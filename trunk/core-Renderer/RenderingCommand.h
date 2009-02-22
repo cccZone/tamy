@@ -1,0 +1,15 @@
+#pragma once
+
+#include "Delegate.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A rendering command is an atomic operation a renderer will perform
+ * in order to render something on the screen
+ */
+typedef Delegate<void ()> RenderingCommand;
+
+
+///////////////////////////////////////////////////////////////////////////////
