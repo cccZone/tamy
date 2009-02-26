@@ -3,13 +3,13 @@
 #include <d3dx9.h>
 #include <list>
 #include <vector>
+#include "Skeleton.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Material;
 class Node;
-class Skeleton;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +24,7 @@ private:
    std::vector<Material*> m_materials;
    D3DXMATRIX m_localMtx;
    std::list<GraphicalEntity*> m_children;
-   Skeleton* m_skeleton;
+   AnimationDefinition m_animationData;
 
 public:
    GraphicalEntity(const std::string& name,
@@ -33,6 +33,12 @@ public:
    virtual ~GraphicalEntity();
 
    const std::string getName() const {return m_name;}
+
+   /**
+    * This method allows the user to exchange animation related
+    * data for this entity
+    */
+   void setAnimationDefinition(const AnimationDefinition& animationDef);
 
    /**
     * Each entity has some material set with which it should be rendered.
@@ -58,20 +64,16 @@ public:
    Node* instantiate(const std::string& instanceName);
 
    /**
-    * Attaches a skeleton that will be used to animate 
-    * the hierarchy of entities attached to this entity
+    * This factory method creates a skeleton instance
+    * from this very entity that will animate
+    * the hierarchy of bones passed as the param to this method
     */
-   void attachSkeleton(Skeleton* skeleton);
+   Skeleton* instantiateSkeleton(Node& rootBone);
 
    /**
     * Renders the entity on the specified position
     */
    virtual void render(const D3DXMATRIX& globalMtx, DWORD materialIdx) = 0;
-
-private:
-   Node* createNode(const std::string& name, 
-                    GraphicalEntity& entity, 
-                    DWORD subsetIdx);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

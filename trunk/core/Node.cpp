@@ -1,6 +1,8 @@
 #include "Node.h"
 #include <stdexcept>
 #include <algorithm>
+#include "MatrixWriter.h"
+#include "dostream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -138,7 +140,7 @@ const D3DXMATRIX& Node::getGlobalMtx()
    if (localMatrixChanged || (m_parentGlobalMtxCache != parentGlobalMtx))
    {
       m_parentGlobalMtxCache = parentGlobalMtx;
-      D3DXMatrixMultiply(&m_globalMtx, &m_globalMtx, &m_parentGlobalMtxCache);
+      D3DXMatrixMultiply(&m_globalMtx, &m_localMtx, &m_parentGlobalMtxCache);
    }
 
    return m_globalMtx;

@@ -12,6 +12,7 @@ TEST(EntityLoader, loadSimpleMesh)
    ResourceManagerStub rm;
 
    MeshDefinition mesh;
+   mesh.name = "entity";
    mesh.faces.push_back(Face<USHORT>(0, 1, 2, 0));
    mesh.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0));
 
@@ -30,6 +31,7 @@ TEST(EntityLoader, loadMeshWithManyMaterials)
    ResourceManagerStub rm;
 
    MeshDefinition mesh;
+   mesh.name = "entity";
    MaterialDefinition mat1;
    mat1.texName = "a.jpg";
    mesh.materials.push_back(mat1);
@@ -39,6 +41,7 @@ TEST(EntityLoader, loadMeshWithManyMaterials)
    MaterialDefinition mat2;
    mat2.texName = "b.jpg";
    MeshDefinition subMesh1;
+   subMesh1.name = "subMesh1";
    subMesh1.materials.push_back(mat2);
    subMesh1.faces.push_back(Face<USHORT>(0, 1, 2, 0));
    subMesh1.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0));
@@ -60,6 +63,7 @@ TEST(EntityLoader, loadMeshWithManyRepetitiveMaterials)
    ResourceManagerStub rm;
 
    MeshDefinition mesh;
+   mesh.name = "entity";
    MaterialDefinition mat1;
    mat1.texName = "a.jpg";
    mesh.materials.push_back(mat1);
@@ -69,18 +73,21 @@ TEST(EntityLoader, loadMeshWithManyRepetitiveMaterials)
    MaterialDefinition mat2;
    mat2.texName = "b.jpg";
    MeshDefinition subMesh1;
+   subMesh1.name = "subMesh1";
    subMesh1.materials.push_back(mat2);
    subMesh1.faces.push_back(Face<USHORT>(0, 1, 2, 0));
    subMesh1.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0));
    mesh.children.push_back(subMesh1);
 
    MeshDefinition subMesh2;
+   subMesh2.name = "subMesh2";
    subMesh2.materials.push_back(mat2);
    subMesh2.faces.push_back(Face<USHORT>(0, 1, 2, 0));
    subMesh2.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0));
    mesh.children.push_back(subMesh2);
 
    MeshDefinition subMesh3;
+   subMesh3.name = "subMesh3";
    subMesh3.materials.push_back(mat1);
    subMesh3.faces.push_back(Face<USHORT>(0, 1, 2, 0));
    subMesh3.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0));
@@ -102,11 +109,13 @@ TEST(EntityLoader, hierarchicalEntityWithSpacers)
    ResourceManagerStub rm;
 
    MeshDefinition spacerMesh;
+   spacerMesh.name = "entity";
    D3DXMatrixTranslation(&spacerMesh.localMtx, 10, 20, 30);
 
    MaterialDefinition mat2;
    mat2.texName = "b.jpg";
    MeshDefinition subMesh1;
+   subMesh1.name = "subMesh1";
    subMesh1.materials.push_back(mat2);
    subMesh1.faces.push_back(Face<USHORT>(0, 1, 2, 0));
    subMesh1.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0));
@@ -122,6 +131,37 @@ TEST(EntityLoader, hierarchicalEntityWithSpacers)
 
    CPPUNIT_ASSERT_EQUAL(static_cast<UINT> (0), rootEntity.getNumSubsets());
    CPPUNIT_ASSERT_EQUAL(spacerMesh.localMtx, rootEntity.getLocalMtx());
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+TEST(EntityLoader, ensuringNameForUnknamedMeshes)
+{
+   ResourceManagerStub rm;
+
+   MeshDefinition spacerMesh;
+   spacerMesh.name = "entity";
+
+   MeshDefinition subMesh;
+   spacerMesh.children.push_back(subMesh);
+
+   GraphicalEntityLoaderMock loader(spacerMesh);
+   loader.load(rm, "entity");
+
+   CPPUNIT_ASSERT(rm.isGraphicalEntityRegistered("entity"));
+
+   GraphicalEntity& rootEntity = rm.getGraphicalEntity("entity");
+   CPPUNIT_ASSERT_EQUAL(static_cast<UINT> (1), rootEntity.getChildren().size());
+
+   GraphicalEntity& childEntity = *(rootEntity.getChildren().back());
+   CPPUNIT_ASSERT_EQUAL(std::string("unnamedEntity_0"), childEntity.getName());
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+TEST(EntityLoader, makingSureNamesMatchForMeshesAndBones)
+{
+   CPPUNIT_ASSERT(false);
 }
 
 //////////////////////////////////////////////////////////////////////////////

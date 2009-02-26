@@ -2,6 +2,7 @@
 #include "Skeleton.h"
 #include "MatrixWriter.h"
 #include "Node.h"
+#include "GraphicalEntityMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,7 @@ TEST(Skeleton, basicAnimation)
    anim.animSets.push_back(walk);
 
    // prepare the nodes
-   Node* kneeNode = new Node("knee");
+   Node kneeNode("knee");
 
    Skeleton skeleton(anim, kneeNode);
    skeleton.activateAnimation("walk");
@@ -36,29 +37,22 @@ TEST(Skeleton, basicAnimation)
    // animation start
    D3DXMatrixTranslation(&expectedResult, 0, 0, 0);
    skeleton.update(0);
-   CPPUNIT_ASSERT_EQUAL(expectedResult, kneeNode->getLocalMtx());
+   CPPUNIT_ASSERT_EQUAL(expectedResult, kneeNode.getLocalMtx());
 
    // 1/3rd through
    D3DXMatrixTranslation(&expectedResult, 5, 10, 15);
    skeleton.update(1);
-   CPPUNIT_ASSERT_EQUAL(expectedResult, kneeNode->getLocalMtx());
+   CPPUNIT_ASSERT_EQUAL(expectedResult, kneeNode.getLocalMtx());
 
    // 2/3rd through
    D3DXMatrixTranslation(&expectedResult, 10, 20, 30);
    skeleton.update(1);
-   CPPUNIT_ASSERT_EQUAL(expectedResult, kneeNode->getLocalMtx());
+   CPPUNIT_ASSERT_EQUAL(expectedResult, kneeNode.getLocalMtx());
 
    // animation end - it wraps around (by default it's in the looping mode...)
    D3DXMatrixTranslation(&expectedResult, 0, 0, 0);
    skeleton.update(1);
-   CPPUNIT_ASSERT_EQUAL(expectedResult, kneeNode->getLocalMtx());
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(Skeleton, instancing)
-{
-   CPPUNIT_ASSERT(false);
+   CPPUNIT_ASSERT_EQUAL(expectedResult, kneeNode.getLocalMtx());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

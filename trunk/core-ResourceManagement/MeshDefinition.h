@@ -27,6 +27,7 @@ struct MaterialDefinition
 
 struct MeshDefinition
 {
+   std::string name;
    std::vector<MaterialDefinition> materials;
    std::list<LitVertex> vertices;
    std::list<Face<USHORT> > faces;

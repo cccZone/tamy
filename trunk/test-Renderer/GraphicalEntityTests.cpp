@@ -9,170 +9,12 @@
 #include "GraphicalEntityMock.h"
 #include "GraphicalNodesAggregator.h"
 #include <vector>
-#include <sstream>
+#include "NodeHierarchyWriter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(GraphicalEntity, referencesToOneEntity)
-{
-   std::vector<Material*> materialsListStub;
-   materialsListStub.push_back(reinterpret_cast<Material*> (0xCC));
-
-   GraphicalEntityMock entity(materialsListStub);
-
-   Node* reference1 = entity.instantiate("reference1");
-   Node* reference2 = entity.instantiate("reference2");
-
-   D3DXMATRIX mtx1;
-   D3DXMatrixTranslation(&mtx1, 10, 0, 0);
-   reference1->setLocalMtx(mtx1);
-
-   D3DXMATRIX mtx2;
-   D3DXMatrixTranslation(&mtx2, -10, 0, 0);
-   reference2->setLocalMtx(mtx2);
-
-   dynamic_cast<GraphicalNode*> (reference1)->render();
-   CPPUNIT_ASSERT_EQUAL(mtx1, entity.getMatrixSet());
-
-   dynamic_cast<GraphicalNode*> (reference2)->render();
-   CPPUNIT_ASSERT_EQUAL(mtx2, entity.getMatrixSet());
-
-   delete reference1;
-   delete reference2;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(GraphicalEntity, creatingNodeForAntityWithManySubsets)
-{
-   TextureStub texture("");
-   Material mat1(texture);
-   Material mat2(texture);
-   Material mat3(texture);
-
-   std::vector<Material*> materials;
-   materials.push_back(&mat1);
-   materials.push_back(&mat2);
-   materials.push_back(&mat3);
-
-   // prepare the entities
-   GraphicalEntityMock richBody(materials);
-   Node* node = richBody.instantiate("node");
-
-   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (2), node->getChildrenCount());
-   
-   std::vector<std::string> expectedChildren;
-   expectedChildren.push_back("node");
-   expectedChildren.push_back("node_subset1");
-   expectedChildren.push_back("node_subset2");
-
-   GraphicalNodesAggregator<GraphicalNode> children;
-   node->accept(children);
-
-   unsigned int expChildIdx = 0;
-   for (std::list<GraphicalNode*>::const_iterator it = children().begin();
-        it != children().end(); ++it, ++expChildIdx)
-   {
-      CPPUNIT_ASSERT_EQUAL(expectedChildren.at(expChildIdx), (*it)->getName());
-   }
-
-   delete node;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(GraphicalEntity, renderingEntityWithManySubsets)
-{
-   std::list<std::string> results;
-
-   TextureStub texture("");
-   Material mat1(texture);
-   Material mat2(texture);
-   Material mat3(texture);
-
-   std::vector<Material*> materials;
-   materials.push_back(&mat1);
-   materials.push_back(&mat2);
-   materials.push_back(&mat3);
-
-   // prepare the entities
-   GraphicalEntityMock richBody("richBody", materials, results);
-   Node* node = richBody.instantiate("node");
-
-   GraphicalNodesAggregator<GraphicalNode> nodesToRender;
-   node->accept(nodesToRender);
-
-   RenderingProcessor processor;
-   std::list<RenderingCommand> commands = processor.translate(nodesToRender());
-   
-   // run through the comands
-   for (std::list<RenderingCommand>::iterator it = commands.begin(); it != commands.end(); ++it)
-   {
-      RenderingCommand& comm = *it;
-      comm();
-   }
-
-   // compare the results
-   std::vector<std::string> expectedResults;
-   expectedResults.push_back("Render richBody subset 0");
-   expectedResults.push_back("Render richBody subset 1");
-   expectedResults.push_back("Render richBody subset 2");
-
-   CPPUNIT_ASSERT_EQUAL(expectedResults.size(), results.size());
-
-   unsigned int resultIdx = 0;
-   for (std::list<std::string>::iterator resultIt = results.begin(); 
-        resultIt != results.end(); ++resultIt, ++resultIdx)
-   {
-      std::stringstream msgId;
-      msgId << "command " << resultIdx;
-      CPPUNIT_ASSERT_EQUAL_MESSAGE(msgId.str(), expectedResults.at(resultIdx), *resultIt);
-   }
-
-   delete node;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(HierarchicalEntity, basicCreation)
-{
-   std::list<std::string> results;
-   std::vector<Material*> materialsListStub;
-   materialsListStub.push_back(reinterpret_cast<Material*> (0xCC));
-
-   // prepare the entities
-   GraphicalEntityMock body("body", materialsListStub, results);
-   GraphicalEntityMock head("head", materialsListStub, results);
-   GraphicalEntityMock hand("hand", materialsListStub, results);
-   body.addChild(head);
-   body.addChild(hand);
-
-   Node* node = body.instantiate("node");
-
-   CPPUNIT_ASSERT_EQUAL(std::string("body"), dynamic_cast<GraphicalNode*> (node)->getEntity().getName());
-   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (2), node->getChildrenCount());
-   
-   std::vector<std::string> expectedChildren;
-   expectedChildren.push_back("body");
-   expectedChildren.push_back("head");
-   expectedChildren.push_back("hand");
-
-   GraphicalNodesAggregator<GraphicalNode> children;
-   node->accept(children);
-   unsigned int expChildIdx = 0;
-   for (std::list<GraphicalNode*>::const_iterator it = children().begin();
-        it != children().end(); ++it, ++expChildIdx)
-   {
-      CPPUNIT_ASSERT_EQUAL(expectedChildren.at(expChildIdx), (*it)->getEntity().getName());
-   }
-
-   delete node;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(HierarchicalEntity, matricesOfGraphicalNodesSet)
+TEST(GraphicalEntityInstantiation, basics)
 {
    std::vector<Material*> materialsListStub;
    materialsListStub.push_back(reinterpret_cast<Material*> (0xCC));
@@ -182,67 +24,147 @@ TEST(HierarchicalEntity, matricesOfGraphicalNodesSet)
    D3DXMATRIX handMtx; D3DXMatrixTranslation(&handMtx, 5, 0, 0);
 
    // prepare the entities
-   GraphicalEntityMock body(materialsListStub, bodyMtx);
-   GraphicalEntityMock head(materialsListStub, headMtx);
-   GraphicalEntityMock hand(materialsListStub, handMtx);
+   GraphicalEntityMock body("body", materialsListStub, bodyMtx);
+   GraphicalEntityMock head("head", materialsListStub, headMtx);
+   GraphicalEntityMock hand("hand", materialsListStub, handMtx);
 
    body.addChild(head);
    body.addChild(hand);
 
    Node* node = body.instantiate("node");
 
+   // prepare the results
+   Node* expectedHierarchy = new Node("node");
 
-   std::vector<D3DXMATRIX> expectedMatrices;
-   expectedMatrices.push_back(bodyMtx);
-   expectedMatrices.push_back(headMtx);
-   expectedMatrices.push_back(handMtx);
+   Node* bodyNode = new Node("body");
+   bodyNode->setLocalMtx(bodyMtx);
+   bodyNode->addChild(new GraphicalNode("body_subset0", body, 0));
 
-   GraphicalNodesAggregator<GraphicalNode> children;
-   node->accept(children);
-   unsigned int expChildIdx = 0;
-   for (std::list<GraphicalNode*>::const_iterator it = children().begin();
-        it != children().end(); ++it, ++expChildIdx)
-   {
-      CPPUNIT_ASSERT_EQUAL(expectedMatrices.at(expChildIdx), (*it)->getLocalMtx());
-   }
+   Node* headNode = new Node("head");
+   headNode->setLocalMtx(headMtx);
+   headNode->addChild(new GraphicalNode("head_subset0", head, 0));
+
+   Node* handNode = new Node("hand");
+   handNode->setLocalMtx(handMtx);
+   handNode->addChild(new GraphicalNode("hand_subset0", hand, 0));
+
+   bodyNode->addChild(headNode);
+   bodyNode->addChild(handNode);
+   expectedHierarchy->addChild(bodyNode);
+
+   NodeHierarchyWriter writer;
+   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchy), writer(*node));
 
    delete node;
+   delete expectedHierarchy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(HierarchicalEntity, creatingNodesAroundSpacerEntities)
+TEST(GraphicalEntityInstantiation, multipleSubsets)
 {
-   std::list<std::string> results;
+   TextureStub texture("");
+   Material skinMat(texture);
+   Material blouseMat(texture);
+   Material hairMat(texture);
+
+   std::vector<Material*> bodyMaterials;
+   std::vector<Material*> headMaterials;
+   std::vector<Material*> handMaterials;
+
+   bodyMaterials.push_back(&skinMat);
+   bodyMaterials.push_back(&blouseMat);
+   headMaterials.push_back(&skinMat);
+   headMaterials.push_back(&hairMat);
+   handMaterials.push_back(&skinMat);
+
+   D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
+   D3DXMATRIX headMtx; D3DXMatrixTranslation(&headMtx, 0, -5, 0);
+   D3DXMATRIX handMtx; D3DXMatrixTranslation(&handMtx, 5, 0, 0);
+
+   // prepare the entities
+   GraphicalEntityMock body("body", bodyMaterials, bodyMtx);
+   GraphicalEntityMock head("head", headMaterials, headMtx);
+   GraphicalEntityMock hand("hand", handMaterials, handMtx);
+
+   body.addChild(head);
+   body.addChild(hand);
+
+   Node* node = body.instantiate("node");
+
+   // prepare the results
+   Node* expectedHierarchy = new Node("node");
+
+   Node* bodyNode = new Node("body");
+   bodyNode->setLocalMtx(bodyMtx);
+   bodyNode->addChild(new GraphicalNode("body_subset0", body, 0));
+   bodyNode->addChild(new GraphicalNode("body_subset1", body, 1));
+
+   Node* headNode = new Node("head");
+   headNode->setLocalMtx(headMtx);
+   headNode->addChild(new GraphicalNode("head_subset0", head, 0));
+   headNode->addChild(new GraphicalNode("head_subset1", head, 1));
+
+   Node* handNode = new Node("hand");
+   handNode->setLocalMtx(handMtx);
+   handNode->addChild(new GraphicalNode("hand_subset0", hand, 0));
+
+   bodyNode->addChild(headNode);
+   bodyNode->addChild(handNode);
+   expectedHierarchy->addChild(bodyNode);
+
+   NodeHierarchyWriter writer;
+   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchy), writer(*node));
+
+   delete node;
+   delete expectedHierarchy;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(GraphicalEntityInstantiation, creatingNodesAroundSpacerEntities)
+{
    std::vector<Material*> materialsListStub;
    materialsListStub.push_back(reinterpret_cast<Material*> (0xCC));
    std::vector<Material*> emptyMaterialsListStub;
 
+   D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
+   D3DXMATRIX headMtx; D3DXMatrixTranslation(&headMtx, 0, -5, 0);
+   D3DXMATRIX handMtx; D3DXMatrixTranslation(&handMtx, 5, 0, 0);
+
    // prepare the entities
-   GraphicalEntityMock raymanBody("raymanBody", emptyMaterialsListStub, results);
-   GraphicalEntityMock head("head", materialsListStub, results);
-   GraphicalEntityMock hand("hand", materialsListStub, results);
+   GraphicalEntityMock raymanBody("raymanBody", emptyMaterialsListStub, bodyMtx);
+   GraphicalEntityMock head("head", materialsListStub, headMtx);
+   GraphicalEntityMock hand("hand", materialsListStub, handMtx);
 
    raymanBody.addChild(head);
    raymanBody.addChild(hand);
 
    Node* node = raymanBody.instantiate("node");
 
-   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (2), node->getChildrenCount());
-   
-   std::vector<std::string> expectedChildren;
-   // no rayman body - it's not gonna be a graphical node
-   expectedChildren.push_back("head");
-   expectedChildren.push_back("hand");
+   // prepare the results
+   Node* expectedHierarchy = new Node("node");
 
-   GraphicalNodesAggregator<GraphicalNode> children;
-   node->accept(children);
-   unsigned int expChildIdx = 0;
-   for (std::list<GraphicalNode*>::const_iterator it = children().begin();
-        it != children().end(); ++it, ++expChildIdx)
-   {
-      CPPUNIT_ASSERT_EQUAL(expectedChildren.at(expChildIdx), (*it)->getEntity().getName());
-   }
+   Node* raymanBodyNode = new Node("raymanBody");
+   raymanBodyNode->setLocalMtx(bodyMtx);
+
+   Node* headNode = new Node("head");
+   headNode->setLocalMtx(headMtx);
+   headNode->addChild(new GraphicalNode("head_subset0", head, 0));
+
+   Node* handNode = new Node("hand");
+   handNode->setLocalMtx(handMtx);
+   handNode->addChild(new GraphicalNode("hand_subset0", hand, 0));
+
+   raymanBodyNode->addChild(headNode);
+   raymanBodyNode->addChild(handNode);
+   expectedHierarchy->addChild(raymanBodyNode);
+
+   NodeHierarchyWriter writer;
+   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchy), writer(*node));
+
+   delete node;
+   delete expectedHierarchy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

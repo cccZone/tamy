@@ -3,7 +3,7 @@
 #include "GraphicalNode.h"
 #include <deque>
 #include <sstream>
-#include "Skeleton.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -12,8 +12,7 @@ GraphicalEntity::GraphicalEntity(const std::string& name,
                                  const D3DXMATRIX& localMtx)
       : m_name(name),
       m_materials(materials),
-      m_localMtx(localMtx),
-      m_skeleton(new Skeleton(AnimationDefinition(), new Node("")))
+      m_localMtx(localMtx)
 {
 }
 
@@ -21,8 +20,13 @@ GraphicalEntity::GraphicalEntity(const std::string& name,
 
 GraphicalEntity::~GraphicalEntity()
 {
-   delete m_skeleton;
-   m_skeleton = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicalEntity::setAnimationDefinition(const AnimationDefinition& animationDef)
+{
+   m_animationData = animationDef;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,38 +72,36 @@ const std::list<GraphicalEntity*>& GraphicalEntity::getChildren() const
 
 Node* GraphicalEntity::instantiate(const std::string& instanceName)
 {
-   Node* rootNode = createNode(instanceName, *this, 0);
+   Node* rootNode = new Node(instanceName);
 
    std::deque<std::pair<Node*, GraphicalEntity*> > entitiesQueue;
+
    entitiesQueue.push_back(std::make_pair(rootNode, this));
 
    while(entitiesQueue.size() > 0)
    {
-      Node* currNode = entitiesQueue.front().first;
+      Node* parentNode = entitiesQueue.front().first;
       GraphicalEntity* currEntity = entitiesQueue.front().second;
       entitiesQueue.pop_front();
 
-      // add all the subsets of the entity - we start counting from
-      // the subset one, 'cause THIS very entity will take care of subset 0
-      for (unsigned int subsetIdx = 1; subsetIdx < currEntity->getNumSubsets(); ++subsetIdx)
+      Node* entityRoot = new Node(currEntity->getName());
+      parentNode->addChild(entityRoot);
+      entityRoot->setLocalMtx(currEntity->getLocalMtx());
+
+      // create graphical node for each subset of current GraphicalEntity
+      for (unsigned int subsetIdx = 0; subsetIdx < currEntity->getNumSubsets(); ++subsetIdx)
       {
          std::stringstream childNodeName;
-         childNodeName << instanceName << "_subset" << subsetIdx;
-
-         Node* newNode = createNode(childNodeName.str(), *currEntity, subsetIdx);
-
-         currNode->addChild(newNode);
+         childNodeName << currEntity->getName() << "_subset" << subsetIdx;
+         Node* newNode = new GraphicalNode(childNodeName.str(), *currEntity, subsetIdx);
+         entityRoot->addChild(newNode);
       }
 
-      // add children of the hierarchical entity
+      // add children of current GraphicalEntity
       for (std::list<GraphicalEntity*>::const_iterator it = currEntity->getChildren().begin();
            it != currEntity->getChildren().end(); ++it)
       {
-         Node* newNode = createNode("", **it, 0);
-         newNode->setLocalMtx((*it)->getLocalMtx());
-
-         currNode->addChild(newNode);
-         entitiesQueue.push_back(std::make_pair(newNode, *it));
+         entitiesQueue.push_back(std::make_pair(entityRoot, *it));
       }
    }
 
@@ -108,33 +110,9 @@ Node* GraphicalEntity::instantiate(const std::string& instanceName)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Node* GraphicalEntity::createNode(const std::string& name, 
-                                  GraphicalEntity& entity,
-                                  DWORD subsetIdx)
+Skeleton* GraphicalEntity::instantiateSkeleton(Node& rootBone)
 {
-   Node* node = NULL;
-   if (entity.getNumSubsets() == 0)
-   {
-      node = new Node(name);
-   }
-   else
-   {
-      node = new GraphicalNode(name, entity, subsetIdx);
-   }
-   return node;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void GraphicalEntity::attachSkeleton(Skeleton* skeleton)
-{
-   if (skeleton == NULL)
-   {
-      throw std::invalid_argument("NULL pointer instead a Skeleton instance");
-   }
-
-   delete m_skeleton;
-   m_skeleton = skeleton;
+   return new Skeleton(m_animationData, rootBone);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

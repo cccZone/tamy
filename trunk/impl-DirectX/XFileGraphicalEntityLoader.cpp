@@ -103,19 +103,19 @@ void XFileGraphicalEntityLoader::parseAnimationSet(ID3DXKeyframedAnimationSet* a
       boneAnimDef.boneName = tmpBoneName;
 
       // copy the rotation keys
-      for (UINT rotKeyIdx = 0; rotKeyIdx < boneAnimDef.rotationKeysArr; ++rotKeyIdx)
+      for (UINT rotKeyIdx = 0; rotKeyIdx < boneAnimDef.rotationKeysCount; ++rotKeyIdx)
       {
          animSet->GetRotationKey(animIdx, rotKeyIdx, &(boneAnimDef.rotationKeysArr[rotKeyIdx]));
       }
 
       // copy the translation keys
-      for (UINT trnslKeyIdx = 0; trnslKeyIdx < boneAnimDef.translationKeysArr; ++trnslKeyIdx)
+      for (UINT trnslKeyIdx = 0; trnslKeyIdx < boneAnimDef.translationKeysCount; ++trnslKeyIdx)
       {
          animSet->GetTranslationKey(animIdx, trnslKeyIdx, &(boneAnimDef.translationKeysArr[trnslKeyIdx]));
       }
 
       // copy the scaling keys
-      for (UINT scaleKeyIdx = 0; scaleKeyIdx < boneAnimDef.scaleKeysArr; ++scaleKeyIdx)
+      for (UINT scaleKeyIdx = 0; scaleKeyIdx < boneAnimDef.scaleKeysCount; ++scaleKeyIdx)
       {
          animSet->GetScaleKey(animIdx, scaleKeyIdx, &(boneAnimDef.scaleKeysArr[scaleKeyIdx]));      
       }
@@ -132,7 +132,7 @@ void XFileGraphicalEntityLoader::parseFrames(D3DXFRAME* frame,
    {
       parseGeometry(frame->pMeshContainer, mesh);
    }
-
+   mesh.name = (frame->Name != NULL) ? frame->Name : "";
    mesh.localMtx = frame->TransformationMatrix;
 
    // proceed down the hierarchy with the parsing
@@ -319,6 +319,15 @@ HRESULT XFileGraphicalEntityLoader::CreateMeshContainer(LPCSTR Name,
    pMeshContainer->MeshData.pMesh = pMesh;
    pMeshContainer->pMaterials = copiedMaterials;
    pMeshContainer->NumMaterials = NumMaterials;
+   if (pSkinInfo != NULL)
+   {
+      pMeshContainer->pSkinInfo = pSkinInfo;
+      pMeshContainer->pSkinInfo->AddRef();
+   }
+   else
+   {
+      pMeshContainer->pSkinInfo = NULL;
+   }
 
    *ppNewMeshContainer = pMeshContainer;
 

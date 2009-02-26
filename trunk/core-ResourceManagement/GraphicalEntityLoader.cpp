@@ -15,8 +15,7 @@ GraphicalEntity& GraphicalEntityLoader::load(ResourceManager& resourceManager, c
    parseMesh(mesh, animation, name);
 
    GraphicalEntity* entity = createGraphicalEntity(resourceManager, mesh, name);
-   Skeleton* skeleton = new Skeleton(animation, new Node(""));
-   entity->attachSkeleton(skeleton);
+   entity->setAnimationDefinition(animation);
 
    return *entity;
 }
@@ -27,33 +26,35 @@ GraphicalEntity* GraphicalEntityLoader::createGraphicalEntity(ResourceManager& r
                                                               MeshDefinition& mesh, 
                                                               const std::string& name)
 {
+   static unsigned long unnamedMeshIdx = 0;
+
    // register the meshes
    GraphicalEntity* entityRootNode = NULL;
 
    std::deque<std::pair<GraphicalEntity*, MeshDefinition*> > meshesQueue;
    meshesQueue.push_back(std::make_pair(reinterpret_cast<GraphicalEntity*> (NULL), &mesh));
 
-   unsigned int subMeshNum = 0;
    while (meshesQueue.size() > 0)
    {
-      std::stringstream subMeshName;
-      subMeshName << name;
-      if (subMeshNum > 0) {subMeshName << "_" << subMeshNum;}
-      subMeshNum++;
-
       GraphicalEntity* parentEntity = meshesQueue.front().first;
       MeshDefinition& currentMesh = *(meshesQueue.front().second);
       meshesQueue.pop_front();
+      if (currentMesh.name.length() == 0)
+      {
+         std::stringstream str;
+         str << "unnamedEntity_" << unnamedMeshIdx++;
+         currentMesh.name = str.str();
+      }
 
       // create a graphical entity based on the geometry definition
       GraphicalEntity* currentEntity = NULL;      
-      if (resourceManager.isGraphicalEntityRegistered(subMeshName.str()) == true)
+      if (resourceManager.isGraphicalEntityRegistered(currentMesh.name) == true)
       {
-         currentEntity = &resourceManager.getGraphicalEntity(subMeshName.str());
+         currentEntity = &resourceManager.getGraphicalEntity(currentMesh.name);
       }
       else
       {
-         currentEntity = &resourceManager.createGraphicalEntity(subMeshName.str(),
+         currentEntity = &resourceManager.createGraphicalEntity(currentMesh.name,
                                                                 currentMesh);
       }
 

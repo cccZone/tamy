@@ -80,10 +80,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\Libs\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)\Temp\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="1"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -105,6 +105,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\include&quot;;&quot;$(SolutionDir)\core&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -144,18 +145,6 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Utils"
-			>
-			<File
-				RelativePath=".\MatrixWriter.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MatrixWriter.h"
-				>
-			</File>
-		</Filter>
 		<Filter
 			Name="Framework"
 			>

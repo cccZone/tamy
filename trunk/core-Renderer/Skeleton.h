@@ -3,6 +3,7 @@
 #include <list>
 #include <string>
 #include <d3dx9.h>
+#include <set>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,7 @@ public:
     *
     * The idea is that the bones in the skeletal structure of bones
     * (described by the 'skeletonRootBone' param) need to bear names
-    * matching those of the bona animation defintions in the animation
+    * matching those of the bone animation defintions in the animation
     * definition template. There may be more bones there, but all the 
     * slots need to be filled.
     *
@@ -39,7 +40,7 @@ public:
     *                                 or if the skeleton contains two or more
     *                                 nodes with the same name
     */
-   Skeleton(const AnimationDefinition& animTemplate, Node* skeletonRootBone);
+   Skeleton(const AnimationDefinition& animTemplate, Node& skeletonRootBone);
    ~Skeleton();
 
    /**
@@ -56,7 +57,7 @@ public:
 
 private:
    void createAnimationController(DWORD requiredBonesCount, const AnimationDefinition& animTemplate);
-   DWORD registerBoneStructure(Node* skeletonRootBone);
+   DWORD registerBoneStructure(Node& skeletonRootBone, std::set<std::string>& bonesSet);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,7 +80,7 @@ struct AnimationDefinition
 struct AnimationSetDefinition
 {
    std::string name;
-   UINT ticksPerSec;
+   double ticksPerSec;
    D3DXPLAYBACK_TYPE playbackType;
 
    std::list<BoneAnimDefinition> boneAnims;

@@ -13,6 +13,8 @@
 #include "Light.h"
 #include "D3DResourceManager.h"
 #include "IWFLoader.h"
+#include "GraphicalEntity.h"
+#include "Skeleton.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,7 +28,8 @@ ComplexSceneDemo::ComplexSceneDemo(HINSTANCE hInstance)
       m_timer(new CTimer()),
       m_lastFrameRate(0),
       m_sceneManager(new BasicSceneManager()),
-      m_cameraController(NULL)
+      m_cameraController(NULL),
+      m_animationController(NULL)
 {
    CWindowBuilder winBuilder;
 
@@ -46,6 +49,9 @@ ComplexSceneDemo::ComplexSceneDemo(HINSTANCE hInstance)
 
 ComplexSceneDemo::~ComplexSceneDemo()
 {
+   delete m_animationController;
+   m_animationController = NULL;
+
    delete m_cameraController;
    m_cameraController = NULL;
 
@@ -79,6 +85,9 @@ void ComplexSceneDemo::run(int nCmdShow)
    m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 
+   GraphicalEntity& ent = m_resourceManager->getGraphicalEntity("unnamedEntity_0");
+   m_animationController = ent.instantiateSkeleton(m_sceneManager->getRootNode());
+   m_animationController->activateAnimation("Cutscene_01");
 
    while (1) 
    {
@@ -111,7 +120,7 @@ void ComplexSceneDemo::advanceGameState()
    }
 
    processInput(timeElapsed);
-
+   m_animationController->update(timeElapsed);
    m_renderer->render(m_sceneManager->getRootNode());
 }
 

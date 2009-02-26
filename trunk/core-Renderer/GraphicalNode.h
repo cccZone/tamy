@@ -23,7 +23,7 @@ private:
 public:
    GraphicalNode(const std::string& name, GraphicalEntity& entity, DWORD subset);
 
-   Material& getMaterial();
+   Material& getMaterial() const;
 
    /**
     * ...self explanatory I think...
@@ -34,6 +34,8 @@ public:
     * Returns the graphical representation of the node
     */
    GraphicalEntity& getEntity() const {return m_entity;}
+
+   DWORD getSubsetIdx() const {return m_subset;}
 
 protected:
    void onAccept(NodeVisitor& visitor);

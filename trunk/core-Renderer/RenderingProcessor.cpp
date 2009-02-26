@@ -6,17 +6,22 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::list<RenderingCommand> RenderingProcessor::translate(const std::list<GraphicalNode*>& nodesToRender)
+std::list<RenderingCommand> RenderingProcessor::translate(const BatchedNodes& nodesToRender)
 {
    std::list<RenderingCommand> commands;
+   Material* prevMat = NULL;
 
-   for (std::list<GraphicalNode*>::const_iterator it = nodesToRender.begin();
-                                                  it != nodesToRender.end(); 
-                                                  ++it)
+   for (BatchedNodes::const_iterator it = nodesToRender.begin();
+        it != nodesToRender.end(); ++it)
    {
       GraphicalNode& graphicalNode = **it;
-   
-      commands.push_back(setMaterial(graphicalNode.getMaterial()));
+      Material& mat = graphicalNode.getMaterial();
+      if ((prevMat == NULL) || (*prevMat != mat))
+      {
+         commands.push_back(setMaterial(mat));
+         prevMat = &mat;
+      }
+
       commands.push_back(renderEntity(graphicalNode));
    }
 

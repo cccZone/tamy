@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "GraphicalNodesAggregator.h"
+#include "LightsAggregator.h"
 #include "Camera.h"
 #include "Light.h"
 #include "RenderingProcessor.h"
@@ -78,7 +79,7 @@ void Renderer::RenderingState::render(Renderer& renderer, Node& rootNode)
 
 
    // set the lights
-   GraphicalNodesAggregator<Light> lights;
+   LightsAggregator lights;
    rootNode.accept(lights);
    UINT lightIdx = 0;
    UINT maxLights = renderer.getMaxLightsCount();
@@ -93,7 +94,7 @@ void Renderer::RenderingState::render(Renderer& renderer, Node& rootNode)
    renderer.setProjectionMatrix(renderer.m_activeCamera->getProjectionMtx3D());
 
    // add the objects to be rendered
-   GraphicalNodesAggregator<GraphicalNode> nodes;
+   GraphicalNodesAggregator nodes;
    rootNode.accept(nodes);
 
    // prepare the rendering commands

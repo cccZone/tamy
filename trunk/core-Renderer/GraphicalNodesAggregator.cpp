@@ -1,20 +1,19 @@
-#include "Light.h"
-#include "NodeVisitor.h"
-#include "TNodesVisitor.h"
+#include "GraphicalNodesAggregator.h"
+#include "GraphicalNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Light::Light(const std::string& name)
-      : Node(name)
+void GraphicalNodesAggregator::visit(GraphicalNode& node) 
 {
+   m_nodes.insert(&node);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Light::onAccept(NodeVisitor& visitor)
+const BatchedNodes& GraphicalNodesAggregator::operator()()
 {
-   REGISTER_NODE_VISITOR(TNodesVisitor<Light>);
+   return m_nodes;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

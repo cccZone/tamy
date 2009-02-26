@@ -6,9 +6,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material::Material(Texture& emptyTexture)
+Material::Material(Texture& emptyTexture, unsigned int index)
       : m_lightReflectingProperties(&m_nullLightReflectingProperties),
-      m_texture(&emptyTexture)
+      m_texture(&emptyTexture),
+      m_index(index)
 {
 }
 

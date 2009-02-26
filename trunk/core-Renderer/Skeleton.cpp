@@ -7,8 +7,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Skeleton::Skeleton(const AnimationDefinition& animTemplate, Node* skeletonRootBone)
-      : m_skeletonRootBone(skeletonRootBone),
+Skeleton::Skeleton(const AnimationDefinition& animTemplate, Node& skeletonRootBone)
+      : m_skeletonRootBone(&skeletonRootBone),
       m_animationController(NULL)
 {
    // check how many bones are used (eliminate reappearing names)
@@ -27,7 +27,7 @@ Skeleton::Skeleton(const AnimationDefinition& animTemplate, Node* skeletonRootBo
    {
       DWORD requiredBonesCount = bonesSet.size();
       createAnimationController(requiredBonesCount, animTemplate);
-      DWORD registeredBonesCount = registerBoneStructure(skeletonRootBone);
+      DWORD registeredBonesCount = registerBoneStructure(skeletonRootBone, bonesSet);
       if (registeredBonesCount < requiredBonesCount)
       {
          throw std::invalid_argument("There are bones missing in the passed bones hierarchy");
@@ -54,7 +54,6 @@ Skeleton::Skeleton(const AnimationDefinition& animTemplate, Node* skeletonRootBo
 
 Skeleton::~Skeleton()
 {
-   delete m_skeletonRootBone;
    m_skeletonRootBone = NULL;
 
    m_animationController->Release();
@@ -65,6 +64,12 @@ Skeleton::~Skeleton()
 
 void Skeleton::createAnimationController(DWORD requiredBonesCount, const AnimationDefinition& animTemplate)
 {
+   DWORD animationSetsCount = animTemplate.animSets.size();
+
+   // we're gonna set the same number of tracks as the number of available animations,
+   // so that we can activate them all at once
+   DWORD animationTracksCount = animTemplate.animSets.size();
+
    // create an animation controller
    HRESULT res;
    if ((requiredBonesCount == 0) || (animTemplate.animSets.size() == 0))
@@ -73,11 +78,9 @@ void Skeleton::createAnimationController(DWORD requiredBonesCount, const Animati
    }
    else
    {
-      // (1) we're gonna set the same number of tracks as the number of available animations,
-      // so that we can activate them all at once
       res = D3DXCreateAnimationController(requiredBonesCount, 
-                                          animTemplate.animSets.size(), 
-                                          animTemplate.animSets.size(), // (1)
+                                          animationSetsCount, 
+                                          animationTracksCount,
                                           1, // just one event (otherwise the method fails) - we don't need any for now though...
                                           &m_animationController);
    }
@@ -129,35 +132,59 @@ void Skeleton::createAnimationController(DWORD requiredBonesCount, const Animati
       newAnimSet->Release();
    }
 
+   // set up all the animatin tracks descriptions to the default values
+   for (DWORD i = 0; i < animationTracksCount; ++i)
+   {
+      m_animationController->SetTrackEnable(i, false);
+      m_animationController->SetTrackSpeed(i, 1);
+      m_animationController->SetTrackWeight(i, 1);
+      m_animationController->SetTrackPriority(i, D3DXPRIORITY_HIGH);
+      m_animationController->SetTrackPosition(i, 0);
+   }
+
    // at this point the animation controller should exist !
    assert(m_animationController != NULL);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DWORD Skeleton::registerBoneStructure(Node* skeletonRootBone)
+DWORD Skeleton::registerBoneStructure(Node& skeletonRootBone, std::set<std::string>& bonesSet)
 {
    // animation controller needs to exist in order to perform this task
    assert(m_animationController != NULL);
 
-   if (skeletonRootBone == NULL)
-   {
-      throw std::invalid_argument("NULL pointer instead a Node instance");
-   }
-
    // we'll use BFS to explore the nodes structure and register the matrices with the animation controller
    std::set<std::string> distinctBoneNamesUsed;
    std::deque<Node*> nodesQueue;
-   nodesQueue.push_back(skeletonRootBone);
+   nodesQueue.push_back(&skeletonRootBone);
    
    HRESULT res;
 
-   while (nodesQueue.size() > 0)
+   while ((nodesQueue.size() > 0) && (bonesSet.size() > 0))
    {
       Node* currentNode = nodesQueue.front();
       nodesQueue.pop_front();
 
+      // add all the children of the node for the BFS to search through
+      const std::list<Node*>& children = currentNode->getChildren();
+      for (std::list<Node*>::const_iterator childNodeIt = children.begin();
+           childNodeIt != children.end(); ++childNodeIt)
+      {
+         nodesQueue.push_back(*childNodeIt);
+      }
+
+      // check if the node is the one of the ones we're looking for
       const std::string& nodeName = currentNode->getName();
+      std::set<std::string>::iterator requiredBoneIt = bonesSet.find(nodeName);
+      if (requiredBoneIt == bonesSet.end()) 
+      {
+         continue;
+      }
+      else
+      {
+         bonesSet.erase(requiredBoneIt);
+      }
+
       // check to see if the bone was previously used and if not, register its name
       // since we're using a set - we can accomplish both goals 
       // with one shot - using the 'insert' method
@@ -177,14 +204,6 @@ DWORD Skeleton::registerBoneStructure(Node* skeletonRootBone)
       if (FAILED(res))
       {
          throw std::runtime_error("Failed to register an animation output");
-      }
-
-      // add all teh childre of the node for the BFS to search through
-      const std::list<Node*>& children = currentNode->getChildren();
-      for (std::list<Node*>::const_iterator childNodeIt = children.begin();
-           childNodeIt != children.end(); ++childNodeIt)
-      {
-         nodesQueue.push_back(*childNodeIt);
       }
    }
 
@@ -210,11 +229,8 @@ void Skeleton::activateAnimation(const std::string& animationName)
       throw std::invalid_argument(std::string("Animation '") + animationName + 
                                   std::string("' could not be activated"));
    }
+
    m_animationController->SetTrackEnable(0, true);
-   m_animationController->SetTrackSpeed(0, 1);
-   m_animationController->SetTrackWeight(0, 1);
-   m_animationController->SetTrackPriority(0, D3DXPRIORITY_HIGH);
-   m_animationController->SetTrackPosition(0, 0);
 
    animSet->Release();
 }

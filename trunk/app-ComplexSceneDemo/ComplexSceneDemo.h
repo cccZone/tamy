@@ -12,6 +12,7 @@ class Renderer;
 class CTimer;
 class SceneManager;
 class UnconstrainedMotionController;
+class Skeleton;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +31,7 @@ private:
    SceneManager* m_sceneManager;
 
    UnconstrainedMotionController* m_cameraController;
+   Skeleton* m_animationController;
 
 public:
    ComplexSceneDemo(HINSTANCE hInstance);

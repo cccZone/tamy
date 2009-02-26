@@ -32,8 +32,8 @@ public:
       D3DXMatrixIdentity(&m_mtx);
    }
 
-   GraphicalEntityMock(const std::vector<Material*>& materials, const D3DXMATRIX& mtx) 
-         : GraphicalEntity("", materials, mtx),
+   GraphicalEntityMock(const std::string& id, const std::vector<Material*>& materials, const D3DXMATRIX& mtx) 
+         : GraphicalEntity(id, materials, mtx),
          m_messageSink(NULL)
    {
       D3DXMatrixIdentity(&m_mtx);

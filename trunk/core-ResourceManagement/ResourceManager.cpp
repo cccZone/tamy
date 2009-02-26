@@ -178,7 +178,7 @@ unsigned int ResourceManager::addMaterial(const std::string& textureName,
                                           const Color& emissive,
                                           float power)
 {
-   Material* materialCandidate = new Material(getEmptyTexture());
+   Material* materialCandidate = new Material(getEmptyTexture(), m_materials.size());
 
    // get light reflectance properties
    LightReflectingProperties* lrpCandidate = createLightReflectingProperties();
@@ -214,18 +214,17 @@ unsigned int ResourceManager::addMaterial(const std::string& textureName,
    materialCandidate->setTexture(*texture);
    
    // check if there's a material with matching properties out there
-   unsigned int id = 0;
-   for (std::vector<Material*>::iterator it = m_materials.begin(); it != m_materials.end(); ++it, ++id)
+   unsigned int id = materialCandidate->getIndex();
+   for (std::vector<Material*>::iterator it = m_materials.begin(); it != m_materials.end(); ++it)
    {
       Material& existingMat = **it;
       if (existingMat == *materialCandidate)
       {
          delete materialCandidate;
-         return id;
+         return existingMat.getIndex();
       }
    }
 
-   id = m_materials.size();
    m_materials.push_back(materialCandidate);
    m_allObjects.push_back(new TManagable<Material>(materialCandidate));
    return id;

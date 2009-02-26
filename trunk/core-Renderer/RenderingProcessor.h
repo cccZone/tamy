@@ -2,6 +2,7 @@
 
 #include <list>
 #include "RenderingCommand.h"
+#include "BatchingStrategy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +20,7 @@ class Material;
 class RenderingProcessor
 {
 public:
-   std::list<RenderingCommand> translate(const std::list<GraphicalNode*>& nodesToRender);
+   std::list<RenderingCommand> translate(const BatchedNodes& nodesToRender);
 
 protected:
    /**

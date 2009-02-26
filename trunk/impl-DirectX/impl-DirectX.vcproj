@@ -82,10 +82,10 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\Libs\$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)\Temp\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="1"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -107,6 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Animation&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -125,6 +126,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="d3d9.lib d3dx9.lib dxguid.lib"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"

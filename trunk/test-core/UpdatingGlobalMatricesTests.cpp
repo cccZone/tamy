@@ -39,7 +39,7 @@ TEST(UpdatingGlobalMatrices, simpleHierarchy)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(UpdatingGlobalMatrices, parentMatrixChangesTwoLevelsAboveThecheckedNode)
+TEST(UpdatingGlobalMatrices, parentMatrixChangesTwoLevelsAboveTheCheckedNode)
 {
    Node root;
    Node* childLevel1 = new Node();
@@ -57,3 +57,21 @@ TEST(UpdatingGlobalMatrices, parentMatrixChangesTwoLevelsAboveThecheckedNode)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+TEST(UpdatingGlobalMatrices, sequenceOfUpdatesInfluencingChild)
+{
+   Node root;
+   Node* child = new Node();
+   root.addChild(child);
+
+   // 1st update
+   D3DXMATRIX rootLocalMatrix; D3DXMatrixTranslation(&rootLocalMatrix, 5, 0, 0);
+   root.setLocalMtx(rootLocalMatrix);
+   CPPUNIT_ASSERT_EQUAL(rootLocalMatrix, child->getGlobalMtx());
+
+   // 2nd update
+   D3DXMatrixTranslation(&rootLocalMatrix, 10, 0, 0);
+   root.setLocalMtx(rootLocalMatrix);
+   CPPUNIT_ASSERT_EQUAL(rootLocalMatrix, child->getGlobalMtx());
+};
+
+///////////////////////////////////////////////////////////////////////////////
