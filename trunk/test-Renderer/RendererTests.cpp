@@ -20,7 +20,7 @@ TEST(Renderer, renderingOnlyWhenRenderingDeviceIsReady)
    TextureStub tex("");
    Material mat(tex);
    std::vector<Material*> materials; materials.push_back(&mat);
-   GraphicalEntityMock entity(materials);
+   GraphicalEntityMock entity("", materials);
    GraphicalNode node("", entity, 0);
 
    renderer.render(node);
@@ -40,7 +40,7 @@ TEST(Renderer, recoveringTheLostDevice)
    TextureStub tex("");
    Material mat(tex);
    std::vector<Material*> materials; materials.push_back(&mat);
-   GraphicalEntityMock entity(materials);
+   GraphicalEntityMock entity("", materials);
    GraphicalNode node("", entity, 0);
 
    // initial rendering
@@ -86,7 +86,7 @@ TEST(Renderer, renderingSkyBox)
    TextureStub tex("");
    Material mat(tex);
    std::vector<Material*> materials; materials.push_back(&mat);
-   GraphicalEntityMock entity(materials);
+   GraphicalEntityMock entity("", materials);
    GraphicalNode node("", entity, 0);
    renderer.render(node);
 
@@ -159,7 +159,7 @@ TEST(GraphicalNodesAggregator, sortingByMaterialsWhenGatheringNodesForRendering)
    materials.push_back(&material1);
    materials.push_back(&material2);
    materials.push_back(&material1);
-   GraphicalEntityMock entity("entity", materials, D3DMATRIX());
+   GraphicalEntityMock entity("entity", materials);
 
    Node root;
    GraphicalNode* node1 = new GraphicalNode("subset0 - material1", entity, 0);

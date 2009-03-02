@@ -8,7 +8,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class ResourceManager;
-class GraphicalEntity;
+class AbstractGraphicalEntity;
+class Material;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +32,7 @@ public:
     *
     * @throw std::logic_error if no mesh was created for some reason.
     */
-   GraphicalEntity& load(ResourceManager& resourceManager, const std::string& name);
+   AbstractGraphicalEntity& load(ResourceManager& resourceManager, const std::string& name);
 
 protected:
    /**
@@ -45,9 +46,14 @@ protected:
                           const std::string& name) = 0;
 
 private:
-   GraphicalEntity* createGraphicalEntity(ResourceManager& resourceManager, 
-                                          MeshDefinition& mesh, 
-                                          const std::string& name);
+   AbstractGraphicalEntity* createGraphicalEntity(ResourceManager& resourceManager, 
+                                                  MeshDefinition& mesh);
+
+   void getMaterials(ResourceManager& resourceManager,
+                     const std::vector<MaterialDefinition>& inMaterialDefinitions,
+                     std::vector<Material*>& outRealMaterials);
+
+   void ensureMeshNames(MeshDefinition& mesh);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

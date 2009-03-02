@@ -4,6 +4,7 @@
 #include "NullLightReflectingProperties.h"
 #include "TextureStub.h"
 #include "GraphicalEntityMock.h"
+#include "SkinnedGraphicalEntityMock.h"
 #include "Skeleton.h"
 
 
@@ -12,18 +13,27 @@
 class ResourceManagerStub : public ResourceManager
 {
 public:
-   ResourceManagerStub() : ResourceManager("") {}
+   ResourceManagerStub() : ResourceManager("") 
+   {
+   }
 
    Renderer& getRendererInstance() {return *(reinterpret_cast<Renderer*> (NULL));}
 
-protected:
-   GraphicalEntity* createGraphicalEntityImpl(const std::string& name,
-                                              const MeshDefinition& subMesh,
-                                              const std::vector<Material*>& registeredMaterials)
+   GraphicalEntity* createGraphicalEntity(const std::string& name,
+                                          const MeshDefinition& subMesh,
+                                          const std::vector<Material*>& registeredMaterials)
    {
-      return new GraphicalEntityMock(name, registeredMaterials, subMesh.localMtx);
+      return new GraphicalEntityMock(name, registeredMaterials);
    }
 
+   SkinnedGraphicalEntity* createSkinedGraphicalEntity(const std::string& name,
+                          const MeshDefinition& subMesh,
+                          const std::vector<Material*>& registeredMaterials)
+   {
+      return new SkinnedGraphicalEntityMock(name, subMesh.skinBones, subMesh.bonesInfluencingAttribute, registeredMaterials);
+   }
+
+protected:
    Light* createLightImpl(const std::string& name) {return NULL;}
 
    LightReflectingProperties* createLightReflectingProperties() {return new NullLightReflectingProperties();}

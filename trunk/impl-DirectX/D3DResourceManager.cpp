@@ -2,6 +2,7 @@
 #include "D3DInitializer.h"
 #include "D3DRenderer.h"
 #include "D3DGraphicalEntity.h"
+#include "D3DSkinnedGraphicalEntity.h"
 #include "D3DLight.h"
 #include "D3DLightReflectingProperties.h"
 #include "D3DTexture.h"
@@ -76,14 +77,26 @@ Renderer& D3DResourceManager::getRendererInstance()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEntity* D3DResourceManager::createGraphicalEntityImpl(const std::string& name,
-                                                               const MeshDefinition& subMesh,
-                                                               const std::vector<Material*>& registeredMaterials)
+GraphicalEntity* D3DResourceManager::createGraphicalEntity(const std::string& name,
+                          const MeshDefinition& subMesh,
+                          const std::vector<Material*>& registeredMaterials)
 {
    return new D3DGraphicalEntity<LitVertex>(name, 
                                             m_renderer->getD3Device(), 
                                             subMesh,
                                             registeredMaterials);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SkinnedGraphicalEntity* D3DResourceManager::createSkinedGraphicalEntity(const std::string& name,
+                          const MeshDefinition& subMesh,
+                          const std::vector<Material*>& registeredMaterials)
+{
+   return new D3DSkinnedGraphicalEntity<LitVertex>(name, 
+                                       m_renderer->getD3Device(), 
+                                       subMesh,
+                                       registeredMaterials);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

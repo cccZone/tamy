@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GraphicalEntity.h"
+#include "SkinnedGraphicalEntity.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <stdexcept>
@@ -12,18 +12,21 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename VertexStruct>
-class D3DGraphicalEntity : public GraphicalEntity
+class D3DSkinnedGraphicalEntity : public SkinnedGraphicalEntity
 {
 private:
    IDirect3DDevice9& m_d3Device;
    ID3DXMesh* m_mesh;
 
 public:
-   D3DGraphicalEntity(const std::string& name,
-                    IDirect3DDevice9& d3Device,
-                    const MeshDefinition& subMesh,
-                    const std::vector<Material*>& registeredMaterials)
-         : GraphicalEntity(name, registeredMaterials),
+   D3DSkinnedGraphicalEntity(const std::string& name,
+                             IDirect3DDevice9& d3Device,
+                             const MeshDefinition& subMesh,
+                             const std::vector<Material*>& registeredMaterials)
+                             : SkinnedGraphicalEntity(name, 
+                                                      subMesh.skinBones,
+                                                      subMesh.bonesInfluencingAttribute, 
+                                                      registeredMaterials),
          m_d3Device(d3Device),
          m_mesh(NULL)
    {
@@ -70,7 +73,7 @@ public:
       }
    }
 
-   ~D3DGraphicalEntity()
+   ~D3DSkinnedGraphicalEntity()
    {
       if (m_mesh != NULL)
       {
@@ -78,25 +81,20 @@ public:
          m_mesh = NULL;
       }
    }
-
-   void render(const D3DXMATRIX& globalMtx, DWORD subset)
-   {
-      m_d3Device.SetTransform(D3DTS_WORLD, &globalMtx);
-      m_mesh->DrawSubset(subset);
-   }
-/*
    void render(const std::vector<D3DXMATRIX>& matrices, DWORD subset)
    {
       for (unsigned char i = 0; i < matrices.size(); ++i)
       {
          m_d3Device.SetTransform(D3DTS_WORLDMATRIX(i), &(matrices[i]));
       }
-      m_d3Device.SetRenderState(D3DRS_VERTEXBLEND, matrices.size());
+
+      unsigned char numMatrices = matrices.size() - 1;
+      m_d3Device.SetRenderState(D3DRS_VERTEXBLEND, numMatrices);
 
       m_mesh->DrawSubset(subset);
       m_d3Device.SetRenderState(D3DRS_VERTEXBLEND, D3DVBF_DISABLE);
    }
-*/
+
 private:
    void optimizeMesh()
    {

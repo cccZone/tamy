@@ -1,6 +1,7 @@
 #include "XFileGraphicalEntityLoader.h"
 #include "LitVertex.h"
 #include <vector>
+#include <cassert>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,10 +131,11 @@ void XFileGraphicalEntityLoader::parseFrames(D3DXFRAME* frame,
 {
    if (frame->pMeshContainer != NULL)
    {
-      parseGeometry(frame->pMeshContainer, mesh);
+      parseGeometry((D3DXMESHCONTAINER_DERRIVED*)(frame->pMeshContainer), mesh);
    }
    mesh.name = (frame->Name != NULL) ? frame->Name : "";
    mesh.localMtx = frame->TransformationMatrix;
+
 
    // proceed down the hierarchy with the parsing
    if(frame->pFrameSibling != NULL) 
@@ -148,6 +150,7 @@ void XFileGraphicalEntityLoader::parseFrames(D3DXFRAME* frame,
          parseFrames(frame->pFrameSibling, parent, parent->children.back());
       }
    }
+
    if(frame->pFrameFirstChild != NULL) 
    {
       mesh.children.push_back(MeshDefinition());
@@ -155,18 +158,21 @@ void XFileGraphicalEntityLoader::parseFrames(D3DXFRAME* frame,
    }
 }
 
+
 ////////////////////////////////////////////////////////////////////////////////
 
-void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER* meshContainer, 
+void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshContainer, 
                                                MeshDefinition& mesh) const
 {
-   // copy the geometry
    ID3DXMesh* pMesh = meshContainer->MeshData.pMesh;
+   HRESULT res;
+
+   // copy the geometry
    LitVertex* pVertices = NULL;
    USHORT* pIndices = NULL;
    DWORD* pAttribs = NULL;
 
-   HRESULT res = pMesh->LockVertexBuffer(0, (VOID**)&pVertices);
+   res = pMesh->LockVertexBuffer(0, (VOID**)&pVertices);
    if (FAILED(res)) {throw std::runtime_error("Can't lock vertex buffer. Invalid vertex format");}
    res = pMesh->LockIndexBuffer(0, (VOID**)&pIndices);
    if (FAILED(res)) {throw std::runtime_error("Can't lock index buffer. Invalid index format");}
@@ -190,11 +196,13 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER* meshContainer,
    pMesh->UnlockIndexBuffer();
    pMesh->UnlockVertexBuffer();
 
+
+   std::vector<MaterialDefinition> tmpMaterials;
    // copy the materials & the transformation matrix
    for (DWORD i = 0; i < meshContainer->NumMaterials; ++i)
    {
-      mesh.materials.push_back(MaterialDefinition());
-      MaterialDefinition& matDef = mesh.materials.back();
+      tmpMaterials.push_back(MaterialDefinition());
+      MaterialDefinition& matDef = tmpMaterials.back();
       D3DMATERIAL9& meshMat = meshContainer->pMaterials[i].MatD3D;
 
       matDef.ambient.r = meshMat.Ambient.r;
@@ -223,6 +231,50 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER* meshContainer,
       {
          matDef.texName = meshContainer->pMaterials[i].pTextureFilename;
       }
+   }
+
+   // copy the skin information
+   if (meshContainer->pSkinInfo != NULL)
+   {
+      mesh.isSkin = true;
+      ID3DXSkinInfo* skinInfo = meshContainer->pSkinInfo;
+
+      // create a list of bones
+      DWORD skinBonesCount = skinInfo->GetNumBones();
+      for (DWORD boneIdx = 0; boneIdx < skinBonesCount; ++boneIdx)
+      {
+         const char* boneName = skinInfo->GetBoneName(boneIdx);
+         D3DXMATRIX* offsetMtx = skinInfo->GetBoneOffsetMatrix(boneIdx);
+         mesh.skinBones.push_back(SkinBoneDefinition(boneName, *offsetMtx));
+      }
+
+      // assign bones to particular attributes
+      D3DXBONECOMBINATION* boneComb = (D3DXBONECOMBINATION*)(meshContainer->boneCombinationTable->GetBufferPointer());
+
+      mesh.bonesInfluencingAttribute.resize(meshContainer->numBoneCombinations);
+      mesh.materials.resize(meshContainer->numBoneCombinations);
+
+      for (DWORD boneCombIdx = 0; boneCombIdx < meshContainer->numBoneCombinations; ++boneCombIdx)
+      {
+         // get the bones influencinfg a particular attribute set
+         std::vector<std::string>& vec = mesh.bonesInfluencingAttribute.at(boneCombIdx);
+         for (DWORD boneIdx = 0; boneIdx < meshContainer->maxFaceInfl; ++boneIdx)
+         {
+            DWORD boneNameIdx = boneComb[boneCombIdx].BoneId[boneIdx];
+            if (boneNameIdx == UINT_MAX) continue;
+
+            std::string boneName = skinInfo->GetBoneName(boneNameIdx);
+            vec.push_back(boneName);
+         }
+
+         // map the material to this attribute set
+         DWORD attribID = boneComb[boneCombIdx].AttribId;
+         mesh.materials[boneCombIdx] = tmpMaterials.at(attribID);
+      }
+   }
+   else
+   {
+      mesh.materials = tmpMaterials;
    }
 }
 
@@ -267,22 +319,43 @@ HRESULT XFileGraphicalEntityLoader::CreateMeshContainer(LPCSTR Name,
    ID3DXMesh* pMesh = pMeshData->pMesh;
    if (pMesh->GetFVF() == 0) return E_FAIL;
 
+   // Allocate a mesh container structure
+   D3DXMESHCONTAINER_DERRIVED* pMeshContainer = new D3DXMESHCONTAINER_DERRIVED;
+   ZeroMemory(pMeshContainer, sizeof(D3DXMESHCONTAINER_DERRIVED));
+
    // make sure the mesh is in the format we requested - both fvf- as well as creation flags-wise.
    {
-      // Clone the mesh
       LPD3DXMESH pCloneMesh = NULL;
-      IDirect3DDevice9* pDevice = NULL;
-      pMesh->GetDevice(&pDevice);
-      HRESULT hRet = pMesh->CloneMeshFVF(flags, 
-                                         fvf,
-                                         pDevice,
-                                         &pCloneMesh);
-      if (FAILED(hRet)) 
+      HRESULT hRet;
+
+      if (pSkinInfo != NULL)
       {
-         throw std::logic_error(std::string("Failed to clone the mesh"));
+         hRet =  pSkinInfo->ConvertToBlendedMesh(pMesh,
+                                                 flags | D3DXMESHOPT_VERTEXCACHE,
+                                                 pAdjacency,
+                                                 NULL, NULL, NULL,
+                                                 &pMeshContainer->maxFaceInfl, 
+                                                 &pMeshContainer->numBoneCombinations,
+                                                 &pMeshContainer->boneCombinationTable,
+                                                 &pCloneMesh);
+         if (FAILED(hRet) || (pCloneMesh == NULL)) 
+         {
+            throw std::runtime_error("Can't create a skinned mesh");
+         }
+         pMesh = pCloneMesh;
+      }
+      else
+      {
+         pMesh->AddRef();
       }
 
-      // Note: we don't release the old mesh here, because we don't own it
+      // Clone the mesh
+      IDirect3DDevice9* pDevice = NULL;
+      pMesh->GetDevice(&pDevice);
+      hRet = pMesh->CloneMeshFVF(flags, fvf, pDevice, &pCloneMesh);
+      if (FAILED(hRet)) { throw std::logic_error("Failed to clone the mesh"); }
+
+      pMesh->Release();
       pMesh = pCloneMesh;
 
       // Compute the normals for the new mesh if there was no normal to begin with
@@ -311,14 +384,13 @@ HRESULT XFileGraphicalEntityLoader::CreateMeshContainer(LPCSTR Name,
       }
    }
 
-   // Allocate a mesh container structure
-   D3DXMESHCONTAINER* pMeshContainer = new D3DXMESHCONTAINER;
-   ZeroMemory(pMeshContainer, sizeof(D3DXMESHCONTAINER));
+   // fill in the mesh container structure
    pMeshContainer->Name = _strdup(Name);
    pMeshContainer->MeshData.Type = D3DXMESHTYPE_MESH;
    pMeshContainer->MeshData.pMesh = pMesh;
    pMeshContainer->pMaterials = copiedMaterials;
    pMeshContainer->NumMaterials = NumMaterials;
+
    if (pSkinInfo != NULL)
    {
       pMeshContainer->pSkinInfo = pSkinInfo;

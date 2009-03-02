@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class GraphicalNode;
+class AbstractGraphicalNode;
 class Material;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,7 @@ protected:
     * This method is supposed to create a command that will
     * render an entity on the screen
     */
-   inline RenderingCommand renderEntity(GraphicalNode& graphicalNode);
+   inline RenderingCommand renderEntity(AbstractGraphicalNode& graphicalNode);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

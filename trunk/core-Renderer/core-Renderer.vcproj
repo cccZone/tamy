@@ -203,47 +203,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Color.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEntity.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEntity.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNode.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Light.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\Light.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LightReflectingProperties.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Material.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Material.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NullLightReflectingProperties.h"
 				>
 			</File>
 			<File
@@ -262,14 +226,118 @@
 				RelativePath=".\SkyBox.h"
 				>
 			</File>
-			<File
-				RelativePath=".\Texture.cpp"
+			<Filter
+				Name="GraphicalEntities"
 				>
-			</File>
-			<File
-				RelativePath=".\Texture.h"
+				<File
+					RelativePath=".\AbstractGraphicalEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\AbstractGraphicalEntity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\CompositeGraphicalEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\CompositeGraphicalEntity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicalEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicalEntity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\LeafGraphicalEntity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SkinBoneDefinition.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SkinnedGraphicalEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SkinnedGraphicalEntity.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="GraphicalNodes"
 				>
-			</File>
+				<File
+					RelativePath=".\AbstractGraphicalNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\AbstractGraphicalNode.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicalEntityInstantiator.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicalEntityInstantiator.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicalNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicalNode.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SkinnedGraphicalNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\SkinnedGraphicalNode.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Material"
+				>
+				<File
+					RelativePath=".\Color.h"
+					>
+				</File>
+				<File
+					RelativePath=".\LightReflectingProperties.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Material.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Material.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NullLightReflectingProperties.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Texture.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Texture.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

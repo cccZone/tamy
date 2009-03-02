@@ -180,10 +180,6 @@
 				RelativePath=".\ResourceManager.h"
 				>
 			</File>
-			<File
-				RelativePath=".\SpacerGraphicalEntity.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Builder"

@@ -1,6 +1,9 @@
 #include "GraphicalEntityLoader.h"
 #include "ResourceManager.h"
+#include "AbstractGraphicalEntity.h"
 #include "GraphicalEntity.h"
+#include "SkinnedGraphicalEntity.h"
+#include "CompositeGraphicalEntity.h"
 #include "Node.h"
 #include <sstream>
 #include <deque>
@@ -8,37 +11,122 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEntity& GraphicalEntityLoader::load(ResourceManager& resourceManager, const std::string& name) 
+AbstractGraphicalEntity& GraphicalEntityLoader::load(ResourceManager& resourceManager, 
+                                                     const std::string& name) 
 {
    MeshDefinition mesh;
    AnimationDefinition animation;
    parseMesh(mesh, animation, name);
 
-   GraphicalEntity* entity = createGraphicalEntity(resourceManager, mesh, name);
-   entity->setAnimationDefinition(animation);
+   AbstractGraphicalEntity* entity = NULL;
+
+   if (resourceManager.isGraphicalEntityRegistered(name) == true)
+   {
+      entity = &resourceManager.getGraphicalEntity(name);
+   }
+   else
+   {
+      ensureMeshNames(mesh);
+
+      entity = createGraphicalEntity(resourceManager, mesh);
+      entity->setAnimationDefinition(animation);
+
+      resourceManager.registerGraphicalEntity(name, entity);
+   }
 
    return *entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEntity* GraphicalEntityLoader::createGraphicalEntity(ResourceManager& resourceManager, 
-                                                              MeshDefinition& mesh, 
-                                                              const std::string& name)
+AbstractGraphicalEntity* GraphicalEntityLoader::createGraphicalEntity(
+                                 ResourceManager& resourceManager, 
+                                 MeshDefinition& mesh)
+{
+   // register the meshes
+   CompositeGraphicalEntity* entityRootNode = new CompositeGraphicalEntity(mesh.name, mesh.localMtx);
+   std::deque<std::pair<CompositeGraphicalEntity*, MeshDefinition*> > meshesQueue;
+   meshesQueue.push_back(std::make_pair(entityRootNode, &mesh));
+
+   while (meshesQueue.size() > 0)
+   {
+      CompositeGraphicalEntity* parentEntity = meshesQueue.front().first;
+      MeshDefinition& currentMesh = *(meshesQueue.front().second);
+      meshesQueue.pop_front();
+      
+      // create a graphical entity based on the geometry definition
+      std::vector<Material*> realMaterials;
+      getMaterials(resourceManager, currentMesh.materials, realMaterials);
+
+      if (currentMesh.faces.size() > 0)
+      {
+         AbstractGraphicalEntity* currentEntity = NULL;
+
+         if (currentMesh.isSkin)
+         {
+            currentEntity = resourceManager.createSkinedGraphicalEntity(
+                                          currentMesh.name + "_entity",
+                                          currentMesh,
+                                          realMaterials);
+         }
+         else
+         {
+            currentEntity = resourceManager.createGraphicalEntity(currentMesh.name + "_entity",
+                                                                  currentMesh,
+                                                                  realMaterials);
+         }
+         parentEntity->addChild(currentEntity);
+      }
+
+      // add the mesh's children to the queue
+      for (std::list<MeshDefinition>::iterator childrenIt = currentMesh.children.begin();
+           childrenIt != currentMesh.children.end(); ++childrenIt)
+      {
+         CompositeGraphicalEntity* childNode = new CompositeGraphicalEntity(childrenIt->name, 
+                                                                            childrenIt->localMtx);
+         parentEntity->addChild(childNode);
+         meshesQueue.push_back(std::make_pair(childNode, &(*childrenIt)));
+      }
+   }
+
+
+   return entityRootNode;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicalEntityLoader::getMaterials(
+                  ResourceManager& resourceManager,
+                  const std::vector<MaterialDefinition>& inMaterialDefinitions,
+                  std::vector<Material*>& outRealMaterials)
+{
+   // split the meshes by the materials
+   outRealMaterials.resize(inMaterialDefinitions.size());
+   for (unsigned int matIdx = 0; matIdx < inMaterialDefinitions.size(); ++matIdx)
+   {
+      const MaterialDefinition& mat = inMaterialDefinitions.at(matIdx);
+      unsigned int id = resourceManager.addMaterial(mat.texName, mat.ambient, 
+                                                    mat.diffuse, mat.specular, 
+                                                    mat.emissive, mat.power);
+      outRealMaterials[matIdx] = &(resourceManager.getMaterial(id));
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphicalEntityLoader::ensureMeshNames(MeshDefinition& mesh)
 {
    static unsigned long unnamedMeshIdx = 0;
 
    // register the meshes
-   GraphicalEntity* entityRootNode = NULL;
-
-   std::deque<std::pair<GraphicalEntity*, MeshDefinition*> > meshesQueue;
-   meshesQueue.push_back(std::make_pair(reinterpret_cast<GraphicalEntity*> (NULL), &mesh));
+   std::deque<MeshDefinition*> meshesQueue;
+   meshesQueue.push_back(&mesh);
 
    while (meshesQueue.size() > 0)
    {
-      GraphicalEntity* parentEntity = meshesQueue.front().first;
-      MeshDefinition& currentMesh = *(meshesQueue.front().second);
+      MeshDefinition& currentMesh = *(meshesQueue.front());
       meshesQueue.pop_front();
+
       if (currentMesh.name.length() == 0)
       {
          std::stringstream str;
@@ -46,46 +134,13 @@ GraphicalEntity* GraphicalEntityLoader::createGraphicalEntity(ResourceManager& r
          currentMesh.name = str.str();
       }
 
-      // create a graphical entity based on the geometry definition
-      GraphicalEntity* currentEntity = NULL;      
-      if (resourceManager.isGraphicalEntityRegistered(currentMesh.name) == true)
-      {
-         currentEntity = &resourceManager.getGraphicalEntity(currentMesh.name);
-      }
-      else
-      {
-         currentEntity = &resourceManager.createGraphicalEntity(currentMesh.name,
-                                                                currentMesh);
-      }
-
-      // attach the entity to its parent (if there's one)
-      if (parentEntity != NULL)
-      {
-         parentEntity->addChild(*currentEntity);
-      }
-
-      // if it's the very first mesh we're parsing - store the pointer to it,
-      // 'cause it's the one we'll be returning from this method
-      if (entityRootNode == NULL)
-      {
-         entityRootNode = currentEntity;
-      }
-
       // add the mesh's children to the queue
       for (std::list<MeshDefinition>::iterator childrenIt = currentMesh.children.begin();
            childrenIt != currentMesh.children.end(); ++childrenIt)
       {
-         meshesQueue.push_back(std::make_pair(currentEntity, &(*childrenIt)));
+         meshesQueue.push_back(&(*childrenIt));
       }
    }
-
-   // verify the results
-   if (entityRootNode == NULL)
-   {
-      throw std::logic_error(std::string("Invalid mesh ") + name);
-   }
-
-   return entityRootNode;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

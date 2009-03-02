@@ -200,6 +200,10 @@
 				RelativePath=".\SkeletonTests.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\SkinnedGraphicalNodeTests.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Utils"
@@ -226,6 +230,10 @@
 			</File>
 			<File
 				RelativePath=".\RendererImplementationMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinnedGraphicalEntityMock.h"
 				>
 			</File>
 			<File

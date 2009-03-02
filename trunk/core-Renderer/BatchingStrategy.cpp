@@ -1,13 +1,13 @@
 #include "BatchingStrategy.h"
-#include "GraphicalNode.h"
+#include "AbstractGraphicalNode.h"
 #include "Material.h"
 #include <cassert>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool BatchComparator::operator()(const GraphicalNode* lhs, 
-                                 const GraphicalNode* rhs) const
+bool BatchComparator::operator()(const AbstractGraphicalNode* lhs, 
+                                 const AbstractGraphicalNode* rhs) const
 {
    assert(lhs != NULL);
    assert(rhs != NULL);

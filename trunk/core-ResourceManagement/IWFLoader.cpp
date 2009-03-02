@@ -12,7 +12,7 @@
 #include "SkyBox.h"
 #include "Renderer.h"
 #include "GraphicalEntity.h"
-
+#include "GraphicalEntityInstantiator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ void IWFLoader::load(const std::string& fileName)
    for (UINT i = 0; i < sceneFile.m_vpMeshList.size(); ++i)
    {
       std::string meshName = getUniqueNameForMesh(sceneFile.m_vpMeshList[i]->Name);
-      GraphicalEntity* entity = NULL;
+      AbstractGraphicalEntity* entity = NULL;
       if (m_resourceManager.isGraphicalEntityRegistered(meshName) == false)
       {
          IWFMeshLoader loader(sceneFile.m_vpMeshList[i], 
@@ -63,7 +63,8 @@ void IWFLoader::load(const std::string& fileName)
          entity = &m_resourceManager.getGraphicalEntity(meshName);
       }
 
-      Node* entityInstance = entity->instantiate(meshName);
+      GraphicalEntityInstantiator* entityInstance = new GraphicalEntityInstantiator("meshName");
+      entityInstance->attachEntity(*entity);
       entityInstance->setLocalMtx(reinterpret_cast<D3DXMATRIX&> (sceneFile.m_vpMeshList[i]->ObjectMatrix));
 
       m_sceneManager.addNode(entityInstance);
@@ -152,7 +153,7 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
       if (reference.referenceType == EXTERNAL_REFERENCE)
       {
          std::string meshName = reference.referenceName;
-         GraphicalEntity* entity = NULL;
+         AbstractGraphicalEntity* entity = NULL;
          if (m_resourceManager.isGraphicalEntityRegistered(meshName) == false)
          {
             GraphicalEntityLoader& loader = m_resourceManager.getLoaderForFile(meshName);
@@ -166,7 +167,8 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
          static int refCount = 0;
          std::stringstream refName;
          refName << "reference_" << refCount++;
-         Node* entityInstance = entity->instantiate(refName.str());
+         GraphicalEntityInstantiator* entityInstance = new GraphicalEntityInstantiator(refName.str());
+         entityInstance->attachEntity(*entity);
          entityInstance->setLocalMtx(reinterpret_cast<D3DXMATRIX&> (fileEntity->ObjectMatrix));
 
          m_sceneManager.addNode(entityInstance);

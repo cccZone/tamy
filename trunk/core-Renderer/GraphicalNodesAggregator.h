@@ -2,7 +2,7 @@
 
 #include "NodeVisitor.h"
 #include "TNodesVisitor.h"
-#include "GraphicalNode.h"
+#include "AbstractGraphicalNode.h"
 #include "BatchingStrategy.h"
 #include <set>
 
@@ -17,13 +17,13 @@
  * you can access the gathered graphical nodes using 
  * the "() operator" accessor.
  */
-class GraphicalNodesAggregator : public NodeVisitor, public TNodesVisitor<GraphicalNode>
+class GraphicalNodesAggregator : public NodeVisitor, public TNodesVisitor<AbstractGraphicalNode>
 {
 private:
    BatchedNodes m_nodes;
 
 public:
-   void visit(GraphicalNode& node);
+   void visit(AbstractGraphicalNode& node);
 
    const BatchedNodes& operator()();
 };

@@ -29,7 +29,7 @@ TEST(Camera, renderingWithActiveCamera)
    TextureStub tex("");
    Material mat(tex);
    std::vector<Material*> materials; materials.push_back(&mat);
-   GraphicalEntityMock entity(materials);
+   GraphicalEntityMock entity("", materials);
    GraphicalNode node("", entity, 0);
    renderer.render(node);     
 

@@ -8,13 +8,14 @@
 #include <cassert>
 #include "BasicSceneManager.h"
 #include "GeometryBuilder.h"
-#include "GraphicalNode.h"
+#include "GraphicalEntityInstantiator.h"
 #include "Camera.h"
 #include "Light.h"
 #include "D3DResourceManager.h"
 #include "IWFLoader.h"
 #include "GraphicalEntity.h"
 #include "Skeleton.h"
+#include "GraphicalEntityLoader.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -76,18 +77,37 @@ void ComplexSceneDemo::run(int nCmdShow)
 {
    MSG msg;
    ShowWindow(m_hWnd, nCmdShow);
-
+/*
    IWFLoader loader(*m_resourceManager, *m_sceneManager);
    loader.load("..\\Data\\AnimLandscape.iwf");
 
+   AbstractGraphicalEntity& ent = m_resourceManager->getGraphicalEntity("animlandscape.x");
+   m_animationController = ent.instantiateSkeleton(m_sceneManager->getRootNode());
+   m_animationController->activateAnimation("Cutscene_01");
+*/
+
+   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("US Ranger.x");
+   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("US Ranger.x", loader);
+   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("ranger01");
+   entInstance->attachEntity(ent);
+   m_sceneManager->addNode(entInstance);
+
+   m_animationController = ent.instantiateSkeleton(*entInstance);
+   m_animationController->activateAnimation("");
+
+   Light* light = m_resourceManager->createLight("light");
+   light->setType(Light::LT_DIRECTIONAL);
+   light->setDiffuseColor(Color(1, 1, 1, 0));
+   light->setLookVec(D3DXVECTOR3(0, 0, -1));
+   m_sceneManager->addNode(light);
+
    Camera* camera = m_resourceManager->createCamera("camera");
+   camera->setLookVec(D3DXVECTOR3(0, -1, -1));
+   camera->setPosition(D3DXVECTOR3(0, 40, 30));
    m_sceneManager->addNode(camera);
    m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 
-   GraphicalEntity& ent = m_resourceManager->getGraphicalEntity("unnamedEntity_0");
-   m_animationController = ent.instantiateSkeleton(m_sceneManager->getRootNode());
-   m_animationController->activateAnimation("Cutscene_01");
 
    while (1) 
    {

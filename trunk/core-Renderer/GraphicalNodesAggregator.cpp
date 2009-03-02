@@ -1,10 +1,10 @@
 #include "GraphicalNodesAggregator.h"
-#include "GraphicalNode.h"
+#include "AbstractGraphicalNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphicalNodesAggregator::visit(GraphicalNode& node) 
+void GraphicalNodesAggregator::visit(AbstractGraphicalNode& node) 
 {
    m_nodes.insert(&node);
 }

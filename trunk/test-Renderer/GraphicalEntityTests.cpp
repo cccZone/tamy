@@ -1,5 +1,6 @@
 #include "TestFramework.h"
 #include "GraphicalNode.h"
+#include "SkinnedGraphicalNode.h"
 #include "RenderingProcessor.h"
 #include "RenderingCommand.h"
 #include "Material.h"
@@ -7,9 +8,11 @@
 #include "TextureStub.h"
 #include "MatrixWriter.h"
 #include "GraphicalEntityMock.h"
-#include "GraphicalNodesAggregator.h"
+#include "SkinnedGraphicalEntityMock.h"
+#include "CompositeGraphicalEntity.h"
 #include <vector>
 #include "NodeHierarchyWriter.h"
+#include "GraphicalEntityInstantiator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,43 +23,61 @@ TEST(GraphicalEntityInstantiation, basics)
    materialsListStub.push_back(reinterpret_cast<Material*> (0xCC));
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
+   D3DXMATRIX identityMtx; D3DXMatrixIdentity(&identityMtx);
    D3DXMATRIX headMtx; D3DXMatrixTranslation(&headMtx, 0, -5, 0);
    D3DXMATRIX handMtx; D3DXMatrixTranslation(&handMtx, 5, 0, 0);
 
    // prepare the entities
-   GraphicalEntityMock body("body", materialsListStub, bodyMtx);
-   GraphicalEntityMock head("head", materialsListStub, headMtx);
-   GraphicalEntityMock hand("hand", materialsListStub, handMtx);
+   CompositeGraphicalEntity bodyRoot("body", bodyMtx);
+   GraphicalEntityMock* bodyEntity = new GraphicalEntityMock("body_entity", materialsListStub);
+   CompositeGraphicalEntity* headRoot = new CompositeGraphicalEntity("head", headMtx);
+   GraphicalEntityMock* headEntity = new GraphicalEntityMock("head_entity", materialsListStub);
+   CompositeGraphicalEntity* handRoot = new CompositeGraphicalEntity("hand", handMtx);
+   GraphicalEntityMock* handEntity = new GraphicalEntityMock("hand_entity", materialsListStub);
 
-   body.addChild(head);
-   body.addChild(hand);
+   headRoot->addChild(headEntity);
+   handRoot->addChild(handEntity);
+   bodyRoot.addChild(bodyEntity);
+   bodyRoot.addChild(headRoot);
+   bodyRoot.addChild(handRoot);
 
-   Node* node = body.instantiate("node");
+   GraphicalEntityInstantiator* node = new GraphicalEntityInstantiator("someReference");
+   node->attachEntity(bodyRoot);
 
    // prepare the results
-   Node* expectedHierarchy = new Node("node");
+   GraphicalEntityInstantiator* expectedHierarchyRoot = new GraphicalEntityInstantiator("someReference");
 
-   Node* bodyNode = new Node("body");
-   bodyNode->setLocalMtx(bodyMtx);
-   bodyNode->addChild(new GraphicalNode("body_subset0", body, 0));
+   Node* bodyRootNode = new Node("body");
+   bodyRootNode->setLocalMtx(bodyMtx);
 
-   Node* headNode = new Node("head");
-   headNode->setLocalMtx(headMtx);
-   headNode->addChild(new GraphicalNode("head_subset0", head, 0));
+   Node* headRootNode = new Node("head");
+   headRootNode->setLocalMtx(headMtx);
 
-   Node* handNode = new Node("hand");
-   handNode->setLocalMtx(handMtx);
-   handNode->addChild(new GraphicalNode("hand_subset0", hand, 0));
+   Node* handRootNode = new Node("hand");
+   handRootNode->setLocalMtx(handMtx);
 
-   bodyNode->addChild(headNode);
-   bodyNode->addChild(handNode);
-   expectedHierarchy->addChild(bodyNode);
+   Node* bodyNode = new Node("body_entity");
+   bodyNode->addChild(new GraphicalNode("body_entity_subset0", *bodyEntity, 0));
+
+   Node* headNode = new Node("head_entity");
+   headNode->addChild(new GraphicalNode("head_entity_subset0", *headEntity, 0));
+
+   Node* handNode = new Node("hand_entity");
+   handNode->addChild(new GraphicalNode("hand_entity_subset0", *handEntity, 0));
+
+   bodyRootNode->addChild(bodyNode);
+   bodyRootNode->addChild(headRootNode);
+   bodyRootNode->addChild(handRootNode);
+   headRootNode->addChild(headNode);
+   handRootNode->addChild(handNode);
+
+   expectedHierarchyRoot->addChild(bodyRootNode);
 
    NodeHierarchyWriter writer;
-   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchy), writer(*node));
+   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchyRoot), writer(*node));
 
    delete node;
-   delete expectedHierarchy;
+   delete expectedHierarchyRoot;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,92 +100,299 @@ TEST(GraphicalEntityInstantiation, multipleSubsets)
    handMaterials.push_back(&skinMat);
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
+   D3DXMATRIX identityMtx; D3DXMatrixIdentity(&identityMtx);
    D3DXMATRIX headMtx; D3DXMatrixTranslation(&headMtx, 0, -5, 0);
    D3DXMATRIX handMtx; D3DXMatrixTranslation(&handMtx, 5, 0, 0);
 
    // prepare the entities
-   GraphicalEntityMock body("body", bodyMaterials, bodyMtx);
-   GraphicalEntityMock head("head", headMaterials, headMtx);
-   GraphicalEntityMock hand("hand", handMaterials, handMtx);
+   CompositeGraphicalEntity bodyRoot("bodyRoot", bodyMtx);
+   GraphicalEntityMock* bodyEntity = new GraphicalEntityMock("body_entity", bodyMaterials);
+   CompositeGraphicalEntity* headRoot = new CompositeGraphicalEntity("head", headMtx);
+   GraphicalEntityMock* headEntity = new GraphicalEntityMock("head_entity", headMaterials);
+   CompositeGraphicalEntity* handRoot = new CompositeGraphicalEntity("hand", handMtx);
+   GraphicalEntityMock* handEntity = new GraphicalEntityMock("hand_entity", handMaterials);
 
-   body.addChild(head);
-   body.addChild(hand);
+   headRoot->addChild(headEntity);
+   handRoot->addChild(handEntity);
+   bodyRoot.addChild(bodyEntity);
+   bodyRoot.addChild(headRoot);
+   bodyRoot.addChild(handRoot);
 
-   Node* node = body.instantiate("node");
+   GraphicalEntityInstantiator* node = new GraphicalEntityInstantiator("someReference");
+   node->attachEntity(bodyRoot);
 
    // prepare the results
-   Node* expectedHierarchy = new Node("node");
+   GraphicalEntityInstantiator* expectedHierarchyRoot = new GraphicalEntityInstantiator("someReference");
 
-   Node* bodyNode = new Node("body");
-   bodyNode->setLocalMtx(bodyMtx);
-   bodyNode->addChild(new GraphicalNode("body_subset0", body, 0));
-   bodyNode->addChild(new GraphicalNode("body_subset1", body, 1));
+   Node* bodyRootNode = new Node("bodyRoot");
+   bodyRootNode->setLocalMtx(bodyMtx);
 
-   Node* headNode = new Node("head");
-   headNode->setLocalMtx(headMtx);
-   headNode->addChild(new GraphicalNode("head_subset0", head, 0));
-   headNode->addChild(new GraphicalNode("head_subset1", head, 1));
+   Node* headRootNode = new Node("head");
+   headRootNode->setLocalMtx(headMtx);
 
-   Node* handNode = new Node("hand");
-   handNode->setLocalMtx(handMtx);
-   handNode->addChild(new GraphicalNode("hand_subset0", hand, 0));
+   Node* handRootNode = new Node("hand");
+   handRootNode->setLocalMtx(handMtx);
 
-   bodyNode->addChild(headNode);
-   bodyNode->addChild(handNode);
-   expectedHierarchy->addChild(bodyNode);
+   Node* bodyNode = new Node("body_entity");
+   bodyNode->addChild(new GraphicalNode("body_entity_subset0", *bodyEntity, 0));
+   bodyNode->addChild(new GraphicalNode("body_entity_subset1", *bodyEntity, 1));
+
+   Node* headNode = new Node("head_entity");
+   headNode->addChild(new GraphicalNode("head_entity_subset0", *headEntity, 0));
+   headNode->addChild(new GraphicalNode("head_entity_subset1", *headEntity, 1));
+
+   Node* handNode = new Node("hand_entity");
+   handNode->addChild(new GraphicalNode("hand_entity_subset0", *handEntity, 0));
+
+   bodyRootNode->addChild(bodyNode);
+   bodyRootNode->addChild(headRootNode);
+   bodyRootNode->addChild(handRootNode);
+   headRootNode->addChild(headNode);
+   handRootNode->addChild(handNode);
+   expectedHierarchyRoot->addChild(bodyRootNode);
 
    NodeHierarchyWriter writer;
-   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchy), writer(*node));
+   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchyRoot), writer(*node));
 
    delete node;
-   delete expectedHierarchy;
+   delete expectedHierarchyRoot;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(GraphicalEntityInstantiation, creatingNodesAroundSpacerEntities)
+TEST(SkinnedGraphicalEntityInstantiation, basics)
 {
-   std::vector<Material*> materialsListStub;
-   materialsListStub.push_back(reinterpret_cast<Material*> (0xCC));
-   std::vector<Material*> emptyMaterialsListStub;
+   TextureStub tex("");
+   Material material(tex);
+   BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
-   D3DXMATRIX headMtx; D3DXMatrixTranslation(&headMtx, 0, -5, 0);
-   D3DXMATRIX handMtx; D3DXMatrixTranslation(&handMtx, 5, 0, 0);
+   D3DXMATRIX bodyBoneMtx; D3DXMatrixTranslation(&bodyBoneMtx, 0, 0, 3);
+   D3DXMATRIX headBoneMtx; D3DXMatrixTranslation(&headBoneMtx, 0, -5, 0);
+   D3DXMATRIX handBoneMtx; D3DXMatrixTranslation(&handBoneMtx, 5, 0, 0);
+   D3DXMATRIX boneOffsetMatrixStub; D3DXMatrixIdentity(&boneOffsetMatrixStub);
 
-   // prepare the entities
-   GraphicalEntityMock raymanBody("raymanBody", emptyMaterialsListStub, bodyMtx);
-   GraphicalEntityMock head("head", materialsListStub, headMtx);
-   GraphicalEntityMock hand("hand", materialsListStub, handMtx);
+   // prepare the entity
+   // ... bones structure
+   std::vector<SkinBoneDefinition> skeleton;
+   skeleton.push_back(SkinBoneDefinition("bodyBone", boneOffsetMatrixStub));
+   skeleton.push_back(SkinBoneDefinition("headBone", boneOffsetMatrixStub));
+   skeleton.push_back(SkinBoneDefinition("handBone", boneOffsetMatrixStub));
 
-   raymanBody.addChild(head);
-   raymanBody.addChild(hand);
+   // ... attributes
+   std::vector<BonesInfluenceDefinition> attributes;
+   std::vector<Material*> materials;
+   tmpVec.clear(); tmpVec.push_back("bodyBone"); tmpVec.push_back("headBone"); // attribute subset 0
+   attributes.push_back(tmpVec);
+   materials.push_back(&material);
+   tmpVec.clear(); tmpVec.push_back("headBone");                               // attribute subset 1
+   attributes.push_back(tmpVec);
+   materials.push_back(&material);
+   tmpVec.clear(); tmpVec.push_back("handBone");                               // attribute subset 2
+   attributes.push_back(tmpVec);
+   materials.push_back(&material);
 
-   Node* node = raymanBody.instantiate("node");
+   // ... and finally the entity itself
+   SkinnedGraphicalEntityMock body("body", skeleton, attributes, materials);
+
+   // create the skeletal structure the skin is streched over
+   Node bodyBoneNode("bodyBone");
+   bodyBoneNode.setLocalMtx(bodyBoneMtx);
+
+   Node* headBoneNode = new Node("headBone");
+   headBoneNode->setLocalMtx(headBoneMtx);
+
+   Node* handBoneNode = new Node("handBone");
+   handBoneNode->setLocalMtx(handBoneMtx);
+
+   bodyBoneNode.addChild(headBoneNode);
+   bodyBoneNode.addChild(handBoneNode);
+
+
+   // instantiate the skin
+   Node* node = body.instantiate(bodyBoneNode);
 
    // prepare the results
-   Node* expectedHierarchy = new Node("node");
+   Node* bodyNode = new Node("body");
+   bodyNode->setLocalMtx(bodyMtx);
 
-   Node* raymanBodyNode = new Node("raymanBody");
-   raymanBodyNode->setLocalMtx(bodyMtx);
+   std::vector<std::pair<Node*, D3DXMATRIX> > bones;
+   bones.clear();
+   bones.push_back(std::make_pair(&bodyBoneNode, boneOffsetMatrixStub));
+   bones.push_back(std::make_pair(headBoneNode, boneOffsetMatrixStub));
+   Node* bodySkinNodeSubset0 = new SkinnedGraphicalNode("body_subset0", body, 0, bones);
 
-   Node* headNode = new Node("head");
-   headNode->setLocalMtx(headMtx);
-   headNode->addChild(new GraphicalNode("head_subset0", head, 0));
+   bones.clear();
+   bones.push_back(std::make_pair(headBoneNode, boneOffsetMatrixStub));
+   Node* bodySkinNodeSubset1 = new SkinnedGraphicalNode("body_subset1", body, 1, bones);
 
-   Node* handNode = new Node("hand");
-   handNode->setLocalMtx(handMtx);
-   handNode->addChild(new GraphicalNode("hand_subset0", hand, 0));
+   bones.clear();
+   bones.push_back(std::make_pair(handBoneNode, boneOffsetMatrixStub));
+   Node* bodySkinNodeSubset2 = new SkinnedGraphicalNode("body_subset2", body, 2, bones);
 
-   raymanBodyNode->addChild(headNode);
-   raymanBodyNode->addChild(handNode);
-   expectedHierarchy->addChild(raymanBodyNode);
+   bodyNode->addChild(bodySkinNodeSubset0);
+   bodyNode->addChild(bodySkinNodeSubset1);
+   bodyNode->addChild(bodySkinNodeSubset2);
 
+   // compare the hierarchies
    NodeHierarchyWriter writer;
-   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchy), writer(*node));
+   CPPUNIT_ASSERT_EQUAL(writer(*bodyNode), writer(*node));
 
    delete node;
-   delete expectedHierarchy;
+   delete bodyNode;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
+{
+   TextureStub tex("");
+   Material material(tex);
+   BonesInfluenceDefinition tmpVec;
+
+   D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
+   D3DXMATRIX bodyBoneMtx; D3DXMatrixTranslation(&bodyBoneMtx, 0, 0, 3);
+   D3DXMATRIX headBoneMtx; D3DXMatrixTranslation(&headBoneMtx, 0, -5, 0);
+   D3DXMATRIX handBoneMtx; D3DXMatrixTranslation(&handBoneMtx, 5, 0, 0);
+   D3DXMATRIX boneOffsetMatrixStub; D3DXMatrixIdentity(&boneOffsetMatrixStub);
+
+   // prepare the entity
+   // ... bones structure
+   std::vector<SkinBoneDefinition> skeleton;
+   skeleton.push_back(SkinBoneDefinition("bodyBone", boneOffsetMatrixStub));
+   skeleton.push_back(SkinBoneDefinition("headBone", boneOffsetMatrixStub));
+   skeleton.push_back(SkinBoneDefinition("handBone", boneOffsetMatrixStub));
+
+   // ... attributes
+   std::vector<BonesInfluenceDefinition> attributes;
+   std::vector<Material*> materials;
+   tmpVec.clear(); tmpVec.push_back("bodyBone"); tmpVec.push_back("headBone"); // attribute subset 0
+   attributes.push_back(tmpVec);
+   materials.push_back(&material);
+   tmpVec.clear(); tmpVec.push_back("headBone");                               // attribute subset 1
+   attributes.push_back(tmpVec);
+   materials.push_back(&material);
+   tmpVec.clear(); tmpVec.push_back("handBone");                               // attribute subset 2
+   attributes.push_back(tmpVec);
+   materials.push_back(&material);
+
+   // ... and finally the entity itself
+   SkinnedGraphicalEntityMock body("body", skeleton, attributes, materials);
+
+   // create the skeletal structure the skin is streched over
+   Node bodyBoneNode("bodyBone");
+   bodyBoneNode.setLocalMtx(bodyBoneMtx);
+
+   // head bone missing
+
+   Node* handBoneNode = new Node("handBone");
+   handBoneNode->setLocalMtx(handBoneMtx);
+
+   bodyBoneNode.addChild(handBoneNode);
+
+   // instantiate the skin
+   CPPUNIT_ASSERT_THROW(body.instantiate(bodyBoneNode), std::runtime_error);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(SkinnedGraphicalEntityInstantiation, instantiationViaGraphicalNodeInstantiator)
+{
+   TextureStub tex("");
+   Material material(tex);
+   BonesInfluenceDefinition tmpVec;
+
+   D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
+   D3DXMATRIX bodyBoneMtx; D3DXMatrixTranslation(&bodyBoneMtx, 0, 0, 3);
+   D3DXMATRIX headBoneMtx; D3DXMatrixTranslation(&headBoneMtx, 0, -5, 0);
+   D3DXMATRIX handBoneMtx; D3DXMatrixTranslation(&handBoneMtx, 5, 0, 0);
+   D3DXMATRIX boneOffsetMatrixStub; D3DXMatrixIdentity(&boneOffsetMatrixStub);
+
+   // prepare the entity
+   // ... bones structure
+   std::vector<SkinBoneDefinition> skeleton;
+   skeleton.push_back(SkinBoneDefinition("bodyBone", boneOffsetMatrixStub));
+   skeleton.push_back(SkinBoneDefinition("headBone", boneOffsetMatrixStub));
+   skeleton.push_back(SkinBoneDefinition("handBone", boneOffsetMatrixStub));
+
+   // ... attributes
+   std::vector<BonesInfluenceDefinition> attributes;
+   std::vector<Material*> materials;
+   tmpVec.clear(); tmpVec.push_back("bodyBone"); tmpVec.push_back("headBone"); // attribute subset 0
+   attributes.push_back(tmpVec);
+   materials.push_back(&material);
+   tmpVec.clear(); tmpVec.push_back("headBone");                               // attribute subset 1
+   attributes.push_back(tmpVec);
+   materials.push_back(&material);
+   tmpVec.clear(); tmpVec.push_back("handBone");                               // attribute subset 2
+   attributes.push_back(tmpVec);
+   materials.push_back(&material);
+
+   // ... and finally the entities themselves
+   CompositeGraphicalEntity bodyRoot("bodyRoot", bodyMtx);
+   SkinnedGraphicalEntityMock* bodySkin = new SkinnedGraphicalEntityMock("bodySkin", skeleton, attributes, materials);
+   CompositeGraphicalEntity* bodyBone = new CompositeGraphicalEntity("bodyBone", bodyBoneMtx);
+   CompositeGraphicalEntity* headBone = new CompositeGraphicalEntity("headBone", headBoneMtx);
+   CompositeGraphicalEntity* handBone = new CompositeGraphicalEntity("handBone", handBoneMtx);
+
+   bodyBone->addChild(headBone);
+   bodyBone->addChild(handBone);
+   bodyRoot.addChild(bodySkin);
+   bodyRoot.addChild(bodyBone);
+
+   // instantiate the skin
+   GraphicalEntityInstantiator* node = new GraphicalEntityInstantiator("someReference");
+   node->attachEntity(bodyRoot);
+
+   // prepare the results
+   GraphicalEntityInstantiator* expectedHierarchyRoot = new GraphicalEntityInstantiator("someReference");
+
+   Node* bodyRootNode = new Node("bodyRoot");
+   bodyRootNode->setLocalMtx(bodyMtx);
+
+   Node* bodyBoneNode = new Node("bodyBone");
+   bodyBoneNode->setLocalMtx(bodyBoneMtx);
+
+   Node* headBoneNode = new Node("headBone");
+   headBoneNode->setLocalMtx(headBoneMtx);
+
+   Node* handBoneNode = new Node("handBone");
+   handBoneNode->setLocalMtx(handBoneMtx);
+
+   Node* bodySkinNode = new Node("bodySkin");
+
+   std::vector<std::pair<Node*, D3DXMATRIX> > bones;
+   bones.clear();
+   bones.push_back(std::make_pair(bodyBoneNode, boneOffsetMatrixStub));
+   bones.push_back(std::make_pair(headBoneNode, boneOffsetMatrixStub));
+   Node* bodySkinNodeSubset0 = new SkinnedGraphicalNode("bodySkin_subset0", *bodySkin, 0, bones);
+
+   bones.clear();
+   bones.push_back(std::make_pair(headBoneNode, boneOffsetMatrixStub));
+   Node* bodySkinNodeSubset1 = new SkinnedGraphicalNode("bodySkin_subset1", *bodySkin, 1, bones);
+
+   bones.clear();
+   bones.push_back(std::make_pair(handBoneNode, boneOffsetMatrixStub));
+   Node* bodySkinNodeSubset2 = new SkinnedGraphicalNode("bodySkin_subset2", *bodySkin, 2, bones);
+
+   bodyBoneNode->addChild(headBoneNode);
+   bodyBoneNode->addChild(handBoneNode);
+
+   bodySkinNode->addChild(bodySkinNodeSubset0);
+   bodySkinNode->addChild(bodySkinNodeSubset1);
+   bodySkinNode->addChild(bodySkinNodeSubset2);
+
+   bodyRootNode->addChild(bodyBoneNode);
+    bodyRootNode->addChild(bodySkinNode);
+
+   expectedHierarchyRoot->addChild(bodyRootNode);
+
+   // compare the hierarchies
+   NodeHierarchyWriter writer;
+   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchyRoot), writer(*node));
+
+   delete node;
+   delete expectedHierarchyRoot;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

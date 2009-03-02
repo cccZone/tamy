@@ -14,8 +14,7 @@ class Node;
 class Camera;
 class Light;
 class Renderer;
-class GraphicalNode;
-class GraphicalEntity;
+class AbstractGraphicalEntity;
 class LightReflectingProperties;
 class Texture;
 class Material;
@@ -27,6 +26,9 @@ class FileGraphicalEntityLoader;
 struct MeshDefinition;
 struct AnimationDefinition;
 class Skeleton;
+class GraphicalEntity;
+class SkinnedGraphicalEntity;
+struct SkinBoneDefinition;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -39,7 +41,7 @@ class ResourceManager
 {
 private:
    std::list<Managable*> m_allObjects;
-   std::map<std::string, GraphicalEntity*> m_graphicalEntities;
+   std::map<std::string, AbstractGraphicalEntity*> m_graphicalEntities;
    std::vector<Material*> m_materials;
    std::list<LightReflectingProperties*> m_lightReflectingProperties;
    std::map<std::string, Texture*> m_textures;
@@ -67,13 +69,13 @@ public:
    bool isGraphicalEntityRegistered(const std::string& name) const;
 
    /**
-    * This method can be used to create the objects returned to us
-    * by the GeometryBuilder
+    * This method can be used to register an entity with the system
+    * for further management
     *
     * @throws std::logic_error if an entity with the specified name already exists
     */
-   GraphicalEntity& createGraphicalEntity(const std::string& name,
-                                          const MeshDefinition& subMesh);
+    void registerGraphicalEntity(const std::string& name,
+                                 AbstractGraphicalEntity* entity);
 
    /**
     * Loads a mesh using a graphical entity loader
@@ -82,14 +84,14 @@ public:
     * @param name - name of the file from which the mesh should be loaded.
     *               It's also the name under which the mesh will be registered.
     */
-   GraphicalEntity& loadGraphicalEntity(const std::string& name, GraphicalEntityLoader& loader);
+   AbstractGraphicalEntity& loadGraphicalEntity(const std::string& name, GraphicalEntityLoader& loader);
 
    /**
     * Rturns a reference to a graphical entity providing one exists
     *
     * @throws std::out_of_range exception if one hasn't been registered yet
     */
-   GraphicalEntity& getGraphicalEntity(const std::string& name);
+   AbstractGraphicalEntity& getGraphicalEntity(const std::string& name);
 
    /**
     * Returns a loader capable of dealing with a specified file type,
@@ -99,6 +101,20 @@ public:
     *                           of dealing with the specified file type
     */
    GraphicalEntityLoader& getLoaderForFile(const std::string& fileName);
+
+   /**
+    * This method should return a valid implementation of the GraphicalEntity class
+    */
+   virtual GraphicalEntity* createGraphicalEntity(const std::string& name,
+                          const MeshDefinition& subMesh,
+                          const std::vector<Material*>& registeredMaterials) = 0;
+
+   /**
+    * This method should return a valid implementation of the GraphicalEntity class
+    */
+   virtual SkinnedGraphicalEntity* createSkinedGraphicalEntity(const std::string& name,
+                          const MeshDefinition& subMesh,
+                          const std::vector<Material*>& registeredMaterials) = 0;
 
    // -------------------------------- Cameras --------------------------------
 
@@ -172,13 +188,6 @@ public:
    SkyBox& createSkyBox();
 
 protected:
-   /**
-    * This method should return a valid implementation of the GraphicalEntity class
-    */
-   virtual GraphicalEntity* createGraphicalEntityImpl(const std::string& name,
-                                                      const MeshDefinition& subMesh,
-                                                      const std::vector<Material*>& registeredMaterials) = 0;
-
    /**
     * This method should return a valid implementation of the Light class
     */

@@ -7,6 +7,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct D3DXMESHCONTAINER_DERRIVED;
+
+///////////////////////////////////////////////////////////////////////////////
+
 class XFileGraphicalEntityLoader : public FileGraphicalEntityLoader,
                                    public ID3DXAllocateHierarchy
 {
@@ -41,13 +45,25 @@ protected:
    void parseFrames(D3DXFRAME* frame, 
                     MeshDefinition* parent,
                     MeshDefinition& mesh) const;
-   void parseGeometry(D3DXMESHCONTAINER* meshContainer, 
+   void parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshContainer, 
                       MeshDefinition& mesh) const;
 
    void parseAnimationData(ID3DXAnimationController* animCtrl, 
                            AnimationDefinition& animation);
    void parseAnimationSet(ID3DXKeyframedAnimationSet* animSet, 
                           AnimationSetDefinition& animSetDef);
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct D3DXMESHCONTAINER_DERRIVED : public D3DXMESHCONTAINER
+{
+   DWORD maxFaceInfl;
+   DWORD numBoneCombinations;
+   LPD3DXBUFFER boneCombinationTable;
+
+   D3DXMESHCONTAINER_DERRIVED() 
+      : maxFaceInfl(0), numBoneCombinations(0), boneCombinationTable(NULL) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

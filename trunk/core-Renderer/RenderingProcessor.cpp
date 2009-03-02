@@ -1,5 +1,5 @@
 #include "RenderingProcessor.h"
-#include "GraphicalNode.h"
+#include "AbstractGraphicalNode.h"
 #include "GraphicalEntity.h"
 #include "Material.h"
 
@@ -14,7 +14,7 @@ std::list<RenderingCommand> RenderingProcessor::translate(const BatchedNodes& no
    for (BatchedNodes::const_iterator it = nodesToRender.begin();
         it != nodesToRender.end(); ++it)
    {
-      GraphicalNode& graphicalNode = **it;
+      AbstractGraphicalNode& graphicalNode = **it;
       Material& mat = graphicalNode.getMaterial();
       if ((prevMat == NULL) || (*prevMat != mat))
       {
@@ -37,9 +37,9 @@ RenderingCommand RenderingProcessor::setMaterial(Material& material)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingCommand RenderingProcessor::renderEntity(GraphicalNode& graphicalNode)
+RenderingCommand RenderingProcessor::renderEntity(AbstractGraphicalNode& graphicalNode)
 {
-   return RenderingCommand::from_method<GraphicalNode, &GraphicalNode::render> (&graphicalNode);
+   return RenderingCommand::from_method<AbstractGraphicalNode, &AbstractGraphicalNode::render> (&graphicalNode);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

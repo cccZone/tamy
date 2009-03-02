@@ -36,12 +36,15 @@ public:
 
    Renderer& getRendererInstance();
 
-   Skeleton* createSkeleton(const std::string& name, const AnimationDefinition& animation);
+   GraphicalEntity* createGraphicalEntity(const std::string& name,
+                                          const MeshDefinition& subMesh,
+                                          const std::vector<Material*>& registeredMaterials);
+
+   SkinnedGraphicalEntity* createSkinedGraphicalEntity(const std::string& name,
+                          const MeshDefinition& subMesh,
+                          const std::vector<Material*>& registeredMaterials);
 
 protected:
-   GraphicalEntity* createGraphicalEntityImpl(const std::string& name,
-                                              const MeshDefinition& subMesh,
-                                              const std::vector<Material*>& registeredMaterials);
 
    Light* createLightImpl(const std::string& name);
 

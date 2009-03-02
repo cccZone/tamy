@@ -6,6 +6,10 @@
 #include <typeinfo>
 #include <list>
 #include <deque>
+#include "GraphicalNode.h"
+#include "SkinnedGraphicalNode.h"
+#include "GraphicalEntity.h"
+#include "SkinnedGraphicalEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,6 +70,22 @@ private:
       {
          stream << "; entity name : " << gn->getEntity().getName() << 
                    "; subset : " << gn->getSubsetIdx();
+      }
+
+      SkinnedGraphicalNode* sgn = dynamic_cast<SkinnedGraphicalNode*> (&node);
+      if (sgn != NULL)
+      {
+         stream << "; entity name : " << sgn->getEntity().getName() << 
+                   "; subset : " << sgn->getSubsetIdx() << "; bones: [";
+
+         const SkinnedGraphicalNode::BonesDef& bd = sgn->getBonesDefinition();
+         for (SkinnedGraphicalNode::BonesDef::const_iterator it = bd.begin();
+              it != bd.end(); ++it)
+         {
+            Node* boneNode = it->first;
+            stream << boneNode->getName() << ", ";
+         }
+         stream << "]";
       }
    }
 };

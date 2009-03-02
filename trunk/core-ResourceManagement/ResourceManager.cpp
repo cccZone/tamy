@@ -12,7 +12,6 @@
 #include "SkyBox.h"
 #include "Managable.h"
 #include "FileGraphicalEntityLoader.h"
-#include "SpacerGraphicalEntity.h"
 #include <cassert>
 
 
@@ -55,8 +54,8 @@ bool ResourceManager::isGraphicalEntityRegistered(const std::string& name) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEntity& ResourceManager::createGraphicalEntity(const std::string& name,
-                                                        const MeshDefinition& subMesh)
+void ResourceManager::registerGraphicalEntity(const std::string& name,
+                                              AbstractGraphicalEntity* entity)
 {
    if (m_graphicalEntities.find(name) != m_graphicalEntities.end())
    {
@@ -64,36 +63,14 @@ GraphicalEntity& ResourceManager::createGraphicalEntity(const std::string& name,
          std::string("GraphicalEntity ") + name + std::string(" is already registered"));
    }
 
-   GraphicalEntity* entity;
-
-   if ((subMesh.faces.size() == 0) || (subMesh.vertices.size() == 0))
-   {
-      entity = new SpacerGraphicalEntity(name, subMesh.localMtx);
-   }
-   else
-   {
-      // split the meshes by the materials
-      std::vector<Material*> realMaterials(subMesh.materials.size());
-      for (unsigned int matIdx = 0; matIdx < subMesh.materials.size(); ++matIdx)
-      {
-         const MaterialDefinition& mat = subMesh.materials.at(matIdx);
-         unsigned int id = addMaterial(mat.texName, mat.ambient, 
-                                       mat.diffuse, mat.specular, 
-                                       mat.emissive, mat.power);
-         realMaterials[matIdx] = &getMaterial(id);
-      }
-
-      entity = createGraphicalEntityImpl(name, subMesh, realMaterials);
-   }
-   m_allObjects.push_back(new TManagable<GraphicalEntity>(entity));
+   m_allObjects.push_back(new TManagable<AbstractGraphicalEntity>(entity));
    m_graphicalEntities.insert(std::make_pair(name, entity));
-
-   return *entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEntity& ResourceManager::loadGraphicalEntity(const std::string& name, GraphicalEntityLoader& loader)
+AbstractGraphicalEntity& ResourceManager::loadGraphicalEntity(const std::string& name, 
+                                                              GraphicalEntityLoader& loader)
 {
    if (m_graphicalEntities.find(name) != m_graphicalEntities.end())
    {
@@ -106,9 +83,9 @@ GraphicalEntity& ResourceManager::loadGraphicalEntity(const std::string& name, G
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEntity& ResourceManager::getGraphicalEntity(const std::string& name)
+AbstractGraphicalEntity& ResourceManager::getGraphicalEntity(const std::string& name)
 {
-   std::map<std::string, GraphicalEntity*>::iterator it = m_graphicalEntities.find(name);
+   std::map<std::string, AbstractGraphicalEntity*>::iterator it = m_graphicalEntities.find(name);
    if (it == m_graphicalEntities.end())
    {
       throw std::out_of_range(

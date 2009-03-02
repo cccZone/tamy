@@ -17,23 +17,18 @@ private:
    static Material s_material;
    D3DXMATRIX m_mtx;
    std::list<std::string>* m_messageSink;
+   std::vector<D3DXMATRIX> m_matrices;
 
 public:
-   GraphicalEntityMock(const std::vector<Material*>& materials) 
-         : GraphicalEntity("", materials, D3DXMATRIX()), m_messageSink(NULL)
-   {
-      D3DXMatrixIdentity(&m_mtx);
-   }
-
    GraphicalEntityMock(const std::string& id, const std::vector<Material*>& materials, std::list<std::string>& messageSink) 
-         : GraphicalEntity(id, materials, D3DXMATRIX()),
+         : GraphicalEntity(id, materials),
          m_messageSink(&messageSink)
    {
       D3DXMatrixIdentity(&m_mtx);
    }
 
-   GraphicalEntityMock(const std::string& id, const std::vector<Material*>& materials, const D3DXMATRIX& mtx) 
-         : GraphicalEntity(id, materials, mtx),
+   GraphicalEntityMock(const std::string& id, const std::vector<Material*>& materials) 
+         : GraphicalEntity(id, materials),
          m_messageSink(NULL)
    {
       D3DXMatrixIdentity(&m_mtx);
@@ -50,6 +45,13 @@ public:
          m_messageSink->push_back(msg.str());
       }
    }
+
+   void render(const std::vector<D3DXMATRIX>& matrices, DWORD subset)
+   {
+      m_matrices = matrices;
+   }
+
+   const std::vector<D3DXMATRIX>& getMatricesUsedForRendering() const {return m_matrices;}
 
    const D3DXMATRIX& getMatrixSet() const {return m_mtx;}
 };
