@@ -84,19 +84,7 @@ public:
       m_d3Device.SetTransform(D3DTS_WORLD, &globalMtx);
       m_mesh->DrawSubset(subset);
    }
-/*
-   void render(const std::vector<D3DXMATRIX>& matrices, DWORD subset)
-   {
-      for (unsigned char i = 0; i < matrices.size(); ++i)
-      {
-         m_d3Device.SetTransform(D3DTS_WORLDMATRIX(i), &(matrices[i]));
-      }
-      m_d3Device.SetRenderState(D3DRS_VERTEXBLEND, matrices.size());
 
-      m_mesh->DrawSubset(subset);
-      m_d3Device.SetRenderState(D3DRS_VERTEXBLEND, D3DVBF_DISABLE);
-   }
-*/
 private:
    void optimizeMesh()
    {

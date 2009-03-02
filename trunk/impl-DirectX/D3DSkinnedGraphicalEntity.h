@@ -81,6 +81,7 @@ public:
          m_mesh = NULL;
       }
    }
+
    void render(const std::vector<D3DXMATRIX>& matrices, DWORD subset)
    {
       for (unsigned char i = 0; i < matrices.size(); ++i)
