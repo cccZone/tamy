@@ -16,9 +16,17 @@ GraphicalEntityInstantiator::GraphicalEntityInstantiator(const std::string& name
 
 void GraphicalEntityInstantiator::attachEntity(AbstractGraphicalEntity& entity)
 {
-   m_localParent = this;
+   // delete the previously set nodes hierarchy
+   const std::list<Node*>& children = getChildren();
+   while(getChildrenCount() > 0)
+   {
+      Node* childNode = getChildren().back();
+      removeChild(*childNode);
+      delete childNode;
+   }
 
-   // gather 
+   // create a new instance of nodes based on the graphical entity template
+   m_localParent = this;
    entity.accept(*this);
 
    for (std::list<std::pair<Node*, SkinnedGraphicalEntity*> >::iterator it = m_skinsToPostprocess.begin();

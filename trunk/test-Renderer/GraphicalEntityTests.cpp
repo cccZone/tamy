@@ -396,3 +396,33 @@ TEST(SkinnedGraphicalEntityInstantiation, instantiationViaGraphicalNodeInstantia
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST(GraphicalEntityInstantiator, attachingManyEntities)
+{
+   D3DXMATRIX identityMtx; D3DXMatrixIdentity(&identityMtx);
+
+   // prepare the entities
+   CompositeGraphicalEntity body("body", identityMtx);
+   CompositeGraphicalEntity rifle("rifle", identityMtx);
+
+   NodeHierarchyWriter writer;
+   GraphicalEntityInstantiator* node = new GraphicalEntityInstantiator("someReference");
+
+   // attach the first entity
+   node->attachEntity(body);
+   GraphicalEntityInstantiator* expectedHierarchy = new GraphicalEntityInstantiator("someReference");
+   expectedHierarchy->addChild(new Node("body"));
+   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchy), writer(*node));
+   delete expectedHierarchy;
+
+   // attach the first second
+   node->attachEntity(rifle);
+   expectedHierarchy = new GraphicalEntityInstantiator("someReference");
+   expectedHierarchy->addChild(new Node("rifle"));
+   CPPUNIT_ASSERT_EQUAL(writer(*expectedHierarchy), writer(*node));
+   delete expectedHierarchy;
+
+   delete node;
+}
+
+///////////////////////////////////////////////////////////////////////////////
