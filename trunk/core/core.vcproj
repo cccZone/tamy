@@ -231,6 +231,10 @@
 			Name="Utils"
 			>
 			<File
+				RelativePath=".\HierarchyWriter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MatrixWriter.cpp"
 				>
 			</File>

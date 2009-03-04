@@ -14,3 +14,11 @@ std::ostream& operator<<(std::ostream &os, const D3DXMATRIX& mtx)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+std::ostream& operator<<(std::ostream &os, const D3DXVECTOR3& vec)
+{
+   os << "[" << vec.x << ", " << vec.y << ", " << vec.z << "]";
+   return os;
+}
+
+///////////////////////////////////////////////////////////////////////////////
