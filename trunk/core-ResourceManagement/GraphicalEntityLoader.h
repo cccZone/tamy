@@ -46,13 +46,6 @@ protected:
                           const std::string& name) = 0;
 
 private:
-   AbstractGraphicalEntity* createGraphicalEntity(ResourceManager& resourceManager, 
-                                                  MeshDefinition& mesh);
-
-   void getMaterials(ResourceManager& resourceManager,
-                     const std::vector<MaterialDefinition>& inMaterialDefinitions,
-                     std::vector<Material*>& outRealMaterials);
-
    void ensureMeshNames(MeshDefinition& mesh);
 };
 

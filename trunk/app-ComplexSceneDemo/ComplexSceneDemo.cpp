@@ -16,6 +16,11 @@
 #include "GraphicalEntity.h"
 #include "Skeleton.h"
 #include "GraphicalEntityLoader.h"
+#include "TreeParams.h"
+#include "TreeStructureGenerator.h"
+#include "TreeSkinner.h"
+#include "TreeSegment.h"
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,7 +89,7 @@ void ComplexSceneDemo::run(int nCmdShow)
    AbstractGraphicalEntity& ent = m_resourceManager->getGraphicalEntity("animlandscape.x");
    m_animationController = ent.instantiateSkeleton(m_sceneManager->getRootNode());
    m_animationController->activateAnimation("Cutscene_01");
-*/
+
 
    GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("US Ranger.x");
    AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("US Ranger.x", loader);
@@ -94,6 +99,44 @@ void ComplexSceneDemo::run(int nCmdShow)
 
    m_animationController = ent.instantiateSkeleton(*entInstance);
    m_animationController->activateAnimation("");
+*/
+
+   TreeParams treeParams;
+   treeParams.maxTreeDepth = 10;
+   treeParams.startWidth = 10;
+   treeParams.startDirection = D3DXVECTOR3(0, 1, 0);
+   treeParams.segmentInitialLength = 20;
+   treeParams.minInternalBranchDirVariation = 2;
+   treeParams.maxInternalBranchDirVariation = 10;
+   treeParams.branchProbab.push_back(100);
+   treeParams.branchProbab.push_back(50);
+   treeParams.minNewBranchDirVariation = 30;
+   treeParams.maxNewBranchDirVariation = 60;
+   treeParams.initialBranchingLevel = 2;
+   treeParams.abruptBranchEndProbab = 0;
+
+   TreeStructureGenerator generator;
+   TreeSegment* treeStruct = generator.generate(treeParams);
+
+   TreeSkinner skinner(*treeStruct);
+   MaterialDefinition treeBark;
+   treeBark.diffuse.r = 1;
+   treeBark.ambient.g = 1;
+   treeBark.ambient.b = 1;
+   treeBark.ambient.a = 1;
+   treeBark.matName = "treeBark";
+   treeBark.texName = "LondonPlaneBark.dds";
+
+   MeshDefinition mesh;
+   skinner("tree", 8, 5, treeBark, mesh);
+   delete treeStruct;
+
+   AbstractGraphicalEntity* treeEntity = m_resourceManager->createGraphicalEntityFromTemplate(mesh);
+   m_resourceManager->registerGraphicalEntity("tree", treeEntity);
+
+   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tree01");
+   entInstance->attachEntity(*treeEntity);
+   m_sceneManager->addNode(entInstance);
 
    Light* light = m_resourceManager->createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
@@ -102,8 +145,8 @@ void ComplexSceneDemo::run(int nCmdShow)
    m_sceneManager->addNode(light);
 
    Camera* camera = m_resourceManager->createCamera("camera");
-   camera->setLookVec(D3DXVECTOR3(0, -1, -1));
-   camera->setPosition(D3DXVECTOR3(0, 40, 30));
+   camera->setLookVec(D3DXVECTOR3(0, 0, -1));
+   camera->setPosition(D3DXVECTOR3(0, 10, 50));
    m_sceneManager->addNode(camera);
    m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
@@ -140,7 +183,7 @@ void ComplexSceneDemo::advanceGameState()
    }
 
    processInput(timeElapsed);
-   m_animationController->update(timeElapsed);
+  // m_animationController->update(timeElapsed);
    m_renderer->render(m_sceneManager->getRootNode());
 }
 

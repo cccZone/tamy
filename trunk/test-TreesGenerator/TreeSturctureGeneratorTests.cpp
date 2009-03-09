@@ -188,7 +188,7 @@ TEST(TreeStructureGenerator, treeWithBranches)
       TreeSegment* branch = new TreeSegment();
       branch->direction = params.startDirection;
       branch->position = D3DXVECTOR3(0, 10, 0);
-      branch->width = 5;
+      branch->width = 15;
       branch->type = BRANCH_START;
       branch->segmentIdx = 1;
       child->children.push_back(branch);
@@ -315,11 +315,11 @@ TEST(TreeStructureGenerator, levelWhereBranchingStarts)
    child->type = BRANCH_MIDDLE;
    child->segmentIdx = 2;
    parent->children.push_back(child);
-      {
+   {
       TreeSegment* branch = new TreeSegment();
       branch->direction = params.startDirection;
       branch->position = D3DXVECTOR3(0, 20, 0);
-      branch->width = 2.5f;
+      branch->width = 7.5f;
       branch->type = BRANCH_START;
       branch->segmentIdx = 2;
       child->children.push_back(branch);
@@ -389,7 +389,7 @@ TEST(TreeStructureGenerator, multipleBranchesAtSameLevel)
       TreeSegment* branch = new TreeSegment();
       branch->direction = params.startDirection;
       branch->position = D3DXVECTOR3(0, 10, 0);
-      branch->width = 5;
+      branch->width = 15;
       branch->type = BRANCH_START;
       branch->segmentIdx = 1;
       child->children.push_back(branch);
@@ -406,7 +406,7 @@ TEST(TreeStructureGenerator, multipleBranchesAtSameLevel)
       TreeSegment* branch = new TreeSegment();
       branch->direction = params.startDirection;
       branch->position = D3DXVECTOR3(0, 10, 0);
-      branch->width = 5;
+      branch->width = 15;
       branch->type = BRANCH_START;
       branch->segmentIdx = 1;
       child->children.push_back(branch);

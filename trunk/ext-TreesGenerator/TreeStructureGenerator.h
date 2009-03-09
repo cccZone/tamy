@@ -30,7 +30,8 @@ private:
    void variateDirection(const TreeSegment& referenceSeg, 
                          float minVarAngle, 
                          float maxVarAngle,
-                         TreeSegment& changedSeg);
+                         TreeSegment& changedSeg,
+                         float polarTheta);
 
    inline bool randomChance(float probab) const;
 };

@@ -24,13 +24,13 @@ public:
    std::list<TreeSegment*> children;
    D3DXVECTOR3 direction;
    D3DXVECTOR3 position;
+   D3DXVECTOR3 rightVec;
    float width;
    TreeSegmentType type;
    unsigned int segmentIdx;
 
 private:
    float initWidth;
-   D3DXVECTOR3 rightVec;
 
 public:
    TreeSegment();

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;&quot;$(SolutionDir)\ext-TreesGenerator&quot;;&quot;$(SolutionDir)\core-TestFramework&quot;;&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;&quot;$(SolutionDir)\ext-TreesGenerator&quot;;&quot;$(SolutionDir)\core-TestFramework&quot;;&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;&quot;$(SolutionDir)\ext-TreesGenerator&quot;;&quot;$(SolutionDir)\core-TestFramework&quot;;&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\include&quot;"
+				AdditionalIncludeDirectories="&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;&quot;$(SolutionDir)\ext-TreesGenerator&quot;;&quot;$(SolutionDir)\core-TestFramework&quot;;&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\TreeSkinnerTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TreeSturctureGeneratorTests.cpp"
 				>
 			</File>
@@ -184,6 +188,10 @@
 		<Filter
 			Name="Utils"
 			>
+			<File
+				RelativePath=".\MeshDefinitionWriter.h"
+				>
+			</File>
 			<File
 				RelativePath=".\TreeStructureWriter.h"
 				>

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -107,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -150,7 +150,7 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Core"
+			Name="StructureGenerator"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
@@ -172,6 +172,18 @@
 			</File>
 			<File
 				RelativePath=".\TreeSturctureGenerator.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Skinner"
+			>
+			<File
+				RelativePath=".\TreeSkinner.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TreeSkinner.h"
 				>
 			</File>
 		</Filter>

@@ -29,6 +29,7 @@ class Skeleton;
 class GraphicalEntity;
 class SkinnedGraphicalEntity;
 struct SkinBoneDefinition;
+struct MaterialDefinition;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -101,6 +102,14 @@ public:
     *                           of dealing with the specified file type
     */
    GraphicalEntityLoader& getLoaderForFile(const std::string& fileName);
+
+   /**
+    * This method provides a mechanism for creating a complete greaphical entity
+    * based on the data from the mesh definition.
+    *
+    * The entity does not get registered as a resource automatically.
+    */
+   AbstractGraphicalEntity* createGraphicalEntityFromTemplate(MeshDefinition& mesh);
 
    /**
     * This method should return a valid implementation of the GraphicalEntity class
@@ -209,6 +218,9 @@ protected:
 
 private:
    Texture& getEmptyTexture();
+
+   void getMaterials(const std::vector<MaterialDefinition>& inMaterialDefinitions,
+                     std::vector<Material*>& outRealMaterials);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

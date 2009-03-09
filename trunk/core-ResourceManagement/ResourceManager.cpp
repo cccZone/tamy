@@ -1,6 +1,8 @@
 #include "ResourceManager.h"
 #include "GraphicalNode.h"
 #include "GraphicalEntity.h"
+#include "SkinnedGraphicalEntity.h"
+#include "CompositeGraphicalEntity.h"
 #include "GraphicalEntityLoader.h"
 #include "Camera.h"
 #include "Light.h"
@@ -13,6 +15,7 @@
 #include "Managable.h"
 #include "FileGraphicalEntityLoader.h"
 #include <cassert>
+#include <deque>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,6 +113,78 @@ GraphicalEntityLoader& ResourceManager::getLoaderForFile(const std::string& file
 
    throw std::out_of_range(
       std::string("There's no loader capable of loading the mesh file ") + fileName);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+AbstractGraphicalEntity* ResourceManager::createGraphicalEntityFromTemplate(MeshDefinition& mesh)
+{
+   // register the meshes
+   CompositeGraphicalEntity* entityRootNode = new CompositeGraphicalEntity(mesh.name, mesh.localMtx);
+   std::deque<std::pair<CompositeGraphicalEntity*, MeshDefinition*> > meshesQueue;
+   meshesQueue.push_back(std::make_pair(entityRootNode, &mesh));
+
+   while (meshesQueue.size() > 0)
+   {
+      CompositeGraphicalEntity* parentEntity = meshesQueue.front().first;
+      MeshDefinition& currentMesh = *(meshesQueue.front().second);
+      meshesQueue.pop_front();
+      
+      // create a graphical entity based on the geometry definition
+      std::vector<Material*> realMaterials;
+      getMaterials(currentMesh.materials, realMaterials);
+
+      if (currentMesh.faces.size() > 0)
+      {
+         AbstractGraphicalEntity* currentEntity = NULL;
+
+         if (currentMesh.isSkin)
+         {
+            currentEntity = createSkinedGraphicalEntity(
+                                          currentMesh.name + "_entity",
+                                          currentMesh,
+                                          realMaterials);
+         }
+         else
+         {
+            currentEntity = createGraphicalEntity(currentMesh.name + "_entity",
+                                                  currentMesh,
+                                                  realMaterials);
+         }
+         parentEntity->addChild(currentEntity);
+      }
+
+      // add the mesh's children to the queue
+      for (std::list<MeshDefinition*>::iterator childrenIt = currentMesh.children.begin();
+           childrenIt != currentMesh.children.end(); ++childrenIt)
+      {
+         CompositeGraphicalEntity* childNode = new CompositeGraphicalEntity((*childrenIt)->name, 
+                                                                            (*childrenIt)->localMtx);
+         parentEntity->addChild(childNode);
+         meshesQueue.push_back(std::make_pair(childNode, *childrenIt));
+      }
+   }
+
+
+   return entityRootNode;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourceManager::getMaterials(
+                  const std::vector<MaterialDefinition>& inMaterialDefinitions,
+                  std::vector<Material*>& outRealMaterials)
+{
+   // split the meshes by the materials
+   outRealMaterials.resize(inMaterialDefinitions.size());
+   for (unsigned int matIdx = 0; matIdx < inMaterialDefinitions.size(); ++matIdx)
+   {
+      const MaterialDefinition& mat = inMaterialDefinitions.at(matIdx);
+      unsigned int id = addMaterial(mat.texName, mat.ambient, 
+                                    mat.diffuse, mat.specular, 
+                                    mat.emissive, mat.power);
+      outRealMaterials[matIdx] = &(getMaterial(id));
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

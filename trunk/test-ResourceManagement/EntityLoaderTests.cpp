@@ -54,12 +54,12 @@ TEST(EntityLoader, loadMeshWithManyMaterials)
 
    MaterialDefinition mat2;
    mat2.texName = "b.jpg";
-   MeshDefinition subMesh1;
-   subMesh1.name = "subMesh1";
-   D3DXMatrixTranslation(&(subMesh1.localMtx), 5, 0, 2);
-   subMesh1.materials.push_back(mat2);
-   subMesh1.faces.push_back(Face<USHORT>(0, 1, 2, 0));
-   subMesh1.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+   MeshDefinition* subMesh1 = new MeshDefinition();
+   subMesh1->name = "subMesh1";
+   D3DXMatrixTranslation(&(subMesh1->localMtx), 5, 0, 2);
+   subMesh1->materials.push_back(mat2);
+   subMesh1->faces.push_back(Face<USHORT>(0, 1, 2, 0));
+   subMesh1->vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
    mesh.children.push_back(subMesh1);
 
    GraphicalEntityLoaderMock loader(mesh);
@@ -74,7 +74,7 @@ TEST(EntityLoader, loadMeshWithManyMaterials)
    CompositeGraphicalEntity expectedHierarchy("entity", mesh.localMtx);
    GraphicalEntityMock* topMeshEntity = new GraphicalEntityMock("entity_entity", materials);
 
-   CompositeGraphicalEntity* subMeshNode = new CompositeGraphicalEntity("subMesh1", subMesh1.localMtx);
+   CompositeGraphicalEntity* subMeshNode = new CompositeGraphicalEntity("subMesh1", subMesh1->localMtx);
    GraphicalEntityMock* subMeshEntity = new GraphicalEntityMock("subMesh1_entity", materials);
 
    expectedHierarchy.addChild(topMeshEntity);
@@ -98,12 +98,12 @@ TEST(EntityLoader, hierarchicalEntityWithSpacers)
 
    MaterialDefinition mat2;
    mat2.texName = "b.jpg";
-   MeshDefinition subMesh1;
-   subMesh1.name = "subMesh1";
-   D3DXMatrixTranslation(&(subMesh1.localMtx), -15, -10, -5);
-   subMesh1.materials.push_back(mat2);
-   subMesh1.faces.push_back(Face<USHORT>(0, 1, 2, 0));
-   subMesh1.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+   MeshDefinition* subMesh1 = new MeshDefinition();
+   subMesh1->name = "subMesh1";
+   D3DXMatrixTranslation(&(subMesh1->localMtx), -15, -10, -5);
+   subMesh1->materials.push_back(mat2);
+   subMesh1->faces.push_back(Face<USHORT>(0, 1, 2, 0));
+   subMesh1->vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
    spacerMesh.children.push_back(subMesh1);
 
    GraphicalEntityLoaderMock loader(spacerMesh);
@@ -117,7 +117,7 @@ TEST(EntityLoader, hierarchicalEntityWithSpacers)
 
    CompositeGraphicalEntity expectedHierarchy("entity", spacerMesh.localMtx);
 
-   CompositeGraphicalEntity* subMeshNode = new CompositeGraphicalEntity("subMesh1", subMesh1.localMtx);
+   CompositeGraphicalEntity* subMeshNode = new CompositeGraphicalEntity("subMesh1", subMesh1->localMtx);
    GraphicalEntityMock* subMeshEntity = new GraphicalEntityMock("subMesh1_entity", materials);
 
    expectedHierarchy.addChild(subMeshNode);
@@ -138,8 +138,8 @@ TEST(EntityLoader, ensuringNameForUnknamedMeshes)
 
    spacerMesh.localMtx = identityMtx;
 
-   MeshDefinition subMesh;
-   subMesh.localMtx = identityMtx;
+   MeshDefinition* subMesh = new MeshDefinition();
+   subMesh->localMtx = identityMtx;
    spacerMesh.children.push_back(subMesh);
 
    GraphicalEntityLoaderMock loader(spacerMesh);
@@ -152,7 +152,7 @@ TEST(EntityLoader, ensuringNameForUnknamedMeshes)
    std::vector<Material*> materials;
 
    CompositeGraphicalEntity expectedHierarchy("unnamedEntity_0", spacerMesh.localMtx);
-   CompositeGraphicalEntity* subMeshNode = new CompositeGraphicalEntity("unnamedEntity_1", subMesh.localMtx);
+   CompositeGraphicalEntity* subMeshNode = new CompositeGraphicalEntity("unnamedEntity_1", subMesh->localMtx);
    expectedHierarchy.addChild(subMeshNode);
 
    CPPUNIT_ASSERT_EQUAL(writer(expectedHierarchy), writer(rootEntity));

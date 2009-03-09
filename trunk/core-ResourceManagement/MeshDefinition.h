@@ -41,9 +41,62 @@ struct MeshDefinition
 
    D3DXMATRIX localMtx;
 
-   std::list<MeshDefinition> children;
+   std::list<MeshDefinition*> children;
 
    MeshDefinition() : isSkin(false) {}
+   MeshDefinition(const MeshDefinition& rhs)
+      : name(rhs.name),
+      isSkin(rhs.isSkin),
+      materials(rhs.materials),
+      vertices(rhs.vertices),
+      faces(rhs.faces),
+      bonesInfluencingAttribute(rhs.bonesInfluencingAttribute),
+      skinBones(rhs.skinBones),
+      localMtx(rhs.localMtx)
+   {
+      for (std::list<MeshDefinition*>::const_iterator it = rhs.children.begin();
+         it != rhs.children.end(); ++it)
+      {
+         children.push_back(new MeshDefinition(**it));
+      }
+   }
+   ~MeshDefinition()
+   {
+      for (std::list<MeshDefinition*>::iterator it = children.begin();
+         it != children.end(); ++it)
+      {
+         delete *it;
+      }
+      children.clear();
+   }
+   MeshDefinition& operator=(const MeshDefinition& rhs)
+   {
+      name = rhs.name;
+      isSkin = rhs.isSkin;
+      materials = rhs.materials;
+      vertices = rhs.vertices;
+      faces = rhs.faces;
+      bonesInfluencingAttribute = rhs.bonesInfluencingAttribute;
+      skinBones = rhs.skinBones;
+      localMtx = rhs.localMtx;
+
+      for (std::list<MeshDefinition*>::iterator it = children.begin();
+         it != children.end(); ++it)
+      {
+         delete *it;
+      }
+      children.clear();
+
+      for (std::list<MeshDefinition*>::const_iterator it = rhs.children.begin();
+         it != rhs.children.end(); ++it)
+      {
+         children.push_back(new MeshDefinition(**it));
+      }
+
+      return *this;
+   }
+
+   const std::list<MeshDefinition*>& getChildren() const {return children;}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

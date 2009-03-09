@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Animation&quot;;&quot;$(SolutionDir)\core-Scene&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\impl-DirectX&quot;;&quot;$(SolutionDir)\ext-MotionControllers&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Animation&quot;;&quot;$(SolutionDir)\core-Scene&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\impl-DirectX&quot;;&quot;$(SolutionDir)\ext-MotionControllers&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;&quot;$(SolutionDir)\ext-TreesGenerator&quot;;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -118,7 +118,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Animation&quot;;&quot;$(SolutionDir)\core-Scene&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\impl-DirectX&quot;;&quot;$(SolutionDir)\ext-MotionControllers&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Animation&quot;;&quot;$(SolutionDir)\core-Scene&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\impl-DirectX&quot;;&quot;$(SolutionDir)\ext-MotionControllers&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;&quot;$(SolutionDir)\ext-TreesGenerator&quot;;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"

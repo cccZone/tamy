@@ -146,15 +146,15 @@ void XFileGraphicalEntityLoader::parseFrames(D3DXFRAME* frame,
       }
       else
       {
-         parent->children.push_back(MeshDefinition());
-         parseFrames(frame->pFrameSibling, parent, parent->children.back());
+         parent->children.push_back(new MeshDefinition());
+         parseFrames(frame->pFrameSibling, parent, *(parent->children.back()));
       }
    }
 
    if(frame->pFrameFirstChild != NULL) 
    {
-      mesh.children.push_back(MeshDefinition());
-      parseFrames(frame->pFrameFirstChild, &mesh, mesh.children.back());
+      mesh.children.push_back(new MeshDefinition());
+      parseFrames(frame->pFrameFirstChild, &mesh, *(mesh.children.back()));
    }
 }
 

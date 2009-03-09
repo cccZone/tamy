@@ -90,7 +90,7 @@ TreeSegment* TreeStructureGenerator::createNextBranchSegment(const TreeParams& p
       if (newBranch)
       {
          segment->segmentIdx = parent->segmentIdx;
-         segment->width = parent->width / 4.f;
+         segment->width = parent->width*0.75f;
          segment->initWidth = segment->width;
 
          segment->position = parent->position;
@@ -98,7 +98,8 @@ TreeSegment* TreeStructureGenerator::createNextBranchSegment(const TreeParams& p
          variateDirection(*parent, 
                           params.minNewBranchDirVariation, 
                           params.maxNewBranchDirVariation, 
-                          *segment);
+                          *segment,
+                          360.f);
       }
       else
       {
@@ -112,7 +113,8 @@ TreeSegment* TreeStructureGenerator::createNextBranchSegment(const TreeParams& p
          variateDirection(*parent, 
                           params.minInternalBranchDirVariation, 
                           params.maxInternalBranchDirVariation, 
-                          *segment);
+                          *segment,
+                          30.0f);
       }
    }
 
@@ -120,8 +122,10 @@ TreeSegment* TreeStructureGenerator::createNextBranchSegment(const TreeParams& p
    {
       segment->type = BRANCH_START;
    }
-   else if ((randomChance(params.abruptBranchEndProbab) == true) ||
-            (segment->segmentIdx >= params.maxTreeDepth))
+   else if (((randomChance(params.abruptBranchEndProbab) == true) && 
+             (segment->segmentIdx >= params.initialBranchingLevel)) ||
+            (segment->segmentIdx >= params.maxTreeDepth) ||
+            (segment->width < 1))
    {
       segment->type = BRANCH_END;
       segment->width = 0;
@@ -139,14 +143,14 @@ TreeSegment* TreeStructureGenerator::createNextBranchSegment(const TreeParams& p
 void TreeStructureGenerator::variateDirection(const TreeSegment& referenceSeg, 
                                               float minVarAngle, 
                                               float maxVarAngle,
-                                              TreeSegment& changedSeg)
+                                              TreeSegment& changedSeg,
+                                              float polarTheta)
 {
    changedSeg.direction = referenceSeg.direction;
    changedSeg.rightVec = referenceSeg.rightVec;
 
    if ((minVarAngle == 0) && (maxVarAngle == 0)) {return;}
 
-   float polarTheta = 360.f;
    float azimuth = (float)rand() / (float)RAND_MAX;
    float polar = (float)rand() / (float)RAND_MAX;
 
