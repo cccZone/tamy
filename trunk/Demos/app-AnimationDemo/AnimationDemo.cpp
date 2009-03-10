@@ -1,4 +1,4 @@
-#include "SkinningDemo.h"
+#include "AnimationDemo.h"
 #include <tchar.h>
 #include "WindowBuilder.h"
 #include "D3DRenderer.h"
@@ -24,7 +24,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkinningDemo::SkinningDemo(HINSTANCE hInstance)
+AnimationDemo::AnimationDemo(HINSTANCE hInstance)
       : m_hInstance(hInstance),
       m_timer(new CTimer()),
       m_lastFrameRate(0),
@@ -35,8 +35,8 @@ SkinningDemo::SkinningDemo(HINSTANCE hInstance)
    CWindowBuilder winBuilder;
 
    WindowParams params;
-   strcpy_s(params.windowTitle, "Skinning Demo");
-   strcpy_s(params.windowClassName, "SkinningDemoClass");
+   strcpy_s(params.windowTitle, "Animation Demo");
+   strcpy_s(params.windowClassName, "AnimationDemoClass");
    params.ptrMsgProc = this;
 
    m_hWnd = winBuilder.createWindowedModeWindow(m_hInstance, params);
@@ -48,7 +48,7 @@ SkinningDemo::SkinningDemo(HINSTANCE hInstance)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkinningDemo::~SkinningDemo()
+AnimationDemo::~AnimationDemo()
 {
    delete m_animationController;
    m_animationController = NULL;
@@ -73,20 +73,17 @@ SkinningDemo::~SkinningDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinningDemo::run(int nCmdShow)
+void AnimationDemo::run(int nCmdShow)
 {
    MSG msg;
    ShowWindow(m_hWnd, nCmdShow);
 
-   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("US Ranger.x");
-   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("US Ranger.x", loader);
-   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("ranger01");
-   entInstance->attachEntity(ent);
-   m_sceneManager->addNode(entInstance);
+   IWFLoader loader(*m_resourceManager, *m_sceneManager);
+   loader.load("..\\Data\\AnimLandscape.iwf");
 
-   m_animationController = ent.instantiateSkeleton(*entInstance);
-   m_animationController->activateAnimation("");
-
+   AbstractGraphicalEntity& ent = m_resourceManager->getGraphicalEntity("animlandscape.x");
+   m_animationController = ent.instantiateSkeleton(m_sceneManager->getRootNode());
+   m_animationController->activateAnimation("Cutscene_01");
 
    Light* light = m_resourceManager->createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
@@ -119,7 +116,7 @@ void SkinningDemo::run(int nCmdShow)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinningDemo::advanceGameState()
+void AnimationDemo::advanceGameState()
 {
    m_timer->tick();
    float timeElapsed = m_timer->getTimeElapsed();
@@ -128,7 +125,7 @@ void SkinningDemo::advanceGameState()
    if (m_lastFrameRate != m_timer->getFrameRate())
    {
       m_lastFrameRate = m_timer->getFrameRate();
-      _stprintf_s(titleBuffer, _T("Skinning Demo : %ld FPS"), m_lastFrameRate);
+      _stprintf_s(titleBuffer, _T("Animation Demo : %ld FPS"), m_lastFrameRate);
       SetWindowText(m_hWnd, titleBuffer);
    }
 
@@ -139,7 +136,7 @@ void SkinningDemo::advanceGameState()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinningDemo::processInput(float timeElapsed)
+void AnimationDemo::processInput(float timeElapsed)
 {
    UCHAR keyBuffer[256];
    if (!GetKeyboardState(keyBuffer)) return;
@@ -170,7 +167,7 @@ void SkinningDemo::processInput(float timeElapsed)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LRESULT SkinningDemo::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT AnimationDemo::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
    switch (message)
    {
@@ -223,7 +220,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-	SkinningDemo app(hInstance);
+	AnimationDemo app(hInstance);
    app.run(nCmdShow);
 
 	return 0;

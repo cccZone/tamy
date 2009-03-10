@@ -1,4 +1,4 @@
-#include "ComplexSceneDemo.h"
+#include "TreesGeneratorDemo.h"
 #include <tchar.h>
 #include "WindowBuilder.h"
 #include "D3DRenderer.h"
@@ -7,7 +7,6 @@
 #include "Timer.h"
 #include <cassert>
 #include "BasicSceneManager.h"
-#include "GeometryBuilder.h"
 #include "GraphicalEntityInstantiator.h"
 #include "Camera.h"
 #include "Light.h"
@@ -29,7 +28,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ComplexSceneDemo::ComplexSceneDemo(HINSTANCE hInstance)
+TreesGeneratorDemo::TreesGeneratorDemo(HINSTANCE hInstance)
       : m_hInstance(hInstance),
       m_timer(new CTimer()),
       m_lastFrameRate(0),
@@ -40,8 +39,8 @@ ComplexSceneDemo::ComplexSceneDemo(HINSTANCE hInstance)
    CWindowBuilder winBuilder;
 
    WindowParams params;
-   strcpy_s(params.windowTitle, "Complex Scene Demo");
-   strcpy_s(params.windowClassName, "ComplexSceneDemoClass");
+   strcpy_s(params.windowTitle, "Trees Generator Demo");
+   strcpy_s(params.windowClassName, "TreesGeneratorDemoClass");
    params.ptrMsgProc = this;
 
    m_hWnd = winBuilder.createWindowedModeWindow(m_hInstance, params);
@@ -53,7 +52,7 @@ ComplexSceneDemo::ComplexSceneDemo(HINSTANCE hInstance)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ComplexSceneDemo::~ComplexSceneDemo()
+TreesGeneratorDemo::~TreesGeneratorDemo()
 {
    delete m_animationController;
    m_animationController = NULL;
@@ -78,28 +77,10 @@ ComplexSceneDemo::~ComplexSceneDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSceneDemo::run(int nCmdShow)
+void TreesGeneratorDemo::run(int nCmdShow)
 {
    MSG msg;
    ShowWindow(m_hWnd, nCmdShow);
-/*
-   IWFLoader loader(*m_resourceManager, *m_sceneManager);
-   loader.load("..\\Data\\AnimLandscape.iwf");
-
-   AbstractGraphicalEntity& ent = m_resourceManager->getGraphicalEntity("animlandscape.x");
-   m_animationController = ent.instantiateSkeleton(m_sceneManager->getRootNode());
-   m_animationController->activateAnimation("Cutscene_01");
-
-
-   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("US Ranger.x");
-   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("US Ranger.x", loader);
-   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("ranger01");
-   entInstance->attachEntity(ent);
-   m_sceneManager->addNode(entInstance);
-
-   m_animationController = ent.instantiateSkeleton(*entInstance);
-   m_animationController->activateAnimation("");
-*/
 
    TreeParams treeParams;
    treeParams.maxTreeDepth = 10;
@@ -169,7 +150,7 @@ void ComplexSceneDemo::run(int nCmdShow)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSceneDemo::advanceGameState()
+void TreesGeneratorDemo::advanceGameState()
 {
    m_timer->tick();
    float timeElapsed = m_timer->getTimeElapsed();
@@ -178,7 +159,7 @@ void ComplexSceneDemo::advanceGameState()
    if (m_lastFrameRate != m_timer->getFrameRate())
    {
       m_lastFrameRate = m_timer->getFrameRate();
-      _stprintf_s(titleBuffer, _T("Complex Scene Demo : %ld FPS"), m_lastFrameRate);
+      _stprintf_s(titleBuffer, _T("Trees Generator Demo : %ld FPS"), m_lastFrameRate);
       SetWindowText(m_hWnd, titleBuffer);
    }
 
@@ -189,7 +170,7 @@ void ComplexSceneDemo::advanceGameState()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSceneDemo::processInput(float timeElapsed)
+void TreesGeneratorDemo::processInput(float timeElapsed)
 {
    UCHAR keyBuffer[256];
    if (!GetKeyboardState(keyBuffer)) return;
@@ -220,7 +201,7 @@ void ComplexSceneDemo::processInput(float timeElapsed)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LRESULT ComplexSceneDemo::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT TreesGeneratorDemo::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
    switch (message)
    {
@@ -273,7 +254,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-	ComplexSceneDemo app(hInstance);
+	TreesGeneratorDemo app(hInstance);
    app.run(nCmdShow);
 
 	return 0;

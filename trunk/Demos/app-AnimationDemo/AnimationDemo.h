@@ -16,7 +16,7 @@ class Skeleton;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class TreesGeneratorDemo : public IWindowMessagesProcessor
+class AnimationDemo : public IWindowMessagesProcessor
 {
 private:
    HINSTANCE m_hInstance;
@@ -34,8 +34,8 @@ private:
    Skeleton* m_animationController;
 
 public:
-   TreesGeneratorDemo(HINSTANCE hInstance);
-   ~TreesGeneratorDemo();
+   AnimationDemo(HINSTANCE hInstance);
+   ~AnimationDemo();
 
    void run(int nCmdShow);
    

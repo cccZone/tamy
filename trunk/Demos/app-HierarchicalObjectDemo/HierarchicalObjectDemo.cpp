@@ -1,4 +1,4 @@
-#include "SkinningDemo.h"
+#include "HierarchicalObjectDemo.h"
 #include <tchar.h>
 #include "WindowBuilder.h"
 #include "D3DRenderer.h"
@@ -24,19 +24,18 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkinningDemo::SkinningDemo(HINSTANCE hInstance)
+HierarchicalObjectDemo::HierarchicalObjectDemo(HINSTANCE hInstance)
       : m_hInstance(hInstance),
       m_timer(new CTimer()),
       m_lastFrameRate(0),
       m_sceneManager(new BasicSceneManager()),
-      m_cameraController(NULL),
-      m_animationController(NULL)
+      m_cameraController(NULL)
 {
    CWindowBuilder winBuilder;
 
    WindowParams params;
-   strcpy_s(params.windowTitle, "Skinning Demo");
-   strcpy_s(params.windowClassName, "SkinningDemoClass");
+   strcpy_s(params.windowTitle, "Hierarchical Object Demo");
+   strcpy_s(params.windowClassName, "HierarchicalObjectDemoClass");
    params.ptrMsgProc = this;
 
    m_hWnd = winBuilder.createWindowedModeWindow(m_hInstance, params);
@@ -48,11 +47,8 @@ SkinningDemo::SkinningDemo(HINSTANCE hInstance)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkinningDemo::~SkinningDemo()
+HierarchicalObjectDemo::~HierarchicalObjectDemo()
 {
-   delete m_animationController;
-   m_animationController = NULL;
-
    delete m_cameraController;
    m_cameraController = NULL;
 
@@ -73,30 +69,15 @@ SkinningDemo::~SkinningDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinningDemo::run(int nCmdShow)
+void HierarchicalObjectDemo::run(int nCmdShow)
 {
    MSG msg;
    ShowWindow(m_hWnd, nCmdShow);
 
-   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("US Ranger.x");
-   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("US Ranger.x", loader);
-   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("ranger01");
-   entInstance->attachEntity(ent);
-   m_sceneManager->addNode(entInstance);
-
-   m_animationController = ent.instantiateSkeleton(*entInstance);
-   m_animationController->activateAnimation("");
-
-
-   Light* light = m_resourceManager->createLight("light");
-   light->setType(Light::LT_DIRECTIONAL);
-   light->setDiffuseColor(Color(1, 1, 1, 0));
-   light->setLookVec(D3DXVECTOR3(0, 0, -1));
-   m_sceneManager->addNode(light);
+   IWFLoader loader(*m_resourceManager, *m_sceneManager);
+   loader.load("..\\Data\\Space_Scene.iwf");
 
    Camera* camera = m_resourceManager->createCamera("camera");
-   camera->setLookVec(D3DXVECTOR3(0, 0, -1));
-   camera->setPosition(D3DXVECTOR3(0, 10, 50));
    m_sceneManager->addNode(camera);
    m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
@@ -119,7 +100,7 @@ void SkinningDemo::run(int nCmdShow)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinningDemo::advanceGameState()
+void HierarchicalObjectDemo::advanceGameState()
 {
    m_timer->tick();
    float timeElapsed = m_timer->getTimeElapsed();
@@ -128,18 +109,17 @@ void SkinningDemo::advanceGameState()
    if (m_lastFrameRate != m_timer->getFrameRate())
    {
       m_lastFrameRate = m_timer->getFrameRate();
-      _stprintf_s(titleBuffer, _T("Skinning Demo : %ld FPS"), m_lastFrameRate);
+      _stprintf_s(titleBuffer, _T("Hierarchical Object Demo : %ld FPS"), m_lastFrameRate);
       SetWindowText(m_hWnd, titleBuffer);
    }
 
    processInput(timeElapsed);
-   m_animationController->update(timeElapsed);
    m_renderer->render(m_sceneManager->getRootNode());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinningDemo::processInput(float timeElapsed)
+void HierarchicalObjectDemo::processInput(float timeElapsed)
 {
    UCHAR keyBuffer[256];
    if (!GetKeyboardState(keyBuffer)) return;
@@ -170,7 +150,7 @@ void SkinningDemo::processInput(float timeElapsed)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LRESULT SkinningDemo::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+LRESULT HierarchicalObjectDemo::wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
    switch (message)
    {
@@ -223,7 +203,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-	SkinningDemo app(hInstance);
+	HierarchicalObjectDemo app(hInstance);
    app.run(nCmdShow);
 
 	return 0;

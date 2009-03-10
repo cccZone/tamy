@@ -12,11 +12,10 @@ class Renderer;
 class CTimer;
 class SceneManager;
 class UnconstrainedMotionController;
-class Skeleton;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class TreesGeneratorDemo : public IWindowMessagesProcessor
+class HierarchicalObjectDemo : public IWindowMessagesProcessor
 {
 private:
    HINSTANCE m_hInstance;
@@ -31,11 +30,10 @@ private:
    SceneManager* m_sceneManager;
 
    UnconstrainedMotionController* m_cameraController;
-   Skeleton* m_animationController;
 
 public:
-   TreesGeneratorDemo(HINSTANCE hInstance);
-   ~TreesGeneratorDemo();
+   HierarchicalObjectDemo(HINSTANCE hInstance);
+   ~HierarchicalObjectDemo();
 
    void run(int nCmdShow);
    

@@ -16,7 +16,7 @@ class Skeleton;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ComplexSceneDemo : public IWindowMessagesProcessor
+class SkinningDemo : public IWindowMessagesProcessor
 {
 private:
    HINSTANCE m_hInstance;
@@ -34,8 +34,8 @@ private:
    Skeleton* m_animationController;
 
 public:
-   ComplexSceneDemo(HINSTANCE hInstance);
-   ~ComplexSceneDemo();
+   SkinningDemo(HINSTANCE hInstance);
+   ~SkinningDemo();
 
    void run(int nCmdShow);
    
