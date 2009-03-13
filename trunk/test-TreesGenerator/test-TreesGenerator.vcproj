@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\TreeAnimatorTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TreeSkinnerTests.cpp"
 				>
 			</File>
@@ -189,7 +193,15 @@
 			Name="Utils"
 			>
 			<File
+				RelativePath=".\AnimationDefinitionWriter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MeshDefinitionWriter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SampleTrees.h"
 				>
 			</File>
 			<File

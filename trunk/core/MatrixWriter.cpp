@@ -22,3 +22,15 @@ std::ostream& operator<<(std::ostream &os, const D3DXVECTOR3& vec)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+std::ostream& operator<<(std::ostream &os, const D3DXQUATERNION& quat)
+{
+   float x = (fabs(quat.x) < 0.00001f) ? 0 : quat.x;
+   float y = (fabs(quat.y) < 0.00001f) ? 0 : quat.y;
+   float z = (fabs(quat.z) < 0.00001f) ? 0 : quat.z;
+   float w = (fabs(quat.w) < 0.00001f) ? 0 : quat.w;
+   os << "[" << x << ", " << y << ", " << z << ", " << w << "]";
+   return os;
+}
+
+///////////////////////////////////////////////////////////////////////////////

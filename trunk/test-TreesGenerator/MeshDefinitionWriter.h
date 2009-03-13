@@ -96,11 +96,13 @@ protected:
          for (std::vector<BonesInfluenceDefinition>::iterator setIt = entity.bonesInfluencingAttribute.begin();
               setIt != entity.bonesInfluencingAttribute.end(); ++setIt)
          {
+            stream << "(";
             for (BonesInfluenceDefinition::iterator boneIt = setIt->begin();
                  boneIt != setIt->end(); ++boneIt)
             {
-               stream << *boneIt << ", " << std::endl;
+               stream << *boneIt << ", ";
             }
+            stream << ") ," << std::endl;
          }
 
          stream << "};" << std::endl << "skinBones : {" << std::endl;

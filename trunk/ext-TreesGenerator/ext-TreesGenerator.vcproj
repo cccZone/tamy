@@ -187,6 +187,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Animator"
+			>
+			<File
+				RelativePath=".\TreeAnimator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TreeAnimator.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

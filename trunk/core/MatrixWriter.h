@@ -8,5 +8,6 @@
 
 std::ostream& operator<<(std::ostream &os, const D3DXMATRIX& mtx);
 std::ostream& operator<<(std::ostream &os, const D3DXVECTOR3& vec);
+std::ostream& operator<<(std::ostream &os, const D3DXQUATERNION& quat);
 
 ///////////////////////////////////////////////////////////////////////////////

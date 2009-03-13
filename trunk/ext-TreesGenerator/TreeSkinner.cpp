@@ -1,8 +1,8 @@
 #include "TreeSkinner.h"
 #include "TreeSegment.h"
 #include "MeshDefinition.h"
-#include <deque>
 #include <math.h>
+#include <set>
 #include <cassert>
 #include <stdexcept>
 #include <sstream>
@@ -10,19 +10,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-double const M_PI = 2 * acos(0.0);
-
-///////////////////////////////////////////////////////////////////////////////
-
 TreeSkinner::TreeSkinner(const TreeSegment& treeRoot)
       : m_treeRoot(treeRoot),
-      m_treeHeight(0),
-      m_skinningResolution(0),
-      m_bonesResolution(0),
-      m_skinnedTreeRoot(NULL),
-      m_analysisStart(true),
-      m_branchIdx(0),
-      m_currAnalyzedBranch(NULL)
+      m_treeHeight(0)
 {
    m_treeHeight = getTreeHeight(m_treeRoot);
 
@@ -35,11 +25,10 @@ TreeSkinner::TreeSkinner(const TreeSegment& treeRoot)
 ///////////////////////////////////////////////////////////////////////////////
 
 
-void TreeSkinner::operator()(const std::string& entityName, 
-                             unsigned int skinningResolution,
-                             unsigned int bonesResolution,
-                             const MaterialDefinition& requestedMaterial,
-                             MeshDefinition& outMesh)
+MeshDefinition* TreeSkinner::operator()(const std::string& entityName, 
+                                        unsigned int skinningResolution,
+                                        unsigned int bonesResolution,
+                                        const MaterialDefinition& requestedMaterial)
 {
    if (skinningResolution < 3)
    {
@@ -50,15 +39,407 @@ void TreeSkinner::operator()(const std::string& entityName,
       throw std::invalid_argument("Bones resolution has to be > 0");
    }
 
-   m_skinningResolution = skinningResolution;
-   m_bonesResolution = bonesResolution;
-   m_analysisStart = true;
-   m_skinnedTreeRoot = &outMesh;
-   m_entityName = entityName;
-   m_branchIdx = 0;
+   MeshDefinition* root = NULL;
 
-   createSkin();
-   setMaterials(requestedMaterial, outMesh);
+   std::list<TreeBoneDefinition> skeleton;
+   std::list<TreeBoneDefinition> skins;
+   createSkeleton(bonesResolution, skeleton, skins);
+   if ((skeleton.size() == 0) || (skins.size() == 0))
+   {
+      throw std::runtime_error("Invalid tree sturcture");
+   }
+   else
+   {
+      root = &(skeleton.front().mesh);
+   }
+
+   // process the bones
+   for (std::list<TreeBoneDefinition>::iterator it = skeleton.begin();
+        it != skeleton.end(); ++it)
+   {
+      createBone(*it);
+   }
+
+   // process the skins
+   for (std::list<TreeBoneDefinition>::iterator it = skins.begin();
+        it != skins.end(); ++it)
+   {
+      createSkin(*it, skinningResolution, bonesResolution);
+   }
+
+   // create the information about the offset matrices
+   std::map<std::string, D3DXMATRIX> offsetMatrices;
+   extractOffsetMatrices(*root, offsetMatrices);
+   updateMeshesWithOffsetMatrices(*root, offsetMatrices);
+
+   // set the materials on the entire hierarchy of meshes
+   setMaterials(requestedMaterial, *root);
+
+   return root;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+unsigned int TreeSkinner::getTreeHeight(const TreeSegment& treeRoot) const
+{
+   // find the height of the tree
+   unsigned int treeHeight = 0;
+   std::deque<const TreeSegment*> segsQueue;
+   segsQueue.push_back(&treeRoot);
+   while(segsQueue.size() > 0)
+   {
+      const TreeSegment* currSeg = segsQueue.front();
+      segsQueue.pop_front();
+
+      if (currSeg->segmentIdx > treeHeight) {treeHeight = currSeg->segmentIdx;}
+
+      for (std::list<TreeSegment*>::const_iterator it = currSeg->children.begin();
+           it != currSeg->children.end(); ++it)
+      {
+         segsQueue.push_back(*it);
+      }
+   }
+
+   return treeHeight;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TreeSkinner::createSkeleton(unsigned int bonesResolution,
+                                 std::list<TreeBoneDefinition>& skeleton,
+                                 std::list<TreeBoneDefinition>& skins) const
+{
+   std::deque<TreeBoneDefinition> segsQueue;
+   segsQueue.push_back(TreeBoneDefinition(m_treeRoot,
+                                          *(reinterpret_cast<MeshDefinition*> (NULL)),
+                                          NULL,
+                                          -1,
+                                          0));
+
+   unsigned int branchesCounter = 0;
+
+   while (segsQueue.size() > 0)
+   {
+      TreeBoneDefinition& def = segsQueue.front(); 
+
+      switch(def.treeSeg.type)
+      {
+      case BRANCH_START:
+         {
+            // create a bone mesh
+            MeshDefinition* newBone = new MeshDefinition();
+            MeshDefinition* parentMesh = &(def.mesh);
+            if (parentMesh != NULL) 
+            {
+               parentMesh->children.push_back(newBone);
+               newBone->parent = parentMesh;
+            }
+            skeleton.push_back(TreeBoneDefinition(def.treeSeg, 
+                                                  *newBone, 
+                                                  def.parentTreeSeg, 
+                                                  branchesCounter,
+                                                  0));
+
+            // create a skin mesh
+            MeshDefinition* newSkin = new MeshDefinition();
+            newBone->children.push_back(newSkin);
+            newSkin->parent = newBone;
+            skins.push_back(TreeBoneDefinition(def.treeSeg, 
+                                               *newSkin, 
+                                               def.parentTreeSeg, 
+                                               branchesCounter,
+                                               0));
+
+            // get the only child (hopefully) into the processing queue
+            assert(def.treeSeg.children.size() == 1);
+            TreeSegment* childSeg = def.treeSeg.children.back();
+            segsQueue.push_back(TreeBoneDefinition(*childSeg, 
+                                                   *newBone, 
+                                                   &(def.treeSeg), 
+                                                   branchesCounter, 
+                                                   0));
+            branchesCounter++;
+            break;
+         }
+
+      case BRANCH_MIDDLE:
+         {
+            const TreeSegment* parentSeg = def.parentTreeSeg;
+            MeshDefinition* parentMesh = &(def.mesh);
+            unsigned int boneIdx = def.boneIdx;
+
+            if (isTimeForBranch(def.treeSeg, bonesResolution) == true)
+            {
+               MeshDefinition* newBone = new MeshDefinition();
+               if (parentMesh != NULL) 
+               {
+                  parentMesh->children.push_back(newBone);
+                  newBone->parent = parentMesh;
+               }
+
+               boneIdx++;
+               skeleton.push_back(TreeBoneDefinition(def.treeSeg, 
+                                                     *newBone, 
+                                                     def.parentTreeSeg, 
+                                                     def.branchIdx, 
+                                                     boneIdx));
+
+               parentMesh = newBone;
+               parentSeg = &(def.treeSeg);
+            }
+
+            const std::list<TreeSegment*>& childrenSegs = def.treeSeg.children;
+            for (std::list<TreeSegment*>::const_iterator it = childrenSegs.begin();
+                 it != childrenSegs.end(); ++it)
+            {
+               segsQueue.push_back(TreeBoneDefinition(**it, 
+                                                      *parentMesh, 
+                                                      parentSeg, 
+                                                      def.branchIdx, 
+                                                      boneIdx));
+            }
+            break;
+         };
+
+      case BRANCH_END:
+         {
+            break;
+         }
+      }
+
+      segsQueue.pop_front();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool TreeSkinner::isTimeForBranch(const TreeSegment& treeSegment, 
+                                  unsigned int bonesResolution) const
+{
+   // each n-segments a bone needs to be insterted
+   if ((treeSegment.segmentIdx % bonesResolution) == 0)
+   {
+      return true;
+   }
+
+   // if that's not the case, then we will also need a bone
+   // if there's a branch originating at the segment here
+
+   for (std::list<TreeSegment*>::const_iterator it = treeSegment.children.begin();
+        it != treeSegment.children.end(); ++it)
+   {
+      if ((*it)->type == BRANCH_START)
+      {
+         return true;
+      }
+   }
+
+   // ... guess it's not the time for a new bone just yet
+   return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TreeSkinner::createBone(const TreeBoneDefinition& boneDef)
+{
+   std::stringstream boneName;
+   boneName << "branch_" << boneDef.branchIdx << "_Bone_" << boneDef.boneIdx;
+   boneDef.mesh.name = boneName.str();
+
+   D3DXMatrixIdentity(&(boneDef.mesh.localMtx));
+   if (boneDef.parentTreeSeg != NULL)
+   {
+      boneDef.mesh.localMtx = extractLocalMatrix(boneDef.treeSeg, boneDef.parentTreeSeg);
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+D3DXMATRIX TreeSkinner::extractLocalMatrix(const TreeSegment& treeSeg, 
+                                           const TreeSegment* parentSeg)
+{
+   D3DXMATRIX currGlobalMtx = extractGlobalMatrix(treeSeg);
+   if (parentSeg == NULL)
+   {
+      return currGlobalMtx;
+   }
+   else
+   {
+      D3DXMATRIX localMtx;
+      D3DXMATRIX parentGlobalMtx = extractGlobalMatrix(*parentSeg);
+
+      D3DXMatrixInverse(&parentGlobalMtx, NULL, &parentGlobalMtx);
+      D3DXMatrixMultiply(&localMtx, &currGlobalMtx, &parentGlobalMtx);
+
+      for (char row = 0; row < 4; row++)
+      {
+         for (char col = 0; col < 4; col++)
+         {
+            if (fabs(localMtx.m[row][col]) < 0.000001f) {localMtx.m[row][col] = 0;}
+         }
+      }
+
+      return localMtx;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+D3DXMATRIX TreeSkinner::extractGlobalMatrix(const TreeSegment& treeSeg)
+{
+   D3DXVECTOR3 lookVec;
+   D3DXVec3Cross(&lookVec, &treeSeg.direction, &treeSeg.rightVec);
+   D3DXVec3Normalize(&lookVec, &lookVec);
+
+   D3DXMATRIX currMtx; D3DXMatrixIdentity(&currMtx);
+   currMtx._11 = treeSeg.rightVec.x; 
+   currMtx._12 = treeSeg.rightVec.y; 
+   currMtx._13 = treeSeg.rightVec.z;
+   currMtx._21 = treeSeg.direction.x; 
+   currMtx._22 = treeSeg.direction.y; 
+   currMtx._23 = treeSeg.direction.z;
+   currMtx._31 = -lookVec.x; 
+   currMtx._32 = -lookVec.y; 
+   currMtx._33 = -lookVec.z;
+   currMtx._41 = treeSeg.position.x; 
+   currMtx._42 = treeSeg.position.y; 
+   currMtx._43 = treeSeg.position.z;
+
+   return currMtx;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TreeSkinner::createSkin(const TreeBoneDefinition& boneDef,
+                             unsigned int skinningResolution,
+                             unsigned int bonesResolution)
+{
+   std::stringstream boneName;
+   boneName << "branch_" << boneDef.branchIdx << "_skin";
+   boneDef.mesh.name = boneName.str();
+   boneDef.mesh.isSkin = true;
+   D3DXMatrixIdentity(&(boneDef.mesh.localMtx));
+ 
+   const TreeSegment* branchRootSeg = &(boneDef.treeSeg);
+
+   std::set<std::string> distinctBoneNames;
+
+   // generate the vertices, faces and attributes
+   std::deque<const TreeSegment*> segsQueue;
+   segsQueue.push_back(&(boneDef.treeSeg));
+
+   DWORD attributeID = 0;
+   DWORD boneIdx = 0;
+   bool swappedWeights = false;
+   bool wasPreviousWithBone = false;
+   std::string previousBoneName;
+
+   while (segsQueue.size() > 0)
+   {
+      const TreeSegment* currSeg = segsQueue.front();
+      segsQueue.pop_front();
+
+      switch(currSeg->type)
+      {
+      case BRANCH_START:
+         {
+            addCylindricalVertices(*currSeg, branchRootSeg, skinningResolution, swappedWeights, boneDef.mesh);
+
+            BonesInfluenceDefinition bonesForAttibute;
+
+            std::stringstream bone1Name;
+            bone1Name << "branch_" << boneDef.branchIdx << "_Bone_" << boneIdx;
+            previousBoneName = bone1Name.str();
+
+            bonesForAttibute.push_back(previousBoneName);
+            boneDef.mesh.bonesInfluencingAttribute.push_back(bonesForAttibute);
+            distinctBoneNames.insert(previousBoneName);
+
+            break;
+         }
+
+      case BRANCH_MIDDLE:
+         {
+            bool isBoneSegment = isTimeForBranch(*currSeg, bonesResolution);
+
+            if (isBoneSegment) 
+            {
+               swappedWeights = !swappedWeights;
+               wasPreviousWithBone = true;
+            }
+            else
+            {
+               wasPreviousWithBone = false;
+            }
+
+            addCylindricalVertices(*currSeg, branchRootSeg, skinningResolution, swappedWeights, boneDef.mesh);
+
+
+            if (isBoneSegment) 
+            {
+               std::stringstream newBoneName;
+               boneIdx++;
+               newBoneName << "branch_" << boneDef.branchIdx << "_Bone_" << boneIdx;
+               distinctBoneNames.insert(newBoneName.str());
+
+               BonesInfluenceDefinition bonesForAttribute(2);
+               if (swappedWeights)
+               {
+                  bonesForAttribute[1] = newBoneName.str();
+                  bonesForAttribute[0] = previousBoneName;
+               }
+               else
+               {
+                  bonesForAttribute[0] = newBoneName.str();
+                  bonesForAttribute[1] = previousBoneName;
+               }       
+               boneDef.mesh.bonesInfluencingAttribute.push_back(bonesForAttribute);
+               previousBoneName = newBoneName.str();
+
+               attributeID++;
+            }
+
+            addCylindricalFaces(skinningResolution, boneDef.mesh, attributeID);
+
+            break;  
+         }
+
+      case BRANCH_END:
+         {
+            if (wasPreviousWithBone) 
+            {
+               swappedWeights = !swappedWeights;
+
+               BonesInfluenceDefinition bonesForAttribute;
+               bonesForAttribute.push_back(previousBoneName);
+               bonesForAttribute.push_back(previousBoneName);
+               boneDef.mesh.bonesInfluencingAttribute.push_back(bonesForAttribute);
+
+               attributeID++;
+            }
+            addEndVertex(*currSeg, branchRootSeg, swappedWeights, boneDef.mesh);
+            addEndFaces(skinningResolution, boneDef.mesh, attributeID);
+            break;
+         }
+      }
+
+      // put children segments up for processing
+      for (std::list<TreeSegment*>::const_iterator it = currSeg->children.begin();
+           it != currSeg->children.end(); ++it)
+      {
+         if ((*it)->type == BRANCH_START) continue; // we're not interested in branches this time
+
+         segsQueue.push_back(*it);
+      }
+   }
+
+   // update the list of skin bones definitions
+   D3DXMATRIX identityMtx; D3DXMatrixIdentity(&identityMtx);
+   for (std::set<std::string>::iterator it = distinctBoneNames.begin();
+        it != distinctBoneNames.end(); ++it)
+   {
+      boneDef.mesh.skinBones.push_back(SkinBoneDefinition(*it, identityMtx));
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,223 +468,25 @@ void TreeSkinner::setMaterials(const MaterialDefinition& requestedMaterial,
    }
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
-void TreeSkinner::createSkin()
-{
-   std::deque<SegmentToAnalyze> segsQueue;
-   segsQueue.push_back(SegmentToAnalyze(NULL, &m_treeRoot));
-   while(segsQueue.size() > 0)
-   {
-      m_currAnalyzedBranch = &(segsQueue.front());
-      segsQueue.pop_front();
-
-      const TreeSegment& treeSeg = *(m_currAnalyzedBranch->treeSeg);
-      MeshDefinition& currMesh = *(m_currAnalyzedBranch->parentMesh);
-
-      switch(treeSeg.type)
-      {
-      case BRANCH_START:
-         {
-            D3DXMATRIX localMtx = calculateLocalMtx(treeSeg, 
-                                                    m_currAnalyzedBranch->m_currentBranchGlobalMtx);
-            D3DXMATRIX identityMtx; D3DXMatrixIdentity(&identityMtx);
-
-            MeshDefinition* newBranchMesh = createBranch(localMtx);
-            m_currAnalyzedBranch->m_currBone = newBranchMesh;
-            m_currAnalyzedBranch->m_currentBoneIdx = -1;
-            defineNewBone(treeSeg, *newBranchMesh, identityMtx, identityMtx);
-            addCylindricalVertices(treeSeg, *newBranchMesh);
-
-            for (std::list<TreeSegment*>::const_iterator it = treeSeg.children.begin();
-                 it != treeSeg.children.end(); ++it)
-            {
-               SegmentToAnalyze newSeg(*m_currAnalyzedBranch);
-               newSeg.parentMesh = newBranchMesh;
-               newSeg.treeSeg = *it;
-               newSeg.m_currentSegGlobalMtx = localMtx;
-               D3DXMatrixIdentity(&newSeg.m_globalBoneOffsetMtx);
-               segsQueue.push_back(newSeg);
-            }
-            break;
-         }
-      case BRANCH_MIDDLE:
-         {
-            addCylindricalVertices(treeSeg, currMesh);
-            addCylindricalFaces(currMesh);
-
-            if (isTimeForNextBone(treeSeg)) 
-            { 
-               D3DXMATRIX localMtx = calculateLocalMtx(treeSeg,
-                                                       m_currAnalyzedBranch->m_currentSegGlobalMtx);
-               defineNewBone(treeSeg, currMesh, localMtx, m_currAnalyzedBranch->m_globalBoneOffsetMtx); 
-            }
-
-            for (std::list<TreeSegment*>::const_iterator it = treeSeg.children.begin();
-                 it != treeSeg.children.end(); ++it)
-            {
-               SegmentToAnalyze newSeg(*m_currAnalyzedBranch);
-               newSeg.parentMesh = &currMesh;
-               newSeg.treeSeg = *it;
-               segsQueue.push_back(newSeg);
-            }
-            break;
-         }
-      case BRANCH_END:
-         {
-            addEndVertex(treeSeg, currMesh);
-            addEndFaces(currMesh);
-
-            assert(treeSeg.children.size() == 0);
-
-            break;
-         }
-      }
-   }
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MeshDefinition* TreeSkinner::createBranch(const D3DXMATRIX& localMtx)
+void TreeSkinner::addCylindricalVertices(const TreeSegment& treeSeg, 
+                                         const TreeSegment* parentTreeSeg, 
+                                         unsigned int skinningResolution,
+                                         bool swappedWeights,
+                                         MeshDefinition& outMesh)
 {
-   assert(m_skinnedTreeRoot != NULL);
-
-   MeshDefinition* newMesh;
-   if (m_analysisStart)
-   {
-      newMesh = m_skinnedTreeRoot;
-      newMesh->name = m_entityName;
-      m_analysisStart = false;
-   }
-   else
-   {
-      newMesh = new MeshDefinition();
-      m_currAnalyzedBranch->parentMesh->children.push_back(newMesh);
-
-      std::stringstream branchName;
-      branchName << m_entityName << "_branch_" << m_branchIdx;
-      m_branchIdx++;
-
-      newMesh->name = branchName.str();
-   }
-   newMesh->isSkin = true;
-   newMesh->localMtx = localMtx;
-   return newMesh;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool TreeSkinner::isTimeForNextBone(const TreeSegment& treeSeg) const
-{
-   return ((treeSeg.segmentIdx % m_bonesResolution) == 0);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-D3DXMATRIX TreeSkinner::calculateLocalMtx(const TreeSegment& treeSeg, 
-                                          D3DXMATRIX& parentRefMtx)
-{
-   // calculate the bone's local mtx
-   D3DXVECTOR3 lookVec;
-   D3DXVec3Cross(&lookVec, &treeSeg.direction, &treeSeg.rightVec);
-   D3DXVec3Normalize(&lookVec, &lookVec);
-
-   D3DXMATRIX currMtx; D3DXMatrixIdentity(&currMtx);
-   currMtx._11 = treeSeg.rightVec.x; 
-   currMtx._12 = treeSeg.rightVec.y; 
-   currMtx._13 = treeSeg.rightVec.z;
-   currMtx._21 = treeSeg.direction.x; 
-   currMtx._22 = treeSeg.direction.y; 
-   currMtx._23 = treeSeg.direction.z;
-   currMtx._31 = -lookVec.x; 
-   currMtx._32 = -lookVec.y; 
-   currMtx._33 = -lookVec.z;
-   currMtx._41 = treeSeg.position.x; 
-   currMtx._42 = treeSeg.position.y; 
-   currMtx._43 = treeSeg.position.z;
-
-   D3DXMATRIX currGlobalMatrixInv;
-   D3DXMATRIX localMtx;
-   D3DXMatrixInverse(&currGlobalMatrixInv, NULL, &parentRefMtx);
-   D3DXMatrixMultiply(&localMtx, &currMtx, &currGlobalMatrixInv);
-
-   for (char row = 0; row < 4; row++)
-   {
-      for (char col = 0; col < 4; col++)
-      {
-         if (fabs(localMtx.m[row][col]) < 0.000001f) {localMtx.m[row][col] = 0;}
-      }
-   }
-
-   D3DXMatrixMultiply(&parentRefMtx, &localMtx, &parentRefMtx);
-
-   return localMtx;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TreeSkinner::defineNewBone(const TreeSegment& treeSeg,
-                                MeshDefinition& outMesh,
-                                const D3DXMATRIX& localMtx,
-                                D3DXMATRIX& globalBoneMtx)
-{
-   m_currAnalyzedBranch->m_currentBoneIdx++;
-      
-   std::stringstream boneName;
-   boneName << outMesh.name << "Bone_" << m_currAnalyzedBranch->m_currentBoneIdx;
-
-   BonesInfluenceDefinition bonesForAttrib; bonesForAttrib.push_back(boneName.str());
-   outMesh.bonesInfluencingAttribute.push_back(bonesForAttrib);
-
-   MeshDefinition* boneMesh = new MeshDefinition();
-   boneMesh->name = boneName.str();
-   boneMesh->isSkin = false;
-   boneMesh->localMtx = localMtx;
-
-   m_currAnalyzedBranch->m_currBone->children.push_back(boneMesh);
-   m_currAnalyzedBranch->m_currBone = boneMesh;
-
-   // calculate the bone's offset mtx
-   D3DXMATRIX boneOffsetMtx;
-   D3DXMatrixMultiply(&globalBoneMtx, &(boneMesh->localMtx), &globalBoneMtx);
-   D3DXMatrixInverse(&boneOffsetMtx, NULL, &globalBoneMtx);
-   outMesh.skinBones.push_back(SkinBoneDefinition(boneName.str(), boneOffsetMtx));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TreeSkinner::addCylindricalVertices(const TreeSegment& treeSeg, MeshDefinition& outMesh)
-{
-   D3DXVECTOR3 rightVec = treeSeg.rightVec;
-   D3DXVECTOR3 upVec = treeSeg.direction;
-   D3DXVECTOR3 lookVec;
-   D3DXVECTOR3 posVec = treeSeg.position;
-   D3DXVec3Cross(&lookVec, &upVec, &rightVec);
-   D3DXVec3Normalize(&lookVec, &lookVec);
-
-   D3DXMATRIX thisSegMtx; D3DXMatrixIdentity(&thisSegMtx);
-   thisSegMtx._11 = rightVec.x; 
-   thisSegMtx._12 = rightVec.y; 
-   thisSegMtx._13 = rightVec.z;
-   thisSegMtx._21 = upVec.x; 
-   thisSegMtx._22 = upVec.y; 
-   thisSegMtx._23 = upVec.z;
-   thisSegMtx._31 = -lookVec.x; 
-   thisSegMtx._32 = -lookVec.y; 
-   thisSegMtx._33 = -lookVec.z;
-   thisSegMtx._41 = posVec.x; 
-   thisSegMtx._42 = posVec.y; 
-   thisSegMtx._43 = posVec.z;
-
-   D3DXMATRIX parentLocalMatrixInv = m_currAnalyzedBranch->m_currentBranchGlobalMtx;
-   D3DXMatrixInverse(&parentLocalMatrixInv, NULL, &parentLocalMatrixInv);
-   D3DXMatrixMultiply(&thisSegMtx, &thisSegMtx, &parentLocalMatrixInv);
+   D3DXMATRIX thisSegMtx = extractLocalMatrix(treeSeg, parentTreeSeg);
 
    float width = treeSeg.width / 2.f;
-   float angFact = (float)(2.f * M_PI);
-   for (unsigned int i = 0; i <= m_skinningResolution; ++i)
+   float angFact = (float)(2.f * D3DX_PI);
+   float w1 = swappedWeights ? 0.f : 1.f;
+   float w2 = swappedWeights ? 1.f : 0.f;
+
+   for (unsigned int i = 0; i <= skinningResolution; ++i)
    {
-      float part = (float)i / (float)m_skinningResolution;
+      float part = (float)i / (float)skinningResolution;
       float x = cos(part * angFact) * width;
       float z = sin(part * angFact) * width;
       
@@ -324,7 +507,7 @@ void TreeSkinner::addCylindricalVertices(const TreeSegment& treeSeg, MeshDefinit
       float v = (float)(treeSeg.segmentIdx) / (float)m_treeHeight;
 
       outMesh.vertices.push_back(LitVertex(pos.x, pos.y, pos.z, 
-                                           1, 0, 0, 
+                                           w1, w2, 0, 
                                            norm.x, norm.y, norm.z,
                                            u, v));
    }
@@ -332,38 +515,21 @@ void TreeSkinner::addCylindricalVertices(const TreeSegment& treeSeg, MeshDefinit
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TreeSkinner::addEndVertex(const TreeSegment& treeSeg, MeshDefinition& outMesh)
+void TreeSkinner::addEndVertex(const TreeSegment& treeSeg, 
+                               const TreeSegment* parentTreeSeg,  
+                               bool swappedWeights,
+                               MeshDefinition& outMesh)
 {
-   D3DXVECTOR3 rightVec = treeSeg.rightVec;
-   D3DXVECTOR3 upVec = treeSeg.direction;
-   D3DXVECTOR3 lookVec;
-   D3DXVECTOR3 posVec = treeSeg.position;
-   D3DXVec3Cross(&lookVec, &upVec, &rightVec);
-   D3DXVec3Normalize(&lookVec, &lookVec);
-
-   D3DXMATRIX thisSegMtx; D3DXMatrixIdentity(&thisSegMtx);
-   thisSegMtx._11 = rightVec.x; 
-   thisSegMtx._12 = rightVec.y; 
-   thisSegMtx._13 = rightVec.z;
-   thisSegMtx._21 = upVec.x; 
-   thisSegMtx._22 = upVec.y; 
-   thisSegMtx._23 = upVec.z;
-   thisSegMtx._31 = -lookVec.x; 
-   thisSegMtx._32 = -lookVec.y; 
-   thisSegMtx._33 = -lookVec.z;
-   thisSegMtx._41 = posVec.x; 
-   thisSegMtx._42 = posVec.y; 
-   thisSegMtx._43 = posVec.z;
-
-   D3DXMATRIX parentLocalMatrixInv = m_currAnalyzedBranch->m_currentBranchGlobalMtx;
-   D3DXMatrixInverse(&parentLocalMatrixInv, NULL, &parentLocalMatrixInv);
-   D3DXMatrixMultiply(&thisSegMtx, &thisSegMtx, &parentLocalMatrixInv);
+   D3DXMATRIX thisSegMtx = extractLocalMatrix(treeSeg, parentTreeSeg);
 
    D3DXVECTOR3 pos(thisSegMtx._41, thisSegMtx._42, thisSegMtx._43);
    D3DXVECTOR3 norm(thisSegMtx._21, thisSegMtx._22, thisSegMtx._23);
    D3DXVec3Normalize(&norm, &norm);
 
    float v = (float)(treeSeg.segmentIdx) / (float)m_treeHeight;
+
+   float w1 = swappedWeights ? 0.f : 1.f;
+   float w2 = swappedWeights ? 1.f : 0.f;
 
    if (fabs(pos.x) < 0.00001f) pos.x = 0;
    if (fabs(pos.y) < 0.00001f) pos.y = 0;
@@ -373,83 +539,148 @@ void TreeSkinner::addEndVertex(const TreeSegment& treeSeg, MeshDefinition& outMe
    if (fabs(norm.z) < 0.00001f) norm.z = 0;
 
    outMesh.vertices.push_back(LitVertex(pos.x, pos.y, pos.z,
-                                        1, 0, 0, 
+                                        w1, w2, 0, 
                                         norm.x, norm.y, norm.z,
                                         0.5f, v));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TreeSkinner::addCylindricalFaces(MeshDefinition& outMesh)
+void TreeSkinner::addCylindricalFaces(unsigned int skinningResolution,
+                                      MeshDefinition& outMesh,
+                                      DWORD attributeID)
 {
    // add faces
-   long startVertexIdx = outMesh.vertices.size() - (m_skinningResolution + 1)*2;
+   long startVertexIdx = outMesh.vertices.size() - (skinningResolution + 1)*2;
    assert(startVertexIdx >= 0);
 
-   for (unsigned int i = 0; i < m_skinningResolution; ++i)
+   for (unsigned int i = 0; i < skinningResolution; ++i)
    {
       outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx + i, 
-                                            (USHORT)startVertexIdx + m_skinningResolution + 1 + i, 
+                                            (USHORT)startVertexIdx + skinningResolution + 1 + i, 
                                             (USHORT)startVertexIdx + i + 1, 
-                                            m_currAnalyzedBranch->m_currentBoneIdx));
+                                            attributeID));
       outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx + i + 1, 
-                                            (USHORT)startVertexIdx + m_skinningResolution + 1 + i, 
-                                            (USHORT)startVertexIdx + m_skinningResolution + 2 + i, 
-                                            m_currAnalyzedBranch->m_currentBoneIdx));
+                                            (USHORT)startVertexIdx + skinningResolution + 1 + i, 
+                                            (USHORT)startVertexIdx + skinningResolution + 2 + i, 
+                                            attributeID));
    }
-   outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx + m_skinningResolution, 
-                                         (USHORT)startVertexIdx + 2*m_skinningResolution + 1, 
+   outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx + skinningResolution, 
+                                         (USHORT)startVertexIdx + 2*skinningResolution + 1, 
                                          (USHORT)startVertexIdx, 
-                                         m_currAnalyzedBranch->m_currentBoneIdx));
+                                         attributeID));
    outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx, 
-                                         (USHORT)startVertexIdx + 2*m_skinningResolution + 1, 
-                                         (USHORT)startVertexIdx + m_skinningResolution + 1, 
-                                         m_currAnalyzedBranch->m_currentBoneIdx));
+                                         (USHORT)startVertexIdx + 2*skinningResolution + 1, 
+                                         (USHORT)startVertexIdx + skinningResolution + 1, 
+                                         attributeID));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TreeSkinner::addEndFaces(MeshDefinition& outMesh)
+void TreeSkinner::addEndFaces(unsigned int skinningResolution,
+                              MeshDefinition& outMesh,
+                              DWORD attributeID)
 {
    unsigned int lastVertexIdx = outMesh.vertices.size() - 1;
-   long startVertexIdx = lastVertexIdx - 1 - m_skinningResolution;
+   long startVertexIdx = lastVertexIdx - 1 - skinningResolution;
    assert(startVertexIdx >= 0);
-   for (unsigned int i = 0; i < m_skinningResolution; ++i)
+   for (unsigned int i = 0; i < skinningResolution; ++i)
    {
       outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx + i, 
                                              lastVertexIdx, 
                                              (USHORT)startVertexIdx + i + 1, 
-                                             m_currAnalyzedBranch->m_currentBoneIdx));
+                                             attributeID));
    }
    outMesh.faces.push_back(Face<USHORT> (lastVertexIdx - 1, 
                                          lastVertexIdx, 
                                          (USHORT)startVertexIdx, 
-                                         m_currAnalyzedBranch->m_currentBoneIdx));
+                                         attributeID));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-unsigned int TreeSkinner::getTreeHeight(const TreeSegment& treeRoot) const
+void TreeSkinner::extractOffsetMatrices(const MeshDefinition& rootMesh,
+                                        std::map<std::string, D3DXMATRIX>& offsetMatrices)
 {
-   // find the height of the tree
-   unsigned int treeHeight = 0;
-   std::deque<const TreeSegment*> segsQueue;
-   segsQueue.push_back(&treeRoot);
+   D3DXMATRIX identityMtx;
+   D3DXMatrixIdentity(&identityMtx);
+
+   std::deque<std::pair<const MeshDefinition*, D3DXMATRIX> > segsQueue;
+   segsQueue.push_back(std::make_pair(&rootMesh, identityMtx));
+
    while(segsQueue.size() > 0)
    {
-      const TreeSegment* currSeg = segsQueue.front();
+      const MeshDefinition* currSeg = segsQueue.front().first;
+      const D3DXMATRIX& parentGlobalMtx = segsQueue.front().second;
       segsQueue.pop_front();
 
-      if (currSeg->segmentIdx > treeHeight) {treeHeight = currSeg->segmentIdx;}
+      bool isBranchStart = false;
+      for (std::list<MeshDefinition*>::const_iterator it = currSeg->children.begin();
+           it != currSeg->children.end(); ++it)
+      {
+         if ((*it)->isSkin == true)
+         {
+            isBranchStart = true;
+            break;
+         }
+      }
+   
+      D3DXMATRIX thisSegGlobalMtx;
+      if (isBranchStart == false)
+      {
+         thisSegGlobalMtx = currSeg->localMtx;
+         D3DXMatrixMultiply(&thisSegGlobalMtx, &thisSegGlobalMtx, &parentGlobalMtx);
+      }
+      else
+      {
+         thisSegGlobalMtx = identityMtx;
+      }
 
-      for (std::list<TreeSegment*>::const_iterator it = currSeg->children.begin();
+      D3DXMATRIX offsetMtx;
+      D3DXMatrixInverse(&offsetMtx, NULL, &thisSegGlobalMtx);
+      offsetMatrices.insert(std::make_pair(currSeg->name, offsetMtx));
+
+      for (std::list<MeshDefinition*>::const_iterator it = currSeg->children.begin();
+           it != currSeg->children.end(); ++it)
+      {
+         segsQueue.push_back(std::make_pair(*it, thisSegGlobalMtx));
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TreeSkinner::updateMeshesWithOffsetMatrices(
+                             MeshDefinition& rootMesh,
+                             std::map<std::string, D3DXMATRIX>& offsetMatrices)
+{
+   std::deque<MeshDefinition*> segsQueue;
+   segsQueue.push_back(&rootMesh);
+
+   while(segsQueue.size() > 0)
+   {
+      MeshDefinition* currSeg = segsQueue.front();
+      segsQueue.pop_front();
+
+      if (currSeg->isSkin == true)
+      {
+         for (UINT boneIdx = 0; boneIdx < currSeg->skinBones.size(); ++boneIdx)
+         {
+            SkinBoneDefinition& boneDef = currSeg->skinBones.at(boneIdx);
+
+            std::map<std::string, D3DXMATRIX>::iterator it = offsetMatrices.find(boneDef.name);
+            assert(it != offsetMatrices.end());
+
+            boneDef.boneOffset = it->second;
+         }
+      }
+
+      for (std::list<MeshDefinition*>::const_iterator it = currSeg->children.begin();
            it != currSeg->children.end(); ++it)
       {
          segsQueue.push_back(*it);
       }
    }
-
-   return treeHeight;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

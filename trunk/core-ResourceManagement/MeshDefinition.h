@@ -41,9 +41,10 @@ struct MeshDefinition
 
    D3DXMATRIX localMtx;
 
+   MeshDefinition* parent;
    std::list<MeshDefinition*> children;
 
-   MeshDefinition() : isSkin(false) {}
+   MeshDefinition() : isSkin(false), parent(NULL) {}
    MeshDefinition(const MeshDefinition& rhs)
       : name(rhs.name),
       isSkin(rhs.isSkin),
@@ -52,7 +53,8 @@ struct MeshDefinition
       faces(rhs.faces),
       bonesInfluencingAttribute(rhs.bonesInfluencingAttribute),
       skinBones(rhs.skinBones),
-      localMtx(rhs.localMtx)
+      localMtx(rhs.localMtx),
+      parent(rhs.parent)
    {
       for (std::list<MeshDefinition*>::const_iterator it = rhs.children.begin();
          it != rhs.children.end(); ++it)
@@ -79,6 +81,7 @@ struct MeshDefinition
       bonesInfluencingAttribute = rhs.bonesInfluencingAttribute;
       skinBones = rhs.skinBones;
       localMtx = rhs.localMtx;
+      parent = rhs.parent;
 
       for (std::list<MeshDefinition*>::iterator it = children.begin();
          it != children.end(); ++it)

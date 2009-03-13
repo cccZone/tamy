@@ -19,7 +19,7 @@
 #include "TreeStructureGenerator.h"
 #include "TreeSkinner.h"
 #include "TreeSegment.h"
-
+#include "TreeAnimator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,18 +83,18 @@ void TreesGeneratorDemo::run(int nCmdShow)
    ShowWindow(m_hWnd, nCmdShow);
 
    TreeParams treeParams;
-   treeParams.maxTreeDepth = 10;
+   treeParams.maxTreeDepth = 5;
    treeParams.startWidth = 10;
    treeParams.startDirection = D3DXVECTOR3(0, 1, 0);
    treeParams.segmentInitialLength = 20;
    treeParams.minInternalBranchDirVariation = 2;
    treeParams.maxInternalBranchDirVariation = 10;
-   treeParams.branchProbab.push_back(100);
-   treeParams.branchProbab.push_back(50);
+   treeParams.branchProbab.push_back(80);
+   treeParams.branchProbab.push_back(30);
    treeParams.minNewBranchDirVariation = 30;
    treeParams.maxNewBranchDirVariation = 60;
-   treeParams.initialBranchingLevel = 2;
-   treeParams.abruptBranchEndProbab = 0;
+   treeParams.initialBranchingLevel = 1;
+   treeParams.abruptBranchEndProbab = 5;
 
    TreeStructureGenerator generator;
    TreeSegment* treeStruct = generator.generate(treeParams);
@@ -108,16 +108,25 @@ void TreesGeneratorDemo::run(int nCmdShow)
    treeBark.matName = "treeBark";
    treeBark.texName = "LondonPlaneBark.dds";
 
-   MeshDefinition mesh;
-   skinner("tree", 8, 5, treeBark, mesh);
+   MeshDefinition* mesh = skinner("tree", 8, 1, treeBark);
    delete treeStruct;
 
-   AbstractGraphicalEntity* treeEntity = m_resourceManager->createGraphicalEntityFromTemplate(mesh);
+   TreeAnimator animator;
+   AnimationDefinition anim;
+   animator(*mesh, D3DXVECTOR3(1, 0, 0), 1, 10, anim);
+
+   AbstractGraphicalEntity* treeEntity = m_resourceManager->createGraphicalEntityFromTemplate(*mesh);
    m_resourceManager->registerGraphicalEntity("tree", treeEntity);
+   treeEntity->setAnimationDefinition(anim);
+
+   delete mesh;
 
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tree01");
    entInstance->attachEntity(*treeEntity);
    m_sceneManager->addNode(entInstance);
+
+   m_animationController = treeEntity->instantiateSkeleton(*entInstance);
+   m_animationController->activateAnimation("wind");
 
    Light* light = m_resourceManager->createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
@@ -164,7 +173,7 @@ void TreesGeneratorDemo::advanceGameState()
    }
 
    processInput(timeElapsed);
-  // m_animationController->update(timeElapsed);
+   m_animationController->update(timeElapsed);
    m_renderer->render(m_sceneManager->getRootNode());
 }
 

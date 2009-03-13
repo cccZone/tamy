@@ -2,7 +2,9 @@
 
 #include <string>
 #include <d3dx9.h>
-
+#include <deque>
+#include <list>
+#include <map>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,69 +19,86 @@ struct MaterialDefinition;
  */
 class TreeSkinner
 {
-private:      
-   struct SegmentToAnalyze
+private:
+   struct TreeBoneDefinition
    {
-      MeshDefinition* parentMesh;
-      const TreeSegment* treeSeg;
+      const TreeSegment& treeSeg;
+      MeshDefinition& mesh;
+      const TreeSegment* parentTreeSeg;
+      int branchIdx;
+      int boneIdx;
 
-      MeshDefinition* m_currBone;
-      unsigned int m_currentBoneIdx;
-      D3DXMATRIX m_globalBoneOffsetMtx;
-      D3DXMATRIX m_currentSegGlobalMtx;
-      D3DXMATRIX m_currentBranchGlobalMtx;
-
-      SegmentToAnalyze(MeshDefinition* _parentMesh,
-                       const TreeSegment* _treeSeg)
-            : parentMesh(_parentMesh),
-            treeSeg(_treeSeg),
-            m_currBone(_parentMesh),
-            m_currentBoneIdx(-1)
-      {
-         D3DXMatrixIdentity(&m_globalBoneOffsetMtx);
-         D3DXMatrixIdentity(&m_currentSegGlobalMtx);
-         D3DXMatrixIdentity(&m_currentBranchGlobalMtx);
-      }
+      TreeBoneDefinition(const TreeSegment& _treeSeg,
+                         MeshDefinition& _mesh,
+                         const TreeSegment* _parentTreeSeg,
+                         int _branchIdx,
+                         int _boneIdx)
+            : treeSeg(_treeSeg),
+            mesh(_mesh),
+            parentTreeSeg(_parentTreeSeg),
+            branchIdx(_branchIdx),
+            boneIdx(_boneIdx)
+      {}
    };
 
 private:
    const TreeSegment& m_treeRoot;
    unsigned int m_treeHeight;
 
-   unsigned int m_skinningResolution;
-   unsigned int m_bonesResolution;
-
-   MeshDefinition* m_skinnedTreeRoot;
-   bool m_analysisStart;
-   std::string m_entityName;
-   unsigned int m_branchIdx;
-   SegmentToAnalyze* m_currAnalyzedBranch;
-
 public:
    TreeSkinner(const TreeSegment& treeRoot);
 
-   void operator()(const std::string& entityName, 
-                   unsigned int skinningResolution,
-                   unsigned int bonesResolution,
-                   const MaterialDefinition& requestedMaterial,
-                   MeshDefinition& outMesh);
+   MeshDefinition* operator()(const std::string& entityName, 
+                              unsigned int skinningResolution,
+                              unsigned int bonesResolution,
+                              const MaterialDefinition& requestedMaterial);
 private:
    unsigned int getTreeHeight(const TreeSegment& treeRoot) const;
-   void createSkin();
+
+   void createSkeleton(unsigned int bonesResolution,
+                       std::list<TreeBoneDefinition>& skeleton,
+                       std::list<TreeBoneDefinition>& skins) const;
+
+   bool isTimeForBranch(const TreeSegment& treeSegment, unsigned int bonesResolution) const;
+
+   void createBone(const TreeBoneDefinition& boneDef);
+
+   void createSkin(const TreeBoneDefinition& boneDef,
+                   unsigned int skinningResolution,
+                   unsigned int bonesResolution);
+
+   D3DXMATRIX extractLocalMatrix(const TreeSegment& treeSeg, 
+                                 const TreeSegment* parentSeg);
+
+   D3DXMATRIX extractGlobalMatrix(const TreeSegment& treeSeg);
+
    void setMaterials(const MaterialDefinition& requestedMaterial,
                      MeshDefinition& outMesh);
 
-   bool isTimeForNextBone(const TreeSegment& treeSeg) const;
-   MeshDefinition* createBranch(const D3DXMATRIX& localMtx);
-   void defineNewBone(const TreeSegment& treeSeg, 
-                      MeshDefinition& outMesh, 
-                      const D3DXMATRIX& localMtx, 
-                      D3DXMATRIX& globalBoneMtx);
-   void addCylindricalVertices(const TreeSegment& treeSeg, MeshDefinition& outMesh);
-   void addEndVertex(const TreeSegment& treeSeg, MeshDefinition& outMesh);
-   void addCylindricalFaces(MeshDefinition& outMesh);
-   void addEndFaces(MeshDefinition& outMesh);
-   D3DXMATRIX calculateLocalMtx(const TreeSegment& treeSeg, D3DXMATRIX& parentRefMtx);
+   void addCylindricalVertices(const TreeSegment& treeSeg, 
+                               const TreeSegment* parentTreeSeg, 
+                               unsigned int skinningResolution,
+                               bool swappedWeights,
+                               MeshDefinition& outMesh);
+
+   void addEndVertex(const TreeSegment& treeSeg, 
+                     const TreeSegment* parentTreeSeg, 
+                     bool swappedWeights,
+                     MeshDefinition& outMesh);
+
+   void addCylindricalFaces(unsigned int skinningResolution,
+                            MeshDefinition& outMesh,
+                            DWORD attributeID);
+
+   void addEndFaces(unsigned int skinningResolution,
+                    MeshDefinition& outMesh,
+                    DWORD attributeID);
+
+   void extractOffsetMatrices(const MeshDefinition& rootMesh,
+                              std::map<std::string, D3DXMATRIX>& offsetMatrices);
+
+   void updateMeshesWithOffsetMatrices(MeshDefinition& rootMesh,
+                                       std::map<std::string, D3DXMATRIX>& offsetMatrices);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
