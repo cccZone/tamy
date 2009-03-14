@@ -13,12 +13,13 @@ class LightReflectingPropertiesStub : public LightReflectingProperties
 private:
    std::list<std::string>* m_messageSink;
    int m_id;
+   bool m_transparent;
 
 public:
-   LightReflectingPropertiesStub() : m_messageSink(NULL), m_id(0) {}
+   LightReflectingPropertiesStub() : m_messageSink(NULL), m_id(0), m_transparent(false) {}
 
    LightReflectingPropertiesStub(std::list<std::string>& messageSink, int id = 0) 
-      : m_messageSink(&messageSink), m_id(id) {}
+      : m_messageSink(&messageSink), m_id(id), m_transparent(false) {}
 
    bool operator==(const LightReflectingProperties& rhs) const 
    {
@@ -32,6 +33,9 @@ public:
    void setSpecularColor(const Color& specular) {}
    void setEmissiveColor(const Color& emissive){}
    void setPower(float val) {}
+
+   void setTransparent() {m_transparent = true;}
+   bool isTransparent() const {return m_transparent;}
 
    void setForRendering() 
    {

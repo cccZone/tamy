@@ -4,6 +4,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+GraphicalNodesAggregator::GraphicalNodesAggregator(const D3DXVECTOR3& cameraPos)
+      : m_comparator(cameraPos),
+      m_nodes(m_comparator)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void GraphicalNodesAggregator::visit(AbstractGraphicalNode& node) 
 {
    m_nodes.insert(&node);

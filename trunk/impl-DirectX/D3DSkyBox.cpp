@@ -53,10 +53,14 @@ void D3DSkyBox::startRendering()
 
 void D3DSkyBox::renderSide(SkyBoxSides sideIdx)
 {
+   m_d3Device.SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+   m_d3Device.SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
    m_d3Device.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
    m_d3Device.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
    m_d3Device.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
    m_d3Device.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+   m_d3Device.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+   m_d3Device.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
    m_d3Device.SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
 
    m_d3Device.DrawPrimitive(D3DPT_TRIANGLESTRIP, sideIdx * 4, 2);

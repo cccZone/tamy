@@ -210,6 +210,8 @@ protected:
 
    virtual SkyBox* createSkyBoxImpl() = 0;
 
+   virtual Material* createMaterial(Texture& emptyTexture, unsigned int index) = 0;
+
    /**
     * This method allows the implementations to register
     * the mesh file handlers specific for a particular implementation type

@@ -24,6 +24,8 @@ public:
    void setEmissiveColor(const Color& emissive) {}
    void setPower(float val) {}
 
+   bool isTransparent() const {return false;}
+
    void setForRendering() {}
 };
 

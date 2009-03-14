@@ -5,6 +5,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class Material;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * This class represents the light reflecting properties of a material with which 
  * the GraphicalNodes will be rendered
@@ -25,6 +29,8 @@ public:
    virtual void setSpecularColor(const Color& specular) = 0;
    virtual void setEmissiveColor(const Color& emissive) = 0;
    virtual void setPower(float val) = 0;
+
+   virtual bool isTransparent() const = 0;
 
    /**
     * This method is engine implementation specific

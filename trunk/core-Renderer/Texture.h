@@ -12,13 +12,16 @@ class Texture
 {
 private:
    std::string m_name;
+   bool m_isTransparent;
 
 public:
-   Texture(const std::string& name);
+   Texture(const std::string& name, bool isTransparent = false);
    virtual ~Texture() {}
 
    bool operator==(const Texture& rhs) const;
    bool operator!=(const Texture& rhs) const;
+
+   bool isTransparent() const {return m_isTransparent;}
 
    /**
     * This method is engine implementation specific

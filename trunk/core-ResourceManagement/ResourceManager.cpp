@@ -230,7 +230,7 @@ unsigned int ResourceManager::addMaterial(const std::string& textureName,
                                           const Color& emissive,
                                           float power)
 {
-   Material* materialCandidate = new Material(getEmptyTexture(), m_materials.size());
+   Material* materialCandidate = createMaterial(getEmptyTexture(), m_materials.size());
 
    // get light reflectance properties
    LightReflectingProperties* lrpCandidate = createLightReflectingProperties();

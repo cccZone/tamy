@@ -34,8 +34,26 @@ bool Material::operator!=(const Material& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Material::setLightReflectingProperties(LightReflectingProperties& component) 
+{
+   m_lightReflectingProperties = &component;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Material::isTransparent() const
+{
+   bool isLRPTransparent = m_lightReflectingProperties->isTransparent();
+   bool isTexTransparent = m_texture->isTransparent();
+   return (m_lightReflectingProperties->isTransparent() || m_texture->isTransparent());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Material::setForRendering()
 {
+   enableTransparency(isTransparent());
+
    m_lightReflectingProperties->setForRendering();
    m_texture->setForRendering();
 }

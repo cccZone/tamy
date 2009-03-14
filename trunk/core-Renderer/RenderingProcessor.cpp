@@ -16,6 +16,7 @@ std::list<RenderingCommand> RenderingProcessor::translate(const BatchedNodes& no
    {
       AbstractGraphicalNode& graphicalNode = **it;
       Material& mat = graphicalNode.getMaterial();
+
       if ((prevMat == NULL) || (*prevMat != mat))
       {
          commands.push_back(setMaterial(mat));

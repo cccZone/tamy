@@ -8,6 +8,7 @@
 #include "D3DTexture.h"
 #include "D3DEmptyTexture.h"
 #include "D3DSkyBox.h"
+#include "D3DMaterial.h"
 #include "XFileGraphicalEntityLoader.h"
 #include <stdexcept>
 #include <string>
@@ -73,6 +74,13 @@ D3DResourceManager::~D3DResourceManager()
 Renderer& D3DResourceManager::getRendererInstance()
 {
    return *m_renderer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Material* D3DResourceManager::createMaterial(Texture& emptyTexture, unsigned int index)
+{
+   return new D3DMaterial(emptyTexture, index, m_renderer->getD3Device());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

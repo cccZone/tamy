@@ -4,7 +4,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 D3DLightReflectingProperties::D3DLightReflectingProperties(IDirect3DDevice9& d3Device)
-      : m_d3Device(d3Device)
+      : m_d3Device(d3Device), m_transparent(false)
 {
    m_d3Device.AddRef();
    ZeroMemory(&m_material, sizeof(D3DMATERIAL9));
@@ -55,6 +55,8 @@ void D3DLightReflectingProperties::setAmbientColor(const Color& ambient)
    m_material.Ambient.g = ambient.g;
    m_material.Ambient.b = ambient.b;
    m_material.Ambient.a = ambient.a;
+
+   m_transparent |= checkTransparency(ambient);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,6 +67,8 @@ void D3DLightReflectingProperties::setDiffuseColor(const Color& diffuse)
    m_material.Diffuse.g = diffuse.g;
    m_material.Diffuse.b = diffuse.b;
    m_material.Diffuse.a = diffuse.a;
+
+   m_transparent |= checkTransparency(diffuse);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,6 +103,13 @@ void D3DLightReflectingProperties::setPower(float val)
 void D3DLightReflectingProperties::setForRendering()
 {
    m_d3Device.SetMaterial(&m_material);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool D3DLightReflectingProperties::checkTransparency(const Color& color) const
+{
+   return (1.0f - color.a) > 0.001f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

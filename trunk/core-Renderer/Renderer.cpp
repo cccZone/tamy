@@ -90,11 +90,15 @@ void Renderer::RenderingState::render(Renderer& renderer, Node& rootNode)
       (*it)->enable(true);
    }
 
-   renderer.setViewMatrix(renderer.m_activeCamera->getViewMtx());
+   const D3DXMATRIX& viewMtx = renderer.m_activeCamera->getViewMtx();
+   const D3DXMATRIX& camMtx = renderer.m_activeCamera->getGlobalMtx();
+   D3DXVECTOR3 cameraPos(camMtx._41, camMtx._42, camMtx ._43);
+
+   renderer.setViewMatrix(viewMtx);
    renderer.setProjectionMatrix(renderer.m_activeCamera->getProjectionMtx3D());
 
    // add the objects to be rendered
-   GraphicalNodesAggregator nodes;
+   GraphicalNodesAggregator nodes(cameraPos);
    rootNode.accept(nodes);
 
    // prepare the rendering commands

@@ -101,10 +101,14 @@ void TreesGeneratorDemo::run(int nCmdShow)
 
    TreeSkinner skinner(*treeStruct);
    MaterialDefinition treeBark;
-   treeBark.diffuse.r = 1;
+   treeBark.ambient.r = 1;
    treeBark.ambient.g = 1;
    treeBark.ambient.b = 1;
    treeBark.ambient.a = 1;
+   treeBark.diffuse.r = 1;
+   treeBark.diffuse.g = 1;
+   treeBark.diffuse.b = 1;
+   treeBark.diffuse.a = 1;
    treeBark.matName = "treeBark";
    treeBark.texName = "LondonPlaneBark.dds";
 

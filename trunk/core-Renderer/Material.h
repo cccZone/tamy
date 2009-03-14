@@ -25,6 +25,7 @@ private:
 
 public:
    Material(Texture& emptyTexture, unsigned int index = 0);
+   virtual ~Material() {}
 
    /** 
     * Since materials are used in the rendering strategy as a batching pointer,
@@ -38,22 +39,26 @@ public:
    bool operator==(const Material& rhs) const;
    bool operator!=(const Material& rhs) const;
 
-   void setLightReflectingProperties(LightReflectingProperties& component) 
-   {
-      m_lightReflectingProperties = &component;
-   }
+   void setLightReflectingProperties(LightReflectingProperties& component);
+
+   bool isTransparent() const;
 
    void setTexture(Texture& texture)
    {
       m_texture = &texture;
    }
 
+   void setForRendering();
+
+protected:
    /**
     * This method is engine implementation specific
-    * and is supposed to set the material as an active material
-    * with which the objects will be rendered
+    * and is supposed to set proper flags that will enable or
+    * disable the transparency drawing
+    *
+    * By default it does nothing
     */
-   void setForRendering();
+   virtual void enableTransparency(bool enable) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

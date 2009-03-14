@@ -5,6 +5,7 @@
 #include "AbstractGraphicalNode.h"
 #include "BatchingStrategy.h"
 #include <set>
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,12 +18,16 @@
  * you can access the gathered graphical nodes using 
  * the "() operator" accessor.
  */
-class GraphicalNodesAggregator : public NodeVisitor, public TNodesVisitor<AbstractGraphicalNode>
+class GraphicalNodesAggregator : public NodeVisitor, 
+                                 public TNodesVisitor<AbstractGraphicalNode>
 {
 private:
+   BatchComparator m_comparator;
    BatchedNodes m_nodes;
 
 public:
+   GraphicalNodesAggregator(const D3DXVECTOR3& cameraPos);
+
    void visit(AbstractGraphicalNode& node);
 
    const BatchedNodes& operator()();

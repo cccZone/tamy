@@ -6,6 +6,7 @@
 #include "GraphicalEntityMock.h"
 #include "SkinnedGraphicalEntityMock.h"
 #include "Skeleton.h"
+#include "Material.h"
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -43,6 +44,8 @@ protected:
    Texture* loadTexture(const std::string& textureDirPath, const std::string& name) {return new TextureStub(name);}
 
    SkyBox* createSkyBoxImpl() {return NULL;}
+
+   Material* createMaterial(Texture& emptyTexture, unsigned int index) {return new Material(emptyTexture, index);}
 };
 
 //////////////////////////////////////////////////////////////////////////////
