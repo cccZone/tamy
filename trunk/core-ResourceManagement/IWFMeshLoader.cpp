@@ -20,6 +20,9 @@ void IWFMeshLoader::parseMesh(MeshDefinition& mesh,
                               AnimationDefinition& animation, 
                               const std::string& name)
 {
+   D3DXVECTOR3 minPos(10000000, 10000000, 10000000);
+   D3DXVECTOR3 maxPos(-10000000, -10000000, -10000000);
+
    // let's parse the mesh and explode it into a group of engine laws abiding meshes
    for (ULONG surfaceIdx = 0; surfaceIdx < m_fileMesh->SurfaceCount; ++surfaceIdx)
    {
@@ -47,19 +50,43 @@ void IWFMeshLoader::parseMesh(MeshDefinition& mesh,
       // geometry creation step 2: create vertices
       for (UINT i = 0; i < surface->VertexCount; i++)
       {
-         mesh.vertices.push_back(LitVertex(surface->Vertices[i].x,
-            surface->Vertices[i].y,
-            surface->Vertices[i].z,
+         D3DXVECTOR3 vertexPos(surface->Vertices[i].x,
+                               surface->Vertices[i].y,
+                               surface->Vertices[i].z);
+
+         mesh.vertices.push_back(LitVertex(
+            vertexPos.x,
+            vertexPos.y,
+            vertexPos.z,
             1, 0, 0,
             surface->Vertices[i].Normal.x,
             surface->Vertices[i].Normal.y,
             surface->Vertices[i].Normal.z,
             surface->Vertices[i].TexCoords[0][0],
             surface->Vertices[i].TexCoords[0][1]));
-      }
 
-      D3DXMatrixIdentity(&(mesh.localMtx));
+         if (vertexPos.x < minPos.x) minPos.x = vertexPos.x;
+         if (vertexPos.y < minPos.y) minPos.y = vertexPos.y;
+         if (vertexPos.z < minPos.z) minPos.z = vertexPos.z;
+
+         if (vertexPos.x > maxPos.x) maxPos.x = vertexPos.x;
+         if (vertexPos.y > maxPos.y) maxPos.y = vertexPos.y;
+         if (vertexPos.z > maxPos.z) maxPos.z = vertexPos.z;
+      }
    }
+
+   // translate all vertices so that the mesh is centered around the global origin
+   D3DXVECTOR3 meshTranslation(minPos.x + (maxPos.x - minPos.x) / 2.f,
+                               minPos.y + (maxPos.y - minPos.y) / 2.f,
+                               minPos.z + (maxPos.z - minPos.z) / 2.f);
+
+   for (std::list<LitVertex>::iterator vertexIt = mesh.vertices.begin();
+        vertexIt != mesh.vertices.end(); ++vertexIt)
+   {
+      vertexIt->m_coords -= meshTranslation; 
+   }
+
+   D3DXMatrixTranslation(&(mesh.localMtx), meshTranslation.x, meshTranslation.y, meshTranslation.z);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

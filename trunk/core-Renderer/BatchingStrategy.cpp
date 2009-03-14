@@ -2,7 +2,7 @@
 #include "AbstractGraphicalNode.h"
 #include "Material.h"
 #include <cassert>
-
+#include <math.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,11 +29,11 @@ bool BatchComparator::operator()(AbstractGraphicalNode* lhs,
    Material& mat1 = lhs->getMaterial();
    Material& mat2 = rhs->getMaterial();
 
-   DWORD id1, id2;
+   double id1, id2;
    
    if (mat1.isTransparent())
    {
-      id1 = (0xffffffff - calcDistance(lhs->getGlobalMtx())) << 16;
+      id1 = (10000000 - calcDistance(lhs->getGlobalMtx())) + 65536;
    }
    else
    {
@@ -42,7 +42,7 @@ bool BatchComparator::operator()(AbstractGraphicalNode* lhs,
 
    if (mat2.isTransparent())
    {
-      id2 = (0xffffffff - calcDistance(rhs->getGlobalMtx())) << 16;
+      id2 = (10000000 - calcDistance(rhs->getGlobalMtx())) + 65536;
    }
    else
    {
@@ -54,12 +54,12 @@ bool BatchComparator::operator()(AbstractGraphicalNode* lhs,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DWORD BatchComparator::calcDistance(const D3DXMATRIX& mtx) const
+double BatchComparator::calcDistance(const D3DXMATRIX& mtx) const
 {
-   long dx = (long)(mtx._41 - m_cameraPos.x);
-   long dy = (long)(mtx._42 - m_cameraPos.y);
-   long dz = (long)(mtx._43 - m_cameraPos.z);
-   return dx*dx + dy*dy + dz*dz;
+   double dx = (mtx._41 - m_cameraPos.x);
+   double dy = (mtx._42 - m_cameraPos.y);
+   double dz = (mtx._43 - m_cameraPos.z);
+   return sqrt(dx*dx + dy*dy + dz*dz);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

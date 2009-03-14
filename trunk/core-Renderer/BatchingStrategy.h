@@ -22,7 +22,7 @@ public:
    bool operator()(AbstractGraphicalNode* lhs, AbstractGraphicalNode* rhs) const;
 
 private:
-   inline DWORD calcDistance(const D3DXMATRIX& mtx) const;
+   inline double calcDistance(const D3DXMATRIX& mtx) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
