@@ -1,7 +1,7 @@
-#include "AbstractGraphicalNode.h"
-#include "NodeVisitor.h"
-#include "TNodesVisitor.h"
-#include "Material.h"
+#include "core-Renderer\AbstractGraphicalNode.h"
+#include "core\NodeVisitor.h"
+#include "core\TNodesVisitor.h"
+#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

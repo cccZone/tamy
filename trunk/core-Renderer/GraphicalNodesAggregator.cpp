@@ -1,5 +1,5 @@
-#include "GraphicalNodesAggregator.h"
-#include "AbstractGraphicalNode.h"
+#include "core-Renderer\GraphicalNodesAggregator.h"
+#include "core-Renderer\AbstractGraphicalNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

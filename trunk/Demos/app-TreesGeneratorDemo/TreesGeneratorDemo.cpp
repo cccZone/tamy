@@ -1,25 +1,24 @@
 #include "TreesGeneratorDemo.h"
 #include <tchar.h>
-#include "WindowBuilder.h"
-#include "D3DRenderer.h"
-#include "D3DInitializer.h"
-#include "UnconstrainedMotionController.h"
-#include "Timer.h"
+#include "core\WindowBuilder.h"
+#include "impl-DirectX\D3DRenderer.h"
+#include "impl-DirectX\D3DInitializer.h"
+#include "ext-MotionControllers\UnconstrainedMotionController.h"
+#include "core\Timer.h"
 #include <cassert>
-#include "BasicSceneManager.h"
-#include "GraphicalEntityInstantiator.h"
-#include "Camera.h"
-#include "Light.h"
-#include "D3DResourceManager.h"
-#include "IWFLoader.h"
-#include "GraphicalEntity.h"
-#include "Skeleton.h"
-#include "GraphicalEntityLoader.h"
-#include "TreeParams.h"
-#include "TreeStructureGenerator.h"
-#include "TreeSkinner.h"
-#include "TreeSegment.h"
-#include "TreeAnimator.h"
+#include "core-ResourceManagement\BasicSceneManager.h"
+#include "core-ResourceManagement\MeshDefinition.h"
+#include "core-Renderer\GraphicalEntityInstantiator.h"
+#include "core-Renderer\Camera.h"
+#include "core-Renderer\Light.h"
+#include "impl-DirectX\D3DResourceManager.h"
+#include "core-Renderer\GraphicalEntity.h"
+#include "core-Renderer\Skeleton.h"
+#include "ext-TreesGenerator\TreeParams.h"
+#include "ext-TreesGenerator\TreeStructureGenerator.h"
+#include "ext-TreesGenerator\TreeSkinner.h"
+#include "ext-TreesGenerator\TreeSegment.h"
+#include "ext-TreesGenerator\TreeAnimator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +116,7 @@ void TreesGeneratorDemo::run(int nCmdShow)
 
    TreeAnimator animator;
    AnimationDefinition anim;
-   animator(*mesh, D3DXVECTOR3(1, 0, 0), 1, 10, anim);
+   animator(*mesh, D3DXVECTOR3(1, 0, 0), 0.1f, 3, anim);
 
    AbstractGraphicalEntity* treeEntity = m_resourceManager->createGraphicalEntityFromTemplate(*mesh);
    m_resourceManager->registerGraphicalEntity("tree", treeEntity);
@@ -139,8 +138,10 @@ void TreesGeneratorDemo::run(int nCmdShow)
    m_sceneManager->addNode(light);
 
    Camera* camera = m_resourceManager->createCamera("camera");
-   camera->setLookVec(D3DXVECTOR3(0, 0, -1));
-   camera->setPosition(D3DXVECTOR3(0, 10, 50));
+   D3DXMATRIX rotMtx;
+   D3DXMatrixRotationYawPitchRoll(&rotMtx, D3DXToRadian(180), 0, 0);
+   D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 50, 100);
+   D3DXMatrixMultiply(&(camera->accessLocalMtx()), &rotMtx, &(camera->accessLocalMtx()));
    m_sceneManager->addNode(camera);
    m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);

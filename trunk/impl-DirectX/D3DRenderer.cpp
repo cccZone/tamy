@@ -1,10 +1,10 @@
-#include "D3DRenderer.h"
+#include "impl-DirectX\D3DRenderer.h"
 #include <stdexcept>
 #include <string>
 #include <cassert>
-#include "GraphicalNode.h"
-#include "D3DLight.h"
-#include "RenderingCommand.h"
+#include "core-Renderer\GraphicalNode.h"
+#include "impl-DirectX\D3DLight.h"
+#include "core-Renderer\RenderingCommand.h"
 
 
 /////////////////////////////////////////////////////////////////////////////

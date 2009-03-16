@@ -1,5 +1,5 @@
-#include "SkinnedGraphicalNode.h"
-#include "SkinnedGraphicalEntity.h"
+#include "core-Renderer\SkinnedGraphicalNode.h"
+#include "core-Renderer\SkinnedGraphicalEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

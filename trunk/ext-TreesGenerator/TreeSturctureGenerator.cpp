@@ -1,6 +1,6 @@
-#include "TreeStructureGenerator.h"
-#include "TreeParams.h"
-#include "TreeSegment.h"
+#include "ext-TreesGenerator\TreeStructureGenerator.h"
+#include "ext-TreesGenerator\TreeParams.h"
+#include "ext-TreesGenerator\TreeSegment.h"
 #include <d3dx9.h>
 #include <deque>
 #include <math.h>

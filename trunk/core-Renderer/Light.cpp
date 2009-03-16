@@ -1,6 +1,6 @@
-#include "Light.h"
-#include "NodeVisitor.h"
-#include "TNodesVisitor.h"
+#include "core-Renderer\Light.h"
+#include "core\NodeVisitor.h"
+#include "core\TNodesVisitor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

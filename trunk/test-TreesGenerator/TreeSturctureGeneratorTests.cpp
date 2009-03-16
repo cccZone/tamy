@@ -1,7 +1,7 @@
-#include "TestFramework.h"
-#include "TreeStructureGenerator.h"
-#include "TreeParams.h"
-#include "TreeSegment.h"
+#include "core-TestFramework\TestFramework.h"
+#include "ext-TreesGenerator\TreeStructureGenerator.h"
+#include "ext-TreesGenerator\TreeParams.h"
+#include "ext-TreesGenerator\TreeSegment.h"
 #include <d3dx9.h>
 #include "TreeStructureWriter.h"
 #include <deque>

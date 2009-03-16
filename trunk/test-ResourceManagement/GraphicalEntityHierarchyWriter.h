@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Node.h"
-#include "MatrixWriter.h"
-#include "HierarchyWriter.h"
+#include "core\Node.h"
+#include "core\MatrixWriter.h"
+#include "core\HierarchyWriter.h"
 #include <typeinfo>
-#include "AbstractGraphicalEntity.h"
-#include "CompositeGraphicalEntity.h"
-#include "GraphicalEntity.h"
-#include "SkinnedGraphicalEntity.h"
+#include "core-Renderer\AbstractGraphicalEntity.h"
+#include "core-Renderer\CompositeGraphicalEntity.h"
+#include "core-Renderer\GraphicalEntity.h"
+#include "core-Renderer\SkinnedGraphicalEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

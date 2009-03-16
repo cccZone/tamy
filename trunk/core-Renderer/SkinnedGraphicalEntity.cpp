@@ -1,7 +1,7 @@
-#include "SkinnedGraphicalEntity.h"
-#include "Material.h"
-#include "SkinnedGraphicalNode.h"
-#include "GraphicalEntityInstantiator.h"
+#include "core-Renderer\SkinnedGraphicalEntity.h"
+#include "core-Renderer\Material.h"
+#include "core-Renderer\SkinnedGraphicalNode.h"
+#include "core-Renderer\GraphicalEntityInstantiator.h"
 #include <deque>
 #include <sstream>
 #include <map>

@@ -1,12 +1,12 @@
-#include "TestFramework.h"
-#include "RenderingProcessor.h"
-#include "RenderingCommand.h"
-#include "GraphicalNodesAggregator.h"
+#include "core-TestFramework\TestFramework.h"
+#include "core-Renderer\RenderingProcessor.h"
+#include "core-Renderer\RenderingCommand.h"
+#include "core-Renderer\GraphicalNodesAggregator.h"
 #include "RendererImplementationMock.h"
 #include "TextureStub.h"
-#include "Material.h"
+#include "core-Renderer\Material.h"
 #include "GraphicalEntityMock.h"
-#include "GraphicalNode.h"
+#include "core-Renderer\GraphicalNode.h"
 #include "SkyBoxMock.h"
 #include "LightReflectingPropertiesStub.h"
 
@@ -175,10 +175,10 @@ TEST(BatchingStrategy, sortingByMaterialsWhenGatheringNodesForRendering)
    root.accept(aggregator);
 
    std::vector<std::string> expResults;
+   expResults.push_back("subset2 - material2");
    expResults.push_back("subset0 - material1");
    expResults.push_back("subset1 - material1");
    expResults.push_back("subset3 - material1");
-   expResults.push_back("subset2 - material2");
    unsigned int resultIdx = 0;
    for (BatchedNodes::const_iterator resultIt = aggregator().begin();
         resultIt != aggregator().end(); ++resultIt, ++resultIdx)
@@ -238,14 +238,14 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
 
    // compare the results
    std::vector<std::string> expectedResults;
+   expectedResults.push_back("Set light reflecting properties 1");
+   expectedResults.push_back("Set texture");
+   expectedResults.push_back("Render entity subset 2");
    expectedResults.push_back("Set light reflecting properties 0");
    expectedResults.push_back("Set texture");
    expectedResults.push_back("Render entity subset 0");
    expectedResults.push_back("Render entity subset 1");
    expectedResults.push_back("Render entity subset 3");
-   expectedResults.push_back("Set light reflecting properties 1");
-   expectedResults.push_back("Set texture");
-   expectedResults.push_back("Render entity subset 2");
 
    CPPUNIT_ASSERT_EQUAL(expectedResults.size(), results.size());
 
@@ -296,10 +296,11 @@ TEST(BatchingStrategy, transparentMaterials)
    materials.push_back(&regularMaterial2);
    materials.push_back(&transparentMaterial2);
    GraphicalEntityMock entity("entity", materials, results);
-   GraphicalNode regularNodeClose("", entity, 0);
-   GraphicalNode transparentNodeClose("", entity, 1);
-   GraphicalNode regularNodeFar("", entity, 2);
-   GraphicalNode transparentNodeFar("", entity, 3);
+
+   GraphicalNode regularNodeClose    ("regularNodeClose",     entity, 0);
+   GraphicalNode transparentNodeClose("transparentNodeClose", entity, 1);
+   GraphicalNode regularNodeFar      ("regularNodeFar",       entity, 2);
+   GraphicalNode transparentNodeFar  ("transparentNodeFar",   entity, 3);
 
    D3DXMATRIX mtx;
    D3DXMatrixTranslation(&mtx, 0, 0, 10);
@@ -329,12 +330,12 @@ TEST(BatchingStrategy, transparentMaterials)
 
    // compare the results
    std::vector<std::string> expectedResults;
-   expectedResults.push_back("Set light reflecting properties 0");
-   expectedResults.push_back("Set texture");
-   expectedResults.push_back("Render entity subset 0");
    expectedResults.push_back("Set light reflecting properties 2");
    expectedResults.push_back("Set texture");
    expectedResults.push_back("Render entity subset 2");
+   expectedResults.push_back("Set light reflecting properties 0");
+   expectedResults.push_back("Set texture");
+   expectedResults.push_back("Render entity subset 0");
    expectedResults.push_back("Set light reflecting properties 2");
    expectedResults.push_back("Set texture");
    expectedResults.push_back("Render entity subset 3");

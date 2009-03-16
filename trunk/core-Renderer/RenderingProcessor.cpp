@@ -1,7 +1,7 @@
-#include "RenderingProcessor.h"
-#include "AbstractGraphicalNode.h"
-#include "GraphicalEntity.h"
-#include "Material.h"
+#include "core-Renderer\RenderingProcessor.h"
+#include "core-Renderer\AbstractGraphicalNode.h"
+#include "core-Renderer\GraphicalEntity.h"
+#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

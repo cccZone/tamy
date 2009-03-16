@@ -1,5 +1,5 @@
-#include "TestFramework.h"
-#include "Delegate.h"
+#include "core-TestFramework\TestFramework.h"
+#include "core\Delegate.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

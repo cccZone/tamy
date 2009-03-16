@@ -1,5 +1,5 @@
-#include "TestFramework.h"
-#include "Node.h"
+#include "core-TestFramework\TestFramework.h"
+#include "core\Node.h"
 #include "NodeVisitorMock.h"
 #include "SpecializedNodeVisitorMock.h"
 

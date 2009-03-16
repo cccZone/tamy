@@ -1,6 +1,6 @@
 #pragma once
 
-#include "LightReflectingProperties.h"
+#include "core-Renderer\LightReflectingProperties.h"
 #include <list>
 #include <string>
 #include <sstream>

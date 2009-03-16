@@ -1,5 +1,5 @@
-#include "LitVertex.h"
-#include "MatrixWriter.h"
+#include "core-ResourceManagement\LitVertex.h"
+#include "core\MatrixWriter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,6 @@
-#include "Material.h"
-#include "LightReflectingProperties.h"
-#include "Texture.h"
+#include "core-Renderer\Material.h"
+#include "core-Renderer\LightReflectingProperties.h"
+#include "core-Renderer\Texture.h"
 #include <stdio.h>
 
 

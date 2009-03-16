@@ -1,5 +1,5 @@
-#include "UnconstrainedMotionController.h"
-#include "Node.h"
+#include "ext-MotionControllers\UnconstrainedMotionController.h"
+#include "core\Node.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
-#include "TestFramework.h"
+#include "core-TestFramework\TestFramework.h"
 #include "RendererImplementationMock.h"
 #include "LightMock.h"
-#include "Node.h"
+#include "core\Node.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

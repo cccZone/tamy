@@ -1,6 +1,6 @@
-#include "TreeSkinner.h"
-#include "TreeSegment.h"
-#include "MeshDefinition.h"
+#include "ext-TreesGenerator\TreeSkinner.h"
+#include "ext-TreesGenerator\TreeSegment.h"
+#include "core-ResourceManagement\MeshDefinition.h"
 #include <math.h>
 #include <set>
 #include <cassert>

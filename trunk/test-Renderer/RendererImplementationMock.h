@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Renderer.h"
-#include "GraphicalNode.h"
+#include "core-Renderer\Renderer.h"
+#include "core-Renderer\GraphicalNode.h"
 #include <d3dx9.h>
-#include "Camera.h"
+#include "core-Renderer\Camera.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

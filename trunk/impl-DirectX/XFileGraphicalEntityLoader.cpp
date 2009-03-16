@@ -1,5 +1,5 @@
-#include "XFileGraphicalEntityLoader.h"
-#include "LitVertex.h"
+#include "impl-DirectX\XFileGraphicalEntityLoader.h"
+#include "core-ResourceManagement\LitVertex.h"
 #include <vector>
 #include <cassert>
 

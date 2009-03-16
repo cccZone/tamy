@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -106,7 +106,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -155,7 +155,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BatchingStrategy.h"
+				RelativePath="..\Include\core-Renderer\BatchingStrategy.h"
 				>
 			</File>
 			<File
@@ -163,11 +163,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GraphicalNodesAggregator.h"
+				RelativePath="..\Include\core-Renderer\GraphicalNodesAggregator.h"
 				>
 			</File>
 			<File
-				RelativePath=".\LightsAggregator.h"
+				RelativePath="..\Include\core-Renderer\LightsAggregator.h"
 				>
 			</File>
 			<File
@@ -175,11 +175,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Renderer.h"
+				RelativePath="..\Include\core-Renderer\Renderer.h"
 				>
 			</File>
 			<File
-				RelativePath=".\RenderingCommand.h"
+				RelativePath="..\Include\core-Renderer\RenderingCommand.h"
 				>
 			</File>
 			<File
@@ -187,7 +187,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RenderingProcessor.h"
+				RelativePath="..\Include\core-Renderer\RenderingProcessor.h"
 				>
 			</File>
 		</Filter>
@@ -199,7 +199,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Camera.h"
+				RelativePath="..\Include\core-Renderer\Camera.h"
 				>
 			</File>
 			<File
@@ -207,7 +207,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Light.h"
+				RelativePath="..\Include\core-Renderer\Light.h"
 				>
 			</File>
 			<File
@@ -215,7 +215,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Skeleton.h"
+				RelativePath="..\Include\core-Renderer\Skeleton.h"
 				>
 			</File>
 			<File
@@ -223,7 +223,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SkyBox.h"
+				RelativePath="..\Include\core-Renderer\SkyBox.h"
 				>
 			</File>
 			<Filter
@@ -234,7 +234,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\AbstractGraphicalEntity.h"
+					RelativePath="..\Include\core-Renderer\AbstractGraphicalEntity.h"
 					>
 				</File>
 				<File
@@ -242,7 +242,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\CompositeGraphicalEntity.h"
+					RelativePath="..\Include\core-Renderer\CompositeGraphicalEntity.h"
 					>
 				</File>
 				<File
@@ -250,15 +250,15 @@
 					>
 				</File>
 				<File
-					RelativePath=".\GraphicalEntity.h"
+					RelativePath="..\Include\core-Renderer\GraphicalEntity.h"
 					>
 				</File>
 				<File
-					RelativePath=".\LeafGraphicalEntity.h"
+					RelativePath="..\Include\core-Renderer\LeafGraphicalEntity.h"
 					>
 				</File>
 				<File
-					RelativePath=".\SkinBoneDefinition.h"
+					RelativePath="..\Include\core-Renderer\SkinBoneDefinition.h"
 					>
 				</File>
 				<File
@@ -266,7 +266,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\SkinnedGraphicalEntity.h"
+					RelativePath="..\Include\core-Renderer\SkinnedGraphicalEntity.h"
 					>
 				</File>
 			</Filter>
@@ -278,7 +278,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\AbstractGraphicalNode.h"
+					RelativePath="..\Include\core-Renderer\AbstractGraphicalNode.h"
 					>
 				</File>
 				<File
@@ -286,7 +286,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\GraphicalEntityInstantiator.h"
+					RelativePath="..\Include\core-Renderer\GraphicalEntityInstantiator.h"
 					>
 				</File>
 				<File
@@ -294,7 +294,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\GraphicalNode.h"
+					RelativePath="..\Include\core-Renderer\GraphicalNode.h"
 					>
 				</File>
 				<File
@@ -302,7 +302,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\SkinnedGraphicalNode.h"
+					RelativePath="..\Include\core-Renderer\SkinnedGraphicalNode.h"
 					>
 				</File>
 			</Filter>
@@ -310,11 +310,11 @@
 				Name="Material"
 				>
 				<File
-					RelativePath=".\Color.h"
+					RelativePath="..\Include\core-Renderer\Color.h"
 					>
 				</File>
 				<File
-					RelativePath=".\LightReflectingProperties.h"
+					RelativePath="..\Include\core-Renderer\LightReflectingProperties.h"
 					>
 				</File>
 				<File
@@ -322,11 +322,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Material.h"
+					RelativePath="..\Include\core-Renderer\Material.h"
 					>
 				</File>
 				<File
-					RelativePath=".\NullLightReflectingProperties.h"
+					RelativePath="..\Include\core-Renderer\NullLightReflectingProperties.h"
 					>
 				</File>
 				<File
@@ -334,7 +334,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Texture.h"
+					RelativePath="..\Include\core-Renderer\Texture.h"
 					>
 				</File>
 			</Filter>

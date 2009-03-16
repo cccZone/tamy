@@ -22,8 +22,8 @@
 //-----------------------------------------------------------------------------
 // iwfFile Specific Includes
 //-----------------------------------------------------------------------------
-#include "iwfFile.h"
-#include "iwfObjects.h"
+#include "core-ResourceManagement\libIWF\iwfFile.h"
+#include "core-ResourceManagement\libIWF\iwfObjects.h"
 
 //-----------------------------------------------------------------------------
 // Name : CFileIWF () (Constructor)

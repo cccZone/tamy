@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GraphicalEntity.h"
-#include "Material.h"
+#include "core-Renderer\GraphicalEntity.h"
+#include "core-Renderer\Material.h"
 #include "TextureStub.h"
 #include <list>
 #include <string>

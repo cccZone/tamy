@@ -1,6 +1,6 @@
-#include "CompositeGraphicalEntity.h"
-#include "GraphicalEntityInstantiator.h"
-#include "Node.h"
+#include "core-Renderer\CompositeGraphicalEntity.h"
+#include "core-Renderer\GraphicalEntityInstantiator.h"
+#include "core\Node.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

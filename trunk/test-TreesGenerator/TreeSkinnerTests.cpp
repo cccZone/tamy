@@ -1,8 +1,8 @@
-#include "TestFramework.h"
-#include "TreeSegment.h"
-#include "MeshDefinition.h"
+#include "core-TestFramework\TestFramework.h"
+#include "ext-TreesGenerator\TreeSegment.h"
+#include "core-ResourceManagement\MeshDefinition.h"
 #include "MeshDefinitionWriter.h"
-#include "TreeSkinner.h"
+#include "ext-TreesGenerator\TreeSkinner.h"
 #include "SampleTrees.h"
 #include <d3dx9.h>
 

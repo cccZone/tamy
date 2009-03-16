@@ -1,9 +1,9 @@
 #pragma once
 
-#include "MatrixWriter.h"
-#include "Node.h"
-#include "HierarchyWriter.h"
-#include "MeshDefinition.h"
+#include "core\MatrixWriter.h"
+#include "core\Node.h"
+#include "core\HierarchyWriter.h"
+#include "core-ResourceManagement\MeshDefinition.h"
 #include <string>
 
 

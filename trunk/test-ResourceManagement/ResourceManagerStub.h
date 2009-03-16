@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ResourceManager.h"
-#include "NullLightReflectingProperties.h"
+#include "core-ResourceManagement\ResourceManager.h"
+#include "core-Renderer\NullLightReflectingProperties.h"
 #include "TextureStub.h"
 #include "GraphicalEntityMock.h"
 #include "SkinnedGraphicalEntityMock.h"
-#include "Skeleton.h"
-#include "Material.h"
+#include "core-Renderer\Skeleton.h"
+#include "core-Renderer\Material.h"
 
 
 //////////////////////////////////////////////////////////////////////////////

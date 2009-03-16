@@ -1,10 +1,10 @@
-#include "Renderer.h"
-#include "GraphicalNodesAggregator.h"
-#include "LightsAggregator.h"
-#include "Camera.h"
-#include "Light.h"
-#include "RenderingProcessor.h"
-#include "SkyBox.h"
+#include "core-Renderer\Renderer.h"
+#include "core-Renderer\GraphicalNodesAggregator.h"
+#include "core-Renderer\LightsAggregator.h"
+#include "core-Renderer\Camera.h"
+#include "core-Renderer\Light.h"
+#include "core-Renderer\RenderingProcessor.h"
+#include "core-Renderer\SkyBox.h"
 #include <cassert>
 
 

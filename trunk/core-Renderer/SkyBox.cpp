@@ -1,5 +1,5 @@
-#include "SkyBox.h"
-#include "Material.h"
+#include "core-Renderer\SkyBox.h"
+#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

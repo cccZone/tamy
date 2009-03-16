@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -105,7 +105,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -153,11 +153,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\WindowBuilder.h"
+				RelativePath="..\Include\core\WindowBuilder.h"
 				>
 			</File>
 			<File
-				RelativePath=".\WindowMessagesProcessor.h"
+				RelativePath="..\Include\core\WindowMessagesProcessor.h"
 				>
 			</File>
 		</Filter>
@@ -171,15 +171,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Node.h"
+				RelativePath="..\Include\core\Node.h"
 				>
 			</File>
 			<File
-				RelativePath=".\NodeVisitor.h"
+				RelativePath="..\Include\core\NodeVisitor.h"
 				>
 			</File>
 			<File
-				RelativePath=".\TNodesVisitor.h"
+				RelativePath="..\Include\core\TNodesVisitor.h"
 				>
 			</File>
 		</Filter>
@@ -191,7 +191,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Timer.h"
+				RelativePath="..\Include\core\Timer.h"
 				>
 			</File>
 		</Filter>
@@ -203,11 +203,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BoundingVolume.h"
+				RelativePath="..\Include\core\BoundingVolume.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CellSpacePartition.h"
+				RelativePath="..\Include\core\CellSpacePartition.h"
 				>
 			</File>
 		</Filter>
@@ -215,7 +215,7 @@
 			Name="Delegates"
 			>
 			<File
-				RelativePath=".\Delegate.h"
+				RelativePath="..\Include\core\Delegate.h"
 				>
 			</File>
 		</Filter>
@@ -223,7 +223,7 @@
 			Name="Streams"
 			>
 			<File
-				RelativePath=".\dostream.h"
+				RelativePath="..\Include\core\dostream.h"
 				>
 			</File>
 		</Filter>
@@ -231,7 +231,7 @@
 			Name="Utils"
 			>
 			<File
-				RelativePath=".\HierarchyWriter.h"
+				RelativePath="..\Include\core\HierarchyWriter.h"
 				>
 			</File>
 			<File
@@ -239,7 +239,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MatrixWriter.h"
+				RelativePath="..\Include\core\MatrixWriter.h"
 				>
 			</File>
 		</Filter>

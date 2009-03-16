@@ -1,8 +1,8 @@
 #pragma once
 
-#include "TreeSegment.h"
-#include "HierarchyWriter.h"
-#include "MatrixWriter.h"
+#include "ext-TreesGenerator\TreeSegment.h"
+#include "core\HierarchyWriter.h"
+#include "core\MatrixWriter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

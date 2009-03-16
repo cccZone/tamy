@@ -1,10 +1,10 @@
-#include "TestFramework.h"
+#include "core-TestFramework\TestFramework.h"
 #include "GraphicalEntityLoaderMock.h"
 #include "ResourceManagerStub.h"
-#include "Material.h"
-#include "MatrixWriter.h"
+#include "core-Renderer\Material.h"
+#include "core\MatrixWriter.h"
 #include "GraphicalEntityHierarchyWriter.h"
-#include "CompositeGraphicalEntity.h"
+#include "core-Renderer\CompositeGraphicalEntity.h"
 
 
 //////////////////////////////////////////////////////////////////////////////

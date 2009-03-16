@@ -1,5 +1,5 @@
-#include "TestFramework.h"
-#include "Material.h"
+#include "core-TestFramework\TestFramework.h"
+#include "core-Renderer\Material.h"
 #include "LightReflectingPropertiesStub.h"
 #include "TextureStub.h"
 

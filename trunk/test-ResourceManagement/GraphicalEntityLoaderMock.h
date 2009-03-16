@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GraphicalEntityLoader.h"
+#include "core-ResourceManagement\GraphicalEntityLoader.h"
 
 
 //////////////////////////////////////////////////////////////////////////////

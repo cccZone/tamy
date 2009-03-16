@@ -1,5 +1,5 @@
-#include "GraphicalNode.h"
-#include "GraphicalEntity.h"
+#include "core-Renderer\GraphicalNode.h"
+#include "core-Renderer\GraphicalEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

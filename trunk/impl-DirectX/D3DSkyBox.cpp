@@ -1,4 +1,4 @@
-#include "D3DSkyBox.h"
+#include "impl-DirectX\D3DSkyBox.h"
 #include <stdexcept>
 #include <string>
 

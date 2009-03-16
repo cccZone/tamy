@@ -1,20 +1,18 @@
 #include "SkinningDemo.h"
 #include <tchar.h>
-#include "WindowBuilder.h"
-#include "D3DRenderer.h"
-#include "D3DInitializer.h"
-#include "UnconstrainedMotionController.h"
-#include "Timer.h"
+#include "core\WindowBuilder.h"
+#include "impl-DirectX\D3DRenderer.h"
+#include "impl-DirectX\D3DInitializer.h"
+#include "ext-MotionControllers\UnconstrainedMotionController.h"
+#include "core\Timer.h"
 #include <cassert>
-#include "BasicSceneManager.h"
-#include "GraphicalEntityInstantiator.h"
-#include "Camera.h"
-#include "Light.h"
-#include "D3DResourceManager.h"
-#include "IWFLoader.h"
-#include "GraphicalEntity.h"
-#include "Skeleton.h"
-#include "GraphicalEntityLoader.h"
+#include "core-ResourceManagement\BasicSceneManager.h"
+#include "core-Renderer\GraphicalEntityInstantiator.h"
+#include "core-Renderer\Camera.h"
+#include "core-Renderer\Light.h"
+#include "impl-DirectX\D3DResourceManager.h"
+#include "core-Renderer\GraphicalEntity.h"
+#include "core-Renderer\Skeleton.h"
 
 
 
@@ -95,8 +93,11 @@ void SkinningDemo::run(int nCmdShow)
    m_sceneManager->addNode(light);
 
    Camera* camera = m_resourceManager->createCamera("camera");
-   camera->setLookVec(D3DXVECTOR3(0, 0, -1));
-   camera->setPosition(D3DXVECTOR3(0, 10, 50));
+
+   D3DXMATRIX rotMtx;
+   D3DXMatrixRotationYawPitchRoll(&rotMtx, D3DXToRadian(180), 0, 0);
+   D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 10, 50);
+   D3DXMatrixMultiply(&(camera->accessLocalMtx()), &rotMtx, &(camera->accessLocalMtx()));
    m_sceneManager->addNode(camera);
    m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WindowMessagesProcessor.h"
+#include "core\WindowMessagesProcessor.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 

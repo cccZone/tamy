@@ -1,7 +1,7 @@
-#include "TestFramework.h"
-#include "UnconstrainedMotionController.h"
-#include "Node.h"
-#include "MatrixWriter.h"
+#include "core-TestFramework\TestFramework.h"
+#include "ext-MotionControllers\UnconstrainedMotionController.h"
+#include "core\Node.h"
+#include "core\MatrixWriter.h"
 #include <d3dx9.h>
 
 

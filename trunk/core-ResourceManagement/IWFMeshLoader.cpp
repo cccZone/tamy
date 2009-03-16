@@ -1,6 +1,6 @@
-#include "IWFMeshLoader.h"
-#include "libIWF\iwfObjects.h"
-#include "MeshDefinition.h"
+#include "core-ResourceManagement\IWFMeshLoader.h"
+#include "core-ResourceManagement\libIWF\iwfObjects.h"
+#include "core-ResourceManagement\MeshDefinition.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

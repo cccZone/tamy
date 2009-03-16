@@ -1,7 +1,7 @@
 #pragma once
 
-#include "NodeVisitor.h"
-#include "Node.h"
+#include "core\NodeVisitor.h"
+#include "core\Node.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

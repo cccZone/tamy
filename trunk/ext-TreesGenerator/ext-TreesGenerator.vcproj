@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -107,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -126,7 +126,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="d3dx9.lib"
+				AdditionalDependencies="d3dx9.lib winmm.lib"
 				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
 			/>
 			<Tool
@@ -155,7 +155,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\TreeParams.h"
+				RelativePath="..\Include\ext-TreesGenerator\TreeParams.h"
 				>
 			</File>
 			<File
@@ -163,11 +163,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TreeSegment.h"
+				RelativePath="..\Include\ext-TreesGenerator\TreeSegment.h"
 				>
 			</File>
 			<File
-				RelativePath=".\TreeStructureGenerator.h"
+				RelativePath="..\Include\ext-TreesGenerator\TreeStructureGenerator.h"
 				>
 			</File>
 			<File
@@ -183,7 +183,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TreeSkinner.h"
+				RelativePath="..\Include\ext-TreesGenerator\TreeSkinner.h"
 				>
 			</File>
 		</Filter>
@@ -195,7 +195,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TreeAnimator.h"
+				RelativePath="..\Include\ext-TreesGenerator\TreeAnimator.h"
 				>
 			</File>
 		</Filter>

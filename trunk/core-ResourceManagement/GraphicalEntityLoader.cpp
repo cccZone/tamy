@@ -1,7 +1,7 @@
-#include "GraphicalEntityLoader.h"
-#include "ResourceManager.h"
-#include "AbstractGraphicalEntity.h"
-#include "Node.h"
+#include "core-ResourceManagement\GraphicalEntityLoader.h"
+#include "core-ResourceManagement\ResourceManager.h"
+#include "core-Renderer\AbstractGraphicalEntity.h"
+#include "core\Node.h"
 #include <sstream>
 #include <deque>
 

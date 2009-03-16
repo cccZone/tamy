@@ -1,4 +1,4 @@
-#include "D3DLight.h"
+#include "impl-DirectX\D3DLight.h"
 #include <d3dx9.h>
 
 

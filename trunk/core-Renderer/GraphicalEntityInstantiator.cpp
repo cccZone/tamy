@@ -1,7 +1,7 @@
-#include "GraphicalEntityInstantiator.h"
-#include "CompositeGraphicalEntity.h"
-#include "GraphicalEntity.h"
-#include "SkinnedGraphicalEntity.h"
+#include "core-Renderer\GraphicalEntityInstantiator.h"
+#include "core-Renderer\CompositeGraphicalEntity.h"
+#include "core-Renderer\GraphicalEntity.h"
+#include "core-Renderer\SkinnedGraphicalEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

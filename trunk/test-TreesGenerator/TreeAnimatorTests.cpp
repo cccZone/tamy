@@ -1,7 +1,7 @@
-#include "TestFramework.h"
-#include "MeshDefinition.h"
-#include "TreeAnimator.h"
-#include "Skeleton.h"
+#include "core-TestFramework\TestFramework.h"
+#include "core-ResourceManagement\MeshDefinition.h"
+#include "ext-TreesGenerator\TreeAnimator.h"
+#include "core-Renderer\Skeleton.h"
 #include "AnimationDefinitionWriter.h"
 #include <d3dx9.h>
 

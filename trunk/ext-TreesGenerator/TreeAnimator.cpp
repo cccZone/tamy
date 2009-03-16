@@ -1,6 +1,6 @@
-#include "TreeAnimator.h"
-#include "Skeleton.h"
-#include "MeshDefinition.h"
+#include "ext-TreesGenerator\TreeAnimator.h"
+#include "core-Renderer\Skeleton.h"
+#include "core-ResourceManagement\MeshDefinition.h"
 #include <deque>
 #include <stdexcept>
 #include <math.h>

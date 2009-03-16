@@ -1,5 +1,5 @@
-#include "WindowBuilder.h"
-#include "WindowMessagesProcessor.h"
+#include "core\WindowBuilder.h"
+#include "core\WindowMessagesProcessor.h"
 
 
 CWindowBuilder::CWindowBuilder(void)

@@ -1,5 +1,5 @@
-#include "D3DInitializer.h"
-#include "D3DRenderer.h"
+#include "impl-DirectX\D3DInitializer.h"
+#include "impl-DirectX\D3DRenderer.h"
 #include <algorithm>
 #include <stdexcept>
 #include <string>

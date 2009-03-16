@@ -1,6 +1,6 @@
-#include "TestFramework.h"
-#include "BasicSceneManager.h"
-#include "Node.h"
+#include "core-TestFramework\TestFramework.h"
+#include "core-ResourceManagement\BasicSceneManager.h"
+#include "core\Node.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

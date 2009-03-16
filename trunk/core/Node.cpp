@@ -1,8 +1,8 @@
-#include "Node.h"
+#include "core\Node.h"
 #include <stdexcept>
 #include <algorithm>
-#include "MatrixWriter.h"
-#include "dostream.h"
+#include "core\MatrixWriter.h"
+#include "core\dostream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

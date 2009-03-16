@@ -1,11 +1,11 @@
-#include "TestFramework.h"
+#include "core-TestFramework\TestFramework.h"
 #include "RendererImplementationMock.h"
-#include "Material.h"
+#include "core-Renderer\Material.h"
 #include "TextureStub.h"
 #include "GraphicalEntityMock.h"
-#include "GraphicalNode.h"
-#include "Camera.h"
-#include "MatrixWriter.h"
+#include "core-Renderer\GraphicalNode.h"
+#include "core-Renderer\Camera.h"
+#include "core\MatrixWriter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

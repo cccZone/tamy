@@ -1,15 +1,15 @@
-#include "TestFramework.h"
-#include "GraphicalNode.h"
-#include "Material.h"
+#include "core-TestFramework\TestFramework.h"
+#include "core-Renderer\GraphicalNode.h"
+#include "core-Renderer\Material.h"
 #include "LightReflectingPropertiesStub.h"
 #include "TextureStub.h"
-#include "MatrixWriter.h"
+#include "core\MatrixWriter.h"
 #include "GraphicalEntityMock.h"
 #include "SkinnedGraphicalEntityMock.h"
 #include <vector>
 #include "NodeHierarchyWriter.h"
-#include "SkinnedGraphicalNode.h"
-#include "SkinBoneDefinition.h"
+#include "core-Renderer\SkinnedGraphicalNode.h"
+#include "core-Renderer\SkinBoneDefinition.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

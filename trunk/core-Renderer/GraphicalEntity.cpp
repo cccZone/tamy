@@ -1,7 +1,7 @@
-#include "GraphicalEntity.h"
-#include "Material.h"
-#include "GraphicalNode.h"
-#include "GraphicalEntityInstantiator.h"
+#include "core-Renderer\GraphicalEntity.h"
+#include "core-Renderer\Material.h"
+#include "core-Renderer\GraphicalNode.h"
+#include "core-Renderer\GraphicalEntityInstantiator.h"
 #include <sstream>
 
 

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <string>
-#include "Skeleton.h"
-#include "MatrixWriter.h"
+#include "core-Renderer\Skeleton.h"
+#include "core\MatrixWriter.h"
 #include <sstream>
 
 

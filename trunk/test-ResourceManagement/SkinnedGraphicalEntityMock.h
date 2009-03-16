@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SkinnedGraphicalEntity.h"
+#include "core-Renderer\SkinnedGraphicalEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

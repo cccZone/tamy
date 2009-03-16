@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Animation&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -107,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\core&quot;;&quot;$(SolutionDir)\core-Animation&quot;;&quot;$(SolutionDir)\core-Renderer&quot;;&quot;$(SolutionDir)\core-ResourceManagement&quot;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -157,7 +157,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\D3DResourceManager.h"
+				RelativePath="..\Include\impl-DirectX\D3DResourceManager.h"
 				>
 			</File>
 			<File
@@ -165,7 +165,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\XFileGraphicalEntityLoader.h"
+				RelativePath="..\Include\impl-DirectX\XFileGraphicalEntityLoader.h"
 				>
 			</File>
 		</Filter>
@@ -180,11 +180,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\D3DEmptyTexture.h"
+					RelativePath="..\Include\impl-DirectX\D3DEmptyTexture.h"
 					>
 				</File>
 				<File
-					RelativePath=".\D3DGraphicalEntity.h"
+					RelativePath="..\Include\impl-DirectX\D3DGraphicalEntity.h"
 					>
 				</File>
 				<File
@@ -192,7 +192,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\D3DLight.h"
+					RelativePath="..\Include\impl-DirectX\D3DLight.h"
 					>
 				</File>
 				<File
@@ -200,7 +200,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\D3DLightReflectingProperties.h"
+					RelativePath="..\Include\impl-DirectX\D3DLightReflectingProperties.h"
 					>
 				</File>
 				<File
@@ -208,11 +208,11 @@
 					>
 				</File>
 				<File
-					RelativePath=".\D3DMaterial.h"
+					RelativePath="..\Include\impl-DirectX\D3DMaterial.h"
 					>
 				</File>
 				<File
-					RelativePath=".\D3DSkinnedGraphicalEntity.h"
+					RelativePath="..\Include\impl-DirectX\D3DSkinnedGraphicalEntity.h"
 					>
 				</File>
 				<File
@@ -220,7 +220,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\D3DSkyBox.h"
+					RelativePath="..\Include\impl-DirectX\D3DSkyBox.h"
 					>
 				</File>
 				<File
@@ -228,7 +228,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\D3DTexture.h"
+					RelativePath="..\Include\impl-DirectX\D3DTexture.h"
 					>
 				</File>
 			</Filter>
@@ -240,7 +240,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\D3DInitializer.h"
+					RelativePath="..\Include\impl-DirectX\D3DInitializer.h"
 					>
 				</File>
 				<File
@@ -248,7 +248,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\D3DRenderer.h"
+					RelativePath="..\Include\impl-DirectX\D3DRenderer.h"
 					>
 				</File>
 			</Filter>

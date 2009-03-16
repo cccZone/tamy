@@ -1,18 +1,18 @@
-#include "IWFLoader.h"
-#include "libIWF\iwfFile.h"
-#include "libIWF\iwfObjects.h"
-#include "ResourceManager.h"
-#include "SceneManager.h"
-#include "GraphicalNode.h"
+#include "core-ResourceManagement\IWFLoader.h"
+#include "core-ResourceManagement\libIWF\iwfFile.h"
+#include "core-ResourceManagement\libIWF\iwfObjects.h"
+#include "core-ResourceManagement\ResourceManager.h"
+#include "core-ResourceManagement\SceneManager.h"
+#include "core-Renderer\GraphicalNode.h"
 #include <map>
 #include <sstream>
-#include "IWFMeshLoader.h"
-#include "Material.h"
-#include "Light.h"
-#include "SkyBox.h"
-#include "Renderer.h"
-#include "GraphicalEntity.h"
-#include "GraphicalEntityInstantiator.h"
+#include "core-ResourceManagement\IWFMeshLoader.h"
+#include "core-Renderer\Material.h"
+#include "core-Renderer\Light.h"
+#include "core-Renderer\SkyBox.h"
+#include "core-Renderer\Renderer.h"
+#include "core-Renderer\GraphicalEntity.h"
+#include "core-Renderer\GraphicalEntityInstantiator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

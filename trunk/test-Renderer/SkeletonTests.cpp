@@ -1,7 +1,7 @@
-#include "TestFramework.h"
-#include "Skeleton.h"
-#include "MatrixWriter.h"
-#include "Node.h"
+#include "core-TestFramework\TestFramework.h"
+#include "core-Renderer\Skeleton.h"
+#include "core\MatrixWriter.h"
+#include "core\Node.h"
 #include "GraphicalEntityMock.h"
 
 

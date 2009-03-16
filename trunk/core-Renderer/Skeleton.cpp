@@ -1,5 +1,5 @@
-#include "Skeleton.h"
-#include "Node.h"
+#include "core-Renderer\Skeleton.h"
+#include "core\Node.h"
 #include <set>
 #include <deque>
 #include <cassert>

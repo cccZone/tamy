@@ -1,4 +1,4 @@
-#include "D3DLightReflectingProperties.h"
+#include "impl-DirectX\D3DLightReflectingProperties.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

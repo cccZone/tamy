@@ -1,5 +1,5 @@
-#include "BasicSceneManager.h"
-#include "Node.h"
+#include "core-ResourceManagement\BasicSceneManager.h"
+#include "core\Node.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
