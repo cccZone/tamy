@@ -328,18 +328,6 @@ float Skeleton::getSpeed(const std::string& animationName) const
 void Skeleton::update(float timeElapsed)
 {
    m_animationController->AdvanceTime(timeElapsed, NULL);
-
-   ID3DXAnimationSet* animSet = NULL;
-   m_animationController->GetTrackAnimationSet(0, &animSet);
-   
-   D3DXTRACK_DESC desc;
-   m_animationController->GetTrackDesc(0, &desc);
-   double trackPos = animSet->GetPeriodicPosition(desc.Position);
-   D3DXVECTOR3 scale;
-   D3DXQUATERNION rot;
-   D3DXVECTOR3 trans;
-   animSet->GetSRT(trackPos, 0, &scale, &rot, &trans);
-   animSet->Release();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
