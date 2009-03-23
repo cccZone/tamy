@@ -83,7 +83,7 @@ void SkinningDemo::run(int nCmdShow)
    m_sceneManager->addNode(entInstance);
 
    m_animationController = ent.instantiateSkeleton(*entInstance);
-   m_animationController->activateAnimation("");
+   m_animationController->activateAnimation("", true);
 
 
    Light* light = m_resourceManager->createLight("light");

@@ -83,7 +83,7 @@ void AnimationDemo::run(int nCmdShow)
 
    AbstractGraphicalEntity& ent = m_resourceManager->getGraphicalEntity("animlandscape.x");
    m_animationController = ent.instantiateSkeleton(m_sceneManager->getRootNode());
-   m_animationController->activateAnimation("Cutscene_01");
+   m_animationController->activateAnimation("Cutscene_01", true);
 
    Light* light = m_resourceManager->createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
@@ -92,8 +92,6 @@ void AnimationDemo::run(int nCmdShow)
    m_sceneManager->addNode(light);
 
    Camera* camera = m_resourceManager->createCamera("camera");
-   camera->setLookVec(D3DXVECTOR3(0, 0, -1));
-   camera->setPosition(D3DXVECTOR3(0, 10, 50));
    m_sceneManager->addNode(camera);
    m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);

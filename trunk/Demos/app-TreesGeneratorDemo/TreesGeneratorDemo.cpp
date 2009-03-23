@@ -129,7 +129,7 @@ void TreesGeneratorDemo::run(int nCmdShow)
    m_sceneManager->addNode(entInstance);
 
    m_animationController = treeEntity->instantiateSkeleton(*entInstance);
-   m_animationController->activateAnimation("wind");
+   m_animationController->activateAnimation("wind", true);
 
    Light* light = m_resourceManager->createLight("light");
    light->setType(Light::LT_DIRECTIONAL);

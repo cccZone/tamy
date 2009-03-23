@@ -79,7 +79,9 @@ public:
                                  AbstractGraphicalEntity* entity);
 
    /**
-    * Loads a mesh using a graphical entity loader
+    * Loads a mesh using a graphical entity loader. This method DOES
+    * register the entity with the manager - you don't have to call 'registerGraphicalEntity'
+    * afterwards
     *
     * @throws std::logic_error if an entity with the specified name already exists
     * @param name - name of the file from which the mesh should be loaded.

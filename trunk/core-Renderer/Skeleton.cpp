@@ -54,6 +54,13 @@ Skeleton::Skeleton(const AnimationDefinition& animTemplate, Node& skeletonRootBo
 
 Skeleton::~Skeleton()
 {
+   m_animPerTrack.clear();
+   for (unsigned int i = 0; i < m_animSets.size(); ++i)
+   {
+      m_animSets.at(i)->Release();
+   }
+   m_animSets.clear();
+
    m_skeletonRootBone = NULL;
 
    m_animationController->Release();
@@ -90,8 +97,9 @@ void Skeleton::createAnimationController(DWORD requiredBonesCount, const Animati
    }
 
    // create the animations and register them with the controller
+   int animSetId = 0;
    for (std::list<AnimationSetDefinition>::const_iterator animSetIt = animTemplate.animSets.begin();
-        animSetIt != animTemplate.animSets.end(); ++animSetIt)
+        animSetIt != animTemplate.animSets.end(); ++animSetIt, ++animSetId)
    {
       const AnimationSetDefinition& animSetDef = *animSetIt;
       ID3DXKeyframedAnimationSet* newAnimSet = NULL;
@@ -102,6 +110,10 @@ void Skeleton::createAnimationController(DWORD requiredBonesCount, const Animati
                                             0,
                                             NULL,
                                             &newAnimSet);
+
+      m_animPerTrack.insert(std::make_pair(animSetDef.name, animSetId));
+      m_animSets.push_back(newAnimSet);
+      newAnimSet->AddRef();
 
       if (FAILED(res) || (newAnimSet == NULL))
       {
@@ -212,27 +224,103 @@ DWORD Skeleton::registerBoneStructure(Node& skeletonRootBone, std::set<std::stri
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Skeleton::activateAnimation(const std::string& animationName)
+void Skeleton::activateAnimation(const std::string& animationName, bool enable)
 {
-   ID3DXAnimationSet* animSet = NULL;
-   HRESULT res = m_animationController->GetAnimationSetByName(animationName.c_str(), &animSet);
+   int trackId = getTrackForAnimation(animationName);
+   ID3DXAnimationSet* animSet = m_animSets.at(trackId);
 
-   if (FAILED(res) || (animSet == NULL))
-   {
-      throw std::invalid_argument(std::string("Animation '") + animationName + 
-                                  std::string("' doesn't exist"));
-   }
-
-   res = m_animationController->SetTrackAnimationSet(0, animSet);
+   HRESULT res = m_animationController->SetTrackAnimationSet(trackId, animSet);
    if (FAILED(res))
    {
       throw std::invalid_argument(std::string("Animation '") + animationName + 
                                   std::string("' could not be activated"));
    }
 
-   m_animationController->SetTrackEnable(0, true);
+   m_animationController->SetTrackEnable(trackId, enable);
+}
 
-   animSet->Release();
+///////////////////////////////////////////////////////////////////////////////
+
+bool Skeleton::isActive(const std::string& animationName) const
+{
+   int trackId = getTrackForAnimation(animationName);
+
+   D3DXTRACK_DESC desc;
+   m_animationController->GetTrackDesc(trackId, &desc);
+
+   return desc.Enable;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Skeleton::getAnimationLength(const std::string& animationName) const
+{
+   int trackId = getTrackForAnimation(animationName);
+   ID3DXAnimationSet* animSet = m_animSets.at(trackId);
+   float length = static_cast<float> (animSet->GetPeriod());
+   return length;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::setPosition(const std::string& animationName, 
+                           float position) const
+{
+   int trackId = getTrackForAnimation(animationName);
+   m_animationController->SetTrackPosition(trackId, position);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Skeleton::getPosition(const std::string& animationName) const
+{
+   int trackId = getTrackForAnimation(animationName);
+
+   D3DXTRACK_DESC desc;
+   m_animationController->GetTrackDesc(trackId, &desc);
+
+   return static_cast<float> (desc.Position);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::setBlendWeight(const std::string& animationName, 
+                              float weight) const
+{
+   int trackId = getTrackForAnimation(animationName);
+   m_animationController->SetTrackWeight(trackId, weight);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Skeleton::getBlendWeight(const std::string& animationName) const
+{
+   int trackId = getTrackForAnimation(animationName);
+
+   D3DXTRACK_DESC desc;
+   m_animationController->GetTrackDesc(trackId, &desc);
+
+   return static_cast<float> (desc.Weight);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::setSpeed(const std::string& animationName, float speed) const
+{
+   int trackId = getTrackForAnimation(animationName);
+   m_animationController->SetTrackSpeed(trackId, speed);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Skeleton::getSpeed(const std::string& animationName) const
+{
+   int trackId = getTrackForAnimation(animationName);
+
+   D3DXTRACK_DESC desc;
+   m_animationController->GetTrackDesc(trackId, &desc);
+
+   return static_cast<float> (desc.Speed);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -252,6 +340,20 @@ void Skeleton::update(float timeElapsed)
    D3DXVECTOR3 trans;
    animSet->GetSRT(trackPos, 0, &scale, &rot, &trans);
    animSet->Release();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+int Skeleton::getTrackForAnimation(const std::string& animationName) const
+{
+   std::map<std::string, int>::const_iterator it = m_animPerTrack.find(animationName);
+   if (it == m_animPerTrack.end())
+   {
+      throw std::invalid_argument(std::string("Animation '") + animationName + 
+                                  std::string("' doesn't exist"));
+   }
+
+   return it->second;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

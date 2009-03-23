@@ -4,6 +4,8 @@
 #include <string>
 #include <d3dx9.h>
 #include <set>
+#include <vector>
+#include <map>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,6 +26,8 @@ class Skeleton
 private:
    Node* m_skeletonRootBone;
    ID3DXAnimationController* m_animationController;
+   std::map<std::string, int> m_animPerTrack;
+   std::vector<ID3DXAnimationSet*> m_animSets;
 
 public:
    /**
@@ -48,7 +52,68 @@ public:
     *
     * @throws std::invalid_argument if the animation with this name doesn't exist
     */
-   void activateAnimation(const std::string& animationName);
+   void activateAnimation(const std::string& animationName, bool enable);
+
+   /**
+    * @see activateAnimation method counterpart
+    */
+   bool isActive(const std::string& animationName) const;
+
+   /**
+    * Returns the length of an animation (in seconds)
+    *
+    * @throws std::invalid_argument if the animation with this name doesn't exist
+    */
+   float getAnimationLength(const std::string& animationName) const;
+
+   /**
+    * Sets the position in the animation sequence.
+    * Obeys the rules of wrapping etc. if the passed position is
+    * larger than the periodic length of the track
+    *
+    * @param position - specifies the position (in seconds)
+    * @throws std::invalid_argument if the animation with this name doesn't exist
+    */
+   void setPosition(const std::string& animationName, float position) const;
+
+   /**
+    * @see setPosition method counterpart
+    */
+   float getPosition(const std::string& animationName) const;
+
+   /**
+    * This method sets the weight of an animation so that it can be blended
+    * with other animations
+    *
+    * @param weight - <0, 1> corrsponds to <0%, 100%> range. Greater (or lesser) values
+    *                 are acceptable as well
+    * @throws std::invalid_argument if the animation with this name doesn't exist
+    */
+   void setBlendWeight(const std::string& animationName, float weight) const;
+
+   /**
+    * @see setBlendWeight method counterpart
+    */
+   float getBlendWeight(const std::string& animationName) const;
+
+   /**
+    * This method sets the speed of an animation
+    *
+    * @param speed - 1 - 100%
+    *                2 - 200%, 
+    *                0.5 - 50%, 
+    *                -1 - play backwards with normal speed 
+    *                0 - even though the animation is active, don't play it
+    *                etc.
+    *
+    * @throws std::invalid_argument if the animation with this name doesn't exist
+    */
+   void setSpeed(const std::string& animationName, float speed) const;
+
+   /**
+    * @see setSpeed method counterpart
+    */
+   float getSpeed(const std::string& animationName) const;
 
    /**
     * Updates the global time line, thus moving the active animations forward
@@ -56,8 +121,12 @@ public:
    void update(float timeElapsed);
 
 private:
-   void createAnimationController(DWORD requiredBonesCount, const AnimationDefinition& animTemplate);
-   DWORD registerBoneStructure(Node& skeletonRootBone, std::set<std::string>& bonesSet);
+   void createAnimationController(DWORD requiredBonesCount, 
+                                  const AnimationDefinition& animTemplate);
+   DWORD registerBoneStructure(Node& skeletonRootBone, 
+                               std::set<std::string>& bonesSet);
+
+   inline int getTrackForAnimation(const std::string& animationName) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
