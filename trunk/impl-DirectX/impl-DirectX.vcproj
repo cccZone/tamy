@@ -253,6 +253,18 @@
 				</File>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="AppFlow"
+			>
+			<File
+				RelativePath=".\D3DApplicationManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\impl-DirectX\D3DApplicationManager.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

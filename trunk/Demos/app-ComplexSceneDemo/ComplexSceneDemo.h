@@ -1,47 +1,33 @@
 #pragma once
 
-#include "core\WindowMessagesProcessor.h"
-#include <d3d9.h>
-#include <d3dx9.h>
+#include "core-AppFlow\Application.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class D3DResourceManager;
-class Renderer;
-class CTimer;
 class SceneManager;
 class UnconstrainedMotionController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ComplexSceneDemo : public IWindowMessagesProcessor
+class ComplexSceneDemo : public Application
 {
 private:
-   HINSTANCE m_hInstance;
-   HWND m_hWnd;
-   D3DResourceManager* m_resourceManager;
    Renderer* m_renderer;
-   CTimer* m_timer;
-
-   POINT m_oldCursorPos;
-   unsigned long m_lastFrameRate;
+   ResourceManager* m_resourceManager;
 
    SceneManager* m_sceneManager;
-
    UnconstrainedMotionController* m_cameraController;
+   bool m_rotating;
 
 public:
-   ComplexSceneDemo(HINSTANCE hInstance);
-   ~ComplexSceneDemo();
+   ComplexSceneDemo();
 
-   void run(int nCmdShow);
-   
-   LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+   void initialize(Renderer& renderer, ResourceManager& resourceManager);
 
-private:
-   void advanceGameState();
-   void processInput(float timeElapsed);
+   void deinitialize();
+
+   void update(float timeElapsed);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

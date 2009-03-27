@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="core"
-	ProjectGUID="{4F4CEC82-B5C6-4F0E-B69B-855FA55F4B80}"
-	RootNamespace="core"
+	Name="test-AppFlow"
+	ProjectGUID="{23B8D639-2513-47EF-A540-844D8B5C37EF}"
+	RootNamespace="testAppFlow"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -18,9 +18,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)\Libs\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\Build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)\Temp\$(ProjectName)\$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			>
 			<Tool
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -60,10 +60,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="cppunitd.lib d3dx9.lib"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\lib&quot;"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -75,14 +84,17 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)\Libs\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\Build\$(ProjectName)\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)\Temp\$(ProjectName)\$(ConfigurationName)"
-			ConfigurationType="4"
+			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -106,7 +118,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -123,10 +135,21 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				AdditionalDependencies="cppunit.lib d3dx9.lib"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\lib&quot;"
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -138,6 +161,9 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -146,104 +172,24 @@
 	</References>
 	<Files>
 		<Filter
-			Name="WindowingSystem"
+			Name="Core"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\WindowBuilder.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\WindowBuilder.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\WindowMessagesProcessor.h"
+				RelativePath=".\ApplicationTests.cpp"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="HierarchicalNodes"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			Name="Mocks"
 			>
 			<File
-				RelativePath=".\Node.cpp"
+				RelativePath=".\ApplicationManagerMock.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Node.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\NodeVisitor.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\TNodesVisitor.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Timer"
-			>
-			<File
-				RelativePath=".\Timer.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\Timer.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Math"
-			>
-			<File
-				RelativePath=".\BoundingVolume.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\BoundingVolume.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\CellSpacePartition.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\Point.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Delegates"
-			>
-			<File
-				RelativePath="..\Include\core\Delegate.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Streams"
-			>
-			<File
-				RelativePath="..\Include\core\dostream.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Utils"
-			>
-			<File
-				RelativePath="..\Include\core\HierarchyWriter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MatrixWriter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\MatrixWriter.h"
+				RelativePath=".\ApplicationMock.h"
 				>
 			</File>
 		</Filter>

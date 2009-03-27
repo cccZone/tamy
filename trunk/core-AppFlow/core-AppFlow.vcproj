@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="core"
-	ProjectGUID="{4F4CEC82-B5C6-4F0E-B69B-855FA55F4B80}"
-	RootNamespace="core"
+	Name="core-AppFlow"
+	ProjectGUID="{ADD6CE30-DEDE-450F-8C75-532D65F3AC15}"
+	RootNamespace="coreAppFlow"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -146,104 +146,24 @@
 	</References>
 	<Files>
 		<Filter
-			Name="WindowingSystem"
+			Name="Core"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\WindowBuilder.cpp"
+				RelativePath="..\Include\core-AppFlow\Application.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\WindowBuilder.h"
+				RelativePath=".\ApplicationManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\WindowMessagesProcessor.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="HierarchicalNodes"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
-			>
-			<File
-				RelativePath=".\Node.cpp"
+				RelativePath="..\Include\core-AppFlow\ApplicationManager.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Node.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\NodeVisitor.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\TNodesVisitor.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Timer"
-			>
-			<File
-				RelativePath=".\Timer.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\Timer.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Math"
-			>
-			<File
-				RelativePath=".\BoundingVolume.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\BoundingVolume.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\CellSpacePartition.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\Point.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Delegates"
-			>
-			<File
-				RelativePath="..\Include\core\Delegate.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Streams"
-			>
-			<File
-				RelativePath="..\Include\core\dostream.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Utils"
-			>
-			<File
-				RelativePath="..\Include\core\HierarchyWriter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MatrixWriter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\MatrixWriter.h"
+				RelativePath="..\Include\core-AppFlow\ExecutionContext.h"
 				>
 			</File>
 		</Filter>
