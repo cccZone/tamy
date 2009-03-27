@@ -134,7 +134,7 @@ bool ApplicationManager::step()
 
 void ApplicationManager::signal(const Application& app, int signalId)
 {
-   // locate the app in teh registry
+   // locate the app in the registry
    AppsMap::iterator appIt = m_apps.find(app.getName());
    if (appIt == m_apps.end())
    {
@@ -159,7 +159,10 @@ void ApplicationManager::signal(const Application& app, int signalId)
    }
 
    // switch over to the other application
-   appNode.state = AS_FINISHED;
+   if (appNode.state != AS_FINISHED)
+   {
+      appNode.state = AS_UNINITIALIZED;
+   }
    targetAppIt->second.state = AS_SCHEDULED;
 }
 

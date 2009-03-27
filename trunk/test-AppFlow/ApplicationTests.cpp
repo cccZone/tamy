@@ -101,18 +101,18 @@ TEST(ApplicationManager, connectingTwoApplications)
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
    // switching over to game:
-   //   - menu gets deinitialized (releasing all the resources) and stops receivig updates
+   //   - menu doesn't get deinitialized, but it stops receivig updates (enters hibernation)
    //   - game gets initialized
    menu.sendSignal(0);
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
-   CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
    // ...playing the game...
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
-   CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(1.f, game.getTimeElapsed());
@@ -173,18 +173,18 @@ TEST(ApplicationManager, reinitializingFinishedApp)
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
    // switching over to game:
-   //   - menu gets deinitialized (releasing all the resources) and stops receivig updates
+   //   - menu doesn't get deinitialized, but it stops receivig updates (enters hibernation)
    //   - game gets initialized
    menu.sendSignal(0);
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
-   CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
    // ...playing the game...
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
-   CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(1.f, game.getTimeElapsed());
@@ -207,14 +207,14 @@ TEST(ApplicationManager, reinitializingFinishedApp)
    // switching over to game again...
    menu.sendSignal(0);
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
-   CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
    // ...playing the game...
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
-   CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(1.f, game.getTimeElapsed());
