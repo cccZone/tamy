@@ -267,3 +267,51 @@ TEST(ApplicationManager, userInput)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST(ApplicationManager, signalingOtherApplication)
+{
+   ApplicationManagerMock manager;
+   ApplicationMock menu("menu");
+   ApplicationMock game("game");
+
+   manager.addApplication(menu);
+   manager.addApplication(game);
+
+   manager.setEntryApplication("menu");
+   manager.connect("menu", "game", 0);
+   manager.connect("game", "menu", Application::ON_EXIT);
+
+
+   // first step and menu gets initialized
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   CPPUNIT_ASSERT_THROW(menu.sendSignal("game", 5), std::logic_error);
+
+   // switching over to game:
+   //   - menu doesn't get deinitialized, but it stops receivig updates (enters hibernation)
+   //   - game gets initialized
+   menu.sendSignal(0);
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   // sending signal from a hibernated app to the active app
+   menu.sendSignal("game", 5);
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(-1, menu.getReceivedSignal());
+   CPPUNIT_ASSERT_EQUAL(5, game.getReceivedSignal());
+
+   // sending signal from the active app to a hibernated app
+   menu.sendSignal("menu", 7);
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(7, menu.getReceivedSignal());
+   CPPUNIT_ASSERT_EQUAL(-1, game.getReceivedSignal());
+}
+
+///////////////////////////////////////////////////////////////////////////////

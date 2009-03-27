@@ -97,6 +97,12 @@ bool ApplicationManager::step()
             break;
          }
 
+      case AS_HIBERNATED:
+         {
+            dispatchAppSignals(currNode);
+            break;
+         }
+
       case AS_SCHEDULED:
          {
             currNode.app.initialize(getRenderer(), getResourceManager());
@@ -106,6 +112,7 @@ bool ApplicationManager::step()
 
       case AS_RUNNING:
          {
+            dispatchAppSignals(currNode);
             currNode.app.update(getTimeElapsed());
             break;
          }
@@ -161,9 +168,33 @@ void ApplicationManager::signal(const Application& app, int signalId)
    // switch over to the other application
    if (appNode.state != AS_FINISHED)
    {
-      appNode.state = AS_UNINITIALIZED;
+      appNode.state = AS_HIBERNATED;
    }
    targetAppIt->second.state = AS_SCHEDULED;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ApplicationManager::signal(const Application& app, 
+                                const std::string& receiverApp, 
+                                int signalId)
+{
+   // locate the app in the registry
+   AppsMap::iterator appIt = m_apps.find(receiverApp);
+   if (appIt == m_apps.end())
+   {
+      throw std::runtime_error(std::string("Application '") + receiverApp +
+                               std::string("' not registered"));
+   }
+   ApplicationNode& appNode = appIt->second;
+
+   if ((appNode.state == AS_UNINITIALIZED) || (appNode.state == AS_FINISHED))
+   {
+      throw std::logic_error(std::string("Application '") + receiverApp +
+                             std::string("' needs to be initialized in order to receive a signal"));
+   }
+
+   appNode.signalsQueue.push_back(std::make_pair(app.getName(), signalId));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -179,6 +210,18 @@ void ApplicationManager::relativeMouseMovement(bool enable)
 {
    switchMouseMovementMode(enable);
    checkUserInput(m_keyBuffer, m_mousePos);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ApplicationManager::dispatchAppSignals(ApplicationNode& currNode)
+{
+   for (SignalsQueue::iterator signalIt = currNode.signalsQueue.begin();
+        signalIt != currNode.signalsQueue.end(); ++signalIt)
+   {
+      currNode.app.notify(signalIt->first, signalIt->second);
+   }
+   currNode.signalsQueue.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

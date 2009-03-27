@@ -3,6 +3,7 @@
 #include <string>
 #include "core-AppFlow\ExecutionContext.h"
 #include <map>
+#include <list>
 #include "core\Point.h"
 
 
@@ -31,9 +32,12 @@ protected:
    };
 
 private:
+   typedef std::list<std::pair<std::string, int> > SignalsQueue;
+
    enum ApplicationState
    {
       AS_UNINITIALIZED,
+      AS_HIBERNATED,
       AS_SCHEDULED,
       AS_RUNNING,
       AS_FINISHED
@@ -44,6 +48,7 @@ private:
       Application& app;
       ApplicationState state;
       std::map<int, std::string> connections;
+      SignalsQueue signalsQueue;
 
       ApplicationNode(Application& _app)
          : app(_app), state(AS_UNINITIALIZED)
@@ -91,6 +96,9 @@ public:
 
    // ---------------------- ExecutionContext implementation ------------------
    void signal(const Application& app, int signalId);
+   void signal(const Application& app, 
+               const std::string& receiverApp, 
+               int signalId);
    bool isKeyPressed(unsigned char keyCode) const;
    const Point& getMousePos() const {return m_mousePos;}
    void relativeMouseMovement(bool enable);
@@ -134,6 +142,9 @@ protected:
     * The method should return an instace of ResourceManager created by the implementation
     */
    virtual ResourceManager& getResourceManager() = 0;
+
+private:
+   void dispatchAppSignals(ApplicationNode& currNode);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -63,6 +63,12 @@ public:
     */
    virtual void update(float timeElapsed) = 0;
 
+   /**
+    * When this method is called, it means that some other active application
+    * is sending us a signal.
+    */
+   virtual void notify(const std::string& senderApp, int signalCode) = 0;
+
 protected:
    Application(const std::string& name) : m_name(name), m_context(NULL) {}
 

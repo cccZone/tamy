@@ -25,6 +25,18 @@ public:
     */
    virtual void signal(const Application& app, int signalId) = 0;
 
+   /**
+    * This way we can send signals to other applications
+    * to tell them to do something. The receiver app needs
+    * to be hibernated or running in order to receive the signal 
+    * (an app can also send signals to itself)
+    * 
+    * @throw std::logic_error if the receiver app is uninitialized
+    */
+   virtual void signal(const Application& app, 
+                       const std::string& receiverApp, 
+                       int signalId) = 0;
+
    virtual bool isKeyPressed(unsigned char keyCode) const = 0;
 
    virtual const Point& getMousePos() const = 0;

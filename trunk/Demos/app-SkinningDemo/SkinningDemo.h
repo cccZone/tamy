@@ -33,6 +33,8 @@ public:
    void deinitialize();
 
    void update(float timeElapsed);
+
+   void notify(const std::string& senderApp, int signalCode) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
