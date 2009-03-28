@@ -6,27 +6,29 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::list<RenderingCommand> RenderingProcessor::translate(const BatchedNodes& nodesToRender)
+DWORD RenderingProcessor::translate(AbstractGraphicalNodeP* nodesToRender, const DWORD& nodesArraySize,
+                                    RenderingCommand* renderingCommands, const DWORD& commandsArraySize)
 {
-   std::list<RenderingCommand> commands;
    Material* prevMat = NULL;
+   DWORD commandIdx = 0;
 
-   for (BatchedNodes::const_iterator it = nodesToRender.begin();
-        it != nodesToRender.end(); ++it)
+   for (DWORD i = 0; (i < nodesArraySize) && (commandIdx < commandsArraySize); ++i)
    {
-      AbstractGraphicalNode& graphicalNode = **it;
+      if (nodesToRender[i] == NULL) {continue;}
+
+      AbstractGraphicalNode& graphicalNode = *(nodesToRender[i]);
       Material& mat = graphicalNode.getMaterial();
 
       if ((prevMat == NULL) || (*prevMat != mat))
       {
-         commands.push_back(setMaterial(mat));
+         renderingCommands[commandIdx++] = setMaterial(mat);
          prevMat = &mat;
       }
-
-      commands.push_back(renderEntity(graphicalNode));
+      renderingCommands[commandIdx++] = renderEntity(graphicalNode);
    }
 
-   return commands;
+   return commandIdx;
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,33 @@
+#include "core-Renderer\SceneManager.h"
+#include "core\Node.h"
+#include "core-Renderer\SkyBox.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+SceneManager::SceneManager()
+      : m_rootNode(new Node("SceneRootNode")),
+      m_skyBox(NULL)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SceneManager::~SceneManager()
+{
+   delete m_rootNode;
+   m_rootNode = NULL;
+
+   delete m_skyBox;
+   m_skyBox = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneManager::setSkyBox(SkyBox* skyBox)
+{
+   delete m_skyBox;
+   m_skyBox = skyBox;
+}
+
+///////////////////////////////////////////////////////////////////////////////

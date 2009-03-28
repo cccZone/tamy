@@ -172,36 +172,16 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Core"
+			Name="Renderer"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\CameraTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEntityTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LightsTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialTests.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\RendererTests.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SkeletonTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SkinnedGraphicalNodeTests.cpp"
+				RelativePath=".\RenderingProcessorTests.cpp"
 				>
 			</File>
 		</Filter>
@@ -233,6 +213,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SceneManagerMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinnedGraphicalEntityMock.h"
 				>
 			</File>
@@ -242,6 +226,46 @@
 			</File>
 			<File
 				RelativePath=".\TextureStub.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="SceneManager"
+			>
+			<File
+				RelativePath=".\BasicDefaultManagerTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BatchingStrategyTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Entities"
+			>
+			<File
+				RelativePath=".\CameraTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalEntityTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\LightsTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkeletonTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinnedGraphicalNodeTests.cpp"
 				>
 			</File>
 		</Filter>

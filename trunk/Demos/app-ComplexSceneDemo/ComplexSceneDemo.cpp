@@ -4,7 +4,7 @@
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-ResourceManagement\ResourceManager.h"
-#include "core-ResourceManagement\BasicSceneManager.h"
+#include "core-Renderer\BasicSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
@@ -94,7 +94,7 @@ void ComplexSceneDemo::update(float timeElapsed)
       m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
    }
 
-   m_renderer->render(m_sceneManager->getRootNode());
+   m_renderer->render(*m_sceneManager);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

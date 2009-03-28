@@ -382,12 +382,10 @@ Texture& ResourceManager::getEmptyTexture()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkyBox& ResourceManager::createSkyBox()
+SkyBox* ResourceManager::createSkyBox()
 {
    SkyBox* skyBox = createSkyBoxImpl();
-   m_allObjects.push_back(new TManagable<SkyBox>(skyBox));
-
-   return *skyBox;
+   return skyBox;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

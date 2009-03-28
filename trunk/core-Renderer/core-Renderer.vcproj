@@ -151,26 +151,6 @@
 			Name="Core"
 			>
 			<File
-				RelativePath=".\BatchingStrategy.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\BatchingStrategy.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNodesAggregator.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\GraphicalNodesAggregator.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\LightsAggregator.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Renderer.cpp"
 				>
 			</File>
@@ -338,6 +318,34 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="SceneManager"
+			>
+			<File
+				RelativePath=".\BasicSceneManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\BasicSceneManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BatchingStrategy.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\BatchingStrategy.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SceneManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\SceneManager.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

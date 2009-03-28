@@ -45,8 +45,8 @@ protected:
 
    void setViewMatrix(const D3DXMATRIX& mtx);
    void setProjectionMatrix(const D3DXMATRIX& mtx);
-   void executeRenderingCommands(const std::list<RenderingCommand>& commands);
-   void present();
+   void renderingBegin();
+   void renderingEnd();
    bool isGraphicsSystemReady() const;
    void attemptToRecoverGraphicsSystem();
 };

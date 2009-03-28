@@ -3,10 +3,13 @@
 #include <d3dx9.h>
 #include <list>
 #include "core-Renderer\RenderingCommand.h"
+#include "core\Delegate.h"
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class SceneManager;
 class Node;
 class GraphicalNode;
 class Camera;
@@ -21,6 +24,10 @@ class SkyBox;
    class ClassName;                                                  \
    friend class ClassName;                                           \
    class ClassName
+
+///////////////////////////////////////////////////////////////////////////////
+
+typedef Delegate<void ()> RenderingPass;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -44,13 +51,15 @@ private:
    public:
       virtual ~RendererState() {}
 
-      virtual void render(Renderer& renderer, Node& rootNode) = 0;
+      virtual void render(Renderer& renderer, SceneManager& sceneManager) = 0;
    };
 
 private:
+   SceneManager* m_activeSceneManager;
+   std::vector<RenderingPass> m_renderingPasses;
+
    RenderingProcessor* m_renderingProcessor;
    Camera* m_activeCamera;
-   SkyBox* m_skyBox;
    unsigned int m_viewportWidth;
    unsigned int m_viewportHeight;
 
@@ -59,29 +68,26 @@ private:
    RendererState* m_deviceLostState;
    RendererState* m_currentRendererState;
 
+   DWORD m_commandsArraySize;
+   RenderingCommand* m_renderingCommands;
+
 public:
    Renderer();
    virtual ~Renderer();
 
    /**
-    * Renders the graphical representation of the nodes hierarchy on
+    * Renders the graphical representation of the scene on
     * a graphical device. 
     * The graphical device used is specified in the implementation
     * of this abstract class
     */
-   void render(Node& rootNode);
+   void render(SceneManager& sceneManager);
 
    /**
     * Sets a camera used to view the rendered scene. Without an active camera
     * no rendering will take place
     */
    void setActiveCamera(Camera& camera);
-
-   /**
-    * In order for the rendered scene to appear more lifelike, we can
-    * add a background. A skybox is a perfect choice - and this method allows to add it.
-    */
-   void setSkyBox(SkyBox& skyBox);
 
    /**
     * Changes the size of the active viewport
@@ -121,15 +127,14 @@ protected:
    virtual void setProjectionMatrix(const D3DXMATRIX& mtx) = 0;
 
    /**
-    * The method executes the rendering commands and thus rendering stuff
-    * on the graphical device.
+    * The method opens up the rendering conduct
     */
-   virtual void executeRenderingCommands(const std::list<RenderingCommand>& commands) = 0;
+   virtual void renderingBegin() = 0;
 
    /**
-    * The method renders whatever's there in the queue and clear it afterwards.
+    * The method presents the rendering results on the front buffer
     */
-   virtual void present() = 0;
+   virtual void renderingEnd() = 0;
 
    /**
     * The method tells us whether we can render anything, 
@@ -145,7 +150,10 @@ protected:
 
 private:
    void resetActiveCameraSettings();
-   void addBackgroundRenderingCommand(std::list<RenderingCommand>& renderingCommands);
+
+   void renderBackground();
+   void renderRegular();
+   void renderTransparent();
 
 private:
    // ---------------- Renderer states ---------------
@@ -153,19 +161,19 @@ private:
    INNER_CLASS(InitialState) : public RendererState
    {
    public:
-      void render(Renderer& renderer, Node& rootNode);
+      void render(Renderer& renderer, SceneManager& sceneManager);
    };
 
    INNER_CLASS(RenderingState) : public RendererState
    {
    public:
-      void render(Renderer& renderer, Node& rootNode);
+      void render(Renderer& renderer, SceneManager& sceneManager);
    };
 
    INNER_CLASS(DeviceLostState) : public RendererState
    {
    public:
-      void render(Renderer& renderer, Node& rootNode);
+      void render(Renderer& renderer, SceneManager& sceneManager);
    };
 
    // --------- Renderer states manipulation ---------

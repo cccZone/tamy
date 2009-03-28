@@ -9,6 +9,7 @@
 
 class AbstractGraphicalNode;
 class Material;
+typedef AbstractGraphicalNode* AbstractGraphicalNodeP;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +21,8 @@ class Material;
 class RenderingProcessor
 {
 public:
-   std::list<RenderingCommand> translate(const BatchedNodes& nodesToRender);
+   DWORD translate(AbstractGraphicalNodeP* nodesToRender, const DWORD& nodesArraySize,
+                   RenderingCommand* renderingCommands, const DWORD& commandsArraySize);
 
 protected:
    /**

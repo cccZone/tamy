@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="test-ResourceManagement"
-	ProjectGUID="{DCB889DF-FFED-4CAE-9620-B1A26573E249}"
-	RootNamespace="testResourceManagement"
+	Name="app-TransparencyDemo"
+	ProjectGUID="{55E4725C-D3EC-4263-B2AB-672D6F2413BB}"
+	RootNamespace="appTransparencyDemo"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,11 +61,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3dx9.lib cppunitd.lib"
+				AdditionalDependencies="winmm.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -117,8 +117,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -136,11 +137,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3dx9.lib cppunit.lib"
+				AdditionalDependencies="winmm.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -172,40 +173,16 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Loaders"
+			Name="Core"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\EntityLoaderTests.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Utils"
-			>
-			<File
-				RelativePath=".\GraphicalEntityHierarchyWriter.h"
+				RelativePath=".\TransparencyDemo.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\GraphicalEntityLoaderMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEntityMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ResourceManagerStub.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SkinnedGraphicalEntityMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TextureStub.h"
+				RelativePath=".\TransparencyDemo.h"
 				>
 			</File>
 		</Filter>

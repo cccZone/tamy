@@ -6,6 +6,7 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\Camera.h"
 #include "core\MatrixWriter.h"
+#include "core-Renderer\BasicSceneManager.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,8 +31,12 @@ TEST(Camera, renderingWithActiveCamera)
    Material mat(tex);
    std::vector<Material*> materials; materials.push_back(&mat);
    GraphicalEntityMock entity("", materials);
-   GraphicalNode node("", entity, 0);
-   renderer.render(node);     
+   GraphicalNode* node = new GraphicalNode("", entity, 0);
+
+   BasicSceneManager sceneManager;
+   sceneManager.addNode(node);
+
+   renderer.render(sceneManager);     
 
    D3DXMatrixInverse(&camera1Mtx, NULL, &camera1Mtx);
    D3DXMATRIX viewMtx = renderer.getViewMatrixSet();

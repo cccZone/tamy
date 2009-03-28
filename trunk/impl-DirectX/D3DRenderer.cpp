@@ -107,24 +107,19 @@ void D3DRenderer::setProjectionMatrix(const D3DXMATRIX& mtx)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void D3DRenderer::executeRenderingCommands(const std::list<RenderingCommand>& commands)
+void D3DRenderer::renderingBegin()
 {
    m_d3Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xFF007FFF, 1.0f, 0);
-
    m_d3Device->BeginScene();
 
-   for (std::list<RenderingCommand>::const_iterator it = commands.begin(); it != commands.end(); ++it)
-   {
-      (*it)();
-   }
-
-   m_d3Device->EndScene();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
-void D3DRenderer::present()
+void D3DRenderer::renderingEnd()
 {
+   m_d3Device->EndScene();
+
    if (FAILED(m_d3Device->Present(NULL, NULL, NULL, NULL)))
    {
       m_deviceLost = true;

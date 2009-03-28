@@ -1,27 +1,22 @@
-#include "TreesGeneratorDemo.h"
+#include "PerformanceDemo.h"
 #include "impl-DirectX\D3DApplicationManager.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-ResourceManagement\ResourceManager.h"
 #include "core-Renderer\BasicSceneManager.h"
-#include "core-ResourceManagement\MeshDefinition.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
+#include "core-ResourceManagement\IWFLoader.h"
 #include "core-Renderer\GraphicalEntity.h"
-#include "core-Renderer\Skeleton.h"
-#include "ext-TreesGenerator\TreeParams.h"
-#include "ext-TreesGenerator\TreeStructureGenerator.h"
-#include "ext-TreesGenerator\TreeSkinner.h"
-#include "ext-TreesGenerator\TreeSegment.h"
-#include "ext-TreesGenerator\TreeAnimator.h"
+#include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TreesGeneratorDemo::TreesGeneratorDemo()
+PerformanceDemo::PerformanceDemo()
       : Application("Demo"),
       m_renderer(NULL),
       m_resourceManager(NULL),
@@ -32,7 +27,7 @@ TreesGeneratorDemo::TreesGeneratorDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
 {
    m_renderer = &renderer;
    m_resourceManager = &resourceManager;
@@ -40,67 +35,32 @@ void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourc
    m_rotating = false;
    m_sceneManager = new BasicSceneManager();
 
-   TreeParams treeParams;
-   treeParams.maxTreeDepth = 5;
-   treeParams.startWidth = 10;
-   treeParams.startDirection = D3DXVECTOR3(0, 1, 0);
-   treeParams.segmentInitialLength = 20;
-   treeParams.minInternalBranchDirVariation = 2;
-   treeParams.maxInternalBranchDirVariation = 10;
-   treeParams.branchProbab.push_back(80);
-   treeParams.branchProbab.push_back(30);
-   treeParams.minNewBranchDirVariation = 30;
-   treeParams.maxNewBranchDirVariation = 60;
-   treeParams.initialBranchingLevel = 1;
-   treeParams.abruptBranchEndProbab = 5;
+   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
+   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
 
-   TreeStructureGenerator generator;
-   TreeSegment* treeStruct = generator.generate(treeParams);
+   for (int y = 0; y < 40; ++y)
+   {
+      for (int x = 0; x < 40; ++x)
+      {
+         GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile");
+         entInstance->attachEntity(ent);
+         D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), x * 10.f, 0, y * 10.f);
 
-   TreeSkinner skinner(*treeStruct);
-   MaterialDefinition treeBark;
-   treeBark.ambient.r = 1;
-   treeBark.ambient.g = 1;
-   treeBark.ambient.b = 1;
-   treeBark.ambient.a = 1;
-   treeBark.diffuse.r = 1;
-   treeBark.diffuse.g = 1;
-   treeBark.diffuse.b = 1;
-   treeBark.diffuse.a = 1;
-   treeBark.matName = "treeBark";
-   treeBark.texName = "LondonPlaneBark.dds";
+         m_sceneManager->addNode(entInstance);
+      }
+   }
 
-   MeshDefinition* mesh = skinner("tree", 8, 1, treeBark);
-   delete treeStruct;
-
-   TreeAnimator animator;
-   AnimationDefinition anim;
-   animator(*mesh, D3DXVECTOR3(1, 0, 0), 0.1f, 3, anim);
-
-   AbstractGraphicalEntity* treeEntity = m_resourceManager->createGraphicalEntityFromTemplate(*mesh);
-   m_resourceManager->registerGraphicalEntity("tree", treeEntity);
-   treeEntity->setAnimationDefinition(anim);
-
-   delete mesh;
-
-   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tree01");
-   entInstance->attachEntity(*treeEntity);
-   m_sceneManager->addNode(entInstance);
-
-   m_animationController = treeEntity->instantiateSkeleton(*entInstance);
-   m_animationController->activateAnimation("wind", true);
 
    Light* light = m_resourceManager->createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
-   light->setDiffuseColor(Color(1, 1, 1, 0));
-   light->setLookVec(D3DXVECTOR3(0, 0, -1));
+   light->setDiffuseColor(Color(1, 1, 1, 1));
+   light->setSpecularColor(Color(0.2, 0.2, 0.2, 1));
+   D3DXMatrixRotationYawPitchRoll(&(light->accessLocalMtx()), D3DXToRadian(-45), D3DXToRadian(45), 0);
    m_sceneManager->addNode(light);
 
    Camera* camera = m_resourceManager->createCamera("camera");
-   D3DXMATRIX rotMtx;
-   D3DXMatrixRotationYawPitchRoll(&rotMtx, D3DXToRadian(180), 0, 0);
-   D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 50, 100);
-   D3DXMatrixMultiply(&(camera->accessLocalMtx()), &rotMtx, &(camera->accessLocalMtx()));
+
+   D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 20, 50);
    m_sceneManager->addNode(camera);
    m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
@@ -108,11 +68,8 @@ void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourc
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TreesGeneratorDemo::deinitialize()
+void PerformanceDemo::deinitialize()
 {
-   delete m_animationController;
-   m_animationController = NULL;
-
    delete m_cameraController;
    m_cameraController = NULL;
 
@@ -125,7 +82,7 @@ void TreesGeneratorDemo::deinitialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TreesGeneratorDemo::update(float timeElapsed)
+void PerformanceDemo::update(float timeElapsed)
 {
    float movementSpeed = 40 * timeElapsed;
    float rotationSpeed = 180 * timeElapsed;
@@ -158,7 +115,6 @@ void TreesGeneratorDemo::update(float timeElapsed)
       m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
    }
 
-   m_animationController->update(timeElapsed);
    m_renderer->render(*m_sceneManager);
 }
 
@@ -169,8 +125,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Trees Generator Demo");
-	TreesGeneratorDemo app;
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Performance Demo");
+	PerformanceDemo app;
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

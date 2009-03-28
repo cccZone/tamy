@@ -79,16 +79,9 @@ protected:
 
    void setProjectionMatrix(const D3DXMATRIX& mtx) {}
 
-   void executeRenderingCommands(const std::list<RenderingCommand>& commands) 
-   {
-      for (std::list<RenderingCommand>::const_iterator it = commands.begin();
-         it != commands.end(); ++it)
-      {
-         (*it)();
-      }
-   }
+   void renderingBegin() {}
 
-   void present() {m_presentCalled = true;}
+   void renderingEnd() {m_presentCalled = true;}
 
    bool isGraphicsSystemReady() const {return m_deviceReady;}
 

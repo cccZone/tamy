@@ -196,7 +196,7 @@ public:
    /**
     * This method creates a skybox instance
     */
-   SkyBox& createSkyBox();
+   SkyBox* createSkyBox();
 
 protected:
    /**

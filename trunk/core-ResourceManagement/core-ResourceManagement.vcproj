@@ -253,26 +253,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
-			Name="SceneManager"
-			>
-			<File
-				RelativePath=".\BasicSceneManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\BasicSceneManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SceneManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\SceneManager.h"
-				>
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
