@@ -1,4 +1,6 @@
 #include "core-Renderer\Camera.h"
+#include "core\NodeVisitor.h"
+#include "core\TNodesVisitor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,6 +16,13 @@ Camera::Camera(const std::string& name)
    D3DXMatrixIdentity(&m_mtxIdentity);
    D3DXMatrixIdentity(&m_mtxView);
    D3DXMatrixIdentity(&m_mtx3DProjection);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Camera::onAccept(NodeVisitor& visitor)
+{
+   REGISTER_NODE_VISITOR(TNodesVisitor<Camera>);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

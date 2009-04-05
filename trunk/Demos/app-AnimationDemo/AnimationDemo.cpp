@@ -49,9 +49,10 @@ void AnimationDemo::initialize(Renderer& renderer, ResourceManager& resourceMana
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
    m_sceneManager->addNode(light);
 
+   m_renderer->addSceneManager(*m_sceneManager);
+
    Camera* camera = m_resourceManager->createCamera("camera");
    m_sceneManager->addNode(camera);
-   m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }
 
@@ -108,7 +109,7 @@ void AnimationDemo::update(float timeElapsed)
    }
 
    m_animationController->update(timeElapsed);
-   m_renderer->render(*m_sceneManager);
+   m_renderer->render();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

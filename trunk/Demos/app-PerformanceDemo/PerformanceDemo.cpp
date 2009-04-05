@@ -35,6 +35,8 @@ void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceMa
    m_rotating = false;
    m_sceneManager = new BasicSceneManager();
 
+   m_renderer->addSceneManager(*m_sceneManager);
+
    GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
    AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
 
@@ -62,7 +64,7 @@ void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceMa
 
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 20, 50);
    m_sceneManager->addNode(camera);
-   m_renderer->setActiveCamera(*camera);
+   m_sceneManager->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }
 
@@ -115,7 +117,7 @@ void PerformanceDemo::update(float timeElapsed)
       m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
    }
 
-   m_renderer->render(*m_sceneManager);
+   m_renderer->render();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

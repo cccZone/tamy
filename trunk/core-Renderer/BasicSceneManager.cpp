@@ -1,6 +1,7 @@
 #include "core-Renderer\BasicSceneManager.h"
 #include "core\Node.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\Camera.h"
 #include <windows.h>
 #include <math.h>
 #include <algorithm>
@@ -34,27 +35,31 @@ BasicSceneManager::~BasicSceneManager()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::addNode(Node* newNode)
+void BasicSceneManager::addToHierarchy(Node* newNode)
 {
-   // attach the node to the nodfes hierarchy
    getRootNode().addChild(newNode);
-
-   // check its kind to see what buffer shoul it be put in
-   newNode->accept(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const std::list<Light*>& BasicSceneManager::getLights(const Node& cameraNode, 
-                                                      int lightLimit)
+void BasicSceneManager::removeFromHierarchy(Node* node) 
 {
+   getRootNode().removeChild(*node);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const std::list<Light*>& BasicSceneManager::getLights(int lightLimit)
+{
+   Camera& activeCamera = getActiveCamera();
+
    bool dirty = (m_currentlyVisibleLights.size() == 0) || 
-                (cameraNode.getPosition() != m_cachedCameraPos) ||
+                (activeCamera.getPosition() != m_cachedCameraPos) ||
                 (m_currentlyVisibleLights.size() > lightLimit);
 
    if (dirty)
    {
-      m_cachedCameraPos = cameraNode.getPosition();
+      m_cachedCameraPos = activeCamera.getPosition();
       refreshVisibleLights(lightLimit);
    }
 
@@ -63,9 +68,14 @@ const std::list<Light*>& BasicSceneManager::getLights(const Node& cameraNode,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AbstractGraphicalNodeP* BasicSceneManager::getRegularGraphicalNodes(const Node& cameraNode, 
-                                                                    DWORD& arraySize)
+AbstractGraphicalNodeP* BasicSceneManager::getRegularGraphicalNodes(DWORD& arraySize)
 {
+   if (hasActiveCamera() == false) 
+   {
+      arraySize = 0;
+      return NULL;
+   }
+
    if (m_regularGraphicalNodes.size() != m_regularRenderingQueueSize)
    {
       delete [] m_regularRenderingQueue;
@@ -87,12 +97,18 @@ AbstractGraphicalNodeP* BasicSceneManager::getRegularGraphicalNodes(const Node& 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AbstractGraphicalNodeP* BasicSceneManager::getTransparentGraphicalNodes(const Node& cameraNode, 
-                                                                        DWORD& arraySize)
+AbstractGraphicalNodeP* BasicSceneManager::getTransparentGraphicalNodes(DWORD& arraySize)
 {
+   if (hasActiveCamera() == false) 
+   {
+      arraySize = 0;
+      return NULL;
+   }
+
    if (m_transparentNodesCount > 0)
    {
-      m_distanceComparator.setReferencePoint(cameraNode.getPosition());
+      Camera& activeCamera = getActiveCamera();
+      m_distanceComparator.setReferencePoint(activeCamera.getPosition());
       std::sort(m_transparentRenderingQueue, 
                 m_transparentRenderingQueue + m_transparentNodesCount,
                 m_distanceComparator);
@@ -104,30 +120,123 @@ AbstractGraphicalNodeP* BasicSceneManager::getTransparentGraphicalNodes(const No
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::visit(AbstractGraphicalNode& node) 
+void BasicSceneManager::add(Light& light)
+{
+   m_allLights.push_back(&light);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BasicSceneManager::remove(Light& light)
+{
+   for (std::list<Light*>::iterator it = m_allLights.begin();
+        it != m_allLights.end(); ++it)
+   {
+      if (*it == &light) 
+      {
+         m_allLights.erase(it);
+         return;
+      }
+   }
+   
+   throw std::runtime_error("Trying to remove an unregistered Light");
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BasicSceneManager::add(AbstractGraphicalNode& node) 
 {
    if (node.getMaterial().isTransparent())
    {
-      if (m_transparentNodesCount + 1 >  m_transparentRenderingQueueSize)
-      {
-         DWORD newSize = m_transparentRenderingQueueSize * 2;
-         AbstractGraphicalNodeP* tmpArr = new AbstractGraphicalNodeP[newSize];
-         ZeroMemory(tmpArr, sizeof(AbstractGraphicalNodeP) * newSize);
-
-         memcpy(tmpArr, m_transparentRenderingQueue, 
-                sizeof(AbstractGraphicalNodeP) * m_transparentRenderingQueueSize);
-         delete [] m_transparentRenderingQueue;
-
-         m_transparentRenderingQueueSize = newSize;
-         m_transparentRenderingQueue = tmpArr;
-      }
-
-      m_transparentRenderingQueue[m_transparentNodesCount++] = &node;
+      addTransparentNode(node);
    }
    else
    {
-      m_regularGraphicalNodes.insert(&node);  
+      addRegularNode(node);  
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BasicSceneManager::remove(AbstractGraphicalNode& node)
+{
+   if (node.getMaterial().isTransparent())
+   {
+      removeTransparentNode(node);
+   }
+   else
+   {
+      removeRegularNode(node);
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BasicSceneManager::addRegularNode(AbstractGraphicalNode& node)
+{
+   m_regularGraphicalNodes.insert(&node);  
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BasicSceneManager::removeRegularNode(AbstractGraphicalNode& node)
+{
+   GraphicalNodesSet::iterator it = m_regularGraphicalNodes.begin(); 
+   for (; it != m_regularGraphicalNodes.end(); ++it)
+   {
+      if (*it == &node) {break;}
+   }
+   if (it == m_regularGraphicalNodes.end())
+   {
+      throw std::runtime_error("Trying to remove an unregistered regular AbstractGraphicalNode");
+   }
+   m_regularGraphicalNodes.erase(it);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BasicSceneManager::addTransparentNode(AbstractGraphicalNode& node)
+{
+   if (m_transparentNodesCount + 1 >  m_transparentRenderingQueueSize)
+   {
+      DWORD newSize = m_transparentRenderingQueueSize * 2;
+      AbstractGraphicalNodeP* tmpArr = new AbstractGraphicalNodeP[newSize];
+      ZeroMemory(tmpArr, sizeof(AbstractGraphicalNodeP) * newSize);
+
+      memcpy(tmpArr, m_transparentRenderingQueue, 
+             sizeof(AbstractGraphicalNodeP) * m_transparentRenderingQueueSize);
+      delete [] m_transparentRenderingQueue;
+
+      m_transparentRenderingQueueSize = newSize;
+      m_transparentRenderingQueue = tmpArr;
+   }
+
+   m_transparentRenderingQueue[m_transparentNodesCount++] = &node;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BasicSceneManager::removeTransparentNode(AbstractGraphicalNode& node)
+{
+   // find the node
+   unsigned int nodeIdx = 0;
+   for (; nodeIdx < m_transparentNodesCount; ++nodeIdx)
+   {
+      if (m_transparentRenderingQueue[nodeIdx] == &node)
+      {
+         break;
+      }
+   }
+
+   if (nodeIdx >= m_transparentNodesCount)
+   {
+      throw std::runtime_error("Trying to remove an unregistered transparent AbstractGraphicalNode");
+   }
+
+   memcpy(m_transparentRenderingQueue + nodeIdx, 
+          m_transparentRenderingQueue + nodeIdx + 1,
+          m_transparentNodesCount - nodeIdx);
+   m_transparentNodesCount--;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

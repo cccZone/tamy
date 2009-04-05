@@ -163,6 +163,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Include\core-Renderer\RenderingPass.h"
+				>
+			</File>
+			<File
 				RelativePath=".\RenderingProcessor.cpp"
 				>
 			</File>
@@ -323,6 +327,14 @@
 			Name="SceneManager"
 			>
 			<File
+				RelativePath=".\ActiveCameraNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\ActiveCameraNode.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BasicSceneManager.cpp"
 				>
 			</File>
@@ -344,6 +356,34 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\SceneManager.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="RenderingPasses"
+			>
+			<File
+				RelativePath=".\BackgroundPass.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\BackgroundPass.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RegularNodesPass.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RegularNodesPass.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TransparentNodesPass.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\TransparentNodesPass.h"
 				>
 			</File>
 		</Filter>

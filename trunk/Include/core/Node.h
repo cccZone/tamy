@@ -45,7 +45,7 @@ public:
     * (unlike the local matrix wich describes the position relative to node's
     * parent).
     */
-   const D3DXMATRIX& getGlobalMtx();
+   virtual const D3DXMATRIX& getGlobalMtx();
 
    /**
     * This is the matrix that describes the node's position in relation
@@ -53,9 +53,9 @@ public:
     * It the node doesn't have a parent, this one will be equal
     * to the global matrix
     */
-   const D3DXMATRIX& getLocalMtx() const {return m_localMtx;}
+   virtual const D3DXMATRIX& getLocalMtx() const {return m_localMtx;}
 
-   void setLocalMtx(const D3DXMATRIX& localMtx);
+   virtual void setLocalMtx(const D3DXMATRIX& localMtx);
 
    /**
     * The method allows to access the matrix of the node directly,
@@ -64,19 +64,19 @@ public:
     * as various libs manipulate pointers to matrices. 
     * Not to worry - the global matrix will always remain in synch
     */
-   D3DXMATRIX& accessLocalMtx() {return m_localMtx;}
+   virtual D3DXMATRIX& accessLocalMtx() {return m_localMtx;}
 
    /*
     * A group of accessors to the local coordinate system vectors
     */
-   void setRightVec(const D3DXVECTOR3& vec);
-   void setUpVec(const D3DXVECTOR3& vec);
-   void setLookVec(const D3DXVECTOR3& vec);
-   void setPosition(const D3DXVECTOR3& vec);
-   D3DXVECTOR3 getRightVec() const;
-   D3DXVECTOR3 getUpVec() const;
-   D3DXVECTOR3 getLookVec() const;
-   D3DXVECTOR3 getPosition() const;
+   virtual void setRightVec(const D3DXVECTOR3& vec);
+   virtual void setUpVec(const D3DXVECTOR3& vec);
+   virtual void setLookVec(const D3DXVECTOR3& vec);
+   virtual void setPosition(const D3DXVECTOR3& vec);
+   virtual D3DXVECTOR3 getRightVec() const;
+   virtual D3DXVECTOR3 getUpVec() const;
+   virtual D3DXVECTOR3 getLookVec() const;
+   virtual D3DXVECTOR3 getPosition() const;
 
    /**
     * A node can have a single parent node. This methid will return true

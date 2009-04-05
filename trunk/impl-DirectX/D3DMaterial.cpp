@@ -27,7 +27,7 @@ void D3DMaterial::enableTransparency(bool enable)
 
       m_d3Device.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
       m_d3Device.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_TEXTURE);
-      m_d3Device.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_ADDSIGNED);
+      m_d3Device.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE);
 
       m_d3Device.SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
    }

@@ -39,6 +39,7 @@ void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourc
 
    m_rotating = false;
    m_sceneManager = new BasicSceneManager();
+   m_renderer->addSceneManager(*m_sceneManager);
 
    TreeParams treeParams;
    treeParams.maxTreeDepth = 5;
@@ -102,7 +103,6 @@ void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourc
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 50, 100);
    D3DXMatrixMultiply(&(camera->accessLocalMtx()), &rotMtx, &(camera->accessLocalMtx()));
    m_sceneManager->addNode(camera);
-   m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }
 
@@ -159,7 +159,7 @@ void TreesGeneratorDemo::update(float timeElapsed)
    }
 
    m_animationController->update(timeElapsed);
-   m_renderer->render(*m_sceneManager);
+   m_renderer->render();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <d3dx9.h>
+#include "core\Node.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,7 @@ enum SkyBoxSides
  * This class represents a skybox - a background element
  * which adds a panoramic surrounding to the scene.
  */
-class SkyBox
+class SkyBox : public Node
 {
 private:
    Material* m_materials[6];
@@ -33,12 +34,6 @@ private:
 public:
    SkyBox();
    virtual ~SkyBox() {}
-
-   /**
-    * A skybox is rendered relative to the position of the camera.
-    * @param The active camera's world matrix
-    */
-   virtual void updateOrientation(const D3DXMATRIX& cameraWorldMtx) = 0;
 
    void render();
 

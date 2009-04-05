@@ -31,18 +31,14 @@ D3DSkyBox::~D3DSkyBox()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DSkyBox::updateOrientation(const D3DXMATRIX& cameraWorldMtx) 
-{
-   m_cameraWorldMtx._41 = cameraWorldMtx._41;
-   m_cameraWorldMtx._42 = cameraWorldMtx._42;
-   m_cameraWorldMtx._43 = cameraWorldMtx._43;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void D3DSkyBox::startRendering()
 {
    m_d3Device.SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
+   D3DXMATRIX globalMtx = getGlobalMtx();
+   m_cameraWorldMtx._41 = globalMtx._41;
+   m_cameraWorldMtx._42 = globalMtx._42;
+   m_cameraWorldMtx._43 = globalMtx._43;
 
    m_d3Device.SetFVF(D3DSkyBoxVertex::FVF);
    m_d3Device.SetTransform(D3DTS_WORLD, &m_cameraWorldMtx);

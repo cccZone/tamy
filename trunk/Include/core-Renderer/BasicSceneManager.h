@@ -1,10 +1,6 @@
 #pragma once
 
 #include "core-Renderer\SceneManager.h"
-#include "core\NodeVisitor.h"
-#include "core\TNodesVisitor.h"
-#include "core-Renderer\AbstractGraphicalNode.h"
-#include "core-Renderer\Light.h"
 #include "core-Renderer\BatchingStrategy.h"
 #include <set>
 #include <vector>
@@ -16,10 +12,7 @@
  * This scene manager doesn't do much - it assigns all the nodes
  * to its root node, so there's not much hierarchy here.
  */
-class BasicSceneManager : public SceneManager,
-                          public NodeVisitor, 
-                          public TNodesVisitor<Light>,
-                          public TNodesVisitor<AbstractGraphicalNode>
+class BasicSceneManager : public SceneManager
 {
 private:
    std::list<Light*> m_allLights;
@@ -42,21 +35,33 @@ public:
    BasicSceneManager();
    ~BasicSceneManager();
 
-   void addNode(Node* newNode);
+   const std::list<Light*>& getLights(int lightLimit);
 
-   const std::list<Light*>& getLights(const Node& cameraNode, int lightLimit);
+   AbstractGraphicalNodeP* getRegularGraphicalNodes(DWORD& arraySize);
 
-   AbstractGraphicalNodeP* getRegularGraphicalNodes(const Node& cameraNode, 
-                                                    DWORD& arraySize);
+   AbstractGraphicalNodeP* getTransparentGraphicalNodes(DWORD& arraySize);
 
-   AbstractGraphicalNodeP* getTransparentGraphicalNodes(const Node& cameraNode, 
-                                                        DWORD& arraySize);
+protected:
+   void addToHierarchy(Node* node);
 
-   void visit(Light& light) {m_allLights.push_back(&light);}
-   void visit(AbstractGraphicalNode& node);
+   void removeFromHierarchy(Node* node);
+
+   void add(Light& light);
+
+   void remove(Light& light);
+
+   void add(AbstractGraphicalNode& node);
+
+   void remove(AbstractGraphicalNode& node);
 
 private:
    void refreshVisibleLights(int lightLimit);
+
+   void addRegularNode(AbstractGraphicalNode& node);
+   void removeRegularNode(AbstractGraphicalNode& node);
+
+   void addTransparentNode(AbstractGraphicalNode& node);
+   void removeTransparentNode(AbstractGraphicalNode& node);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -41,6 +41,9 @@ public:
    void setFOV(float angle);
    float getFOV() const {return m_fov;}
 
+protected:
+   void onAccept(NodeVisitor& visitor);
+
 private:
    void updateProjectionMtx();
    void updateViewMtx();

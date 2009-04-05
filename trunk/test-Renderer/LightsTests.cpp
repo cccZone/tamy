@@ -3,19 +3,23 @@
 #include "LightMock.h"
 #include "core\Node.h"
 #include "core-Renderer\BasicSceneManager.h"
+#include "core-Renderer\Camera.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(Lights, singleLight)
 {
+   Camera camera("camera");
    RendererImplementationMock renderer; 
    LightMock* light = new LightMock();
 
    BasicSceneManager sceneManager;
+   renderer.addSceneManager(sceneManager);
+   sceneManager.setActiveCamera(camera);
    sceneManager.addNode(light);
 
-   renderer.render(sceneManager);
+   renderer.render();
    CPPUNIT_ASSERT_EQUAL(true, light->hasBeenEnabled()); // lights gete nabled during the rendering pass
    CPPUNIT_ASSERT_EQUAL(false, light->isEnabled()); // lights get turned off after rendering pass is complete
 }
@@ -24,6 +28,7 @@ TEST(Lights, singleLight)
 
 TEST(Lights, renderingHierarchyOfLights)
 {
+   Camera camera("camera");
    RendererImplementationMock renderer; 
 
    Node* root = new Node();
@@ -33,9 +38,11 @@ TEST(Lights, renderingHierarchyOfLights)
    root->addChild(light2);
 
    BasicSceneManager sceneManager;
+   renderer.addSceneManager(sceneManager);
+   sceneManager.setActiveCamera(camera);
    sceneManager.addNode(root);
-
-   renderer.render(sceneManager);
+      
+   renderer.render();
 
    // only as many lights can be set as the device light limit allows
    CPPUNIT_ASSERT_EQUAL(true, light1->hasBeenEnabled());
@@ -50,6 +57,7 @@ TEST(Lights, renderingHierarchyOfLights)
 
 TEST(Lights, tooManyLights)
 {
+   Camera camera("camera");
    RendererImplementationMock renderer; 
    renderer.setMaxLightsCount(1); // we can only render using ONE LIGHT at a time !!!!
 
@@ -60,9 +68,11 @@ TEST(Lights, tooManyLights)
    root->addChild(light2);
 
    BasicSceneManager sceneManager;
+   renderer.addSceneManager(sceneManager);
+   sceneManager.setActiveCamera(camera);
    sceneManager.addNode(root);
 
-   renderer.render(sceneManager);
+   renderer.render();
 
    // only as many lights can be set as the device light limit allows
    CPPUNIT_ASSERT_EQUAL(true, light1->hasBeenEnabled());

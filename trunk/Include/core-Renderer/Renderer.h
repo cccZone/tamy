@@ -2,7 +2,6 @@
 
 #include <d3dx9.h>
 #include <list>
-#include "core-Renderer\RenderingCommand.h"
 #include "core\Delegate.h"
 #include <vector>
 
@@ -17,6 +16,7 @@ class Light;
 class Renderer;
 class RenderingProcessor;
 class SkyBox;
+class RenderingPass;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,10 +24,6 @@ class SkyBox;
    class ClassName;                                                  \
    friend class ClassName;                                           \
    class ClassName
-
-///////////////////////////////////////////////////////////////////////////////
-
-typedef Delegate<void ()> RenderingPass;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -51,15 +47,13 @@ private:
    public:
       virtual ~RendererState() {}
 
-      virtual void render(Renderer& renderer, SceneManager& sceneManager) = 0;
+      virtual void render(Renderer& renderer) = 0;
    };
 
 private:
-   SceneManager* m_activeSceneManager;
-   std::vector<RenderingPass> m_renderingPasses;
+   std::vector<RenderingPass*> m_renderingPasses;
+   std::list<SceneManager*> m_sceneManagers;
 
-   RenderingProcessor* m_renderingProcessor;
-   Camera* m_activeCamera;
    unsigned int m_viewportWidth;
    unsigned int m_viewportHeight;
 
@@ -67,9 +61,6 @@ private:
    RendererState* m_renderingState;
    RendererState* m_deviceLostState;
    RendererState* m_currentRendererState;
-
-   DWORD m_commandsArraySize;
-   RenderingCommand* m_renderingCommands;
 
 public:
    Renderer();
@@ -81,18 +72,28 @@ public:
     * The graphical device used is specified in the implementation
     * of this abstract class
     */
-   void render(SceneManager& sceneManager);
-
-   /**
-    * Sets a camera used to view the rendered scene. Without an active camera
-    * no rendering will take place
-    */
-   void setActiveCamera(Camera& camera);
+   void render();
 
    /**
     * Changes the size of the active viewport
     */
    void resizeViewport(unsigned int width, unsigned int height);
+
+   /**
+    * This method adds a new 2d rendering pass to the rendering pipeline
+    */
+   void addPass(RenderingPass* pass);
+
+   /** 
+    * Adds a scene to the rendering queue. A single rendering pass
+    * can render multiple scenes (2D, 3D etc.) at once
+    */
+   void addSceneManager(SceneManager& manager);
+
+   /**
+    * The method removes a scene from the rendering queue
+    */
+   void removeSceneManager(SceneManager& manager);
 
 protected:
    /**
@@ -116,6 +117,7 @@ protected:
     * set on the rendering device
     */
    virtual UINT getMaxLightsCount() const = 0;
+
    /**
     * The method sets the view matrix for the rendering pass
     */
@@ -149,31 +151,24 @@ protected:
    virtual void attemptToRecoverGraphicsSystem() = 0;
 
 private:
-   void resetActiveCameraSettings();
-
-   void renderBackground();
-   void renderRegular();
-   void renderTransparent();
-
-private:
    // ---------------- Renderer states ---------------
 
    INNER_CLASS(InitialState) : public RendererState
    {
    public:
-      void render(Renderer& renderer, SceneManager& sceneManager);
+      void render(Renderer& renderer);
    };
 
    INNER_CLASS(RenderingState) : public RendererState
    {
    public:
-      void render(Renderer& renderer, SceneManager& sceneManager);
+      void render(Renderer& renderer);
    };
 
    INNER_CLASS(DeviceLostState) : public RendererState
    {
    public:
-      void render(Renderer& renderer, SceneManager& sceneManager);
+      void render(Renderer& renderer);
    };
 
    // --------- Renderer states manipulation ---------

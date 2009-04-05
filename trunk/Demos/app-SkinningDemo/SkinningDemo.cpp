@@ -35,6 +35,7 @@ void SkinningDemo::initialize(Renderer& renderer, ResourceManager& resourceManag
 
    m_rotating = false;
    m_sceneManager = new BasicSceneManager();
+   m_renderer->addSceneManager(*m_sceneManager);
 
    GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("US Ranger.x");
    AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("US Ranger.x", loader);
@@ -59,7 +60,6 @@ void SkinningDemo::initialize(Renderer& renderer, ResourceManager& resourceManag
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 10, 50);
    D3DXMatrixMultiply(&(camera->accessLocalMtx()), &rotMtx, &(camera->accessLocalMtx()));
    m_sceneManager->addNode(camera);
-   m_renderer->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }
 
@@ -116,7 +116,7 @@ void SkinningDemo::update(float timeElapsed)
    }
 
    m_animationController->update(timeElapsed);
-   m_renderer->render(*m_sceneManager);
+   m_renderer->render(  );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

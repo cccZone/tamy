@@ -240,6 +240,10 @@
 				RelativePath=".\BatchingStrategyTests.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\SceneManagerTests.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Entities"
@@ -266,6 +270,14 @@
 			</File>
 			<File
 				RelativePath=".\SkinnedGraphicalNodeTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="RenderingPasses"
+			>
+			<File
+				RelativePath=".\BackgroundPassTests.cpp"
 				>
 			</File>
 		</Filter>

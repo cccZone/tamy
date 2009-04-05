@@ -14,6 +14,10 @@
 #include <string>
 #include <cassert>
 
+#include "core-Renderer\BackgroundPass.h"
+#include "core-Renderer\RegularNodesPass.h"
+#include "core-Renderer\TransparentNodesPass.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -50,6 +54,9 @@ D3DResourceManager::D3DResourceManager(const std::string& texturesDirPath,
       d3DSettings = m_d3dInitializer->findBestFullscreenMode(matchMode);
    }
    m_renderer = m_d3dInitializer->createDisplay(d3DSettings, hWnd);
+   m_renderer->addPass(new BackgroundPass());
+   m_renderer->addPass(new RegularNodesPass());
+   m_renderer->addPass(new TransparentNodesPass());
 
    // register file handlers
    registerFileGraphicalEntityLoader(new XFileGraphicalEntityLoader(m_renderer->getD3Device(), meshesDirPath));

@@ -1,44 +1,34 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
-#include "core-Renderer\RenderingProcessor.h"
-#include "core-Renderer\SkyBox.h"
 #include "core-Renderer\SceneManager.h"
+#include "core-Renderer\RenderingPass.h"
 #include <cassert>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Renderer::Renderer()
-      : m_activeSceneManager(NULL),
-      m_renderingProcessor(new RenderingProcessor()),
-      m_activeCamera(NULL),
-      m_viewportWidth(800),
+      : m_viewportWidth(800),
       m_viewportHeight(600),
       m_initialState(new InitialState()),
       m_renderingState(new RenderingState()),
       m_deviceLostState(new DeviceLostState()),
       m_currentRendererState(m_initialState) // we always start in the initial state
 {
-   m_commandsArraySize = 100000; // TODO: rozmiar tego
-   m_renderingCommands = new RenderingCommand[m_commandsArraySize];
-
-   // configure the rendering pipeline
-   m_renderingPasses.push_back(RenderingCommand::from_method<Renderer, &Renderer::renderBackground> (this));
-   m_renderingPasses.push_back(RenderingCommand::from_method<Renderer, &Renderer::renderRegular> (this));
-   m_renderingPasses.push_back(RenderingCommand::from_method<Renderer, &Renderer::renderTransparent> (this));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Renderer::~Renderer()
 {
-   delete [] m_renderingCommands; 
-   m_renderingCommands = NULL;
-   m_commandsArraySize = 0;
+   m_sceneManagers.clear();
 
-   delete m_renderingProcessor;
-   m_renderingProcessor = NULL;
+   for (unsigned int i = 0; i < m_renderingPasses.size(); ++i)
+   {
+      delete m_renderingPasses[i];
+   }
+   m_renderingPasses.clear();
 
    m_currentRendererState = NULL;
 
@@ -54,14 +44,36 @@ Renderer::~Renderer()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::render(SceneManager& sceneManager)
+void Renderer::addSceneManager(SceneManager& manager)
 {
-   m_currentRendererState->render(*this, sceneManager);
+   m_sceneManagers.push_back(&manager);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::InitialState::render(Renderer& renderer, SceneManager& sceneManager)
+void Renderer::removeSceneManager(SceneManager& manager)
+{
+   for (std::list<SceneManager*>::iterator it = m_sceneManagers.begin();
+        it != m_sceneManagers.end(); ++it)
+   {
+      if (*it == &manager)
+      {
+         m_sceneManagers.erase(it);
+         break;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::render()
+{
+   m_currentRendererState->render(*this);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::InitialState::render(Renderer& renderer)
 {
    renderer.initRenderer();
    renderer.resetViewport(renderer.m_viewportWidth, renderer.m_viewportHeight);
@@ -70,12 +82,12 @@ void Renderer::InitialState::render(Renderer& renderer, SceneManager& sceneManag
    // we don't want to loose the rendering frame just for rendering - 
    // invoke the rendering method once again so that the actual rendering
    // takes place also
-   renderer.render(sceneManager);
+   renderer.render();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::RenderingState::render(Renderer& renderer, SceneManager& sceneManager)
+void Renderer::RenderingState::render(Renderer& renderer)
 {
    if (renderer.isGraphicsSystemReady() == false)
    {
@@ -83,95 +95,55 @@ void Renderer::RenderingState::render(Renderer& renderer, SceneManager& sceneMan
       return;
    }
 
-   assert(renderer.m_renderingProcessor != NULL);
-   if (renderer.m_activeCamera == NULL) {return;}
-
-   // set the camera
-   const D3DXMATRIX& viewMtx = renderer.m_activeCamera->getViewMtx();
-   const D3DXMATRIX& camMtx = renderer.m_activeCamera->getGlobalMtx();
-   D3DXVECTOR3 cameraPos(camMtx._41, camMtx._42, camMtx ._43);
-
-   renderer.setViewMatrix(viewMtx);
-   renderer.setProjectionMatrix(renderer.m_activeCamera->getProjectionMtx3D());
-
-   // set the lights
-   UINT maxLights = renderer.getMaxLightsCount();
-   const std::list<Light*>& lights = sceneManager.getLights(*(renderer.m_activeCamera), maxLights);
-   for (std::list<Light*>::const_iterator it = lights.begin(); 
-        it != lights.end(); ++it)
-   {
-      (*it)->enable(true);
-   }
-
-   // render
-   renderer.renderingBegin();
-   renderer.m_activeSceneManager = &sceneManager;
    unsigned int passesCount = renderer.m_renderingPasses.size();
-   for (unsigned int passIdx = 0; passIdx < passesCount; ++passIdx)
+   if (passesCount == 0) {return;}
+
+   renderer.renderingBegin();
+
+   for (std::list<SceneManager*>::iterator it = renderer.m_sceneManagers.begin();
+        it != renderer.m_sceneManagers.end(); ++it)
    {
-      (renderer.m_renderingPasses[passIdx])();
+      SceneManager& sceneManager = **it;
+      if (sceneManager.hasActiveCamera() == false) {continue;}
+
+      Camera& activeCamera = sceneManager.getActiveCamera();
+
+      // set the lights
+      UINT maxLights = renderer.getMaxLightsCount();
+      const std::list<Light*>& lights = sceneManager.getLights(maxLights);
+      for (std::list<Light*>::const_iterator it = lights.begin(); 
+           it != lights.end(); ++it)
+      {
+         (*it)->enable(true);
+      }
+
+      activeCamera.setAspectRatio((float)renderer.m_viewportWidth / (float)renderer.m_viewportHeight);
+      // set the camera
+      const D3DXMATRIX& viewMtx = activeCamera.getViewMtx();
+      const D3DXMATRIX& camMtx = activeCamera.getGlobalMtx();
+      D3DXVECTOR3 cameraPos(camMtx._41, camMtx._42, camMtx ._43);
+
+      renderer.setViewMatrix(viewMtx);
+      renderer.setProjectionMatrix(activeCamera.getProjectionMtx3D());
+
+      for (unsigned int passIdx = 0; passIdx < passesCount; ++passIdx)
+      {
+         (*renderer.m_renderingPasses[passIdx])(sceneManager, renderer);
+      }
+
+      // turn the lights off
+      for (std::list<Light*>::const_iterator it = lights.begin(); it != lights.end(); ++it)
+      {
+         (*it)->enable(false);
+      }
    }
 
    renderer.renderingEnd();
-
-   // turn the lights off
-   for (std::list<Light*>::const_iterator it = lights.begin(); it != lights.end(); ++it)
-   {
-      (*it)->enable(false);
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::renderBackground()
-{
-   if (m_activeSceneManager->isSkyBox() == false) {return;}
-
-   SkyBox& skyBox = m_activeSceneManager->getSkyBox();
-   skyBox.updateOrientation(m_activeCamera->getGlobalMtx());
-   skyBox.render();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Renderer::renderRegular()
-{
-   DWORD nodesArraySize = 0;
-   AbstractGraphicalNodeP* nodes = m_activeSceneManager->getRegularGraphicalNodes(
-                                                *m_activeCamera, 
-                                                 nodesArraySize);
-
-   DWORD commandsCount = m_renderingProcessor->translate(nodes, nodesArraySize, 
-                                                         m_renderingCommands, 
-                                                         m_commandsArraySize);
-
-   for (DWORD i = 0; i < commandsCount; ++i)
-   {
-      (m_renderingCommands[i])();
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Renderer::renderTransparent()
-{
-   DWORD nodesArraySize = 0;
-   AbstractGraphicalNodeP* nodes = m_activeSceneManager->getTransparentGraphicalNodes(
-                                                    *(m_activeCamera), 
-                                                     nodesArraySize);
-
-   DWORD commandsCount = m_renderingProcessor->translate(nodes, nodesArraySize, 
-                                                         m_renderingCommands, 
-                                                         m_commandsArraySize);
-   for (DWORD i = 0; i < commandsCount; ++i)
-   {
-      (m_renderingCommands[i])();
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Renderer::DeviceLostState::render(Renderer& renderer, SceneManager& sceneManager)
+void Renderer::DeviceLostState::render(Renderer& renderer)
 {
    renderer.attemptToRecoverGraphicsSystem();
 
@@ -206,25 +178,18 @@ void Renderer::resizeViewport(unsigned int width, unsigned int height)
    m_viewportWidth = width;
    m_viewportHeight = height;
 
-   resetActiveCameraSettings();
    resetViewport(m_viewportWidth, m_viewportHeight);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::setActiveCamera(Camera& camera)
+void Renderer::addPass(RenderingPass* pass)
 {
-   m_activeCamera = &camera; 
-   resetActiveCameraSettings();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Renderer::resetActiveCameraSettings()
-{
-   if (m_activeCamera == NULL) {return;}
-
-   m_activeCamera->setAspectRatio((float)m_viewportWidth / (float)m_viewportHeight);
+   if (pass == NULL)
+   {
+      throw std::invalid_argument("NULL pointer instead a RenderingPass instance");
+   }
+   m_renderingPasses.push_back(pass);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

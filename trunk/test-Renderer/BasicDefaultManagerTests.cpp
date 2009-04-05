@@ -7,21 +7,32 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "LightReflectingPropertiesStub.h"
 #include "core-Renderer\BatchingStrategy.h"
+#include "core-Renderer\Camera.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(BasicSceneManagerTests, addingNodesToScene)
+TEST(BasicSceneManagerTests, addingAndRemovingNodes)
 {
    BasicSceneManager sceneManager;
    Node* newNode = new Node();
    Node* anotherNewNode = new Node();
 
    sceneManager.addNode(newNode);
-   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (1), sceneManager.getRootNode().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (2), sceneManager.getRootNode().getChildrenCount());
 
    sceneManager.addNode(anotherNewNode);
+   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (3), sceneManager.getRootNode().getChildrenCount());
+
+
+   sceneManager.removeNode(*newNode);
    CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (2), sceneManager.getRootNode().getChildrenCount());
+
+   sceneManager.removeNode(*anotherNewNode);
+   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (1), sceneManager.getRootNode().getChildrenCount());
+
+   delete newNode;
+   delete anotherNewNode;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,28 +58,29 @@ TEST(BasicSceneManagerTests, retrievingStaticGeometry)
    GraphicalNode* node3 = new GraphicalNode("subset2 - material2", entity, 2);
    GraphicalNode* node4 = new GraphicalNode("subset3 - material1", entity, 3);
 
-   Node cameraNode("camera"); // camera doesn't play any part as far as this scene manager is concerned
+   Camera cameraNode("camera"); // camera doesn't play any part as far as this scene manager is concerned
 
    // add the nodes to the scene
    BasicSceneManager sceneManager;
+   sceneManager.setActiveCamera(cameraNode);
 
    // 1st node
    sceneManager.addNode(node1);
    DWORD arraySize = 0;
-   AbstractGraphicalNodeP* nodes = sceneManager.getRegularGraphicalNodes(cameraNode, arraySize);
+   AbstractGraphicalNodeP* nodes = sceneManager.getRegularGraphicalNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)1, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
 
    // 2nd node
    sceneManager.addNode(node2);
-   nodes = sceneManager.getRegularGraphicalNodes(cameraNode, arraySize);
+   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node2, nodes[1]);
 
    // 3rd node
    sceneManager.addNode(node3);
-   nodes = sceneManager.getRegularGraphicalNodes(cameraNode, arraySize);
+   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)3, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node2, nodes[1]);
@@ -78,19 +90,29 @@ TEST(BasicSceneManagerTests, retrievingStaticGeometry)
    //            so it should be grouped toghether with them (at least 
    //            with the batching strategy we used for this test)
    sceneManager.addNode(node4);
-   nodes = sceneManager.getRegularGraphicalNodes(cameraNode, arraySize);
+   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)4, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node2, nodes[1]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node4, nodes[2]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node3, nodes[3]);
+
+   // remove one of the nodes
+
+   sceneManager.removeNode(*node3); 
+   delete node3;
+   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
+   CPPUNIT_ASSERT_EQUAL((DWORD)3, arraySize);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node2, nodes[1]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node4, nodes[2]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(BasicSceneManagerTests, transparentObjects)
 {
-   Node cameraNode("camera");
+   Camera cameraNode("camera");
    std::list<std::string> results;
    DWORD arraySize = 0;
    AbstractGraphicalNodeP* nodes;
@@ -119,23 +141,71 @@ TEST(BasicSceneManagerTests, transparentObjects)
 
    // add the nodes to the scene
    BasicSceneManager sceneManager;
+   sceneManager.setActiveCamera(cameraNode);
    sceneManager.addNode(regularNode);
    sceneManager.addNode(transparentNode);
    
-   nodes = sceneManager.getRegularGraphicalNodes(cameraNode, arraySize);
+   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)1, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)regularNode, nodes[0]);
 
-   nodes = sceneManager.getTransparentGraphicalNodes(cameraNode, arraySize);
+   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)1, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode, nodes[0]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(BasicSceneManagerTests, ransparentObjectsAreSortedWithRespectToCamera)
+TEST(BasicSceneManagerTests, removingTransparentObjects)
 {
-   Node cameraNode("camera");
+   Camera cameraNode("camera");
+   std::list<std::string> results;
+   DWORD arraySize = 0;
+   AbstractGraphicalNodeP* nodes;
+
+   // prepare the materials
+   TextureStub transparentTexture(results, true);
+   LightReflectingPropertiesStub lrp(results, 0);
+   Material transparentMaterial(transparentTexture, 0);
+   transparentMaterial.setLightReflectingProperties(lrp);
+
+
+   // create the node we'll use for rendering
+   std::vector<Material*> materials;  materials.push_back(&transparentMaterial);
+   GraphicalEntityMock entity("entity", materials, results);
+
+   GraphicalNode* transparentNode1 = new GraphicalNode("transparentNode1", entity, 0);
+   GraphicalNode* transparentNode2 = new GraphicalNode("transparentNode2", entity, 0);
+   GraphicalNode* transparentNode3 = new GraphicalNode("transparentNode3", entity, 0);
+
+
+   // add the nodes to the scene
+   BasicSceneManager sceneManager;
+   sceneManager.setActiveCamera(cameraNode);
+   sceneManager.addNode(transparentNode1);
+   sceneManager.addNode(transparentNode2);
+   sceneManager.addNode(transparentNode3);
+
+   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
+   CPPUNIT_ASSERT_EQUAL((DWORD)3, arraySize);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode1, nodes[0]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode2, nodes[1]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode3, nodes[2]);
+
+   sceneManager.removeNode(*transparentNode2);
+   delete transparentNode2;
+
+   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
+   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode1, nodes[0]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode3, nodes[1]);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(BasicSceneManagerTests, transparentObjectsAreSortedWithRespectToCamera)
+{
+   Camera cameraNode("camera");
    std::list<std::string> results;
    DWORD arraySize = 0;
    AbstractGraphicalNodeP* nodes;
@@ -156,6 +226,7 @@ TEST(BasicSceneManagerTests, ransparentObjectsAreSortedWithRespectToCamera)
 
    // add the nodes to the scene
    BasicSceneManager sceneManager;
+   sceneManager.setActiveCamera(cameraNode);
    sceneManager.addNode(transparentNodeClose);
    sceneManager.addNode(transparentNodeFar);
 
@@ -164,7 +235,7 @@ TEST(BasicSceneManagerTests, ransparentObjectsAreSortedWithRespectToCamera)
 
    // we're standing closer to the 'transparentNodeClose', so it's gonna be rendered last
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 0, 0, 5);
-   nodes = sceneManager.getTransparentGraphicalNodes(cameraNode, arraySize);
+   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNodeFar,   nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNodeClose, nodes[1]);
@@ -172,7 +243,7 @@ TEST(BasicSceneManagerTests, ransparentObjectsAreSortedWithRespectToCamera)
 
    // we moved next to the 'transparentNodeFar', so it's gonna be rendered last now
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 0, 0, 55);
-   nodes = sceneManager.getTransparentGraphicalNodes(cameraNode, arraySize);
+   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNodeClose, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNodeFar,   nodes[1]);

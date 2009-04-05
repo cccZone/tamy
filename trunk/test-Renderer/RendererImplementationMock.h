@@ -4,6 +4,7 @@
 #include "core-Renderer\GraphicalNode.h"
 #include <d3dx9.h>
 #include "core-Renderer\Camera.h"
+#include "core-Renderer\RegularNodesPass.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,7 +14,6 @@ class RendererImplementationMock : public Renderer
 private:
    bool m_deviceReady;
    D3DXMATRIX m_viewMtx;
-   Camera m_dummyCamera;
    UINT m_maxLightsCount;
    bool m_deviceRecoveryAttemptMade;
    bool m_viewportReset;
@@ -23,7 +23,6 @@ private:
 public:
    RendererImplementationMock() 
          : m_deviceReady(true),
-         m_dummyCamera("dummyCamera"),
          m_maxLightsCount(255),
          m_deviceRecoveryAttemptMade(false),
          m_viewportReset(false),
@@ -31,7 +30,7 @@ public:
          m_presentCalled(false)
    {
       D3DXMatrixIdentity(&m_viewMtx);
-      setActiveCamera(m_dummyCamera);
+      addPass(new RegularNodesPass());
    }
 
    void setDeviceReady(bool enable) {m_deviceReady = enable;}

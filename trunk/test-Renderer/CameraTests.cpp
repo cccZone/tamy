@@ -6,7 +6,7 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\Camera.h"
 #include "core\MatrixWriter.h"
-#include "core-Renderer\BasicSceneManager.h"
+#include "SceneManagerMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,19 +24,19 @@ TEST(Camera, renderingWithActiveCamera)
    D3DXMATRIX camera2Mtx = camera2.getLocalMtx();
    camera2Mtx._41 = 10;
    camera2.setLocalMtx(camera2Mtx);
-   
-   renderer.setActiveCamera(camera1);
-
+  
    TextureStub tex("");
    Material mat(tex);
    std::vector<Material*> materials; materials.push_back(&mat);
    GraphicalEntityMock entity("", materials);
    GraphicalNode* node = new GraphicalNode("", entity, 0);
 
-   BasicSceneManager sceneManager;
+   SceneManagerMock sceneManager;
+   renderer.addSceneManager(sceneManager);
+   sceneManager.setActiveCamera(camera1);
    sceneManager.addNode(node);
 
-   renderer.render(sceneManager);     
+   renderer.render();     
 
    D3DXMatrixInverse(&camera1Mtx, NULL, &camera1Mtx);
    D3DXMATRIX viewMtx = renderer.getViewMatrixSet();
@@ -51,25 +51,15 @@ TEST(Camera, renderingWithActiveCamera)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Camera, settingNewAspectRatioOnActiveCameraDuringViewportResize)
+TEST(Camera, settingAspectRatioOfCurrentViewportDuringRendering)
 {
    RendererImplementationMock renderer;
    Camera camera("camera");
-   renderer.setActiveCamera(camera);
 
-   // original aspect ratio is close to 1.333
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.333, camera.getAspectRatio(), 0.01);
+   SceneManagerMock sceneManager;
+   renderer.addSceneManager(sceneManager);
+   sceneManager.setActiveCamera(camera);
 
-   renderer.resizeViewport(100, 50);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(2, camera.getAspectRatio(), 0.01);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(Camera, settingAspectRatioOfCurrentViewportOnNewlySetActiveCamera)
-{
-   RendererImplementationMock renderer;
-   Camera camera("camera");
    // we resized the viewport
    renderer.resizeViewport(100, 50);
 
@@ -77,7 +67,7 @@ TEST(Camera, settingAspectRatioOfCurrentViewportOnNewlySetActiveCamera)
    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.333, camera.getAspectRatio(), 0.01);
 
    // no we set the camera as an active one
-   renderer.setActiveCamera(camera);
+   renderer.render();
    CPPUNIT_ASSERT_DOUBLES_EQUAL(2, camera.getAspectRatio(), 0.01);
 }
 

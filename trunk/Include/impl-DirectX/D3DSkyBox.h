@@ -20,8 +20,6 @@ public:
    D3DSkyBox(IDirect3DDevice9& d3Device, IDirect3DVertexBuffer9* vb);
    ~D3DSkyBox();
 
-   void updateOrientation(const D3DXMATRIX& cameraWorldMtx);
-
 protected:
    void startRendering();
    void renderSide(SkyBoxSides sideIdx);
