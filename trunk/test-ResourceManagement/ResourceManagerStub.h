@@ -34,6 +34,8 @@ public:
       return new SkinnedGraphicalEntityMock(name, subMesh.skinBones, subMesh.bonesInfluencingAttribute, registeredMaterials);
    }
 
+   SoundDevice& getSoundDeviceInstance() {return *(reinterpret_cast<SoundDevice*> (NULL));}
+
 protected:
    Light* createLightImpl(const std::string& name) {return NULL;}
 

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(OPENAL_DIR)\include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,8 +61,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="d3d9.lib d3dx9.lib dxguid.lib"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
+				AdditionalDependencies="d3d9.lib d3dx9.lib dxguid.lib OpenAL32.lib"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(OPENAL_DIR)\libs\Win32&quot;;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -107,7 +107,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
+				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(OPENAL_DIR)\include&quot;;&quot;$(SolutionDir)\Include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -126,8 +126,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				AdditionalDependencies="d3d9.lib d3dx9.lib dxguid.lib"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
+				AdditionalDependencies="d3d9.lib d3dx9.lib dxguid.lib OpenAL32.lib"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(OPENAL_DIR)\libs\Win32&quot;;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -262,6 +262,46 @@
 			</File>
 			<File
 				RelativePath="..\Include\impl-DirectX\D3DApplicationManager.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Sound"
+			>
+			<File
+				RelativePath=".\OALSoundChannel.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\impl-DirectX\OALSoundChannel.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OALSoundDevice.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\impl-DirectX\OALSoundDevice.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OpenALSoundSystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\impl-DirectX\OpenALSoundSystem.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\impl-DirectX\SoundDeviceInfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundInitializer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\impl-DirectX\SoundInitializer.h"
 				>
 			</File>
 		</Filter>

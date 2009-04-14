@@ -30,6 +30,7 @@ class GraphicalEntity;
 class SkinnedGraphicalEntity;
 struct SkinBoneDefinition;
 struct MaterialDefinition;
+class SoundDevice;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -197,6 +198,10 @@ public:
     * This method creates a skybox instance
     */
    SkyBox* createSkyBox();
+
+   // ------------------------------ Sound system ------------------------------
+
+   virtual SoundDevice& getSoundDeviceInstance() = 0;
 
 protected:
    /**

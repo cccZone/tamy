@@ -18,6 +18,11 @@
 #include "core-Renderer\RegularNodesPass.h"
 #include "core-Renderer\TransparentNodesPass.h"
 
+#include "impl-DirectX\OpenALSoundSystem.h"
+#include "impl-DirectX\SoundInitializer.h"
+#include "impl-DirectX\SoundDeviceInfo.h"
+#include "impl-DirectX\OALSoundDevice.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +31,7 @@ D3DResourceManager::D3DResourceManager(const std::string& texturesDirPath,
                                        HWND hWnd, bool windowed)
       : ResourceManager(texturesDirPath)
 {
+   // ---------------------- initialize rendering system ----------------------
    m_d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
    if (m_d3d9 == NULL)
    {
@@ -60,12 +66,26 @@ D3DResourceManager::D3DResourceManager(const std::string& texturesDirPath,
 
    // register file handlers
    registerFileGraphicalEntityLoader(new XFileGraphicalEntityLoader(m_renderer->getD3Device(), meshesDirPath));
+
+   // ---------------------- initialize sound system ----------------------
+   m_soundSystem = new OpenALSoundSystem();
+   SoundInitializer soundInit(*m_soundSystem);
+
+   SoundDeviceInfo idealDevice(OALV_UNKNOWN, 8);
+   const SoundDeviceInfo& bestDevice = soundInit.findBest(idealDevice);
+   m_soundDevice = m_soundSystem->createDevice(bestDevice);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 D3DResourceManager::~D3DResourceManager()
 {
+   delete m_soundDevice;
+   m_soundDevice = NULL;
+
+   delete m_soundSystem;
+   m_soundSystem = NULL;
+
    delete m_renderer;
    m_renderer = NULL;
 
@@ -270,6 +290,13 @@ IDirect3DIndexBuffer9* D3DResourceManager::createIndexBuffer(UINT length,
    }
 
    return indexBuffer;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+SoundDevice& D3DResourceManager::getSoundDeviceInstance()
+{
+   return *m_soundDevice;
 }
 
 /////////////////////////////////////////////////////////////////////////////

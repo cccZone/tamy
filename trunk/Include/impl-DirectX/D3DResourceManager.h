@@ -11,6 +11,8 @@
 class D3DInitializer;
 class D3DRenderer;
 class D3DMaterial;
+class OpenALSoundSystem;
+class OALSoundDevice;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +27,9 @@ private:
    D3DInitializer* m_d3dInitializer;
    D3DRenderer* m_renderer;
    bool m_hardwareTLOn;
+
+   OpenALSoundSystem* m_soundSystem;
+   OALSoundDevice* m_soundDevice;
 
 public:
    D3DResourceManager(const std::string& texturesDirPath,
@@ -43,6 +48,8 @@ public:
    SkinnedGraphicalEntity* createSkinedGraphicalEntity(const std::string& name,
                           const MeshDefinition& subMesh,
                           const std::vector<Material*>& registeredMaterials);
+
+   SoundDevice& getSoundDeviceInstance();
 
 protected:
 
