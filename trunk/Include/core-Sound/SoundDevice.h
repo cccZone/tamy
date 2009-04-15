@@ -44,6 +44,17 @@ public:
    SoundChannel& activateSound(Sound& sound);
 
    /**
+    * The method releases all currently occupied channels
+    * on the device, effectively stopping all the sounds being played at the moment
+    */
+   void releaseAllChannels();
+
+   /**
+    * The method returns a list of all currently occupied channels
+    */
+   const std::list<SoundChannel*>& getActiveChannels() const {return m_activeChannels;}
+
+   /**
     * Call this method in the main program loop to ensure continuous
     * sound and proper channels management
     */

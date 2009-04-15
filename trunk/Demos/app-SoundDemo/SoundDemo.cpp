@@ -15,6 +15,10 @@
 #include "core-Sound\SoundDevice.h"
 #include "core-Sound\SoundChannel.h"
 #include "core-Sound\WavFile.h"
+#include "core-Sound\SoundListener.h"
+#include "core-Sound\SoundRenderer.h"
+#include "core-Sound\BasicSoundSceneManager.h"
+#include "core-Sound\Sound3D.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,25 +62,33 @@ void SoundDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
 
    Camera* camera = m_resourceManager->createCamera("camera");
 
-   D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 20, 50);
+   D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 10, -20);
    m_sceneManager->addNode(camera);
    m_sceneManager->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 
-   // prepare sounds
-   m_soundDevice = &(resourceManager.getSoundDeviceInstance());
+   // prepare the sound env
+   m_soundRenderer = &(m_resourceManager->getSoundRenderer());
+
+   m_soundListener = m_resourceManager->createSoundListener();
+   camera->addChild(m_soundListener);
+
+   m_soundScene = new BasicSoundSceneManager();
+   m_soundScene->setActiveListener(*m_soundListener);
+
+    // prepare sounds
    m_sound = new WavFile("..\\Data\\Footsteps.wav");
-   m_soundChannel = &( m_soundDevice->activateSound(*m_sound));
-   m_soundChannel->setLooped(true);
-   m_soundChannel->play();
+   Sound3D* tileSound = m_resourceManager->createSound3D("tileSound", *m_sound, 100);
+   entInstance->addChild(tileSound);
+   m_soundScene->add(*tileSound);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SoundDemo::deinitialize()
 {
-   m_soundChannel->removeSound();
-   m_soundChannel = NULL;
+   delete m_soundScene;
+   m_soundScene = NULL;
 
    delete m_sound;
    m_sound = NULL;
@@ -87,7 +99,7 @@ void SoundDemo::deinitialize()
    delete m_sceneManager;
    m_sceneManager = NULL;
 
-   m_soundDevice = NULL;
+   m_soundRenderer = NULL;
    m_renderer = NULL;
    m_resourceManager = NULL;
 }
@@ -126,7 +138,7 @@ void SoundDemo::update(float timeElapsed)
       m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
    }
 
-   m_soundDevice->update();
+   m_soundRenderer->render(*m_soundScene);
    m_renderer->render();
 }
 

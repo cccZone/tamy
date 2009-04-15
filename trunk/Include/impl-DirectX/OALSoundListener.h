@@ -1,0 +1,17 @@
+#pragma once
+
+#include "core-Sound\SoundListener.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * This is an OpenAL implementation of a 3d scene sound listener
+ */
+class OALSoundListener : public SoundListener
+{
+public:
+   void update();
+};
+
+///////////////////////////////////////////////////////////////////////////////

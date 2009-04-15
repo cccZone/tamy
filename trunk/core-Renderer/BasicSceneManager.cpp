@@ -108,7 +108,9 @@ AbstractGraphicalNodeP* BasicSceneManager::getTransparentGraphicalNodes(DWORD& a
    if (m_transparentNodesCount > 0)
    {
       Camera& activeCamera = getActiveCamera();
-      m_distanceComparator.setReferencePoint(activeCamera.getPosition());
+      D3DXMATRIX mtx = activeCamera.getGlobalMtx();
+
+      m_distanceComparator.setReferencePoint(D3DXVECTOR3(mtx._41, mtx._42, mtx._43));
       std::sort(m_transparentRenderingQueue, 
                 m_transparentRenderingQueue + m_transparentNodesCount,
                 m_distanceComparator);

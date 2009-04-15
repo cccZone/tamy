@@ -22,6 +22,8 @@
 #include "impl-DirectX\SoundInitializer.h"
 #include "impl-DirectX\SoundDeviceInfo.h"
 #include "impl-DirectX\OALSoundDevice.h"
+#include "impl-DirectX\OALSoundListener.h"
+#include "impl-DirectX\OALSound3D.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -297,6 +299,22 @@ IDirect3DIndexBuffer9* D3DResourceManager::createIndexBuffer(UINT length,
 SoundDevice& D3DResourceManager::getSoundDeviceInstance()
 {
    return *m_soundDevice;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+SoundListener* D3DResourceManager::createSoundListener()
+{
+   return new OALSoundListener();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+Sound3D* D3DResourceManager::createSound3D(const std::string& name, 
+                                           Sound& sound,
+                                           float hearingRadius)
+{
+   return new OALSound3D(name, sound, hearingRadius);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -19,19 +19,3 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-
-class DistanceComparator
-{
-private:
-   D3DXVECTOR3 m_referencePoint;
-
-public:
-   void setReferencePoint(const D3DXVECTOR3& pt);
-
-   bool operator()(AbstractGraphicalNode* lhs, AbstractGraphicalNode* rhs) const;
-
-private:
-   inline double calcDistanceTo(float x, float y, float z) const;
-};
-
-///////////////////////////////////////////////////////////////////////////////

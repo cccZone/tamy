@@ -184,3 +184,30 @@ TEST(SoundDevice, makingSureChannelDoesntRunOutOfData)
 }
 
 //////////////////////////////////////////////////////////////////////////////
+
+TEST(SoundDevice, releasingAllChannels)
+{
+   SoundDeviceMock soundDevice(2);
+   SoundMock sound1;
+   SoundMock sound2;
+   
+   SoundChannel& channel1 = soundDevice.activateSound(sound1);
+   SoundChannel& channel2 = soundDevice.activateSound(sound2);
+
+   channel1.play();
+   channel2.play();
+
+   CPPUNIT_ASSERT_EQUAL(true, channel1.isBusy());
+   CPPUNIT_ASSERT_EQUAL(true, channel1.isPlaying());
+   CPPUNIT_ASSERT_EQUAL(true, channel2.isBusy());
+   CPPUNIT_ASSERT_EQUAL(true, channel2.isPlaying());
+
+   soundDevice.releaseAllChannels();
+
+   CPPUNIT_ASSERT_EQUAL(false, channel1.isBusy());
+   CPPUNIT_ASSERT_EQUAL(false, channel1.isPlaying());
+   CPPUNIT_ASSERT_EQUAL(false, channel2.isBusy());
+   CPPUNIT_ASSERT_EQUAL(false, channel2.isPlaying());
+}
+
+//////////////////////////////////////////////////////////////////////////////

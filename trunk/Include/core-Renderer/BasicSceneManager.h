@@ -2,6 +2,7 @@
 
 #include "core-Renderer\SceneManager.h"
 #include "core-Renderer\BatchingStrategy.h"
+#include "core\DistanceComparator.h"
 #include <set>
 #include <vector>
 
@@ -26,7 +27,7 @@ private:
    DWORD m_transparentRenderingQueueSize;
    DWORD m_transparentNodesCount;
 
-   DistanceComparator m_distanceComparator;
+   DistanceComparator<AbstractGraphicalNode> m_distanceComparator;
 
    D3DXVECTOR3 m_cachedCameraPos;
    std::list<Light*> m_currentlyVisibleLights;

@@ -17,6 +17,7 @@ class Sound;
 class SoundChannel
 {
 private:
+   int m_id;
    DWORD m_sampleLength;
    char* m_data;
 
@@ -27,8 +28,16 @@ private:
    std::string m_currSoundFormat;
    DWORD m_currSoundFreq;
 
+   DWORD m_currPeriodicPos;
+   DWORD m_soundLength;
+
 public:
    virtual ~SoundChannel();
+
+   /**
+    * Each channel has a unique ID assigned
+    */
+   int getID() {return m_id;}
 
    /**
     * The method returns true if the channel has asound assigned and
@@ -97,9 +106,29 @@ public:
     */
    DWORD getSampleLength() const;
 
+   
+   /**
+    * This method returns the current position inside the sound data buffer
+    * we're reading from
+    *
+    * The position returned is specified in seconds
+    */
+   float getPosition() const;
+
+   /**
+    * This method allows to adjust the data reading position
+    *
+    * The position should be specified in seconds
+    */
+   void setPosition(float pos);
+
+   /**
+    * The method returns the lenght of the sound (in seconds)
+    */
+   float getSoundLength() const;
 
 protected:
-   SoundChannel();
+   SoundChannel(int id);
 
    /**
     * The method should add new data to the channel's sound queue
@@ -124,6 +153,9 @@ protected:
     * seize playing the sound
     */
    virtual void stopPlaying() = 0;
+
+private:
+   void setPosition(DWORD pos);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

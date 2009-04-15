@@ -23,11 +23,13 @@ private:
    std::list<ALuint> m_freeBuffers;
 
 public:
-   OALSoundChannel(OpenALSoundSystem& soundSystem, int numBuffersUsed);
+   OALSoundChannel(int id, OpenALSoundSystem& soundSystem, int numBuffersUsed);
    ~OALSoundChannel();
 
    void update();
    int getActiveBuffersCount() const;
+
+   ALuint getOALSource() {return m_oalSource;}
 
 protected:
    void addDataToPlayBuffer(char* data, DWORD size,

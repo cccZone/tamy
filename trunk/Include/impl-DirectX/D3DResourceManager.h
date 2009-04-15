@@ -51,6 +51,10 @@ public:
 
    SoundDevice& getSoundDeviceInstance();
 
+   SoundListener* createSoundListener();
+
+   Sound3D* createSound3D(const std::string& name, Sound& sound, float hearingRadius);
+
 protected:
 
    Light* createLightImpl(const std::string& name);

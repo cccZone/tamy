@@ -230,34 +230,20 @@ std::string WavFile::recognizeFormat()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DWORD WavFile::getDataOffset() const
+DWORD WavFile::getData(DWORD periodicPos, char* data, DWORD bufSize)
 {
-   return m_currentOffset;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void WavFile::setDataOffset(DWORD pos)
-{
-   if (pos > m_dataSize)
+   if (periodicPos > m_dataSize)
    {
       throw std::out_of_range("Trying to move past the end of the sound file");
    }
-   m_currentOffset = pos; 
-   fseek(m_file, m_currentOffset + m_dataOffset, SEEK_SET);
-}
+   fseek(m_file, periodicPos + m_dataOffset, SEEK_SET);
 
-///////////////////////////////////////////////////////////////////////////////
-
-DWORD WavFile::getData(char* data, DWORD bufSize)
-{
-   DWORD leftToRead = m_dataSize - m_currentOffset;
+   DWORD leftToRead = m_dataSize - periodicPos;
 	if (leftToRead == 0) {return 0;}
 
    if (leftToRead > bufSize) {leftToRead = bufSize;}
 
 	DWORD bytesRead = (DWORD)fread(data, 1, leftToRead, m_file);
-   m_currentOffset += bytesRead;
    return bytesRead;
 }
 
@@ -273,6 +259,13 @@ std::string WavFile::getFormat() const
 unsigned int WavFile::getFrequency() const
 {
    return m_ext.Format.nSamplesPerSec;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+DWORD WavFile::getLength() const
+{
+   return m_dataSize;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

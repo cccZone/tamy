@@ -12,6 +12,9 @@ class UnconstrainedMotionController;
 class WavFile;
 class SoundDevice;
 class SoundChannel;
+class SoundListener;
+class SoundSceneManager;
+class SoundRenderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +23,6 @@ class SoundDemo : public Application
 private:
    Renderer* m_renderer;
    ResourceManager* m_resourceManager;
-   SoundDevice* m_soundDevice;
 
    SceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;
@@ -29,6 +31,9 @@ private:
 
    WavFile* m_sound;
    SoundChannel* m_soundChannel;
+   SoundListener* m_soundListener;
+   SoundSceneManager* m_soundScene;
+   SoundRenderer* m_soundRenderer;
 
 public:
    SoundDemo();

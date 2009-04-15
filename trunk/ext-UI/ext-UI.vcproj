@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="core"
-	ProjectGUID="{4F4CEC82-B5C6-4F0E-B69B-855FA55F4B80}"
-	RootNamespace="core"
+	Name="ext-UI"
+	ProjectGUID="{CF6BB443-A595-46FD-8AC1-5403FA507B66}"
+	RootNamespace="extUI"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				IgnoreAllDefaultLibraries="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -124,6 +125,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				IgnoreDefaultLibraryNames="MSVCRT"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -146,108 +148,26 @@
 	</References>
 	<Files>
 		<Filter
-			Name="WindowingSystem"
+			Name="Core"
 			>
 			<File
-				RelativePath=".\WindowBuilder.cpp"
+				RelativePath=".\UIManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\WindowBuilder.h"
+				RelativePath="..\Include\ext-UI\UIManager.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\WindowMessagesProcessor.h"
+				RelativePath="..\Include\ext-UI\UIWidget.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="HierarchicalNodes"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			Name="Widgets"
 			>
 			<File
-				RelativePath=".\Node.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\Node.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\NodeVisitor.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\TNodesVisitor.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Timer"
-			>
-			<File
-				RelativePath=".\Timer.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\Timer.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Math"
-			>
-			<File
-				RelativePath=".\BoundingVolume.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\BoundingVolume.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\CellSpacePartition.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\Point.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Delegates"
-			>
-			<File
-				RelativePath="..\Include\core\Delegate.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Streams"
-			>
-			<File
-				RelativePath="..\Include\core\dostream.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Utils"
-			>
-			<File
-				RelativePath="..\Include\core\DistanceComparator.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\HierarchyWriter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MatrixWriter.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\MatrixWriter.h"
+				RelativePath="..\Include\ext-UI\Button.h"
 				>
 			</File>
 		</Filter>

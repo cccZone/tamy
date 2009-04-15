@@ -6,8 +6,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-OALSoundChannel::OALSoundChannel(OpenALSoundSystem& soundSystem, int numBuffersUsed)
-      : m_soundSystem(soundSystem),
+OALSoundChannel::OALSoundChannel(int id, 
+                                 OpenALSoundSystem& soundSystem, 
+                                 int numBuffersUsed)
+      : SoundChannel(id),
+      m_soundSystem(soundSystem),
       m_buffersCount(numBuffersUsed),
       m_oalSource(0)
 {

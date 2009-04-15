@@ -31,6 +31,10 @@ class SkinnedGraphicalEntity;
 struct SkinBoneDefinition;
 struct MaterialDefinition;
 class SoundDevice;
+class SoundRenderer;
+class SoundListener;
+class Sound3D;
+class Sound;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -50,6 +54,8 @@ private:
    std::string m_texturesDirPath;
 
    std::list<FileGraphicalEntityLoader*> m_graphicalEntitiesLoaders;
+
+   SoundRenderer* m_soundRenderer;
 
 public:
    ResourceManager(const std::string& texturesDirPath);
@@ -201,7 +207,28 @@ public:
 
    // ------------------------------ Sound system ------------------------------
 
+   /**
+    * The method returns the sole instance of a sound device created for the application
+    */
    virtual SoundDevice& getSoundDeviceInstance() = 0;
+
+   /**
+    * The method returns the sole instance of the sound renderer
+    */
+   SoundRenderer& getSoundRenderer();
+
+   /**
+    * The method creates an implementation specific instance of a sound listener
+    */
+   virtual SoundListener* createSoundListener() = 0;
+
+   /**
+    * The method creates an implementation specific instance of a sound that can
+    * be placed in the 3D scene
+    */
+   virtual Sound3D* createSound3D(const std::string& name, 
+                                  Sound& sound, 
+                                  float hearingRadius) = 0;
 
 protected:
    /**

@@ -8,7 +8,6 @@
 class SoundMock : public Sound
 {
 private:
-   DWORD m_offset;
    DWORD m_bufSize;
    char* m_someBuf;
    int m_bytesPerSec;
@@ -26,8 +25,6 @@ public:
       {
          m_someBuf[i] = i;
       }
-
-      m_offset = 0;
    }
 
    ~SoundMock()
@@ -36,18 +33,11 @@ public:
 
       delete [] m_someBuf;
       m_someBuf = NULL;
-
-      m_offset = 0;
    }
 
-   DWORD getDataOffset() const
+   DWORD getLength() const
    {
-      return m_offset;
-   }
-
-   void setDataOffset(DWORD pos)
-   {
-      m_offset = pos;
+      return m_bufSize;
    }
 
    DWORD getBytesPerSec() const
@@ -60,12 +50,11 @@ public:
       return m_blockAlignment;
    }
 
-   DWORD getData(char* data, DWORD bufSize)
+   DWORD getData(DWORD periodicPos, char* data, DWORD bufSize)
    {
-      DWORD toRead = m_bufSize - m_offset;
+      DWORD toRead = m_bufSize - periodicPos;
       if (bufSize < toRead) toRead = bufSize;
-      memcpy(data, m_someBuf + m_offset, toRead);
-      m_offset += toRead;
+      memcpy(data, m_someBuf + periodicPos, toRead);
 
       return toRead;
    }

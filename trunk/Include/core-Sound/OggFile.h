@@ -16,13 +16,11 @@ public:
    OggFile(const std::string& fileName);
 	~OggFile();
 
-   DWORD getDataOffset() const;
-   void setDataOffset(DWORD pos);
+   DWORD getData(DWORD periodicPos, char* data, DWORD bufSize);
 
-   DWORD getData(char* data, DWORD bufSize);
    std::string getFormat() const;
    unsigned int getFrequency() const;
-
+   DWORD getLength() const;
    DWORD getBytesPerSec() const;
    DWORD getBlockAlignment() const;
 };

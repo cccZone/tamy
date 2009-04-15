@@ -195,6 +195,14 @@
 			Name="SoundScene"
 			>
 			<File
+				RelativePath=".\BasicSoundSceneManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Sound\BasicSoundSceneManager.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Sound3D.cpp"
 				>
 			</File>
@@ -203,7 +211,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SoundSceneManager.cpp"
+				RelativePath="..\Include\core-Sound\SoundListener.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundRenderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Sound\SoundRenderer.h"
 				>
 			</File>
 			<File

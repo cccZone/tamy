@@ -45,6 +45,19 @@ SoundChannel& SoundDevice::activateSound(Sound& sound)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void SoundDevice::releaseAllChannels()
+{
+   while(m_activeChannels.size() > 0)
+   {
+      SoundChannel& channel = *(m_activeChannels.front());
+      channel.stop();
+      channel.removeSound();
+      m_activeChannels.pop_front();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void SoundDevice::update()
 {
    std::list<SoundChannel*>::iterator it = m_activeChannels.begin();

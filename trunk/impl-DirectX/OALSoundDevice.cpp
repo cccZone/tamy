@@ -34,7 +34,7 @@ OALSoundDevice::OALSoundDevice(const SoundDeviceInfo& deviceDesc,
 
    for (unsigned int i = 0; i < m_deviceDesc.sourceCount; ++i)
    {
-      m_channels.push_back(new OALSoundChannel(m_soundSystem, numBuffersUsed));
+      m_channels.push_back(new OALSoundChannel(i, m_soundSystem, numBuffersUsed));
    }
 }
 

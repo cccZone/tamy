@@ -14,6 +14,7 @@
 #include "core-Renderer\SkyBox.h"
 #include "core-ResourceManagement\Managable.h"
 #include "core-ResourceManagement\FileGraphicalEntityLoader.h"
+#include "core-Sound\SoundRenderer.h"
 #include <cassert>
 #include <deque>
 
@@ -21,7 +22,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ResourceManager::ResourceManager(const std::string& texturesDirPath)
-      : m_texturesDirPath(texturesDirPath)
+      : m_texturesDirPath(texturesDirPath),
+      m_soundRenderer(NULL)
 {
 }
 
@@ -46,6 +48,9 @@ ResourceManager::~ResourceManager()
       delete *it;
    }
    m_graphicalEntitiesLoaders.clear();
+
+   delete m_soundRenderer;
+   m_soundRenderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -399,6 +404,18 @@ void ResourceManager::registerFileGraphicalEntityLoader(FileGraphicalEntityLoade
    }
 
    m_graphicalEntitiesLoaders.push_back(loader);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SoundRenderer& ResourceManager::getSoundRenderer()
+{
+   if (m_soundRenderer == NULL)
+   {
+      m_soundRenderer = new SoundRenderer(getSoundDeviceInstance());
+   }
+
+   return *m_soundRenderer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
