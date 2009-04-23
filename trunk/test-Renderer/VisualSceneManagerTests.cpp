@@ -1,5 +1,5 @@
 #include "core-TestFramework\TestFramework.h"
-#include "SceneManagerMock.h"
+#include "VisualSceneManagerMock.h"
 #include "core-Renderer\Camera.h"
 #include "SkyBoxMock.h"
 #include "core\MatrixWriter.h"
@@ -7,9 +7,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(SceneManager, addingCameraAndActiveCamera)
+TEST(VisualSceneManager, addingCameraAndActiveCamera)
 {
-   SceneManagerMock sceneManager;
+   VisualSceneManagerMock sceneManager;
    Camera* camera1 = new Camera("camera1");
    Camera* camera2 = new Camera("camera2");
 
@@ -26,9 +26,9 @@ TEST(SceneManager, addingCameraAndActiveCamera)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(SceneManager, removingCameraThatIsSetAsActive)
+TEST(VisualSceneManager, removingCameraThatIsSetAsActive)
 {
-   SceneManagerMock sceneManager;
+   VisualSceneManagerMock sceneManager;
    Camera camera("camera");
 
    sceneManager.addNode(&camera);
@@ -40,9 +40,9 @@ TEST(SceneManager, removingCameraThatIsSetAsActive)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(SceneManager, changingActiveCameraReattachesSkyBox)
+TEST(VisualSceneManager, changingActiveCameraReattachesSkyBox)
 {
-   SceneManagerMock sceneManager;
+   VisualSceneManagerMock sceneManager;
    Camera* camera1 = new Camera("camera1");
    Camera* camera2 = new Camera("camera2");
    sceneManager.addNode(camera1);
@@ -66,9 +66,9 @@ TEST(SceneManager, changingActiveCameraReattachesSkyBox)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(SceneManager, addingSkyBoxAttachesItToActiveCamera)
+TEST(VisualSceneManager, addingSkyBoxAttachesItToActiveCamera)
 {
-   SceneManagerMock sceneManager;
+   VisualSceneManagerMock sceneManager;
    Camera* camera = new Camera("camera");
    sceneManager.addNode(camera);
 

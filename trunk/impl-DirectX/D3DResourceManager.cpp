@@ -305,7 +305,7 @@ SoundDevice& D3DResourceManager::getSoundDeviceInstance()
 
 SoundListener* D3DResourceManager::createSoundListener()
 {
-   return new OALSoundListener();
+   return new OALSoundListener(*m_soundSystem);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -314,7 +314,7 @@ Sound3D* D3DResourceManager::createSound3D(const std::string& name,
                                            Sound& sound,
                                            float hearingRadius)
 {
-   return new OALSound3D(name, sound, hearingRadius);
+   return new OALSound3D(*m_soundSystem, name, sound, hearingRadius);
 }
 
 /////////////////////////////////////////////////////////////////////////////

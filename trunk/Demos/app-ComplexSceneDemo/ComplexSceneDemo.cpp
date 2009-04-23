@@ -4,7 +4,8 @@
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-ResourceManagement\ResourceManager.h"
-#include "core-Renderer\BasicSceneManager.h"
+#include "core\CompositeSceneManager.h"
+#include "core-Renderer\BasicVisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
@@ -34,8 +35,10 @@ void ComplexSceneDemo::initialize(Renderer& renderer, ResourceManager& resourceM
    m_resourceManager = &resourceManager;
 
    m_rotating = false;
-   m_sceneManager = new BasicSceneManager();
-   m_renderer->addSceneManager(*m_sceneManager);
+   m_sceneManager = new CompositeSceneManager();
+   VisualSceneManager* visualSceneManager = new BasicVisualSceneManager();
+   m_sceneManager->addSceneManager(visualSceneManager);
+   m_renderer->addVisualSceneManager(*visualSceneManager);
 
    IWFLoader loader(*m_resourceManager, *m_sceneManager);
    loader.load("..\\Data\\Colony5.iwf");

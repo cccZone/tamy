@@ -1,5 +1,5 @@
 #include "core-Renderer\TransparentNodesPass.h"
-#include "core-Renderer\SceneManager.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RenderingProcessor.h"
 #include "core-Renderer\Camera.h"
@@ -28,7 +28,7 @@ TransparentNodesPass::~TransparentNodesPass()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TransparentNodesPass::operator()(SceneManager& sceneManager, Renderer& renderer)
+void TransparentNodesPass::operator()(VisualSceneManager& sceneManager, Renderer& renderer)
 {
    DWORD nodesArraySize = 0;
    AbstractGraphicalNodeP* nodes = sceneManager.getTransparentGraphicalNodes(nodesArraySize);

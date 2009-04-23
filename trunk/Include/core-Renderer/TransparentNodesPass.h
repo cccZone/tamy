@@ -23,7 +23,7 @@ public:
    TransparentNodesPass();
    ~TransparentNodesPass();
 
-   void operator()(SceneManager& sceneManager, Renderer& renderer);
+   void operator()(VisualSceneManager& sceneManager, Renderer& renderer);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

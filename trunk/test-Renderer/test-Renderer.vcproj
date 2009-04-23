@@ -213,10 +213,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SceneManagerMock.h"
-				>
-			</File>
-			<File
 				RelativePath=".\SkinnedGraphicalEntityMock.h"
 				>
 			</File>
@@ -226,6 +222,10 @@
 			</File>
 			<File
 				RelativePath=".\TextureStub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VisualSceneManagerMock.h"
 				>
 			</File>
 		</Filter>
@@ -241,7 +241,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SceneManagerTests.cpp"
+				RelativePath=".\VisualSceneManagerTests.cpp"
 				>
 			</File>
 		</Filter>

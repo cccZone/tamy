@@ -4,7 +4,8 @@
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-ResourceManagement\ResourceManager.h"
-#include "core-Renderer\BasicSceneManager.h"
+#include "core\CompositeSceneManager.h"
+#include "core-Renderer\BasicVisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
@@ -38,19 +39,16 @@ void SoundDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
 {
    m_renderer = &renderer;
    m_resourceManager = &resourceManager;
+   m_soundRenderer = &(m_resourceManager->getSoundRenderer());
 
    m_rotating = false;
-   m_sceneManager = new BasicSceneManager();
+   m_sceneManager = new CompositeSceneManager();
+   VisualSceneManager* visualSceneManager = new BasicVisualSceneManager();
+   m_audioSoundScene = new BasicSoundSceneManager();
+   m_sceneManager->addSceneManager(visualSceneManager);
+   m_sceneManager->addSceneManager(m_audioSoundScene);
 
-   m_renderer->addSceneManager(*m_sceneManager);
-
-   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
-   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
-
-   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile");
-   entInstance->attachEntity(ent);
-
-   m_sceneManager->addNode(entInstance);
+   m_renderer->addVisualSceneManager(*visualSceneManager);
 
 
    Light* light = m_resourceManager->createLight("light");
@@ -60,36 +58,33 @@ void SoundDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
    D3DXMatrixRotationYawPitchRoll(&(light->accessLocalMtx()), D3DXToRadian(-45), D3DXToRadian(45), 0);
    m_sceneManager->addNode(light);
 
+   // prepare our 'listener'
    Camera* camera = m_resourceManager->createCamera("camera");
-
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 10, -20);
-   m_sceneManager->addNode(camera);
-   m_sceneManager->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
-
-   // prepare the sound env
-   m_soundRenderer = &(m_resourceManager->getSoundRenderer());
 
    m_soundListener = m_resourceManager->createSoundListener();
    camera->addChild(m_soundListener);
+   m_sceneManager->addNode(camera);
 
-   m_soundScene = new BasicSoundSceneManager();
-   m_soundScene->setActiveListener(*m_soundListener);
+   // prepare tiles that emit sounds
+   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
+   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
 
-    // prepare sounds
+   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile");
+   entInstance->attachEntity(ent);
+
    m_sound = new WavFile("..\\Data\\Footsteps.wav");
    Sound3D* tileSound = m_resourceManager->createSound3D("tileSound", *m_sound, 100);
    entInstance->addChild(tileSound);
-   m_soundScene->add(*tileSound);
+
+   m_sceneManager->addNode(entInstance);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SoundDemo::deinitialize()
 {
-   delete m_soundScene;
-   m_soundScene = NULL;
-
    delete m_sound;
    m_sound = NULL;
 
@@ -138,7 +133,7 @@ void SoundDemo::update(float timeElapsed)
       m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
    }
 
-   m_soundRenderer->render(*m_soundScene);
+   m_soundRenderer->render(*m_audioSoundScene);
    m_renderer->render();
 }
 

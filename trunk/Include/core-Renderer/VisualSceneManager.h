@@ -1,8 +1,8 @@
 #pragma once
 
+#include "core\AbstractSceneManager.h"
 #include "core-Renderer\BatchingStrategy.h"
 #include <list>
-#include "core\NodeVisitor.h"
 #include "core\TNodesVisitor.h"
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include "core-Renderer\Light.h"
@@ -19,10 +19,11 @@ class ActiveCameraNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneManager: public NodeVisitor, 
-                    public TNodesVisitor<Light>,
-                    public TNodesVisitor<AbstractGraphicalNode>,
-                    public TNodesVisitor<Camera>
+class VisualSceneManager: public AbstractSceneManager, 
+                          public TNodesVisitor<Light>,
+                          public TNodesVisitor<AbstractGraphicalNode>,
+                          public TNodesVisitor<Camera>,
+                          public TNodesVisitor<SkyBox>
 {
 private:
    class Operation
@@ -30,10 +31,10 @@ private:
    public:
       virtual ~Operation() {}
       
-      virtual void toHierarchy(Node* node) = 0;
       virtual void perform(Light& light) = 0;
       virtual void perform(AbstractGraphicalNode& node) = 0;
       virtual void perform(Camera& node) = 0;
+      virtual void perform(SkyBox& node) = 0;
    };
 
 private:
@@ -45,14 +46,11 @@ private:
    ActiveCameraNode* m_activeCameraDeploymentNode;
    Camera* m_activeCamera;
 
-   Node* m_rootNode;
    SkyBox* m_skyBox;
 
 public:
-   SceneManager();
-   ~SceneManager();
-
-   inline Node& getRootNode() {return *m_rootNode;}
+   VisualSceneManager();
+   ~VisualSceneManager();
 
    /**
     * In order for the rendered scene to appear more lifelike, we can
@@ -83,6 +81,7 @@ public:
    void visit(Light& light);
    void visit(AbstractGraphicalNode& node);
    void visit(Camera& node);
+   void visit(SkyBox& node);
 
    /**
     * The method extracts the most influential lights (up to the given limit)
@@ -116,20 +115,6 @@ public:
 
 
 protected:
-   /**
-    * This method adds a new node to the scene's hierarchy
-    * Depending on the implementation, different strategies
-    * for doing that will be implemented
-    */
-   virtual void addToHierarchy(Node* node) = 0;
-
-   /**
-    * This method removes an existing node from the scene's hierarchy
-    * Depending on the implementation, different strategies
-    * for doing that will be implemented
-    */
-   virtual void removeFromHierarchy(Node* node) = 0;
-
    /**
     * This method is called when we're adding a light to the scene
     */
@@ -166,15 +151,15 @@ private:
    class AddOperation : public Operation
    {
    private:
-      SceneManager& m_controller;
+      VisualSceneManager& m_controller;
 
    public:
-      AddOperation(SceneManager& controller) : m_controller(controller) {}
+      AddOperation(VisualSceneManager& controller) : m_controller(controller) {}
 
-      void toHierarchy(Node* node) {m_controller.addToHierarchy(node);}
       void perform(Light& light) {m_controller.add(light);}
       void perform(AbstractGraphicalNode& node) {m_controller.add(node);}
       void perform(Camera& node) {m_controller.add(node);}
+      void perform(SkyBox& node) {m_controller.setSkyBox(&node);}
    };
    friend class AddOperation;
 
@@ -183,15 +168,15 @@ private:
    class RemoveOperation : public Operation
    {
    private:
-      SceneManager& m_controller;
+      VisualSceneManager& m_controller;
 
    public:
-      RemoveOperation(SceneManager& controller) : m_controller(controller) {}
+      RemoveOperation(VisualSceneManager& controller) : m_controller(controller) {}
 
-      void toHierarchy(Node* node) {m_controller.removeFromHierarchy(node);}
       void perform(Light& light) {m_controller.remove(light);}
       void perform(AbstractGraphicalNode& node) {m_controller.remove(node);}
       void perform(Camera& node) {m_controller.remove(node);}
+      void perform(SkyBox& node) {}
    };
    friend class RemoveOperation;
 
@@ -202,10 +187,10 @@ private:
    public:
       NoOperation() {}
       
-      void toHierarchy(Node* node) {}
       void perform(Light& light) {}
       void perform(AbstractGraphicalNode& node) {}
       void perform(Camera& node) {}
+      void perform(SkyBox& node) {}
    };
    friend class NoOperation;
 

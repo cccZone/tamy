@@ -15,7 +15,7 @@ public:
          : Sound3D(name, sound, soundHearingRadius), m_updated(false)
    {}
 
-   void update() {m_updated = true;}
+   void update(SoundListener& listener) {m_updated = true;}
 
    bool wasUpdated()
    {

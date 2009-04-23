@@ -114,9 +114,18 @@ void SoundInitializer::getDeviceInfo(SoundDeviceInfo& device)
          device.extensions.push_back(extName);
    }
 
+   ALCcontext* context = m_soundSystem.alcCreateContext(pDevice, NULL);
+   if (pDevice == NULL)
+   {
+	   throw std::runtime_error(std::string("Cannot create a context for sound device"));
+   }
+	m_soundSystem.alcMakeContextCurrent(context);
+
    // fin out how many sources we can simultaneously create
    device.sourceCount = getMaxNumSources();
 
+   m_soundSystem.alcMakeContextCurrent(NULL);
+	m_soundSystem.alcDestroyContext(context);
    m_soundSystem.alcCloseDevice(pDevice);
 }
 
@@ -126,6 +135,7 @@ unsigned int SoundInitializer::getMaxNumSources() const
 {
 	ALuint tmpSources[256];
 	unsigned int sourceCount = 0;
+   memset(tmpSources, 0, sizeof(ALuint) * 256);
 
 	// clear AL error code
 	m_soundSystem.alGetError();

@@ -1,5 +1,7 @@
 #include "core-Renderer\SkyBox.h"
 #include "core-Renderer\Material.h"
+#include "core\NodeVisitor.h"
+#include "core\TNodesVisitor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,6 +14,14 @@ SkyBox::SkyBox()
       m_materials[i] = NULL;
    }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkyBox::onAccept(NodeVisitor& visitor)
+{
+   REGISTER_NODE_VISITOR(TNodesVisitor<SkyBox>);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 

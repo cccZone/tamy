@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SoundListener.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core-Sound\SoundListener.h"
 				>
 			</File>
@@ -220,6 +224,10 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Sound\SoundRenderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SoundSceneManager.cpp"
 				>
 			</File>
 			<File

@@ -335,11 +335,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BasicSceneManager.cpp"
+				RelativePath=".\BasicVisualSceneManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\BasicSceneManager.h"
+				RelativePath="..\Include\core-Renderer\BasicVisualSceneManager.h"
 				>
 			</File>
 			<File
@@ -351,11 +351,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SceneManager.cpp"
+				RelativePath=".\VisualSceneManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\SceneManager.h"
+				RelativePath="..\Include\core-Renderer\VisualSceneManager.h"
 				>
 			</File>
 		</Filter>

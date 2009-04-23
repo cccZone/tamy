@@ -6,7 +6,7 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\Camera.h"
 #include "core\MatrixWriter.h"
-#include "SceneManagerMock.h"
+#include "VisualSceneManagerMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,8 +31,8 @@ TEST(Camera, renderingWithActiveCamera)
    GraphicalEntityMock entity("", materials);
    GraphicalNode* node = new GraphicalNode("", entity, 0);
 
-   SceneManagerMock sceneManager;
-   renderer.addSceneManager(sceneManager);
+   VisualSceneManagerMock sceneManager;
+   renderer.addVisualSceneManager(sceneManager);
    sceneManager.setActiveCamera(camera1);
    sceneManager.addNode(node);
 
@@ -56,8 +56,8 @@ TEST(Camera, settingAspectRatioOfCurrentViewportDuringRendering)
    RendererImplementationMock renderer;
    Camera camera("camera");
 
-   SceneManagerMock sceneManager;
-   renderer.addSceneManager(sceneManager);
+   VisualSceneManagerMock sceneManager;
+   renderer.addVisualSceneManager(sceneManager);
    sceneManager.setActiveCamera(camera);
 
    // we resized the viewport

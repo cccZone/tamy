@@ -20,7 +20,7 @@ TEST(SoundRenderer, renderingSound)
    SoundSceneManagerMock soundScene;
 
    SoundMock someSound;
-   Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound);
+   Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound, 100);
    
    Node dog("dog");
    dog.addChild(barkingSound);
@@ -34,8 +34,6 @@ TEST(SoundRenderer, renderingSound)
    CPPUNIT_ASSERT_EQUAL(false, soundDevice.getChannel(0).isPlaying());
 
    soundRenderer.render(soundScene);
-   CPPUNIT_ASSERT_EQUAL(true, listener.wasUpdated());
-   CPPUNIT_ASSERT_EQUAL(true, barkingSound->wasUpdated());
 
    CPPUNIT_ASSERT_EQUAL(true, soundDevice.getChannel(0).isBusy());
    CPPUNIT_ASSERT_EQUAL(true, soundDevice.getChannel(0).isPlaying());
@@ -51,7 +49,7 @@ TEST(SoundRenderer, soundPlayedContinuouslyAcrossRenderings)
    SoundSceneManagerMock soundScene;
 
    SoundMock someSound;
-   Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound);
+   Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound, 100);
    
    Node dog("dog");
    dog.addChild(barkingSound);
@@ -67,6 +65,7 @@ TEST(SoundRenderer, soundPlayedContinuouslyAcrossRenderings)
 
    soundRenderer.render(soundScene);
    CPPUNIT_ASSERT_EQUAL(true, channel.isBusy());
+   CPPUNIT_ASSERT_EQUAL(true, channel.wasReassigned());
 
    soundRenderer.render(soundScene);
    CPPUNIT_ASSERT_EQUAL(true, channel.isBusy());

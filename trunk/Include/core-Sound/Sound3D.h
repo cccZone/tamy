@@ -8,6 +8,7 @@
 class Sound;
 class SoundChannel;
 class SoundDevice;
+class SoundListener;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +29,7 @@ public:
    Sound3D(const std::string& name, Sound& sound, float soundHearingRadius);
    virtual ~Sound3D();
 
-   virtual void update() = 0;
+   virtual void update(SoundListener& listener) = 0;
 
    Sound& getSound() {return m_sound;}
 
@@ -40,6 +41,8 @@ public:
    float getHearingRadiusSq() const {return m_soundHearingRadiusSq;}
 
 protected:
+   void onAccept(NodeVisitor& visitor);
+
    virtual void onChannelAssigned(SoundChannel& channel) = 0;
 };
 

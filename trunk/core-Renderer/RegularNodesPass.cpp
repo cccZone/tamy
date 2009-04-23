@@ -1,5 +1,5 @@
 #include "core-Renderer\RegularNodesPass.h"
-#include "core-Renderer\SceneManager.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RenderingProcessor.h"
 #include "core-Renderer\Camera.h"
@@ -28,7 +28,7 @@ RegularNodesPass::~RegularNodesPass()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RegularNodesPass::operator()(SceneManager& sceneManager, Renderer& renderer)
+void RegularNodesPass::operator()(VisualSceneManager& sceneManager, Renderer& renderer)
 {
    DWORD nodesArraySize = 0;
    AbstractGraphicalNodeP* nodes = sceneManager.getRegularGraphicalNodes(nodesArraySize);

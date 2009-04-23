@@ -1,4 +1,4 @@
-#include "core-Renderer\BasicSceneManager.h"
+#include "core-Renderer\BasicVisualSceneManager.h"
 #include "core\Node.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Camera.h"
@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BasicSceneManager::BasicSceneManager()
+BasicVisualSceneManager::BasicVisualSceneManager()
 {
    m_regularRenderingQueueSize = 0;
    m_regularRenderingQueue = NULL;
@@ -22,7 +22,7 @@ BasicSceneManager::BasicSceneManager()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BasicSceneManager::~BasicSceneManager()
+BasicVisualSceneManager::~BasicVisualSceneManager()
 {
    m_regularRenderingQueueSize = 0;
    delete [] m_regularRenderingQueue;
@@ -35,21 +35,7 @@ BasicSceneManager::~BasicSceneManager()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::addToHierarchy(Node* newNode)
-{
-   getRootNode().addChild(newNode);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void BasicSceneManager::removeFromHierarchy(Node* node) 
-{
-   getRootNode().removeChild(*node);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const std::list<Light*>& BasicSceneManager::getLights(int lightLimit)
+const std::list<Light*>& BasicVisualSceneManager::getLights(int lightLimit)
 {
    Camera& activeCamera = getActiveCamera();
 
@@ -68,7 +54,7 @@ const std::list<Light*>& BasicSceneManager::getLights(int lightLimit)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AbstractGraphicalNodeP* BasicSceneManager::getRegularGraphicalNodes(DWORD& arraySize)
+AbstractGraphicalNodeP* BasicVisualSceneManager::getRegularGraphicalNodes(DWORD& arraySize)
 {
    if (hasActiveCamera() == false) 
    {
@@ -97,7 +83,7 @@ AbstractGraphicalNodeP* BasicSceneManager::getRegularGraphicalNodes(DWORD& array
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AbstractGraphicalNodeP* BasicSceneManager::getTransparentGraphicalNodes(DWORD& arraySize)
+AbstractGraphicalNodeP* BasicVisualSceneManager::getTransparentGraphicalNodes(DWORD& arraySize)
 {
    if (hasActiveCamera() == false) 
    {
@@ -122,14 +108,14 @@ AbstractGraphicalNodeP* BasicSceneManager::getTransparentGraphicalNodes(DWORD& a
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::add(Light& light)
+void BasicVisualSceneManager::add(Light& light)
 {
    m_allLights.push_back(&light);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::remove(Light& light)
+void BasicVisualSceneManager::remove(Light& light)
 {
    for (std::list<Light*>::iterator it = m_allLights.begin();
         it != m_allLights.end(); ++it)
@@ -146,7 +132,7 @@ void BasicSceneManager::remove(Light& light)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::add(AbstractGraphicalNode& node) 
+void BasicVisualSceneManager::add(AbstractGraphicalNode& node) 
 {
    if (node.getMaterial().isTransparent())
    {
@@ -160,7 +146,7 @@ void BasicSceneManager::add(AbstractGraphicalNode& node)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::remove(AbstractGraphicalNode& node)
+void BasicVisualSceneManager::remove(AbstractGraphicalNode& node)
 {
    if (node.getMaterial().isTransparent())
    {
@@ -174,14 +160,14 @@ void BasicSceneManager::remove(AbstractGraphicalNode& node)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::addRegularNode(AbstractGraphicalNode& node)
+void BasicVisualSceneManager::addRegularNode(AbstractGraphicalNode& node)
 {
    m_regularGraphicalNodes.insert(&node);  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::removeRegularNode(AbstractGraphicalNode& node)
+void BasicVisualSceneManager::removeRegularNode(AbstractGraphicalNode& node)
 {
    GraphicalNodesSet::iterator it = m_regularGraphicalNodes.begin(); 
    for (; it != m_regularGraphicalNodes.end(); ++it)
@@ -197,7 +183,7 @@ void BasicSceneManager::removeRegularNode(AbstractGraphicalNode& node)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::addTransparentNode(AbstractGraphicalNode& node)
+void BasicVisualSceneManager::addTransparentNode(AbstractGraphicalNode& node)
 {
    if (m_transparentNodesCount + 1 >  m_transparentRenderingQueueSize)
    {
@@ -218,7 +204,7 @@ void BasicSceneManager::addTransparentNode(AbstractGraphicalNode& node)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::removeTransparentNode(AbstractGraphicalNode& node)
+void BasicVisualSceneManager::removeTransparentNode(AbstractGraphicalNode& node)
 {
    // find the node
    unsigned int nodeIdx = 0;
@@ -243,7 +229,7 @@ void BasicSceneManager::removeTransparentNode(AbstractGraphicalNode& node)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BasicSceneManager::refreshVisibleLights(int lightLimit)
+void BasicVisualSceneManager::refreshVisibleLights(int lightLimit)
 {
    m_currentlyVisibleLights.clear();
 

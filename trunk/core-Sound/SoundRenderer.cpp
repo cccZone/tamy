@@ -29,7 +29,6 @@ void SoundRenderer::render(SoundSceneManager& soundScene)
    SoundListener& listener = soundScene.getActiveListener();
    listener.update();
 
-
    soundScene.calculateSoundsHearability();
  
    DWORD soundsCount = 0;
@@ -52,7 +51,7 @@ void SoundRenderer::render(SoundSceneManager& soundScene)
    // render the sounds
    for (DWORD i = 0; i < soundsCount; ++i)
    {
-      sounds[i]->update();
+      sounds[i]->update(listener);
    }
 
    // update the device - effectively presenting the sounds

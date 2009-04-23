@@ -9,7 +9,7 @@
 OALSoundChannel::OALSoundChannel(int id, 
                                  OpenALSoundSystem& soundSystem, 
                                  int numBuffersUsed)
-      : SoundChannel(id),
+      : SoundChannel(id, numBuffersUsed),
       m_soundSystem(soundSystem),
       m_buffersCount(numBuffersUsed),
       m_oalSource(0)
@@ -94,19 +94,24 @@ void OALSoundChannel::addDataToPlayBuffer(char* data, DWORD size,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void OALSoundChannel::cleanBuffers()
+void OALSoundChannel::onCleanBuffers()
 {
    ALuint buf;
-   m_soundSystem.alSourceUnqueueBuffers(m_oalSource, m_freeBuffers.size(), &buf);
+   int activeBufsCount = getActiveBuffersCount();
+   while (activeBufsCount > 0)
+   {
+      m_soundSystem.alSourceUnqueueBuffers(m_oalSource, 1, &buf);
+      activeBufsCount--;
+   }
+
+   m_soundSystem.alDeleteBuffers(m_buffersCount, m_oalBuffer);
+   m_soundSystem.alGenBuffers(m_buffersCount, m_oalBuffer);
 
    m_freeBuffers.clear();
    for (int i = 0; i < m_buffersCount; ++i)
    {
       m_freeBuffers.push_back(m_oalBuffer[i]);
    }
-
-   m_soundSystem.alDeleteBuffers(m_buffersCount, m_oalBuffer);
-   m_soundSystem.alGenBuffers(m_buffersCount, m_oalBuffer);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

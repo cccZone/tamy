@@ -2,8 +2,8 @@
 #include "core\Node.h"
 #include "core\MatrixWriter.h"
 #include "core-Sound\BasicSoundSceneManager.h"
-#include "SoundMock.h"
 #include "Sound3DMock.h"
+#include "SoundMock.h"
 #include "SoundListenerMock.h"
 #include "SoundDeviceMock.h"
 #include <d3dx9.h>

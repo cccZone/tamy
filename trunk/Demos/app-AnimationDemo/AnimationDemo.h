@@ -5,7 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneManager;
+class CompositeSceneManager;
 class UnconstrainedMotionController;
 class Skeleton;
 
@@ -17,7 +17,7 @@ private:
    Renderer* m_renderer;
    ResourceManager* m_resourceManager;
 
-   SceneManager* m_sceneManager;
+   CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;
    Skeleton* m_animationController;
 

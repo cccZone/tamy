@@ -35,7 +35,7 @@ protected:
    void addDataToPlayBuffer(char* data, DWORD size,
                             const std::string& format, 
                             DWORD freq);
-   void cleanBuffers();
+   void onCleanBuffers();
    void startPlaying();
    void stopPlaying();
 };

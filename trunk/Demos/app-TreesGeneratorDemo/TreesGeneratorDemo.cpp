@@ -4,7 +4,8 @@
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-ResourceManagement\ResourceManager.h"
-#include "core-Renderer\BasicSceneManager.h"
+#include "core\CompositeSceneManager.h"
+#include "core-Renderer\BasicVisualSceneManager.h"
 #include "core-ResourceManagement\MeshDefinition.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\Camera.h"
@@ -38,8 +39,10 @@ void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourc
    m_resourceManager = &resourceManager;
 
    m_rotating = false;
-   m_sceneManager = new BasicSceneManager();
-   m_renderer->addSceneManager(*m_sceneManager);
+   m_sceneManager = new CompositeSceneManager();
+   VisualSceneManager* visualSceneManager = new BasicVisualSceneManager();
+   m_sceneManager->addSceneManager(visualSceneManager);
+   m_renderer->addVisualSceneManager(*visualSceneManager);
 
    TreeParams treeParams;
    treeParams.maxTreeDepth = 5;

@@ -251,6 +251,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Scene"
+			>
+			<File
+				RelativePath="..\Include\core\AbstractSceneManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\CompositeSceneManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core\CompositeSceneManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core\SceneManager.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

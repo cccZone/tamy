@@ -1,23 +1,23 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core-Renderer\RenderingProcessor.h"
 #include "core-Renderer\RenderingCommand.h"
-#include "core-Renderer\BasicSceneManager.h"
+#include "core-Renderer\BasicVisualSceneManager.h"
 #include "RendererImplementationMock.h"
 #include "TextureStub.h"
 #include "core-Renderer\Material.h"
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "LightReflectingPropertiesStub.h"
-#include "SceneManagerMock.h"
+#include "VisualSceneManagerMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(Renderer, renderingOnlyWhenRenderingDeviceIsReady)
 {
-   SceneManagerMock sceneManager;
+   VisualSceneManagerMock sceneManager;
    RendererImplementationMock renderer;
-   renderer.addSceneManager(sceneManager);
+   renderer.addVisualSceneManager(sceneManager);
 
 
    renderer.render(); 
@@ -33,9 +33,9 @@ TEST(Renderer, renderingOnlyWhenRenderingDeviceIsReady)
 
 TEST(Renderer, recoveringTheLostDevice)
 {
-   SceneManagerMock sceneManager;
+   VisualSceneManagerMock sceneManager;
    RendererImplementationMock renderer;
-   renderer.addSceneManager(sceneManager);
+   renderer.addVisualSceneManager(sceneManager);
 
    // initial rendering
    renderer.render(); 

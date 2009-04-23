@@ -23,7 +23,7 @@ public:
    RegularNodesPass();
    ~RegularNodesPass();
 
-   void operator()(SceneManager& sceneManager, Renderer& renderer);
+   void operator()(VisualSceneManager& sceneManager, Renderer& renderer);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

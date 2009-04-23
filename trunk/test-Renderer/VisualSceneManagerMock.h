@@ -1,12 +1,12 @@
 #pragma once
 
-#include "core-Renderer\SceneManager.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include <list>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneManagerMock : public SceneManager
+class VisualSceneManagerMock : public VisualSceneManager
 {
 private:
    std::list<Light*> m_lights;

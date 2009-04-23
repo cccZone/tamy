@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneManager;
+class CompositeSceneManager;
 class UnconstrainedMotionController;
 class WavFile;
 class SoundDevice;
@@ -24,7 +24,7 @@ private:
    Renderer* m_renderer;
    ResourceManager* m_resourceManager;
 
-   SceneManager* m_sceneManager;
+   CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;
 
    bool m_rotating;
@@ -32,7 +32,7 @@ private:
    WavFile* m_sound;
    SoundChannel* m_soundChannel;
    SoundListener* m_soundListener;
-   SoundSceneManager* m_soundScene;
+   SoundSceneManager* m_audioSoundScene;
    SoundRenderer* m_soundRenderer;
 
 public:

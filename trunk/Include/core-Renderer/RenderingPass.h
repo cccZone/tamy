@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneManager;
+class VisualSceneManager;
 class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@ class RenderingPass
 public:
    virtual ~RenderingPass() {}
 
-   virtual void operator()(SceneManager& sceneManager, Renderer& renderer) = 0;
+   virtual void operator()(VisualSceneManager& sceneManager, Renderer& renderer) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

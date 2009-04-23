@@ -4,7 +4,8 @@
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-ResourceManagement\ResourceManager.h"
-#include "core-Renderer\BasicSceneManager.h"
+#include "core\CompositeSceneManager.h"
+#include "core-Renderer\BasicVisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
@@ -33,9 +34,10 @@ void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceMa
    m_resourceManager = &resourceManager;
 
    m_rotating = false;
-   m_sceneManager = new BasicSceneManager();
-
-   m_renderer->addSceneManager(*m_sceneManager);
+   m_sceneManager = new CompositeSceneManager();
+   VisualSceneManager* visualSceneManager = new BasicVisualSceneManager();
+   m_sceneManager->addSceneManager(visualSceneManager);
+   m_renderer->addVisualSceneManager(*visualSceneManager);
 
    GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
    AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
@@ -64,7 +66,6 @@ void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceMa
 
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 20, 50);
    m_sceneManager->addNode(camera);
-   m_sceneManager->setActiveCamera(*camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }
 

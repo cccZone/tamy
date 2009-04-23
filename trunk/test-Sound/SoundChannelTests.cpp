@@ -166,3 +166,34 @@ TEST(SoundChannel, soundInstancing)
 }
 
 //////////////////////////////////////////////////////////////////////////////
+
+TEST(SoundChannel, subsequentBuffersContainDifferentData)
+{
+  int soundLength = 5;
+  int bytesPerSec = 1;
+  DWORD soundSampleLength = 1;
+  int numBuffers = 4;
+  SoundMock sound(soundLength, bytesPerSec);
+
+  SoundChannelMock channel(0, numBuffers);
+  channel.setSampleLength(soundSampleLength);
+  channel.assignSound(sound);
+
+  channel.loadNextSample();
+  channel.loadNextSample();
+  channel.loadNextSample();
+  channel.loadNextSample();
+
+  CPPUNIT_ASSERT_EQUAL((int)0, (int)channel.getBufferData(0)[0]);
+  CPPUNIT_ASSERT_EQUAL((int)1, (int)channel.getBufferData(1)[0]);
+  CPPUNIT_ASSERT_EQUAL((int)2, (int)channel.getBufferData(2)[0]);
+  CPPUNIT_ASSERT_EQUAL((int)3, (int)channel.getBufferData(3)[0]);
+
+  channel.loadNextSample();
+  CPPUNIT_ASSERT_EQUAL((int)4, (int)channel.getBufferData(0)[0]);
+  CPPUNIT_ASSERT_EQUAL((int)1, (int)channel.getBufferData(1)[0]);
+  CPPUNIT_ASSERT_EQUAL((int)2, (int)channel.getBufferData(2)[0]);
+  CPPUNIT_ASSERT_EQUAL((int)3, (int)channel.getBufferData(3)[0]);
+}
+
+//////////////////////////////////////////////////////////////////////////////

@@ -3,12 +3,30 @@
 #include <d3dx9.h>
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+class BoundingVolume
+{
+public:
+   virtual ~BoundingVolume() {}
+
+   virtual bool operator==(const BoundingVolume& rhs) const = 0;
+   bool operator!=(const BoundingVolume& rhs) const
+   {
+      return !(*this == rhs);
+   }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 struct Ray;
 
-//-----------------------------------------------------------------------------
-// (helper struct)
-// the structure describes an axis aligned bounding box of a mesh
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * (helper struct)
+ * the structure describes an axis aligned bounding box of a mesh
+ */
 struct AABoundingBox
 {
    D3DXVECTOR3 min;
@@ -32,10 +50,12 @@ private:
    
 };
 
-//-----------------------------------------------------------------------------
-// (helper struct)
-// the structure describes a sphere bouyyng an object
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * (helper struct)
+ * the structure describes a sphere bouyyng an object
+ */
 struct BoundingSphere
 {
    D3DXVECTOR3 origin;
@@ -51,10 +71,12 @@ struct BoundingSphere
    D3DXVECTOR3 findIntersectionRemovalVector(const BoundingSphere& colidor) const;
 };
 
-//-----------------------------------------------------------------------------
-// (helper struct)
-// the structure describes a ray
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ *(helper struct)
+ * the structure describes a ray
+ */
 struct Ray
 {
    D3DXVECTOR3 origin;
@@ -67,3 +89,5 @@ struct Ray
 
    bool isIntersecting(const D3DXPLANE& plane, D3DXVECTOR3& intersectionPt) const;
 };
+
+///////////////////////////////////////////////////////////////////////////////

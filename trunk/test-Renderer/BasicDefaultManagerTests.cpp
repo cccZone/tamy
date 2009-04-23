@@ -1,5 +1,5 @@
 #include "core-TestFramework\TestFramework.h"
-#include "core-Renderer\BasicSceneManager.h"
+#include "core-Renderer\BasicVisualSceneManager.h"
 #include "core\Node.h"
 #include "TextureStub.h"
 #include "core-Renderer\Material.h"
@@ -12,32 +12,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(BasicSceneManagerTests, addingAndRemovingNodes)
-{
-   BasicSceneManager sceneManager;
-   Node* newNode = new Node();
-   Node* anotherNewNode = new Node();
-
-   sceneManager.addNode(newNode);
-   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (2), sceneManager.getRootNode().getChildrenCount());
-
-   sceneManager.addNode(anotherNewNode);
-   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (3), sceneManager.getRootNode().getChildrenCount());
-
-
-   sceneManager.removeNode(*newNode);
-   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (2), sceneManager.getRootNode().getChildrenCount());
-
-   sceneManager.removeNode(*anotherNewNode);
-   CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (1), sceneManager.getRootNode().getChildrenCount());
-
-   delete newNode;
-   delete anotherNewNode;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(BasicSceneManagerTests, retrievingStaticGeometry)
+TEST(BasicVisualSceneManagerTests, retrievingStaticGeometry)
 {
    // prepare the materials
    TextureStub texture("");
@@ -61,7 +36,7 @@ TEST(BasicSceneManagerTests, retrievingStaticGeometry)
    Camera cameraNode("camera"); // camera doesn't play any part as far as this scene manager is concerned
 
    // add the nodes to the scene
-   BasicSceneManager sceneManager;
+   BasicVisualSceneManager sceneManager;
    sceneManager.setActiveCamera(cameraNode);
 
    // 1st node
@@ -110,7 +85,7 @@ TEST(BasicSceneManagerTests, retrievingStaticGeometry)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(BasicSceneManagerTests, transparentObjects)
+TEST(BasicVisualSceneManagerTests, transparentObjects)
 {
    Camera cameraNode("camera");
    std::list<std::string> results;
@@ -140,7 +115,7 @@ TEST(BasicSceneManagerTests, transparentObjects)
 
 
    // add the nodes to the scene
-   BasicSceneManager sceneManager;
+   BasicVisualSceneManager sceneManager;
    sceneManager.setActiveCamera(cameraNode);
    sceneManager.addNode(regularNode);
    sceneManager.addNode(transparentNode);
@@ -156,7 +131,7 @@ TEST(BasicSceneManagerTests, transparentObjects)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(BasicSceneManagerTests, removingTransparentObjects)
+TEST(BasicVisualSceneManagerTests, removingTransparentObjects)
 {
    Camera cameraNode("camera");
    std::list<std::string> results;
@@ -180,7 +155,7 @@ TEST(BasicSceneManagerTests, removingTransparentObjects)
 
 
    // add the nodes to the scene
-   BasicSceneManager sceneManager;
+   BasicVisualSceneManager sceneManager;
    sceneManager.setActiveCamera(cameraNode);
    sceneManager.addNode(transparentNode1);
    sceneManager.addNode(transparentNode2);
@@ -203,7 +178,7 @@ TEST(BasicSceneManagerTests, removingTransparentObjects)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(BasicSceneManagerTests, transparentObjectsAreSortedWithRespectToCamera)
+TEST(BasicVisualSceneManagerTests, transparentObjectsAreSortedWithRespectToCamera)
 {
    Camera cameraNode("camera");
    std::list<std::string> results;
@@ -225,7 +200,7 @@ TEST(BasicSceneManagerTests, transparentObjectsAreSortedWithRespectToCamera)
    GraphicalNode* transparentNodeFar   = new GraphicalNode("transparentNodeFar",    entity, 0);
 
    // add the nodes to the scene
-   BasicSceneManager sceneManager;
+   BasicVisualSceneManager sceneManager;
    sceneManager.setActiveCamera(cameraNode);
    sceneManager.addNode(transparentNodeClose);
    sceneManager.addNode(transparentNodeFar);

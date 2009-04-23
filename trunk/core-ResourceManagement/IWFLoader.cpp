@@ -2,7 +2,7 @@
 #include "core-ResourceManagement\libIWF\iwfFile.h"
 #include "core-ResourceManagement\libIWF\iwfObjects.h"
 #include "core-ResourceManagement\ResourceManager.h"
-#include "core-Renderer\SceneManager.h"
+#include "core\SceneManager.h"
 #include "core-Renderer\GraphicalNode.h"
 #include <map>
 #include <sstream>
@@ -142,7 +142,7 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
          Material& mat = m_resourceManager.getMaterial(materials.at(i));
          skyBox->setMaterial(static_cast<SkyBoxSides> (i), mat);
       }
-      m_sceneManager.setSkyBox(skyBox);
+      m_sceneManager.addNode(skyBox);
    }
 
    // references

@@ -6,8 +6,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SoundChannel::SoundChannel(int id)
+SoundChannel::SoundChannel(int id, int buffersCount)
       : m_id(id),
+      m_nextFreeBuf(0),
       m_sound(NULL),
       m_sampleLength(0xffff),
       m_isPlaying(false),
@@ -16,7 +17,10 @@ SoundChannel::SoundChannel(int id)
       m_currPeriodicPos(0),
       m_soundLength(0)
 {
-   m_data = new char[m_sampleLength];
+   for (int i = 0; i < buffersCount; ++i)
+   {
+      m_data.push_back(new char[m_sampleLength]);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,8 +29,12 @@ SoundChannel::~SoundChannel()
 {
    m_sound = NULL;
 
-   delete [] m_data;
-   m_data = NULL;
+   for (int i = 0; i < m_data.size(); ++i)
+   {
+      delete [] m_data[i];
+   }
+   m_data.clear();
+   m_nextFreeBuf = 0;
 
    m_sampleLength = 0;
 
@@ -47,10 +55,13 @@ void SoundChannel::loadNextSample()
    DWORD len = m_sampleLength;
    DWORD offset = 0;
 
+   char* currBuf = m_data[m_nextFreeBuf];
+   m_nextFreeBuf = (m_nextFreeBuf + 1) % m_data.size();
+
    DWORD bytesRead; 
    while ((len > 0) && (m_currPeriodicPos < m_soundLength))
    {
-      bytesRead = m_sound->getData(m_currPeriodicPos, m_data + offset, len);
+      bytesRead = m_sound->getData(m_currPeriodicPos, currBuf + offset, len);
       len -= bytesRead;
       offset += bytesRead;
       setPosition(m_currPeriodicPos + bytesRead);
@@ -58,7 +69,7 @@ void SoundChannel::loadNextSample()
 
    if (offset > 0)
    {
-      addDataToPlayBuffer(m_data, m_sampleLength, m_currSoundFormat, m_currSoundFreq);
+      addDataToPlayBuffer(currBuf, m_sampleLength, m_currSoundFormat, m_currSoundFreq);
    }
 }
 
@@ -98,7 +109,7 @@ void SoundChannel::assignSound(Sound& sound)
 {
    m_sound = &sound;
 
-   DWORD newBufSize = m_sound->getBytesPerSec();/* >> 2;*/ //TODO
+   DWORD newBufSize = m_sound->getBytesPerSec();
    newBufSize -= newBufSize % m_sound->getBlockAlignment();
    setSampleLength(newBufSize);
    
@@ -124,12 +135,30 @@ void SoundChannel::removeSound()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void SoundChannel::cleanBuffers()
+{
+   onCleanBuffers();
+
+   int buffersCount = m_data.size();
+   for (int i = 0; i < buffersCount; ++i)
+   {
+      char* data = m_data[i];
+      delete data;
+   }
+
+   for (int i = 0; i < buffersCount; ++i)
+   {
+      m_data[i] = new char[m_sampleLength];
+   }
+   m_nextFreeBuf = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void SoundChannel::setSampleLength(DWORD len)
 {
-   delete [] m_data;
-
    m_sampleLength = len;
-   m_data = new char[m_sampleLength];
+   cleanBuffers();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

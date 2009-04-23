@@ -1,7 +1,7 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
-#include "core-Renderer\SceneManager.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\RenderingPass.h"
 #include <cassert>
 
@@ -44,16 +44,16 @@ Renderer::~Renderer()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::addSceneManager(SceneManager& manager)
+void Renderer::addVisualSceneManager(VisualSceneManager& manager)
 {
    m_sceneManagers.push_back(&manager);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::removeSceneManager(SceneManager& manager)
+void Renderer::removeVisualSceneManager(VisualSceneManager& manager)
 {
-   for (std::list<SceneManager*>::iterator it = m_sceneManagers.begin();
+   for (std::list<VisualSceneManager*>::iterator it = m_sceneManagers.begin();
         it != m_sceneManagers.end(); ++it)
    {
       if (*it == &manager)
@@ -100,10 +100,10 @@ void Renderer::RenderingState::render(Renderer& renderer)
 
    renderer.renderingBegin();
 
-   for (std::list<SceneManager*>::iterator it = renderer.m_sceneManagers.begin();
+   for (std::list<VisualSceneManager*>::iterator it = renderer.m_sceneManagers.begin();
         it != renderer.m_sceneManagers.end(); ++it)
    {
-      SceneManager& sceneManager = **it;
+      VisualSceneManager& sceneManager = **it;
       if (sceneManager.hasActiveCamera() == false) {continue;}
 
       Camera& activeCamera = sceneManager.getActiveCamera();

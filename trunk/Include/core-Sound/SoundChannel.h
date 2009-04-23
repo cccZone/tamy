@@ -2,6 +2,7 @@
 
 #include <string>
 #include <windows.h>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +20,9 @@ class SoundChannel
 private:
    int m_id;
    DWORD m_sampleLength;
-   char* m_data;
+   
+   int m_nextFreeBuf;
+   std::vector<char*> m_data;
 
    bool m_isPlaying;
    bool m_looped;
@@ -128,7 +131,7 @@ public:
    float getSoundLength() const;
 
 protected:
-   SoundChannel(int id);
+   SoundChannel(int id, int buffersCount);
 
    /**
     * The method should add new data to the channel's sound queue
@@ -140,7 +143,7 @@ protected:
    /**
     * The method should clean up the channel's sound queue
     */
-   virtual void cleanBuffers() = 0;
+   virtual void onCleanBuffers() = 0;
 
    /**
     * The method should issue an implementation specific command that will
@@ -156,6 +159,7 @@ protected:
 
 private:
    void setPosition(DWORD pos);
+   void cleanBuffers();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

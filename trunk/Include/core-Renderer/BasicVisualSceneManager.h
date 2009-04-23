@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core-Renderer\SceneManager.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\BatchingStrategy.h"
 #include "core\DistanceComparator.h"
 #include <set>
@@ -13,7 +13,7 @@
  * This scene manager doesn't do much - it assigns all the nodes
  * to its root node, so there's not much hierarchy here.
  */
-class BasicSceneManager : public SceneManager
+class BasicVisualSceneManager : public VisualSceneManager
 {
 private:
    std::list<Light*> m_allLights;
@@ -33,8 +33,8 @@ private:
    std::list<Light*> m_currentlyVisibleLights;
 
 public:
-   BasicSceneManager();
-   ~BasicSceneManager();
+   BasicVisualSceneManager();
+   ~BasicVisualSceneManager();
 
    const std::list<Light*>& getLights(int lightLimit);
 
@@ -43,10 +43,6 @@ public:
    AbstractGraphicalNodeP* getTransparentGraphicalNodes(DWORD& arraySize);
 
 protected:
-   void addToHierarchy(Node* node);
-
-   void removeFromHierarchy(Node* node);
-
    void add(Light& light);
 
    void remove(Light& light);

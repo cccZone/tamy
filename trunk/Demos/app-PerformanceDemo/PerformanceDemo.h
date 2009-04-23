@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneManager;
+class CompositeSceneManager;
 class UnconstrainedMotionController;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,7 +18,7 @@ private:
    Renderer* m_renderer;
    ResourceManager* m_resourceManager;
 
-   SceneManager* m_sceneManager;
+   CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;
 
    bool m_rotating;

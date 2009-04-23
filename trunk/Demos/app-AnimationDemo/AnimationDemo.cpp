@@ -4,7 +4,8 @@
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-ResourceManagement\ResourceManager.h"
-#include "core-Renderer\BasicSceneManager.h"
+#include "core\CompositeSceneManager.h"
+#include "core-Renderer\BasicVisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
@@ -34,13 +35,16 @@ void AnimationDemo::initialize(Renderer& renderer, ResourceManager& resourceMana
    m_resourceManager = &resourceManager;
 
    m_rotating = false;
-   m_sceneManager = new BasicSceneManager();
+   m_sceneManager = new CompositeSceneManager();
+   VisualSceneManager* visualSceneManager = new BasicVisualSceneManager();
+   m_sceneManager->addSceneManager(visualSceneManager);
+   m_renderer->addVisualSceneManager(*visualSceneManager);
 
    IWFLoader loader(*m_resourceManager, *m_sceneManager);
    loader.load("..\\Data\\AnimLandscape.iwf");
 
    AbstractGraphicalEntity& ent = m_resourceManager->getGraphicalEntity("animlandscape.x");
-   m_animationController = ent.instantiateSkeleton(m_sceneManager->getRootNode());
+   m_animationController = ent.instantiateSkeleton(m_sceneManager->root());
    m_animationController->activateAnimation("Cutscene_01", true);
 
    Light* light = m_resourceManager->createLight("light");
@@ -48,8 +52,6 @@ void AnimationDemo::initialize(Renderer& renderer, ResourceManager& resourceMana
    light->setDiffuseColor(Color(1, 1, 1, 0));
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
    m_sceneManager->addNode(light);
-
-   m_renderer->addSceneManager(*m_sceneManager);
 
    Camera* camera = m_resourceManager->createCamera("camera");
    m_sceneManager->addNode(camera);

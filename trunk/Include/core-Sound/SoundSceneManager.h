@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core\AbstractSceneManager.h"
+#include "core\TNodesVisitor.h"
 #include <windows.h>
 
 
@@ -14,10 +16,35 @@ typedef Sound3D* Sound3DP;
 /**
  * This scene manager manages the audio representation of a 3D scene
  */
-class SoundSceneManager
+class SoundSceneManager : public AbstractSceneManager,
+                          public TNodesVisitor<SoundListener>,
+                          public TNodesVisitor<Sound3D>
 {
+private:
+   class Operation
+   {
+   public:
+      virtual ~Operation() {}
+      
+      virtual void perform(SoundListener& listener) = 0;
+      virtual void perform(Sound3D& source) = 0;
+   };
+
+private:
+   Operation* m_addOperation;
+   Operation* m_removeOperation;
+   Operation* m_noOperation;
+   Operation* m_currentOperation;
+
 public:
-   virtual ~SoundSceneManager() {}
+   SoundSceneManager();
+   virtual ~SoundSceneManager();
+
+   void addNode(Node* node);
+   void removeNode(Node& node);
+
+   void visit(SoundListener& listener);
+   void visit(Sound3D& source);
 
    /**
     * A 3D sound in order to be perceived requires someone
@@ -71,6 +98,51 @@ public:
     *                      will contain the number of elements in the returned array
     */
    virtual Sound3DP* getSoundsToEnable(DWORD& soundsCount) = 0;
+
+private:
+   // ---------------------------
+
+   class AddOperation : public Operation
+   {
+   private:
+      SoundSceneManager& m_controller;
+
+   public:
+      AddOperation(SoundSceneManager& controller) : m_controller(controller) {}
+
+      void perform(SoundListener& listener) {m_controller.setActiveListener(listener);}
+      void perform(Sound3D& source) {m_controller.add(source);}
+   };
+   friend class AddOperation;
+
+   // ---------------------------
+
+   class RemoveOperation : public Operation
+   {
+   private:
+      SoundSceneManager& m_controller;
+
+   public:
+      RemoveOperation(SoundSceneManager& controller) : m_controller(controller) {}
+
+      void perform(SoundListener& listener) {}
+      void perform(Sound3D& source) {}
+   };
+   friend class RemoveOperation;
+
+   // ---------------------------
+
+   class NoOperation : public Operation
+   {
+   public:
+      NoOperation() {}
+      
+      void perform(SoundListener& listener) {}
+      void perform(Sound3D& source) {}
+   };
+   friend class NoOperation;
+
+   // ---------------------------
 };
 
 ///////////////////////////////////////////////////////////////////////////////

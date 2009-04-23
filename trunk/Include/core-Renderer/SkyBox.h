@@ -40,6 +40,8 @@ public:
    void setMaterial(SkyBoxSides side, Material& material);
 
 protected:
+   void onAccept(NodeVisitor& visitor);
+
    /**
     * The method prepares the skybox for rendering - setting the
     * device etc.

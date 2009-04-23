@@ -2,7 +2,11 @@
 #include "core-Sound\Sound.h"
 #include "core-Sound\SoundDevice.h"
 #include "core-Sound\SoundChannel.h"
+#include "core-Sound\SoundListener.h"
+#include "core\NodeVisitor.h"
+#include "core\TNodesVisitor.h"
 #include <stdexcept>
+#include <math.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +24,13 @@ Sound3D::Sound3D(const std::string& name, Sound& sound, float soundHearingRadius
 
 Sound3D::~Sound3D()
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Sound3D::onAccept(NodeVisitor& visitor)
+{
+   REGISTER_NODE_VISITOR(TNodesVisitor<Sound3D>);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

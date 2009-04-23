@@ -2,7 +2,7 @@
 #include "RendererImplementationMock.h"
 #include "LightMock.h"
 #include "core\Node.h"
-#include "core-Renderer\BasicSceneManager.h"
+#include "core-Renderer\BasicVisualSceneManager.h"
 #include "core-Renderer\Camera.h"
 
 
@@ -14,8 +14,8 @@ TEST(Lights, singleLight)
    RendererImplementationMock renderer; 
    LightMock* light = new LightMock();
 
-   BasicSceneManager sceneManager;
-   renderer.addSceneManager(sceneManager);
+   BasicVisualSceneManager sceneManager;
+   renderer.addVisualSceneManager(sceneManager);
    sceneManager.setActiveCamera(camera);
    sceneManager.addNode(light);
 
@@ -37,8 +37,8 @@ TEST(Lights, renderingHierarchyOfLights)
    root->addChild(light1);
    root->addChild(light2);
 
-   BasicSceneManager sceneManager;
-   renderer.addSceneManager(sceneManager);
+   BasicVisualSceneManager sceneManager;
+   renderer.addVisualSceneManager(sceneManager);
    sceneManager.setActiveCamera(camera);
    sceneManager.addNode(root);
       
@@ -67,8 +67,8 @@ TEST(Lights, tooManyLights)
    root->addChild(light1);
    root->addChild(light2);
 
-   BasicSceneManager sceneManager;
-   renderer.addSceneManager(sceneManager);
+   BasicVisualSceneManager sceneManager;
+   renderer.addVisualSceneManager(sceneManager);
    sceneManager.setActiveCamera(camera);
    sceneManager.addNode(root);
 

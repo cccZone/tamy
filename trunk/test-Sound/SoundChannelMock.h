@@ -2,6 +2,7 @@
 
 #include "core-Sound\SoundChannel.h"
 #include <list>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,10 +12,16 @@ class SoundChannelMock : public SoundChannel
 private:
    std::list<DWORD> m_buffers;
    bool m_wasReassigned;
+   std::vector<char*> m_data;
+
+   float m_pan;
+   float m_vol;
 
 public:
-   SoundChannelMock(int id) 
-         : SoundChannel(id), m_wasReassigned(false) {}
+   SoundChannelMock(int id, int buffersCount = 1) 
+         : SoundChannel(id, buffersCount), m_wasReassigned(false),
+         m_pan(0), m_vol(1) 
+   {}
 
    void update() {}
 
@@ -33,6 +40,7 @@ public:
    void simulateBufferEnd()
    {
       m_buffers.pop_front();
+      m_data.clear();
    }
 
    int getActiveBuffersCount() const
@@ -47,17 +55,32 @@ public:
       return result;
    }
 
+   char* getBufferData(int idx)
+   {
+      return m_data.at(idx);
+   }
+
+   void setPan(float pan) {m_pan = pan;}
+
+   float getPan() const {return m_pan;}
+
+   void setVolume(float vol) {m_vol = vol;}
+
+   float getVolume() const {return m_vol;}
+
 protected:
    void addDataToPlayBuffer(char* data, DWORD size, 
                             const std::string& format, DWORD freq)
    {
       m_buffers.push_back(size);
+      m_data.push_back(data);
    }
 
-   void cleanBuffers()
+   void onCleanBuffers()
    {
       m_wasReassigned = true;
       m_buffers.clear();
+      m_data.clear();
    }
 
    void startPlaying()

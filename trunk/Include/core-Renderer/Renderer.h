@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneManager;
+class VisualSceneManager;
 class Node;
 class GraphicalNode;
 class Camera;
@@ -52,7 +52,7 @@ private:
 
 private:
    std::vector<RenderingPass*> m_renderingPasses;
-   std::list<SceneManager*> m_sceneManagers;
+   std::list<VisualSceneManager*> m_sceneManagers;
 
    unsigned int m_viewportWidth;
    unsigned int m_viewportHeight;
@@ -88,12 +88,12 @@ public:
     * Adds a scene to the rendering queue. A single rendering pass
     * can render multiple scenes (2D, 3D etc.) at once
     */
-   void addSceneManager(SceneManager& manager);
+   void addVisualSceneManager(VisualSceneManager& manager);
 
    /**
     * The method removes a scene from the rendering queue
     */
-   void removeSceneManager(SceneManager& manager);
+   void removeVisualSceneManager(VisualSceneManager& manager);
 
 protected:
    /**
