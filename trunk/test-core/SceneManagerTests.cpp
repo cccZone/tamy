@@ -90,17 +90,17 @@ TEST(SceneManager, connectingNodesUpdatesManagers)
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeA->getNodesCount());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeB->getNodesCount());
 
-   fullScene.addNode(head);
+   fullScene.addNode(someNode);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeA->getNodesCount());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeB->getNodesCount());
 
-   fullScene.connectNodes(head, nodeA);
+   someNode->addChild(nodeA);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, sceneForNodeA->getNodesCount());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeB->getNodesCount());
 
-   fullScene.connectNodes(head, nodeB);
+   someNode->addChild(nodeB);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, sceneForNodeA->getNodesCount());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, sceneForNodeB->getNodesCount());

@@ -20,7 +20,7 @@ class CompositeSceneManager : public SceneManager
 {
 private:
    Node* m_rootNode;
-   std::list<AbstractSceneManager*> m_managers;
+   std::list<SceneManager*> m_managers;
 
 public:
    CompositeSceneManager();

@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class NodeVisitor;
+class NodeObserver;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +30,8 @@ private:
 
    Node* m_parent;
    std::list<Node*> m_children;
+   std::list<NodeObserver*> m_observers;
+
 
 public:
    Node(const std::string& name = "");
@@ -126,6 +129,15 @@ public:
     */
    void accept(NodeVisitor& visitor);
 
+   /**
+    * The method allows to attach an observer to the node instance
+    */
+   void attachObserver(NodeObserver& observer);
+
+   /**
+    * Counterpart of the @see attachObserver method
+    */
+   void detachObserver(NodeObserver& observer);
 
 protected:
    /**

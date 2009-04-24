@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "core\MatrixWriter.h"
 #include "core\dostream.h"
+#include "core\NodeObserver.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -170,12 +171,24 @@ void Node::addChild(Node* childNode)
 
    m_children.push_back(childNode);
    childNode->setParent(*this);
+
+   for (std::list<NodeObserver*>::iterator it = m_observers.begin();
+        it != m_observers.end(); ++it)
+   {
+      (*it)->childAdded(*this, *childNode);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Node::removeChild(Node& childNode)
 {
+   for (std::list<NodeObserver*>::iterator it = m_observers.begin();
+        it != m_observers.end(); ++it)
+   {
+      (*it)->childRemoved(*this, childNode);
+   }
+
    std::list<Node*>::iterator it = std::find(m_children.begin(), m_children.end(), &childNode);
    if (it != m_children.end())
    {
@@ -193,6 +206,28 @@ void Node::accept(NodeVisitor& visitor)
    for (std::list<Node*>::iterator it = m_children.begin(); it != m_children.end(); ++it)
    {
       (*it)->accept(visitor);
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Node::attachObserver(NodeObserver& observer)
+{
+   m_observers.push_back(&observer);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Node::detachObserver(NodeObserver& observer)
+{
+   for (std::list<NodeObserver*>::iterator it = m_observers.begin();
+        it != m_observers.end(); ++it)
+   {
+      if (&observer == *it)
+      {
+         m_observers.erase(it);
+         break;
+      }
    }
 }
 

@@ -175,6 +175,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Include\core\NodeObserver.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core\NodeVisitor.h"
 				>
 			</File>
@@ -264,6 +268,14 @@
 			</File>
 			<File
 				RelativePath="..\Include\core\CompositeSceneManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ObservingSceneManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core\ObservingSceneManager.h"
 				>
 			</File>
 			<File

@@ -1,5 +1,6 @@
 #include "core\CompositeSceneManager.h"
 #include "core\AbstractSceneManager.h"
+#include "core\ObservingSceneManager.h"
 #include "core\Node.h"
 
 
@@ -14,7 +15,7 @@ CompositeSceneManager::CompositeSceneManager()
 
 CompositeSceneManager::~CompositeSceneManager()
 {
-   for (std::list<AbstractSceneManager*>::iterator it = m_managers.begin();
+   for (std::list<SceneManager*>::iterator it = m_managers.begin();
         it != m_managers.end(); ++it)
    {
       delete *it;
@@ -29,7 +30,7 @@ CompositeSceneManager::~CompositeSceneManager()
 
 void CompositeSceneManager::addSceneManager(AbstractSceneManager* sceneManager)
 {
-   m_managers.push_back(sceneManager);
+   m_managers.push_back(new ObservingSceneManager(sceneManager));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,7 +39,7 @@ void CompositeSceneManager::addNode(Node* node)
 {
    m_rootNode->addChild(node);
 
-   for (std::list<AbstractSceneManager*>::iterator it = m_managers.begin();
+   for (std::list<SceneManager*>::iterator it = m_managers.begin();
         it != m_managers.end(); ++it)
    {
       (*it)->addNode(node);
@@ -51,7 +52,7 @@ void CompositeSceneManager::removeNode(Node& node)
 {
    m_rootNode->removeChild(node);
 
-   for (std::list<AbstractSceneManager*>::iterator it = m_managers.begin();
+   for (std::list<SceneManager*>::iterator it = m_managers.begin();
         it != m_managers.end(); ++it)
    {
       (*it)->removeNode(node);
