@@ -1,14 +1,15 @@
 #include "core-Renderer\Camera.h"
 #include "core\NodeVisitor.h"
 #include "core\TNodesVisitor.h"
+#include "core-Renderer\ProjCalc3D.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Camera::Camera(const std::string& name)
       : Node(name),
-      m_fov(60),
-      m_aspectRatio((float)800 / (float)600),
+      m_fov(D3DXToRadian(60)),
+      m_aspectRatio(1.3333f),
       m_nearZPlane(1.01f),
       m_farZPlane(5000.0f),
       m_mtxProjectionDirty(true)
@@ -16,6 +17,16 @@ Camera::Camera(const std::string& name)
    D3DXMatrixIdentity(&m_mtxIdentity);
    D3DXMatrixIdentity(&m_mtxView);
    D3DXMatrixIdentity(&m_mtx3DProjection);
+
+   m_projCalc = new ProjCalc3D();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Camera::~Camera()
+{
+   delete m_projCalc;
+   m_projCalc = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,6 +34,19 @@ Camera::Camera(const std::string& name)
 void Camera::onAccept(NodeVisitor& visitor)
 {
    REGISTER_NODE_VISITOR(TNodesVisitor<Camera>);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Camera::setProjectionCalculator(ProjectionCalculator* projCalc)
+{
+   if (projCalc == NULL)
+   {
+      throw std::invalid_argument("NULL pointer instead a ProjectionCalculator instance");
+   }
+
+   delete m_projCalc;
+   m_projCalc = projCalc;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,9 +71,12 @@ const D3DMATRIX& Camera::getProjectionMtx3D()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Camera::setAspectRatio(float ratio) 
+void Camera::setNearPlaneDimensions(float width, float height)
 {
-   m_aspectRatio = ratio; 
+   if (width < 0) width = 0;
+   if (height < 1) height = 1;
+
+   m_aspectRatio = width / height; 
    m_mtxProjectionDirty = true;
 }
 
@@ -64,10 +91,17 @@ void Camera::setClippingPlanes(float nearZPlane, float farZPlane)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Camera::setFOV(float angle) 
+void Camera::setFOV(float angle)
 {
-   m_fov = angle; 
+   m_fov = D3DXToRadian(angle);
    m_mtxProjectionDirty = true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Camera::getFOV() const 
+{
+   return D3DXToDegree(m_fov);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -94,10 +128,9 @@ void Camera::updateViewMtx()
 
 void Camera::updateProjectionMtx()
 {  
-   D3DXMatrixIdentity(&m_mtx3DProjection);
-
-   D3DXMatrixPerspectiveFovLH(&m_mtx3DProjection, D3DXToRadian(m_fov), m_aspectRatio, m_nearZPlane, m_farZPlane);
-
+   m_mtx3DProjection = m_projCalc->calculate(m_fov, m_aspectRatio,
+                                             m_nearZPlane, m_farZPlane);
+  
    m_mtxProjectionDirty = false;
 }
 

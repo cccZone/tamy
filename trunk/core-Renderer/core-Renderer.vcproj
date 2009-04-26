@@ -195,6 +195,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Include\core-Renderer\ProjectionCalculator.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Skeleton.cpp"
 				>
 			</File>
@@ -319,6 +323,26 @@
 				</File>
 				<File
 					RelativePath="..\Include\core-Renderer\Texture.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="ProjectionCalculators"
+				>
+				<File
+					RelativePath=".\ProjCalc2D.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\ProjCalc2D.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ProjCalc3D.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\ProjCalc3D.h"
 					>
 				</File>
 			</Filter>

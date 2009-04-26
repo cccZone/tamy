@@ -36,6 +36,15 @@ public:
 
    SoundDevice& getSoundDeviceInstance() {return *(reinterpret_cast<SoundDevice*> (NULL));}
 
+   SoundListener* createSoundListener() {return NULL;}
+
+   Sound3D* createSound3D(const std::string& name, 
+                                  Sound& sound, 
+                                  float hearingRadius)
+   {
+      return NULL;
+   }
+
 protected:
    Light* createLightImpl(const std::string& name) {return NULL;}
 

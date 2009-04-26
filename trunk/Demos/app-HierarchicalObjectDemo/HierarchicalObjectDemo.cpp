@@ -15,6 +15,8 @@
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 
+#include "core-Renderer\ProjCalc2D.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 

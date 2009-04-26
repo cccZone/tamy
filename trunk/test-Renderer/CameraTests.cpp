@@ -64,7 +64,7 @@ TEST(Camera, settingAspectRatioOfCurrentViewportDuringRendering)
    renderer.resizeViewport(100, 50);
 
    // camera's not attached yet - there's the default aspect ratio there
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.333, camera.getAspectRatio(), 0.01);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.333f, camera.getAspectRatio(), 0.01);
 
    // no we set the camera as an active one
    renderer.render();

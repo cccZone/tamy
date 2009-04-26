@@ -117,7 +117,7 @@ void Renderer::RenderingState::render(Renderer& renderer)
          (*it)->enable(true);
       }
 
-      activeCamera.setAspectRatio((float)renderer.m_viewportWidth / (float)renderer.m_viewportHeight);
+      activeCamera.setNearPlaneDimensions(renderer.m_viewportWidth, renderer.m_viewportHeight);
       // set the camera
       const D3DXMATRIX& viewMtx = activeCamera.getViewMtx();
       const D3DXMATRIX& camMtx = activeCamera.getGlobalMtx();
