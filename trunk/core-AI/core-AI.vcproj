@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="test-Core"
-	ProjectGUID="{EEA0D7E5-37D7-4197-9943-D9EBB7C62AFD}"
-	RootNamespace="testCore"
+	Name="core-AI"
+	ProjectGUID="{BB9178B4-C215-4AB8-831A-89A717C6B5EE}"
+	RootNamespace="coreAI"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -18,9 +18,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)\Build\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\Libs\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)\Temp\$(ProjectName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="2"
 			>
 			<Tool
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -60,19 +60,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="cppunitd.lib d3dx9.lib"
-				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\lib&quot;"
-				GenerateDebugInformation="true"
-				SubSystem="1"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -84,17 +75,14 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)\Build\$(ProjectName)\$(ConfigurationName)"
+			OutputDirectory="$(SolutionDir)\Libs\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)\Temp\$(ProjectName)\$(ConfigurationName)"
-			ConfigurationType="1"
+			ConfigurationType="4"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
@@ -118,7 +106,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -135,21 +123,10 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="cppunit.lib d3dx9.lib"
-				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\lib&quot;"
-				GenerateDebugInformation="true"
-				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				TargetMachine="1"
+				Name="VCLibrarianTool"
 			/>
 			<Tool
 				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -161,9 +138,6 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -172,70 +146,58 @@
 	</References>
 	<Files>
 		<Filter
-			Name="HierarchicalNodesTests"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			Name="FiniteStateMachine"
 			>
 			<File
-				RelativePath=".\NodesHierarchyTests.cpp"
+				RelativePath="..\Include\core-AI\State.h"
 				>
 			</File>
 			<File
-				RelativePath=".\UpdatingGlobalMatricesTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\VisitorTests.cpp"
+				RelativePath="..\Include\core-AI\StateMachine.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Utils"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			Name="MessagingSystem"
 			>
 			<File
-				RelativePath=".\NodeA.h"
+				RelativePath="..\Include\core-AI\Messagable.h"
 				>
 			</File>
 			<File
-				RelativePath=".\NodeB.h"
+				RelativePath="..\Include\core-AI\Message.h"
 				>
 			</File>
 			<File
-				RelativePath=".\NodeVisitorMock.h"
+				RelativePath=".\MessageDispatcher.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SceneManagerMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SpecializedNodeVisitorMock.h"
+				RelativePath="..\Include\core-AI\MessageDispatcher.h"
 				>
 			</File>
 		</Filter>
 		<Filter
-			Name="Delegates"
+			Name="Core"
 			>
 			<File
-				RelativePath=".\DelegatesTests.cpp"
+				RelativePath="..\Include\core-AI\Agent.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Scene"
-			>
 			<File
-				RelativePath=".\SceneManagerTests.cpp"
+				RelativePath=".\AgentNode.cpp"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="UtilsTests"
-			>
 			<File
-				RelativePath=".\ArrayTests.cpp"
+				RelativePath="..\Include\core-AI\AgentNode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AISceneManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-AI\AISceneManager.h"
 				>
 			</File>
 		</Filter>

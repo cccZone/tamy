@@ -10,7 +10,7 @@ D3DXMATRIX ProjCalc2D::calculate(float fov, float aspectRatio,
    D3DXMATRIX mtx;
 
    float nearPlaneHeight = (2.f * nearZPlane) * tan(fov / 2.f);
-   float nearPlaneWidth = nearPlaneHeight / aspectRatio;
+   float nearPlaneWidth = nearPlaneHeight * aspectRatio;
    D3DXMatrixOrthoLH(&mtx, nearPlaneWidth, nearPlaneHeight,
                      nearZPlane, farZPlane);
 

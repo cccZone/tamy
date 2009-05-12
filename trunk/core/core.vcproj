@@ -239,6 +239,10 @@
 			Name="Utils"
 			>
 			<File
+				RelativePath="..\Include\core\Array.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core\DistanceComparator.h"
 				>
 			</File>

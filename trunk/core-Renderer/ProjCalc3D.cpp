@@ -10,7 +10,7 @@ D3DXMATRIX ProjCalc3D::calculate(float fov, float aspectRatio,
    D3DXMATRIX mtx;
 
    D3DXMatrixPerspectiveFovLH(&mtx, fov, aspectRatio, 
-                           nearZPlane, farZPlane);
+                              nearZPlane, farZPlane);
 
    return mtx;
 }
