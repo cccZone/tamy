@@ -1,6 +1,9 @@
 #include "core-TestFramework\TestFramework.h"
 #include "TextureStub.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
+#include "core-Renderer\MaterialOperation.h"
+#include "MaterialOperationImplementationMock.h"
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "LightReflectingPropertiesStub.h"
@@ -13,9 +16,17 @@ TEST(BatchComparator, sortingByMaterials)
 {
    // prepare the materials
    TextureStub texture("");
+   MaterialOperationImplementationMock matOpImpl;
+   LightReflectingPropertiesStub lrp;
 
-   Material material1(texture, 0);
-   Material material2(texture, 1);
+   Material material1(lrp, 0);
+   Material material2(lrp, 1);
+   material1.addStage(new MaterialStage(texture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+   material2.addStage(new MaterialStage(texture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
 
    // create the node we'll use for rendering
    std::vector<Material*> materials; 

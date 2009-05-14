@@ -46,6 +46,8 @@ private:
    ReferenceEntity extractReference(UCHAR* referenceData) const;
 
    std::string getUniqueNameForMesh(const char* originalMeshName) const;
+
+   unsigned int createSkyboxMaterial(const std::string& textureName) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

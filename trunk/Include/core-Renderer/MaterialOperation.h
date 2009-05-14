@@ -1,0 +1,62 @@
+#pragma once
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum MatOpCode
+{
+   MOP_DISABLE,
+   MOP_SELECT_ARG1,
+   MOP_SELECT_ARG2,
+   MOP_MULTIPLY,
+   MOP_MULTIPLY_2X,
+   MOP_MULTIPLY_4X,
+   MOP_ADD,
+   MOP_ADD_SIGNED,
+   MOP_ADD_SIGNED_2X,
+   MOP_ADD_SMOOTH,
+   MOP_SUBTRACT,
+   MOP_MULTIPLY_ADD
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum SourceCode
+{
+   SC_NONE,
+   SC_LRP,
+   SC_TEXTURE,
+   SC_PREV
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class MaterialOperationImplementation;
+
+///////////////////////////////////////////////////////////////////////////////
+
+class MaterialOperation
+{
+private:
+   MaterialOperationImplementation& m_impl;
+
+   MatOpCode m_opCode;
+   SourceCode m_arg1;
+   SourceCode m_arg2;
+
+public:
+   MaterialOperation(MaterialOperationImplementation& impl, 
+                     MatOpCode opCode, 
+                     SourceCode arg1, 
+                     SourceCode arg2);
+
+   bool operator==(const MaterialOperation& rhs) const;
+   bool operator!=(const MaterialOperation& rhs) const;
+
+   void setForRendering(unsigned char stageIdx);
+
+private:
+   void setSource(unsigned char stageIdx, unsigned char argIdx, SourceCode arg);
+};
+
+///////////////////////////////////////////////////////////////////////////////

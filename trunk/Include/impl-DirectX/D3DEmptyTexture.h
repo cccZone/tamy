@@ -18,7 +18,7 @@ public:
    D3DEmptyTexture(IDirect3DDevice9& d3Device);
    ~D3DEmptyTexture();
 
-   void setForRendering();
+   void setForRendering(unsigned char stageIndex);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

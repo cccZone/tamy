@@ -19,9 +19,9 @@ D3DEmptyTexture::~D3DEmptyTexture()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DEmptyTexture::setForRendering()
+void D3DEmptyTexture::setForRendering(unsigned char stageIndex)
 {
-   m_d3Device.SetTexture(0, NULL);
+   m_d3Device.SetTexture(stageIndex, NULL);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -2,6 +2,7 @@
 #include "core-ResourceManagement\LitVertex.h"
 #include <vector>
 #include <cassert>
+#include <sstream>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -201,8 +202,16 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshC
    // copy the materials & the transformation matrix
    for (DWORD i = 0; i < meshContainer->NumMaterials; ++i)
    {
-      tmpMaterials.push_back(MaterialDefinition());
+      std::stringstream matName;
+      matName << meshContainer->Name << "_mat" << i;
+      if (meshContainer->pMaterials[i].pTextureFilename != NULL)
+      {
+         matName << "_" << meshContainer->pMaterials[i].pTextureFilename;
+      }
+
+      tmpMaterials.push_back(MaterialDefinition(matName.str()));
       MaterialDefinition& matDef = tmpMaterials.back();
+
       D3DMATERIAL9& meshMat = meshContainer->pMaterials[i].MatD3D;
 
       matDef.ambient.r = meshMat.Ambient.r;
@@ -252,7 +261,7 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshC
       D3DXBONECOMBINATION* boneComb = (D3DXBONECOMBINATION*)(meshContainer->boneCombinationTable->GetBufferPointer());
 
       mesh.bonesInfluencingAttribute.resize(meshContainer->numBoneCombinations);
-      mesh.materials.resize(meshContainer->numBoneCombinations);
+      mesh.materials.resize(meshContainer->numBoneCombinations, MaterialDefinition("bogusMaterialToBeReplaced"));
 
       for (DWORD boneCombIdx = 0; boneCombIdx < meshContainer->numBoneCombinations; ++boneCombIdx)
       {

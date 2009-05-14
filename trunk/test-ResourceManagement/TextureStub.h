@@ -10,7 +10,7 @@ class TextureStub : public Texture
 public:
    TextureStub(const std::string& name = "") : Texture(name) {}
 
-   void setForRendering() {}
+   void setForRendering(unsigned char stageIdx) {}
 };
 
 //////////////////////////////////////////////////////////////////////////////

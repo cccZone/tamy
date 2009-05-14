@@ -62,7 +62,7 @@ void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourc
    TreeSegment* treeStruct = generator.generate(treeParams);
 
    TreeSkinner skinner(*treeStruct);
-   MaterialDefinition treeBark;
+   MaterialDefinition treeBark("treeBark");
    treeBark.ambient.r = 1;
    treeBark.ambient.g = 1;
    treeBark.ambient.b = 1;

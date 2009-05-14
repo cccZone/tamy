@@ -18,6 +18,8 @@ public:
    Texture(const std::string& name, bool isTransparent = false);
    virtual ~Texture() {}
 
+   const std::string& getName() const {return m_name;}
+
    bool operator==(const Texture& rhs) const;
    bool operator!=(const Texture& rhs) const;
 
@@ -28,7 +30,7 @@ public:
     * and is supposed to set the texture
     * as an active one with which the objects will be rendered
     */
-   virtual void setForRendering() = 0;
+   virtual void setForRendering(unsigned char stageIdx) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

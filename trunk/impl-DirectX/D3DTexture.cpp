@@ -24,15 +24,12 @@ D3DTexture::~D3DTexture()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DTexture::setForRendering()
+void D3DTexture::setForRendering(unsigned char stageIndex)
 {
    m_d3Device.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
    m_d3Device.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-   m_d3Device.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
-   m_d3Device.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
-   m_d3Device.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 
-   m_d3Device.SetTexture(0, m_texture);
+   m_d3Device.SetTexture(stageIndex, m_texture);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

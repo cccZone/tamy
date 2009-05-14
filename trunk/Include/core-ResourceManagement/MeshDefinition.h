@@ -22,12 +22,34 @@ struct MaterialDefinition
    Color emissive;
    float power;
    std::string texName;
+
+   MaterialDefinition(const std::string& _matName,
+                      const Color& _ambient,
+                      const Color& _diffuse,
+                      const Color& _specular,
+                      const Color& _emissive,
+                      float _power,
+                      const std::string& _texName)
+         : matName(_matName),
+         ambient(_ambient),
+         diffuse(_diffuse),
+         specular(_specular),
+         emissive(_emissive),
+         power(_power),
+         texName(_texName)
+   {}
+
+   MaterialDefinition(const std::string& name)
+      : matName(name), power(1)
+   {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct MeshDefinition
 {
+   // -------------------------------------------------------------------------
+
    std::string name;
    bool isSkin;
 
@@ -43,6 +65,8 @@ struct MeshDefinition
 
    MeshDefinition* parent;
    std::list<MeshDefinition*> children;
+
+   // -------------------------------------------------------------------------
 
    MeshDefinition() : isSkin(false), parent(NULL) {}
    MeshDefinition(const MeshDefinition& rhs)

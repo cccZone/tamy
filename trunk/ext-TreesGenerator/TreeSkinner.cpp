@@ -506,10 +506,10 @@ void TreeSkinner::addCylindricalVertices(const TreeSegment& treeSeg,
       float u = part;
       float v = (float)(treeSeg.segmentIdx) / (float)m_treeHeight;
 
-      outMesh.vertices.push_back(LitVertex(pos.x, pos.y, pos.z, 
-                                           w1, w2, 0, 
-                                           norm.x, norm.y, norm.z,
-                                           u, v));
+      outMesh.vertices.push_back(LitVertex::skinnedOneTex(pos.x, pos.y, pos.z, 
+                                                          w1, w2, 0, 
+                                                          norm.x, norm.y, norm.z,
+                                                          u, v));
    }
 }
 
@@ -538,10 +538,10 @@ void TreeSkinner::addEndVertex(const TreeSegment& treeSeg,
    if (fabs(norm.y) < 0.00001f) norm.y = 0;
    if (fabs(norm.z) < 0.00001f) norm.z = 0;
 
-   outMesh.vertices.push_back(LitVertex(pos.x, pos.y, pos.z,
-                                        w1, w2, 0, 
-                                        norm.x, norm.y, norm.z,
-                                        0.5f, v));
+   outMesh.vertices.push_back(LitVertex::skinnedOneTex(pos.x, pos.y, pos.z,
+                                                       w1, w2, 0, 
+                                                       norm.x, norm.y, norm.z,
+                                                       0.5f, v));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

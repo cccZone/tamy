@@ -10,6 +10,8 @@
 #include "impl-DirectX\D3DSkyBox.h"
 #include "impl-DirectX\D3DMaterial.h"
 #include "impl-DirectX\XFileGraphicalEntityLoader.h"
+#include "impl-DirectX\D3DColorOperationImplementation.h"
+#include "impl-DirectX\D3DAlphaOperationImplementation.h"
 #include <stdexcept>
 #include <string>
 #include <cassert>
@@ -66,6 +68,10 @@ D3DResourceManager::D3DResourceManager(const std::string& texturesDirPath,
    m_renderer->addPass(new RegularNodesPass());
    m_renderer->addPass(new TransparentNodesPass());
 
+   // create material operation implementations
+   m_colorOpImpl = new D3DColorOperationImplementation(m_renderer->getD3Device());
+   m_alphaOpImpl = new D3DAlphaOperationImplementation(m_renderer->getD3Device());
+
    // register file handlers
    registerFileGraphicalEntityLoader(new XFileGraphicalEntityLoader(m_renderer->getD3Device(), meshesDirPath));
 
@@ -103,13 +109,6 @@ D3DResourceManager::~D3DResourceManager()
 Renderer& D3DResourceManager::getRendererInstance()
 {
    return *m_renderer;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Material* D3DResourceManager::createMaterial(Texture& emptyTexture, unsigned int index)
-{
-   return new D3DMaterial(emptyTexture, index, m_renderer->getD3Device());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -237,6 +236,27 @@ SkyBox* D3DResourceManager::createSkyBoxImpl()
    vb->Unlock();
 
    return new D3DSkyBox(m_renderer->getD3Device(), vb);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Material* D3DResourceManager::createMaterialImpl(LightReflectingProperties& lrp, unsigned int index)
+{
+   return new D3DMaterial(m_renderer->getD3Device(), lrp, index);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MaterialOperationImplementation& D3DResourceManager::getColorOperationImpl()
+{
+   return *m_colorOpImpl;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MaterialOperationImplementation& D3DResourceManager::getAlphaOperationImpl()
+{
+   return *m_alphaOpImpl;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

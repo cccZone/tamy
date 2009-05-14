@@ -1,7 +1,11 @@
 #include "core-TestFramework\TestFramework.h"
 #include "RendererImplementationMock.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
+#include "core-Renderer\MaterialOperation.h"
+#include "MaterialOperationImplementationMock.h"
 #include "TextureStub.h"
+#include "LightReflectingPropertiesStub.h"
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\Camera.h"
@@ -26,7 +30,13 @@ TEST(Camera, renderingWithActiveCamera)
    camera2.setLocalMtx(camera2Mtx);
   
    TextureStub tex("");
-   Material mat(tex);
+   MaterialOperationImplementationMock matOpImpl;
+   LightReflectingPropertiesStub lrp;
+   Material mat(lrp);
+   mat.addStage(new MaterialStage(tex,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+
    std::vector<Material*> materials; materials.push_back(&mat);
    GraphicalEntityMock entity("", materials);
    GraphicalNode* node = new GraphicalNode("", entity, 0);

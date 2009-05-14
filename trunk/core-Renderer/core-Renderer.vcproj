@@ -295,38 +295,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Material"
-				>
-				<File
-					RelativePath="..\Include\core-Renderer\Color.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\LightReflectingProperties.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Material.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\Material.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\NullLightReflectingProperties.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Texture.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\Texture.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="ProjectionCalculators"
 				>
 				<File
@@ -408,6 +376,58 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\TransparentNodesPass.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Material"
+			>
+			<File
+				RelativePath="..\Include\core-Renderer\Color.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\LightReflectingProperties.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Material.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\Material.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialOperation.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\MaterialOperation.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\MaterialOperationImplementation.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialStage.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\MaterialStage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\NullLightReflectingProperties.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Texture.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\Texture.h"
 				>
 			</File>
 		</Filter>

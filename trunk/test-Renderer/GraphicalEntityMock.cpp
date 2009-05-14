@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TextureStub GraphicalEntityMock::s_texture("emptyTex");
-Material GraphicalEntityMock::s_material(s_texture);
+LightReflectingPropertiesStub GraphicalEntityMock::s_lrp;
+Material GraphicalEntityMock::s_material(s_lrp);
 
 ///////////////////////////////////////////////////////////////////////////////

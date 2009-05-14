@@ -11,6 +11,8 @@
 class D3DInitializer;
 class D3DRenderer;
 class D3DMaterial;
+class D3DColorOperationImplementation;
+class D3DAlphaOperationImplementation;
 class OpenALSoundSystem;
 class OALSoundDevice;
 
@@ -27,6 +29,9 @@ private:
    D3DInitializer* m_d3dInitializer;
    D3DRenderer* m_renderer;
    bool m_hardwareTLOn;
+
+   D3DColorOperationImplementation* m_colorOpImpl;
+   D3DAlphaOperationImplementation* m_alphaOpImpl;
 
    OpenALSoundSystem* m_soundSystem;
    OALSoundDevice* m_soundDevice;
@@ -67,7 +72,11 @@ protected:
 
    SkyBox* createSkyBoxImpl();
 
-   Material* createMaterial(Texture& emptyTexture, unsigned int index);
+   Material* createMaterialImpl(LightReflectingProperties& lrp, unsigned int index);
+
+   MaterialOperationImplementation& getColorOperationImpl();
+
+   MaterialOperationImplementation& getAlphaOperationImpl();
 
 private:
    IDirect3DVertexBuffer9* createVertexBuffer(UINT length, DWORD usageFlags, DWORD fvf, D3DPOOL memoryPool);

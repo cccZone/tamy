@@ -176,6 +176,22 @@
 				Name="GraphicalDataRepresentation"
 				>
 				<File
+					RelativePath=".\D3DAlphaOperationImplementation.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\D3DAlphaOperationImplementation.h"
+					>
+				</File>
+				<File
+					RelativePath=".\D3DColorOperationImplementation.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\D3DColorOperationImplementation.h"
+					>
+				</File>
+				<File
 					RelativePath=".\D3DEmptyTexture.cpp"
 					>
 				</File>

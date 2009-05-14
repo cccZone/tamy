@@ -8,11 +8,13 @@
 #include <sstream>
 #include "core-ResourceManagement\IWFMeshLoader.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\SkyBox.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
+#include "core-Renderer\LightReflectingProperties.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -129,12 +131,12 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
    {
       std::vector<std::string> textures = extractSkyBoxTextures(fileEntity->DataArea);
       std::vector<unsigned int> materials;
-      materials.push_back(m_resourceManager.addMaterial(textures.at(0), Color(1, 1, 1, 1), Color(), Color(), Color(), 1));
-      materials.push_back(m_resourceManager.addMaterial(textures.at(1), Color(1, 1, 1, 1), Color(), Color(), Color(), 1));
-      materials.push_back(m_resourceManager.addMaterial(textures.at(2), Color(1, 1, 1, 1), Color(), Color(), Color(), 1));
-      materials.push_back(m_resourceManager.addMaterial(textures.at(3), Color(1, 1, 1, 1), Color(), Color(), Color(), 1));
-      materials.push_back(m_resourceManager.addMaterial(textures.at(4), Color(1, 1, 1, 1), Color(), Color(), Color(), 1));
-      materials.push_back(m_resourceManager.addMaterial(textures.at(5), Color(1, 1, 1, 1), Color(), Color(), Color(), 1));
+      materials.push_back(createSkyboxMaterial(textures.at(0)));
+      materials.push_back(createSkyboxMaterial(textures.at(1)));
+      materials.push_back(createSkyboxMaterial(textures.at(2)));
+      materials.push_back(createSkyboxMaterial(textures.at(3)));
+      materials.push_back(createSkyboxMaterial(textures.at(4)));
+      materials.push_back(createSkyboxMaterial(textures.at(5)));
 
       SkyBox* skyBox = m_resourceManager.createSkyBox();
       for (unsigned char i = 0; i < materials.size(); ++i)
@@ -173,6 +175,45 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
 
          m_sceneManager.addNode(entityInstance);
       }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+unsigned int IWFLoader::createSkyboxMaterial(const std::string& textureName) const
+{
+   std::string materialName = std::string("skyBox_") + textureName;
+   if (m_resourceManager.doesMaterialExist(materialName))
+   {
+      return m_resourceManager.findMaterial(textureName).getIndex();
+   }
+   else
+   {
+      Texture* texture = NULL;
+      if (m_resourceManager.isTextureRegistered(textureName))
+      {
+         texture = &m_resourceManager.getTexture(textureName);
+      }
+      else
+      {
+         texture = &m_resourceManager.loadTexture(textureName);
+      }
+
+      LightReflectingProperties* lrp = m_resourceManager.createLightReflectingProperties();
+      lrp->setAmbientColor(Color(1, 1, 1, 1));
+      lrp->setDiffuseColor(Color());
+      lrp->setSpecularColor(Color());
+      lrp->setEmissiveColor(Color());
+      lrp->setPower(1);
+      lrp = &m_resourceManager.addLightReflectingProperties(lrp);
+
+      Material& mat = m_resourceManager.createMaterial(materialName, *lrp);
+      MaterialStage* stage = m_resourceManager.createMaterialStage(*texture,
+               MOP_MULTIPLY, SC_LRP, SC_TEXTURE,
+               MOP_MULTIPLY, SC_LRP, SC_TEXTURE);
+      mat.addStage(stage);
+
+      return mat.getIndex();
    }
 }
 

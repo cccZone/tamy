@@ -54,11 +54,10 @@ void IWFMeshLoader::parseMesh(MeshDefinition& mesh,
                                surface->Vertices[i].y,
                                surface->Vertices[i].z);
 
-         mesh.vertices.push_back(LitVertex(
+         mesh.vertices.push_back(LitVertex::unskinnedOneTex(
             vertexPos.x,
             vertexPos.y,
             vertexPos.z,
-            1, 0, 0,
             surface->Vertices[i].Normal.x,
             surface->Vertices[i].Normal.y,
             surface->Vertices[i].Normal.z,
@@ -230,22 +229,23 @@ unsigned int IWFMeshLoader::getMaterialDefinition(iwfTexture* texture, iwfMateri
 {
    std::string newMaterialName = ((material != NULL) && (material->Name != NULL)) ? material->Name : "";
    std::string newTextureName  = ((texture != NULL) && (texture->Name != NULL)) ? texture->Name : "";
+
+   std::string matName = newMaterialName + std::string("_") + newTextureName;
    // look for a smilar material first
    for (unsigned int matIdx = 0; matIdx < materials.size(); ++matIdx)
    {
       MaterialDefinition& mat = materials.at(matIdx);
-      if ((mat.matName == newMaterialName) && (mat.texName == newTextureName))
+      if (mat.matName == matName)
       {
          return matIdx;
       }
    }
 
    // this is something we don't have yet - create a new material
-   materials.push_back(MaterialDefinition());
+   materials.push_back(MaterialDefinition(matName));
    MaterialDefinition& def = materials.back();
    if (material != NULL)
    {
-      def.matName = newMaterialName;
       def.ambient.r = material->Ambient.r;
       def.ambient.g = material->Ambient.g;
       def.ambient.b = material->Ambient.b;

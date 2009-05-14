@@ -149,6 +149,10 @@
 			Name="ResourceManager"
 			>
 			<File
+				RelativePath="..\Include\core-ResourceManagement\Face.h"
+				>
+			</File>
+			<File
 				RelativePath=".\FileGraphicalEntityLoader.cpp"
 				>
 			</File>
@@ -162,6 +166,14 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-ResourceManagement\GraphicalEntityLoader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LitVertex.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\LitVertex.h"
 				>
 			</File>
 			<File
@@ -185,23 +197,11 @@
 			Name="Builder"
 			>
 			<File
-				RelativePath="..\Include\core-ResourceManagement\Face.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GeometryBuilder.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Include\core-ResourceManagement\GeometryBuilder.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LitVertex.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\LitVertex.h"
 				>
 			</File>
 		</Filter>

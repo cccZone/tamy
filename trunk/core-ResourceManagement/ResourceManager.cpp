@@ -9,6 +9,7 @@
 #include "core\Node.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\LightReflectingProperties.h"
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\SkyBox.h"
@@ -38,6 +39,7 @@ ResourceManager::~ResourceManager()
    m_allObjects.clear();
 
    m_materials.clear();
+   m_materialsByName.clear();
    m_graphicalEntities.clear();
    m_lightReflectingProperties.clear();
    m_textures.clear();
@@ -176,19 +178,49 @@ AbstractGraphicalEntity* ResourceManager::createGraphicalEntityFromTemplate(Mesh
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourceManager::getMaterials(
-                  const std::vector<MaterialDefinition>& inMaterialDefinitions,
-                  std::vector<Material*>& outRealMaterials)
+void ResourceManager::getMaterials(const std::vector<MaterialDefinition>& inMaterialDefinitions,
+                                   std::vector<Material*>& outRealMaterials)
 {
    // split the meshes by the materials
    outRealMaterials.resize(inMaterialDefinitions.size());
    for (unsigned int matIdx = 0; matIdx < inMaterialDefinitions.size(); ++matIdx)
    {
       const MaterialDefinition& mat = inMaterialDefinitions.at(matIdx);
-      unsigned int id = addMaterial(mat.texName, mat.ambient, 
-                                    mat.diffuse, mat.specular, 
-                                    mat.emissive, mat.power);
-      outRealMaterials[matIdx] = &(getMaterial(id));
+
+      Material* realMat = NULL;
+      if (doesMaterialExist(mat.matName) == true)
+      {
+         realMat = &findMaterial(mat.matName);
+      }
+      else
+      {
+         Texture* texture = NULL;
+         if (isTextureRegistered(mat.texName))
+         {
+            texture = &getTexture(mat.texName);
+         }
+         else
+         {
+            texture = &loadTexture(mat.texName);
+         }
+
+         LightReflectingProperties* lrp  = createLightReflectingProperties();
+         lrp->setAmbientColor(mat.ambient);
+         lrp->setDiffuseColor(mat.diffuse);
+         lrp->setSpecularColor(mat.specular);
+         lrp->setEmissiveColor(mat.emissive);
+         lrp->setPower(mat.power);
+         lrp = &addLightReflectingProperties(lrp);
+
+         realMat = &createMaterial(mat.matName, *lrp);
+         MaterialStage* defaultStage = createMaterialStage(*texture,
+                                                           MOP_MULTIPLY, SC_LRP, SC_TEXTURE,
+                                                           MOP_DISABLE, SC_NONE, SC_NONE);
+         realMat->addStage(defaultStage);
+      }
+
+      outRealMaterials[matIdx] = realMat;
+      
    }
 }
 
@@ -210,12 +242,46 @@ Light* ResourceManager::createLight(const std::string& name)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool ResourceManager::doesMaterialExist(const std::string& name) const
+{
+   std::map<std::string, Material*>::const_iterator it = m_materialsByName.find(name);
+   return (it != m_materialsByName.end());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Material& ResourceManager::findMaterial(const std::string& name)
+{
+   std::map<std::string, Material*>::iterator it = m_materialsByName.find(name);
+   if (it == m_materialsByName.end())
+   {
+      throw std::out_of_range(std::string("Invalid material name"));
+   }
+
+   return *(it->second);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Material& ResourceManager::getMaterial(unsigned int id)
 {
    // there's always a default material - if there's none - make one
    if (m_materials.size() == 0)
    {
-      addMaterial("", Color(), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(), 1);
+      LightReflectingProperties* defaultLRP  = createLightReflectingProperties();
+      defaultLRP->setAmbientColor(Color());
+      defaultLRP->setDiffuseColor(Color(1, 1, 1, 1));
+      defaultLRP->setSpecularColor(Color(1, 1, 1, 1));
+      defaultLRP->setEmissiveColor(Color());
+      defaultLRP->setPower(1);
+      defaultLRP = &addLightReflectingProperties(defaultLRP);
+
+      Material& defaultMaterial = createMaterial("default", *defaultLRP);
+
+      MaterialStage* defaultStage = createMaterialStage(getEmptyTexture(),
+                                                        MOP_SELECT_ARG1, SC_LRP, SC_NONE,
+                                                        MOP_SELECT_ARG1, SC_LRP, SC_NONE);
+      defaultMaterial.addStage(defaultStage);
    }
 
    if (id >= m_materials.size())
@@ -228,65 +294,22 @@ Material& ResourceManager::getMaterial(unsigned int id)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-unsigned int ResourceManager::addMaterial(const std::string& textureName, 
-                                          const Color& ambient,
-                                          const Color& diffuse,
-                                          const Color& specular,
-                                          const Color& emissive,
-                                          float power)
+Material& ResourceManager::createMaterial(const std::string& materialName, 
+                                          LightReflectingProperties& lrp)
 {
-   Material* materialCandidate = createMaterial(getEmptyTexture(), m_materials.size());
-
-   // get light reflectance properties
-   LightReflectingProperties* lrpCandidate = createLightReflectingProperties();
-   lrpCandidate->setAmbientColor(ambient);
-   lrpCandidate->setDiffuseColor(diffuse);
-   lrpCandidate->setSpecularColor(specular);
-   lrpCandidate->setEmissiveColor(emissive);
-   lrpCandidate->setPower(power);
-   LightReflectingProperties* lrp = NULL;
-   if (areLightReflectingPropertiesRegistered(*lrpCandidate))
+   std::map<std::string, Material*>::iterator it = m_materialsByName.find(materialName);
+   if (it != m_materialsByName.end())
    {
-      lrp = &getLightReflectingProperties(*lrpCandidate);
-      delete lrpCandidate;
-   }
-   else
-   {
-      lrp = &addLightReflectingProperties(lrpCandidate);
-   }
-   assert(lrp != NULL);
-   materialCandidate->setLightReflectingProperties(*lrp);
-
-   // get a texture
-   Texture* texture = NULL;
-   if (isTextureRegistered(textureName))
-   {
-      texture = &getTexture(textureName);
-   }
-   else
-   {
-      texture = &loadTexture(textureName);
-   }
-   assert(texture != NULL);
-   materialCandidate->setTexture(*texture);
-   
-   // check if there's a material with matching properties out there
-   unsigned int id = materialCandidate->getIndex();
-   for (std::vector<Material*>::iterator it = m_materials.begin(); it != m_materials.end(); ++it)
-   {
-      Material& existingMat = **it;
-      if (existingMat == *materialCandidate)
-      {
-         delete materialCandidate;
-         return existingMat.getIndex();
-      }
+      throw std::runtime_error(std::string("Material") + materialName + std::string("already exists"));
    }
 
-   m_materials.push_back(materialCandidate);
-   m_allObjects.push_back(new TManagable<Material>(materialCandidate));
-   return id;
+   Material* newMaterial = createMaterialImpl(lrp, m_materials.size());
+   m_materials.push_back(newMaterial);
+   m_materialsByName.insert(std::make_pair(materialName, newMaterial));
+   m_allObjects.push_back(new TManagable<Material>(newMaterial));
+
+   return *newMaterial;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -323,12 +346,16 @@ LightReflectingProperties& ResourceManager::addLightReflectingProperties(LightRe
 {
    if (areLightReflectingPropertiesRegistered(*lrp))
    {
-      throw std::logic_error(std::string("These light reflecting properties have already been registered"));
+      LightReflectingProperties& existingLRP = getLightReflectingProperties(*lrp);
+      delete lrp;
+      return existingLRP;
    }
-
-   m_lightReflectingProperties.push_back(lrp);
-   m_allObjects.push_back(new TManagable<LightReflectingProperties>(lrp));
-   return *lrp;
+   else
+   {
+      m_lightReflectingProperties.push_back(lrp);
+      m_allObjects.push_back(new TManagable<LightReflectingProperties>(lrp));
+      return *lrp;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -348,11 +375,18 @@ Texture& ResourceManager::loadTexture(const std::string& name)
       throw std::logic_error(std::string("Texture <") + name + std::string("> is already registered"));
    }
 
-   Texture* tex = loadTexture(m_texturesDirPath, name);
-   m_textures.insert(std::make_pair(name, tex));
-   m_allObjects.push_back(new TManagable<Texture>(tex));
+   if (name.length() == 0)
+   {
+      return getEmptyTexture();
+   }
+   else
+   {
+      Texture* tex = loadTexture(m_texturesDirPath, name);
+      m_textures.insert(std::make_pair(name, tex));
+      m_allObjects.push_back(new TManagable<Texture>(tex));
 
-   return *tex;
+      return *tex;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -391,6 +425,17 @@ SkyBox* ResourceManager::createSkyBox()
 {
    SkyBox* skyBox = createSkyBoxImpl();
    return skyBox;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+MaterialStage* ResourceManager::createMaterialStage(Texture& texture,
+                                      MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
+                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2)
+{
+   return new MaterialStage(texture,
+         new MaterialOperation(getColorOperationImpl(), colorOp, colorArg1, colorArg2),
+         new MaterialOperation(getAlphaOperationImpl(), alphaOp, alphaArg1, alphaArg2));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

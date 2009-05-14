@@ -6,6 +6,7 @@
 #include <string>
 #include "core-ResourceManagement\Face.h"
 #include "core-ResourceManagement\LitVertex.h"
+#include "core-Renderer\MaterialOperation.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,6 +19,8 @@ class AbstractGraphicalEntity;
 class LightReflectingProperties;
 class Texture;
 class Material;
+class MaterialStage;
+class MaterialOperationImplementation;
 struct Color;
 class Managable;
 class SkyBox;
@@ -49,6 +52,7 @@ private:
    std::list<Managable*> m_allObjects;
    std::map<std::string, AbstractGraphicalEntity*> m_graphicalEntities;
    std::vector<Material*> m_materials;
+   std::map<std::string, Material*> m_materialsByName;
    std::list<LightReflectingProperties*> m_lightReflectingProperties;
    std::map<std::string, Texture*> m_textures;
    std::string m_texturesDirPath;
@@ -120,20 +124,6 @@ public:
     */
    AbstractGraphicalEntity* createGraphicalEntityFromTemplate(MeshDefinition& mesh);
 
-   /**
-    * This method should return a valid implementation of the GraphicalEntity class
-    */
-   virtual GraphicalEntity* createGraphicalEntity(const std::string& name,
-                          const MeshDefinition& subMesh,
-                          const std::vector<Material*>& registeredMaterials) = 0;
-
-   /**
-    * This method should return a valid implementation of the GraphicalEntity class
-    */
-   virtual SkinnedGraphicalEntity* createSkinedGraphicalEntity(const std::string& name,
-                          const MeshDefinition& subMesh,
-                          const std::vector<Material*>& registeredMaterials) = 0;
-
    // -------------------------------- Cameras --------------------------------
 
    Camera* createCamera(const std::string& name);
@@ -154,6 +144,11 @@ public:
     * of the sample passed as an argument
     */
    LightReflectingProperties& getLightReflectingProperties(const LightReflectingProperties& lrp) const;
+
+   /** 
+    * Create a new instance of light reflecting properties
+    */
+   virtual LightReflectingProperties* createLightReflectingProperties() = 0;
 
    /**
     * Registers new set of light reflecting properties
@@ -181,22 +176,33 @@ public:
    Texture& getTexture(const std::string& name) const;
 
    /**
-    * Returns a material with the give id, if one exists.
+    * Returns a material with the given id, if one exists.
     * @throws std::out_of_range exception if one hasn't been defined
     */
    Material& getMaterial(unsigned int id);
 
    /**
-    * This method adds a new material and returns an ID assigned to it.
-    * If for some mreason an alike material exists, its ID is returned
-    * and the collection of materials is not expanded
+    * Checks if a material with the given name exists.
     */
-   unsigned int addMaterial(const std::string& textureName, 
-                            const Color& ambient,
-                            const Color& diffuse,
-                            const Color& specular,
-                            const Color& emissive,
-                            float power);
+   bool doesMaterialExist(const std::string& name) const;
+
+   /**
+    * Returns a material with the given name, if one exists.
+    * @throws std::out_of_range exception if one hasn't been defined
+    */
+   Material& findMaterial(const std::string& name);
+
+   /**
+    * This method adds a new material and returns an ID assigned to it.
+    */
+   Material& createMaterial(const std::string& materialName, LightReflectingProperties& lrp);
+
+   /**
+    * This method creates a new material stage
+    */
+   MaterialStage* createMaterialStage(Texture& texture,
+                                      MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
+                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2);
 
    // ------------------------------ Decorations ------------------------------
 
@@ -231,12 +237,25 @@ public:
                                   float hearingRadius) = 0;
 
 protected:
+
+      /**
+    * This method should return a valid implementation of the GraphicalEntity class
+    */
+   virtual GraphicalEntity* createGraphicalEntity(const std::string& name,
+                          const MeshDefinition& subMesh,
+                          const std::vector<Material*>& registeredMaterials) = 0;
+
+   /**
+    * This method should return a valid implementation of the GraphicalEntity class
+    */
+   virtual SkinnedGraphicalEntity* createSkinedGraphicalEntity(const std::string& name,
+                          const MeshDefinition& subMesh,
+                          const std::vector<Material*>& registeredMaterials) = 0;
+
    /**
     * This method should return a valid implementation of the Light class
     */
    virtual Light* createLightImpl(const std::string& name) = 0;
-
-   virtual LightReflectingProperties* createLightReflectingProperties() = 0;
 
    virtual Texture* createEmptyTexture() = 0;
 
@@ -244,7 +263,11 @@ protected:
 
    virtual SkyBox* createSkyBoxImpl() = 0;
 
-   virtual Material* createMaterial(Texture& emptyTexture, unsigned int index) = 0;
+   virtual Material* createMaterialImpl(LightReflectingProperties& lrp, unsigned int index) = 0;
+
+   virtual MaterialOperationImplementation& getColorOperationImpl() = 0;
+
+   virtual MaterialOperationImplementation& getAlphaOperationImpl() = 0;
 
    /**
     * This method allows the implementations to register

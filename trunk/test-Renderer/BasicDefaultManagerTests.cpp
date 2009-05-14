@@ -3,6 +3,9 @@
 #include "core\Node.h"
 #include "TextureStub.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
+#include "core-Renderer\MaterialOperation.h"
+#include "MaterialOperationImplementationMock.h"
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "LightReflectingPropertiesStub.h"
@@ -16,9 +19,18 @@ TEST(BasicVisualSceneManagerTests, retrievingStaticGeometry)
 {
    // prepare the materials
    TextureStub texture("");
+   MaterialOperationImplementationMock matOpImpl;
+   std::list<std::string> results;
+   LightReflectingPropertiesStub lrp(results, 0);
 
-   Material material1(texture, 0);
-   Material material2(texture, 1);
+   Material material1(lrp, 0);
+   Material material2(lrp, 1);
+   material1.addStage(new MaterialStage(texture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+   material2.addStage(new MaterialStage(texture, 
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
 
    // create the node we'll use for rendering
    std::vector<Material*> materials; 
@@ -61,7 +73,7 @@ TEST(BasicVisualSceneManagerTests, retrievingStaticGeometry)
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node2, nodes[1]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node3, nodes[2]);
 
-   // 4th node - this one usesthe same material as 1st and 2nd node, 
+   // 4th node - this one uses the same material as 1st and 2nd node, 
    //            so it should be grouped toghether with them (at least 
    //            with the batching strategy we used for this test)
    sceneManager.addNode(node4);
@@ -87,6 +99,7 @@ TEST(BasicVisualSceneManagerTests, retrievingStaticGeometry)
 
 TEST(BasicVisualSceneManagerTests, transparentObjects)
 {
+   MaterialOperationImplementationMock matOpImpl;
    Camera cameraNode("camera");
    std::list<std::string> results;
    DWORD arraySize = 0;
@@ -97,11 +110,17 @@ TEST(BasicVisualSceneManagerTests, transparentObjects)
    TextureStub transparentTexture(results, true);
    LightReflectingPropertiesStub lrp(results, 0);
 
-   Material regularMaterial(regularTexture, 0);
-   regularMaterial.setLightReflectingProperties(lrp);
+   Material regularMaterial(lrp, 0);
+   MaterialStage* regularMaterialStage = new MaterialStage(regularTexture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+   regularMaterial.addStage(regularMaterialStage);
 
-   Material transparentMaterial(transparentTexture, 1);
-   transparentMaterial.setLightReflectingProperties(lrp);
+   Material transparentMaterial(lrp, 1);
+   MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+   transparentMaterial.addStage(transparentMaterialStage);
 
 
    // create the node we'll use for rendering
@@ -133,6 +152,7 @@ TEST(BasicVisualSceneManagerTests, transparentObjects)
 
 TEST(BasicVisualSceneManagerTests, removingTransparentObjects)
 {
+   MaterialOperationImplementationMock matOpImpl;
    Camera cameraNode("camera");
    std::list<std::string> results;
    DWORD arraySize = 0;
@@ -141,8 +161,12 @@ TEST(BasicVisualSceneManagerTests, removingTransparentObjects)
    // prepare the materials
    TextureStub transparentTexture(results, true);
    LightReflectingPropertiesStub lrp(results, 0);
-   Material transparentMaterial(transparentTexture, 0);
-   transparentMaterial.setLightReflectingProperties(lrp);
+
+   Material transparentMaterial(lrp, 0);
+   MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+   transparentMaterial.addStage(transparentMaterialStage);
 
 
    // create the node we'll use for rendering
@@ -180,6 +204,7 @@ TEST(BasicVisualSceneManagerTests, removingTransparentObjects)
 
 TEST(BasicVisualSceneManagerTests, transparentObjectsAreSortedWithRespectToCamera)
 {
+   MaterialOperationImplementationMock matOpImpl;
    Camera cameraNode("camera");
    std::list<std::string> results;
    DWORD arraySize = 0;
@@ -188,8 +213,12 @@ TEST(BasicVisualSceneManagerTests, transparentObjectsAreSortedWithRespectToCamer
    // prepare the materials
    TextureStub transparentTexture(results, true);
    LightReflectingPropertiesStub lrp(results, 0);
-   Material transparentMaterial(transparentTexture, 0);
-   transparentMaterial.setLightReflectingProperties(lrp);
+
+   Material transparentMaterial(lrp, 0);
+   MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+   transparentMaterial.addStage(transparentMaterialStage);
 
 
    // create the node we'll use for rendering

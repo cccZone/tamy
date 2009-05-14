@@ -205,6 +205,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MaterialOperationImplementationMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\NodeHierarchyWriter.h"
 				>
 			</File>
@@ -261,10 +265,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MaterialTests.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\SkeletonTests.cpp"
 				>
 			</File>
@@ -278,6 +278,18 @@
 			>
 			<File
 				RelativePath=".\BackgroundPassTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Materials"
+			>
+			<File
+				RelativePath=".\MaterialOperationTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialTests.cpp"
 				>
 			</File>
 		</Filter>

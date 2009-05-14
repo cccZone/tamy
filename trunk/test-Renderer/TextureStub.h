@@ -18,7 +18,7 @@ public:
    TextureStub(std::list<std::string>& messageSink, bool isTransparent = false) 
       : Texture("textureStub", isTransparent), m_messageSink(&messageSink) {}
 
-   void setForRendering() 
+   void setForRendering(unsigned char stageIdx) 
    {
       if (m_messageSink != NULL)
       {

@@ -4,6 +4,9 @@
 #include "core-Renderer\RenderingProcessor.h"
 #include "core-Renderer\RenderingCommand.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
+#include "core-Renderer\MaterialOperation.h"
+#include "MaterialOperationImplementationMock.h"
 #include "LightReflectingPropertiesStub.h"
 #include "TextureStub.h"
 #include "core\MatrixWriter.h"
@@ -84,10 +87,21 @@ TEST(GraphicalEntityInstantiation, basics)
 
 TEST(GraphicalEntityInstantiation, multipleSubsets)
 {
+   MaterialOperationImplementationMock matOpImpl;
+   LightReflectingPropertiesStub lrp;
    TextureStub texture("");
-   Material skinMat(texture);
-   Material blouseMat(texture);
-   Material hairMat(texture);
+   Material skinMat(lrp);
+   skinMat.addStage(new MaterialStage(texture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+   Material blouseMat(lrp);
+   blouseMat.addStage(new MaterialStage(texture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+   Material hairMat(lrp);
+   hairMat.addStage(new MaterialStage(texture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
 
    std::vector<Material*> bodyMaterials;
    std::vector<Material*> headMaterials;
@@ -162,8 +176,13 @@ TEST(GraphicalEntityInstantiation, multipleSubsets)
 
 TEST(SkinnedGraphicalEntityInstantiation, basics)
 {
+   MaterialOperationImplementationMock matOpImpl;
+   LightReflectingPropertiesStub lrp;
    TextureStub tex("");
-   Material material(tex);
+   Material material(lrp);
+   material.addStage(new MaterialStage(tex,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
    BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
@@ -246,8 +265,13 @@ TEST(SkinnedGraphicalEntityInstantiation, basics)
 
 TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
 {
+   MaterialOperationImplementationMock matOpImpl;
+   LightReflectingPropertiesStub lrp;
    TextureStub tex("");
-   Material material(tex);
+   Material material(lrp);
+   material.addStage(new MaterialStage(tex,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
    BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
@@ -298,8 +322,13 @@ TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
 
 TEST(SkinnedGraphicalEntityInstantiation, instantiationViaGraphicalNodeInstantiator)
 {
+   MaterialOperationImplementationMock matOpImpl;
+   LightReflectingPropertiesStub lrp;
    TextureStub tex("");
-   Material material(tex);
+   Material material(lrp);
+   material.addStage(new MaterialStage(tex,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
    BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);

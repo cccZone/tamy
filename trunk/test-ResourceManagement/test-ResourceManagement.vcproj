@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MaterialOperationImplementationMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ResourceManagerStub.h"
 				>
 			</File>

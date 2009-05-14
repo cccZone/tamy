@@ -7,12 +7,17 @@
 #include "SkinnedGraphicalEntityMock.h"
 #include "core-Renderer\Skeleton.h"
 #include "core-Renderer\Material.h"
+#include "MaterialOperationImplementationMock.h"
+#include "core-Renderer\NullLightReflectingProperties.h"
 
 
 //////////////////////////////////////////////////////////////////////////////
 
 class ResourceManagerStub : public ResourceManager
 {
+private:
+   MaterialOperationImplementationMock m_matOpImpl;
+
 public:
    ResourceManagerStub() : ResourceManager("") 
    {
@@ -56,7 +61,11 @@ protected:
 
    SkyBox* createSkyBoxImpl() {return NULL;}
 
-   Material* createMaterial(Texture& emptyTexture, unsigned int index) {return new Material(emptyTexture, index);}
+   Material* createMaterialImpl(LightReflectingProperties& lrp, unsigned int index) {return new Material(lrp, index);}
+
+   MaterialOperationImplementation& getColorOperationImpl() {return m_matOpImpl;}
+
+   MaterialOperationImplementation& getAlphaOperationImpl() {return m_matOpImpl;}
 };
 
 //////////////////////////////////////////////////////////////////////////////

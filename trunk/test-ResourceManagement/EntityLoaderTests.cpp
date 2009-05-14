@@ -19,7 +19,7 @@ TEST(EntityLoader, loadSimpleMesh)
    mesh.name = "entityMeshName";
    D3DXMatrixTranslation(&(mesh.localMtx), 1, 2, 3);
    mesh.faces.push_back(Face<USHORT>(0, 1, 2, 0));
-   mesh.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+   mesh.vertices.push_back(LitVertex());
 
    GraphicalEntityLoaderMock loader(mesh);
    loader.load(rm, "entityRegistrationName");
@@ -46,20 +46,20 @@ TEST(EntityLoader, loadMeshWithManyMaterials)
    MeshDefinition mesh;
    mesh.name = "entity";
    D3DXMatrixTranslation(&(mesh.localMtx), 10, 15, 20);
-   MaterialDefinition mat1;
+   MaterialDefinition mat1("mat1");
    mat1.texName = "a.jpg";
    mesh.materials.push_back(mat1);
    mesh.faces.push_back(Face<USHORT>(0, 1, 2, 0));
-   mesh.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+   mesh.vertices.push_back(LitVertex());
 
-   MaterialDefinition mat2;
+   MaterialDefinition mat2("mat2");
    mat2.texName = "b.jpg";
    MeshDefinition* subMesh1 = new MeshDefinition();
    subMesh1->name = "subMesh1";
    D3DXMatrixTranslation(&(subMesh1->localMtx), 5, 0, 2);
    subMesh1->materials.push_back(mat2);
    subMesh1->faces.push_back(Face<USHORT>(0, 1, 2, 0));
-   subMesh1->vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+   subMesh1->vertices.push_back(LitVertex());
    mesh.children.push_back(subMesh1);
 
    GraphicalEntityLoaderMock loader(mesh);
@@ -96,14 +96,14 @@ TEST(EntityLoader, hierarchicalEntityWithSpacers)
    spacerMesh.name = "entity";
    D3DXMatrixTranslation(&(spacerMesh.localMtx), 10, 20, 30);
 
-   MaterialDefinition mat2;
+   MaterialDefinition mat2("mat2");
    mat2.texName = "b.jpg";
    MeshDefinition* subMesh1 = new MeshDefinition();
    subMesh1->name = "subMesh1";
    D3DXMatrixTranslation(&(subMesh1->localMtx), -15, -10, -5);
    subMesh1->materials.push_back(mat2);
    subMesh1->faces.push_back(Face<USHORT>(0, 1, 2, 0));
-   subMesh1->vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+   subMesh1->vertices.push_back(LitVertex());
    spacerMesh.children.push_back(subMesh1);
 
    GraphicalEntityLoaderMock loader(spacerMesh);
@@ -168,7 +168,7 @@ TEST(EntityLoader, loadingSkinnedEntity)
 
    // ----------- prepare the entity definition -----------
    // .. materials
-   MaterialDefinition mat;
+   MaterialDefinition mat("mat");
    mat.texName = "b.jpg";
 
    MeshDefinition mesh;
@@ -204,7 +204,7 @@ TEST(EntityLoader, loadingSkinnedEntity)
    // ... geometry
    D3DXMatrixTranslation(&(mesh.localMtx), -15, -10, -5);
    mesh.faces.push_back(Face<USHORT>(0, 1, 2, 0));
-   mesh.vertices.push_back(LitVertex(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+   mesh.vertices.push_back(LitVertex());
 
    // ----------- load the hierarchy -----------
    GraphicalEntityLoaderMock loader(mesh);

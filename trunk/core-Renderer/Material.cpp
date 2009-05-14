@@ -1,28 +1,102 @@
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\LightReflectingProperties.h"
-#include "core-Renderer\Texture.h"
-#include <stdio.h>
+#include <string.h>
+#include <stdexcept>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material::Material(Texture& emptyTexture, unsigned int index)
-      : m_lightReflectingProperties(&m_nullLightReflectingProperties),
-      m_texture(&emptyTexture),
-      m_index(index)
+unsigned char Material::s_stagesArrSize = 8;
+
+///////////////////////////////////////////////////////////////////////////////
+
+Material::Material(LightReflectingProperties& lrp, unsigned int index)
+      : m_index(index),
+      m_lightReflectingProperties(lrp),
+      m_stagesCount(0),
+      m_transparent(false)
 {
+   m_stages = new MaterialStageP[s_stagesArrSize];
+   memset(m_stages, NULL, sizeof(MaterialStageP) * s_stagesArrSize);
+
+   checkTransparency();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Material::~Material()
+{
+   for (unsigned char i = 0; i < m_stagesCount; ++i)
+   {
+      delete m_stages[i];
+   }
+
+   delete [] m_stages;
+   m_stages = NULL;
+
+   m_stagesCount = 0;
+
+   m_index = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Material::addStage(MaterialStage* stage)
+{
+   if (stage == NULL)
+   {
+      throw std::invalid_argument("NULL pointer instead a MaterialStage instance");
+   }
+
+   if (m_stagesCount >= s_stagesArrSize)
+   {
+      throw std::out_of_range("Too many stages defined");
+   }
+
+   m_stages[m_stagesCount] = stage;
+   stage->setIndex(m_stagesCount);
+   m_stagesCount++;
+
+   checkTransparency();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Material::removeStage(unsigned int stageIdx)
+{
+   if (stageIdx >= m_stagesCount)
+   {
+      throw std::out_of_range("Invalid stage index - there aren't so many defined in this material");
+   }
+
+   delete m_stages[stageIdx];
+   unsigned char newIdx;
+   for (unsigned char i = stageIdx + 1; i < m_stagesCount; ++i)
+   {
+      newIdx = i - 1;
+      m_stages[newIdx] = m_stages[i];
+      m_stages[newIdx]->setIndex(newIdx);
+   }
+   m_stagesCount--;
+
+   checkTransparency();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool Material::operator==(const Material& rhs) const
 {
-   bool equal = (*m_lightReflectingProperties == *(rhs.m_lightReflectingProperties));
-   if (equal == false) {return equal;}
+   if (m_lightReflectingProperties != rhs.m_lightReflectingProperties) {return false;}
 
-   equal &= (*m_texture == *(rhs.m_texture));
-   
-   return equal;
+   if (m_stagesCount != rhs.m_stagesCount) {return false;}
+
+   for (unsigned char i = 0; i < m_stagesCount; ++i)
+   {
+      if (*(m_stages[i]) != *(rhs.m_stages[i])) {return false;}
+   }
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,28 +108,40 @@ bool Material::operator!=(const Material& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Material::setLightReflectingProperties(LightReflectingProperties& component) 
-{
-   m_lightReflectingProperties = &component;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 bool Material::isTransparent() const
 {
-   bool isLRPTransparent = m_lightReflectingProperties->isTransparent();
-   bool isTexTransparent = m_texture->isTransparent();
-   return (m_lightReflectingProperties->isTransparent() || m_texture->isTransparent());
+   return m_transparent;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Material::setForRendering()
 {
-   enableTransparency(isTransparent());
+   enableTransparency(m_transparent);
 
-   m_lightReflectingProperties->setForRendering();
-   m_texture->setForRendering();
+   m_lightReflectingProperties.setForRendering();
+
+   for (unsigned char i = 0; i < m_stagesCount; ++i)
+   {
+      m_stages[i]->setForRendering();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Material::checkTransparency()
+{
+   m_transparent = false;
+   for (unsigned char i = 0; i < m_stagesCount; ++i)
+   {
+      if (m_stages[i]->isTransparent() == true) 
+      {
+         m_transparent = true;
+         break;
+      }
+   }
+
+   m_transparent |= m_lightReflectingProperties.isTransparent();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

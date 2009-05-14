@@ -3,6 +3,9 @@
 #include "core-Renderer\RenderingCommand.h"
 #include "TextureStub.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
+#include "core-Renderer\MaterialOperation.h"
+#include "MaterialOperationImplementationMock.h"
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "LightReflectingPropertiesStub.h"
@@ -14,12 +17,17 @@ TEST(RenderingProcessor, issuingRenderingCommands)
 {
    RenderingProcessor processor;
    std::list<std::string> results;
+   MaterialOperationImplementationMock matOpImpl;
 
    // prepare the material
    TextureStub texture(results);
-   Material material(texture);
    LightReflectingPropertiesStub lrp(results);
-   material.setLightReflectingProperties(lrp);
+
+   Material material(lrp);
+   MaterialStage* materialStage = new MaterialStage(texture,  
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+   material.addStage(materialStage);
 
    // create the node we'll use for rendering
    std::vector<Material*> materials; materials.push_back(&material);
@@ -72,16 +80,24 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
 {
    RenderingProcessor processor;
    std::list<std::string> results;
+   MaterialOperationImplementationMock matOpImpl;
 
    // prepare the materials
    TextureStub texture(results);
    LightReflectingPropertiesStub lrp1(results, 0);
    LightReflectingPropertiesStub lrp2(results, 1);
 
-   Material material1(texture, 0);
-   material1.setLightReflectingProperties(lrp1);
-   Material material2(texture, 1);
-   material2.setLightReflectingProperties(lrp2);
+   Material material1(lrp1, 0);
+   MaterialStage* materialStage1 = new MaterialStage(texture, 
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+   material1.addStage(materialStage1);
+
+   Material material2(lrp2, 1);
+   MaterialStage* materialStage2 = new MaterialStage(texture,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+   material2.addStage(materialStage2);
 
    // create the node we'll use for rendering
    std::vector<Material*> materials; 

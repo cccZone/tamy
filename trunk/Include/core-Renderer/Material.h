@@ -1,12 +1,10 @@
 #pragma once
 
-#include "core-Renderer\NullLightReflectingProperties.h"
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class LightReflectingProperties;
-class Texture;
+class MaterialStage;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,14 +16,29 @@ class Texture;
 class Material
 {
 private:
-   NullLightReflectingProperties m_nullLightReflectingProperties;
-   LightReflectingProperties* m_lightReflectingProperties;
-   Texture* m_texture;
+   static unsigned char s_stagesArrSize;
+
    unsigned int m_index;
 
+   LightReflectingProperties& m_lightReflectingProperties;
+
+   typedef MaterialStage* MaterialStageP;
+   MaterialStageP* m_stages;
+
+   unsigned char m_stagesCount;
+
+   bool m_transparent;
+
 public:
-   Material(Texture& emptyTexture, unsigned int index = 0);
-   virtual ~Material() {}
+   Material(LightReflectingProperties& lrp, unsigned int index = 0);
+   ~Material();
+
+   unsigned int getStagesCount() const {return m_stagesCount;}
+
+   void addStage(MaterialStage* stage);
+   void removeStage(unsigned int stageIdx);
+
+   const LightReflectingProperties& getLightReflectingProperties() const {return m_lightReflectingProperties;}
 
    /** 
     * Since materials are used in the rendering strategy as a batching pointer,
@@ -39,26 +52,20 @@ public:
    bool operator==(const Material& rhs) const;
    bool operator!=(const Material& rhs) const;
 
-   void setLightReflectingProperties(LightReflectingProperties& component);
-
    bool isTransparent() const;
-
-   void setTexture(Texture& texture)
-   {
-      m_texture = &texture;
-   }
 
    void setForRendering();
 
 protected:
    /**
-    * This method is engine implementation specific
-    * and is supposed to set proper flags that will enable or
-    * disable the transparency drawing
-    *
-    * By default it does nothing
+    * This method is called whenever we need to render a transparent material.
+    * The implementation of this class should make whatever's necessary
+    * in the graphical; library it uses to ensure that
     */
    virtual void enableTransparency(bool enable) {}
+
+private:
+   void checkTransparency();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -11,7 +11,7 @@
 
 TEST(TreeSkinner, bonesStructure)
 {
-   MaterialDefinition matStub;
+   MaterialDefinition matStub("matStub");
 
    // prepare the tree structure
    TreeSegment structure;
@@ -112,7 +112,7 @@ TEST(TreeSkinner, bonesStructure)
 
 TEST(TreeSkinner, sparseBoneStructure)
 {
-   MaterialDefinition matStub;
+   MaterialDefinition matStub("matStub");
 
    // prepare the tree structure
    TreeSegment structure;
@@ -170,7 +170,7 @@ TEST(TreeSkinner, sparseBoneStructure)
 
 TEST(TreeSkinner, verticesOfMesh)
 {
-   MaterialDefinition matStub;
+   MaterialDefinition matStub("matStub");
 
    // prepare the tree structure
    TreeSegment structure;
@@ -189,25 +189,25 @@ TEST(TreeSkinner, verticesOfMesh)
    MeshDefinition* branch0Skin = new MeshDefinition();
    branch0Bone0.children.push_back(branch0Skin);
 
-   branch0Skin->vertices.push_back(LitVertex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   0, 0)); 
-   branch0Skin->vertices.push_back(LitVertex( 0, 0, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0));
-   branch0Skin->vertices.push_back(LitVertex(-5, 0, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0));
-   branch0Skin->vertices.push_back(LitVertex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0));
-   branch0Skin->vertices.push_back(LitVertex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   0, 0)); 
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 0, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0));
 
-   branch0Skin->vertices.push_back(LitVertex( 5, 10, 0,   0, 1, 0,    1, 0, 0,   0, 0.333333f)); 
-   branch0Skin->vertices.push_back(LitVertex( 0, 10, 5,   0, 1, 0,    0, 0, 1,   0.25f, 0.333333f));
-   branch0Skin->vertices.push_back(LitVertex(-5, 10, 0,   0, 1, 0,   -1, 0, 0,   0.5f, 0.333333f));
-   branch0Skin->vertices.push_back(LitVertex( 0, 10,-5,   0, 1, 0,    0, 0,-1,   0.75f, 0.333333f));
-   branch0Skin->vertices.push_back(LitVertex( 5, 10, 0,   0, 1, 0,    1, 0, 0,   1, 0.333333f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 10, 0,   0, 1, 0,    1, 0, 0,   0, 0.333333f)); 
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10, 5,   0, 1, 0,    0, 0, 1,   0.25f, 0.333333f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 10, 0,   0, 1, 0,   -1, 0, 0,   0.5f, 0.333333f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10,-5,   0, 1, 0,    0, 0,-1,   0.75f, 0.333333f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 10, 0,   0, 1, 0,    1, 0, 0,   1, 0.333333f));
 
-   branch0Skin->vertices.push_back(LitVertex( 5, 20, 0,   1, 0, 0,    1, 0, 0,   0, 0.666667f)); 
-   branch0Skin->vertices.push_back(LitVertex( 0, 20, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.666667f));
-   branch0Skin->vertices.push_back(LitVertex(-5, 20, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.666667f));
-   branch0Skin->vertices.push_back(LitVertex( 0, 20,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.666667f));
-   branch0Skin->vertices.push_back(LitVertex( 5, 20, 0,   1, 0, 0,    1, 0, 0,   1, 0.666667f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 20, 0,   1, 0, 0,    1, 0, 0,   0, 0.666667f)); 
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 20, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.666667f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 20, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.666667f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 20,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.666667f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 20, 0,   1, 0, 0,    1, 0, 0,   1, 0.666667f));
 
-   branch0Skin->vertices.push_back(LitVertex( 0, 30, 0,   0, 1, 0,          0, 1, 0,   0.5f, 1));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 30, 0,   0, 1, 0,          0, 1, 0,   0.5f, 1));
 
 
    MeshDefinition* branch0Bone1 = new MeshDefinition();
@@ -221,20 +221,20 @@ TEST(TreeSkinner, verticesOfMesh)
       MeshDefinition* branch1Skin = new MeshDefinition();
       branch1Bone0->children.push_back(branch1Skin);
 
-      branch1Skin->vertices.push_back(LitVertex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   0, 0.333333f)); 
-      branch1Skin->vertices.push_back(LitVertex( 0, 0, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.333333f));
-      branch1Skin->vertices.push_back(LitVertex(-5, 0, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.333333f));
-      branch1Skin->vertices.push_back(LitVertex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.333333f));
-      branch1Skin->vertices.push_back(LitVertex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0.333333f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   0, 0.333333f)); 
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.333333f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 0, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.333333f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.333333f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0.333333f));
 
       // 2nd seg - where the bone is
-      branch1Skin->vertices.push_back(LitVertex( 5, 10, 0,   0, 1, 0,    1, 0, 0,   0, 0.666667f)); 
-      branch1Skin->vertices.push_back(LitVertex( 0, 10, 5,   0, 1, 0,    0, 0, 1,   0.25f, 0.666667f));
-      branch1Skin->vertices.push_back(LitVertex(-5, 10, 0,   0, 1, 0,   -1, 0, 0,   0.5f, 0.666667f));
-      branch1Skin->vertices.push_back(LitVertex( 0, 10,-5,   0, 1, 0,    0, 0,-1,   0.75f, 0.666667f));
-      branch1Skin->vertices.push_back(LitVertex( 5, 10, 0,   0, 1, 0,    1, 0, 0,   1, 0.666667f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 10, 0,   0, 1, 0,    1, 0, 0,   0, 0.666667f)); 
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10, 5,   0, 1, 0,    0, 0, 1,   0.25f, 0.666667f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 10, 0,   0, 1, 0,   -1, 0, 0,   0.5f, 0.666667f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10,-5,   0, 1, 0,    0, 0,-1,   0.75f, 0.666667f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 10, 0,   0, 1, 0,    1, 0, 0,   1, 0.666667f));
 
-      branch1Skin->vertices.push_back(LitVertex( 0, 20, 0,   1, 0, 0,          0, 1, 0,   0.5f, 1));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 20, 0,   1, 0, 0,          0, 1, 0,   0.5f, 1));
 
 
       MeshDefinition* branch1Bone1 = new MeshDefinition();
@@ -247,13 +247,13 @@ TEST(TreeSkinner, verticesOfMesh)
          MeshDefinition* branch3Skin = new MeshDefinition();
          branch3Bone0->children.push_back(branch3Skin);
 
-         branch3Skin->vertices.push_back(LitVertex( 5, 0, 0,  1, 0, 0,    1, 0, 0,   0, 0.666667f)); 
-         branch3Skin->vertices.push_back(LitVertex( 0, 0, 5,  1, 0, 0,    0, 0, 1,   0.25f, 0.666667f));
-         branch3Skin->vertices.push_back(LitVertex(-5, 0, 0,  1, 0, 0,   -1, 0, 0,   0.5f, 0.666667f));
-         branch3Skin->vertices.push_back(LitVertex( 0, 0,-5,  1, 0, 0,    0, 0,-1,   0.75f, 0.666667f));
-         branch3Skin->vertices.push_back(LitVertex( 5, 0, 0,  1, 0, 0,    1, 0, 0,   1, 0.666667f));
+         branch3Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,  1, 0, 0,    1, 0, 0,   0, 0.666667f)); 
+         branch3Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0, 5,  1, 0, 0,    0, 0, 1,   0.25f, 0.666667f));
+         branch3Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 0, 0,  1, 0, 0,   -1, 0, 0,   0.5f, 0.666667f));
+         branch3Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0,-5,  1, 0, 0,    0, 0,-1,   0.75f, 0.666667f));
+         branch3Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,  1, 0, 0,    1, 0, 0,   1, 0.666667f));
 
-         branch3Skin->vertices.push_back(LitVertex( 0, 10, 0,  1, 0, 0,   0, 1, 0,   0.5f, 1));
+         branch3Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10, 0,  1, 0, 0,   0, 1, 0,   0.5f, 1));
 
    MeshDefinition* branch0Bone2 = new MeshDefinition();
    branch0Bone1->children.push_back(branch0Bone2);
@@ -265,13 +265,13 @@ TEST(TreeSkinner, verticesOfMesh)
       MeshDefinition* branch2Skin = new MeshDefinition();
       branch2Bone0->children.push_back(branch2Skin);
 
-      branch2Skin->vertices.push_back(LitVertex( 5, 0, 0,  1, 0, 0,    1, 0, 0,   0, 0.666667f)); 
-      branch2Skin->vertices.push_back(LitVertex( 0, 0, 5,  1, 0, 0,    0, 0, 1,   0.25f, 0.666667f));
-      branch2Skin->vertices.push_back(LitVertex(-5, 0, 0,  1, 0, 0,   -1, 0, 0,   0.5f, 0.666667f));
-      branch2Skin->vertices.push_back(LitVertex( 0, 0,-5,  1, 0, 0,    0, 0,-1,   0.75f, 0.666667f));
-      branch2Skin->vertices.push_back(LitVertex( 5, 0, 0,  1, 0, 0,    1, 0, 0,   1, 0.666667f));
+      branch2Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,  1, 0, 0,    1, 0, 0,   0, 0.666667f)); 
+      branch2Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0, 5,  1, 0, 0,    0, 0, 1,   0.25f, 0.666667f));
+      branch2Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 0, 0,  1, 0, 0,   -1, 0, 0,   0.5f, 0.666667f));
+      branch2Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0,-5,  1, 0, 0,    0, 0,-1,   0.75f, 0.666667f));
+      branch2Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,  1, 0, 0,    1, 0, 0,   1, 0.666667f));
 
-      branch2Skin->vertices.push_back(LitVertex( 0, 10, 0,   1, 0, 0,  0, 1, 0,   0.5f, 1));
+      branch2Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10, 0,   1, 0, 0,  0, 1, 0,   0.5f, 1));
 
 
    MeshDefinitionWriter writer;
@@ -284,7 +284,7 @@ TEST(TreeSkinner, verticesOfMesh)
 
 TEST(TreeSkinner, skinDetailsOfSparseMesh)
 {
-   MaterialDefinition matStub;
+   MaterialDefinition matStub("matStub");
 
    // prepare the tree structure
    TreeSegment structure;
@@ -313,11 +313,11 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
    branch0Skin->skinBones.push_back(SkinBoneDefinition("branch_0_Bone_0", offsetMtx));
 
 
-   branch0Skin->vertices.push_back(LitVertex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   0, 0)); 
-   branch0Skin->vertices.push_back(LitVertex( 0, 0, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0));
-   branch0Skin->vertices.push_back(LitVertex(-5, 0, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0));
-   branch0Skin->vertices.push_back(LitVertex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0));
-   branch0Skin->vertices.push_back(LitVertex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   0, 0)); 
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 0, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0));
 
    branch0Skin->faces.push_back(Face<USHORT> (0, 5, 1, 0));
    branch0Skin->faces.push_back(Face<USHORT> (1, 5, 6, 0));
@@ -330,11 +330,11 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
    branch0Skin->faces.push_back(Face<USHORT> (4, 9, 0, 0));
    branch0Skin->faces.push_back(Face<USHORT> (0, 9, 5, 0));
 
-   branch0Skin->vertices.push_back(LitVertex( 5, 10, 0,   1, 0, 0,    1, 0, 0,   0, 0.25f)); 
-   branch0Skin->vertices.push_back(LitVertex( 0, 10, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.25f));
-   branch0Skin->vertices.push_back(LitVertex(-5, 10, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.25f));
-   branch0Skin->vertices.push_back(LitVertex( 0, 10,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.25f));
-   branch0Skin->vertices.push_back(LitVertex( 5, 10, 0,   1, 0, 0,    1, 0, 0,   1, 0.25f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 10, 0,   1, 0, 0,    1, 0, 0,   0, 0.25f)); 
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.25f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 10, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.25f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.25f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 10, 0,   1, 0, 0,    1, 0, 0,   1, 0.25f));
 
    branch0Skin->faces.push_back(Face<USHORT> (5, 10,  6, 0));
    branch0Skin->faces.push_back(Face<USHORT> (6, 10, 11, 0));
@@ -347,11 +347,11 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
    branch0Skin->faces.push_back(Face<USHORT> (9, 14,  5, 0));
    branch0Skin->faces.push_back(Face<USHORT> (5, 14, 10, 0));
 
-   branch0Skin->vertices.push_back(LitVertex( 5, 20, 0,   1, 0, 0,    1, 0, 0,   0, 0.5f)); 
-   branch0Skin->vertices.push_back(LitVertex( 0, 20, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.5f));
-   branch0Skin->vertices.push_back(LitVertex(-5, 20, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.5f));
-   branch0Skin->vertices.push_back(LitVertex( 0, 20,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.5f));
-   branch0Skin->vertices.push_back(LitVertex( 5, 20, 0,   1, 0, 0,    1, 0, 0,   1, 0.5f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 20, 0,   1, 0, 0,    1, 0, 0,   0, 0.5f)); 
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 20, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.5f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 20, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.5f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 20,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.5f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 20, 0,   1, 0, 0,    1, 0, 0,   1, 0.5f));
 
    bonesForAttibute.clear(); 
    bonesForAttibute.push_back("branch_0_Bone_0"); 
@@ -368,11 +368,11 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
    branch0Skin->faces.push_back(Face<USHORT> (14, 19, 10, 1));
    branch0Skin->faces.push_back(Face<USHORT> (10, 19, 15, 1));
 
-   branch0Skin->vertices.push_back(LitVertex( 5, 30, 0,   0, 1, 0,    1, 0, 0,   0, 0.75f)); 
-   branch0Skin->vertices.push_back(LitVertex( 0, 30, 5,   0, 1, 0,    0, 0, 1,   0.25f, 0.75f));
-   branch0Skin->vertices.push_back(LitVertex(-5, 30, 0,   0, 1, 0,   -1, 0, 0,   0.5f, 0.75f));
-   branch0Skin->vertices.push_back(LitVertex( 0, 30,-5,   0, 1, 0,    0, 0,-1,   0.75f, 0.75f));
-   branch0Skin->vertices.push_back(LitVertex( 5, 30, 0,   0, 1, 0,    1, 0, 0,   1, 0.75f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 30, 0,   0, 1, 0,    1, 0, 0,   0, 0.75f)); 
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 30, 5,   0, 1, 0,    0, 0, 1,   0.25f, 0.75f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 30, 0,   0, 1, 0,   -1, 0, 0,   0.5f, 0.75f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 30,-5,   0, 1, 0,    0, 0,-1,   0.75f, 0.75f));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 30, 0,   0, 1, 0,    1, 0, 0,   1, 0.75f));
 
    bonesForAttibute.clear(); 
    bonesForAttibute.push_back("branch_0_Bone_0"); 
@@ -385,7 +385,7 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
    branch0Skin->faces.push_back(Face<USHORT> (18, 20, 19, 2));
    branch0Skin->faces.push_back(Face<USHORT> (19, 20, 15, 2));
    
-   branch0Skin->vertices.push_back(LitVertex( 0, 40, 0,   1, 0, 0,    0, 1, 0,   0.5f, 1));
+   branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 40, 0,   1, 0, 0,    0, 1, 0,   0.5f, 1));
 
    bonesForAttibute.clear(); 
    bonesForAttibute.push_back("branch_0_Bone_1");
@@ -409,11 +409,11 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
       branch1Skin->name = "branch_1_skin";
       branch1Bone0->children.push_back(branch1Skin);
 
-      branch1Skin->vertices.push_back(LitVertex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   0, 0.75f)); 
-      branch1Skin->vertices.push_back(LitVertex( 0, 0, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.75f));
-      branch1Skin->vertices.push_back(LitVertex(-5, 0, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.75f));
-      branch1Skin->vertices.push_back(LitVertex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.75f));
-      branch1Skin->vertices.push_back(LitVertex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0.75f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   0, 0.75f)); 
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.75f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex(-5, 0, 0,   1, 0, 0,   -1, 0, 0,   0.5f, 0.75f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.75f));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0.75f));
 
       branch1Skin->faces.push_back(Face<USHORT> (0, 5, 1, 0));
       branch1Skin->faces.push_back(Face<USHORT> (1, 5, 2, 0));
@@ -421,7 +421,7 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
       branch1Skin->faces.push_back(Face<USHORT> (3, 5, 4, 0));
       branch1Skin->faces.push_back(Face<USHORT> (4, 5, 0, 0));
 
-      branch1Skin->vertices.push_back(LitVertex( 0, 10, 0,   1, 0, 0,          0, 1, 0,   0.5f, 1));
+      branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10, 0,   1, 0, 0,          0, 1, 0,   0.5f, 1));
 
       bonesForAttibute.clear(); 
       bonesForAttibute.push_back("branch_1_Bone_0"); 

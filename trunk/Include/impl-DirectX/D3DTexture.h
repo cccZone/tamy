@@ -21,7 +21,7 @@ public:
               IDirect3DTexture9& texture);
    ~D3DTexture();
 
-   void setForRendering();
+   void setForRendering(unsigned char stageIndex);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
