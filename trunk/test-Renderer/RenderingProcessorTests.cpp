@@ -23,7 +23,7 @@ TEST(RenderingProcessor, issuingRenderingCommands)
    TextureStub texture(results);
    LightReflectingPropertiesStub lrp(results);
 
-   Material material(lrp);
+   Material material(lrp, matOpImpl, matOpImpl);
    MaterialStage* materialStage = new MaterialStage(texture,  
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
@@ -87,13 +87,13 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
    LightReflectingPropertiesStub lrp1(results, 0);
    LightReflectingPropertiesStub lrp2(results, 1);
 
-   Material material1(lrp1, 0);
+   Material material1(lrp1, matOpImpl, matOpImpl, 0);
    MaterialStage* materialStage1 = new MaterialStage(texture, 
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
    material1.addStage(materialStage1);
 
-   Material material2(lrp2, 1);
+   Material material2(lrp2, matOpImpl, matOpImpl, 1);
    MaterialStage* materialStage2 = new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));

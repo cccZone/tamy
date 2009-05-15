@@ -3,6 +3,7 @@
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\Material.h"
 #include "LightReflectingPropertiesStub.h"
+#include "MaterialOperationImplementationMock.h"
 #include <list>
 #include <string>
 #include <sstream>
@@ -13,6 +14,7 @@
 class GraphicalEntityMock : public GraphicalEntity
 {
 private:
+   static MaterialOperationImplementationMock s_matOpImpl;
    static LightReflectingPropertiesStub s_lrp;
    static Material s_material;
    D3DXMATRIX m_mtx;

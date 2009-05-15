@@ -23,8 +23,8 @@ TEST(BasicVisualSceneManagerTests, retrievingStaticGeometry)
    std::list<std::string> results;
    LightReflectingPropertiesStub lrp(results, 0);
 
-   Material material1(lrp, 0);
-   Material material2(lrp, 1);
+   Material material1(lrp, matOpImpl, matOpImpl, 0);
+   Material material2(lrp, matOpImpl, matOpImpl, 1);
    material1.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -110,13 +110,13 @@ TEST(BasicVisualSceneManagerTests, transparentObjects)
    TextureStub transparentTexture(results, true);
    LightReflectingPropertiesStub lrp(results, 0);
 
-   Material regularMaterial(lrp, 0);
+   Material regularMaterial(lrp, matOpImpl, matOpImpl, 0);
    MaterialStage* regularMaterialStage = new MaterialStage(regularTexture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
    regularMaterial.addStage(regularMaterialStage);
 
-   Material transparentMaterial(lrp, 1);
+   Material transparentMaterial(lrp, matOpImpl, matOpImpl, 1);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
@@ -162,7 +162,7 @@ TEST(BasicVisualSceneManagerTests, removingTransparentObjects)
    TextureStub transparentTexture(results, true);
    LightReflectingPropertiesStub lrp(results, 0);
 
-   Material transparentMaterial(lrp, 0);
+   Material transparentMaterial(lrp, matOpImpl, matOpImpl, 0);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
@@ -214,7 +214,7 @@ TEST(BasicVisualSceneManagerTests, transparentObjectsAreSortedWithRespectToCamer
    TextureStub transparentTexture(results, true);
    LightReflectingPropertiesStub lrp(results, 0);
 
-   Material transparentMaterial(lrp, 0);
+   Material transparentMaterial(lrp, matOpImpl, matOpImpl, 0);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));

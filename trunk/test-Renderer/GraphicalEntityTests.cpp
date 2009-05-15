@@ -90,15 +90,15 @@ TEST(GraphicalEntityInstantiation, multipleSubsets)
    MaterialOperationImplementationMock matOpImpl;
    LightReflectingPropertiesStub lrp;
    TextureStub texture("");
-   Material skinMat(lrp);
+   Material skinMat(lrp, matOpImpl, matOpImpl);
    skinMat.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-   Material blouseMat(lrp);
+   Material blouseMat(lrp, matOpImpl, matOpImpl);
    blouseMat.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-   Material hairMat(lrp);
+   Material hairMat(lrp, matOpImpl, matOpImpl);
    hairMat.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -179,7 +179,7 @@ TEST(SkinnedGraphicalEntityInstantiation, basics)
    MaterialOperationImplementationMock matOpImpl;
    LightReflectingPropertiesStub lrp;
    TextureStub tex("");
-   Material material(lrp);
+   Material material(lrp, matOpImpl, matOpImpl);
    material.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -268,7 +268,7 @@ TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
    MaterialOperationImplementationMock matOpImpl;
    LightReflectingPropertiesStub lrp;
    TextureStub tex("");
-   Material material(lrp);
+   Material material(lrp, matOpImpl, matOpImpl);
    material.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -325,7 +325,7 @@ TEST(SkinnedGraphicalEntityInstantiation, instantiationViaGraphicalNodeInstantia
    MaterialOperationImplementationMock matOpImpl;
    LightReflectingPropertiesStub lrp;
    TextureStub tex("");
-   Material material(lrp);
+   Material material(lrp, matOpImpl, matOpImpl);
    material.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));

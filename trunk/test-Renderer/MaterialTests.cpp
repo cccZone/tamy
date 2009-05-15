@@ -66,7 +66,7 @@ TEST(Material, addingStage)
    MaterialOperationImplementationMock matOpImpl;
    LightReflectingPropertiesStub lrp;
    TextureStub tex("tex");
-   Material mat(lrp);
+   Material mat(lrp, matOpImpl, matOpImpl);
    MaterialStage* stage1 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
@@ -96,7 +96,7 @@ TEST(Material, removingStage)
    MaterialOperationImplementationMock matOpImpl;
    LightReflectingPropertiesStub lrp;
    TextureStub tex("tex");
-   Material mat(lrp);
+   Material mat(lrp, matOpImpl, matOpImpl);
    MaterialStage* stage1 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
@@ -138,12 +138,12 @@ TEST(Material, equalityWithManyStages)
    TextureStub tex1("tex1");
    TextureStub tex2("tex2");
 
-   Material mat1(lrp);
+   Material mat1(lrp, matOpImpl, matOpImpl);
    mat1.addStage(new MaterialStage(tex1,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
 
-   Material mat2(lrp);
+   Material mat2(lrp, matOpImpl, matOpImpl);
    mat2.addStage(new MaterialStage(tex1,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -151,7 +151,7 @@ TEST(Material, equalityWithManyStages)
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
 
-   Material mat3(lrp);
+   Material mat3(lrp, matOpImpl, matOpImpl);
    mat3.addStage(new MaterialStage(tex2,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -159,7 +159,7 @@ TEST(Material, equalityWithManyStages)
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
 
-   Material mat4(lrp);
+   Material mat4(lrp, matOpImpl, matOpImpl);
    mat4.addStage(new MaterialStage(tex1,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -172,6 +172,52 @@ TEST(Material, equalityWithManyStages)
    CPPUNIT_ASSERT(mat3 != mat4);
    CPPUNIT_ASSERT(mat1 != mat3);
    CPPUNIT_ASSERT(mat4 == mat2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(Material, lastRenderedStageIsOneThatDisablesItself)
+{
+   MaterialOperationImplementationMock colorMatOpImpl;
+   MaterialOperationImplementationMock alphaMatOpImpl;
+   LightReflectingPropertiesStub lrp;
+   TextureStub tex("tex");
+   Material mat(lrp, alphaMatOpImpl, colorMatOpImpl);
+
+   mat.setForRendering();
+   CPPUNIT_ASSERT_EQUAL(1, colorMatOpImpl.getOperationsCount());
+   CPPUNIT_ASSERT_EQUAL(1, alphaMatOpImpl.getOperationsCount());
+   CPPUNIT_ASSERT_EQUAL(std::string("disable"), colorMatOpImpl.getOperation(0));
+   CPPUNIT_ASSERT_EQUAL(std::string("disable"), alphaMatOpImpl.getOperation(0));
+
+   colorMatOpImpl.clear();
+   alphaMatOpImpl.clear();
+   mat.addStage(new MaterialStage(tex,
+         new MaterialOperation(colorMatOpImpl, MOP_MULTIPLY, SC_NONE, SC_NONE),
+         new MaterialOperation(alphaMatOpImpl, MOP_ADD,      SC_NONE, SC_NONE)));
+   mat.setForRendering();
+   CPPUNIT_ASSERT_EQUAL(2, colorMatOpImpl.getOperationsCount());
+   CPPUNIT_ASSERT_EQUAL(2, alphaMatOpImpl.getOperationsCount());
+   CPPUNIT_ASSERT_EQUAL(std::string("multiply"), colorMatOpImpl.getOperation(0));
+   CPPUNIT_ASSERT_EQUAL(std::string("add"), alphaMatOpImpl.getOperation(0));
+   CPPUNIT_ASSERT_EQUAL(std::string("disable"), colorMatOpImpl.getOperation(1));
+   CPPUNIT_ASSERT_EQUAL(std::string("disable"), alphaMatOpImpl.getOperation(1));
+
+   colorMatOpImpl.clear();
+   alphaMatOpImpl.clear();
+   mat.addStage(new MaterialStage(tex,
+         new MaterialOperation(colorMatOpImpl, MOP_SUBTRACT, SC_NONE, SC_NONE),
+         new MaterialOperation(alphaMatOpImpl, MOP_MULTIPLY_ADD,      SC_NONE, SC_NONE)));
+   mat.setForRendering();
+   CPPUNIT_ASSERT_EQUAL(3, colorMatOpImpl.getOperationsCount());
+   CPPUNIT_ASSERT_EQUAL(3, alphaMatOpImpl.getOperationsCount());
+   CPPUNIT_ASSERT_EQUAL(std::string("multiply"), colorMatOpImpl.getOperation(0));
+   CPPUNIT_ASSERT_EQUAL(std::string("add"), alphaMatOpImpl.getOperation(0));
+   CPPUNIT_ASSERT_EQUAL(std::string("subtract"), colorMatOpImpl.getOperation(1));
+   CPPUNIT_ASSERT_EQUAL(std::string("multiplyAdd"), alphaMatOpImpl.getOperation(1));
+   CPPUNIT_ASSERT_EQUAL(std::string("disable"), colorMatOpImpl.getOperation(2));
+   CPPUNIT_ASSERT_EQUAL(std::string("disable"), alphaMatOpImpl.getOperation(2));
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

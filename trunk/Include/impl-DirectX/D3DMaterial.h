@@ -14,6 +14,8 @@ private:
 public:
    D3DMaterial(IDirect3DDevice9& d3Device, 
                LightReflectingProperties& lrp, 
+               MaterialOperationImplementation& alphaMatOp,
+               MaterialOperationImplementation& colorMatOp,
                unsigned int index);
 
 protected:

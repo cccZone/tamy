@@ -242,7 +242,7 @@ SkyBox* D3DResourceManager::createSkyBoxImpl()
 
 Material* D3DResourceManager::createMaterialImpl(LightReflectingProperties& lrp, unsigned int index)
 {
-   return new D3DMaterial(m_renderer->getD3Device(), lrp, index);
+   return new D3DMaterial(m_renderer->getD3Device(), lrp, *m_alphaOpImpl, *m_colorOpImpl, index);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

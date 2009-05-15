@@ -5,6 +5,8 @@
 
 class LightReflectingProperties;
 class MaterialStage;
+class MaterialOperation;
+class MaterialOperationImplementation;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,8 +21,9 @@ private:
    static unsigned char s_stagesArrSize;
 
    unsigned int m_index;
-
    LightReflectingProperties& m_lightReflectingProperties;
+   MaterialOperation* m_disableAlpha;
+   MaterialOperation* m_disableColor;
 
    typedef MaterialStage* MaterialStageP;
    MaterialStageP* m_stages;
@@ -30,7 +33,10 @@ private:
    bool m_transparent;
 
 public:
-   Material(LightReflectingProperties& lrp, unsigned int index = 0);
+   Material(LightReflectingProperties& lrp, 
+            MaterialOperationImplementation& alphaMatOp,
+            MaterialOperationImplementation& colorMatOp,
+            unsigned int index = 0);
    ~Material();
 
    unsigned int getStagesCount() const {return m_stagesCount;}

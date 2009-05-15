@@ -32,7 +32,7 @@ TEST(Camera, renderingWithActiveCamera)
    TextureStub tex("");
    MaterialOperationImplementationMock matOpImpl;
    LightReflectingPropertiesStub lrp;
-   Material mat(lrp);
+   Material mat(lrp, matOpImpl, matOpImpl);
    mat.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));

@@ -1,5 +1,6 @@
 #include "core-Renderer\Material.h"
 #include "core-Renderer\MaterialStage.h"
+#include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\LightReflectingProperties.h"
 #include <string.h>
 #include <stdexcept>
@@ -11,9 +12,14 @@ unsigned char Material::s_stagesArrSize = 8;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material::Material(LightReflectingProperties& lrp, unsigned int index)
+Material::Material(LightReflectingProperties& lrp, 
+                   MaterialOperationImplementation& alphaMatOp,
+                   MaterialOperationImplementation& colorMatOp,
+                   unsigned int index)
       : m_index(index),
       m_lightReflectingProperties(lrp),
+      m_disableAlpha(new MaterialOperation(alphaMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
+      m_disableColor(new MaterialOperation(colorMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
       m_stagesCount(0),
       m_transparent(false)
 {
@@ -27,11 +33,16 @@ Material::Material(LightReflectingProperties& lrp, unsigned int index)
 
 Material::~Material()
 {
+   delete m_disableAlpha;
+   m_disableAlpha = NULL;
+
+   delete m_disableColor;
+   m_disableColor = NULL;
+
    for (unsigned char i = 0; i < m_stagesCount; ++i)
    {
       delete m_stages[i];
    }
-
    delete [] m_stages;
    m_stages = NULL;
 
@@ -125,6 +136,9 @@ void Material::setForRendering()
    {
       m_stages[i]->setForRendering();
    }
+
+   m_disableAlpha->setForRendering(m_stagesCount);
+   m_disableColor->setForRendering(m_stagesCount);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
