@@ -11,6 +11,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class MaterialsParser;
 class Node;
 class Camera;
 class Light;
@@ -49,6 +50,8 @@ class Sound;
 class ResourceManager
 {
 private:
+   MaterialsParser* m_materialsParser;
+
    std::list<Managable*> m_allObjects;
    std::map<std::string, AbstractGraphicalEntity*> m_graphicalEntities;
    std::vector<Material*> m_materials;
@@ -133,6 +136,12 @@ public:
    Light* createLight(const std::string& name);
 
    // ------------------------------- Materials --------------------------------
+
+   /**
+    * The method loads the materials definition file from the materials directory
+    * (which at this point is the same as the textures directory ;)
+    */
+   void loadMaterialDefinition(const std::string& fileName);
 
    /**
     * The method checks if particular set of light reflecting properties is registered

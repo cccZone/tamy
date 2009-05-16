@@ -186,6 +186,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Data"
+			>
+			<File
+				RelativePath="..\..\Build\app-TransparencyDemo\Data\materials.xml"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

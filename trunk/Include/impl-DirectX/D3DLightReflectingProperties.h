@@ -14,7 +14,6 @@ class D3DLightReflectingProperties : public LightReflectingProperties
 private:
    IDirect3DDevice9& m_d3Device;
    D3DMATERIAL9 m_material;
-   bool m_transparent;
 
 public:
    D3DLightReflectingProperties(IDirect3DDevice9& d3Device);
@@ -28,12 +27,7 @@ public:
    void setEmissiveColor(const Color& emissive);
    void setPower(float val);
 
-   bool isTransparent() const {return m_transparent;}
-
    void setForRendering();
-
-private:
-   bool checkTransparency(const Color& color) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

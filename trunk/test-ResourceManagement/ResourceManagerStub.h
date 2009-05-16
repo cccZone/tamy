@@ -9,6 +9,8 @@
 #include "core-Renderer\Material.h"
 #include "MaterialOperationImplementationMock.h"
 #include "core-Renderer\NullLightReflectingProperties.h"
+#include "core-ResourceManagement\MeshDefinition.h"
+#include "LightReflectingPropertiesStub.h"
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -50,10 +52,10 @@ public:
       return NULL;
    }
 
+   LightReflectingProperties* createLightReflectingProperties() {return new LightReflectingPropertiesStub();}
+
 protected:
    Light* createLightImpl(const std::string& name) {return NULL;}
-
-   LightReflectingProperties* createLightReflectingProperties() {return new NullLightReflectingProperties();}
 
    Texture* createEmptyTexture() {return new TextureStub();}
 
@@ -61,7 +63,7 @@ protected:
 
    SkyBox* createSkyBoxImpl() {return NULL;}
 
-   Material* createMaterialImpl(LightReflectingProperties& lrp, unsigned int index) {return new Material(lrp, index);}
+   Material* createMaterialImpl(LightReflectingProperties& lrp, unsigned int index) {return new Material(lrp, m_matOpImpl, m_matOpImpl, index);}
 
    MaterialOperationImplementation& getColorOperationImpl() {return m_matOpImpl;}
 

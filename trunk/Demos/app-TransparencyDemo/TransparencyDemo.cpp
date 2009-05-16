@@ -40,6 +40,7 @@ void TransparencyDemo::initialize(Renderer& renderer, ResourceManager& resourceM
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
+   m_resourceManager->loadMaterialDefinition("materials.xml");
    IWFLoader loader(*m_resourceManager, *m_sceneManager);
    loader.load("..\\Data\\Dolphin.iwf");
 

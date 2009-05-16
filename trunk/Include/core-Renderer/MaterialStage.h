@@ -16,8 +16,6 @@ private:
    MaterialOperation* m_colorOperation;
    MaterialOperation* m_alphaOperation;
 
-   bool m_transparent;
-
 public:
    MaterialStage(Texture& emptyTexture, 
                  MaterialOperation* defaultColorOp, 
@@ -35,8 +33,6 @@ public:
    const MaterialOperation& getAlphaOperation() const {return *m_alphaOperation;}
 
    const Texture& getTexture() const {return m_texture;}
-
-   bool isTransparent() const {return m_transparent;}
 
    void setForRendering();
 };

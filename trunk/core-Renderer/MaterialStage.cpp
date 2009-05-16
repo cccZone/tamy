@@ -23,8 +23,6 @@ MaterialStage::MaterialStage(Texture& texture,
    {
       throw std::invalid_argument("NULL pointer instead a MaterialOperation instance for an alpha operation");
    }
-
-   m_transparent =  m_texture.isTransparent();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

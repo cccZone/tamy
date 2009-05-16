@@ -4,6 +4,7 @@
 #include "core-Renderer\SkinnedGraphicalEntity.h"
 #include "core-Renderer\CompositeGraphicalEntity.h"
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
+#include "core-ResourceManagement\MaterialsParser.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
 #include "core\Node.h"
@@ -23,9 +24,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ResourceManager::ResourceManager(const std::string& texturesDirPath)
-      : m_texturesDirPath(texturesDirPath),
+      : m_materialsParser(NULL),
+      m_texturesDirPath(texturesDirPath),
       m_soundRenderer(NULL)
 {
+   m_materialsParser = new MaterialsParser(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,6 +56,9 @@ ResourceManager::~ResourceManager()
 
    delete m_soundRenderer;
    m_soundRenderer = NULL;
+
+   delete m_materialsParser;
+   m_materialsParser = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -242,6 +248,13 @@ Light* ResourceManager::createLight(const std::string& name)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void ResourceManager::loadMaterialDefinition(const std::string& fileName)
+{
+   m_materialsParser->load(m_texturesDirPath + std::string("\\") + fileName);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool ResourceManager::doesMaterialExist(const std::string& name) const
 {
    std::map<std::string, Material*>::const_iterator it = m_materialsByName.find(name);
@@ -265,25 +278,6 @@ Material& ResourceManager::findMaterial(const std::string& name)
 
 Material& ResourceManager::getMaterial(unsigned int id)
 {
-   // there's always a default material - if there's none - make one
-   if (m_materials.size() == 0)
-   {
-      LightReflectingProperties* defaultLRP  = createLightReflectingProperties();
-      defaultLRP->setAmbientColor(Color());
-      defaultLRP->setDiffuseColor(Color(1, 1, 1, 1));
-      defaultLRP->setSpecularColor(Color(1, 1, 1, 1));
-      defaultLRP->setEmissiveColor(Color());
-      defaultLRP->setPower(1);
-      defaultLRP = &addLightReflectingProperties(defaultLRP);
-
-      Material& defaultMaterial = createMaterial("default", *defaultLRP);
-
-      MaterialStage* defaultStage = createMaterialStage(getEmptyTexture(),
-                                                        MOP_SELECT_ARG1, SC_LRP, SC_NONE,
-                                                        MOP_SELECT_ARG1, SC_LRP, SC_NONE);
-      defaultMaterial.addStage(defaultStage);
-   }
-
    if (id >= m_materials.size())
    {
       throw std::out_of_range(std::string("Invalid material id"));

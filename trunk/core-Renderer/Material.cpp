@@ -96,6 +96,18 @@ void Material::removeStage(unsigned int stageIdx)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MaterialStage& Material::getStage(unsigned int stageIdx)
+{
+   if (stageIdx >= m_stagesCount)
+   {
+      throw std::out_of_range("Invalid stage index - there aren't so many defined in this material");
+   }
+
+   return *(m_stages[stageIdx]);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool Material::operator==(const Material& rhs) const
 {
    if (m_lightReflectingProperties != rhs.m_lightReflectingProperties) {return false;}
@@ -148,14 +160,12 @@ void Material::checkTransparency()
    m_transparent = false;
    for (unsigned char i = 0; i < m_stagesCount; ++i)
    {
-      if (m_stages[i]->isTransparent() == true) 
+      if (m_stages[i]->getAlphaOperation().getOperationCode() != MOP_DISABLE) 
       {
          m_transparent = true;
          break;
       }
    }
-
-   m_transparent |= m_lightReflectingProperties.isTransparent();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

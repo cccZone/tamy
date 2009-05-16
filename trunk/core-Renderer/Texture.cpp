@@ -3,8 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Texture::Texture(const std::string& name, bool isTransparent)
-      : m_name(name), m_isTransparent(isTransparent)
+Texture::Texture(const std::string& name)
+      : m_name(name)
 {
 }
 
@@ -12,7 +12,7 @@ Texture::Texture(const std::string& name, bool isTransparent)
 
 bool Texture::operator==(const Texture& rhs) const
 {
-   return (m_name == rhs.m_name) && (m_isTransparent == rhs.m_isTransparent);
+   return m_name == rhs.m_name;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

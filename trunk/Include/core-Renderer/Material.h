@@ -43,6 +43,7 @@ public:
 
    void addStage(MaterialStage* stage);
    void removeStage(unsigned int stageIdx);
+   MaterialStage& getStage(unsigned int stageIdx);
 
    const LightReflectingProperties& getLightReflectingProperties() const {return m_lightReflectingProperties;}
 

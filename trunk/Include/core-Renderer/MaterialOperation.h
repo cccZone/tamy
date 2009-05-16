@@ -55,6 +55,10 @@ public:
 
    void setForRendering(unsigned char stageIdx);
 
+   MatOpCode getOperationCode() const {return m_opCode;}
+   SourceCode getArg1() const {return m_arg1;}
+   SourceCode getArg2() const {return m_arg2;}
+
 private:
    void setSource(unsigned char stageIdx, unsigned char argIdx, SourceCode arg);
 };

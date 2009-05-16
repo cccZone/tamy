@@ -61,6 +61,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="tinyxmld.lib"
+				AdditionalLibraryDirectories="$(SolutionDir)\Libs\External\tinyxml&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -124,6 +126,8 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
+				AdditionalDependencies="tinyxml.lib"
+				AdditionalLibraryDirectories="$(SolutionDir)\Libs\External\tinyxml&quot;"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -252,6 +256,54 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="MaterialsParser"
+			>
+			<File
+				RelativePath=".\CompositeElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\CompositeElement.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialLeaf.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\MaterialLeaf.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialsParser.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\MaterialsParser.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialStageLeaf.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\MaterialStageLeaf.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\MaterialXmlElement.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MultipleElement.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\MultipleElement.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

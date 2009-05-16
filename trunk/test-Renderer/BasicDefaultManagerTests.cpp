@@ -106,8 +106,8 @@ TEST(BasicVisualSceneManagerTests, transparentObjects)
    AbstractGraphicalNodeP* nodes;
 
    // prepare the materials
-   TextureStub regularTexture(results, false);
-   TextureStub transparentTexture(results, true);
+   TextureStub regularTexture(results);
+   TextureStub transparentTexture(results);
    LightReflectingPropertiesStub lrp(results, 0);
 
    Material regularMaterial(lrp, matOpImpl, matOpImpl, 0);
@@ -119,7 +119,7 @@ TEST(BasicVisualSceneManagerTests, transparentObjects)
    Material transparentMaterial(lrp, matOpImpl, matOpImpl, 1);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_ADD, SC_NONE, SC_NONE));
    transparentMaterial.addStage(transparentMaterialStage);
 
 
@@ -159,13 +159,13 @@ TEST(BasicVisualSceneManagerTests, removingTransparentObjects)
    AbstractGraphicalNodeP* nodes;
 
    // prepare the materials
-   TextureStub transparentTexture(results, true);
+   TextureStub transparentTexture(results);
    LightReflectingPropertiesStub lrp(results, 0);
 
    Material transparentMaterial(lrp, matOpImpl, matOpImpl, 0);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_MULTIPLY, SC_NONE, SC_NONE));
    transparentMaterial.addStage(transparentMaterialStage);
 
 
@@ -211,13 +211,13 @@ TEST(BasicVisualSceneManagerTests, transparentObjectsAreSortedWithRespectToCamer
    AbstractGraphicalNodeP* nodes;
 
    // prepare the materials
-   TextureStub transparentTexture(results, true);
+   TextureStub transparentTexture(results);
    LightReflectingPropertiesStub lrp(results, 0);
 
    Material transparentMaterial(lrp, matOpImpl, matOpImpl, 0);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_SUBTRACT, SC_NONE, SC_NONE));
    transparentMaterial.addStage(transparentMaterialStage);
 
 
