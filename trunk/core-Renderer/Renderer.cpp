@@ -124,7 +124,7 @@ void Renderer::RenderingState::render(Renderer& renderer)
       D3DXVECTOR3 cameraPos(camMtx._41, camMtx._42, camMtx ._43);
 
       renderer.setViewMatrix(viewMtx);
-      renderer.setProjectionMatrix(activeCamera.getProjectionMtx3D());
+      renderer.setProjectionMatrix(activeCamera.getProjectionMtx());
 
       for (unsigned int passIdx = 0; passIdx < passesCount; ++passIdx)
       {

@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class ProjectionCalculator;
+struct Frustum;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,7 +39,7 @@ public:
 
    const D3DMATRIX& getViewMtx();
 
-   const D3DMATRIX& getProjectionMtx3D();
+   const D3DMATRIX& getProjectionMtx();
 
    void setNearPlaneDimensions(float width, float height);
    float getAspectRatio() const {return m_aspectRatio;}
@@ -56,6 +57,12 @@ public:
     * Returns the current FOV angle of the camera (in degrees)
     */
    float getFOV() const;
+
+   /**
+    * The method returns the current camera frustum (in global coordinates)
+    * The planes in the frustum ARE NORMALIZED
+    */
+   Frustum getFrustrum();
 
 protected:
    void onAccept(NodeVisitor& visitor);

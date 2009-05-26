@@ -130,14 +130,14 @@ void XFileGraphicalEntityLoader::parseFrames(D3DXFRAME* frame,
                                              MeshDefinition* parent, 
                                              MeshDefinition& mesh) const
 {
+   mesh.name = (frame->Name != NULL) ? frame->Name : "";
+   mesh.localMtx = frame->TransformationMatrix;
+
    if (frame->pMeshContainer != NULL)
    {
       parseGeometry((D3DXMESHCONTAINER_DERRIVED*)(frame->pMeshContainer), mesh);
    }
-   mesh.name = (frame->Name != NULL) ? frame->Name : "";
-   mesh.localMtx = frame->TransformationMatrix;
-
-
+   
    // proceed down the hierarchy with the parsing
    if(frame->pFrameSibling != NULL) 
    {
@@ -203,7 +203,7 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshC
    for (DWORD i = 0; i < meshContainer->NumMaterials; ++i)
    {
       std::stringstream matName;
-      matName << meshContainer->Name << "_mat" << i;
+      matName << mesh.name << "_mat" << i;
       if (meshContainer->pMaterials[i].pTextureFilename != NULL)
       {
          matName << "_" << meshContainer->pMaterials[i].pTextureFilename;

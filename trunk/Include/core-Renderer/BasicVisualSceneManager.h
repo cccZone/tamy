@@ -47,18 +47,14 @@ protected:
 
    void remove(Light& light);
 
-   void add(AbstractGraphicalNode& node);
-
-   void remove(AbstractGraphicalNode& node);
-
-private:
-   void refreshVisibleLights(int lightLimit);
-
    void addRegularNode(AbstractGraphicalNode& node);
    void removeRegularNode(AbstractGraphicalNode& node);
 
    void addTransparentNode(AbstractGraphicalNode& node);
    void removeTransparentNode(AbstractGraphicalNode& node);
+
+private:
+   void refreshVisibleLights(int lightLimit);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -2,6 +2,9 @@
 #include "core\Node.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Camera.h"
+#include "core\CollisionTests.h"
+#include "core\Frustum.h"
+#include "core\BoundingSphere.h"
 #include <windows.h>
 #include <math.h>
 #include <algorithm>
@@ -68,7 +71,8 @@ AbstractGraphicalNodeP* BasicVisualSceneManager::getRegularGraphicalNodes(DWORD&
 
       m_regularRenderingQueueSize = m_regularGraphicalNodes.size();
       m_regularRenderingQueue = new AbstractGraphicalNodeP[m_regularRenderingQueueSize];
-
+   }
+   /*
       DWORD i = 0;
       for (GraphicalNodesSet::iterator it = m_regularGraphicalNodes.begin();
            it != m_regularGraphicalNodes.end(); ++it, ++i)
@@ -76,8 +80,24 @@ AbstractGraphicalNodeP* BasicVisualSceneManager::getRegularGraphicalNodes(DWORD&
          m_regularRenderingQueue[i] = *it;
       }
    }
+   
+   delete [] m_regularRenderingQueue;
 
-   arraySize = m_regularRenderingQueueSize;
+   m_regularRenderingQueueSize = m_regularGraphicalNodes.size();
+   m_regularRenderingQueue = new AbstractGraphicalNodeP[m_regularRenderingQueueSize];
+*/
+   Frustum frustum = getActiveCamera().getFrustrum();
+   DWORD i = 0;
+   for (GraphicalNodesSet::iterator it = m_regularGraphicalNodes.begin();
+      it != m_regularGraphicalNodes.end(); ++it)
+   {
+      if (testCollision(frustum, (*it)->getBoundingSphere()) == true)
+      {
+         m_regularRenderingQueue[i++] = *it;
+      }
+   }
+
+   arraySize = i;
    return m_regularRenderingQueue;
 }
 
@@ -128,34 +148,6 @@ void BasicVisualSceneManager::remove(Light& light)
    }
    
    throw std::runtime_error("Trying to remove an unregistered Light");
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void BasicVisualSceneManager::add(AbstractGraphicalNode& node) 
-{
-   if (node.getMaterial().isTransparent())
-   {
-      addTransparentNode(node);
-   }
-   else
-   {
-      addRegularNode(node);  
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void BasicVisualSceneManager::remove(AbstractGraphicalNode& node)
-{
-   if (node.getMaterial().isTransparent())
-   {
-      removeTransparentNode(node);
-   }
-   else
-   {
-      removeRegularNode(node);
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

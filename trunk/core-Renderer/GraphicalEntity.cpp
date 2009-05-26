@@ -50,7 +50,8 @@ Node* GraphicalEntity::instantiate()
    {
       std::stringstream childNodeName;
       childNodeName << getName() << "_subset" << subsetIdx;
-      Node* newNode = new GraphicalNode(childNodeName.str(), *this, subsetIdx);
+      GraphicalNode* newNode = new GraphicalNode(childNodeName.str(), *this, subsetIdx);
+      newNode->setBoundingSphereRadius(getBoundingSphereRadius());
       rootNode->addChild(newNode);
    }
 

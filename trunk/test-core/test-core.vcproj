@@ -239,6 +239,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="BoundingVolumes"
+			>
+			<File
+				RelativePath=".\BoundingVolumesTests.cpp"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

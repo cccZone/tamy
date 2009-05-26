@@ -37,9 +37,13 @@ protected:
 
    void remove(Light& light) {}
 
-   void add(AbstractGraphicalNode& node) {}
+   void addRegularNode(AbstractGraphicalNode& node) {}
 
-   void remove(AbstractGraphicalNode& node) {}
+   void removeRegularNode(AbstractGraphicalNode& node) {}
+
+   void addTransparentNode(AbstractGraphicalNode& node) {}
+
+   void removeTransparentNode(AbstractGraphicalNode& node) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

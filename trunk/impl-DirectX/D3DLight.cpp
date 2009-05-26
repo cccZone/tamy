@@ -22,6 +22,7 @@ D3DLight::D3DLight(const std::string& name, IDirect3DDevice9& d3Device)
 void D3DLight::enable(bool val)
 {
    m_enabled = val;
+   m_d3Device.LightEnable(m_lightNo, m_enabled);
 
    // if we're turning the light off, there's no need to reset it (which costs like A LOT),
    // we'll simply put it off till the next time the light is turned on
@@ -32,7 +33,6 @@ void D3DLight::enable(bool val)
    m_lightDesc.Direction = D3DXVECTOR3(globalMtx._31, globalMtx._32, globalMtx._33); // the global matrix's look vector
 
    m_d3Device.SetLight(m_lightNo, &m_lightDesc);
-   m_d3Device.LightEnable(m_lightNo, m_enabled);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

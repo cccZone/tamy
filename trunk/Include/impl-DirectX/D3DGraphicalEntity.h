@@ -32,16 +32,22 @@ public:
                                       &d3Device, &m_mesh);
       if (FAILED(res)) { throw std::logic_error(std::string("Can't create a mesh")); }
 
-      // fill the vertex buffer
+      // fill the vertex buffer, analyze the bounding sphere radius on the way
       VertexStruct* pVertex = NULL;
       res = m_mesh->LockVertexBuffer(D3DLOCK_DISCARD, (void**)&pVertex);
       if (FAILED(res)) { throw std::logic_error(std::string("Can't lock the mesh's vertex buffer")); }
 
+      float maxCoord = -10000000.f;
       for (typename std::list<VertexStruct>::const_iterator it = subMesh.vertices.begin(); 
            it != subMesh.vertices.end(); ++it)
       {
+         maxCoord = max(maxCoord, fabs((*it).m_coords.x));
+         maxCoord = max(maxCoord, fabs((*it).m_coords.y));
+         maxCoord = max(maxCoord, fabs((*it).m_coords.z));
+
          *pVertex++ = *it;
       }
+      setBoundingSphereRadius(maxCoord);
       m_mesh->UnlockVertexBuffer();
 
       // fill the index buffer & the attributes table

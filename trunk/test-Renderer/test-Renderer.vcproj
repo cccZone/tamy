@@ -197,6 +197,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GraphicalNodeMock.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalNodeMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LightMock.h"
 				>
 			</File>
@@ -245,6 +253,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CullingTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\VisualSceneManagerTests.cpp"
 				>
 			</File>
@@ -258,6 +270,10 @@
 			</File>
 			<File
 				RelativePath=".\GraphicalEntityTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalNodesTests.cpp"
 				>
 			</File>
 			<File

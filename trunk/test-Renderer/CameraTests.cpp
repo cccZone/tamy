@@ -11,6 +11,9 @@
 #include "core-Renderer\Camera.h"
 #include "core\MatrixWriter.h"
 #include "VisualSceneManagerMock.h"
+#include "core\Frustum.h"
+#include "core\BoundingSphere.h"
+#include "core\CollisionTests.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,6 +82,52 @@ TEST(Camera, settingAspectRatioOfCurrentViewportDuringRendering)
    // no we set the camera as an active one
    renderer.render();
    CPPUNIT_ASSERT_DOUBLES_EQUAL(2, camera.getAspectRatio(), 0.01);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(Camera, frustrumCreation)
+{
+  Camera camera("camera");
+  camera.setNearPlaneDimensions(10, 10);
+  camera.setClippingPlanes(10, 100);
+  camera.setFOV(90);
+
+  Frustum frustrum = camera.getFrustrum();
+
+  CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, -2), 1)));
+  CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 8), 1)));
+  CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 102), 1)));
+  CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 0), 1)));
+
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 100), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 8), 2)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 10), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 100), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 50), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-20, 0, 50), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(20, 0, 50), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, -20, 50), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 20, 50), 1)));
+
+  // camera rotated
+  D3DXMatrixRotationY(&(camera.accessLocalMtx()), D3DXToRadian(90));
+
+  frustrum = camera.getFrustrum();
+
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(10, 0, 0), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(100, 0, 0), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(50, 0, 0), 1)));
+
+  // camera rotated
+  D3DXMatrixRotationY(&(camera.accessLocalMtx()), D3DXToRadian(-90));
+
+  frustrum = camera.getFrustrum();
+
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-10, 0, 0), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-100, 0, 0), 1)));
+  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-50, 0, 0), 1)));
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

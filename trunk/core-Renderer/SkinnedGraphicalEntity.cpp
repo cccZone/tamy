@@ -94,7 +94,8 @@ Node* SkinnedGraphicalEntity::instantiate(Node& boneStructure)
          boneDef.push_back(std::make_pair(defIt->second.boneNode, defIt->second.offsetMtx));
       }
 
-      Node* newNode = new SkinnedGraphicalNode(childNodeName.str(), *this, subsetIdx, boneDef);
+      SkinnedGraphicalNode* newNode = new SkinnedGraphicalNode(childNodeName.str(), *this, subsetIdx, boneDef);
+      newNode->setBoundingSphereRadius(getBoundingSphereRadius());
       rootNode->addChild(newNode);
    }
 

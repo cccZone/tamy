@@ -39,8 +39,6 @@ MeshData* GeometryBuilder::createPrism()
    result->vertices.push_back(LitVertex::unskinnedNoTex(-2,  2, -2, 0.707f, 0, -0.707f));
    result->indices.push_back(Face<USHORT>(13, 14, 15, 0));
 
-   result->boundingBox = AABoundingBox(D3DXVECTOR3(-2, -2, -2), D3DXVECTOR3(2, 2, 2));
-
    return result;
 }
 
@@ -97,8 +95,6 @@ MeshData* GeometryBuilder::createCube()
    result->vertices.push_back(LitVertex::unskinnedNoTex( 2, -2,  2, 0, -1, 0));
    result->indices.push_back(Face<USHORT>(20, 21, 22, 0));
    result->indices.push_back(Face<USHORT>(20, 22, 23, 0));
-
-   result->boundingBox = AABoundingBox(D3DXVECTOR3(-2, -2, -2), D3DXVECTOR3(2, 2, 2));
 
    return result;
 }

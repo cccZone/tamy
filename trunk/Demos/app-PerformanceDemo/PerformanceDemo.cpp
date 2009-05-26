@@ -42,9 +42,9 @@ void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceMa
    GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
    AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
 
-   for (int y = 0; y < 40; ++y)
+   for (int y = -20; y < 20; ++y)
    {
-      for (int x = 0; x < 40; ++x)
+      for (int x = -20; x < 20; ++x)
       {
          GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile");
          entInstance->attachEntity(ent);

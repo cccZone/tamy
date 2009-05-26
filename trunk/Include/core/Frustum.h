@@ -1,0 +1,18 @@
+#pragma once
+
+#include <d3dx9.h>
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct Frustum
+{
+   D3DXPLANE nearPlane;
+   D3DXPLANE farPlane;
+   D3DXPLANE leftPlane;
+   D3DXPLANE rightPlane;
+   D3DXPLANE upperPlane;
+   D3DXPLANE lowerPlane;
+};
+
+///////////////////////////////////////////////////////////////////////////////

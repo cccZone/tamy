@@ -126,14 +126,24 @@ protected:
    virtual void remove(Light& light) = 0;
 
    /**
-    * This method is called when we're adding a graphical node to the scene
-    */
-   virtual void add(AbstractGraphicalNode& node) = 0;
+   * This method is called when we're adding a non-transparent graphical node to the scene
+   */
+   virtual void addRegularNode(AbstractGraphicalNode& node) = 0;
 
    /**
-    * This method is called when we're removing a graphical node from the scene
-    */
-   virtual void remove(AbstractGraphicalNode& node) = 0;
+   * This method is called when we're removing a non-transparent graphical node from the scene
+   */
+   virtual void removeRegularNode(AbstractGraphicalNode& node) = 0;
+
+   /**
+   * This method is called when we're adding a transparent graphical node to the scene
+   */
+   virtual void addTransparentNode(AbstractGraphicalNode& node) = 0;
+
+   /**
+   * This method is called when we're removing a transparent graphical node from the scene
+   */
+   virtual void removeTransparentNode(AbstractGraphicalNode& node) = 0;
 
    /**
     * This method is called when we're adding a camera to the scene
@@ -144,6 +154,10 @@ protected:
     * This method is called when we're removing a camera from the scene
     */
    void remove(Camera& node);
+
+   void add(AbstractGraphicalNode& node);
+
+   void remove(AbstractGraphicalNode& node);
 
 private:
    // ---------------------------

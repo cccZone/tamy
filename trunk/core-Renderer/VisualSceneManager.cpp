@@ -2,6 +2,7 @@
 #include "core\Node.h"
 #include "core-Renderer\SkyBox.h"
 #include "core-Renderer\ActiveCameraNode.h"
+#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -96,6 +97,34 @@ void VisualSceneManager::remove(Camera& node)
 {
    if (m_activeCamera != &node) {return;}
    m_activeCamera = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void VisualSceneManager::add(AbstractGraphicalNode& node) 
+{
+   if (node.getMaterial().isTransparent())
+   {
+      addTransparentNode(node);
+   }
+   else
+   {
+      addRegularNode(node);  
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void VisualSceneManager::remove(AbstractGraphicalNode& node)
+{
+   if (node.getMaterial().isTransparent())
+   {
+      removeTransparentNode(node);
+   }
+   else
+   {
+      removeRegularNode(node);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -203,14 +203,6 @@
 			Name="Math"
 			>
 			<File
-				RelativePath=".\BoundingVolume.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core\BoundingVolume.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Include\core\CellSpacePartition.h"
 				>
 			</File>
@@ -286,6 +278,50 @@
 				RelativePath="..\Include\core\SceneManager.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="BoundingVolumes"
+			>
+			<Filter
+				Name="Volumes"
+				>
+				<File
+					RelativePath=".\AABoundingBox.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\AABoundingBox.h"
+					>
+				</File>
+				<File
+					RelativePath=".\BoundingSphere.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\BoundingSphere.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\Frustum.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\Ray.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Algorithms"
+				>
+				<File
+					RelativePath=".\CollisionTests.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\CollisionTests.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
