@@ -157,21 +157,3 @@ TEST(Ray, intersects_Plane)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-TEST(BoundingSphere_Frustrum_intersection, bug)
-{
-   Frustum frustrum;
-
-   frustrum.nearPlane  = D3DXPLANE(0.643853, -0.051671, -0.763403, 1.01);
-   frustrum.farPlane   = D3DXPLANE(-0.000186903, 1, 0.00022161, -1.45241);
-   frustrum.leftPlane  = D3DXPLANE(-0.193365, -0.0385902, -0.980368, -0);
-   frustrum.rightPlane = D3DXPLANE(0.999354, -0.0260927, 0.0247237, -0);
-   frustrum.upperPlane = D3DXPLANE(0.345464, 0.839005, -0.420387, -0);
-   frustrum.lowerPlane = D3DXPLANE(0.298389, -0.890676, -0.343016, -0);
-
-   BoundingSphere sphere(D3DXVECTOR3(-9.9418507, 5.1547689, 17.066504), 3.7042301);
-
-   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, sphere));
-}
-
-///////////////////////////////////////////////////////////////////////////////

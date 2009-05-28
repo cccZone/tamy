@@ -1,7 +1,7 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core-Renderer\RenderingProcessor.h"
 #include "core-Renderer\RenderingCommand.h"
-#include "core-Renderer\BasicVisualSceneManager.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "RendererImplementationMock.h"
 #include "TextureStub.h"
 #include "core-Renderer\Material.h"

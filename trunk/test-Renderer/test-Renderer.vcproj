@@ -245,10 +245,6 @@
 			Name="SceneManager"
 			>
 			<File
-				RelativePath=".\BasicDefaultManagerTests.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\BatchingStrategyTests.cpp"
 				>
 			</File>

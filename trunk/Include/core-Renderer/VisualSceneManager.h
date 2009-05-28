@@ -3,10 +3,14 @@
 #include "core\AbstractSceneManager.h"
 #include "core-Renderer\BatchingStrategy.h"
 #include <list>
+#include "core\Array.h"
 #include "core\TNodesVisitor.h"
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\Camera.h"
+#include "core\DistanceComparator.h"
+#include <set>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,6 +20,7 @@ class Node;
 class SkyBox;
 class Camera;
 class ActiveCameraNode;
+class Culler;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,14 +48,38 @@ private:
    Operation* m_noOperation;
    Operation* m_currentOperation;
 
+   Culler* m_culler;
+
    ActiveCameraNode* m_activeCameraDeploymentNode;
    Camera* m_activeCamera;
 
    SkyBox* m_skyBox;
 
+   std::list<Light*> m_allLights;
+   D3DXVECTOR3 m_cachedCameraPos;
+   std::list<Light*> m_currentlyVisibleLights;
+
+   //typedef std::multiset<AbstractGraphicalNode*, BatchComparator> GraphicalNodesSet;
+   //GraphicalNodesSet m_regularGraphicalNodes;
+   Array<AbstractGraphicalNodeP> m_regularGraphicalNodes;
+   Array<AbstractGraphicalNodeP> m_regularRenderingQueue;
+   bool m_regularNodesDirty;
+
+   Array<AbstractGraphicalNodeP> m_transparentNodes;
+   Array<AbstractGraphicalNodeP> m_transparentRenderingQueue;
+
+
+   BatchComparator m_materialsComparator;
+   DistanceComparator<AbstractGraphicalNode> m_distanceComparator;
+
 public:
    VisualSceneManager();
    ~VisualSceneManager();
+
+   /**
+    * The method allows to switch from the default culler to a custom one
+    */
+   void setCuller(Culler* culler);
 
    /**
     * In order for the rendered scene to appear more lifelike, we can
@@ -87,7 +116,7 @@ public:
     * The method extracts the most influential lights (up to the given limit)
     * for the area specified by the transformation of the 'cameraNode'
     */
-   virtual const std::list<Light*>& getLights(int lightLimit) = 0;
+   const std::list<Light*>& getLights(int lightLimit);
 
    /**
     * The method extracts all the nodes that can be rendered from the camera's 
@@ -99,7 +128,7 @@ public:
     *         is managed by the scene manager and should not be released from the context
     *         that calls this method
     */
-   virtual AbstractGraphicalNodeP* getRegularGraphicalNodes(DWORD& arraySize) = 0;
+   AbstractGraphicalNodeP* getRegularGraphicalNodes(DWORD& arraySize);
 
    /**
     * The method extracts all the transparent nodes that can be rendered from the camera's 
@@ -111,53 +140,25 @@ public:
     *         is managed by the scene manager and should not be released from the context
     *         that calls this method
     */
-   virtual AbstractGraphicalNodeP* getTransparentGraphicalNodes(DWORD& arraySize) = 0;
+   AbstractGraphicalNodeP* getTransparentGraphicalNodes(DWORD& arraySize);
 
 
-protected:
-   /**
-    * This method is called when we're adding a light to the scene
-    */
-   virtual void add(Light& light) = 0;
+private:
+   void add(Light& light);
+   void remove(Light& light);
+   void refreshVisibleLights(int lightLimit);
 
-   /**
-    * This method is called when we're removing a light from the scene
-    */
-   virtual void remove(Light& light) = 0;
-
-   /**
-   * This method is called when we're adding a non-transparent graphical node to the scene
-   */
-   virtual void addRegularNode(AbstractGraphicalNode& node) = 0;
-
-   /**
-   * This method is called when we're removing a non-transparent graphical node from the scene
-   */
-   virtual void removeRegularNode(AbstractGraphicalNode& node) = 0;
-
-   /**
-   * This method is called when we're adding a transparent graphical node to the scene
-   */
-   virtual void addTransparentNode(AbstractGraphicalNode& node) = 0;
-
-   /**
-   * This method is called when we're removing a transparent graphical node from the scene
-   */
-   virtual void removeTransparentNode(AbstractGraphicalNode& node) = 0;
-
-   /**
-    * This method is called when we're adding a camera to the scene
-    */
    void add(Camera& node);
-
-   /**
-    * This method is called when we're removing a camera from the scene
-    */
    void remove(Camera& node);
 
    void add(AbstractGraphicalNode& node);
-
    void remove(AbstractGraphicalNode& node);
+
+   void addRegularNode(AbstractGraphicalNode& node);
+   void removeRegularNode(AbstractGraphicalNode& node);
+
+   void addTransparentNode(AbstractGraphicalNode& node);
+   void removeTransparentNode(AbstractGraphicalNode& node);
 
 private:
    // ---------------------------

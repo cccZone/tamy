@@ -5,7 +5,7 @@
 #include "core\Point.h"
 #include "core-ResourceManagement\ResourceManager.h"
 #include "core\CompositeSceneManager.h"
-#include "core-Renderer\BasicVisualSceneManager.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
@@ -36,7 +36,7 @@ void TransparencyDemo::initialize(Renderer& renderer, ResourceManager& resourceM
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
-   VisualSceneManager* visualSceneManager = new BasicVisualSceneManager();
+   VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 

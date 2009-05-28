@@ -54,6 +54,14 @@ public:
    }
 
    /**
+    * Clears the contents of the array
+    */
+   void clear()
+   {
+      m_elementsCount = 0;
+   }
+
+   /**
     * The method returns the number of elements that can be put
     * in the array without it being resized
     */

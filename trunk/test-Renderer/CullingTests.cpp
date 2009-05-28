@@ -1,5 +1,5 @@
 #include "core-TestFramework\TestFramework.h"
-#include "core-Renderer\BasicVisualSceneManager.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "core\Node.h"
 #include "TextureStub.h"
 #include "core-Renderer\Material.h"

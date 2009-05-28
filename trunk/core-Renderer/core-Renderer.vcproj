@@ -327,19 +327,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BasicVisualSceneManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\BasicVisualSceneManager.h"
-				>
-			</File>
-			<File
 				RelativePath=".\BatchingStrategy.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\BatchingStrategy.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\Culler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\GraphicalNodesAnalyzer.h"
 				>
 			</File>
 			<File
@@ -428,6 +428,26 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\Texture.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Cullers"
+			>
+			<File
+				RelativePath=".\FrustumCuller.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\FrustumCuller.h"
+				>
+			</File>
+			<File
+				RelativePath=".\NullCuller.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\NullCuller.h"
 				>
 			</File>
 		</Filter>
