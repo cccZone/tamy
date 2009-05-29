@@ -39,19 +39,8 @@ TEST(RenderingProcessor, issuingRenderingCommands)
    AbstractGraphicalNodeP* nodesToRender = new AbstractGraphicalNodeP[nodesArraySize];
    nodesToRender[0] = &node;
 
-   DWORD commandsArraySize = 10;
-   RenderingCommand* commands = new RenderingCommand[commandsArraySize];
-
-   DWORD commandsCount = processor.translate(nodesToRender, nodesArraySize, 
-                                             commands, commandsArraySize);
+   processor.translate(nodesToRender, nodesArraySize);
    
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, commandsCount);
-
-   // run through the comands
-   for (DWORD i = 0; i < commandsCount; ++i)
-   {
-      (commands[i])();
-   }
 
    // compare the results
    std::vector<std::string> expectedResults;
@@ -71,7 +60,6 @@ TEST(RenderingProcessor, issuingRenderingCommands)
    }
 
    delete [] nodesToRender;
-   delete [] commands;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,20 +107,7 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
    nodesToRender[2] = &node4;
    nodesToRender[3] = &node3; // this one uses a different material
 
-   DWORD commandsArraySize = 10;
-   RenderingCommand* commands = new RenderingCommand[commandsArraySize];
-
-   DWORD commandsCount = processor.translate(nodesToRender, nodesArraySize, 
-                                             commands, commandsArraySize);
-
-   
-   CPPUNIT_ASSERT_EQUAL((DWORD)6, commandsCount);
-
-   // run through the comands
-   for (DWORD i = 0; i < commandsCount; ++i)
-   {
-      (commands[i])();
-   }
+   processor.translate(nodesToRender, nodesArraySize);
 
    // compare the results
    std::vector<std::string> expectedResults;
@@ -157,7 +132,6 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
    }
 
    delete [] nodesToRender;
-   delete [] commands;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

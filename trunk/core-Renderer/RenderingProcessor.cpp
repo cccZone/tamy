@@ -6,13 +6,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DWORD RenderingProcessor::translate(AbstractGraphicalNodeP* nodesToRender, const DWORD& nodesArraySize,
-                                    RenderingCommand* renderingCommands, const DWORD& commandsArraySize)
+void RenderingProcessor::translate(AbstractGraphicalNodeP* nodesToRender, const DWORD& nodesArraySize)
 {
    Material* prevMat = NULL;
    DWORD commandIdx = 0;
 
-   for (DWORD i = 0; (i < nodesArraySize) && (commandIdx < commandsArraySize); ++i)
+   for (DWORD i = 0; i < nodesArraySize; ++i)
    {
       if (nodesToRender[i] == NULL) {continue;}
 
@@ -21,28 +20,11 @@ DWORD RenderingProcessor::translate(AbstractGraphicalNodeP* nodesToRender, const
 
       if ((prevMat == NULL) || (*prevMat != mat))
       {
-         renderingCommands[commandIdx++] = setMaterial(mat);
+         mat.setForRendering();
          prevMat = &mat;
       }
-      renderingCommands[commandIdx++] = renderEntity(graphicalNode);
+      graphicalNode.render();
    }
-
-   return commandIdx;
-
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-RenderingCommand RenderingProcessor::setMaterial(Material& material)
-{
-   return RenderingCommand::from_method<Material, &Material::setForRendering> (&material);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-RenderingCommand RenderingProcessor::renderEntity(AbstractGraphicalNode& graphicalNode)
-{
-   return RenderingCommand::from_method<AbstractGraphicalNode, &AbstractGraphicalNode::render> (&graphicalNode);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

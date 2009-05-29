@@ -139,7 +139,7 @@ TEST(VisualSceneManagerTests, retrievingStaticGeometry)
    GraphicalNode* node3 = new GraphicalNode("subset2 - material2", entity, 2);
    GraphicalNode* node4 = new GraphicalNode("subset3 - material1", entity, 3);
 
-   Camera cameraNode("camera"); // camera doesn't play any part as far as this scene manager is concerned
+   Camera cameraNode("camera"); 
 
    // add the nodes to the scene
    VisualSceneManager sceneManager;

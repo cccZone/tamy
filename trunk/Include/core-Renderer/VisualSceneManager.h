@@ -2,15 +2,13 @@
 
 #include "core\AbstractSceneManager.h"
 #include "core-Renderer\BatchingStrategy.h"
-#include <list>
 #include "core\Array.h"
 #include "core\TNodesVisitor.h"
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\Camera.h"
 #include "core\DistanceComparator.h"
-#include <set>
-#include <vector>
+#include <list>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,8 +57,6 @@ private:
    D3DXVECTOR3 m_cachedCameraPos;
    std::list<Light*> m_currentlyVisibleLights;
 
-   //typedef std::multiset<AbstractGraphicalNode*, BatchComparator> GraphicalNodesSet;
-   //GraphicalNodesSet m_regularGraphicalNodes;
    Array<AbstractGraphicalNodeP> m_regularGraphicalNodes;
    Array<AbstractGraphicalNodeP> m_regularRenderingQueue;
    bool m_regularNodesDirty;

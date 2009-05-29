@@ -247,16 +247,6 @@ AbstractGraphicalNodeP* VisualSceneManager::getRegularGraphicalNodes(DWORD& arra
       return NULL;
    }
 
-   // create a list of visible nodes
-   m_regularRenderingQueue.clear();
-
-   m_culler->setup(getActiveCamera(), m_regularRenderingQueue);
-   GraphicalNodesAnalyzer<Culler> analyzer(*m_culler);
-
-   std::for_each((AbstractGraphicalNodeP*)m_regularGraphicalNodes, 
-                 (AbstractGraphicalNodeP*)m_regularGraphicalNodes + m_regularGraphicalNodes.size(), 
-                 analyzer);
-
    // sort the nodes
    if (m_regularNodesDirty)
    {
@@ -266,6 +256,16 @@ AbstractGraphicalNodeP* VisualSceneManager::getRegularGraphicalNodes(DWORD& arra
 
       m_regularNodesDirty = false;
    }
+
+   // create a list of visible nodes
+   m_regularRenderingQueue.clear();
+
+   m_culler->setup(getActiveCamera(), m_regularRenderingQueue);
+   GraphicalNodesAnalyzer<Culler> analyzer(*m_culler);
+
+   std::for_each((AbstractGraphicalNodeP*)m_regularGraphicalNodes, 
+                 (AbstractGraphicalNodeP*)m_regularGraphicalNodes + m_regularGraphicalNodes.size(), 
+                 analyzer);
    
    arraySize = m_regularRenderingQueue.size();
    return m_regularRenderingQueue;
