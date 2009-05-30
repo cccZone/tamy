@@ -1,13 +1,11 @@
 #pragma once
 
-#include <d3dx9.h>
+#include <cassert>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct Frustum
-{
-   D3DXPLANE planes[6];
-};
+#define ASSERT(cond, msg)                                                     \
+   assert((cond) && msg);
 
 ///////////////////////////////////////////////////////////////////////////////

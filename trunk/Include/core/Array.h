@@ -1,6 +1,7 @@
 #pragma once
 
-#include <stdexcept>
+#include "core\Assert.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -65,12 +66,12 @@ public:
     * The method returns the number of elements that can be put
     * in the array without it being resized
     */
-   unsigned int containerSize() {return m_size;}
+   unsigned int containerSize() const {return m_size;}
 
    /**
     * The method returns the number of elements in the array
     */
-   unsigned int size() {return m_elementsCount;}
+   unsigned int size() const {return m_elementsCount;}
 
    /**
     * The method resizes the array, preparing it to accumulate
@@ -120,10 +121,7 @@ public:
     */
    void remove(unsigned int idx)
    {
-      if (idx >= m_elementsCount) 
-      {
-         throw std::out_of_range("index out of array boundaries");
-      }
+      ASSERT(idx < m_elementsCount, "index out of array boundaries"); 
 
       for (unsigned int i = idx + 1; i < m_elementsCount; ++i)
       {
@@ -137,10 +135,7 @@ public:
     */
    T& at(unsigned int idx)
    {
-      if (idx >= m_elementsCount) 
-      {
-         throw std::out_of_range("index out of array boundaries");
-      }
+      ASSERT(idx < m_elementsCount,  "index out of array boundaries"); 
       return m_arr[idx];
    }
 
@@ -150,10 +145,7 @@ public:
     */
    const T& at(unsigned int idx) const
    {
-      if (idx >= m_elementsCount) 
-      {
-         throw std::out_of_range("index out of array boundaries");
-      }
+      ASSERT(idx < m_elementsCount, "index out of array boundaries"); 
       return m_arr[idx];
    }
 

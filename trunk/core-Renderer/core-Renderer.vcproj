@@ -327,6 +327,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\AGNVolExtractor.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\AGNVolExtractor.h"
+				>
+			</File>
+			<File
 				RelativePath=".\BatchingStrategy.cpp"
 				>
 			</File>

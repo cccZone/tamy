@@ -200,14 +200,26 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Math"
+			Name="DataStructures"
 			>
+			<File
+				RelativePath="..\Include\core\Array.h"
+				>
+			</File>
 			<File
 				RelativePath="..\Include\core\CellSpacePartition.h"
 				>
 			</File>
 			<File
+				RelativePath="..\Include\core\Octree.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core\Point.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core\Stack.h"
 				>
 			</File>
 		</Filter>
@@ -231,7 +243,7 @@
 			Name="Utils"
 			>
 			<File
-				RelativePath="..\Include\core\Array.h"
+				RelativePath="..\Include\core\Assert.h"
 				>
 			</File>
 			<File

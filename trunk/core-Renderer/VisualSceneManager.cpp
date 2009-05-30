@@ -20,7 +20,7 @@ VisualSceneManager::VisualSceneManager()
       m_activeCameraDeploymentNode(new ActiveCameraNode()),
       m_activeCamera(NULL),
       m_skyBox(NULL),
-      m_regularNodesDirty(false)
+      m_regularNodesTree(64, 1000)
 {
    m_addOperation = new AddOperation(*this);
    m_removeOperation = new RemoveOperation(*this);
@@ -247,25 +247,24 @@ AbstractGraphicalNodeP* VisualSceneManager::getRegularGraphicalNodes(DWORD& arra
       return NULL;
    }
 
-   // sort the nodes
-   if (m_regularNodesDirty)
-   {
-      std::sort((AbstractGraphicalNodeP*)m_regularGraphicalNodes, 
-         (AbstractGraphicalNodeP*)m_regularGraphicalNodes + m_regularGraphicalNodes.size(),
-         m_materialsComparator);
-
-      m_regularNodesDirty = false;
-   }
+   // get the nodes in the visible sector
+   m_regularGraphicalNodes.clear();
+   Frustum frustum = getActiveCamera().getFrustrum();
+   m_regularNodesTree.query(frustum, m_regularGraphicalNodes);
 
    // create a list of visible nodes
    m_regularRenderingQueue.clear();
-
    m_culler->setup(getActiveCamera(), m_regularRenderingQueue);
    GraphicalNodesAnalyzer<Culler> analyzer(*m_culler);
 
    std::for_each((AbstractGraphicalNodeP*)m_regularGraphicalNodes, 
                  (AbstractGraphicalNodeP*)m_regularGraphicalNodes + m_regularGraphicalNodes.size(), 
                  analyzer);
+
+   // sort the nodes
+   std::sort((AbstractGraphicalNodeP*)m_regularRenderingQueue, 
+      (AbstractGraphicalNodeP*)m_regularRenderingQueue + m_regularRenderingQueue.size(),
+      m_materialsComparator);
    
    arraySize = m_regularRenderingQueue.size();
    return m_regularRenderingQueue;
@@ -308,16 +307,14 @@ AbstractGraphicalNodeP* VisualSceneManager::getTransparentGraphicalNodes(DWORD& 
 
 void VisualSceneManager::addRegularNode(AbstractGraphicalNode& node)
 {
-   m_regularGraphicalNodes.push_back(&node);
-   m_regularNodesDirty = true;
+   m_regularNodesTree.insert(&node);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void VisualSceneManager::removeRegularNode(AbstractGraphicalNode& node)
 {
-   unsigned int pos = m_regularGraphicalNodes.find(&node);
-   m_regularGraphicalNodes.remove(pos);
+   m_regularNodesTree.remove(&node);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

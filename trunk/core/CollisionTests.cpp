@@ -71,14 +71,79 @@ bool testCollision(const AABoundingBox& aabb, const BoundingSphere& sphere)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const Frustum& frustrum, const BoundingSphere& sphere)
+bool testCollision(const AABoundingBox& aabb, const Frustum& frustum)
 {
-   if (D3DXPlaneDotCoord(&(frustrum.leftPlane),  &(sphere.origin)) > sphere.radius) {return false;}
-   if (D3DXPlaneDotCoord(&(frustrum.rightPlane), &(sphere.origin)) > sphere.radius) {return false;}
-   if (D3DXPlaneDotCoord(&(frustrum.nearPlane),  &(sphere.origin)) > sphere.radius) {return false;}
-   if (D3DXPlaneDotCoord(&(frustrum.farPlane),   &(sphere.origin)) > sphere.radius) {return false;}
-   if (D3DXPlaneDotCoord(&(frustrum.upperPlane), &(sphere.origin)) > sphere.radius) {return false;}
-   if (D3DXPlaneDotCoord(&(frustrum.lowerPlane), &(sphere.origin)) > sphere.radius) {return false;}
+   D3DXVECTOR3 nearPoint;
+
+   for (int i =0; i < 6; ++i)
+   {
+      D3DXVECTOR3 planeNormal(frustum.planes[i].a, frustum.planes[i].b, frustum.planes[i].c);
+
+      if (planeNormal.x > 0.0f)
+      {
+         if (planeNormal.y > 0.0f)
+         {
+            if (planeNormal.z > 0.0f)
+            {
+               nearPoint.x = aabb.min.x; nearPoint.y = aabb.min.y; nearPoint.z = aabb.min.z;
+            }
+            else
+            {
+               nearPoint.x = aabb.min.x; nearPoint.y = aabb.min.y; nearPoint.z = aabb.max.z;
+            }
+         }
+         else
+         {
+            if (planeNormal.z> 0.0f)
+            {
+               nearPoint.x = aabb.min.x; nearPoint.y = aabb.max.y; nearPoint.z = aabb.min.z;
+            }
+            else
+            {
+               nearPoint.x = aabb.min.x; nearPoint.y = aabb.max.y; nearPoint.z = aabb.max.z;
+            }
+         }
+      }
+      else 
+      {
+         if (planeNormal.y > 0.0f)
+         {
+            if (planeNormal.z > 0.0f)
+            {
+               nearPoint.x = aabb.max.x; nearPoint.y = aabb.min.y; nearPoint.z = aabb.min.z;
+            }
+            else
+            {
+               nearPoint.x = aabb.max.x; nearPoint.y = aabb.min.y; nearPoint.z = aabb.max.z;
+            }
+         }
+         else
+         {
+            if (planeNormal.z > 0.0f)
+            {
+               nearPoint.x = aabb.max.x; nearPoint.y = aabb.max.y; nearPoint.z = aabb.min.z;
+            }
+            else
+            {
+               nearPoint.x = aabb.max.x; nearPoint.y = aabb.max.y; nearPoint.z = aabb.max.z;
+            }
+         }
+      }
+
+      if ((D3DXVec3Dot(&planeNormal, &nearPoint) + frustum.planes[i].d) > 0) {return false;}
+   }
+
+   return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool testCollision(const Frustum& frustum, const BoundingSphere& sphere)
+{
+   for (int i = 0; i < 6; ++i)
+   {
+      if (D3DXPlaneDotCoord(&(frustum.planes[i]),  &(sphere.origin)) > sphere.radius) {return false;}
+   }
 
    return true;
 }

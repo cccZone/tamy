@@ -9,7 +9,6 @@ TEST(Array, addingNewElements)
    Array<int> arr;
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, arr.size());
-   CPPUNIT_ASSERT_THROW(arr.at(0), std::out_of_range);
 
    arr.push_back(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, arr.size());
@@ -73,8 +72,6 @@ TEST(Array, removingElements)
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, arr.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)4, arr.containerSize());
    CPPUNIT_ASSERT_EQUAL(1, arr[0]);
-
-   CPPUNIT_ASSERT_THROW(arr.remove(1), std::out_of_range);
 
    arr.remove(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, arr.size());

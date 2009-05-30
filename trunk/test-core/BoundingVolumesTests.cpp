@@ -99,12 +99,12 @@ TEST(AABoundingBox, intersects_BoundingSphere)
 TEST(BoundingSphere, intersects_Frustrum)
 {
    Frustum frustrum;
-   frustrum.nearPlane  = D3DXPLANE(         0,          0,         -1, 1.01f);
-   frustrum.farPlane   = D3DXPLANE(         0,          0,          1, -5002.28f);
-   frustrum.leftPlane  = D3DXPLANE(-0.707107f,          0, -0.707107f, 0);
-   frustrum.rightPlane = D3DXPLANE( 0.707107f,          0, -0.707107f, 0);
-   frustrum.upperPlane = D3DXPLANE(         0,  0.707107f, -0.707107f, 0);
-   frustrum.lowerPlane = D3DXPLANE(         0, -0.707107f, -0.707107f, 0);
+   frustrum.planes[0]  = D3DXPLANE(         0,          0,         -1, 1.01f);
+   frustrum.planes[1]  = D3DXPLANE(         0,          0,          1, -5002.28f);
+   frustrum.planes[2]  = D3DXPLANE(-0.707107f,          0, -0.707107f, 0);
+   frustrum.planes[3]  = D3DXPLANE( 0.707107f,          0, -0.707107f, 0);
+   frustrum.planes[4]  = D3DXPLANE(         0,  0.707107f, -0.707107f, 0);
+   frustrum.planes[5]  = D3DXPLANE(         0, -0.707107f, -0.707107f, 0);
 
    // completely inside
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 100), 1)));

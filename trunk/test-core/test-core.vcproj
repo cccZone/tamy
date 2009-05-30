@@ -232,18 +232,22 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="UtilsTests"
+			Name="BoundingVolumes"
+			>
+			<File
+				RelativePath=".\BoundingVolumesTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="DataStructures"
 			>
 			<File
 				RelativePath=".\ArrayTests.cpp"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="BoundingVolumes"
-			>
 			<File
-				RelativePath=".\BoundingVolumesTests.cpp"
+				RelativePath=".\OctreesTests.cpp"
 				>
 			</File>
 		</Filter>

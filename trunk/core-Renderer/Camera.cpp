@@ -145,41 +145,41 @@ Frustum Camera::getFrustrum()
 
    Frustum frustrum;
 
-   frustrum.lowerPlane.a = -(combinedMtx._14 + combinedMtx._12);
-   frustrum.lowerPlane.b = -(combinedMtx._24 + combinedMtx._22);
-   frustrum.lowerPlane.c = -(combinedMtx._34 + combinedMtx._32);
-   frustrum.lowerPlane.d = -(combinedMtx._44 + combinedMtx._42);
-   D3DXPlaneNormalize(&(frustrum.lowerPlane), &(frustrum.lowerPlane));
+   frustrum.planes[0].a = -(combinedMtx._14 + combinedMtx._12);
+   frustrum.planes[0].b = -(combinedMtx._24 + combinedMtx._22);
+   frustrum.planes[0].c = -(combinedMtx._34 + combinedMtx._32);
+   frustrum.planes[0].d = -(combinedMtx._44 + combinedMtx._42);
+   D3DXPlaneNormalize(&(frustrum.planes[0]), &(frustrum.planes[0]));
 
-   frustrum.upperPlane.a = -(combinedMtx._14 - combinedMtx._12);
-   frustrum.upperPlane.b = -(combinedMtx._24 - combinedMtx._22);
-   frustrum.upperPlane.c = -(combinedMtx._34 - combinedMtx._32);
-   frustrum.upperPlane.d = -(combinedMtx._44 - combinedMtx._42);
-   D3DXPlaneNormalize(&(frustrum.upperPlane), &(frustrum.upperPlane));
+   frustrum.planes[1].a = -(combinedMtx._14 - combinedMtx._12);
+   frustrum.planes[1].b = -(combinedMtx._24 - combinedMtx._22);
+   frustrum.planes[1].c = -(combinedMtx._34 - combinedMtx._32);
+   frustrum.planes[1].d = -(combinedMtx._44 - combinedMtx._42);
+   D3DXPlaneNormalize(&(frustrum.planes[1]), &(frustrum.planes[1]));
 
-   frustrum.leftPlane.a  = -(combinedMtx._14 + combinedMtx._11);
-   frustrum.leftPlane.b  = -(combinedMtx._24 + combinedMtx._21);
-   frustrum.leftPlane.c  = -(combinedMtx._34 + combinedMtx._31);
-   frustrum.leftPlane.d  = -(combinedMtx._44 + combinedMtx._41);
-   D3DXPlaneNormalize(&(frustrum.leftPlane), &(frustrum.leftPlane));
+   frustrum.planes[2].a  = -(combinedMtx._14 + combinedMtx._11);
+   frustrum.planes[2].b  = -(combinedMtx._24 + combinedMtx._21);
+   frustrum.planes[2].c  = -(combinedMtx._34 + combinedMtx._31);
+   frustrum.planes[2].d  = -(combinedMtx._44 + combinedMtx._41);
+   D3DXPlaneNormalize(&(frustrum.planes[2]), &(frustrum.planes[2]));
 
-   frustrum.rightPlane.a = -(combinedMtx._14 - combinedMtx._11);
-   frustrum.rightPlane.b = -(combinedMtx._24 - combinedMtx._21);
-   frustrum.rightPlane.c = -(combinedMtx._34 - combinedMtx._31);
-   frustrum.rightPlane.d = -(combinedMtx._44 - combinedMtx._41);
-   D3DXPlaneNormalize(&(frustrum.rightPlane), &(frustrum.rightPlane));
+   frustrum.planes[3].a = -(combinedMtx._14 - combinedMtx._11);
+   frustrum.planes[3].b = -(combinedMtx._24 - combinedMtx._21);
+   frustrum.planes[3].c = -(combinedMtx._34 - combinedMtx._31);
+   frustrum.planes[3].d = -(combinedMtx._44 - combinedMtx._41);
+   D3DXPlaneNormalize(&(frustrum.planes[3]), &(frustrum.planes[3]));
 
-   frustrum.farPlane.a   = -(combinedMtx._14 - combinedMtx._13);
-   frustrum.farPlane.b   = -(combinedMtx._24 - combinedMtx._23);
-   frustrum.farPlane.c   = -(combinedMtx._34 - combinedMtx._33);
-   frustrum.farPlane.d   = -(combinedMtx._44 - combinedMtx._43);
-   D3DXPlaneNormalize(&(frustrum.farPlane), &(frustrum.farPlane));
+   frustrum.planes[4].a   = -(combinedMtx._14 - combinedMtx._13);
+   frustrum.planes[4].b   = -(combinedMtx._24 - combinedMtx._23);
+   frustrum.planes[4].c   = -(combinedMtx._34 - combinedMtx._33);
+   frustrum.planes[4].d   = -(combinedMtx._44 - combinedMtx._43);
+   D3DXPlaneNormalize(&(frustrum.planes[4]), &(frustrum.planes[4]));
 
-   frustrum.nearPlane.a   = -combinedMtx._13;
-   frustrum.nearPlane.b   = -combinedMtx._23;
-   frustrum.nearPlane.c   = -combinedMtx._33;
-   frustrum.nearPlane.d   = -combinedMtx._43;
-   D3DXPlaneNormalize(&(frustrum.nearPlane), &(frustrum.nearPlane));
+   frustrum.planes[5].a   = -combinedMtx._13;
+   frustrum.planes[5].b   = -combinedMtx._23;
+   frustrum.planes[5].c   = -combinedMtx._33;
+   frustrum.planes[5].d   = -combinedMtx._43;
+   D3DXPlaneNormalize(&(frustrum.planes[5]), &(frustrum.planes[5]));
 
    return frustrum;
 }

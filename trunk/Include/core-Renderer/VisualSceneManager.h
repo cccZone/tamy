@@ -8,6 +8,8 @@
 #include "core-Renderer\Light.h"
 #include "core-Renderer\Camera.h"
 #include "core\DistanceComparator.h"
+#include "core\Octree.h"
+#include "core-Renderer\AGNVolExtractor.h"
 #include <list>
 
 
@@ -57,9 +59,9 @@ private:
    D3DXVECTOR3 m_cachedCameraPos;
    std::list<Light*> m_currentlyVisibleLights;
 
+   Octree<AbstractGraphicalNodeP, AGNVolExtractor> m_regularNodesTree;
    Array<AbstractGraphicalNodeP> m_regularGraphicalNodes;
    Array<AbstractGraphicalNodeP> m_regularRenderingQueue;
-   bool m_regularNodesDirty;
 
    Array<AbstractGraphicalNodeP> m_transparentNodes;
    Array<AbstractGraphicalNodeP> m_transparentRenderingQueue;

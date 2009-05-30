@@ -321,4 +321,7 @@ Global
 		{55E4725C-D3EC-4263-B2AB-672D6F2413BB} = {E2C5507B-4365-4FFE-B527-0353065333EE}
 		{C1E20DCE-6BF3-40B8-BD92-862B1E50FED9} = {E2C5507B-4365-4FFE-B527-0353065333EE}
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		AMDCaProjectFile = D:\Docs\Projects\GameEngine\CodeAnalyst\GameEngine.caw
+	EndGlobalSection
 EndGlobal
