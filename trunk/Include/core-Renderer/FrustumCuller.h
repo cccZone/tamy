@@ -13,7 +13,7 @@ private:
    Array<AbstractGraphicalNodeP>* m_renderingQueue;
 
 public:
-   void setup(Camera& camera,
+   void setup(Frustum& frustum,
               Array<AbstractGraphicalNodeP>& renderingQueue);
 
    void operator()(AbstractGraphicalNode& node);

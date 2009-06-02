@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Camera;
+struct Frustum;
 class AbstractGraphicalNode;
 typedef AbstractGraphicalNode* AbstractGraphicalNodeP;
 
@@ -17,7 +17,7 @@ class Culler
 public:
    virtual ~Culler() {}
 
-   virtual void setup(Camera& camera,
+   virtual void setup(Frustum& frustum,
                       Array<AbstractGraphicalNodeP>& renderingQueue) = 0;
 
    virtual void operator()(AbstractGraphicalNode& node) = 0;

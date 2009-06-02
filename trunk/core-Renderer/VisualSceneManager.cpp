@@ -192,28 +192,14 @@ void VisualSceneManager::remove(Camera& node)
 
 void VisualSceneManager::add(AbstractGraphicalNode& node) 
 {
-   if (node.getMaterial().isTransparent())
-   {
-      addTransparentNode(node);
-   }
-   else
-   {
-      addRegularNode(node);  
-   }
+   m_regularNodesTree.insert(&node);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void VisualSceneManager::remove(AbstractGraphicalNode& node)
 {
-   if (node.getMaterial().isTransparent())
-   {
-      removeTransparentNode(node);
-   }
-   else
-   {
-      removeRegularNode(node);
-   }
+   m_regularNodesTree.remove(&node);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -239,7 +225,7 @@ void VisualSceneManager::setActiveCamera(Camera& camera)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AbstractGraphicalNodeP* VisualSceneManager::getRegularGraphicalNodes(DWORD& arraySize)
+AbstractGraphicalNodeP* VisualSceneManager::getNodes(DWORD& arraySize)
 {
    if (hasActiveCamera() == false) 
    {
@@ -247,89 +233,59 @@ AbstractGraphicalNodeP* VisualSceneManager::getRegularGraphicalNodes(DWORD& arra
       return NULL;
    }
 
-   // get the nodes in the visible sector
+   Camera& activeCamera = getActiveCamera();
+
+   // get the nodes from the sectors we can see
    m_regularGraphicalNodes.clear();
-   Frustum frustum = getActiveCamera().getFrustrum();
+   Frustum frustum = activeCamera.getFrustrum();
    m_regularNodesTree.query(frustum, m_regularGraphicalNodes);
 
-   // create a list of visible nodes
+   // filter the nodes we can't see
+   m_culler->setup(frustum, m_regularRenderingQueue);
+   GraphicalNodesAnalyzer<Culler> visibilityAnalyzer(*m_culler);
+
    m_regularRenderingQueue.clear();
-   m_culler->setup(getActiveCamera(), m_regularRenderingQueue);
-   GraphicalNodesAnalyzer<Culler> analyzer(*m_culler);
-
    std::for_each((AbstractGraphicalNodeP*)m_regularGraphicalNodes, 
-                 (AbstractGraphicalNodeP*)m_regularGraphicalNodes + m_regularGraphicalNodes.size(), 
-                 analyzer);
+      (AbstractGraphicalNodeP*)m_regularGraphicalNodes + m_regularGraphicalNodes.size(), 
+      visibilityAnalyzer);
 
-   // sort the nodes
-   std::sort((AbstractGraphicalNodeP*)m_regularRenderingQueue, 
-      (AbstractGraphicalNodeP*)m_regularRenderingQueue + m_regularRenderingQueue.size(),
-      m_materialsComparator);
-   
-   arraySize = m_regularRenderingQueue.size();
-   return m_regularRenderingQueue;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-AbstractGraphicalNodeP* VisualSceneManager::getTransparentGraphicalNodes(DWORD& arraySize)
-{
-   if ((hasActiveCamera() == false) || (m_transparentNodes.size() == 0))
+   // segregate nodes
+   m_transparentRenderingQueue.clear();
+   unsigned int nodesCount = m_regularRenderingQueue.size();
+   unsigned int regularNodesCount = 0;
+   for (unsigned int i = 0; i < nodesCount; ++i)
    {
-      arraySize = 0;
-      return NULL;
+      if (m_regularRenderingQueue[i]->getMaterial().isTransparent() == false)
+      {
+         m_transparentRenderingQueue.push_back(m_regularRenderingQueue[i]);
+         regularNodesCount++;
+      }
    }
 
-   // create a list of visible nodes
-   m_transparentRenderingQueue.clear();
-
-   m_culler->setup(getActiveCamera(), m_transparentRenderingQueue);
-   GraphicalNodesAnalyzer<Culler> analyzer(*m_culler);
-
-   std::for_each((AbstractGraphicalNodeP*)m_transparentNodes, 
-                 (AbstractGraphicalNodeP*)m_transparentNodes + m_transparentNodes.size(), 
-                 analyzer);
+   for (unsigned int i = 0; i < nodesCount; ++i)
+   {
+      if (m_regularRenderingQueue[i]->getMaterial().isTransparent() == true)
+      {
+         m_transparentRenderingQueue.push_back(m_regularRenderingQueue[i]);
+      }
+   }
 
    // sort the nodes
-   Camera& activeCamera = getActiveCamera();
-   D3DXMATRIX mtx = activeCamera.getGlobalMtx();
-
-   m_distanceComparator.setReferencePoint(D3DXVECTOR3(mtx._41, mtx._42, mtx._43));
    std::sort((AbstractGraphicalNodeP*)m_transparentRenderingQueue, 
-             (AbstractGraphicalNodeP*)m_transparentRenderingQueue + m_transparentRenderingQueue.size(),
-             m_distanceComparator);
+      (AbstractGraphicalNodeP*)m_transparentRenderingQueue + regularNodesCount,
+      m_materialsComparator);
 
+
+   D3DXMATRIX mtx = activeCamera.getGlobalMtx();
+   m_distanceComparator.setReferencePoint(D3DXVECTOR3(mtx._41, mtx._42, mtx._43));
+   std::sort((AbstractGraphicalNodeP*)m_transparentRenderingQueue + regularNodesCount, 
+      (AbstractGraphicalNodeP*)m_transparentRenderingQueue + m_transparentRenderingQueue.size(),
+      m_distanceComparator);
+
+
+   // output the results
    arraySize = m_transparentRenderingQueue.size();
    return m_transparentRenderingQueue;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::addRegularNode(AbstractGraphicalNode& node)
-{
-   m_regularNodesTree.insert(&node);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::removeRegularNode(AbstractGraphicalNode& node)
-{
-   m_regularNodesTree.remove(&node);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::addTransparentNode(AbstractGraphicalNode& node)
-{
-   m_transparentNodes.push_back(&node);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::removeTransparentNode(AbstractGraphicalNode& node)
-{
-   unsigned int pos = m_transparentNodes.find(&node);
-   m_transparentNodes.remove(pos);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

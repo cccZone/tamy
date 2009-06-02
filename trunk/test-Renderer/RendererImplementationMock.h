@@ -4,7 +4,7 @@
 #include "core-Renderer\GraphicalNode.h"
 #include <d3dx9.h>
 #include "core-Renderer\Camera.h"
-#include "core-Renderer\RegularNodesPass.h"
+#include "core-Renderer\DrawingPass.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ public:
          m_presentCalled(false)
    {
       D3DXMatrixIdentity(&m_viewMtx);
-      addPass(new RegularNodesPass());
+      addPass(new DrawingPass());
    }
 
    void setDeviceReady(bool enable) {m_deviceReady = enable;}

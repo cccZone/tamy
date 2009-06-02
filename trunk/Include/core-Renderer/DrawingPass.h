@@ -9,14 +9,14 @@ class RenderingProcessor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class TransparentNodesPass : public RenderingPass
+class DrawingPass : public RenderingPass
 {
 private:
    RenderingProcessor* m_renderingProcessor;
 
 public:
-   TransparentNodesPass();
-   ~TransparentNodesPass();
+   DrawingPass();
+   ~DrawingPass();
 
    void operator()(VisualSceneManager& sceneManager, Renderer& renderer);
 };

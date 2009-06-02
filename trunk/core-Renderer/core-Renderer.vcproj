@@ -371,19 +371,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RegularNodesPass.cpp"
+				RelativePath=".\DrawingPass.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RegularNodesPass.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TransparentNodesPass.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\TransparentNodesPass.h"
+				RelativePath="..\Include\core-Renderer\DrawingPass.h"
 				>
 			</File>
 		</Filter>

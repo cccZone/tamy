@@ -1,4 +1,4 @@
-#include "core-Renderer\RegularNodesPass.h"
+#include "core-Renderer\DrawingPass.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RenderingProcessor.h"
@@ -7,14 +7,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RegularNodesPass::RegularNodesPass()
+DrawingPass::DrawingPass()
       : m_renderingProcessor(new RenderingProcessor())
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RegularNodesPass::~RegularNodesPass()
+DrawingPass::~DrawingPass()
 {
    delete m_renderingProcessor;
    m_renderingProcessor = NULL;
@@ -22,10 +22,10 @@ RegularNodesPass::~RegularNodesPass()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RegularNodesPass::operator()(VisualSceneManager& sceneManager, Renderer& renderer)
+void DrawingPass::operator()(VisualSceneManager& sceneManager, Renderer& renderer)
 {
    DWORD nodesArraySize = 0;
-   AbstractGraphicalNodeP* nodes = sceneManager.getRegularGraphicalNodes(nodesArraySize);
+   AbstractGraphicalNodeP* nodes = sceneManager.getNodes(nodesArraySize);
    m_renderingProcessor->translate(nodes, nodesArraySize);
 }
 

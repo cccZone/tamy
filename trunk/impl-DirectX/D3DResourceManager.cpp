@@ -17,8 +17,7 @@
 #include <cassert>
 
 #include "core-Renderer\BackgroundPass.h"
-#include "core-Renderer\RegularNodesPass.h"
-#include "core-Renderer\TransparentNodesPass.h"
+#include "core-Renderer\DrawingPass.h"
 
 #include "impl-DirectX\OpenALSoundSystem.h"
 #include "impl-DirectX\SoundInitializer.h"
@@ -65,8 +64,7 @@ D3DResourceManager::D3DResourceManager(const std::string& texturesDirPath,
    }
    m_renderer = m_d3dInitializer->createDisplay(d3DSettings, hWnd);
    m_renderer->addPass(new BackgroundPass());
-   m_renderer->addPass(new RegularNodesPass());
-   m_renderer->addPass(new TransparentNodesPass());
+   m_renderer->addPass(new DrawingPass());
 
    // create material operation implementations
    m_colorOpImpl = new D3DColorOperationImplementation(m_renderer->getD3Device());

@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NullCuller::setup(Camera& camera,
+void NullCuller::setup(Frustum& frustum,
                        Array<AbstractGraphicalNodeP>& renderingQueue)
 {
    m_renderingQueue = &renderingQueue;

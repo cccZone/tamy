@@ -149,20 +149,20 @@ TEST(VisualSceneManagerTests, retrievingStaticGeometry)
    // 1st node
    sceneManager.addNode(node1);
    DWORD arraySize = 0;
-   AbstractGraphicalNodeP* nodes = sceneManager.getRegularGraphicalNodes(arraySize);
+   AbstractGraphicalNodeP* nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)1, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
 
    // 2nd node
    sceneManager.addNode(node2);
-   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
+   nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node2, nodes[1]);
 
    // 3rd node
    sceneManager.addNode(node3);
-   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
+   nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)3, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node2, nodes[1]);
@@ -172,7 +172,7 @@ TEST(VisualSceneManagerTests, retrievingStaticGeometry)
    //            so it should be grouped along with them (at least 
    //            with the batching strategy we used for this test)
    sceneManager.addNode(node4);
-   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
+   nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)4, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node2, nodes[1]);
@@ -183,7 +183,7 @@ TEST(VisualSceneManagerTests, retrievingStaticGeometry)
 
    sceneManager.removeNode(*node3); 
    delete node3;
-   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
+   nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)3, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)node2, nodes[1]);
@@ -235,13 +235,10 @@ TEST(VisualSceneManagerTests, transparentObjects)
    sceneManager.addNode(regularNode);
    sceneManager.addNode(transparentNode);
 
-   nodes = sceneManager.getRegularGraphicalNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)1, arraySize);
+   nodes = sceneManager.getNodes(arraySize);
+   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)regularNode, nodes[0]);
-
-   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)1, arraySize);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode, nodes[0]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode, nodes[1]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -282,7 +279,7 @@ TEST(VisualSceneManagerTests, removingTransparentObjects)
    sceneManager.addNode(transparentNode2);
    sceneManager.addNode(transparentNode3);
 
-   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
+   nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)3, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode2, nodes[1]);
@@ -291,7 +288,7 @@ TEST(VisualSceneManagerTests, removingTransparentObjects)
    sceneManager.removeNode(*transparentNode2);
    delete transparentNode2;
 
-   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
+   nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNode3, nodes[1]);
@@ -337,7 +334,7 @@ TEST(VisualSceneManagerTests, transparentObjectsAreSortedWithRespectToCamera)
 
    // we're standing closer to the 'transparentNodeClose', so it's gonna be rendered last
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 0, 0, 5);
-   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
+   nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNodeFar,   nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNodeClose, nodes[1]);
@@ -345,7 +342,7 @@ TEST(VisualSceneManagerTests, transparentObjectsAreSortedWithRespectToCamera)
 
    // we moved next to the 'transparentNodeFar', so it's gonna be rendered last now
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 0, 0, 55);
-   nodes = sceneManager.getTransparentGraphicalNodes(arraySize);
+   nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNodeClose, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)transparentNodeFar,   nodes[1]);

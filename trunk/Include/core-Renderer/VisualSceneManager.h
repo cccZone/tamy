@@ -118,27 +118,16 @@ public:
 
    /**
     * The method extracts all the nodes that can be rendered from the camera's 
-    * standpoint and that don't have any transparency
-    *
-    * @param arraySize - upon return this parameter will contain the number of elements
-    *                    in the returned array
-    * @return the array contains all the nodes that can be renderered. The array
-    *         is managed by the scene manager and should not be released from the context
-    *         that calls this method
-    */
-   AbstractGraphicalNodeP* getRegularGraphicalNodes(DWORD& arraySize);
-
-   /**
-    * The method extracts all the transparent nodes that can be rendered from the camera's 
     * standpoint
     *
     * @param arraySize - upon return this parameter will contain the number of elements
     *                    in the returned array
-    * @return the array contains all the nodes that can be renderered. The array
+    * @return the array contains all the nodes that can be rendered. The array
     *         is managed by the scene manager and should not be released from the context
     *         that calls this method
     */
-   AbstractGraphicalNodeP* getTransparentGraphicalNodes(DWORD& arraySize);
+   AbstractGraphicalNodeP* getNodes(DWORD& arraySize);
+
 
 
 private:
@@ -152,11 +141,6 @@ private:
    void add(AbstractGraphicalNode& node);
    void remove(AbstractGraphicalNode& node);
 
-   void addRegularNode(AbstractGraphicalNode& node);
-   void removeRegularNode(AbstractGraphicalNode& node);
-
-   void addTransparentNode(AbstractGraphicalNode& node);
-   void removeTransparentNode(AbstractGraphicalNode& node);
 
 private:
    // ---------------------------

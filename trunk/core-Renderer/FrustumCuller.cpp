@@ -8,10 +8,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FrustumCuller::setup(Camera& camera,
+void FrustumCuller::setup(Frustum& frustum,
                           Array<AbstractGraphicalNodeP>& renderingQueue)
 {
-   m_frustum = camera.getFrustrum();
+   m_frustum = frustum;
    m_renderingQueue = &renderingQueue;
 }
 
