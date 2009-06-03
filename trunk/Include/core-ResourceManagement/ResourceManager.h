@@ -234,7 +234,9 @@ public:
     * passed into the constructor when the instance of the ResourceManager
     * was created
     */
-   void loadFont(const std::string& name);
+   void loadFont(const std::string& fileName, 
+                 const std::string& fontName, 
+                 const Color& color);
 
    // ------------------------------ Decorations ------------------------------
 

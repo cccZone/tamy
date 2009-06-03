@@ -42,9 +42,9 @@ void FontsDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 1));
 
-   m_resourceManager->loadFont("Curlz.fnt");
+   m_resourceManager->loadFont("Curlz.fnt", "Curlz_red", Color(1, 0, 0, 1));
 
-   VisibleString* string = new VisibleString(m_resourceManager->getFont("Curlz.fnt"));
+   VisibleString* string = new VisibleString(m_resourceManager->getFont("Curlz_red"));
    m_sceneManager->addNode(string);
    D3DXMatrixTranslation(&(string->accessLocalMtx()), -0.5, 0, 2);
 

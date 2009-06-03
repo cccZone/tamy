@@ -482,17 +482,22 @@ Font& ResourceManager::getFont(const std::string& name)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourceManager::loadFont(const std::string& name)
+void ResourceManager::loadFont(const std::string& fileName, 
+                               const std::string& fontName, 
+                               const Color& color)
 {
-   std::map<std::string, Font*>::const_iterator it = m_fonts.find(name);
+   std::map<std::string, Font*>::const_iterator it = m_fonts.find(fontName);
    if (it != m_fonts.end())
    {
-      throw std::out_of_range(std::string("Font <") + name + std::string("> already registered"));
+      throw std::out_of_range(std::string("Font <") + fontName + std::string("> already registered"));
    }
 
-   XMLFont* font = new XMLFont((m_texturesDirPath + std::string("\\") + name).c_str(), *this);
+   XMLFont* font = new XMLFont((m_texturesDirPath + std::string("\\") + fileName).c_str(), 
+                               fontName.c_str(),
+                               color,
+                               *this);
    m_allObjects.push_back(new TManagable<Font>(font));
-   m_fonts.insert(std::make_pair(name, font));
+   m_fonts.insert(std::make_pair(fontName, font));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

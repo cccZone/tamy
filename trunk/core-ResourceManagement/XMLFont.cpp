@@ -11,7 +11,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-XMLFont::XMLFont(const char* fontDefFile, ResourceManager& resMgr)
+XMLFont::XMLFont(const char* fontDefFile, 
+                 const char* fontName, 
+                 const Color& color, 
+                 ResourceManager& resMgr)
       : m_resMgr(resMgr),
       m_glifs(256, NULL),
       m_glifSizes(256, 0)
@@ -38,8 +41,8 @@ XMLFont::XMLFont(const char* fontDefFile, ResourceManager& resMgr)
 
    // create the material for the font
    char tmpMaterialName[256];
-   sprintf_s(tmpMaterialName, "%s_mat", fontDefFile);
-   createMaterial(tmpMaterialName, fontFaceFileName.c_str());
+   sprintf_s(tmpMaterialName, "%s_mat", fontName);
+   createMaterial(tmpMaterialName, fontFaceFileName.c_str(), color);
 
    // parse the glifs and create the entities for them
    char tmpGlifMeshName[256];
@@ -70,7 +73,7 @@ XMLFont::XMLFont(const char* fontDefFile, ResourceManager& resMgr)
       float tu2 = u2 / size;
       float tv2 = v2 / size;
 
-      sprintf_s(tmpGlifMeshName, "%s_glif_%d", fontDefFile, c);
+      sprintf_s(tmpGlifMeshName, "%s_glif_%d", fontName, c);
 
       AbstractGraphicalEntity& glifEntity = prepareEntity(tmpGlifMeshName, tmpMaterialName, 
                                                           width / 2.f, height / 2.f,
@@ -81,7 +84,7 @@ XMLFont::XMLFont(const char* fontDefFile, ResourceManager& resMgr)
    }
 
    // remember to always add a white space character
-   sprintf_s(tmpGlifMeshName, "%s_glif_whiteSpace", fontDefFile);
+   sprintf_s(tmpGlifMeshName, "%s_glif_whiteSpace", fontName);
    AbstractGraphicalEntity& glifEntity = prepareEntity(tmpGlifMeshName, tmpMaterialName, 
                                                        (longestGlif / 4.f), 1,
                                                        0, 0, 0, 0);
@@ -127,7 +130,8 @@ void XMLFont::parseGlif(TiXmlElement& glif,
 ///////////////////////////////////////////////////////////////////////////////
 
 void XMLFont::createMaterial(const char* materialName, 
-                             const char* texName)
+                             const char* texName,
+                             const Color& color)
 {
    if (m_resMgr.doesMaterialExist(materialName)) {return;}
 
@@ -142,8 +146,8 @@ void XMLFont::createMaterial(const char* materialName,
    }
 
    LightReflectingProperties* lrp  = m_resMgr.createLightReflectingProperties();
-   lrp->setAmbientColor(Color(1, 1, 1, 1));
-   lrp->setDiffuseColor(Color(1, 1, 1, 1));
+   lrp->setAmbientColor(color);
+   lrp->setDiffuseColor(color);
    lrp = &m_resMgr.addLightReflectingProperties(lrp);
 
    Material* realMat = &m_resMgr.createMaterial(materialName, *lrp);
