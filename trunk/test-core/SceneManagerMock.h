@@ -9,46 +9,37 @@
 
 template<typename NodeType>
 class SceneManagerMock : public AbstractSceneManager,
-                         public TNodesVisitor<NodeType>
+                         public SceneAspectManager<NodeType>
 {
 private:
    std::list<NodeType*> m_nodes;
-   bool m_adding;
 
 public:
-   void visit(NodeType& node)
+   SceneManagerMock() 
    {
-      if (m_adding)
-      {
-         m_nodes.push_back(&node);
-      }
-      else
-      {
-         for (std::list<NodeType*>::iterator it = m_nodes.begin();
-              it != m_nodes.end(); ++it)
-         {
-            if (*it == &node)
-            {
-               m_nodes.erase(it);
-               break;
-            }
-         }
-      }
+      REGISTER_SCENE_ASPECT(NodeType);
    }
 
    unsigned int getNodesCount() const {return m_nodes.size();}
 
-   void addNode(Node* node)
+   void add(NodeType& node)
    {
-      m_adding = true;
-      node->accept(*this);
+      m_nodes.push_back(&node);
    }
 
-   void removeNode(Node& node)
+   void remove(NodeType& node)
    {
-      m_adding = false;
-      node.accept(*this);
+      for (std::list<NodeType*>::iterator it = m_nodes.begin();
+         it != m_nodes.end(); ++it)
+      {
+         if (*it == &node)
+         {
+            m_nodes.erase(it);
+            break;
+         }
+      }
    }
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

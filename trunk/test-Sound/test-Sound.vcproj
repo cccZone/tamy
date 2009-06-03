@@ -206,20 +206,16 @@
 				RelativePath=".\SoundMock.h"
 				>
 			</File>
-			<File
-				RelativePath=".\SoundSceneManagerMock.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="SoundScene"
 			>
 			<File
-				RelativePath=".\BasicSoundSceneTests.cpp"
+				RelativePath=".\SoundRendererTests.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SoundRendererTests.cpp"
+				RelativePath=".\SoundSceneTests.cpp"
 				>
 			</File>
 		</Filter>

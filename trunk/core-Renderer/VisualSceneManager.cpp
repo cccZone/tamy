@@ -6,56 +6,49 @@
 #include "core-Renderer\Culler.h"
 #include "core-Renderer\FrustumCuller.h"
 #include "core-Renderer\GraphicalNodesAnalyzer.h"
+#include "core-Renderer\OctreeSpatialContainer.h"
 #include <algorithm>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-VisualSceneManager::VisualSceneManager()
-      : m_addOperation(NULL),
-      m_removeOperation(NULL),
-      m_noOperation(new NoOperation()),
-      m_currentOperation(m_noOperation),
-      m_culler(new FrustumCuller()),
+VisualSceneManager::VisualSceneManager(SpatialContainer* nodesContainer)
+      : m_culler(new FrustumCuller()),
       m_activeCameraDeploymentNode(new ActiveCameraNode()),
       m_activeCamera(NULL),
       m_skyBox(NULL),
-      m_regularNodesTree(64, 1000)
+      m_nodesContainer(NULL)
 {
-   m_addOperation = new AddOperation(*this);
-   m_removeOperation = new RemoveOperation(*this);
+   REGISTER_SCENE_ASPECT(Light);
+   REGISTER_SCENE_ASPECT(AbstractGraphicalNode);
+   REGISTER_SCENE_ASPECT(Camera);
+   REGISTER_SCENE_ASPECT(SkyBox);
+
+   if (nodesContainer != NULL)
+   {
+      m_nodesContainer = nodesContainer;
+   }
+   else
+   {
+      m_nodesContainer = new OctreeSpatialContainer(64, 1000);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 VisualSceneManager::~VisualSceneManager()
 {
+   delete m_nodesContainer;
+   m_nodesContainer = NULL;
+
    delete m_culler;
    m_culler = NULL;
 
-   m_regularRenderingQueue.clear();
-
-   DWORD nodesCount = m_transparentNodes.size();
-   for (DWORD i = 0; i < nodesCount; ++i)
-   {
-      delete m_transparentNodes[i];
-   }
-   m_transparentNodes.clear();
-   m_transparentRenderingQueue.clear();
+   m_visibleNodes.clear();
+   m_nodesForSorting.clear();
 
    delete m_activeCameraDeploymentNode;
    m_activeCameraDeploymentNode = NULL;
-
-   m_currentOperation = NULL;
-
-   delete m_noOperation;
-   m_noOperation = NULL;
-
-   delete m_removeOperation;
-   m_removeOperation = NULL;
-
-   delete m_addOperation;
-   m_addOperation = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,50 +123,6 @@ void VisualSceneManager::refreshVisibleLights(int lightLimit)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::addNode(Node* node)
-{
-   m_currentOperation = m_addOperation;
-   node->accept(*this);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::removeNode(Node& node)
-{
-   m_currentOperation = m_removeOperation;
-   node.accept(*this);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::visit(Light& light)
-{
-   m_currentOperation->perform(light);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::visit(AbstractGraphicalNode& node)
-{
-   m_currentOperation->perform(node);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::visit(Camera& node)
-{
-   m_currentOperation->perform(node);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::visit(SkyBox& node)
-{
-   m_currentOperation->perform(node);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void VisualSceneManager::add(Camera& node)
 {
    if (m_activeCamera != NULL) {return;}
@@ -192,27 +141,38 @@ void VisualSceneManager::remove(Camera& node)
 
 void VisualSceneManager::add(AbstractGraphicalNode& node) 
 {
-   m_regularNodesTree.insert(&node);
+   m_nodesContainer->insert(&node);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void VisualSceneManager::remove(AbstractGraphicalNode& node)
 {
-   m_regularNodesTree.remove(&node);
+   m_nodesContainer->remove(&node);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::setSkyBox(SkyBox* skyBox)
+void VisualSceneManager::add(SkyBox& skyBox)
 {
    if (m_skyBox != NULL)
    {
       m_activeCameraDeploymentNode->removeChild(*m_skyBox);
       delete m_skyBox;
    }
-   m_activeCameraDeploymentNode->addChild(skyBox);
-   m_skyBox = skyBox;
+   m_activeCameraDeploymentNode->addChild(&skyBox);
+   m_skyBox = &skyBox;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void VisualSceneManager::remove(SkyBox& skyBox)
+{
+   if (m_skyBox == NULL) {return;}
+   if (&skyBox != m_skyBox) {throw std::runtime_error("Trying to remove the invalid skybox");}
+
+   m_activeCameraDeploymentNode->removeChild(*m_skyBox);
+   m_skyBox = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -236,56 +196,56 @@ AbstractGraphicalNodeP* VisualSceneManager::getNodes(DWORD& arraySize)
    Camera& activeCamera = getActiveCamera();
 
    // get the nodes from the sectors we can see
-   m_regularGraphicalNodes.clear();
+   m_potentiallyVisibleNodes.clear();
    Frustum frustum = activeCamera.getFrustrum();
-   m_regularNodesTree.query(frustum, m_regularGraphicalNodes);
+   m_nodesContainer->query(frustum, m_potentiallyVisibleNodes);
 
    // filter the nodes we can't see
-   m_culler->setup(frustum, m_regularRenderingQueue);
+   m_culler->setup(frustum, m_visibleNodes);
    GraphicalNodesAnalyzer<Culler> visibilityAnalyzer(*m_culler);
 
-   m_regularRenderingQueue.clear();
-   std::for_each((AbstractGraphicalNodeP*)m_regularGraphicalNodes, 
-      (AbstractGraphicalNodeP*)m_regularGraphicalNodes + m_regularGraphicalNodes.size(), 
+   m_visibleNodes.clear();
+   std::for_each((AbstractGraphicalNodeP*)m_potentiallyVisibleNodes, 
+      (AbstractGraphicalNodeP*)m_potentiallyVisibleNodes + m_potentiallyVisibleNodes.size(), 
       visibilityAnalyzer);
 
    // segregate nodes
-   m_transparentRenderingQueue.clear();
-   unsigned int nodesCount = m_regularRenderingQueue.size();
+   m_nodesForSorting.clear();
+   unsigned int nodesCount = m_visibleNodes.size();
    unsigned int regularNodesCount = 0;
    for (unsigned int i = 0; i < nodesCount; ++i)
    {
-      if (m_regularRenderingQueue[i]->getMaterial().isTransparent() == false)
+      if (m_visibleNodes[i]->getMaterial().isTransparent() == false)
       {
-         m_transparentRenderingQueue.push_back(m_regularRenderingQueue[i]);
+         m_nodesForSorting.push_back(m_visibleNodes[i]);
          regularNodesCount++;
       }
    }
 
    for (unsigned int i = 0; i < nodesCount; ++i)
    {
-      if (m_regularRenderingQueue[i]->getMaterial().isTransparent() == true)
+      if (m_visibleNodes[i]->getMaterial().isTransparent() == true)
       {
-         m_transparentRenderingQueue.push_back(m_regularRenderingQueue[i]);
+         m_nodesForSorting.push_back(m_visibleNodes[i]);
       }
    }
 
    // sort the nodes
-   std::sort((AbstractGraphicalNodeP*)m_transparentRenderingQueue, 
-      (AbstractGraphicalNodeP*)m_transparentRenderingQueue + regularNodesCount,
+   std::sort((AbstractGraphicalNodeP*)m_nodesForSorting, 
+      (AbstractGraphicalNodeP*)m_nodesForSorting + regularNodesCount,
       m_materialsComparator);
 
 
    D3DXMATRIX mtx = activeCamera.getGlobalMtx();
    m_distanceComparator.setReferencePoint(D3DXVECTOR3(mtx._41, mtx._42, mtx._43));
-   std::sort((AbstractGraphicalNodeP*)m_transparentRenderingQueue + regularNodesCount, 
-      (AbstractGraphicalNodeP*)m_transparentRenderingQueue + m_transparentRenderingQueue.size(),
+   std::sort((AbstractGraphicalNodeP*)m_nodesForSorting + regularNodesCount, 
+      (AbstractGraphicalNodeP*)m_nodesForSorting + m_nodesForSorting.size(),
       m_distanceComparator);
 
 
    // output the results
-   arraySize = m_transparentRenderingQueue.size();
-   return m_transparentRenderingQueue;
+   arraySize = m_nodesForSorting.size();
+   return m_nodesForSorting;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

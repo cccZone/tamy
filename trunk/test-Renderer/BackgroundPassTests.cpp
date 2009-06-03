@@ -13,7 +13,7 @@ TEST(BackgroundPass, renderingSkyBox)
    RendererImplementationMock renderer;
 
    SkyBoxMock* skyBox = new SkyBoxMock();
-   sceneManager.setSkyBox(skyBox);
+   sceneManager.addNode(skyBox);
 
    BackgroundPass pass;
    pass(sceneManager, renderer); 

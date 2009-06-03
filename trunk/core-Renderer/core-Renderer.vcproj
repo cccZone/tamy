@@ -351,6 +351,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Include\core-Renderer\SpatialContainer.h"
+				>
+			</File>
+			<File
 				RelativePath=".\VisualSceneManager.cpp"
 				>
 			</File>
@@ -358,6 +362,18 @@
 				RelativePath="..\Include\core-Renderer\VisualSceneManager.h"
 				>
 			</File>
+			<Filter
+				Name="Containers"
+				>
+				<File
+					RelativePath=".\OctreeSpatialContainer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\OctreeSpatialContainer.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="RenderingPasses"

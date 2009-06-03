@@ -6,11 +6,7 @@
 
 AISceneManager::AISceneManager()
 {
-   m_addOperation = new AddOperation(*this);
-   m_removeOperation = new RemoveOperation(*this);
-   m_noOperation = new NoOperation();
-   m_currentOperation = m_noOperation;
-
+   REGISTER_SCENE_ASPECT(AgentNode);
    m_messageDispatcher = new MessageDispatcher();
 }
 
@@ -20,40 +16,6 @@ AISceneManager::~AISceneManager()
 {
    delete m_messageDispatcher;
    m_messageDispatcher = NULL;
-
-   m_currentOperation = NULL;
-
-   delete m_noOperation;
-   m_noOperation = NULL;
-
-   delete m_removeOperation;
-   m_removeOperation = NULL;
-
-   delete m_addOperation;
-   m_addOperation = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void AISceneManager::addNode(Node* node)
-{
-   m_currentOperation = m_addOperation;
-   node->accept(*this);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void AISceneManager::removeNode(Node& node)
-{
-   m_currentOperation = m_removeOperation;
-   node.accept(*this);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void AISceneManager::visit(AgentNode& agent)
-{
-   m_currentOperation->perform(agent);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

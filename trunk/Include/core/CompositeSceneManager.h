@@ -20,7 +20,7 @@ class CompositeSceneManager : public SceneManager
 {
 private:
    Node* m_rootNode;
-   std::list<SceneManager*> m_managers;
+   std::list<AbstractSceneManager*> m_managers;
 
 public:
    CompositeSceneManager();
@@ -31,7 +31,7 @@ public:
    void removeNode(Node& node);
 
    /**
-    * We can't aggregate the aggtregates - there's no point in doing that.
+    * We can't aggregate the aggregates - there's no point in doing that.
     * That's why we allow to aggregate only the leaf scene managers 
     * (namely the AbstractSceneManagers)
     */

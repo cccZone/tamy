@@ -18,7 +18,7 @@
 #include "core-Sound\WavFile.h"
 #include "core-Sound\SoundListener.h"
 #include "core-Sound\SoundRenderer.h"
-#include "core-Sound\BasicSoundSceneManager.h"
+#include "core-Sound\SoundSceneManager.h"
 #include "core-Sound\Sound3D.h"
 
 
@@ -44,7 +44,7 @@ void SoundDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
-   m_audioSoundScene = new BasicSoundSceneManager();
+   m_audioSoundScene = new SoundSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_sceneManager->addSceneManager(m_audioSoundScene);
 

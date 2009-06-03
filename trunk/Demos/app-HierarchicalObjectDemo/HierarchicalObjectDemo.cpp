@@ -12,6 +12,7 @@
 #include "core-ResourceManagement\IWFLoader.h"
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\Skeleton.h"
+#include "core-Renderer\OctreeSpatialContainer.h"
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 
@@ -38,7 +39,7 @@ void HierarchicalObjectDemo::initialize(Renderer& renderer, ResourceManager& res
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
-   VisualSceneManager* visualSceneManager = new VisualSceneManager();
+   VisualSceneManager* visualSceneManager = new VisualSceneManager(new OctreeSpatialContainer(64, 5000));
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 

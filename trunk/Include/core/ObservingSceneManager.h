@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core\SceneManager.h"
+#include "core\AbstractSceneManager.h"
 #include "core\NodeObserver.h"
 
 
@@ -10,7 +10,7 @@ class AbstractSceneManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ObservingSceneManager : public SceneManager, 
+class ObservingSceneManager : public AbstractSceneManager, 
                               public NodeObserver
 {
 private:

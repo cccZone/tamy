@@ -6,7 +6,7 @@
 #include "SoundMock.h"
 #include "Sound3DMock.h"
 #include "SoundListenerMock.h"
-#include "SoundSceneManagerMock.h"
+#include "core-Sound\SoundSceneManager.h"
 #include <d3dx9.h>
 
 
@@ -17,18 +17,17 @@ TEST(SoundRenderer, renderingSound)
    SoundDeviceMock soundDevice;
    SoundRenderer soundRenderer(soundDevice);
 
-   SoundSceneManagerMock soundScene;
+   SoundSceneManager soundScene;
 
    SoundMock someSound;
    Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound, 100);
    
    Node dog("dog");
    dog.addChild(barkingSound);
-
-   soundScene.add(*barkingSound);
+   soundScene.addNode(&dog);
 
    SoundListenerMock listener;
-   soundScene.setActiveListener(listener);
+   soundScene.addNode(&listener);
 
    CPPUNIT_ASSERT_EQUAL(false, soundDevice.getChannel(0).isBusy());
    CPPUNIT_ASSERT_EQUAL(false, soundDevice.getChannel(0).isPlaying());
@@ -46,18 +45,17 @@ TEST(SoundRenderer, soundPlayedContinuouslyAcrossRenderings)
    SoundDeviceMock soundDevice;
    SoundRenderer soundRenderer(soundDevice);
 
-   SoundSceneManagerMock soundScene;
+   SoundSceneManager soundScene;
 
    SoundMock someSound;
    Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound, 100);
    
    Node dog("dog");
    dog.addChild(barkingSound);
-
-   soundScene.add(*barkingSound);
+   soundScene.addNode(&dog);
 
    SoundListenerMock listener;
-   soundScene.setActiveListener(listener);
+   soundScene.addNode(&listener);
 
    SoundChannelMock& channel = dynamic_cast<SoundChannelMock&> (soundDevice.getChannel(0));
 
@@ -79,7 +77,7 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
    SoundDeviceMock soundDevice;
    SoundRenderer soundRenderer(soundDevice);
 
-   SoundSceneManagerMock soundScene;
+   SoundSceneManager soundScene;
 
    SoundMock someSound;
    Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound, 1);
@@ -87,14 +85,13 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
    
    Node dog("dog");
    dog.addChild(barkingSound);
+   D3DXMatrixTranslation(&(dog.accessLocalMtx()), -10, 0, 0);
    Node man("man");
    man.addChild(walkingSound);
-
- 
-   soundScene.add(*walkingSound);
+   D3DXMatrixTranslation(&(man.accessLocalMtx()), 10, 0, 0);
 
    SoundListenerMock listener;
-   soundScene.setActiveListener(listener);
+   soundScene.addNode(&listener);
 
    SoundChannelMock& channel = dynamic_cast<SoundChannelMock&> (soundDevice.getChannel(0));
 
@@ -102,13 +99,15 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
 
    // first - the listener is near the man - he can hear his walking,
    // but he can't hear the dog barking
-   soundScene.add(*walkingSound);
+   D3DXMatrixTranslation(&(listener.accessLocalMtx()), 10, 0, 0);
+   soundScene.addNode(&man);
    soundRenderer.render(soundScene);
    CPPUNIT_ASSERT_EQUAL(true, channel.isBusy());
 
    // next moment - the listener moves close to the dog - he can hear it barking,
    // but he can't hear the man walking
-   soundScene.add(*barkingSound);
+   D3DXMatrixTranslation(&(listener.accessLocalMtx()), -10, 0, 0);
+   soundScene.addNode(&dog);
    soundRenderer.render(soundScene);
    CPPUNIT_ASSERT_EQUAL(true, channel.isBusy());
    CPPUNIT_ASSERT_EQUAL(true, channel.wasReassigned());

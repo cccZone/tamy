@@ -29,29 +29,32 @@ void SoundRenderer::render(SoundSceneManager& soundScene)
    SoundListener& listener = soundScene.getActiveListener();
    listener.update();
 
-   soundScene.calculateSoundsHearability();
+   m_soundsToDisable.clear();
+   m_soundsToEnable.clear();
+
+   Array<Sound3D*>& activeSounds = soundScene.update(m_soundsToDisable, m_soundsToEnable);
  
    DWORD soundsCount = 0;
-   Sound3DP* sounds = NULL;
 
    // deactivate sounds that can no longer be heard
-   sounds = soundScene.getSoundsToDisable(soundsCount);
+   soundsCount = m_soundsToDisable.size();
    for (DWORD i = 0; i < soundsCount; ++i)
    {
-      sounds[i]->deassignChannel();
+      m_soundsToDisable[i]->deassignChannel();
    }
 
    // assign channels to active sounds
-   sounds = soundScene.getSoundsToEnable(soundsCount);
+   soundsCount = m_soundsToEnable.size();
    for (DWORD i = 0; i < soundsCount; ++i)
    {
-      sounds[i]->assignChannel(m_soundDevice);
+      m_soundsToEnable[i]->assignChannel(m_soundDevice);
    }
 
    // render the sounds
+   soundsCount = activeSounds.size();
    for (DWORD i = 0; i < soundsCount; ++i)
    {
-      sounds[i]->update(listener);
+      activeSounds[i]->update(listener);
    }
 
    // update the device - effectively presenting the sounds

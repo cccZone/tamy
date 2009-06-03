@@ -1,10 +1,13 @@
 #pragma once
 
+#include "core\Array.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class SoundSceneManager;
 class SoundDevice;
+class Sound3D;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +20,8 @@ class SoundRenderer
 {
 private:
    SoundDevice& m_soundDevice;
+   Array<Sound3D*> m_soundsToDisable;
+   Array<Sound3D*> m_soundsToEnable;
 
 public:
    SoundRenderer(SoundDevice& soundDevice);
