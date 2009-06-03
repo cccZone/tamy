@@ -46,7 +46,7 @@ void MaterialsParser::load(const std::string& fileName)
    TiXmlElement* root = document.FirstChildElement("Root"); 
    if (root == NULL) 
    {
-      throw std::runtime_error(fileName + " deosn't contain valid material definition");
+      throw std::runtime_error(fileName + " doesn't contain valid material definition");
    }
 
    m_parsedMaterial = NULL;

@@ -305,6 +305,26 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Fonts"
+			>
+			<File
+				RelativePath=".\XMLFont.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\XMLFont.h"
+				>
+			</File>
+			<Filter
+				Name="Definitions"
+				>
+				<File
+					RelativePath="..\Fonts\Curlz.fnt"
+					>
+				</File>
+			</Filter>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

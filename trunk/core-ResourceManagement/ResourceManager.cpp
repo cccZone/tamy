@@ -17,6 +17,7 @@
 #include "core-ResourceManagement\Managable.h"
 #include "core-ResourceManagement\FileGraphicalEntityLoader.h"
 #include "core-Sound\SoundRenderer.h"
+#include "core-ResourceManagement\XMLFont.h"
 #include <cassert>
 #include <deque>
 
@@ -46,6 +47,7 @@ ResourceManager::~ResourceManager()
    m_graphicalEntities.clear();
    m_lightReflectingProperties.clear();
    m_textures.clear();
+   m_fonts.clear();
 
    for (std::list<FileGraphicalEntityLoader*>::iterator it = m_graphicalEntitiesLoaders.begin();
       it != m_graphicalEntitiesLoaders.end(); ++it)
@@ -455,6 +457,42 @@ SoundRenderer& ResourceManager::getSoundRenderer()
    }
 
    return *m_soundRenderer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool ResourceManager::isFontRegistered(const std::string& name) const
+{
+   std::map<std::string, Font*>::const_iterator it = m_fonts.find(name);
+   return (it != m_fonts.end());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Font& ResourceManager::getFont(const std::string& name)
+{
+   std::map<std::string, Font*>::const_iterator it = m_fonts.find(name);
+   if (it == m_fonts.end())
+   {
+      throw std::out_of_range(std::string("Font <") + name + std::string("> is not registered"));
+   }
+
+   return *(it->second);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourceManager::loadFont(const std::string& name)
+{
+   std::map<std::string, Font*>::const_iterator it = m_fonts.find(name);
+   if (it != m_fonts.end())
+   {
+      throw std::out_of_range(std::string("Font <") + name + std::string("> already registered"));
+   }
+
+   XMLFont* font = new XMLFont((m_texturesDirPath + std::string("\\") + name).c_str(), *this);
+   m_allObjects.push_back(new TManagable<Font>(font));
+   m_fonts.insert(std::make_pair(name, font));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

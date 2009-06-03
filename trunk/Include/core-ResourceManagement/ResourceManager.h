@@ -39,6 +39,7 @@ class SoundRenderer;
 class SoundListener;
 class Sound3D;
 class Sound;
+class Font;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -58,6 +59,7 @@ private:
    std::map<std::string, Material*> m_materialsByName;
    std::list<LightReflectingProperties*> m_lightReflectingProperties;
    std::map<std::string, Texture*> m_textures;
+   std::map<std::string, Font*> m_fonts;
    std::string m_texturesDirPath;
 
    std::list<FileGraphicalEntityLoader*> m_graphicalEntitiesLoaders;
@@ -213,10 +215,31 @@ public:
                                       MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
                                       MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2);
 
+   // ------------------------------ Fonts ------------------------------
+
+   /**
+    * The method checks if a font with the given name is loaded
+    */
+   bool isFontRegistered(const std::string& name) const;
+
+   /**
+    * The method retrieves an instance of the font with the specified name
+    */
+   Font& getFont(const std::string& name);
+
+   /**
+    * The method loads a font from the specified file.
+    *
+    * The file must be located in the path specified by the textureDirPath param
+    * passed into the constructor when the instance of the ResourceManager
+    * was created
+    */
+   void loadFont(const std::string& name);
+
    // ------------------------------ Decorations ------------------------------
 
    /**
-    * This method creates a skybox instance
+    * This method creates a sky box instance
     */
    SkyBox* createSkyBox();
 
