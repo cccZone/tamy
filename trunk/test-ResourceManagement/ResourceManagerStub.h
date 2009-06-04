@@ -45,9 +45,10 @@ public:
 
    SoundListener* createSoundListener() {return NULL;}
 
-   Sound3D* createSound3D(const std::string& name, 
-                                  Sound& sound, 
-                                  float hearingRadius)
+   Sound3D* createSound3D(const std::string& name,
+                          bool dynamic,
+                          Sound& sound, 
+                          float hearingRadius)
    {
       return NULL;
    }

@@ -42,7 +42,7 @@ TEST(Camera, renderingWithActiveCamera)
 
    std::vector<Material*> materials; materials.push_back(&mat);
    GraphicalEntityMock entity("", materials);
-   GraphicalNode* node = new GraphicalNode("", entity, 0);
+   GraphicalNode* node = new GraphicalNode("", false, entity, 0);
 
    VisualSceneManagerMock sceneManager;
    renderer.addVisualSceneManager(sceneManager);

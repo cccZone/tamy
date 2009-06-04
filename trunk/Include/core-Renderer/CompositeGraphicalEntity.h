@@ -34,7 +34,7 @@ public:
    /**
     * This method creates an instance of the CompositeGraphicalEntity
     */
-   Node* instantiate();
+   Node* instantiate(bool dynamic);
 
 protected:
    void accept(GraphicalEntityInstantiator& instantiator);

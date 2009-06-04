@@ -19,7 +19,7 @@ public:
    virtual void update() = 0;
 
 protected:
-    SoundListener() : Node("soundListener") {}
+    SoundListener() : Node("soundListener", true) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

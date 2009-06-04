@@ -23,7 +23,10 @@ protected:
    float m_bsRadius;
 
 public:
-   AbstractGraphicalNode(const std::string& name, Material& material, DWORD subset);
+   AbstractGraphicalNode(const std::string& name, 
+                         bool dynamic, 
+                         Material& material, 
+                         DWORD subset);
    virtual ~AbstractGraphicalNode() {}
 
    /**

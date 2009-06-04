@@ -136,3 +136,26 @@ TEST(Array, finding)
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST(Array, copying)
+{
+   Array<int> arr;
+   arr.push_back(5);
+   arr.push_back(2);
+   arr.push_back(9);
+   arr.push_back(6);
+
+   Array<int> copiedArr;
+   copiedArr.push_back(4);
+   copiedArr.copyFrom(arr);
+
+   CPPUNIT_ASSERT_EQUAL((unsigned int)5, copiedArr.size());
+   CPPUNIT_ASSERT_EQUAL(4, copiedArr[0]);
+   CPPUNIT_ASSERT_EQUAL(5, copiedArr[1]);
+   CPPUNIT_ASSERT_EQUAL(2, copiedArr[2]);
+   CPPUNIT_ASSERT_EQUAL(9, copiedArr[3]);
+   CPPUNIT_ASSERT_EQUAL(6, copiedArr[4]);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)8, copiedArr.containerSize());
+};
+
+///////////////////////////////////////////////////////////////////////////////

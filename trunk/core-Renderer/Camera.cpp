@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 Camera::Camera(const std::string& name)
-      : Node(name),
+      : Node(name, true),
       m_fov(D3DXToRadian(60)),
       m_aspectRatio(1.3333f),
       m_nearZPlane(1.01f),

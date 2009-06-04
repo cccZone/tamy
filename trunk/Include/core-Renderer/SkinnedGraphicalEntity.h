@@ -43,7 +43,7 @@ public:
    /**
     * This method creates an instance of the CompositeGraphicalEntity
     */
-   Node* instantiate(Node& boneStructure);
+   Node* instantiate(Node& boneStructure, bool dynamic);
 
    /**
     * Renders the entity in a skinned way - where each face can have 

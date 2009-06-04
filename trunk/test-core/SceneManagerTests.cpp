@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(ConmpositeSceneManager, addingNodesThatCanBeManagedByLeafManagers)
+TEST(CompositeSceneManager, addingNodesThatCanBeManagedByLeafManagers)
 {
    CompositeSceneManager fullScene;
    SceneManagerMock<NodeA>* sceneForNodeA = new SceneManagerMock<NodeA>();
@@ -46,7 +46,7 @@ TEST(ConmpositeSceneManager, addingNodesThatCanBeManagedByLeafManagers)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(ConmpositeSceneManager, addingHierarchyOfNodes)
+TEST(CompositeSceneManager, addingHierarchyOfNodes)
 {
    CompositeSceneManager fullScene;
    SceneManagerMock<NodeA>* sceneForNodeA = new SceneManagerMock<NodeA>();
@@ -55,7 +55,7 @@ TEST(ConmpositeSceneManager, addingHierarchyOfNodes)
    fullScene.addSceneManager(sceneForNodeA);
    fullScene.addSceneManager(sceneForNodeB);
 
-   Node* head = new Node("head");
+   Node* head = new Node("head", false);
    NodeA* headAppearance = new NodeA();
    NodeB* headSound = new NodeB();
    head->addChild(headAppearance);
@@ -82,7 +82,7 @@ TEST(SceneManager, connectingNodesUpdatesManagers)
    fullScene.addSceneManager(sceneForNodeA);
    fullScene.addSceneManager(sceneForNodeB);
 
-   Node* someNode = new Node("someNode");
+   Node* someNode = new Node("someNode", false);
    NodeA* nodeA = new NodeA();
    NodeB* nodeB = new NodeB();
 

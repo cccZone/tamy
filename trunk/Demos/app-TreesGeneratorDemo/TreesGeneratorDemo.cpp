@@ -87,7 +87,7 @@ void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourc
 
    delete mesh;
 
-   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tree01");
+   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tree01", false);
    entInstance->attachEntity(*treeEntity);
    m_sceneManager->addNode(entInstance);
 

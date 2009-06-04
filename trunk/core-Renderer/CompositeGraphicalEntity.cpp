@@ -40,9 +40,9 @@ const std::list<AbstractGraphicalEntity*>& CompositeGraphicalEntity::getChildren
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Node* CompositeGraphicalEntity::instantiate()
+Node* CompositeGraphicalEntity::instantiate(bool dynamic)
 {
-   Node* subtreeRoot = new Node(getName());
+   Node* subtreeRoot = new Node(getName(), dynamic);
    subtreeRoot->setLocalMtx(getLocalMtx());
 
    return subtreeRoot;

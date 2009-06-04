@@ -7,8 +7,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AbstractGraphicalNode::AbstractGraphicalNode(const std::string& name, Material& material, DWORD subset)
-      : Node(name), m_material(material), m_subset(subset), m_bsRadius(0)
+AbstractGraphicalNode::AbstractGraphicalNode(const std::string& name, 
+                                             bool dynamic, 
+                                             Material& material, 
+                                             DWORD subset)
+      : Node(name, dynamic),
+      m_material(material), 
+      m_subset(subset), 
+      m_bsRadius(0)
 {
 }
 ///////////////////////////////////////////////////////////////////////////////

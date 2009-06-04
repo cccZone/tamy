@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 SkyBox::SkyBox()
-      : Node("SkyBox")
+      : Node("SkyBox", false)
 {
    for (unsigned char i = 0; i < 6; ++i)
    {

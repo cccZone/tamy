@@ -40,9 +40,9 @@ unsigned int GraphicalEntity::getNumSubsets() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Node* GraphicalEntity::instantiate()
+Node* GraphicalEntity::instantiate(bool dynamic)
 {
-   Node* rootNode = new Node(getName());
+   Node* rootNode = new Node(getName(), dynamic);
    rootNode->setLocalMtx(getLocalMtx());
 
    unsigned int subsetsCount = m_materials.size();
@@ -50,7 +50,7 @@ Node* GraphicalEntity::instantiate()
    {
       std::stringstream childNodeName;
       childNodeName << getName() << "_subset" << subsetIdx;
-      GraphicalNode* newNode = new GraphicalNode(childNodeName.str(), *this, subsetIdx);
+      GraphicalNode* newNode = new GraphicalNode(childNodeName.str(), dynamic, *this, subsetIdx);
       newNode->setBoundingSphereRadius(getBoundingSphereRadius());
       rootNode->addChild(newNode);
    }

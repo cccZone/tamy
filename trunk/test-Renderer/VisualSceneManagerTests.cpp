@@ -135,10 +135,10 @@ TEST(VisualSceneManagerTests, retrievingStaticGeometry)
    materials.push_back(&material1);
    GraphicalEntityMock entity("entity", materials);
 
-   GraphicalNode node1("subset0 - material1", entity, 0);
-   GraphicalNode node2("subset1 - material1", entity, 1);
-   GraphicalNode node3("subset2 - material2", entity, 2);
-   GraphicalNode node4("subset3 - material1", entity, 3);
+   GraphicalNode node1("subset0 - material1", false, entity, 0);
+   GraphicalNode node2("subset1 - material1", false, entity, 1);
+   GraphicalNode node3("subset2 - material2", false, entity, 2);
+   GraphicalNode node4("subset3 - material1", false, entity, 3);
 
    Camera cameraNode("camera"); 
 
@@ -224,8 +224,8 @@ TEST(VisualSceneManagerTests, transparentObjects)
    materials.push_back(&transparentMaterial);
    GraphicalEntityMock entity("entity", materials, results);
 
-   GraphicalNode regularNode("regularNode",     entity, 0);
-   GraphicalNode transparentNode("transparentNode", entity, 1);
+   GraphicalNode regularNode("regularNode", false, entity, 0);
+   GraphicalNode transparentNode("transparentNode", false, entity, 1);
 
 
    // add the nodes to the scene
@@ -266,9 +266,9 @@ TEST(VisualSceneManagerTests, removingTransparentObjects)
    std::vector<Material*> materials;  materials.push_back(&transparentMaterial);
    GraphicalEntityMock entity("entity", materials, results);
 
-   GraphicalNode transparentNode1("transparentNode1", entity, 0);
-   GraphicalNode transparentNode2("transparentNode2", entity, 0);
-   GraphicalNode transparentNode3("transparentNode3", entity, 0);
+   GraphicalNode transparentNode1("transparentNode1", false, entity, 0);
+   GraphicalNode transparentNode2("transparentNode2", false, entity, 0);
+   GraphicalNode transparentNode3("transparentNode3", false, entity, 0);
 
 
    // add the nodes to the scene
@@ -318,8 +318,8 @@ TEST(VisualSceneManagerTests, transparentObjectsAreSortedWithRespectToCamera)
    std::vector<Material*> materials; materials.push_back(&transparentMaterial);
    GraphicalEntityMock entity("entity", materials, results);
 
-   GraphicalNode transparentNodeClose("transparentNodeClose",  entity, 0);
-   GraphicalNode transparentNodeFar("transparentNodeFar",    entity, 0);
+   GraphicalNode transparentNodeClose("transparentNodeClose", false, entity, 0);
+   GraphicalNode transparentNodeFar("transparentNodeFar", false, entity, 0);
 
    // add the nodes to the scene
    VisualSceneManager sceneManager;
@@ -368,8 +368,9 @@ TEST(VisualSceneManager, dynamicNodesAndOctrees)
    // create the node we'll use for rendering
    std::vector<Material*> materials; materials.push_back(&material);
    GraphicalEntityMock entity("entity", materials, results);
-   GraphicalNode node1("node1", entity, 0);
-   GraphicalNode node2("node2", entity, 0);
+   GraphicalNode node1("node1", true, entity, 0);
+   GraphicalNode node2("node2", false, entity, 0);
+   GraphicalNode node3("node3", false, entity, 0);
    Camera cameraNode("camera"); 
 
    // add the nodes to the scene
@@ -378,40 +379,45 @@ TEST(VisualSceneManager, dynamicNodesAndOctrees)
    sceneManager.setActiveCamera(cameraNode);
    
    D3DXMatrixTranslation(&(node1.accessLocalMtx()), -50, 50, -10);
-   D3DXMatrixTranslation(&(node2.accessLocalMtx()), 50, 50, -10);
+   D3DXMatrixTranslation(&(node2.accessLocalMtx()), -49, 50, -10);
+   D3DXMatrixTranslation(&(node3.accessLocalMtx()), 50, 50, -10);
    sceneManager.addNode(&node1);
    sceneManager.addNode(&node2);
+   sceneManager.addNode(&node3);
 
    // let's check the visibility of nodes in the positions they were in when
    // they were first added to the scene
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), -50, 50, -20);
    arraySize = 0;
    nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)1, arraySize);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
-
-   D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 50, 50, -20);
-   arraySize = 0;
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)1, arraySize);
+   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[0]);
-
-   // now let's move node1 and see if the situation on the scene changes
-   // accordingly
-
-   D3DXMatrixTranslation(&(node1.accessLocalMtx()), 49, 50, -10);
-
-   D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), -50, 50, -20);
-   arraySize = 0;
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)0, arraySize);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);
 
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 50, 50, -20);
    arraySize = 0;
    nodes = sceneManager.getNodes(arraySize);
    CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[1]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node3, nodes[0]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);
+
+   // now let's move node1 (a dynamic node) and see if the situation on the scene changes
+   // accordingly
+   D3DXMatrixTranslation(&(node1.accessLocalMtx()), 49, 50, -10);
+
+   D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), -50, 50, -20);
+   arraySize = 0;
+   nodes = sceneManager.getNodes(arraySize);
+   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[0]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);
+
+   D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 50, 50, -20);
+   arraySize = 0;
+   nodes = sceneManager.getNodes(arraySize);
+   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node3, nodes[0]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

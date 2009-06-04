@@ -34,7 +34,10 @@ public:
    }
 
 protected:
-   AgentNode(const std::string& name) : Node(name), m_dispatcher(NULL) {}
+   AgentNode(const std::string& name, bool dynamic) 
+      : Node(name, dynamic), 
+      m_dispatcher(NULL) 
+   {}
 
    inline MessageDispatcher& dispatcher() 
    {

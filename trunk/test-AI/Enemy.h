@@ -12,7 +12,7 @@ private:
    int m_health;
 
 public:
-   Enemy() : Agent("enemy"), m_health(2) 
+   Enemy() : Agent("enemy", true), m_health(2) 
    {}
 
    int getHealth() const {return m_health;}

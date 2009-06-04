@@ -36,10 +36,10 @@ TEST(BatchComparator, sortingByMaterials)
    materials.push_back(&material1);
    GraphicalEntityMock entity("entity", materials);
 
-   GraphicalNode node1("subset0 - material1", entity, 0);
-   GraphicalNode node2("subset1 - material1", entity, 1);
-   GraphicalNode node3("subset2 - material2", entity, 2);
-   GraphicalNode node4("subset3 - material1", entity, 3);
+   GraphicalNode node1("subset0 - material1", false, entity, 0);
+   GraphicalNode node2("subset1 - material1", false, entity, 1);
+   GraphicalNode node3("subset2 - material2", false, entity, 2);
+   GraphicalNode node4("subset3 - material1", false, entity, 3);
 
    BatchComparator comparator;
    CPPUNIT_ASSERT_EQUAL(false, comparator(&node1, &node2));

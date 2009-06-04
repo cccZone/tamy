@@ -19,7 +19,10 @@ private:
    GraphicalEntity& m_entity;
 
 public:
-   GraphicalNode(const std::string& name, GraphicalEntity& entity, DWORD subset);
+   GraphicalNode(const std::string& name, 
+                 bool dynamic, 
+                 GraphicalEntity& entity, 
+                 DWORD subset);
 
    /**
     * ...self explanatory I think...

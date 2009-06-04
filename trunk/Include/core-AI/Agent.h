@@ -31,8 +31,8 @@ public:
    }
 
 protected:
-   Agent(const std::string& name) 
-         : AgentNode(name), m_fsm(new StateMachine<T>())
+   Agent(const std::string& name, bool dynamic) 
+         : AgentNode(name, dynamic), m_fsm(new StateMachine<T>())
    {}
 
    inline StateMachine<T>& fsm() {return *m_fsm;}

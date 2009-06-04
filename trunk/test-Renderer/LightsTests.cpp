@@ -31,7 +31,7 @@ TEST(Lights, renderingHierarchyOfLights)
    Camera camera("camera");
    RendererImplementationMock renderer; 
 
-   Node* root = new Node();
+   Node* root = new Node("node", false);
    LightMock* light1 = new LightMock();
    LightMock* light2 = new LightMock();
    root->addChild(light1);
@@ -61,7 +61,7 @@ TEST(Lights, tooManyLights)
    RendererImplementationMock renderer; 
    renderer.setMaxLightsCount(1); // we can only render using ONE LIGHT at a time !!!!
 
-   Node* root = new Node();
+   Node* root = new Node("root", false);
    LightMock* light1 = new LightMock();
    LightMock* light2 = new LightMock();
    root->addChild(light1);

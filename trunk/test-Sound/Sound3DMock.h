@@ -12,7 +12,7 @@ private:
 
 public:
    Sound3DMock(const std::string& name, Sound& sound, float soundHearingRadius = 1000.f) 
-         : Sound3D(name, sound, soundHearingRadius), m_updated(false)
+         : Sound3D(name, false, sound, soundHearingRadius), m_updated(false)
    {}
 
    void update(SoundListener& listener) {m_updated = true;}

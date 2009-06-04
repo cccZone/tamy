@@ -23,6 +23,7 @@ private:
 public:
    OALSound3D(OpenALSoundSystem& soundSystem,
               const std::string& name, 
+              bool dynamic,
               Sound& sound, 
               float soundHearingRadius);
 

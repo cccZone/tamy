@@ -46,7 +46,7 @@ void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceMa
    {
       for (int x = -20; x < 20; ++x)
       {
-         GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile");
+         GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile", false);
          entInstance->attachEntity(ent);
          D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), x * 10.f, 0, y * 10.f);
 

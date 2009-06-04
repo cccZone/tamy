@@ -329,10 +329,11 @@ SoundListener* D3DResourceManager::createSoundListener()
 /////////////////////////////////////////////////////////////////////////////
 
 Sound3D* D3DResourceManager::createSound3D(const std::string& name, 
+                                           bool dynamic, 
                                            Sound& sound,
                                            float hearingRadius)
 {
-   return new OALSound3D(*m_soundSystem, name, sound, hearingRadius);
+   return new OALSound3D(*m_soundSystem, name, dynamic, sound, hearingRadius);
 }
 
 /////////////////////////////////////////////////////////////////////////////

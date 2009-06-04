@@ -35,7 +35,7 @@ public:
    /**
     * This method creates an instance of the GraphicalEntity
     */
-   Node* instantiate();
+   Node* instantiate(bool dynamic);
 
    /**
     * Renders the entity on the specified position

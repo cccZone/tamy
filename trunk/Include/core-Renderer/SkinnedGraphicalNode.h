@@ -31,6 +31,7 @@ private:
 
 public:
    SkinnedGraphicalNode(const std::string& name,
+                        bool dynamic, 
                         SkinnedGraphicalEntity& entity,
                         DWORD subset,
                         const BonesDef& bones);

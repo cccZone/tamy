@@ -40,7 +40,8 @@ private:
    D3DXVECTOR3 m_cachedCameraPos;
    std::list<Light*> m_currentlyVisibleLights;
 
-   SpatialContainer* m_nodesContainer;
+   Array<AbstractGraphicalNodeP>* m_dynamicNodesContainer;
+   SpatialContainer* m_staticNodesContainer;
    Array<AbstractGraphicalNodeP> m_potentiallyVisibleNodes;
    Array<AbstractGraphicalNodeP> m_visibleNodes;
    Array<AbstractGraphicalNodeP> m_nodesForSorting;

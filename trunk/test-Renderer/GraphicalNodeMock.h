@@ -17,7 +17,7 @@ private:
 
 public:
    GraphicalNodeMock()
-      : AbstractGraphicalNode("graphicalNodeMock", s_material, 0)
+      : AbstractGraphicalNode("graphicalNodeMock", false, s_material, 0)
    {
    }
 

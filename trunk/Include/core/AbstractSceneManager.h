@@ -35,7 +35,7 @@ public:
       node.accept(*this);
    }
 
-   bool isAdding() const {return m_adding;}
+   inline bool isAdding() const {return m_adding;}
 
 protected:
    AbstractSceneManager() : m_adding(true) {}

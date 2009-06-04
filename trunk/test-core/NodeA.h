@@ -9,6 +9,9 @@
 
 class NodeA : public Node
 {
+public:
+   NodeA() : Node("nodeA", false) {}
+
 protected:
    void onAccept(NodeVisitor& visitor)
    {

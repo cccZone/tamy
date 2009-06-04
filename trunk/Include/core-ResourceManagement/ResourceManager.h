@@ -122,7 +122,7 @@ public:
    GraphicalEntityLoader& getLoaderForFile(const std::string& fileName);
 
    /**
-    * This method provides a mechanism for creating a complete greaphical entity
+    * This method provides a mechanism for creating a complete graphical entity
     * based on the data from the mesh definition.
     *
     * The entity does not get registered as a resource automatically.
@@ -267,6 +267,7 @@ public:
     * be placed in the 3D scene
     */
    virtual Sound3D* createSound3D(const std::string& name, 
+                                  bool dynamic,
                                   Sound& sound, 
                                   float hearingRadius) = 0;
 

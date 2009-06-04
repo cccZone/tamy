@@ -11,8 +11,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Sound3D::Sound3D(const std::string& name, Sound& sound, float soundHearingRadius)
-      : Node(name), 
+Sound3D::Sound3D(const std::string& name, bool dynamic, Sound& sound, float soundHearingRadius)
+      : Node(name, dynamic), 
       m_soundHearingRadius(soundHearingRadius),
       m_channel(NULL),
       m_sound(sound),

@@ -32,7 +32,7 @@ TEST(RenderingProcessor, issuingRenderingCommands)
    // create the node we'll use for rendering
    std::vector<Material*> materials; materials.push_back(&material);
    GraphicalEntityMock entity("entity", materials, results);
-   GraphicalNode node("", entity, 0);
+   GraphicalNode node("", false, entity, 0);
 
    // run the processor
    DWORD nodesArraySize = 1;
@@ -94,10 +94,10 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
    materials.push_back(&material2);
    materials.push_back(&material1);
    GraphicalEntityMock entity("entity", materials, results);
-   GraphicalNode node1("", entity, 0);
-   GraphicalNode node2("", entity, 1);
-   GraphicalNode node3("", entity, 2);
-   GraphicalNode node4("", entity, 3);
+   GraphicalNode node1("", false, entity, 0);
+   GraphicalNode node2("", false, entity, 1);
+   GraphicalNode node3("", false, entity, 2);
+   GraphicalNode node4("", false, entity, 3);
 
    // run the processor
    DWORD nodesArraySize = 4;

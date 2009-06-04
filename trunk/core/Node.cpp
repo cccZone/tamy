@@ -8,8 +8,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Node::Node(const std::string& name)
+Node::Node(const std::string& name, bool dynamic)
       : m_name(name),
+      m_dynamic(dynamic),
       m_parent(NULL)
 {
    D3DXMatrixIdentity(&m_localMtx);
@@ -42,6 +43,14 @@ Node::~Node()
       delete *it;
    }
    m_children.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Node::isDynamic() const 
+{
+   if (hasParent() == false) {return m_dynamic;}
+   return m_parent->isDynamic();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

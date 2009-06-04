@@ -65,7 +65,7 @@ void IWFLoader::load(const std::string& fileName)
          entity = &m_resourceManager.getGraphicalEntity(meshName);
       }
 
-      GraphicalEntityInstantiator* entityInstance = new GraphicalEntityInstantiator("meshName");
+      GraphicalEntityInstantiator* entityInstance = new GraphicalEntityInstantiator("meshName", false);
       entityInstance->attachEntity(*entity);
       entityInstance->setLocalMtx(reinterpret_cast<D3DXMATRIX&> (sceneFile.m_vpMeshList[i]->ObjectMatrix));
 
@@ -169,7 +169,7 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
          static int refCount = 0;
          std::stringstream refName;
          refName << "reference_" << refCount++;
-         GraphicalEntityInstantiator* entityInstance = new GraphicalEntityInstantiator(refName.str());
+         GraphicalEntityInstantiator* entityInstance = new GraphicalEntityInstantiator(refName.str(), false);
          entityInstance->attachEntity(*entity);
          entityInstance->setLocalMtx(reinterpret_cast<D3DXMATRIX&> (fileEntity->ObjectMatrix));
 

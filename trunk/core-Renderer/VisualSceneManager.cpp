@@ -17,7 +17,7 @@ VisualSceneManager::VisualSceneManager(SpatialContainer* nodesContainer)
       m_activeCameraDeploymentNode(new ActiveCameraNode()),
       m_activeCamera(NULL),
       m_skyBox(NULL),
-      m_nodesContainer(NULL)
+      m_staticNodesContainer(NULL)
 {
    REGISTER_SCENE_ASPECT(Light);
    REGISTER_SCENE_ASPECT(AbstractGraphicalNode);
@@ -26,20 +26,25 @@ VisualSceneManager::VisualSceneManager(SpatialContainer* nodesContainer)
 
    if (nodesContainer != NULL)
    {
-      m_nodesContainer = nodesContainer;
+      m_staticNodesContainer = nodesContainer;
    }
    else
    {
-      m_nodesContainer = new OctreeSpatialContainer(64, 1000);
+      m_staticNodesContainer = new OctreeSpatialContainer(64, 1000);
    }
+
+   m_dynamicNodesContainer = new Array<AbstractGraphicalNodeP>();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 VisualSceneManager::~VisualSceneManager()
 {
-   delete m_nodesContainer;
-   m_nodesContainer = NULL;
+   delete m_dynamicNodesContainer;
+   m_dynamicNodesContainer = NULL;
+
+   delete m_staticNodesContainer;
+   m_staticNodesContainer = NULL;
 
    delete m_culler;
    m_culler = NULL;
@@ -141,14 +146,29 @@ void VisualSceneManager::remove(Camera& node)
 
 void VisualSceneManager::add(AbstractGraphicalNode& node) 
 {
-   m_nodesContainer->insert(&node);
+   if (node.isDynamic())
+   {
+      m_dynamicNodesContainer->push_back(&node);
+   }
+   else
+   {
+      m_staticNodesContainer->insert(&node);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void VisualSceneManager::remove(AbstractGraphicalNode& node)
 {
-   m_nodesContainer->remove(&node);
+   if (node.isDynamic())
+   {
+      unsigned int idx = m_dynamicNodesContainer->find(&node);
+      m_dynamicNodesContainer->remove(idx);
+   }
+   else
+   {
+      m_staticNodesContainer->remove(&node);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -198,7 +218,8 @@ AbstractGraphicalNodeP* VisualSceneManager::getNodes(DWORD& arraySize)
    // get the nodes from the sectors we can see
    m_potentiallyVisibleNodes.clear();
    Frustum frustum = activeCamera.getFrustrum();
-   m_nodesContainer->query(frustum, m_potentiallyVisibleNodes);
+   m_staticNodesContainer->query(frustum, m_potentiallyVisibleNodes);
+   m_potentiallyVisibleNodes.copyFrom(*m_dynamicNodesContainer);
 
    // filter the nodes we can't see
    m_culler->setup(frustum, m_visibleNodes);

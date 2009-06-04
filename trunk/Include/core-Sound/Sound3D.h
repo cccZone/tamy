@@ -26,7 +26,7 @@ private:
    float m_soundHearingRadiusSq;
 
 public:
-   Sound3D(const std::string& name, Sound& sound, float soundHearingRadius);
+   Sound3D(const std::string& name, bool dynamic, Sound& sound, float soundHearingRadius);
    virtual ~Sound3D();
 
    virtual void update(SoundListener& listener) = 0;

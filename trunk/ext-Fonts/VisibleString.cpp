@@ -10,7 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 VisibleString::VisibleString(Font& font)
-      : m_font(font)
+      : Node("visibleString", false),
+      m_font(font)
 {
 }
 
@@ -40,7 +41,7 @@ void VisibleString::setText(const char* text)
 
       AbstractGraphicalEntity& letterEnt = m_font.getChar(letter);
 
-      GraphicalEntityInstantiator* letterNode = new GraphicalEntityInstantiator("letter");
+      GraphicalEntityInstantiator* letterNode = new GraphicalEntityInstantiator("letter", false);
       letterNode->attachEntity(letterEnt);
       D3DXMatrixTranslation(&(letterNode->accessLocalMtx()), letterOffset, 0, 0);
       

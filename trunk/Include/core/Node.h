@@ -19,6 +19,7 @@ class Node
 {
 private:
    std::string m_name;
+   bool m_dynamic;
 
    // local coordinate system
    D3DXMATRIX m_localMtx;
@@ -34,7 +35,7 @@ private:
 
 
 public:
-   Node(const std::string& name = "");
+   Node(const std::string& name, bool dynamic);
    virtual ~Node();
 
    /**
@@ -42,6 +43,13 @@ public:
     * the node identification purpose. 
     */
    const std::string& getName() const {return m_name;}
+
+   /**
+    * The flag tells the scene managers whether we should consider this
+    * subtree dynamic (one that can move around), or static (one that does not move
+    * and therefore can be a subject to optimizations)
+    */
+   bool isDynamic() const;
 
    /**
     * This is the matrix that describes the node's absolute world position

@@ -13,7 +13,7 @@ private:
    std::string m_action;
 
 public:
-   Grunt() : Agent("grunt") {}
+   Grunt() : Agent("grunt", true) {}
 
    void setAction(const std::string& action) {m_action = action;}
    const std::string& getAction() const {return m_action;}

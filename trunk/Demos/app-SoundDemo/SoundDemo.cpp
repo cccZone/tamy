@@ -71,11 +71,11 @@ void SoundDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
    GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
    AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
 
-   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile");
+   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile", false);
    entInstance->attachEntity(ent);
 
    m_sound = new WavFile("..\\Data\\Footsteps.wav");
-   Sound3D* tileSound = m_resourceManager->createSound3D("tileSound", *m_sound, 100);
+   Sound3D* tileSound = m_resourceManager->createSound3D("tileSound", false, *m_sound, 100);
    entInstance->addChild(tileSound);
 
    m_sceneManager->addNode(entInstance);

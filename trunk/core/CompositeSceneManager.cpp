@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 CompositeSceneManager::CompositeSceneManager()
-      : m_rootNode(new Node("rootNode"))
+      : m_rootNode(new Node("rootNode", false))
 {
 }
 

@@ -55,7 +55,7 @@ private:
 
 public:
    DemolitionMan() 
-         : Agent("demolitionMan"), m_chargeToArm(NULL)
+         : Agent("demolitionMan", true), m_chargeToArm(NULL)
    {
       m_idle = new Idle(*this);
       m_work = new DoingHisJob(*this);

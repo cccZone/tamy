@@ -30,6 +30,9 @@ public:
 
 class SpecializedNodeStub : public Node
 {
+public:
+   SpecializedNodeStub() : Node("specializedNodeStub", false) {}
+
 protected:
    void onAccept(NodeVisitor& visitor)
    {

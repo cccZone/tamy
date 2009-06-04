@@ -63,9 +63,9 @@ struct InstantiationBoneStruct
    {}
 };
 
-Node* SkinnedGraphicalEntity::instantiate(Node& boneStructure)
+Node* SkinnedGraphicalEntity::instantiate(Node& boneStructure, bool dynamic)
 {
-   Node* rootNode = new Node(getName());
+   Node* rootNode = new Node(getName(), dynamic);
    rootNode->setLocalMtx(getLocalMtx());
    
    InstBonesMap bonesForAttribs;
@@ -94,7 +94,7 @@ Node* SkinnedGraphicalEntity::instantiate(Node& boneStructure)
          boneDef.push_back(std::make_pair(defIt->second.boneNode, defIt->second.offsetMtx));
       }
 
-      SkinnedGraphicalNode* newNode = new SkinnedGraphicalNode(childNodeName.str(), *this, subsetIdx, boneDef);
+      SkinnedGraphicalNode* newNode = new SkinnedGraphicalNode(childNodeName.str(), dynamic, *this, subsetIdx, boneDef);
       newNode->setBoundingSphereRadius(getBoundingSphereRadius());
       rootNode->addChild(newNode);
    }

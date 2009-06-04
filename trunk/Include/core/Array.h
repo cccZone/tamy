@@ -75,6 +75,20 @@ public:
    unsigned int size() const {return m_elementsCount;}
 
    /**
+    * This method copies the contents of the array passed in as a parameter
+    * and appends it to the back of its own array
+    */
+   void copyFrom(const Array<T>& rhs)
+   {
+      resize(size() + rhs.size());
+      for (unsigned int i = 0; i < rhs.m_elementsCount; ++i)
+      {
+         m_arr[m_elementsCount + i] = rhs.m_arr[i];
+      }
+      m_elementsCount += rhs.m_elementsCount;
+   }
+
+   /**
     * The method resizes the array, preparing it to accumulate
     * a number of elements without a need to resize in the process.
     *

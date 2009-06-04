@@ -9,7 +9,7 @@ class Node;
 
 /**
  * A scene manager maintains a hierarchy of nodes. There can be many
- * different scene managers, managing the visual, audio, ai etc. aspects
+ * different scene managers, managing the visual, audio, AI etc. aspects
  * of the scene in multiple ways
  */
 class SceneManager

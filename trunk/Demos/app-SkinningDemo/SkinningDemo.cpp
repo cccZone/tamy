@@ -42,7 +42,7 @@ void SkinningDemo::initialize(Renderer& renderer, ResourceManager& resourceManag
 
    GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("US Ranger.x");
    AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("US Ranger.x", loader);
-   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("ranger01");
+   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("ranger01", false);
    entInstance->attachEntity(ent);
    m_sceneManager->addNode(entInstance);
 

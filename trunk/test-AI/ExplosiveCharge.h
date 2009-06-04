@@ -16,7 +16,7 @@ private:
 
 public:
    ExplosiveCharge() 
-         : Agent("explosiveCharge"),
+         : Agent("explosiveCharge", false),
          m_armed(false) 
    {}
 

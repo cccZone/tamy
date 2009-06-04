@@ -4,8 +4,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalNode::GraphicalNode(const std::string& name, GraphicalEntity& entity, DWORD subset)
-      : AbstractGraphicalNode(name, entity.getMaterial(subset), subset),
+GraphicalNode::GraphicalNode(const std::string& name, 
+                             bool dynamic, 
+                             GraphicalEntity& entity, 
+                             DWORD subset)
+      : AbstractGraphicalNode(name, dynamic, entity.getMaterial(subset), subset),
       m_entity(entity)
 {
 }

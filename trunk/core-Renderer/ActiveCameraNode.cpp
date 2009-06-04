@@ -4,7 +4,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ActiveCameraNode::ActiveCameraNode()
-      : m_defaultNode("DefaultActiveCameraNode"),
+      : Node("activeCameraNode", true),
+      m_defaultNode("DefaultActiveCameraNode", true),
       m_activeCamera(&m_defaultNode)
 {
 }

@@ -22,7 +22,7 @@ private:
    std::list<std::pair<Node*, SkinnedGraphicalEntity*> > m_skinsToPostprocess;
 
 public:
-   GraphicalEntityInstantiator(const std::string& name);
+   GraphicalEntityInstantiator(const std::string& name, bool dynamic);
 
    void attachEntity(AbstractGraphicalEntity& entity);
 

@@ -23,7 +23,7 @@ TEST(SoundSceneManager, soundsAreHeardOnlyToCertainDistance)
    float listenerHearingRadius = 1;
    Sound3DMock* dogSound = new Sound3DMock("dogSound", barking, dogSoundHearingRadius);
    
-   Node dog("dog");
+   Node dog("dog", false);
    dog.addChild(dogSound);
    soundScene.addNode(&dog);
 

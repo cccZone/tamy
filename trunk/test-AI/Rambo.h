@@ -102,7 +102,7 @@ private:
 
 public:
    Rambo() 
-      : Agent("rambo"), m_health(10), m_enemySpotted(NULL)
+      : Agent("rambo", true), m_health(10), m_enemySpotted(NULL)
    {
       m_lookForEnemy = new LookForEnemy(*this);
       m_kill = new Kill(*this);
