@@ -343,15 +343,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\Culler.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Include\core-Renderer\GraphicalNodesAnalyzer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\SpatialContainer.h"
+				RelativePath="..\Include\core-Renderer\LinearNodesStorage.h"
 				>
 			</File>
 			<File
@@ -362,18 +358,10 @@
 				RelativePath="..\Include\core-Renderer\VisualSceneManager.h"
 				>
 			</File>
-			<Filter
-				Name="Containers"
+			<File
+				RelativePath="..\Include\core-Renderer\VisualSceneManager.inl"
 				>
-				<File
-					RelativePath=".\OctreeSpatialContainer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\OctreeSpatialContainer.h"
-					>
-				</File>
-			</Filter>
+			</File>
 		</Filter>
 		<Filter
 			Name="RenderingPasses"
@@ -392,6 +380,14 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\DrawingPass.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalNodesProcessor.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\GraphicalNodesProcessor.h"
 				>
 			</File>
 		</Filter>
@@ -444,26 +440,6 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\Texture.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Cullers"
-			>
-			<File
-				RelativePath=".\FrustumCuller.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\FrustumCuller.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NullCuller.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\NullCuller.h"
 				>
 			</File>
 		</Filter>

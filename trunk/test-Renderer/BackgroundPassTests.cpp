@@ -1,7 +1,7 @@
 #include "core-TestFramework\TestFramework.h"
 #include "RendererImplementationMock.h"
 #include "SkyBoxMock.h"
-#include "VisualSceneManagerMock.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\BackgroundPass.h"
 
 
@@ -9,7 +9,7 @@
 
 TEST(BackgroundPass, renderingSkyBox)
 {
-   VisualSceneManagerMock sceneManager;
+   VisualSceneManager sceneManager;
    RendererImplementationMock renderer;
 
    SkyBoxMock* skyBox = new SkyBoxMock();

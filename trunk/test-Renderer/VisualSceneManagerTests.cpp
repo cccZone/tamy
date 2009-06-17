@@ -1,5 +1,5 @@
 #include "core-TestFramework\TestFramework.h"
-#include "VisualSceneManagerMock.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\Camera.h"
 #include "SkyBoxMock.h"
 #include "core\MatrixWriter.h"
@@ -12,15 +12,14 @@
 #include "GraphicalEntityMock.h"
 #include "GraphicalNodeMock.h"
 #include "core-Renderer\GraphicalNode.h"
-#include "core-Renderer\NullCuller.h"
-#include "core-Renderer\OctreeSpatialContainer.h"
+#include "core\Frustum.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(VisualSceneManager, addingCameraAndActiveCamera)
 {
-   VisualSceneManagerMock sceneManager;
+   VisualSceneManager sceneManager;
    Camera* camera1 = new Camera("camera1");
    Camera* camera2 = new Camera("camera2");
 
@@ -39,7 +38,7 @@ TEST(VisualSceneManager, addingCameraAndActiveCamera)
 
 TEST(VisualSceneManager, removingCameraThatIsSetAsActive)
 {
-   VisualSceneManagerMock sceneManager;
+   VisualSceneManager sceneManager;
    Camera camera("camera");
 
    sceneManager.addNode(&camera);
@@ -53,7 +52,7 @@ TEST(VisualSceneManager, removingCameraThatIsSetAsActive)
 
 TEST(VisualSceneManager, changingActiveCameraReattachesSkyBox)
 {
-   VisualSceneManagerMock sceneManager;
+   VisualSceneManager sceneManager;
    Camera* camera1 = new Camera("camera1");
    Camera* camera2 = new Camera("camera2");
    sceneManager.addNode(camera1);
@@ -79,7 +78,7 @@ TEST(VisualSceneManager, changingActiveCameraReattachesSkyBox)
 
 TEST(VisualSceneManager, addingSkyBoxAttachesItToActiveCamera)
 {
-   VisualSceneManagerMock sceneManager;
+   VisualSceneManager sceneManager;
    Camera* camera = new Camera("camera");
    sceneManager.addNode(camera);
 
@@ -110,7 +109,7 @@ TEST(VisualSceneManager, addingSkyBoxAttachesItToActiveCamera)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(VisualSceneManagerTests, retrievingStaticGeometry)
+TEST(VisualSceneManager, retrievingStaticGeometry)
 {
    // prepare the materials
    TextureStub texture("");
@@ -140,31 +139,38 @@ TEST(VisualSceneManagerTests, retrievingStaticGeometry)
    GraphicalNode node3("subset2 - material2", false, entity, 2);
    GraphicalNode node4("subset3 - material1", false, entity, 3);
 
+   D3DXMatrixTranslation(&(node1.accessLocalMtx()), 0, 0, 50);
+   D3DXMatrixTranslation(&(node2.accessLocalMtx()), 0, 0, 50);
+   D3DXMatrixTranslation(&(node3.accessLocalMtx()), 0, 0, 50);
+   D3DXMatrixTranslation(&(node4.accessLocalMtx()), 0, 0, 50);
+
    Camera cameraNode("camera"); 
 
    // add the nodes to the scene
    VisualSceneManager sceneManager;
-   sceneManager.setCuller(new NullCuller());
    sceneManager.setActiveCamera(cameraNode);
+
+   Array<AbstractGraphicalNode*> nodes;
 
    // 1st node
    sceneManager.addNode(&node1);
-   DWORD arraySize = 0;
-   AbstractGraphicalNodeP* nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)1, arraySize);
+   sceneManager.query(cameraNode.getFrustum(), nodes);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
 
    // 2nd node
+   nodes.clear();
    sceneManager.addNode(&node2);
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
+   sceneManager.query(cameraNode.getFrustum(), nodes);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[1]);
 
    // 3rd node
+   nodes.clear();
    sceneManager.addNode(&node3);
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)3, arraySize);
+   sceneManager.query(cameraNode.getFrustum(), nodes);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)3, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[1]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node3, nodes[2]);
@@ -172,188 +178,29 @@ TEST(VisualSceneManagerTests, retrievingStaticGeometry)
    // 4th node - this one uses the same material as 1st and 2nd node, 
    //            so it should be grouped along with them (at least 
    //            with the batching strategy we used for this test)
+   nodes.clear();
    sceneManager.addNode(&node4);
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)4, arraySize);
+   sceneManager.query(cameraNode.getFrustum(), nodes);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)4, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[1]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node4, nodes[2]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node3, nodes[3]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node3, nodes[2]);
+   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node4, nodes[3]);
 
    // remove one of the nodes
-
+   nodes.clear();
    sceneManager.removeNode(node3); 
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)3, arraySize);
+   sceneManager.query(cameraNode.getFrustum(), nodes);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)3, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[1]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node4, nodes[2]);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(VisualSceneManagerTests, transparentObjects)
-{
-   MaterialOperationImplementationMock matOpImpl;
-   Camera cameraNode("camera");
-   std::list<std::string> results;
-   DWORD arraySize = 0;
-   AbstractGraphicalNodeP* nodes;
-
-   // prepare the materials
-   TextureStub regularTexture(results);
-   TextureStub transparentTexture(results);
-   LightReflectingPropertiesStub lrp(results, 0);
-
-   Material regularMaterial(lrp, matOpImpl, matOpImpl, 0);
-   MaterialStage* regularMaterialStage = new MaterialStage(regularTexture,
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
-   regularMaterial.addStage(regularMaterialStage);
-
-   Material transparentMaterial(lrp, matOpImpl, matOpImpl, 1);
-   MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_ADD, SC_NONE, SC_NONE));
-   transparentMaterial.addStage(transparentMaterialStage);
-
-
-   // create the node we'll use for rendering
-   std::vector<Material*> materials; 
-   materials.push_back(&regularMaterial);
-   materials.push_back(&transparentMaterial);
-   GraphicalEntityMock entity("entity", materials, results);
-
-   GraphicalNode regularNode("regularNode", false, entity, 0);
-   GraphicalNode transparentNode("transparentNode", false, entity, 1);
-
-
-   // add the nodes to the scene
-   VisualSceneManager sceneManager;
-   sceneManager.setCuller(new NullCuller());
-   sceneManager.setActiveCamera(cameraNode);
-   sceneManager.addNode(&regularNode);
-   sceneManager.addNode(&transparentNode);
-
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&regularNode, nodes[0]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNode, nodes[1]);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(VisualSceneManagerTests, removingTransparentObjects)
-{
-   MaterialOperationImplementationMock matOpImpl;
-   Camera cameraNode("camera");
-   std::list<std::string> results;
-   DWORD arraySize = 0;
-   AbstractGraphicalNodeP* nodes;
-
-   // prepare the materials
-   TextureStub transparentTexture(results);
-   LightReflectingPropertiesStub lrp(results, 0);
-
-   Material transparentMaterial(lrp, matOpImpl, matOpImpl, 0);
-   MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_MULTIPLY, SC_NONE, SC_NONE));
-   transparentMaterial.addStage(transparentMaterialStage);
-
-
-   // create the node we'll use for rendering
-   std::vector<Material*> materials;  materials.push_back(&transparentMaterial);
-   GraphicalEntityMock entity("entity", materials, results);
-
-   GraphicalNode transparentNode1("transparentNode1", false, entity, 0);
-   GraphicalNode transparentNode2("transparentNode2", false, entity, 0);
-   GraphicalNode transparentNode3("transparentNode3", false, entity, 0);
-
-
-   // add the nodes to the scene
-   VisualSceneManager sceneManager;
-   sceneManager.setCuller(new NullCuller());
-   sceneManager.setActiveCamera(cameraNode);
-   sceneManager.addNode(&transparentNode1);
-   sceneManager.addNode(&transparentNode2);
-   sceneManager.addNode(&transparentNode3);
-
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)3, arraySize);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNode1, nodes[0]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNode2, nodes[1]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNode3, nodes[2]);
-
-   sceneManager.removeNode(transparentNode2);
-
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNode1, nodes[0]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNode3, nodes[1]);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(VisualSceneManagerTests, transparentObjectsAreSortedWithRespectToCamera)
-{
-   MaterialOperationImplementationMock matOpImpl;
-   Camera cameraNode("camera");
-   std::list<std::string> results;
-   DWORD arraySize = 0;
-   AbstractGraphicalNodeP* nodes;
-
-   // prepare the materials
-   TextureStub transparentTexture(results);
-   LightReflectingPropertiesStub lrp(results, 0);
-
-   Material transparentMaterial(lrp, matOpImpl, matOpImpl, 0);
-   MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_SUBTRACT, SC_NONE, SC_NONE));
-   transparentMaterial.addStage(transparentMaterialStage);
-
-
-   // create the node we'll use for rendering
-   std::vector<Material*> materials; materials.push_back(&transparentMaterial);
-   GraphicalEntityMock entity("entity", materials, results);
-
-   GraphicalNode transparentNodeClose("transparentNodeClose", false, entity, 0);
-   GraphicalNode transparentNodeFar("transparentNodeFar", false, entity, 0);
-
-   // add the nodes to the scene
-   VisualSceneManager sceneManager;
-   sceneManager.setCuller(new NullCuller());
-   sceneManager.setActiveCamera(cameraNode);
-   sceneManager.addNode(&transparentNodeClose);
-   sceneManager.addNode(&transparentNodeFar);
-
-   D3DXMatrixTranslation(&(transparentNodeClose.accessLocalMtx()), 0, 0, 10);
-   D3DXMatrixTranslation(&(transparentNodeFar.accessLocalMtx()),   0, 0, 50);
-
-   // we're standing closer to the 'transparentNodeClose', so it's gonna be rendered last
-   D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 0, 0, 5);
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNodeFar,   nodes[0]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNodeClose, nodes[1]);
-
-
-   // we moved next to the 'transparentNodeFar', so it's gonna be rendered last now
-   D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 0, 0, 55);
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNodeClose, nodes[0]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&transparentNodeFar,   nodes[1]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(VisualSceneManager, dynamicNodesAndOctrees)
 {
-   DWORD arraySize = 0;
-   AbstractGraphicalNodeP* nodes = NULL;
-
    MaterialOperationImplementationMock matOpImpl;
    std::list<std::string> results;
    TextureStub texture(results);
@@ -374,8 +221,7 @@ TEST(VisualSceneManager, dynamicNodesAndOctrees)
    Camera cameraNode("camera"); 
 
    // add the nodes to the scene
-   VisualSceneManager sceneManager(new OctreeSpatialContainer(1, 100));
-   sceneManager.setCuller(new NullCuller());
+   VisualSceneManager sceneManager(1, 100);
    sceneManager.setActiveCamera(cameraNode);
    
    D3DXMatrixTranslation(&(node1.accessLocalMtx()), -50, 50, -10);
@@ -385,37 +231,36 @@ TEST(VisualSceneManager, dynamicNodesAndOctrees)
    sceneManager.addNode(&node2);
    sceneManager.addNode(&node3);
 
+   Array<AbstractGraphicalNode*> nodes;
+
    // let's check the visibility of nodes in the positions they were in when
    // they were first added to the scene
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), -50, 50, -20);
-   arraySize = 0;
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
+   sceneManager.query(cameraNode.getFrustum(), nodes);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);
 
+   // moving the camera - the dynamic node1 becomes invisible
+   nodes.clear();
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 50, 50, -20);
-   arraySize = 0;
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
+   sceneManager.query(cameraNode.getFrustum(), nodes);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node3, nodes[0]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);
 
    // now let's move node1 (a dynamic node) and see if the situation on the scene changes
    // accordingly
+   nodes.clear();
    D3DXMatrixTranslation(&(node1.accessLocalMtx()), 49, 50, -10);
-
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), -50, 50, -20);
-   arraySize = 0;
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
+   sceneManager.query(cameraNode.getFrustum(), nodes);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[0]);
-   CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);
 
+   nodes.clear();
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 50, 50, -20);
-   arraySize = 0;
-   nodes = sceneManager.getNodes(arraySize);
-   CPPUNIT_ASSERT_EQUAL((DWORD)2, arraySize);
+   sceneManager.query(cameraNode.getFrustum(), nodes);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node3, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);
 }

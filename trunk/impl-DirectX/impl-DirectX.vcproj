@@ -176,6 +176,10 @@
 				Name="GraphicalDataRepresentation"
 				>
 				<File
+					RelativePath="..\Include\impl-DirectX\D3DAbstractGraphicalEntity.h"
+					>
+				</File>
+				<File
 					RelativePath=".\D3DAlphaOperationImplementation.cpp"
 					>
 				</File>

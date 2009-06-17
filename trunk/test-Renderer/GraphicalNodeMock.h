@@ -16,12 +16,17 @@ private:
    static Material s_material;
 
 public:
-   GraphicalNodeMock()
-      : AbstractGraphicalNode("graphicalNodeMock", false, s_material, 0)
+   GraphicalNodeMock(bool dynamic = false)
+      : AbstractGraphicalNode("graphicalNodeMock", dynamic, s_material, 0)
    {
    }
 
    void render() {}
+
+   const AbstractGraphicalEntity& getEntity() const 
+   {
+      return *(reinterpret_cast<const AbstractGraphicalEntity*>(NULL));
+   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

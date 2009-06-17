@@ -8,14 +8,14 @@
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "LightReflectingPropertiesStub.h"
-#include "VisualSceneManagerMock.h"
+#include "core-Renderer\VisualSceneManager.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(Renderer, renderingOnlyWhenRenderingDeviceIsReady)
 {
-   VisualSceneManagerMock sceneManager;
+   VisualSceneManager sceneManager;
    RendererImplementationMock renderer;
    renderer.addVisualSceneManager(sceneManager);
 
@@ -33,7 +33,7 @@ TEST(Renderer, renderingOnlyWhenRenderingDeviceIsReady)
 
 TEST(Renderer, recoveringTheLostDevice)
 {
-   VisualSceneManagerMock sceneManager;
+   VisualSceneManager sceneManager;
    RendererImplementationMock renderer;
    renderer.addVisualSceneManager(sceneManager);
 

@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="test-Renderer"
-	ProjectGUID="{0FC433B8-A585-4B11-866D-39C36CE4F88B}"
-	RootNamespace="testRenderer"
+	Name="app-PickingDemo"
+	ProjectGUID="{9D2C7535-9973-4470-ADB1-FE0A0C2F92E6}"
+	RootNamespace="appPickingDemo"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,11 +61,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3d9.lib d3dx9.lib winmm.lib cppunitd.lib"
+				AdditionalDependencies="winmm.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -117,8 +117,9 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
+				WholeProgramOptimization="false"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -136,11 +137,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3d9.lib d3dx9.lib winmm.lib cppunit.lib"
+				AdditionalDependencies="winmm.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;;&quot;$(SolutionDir)\Libs\External\CPPUNIT\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(DXSDK_DIR)\Lib\x86&quot;"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -172,136 +173,16 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Renderer"
+			Name="Core"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\RendererTests.cpp"
+				RelativePath=".\PickingDemo.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\RenderingProcessorTests.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Utils"
-			>
-			<File
-				RelativePath=".\GraphicalEntityMock.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEntityMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNodeMock.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNodeMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LightMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LightReflectingPropertiesStub.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialOperationImplementationMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NodeHierarchyWriter.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RendererImplementationMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SkinnedGraphicalEntityMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SkyBoxMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TextureStub.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="SceneManager"
-			>
-			<File
-				RelativePath=".\BatchingStrategyTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SceneQueriesTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\VisualSceneManagerTests.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Entities"
-			>
-			<File
-				RelativePath=".\CameraTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEntityTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNodesTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\LightsTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SkeletonTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SkinnedGraphicalNodeTests.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="RenderingPasses"
-			>
-			<File
-				RelativePath=".\BackgroundPassTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNodesProcessorTests.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Materials"
-			>
-			<File
-				RelativePath=".\MaterialOperationTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialTests.cpp"
+				RelativePath=".\PickingDemo.h"
 				>
 			</File>
 		</Filter>

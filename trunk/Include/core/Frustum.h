@@ -3,6 +3,15 @@
 #include <d3dx9.h>
 
 
+enum PlanesEnum
+{
+   FP_BOTTOM,
+   FP_TOP,
+   FP_LEFT,
+   FP_RIGHT,
+   FP_FAR,
+   FP_NEAR,
+};
 ///////////////////////////////////////////////////////////////////////////////
 
 struct Frustum

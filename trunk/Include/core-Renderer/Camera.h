@@ -8,6 +8,7 @@
 
 class ProjectionCalculator;
 struct Frustum;
+struct Ray;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -62,7 +63,15 @@ public:
     * The method returns the current camera frustum (in global coordinates)
     * The planes in the frustum ARE NORMALIZED
     */
-   Frustum getFrustrum();
+   Frustum getFrustum();
+
+   /**
+    * The method constructs a ray running from the camera global position
+    * through the position on the viewport specified by the method params.
+    *
+    * The method params should be specified in the viewport coordinates (range <-1, 1>)
+    */
+   Ray createRay(float viewportX, float viewportY);
 
 protected:
    void onAccept(NodeVisitor& visitor);

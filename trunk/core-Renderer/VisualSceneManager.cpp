@@ -2,19 +2,14 @@
 #include "core\Node.h"
 #include "core-Renderer\SkyBox.h"
 #include "core-Renderer\ActiveCameraNode.h"
-#include "core-Renderer\Material.h"
-#include "core-Renderer\Culler.h"
-#include "core-Renderer\FrustumCuller.h"
-#include "core-Renderer\GraphicalNodesAnalyzer.h"
-#include "core-Renderer\OctreeSpatialContainer.h"
+#include "core-Renderer\LinearNodesStorage.h"
 #include <algorithm>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-VisualSceneManager::VisualSceneManager(SpatialContainer* nodesContainer)
-      : m_culler(new FrustumCuller()),
-      m_activeCameraDeploymentNode(new ActiveCameraNode()),
+VisualSceneManager::VisualSceneManager(unsigned int maxElemsPerSector, float worldSize)
+      : m_activeCameraDeploymentNode(new ActiveCameraNode()),
       m_activeCamera(NULL),
       m_skyBox(NULL),
       m_staticNodesContainer(NULL)
@@ -24,16 +19,8 @@ VisualSceneManager::VisualSceneManager(SpatialContainer* nodesContainer)
    REGISTER_SCENE_ASPECT(Camera);
    REGISTER_SCENE_ASPECT(SkyBox);
 
-   if (nodesContainer != NULL)
-   {
-      m_staticNodesContainer = nodesContainer;
-   }
-   else
-   {
-      m_staticNodesContainer = new OctreeSpatialContainer(64, 1000);
-   }
-
-   m_dynamicNodesContainer = new Array<AbstractGraphicalNodeP>();
+   m_staticNodesContainer = new Octree<AbstractGraphicalNodeP, AGNVolExtractor, BoundingSphere>(maxElemsPerSector, worldSize);
+   m_dynamicNodesContainer = new LinearNodesStorage();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,27 +33,8 @@ VisualSceneManager::~VisualSceneManager()
    delete m_staticNodesContainer;
    m_staticNodesContainer = NULL;
 
-   delete m_culler;
-   m_culler = NULL;
-
-   m_visibleNodes.clear();
-   m_nodesForSorting.clear();
-
    delete m_activeCameraDeploymentNode;
    m_activeCameraDeploymentNode = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VisualSceneManager::setCuller(Culler* culler)
-{
-   if (culler == NULL)
-   {
-      throw std::invalid_argument("NULL pointer instead a Culler instance");
-   }
-
-   delete m_culler;
-   m_culler = culler;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,7 +116,7 @@ void VisualSceneManager::add(AbstractGraphicalNode& node)
 {
    if (node.isDynamic())
    {
-      m_dynamicNodesContainer->push_back(&node);
+      m_dynamicNodesContainer->insert(node);
    }
    else
    {
@@ -162,8 +130,7 @@ void VisualSceneManager::remove(AbstractGraphicalNode& node)
 {
    if (node.isDynamic())
    {
-      unsigned int idx = m_dynamicNodesContainer->find(&node);
-      m_dynamicNodesContainer->remove(idx);
+      m_dynamicNodesContainer->remove(node);
    }
    else
    {
@@ -201,72 +168,6 @@ void VisualSceneManager::setActiveCamera(Camera& camera)
 {
    m_activeCamera = &camera;
    m_activeCameraDeploymentNode->setCameraNode(camera);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-AbstractGraphicalNodeP* VisualSceneManager::getNodes(DWORD& arraySize)
-{
-   if (hasActiveCamera() == false) 
-   {
-      arraySize = 0;
-      return NULL;
-   }
-
-   Camera& activeCamera = getActiveCamera();
-
-   // get the nodes from the sectors we can see
-   m_potentiallyVisibleNodes.clear();
-   Frustum frustum = activeCamera.getFrustrum();
-   m_staticNodesContainer->query(frustum, m_potentiallyVisibleNodes);
-   m_potentiallyVisibleNodes.copyFrom(*m_dynamicNodesContainer);
-
-   // filter the nodes we can't see
-   m_culler->setup(frustum, m_visibleNodes);
-   GraphicalNodesAnalyzer<Culler> visibilityAnalyzer(*m_culler);
-
-   m_visibleNodes.clear();
-   std::for_each((AbstractGraphicalNodeP*)m_potentiallyVisibleNodes, 
-      (AbstractGraphicalNodeP*)m_potentiallyVisibleNodes + m_potentiallyVisibleNodes.size(), 
-      visibilityAnalyzer);
-
-   // segregate nodes
-   m_nodesForSorting.clear();
-   unsigned int nodesCount = m_visibleNodes.size();
-   unsigned int regularNodesCount = 0;
-   for (unsigned int i = 0; i < nodesCount; ++i)
-   {
-      if (m_visibleNodes[i]->getMaterial().isTransparent() == false)
-      {
-         m_nodesForSorting.push_back(m_visibleNodes[i]);
-         regularNodesCount++;
-      }
-   }
-
-   for (unsigned int i = 0; i < nodesCount; ++i)
-   {
-      if (m_visibleNodes[i]->getMaterial().isTransparent() == true)
-      {
-         m_nodesForSorting.push_back(m_visibleNodes[i]);
-      }
-   }
-
-   // sort the nodes
-   std::sort((AbstractGraphicalNodeP*)m_nodesForSorting, 
-      (AbstractGraphicalNodeP*)m_nodesForSorting + regularNodesCount,
-      m_materialsComparator);
-
-
-   D3DXMATRIX mtx = activeCamera.getGlobalMtx();
-   m_distanceComparator.setReferencePoint(D3DXVECTOR3(mtx._41, mtx._42, mtx._43));
-   std::sort((AbstractGraphicalNodeP*)m_nodesForSorting + regularNodesCount, 
-      (AbstractGraphicalNodeP*)m_nodesForSorting + m_nodesForSorting.size(),
-      m_distanceComparator);
-
-
-   // output the results
-   arraySize = m_nodesForSorting.size();
-   return m_nodesForSorting;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

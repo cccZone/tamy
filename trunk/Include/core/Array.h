@@ -23,6 +23,11 @@ private:
    T* m_arr;
 
 public:
+   /**
+    * The parameter passed here preallocates the amount of memory necessary
+    * for the array to store the passed number of elements.
+    * It WILL NOT allocate these elements !!!
+    */
    Array(unsigned int size = 1)
       : m_size(1),
       m_elementsCount(0)

@@ -9,6 +9,7 @@ struct AABoundingBox;
 struct Ray;
 struct BoundingSphere;
 struct Frustum;
+struct Triangle;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +34,7 @@ bool testCollision(const AABoundingBox& aabb, const Frustum& frustum);
 ///////////////////////////////////////////////////////////////////////////////
 
 bool testCollision(const Frustum& frustum, const BoundingSphere& sphere);
+bool testCollision(const BoundingSphere& sphere, const Frustum& frustum);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +46,17 @@ bool testCollision(const BoundingSphere& sphere, const D3DXVECTOR3& point);
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool testCollision(const BoundingSphere& sphere, const Ray& ray);
+bool testCollision(const Ray& ray, const BoundingSphere& sphere);
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool testCollision(const BoundingSphere& sphere, const BoundingSphere& rhs);
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool testCollision(const Ray& ray, const Triangle& triangle);
+bool testCollision(const Triangle& triangle, const Ray& ray);
 
 ///////////////////////////////////////////////////////////////////////////////
 

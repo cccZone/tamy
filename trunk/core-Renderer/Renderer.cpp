@@ -3,6 +3,7 @@
 #include "core-Renderer\Light.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\RenderingPass.h"
+#include "core\Point.h"
 #include <cassert>
 
 
@@ -11,6 +12,10 @@
 Renderer::Renderer()
       : m_viewportWidth(800),
       m_viewportHeight(600),
+      m_leftClientArea(0),
+      m_topClientArea(0),
+      m_rightClientArea(m_viewportWidth),
+      m_bottomClientArea(m_viewportHeight),
       m_initialState(new InitialState()),
       m_renderingState(new RenderingState()),
       m_deviceLostState(new DeviceLostState()),
@@ -173,10 +178,17 @@ void Renderer::setDeviceLostState()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::resizeViewport(unsigned int width, unsigned int height)
+void Renderer::resizeViewport(unsigned int width, unsigned int height,
+                              unsigned int leftClientArea, unsigned int topClientArea,
+                              unsigned int rightClientArea, unsigned int bottomClientArea)
 {
    m_viewportWidth = width;
    m_viewportHeight = height;
+
+   m_leftClientArea = leftClientArea;
+   m_topClientArea = topClientArea;
+   m_rightClientArea = rightClientArea;
+   m_bottomClientArea = bottomClientArea;
 
    resetViewport(m_viewportWidth, m_viewportHeight);
 }
@@ -190,6 +202,23 @@ void Renderer::addPass(RenderingPass* pass)
       throw std::invalid_argument("NULL pointer instead a RenderingPass instance");
    }
    m_renderingPasses.push_back(pass);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::screenToViewport(const Point& screenPt, 
+                                D3DXVECTOR2& viewportPt) const
+{
+   float x = (screenPt.x < m_rightClientArea) ? screenPt.x : m_rightClientArea;
+   float y = (screenPt.y < m_bottomClientArea) ? screenPt.y : m_bottomClientArea;
+
+   x -= m_leftClientArea;
+   y -= m_topClientArea;
+   if (x < 0) x = 0;
+   if (y < 0) y = 0;
+
+   viewportPt.x = (x / (m_viewportWidth * 0.5f)) - 1;
+   viewportPt.y = 1 - (y / (m_viewportHeight * 0.5f));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -36,6 +36,8 @@ public:
     */
    Node* instantiate(bool dynamic);
 
+   void getGeometry(Array<Triangle*>& output) const;
+
 protected:
    void accept(GraphicalEntityInstantiator& instantiator);
 };

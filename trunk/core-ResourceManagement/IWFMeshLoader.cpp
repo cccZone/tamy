@@ -79,7 +79,7 @@ void IWFMeshLoader::parseMesh(MeshDefinition& mesh,
                                minPos.y + (maxPos.y - minPos.y) / 2.f,
                                minPos.z + (maxPos.z - minPos.z) / 2.f);
 
-   for (std::list<LitVertex>::iterator vertexIt = mesh.vertices.begin();
+   for (std::vector<LitVertex>::iterator vertexIt = mesh.vertices.begin();
         vertexIt != mesh.vertices.end(); ++vertexIt)
    {
       vertexIt->m_coords -= meshTranslation; 

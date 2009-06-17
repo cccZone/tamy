@@ -17,6 +17,7 @@ class Renderer;
 class RenderingProcessor;
 class SkyBox;
 class RenderingPass;
+struct Point;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -56,6 +57,10 @@ private:
 
    unsigned int m_viewportWidth;
    unsigned int m_viewportHeight;
+   unsigned int m_leftClientArea;
+   unsigned int m_topClientArea;
+   unsigned int m_rightClientArea;
+   unsigned int m_bottomClientArea;
 
    RendererState* m_initialState;
    RendererState* m_renderingState;
@@ -77,7 +82,9 @@ public:
    /**
     * Changes the size of the active viewport
     */
-   void resizeViewport(unsigned int width, unsigned int height);
+   void resizeViewport(unsigned int width, unsigned int height,
+                       unsigned int leftClientArea, unsigned int topClientArea,
+                       unsigned int rightClientArea, unsigned int bottomClientArea);
 
    /**
     * This method adds a new 2d rendering pass to the rendering pipeline
@@ -95,12 +102,18 @@ public:
     */
    void removeVisualSceneManager(VisualSceneManager& manager);
 
+   /**
+    * The method translates the screen space coordinates
+    * (i.e. ones your mouse moves in) to viewport space coordinates
+    */
+   void screenToViewport(const Point& inScreenPt, D3DXVECTOR2& outViewportPt) const;
+
 protected:
    /**
     * This method will be called whenever the device needs
     * to be initialized (which will basically take place
     * when the device is first referenced, or when we loose
-    * the device's focus for some reason and then reaquire it)
+    * the device's focus for some reason and then reacquire it)
     *
     * It should perform all the required initialization to get
     * the device ready for rendering
@@ -108,7 +121,7 @@ protected:
    virtual void initRenderer() = 0;
 
    /**
-    * This method sets the implementation-dependant details of the used viewport
+    * This method sets the implementation-dependent details of the used viewport
     */
    virtual void resetViewport(unsigned int width, unsigned int height) = 0;
 

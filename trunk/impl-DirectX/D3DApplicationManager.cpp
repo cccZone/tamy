@@ -97,14 +97,20 @@ LRESULT D3DApplicationManager::wndProc(HWND hWnd, UINT message, WPARAM wParam, L
 {
    switch (message)
    {
-   case WM_SIZE:
+   case WM_SIZE: // fallthrough
+   case WM_MOVE:
       {
-         UINT screenWidth  = LOWORD( lParam );
-         UINT screenHeight = HIWORD( lParam );
+         WINDOWINFO info;
+         GetWindowInfo(hWnd, &info);
 
          if (m_renderer)
          {
-            m_renderer->resizeViewport(screenWidth, screenHeight);
+            m_renderer->resizeViewport(info.rcClient.right - info.rcClient.left, 
+                                       info.rcClient.bottom - info.rcClient.top, 
+                                       info.rcClient.left, 
+                                       info.rcClient.top,
+                                       info.rcClient.right, 
+                                       info.rcClient.bottom);
          }
 
          break;
@@ -163,7 +169,6 @@ void D3DApplicationManager::checkUserInput(unsigned char* keysBuffer, Point& mou
 
    if (m_rightMouseButton) keysBuffer[VK_RBUTTON] = 0xF0;
    if (m_leftMouseButton) keysBuffer[VK_LBUTTON] = 0xF0;
-
 
    POINT cursorPos;
    GetCursorPos(&cursorPos);

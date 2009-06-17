@@ -3,6 +3,7 @@
 #include "core\TNodesVisitor.h"
 #include "core-Renderer\ProjCalc3D.h"
 #include "core\Frustum.h"
+#include "core\Ray.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -137,7 +138,7 @@ void Camera::updateProjectionMtx()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Frustum Camera::getFrustrum()
+Frustum Camera::getFrustum()
 {
    D3DXMATRIX combinedMtx = getViewMtx();
    D3DXMATRIX projMtx = getProjectionMtx();
@@ -145,43 +146,70 @@ Frustum Camera::getFrustrum()
 
    Frustum frustrum;
 
-   frustrum.planes[0].a = -(combinedMtx._14 + combinedMtx._12);
-   frustrum.planes[0].b = -(combinedMtx._24 + combinedMtx._22);
-   frustrum.planes[0].c = -(combinedMtx._34 + combinedMtx._32);
-   frustrum.planes[0].d = -(combinedMtx._44 + combinedMtx._42);
-   D3DXPlaneNormalize(&(frustrum.planes[0]), &(frustrum.planes[0]));
+   frustrum.planes[FP_BOTTOM].a = -(combinedMtx._14 + combinedMtx._12);
+   frustrum.planes[FP_BOTTOM].b = -(combinedMtx._24 + combinedMtx._22);
+   frustrum.planes[FP_BOTTOM].c = -(combinedMtx._34 + combinedMtx._32);
+   frustrum.planes[FP_BOTTOM].d = -(combinedMtx._44 + combinedMtx._42);
+   D3DXPlaneNormalize(&(frustrum.planes[FP_BOTTOM]), &(frustrum.planes[FP_BOTTOM]));
 
-   frustrum.planes[1].a = -(combinedMtx._14 - combinedMtx._12);
-   frustrum.planes[1].b = -(combinedMtx._24 - combinedMtx._22);
-   frustrum.planes[1].c = -(combinedMtx._34 - combinedMtx._32);
-   frustrum.planes[1].d = -(combinedMtx._44 - combinedMtx._42);
-   D3DXPlaneNormalize(&(frustrum.planes[1]), &(frustrum.planes[1]));
+   frustrum.planes[FP_TOP].a = -(combinedMtx._14 - combinedMtx._12);
+   frustrum.planes[FP_TOP].b = -(combinedMtx._24 - combinedMtx._22);
+   frustrum.planes[FP_TOP].c = -(combinedMtx._34 - combinedMtx._32);
+   frustrum.planes[FP_TOP].d = -(combinedMtx._44 - combinedMtx._42);
+   D3DXPlaneNormalize(&(frustrum.planes[FP_TOP]), &(frustrum.planes[FP_TOP]));
 
-   frustrum.planes[2].a  = -(combinedMtx._14 + combinedMtx._11);
-   frustrum.planes[2].b  = -(combinedMtx._24 + combinedMtx._21);
-   frustrum.planes[2].c  = -(combinedMtx._34 + combinedMtx._31);
-   frustrum.planes[2].d  = -(combinedMtx._44 + combinedMtx._41);
-   D3DXPlaneNormalize(&(frustrum.planes[2]), &(frustrum.planes[2]));
+   frustrum.planes[FP_LEFT].a  = -(combinedMtx._14 + combinedMtx._11);
+   frustrum.planes[FP_LEFT].b  = -(combinedMtx._24 + combinedMtx._21);
+   frustrum.planes[FP_LEFT].c  = -(combinedMtx._34 + combinedMtx._31);
+   frustrum.planes[FP_LEFT].d  = -(combinedMtx._44 + combinedMtx._41);
+   D3DXPlaneNormalize(&(frustrum.planes[FP_LEFT]), &(frustrum.planes[FP_LEFT]));
 
-   frustrum.planes[3].a = -(combinedMtx._14 - combinedMtx._11);
-   frustrum.planes[3].b = -(combinedMtx._24 - combinedMtx._21);
-   frustrum.planes[3].c = -(combinedMtx._34 - combinedMtx._31);
-   frustrum.planes[3].d = -(combinedMtx._44 - combinedMtx._41);
-   D3DXPlaneNormalize(&(frustrum.planes[3]), &(frustrum.planes[3]));
+   frustrum.planes[FP_RIGHT].a = -(combinedMtx._14 - combinedMtx._11);
+   frustrum.planes[FP_RIGHT].b = -(combinedMtx._24 - combinedMtx._21);
+   frustrum.planes[FP_RIGHT].c = -(combinedMtx._34 - combinedMtx._31);
+   frustrum.planes[FP_RIGHT].d = -(combinedMtx._44 - combinedMtx._41);
+   D3DXPlaneNormalize(&(frustrum.planes[FP_RIGHT]), &(frustrum.planes[FP_RIGHT]));
 
-   frustrum.planes[4].a   = -(combinedMtx._14 - combinedMtx._13);
-   frustrum.planes[4].b   = -(combinedMtx._24 - combinedMtx._23);
-   frustrum.planes[4].c   = -(combinedMtx._34 - combinedMtx._33);
-   frustrum.planes[4].d   = -(combinedMtx._44 - combinedMtx._43);
-   D3DXPlaneNormalize(&(frustrum.planes[4]), &(frustrum.planes[4]));
+   frustrum.planes[FP_FAR].a   = -(combinedMtx._14 - combinedMtx._13);
+   frustrum.planes[FP_FAR].b   = -(combinedMtx._24 - combinedMtx._23);
+   frustrum.planes[FP_FAR].c   = -(combinedMtx._34 - combinedMtx._33);
+   frustrum.planes[FP_FAR].d   = -(combinedMtx._44 - combinedMtx._43);
+   D3DXPlaneNormalize(&(frustrum.planes[FP_FAR]), &(frustrum.planes[FP_FAR]));
 
-   frustrum.planes[5].a   = -combinedMtx._13;
-   frustrum.planes[5].b   = -combinedMtx._23;
-   frustrum.planes[5].c   = -combinedMtx._33;
-   frustrum.planes[5].d   = -combinedMtx._43;
-   D3DXPlaneNormalize(&(frustrum.planes[5]), &(frustrum.planes[5]));
+   frustrum.planes[FP_NEAR].a   = -combinedMtx._13;
+   frustrum.planes[FP_NEAR].b   = -combinedMtx._23;
+   frustrum.planes[FP_NEAR].c   = -combinedMtx._33;
+   frustrum.planes[FP_NEAR].d   = -combinedMtx._43;
+   D3DXPlaneNormalize(&(frustrum.planes[FP_NEAR]), &(frustrum.planes[FP_NEAR]));
 
    return frustrum;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Ray Camera::createRay(float viewportX, float viewportY)
+{
+   D3DXMATRIX globalMtx = getGlobalMtx();
+
+   D3DXVECTOR3 origin(globalMtx._41, globalMtx._42, globalMtx._43);
+
+   // now I treat the mouse position as if it was located on the near clipping plane
+   D3DXVECTOR3 mouseOnNearPlane(viewportX, viewportY, -m_nearZPlane);
+
+   // these 3d coords are in the viewport space - now I need to transform them into world space
+   D3DXMATRIX combinedMtx = getViewMtx();
+   D3DXMATRIX projMtx = getProjectionMtx();
+   D3DXMatrixMultiply(&combinedMtx, &combinedMtx, &projMtx);
+   D3DXMatrixInverse(&combinedMtx, NULL, &combinedMtx);
+
+   // once I have the backwards transformation, I use it on the 3D mouse coord
+   D3DXVec3TransformCoord(&mouseOnNearPlane, &mouseOnNearPlane, &combinedMtx);
+
+   // now I just need to find the vector between this point and the camera world space position and normalize it, and I should get my direction:
+   D3DXVECTOR3 direction = mouseOnNearPlane - origin;
+   D3DXVec3Normalize(&direction, &direction);
+
+   return Ray(origin, direction);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

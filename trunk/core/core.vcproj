@@ -255,6 +255,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Include\core\IntervalOperation.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MatrixWriter.cpp"
 				>
 			</File>
@@ -318,7 +322,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Ray.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\core\Ray.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Triangle.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\Triangle.h"
 					>
 				</File>
 			</Filter>
@@ -331,6 +347,14 @@
 				</File>
 				<File
 					RelativePath="..\Include\core\CollisionTests.h"
+					>
+				</File>
+				<File
+					RelativePath=".\QuadraticEquations.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\QuadraticEquations.h"
 					>
 				</File>
 			</Filter>

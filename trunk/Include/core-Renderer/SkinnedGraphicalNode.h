@@ -38,7 +38,8 @@ public:
 
    void render();
 
-   inline SkinnedGraphicalEntity& getEntity() const {return m_entity;}
+   const AbstractGraphicalEntity& getEntity() const;
+
    inline const BonesDef& getBonesDefinition() const {return m_bones;}
 };
 

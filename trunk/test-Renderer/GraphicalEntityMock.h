@@ -56,6 +56,11 @@ public:
    const std::vector<D3DXMATRIX>& getMatricesUsedForRendering() const {return m_matrices;}
 
    const D3DXMATRIX& getMatrixSet() const {return m_mtx;}
+
+   void addTriangle(const Triangle& tri)
+   {
+      LeafGraphicalEntity::addTriangle(tri);
+   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

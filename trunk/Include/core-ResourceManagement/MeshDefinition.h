@@ -54,7 +54,7 @@ struct MeshDefinition
    bool isSkin;
 
    std::vector<MaterialDefinition> materials;
-   std::list<LitVertex> vertices;
+   std::vector<LitVertex> vertices;
    std::list<Face<USHORT> > faces;
 
    // these two attributes have meaning only if the mesh is a skin

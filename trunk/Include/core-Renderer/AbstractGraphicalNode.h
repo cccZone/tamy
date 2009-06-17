@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Material;
-class GraphicalEntity;
+class AbstractGraphicalEntity;
 struct BoundingSphere;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,6 +41,11 @@ public:
    void setBoundingSphereRadius(float radius);
 
    Material& getMaterial() const {return m_material;}
+
+   /**
+    * The method returns a graphical entity attached to the node
+    */
+   virtual const AbstractGraphicalEntity& getEntity() const = 0;
 
     /**
     * ...self explanatory I think...

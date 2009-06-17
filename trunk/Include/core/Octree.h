@@ -10,7 +10,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename BoundingVolumeExtractor>
+template<typename Elem, typename BoundingVolumeExtractor, typename ElemBoundingVolume>
 class Octree
 {
 private:
@@ -93,13 +93,11 @@ public:
       m_elements.push_back(elem);
 
       // place the element id in the correct sector
-      AABoundingBox newBB;
-      m_extractor(elem, newBB);
-
       Array<Sector*> candidateSectors;
       unsigned int sectorsCount = 0;
 
-      querySectors(newBB, *m_root, candidateSectors);
+      ElemBoundingVolume vol = m_extractor(elem);
+      querySectors(vol, *m_root, candidateSectors);
       sectorsCount = candidateSectors.size();
 
       ASSERT(sectorsCount > 0, "The world is too small to add this element");
@@ -185,7 +183,7 @@ public:
       Array<bool> elemsToOutput(elemsCount);
       for (unsigned int i = 0; i < elemsCount; ++i)
       {
-         elemsToOutput[i] = false;
+         elemsToOutput.push_back(false);
       }
 
       unsigned int sectorsCount = candidateSectors.size();
@@ -201,9 +199,16 @@ public:
          }
       }
 
+      // add each element only once - providing it's inside the query volume
       for (unsigned int i = 0; i < elemsCount; ++i)
       {
-         if (elemsToOutput[i]) {output.push_back(m_elements[i]);}
+         if (elemsToOutput[i] == false) continue;
+
+         ElemBoundingVolume vol = m_extractor(m_elements[i]);
+         if (testCollision(vol, boundingVol))
+         {
+            output.push_back(m_elements[i]);
+         }
       }
    }
 
@@ -310,12 +315,11 @@ private:
 
       Array<Sector*> candidateSectors;
       unsigned int sectorsCount = 0;
-      AABoundingBox newBB;
       for (unsigned int i = 0; i < elemsCount; ++i)
       {
          candidateSectors.clear();
-         m_extractor(m_elements[elemsToDistribute[i]], newBB);
-         querySectors(newBB, sector, candidateSectors);
+         ElemBoundingVolume vol = m_extractor(m_elements[elemsToDistribute[i]]);
+         querySectors(vol, sector, candidateSectors);
 
          sectorsCount = candidateSectors.size();
          for (unsigned int j = 0; j < sectorsCount; ++j)

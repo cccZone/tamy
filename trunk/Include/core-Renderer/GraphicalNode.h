@@ -29,10 +29,7 @@ public:
     */
    void render();
 
-   /**
-    * Returns the graphical representation of the node
-    */
-   inline GraphicalEntity& getEntity() const {return m_entity;}
+   const AbstractGraphicalEntity& getEntity() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

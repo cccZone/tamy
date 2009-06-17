@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core-Renderer\AbstractGraphicalEntity.h"
+#include "core\Triangle.h"
 #include <list>
 
 
@@ -22,15 +23,27 @@ private:
    std::list<AbstractGraphicalEntity*> m_noChildren;
    float m_boundingSphereRadius;
 
+   Array<Triangle*>* m_geometry;
+
 public:
    LeafGraphicalEntity(const std::string& name)
          : AbstractGraphicalEntity(name),
-         m_boundingSphereRadius(0)
+         m_boundingSphereRadius(0),
+         m_geometry(new Array<Triangle*>())
    {
       D3DXMatrixIdentity(&m_identityMtx);
    }
 
-   virtual ~LeafGraphicalEntity() {}
+   virtual ~LeafGraphicalEntity() 
+   {
+      unsigned int trisCount = m_geometry->size();
+      for (unsigned int i = 0; i < trisCount; ++i)
+      {
+         delete (*m_geometry)[i];
+      }
+      delete m_geometry; 
+      m_geometry = NULL;
+   }
 
    void addChild(AbstractGraphicalEntity* child) {delete child;}
 
@@ -43,10 +56,17 @@ public:
    */
    float getBoundingSphereRadius() const {return m_boundingSphereRadius;}
 
+   void getGeometry(Array<Triangle*>& output) const {output.copyFrom(*m_geometry);}
+
 protected:
    void setBoundingSphereRadius(float radius)
    {
       m_boundingSphereRadius = radius;
+   }
+
+   void addTriangle(const Triangle& tri) 
+   {
+      m_geometry->push_back(new Triangle(tri));
    }
 };
 

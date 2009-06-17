@@ -20,7 +20,7 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-
+/*
 class BoundVolExtractor
 {
 public:
@@ -35,12 +35,22 @@ public:
       output.max.z = sphere.origin.z + sphere.radius;
    }
 };
+*/
+
+class BoundVolExtractor
+{
+public:
+   const BoundingSphere& operator()(BoundedObjectMock* elem) const
+   {
+      return elem->getSphere();
+   }
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Octrees, queryingElements)
+TEST(Octree, queryingElements)
 {
-   Octree<BoundedObjectMock*, BoundVolExtractor> tree;
+   Octree<BoundedObjectMock*, BoundVolExtractor, BoundingSphere> tree;
    Array<BoundedObjectMock*> result;
 
    BoundedObjectMock ob1(0, 0, 0, 1);
@@ -55,15 +65,14 @@ TEST(Octrees, queryingElements)
    // collide with it, but instead collides with a sector it's in
    result.clear();
    tree.query(BoundingSphere(D3DXVECTOR3(10, 0, 0), 5), result);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
-   CPPUNIT_ASSERT_EQUAL(&ob1, result[0]);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, result.size());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Octrees, sectorsDivision)
+TEST(Octree, sectorsDivision)
 {
-   Octree<BoundedObjectMock*, BoundVolExtractor> tree(1, 20);
+   Octree<BoundedObjectMock*, BoundVolExtractor, BoundingSphere> tree(1, 20);
    Array<BoundedObjectMock*> result;
 
    BoundedObjectMock ob1(-5, 5, 5, 1);
@@ -91,7 +100,7 @@ TEST(Octrees, sectorsDivision)
 
    // this query should return the data from all the overlapping sectors
    result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(0, 0, 0), 5), result);
+   tree.query(BoundingSphere(D3DXVECTOR3(0, 0, 0), 20), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)3, result.size());
    CPPUNIT_ASSERT_EQUAL(&ob1, result[0]);
    CPPUNIT_ASSERT_EQUAL(&ob2, result[1]);
@@ -100,9 +109,9 @@ TEST(Octrees, sectorsDivision)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Octrees, elementsThatSpanAcrossSectors)
+TEST(Octree, elementsThatSpanAcrossSectors)
 {
-   Octree<BoundedObjectMock*, BoundVolExtractor> tree(1, 20);
+   Octree<BoundedObjectMock*, BoundVolExtractor, BoundingSphere> tree(1, 20);
    Array<BoundedObjectMock*> result;
 
    BoundedObjectMock spanningOb(0, 0, 0, 2);
@@ -127,9 +136,9 @@ TEST(Octrees, elementsThatSpanAcrossSectors)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Octrees, removingElements)
+TEST(Octree, removingElements)
 {
-   Octree<BoundedObjectMock*, BoundVolExtractor> tree(1, 20);
+   Octree<BoundedObjectMock*, BoundVolExtractor, BoundingSphere> tree(1, 20);
    Array<BoundedObjectMock*> result;
 
    BoundedObjectMock ob1(-1, 1, 1, 1);
@@ -159,9 +168,8 @@ TEST(Octrees, removingElements)
 
    result.clear();
    tree.query(BoundingSphere(D3DXVECTOR3(-1, 1, 1), 0.5), result);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)2, result.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
    CPPUNIT_ASSERT_EQUAL(&ob2, result[0]);
-   CPPUNIT_ASSERT_EQUAL(&ob3, result[1]);
 
    // removing second object
    tree.remove(&ob2);

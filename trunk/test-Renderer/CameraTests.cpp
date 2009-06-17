@@ -10,10 +10,11 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\Camera.h"
 #include "core\MatrixWriter.h"
-#include "VisualSceneManagerMock.h"
+#include "core-Renderer\VisualSceneManager.h"
 #include "core\Frustum.h"
 #include "core\BoundingSphere.h"
 #include "core\CollisionTests.h"
+#include "core\Ray.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,7 +45,7 @@ TEST(Camera, renderingWithActiveCamera)
    GraphicalEntityMock entity("", materials);
    GraphicalNode* node = new GraphicalNode("", false, entity, 0);
 
-   VisualSceneManagerMock sceneManager;
+   VisualSceneManager sceneManager;
    renderer.addVisualSceneManager(sceneManager);
    sceneManager.setActiveCamera(camera1);
    sceneManager.addNode(node);
@@ -69,12 +70,12 @@ TEST(Camera, settingAspectRatioOfCurrentViewportDuringRendering)
    RendererImplementationMock renderer;
    Camera camera("camera");
 
-   VisualSceneManagerMock sceneManager;
+   VisualSceneManager sceneManager;
    renderer.addVisualSceneManager(sceneManager);
    sceneManager.setActiveCamera(camera);
 
    // we resized the viewport
-   renderer.resizeViewport(100, 50);
+   renderer.resizeViewport(100, 50, 0, 0, 800, 600);
 
    // camera's not attached yet - there's the default aspect ratio there
    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.333f, camera.getAspectRatio(), 0.01);
@@ -93,7 +94,7 @@ TEST(Camera, frustrumCreation)
   camera.setClippingPlanes(10, 100);
   camera.setFOV(90);
 
-  Frustum frustrum = camera.getFrustrum();
+  Frustum frustrum = camera.getFrustum();
 
   CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, -2), 1)));
   CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 8), 1)));
@@ -113,7 +114,7 @@ TEST(Camera, frustrumCreation)
   // camera rotated
   D3DXMatrixRotationY(&(camera.accessLocalMtx()), D3DXToRadian(90));
 
-  frustrum = camera.getFrustrum();
+  frustrum = camera.getFrustum();
 
   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(10, 0, 0), 1)));
   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(100, 0, 0), 1)));
@@ -122,12 +123,74 @@ TEST(Camera, frustrumCreation)
   // camera rotated
   D3DXMatrixRotationY(&(camera.accessLocalMtx()), D3DXToRadian(-90));
 
-  frustrum = camera.getFrustrum();
+  frustrum = camera.getFrustum();
 
   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-10, 0, 0), 1)));
   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-100, 0, 0), 1)));
   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-50, 0, 0), 1)));
 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+#define COMPARE_VEC(v1, v2)                                                   \
+   CPPUNIT_ASSERT(fabs(v1.x - v2.x) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1.y - v2.y) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1.z - v2.z) < 0.0001f);                               \
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(Camera, createRay)
+{
+   Camera camera("camera");
+   Frustum frustum = camera.getFrustum();
+   D3DXVECTOR3 expectedNormal;
+   D3DXVECTOR3 nox(-1, 0, 0);
+   D3DXVECTOR3 ox(1, 0, 0);
+   D3DXVECTOR3 noy(0, -1, 0);
+   D3DXVECTOR3 oy(0, 1, 0);
+
+   // a basic plane running straight through the screen's center
+   Ray result = camera.createRay(0, 0);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 0), result.origin);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 1), result.direction);
+
+   // test the rays running through the frustum's clipping planes:
+   // - bottom plane
+   D3DXVECTOR3 planeNormal(frustum.planes[FP_BOTTOM].a, frustum.planes[FP_BOTTOM].b, frustum.planes[FP_BOTTOM].c);
+   D3DXVec3Cross(&expectedNormal, &planeNormal, &ox);
+   D3DXVec3Normalize(&expectedNormal, &expectedNormal);
+
+   result = camera.createRay(0, -1);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 0), result.origin);
+   COMPARE_VEC(expectedNormal, result.direction);
+
+   // - top plane
+   planeNormal = D3DXVECTOR3(frustum.planes[FP_TOP].a, frustum.planes[FP_TOP].b, frustum.planes[FP_TOP].c);
+   D3DXVec3Cross(&expectedNormal, &planeNormal, &nox);
+   D3DXVec3Normalize(&expectedNormal, &expectedNormal);
+
+   result = camera.createRay(0, 1);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 0), result.origin);
+   COMPARE_VEC(expectedNormal, result.direction);
+
+   // - left plane
+   planeNormal = D3DXVECTOR3(frustum.planes[FP_LEFT].a, frustum.planes[FP_LEFT].b, frustum.planes[FP_LEFT].c);
+   D3DXVec3Cross(&expectedNormal, &oy, &planeNormal);
+   D3DXVec3Normalize(&expectedNormal, &expectedNormal);
+
+   result = camera.createRay(-1, 0);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 0), result.origin);
+   COMPARE_VEC(expectedNormal, result.direction);
+
+   // - right plane
+   planeNormal = D3DXVECTOR3(frustum.planes[FP_RIGHT].a, frustum.planes[FP_RIGHT].b, frustum.planes[FP_RIGHT].c);
+   D3DXVec3Cross(&expectedNormal, &noy, &planeNormal);
+   D3DXVec3Normalize(&expectedNormal, &expectedNormal);
+
+   result = camera.createRay(1, 0);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 0), result.origin);
+   COMPARE_VEC(expectedNormal, result.direction);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

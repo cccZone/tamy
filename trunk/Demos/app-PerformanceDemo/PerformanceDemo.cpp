@@ -87,8 +87,8 @@ void PerformanceDemo::deinitialize()
 
 void PerformanceDemo::update(float timeElapsed)
 {
-   float movementSpeed = 40 * timeElapsed;
-   float rotationSpeed = 180 * timeElapsed;
+   float movementSpeed = 40.f * timeElapsed;
+   float rotationSpeed = 180.f * timeElapsed;
 
 
    // process the keys

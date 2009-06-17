@@ -1,12 +1,12 @@
 #pragma once
 
 #include "core\AbstractSceneManager.h"
-#include "core-Renderer\BatchingStrategy.h"
 #include "core\Array.h"
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\Camera.h"
-#include "core\DistanceComparator.h"
+#include "core-Renderer\AGNVolExtractor.h"
+#include "core\Octree.h"
 #include <list>
 
 
@@ -17,11 +17,13 @@ class Node;
 class SkyBox;
 class Camera;
 class ActiveCameraNode;
-class Culler;
-class SpatialContainer;
+class LinearNodesStorage;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * This manager manages the visual aspects of the scene
+ */
 class VisualSceneManager: public AbstractSceneManager,
                           public SceneAspectManager<Light>, 
                           public SceneAspectManager<AbstractGraphicalNode>, 
@@ -29,8 +31,6 @@ class VisualSceneManager: public AbstractSceneManager,
                           public SceneAspectManager<SkyBox>
 {
 private:
-   Culler* m_culler;
-
    ActiveCameraNode* m_activeCameraDeploymentNode;
    Camera* m_activeCamera;
 
@@ -40,23 +40,12 @@ private:
    D3DXVECTOR3 m_cachedCameraPos;
    std::list<Light*> m_currentlyVisibleLights;
 
-   Array<AbstractGraphicalNodeP>* m_dynamicNodesContainer;
-   SpatialContainer* m_staticNodesContainer;
-   Array<AbstractGraphicalNodeP> m_potentiallyVisibleNodes;
-   Array<AbstractGraphicalNodeP> m_visibleNodes;
-   Array<AbstractGraphicalNodeP> m_nodesForSorting;
-
-   BatchComparator m_materialsComparator;
-   DistanceComparator<AbstractGraphicalNode> m_distanceComparator;
+   LinearNodesStorage* m_dynamicNodesContainer;
+   Octree<AbstractGraphicalNodeP, AGNVolExtractor, BoundingSphere>* m_staticNodesContainer;
 
 public:
-   VisualSceneManager(SpatialContainer* nodesContainer = NULL);
+   VisualSceneManager(unsigned int maxElemsPerSector = 64, float worldSize = 1000);
    ~VisualSceneManager();
-
-   /**
-    * The method allows to switch from the default culler to a custom one
-    */
-   void setCuller(Culler* culler);
 
    bool isSkyBox() const {return m_skyBox != NULL;}
    SkyBox& getSkyBox() const {return *m_skyBox;}
@@ -76,18 +65,24 @@ public:
    const std::list<Light*>& getLights(int lightLimit);
 
    /**
-    * The method extracts all the nodes that can be rendered from the camera's 
-    * standpoint
+    * The method allows to query the graphical scene for nodes that overlap
+    * the volume passed in the @param volume.
     *
-    * @param arraySize - upon return this parameter will contain the number of elements
-    *                    in the returned array
-    * @return the array contains all the nodes that can be rendered. The array
-    *         is managed by the scene manager and should not be released from the context
-    *         that calls this method
+    * The results are returned in the array passed in the @param output
     */
-   AbstractGraphicalNodeP* getNodes(DWORD& arraySize);
+   template<typename QueryVolume>
+   void query(const QueryVolume& volume, Array<AbstractGraphicalNode*>& output) const;
 
-
+   /**
+   * The method allows to query the graphical scene for nodes that overlap
+   * the volume passed in the @param volume. The query is performed in broad and narrow phase,
+   * meaning that not only the bounding volumes of the scene nodes, but also
+   * the underlying geometry will be tested
+   *
+   * The results are returned in the array passed in the @param output
+   */
+   template<typename QueryVolume>
+   void detailedQuery(const QueryVolume& volume, Array<AbstractGraphicalNode*>& output) const;
 
 private:
    void add(Light& light);
@@ -103,5 +98,14 @@ private:
    void add(SkyBox& skyBox);
    void remove(SkyBox& skyBox);
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef VISUAL_SCENE_MANAGER_H
+#define VISUAL_SCENE_MANAGER_H
+
+#include "core-Renderer\VisualSceneManager.inl"
+
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////

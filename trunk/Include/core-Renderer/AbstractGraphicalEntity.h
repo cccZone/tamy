@@ -2,12 +2,14 @@
 
 #include <d3dx9.h>
 #include "core-Renderer\Skeleton.h"
+#include "core\Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Node;
 class GraphicalEntityInstantiator;
+struct Triangle;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,6 +59,11 @@ public:
     * the hierarchy of bones passed as the param to this method
     */
    Skeleton* instantiateSkeleton(Node& rootBone);
+
+   /**
+    * The method returns the geometry that comprises the graphical entity
+    */
+   virtual void getGeometry(Array<Triangle*>& output) const = 0;
 
 protected:
    friend class GraphicalEntityInstantiator;
