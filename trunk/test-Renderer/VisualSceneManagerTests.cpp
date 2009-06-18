@@ -154,14 +154,14 @@ TEST(VisualSceneManager, retrievingStaticGeometry)
 
    // 1st node
    sceneManager.addNode(&node1);
-   sceneManager.query(cameraNode.getFrustum(), nodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraNode.getFrustum(), nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
 
    // 2nd node
    nodes.clear();
    sceneManager.addNode(&node2);
-   sceneManager.query(cameraNode.getFrustum(), nodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraNode.getFrustum(), nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[1]);
@@ -169,7 +169,7 @@ TEST(VisualSceneManager, retrievingStaticGeometry)
    // 3rd node
    nodes.clear();
    sceneManager.addNode(&node3);
-   sceneManager.query(cameraNode.getFrustum(), nodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraNode.getFrustum(), nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)3, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[1]);
@@ -180,7 +180,7 @@ TEST(VisualSceneManager, retrievingStaticGeometry)
    //            with the batching strategy we used for this test)
    nodes.clear();
    sceneManager.addNode(&node4);
-   sceneManager.query(cameraNode.getFrustum(), nodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraNode.getFrustum(), nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)4, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[1]);
@@ -190,7 +190,7 @@ TEST(VisualSceneManager, retrievingStaticGeometry)
    // remove one of the nodes
    nodes.clear();
    sceneManager.removeNode(node3); 
-   sceneManager.query(cameraNode.getFrustum(), nodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraNode.getFrustum(), nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)3, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[1]);
@@ -236,7 +236,7 @@ TEST(VisualSceneManager, dynamicNodesAndOctrees)
    // let's check the visibility of nodes in the positions they were in when
    // they were first added to the scene
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), -50, 50, -20);
-   sceneManager.query(cameraNode.getFrustum(), nodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraNode.getFrustum(), nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);
@@ -244,7 +244,7 @@ TEST(VisualSceneManager, dynamicNodesAndOctrees)
    // moving the camera - the dynamic node1 becomes invisible
    nodes.clear();
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 50, 50, -20);
-   sceneManager.query(cameraNode.getFrustum(), nodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraNode.getFrustum(), nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node3, nodes[0]);
 
@@ -253,13 +253,13 @@ TEST(VisualSceneManager, dynamicNodesAndOctrees)
    nodes.clear();
    D3DXMatrixTranslation(&(node1.accessLocalMtx()), 49, 50, -10);
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), -50, 50, -20);
-   sceneManager.query(cameraNode.getFrustum(), nodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraNode.getFrustum(), nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node2, nodes[0]);
 
    nodes.clear();
    D3DXMatrixTranslation(&(cameraNode.accessLocalMtx()), 50, 50, -20);
-   sceneManager.query(cameraNode.getFrustum(), nodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraNode.getFrustum(), nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, nodes.size());
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node3, nodes[0]);
    CPPUNIT_ASSERT_EQUAL((AbstractGraphicalNodeP)&node1, nodes[1]);

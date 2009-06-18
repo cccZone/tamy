@@ -13,8 +13,7 @@ AbstractGraphicalNode::AbstractGraphicalNode(const std::string& name,
                                              DWORD subset)
       : Node(name, dynamic),
       m_material(material), 
-      m_subset(subset), 
-      m_bsRadius(0)
+      m_subset(subset)
 {
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,24 +25,10 @@ void AbstractGraphicalNode::onAccept(NodeVisitor& visitor)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingSphere AbstractGraphicalNode::getBoundingSphere()
-{
-   D3DXMATRIX globalMtx = getGlobalMtx();
-   return BoundingSphere(D3DXVECTOR3(globalMtx._41, globalMtx._42, globalMtx._43), m_bsRadius);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void AbstractGraphicalNode::setBoundingSphereRadius(float radius)
 {
-   if (radius < 0)
-   {
-      m_bsRadius = 0;
-   }
-   else
-   {
-      m_bsRadius = radius;
-   }
+   if (radius < 0) {radius = 0;}
+   setBoundingVolume(new BoundingSphere(D3DXVECTOR3(0, 0, 0), radius));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

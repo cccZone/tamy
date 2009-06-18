@@ -27,7 +27,7 @@ private:
    Array<Sound3D*> m_soundsArr;
 
 public:
-   SoundSceneManager();
+   SoundSceneManager(unsigned int maxElemsPerSector = 64, float worldSize = 1000);
    virtual ~SoundSceneManager();
 
    /**
@@ -51,16 +51,16 @@ public:
                            Array<Sound3D*>& soundsToEnable);
 
 protected:
-   void add(Sound3D& sound);
-   void remove(Sound3D& sound);
+   void onAdd(Sound3D& sound);
+   void onRemove(Sound3D& sound);
 
    /**
    * A 3D sound in order to be perceived requires someone
    * to listen to it - this someone needs to have a position in the 3D world etc.
    * This someone is represented by the SoundListener
    */
-   void add(SoundListener& sound);
-   void remove(SoundListener& sound);
+   void onAdd(SoundListener& sound);
+   void onRemove(SoundListener& sound);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

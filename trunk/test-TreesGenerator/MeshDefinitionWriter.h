@@ -69,7 +69,7 @@ protected:
       {
          stream << "vertices : {" << std::endl;
 
-         for (std::list<LitVertex>::iterator it = entity.vertices.begin();
+         for (std::vector<LitVertex>::iterator it = entity.vertices.begin();
               it != entity.vertices.end(); ++it)
          {
             stream << *it << ", " << std::endl;

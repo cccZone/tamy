@@ -152,13 +152,6 @@ bool testCollision(const Frustum& frustum, const BoundingSphere& sphere)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const BoundingSphere& sphere, const Frustum& frustum)
-{
-   return testCollision(frustum, sphere);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 bool testCollision(const AABoundingBox& aabb, const Ray& ray)
 {
    D3DXPLANE plane;
@@ -332,22 +325,7 @@ bool testCollision(const BoundingSphere& sphere, const Ray& ray)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const Ray& ray, const BoundingSphere& sphere)
-{
-   return testCollision(sphere, ray);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 bool testCollision(const Ray& ray, const Triangle& triangle)
-{
-   return D3DXIntersectTri(&triangle.vertex(0), &triangle.vertex(1), &triangle.vertex(2),
-                           &ray.origin, &ray.direction, NULL, NULL, NULL);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool testCollision(const Triangle& triangle, const Ray& ray)
 {
    return D3DXIntersectTri(&triangle.vertex(0), &triangle.vertex(1), &triangle.vertex(2),
                            &ray.origin, &ray.direction, NULL, NULL, NULL);

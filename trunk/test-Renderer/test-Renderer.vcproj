@@ -245,10 +245,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SceneQueriesTests.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\VisualSceneManagerTests.cpp"
 				>
 			</File>

@@ -1,4 +1,6 @@
 #include "core\AABoundingBox.h"
+#include "core\Assert.h"
+#include "core\CollisionTests.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,6 +34,61 @@ AABoundingBox AABoundingBox::operator+(const AABoundingBox& rhs) const
    newBB.max.z = this->max.z > rhs.max.z ? this->max.z : rhs.max.z;
 
    return newBB;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+BoundingVolume* AABoundingBox::operator*(const D3DXMATRIX& mtx) const
+{
+   AABoundingBox* newBB = new AABoundingBox();
+
+   D3DXVec3TransformCoord(&newBB->min, &min, &mtx);
+   D3DXVec3TransformCoord(&newBB->max, &max, &mtx);
+
+   return newBB;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool AABoundingBox::testCollision(const D3DXVECTOR3& point) const
+{
+   return ::testCollision(*this, point);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool AABoundingBox::testCollision(const AABoundingBox& rhs) const
+{
+   return ::testCollision(*this, rhs);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool AABoundingBox::testCollision(const BoundingSphere& rhs) const
+{
+   return ::testCollision(*this, rhs);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool AABoundingBox::testCollision(const Frustum& rhs) const
+{
+   return ::testCollision(*this, rhs);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool AABoundingBox::testCollision(const Ray& rhs) const
+{
+   return ::testCollision(*this, rhs);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool AABoundingBox::testCollision(const Triangle& rhs) const
+{
+   ASSERT(false, "AABoundingBox::testCollision(const Triangle&) - Method not implemented");
+   return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

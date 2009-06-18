@@ -9,6 +9,7 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "LightReflectingPropertiesStub.h"
 #include "core-Renderer\VisualSceneManager.h"
+#include "core-Renderer\SkyBox.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -138,7 +138,7 @@ void QueryNodesAction::operator()()
 
    // perform the query
    Array<AbstractGraphicalNode*> nodes;
-   m_sceneMgr.detailedQuery(queryRay, nodes);
+   m_sceneMgr.detailedQuery<AbstractGraphicalNode>(queryRay, nodes);
 
    // output the results
    for (unsigned int i = 0; i < nodes.size(); ++i)

@@ -4,6 +4,8 @@
 #include "core\MatrixWriter.h"
 #include "core\dostream.h"
 #include "core\NodeObserver.h"
+#include "core\BoundingVolume.h"
+#include "core\BoundingSphere.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,7 +13,9 @@
 Node::Node(const std::string& name, bool dynamic)
       : m_name(name),
       m_dynamic(dynamic),
-      m_parent(NULL)
+      m_parent(NULL),
+      m_volume(new BoundingSphere(D3DXVECTOR3(0, 0, 0), 0)),
+      m_globalVolume(NULL)
 {
    D3DXMatrixIdentity(&m_localMtx);
    D3DXMatrixIdentity(&m_globalMtx);
@@ -35,6 +39,12 @@ Node::Node(const std::string& name, bool dynamic)
 
 Node::~Node()
 {
+   delete m_volume;
+   m_volume = NULL;
+
+   delete m_globalVolume;
+   m_globalVolume = NULL;
+
    m_parent = NULL;
 
    for (std::list<Node*>::iterator it = m_children.begin();
@@ -132,11 +142,11 @@ const D3DXMATRIX& Node::getGlobalMtx()
 
    // this node's global matrix can be influenced by the change
    // in this node's local matrix, or any of it's parents' global matrices.
-   // we need to chek for both events.
+   // we need to check for both events.
    bool localMatrixChanged = false;
 
    // The case with the parent's matrices will be dealt with using recurency,
-   // so we basically need to check only the immedate parent to spot the difference
+   // so we basically need to check only the immediate parent to spot the difference
    // in the global matrix
 
    if (m_localMtxCache != m_localMtx)
@@ -154,6 +164,27 @@ const D3DXMATRIX& Node::getGlobalMtx()
    }
 
    return m_globalMtx;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const BoundingVolume& Node::getBoundingVolume()
+{
+   delete m_globalVolume;
+   m_globalVolume = *m_volume * getGlobalMtx();
+   return *m_globalVolume;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Node::setBoundingVolume(BoundingVolume* volume)
+{
+   if (volume == NULL)
+   {
+      throw std::invalid_argument("NULL pointer instead a BoundingVolume instance");
+   }
+   delete m_volume;
+   m_volume = volume;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

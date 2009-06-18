@@ -36,7 +36,7 @@ void ComplexSceneDemo::initialize(Renderer& renderer, ResourceManager& resourceM
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
-   VisualSceneManager* visualSceneManager = new VisualSceneManager();
+   VisualSceneManager* visualSceneManager = new VisualSceneManager(64, 2000);
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 

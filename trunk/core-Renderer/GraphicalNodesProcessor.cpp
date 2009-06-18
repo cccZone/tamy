@@ -1,8 +1,7 @@
 #include "core-Renderer\GraphicalNodesProcessor.h"
-#include "core-Renderer\GraphicalNodesAnalyzer.h"
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include "core-Renderer\Material.h"
-
+#include <algorithm>
 
 
 ///////////////////////////////////////////////////////////////////////////////

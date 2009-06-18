@@ -23,6 +23,8 @@ public:
 
    const std::list<AbstractGraphicalEntity*>& getChildren() const {return m_noChildren;}
 
+   void getGeometry(Array<Triangle*>& output) const {}
+
 protected:
    void accept(GraphicalEntityInstantiator& instantiator)
    {      

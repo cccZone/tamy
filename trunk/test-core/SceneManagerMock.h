@@ -15,19 +15,19 @@ private:
    std::list<NodeType*> m_nodes;
 
 public:
-   SceneManagerMock() 
+   SceneManagerMock() : SceneAspectManager<NodeType>(1, 100)
    {
       REGISTER_SCENE_ASPECT(NodeType);
    }
 
    unsigned int getNodesCount() const {return m_nodes.size();}
 
-   void add(NodeType& node)
+   void onAdd(NodeType& node)
    {
       m_nodes.push_back(&node);
    }
 
-   void remove(NodeType& node)
+   void onRemove(NodeType& node)
    {
       for (std::list<NodeType*>::iterator it = m_nodes.begin();
          it != m_nodes.end(); ++it)

@@ -156,6 +156,10 @@
 				RelativePath="..\Include\core-TestFramework\TestFramework.h"
 				>
 			</File>
+			<File
+				RelativePath="..\Include\core-TestFramework\TestMacros.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

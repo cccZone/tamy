@@ -4,6 +4,7 @@
 #include "core-Renderer\Material.h"
 #include "LightReflectingPropertiesStub.h"
 #include "MaterialOperationImplementationMock.h"
+#include "core\BoundingSphere.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,6 +27,11 @@ public:
    const AbstractGraphicalEntity& getEntity() const 
    {
       return *(reinterpret_cast<const AbstractGraphicalEntity*>(NULL));
+   }
+
+   const BoundingSphere& getBoundingSphere()
+   {
+      return dynamic_cast<const BoundingSphere&> (getBoundingVolume());
    }
 };
 

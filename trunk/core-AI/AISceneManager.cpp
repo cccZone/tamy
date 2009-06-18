@@ -4,7 +4,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AISceneManager::AISceneManager()
+AISceneManager::AISceneManager(unsigned int maxElemsPerSector, float worldSize)
+      : SceneAspectManager<AgentNode>(maxElemsPerSector, worldSize)
 {
    REGISTER_SCENE_ASPECT(AgentNode);
    m_messageDispatcher = new MessageDispatcher();
@@ -20,7 +21,7 @@ AISceneManager::~AISceneManager()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AISceneManager::add(AgentNode& agent)
+void AISceneManager::onAdd(AgentNode& agent)
 {
    m_agents.push_back(&agent);
    agent.setMessageDispatcher(*m_messageDispatcher);
@@ -28,7 +29,7 @@ void AISceneManager::add(AgentNode& agent)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AISceneManager::remove(AgentNode& agent)
+void AISceneManager::onRemove(AgentNode& agent)
 {
    int idx = m_agents.find(&agent);
    if (idx != EOA)

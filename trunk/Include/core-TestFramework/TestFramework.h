@@ -35,3 +35,7 @@ AutoRegisterFixture<Test##suite##function>                                    \
 void Test##suite##function::test##function()                                  
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "core-TestFramework\TestMacros.h"
+
+///////////////////////////////////////////////////////////////////////////////

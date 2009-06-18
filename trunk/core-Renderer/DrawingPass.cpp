@@ -36,7 +36,7 @@ void DrawingPass::operator()(VisualSceneManager& sceneManager, Renderer& rendere
    Camera&  activeCamera = sceneManager.getActiveCamera();
 
    Frustum cameraFrustum = activeCamera.getFrustum();
-   sceneManager.query(cameraFrustum, m_visibleNodes);
+   sceneManager.query<AbstractGraphicalNode>(cameraFrustum, m_visibleNodes);
    
    D3DXMATRIX cameraMtx = activeCamera.getGlobalMtx();
    D3DXVECTOR3 cameraPos(cameraMtx._41, cameraMtx._42, cameraMtx._43);

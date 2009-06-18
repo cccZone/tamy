@@ -2,37 +2,30 @@
 #include "core\Node.h"
 #include "core-Renderer\SkyBox.h"
 #include "core-Renderer\ActiveCameraNode.h"
-#include "core-Renderer\LinearNodesStorage.h"
 #include <algorithm>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 VisualSceneManager::VisualSceneManager(unsigned int maxElemsPerSector, float worldSize)
-      : m_activeCameraDeploymentNode(new ActiveCameraNode()),
+      : SceneAspectManager<Light>(maxElemsPerSector, worldSize),
+      SceneAspectManager<AbstractGraphicalNode>(maxElemsPerSector, worldSize),
+      SceneAspectManager<Camera>(maxElemsPerSector, worldSize),
+      SceneAspectManager<SkyBox>(maxElemsPerSector, worldSize),
+      m_activeCameraDeploymentNode(new ActiveCameraNode()),
       m_activeCamera(NULL),
-      m_skyBox(NULL),
-      m_staticNodesContainer(NULL)
+      m_skyBox(NULL)
 {
    REGISTER_SCENE_ASPECT(Light);
    REGISTER_SCENE_ASPECT(AbstractGraphicalNode);
    REGISTER_SCENE_ASPECT(Camera);
    REGISTER_SCENE_ASPECT(SkyBox);
-
-   m_staticNodesContainer = new Octree<AbstractGraphicalNodeP, AGNVolExtractor, BoundingSphere>(maxElemsPerSector, worldSize);
-   m_dynamicNodesContainer = new LinearNodesStorage();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 VisualSceneManager::~VisualSceneManager()
 {
-   delete m_dynamicNodesContainer;
-   m_dynamicNodesContainer = NULL;
-
-   delete m_staticNodesContainer;
-   m_staticNodesContainer = NULL;
-
    delete m_activeCameraDeploymentNode;
    m_activeCameraDeploymentNode = NULL;
 }
@@ -58,14 +51,14 @@ const std::list<Light*>& VisualSceneManager::getLights(int lightLimit)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::add(Light& light)
+void VisualSceneManager::onAdd(Light& light)
 {
    m_allLights.push_back(&light);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::remove(Light& light)
+void VisualSceneManager::onRemove(Light& light)
 {
    for (std::list<Light*>::iterator it = m_allLights.begin();
       it != m_allLights.end(); ++it)
@@ -96,7 +89,7 @@ void VisualSceneManager::refreshVisibleLights(int lightLimit)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::add(Camera& node)
+void VisualSceneManager::onAdd(Camera& node)
 {
    if (m_activeCamera != NULL) {return;}
    setActiveCamera(node);
@@ -104,7 +97,7 @@ void VisualSceneManager::add(Camera& node)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::remove(Camera& node)
+void VisualSceneManager::onRemove(Camera& node)
 {
    if (m_activeCamera != &node) {return;}
    m_activeCamera = NULL;
@@ -112,35 +105,19 @@ void VisualSceneManager::remove(Camera& node)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::add(AbstractGraphicalNode& node) 
+void VisualSceneManager::onAdd(AbstractGraphicalNode& node) 
 {
-   if (node.isDynamic())
-   {
-      m_dynamicNodesContainer->insert(node);
-   }
-   else
-   {
-      m_staticNodesContainer->insert(&node);
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::remove(AbstractGraphicalNode& node)
+void VisualSceneManager::onRemove(AbstractGraphicalNode& node)
 {
-   if (node.isDynamic())
-   {
-      m_dynamicNodesContainer->remove(node);
-   }
-   else
-   {
-      m_staticNodesContainer->remove(&node);
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::add(SkyBox& skyBox)
+void VisualSceneManager::onAdd(SkyBox& skyBox)
 {
    if (m_skyBox != NULL)
    {
@@ -153,7 +130,7 @@ void VisualSceneManager::add(SkyBox& skyBox)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VisualSceneManager::remove(SkyBox& skyBox)
+void VisualSceneManager::onRemove(SkyBox& skyBox)
 {
    if (m_skyBox == NULL) {return;}
    if (&skyBox != m_skyBox) {throw std::runtime_error("Trying to remove the invalid skybox");}

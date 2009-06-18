@@ -327,14 +327,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\AGNVolExtractor.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\AGNVolExtractor.h"
-				>
-			</File>
-			<File
 				RelativePath=".\BatchingStrategy.cpp"
 				>
 			</File>
@@ -343,23 +335,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\GraphicalNodesAnalyzer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\LinearNodesStorage.h"
-				>
-			</File>
-			<File
 				RelativePath=".\VisualSceneManager.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\VisualSceneManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\VisualSceneManager.inl"
 				>
 			</File>
 		</Filter>

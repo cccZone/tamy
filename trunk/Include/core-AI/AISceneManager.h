@@ -24,14 +24,14 @@ private:
    MessageDispatcher* m_messageDispatcher;
 
 public:
-   AISceneManager();
+   AISceneManager(unsigned int maxElemsPerSector = 64, float worldSize = 1000);
    ~AISceneManager();
 
    void update(float timeElapsed);
 
 protected:
-   void add(AgentNode& agent);
-   void remove(AgentNode& agent);
+   void onAdd(AgentNode& agent);
+   void onRemove(AgentNode& agent);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

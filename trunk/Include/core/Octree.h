@@ -3,14 +3,14 @@
 #include "core\Array.h"
 #include "core\Stack.h"
 #include "core\AABoundingBox.h"
-#include "core\CollisionTests.h"
+#include "core\BoundingVolume.h"
 #include "core\Assert.h"
 #include <list>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename BoundingVolumeExtractor, typename ElemBoundingVolume>
+template<typename Elem>
 class Octree
 {
 private:
@@ -40,9 +40,8 @@ private:
 
 
 private:
-   Array<Elem> m_elements;
+   Array<Elem*> m_elements;
 
-   BoundingVolumeExtractor m_extractor;
    unsigned int m_maxElemsPerSector;
    Sector* m_root;
 
@@ -75,7 +74,7 @@ public:
       unsigned int elemsCount = m_elements.size();
       for (unsigned int i = 0; i < elemsCount; ++i)
       {
-         if (elem == m_elements[i]) {return true;}
+         if (&elem == m_elements[i]) {return true;}
       }
 
       return false;
@@ -84,20 +83,19 @@ public:
    /**
     * The method inserts a new element into the tree
     */
-   void insert(const Elem& elem)
+   void insert(Elem& elem)
    {
       if (isAdded(elem) == true) {return;}
 
       // add the element to the collection of elements
       unsigned int elemIdx = m_elements.size();
-      m_elements.push_back(elem);
+      m_elements.push_back(&elem);
 
       // place the element id in the correct sector
       Array<Sector*> candidateSectors;
       unsigned int sectorsCount = 0;
 
-      ElemBoundingVolume vol = m_extractor(elem);
-      querySectors(vol, *m_root, candidateSectors);
+      querySectors(elem.getBoundingVolume(), *m_root, candidateSectors);
       sectorsCount = candidateSectors.size();
 
       ASSERT(sectorsCount > 0, "The world is too small to add this element");
@@ -118,10 +116,10 @@ public:
    /**
     * The method allows to remove an element from a tree
     */
-   void remove(const Elem& elem)
+   void remove(Elem& elem)
    {
       // remove the element from the array of elements
-      unsigned int removedElemIdx = m_elements.find(elem);
+      unsigned int removedElemIdx = m_elements.find(&elem);
       m_elements.remove(removedElemIdx);
 
 
@@ -173,8 +171,7 @@ public:
     *    bool testCollision(const AABoundingBox& bb, const BoundingVolumeType& bv)
     * is made available to the linker.
     */
-   template<typename BoundingVolumeType>
-   void query(const BoundingVolumeType& boundingVol, Array<Elem>& output) const
+   void query(const BoundingVolume& boundingVol, Array<Elem*>& output) const
    {
       Array<Sector*> candidateSectors;
       querySectors(boundingVol, *m_root, candidateSectors);
@@ -204,8 +201,7 @@ public:
       {
          if (elemsToOutput[i] == false) continue;
 
-         ElemBoundingVolume vol = m_extractor(m_elements[i]);
-         if (testCollision(vol, boundingVol))
+         if (m_elements[i]->getBoundingVolume().testCollision(boundingVol))
          {
             output.push_back(m_elements[i]);
          }
@@ -213,8 +209,7 @@ public:
    }
 
 private:
-   template<typename BoundingVolumeType>
-   void querySectors(const BoundingVolumeType& boundingVol, 
+   void querySectors(const BoundingVolume& boundingVol, 
                      Sector& searchRoot,
                      Array<Sector*>& output) const
    {
@@ -225,7 +220,7 @@ private:
       {
          Sector* currSector = stack.pop();
 
-         if (testCollision(currSector->m_bb, boundingVol) == false) {continue;}
+         if (currSector->m_bb.testCollision(boundingVol) == false) {continue;}
 
          if (currSector->m_children != NULL)
          {
@@ -318,8 +313,7 @@ private:
       for (unsigned int i = 0; i < elemsCount; ++i)
       {
          candidateSectors.clear();
-         ElemBoundingVolume vol = m_extractor(m_elements[elemsToDistribute[i]]);
-         querySectors(vol, sector, candidateSectors);
+         querySectors(m_elements[elemsToDistribute[i]]->getBoundingVolume(), sector, candidateSectors);
 
          sectorsCount = candidateSectors.size();
          for (unsigned int j = 0; j < sectorsCount; ++j)

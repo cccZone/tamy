@@ -1,12 +1,13 @@
 #pragma once
 
+#include "core\BoundingVolume.h"
 #include <d3dx9.h>
 #include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct Triangle
+struct Triangle : public BoundingVolume
 {
 private:
    D3DXVECTOR3 v[3];
@@ -44,6 +45,15 @@ public:
       return en[idx];
    }
 
+   BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
+
+   bool testCollision(const D3DXVECTOR3& point) const;
+   bool testCollision(const AABoundingBox& rhs) const;
+   bool testCollision(const BoundingSphere& rhs) const;
+   bool testCollision(const Frustum& rhs) const;
+   bool testCollision(const Ray& rhs) const;
+   bool testCollision(const Triangle& rhs) const;
+   bool testCollision(const BoundingVolume& rhs) const {return rhs.testCollision(*this);}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

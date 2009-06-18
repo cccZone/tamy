@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core-Renderer\AbstractGraphicalEntity.h"
+#include "core\Array.h"
 #include <list>
 
 
@@ -19,6 +20,7 @@ class CompositeGraphicalEntity : public AbstractGraphicalEntity
 private:
    D3DXMATRIX m_localMtx;
    std::list<AbstractGraphicalEntity*> m_children;
+   Array<Triangle*> m_noGeometry;
 
 public:
    CompositeGraphicalEntity(const std::string& name,
@@ -36,7 +38,7 @@ public:
     */
    Node* instantiate(bool dynamic);
 
-   void getGeometry(Array<Triangle*>& output) const;
+   const Array<Triangle*>& getGeometry() const {return m_noGeometry;}
 
 protected:
    void accept(GraphicalEntityInstantiator& instantiator);

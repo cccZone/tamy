@@ -50,13 +50,6 @@ Node* CompositeGraphicalEntity::instantiate(bool dynamic)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CompositeGraphicalEntity::getGeometry(Array<Triangle*>& output) const
-{
-   // this type of node doesn't store any geometry - so we return nothing
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void CompositeGraphicalEntity::accept(GraphicalEntityInstantiator& instantiator)
 {
    instantiator.visit(*this);

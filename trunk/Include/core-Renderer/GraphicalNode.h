@@ -30,6 +30,8 @@ public:
    void render();
 
    const AbstractGraphicalEntity& getEntity() const;
+
+   const Array<Triangle*>& getBoundingGeometry() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -63,7 +63,7 @@ public:
    /**
     * The method returns the geometry that comprises the graphical entity
     */
-   virtual void getGeometry(Array<Triangle*>& output) const = 0;
+   virtual const Array<Triangle*>& getGeometry() const = 0;
 
 protected:
    friend class GraphicalEntityInstantiator;

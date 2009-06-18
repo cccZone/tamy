@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core\BoundingVolume.h"
 #include <d3dx9.h>
 
 
@@ -8,7 +9,7 @@
 /**
  * the structure describes a ray
  */
-struct Ray
+struct Ray : public BoundingVolume
 {
    D3DXVECTOR3 origin;
    D3DXVECTOR3 direction;
@@ -19,7 +20,15 @@ struct Ray
       : origin(_origin), direction(_direction)
    {}
 
-   Ray operator*(const D3DXMATRIX& mtx) const;
+   BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
+
+   bool testCollision(const D3DXVECTOR3& point) const;
+   bool testCollision(const AABoundingBox& rhs) const;
+   bool testCollision(const BoundingSphere& rhs) const;
+   bool testCollision(const Frustum& rhs) const;
+   bool testCollision(const Ray& rhs) const;
+   bool testCollision(const Triangle& rhs) const;
+   bool testCollision(const BoundingVolume& rhs) const {return rhs.testCollision(*this);}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

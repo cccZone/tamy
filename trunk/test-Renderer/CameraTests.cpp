@@ -133,13 +133,6 @@ TEST(Camera, frustrumCreation)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define COMPARE_VEC(v1, v2)                                                   \
-   CPPUNIT_ASSERT(fabs(v1.x - v2.x) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.y - v2.y) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.z - v2.z) < 0.0001f);                               \
-
-///////////////////////////////////////////////////////////////////////////////
-
 TEST(Camera, createRay)
 {
    Camera camera("camera");

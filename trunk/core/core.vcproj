@@ -211,6 +211,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Include\core\LinearNodesStorage.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core\Octree.h"
 				>
 			</File>
@@ -298,6 +302,10 @@
 		<Filter
 			Name="BoundingVolumes"
 			>
+			<File
+				RelativePath="..\Include\core\BoundingVolume.h"
+				>
+			</File>
 			<Filter
 				Name="Volumes"
 				>
@@ -315,6 +323,10 @@
 				</File>
 				<File
 					RelativePath="..\Include\core\BoundingSphere.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Frustum.cpp"
 					>
 				</File>
 				<File

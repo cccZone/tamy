@@ -6,8 +6,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SoundSceneManager::SoundSceneManager()
-      : m_activeListener(NULL)
+SoundSceneManager::SoundSceneManager(unsigned int maxElemsPerSector, float worldSize)
+      : SceneAspectManager<SoundListener>(maxElemsPerSector, worldSize),
+      SceneAspectManager<Sound3D>(maxElemsPerSector, worldSize),
+      m_activeListener(NULL)
 {
    REGISTER_SCENE_ASPECT(SoundListener);
    REGISTER_SCENE_ASPECT(Sound3D);
@@ -21,14 +23,14 @@ SoundSceneManager::~SoundSceneManager()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundSceneManager::add(SoundListener& listener)
+void SoundSceneManager::onAdd(SoundListener& listener)
 {
    m_activeListener = &listener;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundSceneManager::remove(SoundListener& listener)
+void SoundSceneManager::onRemove(SoundListener& listener)
 {
    m_activeListener = NULL;
 }
@@ -53,14 +55,14 @@ SoundListener& SoundSceneManager::getActiveListener()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundSceneManager::add(Sound3D& sound)
+void SoundSceneManager::onAdd(Sound3D& sound)
 {
    m_soundsArr.push_back(&sound);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundSceneManager::remove(Sound3D& sound)
+void SoundSceneManager::onRemove(Sound3D& sound)
 {
    unsigned int idx = m_soundsArr.find(&sound);
    m_soundsArr.remove(idx);

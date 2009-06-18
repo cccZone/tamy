@@ -3,12 +3,15 @@
 #include <list>
 #include <d3dx9.h>
 #include <string>
+#include "core\Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class NodeVisitor;
 class NodeObserver;
+class BoundingVolume;
+struct Triangle;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,19 +23,22 @@ class Node
 private:
    std::string m_name;
    bool m_dynamic;
-
+   
    // local coordinate system
    D3DXMATRIX m_localMtx;
+   BoundingVolume* m_volume;
 
    // global coordinate system
    D3DXMATRIX m_globalMtx;
    D3DXMATRIX m_parentGlobalMtxCache;
    D3DXMATRIX m_localMtxCache;
+   BoundingVolume* m_globalVolume;
 
    Node* m_parent;
    std::list<Node*> m_children;
    std::list<NodeObserver*> m_observers;
 
+   Array<Triangle*> m_noGeometry;
 
 public:
    Node(const std::string& name, bool dynamic);
@@ -53,7 +59,7 @@ public:
 
    /**
     * This is the matrix that describes the node's absolute world position
-    * (unlike the local matrix wich describes the position relative to node's
+    * (unlike the local matrix which describes the position relative to node's
     * parent).
     */
    virtual const D3DXMATRIX& getGlobalMtx();
@@ -90,7 +96,29 @@ public:
    virtual D3DXVECTOR3 getPosition() const;
 
    /**
-    * A node can have a single parent node. This methid will return true
+    * This method returns the global bounding volume that bounds the node's contents
+    */
+   const BoundingVolume& getBoundingVolume();
+
+   /**
+    * This method allows to set a bounding volume for the node
+    */
+   void setBoundingVolume(BoundingVolume* volume);
+
+   /**
+    * This method returns the detailed geometry that bounds the
+    * contents of a node. 
+    *
+    * This geometry will be used in detailed scene queries, 
+    * and doesn't necessarily have to be the same as for instance 
+    * the geometry of a graphical node.
+    * It simply is something more detailed than the BoundingVolume, which
+    * is used during the broad phase scene queries
+    */
+   virtual const Array<Triangle*>& getBoundingGeometry() const {return m_noGeometry;}
+
+   /**
+    * A node can have a single parent node. This method will return true
     * if this is the case.
     */
    bool hasParent() const {return m_parent != NULL;}

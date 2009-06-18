@@ -41,6 +41,8 @@ public:
    const AbstractGraphicalEntity& getEntity() const;
 
    inline const BonesDef& getBonesDefinition() const {return m_bones;}
+
+   const Array<Triangle*>& getBoundingGeometry() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

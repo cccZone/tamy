@@ -18,17 +18,17 @@ TEST(AbstractGraphicalNode, boundingSpheres)
 
    D3DXMatrixTranslation(&(node.accessLocalMtx()), 10, 20, 30);
 
-   CPPUNIT_ASSERT_EQUAL(D3DXVECTOR3(10, 20, 30), node.getBoundingSphere().origin);
+   COMPARE_VEC(D3DXVECTOR3(10, 20, 30), node.getBoundingSphere().origin);
    CPPUNIT_ASSERT_EQUAL(1.f, node.getBoundingSphere().radius);
 
    node.setBoundingSphereRadius(2);
 
-   CPPUNIT_ASSERT_EQUAL(D3DXVECTOR3(10, 20, 30), node.getBoundingSphere().origin);
+   COMPARE_VEC(D3DXVECTOR3(10, 20, 30), node.getBoundingSphere().origin);
    CPPUNIT_ASSERT_EQUAL(2.f, node.getBoundingSphere().radius);
 
    D3DXMatrixScaling(&(node.accessLocalMtx()), 2, 3, 4);
 
-   CPPUNIT_ASSERT_EQUAL(D3DXVECTOR3(0, 0, 0), node.getBoundingSphere().origin);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 0), node.getBoundingSphere().origin);
    CPPUNIT_ASSERT_EQUAL(2.f, node.getBoundingSphere().radius);
 }
 

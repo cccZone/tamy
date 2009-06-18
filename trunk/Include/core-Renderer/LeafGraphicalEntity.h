@@ -56,7 +56,7 @@ public:
    */
    float getBoundingSphereRadius() const {return m_boundingSphereRadius;}
 
-   void getGeometry(Array<Triangle*>& output) const {output.copyFrom(*m_geometry);}
+   const Array<Triangle*>&  getGeometry() const {return *m_geometry;}
 
 protected:
    void setBoundingSphereRadius(float radius)
