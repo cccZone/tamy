@@ -12,9 +12,10 @@
 #include "core-ResourceManagement\IWFLoader.h"
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
-#include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core\Ray.h"
 #include "core\MatrixWriter.h"
+#include "core\NodeActionsExecutor.h"
+#include "core\dostream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,8 @@ PickingDemo::PickingDemo()
       m_renderer(NULL),
       m_resourceManager(NULL),
       m_sceneManager(NULL),
-      m_action(NULL)
+      m_actionsExecutor(NULL),
+      m_cameraController(NULL)
 {
 }
 
@@ -35,7 +37,9 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
    m_renderer = &renderer;
    m_resourceManager = &resourceManager;
 
-   m_rotating = false;
+   m_shownNode = 2;
+   m_actionsExecutor = new NodeActionsExecutor();
+
    m_sceneManager = new CompositeSceneManager();
    m_visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(m_visualSceneManager);
@@ -43,23 +47,6 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
 
    GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
    AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
-
-   // add a few objects
-   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile1", false);
-   entInstance->attachEntity(ent);
-   D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 0, 0, 30);
-   m_sceneManager->addNode(entInstance);
-/*
-   entInstance = new GraphicalEntityInstantiator("tile2", false);
-   entInstance->attachEntity(ent);
-   D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 10, 5, 40);
-   m_sceneManager->addNode(entInstance);
-
-
-   entInstance = new GraphicalEntityInstantiator("tile3", false);
-   entInstance->attachEntity(ent);
-   D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), -15, -10, 35);
-   m_sceneManager->addNode(entInstance);*/
 
    // add lighting and such
    Light* light = m_resourceManager->createLight("light");
@@ -72,18 +59,48 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
    Camera* camera = m_resourceManager->createCamera("camera");
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 0, 0);
    m_sceneManager->addNode(camera);
+   m_cameraController = new WaypointCameraController<LinearTimeFunc>(*camera, D3DXVECTOR3(0, 10, -30));
 
-   // prepare the action
-   QueryNodesAction* queryNodesAction = new QueryNodesAction(renderer, *m_visualSceneManager, context());
-   m_action = new IntervalOperation<QueryNodesAction>(0.25f, queryNodesAction);
+   // add a few objects
+   D3DXMATRIX helperMtx;
+
+   GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile1", false);
+   entInstance->attachEntity(ent);
+   D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 0, 0, 30);
+   m_sceneManager->addNode(entInstance);
+   m_actionsExecutor->add(*entInstance, NodeActionDelegate::FROM_METHOD(PickingDemo, jumpToNext, this));
+   m_cameraController->registerWaypoint(0, *entInstance);
+
+   entInstance = new GraphicalEntityInstantiator("tile2", false);
+   entInstance->attachEntity(ent);
+   D3DXMatrixRotationYawPitchRoll(&helperMtx, D3DXToRadian(60), 0, 0);
+   D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 20, 5, 40);
+   D3DXMatrixMultiply(&(entInstance->accessLocalMtx()), &helperMtx, &(entInstance->accessLocalMtx()));
+   m_sceneManager->addNode(entInstance);
+   m_actionsExecutor->add(*entInstance, NodeActionDelegate::FROM_METHOD(PickingDemo, jumpToNext, this));
+   m_cameraController->registerWaypoint(1, *entInstance);
+
+   entInstance = new GraphicalEntityInstantiator("tile3", false);
+   entInstance->attachEntity(ent);
+   D3DXMatrixRotationYawPitchRoll(&helperMtx, D3DXToRadian(-30), 0, 0);
+   D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), -15, -10, 35);
+   D3DXMatrixMultiply(&(entInstance->accessLocalMtx()), &helperMtx, &(entInstance->accessLocalMtx()));
+   m_sceneManager->addNode(entInstance);
+   m_actionsExecutor->add(*entInstance, NodeActionDelegate::FROM_METHOD(PickingDemo, jumpToNext, this));
+   m_cameraController->registerWaypoint(2, *entInstance);
+
+   jumpToNext();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void PickingDemo::deinitialize()
 {
-   delete m_action;
-   m_action = NULL;
+   delete m_cameraController;
+   m_cameraController = NULL;
+
+   delete m_actionsExecutor;
+   m_actionsExecutor = NULL;
 
    delete m_sceneManager;
    m_sceneManager = NULL;
@@ -97,9 +114,63 @@ void PickingDemo::deinitialize()
 
 void PickingDemo::update(float timeElapsed)
 {
-   (*m_action)(timeElapsed);
+   static bool keyPressed = false;
+   static bool onPress = false;
+
+   if (context().isKeyPressed(VK_LBUTTON))
+   {
+      onPress = (keyPressed == false);
+      keyPressed = true;
+   }
+   else if (context().isKeyPressed(VK_LBUTTON) == false)
+   {
+      keyPressed = false;
+   }
+
+   if (onPress)
+   {
+      Array<Node*> nodes;
+      performQuery(nodes);
+
+      m_actionsExecutor->execute(nodes);
+   }
+
+   m_cameraController->update(timeElapsed);
    m_renderer->render();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PickingDemo::performQuery(Array<Node*>& nodes)
+{
+   // construct the query ray
+   Point mousePos = context().getMousePos();
+
+   Camera& camera = m_visualSceneManager->getActiveCamera();
+   D3DXVECTOR2 viewportPos;
+   m_renderer->screenToViewport(mousePos, viewportPos);
+
+   Ray queryRay = camera.createRay(viewportPos.x, viewportPos.y);
+
+   // perform the query
+   Array<AbstractGraphicalNode*> queriedNodes;
+   m_visualSceneManager->detailedQuery<AbstractGraphicalNode>(queryRay, queriedNodes);
+
+   // output the results
+   for (unsigned int i = 0; i < queriedNodes.size(); ++i)
+   {
+      nodes.push_back(queriedNodes[i]);
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PickingDemo::jumpToNext()
+{
+   m_shownNode = (m_shownNode + 1) % 3;
+   m_cameraController->goTo(m_shownNode);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -117,35 +188,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
    while (applicationManager.step()) {}
 
 	return 0;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-void QueryNodesAction::operator()()
-{
-   // construct the query ray
-   Point mousePos = m_context.getMousePos();
-
-   Camera& camera = m_sceneMgr.getActiveCamera();
-   D3DXVECTOR2 viewportPos;
-   m_renderer.screenToViewport(mousePos, viewportPos);
-
-   Ray queryRay = camera.createRay(viewportPos.x, viewportPos.y);
-
-   m_dbg << "query: " << queryRay.direction << std::endl;
-
-   // perform the query
-   Array<AbstractGraphicalNode*> nodes;
-   m_sceneMgr.detailedQuery<AbstractGraphicalNode>(queryRay, nodes);
-
-   // output the results
-   for (unsigned int i = 0; i < nodes.size(); ++i)
-   {
-      m_dbg << nodes[i]->getName() << std::endl;
-   }
-   m_dbg << std::endl;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

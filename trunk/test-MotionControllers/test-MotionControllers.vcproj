@@ -180,6 +180,10 @@
 				RelativePath=".\UnconstrainedMotionControllerTests.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\WaypointCameraControllerTests.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

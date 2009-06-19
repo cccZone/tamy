@@ -157,6 +157,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Automatic"
+			>
+			<File
+				RelativePath="..\Include\ext-MotionControllers\WaypointCameraController.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

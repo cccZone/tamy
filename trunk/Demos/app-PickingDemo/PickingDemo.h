@@ -1,36 +1,30 @@
 #pragma once
 
 #include "core-AppFlow\Application.h"
-#include "core\IntervalOperation.h"
-#include "core\dostream.h"
+#include "core\Array.h"
+#include "ext-MotionControllers\WaypointCameraController.h"
+#include <math.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class CompositeSceneManager;
 class VisualSceneManager;
+class NodeActionsExecutor;
+class Node;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class QueryNodesAction
+class LinearTimeFunc
 {
-private:
-   const Renderer& m_renderer;
-   const VisualSceneManager& m_sceneMgr;
-   ExecutionContext& m_context;
-   dostream m_dbg;
-
 public:
-   QueryNodesAction(const Renderer& renderer,
-                    const VisualSceneManager& sceneMgr, 
-                    ExecutionContext& context)
-      : m_renderer(renderer),
-      m_sceneMgr(sceneMgr),
-      m_context(context)
+   float operator()(const float& advancement) const
    {
-   }
+      ASSERT(advancement <= 1, "The value for advancement should be <= 1");
+      ASSERT(advancement >= 0, "The value for advancement should be >= 0");
 
-   void operator()();
+      return sin(advancement * D3DX_PI / 2.f);
+   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,8 +38,9 @@ private:
    CompositeSceneManager* m_sceneManager;
    VisualSceneManager * m_visualSceneManager;
 
-   bool m_rotating;
-   IntervalOperation<QueryNodesAction>* m_action;
+   NodeActionsExecutor* m_actionsExecutor;
+   WaypointCameraController<LinearTimeFunc>* m_cameraController;
+   int m_shownNode;
 
 public:
    PickingDemo();
@@ -57,6 +52,11 @@ public:
    void update(float timeElapsed);
 
    void notify(const std::string& senderApp, int signalCode) {}
+
+private:
+   void performQuery(Array<Node*>& nodes);
+
+   void jumpToNext();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
