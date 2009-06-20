@@ -5,7 +5,12 @@
 #include <vector>
 
 
+///////////////////////////////////////////////////////////////////////////////
+
 class D3DRenderer;
+class GraphicalCapsEvaluator;
+
+///////////////////////////////////////////////////////////////////////////////
 
 enum VERTEXPROCESSING_TYPE
 {
@@ -15,11 +20,12 @@ enum VERTEXPROCESSING_TYPE
     PURE_HARDWARE_VP    = 4         // Pure Hardware Vertex Processing
 };
 
-//-----------------------------------------------------------------------------
-// Name : D3DSettings (Support Class)
-// Desc : Contains a set of options defining all possible display modes
-//        for all the installed graphics adapters
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Contains a set of options defining all possible display modes
+ * for all the installed graphics adapters
+ */
 struct D3DSettings
 {
    ULONG                   adapterOrdinal;
@@ -35,11 +41,12 @@ struct D3DSettings
    D3DCAPS9                caps;
 };
 
-//-----------------------------------------------------------------------------
-// Name : DeviceOptions (Support Class)
-// Desc : The structure stores the information about the capabilities
-//        a device has
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The structure stores the information about the capabilities
+ * a device has
+ */
 struct DeviceOptions
 {
    ULONG                              adapterOrdinal;
@@ -55,10 +62,11 @@ struct DeviceOptions
    bool                               windowed;
 };
 
-//-----------------------------------------------------------------------------
-// Name : Device (Support Class)
-// Desc : The structure stores the information about a device an adapter can use
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The structure stores the information about a device an adapter can use
+ */
 struct Device
 {
    ~Device();
@@ -68,11 +76,12 @@ struct Device
    std::vector<DeviceOptions*> options;
 };
 
-//-----------------------------------------------------------------------------
-// Name : Adapter (Support Class)
-// Desc : The structure stores the information about an adapter present 
-//        in the machine
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The structure stores the information about an adapter present 
+ * in the machine
+ */
 struct Adapter
 {
    ~Adapter();
@@ -81,20 +90,22 @@ struct Adapter
    std::vector<Device*>       devices;
 };
 
-//-----------------------------------------------------------------------------
-// Name : D3DInitializer (Class)
-// Desc : Allows to create a graphics display suitable to our needs.
-//-----------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Allows to create a graphics display suitable to our needs.
+ */
 class D3DInitializer
 {
 private:
    IDirect3D9& m_d3d9;
    HWND m_focusWnd;
+   GraphicalCapsEvaluator& m_capsEvaluator;
 
    std::vector<Adapter*> m_adapters;
 
 public:
-   D3DInitializer(IDirect3D9& d3d9, HWND focusWnd);
+   D3DInitializer(IDirect3D9& d3d9, HWND focusWnd, GraphicalCapsEvaluator& capsEvaluator);
    ~D3DInitializer(void);
 
    D3DSettings findBestWindowedMode(bool bRequireHAL = false, bool bRequireREF = false);
@@ -115,3 +126,5 @@ private:
    void enumerateVertexProcessingTypes(DeviceOptions* options);
    D3DFORMAT findOptimalTextureFormat(D3DSettings& settings);
 };
+
+///////////////////////////////////////////////////////////////////////////////

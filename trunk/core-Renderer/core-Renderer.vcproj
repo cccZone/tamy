@@ -314,6 +314,54 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Particles"
+				>
+				<File
+					RelativePath="..\Include\core-Renderer\Particle.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\ParticleAnimator.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\ParticleInitializer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ParticleSystem.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\ParticleSystem.h"
+					>
+				</File>
+				<Filter
+					Name="Initializers"
+					>
+					<File
+						RelativePath=".\PlanarParticleInitializer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\PlanarParticleInitializer.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Animators"
+					>
+					<File
+						RelativePath=".\LinearParticleAnimator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\LinearParticleAnimator.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="SceneManager"

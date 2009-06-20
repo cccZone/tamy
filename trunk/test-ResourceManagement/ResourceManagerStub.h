@@ -55,6 +55,13 @@ public:
 
    LightReflectingProperties* createLightReflectingProperties() {return new LightReflectingPropertiesStub();}
 
+   ParticleSystem* createParticleSystem(const std::string& name, 
+                                        bool isDynamic, 
+                                        Material& material)
+   {
+      return NULL;
+   }
+
 protected:
    Light* createLightImpl(const std::string& name) {return NULL;}
 

@@ -35,11 +35,6 @@ public:
 
    Material& getMaterial() const {return m_material;}
 
-   /**
-    * The method returns a graphical entity attached to the node
-    */
-   virtual const AbstractGraphicalEntity& getEntity() const = 0;
-
     /**
     * ...self explanatory I think...
     */

@@ -12,6 +12,7 @@
 #include "impl-DirectX\XFileGraphicalEntityLoader.h"
 #include "impl-DirectX\D3DColorOperationImplementation.h"
 #include "impl-DirectX\D3DAlphaOperationImplementation.h"
+#include "impl-DirectX\D3DParticleSystem.h"
 #include <stdexcept>
 #include <string>
 #include <cassert>
@@ -41,7 +42,7 @@ D3DResourceManager::D3DResourceManager(const std::string& texturesDirPath,
       throw std::logic_error(std::string("Cannot initialize DirectX library"));
    }
 
-   m_d3dInitializer = new D3DInitializer(*m_d3d9, hWnd);
+   m_d3dInitializer = new D3DInitializer(*m_d3d9, hWnd, *this);
    if (m_d3dInitializer == NULL)
    {
       m_d3d9->Release();
@@ -100,6 +101,16 @@ D3DResourceManager::~D3DResourceManager()
 
    m_d3d9->Release();
    m_d3d9 = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool D3DResourceManager::checkDeviceCaps(const D3DCAPS9& caps)
+{
+   if(!(caps.FVFCaps & D3DFVFCAPS_PSIZE)) {return false;}
+   if(caps.MaxPointSize <= 1.0f) {return false;}
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -334,6 +345,20 @@ Sound3D* D3DResourceManager::createSound3D(const std::string& name,
                                            float hearingRadius)
 {
    return new OALSound3D(*m_soundSystem, name, dynamic, sound, hearingRadius);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+ParticleSystem* D3DResourceManager::createParticleSystem(const std::string& name, 
+                                                         bool isDynamic, 
+                                                         Material& material,
+                                                         unsigned int particlesCount)
+{
+   return new D3DParticleSystem(m_renderer->getD3Device(), 
+                                name, 
+                                isDynamic, 
+                                material, 
+                                particlesCount);
 }
 
 /////////////////////////////////////////////////////////////////////////////

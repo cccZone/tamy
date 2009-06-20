@@ -161,6 +161,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\TTFont.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\impl-DirectX\TTFont.h"
+				>
+			</File>
+			<File
 				RelativePath=".\XFileGraphicalEntityLoader.cpp"
 				>
 			</File>
@@ -232,6 +240,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\D3DParticleSystem.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\D3DParticleSystem.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\impl-DirectX\D3DSkinnedGraphicalEntity.h"
 					>
 				</File>
@@ -269,6 +285,10 @@
 				</File>
 				<File
 					RelativePath="..\Include\impl-DirectX\D3DRenderer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\GraphicalCapsEvaluator.h"
 					>
 				</File>
 			</Filter>

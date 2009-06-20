@@ -1,5 +1,6 @@
 #include "impl-DirectX\D3DInitializer.h"
 #include "impl-DirectX\D3DRenderer.h"
+#include "impl-DirectX\GraphicalCapsEvaluator.h"
 #include <algorithm>
 #include <stdexcept>
 #include <string>
@@ -29,9 +30,10 @@ Adapter::~Adapter()
 
 /////////////////////////////////////////////////////////////////////////////
 
-D3DInitializer::D3DInitializer(IDirect3D9& d3d9, HWND focusWnd)
+D3DInitializer::D3DInitializer(IDirect3D9& d3d9, HWND focusWnd, GraphicalCapsEvaluator& capsEvaluator)
       : m_d3d9(d3d9),
-      m_focusWnd(focusWnd)
+      m_focusWnd(focusWnd),
+      m_capsEvaluator(capsEvaluator)
 {
    enumerateGraphicsEquipment();
 }
@@ -348,7 +350,7 @@ void D3DInitializer::enumerateDevices(Adapter* adapter)
       device->caps = deviceCaps;
       enumerateDeviceOptions(adapter, device);
 
-      if (device->options.size() == 0)
+      if ((device->options.size() == 0) || (m_capsEvaluator.checkDeviceCaps(device->caps) == false))
       {
          delete device;
       }

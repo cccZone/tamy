@@ -317,7 +317,7 @@
 				>
 			</File>
 			<Filter
-				Name="Definitions"
+				Name="XMLDefinitions"
 				>
 				<File
 					RelativePath="..\Fonts\Curlz.fnt"

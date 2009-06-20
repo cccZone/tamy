@@ -13,6 +13,7 @@ class LightReflectingPropertiesStub : public LightReflectingProperties
 private:
    std::list<std::string>* m_messageSink;
    int m_id;
+   Color m_diffuse;
 
 public:
    LightReflectingPropertiesStub() : m_messageSink(NULL), m_id(0) {}
@@ -32,6 +33,8 @@ public:
    void setSpecularColor(const Color& specular) {}
    void setEmissiveColor(const Color& emissive){}
    void setPower(float val) {}
+
+   const Color& getDiffuseColor() const {return m_diffuse;}
 
    void setForRendering() 
    {

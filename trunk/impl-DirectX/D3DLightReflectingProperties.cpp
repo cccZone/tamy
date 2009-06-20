@@ -4,7 +4,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 D3DLightReflectingProperties::D3DLightReflectingProperties(IDirect3DDevice9& d3Device)
-      : m_d3Device(d3Device)
+      : m_d3Device(d3Device),
+      m_diffuse(0, 0, 0, 0)
 {
    m_d3Device.AddRef();
    ZeroMemory(&m_material, sizeof(D3DMATERIAL9));
@@ -61,6 +62,8 @@ void D3DLightReflectingProperties::setAmbientColor(const Color& ambient)
 
 void D3DLightReflectingProperties::setDiffuseColor(const Color& diffuse)
 {
+   m_diffuse = diffuse;
+
    m_material.Diffuse.r = diffuse.r;
    m_material.Diffuse.g = diffuse.g;
    m_material.Diffuse.b = diffuse.b;

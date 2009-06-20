@@ -30,6 +30,8 @@ public:
    virtual void setEmissiveColor(const Color& emissive) = 0;
    virtual void setPower(float val) = 0;
 
+   virtual const Color& getDiffuseColor() const = 0;
+
    /**
     * This method is engine implementation specific
     * and is supposed to set the light reflecting properties set 

@@ -45,7 +45,7 @@ public:
    void removeStage(unsigned int stageIdx);
    MaterialStage& getStage(unsigned int stageIdx);
 
-   const LightReflectingProperties& getLightReflectingProperties() const {return m_lightReflectingProperties;}
+   LightReflectingProperties& getLightReflectingProperties() {return m_lightReflectingProperties;}
 
    /** 
     * Since materials are used in the rendering strategy as a batching pointer,

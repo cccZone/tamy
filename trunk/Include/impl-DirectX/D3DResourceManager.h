@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core-ResourceManagement\ResourceManager.h"
+#include "impl-DirectX\GraphicalCapsEvaluator.h"
 #include <windows.h>
 #include <d3d9.h>
 #include <vector>
@@ -22,7 +23,7 @@ class OALSoundDevice;
  * This is the implementation of the ResourceManager
  * for the implementation of the engine that uses the DirectX library
  */
-class D3DResourceManager : public ResourceManager
+class D3DResourceManager : public ResourceManager, public GraphicalCapsEvaluator
 {
 private:
    IDirect3D9* m_d3d9;
@@ -44,6 +45,8 @@ public:
 
    ~D3DResourceManager();
 
+   bool checkDeviceCaps(const D3DCAPS9& caps);
+
    Renderer& getRendererInstance();
 
    GraphicalEntity* createGraphicalEntity(const std::string& name,
@@ -59,6 +62,11 @@ public:
    SoundListener* createSoundListener();
 
    Sound3D* createSound3D(const std::string& name, bool dynamic, Sound& sound, float hearingRadius);
+
+   ParticleSystem* createParticleSystem(const std::string& name, 
+                                        bool isDynamic, 
+                                        Material& material,
+                                        unsigned int particlesCount);
 
 protected:
 

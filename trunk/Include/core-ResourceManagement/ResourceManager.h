@@ -40,6 +40,7 @@ class SoundListener;
 class Sound3D;
 class Sound;
 class Font;
+class ParticleSystem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -128,6 +129,14 @@ public:
     * The entity does not get registered as a resource automatically.
     */
    AbstractGraphicalEntity* createGraphicalEntityFromTemplate(MeshDefinition& mesh);
+
+   /**
+    * This method creates a new particle system
+    */
+   virtual ParticleSystem* createParticleSystem(const std::string& name, 
+                                                bool isDynamic, 
+                                                Material& material,
+                                                unsigned int particlesCount) = 0;
 
    // -------------------------------- Cameras --------------------------------
 
