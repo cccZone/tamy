@@ -7,19 +7,13 @@
 
 PlanarParticleInitializer::PlanarParticleInitializer(float planeSize,
                                                      float particleSize,
-                                                     float particleSizeVariation)
+                                                     float particleSizeVariation,
+                                                     float initialSpeed)
       : m_planeSize(planeSize),
       m_particleSize(particleSize),
-      m_particleSizeVariation(particleSizeVariation)
+      m_particleSizeVariation(particleSizeVariation),
+      m_initialSpeed(initialSpeed)
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float PlanarParticleInitializer::randomizeValue(float max, float var) const
-{
-   float val = (-0.5f * var) + ((float)rand() / (float)RAND_MAX) * var;
-   return max + val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,6 +21,9 @@ float PlanarParticleInitializer::randomizeValue(float max, float var) const
 void PlanarParticleInitializer::initialize(const D3DXMATRIX& particleSystemGlobalMtx, 
                                            Particle& particle)
 {
+   D3DXVECTOR3 planeNormal(particleSystemGlobalMtx._21, 
+                           particleSystemGlobalMtx._22,
+                           particleSystemGlobalMtx._23);
    D3DXVECTOR3 planeCenter(particleSystemGlobalMtx._41, 
                            particleSystemGlobalMtx._42,
                            particleSystemGlobalMtx._43);
@@ -36,7 +33,7 @@ void PlanarParticleInitializer::initialize(const D3DXMATRIX& particleSystemGloba
                       randomizeValue(0, m_planeSize));
 
    particle.position = planeCenter + offset;
-
+   particle.velocity = planeNormal * m_initialSpeed;
    particle.size = randomizeValue(m_particleSize, m_particleSizeVariation);
 }
 
@@ -44,7 +41,7 @@ void PlanarParticleInitializer::initialize(const D3DXMATRIX& particleSystemGloba
 
 float PlanarParticleInitializer::getBoundingSphereRadius() const
 {
-   return m_planeSize;
+   return (m_planeSize > m_initialSpeed) ? m_planeSize : m_initialSpeed;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

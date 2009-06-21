@@ -8,8 +8,9 @@
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\ParticleSystem.h"
-#include "core-Renderer\LinearParticleAnimator.h"
+#include "core-Renderer\ParticleFader.h"
 #include "core-Renderer\PlanarParticleInitializer.h"
+#include "core-Renderer\PointParticleInitializer.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\LightReflectingProperties.h"
@@ -92,8 +93,8 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
    particleMat.addStage(particleMatStage);
    m_atmosphere = m_resourceManager->createParticleSystem("atmosphere", false, particleMat, 200);
    m_atmosphere->setLifeSpan(10, 1);
-   m_atmosphere->setParticleAnimator(new LinearParticleAnimator(D3DXVECTOR3(0, 20, 0)));
-   m_atmosphere->setParticleInitializer(new PlanarParticleInitializer(200, 0.2f, 0.1f));
+   m_atmosphere->setParticleAnimator(new ParticleFader());
+   m_atmosphere->setParticleInitializer(new PlanarParticleInitializer(200, 0.2f, 0.1f, 20));
    D3DXMatrixTranslation(&(m_atmosphere->accessLocalMtx()), 0, -20, 100);
    m_sceneManager->addNode(m_atmosphere);
 
@@ -108,9 +109,9 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
                                                                MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE);
    cursorMat.addStage(cursorMatStage);
    m_cursor = m_resourceManager->createParticleSystem("cursor", true, cursorMat, 200);
-   m_cursor->setLifeSpan(1, 0.3f);
-   m_cursor->setParticleAnimator(new LinearParticleAnimator(D3DXVECTOR3(0, -0.5, 0)));
-   m_cursor->setParticleInitializer(new PlanarParticleInitializer(0.02f, 0.05f, 0.025f));
+   m_cursor->setLifeSpan(0.3f, 0.2f);
+   m_cursor->setParticleAnimator(new ParticleFader());
+   m_cursor->setParticleInitializer(new PointParticleInitializer(0.02f, 0.01f, 0.5f));
    D3DXMatrixTranslation(&(m_cursor->accessLocalMtx()), 0, 0, 10);
    m_hudSceneManager->addNode(m_cursor);
 

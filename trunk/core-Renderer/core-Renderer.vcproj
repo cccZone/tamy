@@ -326,6 +326,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ParticleInitializer.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\core-Renderer\ParticleInitializer.h"
 					>
 				</File>
@@ -348,16 +352,24 @@
 						RelativePath="..\Include\core-Renderer\PlanarParticleInitializer.h"
 						>
 					</File>
+					<File
+						RelativePath=".\PointParticleInitializer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\PointParticleInitializer.h"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="Animators"
 					>
 					<File
-						RelativePath=".\LinearParticleAnimator.cpp"
+						RelativePath=".\ParticleFader.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\LinearParticleAnimator.h"
+						RelativePath="..\Include\core-Renderer\ParticleFader.h"
 						>
 					</File>
 				</Filter>

@@ -26,6 +26,9 @@ public:
                            Particle& particle) = 0;
 
    virtual float getBoundingSphereRadius() const = 0;
+
+protected:
+    float randomizeValue(float max, float var) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
