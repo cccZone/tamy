@@ -54,8 +54,10 @@ HWND CWindowBuilder::createWindowedModeWindow(HINSTANCE hInstance,
    wcex.hIconSm		   = (windowParams.smallIconID >= 0) ? LoadIcon(hInstance, MAKEINTRESOURCE(windowParams.smallIconID)) : NULL;
    RegisterClassEx(&wcex);
 
-   HWND hWnd = CreateWindowEx(0, windowParams.windowClassName, windowParams.windowTitle, WS_OVERLAPPEDWINDOW,
-      0, 0, windowParams.width, windowParams.height, NULL, NULL, hInstance, windowParams.ptrMsgProc);
+   HWND hWnd = CreateWindowEx(0, windowParams.windowClassName, windowParams.windowTitle, 
+                              WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
+                              0, 0, windowParams.width, windowParams.height, 
+                              NULL, NULL, hInstance, windowParams.ptrMsgProc);
 
    return hWnd;
 }

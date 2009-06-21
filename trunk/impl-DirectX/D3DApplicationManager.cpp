@@ -31,6 +31,8 @@ D3DApplicationManager::D3DApplicationManager(HINSTANCE hInstance,
    strcpy_s(params.windowTitle, programName.c_str());
    strcpy_s(params.windowClassName, (programName + std::string("Class")).c_str());
    params.ptrMsgProc = this;
+   params.width = 1024;
+   params.height = 768;
 
    m_hWnd = winBuilder.createWindowedModeWindow(m_hInstance, params);
    assert(m_hWnd != NULL);

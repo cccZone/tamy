@@ -194,7 +194,7 @@ void PickingDemo::update(float timeElapsed)
    const Point& mouseScreenPos = context().getMousePos();
    D3DXVECTOR2 mouseViewportPos(0, 0);
    m_renderer->screenToViewport(mouseScreenPos, mouseViewportPos);
-   D3DXMatrixTranslation(&(m_cursor->accessLocalMtx()), mouseViewportPos.x * 0.75f, mouseViewportPos.y * 0.75f, 10);
+   D3DXMatrixTranslation(&(m_cursor->accessLocalMtx()), mouseViewportPos.x, mouseViewportPos.y, 10);
 
    m_cameraController->update(timeElapsed);
    m_atmosphere->update(timeElapsed);
