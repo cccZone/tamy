@@ -107,3 +107,40 @@ TEST(SceneManager, connectingNodesUpdatesManagers)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST(SceneManager, addingUnknownNodeType)
+{
+   CompositeSceneManager fullScene;
+   SceneManagerMock<NodeA>* sceneForNodeA = new SceneManagerMock<NodeA>();
+   fullScene.addSceneManager(sceneForNodeA);
+
+   Node* someNode = new Node("someNode", false);
+   NodeB unknownNode;
+   NodeA* knownNode1 = new NodeA();
+   NodeA* knownNode2 = new NodeA();
+
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeA->getNodesCount());
+
+   fullScene.addNode(someNode);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeA->getNodesCount());
+
+   someNode->addChild(&unknownNode);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeA->getNodesCount());
+
+   unknownNode.addChild(knownNode1);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, sceneForNodeA->getNodesCount());
+
+   unknownNode.addChild(knownNode2);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, sceneForNodeA->getNodesCount());
+
+   someNode->removeChild(unknownNode);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeA->getNodesCount());
+}
+
+///////////////////////////////////////////////////////////////////////////////

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core\Delegate.h"
 #include <vector>
 #include <set>
 #include <functional>
@@ -10,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Node;
-typedef Delegate<void (void)> NodeActionDelegate;
+class NodeAction;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,12 +19,14 @@ typedef Delegate<void (void)> NodeActionDelegate;
 class NodeActionsExecutor
 {
 private:
-   typedef std::pair<Node*, NodeActionDelegate> ActionDef;
+   typedef std::pair<Node*, NodeAction*> ActionDef;
    typedef std::vector<ActionDef> ActionsStorage;
    ActionsStorage m_actions;
 
 public:
-   void add(Node& node, const NodeActionDelegate& delegate);
+   ~NodeActionsExecutor();
+
+   void add(Node& node, NodeAction* action);
 
    /**
     * This method gives you an ability to execute an action
@@ -45,9 +46,9 @@ public:
 
 private:
    void findActionNodes(Node& inNodeToAnalyze, 
-                        std::set<NodeActionDelegate*>& outActions);
+                        std::set<NodeAction*>& outActions);
 
-   void executeActions(const std::set<NodeActionDelegate*>& actions);
+   void executeActions(const std::set<NodeAction*>& actions);
 
 private:
    class comparator : public std::unary_function<ActionDef, bool>

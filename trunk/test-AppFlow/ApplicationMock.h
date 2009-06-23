@@ -10,18 +10,24 @@ class ApplicationMock : public Application
 {
 private:
    bool m_initialized;
+   bool m_hibernated;
    float m_timeElapsed;
    int m_receivedSignal;
+   int m_sendSignalInsideStepLoop;
 
 public:
    ApplicationMock(const std::string& name) 
          : Application(name), 
          m_initialized(false), 
+         m_hibernated(false),
          m_timeElapsed(0),
-         m_receivedSignal(-1)
+         m_receivedSignal(-1),
+         m_sendSignalInsideStepLoop(-1)
    {}
 
    bool isInitialized() const {return m_initialized;}
+
+   bool isHibernated() const {return m_hibernated;}
 
    float getTimeElapsed() 
    {
@@ -57,14 +63,20 @@ public:
       context().signal(*this, signalId);
    }
 
-   void finish()
+   void sendSignalFromStep(int signalId)
    {
-      context().signal(*this, ON_EXIT);
+      m_sendSignalInsideStepLoop = signalId;
    }
 
    void update(float timeElapsed)
    {
       m_timeElapsed = timeElapsed;
+
+      if (m_sendSignalInsideStepLoop >= 0)
+      {
+         sendSignal(m_sendSignalInsideStepLoop);
+         m_sendSignalInsideStepLoop = -1;
+      }
    }
 
    void initialize(Renderer& renderer, ResourceManager& resourceManager)
@@ -75,6 +87,16 @@ public:
    void deinitialize() 
    {
       m_initialized = false;
+   }
+
+   void hibernate(Renderer& renderer)
+   {
+      m_hibernated = true;
+   }
+
+   void dehibernate(Renderer& renderer)
+   {
+      m_hibernated = false;
    }
 
    void notify(const std::string& senderApp, int signalCode)

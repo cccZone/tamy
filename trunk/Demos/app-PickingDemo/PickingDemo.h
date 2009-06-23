@@ -2,7 +2,6 @@
 
 #include "core-AppFlow\Application.h"
 #include "core\Array.h"
-#include "ext-MotionControllers\WaypointCameraController.h"
 #include <math.h>
 
 
@@ -13,20 +12,7 @@ class VisualSceneManager;
 class NodeActionsExecutor;
 class Node;
 class ParticleSystem;
-
-///////////////////////////////////////////////////////////////////////////////
-
-class LinearTimeFunc
-{
-public:
-   float operator()(const float& advancement) const
-   {
-      ASSERT(advancement <= 1, "The value for advancement should be <= 1");
-      ASSERT(advancement >= 0, "The value for advancement should be >= 0");
-
-      return sin(advancement * D3DX_PI / 2.f);
-   }
-};
+class WaypointCameraController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +30,7 @@ private:
    ParticleSystem* m_cursor;
 
    NodeActionsExecutor* m_actionsExecutor;
-   WaypointCameraController<LinearTimeFunc>* m_cameraController;
+   WaypointCameraController* m_cameraController;
    int m_shownNode;
 
 public:
@@ -54,14 +40,15 @@ public:
 
    void deinitialize();
 
+   void hibernate(Renderer& renderer) {}
+   void dehibernate(Renderer& renderer) {}
+
    void update(float timeElapsed);
 
    void notify(const std::string& senderApp, int signalCode) {}
 
 private:
    void performQuery(Array<Node*>& nodes);
-
-   void jumpToNext();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

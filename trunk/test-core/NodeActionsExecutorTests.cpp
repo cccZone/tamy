@@ -12,15 +12,15 @@
 TEST(NodeActionsExecutor, registeringActionForNode)
 {
    Node node("node", false);
-   NodeActionMock nodeAction;
+   NodeActionMock* nodeAction = new NodeActionMock();
 
    NodeActionsExecutor executor;
-   executor.add(node, NodeActionDelegate::FROM_METHOD(NodeActionMock, execute, &nodeAction));
+   executor.add(node, nodeAction);
 
-   CPPUNIT_ASSERT_EQUAL(0, nodeAction.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, nodeAction->getExecutionsCount());
 
    executor.execute(node);
-   CPPUNIT_ASSERT_EQUAL(1, nodeAction.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(1, nodeAction->getExecutionsCount());
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,23 +29,23 @@ TEST(NodeActionsExecutor, executingMultipleActionsOneByOne)
 {
    Node node1("node1", false);
    Node node2("node2", false);
-   NodeActionMock action1;
-   NodeActionMock action2;
+   NodeActionMock* action1 = new NodeActionMock();
+   NodeActionMock* action2 = new NodeActionMock();
 
    NodeActionsExecutor executor;
-   executor.add(node1, NodeActionDelegate::FROM_METHOD(NodeActionMock, execute, &action1));
-   executor.add(node2, NodeActionDelegate::FROM_METHOD(NodeActionMock, execute, &action2));
+   executor.add(node1, action1);
+   executor.add(node2, action2);
 
-   CPPUNIT_ASSERT_EQUAL(0, action1.getExecutionsCount());
-   CPPUNIT_ASSERT_EQUAL(0, action2.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action1->getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action2->getExecutionsCount());
 
    executor.execute(node1);
-   CPPUNIT_ASSERT_EQUAL(1,  action1.getExecutionsCount());
-   CPPUNIT_ASSERT_EQUAL(0, action2.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(1,  action1->getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action2->getExecutionsCount());
 
    executor.execute(node2);
-   CPPUNIT_ASSERT_EQUAL(0, action1.getExecutionsCount());
-   CPPUNIT_ASSERT_EQUAL(1,  action2.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action1->getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(1,  action2->getExecutionsCount());
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -54,22 +54,22 @@ TEST(NodeActionsExecutor, executingMultipleActionsSimultaneously)
 {
    Node node1("node1", false);
    Node node2("node2", false);
-   NodeActionMock action1;
-   NodeActionMock action2;
+   NodeActionMock* action1 = new NodeActionMock();
+   NodeActionMock* action2 = new NodeActionMock();
 
    NodeActionsExecutor executor;
-   executor.add(node1, NodeActionDelegate::FROM_METHOD(NodeActionMock, execute, &action1));
-   executor.add(node2, NodeActionDelegate::FROM_METHOD(NodeActionMock, execute, &action2));
+   executor.add(node1, action1);
+   executor.add(node2, action2);
 
-   CPPUNIT_ASSERT_EQUAL(0, action1.getExecutionsCount());
-   CPPUNIT_ASSERT_EQUAL(0, action2.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action1->getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action2->getExecutionsCount());
 
    Array<Node*> nodes;
    nodes.push_back(&node1);
    nodes.push_back(&node2);
    executor.execute(nodes);
-   CPPUNIT_ASSERT_EQUAL(1, action1.getExecutionsCount());
-   CPPUNIT_ASSERT_EQUAL(1, action2.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(1, action1->getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(1, action2->getExecutionsCount());
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,15 +80,15 @@ TEST(NodeActionsExecutor, executingActionOfParentNodeThroughChildNode)
    Node* child = new Node("child", false);
    root.addChild(child);
 
-   NodeActionMock action;
+   NodeActionMock* action = new NodeActionMock();
 
    NodeActionsExecutor executor;
-   executor.add(root, NodeActionDelegate::FROM_METHOD(NodeActionMock, execute, &action));
+   executor.add(root, action);
 
-   CPPUNIT_ASSERT_EQUAL(0, action.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action->getExecutionsCount());
 
    executor.execute(*child);
-   CPPUNIT_ASSERT_EQUAL(1, action.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(1, action->getExecutionsCount());
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,18 +101,18 @@ TEST(NodeActionsExecutor, actionsOnTreeExecutedOnlyOnceWhenHierarchyPassed)
    root.addChild(child1);
    root.addChild(child2);
 
-   NodeActionMock action;
+   NodeActionMock* action = new NodeActionMock();
 
    NodeActionsExecutor executor;
-   executor.add(root, NodeActionDelegate::FROM_METHOD(NodeActionMock, execute, &action));
+   executor.add(root, action);
 
-   CPPUNIT_ASSERT_EQUAL(0, action.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action->getExecutionsCount());
 
    Array<Node*> nodes;
    nodes.push_back(child1);
    nodes.push_back(child2);
    executor.execute(nodes);
-   CPPUNIT_ASSERT_EQUAL(1, action.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(1, action->getExecutionsCount());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -131,15 +131,15 @@ TEST(NodeActionsExecutor, nodesFromDifferentHierarchyTrees)
    root2.addChild(child3);
    root2.addChild(child4);
 
-   NodeActionMock action1;
-   NodeActionMock action2;
+   NodeActionMock* action1 = new NodeActionMock();
+   NodeActionMock* action2 = new NodeActionMock();
 
    NodeActionsExecutor executor;
-   executor.add(root1, NodeActionDelegate::FROM_METHOD(NodeActionMock, execute, &action1));
-   executor.add(root2, NodeActionDelegate::FROM_METHOD(NodeActionMock, execute, &action2));
+   executor.add(root1, action1);
+   executor.add(root2, action2);
 
-   CPPUNIT_ASSERT_EQUAL(0, action1.getExecutionsCount());
-   CPPUNIT_ASSERT_EQUAL(0, action2.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action1->getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(0, action2->getExecutionsCount());
 
    Array<Node*> nodes;
    nodes.push_back(child1);
@@ -147,8 +147,8 @@ TEST(NodeActionsExecutor, nodesFromDifferentHierarchyTrees)
    nodes.push_back(child3);
    nodes.push_back(child4);
    executor.execute(nodes);
-   CPPUNIT_ASSERT_EQUAL(1, action1.getExecutionsCount());
-   CPPUNIT_ASSERT_EQUAL(1, action2.getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(1, action1->getExecutionsCount());
+   CPPUNIT_ASSERT_EQUAL(1, action2->getExecutionsCount());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

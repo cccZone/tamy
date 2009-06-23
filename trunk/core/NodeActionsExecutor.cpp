@@ -1,5 +1,6 @@
 #include "core\NodeActionsExecutor.h"
 #include "core\Node.h"
+#include "core\NodeAction.h"
 #include <algorithm>
 
 
@@ -19,16 +20,34 @@ NodeActionsExecutor::comparator::operator()(argument_type actionDef)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NodeActionsExecutor::add(Node& node, const NodeActionDelegate& delegate)
+NodeActionsExecutor::~NodeActionsExecutor()
 {
+   for (ActionsStorage::iterator it = m_actions.begin(); 
+      it != m_actions.end(); ++it)
+   {
+      delete it->second;
+   }
+   m_actions.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void NodeActionsExecutor::add(Node& node, NodeAction* action)
+{
+   if (action == NULL)
+   {
+      throw std::invalid_argument("NULL pointer instead a NodeAction instance");
+   }
+
    ActionsStorage::iterator it = std::find_if(m_actions.begin(), m_actions.end(), comparator(node));
    if (it == m_actions.end())
    {
-      m_actions.push_back(std::make_pair(&node, delegate));
+      m_actions.push_back(std::make_pair(&node, action));
    }
    else
    {
-      it->second = delegate;
+      delete it->second;
+      it->second = action;
    }
 }
 
@@ -36,7 +55,7 @@ void NodeActionsExecutor::add(Node& node, const NodeActionDelegate& delegate)
 
 void NodeActionsExecutor::execute(Node& node)
 {
-   std::set<NodeActionDelegate*> actions;
+   std::set<NodeAction*> actions;
    findActionNodes(node, actions);
    executeActions(actions);
 }
@@ -45,7 +64,7 @@ void NodeActionsExecutor::execute(Node& node)
 
 void NodeActionsExecutor::execute(const Array<Node*>& nodes)
 {
-   std::set<NodeActionDelegate*> actions;
+   std::set<NodeAction*> actions;
 
    unsigned int nodesCount = nodes.size();
    for (unsigned int i = 0; i < nodesCount; ++i)
@@ -59,19 +78,19 @@ void NodeActionsExecutor::execute(const Array<Node*>& nodes)
 ///////////////////////////////////////////////////////////////////////////////
 
 void NodeActionsExecutor::findActionNodes(Node& inNodeToAnalyze, 
-                                          std::set<NodeActionDelegate*>& outActions)
+                                          std::set<NodeAction*>& outActions)
 {
    ActionsStorage::iterator it;
    Node* analyzedNode = &inNodeToAnalyze;
 
    bool foundActionNode = false;
-   while ((analyzedNode != NULL) || (foundActionNode == false))
+   while ((analyzedNode != NULL) && (foundActionNode == false))
    {
       it = std::find_if(m_actions.begin(), m_actions.end(), 
                         comparator(*analyzedNode));
       if (it != m_actions.end())
       {
-         outActions.insert(&(it->second));
+         outActions.insert(it->second);
          foundActionNode = true;
       }
 
@@ -88,12 +107,12 @@ void NodeActionsExecutor::findActionNodes(Node& inNodeToAnalyze,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NodeActionsExecutor::executeActions(const std::set<NodeActionDelegate*>& actions)
+void NodeActionsExecutor::executeActions(const std::set<NodeAction*>& actions)
 {
-   for (std::set<NodeActionDelegate*>::const_iterator it = actions.begin();
+   for (std::set<NodeAction*>::const_iterator it = actions.begin();
         it != actions.end(); ++it)
    {
-      (*(*it))();
+      (*it)->performNodeAction();
    }
 }
 

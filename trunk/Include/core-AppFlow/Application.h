@@ -59,6 +59,22 @@ public:
    virtual void deinitialize() = 0;
 
    /**
+    * This method will be called as soon as an application 
+    * enters the hibernation mode.
+    * In this mode, the app can keep all its resources, however it is supposed
+    * to release common resources, such as the renderer etc.
+    */
+   virtual void hibernate(Renderer& renderer) = 0;
+
+   /**
+   * This method will be called as soon as an application 
+   * exits the hibernation mode.
+   * When this call happens, the application is free to reclaim
+   * common resources, such as the renderer etc.
+   */
+   virtual void dehibernate(Renderer& renderer) = 0;
+
+   /**
     * This is the method that updates the internal state of the application
     */
    virtual void update(float timeElapsed) = 0;

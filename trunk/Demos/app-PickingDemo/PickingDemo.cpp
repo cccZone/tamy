@@ -22,8 +22,25 @@
 #include "core\Ray.h"
 #include "core\MatrixWriter.h"
 #include "core\NodeActionsExecutor.h"
+#include "ext-MotionControllers\WaypointCameraController.h"
+#include "ext-MotionControllers\TimeFunction.h"
 #include "core\dostream.h"
+#include "JumpToNodeAction.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+class LinearTimeFunc : public TimeFunction
+{
+public:
+   float operator()(const float& advancement) const
+   {
+      ASSERT(advancement <= 1, "The value for advancement should be <= 1");
+      ASSERT(advancement >= 0, "The value for advancement should be >= 0");
+
+      return sin(advancement * D3DX_PI / 2.f);
+   }
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -35,7 +52,8 @@ PickingDemo::PickingDemo()
       m_atmosphere(NULL),
       m_cursor(NULL),
       m_actionsExecutor(NULL),
-      m_cameraController(NULL)
+      m_cameraController(NULL),
+      m_shownNode(0)
 {
 }
 
@@ -46,7 +64,6 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
    m_renderer = &renderer;
    m_resourceManager = &resourceManager;
 
-   m_shownNode = 2;
    m_actionsExecutor = new NodeActionsExecutor();
 
    m_sceneManager = new CompositeSceneManager();
@@ -73,7 +90,7 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
 
    Camera* camera = m_resourceManager->createCamera("camera");
    m_sceneManager->addNode(camera);
-   m_cameraController = new WaypointCameraController<LinearTimeFunc>(*camera, D3DXVECTOR3(0, 10, -30));
+   m_cameraController = new WaypointCameraController(*camera, D3DXVECTOR3(0, 10, -30), new LinearTimeFunc());
 
    Camera* hudCamera = m_resourceManager->createCamera("hudCamera");
    hudCamera->setProjectionCalculator(new ProjCalc2D());
@@ -122,8 +139,8 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
    entInstance->attachEntity(ent);
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 0, 0, 30);
    m_sceneManager->addNode(entInstance);
-   m_actionsExecutor->add(*entInstance, NodeActionDelegate::FROM_METHOD(PickingDemo, jumpToNext, this));
    m_cameraController->registerWaypoint(0, *entInstance);
+   m_actionsExecutor->add(*entInstance, new JumpToNodeAction(*m_cameraController, m_shownNode));
 
    entInstance = new GraphicalEntityInstantiator("tile2", false);
    entInstance->attachEntity(ent);
@@ -131,8 +148,8 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 20, 5, 40);
    D3DXMatrixMultiply(&(entInstance->accessLocalMtx()), &helperMtx, &(entInstance->accessLocalMtx()));
    m_sceneManager->addNode(entInstance);
-   m_actionsExecutor->add(*entInstance, NodeActionDelegate::FROM_METHOD(PickingDemo, jumpToNext, this));
    m_cameraController->registerWaypoint(1, *entInstance);
+   m_actionsExecutor->add(*entInstance, new JumpToNodeAction(*m_cameraController, m_shownNode));
 
    entInstance = new GraphicalEntityInstantiator("tile3", false);
    entInstance->attachEntity(ent);
@@ -140,10 +157,11 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), -15, -10, 35);
    D3DXMatrixMultiply(&(entInstance->accessLocalMtx()), &helperMtx, &(entInstance->accessLocalMtx()));
    m_sceneManager->addNode(entInstance);
-   m_actionsExecutor->add(*entInstance, NodeActionDelegate::FROM_METHOD(PickingDemo, jumpToNext, this));
    m_cameraController->registerWaypoint(2, *entInstance);
+   m_actionsExecutor->add(*entInstance, new JumpToNodeAction(*m_cameraController, m_shownNode));
 
-   jumpToNext();
+   m_shownNode = 0;
+   m_cameraController->goTo(m_shownNode);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -226,15 +244,6 @@ void PickingDemo::performQuery(Array<Node*>& nodes)
       nodes.push_back(queriedNodes[i]);
    }
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PickingDemo::jumpToNext()
-{
-   m_shownNode = (m_shownNode + 1) % 3;
-   m_cameraController->goTo(m_shownNode);
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 

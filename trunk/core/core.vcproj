@@ -274,14 +274,22 @@
 				RelativePath="..\Include\core\MatrixWriter.h"
 				>
 			</File>
-			<File
-				RelativePath=".\NodeActionsExecutor.cpp"
+			<Filter
+				Name="NodeActionsExecutor"
 				>
-			</File>
-			<File
-				RelativePath="..\Include\core\NodeActionsExecutor.h"
-				>
-			</File>
+				<File
+					RelativePath="..\Include\core\NodeAction.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NodeActionsExecutor.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\NodeActionsExecutor.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Scene"

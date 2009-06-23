@@ -27,8 +27,10 @@ public:
    HierarchicalObjectDemo();
 
    void initialize(Renderer& renderer, ResourceManager& resourceManager);
-
    void deinitialize();
+
+   void hibernate(Renderer& renderer) {}
+   void dehibernate(Renderer& renderer) {}
 
    void update(float timeElapsed);
 

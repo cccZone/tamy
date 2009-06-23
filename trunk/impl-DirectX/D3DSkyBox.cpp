@@ -34,6 +34,7 @@ D3DSkyBox::~D3DSkyBox()
 void D3DSkyBox::startRendering()
 {
    m_d3Device.SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+   m_d3Device.SetRenderState(D3DRS_ZENABLE, FALSE);
 
    D3DXMATRIX globalMtx = getGlobalMtx();
    m_cameraWorldMtx._41 = globalMtx._41;
@@ -49,15 +50,8 @@ void D3DSkyBox::startRendering()
 
 void D3DSkyBox::renderSide(SkyBoxSides sideIdx)
 {
-   m_d3Device.SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-   m_d3Device.SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
    m_d3Device.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
    m_d3Device.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-   m_d3Device.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-   m_d3Device.SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-   m_d3Device.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-   m_d3Device.SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-   m_d3Device.SetTextureStageState(0, D3DTSS_TEXCOORDINDEX, 0);
 
    m_d3Device.DrawPrimitive(D3DPT_TRIANGLESTRIP, sideIdx * 4, 2);
 }
@@ -67,8 +61,8 @@ void D3DSkyBox::renderSide(SkyBoxSides sideIdx)
 void D3DSkyBox::endRendering()
 {
    m_d3Device.SetTexture(0, NULL);
-
    m_d3Device.SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+   m_d3Device.SetRenderState(D3DRS_ZENABLE, TRUE);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

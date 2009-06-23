@@ -107,23 +107,30 @@ public:
       D3DXMATRIX volumeTransformMtx;
       for (unsigned int i = 0; i < nodesCount; ++i)
       {
+         visible = false;
          node = possiblyVisibleNodes[i];
 
          geometry = &(node->getBoundingGeometry());
-
          trisCount = geometry->size();
-         D3DXMatrixInverse(&volumeTransformMtx, NULL, &(node->getGlobalMtx()));
-         for (unsigned int j = 0; j < trisCount; ++j)
+         if (trisCount == 0)
          {
-            BoundingVolume* transformedVolume = volume * volumeTransformMtx;
-            Triangle* tri = (*geometry)[j];
-            if (tri->testCollision(*transformedVolume) == true) 
+            visible = true;
+         }
+         else
+         {
+            D3DXMatrixInverse(&volumeTransformMtx, NULL, &(node->getGlobalMtx()));
+            for (unsigned int j = 0; j < trisCount; ++j)
             {
-               visible = true;
+               BoundingVolume* transformedVolume = volume * volumeTransformMtx;
+               Triangle* tri = (*geometry)[j];
+               if (tri->testCollision(*transformedVolume) == true) 
+               {
+                  visible = true;
+                  delete transformedVolume;
+                  break;
+               }
                delete transformedVolume;
-               break;
             }
-            delete transformedVolume;
          }
 
          if (visible)

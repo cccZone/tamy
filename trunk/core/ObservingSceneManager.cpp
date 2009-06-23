@@ -38,6 +38,7 @@ void ObservingSceneManager::removeNode(Node& node)
 
 void ObservingSceneManager::childAdded(Node& parent, Node& child)
 {
+   child.attachObserver(*this);
    m_sceneManager->addNode(&child);
 }
 
@@ -45,6 +46,7 @@ void ObservingSceneManager::childAdded(Node& parent, Node& child)
 
 void ObservingSceneManager::childRemoved(Node& parent, Node& child)
 {
+   child.detachObserver(*this);
    m_sceneManager->removeNode(child);
 }
 

@@ -83,11 +83,13 @@ bool ApplicationManager::step()
    }
 
    int numRunning = 0;
+   int numActive = 0;
 
    for (AppsMap::iterator appIt = m_apps.begin(); 
         appIt != m_apps.end(); ++appIt)
    {
       ApplicationNode& currNode = appIt->second;
+      dispatchAppSignals(currNode);
 
       switch(currNode.state)
       {
@@ -97,9 +99,22 @@ bool ApplicationManager::step()
             break;
          }
 
+      case AS_BEING_HIBERNATED:
+         {
+            currNode.app.hibernate(getRenderer());
+            currNode.state = AS_HIBERNATED;
+            break;
+         }
+
       case AS_HIBERNATED:
          {
-            dispatchAppSignals(currNode);
+            break;
+         }
+
+      case AS_BEING_DEHIBERNATED:
+         {
+            currNode.app.dehibernate(getRenderer());
+            currNode.state = AS_RUNNING;
             break;
          }
 
@@ -112,7 +127,6 @@ bool ApplicationManager::step()
 
       case AS_RUNNING:
          {
-            dispatchAppSignals(currNode);
             currNode.app.update(getTimeElapsed());
             break;
          }
@@ -126,6 +140,7 @@ bool ApplicationManager::step()
       }
 
       if (currNode.state == AS_RUNNING) { numRunning++; }     
+      if (currNode.state != AS_UNINITIALIZED) { numActive++; }    
       if (numRunning > 1)
       {
          throw std::runtime_error("Only one application can be running at a time");
@@ -134,43 +149,14 @@ bool ApplicationManager::step()
 
    checkUserInput(m_keyBuffer, m_mousePos);
 
-   return (numRunning == 1);
+   return (numActive > 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ApplicationManager::signal(const Application& app, int signalId)
 {
-   // locate the app in the registry
-   AppsMap::iterator appIt = m_apps.find(app.getName());
-   if (appIt == m_apps.end())
-   {
-      throw std::runtime_error(std::string("Application '") + app.getName() +
-                               std::string("' not registered"));
-   }
-
-   ApplicationNode& appNode = appIt->second;
-
-   // if the app wants to be closed - change its state
-   if (signalId == Application::ON_EXIT) {appNode.state = AS_FINISHED;}
-
-   // check if there is a connection for this app on this signal
-   std::map<int, std::string>::iterator connectionIt = appNode.connections.find(signalId);
-   if (connectionIt == appNode.connections.end()) {return;}
-
-   AppsMap::iterator targetAppIt = m_apps.find(connectionIt->second);
-   if (targetAppIt == m_apps.end())
-   {
-      throw std::runtime_error(std::string("Application '") + connectionIt->second +
-                               std::string("' not registered"));
-   }
-
-   // switch over to the other application
-   if (appNode.state != AS_FINISHED)
-   {
-      appNode.state = AS_HIBERNATED;
-   }
-   targetAppIt->second.state = AS_SCHEDULED;
+   signal(app, app.getName(), signalId);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -219,7 +205,46 @@ void ApplicationManager::dispatchAppSignals(ApplicationNode& currNode)
    for (SignalsQueue::iterator signalIt = currNode.signalsQueue.begin();
         signalIt != currNode.signalsQueue.end(); ++signalIt)
    {
-      currNode.app.notify(signalIt->first, signalIt->second);
+      int signalId = signalIt->second;
+
+      // if the app wants to be closed - change its state
+      if (signalId == Application::ON_EXIT) 
+      {
+         currNode.state = AS_FINISHED;
+      }
+
+      // check if there is a connection for this app on this signal
+      std::map<int, std::string>::iterator connectionIt = currNode.connections.find(signalId);
+      if (connectionIt == currNode.connections.end()) 
+      {
+         // it's not a connection signal - forward it to the destination application
+         currNode.app.notify(signalIt->first, signalId);
+      }
+      else
+      {
+         // perform a connection switch
+         AppsMap::iterator targetAppIt = m_apps.find(connectionIt->second);
+         if (targetAppIt == m_apps.end())
+         {
+            throw std::runtime_error(std::string("Application '") + connectionIt->second +
+               std::string("' not registered"));
+         }
+
+         // switch over to the other application
+         if (currNode.state != AS_FINISHED)
+         {
+            currNode.state = AS_BEING_HIBERNATED;
+         }
+
+         if (targetAppIt->second.state == AS_HIBERNATED)
+         {
+            targetAppIt->second.state = AS_BEING_DEHIBERNATED;
+         }
+         else
+         {
+            targetAppIt->second.state = AS_SCHEDULED;
+         }
+      }
    }
    currNode.signalsQueue.clear();
 }

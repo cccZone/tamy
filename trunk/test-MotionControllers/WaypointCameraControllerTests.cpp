@@ -3,11 +3,12 @@
 #include "core\MatrixWriter.h"
 #include <d3dx9.h>
 #include "ext-MotionControllers\WaypointCameraController.h"
+#include "ext-MotionControllers\TimeFunction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class LinearTimeFuncMock
+class LinearTimeFuncMock : public TimeFunction
 {
 public:
    float operator()(const float& advancement) const
@@ -25,7 +26,7 @@ TEST(WaypointCameraController, rotationsIncludedInMovementScheme)
    Node page("page", false);
    Node camera("camera", false);
 
-   WaypointCameraController<LinearTimeFuncMock> menuController(camera, D3DXVECTOR3(0, 0, -20));
+   WaypointCameraController menuController(camera, D3DXVECTOR3(0, 0, -20), new LinearTimeFuncMock());
 
    menuController.registerWaypoint(0, page);
 
@@ -50,7 +51,7 @@ TEST(WaypointCameraController, complexMovementx)
    Node page("page", false);
    Node camera("camera", false);
 
-   WaypointCameraController<LinearTimeFuncMock> menuController(camera, D3DXVECTOR3(0, 10, -30));
+   WaypointCameraController menuController(camera, D3DXVECTOR3(0, 10, -30), new LinearTimeFuncMock());
 
    menuController.registerWaypoint(0, page);
 
@@ -83,7 +84,7 @@ TEST(WaypointCameraController, switchingBetweenPagesCanBeSpreadInTime)
    float dist = 10;
    float zOffset = -20;
 
-   WaypointCameraController<LinearTimeFuncMock> menuController(camera, D3DXVECTOR3(0, 0, zOffset));
+   WaypointCameraController menuController(camera, D3DXVECTOR3(0, 0, zOffset), new LinearTimeFuncMock());
 
    menuController.registerWaypoint(0, page0);
    menuController.registerWaypoint(1, page1);

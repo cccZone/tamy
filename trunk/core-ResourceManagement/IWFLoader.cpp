@@ -209,8 +209,8 @@ unsigned int IWFLoader::createSkyboxMaterial(const std::string& textureName) con
 
       Material& mat = m_resourceManager.createMaterial(materialName, *lrp);
       MaterialStage* stage = m_resourceManager.createMaterialStage(*texture,
-               MOP_MULTIPLY, SC_LRP, SC_TEXTURE,
-               MOP_MULTIPLY, SC_LRP, SC_TEXTURE);
+               MOP_SELECT_ARG1, SC_TEXTURE, SC_NONE,
+               MOP_DISABLE, SC_NONE, SC_NONE);
       mat.addStage(stage);
 
       return mat.getIndex();

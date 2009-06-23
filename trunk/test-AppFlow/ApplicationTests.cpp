@@ -36,7 +36,7 @@ TEST(ApplicationManager, runningSingleApplication)
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, app.isInitialized());
 
-   app.finish();
+   app.sendSignal(Application::ON_EXIT);
    CPPUNIT_ASSERT_EQUAL(true, app.isInitialized());
 
    CPPUNIT_ASSERT_EQUAL(false, manager.step());
@@ -61,7 +61,7 @@ TEST(ApplicationManager, appReceivesUpdated)
    manager.step();
    CPPUNIT_ASSERT_EQUAL(1.f, app.getTimeElapsed());
 
-   app.finish();
+   app.sendSignal(Application::ON_EXIT);
 
    manager.step();
    CPPUNIT_ASSERT_EQUAL(0.f, app.getTimeElapsed());
@@ -75,8 +75,103 @@ TEST(ApplicationManager, connectingTwoApplications)
    ApplicationMock menu("menu");
    ApplicationMock game("game");
 
-   manager.addApplication(menu);
    manager.addApplication(game);
+   manager.addApplication(menu);
+
+   manager.setEntryApplication("menu");
+   manager.connect("menu", "game", 0);
+   manager.connect("game", "menu", Application::ON_EXIT);
+
+   // no app is initialized yet
+   CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+
+   // first step and menu gets initialized
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, menu.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, game.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   // menu starts getting updated, game still uninitialized
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, menu.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(1.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, game.isHibernated());
+
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   // switching over to game:
+   //   - menu doesn't get deinitialized, but it stops receiving updates (enters hibernation)
+   //   - game gets initialized
+   menu.sendSignal(0);
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, game.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, game.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   // ...playing the game...
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, game.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(1.f, game.getTimeElapsed());
+
+   // finished the game - game gets deinitialized...
+   game.sendSignal(Application::ON_EXIT);
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, menu.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, game.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   // .. and menu gains focus with the next update
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, menu.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(1.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, game.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   // close the menu
+   menu.sendSignal(Application::ON_EXIT);
+   CPPUNIT_ASSERT_EQUAL(false, manager.step());
+   CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, menu.isHibernated());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(false, game.isHibernated());
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(ApplicationManager, sendingApplicationSwitchSignalFromInsideTheStepLoop)
+{
+   ApplicationManagerMock manager;
+   ApplicationMock menu("menu");
+   ApplicationMock game("game");
+
+   manager.addApplication(game);
+   manager.addApplication(menu);
 
    manager.setEntryApplication("menu");
    manager.connect("menu", "game", 0);
@@ -100,25 +195,43 @@ TEST(ApplicationManager, connectingTwoApplications)
    CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
-   // switching over to game:
-   //   - menu doesn't get deinitialized, but it stops receivig updates (enters hibernation)
-   //   - game gets initialized
-   menu.sendSignal(0);
+   // switching over to game - but this time from inside of the 'step' method loop.
+   // In this case the signal gets cached and will be executed in the next
+   // 'step' method loop's iteration
+   menu.sendSignalFromStep(0);
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(1.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
-   // ...playing the game...
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(1.f, game.getTimeElapsed());
 
-   // finished the game - game gets deinitialized...
-   game.finish();
+   // finished the game - we wish to deinitialize the game...
+   game.sendSignalFromStep(Application::ON_EXIT);
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(1.f, game.getTimeElapsed());
+
+   // ... game gets deinitialized...
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
@@ -130,14 +243,8 @@ TEST(ApplicationManager, connectingTwoApplications)
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(1.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
-
-   // close the menu
-   menu.finish();
-   CPPUNIT_ASSERT_EQUAL(false, manager.step());
-   CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
-   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
-};
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -173,16 +280,21 @@ TEST(ApplicationManager, reinitializingFinishedApp)
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
    // switching over to game:
-   //   - menu doesn't get deinitialized, but it stops receivig updates (enters hibernation)
+   //   - menu doesn't get deinitialized, but it stops receiving updates (enters hibernation)
    //   - game gets initialized
    menu.sendSignal(0);
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
-   // ...playing the game...
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
@@ -190,7 +302,7 @@ TEST(ApplicationManager, reinitializingFinishedApp)
    CPPUNIT_ASSERT_EQUAL(1.f, game.getTimeElapsed());
 
    // finished the game - game gets deinitialized...
-   game.finish();
+   game.sendSignal(Application::ON_EXIT);
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
@@ -209,6 +321,12 @@ TEST(ApplicationManager, reinitializingFinishedApp)
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(true, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
@@ -220,7 +338,7 @@ TEST(ApplicationManager, reinitializingFinishedApp)
    CPPUNIT_ASSERT_EQUAL(1.f, game.getTimeElapsed());
 
    // ... and finishing the game once more
-   game.finish();
+   game.sendSignal(Application::ON_EXIT);
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
@@ -228,7 +346,7 @@ TEST(ApplicationManager, reinitializingFinishedApp)
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
    // close the menu
-   menu.finish();
+   menu.sendSignal(Application::ON_EXIT);
    CPPUNIT_ASSERT_EQUAL(false, manager.step());
    CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
@@ -292,9 +410,15 @@ TEST(ApplicationManager, signalingOtherApplication)
    CPPUNIT_ASSERT_THROW(menu.sendSignal("game", 5), std::logic_error);
 
    // switching over to game:
-   //   - menu doesn't get deinitialized, but it stops receivig updates (enters hibernation)
+   //   - menu doesn't get deinitialized, but it stops receiving updates (enters hibernation)
    //   - game gets initialized
    menu.sendSignal(0);
+   CPPUNIT_ASSERT_EQUAL(true, manager.step());
+   CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
+   CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
+   CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
+
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(true, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
@@ -308,7 +432,7 @@ TEST(ApplicationManager, signalingOtherApplication)
    CPPUNIT_ASSERT_EQUAL(5, game.getReceivedSignal());
 
    // sending signal from the active app to a hibernated app
-   menu.sendSignal("menu", 7);
+   game.sendSignal("menu", 7);
    CPPUNIT_ASSERT_EQUAL(true, manager.step());
    CPPUNIT_ASSERT_EQUAL(7, menu.getReceivedSignal());
    CPPUNIT_ASSERT_EQUAL(-1, game.getReceivedSignal());

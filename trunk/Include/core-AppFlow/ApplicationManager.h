@@ -37,7 +37,9 @@ private:
    enum ApplicationState
    {
       AS_UNINITIALIZED,
+      AS_BEING_HIBERNATED,
       AS_HIBERNATED,
+      AS_BEING_DEHIBERNATED,
       AS_SCHEDULED,
       AS_RUNNING,
       AS_FINISHED

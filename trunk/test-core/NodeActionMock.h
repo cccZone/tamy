@@ -1,11 +1,12 @@
 #pragma once
 
 #include <string>
+#include "core\NodeAction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class NodeActionMock
+class NodeActionMock : public NodeAction
 {
 private:
    int m_executionsCount;
@@ -16,7 +17,7 @@ public:
    {
    }
 
-   void execute()
+   void performNodeAction()
    {
       m_executionsCount++;
    }
