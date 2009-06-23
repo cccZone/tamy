@@ -39,6 +39,8 @@ public:
    void setEmissiveColor(const Color& emissive){m_emissive = emissive;}
    void setPower(float val) {m_power = val;}
 
+   const Color& getDiffuseColor() const {return m_diffuse;}
+
    void setForRendering() 
    {
    }

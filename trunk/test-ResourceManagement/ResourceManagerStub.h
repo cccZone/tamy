@@ -57,7 +57,8 @@ public:
 
    ParticleSystem* createParticleSystem(const std::string& name, 
                                         bool isDynamic, 
-                                        Material& material)
+                                        Material& material,
+                                        unsigned int particlesCount)
    {
       return NULL;
    }
