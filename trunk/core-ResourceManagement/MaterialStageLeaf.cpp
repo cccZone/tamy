@@ -4,6 +4,8 @@
 #include "core-Renderer\Material.h"
 #include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\Texture.h"
+#include "core-ResourceManagement\MaterialStageFactory.h"
+#include "core-ResourceManagement\TextureFactory.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,9 +19,9 @@ MaterialStageLeaf::MaterialStageLeaf(MaterialsParser& mainParser,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialStageLeaf::parse(TiXmlElement& parent)
+bool MaterialStageLeaf::parse(TiXmlElement& parent)
 {
-   if (m_mainParser.isdMaterialParsed() == false)
+   if (m_mainParser.isMaterialParsed() == false)
    {
       throw std::runtime_error("Texture stage definition can only be embedded within \
                                 a material definition");
@@ -37,13 +39,14 @@ void MaterialStageLeaf::parse(TiXmlElement& parent)
    parseOperation(parent, "Color", colorOpCode, colorArg1, colorArg2);
    parseOperation(parent, "Alpha", alphaOpCode, alphaArg1, alphaArg2);
 
-   MaterialStage* stage = m_resMgr.createMaterialStage(texture, 
+   MaterialStage* stage = m_resMgr.resource<MaterialStage>()(texture, 
                                 colorOpCode, colorArg1, colorArg2,
                                 alphaOpCode, alphaArg1, alphaArg2);
 
 
    Material& mat = m_mainParser.getMaterialParsed();
    mat.addStage(stage);
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,17 +64,9 @@ Texture& MaterialStageLeaf::parseTexture(TiXmlElement& parent)
       textureName = "";
    }
 
-   Texture* texture = NULL;
-   if (m_resMgr.isTextureRegistered(textureName))
-   {
-      texture = &m_resMgr.getTexture(textureName);
-   }
-   else
-   {
-      texture = &m_resMgr.loadTexture(textureName);
-   }
+   Texture& texture = m_resMgr.resource<Texture>()(textureName);
 
-   return *texture;
+   return texture;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -28,7 +28,7 @@ public:
 
    void load(const std::string& fileName);
 
-   bool isdMaterialParsed() const;
+   bool isMaterialParsed() const;
    Material& getMaterialParsed();
    void setMaterialParsed(Material& mat);
 };

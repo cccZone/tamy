@@ -16,11 +16,9 @@ class XFileGraphicalEntityLoader : public FileGraphicalEntityLoader,
 {
 private:
    IDirect3DDevice9& m_d3Device;
-   std::string m_meshDirPath;
 
 public:
-   XFileGraphicalEntityLoader(IDirect3DDevice9& d3Device,
-                              const std::string& meshDirPath);
+   XFileGraphicalEntityLoader(IDirect3DDevice9& d3Device);
 
    bool canHandleFile(const std::string& fileName) const;
 

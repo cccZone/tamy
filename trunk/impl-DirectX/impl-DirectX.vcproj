@@ -153,14 +153,6 @@
 			Name="ResourceManager"
 			>
 			<File
-				RelativePath=".\D3DResourceManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\impl-DirectX\D3DResourceManager.h"
-				>
-			</File>
-			<File
 				RelativePath=".\TTFont.cpp"
 				>
 			</File>
@@ -368,6 +360,50 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Factories"
+			>
+			<File
+				RelativePath=".\D3DGraphicalEntityFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DLightFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DLightReflectingPropertiesFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DMaterialFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DMaterialStageFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DParticleSystemFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DSkyBoxFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DSound3DFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DSoundListenerFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DTextureFactory.cpp"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

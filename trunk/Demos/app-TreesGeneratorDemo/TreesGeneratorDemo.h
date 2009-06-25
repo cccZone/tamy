@@ -8,6 +8,7 @@
 class CompositeSceneManager;
 class UnconstrainedMotionController;
 class Skeleton;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +16,7 @@ class TreesGeneratorDemo : public Application
 {
 private:
    Renderer* m_renderer;
-   ResourceManager* m_resourceManager;
+   ResourceManager* m_resMgr;
 
    CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;
@@ -26,11 +27,11 @@ private:
 public:
    TreesGeneratorDemo();
 
-   void initialize(Renderer& renderer, ResourceManager& resourceManager);
+   void initialize(ResourceManager& resMgr);
    void deinitialize();
 
-   void hibernate(Renderer& renderer) {}
-   void dehibernate(Renderer& renderer) {}
+   void hibernate(ResourceManager& resMgr) {}
+   void dehibernate(ResourceManager& resMgr) {}
 
    void update(float timeElapsed);
 

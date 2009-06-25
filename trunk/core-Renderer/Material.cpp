@@ -12,11 +12,13 @@ unsigned char Material::s_stagesArrSize = 8;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material::Material(LightReflectingProperties& lrp, 
+Material::Material(const std::string& name,
+                   LightReflectingProperties* lrp, 
                    MaterialOperationImplementation& alphaMatOp,
                    MaterialOperationImplementation& colorMatOp,
                    unsigned int index)
-      : m_index(index),
+      : m_name(name),
+      m_index(index),
       m_lightReflectingProperties(lrp),
       m_disableAlpha(new MaterialOperation(alphaMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
       m_disableColor(new MaterialOperation(colorMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
@@ -33,6 +35,9 @@ Material::Material(LightReflectingProperties& lrp,
 
 Material::~Material()
 {
+   delete m_lightReflectingProperties;
+   m_lightReflectingProperties = NULL;
+
    delete m_disableAlpha;
    m_disableAlpha = NULL;
 
@@ -110,7 +115,7 @@ MaterialStage& Material::getStage(unsigned int stageIdx)
 
 bool Material::operator==(const Material& rhs) const
 {
-   if (m_lightReflectingProperties != rhs.m_lightReflectingProperties) {return false;}
+   if (*m_lightReflectingProperties != *(rhs.m_lightReflectingProperties)) {return false;}
 
    if (m_stagesCount != rhs.m_stagesCount) {return false;}
 
@@ -142,7 +147,7 @@ void Material::setForRendering()
 {
    enableTransparency(m_transparent);
 
-   m_lightReflectingProperties.setForRendering();
+   m_lightReflectingProperties->setForRendering();
 
    for (unsigned char i = 0; i < m_stagesCount; ++i)
    {

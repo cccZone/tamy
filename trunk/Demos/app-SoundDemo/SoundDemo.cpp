@@ -35,11 +35,11 @@ SoundDemo::SoundDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void SoundDemo::initialize(ResourceManager& resMgr)
 {
-   m_renderer = &renderer;
-   m_resourceManager = &resourceManager;
-   m_soundRenderer = &(m_resourceManager->getSoundRenderer());
+   m_renderer = &(resMgr.shared<Renderer>());
+   m_resourceManager = &resMgr;
+   m_soundRenderer = &(resMgr.shared<SoundRenderer>());
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
@@ -51,7 +51,7 @@ void SoundDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
 
-   Light* light = m_resourceManager->createLight("light");
+   Light* light = resMgr.resource<Light>()("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 1));
    light->setSpecularColor(Color(0.2f, 0.2f, 0.2f, 1));
@@ -59,23 +59,22 @@ void SoundDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
    m_sceneManager->addNode(light);
 
    // prepare our 'listener'
-   Camera* camera = m_resourceManager->createCamera("camera");
+   Camera* camera = new Camera("camera");
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 10, -20);
    m_cameraController = new UnconstrainedMotionController(*camera);
 
-   m_soundListener = m_resourceManager->createSoundListener();
+   m_soundListener = resMgr.resource<SoundListener>()();
    camera->addChild(m_soundListener);
    m_sceneManager->addNode(camera);
 
    // prepare tiles that emit sounds
-   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
-   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
+   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>()("meadowNormalTile.x");
 
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile", false);
    entInstance->attachEntity(ent);
 
    m_sound = new WavFile("..\\Data\\Footsteps.wav");
-   Sound3D* tileSound = m_resourceManager->createSound3D("tileSound", false, *m_sound, 100);
+   Sound3D* tileSound = resMgr.resource<Sound3D>()("tileSound", false, *m_sound, 100);
    entInstance->addChild(tileSound);
 
    m_sceneManager->addNode(entInstance);
@@ -144,7 +143,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Performance Demo");
+   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
+                                            hInstance, nCmdShow, "Performance Demo");
 	SoundDemo app;
 
    applicationManager.addApplication(app);

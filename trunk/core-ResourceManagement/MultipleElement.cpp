@@ -24,7 +24,7 @@ MultipleElement::~MultipleElement()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MultipleElement::parse(TiXmlElement& parent)
+bool MultipleElement::parse(TiXmlElement& parent)
 {
    for (TiXmlElement* element = parent.FirstChildElement(m_tag.c_str()); 
         element != NULL;
@@ -32,6 +32,7 @@ void MultipleElement::parse(TiXmlElement& parent)
    {
       m_elem->parse(*element);
    }
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

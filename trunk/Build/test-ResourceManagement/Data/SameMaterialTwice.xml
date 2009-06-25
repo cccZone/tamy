@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root>
+   <Material name="Material">
+      <Stage texture="tex1">
+         <Color op="add" arg1="texture" arg2="lrp" />
+         <Alpha op="mul" arg1="texture" arg2="prev" />
+      </Stage>
+   </Material>
+
+   <Material name="Material">
+      <Stage texture="tex2">
+         <Color op="mul" arg1="lrp" arg2="texture" />
+         <Alpha op="add" arg1="prev" arg2="texture" />
+      </Stage>
+   </Material>
+
+   <Material name="MaterialX">
+      <Stage texture="tex3">
+         <Color op="mul" arg1="lrp" arg2="texture" />
+         <Alpha op="add" arg1="prev" arg2="texture" />
+      </Stage>
+   </Material>
+</Root>

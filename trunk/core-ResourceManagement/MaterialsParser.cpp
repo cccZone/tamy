@@ -14,14 +14,12 @@ MaterialsParser::MaterialsParser(ResourceManager& resMgr)
       m_parsedMaterial(NULL)
 {
    CompositeElement* materialElem = new CompositeElement(*this);
+      materialElem->addElement(new MaterialLeaf(*this, resMgr));
+
+      MultipleElement* stageElem = new MultipleElement(*this, "Stage", 
+                                       new MaterialStageLeaf(*this, resMgr));
+      materialElem->addElement(stageElem);
    m_parser = new MultipleElement(*this, "Material", materialElem);
-
-   materialElem->addElement(new MaterialLeaf(*this, resMgr));
-
-
-   MultipleElement* stageElem = new MultipleElement(*this, "Stage", 
-                                    new MaterialStageLeaf(*this, resMgr));
-   materialElem->addElement(stageElem);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,7 +56,7 @@ void MaterialsParser::load(const std::string& fileName)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool MaterialsParser::isdMaterialParsed() const
+bool MaterialsParser::isMaterialParsed() const
 {
    return m_parsedMaterial != NULL;
 }

@@ -2,21 +2,59 @@
 #include <tchar.h>
 #include "core\WindowBuilder.h"
 #include "impl-DirectX\D3DRenderer.h"
-#include "impl-DirectX\D3DResourceManager.h"
+#include "core-ResourceManagement\ResourceManager.h"
 #include "impl-DirectX\D3DInitializer.h"
 #include "core\Timer.h"
 #include <cassert>
 #include "core\dostream.h"
+#include "core-ResourceManagement\MaterialsParser.h"
+#include "core-ResourceManagement\GraphicalEntityLoaderFactory.h"
+
+#include "impl-DirectX\D3DInitializer.h"
+#include "impl-DirectX\D3DRenderer.h"
+#include "impl-DirectX\D3DGraphicalEntity.h"
+#include "impl-DirectX\D3DSkinnedGraphicalEntity.h"
+#include "impl-DirectX\D3DLight.h"
+#include "impl-DirectX\D3DLightReflectingProperties.h"
+#include "impl-DirectX\D3DTexture.h"
+#include "impl-DirectX\D3DEmptyTexture.h"
+#include "impl-DirectX\D3DSkyBox.h"
+#include "impl-DirectX\D3DMaterial.h"
+#include "impl-DirectX\XFileGraphicalEntityLoader.h"
+#include "impl-DirectX\D3DColorOperationImplementation.h"
+#include "impl-DirectX\D3DAlphaOperationImplementation.h"
+#include "impl-DirectX\D3DParticleSystem.h"
+#include <stdexcept>
+#include <string>
+#include <cassert>
+
+#include "core-Renderer\BackgroundPass.h"
+#include "core-Renderer\DrawingPass.h"
+
+#include "impl-DirectX\OpenALSoundSystem.h"
+#include "impl-DirectX\SoundInitializer.h"
+#include "impl-DirectX\SoundDeviceInfo.h"
+#include "impl-DirectX\OALSoundDevice.h"
+#include "impl-DirectX\OALSoundListener.h"
+#include "impl-DirectX\OALSound3D.h"
+#include "core-Sound\SoundRenderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DApplicationManager::D3DApplicationManager(HINSTANCE hInstance, 
+D3DApplicationManager::D3DApplicationManager(const std::string& texturesDir,
+                                             const std::string& fontsDir,
+                                             const std::string& meshesDir,
+                                             HINSTANCE hInstance, 
                                              int nCmdShow,
                                              const std::string& programName)
-      : m_hInstance(hInstance),
+      : ApplicationManager(texturesDir, fontsDir, meshesDir),
+      m_hInstance(hInstance),
       m_programName(programName),
       m_timer(new CTimer()),
+      m_d3d9(NULL),
+      m_d3dInitializer(NULL),
+      m_renderer(NULL),
       m_lastFrameRate(0),
       m_rightMouseButton(false),
       m_leftMouseButton(false),
@@ -37,9 +75,34 @@ D3DApplicationManager::D3DApplicationManager(HINSTANCE hInstance,
    m_hWnd = winBuilder.createWindowedModeWindow(m_hInstance, params);
    assert(m_hWnd != NULL);
 
-   m_resourceManager = new D3DResourceManager("..\\Data", "..\\Data", m_hWnd, true);
-   m_renderer = &(m_resourceManager->getRendererInstance());
+   // prepare resMgr for work
+   resMgr().setShared<MaterialsParser>(new MaterialsParser(resMgr()));
 
+   m_renderer = createRenderer(true);
+   resMgr().setShared<Renderer>(m_renderer);
+   resMgr().setShared<D3DRenderer>(*m_renderer);
+   resMgr().setShared<IDirect3DDevice9>(m_renderer->getD3Device());
+
+   resMgr().setShared<D3DColorOperationImplementation>(new D3DColorOperationImplementation(m_renderer->getD3Device()));
+   resMgr().setShared<D3DAlphaOperationImplementation>(new D3DAlphaOperationImplementation(m_renderer->getD3Device()));
+
+   OpenALSoundSystem* soundSystem = new OpenALSoundSystem();
+
+   SoundInitializer soundInit(*soundSystem);
+   SoundDeviceInfo idealDevice(OALV_UNKNOWN, 8);
+   const SoundDeviceInfo& bestDevice = soundInit.findBest(idealDevice);
+   OALSoundDevice* soundDevice = soundSystem->createDevice(bestDevice);
+   resMgr().setShared<SoundRenderer>(new SoundRenderer(*soundDevice));
+   resMgr().setShared<SoundDevice>(soundDevice);
+   resMgr().setShared<OpenALSoundSystem>(soundSystem);
+
+   registerFactories<IDirect3D9>();
+
+   // register additional file readers
+   resMgr().resource<GraphicalEntityLoader>().add(new XFileGraphicalEntityLoader(m_renderer->getD3Device()));
+
+
+   // show the application window
    ShowWindow(m_hWnd, nCmdShow);
 }
 
@@ -47,13 +110,64 @@ D3DApplicationManager::D3DApplicationManager(HINSTANCE hInstance,
 
 D3DApplicationManager::~D3DApplicationManager()
 {
-   m_renderer = NULL;
-
-   delete m_resourceManager;
-   m_resourceManager = NULL;
-
    delete m_timer;
    m_timer = NULL;
+
+   delete m_d3dInitializer;
+   m_d3dInitializer = NULL;
+
+   m_d3d9->Release();
+   m_d3d9 = NULL;
+
+   m_renderer = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+D3DRenderer* D3DApplicationManager::createRenderer(bool windowed)
+{
+   m_d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
+   if (m_d3d9 == NULL)
+   {
+      throw std::logic_error(std::string("Cannot initialize DirectX library"));
+   }
+
+   m_d3dInitializer = new D3DInitializer(*m_d3d9, m_hWnd, *this);
+   if (m_d3dInitializer == NULL)
+   {
+      m_d3d9->Release();
+      m_d3d9 = NULL;
+      throw std::logic_error(std::string("Failed to create a Direct3D initializer"));
+   }
+
+   D3DSettings d3DSettings;
+   if (windowed)
+   {
+      d3DSettings = m_d3dInitializer->findBestWindowedMode();
+   }
+   else
+   {
+      D3DDISPLAYMODE matchMode;
+      matchMode.Width = 1024;
+      matchMode.Width = 768;
+      matchMode.Format = D3DFMT_X8R8G8B8;
+      d3DSettings = m_d3dInitializer->findBestFullscreenMode(matchMode);
+   }
+   D3DRenderer* renderer = m_d3dInitializer->createDisplay(d3DSettings, m_hWnd);
+   renderer->addPass(new BackgroundPass());
+   renderer->addPass(new DrawingPass());
+
+   return renderer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool D3DApplicationManager::checkDeviceCaps(const D3DCAPS9& caps)
+{
+   if(!(caps.FVFCaps & D3DFVFCAPS_PSIZE)) {return false;}
+   if(caps.MaxPointSize <= 1.0f) {return false;}
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -185,20 +299,6 @@ void D3DApplicationManager::checkUserInput(unsigned char* keysBuffer, Point& mou
       mousePos.x = cursorPos.x;
       mousePos.y = cursorPos.y;
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Renderer& D3DApplicationManager::getRenderer() 
-{
-   return *m_renderer;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-ResourceManager& D3DApplicationManager::getResourceManager()
-{
-   return *m_resourceManager;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

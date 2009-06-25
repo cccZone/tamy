@@ -1,9 +1,16 @@
 #include "core-ResourceManagement\XMLFont.h"
 #include "core-ResourceManagement\ResourceManager.h"
 #include "core-ResourceManagement\MeshDefinition.h"
+#include "core-ResourceManagement\MaterialFactory.h"
+#include "core-ResourceManagement\GraphicalEntityFactory.h"
+#include "core-ResourceManagement\MaterialStageFactory.h"
+#include "core-ResourceManagement\TextureFactory.h"
+#include "core-ResourceManagement\LightReflectingPropertiesFactory.h"
 #include "core-Renderer\LightReflectingProperties.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\MaterialOperation.h"
+#include "core-Renderer\Texture.h"
+#include "core-Renderer\AbstractGraphicalEntity.h"
 #include "tinyxml\tinyxml.h"
 #include <string>
 #include <stdexcept>
@@ -11,9 +18,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-XMLFont::XMLFont(const char* fontDefFile, 
-                 const char* fontName, 
-                 const Color& color, 
+XMLFont::XMLFont(const char* fontDefFile,  
                  ResourceManager& resMgr)
       : m_resMgr(resMgr),
       m_glifs(256, NULL),
@@ -41,8 +46,8 @@ XMLFont::XMLFont(const char* fontDefFile,
 
    // create the material for the font
    char tmpMaterialName[256];
-   sprintf_s(tmpMaterialName, "%s_mat", fontName);
-   createMaterial(tmpMaterialName, fontFaceFileName.c_str(), color);
+   sprintf_s(tmpMaterialName, "%s_mat", fontDefFile);
+   createMaterial(tmpMaterialName, fontFaceFileName.c_str());
 
    // parse the glifs and create the entities for them
    char tmpGlifMeshName[256];
@@ -73,7 +78,7 @@ XMLFont::XMLFont(const char* fontDefFile,
       float tu2 = u2 / size;
       float tv2 = v2 / size;
 
-      sprintf_s(tmpGlifMeshName, "%s_glif_%d", fontName, c);
+      sprintf_s(tmpGlifMeshName, "%s_glif_%d", fontDefFile, c);
 
       AbstractGraphicalEntity& glifEntity = prepareEntity(tmpGlifMeshName, tmpMaterialName, 
                                                           width / 2.f, height / 2.f,
@@ -84,7 +89,7 @@ XMLFont::XMLFont(const char* fontDefFile,
    }
 
    // remember to always add a white space character
-   sprintf_s(tmpGlifMeshName, "%s_glif_whiteSpace", fontName);
+   sprintf_s(tmpGlifMeshName, "%s_glif_whiteSpace", fontDefFile);
    AbstractGraphicalEntity& glifEntity = prepareEntity(tmpGlifMeshName, tmpMaterialName, 
                                                        (longestGlif / 4.f), 1,
                                                        0, 0, 0, 0);
@@ -130,31 +135,21 @@ void XMLFont::parseGlif(TiXmlElement& glif,
 ///////////////////////////////////////////////////////////////////////////////
 
 void XMLFont::createMaterial(const char* materialName, 
-                             const char* texName,
-                             const Color& color)
+                             const char* texName)
 {
-   if (m_resMgr.doesMaterialExist(materialName)) {return;}
+   if (m_resMgr.resource<Material>().is(materialName)) {return;}
 
-   Texture* texture = NULL;
-   if (m_resMgr.isTextureRegistered(texName))
-   {
-      texture = &m_resMgr.getTexture(texName);
-   }
-   else
-   {
-      texture = &m_resMgr.loadTexture(texName);
-   }
+   Texture& texture = m_resMgr.resource<Texture>()(texName);
 
-   LightReflectingProperties* lrp  = m_resMgr.createLightReflectingProperties();
-   lrp->setAmbientColor(color);
-   lrp->setDiffuseColor(color);
-   lrp = &m_resMgr.addLightReflectingProperties(lrp);
+   LightReflectingProperties* lrp  = m_resMgr.resource<LightReflectingProperties>()();
+   lrp->setAmbientColor(Color(1, 1, 1, 1));
+   lrp->setDiffuseColor(Color(1, 1, 1, 1));
 
-   Material* realMat = &m_resMgr.createMaterial(materialName, *lrp);
-   MaterialStage* defaultStage = m_resMgr.createMaterialStage(*texture,
-      MOP_SELECT_ARG1, SC_LRP, SC_NONE,
-      MOP_SELECT_ARG1, SC_TEXTURE, SC_NONE);
-   realMat->addStage(defaultStage);
+   Material& realMat = m_resMgr.resource<Material>()(materialName, lrp);
+   MaterialStage* defaultStage = m_resMgr.resource<MaterialStage>()(texture,
+                                                                 MOP_SELECT_ARG1, SC_LRP, SC_NONE,
+                                                                 MOP_SELECT_ARG1, SC_TEXTURE, SC_NONE);
+   realMat.addStage(defaultStage);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -165,9 +160,9 @@ AbstractGraphicalEntity& XMLFont::prepareEntity(const char* meshName,
                                                 float tu1, float tv1,
                                                 float tu2, float tv2)
 {
-   if (m_resMgr.isGraphicalEntityRegistered(meshName))
+   if (m_resMgr.resource<AbstractGraphicalEntity>().is(meshName))
    {
-      return m_resMgr.getGraphicalEntity(meshName);
+      return m_resMgr.resource<AbstractGraphicalEntity>().get(meshName);
    }
    else
    {
@@ -185,10 +180,9 @@ AbstractGraphicalEntity& XMLFont::prepareEntity(const char* meshName,
       MaterialDefinition material(materialName);
       mesh.materials.push_back(material);
 
-      AbstractGraphicalEntity* ent = m_resMgr.createGraphicalEntityFromTemplate(mesh);
-      m_resMgr.registerGraphicalEntity(meshName, ent);
+      AbstractGraphicalEntity& ent = m_resMgr.resource<AbstractGraphicalEntity>()(mesh);
 
-      return *ent;
+      return ent;
    }
 }
 

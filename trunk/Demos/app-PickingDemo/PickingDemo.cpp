@@ -59,10 +59,10 @@ PickingDemo::PickingDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void PickingDemo::initialize(ResourceManager& resMgr)
 {
-   m_renderer = &renderer;
-   m_resourceManager = &resourceManager;
+   m_renderer = &(resMgr.shared<Renderer>());
+   m_resourceManager = &resMgr;
 
    m_actionsExecutor = new NodeActionsExecutor();
 
@@ -77,38 +77,36 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
    m_renderer->addVisualSceneManager(*hudVisualSceneMgr);
 
 
-   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
-   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
+   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>()("meadowNormalTile.x");
 
    // add lighting and such
-   Light* light = m_resourceManager->createLight("light");
+   Light* light = resMgr.resource<Light>()("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 1));
    light->setSpecularColor(Color(0.2f, 0.2f, 0.2f, 1));
    D3DXMatrixRotationYawPitchRoll(&(light->accessLocalMtx()), D3DXToRadian(-45), D3DXToRadian(45), 0);
    m_sceneManager->addNode(light);
 
-   Camera* camera = m_resourceManager->createCamera("camera");
+   Camera* camera = new Camera("camera");
    m_sceneManager->addNode(camera);
    m_cameraController = new WaypointCameraController(*camera, D3DXVECTOR3(0, 10, -30), new LinearTimeFunc());
 
-   Camera* hudCamera = m_resourceManager->createCamera("hudCamera");
+   Camera* hudCamera = new Camera("hudCamera");
    hudCamera->setProjectionCalculator(new ProjCalc2D());
    m_hudSceneManager->addNode(hudCamera);
 
    // add a particle system
-   LightReflectingProperties* particleLrp = m_resourceManager->createLightReflectingProperties();
+   LightReflectingProperties* particleLrp = resMgr.resource<LightReflectingProperties>()();
    particleLrp->setDiffuseColor(Color(1, 1, 1, 1));
-   particleLrp = &(m_resourceManager->addLightReflectingProperties(particleLrp));
 
-   Texture& tex = m_resourceManager->loadTexture("particle.tga");
-   Material& particleMat = m_resourceManager->createMaterial("particleMat", *particleLrp);
-   MaterialStage* particleMatStage = m_resourceManager->createMaterialStage(
+   Texture& tex = resMgr.resource<Texture>()("particle.tga");
+   Material& particleMat = resMgr.resource<Material>()("particleMat", particleLrp);
+   MaterialStage* particleMatStage = resMgr.resource<MaterialStage>()(
                                                                tex, 
                                                                MOP_SELECT_ARG1, SC_LRP, SC_NONE,
                                                                MOP_MULTIPLY, SC_LRP, SC_TEXTURE);
    particleMat.addStage(particleMatStage);
-   m_atmosphere = m_resourceManager->createParticleSystem("atmosphere", false, particleMat, 200);
+   m_atmosphere = resMgr.resource<ParticleSystem>()("atmosphere", false, particleMat, 200);
    m_atmosphere->setLifeSpan(10, 1);
    m_atmosphere->setParticleAnimator(new ParticleFader());
    m_atmosphere->setParticleInitializer(new PlanarParticleInitializer(200, 0.2f, 0.1f, 20));
@@ -116,16 +114,15 @@ void PickingDemo::initialize(Renderer& renderer, ResourceManager& resourceManage
    m_sceneManager->addNode(m_atmosphere);
 
    // create the cursor
-   particleLrp = m_resourceManager->createLightReflectingProperties();
+   particleLrp = resMgr.resource<LightReflectingProperties>()();
    particleLrp->setDiffuseColor(Color(1, 0, 1, 1));
-   particleLrp = &(m_resourceManager->addLightReflectingProperties(particleLrp));
-   Material& cursorMat = m_resourceManager->createMaterial("cursorMat", *particleLrp);
-   MaterialStage* cursorMatStage = m_resourceManager->createMaterialStage(
+   Material& cursorMat = resMgr.resource<Material>()("cursorMat", particleLrp);
+   MaterialStage* cursorMatStage = resMgr.resource<MaterialStage>()(
                                                                tex, 
                                                                MOP_SELECT_ARG1, SC_LRP, SC_NONE,
                                                                MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE);
    cursorMat.addStage(cursorMatStage);
-   m_cursor = m_resourceManager->createParticleSystem("cursor", true, cursorMat, 200);
+   m_cursor = resMgr.resource<ParticleSystem>()("cursor", true, cursorMat, 200);
    m_cursor->setLifeSpan(0.3f, 0.2f);
    m_cursor->setParticleAnimator(new ParticleFader());
    m_cursor->setParticleInitializer(new PointParticleInitializer(0.02f, 0.01f, 0.5f));
@@ -252,7 +249,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Picking Demo");
+   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
+                                            hInstance, nCmdShow, "Picking Demo");
 	PickingDemo app;
 
    applicationManager.addApplication(app);

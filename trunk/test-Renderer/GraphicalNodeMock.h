@@ -2,7 +2,6 @@
 
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include "core-Renderer\Material.h"
-#include "LightReflectingPropertiesStub.h"
 #include "MaterialOperationImplementationMock.h"
 #include "core\BoundingSphere.h"
 
@@ -13,7 +12,6 @@ class GraphicalNodeMock : public AbstractGraphicalNode
 {
 private:
    static MaterialOperationImplementationMock s_matOpImpl;
-   static LightReflectingPropertiesStub s_lrp;
    static Material s_material;
 
 public:

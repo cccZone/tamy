@@ -1,6 +1,4 @@
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
-#include "core-ResourceManagement\ResourceManager.h"
-#include "core-Renderer\AbstractGraphicalEntity.h"
 #include "core\Node.h"
 #include <sstream>
 #include <deque>
@@ -8,30 +6,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AbstractGraphicalEntity& GraphicalEntityLoader::load(ResourceManager& resourceManager, 
-                                                     const std::string& name) 
+void GraphicalEntityLoader::load(const std::string& name,
+                                 MeshDefinition& outMesh,
+                                 AnimationDefinition &outAnimation) 
 {
-   MeshDefinition mesh;
-   AnimationDefinition animation;
-   parseMesh(mesh, animation, name);
-
-   AbstractGraphicalEntity* entity = NULL;
-
-   if (resourceManager.isGraphicalEntityRegistered(name) == true)
-   {
-      entity = &resourceManager.getGraphicalEntity(name);
-   }
-   else
-   {
-      ensureMeshNames(mesh);
-
-      entity = resourceManager.createGraphicalEntityFromTemplate(mesh);
-      entity->setAnimationDefinition(animation);
-
-      resourceManager.registerGraphicalEntity(name, entity);
-   }
-
-   return *entity;
+   parseMesh(outMesh, outAnimation, name);
+   ensureMeshNames(outMesh);
+   outMesh.name = name;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

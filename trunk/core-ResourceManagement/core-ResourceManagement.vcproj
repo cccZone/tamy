@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -108,7 +108,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="&quot;$(DXSDK_DIR)\Include&quot;;&quot;$(SolutionDir)\Include&quot;"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -150,54 +150,6 @@
 	</References>
 	<Files>
 		<Filter
-			Name="ResourceManager"
-			>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\Face.h"
-				>
-			</File>
-			<File
-				RelativePath=".\FileGraphicalEntityLoader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\FileGraphicalEntityLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEntityLoader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\GraphicalEntityLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LitVertex.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\LitVertex.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\Managable.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\MeshDefinition.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ResourceManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\ResourceManager.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Builder"
 			>
 			<File
@@ -212,6 +164,14 @@
 		<Filter
 			Name="Loaders"
 			>
+			<File
+				RelativePath=".\FileGraphicalEntityLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\FileGraphicalEntityLoader.h"
+				>
+			</File>
 			<File
 				RelativePath=".\IWFLoader.cpp"
 				>
@@ -324,6 +284,122 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="GraphicalData"
+			>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\Face.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LitVertex.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\LitVertex.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\MeshDefinition.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Core"
+			>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\AbstractResourceFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\Managable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\ResourceFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ResourceManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\ResourceManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\ResourceStorage.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Factories"
+			>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\FileResourceFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\FontFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalEntityFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\GraphicalEntityFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalEntityLoader.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\GraphicalEntityLoader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\GraphicalEntityLoaderFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\LightFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\LightReflectingPropertiesFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\MaterialFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\MaterialStageFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\ParticleSystemFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\SkyBoxFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\Sound3DFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\SoundListenerFactory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-ResourceManagement\TextureFactory.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

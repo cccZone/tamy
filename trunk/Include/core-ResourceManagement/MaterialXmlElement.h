@@ -17,7 +17,7 @@ protected:
 public:
    virtual ~MaterialXmlElement() {}
 
-   virtual void parse(TiXmlElement& parent) = 0;
+   virtual bool parse(TiXmlElement& parent) = 0;
 
 protected:
    MaterialXmlElement(MaterialsParser& mainParser) 

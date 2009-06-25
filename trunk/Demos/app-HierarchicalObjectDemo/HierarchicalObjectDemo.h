@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include "core-AppFlow\Application.h"
 
 
@@ -9,14 +7,15 @@
 
 class CompositeSceneManager;
 class UnconstrainedMotionController;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class HierarchicalObjectDemo : public Application
 {
 private:
+   ResourceManager* m_resMgr;
    Renderer* m_renderer;
-   ResourceManager* m_resourceManager;
 
    CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;
@@ -26,11 +25,11 @@ private:
 public:
    HierarchicalObjectDemo();
 
-   void initialize(Renderer& renderer, ResourceManager& resourceManager);
+   void initialize(ResourceManager& resMgr);
    void deinitialize();
 
-   void hibernate(Renderer& renderer) {}
-   void dehibernate(Renderer& renderer) {}
+   void hibernate(ResourceManager& resMgr) {}
+   void dehibernate(ResourceManager& resMgr) {}
 
    void update(float timeElapsed);
 

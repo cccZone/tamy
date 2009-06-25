@@ -28,10 +28,10 @@ PerformanceDemo::PerformanceDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void PerformanceDemo::initialize(ResourceManager& resMgr)
 {
-   m_renderer = &renderer;
-   m_resourceManager = &resourceManager;
+   m_renderer = &(resMgr.shared<Renderer>());
+   m_resourceManager = &resMgr;
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
@@ -39,9 +39,7 @@ void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceMa
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("meadowNormalTile.x");
-   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("meadowNormalTile.x", loader);
-
+   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>()("meadowNormalTile.x");
    for (int y = -20; y < 20; ++y)
    {
       for (int x = -20; x < 20; ++x)
@@ -55,14 +53,14 @@ void PerformanceDemo::initialize(Renderer& renderer, ResourceManager& resourceMa
    }
 
 
-   Light* light = m_resourceManager->createLight("light");
+   Light* light = resMgr.resource<Light>()("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 1));
    light->setSpecularColor(Color(0.2, 0.2, 0.2, 1));
    D3DXMatrixRotationYawPitchRoll(&(light->accessLocalMtx()), D3DXToRadian(-45), D3DXToRadian(45), 0);
    m_sceneManager->addNode(light);
 
-   Camera* camera = m_resourceManager->createCamera("camera");
+   Camera* camera = new Camera("camera");
 
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 20, 50);
    m_sceneManager->addNode(camera);
@@ -128,7 +126,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Performance Demo");
+   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
+                                            hInstance, nCmdShow, "Performance Demo");
 	PerformanceDemo app;
 
    applicationManager.addApplication(app);

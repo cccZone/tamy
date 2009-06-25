@@ -15,7 +15,7 @@ private:
    unsigned char m_keyBuffer[256];
 
 public:
-   ApplicationManagerMock() 
+   ApplicationManagerMock() : ApplicationManager("", "", "")
    {
       ZeroMemory(m_keyBuffer, 256 * sizeof(unsigned char));
    }
@@ -45,16 +45,6 @@ protected:
 
    void switchMouseMovementMode(bool relative)
    {
-   }
-
-   Renderer& getRenderer()
-   {
-      return *(reinterpret_cast<Renderer*> (NULL));
-   }
-
-   ResourceManager& getResourceManager()
-   {
-      return *(reinterpret_cast<ResourceManager*> (NULL));
    }
 };
 

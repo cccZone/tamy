@@ -1,14 +1,29 @@
 #include "core-AppFlow\ApplicationManager.h"
 #include "core-AppFlow\Application.h"
+#include "core-ResourceManagement\ResourceManager.h"
 #include <stdexcept>
 #include <windows.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ApplicationManager::ApplicationManager()
+ApplicationManager::ApplicationManager(const std::string& texturesDir,
+                                       const std::string& fontsDir,
+                                       const std::string& meshesDir)
+      : m_texturesDir(texturesDir),
+      m_fontsDir(fontsDir),
+      m_meshesDir(meshesDir),
+      m_resMgr(new ResourceManager())
 {
    ZeroMemory(m_keyBuffer, 256 * sizeof(unsigned char));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ApplicationManager::~ApplicationManager()
+{
+   delete m_resMgr;
+   m_resMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,7 +116,7 @@ bool ApplicationManager::step()
 
       case AS_BEING_HIBERNATED:
          {
-            currNode.app.hibernate(getRenderer());
+            currNode.app.hibernate(resMgr());
             currNode.state = AS_HIBERNATED;
             break;
          }
@@ -113,14 +128,14 @@ bool ApplicationManager::step()
 
       case AS_BEING_DEHIBERNATED:
          {
-            currNode.app.dehibernate(getRenderer());
+            currNode.app.dehibernate(resMgr());
             currNode.state = AS_RUNNING;
             break;
          }
 
       case AS_SCHEDULED:
          {
-            currNode.app.initialize(getRenderer(), getResourceManager());
+            currNode.app.initialize(resMgr());
             currNode.state = AS_RUNNING;
             break;
          }

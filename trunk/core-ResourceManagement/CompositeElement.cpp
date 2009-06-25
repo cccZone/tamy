@@ -30,13 +30,18 @@ void CompositeElement::addElement(MaterialXmlElement* elem)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CompositeElement::parse(TiXmlElement& parent)
+bool CompositeElement::parse(TiXmlElement& parent)
 {
    for (std::list<MaterialXmlElement*>::iterator it = m_elems.begin();
         it != m_elems.end(); ++it)
    {
-      (*it)->parse(parent);
+      if ((*it)->parse(parent) == false)
+      {
+         break;
+      }
    }
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -172,16 +172,6 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Loaders"
-			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
-			>
-			<File
-				RelativePath=".\EntityLoaderTests.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Utils"
 			>
 			<File
@@ -205,7 +195,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ResourceManagerStub.h"
+				RelativePath=".\MockLightReflectingPropertiesFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MockMaterialFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MockMaterialStageFactory.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MockTextureFactory.h"
 				>
 			</File>
 			<File
@@ -245,6 +247,10 @@
 				</File>
 				<File
 					RelativePath="..\Build\test-ResourceManagement\Data\MultMatsMultStages.xml"
+					>
+				</File>
+				<File
+					RelativePath="..\Build\test-ResourceManagement\Data\SameMaterialTwice.xml"
 					>
 				</File>
 				<File

@@ -17,10 +17,9 @@ TEST(BatchComparator, sortingByMaterials)
    // prepare the materials
    TextureStub texture("");
    MaterialOperationImplementationMock matOpImpl;
-   LightReflectingPropertiesStub lrp;
 
-   Material material1(lrp, matOpImpl, matOpImpl, 0);
-   Material material2(lrp, matOpImpl, matOpImpl, 1);
+   Material material1("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, 0);
+   Material material2("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, 1);
    material1.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));

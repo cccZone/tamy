@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,8 +22,10 @@ class Material
 private:
    static unsigned char s_stagesArrSize;
 
+   std::string m_name;
    unsigned int m_index;
-   LightReflectingProperties& m_lightReflectingProperties;
+
+   LightReflectingProperties* m_lightReflectingProperties;
    MaterialOperation* m_disableAlpha;
    MaterialOperation* m_disableColor;
 
@@ -33,11 +37,14 @@ private:
    bool m_transparent;
 
 public:
-   Material(LightReflectingProperties& lrp, 
+   Material(const std::string& name,
+            LightReflectingProperties* lrp, 
             MaterialOperationImplementation& alphaMatOp,
             MaterialOperationImplementation& colorMatOp,
             unsigned int index = 0);
    ~Material();
+
+   const std::string& getName() const {return m_name;}
 
    unsigned int getStagesCount() const {return m_stagesCount;}
 
@@ -45,7 +52,7 @@ public:
    void removeStage(unsigned int stageIdx);
    MaterialStage& getStage(unsigned int stageIdx);
 
-   LightReflectingProperties& getLightReflectingProperties() {return m_lightReflectingProperties;}
+   LightReflectingProperties& getLightReflectingProperties() {return *m_lightReflectingProperties;}
 
    /** 
     * Since materials are used in the rendering strategy as a batching pointer,

@@ -14,8 +14,9 @@ class iwfTexture;
 class iwfMaterial;
 class iwfSurface;
 struct ReferenceEntity;
-class ResourceManager;
 class SceneManager;
+class ResourceManager;
+class Material;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,11 +26,11 @@ class SceneManager;
 class IWFLoader
 {
 private:
-   ResourceManager& m_resourceManager;
+   ResourceManager& m_resMgr;
    SceneManager& m_sceneManager;
 
 public:
-   IWFLoader(ResourceManager& resourceManager, SceneManager& sceneManager);
+   IWFLoader(ResourceManager& resMgr, SceneManager& sceneManager);
 
    /**
     * The method will load a scene from an IWF file
@@ -47,7 +48,7 @@ private:
 
    std::string getUniqueNameForMesh(const char* originalMeshName) const;
 
-   unsigned int createSkyboxMaterial(const std::string& textureName) const;
+   Material& createSkyboxMaterial(const std::string& textureName) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

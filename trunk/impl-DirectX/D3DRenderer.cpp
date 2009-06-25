@@ -181,3 +181,58 @@ UINT D3DRenderer::getSimultaneouslyRenderedTexturesCount() const
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+IDirect3DVertexBuffer9* D3DRenderer::createVertexBuffer(UINT length, 
+                                                        DWORD usageFlags, 
+                                                        DWORD fvf, 
+                                                        D3DPOOL memoryPool)
+{
+   assert(length > 0);
+
+   if (!m_hardwareTLOn) usageFlags |= D3DUSAGE_SOFTWAREPROCESSING;
+
+   IDirect3DVertexBuffer9* vertexBuffer = NULL;
+   HRESULT res = m_d3Device->CreateVertexBuffer(length,
+      usageFlags,
+      fvf,
+      memoryPool,
+      &vertexBuffer,
+      NULL);
+
+   if (FAILED(res))
+   {
+      throw std::logic_error(
+         std::string("Cannot create a vertex buffer"));
+   }
+
+   return vertexBuffer;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+IDirect3DIndexBuffer9* D3DRenderer::createIndexBuffer(UINT length, 
+                                                      DWORD usageFlags, 
+                                                      D3DFORMAT format, 
+                                                      D3DPOOL memoryPool)
+{
+   if (!m_hardwareTLOn) usageFlags |= D3DUSAGE_SOFTWAREPROCESSING;
+
+   IDirect3DIndexBuffer9* indexBuffer = NULL;
+
+   HRESULT res = m_d3Device->CreateIndexBuffer(length,
+      usageFlags,
+      format,
+      memoryPool,
+      &indexBuffer,
+      NULL);
+
+   if (FAILED(res))
+   {
+      throw std::logic_error(
+         std::string("Cannot create an index buffer"));
+   }
+
+   return indexBuffer;
+}
+
+/////////////////////////////////////////////////////////////////////////////

@@ -23,28 +23,26 @@ FontsDemo::FontsDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FontsDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void FontsDemo::initialize(ResourceManager& resMgr)
 {
-   m_renderer = &renderer;
-   m_resourceManager = &resourceManager;
+   m_renderer = &(resMgr.shared<Renderer>());
+   m_resourceManager = &resMgr;
 
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   Camera* camera = m_resourceManager->createCamera("camera");
+   Camera* camera = new Camera("camera");
    camera->setProjectionCalculator(new ProjCalc2D());
    m_sceneManager->addNode(camera);
 
-   Light* light = m_resourceManager->createLight("light");
+   Light* light = resMgr.resource<Light>()("light");
    m_sceneManager->addNode(light);
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 1));
 
-   m_resourceManager->loadFont("Curlz.fnt", "Curlz_red", Color(1, 0, 0, 1));
-
-   VisibleString* string = new VisibleString(m_resourceManager->getFont("Curlz_red"));
+   VisibleString* string = new VisibleString(resMgr.resource<Font>()("Curlz.fnt"));
    m_sceneManager->addNode(string);
    D3DXMatrixTranslation(&(string->accessLocalMtx()), -0.5, 0, 2);
 
@@ -76,7 +74,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Fonts Demo");
+   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
+                                            hInstance, nCmdShow, "Fonts Demo");
 	FontsDemo app;
 
    applicationManager.addApplication(app);

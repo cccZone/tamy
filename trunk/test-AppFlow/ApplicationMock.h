@@ -79,7 +79,7 @@ public:
       }
    }
 
-   void initialize(Renderer& renderer, ResourceManager& resourceManager)
+   void initialize(ResourceManager& resMgr)
    {
       m_initialized = true;
    }
@@ -89,12 +89,12 @@ public:
       m_initialized = false;
    }
 
-   void hibernate(Renderer& renderer)
+   void hibernate(ResourceManager& resMgr)
    {
       m_hibernated = true;
    }
 
-   void dehibernate(Renderer& renderer)
+   void dehibernate(ResourceManager& resMgr)
    {
       m_hibernated = false;
    }

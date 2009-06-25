@@ -32,7 +32,9 @@ public:
     *
     * @throw std::logic_error if no mesh was created for some reason.
     */
-   AbstractGraphicalEntity& load(ResourceManager& resourceManager, const std::string& name);
+   void load(const std::string& name,
+             MeshDefinition& outMesh,
+             AnimationDefinition &outAnimation);
 
 protected:
    /**

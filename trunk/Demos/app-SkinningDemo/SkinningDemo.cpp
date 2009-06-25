@@ -20,8 +20,8 @@
 
 SkinningDemo::SkinningDemo()
       : Application("Demo"),
+      m_resMgr(NULL),
       m_renderer(NULL),
-      m_resourceManager(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -29,10 +29,10 @@ SkinningDemo::SkinningDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinningDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void SkinningDemo::initialize(ResourceManager& resMgr)
 {
-   m_renderer = &renderer;
-   m_resourceManager = &resourceManager;
+   m_resMgr = &resMgr;
+   m_renderer = &(resMgr.shared<Renderer>());
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
@@ -40,8 +40,7 @@ void SkinningDemo::initialize(Renderer& renderer, ResourceManager& resourceManag
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   GraphicalEntityLoader& loader =  m_resourceManager->getLoaderForFile("US Ranger.x");
-   AbstractGraphicalEntity& ent = m_resourceManager->loadGraphicalEntity("US Ranger.x", loader);
+   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>()("US Ranger.x");
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("ranger01", false);
    entInstance->attachEntity(ent);
    m_sceneManager->addNode(entInstance);
@@ -50,13 +49,13 @@ void SkinningDemo::initialize(Renderer& renderer, ResourceManager& resourceManag
    m_animationController->activateAnimation("", true);
 
 
-   Light* light = m_resourceManager->createLight("light");
+   Light* light = resMgr.resource<Light>()("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 0));
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
    m_sceneManager->addNode(light);
 
-   Camera* camera = m_resourceManager->createCamera("camera");
+   Camera* camera = new Camera("camera");
 
    D3DXMATRIX rotMtx;
    D3DXMatrixRotationYawPitchRoll(&rotMtx, D3DXToRadian(180), 0, 0);
@@ -80,7 +79,7 @@ void SkinningDemo::deinitialize()
    m_sceneManager = NULL;
 
    m_renderer = NULL;
-   m_resourceManager = NULL;
+   m_resMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -129,7 +128,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Skinning Demo");
+   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
+                                            hInstance, nCmdShow, "Skinning Demo");
 	SkinningDemo app;
 
    applicationManager.addApplication(app);

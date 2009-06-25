@@ -12,7 +12,7 @@
 #include "core-ResourceManagement\IWFLoader.h"
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\Skeleton.h"
-#include "core-ResourceManagement\GraphicalEntityLoader.h"
+#include "core-ResourceManagement\MaterialsParser.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 
 
@@ -29,10 +29,10 @@ TransparencyDemo::TransparencyDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TransparencyDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void TransparencyDemo::initialize(ResourceManager& resMgr)
 {
-   m_renderer = &renderer;
-   m_resourceManager = &resourceManager;
+   m_renderer = &(resMgr.shared<Renderer>());
+   m_resourceManager = &resMgr;
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
@@ -40,11 +40,13 @@ void TransparencyDemo::initialize(Renderer& renderer, ResourceManager& resourceM
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   m_resourceManager->loadMaterialDefinition("materials.xml");
-   IWFLoader loader(*m_resourceManager, *m_sceneManager);
+   MaterialsParser parser(resMgr);
+   parser.load("..\\Data\\materials.xml");
+
+   IWFLoader loader(resMgr, *m_sceneManager);
    loader.load("..\\Data\\Dolphin.iwf");
 
-   Camera* camera = m_resourceManager->createCamera("camera");
+   Camera* camera = new Camera("camera");
    m_sceneManager->addNode(camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }
@@ -108,7 +110,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Transparency Demo");
+   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
+                                            hInstance, nCmdShow, "Transparency Demo");
 	TransparencyDemo app;
 
    applicationManager.addApplication(app);

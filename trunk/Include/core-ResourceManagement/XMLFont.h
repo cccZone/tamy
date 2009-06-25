@@ -21,9 +21,7 @@ private:
    std::vector<float> m_glifSizes;
 
 public:
-   XMLFont(const char* fontDefFile, 
-           const char* fontName, 
-           const Color& color, 
+   XMLFont(const char* fontDefFile,
            ResourceManager& resMgr);
 
    AbstractGraphicalEntity& getChar(unsigned char c);
@@ -37,8 +35,7 @@ private:
                   float& u2, float& v2);
 
    void createMaterial(const char* materialName, 
-                       const char* texName,
-                       const Color& color);
+                       const char* texName);
 
    AbstractGraphicalEntity& prepareEntity(const char* meshName,
                                           const char* materialName,

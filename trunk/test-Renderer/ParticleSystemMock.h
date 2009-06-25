@@ -15,7 +15,6 @@ class ParticleSystemMock : public ParticleSystem
 {
 private:
    static MaterialOperationImplementationMock s_matOpImpl;
-   static LightReflectingPropertiesStub s_lrp;
    static Material s_material;
 
 public:

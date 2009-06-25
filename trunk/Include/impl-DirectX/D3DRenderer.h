@@ -37,6 +37,9 @@ public:
 
    UINT getSimultaneouslyRenderedTexturesCount() const;
 
+   IDirect3DVertexBuffer9* createVertexBuffer(UINT length, DWORD usageFlags, DWORD fvf, D3DPOOL memoryPool);
+   IDirect3DIndexBuffer9* createIndexBuffer(UINT length, DWORD usageFlags, D3DFORMAT format, D3DPOOL memoryPool);
+
 protected:
    void initRenderer();
    void resetViewport(unsigned int width, unsigned int height);

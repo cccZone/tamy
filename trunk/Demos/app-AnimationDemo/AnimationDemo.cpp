@@ -4,6 +4,7 @@
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-ResourceManagement\ResourceManager.h"
+#include "core-ResourceManagement\GraphicalEntityLoaderFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
@@ -20,8 +21,8 @@
 
 AnimationDemo::AnimationDemo()
       : Application("Demo"),
+      m_resMgr(NULL),
       m_renderer(NULL),
-      m_resourceManager(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -29,10 +30,10 @@ AnimationDemo::AnimationDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AnimationDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void AnimationDemo::initialize(ResourceManager& resMgr)
 {
-   m_renderer = &renderer;
-   m_resourceManager = &resourceManager;
+   m_resMgr = &resMgr;
+   m_renderer = &(resMgr.shared<Renderer>());
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
@@ -40,20 +41,20 @@ void AnimationDemo::initialize(Renderer& renderer, ResourceManager& resourceMana
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   IWFLoader loader(*m_resourceManager, *m_sceneManager);
+   IWFLoader loader(resMgr, *m_sceneManager);
    loader.load("..\\Data\\AnimLandscape.iwf");
 
-   AbstractGraphicalEntity& ent = m_resourceManager->getGraphicalEntity("animlandscape.x");
+   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>().get("animlandscape.x");
    m_animationController = ent.instantiateSkeleton(m_sceneManager->root());
    m_animationController->activateAnimation("Cutscene_01", true);
 
-   Light* light = m_resourceManager->createLight("light");
+   Light* light = resMgr.resource<Light>()("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 0));
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
    m_sceneManager->addNode(light);
 
-   Camera* camera = m_resourceManager->createCamera("camera");
+   Camera* camera = new Camera("camera");
    m_sceneManager->addNode(camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }
@@ -72,7 +73,7 @@ void AnimationDemo::deinitialize()
    m_sceneManager = NULL;
 
    m_renderer = NULL;
-   m_resourceManager = NULL;
+   m_resMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -121,7 +122,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Animation Demo");
+   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
+                                            hInstance, nCmdShow, "Animation Demo");
 	AnimationDemo app;
 
    applicationManager.addApplication(app);

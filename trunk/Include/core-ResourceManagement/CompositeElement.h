@@ -18,7 +18,7 @@ public:
 
    void addElement(MaterialXmlElement* elem);
 
-   void parse(TiXmlElement& parent);
+   bool parse(TiXmlElement& parent);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

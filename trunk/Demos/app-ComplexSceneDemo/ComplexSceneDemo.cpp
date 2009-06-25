@@ -20,8 +20,8 @@
 
 ComplexSceneDemo::ComplexSceneDemo()
       : Application("Demo"),
+      m_resMgr(NULL),
       m_renderer(NULL),
-      m_resourceManager(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -29,10 +29,10 @@ ComplexSceneDemo::ComplexSceneDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSceneDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void ComplexSceneDemo::initialize(ResourceManager& resMgr)
 {
-   m_renderer = &renderer;
-   m_resourceManager = &resourceManager;
+   m_resMgr = &resMgr;
+   m_renderer = &(resMgr.shared<Renderer>());
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
@@ -40,10 +40,10 @@ void ComplexSceneDemo::initialize(Renderer& renderer, ResourceManager& resourceM
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   IWFLoader loader(*m_resourceManager, *m_sceneManager);
+   IWFLoader loader(*m_resMgr, *m_sceneManager);
    loader.load("..\\Data\\Colony5.iwf");
 
-   Camera* camera = m_resourceManager->createCamera("camera");
+   Camera* camera = new Camera("camera");
    m_sceneManager->addNode(camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }
@@ -59,7 +59,7 @@ void ComplexSceneDemo::deinitialize()
    m_sceneManager = NULL;
 
    m_renderer = NULL;
-   m_resourceManager = NULL;
+   m_resMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -107,7 +107,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Complex Scene Demo");
+   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
+                                            hInstance, nCmdShow, "Complex Scene Demo");
 	ComplexSceneDemo app;
 
    applicationManager.addApplication(app);

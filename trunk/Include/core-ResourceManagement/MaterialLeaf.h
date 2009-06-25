@@ -18,7 +18,7 @@ private:
 public:
    MaterialLeaf(MaterialsParser& mainParser, ResourceManager& resMgr);
 
-   void parse(TiXmlElement& parent);
+   bool parse(TiXmlElement& parent);
 
 private:
    void parseLRP(TiXmlElement& lrpElem, LightReflectingProperties& lrp);

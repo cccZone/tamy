@@ -8,14 +8,15 @@
 class CompositeSceneManager;
 class UnconstrainedMotionController;
 class Skeleton;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class AnimationDemo : public Application
 {
 private:
+   ResourceManager* m_resMgr;
    Renderer* m_renderer;
-   ResourceManager* m_resourceManager;
 
    CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;
@@ -26,11 +27,11 @@ private:
 public:
    AnimationDemo();
 
-   void initialize(Renderer& renderer, ResourceManager& resourceManager);
+   void initialize(ResourceManager& resMgr);
    void deinitialize();
 
-   void hibernate(Renderer& renderer) {}
-   void dehibernate(Renderer& renderer) {}
+   void hibernate(ResourceManager& resMgr) {}
+   void dehibernate(ResourceManager& resMgr) {}
 
    void update(float timeElapsed);
 

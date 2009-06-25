@@ -21,7 +21,7 @@ private:
 public:
    MaterialStageLeaf(MaterialsParser& mainParser, ResourceManager& resMgr);
 
-   void parse(TiXmlElement& parent);
+   bool parse(TiXmlElement& parent);
 
 private:
    Texture& parseTexture(TiXmlElement& parent);

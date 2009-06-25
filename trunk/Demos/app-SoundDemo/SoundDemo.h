@@ -15,6 +15,7 @@ class SoundChannel;
 class SoundListener;
 class SoundSceneManager;
 class SoundRenderer;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,11 +39,11 @@ private:
 public:
    SoundDemo();
 
-   void initialize(Renderer& renderer, ResourceManager& resourceManager);
+   void initialize(ResourceManager& resourceManager);
    void deinitialize();
 
-   void hibernate(Renderer& renderer) {}
-   void dehibernate(Renderer& renderer) {}
+   void hibernate(ResourceManager& resourceManager) {}
+   void dehibernate(ResourceManager& resourceManager) {}
 
    void update(float timeElapsed);
 

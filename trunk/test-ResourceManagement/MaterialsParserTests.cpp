@@ -1,64 +1,85 @@
 #include "core-TestFramework\TestFramework.h"
-#include "ResourceManagerStub.h"
 #include "core-ResourceManagement\MaterialsParser.h"
 #include "core-Renderer\MaterialStage.h"
+#include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\Texture.h"
+#include "core-ResourceManagement\ResourceManager.h"
+#include "MockMaterialFactory.h"
+#include "MockLightReflectingPropertiesFactory.h"
+#include "MockMaterialStageFactory.h"
+#include "MockTextureFactory.h"
 
+
+//////////////////////////////////////////////////////////////////////////////
+
+struct Mock {};
 
 //////////////////////////////////////////////////////////////////////////////
 
 TEST(MaterialsParser, simpleMaterial)
 {
-   ResourceManagerStub resMgr;
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+
    MaterialsParser parser(resMgr);
 
-   CPPUNIT_ASSERT_EQUAL(false, resMgr.doesMaterialExist("SomeMaterial"));
+   CPPUNIT_ASSERT_EQUAL(false, resMgr.resource<Material>().is("SomeMaterial"));
 
    parser.load("..\\Data\\SimpleMaterial.xml");
-   CPPUNIT_ASSERT_EQUAL(true, resMgr.doesMaterialExist("SomeMaterial"));
+   CPPUNIT_ASSERT_EQUAL(true, resMgr.resource<Material>().is("SomeMaterial"));
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
 TEST(MaterialsParser, manyMaterialsInOneFile)
 {
-   ResourceManagerStub resMgr;
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+
    MaterialsParser parser(resMgr);
 
-   CPPUNIT_ASSERT_EQUAL(false, resMgr.doesMaterialExist("material_1"));
-   CPPUNIT_ASSERT_EQUAL(false, resMgr.doesMaterialExist("material_2"));
+   CPPUNIT_ASSERT_EQUAL(false, resMgr.resource<Material>().is("material_1"));
+   CPPUNIT_ASSERT_EQUAL(false, resMgr.resource<Material>().is("material_2"));
 
    parser.load("..\\Data\\ManyMaterials.xml");
-   CPPUNIT_ASSERT_EQUAL(true, resMgr.doesMaterialExist("material_1"));
-   CPPUNIT_ASSERT_EQUAL(true, resMgr.doesMaterialExist("material_2"));
+   CPPUNIT_ASSERT_EQUAL(true, resMgr.resource<Material>().is("material_1"));
+   CPPUNIT_ASSERT_EQUAL(true, resMgr.resource<Material>().is("material_2"));
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
 TEST(MaterialsParser, materialWithNoName)
 {
-   ResourceManagerStub resMgr;
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+
    MaterialsParser parser(resMgr);
 
-   CPPUNIT_ASSERT_EQUAL(false, resMgr.doesMaterialExist(""));
+   CPPUNIT_ASSERT_EQUAL(false, resMgr.resource<Material>().is(""));
 
    CPPUNIT_ASSERT_THROW(parser.load("..\\Data\\UnnamedMaterial.xml"), std::runtime_error);
 
-   CPPUNIT_ASSERT_EQUAL(false, resMgr.doesMaterialExist(""));
+   CPPUNIT_ASSERT_EQUAL(false, resMgr.resource<Material>().is(""));
 }
 
 //////////////////////////////////////////////////////////////////////////////
 
 TEST(MaterialsParser, defaultLightReflectingProperties)
 {
-   ResourceManagerStub resMgr;
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+
    MaterialsParser parser(resMgr);
    parser.load("..\\Data\\SimpleMaterial.xml");
 
-   Material& mat = resMgr.findMaterial("SomeMaterial");
+   Material& mat = resMgr.resource<Material>().get("SomeMaterial");
    const LightReflectingProperties& lrp = mat.getLightReflectingProperties();
 
-   LightReflectingProperties* defaultLRP  = resMgr.createLightReflectingProperties();
+   LightReflectingProperties* defaultLRP  = resMgr.resource<LightReflectingProperties>()();
    defaultLRP->setAmbientColor(Color());
    defaultLRP->setDiffuseColor(Color(1, 1, 1, 1));
    defaultLRP->setSpecularColor(Color(1, 1, 1, 1));
@@ -74,14 +95,17 @@ TEST(MaterialsParser, defaultLightReflectingProperties)
 
 TEST(MaterialsParser, readingLightReflectingProperties)
 {
-   ResourceManagerStub resMgr;
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+
    MaterialsParser parser(resMgr);
    parser.load("..\\Data\\MatWithLRP.xml");
 
-   Material& mat = resMgr.findMaterial("MatWithLRP");
+   Material& mat = resMgr.resource<Material>().get("MatWithLRP");
    const LightReflectingProperties& lrp = mat.getLightReflectingProperties();
 
-   LightReflectingProperties* defaultLRP  = resMgr.createLightReflectingProperties();
+   LightReflectingProperties* defaultLRP  = resMgr.resource<LightReflectingProperties>()();
    defaultLRP->setAmbientColor (Color(1.1f, 1.2f, 1.3f, 1.4f));
    defaultLRP->setDiffuseColor (Color(2.1f, 2.2f, 2.3f, 2.4f));
    defaultLRP->setSpecularColor(Color(3.1f, 3.2f, 3.3f, 3.4f));
@@ -97,14 +121,17 @@ TEST(MaterialsParser, readingLightReflectingProperties)
 
 TEST(MaterialsParser, readingParitalLightReflectingPropertiesDefinition)
 {
-   ResourceManagerStub resMgr;
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+
    MaterialsParser parser(resMgr);
    parser.load("..\\Data\\MatWithPartialLRP.xml");
 
-   Material& mat = resMgr.findMaterial("MatWithPartialLRP");
+   Material& mat = resMgr.resource<Material>().get("MatWithPartialLRP");
    const LightReflectingProperties& lrp = mat.getLightReflectingProperties();
 
-   LightReflectingProperties* defaultLRP  = resMgr.createLightReflectingProperties();
+   LightReflectingProperties* defaultLRP  = resMgr.resource<LightReflectingProperties>()();
    defaultLRP->setAmbientColor (Color(1.1f, 1.2f, 1.3f, 1.4f));
    defaultLRP->setDiffuseColor (Color());
    defaultLRP->setSpecularColor(Color(3.1f, 3.2f, 3.3f, 3.4f));
@@ -120,11 +147,16 @@ TEST(MaterialsParser, readingParitalLightReflectingPropertiesDefinition)
 
 TEST(MaterialsParser, textureStage)
 {
-   ResourceManagerStub resMgr;
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+   resMgr.registerResource<MaterialStage>(new MaterialStageFactory<Mock>(resMgr));
+   resMgr.registerResource<Texture>(new TextureFactory<Mock>(resMgr, ""));
+
    MaterialsParser parser(resMgr);
    parser.load("..\\Data\\SingleTextureStage.xml");
 
-   Material& mat = resMgr.findMaterial("SingleTextureStage");
+   Material& mat = resMgr.resource<Material>().get("SingleTextureStage");
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, mat.getStagesCount());
    CPPUNIT_ASSERT_EQUAL(std::string("tex"), mat.getStage(0).getTexture().getName());
@@ -140,11 +172,16 @@ TEST(MaterialsParser, textureStage)
 
 TEST(MaterialsParser, multipleTextureStages)
 {
-   ResourceManagerStub resMgr;
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+   resMgr.registerResource<MaterialStage>(new MaterialStageFactory<Mock>(resMgr));
+   resMgr.registerResource<Texture>(new TextureFactory<Mock>(resMgr, ""));
+
    MaterialsParser parser(resMgr);
    parser.load("..\\Data\\MultipleTextureStages.xml");
 
-   Material& mat = resMgr.findMaterial("MultipleTextureStages");
+   Material& mat = resMgr.resource<Material>().get("MultipleTextureStages");
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, mat.getStagesCount());
 
@@ -171,11 +208,16 @@ TEST(MaterialsParser, multipleTextureStages)
 
 TEST(MaterialsParser, multipleMaterialsWithTextureStages)
 {
-   ResourceManagerStub resMgr;
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+   resMgr.registerResource<MaterialStage>(new MaterialStageFactory<Mock>(resMgr));
+   resMgr.registerResource<Texture>(new TextureFactory<Mock>(resMgr, ""));
+
    MaterialsParser parser(resMgr);
    parser.load("..\\Data\\MultMatsMultStages.xml");
 
-   Material& mat1 = resMgr.findMaterial("Material_1");
+   Material& mat1 = resMgr.resource<Material>().get("Material_1");
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, mat1.getStagesCount());
 
@@ -198,7 +240,7 @@ TEST(MaterialsParser, multipleMaterialsWithTextureStages)
    CPPUNIT_ASSERT_EQUAL(SC_NONE, mat1.getStage(1).getAlphaOperation().getArg2());
 
 
-   Material& mat2 = resMgr.findMaterial("Material_2");
+   Material& mat2 = resMgr.resource<Material>().get("Material_2");
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, mat2.getStagesCount());
 
@@ -209,6 +251,49 @@ TEST(MaterialsParser, multipleMaterialsWithTextureStages)
    CPPUNIT_ASSERT_EQUAL(MOP_MULTIPLY, mat2.getStage(0).getAlphaOperation().getOperationCode());
    CPPUNIT_ASSERT_EQUAL(SC_TEXTURE, mat2.getStage(0).getAlphaOperation().getArg1());
    CPPUNIT_ASSERT_EQUAL(SC_PREV, mat2.getStage(0).getAlphaOperation().getArg2());
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+TEST(MaterialsParser, loadingSameMaterialTwice)
+{
+   ResourceManager resMgr;
+   resMgr.registerResource<Material>(new MaterialFactory<Mock>(resMgr));
+   resMgr.registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Mock>(resMgr));
+   resMgr.registerResource<MaterialStage>(new MaterialStageFactory<Mock>(resMgr));
+   resMgr.registerResource<Texture>(new TextureFactory<Mock>(resMgr, ""));
+
+   MaterialsParser parser(resMgr);
+
+   CPPUNIT_ASSERT_EQUAL(false, resMgr.resource<Material>().is("Material"));
+
+   CPPUNIT_ASSERT_NO_THROW(parser.load("..\\Data\\SameMaterialTwice.xml"));
+
+   // Material has been loaded...
+   CPPUNIT_ASSERT_EQUAL(true, resMgr.resource<Material>().is("Material"));
+   Material& mat = resMgr.resource<Material>().get("Material");
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, mat.getStagesCount());
+
+   CPPUNIT_ASSERT_EQUAL(std::string("tex1"), mat.getStage(0).getTexture().getName());
+   CPPUNIT_ASSERT_EQUAL(MOP_ADD, mat.getStage(0).getColorOperation().getOperationCode());
+   CPPUNIT_ASSERT_EQUAL(SC_TEXTURE, mat.getStage(0).getColorOperation().getArg1());
+   CPPUNIT_ASSERT_EQUAL(SC_LRP, mat.getStage(0).getColorOperation().getArg2());
+   CPPUNIT_ASSERT_EQUAL(MOP_MULTIPLY, mat.getStage(0).getAlphaOperation().getOperationCode());
+   CPPUNIT_ASSERT_EQUAL(SC_TEXTURE, mat.getStage(0).getAlphaOperation().getArg1());
+   CPPUNIT_ASSERT_EQUAL(SC_PREV, mat.getStage(0).getAlphaOperation().getArg2());
+
+   // ...and so has MaterialX
+   CPPUNIT_ASSERT_EQUAL(true, resMgr.resource<Material>().is("MaterialX"));
+   Material& matX = resMgr.resource<Material>().get("MaterialX");
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, matX.getStagesCount());
+
+   CPPUNIT_ASSERT_EQUAL(std::string("tex3"), matX.getStage(0).getTexture().getName());
+   CPPUNIT_ASSERT_EQUAL(MOP_MULTIPLY, matX.getStage(0).getColorOperation().getOperationCode());
+   CPPUNIT_ASSERT_EQUAL(SC_LRP, matX.getStage(0).getColorOperation().getArg1());
+   CPPUNIT_ASSERT_EQUAL(SC_TEXTURE, matX.getStage(0).getColorOperation().getArg2());
+   CPPUNIT_ASSERT_EQUAL(MOP_ADD, matX.getStage(0).getAlphaOperation().getOperationCode());
+   CPPUNIT_ASSERT_EQUAL(SC_PREV, matX.getStage(0).getAlphaOperation().getArg1());
+   CPPUNIT_ASSERT_EQUAL(SC_TEXTURE, matX.getStage(0).getAlphaOperation().getArg2());
 }
 
 //////////////////////////////////////////////////////////////////////////////

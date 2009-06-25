@@ -25,7 +25,7 @@
 TreesGeneratorDemo::TreesGeneratorDemo()
       : Application("Demo"),
       m_renderer(NULL),
-      m_resourceManager(NULL),
+      m_resMgr(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -33,10 +33,10 @@ TreesGeneratorDemo::TreesGeneratorDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourceManager)
+void TreesGeneratorDemo::initialize(ResourceManager& resMgr)
 {
-   m_renderer = &renderer;
-   m_resourceManager = &resourceManager;
+   m_renderer = &(resMgr.shared<Renderer>());
+   m_resMgr = &resMgr;
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
@@ -81,26 +81,25 @@ void TreesGeneratorDemo::initialize(Renderer& renderer, ResourceManager& resourc
    AnimationDefinition anim;
    animator(*mesh, D3DXVECTOR3(1, 0, 0), 0.1f, 3, anim);
 
-   AbstractGraphicalEntity* treeEntity = m_resourceManager->createGraphicalEntityFromTemplate(*mesh);
-   m_resourceManager->registerGraphicalEntity("tree", treeEntity);
-   treeEntity->setAnimationDefinition(anim);
+   AbstractGraphicalEntity& treeEntity = resMgr.resource<AbstractGraphicalEntity>()(*mesh);
+   treeEntity.setAnimationDefinition(anim);
 
    delete mesh;
 
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tree01", false);
-   entInstance->attachEntity(*treeEntity);
+   entInstance->attachEntity(treeEntity);
    m_sceneManager->addNode(entInstance);
 
-   m_animationController = treeEntity->instantiateSkeleton(*entInstance);
+   m_animationController = treeEntity.instantiateSkeleton(*entInstance);
    m_animationController->activateAnimation("wind", true);
 
-   Light* light = m_resourceManager->createLight("light");
+   Light* light = resMgr.resource<Light>()("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 0));
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
    m_sceneManager->addNode(light);
 
-   Camera* camera = m_resourceManager->createCamera("camera");
+   Camera* camera = new Camera("camera");
    D3DXMATRIX rotMtx;
    D3DXMatrixRotationYawPitchRoll(&rotMtx, D3DXToRadian(180), 0, 0);
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 50, 100);
@@ -123,7 +122,7 @@ void TreesGeneratorDemo::deinitialize()
    m_sceneManager = NULL;
 
    m_renderer = NULL;
-   m_resourceManager = NULL;
+   m_resMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -172,7 +171,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Trees Generator Demo");
+   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
+                                            hInstance, nCmdShow, "Trees Generator Demo");
 	TreesGeneratorDemo app;
 
    applicationManager.addApplication(app);

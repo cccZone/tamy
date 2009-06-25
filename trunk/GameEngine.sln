@@ -119,6 +119,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test-Core", "test-core\test
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core-AppFlow", "core-AppFlow\core-AppFlow.vcproj", "{ADD6CE30-DEDE-450F-8C75-532D65F3AC15}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6258FF02-94E3-4527-89C7-ECFFAB554AEE} = {6258FF02-94E3-4527-89C7-ECFFAB554AEE}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{666FC911-92BB-42E0-83FF-32DA58A98023}"
 EndProject

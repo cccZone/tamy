@@ -7,10 +7,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-XFileGraphicalEntityLoader::XFileGraphicalEntityLoader(IDirect3DDevice9& d3Device,
-                                                       const std::string& meshDirPath)
-      : m_d3Device(d3Device),
-      m_meshDirPath(meshDirPath)
+XFileGraphicalEntityLoader::XFileGraphicalEntityLoader(IDirect3DDevice9& d3Device)
+      : m_d3Device(d3Device)
 {
 }
 
@@ -31,7 +29,7 @@ void XFileGraphicalEntityLoader::parseMesh(MeshDefinition& mesh,
    D3DXFRAME* outFrame = NULL;
    ID3DXAnimationController* outAnimationController = NULL;
 
-   std::string fullFileName = m_meshDirPath + std::string("\\") + name;
+   std::string fullFileName = getMeshesDir() + std::string("\\") + name;
    HRESULT hRet = D3DXLoadMeshHierarchyFromX(fullFileName.c_str(), 
                                              D3DXMESH_MANAGED, &m_d3Device, this,
                                              NULL, &outFrame, &outAnimationController);

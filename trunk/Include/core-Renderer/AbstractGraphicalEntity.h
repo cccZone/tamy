@@ -27,7 +27,7 @@ public:
    AbstractGraphicalEntity(const std::string& name);
    virtual ~AbstractGraphicalEntity();
 
-   const std::string getName() const {return m_name;}
+   const std::string& getName() const {return m_name;}
 
    /**
     * This method allows the user to exchange animation related

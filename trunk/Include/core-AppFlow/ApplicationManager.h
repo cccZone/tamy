@@ -10,7 +10,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Application;
-class Renderer;
 class ResourceManager;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,12 +60,19 @@ private:
    typedef std::map<std::string, ApplicationNode> AppsMap;
    AppsMap m_apps;
 
+   std::string m_texturesDir;
+   std::string m_fontsDir;
+   std::string m_meshesDir;
+   ResourceManager* m_resMgr;
+
    unsigned char m_keyBuffer[256];
    Point m_mousePos;
 
 public:
-   ApplicationManager();
-   virtual ~ApplicationManager() {}
+   ApplicationManager(const std::string& texturesDir,
+                      const std::string& fontsDir,
+                      const std::string& meshesDir);
+   virtual ~ApplicationManager();
 
    /**
     * Adds a new application to be ran
@@ -109,10 +115,10 @@ protected:
 
    /**
     * Method called before each step. Should return 'APC_SYSTEM'
-    * if system has the resources and needs to preocess something.
+    * if system has the resources and needs to process something.
     *
     * 'APC_APPLICATION' value is a sign that we have our processing window
-    * 'APC_EXIT' meass that we should exist immediately
+    * 'APC_EXIT' means that we should exist immediately
     */
    virtual ProcessingCode onStep() = 0;
 
@@ -135,18 +141,50 @@ protected:
     */
    virtual void checkUserInput(unsigned char* keyBuffer, Point& mousePos) = 0;
 
-   /**
-    * The method should return the renderer created by the implementation
-    */
-   virtual Renderer& getRenderer() = 0;
+   ResourceManager& resMgr() {return *m_resMgr;}
 
    /**
-    * The method should return an instace of ResourceManager created by the implementation
+    * Use this method in the constructor of this class' implementation
+    * to register standard factories with resMgr,
+    * Specifying the implementation that should be used for them
     */
-   virtual ResourceManager& getResourceManager() = 0;
+   template<typename Impl>
+   void registerFactories();
 
 private:
    void dispatchAppSignals(ApplicationNode& currNode);
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+#include "core-ResourceManagement\GraphicalEntityFactory.h"
+#include "core-ResourceManagement\LightFactory.h"
+#include "core-ResourceManagement\ParticleSystemFactory.h"
+#include "core-ResourceManagement\Sound3DFactory.h"
+#include "core-ResourceManagement\TextureFactory.h"
+#include "core-ResourceManagement\LightReflectingPropertiesFactory.h"
+#include "core-ResourceManagement\MaterialFactory.h"
+#include "core-ResourceManagement\MaterialStageFactory.h"
+#include "core-ResourceManagement\FontFactory.h"
+#include "core-ResourceManagement\SkyBoxFactory.h"
+#include "core-ResourceManagement\SoundListenerFactory.h"
+#include "core-ResourceManagement\GraphicalEntityLoaderFactory.h"
+
+template<typename Impl>
+void ApplicationManager::registerFactories()
+{
+   m_resMgr->registerResource<AbstractGraphicalEntity>(new GraphicalEntityFactory<Impl>(*m_resMgr));
+   m_resMgr->registerResource<Light>(new LightFactory<Impl>(*m_resMgr));
+   m_resMgr->registerResource<ParticleSystem>(new ParticleSystemFactory<Impl>(*m_resMgr));
+   m_resMgr->registerResource<Sound3D>(new Sound3DFactory<Impl>(*m_resMgr));
+   m_resMgr->registerResource<Texture>(new TextureFactory<Impl>(*m_resMgr, m_texturesDir));
+   m_resMgr->registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Impl>(*m_resMgr));
+   m_resMgr->registerResource<Material>(new MaterialFactory<Impl>(*m_resMgr));
+   m_resMgr->registerResource<MaterialStage>(new MaterialStageFactory<Impl>(*m_resMgr));
+   m_resMgr->registerResource<Font>(new Factory<Font>(*m_resMgr, m_fontsDir));
+   m_resMgr->registerResource<SkyBox>(new SkyBoxFactory<Impl>(*m_resMgr));
+   m_resMgr->registerResource<SoundListener>(new SoundListenerFactory<Impl>(*m_resMgr));
+   m_resMgr->registerResource<GraphicalEntityLoader>(new Factory<GraphicalEntityLoader>(m_meshesDir));
+}
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,6 @@
 #include "impl-DirectX\TTFont.h"
 #include "core-ResourceManagement\ResourceManager.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 TTFont::TTFont(const char* fontFaceName, 

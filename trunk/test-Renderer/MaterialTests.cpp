@@ -64,9 +64,8 @@ TEST(MaterialStage, equalityWithTwoIdenticalTextures)
 TEST(Material, addingStage)
 {
    MaterialOperationImplementationMock matOpImpl;
-   LightReflectingPropertiesStub lrp;
    TextureStub tex("tex");
-   Material mat(lrp, matOpImpl, matOpImpl);
+   Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
    MaterialStage* stage1 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
@@ -94,9 +93,8 @@ TEST(Material, addingStage)
 TEST(Material, removingStage)
 {
    MaterialOperationImplementationMock matOpImpl;
-   LightReflectingPropertiesStub lrp;
    TextureStub tex("tex");
-   Material mat(lrp, matOpImpl, matOpImpl);
+   Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
    MaterialStage* stage1 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
@@ -134,16 +132,15 @@ TEST(Material, removingStage)
 TEST(Material, equalityWithManyStages)
 {
    MaterialOperationImplementationMock matOpImpl;
-   LightReflectingPropertiesStub lrp;
    TextureStub tex1("tex1");
    TextureStub tex2("tex2");
 
-   Material mat1(lrp, matOpImpl, matOpImpl);
+   Material mat1("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
    mat1.addStage(new MaterialStage(tex1,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
 
-   Material mat2(lrp, matOpImpl, matOpImpl);
+   Material mat2("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
    mat2.addStage(new MaterialStage(tex1,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -151,7 +148,7 @@ TEST(Material, equalityWithManyStages)
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
 
-   Material mat3(lrp, matOpImpl, matOpImpl);
+   Material mat3("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
    mat3.addStage(new MaterialStage(tex2,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -159,7 +156,7 @@ TEST(Material, equalityWithManyStages)
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
 
-   Material mat4(lrp, matOpImpl, matOpImpl);
+   Material mat4("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
    mat4.addStage(new MaterialStage(tex1,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -180,9 +177,8 @@ TEST(Material, lastRenderedStageIsOneThatDisablesItself)
 {
    MaterialOperationImplementationMock colorMatOpImpl;
    MaterialOperationImplementationMock alphaMatOpImpl;
-   LightReflectingPropertiesStub lrp;
    TextureStub tex("tex");
-   Material mat(lrp, alphaMatOpImpl, colorMatOpImpl);
+   Material mat("", new LightReflectingPropertiesStub(), alphaMatOpImpl, colorMatOpImpl);
 
    mat.setForRendering();
    CPPUNIT_ASSERT_EQUAL(1, colorMatOpImpl.getOperationsCount());

@@ -19,7 +19,7 @@ public:
                    MaterialXmlElement* elem);
    ~MultipleElement();
 
-   void parse(TiXmlElement& parent);
+   bool parse(TiXmlElement& parent);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

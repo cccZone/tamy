@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
+#include <string>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,8 +15,14 @@
  */
 class FileGraphicalEntityLoader : public GraphicalEntityLoader
 {
+protected:
+   std::string m_meshesDir;
+
 public:
    virtual ~FileGraphicalEntityLoader() {}
+
+   void setMeshesDir(const std::string& dir) {m_meshesDir = dir;}
+   const std::string& getMeshesDir() const {return m_meshesDir;}
 
    /**
     * The method should return true if it's capable of 

@@ -13,6 +13,7 @@ class NodeActionsExecutor;
 class Node;
 class ParticleSystem;
 class WaypointCameraController;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -36,12 +37,12 @@ private:
 public:
    PickingDemo();
 
-   void initialize(Renderer& renderer, ResourceManager& resourceManager);
+   void initialize(ResourceManager& resourceManager);
 
    void deinitialize();
 
-   void hibernate(Renderer& renderer) {}
-   void dehibernate(Renderer& renderer) {}
+   void hibernate(ResourceManager& resourceManager) {}
+   void dehibernate(ResourceManager& resourceManager) {}
 
    void update(float timeElapsed);
 

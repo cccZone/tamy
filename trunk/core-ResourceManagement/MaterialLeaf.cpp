@@ -1,11 +1,13 @@
 #include "core-ResourceManagement\MaterialLeaf.h"
-#include "core-ResourceManagement\ResourceManager.h"
 #include "core-ResourceManagement\MaterialsParser.h"
+#include "core-ResourceManagement\ResourceManager.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\LightReflectingProperties.h"
 #include "core-Renderer\Texture.h"
+#include "core-ResourceManagement\LightReflectingPropertiesFactory.h"
+#include "core-ResourceManagement\MaterialFactory.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,7 +20,7 @@ MaterialLeaf::MaterialLeaf(MaterialsParser& mainParser, ResourceManager& resMgr)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialLeaf::parse(TiXmlElement& parent)
+bool MaterialLeaf::parse(TiXmlElement& parent)
 {
    const char* materialName = parent.Attribute("name");
    if (materialName == NULL) 
@@ -26,27 +28,33 @@ void MaterialLeaf::parse(TiXmlElement& parent)
       throw std::runtime_error("Material needs to have a name assigned");
    }
 
-   // parse LRP
-   LightReflectingProperties* lrp = m_resMgr.createLightReflectingProperties();
-   TiXmlElement* lrpElem = parent.FirstChildElement("LightReflectingProperties");
-   if (lrpElem == NULL)
+   if (m_resMgr.resource<Material>().is(materialName))
    {
-      lrp->setAmbientColor(Color());
-      lrp->setDiffuseColor(Color(1, 1, 1, 1));
-      lrp->setSpecularColor(Color(1, 1, 1, 1));
-      lrp->setEmissiveColor(Color());
-      lrp->setPower(1);
+      return false;
    }
    else
    {
-      parseLRP(*lrpElem, *lrp);
+      // parse LRP
+      LightReflectingProperties* lrp = m_resMgr.resource<LightReflectingProperties>()();
+      TiXmlElement* lrpElem = parent.FirstChildElement("LightReflectingProperties");
+      if (lrpElem == NULL)
+      {
+         lrp->setAmbientColor(Color());
+         lrp->setDiffuseColor(Color(1, 1, 1, 1));
+         lrp->setSpecularColor(Color(1, 1, 1, 1));
+         lrp->setEmissiveColor(Color());
+         lrp->setPower(1);
+      }
+      else
+      {
+         parseLRP(*lrpElem, *lrp);
+      }
+
+      // create the material
+      Material& mat = m_resMgr.resource<Material>()(materialName, lrp);
+      m_mainParser.setMaterialParsed(mat);
+      return true;
    }
-   lrp = &(m_resMgr.addLightReflectingProperties(lrp));
-
-   // create the material
-   Material& mat = m_resMgr.createMaterial(materialName, *lrp);
-
-   m_mainParser.setMaterialParsed(mat);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,11 +4,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 D3DMaterial::D3DMaterial(IDirect3DDevice9& d3Device, 
-                         LightReflectingProperties& lrp, 
+                         const std::string& name,
+                         LightReflectingProperties* lrp, 
                          MaterialOperationImplementation& alphaMatOp,
                          MaterialOperationImplementation& colorMatOp,
                          unsigned int index)
-      : Material(lrp, alphaMatOp, colorMatOp, index),
+      : Material(name, lrp, alphaMatOp, colorMatOp, index),
       m_d3Device(d3Device)
 {
 }
