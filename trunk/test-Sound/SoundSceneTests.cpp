@@ -59,7 +59,7 @@ TEST(SoundSceneManager, soundsAreHeardOnlyToCertainDistance)
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundsToDisable.size());
 
    // deassign the channel from the sound that can no longer be heard
-   soundsToDisable[0]->deassignChannel();
+   soundsToDisable[0]->deassignChannel(soundDevice);
 
    soundsToEnable.clear();
    soundsToDisable.clear();

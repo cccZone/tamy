@@ -18,7 +18,7 @@ class Sound;
 class SoundChannel
 {
 private:
-   int m_id;
+   Sound& m_sound;
    DWORD m_sampleLength;
    
    int m_nextFreeBuf;
@@ -27,7 +27,6 @@ private:
    bool m_isPlaying;
    bool m_looped;
 
-   Sound* m_sound;
    std::string m_currSoundFormat;
    DWORD m_currSoundFreq;
 
@@ -36,11 +35,6 @@ private:
 
 public:
    virtual ~SoundChannel();
-
-   /**
-    * Each channel has a unique ID assigned
-    */
-   int getID() {return m_id;}
 
    /**
     * The method returns true if the channel has asound assigned and
@@ -82,23 +76,6 @@ public:
    virtual int getActiveBuffersCount() const = 0;
 
    /**
-    * The method returns true if the channel has a sound assigned
-    */
-   bool isBusy() const;
-
-
-   /**
-    * The method allows to assign a sound to a channel
-    */
-   void assignSound(Sound& sound);
-
-   /**
-    * The method allows to remove the sound from a channel, freeing it
-    * and allowing to be used by another sound
-    */
-   void removeSound();
-
-   /**
     * The method adjusts the sound sample size that will be queried from
     * the sound file
     */
@@ -131,7 +108,7 @@ public:
    float getSoundLength() const;
 
 protected:
-   SoundChannel(int id, int buffersCount);
+   SoundChannel(Sound& sound, int buffersCount);
 
    /**
     * The method should add new data to the channel's sound queue
@@ -143,7 +120,7 @@ protected:
    /**
     * The method should clean up the channel's sound queue
     */
-   virtual void onCleanBuffers() = 0;
+   virtual void onCleanBuffers() {}
 
    /**
     * The method should issue an implementation specific command that will

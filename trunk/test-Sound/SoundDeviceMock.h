@@ -10,50 +10,24 @@
 class SoundDeviceMock : public SoundDevice
 {
 private:
-   std::vector<SoundChannelMock*> m_channels;
-   DWORD m_offset;
+   int m_channelsCount;
 
 public:
    SoundDeviceMock(int channelsCount = 1, int numBuffersUsed = 1) 
-      : SoundDevice(numBuffersUsed)
+      : SoundDevice(numBuffersUsed),
+      m_channelsCount(channelsCount)
    {
-      for (int i = 0; i < channelsCount; ++i)
-      {
-         m_channels.push_back(new SoundChannelMock(i));
-      }
-
-      m_offset = 0;
-   }
-
-   ~SoundDeviceMock()
-   {
-      for (unsigned int i = 0; i < m_channels.size(); ++i)
-      {
-         delete m_channels[i];
-      }
-      m_channels.clear();
-
-      m_offset = 0;
    }
 
    int getChannelsCount() const
    {
-      return m_channels.size();
+      return m_channelsCount;
    }
 
-   SoundChannel& getChannel(int channelIdx)
+protected:
+   SoundChannel* createChannel(Sound& sound, int buffersCount)
    {
-      return *(m_channels.at(channelIdx));
-   }
-
-   DWORD getDataOffset() const
-   {
-      return m_offset;
-   }
-
-   void setDataOffset(DWORD pos)
-   {
-      m_offset = pos;
+      return new SoundChannelMock(sound, buffersCount);
    }
 };
 

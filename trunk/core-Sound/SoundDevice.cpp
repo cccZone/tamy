@@ -19,28 +19,41 @@ SoundDevice::~SoundDevice()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+SoundChannel& SoundDevice::getChannel(unsigned int idx)
+{
+   return *(m_activeChannels.at(idx));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 SoundChannel& SoundDevice::activateSound(Sound& sound)
 {
-   int freeChannel = -1;
-   int channelsCount = getChannelsCount();
-   for (int i = 0; i < channelsCount; ++i)
-   {
-      if (getChannel(i).isBusy() == false)
-      {
-         freeChannel = i;
-         break;
-      }
-   }
-
-   if (freeChannel == -1)
+   if (getChannelsCount() == m_activeChannels.size())
    {
       throw std::runtime_error("All sound channels are currently occupied");
    }
 
-   SoundChannel& channel = getChannel(freeChannel);
-   m_activeChannels.push_back(&channel);
-   channel.assignSound(sound);
-   return channel;
+   SoundChannel* channel = createChannel(sound, m_numBuffersUsed);
+   m_activeChannels.push_back(channel);
+   return *channel;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SoundDevice::deactivateSound(SoundChannel& channel)
+{
+   for (std::vector<SoundChannel*>::iterator it = m_activeChannels.begin();
+        it != m_activeChannels.end(); ++it)
+   {
+      if (*it == &channel)
+      {
+         m_activeChannels.erase(it);
+         break;
+      }
+   }
+
+   channel.stop();
+   delete &channel;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -49,10 +62,9 @@ void SoundDevice::releaseAllChannels()
 {
    while(m_activeChannels.size() > 0)
    {
-      SoundChannel& channel = *(m_activeChannels.front());
+      SoundChannel& channel = *(m_activeChannels.back());
       channel.stop();
-      channel.removeSound();
-      m_activeChannels.pop_front();
+      m_activeChannels.pop_back();
    }
 }
 
@@ -60,7 +72,7 @@ void SoundDevice::releaseAllChannels()
 
 void SoundDevice::update()
 {
-   std::list<SoundChannel*>::iterator it = m_activeChannels.begin();
+   std::vector<SoundChannel*>::iterator it = m_activeChannels.begin();
    while(it != m_activeChannels.end())
    {
       SoundChannel& channel = **it;
@@ -70,8 +82,9 @@ void SoundDevice::update()
       if (channel.getActiveBuffersCount() < m_numBuffersUsed) {channel.loadNextSample();}
       if (channel.getActiveBuffersCount() == 0)
       {
-         channel.removeSound();
+         channel.stop();
          it = m_activeChannels.erase(it);
+         delete &channel;
       }
       else
       {

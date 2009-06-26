@@ -11,15 +11,15 @@ class SoundChannelMock : public SoundChannel
 {
 private:
    std::list<DWORD> m_buffers;
-   bool m_wasReassigned;
+   bool m_hadBuffersCleaned;
    std::vector<char*> m_data;
 
    float m_pan;
    float m_vol;
 
 public:
-   SoundChannelMock(int id, int buffersCount = 1) 
-         : SoundChannel(id, buffersCount), m_wasReassigned(false),
+   SoundChannelMock(Sound& sound, int buffersCount = 1) 
+         : SoundChannel(sound, buffersCount), m_hadBuffersCleaned(false),
          m_pan(0), m_vol(1) 
    {}
 
@@ -48,10 +48,10 @@ public:
       return (int)m_buffers.size();
    }
 
-   bool wasReassigned()
+   bool hadBuffersCleaned()
    {
-      bool result = m_wasReassigned;
-      m_wasReassigned = false;
+      bool result = m_hadBuffersCleaned;
+      m_hadBuffersCleaned = false;
       return result;
    }
 
@@ -78,7 +78,7 @@ protected:
 
    void onCleanBuffers()
    {
-      m_wasReassigned = true;
+      m_hadBuffersCleaned = true;
       m_buffers.clear();
       m_data.clear();
    }

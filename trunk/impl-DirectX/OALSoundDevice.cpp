@@ -31,23 +31,12 @@ OALSoundDevice::OALSoundDevice(const SoundDeviceInfo& deviceDesc,
 	   throw std::runtime_error(std::string("Cannot create a context for sound device ") + deviceDesc.name);
    }
 	m_soundSystem.alcMakeContextCurrent(m_context);
-
-   for (unsigned int i = 0; i < m_deviceDesc.sourceCount; ++i)
-   {
-      m_channels.push_back(new OALSoundChannel(i, m_soundSystem, numBuffersUsed));
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 OALSoundDevice::~OALSoundDevice()
 {
-   for (unsigned int i = 0; i < m_channels.size(); ++i)
-   {
-      delete m_channels[i];
-   }
-   m_channels.clear();
-
    m_soundSystem.alcMakeContextCurrent(NULL);
 	m_soundSystem.alcDestroyContext(m_context);
    m_soundSystem.alcCloseDevice(m_device);
@@ -58,14 +47,14 @@ OALSoundDevice::~OALSoundDevice()
 
 int OALSoundDevice::getChannelsCount() const
 {
-   return (int)m_channels.size();
+   return (int)m_deviceDesc.sourceCount;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SoundChannel& OALSoundDevice::getChannel(int channelIdx)
+SoundChannel* OALSoundDevice::createChannel(Sound& sound, int buffersCount)
 {
-   return *(m_channels.at(channelIdx));
+   return new OALSoundChannel(sound, m_soundSystem, buffersCount);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

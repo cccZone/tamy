@@ -50,13 +50,13 @@ void Sound3D::assignChannel(SoundDevice& device)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Sound3D::deassignChannel()
+void Sound3D::deassignChannel(SoundDevice& device)
 {
    if (m_channel == NULL)
    {
       throw std::logic_error("No channel assigned");
    }
-   m_channel->removeSound();
+   device.deactivateSound(*m_channel);
    m_channel = NULL;
 }
 

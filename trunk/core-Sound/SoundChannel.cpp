@@ -6,10 +6,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SoundChannel::SoundChannel(int id, int buffersCount)
-      : m_id(id),
+SoundChannel::SoundChannel(Sound& sound, int buffersCount)
+      : m_sound(sound),
       m_nextFreeBuf(0),
-      m_sound(NULL),
       m_sampleLength(0xffff),
       m_isPlaying(false),
       m_looped(false),
@@ -21,14 +20,23 @@ SoundChannel::SoundChannel(int id, int buffersCount)
    {
       m_data.push_back(new char[m_sampleLength]);
    }
+
+
+   DWORD newBufSize = m_sound.getBytesPerSec();
+   newBufSize -= newBufSize % m_sound.getBlockAlignment();
+   setSampleLength(newBufSize);
+   
+   m_currSoundFormat = m_sound.getFormat();
+   m_currSoundFreq = m_sound.getFrequency();
+
+   m_soundLength = m_sound.getLength();
+   m_currPeriodicPos = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SoundChannel::~SoundChannel()
 {
-   m_sound = NULL;
-
    for (int i = 0; i < m_data.size(); ++i)
    {
       delete [] m_data[i];
@@ -40,8 +48,9 @@ SoundChannel::~SoundChannel()
 
    m_isPlaying = false;
    m_looped = false;
-   m_currSoundFreq = 0;
 
+   m_currSoundFormat = "";
+   m_currSoundFreq = 0;
    m_currPeriodicPos = 0;
    m_soundLength = 0;
 }
@@ -50,8 +59,6 @@ SoundChannel::~SoundChannel()
 
 void SoundChannel::loadNextSample()
 {
-   if (m_sound == NULL) {return;}
-
    DWORD len = m_sampleLength;
    DWORD offset = 0;
 
@@ -61,7 +68,7 @@ void SoundChannel::loadNextSample()
    DWORD bytesRead; 
    while ((len > 0) && (m_currPeriodicPos < m_soundLength))
    {
-      bytesRead = m_sound->getData(m_currPeriodicPos, currBuf + offset, len);
+      bytesRead = m_sound.getData(m_currPeriodicPos, currBuf + offset, len);
       len -= bytesRead;
       offset += bytesRead;
       setPosition(m_currPeriodicPos + bytesRead);
@@ -91,46 +98,9 @@ void SoundChannel::stop()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool SoundChannel::isBusy() const
-{
-   return m_sound != NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 bool SoundChannel::isPlaying() const
 {
    return m_isPlaying;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SoundChannel::assignSound(Sound& sound)
-{
-   m_sound = &sound;
-
-   DWORD newBufSize = m_sound->getBytesPerSec();
-   newBufSize -= newBufSize % m_sound->getBlockAlignment();
-   setSampleLength(newBufSize);
-   
-   m_currSoundFormat = m_sound->getFormat();
-   m_currSoundFreq = m_sound->getFrequency();
-
-   m_soundLength = m_sound->getLength();
-   m_currPeriodicPos = 0;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SoundChannel::removeSound()
-{
-   stop();
-   cleanBuffers();
-   m_sound = NULL;
-   m_currSoundFormat = "";
-   m_currSoundFreq = 0;
-   m_soundLength = 0;
-   m_currPeriodicPos = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -179,16 +149,14 @@ void SoundChannel::setLooped(bool enable)
 
 float SoundChannel::getPosition() const
 {
-   if (m_sound == NULL) {return 0.f;}
-   return (float)m_currPeriodicPos / (float)m_sound->getBytesPerSec();
+   return (float)m_currPeriodicPos / (float)m_sound.getBytesPerSec();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SoundChannel::setPosition(float pos)
 {
-   if (m_sound == NULL) {return;}
-   m_currPeriodicPos = (DWORD)(pos * (float)m_sound->getBytesPerSec()) % m_soundLength;
+   m_currPeriodicPos = (DWORD)(pos * (float)m_sound.getBytesPerSec()) % m_soundLength;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -210,8 +178,7 @@ void SoundChannel::setPosition(DWORD pos)
 
 float SoundChannel::getSoundLength() const
 {
-   if (m_sound == NULL) {return 0.f;}
-   return (float)m_soundLength / (float)m_sound->getBytesPerSec();
+   return (float)m_soundLength / (float)m_sound.getBytesPerSec();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

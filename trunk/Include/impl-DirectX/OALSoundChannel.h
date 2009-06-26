@@ -23,7 +23,7 @@ private:
    std::list<ALuint> m_freeBuffers;
 
 public:
-   OALSoundChannel(int id, OpenALSoundSystem& soundSystem, int numBuffersUsed);
+   OALSoundChannel(Sound& sound, OpenALSoundSystem& soundSystem, int numBuffersUsed);
    ~OALSoundChannel();
 
    void update();

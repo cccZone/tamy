@@ -29,12 +29,11 @@ TEST(SoundRenderer, renderingSound)
    SoundListenerMock listener;
    soundScene.addNode(&listener);
 
-   CPPUNIT_ASSERT_EQUAL(false, soundDevice.getChannel(0).isBusy());
-   CPPUNIT_ASSERT_EQUAL(false, soundDevice.getChannel(0).isPlaying());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundDevice.getActiveChannelsCount());
 
    soundRenderer.render(soundScene);
 
-   CPPUNIT_ASSERT_EQUAL(true, soundDevice.getChannel(0).isBusy());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    CPPUNIT_ASSERT_EQUAL(true, soundDevice.getChannel(0).isPlaying());
 }
 
@@ -57,17 +56,17 @@ TEST(SoundRenderer, soundPlayedContinuouslyAcrossRenderings)
    SoundListenerMock listener;
    soundScene.addNode(&listener);
 
-   SoundChannelMock& channel = dynamic_cast<SoundChannelMock&> (soundDevice.getChannel(0));
-
-   CPPUNIT_ASSERT_EQUAL(false, channel.isBusy());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundDevice.getActiveChannelsCount());
 
    soundRenderer.render(soundScene);
-   CPPUNIT_ASSERT_EQUAL(true, channel.isBusy());
-   CPPUNIT_ASSERT_EQUAL(true, channel.wasReassigned());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
+   SoundChannel* channel1 = &(soundDevice.getChannel(0));
 
    soundRenderer.render(soundScene);
-   CPPUNIT_ASSERT_EQUAL(true, channel.isBusy());
-   CPPUNIT_ASSERT_EQUAL(false, channel.wasReassigned());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
+   SoundChannel* channel2 = &(soundDevice.getChannel(0));
+
+   CPPUNIT_ASSERT(channel1 == channel2);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -93,24 +92,25 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
    SoundListenerMock listener;
    soundScene.addNode(&listener);
 
-   SoundChannelMock& channel = dynamic_cast<SoundChannelMock&> (soundDevice.getChannel(0));
-
-   CPPUNIT_ASSERT_EQUAL(false, channel.isBusy());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundDevice.getActiveChannelsCount());
 
    // first - the listener is near the man - he can hear his walking,
    // but he can't hear the dog barking
    D3DXMatrixTranslation(&(listener.accessLocalMtx()), 10, 0, 0);
    soundScene.addNode(&man);
    soundRenderer.render(soundScene);
-   CPPUNIT_ASSERT_EQUAL(true, channel.isBusy());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
+   SoundChannel* channel1 = &(soundDevice.getChannel(0));
 
    // next moment - the listener moves close to the dog - he can hear it barking,
    // but he can't hear the man walking
    D3DXMatrixTranslation(&(listener.accessLocalMtx()), -10, 0, 0);
    soundScene.addNode(&dog);
    soundRenderer.render(soundScene);
-   CPPUNIT_ASSERT_EQUAL(true, channel.isBusy());
-   CPPUNIT_ASSERT_EQUAL(true, channel.wasReassigned());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
+   SoundChannel* channel2 = &(soundDevice.getChannel(0));
+
+   CPPUNIT_ASSERT(channel1 != channel2);
 }
 
 //////////////////////////////////////////////////////////////////////////////

@@ -38,7 +38,7 @@ private:
 
 public:
    Material(const std::string& name,
-            LightReflectingProperties* lrp, 
+            LightReflectingProperties* lrp,
             MaterialOperationImplementation& alphaMatOp,
             MaterialOperationImplementation& colorMatOp,
             unsigned int index = 0);

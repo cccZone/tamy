@@ -34,7 +34,7 @@ public:
    Sound& getSound() {return m_sound;}
 
    void assignChannel(SoundDevice& device);
-   void deassignChannel();
+   void deassignChannel(SoundDevice& device);
    bool hasChannelAssigned() const {return m_channel != NULL;}
 
    float getHearingRadius() const {return m_soundHearingRadius;}

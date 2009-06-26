@@ -40,7 +40,7 @@ void SoundRenderer::render(SoundSceneManager& soundScene)
    soundsCount = m_soundsToDisable.size();
    for (DWORD i = 0; i < soundsCount; ++i)
    {
-      m_soundsToDisable[i]->deassignChannel();
+      m_soundsToDisable[i]->deassignChannel(m_soundDevice);
    }
 
    // assign channels to active sounds

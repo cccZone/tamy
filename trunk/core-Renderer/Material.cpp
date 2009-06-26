@@ -13,7 +13,7 @@ unsigned char Material::s_stagesArrSize = 8;
 ///////////////////////////////////////////////////////////////////////////////
 
 Material::Material(const std::string& name,
-                   LightReflectingProperties* lrp, 
+                   LightReflectingProperties* lrp,
                    MaterialOperationImplementation& alphaMatOp,
                    MaterialOperationImplementation& colorMatOp,
                    unsigned int index)
