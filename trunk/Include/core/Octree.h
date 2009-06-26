@@ -47,7 +47,8 @@ private:
 
 public:
    Octree(unsigned int maxElemsPerSector = 64, float worldSize = 1000)
-      : m_maxElemsPerSector(maxElemsPerSector),
+      : m_elements(65536), // TODO: allocating some memory up front prevents memory defragmentation - deal with it in a better way though!!!!
+      m_maxElemsPerSector(maxElemsPerSector),
       m_root(new Sector())
    {
       m_root->m_bb.min.x = -worldSize;

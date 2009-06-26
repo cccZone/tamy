@@ -35,9 +35,9 @@ void PerformanceDemo::initialize(ResourceManager& resMgr)
 
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
-   VisualSceneManager* visualSceneManager = new VisualSceneManager();
-   m_sceneManager->addSceneManager(visualSceneManager);
-   m_renderer->addVisualSceneManager(*visualSceneManager);
+   m_visualSceneManager = new VisualSceneManager();
+   m_sceneManager->addSceneManager(m_visualSceneManager);
+   m_renderer->addVisualSceneManager(*m_visualSceneManager);
 
    AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>()("meadowNormalTile.x");
    for (int y = -20; y < 20; ++y)
@@ -71,6 +71,9 @@ void PerformanceDemo::initialize(ResourceManager& resMgr)
 
 void PerformanceDemo::deinitialize()
 {
+   m_renderer->removeVisualSceneManager(*m_visualSceneManager);
+   m_visualSceneManager = NULL;
+
    delete m_cameraController;
    m_cameraController = NULL;
 
