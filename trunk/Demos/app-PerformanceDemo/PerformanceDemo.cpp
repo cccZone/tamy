@@ -1,9 +1,10 @@
 #include "PerformanceDemo.h"
 #include "impl-DirectX\D3DApplicationManager.h"
+#include "impl-DirectX\Tamy.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
-#include "core-ResourceManagement\ResourceManager.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
@@ -17,10 +18,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PerformanceDemo::PerformanceDemo()
+PerformanceDemo::PerformanceDemo(Tamy& tamy)
       : Application("Demo"),
-      m_renderer(NULL),
-      m_resourceManager(NULL),
+      m_renderer(&(tamy.renderer())),
+      m_tamy(tamy),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -28,35 +29,35 @@ PerformanceDemo::PerformanceDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PerformanceDemo::initialize(ResourceManager& resMgr)
+void PerformanceDemo::initialize()
 {
-   m_renderer = &(resMgr.shared<Renderer>());
-   m_resourceManager = &resMgr;
-
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    m_visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(m_visualSceneManager);
    m_renderer->addVisualSceneManager(*m_visualSceneManager);
 
-   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>()("meadowNormalTile.x");
+   GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
+   GraphicalEntityLoader loader(factory, m_materialsStorage);
+
+   AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
+   m_entitiesStorage.add(ent);
    for (int y = -20; y < 20; ++y)
    {
       for (int x = -20; x < 20; ++x)
       {
          GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile", false);
-         entInstance->attachEntity(ent);
+         entInstance->attachEntity(*ent);
          D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), x * 10.f, 0, y * 10.f);
 
          m_sceneManager->addNode(entInstance);
       }
    }
 
-
-   Light* light = resMgr.resource<Light>()("light");
+   Light* light = factory.createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 1));
-   light->setSpecularColor(Color(0.2, 0.2, 0.2, 1));
+   light->setSpecularColor(Color(0.2f, 0.2f, 0.2f, 1));
    D3DXMatrixRotationYawPitchRoll(&(light->accessLocalMtx()), D3DXToRadian(-45), D3DXToRadian(45), 0);
    m_sceneManager->addNode(light);
 
@@ -79,9 +80,6 @@ void PerformanceDemo::deinitialize()
 
    delete m_sceneManager;
    m_sceneManager = NULL;
-
-   m_renderer = NULL;
-   m_resourceManager = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -129,9 +127,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Performance Demo");
-	PerformanceDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Performance Demo", tamy);
+	PerformanceDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

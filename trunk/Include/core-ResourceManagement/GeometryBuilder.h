@@ -4,8 +4,8 @@
 #include <string>
 #include <list>
 #include <vector>
-#include "core-ResourceManagement\Face.h"
-#include "core-ResourceManagement\LitVertex.h"
+#include "core-Renderer\Face.h"
+#include "core-Renderer\LitVertex.h"
 
 
 

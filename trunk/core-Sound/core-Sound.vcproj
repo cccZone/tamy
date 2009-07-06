@@ -227,6 +227,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Factories"
+			>
+			<File
+				RelativePath="..\Include\core-Sound\SoundEntitiesFactory.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

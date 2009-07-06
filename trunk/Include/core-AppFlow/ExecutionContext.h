@@ -5,6 +5,7 @@
 
 class Application;
 struct Point;
+class ApplicationData;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +18,8 @@ class ExecutionContext
 {
 public:
    virtual ~ExecutionContext() {}
+
+   virtual ApplicationData& blackboard() = 0;
 
    /**
     * This way we can send signals to the app manager

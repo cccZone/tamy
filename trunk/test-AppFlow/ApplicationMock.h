@@ -79,7 +79,7 @@ public:
       }
    }
 
-   void initialize(ResourceManager& resMgr)
+   void initialize()
    {
       m_initialized = true;
    }
@@ -89,12 +89,12 @@ public:
       m_initialized = false;
    }
 
-   void hibernate(ResourceManager& resMgr)
+   void hibernate()
    {
       m_hibernated = true;
    }
 
-   void dehibernate(ResourceManager& resMgr)
+   void dehibernate()
    {
       m_hibernated = false;
    }

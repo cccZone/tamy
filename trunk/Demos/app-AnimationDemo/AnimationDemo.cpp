@@ -1,10 +1,10 @@
 #include "AnimationDemo.h"
 #include "impl-DirectX\D3DApplicationManager.h"
+#include "impl-DirectX\Tamy.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
-#include "core-ResourceManagement\ResourceManager.h"
-#include "core-ResourceManagement\GraphicalEntityLoaderFactory.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
@@ -13,16 +13,15 @@
 #include "core-ResourceManagement\IWFLoader.h"
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\Skeleton.h"
-#include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AnimationDemo::AnimationDemo()
+AnimationDemo::AnimationDemo(Tamy& tamy)
       : Application("Demo"),
-      m_resMgr(NULL),
-      m_renderer(NULL),
+      m_tamy(tamy),
+      m_renderer(&(tamy.renderer())),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -30,25 +29,26 @@ AnimationDemo::AnimationDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AnimationDemo::initialize(ResourceManager& resMgr)
+void AnimationDemo::initialize()
 {
-   m_resMgr = &resMgr;
-   m_renderer = &(resMgr.shared<Renderer>());
-
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   IWFLoader loader(resMgr, *m_sceneManager);
+   IWFLoader loader(m_tamy.graphicalFactory(), 
+                    m_tamy.meshLoaders(),
+                    *m_sceneManager, 
+                    m_entitiesStorage,
+                    m_materialsStorage);
    loader.load("..\\Data\\AnimLandscape.iwf");
 
-   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>().get("animlandscape.x");
+   AbstractGraphicalEntity& ent = m_entitiesStorage.get("animlandscape.x");
    m_animationController = ent.instantiateSkeleton(m_sceneManager->root());
    m_animationController->activateAnimation("Cutscene_01", true);
 
-   Light* light = resMgr.resource<Light>()("light");
+   Light* light = m_tamy.graphicalFactory().createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 0));
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
@@ -71,9 +71,6 @@ void AnimationDemo::deinitialize()
 
    delete m_sceneManager;
    m_sceneManager = NULL;
-
-   m_renderer = NULL;
-   m_resMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -122,9 +119,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Animation Demo");
-	AnimationDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Animation Demo", tamy);
+	AnimationDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

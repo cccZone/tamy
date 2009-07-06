@@ -6,7 +6,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ResourceManager;
 class AbstractGraphicalEntity;
 struct Color;
 
@@ -15,15 +14,13 @@ struct Color;
 class TTFont : public Font
 {
 private:
-   ResourceManager& m_resMgr;
    std::vector<AbstractGraphicalEntity*> m_glifs;
    std::vector<float> m_glifSizes;
 
 public:
    TTFont(const char* fontFaceName, 
           const char* fontName, 
-          const Color& color, 
-          ResourceManager& resMgr);
+          const Color& color);
 
    AbstractGraphicalEntity& getChar(unsigned char c);
 

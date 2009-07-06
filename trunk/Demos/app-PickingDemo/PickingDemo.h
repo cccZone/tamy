@@ -3,6 +3,9 @@
 #include "core-AppFlow\Application.h"
 #include "core\Array.h"
 #include <math.h>
+#include "core-Renderer\AbstractGraphicalEntity.h"
+#include "core-Renderer\Material.h"
+#include "core\ResourceStorage.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,6 +17,7 @@ class Node;
 class ParticleSystem;
 class WaypointCameraController;
 class Renderer;
+class Tamy;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +25,7 @@ class PickingDemo : public Application
 {
 private:
    Renderer* m_renderer;
-   ResourceManager* m_resourceManager;
+   Tamy& m_tamy;
 
    CompositeSceneManager* m_sceneManager;
    CompositeSceneManager * m_hudSceneManager;
@@ -34,15 +38,18 @@ private:
    WaypointCameraController* m_cameraController;
    int m_shownNode;
 
-public:
-   PickingDemo();
+   ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
+   ResourceStorage<Material> m_materialsStorage;
 
-   void initialize(ResourceManager& resourceManager);
+public:
+   PickingDemo(Tamy& tamy);
+
+   void initialize();
 
    void deinitialize();
 
-   void hibernate(ResourceManager& resourceManager) {}
-   void dehibernate(ResourceManager& resourceManager) {}
+   void hibernate() {}
+   void dehibernate() {}
 
    void update(float timeElapsed);
 

@@ -15,7 +15,7 @@ private:
    unsigned char m_keyBuffer[256];
 
 public:
-   ApplicationManagerMock() : ApplicationManager("", "", "")
+   ApplicationManagerMock()
    {
       ZeroMemory(m_keyBuffer, 256 * sizeof(unsigned char));
    }

@@ -18,10 +18,13 @@ IWFMeshLoader::IWFMeshLoader(iwfMesh* fileMesh,
 
 void IWFMeshLoader::parseMesh(MeshDefinition& mesh, 
                               AnimationDefinition& animation, 
+                              std::vector<MaterialDefinition>& materials,
                               const std::string& name)
 {
    D3DXVECTOR3 minPos(10000000, 10000000, 10000000);
    D3DXVECTOR3 maxPos(-10000000, -10000000, -10000000);
+
+   std::vector<MaterialDefinition> tmpMaterials;
 
    // let's parse the mesh and explode it into a group of engine laws abiding meshes
    for (ULONG surfaceIdx = 0; surfaceIdx < m_fileMesh->SurfaceCount; ++surfaceIdx)
@@ -41,8 +44,9 @@ void IWFMeshLoader::parseMesh(MeshDefinition& mesh,
       {
          tex = m_textures.at(surface->TextureIndices[0]);
       }
-      unsigned int matIdx = getMaterialDefinition(tex, mat, mesh.materials);
 
+      // gather material information
+      unsigned int matIdx = getMaterialDefinition(tex, mat, tmpMaterials);
 
       // geometry creation step 1: create faces
       addSurface(surface, mesh.vertices.size(), mesh.faces, matIdx);
@@ -72,6 +76,15 @@ void IWFMeshLoader::parseMesh(MeshDefinition& mesh,
          if (vertexPos.y > maxPos.y) maxPos.y = vertexPos.y;
          if (vertexPos.z > maxPos.z) maxPos.z = vertexPos.z;
       }
+   }
+
+   // split the material definitions to material names, required by the mesh definitions
+   // and the material definitions that will be a subject to materials creation
+   materials.insert(materials.end(), tmpMaterials.begin(), tmpMaterials.end());
+   unsigned int materialsCount = tmpMaterials.size();
+   for (unsigned int matIdx = 0; matIdx < materialsCount; ++matIdx)
+   {
+      mesh.materials.push_back(tmpMaterials[matIdx].matName);
    }
 
    // translate all vertices so that the mesh is centered around the global origin
@@ -267,6 +280,13 @@ unsigned int IWFMeshLoader::getMaterialDefinition(iwfTexture* texture, iwfMateri
       def.emissive.a = material->Emissive.a;
 
       def.power = material->Power;
+
+      def.colorOp = MOP_MULTIPLY;
+      def.colorArg1 = SC_LRP;
+      def.colorArg2 = SC_TEXTURE;
+      def.alphaOp = MOP_DISABLE;
+      def.alphaArg1 = SC_NONE;
+      def.alphaArg2 = SC_NONE;
    }
 
    if (texture != NULL)

@@ -1,9 +1,10 @@
 #pragma once
 
+#include "core\ResourceStorage.h"
 #include <string>
 #include <list>
 #include <vector>
-#include "Face.h"
+#include <windows.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,8 +16,11 @@ class iwfMaterial;
 class iwfSurface;
 struct ReferenceEntity;
 class SceneManager;
-class ResourceManager;
+class GraphicalEntitiesFactory;
 class Material;
+class GraphicalEntityLoader;
+class GraphicalDataSource;
+class AbstractGraphicalEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,11 +30,20 @@ class Material;
 class IWFLoader
 {
 private:
-   ResourceManager& m_resMgr;
+   GraphicalEntitiesFactory& m_entitiesFactory;
+   GraphicalEntityLoader* m_entityLoader;
+   GraphicalDataSource& m_externalEntitiesSource;
    SceneManager& m_sceneManager;
+   ResourceStorage<AbstractGraphicalEntity>& m_entitiesStorage;
+   ResourceStorage<Material>& m_materialsStorage;
 
 public:
-   IWFLoader(ResourceManager& resMgr, SceneManager& sceneManager);
+   IWFLoader(GraphicalEntitiesFactory& entitiesFactory, 
+             GraphicalDataSource& externalEntitiesSource,
+             SceneManager& sceneManager,
+             ResourceStorage<AbstractGraphicalEntity>& entitiesStorage,
+             ResourceStorage<Material>& materialsStorage);
+   ~IWFLoader();
 
    /**
     * The method will load a scene from an IWF file

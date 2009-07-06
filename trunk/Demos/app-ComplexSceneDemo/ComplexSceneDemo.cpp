@@ -1,9 +1,10 @@
 #include "ComplexSceneDemo.h"
+#include "impl-DirectX\Tamy.h"
 #include "impl-DirectX\D3DApplicationManager.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
-#include "core-ResourceManagement\ResourceManager.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
@@ -18,10 +19,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ComplexSceneDemo::ComplexSceneDemo()
+ComplexSceneDemo::ComplexSceneDemo(Tamy& tamy)
       : Application("Demo"),
-      m_resMgr(NULL),
-      m_renderer(NULL),
+      m_tamy(tamy),
+      m_renderer(&(tamy.renderer())),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -29,18 +30,19 @@ ComplexSceneDemo::ComplexSceneDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSceneDemo::initialize(ResourceManager& resMgr)
+void ComplexSceneDemo::initialize()
 {
-   m_resMgr = &resMgr;
-   m_renderer = &(resMgr.shared<Renderer>());
-
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager(64, 2000);
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   IWFLoader loader(*m_resMgr, *m_sceneManager);
+   IWFLoader loader(m_tamy.graphicalFactory(), 
+                    m_tamy.meshLoaders(),
+                    *m_sceneManager, 
+                    m_entitiesStorage,
+                    m_materialsStorage);
    loader.load("..\\Data\\Colony5.iwf");
 
    Camera* camera = new Camera("camera");
@@ -57,9 +59,6 @@ void ComplexSceneDemo::deinitialize()
 
    delete m_sceneManager;
    m_sceneManager = NULL;
-
-   m_renderer = NULL;
-   m_resMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -107,9 +106,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Complex Scene Demo");
-	ComplexSceneDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Complex Scene Demo", tamy);
+	ComplexSceneDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

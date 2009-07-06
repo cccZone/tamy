@@ -374,6 +374,22 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="GraphicalData"
+				>
+				<File
+					RelativePath="..\Include\core-Renderer\Face.h"
+					>
+				</File>
+				<File
+					RelativePath=".\LitVertex.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\LitVertex.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="SceneManager"
@@ -480,6 +496,18 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\Texture.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Factories"
+			>
+			<File
+				RelativePath=".\GraphicalEntitiesFactory.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\GraphicalEntitiesFactory.h"
 				>
 			</File>
 		</Filter>

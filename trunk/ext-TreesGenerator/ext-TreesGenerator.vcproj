@@ -199,6 +199,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Core"
+			>
+			<File
+				RelativePath=".\TreesGenerator.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\ext-TreesGenerator\TreesGenerator.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

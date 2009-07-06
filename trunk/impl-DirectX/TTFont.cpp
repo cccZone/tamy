@@ -1,13 +1,12 @@
 #include "impl-DirectX\TTFont.h"
-#include "core-ResourceManagement\ResourceManager.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TTFont::TTFont(const char* fontFaceName, 
                const char* fontName, 
-               const Color& color, 
-               ResourceManager& resMgr)
-      : m_resMgr(resMgr)
+               const Color& color)
+      : Font(fontName)
 {
    // TODO:
 }

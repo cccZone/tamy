@@ -1,9 +1,12 @@
 #include "SoundDemo.h"
+#include "impl-DirectX\Tamy.h"
 #include "impl-DirectX\D3DApplicationManager.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
-#include "core-ResourceManagement\ResourceManager.h"
+#include "core-ResourceManagement\GraphicalEntityLoader.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
+#include "core-Sound\SoundEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
@@ -11,7 +14,6 @@
 #include "core-Renderer\Light.h"
 #include "core-ResourceManagement\IWFLoader.h"
 #include "core-Renderer\GraphicalEntity.h"
-#include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core-Sound\SoundDevice.h"
 #include "core-Sound\SoundChannel.h"
@@ -24,23 +26,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SoundDemo::SoundDemo()
+SoundDemo::SoundDemo(Tamy& tamy)
       : Application("Demo"),
-      m_renderer(NULL),
-      m_resourceManager(NULL),
-      m_sceneManager(NULL),
-      m_cameraController(NULL)
+      m_renderer(&(tamy.renderer())),
+      m_tamy(tamy)
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundDemo::initialize(ResourceManager& resMgr)
+void SoundDemo::initialize()
 {
-   m_renderer = &(resMgr.shared<Renderer>());
-   m_resourceManager = &resMgr;
-   m_soundRenderer = &(resMgr.shared<SoundRenderer>());
-
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
@@ -50,8 +46,7 @@ void SoundDemo::initialize(ResourceManager& resMgr)
 
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-
-   Light* light = resMgr.resource<Light>()("light");
+   Light* light = m_tamy.graphicalFactory().createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 1));
    light->setSpecularColor(Color(0.2f, 0.2f, 0.2f, 1));
@@ -63,18 +58,19 @@ void SoundDemo::initialize(ResourceManager& resMgr)
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 10, -20);
    m_cameraController = new UnconstrainedMotionController(*camera);
 
-   m_soundListener = resMgr.resource<SoundListener>()();
+   m_soundListener = m_tamy.soundFactory().createListener();
    camera->addChild(m_soundListener);
    m_sceneManager->addNode(camera);
 
    // prepare tiles that emit sounds
-   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>()("meadowNormalTile.x");
-
+   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_materialsStorage);
+   AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
+   m_entitiesStorage.add(ent);
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile", false);
-   entInstance->attachEntity(ent);
+   entInstance->attachEntity(*ent);
 
    m_sound = new WavFile("..\\Data\\Footsteps.wav");
-   Sound3D* tileSound = resMgr.resource<Sound3D>()("tileSound", false, *m_sound, 100);
+   Sound3D* tileSound = m_tamy.soundFactory().createEmiter("tileSound", false, *m_sound, 100);
    entInstance->addChild(tileSound);
 
    m_sceneManager->addNode(entInstance);
@@ -92,10 +88,6 @@ void SoundDemo::deinitialize()
 
    delete m_sceneManager;
    m_sceneManager = NULL;
-
-   m_soundRenderer = NULL;
-   m_renderer = NULL;
-   m_resourceManager = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -132,7 +124,7 @@ void SoundDemo::update(float timeElapsed)
       m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
    }
 
-   m_soundRenderer->render(*m_audioSoundScene);
+   m_tamy.soundRenderer().render(*m_audioSoundScene);
    m_renderer->render();
 }
 
@@ -143,9 +135,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Performance Demo");
-	SoundDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Sound Demo", tamy);
+	SoundDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

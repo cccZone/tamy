@@ -13,6 +13,8 @@ private:
    GraphicalEntityMock m_mockEntity;
 
 public:
+   FontMock() : Font("FontMock") {}
+
    void reset()
    {
       m_chars.clear();

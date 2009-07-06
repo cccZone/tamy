@@ -1,5 +1,5 @@
 #include "impl-DirectX\XFileGraphicalEntityLoader.h"
-#include "core-ResourceManagement\LitVertex.h"
+#include "core-Renderer\LitVertex.h"
 #include <vector>
 #include <cassert>
 #include <sstream>
@@ -24,23 +24,23 @@ bool XFileGraphicalEntityLoader::canHandleFile(const std::string& fileName) cons
 
 void XFileGraphicalEntityLoader::parseMesh(MeshDefinition& mesh, 
                                            AnimationDefinition& animation,
+                                           std::vector<MaterialDefinition>& materials,
                                            const std::string& name)
 {
    D3DXFRAME* outFrame = NULL;
    ID3DXAnimationController* outAnimationController = NULL;
 
-   std::string fullFileName = getMeshesDir() + std::string("\\") + name;
-   HRESULT hRet = D3DXLoadMeshHierarchyFromX(fullFileName.c_str(), 
+   HRESULT hRet = D3DXLoadMeshHierarchyFromX(name.c_str(), 
                                              D3DXMESH_MANAGED, &m_d3Device, this,
                                              NULL, &outFrame, &outAnimationController);
 
    if (FAILED(hRet))
    {
-      throw std::runtime_error(std::string("Failed to load file ") + fullFileName);
+      throw std::runtime_error(std::string("Failed to load file ") + name);
    }
 
    // parse the mesh definition
-   parseFrames(outFrame, NULL, mesh);
+   parseFrames(outFrame, NULL, mesh, materials);
 
    // parse the animationData
    if (outAnimationController != NULL)
@@ -126,14 +126,15 @@ void XFileGraphicalEntityLoader::parseAnimationSet(ID3DXKeyframedAnimationSet* a
 
 void XFileGraphicalEntityLoader::parseFrames(D3DXFRAME* frame, 
                                              MeshDefinition* parent, 
-                                             MeshDefinition& mesh) const
+                                             MeshDefinition& mesh,
+                                             std::vector<MaterialDefinition>& materials) const
 {
    mesh.name = (frame->Name != NULL) ? frame->Name : "";
    mesh.localMtx = frame->TransformationMatrix;
 
    if (frame->pMeshContainer != NULL)
    {
-      parseGeometry((D3DXMESHCONTAINER_DERRIVED*)(frame->pMeshContainer), mesh);
+      parseGeometry((D3DXMESHCONTAINER_DERRIVED*)(frame->pMeshContainer), mesh, materials);
    }
    
    // proceed down the hierarchy with the parsing
@@ -146,14 +147,14 @@ void XFileGraphicalEntityLoader::parseFrames(D3DXFRAME* frame,
       else
       {
          parent->children.push_back(new MeshDefinition());
-         parseFrames(frame->pFrameSibling, parent, *(parent->children.back()));
+         parseFrames(frame->pFrameSibling, parent, *(parent->children.back()), materials);
       }
    }
 
    if(frame->pFrameFirstChild != NULL) 
    {
       mesh.children.push_back(new MeshDefinition());
-      parseFrames(frame->pFrameFirstChild, &mesh, *(mesh.children.back()));
+      parseFrames(frame->pFrameFirstChild, &mesh, *(mesh.children.back()), materials);
    }
 }
 
@@ -161,7 +162,8 @@ void XFileGraphicalEntityLoader::parseFrames(D3DXFRAME* frame,
 ////////////////////////////////////////////////////////////////////////////////
 
 void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshContainer, 
-                                               MeshDefinition& mesh) const
+                                               MeshDefinition& mesh,
+                                               std::vector<MaterialDefinition>& materials) const
 {
    ID3DXMesh* pMesh = meshContainer->MeshData.pMesh;
    HRESULT res;
@@ -196,7 +198,7 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshC
    pMesh->UnlockVertexBuffer();
 
 
-   std::vector<MaterialDefinition> tmpMaterials;
+   std::vector<std::string> tmpMaterials;
    // copy the materials & the transformation matrix
    for (DWORD i = 0; i < meshContainer->NumMaterials; ++i)
    {
@@ -207,8 +209,9 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshC
          matName << "_" << meshContainer->pMaterials[i].pTextureFilename;
       }
 
-      tmpMaterials.push_back(MaterialDefinition(matName.str()));
-      MaterialDefinition& matDef = tmpMaterials.back();
+      tmpMaterials.push_back(matName.str());
+      materials.push_back(MaterialDefinition(matName.str()));
+      MaterialDefinition& matDef = materials.back();
 
       D3DMATERIAL9& meshMat = meshContainer->pMaterials[i].MatD3D;
 
@@ -233,6 +236,13 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshC
       matDef.emissive.a = meshMat.Emissive.a;
 
       matDef.power = meshMat.Power;
+
+      matDef.colorOp = MOP_MULTIPLY;
+      matDef.colorArg1 = SC_LRP;
+      matDef.colorArg2 = SC_TEXTURE;
+      matDef.alphaOp = MOP_DISABLE;
+      matDef.alphaArg1 = SC_NONE;
+      matDef.alphaArg2 = SC_NONE;
 
       if (meshContainer->pMaterials[i].pTextureFilename != NULL)
       {
@@ -259,7 +269,7 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshC
       D3DXBONECOMBINATION* boneComb = (D3DXBONECOMBINATION*)(meshContainer->boneCombinationTable->GetBufferPointer());
 
       mesh.bonesInfluencingAttribute.resize(meshContainer->numBoneCombinations);
-      mesh.materials.resize(meshContainer->numBoneCombinations, MaterialDefinition("bogusMaterialToBeReplaced"));
+      mesh.materials.resize(meshContainer->numBoneCombinations, "bogusMaterialToBeReplaced");
 
       for (DWORD boneCombIdx = 0; boneCombIdx < meshContainer->numBoneCombinations; ++boneCombIdx)
       {

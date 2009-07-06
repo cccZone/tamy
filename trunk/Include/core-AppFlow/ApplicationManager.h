@@ -10,7 +10,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Application;
-class ResourceManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -60,18 +59,13 @@ private:
    typedef std::map<std::string, ApplicationNode> AppsMap;
    AppsMap m_apps;
 
-   std::string m_texturesDir;
-   std::string m_fontsDir;
-   std::string m_meshesDir;
-   ResourceManager* m_resMgr;
-
    unsigned char m_keyBuffer[256];
    Point m_mousePos;
 
+   ApplicationData* m_blackboard;
+
 public:
-   ApplicationManager(const std::string& texturesDir,
-                      const std::string& fontsDir,
-                      const std::string& meshesDir);
+   ApplicationManager();
    virtual ~ApplicationManager();
 
    /**
@@ -83,6 +77,13 @@ public:
     * This method selects which application should be ran first
     */
    void setEntryApplication(const std::string& appName);
+
+   /**
+    * This method returns a shared instance of a blackboard
+    * used to share data between various applications
+    */
+   ApplicationData& blackboard();
+   void setBlackboard(ApplicationData* blackboard);
 
    /**
     * This method is used to connect two applications together.
@@ -141,50 +142,8 @@ protected:
     */
    virtual void checkUserInput(unsigned char* keyBuffer, Point& mousePos) = 0;
 
-   ResourceManager& resMgr() {return *m_resMgr;}
-
-   /**
-    * Use this method in the constructor of this class' implementation
-    * to register standard factories with resMgr,
-    * Specifying the implementation that should be used for them
-    */
-   template<typename Impl>
-   void registerFactories();
-
 private:
    void dispatchAppSignals(ApplicationNode& currNode);
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-#include "core-ResourceManagement\GraphicalEntityFactory.h"
-#include "core-ResourceManagement\LightFactory.h"
-#include "core-ResourceManagement\ParticleSystemFactory.h"
-#include "core-ResourceManagement\Sound3DFactory.h"
-#include "core-ResourceManagement\TextureFactory.h"
-#include "core-ResourceManagement\LightReflectingPropertiesFactory.h"
-#include "core-ResourceManagement\MaterialFactory.h"
-#include "core-ResourceManagement\MaterialStageFactory.h"
-#include "core-ResourceManagement\FontFactory.h"
-#include "core-ResourceManagement\SkyBoxFactory.h"
-#include "core-ResourceManagement\SoundListenerFactory.h"
-#include "core-ResourceManagement\GraphicalEntityLoaderFactory.h"
-
-template<typename Impl>
-void ApplicationManager::registerFactories()
-{
-   m_resMgr->registerResource<AbstractGraphicalEntity>(new GraphicalEntityFactory<Impl>(*m_resMgr));
-   m_resMgr->registerResource<Light>(new LightFactory<Impl>(*m_resMgr));
-   m_resMgr->registerResource<ParticleSystem>(new ParticleSystemFactory<Impl>(*m_resMgr));
-   m_resMgr->registerResource<Sound3D>(new Sound3DFactory<Impl>(*m_resMgr));
-   m_resMgr->registerResource<Texture>(new TextureFactory<Impl>(*m_resMgr, m_texturesDir));
-   m_resMgr->registerResource<LightReflectingProperties>(new LightReflectingPropertiesFactory<Impl>(*m_resMgr));
-   m_resMgr->registerResource<Material>(new MaterialFactory<Impl>(*m_resMgr));
-   m_resMgr->registerResource<MaterialStage>(new MaterialStageFactory<Impl>(*m_resMgr));
-   m_resMgr->registerResource<Font>(new Factory<Font>(*m_resMgr, m_fontsDir));
-   m_resMgr->registerResource<SkyBox>(new SkyBoxFactory<Impl>(*m_resMgr));
-   m_resMgr->registerResource<SoundListener>(new SoundListenerFactory<Impl>(*m_resMgr));
-   m_resMgr->registerResource<GraphicalEntityLoader>(new Factory<GraphicalEntityLoader>(m_meshesDir));
-}
 
 ///////////////////////////////////////////////////////////////////////////////

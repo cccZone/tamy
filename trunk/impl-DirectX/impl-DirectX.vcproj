@@ -284,6 +284,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Factories"
+				>
+				<File
+					RelativePath=".\D3DGraphicalEntitiesFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\D3DGraphicalEntitiesFactory.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="AppFlow"
@@ -360,48 +372,28 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Factories"
+				>
+				<File
+					RelativePath=".\OALSoundEntitiesFactory.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\OALSoundEntitiesFactory.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
-			Name="Factories"
+			Name="Tamy"
 			>
 			<File
-				RelativePath=".\D3DGraphicalEntityFactory.cpp"
+				RelativePath=".\Tamy.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\D3DLightFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\D3DLightReflectingPropertiesFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\D3DMaterialFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\D3DMaterialStageFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\D3DParticleSystemFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\D3DSkyBoxFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\D3DSound3DFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\D3DSoundListenerFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\D3DTextureFactory.cpp"
+				RelativePath="..\Include\impl-DirectX\Tamy.h"
 				>
 			</File>
 		</Filter>

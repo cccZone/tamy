@@ -7,7 +7,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class ExecutionContext;
-class ResourceManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +47,7 @@ public:
     * This method will be the first one to be called when
     * the application is scheduled to be ran
     */
-   virtual void initialize(ResourceManager& resMgr) = 0;
+   virtual void initialize() = 0;
 
    /**
     * This method is an application destructor - the class can't
@@ -63,7 +62,7 @@ public:
     * In this mode, the app can keep all its resources, however it is supposed
     * to release common resources, such as the renderer etc.
     */
-   virtual void hibernate(ResourceManager& resMgr) = 0;
+   virtual void hibernate() = 0;
 
    /**
    * This method will be called as soon as an application 
@@ -71,7 +70,7 @@ public:
    * When this call happens, the application is free to reclaim
    * common resources, such as the renderer etc.
    */
-   virtual void dehibernate(ResourceManager& resMgr) = 0;
+   virtual void dehibernate() = 0;
 
    /**
     * This is the method that updates the internal state of the application

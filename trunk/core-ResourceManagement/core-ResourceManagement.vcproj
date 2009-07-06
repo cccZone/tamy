@@ -164,106 +164,90 @@
 		<Filter
 			Name="Loaders"
 			>
-			<File
-				RelativePath=".\FileGraphicalEntityLoader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\FileGraphicalEntityLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IWFLoader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\IWFLoader.h"
-				>
-			</File>
-			<File
-				RelativePath=".\IWFMeshLoader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\IWFMeshLoader.h"
-				>
-			</File>
 			<Filter
-				Name="IWFLib"
+				Name="IWF"
 				>
 				<File
-					RelativePath=".\libIWF\iwfBase.cpp"
+					RelativePath=".\IWFLoader.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\libIWF\iwfFile.cpp"
+					RelativePath="..\Include\core-ResourceManagement\IWFLoader.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\libIWF\iwfFile.h"
+					RelativePath=".\IWFMeshLoader.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\libIWF\iwfObjects.cpp"
+					RelativePath="..\Include\core-ResourceManagement\IWFMeshLoader.h"
+					>
+				</File>
+				<Filter
+					Name="IWFLib"
+					>
+					<File
+						RelativePath=".\libIWF\iwfBase.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\libIWF\iwfFile.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-ResourceManagement\libIWF\iwfFile.h"
+						>
+					</File>
+					<File
+						RelativePath=".\libIWF\iwfObjects.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-ResourceManagement\libIWF\iwfObjects.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-ResourceManagement\libIWF\libIWF.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="GraphicalEntitiesLoader"
+				>
+				<File
+					RelativePath=".\CompositeGraphicalDataSource.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\libIWF\iwfObjects.h"
+					RelativePath="..\Include\core-ResourceManagement\CompositeGraphicalDataSource.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\libIWF\libIWF.h"
+					RelativePath=".\FileGraphicalDataSource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-ResourceManagement\FileGraphicalDataSource.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-ResourceManagement\GraphicalDataSource.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicalEntityLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-ResourceManagement\GraphicalEntityLoader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-ResourceManagement\MeshDefinition.h"
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="MaterialsParser"
-			>
-			<File
-				RelativePath=".\CompositeElement.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\CompositeElement.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialLeaf.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\MaterialLeaf.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialsParser.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\MaterialsParser.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialStageLeaf.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\MaterialStageLeaf.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\MaterialXmlElement.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MultipleElement.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\MultipleElement.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Fonts"
@@ -286,118 +270,18 @@
 			</Filter>
 		</Filter>
 		<Filter
-			Name="GraphicalData"
+			Name="SingletonsManager"
 			>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\Face.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LitVertex.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\LitVertex.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\MeshDefinition.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Core"
-			>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\AbstractResourceFactory.h"
-				>
-			</File>
 			<File
 				RelativePath="..\Include\core-ResourceManagement\Managable.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-ResourceManagement\ResourceFactory.h"
+				RelativePath=".\SingletonsManager.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\ResourceManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\ResourceManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\ResourceStorage.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="Factories"
-			>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\FileResourceFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\FontFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEntityFactory.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\GraphicalEntityFactory.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEntityLoader.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\GraphicalEntityLoader.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\GraphicalEntityLoaderFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\LightFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\LightReflectingPropertiesFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\MaterialFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\MaterialStageFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\ParticleSystemFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\SkyBoxFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\Sound3DFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\SoundListenerFactory.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-ResourceManagement\TextureFactory.h"
+				RelativePath="..\Include\core-ResourceManagement\SingletonsManager.h"
 				>
 			</File>
 		</Filter>

@@ -1,9 +1,11 @@
 #include "HierarchicalObjectDemo.h"
 #include "impl-DirectX\D3DApplicationManager.h"
+#include "impl-DirectX\Tamy.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
-#include "core-ResourceManagement\ResourceManager.h"
+#include "core-ResourceManagement\GraphicalDataSource.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
@@ -19,10 +21,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-HierarchicalObjectDemo::HierarchicalObjectDemo()
+HierarchicalObjectDemo::HierarchicalObjectDemo(Tamy& tamy)
       : Application("Demo"),
-      m_resMgr(NULL),
-      m_renderer(NULL),
+      m_tamy(tamy),
+      m_renderer(&(tamy.renderer())),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -30,18 +32,19 @@ HierarchicalObjectDemo::HierarchicalObjectDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void HierarchicalObjectDemo::initialize(ResourceManager& resMgr)
+void HierarchicalObjectDemo::initialize()
 {
-   m_resMgr = &resMgr;
-   m_renderer = &(resMgr.shared<Renderer>());
-
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager(64, 5000);
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   IWFLoader loader(resMgr, *m_sceneManager);
+   IWFLoader loader(m_tamy.graphicalFactory(), 
+                    m_tamy.meshLoaders(),
+                    *m_sceneManager, 
+                    m_entitiesStorage,
+                    m_materialsStorage);
    loader.load("..\\Data\\Space_Scene.iwf");
 
    Camera* camera = new Camera("camera");
@@ -58,9 +61,6 @@ void HierarchicalObjectDemo::deinitialize()
 
    delete m_sceneManager;
    m_sceneManager = NULL;
-
-   m_renderer = NULL;
-   m_resMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -108,9 +108,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Hierarchical Object Demo");
-	HierarchicalObjectDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Hierarchical Object Demo", tamy);
+	HierarchicalObjectDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

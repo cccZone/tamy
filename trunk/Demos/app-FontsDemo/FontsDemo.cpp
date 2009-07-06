@@ -1,33 +1,32 @@
 #include "FontsDemo.h"
+#include "impl-DirectX\Tamy.h"
 #include "impl-DirectX\D3DApplicationManager.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
-#include "core-ResourceManagement\ResourceManager.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\ProjCalc2D.h"
+#include "core-ResourceManagement\XMLFont.h"
 #include "ext-Fonts\VisibleString.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FontsDemo::FontsDemo()
+FontsDemo::FontsDemo(Tamy& tamy)
       : Application("Demo"),
-      m_renderer(NULL),
-      m_resourceManager(NULL),
+      m_renderer(&(tamy.renderer())),
+      m_tamy(tamy),
       m_sceneManager(NULL)
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FontsDemo::initialize(ResourceManager& resMgr)
+void FontsDemo::initialize()
 {
-   m_renderer = &(resMgr.shared<Renderer>());
-   m_resourceManager = &resMgr;
-
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
@@ -37,14 +36,17 @@ void FontsDemo::initialize(ResourceManager& resMgr)
    camera->setProjectionCalculator(new ProjCalc2D());
    m_sceneManager->addNode(camera);
 
-   Light* light = resMgr.resource<Light>()("light");
+   Light* light = m_tamy.graphicalFactory().createLight("light");
    m_sceneManager->addNode(light);
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 1));
 
-   VisibleString* string = new VisibleString(resMgr.resource<Font>()("Curlz.fnt"));
+   XMLFont* font = new XMLFont("..\\Data\\Curlz.fnt", m_tamy.graphicalFactory());
+   m_tamy.fontsStorage().add(font);
+
+   VisibleString* string = new VisibleString(m_tamy.fontsStorage().get("Curlz"));
    m_sceneManager->addNode(string);
-   D3DXMatrixTranslation(&(string->accessLocalMtx()), -0.5, 0, 2);
+   D3DXMatrixTranslation(&(string->accessLocalMtx()), -0.5f, 0, 2);
 
    string->setText("Hello World");
 }
@@ -55,9 +57,6 @@ void FontsDemo::deinitialize()
 {
    delete m_sceneManager;
    m_sceneManager = NULL;
-
-   m_renderer = NULL;
-   m_resourceManager = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,9 +73,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Fonts Demo");
-	FontsDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Fonts Demo", tamy);
+	FontsDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

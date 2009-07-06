@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core-ResourceManagement\FileGraphicalEntityLoader.h"
+#include "core-ResourceManagement\FileGraphicalDataSource.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 
@@ -11,7 +11,7 @@ struct D3DXMESHCONTAINER_DERRIVED;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class XFileGraphicalEntityLoader : public FileGraphicalEntityLoader,
+class XFileGraphicalEntityLoader : public FileGraphicalDataSource,
                                    public ID3DXAllocateHierarchy
 {
 private:
@@ -35,16 +35,19 @@ public:
 
    STDMETHOD(DestroyMeshContainer) (THIS_ LPD3DXMESHCONTAINER pMeshContainerBase);
 
-protected:
    void parseMesh(MeshDefinition& mesh, 
                   AnimationDefinition& animation,
+                  std::vector<MaterialDefinition>& materials,
                   const std::string& name);
 
+protected:
    void parseFrames(D3DXFRAME* frame, 
                     MeshDefinition* parent,
-                    MeshDefinition& mesh) const;
+                    MeshDefinition& mesh,
+                    std::vector<MaterialDefinition>& materials) const;
    void parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshContainer, 
-                      MeshDefinition& mesh) const;
+                      MeshDefinition& mesh,
+                      std::vector<MaterialDefinition>& materials) const;
 
    void parseAnimationData(ID3DXAnimationController* animCtrl, 
                            AnimationDefinition& animation);

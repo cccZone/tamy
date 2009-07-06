@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GraphicalEntityLoader.h"
-#include "Face.h"
+#include "core-ResourceManagement\GraphicalDataSource.h"
+#include "core-Renderer\Face.h"
 #include <vector>
 
 
@@ -14,7 +14,7 @@ class iwfSurface;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class IWFMeshLoader : public GraphicalEntityLoader
+class IWFMeshLoader : public GraphicalDataSource
 {
 private:
    iwfMesh* m_fileMesh;
@@ -26,9 +26,9 @@ public:
                  const std::vector<iwfTexture*>& textures, 
                  const std::vector<iwfMaterial*>& materials);
 
-protected:
    void parseMesh(MeshDefinition& mesh, 
-                  AnimationDefinition& animation, 
+                  AnimationDefinition& animation,
+                  std::vector<MaterialDefinition>& materials,
                   const std::string& name);
 
 private:

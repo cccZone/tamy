@@ -457,7 +457,7 @@ void TreeSkinner::setMaterials(const MaterialDefinition& requestedMaterial,
       unsigned int attribsCount = currMesh->bonesInfluencingAttribute.size();
       for (unsigned int i = 0; i < attribsCount; ++i)
       {
-         currMesh->materials.push_back(requestedMaterial);
+         currMesh->materials.push_back(requestedMaterial.matName);
       }
       
       for (std::list<MeshDefinition*>::const_iterator it = currMesh->children.begin();

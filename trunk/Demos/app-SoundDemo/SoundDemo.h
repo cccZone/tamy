@@ -1,8 +1,9 @@
 #pragma once
 
-#pragma once
-
 #include "core-AppFlow\Application.h"
+#include "core-Renderer\AbstractGraphicalEntity.h"
+#include "core-Renderer\Material.h"
+#include "core\ResourceStorage.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,8 +15,8 @@ class SoundDevice;
 class SoundChannel;
 class SoundListener;
 class SoundSceneManager;
-class SoundRenderer;
 class Renderer;
+class Tamy;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +24,9 @@ class SoundDemo : public Application
 {
 private:
    Renderer* m_renderer;
-   ResourceManager* m_resourceManager;
+   Tamy& m_tamy;
+   ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
+   ResourceStorage<Material> m_materialsStorage;
 
    CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;
@@ -34,16 +37,15 @@ private:
    SoundChannel* m_soundChannel;
    SoundListener* m_soundListener;
    SoundSceneManager* m_audioSoundScene;
-   SoundRenderer* m_soundRenderer;
 
 public:
-   SoundDemo();
+   SoundDemo(Tamy& tamy);
 
-   void initialize(ResourceManager& resourceManager);
+   void initialize();
    void deinitialize();
 
-   void hibernate(ResourceManager& resourceManager) {}
-   void dehibernate(ResourceManager& resourceManager) {}
+   void hibernate() {}
+   void dehibernate() {}
 
    void update(float timeElapsed);
 

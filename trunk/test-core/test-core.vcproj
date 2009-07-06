@@ -194,30 +194,38 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\NodeA.h"
+			<Filter
+				Name="Scene"
 				>
-			</File>
-			<File
-				RelativePath=".\NodeActionMock.h"
+				<File
+					RelativePath=".\SceneManagerMock.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpecializedNodeVisitorMock.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="HierarchicalNodes"
 				>
-			</File>
-			<File
-				RelativePath=".\NodeB.h"
-				>
-			</File>
-			<File
-				RelativePath=".\NodeVisitorMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SceneManagerMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SpecializedNodeVisitorMock.h"
-				>
-			</File>
+				<File
+					RelativePath=".\NodeA.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NodeActionMock.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NodeB.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NodeVisitorMock.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Delegates"

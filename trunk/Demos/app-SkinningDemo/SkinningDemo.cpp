@@ -1,9 +1,10 @@
 #include "SkinningDemo.h"
+#include "impl-DirectX\Tamy.h"
 #include "impl-DirectX\D3DApplicationManager.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
-#include "core-ResourceManagement\ResourceManager.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
@@ -18,10 +19,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkinningDemo::SkinningDemo()
+SkinningDemo::SkinningDemo(Tamy& tamy)
       : Application("Demo"),
-      m_resMgr(NULL),
-      m_renderer(NULL),
+      m_tamy(tamy),
+      m_renderer(&(tamy.renderer())),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -29,27 +30,29 @@ SkinningDemo::SkinningDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinningDemo::initialize(ResourceManager& resMgr)
+void SkinningDemo::initialize()
 {
-   m_resMgr = &resMgr;
-   m_renderer = &(resMgr.shared<Renderer>());
-
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
+   
+   GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
+   GraphicalEntityLoader loader(factory, m_materialsStorage);
 
-   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>()("US Ranger.x");
+   AbstractGraphicalEntity* ent = loader.load("US Ranger.x", m_tamy.meshLoaders());
+   m_entitiesStorage.add(ent);
+
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("ranger01", false);
-   entInstance->attachEntity(ent);
+   entInstance->attachEntity(*ent);
    m_sceneManager->addNode(entInstance);
 
-   m_animationController = ent.instantiateSkeleton(*entInstance);
+   m_animationController = ent->instantiateSkeleton(*entInstance);
    m_animationController->activateAnimation("", true);
 
 
-   Light* light = resMgr.resource<Light>()("light");
+   Light* light = factory.createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 0));
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
@@ -77,9 +80,6 @@ void SkinningDemo::deinitialize()
 
    delete m_sceneManager;
    m_sceneManager = NULL;
-
-   m_renderer = NULL;
-   m_resMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,9 +128,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Skinning Demo");
-	SkinningDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Skinning Demo", tamy);
+	SkinningDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

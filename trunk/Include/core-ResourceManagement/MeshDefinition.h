@@ -2,12 +2,13 @@
 
 #include <list>
 #include <vector>
-#include "core-ResourceManagement\LitVertex.h"
-#include "core-ResourceManagement\Face.h"
+#include "core-Renderer\LitVertex.h"
+#include "core-Renderer\Face.h"
 #include <string>
 #include "core-Renderer\Color.h"
 #include <d3dx9.h>
 #include "core-Renderer\SkinBoneDefinition.h"
+#include "core-Renderer\MaterialOperation.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,7 +22,14 @@ struct MaterialDefinition
    Color specular;
    Color emissive;
    float power;
+
    std::string texName;
+   MatOpCode colorOp;
+   SourceCode colorArg1;
+   SourceCode colorArg2;
+   MatOpCode alphaOp;
+   SourceCode alphaArg1;
+   SourceCode alphaArg2;
 
    MaterialDefinition(const std::string& _matName,
                       const Color& _ambient,
@@ -29,18 +37,28 @@ struct MaterialDefinition
                       const Color& _specular,
                       const Color& _emissive,
                       float _power,
-                      const std::string& _texName)
+                      const std::string& _texName,
+                      MatOpCode _colorOp,
+                      SourceCode _colorArg1,
+                      SourceCode _colorArg2,
+                      MatOpCode _alphaOp,
+                      SourceCode _alphaArg1,
+                      SourceCode _alphaArg2)
          : matName(_matName),
          ambient(_ambient),
          diffuse(_diffuse),
          specular(_specular),
          emissive(_emissive),
          power(_power),
-         texName(_texName)
+         texName(_texName),
+         colorOp(_colorOp), colorArg1(_colorArg1), colorArg2(_colorArg2),
+         alphaOp(_alphaOp), alphaArg1(_alphaArg1), alphaArg2(_alphaArg2)
    {}
 
    MaterialDefinition(const std::string& name)
-      : matName(name), power(1)
+      : matName(name), power(1), 
+      colorOp(MOP_DISABLE), colorArg1(SC_NONE), colorArg2(SC_NONE),
+      alphaOp(MOP_DISABLE), alphaArg1(SC_NONE), alphaArg2(SC_NONE)
    {}
 };
 
@@ -53,7 +71,7 @@ struct MeshDefinition
    std::string name;
    bool isSkin;
 
-   std::vector<MaterialDefinition> materials;
+   std::vector<std::string> materials;
    std::vector<LitVertex> vertices;
    std::list<Face<USHORT> > faces;
 
@@ -68,7 +86,11 @@ struct MeshDefinition
 
    // -------------------------------------------------------------------------
 
-   MeshDefinition() : isSkin(false), parent(NULL) {}
+   MeshDefinition() : isSkin(false), parent(NULL) 
+   {
+      D3DXMatrixIdentity(&localMtx);
+   }
+
    MeshDefinition(const MeshDefinition& rhs)
       : name(rhs.name),
       isSkin(rhs.isSkin),

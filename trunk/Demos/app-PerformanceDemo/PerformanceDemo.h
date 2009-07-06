@@ -1,8 +1,9 @@
 #pragma once
 
-#pragma once
-
 #include "core-AppFlow\Application.h"
+#include "core-Renderer\AbstractGraphicalEntity.h"
+#include "core-Renderer\Material.h"
+#include "core\ResourceStorage.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,6 +12,7 @@ class CompositeSceneManager;
 class VisualSceneManager;
 class UnconstrainedMotionController;
 class Renderer;
+class Tamy;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +20,7 @@ class PerformanceDemo : public Application
 {
 private:
    Renderer* m_renderer;
-   ResourceManager* m_resourceManager;
+   Tamy& m_tamy;
 
    CompositeSceneManager* m_sceneManager;
    VisualSceneManager* m_visualSceneManager;
@@ -26,14 +28,17 @@ private:
 
    bool m_rotating;
 
-public:
-   PerformanceDemo();
+   ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
+   ResourceStorage<Material> m_materialsStorage;
 
-   void initialize(ResourceManager& resourceManager);
+public:
+   PerformanceDemo(Tamy& tamy);
+
+   void initialize();
    void deinitialize();
 
-   void hibernate(ResourceManager& resourceManager) {}
-   void dehibernate(ResourceManager& resourceManager) {}
+   void hibernate() {}
+   void dehibernate() {}
 
    void update(float timeElapsed);
 

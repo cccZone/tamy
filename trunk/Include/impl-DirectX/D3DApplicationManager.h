@@ -2,7 +2,6 @@
 
 #include "core-AppFlow\ApplicationManager.h"
 #include "core\WindowMessagesProcessor.h"
-#include "impl-DirectX\GraphicalCapsEvaluator.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <windows.h>
@@ -12,25 +11,22 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class CTimer;
-class D3DInitializer;
-class D3DRenderer;
+class Tamy;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class D3DApplicationManager : public ApplicationManager,
-                              public IWindowMessagesProcessor,
-                              public GraphicalCapsEvaluator
+                              public IWindowMessagesProcessor
 {
 private:
    HINSTANCE m_hInstance;
    std::string m_programName;
+   Tamy& m_tamy;
    HWND m_hWnd;
+   Renderer* m_renderer;
    CTimer* m_timer;
-
-   IDirect3D9* m_d3d9;
-   D3DInitializer* m_d3dInitializer;
-   D3DRenderer* m_renderer;
-
+   
    unsigned long m_lastFrameRate;
 
    bool m_rightMouseButton;
@@ -40,17 +36,15 @@ private:
    POINT m_oldCursorPos;
 
 public:
-   D3DApplicationManager(const std::string& texturesDir,
-                         const std::string& fontsDir,
-                         const std::string& meshesDir,
-                         HINSTANCE hInstance, 
+   D3DApplicationManager(HINSTANCE hInstance, 
                          int nCmdShow, 
-                         const std::string& programName);
+                         const std::string& programName,
+                         Tamy& tamy);
    ~D3DApplicationManager();
 
-   LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+   HWND getWnd() const {return m_hWnd;}
 
-   bool checkDeviceCaps(const D3DCAPS9& caps);
+   LRESULT wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
    ProcessingCode onStep();
@@ -63,8 +57,6 @@ protected:
 
 private:
    void advanceApplicationState();
-
-   D3DRenderer* createRenderer(bool windowed);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

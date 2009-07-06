@@ -1,31 +1,33 @@
 #include "TreesGeneratorDemo.h"
+#include "impl-DirectX\Tamy.h"
 #include "impl-DirectX\D3DApplicationManager.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\Point.h"
-#include "core-ResourceManagement\ResourceManager.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-ResourceManagement\MeshDefinition.h"
+#include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
+#include "core-Renderer\LightReflectingProperties.h"
+#include "core-Renderer\Material.h"
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\Skeleton.h"
 #include "ext-TreesGenerator\TreeParams.h"
-#include "ext-TreesGenerator\TreeStructureGenerator.h"
-#include "ext-TreesGenerator\TreeSkinner.h"
-#include "ext-TreesGenerator\TreeSegment.h"
-#include "ext-TreesGenerator\TreeAnimator.h"
+#include "ext-TreesGenerator\TreesGenerator.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TreesGeneratorDemo::TreesGeneratorDemo()
+TreesGeneratorDemo::TreesGeneratorDemo(Tamy& tamy)
       : Application("Demo"),
-      m_renderer(NULL),
-      m_resMgr(NULL),
+      m_renderer(&(tamy.renderer())),
+      m_tamy(tamy),
+      m_treeEntity(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -33,11 +35,8 @@ TreesGeneratorDemo::TreesGeneratorDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TreesGeneratorDemo::initialize(ResourceManager& resMgr)
+void TreesGeneratorDemo::initialize()
 {
-   m_renderer = &(resMgr.shared<Renderer>());
-   m_resMgr = &resMgr;
-
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
@@ -58,42 +57,30 @@ void TreesGeneratorDemo::initialize(ResourceManager& resMgr)
    treeParams.initialBranchingLevel = 1;
    treeParams.abruptBranchEndProbab = 5;
 
-   TreeStructureGenerator generator;
-   TreeSegment* treeStruct = generator.generate(treeParams);
+   // prepare material
+   LightReflectingProperties* lrp = m_tamy.graphicalFactory().createLightReflectingProperties();
+   lrp->setAmbientColor(Color(1, 1, 1, 1));
+   lrp->setDiffuseColor(Color(1, 1, 1, 1));
+   MaterialStage* stage = m_tamy.graphicalFactory().createMaterialStage("LondonPlaneBark.dds",
+                                             MOP_MULTIPLY, SC_LRP, SC_TEXTURE,
+                                             MOP_DISABLE, SC_NONE, SC_NONE);
+   Material* mat = m_tamy.graphicalFactory().createMaterial("treeBark", lrp);
+   mat->addStage(stage);
+   m_materialsStorage.add(mat);
 
-   TreeSkinner skinner(*treeStruct);
-   MaterialDefinition treeBark("treeBark");
-   treeBark.ambient.r = 1;
-   treeBark.ambient.g = 1;
-   treeBark.ambient.b = 1;
-   treeBark.ambient.a = 1;
-   treeBark.diffuse.r = 1;
-   treeBark.diffuse.g = 1;
-   treeBark.diffuse.b = 1;
-   treeBark.diffuse.a = 1;
-   treeBark.matName = "treeBark";
-   treeBark.texName = "LondonPlaneBark.dds";
-
-   MeshDefinition* mesh = skinner("tree", 8, 1, treeBark);
-   delete treeStruct;
-
-   TreeAnimator animator;
-   AnimationDefinition anim;
-   animator(*mesh, D3DXVECTOR3(1, 0, 0), 0.1f, 3, anim);
-
-   AbstractGraphicalEntity& treeEntity = resMgr.resource<AbstractGraphicalEntity>()(*mesh);
-   treeEntity.setAnimationDefinition(anim);
-
-   delete mesh;
-
+   // prepare mesh
+   TreesGenerator generator(treeParams, 8, 1, D3DXVECTOR3(1, 0, 0), 0.1f, 3, "treeBark");
+   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_materialsStorage);
+   m_treeEntity = loader.load("tree", generator);
+   
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tree01", false);
-   entInstance->attachEntity(treeEntity);
+   entInstance->attachEntity(*m_treeEntity);
    m_sceneManager->addNode(entInstance);
 
-   m_animationController = treeEntity.instantiateSkeleton(*entInstance);
+   m_animationController = m_treeEntity->instantiateSkeleton(*entInstance);
    m_animationController->activateAnimation("wind", true);
 
-   Light* light = resMgr.resource<Light>()("light");
+   Light* light = m_tamy.graphicalFactory().createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 0));
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
@@ -121,8 +108,8 @@ void TreesGeneratorDemo::deinitialize()
    delete m_sceneManager;
    m_sceneManager = NULL;
 
-   m_renderer = NULL;
-   m_resMgr = NULL;
+   delete m_treeEntity;
+   m_treeEntity = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -171,9 +158,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Trees Generator Demo");
-	TreesGeneratorDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Trees Generator Demo", tamy);
+	TreesGeneratorDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

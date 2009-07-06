@@ -1,9 +1,10 @@
 #include "PickingDemo.h"
+#include "impl-DirectX\Tamy.h"
 #include "impl-DirectX\D3DApplicationManager.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
-#include "core-ResourceManagement\ResourceManager.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
@@ -44,10 +45,10 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PickingDemo::PickingDemo()
+PickingDemo::PickingDemo(Tamy& tamy)
       : Application("Demo"),
-      m_renderer(NULL),
-      m_resourceManager(NULL),
+      m_renderer(&(tamy.renderer())),
+      m_tamy(tamy),
       m_sceneManager(NULL),
       m_atmosphere(NULL),
       m_cursor(NULL),
@@ -59,11 +60,8 @@ PickingDemo::PickingDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PickingDemo::initialize(ResourceManager& resMgr)
+void PickingDemo::initialize()
 {
-   m_renderer = &(resMgr.shared<Renderer>());
-   m_resourceManager = &resMgr;
-
    m_actionsExecutor = new NodeActionsExecutor();
 
    m_sceneManager = new CompositeSceneManager();
@@ -76,11 +74,14 @@ void PickingDemo::initialize(ResourceManager& resMgr)
    m_hudSceneManager->addSceneManager(hudVisualSceneMgr);
    m_renderer->addVisualSceneManager(*hudVisualSceneMgr);
 
+   GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
+   GraphicalEntityLoader loader(factory, m_materialsStorage);
 
-   AbstractGraphicalEntity& ent = resMgr.resource<AbstractGraphicalEntity>()("meadowNormalTile.x");
+   AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
+   m_entitiesStorage.add(ent);
 
    // add lighting and such
-   Light* light = resMgr.resource<Light>()("light");
+   Light* light = factory.createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 1));
    light->setSpecularColor(Color(0.2f, 0.2f, 0.2f, 1));
@@ -96,17 +97,16 @@ void PickingDemo::initialize(ResourceManager& resMgr)
    m_hudSceneManager->addNode(hudCamera);
 
    // add a particle system
-   LightReflectingProperties* particleLrp = resMgr.resource<LightReflectingProperties>()();
+   LightReflectingProperties* particleLrp = factory.createLightReflectingProperties();
    particleLrp->setDiffuseColor(Color(1, 1, 1, 1));
+   MaterialStage* particleMatStage = factory.createMaterialStage("particle.tga",
+                                                                 MOP_SELECT_ARG1, SC_LRP, SC_NONE,
+                                                                 MOP_MULTIPLY, SC_LRP, SC_TEXTURE);
+   Material* particleMat = factory.createMaterial("particleMat", particleLrp);
+   particleMat->addStage(particleMatStage);
+   m_materialsStorage.add(particleMat);
 
-   Texture& tex = resMgr.resource<Texture>()("particle.tga");
-   Material& particleMat = resMgr.resource<Material>()("particleMat", particleLrp);
-   MaterialStage* particleMatStage = resMgr.resource<MaterialStage>()(
-                                                               tex, 
-                                                               MOP_SELECT_ARG1, SC_LRP, SC_NONE,
-                                                               MOP_MULTIPLY, SC_LRP, SC_TEXTURE);
-   particleMat.addStage(particleMatStage);
-   m_atmosphere = resMgr.resource<ParticleSystem>()("atmosphere", false, particleMat, 200);
+   m_atmosphere = factory.createParticleSystem("atmosphere", false, *particleMat, 200);
    m_atmosphere->setLifeSpan(10, 1);
    m_atmosphere->setParticleAnimator(new ParticleFader());
    m_atmosphere->setParticleInitializer(new PlanarParticleInitializer(200, 0.2f, 0.1f, 20));
@@ -114,15 +114,15 @@ void PickingDemo::initialize(ResourceManager& resMgr)
    m_sceneManager->addNode(m_atmosphere);
 
    // create the cursor
-   particleLrp = resMgr.resource<LightReflectingProperties>()();
+   particleLrp = factory.createLightReflectingProperties();
    particleLrp->setDiffuseColor(Color(1, 0, 1, 1));
-   Material& cursorMat = resMgr.resource<Material>()("cursorMat", particleLrp);
-   MaterialStage* cursorMatStage = resMgr.resource<MaterialStage>()(
-                                                               tex, 
+   MaterialStage* cursorMatStage = factory.createMaterialStage("particle.tga",
                                                                MOP_SELECT_ARG1, SC_LRP, SC_NONE,
                                                                MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE);
-   cursorMat.addStage(cursorMatStage);
-   m_cursor = resMgr.resource<ParticleSystem>()("cursor", true, cursorMat, 200);
+   Material* cursorMat = factory.createMaterial("cursorMat", particleLrp);
+   cursorMat->addStage(cursorMatStage);
+   m_materialsStorage.add(cursorMat);
+   m_cursor = factory.createParticleSystem("cursor", true, *cursorMat, 200);
    m_cursor->setLifeSpan(0.3f, 0.2f);
    m_cursor->setParticleAnimator(new ParticleFader());
    m_cursor->setParticleInitializer(new PointParticleInitializer(0.02f, 0.01f, 0.5f));
@@ -133,14 +133,14 @@ void PickingDemo::initialize(ResourceManager& resMgr)
    D3DXMATRIX helperMtx;
 
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile1", false);
-   entInstance->attachEntity(ent);
+   entInstance->attachEntity(*ent);
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 0, 0, 30);
    m_sceneManager->addNode(entInstance);
    m_cameraController->registerWaypoint(0, *entInstance);
    m_actionsExecutor->add(*entInstance, new JumpToNodeAction(*m_cameraController, m_shownNode));
 
    entInstance = new GraphicalEntityInstantiator("tile2", false);
-   entInstance->attachEntity(ent);
+   entInstance->attachEntity(*ent);
    D3DXMatrixRotationYawPitchRoll(&helperMtx, D3DXToRadian(60), 0, 0);
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 20, 5, 40);
    D3DXMatrixMultiply(&(entInstance->accessLocalMtx()), &helperMtx, &(entInstance->accessLocalMtx()));
@@ -149,7 +149,7 @@ void PickingDemo::initialize(ResourceManager& resMgr)
    m_actionsExecutor->add(*entInstance, new JumpToNodeAction(*m_cameraController, m_shownNode));
 
    entInstance = new GraphicalEntityInstantiator("tile3", false);
-   entInstance->attachEntity(ent);
+   entInstance->attachEntity(*ent);
    D3DXMatrixRotationYawPitchRoll(&helperMtx, D3DXToRadian(-30), 0, 0);
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), -15, -10, 35);
    D3DXMatrixMultiply(&(entInstance->accessLocalMtx()), &helperMtx, &(entInstance->accessLocalMtx()));
@@ -178,8 +178,6 @@ void PickingDemo::deinitialize()
    m_sceneManager = NULL;
 
    m_visualSceneManager = NULL;
-   m_renderer = NULL;
-   m_resourceManager = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -249,9 +247,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Picking Demo");
-	PickingDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Picking Demo", tamy);
+	PickingDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

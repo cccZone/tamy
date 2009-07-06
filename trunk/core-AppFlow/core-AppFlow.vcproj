@@ -167,6 +167,14 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Blackboard"
+			>
+			<File
+				RelativePath="..\Include\core-AppFlow\ApplicationData.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

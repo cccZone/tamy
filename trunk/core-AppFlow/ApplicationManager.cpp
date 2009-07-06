@@ -1,19 +1,14 @@
 #include "core-AppFlow\ApplicationManager.h"
 #include "core-AppFlow\Application.h"
-#include "core-ResourceManagement\ResourceManager.h"
+#include "core-AppFlow\ApplicationData.h"
 #include <stdexcept>
 #include <windows.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ApplicationManager::ApplicationManager(const std::string& texturesDir,
-                                       const std::string& fontsDir,
-                                       const std::string& meshesDir)
-      : m_texturesDir(texturesDir),
-      m_fontsDir(fontsDir),
-      m_meshesDir(meshesDir),
-      m_resMgr(new ResourceManager())
+ApplicationManager::ApplicationManager()
+      : m_blackboard(new ApplicationData())
 {
    ZeroMemory(m_keyBuffer, 256 * sizeof(unsigned char));
 }
@@ -22,8 +17,27 @@ ApplicationManager::ApplicationManager(const std::string& texturesDir,
 
 ApplicationManager::~ApplicationManager()
 {
-   delete m_resMgr;
-   m_resMgr = NULL;
+   delete m_blackboard;
+   m_blackboard = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ApplicationData& ApplicationManager::blackboard()
+{
+   return *m_blackboard;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ApplicationManager::setBlackboard(ApplicationData* blackboard)
+{
+   if (blackboard == NULL)
+   {
+      throw std::invalid_argument("NULL pointer instead an ApplicationData instance");
+   }
+   delete m_blackboard;
+   m_blackboard = blackboard;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -116,7 +130,7 @@ bool ApplicationManager::step()
 
       case AS_BEING_HIBERNATED:
          {
-            currNode.app.hibernate(resMgr());
+            currNode.app.hibernate();
             currNode.state = AS_HIBERNATED;
             break;
          }
@@ -128,14 +142,14 @@ bool ApplicationManager::step()
 
       case AS_BEING_DEHIBERNATED:
          {
-            currNode.app.dehibernate(resMgr());
+            currNode.app.dehibernate();
             currNode.state = AS_RUNNING;
             break;
          }
 
       case AS_SCHEDULED:
          {
-            currNode.app.initialize(resMgr());
+            currNode.app.initialize();
             currNode.state = AS_RUNNING;
             break;
          }

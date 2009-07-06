@@ -1,9 +1,10 @@
 #include "TransparencyDemo.h"
+#include "impl-DirectX\Tamy.h"
 #include "impl-DirectX\D3DApplicationManager.h"
 #include "core-AppFlow\ExecutionContext.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
-#include "core-ResourceManagement\ResourceManager.h"
+#include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
@@ -12,16 +13,16 @@
 #include "core-ResourceManagement\IWFLoader.h"
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\Skeleton.h"
-#include "core-ResourceManagement\MaterialsParser.h"
+#include "ext-MaterialsParser\MaterialsParser.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TransparencyDemo::TransparencyDemo()
+TransparencyDemo::TransparencyDemo(Tamy& tamy)
       : Application("Demo"),
-      m_renderer(NULL),
-      m_resourceManager(NULL),
+      m_renderer(&(tamy.renderer())),
+      m_tamy(tamy),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -29,21 +30,22 @@ TransparencyDemo::TransparencyDemo()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TransparencyDemo::initialize(ResourceManager& resMgr)
+void TransparencyDemo::initialize()
 {
-   m_renderer = &(resMgr.shared<Renderer>());
-   m_resourceManager = &resMgr;
-
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
-   MaterialsParser parser(resMgr);
+   MaterialsParser parser(m_tamy.graphicalFactory(), m_tamy.materialsStorage());
    parser.load("..\\Data\\materials.xml");
 
-   IWFLoader loader(resMgr, *m_sceneManager);
+   IWFLoader loader(m_tamy.graphicalFactory(), 
+                    m_tamy.meshLoaders(),
+                    *m_sceneManager, 
+                    m_tamy.entitiesStorage(),
+                    m_tamy.materialsStorage());
    loader.load("..\\Data\\Dolphin.iwf");
 
    Camera* camera = new Camera("camera");
@@ -60,9 +62,6 @@ void TransparencyDemo::deinitialize()
 
    delete m_sceneManager;
    m_sceneManager = NULL;
-
-   m_renderer = NULL;
-   m_resourceManager = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,9 +109,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   D3DApplicationManager applicationManager("..\\Data", "..\\Data", "..\\Data",
-                                            hInstance, nCmdShow, "Transparency Demo");
-	TransparencyDemo app;
+   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
+   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Transparency Demo", tamy);
+	TransparencyDemo app(tamy);
 
    applicationManager.addApplication(app);
    applicationManager.setEntryApplication(app.getName());

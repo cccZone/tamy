@@ -6,8 +6,7 @@
 #include <d3dx9.h>
 #include <stdexcept>
 #include <string>
-#include "core-ResourceManagement\Face.h"
-#include "core-ResourceManagement\MeshDefinition.h"
+#include "core-Renderer\Face.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,22 +18,25 @@ class D3DSkinnedGraphicalEntity : public D3DAbstractGraphicalEntity<VertexStruct
 public:
    D3DSkinnedGraphicalEntity(const std::string& name,
                              IDirect3DDevice9& d3Device,
-                             const MeshDefinition& subMesh,
+                             const std::vector<LitVertex>& vertices,
+                             const std::list<Face<USHORT> >& faces,
+                             const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
+                             const std::vector<SkinBoneDefinition>& skinBones,
                              const std::vector<Material*>& registeredMaterials)
-         : D3DAbstractGraphicalEntity<VertexStruct>(d3Device, subMesh),
+         : D3DAbstractGraphicalEntity<VertexStruct>(d3Device, vertices, faces),
          SkinnedGraphicalEntity(name, 
-                                subMesh.skinBones,
-                                subMesh.bonesInfluencingAttribute, 
+                                skinBones,
+                                bonesInfluencingAttribute, 
                                 registeredMaterials)
    {
       setBoundingSphereRadius(m_maxCoord);
 
-      for (std::list<Face<USHORT> >::const_iterator faceIt = subMesh.faces.begin();
-           faceIt != subMesh.faces.end(); ++faceIt)
+      for (std::list<Face<USHORT> >::const_iterator faceIt = faces.begin();
+           faceIt != faces.end(); ++faceIt)
       {
-         addTriangle(Triangle(subMesh.vertices.at(faceIt->idx[0]).m_coords,
-                              subMesh.vertices.at(faceIt->idx[1]).m_coords,
-                              subMesh.vertices.at(faceIt->idx[2]).m_coords));
+         addTriangle(Triangle(vertices.at(faceIt->idx[0]).m_coords,
+                              vertices.at(faceIt->idx[1]).m_coords,
+                              vertices.at(faceIt->idx[2]).m_coords));
       }
    }
 

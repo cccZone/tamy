@@ -2,14 +2,17 @@
 
 #include "core-ResourceManagement\MeshDefinition.h"
 #include "core-Renderer\Skeleton.h"
+#include "core\ResourceStorage.h"
 #include <string>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ResourceManager;
+class GraphicalEntitiesFactory;
 class AbstractGraphicalEntity;
 class Material;
+class GraphicalDataSource;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,32 +26,29 @@ class Material;
  */
 class GraphicalEntityLoader
 {
+private:
+   GraphicalEntitiesFactory& m_factory;
+   ResourceStorage<Material>& m_materialsStorage;
+
 public:
-   virtual ~GraphicalEntityLoader() {}
+   GraphicalEntityLoader(GraphicalEntitiesFactory& factory,
+                         ResourceStorage<Material>& materialsStorage);
 
    /**
     * Creates a mesh based on the data received from the implementation 
-    * (via the parseMesh method), and registers it with the ResourceManager.
+    * (via the parseMesh method)
     *
     * @throw std::logic_error if no mesh was created for some reason.
     */
-   void load(const std::string& name,
-             MeshDefinition& outMesh,
-             AnimationDefinition &outAnimation);
-
-protected:
-   /**
-    * The method is required to fill in the 'mesh' param with
-    * the structure of a mesh from the source.
-    * @param name - the name of the mesh being parsed - may come in handy
-    *               if the mesh comes from a file or something.
-    */
-   virtual void parseMesh(MeshDefinition& mesh, 
-                          AnimationDefinition& animation, 
-                          const std::string& name) = 0;
+   AbstractGraphicalEntity* load(const std::string& name, 
+                                 GraphicalDataSource& source);
 
 private:
    void ensureMeshNames(MeshDefinition& mesh);
+
+   void createMaterials(std::vector<MaterialDefinition>& materials);
+
+   AbstractGraphicalEntity* translateMeshToEntity(MeshDefinition& mesh);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
