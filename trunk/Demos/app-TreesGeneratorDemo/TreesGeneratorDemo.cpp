@@ -31,6 +31,8 @@ TreesGeneratorDemo::TreesGeneratorDemo(Tamy& tamy)
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
+   timeController().add("regularTrack");
+   timeController().get("regularTrack").add(new TTimeDependent<TreesGeneratorDemo>(*this));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

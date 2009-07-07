@@ -2,11 +2,9 @@
 
 #include <stdexcept>
 #include <string>
+#include "core-AppFlow\TimeController.h"
+#include "core-AppFlow\ExecutionContext.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class ExecutionContext;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,9 +26,10 @@ public:
 private:
    std::string m_name;
    ExecutionContext* m_context;
+   TimeController* m_timeController;
   
 public:
-   virtual ~Application() {}
+   virtual ~Application();
 
    const std::string& getName() const {return m_name;}
    bool operator==(const Application& rhs) const {return m_name == rhs.m_name;}
@@ -75,7 +74,7 @@ public:
    /**
     * This is the method that updates the internal state of the application
     */
-   virtual void update(float timeElapsed) = 0;
+   void update(float timeElapsed);
 
    /**
     * When this method is called, it means that some other active application
@@ -84,7 +83,7 @@ public:
    virtual void notify(const std::string& senderApp, int signalCode) = 0;
 
 protected:
-   Application(const std::string& name) : m_name(name), m_context(NULL) {}
+   Application(const std::string& name);
 
    ExecutionContext& context() 
    {
@@ -105,6 +104,13 @@ protected:
 
       return *m_context;
    }
+
+   /**
+    * If you want the application to run any code, you need to add it to
+    * the time controller of that application. 
+    * This method gives you the access to the controller
+    */
+   TimeController& timeController() {return *m_timeController;}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

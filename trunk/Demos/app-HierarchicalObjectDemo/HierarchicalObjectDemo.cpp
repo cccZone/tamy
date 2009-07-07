@@ -28,6 +28,8 @@ HierarchicalObjectDemo::HierarchicalObjectDemo(Tamy& tamy)
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
+   timeController().add("regularTrack");
+   timeController().get("regularTrack").add(new TTimeDependent<HierarchicalObjectDemo>(*this));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -151,6 +151,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\Application.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core-AppFlow\Application.h"
 				>
 			</File>
@@ -172,6 +176,30 @@
 			>
 			<File
 				RelativePath="..\Include\core-AppFlow\ApplicationData.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="TimeController"
+			>
+			<File
+				RelativePath=".\TimeController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-AppFlow\TimeController.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TimeControllerTrack.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-AppFlow\TimeControllerTrack.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-AppFlow\TimeDependent.h"
 				>
 			</File>
 		</Filter>

@@ -180,6 +180,10 @@
 				RelativePath=".\ApplicationTests.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TimeControllerTests.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Mocks"
@@ -190,6 +194,10 @@
 			</File>
 			<File
 				RelativePath=".\ApplicationMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UpdatableMock.h"
 				>
 			</File>
 		</Filter>

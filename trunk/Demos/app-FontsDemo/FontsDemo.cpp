@@ -22,6 +22,8 @@ FontsDemo::FontsDemo(Tamy& tamy)
       m_sceneManager2D(NULL),
       m_sceneManager3D(NULL)
 {
+   timeController().add("regularTrack");
+   timeController().get("regularTrack").add(new TTimeDependent<FontsDemo>(*this));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

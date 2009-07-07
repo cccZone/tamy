@@ -23,7 +23,10 @@ public:
          m_timeElapsed(0),
          m_receivedSignal(-1),
          m_sendSignalInsideStepLoop(-1)
-   {}
+   {
+      timeController().add("regularTrack");
+      timeController().get("regularTrack").add(new TTimeDependent<ApplicationMock>(*this));
+   }
 
    bool isInitialized() const {return m_initialized;}
 

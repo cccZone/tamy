@@ -56,6 +56,8 @@ PickingDemo::PickingDemo(Tamy& tamy)
       m_cameraController(NULL),
       m_shownNode(0)
 {
+   timeController().add("regularTrack");
+   timeController().get("regularTrack").add(new TTimeDependent<PickingDemo>(*this));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -31,6 +31,8 @@ SoundDemo::SoundDemo(Tamy& tamy)
       m_renderer(&(tamy.renderer())),
       m_tamy(tamy)
 {
+   timeController().add("regularTrack");
+   timeController().get("regularTrack").add(new TTimeDependent<SoundDemo>(*this));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
