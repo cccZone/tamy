@@ -254,6 +254,12 @@ void Node::accept(NodeVisitor& visitor)
 void Node::attachObserver(NodeObserver& observer)
 {
    m_observers.push_back(&observer);
+
+   for (std::list<Node*>::iterator it = m_children.begin();
+      it != m_children.end(); ++it)
+   {
+      (*it)->attachObserver(observer);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -268,6 +274,12 @@ void Node::detachObserver(NodeObserver& observer)
          m_observers.erase(it);
          break;
       }
+   }
+
+   for (std::list<Node*>::iterator it = m_children.begin();
+      it != m_children.end(); ++it)
+   {
+      (*it)->detachObserver(observer);
    }
 }
 

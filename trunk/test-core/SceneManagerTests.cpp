@@ -144,3 +144,48 @@ TEST(SceneManager, addingUnknownNodeType)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST(SceneManager, attachingSubhierarchyOfNodes)
+{
+   CompositeSceneManager fullScene;
+   SceneManagerMock<NodeA>* sceneForNodeA = new SceneManagerMock<NodeA>();
+   fullScene.addSceneManager(sceneForNodeA);
+
+   Node* someNode = new Node("someNode", false);
+
+   NodeA* subhierarchyRoot = new NodeA();
+   NodeA* subhierarchyChild = new NodeA();
+   subhierarchyRoot->addChild(subhierarchyChild);
+
+   NodeA danglingNode;
+   NodeA* anotherDanglingNode = new NodeA();
+
+   fullScene.addNode(someNode);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, sceneForNodeA->getNodesCount());
+
+   someNode->addChild(subhierarchyRoot);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, sceneForNodeA->getNodesCount());
+
+   // now check if anything we add to the subhierarchy will also be added to the scene manager
+   subhierarchyChild->addChild(&danglingNode);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)3, sceneForNodeA->getNodesCount());
+
+   // check that when we detach the dangling node we previoulsy
+   // attached, it will get removed from the scene manager
+   // as well as from under the scrutiny of the scene manager,
+   // meaning that if we attach something to it, that thing WILL NOT
+   // end up added to the observing scene manager
+   subhierarchyChild->removeChild(danglingNode);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, sceneForNodeA->getNodesCount());
+
+   danglingNode.addChild(anotherDanglingNode);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, fullScene.root().getChildrenCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, sceneForNodeA->getNodesCount());
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
