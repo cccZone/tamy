@@ -172,7 +172,7 @@ void ParticleSystem::activateParticles(const D3DXMATRIX& systemGlobalMtx,
    unsigned int i = 0;
 
    unsigned int noParticlesToSpawn = 1 + (m_spawnTimeline - m_nextSpawnTime) / m_spawnInterval;
-
+   
    for (; (i < noParticlesToSpawn) && (m_activeParticles < particlesCount); 
         ++i, ++m_activeParticles)
    {
@@ -180,7 +180,7 @@ void ParticleSystem::activateParticles(const D3DXMATRIX& systemGlobalMtx,
       onActivateParticle(m_activeParticles);
    }
 
-   m_nextSpawnTime += m_spawnInterval;
+   m_nextSpawnTime = m_spawnTimeline + m_spawnInterval;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

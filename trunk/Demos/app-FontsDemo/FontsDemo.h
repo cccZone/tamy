@@ -18,7 +18,8 @@ private:
    Renderer* m_renderer;
    Tamy& m_tamy;
 
-   CompositeSceneManager* m_sceneManager;
+   CompositeSceneManager* m_sceneManager2D;
+   CompositeSceneManager* m_sceneManager3D;
 
 public:
    FontsDemo(Tamy& tamy);

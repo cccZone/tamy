@@ -26,12 +26,30 @@ CTimer::~CTimer(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void CTimer::reset(void)
+{
+   m_fpsTimeElapsed = 0;
+   m_fpsFrameCount = 0;
+   m_frameRate = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void CTimer::tick(void)
 {
    __int64 currTime;
    QueryPerformanceCounter((LARGE_INTEGER*)&currTime);
 
-   m_timeElapsed = (currTime - m_lastTime) * m_timeScale;
+   static bool start = true;
+   if (start)
+   {
+      m_timeElapsed = 0;
+      start = false;
+   }
+   else
+   {
+      m_timeElapsed = (currTime - m_lastTime) * m_timeScale;
+   }
    m_lastTime = currTime;
 
    // Calculate Frame Rate

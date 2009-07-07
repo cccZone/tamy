@@ -106,7 +106,7 @@ void PickingDemo::initialize()
    particleMat->addStage(particleMatStage);
    m_materialsStorage.add(particleMat);
 
-   m_atmosphere = factory.createParticleSystem("atmosphere", false, *particleMat, 200);
+   m_atmosphere = factory.createParticleSystem("atmosphere", false, *particleMat, 50000);
    m_atmosphere->setLifeSpan(10, 1);
    m_atmosphere->setParticleAnimator(new ParticleFader());
    m_atmosphere->setParticleInitializer(new PlanarParticleInitializer(200, 0.2f, 0.1f, 20));

@@ -15,6 +15,8 @@ public:
    CTimer(void);
    ~CTimer(void);
 
+   void reset(void);
+
    void tick(void);
 
    float getTimeElapsed() const;

@@ -19,7 +19,7 @@ TEST(ParticleSystem, particlesCreation)
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, particleSystem.getActiveParticlesCount());
 
    particleSystem.update(0.25f);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)2, particleSystem.getActiveParticlesCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, particleSystem.getActiveParticlesCount());
 
    particleSystem.update(0.25f);
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, particleSystem.getActiveParticlesCount());
