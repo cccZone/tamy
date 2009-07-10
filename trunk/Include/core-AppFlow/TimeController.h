@@ -40,6 +40,7 @@ public:
 
    void add(const std::string& trackID);
    TimeControllerTrack& get(const std::string& trackID);
+   void remove(const std::string& trackID);
 
    void update(float timeElapsed);
 

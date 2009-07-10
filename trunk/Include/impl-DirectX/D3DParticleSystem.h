@@ -42,8 +42,7 @@ public:
    void render();
 
 protected:
-   void onUpdate();
-   void onActivateParticle(unsigned int idx);
+   void updateParticles();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

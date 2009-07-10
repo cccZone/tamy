@@ -52,6 +52,7 @@ PickingDemo::PickingDemo(Tamy& tamy)
       m_sceneManager(NULL),
       m_atmosphere(NULL),
       m_cursor(NULL),
+      m_burst(NULL),
       m_actionsExecutor(NULL),
       m_cameraController(NULL),
       m_shownNode(0)
@@ -108,7 +109,8 @@ void PickingDemo::initialize()
    particleMat->addStage(particleMatStage);
    m_materialsStorage.add(particleMat);
 
-   m_atmosphere = factory.createParticleSystem("atmosphere", false, *particleMat, 50000);
+   m_atmosphere = factory.createParticleSystem("atmosphere", false, *particleMat, 10000);
+   m_atmosphere->setEmissionTime(20);
    m_atmosphere->setLifeSpan(10, 1);
    m_atmosphere->setParticleAnimator(new ParticleFader());
    m_atmosphere->setParticleInitializer(new PlanarParticleInitializer(200, 0.2f, 0.1f, 20));
@@ -125,11 +127,31 @@ void PickingDemo::initialize()
    cursorMat->addStage(cursorMatStage);
    m_materialsStorage.add(cursorMat);
    m_cursor = factory.createParticleSystem("cursor", true, *cursorMat, 200);
+   m_cursor->setEmissionTime(0.2f);
    m_cursor->setLifeSpan(0.3f, 0.2f);
    m_cursor->setParticleAnimator(new ParticleFader());
    m_cursor->setParticleInitializer(new PointParticleInitializer(0.02f, 0.01f, 0.5f));
    D3DXMatrixTranslation(&(m_cursor->accessLocalMtx()), 0, 0, 10);
    m_hudSceneManager->addNode(m_cursor);
+
+   // create the particel burst that will be activated each time mouse is clicked
+   particleLrp = factory.createLightReflectingProperties();
+   particleLrp->setDiffuseColor(Color(0, 1, 0.2f, 1));
+   MaterialStage* burstMatStage = factory.createMaterialStage("particle.tga",
+                                                               MOP_SELECT_ARG1, SC_LRP, SC_NONE,
+                                                               MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE);
+   Material* burstMat = factory.createMaterial("burstMat", particleLrp);
+   burstMat->addStage(burstMatStage);
+   m_materialsStorage.add(burstMat);
+   m_burst = factory.createParticleSystem("burst", true, *burstMat, 300);
+   m_burst->setEmissionTime(0.5f);
+   m_burst->setLifeSpan(1.f, 0.2f);
+   m_burst->setParticleAnimator(new ParticleFader());
+   m_burst->setParticleInitializer(new PointParticleInitializer(0.02f, 0.01f, 0.5f));
+   m_burst->setLooped(false);
+   m_burst->deactivate();
+   D3DXMatrixTranslation(&(m_burst->accessLocalMtx()), 0, 0, 10);
+   m_cursor->addChild(m_burst);
 
    // add a few objects
    D3DXMATRIX helperMtx;
@@ -205,6 +227,7 @@ void PickingDemo::update(float timeElapsed)
       performQuery(nodes);
 
       m_actionsExecutor->execute(nodes);
+      m_burst->activate();
    }
 
    const Point& mouseScreenPos = context().getMousePos();
@@ -215,6 +238,7 @@ void PickingDemo::update(float timeElapsed)
    m_cameraController->update(timeElapsed);
    m_atmosphere->update(timeElapsed);
    m_cursor->update(timeElapsed);
+   m_burst->update(timeElapsed);
    m_renderer->render();
 }
 

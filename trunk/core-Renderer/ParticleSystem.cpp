@@ -14,26 +14,33 @@ ParticleSystem::ParticleSystem(const std::string& name,
                                Material& material,
                                unsigned int particlesCount)
       : AbstractGraphicalNode(name, isDynamic, material, 0),
-      m_particles(new Array<Particle*>()),
-      m_activeParticles(0),
+      m_particles(new Array<Particle*>(particlesCount)),
+      m_desiredParticlesCount(particlesCount),
       m_spawnInterval(0),
       m_nextSpawnTime(0),
       m_spawnTimeline(0),
       m_lifeSpan(0),
       m_lifeSpanVar(0),
+      m_loopedMode(new LoopedMode()),
+      m_impulseMode(new ImpulseMode(m_desiredParticlesCount)),
+      m_currentMode(m_loopedMode),
       m_particleInitializer(new NullParticleInitializer()),
       m_particleAnimator(new NullParticleAnimator())
 {
-   for (unsigned int i = 0; i < particlesCount; ++i)
-   {
-      m_particles->push_back(new Particle());
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ParticleSystem::~ParticleSystem()
 {
+   delete m_loopedMode;
+   m_loopedMode = NULL;
+
+   delete m_impulseMode;
+   m_impulseMode = NULL;
+
+   m_currentMode = NULL;
+
    delete m_particleAnimator;
    m_particleAnimator = NULL;
 
@@ -52,15 +59,31 @@ ParticleSystem::~ParticleSystem()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ParticleSystem::setLifeSpan(float val, float variation)
+void ParticleSystem::setLooped(bool val)
 {
-   m_lifeSpan = val;
-   m_lifeSpanVar = variation;
+   m_currentMode = val ? m_loopedMode : m_impulseMode;
+}
 
-   float particlesCount = (float)m_particles->size();
-   m_spawnInterval = m_lifeSpan / particlesCount;
+///////////////////////////////////////////////////////////////////////////////
+
+void ParticleSystem::setEmissionTime(float time)
+{
+   if (time < 0) {time = 0;}
+
+   m_spawnInterval = time / m_desiredParticlesCount;
    m_nextSpawnTime = 0;
    m_spawnTimeline = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ParticleSystem::setLifeSpan(float val, float variation)
+{
+   if (val < 0) {val = 0;}
+   if (variation < 0) {variation = 0;}
+
+   m_lifeSpan = val;
+   m_lifeSpanVar = variation;
 
    updateBoundingVolume();
 }
@@ -107,35 +130,100 @@ void ParticleSystem::updateBoundingVolume()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void ParticleSystem::activate()
+{
+   m_currentMode->activate();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ParticleSystem::deactivate()
+{
+   m_currentMode->deactivate();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool ParticleSystem::isActive() const
+{
+   return m_currentMode->isActive();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void ParticleSystem::update(float timeElapsed)
 {
-   ASSERT(m_activeParticles <= m_particles->size(), "ParticleSystem data is corrupt");
+   unsigned int activeParticlesCount = m_particles->size();
 
    // animate the existing particles
-   D3DXMATRIX systemGlobalMtx = getGlobalMtx();
    Particle* particle = NULL;
-   for (unsigned int i = 0; i < m_activeParticles; ++i)
+   for (unsigned int i = 0; i < activeParticlesCount;)
    {
       particle = (*m_particles)[i];
       particle->timeToLive -= timeElapsed;
 
-      if (particle->timeToLive <= 0)
+      if (particle->timeToLive > 0)
       {
-         initializeParticle(systemGlobalMtx, *particle);
+         animateParticle(*particle, timeElapsed);
+         ++i;
       }
       else
       {
-         animateParticle(*particle, timeElapsed);
+         delete particle;
+         m_particles->remove(i);
+         activeParticlesCount--;
       }
    }
 
-   // add new particles if necessary
-   if (m_particles->size() > m_activeParticles)
-   {  
-      activateParticles(systemGlobalMtx, timeElapsed);
+   // emit particles if necessary
+   m_spawnTimeline += timeElapsed;
+   if ((m_particles->size() < m_desiredParticlesCount) && (m_spawnTimeline >= m_nextSpawnTime))
+   {
+      m_currentMode->activateParticles(*this);
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ParticleSystem::animateParticle(Particle& particle, float& timeElapsed)
+{
+   particle.position += particle.velocity * timeElapsed;
+   m_particleAnimator->update(particle, timeElapsed);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ParticleSystem::activateParticles()
+{
+   const D3DXMATRIX& systemGlobalMtx = getGlobalMtx();
+
+   unsigned int particlesCount = m_particles->size();
+   unsigned int i = 0;
+
+   unsigned int noParticlesToSpawn = 0;
+   if (m_spawnInterval == 0)
+   {
+      noParticlesToSpawn = m_desiredParticlesCount;
+   }
+   else
+   {
+      noParticlesToSpawn = (1.f + (m_spawnTimeline - m_nextSpawnTime) / m_spawnInterval);
    }
 
-   onUpdate();
+   unsigned int particlesMissingCount = (m_desiredParticlesCount - particlesCount);
+   if (noParticlesToSpawn > particlesMissingCount)
+   {
+      noParticlesToSpawn = particlesMissingCount;
+   }
+   
+   for (; (i < noParticlesToSpawn); ++i, ++particlesCount)
+   {
+      Particle* particle = new Particle();
+      initializeParticle(systemGlobalMtx, *particle);
+      m_particles->push_back(particle);
+   }
+
+   m_nextSpawnTime = m_spawnTimeline + m_spawnInterval;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -153,34 +241,87 @@ void ParticleSystem::initializeParticle(const D3DXMATRIX& systemGlobalMtx,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
-void ParticleSystem::animateParticle(Particle& particle, float& timeElapsed)
+ParticleSystem::ImpulseMode::ImpulseMode(unsigned int maxParticlesCount)
+      : m_maxParticlesCount(maxParticlesCount),
+      m_emittedParticlesCount(0)
 {
-   particle.position += particle.velocity * timeElapsed;
-   m_particleAnimator->update(particle, timeElapsed);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ParticleSystem::activateParticles(const D3DXMATRIX& systemGlobalMtx, 
-                                       float& timeElapsed)
+void ParticleSystem::ImpulseMode::activate()
 {
-   m_spawnTimeline += timeElapsed;
-   if (m_spawnTimeline < m_nextSpawnTime) {return;}
+   m_emittedParticlesCount = 0;
+}
 
-   unsigned int particlesCount = m_particles->size();
-   unsigned int i = 0;
+///////////////////////////////////////////////////////////////////////////////
 
-   unsigned int noParticlesToSpawn = 1 + (m_spawnTimeline - m_nextSpawnTime) / m_spawnInterval;
-   
-   for (; (i < noParticlesToSpawn) && (m_activeParticles < particlesCount); 
-        ++i, ++m_activeParticles)
+void ParticleSystem::ImpulseMode::deactivate()
+{
+   m_emittedParticlesCount = m_maxParticlesCount;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool ParticleSystem::ImpulseMode::isActive() const
+{
+   return (m_emittedParticlesCount < m_maxParticlesCount);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ParticleSystem::ImpulseMode::activateParticles(ParticleSystem& system)
+{
+   if (m_emittedParticlesCount >= m_maxParticlesCount) 
    {
-      initializeParticle(systemGlobalMtx, *(*m_particles)[i]);
-      onActivateParticle(m_activeParticles);
+      return;
    }
 
-   m_nextSpawnTime = m_spawnTimeline + m_spawnInterval;
+   system.activateParticles();
+   m_emittedParticlesCount = system.getActiveParticlesCount();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+ParticleSystem::LoopedMode::LoopedMode()
+      : m_active(true)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ParticleSystem::LoopedMode::activate()
+{
+   m_active = true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ParticleSystem::LoopedMode::deactivate()
+{
+   m_active = false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool ParticleSystem::LoopedMode::isActive() const
+{
+   return m_active;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ParticleSystem::LoopedMode::activateParticles(ParticleSystem& system)
+{
+   if (m_active)
+   {
+      system.activateParticles();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

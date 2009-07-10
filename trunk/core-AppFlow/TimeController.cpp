@@ -60,6 +60,20 @@ TimeControllerTrack& TimeController::get(const std::string& trackID)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void TimeController::remove(const std::string& trackID)
+{
+   std::vector<TimeControllerTrack*>::iterator it =
+      std::find_if(m_tracks.begin(), m_tracks.end(), FindTrack(trackID));
+
+   if (it != m_tracks.end())
+   {
+      delete *it;
+      m_tracks.erase(it);
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void TimeController::resetAll()
 {
    unsigned int count = m_tracks.size();

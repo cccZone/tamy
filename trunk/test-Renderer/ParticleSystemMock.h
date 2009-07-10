@@ -28,10 +28,6 @@ public:
    {
       return ParticleSystem::getParticle(idx);
    }
-
-protected:
-   void onActivateParticle(unsigned int idx) {}
-   void onUpdate() {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
