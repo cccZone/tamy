@@ -8,8 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 GraphicalEntitiesFactory::GraphicalEntitiesFactory(const std::string& texturesPath)
-      : m_texturesPath(texturesPath),
-      m_materialID(0)
+      : m_texturesPath(texturesPath)
 {
 }
 
@@ -71,8 +70,7 @@ Material* GraphicalEntitiesFactory::createMaterial(
                                           const std::string& materialName,
                                           LightReflectingProperties* lrp)
 {
-   Material* mat = createMaterial(materialName, m_materialID, lrp);
-   ++m_materialID;
+   Material* mat = createMaterialImpl(materialName, lrp);
    return mat;
 }
 

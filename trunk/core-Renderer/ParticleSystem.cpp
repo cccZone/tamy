@@ -231,7 +231,7 @@ void ParticleSystem::activateParticles()
 void ParticleSystem::initializeParticle(const D3DXMATRIX& systemGlobalMtx,
                                         Particle& particle)
 {
-   particle.color = m_material.getLightReflectingProperties().getDiffuseColor();
+   particle.color = getMaterial().getLightReflectingProperties().getDiffuseColor();
 
    float randomVar = (-0.5f * m_lifeSpanVar) + ((float)rand() / (float)RAND_MAX) * m_lifeSpanVar;
    particle.timeToLive = m_lifeSpan + randomVar;

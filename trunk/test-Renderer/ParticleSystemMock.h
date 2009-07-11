@@ -7,6 +7,7 @@
 #include "core-Renderer\Material.h"
 #include "LightReflectingPropertiesStub.h"
 #include "MaterialOperationImplementationMock.h"
+#include "TransparencyEnablerStub.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,6 +16,7 @@ class ParticleSystemMock : public ParticleSystem
 {
 private:
    static MaterialOperationImplementationMock s_matOpImpl;
+   static TransparencyEnablerStub s_transparencyEnabler;
    static Material s_material;
 
 public:

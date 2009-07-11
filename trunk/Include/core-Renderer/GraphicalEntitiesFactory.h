@@ -39,8 +39,6 @@ class GraphicalEntitiesFactory
 private:
    std::string m_texturesPath;
 
-   unsigned int m_materialID;
-
    ResourceStorage<Texture> m_textures;
 
 public:
@@ -91,9 +89,8 @@ protected:
                                               MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
                                               MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2) = 0;
 
-   virtual Material* createMaterial(const std::string& name,
-                                    unsigned int index, 
-                                    LightReflectingProperties* lrp) = 0;
+   virtual Material* createMaterialImpl(const std::string& name,
+                                        LightReflectingProperties* lrp) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

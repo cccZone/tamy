@@ -17,8 +17,8 @@ struct BoundingSphere;
  */
 class AbstractGraphicalNode : public Node
 {
-protected:
-   Material& m_material;
+private:
+   Material* m_material;
    DWORD m_subset;
 
 public:
@@ -33,7 +33,14 @@ public:
     */
    void setBoundingSphereRadius(float radius);
 
-   Material& getMaterial() const {return m_material;}
+   /**
+    * This method allows to set an arbitrary material that will be used
+    * during rendering of the node contents.
+    */
+   void setMaterial(Material& material);
+
+   inline const Material& getMaterial() const {return *m_material;}
+   inline Material& getMaterial() {return *m_material;}
 
     /**
     * ...self explanatory I think...

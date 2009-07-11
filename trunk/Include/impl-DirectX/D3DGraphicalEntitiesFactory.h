@@ -9,6 +9,7 @@
 class D3DRenderer;
 class D3DColorOperationImplementation;
 class D3DAlphaOperationImplementation;
+class D3DTransparencyEnabler;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,6 +20,7 @@ private:
    D3DRenderer& m_renderer;
    D3DColorOperationImplementation* m_colorOpImpl;
    D3DAlphaOperationImplementation* m_alphaOpImpl;
+   D3DTransparencyEnabler *m_transparencyEnabler;
 
 public:
    D3DGraphicalEntitiesFactory(const std::string& texturesPath,
@@ -57,9 +59,8 @@ protected:
                                       MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
                                       MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2);
 
-   Material* createMaterial(const std::string& name,
-                                    unsigned int index, 
-                                    LightReflectingProperties* lrp);
+   Material* createMaterialImpl(const std::string& name,
+                                LightReflectingProperties* lrp);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

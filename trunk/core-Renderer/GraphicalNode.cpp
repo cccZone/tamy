@@ -17,7 +17,7 @@ GraphicalNode::GraphicalNode(const std::string& name,
 
 void GraphicalNode::render() 
 {
-   m_entity.render(getGlobalMtx(), m_subset);
+   m_entity.render(getGlobalMtx(), getSubsetIdx());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

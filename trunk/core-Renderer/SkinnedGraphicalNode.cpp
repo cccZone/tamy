@@ -27,7 +27,7 @@ void SkinnedGraphicalNode::render()
       D3DXMatrixMultiply(&(matrices[i]), &offsetMtx, &globalMtx);
    }
 
-   m_entity.render(matrices, m_subset);
+   m_entity.render(matrices, getSubsetIdx());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -13,6 +13,7 @@
 #include "GraphicalNodeMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core\Frustum.h"
+#include "TransparencyEnablerStub.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,9 +116,10 @@ TEST(VisualSceneManager, retrievingStaticGeometry)
    TextureStub texture("");
    MaterialOperationImplementationMock matOpImpl;
    std::list<std::string> results;
+   TransparencyEnablerStub transparencyEnabler;
 
-   Material material1("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, 0);
-   Material material2("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, 1);
+   Material material1("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
+   Material material2("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    material1.addStage(new MaterialStage(texture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -203,8 +205,9 @@ TEST(VisualSceneManager, dynamicNodesAndOctrees)
    MaterialOperationImplementationMock matOpImpl;
    std::list<std::string> results;
    TextureStub texture(results);
+   TransparencyEnablerStub transparencyEnabler;
 
-   Material material("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, 0);
+   Material material("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* materialStage = new MaterialStage(texture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));

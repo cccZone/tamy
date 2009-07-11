@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialOperationImplementationMock GraphicalEntityMock::s_matOpImpl;
-Material GraphicalEntityMock::s_material("", new LightReflectingPropertiesStub(), s_matOpImpl, s_matOpImpl);
+TransparencyEnablerStub GraphicalEntityMock::s_transparencyEnabler;
+Material GraphicalEntityMock::s_material("", new LightReflectingPropertiesStub(), s_matOpImpl, s_matOpImpl, s_transparencyEnabler);
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -13,6 +13,7 @@
 #include "GraphicalNodeMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core\Frustum.h"
+#include "TransparencyEnablerStub.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,9 +24,10 @@ TEST(GraphicalNodesProcessor, sortingByMaterial)
    TextureStub texture("");
    MaterialOperationImplementationMock matOpImpl;
    std::list<std::string> results;
+   TransparencyEnablerStub transparencyEnabler;
 
-   Material material1("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, 0);
-   Material material2("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, 1);
+   Material material1("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
+   Material material2("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    material1.addStage(new MaterialStage(texture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -76,14 +78,15 @@ TEST(GraphicalNodesProcessor, transparentObjects)
    // prepare the materials
    TextureStub regularTexture(results);
    TextureStub transparentTexture(results);
+   TransparencyEnablerStub transparencyEnabler;
 
-   Material regularMaterial("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, 0);
+   Material regularMaterial("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* regularMaterialStage = new MaterialStage(regularTexture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
    regularMaterial.addStage(regularMaterialStage);
 
-   Material transparentMaterial("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, 1);
+   Material transparentMaterial("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
       new MaterialOperation(matOpImpl, MOP_ADD, SC_NONE, SC_NONE));
@@ -125,8 +128,9 @@ TEST(GraphicalNodesProcessor, transparentObjectsAreSortedWithRespectToCamera)
 
    // prepare the materials
    TextureStub transparentTexture(results);
+   TransparencyEnablerStub transparencyEnabler;
 
-   Material transparentMaterial("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, 0);
+   Material transparentMaterial("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
       new MaterialOperation(matOpImpl, MOP_SUBTRACT, SC_NONE, SC_NONE));

@@ -4,6 +4,10 @@
 #include "ext-Fonts\Font.h"
 #include "core-Renderer\AbstractGraphicalEntity.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
+#include "core-Renderer\Color.h"
+#include "core-Renderer\Material.h"
+#include "core-Renderer\LightReflectingProperties.h"
+#include "core-Renderer\MaterialReplacer.h"
 #include <stdio.h>
 
 
@@ -11,8 +15,25 @@
 
 VisibleString::VisibleString(Font& font)
       : Node("visibleString", false),
-      m_font(font)
+      m_font(font),
+      m_material(NULL),
+      m_matReplacer(NULL)
 {
+   const Material& fontMat = m_font.getMaterial();
+   m_material = new Material(fontMat);
+
+   m_matReplacer = new MaterialReplacer(fontMat, *m_material);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+VisibleString::~VisibleString()
+{
+   delete m_matReplacer;
+   m_matReplacer = NULL;
+
+   delete m_material;
+   m_material = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -49,6 +70,25 @@ void VisibleString::setText(const char* text)
 
       letterOffset += m_font.getCharWidth(letter);
    }
+
+   // replace the original font material with our material
+   this->accept(*m_matReplacer);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void VisibleString::setColor(const Color& color)
+{
+   LightReflectingProperties& lrp = m_material->getLightReflectingProperties();
+   lrp.setAmbientColor(color);
+   lrp.setDiffuseColor(color);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Material& VisibleString::getMaterial()
+{
+   return *m_material;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

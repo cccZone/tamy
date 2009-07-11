@@ -8,12 +8,13 @@
 #include "impl-DirectX\D3DSkyBox.h"
 #include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\MaterialOperation.h"
+#include "core-Renderer\Material.h"
 #include "impl-DirectX\D3DColorOperationImplementation.h"
 #include "impl-DirectX\D3DAlphaOperationImplementation.h"
-#include "impl-DirectX\D3DMaterial.h"
 #include "impl-DirectX\D3DTexture.h"
 #include "impl-DirectX\D3DEmptyTexture.h"
 #include "impl-DirectX\D3DParticleSystem.h"
+#include "impl-DirectX\D3DTransparencyEnabler.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,8 @@ D3DGraphicalEntitiesFactory::D3DGraphicalEntitiesFactory(const std::string& text
       m_d3Device(d3Device),
       m_renderer(renderer),
       m_colorOpImpl(new D3DColorOperationImplementation(d3Device)),
-      m_alphaOpImpl(new D3DAlphaOperationImplementation(d3Device))
+      m_alphaOpImpl(new D3DAlphaOperationImplementation(d3Device)),
+      m_transparencyEnabler(new D3DTransparencyEnabler(d3Device))
 {
 }
 
@@ -189,17 +191,11 @@ MaterialStage* D3DGraphicalEntitiesFactory::createMaterialStage(Texture& tex,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material* D3DGraphicalEntitiesFactory::createMaterial(
+Material* D3DGraphicalEntitiesFactory::createMaterialImpl(
                                              const std::string& name,
-                                             unsigned int index, 
                                              LightReflectingProperties* lrp)
 {
-   return new D3DMaterial(m_d3Device, 
-                          name,
-                          lrp, 
-                          *m_alphaOpImpl,
-                          *m_colorOpImpl,
-                          index);
+   return new Material(name, lrp, *m_alphaOpImpl, *m_colorOpImpl, *m_transparencyEnabler);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

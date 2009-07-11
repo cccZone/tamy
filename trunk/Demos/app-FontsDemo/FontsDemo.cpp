@@ -65,7 +65,7 @@ void FontsDemo::initialize()
    Light* light3D = m_tamy.graphicalFactory().createLight("light3D");
    m_sceneManager3D->addNode(light3D);
    light3D->setType(Light::LT_DIRECTIONAL);
-   light3D->setDiffuseColor(Color(1, 0.5f, 0.5f, 1));
+   light3D->setDiffuseColor(Color(1, 1, 1, 1));
 
    VisibleString* string3D = new VisibleString(m_tamy.fontsStorage().get("Curlz"));
    m_sceneManager3D->addNode(string3D);
@@ -74,6 +74,7 @@ void FontsDemo::initialize()
    D3DXMatrixScaling(&helperMtx, 30, 30, 30);
    D3DXMatrixMultiply(&(string3D->accessLocalMtx()), &helperMtx, &(string3D->accessLocalMtx()));
    string3D->setText("Hello World in 3D");
+   string3D->setColor(Color(1, 0.5f, 0.5f, 1));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

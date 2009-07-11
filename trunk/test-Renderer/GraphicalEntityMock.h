@@ -3,6 +3,7 @@
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\Material.h"
 #include "MaterialOperationImplementationMock.h"
+#include "TransparencyEnablerStub.h"
 #include <list>
 #include <string>
 #include <sstream>
@@ -14,6 +15,7 @@ class GraphicalEntityMock : public GraphicalEntity
 {
 private:
    static MaterialOperationImplementationMock s_matOpImpl;
+   static TransparencyEnablerStub s_transparencyEnabler;
    static Material s_material;
    D3DXMATRIX m_mtx;
    std::list<std::string>* m_messageSink;

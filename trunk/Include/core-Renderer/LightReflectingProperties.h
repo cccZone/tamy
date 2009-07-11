@@ -25,6 +25,11 @@ public:
       return !(*this == rhs);
    }
 
+   /**
+    * This method shoudl perform a deep copy of the class instace.
+    */
+   virtual LightReflectingProperties* clone() = 0;
+
    virtual void setAmbientColor(const Color& ambient) = 0;
    virtual void setDiffuseColor(const Color& diffuse) = 0;
    virtual void setSpecularColor(const Color& specular) = 0;

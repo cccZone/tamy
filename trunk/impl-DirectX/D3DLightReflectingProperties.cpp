@@ -13,9 +13,25 @@ D3DLightReflectingProperties::D3DLightReflectingProperties(IDirect3DDevice9& d3D
 
 ///////////////////////////////////////////////////////////////////////////////
 
+D3DLightReflectingProperties::D3DLightReflectingProperties(const D3DLightReflectingProperties& rhs)
+      : m_d3Device(rhs.m_d3Device),
+      m_material(rhs.m_material),
+      m_diffuse(rhs.m_diffuse)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 D3DLightReflectingProperties::~D3DLightReflectingProperties()
 {
    m_d3Device.Release();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+LightReflectingProperties* D3DLightReflectingProperties::clone()
+{
+   return new D3DLightReflectingProperties(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -20,6 +20,7 @@ public:
    MaterialStage(Texture& emptyTexture, 
                  MaterialOperation* defaultColorOp, 
                  MaterialOperation* defaultAlphaOp);
+   MaterialStage(const MaterialStage& rhs);
    ~MaterialStage();
 
    void setIndex(int val) {m_index = val;}

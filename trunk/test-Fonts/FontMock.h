@@ -2,6 +2,10 @@
 
 #include "ext-Fonts\Font.h"
 #include "GraphicalEntityMock.h"
+#include "core-Renderer\Material.h"
+#include "LightReflectingPropertiesStub.h"
+#include "MaterialOperationImplementationMock.h"
+#include "TransparencyEnablerStub.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,8 +16,25 @@ private:
    std::vector<unsigned char> m_chars;
    GraphicalEntityMock m_mockEntity;
 
+   MaterialOperationImplementationMock m_matOp;
+   TransparencyEnablerStub m_transparencyEnabler;
+   Material* m_material;
+
 public:
-   FontMock() : Font("FontMock") {}
+   FontMock() 
+      : Font("FontMock") 
+   {
+      m_material = new Material("someMaterial", 
+                                new LightReflectingPropertiesStub(),
+                                m_matOp, m_matOp,
+                                m_transparencyEnabler);
+   }
+
+   ~FontMock()
+   {
+      delete m_material;
+      m_material = NULL;
+   }
 
    void reset()
    {
@@ -34,6 +55,11 @@ public:
    float getCharWidth(unsigned char c) const
    {
       return 10;
+   }
+
+   const Material& getMaterial() const
+   {
+      return *m_material;
    }
 };
 

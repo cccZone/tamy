@@ -17,6 +17,16 @@ MaterialOperation::MaterialOperation(MaterialOperationImplementation& impl,
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MaterialOperation::MaterialOperation(const MaterialOperation& rhs)
+      : m_impl(rhs.m_impl),
+      m_opCode(rhs.m_opCode),
+      m_arg1(rhs.m_arg1),
+      m_arg2(rhs.m_arg2)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool MaterialOperation::operator==(const MaterialOperation& rhs) const
 {
    if (m_opCode != rhs.m_opCode) return false;

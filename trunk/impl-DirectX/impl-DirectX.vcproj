@@ -224,14 +224,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\D3DMaterial.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\impl-DirectX\D3DMaterial.h"
-					>
-				</File>
-				<File
 					RelativePath=".\D3DParticleSystem.cpp"
 					>
 				</File>
@@ -257,6 +249,14 @@
 				</File>
 				<File
 					RelativePath="..\Include\impl-DirectX\D3DTexture.h"
+					>
+				</File>
+				<File
+					RelativePath=".\D3DTransparencyEnabler.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\D3DTransparencyEnabler.h"
 					>
 				</File>
 			</Filter>

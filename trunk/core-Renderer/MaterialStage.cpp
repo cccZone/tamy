@@ -27,6 +27,16 @@ MaterialStage::MaterialStage(Texture& texture,
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MaterialStage::MaterialStage(const MaterialStage& rhs)
+      : m_index(rhs.m_index),
+      m_texture(rhs.m_texture),
+      m_colorOperation(new MaterialOperation(*rhs.m_colorOperation)),
+      m_alphaOperation(new MaterialOperation(*rhs.m_alphaOperation))
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 MaterialStage::~MaterialStage()
 {
    delete m_colorOperation;

@@ -32,9 +32,17 @@ public:
       throw std::runtime_error(std::string("Resource ") + std::string(name) + " doesn't exist");
    }
 
-   bool is(const std::string& name)
+   const ResourceType& get(const std::string& name) const
    {
-      ResourceMap::iterator it = m_resources.find(name);
+      ResourceMap::const_iterator it = m_resources.find(name);
+      if (it != m_resources.end()) {return *(it->second);}
+
+      throw std::runtime_error(std::string("Resource ") + std::string(name) + " doesn't exist");
+   }
+
+   bool is(const std::string& name) const
+   {
+      ResourceMap::const_iterator it = m_resources.find(name);
       return (it != m_resources.end());
    }
 

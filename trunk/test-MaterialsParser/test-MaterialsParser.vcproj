@@ -194,6 +194,10 @@
 				RelativePath=".\TextureStub.h"
 				>
 			</File>
+			<File
+				RelativePath=".\TransparencyEnablerStub.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Core"

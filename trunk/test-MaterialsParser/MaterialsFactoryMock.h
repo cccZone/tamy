@@ -5,6 +5,7 @@
 #include "LightReflectingPropertiesStub.h"
 #include "MaterialOperationImplementationMock.h"
 #include "TextureStub.h"
+#include "TransparencyEnablerStub.h"
 #include "core-Renderer\Material.h"
 #include <vector>
 #include <algorithm>
@@ -17,6 +18,7 @@ class MaterialsFactoryMock : public GraphicalEntitiesFactory
 {
 private:
    MaterialOperationImplementationMock m_matOp;
+   TransparencyEnablerStub m_transparencyEnabler;
 
 public:
    MaterialsFactoryMock() : GraphicalEntitiesFactory("") {}
@@ -73,9 +75,9 @@ protected:
       return new TextureStub("");
    }
 
-   Material* createMaterial(const std::string& name, unsigned int idx, LightReflectingProperties* lrp)
+   Material* createMaterialImpl(const std::string& name, LightReflectingProperties* lrp)
    {
-      return new Material(name, lrp, m_matOp, m_matOp, idx);
+      return new Material(name, lrp, m_matOp, m_matOp, m_transparencyEnabler);
    }
 
    MaterialStage* createMaterialStage(Texture& texture,

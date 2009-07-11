@@ -2,12 +2,14 @@
 #include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\LightReflectingProperties.h"
+#include "core-Renderer\TransparencyEnabler.h"
 #include <string.h>
 #include <stdexcept>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+unsigned int Material::m_nextIndex = 0;
 unsigned char Material::s_stagesArrSize = 8;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,17 +18,46 @@ Material::Material(const std::string& name,
                    LightReflectingProperties* lrp,
                    MaterialOperationImplementation& alphaMatOp,
                    MaterialOperationImplementation& colorMatOp,
-                   unsigned int index)
+                   TransparencyEnabler& transparencyEnabler)
       : m_name(name),
-      m_index(index),
+      m_index(m_nextIndex),
       m_lightReflectingProperties(lrp),
       m_disableAlpha(new MaterialOperation(alphaMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
       m_disableColor(new MaterialOperation(colorMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
+      m_transparencyEnabler(transparencyEnabler),
       m_stagesCount(0),
       m_transparent(false)
 {
+   ++m_nextIndex;
+
    m_stages = new MaterialStageP[s_stagesArrSize];
    memset(m_stages, NULL, sizeof(MaterialStageP) * s_stagesArrSize);
+
+   checkTransparency();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Material::Material(const Material& rhs)
+      : m_name(rhs.m_name),
+      m_index(m_nextIndex),
+      m_lightReflectingProperties(rhs.m_lightReflectingProperties->clone()),
+      m_disableAlpha(new MaterialOperation(*rhs.m_disableAlpha)),
+      m_disableColor(new MaterialOperation(*rhs.m_disableColor)),
+      m_transparencyEnabler(rhs.m_transparencyEnabler),
+      m_stagesCount(rhs.m_stagesCount),
+      m_transparent(false)
+{
+   ++m_nextIndex;
+
+   m_stages = new MaterialStageP[s_stagesArrSize];
+   memset(m_stages, NULL, sizeof(MaterialStageP) * s_stagesArrSize);
+
+   // copy material stages
+   for (int i = 0; i < m_stagesCount; ++i)
+   {
+      m_stages[i] = new MaterialStage(*rhs.m_stages[i]);
+   }
 
    checkTransparency();
 }
@@ -54,6 +85,19 @@ Material::~Material()
    m_stagesCount = 0;
 
    m_index = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Material::setLightReflectingProperties(LightReflectingProperties* lrp)
+{
+   if (lrp == NULL)
+   {
+      throw std::invalid_argument("NULL pointer instead a LightReflectingProperties instance");
+   }
+
+   delete m_lightReflectingProperties;
+   m_lightReflectingProperties = lrp;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,16 +159,7 @@ MaterialStage& Material::getStage(unsigned int stageIdx)
 
 bool Material::operator==(const Material& rhs) const
 {
-   if (*m_lightReflectingProperties != *(rhs.m_lightReflectingProperties)) {return false;}
-
-   if (m_stagesCount != rhs.m_stagesCount) {return false;}
-
-   for (unsigned char i = 0; i < m_stagesCount; ++i)
-   {
-      if (*(m_stages[i]) != *(rhs.m_stages[i])) {return false;}
-   }
-
-   return true;
+   return (m_index == rhs.m_index);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,7 +180,7 @@ bool Material::isTransparent() const
 
 void Material::setForRendering()
 {
-   enableTransparency(m_transparent);
+   m_transparencyEnabler.setTransparency(m_transparent);
 
    m_lightReflectingProperties->setForRendering();
 

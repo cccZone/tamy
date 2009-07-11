@@ -42,19 +42,11 @@ void XMLFontLoader::parseMesh(MeshDefinition& mesh,
       throw std::runtime_error(m_fileName + " doesn't contain valid font definition");
    }
 
-   std::string fontFaceFileName = root->Attribute("fontFaceFileName");
-
    float size = 0;
    if (root->QueryFloatAttribute("size", &size) != TIXML_SUCCESS)
    {
       throw std::runtime_error("Invalid value in <size> attribute - float expected");
    }
-
-   // create the material for the font
-   char tmpMaterialName[256];
-   sprintf_s(tmpMaterialName, "%s_mat", m_fileName.c_str());
-   materials.push_back(MaterialDefinition(tmpMaterialName));
-   createMaterial(materials.back(), fontFaceFileName.c_str());
 
    // parse the glifs and create the entities for them
    char tmpGlifMeshName[256];
@@ -82,7 +74,7 @@ void XMLFontLoader::parseMesh(MeshDefinition& mesh,
    float tv2 = v2 / size;
 
    sprintf_s(tmpGlifMeshName, "%s_glif_%d", m_fileName.c_str(), c);
-   prepareEntity(mesh, tmpGlifMeshName, tmpMaterialName, 
+   prepareEntity(mesh, tmpGlifMeshName,
                  width / 2.f, height / 2.f,
                  tu1, tv1,
                  tu2, tv2);
@@ -126,25 +118,8 @@ void XMLFontLoader::parseGlif(TiXmlElement& glif,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void XMLFontLoader::createMaterial(MaterialDefinition& material,
-                                   const char* texName)
-{
-   material.texName = texName;
-   material.ambient = Color(1, 1, 1, 1);
-   material.diffuse = Color(1, 1, 1, 1);
-   material.colorOp = MOP_SELECT_ARG1;
-   material.colorArg1 = SC_LRP;
-   material.colorArg2 = SC_NONE;
-   material.alphaOp = MOP_SELECT_ARG1;
-   material.alphaArg1 = SC_TEXTURE;
-   material.alphaArg2 = SC_NONE;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void XMLFontLoader::prepareEntity(MeshDefinition& mesh,
                                   const char* meshName,
-                                  const char* materialName,
                                   float width, float height,
                                   float tu1, float tv1,
                                   float tu2, float tv2)
@@ -158,7 +133,7 @@ void XMLFontLoader::prepareEntity(MeshDefinition& mesh,
    mesh.vertices.push_back(LitVertex::unskinnedOneTex( width,  height, 0, 0, 0, -1, tu2, tv1));
    mesh.faces.push_back(Face<USHORT>(0, 2, 1, 0));
    mesh.faces.push_back(Face<USHORT>(1, 2, 3, 0));
-   mesh.materials.push_back(materialName);
+   mesh.materials.push_back("material");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -185,6 +160,11 @@ XMLFont::XMLFont(const char* fontDefFile,
       m_glifs(256, NULL),
       m_glifSizes(256, -1)
 {
+   // create material
+   Material* material = createMaterial(fontDefFile);
+   m_materialsStorage.add(material);
+
+   // create glifs
    unsigned char glifsToParse[] = 
    {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 
     'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 
@@ -228,6 +208,37 @@ XMLFont::~XMLFont()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Material* XMLFont::createMaterial(const char* fontDefFile)
+{
+   // parse the xml definition of the font
+   TiXmlDocument document(fontDefFile);
+   if (document.LoadFile() == false)
+   {
+      throw std::runtime_error(std::string("Cannot load file ") + fontDefFile);
+   }
+   TiXmlElement* root = document.FirstChildElement("Font"); 
+   if (root == NULL) 
+   {
+      throw std::runtime_error(std::string(fontDefFile) + " doesn't contain valid font definition");
+   }
+
+   std::string fontFaceFileName = root->Attribute("fontFaceFileName");
+
+   LightReflectingProperties* lrp = m_entitiesFactory.createLightReflectingProperties();
+   lrp->setAmbientColor(Color(1, 1, 1, 1));
+   lrp->setDiffuseColor(Color(1, 1, 1, 1));
+
+   MaterialStage* stage = m_entitiesFactory.createMaterialStage(fontFaceFileName,
+                                                                MOP_SELECT_ARG1, SC_LRP, SC_NONE,
+                                                                MOP_SELECT_ARG1, SC_TEXTURE, SC_NONE);
+
+   Material* material = m_entitiesFactory.createMaterial("material", lrp);
+   material->addStage(stage);
+   return material;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 AbstractGraphicalEntity& XMLFont::getChar(unsigned char c)
 {
    if (m_glifs[c] == NULL)
@@ -252,6 +263,13 @@ float XMLFont::getCharWidth(unsigned char c) const
    {
       return m_glifSizes[c];
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const Material& XMLFont::getMaterial() const
+{
+   return m_materialsStorage.get("material");
 }
 
 ///////////////////////////////////////////////////////////////////////////////

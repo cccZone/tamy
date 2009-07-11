@@ -3,6 +3,8 @@
 #include "core\MatrixWriter.h"
 #include "FontMock.h"
 #include <d3dx9.h>
+#include "core-Renderer\AbstractGraphicalNode.h"
+#include "MaterialChecker.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,6 +49,20 @@ TEST(VisibleString, spacingBetweenLetters)
    {
       CPPUNIT_ASSERT_EQUAL(expectedPos[i], (*it)->getLocalMtx());
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(VisibleString, ownMaterialCopy)
+{
+   FontMock font;
+   const Material& originalMat = font.getMaterial();
+
+   VisibleString string(font);
+   Material& instanceMat = string.getMaterial();
+
+   // verify that each string uses its own material
+   CPPUNIT_ASSERT(originalMat.getIndex() != instanceMat.getIndex());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

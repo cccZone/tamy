@@ -12,7 +12,7 @@ AbstractGraphicalNode::AbstractGraphicalNode(const std::string& name,
                                              Material& material, 
                                              DWORD subset)
       : Node(name, dynamic),
-      m_material(material), 
+      m_material(&material), 
       m_subset(subset)
 {
 }
@@ -29,6 +29,13 @@ void AbstractGraphicalNode::setBoundingSphereRadius(float radius)
 {
    if (radius < 0) {radius = 0;}
    setBoundingVolume(new BoundingSphere(D3DXVECTOR3(0, 0, 0), radius));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void AbstractGraphicalNode::setMaterial(Material& material)
+{
+   m_material = &material;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

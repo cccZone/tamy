@@ -5,6 +5,7 @@
 #include "MaterialOperationImplementationMock.h"
 #include "LightReflectingPropertiesStub.h"
 #include "TextureStub.h"
+#include "TransparencyEnablerStub.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,7 +66,9 @@ TEST(Material, addingStage)
 {
    MaterialOperationImplementationMock matOpImpl;
    TextureStub tex("tex");
-   Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
+   TransparencyEnablerStub transparencyEnabler;
+
+   Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* stage1 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
@@ -94,7 +97,9 @@ TEST(Material, removingStage)
 {
    MaterialOperationImplementationMock matOpImpl;
    TextureStub tex("tex");
-   Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
+   TransparencyEnablerStub transparencyEnabler;
+
+   Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* stage1 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
@@ -129,46 +134,17 @@ TEST(Material, removingStage)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Material, equalityWithManyStages)
+TEST(Material, equality)
 {
    MaterialOperationImplementationMock matOpImpl;
-   TextureStub tex1("tex1");
-   TextureStub tex2("tex2");
+   TransparencyEnablerStub transparencyEnabler;
 
-   Material mat1("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
-   mat1.addStage(new MaterialStage(tex1,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-
-   Material mat2("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
-   mat2.addStage(new MaterialStage(tex1,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-   mat2.addStage(new MaterialStage(tex2,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-
-   Material mat3("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
-   mat3.addStage(new MaterialStage(tex2,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-   mat3.addStage(new MaterialStage(tex1,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-
-   Material mat4("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
-   mat4.addStage(new MaterialStage(tex1,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-   mat4.addStage(new MaterialStage(tex2,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+   Material mat1("xxx", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
+   Material mat2("xxx", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
 
    CPPUNIT_ASSERT(mat1 != mat2);
-   CPPUNIT_ASSERT(mat2 != mat3);
-   CPPUNIT_ASSERT(mat3 != mat4);
-   CPPUNIT_ASSERT(mat1 != mat3);
-   CPPUNIT_ASSERT(mat4 == mat2);
+   CPPUNIT_ASSERT(mat2 == mat2);
+   CPPUNIT_ASSERT(mat1 == mat1);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -178,7 +154,9 @@ TEST(Material, lastRenderedStageIsOneThatDisablesItself)
    MaterialOperationImplementationMock colorMatOpImpl;
    MaterialOperationImplementationMock alphaMatOpImpl;
    TextureStub tex("tex");
-   Material mat("", new LightReflectingPropertiesStub(), alphaMatOpImpl, colorMatOpImpl);
+   TransparencyEnablerStub transparencyEnabler;
+
+   Material mat("", new LightReflectingPropertiesStub(), alphaMatOpImpl, colorMatOpImpl, transparencyEnabler);
 
    mat.setForRendering();
    CPPUNIT_ASSERT_EQUAL(1, colorMatOpImpl.getOperationsCount());

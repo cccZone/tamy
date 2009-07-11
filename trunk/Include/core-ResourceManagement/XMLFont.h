@@ -41,12 +41,8 @@ private:
                   float& u1, float& v1, 
                   float& u2, float& v2);
 
-   void createMaterial(MaterialDefinition& material,  
-                       const char* texName);
-
    void prepareEntity(MeshDefinition& mesh,
                       const char* meshName,
-                      const char* materialName,
                       float width, float height,
                       float tu1, float tv1,
                       float tu2, float tv2);
@@ -76,9 +72,14 @@ public:
            GraphicalEntitiesFactory& entitiesFactory);
    ~XMLFont();
 
+   const Material& getMaterial() const;
+
    AbstractGraphicalEntity& getChar(unsigned char c);
 
    float getCharWidth(unsigned char c) const;
+
+private:
+   Material* createMaterial(const char* fontDefFile);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

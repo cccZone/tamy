@@ -189,6 +189,10 @@
 			Name="Utils"
 			>
 			<File
+				RelativePath=".\AbstractGraphicalNodeMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GraphicalEntityMock.cpp"
 				>
 			</File>
@@ -242,6 +246,10 @@
 			</File>
 			<File
 				RelativePath=".\TextureStub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TransparencyEnablerStub.h"
 				>
 			</File>
 		</Filter>
@@ -310,6 +318,14 @@
 			</File>
 			<File
 				RelativePath=".\MaterialTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Editors"
+			>
+			<File
+				RelativePath=".\MaterialReplacerTests.cpp"
 				>
 			</File>
 		</Filter>

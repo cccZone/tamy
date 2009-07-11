@@ -4,6 +4,7 @@
 #include "core-Renderer\Material.h"
 #include "MaterialOperationImplementationMock.h"
 #include "core\BoundingSphere.h"
+#include "TransparencyEnablerStub.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,6 +13,7 @@ class GraphicalNodeMock : public AbstractGraphicalNode
 {
 private:
    static MaterialOperationImplementationMock s_matOpImpl;
+   static TransparencyEnablerStub s_transparencyEnabler;
    static Material s_material;
 
 public:

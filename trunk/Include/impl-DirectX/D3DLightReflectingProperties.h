@@ -18,7 +18,10 @@ private:
 
 public:
    D3DLightReflectingProperties(IDirect3DDevice9& d3Device);
+   D3DLightReflectingProperties(const D3DLightReflectingProperties& rhs);
    ~D3DLightReflectingProperties();
+
+   LightReflectingProperties* clone();
 
    bool operator==(const LightReflectingProperties& rhs) const;
 

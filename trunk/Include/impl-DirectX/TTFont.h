@@ -25,6 +25,8 @@ public:
    AbstractGraphicalEntity& getChar(unsigned char c);
 
    float getCharWidth(unsigned char c) const;
+
+   const Material& getMaterial() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialOperationImplementationMock GraphicalNodeMock::s_matOpImpl;
-Material GraphicalNodeMock::s_material("", new LightReflectingPropertiesStub(), s_matOpImpl, s_matOpImpl);
+TransparencyEnablerStub GraphicalNodeMock::s_transparencyEnabler;
+Material GraphicalNodeMock::s_material("", new LightReflectingPropertiesStub(), s_matOpImpl, s_matOpImpl, s_transparencyEnabler);
 
 ///////////////////////////////////////////////////////////////////////////////

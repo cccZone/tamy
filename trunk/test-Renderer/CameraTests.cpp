@@ -15,6 +15,7 @@
 #include "core\BoundingSphere.h"
 #include "core\CollisionTests.h"
 #include "core\Ray.h"
+#include "TransparencyEnablerStub.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,7 +36,9 @@ TEST(Camera, renderingWithActiveCamera)
   
    TextureStub tex("");
    MaterialOperationImplementationMock matOpImpl;
-   Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
+   TransparencyEnablerStub transparencyEnabler;
+
+   Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    mat.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));

@@ -9,6 +9,7 @@ class LightReflectingProperties;
 class MaterialStage;
 class MaterialOperation;
 class MaterialOperationImplementation;
+class TransparencyEnabler;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,6 +21,7 @@ class MaterialOperationImplementation;
 class Material
 {
 private:
+   static unsigned int m_nextIndex;
    static unsigned char s_stagesArrSize;
 
    std::string m_name;
@@ -28,6 +30,7 @@ private:
    LightReflectingProperties* m_lightReflectingProperties;
    MaterialOperation* m_disableAlpha;
    MaterialOperation* m_disableColor;
+   TransparencyEnabler& m_transparencyEnabler;
 
    typedef MaterialStage* MaterialStageP;
    MaterialStageP* m_stages;
@@ -41,9 +44,19 @@ public:
             LightReflectingProperties* lrp,
             MaterialOperationImplementation& alphaMatOp,
             MaterialOperationImplementation& colorMatOp,
-            unsigned int index = 0);
+            TransparencyEnabler& transparencyEnabler);
+   Material(const Material& rhs);
    ~Material();
 
+   Material* clone();
+
+   /**
+    * Material bears a name. It gives it a 'recognizable label'.
+    *
+    * However - the name of the material is not it's unique ID - it's index is.
+    * Two completely different materials can bear the same name, however
+    * it is guaranteed that THEY WILL HAVE DIFFERENT IDs.
+    */
    const std::string& getName() const {return m_name;}
 
    unsigned int getStagesCount() const {return m_stagesCount;}
@@ -54,6 +67,11 @@ public:
 
    LightReflectingProperties& getLightReflectingProperties() {return *m_lightReflectingProperties;}
 
+   /**
+    * This method allows to change the light reflecting properties of a material
+    */
+   void setLightReflectingProperties(LightReflectingProperties* lrp);
+
    /** 
     * Since materials are used in the rendering strategy as a batching pointer,
     * we want to have a way of sorting through them.
@@ -63,20 +81,15 @@ public:
    unsigned int getIndex() const {return m_index;}
    bool operator<(const Material& rhs) const {return m_index < rhs.m_index;}
 
+   /** 
+    * Operator returns true if both materials have the same id
+    */
    bool operator==(const Material& rhs) const;
    bool operator!=(const Material& rhs) const;
 
    bool isTransparent() const;
 
    void setForRendering();
-
-protected:
-   /**
-    * This method is called whenever we need to render a transparent material.
-    * The implementation of this class should make whatever's necessary
-    * in the graphical; library it uses to ensure that
-    */
-   virtual void enableTransparency(bool enable) {}
 
 private:
    void checkTransparency();

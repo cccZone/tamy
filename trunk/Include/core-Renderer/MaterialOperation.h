@@ -49,6 +49,7 @@ public:
                      MatOpCode opCode, 
                      SourceCode arg1, 
                      SourceCode arg2);
+   MaterialOperation(const MaterialOperation& rhs);
 
    bool operator==(const MaterialOperation& rhs) const;
    bool operator!=(const MaterialOperation& rhs) const;

@@ -8,6 +8,7 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "LightReflectingPropertiesStub.h"
 #include "core-Renderer\BatchingStrategy.h"
+#include "TransparencyEnablerStub.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,9 +18,10 @@ TEST(BatchComparator, sortingByMaterials)
    // prepare the materials
    TextureStub texture("");
    MaterialOperationImplementationMock matOpImpl;
+   TransparencyEnablerStub transparencyEnabler;
 
-   Material material1("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, 0);
-   Material material2("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, 1);
+   Material material1("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
+   Material material2("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    material1.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));

@@ -21,6 +21,11 @@ public:
    LightReflectingPropertiesStub(std::list<std::string>& messageSink, int id = 0) 
       : m_messageSink(&messageSink), m_id(id) {}
 
+   LightReflectingProperties* clone()
+   {
+      return new LightReflectingPropertiesStub(*this);
+   }
+
    bool operator==(const LightReflectingProperties& rhs) const 
    {
       const LightReflectingPropertiesStub* lrp = dynamic_cast<const LightReflectingPropertiesStub*> (&rhs);

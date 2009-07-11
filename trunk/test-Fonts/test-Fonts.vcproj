@@ -192,6 +192,22 @@
 				RelativePath=".\GraphicalEntityMock.h"
 				>
 			</File>
+			<File
+				RelativePath=".\LightReflectingPropertiesStub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialChecker.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MaterialOperationImplementationMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TransparencyEnablerStub.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

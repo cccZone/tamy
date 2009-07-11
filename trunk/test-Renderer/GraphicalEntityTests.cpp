@@ -16,6 +16,7 @@
 #include <vector>
 #include "NodeHierarchyWriter.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
+#include "TransparencyEnablerStub.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,15 +90,17 @@ TEST(GraphicalEntityInstantiation, multipleSubsets)
 {
    MaterialOperationImplementationMock matOpImpl;
    TextureStub texture("");
-   Material skinMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
+   TransparencyEnablerStub transparencyEnabler;
+
+   Material skinMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    skinMat.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-   Material blouseMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
+   Material blouseMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    blouseMat.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
-   Material hairMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
+   Material hairMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    hairMat.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -177,7 +180,8 @@ TEST(SkinnedGraphicalEntityInstantiation, basics)
 {
    MaterialOperationImplementationMock matOpImpl;
    TextureStub tex("");
-   Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
+   TransparencyEnablerStub transparencyEnabler;
+   Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    material.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -265,7 +269,8 @@ TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
 {
    MaterialOperationImplementationMock matOpImpl;
    TextureStub tex("");
-   Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
+   TransparencyEnablerStub transparencyEnabler;
+   Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    material.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
@@ -321,7 +326,8 @@ TEST(SkinnedGraphicalEntityInstantiation, instantiationViaGraphicalNodeInstantia
 {
    MaterialOperationImplementationMock matOpImpl;
    TextureStub tex("");
-   Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl);
+   TransparencyEnablerStub transparencyEnabler;
+   Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    material.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
