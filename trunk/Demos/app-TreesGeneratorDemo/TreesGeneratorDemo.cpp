@@ -65,7 +65,8 @@ void TreesGeneratorDemo::initialize()
    lrp->setDiffuseColor(Color(1, 1, 1, 1));
    MaterialStage* stage = m_tamy.graphicalFactory().createMaterialStage("LondonPlaneBark.dds",
                                              MOP_MULTIPLY, SC_LRP, SC_TEXTURE,
-                                             MOP_DISABLE, SC_NONE, SC_NONE);
+                                             MOP_DISABLE, SC_NONE, SC_NONE,
+                                             CC_WRAP);
    Material* mat = m_tamy.graphicalFactory().createMaterial("treeBark", lrp);
    mat->addStage(stage);
    m_materialsStorage.add(mat);

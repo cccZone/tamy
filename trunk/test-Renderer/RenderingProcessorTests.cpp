@@ -10,6 +10,7 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "LightReflectingPropertiesStub.h"
 #include "TransparencyEnablerStub.h"
+#include "CoordinatesOperationMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,7 +29,8 @@ TEST(RenderingProcessor, issuingRenderingCommands)
    Material material("", lrp, matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* materialStage = new MaterialStage(texture,  
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
    material.addStage(materialStage);
 
    // create the node we'll use for rendering
@@ -81,13 +83,15 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
    Material material1("", lrp1, matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* materialStage1 = new MaterialStage(texture, 
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
    material1.addStage(materialStage1);
 
    Material material2("", lrp2, matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* materialStage2 = new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
    material2.addStage(materialStage2);
 
    // create the node we'll use for rendering

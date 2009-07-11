@@ -6,6 +6,7 @@
 #include "MaterialOperationImplementationMock.h"
 #include "TextureStub.h"
 #include "TransparencyEnablerStub.h"
+#include "CoordinatesOperationMock.h"
 #include "core-Renderer\Material.h"
 #include <vector>
 #include <algorithm>
@@ -82,11 +83,13 @@ protected:
 
    MaterialStage* createMaterialStage(Texture& texture,
                                       MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
-                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2)
+                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
+                                      CoordsOpCode coordsOp)
    {
       return new MaterialStage(texture, 
                                new MaterialOperation(m_matOp, colorOp, colorArg1, colorArg2),
-                               new MaterialOperation(m_matOp, alphaOp, alphaArg1, alphaArg2));
+                               new MaterialOperation(m_matOp, alphaOp, alphaArg1, alphaArg2),
+                               new CoordinatesOperationMock(coordsOp));
    }
 };
 

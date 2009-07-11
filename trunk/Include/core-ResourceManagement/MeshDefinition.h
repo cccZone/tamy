@@ -9,6 +9,7 @@
 #include <d3dx9.h>
 #include "core-Renderer\SkinBoneDefinition.h"
 #include "core-Renderer\MaterialOperation.h"
+#include "core-Renderer\CoordinatesOperation.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,6 +31,7 @@ struct MaterialDefinition
    MatOpCode alphaOp;
    SourceCode alphaArg1;
    SourceCode alphaArg2;
+   CoordsOpCode coordsOp;
 
    MaterialDefinition(const std::string& _matName,
                       const Color& _ambient,
@@ -43,7 +45,8 @@ struct MaterialDefinition
                       SourceCode _colorArg2,
                       MatOpCode _alphaOp,
                       SourceCode _alphaArg1,
-                      SourceCode _alphaArg2)
+                      SourceCode _alphaArg2,
+                      CoordsOpCode _coordsOp)
          : matName(_matName),
          ambient(_ambient),
          diffuse(_diffuse),
@@ -52,13 +55,15 @@ struct MaterialDefinition
          power(_power),
          texName(_texName),
          colorOp(_colorOp), colorArg1(_colorArg1), colorArg2(_colorArg2),
-         alphaOp(_alphaOp), alphaArg1(_alphaArg1), alphaArg2(_alphaArg2)
+         alphaOp(_alphaOp), alphaArg1(_alphaArg1), alphaArg2(_alphaArg2),
+         coordsOp(_coordsOp)
    {}
 
    MaterialDefinition(const std::string& name)
       : matName(name), power(1), 
       colorOp(MOP_DISABLE), colorArg1(SC_NONE), colorArg2(SC_NONE),
-      alphaOp(MOP_DISABLE), alphaArg1(SC_NONE), alphaArg2(SC_NONE)
+      alphaOp(MOP_DISABLE), alphaArg1(SC_NONE), alphaArg2(SC_NONE),
+      coordsOp(CC_WRAP)
    {}
 };
 

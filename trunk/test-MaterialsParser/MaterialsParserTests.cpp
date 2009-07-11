@@ -147,6 +147,7 @@ TEST(MaterialsParser, textureStage)
    CPPUNIT_ASSERT_EQUAL(MOP_MULTIPLY, mat.getStage(0).getAlphaOperation().getOperationCode());
    CPPUNIT_ASSERT_EQUAL(SC_TEXTURE, mat.getStage(0).getAlphaOperation().getArg1());
    CPPUNIT_ASSERT_EQUAL(SC_PREV, mat.getStage(0).getAlphaOperation().getArg2());
+   CPPUNIT_ASSERT_EQUAL(CC_CLAMP, mat.getStage(0).getCoordOperation().getCode());
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -170,6 +171,7 @@ TEST(MaterialsParser, multipleTextureStages)
    CPPUNIT_ASSERT_EQUAL(MOP_MULTIPLY_ADD, mat.getStage(0).getAlphaOperation().getOperationCode());
    CPPUNIT_ASSERT_EQUAL(SC_LRP, mat.getStage(0).getAlphaOperation().getArg1());
    CPPUNIT_ASSERT_EQUAL(SC_TEXTURE, mat.getStage(0).getAlphaOperation().getArg2());
+   CPPUNIT_ASSERT_EQUAL(CC_MIRROR, mat.getStage(0).getCoordOperation().getCode());
 
    // stage 1
    CPPUNIT_ASSERT_EQUAL(std::string("tex2"), mat.getStage(1).getTexture().getName());
@@ -179,6 +181,7 @@ TEST(MaterialsParser, multipleTextureStages)
    CPPUNIT_ASSERT_EQUAL(MOP_DISABLE, mat.getStage(1).getAlphaOperation().getOperationCode());
    CPPUNIT_ASSERT_EQUAL(SC_NONE, mat.getStage(1).getAlphaOperation().getArg1());
    CPPUNIT_ASSERT_EQUAL(SC_NONE, mat.getStage(1).getAlphaOperation().getArg2());
+   CPPUNIT_ASSERT_EQUAL(CC_WRAP, mat.getStage(1).getCoordOperation().getCode());
 }
 
 //////////////////////////////////////////////////////////////////////////////

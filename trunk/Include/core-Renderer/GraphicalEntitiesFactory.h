@@ -2,6 +2,7 @@
 
 #include "core\ResourceStorage.h"
 #include "core-Renderer\MaterialOperation.h"
+#include "core-Renderer\CoordinatesOperation.h"
 #include "core-Renderer\SkinBoneDefinition.h"
 #include "core-Renderer\Face.h"
 #include "core-Renderer\Texture.h"
@@ -67,7 +68,8 @@ public:
 
    MaterialStage* createMaterialStage(const std::string& textureName,
                                       MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
-                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2);
+                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
+                                      CoordsOpCode coordsOperation);
 
    Material* createMaterial(const std::string& materialName,
                             LightReflectingProperties* lrp);
@@ -87,7 +89,8 @@ protected:
 
    virtual MaterialStage* createMaterialStage(Texture& tex,
                                               MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
-                                              MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2) = 0;
+                                              MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
+                                              CoordsOpCode coordsOperation) = 0;
 
    virtual Material* createMaterialImpl(const std::string& name,
                                         LightReflectingProperties* lrp) = 0;

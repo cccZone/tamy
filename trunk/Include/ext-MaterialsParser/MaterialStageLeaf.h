@@ -2,6 +2,7 @@
 
 #include "ext-MaterialsParser\MaterialXmlElement.h"
 #include "core-Renderer\MaterialOperation.h"
+#include "core-Renderer\CoordinatesOperation.h"
 #include <string>
 
 
@@ -31,6 +32,10 @@ private:
                        MatOpCode& opCode, 
                        SourceCode& arg1, 
                        SourceCode& arg2);
+
+   void parseOperation(TiXmlElement& parent,
+                       const std::string& tag,
+                       CoordsOpCode& coordsOp);
 
    MatOpCode getOperationFor(const std::string& val) const;
    SourceCode getSourceFor(const std::string& val) const;

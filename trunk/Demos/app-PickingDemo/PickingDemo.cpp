@@ -104,7 +104,8 @@ void PickingDemo::initialize()
    particleLrp->setDiffuseColor(Color(1, 1, 1, 1));
    MaterialStage* particleMatStage = factory.createMaterialStage("particle.tga",
                                                                  MOP_SELECT_ARG1, SC_LRP, SC_NONE,
-                                                                 MOP_MULTIPLY, SC_LRP, SC_TEXTURE);
+                                                                 MOP_MULTIPLY, SC_LRP, SC_TEXTURE,
+                                                                 CC_CLAMP);
    Material* particleMat = factory.createMaterial("particleMat", particleLrp);
    particleMat->addStage(particleMatStage);
    m_materialsStorage.add(particleMat);
@@ -122,7 +123,8 @@ void PickingDemo::initialize()
    particleLrp->setDiffuseColor(Color(1, 0, 1, 1));
    MaterialStage* cursorMatStage = factory.createMaterialStage("particle.tga",
                                                                MOP_SELECT_ARG1, SC_LRP, SC_NONE,
-                                                               MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE);
+                                                               MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE,
+                                                               CC_CLAMP);
    Material* cursorMat = factory.createMaterial("cursorMat", particleLrp);
    cursorMat->addStage(cursorMatStage);
    m_materialsStorage.add(cursorMat);
@@ -139,7 +141,8 @@ void PickingDemo::initialize()
    particleLrp->setDiffuseColor(Color(0, 1, 0.2f, 1));
    MaterialStage* burstMatStage = factory.createMaterialStage("particle.tga",
                                                                MOP_SELECT_ARG1, SC_LRP, SC_NONE,
-                                                               MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE);
+                                                               MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE,
+                                                               CC_CLAMP);
    Material* burstMat = factory.createMaterial("burstMat", particleLrp);
    burstMat->addStage(burstMatStage);
    m_materialsStorage.add(burstMat);

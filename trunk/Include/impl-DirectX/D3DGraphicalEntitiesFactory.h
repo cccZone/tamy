@@ -57,7 +57,8 @@ protected:
 
    MaterialStage* createMaterialStage(Texture& tex,
                                       MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
-                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2);
+                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
+                                      CoordsOpCode coordsOp);
 
    Material* createMaterialImpl(const std::string& name,
                                 LightReflectingProperties* lrp);

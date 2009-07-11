@@ -17,6 +17,7 @@
 #include "NodeHierarchyWriter.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "TransparencyEnablerStub.h"
+#include "CoordinatesOperationMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -95,15 +96,18 @@ TEST(GraphicalEntityInstantiation, multipleSubsets)
    Material skinMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    skinMat.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
    Material blouseMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    blouseMat.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
    Material hairMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    hairMat.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
 
    std::vector<Material*> bodyMaterials;
    std::vector<Material*> headMaterials;
@@ -184,7 +188,8 @@ TEST(SkinnedGraphicalEntityInstantiation, basics)
    Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    material.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
    BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
@@ -273,7 +278,8 @@ TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
    Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    material.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
    BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
@@ -330,7 +336,8 @@ TEST(SkinnedGraphicalEntityInstantiation, instantiationViaGraphicalNodeInstantia
    Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    material.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
    BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);

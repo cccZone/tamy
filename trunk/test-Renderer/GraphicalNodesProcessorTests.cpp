@@ -14,6 +14,7 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "core\Frustum.h"
 #include "TransparencyEnablerStub.h"
+#include "CoordinatesOperationMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,10 +31,12 @@ TEST(GraphicalNodesProcessor, sortingByMaterial)
    Material material2("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    material1.addStage(new MaterialStage(texture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+      new CoordinatesOperationMock(CC_WRAP)));
    material2.addStage(new MaterialStage(texture, 
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+      new CoordinatesOperationMock(CC_WRAP)));
 
    // create the node we'll use for rendering
    std::vector<Material*> materials; 
@@ -83,13 +86,15 @@ TEST(GraphicalNodesProcessor, transparentObjects)
    Material regularMaterial("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* regularMaterialStage = new MaterialStage(regularTexture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+      new CoordinatesOperationMock(CC_WRAP));
    regularMaterial.addStage(regularMaterialStage);
 
    Material transparentMaterial("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_ADD, SC_NONE, SC_NONE));
+      new MaterialOperation(matOpImpl, MOP_ADD, SC_NONE, SC_NONE),
+      new CoordinatesOperationMock(CC_WRAP));
    transparentMaterial.addStage(transparentMaterialStage);
 
 
@@ -133,7 +138,8 @@ TEST(GraphicalNodesProcessor, transparentObjectsAreSortedWithRespectToCamera)
    Material transparentMaterial("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* transparentMaterialStage = new MaterialStage(transparentTexture,
       new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_SUBTRACT, SC_NONE, SC_NONE));
+      new MaterialOperation(matOpImpl, MOP_SUBTRACT, SC_NONE, SC_NONE),
+      new CoordinatesOperationMock(CC_WRAP));
    transparentMaterial.addStage(transparentMaterialStage);
 
 

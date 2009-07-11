@@ -215,7 +215,8 @@ Material& IWFLoader::createSkyboxMaterial(const std::string& textureName) const
          
       MaterialStage* stage = m_entitiesFactory.createMaterialStage(textureName,
                                                                    MOP_SELECT_ARG1, SC_TEXTURE, SC_NONE,
-                                                                   MOP_DISABLE, SC_NONE, SC_NONE);
+                                                                   MOP_DISABLE, SC_NONE, SC_NONE,
+                                                                   CC_CLAMP);
 
       Material* mat = m_entitiesFactory.createMaterial(materialName, lrp);
       mat->addStage(stage);

@@ -230,7 +230,8 @@ Material* XMLFont::createMaterial(const char* fontDefFile)
 
    MaterialStage* stage = m_entitiesFactory.createMaterialStage(fontFaceFileName,
                                                                 MOP_SELECT_ARG1, SC_LRP, SC_NONE,
-                                                                MOP_SELECT_ARG1, SC_TEXTURE, SC_NONE);
+                                                                MOP_SELECT_ARG1, SC_TEXTURE, SC_NONE,
+                                                                CC_CLAMP);
 
    Material* material = m_entitiesFactory.createMaterial("material", lrp);
    material->addStage(stage);

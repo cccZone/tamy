@@ -175,6 +175,10 @@
 			Name="Utils"
 			>
 			<File
+				RelativePath=".\CoordinatesOperationMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LightReflectingPropertiesStub.h"
 				>
 			</File>

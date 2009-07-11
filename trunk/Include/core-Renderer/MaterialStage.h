@@ -5,6 +5,7 @@
 
 class Texture;
 class MaterialOperation;
+class CoordinatesOperation;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,11 +16,13 @@ private:
    Texture& m_texture;
    MaterialOperation* m_colorOperation;
    MaterialOperation* m_alphaOperation;
+   CoordinatesOperation* m_coordsOp;
 
 public:
    MaterialStage(Texture& emptyTexture, 
                  MaterialOperation* defaultColorOp, 
-                 MaterialOperation* defaultAlphaOp);
+                 MaterialOperation* defaultAlphaOp,
+                 CoordinatesOperation* coordsOp);
    MaterialStage(const MaterialStage& rhs);
    ~MaterialStage();
 
@@ -28,6 +31,8 @@ public:
 
    bool operator==(const MaterialStage& rhs) const;
    bool operator!=(const MaterialStage& rhs) const;
+
+   const CoordinatesOperation& getCoordOperation() const {return *m_coordsOp;}
 
    const MaterialOperation& getColorOperation() const {return *m_colorOperation;}
 

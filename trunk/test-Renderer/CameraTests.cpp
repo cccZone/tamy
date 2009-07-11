@@ -16,6 +16,7 @@
 #include "core\CollisionTests.h"
 #include "core\Ray.h"
 #include "TransparencyEnablerStub.h"
+#include "CoordinatesOperationMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,7 +42,8 @@ TEST(Camera, renderingWithActiveCamera)
    Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    mat.addStage(new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
 
    std::vector<Material*> materials; materials.push_back(&mat);
    GraphicalEntityMock entity("", materials);

@@ -70,7 +70,8 @@ void GraphicalEntityLoader::createMaterials(std::vector<MaterialDefinition>& mat
                                                               materials[matIdx].colorArg2,
                                                               materials[matIdx].alphaOp, 
                                                               materials[matIdx].alphaArg1, 
-                                                              materials[matIdx].alphaArg2);
+                                                              materials[matIdx].alphaArg2,
+                                                              materials[matIdx].coordsOp);
          Material* mat = m_factory.createMaterial(materials[matIdx].matName, lrp);
          mat->addStage(stage);
          m_materialsStorage.add(mat);

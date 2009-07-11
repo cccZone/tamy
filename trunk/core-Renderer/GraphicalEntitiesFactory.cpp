@@ -40,7 +40,8 @@ SkyBox* GraphicalEntitiesFactory::createSkyBox(Material& front, Material& back,
 MaterialStage* GraphicalEntitiesFactory::createMaterialStage(
                   const std::string& textureName,
                   MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
-                  MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2)
+                  MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
+                  CoordsOpCode coordsOperation)
 {
    Texture* texture = NULL;
    if (m_textures.is(textureName))
@@ -61,7 +62,8 @@ MaterialStage* GraphicalEntitiesFactory::createMaterialStage(
 
    return createMaterialStage(*texture,
                               colorOp, colorArg1, colorArg2,
-                              alphaOp, alphaArg1, alphaArg2);
+                              alphaOp, alphaArg1, alphaArg2,
+                              coordsOperation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

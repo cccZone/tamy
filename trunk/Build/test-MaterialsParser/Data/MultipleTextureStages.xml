@@ -2,7 +2,7 @@
 <Root>
    <Material name="MultipleTextureStages">
 
-      <Stage texture="tex1">
+      <Stage texture="tex1" Coords="mirror">
          <Color op="sub" arg1="none" arg2="prev" />
          <Alpha op="mulAdd" arg1="lrp" arg2="texture" />
       </Stage>

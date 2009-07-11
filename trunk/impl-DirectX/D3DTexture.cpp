@@ -26,9 +26,6 @@ D3DTexture::~D3DTexture()
 
 void D3DTexture::setForRendering(unsigned char stageIndex)
 {
-   m_d3Device.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-   m_d3Device.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-
    m_d3Device.SetTexture(stageIndex, m_texture);
 }
 

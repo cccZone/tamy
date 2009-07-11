@@ -9,6 +9,7 @@
 #include "LightReflectingPropertiesStub.h"
 #include "core-Renderer\BatchingStrategy.h"
 #include "TransparencyEnablerStub.h"
+#include "CoordinatesOperationMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,10 +25,12 @@ TEST(BatchComparator, sortingByMaterials)
    Material material2("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    material1.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
    material2.addStage(new MaterialStage(texture,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE)));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
 
    // create the node we'll use for rendering
    std::vector<Material*> materials; 

@@ -193,6 +193,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CoordinatesOperationMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GraphicalEntityMock.cpp"
 				>
 			</File>

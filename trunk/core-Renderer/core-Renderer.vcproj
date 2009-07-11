@@ -467,6 +467,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CoordinatesOperation.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\CoordinatesOperation.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core-Renderer\LightReflectingProperties.h"
 				>
 			</File>

@@ -6,6 +6,7 @@
 #include "LightReflectingPropertiesStub.h"
 #include "TextureStub.h"
 #include "TransparencyEnablerStub.h"
+#include "CoordinatesOperationMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,10 +18,12 @@ TEST(MaterialStage, equalityWithTwoEqualLightReflectanceProperties)
    LightReflectingPropertiesStub lrp;
    MaterialStage mat1(emptyTex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
    MaterialStage mat2(emptyTex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
 
    CPPUNIT_ASSERT(mat1 == mat2);
 }
@@ -35,10 +38,12 @@ TEST(MaterialStage, equalityWithTwoDifferentTextures)
    TextureStub tex2("tex2");
    MaterialStage mat1(tex1,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
    MaterialStage mat2(tex2,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
 
    CPPUNIT_ASSERT(mat1 != mat2);
 }
@@ -52,12 +57,33 @@ TEST(MaterialStage, equalityWithTwoIdenticalTextures)
    TextureStub tex("tex");
    MaterialStage mat1(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
    MaterialStage mat2(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
 
    CPPUNIT_ASSERT(mat1 == mat2);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(MaterialStage, equalityWithTwoDifferentCoordinateOperations)
+{
+   MaterialOperationImplementationMock matOpImpl;
+   LightReflectingPropertiesStub lrp;
+   TextureStub tex("tex");
+   MaterialStage mat1(tex,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
+   MaterialStage mat2(tex,
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_CLAMP));
+
+   CPPUNIT_ASSERT(mat1 != mat2);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,10 +97,12 @@ TEST(Material, addingStage)
    Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* stage1 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
    MaterialStage* stage2 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, mat.getStagesCount());
    CPPUNIT_ASSERT_EQUAL((int)-1, stage1->getIndex());
@@ -102,13 +130,16 @@ TEST(Material, removingStage)
    Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
    MaterialStage* stage1 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
    MaterialStage* stage2 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
    MaterialStage* stage3 = new MaterialStage(tex,
          new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE));
+         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP));
 
    mat.addStage(stage1);
    mat.addStage(stage2);
@@ -168,7 +199,8 @@ TEST(Material, lastRenderedStageIsOneThatDisablesItself)
    alphaMatOpImpl.clear();
    mat.addStage(new MaterialStage(tex,
          new MaterialOperation(colorMatOpImpl, MOP_MULTIPLY, SC_NONE, SC_NONE),
-         new MaterialOperation(alphaMatOpImpl, MOP_ADD,      SC_NONE, SC_NONE)));
+         new MaterialOperation(alphaMatOpImpl, MOP_ADD,      SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
    mat.setForRendering();
    CPPUNIT_ASSERT_EQUAL(2, colorMatOpImpl.getOperationsCount());
    CPPUNIT_ASSERT_EQUAL(2, alphaMatOpImpl.getOperationsCount());
@@ -181,7 +213,8 @@ TEST(Material, lastRenderedStageIsOneThatDisablesItself)
    alphaMatOpImpl.clear();
    mat.addStage(new MaterialStage(tex,
          new MaterialOperation(colorMatOpImpl, MOP_SUBTRACT, SC_NONE, SC_NONE),
-         new MaterialOperation(alphaMatOpImpl, MOP_MULTIPLY_ADD,      SC_NONE, SC_NONE)));
+         new MaterialOperation(alphaMatOpImpl, MOP_MULTIPLY_ADD,      SC_NONE, SC_NONE),
+         new CoordinatesOperationMock(CC_WRAP)));
    mat.setForRendering();
    CPPUNIT_ASSERT_EQUAL(3, colorMatOpImpl.getOperationsCount());
    CPPUNIT_ASSERT_EQUAL(3, alphaMatOpImpl.getOperationsCount());

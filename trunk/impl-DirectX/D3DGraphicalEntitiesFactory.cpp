@@ -15,6 +15,7 @@
 #include "impl-DirectX\D3DEmptyTexture.h"
 #include "impl-DirectX\D3DParticleSystem.h"
 #include "impl-DirectX\D3DTransparencyEnabler.h"
+#include "impl-DirectX\D3DCoordinatesOperation.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -180,13 +181,15 @@ Texture* D3DGraphicalEntitiesFactory::createEmptyTexture()
 
 MaterialStage* D3DGraphicalEntitiesFactory::createMaterialStage(Texture& tex,
                                       MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
-                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2)
+                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
+                                      CoordsOpCode coordsOp)
 {
    return new MaterialStage(tex,
             new MaterialOperation(*m_colorOpImpl, 
                                   colorOp, colorArg1, colorArg2),
             new MaterialOperation(*m_alphaOpImpl, 
-                                  alphaOp, alphaArg1, alphaArg2));
+                                  alphaOp, alphaArg1, alphaArg2),
+            new D3DCoordinatesOperation(m_d3Device, coordsOp));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

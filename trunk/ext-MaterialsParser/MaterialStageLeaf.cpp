@@ -33,13 +33,16 @@ void MaterialStageLeaf::parse(TiXmlElement& parent)
    MatOpCode  alphaOpCode;
    SourceCode alphaArg1;
    SourceCode alphaArg2;
+   CoordsOpCode coordsOp;
 
    parseOperation(parent, "Color", colorOpCode, colorArg1, colorArg2);
    parseOperation(parent, "Alpha", alphaOpCode, alphaArg1, alphaArg2);
+   parseOperation(parent, "Coords", coordsOp);
 
    MaterialStage* stage = m_factory.createMaterialStage(textureName, 
                                                         colorOpCode, colorArg1, colorArg2,
-                                                        alphaOpCode, alphaArg1, alphaArg2);
+                                                        alphaOpCode, alphaArg1, alphaArg2,
+                                                        coordsOp);
 
 
    Material& mat = m_mainParser.getMaterialParsed();
@@ -191,6 +194,48 @@ SourceCode MaterialStageLeaf::getSourceFor(const std::string& val) const
    }
 
    return SC_NONE;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialStageLeaf::parseOperation(TiXmlElement& parent,
+                                       const std::string& tag,
+                                       CoordsOpCode& coordsOp)
+{
+   const char* opName = parent.Attribute(tag.c_str());
+   if (opName == NULL)
+   {
+      coordsOp = CC_WRAP;
+   }
+   else
+   {
+      std::string strOpName = opName;
+
+      if (strOpName == "wrap")
+      {
+         coordsOp = CC_WRAP;
+      }
+      else if (strOpName == "mirror")
+      {
+         coordsOp = CC_MIRROR;
+      }
+      else if (strOpName == "clamp")
+      {
+         coordsOp = CC_CLAMP;
+      }
+      else if (strOpName == "border")
+      {
+         coordsOp = CC_BORDER;
+      }
+      else if (strOpName == "mirrorOnce")
+      {
+         coordsOp = CC_MIRRORONCE;
+      }
+      else
+      {
+         throw std::runtime_error(std::string("'") + strOpName + "' is not a valid coordinate operation argument");
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
