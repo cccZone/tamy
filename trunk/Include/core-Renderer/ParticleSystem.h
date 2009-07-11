@@ -155,7 +155,7 @@ private:
    void updateBoundingVolume();
    void initializeParticle(const D3DXMATRIX& systemGlobalMtx, Particle& particle);
    void animateParticle(Particle& particle, float& timeElapsed);
-   void activateParticles();
+   unsigned int activateParticles();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

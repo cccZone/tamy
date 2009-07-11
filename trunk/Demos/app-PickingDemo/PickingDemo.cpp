@@ -147,7 +147,7 @@ void PickingDemo::initialize()
    burstMat->addStage(burstMatStage);
    m_materialsStorage.add(burstMat);
    m_burst = factory.createParticleSystem("burst", true, *burstMat, 300);
-   m_burst->setEmissionTime(0.5f);
+   m_burst->setEmissionTime(0.1f);
    m_burst->setLifeSpan(1.f, 0.2f);
    m_burst->setParticleAnimator(new ParticleFader());
    m_burst->setParticleInitializer(new PointParticleInitializer(0.02f, 0.01f, 0.5f));

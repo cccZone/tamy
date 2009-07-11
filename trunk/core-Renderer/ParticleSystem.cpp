@@ -176,7 +176,11 @@ void ParticleSystem::update(float timeElapsed)
    }
 
    // emit particles if necessary
-   m_spawnTimeline += timeElapsed;
+   if (isActive())
+   {
+      m_spawnTimeline += timeElapsed;
+   }
+
    if ((m_particles->size() < m_desiredParticlesCount) && (m_spawnTimeline >= m_nextSpawnTime))
    {
       m_currentMode->activateParticles(*this);
@@ -193,7 +197,7 @@ void ParticleSystem::animateParticle(Particle& particle, float& timeElapsed)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ParticleSystem::activateParticles()
+unsigned int ParticleSystem::activateParticles()
 {
    const D3DXMATRIX& systemGlobalMtx = getGlobalMtx();
 
@@ -207,7 +211,8 @@ void ParticleSystem::activateParticles()
    }
    else
    {
-      noParticlesToSpawn = (1.f + (m_spawnTimeline - m_nextSpawnTime) / m_spawnInterval);
+      noParticlesToSpawn = (float)(m_spawnTimeline - m_nextSpawnTime) / (float)m_spawnInterval;
+      ++noParticlesToSpawn;
    }
 
    unsigned int particlesMissingCount = (m_desiredParticlesCount - particlesCount);
@@ -224,6 +229,8 @@ void ParticleSystem::activateParticles()
    }
 
    m_nextSpawnTime = m_spawnTimeline + m_spawnInterval;
+
+   return noParticlesToSpawn;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -254,7 +261,10 @@ ParticleSystem::ImpulseMode::ImpulseMode(unsigned int maxParticlesCount)
 
 void ParticleSystem::ImpulseMode::activate()
 {
-   m_emittedParticlesCount = 0;
+   if (m_emittedParticlesCount >= m_maxParticlesCount)
+   {
+      m_emittedParticlesCount = 0;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -280,8 +290,7 @@ void ParticleSystem::ImpulseMode::activateParticles(ParticleSystem& system)
       return;
    }
 
-   system.activateParticles();
-   m_emittedParticlesCount = system.getActiveParticlesCount();
+   m_emittedParticlesCount += system.activateParticles();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

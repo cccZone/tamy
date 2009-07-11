@@ -175,23 +175,35 @@ TEST(ParticleSystem, boundingVolume)
 
 TEST(ParticleSystem, singleImpulseParticlesEmission)
 {
-   ParticleSystemMock ps("ps", false, 1);
+   ParticleSystemMock ps("ps", false, 10);
    ps.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    ps.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    ps.setLifeSpan(2, 0);
+   ps.setEmissionTime(2);
    ps.setLooped(false);
 
    ps.update(0);
+   CPPUNIT_ASSERT_EQUAL(true, ps.isActive());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, ps.getActiveParticlesCount());
-   CPPUNIT_ASSERT_EQUAL(D3DXVECTOR3(0, 0, 0), ps.getParticle(0).position);
-   CPPUNIT_ASSERT_EQUAL(2.f, ps.getParticle(0).timeToLive);
 
    ps.update(1);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)1, ps.getActiveParticlesCount());
-   CPPUNIT_ASSERT_EQUAL(D3DXVECTOR3(0, 0, 1), ps.getParticle(0).position);
-   CPPUNIT_ASSERT_EQUAL(1.f, ps.getParticle(0).timeToLive);
+   CPPUNIT_ASSERT_EQUAL(true, ps.isActive());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)6, ps.getActiveParticlesCount());
 
    ps.update(1);
+   CPPUNIT_ASSERT_EQUAL(false, ps.isActive());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)9, ps.getActiveParticlesCount());
+
+   ps.update(1);
+   CPPUNIT_ASSERT_EQUAL(false, ps.isActive());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)4, ps.getActiveParticlesCount());
+
+   ps.update(1);
+   CPPUNIT_ASSERT_EQUAL(false, ps.isActive());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, ps.getActiveParticlesCount());
+
+   ps.update(1);
+   CPPUNIT_ASSERT_EQUAL(false, ps.isActive());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, ps.getActiveParticlesCount());
 }
 
@@ -289,6 +301,32 @@ TEST(ParticleSystem, activatingParticlesDuringInputSystemActivityTime)
    ps.update(1);
    CPPUNIT_ASSERT_EQUAL(false, ps.isActive());
    CPPUNIT_ASSERT_EQUAL((unsigned int)4, ps.getActiveParticlesCount());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(ParticleSystem, impulseActivactedAfterLongInactivity)
+{
+   ParticleSystemMock ps("ps", false, 4);
+   ps.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
+   ps.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
+   ps.setLifeSpan(4, 0);
+   ps.setEmissionTime(4);
+   ps.setLooped(false);
+
+   // system has 4 particles to emit over the period of 4 seconds,
+   // meaning that it will emmit a new particle each second.
+
+   // let's deactivate it and wait a considerable amount of time
+   ps.deactivate();
+   ps.update(20);
+
+   // now let's activate it - the emission time should be maintained
+   ps.activate();
+   ps.update(0);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, ps.getActiveParticlesCount());
+   ps.update(1);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, ps.getActiveParticlesCount());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
