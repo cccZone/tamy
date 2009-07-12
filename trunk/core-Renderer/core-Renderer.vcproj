@@ -345,6 +345,14 @@
 					Name="Initializers"
 					>
 					<File
+						RelativePath=".\CircularParticleInitializer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\CircularParticleInitializer.h"
+						>
+					</File>
+					<File
 						RelativePath=".\PlanarParticleInitializer.cpp"
 						>
 					</File>

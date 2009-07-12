@@ -34,6 +34,7 @@ private:
    ParticleSystem* m_atmosphere;
    ParticleSystem* m_cursor;
    ParticleSystem* m_burst;
+   ParticleSystem* m_circular;
 
    NodeActionsExecutor* m_actionsExecutor;
    WaypointCameraController* m_cameraController;

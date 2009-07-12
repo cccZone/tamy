@@ -12,6 +12,7 @@
 #include "core-Renderer\ParticleFader.h"
 #include "core-Renderer\PlanarParticleInitializer.h"
 #include "core-Renderer\PointParticleInitializer.h"
+#include "core-Renderer\CircularParticleInitializer.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\LightReflectingProperties.h"
@@ -115,7 +116,7 @@ void PickingDemo::initialize()
    m_atmosphere->setLifeSpan(10, 1);
    m_atmosphere->setParticleAnimator(new ParticleFader());
    m_atmosphere->setParticleInitializer(new PlanarParticleInitializer(200, 0.2f, 0.1f, 20));
-   D3DXMatrixTranslation(&(m_atmosphere->accessLocalMtx()), 0, -20, 100);
+   D3DXMatrixTranslation(&(m_atmosphere->accessLocalMtx()), 0, -20, 50);
    m_sceneManager->addNode(m_atmosphere);
 
    // create the cursor
@@ -156,9 +157,29 @@ void PickingDemo::initialize()
    D3DXMatrixTranslation(&(m_burst->accessLocalMtx()), 0, 0, 10);
    m_cursor->addChild(m_burst);
 
-   // add a few objects
+   // cicular emitter
+   particleLrp = factory.createLightReflectingProperties();
+   particleLrp->setDiffuseColor(Color(0.2f, 1, 0.2f, 1));
+   particleLrp->setEmissiveColor(Color(0.2f, 1, 0.2f, 1));
+   MaterialStage* circularMatStage = factory.createMaterialStage("particle.tga",
+                                                                 MOP_SELECT_ARG1, SC_LRP, SC_NONE,
+                                                                 MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE,
+                                                                 CC_CLAMP);
+   Material* circularMat = factory.createMaterial("circularMat", particleLrp);
+   circularMat->addStage(circularMatStage);
+   m_materialsStorage.add(circularMat);
+   m_circular = factory.createParticleSystem("circular", false, *circularMat, 100);
+   m_circular->setEmissionTime(0.1f);
+   m_circular->setLifeSpan(2.f, 0.2f);
+   m_circular->setParticleAnimator(new ParticleFader());
+   m_circular->setParticleInitializer(new CircularParticleInitializer(5, 0.1f, 0.01f, 10.f));
    D3DXMATRIX helperMtx;
+   D3DXMatrixRotationYawPitchRoll(&helperMtx, 0, D3DXToRadian(45), D3DXToRadian(45));
+   D3DXMatrixTranslation(&(m_circular->accessLocalMtx()), 0, 20, 50);
+   D3DXMatrixMultiply(&(m_circular->accessLocalMtx()), &helperMtx, &(m_circular->accessLocalMtx()));
+   m_sceneManager->addNode(m_circular);
 
+   // add a few objects
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile1", false);
    entInstance->attachEntity(*ent);
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 0, 0, 30);
@@ -192,6 +213,8 @@ void PickingDemo::initialize()
 
 void PickingDemo::deinitialize()
 {
+   m_circular = NULL;
+   m_burst = NULL;
    m_cursor = NULL;
    m_atmosphere = NULL;
 
@@ -242,6 +265,7 @@ void PickingDemo::update(float timeElapsed)
    m_atmosphere->update(timeElapsed);
    m_cursor->update(timeElapsed);
    m_burst->update(timeElapsed);
+   m_circular->update(timeElapsed);
    m_renderer->render();
 }
 

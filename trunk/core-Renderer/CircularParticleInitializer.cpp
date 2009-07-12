@@ -1,15 +1,15 @@
-#include "core-Renderer\PlanarParticleInitializer.h"
+#include "core-Renderer\CircularParticleInitializer.h"
 #include "core-Renderer\Particle.h"
 #include <math.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PlanarParticleInitializer::PlanarParticleInitializer(float planeSize,
-                                                     float particleSize,
-                                                     float particleSizeVariation,
-                                                     float initialSpeed)
-      : m_planeSize(planeSize),
+CircularParticleInitializer::CircularParticleInitializer(float radius,
+                                                         float particleSize,
+                                                         float particleSizeVariation,
+                                                         float initialSpeed)
+      : m_radius(radius),
       m_particleSize(particleSize),
       m_particleSizeVariation(particleSizeVariation),
       m_initialSpeed(initialSpeed)
@@ -18,8 +18,8 @@ PlanarParticleInitializer::PlanarParticleInitializer(float planeSize,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PlanarParticleInitializer::initialize(const D3DXMATRIX& particleSystemGlobalMtx, 
-                                           Particle& particle)
+void CircularParticleInitializer::initialize(const D3DXMATRIX& particleSystemGlobalMtx, 
+                                             Particle& particle)
 {
    D3DXVECTOR3 planeNormal(particleSystemGlobalMtx._21, 
                            particleSystemGlobalMtx._22,
@@ -28,9 +28,11 @@ void PlanarParticleInitializer::initialize(const D3DXMATRIX& particleSystemGloba
                            particleSystemGlobalMtx._42,
                            particleSystemGlobalMtx._43);
 
-   D3DXVECTOR3 offset(randomizeValue(0, m_planeSize),
+   // calculate the position on the circle's circumference
+   float angle = randomizeValue(0, 2.f * D3DX_PI);
+   D3DXVECTOR3 offset(sin(angle) * m_radius,
                       0,
-                      randomizeValue(0, m_planeSize));
+                      cos(angle) * m_radius);
    D3DXVec3TransformCoord(&offset, &offset, &particleSystemGlobalMtx);
 
    particle.position = planeCenter + offset;
@@ -40,9 +42,9 @@ void PlanarParticleInitializer::initialize(const D3DXMATRIX& particleSystemGloba
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float PlanarParticleInitializer::getBoundingSphereRadius() const
+float CircularParticleInitializer::getBoundingSphereRadius() const
 {
-   return (m_planeSize > m_initialSpeed) ? m_planeSize : m_initialSpeed;
+   return (m_radius > m_initialSpeed) ? m_radius : m_initialSpeed;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
