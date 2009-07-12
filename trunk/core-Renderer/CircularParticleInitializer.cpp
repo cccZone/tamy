@@ -35,7 +35,7 @@ void CircularParticleInitializer::initialize(const D3DXMATRIX& particleSystemGlo
                       cos(angle) * m_radius);
    D3DXVec3TransformCoord(&offset, &offset, &particleSystemGlobalMtx);
 
-   particle.position = planeCenter + offset;
+   particle.position = offset;
    particle.velocity = planeNormal * m_initialSpeed;
    particle.size = randomizeValue(m_particleSize, m_particleSizeVariation);
 }

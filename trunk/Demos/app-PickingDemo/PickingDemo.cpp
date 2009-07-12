@@ -157,29 +157,9 @@ void PickingDemo::initialize()
    D3DXMatrixTranslation(&(m_burst->accessLocalMtx()), 0, 0, 10);
    m_cursor->addChild(m_burst);
 
-   // cicular emitter
-   particleLrp = factory.createLightReflectingProperties();
-   particleLrp->setDiffuseColor(Color(0.2f, 1, 0.2f, 1));
-   particleLrp->setEmissiveColor(Color(0.2f, 1, 0.2f, 1));
-   MaterialStage* circularMatStage = factory.createMaterialStage("particle.tga",
-                                                                 MOP_SELECT_ARG1, SC_LRP, SC_NONE,
-                                                                 MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE,
-                                                                 CC_CLAMP);
-   Material* circularMat = factory.createMaterial("circularMat", particleLrp);
-   circularMat->addStage(circularMatStage);
-   m_materialsStorage.add(circularMat);
-   m_circular = factory.createParticleSystem("circular", false, *circularMat, 100);
-   m_circular->setEmissionTime(0.1f);
-   m_circular->setLifeSpan(2.f, 0.2f);
-   m_circular->setParticleAnimator(new ParticleFader());
-   m_circular->setParticleInitializer(new CircularParticleInitializer(5, 0.1f, 0.01f, 10.f));
-   D3DXMATRIX helperMtx;
-   D3DXMatrixRotationYawPitchRoll(&helperMtx, 0, D3DXToRadian(45), D3DXToRadian(45));
-   D3DXMatrixTranslation(&(m_circular->accessLocalMtx()), 0, 20, 50);
-   D3DXMatrixMultiply(&(m_circular->accessLocalMtx()), &helperMtx, &(m_circular->accessLocalMtx()));
-   m_sceneManager->addNode(m_circular);
-
    // add a few objects
+   D3DXMATRIX helperMtx;
+
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile1", false);
    entInstance->attachEntity(*ent);
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 0, 0, 30);
@@ -204,6 +184,27 @@ void PickingDemo::initialize()
    m_sceneManager->addNode(entInstance);
    m_cameraController->registerWaypoint(2, *entInstance);
    m_actionsExecutor->add(*entInstance, new JumpToNodeAction(*m_cameraController, m_shownNode));
+
+      // cicular emitter
+   particleLrp = factory.createLightReflectingProperties();
+   particleLrp->setDiffuseColor(Color(0.2f, 1, 0.2f, 1));
+   particleLrp->setEmissiveColor(Color(0.2f, 1, 0.2f, 1));
+   MaterialStage* circularMatStage = factory.createMaterialStage("particle.tga",
+                                                                 MOP_SELECT_ARG1, SC_LRP, SC_NONE,
+                                                                 MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE,
+                                                                 CC_CLAMP);
+   Material* circularMat = factory.createMaterial("circularMat", particleLrp);
+   circularMat->addStage(circularMatStage);
+   m_materialsStorage.add(circularMat);
+   m_circular = factory.createParticleSystem("circular", false, *circularMat, 100);
+   m_circular->setEmissionTime(0.1f);
+   m_circular->setLifeSpan(2.f, 0.2f);
+   m_circular->setParticleAnimator(new ParticleFader());
+   m_circular->setParticleInitializer(new CircularParticleInitializer(5, 0.1f, 0.01f, 10.f));
+   D3DXMatrixRotationYawPitchRoll(&helperMtx, 0, D3DXToRadian(45), D3DXToRadian(45));
+   D3DXMatrixTranslation(&(m_circular->accessLocalMtx()), 0, 10, 0);
+   D3DXMatrixMultiply(&(m_circular->accessLocalMtx()), &helperMtx, &(m_circular->accessLocalMtx()));
+   entInstance->addChild(m_circular);
 
    m_shownNode = 0;
    m_cameraController->goTo(m_shownNode);

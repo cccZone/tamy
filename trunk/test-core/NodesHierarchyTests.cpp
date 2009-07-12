@@ -54,33 +54,33 @@ TEST(NodesHierarchy, switchingChildren)
 
 TEST(NodesHierarchy, dynamicFlagInheritedBySubtree)
 {
-   Node root("root", true);
-   Node* child = new Node("child", false);
-   Node* lowerChild = new Node("lowerChild", true);
+   Node root("root", false);
+   Node* child = new Node("child", true); // dynamic flag is inherited bythe whole subtree
+   Node* lowerChild = new Node("lowerChild", false);
 
-   CPPUNIT_ASSERT_EQUAL(true, root.isDynamic());
-   CPPUNIT_ASSERT_EQUAL(false, child->isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, lowerChild->isDynamic());
-
-   child->addChild(lowerChild);
-   CPPUNIT_ASSERT_EQUAL(true, root.isDynamic());
-   CPPUNIT_ASSERT_EQUAL(false, child->isDynamic());
+   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
+   CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
    CPPUNIT_ASSERT_EQUAL(false, lowerChild->isDynamic());
 
+   child->addChild(lowerChild);
+   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
+   CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
+   CPPUNIT_ASSERT_EQUAL(true, lowerChild->isDynamic());
+
    root.addChild(child);
-   CPPUNIT_ASSERT_EQUAL(true, root.isDynamic());
+   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
    CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
    CPPUNIT_ASSERT_EQUAL(true, lowerChild->isDynamic());
 
    root.removeChild(*child);
-   CPPUNIT_ASSERT_EQUAL(true, root.isDynamic());
-   CPPUNIT_ASSERT_EQUAL(false, child->isDynamic());
-   CPPUNIT_ASSERT_EQUAL(false, lowerChild->isDynamic());
+   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
+   CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
+   CPPUNIT_ASSERT_EQUAL(true, lowerChild->isDynamic());
 
    child->removeChild(*lowerChild);
-   CPPUNIT_ASSERT_EQUAL(true, root.isDynamic());
-   CPPUNIT_ASSERT_EQUAL(false, child->isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, lowerChild->isDynamic());
+   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
+   CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
+   CPPUNIT_ASSERT_EQUAL(false, lowerChild->isDynamic());
 
    delete child;
    delete lowerChild;

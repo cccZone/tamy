@@ -60,7 +60,7 @@ Node::~Node()
 bool Node::isDynamic() const 
 {
    if (hasParent() == false) {return m_dynamic;}
-   return m_parent->isDynamic();
+   return m_parent->isDynamic() | m_dynamic;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

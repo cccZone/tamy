@@ -33,7 +33,7 @@ void PlanarParticleInitializer::initialize(const D3DXMATRIX& particleSystemGloba
                       randomizeValue(0, m_planeSize));
    D3DXVec3TransformCoord(&offset, &offset, &particleSystemGlobalMtx);
 
-   particle.position = planeCenter + offset;
+   particle.position = offset;
    particle.velocity = planeNormal * m_initialSpeed;
    particle.size = randomizeValue(m_particleSize, m_particleSizeVariation);
 }
