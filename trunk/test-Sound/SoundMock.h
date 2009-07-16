@@ -15,6 +15,7 @@ private:
 
 public:
    SoundMock(int bufSize = 16, int bytesPerSec = 0xffff, int blockAlignment = 1)
+         : Sound("SoundMock")
    {
       m_bufSize = bufSize;
       m_bytesPerSec = bytesPerSec;

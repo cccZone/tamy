@@ -10,9 +10,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class CTimer;
 class Tamy;
 class Renderer;
+class CTimer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,8 +24,8 @@ private:
    std::string m_programName;
    Tamy& m_tamy;
    HWND m_hWnd;
-   Renderer* m_renderer;
    CTimer* m_timer;
+   Renderer* m_renderer;
    
    unsigned long m_lastFrameRate;
 
@@ -48,7 +48,7 @@ public:
 
 protected:
    ProcessingCode onStep();
-
+   
    float getTimeElapsed();
 
    void checkUserInput(unsigned char* keysBuffer, Point& mousePos);

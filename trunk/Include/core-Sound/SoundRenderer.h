@@ -20,6 +20,7 @@ class SoundRenderer
 {
 private:
    SoundDevice& m_soundDevice;
+   Array<SoundSceneManager*> m_soundScenes;
    Array<Sound3D*> m_soundsToDisable;
    Array<Sound3D*> m_soundsToEnable;
 
@@ -28,9 +29,19 @@ public:
    ~SoundRenderer();
 
    /**
+    * This method adds a new sound scene to the 3D sound rendering pipeline
+    */
+   void addSoundScene(SoundSceneManager& scene);
+
+   /**
+    * This method removes a sound scene from the 3D sound rendering pipeline
+    */
+   void removeSoundScene(SoundSceneManager& scene);
+
+   /**
     * The method renders the contents of an audio scene on the sound device
     */
-   void render(SoundSceneManager& soundScene);
+   void update(float timeElapsed);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

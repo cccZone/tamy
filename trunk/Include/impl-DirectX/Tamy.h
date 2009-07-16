@@ -58,6 +58,7 @@ public:
 
    Renderer& renderer();
    SoundRenderer& soundRenderer();
+   SoundDevice& soundDevice();
    GraphicalEntitiesFactory& graphicalFactory();
    SoundEntitiesFactory& soundFactory();
 

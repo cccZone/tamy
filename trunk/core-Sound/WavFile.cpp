@@ -67,10 +67,11 @@ struct WAVEFMT
 ///////////////////////////////////////////////////////////////////////////////
 
 WavFile::WavFile(const std::string& fileName)
-   : m_data(NULL),
-	m_dataSize(0),
-	m_file(NULL),
-	m_dataOffset(0)
+      : Sound(fileName),
+      m_data(NULL),
+	   m_dataSize(0),
+	   m_file(NULL),
+	   m_dataOffset(0)
 {
 	parseFile(fileName);
 }
@@ -182,13 +183,15 @@ std::string WavFile::recognizeFormat()
    {
 		if (m_ext.Format.nChannels == 1)
       {
-			return (m_ext.Format.wBitsPerSample == 16) ? "AL_FORMAT_MONO16" : "AL_FORMAT_MONO8";
+         if      (m_ext.Format.wBitsPerSample == 16) {return "AL_FORMAT_MONO16";}
+         else if (m_ext.Format.wBitsPerSample == 8) {return "AL_FORMAT_MONO8";}
       }
 		else if (m_ext.Format.nChannels == 2)
       {
-			return (m_ext.Format.wBitsPerSample == 16) ? "AL_FORMAT_STEREO16" : "AL_FORMAT_STEREO8";
+         if      (m_ext.Format.wBitsPerSample == 16) {return "AL_FORMAT_STEREO16";}
+         else if (m_ext.Format.wBitsPerSample == 8) {return "AL_FORMAT_STEREO8";}
       }
-		else if ((m_ext.Format.nChannels == 4) && (m_ext.Format.wBitsPerSample == 16))
+		else if ((m_ext.Format.nChannels >= 4) && (m_ext.Format.wBitsPerSample == 16))
       {
 			return "AL_FORMAT_QUAD16";
       }
@@ -197,11 +200,13 @@ std::string WavFile::recognizeFormat()
 	{
 		if ((m_ext.Format.nChannels == 1) && (m_ext.dwChannelMask == SPEAKER_FRONT_CENTER))
       {
-			return (m_ext.Format.wBitsPerSample == 16) ? "AL_FORMAT_MONO16" : "AL_FORMAT_MONO8";
+         if      (m_ext.Format.wBitsPerSample == 16) {return "AL_FORMAT_MONO16";}
+         else if (m_ext.Format.wBitsPerSample == 8) {return "AL_FORMAT_MONO8";}
       }
 		else if ((m_ext.Format.nChannels == 2) && (m_ext.dwChannelMask == (SPEAKER_FRONT_LEFT|SPEAKER_FRONT_RIGHT)))
       {
-			return (m_ext.Format.wBitsPerSample == 16) ? "AL_FORMAT_STEREO16" : "AL_FORMAT_STEREO8";
+         if      (m_ext.Format.wBitsPerSample == 16) {return "AL_FORMAT_STEREO16";}
+         else if (m_ext.Format.wBitsPerSample == 8) {return "AL_FORMAT_STEREO8";}
       }
 		else if ((m_ext.Format.nChannels == 2) && (m_ext.Format.wBitsPerSample == 16) && (m_ext.dwChannelMask == (SPEAKER_BACK_LEFT|SPEAKER_BACK_RIGHT)))
       {

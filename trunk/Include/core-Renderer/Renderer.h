@@ -3,6 +3,7 @@
 #include <d3dx9.h>
 #include <list>
 #include "core\Delegate.h"
+#include "core\Array.h"
 #include <vector>
 
 
@@ -53,7 +54,7 @@ private:
 
 private:
    std::vector<RenderingPass*> m_renderingPasses;
-   std::list<VisualSceneManager*> m_sceneManagers;
+   Array<VisualSceneManager*> m_sceneManagers;
 
    unsigned int m_viewportWidth;
    unsigned int m_viewportHeight;

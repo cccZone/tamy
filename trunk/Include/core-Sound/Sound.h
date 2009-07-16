@@ -13,8 +13,17 @@
  */
 class Sound
 {
+private:
+   std::string m_name;
+
 public:
+   Sound(const std::string& name) : m_name(name) {}
    virtual ~Sound() {}
+
+   /**
+    * This method returns the name of the sound file
+    */
+   const std::string& getName() const {return m_name;}
 
    /**
     * The method retrieves the data from the sound file to the preallocated buffer

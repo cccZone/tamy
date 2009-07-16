@@ -18,6 +18,7 @@ TEST(SoundRenderer, renderingSound)
    SoundRenderer soundRenderer(soundDevice);
 
    SoundSceneManager soundScene;
+   soundRenderer.addSoundScene(soundScene);
 
    SoundMock someSound;
    Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound, 100);
@@ -31,7 +32,7 @@ TEST(SoundRenderer, renderingSound)
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundDevice.getActiveChannelsCount());
 
-   soundRenderer.render(soundScene);
+   soundRenderer.update(0);
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    CPPUNIT_ASSERT_EQUAL(true, soundDevice.getChannel(0).isPlaying());
@@ -45,6 +46,7 @@ TEST(SoundRenderer, soundPlayedContinuouslyAcrossRenderings)
    SoundRenderer soundRenderer(soundDevice);
 
    SoundSceneManager soundScene;
+   soundRenderer.addSoundScene(soundScene);
 
    SoundMock someSound;
    Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound, 100);
@@ -58,11 +60,11 @@ TEST(SoundRenderer, soundPlayedContinuouslyAcrossRenderings)
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundDevice.getActiveChannelsCount());
 
-   soundRenderer.render(soundScene);
+   soundRenderer.update(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    SoundChannel* channel1 = &(soundDevice.getChannel(0));
 
-   soundRenderer.render(soundScene);
+   soundRenderer.update(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    SoundChannel* channel2 = &(soundDevice.getChannel(0));
 
@@ -77,6 +79,7 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
    SoundRenderer soundRenderer(soundDevice);
 
    SoundSceneManager soundScene;
+   soundRenderer.addSoundScene(soundScene);
 
    SoundMock someSound;
    Sound3DMock* barkingSound = new Sound3DMock("barkingSound", someSound, 1);
@@ -98,7 +101,7 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
    // but he can't hear the dog barking
    D3DXMatrixTranslation(&(listener.accessLocalMtx()), 10, 0, 0);
    soundScene.addNode(&man);
-   soundRenderer.render(soundScene);
+   soundRenderer.update(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    SoundChannel* channel1 = &(soundDevice.getChannel(0));
 
@@ -106,7 +109,7 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
    // but he can't hear the man walking
    D3DXMatrixTranslation(&(listener.accessLocalMtx()), -10, 0, 0);
    soundScene.addNode(&dog);
-   soundRenderer.render(soundScene);
+   soundRenderer.update(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    SoundChannel* channel2 = &(soundDevice.getChannel(0));
 

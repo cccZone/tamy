@@ -10,6 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Application;
+class TimeController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -62,6 +63,7 @@ private:
    unsigned char m_keyBuffer[256];
    Point m_mousePos;
 
+   TimeController* m_globalTimeController;
    ApplicationData* m_blackboard;
 
 public:
@@ -77,6 +79,12 @@ public:
     * This method selects which application should be ran first
     */
    void setEntryApplication(const std::string& appName);
+
+   /**
+    * This method returns an instance of a TimeController
+    * global to the entire program
+    */
+   TimeController& timeController();
 
    /**
     * This method returns a shared instance of a blackboard
@@ -101,7 +109,6 @@ public:
     *           there are no more apps to run and we can close the program
     */
    bool step();
-
 
    // ---------------------- ExecutionContext implementation ------------------
    void signal(const Application& app, int signalId);

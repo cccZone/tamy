@@ -17,8 +17,8 @@ D3DApplicationManager::D3DApplicationManager(HINSTANCE hInstance,
       : m_hInstance(hInstance),
       m_programName(programName),
       m_tamy(tamy),
-      m_renderer(NULL),
       m_timer(new CTimer()),
+      m_renderer(NULL),
       m_lastFrameRate(0),
       m_rightMouseButton(false),
       m_leftMouseButton(false),
@@ -52,6 +52,13 @@ D3DApplicationManager::~D3DApplicationManager()
 {
    delete m_timer;
    m_timer = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float D3DApplicationManager::getTimeElapsed()
+{
+   return m_timer->getTimeElapsed();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -151,13 +158,6 @@ LRESULT D3DApplicationManager::wndProc(HWND hWnd, UINT message, WPARAM wParam, L
       }
    }
    return 0;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float D3DApplicationManager::getTimeElapsed()
-{
-   return m_timer->getTimeElapsed();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

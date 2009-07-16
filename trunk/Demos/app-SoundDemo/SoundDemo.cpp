@@ -47,6 +47,7 @@ void SoundDemo::initialize()
    m_sceneManager->addSceneManager(m_audioSoundScene);
 
    m_renderer->addVisualSceneManager(*visualSceneManager);
+   m_tamy.soundRenderer().addSoundScene(*m_audioSoundScene);
 
    Light* light = m_tamy.graphicalFactory().createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
@@ -126,7 +127,7 @@ void SoundDemo::update(float timeElapsed)
       m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
    }
 
-   m_tamy.soundRenderer().render(*m_audioSoundScene);
+   m_tamy.soundRenderer().update(timeElapsed);
    m_renderer->render();
 }
 

@@ -170,10 +170,18 @@ bool Tamy::checkDeviceCaps(const D3DCAPS9& caps)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SoundRenderer&  Tamy::soundRenderer() 
+SoundRenderer& Tamy::soundRenderer() 
 {
    ASSERT(m_soundRenderer != NULL, "Tamy is not initialized");
    return *m_soundRenderer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SoundDevice& Tamy::soundDevice()
+{
+   ASSERT(m_soundRenderer != NULL, "Tamy is not initialized");
+   return *m_soundDevice;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

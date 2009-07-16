@@ -1,6 +1,7 @@
 #include "core-AppFlow\ApplicationManager.h"
 #include "core-AppFlow\Application.h"
 #include "core-AppFlow\ApplicationData.h"
+#include "core-AppFlow\TimeController.h"
 #include <stdexcept>
 #include <windows.h>
 
@@ -8,7 +9,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ApplicationManager::ApplicationManager()
-      : m_blackboard(new ApplicationData())
+      : m_globalTimeController(new TimeController()),
+      m_blackboard(new ApplicationData())
 {
    ZeroMemory(m_keyBuffer, 256 * sizeof(unsigned char));
 }
@@ -17,8 +19,18 @@ ApplicationManager::ApplicationManager()
 
 ApplicationManager::~ApplicationManager()
 {
+   delete m_globalTimeController;
+   m_globalTimeController = NULL;
+
    delete m_blackboard;
    m_blackboard = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TimeController& ApplicationManager::timeController()
+{
+   return *m_globalTimeController;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,6 +116,9 @@ void ApplicationManager::connect(const std::string& originator,
 
 bool ApplicationManager::step()
 {
+   float timeElapsed = getTimeElapsed();
+   m_globalTimeController->update(timeElapsed);
+
    switch(onStep())
    {
    case APC_SYSTEM:      return true;
@@ -156,7 +171,7 @@ bool ApplicationManager::step()
 
       case AS_RUNNING:
          {
-            currNode.app.update(getTimeElapsed());
+            currNode.app.update(timeElapsed);
             break;
          }
 

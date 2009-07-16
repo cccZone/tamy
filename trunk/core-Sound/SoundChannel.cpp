@@ -20,17 +20,15 @@ SoundChannel::SoundChannel(Sound& sound, int buffersCount)
    {
       m_data.push_back(new char[m_sampleLength]);
    }
-
-
-   DWORD newBufSize = m_sound.getBytesPerSec();
-   newBufSize -= newBufSize % m_sound.getBlockAlignment();
-   setSampleLength(newBufSize);
    
    m_currSoundFormat = m_sound.getFormat();
    m_currSoundFreq = m_sound.getFrequency();
 
    m_soundLength = m_sound.getLength();
    m_currPeriodicPos = 0;
+
+   DWORD newBufSize = m_sound.getBytesPerSec();
+   setSampleLength(newBufSize);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,6 +62,7 @@ void SoundChannel::loadNextSample()
 
    char* currBuf = m_data[m_nextFreeBuf];
    m_nextFreeBuf = (m_nextFreeBuf + 1) % m_data.size();
+   memset(currBuf, 0, m_sampleLength);
 
    DWORD bytesRead; 
    while ((len > 0) && (m_currPeriodicPos < m_soundLength))
@@ -127,7 +126,9 @@ void SoundChannel::cleanBuffers()
 
 void SoundChannel::setSampleLength(DWORD len)
 {
-   m_sampleLength = len;
+   m_sampleLength = (len < m_soundLength) ? len : m_soundLength;
+   m_sampleLength -= m_sampleLength % m_sound.getBlockAlignment();
+
    cleanBuffers();
 }
 

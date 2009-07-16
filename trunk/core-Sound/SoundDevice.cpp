@@ -70,7 +70,7 @@ void SoundDevice::releaseAllChannels()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundDevice::update()
+void SoundDevice::update(float timeElapsed)
 {
    std::vector<SoundChannel*>::iterator it = m_activeChannels.begin();
    while(it != m_activeChannels.end())

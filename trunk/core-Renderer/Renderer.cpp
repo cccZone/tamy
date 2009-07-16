@@ -58,14 +58,10 @@ void Renderer::addVisualSceneManager(VisualSceneManager& manager)
 
 void Renderer::removeVisualSceneManager(VisualSceneManager& manager)
 {
-   for (std::list<VisualSceneManager*>::iterator it = m_sceneManagers.begin();
-        it != m_sceneManagers.end(); ++it)
+   unsigned int idx = m_sceneManagers.find(&manager);
+   if (idx != EOA)
    {
-      if (*it == &manager)
-      {
-         m_sceneManagers.erase(it);
-         break;
-      }
+      m_sceneManagers.remove(idx);
    }
 }
 
@@ -105,10 +101,10 @@ void Renderer::RenderingState::render(Renderer& renderer)
 
    renderer.renderingBegin();
 
-   for (std::list<VisualSceneManager*>::iterator it = renderer.m_sceneManagers.begin();
-        it != renderer.m_sceneManagers.end(); ++it)
+   unsigned int managersCount = renderer.m_sceneManagers.size();
+   for (unsigned int managerIdx = 0; managerIdx < managersCount; ++managerIdx)
    {
-      VisualSceneManager& sceneManager = **it;
+      VisualSceneManager& sceneManager = *(renderer.m_sceneManagers[managerIdx]);
       if (sceneManager.hasActiveCamera() == false) {continue;}
 
       Camera& activeCamera = sceneManager.getActiveCamera();

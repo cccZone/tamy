@@ -22,7 +22,33 @@ TEST(SoundChannel, samplesUnloadedDuringSoundRemoval)
 
 //////////////////////////////////////////////////////////////////////////////
 
-TEST(SoundChannel, playingSound)
+TEST(SoundChannel, playingSoundShorterThanSampleLength)
+{
+   int soundLength = 2;
+   int bytesPerSec = 1;
+   int soundSampleLength = 6;
+   SoundMock sound(soundLength, bytesPerSec);
+   SoundChannelMock channel(sound);
+
+   channel.setSampleLength(soundSampleLength);
+   CPPUNIT_ASSERT_EQUAL((DWORD)soundLength, channel.getSampleLength());
+
+   CPPUNIT_ASSERT_EQUAL(0.f, channel.getPosition());
+
+   channel.loadNextSample();
+   CPPUNIT_ASSERT_EQUAL(2.f, channel.getPosition());
+
+   // the sound is over - we stop playing (we stop reading from the buffer - the offset stays still)
+   channel.loadNextSample();
+   CPPUNIT_ASSERT_EQUAL(2.f, channel.getPosition());
+
+   channel.loadNextSample();
+   CPPUNIT_ASSERT_EQUAL(2.f, channel.getPosition());
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+TEST(SoundChannel, playingSoundLongerThanSampleLength)
 {
    int soundLength = 6;
    int bytesPerSec = 1;
@@ -31,6 +57,7 @@ TEST(SoundChannel, playingSound)
    SoundChannelMock channel(sound);
 
    channel.setSampleLength(soundSampleLength);
+   CPPUNIT_ASSERT_EQUAL((DWORD)soundSampleLength, channel.getSampleLength());
 
    CPPUNIT_ASSERT_EQUAL(0.f, channel.getPosition());
 
@@ -98,26 +125,12 @@ TEST(SoundChannel, loopedPlayingWithSampleLargeEnoughToEncompassManyLoops)
    CPPUNIT_ASSERT_EQUAL(0.f, channel.getPosition());
 
    channel.loadNextSample();
-   CPPUNIT_ASSERT_EQUAL(soundSampleLength, channel.getNumBytesToPlay());
-   CPPUNIT_ASSERT_EQUAL(2.f, channel.getPosition());
+   CPPUNIT_ASSERT_EQUAL((DWORD)soundLength, channel.getNumBytesToPlay());
+   CPPUNIT_ASSERT_EQUAL(0.f, channel.getPosition());
 
    channel.loadNextSample();
-   CPPUNIT_ASSERT_EQUAL(soundSampleLength, channel.getNumBytesToPlay());
-   CPPUNIT_ASSERT_EQUAL(1.f, channel.getPosition());
-}
-
-//////////////////////////////////////////////////////////////////////////////
-
-TEST(SoundChannel, settingSoundAdjustsBufferSize)
-{
-   int soundLength = 3;
-   DWORD bytesPerSec = 88200; // pick a num that's a little bit uneven bitwise
-   DWORD blockAlignment = 4;
-   DWORD soundSampleLength = 8;
-   SoundMock sound(soundLength, bytesPerSec, blockAlignment);
-   SoundChannelMock channel(sound, 0);
-
-   CPPUNIT_ASSERT_EQUAL((DWORD)88200, channel.getSampleLength()); // it's an even binary num
+   CPPUNIT_ASSERT_EQUAL((DWORD)soundLength, channel.getNumBytesToPlay());
+   CPPUNIT_ASSERT_EQUAL(0.f, channel.getPosition());
 }
 
 //////////////////////////////////////////////////////////////////////////////

@@ -20,12 +20,12 @@ TEST(SoundDevice, removingSoundThatFinishedPlaying)
    channel.play();
    CPPUNIT_ASSERT_EQUAL(0, channel.getActiveBuffersCount());
 
-   soundDevice.update(); 
+   soundDevice.update(0); 
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
    channel.simulateBufferEnd();
 
-   soundDevice.update(); 
+   soundDevice.update(0); 
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundDevice.getActiveChannelsCount());
 }
 
@@ -44,27 +44,27 @@ TEST(SoundDevice, continuousPlayingOfLoopedSound)
    channel.play();
    CPPUNIT_ASSERT_EQUAL(0, channel.getActiveBuffersCount());
 
-   soundDevice.update(); 
+   soundDevice.update(0); 
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
    channel.simulateBufferEnd();
 
-   soundDevice.update();  // buffer gets reloaded
+   soundDevice.update(0);  // buffer gets reloaded
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
    channel.simulateBufferEnd();
 
-   soundDevice.update();  // ... and so on
+   soundDevice.update(0);  // ... and so on
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
    channel.setLooped(false);
    channel.simulateBufferEnd();
 
-   soundDevice.update(); // unitl we turn the looping off - after that we play the sound only once more ...
+   soundDevice.update(0); // unitl we turn the looping off - after that we play the sound only once more ...
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
    channel.simulateBufferEnd();
-   soundDevice.update(); // ... but that's it
+   soundDevice.update(0); // ... but that's it
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundDevice.getActiveChannelsCount());
 }
 
@@ -84,23 +84,23 @@ TEST(SoundDevice, stoppingTheSoundAllowsToResumeIt)
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(0, channel.getActiveBuffersCount());
 
-   soundDevice.update(); 
+   soundDevice.update(0); 
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
    channel.simulateBufferEnd();
 
-   soundDevice.update();  // buffer gets reloaded
+   soundDevice.update(0);  // buffer gets reloaded
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
    channel.stop();
-   soundDevice.update();  // buffer gets reloaded
+   soundDevice.update(0);  // buffer gets reloaded
    CPPUNIT_ASSERT_EQUAL(false, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
    channel.play();
-   soundDevice.update();
+   soundDevice.update(0);
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 }
@@ -125,39 +125,39 @@ TEST(SoundDevice, makingSureChannelDoesntRunOutOfData)
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(0, channel.getActiveBuffersCount());
 
-   soundDevice.update(); 
+   soundDevice.update(0); 
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
-   soundDevice.update(); 
+   soundDevice.update(0); 
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(2, channel.getActiveBuffersCount());
 
-   soundDevice.update(); 
+   soundDevice.update(0); 
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(3, channel.getActiveBuffersCount());
 
    channel.simulateBufferEnd();
 
-   soundDevice.update();  // buffer gets reloaded
+   soundDevice.update(0);  // buffer gets reloaded
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(3, channel.getActiveBuffersCount());
 
    channel.simulateBufferEnd();
 
-   soundDevice.update();  // that was the last chunk opf data we could get - now we simply run out of data...
+   soundDevice.update(0);  // that was the last chunk opf data we could get - now we simply run out of data...
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(2, channel.getActiveBuffersCount());
 
    channel.simulateBufferEnd();
 
-   soundDevice.update();
+   soundDevice.update(0);
    CPPUNIT_ASSERT_EQUAL(true, channel.isPlaying());
    CPPUNIT_ASSERT_EQUAL(1, channel.getActiveBuffersCount());
 
    channel.simulateBufferEnd();
 
-   soundDevice.update();
+   soundDevice.update(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundDevice.getActiveChannelsCount());
 }
 

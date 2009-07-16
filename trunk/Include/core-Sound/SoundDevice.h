@@ -62,7 +62,7 @@ public:
     * Call this method in the main program loop to ensure continuous
     * sound and proper channels management
     */
-   void update();
+   void update(float timeElapsed);
 
 protected:
    /**

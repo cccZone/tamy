@@ -21,44 +21,68 @@ SoundRenderer::~SoundRenderer()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundRenderer::render(SoundSceneManager& soundScene)
+void SoundRenderer::addSoundScene(SoundSceneManager& scene)
 {
-   if (soundScene.hasActiveListener() == false) {return;}
+   m_soundScenes.push_back(&scene);
+}
 
-   // update the listener
-   SoundListener& listener = soundScene.getActiveListener();
-   listener.update();
+///////////////////////////////////////////////////////////////////////////////
 
-   m_soundsToDisable.clear();
-   m_soundsToEnable.clear();
-
-   Array<Sound3D*>& activeSounds = soundScene.update(m_soundsToDisable, m_soundsToEnable);
- 
-   DWORD soundsCount = 0;
-
-   // deactivate sounds that can no longer be heard
-   soundsCount = m_soundsToDisable.size();
-   for (DWORD i = 0; i < soundsCount; ++i)
+void SoundRenderer::removeSoundScene(SoundSceneManager& scene)
+{
+   unsigned int idx = m_soundScenes.find(&scene);
+   if (idx != EOA)
    {
-      m_soundsToDisable[i]->deassignChannel(m_soundDevice);
+      m_soundScenes.remove(idx);
    }
+}
 
-   // assign channels to active sounds
-   soundsCount = m_soundsToEnable.size();
-   for (DWORD i = 0; i < soundsCount; ++i)
+///////////////////////////////////////////////////////////////////////////////
+
+void SoundRenderer::update(float timeElapsed)
+{
+   unsigned int scenesCount = m_soundScenes.size();
+   for (unsigned int sceneIdx = 0; sceneIdx < scenesCount; ++sceneIdx)
    {
-      m_soundsToEnable[i]->assignChannel(m_soundDevice);
-   }
+      SoundSceneManager& soundScene = *(m_soundScenes[sceneIdx]);
 
-   // render the sounds
-   soundsCount = activeSounds.size();
-   for (DWORD i = 0; i < soundsCount; ++i)
-   {
-      activeSounds[i]->update(listener);
-   }
+      if (soundScene.hasActiveListener() == false) {continue;}
 
-   // update the device - effectively presenting the sounds
-   m_soundDevice.update();
+      // update the listener
+      SoundListener& listener = soundScene.getActiveListener();
+      listener.update();
+
+      m_soundsToDisable.clear();
+      m_soundsToEnable.clear();
+
+      Array<Sound3D*>& activeSounds = soundScene.update(m_soundsToDisable, m_soundsToEnable);
+    
+      DWORD soundsCount = 0;
+
+      // deactivate sounds that can no longer be heard
+      soundsCount = m_soundsToDisable.size();
+      for (DWORD i = 0; i < soundsCount; ++i)
+      {
+         m_soundsToDisable[i]->deassignChannel(m_soundDevice);
+      }
+
+      // assign channels to active sounds
+      soundsCount = m_soundsToEnable.size();
+      for (DWORD i = 0; i < soundsCount; ++i)
+      {
+         m_soundsToEnable[i]->assignChannel(m_soundDevice);
+      }
+
+      // render the sounds
+      soundsCount = activeSounds.size();
+      for (DWORD i = 0; i < soundsCount; ++i)
+      {
+         activeSounds[i]->update(listener);
+      }
+
+      // update the device - effectively presenting the sounds
+      m_soundDevice.update(timeElapsed);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
