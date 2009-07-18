@@ -91,6 +91,13 @@ protected:
                                new MaterialOperation(m_matOp, alphaOp, alphaArg1, alphaArg2),
                                new CoordinatesOperationMock(coordsOp));
    }
+
+   RenderingTarget* createDefaultRenderingTarget() {return NULL;}
+
+   TextureRenderingTarget* createTextureRenderingTarget(const std::string& name,
+                                                        unsigned int width,
+                                                        unsigned int height,
+                                                        unsigned int mipLevels) {return NULL;}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -350,7 +350,14 @@ void D3DInitializer::enumerateDevices(Adapter* adapter)
       device->caps = deviceCaps;
       enumerateDeviceOptions(adapter, device);
 
-      if ((device->options.size() == 0) || (m_capsEvaluator.checkDeviceCaps(device->caps) == false))
+      // check the minimum reuqired shader support
+      bool isVertexShaderSupport = (deviceCaps.VertexShaderVersion >= D3DVS_VERSION(1, 1));
+      bool isPixelShaderSupport = (deviceCaps.PixelShaderVersion >= D3DPS_VERSION(1, 1));
+
+      if ((device->options.size() == 0) || 
+          (isVertexShaderSupport == false) || 
+          (isPixelShaderSupport == false) ||
+          (m_capsEvaluator.checkDeviceCaps(device->caps) == false))
       {
          delete device;
       }
@@ -398,6 +405,10 @@ void D3DInitializer::enumerateDeviceOptions(Adapter* adapter, Device* device)
             bool isWindowed = (windowed == 1) ? true : false;
             if (FAILED(m_d3d9.CheckDeviceType(adapter->adapterOrdinal, device->deviceType, 
                                                adapterFormat, backBufferFormat, isWindowed))) continue;
+
+            // check if the format can be used to create a texture rendering target - we're only interested in those
+            if (FAILED(m_d3d9.CheckDeviceFormat(adapter->adapterOrdinal, device->deviceType, adapterFormat, 
+                                               D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, backBufferFormat))) continue;
 
             DeviceOptions* options = new DeviceOptions();
 
@@ -533,9 +544,9 @@ void D3DInitializer::enumerateVertexProcessingTypes(DeviceOptions* options)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-const UINT TextureFormatsCount = 4;
-const D3DFORMAT TextureFormats[4] = {D3DFMT_DXT1, D3DFMT_X8R8G8B8, D3DFMT_R5G6B5,
-                                     D3DFMT_X1R5G5B5};
+const UINT TextureFormatsCount = 6;
+const D3DFORMAT TextureFormats[6] = {D3DFMT_DXT5, D3DFMT_DXT3, D3DFMT_X8R8G8B8,
+                                     D3DFMT_DXT1, D3DFMT_X1R5G5B5, D3DFMT_R5G6B5};
 
 D3DFORMAT D3DInitializer::findOptimalTextureFormat(D3DSettings& settings)
 {

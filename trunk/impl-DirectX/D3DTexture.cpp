@@ -25,7 +25,7 @@ D3DTexture::~D3DTexture()
 ///////////////////////////////////////////////////////////////////////////////
 
 void D3DTexture::setForRendering(unsigned char stageIndex)
-{
+{ 
    m_d3Device.SetTexture(stageIndex, m_texture);
 }
 

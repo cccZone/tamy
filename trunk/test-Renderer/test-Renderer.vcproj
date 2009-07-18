@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GraphicalEffectMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GraphicalEntityMock.cpp"
 				>
 			</File>
@@ -238,6 +242,10 @@
 			</File>
 			<File
 				RelativePath=".\RendererImplementationMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingTargetMock.h"
 				>
 			</File>
 			<File

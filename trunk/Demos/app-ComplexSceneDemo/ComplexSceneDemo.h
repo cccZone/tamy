@@ -15,6 +15,7 @@ class UnconstrainedMotionController;
 class ResourceManager;
 class AbstractGraphicalEntity;
 class Material;
+class RenderingTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,6 +24,7 @@ class ComplexSceneDemo : public Application
 private:
    Tamy& m_tamy;
    Renderer* m_renderer;
+   RenderingTarget* m_renderingTarget;
 
    CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;

@@ -17,6 +17,7 @@
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core-Renderer\ProjCalc2D.h"
+#include "core-Renderer\RenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,6 +26,7 @@ HierarchicalObjectDemo::HierarchicalObjectDemo(Tamy& tamy)
       : Application("Demo"),
       m_tamy(tamy),
       m_renderer(&(tamy.renderer())),
+      m_renderingTarget(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -42,6 +44,9 @@ void HierarchicalObjectDemo::initialize()
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
 
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   m_renderer->addRenderingTarget(*m_renderingTarget);
+
    IWFLoader loader(m_tamy.graphicalFactory(), 
                     m_tamy.meshLoaders(),
                     *m_sceneManager, 
@@ -58,6 +63,9 @@ void HierarchicalObjectDemo::initialize()
 
 void HierarchicalObjectDemo::deinitialize()
 {
+   delete m_renderingTarget;
+   m_renderingTarget = NULL;
+
    delete m_cameraController;
    m_cameraController = NULL;
 

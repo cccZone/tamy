@@ -28,6 +28,8 @@ class Texture;
 class ParticleSystem;
 struct MeshDefinition;
 struct LitVertex;
+class RenderingTarget;
+class TextureRenderingTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -78,6 +80,13 @@ public:
                                                 bool isDynamic, 
                                                 Material& material,
                                                 unsigned int particlesCount) = 0;
+
+   virtual RenderingTarget* createDefaultRenderingTarget() = 0;
+
+   virtual TextureRenderingTarget* createTextureRenderingTarget(const std::string& name,
+                                                                unsigned int width,
+                                                                unsigned int height,
+                                                                unsigned int mipLevels) = 0;
 
 protected:
    GraphicalEntitiesFactory(const std::string& texturesPath);

@@ -22,6 +22,7 @@
 #include "core-Sound\SoundRenderer.h"
 #include "core-Sound\SoundSceneManager.h"
 #include "core-Sound\Sound3D.h"
+#include "core-Renderer\RenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,7 +30,8 @@
 SoundDemo::SoundDemo(Tamy& tamy)
       : Application("Demo"),
       m_renderer(&(tamy.renderer())),
-      m_tamy(tamy)
+      m_tamy(tamy),
+      m_renderingTarget(NULL)
 {
    timeController().add("regularTrack");
    timeController().get("regularTrack").add(new TTimeDependent<SoundDemo>(*this));
@@ -45,6 +47,9 @@ void SoundDemo::initialize()
    m_audioSoundScene = new SoundSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_sceneManager->addSceneManager(m_audioSoundScene);
+
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   m_renderer->addRenderingTarget(*m_renderingTarget);
 
    m_renderer->addVisualSceneManager(*visualSceneManager);
    m_tamy.soundRenderer().addSoundScene(*m_audioSoundScene);
@@ -83,6 +88,9 @@ void SoundDemo::initialize()
 
 void SoundDemo::deinitialize()
 {
+   delete m_renderingTarget;
+   m_renderingTarget = NULL;
+
    delete m_sound;
    m_sound = NULL;
 

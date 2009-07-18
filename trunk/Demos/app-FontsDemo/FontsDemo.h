@@ -9,6 +9,7 @@ class CompositeSceneManager;
 class UnconstrainedMotionController;
 class Renderer;
 class Tamy;
+class RenderingTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +18,7 @@ class FontsDemo : public Application
 private:
    Renderer* m_renderer;
    Tamy& m_tamy;
+   RenderingTarget* m_renderingTarget;
 
    CompositeSceneManager* m_sceneManager2D;
    CompositeSceneManager* m_sceneManager3D;

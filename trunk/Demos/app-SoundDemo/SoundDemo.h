@@ -17,6 +17,7 @@ class SoundListener;
 class SoundSceneManager;
 class Renderer;
 class Tamy;
+class RenderingTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +26,8 @@ class SoundDemo : public Application
 private:
    Renderer* m_renderer;
    Tamy& m_tamy;
+   RenderingTarget* m_renderingTarget;
+
    ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
    ResourceStorage<Material> m_materialsStorage;
 

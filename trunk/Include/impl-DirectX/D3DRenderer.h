@@ -4,11 +4,26 @@
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
+#include "core\Subject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class D3DRenderer : public Renderer
+/**
+ * D3DRenderer will emit these signals to its observers
+ * when it needs them to release or recreate all the
+ * resources that were created in the D3DPOOL_DEFAULT pool.
+ */
+enum D3DGraphResourceOp
+{
+   GRO_RELEASE_RES,
+   GRO_CREATE_RES
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class D3DRenderer : public Renderer, 
+                    public Subject<D3DRenderer, D3DGraphResourceOp>
 {
 private:
    IDirect3DDevice9* m_d3Device;
@@ -39,9 +54,9 @@ public:
 
    IDirect3DVertexBuffer9* createVertexBuffer(UINT length, DWORD usageFlags, DWORD fvf, D3DPOOL memoryPool);
    IDirect3DIndexBuffer9* createIndexBuffer(UINT length, DWORD usageFlags, D3DFORMAT format, D3DPOOL memoryPool);
+   D3DFORMAT getOptimalTextureFormat() const {return m_optimalTextureFormat;}
 
 protected:
-   void initRenderer();
    void resetViewport(unsigned int width, unsigned int height);
 
    UINT getMaxLightsCount() const;
@@ -52,6 +67,9 @@ protected:
    void renderingEnd();
    bool isGraphicsSystemReady() const;
    void attemptToRecoverGraphicsSystem();
+
+private:
+   void initRenderer();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

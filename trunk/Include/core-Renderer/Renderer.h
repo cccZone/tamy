@@ -2,7 +2,6 @@
 
 #include <d3dx9.h>
 #include <list>
-#include "core\Delegate.h"
 #include "core\Array.h"
 #include <vector>
 
@@ -10,15 +9,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class VisualSceneManager;
-class Node;
-class GraphicalNode;
-class Camera;
-class Light;
 class Renderer;
-class RenderingProcessor;
-class SkyBox;
 class RenderingPass;
 struct Point;
+class RendererObserver;
+class RenderingTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +29,9 @@ struct Point;
  * It needs to be implemented in order to actually work with
  * the graphical equipment (the implementation can be done using
  * DirectX, openGL etc. - we don't specify that here)
+ *
+ * The renderer can be observer - it will notify it's observers about the
+ * changes in its state (rendering, device lost, device recovered)
  */
 class Renderer
 {
@@ -56,6 +54,9 @@ private:
    std::vector<RenderingPass*> m_renderingPasses;
    Array<VisualSceneManager*> m_sceneManagers;
 
+   Array<RenderingTarget*> m_renderingTargets;
+   unsigned int m_maxRenderingTargets;
+
    unsigned int m_viewportWidth;
    unsigned int m_viewportHeight;
    unsigned int m_leftClientArea;
@@ -69,7 +70,7 @@ private:
    RendererState* m_currentRendererState;
 
 public:
-   Renderer();
+   Renderer(unsigned int maxRenderingTargets);
    virtual ~Renderer();
 
    /**
@@ -88,7 +89,7 @@ public:
                        unsigned int rightClientArea, unsigned int bottomClientArea);
 
    /**
-    * This method adds a new 2d rendering pass to the rendering pipeline
+    * This method adds a new rendering pass to the rendering pipeline
     */
    void addPass(RenderingPass* pass);
 
@@ -109,20 +110,38 @@ public:
     */
    void screenToViewport(const Point& inScreenPt, D3DXVECTOR2& outViewportPt) const;
 
+   /**
+    * This method returns the maximum supported rendering targets
+    */
+   unsigned int getMaxRenderingTargets() const {return m_maxRenderingTargets;}
+
+   /**
+    * This method returns the current number of rendering targets set
+    */
+   unsigned int getRenderingTargetsCount() const {return m_renderingTargets.size();}
+
+   /**
+    * This method adds a new rendering target.
+    *
+    * @throws runtime_error if the maximum number of rtendering targets is already set
+    */
+   void addRenderingTarget(RenderingTarget& target);
+
+   /**
+    * Removes a rendering target with the given index
+    */
+   void removeRenderingTarget(RenderingTarget& target);
+
 protected:
    /**
-    * This method will be called whenever the device needs
-    * to be initialized (which will basically take place
+    * This method sets the implementation-dependent details of the used viewport
+    *
+    * When it's called, the device needs to be initialized (which will basically take place
     * when the device is first referenced, or when we loose
     * the device's focus for some reason and then reacquire it)
     *
     * It should perform all the required initialization to get
     * the device ready for rendering
-    */
-   virtual void initRenderer() = 0;
-
-   /**
-    * This method sets the implementation-dependent details of the used viewport
     */
    virtual void resetViewport(unsigned int width, unsigned int height) = 0;
 

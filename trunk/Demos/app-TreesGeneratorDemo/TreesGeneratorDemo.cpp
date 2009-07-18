@@ -19,6 +19,7 @@
 #include "ext-TreesGenerator\TreeParams.h"
 #include "ext-TreesGenerator\TreesGenerator.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
+#include "core-Renderer\RenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,6 +28,7 @@ TreesGeneratorDemo::TreesGeneratorDemo(Tamy& tamy)
       : Application("Demo"),
       m_renderer(&(tamy.renderer())),
       m_tamy(tamy),
+      m_renderingTarget(NULL),
       m_treeEntity(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
@@ -44,6 +46,9 @@ void TreesGeneratorDemo::initialize()
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
+
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   m_renderer->addRenderingTarget(*m_renderingTarget);
 
    TreeParams treeParams;
    treeParams.maxTreeDepth = 5;
@@ -102,6 +107,9 @@ void TreesGeneratorDemo::initialize()
 
 void TreesGeneratorDemo::deinitialize()
 {
+   delete m_renderingTarget;
+   m_renderingTarget = NULL;
+
    delete m_animationController;
    m_animationController = NULL;
 

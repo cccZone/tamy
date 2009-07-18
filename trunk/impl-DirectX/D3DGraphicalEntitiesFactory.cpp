@@ -16,6 +16,8 @@
 #include "impl-DirectX\D3DParticleSystem.h"
 #include "impl-DirectX\D3DTransparencyEnabler.h"
 #include "impl-DirectX\D3DCoordinatesOperation.h"
+#include "impl-DirectX\D3DDefaultRenderingTarget.h"
+#include "impl-DirectX\D3DTextureRenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -152,16 +154,60 @@ Texture* D3DGraphicalEntitiesFactory::loadTexture(const std::string& path, const
    IDirect3DTexture9* loadedTex = NULL;
    std::string fullPathToTexture = path + std::string("\\") + fileName;
 
-   HRESULT res = D3DXCreateTextureFromFileEx(&m_d3Device,
-                                             fullPathToTexture.c_str(),
-                                             D3DX_DEFAULT, D3DX_DEFAULT,
-                                             D3DX_DEFAULT, 0, D3DFMT_UNKNOWN,
-                                             D3DPOOL_MANAGED, 
-                                             D3DX_DEFAULT, D3DX_DEFAULT,
-                                             D3DCOLOR(), NULL, NULL, &loadedTex);
+   D3DFORMAT texFormat = m_renderer.getOptimalTextureFormat();
+   HRESULT res;
+
+   res = D3DXCreateTextureFromFileEx(&m_d3Device,
+                                     fullPathToTexture.c_str(),
+                                     D3DX_DEFAULT, D3DX_DEFAULT,
+                                     D3DX_DEFAULT, 0, texFormat,
+                                     D3DPOOL_MANAGED, 
+                                     D3DX_DEFAULT, D3DX_DEFAULT,
+                                     D3DCOLOR(), NULL, NULL, &loadedTex);
+
    if (FAILED(res))
    {
-      throw std::logic_error(std::string("Can't load texture from file ") + fullPathToTexture);
+      std::string errorMsg = std::string("Can't load texture from file ") + fullPathToTexture;
+      switch(res)
+      {
+      case D3DERR_INVALIDCALL:
+         {
+            errorMsg += " due to invalid parameters passed";
+            break;
+         }
+
+      case D3DERR_NOTAVAILABLE:
+         {
+            errorMsg += " - this format is unavailable";
+            break;
+         }
+
+      case D3DERR_OUTOFVIDEOMEMORY:
+         {
+            errorMsg += " due to the lack of video memory";
+            break;
+         }
+
+      case D3DXERR_INVALIDDATA:
+         {
+            errorMsg += " due to invalid data";
+            break;
+         }
+
+      case E_OUTOFMEMORY:
+         {
+            errorMsg += " due to the lack of system memory";
+            break;
+         }
+
+      default:
+         {
+            errorMsg += " for unknown reason";
+            break;
+         }
+      }
+
+      throw std::logic_error(errorMsg);
    }
 
    Texture* tex = new D3DTexture(fileName, m_d3Device, *loadedTex);
@@ -211,6 +257,25 @@ ParticleSystem* D3DGraphicalEntitiesFactory::createParticleSystem(
 {
    return new D3DParticleSystem(m_d3Device,
                                 name, isDynamic, material, particlesCount);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+RenderingTarget* D3DGraphicalEntitiesFactory::createDefaultRenderingTarget()
+{
+   return new D3DDefaultRenderingTarget(m_d3Device, m_renderer);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TextureRenderingTarget* 
+D3DGraphicalEntitiesFactory::createTextureRenderingTarget(const std::string& name,
+                                                          unsigned int width,
+                                                          unsigned int height,
+                                                          unsigned int mipLevels)
+{
+   return new D3DTextureRenderingTarget(name, width, height, mipLevels, 
+                                        m_d3Device, m_renderer);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

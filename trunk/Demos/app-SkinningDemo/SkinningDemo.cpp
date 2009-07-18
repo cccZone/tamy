@@ -15,6 +15,7 @@
 #include "core-Renderer\Skeleton.h"
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
+#include "core-Renderer\RenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,6 +24,7 @@ SkinningDemo::SkinningDemo(Tamy& tamy)
       : Application("Demo"),
       m_tamy(tamy),
       m_renderer(&(tamy.renderer())),
+      m_renderingTarget(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -40,6 +42,9 @@ void SkinningDemo::initialize()
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
    
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   m_renderer->addRenderingTarget(*m_renderingTarget);
+
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
    GraphicalEntityLoader loader(factory, m_materialsStorage);
 
@@ -74,6 +79,9 @@ void SkinningDemo::initialize()
 
 void SkinningDemo::deinitialize()
 {
+   delete m_renderingTarget;
+   m_renderingTarget = NULL;
+   
    delete m_animationController;
    m_animationController = NULL;
 

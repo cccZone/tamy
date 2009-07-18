@@ -11,6 +11,7 @@
 #include "core-Renderer\ProjCalc2D.h"
 #include "core-ResourceManagement\XMLFont.h"
 #include "ext-Fonts\VisibleString.h"
+#include "core-Renderer\RenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,6 +20,7 @@ FontsDemo::FontsDemo(Tamy& tamy)
       : Application("Demo"),
       m_renderer(&(tamy.renderer())),
       m_tamy(tamy),
+      m_renderingTarget(NULL),
       m_sceneManager2D(NULL),
       m_sceneManager3D(NULL)
 {
@@ -32,6 +34,9 @@ void FontsDemo::initialize()
 {
    XMLFont* font = new XMLFont("..\\Data\\Curlz.fnt", m_tamy.graphicalFactory());
    m_tamy.fontsStorage().add(font);
+
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   m_renderer->addRenderingTarget(*m_renderingTarget);
 
    // scene 2D
    m_sceneManager2D = new CompositeSceneManager();
@@ -81,6 +86,9 @@ void FontsDemo::initialize()
 
 void FontsDemo::deinitialize()
 {
+   delete m_renderingTarget;
+   m_renderingTarget = NULL;
+
    delete m_sceneManager3D;
    m_sceneManager3D = NULL;
 

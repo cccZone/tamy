@@ -294,6 +294,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="ObserverPattern"
+				>
+				<File
+					RelativePath="..\Include\core\Observer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\Subject.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Scene"

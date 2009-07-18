@@ -18,6 +18,7 @@ class ParticleSystem;
 class WaypointCameraController;
 class Renderer;
 class Tamy;
+class RenderingTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +27,7 @@ class PickingDemo : public Application
 private:
    Renderer* m_renderer;
    Tamy& m_tamy;
+   RenderingTarget* m_renderingTarget;
 
    CompositeSceneManager* m_sceneManager;
    CompositeSceneManager * m_hudSceneManager;

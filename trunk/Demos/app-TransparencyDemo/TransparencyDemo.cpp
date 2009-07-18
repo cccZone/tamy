@@ -15,6 +15,7 @@
 #include "core-Renderer\Skeleton.h"
 #include "ext-MaterialsParser\MaterialsParser.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
+#include "core-Renderer\RenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,6 +24,7 @@ TransparencyDemo::TransparencyDemo(Tamy& tamy)
       : Application("Demo"),
       m_renderer(&(tamy.renderer())),
       m_tamy(tamy),
+      m_renderingTarget(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -39,6 +41,9 @@ void TransparencyDemo::initialize()
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
+
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   m_renderer->addRenderingTarget(*m_renderingTarget);
 
    MaterialsParser parser(m_tamy.graphicalFactory(), m_tamy.materialsStorage());
    parser.load("..\\Data\\materials.xml");
@@ -59,6 +64,9 @@ void TransparencyDemo::initialize()
 
 void TransparencyDemo::deinitialize()
 {
+   delete m_renderingTarget;
+   m_renderingTarget = NULL;
+
    delete m_cameraController;
    m_cameraController = NULL;
 

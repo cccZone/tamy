@@ -167,11 +167,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RenderingProcessor.cpp"
+				RelativePath="..\Include\core-Renderer\RenderingTarget.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingProcessor.h"
+				RelativePath="..\Include\core-Renderer\TextureRenderingTarget.h"
 				>
 			</File>
 		</Filter>
@@ -464,6 +464,14 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\GraphicalNodesProcessor.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingProcessor.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingProcessor.h"
 				>
 			</File>
 		</Filter>

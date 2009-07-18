@@ -1,15 +1,8 @@
 #include "core-TestFramework\TestFramework.h"
-#include "core-Renderer\RenderingProcessor.h"
-#include "core-Renderer\RenderingCommand.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "RendererImplementationMock.h"
-#include "TextureStub.h"
-#include "core-Renderer\Material.h"
-#include "GraphicalEntityMock.h"
-#include "core-Renderer\GraphicalNode.h"
-#include "LightReflectingPropertiesStub.h"
 #include "core-Renderer\VisualSceneManager.h"
-#include "core-Renderer\SkyBox.h"
+#include "RenderingTargetMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +12,6 @@ TEST(Renderer, renderingOnlyWhenRenderingDeviceIsReady)
    VisualSceneManager sceneManager;
    RendererImplementationMock renderer;
    renderer.addVisualSceneManager(sceneManager);
-
 
    renderer.render(); 
    CPPUNIT_ASSERT_EQUAL(true, renderer.wasPresentCalled());
@@ -40,19 +32,16 @@ TEST(Renderer, recoveringTheLostDevice)
 
    // initial rendering
    renderer.render(); 
-   CPPUNIT_ASSERT_EQUAL(true, renderer.wasInitialStateSet());
    CPPUNIT_ASSERT_EQUAL(true, renderer.wasViewportReset());
    CPPUNIT_ASSERT_EQUAL(false, renderer.wasDeviceRecoveryAttemptMade());
 
    // we loose the device
    renderer.setDeviceReady(false);
    renderer.render(); 
-   CPPUNIT_ASSERT_EQUAL(false, renderer.wasInitialStateSet());
    CPPUNIT_ASSERT_EQUAL(false, renderer.wasViewportReset());
-   CPPUNIT_ASSERT_EQUAL(false, renderer.wasDeviceRecoveryAttemptMade()); // we don't attempt to recover the device just yet - let's give it aloop
+   CPPUNIT_ASSERT_EQUAL(false, renderer.wasDeviceRecoveryAttemptMade()); // we don't attempt to recover the device just yet - let's give it a loop
 
    renderer.render(); 
-   CPPUNIT_ASSERT_EQUAL(false, renderer.wasInitialStateSet());
    CPPUNIT_ASSERT_EQUAL(false, renderer.wasViewportReset());
    CPPUNIT_ASSERT_EQUAL(true, renderer.wasDeviceRecoveryAttemptMade());
 
@@ -60,14 +49,39 @@ TEST(Renderer, recoveringTheLostDevice)
    // rendering pass should proceed as if the device was ready
 
    renderer.render(); 
-   CPPUNIT_ASSERT_EQUAL(true, renderer.wasInitialStateSet());
    CPPUNIT_ASSERT_EQUAL(true, renderer.wasViewportReset());
    CPPUNIT_ASSERT_EQUAL(false, renderer.wasDeviceRecoveryAttemptMade());
 
    renderer.render(); 
-   CPPUNIT_ASSERT_EQUAL(false, renderer.wasInitialStateSet());
    CPPUNIT_ASSERT_EQUAL(false, renderer.wasViewportReset());
    CPPUNIT_ASSERT_EQUAL(false, renderer.wasDeviceRecoveryAttemptMade());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(Renderer, noRenderingWithoutRenderingTargets)
+{
+   VisualSceneManager sceneManager;
+   RendererImplementationMock renderer(false);
+   renderer.addVisualSceneManager(sceneManager);
+
+   renderer.render();
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, renderer.getRenderingTargetsCount());
+   CPPUNIT_ASSERT_EQUAL(false, renderer.wasPresentCalled());
+
+   RenderingTargetMock target;
+
+   renderer.addRenderingTarget(target);
+   renderer.render(); 
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, renderer.getRenderingTargetsCount());
+   CPPUNIT_ASSERT_EQUAL(true, renderer.wasPresentCalled());
+   CPPUNIT_ASSERT_EQUAL(0, target.getRenderingIdx());
+
+   renderer.removeRenderingTarget(target);
+   renderer.render();
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, renderer.getRenderingTargetsCount());
+   CPPUNIT_ASSERT_EQUAL(false, renderer.wasPresentCalled());
+   CPPUNIT_ASSERT_EQUAL(-1, target.getRenderingIdx());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -14,6 +14,7 @@ class Renderer;
 class ResourceManager;
 class AbstractGraphicalEntity;
 class Tamy;
+class RenderingTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,6 +23,7 @@ class TreesGeneratorDemo : public Application
 private:
    Renderer* m_renderer;
    Tamy& m_tamy;
+   RenderingTarget* m_renderingTarget;
 
    AbstractGraphicalEntity* m_treeEntity;
    CompositeSceneManager* m_sceneManager;

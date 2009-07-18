@@ -14,6 +14,7 @@
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
+#include "core-Renderer\RenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,6 +23,7 @@ PerformanceDemo::PerformanceDemo(Tamy& tamy)
       : Application("Demo"),
       m_renderer(&(tamy.renderer())),
       m_tamy(tamy),
+      m_renderingTarget(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -40,6 +42,10 @@ void PerformanceDemo::initialize()
    m_renderer->addVisualSceneManager(*m_visualSceneManager);
 
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
+
+   m_renderingTarget = factory.createDefaultRenderingTarget();
+   m_renderer->addRenderingTarget(*m_renderingTarget);
+
    GraphicalEntityLoader loader(factory, m_materialsStorage);
 
    AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
@@ -74,6 +80,9 @@ void PerformanceDemo::initialize()
 
 void PerformanceDemo::deinitialize()
 {
+   delete m_renderingTarget;
+   m_renderingTarget = NULL;
+
    m_renderer->removeVisualSceneManager(*m_visualSceneManager);
    m_visualSceneManager = NULL;
 

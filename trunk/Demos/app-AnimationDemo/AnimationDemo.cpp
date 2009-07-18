@@ -14,6 +14,7 @@
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\Skeleton.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
+#include "core-Renderer\RenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,6 +23,7 @@ AnimationDemo::AnimationDemo(Tamy& tamy)
       : Application("Demo"),
       m_tamy(tamy),
       m_renderer(&(tamy.renderer())),
+      m_renderingTarget(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -38,6 +40,9 @@ void AnimationDemo::initialize()
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
    m_renderer->addVisualSceneManager(*visualSceneManager);
+
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   m_renderer->addRenderingTarget(*m_renderingTarget);
 
    IWFLoader loader(m_tamy.graphicalFactory(), 
                     m_tamy.meshLoaders(),
@@ -65,6 +70,9 @@ void AnimationDemo::initialize()
 
 void AnimationDemo::deinitialize()
 {
+   delete m_renderingTarget;
+   m_renderingTarget = NULL;
+
    delete m_animationController;
    m_animationController = NULL;
 

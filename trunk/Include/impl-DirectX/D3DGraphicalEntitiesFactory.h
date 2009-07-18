@@ -37,6 +37,13 @@ public:
                                         Material& material,
                                         unsigned int particlesCount);
 
+   RenderingTarget* createDefaultRenderingTarget();
+
+   TextureRenderingTarget* createTextureRenderingTarget(const std::string& name,
+                                                        unsigned int width,
+                                                        unsigned int height,
+                                                        unsigned int mipLevels);
+
 protected:
    GraphicalEntity* createGraphicalEntity(const std::string& name,
                                           const std::vector<LitVertex>& vertices,

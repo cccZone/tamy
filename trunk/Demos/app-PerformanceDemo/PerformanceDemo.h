@@ -13,6 +13,7 @@ class VisualSceneManager;
 class UnconstrainedMotionController;
 class Renderer;
 class Tamy;
+class RenderingTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +22,7 @@ class PerformanceDemo : public Application
 private:
    Renderer* m_renderer;
    Tamy& m_tamy;
+   RenderingTarget* m_renderingTarget;
 
    CompositeSceneManager* m_sceneManager;
    VisualSceneManager* m_visualSceneManager;

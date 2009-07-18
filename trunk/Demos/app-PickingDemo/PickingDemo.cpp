@@ -28,6 +28,7 @@
 #include "ext-MotionControllers\TimeFunction.h"
 #include "core\dostream.h"
 #include "JumpToNodeAction.h"
+#include "core-Renderer\RenderingTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,6 +51,7 @@ PickingDemo::PickingDemo(Tamy& tamy)
       : Application("Demo"),
       m_renderer(&(tamy.renderer())),
       m_tamy(tamy),
+      m_renderingTarget(NULL),
       m_sceneManager(NULL),
       m_atmosphere(NULL),
       m_cursor(NULL),
@@ -79,6 +81,10 @@ void PickingDemo::initialize()
    m_renderer->addVisualSceneManager(*hudVisualSceneMgr);
 
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
+
+   m_renderingTarget = factory.createDefaultRenderingTarget();
+   m_renderer->addRenderingTarget(*m_renderingTarget);
+
    GraphicalEntityLoader loader(factory, m_materialsStorage);
 
    AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
@@ -214,6 +220,9 @@ void PickingDemo::initialize()
 
 void PickingDemo::deinitialize()
 {
+   delete m_renderingTarget;
+   m_renderingTarget = NULL;
+
    m_circular = NULL;
    m_burst = NULL;
    m_cursor = NULL;

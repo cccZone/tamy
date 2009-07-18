@@ -5,6 +5,7 @@
 #include <d3dx9.h>
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\DrawingPass.h"
+#include "RenderingTargetMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,25 +13,31 @@
 class RendererImplementationMock : public Renderer
 {
 private:
+   RenderingTargetMock m_renderingTarget;
+
    bool m_deviceReady;
    D3DXMATRIX m_viewMtx;
    UINT m_maxLightsCount;
    bool m_deviceRecoveryAttemptMade;
    bool m_viewportReset;
-   bool m_initialStateSet;
    bool m_presentCalled;
 
 public:
-   RendererImplementationMock() 
-         : m_deviceReady(true),
+   RendererImplementationMock(bool addDefaultRenderingTarget = true) 
+         : Renderer(1),
+         m_deviceReady(true),
          m_maxLightsCount(255),
          m_deviceRecoveryAttemptMade(false),
          m_viewportReset(false),
-         m_initialStateSet(false),
          m_presentCalled(false)
    {
       D3DXMatrixIdentity(&m_viewMtx);
       addPass(new DrawingPass());
+
+      if (addDefaultRenderingTarget)
+      {
+         addRenderingTarget(m_renderingTarget);
+      }
    }
 
    void setDeviceReady(bool enable) {m_deviceReady = enable;}
@@ -53,13 +60,6 @@ public:
       return result;
    }
 
-   bool wasInitialStateSet()
-   {
-      bool result = m_initialStateSet;
-      m_initialStateSet = false;
-      return result;
-   }
-
    bool wasPresentCalled()
    {
       bool result = m_presentCalled;
@@ -68,7 +68,6 @@ public:
    }
 
 protected:
-   void initRenderer() {m_initialStateSet = true;}
 
    void resetViewport(unsigned int width, unsigned int height) {m_viewportReset = true;}
 

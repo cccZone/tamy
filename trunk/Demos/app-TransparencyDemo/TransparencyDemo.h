@@ -9,6 +9,7 @@ class CompositeSceneManager;
 class UnconstrainedMotionController;
 class Renderer;
 class Tamy;
+class RenderingTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +18,7 @@ class TransparencyDemo : public Application
 private:
    Renderer* m_renderer;
    Tamy& m_tamy;
+   RenderingTarget* m_renderingTarget;
 
    CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;

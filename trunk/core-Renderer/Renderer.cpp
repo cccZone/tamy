@@ -3,14 +3,17 @@
 #include "core-Renderer\Light.h"
 #include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\RenderingPass.h"
+#include "core-Renderer\RenderingTarget.h"
 #include "core\Point.h"
-#include <cassert>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Renderer::Renderer()
-      : m_viewportWidth(800),
+Renderer::Renderer(unsigned int maxRenderingTargets)
+      : m_renderingTargets(maxRenderingTargets),
+      m_maxRenderingTargets(maxRenderingTargets),
+      m_viewportWidth(800),
       m_viewportHeight(600),
       m_leftClientArea(0),
       m_topClientArea(0),
@@ -21,6 +24,10 @@ Renderer::Renderer()
       m_deviceLostState(new DeviceLostState()),
       m_currentRendererState(m_initialState) // we always start in the initial state
 {
+   if (m_maxRenderingTargets == 0)
+   {
+      throw std::invalid_argument("Graphics device has to allow for at least one rendering target");
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,6 +74,29 @@ void Renderer::removeVisualSceneManager(VisualSceneManager& manager)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Renderer::addRenderingTarget(RenderingTarget& target)
+{
+   if (m_renderingTargets.size() >= m_maxRenderingTargets)
+   {
+      throw std::runtime_error("Too many rendering targets for your graphics device");
+   }
+
+   m_renderingTargets.push_back(&target);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::removeRenderingTarget(RenderingTarget& target)
+{
+   unsigned int idx = m_renderingTargets.find(&target);
+   if (idx != EOA)
+   {
+      m_renderingTargets.remove(idx);
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Renderer::render()
 {
    m_currentRendererState->render(*this);
@@ -76,7 +106,6 @@ void Renderer::render()
 
 void Renderer::InitialState::render(Renderer& renderer)
 {
-   renderer.initRenderer();
    renderer.resetViewport(renderer.m_viewportWidth, renderer.m_viewportHeight);
    renderer.setRenderingState();
 
@@ -96,9 +125,20 @@ void Renderer::RenderingState::render(Renderer& renderer)
       return;
    }
 
+   // check if there are any rendering passes - none mean that 
+   // we have noting to render with
    unsigned int passesCount = renderer.m_renderingPasses.size();
    if (passesCount == 0) {return;}
 
+   // set the rendering targets
+   unsigned int rtsCount = renderer.m_renderingTargets.size();
+   if (rtsCount == 0) {return;}
+   for (unsigned int i = 0; i < rtsCount; ++i)
+   {
+      renderer.m_renderingTargets[i]->use(i);
+   }
+
+   // begin rendering 
    renderer.renderingBegin();
 
    unsigned int managersCount = renderer.m_sceneManagers.size();
