@@ -1,0 +1,14 @@
+#pragma once
+
+#include "core-Renderer\StageTextureRenderer.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+class StageTextureRendererStub : public StageTextureRenderer
+{
+public:
+   void setForRendering(unsigned int stageIdx, TextureImpl& texImpl) {}
+};
+
+///////////////////////////////////////////////////////////////////////////////

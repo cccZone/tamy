@@ -4,7 +4,7 @@
 #include "core\Array.h"
 #include <math.h>
 #include "core-Renderer\AbstractGraphicalEntity.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTechnique.h"
 #include "core\ResourceStorage.h"
 
 
@@ -43,7 +43,7 @@ private:
    int m_shownNode;
 
    ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
-   ResourceStorage<Material> m_materialsStorage;
+   ResourceStorage<RenderingTechnique> m_renderingTechniquesStorage;
 
 public:
    PickingDemo(Tamy& tamy);

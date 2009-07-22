@@ -6,7 +6,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Material;
+class Texture;
+class TextureImpl;
+class StageTextureRenderer;
+class RenderingTargetsPolicy;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,15 +32,17 @@ enum SkyBoxSides
 class SkyBox : public Node
 {
 private:
-   Material* m_materials[6];
+   StageTextureRenderer& m_textureRenderer;
+   RenderingTargetsPolicy& m_policy;
+   TextureImpl* m_textures[6];
 
 public:
-   SkyBox();
+   SkyBox(StageTextureRenderer& textureRenderer, RenderingTargetsPolicy& policy);
    virtual ~SkyBox() {}
 
    void render();
 
-   void setMaterial(SkyBoxSides side, Material& material);
+   void setTexture(SkyBoxSides side, Texture& texture);
 
 protected:
    void onAccept(NodeVisitor& visitor);

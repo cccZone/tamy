@@ -10,6 +10,7 @@ class D3DRenderer;
 class D3DColorOperationImplementation;
 class D3DAlphaOperationImplementation;
 class D3DTransparencyEnabler;
+class D3DStageTextureRenderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +22,7 @@ private:
    D3DColorOperationImplementation* m_colorOpImpl;
    D3DAlphaOperationImplementation* m_alphaOpImpl;
    D3DTransparencyEnabler *m_transparencyEnabler;
+   D3DStageTextureRenderer* m_stageTextureRenderer;
 
 public:
    D3DGraphicalEntitiesFactory(const std::string& texturesPath,
@@ -39,23 +41,24 @@ public:
 
    RenderingTarget* createDefaultRenderingTarget();
 
-   TextureRenderingTarget* createTextureRenderingTarget(const std::string& name,
-                                                        unsigned int width,
-                                                        unsigned int height,
-                                                        unsigned int mipLevels);
+   TextureRenderingTarget* createTextureRenderingTarget(const std::string& name);
+
+   PostProcessEffectNode* createPostProcessEffectNode(const std::string& name,
+                                                      RenderingTechnique& technique);
+
 
 protected:
    GraphicalEntity* createGraphicalEntity(const std::string& name,
                                           const std::vector<LitVertex>& vertices,
                                           const std::list<Face<USHORT> >& faces,
-                                          const std::vector<Material*>& registeredMaterials);
+                                          const std::vector<RenderingTechnique*>& techniques);
 
    SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                         const std::vector<LitVertex>& vertices,
                                                         const std::list<Face<USHORT> >& faces,
                                                         const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                         const std::vector<SkinBoneDefinition>& skinBones,
-                                                        const std::vector<Material*>& registeredMaterials);
+                                                        const std::vector<RenderingTechnique*>& techniques);
 
    SkyBox* createSkyBox();
 
@@ -68,7 +71,13 @@ protected:
                                       CoordsOpCode coordsOp);
 
    Material* createMaterialImpl(const std::string& name,
+                                RenderingTargetsPolicy& policy,
                                 LightReflectingProperties* lrp);
+
+   GraphicalEffect* createEffectImpl(const std::string& name,
+                                     RenderingTargetsPolicy& policy,
+                                     bool isTransparent,
+                                     EffectDataSource* dataSource);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

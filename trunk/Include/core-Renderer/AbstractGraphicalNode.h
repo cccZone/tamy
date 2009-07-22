@@ -5,7 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Material;
+class RenderingTechnique;
 class AbstractGraphicalEntity;
 struct BoundingSphere;
 
@@ -18,13 +18,13 @@ struct BoundingSphere;
 class AbstractGraphicalNode : public Node
 {
 private:
-   Material* m_material;
+   RenderingTechnique* m_technique;
    DWORD m_subset;
 
 public:
    AbstractGraphicalNode(const std::string& name, 
                          bool dynamic, 
-                         Material& material, 
+                         RenderingTechnique& technique, 
                          DWORD subset);
    virtual ~AbstractGraphicalNode() {}
 
@@ -37,10 +37,10 @@ public:
     * This method allows to set an arbitrary material that will be used
     * during rendering of the node contents.
     */
-   void setMaterial(Material& material);
+   void setTechnique(RenderingTechnique& technique);
 
-   inline const Material& getMaterial() const {return *m_material;}
-   inline Material& getMaterial() {return *m_material;}
+   inline const RenderingTechnique& getTechnique() const {return *m_technique;}
+   inline RenderingTechnique& getTechnique() {return *m_technique;}
 
     /**
     * ...self explanatory I think...

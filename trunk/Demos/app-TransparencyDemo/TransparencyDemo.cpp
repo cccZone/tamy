@@ -16,6 +16,8 @@
 #include "ext-MaterialsParser\MaterialsParser.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\SceneRenderingMechanism.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,22 +42,24 @@ void TransparencyDemo::initialize()
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
-   m_renderer->addVisualSceneManager(*visualSceneManager);
+   
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
+   sceneRenderer.addVisualSceneManager(*visualSceneManager);
 
    m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_renderer->addRenderingTarget(*m_renderingTarget);
+   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
 
-   MaterialsParser parser(m_tamy.graphicalFactory(), m_tamy.materialsStorage());
+   MaterialsParser parser(m_tamy.graphicalFactory(), m_renderingTechniquesStorage);
    parser.load("..\\Data\\materials.xml");
 
    IWFLoader loader(m_tamy.graphicalFactory(), 
                     m_tamy.meshLoaders(),
                     *m_sceneManager, 
-                    m_tamy.entitiesStorage(),
-                    m_tamy.materialsStorage());
+                    m_entitiesStorage,
+                    m_renderingTechniquesStorage);
    loader.load("..\\Data\\Dolphin.iwf");
 
-   Camera* camera = new Camera("camera");
+   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
    m_sceneManager->addNode(camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }

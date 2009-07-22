@@ -9,7 +9,7 @@
 class Font;
 struct Color;
 class Material;
-class MaterialReplacer;
+class RenderingTechniqueReplacer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +18,7 @@ class VisibleString : public Node
 private:
    Font& m_font;
    Material* m_material;
-   MaterialReplacer* m_matReplacer;
+   RenderingTechniqueReplacer* m_matReplacer;
 
 public:
    VisibleString(Font& font);

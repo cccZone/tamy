@@ -2,13 +2,6 @@
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\SkinnedGraphicalNode.h"
 #include "core-Renderer\RenderingProcessor.h"
-#include "core-Renderer\RenderingCommand.h"
-#include "core-Renderer\Material.h"
-#include "core-Renderer\MaterialStage.h"
-#include "core-Renderer\MaterialOperation.h"
-#include "MaterialOperationImplementationMock.h"
-#include "LightReflectingPropertiesStub.h"
-#include "TextureStub.h"
 #include "core\MatrixWriter.h"
 #include "GraphicalEntityMock.h"
 #include "SkinnedGraphicalEntityMock.h"
@@ -18,14 +11,17 @@
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "TransparencyEnablerStub.h"
 #include "CoordinatesOperationMock.h"
+#include "RenderingTechniqueStub.h"
 
+
+using namespace RegularTests;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(GraphicalEntityInstantiation, basics)
 {
-   std::vector<Material*> materialsListStub;
-   materialsListStub.push_back(reinterpret_cast<Material*> (0xCC));
+   std::vector<RenderingTechnique*> techniquesListStub;
+   techniquesListStub.push_back(reinterpret_cast<RenderingTechnique*> (0xCC));
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
    D3DXMATRIX identityMtx; D3DXMatrixIdentity(&identityMtx);
@@ -34,11 +30,11 @@ TEST(GraphicalEntityInstantiation, basics)
 
    // prepare the entities
    CompositeGraphicalEntity bodyRoot("body", bodyMtx);
-   GraphicalEntityMock* bodyEntity = new GraphicalEntityMock("body_entity", materialsListStub);
+   GraphicalEntityMock* bodyEntity = new GraphicalEntityMock("body_entity", techniquesListStub);
    CompositeGraphicalEntity* headRoot = new CompositeGraphicalEntity("head", headMtx);
-   GraphicalEntityMock* headEntity = new GraphicalEntityMock("head_entity", materialsListStub);
+   GraphicalEntityMock* headEntity = new GraphicalEntityMock("head_entity", techniquesListStub);
    CompositeGraphicalEntity* handRoot = new CompositeGraphicalEntity("hand", handMtx);
-   GraphicalEntityMock* handEntity = new GraphicalEntityMock("hand_entity", materialsListStub);
+   GraphicalEntityMock* handEntity = new GraphicalEntityMock("hand_entity", techniquesListStub);
 
    headRoot->addChild(headEntity);
    handRoot->addChild(handEntity);
@@ -89,35 +85,19 @@ TEST(GraphicalEntityInstantiation, basics)
 
 TEST(GraphicalEntityInstantiation, multipleSubsets)
 {
-   MaterialOperationImplementationMock matOpImpl;
-   TextureStub texture("");
-   TransparencyEnablerStub transparencyEnabler;
+   std::vector<RenderingTechnique*> bodyTechniques;
+   std::vector<RenderingTechnique*> headTechniques;
+   std::vector<RenderingTechnique*> handTechniques;
 
-   Material skinMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
-   skinMat.addStage(new MaterialStage(texture,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new CoordinatesOperationMock(CC_WRAP)));
-   Material blouseMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
-   blouseMat.addStage(new MaterialStage(texture,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new CoordinatesOperationMock(CC_WRAP)));
-   Material hairMat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
-   hairMat.addStage(new MaterialStage(texture,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new CoordinatesOperationMock(CC_WRAP)));
+   RenderingTechniqueStub skinMat;
+   RenderingTechniqueStub blouseMat;
+   RenderingTechniqueStub hairMat;
 
-   std::vector<Material*> bodyMaterials;
-   std::vector<Material*> headMaterials;
-   std::vector<Material*> handMaterials;
-
-   bodyMaterials.push_back(&skinMat);
-   bodyMaterials.push_back(&blouseMat);
-   headMaterials.push_back(&skinMat);
-   headMaterials.push_back(&hairMat);
-   handMaterials.push_back(&skinMat);
+   bodyTechniques.push_back(&skinMat);
+   bodyTechniques.push_back(&blouseMat);
+   headTechniques.push_back(&skinMat);
+   headTechniques.push_back(&hairMat);
+   handTechniques.push_back(&skinMat);
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
    D3DXMATRIX identityMtx; D3DXMatrixIdentity(&identityMtx);
@@ -126,11 +106,11 @@ TEST(GraphicalEntityInstantiation, multipleSubsets)
 
    // prepare the entities
    CompositeGraphicalEntity bodyRoot("bodyRoot", bodyMtx);
-   GraphicalEntityMock* bodyEntity = new GraphicalEntityMock("body_entity", bodyMaterials);
+   GraphicalEntityMock* bodyEntity = new GraphicalEntityMock("body_entity", bodyTechniques);
    CompositeGraphicalEntity* headRoot = new CompositeGraphicalEntity("head", headMtx);
-   GraphicalEntityMock* headEntity = new GraphicalEntityMock("head_entity", headMaterials);
+   GraphicalEntityMock* headEntity = new GraphicalEntityMock("head_entity", headTechniques);
    CompositeGraphicalEntity* handRoot = new CompositeGraphicalEntity("hand", handMtx);
-   GraphicalEntityMock* handEntity = new GraphicalEntityMock("hand_entity", handMaterials);
+   GraphicalEntityMock* handEntity = new GraphicalEntityMock("hand_entity", handTechniques);
 
    headRoot->addChild(headEntity);
    handRoot->addChild(handEntity);
@@ -182,14 +162,6 @@ TEST(GraphicalEntityInstantiation, multipleSubsets)
 
 TEST(SkinnedGraphicalEntityInstantiation, basics)
 {
-   MaterialOperationImplementationMock matOpImpl;
-   TextureStub tex("");
-   TransparencyEnablerStub transparencyEnabler;
-   Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
-   material.addStage(new MaterialStage(tex,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new CoordinatesOperationMock(CC_WRAP)));
    BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
@@ -207,19 +179,20 @@ TEST(SkinnedGraphicalEntityInstantiation, basics)
 
    // ... attributes
    std::vector<BonesInfluenceDefinition> attributes;
-   std::vector<Material*> materials;
+   RenderingTechniqueStub renderingTechnique;
+   std::vector<RenderingTechnique*> techniques;
    tmpVec.clear(); tmpVec.push_back("bodyBone"); tmpVec.push_back("headBone"); // attribute subset 0
    attributes.push_back(tmpVec);
-   materials.push_back(&material);
+   techniques.push_back(&renderingTechnique);
    tmpVec.clear(); tmpVec.push_back("headBone");                               // attribute subset 1
    attributes.push_back(tmpVec);
-   materials.push_back(&material);
+   techniques.push_back(&renderingTechnique);
    tmpVec.clear(); tmpVec.push_back("handBone");                               // attribute subset 2
    attributes.push_back(tmpVec);
-   materials.push_back(&material);
+   techniques.push_back(&renderingTechnique);
 
    // ... and finally the entity itself
-   SkinnedGraphicalEntityMock body("body", skeleton, attributes, materials);
+   SkinnedGraphicalEntityMock body("body", skeleton, attributes, techniques);
 
    // create the skeletal structure the skin is stretched over
    Node bodyBoneNode("bodyBone", false);
@@ -272,14 +245,6 @@ TEST(SkinnedGraphicalEntityInstantiation, basics)
 
 TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
 {
-   MaterialOperationImplementationMock matOpImpl;
-   TextureStub tex("");
-   TransparencyEnablerStub transparencyEnabler;
-   Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
-   material.addStage(new MaterialStage(tex,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new CoordinatesOperationMock(CC_WRAP)));
    BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
@@ -297,19 +262,20 @@ TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
 
    // ... attributes
    std::vector<BonesInfluenceDefinition> attributes;
-   std::vector<Material*> materials;
+   RenderingTechniqueStub renderingTechnique;
+   std::vector<RenderingTechnique*> techniques;
    tmpVec.clear(); tmpVec.push_back("bodyBone"); tmpVec.push_back("headBone"); // attribute subset 0
    attributes.push_back(tmpVec);
-   materials.push_back(&material);
+   techniques.push_back(&renderingTechnique);
    tmpVec.clear(); tmpVec.push_back("headBone");                               // attribute subset 1
    attributes.push_back(tmpVec);
-   materials.push_back(&material);
+   techniques.push_back(&renderingTechnique);
    tmpVec.clear(); tmpVec.push_back("handBone");                               // attribute subset 2
    attributes.push_back(tmpVec);
-   materials.push_back(&material);
+   techniques.push_back(&renderingTechnique);
 
    // ... and finally the entity itself
-   SkinnedGraphicalEntityMock body("body", skeleton, attributes, materials);
+   SkinnedGraphicalEntityMock body("body", skeleton, attributes, techniques);
 
    // create the skeletal structure the skin is stretched over
    Node bodyBoneNode("bodyBone", false);
@@ -330,14 +296,6 @@ TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
 
 TEST(SkinnedGraphicalEntityInstantiation, instantiationViaGraphicalNodeInstantiator)
 {
-   MaterialOperationImplementationMock matOpImpl;
-   TextureStub tex("");
-   TransparencyEnablerStub transparencyEnabler;
-   Material material("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
-   material.addStage(new MaterialStage(tex,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new CoordinatesOperationMock(CC_WRAP)));
    BonesInfluenceDefinition tmpVec;
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
@@ -355,20 +313,21 @@ TEST(SkinnedGraphicalEntityInstantiation, instantiationViaGraphicalNodeInstantia
 
    // ... attributes
    std::vector<BonesInfluenceDefinition> attributes;
-   std::vector<Material*> materials;
+   RenderingTechniqueStub renderingTechnique;
+   std::vector<RenderingTechnique*> techniques;
    tmpVec.clear(); tmpVec.push_back("bodyBone"); tmpVec.push_back("headBone"); // attribute subset 0
    attributes.push_back(tmpVec);
-   materials.push_back(&material);
+   techniques.push_back(&renderingTechnique);
    tmpVec.clear(); tmpVec.push_back("headBone");                               // attribute subset 1
    attributes.push_back(tmpVec);
-   materials.push_back(&material);
+   techniques.push_back(&renderingTechnique);
    tmpVec.clear(); tmpVec.push_back("handBone");                               // attribute subset 2
    attributes.push_back(tmpVec);
-   materials.push_back(&material);
+   techniques.push_back(&renderingTechnique);
 
    // ... and finally the entities themselves
    CompositeGraphicalEntity bodyRoot("bodyRoot", bodyMtx);
-   SkinnedGraphicalEntityMock* bodySkin = new SkinnedGraphicalEntityMock("bodySkin", skeleton, attributes, materials);
+   SkinnedGraphicalEntityMock* bodySkin = new SkinnedGraphicalEntityMock("bodySkin", skeleton, attributes, techniques);
    CompositeGraphicalEntity* bodyBone = new CompositeGraphicalEntity("bodyBone", bodyBoneMtx);
    CompositeGraphicalEntity* headBone = new CompositeGraphicalEntity("headBone", headBoneMtx);
    CompositeGraphicalEntity* handBone = new CompositeGraphicalEntity("handBone", handBoneMtx);

@@ -4,10 +4,6 @@
 #include "impl-DirectX\GraphicalCapsEvaluator.h"
 #include <d3d9.h>
 #include <windows.h>
-#include "core-Renderer\AbstractGraphicalEntity.h"
-#include "core-Renderer\Material.h"
-#include "ext-Fonts\Font.h"
-#include "core\ResourceStorage.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,6 +17,9 @@ class GraphicalEntitiesFactory;
 class SoundEntitiesFactory;
 class GraphicalDataSource;
 class CompositeGraphicalDataSource;
+class D3DSceneRenderingMechanism;
+class SceneRenderingMechanism;
+class SettableRenderingTargetsPolicy;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -37,12 +36,11 @@ private:
    SoundDevice* m_soundDevice;
    D3DRenderer* m_renderer;
 
+   D3DSceneRenderingMechanism* m_sceneRenderingMech;
+   SettableRenderingTargetsPolicy* m_sceneRenderingTargetsPolicy;
+
    GraphicalEntitiesFactory* m_graphicalFactory;
    SoundEntitiesFactory* m_soundFactory;
-
-   ResourceStorage<AbstractGraphicalEntity>* m_entitiesStorage;
-   ResourceStorage<Material>* m_materialsStorage;
-   ResourceStorage<Font>* m_fontsStorage;
 
    CompositeGraphicalDataSource* m_meshLoaders;
 
@@ -59,12 +57,12 @@ public:
    Renderer& renderer();
    SoundRenderer& soundRenderer();
    SoundDevice& soundDevice();
+
+   SceneRenderingMechanism& sceneRenderingMechanism();
+   SettableRenderingTargetsPolicy& sceneRenderingTargetPolicy();
+
    GraphicalEntitiesFactory& graphicalFactory();
    SoundEntitiesFactory& soundFactory();
-
-   ResourceStorage<AbstractGraphicalEntity>& entitiesStorage();
-   ResourceStorage<Material>& materialsStorage();
-   ResourceStorage<Font>& fontsStorage();
 
    GraphicalDataSource& meshLoaders();
 

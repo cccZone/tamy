@@ -4,7 +4,6 @@
 #include <cassert>
 #include "core-Renderer\GraphicalNode.h"
 #include "impl-DirectX\D3DLight.h"
-#include "core-Renderer\RenderingCommand.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -16,8 +15,7 @@ D3DRenderer::D3DRenderer(IDirect3DDevice9* d3Device,
                          UINT frontBufferHeight,
                          bool hardwareTLOn,
                          D3DFORMAT optimalTextureFormat)
-      : Renderer(caps.NumSimultaneousRTs),
-      m_d3Device(d3Device),
+      : m_d3Device(d3Device),
       m_creationParams(creationParams),
       m_caps(caps),
       m_deviceLost(false),
@@ -68,7 +66,7 @@ void D3DRenderer::initRenderer()
    m_d3Device->SetRenderState(D3DRS_AMBIENT, 0x0D0D0D);
    m_d3Device->SetViewport(&m_viewport);
 
-   notify(GRO_CREATE_RES);
+   Subject<D3DRenderer, D3DGraphResourceOp>::notify(GRO_CREATE_RES);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -95,7 +93,7 @@ void D3DRenderer::resetViewport(unsigned int width, unsigned int height)
       creationParams.BackBufferWidth = 0;
       creationParams.BackBufferHeight = 0;
 
-      notify(GRO_RELEASE_RES);
+      Subject<D3DRenderer, D3DGraphResourceOp>::notify(GRO_RELEASE_RES);
 
       if (FAILED(m_d3Device->Reset(&creationParams)))
       {
@@ -110,23 +108,19 @@ void D3DRenderer::resetViewport(unsigned int width, unsigned int height)
 
 /////////////////////////////////////////////////////////////////////////////
 
-void D3DRenderer::setViewMatrix(const D3DXMATRIX& mtx)
-{
-   m_d3Device->SetTransform(D3DTS_VIEW, &mtx);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void D3DRenderer::setProjectionMatrix(const D3DXMATRIX& mtx)
-{
-   m_d3Device->SetTransform(D3DTS_PROJECTION, &mtx);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 void D3DRenderer::renderingBegin()
 {
    m_d3Device->BeginScene();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void D3DRenderer::cleanAllTargets(unsigned int count)
+{
+   for (unsigned int i = 0; i < count; ++i)
+   {
+      m_d3Device->Clear(i, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x0032C1FF, 1.0f, 0);
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -213,16 +207,34 @@ IDirect3DVertexBuffer9* D3DRenderer::createVertexBuffer(UINT length,
 
    IDirect3DVertexBuffer9* vertexBuffer = NULL;
    HRESULT res = m_d3Device->CreateVertexBuffer(length,
-      usageFlags,
-      fvf,
-      memoryPool,
-      &vertexBuffer,
-      NULL);
+                                                usageFlags,
+                                                fvf,
+                                                memoryPool,
+                                                &vertexBuffer,
+                                                NULL);
 
    if (FAILED(res))
    {
-      throw std::logic_error(
-         std::string("Cannot create a vertex buffer"));
+      std::string errCode = "Cannot create a vertex buffer ";
+      switch(res)
+      {
+      case D3DERR_INVALIDCALL:
+         errCode += "- invalid parameters used";
+         break;
+
+      case D3DERR_OUTOFVIDEOMEMORY:
+         errCode += "- not enough video memory left";
+         break;
+
+      case E_OUTOFMEMORY:
+         errCode += "- not enough system memory left";
+         break;
+
+      default:
+         errCode += "for an unknown reason";
+         break;
+      }
+      throw std::logic_error(errCode);
    }
 
    return vertexBuffer;
@@ -256,141 +268,3 @@ IDirect3DIndexBuffer9* D3DRenderer::createIndexBuffer(UINT length,
 }
 
 /////////////////////////////////////////////////////////////////////////////
-
-
-/*
-/////////////////////////////////////////////////////////////////////////////
-
-const DWORD D3DRenderer::SCREEN_VERTEX::FVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1;
-
-
-private:
-   struct SCREEN_VERTEX
-   {
-      D3DXVECTOR4 pos;
-      DWORD clr;
-      D3DXVECTOR2 tex1;
-
-      static const DWORD FVF;
-   };
-
-
-// swap chain
-   IDirect3DTexture9* m_renderTargetTexture;
-   IDirect3DSurface9* m_renderTargetSurface;
-
-   SCREEN_VERTEX m_fullScreenQuad[4];
-
-void D3DRenderer::clearSwapChain()
-{
-   if (m_renderTargetSurface != NULL)
-   {
-      m_renderTargetSurface->Release();
-      m_renderTargetSurface = NULL;
-   }
-
-   if (m_renderTargetTexture != NULL)
-   {
-      m_renderTargetTexture->Release();
-      m_renderTargetTexture = NULL;
-   }
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void D3DRenderer::createSwapChain()
-{
-   clearSwapChain();
-
-   // create the rendering swap chain
-   HRESULT res = D3DXCreateTexture(m_d3Device, 
-                                   m_creationParams.BackBufferWidth, 
-                                   m_creationParams.BackBufferHeight,
-                                   1,
-                                   D3DUSAGE_RENDERTARGET,
-                                   m_creationParams.BackBufferFormat,
-                                   D3DPOOL_DEFAULT,
-                                   &m_renderTargetTexture);
-   if (FAILED(res) || (m_renderTargetTexture == NULL))
-   {
-      std::string errorMsg = std::string("Texture creation failed");
-      switch(res)
-      {
-         case D3DERR_INVALIDCALL:
-            {
-               errorMsg += " due to invalid parameters passed";
-               break;
-            }
-
-         case D3DERR_NOTAVAILABLE:
-            {
-               errorMsg += " - this format is unavailable";
-               break;
-            }
-
-         case D3DERR_OUTOFVIDEOMEMORY:
-            {
-               errorMsg += " due to the lack of video memory";
-               break;
-            }
-
-         case D3DXERR_INVALIDDATA:
-            {
-               errorMsg += " due to invalid data";
-               break;
-            }
-
-         case E_OUTOFMEMORY:
-            {
-               errorMsg += " due to the lack of system memory";
-               break;
-            }
-
-         default:
-            {
-               errorMsg += " for unknown reason";
-               break;
-            }
-      }
-      throw std::logic_error(errorMsg);
-   }
-
-   if (FAILED(m_renderTargetTexture->GetSurfaceLevel(0, &m_renderTargetSurface)) || (m_renderTargetSurface == NULL))
-   {
-      throw std::runtime_error("Can'r extract the surface from a rendering target texture");
-   }
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void D3DRenderer::prepareFullScreenQuad()
-{
-   D3DSURFACE_DESC desc;
-   m_backBuffer->GetDesc(&desc);
-
-   float width = (float)desc.Width - 0.5f;
-   float height = (float)desc.Height - 0.5f;
-
-   float texWidth = 1.f;
-   float texHeight = 1.f;
-
-   // fill in the vertex values
-   m_fullScreenQuad[0].pos = D3DXVECTOR4(width, -0.5f, 0.0f, 1.0f);
-   m_fullScreenQuad[0].clr = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.66666f);
-   m_fullScreenQuad[0].tex1 = D3DXVECTOR2(texWidth, 0.0f);
-
-   m_fullScreenQuad[1].pos = D3DXVECTOR4( width, height, 0.0f, 1.0f);
-   m_fullScreenQuad[1].clr = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.66666f);
-   m_fullScreenQuad[1].tex1 = D3DXVECTOR2(texWidth, texHeight);
-
-   m_fullScreenQuad[2].pos = D3DXVECTOR4(-0.5f, -0.5f, 0.0f, 1.0f);
-   m_fullScreenQuad[2].clr = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.66666f);
-   m_fullScreenQuad[2].tex1 = D3DXVECTOR2(0.0f, 0.0f);
-
-   m_fullScreenQuad[3].pos = D3DXVECTOR4(-0.5f, height, 0.0f, 1.0f);
-   m_fullScreenQuad[3].clr = D3DXCOLOR(0.5f, 0.5f, 0.5f, 0.66666f);
-   m_fullScreenQuad[3].tex1 = D3DXVECTOR2(0.0f, texHeight);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-*/

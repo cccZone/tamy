@@ -7,13 +7,23 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This rendering target cann be used as a texture
+ * This rendering target can be used as a texture
  */
-class TextureRenderingTarget : public Texture,
-                               public RenderingTarget
+class TextureRenderingTarget : public RenderingTarget,
+                               public Texture
 {
 public:
    virtual ~TextureRenderingTarget() {}
+
+   /** 
+    * @derrived
+    */
+   virtual void use(unsigned char idx) = 0;
+
+   /** 
+    * @derrived
+    */
+   virtual TextureImpl& getImpl() = 0;
 
 protected:
    TextureRenderingTarget(const std::string& name) : Texture(name) {}

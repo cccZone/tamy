@@ -51,6 +51,7 @@ public:
    UINT getBackBufferHeight() const {return m_creationParams.BackBufferHeight;}
 
    UINT getSimultaneouslyRenderedTexturesCount() const;
+   UINT getMaxLightsCount() const;
 
    IDirect3DVertexBuffer9* createVertexBuffer(UINT length, DWORD usageFlags, DWORD fvf, D3DPOOL memoryPool);
    IDirect3DIndexBuffer9* createIndexBuffer(UINT length, DWORD usageFlags, D3DFORMAT format, D3DPOOL memoryPool);
@@ -58,11 +59,7 @@ public:
 
 protected:
    void resetViewport(unsigned int width, unsigned int height);
-
-   UINT getMaxLightsCount() const;
-
-   void setViewMatrix(const D3DXMATRIX& mtx);
-   void setProjectionMatrix(const D3DXMATRIX& mtx);
+   void cleanAllTargets(unsigned int count);
    void renderingBegin();
    void renderingEnd();
    bool isGraphicsSystemReady() const;

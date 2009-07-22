@@ -19,6 +19,7 @@
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\LightReflectingProperties.h"
 #include "core-Renderer\Texture.h"
+#include "core-Renderer\RenderingTechnique.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,13 +35,13 @@ IWFLoader::IWFLoader(GraphicalEntitiesFactory& entitiesFactory,
                      GraphicalDataSource& externalEntitiesSource,
                      SceneManager& sceneManager,
                      ResourceStorage<AbstractGraphicalEntity>& entitiesStorage,
-                     ResourceStorage<Material>& materialsStorage)
+                     ResourceStorage<RenderingTechnique>& renderingTechniquesStorage)
       : m_entitiesFactory(entitiesFactory),
-      m_entityLoader(new GraphicalEntityLoader(entitiesFactory, materialsStorage)),
+      m_entityLoader(new GraphicalEntityLoader(entitiesFactory, renderingTechniquesStorage)),
       m_externalEntitiesSource(externalEntitiesSource),
       m_sceneManager(sceneManager),
       m_entitiesStorage(entitiesStorage),
-      m_materialsStorage(materialsStorage)
+      m_renderingTechniquesStorage(renderingTechniquesStorage)
 {
 }
 
@@ -196,32 +197,20 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material& IWFLoader::createSkyboxMaterial(const std::string& textureName) const
+Texture& IWFLoader::createSkyboxMaterial(const std::string& textureName) const
 {
    std::string materialName = std::string("skyBox_") + textureName;
+   ResourceStorage<Texture>& texStorage = m_entitiesFactory.getTexturesStorage();
 
-   if (m_materialsStorage.is(materialName))
+   if (texStorage.is(textureName))
    {
-      return m_materialsStorage.get(materialName);
+      return texStorage.get(textureName);
    }
    else
-   {
-      LightReflectingProperties* lrp = m_entitiesFactory.createLightReflectingProperties();
-      lrp->setAmbientColor(Color(1, 1, 1, 1));
-      lrp->setDiffuseColor(Color());
-      lrp->setSpecularColor(Color());
-      lrp->setEmissiveColor(Color());
-      lrp->setPower(1);
-         
-      MaterialStage* stage = m_entitiesFactory.createMaterialStage(textureName,
-                                                                   MOP_SELECT_ARG1, SC_TEXTURE, SC_NONE,
-                                                                   MOP_DISABLE, SC_NONE, SC_NONE,
-                                                                   CC_CLAMP);
-
-      Material* mat = m_entitiesFactory.createMaterial(materialName, lrp);
-      mat->addStage(stage);
-      m_materialsStorage.add(mat);
-      return *mat;
+   {    
+      Texture* texture = m_entitiesFactory.createTexture(textureName);
+      texStorage.add(texture);
+      return *texture;
    }
 }
 

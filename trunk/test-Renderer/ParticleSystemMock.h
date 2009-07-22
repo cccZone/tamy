@@ -8,6 +8,7 @@
 #include "LightReflectingPropertiesStub.h"
 #include "MaterialOperationImplementationMock.h"
 #include "TransparencyEnablerStub.h"
+#include "RenderingTargetsPolicyMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,6 +16,7 @@
 class ParticleSystemMock : public ParticleSystem
 {
 private:
+   static RegularTests::RenderingTargetsPolicyMock s_policy;
    static MaterialOperationImplementationMock s_matOpImpl;
    static TransparencyEnablerStub s_transparencyEnabler;
    static Material s_material;

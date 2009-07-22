@@ -9,18 +9,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-unsigned int Material::m_nextIndex = 0;
 unsigned char Material::s_stagesArrSize = 8;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Material::Material(const std::string& name,
+                   RenderingTargetsPolicy& policy,
                    LightReflectingProperties* lrp,
                    MaterialOperationImplementation& alphaMatOp,
                    MaterialOperationImplementation& colorMatOp,
                    TransparencyEnabler& transparencyEnabler)
-      : m_name(name),
-      m_index(m_nextIndex),
+      : RenderingTechnique(name, policy),
       m_lightReflectingProperties(lrp),
       m_disableAlpha(new MaterialOperation(alphaMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
       m_disableColor(new MaterialOperation(colorMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
@@ -28,8 +27,6 @@ Material::Material(const std::string& name,
       m_stagesCount(0),
       m_transparent(false)
 {
-   ++m_nextIndex;
-
    m_stages = new MaterialStageP[s_stagesArrSize];
    memset(m_stages, NULL, sizeof(MaterialStageP) * s_stagesArrSize);
 
@@ -39,8 +36,7 @@ Material::Material(const std::string& name,
 ///////////////////////////////////////////////////////////////////////////////
 
 Material::Material(const Material& rhs)
-      : m_name(rhs.m_name),
-      m_index(m_nextIndex),
+      : RenderingTechnique(rhs),
       m_lightReflectingProperties(rhs.m_lightReflectingProperties->clone()),
       m_disableAlpha(new MaterialOperation(*rhs.m_disableAlpha)),
       m_disableColor(new MaterialOperation(*rhs.m_disableColor)),
@@ -48,8 +44,6 @@ Material::Material(const Material& rhs)
       m_stagesCount(rhs.m_stagesCount),
       m_transparent(false)
 {
-   ++m_nextIndex;
-
    m_stages = new MaterialStageP[s_stagesArrSize];
    memset(m_stages, NULL, sizeof(MaterialStageP) * s_stagesArrSize);
 
@@ -83,8 +77,6 @@ Material::~Material()
    m_stages = NULL;
 
    m_stagesCount = 0;
-
-   m_index = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -157,20 +149,6 @@ MaterialStage& Material::getStage(unsigned int stageIdx)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Material::operator==(const Material& rhs) const
-{
-   return (m_index == rhs.m_index);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool Material::operator!=(const Material& rhs) const
-{
-   return !(*this == rhs);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 bool Material::isTransparent() const
 {
    return m_transparent;
@@ -178,7 +156,7 @@ bool Material::isTransparent() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Material::setForRendering()
+unsigned int Material::beginRendering()
 {
    m_transparencyEnabler.setTransparency(m_transparent);
 
@@ -191,6 +169,26 @@ void Material::setForRendering()
 
    m_disableAlpha->setForRendering(m_stagesCount);
    m_disableColor->setForRendering(m_stagesCount);
+
+   return 1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Material::endRendering()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Material::beginPass(const unsigned int& passIdx)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Material::endPass(const unsigned int& passIdx)
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////

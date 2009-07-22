@@ -6,6 +6,7 @@
 #include "LightReflectingPropertiesStub.h"
 #include "MaterialOperationImplementationMock.h"
 #include "TransparencyEnablerStub.h"
+#include "RenderingTargetsPolicyMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,6 +17,7 @@ private:
    std::vector<unsigned char> m_chars;
    GraphicalEntityMock m_mockEntity;
 
+   RenderingTargetsPolicyMock s_policy;
    MaterialOperationImplementationMock m_matOp;
    TransparencyEnablerStub m_transparencyEnabler;
    Material* m_material;
@@ -25,6 +27,7 @@ public:
       : Font("FontMock") 
    {
       m_material = new Material("someMaterial", 
+                                s_policy,
                                 new LightReflectingPropertiesStub(),
                                 m_matOp, m_matOp,
                                 m_transparencyEnabler);

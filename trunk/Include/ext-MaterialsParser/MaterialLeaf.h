@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ext-MaterialsParser\MaterialXmlElement.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTechnique.h"
 #include "core\ResourceStorage.h"
 
 
@@ -16,12 +16,12 @@ class MaterialLeaf : public MaterialXmlElement
 {
 private:
    GraphicalEntitiesFactory& m_factory;
-   ResourceStorage<Material>& m_matStorage;
+   ResourceStorage<RenderingTechnique>& m_storage;
 
 public:
    MaterialLeaf(MaterialsParser& mainParser, 
                 GraphicalEntitiesFactory& factory,
-                ResourceStorage<Material>& matStorage);
+                ResourceStorage<RenderingTechnique>& storage);
 
    void parse(TiXmlElement& parent);
 

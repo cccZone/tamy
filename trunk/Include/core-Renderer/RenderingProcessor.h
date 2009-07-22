@@ -1,13 +1,12 @@
 #pragma once
 
 #include <windows.h>
+#include "core\Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class AbstractGraphicalNode;
-class Material;
-typedef AbstractGraphicalNode* AbstractGraphicalNodeP;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,7 +18,7 @@ typedef AbstractGraphicalNode* AbstractGraphicalNodeP;
 class RenderingProcessor
 {
 public:
-   void translate(AbstractGraphicalNodeP* nodesToRender, const DWORD& nodesArraySize);
+   void translate(Array<AbstractGraphicalNode*>& nodesToRender);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,7 +3,6 @@
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include <d3dx9.h>
 #include "core\Array.h"
-#include "core-Renderer\Color.h"
 #include "core-Renderer\Particle.h"
 
 
@@ -11,6 +10,7 @@
 
 class ParticleInitializer;
 class ParticleAnimator;
+class RenderingTechnique;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -81,7 +81,7 @@ private:
 public:
    ParticleSystem(const std::string& name, 
                   bool isDynamic, 
-                  Material& material,
+                  RenderingTechnique& technique,
                   unsigned int particlesCount);
    virtual ~ParticleSystem();
 

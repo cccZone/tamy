@@ -3,7 +3,7 @@
 #include "ext-Fonts\Font.h"
 #include "core-ResourceManagement\GraphicalDataSource.h"
 #include <vector>
-#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTechnique.h"
 #include "core\ResourceStorage.h"
 
 
@@ -15,6 +15,7 @@ class AbstractGraphicalEntity;
 struct Color;
 struct MaterialDefinition;
 struct MeshDefinition;
+class Material;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -65,7 +66,7 @@ private:
    std::vector<AbstractGraphicalEntity*> m_glifs;
    std::vector<float> m_glifSizes;
 
-   ResourceStorage<Material> m_materialsStorage;
+   ResourceStorage<RenderingTechnique> m_renderingTechniquesStorage;
 
 public:
    XMLFont(const char* fontDefFile,

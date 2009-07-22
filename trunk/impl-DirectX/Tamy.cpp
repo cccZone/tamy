@@ -3,9 +3,9 @@
 // graphical system headers
 #include "impl-DirectX\D3DInitializer.h"
 #include "impl-DirectX\D3DRenderer.h"
-#include "core-Renderer\BackgroundPass.h"
-#include "core-Renderer\DrawingPass.h"
+#include "impl-DirectX\D3DSceneRenderingMechanism.h"
 #include "impl-DirectX\D3DGraphicalEntitiesFactory.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 // sound system headers
 #include "impl-DirectX\OpenALSoundSystem.h"
@@ -42,11 +42,10 @@ Tamy::Tamy(const std::string& texturesDir,
       m_renderer(NULL),
       m_soundDevice(NULL),
       m_soundRenderer(NULL),
+      m_sceneRenderingMech(NULL),
+      m_sceneRenderingTargetsPolicy(NULL),
       m_graphicalFactory(NULL),
       m_soundFactory(NULL),
-      m_entitiesStorage(NULL),
-      m_materialsStorage(NULL),
-      m_fontsStorage(NULL),
       m_meshLoaders(NULL)
 {
 }
@@ -57,11 +56,14 @@ void Tamy::initialize(HWND mainAppWindow)
 {
    // 1.) graphical system
    m_renderer = createRenderer(mainAppWindow, true);
+   m_sceneRenderingTargetsPolicy = new SettableRenderingTargetsPolicy();
+   m_sceneRenderingMech = new D3DSceneRenderingMechanism(m_sceneRenderingTargetsPolicy,
+                                                         m_renderer->getMaxLightsCount(),
+                                                         m_renderer->getD3Device());
+   m_renderer->addMechanism(m_sceneRenderingMech);
    m_graphicalFactory = new D3DGraphicalEntitiesFactory(m_texturesDir, 
                                                         m_renderer->getD3Device(), 
                                                         *m_renderer);
-   m_entitiesStorage = new ResourceStorage<AbstractGraphicalEntity>();
-   m_materialsStorage = new ResourceStorage<Material>();
 
    // 2.) sound system
    OpenALSoundSystem* soundSystem = new OpenALSoundSystem();
@@ -76,7 +78,6 @@ void Tamy::initialize(HWND mainAppWindow)
    m_meshLoaders = new CompositeGraphicalDataSource(m_meshesDir);
    m_meshLoaders->addSource(new XFileGraphicalEntityLoader(m_renderer->getD3Device()));
 
-   m_fontsStorage = new ResourceStorage<Font>();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,20 +87,14 @@ Tamy::~Tamy()
    delete m_meshLoaders;
    m_meshLoaders = NULL;
 
-   delete m_fontsStorage;
-   m_fontsStorage = NULL;
-
-   delete m_materialsStorage;
-   m_materialsStorage = NULL;
-
-   delete m_entitiesStorage;
-   m_entitiesStorage = NULL;
-
    delete m_soundFactory;
    m_soundFactory = NULL;
 
    delete m_graphicalFactory;
    m_graphicalFactory = NULL;
+
+   m_sceneRenderingMech = NULL;
+   m_sceneRenderingTargetsPolicy = NULL;
 
    delete m_renderer;
    m_renderer = NULL;
@@ -152,8 +147,6 @@ D3DRenderer* Tamy::createRenderer(HWND hWnd, bool windowed)
       d3DSettings = m_d3dInitializer->findBestFullscreenMode(matchMode);
    }
    D3DRenderer* renderer = m_d3dInitializer->createDisplay(d3DSettings, hWnd);
-   renderer->addPass(new BackgroundPass());
-   renderer->addPass(new DrawingPass());
 
    return renderer;
 }
@@ -194,6 +187,22 @@ Renderer& Tamy::renderer()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+SceneRenderingMechanism& Tamy::sceneRenderingMechanism()
+{
+   ASSERT(m_sceneRenderingMech != NULL, "Tamy is not initialized");
+   return *m_sceneRenderingMech;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SettableRenderingTargetsPolicy& Tamy::sceneRenderingTargetPolicy()
+{
+   ASSERT(m_sceneRenderingTargetsPolicy != NULL, "Tamy is not initialized");
+   return *m_sceneRenderingTargetsPolicy;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 GraphicalEntitiesFactory& Tamy::graphicalFactory()
 {
    ASSERT(m_graphicalFactory != NULL, "Tamy is not initialized");
@@ -206,30 +215,6 @@ SoundEntitiesFactory& Tamy::soundFactory()
 {
    ASSERT(m_soundFactory != NULL, "Tamy is not initialized");
    return *m_soundFactory;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-ResourceStorage<AbstractGraphicalEntity>& Tamy::entitiesStorage()
-{
-   ASSERT(m_entitiesStorage != NULL, "Tamy is not initialized");
-   return *m_entitiesStorage;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-ResourceStorage<Material>& Tamy::materialsStorage()
-{
-   ASSERT(m_materialsStorage != NULL, "Tamy is not initialized");
-   return *m_materialsStorage;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-ResourceStorage<Font>& Tamy::fontsStorage()
-{
-   ASSERT(m_fontsStorage != NULL, "Tamy is not initialized");
-   return *m_fontsStorage;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

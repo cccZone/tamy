@@ -15,6 +15,8 @@
 #include "core-Renderer\Skeleton.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\SceneRenderingMechanism.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,16 +41,18 @@ void AnimationDemo::initialize()
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
-   m_renderer->addVisualSceneManager(*visualSceneManager);
+
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
+   sceneRenderer.addVisualSceneManager(*visualSceneManager);
 
    m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_renderer->addRenderingTarget(*m_renderingTarget);
+   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
 
    IWFLoader loader(m_tamy.graphicalFactory(), 
                     m_tamy.meshLoaders(),
                     *m_sceneManager, 
                     m_entitiesStorage,
-                    m_materialsStorage);
+                    m_renderingTechniquesStorage);
    loader.load("..\\Data\\AnimLandscape.iwf");
 
    AbstractGraphicalEntity& ent = m_entitiesStorage.get("animlandscape.x");
@@ -61,7 +65,7 @@ void AnimationDemo::initialize()
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
    m_sceneManager->addNode(light);
 
-   Camera* camera = new Camera("camera");
+   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
    m_sceneManager->addNode(camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }

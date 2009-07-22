@@ -4,7 +4,6 @@
 #include "FontMock.h"
 #include <d3dx9.h>
 #include "core-Renderer\AbstractGraphicalNode.h"
-#include "MaterialChecker.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

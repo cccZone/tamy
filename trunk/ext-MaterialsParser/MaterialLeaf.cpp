@@ -9,10 +9,10 @@
 
 MaterialLeaf::MaterialLeaf(MaterialsParser& mainParser, 
                            GraphicalEntitiesFactory& factory,
-                           ResourceStorage<Material>& matStorage)
+                           ResourceStorage<RenderingTechnique>& storage)
       : MaterialXmlElement(mainParser),
       m_factory(factory),
-      m_matStorage(matStorage)
+      m_storage(storage)
 {
 }
 
@@ -25,7 +25,7 @@ void MaterialLeaf::parse(TiXmlElement& parent)
    {
       throw std::runtime_error("Material needs to have a name assigned");
    }
-   if (m_matStorage.is(materialName))
+   if (m_storage.is(materialName))
    {
       throw std::runtime_error(std::string("Material ") + std::string(materialName) + " already exists");
    }
@@ -48,7 +48,7 @@ void MaterialLeaf::parse(TiXmlElement& parent)
 
    // create the material
    Material* mat = m_factory.createMaterial(materialName, lrp);
-   m_matStorage.add(mat);
+   m_storage.add(mat);
    m_mainParser.setMaterialParsed(*mat);
 }
 

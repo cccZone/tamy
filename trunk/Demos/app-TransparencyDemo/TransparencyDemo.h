@@ -1,6 +1,9 @@
 #pragma once
 
 #include "core-AppFlow\Application.h"
+#include "core-Renderer\AbstractGraphicalEntity.h"
+#include "core-Renderer\RenderingTechnique.h"
+#include "core\ResourceStorage.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,6 +26,9 @@ private:
    CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;
    bool m_rotating;
+
+   ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
+   ResourceStorage<RenderingTechnique> m_renderingTechniquesStorage;
 
 public:
    TransparencyDemo(Tamy& tamy);

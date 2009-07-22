@@ -197,11 +197,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MaterialChecker.h"
+				RelativePath=".\MaterialOperationImplementationMock.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MaterialOperationImplementationMock.h"
+				RelativePath=".\RenderingTargetsPolicyMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingTechniqueChecker.h"
 				>
 			</File>
 			<File

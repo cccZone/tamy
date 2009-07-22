@@ -16,6 +16,8 @@
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\SceneRenderingMechanism.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,13 +42,15 @@ void SkinningDemo::initialize()
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
-   m_renderer->addVisualSceneManager(*visualSceneManager);
-   
+
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
+   sceneRenderer.addVisualSceneManager(*visualSceneManager);
+
    m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_renderer->addRenderingTarget(*m_renderingTarget);
+   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
 
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
-   GraphicalEntityLoader loader(factory, m_materialsStorage);
+   GraphicalEntityLoader loader(factory, m_renderingTechniquesStorage);
 
    AbstractGraphicalEntity* ent = loader.load("US Ranger.x", m_tamy.meshLoaders());
    m_entitiesStorage.add(ent);
@@ -65,7 +69,7 @@ void SkinningDemo::initialize()
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
    m_sceneManager->addNode(light);
 
-   Camera* camera = new Camera("camera");
+   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
 
    D3DXMATRIX rotMtx;
    D3DXMatrixRotationYawPitchRoll(&rotMtx, D3DXToRadian(180), 0, 0);

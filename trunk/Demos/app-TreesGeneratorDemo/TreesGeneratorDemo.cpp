@@ -20,6 +20,8 @@
 #include "ext-TreesGenerator\TreesGenerator.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\SceneRenderingMechanism.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,10 +47,13 @@ void TreesGeneratorDemo::initialize()
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
-   m_renderer->addVisualSceneManager(*visualSceneManager);
+
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
+   sceneRenderer.addVisualSceneManager(*visualSceneManager);
 
    m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_renderer->addRenderingTarget(*m_renderingTarget);
+   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
+
 
    TreeParams treeParams;
    treeParams.maxTreeDepth = 5;
@@ -74,11 +79,11 @@ void TreesGeneratorDemo::initialize()
                                              CC_WRAP);
    Material* mat = m_tamy.graphicalFactory().createMaterial("treeBark", lrp);
    mat->addStage(stage);
-   m_materialsStorage.add(mat);
+   m_renderingTechniquesStorage.add(mat);
 
    // prepare mesh
    TreesGenerator generator(treeParams, 8, 1, D3DXVECTOR3(1, 0, 0), 0.1f, 3, "treeBark");
-   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_materialsStorage);
+   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_renderingTechniquesStorage);
    m_treeEntity = loader.load("tree", generator);
    
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tree01", false);
@@ -94,7 +99,7 @@ void TreesGeneratorDemo::initialize()
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
    m_sceneManager->addNode(light);
 
-   Camera* camera = new Camera("camera");
+   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
    D3DXMATRIX rotMtx;
    D3DXMatrixRotationYawPitchRoll(&rotMtx, D3DXToRadian(180), 0, 0);
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 50, 100);

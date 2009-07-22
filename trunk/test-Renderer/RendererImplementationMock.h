@@ -1,93 +1,71 @@
 #pragma once
 
 #include "core-Renderer\Renderer.h"
-#include "core-Renderer\GraphicalNode.h"
-#include <d3dx9.h>
-#include "core-Renderer\Camera.h"
-#include "core-Renderer\DrawingPass.h"
-#include "RenderingTargetMock.h"
+#include <vector>
+#include <string>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RendererImplementationMock : public Renderer
+namespace RegularTests
 {
-private:
-   RenderingTargetMock m_renderingTarget;
-
-   bool m_deviceReady;
-   D3DXMATRIX m_viewMtx;
-   UINT m_maxLightsCount;
-   bool m_deviceRecoveryAttemptMade;
-   bool m_viewportReset;
-   bool m_presentCalled;
-
-public:
-   RendererImplementationMock(bool addDefaultRenderingTarget = true) 
-         : Renderer(1),
-         m_deviceReady(true),
-         m_maxLightsCount(255),
-         m_deviceRecoveryAttemptMade(false),
-         m_viewportReset(false),
-         m_presentCalled(false)
+   class RendererImplementationMock : public Renderer
    {
-      D3DXMatrixIdentity(&m_viewMtx);
-      addPass(new DrawingPass());
+   protected:
+      void resetViewport(unsigned int width, unsigned int height) {}
 
-      if (addDefaultRenderingTarget)
+      void renderingBegin() {}
+
+      void renderingEnd() {}
+
+      bool isGraphicsSystemReady() const {return true;}
+
+      void attemptToRecoverGraphicsSystem() {}
+
+      void cleanAllTargets(unsigned int count) {}
+   };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace RendererTests
+{
+   class RendererImplementationMock : public Renderer
+   {
+   private:
+      std::vector<std::string>& m_seqLog;
+      bool m_deviceReady;
+
+   public:
+      RendererImplementationMock(std::vector<std::string>& seqLog) 
+            : m_seqLog(seqLog),
+            m_deviceReady(true)
       {
-         addRenderingTarget(m_renderingTarget);
       }
-   }
 
-   void setDeviceReady(bool enable) {m_deviceReady = enable;}
+      void setDeviceReady(bool enable) 
+      {
+         m_deviceReady = enable;
+      }
 
-   const D3DXMATRIX& getViewMatrixSet() const {return m_viewMtx;}
 
-   void setMaxLightsCount(UINT val) {m_maxLightsCount = val;}
+   protected:
+      void resetViewport(unsigned int width, unsigned int height) {m_seqLog.push_back("Renderer - resetViewport");}
 
-   bool wasDeviceRecoveryAttemptMade() 
-   {
-      bool result = m_deviceRecoveryAttemptMade;
-      m_deviceRecoveryAttemptMade = false;
-      return result;
-   }
+      void renderingBegin() {m_seqLog.push_back("Renderer - begin");}
 
-   bool wasViewportReset()
-   {
-      bool result = m_viewportReset;
-      m_viewportReset = false;
-      return result;
-   }
+      void renderingEnd() {m_seqLog.push_back("Renderer - end");}
 
-   bool wasPresentCalled()
-   {
-      bool result = m_presentCalled;
-      m_presentCalled = false;
-      return result;
-   }
+      bool isGraphicsSystemReady() const {return m_deviceReady;}
 
-protected:
+      void attemptToRecoverGraphicsSystem() 
+      {
+         m_seqLog.push_back("Renderer - attemptToRecoverGraphicsSystem");
+         m_deviceReady = true;
+      }
 
-   void resetViewport(unsigned int width, unsigned int height) {m_viewportReset = true;}
-
-   UINT getMaxLightsCount() const {return m_maxLightsCount;}
-
-   void setViewMatrix(const D3DXMATRIX& mtx) {m_viewMtx = mtx;}
-
-   void setProjectionMatrix(const D3DXMATRIX& mtx) {}
-
-   void renderingBegin() {}
-
-   void renderingEnd() {m_presentCalled = true;}
-
-   bool isGraphicsSystemReady() const {return m_deviceReady;}
-
-   void attemptToRecoverGraphicsSystem() 
-   {
-      m_deviceRecoveryAttemptMade = true;
-      m_deviceReady = true;
-   }
-};
+      void cleanAllTargets(unsigned int count) {m_seqLog.push_back("Renderer - cleanAllTargets");}
+   };
+}
 
 ///////////////////////////////////////////////////////////////////////////////

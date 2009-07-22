@@ -2,6 +2,7 @@
 
 #include "core\Node.h"
 #include <d3dx9.h>
+#include "core\Observer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -9,6 +10,8 @@
 class ProjectionCalculator;
 struct Frustum;
 struct Ray;
+class Renderer;
+enum RendererOps;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,9 +19,12 @@ struct Ray;
  * A camera is a kind of Node that allows to set 
  * camera specific stuff and represents a camera that watches the scene
  */
-class Camera : public Node
+class Camera : public Node,
+               public Observer<Renderer, RendererOps>
 {
 private:
+   Renderer& m_renderer;
+
    float m_fov;
    float m_aspectRatio;
    float m_nearZPlane;
@@ -33,7 +39,7 @@ private:
    ProjectionCalculator* m_projCalc;
 
 public:
-   Camera(const std::string& name);
+   Camera(const std::string& name, Renderer& renderer);
    ~Camera();
 
    void setProjectionCalculator(ProjectionCalculator* projCalc);
@@ -72,6 +78,13 @@ public:
     * The method params should be specified in the viewport coordinates (range <-1, 1>)
     */
    Ray createRay(float viewportX, float viewportY);
+
+   /**
+    * This two method will be called whenever the renderer wishes to update 
+    * its observers - and camera as an observer is attached to it
+    */
+   void update(Renderer& renderer);
+   void update(Renderer& renderer, const RendererOps& operation);
 
 protected:
    void onAccept(NodeVisitor& visitor);

@@ -22,12 +22,12 @@ public:
                              const std::list<Face<USHORT> >& faces,
                              const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                              const std::vector<SkinBoneDefinition>& skinBones,
-                             const std::vector<Material*>& registeredMaterials)
+                             const std::vector<RenderingTechnique*>& techniques)
          : D3DAbstractGraphicalEntity<VertexStruct>(d3Device, vertices, faces),
          SkinnedGraphicalEntity(name, 
                                 skinBones,
                                 bonesInfluencingAttribute, 
-                                registeredMaterials)
+                                techniques)
    {
       setBoundingSphereRadius(m_maxCoord);
 

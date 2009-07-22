@@ -159,61 +159,113 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingCommand.h"
+				RelativePath=".\RenderingMechanism.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingPass.h"
+				RelativePath="..\Include\core-Renderer\RenderingMechanism.h"
 				>
 			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\RenderingTarget.h"
+			<Filter
+				Name="Mechanisms"
 				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\TextureRenderingTarget.h"
+				<Filter
+					Name="SceneRendering"
+					>
+					<File
+						RelativePath=".\GraphicalNodesProcessor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\GraphicalNodesProcessor.h"
+						>
+					</File>
+					<File
+						RelativePath=".\RenderingProcessor.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\RenderingProcessor.h"
+						>
+					</File>
+					<File
+						RelativePath=".\SceneRenderingMechanism.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\SceneRenderingMechanism.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="PostProcess"
+					>
+					<File
+						RelativePath=".\PostProcessMechanism.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\PostProcessMechanism.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Techniques"
 				>
-			</File>
+				<File
+					RelativePath=".\CyclicRenderingTarget.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\CyclicRenderingTarget.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\RenderingTarget.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\RenderingTargetsPolicy.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RenderingTechnique.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\RenderingTechnique.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\TextureRenderingTarget.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="RenderingTargetPolicies"
+				>
+				<File
+					RelativePath=".\RenderingTargetsPolicyProxy.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\RenderingTargetsPolicyProxy.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SettableRenderingTargetsPolicy.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\SettableRenderingTargetsPolicy.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Entities"
 			>
-			<File
-				RelativePath=".\Camera.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\Camera.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Light.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\Light.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\ProjectionCalculator.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Skeleton.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\Skeleton.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SkyBox.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\SkyBox.h"
-				>
-			</File>
 			<Filter
 				Name="GraphicalEntities"
 				>
@@ -286,31 +338,19 @@
 					>
 				</File>
 				<File
+					RelativePath=".\PostProcessEffectNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\PostProcessEffectNode.h"
+					>
+				</File>
+				<File
 					RelativePath=".\SkinnedGraphicalNode.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\Include\core-Renderer\SkinnedGraphicalNode.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="ProjectionCalculators"
-				>
-				<File
-					RelativePath=".\ProjCalc2D.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\ProjCalc2D.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ProjCalc3D.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\ProjCalc3D.h"
 					>
 				</File>
 			</Filter>
@@ -402,13 +442,73 @@
 				Name="Editors"
 				>
 				<File
-					RelativePath=".\MaterialReplacer.cpp"
+					RelativePath=".\RenderingTechniqueReplacer.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\MaterialReplacer.h"
+					RelativePath="..\Include\core-Renderer\RenderingTechniqueReplacer.h"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="Misc"
+				>
+				<File
+					RelativePath=".\Camera.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\Camera.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Light.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\Light.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\ProjectionCalculator.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Skeleton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\Skeleton.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SkyBox.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\SkyBox.h"
+					>
+				</File>
+				<Filter
+					Name="ProjectionCalculators"
+					>
+					<File
+						RelativePath=".\ProjCalc2D.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\ProjCalc2D.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ProjCalc3D.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\ProjCalc3D.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -436,42 +536,6 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\VisualSceneManager.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="RenderingPasses"
-			>
-			<File
-				RelativePath=".\BackgroundPass.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\BackgroundPass.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DrawingPass.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\DrawingPass.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNodesProcessor.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\GraphicalNodesProcessor.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RenderingProcessor.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\RenderingProcessor.h"
 				>
 			</File>
 		</Filter>
@@ -523,21 +587,37 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Include\core-Renderer\NullGraphicalEffect.h"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core-Renderer\NullLightReflectingProperties.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Texture.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\Texture.h"
+				RelativePath="..\Include\core-Renderer\StageTextureRenderer.h"
 				>
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\TransparencyEnabler.h"
 				>
 			</File>
+			<Filter
+				Name="Textures"
+				>
+				<File
+					RelativePath="..\Include\core-Renderer\ChangableTexture.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\ManagedTexture.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\Texture.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Factories"
@@ -548,6 +628,22 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\GraphicalEntitiesFactory.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Effects"
+			>
+			<File
+				RelativePath="..\Include\core-Renderer\EffectDataSource.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalEffect.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\GraphicalEffect.h"
 				>
 			</File>
 		</Filter>

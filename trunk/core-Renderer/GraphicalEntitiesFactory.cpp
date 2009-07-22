@@ -2,13 +2,17 @@
 #include "core-Renderer\SkyBox.h"
 #include "core-Renderer\LightReflectingProperties.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\Renderer.h"
+#include "core-Renderer\Camera.h"
 #include <deque>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEntitiesFactory::GraphicalEntitiesFactory(const std::string& texturesPath)
-      : m_texturesPath(texturesPath)
+GraphicalEntitiesFactory::GraphicalEntitiesFactory(const std::string& texturesPath,
+                                                   Renderer& renderer)
+      : m_texturesPath(texturesPath),
+      m_renderer(renderer)
 {
 }
 
@@ -20,17 +24,41 @@ GraphicalEntitiesFactory::~GraphicalEntitiesFactory()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkyBox* GraphicalEntitiesFactory::createSkyBox(Material& front, Material& back,
-                                               Material& left, Material& right,
-                                               Material& top, Material& bottom)
+Camera* GraphicalEntitiesFactory::createCamera(const std::string& name)
+{
+   return new Camera(name, m_renderer);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Texture* GraphicalEntitiesFactory::createTexture(const std::string& name)
+{
+   Texture* texture = NULL;
+   if (name.length() == 0)
+   {
+      texture = createEmptyTexture();
+   }
+   else
+   {
+      texture = loadTexture(m_texturesPath, name);
+   }
+
+   return texture;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SkyBox* GraphicalEntitiesFactory::createSkyBox(Texture& front, Texture& back,
+                                               Texture& left, Texture& right,
+                                               Texture& top, Texture& bottom)
 {
    SkyBox* skyBox = createSkyBox();
-   skyBox->setMaterial(SBS_FRONT, front);
-   skyBox->setMaterial(SBS_BACK, back);
-   skyBox->setMaterial(SBS_LEFT, left);
-   skyBox->setMaterial(SBS_RIGHT, right);
-   skyBox->setMaterial(SBS_TOP, top);
-   skyBox->setMaterial(SBS_BOTTOM, bottom);
+   skyBox->setTexture(SBS_FRONT, front);
+   skyBox->setTexture(SBS_BACK, back);
+   skyBox->setTexture(SBS_LEFT, left);
+   skyBox->setTexture(SBS_RIGHT, right);
+   skyBox->setTexture(SBS_TOP, top);
+   skyBox->setTexture(SBS_BOTTOM, bottom);
 
    return skyBox;
 }
@@ -50,14 +78,8 @@ MaterialStage* GraphicalEntitiesFactory::createMaterialStage(
    }
    else
    {
-      if (textureName.length() == 0)
-      {
-         texture = createEmptyTexture();
-      }
-      else
-      {
-         texture = loadTexture(m_texturesPath, textureName);
-      }
+      texture = createTexture(textureName);
+      m_textures.add(texture);
    }
 
    return createMaterialStage(*texture,
@@ -72,8 +94,23 @@ Material* GraphicalEntitiesFactory::createMaterial(
                                           const std::string& materialName,
                                           LightReflectingProperties* lrp)
 {
-   Material* mat = createMaterialImpl(materialName, lrp);
+   Material* mat = createMaterialImpl(materialName, 
+                                      m_renderer.getRenderingTargetsPolicy(), 
+                                      lrp);
    return mat;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+GraphicalEffect* GraphicalEntitiesFactory::createEffect(const std::string& name, 
+                                                        bool isTransparent,
+                                                        EffectDataSource* dataSource)
+{
+   GraphicalEffect* effect = createEffectImpl(name, 
+                                    m_renderer.getRenderingTargetsPolicy(), 
+                                    isTransparent, 
+                                    dataSource);
+   return effect;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

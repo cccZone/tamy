@@ -12,7 +12,7 @@
 
 TEST(MaterialsParser, simpleMaterial)
 {
-   ResourceStorage<Material> matStorage;
+   ResourceStorage<RenderingTechnique> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
@@ -26,7 +26,7 @@ TEST(MaterialsParser, simpleMaterial)
 
 TEST(MaterialsParser, manyMaterialsInOneFile)
 {
-   ResourceStorage<Material> matStorage;
+   ResourceStorage<RenderingTechnique> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
@@ -42,7 +42,7 @@ TEST(MaterialsParser, manyMaterialsInOneFile)
 
 TEST(MaterialsParser, materialWithNoName)
 {
-   ResourceStorage<Material> matStorage;
+   ResourceStorage<RenderingTechnique> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
@@ -57,13 +57,13 @@ TEST(MaterialsParser, materialWithNoName)
 
 TEST(MaterialsParser, defaultLightReflectingProperties)
 {
-   ResourceStorage<Material> matStorage;
+   ResourceStorage<RenderingTechnique> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
    parser.load("..\\Data\\SimpleMaterial.xml");
 
-   Material& mat = matStorage.get("SomeMaterial");
+   Material& mat = dynamic_cast<Material&>(matStorage.get("SomeMaterial"));
    const LightReflectingProperties& lrp = mat.getLightReflectingProperties();
 
    LightReflectingProperties* defaultLRP  = factory.createLightReflectingProperties();
@@ -82,13 +82,13 @@ TEST(MaterialsParser, defaultLightReflectingProperties)
 
 TEST(MaterialsParser, readingLightReflectingProperties)
 {
-   ResourceStorage<Material> matStorage;
+   ResourceStorage<RenderingTechnique> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
    parser.load("..\\Data\\MatWithLRP.xml");
 
-   Material& mat = matStorage.get("MatWithLRP");
+   Material& mat = dynamic_cast<Material&>(matStorage.get("MatWithLRP"));
    const LightReflectingProperties& lrp = mat.getLightReflectingProperties();
 
    LightReflectingProperties* defaultLRP  = factory.createLightReflectingProperties();
@@ -107,13 +107,13 @@ TEST(MaterialsParser, readingLightReflectingProperties)
 
 TEST(MaterialsParser, readingParitalLightReflectingPropertiesDefinition)
 {
-   ResourceStorage<Material> matStorage;
+   ResourceStorage<RenderingTechnique> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
    parser.load("..\\Data\\MatWithPartialLRP.xml");
 
-   Material& mat = matStorage.get("MatWithPartialLRP");
+   Material& mat = dynamic_cast<Material&>(matStorage.get("MatWithPartialLRP"));
    const LightReflectingProperties& lrp = mat.getLightReflectingProperties();
 
    LightReflectingProperties* defaultLRP  = factory.createLightReflectingProperties();
@@ -132,12 +132,12 @@ TEST(MaterialsParser, readingParitalLightReflectingPropertiesDefinition)
 
 TEST(MaterialsParser, textureStage)
 {
-   ResourceStorage<Material> matStorage;
+   ResourceStorage<RenderingTechnique> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
    parser.load("..\\Data\\SingleTextureStage.xml");
 
-   Material& mat = matStorage.get("SingleTextureStage");
+   Material& mat = dynamic_cast<Material&>(matStorage.get("SingleTextureStage"));
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, mat.getStagesCount());
    CPPUNIT_ASSERT_EQUAL(std::string("tex"), mat.getStage(0).getTexture().getName());
@@ -154,12 +154,12 @@ TEST(MaterialsParser, textureStage)
 
 TEST(MaterialsParser, multipleTextureStages)
 {
-   ResourceStorage<Material> matStorage;
+   ResourceStorage<RenderingTechnique> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
    parser.load("..\\Data\\MultipleTextureStages.xml");
 
-   Material& mat = matStorage.get("MultipleTextureStages");
+   Material& mat = dynamic_cast<Material&>(matStorage.get("MultipleTextureStages"));
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, mat.getStagesCount());
 
@@ -188,12 +188,12 @@ TEST(MaterialsParser, multipleTextureStages)
 
 TEST(MaterialsParser, multipleMaterialsWithTextureStages)
 {
-   ResourceStorage<Material> matStorage;
+   ResourceStorage<RenderingTechnique> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
    parser.load("..\\Data\\MultMatsMultStages.xml");
 
-   Material& mat1 = matStorage.get("Material_1");
+   Material& mat1 = dynamic_cast<Material&>(matStorage.get("Material_1"));
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, mat1.getStagesCount());
 
@@ -216,7 +216,7 @@ TEST(MaterialsParser, multipleMaterialsWithTextureStages)
    CPPUNIT_ASSERT_EQUAL(SC_NONE, mat1.getStage(1).getAlphaOperation().getArg2());
 
 
-   Material& mat2 = matStorage.get("Material_2");
+   Material& mat2 = dynamic_cast<Material&>(matStorage.get("Material_2"));
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, mat2.getStagesCount());
 

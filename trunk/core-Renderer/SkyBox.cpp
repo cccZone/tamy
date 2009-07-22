@@ -1,17 +1,22 @@
 #include "core-Renderer\SkyBox.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\Texture.h"
+#include "core-Renderer\StageTextureRenderer.h"
+#include "core-Renderer\RenderingTargetsPolicy.h"
 #include "core\NodeVisitor.h"
 #include "core\TNodesVisitor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkyBox::SkyBox()
-      : Node("SkyBox", false)
+SkyBox::SkyBox(StageTextureRenderer& textureRenderer, 
+               RenderingTargetsPolicy& policy)
+      : Node("SkyBox", false),
+      m_textureRenderer(textureRenderer),
+      m_policy(policy)
 {
    for (unsigned char i = 0; i < 6; ++i)
    {
-      m_materials[i] = NULL;
+      m_textures[i] = NULL;
    }
 }
 
@@ -27,13 +32,14 @@ void SkyBox::onAccept(NodeVisitor& visitor)
 
 void SkyBox::render()
 {
+   m_policy.setTargets(0);
    startRendering();
 
    for (unsigned char i = 0; i < 6; ++i)
    {
-      if (m_materials[i] == NULL) continue;
+      if (m_textures[i] == NULL) continue;
+      m_textureRenderer.setForRendering(0, *(m_textures[i]));
 
-      m_materials[i]->setForRendering();
       renderSide(static_cast<SkyBoxSides> (i));
    }
 
@@ -42,9 +48,9 @@ void SkyBox::render()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkyBox::setMaterial(SkyBoxSides side, Material& material)
+void SkyBox::setTexture(SkyBoxSides side, Texture& texture)
 {
-   m_materials[side] = &material;
+   m_textures[side] = &(texture.getImpl());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

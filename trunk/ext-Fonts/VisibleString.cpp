@@ -7,7 +7,7 @@
 #include "core-Renderer\Color.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\LightReflectingProperties.h"
-#include "core-Renderer\MaterialReplacer.h"
+#include "core-Renderer\RenderingTechniqueReplacer.h"
 #include <stdio.h>
 
 
@@ -22,7 +22,7 @@ VisibleString::VisibleString(Font& font)
    const Material& fontMat = m_font.getMaterial();
    m_material = new Material(fontMat);
 
-   m_matReplacer = new MaterialReplacer(fontMat, *m_material);
+   m_matReplacer = new RenderingTechniqueReplacer(fontMat, *m_material);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,17 +3,17 @@
 #include <d3dx9.h>
 #include <list>
 #include "core\Array.h"
+#include "core\Subject.h"
 #include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class VisualSceneManager;
-class Renderer;
-class RenderingPass;
 struct Point;
 class RendererObserver;
-class RenderingTarget;
+class RenderingMechanism;
+class RenderingTargetsPolicy;
+class RenderingTargetsPolicyProxy;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +21,13 @@ class RenderingTarget;
    class ClassName;                                                  \
    friend class ClassName;                                           \
    class ClassName
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum RendererOps
+{
+   RO_RESIZE_VIEWPORT
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +40,7 @@ class RenderingTarget;
  * The renderer can be observer - it will notify it's observers about the
  * changes in its state (rendering, device lost, device recovered)
  */
-class Renderer
+class Renderer : public Subject<Renderer, RendererOps>
 {
 private:
    
@@ -51,11 +58,8 @@ private:
    };
 
 private:
-   std::vector<RenderingPass*> m_renderingPasses;
-   Array<VisualSceneManager*> m_sceneManagers;
-
-   Array<RenderingTarget*> m_renderingTargets;
-   unsigned int m_maxRenderingTargets;
+   Array<RenderingMechanism*> m_mechanisms;
+   RenderingTargetsPolicyProxy* m_globalRenderTargetsPolicy;
 
    unsigned int m_viewportWidth;
    unsigned int m_viewportHeight;
@@ -70,7 +74,7 @@ private:
    RendererState* m_currentRendererState;
 
 public:
-   Renderer(unsigned int maxRenderingTargets);
+   Renderer();
    virtual ~Renderer();
 
    /**
@@ -89,48 +93,45 @@ public:
                        unsigned int rightClientArea, unsigned int bottomClientArea);
 
    /**
-    * This method adds a new rendering pass to the rendering pipeline
-    */
-   void addPass(RenderingPass* pass);
-
-   /** 
-    * Adds a scene to the rendering queue. A single rendering pass
-    * can render multiple scenes (2D, 3D etc.) at once
-    */
-   void addVisualSceneManager(VisualSceneManager& manager);
-
-   /**
-    * The method removes a scene from the rendering queue
-    */
-   void removeVisualSceneManager(VisualSceneManager& manager);
-
-   /**
     * The method translates the screen space coordinates
     * (i.e. ones your mouse moves in) to viewport space coordinates
     */
    void screenToViewport(const Point& inScreenPt, D3DXVECTOR2& outViewportPt) const;
 
    /**
-    * This method returns the maximum supported rendering targets
-    */
-   unsigned int getMaxRenderingTargets() const {return m_maxRenderingTargets;}
-
-   /**
     * This method returns the current number of rendering targets set
     */
-   unsigned int getRenderingTargetsCount() const {return m_renderingTargets.size();}
+   unsigned int getMechanismsCount() const {return m_mechanisms.size();}
 
    /**
-    * This method adds a new rendering target.
+    * This method adds a new rendering mechanism to the pipeline.
+    */
+   void addMechanism(RenderingMechanism* mech);
+
+   /**
+    * Removes the rendering mechanism with the given index
+    */
+   void removeMechanism(RenderingMechanism& mech);
+
+   /**
+    * This method returns the width of currently set viewport
+    */
+   unsigned int getViewportWidth() const {return m_viewportWidth;}
+
+   /**
+    * This method returns the height of currently set viewport
+    */
+   unsigned int getViewportHeight() const {return m_viewportHeight;}
+
+   /**
+    * This method returns a renderer-owned (and thus considered globally
+    * accessible) instance of the RenderTargetsPolicy interface.
     *
-    * @throws runtime_error if the maximum number of rtendering targets is already set
+    * This class should be set on each and every rendering technique
+    * that is rendered on this renderer, so that it can be assured
+    * that proper rendering targets are used throughout the rendering process
     */
-   void addRenderingTarget(RenderingTarget& target);
-
-   /**
-    * Removes a rendering target with the given index
-    */
-   void removeRenderingTarget(RenderingTarget& target);
+   RenderingTargetsPolicy& getRenderingTargetsPolicy();
 
 protected:
    /**
@@ -146,20 +147,9 @@ protected:
    virtual void resetViewport(unsigned int width, unsigned int height) = 0;
 
    /**
-    * This method is expected to return the number of lights that can be simultaneously
-    * set on the rendering device
+    * The method cleans up the specified number of rendering target
     */
-   virtual UINT getMaxLightsCount() const = 0;
-
-   /**
-    * The method sets the view matrix for the rendering pass
-    */
-   virtual void setViewMatrix(const D3DXMATRIX& mtx) = 0;
-
-   /**
-    * The method sets the projection matrix for the rendering pass
-    */
-   virtual void setProjectionMatrix(const D3DXMATRIX& mtx) = 0;
+   virtual void cleanAllTargets(unsigned int count) = 0;
 
    /**
     * The method opens up the rendering conduct

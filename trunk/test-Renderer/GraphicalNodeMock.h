@@ -5,6 +5,9 @@
 #include "MaterialOperationImplementationMock.h"
 #include "core\BoundingSphere.h"
 #include "TransparencyEnablerStub.h"
+#include "RenderingTargetsPolicyMock.h"
+#include <vector>
+#include <string>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,6 +15,7 @@
 class GraphicalNodeMock : public AbstractGraphicalNode
 {
 private:
+   static RegularTests::RenderingTargetsPolicyMock s_policy;
    static MaterialOperationImplementationMock s_matOpImpl;
    static TransparencyEnablerStub s_transparencyEnabler;
    static Material s_material;
@@ -34,5 +38,45 @@ public:
       return dynamic_cast<const BoundingSphere&> (getBoundingVolume());
    }
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace GraphicalEffectTests
+{
+
+   class GraphicalNodeMock : public AbstractGraphicalNode
+   {
+   private:
+      static RegularTests::RenderingTargetsPolicyMock s_policy;
+      static MaterialOperationImplementationMock s_matOpImpl;
+      static TransparencyEnablerStub s_transparencyEnabler;
+      static Material s_material;
+
+      std::vector<std::string>& m_callSequenceVec;
+
+   public:
+      GraphicalNodeMock(std::vector<std::string>& callSequenceVec)
+         : AbstractGraphicalNode("graphicalNodeMock", false, s_material, 0),
+         m_callSequenceVec(callSequenceVec)
+      {
+      }
+
+      void render() 
+      {
+         m_callSequenceVec.push_back("GraphicalNode::render");
+      }
+
+      const AbstractGraphicalEntity& getEntity() const 
+      {
+         return *(reinterpret_cast<const AbstractGraphicalEntity*>(NULL));
+      }
+
+      const BoundingSphere& getBoundingSphere()
+      {
+         return dynamic_cast<const BoundingSphere&> (getBoundingVolume());
+      }
+   };
+
+}
 
 ///////////////////////////////////////////////////////////////////////////////

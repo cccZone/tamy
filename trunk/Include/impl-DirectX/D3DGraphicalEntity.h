@@ -20,9 +20,9 @@ public:
                       IDirect3DDevice9& d3Device,
                       const std::vector<LitVertex>& vertices,
                       const std::list<Face<USHORT> >& faces,
-                      const std::vector<Material*>& registeredMaterials)
+                      const std::vector<RenderingTechnique*>& techniques)
          : D3DAbstractGraphicalEntity<VertexStruct>(d3Device, vertices, faces),
-         GraphicalEntity(name, registeredMaterials)
+         GraphicalEntity(name, techniques)
    {
       setBoundingSphereRadius(m_maxCoord);
 

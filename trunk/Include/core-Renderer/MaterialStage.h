@@ -4,8 +4,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Texture;
+class TextureImpl;
 class MaterialOperation;
 class CoordinatesOperation;
+class StageTextureRenderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -14,15 +16,18 @@ class MaterialStage
 private:
    int m_index;
    Texture& m_texture;
+   TextureImpl& m_textureImpl;
    MaterialOperation* m_colorOperation;
    MaterialOperation* m_alphaOperation;
    CoordinatesOperation* m_coordsOp;
+   StageTextureRenderer& m_textureRenderer;
 
 public:
-   MaterialStage(Texture& emptyTexture, 
+   MaterialStage(Texture& texture, 
                  MaterialOperation* defaultColorOp, 
                  MaterialOperation* defaultAlphaOp,
-                 CoordinatesOperation* coordsOp);
+                 CoordinatesOperation* coordsOp,
+                 StageTextureRenderer& textureRenderer);
    MaterialStage(const MaterialStage& rhs);
    ~MaterialStage();
 

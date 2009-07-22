@@ -1,7 +1,7 @@
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include "core\NodeVisitor.h"
 #include "core\TNodesVisitor.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTechnique.h"
 #include "core\BoundingSphere.h"
 
 
@@ -9,10 +9,10 @@
 
 AbstractGraphicalNode::AbstractGraphicalNode(const std::string& name, 
                                              bool dynamic, 
-                                             Material& material, 
+                                             RenderingTechnique& technique, 
                                              DWORD subset)
       : Node(name, dynamic),
-      m_material(&material), 
+      m_technique(&technique), 
       m_subset(subset)
 {
 }
@@ -33,9 +33,9 @@ void AbstractGraphicalNode::setBoundingSphereRadius(float radius)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AbstractGraphicalNode::setMaterial(Material& material)
+void AbstractGraphicalNode::setTechnique(RenderingTechnique& technique)
 {
-   m_material = &material;
+   m_technique = &technique;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

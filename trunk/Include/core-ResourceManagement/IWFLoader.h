@@ -21,6 +21,8 @@ class Material;
 class GraphicalEntityLoader;
 class GraphicalDataSource;
 class AbstractGraphicalEntity;
+class RenderingTechnique;
+class Texture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -35,14 +37,14 @@ private:
    GraphicalDataSource& m_externalEntitiesSource;
    SceneManager& m_sceneManager;
    ResourceStorage<AbstractGraphicalEntity>& m_entitiesStorage;
-   ResourceStorage<Material>& m_materialsStorage;
+   ResourceStorage<RenderingTechnique>& m_renderingTechniquesStorage;
 
 public:
    IWFLoader(GraphicalEntitiesFactory& entitiesFactory, 
              GraphicalDataSource& externalEntitiesSource,
              SceneManager& sceneManager,
              ResourceStorage<AbstractGraphicalEntity>& entitiesStorage,
-             ResourceStorage<Material>& materialsStorage);
+             ResourceStorage<RenderingTechnique>& renderingTechniquesStorage);
    ~IWFLoader();
 
    /**
@@ -61,7 +63,7 @@ private:
 
    std::string getUniqueNameForMesh(const char* originalMeshName) const;
 
-   Material& createSkyboxMaterial(const std::string& textureName) const;
+   Texture& createSkyboxMaterial(const std::string& textureName) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -173,7 +173,7 @@
 			Name="Renderer"
 			>
 			<Filter
-				Name="GraphicalDataRepresentation"
+				Name="Entities"
 				>
 				<Filter
 					Name="Materials"
@@ -203,14 +203,6 @@
 						>
 					</File>
 					<File
-						RelativePath=".\D3DEmptyTexture.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\impl-DirectX\D3DEmptyTexture.h"
-						>
-					</File>
-					<File
 						RelativePath=".\D3DLightReflectingProperties.cpp"
 						>
 					</File>
@@ -219,7 +211,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\D3DTexture.cpp"
+						RelativePath=".\D3DStageTextureRenderer.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\impl-DirectX\D3DStageTextureRenderer.h"
 						>
 					</File>
 					<File
@@ -283,6 +279,30 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="GraphicalNode"
+					>
+					<File
+						RelativePath=".\D3DPostProcessEffectNode.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\impl-DirectX\D3DPostProcessEffectNode.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Effects"
+					>
+					<File
+						RelativePath=".\D3DGraphicalEffect.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\impl-DirectX\D3DGraphicalEffect.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="Core"
@@ -324,6 +344,18 @@
 					</File>
 					<File
 						RelativePath="..\Include\impl-DirectX\D3DTextureRenderingTarget.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Mechanisms"
+					>
+					<File
+						RelativePath=".\D3DSceneRenderingMechanism.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\impl-DirectX\D3DSceneRenderingMechanism.h"
 						>
 					</File>
 				</Filter>

@@ -11,9 +11,9 @@
 
 ParticleSystem::ParticleSystem(const std::string& name, 
                                bool isDynamic, 
-                               Material& material,
+                               RenderingTechnique& technique,
                                unsigned int particlesCount)
-      : AbstractGraphicalNode(name, isDynamic, material, 0),
+      : AbstractGraphicalNode(name, isDynamic, technique, 0),
       m_particles(new Array<Particle*>(particlesCount)),
       m_desiredParticlesCount(particlesCount),
       m_spawnInterval(0),
@@ -238,7 +238,19 @@ unsigned int ParticleSystem::activateParticles()
 void ParticleSystem::initializeParticle(const D3DXMATRIX& systemGlobalMtx,
                                         Particle& particle)
 {
-   particle.color = getMaterial().getLightReflectingProperties().getDiffuseColor();
+   // Currently the particle system can operate on colors of the material only.
+   // Should a different rendering technique be used for a particle system,
+   // a default particle color (white) will be used
+   // Refactor it if it turns out to be a problem
+   Material* mat = dynamic_cast<Material*> (&(getTechnique()));
+   if (mat == NULL)
+   {
+      particle.color = Color(1, 1, 1, 1);
+   }
+   else
+   {
+      particle.color = mat->getLightReflectingProperties().getDiffuseColor();
+   }
 
    float randomVar = (-0.5f * m_lifeSpanVar) + ((float)rand() / (float)RAND_MAX) * m_lifeSpanVar;
    particle.timeToLive = m_lifeSpan + randomVar;

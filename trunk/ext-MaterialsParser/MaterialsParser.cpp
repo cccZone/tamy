@@ -10,12 +10,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialsParser::MaterialsParser(GraphicalEntitiesFactory& factory,
-                                 ResourceStorage<Material>& matStorage)
+                                 ResourceStorage<RenderingTechnique>& storage)
       : m_parser(NULL),
       m_parsedMaterial(NULL)
 {
    CompositeElement* materialElem = new CompositeElement(*this);
-      materialElem->addElement(new MaterialLeaf(*this, factory, matStorage));
+      materialElem->addElement(new MaterialLeaf(*this, factory, storage));
 
       MultipleElement* stageElem = new MultipleElement(*this, "Stage", 
                                        new MaterialStageLeaf(*this, factory));

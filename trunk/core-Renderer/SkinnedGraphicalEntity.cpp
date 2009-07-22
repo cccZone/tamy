@@ -1,5 +1,5 @@
 #include "core-Renderer\SkinnedGraphicalEntity.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTechnique.h"
 #include "core-Renderer\SkinnedGraphicalNode.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include <deque>
@@ -14,16 +14,17 @@
 SkinnedGraphicalEntity::SkinnedGraphicalEntity(const std::string& name,
                                                const std::vector<SkinBoneDefinition>& skeleton,
                                                const std::vector<BonesInfluenceDefinition>& boneSets,
-                                               const std::vector<Material*>& materials)
+                                               const std::vector<RenderingTechnique*>& techniques)
       : LeafGraphicalEntity(name),
       m_skeleton(skeleton),
       m_boneSets(boneSets),
-      m_materials(materials)
+      m_techniques(techniques)
 {
    // the number of bone influences must match the number of materials passed
-   if (boneSets.size() != materials.size())
+   if (boneSets.size() != techniques.size())
    {
-      throw std::invalid_argument("Invalid attributes definition - number of bone influences doesn't match the number of materials per attribute");
+      throw std::invalid_argument("Invalid attributes definition - number of bone influences doesn't\
+                                  match the number of rendering techniques per attribute");
    }
 }
 
@@ -35,13 +36,13 @@ SkinnedGraphicalEntity::~SkinnedGraphicalEntity()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material& SkinnedGraphicalEntity::getMaterial(DWORD subsetIdx) const 
+RenderingTechnique& SkinnedGraphicalEntity::getTechnique(DWORD subsetIdx) const 
 {
-   if (subsetIdx >= m_materials.size())
+   if (subsetIdx >= m_techniques.size())
    {
       throw std::out_of_range("There aren't so many subsets defined");
    }
-   return *(m_materials.at(subsetIdx));
+   return *(m_techniques.at(subsetIdx));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

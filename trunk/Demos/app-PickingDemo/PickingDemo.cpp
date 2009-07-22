@@ -29,6 +29,8 @@
 #include "core\dostream.h"
 #include "JumpToNodeAction.h"
 #include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\SceneRenderingMechanism.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,23 +71,24 @@ PickingDemo::PickingDemo(Tamy& tamy)
 void PickingDemo::initialize()
 {
    m_actionsExecutor = new NodeActionsExecutor();
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
 
    m_sceneManager = new CompositeSceneManager();
    m_visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(m_visualSceneManager);
-   m_renderer->addVisualSceneManager(*m_visualSceneManager);
+   sceneRenderer.addVisualSceneManager(*m_visualSceneManager);
 
    m_hudSceneManager = new CompositeSceneManager();
    VisualSceneManager* hudVisualSceneMgr = new VisualSceneManager();
    m_hudSceneManager->addSceneManager(hudVisualSceneMgr);
-   m_renderer->addVisualSceneManager(*hudVisualSceneMgr);
+   sceneRenderer.addVisualSceneManager(*hudVisualSceneMgr);
 
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
 
    m_renderingTarget = factory.createDefaultRenderingTarget();
-   m_renderer->addRenderingTarget(*m_renderingTarget);
+   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
 
-   GraphicalEntityLoader loader(factory, m_materialsStorage);
+   GraphicalEntityLoader loader(factory, m_renderingTechniquesStorage);
 
    AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
    m_entitiesStorage.add(ent);
@@ -98,11 +101,17 @@ void PickingDemo::initialize()
    D3DXMatrixRotationYawPitchRoll(&(light->accessLocalMtx()), D3DXToRadian(-45), D3DXToRadian(45), 0);
    m_sceneManager->addNode(light);
 
-   Camera* camera = new Camera("camera");
+   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
    m_sceneManager->addNode(camera);
    m_cameraController = new WaypointCameraController(*camera, D3DXVECTOR3(0, 10, -30), new LinearTimeFunc());
 
-   Camera* hudCamera = new Camera("hudCamera");
+   Light* hudLight = factory.createLight("hudLight");
+   hudLight->setType(Light::LT_DIRECTIONAL);
+   hudLight->setDiffuseColor(Color(1, 1, 1, 1));
+   hudLight->setSpecularColor(Color(0.2f, 0.2f, 0.2f, 1));
+   m_hudSceneManager->addNode(hudLight);
+
+   Camera* hudCamera = m_tamy.graphicalFactory().createCamera("hudCamera");
    hudCamera->setProjectionCalculator(new ProjCalc2D());
    m_hudSceneManager->addNode(hudCamera);
 
@@ -115,7 +124,7 @@ void PickingDemo::initialize()
                                                                  CC_CLAMP);
    Material* particleMat = factory.createMaterial("particleMat", particleLrp);
    particleMat->addStage(particleMatStage);
-   m_materialsStorage.add(particleMat);
+   m_renderingTechniquesStorage.add(particleMat);
 
    m_atmosphere = factory.createParticleSystem("atmosphere", false, *particleMat, 10000);
    m_atmosphere->setEmissionTime(20);
@@ -134,7 +143,7 @@ void PickingDemo::initialize()
                                                                CC_CLAMP);
    Material* cursorMat = factory.createMaterial("cursorMat", particleLrp);
    cursorMat->addStage(cursorMatStage);
-   m_materialsStorage.add(cursorMat);
+   m_renderingTechniquesStorage.add(cursorMat);
    m_cursor = factory.createParticleSystem("cursor", true, *cursorMat, 200);
    m_cursor->setEmissionTime(0.2f);
    m_cursor->setLifeSpan(0.3f, 0.2f);
@@ -152,7 +161,7 @@ void PickingDemo::initialize()
                                                                CC_CLAMP);
    Material* burstMat = factory.createMaterial("burstMat", particleLrp);
    burstMat->addStage(burstMatStage);
-   m_materialsStorage.add(burstMat);
+   m_renderingTechniquesStorage.add(burstMat);
    m_burst = factory.createParticleSystem("burst", true, *burstMat, 300);
    m_burst->setEmissionTime(0.1f);
    m_burst->setLifeSpan(1.f, 0.2f);
@@ -194,14 +203,13 @@ void PickingDemo::initialize()
       // cicular emitter
    particleLrp = factory.createLightReflectingProperties();
    particleLrp->setDiffuseColor(Color(0.2f, 1, 0.2f, 1));
-   particleLrp->setEmissiveColor(Color(0.2f, 1, 0.2f, 1));
    MaterialStage* circularMatStage = factory.createMaterialStage("particle.tga",
                                                                  MOP_SELECT_ARG1, SC_LRP, SC_NONE,
                                                                  MOP_ADD_SIGNED, SC_LRP, SC_TEXTURE,
                                                                  CC_CLAMP);
    Material* circularMat = factory.createMaterial("circularMat", particleLrp);
    circularMat->addStage(circularMatStage);
-   m_materialsStorage.add(circularMat);
+   m_renderingTechniquesStorage.add(circularMat);
    m_circular = factory.createParticleSystem("circular", false, *circularMat, 100);
    m_circular->setEmissionTime(0.1f);
    m_circular->setLifeSpan(2.f, 0.2f);

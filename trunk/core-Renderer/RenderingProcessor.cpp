@@ -1,30 +1,37 @@
 #include "core-Renderer\RenderingProcessor.h"
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include "core-Renderer\GraphicalEntity.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTechnique.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingProcessor::translate(AbstractGraphicalNodeP* nodesToRender, const DWORD& nodesArraySize)
+void RenderingProcessor::translate(Array<AbstractGraphicalNode*>& nodesToRender)
 {
-   Material* prevMat = NULL;
-   DWORD commandIdx = 0;
+   unsigned int startIdx = 0;
+   unsigned int nodesCount = nodesToRender.size();
+   if (nodesCount == 0) {return;}
 
-   for (DWORD i = 0; i < nodesArraySize; ++i)
+   // we'll be processing the nodes in batches - find all the consecutive nodes
+   // that share the technique, and when we spot the first one that uses a different technique,
+   // let's render the ones we iterated over, and start counting anew...
+   RenderingTechnique* prevTechnique = &(nodesToRender[0]->getTechnique());
+   for (DWORD i = 1; i < nodesCount; ++i)
    {
-      if (nodesToRender[i] == NULL) {continue;}
-
       AbstractGraphicalNode& graphicalNode = *(nodesToRender[i]);
-      Material& mat = graphicalNode.getMaterial();
+      RenderingTechnique& technique = graphicalNode.getTechnique();
 
-      if ((prevMat == NULL) || (*prevMat != mat))
+      if (*prevTechnique != technique)
       {
-         mat.setForRendering();
-         prevMat = &mat;
+         prevTechnique->render(nodesToRender, startIdx, i);
+         startIdx = i;
+         prevTechnique = &technique;
       }
-      graphicalNode.render();
    }
+
+   // ...however that will leave us with the nodes at the end of the list
+   // unprocessed - so process the remaining nodes now
+   prevTechnique->render(nodesToRender, startIdx, nodesCount);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

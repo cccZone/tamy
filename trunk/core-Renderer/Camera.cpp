@@ -4,18 +4,22 @@
 #include "core-Renderer\ProjCalc3D.h"
 #include "core\Frustum.h"
 #include "core\Ray.h"
+#include "core-Renderer\Renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Camera::Camera(const std::string& name)
+Camera::Camera(const std::string& name, Renderer& renderer)
       : Node(name, true),
+      m_renderer(renderer),
       m_fov(D3DXToRadian(60)),
       m_aspectRatio(1.3333f),
       m_nearZPlane(1.01f),
       m_farZPlane(5000.0f),
       m_mtxProjectionDirty(true)
 {
+   m_renderer.attachObserver(*this);
+
    D3DXMatrixIdentity(&m_mtxIdentity);
    D3DXMatrixIdentity(&m_mtxView);
    D3DXMatrixIdentity(&m_mtx3DProjection);
@@ -27,6 +31,8 @@ Camera::Camera(const std::string& name)
 
 Camera::~Camera()
 {
+   m_renderer.detachObserver(*this);
+
    delete m_projCalc;
    m_projCalc = NULL;
 }
@@ -36,6 +42,23 @@ Camera::~Camera()
 void Camera::onAccept(NodeVisitor& visitor)
 {
    REGISTER_NODE_VISITOR(TNodesVisitor<Camera>);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Camera::update(Renderer& renderer)
+{
+   setNearPlaneDimensions((float)renderer.getViewportWidth(), (float)renderer.getViewportHeight());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Camera::update(Renderer& renderer, const RendererOps& operation)
+{
+   if (operation == RO_RESIZE_VIEWPORT)
+   {
+      setNearPlaneDimensions((float)renderer.getViewportWidth(), (float)renderer.getViewportHeight());
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

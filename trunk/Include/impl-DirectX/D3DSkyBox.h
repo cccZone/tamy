@@ -17,7 +17,10 @@ private:
    D3DXMATRIX m_cameraWorldMtx;
 
 public:
-   D3DSkyBox(IDirect3DDevice9& d3Device, IDirect3DVertexBuffer9* vb);
+   D3DSkyBox(StageTextureRenderer& textureRenderer, 
+             RenderingTargetsPolicy& policy,
+             IDirect3DDevice9& d3Device, 
+             IDirect3DVertexBuffer9* vb);
    ~D3DSkyBox();
 
 protected:

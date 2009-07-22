@@ -11,14 +11,14 @@ D3DDefaultRenderingTarget::D3DDefaultRenderingTarget(IDirect3DDevice9& d3Device,
       m_renderer(renderer),
       m_backBuffer(NULL)
 {
-   m_renderer.attachObserver(*this);
+   dynamic_cast<Subject<D3DRenderer, D3DGraphResourceOp>& > (m_renderer).attachObserver(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 D3DDefaultRenderingTarget::~D3DDefaultRenderingTarget()
 {
-   m_renderer.detachObserver(*this);
+   dynamic_cast<Subject<D3DRenderer, D3DGraphResourceOp>& > (m_renderer).detachObserver(*this);
 
    if (m_backBuffer != NULL)
    {
@@ -32,9 +32,7 @@ D3DDefaultRenderingTarget::~D3DDefaultRenderingTarget()
 void D3DDefaultRenderingTarget::use(unsigned char idx)
 {
    if (m_backBuffer == NULL) {return;}
-
    m_d3Device.SetRenderTarget(idx, m_backBuffer);
-   m_d3Device.Clear(idx, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x00000000, 1.0f, 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 #include "core-Renderer\GraphicalEntity.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTechnique.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include <sstream>
@@ -8,9 +8,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 GraphicalEntity::GraphicalEntity(const std::string& name,
-                                 const std::vector<Material*>& materials)
+                                 const std::vector<RenderingTechnique*>& techniques)
       : LeafGraphicalEntity(name),
-      m_materials(materials)
+      m_techniques(techniques)
 {
 }
 
@@ -22,20 +22,20 @@ GraphicalEntity::~GraphicalEntity()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material& GraphicalEntity::getMaterial(DWORD subsetIdx) const 
+RenderingTechnique& GraphicalEntity::getTechnique(DWORD subsetIdx) const 
 {
-   if (subsetIdx >= m_materials.size())
+   if (subsetIdx >= m_techniques.size())
    {
       throw std::out_of_range("There aren't so many subsets defined");
    }
-   return *(m_materials.at(subsetIdx));
+   return *(m_techniques.at(subsetIdx));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 unsigned int GraphicalEntity::getNumSubsets() const
 {
-   return m_materials.size();
+   return m_techniques.size();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ Node* GraphicalEntity::instantiate(bool dynamic)
    Node* rootNode = new Node(getName(), dynamic);
    rootNode->setLocalMtx(getLocalMtx());
 
-   unsigned int subsetsCount = m_materials.size();
+   unsigned int subsetsCount = m_techniques.size();
    for (unsigned int subsetIdx = 0; subsetIdx < subsetsCount; ++subsetIdx)
    {
       std::stringstream childNodeName;

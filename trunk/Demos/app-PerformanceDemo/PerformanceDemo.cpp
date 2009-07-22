@@ -15,6 +15,8 @@
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\SceneRenderingMechanism.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,14 +41,15 @@ void PerformanceDemo::initialize()
    m_sceneManager = new CompositeSceneManager();
    m_visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(m_visualSceneManager);
-   m_renderer->addVisualSceneManager(*m_visualSceneManager);
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
+   sceneRenderer.addVisualSceneManager(*m_visualSceneManager);
 
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
 
    m_renderingTarget = factory.createDefaultRenderingTarget();
-   m_renderer->addRenderingTarget(*m_renderingTarget);
+   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
 
-   GraphicalEntityLoader loader(factory, m_materialsStorage);
+   GraphicalEntityLoader loader(factory, m_renderingTechniquesStorage);
 
    AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
    m_entitiesStorage.add(ent);
@@ -69,7 +72,7 @@ void PerformanceDemo::initialize()
    D3DXMatrixRotationYawPitchRoll(&(light->accessLocalMtx()), D3DXToRadian(-45), D3DXToRadian(45), 0);
    m_sceneManager->addNode(light);
 
-   Camera* camera = new Camera("camera");
+   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
 
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 20, 50);
    m_sceneManager->addNode(camera);
@@ -83,7 +86,9 @@ void PerformanceDemo::deinitialize()
    delete m_renderingTarget;
    m_renderingTarget = NULL;
 
-   m_renderer->removeVisualSceneManager(*m_visualSceneManager);
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
+   sceneRenderer.removeVisualSceneManager(*m_visualSceneManager);
+
    m_visualSceneManager = NULL;
 
    delete m_cameraController;

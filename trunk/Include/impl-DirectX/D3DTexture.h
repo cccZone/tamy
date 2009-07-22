@@ -6,22 +6,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * A DirectX representation of a texture
- */
-class D3DTexture : public Texture
+template<>
+class TTextureImplDestructor<IDirect3DTexture9>
 {
-private:
-   IDirect3DDevice9& m_d3Device;
-   IDirect3DTexture9* m_texture;
-
 public:
-   D3DTexture(const std::string& name, 
-              IDirect3DDevice9& d3Device, 
-              IDirect3DTexture9& texture);
-   ~D3DTexture();
-
-   void setForRendering(unsigned char stageIndex);
+   void destroy(IDirect3DTexture9* tex)
+   {
+      if (tex != NULL)
+      {
+         tex->Release();
+      }
+   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

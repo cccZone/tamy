@@ -8,6 +8,7 @@
 #include "core-Renderer\LightReflectingProperties.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Texture.h"
+#include "core-Renderer\RenderingTechnique.h"
 #include <sstream>
 #include <deque>
 
@@ -15,9 +16,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 GraphicalEntityLoader::GraphicalEntityLoader(GraphicalEntitiesFactory& factory,
-                                             ResourceStorage<Material>& materialsStorage)
+                                             ResourceStorage<RenderingTechnique>& renderingTechniquesStorage)
       : m_factory(factory),
-      m_materialsStorage(materialsStorage)
+      m_renderingTechniquesStorage(renderingTechniquesStorage)
 {
 }
 
@@ -50,12 +51,11 @@ AbstractGraphicalEntity* GraphicalEntityLoader::load(const std::string& name,
 
 void GraphicalEntityLoader::createMaterials(std::vector<MaterialDefinition>& materials)
 {
-
    // register materials
    unsigned int materialsCount = materials.size();
    for (unsigned int matIdx = 0; matIdx < materialsCount; ++matIdx)
    {
-      if (m_materialsStorage.is(materials[matIdx].matName) == false)
+      if (m_renderingTechniquesStorage.is(materials[matIdx].matName) == false)
       {
          LightReflectingProperties* lrp  = m_factory.createLightReflectingProperties();
          lrp->setAmbientColor(materials[matIdx].ambient);
@@ -74,7 +74,7 @@ void GraphicalEntityLoader::createMaterials(std::vector<MaterialDefinition>& mat
                                                               materials[matIdx].coordsOp);
          Material* mat = m_factory.createMaterial(materials[matIdx].matName, lrp);
          mat->addStage(stage);
-         m_materialsStorage.add(mat);
+         m_renderingTechniquesStorage.add(mat);
       }
    }
 }
@@ -95,18 +95,18 @@ AbstractGraphicalEntity* GraphicalEntityLoader::translateMeshToEntity(MeshDefini
       meshesQueue.pop_front();
 
       // locate the required materials
-      std::vector<Material*> realMaterials;
+      std::vector<RenderingTechnique*> techniques;
       unsigned int materialsCount = currentMesh.materials.size();
       for (unsigned int matIdx = 0; matIdx < materialsCount; ++matIdx)
       {
          const std::string& matName = currentMesh.materials[matIdx];
-         if (m_materialsStorage.is(matName))
+         if (m_renderingTechniquesStorage.is(matName))
          {
-            realMaterials.push_back(&(m_materialsStorage.get(matName)));
+            techniques.push_back(&(m_renderingTechniquesStorage.get(matName)));
          }
          else
          {
-            throw std::runtime_error(std::string("Material ") + currentMesh.materials[matIdx] + " doesn't exist");
+            throw std::runtime_error(std::string("Rendering technique ") + currentMesh.materials[matIdx] + " doesn't exist");
          }
       }
 
@@ -123,14 +123,14 @@ AbstractGraphicalEntity* GraphicalEntityLoader::translateMeshToEntity(MeshDefini
                                                       currentMesh.faces,
                                                       currentMesh.bonesInfluencingAttribute,
                                                       currentMesh.skinBones,
-                                                      realMaterials);
+                                                      techniques);
          }
          else
          {
             currentEntity = m_factory.createGraphicalEntity(currentMesh.name + "_entity",
                                                             currentMesh.vertices,
                                                             currentMesh.faces,
-                                                            realMaterials);
+                                                            techniques);
          }
          parentEntity->addChild(currentEntity);
       }

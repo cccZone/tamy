@@ -12,9 +12,9 @@
 D3DParticleSystem::D3DParticleSystem(IDirect3DDevice9& d3Device, 
                                      const std::string& name,
                                      bool isDynamic, 
-                                     Material& material,
+                                     RenderingTechnique& technique,
                                      unsigned int particlesCount)
-      : ParticleSystem(name, isDynamic, material, particlesCount),
+      : ParticleSystem(name, isDynamic, technique, particlesCount),
       m_d3Device(d3Device),
       m_vertexBuffer(NULL),
       m_particlesCount(0),
@@ -78,7 +78,7 @@ void D3DParticleSystem::render()
    m_d3Device.SetRenderState(D3DRS_POINTSPRITEENABLE, true);
    m_d3Device.SetRenderState(D3DRS_POINTSCALEENABLE, true);
    m_d3Device.SetRenderState(D3DRS_LIGHTING, false);
-
+  
    // render the particles
    m_d3Device.SetFVF(D3DFVF_PARTICLEVERTEX);
    m_d3Device.SetStreamSource(0, m_vertexBuffer, 0, sizeof(ParticleVertex));

@@ -12,6 +12,8 @@
 #include "core-ResourceManagement\XMLFont.h"
 #include "ext-Fonts\VisibleString.h"
 #include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\SceneRenderingMechanism.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,18 +35,20 @@ FontsDemo::FontsDemo(Tamy& tamy)
 void FontsDemo::initialize()
 {
    XMLFont* font = new XMLFont("..\\Data\\Curlz.fnt", m_tamy.graphicalFactory());
-   m_tamy.fontsStorage().add(font);
+   m_fontsStorage.add(font);
+
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
 
    m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_renderer->addRenderingTarget(*m_renderingTarget);
+   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
 
    // scene 2D
    m_sceneManager2D = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager2D = new VisualSceneManager();
    m_sceneManager2D->addSceneManager(visualSceneManager2D);
-   m_renderer->addVisualSceneManager(*visualSceneManager2D);
+   sceneRenderer.addVisualSceneManager(*visualSceneManager2D);
 
-   Camera* camera2D = new Camera("camera2D");
+   Camera* camera2D = m_tamy.graphicalFactory().createCamera("camera2D");
    camera2D->setProjectionCalculator(new ProjCalc2D());
    m_sceneManager2D->addNode(camera2D);
 
@@ -53,7 +57,7 @@ void FontsDemo::initialize()
    light2D->setType(Light::LT_DIRECTIONAL);
    light2D->setDiffuseColor(Color(1, 1, 1, 1));
 
-   VisibleString* string2D = new VisibleString(m_tamy.fontsStorage().get("Curlz"));
+   VisibleString* string2D = new VisibleString(m_fontsStorage.get("Curlz"));
    m_sceneManager2D->addNode(string2D);
    D3DXMatrixTranslation(&(string2D->accessLocalMtx()), -0.5f, -0.5f, 2);
    string2D->setText("Hello World in 2D");
@@ -62,9 +66,9 @@ void FontsDemo::initialize()
    m_sceneManager3D = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager3D = new VisualSceneManager();
    m_sceneManager3D->addSceneManager(visualSceneManager3D);
-   m_renderer->addVisualSceneManager(*visualSceneManager3D);
+   sceneRenderer.addVisualSceneManager(*visualSceneManager3D);
 
-   Camera* camera3D = new Camera("camera3D");
+   Camera* camera3D = m_tamy.graphicalFactory().createCamera("camera3D");
    m_sceneManager3D->addNode(camera3D);
 
    Light* light3D = m_tamy.graphicalFactory().createLight("light3D");
@@ -72,7 +76,7 @@ void FontsDemo::initialize()
    light3D->setType(Light::LT_DIRECTIONAL);
    light3D->setDiffuseColor(Color(1, 1, 1, 1));
 
-   VisibleString* string3D = new VisibleString(m_tamy.fontsStorage().get("Curlz"));
+   VisibleString* string3D = new VisibleString(m_fontsStorage.get("Curlz"));
    m_sceneManager3D->addNode(string3D);
    D3DXMatrixTranslation(&(string3D->accessLocalMtx()), 0, 0, 80);
    D3DXMATRIX helperMtx;

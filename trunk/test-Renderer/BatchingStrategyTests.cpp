@@ -1,44 +1,25 @@
 #include "core-TestFramework\TestFramework.h"
-#include "TextureStub.h"
-#include "core-Renderer\Material.h"
-#include "core-Renderer\MaterialStage.h"
-#include "core-Renderer\MaterialOperation.h"
-#include "MaterialOperationImplementationMock.h"
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
-#include "LightReflectingPropertiesStub.h"
 #include "core-Renderer\BatchingStrategy.h"
-#include "TransparencyEnablerStub.h"
-#include "CoordinatesOperationMock.h"
+#include "RenderingTechniqueStub.h"
 
+
+using namespace RegularTests;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(BatchComparator, sortingByMaterials)
 {
-   // prepare the materials
-   TextureStub texture("");
-   MaterialOperationImplementationMock matOpImpl;
-   TransparencyEnablerStub transparencyEnabler;
-
-   Material material1("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
-   Material material2("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
-   material1.addStage(new MaterialStage(texture,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new CoordinatesOperationMock(CC_WRAP)));
-   material2.addStage(new MaterialStage(texture,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new CoordinatesOperationMock(CC_WRAP)));
-
    // create the node we'll use for rendering
-   std::vector<Material*> materials; 
-   materials.push_back(&material1);
-   materials.push_back(&material1);
-   materials.push_back(&material2);
-   materials.push_back(&material1);
-   GraphicalEntityMock entity("entity", materials);
+   RenderingTechniqueStub technique1;
+   RenderingTechniqueStub technique2;
+   std::vector<RenderingTechnique*> techniques; 
+   techniques.push_back(&technique1);
+   techniques.push_back(&technique1);
+   techniques.push_back(&technique2);
+   techniques.push_back(&technique1);
+   GraphicalEntityMock entity("entity", techniques);
 
    GraphicalNode node1("subset0 - material1", false, entity, 0);
    GraphicalNode node2("subset1 - material1", false, entity, 1);

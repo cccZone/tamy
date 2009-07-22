@@ -13,6 +13,7 @@ class GraphicalEntitiesFactory;
 class AbstractGraphicalEntity;
 class Material;
 class GraphicalDataSource;
+class RenderingTechnique;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,11 +29,11 @@ class GraphicalEntityLoader
 {
 private:
    GraphicalEntitiesFactory& m_factory;
-   ResourceStorage<Material>& m_materialsStorage;
+   ResourceStorage<RenderingTechnique>& m_renderingTechniquesStorage;
 
 public:
    GraphicalEntityLoader(GraphicalEntitiesFactory& factory,
-                         ResourceStorage<Material>& materialsStorage);
+                         ResourceStorage<RenderingTechnique>& renderingTechniquesStorage);
 
    /**
     * Creates a mesh based on the data received from the implementation 

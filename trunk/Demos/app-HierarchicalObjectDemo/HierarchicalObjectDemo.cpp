@@ -18,6 +18,9 @@
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core-Renderer\ProjCalc2D.h"
 #include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\TextureRenderingTarget.h"
+#include "core-Renderer\SceneRenderingMechanism.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,19 +45,21 @@ void HierarchicalObjectDemo::initialize()
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager(64, 5000);
    m_sceneManager->addSceneManager(visualSceneManager);
-   m_renderer->addVisualSceneManager(*visualSceneManager);
+   
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
+   sceneRenderer.addVisualSceneManager(*visualSceneManager);
 
    m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_renderer->addRenderingTarget(*m_renderingTarget);
+   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
 
    IWFLoader loader(m_tamy.graphicalFactory(), 
                     m_tamy.meshLoaders(),
                     *m_sceneManager, 
                     m_entitiesStorage,
-                    m_materialsStorage);
+                    m_renderingTechniquesStorage);
    loader.load("..\\Data\\Space_Scene.iwf");
 
-   Camera* camera = new Camera("camera");
+   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
    m_sceneManager->addNode(camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 }

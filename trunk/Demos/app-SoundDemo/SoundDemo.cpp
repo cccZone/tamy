@@ -23,6 +23,8 @@
 #include "core-Sound\SoundSceneManager.h"
 #include "core-Sound\Sound3D.h"
 #include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\SceneRenderingMechanism.h"
+#include "core-Renderer\SettableRenderingTargetsPolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,10 +50,12 @@ void SoundDemo::initialize()
    m_sceneManager->addSceneManager(visualSceneManager);
    m_sceneManager->addSceneManager(m_audioSoundScene);
 
-   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_renderer->addRenderingTarget(*m_renderingTarget);
+   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
+   sceneRenderer.addVisualSceneManager(*visualSceneManager);
 
-   m_renderer->addVisualSceneManager(*visualSceneManager);
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
+
    m_tamy.soundRenderer().addSoundScene(*m_audioSoundScene);
 
    Light* light = m_tamy.graphicalFactory().createLight("light");
@@ -62,7 +66,7 @@ void SoundDemo::initialize()
    m_sceneManager->addNode(light);
 
    // prepare our 'listener'
-   Camera* camera = new Camera("camera");
+   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
    D3DXMatrixTranslation(&(camera->accessLocalMtx()), 0, 10, -20);
    m_cameraController = new UnconstrainedMotionController(*camera);
 
@@ -71,7 +75,7 @@ void SoundDemo::initialize()
    m_sceneManager->addNode(camera);
 
    // prepare tiles that emit sounds
-   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_materialsStorage);
+   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_renderingTechniquesStorage);
    AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
    m_entitiesStorage.add(ent);
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile", false);

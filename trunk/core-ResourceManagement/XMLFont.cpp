@@ -162,7 +162,7 @@ XMLFont::XMLFont(const char* fontDefFile,
 {
    // create material
    Material* material = createMaterial(fontDefFile);
-   m_materialsStorage.add(material);
+   m_renderingTechniquesStorage.add(material);
 
    // create glifs
    unsigned char glifsToParse[] = 
@@ -175,7 +175,7 @@ XMLFont::XMLFont(const char* fontDefFile,
    };
    unsigned int glifsCount = 86;
 
-   GraphicalEntityLoader loader(entitiesFactory, m_materialsStorage);
+   GraphicalEntityLoader loader(entitiesFactory, m_renderingTechniquesStorage);
    unsigned char glifIdx;
    for (unsigned int i = 0; i < glifsCount; ++i)
    {
@@ -270,7 +270,7 @@ float XMLFont::getCharWidth(unsigned char c) const
 
 const Material& XMLFont::getMaterial() const
 {
-   return m_materialsStorage.get("material");
+   return dynamic_cast<const Material&> (m_renderingTechniquesStorage.get("material"));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

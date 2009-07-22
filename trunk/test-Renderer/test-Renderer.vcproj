@@ -172,16 +172,32 @@
 	</References>
 	<Files>
 		<Filter
-			Name="Renderer"
+			Name="Core"
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\CyclicRenderingTargetTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalNodesProcessorTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PostProcessMechanismTests.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\RendererTests.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\RenderingProcessorTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingTechniqueTests.cpp"
 				>
 			</File>
 		</Filter>
@@ -194,6 +210,10 @@
 			</File>
 			<File
 				RelativePath=".\CoordinatesOperationMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphicalEffectMock.cpp"
 				>
 			</File>
 			<File
@@ -241,7 +261,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PostProcessEffectNodeMock.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PostProcessEffectNodeMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\RendererImplementationMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingMechanismMock.h"
 				>
 			</File>
 			<File
@@ -249,7 +281,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RenderingTargetsPolicyMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingTechniqueStub.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingTechniqueStub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SceneRenderingMechanismMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinnedGraphicalEntityMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkyBoxMock.cpp"
 				>
 			</File>
 			<File
@@ -257,7 +309,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TextureStub.h"
+				RelativePath=".\StageTextureRendererStub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TextureRenderingTargetMock.h"
 				>
 			</File>
 			<File
@@ -310,18 +366,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="RenderingPasses"
-			>
-			<File
-				RelativePath=".\BackgroundPassTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNodesProcessorTests.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="Materials"
 			>
 			<File
@@ -337,7 +381,15 @@
 			Name="Editors"
 			>
 			<File
-				RelativePath=".\MaterialReplacerTests.cpp"
+				RelativePath=".\RenderingTechniqueReplacerTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Effects"
+			>
+			<File
+				RelativePath=".\GraphicalEffectTests.cpp"
 				>
 			</File>
 		</Filter>

@@ -187,6 +187,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MaterialsFactoryMock.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialsFactoryMock.h"
 				>
 			</File>
@@ -195,7 +199,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\TextureStub.h"
+				RelativePath=".\RendererStub.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingTargetsPolicyMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\StageTextureRendererStub.h"
 				>
 			</File>
 			<File

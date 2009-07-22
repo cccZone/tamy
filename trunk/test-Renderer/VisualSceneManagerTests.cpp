@@ -3,27 +3,24 @@
 #include "core-Renderer\Camera.h"
 #include "SkyBoxMock.h"
 #include "core\MatrixWriter.h"
-#include "TextureStub.h"
-#include "MaterialOperationImplementationMock.h"
-#include "LightReflectingPropertiesStub.h"
-#include "core-Renderer\MaterialStage.h"
-#include "core-Renderer\Material.h"
-#include "core-Renderer\MaterialOperation.h"
 #include "GraphicalEntityMock.h"
 #include "GraphicalNodeMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core\Frustum.h"
-#include "TransparencyEnablerStub.h"
-#include "CoordinatesOperationMock.h"
+#include "RenderingTechniqueStub.h"
+#include "RendererImplementationMock.h"
 
+
+using namespace RegularTests;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(VisualSceneManager, addingCameraAndActiveCamera)
 {
+   RendererImplementationMock renderer;
    VisualSceneManager sceneManager;
-   Camera* camera1 = new Camera("camera1");
-   Camera* camera2 = new Camera("camera2");
+   Camera* camera1 = new Camera("camera1", renderer);
+   Camera* camera2 = new Camera("camera2", renderer);
 
    CPPUNIT_ASSERT_EQUAL(false, sceneManager.hasActiveCamera());
 
@@ -40,8 +37,9 @@ TEST(VisualSceneManager, addingCameraAndActiveCamera)
 
 TEST(VisualSceneManager, removingCameraThatIsSetAsActive)
 {
+   RendererImplementationMock renderer;
    VisualSceneManager sceneManager;
-   Camera camera("camera");
+   Camera camera("camera", renderer);
 
    sceneManager.addNode(&camera);
    CPPUNIT_ASSERT_EQUAL(true, sceneManager.hasActiveCamera());
@@ -54,9 +52,10 @@ TEST(VisualSceneManager, removingCameraThatIsSetAsActive)
 
 TEST(VisualSceneManager, changingActiveCameraReattachesSkyBox)
 {
+   RendererImplementationMock renderer;
    VisualSceneManager sceneManager;
-   Camera* camera1 = new Camera("camera1");
-   Camera* camera2 = new Camera("camera2");
+   Camera* camera1 = new Camera("camera1", renderer);
+   Camera* camera2 = new Camera("camera2", renderer);
    sceneManager.addNode(camera1);
    sceneManager.addNode(camera2);
    SkyBoxMock* skyBox = new SkyBoxMock();
@@ -80,8 +79,9 @@ TEST(VisualSceneManager, changingActiveCameraReattachesSkyBox)
 
 TEST(VisualSceneManager, addingSkyBoxAttachesItToActiveCamera)
 {
+   RendererImplementationMock renderer;
    VisualSceneManager sceneManager;
-   Camera* camera = new Camera("camera");
+   Camera* camera = new Camera("camera", renderer);
    sceneManager.addNode(camera);
 
    SkyBoxMock* skyBox1 = new SkyBoxMock();
@@ -113,30 +113,17 @@ TEST(VisualSceneManager, addingSkyBoxAttachesItToActiveCamera)
 
 TEST(VisualSceneManager, retrievingStaticGeometry)
 {
-   // prepare the materials
-   TextureStub texture("");
-   MaterialOperationImplementationMock matOpImpl;
-   std::list<std::string> results;
-   TransparencyEnablerStub transparencyEnabler;
-
-   Material material1("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
-   Material material2("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
-   material1.addStage(new MaterialStage(texture,
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new CoordinatesOperationMock(CC_WRAP)));
-   material2.addStage(new MaterialStage(texture, 
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new CoordinatesOperationMock(CC_WRAP)));
+   RendererImplementationMock renderer;
 
    // create the node we'll use for rendering
-   std::vector<Material*> materials; 
-   materials.push_back(&material1);
-   materials.push_back(&material1);
-   materials.push_back(&material2);
-   materials.push_back(&material1);
-   GraphicalEntityMock entity("entity", materials);
+   RenderingTechniqueStub technique1;
+   RenderingTechniqueStub technique2;
+   std::vector<RenderingTechnique*> techniques; 
+   techniques.push_back(&technique1);
+   techniques.push_back(&technique1);
+   techniques.push_back(&technique2);
+   techniques.push_back(&technique1);
+   GraphicalEntityMock entity("entity", techniques);
 
    GraphicalNode node1("subset0 - material1", false, entity, 0);
    GraphicalNode node2("subset1 - material1", false, entity, 1);
@@ -148,7 +135,7 @@ TEST(VisualSceneManager, retrievingStaticGeometry)
    D3DXMatrixTranslation(&(node3.accessLocalMtx()), 0, 0, 50);
    D3DXMatrixTranslation(&(node4.accessLocalMtx()), 0, 0, 50);
 
-   Camera cameraNode("camera"); 
+   Camera cameraNode("camera", renderer); 
 
    // add the nodes to the scene
    VisualSceneManager sceneManager;
@@ -205,25 +192,18 @@ TEST(VisualSceneManager, retrievingStaticGeometry)
 
 TEST(VisualSceneManager, dynamicNodesAndOctrees)
 {
-   MaterialOperationImplementationMock matOpImpl;
-   std::list<std::string> results;
-   TextureStub texture(results);
-   TransparencyEnablerStub transparencyEnabler;
-
-   Material material("", new LightReflectingPropertiesStub(results, 0), matOpImpl, matOpImpl, transparencyEnabler);
-   MaterialStage* materialStage = new MaterialStage(texture,
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-      new CoordinatesOperationMock(CC_WRAP));
-   material.addStage(materialStage);
-
    // create the node we'll use for rendering
-   std::vector<Material*> materials; materials.push_back(&material);
-   GraphicalEntityMock entity("entity", materials, results);
+   RendererImplementationMock renderer;
+   std::vector<std::string> results;
+
+   RenderingTechniqueStub technique;
+   std::vector<RenderingTechnique*> techniques; 
+   techniques.push_back(&technique);
+   GraphicalEntityMock entity("entity", techniques, results);
    GraphicalNode node1("node1", true, entity, 0);
    GraphicalNode node2("node2", false, entity, 0);
    GraphicalNode node3("node3", false, entity, 0);
-   Camera cameraNode("camera"); 
+   Camera cameraNode("camera", renderer); 
 
    // add the nodes to the scene
    VisualSceneManager sceneManager(1, 100);

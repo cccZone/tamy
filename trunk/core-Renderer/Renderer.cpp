@@ -1,18 +1,14 @@
 #include "core-Renderer\Renderer.h"
-#include "core-Renderer\Camera.h"
-#include "core-Renderer\Light.h"
-#include "core-Renderer\VisualSceneManager.h"
-#include "core-Renderer\RenderingPass.h"
-#include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\RenderingMechanism.h"
+#include "core-Renderer\RenderingTargetsPolicyProxy.h"
 #include "core\Point.h"
 #include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Renderer::Renderer(unsigned int maxRenderingTargets)
-      : m_renderingTargets(maxRenderingTargets),
-      m_maxRenderingTargets(maxRenderingTargets),
+Renderer::Renderer()
+      : m_globalRenderTargetsPolicy(new RenderingTargetsPolicyProxy()),
       m_viewportWidth(800),
       m_viewportHeight(600),
       m_leftClientArea(0),
@@ -24,23 +20,17 @@ Renderer::Renderer(unsigned int maxRenderingTargets)
       m_deviceLostState(new DeviceLostState()),
       m_currentRendererState(m_initialState) // we always start in the initial state
 {
-   if (m_maxRenderingTargets == 0)
-   {
-      throw std::invalid_argument("Graphics device has to allow for at least one rendering target");
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Renderer::~Renderer()
 {
-   m_sceneManagers.clear();
-
-   for (unsigned int i = 0; i < m_renderingPasses.size(); ++i)
+   for (unsigned int i = 0; i < m_mechanisms.size(); ++i)
    {
-      delete m_renderingPasses[i];
+      delete m_mechanisms[i];
    }
-   m_renderingPasses.clear();
+   m_mechanisms.clear();
 
    m_currentRendererState = NULL;
 
@@ -52,46 +42,38 @@ Renderer::~Renderer()
 
    delete m_deviceLostState;
    m_deviceLostState = NULL;
+
+   delete m_globalRenderTargetsPolicy;
+   m_globalRenderTargetsPolicy = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::addVisualSceneManager(VisualSceneManager& manager)
+RenderingTargetsPolicy& Renderer::getRenderingTargetsPolicy()
 {
-   m_sceneManagers.push_back(&manager);
+   return *m_globalRenderTargetsPolicy;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::removeVisualSceneManager(VisualSceneManager& manager)
+void Renderer::addMechanism(RenderingMechanism* mechanism)
 {
-   unsigned int idx = m_sceneManagers.find(&manager);
-   if (idx != EOA)
+   if (mechanism == NULL)
    {
-      m_sceneManagers.remove(idx);
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Renderer::addRenderingTarget(RenderingTarget& target)
-{
-   if (m_renderingTargets.size() >= m_maxRenderingTargets)
-   {
-      throw std::runtime_error("Too many rendering targets for your graphics device");
+      throw std::invalid_argument("NULL pointer instead a RenderingMechanism instance");
    }
 
-   m_renderingTargets.push_back(&target);
+   m_mechanisms.push_back(mechanism);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::removeRenderingTarget(RenderingTarget& target)
+void Renderer::removeMechanism(RenderingMechanism& mechanism)
 {
-   unsigned int idx = m_renderingTargets.find(&target);
+   unsigned int idx = m_mechanisms.find(&mechanism);
    if (idx != EOA)
    {
-      m_renderingTargets.remove(idx);
+      m_mechanisms.remove(idx);
    }
 }
 
@@ -124,63 +106,29 @@ void Renderer::RenderingState::render(Renderer& renderer)
       renderer.setDeviceLostState();
       return;
    }
+   unsigned int mechanismsCount = renderer.m_mechanisms.size();
+   if (mechanismsCount == 0) {return;}
 
-   // check if there are any rendering passes - none mean that 
-   // we have noting to render with
-   unsigned int passesCount = renderer.m_renderingPasses.size();
-   if (passesCount == 0) {return;}
 
-   // set the rendering targets
-   unsigned int rtsCount = renderer.m_renderingTargets.size();
-   if (rtsCount == 0) {return;}
-   for (unsigned int i = 0; i < rtsCount; ++i)
+   unsigned int targetsUsedCount = 0;
+   for (unsigned int i = 0; i < mechanismsCount; ++i)
    {
-      renderer.m_renderingTargets[i]->use(i);
-   }
+      RenderingMechanism& mechanism = *(renderer.m_mechanisms[i]);
 
-   // begin rendering 
-   renderer.renderingBegin();
+      renderer.m_globalRenderTargetsPolicy->setPolicy(mechanism.getRenderingTargetPolicy());
 
-   unsigned int managersCount = renderer.m_sceneManagers.size();
-   for (unsigned int managerIdx = 0; managerIdx < managersCount; ++managerIdx)
-   {
-      VisualSceneManager& sceneManager = *(renderer.m_sceneManagers[managerIdx]);
-      if (sceneManager.hasActiveCamera() == false) {continue;}
-
-      Camera& activeCamera = sceneManager.getActiveCamera();
-
-      // set the lights
-      UINT maxLights = renderer.getMaxLightsCount();
-      const std::list<Light*>& lights = sceneManager.getLights(maxLights);
-      for (std::list<Light*>::const_iterator it = lights.begin(); 
-           it != lights.end(); ++it)
-      {
-         (*it)->enable(true);
-      }
-
-      activeCamera.setNearPlaneDimensions((float)(renderer.m_viewportWidth), 
-                                          (float)(renderer.m_viewportHeight));
-      // set the camera
-      const D3DXMATRIX& viewMtx = activeCamera.getViewMtx();
-      const D3DXMATRIX& camMtx = activeCamera.getGlobalMtx();
-      D3DXVECTOR3 cameraPos(camMtx._41, camMtx._42, camMtx ._43);
-
-      renderer.setViewMatrix(viewMtx);
-      renderer.setProjectionMatrix(activeCamera.getProjectionMtx());
-
+      // clean all the rendering targets of this policy
+      unsigned int passesCount = renderer.m_globalRenderTargetsPolicy->getDefinedPassesCount();
       for (unsigned int passIdx = 0; passIdx < passesCount; ++passIdx)
       {
-         (*renderer.m_renderingPasses[passIdx])(sceneManager, renderer);
+         targetsUsedCount = renderer.m_globalRenderTargetsPolicy->setTargets(passIdx);
+         renderer.cleanAllTargets(targetsUsedCount);
       }
 
-      // turn the lights off
-      for (std::list<Light*>::const_iterator it = lights.begin(); it != lights.end(); ++it)
-      {
-         (*it)->enable(false);
-      }
+      renderer.renderingBegin();
+      mechanism.render();
+      renderer.renderingEnd();
    }
-
-   renderer.renderingEnd();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -228,17 +176,8 @@ void Renderer::resizeViewport(unsigned int width, unsigned int height,
    m_bottomClientArea = bottomClientArea;
 
    resetViewport(m_viewportWidth, m_viewportHeight);
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-void Renderer::addPass(RenderingPass* pass)
-{
-   if (pass == NULL)
-   {
-      throw std::invalid_argument("NULL pointer instead a RenderingPass instance");
-   }
-   m_renderingPasses.push_back(pass);
+   notify(RO_RESIZE_VIEWPORT);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

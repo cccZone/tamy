@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTechnique.h"
 #include "core\ResourceStorage.h"
 
 
@@ -26,7 +26,7 @@ private:
 
 public:
    MaterialsParser(GraphicalEntitiesFactory& factory, 
-                   ResourceStorage<Material>& matStorage);
+                   ResourceStorage<RenderingTechnique>& storage);
    ~MaterialsParser();
 
    void load(const std::string& fileName);

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core-AppFlow\Application.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTechnique.h"
 #include "core\ResourceStorage.h"
 
 
@@ -32,7 +32,7 @@ private:
 
    bool m_rotating;
 
-   ResourceStorage<Material> m_materialsStorage;
+   ResourceStorage<RenderingTechnique> m_renderingTechniquesStorage;
 
 public:
    TreesGeneratorDemo(Tamy& tamy);

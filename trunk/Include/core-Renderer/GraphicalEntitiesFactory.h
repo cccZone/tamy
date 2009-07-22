@@ -30,6 +30,14 @@ struct MeshDefinition;
 struct LitVertex;
 class RenderingTarget;
 class TextureRenderingTarget;
+class RenderingTechnique;
+class GraphicalEffect;
+class EffectDataSource;
+class AbstractGraphicalNode;
+class Renderer;
+class Camera;
+class PostProcessEffectNode;
+class RenderingTargetsPolicy;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -41,30 +49,38 @@ class GraphicalEntitiesFactory
 {
 private:
    std::string m_texturesPath;
-
+   Renderer& m_renderer;
    ResourceStorage<Texture> m_textures;
 
 public:
    virtual ~GraphicalEntitiesFactory();
 
+   Camera* createCamera(const std::string& name);
+
+   /**
+    * Returns an instance of the built in textures storage
+    */
+   ResourceStorage<Texture>& getTexturesStorage() {return m_textures;}
+
+   Texture* createTexture(const std::string& name);
+
    virtual GraphicalEntity* createGraphicalEntity(const std::string& name,
                                                   const std::vector<LitVertex>& vertices,
                                                   const std::list<Face<USHORT> >& faces,
-                                                  const std::vector<Material*>& registeredMaterials) = 0;
+                                                  const std::vector<RenderingTechnique*>& techniques) = 0;
 
    virtual SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                                 const std::vector<LitVertex>& vertices,
                                                                 const std::list<Face<USHORT> >& faces,
                                                                 const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                                 const std::vector<SkinBoneDefinition>& skinBones,
-                                                                const std::vector<Material*>& registeredMaterials) = 0;
-
+                                                                const std::vector<RenderingTechnique*>& techniques) = 0;
 
    virtual Light* createLight(const std::string& name) = 0;
 
-   SkyBox* createSkyBox(Material& front, Material& back,
-                        Material& left, Material& right,
-                        Material& top, Material& bottom);
+   SkyBox* createSkyBox(Texture& front, Texture& back,
+                        Texture& left, Texture& right,
+                        Texture& top, Texture& bottom);
 
    virtual LightReflectingProperties* createLightReflectingProperties() = 0;
 
@@ -83,13 +99,20 @@ public:
 
    virtual RenderingTarget* createDefaultRenderingTarget() = 0;
 
-   virtual TextureRenderingTarget* createTextureRenderingTarget(const std::string& name,
-                                                                unsigned int width,
-                                                                unsigned int height,
-                                                                unsigned int mipLevels) = 0;
+   virtual TextureRenderingTarget* createTextureRenderingTarget(const std::string& name) = 0;
+
+   /** 
+    * This method creates a quad that can be used to render a full screen texture on.
+    */
+   virtual PostProcessEffectNode* createPostProcessEffectNode(const std::string& name, 
+                                                              RenderingTechnique& technique) = 0;
+
+   GraphicalEffect* createEffect(const std::string& name, 
+                                 bool isTransparent,
+                                 EffectDataSource* dataSource);
 
 protected:
-   GraphicalEntitiesFactory(const std::string& texturesPath);
+   GraphicalEntitiesFactory(const std::string& texturesPath, Renderer& renderer);
 
    virtual SkyBox* createSkyBox() = 0;
 
@@ -102,7 +125,13 @@ protected:
                                               CoordsOpCode coordsOperation) = 0;
 
    virtual Material* createMaterialImpl(const std::string& name,
+                                        RenderingTargetsPolicy& policy,
                                         LightReflectingProperties* lrp) = 0;
+
+   virtual GraphicalEffect* createEffectImpl(const std::string& name, 
+                                             RenderingTargetsPolicy& policy,
+                                             bool isTransparent,
+                                             EffectDataSource* dataSource) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

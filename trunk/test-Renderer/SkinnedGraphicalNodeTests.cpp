@@ -1,8 +1,6 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\Material.h"
-#include "LightReflectingPropertiesStub.h"
-#include "TextureStub.h"
 #include "core\MatrixWriter.h"
 #include "GraphicalEntityMock.h"
 #include "SkinnedGraphicalEntityMock.h"
@@ -19,8 +17,8 @@ TEST(SkinnedGraphicalNode, basics)
    std::vector<SkinBoneDefinition> skinBonesStub;
    std::vector<BonesInfluenceDefinition> boneSetsStub;
    boneSetsStub.push_back(std::vector<std::string>());
-   std::vector<Material*> materialsStub;
-   materialsStub.push_back(reinterpret_cast<Material*> (NULL));
+   std::vector<RenderingTechnique*> techniquesStub;
+   techniquesStub.push_back(reinterpret_cast<RenderingTechnique*> (NULL));
 
    D3DXMATRIX pelvisOffsetMtx; D3DXMatrixIdentity(&pelvisOffsetMtx);
    D3DXMATRIX kneeOffsetMtx; D3DXMatrixTranslation(&kneeOffsetMtx, 5, 10, 0);
@@ -34,7 +32,7 @@ TEST(SkinnedGraphicalNode, basics)
    bones.push_back(std::make_pair(&pelvis, pelvisOffsetMtx));
    bones.push_back(std::make_pair(&knee, kneeOffsetMtx));
 
-   SkinnedGraphicalEntityMock entity("legSkin", skinBonesStub, boneSetsStub, materialsStub);
+   SkinnedGraphicalEntityMock entity("legSkin", skinBonesStub, boneSetsStub, techniquesStub);
    SkinnedGraphicalNode skin("legSkin", false, entity, 0, bones);
 
    // prepare results

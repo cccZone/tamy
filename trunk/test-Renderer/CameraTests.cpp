@@ -1,11 +1,6 @@
 #include "core-TestFramework\TestFramework.h"
+#include "SceneRenderingMechanismMock.h"
 #include "RendererImplementationMock.h"
-#include "core-Renderer\Material.h"
-#include "core-Renderer\MaterialStage.h"
-#include "core-Renderer\MaterialOperation.h"
-#include "MaterialOperationImplementationMock.h"
-#include "TextureStub.h"
-#include "LightReflectingPropertiesStub.h"
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\Camera.h"
@@ -15,17 +10,21 @@
 #include "core\BoundingSphere.h"
 #include "core\CollisionTests.h"
 #include "core\Ray.h"
-#include "TransparencyEnablerStub.h"
-#include "CoordinatesOperationMock.h"
+#include "RenderingTechniqueStub.h"
+#include "RendererImplementationMock.h"
 
+
+using namespace RegularTests;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(Camera, renderingWithActiveCamera)
 {
    RendererImplementationMock renderer;
-   Camera camera1("camera1");
-   Camera camera2("camera2");
+
+   SceneRenderingMechanismMock renderingMechanism;
+   Camera camera1("camera1", renderer);
+   Camera camera2("camera2", renderer);
 
    D3DXMATRIX camera1Mtx = camera1.getLocalMtx();
    camera1Mtx._41 = 5;
@@ -34,30 +33,22 @@ TEST(Camera, renderingWithActiveCamera)
    D3DXMATRIX camera2Mtx = camera2.getLocalMtx();
    camera2Mtx._41 = 10;
    camera2.setLocalMtx(camera2Mtx);
-  
-   TextureStub tex("");
-   MaterialOperationImplementationMock matOpImpl;
-   TransparencyEnablerStub transparencyEnabler;
 
-   Material mat("", new LightReflectingPropertiesStub(), matOpImpl, matOpImpl, transparencyEnabler);
-   mat.addStage(new MaterialStage(tex,
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new MaterialOperation(matOpImpl, MOP_DISABLE, SC_NONE, SC_NONE),
-         new CoordinatesOperationMock(CC_WRAP)));
-
-   std::vector<Material*> materials; materials.push_back(&mat);
-   GraphicalEntityMock entity("", materials);
+   RenderingTechniqueStub technique;
+   std::vector<RenderingTechnique*> techniques; 
+   techniques.push_back(&technique);
+   GraphicalEntityMock entity("", techniques);
    GraphicalNode* node = new GraphicalNode("", false, entity, 0);
 
    VisualSceneManager sceneManager;
-   renderer.addVisualSceneManager(sceneManager);
+   renderingMechanism.addVisualSceneManager(sceneManager);
    sceneManager.setActiveCamera(camera1);
    sceneManager.addNode(node);
 
-   renderer.render();     
+   renderingMechanism.render();     
 
    D3DXMatrixInverse(&camera1Mtx, NULL, &camera1Mtx);
-   D3DXMATRIX viewMtx = renderer.getViewMatrixSet();
+   D3DXMATRIX viewMtx = renderingMechanism.getViewMatrixSet();
    for (int col = 0; col < 4; col++)
    {
       for (int row = 0; row < 4; row++)
@@ -68,70 +59,73 @@ TEST(Camera, renderingWithActiveCamera)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
+/*
 TEST(Camera, settingAspectRatioOfCurrentViewportDuringRendering)
 {
-   RendererImplementationMock renderer;
-   Camera camera("camera");
+RendererImplementationMock renderer;
+RendererImplementationMock renderingMechanism;
+Camera camera("camera", renderer);
 
-   VisualSceneManager sceneManager;
-   renderer.addVisualSceneManager(sceneManager);
-   sceneManager.setActiveCamera(camera);
+VisualSceneManager sceneManager;
+renderingMechanism.addVisualSceneManager(sceneManager);
+sceneManager.setActiveCamera(camera);
 
-   // we resized the viewport
-   renderer.resizeViewport(100, 50, 0, 0, 800, 600);
+// we resized the viewport
+renderingMechanism.resizeViewport(100, 50, 0, 0, 800, 600);
 
-   // camera's not attached yet - there's the default aspect ratio there
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.333f, camera.getAspectRatio(), 0.01);
+// camera's not attached yet - there's the default aspect ratio there
+CPPUNIT_ASSERT_DOUBLES_EQUAL(1.333f, camera.getAspectRatio(), 0.01);
 
-   // no we set the camera as an active one
-   renderer.render();
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(2, camera.getAspectRatio(), 0.01);
+// no we set the camera as an active one
+renderingMechanism.render();
+CPPUNIT_ASSERT_DOUBLES_EQUAL(2, camera.getAspectRatio(), 0.01);
 }
-
+// TODO: PRZYWROCIC !!!!!!
+*/
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(Camera, frustrumCreation)
 {
-  Camera camera("camera");
-  camera.setNearPlaneDimensions(10, 10);
-  camera.setClippingPlanes(10, 100);
-  camera.setFOV(90);
+   RendererImplementationMock renderer;
+   Camera camera("camera", renderer);
+   camera.setNearPlaneDimensions(10, 10);
+   camera.setClippingPlanes(10, 100);
+   camera.setFOV(90);
 
-  Frustum frustrum = camera.getFrustum();
+   Frustum frustrum = camera.getFrustum();
 
-  CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, -2), 1)));
-  CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 8), 1)));
-  CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 102), 1)));
-  CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 0), 1)));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, -2), 1)));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 8), 1)));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 102), 1)));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 0), 1)));
 
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 100), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 8), 2)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 10), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 100), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 50), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-20, 0, 50), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(20, 0, 50), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, -20, 50), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 20, 50), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 100), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 8), 2)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 10), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 100), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 0, 50), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-20, 0, 50), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(20, 0, 50), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, -20, 50), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(0, 20, 50), 1)));
 
-  // camera rotated
-  D3DXMatrixRotationY(&(camera.accessLocalMtx()), D3DXToRadian(90));
+   // camera rotated
+   D3DXMatrixRotationY(&(camera.accessLocalMtx()), D3DXToRadian(90));
 
-  frustrum = camera.getFrustum();
+   frustrum = camera.getFrustum();
 
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(10, 0, 0), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(100, 0, 0), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(50, 0, 0), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(10, 0, 0), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(100, 0, 0), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(50, 0, 0), 1)));
 
-  // camera rotated
-  D3DXMatrixRotationY(&(camera.accessLocalMtx()), D3DXToRadian(-90));
+   // camera rotated
+   D3DXMatrixRotationY(&(camera.accessLocalMtx()), D3DXToRadian(-90));
 
-  frustrum = camera.getFrustum();
+   frustrum = camera.getFrustum();
 
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-10, 0, 0), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-100, 0, 0), 1)));
-  CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-50, 0, 0), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-10, 0, 0), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-100, 0, 0), 1)));
+   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(D3DXVECTOR3(-50, 0, 0), 1)));
 
 }
 
@@ -139,7 +133,8 @@ TEST(Camera, frustrumCreation)
 
 TEST(Camera, createRay)
 {
-   Camera camera("camera");
+   RendererImplementationMock renderer;
+   Camera camera("camera", renderer);
    Frustum frustum = camera.getFrustum();
    D3DXVECTOR3 expectedNormal;
    D3DXVECTOR3 nox(-1, 0, 0);

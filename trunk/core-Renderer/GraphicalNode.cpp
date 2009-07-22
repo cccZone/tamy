@@ -8,7 +8,7 @@ GraphicalNode::GraphicalNode(const std::string& name,
                              bool dynamic, 
                              GraphicalEntity& entity, 
                              DWORD subset)
-      : AbstractGraphicalNode(name, dynamic, entity.getMaterial(subset), subset),
+      : AbstractGraphicalNode(name, dynamic, entity.getTechnique(subset), subset),
       m_entity(entity)
 {
 }

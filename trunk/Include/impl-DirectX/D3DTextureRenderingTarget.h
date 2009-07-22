@@ -24,28 +24,22 @@ class D3DTextureRenderingTarget : public TextureRenderingTarget,
                                   public Observer<D3DRenderer, D3DGraphResourceOp>
 {
 private:
-   unsigned int m_width;
-   unsigned int m_height;
-   unsigned int m_mipLevels;
-
    IDirect3DDevice9& m_d3Device;
    D3DRenderer& m_renderer;
+   TTextureImpl<IDirect3DTexture9>* m_texImpl;
 
    IDirect3DTexture9* m_texture;
    IDirect3DSurface9* m_surface;
 
 public:
    D3DTextureRenderingTarget(const std::string& name,
-                             unsigned int width,
-                             unsigned int height,
-                             unsigned int mipLevels,
                              IDirect3DDevice9& d3Device, 
                              D3DRenderer& renderer);
    ~D3DTextureRenderingTarget();
 
-   void use(unsigned char idx);
+   TextureImpl& getImpl();
 
-   void setForRendering(unsigned char stageIdx);
+   void use(unsigned char idx);
 
    void update(D3DRenderer& renderer);
 
@@ -53,7 +47,7 @@ public:
 
 private:
    void releaseTexture();
-   void createTexture();
+   void createTexture(D3DRenderer& renderer);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
