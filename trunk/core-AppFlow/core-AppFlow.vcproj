@@ -202,6 +202,10 @@
 				RelativePath="..\Include\core-AppFlow\TimeDependent.h"
 				>
 			</File>
+			<File
+				RelativePath="..\Include\core-AppFlow\TimeEvent.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

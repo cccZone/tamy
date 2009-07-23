@@ -1,14 +1,14 @@
 #include "core-AppFlow\TimeControllerTrack.h"
 #include "core-AppFlow\TimeDependent.h"
 #include <stdexcept>
+#include <algorithm>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TimeControllerTrack::TimeControllerTrack(const std::string& id)
       : m_id(id),
-      m_multiplierDuration(0),
-      m_multiplier(1),
+      m_speed(1),
       m_updateFreq(0),
       m_timeline(0),
       m_lastUpdate(0),
@@ -25,7 +25,15 @@ TimeControllerTrack::~TimeControllerTrack()
    {
       delete m_objects[i];
    }
+
+   for (std::vector<Event*>::iterator it = m_events.begin();
+        it != m_events.end(); ++it)
+   {
+      delete *it;
+   }
+   m_events.clear();
 }
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void TimeControllerTrack::add(TimeDependent* object)
@@ -40,13 +48,54 @@ void TimeControllerTrack::add(TimeDependent* object)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TimeControllerTrack::setMultiplier(float multiplier, float duration)
+void TimeControllerTrack::setEvent(float time, TimeEvent* e)
 {
-   if (duration < 0) {duration = 0;}
+   m_events.push_back(new Event(e, m_timeline + time));
+   std::sort(m_events.begin(), m_events.end(), m_eventComparator);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TimeControllerTrack::removeFirstEvent(const std::string& id)
+{
+   for (std::vector<Event*>::iterator it = m_events.begin();
+        it != m_events.end(); ++it)
+   {
+      if ((*it)->action->getID() == id)
+      {
+         delete *it;
+         m_events.erase(it);
+         break;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TimeControllerTrack::removeAllEvents(const std::string& id)
+{
+   for (std::vector<Event*>::iterator it = m_events.begin();
+        it != m_events.end();)
+   {
+      if ((*it)->action->getID() == id)
+      {
+         delete *it;
+         it = m_events.erase(it);
+      }
+      else
+      {
+          ++it;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TimeControllerTrack::setSpeed(float multiplier)
+{
    if (multiplier < 0) {multiplier = 0;}
 
-   m_multiplierDuration = duration;
-   m_multiplier = multiplier;
+   m_speed = multiplier;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,18 +134,23 @@ void TimeControllerTrack::update(float timeElapsed)
       return;
    }
 
-   // change the speed of time according to the speed of the track
-   if (m_multiplierDuration > 0)
+   // execute all events times for which has come
+   Event* currEvent = NULL;
+   std::vector<Event*>::iterator eventIt = m_events.begin();
+   while ((m_events.size() > 0) && ((currEvent = *eventIt)->time <= m_timeline))
    {
-      m_multiplierDuration -= timeElapsed;
-      timeElapsed *= m_multiplier;
+      eventIt = m_events.erase(eventIt);
+      currEvent->action->execute();
+      delete currEvent;
    }
 
+
    // update the objects on the track
+   float timeForObjects = timeElapsed * m_speed;
    unsigned int count = m_objects.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      m_objects[i]->update(timeElapsed);
+      m_objects[i]->update(timeForObjects);
    }
 }
 
@@ -104,8 +158,14 @@ void TimeControllerTrack::update(float timeElapsed)
 
 void TimeControllerTrack::reset()
 {
-   m_multiplierDuration = 0;
-   m_multiplier = 1;
+   m_speed = 1;
+
+   for (std::vector<Event*>::iterator it = m_events.begin();
+        it != m_events.end(); ++it)
+   {
+      delete *it;
+   }
+   m_events.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -197,6 +197,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SpeedChangeEventMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\UpdatableMock.h"
 				>
 			</File>
