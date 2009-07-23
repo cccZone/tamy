@@ -36,7 +36,7 @@ public:
 
    ParticleSystem* createParticleSystem(const std::string& name, 
                                         bool isDynamic, 
-                                        Material& material,
+                                        RenderingTechnique& renderingTechnique,
                                         unsigned int particlesCount);
 
    RenderingTarget* createDefaultRenderingTarget();

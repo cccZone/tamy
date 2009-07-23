@@ -94,7 +94,7 @@ public:
 
    virtual ParticleSystem* createParticleSystem(const std::string& name, 
                                                 bool isDynamic, 
-                                                Material& material,
+                                                RenderingTechnique& renderingTechnique,
                                                 unsigned int particlesCount) = 0;
 
    virtual RenderingTarget* createDefaultRenderingTarget() = 0;

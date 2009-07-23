@@ -231,7 +231,7 @@ Texture* D3DGraphicalEntitiesFactory::loadTexture(const std::string& path, const
 
 Texture* D3DGraphicalEntitiesFactory::createEmptyTexture()
 {
-   return new ManagedTexture("",  new TTextureImpl<IDirect3DTexture9>());
+   return new ManagedTexture("", new TTextureImpl<IDirect3DTexture9>());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -265,11 +265,11 @@ Material* D3DGraphicalEntitiesFactory::createMaterialImpl(
 ParticleSystem* D3DGraphicalEntitiesFactory::createParticleSystem(
                                               const std::string& name, 
                                               bool isDynamic, 
-                                              Material& material,
+                                              RenderingTechnique& renderingTechnique,
                                               unsigned int particlesCount)
 {
    return new D3DParticleSystem(m_d3Device,
-                                name, isDynamic, material, particlesCount);
+                                name, isDynamic, renderingTechnique, particlesCount);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

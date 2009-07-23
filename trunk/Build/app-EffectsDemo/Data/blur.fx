@@ -48,6 +48,7 @@ sampler SamplerPrev3 = sampler_state
     MagFilter = LINEAR;
 };
 
+
 ///////////////////////////////////////////////////////////////////////////////
 // Vertex Definitions
 ///////////////////////////////////////////////////////////////////////////////
@@ -77,26 +78,26 @@ PS_OUTPUT blurPS( VS_OUTPUT IN )
    OUT.color = tex2D(SamplerNow, texCoord) * 0.5;
    OUT.color.a = 0.8;
    
-   texCoord.x = 0.5 + (texCoord.x - 0.5) * 0.99;
-   texCoord.y = 0.5 + (texCoord.y - 0.5) * 0.99;
+   texCoord.x = 0.5 + (texCoord.x - 0.5);
+   texCoord.y = 0.5 + (texCoord.y - 0.5);
    col = tex2D(SamplerPrev0, texCoord) * 0.2;
    col.a = 0.6;
    OUT.color += col;
    
-   texCoord.x = 0.5 + (texCoord.x - 0.5) * 0.96;
-   texCoord.y = 0.5 + (texCoord.y - 0.5) * 0.96;
+   texCoord.x = 0.5 + (texCoord.x - 0.5);
+   texCoord.y = 0.5 + (texCoord.y - 0.5);
    col = tex2D(SamplerPrev1, texCoord) * 0.2;
    col.a = 0.4;
    OUT.color += col;
    
-   texCoord.x = 0.5 + (texCoord.x - 0.5) * 0.90;
-   texCoord.y = 0.5 + (texCoord.y - 0.5) * 0.90;
+   texCoord.x = 0.5 + (texCoord.x - 0.5);
+   texCoord.y = 0.5 + (texCoord.y - 0.5);
    col = tex2D(SamplerPrev2, texCoord) * 0.2;
    col.a = 0.2;
    OUT.color += col;
    
-   texCoord.x = 0.5 + (texCoord.x - 0.5) * 0.85;
-   texCoord.y = 0.5 + (texCoord.y - 0.5) * 0.85;
+   texCoord.x = 0.5 + (texCoord.x - 0.5);
+   texCoord.y = 0.5 + (texCoord.y - 0.5);
    col = tex2D(SamplerPrev3, texCoord) * 0.5;
    col.a = 0.1;
    OUT.color += col;

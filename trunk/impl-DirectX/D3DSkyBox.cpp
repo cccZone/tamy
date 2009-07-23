@@ -17,9 +17,6 @@ D3DSkyBox::D3DSkyBox(StageTextureRenderer& textureRenderer,
       m_d3Device(d3Device),
       m_vb(vb)
 {
-   m_d3Device.AddRef();
-   m_vb->AddRef();
-
    D3DXMatrixIdentity(&m_cameraWorldMtx);
 }
 
@@ -29,8 +26,6 @@ D3DSkyBox::~D3DSkyBox()
 {
    m_vb->Release();
    m_vb = NULL;
-
-   m_d3Device.Release();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -7,7 +7,6 @@ D3DLightReflectingProperties::D3DLightReflectingProperties(IDirect3DDevice9& d3D
       : m_d3Device(d3Device),
       m_diffuse(0, 0, 0, 0)
 {
-   m_d3Device.AddRef();
    ZeroMemory(&m_material, sizeof(D3DMATERIAL9));
 }
 
@@ -24,7 +23,6 @@ D3DLightReflectingProperties::D3DLightReflectingProperties(const D3DLightReflect
 
 D3DLightReflectingProperties::~D3DLightReflectingProperties()
 {
-   m_d3Device.Release();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
