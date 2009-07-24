@@ -11,16 +11,16 @@ struct WindowParams
 {
    char windowTitle[MAX_LOADSTRING];
    char windowClassName[MAX_LOADSTRING];
-   UINT largeIconID;
-   UINT smallIconID;
+   HICON largeIcon;
+   HICON smallIcon;
    UINT menuID;
    UINT width;
    UINT height;
    IWindowMessagesProcessor* ptrMsgProc;
 
    WindowParams()
-      : largeIconID(-1),
-      smallIconID(-1),
+      : largeIcon(NULL),
+      smallIcon(NULL),
       menuID(-1),
       width(800),
       height(600),

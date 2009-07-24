@@ -39,7 +39,9 @@ public:
    D3DApplicationManager(HINSTANCE hInstance, 
                          int nCmdShow, 
                          const std::string& programName,
-                         Tamy& tamy);
+                         Tamy& tamy,
+                         HICON largeIcon = NULL,
+                         HICON smallIcon = NULL);
    ~D3DApplicationManager();
 
    HWND getWnd() const {return m_hWnd;}

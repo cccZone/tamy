@@ -13,7 +13,9 @@
 D3DApplicationManager::D3DApplicationManager(HINSTANCE hInstance, 
                                              int nCmdShow,
                                              const std::string& programName,
-                                             Tamy& tamy)
+                                             Tamy& tamy,
+                                             HICON largeIcon,
+                                             HICON smallIcon)
       : m_hInstance(hInstance),
       m_programName(programName),
       m_tamy(tamy),
@@ -32,6 +34,8 @@ D3DApplicationManager::D3DApplicationManager(HINSTANCE hInstance,
    WindowParams params;
    strcpy_s(params.windowTitle, programName.c_str());
    strcpy_s(params.windowClassName, (programName + std::string("Class")).c_str());
+   params.largeIcon = largeIcon;
+   params.smallIcon = smallIcon;
    params.ptrMsgProc = this;
    params.width = 1024;
    params.height = 768;

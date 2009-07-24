@@ -46,12 +46,12 @@ HWND CWindowBuilder::createWindowedModeWindow(HINSTANCE hInstance,
    wcex.cbClsExtra		= 0;
    wcex.cbWndExtra		= 0;
    wcex.hInstance		   = hInstance;
-   wcex.hIcon			   = (windowParams.largeIconID >= 0) ? LoadIcon(hInstance, MAKEINTRESOURCE(windowParams.largeIconID)) : NULL;
+   wcex.hIcon			   = windowParams.largeIcon;
    wcex.hCursor		   = LoadCursor(NULL, IDC_ARROW);
    wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
    wcex.lpszMenuName	   = (windowParams.menuID >= 0) ? MAKEINTRESOURCE(windowParams.menuID) : NULL;
    wcex.lpszClassName	= windowParams.windowClassName;
-   wcex.hIconSm		   = (windowParams.smallIconID >= 0) ? LoadIcon(hInstance, MAKEINTRESOURCE(windowParams.smallIconID)) : NULL;
+   wcex.hIconSm		   = windowParams.smallIcon;
    RegisterClassEx(&wcex);
 
    HWND hWnd = CreateWindowEx(0, windowParams.windowClassName, windowParams.windowTitle, 
