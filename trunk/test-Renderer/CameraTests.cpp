@@ -59,30 +59,6 @@ TEST(Camera, renderingWithActiveCamera)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/*
-TEST(Camera, settingAspectRatioOfCurrentViewportDuringRendering)
-{
-RendererImplementationMock renderer;
-RendererImplementationMock renderingMechanism;
-Camera camera("camera", renderer);
-
-VisualSceneManager sceneManager;
-renderingMechanism.addVisualSceneManager(sceneManager);
-sceneManager.setActiveCamera(camera);
-
-// we resized the viewport
-renderingMechanism.resizeViewport(100, 50, 0, 0, 800, 600);
-
-// camera's not attached yet - there's the default aspect ratio there
-CPPUNIT_ASSERT_DOUBLES_EQUAL(1.333f, camera.getAspectRatio(), 0.01);
-
-// no we set the camera as an active one
-renderingMechanism.render();
-CPPUNIT_ASSERT_DOUBLES_EQUAL(2, camera.getAspectRatio(), 0.01);
-}
-// TODO: PRZYWROCIC !!!!!!
-*/
-///////////////////////////////////////////////////////////////////////////////
 
 TEST(Camera, frustrumCreation)
 {

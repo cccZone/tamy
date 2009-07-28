@@ -2,6 +2,7 @@
 #include "ApplicationManagerMock.h"
 #include "ApplicationMock.h"
 #include "core-AppFlow\Application.h"
+#include "core\MatrixWriter.h"
 #include <windows.h>
 
 
@@ -351,37 +352,6 @@ TEST(ApplicationManager, reinitializingFinishedApp)
    CPPUNIT_ASSERT_EQUAL(false, menu.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, menu.getTimeElapsed());
    CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(ApplicationManager, userInput)
-{
-   ApplicationManagerMock manager;
-   ApplicationMock app("app");
-   manager.addApplication(app);
-   manager.setEntryApplication("app");
-
-   manager.keyDown(VK_UP);
-   manager.step();
-   CPPUNIT_ASSERT_EQUAL(true, app.isKeyPressed(VK_UP));
-   CPPUNIT_ASSERT_EQUAL(false, app.isKeyPressed(VK_DOWN));
-   CPPUNIT_ASSERT_EQUAL(false, app.isKeyPressed(VK_LEFT));
-
-   manager.keyDown(VK_LEFT);
-   manager.keyDown(VK_DOWN);
-   manager.step();
-   CPPUNIT_ASSERT_EQUAL(false, app.isKeyPressed(VK_UP));
-   CPPUNIT_ASSERT_EQUAL(true, app.isKeyPressed(VK_DOWN));
-   CPPUNIT_ASSERT_EQUAL(true, app.isKeyPressed(VK_LEFT));
-
-   manager.mouseMove(Point(500, 600));
-   manager.step();
-   CPPUNIT_ASSERT_EQUAL(Point(500, 600), app.getMousePos());
-
-   manager.mouseMove(Point(505, 610));
-   manager.step();
-   CPPUNIT_ASSERT_EQUAL(Point(505, 610), app.getMousePos());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

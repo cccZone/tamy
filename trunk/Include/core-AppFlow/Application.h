@@ -8,6 +8,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class UserInputController;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * An implementation of this class represents a single 'app'
  * that can be run by the flow framework.
@@ -27,7 +31,7 @@ private:
    std::string m_name;
    ExecutionContext* m_context;
    TimeController* m_timeController;
-  
+
 public:
    virtual ~Application();
 

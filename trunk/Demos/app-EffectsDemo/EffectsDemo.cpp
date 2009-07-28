@@ -1,7 +1,8 @@
 #include "EffectsDemo.h"
-#include "impl-DirectX\D3DApplicationManager.h"
-#include "impl-DirectX\Tamy.h"
+#include "tamy\Tamy.h"
 #include "core-AppFlow\ExecutionContext.h"
+#include "core-AppFlow\UserInputController.h"
+#include "core-AppFlow\ApplicationManager.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
@@ -25,7 +26,6 @@
 #include "core-Renderer\ChangableTexture.h"
 #include "core\dostream.h"
 
-
 // effect data sources
 #include "OldTVDataSource.h"
 #include "WavyImageDataSource.h"
@@ -46,13 +46,16 @@ void RenderingUpdator::update(float timeElapsed)
 EffectsDemo::EffectsDemo(Tamy& tamy)
       : Application("Demo"),
       m_tamy(tamy),
-      m_renderer(&(tamy.renderer())),
+      m_renderer(&(m_tamy.renderer())),
+      m_sceneRenderer(NULL),
+      m_sceneRenderingTargetPolicy(NULL),
       m_mainRendererOutput(NULL),
       m_screenBuffer(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL),
       m_animationController(NULL),
       m_renderingUpdator(NULL),
+      m_uiController(&(m_tamy.uiController())),
       m_currEffect(NULL),
       m_nextEffectIdx(0),
       m_timeSinceLastSwitch(0)
@@ -73,8 +76,11 @@ void EffectsDemo::initialize()
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
 
-   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
-   sceneRenderer.addVisualSceneManager(*visualSceneManager);
+   m_sceneRenderingTargetPolicy = new SettableRenderingTargetsPolicy();
+   m_sceneRenderer = m_tamy.createSceneRenderingMechanism(m_sceneRenderingTargetPolicy);
+   m_renderer->addMechanism(m_sceneRenderer);
+
+   m_sceneRenderer->addVisualSceneManager(*visualSceneManager);
 
    IWFLoader loader(m_tamy.graphicalFactory(), 
                     m_tamy.meshLoaders(),
@@ -105,7 +111,7 @@ void EffectsDemo::initialize()
    m_mainRendererOutput->add(m_tamy.graphicalFactory().createTextureRenderingTarget("outputTex3"));
    m_mainRendererOutput->add(m_tamy.graphicalFactory().createTextureRenderingTarget("outputTex4"));
    m_screenBuffer = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_mainRendererOutput);
+   m_sceneRenderingTargetPolicy->addTarget(0, *m_mainRendererOutput);
 
    PostProcessEffectNode* postProcessEffect = NULL;
    SettableRenderingTargetsPolicy* policy = NULL;
@@ -163,6 +169,8 @@ void EffectsDemo::initialize()
 
 void EffectsDemo::deinitialize()
 {
+   m_uiController = NULL;
+
    delete m_renderingUpdator;
    m_renderingUpdator = NULL;
    
@@ -180,46 +188,50 @@ void EffectsDemo::deinitialize()
 
    delete m_sceneManager;
    m_sceneManager = NULL;
+
+   m_sceneRenderingTargetPolicy = NULL;
+   m_sceneRenderer = NULL;
+   m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void EffectsDemo::update(float timeElapsed)
 {
+   m_uiController->update(timeElapsed);
+
    float movementSpeed = 40 * timeElapsed;
-   float rotationSpeed = 180 * timeElapsed;
+   float rotationSpeed = 0.1f * timeElapsed;
 
 
    // process the keys
-   if (context().isKeyPressed(VK_ESCAPE))    {context().signal(*this, ON_EXIT);}
-   if (context().isKeyPressed(VK_UP))     {m_cameraController->move(m_cameraController->getLookVec()   * movementSpeed);}
-   if (context().isKeyPressed(VK_DOWN))   {m_cameraController->move(-m_cameraController->getLookVec()  * movementSpeed);}
-   if (context().isKeyPressed(VK_LEFT))   {m_cameraController->move(-m_cameraController->getRightVec() * movementSpeed);}
-   if (context().isKeyPressed(VK_RIGHT))  {m_cameraController->move(m_cameraController->getRightVec()  * movementSpeed);}
+   if (m_uiController->isKeyPressed(VK_ESCAPE))    {context().signal(*this, ON_EXIT);}
+   if (m_uiController->isKeyPressed(VK_UP))     {m_cameraController->move(m_cameraController->getLookVec()   * movementSpeed);}
+   if (m_uiController->isKeyPressed(VK_DOWN))   {m_cameraController->move(-m_cameraController->getLookVec()  * movementSpeed);}
+   if (m_uiController->isKeyPressed(VK_LEFT))   {m_cameraController->move(-m_cameraController->getRightVec() * movementSpeed);}
+   if (m_uiController->isKeyPressed(VK_RIGHT))  {m_cameraController->move(m_cameraController->getRightVec()  * movementSpeed);}
 
-   if (context().isKeyPressed(VK_LBUTTON) && (m_rotating == false))
+   if (m_uiController->isKeyPressed(VK_LBUTTON) && (m_rotating == false))
    {
-      context().relativeMouseMovement(true);
+      m_uiController->setRelativeMouseMovement(true);
       m_rotating = true;
    }
-   else if ((context().isKeyPressed(VK_LBUTTON) == false) && m_rotating)
+   else if ((m_uiController->isKeyPressed(VK_LBUTTON) == false) && m_rotating)
    {
-      context().relativeMouseMovement(false);
+      m_uiController->setRelativeMouseMovement(false);
       m_rotating = false;
    }
 
    // process the mouse
    if (m_rotating)
    {
-      Point mouseRel = context().getMousePos();
-      float rotX = (float)(mouseRel.x) / 3.0f;
-      float rotY = (float)(mouseRel.y) / 3.0f;
-      m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
+      D3DXVECTOR2 mouseSpeed = m_uiController->getMouseSpeed() * rotationSpeed;
+      m_cameraController->rotate(mouseSpeed.y, mouseSpeed.x, 0);
    }
 
    // effects switching
    m_timeSinceLastSwitch += timeElapsed;
-   if ((context().isKeyPressed(VK_SPACE)) && (m_timeSinceLastSwitch > 0.4))
+   if ((m_uiController->isKeyPressed(VK_SPACE)) && (m_timeSinceLastSwitch > 0.4))
    {
       switchEffect();
       m_timeSinceLastSwitch = 0;
@@ -245,14 +257,18 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Effects Demo", tamy);
-	EffectsDemo app(tamy);
+   Tamy::initialize(hInstance, nCmdShow, "Effects Demo", 1024, 768, false);
 
-   applicationManager.addApplication(app);
-   applicationManager.setEntryApplication(app.getName());
+   // create the application components
+	EffectsDemo app(TAMY);
 
-   while (applicationManager.step()) {Sleep(0);}
+   ApplicationManager& appMgr = TAMY.appManager();
+
+   appMgr.addApplication(app);
+   appMgr.setEntryApplication(app.getName());
+
+   // run the app
+   while (appMgr.step()) {Sleep(0);}
 
 	return 0;
 }

@@ -1,7 +1,7 @@
 #include "FontsDemo.h"
-#include "impl-DirectX\Tamy.h"
-#include "impl-DirectX\D3DApplicationManager.h"
+#include "tamy\Tamy.h"
 #include "core-AppFlow\ExecutionContext.h"
+#include "core-AppFlow\ApplicationManager.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\CompositeSceneManager.h"
@@ -37,16 +37,18 @@ void FontsDemo::initialize()
    XMLFont* font = new XMLFont("..\\Data\\Curlz.fnt", m_tamy.graphicalFactory());
    m_fontsStorage.add(font);
 
-   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
-
+   SettableRenderingTargetsPolicy* sceneRenderingTargetPolicy = new SettableRenderingTargetsPolicy();
+   SceneRenderingMechanism* sceneRenderer = m_tamy.createSceneRenderingMechanism(sceneRenderingTargetPolicy);
+   m_renderer->addMechanism(sceneRenderer);
    m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
+   sceneRenderingTargetPolicy->addTarget(0, *m_renderingTarget);
+
 
    // scene 2D
    m_sceneManager2D = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager2D = new VisualSceneManager();
    m_sceneManager2D->addSceneManager(visualSceneManager2D);
-   sceneRenderer.addVisualSceneManager(*visualSceneManager2D);
+   sceneRenderer->addVisualSceneManager(*visualSceneManager2D);
 
    Camera* camera2D = m_tamy.graphicalFactory().createCamera("camera2D");
    camera2D->setProjectionCalculator(new ProjCalc2D());
@@ -66,7 +68,7 @@ void FontsDemo::initialize()
    m_sceneManager3D = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager3D = new VisualSceneManager();
    m_sceneManager3D->addSceneManager(visualSceneManager3D);
-   sceneRenderer.addVisualSceneManager(*visualSceneManager3D);
+   sceneRenderer->addVisualSceneManager(*visualSceneManager3D);
 
    Camera* camera3D = m_tamy.graphicalFactory().createCamera("camera3D");
    m_sceneManager3D->addNode(camera3D);
@@ -114,14 +116,18 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Fonts Demo", tamy);
-	FontsDemo app(tamy);
+   Tamy::initialize(hInstance, nCmdShow, "Fonts Demo", 1024, 768, false);
 
-   applicationManager.addApplication(app);
-   applicationManager.setEntryApplication(app.getName());
+   // create the application components
+	FontsDemo app(TAMY);
 
-   while (applicationManager.step()) {}
+   ApplicationManager& appMgr = TAMY.appManager();
+
+   appMgr.addApplication(app);
+   appMgr.setEntryApplication(app.getName());
+
+   // run the app
+   while (appMgr.step()) {Sleep(0);}
 
 	return 0;
 }

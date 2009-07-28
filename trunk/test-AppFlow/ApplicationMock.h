@@ -46,16 +46,6 @@ public:
       return result;
    }
 
-   bool isKeyPressed(unsigned char keyCode) const
-   {
-      return context().isKeyPressed(keyCode);
-   }
-
-   const Point& getMousePos() const
-   {
-      return context().getMousePos();
-   }
-
    void sendSignal(const std::string& receiverApp, int signalId)
    {
       context().signal(*this, receiverApp, signalId);

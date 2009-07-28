@@ -2,13 +2,19 @@
 #include "core\WindowMessagesProcessor.h"
 
 
+///////////////////////////////////////////////////////////////////////////////
+
 CWindowBuilder::CWindowBuilder(void)
 {
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 CWindowBuilder::~CWindowBuilder(void)
 {
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 HWND CWindowBuilder::createFullScreenWindow(HINSTANCE hInstance, 
                                             const WindowParams& windowParams) const
@@ -34,6 +40,8 @@ HWND CWindowBuilder::createFullScreenWindow(HINSTANCE hInstance,
 
    return hWnd;
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 HWND CWindowBuilder::createWindowedModeWindow(HINSTANCE hInstance, 
                                               const WindowParams& windowParams) const
@@ -62,6 +70,8 @@ HWND CWindowBuilder::createWindowedModeWindow(HINSTANCE hInstance,
    return hWnd;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 LRESULT CALLBACK CWindowBuilder::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
    // If this is a create message, trap the 'this' pointer passed in and store it within the window.
@@ -71,12 +81,20 @@ LRESULT CALLBACK CWindowBuilder::WndProc(HWND hWnd, UINT message, WPARAM wParam,
    }
 
    IWindowMessagesProcessor *destination = (IWindowMessagesProcessor*)GetWindowLong(hWnd, GWL_USERDATA);
+   bool wasMessageProcessed = false;
    if (destination) 
    {
-      return destination->wndProc(hWnd, message, wParam, lParam);
+      wasMessageProcessed = destination->wndProc(hWnd, message, wParam, lParam);
    }
-   else
+   
+   if (wasMessageProcessed == false)
    {
       return DefWindowProc(hWnd, message, wParam, lParam);
    }
+   else
+   {
+      return 0;
+   }
 }
+
+///////////////////////////////////////////////////////////////////////////////

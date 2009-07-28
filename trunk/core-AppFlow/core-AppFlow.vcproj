@@ -207,6 +207,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="UserInputController"
+			>
+			<File
+				RelativePath=".\UserInputController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-AppFlow\UserInputController.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

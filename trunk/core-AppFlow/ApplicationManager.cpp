@@ -12,7 +12,6 @@ ApplicationManager::ApplicationManager()
       : m_globalTimeController(new TimeController()),
       m_blackboard(new ApplicationData())
 {
-   ZeroMemory(m_keyBuffer, 256 * sizeof(unsigned char));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -191,8 +190,6 @@ bool ApplicationManager::step()
       }
    }
 
-   checkUserInput(m_keyBuffer, m_mousePos);
-
    return (numActive > 0);
 }
 
@@ -225,21 +222,6 @@ void ApplicationManager::signal(const Application& app,
    }
 
    appNode.signalsQueue.push_back(std::make_pair(app.getName(), signalId));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool ApplicationManager::isKeyPressed(unsigned char keyCode) const
-{
-   return (bool)(m_keyBuffer[keyCode] & 0xF0); 
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ApplicationManager::relativeMouseMovement(bool enable)
-{
-   switchMouseMovementMode(enable);
-   checkUserInput(m_keyBuffer, m_mousePos);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

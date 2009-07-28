@@ -17,6 +17,9 @@ class Tamy;
 class RenderingTarget;
 class CyclicRenderingTarget;
 class PostProcessMechanism;
+class SceneRenderingMechanism;
+class SettableRenderingTargetsPolicy;
+class UserInputController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,6 +46,8 @@ class EffectsDemo : public Application
 private:
    Tamy& m_tamy;
    Renderer* m_renderer;
+   SceneRenderingMechanism* m_sceneRenderer;
+   SettableRenderingTargetsPolicy* m_sceneRenderingTargetPolicy;
    CyclicRenderingTarget* m_mainRendererOutput;
    RenderingTarget* m_screenBuffer;
 
@@ -56,6 +61,8 @@ private:
    ResourceStorage<RenderingTechnique> m_renderingTechniquesStorage;
 
    RenderingUpdator* m_renderingUpdator;
+
+   UserInputController* m_uiController;
 
    std::vector<PostProcessMechanism*> m_postProcessEffects;
    PostProcessMechanism* m_currEffect;

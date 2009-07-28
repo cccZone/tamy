@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core-Renderer\Renderer.h"
+#include "core\WindowMessagesProcessor.h"
 #include <windows.h>
 #include <d3d9.h>
 #include <d3dx9.h>
@@ -23,7 +24,8 @@ enum D3DGraphResourceOp
 ///////////////////////////////////////////////////////////////////////////////
 
 class D3DRenderer : public Renderer, 
-                    public Subject<D3DRenderer, D3DGraphResourceOp>
+                    public Subject<D3DRenderer, D3DGraphResourceOp>,
+                    public IWindowMessagesProcessor
 {
 private:
    IDirect3DDevice9* m_d3Device;
@@ -56,6 +58,8 @@ public:
    IDirect3DVertexBuffer9* createVertexBuffer(UINT length, DWORD usageFlags, DWORD fvf, D3DPOOL memoryPool);
    IDirect3DIndexBuffer9* createIndexBuffer(UINT length, DWORD usageFlags, D3DFORMAT format, D3DPOOL memoryPool);
    D3DFORMAT getOptimalTextureFormat() const {return m_optimalTextureFormat;}
+
+   bool wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 protected:
    void resetViewport(unsigned int width, unsigned int height);

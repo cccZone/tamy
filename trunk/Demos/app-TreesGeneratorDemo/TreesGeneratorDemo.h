@@ -15,6 +15,7 @@ class ResourceManager;
 class AbstractGraphicalEntity;
 class Tamy;
 class RenderingTarget;
+class UserInputController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,6 +25,7 @@ private:
    Renderer* m_renderer;
    Tamy& m_tamy;
    RenderingTarget* m_renderingTarget;
+   UserInputController& m_uiController;
 
    AbstractGraphicalEntity* m_treeEntity;
    CompositeSceneManager* m_sceneManager;

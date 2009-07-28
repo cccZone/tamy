@@ -19,6 +19,7 @@ class WaypointCameraController;
 class Renderer;
 class Tamy;
 class RenderingTarget;
+class UserInputController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +29,7 @@ private:
    Renderer* m_renderer;
    Tamy& m_tamy;
    RenderingTarget* m_renderingTarget;
+   UserInputController& m_uiController;
 
    CompositeSceneManager* m_sceneManager;
    CompositeSceneManager * m_hudSceneManager;

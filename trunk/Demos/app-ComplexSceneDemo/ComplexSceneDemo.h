@@ -15,6 +15,7 @@ class UnconstrainedMotionController;
 class ResourceManager;
 class AbstractGraphicalEntity;
 class RenderingTarget;
+class UserInputController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,6 +25,7 @@ private:
    Tamy& m_tamy;
    Renderer* m_renderer;
    RenderingTarget* m_renderingTarget;
+   UserInputController& m_uiController;
 
    CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;

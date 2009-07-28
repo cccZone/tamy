@@ -352,7 +352,7 @@ void D3DInitializer::enumerateDevices(Adapter* adapter)
 
       // check the minimum reuqired shader support
       bool isVertexShaderSupport = (deviceCaps.VertexShaderVersion >= D3DVS_VERSION(1, 1));
-      bool isPixelShaderSupport = (deviceCaps.PixelShaderVersion >= D3DPS_VERSION(1, 1));
+      bool isPixelShaderSupport = (deviceCaps.PixelShaderVersion >= D3DPS_VERSION(2, 0));
 
       if ((device->options.size() == 0) || 
           (isVertexShaderSupport == false) || 

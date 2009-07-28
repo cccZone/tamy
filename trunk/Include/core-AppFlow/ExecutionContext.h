@@ -6,6 +6,7 @@
 class Application;
 struct Point;
 class ApplicationData;
+struct D3DXVECTOR2;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -39,12 +40,6 @@ public:
    virtual void signal(const Application& app, 
                        const std::string& receiverApp, 
                        int signalId) = 0;
-
-   virtual bool isKeyPressed(unsigned char keyCode) const = 0;
-
-   virtual const Point& getMousePos() const = 0;
-
-   virtual void relativeMouseMovement(bool enable) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -15,7 +15,8 @@ D3DRenderer::D3DRenderer(IDirect3DDevice9* d3Device,
                          UINT frontBufferHeight,
                          bool hardwareTLOn,
                          D3DFORMAT optimalTextureFormat)
-      : m_d3Device(d3Device),
+      : Renderer(frontBufferWidth, frontBufferHeight),
+      m_d3Device(d3Device),
       m_creationParams(creationParams),
       m_caps(caps),
       m_deviceLost(false),
@@ -268,3 +269,36 @@ IDirect3DIndexBuffer9* D3DRenderer::createIndexBuffer(UINT length,
 }
 
 /////////////////////////////////////////////////////////////////////////////
+
+bool D3DRenderer::wndProc(HWND hWnd, 
+                          UINT message, 
+                          WPARAM wParam, 
+                          LPARAM lParam)
+{
+   switch (message)
+   {
+   case WM_SIZE: // fallthrough
+   case WM_MOVE:
+      {
+         WINDOWINFO info;
+         GetWindowInfo(hWnd, &info);
+
+         resizeViewport(info.rcClient.right - info.rcClient.left, 
+                        info.rcClient.bottom - info.rcClient.top, 
+                        info.rcClient.left, 
+                        info.rcClient.top,
+                        info.rcClient.right, 
+                        info.rcClient.bottom);
+
+         break;
+      }
+
+   default:
+      {
+         return false;
+      }
+   }
+   return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////

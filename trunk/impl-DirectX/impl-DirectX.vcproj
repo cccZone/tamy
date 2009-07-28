@@ -384,6 +384,14 @@
 				RelativePath="..\Include\impl-DirectX\D3DApplicationManager.h"
 				>
 			</File>
+			<File
+				RelativePath=".\D3DUserInputController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\impl-DirectX\D3DUserInputController.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Sound"
@@ -465,11 +473,7 @@
 			Name="Tamy"
 			>
 			<File
-				RelativePath=".\Tamy.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\impl-DirectX\Tamy.h"
+				RelativePath=".\TamyImpl.cpp"
 				>
 			</File>
 		</Filter>

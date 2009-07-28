@@ -74,7 +74,8 @@ private:
    RendererState* m_currentRendererState;
 
 public:
-   Renderer();
+   Renderer(unsigned int viewportWidth = 800,
+            unsigned int viewportHeight = 600);
    virtual ~Renderer();
 
    /**

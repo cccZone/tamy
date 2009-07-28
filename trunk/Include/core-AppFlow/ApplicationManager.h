@@ -4,7 +4,6 @@
 #include "core-AppFlow\ExecutionContext.h"
 #include <map>
 #include <list>
-#include "core\Point.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,9 +59,6 @@ private:
    typedef std::map<std::string, ApplicationNode> AppsMap;
    AppsMap m_apps;
 
-   unsigned char m_keyBuffer[256];
-   Point m_mousePos;
-
    TimeController* m_globalTimeController;
    ApplicationData* m_blackboard;
 
@@ -115,9 +111,6 @@ public:
    void signal(const Application& app, 
                const std::string& receiverApp, 
                int signalId);
-   bool isKeyPressed(unsigned char keyCode) const;
-   const Point& getMousePos() const {return m_mousePos;}
-   void relativeMouseMovement(bool enable);
 
 protected:
 
@@ -136,21 +129,9 @@ protected:
     */
    virtual float getTimeElapsed() = 0;
 
-   virtual void switchMouseMovementMode(bool relative) = 0;
-
-   /**
-    * This method is implementation specific.
-    * Upon return both params should contain the current state of
-    * the user input:
-    *
-    * @param keysPressed - keyboard keys as well as mouse keys pressed
-    * @param mousePos - absolute position of the mouse
-    * @param relMovement - relative position change since the last check
-    */
-   virtual void checkUserInput(unsigned char* keyBuffer, Point& mousePos) = 0;
-
 private:
    void dispatchAppSignals(ApplicationNode& currNode);
+   void processUserInput(float timeElapsed);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

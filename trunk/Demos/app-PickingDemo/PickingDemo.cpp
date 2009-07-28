@@ -1,7 +1,8 @@
 #include "PickingDemo.h"
-#include "impl-DirectX\Tamy.h"
-#include "impl-DirectX\D3DApplicationManager.h"
+#include "tamy\Tamy.h"
 #include "core-AppFlow\ExecutionContext.h"
+#include "core-AppFlow\UserInputController.h"
+#include "core-AppFlow\ApplicationManager.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
@@ -54,6 +55,7 @@ PickingDemo::PickingDemo(Tamy& tamy)
       m_renderer(&(tamy.renderer())),
       m_tamy(tamy),
       m_renderingTarget(NULL),
+      m_uiController(m_tamy.uiController()),
       m_sceneManager(NULL),
       m_atmosphere(NULL),
       m_cursor(NULL),
@@ -71,22 +73,24 @@ PickingDemo::PickingDemo(Tamy& tamy)
 void PickingDemo::initialize()
 {
    m_actionsExecutor = new NodeActionsExecutor();
-   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
+
+   SettableRenderingTargetsPolicy* sceneRenderingTargetPolicy = new SettableRenderingTargetsPolicy();
+   SceneRenderingMechanism* sceneRenderer = m_tamy.createSceneRenderingMechanism(sceneRenderingTargetPolicy);
+   m_renderer->addMechanism(sceneRenderer);
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   sceneRenderingTargetPolicy->addTarget(0, *m_renderingTarget);
 
    m_sceneManager = new CompositeSceneManager();
    m_visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(m_visualSceneManager);
-   sceneRenderer.addVisualSceneManager(*m_visualSceneManager);
+   sceneRenderer->addVisualSceneManager(*m_visualSceneManager);
 
    m_hudSceneManager = new CompositeSceneManager();
    VisualSceneManager* hudVisualSceneMgr = new VisualSceneManager();
    m_hudSceneManager->addSceneManager(hudVisualSceneMgr);
-   sceneRenderer.addVisualSceneManager(*hudVisualSceneMgr);
+   sceneRenderer->addVisualSceneManager(*hudVisualSceneMgr);
 
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
-
-   m_renderingTarget = factory.createDefaultRenderingTarget();
-   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
 
    GraphicalEntityLoader loader(factory, m_renderingTechniquesStorage);
 
@@ -252,15 +256,16 @@ void PickingDemo::deinitialize()
 
 void PickingDemo::update(float timeElapsed)
 {
+   m_uiController.update(timeElapsed);
    static bool keyPressed = false;
    static bool onPress = false;
 
-   if (context().isKeyPressed(VK_LBUTTON))
+   if (m_uiController.isKeyPressed(VK_LBUTTON))
    {
       onPress = (keyPressed == false);
       keyPressed = true;
    }
-   else if (context().isKeyPressed(VK_LBUTTON) == false)
+   else if (m_uiController.isKeyPressed(VK_LBUTTON) == false)
    {
       keyPressed = false;
    }
@@ -274,7 +279,7 @@ void PickingDemo::update(float timeElapsed)
       m_burst->activate();
    }
 
-   const Point& mouseScreenPos = context().getMousePos();
+   const Point& mouseScreenPos = m_uiController.getMousePos();
    D3DXVECTOR2 mouseViewportPos(0, 0);
    m_renderer->screenToViewport(mouseScreenPos, mouseViewportPos);
    D3DXMatrixTranslation(&(m_cursor->accessLocalMtx()), mouseViewportPos.x, mouseViewportPos.y, 10);
@@ -292,7 +297,7 @@ void PickingDemo::update(float timeElapsed)
 void PickingDemo::performQuery(Array<Node*>& nodes)
 {
    // construct the query ray
-   Point mousePos = context().getMousePos();
+   Point mousePos = m_uiController.getMousePos();
 
    Camera& camera = m_visualSceneManager->getActiveCamera();
    D3DXVECTOR2 viewportPos;
@@ -318,14 +323,18 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Picking Demo", tamy);
-	PickingDemo app(tamy);
+   Tamy::initialize(hInstance, nCmdShow, "Picking Demo", 1024, 768, false);
 
-   applicationManager.addApplication(app);
-   applicationManager.setEntryApplication(app.getName());
+   // create the application components
+	PickingDemo app(TAMY);
 
-   while (applicationManager.step()) {}
+   ApplicationManager& appMgr = TAMY.appManager();
+
+   appMgr.addApplication(app);
+   appMgr.setEntryApplication(app.getName());
+
+   // run the app
+   while (appMgr.step()) {Sleep(0);}
 
 	return 0;
 }

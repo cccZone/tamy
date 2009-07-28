@@ -1,7 +1,8 @@
 #include "PerformanceDemo.h"
-#include "impl-DirectX\D3DApplicationManager.h"
-#include "impl-DirectX\Tamy.h"
+#include "tamy\Tamy.h"
 #include "core-AppFlow\ExecutionContext.h"
+#include "core-AppFlow\UserInputController.h"
+#include "core-AppFlow\ApplicationManager.h"
 #include "core-Renderer\Renderer.h"
 #include "core\Point.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
@@ -26,6 +27,7 @@ PerformanceDemo::PerformanceDemo(Tamy& tamy)
       m_renderer(&(tamy.renderer())),
       m_tamy(tamy),
       m_renderingTarget(NULL),
+      m_uiController(m_tamy.uiController()),
       m_sceneManager(NULL),
       m_cameraController(NULL)
 {
@@ -41,13 +43,15 @@ void PerformanceDemo::initialize()
    m_sceneManager = new CompositeSceneManager();
    m_visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(m_visualSceneManager);
-   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
-   sceneRenderer.addVisualSceneManager(*m_visualSceneManager);
 
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
 
+   SettableRenderingTargetsPolicy* sceneRenderingTargetPolicy = new SettableRenderingTargetsPolicy();
+   SceneRenderingMechanism* sceneRenderer = m_tamy.createSceneRenderingMechanism(sceneRenderingTargetPolicy);
+   m_renderer->addMechanism(sceneRenderer);
    m_renderingTarget = factory.createDefaultRenderingTarget();
-   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
+   sceneRenderingTargetPolicy->addTarget(0, *m_renderingTarget);
+   sceneRenderer->addVisualSceneManager(*m_visualSceneManager);
 
    GraphicalEntityLoader loader(factory, m_renderingTechniquesStorage);
 
@@ -86,9 +90,6 @@ void PerformanceDemo::deinitialize()
    delete m_renderingTarget;
    m_renderingTarget = NULL;
 
-   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
-   sceneRenderer.removeVisualSceneManager(*m_visualSceneManager);
-
    m_visualSceneManager = NULL;
 
    delete m_cameraController;
@@ -102,35 +103,34 @@ void PerformanceDemo::deinitialize()
 
 void PerformanceDemo::update(float timeElapsed)
 {
+   m_uiController.update(timeElapsed);
    float movementSpeed = 40.f * timeElapsed;
-   float rotationSpeed = 180.f * timeElapsed;
+   float rotationSpeed = 0.1f * timeElapsed;
 
 
    // process the keys
-   if (context().isKeyPressed(VK_ESCAPE))     {context().signal(*this, ON_EXIT);}
-   if (context().isKeyPressed(VK_UP))     {m_cameraController->move(m_cameraController->getLookVec()   * movementSpeed);}
-   if (context().isKeyPressed(VK_DOWN))   {m_cameraController->move(-m_cameraController->getLookVec()  * movementSpeed);}
-   if (context().isKeyPressed(VK_LEFT))   {m_cameraController->move(-m_cameraController->getRightVec() * movementSpeed);}
-   if (context().isKeyPressed(VK_RIGHT))  {m_cameraController->move(m_cameraController->getRightVec()  * movementSpeed);}
+   if (m_uiController.isKeyPressed(VK_ESCAPE))     {context().signal(*this, ON_EXIT);}
+   if (m_uiController.isKeyPressed(VK_UP))     {m_cameraController->move(m_cameraController->getLookVec()   * movementSpeed);}
+   if (m_uiController.isKeyPressed(VK_DOWN))   {m_cameraController->move(-m_cameraController->getLookVec()  * movementSpeed);}
+   if (m_uiController.isKeyPressed(VK_LEFT))   {m_cameraController->move(-m_cameraController->getRightVec() * movementSpeed);}
+   if (m_uiController.isKeyPressed(VK_RIGHT))  {m_cameraController->move(m_cameraController->getRightVec()  * movementSpeed);}
 
-   if (context().isKeyPressed(VK_LBUTTON) && (m_rotating == false))
+   if (m_uiController.isKeyPressed(VK_LBUTTON) && (m_rotating == false))
    {
-      context().relativeMouseMovement(true);
+      m_uiController.setRelativeMouseMovement(true);
       m_rotating = true;
    }
-   else if ((context().isKeyPressed(VK_LBUTTON) == false) && m_rotating)
+   else if ((m_uiController.isKeyPressed(VK_LBUTTON) == false) && m_rotating)
    {
-      context().relativeMouseMovement(false);
+      m_uiController.setRelativeMouseMovement(false);
       m_rotating = false;
    }
 
    // process the mouse
    if (m_rotating)
    {
-      Point mouseRel = context().getMousePos();
-      float rotX = (float)(mouseRel.x) / 3.0f;
-      float rotY = (float)(mouseRel.y) / 3.0f;
-      m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
+      D3DXVECTOR2 mouseSpeed = m_uiController.getMouseSpeed() * rotationSpeed;
+      m_cameraController->rotate(mouseSpeed.y, mouseSpeed.x, 0);
    }
 
    m_renderer->render();
@@ -143,14 +143,18 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Performance Demo", tamy);
-	PerformanceDemo app(tamy);
+   Tamy::initialize(hInstance, nCmdShow, "Performance Demo", 1024, 768, false);
 
-   applicationManager.addApplication(app);
-   applicationManager.setEntryApplication(app.getName());
+   // create the application components
+	PerformanceDemo app(TAMY);
 
-   while (applicationManager.step()) {}
+   ApplicationManager& appMgr = TAMY.appManager();
+
+   appMgr.addApplication(app);
+   appMgr.setEntryApplication(app.getName());
+
+   // run the app
+   while (appMgr.step()) {Sleep(0);}
 
 	return 0;
 }

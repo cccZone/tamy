@@ -7,10 +7,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Renderer::Renderer()
+Renderer::Renderer(unsigned int viewportWidth,
+                   unsigned int viewportHeight)
       : m_globalRenderTargetsPolicy(new RenderingTargetsPolicyProxy()),
-      m_viewportWidth(800),
-      m_viewportHeight(600),
+      m_viewportWidth(viewportWidth),
+      m_viewportHeight(viewportHeight),
       m_leftClientArea(0),
       m_topClientArea(0),
       m_rightClientArea(m_viewportWidth),

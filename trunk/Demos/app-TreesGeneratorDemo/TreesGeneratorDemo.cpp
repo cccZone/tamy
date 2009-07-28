@@ -1,7 +1,8 @@
 #include "TreesGeneratorDemo.h"
-#include "impl-DirectX\Tamy.h"
-#include "impl-DirectX\D3DApplicationManager.h"
+#include "tamy\Tamy.h"
 #include "core-AppFlow\ExecutionContext.h"
+#include "core-AppFlow\UserInputController.h"
+#include "core-AppFlow\ApplicationManager.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core\Point.h"
@@ -31,6 +32,7 @@ TreesGeneratorDemo::TreesGeneratorDemo(Tamy& tamy)
       m_renderer(&(tamy.renderer())),
       m_tamy(tamy),
       m_renderingTarget(NULL),
+      m_uiController(m_tamy.uiController()),
       m_treeEntity(NULL),
       m_sceneManager(NULL),
       m_cameraController(NULL)
@@ -44,16 +46,17 @@ TreesGeneratorDemo::TreesGeneratorDemo(Tamy& tamy)
 void TreesGeneratorDemo::initialize()
 {
    m_rotating = false;
+
+   SettableRenderingTargetsPolicy* sceneRenderingTargetPolicy = new SettableRenderingTargetsPolicy();
+   SceneRenderingMechanism* sceneRenderer = m_tamy.createSceneRenderingMechanism(sceneRenderingTargetPolicy);
+   m_renderer->addMechanism(sceneRenderer);
+   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   sceneRenderingTargetPolicy->addTarget(0, *m_renderingTarget);
+
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
-
-   SceneRenderingMechanism& sceneRenderer = m_tamy.sceneRenderingMechanism();
-   sceneRenderer.addVisualSceneManager(*visualSceneManager);
-
-   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   m_tamy.sceneRenderingTargetPolicy().addTarget(0, *m_renderingTarget);
-
+   sceneRenderer->addVisualSceneManager(*visualSceneManager);
 
    TreeParams treeParams;
    treeParams.maxTreeDepth = 5;
@@ -132,35 +135,35 @@ void TreesGeneratorDemo::deinitialize()
 
 void TreesGeneratorDemo::update(float timeElapsed)
 {
+   m_uiController.update(timeElapsed);
+
    float movementSpeed = 40 * timeElapsed;
-   float rotationSpeed = 180 * timeElapsed;
+   float rotationSpeed = 0.1f * timeElapsed;
 
 
    // process the keys
-   if (context().isKeyPressed(VK_ESCAPE))     {context().signal(*this, ON_EXIT);}
-   if (context().isKeyPressed(VK_UP))     {m_cameraController->move(m_cameraController->getLookVec()   * movementSpeed);}
-   if (context().isKeyPressed(VK_DOWN))   {m_cameraController->move(-m_cameraController->getLookVec()  * movementSpeed);}
-   if (context().isKeyPressed(VK_LEFT))   {m_cameraController->move(-m_cameraController->getRightVec() * movementSpeed);}
-   if (context().isKeyPressed(VK_RIGHT))  {m_cameraController->move(m_cameraController->getRightVec()  * movementSpeed);}
+   if (m_uiController.isKeyPressed(VK_ESCAPE))     {context().signal(*this, ON_EXIT);}
+   if (m_uiController.isKeyPressed(VK_UP))     {m_cameraController->move(m_cameraController->getLookVec()   * movementSpeed);}
+   if (m_uiController.isKeyPressed(VK_DOWN))   {m_cameraController->move(-m_cameraController->getLookVec()  * movementSpeed);}
+   if (m_uiController.isKeyPressed(VK_LEFT))   {m_cameraController->move(-m_cameraController->getRightVec() * movementSpeed);}
+   if (m_uiController.isKeyPressed(VK_RIGHT))  {m_cameraController->move(m_cameraController->getRightVec()  * movementSpeed);}
 
-   if (context().isKeyPressed(VK_LBUTTON) && (m_rotating == false))
+   if (m_uiController.isKeyPressed(VK_LBUTTON) && (m_rotating == false))
    {
-      context().relativeMouseMovement(true);
+      m_uiController.setRelativeMouseMovement(true);
       m_rotating = true;
    }
-   else if ((context().isKeyPressed(VK_LBUTTON) == false) && m_rotating)
+   else if ((m_uiController.isKeyPressed(VK_LBUTTON) == false) && m_rotating)
    {
-      context().relativeMouseMovement(false);
+      m_uiController.setRelativeMouseMovement(false);
       m_rotating = false;
    }
 
    // process the mouse
    if (m_rotating)
    {
-      Point mouseRel = context().getMousePos();
-      float rotX = (float)(mouseRel.x) / 3.0f;
-      float rotY = (float)(mouseRel.y) / 3.0f;
-      m_cameraController->rotate(rotY * rotationSpeed, rotX * rotationSpeed, 0);
+      D3DXVECTOR2 mouseSpeed = m_uiController.getMouseSpeed() * rotationSpeed;
+      m_cameraController->rotate(mouseSpeed.y, mouseSpeed.x, 0);
    }
 
    m_animationController->update(timeElapsed);
@@ -174,14 +177,18 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   Tamy tamy("..\\Data", "..\\Data", "..\\Data");
-   D3DApplicationManager applicationManager(hInstance, nCmdShow, "Trees Generator Demo", tamy);
-	TreesGeneratorDemo app(tamy);
+   Tamy::initialize(hInstance, nCmdShow, "Trees Generator Demo", 1024, 768, false);
 
-   applicationManager.addApplication(app);
-   applicationManager.setEntryApplication(app.getName());
+   // create the application components
+	TreesGeneratorDemo app(TAMY);
 
-   while (applicationManager.step()) {}
+   ApplicationManager& appMgr = TAMY.appManager();
+
+   appMgr.addApplication(app);
+   appMgr.setEntryApplication(app.getName());
+
+   // run the app
+   while (appMgr.step()) {Sleep(0);}
 
 	return 0;
 }
