@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core\Node.h"
+#include "core-Renderer\Renderable.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,7 +16,7 @@ struct BoundingSphere;
  * This class represents a node that can be rendered on a graphical device.
  * This node instantiates a graphical entity
  */
-class AbstractGraphicalNode : public Node
+class AbstractGraphicalNode : public Node, public Renderable
 {
 private:
    RenderingTechnique* m_technique;
@@ -34,8 +35,8 @@ public:
    void setBoundingSphereRadius(float radius);
 
    /**
-    * This method allows to set an arbitrary material that will be used
-    * during rendering of the node contents.
+    * This method allows to set an arbitrary technique that will be used
+    * to render this node's contents
     */
    void setTechnique(RenderingTechnique& technique);
 

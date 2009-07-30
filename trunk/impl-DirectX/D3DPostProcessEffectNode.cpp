@@ -8,11 +8,9 @@ DWORD D3DPostProcessEffectNode::ScreenVertex::FVF = D3DFVF_XYZRHW | D3DFVF_TEX1;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DPostProcessEffectNode::D3DPostProcessEffectNode(const std::string& name, 
-                                                   RenderingTechnique& technique,
-                                                   IDirect3DDevice9& d3Device,
+D3DPostProcessEffectNode::D3DPostProcessEffectNode(IDirect3DDevice9& d3Device,
                                                    D3DRenderer& renderer)
-      : PostProcessEffectNode(name, technique, renderer),
+      : PostProcessEffectNode(renderer),
       m_d3Device(d3Device),
       m_renderer(renderer),
       m_vb(NULL)
@@ -33,17 +31,9 @@ void D3DPostProcessEffectNode::render()
 {
    if (m_vb == NULL) {return;}
 
-/*   m_d3Device.SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-   m_d3Device.SetRenderState(D3DRS_ZENABLE, FALSE);
-   m_d3Device.SetRenderState(D3DRS_LIGHTING, FALSE);
-*/
    m_d3Device.SetStreamSource(0, m_vb, 0, sizeof(ScreenVertex));
    m_d3Device.SetFVF(ScreenVertex::FVF);
    m_d3Device.DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-/*
-   m_d3Device.SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-   m_d3Device.SetRenderState(D3DRS_ZENABLE, TRUE);
-   m_d3Device.SetRenderState(D3DRS_LIGHTING, TRUE);*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////

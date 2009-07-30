@@ -222,6 +222,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\core-Renderer\Renderable.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\core-Renderer\RenderingTarget.h"
 					>
 				</File>

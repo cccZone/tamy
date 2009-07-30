@@ -228,10 +228,10 @@ TEST(Material, lastRenderedStageIsOneThatDisablesItself)
    Material mat("", renderTargetsPolicy, new LightReflectingPropertiesStub(), alphaMatOpImpl, colorMatOpImpl, transparencyEnabler);
 
    GraphicalNodeMock node;
-   Array<AbstractGraphicalNode*> nodesToRender;
+   Array<Renderable*> nodesToRender;
    nodesToRender.push_back(&node);
 
-   mat.render(nodesToRender, 0, 1);
+   mat.render(nodesToRender);
    CPPUNIT_ASSERT_EQUAL(1, colorMatOpImpl.getOperationsCount());
    CPPUNIT_ASSERT_EQUAL(1, alphaMatOpImpl.getOperationsCount());
    CPPUNIT_ASSERT_EQUAL(std::string("disable"), colorMatOpImpl.getOperation(0));
@@ -244,7 +244,7 @@ TEST(Material, lastRenderedStageIsOneThatDisablesItself)
          new MaterialOperation(alphaMatOpImpl, MOP_ADD,      SC_NONE, SC_NONE),
          new CoordinatesOperationMock(CC_WRAP),
          textureRenderer));
-   mat.render(nodesToRender, 0, 1);
+   mat.render(nodesToRender);
    CPPUNIT_ASSERT_EQUAL(2, colorMatOpImpl.getOperationsCount());
    CPPUNIT_ASSERT_EQUAL(2, alphaMatOpImpl.getOperationsCount());
    CPPUNIT_ASSERT_EQUAL(std::string("multiply"), colorMatOpImpl.getOperation(0));
@@ -259,7 +259,7 @@ TEST(Material, lastRenderedStageIsOneThatDisablesItself)
          new MaterialOperation(alphaMatOpImpl, MOP_MULTIPLY_ADD,      SC_NONE, SC_NONE),
          new CoordinatesOperationMock(CC_WRAP),
          textureRenderer));
-   mat.render(nodesToRender, 0, 1);
+   mat.render(nodesToRender);
    CPPUNIT_ASSERT_EQUAL(3, colorMatOpImpl.getOperationsCount());
    CPPUNIT_ASSERT_EQUAL(3, alphaMatOpImpl.getOperationsCount());
    CPPUNIT_ASSERT_EQUAL(std::string("multiply"), colorMatOpImpl.getOperation(0));

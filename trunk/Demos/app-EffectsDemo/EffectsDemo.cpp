@@ -123,40 +123,40 @@ void EffectsDemo::initialize()
    GraphicalEffect* oldTV = m_tamy.graphicalFactory().createEffect("..\\Data\\oldTV.fx", false, oldTVData);
    m_renderingTechniquesStorage.add(oldTV);
 
-   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode("oldTV", *oldTV);
+   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode();
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
-   m_postProcessEffects.push_back(new PostProcessMechanism(policy, postProcessEffect));
+   m_postProcessEffects.push_back(new PostProcessMechanism(policy, *oldTV, postProcessEffect));
 
    // 2. wavy image
    WavyImageDataSource* wavyImageData = new WavyImageDataSource(*m_mainRendererOutput);
    GraphicalEffect* wavyImage = m_tamy.graphicalFactory().createEffect("..\\Data\\wavyImage.fx", false, wavyImageData);
    m_renderingTechniquesStorage.add(wavyImage);
 
-   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode("wavyImage", *wavyImage);
+   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode();
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
-   m_postProcessEffects.push_back(new PostProcessMechanism(policy, postProcessEffect));
+   m_postProcessEffects.push_back(new PostProcessMechanism(policy, *wavyImage, postProcessEffect));
 
    // 3. dizzy
    DizzyDataSource* dizzyData = new DizzyDataSource(*m_mainRendererOutput);
    GraphicalEffect* dizzy = m_tamy.graphicalFactory().createEffect("..\\Data\\dizzy.fx", false, dizzyData);
    m_renderingTechniquesStorage.add(dizzy);
 
-   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode("dizzy", *dizzy);
+   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode();
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
-   m_postProcessEffects.push_back(new PostProcessMechanism(policy, postProcessEffect));
+   m_postProcessEffects.push_back(new PostProcessMechanism(policy, *dizzy, postProcessEffect));
 
    // 4. blur
    BlurEffectDataSource* blurData = new BlurEffectDataSource(*m_mainRendererOutput);
    GraphicalEffect* blur = m_tamy.graphicalFactory().createEffect("..\\Data\\blur.fx", false, blurData);
    m_renderingTechniquesStorage.add(blur);
 
-   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode("blur", *blur);
+   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode();
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
-   m_postProcessEffects.push_back(new PostProcessMechanism(policy, postProcessEffect));
+   m_postProcessEffects.push_back(new PostProcessMechanism(policy, *blur, postProcessEffect));
 
    m_renderingUpdator = new RenderingUpdator(*m_animationController, *m_renderer);
    timeController().get("renderingTrack").add(new TTimeDependent<RenderingUpdator>(*m_renderingUpdator));

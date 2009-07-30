@@ -4,11 +4,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PostProcessEffectNode::PostProcessEffectNode(const std::string& name,
-                                     RenderingTechnique& technique,
-                                     Renderer& renderer)
-      : AbstractGraphicalNode(name, false, technique, 0),
-      m_renderer(renderer)
+PostProcessEffectNode::PostProcessEffectNode(Renderer& renderer)
+      : m_renderer(renderer)
 {
    m_renderer.attachObserver(*this);
 }

@@ -18,9 +18,9 @@ TEST(RenderingTechnique, singlePassTechnique)
    AbstractGraphicalNodeMock node(technique);
 
    // run the processor
-   Array<AbstractGraphicalNode*> nodesToRender;
+   Array<Renderable*> nodesToRender;
    nodesToRender.push_back(&node);
-   technique.render(nodesToRender, 0, 1);
+   technique.render(nodesToRender);
 
    CPPUNIT_ASSERT_EQUAL((unsigned int) 5, results.size());
    CPPUNIT_ASSERT_EQUAL(std::string("RenderingTechnique::beginRendering"), results[0]);
@@ -41,9 +41,9 @@ TEST(RenderingTechnique, multiPassTechnique)
    AbstractGraphicalNodeMock node(technique);
 
    // run the processor
-   Array<AbstractGraphicalNode*> nodesToRender;
+   Array<Renderable*> nodesToRender;
    nodesToRender.push_back(&node);
-   technique.render(nodesToRender, 0, 1);
+   technique.render(nodesToRender);
 
    CPPUNIT_ASSERT_EQUAL((unsigned int) 8, results.size());
    CPPUNIT_ASSERT_EQUAL(std::string("RenderingTechnique::beginRendering"), results[0]);

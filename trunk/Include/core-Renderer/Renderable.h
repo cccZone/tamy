@@ -1,0 +1,17 @@
+#pragma once
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A rendering technique renders renderables on the screen (sounds kinda weird ;)
+ */
+class Renderable
+{
+public:
+   virtual ~Renderable() {}
+
+   virtual void render() = 0;
+};
+
+///////////////////////////////////////////////////////////////////////////////

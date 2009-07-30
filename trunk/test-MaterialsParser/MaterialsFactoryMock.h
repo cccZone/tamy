@@ -56,8 +56,7 @@ public:
        return NULL;
    }
 
-   PostProcessEffectNode* createPostProcessEffectNode(const std::string& name, 
-                                                      RenderingTechnique& technique)
+   PostProcessEffectNode* createPostProcessEffectNode()
    {
       return NULL;
    }

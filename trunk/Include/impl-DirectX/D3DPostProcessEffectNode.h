@@ -34,9 +34,7 @@ private:
    IDirect3DVertexBuffer9* m_vb;
 
 public:
-   D3DPostProcessEffectNode(const std::string& name, 
-                            RenderingTechnique& technique,
-                            IDirect3DDevice9& d3Device,
+   D3DPostProcessEffectNode(IDirect3DDevice9& d3Device,
                             D3DRenderer& renderer);
    ~D3DPostProcessEffectNode();
 

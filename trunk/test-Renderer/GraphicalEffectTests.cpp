@@ -13,7 +13,7 @@ TEST(GraphicalEffect, settingSimpleArgument)
    std::vector<std::string> callSequenceVec;
 
    GraphicalEffectTests::GraphicalNodeMock node(callSequenceVec);
-   Array<AbstractGraphicalNode*> nodes;
+   Array<Renderable*> nodes;
    nodes.push_back(&node);
 
    EffectDataSourceMock* dataSource = new EffectDataSourceMock(callSequenceVec);
@@ -21,7 +21,7 @@ TEST(GraphicalEffect, settingSimpleArgument)
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, callSequenceVec.size());
 
-   effect.render(nodes, 0, 1);
+   effect.render(nodes);
    CPPUNIT_ASSERT_EQUAL((unsigned int)4, callSequenceVec.size());
 
    CPPUNIT_ASSERT_EQUAL(std::string("EffectDataSource::setData"), callSequenceVec[0]);

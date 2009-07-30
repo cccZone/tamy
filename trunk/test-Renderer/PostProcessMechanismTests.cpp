@@ -17,7 +17,8 @@ TEST(PostProcessMechanism, renderingSingleEffect)
 
    RenderingProcessorTests::RenderingTechniqueStub technique("technique0", callSequence);
    PostProcessMechanism mechanism(new RegularTests::RenderingTargetsPolicyMock(), 
-                                  new PostProcessEffectNodeMock("effect", technique, callSequence));
+                                  technique,
+                                  new PostProcessEffectNodeMock("effect", callSequence));
 
    mechanism.render();
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, callSequence.size());

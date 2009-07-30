@@ -7,8 +7,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 PostProcessMechanism::PostProcessMechanism(RenderingTargetsPolicy* policy,
+                                           RenderingTechnique& technique,
                                            PostProcessEffectNode* effect)
       : RenderingMechanism(policy),
+      m_technique(technique),
       m_effect(effect)
 {
    if (effect == NULL)
@@ -16,14 +18,14 @@ PostProcessMechanism::PostProcessMechanism(RenderingTargetsPolicy* policy,
       throw std::invalid_argument("NULL pointer instead a PostProcessEffectNode instance");
    }
 
-   m_nodesToRender.push_back(effect);
+   m_renderables.push_back(effect);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 PostProcessMechanism::~PostProcessMechanism()
 {
-   m_nodesToRender.clear();
+   m_renderables.clear();
 
    delete m_effect;
    m_effect = NULL;
@@ -33,8 +35,7 @@ PostProcessMechanism::~PostProcessMechanism()
 
 void PostProcessMechanism::render()
 {   
-   RenderingTechnique& technique = m_effect->getTechnique();
-   technique.render(m_nodesToRender, 0, 1);
+   m_technique.render(m_renderables);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

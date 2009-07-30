@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class AbstractGraphicalNode;
+class Renderable;
 class RenderingTarget;
 class RenderingTargetsPolicy;
 
@@ -62,9 +62,7 @@ public:
    /** 
     * This method renders a group of nodes using this technique
     */
-   void render(Array<AbstractGraphicalNode*>& nodes, 
-               unsigned int startIdx, 
-               unsigned int endIdx);
+   void render(Array<Renderable*>& renderables);
 
 protected:
    /** 

@@ -290,10 +290,9 @@ D3DGraphicalEntitiesFactory::createTextureRenderingTarget(const std::string& nam
 ///////////////////////////////////////////////////////////////////////////////
 
 PostProcessEffectNode* 
-D3DGraphicalEntitiesFactory::createPostProcessEffectNode(const std::string& name,
-                                                         RenderingTechnique& technique)
+D3DGraphicalEntitiesFactory::createPostProcessEffectNode()
 {
-   return new D3DPostProcessEffectNode(name, technique, m_d3Device, m_renderer);
+   return new D3DPostProcessEffectNode(m_d3Device, m_renderer);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

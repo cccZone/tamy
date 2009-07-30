@@ -7,7 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class PostProcessEffectNode;
-class AbstractGraphicalNode;
+class Renderable;
+class RenderingTechnique;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,10 +16,12 @@ class PostProcessMechanism : public RenderingMechanism
 {
 private:
    PostProcessEffectNode* m_effect;
-   Array<AbstractGraphicalNode*> m_nodesToRender;
+   RenderingTechnique& m_technique;
+   Array<Renderable*> m_renderables;
 
 public:
    PostProcessMechanism(RenderingTargetsPolicy* policy, 
+                        RenderingTechnique& technique,
                         PostProcessEffectNode* effect);
    ~PostProcessMechanism();
 

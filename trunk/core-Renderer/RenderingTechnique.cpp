@@ -1,5 +1,5 @@
 #include "core-Renderer\RenderingTechnique.h"
-#include "core-Renderer\AbstractGraphicalNode.h"
+#include "core-Renderer\Renderable.h"
 #include "core-Renderer\RenderingTargetsPolicy.h"
 #include "core\Assert.h"
 
@@ -31,30 +31,24 @@ RenderingTechnique::RenderingTechnique(const RenderingTechnique& rhs)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingTechnique::render(Array<AbstractGraphicalNode*>& nodes, 
-                                unsigned int startIdx, 
-                                unsigned int endIdx)
+void RenderingTechnique::render(Array<Renderable*>& renderables)
 {
-   if (startIdx == endIdx) {return;}
-   ASSERT(nodes.size() > startIdx, "Invalid start index");
-   ASSERT(nodes.size() >= endIdx, "Invalid end index");
+   unsigned int renderablesCount = renderables.size();
 
    unsigned int passesCount = beginRendering();
-
    for (unsigned int passIdx = 0; passIdx < passesCount; ++passIdx)
    {
       m_renderingTargetsPolicy.setTargets(passIdx);
 
       beginPass(passIdx);
 
-      for (unsigned int nodeIdx = startIdx; nodeIdx < endIdx; ++nodeIdx)
+      for (unsigned int i = 0; i < renderablesCount; ++i)
       {
-         nodes[nodeIdx]->render();
+         renderables[i]->render();
       }
 
       endPass(passIdx);
    }
-
    endRendering();
 }
 

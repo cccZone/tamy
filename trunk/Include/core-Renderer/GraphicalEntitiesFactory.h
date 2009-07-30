@@ -104,8 +104,7 @@ public:
    /** 
     * This method creates a quad that can be used to render a full screen texture on.
     */
-   virtual PostProcessEffectNode* createPostProcessEffectNode(const std::string& name, 
-                                                              RenderingTechnique& technique) = 0;
+   virtual PostProcessEffectNode* createPostProcessEffectNode() = 0;
 
    GraphicalEffect* createEffect(const std::string& name, 
                                  bool isTransparent,

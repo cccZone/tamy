@@ -1,7 +1,8 @@
 #pragma once
 
-#include "core-Renderer\AbstractGraphicalNode.h"
+#include "core-Renderer\Renderable.h"
 #include "core\Observer.h"
+#include <string>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,16 +23,14 @@ enum RendererOps;
  *   - clamp the textures displayed on it
  *   - be rendered irrespective of the z-buffer contents (ensuring it's always rendered)
  */
-class PostProcessEffectNode : public AbstractGraphicalNode,
-                          public Observer<Renderer, RendererOps>
+class PostProcessEffectNode : public Renderable,
+                              public Observer<Renderer, RendererOps>
 {
 private:
    Renderer& m_renderer;
 
 public:
-   PostProcessEffectNode(const std::string& name,
-                         RenderingTechnique& technique,
-                         Renderer& renderer);
+   PostProcessEffectNode(Renderer& renderer);
 
    virtual ~PostProcessEffectNode();
 

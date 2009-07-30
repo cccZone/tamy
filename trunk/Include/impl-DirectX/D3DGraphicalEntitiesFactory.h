@@ -43,8 +43,7 @@ public:
 
    TextureRenderingTarget* createTextureRenderingTarget(const std::string& name);
 
-   PostProcessEffectNode* createPostProcessEffectNode(const std::string& name,
-                                                      RenderingTechnique& technique);
+   PostProcessEffectNode* createPostProcessEffectNode();
 
 
 protected:

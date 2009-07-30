@@ -18,7 +18,7 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
    std::vector<RenderingTechnique*> techniques; 
    techniques.push_back(&technique1);
    techniques.push_back(&technique1);
-   techniques.push_back(&technique2);
+   techniques.push_back(&technique2); // this one uses a different technique
    techniques.push_back(&technique1);
    GraphicalEntityMock entity("entity", techniques, results);
    GraphicalNode node1("", false, entity, 0);
@@ -30,8 +30,8 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
    Array<AbstractGraphicalNode*> nodesToRender;
    nodesToRender.push_back(&node1);
    nodesToRender.push_back(&node2);
+   nodesToRender.push_back(&node3); // the one with the different technique is set here
    nodesToRender.push_back(&node4);
-   nodesToRender.push_back(&node3); // this one uses a different material
 
    processor.translate(nodesToRender);
 
@@ -40,9 +40,10 @@ TEST(RenderingProcessor, materialNotSetIfItDoesntChange)
    expectedResults.push_back("Set technique technique1");
    expectedResults.push_back("Render entity subset 0");
    expectedResults.push_back("Render entity subset 1");
-   expectedResults.push_back("Render entity subset 3");
    expectedResults.push_back("Set technique technique2");
    expectedResults.push_back("Render entity subset 2");
+   expectedResults.push_back("Set technique technique1");
+   expectedResults.push_back("Render entity subset 3");
 
    CPPUNIT_ASSERT_EQUAL(expectedResults.size(), results.size());
 
