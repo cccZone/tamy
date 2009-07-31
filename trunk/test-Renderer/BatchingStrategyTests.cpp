@@ -2,24 +2,22 @@
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\BatchingStrategy.h"
-#include "RenderingTechniqueStub.h"
+#include "core-Renderer\Material.h"
 
-
-using namespace RegularTests;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(BatchComparator, sortingByMaterials)
 {
    // create the node we'll use for rendering
-   RenderingTechniqueStub technique1;
-   RenderingTechniqueStub technique2;
-   std::vector<RenderingTechnique*> techniques; 
-   techniques.push_back(&technique1);
-   techniques.push_back(&technique1);
-   techniques.push_back(&technique2);
-   techniques.push_back(&technique1);
-   GraphicalEntityMock entity("entity", techniques);
+   Material material1("material1");
+   Material material2("material2");
+   std::vector<Material*> materials; 
+   materials.push_back(&material1);
+   materials.push_back(&material1);
+   materials.push_back(&material2);
+   materials.push_back(&material1);
+   GraphicalEntityMock entity("entity", materials);
 
    GraphicalNode node1("subset0 - material1", false, entity, 0);
    GraphicalNode node2("subset1 - material1", false, entity, 1);

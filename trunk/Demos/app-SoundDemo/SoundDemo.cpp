@@ -78,7 +78,7 @@ void SoundDemo::initialize()
    m_sceneManager->addNode(camera);
 
    // prepare tiles that emit sounds
-   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_renderingTechniquesStorage);
+   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_materialsStorage);
    AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
    m_entitiesStorage.add(ent);
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile", false);

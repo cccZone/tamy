@@ -52,14 +52,14 @@ void TransparencyDemo::initialize()
    sceneRenderingTargetPolicy->addTarget(0, *m_renderingTarget);
    sceneRenderer->addVisualSceneManager(*visualSceneManager);
 
-   MaterialsParser parser(m_tamy.graphicalFactory(), m_renderingTechniquesStorage);
+   MaterialsParser parser(m_tamy.graphicalFactory(), m_materialsStorage);
    parser.load("..\\Data\\materials.xml");
 
    IWFLoader loader(m_tamy.graphicalFactory(), 
                     m_tamy.meshLoaders(),
                     *m_sceneManager, 
                     m_entitiesStorage,
-                    m_renderingTechniquesStorage);
+                    m_materialsStorage);
    loader.load("..\\Data\\Dolphin.iwf");
 
    Camera* camera = m_tamy.graphicalFactory().createCamera("camera");

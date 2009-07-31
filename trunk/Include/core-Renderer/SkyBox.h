@@ -8,7 +8,7 @@
 
 class Texture;
 class TextureImpl;
-class StageTextureRenderer;
+class MaterialImpl;
 class RenderingTargetsPolicy;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,13 +32,13 @@ enum SkyBoxSides
 class SkyBox : public Node
 {
 private:
-   StageTextureRenderer& m_textureRenderer;
+   MaterialImpl* m_materialImpl;
    RenderingTargetsPolicy& m_policy;
    TextureImpl* m_textures[6];
 
 public:
-   SkyBox(StageTextureRenderer& textureRenderer, RenderingTargetsPolicy& policy);
-   virtual ~SkyBox() {}
+   SkyBox(MaterialImpl* materialImpl, RenderingTargetsPolicy& policy);
+   virtual ~SkyBox();
 
    void render();
 

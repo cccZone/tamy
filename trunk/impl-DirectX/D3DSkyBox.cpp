@@ -9,11 +9,11 @@ DWORD D3DSkyBoxVertex::FVF = D3DFVF_XYZ | D3DFVF_TEX1;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DSkyBox::D3DSkyBox(StageTextureRenderer& textureRenderer, 
+D3DSkyBox::D3DSkyBox(MaterialImpl* materialImpl, 
                      RenderingTargetsPolicy& policy,
                      IDirect3DDevice9& d3Device, 
                      IDirect3DVertexBuffer9* vb)
-      : SkyBox(textureRenderer, policy),
+      : SkyBox(materialImpl, policy),
       m_d3Device(d3Device),
       m_vb(vb)
 {

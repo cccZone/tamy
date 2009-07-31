@@ -6,13 +6,14 @@
 #include "MaterialsFactoryMock.h"
 #include "core-Renderer\Material.h"
 #include "core\ResourceStorage.h"
+#include "core-Renderer\LightReflectingProperties.h"
 
 
 //////////////////////////////////////////////////////////////////////////////
 
 TEST(MaterialsParser, simpleMaterial)
 {
-   ResourceStorage<RenderingTechnique> matStorage;
+   ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
@@ -26,7 +27,7 @@ TEST(MaterialsParser, simpleMaterial)
 
 TEST(MaterialsParser, manyMaterialsInOneFile)
 {
-   ResourceStorage<RenderingTechnique> matStorage;
+   ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
@@ -42,7 +43,7 @@ TEST(MaterialsParser, manyMaterialsInOneFile)
 
 TEST(MaterialsParser, materialWithNoName)
 {
-   ResourceStorage<RenderingTechnique> matStorage;
+   ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
@@ -57,7 +58,7 @@ TEST(MaterialsParser, materialWithNoName)
 
 TEST(MaterialsParser, defaultLightReflectingProperties)
 {
-   ResourceStorage<RenderingTechnique> matStorage;
+   ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
@@ -82,7 +83,7 @@ TEST(MaterialsParser, defaultLightReflectingProperties)
 
 TEST(MaterialsParser, readingLightReflectingProperties)
 {
-   ResourceStorage<RenderingTechnique> matStorage;
+   ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
@@ -107,7 +108,7 @@ TEST(MaterialsParser, readingLightReflectingProperties)
 
 TEST(MaterialsParser, readingParitalLightReflectingPropertiesDefinition)
 {
-   ResourceStorage<RenderingTechnique> matStorage;
+   ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
 
@@ -132,7 +133,7 @@ TEST(MaterialsParser, readingParitalLightReflectingPropertiesDefinition)
 
 TEST(MaterialsParser, textureStage)
 {
-   ResourceStorage<RenderingTechnique> matStorage;
+   ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
    parser.load("..\\Data\\SingleTextureStage.xml");
@@ -154,7 +155,7 @@ TEST(MaterialsParser, textureStage)
 
 TEST(MaterialsParser, multipleTextureStages)
 {
-   ResourceStorage<RenderingTechnique> matStorage;
+   ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
    parser.load("..\\Data\\MultipleTextureStages.xml");
@@ -188,7 +189,7 @@ TEST(MaterialsParser, multipleTextureStages)
 
 TEST(MaterialsParser, multipleMaterialsWithTextureStages)
 {
-   ResourceStorage<RenderingTechnique> matStorage;
+   ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
    MaterialsParser parser(factory, matStorage);
    parser.load("..\\Data\\MultMatsMultStages.xml");

@@ -23,7 +23,7 @@ namespace RegularTests
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace RenderingTechniqueTests
+namespace GraphicalEffectTests
 {
    class RenderingTargetsPolicyMock : public RenderingTargetsPolicy
    {
@@ -74,6 +74,30 @@ namespace RendererTests
       }
 
       unsigned int getDefinedPassesCount() const {return 0;}
+   };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace RenderingProcessorTests
+{
+   class RenderingTargetsPolicyMock : public RenderingTargetsPolicy
+   {
+   private:
+      std::vector<std::string>& m_seqLog;
+
+   public:
+      RenderingTargetsPolicyMock(std::vector<std::string>& seqLog)
+         : m_seqLog(seqLog)
+      {}
+
+      unsigned int setTargets(unsigned int passIdx)
+      {
+         m_seqLog.push_back("Setting rendering targets");
+         return 1;
+      }
+
+      unsigned int getDefinedPassesCount() const {return 1;}
    };
 }
 

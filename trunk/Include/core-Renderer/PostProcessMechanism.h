@@ -1,28 +1,25 @@
 #pragma once
 
 #include "core-Renderer\RenderingMechanism.h"
-#include "core\Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class PostProcessEffectRenderable;
-class Renderable;
-class RenderingTechnique;
+class GraphicalEffect;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class PostProcessMechanism : public RenderingMechanism
 {
 private:
-   PostProcessEffectRenderable* m_effect;
-   RenderingTechnique& m_technique;
-   Array<Renderable*> m_renderables;
+   PostProcessEffectRenderable* m_renderable;
+   GraphicalEffect& m_effect;
 
 public:
    PostProcessMechanism(RenderingTargetsPolicy* policy, 
-                        RenderingTechnique& technique,
-                        PostProcessEffectRenderable* effect);
+                        GraphicalEffect& effect,
+                        PostProcessEffectRenderable* renderable);
    ~PostProcessMechanism();
 
    void render();

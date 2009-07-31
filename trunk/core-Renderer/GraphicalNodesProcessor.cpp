@@ -1,6 +1,6 @@
 #include "core-Renderer\GraphicalNodesProcessor.h"
 #include "core-Renderer\AbstractGraphicalNode.h"
-#include "core-Renderer\RenderingTechnique.h"
+#include "core-Renderer\Material.h"
 #include <algorithm>
 
 
@@ -17,7 +17,7 @@ void GraphicalNodesProcessor::operator()(const Array<AbstractGraphicalNode*>& in
    unsigned int regularNodesCount = 0;
    for (unsigned int i = 0; i < nodesCount; ++i)
    {
-      if (input[i]->getTechnique().isTransparent() == false)
+      if (input[i]->getMaterial().isTransparent() == false)
       {
          output.push_back(input[i]);
          regularNodesCount++;
@@ -26,7 +26,7 @@ void GraphicalNodesProcessor::operator()(const Array<AbstractGraphicalNode*>& in
 
    for (unsigned int i = 0; i < nodesCount; ++i)
    {
-      if (input[i]->getTechnique().isTransparent() == true)
+      if (input[i]->getMaterial().isTransparent() == true)
       {
          output.push_back(input[i]);
       }

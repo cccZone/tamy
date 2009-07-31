@@ -2,7 +2,8 @@
 
 #include "core-AppFlow\Application.h"
 #include "core-Renderer\AbstractGraphicalEntity.h"
-#include "core-Renderer\RenderingTechnique.h"
+#include "core-Renderer\Material.h"
+#include "core-Renderer\GraphicalEffect.h"
 #include "core\ResourceStorage.h"
 #include <vector>
 
@@ -58,7 +59,8 @@ private:
    bool m_rotating;
 
    ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
-   ResourceStorage<RenderingTechnique> m_renderingTechniquesStorage;
+   ResourceStorage<Material> m_materialsStorage;
+   ResourceStorage<GraphicalEffect> m_effectsStorage;
 
    RenderingUpdator* m_renderingUpdator;
 

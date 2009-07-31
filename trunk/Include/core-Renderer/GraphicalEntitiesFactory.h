@@ -30,7 +30,7 @@ struct MeshDefinition;
 struct LitVertex;
 class RenderingTarget;
 class TextureRenderingTarget;
-class RenderingTechnique;
+class Material;
 class GraphicalEffect;
 class EffectDataSource;
 class AbstractGraphicalNode;
@@ -69,14 +69,14 @@ public:
    virtual GraphicalEntity* createGraphicalEntity(const std::string& name,
                                                   const std::vector<LitVertex>& vertices,
                                                   const std::list<Face<USHORT> >& faces,
-                                                  const std::vector<RenderingTechnique*>& techniques) = 0;
+                                                  const std::vector<Material*>& materials) = 0;
 
    virtual SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                                 const std::vector<LitVertex>& vertices,
                                                                 const std::list<Face<USHORT> >& faces,
                                                                 const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                                 const std::vector<SkinBoneDefinition>& skinBones,
-                                                                const std::vector<RenderingTechnique*>& techniques) = 0;
+                                                                const std::vector<Material*>& materials) = 0;
 
    virtual Light* createLight(const std::string& name) = 0;
 
@@ -84,7 +84,7 @@ public:
                         Texture& left, Texture& right,
                         Texture& top, Texture& bottom);
 
-   virtual LightReflectingProperties* createLightReflectingProperties() = 0;
+   LightReflectingProperties* createLightReflectingProperties();
 
    MaterialStage* createMaterialStage(const std::string& textureName,
                                       MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
@@ -96,7 +96,7 @@ public:
 
    virtual ParticleSystem* createParticleSystem(const std::string& name, 
                                                 bool isDynamic, 
-                                                RenderingTechnique& renderingTechnique,
+                                                Material& material,
                                                 unsigned int particlesCount) = 0;
 
    virtual RenderingTarget* createDefaultRenderingTarget() = 0;
@@ -118,7 +118,7 @@ public:
     * the appearance of a rendered scene
     */
    PostProcessMechanism* createPostProcessMechanism(RenderingTargetsPolicy* policy,
-                                                    RenderingTechnique& technique);
+                                                    GraphicalEffect& effect);
 
 protected:
    GraphicalEntitiesFactory(const std::string& texturesPath, Renderer& renderer);
@@ -127,15 +127,6 @@ protected:
 
    virtual Texture* loadTexture(const std::string& path, const std::string& fileName) = 0;
    virtual Texture* createEmptyTexture() = 0;
-
-   virtual MaterialStage* createMaterialStage(Texture& tex,
-                                              MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
-                                              MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
-                                              CoordsOpCode coordsOperation) = 0;
-
-   virtual Material* createMaterialImpl(const std::string& name,
-                                        RenderingTargetsPolicy& policy,
-                                        LightReflectingProperties* lrp) = 0;
 
    virtual GraphicalEffect* createEffectImpl(const std::string& name, 
                                              RenderingTargetsPolicy& policy,

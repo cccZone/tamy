@@ -3,10 +3,11 @@
 #include <windows.h>
 #include "core\Array.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 class AbstractGraphicalNode;
+class RenderingTargetsPolicy;
+class MaterialImpl;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,7 +19,9 @@ class AbstractGraphicalNode;
 class RenderingProcessor
 {
 public:
-   void translate(Array<AbstractGraphicalNode*>& nodesToRender);
+   void translate(Array<AbstractGraphicalNode*>& nodesToRender, 
+                  MaterialImpl& impl,
+                  RenderingTargetsPolicy& policy);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

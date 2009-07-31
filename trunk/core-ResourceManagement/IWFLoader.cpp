@@ -19,7 +19,7 @@
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\LightReflectingProperties.h"
 #include "core-Renderer\Texture.h"
-#include "core-Renderer\RenderingTechnique.h"
+#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,13 +35,13 @@ IWFLoader::IWFLoader(GraphicalEntitiesFactory& entitiesFactory,
                      GraphicalDataSource& externalEntitiesSource,
                      SceneManager& sceneManager,
                      ResourceStorage<AbstractGraphicalEntity>& entitiesStorage,
-                     ResourceStorage<RenderingTechnique>& renderingTechniquesStorage)
+                     ResourceStorage<Material>& materialsStorage)
       : m_entitiesFactory(entitiesFactory),
-      m_entityLoader(new GraphicalEntityLoader(entitiesFactory, renderingTechniquesStorage)),
+      m_entityLoader(new GraphicalEntityLoader(entitiesFactory, materialsStorage)),
       m_externalEntitiesSource(externalEntitiesSource),
       m_sceneManager(sceneManager),
       m_entitiesStorage(entitiesStorage),
-      m_renderingTechniquesStorage(renderingTechniquesStorage)
+      m_materialsStorage(materialsStorage)
 {
 }
 

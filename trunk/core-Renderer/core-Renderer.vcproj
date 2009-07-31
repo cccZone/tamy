@@ -242,14 +242,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\RenderingTechnique.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\RenderingTechnique.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Include\core-Renderer\TextureRenderingTarget.h"
 					>
 				</File>
@@ -443,18 +435,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Editors"
-				>
-				<File
-					RelativePath=".\RenderingTechniqueReplacer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\RenderingTechniqueReplacer.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Misc"
 				>
 				<File
@@ -559,6 +539,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LightReflectingProperties.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core-Renderer\LightReflectingProperties.h"
 				>
 			</File>
@@ -571,15 +555,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Include\core-Renderer\MaterialImpl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MaterialOperation.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\MaterialOperation.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\MaterialOperationImplementation.h"
 				>
 			</File>
 			<File
@@ -598,14 +582,6 @@
 				RelativePath="..\Include\core-Renderer\NullLightReflectingProperties.h"
 				>
 			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\StageTextureRenderer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\TransparencyEnabler.h"
-				>
-			</File>
 			<Filter
 				Name="Textures"
 				>
@@ -619,6 +595,18 @@
 				</File>
 				<File
 					RelativePath="..\Include\core-Renderer\Texture.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Editors"
+				>
+				<File
+					RelativePath=".\MaterialReplacer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\MaterialReplacer.h"
 					>
 				</File>
 			</Filter>

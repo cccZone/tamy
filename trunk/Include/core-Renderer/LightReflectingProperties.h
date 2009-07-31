@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Material;
+class MaterialImpl;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,34 +16,34 @@ class Material;
  */
 class LightReflectingProperties
 {
-public:
-   virtual ~LightReflectingProperties() {}
+private:
+   Color m_ambient;
+   Color m_diffuse;
+   Color m_specular;
+   Color m_emissive;
+   float m_power;
 
-   virtual bool operator==(const LightReflectingProperties& rhs) const = 0;
+public:
+   LightReflectingProperties();
+   LightReflectingProperties(const LightReflectingProperties& rhs);
+
+   bool operator==(const LightReflectingProperties& rhs) const;
    bool operator!=(const LightReflectingProperties& rhs) const
    {
       return !(*this == rhs);
    }
 
-   /**
-    * This method shoudl perform a deep copy of the class instace.
-    */
-   virtual LightReflectingProperties* clone() = 0;
+   void setAmbientColor(const Color& ambient) {m_ambient = ambient;}
+   void setDiffuseColor(const Color& diffuse) {m_diffuse = diffuse;}
+   void setSpecularColor(const Color& specular) {m_specular = specular;}
+   void setEmissiveColor(const Color& emissive) {m_emissive = emissive;}
+   void setPower(float val) {m_power = val;}
 
-   virtual void setAmbientColor(const Color& ambient) = 0;
-   virtual void setDiffuseColor(const Color& diffuse) = 0;
-   virtual void setSpecularColor(const Color& specular) = 0;
-   virtual void setEmissiveColor(const Color& emissive) = 0;
-   virtual void setPower(float val) = 0;
-
-   virtual const Color& getDiffuseColor() const = 0;
-
-   /**
-    * This method is engine implementation specific
-    * and is supposed to set the light reflecting properties set 
-    * as an active one with which the objects will be rendered
-    */
-   virtual void setForRendering() = 0;
+   const Color& getAmbientColor() const {return m_ambient;}
+   const Color& getDiffuseColor() const {return m_diffuse;}
+   const Color& getSpecularColor() const {return m_specular;}
+   const Color& getEmissiveColor() const {return m_emissive;}
+   float getPower() const {return m_power;}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

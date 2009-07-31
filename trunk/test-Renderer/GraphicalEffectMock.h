@@ -16,15 +16,25 @@ class GraphicalEffectMock : public GraphicalEffect
 private:
    static RegularTests::RenderingTargetsPolicyMock s_policy;
    std::vector<std::string>& m_callSequenceVec;
+   unsigned int m_passesCount;
 
 public:
    GraphicalEffectMock(EffectDataSource* dataSource,
                        std::vector<std::string>& callSequenceVec) 
          : GraphicalEffect("GraphicalEffectMock", s_policy, false, dataSource),
-         m_callSequenceVec(callSequenceVec)
+         m_callSequenceVec(callSequenceVec),
+         m_passesCount(1)
    {}
 
-   void setTechnique(const std::string& technique) {}
+   GraphicalEffectMock(RenderingTargetsPolicy& policy,
+                       EffectDataSource* dataSource,
+                       std::vector<std::string>& callSequenceVec) 
+         : GraphicalEffect("GraphicalEffectMock", policy, false, dataSource),
+         m_callSequenceVec(callSequenceVec),
+         m_passesCount(1)
+   {}
+
+   void setTechnique(const std::string& material) {}
    void set(const std::string& paramName, bool val){ }
    void set(const std::string& paramName, int val){ }
    void set(const std::string& paramName, const Array<int>& val){ }
@@ -37,11 +47,13 @@ public:
    void set(const std::string& paramName, const D3DXVECTOR4& val){ }
    void set(const std::string& paramName, const Array<D3DXVECTOR4>& val){ }
 
+   void setPassesCount(unsigned int count) {m_passesCount = count;}
+
 protected:
-   unsigned int onBeginRendering()
+   unsigned int beginRendering()
    {
       m_callSequenceVec.push_back("GraphicalEffect::beginRendering");
-      return 1;
+      return m_passesCount;
    }
 
    void endRendering()
@@ -49,9 +61,19 @@ protected:
       m_callSequenceVec.push_back("GraphicalEffect::endRendering");
    }
 
-   void beginPass(const unsigned int& passIdx) {}
+   void beginPass(const unsigned int& passIdx) 
+   {
+      char tmpStr[128];
+      sprintf_s(tmpStr, 128, "GraphicalEffect::beginPass - %d", passIdx);
+      m_callSequenceVec.push_back(tmpStr);
+   }
 
-   void endPass(const unsigned int& passIdx) {}
+   void endPass(const unsigned int& passIdx) 
+   {
+      char tmpStr[128];
+      sprintf_s(tmpStr, 128, "GraphicalEffect::endPass - %d", passIdx);
+      m_callSequenceVec.push_back(tmpStr);
+   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

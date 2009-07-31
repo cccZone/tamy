@@ -55,7 +55,7 @@ void AnimationDemo::initialize()
                     m_tamy.meshLoaders(),
                     *m_sceneManager, 
                     m_entitiesStorage,
-                    m_renderingTechniquesStorage);
+                    m_materialsStorage);
    loader.load("..\\Data\\AnimLandscape.iwf");
 
    AbstractGraphicalEntity& ent = m_entitiesStorage.get("animlandscape.x");

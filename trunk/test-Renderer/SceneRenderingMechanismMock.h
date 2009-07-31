@@ -5,6 +5,7 @@
 #include <d3dx9.h>
 #include "core-Renderer\Camera.h"
 #include "RenderingTargetsPolicyMock.h"
+#include "MaterialImplMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,7 +19,7 @@ namespace RegularTests
 
    public:
       SceneRenderingMechanismMock(unsigned int maxLightsCount = 255) 
-            : SceneRenderingMechanism(new RenderingTargetsPolicyMock(), maxLightsCount)
+            : SceneRenderingMechanism(new RenderingTargetsPolicyMock(), maxLightsCount, new MaterialImplMock())
       {
          D3DXMatrixIdentity(&m_viewMtx);
       }

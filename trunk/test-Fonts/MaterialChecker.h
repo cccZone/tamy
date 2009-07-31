@@ -3,27 +3,27 @@
 #include "core\NodeVisitor.h"
 #include "core\TNodesVisitor.h"
 #include "core-Renderer\AbstractGraphicalNode.h"
-#include "core-Renderer\RenderingTechnique.h"
+#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderingTechniqueChecker : public NodeVisitor,
+class MaterialChecker : public NodeVisitor,
                                   public TNodesVisitor<AbstractGraphicalNode>
 {
 private:
-   const RenderingTechnique& m_technique;
+   const Material& m_material;
    unsigned int m_occurancesCount;
 
 public:
-   MaterialChecker(const RenderingTechnique& technique)
-      : m_technique(technique),
+   MaterialChecker(const Material& material)
+      : m_material(material),
       m_occurancesCount(0)
    {}
 
    void visit(AbstractGraphicalNode& node)
    {
-      if (m_technique == node.getTechnique())
+      if (m_material == node.getTechnique())
       {
          ++m_occurancesCount;
       }

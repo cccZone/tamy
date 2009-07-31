@@ -128,7 +128,7 @@ public:
     * This method returns a renderer-owned (and thus considered globally
     * accessible) instance of the RenderTargetsPolicy interface.
     *
-    * This class should be set on each and every rendering technique
+    * This class should be set on each and every rendering material
     * that is rendered on this renderer, so that it can be assured
     * that proper rendering targets are used throughout the rendering process
     */

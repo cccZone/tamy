@@ -92,7 +92,7 @@ void PickingDemo::initialize()
 
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
 
-   GraphicalEntityLoader loader(factory, m_renderingTechniquesStorage);
+   GraphicalEntityLoader loader(factory, m_materialsStorage);
 
    AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
    m_entitiesStorage.add(ent);
@@ -128,7 +128,7 @@ void PickingDemo::initialize()
                                                                  CC_CLAMP);
    Material* particleMat = factory.createMaterial("particleMat", particleLrp);
    particleMat->addStage(particleMatStage);
-   m_renderingTechniquesStorage.add(particleMat);
+   m_materialsStorage.add(particleMat);
 
    m_atmosphere = factory.createParticleSystem("atmosphere", false, *particleMat, 10000);
    m_atmosphere->setEmissionTime(20);
@@ -147,7 +147,7 @@ void PickingDemo::initialize()
                                                                CC_CLAMP);
    Material* cursorMat = factory.createMaterial("cursorMat", particleLrp);
    cursorMat->addStage(cursorMatStage);
-   m_renderingTechniquesStorage.add(cursorMat);
+   m_materialsStorage.add(cursorMat);
    m_cursor = factory.createParticleSystem("cursor", true, *cursorMat, 200);
    m_cursor->setEmissionTime(0.2f);
    m_cursor->setLifeSpan(0.3f, 0.2f);
@@ -165,7 +165,7 @@ void PickingDemo::initialize()
                                                                CC_CLAMP);
    Material* burstMat = factory.createMaterial("burstMat", particleLrp);
    burstMat->addStage(burstMatStage);
-   m_renderingTechniquesStorage.add(burstMat);
+   m_materialsStorage.add(burstMat);
    m_burst = factory.createParticleSystem("burst", true, *burstMat, 300);
    m_burst->setEmissionTime(0.1f);
    m_burst->setLifeSpan(1.f, 0.2f);
@@ -213,7 +213,7 @@ void PickingDemo::initialize()
                                                                  CC_CLAMP);
    Material* circularMat = factory.createMaterial("circularMat", particleLrp);
    circularMat->addStage(circularMatStage);
-   m_renderingTechniquesStorage.add(circularMat);
+   m_materialsStorage.add(circularMat);
    m_circular = factory.createParticleSystem("circular", false, *circularMat, 100);
    m_circular->setEmissionTime(0.1f);
    m_circular->setLifeSpan(2.f, 0.2f);

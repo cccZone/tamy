@@ -3,10 +3,6 @@
 #include "ext-Fonts\Font.h"
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\Material.h"
-#include "LightReflectingPropertiesStub.h"
-#include "MaterialOperationImplementationMock.h"
-#include "TransparencyEnablerStub.h"
-#include "RenderingTargetsPolicyMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,21 +12,13 @@ class FontMock : public Font
 private:
    std::vector<unsigned char> m_chars;
    GraphicalEntityMock m_mockEntity;
-
-   RenderingTargetsPolicyMock s_policy;
-   MaterialOperationImplementationMock m_matOp;
-   TransparencyEnablerStub m_transparencyEnabler;
    Material* m_material;
 
 public:
    FontMock() 
       : Font("FontMock") 
    {
-      m_material = new Material("someMaterial", 
-                                s_policy,
-                                new LightReflectingPropertiesStub(),
-                                m_matOp, m_matOp,
-                                m_transparencyEnabler);
+      m_material = new Material("someMaterial");
    }
 
    ~FontMock()

@@ -1,41 +1,39 @@
 #include "core-Renderer\RenderingProcessor.h"
 #include "core-Renderer\AbstractGraphicalNode.h"
-#include "core-Renderer\GraphicalEntity.h"
-#include "core-Renderer\RenderingTechnique.h"
+#include "core-Renderer\Renderable.h"
+#include "core-Renderer\Material.h"
+#include "core-Renderer\RenderingTargetsPolicy.h"
+#include "core-Renderer\MaterialImpl.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingProcessor::translate(Array<AbstractGraphicalNode*>& nodesToRender)
+void RenderingProcessor::translate(Array<AbstractGraphicalNode*>& nodesToRender,
+                                   MaterialImpl& impl,
+                                   RenderingTargetsPolicy& policy)
 {
    unsigned int nodesCount = nodesToRender.size();
    if (nodesCount == 0) {return;}
+   if (policy.getDefinedPassesCount() == 0) {return;}
 
-   Array<Renderable*> renderables(nodesToRender.size());
+   policy.setTargets(0);
 
    // we'll be processing the nodes in batches - find all the consecutive nodes
-   // that share the technique, and when we spot the first one that uses a different technique,
+   // that share the material, and when we spot the first one that uses a different material,
    // let's render the ones we iterated over, and start counting anew...
-   RenderingTechnique* prevTechnique = &(nodesToRender[0]->getTechnique());
-   renderables.push_back(nodesToRender[0]);
-   for (DWORD i = 1; i < nodesCount; ++i)
+   Material* prevMaterial = NULL;
+   for (DWORD i = 0; i < nodesCount; ++i)
    {
       AbstractGraphicalNode& graphicalNode = *(nodesToRender[i]);
-      RenderingTechnique& technique = graphicalNode.getTechnique();
+      Material& material = graphicalNode.getMaterial();
 
-      if (*prevTechnique != technique)
+      if ((!prevMaterial) || (*prevMaterial != material))
       {
-         prevTechnique->render(renderables);
-         renderables.clear();
-         prevTechnique = &technique;
+         material.setForRendering(impl);
+         prevMaterial = &material;
       }
-      
-      renderables.push_back(&graphicalNode);
+      graphicalNode.render();
    }
-
-   // ...however that will leave us with the nodes at the end of the list
-   // unprocessed - so process the remaining nodes now
-   prevTechnique->render(renderables);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

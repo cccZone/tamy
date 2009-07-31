@@ -9,7 +9,7 @@
 
 MaterialLeaf::MaterialLeaf(MaterialsParser& mainParser, 
                            GraphicalEntitiesFactory& factory,
-                           ResourceStorage<RenderingTechnique>& storage)
+                           ResourceStorage<Material>& storage)
       : MaterialXmlElement(mainParser),
       m_factory(factory),
       m_storage(storage)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core-Renderer\SkyBox.h"
-#include "StageTextureRendererStub.h"
+#include "MaterialImplMock.h"
 #include "RenderingTargetsPolicyMock.h"
 
 
@@ -10,7 +10,6 @@
 class SkyBoxMock : public SkyBox
 {
 private:
-   static StageTextureRendererStub s_stageTextureRenderer;
    static RegularTests::RenderingTargetsPolicyMock s_policy;
 
    bool m_wasRenderingStarted;
@@ -18,7 +17,7 @@ private:
 
 public:
    SkyBoxMock() 
-      : SkyBox(s_stageTextureRenderer, s_policy), 
+      : SkyBox(new RegularTests::MaterialImplMock(), s_policy), 
       m_wasRenderingStarted(false), 
       m_wasRenderingEnded(false) {}
 

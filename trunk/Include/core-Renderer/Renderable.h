@@ -4,7 +4,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A rendering technique renders renderables on the screen (sounds kinda weird ;)
+ * A rendering material renders renderables on the screen (sounds kinda weird ;)
  */
 class Renderable
 {

@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderingTechnique;
+class Material;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,18 +17,18 @@ class RenderingTechnique;
 class GraphicalEntity : public LeafGraphicalEntity
 {
 private:
-   std::vector<RenderingTechnique*> m_techniques;
+   std::vector<Material*> m_materials;
 
 public:
    GraphicalEntity(const std::string& name,
-                   const std::vector<RenderingTechnique*>& techniques);
+                   const std::vector<Material*>& materials);
    virtual ~GraphicalEntity();
 
    /**
-    * Each entity has some rendering technique set with which it should be rendered.
+    * Each entity has some rendering material set with which it should be rendered.
     * This method returns a reference to it.
     */
-   RenderingTechnique& getTechnique(DWORD subsetIdx) const;
+   Material& getMaterial(DWORD subsetIdx) const;
 
    unsigned int getNumSubsets() const;
 

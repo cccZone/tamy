@@ -22,11 +22,7 @@ private:
 public:
    CoordinatesOperation(CoordsOpCode opCode);
    CoordinatesOperation(const CoordinatesOperation& rhs);
-   virtual ~CoordinatesOperation();
-
-   virtual CoordinatesOperation* clone() = 0; 
-
-   virtual void setForRendering(unsigned char stageIdx) = 0;
+   ~CoordinatesOperation();
 
    bool operator==(const CoordinatesOperation& rhs) const;
    bool operator!=(const CoordinatesOperation& rhs) const;

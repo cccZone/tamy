@@ -8,6 +8,7 @@ class TextureImpl;
 class MaterialOperation;
 class CoordinatesOperation;
 class StageTextureRenderer;
+class MaterialImpl;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,14 +21,12 @@ private:
    MaterialOperation* m_colorOperation;
    MaterialOperation* m_alphaOperation;
    CoordinatesOperation* m_coordsOp;
-   StageTextureRenderer& m_textureRenderer;
 
 public:
    MaterialStage(Texture& texture, 
                  MaterialOperation* defaultColorOp, 
                  MaterialOperation* defaultAlphaOp,
-                 CoordinatesOperation* coordsOp,
-                 StageTextureRenderer& textureRenderer);
+                 CoordinatesOperation* coordsOp);
    MaterialStage(const MaterialStage& rhs);
    ~MaterialStage();
 
@@ -45,7 +44,7 @@ public:
 
    const Texture& getTexture() const {return m_texture;}
 
-   void setForRendering();
+   void setForRendering(MaterialImpl& impl);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

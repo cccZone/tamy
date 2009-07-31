@@ -5,8 +5,9 @@
 
 D3DSceneRenderingMechanism::D3DSceneRenderingMechanism(RenderingTargetsPolicy* policy,
                                                        unsigned int maxLightsCount,
+                                                       MaterialImpl* impl,
                                                        IDirect3DDevice9& d3Device)
-      : SceneRenderingMechanism(policy, maxLightsCount),
+      : SceneRenderingMechanism(policy, maxLightsCount, impl),
       m_d3Device(d3Device)
 {
 }

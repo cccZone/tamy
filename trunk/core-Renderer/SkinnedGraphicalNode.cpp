@@ -1,5 +1,6 @@
 #include "core-Renderer\SkinnedGraphicalNode.h"
 #include "core-Renderer\SkinnedGraphicalEntity.h"
+#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -9,7 +10,7 @@ SkinnedGraphicalNode::SkinnedGraphicalNode(const std::string& name,
                                            SkinnedGraphicalEntity& entity,
                                            DWORD subset,
                                            const std::vector<std::pair<Node*, D3DXMATRIX> >& bones) 
-      : AbstractGraphicalNode(name, dynamic, entity.getTechnique(subset), subset), 
+      : AbstractGraphicalNode(name, dynamic, entity.getMaterial(subset), subset), 
       m_entity(entity),
       m_bones(bones)
 {

@@ -3,26 +3,20 @@
 #include "impl-DirectX\D3DSkinnedGraphicalEntity.h"
 #include "impl-DirectX\D3DRenderer.h"
 #include "core-Renderer\LitVertex.h"
-#include "impl-DirectX\D3DLightReflectingProperties.h"
 #include "impl-DirectX\D3DLight.h"
 #include "impl-DirectX\D3DSkyBox.h"
 #include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\ManagedTexture.h"
-#include "impl-DirectX\D3DColorOperationImplementation.h"
-#include "impl-DirectX\D3DAlphaOperationImplementation.h"
 #include "impl-DirectX\D3DTexture.h"
 #include "impl-DirectX\D3DParticleSystem.h"
-#include "impl-DirectX\D3DTransparencyEnabler.h"
-#include "impl-DirectX\D3DCoordinatesOperation.h"
 #include "impl-DirectX\D3DDefaultRenderingTarget.h"
 #include "impl-DirectX\D3DTextureRenderingTarget.h"
-#include "impl-DirectX\D3DStageTextureRenderer.h"
 #include "impl-DirectX\D3DGraphicalEffect.h"
 #include "impl-DirectX\D3DPostProcessEffectRenderable.h"
 #include "impl-DirectX\D3DSceneRenderingMechanism.h"
-
+#include "impl-DirectX\D3DMaterialImpl.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,11 +25,7 @@ D3DGraphicalEntitiesFactory::D3DGraphicalEntitiesFactory(const std::string& text
                                                          D3DRenderer& renderer)
       : GraphicalEntitiesFactory(texturesPath, renderer),
       m_d3Device(d3Device),
-      m_renderer(renderer),
-      m_colorOpImpl(new D3DColorOperationImplementation(d3Device)),
-      m_alphaOpImpl(new D3DAlphaOperationImplementation(d3Device)),
-      m_transparencyEnabler(new D3DTransparencyEnabler(d3Device)),
-      m_stageTextureRenderer(new D3DStageTextureRenderer(d3Device))
+      m_renderer(renderer)
 {
 }
 
@@ -43,17 +33,6 @@ D3DGraphicalEntitiesFactory::D3DGraphicalEntitiesFactory(const std::string& text
 
 D3DGraphicalEntitiesFactory::~D3DGraphicalEntitiesFactory()
 {
-   delete m_stageTextureRenderer;
-   m_stageTextureRenderer = NULL;
-
-   delete m_transparencyEnabler;
-   m_transparencyEnabler = NULL;
-
-   delete m_colorOpImpl;
-   m_colorOpImpl = NULL;
-
-   delete m_alphaOpImpl;
-   m_alphaOpImpl = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,20 +44,13 @@ Light* D3DGraphicalEntitiesFactory::createLight(const std::string& name)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LightReflectingProperties* D3DGraphicalEntitiesFactory::createLightReflectingProperties()
-{
-   return new D3DLightReflectingProperties(m_d3Device);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 GraphicalEntity* D3DGraphicalEntitiesFactory::createGraphicalEntity(
                                                            const std::string& name,
                                                            const std::vector<LitVertex>& vertices,
                                                            const std::list<Face<USHORT> >& faces,
-                                                           const std::vector<RenderingTechnique*>& techniques)
+                                                           const std::vector<Material*>& materials)
 {
-    return new D3DGraphicalEntity<LitVertex>(name, m_d3Device, vertices, faces, techniques);
+    return new D3DGraphicalEntity<LitVertex>(name, m_d3Device, vertices, faces, materials);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,7 +61,7 @@ SkinnedGraphicalEntity* D3DGraphicalEntitiesFactory::createSkinnedGraphicalEntit
                                                            const std::list<Face<USHORT> >& faces,
                                                            const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                            const std::vector<SkinBoneDefinition>& skinBones,
-                                                           const std::vector<RenderingTechnique*>& techniques)
+                                                           const std::vector<Material*>& materials)
 {
    return new D3DSkinnedGraphicalEntity<LitVertex>(name, 
                                                    m_d3Device, 
@@ -97,7 +69,7 @@ SkinnedGraphicalEntity* D3DGraphicalEntitiesFactory::createSkinnedGraphicalEntit
                                                    faces, 
                                                    bonesInfluencingAttribute, 
                                                    skinBones, 
-                                                   techniques);
+                                                   materials);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -154,7 +126,7 @@ SkyBox* D3DGraphicalEntitiesFactory::createSkyBox()
 
    vb->Unlock();
 
-   return new D3DSkyBox(*m_stageTextureRenderer, m_renderer.getRenderingTargetsPolicy(), m_d3Device, vb);
+   return new D3DSkyBox(new D3DMaterialImpl(m_d3Device), m_renderer.getRenderingTargetsPolicy(), m_d3Device, vb);
 
 }
 
@@ -237,40 +209,14 @@ Texture* D3DGraphicalEntitiesFactory::createEmptyTexture()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MaterialStage* D3DGraphicalEntitiesFactory::createMaterialStage(Texture& tex,
-                                      MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
-                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
-                                      CoordsOpCode coordsOp)
-{
-   return new MaterialStage(tex,
-            new MaterialOperation(*m_colorOpImpl, 
-                                  colorOp, colorArg1, colorArg2),
-            new MaterialOperation(*m_alphaOpImpl, 
-                                  alphaOp, alphaArg1, alphaArg2),
-            new D3DCoordinatesOperation(m_d3Device, coordsOp),
-            *m_stageTextureRenderer);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Material* D3DGraphicalEntitiesFactory::createMaterialImpl(
-                                             const std::string& name,
-                                             RenderingTargetsPolicy& policy,
-                                             LightReflectingProperties* lrp)
-{
-   return new Material(name, policy, lrp, *m_alphaOpImpl, *m_colorOpImpl, *m_transparencyEnabler);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 ParticleSystem* D3DGraphicalEntitiesFactory::createParticleSystem(
                                               const std::string& name, 
                                               bool isDynamic, 
-                                              RenderingTechnique& renderingTechnique,
+                                              Material& material,
                                               unsigned int particlesCount)
 {
    return new D3DParticleSystem(m_d3Device,
-                                name, isDynamic, renderingTechnique, particlesCount);
+                                name, isDynamic, material, particlesCount);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -336,6 +282,7 @@ D3DGraphicalEntitiesFactory::createSceneRenderingMechanism(RenderingTargetsPolic
 {
    return new D3DSceneRenderingMechanism(policy,
                                          m_renderer.getMaxLightsCount(),
+                                         new D3DMaterialImpl(m_d3Device),
                                          m_d3Device);
 }
 

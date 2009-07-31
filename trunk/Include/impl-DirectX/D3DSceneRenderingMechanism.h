@@ -14,6 +14,7 @@ private:
 public:
    D3DSceneRenderingMechanism(RenderingTargetsPolicy* policy,
                               unsigned int maxLightsCount,
+                              MaterialImpl* impl,
                               IDirect3DDevice9& d3Device);
 
 protected:

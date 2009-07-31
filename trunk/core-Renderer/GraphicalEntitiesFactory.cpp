@@ -2,6 +2,9 @@
 #include "core-Renderer\SkyBox.h"
 #include "core-Renderer\LightReflectingProperties.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
+#include "core-Renderer\MaterialOperation.h"
+#include "core-Renderer\CoordinatesOperation.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\PostProcessMechanism.h"
@@ -28,6 +31,13 @@ GraphicalEntitiesFactory::~GraphicalEntitiesFactory()
 Camera* GraphicalEntitiesFactory::createCamera(const std::string& name)
 {
    return new Camera(name, m_renderer);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+LightReflectingProperties* GraphicalEntitiesFactory::createLightReflectingProperties()
+{
+   return new LightReflectingProperties();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,10 +93,10 @@ MaterialStage* GraphicalEntitiesFactory::createMaterialStage(
       m_textures.add(texture);
    }
 
-   return createMaterialStage(*texture,
-                              colorOp, colorArg1, colorArg2,
-                              alphaOp, alphaArg1, alphaArg2,
-                              coordsOperation);
+   return new MaterialStage(*texture,
+                            new MaterialOperation(colorOp, colorArg1, colorArg2),
+                            new MaterialOperation(alphaOp, alphaArg1, alphaArg2),
+                            new CoordinatesOperation(coordsOperation));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -95,9 +105,8 @@ Material* GraphicalEntitiesFactory::createMaterial(
                                           const std::string& materialName,
                                           LightReflectingProperties* lrp)
 {
-   Material* mat = createMaterialImpl(materialName, 
-                                      m_renderer.getRenderingTargetsPolicy(), 
-                                      lrp);
+   Material* mat = new Material(materialName);
+   mat->setLightReflectingProperties(lrp);
    return mat;
 }
 
@@ -118,10 +127,10 @@ GraphicalEffect* GraphicalEntitiesFactory::createEffect(const std::string& name,
 
 PostProcessMechanism* 
 GraphicalEntitiesFactory::createPostProcessMechanism(RenderingTargetsPolicy* policy,
-                                                     RenderingTechnique& technique)
+                                                     GraphicalEffect& effect)
 {
    PostProcessEffectRenderable* renderable = createPostProcessEffectRenderable();
-   return new PostProcessMechanism(policy, technique, renderable);
+   return new PostProcessMechanism(policy, effect, renderable);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

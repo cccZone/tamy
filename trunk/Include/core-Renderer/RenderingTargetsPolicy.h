@@ -5,7 +5,7 @@
 
 /**
  * This policy defines what targets should be used for particular 
- * technique rendering passes
+ * material rendering passes
  */
 class RenderingTargetsPolicy
 {

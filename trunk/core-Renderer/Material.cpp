@@ -2,7 +2,7 @@
 #include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\LightReflectingProperties.h"
-#include "core-Renderer\TransparencyEnabler.h"
+#include "core-Renderer\MaterialImpl.h"
 #include <string.h>
 #include <stdexcept>
 
@@ -10,23 +10,19 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 unsigned char Material::s_stagesArrSize = 8;
+unsigned int Material::m_nextIndex = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material::Material(const std::string& name,
-                   RenderingTargetsPolicy& policy,
-                   LightReflectingProperties* lrp,
-                   MaterialOperationImplementation& alphaMatOp,
-                   MaterialOperationImplementation& colorMatOp,
-                   TransparencyEnabler& transparencyEnabler)
-      : RenderingTechnique(name, policy),
-      m_lightReflectingProperties(lrp),
-      m_disableAlpha(new MaterialOperation(alphaMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
-      m_disableColor(new MaterialOperation(colorMatOp, MOP_DISABLE, SC_NONE, SC_NONE)),
-      m_transparencyEnabler(transparencyEnabler),
+Material::Material(const std::string& name)
+      : m_name(name),
+      m_index(m_nextIndex),
+      m_lightReflectingProperties(new LightReflectingProperties()),
       m_stagesCount(0),
       m_transparent(false)
 {
+   ++m_nextIndex;
+
    m_stages = new MaterialStageP[s_stagesArrSize];
    memset(m_stages, NULL, sizeof(MaterialStageP) * s_stagesArrSize);
 
@@ -36,14 +32,14 @@ Material::Material(const std::string& name,
 ///////////////////////////////////////////////////////////////////////////////
 
 Material::Material(const Material& rhs)
-      : RenderingTechnique(rhs),
-      m_lightReflectingProperties(rhs.m_lightReflectingProperties->clone()),
-      m_disableAlpha(new MaterialOperation(*rhs.m_disableAlpha)),
-      m_disableColor(new MaterialOperation(*rhs.m_disableColor)),
-      m_transparencyEnabler(rhs.m_transparencyEnabler),
+      : m_name(rhs.m_name),
+      m_index(m_nextIndex),
+      m_lightReflectingProperties(new LightReflectingProperties(*rhs.m_lightReflectingProperties)),
       m_stagesCount(rhs.m_stagesCount),
       m_transparent(false)
 {
+   ++m_nextIndex;
+
    m_stages = new MaterialStageP[s_stagesArrSize];
    memset(m_stages, NULL, sizeof(MaterialStageP) * s_stagesArrSize);
 
@@ -62,12 +58,6 @@ Material::~Material()
 {
    delete m_lightReflectingProperties;
    m_lightReflectingProperties = NULL;
-
-   delete m_disableAlpha;
-   m_disableAlpha = NULL;
-
-   delete m_disableColor;
-   m_disableColor = NULL;
 
    for (unsigned char i = 0; i < m_stagesCount; ++i)
    {
@@ -156,39 +146,15 @@ bool Material::isTransparent() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-unsigned int Material::beginRendering()
+void Material::setForRendering(MaterialImpl& impl)
 {
-   m_transparencyEnabler.setTransparency(m_transparent);
-
-   m_lightReflectingProperties->setForRendering();
+   impl.setTransparency(m_transparent);
+   impl.setLRP(*m_lightReflectingProperties);
 
    for (unsigned char i = 0; i < m_stagesCount; ++i)
    {
-      m_stages[i]->setForRendering();
+      m_stages[i]->setForRendering(impl);
    }
-
-   m_disableAlpha->setForRendering(m_stagesCount);
-   m_disableColor->setForRendering(m_stagesCount);
-
-   return 1;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Material::endRendering()
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Material::beginPass(const unsigned int& passIdx)
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Material::endPass(const unsigned int& passIdx)
-{
 }
 
 ///////////////////////////////////////////////////////////////////////////////

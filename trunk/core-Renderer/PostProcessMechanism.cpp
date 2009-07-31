@@ -1,41 +1,37 @@
 #include "core-Renderer\PostProcessMechanism.h"
 #include "core-Renderer\PostProcessEffectRenderable.h"
-#include "core-Renderer\RenderingTechnique.h"
+#include "core-Renderer\GraphicalEffect.h"
 #include <stdexcept>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 PostProcessMechanism::PostProcessMechanism(RenderingTargetsPolicy* policy,
-                                           RenderingTechnique& technique,
-                                           PostProcessEffectRenderable* effect)
+                                           GraphicalEffect& effect,
+                                           PostProcessEffectRenderable* renderable)
       : RenderingMechanism(policy),
-      m_technique(technique),
-      m_effect(effect)
+      m_effect(effect),
+      m_renderable(renderable)
 {
-   if (effect == NULL)
+   if (renderable == NULL)
    {
       throw std::invalid_argument("NULL pointer instead a PostProcessEffectRenderable instance");
    }
-
-   m_renderables.push_back(effect);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 PostProcessMechanism::~PostProcessMechanism()
 {
-   m_renderables.clear();
-
-   delete m_effect;
-   m_effect = NULL;
+   delete m_renderable;
+   m_renderable = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void PostProcessMechanism::render()
 {   
-   m_technique.render(m_renderables);
+   m_effect.render(*m_renderable);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

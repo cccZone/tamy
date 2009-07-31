@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderingTechnique;
+class Material;
 class AbstractGraphicalNode;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,15 +15,15 @@ class AbstractGraphicalNode;
  * This visitor will replace the material in all AbstractGraphicalNodes
  * in the specified nodes hierarchy.
  */
-class RenderingTechniqueReplacer : public NodeVisitor,
+class MaterialReplacer : public NodeVisitor,
                                    public TNodesVisitor<AbstractGraphicalNode>
 {
 private:
-   const RenderingTechnique& m_source;
-   RenderingTechnique& m_target;
+   const Material& m_source;
+   Material& m_target;
 
 public:
-   RenderingTechniqueReplacer(const RenderingTechnique& source, RenderingTechnique& target);
+   MaterialReplacer(const Material& source, Material& target);
 
    void visit(AbstractGraphicalNode& node);
 };

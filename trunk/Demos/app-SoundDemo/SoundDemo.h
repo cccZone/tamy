@@ -2,7 +2,7 @@
 
 #include "core-AppFlow\Application.h"
 #include "core-Renderer\AbstractGraphicalEntity.h"
-#include "core-Renderer\RenderingTechnique.h"
+#include "core-Renderer\Material.h"
 #include "core\ResourceStorage.h"
 
 
@@ -31,7 +31,7 @@ private:
    UserInputController& m_uiController;
 
    ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
-   ResourceStorage<RenderingTechnique> m_renderingTechniquesStorage;
+   ResourceStorage<Material> m_materialsStorage;
 
    CompositeSceneManager* m_sceneManager;
    UnconstrainedMotionController* m_cameraController;

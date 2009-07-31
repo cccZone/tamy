@@ -13,6 +13,7 @@ class Camera;
 class RenderingProcessor;
 class GraphicalNodesProcessor;
 class AbstractGraphicalNode;
+class MaterialImpl;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,6 +21,7 @@ class SceneRenderingMechanism : public RenderingMechanism
 {
 private:
    unsigned int m_maxLightsCount;
+   MaterialImpl* m_impl;
 
    Array<VisualSceneManager*> m_sceneManagers;
 
@@ -32,7 +34,8 @@ private:
 
 public:
    SceneRenderingMechanism(RenderingTargetsPolicy* policy,
-                           unsigned int maxLightsCount);
+                           unsigned int maxLightsCount,
+                           MaterialImpl* impl);
    ~SceneRenderingMechanism();
 
    void render();

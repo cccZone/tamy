@@ -53,7 +53,7 @@ void SkinningDemo::initialize()
    sceneRenderer->addVisualSceneManager(*visualSceneManager);
 
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
-   GraphicalEntityLoader loader(factory, m_renderingTechniquesStorage);
+   GraphicalEntityLoader loader(factory, m_materialsStorage);
 
    AbstractGraphicalEntity* ent = loader.load("US Ranger.x", m_tamy.meshLoaders());
    m_entitiesStorage.add(ent);

@@ -31,7 +31,7 @@ public:
                       ID3DXEffect* effect);
    ~D3DGraphicalEffect();
 
-   void setTechnique(const std::string& technique);
+   void setTechnique(const std::string& material);
    void set(const std::string& paramName, bool val);
    void set(const std::string& paramName, int val);
    void set(const std::string& paramName, const Array<int>& val);
@@ -48,7 +48,7 @@ public:
    void update(D3DRenderer& renderer, const D3DGraphResourceOp& operation);
 
 protected:
-   unsigned int  onBeginRendering();
+   unsigned int beginRendering();
    void endRendering();
    void beginPass(const unsigned int& passIdx);
    void endPass(const unsigned int& passIdx);

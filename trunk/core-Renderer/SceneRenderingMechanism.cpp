@@ -5,15 +5,18 @@
 #include "core-Renderer\SkyBox.h"
 #include "core-Renderer\RenderingProcessor.h"
 #include "core-Renderer\GraphicalNodesProcessor.h"
+#include "core-Renderer\MaterialImpl.h"
 #include "core\Frustum.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SceneRenderingMechanism::SceneRenderingMechanism(RenderingTargetsPolicy* policy,
-                                                 unsigned int maxLightsCount)
+                                                 unsigned int maxLightsCount,
+                                                 MaterialImpl* impl)
       : RenderingMechanism(policy),
       m_maxLightsCount(maxLightsCount),
+      m_impl(impl),
       m_nodesProcessor(new GraphicalNodesProcessor()),
       m_renderingProcessor(new RenderingProcessor())
 {
@@ -30,6 +33,9 @@ SceneRenderingMechanism::~SceneRenderingMechanism()
 
    delete m_renderingProcessor;
    m_renderingProcessor = NULL;
+
+   delete m_impl;
+   m_impl = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +123,7 @@ void SceneRenderingMechanism::renderContents(VisualSceneManager& sceneManager,
 
    (*m_nodesProcessor)(m_visibleNodes, cameraFrustum, cameraPos, m_nodesToProcess);
 
-   m_renderingProcessor->translate(m_nodesToProcess);
+   m_renderingProcessor->translate(m_nodesToProcess, *m_impl, getRenderingTargetPolicy());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

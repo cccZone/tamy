@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderingTechnique;
+class Material;
 class Node;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,13 +22,13 @@ class SkinnedGraphicalEntity : public LeafGraphicalEntity
 private:
    std::vector<SkinBoneDefinition> m_skeleton;
    std::vector<BonesInfluenceDefinition> m_boneSets;
-   std::vector<RenderingTechnique*> m_techniques;
+   std::vector<Material*> m_materials;
 
 public:
    SkinnedGraphicalEntity(const std::string& name,
                           const std::vector<SkinBoneDefinition>& skeleton,
                           const std::vector<BonesInfluenceDefinition>& boneSets,
-                          const std::vector<RenderingTechnique*>& techniques);
+                          const std::vector<Material*>& materials);
 
    virtual ~SkinnedGraphicalEntity();
 
@@ -36,7 +36,7 @@ public:
     * Each entity has some material set with which it should be rendered.
     * This method returns a reference to it.
     */
-   RenderingTechnique& getTechnique(DWORD subsetIdx) const;
+   Material& getMaterial(DWORD subsetIdx) const;
 
    unsigned int getNumSubsets() const;
 

@@ -1,5 +1,5 @@
 #include "core-Renderer\SkinnedGraphicalEntity.h"
-#include "core-Renderer\RenderingTechnique.h"
+#include "core-Renderer\Material.h"
 #include "core-Renderer\SkinnedGraphicalNode.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include <deque>
@@ -14,17 +14,17 @@
 SkinnedGraphicalEntity::SkinnedGraphicalEntity(const std::string& name,
                                                const std::vector<SkinBoneDefinition>& skeleton,
                                                const std::vector<BonesInfluenceDefinition>& boneSets,
-                                               const std::vector<RenderingTechnique*>& techniques)
+                                               const std::vector<Material*>& materials)
       : LeafGraphicalEntity(name),
       m_skeleton(skeleton),
       m_boneSets(boneSets),
-      m_techniques(techniques)
+      m_materials(materials)
 {
    // the number of bone influences must match the number of materials passed
-   if (boneSets.size() != techniques.size())
+   if (boneSets.size() != materials.size())
    {
       throw std::invalid_argument("Invalid attributes definition - number of bone influences doesn't\
-                                  match the number of rendering techniques per attribute");
+                                  match the number of rendering materials per attribute");
    }
 }
 
@@ -36,13 +36,13 @@ SkinnedGraphicalEntity::~SkinnedGraphicalEntity()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingTechnique& SkinnedGraphicalEntity::getTechnique(DWORD subsetIdx) const 
+Material& SkinnedGraphicalEntity::getMaterial(DWORD subsetIdx) const 
 {
-   if (subsetIdx >= m_techniques.size())
+   if (subsetIdx >= m_materials.size())
    {
       throw std::out_of_range("There aren't so many subsets defined");
    }
-   return *(m_techniques.at(subsetIdx));
+   return *(m_materials.at(subsetIdx));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

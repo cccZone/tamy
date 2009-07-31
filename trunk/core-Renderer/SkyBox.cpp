@@ -1,6 +1,6 @@
 #include "core-Renderer\SkyBox.h"
 #include "core-Renderer\Texture.h"
-#include "core-Renderer\StageTextureRenderer.h"
+#include "core-Renderer\MaterialImpl.h"
 #include "core-Renderer\RenderingTargetsPolicy.h"
 #include "core\NodeVisitor.h"
 #include "core\TNodesVisitor.h"
@@ -8,16 +8,24 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkyBox::SkyBox(StageTextureRenderer& textureRenderer, 
+SkyBox::SkyBox(MaterialImpl* materialImpl, 
                RenderingTargetsPolicy& policy)
       : Node("SkyBox", false),
-      m_textureRenderer(textureRenderer),
+      m_materialImpl(materialImpl),
       m_policy(policy)
 {
    for (unsigned char i = 0; i < 6; ++i)
    {
       m_textures[i] = NULL;
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SkyBox::~SkyBox()
+{
+   delete m_materialImpl;
+   m_materialImpl = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,7 +46,7 @@ void SkyBox::render()
    for (unsigned char i = 0; i < 6; ++i)
    {
       if (m_textures[i] == NULL) continue;
-      m_textureRenderer.setForRendering(0, *(m_textures[i]));
+      m_materialImpl->setTexture(0, *(m_textures[i]));
 
       renderSide(static_cast<SkyBoxSides> (i));
    }

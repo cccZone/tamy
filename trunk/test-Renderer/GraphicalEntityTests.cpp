@@ -9,19 +9,16 @@
 #include <vector>
 #include "NodeHierarchyWriter.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
-#include "TransparencyEnablerStub.h"
-#include "CoordinatesOperationMock.h"
-#include "RenderingTechniqueStub.h"
+#include "core-Renderer\Material.h"
 
 
-using namespace RegularTests;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(GraphicalEntityInstantiation, basics)
 {
-   std::vector<RenderingTechnique*> techniquesListStub;
-   techniquesListStub.push_back(reinterpret_cast<RenderingTechnique*> (0xCC));
+   std::vector<Material*> materialsListStub;
+   materialsListStub.push_back(reinterpret_cast<Material*> (0xCC));
 
    D3DXMATRIX bodyMtx; D3DXMatrixIdentity(&bodyMtx);
    D3DXMATRIX identityMtx; D3DXMatrixIdentity(&identityMtx);
@@ -30,11 +27,11 @@ TEST(GraphicalEntityInstantiation, basics)
 
    // prepare the entities
    CompositeGraphicalEntity bodyRoot("body", bodyMtx);
-   GraphicalEntityMock* bodyEntity = new GraphicalEntityMock("body_entity", techniquesListStub);
+   GraphicalEntityMock* bodyEntity = new GraphicalEntityMock("body_entity", materialsListStub);
    CompositeGraphicalEntity* headRoot = new CompositeGraphicalEntity("head", headMtx);
-   GraphicalEntityMock* headEntity = new GraphicalEntityMock("head_entity", techniquesListStub);
+   GraphicalEntityMock* headEntity = new GraphicalEntityMock("head_entity", materialsListStub);
    CompositeGraphicalEntity* handRoot = new CompositeGraphicalEntity("hand", handMtx);
-   GraphicalEntityMock* handEntity = new GraphicalEntityMock("hand_entity", techniquesListStub);
+   GraphicalEntityMock* handEntity = new GraphicalEntityMock("hand_entity", materialsListStub);
 
    headRoot->addChild(headEntity);
    handRoot->addChild(handEntity);
@@ -85,13 +82,13 @@ TEST(GraphicalEntityInstantiation, basics)
 
 TEST(GraphicalEntityInstantiation, multipleSubsets)
 {
-   std::vector<RenderingTechnique*> bodyTechniques;
-   std::vector<RenderingTechnique*> headTechniques;
-   std::vector<RenderingTechnique*> handTechniques;
+   std::vector<Material*> bodyTechniques;
+   std::vector<Material*> headTechniques;
+   std::vector<Material*> handTechniques;
 
-   RenderingTechniqueStub skinMat;
-   RenderingTechniqueStub blouseMat;
-   RenderingTechniqueStub hairMat;
+   Material skinMat("");
+   Material blouseMat("");
+   Material hairMat("");
 
    bodyTechniques.push_back(&skinMat);
    bodyTechniques.push_back(&blouseMat);
@@ -179,20 +176,20 @@ TEST(SkinnedGraphicalEntityInstantiation, basics)
 
    // ... attributes
    std::vector<BonesInfluenceDefinition> attributes;
-   RenderingTechniqueStub renderingTechnique;
-   std::vector<RenderingTechnique*> techniques;
+   Material material("");
+   std::vector<Material*> materials;
    tmpVec.clear(); tmpVec.push_back("bodyBone"); tmpVec.push_back("headBone"); // attribute subset 0
    attributes.push_back(tmpVec);
-   techniques.push_back(&renderingTechnique);
+   materials.push_back(&material);
    tmpVec.clear(); tmpVec.push_back("headBone");                               // attribute subset 1
    attributes.push_back(tmpVec);
-   techniques.push_back(&renderingTechnique);
+   materials.push_back(&material);
    tmpVec.clear(); tmpVec.push_back("handBone");                               // attribute subset 2
    attributes.push_back(tmpVec);
-   techniques.push_back(&renderingTechnique);
+   materials.push_back(&material);
 
    // ... and finally the entity itself
-   SkinnedGraphicalEntityMock body("body", skeleton, attributes, techniques);
+   SkinnedGraphicalEntityMock body("body", skeleton, attributes, materials);
 
    // create the skeletal structure the skin is stretched over
    Node bodyBoneNode("bodyBone", false);
@@ -262,20 +259,20 @@ TEST(SkinnedGraphicalEntityInstantiation, bonoeReferenceMissing)
 
    // ... attributes
    std::vector<BonesInfluenceDefinition> attributes;
-   RenderingTechniqueStub renderingTechnique;
-   std::vector<RenderingTechnique*> techniques;
+   Material material("");
+   std::vector<Material*> materials;
    tmpVec.clear(); tmpVec.push_back("bodyBone"); tmpVec.push_back("headBone"); // attribute subset 0
    attributes.push_back(tmpVec);
-   techniques.push_back(&renderingTechnique);
+   materials.push_back(&material);
    tmpVec.clear(); tmpVec.push_back("headBone");                               // attribute subset 1
    attributes.push_back(tmpVec);
-   techniques.push_back(&renderingTechnique);
+   materials.push_back(&material);
    tmpVec.clear(); tmpVec.push_back("handBone");                               // attribute subset 2
    attributes.push_back(tmpVec);
-   techniques.push_back(&renderingTechnique);
+   materials.push_back(&material);
 
    // ... and finally the entity itself
-   SkinnedGraphicalEntityMock body("body", skeleton, attributes, techniques);
+   SkinnedGraphicalEntityMock body("body", skeleton, attributes, materials);
 
    // create the skeletal structure the skin is stretched over
    Node bodyBoneNode("bodyBone", false);
@@ -313,21 +310,21 @@ TEST(SkinnedGraphicalEntityInstantiation, instantiationViaGraphicalNodeInstantia
 
    // ... attributes
    std::vector<BonesInfluenceDefinition> attributes;
-   RenderingTechniqueStub renderingTechnique;
-   std::vector<RenderingTechnique*> techniques;
+   Material material("");
+   std::vector<Material*> materials;
    tmpVec.clear(); tmpVec.push_back("bodyBone"); tmpVec.push_back("headBone"); // attribute subset 0
    attributes.push_back(tmpVec);
-   techniques.push_back(&renderingTechnique);
+   materials.push_back(&material);
    tmpVec.clear(); tmpVec.push_back("headBone");                               // attribute subset 1
    attributes.push_back(tmpVec);
-   techniques.push_back(&renderingTechnique);
+   materials.push_back(&material);
    tmpVec.clear(); tmpVec.push_back("handBone");                               // attribute subset 2
    attributes.push_back(tmpVec);
-   techniques.push_back(&renderingTechnique);
+   materials.push_back(&material);
 
    // ... and finally the entities themselves
    CompositeGraphicalEntity bodyRoot("bodyRoot", bodyMtx);
-   SkinnedGraphicalEntityMock* bodySkin = new SkinnedGraphicalEntityMock("bodySkin", skeleton, attributes, techniques);
+   SkinnedGraphicalEntityMock* bodySkin = new SkinnedGraphicalEntityMock("bodySkin", skeleton, attributes, materials);
    CompositeGraphicalEntity* bodyBone = new CompositeGraphicalEntity("bodyBone", bodyBoneMtx);
    CompositeGraphicalEntity* headBone = new CompositeGraphicalEntity("headBone", headBoneMtx);
    CompositeGraphicalEntity* handBone = new CompositeGraphicalEntity("handBone", handBoneMtx);

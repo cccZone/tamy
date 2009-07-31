@@ -38,23 +38,18 @@ class MaterialOperationImplementation;
 class MaterialOperation
 {
 private:
-   MaterialOperationImplementation& m_impl;
-
    MatOpCode m_opCode;
    SourceCode m_arg1;
    SourceCode m_arg2;
 
 public:
-   MaterialOperation(MaterialOperationImplementation& impl, 
-                     MatOpCode opCode, 
+   MaterialOperation(MatOpCode opCode, 
                      SourceCode arg1, 
                      SourceCode arg2);
    MaterialOperation(const MaterialOperation& rhs);
 
    bool operator==(const MaterialOperation& rhs) const;
    bool operator!=(const MaterialOperation& rhs) const;
-
-   void setForRendering(unsigned char stageIdx);
 
    MatOpCode getOperationCode() const {return m_opCode;}
    SourceCode getArg1() const {return m_arg1;}

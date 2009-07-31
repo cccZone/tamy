@@ -53,7 +53,7 @@ void PerformanceDemo::initialize()
    sceneRenderingTargetPolicy->addTarget(0, *m_renderingTarget);
    sceneRenderer->addVisualSceneManager(*m_visualSceneManager);
 
-   GraphicalEntityLoader loader(factory, m_renderingTechniquesStorage);
+   GraphicalEntityLoader loader(factory, m_materialsStorage);
 
    AbstractGraphicalEntity* ent = loader.load("meadowNormalTile.x", m_tamy.meshLoaders());
    m_entitiesStorage.add(ent);

@@ -23,12 +23,6 @@ CoordinatesOperation::~CoordinatesOperation()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CoordinatesOperation::setForRendering(unsigned char stageIdx)
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 bool CoordinatesOperation::operator==(const CoordinatesOperation& rhs) const
 {
    return m_opCode == rhs.m_opCode;

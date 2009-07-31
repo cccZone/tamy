@@ -1,6 +1,7 @@
 #include "core-Renderer\GraphicalEffect.h"
-#include "core-Renderer\AbstractGraphicalNode.h"
+#include "core-Renderer\Renderable.h"
 #include "core-Renderer\EffectDataSource.h"
+#include "core-Renderer\RenderingTargetsPolicy.h"
 #include <stdexcept>
 
 
@@ -10,7 +11,8 @@ GraphicalEffect::GraphicalEffect(const std::string& name,
                                  RenderingTargetsPolicy& policy,
                                  bool isTransparent,
                                  EffectDataSource* dataSource)
-      : RenderingTechnique(name, policy),
+      : m_name(name),
+      m_renderingTargetsPolicy(policy),
       m_transparent(isTransparent),
       m_dataSource(dataSource)
 {
@@ -30,10 +32,20 @@ GraphicalEffect::~GraphicalEffect()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-unsigned int GraphicalEffect::beginRendering()
+void GraphicalEffect::render(Renderable& renderable)
 {
    m_dataSource->setData(*this);
-   return onBeginRendering();
+   unsigned int passesCount = beginRendering();
+   for (unsigned int passIdx = 0; passIdx < passesCount; ++passIdx)
+   {
+      m_renderingTargetsPolicy.setTargets(passIdx);
+
+      beginPass(passIdx);
+      renderable.render();
+
+      endPass(passIdx);
+   }
+   endRendering();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

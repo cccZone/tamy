@@ -59,7 +59,7 @@ void HierarchicalObjectDemo::initialize()
                     m_tamy.meshLoaders(),
                     *m_sceneManager, 
                     m_entitiesStorage,
-                    m_renderingTechniquesStorage);
+                    m_materialsStorage);
    loader.load("..\\Data\\Space_Scene.iwf");
 
    Camera* camera = m_tamy.graphicalFactory().createCamera("camera");

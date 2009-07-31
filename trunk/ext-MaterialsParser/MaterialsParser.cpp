@@ -10,7 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialsParser::MaterialsParser(GraphicalEntitiesFactory& factory,
-                                 ResourceStorage<RenderingTechnique>& storage)
+                                 ResourceStorage<Material>& storage)
       : m_parser(NULL),
       m_parsedMaterial(NULL)
 {

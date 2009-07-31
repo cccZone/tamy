@@ -2,10 +2,7 @@
 
 #include "core-Renderer\AbstractGraphicalNode.h"
 #include "core-Renderer\Material.h"
-#include "MaterialOperationImplementationMock.h"
 #include "core\BoundingSphere.h"
-#include "TransparencyEnablerStub.h"
-#include "RenderingTargetsPolicyMock.h"
 #include <vector>
 #include <string>
 
@@ -15,9 +12,6 @@
 class GraphicalNodeMock : public AbstractGraphicalNode
 {
 private:
-   static RegularTests::RenderingTargetsPolicyMock s_policy;
-   static MaterialOperationImplementationMock s_matOpImpl;
-   static TransparencyEnablerStub s_transparencyEnabler;
    static Material s_material;
 
 public:
@@ -47,9 +41,6 @@ namespace GraphicalEffectTests
    class GraphicalNodeMock : public AbstractGraphicalNode
    {
    private:
-      static RegularTests::RenderingTargetsPolicyMock s_policy;
-      static MaterialOperationImplementationMock s_matOpImpl;
-      static TransparencyEnablerStub s_transparencyEnabler;
       static Material s_material;
 
       std::vector<std::string>& m_callSequenceVec;

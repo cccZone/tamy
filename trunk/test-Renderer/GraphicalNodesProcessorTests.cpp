@@ -7,9 +7,11 @@
 #include "GraphicalNodeMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core\Frustum.h"
-#include "TransparencyEnablerStub.h"
-#include "CoordinatesOperationMock.h"
-#include "RenderingTechniqueStub.h"
+#include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialStage.h"
+#include "core-Renderer\MaterialOperation.h"
+#include "core-Renderer\CoordinatesOperation.h"
+#include "core-Renderer\ManagedTexture.h"
 #include "RendererImplementationMock.h"
 
 
@@ -22,15 +24,15 @@ TEST(GraphicalNodesProcessor, sortingByMaterial)
    RendererImplementationMock renderer;
 
    // create the node we'll use for rendering
-   RenderingTechniqueStub technique1;
-   RenderingTechniqueStub technique2;
-   std::vector<RenderingTechnique*> techniques;
-   techniques.push_back(&technique1);
-   techniques.push_back(&technique1);
-   techniques.push_back(&technique2);
-   techniques.push_back(&technique1);
+   Material material1("material1");
+   Material material2("material1");
+   std::vector<Material*> materials;
+   materials.push_back(&material1);
+   materials.push_back(&material1);
+   materials.push_back(&material2);
+   materials.push_back(&material1);
 
-   GraphicalEntityMock entity("entity", techniques);
+   GraphicalEntityMock entity("entity", materials);
 
    GraphicalNode node1("subset0 - material1", false, entity, 0);
    GraphicalNode node2("subset1 - material1", false, entity, 1);
@@ -61,17 +63,22 @@ TEST(GraphicalNodesProcessor, sortingByMaterial)
 TEST(GraphicalNodesProcessor, transparentObjects)
 {
    RendererImplementationMock renderer;
-   MaterialOperationImplementationMock matOpImpl;
    Camera cameraNode("camera", renderer);
    std::vector<std::string> results;
 
    // create the node we'll use for rendering
-   RenderingTechniqueStub regularTechnique(false);
-   RenderingTechniqueStub transparentTechnique(true);
-   std::vector<RenderingTechnique*> techniques;
-   techniques.push_back(&regularTechnique);
-   techniques.push_back(&transparentTechnique);
-   GraphicalEntityMock entity("entity", techniques, results);
+   Material regularMaterial("regularMaterial");
+   Material transparentMaterial("transparentMaterial");
+   ManagedTexture tex("", new TTextureImpl<int>());
+   transparentMaterial.addStage(new MaterialStage(tex, 
+                                                  new MaterialOperation(MOP_SELECT_ARG1, SC_LRP, SC_NONE),
+                                                  new MaterialOperation(MOP_SELECT_ARG1, SC_LRP, SC_NONE),
+                                                  new CoordinatesOperation(CC_WRAP)));
+
+   std::vector<Material*> materials;
+   materials.push_back(&regularMaterial);
+   materials.push_back(&transparentMaterial);
+   GraphicalEntityMock entity("entity", materials, results);
 
    GraphicalNode regularNode("regularNode", false, entity, 0);
    GraphicalNode transparentNode("transparentNode", false, entity, 1);
@@ -97,16 +104,21 @@ TEST(GraphicalNodesProcessor, transparentObjects)
 TEST(GraphicalNodesProcessor, transparentObjectsAreSortedWithRespectToCamera)
 {
    RendererImplementationMock renderer;
-   MaterialOperationImplementationMock matOpImpl;
    Camera cameraNode("camera", renderer);
    std::vector<std::string> results;
 
 
    // create the node we'll use for rendering
-   RenderingTechniqueStub transparentTechnique(true);
-   std::vector<RenderingTechnique*> techniques;
-   techniques.push_back(&transparentTechnique);
-   GraphicalEntityMock entity("entity", techniques, results);
+   Material transparentMaterial("transparentMaterial");
+   ManagedTexture tex("", new TTextureImpl<int>());
+   transparentMaterial.addStage(new MaterialStage(tex, 
+                                                  new MaterialOperation(MOP_SELECT_ARG1, SC_LRP, SC_NONE),
+                                                  new MaterialOperation(MOP_SELECT_ARG1, SC_LRP, SC_NONE),
+                                                  new CoordinatesOperation(CC_WRAP)));
+
+   std::vector<Material*> materials;
+   materials.push_back(&transparentMaterial);
+   GraphicalEntityMock entity("entity", materials, results);
 
    GraphicalNode transparentNodeClose("transparentNodeClose", false, entity, 0);
    GraphicalNode transparentNodeFar("transparentNodeFar", false, entity, 0);

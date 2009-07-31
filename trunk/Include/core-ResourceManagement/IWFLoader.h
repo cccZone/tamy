@@ -21,7 +21,7 @@ class Material;
 class GraphicalEntityLoader;
 class GraphicalDataSource;
 class AbstractGraphicalEntity;
-class RenderingTechnique;
+class Material;
 class Texture;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,14 +37,14 @@ private:
    GraphicalDataSource& m_externalEntitiesSource;
    SceneManager& m_sceneManager;
    ResourceStorage<AbstractGraphicalEntity>& m_entitiesStorage;
-   ResourceStorage<RenderingTechnique>& m_renderingTechniquesStorage;
+   ResourceStorage<Material>& m_materialsStorage;
 
 public:
    IWFLoader(GraphicalEntitiesFactory& entitiesFactory, 
              GraphicalDataSource& externalEntitiesSource,
              SceneManager& sceneManager,
              ResourceStorage<AbstractGraphicalEntity>& entitiesStorage,
-             ResourceStorage<RenderingTechnique>& renderingTechniquesStorage);
+             ResourceStorage<Material>& materialsStorage);
    ~IWFLoader();
 
    /**

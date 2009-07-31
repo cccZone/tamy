@@ -2,9 +2,6 @@
 
 #include "core-Renderer\GraphicalEntity.h"
 #include "core-Renderer\Material.h"
-#include "MaterialOperationImplementationMock.h"
-#include "TransparencyEnablerStub.h"
-#include "RenderingTargetsPolicyMock.h"
 #include <list>
 #include <string>
 #include <sstream>
@@ -15,9 +12,6 @@
 class GraphicalEntityMock : public GraphicalEntity
 {
 private:
-   static RegularTests::RenderingTargetsPolicyMock s_policy;
-   static MaterialOperationImplementationMock s_matOpImpl;
-   static TransparencyEnablerStub s_transparencyEnabler;
    static Material s_material;
    D3DXMATRIX m_mtx;
    std::vector<std::string>* m_messageSink;
@@ -25,17 +19,17 @@ private:
 
 public:
    GraphicalEntityMock(const std::string& id, 
-                       const std::vector<RenderingTechnique*>& techniques, 
+                       const std::vector<Material*>& materials, 
                        std::vector<std::string>& messageSink) 
-         : GraphicalEntity(id, techniques),
+         : GraphicalEntity(id, materials),
          m_messageSink(&messageSink)
    {
       D3DXMatrixIdentity(&m_mtx);
    }
 
    GraphicalEntityMock(const std::string& id, 
-                       const std::vector<RenderingTechnique*>& techniques) 
-         : GraphicalEntity(id, techniques),
+                       const std::vector<Material*>& materials) 
+         : GraphicalEntity(id, materials),
          m_messageSink(NULL)
    {
       D3DXMatrixIdentity(&m_mtx);

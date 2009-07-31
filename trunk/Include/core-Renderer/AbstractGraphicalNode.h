@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderingTechnique;
+class Material;
 class AbstractGraphicalEntity;
 struct BoundingSphere;
 
@@ -19,13 +19,13 @@ struct BoundingSphere;
 class AbstractGraphicalNode : public Node, public Renderable
 {
 private:
-   RenderingTechnique* m_technique;
+   Material* m_material;
    DWORD m_subset;
 
 public:
    AbstractGraphicalNode(const std::string& name, 
                          bool dynamic, 
-                         RenderingTechnique& technique, 
+                         Material& material, 
                          DWORD subset);
    virtual ~AbstractGraphicalNode() {}
 
@@ -35,13 +35,13 @@ public:
    void setBoundingSphereRadius(float radius);
 
    /**
-    * This method allows to set an arbitrary technique that will be used
+    * This method allows to set an arbitrary material that will be used
     * to render this node's contents
     */
-   void setTechnique(RenderingTechnique& technique);
+   void setMaterial(Material& material);
 
-   inline const RenderingTechnique& getTechnique() const {return *m_technique;}
-   inline RenderingTechnique& getTechnique() {return *m_technique;}
+   inline const Material& getMaterial() const {return *m_material;}
+   inline Material& getMaterial() {return *m_material;}
 
     /**
     * ...self explanatory I think...

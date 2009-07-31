@@ -63,9 +63,9 @@ void D3DGraphicalEffect::update(D3DRenderer& renderer, const D3DGraphResourceOp&
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::setTechnique(const std::string& technique)
+void D3DGraphicalEffect::setTechnique(const std::string& material)
 {
-   m_effect->SetTechnique(technique.c_str());
+   m_effect->SetTechnique(material.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ void D3DGraphicalEffect::set(const std::string& paramName, const Array<D3DXVECTO
 
 ///////////////////////////////////////////////////////////////////////////////
 
-unsigned int D3DGraphicalEffect::onBeginRendering()
+unsigned int D3DGraphicalEffect::beginRendering()
 {
    unsigned int passesCount;
    m_effect->Begin(&passesCount, 0);

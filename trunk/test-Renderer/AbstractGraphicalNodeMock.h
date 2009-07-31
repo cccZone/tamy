@@ -8,8 +8,8 @@
 class AbstractGraphicalNodeMock : public AbstractGraphicalNode
 {
 public:
-   AbstractGraphicalNodeMock(RenderingTechnique& technique)
-         : AbstractGraphicalNode("AbstractGraphicalNodeMock", false, technique, 0)
+   AbstractGraphicalNodeMock(Material& material)
+         : AbstractGraphicalNode("AbstractGraphicalNodeMock", false, material, 0)
    {}
 
    void render() {}

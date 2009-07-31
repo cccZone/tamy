@@ -14,8 +14,8 @@ public:
    SkinnedGraphicalEntityMock(const std::string& name,
                               const std::vector<SkinBoneDefinition>& skeleton,
                               const std::vector<BonesInfluenceDefinition>& boneSets,
-                              const std::vector<RenderingTechnique*>& techniques) 
-         : SkinnedGraphicalEntity(name, skeleton, boneSets, techniques)
+                              const std::vector<Material*>& materials) 
+         : SkinnedGraphicalEntity(name, skeleton, boneSets, materials)
    {
    }
 

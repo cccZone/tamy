@@ -82,11 +82,11 @@ void TreesGeneratorDemo::initialize()
                                              CC_WRAP);
    Material* mat = m_tamy.graphicalFactory().createMaterial("treeBark", lrp);
    mat->addStage(stage);
-   m_renderingTechniquesStorage.add(mat);
+   m_materialsStorage.add(mat);
 
    // prepare mesh
    TreesGenerator generator(treeParams, 8, 1, D3DXVECTOR3(1, 0, 0), 0.1f, 3, "treeBark");
-   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_renderingTechniquesStorage);
+   GraphicalEntityLoader loader(m_tamy.graphicalFactory(), m_materialsStorage);
    m_treeEntity = loader.load("tree", generator);
    
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tree01", false);

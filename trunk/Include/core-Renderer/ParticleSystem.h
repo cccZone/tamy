@@ -10,7 +10,7 @@
 
 class ParticleInitializer;
 class ParticleAnimator;
-class RenderingTechnique;
+class Material;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -81,7 +81,7 @@ private:
 public:
    ParticleSystem(const std::string& name, 
                   bool isDynamic, 
-                  RenderingTechnique& technique,
+                  Material& material,
                   unsigned int particlesCount);
    virtual ~ParticleSystem();
 

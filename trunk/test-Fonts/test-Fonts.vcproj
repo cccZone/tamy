@@ -193,23 +193,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LightReflectingPropertiesStub.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialOperationImplementationMock.h"
+				RelativePath=".\MaterialChecker.h"
 				>
 			</File>
 			<File
 				RelativePath=".\RenderingTargetsPolicyMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RenderingTechniqueChecker.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TransparencyEnablerStub.h"
 				>
 			</File>
 		</Filter>

@@ -1,6 +1,6 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core-Renderer\PostProcessMechanism.h"
-#include "RenderingTechniqueStub.h"
+#include "GraphicalEffectMock.h"
 #include "PostProcessEffectRenderableMock.h"
 #include "RenderingTargetsPolicyMock.h"
 #include <vector>
@@ -15,15 +15,19 @@ TEST(PostProcessMechanism, renderingSingleEffect)
 {
    std::vector<std::string> callSequence;
 
-   RenderingProcessorTests::RenderingTechniqueStub technique("technique0", callSequence);
+   GraphicalEffectMock effect(new EffectDataSourceMock(callSequence), callSequence);
    PostProcessMechanism mechanism(new RegularTests::RenderingTargetsPolicyMock(), 
-                                  technique,
+                                  effect,
                                   new PostProcessEffectRenderableMock("effect", callSequence));
 
    mechanism.render();
-   CPPUNIT_ASSERT_EQUAL((unsigned int)2, callSequence.size());
-   CPPUNIT_ASSERT_EQUAL(std::string("Set technique technique0"), callSequence[0]);
-   CPPUNIT_ASSERT_EQUAL(std::string("effect - render"), callSequence[1]);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)6, callSequence.size());
+   CPPUNIT_ASSERT_EQUAL(std::string("EffectDataSource::setData"), callSequence[0]);
+   CPPUNIT_ASSERT_EQUAL(std::string("GraphicalEffect::beginRendering"), callSequence[1]);
+   CPPUNIT_ASSERT_EQUAL(std::string("GraphicalEffect::beginPass - 0"), callSequence[2]);
+   CPPUNIT_ASSERT_EQUAL(std::string("effect - render"), callSequence[3]);
+   CPPUNIT_ASSERT_EQUAL(std::string("GraphicalEffect::endPass - 0"), callSequence[4]);
+   CPPUNIT_ASSERT_EQUAL(std::string("GraphicalEffect::endRendering"), callSequence[5]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

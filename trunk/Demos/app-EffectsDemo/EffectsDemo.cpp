@@ -88,7 +88,7 @@ void EffectsDemo::initialize()
                     m_tamy.meshLoaders(),
                     *m_sceneManager, 
                     m_entitiesStorage,
-                    m_renderingTechniquesStorage);
+                    m_materialsStorage);
    loader.load("..\\Data\\AnimLandscape.iwf");
 
    AbstractGraphicalEntity& ent = m_entitiesStorage.get("animlandscape.x");
@@ -121,7 +121,7 @@ void EffectsDemo::initialize()
    // 1. old tv set
    OldTVDataSource* oldTVData = new OldTVDataSource(*m_mainRendererOutput);
    GraphicalEffect* oldTV = factory.createEffect("..\\Data\\oldTV.fx", false, oldTVData);
-   m_renderingTechniquesStorage.add(oldTV);
+   m_effectsStorage.add(oldTV);
 
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
@@ -130,7 +130,7 @@ void EffectsDemo::initialize()
    // 2. wavy image
    WavyImageDataSource* wavyImageData = new WavyImageDataSource(*m_mainRendererOutput);
    GraphicalEffect* wavyImage = factory.createEffect("..\\Data\\wavyImage.fx", false, wavyImageData);
-   m_renderingTechniquesStorage.add(wavyImage);
+   m_effectsStorage.add(wavyImage);
 
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
@@ -139,7 +139,7 @@ void EffectsDemo::initialize()
    // 3. dizzy
    DizzyDataSource* dizzyData = new DizzyDataSource(*m_mainRendererOutput);
    GraphicalEffect* dizzy = factory.createEffect("..\\Data\\dizzy.fx", false, dizzyData);
-   m_renderingTechniquesStorage.add(dizzy);
+   m_effectsStorage.add(dizzy);
 
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
@@ -148,7 +148,7 @@ void EffectsDemo::initialize()
    // 4. blur
    BlurEffectDataSource* blurData = new BlurEffectDataSource(*m_mainRendererOutput);
    GraphicalEffect* blur = factory.createEffect("..\\Data\\blur.fx", false, blurData);
-   m_renderingTechniquesStorage.add(blur);
+   m_effectsStorage.add(blur);
 
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);

@@ -6,15 +6,16 @@
 #include "core-Renderer\Camera.h"
 #include "core\MatrixWriter.h"
 #include "core-Renderer\VisualSceneManager.h"
+#include "core-Renderer\Material.h"
 #include "core\Frustum.h"
 #include "core\BoundingSphere.h"
 #include "core\CollisionTests.h"
 #include "core\Ray.h"
-#include "RenderingTechniqueStub.h"
 #include "RendererImplementationMock.h"
 
 
 using namespace RegularTests;
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -34,10 +35,10 @@ TEST(Camera, renderingWithActiveCamera)
    camera2Mtx._41 = 10;
    camera2.setLocalMtx(camera2Mtx);
 
-   RenderingTechniqueStub technique;
-   std::vector<RenderingTechnique*> techniques; 
-   techniques.push_back(&technique);
-   GraphicalEntityMock entity("", techniques);
+   Material material("material");
+   std::vector<Material*> materials; 
+   materials.push_back(&material);
+   GraphicalEntityMock entity("", materials);
    GraphicalNode* node = new GraphicalNode("", false, entity, 0);
 
    VisualSceneManager sceneManager;

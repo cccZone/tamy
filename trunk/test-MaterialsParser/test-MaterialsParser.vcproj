@@ -175,18 +175,6 @@
 			Name="Utils"
 			>
 			<File
-				RelativePath=".\CoordinatesOperationMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LightReflectingPropertiesStub.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialOperationImplementationMock.h"
-				>
-			</File>
-			<File
 				RelativePath=".\MaterialsFactoryMock.cpp"
 				>
 			</File>
@@ -195,23 +183,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MockLightReflectingPropertiesFactory.h"
-				>
-			</File>
-			<File
 				RelativePath=".\RendererStub.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RenderingTargetsPolicyMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\StageTextureRendererStub.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TransparencyEnablerStub.h"
 				>
 			</File>
 		</Filter>

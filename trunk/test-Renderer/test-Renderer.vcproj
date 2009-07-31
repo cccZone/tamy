@@ -196,10 +196,6 @@
 				RelativePath=".\RenderingProcessorTests.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\RenderingTechniqueTests.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Utils"
@@ -241,11 +237,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\LightReflectingPropertiesStub.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialOperationImplementationMock.h"
+				RelativePath=".\MaterialImplMock.h"
 				>
 			</File>
 			<File
@@ -269,7 +261,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RenderableMock.h"
+				>
+			</File>
+			<File
 				RelativePath=".\RendererImplementationMock.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingAttributeStub.h"
 				>
 			</File>
 			<File
@@ -282,14 +282,6 @@
 			</File>
 			<File
 				RelativePath=".\RenderingTargetsPolicyMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RenderingTechniqueStub.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\RenderingTechniqueStub.h"
 				>
 			</File>
 			<File
@@ -309,15 +301,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\StageTextureRendererStub.h"
-				>
-			</File>
-			<File
 				RelativePath=".\TextureRenderingTargetMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\TransparencyEnablerStub.h"
 				>
 			</File>
 		</Filter>
@@ -369,10 +353,6 @@
 			Name="Materials"
 			>
 			<File
-				RelativePath=".\MaterialOperationTests.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\MaterialTests.cpp"
 				>
 			</File>
@@ -381,7 +361,7 @@
 			Name="Editors"
 			>
 			<File
-				RelativePath=".\RenderingTechniqueReplacerTests.cpp"
+				RelativePath=".\MaterialReplacerTests.cpp"
 				>
 			</File>
 		</Filter>

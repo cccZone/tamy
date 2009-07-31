@@ -2,7 +2,7 @@
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\CoordinatesOperation.h"
-#include "core-Renderer\StageTextureRenderer.h"
+#include "core-Renderer\MaterialImpl.h"
 #include <stdexcept>
 
 
@@ -11,15 +11,13 @@
 MaterialStage::MaterialStage(Texture& texture,
                              MaterialOperation* colorOp, 
                              MaterialOperation* alphaOp,
-                             CoordinatesOperation* coordsOp,
-                             StageTextureRenderer& textureRenderer)
+                             CoordinatesOperation* coordsOp)
       : m_index(-1),
       m_texture(texture),
       m_textureImpl(texture.getImpl()),
       m_colorOperation(colorOp),
       m_alphaOperation(alphaOp),
-      m_coordsOp(coordsOp),
-      m_textureRenderer(textureRenderer)
+      m_coordsOp(coordsOp)
 {
    if (colorOp == NULL)
    {
@@ -45,8 +43,7 @@ MaterialStage::MaterialStage(const MaterialStage& rhs)
       m_textureImpl(rhs.m_textureImpl),
       m_colorOperation(new MaterialOperation(*rhs.m_colorOperation)),
       m_alphaOperation(new MaterialOperation(*rhs.m_alphaOperation)),
-      m_coordsOp(rhs.m_coordsOp->clone()),
-      m_textureRenderer(rhs.m_textureRenderer)
+      m_coordsOp(new CoordinatesOperation(*rhs.m_coordsOp))
 {
 }
 
@@ -85,12 +82,12 @@ bool MaterialStage::operator!=(const MaterialStage& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialStage::setForRendering()
+void MaterialStage::setForRendering(MaterialImpl& impl)
 {
-   m_textureRenderer.setForRendering(m_index, m_textureImpl);
-   m_colorOperation->setForRendering(m_index);
-   m_alphaOperation->setForRendering(m_index);
-   m_coordsOp->setForRendering(m_index);
+   impl.setTexture(m_index, m_textureImpl);
+   impl.setColorOperation(m_index, *m_colorOperation);
+   impl.setAlphaOperation(m_index, *m_alphaOperation);
+   impl.setCoordsOperation(m_index, *m_coordsOp);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
