@@ -47,7 +47,7 @@ void PerformanceDemo::initialize()
    GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
 
    SettableRenderingTargetsPolicy* sceneRenderingTargetPolicy = new SettableRenderingTargetsPolicy();
-   SceneRenderingMechanism* sceneRenderer = m_tamy.createSceneRenderingMechanism(sceneRenderingTargetPolicy);
+   SceneRenderingMechanism* sceneRenderer = m_tamy.graphicalFactory().createSceneRenderingMechanism(sceneRenderingTargetPolicy);
    m_renderer->addMechanism(sceneRenderer);
    m_renderingTarget = factory.createDefaultRenderingTarget();
    sceneRenderingTargetPolicy->addTarget(0, *m_renderingTarget);

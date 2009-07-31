@@ -71,18 +71,20 @@ EffectsDemo::EffectsDemo(Tamy& tamy)
 
 void EffectsDemo::initialize()
 {
+   GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
+
    m_rotating = false;
    m_sceneManager = new CompositeSceneManager();
    VisualSceneManager* visualSceneManager = new VisualSceneManager();
    m_sceneManager->addSceneManager(visualSceneManager);
 
    m_sceneRenderingTargetPolicy = new SettableRenderingTargetsPolicy();
-   m_sceneRenderer = m_tamy.createSceneRenderingMechanism(m_sceneRenderingTargetPolicy);
+   m_sceneRenderer = factory.createSceneRenderingMechanism(m_sceneRenderingTargetPolicy);
    m_renderer->addMechanism(m_sceneRenderer);
 
    m_sceneRenderer->addVisualSceneManager(*visualSceneManager);
 
-   IWFLoader loader(m_tamy.graphicalFactory(), 
+   IWFLoader loader(factory, 
                     m_tamy.meshLoaders(),
                     *m_sceneManager, 
                     m_entitiesStorage,
@@ -93,70 +95,64 @@ void EffectsDemo::initialize()
    m_animationController = ent.instantiateSkeleton(m_sceneManager->root());
    m_animationController->activateAnimation("Cutscene_01", true);
 
-   Light* light = m_tamy.graphicalFactory().createLight("light");
+   Light* light = factory.createLight("light");
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 0));
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
    m_sceneManager->addNode(light);
 
-   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
+   Camera* camera = factory.createCamera("camera");
    m_sceneManager->addNode(camera);
    m_cameraController = new UnconstrainedMotionController(*camera);
 
    // set up the effect rendering sequence
    m_mainRendererOutput = new CyclicRenderingTarget("cyclicRenderingTarget");
-   m_mainRendererOutput->add(m_tamy.graphicalFactory().createTextureRenderingTarget("outputTex0"));
-   m_mainRendererOutput->add(m_tamy.graphicalFactory().createTextureRenderingTarget("outputTex1"));
-   m_mainRendererOutput->add(m_tamy.graphicalFactory().createTextureRenderingTarget("outputTex2"));
-   m_mainRendererOutput->add(m_tamy.graphicalFactory().createTextureRenderingTarget("outputTex3"));
-   m_mainRendererOutput->add(m_tamy.graphicalFactory().createTextureRenderingTarget("outputTex4"));
-   m_screenBuffer = m_tamy.graphicalFactory().createDefaultRenderingTarget();
+   m_mainRendererOutput->add(factory.createTextureRenderingTarget("outputTex0"));
+   m_mainRendererOutput->add(factory.createTextureRenderingTarget("outputTex1"));
+   m_mainRendererOutput->add(factory.createTextureRenderingTarget("outputTex2"));
+   m_mainRendererOutput->add(factory.createTextureRenderingTarget("outputTex3"));
+   m_mainRendererOutput->add(factory.createTextureRenderingTarget("outputTex4"));
+   m_screenBuffer = factory.createDefaultRenderingTarget();
    m_sceneRenderingTargetPolicy->addTarget(0, *m_mainRendererOutput);
 
-   PostProcessEffectNode* postProcessEffect = NULL;
    SettableRenderingTargetsPolicy* policy = NULL;
    ChangableTexture* inputTexture = NULL;
-
    // create the effects:
    // 1. old tv set
    OldTVDataSource* oldTVData = new OldTVDataSource(*m_mainRendererOutput);
-   GraphicalEffect* oldTV = m_tamy.graphicalFactory().createEffect("..\\Data\\oldTV.fx", false, oldTVData);
+   GraphicalEffect* oldTV = factory.createEffect("..\\Data\\oldTV.fx", false, oldTVData);
    m_renderingTechniquesStorage.add(oldTV);
 
-   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode();
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
-   m_postProcessEffects.push_back(new PostProcessMechanism(policy, *oldTV, postProcessEffect));
+   m_postProcessEffects.push_back(factory.createPostProcessMechanism(policy, *oldTV));
 
    // 2. wavy image
    WavyImageDataSource* wavyImageData = new WavyImageDataSource(*m_mainRendererOutput);
-   GraphicalEffect* wavyImage = m_tamy.graphicalFactory().createEffect("..\\Data\\wavyImage.fx", false, wavyImageData);
+   GraphicalEffect* wavyImage = factory.createEffect("..\\Data\\wavyImage.fx", false, wavyImageData);
    m_renderingTechniquesStorage.add(wavyImage);
 
-   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode();
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
-   m_postProcessEffects.push_back(new PostProcessMechanism(policy, *wavyImage, postProcessEffect));
+   m_postProcessEffects.push_back(factory.createPostProcessMechanism(policy, *wavyImage));
 
    // 3. dizzy
    DizzyDataSource* dizzyData = new DizzyDataSource(*m_mainRendererOutput);
-   GraphicalEffect* dizzy = m_tamy.graphicalFactory().createEffect("..\\Data\\dizzy.fx", false, dizzyData);
+   GraphicalEffect* dizzy = factory.createEffect("..\\Data\\dizzy.fx", false, dizzyData);
    m_renderingTechniquesStorage.add(dizzy);
 
-   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode();
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
-   m_postProcessEffects.push_back(new PostProcessMechanism(policy, *dizzy, postProcessEffect));
+   m_postProcessEffects.push_back(factory.createPostProcessMechanism(policy, *dizzy));
 
    // 4. blur
    BlurEffectDataSource* blurData = new BlurEffectDataSource(*m_mainRendererOutput);
-   GraphicalEffect* blur = m_tamy.graphicalFactory().createEffect("..\\Data\\blur.fx", false, blurData);
+   GraphicalEffect* blur = factory.createEffect("..\\Data\\blur.fx", false, blurData);
    m_renderingTechniquesStorage.add(blur);
 
-   postProcessEffect = m_tamy.graphicalFactory().createPostProcessEffectNode();
    policy = new SettableRenderingTargetsPolicy();
    policy->addTarget(0, *m_screenBuffer);
-   m_postProcessEffects.push_back(new PostProcessMechanism(policy, *blur, postProcessEffect));
+   m_postProcessEffects.push_back(factory.createPostProcessMechanism(policy, *blur));
 
    m_renderingUpdator = new RenderingUpdator(*m_animationController, *m_renderer);
    timeController().get("renderingTrack").add(new TTimeDependent<RenderingUpdator>(*m_renderingUpdator));

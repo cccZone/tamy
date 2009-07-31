@@ -1,16 +1,16 @@
-#include "impl-DirectX\D3DPostProcessEffectNode.h"
+#include "impl-DirectX\D3DPostProcessEffectRenderable.h"
 #include "impl-DirectX\D3DRenderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DWORD D3DPostProcessEffectNode::ScreenVertex::FVF = D3DFVF_XYZRHW | D3DFVF_TEX1;
+DWORD D3DPostProcessEffectRenderable::ScreenVertex::FVF = D3DFVF_XYZRHW | D3DFVF_TEX1;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DPostProcessEffectNode::D3DPostProcessEffectNode(IDirect3DDevice9& d3Device,
+D3DPostProcessEffectRenderable::D3DPostProcessEffectRenderable(IDirect3DDevice9& d3Device,
                                                    D3DRenderer& renderer)
-      : PostProcessEffectNode(renderer),
+      : PostProcessEffectRenderable(renderer),
       m_d3Device(d3Device),
       m_renderer(renderer),
       m_vb(NULL)
@@ -20,14 +20,14 @@ D3DPostProcessEffectNode::D3DPostProcessEffectNode(IDirect3DDevice9& d3Device,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DPostProcessEffectNode::~D3DPostProcessEffectNode()
+D3DPostProcessEffectRenderable::~D3DPostProcessEffectRenderable()
 {
    releaseQuad();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DPostProcessEffectNode::render()
+void D3DPostProcessEffectRenderable::render()
 {
    if (m_vb == NULL) {return;}
 
@@ -38,7 +38,7 @@ void D3DPostProcessEffectNode::render()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DPostProcessEffectNode::recreateGeometry(unsigned int backBufferWidth, 
+void D3DPostProcessEffectRenderable::recreateGeometry(unsigned int backBufferWidth, 
                                                 unsigned int backBufferHeight)
 {
    releaseQuad();
@@ -83,7 +83,7 @@ void D3DPostProcessEffectNode::recreateGeometry(unsigned int backBufferWidth,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DPostProcessEffectNode::releaseQuad()
+void D3DPostProcessEffectRenderable::releaseQuad()
 {
    if (m_vb != NULL)
    {

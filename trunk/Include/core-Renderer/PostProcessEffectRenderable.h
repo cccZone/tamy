@@ -23,16 +23,16 @@ enum RendererOps;
  *   - clamp the textures displayed on it
  *   - be rendered irrespective of the z-buffer contents (ensuring it's always rendered)
  */
-class PostProcessEffectNode : public Renderable,
+class PostProcessEffectRenderable : public Renderable,
                               public Observer<Renderer, RendererOps>
 {
 private:
    Renderer& m_renderer;
 
 public:
-   PostProcessEffectNode(Renderer& renderer);
+   PostProcessEffectRenderable(Renderer& renderer);
 
-   virtual ~PostProcessEffectNode();
+   virtual ~PostProcessEffectRenderable();
 
    /**
     * @derrived

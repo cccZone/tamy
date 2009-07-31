@@ -55,12 +55,6 @@ public:
    GraphicalEntitiesFactory& graphicalFactory();
 
    /**
-    * This method will create a mechanism that allows to render the contents
-    * of a single (and multiple) VisualSceneManager(s)
-    */
-   SceneRenderingMechanism* createSceneRenderingMechanism(RenderingTargetsPolicy* policy);
-
-   /**
     * The method returns the data source which can be used to load
     * supported types of mesh files
     */

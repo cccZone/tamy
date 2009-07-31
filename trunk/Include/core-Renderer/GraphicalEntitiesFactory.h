@@ -36,8 +36,10 @@ class EffectDataSource;
 class AbstractGraphicalNode;
 class Renderer;
 class Camera;
-class PostProcessEffectNode;
+class PostProcessEffectRenderable;
 class RenderingTargetsPolicy;
+class PostProcessMechanism;
+class SceneRenderingMechanism;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -101,14 +103,22 @@ public:
 
    virtual TextureRenderingTarget* createTextureRenderingTarget(const std::string& name) = 0;
 
-   /** 
-    * This method creates a quad that can be used to render a full screen texture on.
-    */
-   virtual PostProcessEffectNode* createPostProcessEffectNode() = 0;
-
    GraphicalEffect* createEffect(const std::string& name, 
                                  bool isTransparent,
                                  EffectDataSource* dataSource);
+
+   /**
+    * This method will create a mechanism that allows to render the contents
+    * of a single (and multiple) VisualSceneManager(s)
+    */
+   virtual SceneRenderingMechanism* createSceneRenderingMechanism(RenderingTargetsPolicy* policy) = 0;
+
+   /**
+    * This method will create a mechanism that allows to change
+    * the appearance of a rendered scene
+    */
+   PostProcessMechanism* createPostProcessMechanism(RenderingTargetsPolicy* policy,
+                                                    RenderingTechnique& technique);
 
 protected:
    GraphicalEntitiesFactory(const std::string& texturesPath, Renderer& renderer);
@@ -131,6 +141,12 @@ protected:
                                              RenderingTargetsPolicy& policy,
                                              bool isTransparent,
                                              EffectDataSource* dataSource) = 0;
+
+   /** 
+    * This method creates a quad that can be used to render a full screen texture on.
+    */
+   virtual PostProcessEffectRenderable* createPostProcessEffectRenderable() = 0;
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

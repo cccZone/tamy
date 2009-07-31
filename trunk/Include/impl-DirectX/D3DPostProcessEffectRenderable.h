@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core-Renderer\PostProcessEffectNode.h"
+#include "core-Renderer\PostProcessEffectRenderable.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 
@@ -11,7 +11,7 @@ class D3DRenderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class D3DPostProcessEffectNode : public PostProcessEffectNode
+class D3DPostProcessEffectRenderable : public PostProcessEffectRenderable
 {
 private:
    struct ScreenVertex
@@ -34,9 +34,9 @@ private:
    IDirect3DVertexBuffer9* m_vb;
 
 public:
-   D3DPostProcessEffectNode(IDirect3DDevice9& d3Device,
+   D3DPostProcessEffectRenderable(IDirect3DDevice9& d3Device,
                             D3DRenderer& renderer);
-   ~D3DPostProcessEffectNode();
+   ~D3DPostProcessEffectRenderable();
 
    void render();
 

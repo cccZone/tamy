@@ -38,7 +38,7 @@ void FontsDemo::initialize()
    m_fontsStorage.add(font);
 
    SettableRenderingTargetsPolicy* sceneRenderingTargetPolicy = new SettableRenderingTargetsPolicy();
-   SceneRenderingMechanism* sceneRenderer = m_tamy.createSceneRenderingMechanism(sceneRenderingTargetPolicy);
+   SceneRenderingMechanism* sceneRenderer = m_tamy.graphicalFactory().createSceneRenderingMechanism(sceneRenderingTargetPolicy);
    m_renderer->addMechanism(sceneRenderer);
    m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
    sceneRenderingTargetPolicy->addTarget(0, *m_renderingTarget);

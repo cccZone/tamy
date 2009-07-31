@@ -280,18 +280,6 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="GraphicalNode"
-					>
-					<File
-						RelativePath=".\D3DPostProcessEffectNode.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\impl-DirectX\D3DPostProcessEffectNode.h"
-						>
-					</File>
-				</Filter>
-				<Filter
 					Name="Effects"
 					>
 					<File
@@ -350,6 +338,14 @@
 				<Filter
 					Name="Mechanisms"
 					>
+					<File
+						RelativePath=".\D3DPostProcessEffectRenderable.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\impl-DirectX\D3DPostProcessEffectRenderable.h"
+						>
+					</File>
 					<File
 						RelativePath=".\D3DSceneRenderingMechanism.cpp"
 						>

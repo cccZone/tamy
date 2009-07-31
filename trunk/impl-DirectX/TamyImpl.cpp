@@ -3,7 +3,6 @@
 // graphical system headers
 #include "impl-DirectX\D3DInitializer.h"
 #include "impl-DirectX\D3DRenderer.h"
-#include "impl-DirectX\D3DSceneRenderingMechanism.h"
 #include "impl-DirectX\D3DGraphicalEntitiesFactory.h"
 #include "impl-DirectX\GraphicalCapsEvaluator.h"
 
@@ -157,15 +156,6 @@ GraphicalEntitiesFactory& Tamy::graphicalFactory()
 {
    ASSERT(s_tamyGraphImpl.m_graphicalFactory != NULL, "GraphicalEntitiesFactory not initialized by Tamy");
    return *(s_tamyGraphImpl.m_graphicalFactory);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-SceneRenderingMechanism* Tamy::createSceneRenderingMechanism(RenderingTargetsPolicy* policy)
-{
-   return new D3DSceneRenderingMechanism(policy,
-                                         s_tamyGraphImpl.m_renderer->getMaxLightsCount(),
-                                         s_tamyGraphImpl.m_renderer->getD3Device());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

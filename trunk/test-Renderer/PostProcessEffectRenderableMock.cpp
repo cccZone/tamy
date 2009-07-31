@@ -1,11 +1,11 @@
-#include "PostProcessEffectNodeMock.h"
+#include "PostProcessEffectRenderableMock.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace PostProcessMechanismTests
 { 
-   RegularTests::RendererImplementationMock PostProcessEffectNodeMock::s_renderer;
+   RegularTests::RendererImplementationMock PostProcessEffectRenderableMock::s_renderer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

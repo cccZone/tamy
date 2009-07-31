@@ -1,7 +1,7 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core-Renderer\PostProcessMechanism.h"
 #include "RenderingTechniqueStub.h"
-#include "PostProcessEffectNodeMock.h"
+#include "PostProcessEffectRenderableMock.h"
 #include "RenderingTargetsPolicyMock.h"
 #include <vector>
 #include <string>
@@ -18,7 +18,7 @@ TEST(PostProcessMechanism, renderingSingleEffect)
    RenderingProcessorTests::RenderingTechniqueStub technique("technique0", callSequence);
    PostProcessMechanism mechanism(new RegularTests::RenderingTargetsPolicyMock(), 
                                   technique,
-                                  new PostProcessEffectNodeMock("effect", callSequence));
+                                  new PostProcessEffectRenderableMock("effect", callSequence));
 
    mechanism.render();
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, callSequence.size());

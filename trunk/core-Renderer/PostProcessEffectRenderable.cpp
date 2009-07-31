@@ -1,10 +1,10 @@
-#include "core-Renderer\PostProcessEffectNode.h"
+#include "core-Renderer\PostProcessEffectRenderable.h"
 #include "core-Renderer\Renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PostProcessEffectNode::PostProcessEffectNode(Renderer& renderer)
+PostProcessEffectRenderable::PostProcessEffectRenderable(Renderer& renderer)
       : m_renderer(renderer)
 {
    m_renderer.attachObserver(*this);
@@ -12,20 +12,20 @@ PostProcessEffectNode::PostProcessEffectNode(Renderer& renderer)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PostProcessEffectNode::~PostProcessEffectNode()
+PostProcessEffectRenderable::~PostProcessEffectRenderable()
 {
    m_renderer.detachObserver(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PostProcessEffectNode::update(Renderer& renderer)
+void PostProcessEffectRenderable::update(Renderer& renderer)
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PostProcessEffectNode::update(Renderer& renderer, const RendererOps& operation)
+void PostProcessEffectRenderable::update(Renderer& renderer, const RendererOps& operation)
 {
    if (operation == RO_RESIZE_VIEWPORT)
    {

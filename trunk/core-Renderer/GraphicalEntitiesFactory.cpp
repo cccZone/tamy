@@ -4,6 +4,7 @@
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\Camera.h"
+#include "core-Renderer\PostProcessMechanism.h"
 #include <deque>
 
 
@@ -111,6 +112,16 @@ GraphicalEffect* GraphicalEntitiesFactory::createEffect(const std::string& name,
                                     isTransparent, 
                                     dataSource);
    return effect;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+PostProcessMechanism* 
+GraphicalEntitiesFactory::createPostProcessMechanism(RenderingTargetsPolicy* policy,
+                                                     RenderingTechnique& technique)
+{
+   PostProcessEffectRenderable* renderable = createPostProcessEffectRenderable();
+   return new PostProcessMechanism(policy, technique, renderable);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

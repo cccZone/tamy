@@ -56,7 +56,7 @@ public:
        return NULL;
    }
 
-   PostProcessEffectNode* createPostProcessEffectNode()
+   SceneRenderingMechanism* createSceneRenderingMechanism(RenderingTargetsPolicy* policy)
    {
       return NULL;
    }
@@ -120,6 +120,11 @@ protected:
                                      RenderingTargetsPolicy& policy,
                                      bool isTransparent,
                                      EffectDataSource* dataSource)
+   {
+      return NULL;
+   }
+
+   PostProcessEffectRenderable* createPostProcessEffectRenderable(void)
    {
       return NULL;
    }

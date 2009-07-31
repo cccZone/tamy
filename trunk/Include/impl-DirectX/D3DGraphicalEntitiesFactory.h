@@ -43,8 +43,7 @@ public:
 
    TextureRenderingTarget* createTextureRenderingTarget(const std::string& name);
 
-   PostProcessEffectNode* createPostProcessEffectNode();
-
+   SceneRenderingMechanism* createSceneRenderingMechanism(RenderingTargetsPolicy* policy);
 
 protected:
    GraphicalEntity* createGraphicalEntity(const std::string& name,
@@ -77,6 +76,8 @@ protected:
                                      RenderingTargetsPolicy& policy,
                                      bool isTransparent,
                                      EffectDataSource* dataSource);
+
+   PostProcessEffectRenderable* createPostProcessEffectRenderable();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

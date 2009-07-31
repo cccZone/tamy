@@ -20,7 +20,8 @@
 #include "impl-DirectX\D3DTextureRenderingTarget.h"
 #include "impl-DirectX\D3DStageTextureRenderer.h"
 #include "impl-DirectX\D3DGraphicalEffect.h"
-#include "impl-DirectX\D3DPostProcessEffectNode.h"
+#include "impl-DirectX\D3DPostProcessEffectRenderable.h"
+#include "impl-DirectX\D3DSceneRenderingMechanism.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -289,10 +290,10 @@ D3DGraphicalEntitiesFactory::createTextureRenderingTarget(const std::string& nam
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PostProcessEffectNode* 
-D3DGraphicalEntitiesFactory::createPostProcessEffectNode()
+PostProcessEffectRenderable* 
+D3DGraphicalEntitiesFactory::createPostProcessEffectRenderable()
 {
-   return new D3DPostProcessEffectNode(m_d3Device, m_renderer);
+   return new D3DPostProcessEffectRenderable(m_d3Device, m_renderer);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -326,6 +327,16 @@ GraphicalEffect* D3DGraphicalEntitiesFactory::createEffectImpl(const std::string
                                  m_d3Device, 
                                  m_renderer, 
                                  effect);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SceneRenderingMechanism* 
+D3DGraphicalEntitiesFactory::createSceneRenderingMechanism(RenderingTargetsPolicy* policy)
+{
+   return new D3DSceneRenderingMechanism(policy,
+                                         m_renderer.getMaxLightsCount(),
+                                         m_d3Device);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

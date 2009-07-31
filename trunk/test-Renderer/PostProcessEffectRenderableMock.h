@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core-Renderer\PostProcessEffectNode.h"
+#include "core-Renderer\PostProcessEffectRenderable.h"
 #include "RendererImplementationMock.h"
 #include <vector>
 #include <string>
@@ -11,7 +11,7 @@
 namespace PostProcessMechanismTests
 {
   
-   class PostProcessEffectNodeMock : public PostProcessEffectNode
+   class PostProcessEffectRenderableMock : public PostProcessEffectRenderable
    {
    private:
       std::string m_name;
@@ -19,9 +19,9 @@ namespace PostProcessMechanismTests
       std::vector<std::string>& m_seqLog;
 
    public:
-      PostProcessEffectNodeMock(const std::string& name,
+      PostProcessEffectRenderableMock(const std::string& name,
                                 std::vector<std::string>& seqLog)
-            : PostProcessEffectNode(s_renderer),
+            : PostProcessEffectRenderable(s_renderer),
             m_name(name),
             m_seqLog(seqLog)
       {}

@@ -261,11 +261,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PostProcessEffectNodeMock.cpp"
+				RelativePath=".\PostProcessEffectRenderableMock.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\PostProcessEffectNodeMock.h"
+				RelativePath=".\PostProcessEffectRenderableMock.h"
 				>
 			</File>
 			<File

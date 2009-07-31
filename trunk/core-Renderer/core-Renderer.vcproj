@@ -201,6 +201,14 @@
 					Name="PostProcess"
 					>
 					<File
+						RelativePath=".\PostProcessEffectRenderable.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\PostProcessEffectRenderable.h"
+						>
+					</File>
+					<File
 						RelativePath=".\PostProcessMechanism.cpp"
 						>
 					</File>
@@ -339,14 +347,6 @@
 				</File>
 				<File
 					RelativePath="..\Include\core-Renderer\GraphicalNode.h"
-					>
-				</File>
-				<File
-					RelativePath=".\PostProcessEffectNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\PostProcessEffectNode.h"
 					>
 				</File>
 				<File
