@@ -9,11 +9,9 @@
 
 GraphicalEffect::GraphicalEffect(const std::string& name, 
                                  RenderingTargetsPolicy& policy,
-                                 bool isTransparent,
                                  EffectDataSource* dataSource)
       : m_name(name),
       m_renderingTargetsPolicy(policy),
-      m_transparent(isTransparent),
       m_dataSource(dataSource)
 {
    if (dataSource == NULL)

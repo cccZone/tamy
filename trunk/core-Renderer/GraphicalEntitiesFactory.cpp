@@ -113,12 +113,10 @@ Material* GraphicalEntitiesFactory::createMaterial(
 ///////////////////////////////////////////////////////////////////////////////
 
 GraphicalEffect* GraphicalEntitiesFactory::createEffect(const std::string& name, 
-                                                        bool isTransparent,
                                                         EffectDataSource* dataSource)
 {
    GraphicalEffect* effect = createEffectImpl(name, 
                                     m_renderer.getRenderingTargetsPolicy(), 
-                                    isTransparent, 
                                     dataSource);
    return effect;
 }

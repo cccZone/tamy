@@ -55,7 +55,6 @@ protected:
 
    GraphicalEffect* createEffectImpl(const std::string& name,
                                      RenderingTargetsPolicy& policy,
-                                     bool isTransparent,
                                      EffectDataSource* dataSource);
 
    PostProcessEffectRenderable* createPostProcessEffectRenderable();

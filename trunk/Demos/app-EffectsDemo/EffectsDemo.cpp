@@ -120,7 +120,7 @@ void EffectsDemo::initialize()
    // create the effects:
    // 1. old tv set
    OldTVDataSource* oldTVData = new OldTVDataSource(*m_mainRendererOutput);
-   GraphicalEffect* oldTV = factory.createEffect("..\\Data\\oldTV.fx", false, oldTVData);
+   GraphicalEffect* oldTV = factory.createEffect("..\\Data\\oldTV.fx", oldTVData);
    m_effectsStorage.add(oldTV);
 
    policy = new SettableRenderingTargetsPolicy();
@@ -129,7 +129,7 @@ void EffectsDemo::initialize()
 
    // 2. wavy image
    WavyImageDataSource* wavyImageData = new WavyImageDataSource(*m_mainRendererOutput);
-   GraphicalEffect* wavyImage = factory.createEffect("..\\Data\\wavyImage.fx", false, wavyImageData);
+   GraphicalEffect* wavyImage = factory.createEffect("..\\Data\\wavyImage.fx", wavyImageData);
    m_effectsStorage.add(wavyImage);
 
    policy = new SettableRenderingTargetsPolicy();
@@ -138,7 +138,7 @@ void EffectsDemo::initialize()
 
    // 3. dizzy
    DizzyDataSource* dizzyData = new DizzyDataSource(*m_mainRendererOutput);
-   GraphicalEffect* dizzy = factory.createEffect("..\\Data\\dizzy.fx", false, dizzyData);
+   GraphicalEffect* dizzy = factory.createEffect("..\\Data\\dizzy.fx", dizzyData);
    m_effectsStorage.add(dizzy);
 
    policy = new SettableRenderingTargetsPolicy();
@@ -147,7 +147,7 @@ void EffectsDemo::initialize()
 
    // 4. blur
    BlurEffectDataSource* blurData = new BlurEffectDataSource(*m_mainRendererOutput);
-   GraphicalEffect* blur = factory.createEffect("..\\Data\\blur.fx", false, blurData);
+   GraphicalEffect* blur = factory.createEffect("..\\Data\\blur.fx", blurData);
    m_effectsStorage.add(blur);
 
    policy = new SettableRenderingTargetsPolicy();

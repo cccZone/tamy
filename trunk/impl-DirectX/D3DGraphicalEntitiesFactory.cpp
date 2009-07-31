@@ -246,7 +246,6 @@ D3DGraphicalEntitiesFactory::createPostProcessEffectRenderable()
 
 GraphicalEffect* D3DGraphicalEntitiesFactory::createEffectImpl(const std::string& name, 
                                                                RenderingTargetsPolicy& policy,
-                                                               bool isTransparent,
                                                                EffectDataSource* dataSource)
 {
    ID3DXEffect* effect = NULL;
@@ -268,7 +267,6 @@ GraphicalEffect* D3DGraphicalEntitiesFactory::createEffectImpl(const std::string
 
    return new D3DGraphicalEffect(name, 
                                  policy, 
-                                 isTransparent, 
                                  dataSource, 
                                  m_d3Device, 
                                  m_renderer, 

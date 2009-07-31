@@ -24,7 +24,6 @@ private:
 public:
    D3DGraphicalEffect(const std::string& name, 
                       RenderingTargetsPolicy& policy,
-                      bool isTransparent,
                       EffectDataSource* dataSource,
                       IDirect3DDevice9& d3Device,
                       D3DRenderer& renderer,

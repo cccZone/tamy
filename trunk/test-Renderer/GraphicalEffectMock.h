@@ -21,7 +21,7 @@ private:
 public:
    GraphicalEffectMock(EffectDataSource* dataSource,
                        std::vector<std::string>& callSequenceVec) 
-         : GraphicalEffect("GraphicalEffectMock", s_policy, false, dataSource),
+         : GraphicalEffect("GraphicalEffectMock", s_policy, dataSource),
          m_callSequenceVec(callSequenceVec),
          m_passesCount(1)
    {}
@@ -29,7 +29,7 @@ public:
    GraphicalEffectMock(RenderingTargetsPolicy& policy,
                        EffectDataSource* dataSource,
                        std::vector<std::string>& callSequenceVec) 
-         : GraphicalEffect("GraphicalEffectMock", policy, false, dataSource),
+         : GraphicalEffect("GraphicalEffectMock", policy, dataSource),
          m_callSequenceVec(callSequenceVec),
          m_passesCount(1)
    {}

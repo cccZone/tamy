@@ -104,7 +104,6 @@ public:
    virtual TextureRenderingTarget* createTextureRenderingTarget(const std::string& name) = 0;
 
    GraphicalEffect* createEffect(const std::string& name, 
-                                 bool isTransparent,
                                  EffectDataSource* dataSource);
 
    /**
@@ -130,7 +129,6 @@ protected:
 
    virtual GraphicalEffect* createEffectImpl(const std::string& name, 
                                              RenderingTargetsPolicy& policy,
-                                             bool isTransparent,
                                              EffectDataSource* dataSource) = 0;
 
    /** 

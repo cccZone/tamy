@@ -8,12 +8,11 @@
 
 D3DGraphicalEffect::D3DGraphicalEffect(const std::string& name, 
                                        RenderingTargetsPolicy& policy,
-                                       bool isTransparent,
                                        EffectDataSource* dataSource,
                                        IDirect3DDevice9& d3Device, 
                                        D3DRenderer& renderer,
                                        ID3DXEffect* effect)
-      : GraphicalEffect(name, policy, isTransparent, dataSource),
+      : GraphicalEffect(name, policy, dataSource),
       m_d3Device(d3Device),
       m_renderer(renderer),
       m_effect(effect)

@@ -22,18 +22,14 @@ private:
    std::string m_name;
    RenderingTargetsPolicy& m_renderingTargetsPolicy;
    EffectDataSource* m_dataSource;
-   bool m_transparent;
 
 public:
    GraphicalEffect(const std::string& name, 
                    RenderingTargetsPolicy& policy,
-                   bool isTransparent,
                    EffectDataSource* dataSource);
    virtual ~GraphicalEffect();
 
    const std::string& getName() const {return m_name;}
-
-   bool isTransparent() const {return m_transparent;}
 
    virtual void setTechnique(const std::string& material) = 0;
    virtual void set(const std::string& paramName, bool val) = 0;
