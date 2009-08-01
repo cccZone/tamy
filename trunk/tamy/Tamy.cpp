@@ -37,6 +37,7 @@ Tamy::~Tamy()
    destroyAppManager();
    destroyRenderer();
 
+   SetWindowLong(m_hWnd, GWL_USERDATA, (LONG)NULL);
    delete m_winMsgsProcessor;
    m_winMsgsProcessor = NULL;
 
@@ -64,12 +65,6 @@ void Tamy::initialize(HINSTANCE hInstance,
                                   winWidth, 
                                   winHeight, 
                                   fullScreen);
-
-   // get the actual window size
-   WINDOWINFO info;
-   GetWindowInfo(s_theInstance.m_hWnd, &info);
-   winWidth = info.rcClient.right - info.rcClient.left;
-   winHeight = info.rcClient.bottom - info.rcClient.top;
 
    s_theInstance.createRenderer(s_theInstance.m_hWnd, 
                                 winWidth, 
@@ -107,17 +102,16 @@ void Tamy::createMainWindow(HINSTANCE hInstance,
 
    if (fullScreen)
    {
-      m_hWnd = winBuilder.createFullScreenWindow(hInstance, params);
+      m_hWnd = winBuilder.createFullScreenWindow(hInstance, nCmdShow, params);
    }
    else
    {
-      m_hWnd = winBuilder.createWindowedModeWindow(hInstance, params);
+      m_hWnd = winBuilder.createWindowedModeWindow(hInstance, nCmdShow, params);
    }
    if (m_hWnd == NULL)
    {
       std::runtime_error("Application window could not be created");
    }
-   ShowWindow(m_hWnd, nCmdShow);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

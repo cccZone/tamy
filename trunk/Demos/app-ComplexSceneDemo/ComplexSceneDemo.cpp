@@ -21,6 +21,7 @@
 #include "core-Renderer\SettableRenderingTargetsPolicy.h"
 #include "core-Renderer\SceneRenderingMechanism.h"
 #include "core-Renderer\SettableRenderingTargetsPolicy.h"
+#include <windows.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -125,19 +126,33 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   Tamy::initialize(hInstance, nCmdShow, "Complex Scene Demo", 1024, 768, false);
+   #ifndef _DEBUG
+   try
+   {
+   #endif
+      Tamy::initialize(hInstance, nCmdShow, "Complex Scene Demo", 1024, 768, false);
 
-   // create the application components
-	ComplexSceneDemo app(TAMY);
+      // create the application components
+	   ComplexSceneDemo app(TAMY);
 
-   ApplicationManager& appMgr = TAMY.appManager();
+      ApplicationManager& appMgr = TAMY.appManager();
 
-   appMgr.addApplication(app);
-   appMgr.setEntryApplication(app.getName());
+      appMgr.addApplication(app);
+      appMgr.setEntryApplication(app.getName());
 
-   // run the app
-   while (appMgr.step()) {Sleep(0);}
-
+      // run the app
+      while (appMgr.step()) {Sleep(0);}
+   #ifndef _DEBUG
+   }
+   catch(std::exception& ex)
+   {
+      MessageBox(NULL, ex.what(), "Spiral Of Madness - EXCEPTION", MB_OK);
+   }
+   catch(...)
+   {
+      MessageBox(NULL, "Unknown error has occured.", "Spiral Of Madness - EXCEPTION", MB_OK);
+   }
+   #endif
 	return 0;
 }
 

@@ -42,14 +42,18 @@ struct WindowParams
 
 class CWindowBuilder
 {
+private:
+   static bool m_windowInitialized;
 public:
    CWindowBuilder(void);
    ~CWindowBuilder(void);
 
    HWND createFullScreenWindow(HINSTANCE hInstance, 
+                               int nCmdShow,
                                const WindowParams& windowParams) const;
 
    HWND createWindowedModeWindow(HINSTANCE hInstance, 
+                                 int nCmdShow,
                                  const WindowParams& windowParams) const;
 
 private:

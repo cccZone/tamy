@@ -42,7 +42,7 @@ D3DInitializer::D3DInitializer(IDirect3D9& d3d9, HWND focusWnd, GraphicalCapsEva
 
 D3DInitializer::~D3DInitializer(void)
 {
-   for (UINT adapterNo = 0; adapterNo < m_adapters.size(); adapterNo++)
+   for (UINT adapterNo = 0; adapterNo < m_adapters.size(); ++adapterNo)
    {
       delete m_adapters[adapterNo];
    }
@@ -57,25 +57,24 @@ D3DSettings D3DInitializer::findBestWindowedMode(bool bRequireHAL, bool bRequire
 
    D3DDISPLAYMODE currentDisplayMode;
    m_d3d9.GetAdapterDisplayMode(D3DADAPTER_DEFAULT, &currentDisplayMode);
-
-   for (UINT adapterIdx = 0; adapterIdx < m_adapters.size(); adapterIdx++)
+      
+   for (UINT adapterIdx = 0; adapterIdx < m_adapters.size(); ++adapterIdx)
    {
       Adapter* adapter = m_adapters[adapterIdx];
 
-      for (UINT deviceIdx = 0; deviceIdx < adapter->devices.size(); deviceIdx++)
+      for (UINT deviceIdx = 0; deviceIdx < adapter->devices.size(); ++deviceIdx)
       {
          Device* device = adapter->devices[deviceIdx];
 
          if (bRequireHAL && (device->deviceType != D3DDEVTYPE_HAL)) continue;
          if (bRequireREF && (device->deviceType != D3DDEVTYPE_REF)) continue;
 
-         for (UINT optIdx = 0; optIdx < device->options.size(); optIdx++)
+         for (UINT optIdx = 0; optIdx < device->options.size(); ++optIdx)
          {
             DeviceOptions* options = device->options[optIdx];
 
             if (options->windowed == false) continue;
             if (options->adapterFormat != currentDisplayMode.Format) continue;
-
             bool backBufferMatch = (options->backBufferFormat == currentDisplayMode.Format);
 
             if ((options->deviceType == D3DDEVTYPE_HAL) && backBufferMatch)
@@ -96,8 +95,7 @@ FoundBestWindowedMode:
 
    if (bestOptions == NULL)
    {
-      throw std::logic_error(
-         std::string("No windowed mode is available on current equipment"));
+      throw std::runtime_error("No windowed mode is available on current equipment");
    }
 
    D3DSettings settings;
@@ -124,7 +122,7 @@ D3DSettings D3DInitializer::findBestFullscreenMode(D3DDISPLAYMODE& matchMode, bo
    D3DDISPLAYMODE bestDisplayMode;
    ZeroMemory(&bestDisplayMode, sizeof(D3DDISPLAYMODE));
 
-   for (UINT adapterIdx = 0; adapterIdx < m_adapters.size(); adapterIdx++)
+   for (UINT adapterIdx = 0; adapterIdx < m_adapters.size(); ++adapterIdx)
    {
       Adapter* adapter = m_adapters[adapterIdx];
 
@@ -136,14 +134,14 @@ D3DSettings D3DInitializer::findBestFullscreenMode(D3DDISPLAYMODE& matchMode, bo
       if (matchMode.Format != D3DFMT_UNKNOWN) currentDisplayMode.Format = matchMode.Format;
       if (matchMode.RefreshRate != 0) currentDisplayMode.RefreshRate = matchMode.RefreshRate;
 
-      for (UINT deviceIdx = 0; deviceIdx < adapter->devices.size(); deviceIdx++)
+      for (UINT deviceIdx = 0; deviceIdx < adapter->devices.size(); ++deviceIdx)
       {
          Device* device = adapter->devices[deviceIdx];
 
          if (bRequireHAL && (device->deviceType != D3DDEVTYPE_HAL)) continue;
          if (bRequireREF && (device->deviceType != D3DDEVTYPE_REF)) continue;
 
-         for (UINT optIdx = 0; optIdx < device->options.size(); optIdx++)
+         for (UINT optIdx = 0; optIdx < device->options.size(); ++optIdx)
          {
             DeviceOptions* options = device->options[optIdx];
 
@@ -174,8 +172,7 @@ FoundBestFullscreenMode:
 
    if (bestOptions == NULL)
    {
-      throw std::logic_error(
-         std::string("No windowed mode is available on current equipment"));
+      throw std::runtime_error("No fullscreen mode is available on current equipment");
    }
 
    D3DSettings settings;
@@ -267,14 +264,23 @@ D3DRenderer* D3DInitializer::createDisplay(D3DSettings& settings,
 
    IDirect3DDevice9* d3Device = NULL;
    HRESULT deviceCreationResult = m_d3d9.CreateDevice(settings.adapterOrdinal, 
-                                                       settings.deviceType, 
-                                                       m_focusWnd, 
-                                                       creationFlags, 
-                                                       &presentParams, 
-                                                       &d3Device);
-   if (FAILED(deviceCreationResult))
+                                                      settings.deviceType, 
+                                                      m_focusWnd, 
+                                                      creationFlags, 
+                                                      &presentParams, 
+                                                      &d3Device);
+   if (FAILED(deviceCreationResult) || (d3Device == NULL))
    {
-      return NULL;
+      std::string errMsg = "Renderer could not be created ";
+      switch(deviceCreationResult)
+      {
+      case D3DERR_DEVICELOST: errMsg += "due to the device being lost"; break;
+      case D3DERR_INVALIDCALL: errMsg += "due to invalid init params"; break;
+      case D3DERR_NOTAVAILABLE: errMsg += "due to unavailable device"; break;
+      case D3DERR_OUTOFVIDEOMEMORY: errMsg += "due to lack of video memory"; break;
+      default: errMsg += "- unknown problem occured"; break;
+      }
+      throw std::runtime_error(errMsg);
    }
    else
    {
@@ -448,7 +454,7 @@ const D3DFORMAT DepthStencilFormats[6]  = {D3DFMT_D32, D3DFMT_D24X4S4, D3DFMT_D2
 void D3DInitializer::enumerateDepthStencilFormats(DeviceOptions* options)
 {
 
-   for (UINT formatIdx = 0; formatIdx < DepthStencilFormatsCount; formatIdx++)
+   for (UINT formatIdx = 0; formatIdx < DepthStencilFormatsCount; ++formatIdx)
    {
       if (SUCCEEDED(m_d3d9.CheckDeviceFormat(options->adapterOrdinal, options->deviceType, 
                                               options->adapterFormat, D3DUSAGE_DEPTHSTENCIL, 
@@ -472,7 +478,7 @@ const ULONG PresentIntervals[6]= {D3DPRESENT_INTERVAL_IMMEDIATE, D3DPRESENT_INTE
 
 void D3DInitializer::enumeratePresentationIntervals(DeviceOptions* options)
 {
-   for (UINT idx = 0; idx < PresentIntervalsCount; idx++)
+   for (UINT idx = 0; idx < PresentIntervalsCount; ++idx)
    {
       ULONG interval = PresentIntervals[idx];
       

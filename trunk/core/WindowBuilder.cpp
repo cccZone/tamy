@@ -17,6 +17,7 @@ CWindowBuilder::~CWindowBuilder(void)
 ///////////////////////////////////////////////////////////////////////////////
 
 HWND CWindowBuilder::createFullScreenWindow(HINSTANCE hInstance, 
+                                            int nCmdShow,
                                             const WindowParams& windowParams) const
 {
    WNDCLASSEX wcex;
@@ -35,15 +36,31 @@ HWND CWindowBuilder::createFullScreenWindow(HINSTANCE hInstance,
    wcex.hIconSm		   = NULL;
    RegisterClassEx(&wcex);
 
+   m_windowInitialized = false;
    HWND hWnd = CreateWindowEx(WS_EX_TOPMOST, windowParams.windowClassName, windowParams.windowTitle, 0,
       0, 0, windowParams.width, windowParams.height, NULL, NULL, hInstance, windowParams.ptrMsgProc);
+
+   ShowWindow(hWnd, nCmdShow);
+
+   MSG msg;
+   while(m_windowInitialized == false)
+   {
+      if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) 
+      {
+         TranslateMessage(&msg);
+         DispatchMessage (&msg);
+      } 
+   }
 
    return hWnd;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool CWindowBuilder::m_windowInitialized = false;
+
 HWND CWindowBuilder::createWindowedModeWindow(HINSTANCE hInstance, 
+                                              int nCmdShow,
                                               const WindowParams& windowParams) const
 {
    WNDCLASSEX wcex;
@@ -62,10 +79,22 @@ HWND CWindowBuilder::createWindowedModeWindow(HINSTANCE hInstance,
    wcex.hIconSm		   = windowParams.smallIcon;
    RegisterClassEx(&wcex);
 
+   m_windowInitialized = false;
    HWND hWnd = CreateWindowEx(0, windowParams.windowClassName, windowParams.windowTitle, 
                               WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
                               0, 0, windowParams.width, windowParams.height, 
                               NULL, NULL, hInstance, windowParams.ptrMsgProc);
+   ShowWindow(hWnd, nCmdShow);
+
+   MSG msg;
+   while(m_windowInitialized == false)
+   {
+      if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) 
+      {
+         TranslateMessage(&msg);
+         DispatchMessage (&msg);
+      } 
+   }
 
    return hWnd;
 }
@@ -78,6 +107,7 @@ LRESULT CALLBACK CWindowBuilder::WndProc(HWND hWnd, UINT message, WPARAM wParam,
    if (message == WM_CREATE) 
    {
       SetWindowLong(hWnd, GWL_USERDATA, (LONG)((CREATESTRUCT FAR *)lParam)->lpCreateParams);
+      m_windowInitialized = true;
    }
 
    IWindowMessagesProcessor *destination = (IWindowMessagesProcessor*)GetWindowLong(hWnd, GWL_USERDATA);

@@ -91,25 +91,30 @@ void Tamy::createRenderer(HWND window,
    s_tamyGraphImpl.m_d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
    if (s_tamyGraphImpl.m_d3d9 == NULL)
    {
-      throw std::logic_error(std::string("Cannot initialize DirectX library"));
+      throw std::runtime_error("Cannot initialize DirectX library");
    }
-
    D3DInitializer d3dInitializer(*(s_tamyGraphImpl.m_d3d9), window, s_tamyGraphImpl);
+
    D3DSettings d3DSettings;
    if (fullScreen)
    {
+
       D3DDISPLAYMODE matchMode;
       matchMode.Width = winWidth;
-      matchMode.Width = winHeight;
+      matchMode.Height = winHeight;
       matchMode.Format = D3DFMT_X8R8G8B8;
-      d3DSettings = d3dInitializer.findBestFullscreenMode(matchMode);
+      d3DSettings = d3dInitializer.findBestFullscreenMode(matchMode, true);
    }
    else
    {
-      d3DSettings = d3dInitializer.findBestWindowedMode();
+      d3DSettings = d3dInitializer.findBestWindowedMode(true);
    }
 
    s_tamyGraphImpl.m_renderer = d3dInitializer.createDisplay(d3DSettings, window);
+   if (s_tamyGraphImpl.m_renderer == NULL)
+   {
+      throw std::runtime_error("Renderer could not be created");
+   }
    s_theInstance.m_winMsgsProcessor->add(*(s_tamyGraphImpl.m_renderer));
 
    s_tamyGraphImpl.m_graphicalFactory = new D3DGraphicalEntitiesFactory("..\\Data",  // TODO: zastapic odwolaniem do VFS'a
@@ -192,7 +197,7 @@ TamyAppMgrImpl s_tamyAppMgrImpl; // the singleton instance of the structure
 void Tamy::createAppManager(const std::string& appName)
 {
    ASSERT(s_tamyAppMgrImpl.m_appMgr == NULL, "ApplicationManager instance already exists");
-    ASSERT(s_tamyAppMgrImpl.m_uiController == NULL, "UserInputController instance already exists");
+   ASSERT(s_tamyAppMgrImpl.m_uiController == NULL, "UserInputController instance already exists");
 
    s_tamyAppMgrImpl.m_appMgr = new D3DApplicationManager(appName);
    m_winMsgsProcessor->add(*(s_tamyAppMgrImpl.m_appMgr));

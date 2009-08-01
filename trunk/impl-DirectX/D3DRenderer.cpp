@@ -102,9 +102,8 @@ void D3DRenderer::resetViewport(unsigned int width, unsigned int height)
       }
 
       m_creationParams = creationParams;
-
-      initRenderer();
    }
+   initRenderer();
 }
 
 /////////////////////////////////////////////////////////////////////////////
