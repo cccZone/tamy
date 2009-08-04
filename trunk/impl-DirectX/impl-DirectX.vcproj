@@ -256,23 +256,11 @@
 				Name="Core"
 				>
 				<File
-					RelativePath=".\D3DInitializer.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\impl-DirectX\D3DInitializer.h"
-					>
-				</File>
-				<File
 					RelativePath=".\D3DRenderer.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\Include\impl-DirectX\D3DRenderer.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\impl-DirectX\GraphicalCapsEvaluator.h"
 					>
 				</File>
 				<Filter
@@ -325,6 +313,18 @@
 				</File>
 				<File
 					RelativePath="..\Include\impl-DirectX\D3DGraphicalEntitiesFactory.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Initializer"
+				>
+				<File
+					RelativePath=".\D3DInitializer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\D3DInitializer.h"
 					>
 				</File>
 			</Filter>

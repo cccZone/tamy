@@ -639,6 +639,42 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Init"
+			>
+			<File
+				RelativePath=".\DeviceFilter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\DeviceFilter.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\DeviceFilterElem.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\DevicesSorter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderDevicesEnumerator.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderDevicesEnumerator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingDevice.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingDevice.h"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

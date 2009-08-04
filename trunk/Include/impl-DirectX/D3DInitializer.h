@@ -8,17 +8,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class D3DRenderer;
-class GraphicalCapsEvaluator;
-
-///////////////////////////////////////////////////////////////////////////////
-
-enum VERTEXPROCESSING_TYPE
-{
-    SOFTWARE_VP         = 1,        // Software Vertex Processing
-    MIXED_VP            = 2,        // Mixed Vertex Processing
-    HARDWARE_VP         = 3,        // Hardware Vertex Processing
-    PURE_HARDWARE_VP    = 4         // Pure Hardware Vertex Processing
-};
+enum VERTEXPROCESSING_TYPE;
+struct RenderingDevice;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -39,55 +30,8 @@ struct D3DSettings
    ULONG                   presentInterval;
    bool                    windowed;
    D3DCAPS9                caps;
-};
 
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * The structure stores the information about the capabilities
- * a device has
- */
-struct DeviceOptions
-{
-   ULONG                              adapterOrdinal;
-   D3DDEVTYPE                         deviceType;
-   D3DCAPS9                           caps;
-   D3DFORMAT                          adapterFormat;
-   D3DFORMAT                          backBufferFormat;
-   std::vector<D3DFORMAT>             depthStencilFormats;
-   std::vector<D3DMULTISAMPLE_TYPE>   multisampleTypes;
-   std::vector<ULONG>                 multisampleQualities;
-   std::vector<VERTEXPROCESSING_TYPE> vertexProcessingTypes;
-   std::vector<ULONG>                 presentIntervals;
-   bool                               windowed;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * The structure stores the information about a device an adapter can use
- */
-struct Device
-{
-   ~Device();
-
-   D3DDEVTYPE                   deviceType;
-   D3DCAPS9                     caps;
-   std::vector<DeviceOptions*> options;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * The structure stores the information about an adapter present 
- * in the machine
- */
-struct Adapter
-{
-   ~Adapter();
-   ULONG                       adapterOrdinal;
-   std::vector<D3DDISPLAYMODE> displayModes;
-   std::vector<Device*>       devices;
+   D3DSettings(RenderingDevice& device);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,31 +43,16 @@ class D3DInitializer
 {
 private:
    IDirect3D9& m_d3d9;
-   HWND m_focusWnd;
-   GraphicalCapsEvaluator& m_capsEvaluator;
-
-   std::vector<Adapter*> m_adapters;
 
 public:
-   D3DInitializer(IDirect3D9& d3d9, HWND focusWnd, GraphicalCapsEvaluator& capsEvaluator);
-   ~D3DInitializer(void);
-
-   D3DSettings findBestWindowedMode(bool bRequireHAL = false, bool bRequireREF = false);
-   D3DSettings findBestFullscreenMode(D3DDISPLAYMODE& matchMode, bool bRequireHAL = false, bool bRequireREF = false);
+   D3DInitializer(IDirect3D9& d3d9);
 
    D3DRenderer* createDisplay(D3DSettings& settings, 
-                              HWND hWnd = NULL,
+                              HWND hWnd,
                               ULONG Flags = 0);
 
 private:
-   void enumerateGraphicsEquipment();
-   void enumerateDisplayModes(Adapter* adapter);
-   void enumerateDevices(Adapter* adapter);
-   void enumerateDeviceOptions(Adapter* adapter, Device* device);
-   void enumerateDepthStencilFormats(DeviceOptions* options);
-   void enumeratePresentationIntervals(DeviceOptions* options);
-   void enumerateMultisamplingTypes(DeviceOptions* options);
-   void enumerateVertexProcessingTypes(DeviceOptions* options);
+
    D3DFORMAT findOptimalTextureFormat(D3DSettings& settings);
 };
 

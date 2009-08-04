@@ -249,6 +249,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "app-EffectsDemo", "Demos\ap
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tamy", "tamy\tamy.vcproj", "{2A28BAD7-C0D6-4819-AFBF-17629EC718F6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "app-GraphDevicesEnumDemo", "Demos\app-GraphDevicesEnumDemo\app-GraphDevicesEnumDemo.vcproj", "{C3339727-A48B-4F3D-909A-5B38BE31D88F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DBCD9F77-4064-4DB9-AC18-516ED35B24CE} = {DBCD9F77-4064-4DB9-AC18-516ED35B24CE}
+		{4F4CEC82-B5C6-4F0E-B69B-855FA55F4B80} = {4F4CEC82-B5C6-4F0E-B69B-855FA55F4B80}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -391,6 +397,10 @@ Global
 		{2A28BAD7-C0D6-4819-AFBF-17629EC718F6}.Debug|Win32.Build.0 = Debug|Win32
 		{2A28BAD7-C0D6-4819-AFBF-17629EC718F6}.Release|Win32.ActiveCfg = Release|Win32
 		{2A28BAD7-C0D6-4819-AFBF-17629EC718F6}.Release|Win32.Build.0 = Release|Win32
+		{C3339727-A48B-4F3D-909A-5B38BE31D88F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C3339727-A48B-4F3D-909A-5B38BE31D88F}.Debug|Win32.Build.0 = Debug|Win32
+		{C3339727-A48B-4F3D-909A-5B38BE31D88F}.Release|Win32.ActiveCfg = Release|Win32
+		{C3339727-A48B-4F3D-909A-5B38BE31D88F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -430,6 +440,7 @@ Global
 		{D53D82F2-D431-4237-B649-4D0458D70B7A} = {E2C5507B-4365-4FFE-B527-0353065333EE}
 		{9D2C7535-9973-4470-ADB1-FE0A0C2F92E6} = {E2C5507B-4365-4FFE-B527-0353065333EE}
 		{4ABCCE58-0B46-40AA-802F-5233183EF66C} = {E2C5507B-4365-4FFE-B527-0353065333EE}
+		{C3339727-A48B-4F3D-909A-5B38BE31D88F} = {E2C5507B-4365-4FFE-B527-0353065333EE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		AMDCaProjectFile = D:\Docs\Projects\GameEngine\CodeAnalyst\GameEngine.caw

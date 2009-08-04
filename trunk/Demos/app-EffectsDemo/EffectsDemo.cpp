@@ -25,6 +25,7 @@
 #include "core-Renderer\CyclicRenderingTarget.h"
 #include "core-Renderer\ChangableTexture.h"
 #include "core\dostream.h"
+#include "tamy\SimpleTamyConfigurator.h"
 
 // effect data sources
 #include "OldTVDataSource.h"
@@ -253,7 +254,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   Tamy::initialize(hInstance, nCmdShow, "Effects Demo", 1024, 768, false);
+   SimpleTamyConfigurator configurator(1024, 768, false);
+   Tamy::initialize(hInstance, nCmdShow, "Effects Demo", configurator);
 
    // create the application components
 	EffectsDemo app(TAMY);

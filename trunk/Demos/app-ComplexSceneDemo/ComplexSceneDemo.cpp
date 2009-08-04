@@ -22,6 +22,7 @@
 #include "core-Renderer\SceneRenderingMechanism.h"
 #include "core-Renderer\SettableRenderingTargetsPolicy.h"
 #include <windows.h>
+#include "tamy\SimpleTamyConfigurator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,7 +131,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
    try
    {
    #endif
-      Tamy::initialize(hInstance, nCmdShow, "Complex Scene Demo", 1024, 768, false);
+      SimpleTamyConfigurator configurator(1024, 768, false);
+      Tamy::initialize(hInstance, nCmdShow, "Complex Scene Demo", configurator);
 
       // create the application components
 	   ComplexSceneDemo app(TAMY);

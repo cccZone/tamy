@@ -4,7 +4,9 @@
 #include "impl-DirectX\D3DInitializer.h"
 #include "impl-DirectX\D3DRenderer.h"
 #include "impl-DirectX\D3DGraphicalEntitiesFactory.h"
-#include "impl-DirectX\GraphicalCapsEvaluator.h"
+#include "core-Renderer\RenderingDevice.h"
+#include "core-Renderer\DeviceFilterElem.h"
+#include "core-Renderer\DeviceFilter.h"
 
 // application management
 #include "impl-DirectX\D3DApplicationManager.h"
@@ -35,17 +37,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-struct TamyGraphImpl : public GraphicalCapsEvaluator
+struct TamyGraphImpl
 {
-   IDirect3D9* m_d3d9;
    D3DRenderer* m_renderer;
    D3DGraphicalEntitiesFactory* m_graphicalFactory;
 
    // -------------------------------------------------------------------------
 
    TamyGraphImpl()
-      : m_d3d9(NULL),
-      m_renderer(NULL),
+      : m_renderer(NULL),
       m_graphicalFactory(NULL)
    {
    }
@@ -57,60 +57,68 @@ struct TamyGraphImpl : public GraphicalCapsEvaluator
 
       delete m_renderer;
       m_renderer = NULL;
-
-      if (m_d3d9 != NULL)
-      {
-         m_d3d9->Release();
-         m_d3d9 = NULL;
-      }
    }
-
-   bool checkDeviceCaps(const D3DCAPS9& caps)
-   {
-      if(!(caps.FVFCaps & D3DFVFCAPS_PSIZE)) {return false;}
-      if(caps.MaxPointSize <= 1.0f) {return false;}
-
-      return true;
-   }
-
 };
 
 TamyGraphImpl s_tamyGraphImpl; // the singleton instance of the structure
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Tamy::createRenderer(HWND window, 
-                          unsigned int winWidth,
-                          unsigned int winHeight,
-                          bool fullScreen)
+IDirect3D9* Tamy::initializeRenderingSystem()
 {
-   ASSERT(s_tamyGraphImpl.m_d3d9 == NULL, "IDirect3D9 instance already exists");
-   ASSERT(s_tamyGraphImpl.m_renderer == NULL, "Renderer instance already exists");
-   ASSERT(s_tamyGraphImpl.m_graphicalFactory == NULL, "GraphicalEntitiesFactory instance already exists");
-
-   s_tamyGraphImpl.m_d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
-   if (s_tamyGraphImpl.m_d3d9 == NULL)
+   IDirect3D9* d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
+   if (d3d9 == NULL)
    {
       throw std::runtime_error("Cannot initialize DirectX library");
    }
-   D3DInitializer d3dInitializer(*(s_tamyGraphImpl.m_d3d9), window, s_tamyGraphImpl);
 
-   D3DSettings d3DSettings;
-   if (fullScreen)
+   return d3d9;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+class TamyDeviceFilter : public DeviceFilterElem
+{
+private:
+   IDirect3D9& m_d3d9;
+
+public:
+   TamyDeviceFilter(IDirect3D9& d3d9)
+      : m_d3d9(d3d9)
+   {}
+
+   bool validate(RenderingDevice& device)
    {
+      // check if the format can be used to create a texture rendering target - we're only interested in those
+      if (FAILED(m_d3d9.CheckDeviceFormat(device.adapterOrdinal, device.deviceType, device.adapterFormat, 
+                                           D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, device.backBufferFormat))) return false;
 
-      D3DDISPLAYMODE matchMode;
-      matchMode.Width = winWidth;
-      matchMode.Height = winHeight;
-      matchMode.Format = D3DFMT_X8R8G8B8;
-      d3DSettings = d3dInitializer.findBestFullscreenMode(matchMode, true);
-   }
-   else
-   {
-      d3DSettings = d3dInitializer.findBestWindowedMode(true);
-   }
+      if(!(device.caps.FVFCaps & D3DFVFCAPS_PSIZE)) {return false;}
+      if(device.caps.MaxPointSize <= 1.0f) {return false;}
 
-   s_tamyGraphImpl.m_renderer = d3dInitializer.createDisplay(d3DSettings, window);
+      return true;
+   }
+};
+
+void Tamy::addImplSpecificRenderDeviceFilters(IDirect3D9& d3d9, DeviceFilter& filter)
+{
+   filter.add(new TamyDeviceFilter(d3d9));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Tamy::createRenderer(IDirect3D9& d3d9, 
+                          RenderingDevice& deviceDesc, 
+                          HWND window)
+{
+
+   ASSERT(s_tamyGraphImpl.m_renderer == NULL, "Renderer instance already exists");
+   ASSERT(s_tamyGraphImpl.m_graphicalFactory == NULL, "GraphicalEntitiesFactory instance already exists");
+
+   // create the device
+   D3DInitializer initializer(d3d9);
+   D3DSettings d3DSettings(deviceDesc);
+   s_tamyGraphImpl.m_renderer = initializer.createDisplay(d3DSettings, window);
    if (s_tamyGraphImpl.m_renderer == NULL)
    {
       throw std::runtime_error("Renderer could not be created");
@@ -131,12 +139,6 @@ void Tamy::destroyRenderer()
 
    delete s_tamyGraphImpl.m_renderer;
    s_tamyGraphImpl.m_renderer = NULL;
-
-   if (s_tamyGraphImpl.m_d3d9 != NULL)
-   {
-      s_tamyGraphImpl.m_d3d9->Release();
-      s_tamyGraphImpl.m_d3d9 = NULL;
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

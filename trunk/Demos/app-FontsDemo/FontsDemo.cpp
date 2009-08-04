@@ -14,6 +14,7 @@
 #include "core-Renderer\RenderingTarget.h"
 #include "core-Renderer\SceneRenderingMechanism.h"
 #include "core-Renderer\SettableRenderingTargetsPolicy.h"
+#include "tamy\SimpleTamyConfigurator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -116,7 +117,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
                    LPSTR    lpCmdLine,
                    int       nCmdShow)
 {
-   Tamy::initialize(hInstance, nCmdShow, "Fonts Demo", 1024, 768, false);
+   SimpleTamyConfigurator configurator(1024, 768, false);
+   Tamy::initialize(hInstance, nCmdShow, "Fonts Demo", configurator);
 
    // create the application components
 	FontsDemo app(TAMY);
