@@ -88,7 +88,8 @@ void Tamy::initialize(HINSTANCE hInstance,
                                   appName, 
                                   device.displayMode.Width, 
                                   device.displayMode.Height, 
-                                  device.windowed);
+                                  device.windowed,
+                                  configurator.getApplicationIcon());
 
    s_theInstance.createRenderer(*(s_theInstance.m_d3d9), device, s_theInstance.m_hWnd);
 
@@ -144,7 +145,8 @@ void Tamy::createMainWindow(HINSTANCE hInstance,
                             const std::string& appName,
                             unsigned int winWidth,
                             unsigned int winHeight,
-                            bool windowed)
+                            bool windowed,
+                            HICON icon)
 {
    m_winMsgsProcessor = new CompositeWindowMessagesProcessor();
 
@@ -155,6 +157,8 @@ void Tamy::createMainWindow(HINSTANCE hInstance,
    params.ptrMsgProc = m_winMsgsProcessor;
    params.width = winWidth;
    params.height = winHeight;
+   params.smallIcon = icon;
+   params.largeIcon = icon;
 
    if (windowed)
    {

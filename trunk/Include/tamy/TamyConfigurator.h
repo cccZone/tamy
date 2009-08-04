@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <windows.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,6 +20,8 @@ public:
    virtual ~TamyConfigurator() {}
 
    virtual RenderingDevice& selectRenderingDevice(const std::vector<RenderingDevice*>& devicesDB) = 0;
+
+   virtual HICON getApplicationIcon() = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -17,10 +17,12 @@
 
 SimpleTamyConfigurator::SimpleTamyConfigurator(unsigned int width, 
                                                unsigned int height, 
-                                               bool fullScreen)
+                                               bool fullScreen,
+                                               HICON icon)
       : m_width(width),
       m_height(height),
-      m_fullScreen(fullScreen)
+      m_fullScreen(fullScreen),
+      m_icon(icon)
 {
 }
 
@@ -53,6 +55,13 @@ SimpleTamyConfigurator::selectRenderingDevice(const std::vector<RenderingDevice*
    }
 
    return *(applicableDevices[0]);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+HICON SimpleTamyConfigurator::getApplicationIcon()
+{
+   return m_icon;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

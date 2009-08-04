@@ -33,6 +33,7 @@ private:
    D3DCAPS9 m_caps;
    bool m_deviceLost;
    bool m_hardwareTLOn;
+   unsigned int m_maxLights;
    D3DFORMAT m_optimalTextureFormat;
    D3DVIEWPORT9 m_viewport;
 

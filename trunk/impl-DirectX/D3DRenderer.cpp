@@ -21,8 +21,14 @@ D3DRenderer::D3DRenderer(IDirect3DDevice9* d3Device,
       m_caps(caps),
       m_deviceLost(false),
       m_hardwareTLOn(hardwareTLOn),
+      m_maxLights(255),
       m_optimalTextureFormat(optimalTextureFormat)
 {
+   if (m_hardwareTLOn)
+   {
+      m_maxLights = m_caps.MaxActiveLights;
+   }
+
    m_viewport.X = 0;
    m_viewport.Y = 0;
    m_viewport.Width = frontBufferWidth;
@@ -181,7 +187,7 @@ void D3DRenderer::attemptToRecoverGraphicsSystem()
 
 UINT D3DRenderer::getMaxLightsCount() const
 {
-   return m_caps.MaxActiveLights;
+   return m_maxLights;
 }
 
 /////////////////////////////////////////////////////////////////////////////

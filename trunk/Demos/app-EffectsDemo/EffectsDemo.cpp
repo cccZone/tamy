@@ -239,6 +239,8 @@ void EffectsDemo::update(float timeElapsed)
 
 void EffectsDemo::switchEffect()
 {
+   if (m_postProcessEffects.size() == 0) {return;}
+
    m_renderer->removeMechanism(*m_currEffect);
 
    m_currEffect = m_postProcessEffects.at(m_nextEffectIdx);

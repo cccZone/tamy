@@ -3,6 +3,7 @@
 #include "core\WindowMessagesProcessor.h"
 #include <d3d9.h>
 #include <vector>
+#include <windows.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,7 +93,8 @@ private:
                          const std::string& appName,
                          unsigned int winWidth,
                          unsigned int winHeight,
-                         bool windowed);
+                         bool windowed,
+                         HICON icon);
 
    void createRenderer(HWND window, RenderingDevice& device);
    IDirect3D9* initializeRenderingSystem();
