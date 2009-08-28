@@ -2,7 +2,7 @@
 #include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\LightReflectingProperties.h"
-#include "core-Renderer\MaterialImpl.h"
+#include "core-Renderer\RendererImpl.h"
 #include <string.h>
 #include <stdexcept>
 
@@ -10,19 +10,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 unsigned char Material::s_stagesArrSize = 8;
-unsigned int Material::m_nextIndex = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Material::Material(const std::string& name)
-      : m_name(name),
-      m_index(m_nextIndex),
-      m_lightReflectingProperties(new LightReflectingProperties()),
-      m_stagesCount(0),
-      m_transparent(false)
+: m_name(name)
+, m_lightReflectingProperties(new LightReflectingProperties())
+, m_stagesCount(0)
+, m_transparent(false)
 {
-   ++m_nextIndex;
-
    m_stages = new MaterialStageP[s_stagesArrSize];
    memset(m_stages, NULL, sizeof(MaterialStageP) * s_stagesArrSize);
 
@@ -32,14 +28,12 @@ Material::Material(const std::string& name)
 ///////////////////////////////////////////////////////////////////////////////
 
 Material::Material(const Material& rhs)
-      : m_name(rhs.m_name),
-      m_index(m_nextIndex),
-      m_lightReflectingProperties(new LightReflectingProperties(*rhs.m_lightReflectingProperties)),
-      m_stagesCount(rhs.m_stagesCount),
-      m_transparent(false)
+: UniqueObject(rhs)
+, m_name(rhs.m_name)
+, m_lightReflectingProperties(new LightReflectingProperties(*rhs.m_lightReflectingProperties))
+, m_stagesCount(rhs.m_stagesCount)
+, m_transparent(false)
 {
-   ++m_nextIndex;
-
    m_stages = new MaterialStageP[s_stagesArrSize];
    memset(m_stages, NULL, sizeof(MaterialStageP) * s_stagesArrSize);
 
@@ -146,7 +140,7 @@ bool Material::isTransparent() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Material::setForRendering(MaterialImpl& impl)
+void Material::setForRendering(RendererImpl& impl) const
 {
    impl.setTransparency(m_transparent);
    impl.setLRP(*m_lightReflectingProperties);

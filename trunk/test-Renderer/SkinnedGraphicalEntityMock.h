@@ -7,9 +7,6 @@
 
 class SkinnedGraphicalEntityMock : public SkinnedGraphicalEntity
 {
-private:
-   std::vector<D3DXMATRIX> m_matrices;
-
 public:
    SkinnedGraphicalEntityMock(const std::string& name,
                               const std::vector<SkinBoneDefinition>& skeleton,
@@ -19,12 +16,9 @@ public:
    {
    }
 
-   void render(const std::vector<D3DXMATRIX>& matrices, DWORD subset)
+   void render(DWORD subset)
    {
-      m_matrices = matrices;
    }
-
-   const std::vector<D3DXMATRIX>& getMatricesUsedForRendering() const {return m_matrices;}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

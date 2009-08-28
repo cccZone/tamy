@@ -1,5 +1,9 @@
 #pragma once
 
+/// @file   core\NodeActionsExecutor.h
+/// @brief  facility for associating actions with scene nodes
+
+
 #include <vector>
 #include <set>
 #include <functional>

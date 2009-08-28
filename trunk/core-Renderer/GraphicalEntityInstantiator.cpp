@@ -6,9 +6,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEntityInstantiator::GraphicalEntityInstantiator(const std::string& name, 
-                                                         bool dynamic)
-      : Node(name, dynamic),
+GraphicalEntityInstantiator::GraphicalEntityInstantiator(const std::string& name)
+      : Node(name),
       m_localParent(NULL)
 {
 }
@@ -17,8 +16,6 @@ GraphicalEntityInstantiator::GraphicalEntityInstantiator(const std::string& name
 
 void GraphicalEntityInstantiator::attachEntity(AbstractGraphicalEntity& entity)
 {
-   bool amIDynamic = isDynamic();
-
    // delete the previously set nodes hierarchy
    const std::list<Node*>& children = getChildren();
    while(getChildrenCount() > 0)
@@ -37,7 +34,7 @@ void GraphicalEntityInstantiator::attachEntity(AbstractGraphicalEntity& entity)
    {
       Node* parentNode = it->first;
       SkinnedGraphicalEntity* skinnedEntity = it->second;
-      parentNode->addChild(skinnedEntity->instantiate(*this, amIDynamic));
+      parentNode->addChild(skinnedEntity->instantiate(*this));
    }
    m_skinsToPostprocess.clear();
    m_localParent = NULL;
@@ -49,7 +46,7 @@ void GraphicalEntityInstantiator::visit(CompositeGraphicalEntity& entity)
 {
    Node* prevParent = m_localParent;
 
-   Node* compositeNode = entity.instantiate(isDynamic());
+   Node* compositeNode = entity.instantiate();
    m_localParent->addChild(compositeNode);
    m_localParent = compositeNode;
 
@@ -66,7 +63,7 @@ void GraphicalEntityInstantiator::visit(CompositeGraphicalEntity& entity)
 
 void GraphicalEntityInstantiator::visit(GraphicalEntity& entity)
 {
-   m_localParent->addChild(entity.instantiate(isDynamic()));
+   m_localParent->addChild(entity.instantiate());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

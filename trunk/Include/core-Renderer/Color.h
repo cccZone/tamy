@@ -3,6 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * A support structure describing an RGBA color
+ */
 struct Color
 {
    float r;
@@ -21,6 +24,16 @@ struct Color
    bool operator!=(const Color& rhs) const
    {
       return !(*this == rhs);
+   }
+
+   Color operator+(const Color& lhs) const
+   {
+      Color newColor;
+      newColor.r = r + lhs.r;
+      newColor.g = g + lhs.g;
+      newColor.b = b + lhs.b;
+      newColor.a = a + lhs.a;
+      return newColor;
    }
 };
 

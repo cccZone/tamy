@@ -1,6 +1,7 @@
 #include "core\BoundingSphere.h"
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
+#include "core\PointVolume.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,10 +34,9 @@ BoundingVolume* BoundingSphere::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool BoundingSphere::testCollision(const D3DXVECTOR3& point) const
+bool BoundingSphere::testCollision(const PointVolume& rhs) const
 {
-    ASSERT(false, "BoundingSphere::testCollision(const D3DXVECTOR3&) - Method not implemented");
-    return false;
+   return ::testCollision(*this, rhs.point);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

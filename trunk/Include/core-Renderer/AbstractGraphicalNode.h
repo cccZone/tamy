@@ -1,13 +1,15 @@
 #pragma once
 
+#include <d3dx9.h>
 #include "core\Node.h"
-#include "core-Renderer\Renderable.h"
+#include "core\Array.h"
+#include "core-Renderer\RenderableNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Material;
-class AbstractGraphicalEntity;
+class LeafGraphicalEntity;
 struct BoundingSphere;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,16 +18,15 @@ struct BoundingSphere;
  * This class represents a node that can be rendered on a graphical device.
  * This node instantiates a graphical entity
  */
-class AbstractGraphicalNode : public Node, public Renderable
+class AbstractGraphicalNode : public RenderableNode
 {
 private:
-   Material* m_material;
+   LeafGraphicalEntity& m_entity;
    DWORD m_subset;
 
 public:
    AbstractGraphicalNode(const std::string& name, 
-                         bool dynamic, 
-                         Material& material, 
+                         LeafGraphicalEntity& entity,
                          DWORD subset);
    virtual ~AbstractGraphicalNode() {}
 
@@ -34,24 +35,22 @@ public:
     */
    void setBoundingSphereRadius(float radius);
 
-   /**
-    * This method allows to set an arbitrary material that will be used
-    * to render this node's contents
+   void render();
+
+   /** 
+    * @Inherited
     */
-   void setMaterial(Material& material);
+   virtual const Array<D3DXMATRIX>& getRenderingMatrices() = 0;
 
-   inline const Material& getMaterial() const {return *m_material;}
-   inline Material& getMaterial() {return *m_material;}
-
-    /**
-    * ...self explanatory I think...
+   /** 
+    * This method returns an index indicating which 'part'
+    * of the graphical entity the node describes
     */
-   virtual void render() = 0;
-
    inline DWORD getSubsetIdx() const {return m_subset;}
 
-protected:
-   void onAccept(NodeVisitor& visitor);
+   const LeafGraphicalEntity& getEntity() const;
+
+   const Array<Triangle*>& getBoundingGeometry() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

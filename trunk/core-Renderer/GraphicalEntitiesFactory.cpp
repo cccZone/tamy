@@ -1,5 +1,6 @@
 #include "core-Renderer\GraphicalEntitiesFactory.h"
-#include "core-Renderer\SkyBox.h"
+#include "core-Renderer\SkyBoxStorage.h"
+#include "core-Renderer\SkyBoxSide.h"
 #include "core-Renderer\LightReflectingProperties.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\MaterialStage.h"
@@ -7,7 +8,7 @@
 #include "core-Renderer\CoordinatesOperation.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\Camera.h"
-#include "core-Renderer\PostProcessMechanism.h"
+#include "core-Renderer\Light.h"
 #include <deque>
 
 
@@ -35,6 +36,13 @@ Camera* GraphicalEntitiesFactory::createCamera(const std::string& name)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Light* GraphicalEntitiesFactory::createLight(const std::string& name)
+{
+   return new Light(name);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 LightReflectingProperties* GraphicalEntitiesFactory::createLightReflectingProperties()
 {
    return new LightReflectingProperties();
@@ -55,23 +63,6 @@ Texture* GraphicalEntitiesFactory::createTexture(const std::string& name)
    }
 
    return texture;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-SkyBox* GraphicalEntitiesFactory::createSkyBox(Texture& front, Texture& back,
-                                               Texture& left, Texture& right,
-                                               Texture& top, Texture& bottom)
-{
-   SkyBox* skyBox = createSkyBox();
-   skyBox->setTexture(SBS_FRONT, front);
-   skyBox->setTexture(SBS_BACK, back);
-   skyBox->setTexture(SBS_LEFT, left);
-   skyBox->setTexture(SBS_RIGHT, right);
-   skyBox->setTexture(SBS_TOP, top);
-   skyBox->setTexture(SBS_BOTTOM, bottom);
-
-   return skyBox;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,6 +92,20 @@ MaterialStage* GraphicalEntitiesFactory::createMaterialStage(
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MaterialStage* GraphicalEntitiesFactory::createMaterialStage(
+                  Texture& texture,
+                  MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
+                  MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
+                  CoordsOpCode coordsOperation)
+{
+   return new MaterialStage(texture,
+                            new MaterialOperation(colorOp, colorArg1, colorArg2),
+                            new MaterialOperation(alphaOp, alphaArg1, alphaArg2),
+                            new CoordinatesOperation(coordsOperation));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Material* GraphicalEntitiesFactory::createMaterial(
                                           const std::string& materialName,
                                           LightReflectingProperties* lrp)
@@ -108,27 +113,6 @@ Material* GraphicalEntitiesFactory::createMaterial(
    Material* mat = new Material(materialName);
    mat->setLightReflectingProperties(lrp);
    return mat;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-GraphicalEffect* GraphicalEntitiesFactory::createEffect(const std::string& name, 
-                                                        EffectDataSource* dataSource)
-{
-   GraphicalEffect* effect = createEffectImpl(name, 
-                                    m_renderer.getRenderingTargetsPolicy(), 
-                                    dataSource);
-   return effect;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-PostProcessMechanism* 
-GraphicalEntitiesFactory::createPostProcessMechanism(RenderingTargetsPolicy* policy,
-                                                     GraphicalEffect& effect)
-{
-   PostProcessEffectRenderable* renderable = createPostProcessEffectRenderable();
-   return new PostProcessMechanism(policy, effect, renderable);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -6,41 +6,42 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphicalNodesProcessor::operator()(const Array<AbstractGraphicalNode*>& input, 
+void GraphicalNodesProcessor::operator()(const Array<RenderableNode*>& input, 
                                          const Frustum& frustum,
                                          const D3DXVECTOR3& cameraGlobalPos,
-                                         Array<AbstractGraphicalNode*>& output)
+                                         Array<Renderable*>& output)
 {
    // segregate nodes
    output.clear();
+
    unsigned int nodesCount = input.size();
-   unsigned int regularNodesCount = 0;
+   output.resize(nodesCount, NULL);
+
+   unsigned int regularNodeIdx = 0;
+   unsigned int transparentNodeIdx = nodesCount - 1;
    for (unsigned int i = 0; i < nodesCount; ++i)
    {
       if (input[i]->getMaterial().isTransparent() == false)
       {
-         output.push_back(input[i]);
-         regularNodesCount++;
+         output[regularNodeIdx] = input[i];
+         ++regularNodeIdx;
       }
-   }
-
-   for (unsigned int i = 0; i < nodesCount; ++i)
-   {
-      if (input[i]->getMaterial().isTransparent() == true)
+      else
       {
-         output.push_back(input[i]);
+         output[transparentNodeIdx] = input[i];
+         --transparentNodeIdx;
       }
    }
 
    // sort the nodes
-   std::sort((AbstractGraphicalNode**)output, 
-      (AbstractGraphicalNode**)output + regularNodesCount,
+   std::sort((Renderable**)output, 
+      (Renderable**)output + regularNodeIdx,
       m_materialsComparator);
 
 
    m_distanceComparator.setReferencePoint(cameraGlobalPos);
-   std::sort((AbstractGraphicalNode**)output + regularNodesCount, 
-      (AbstractGraphicalNode**)output + output.size(),
+   std::sort((Renderable**)output + regularNodeIdx, 
+      (Renderable**)output + output.size(),
       m_distanceComparator);
 }
 

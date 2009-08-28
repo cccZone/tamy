@@ -225,7 +225,7 @@ bool testCollision(const Ray& ray, const D3DXPLANE& plane, D3DXVECTOR3& intersec
 bool testCollision(const BoundingSphere& sphere, const D3DXVECTOR3& point)
 {
    D3DXVECTOR3 to = sphere.origin - point;
-   return (D3DXVec3Length(&to) < sphere.radius * sphere.radius);
+   return (D3DXVec3LengthSq(&to) < sphere.radius * sphere.radius);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

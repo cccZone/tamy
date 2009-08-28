@@ -40,18 +40,9 @@ public:
       }
    }
 
-   void render(const std::vector<D3DXMATRIX>& matrices, DWORD subset)
+   void render(DWORD subset)
    {
-      for (unsigned char i = 0; i < matrices.size(); ++i)
-      {
-         m_d3Device.SetTransform(D3DTS_WORLDMATRIX(i), &(matrices[i]));
-      }
-
-      unsigned char numMatrices = matrices.size() - 1;
-      m_d3Device.SetRenderState(D3DRS_VERTEXBLEND, numMatrices);
-
       m_mesh->DrawSubset(subset);
-      m_d3Device.SetRenderState(D3DRS_VERTEXBLEND, D3DVBF_DISABLE);
    }
 };
 

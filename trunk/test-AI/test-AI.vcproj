@@ -175,10 +175,6 @@
 			Name="Core"
 			>
 			<File
-				RelativePath=".\AISceneManagerTests.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\FiniteStateMachineTests.cpp"
 				>
 			</File>

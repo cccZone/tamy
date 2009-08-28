@@ -8,8 +8,8 @@
 
 TEST(NodesHierarchy, attachingChild)
 {
-   Node root("root", false);
-   Node* child = new Node("child", false);
+   Node root("root");
+   Node* child = new Node("child");
    
    CPPUNIT_ASSERT_EQUAL(false, root.hasParent());
    CPPUNIT_ASSERT_EQUAL(false, child->hasParent());
@@ -25,10 +25,10 @@ TEST(NodesHierarchy, attachingChild)
 
 TEST(NodesHierarchy, switchingChildren)
 {
-   Node root("root", false);
-   Node differentRoot("differentRoot", false);
-   Node* child = new Node("child", false);
-   
+   Node root("root");
+   Node differentRoot("differentRoot");
+   Node* child = new Node("child");
+
    CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (0), root.getChildrenCount());
    CPPUNIT_ASSERT_EQUAL(false, differentRoot.hasParent());
    CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (0), differentRoot.getChildrenCount());
@@ -49,41 +49,5 @@ TEST(NodesHierarchy, switchingChildren)
    CPPUNIT_ASSERT_EQUAL(true, child->hasParent());
    CPPUNIT_ASSERT_EQUAL(&differentRoot, &(child->getParent()));
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(NodesHierarchy, dynamicFlagInheritedBySubtree)
-{
-   Node root("root", false);
-   Node* child = new Node("child", true); // dynamic flag is inherited bythe whole subtree
-   Node* lowerChild = new Node("lowerChild", false);
-
-   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
-   CPPUNIT_ASSERT_EQUAL(false, lowerChild->isDynamic());
-
-   child->addChild(lowerChild);
-   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, lowerChild->isDynamic());
-
-   root.addChild(child);
-   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, lowerChild->isDynamic());
-
-   root.removeChild(*child);
-   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, lowerChild->isDynamic());
-
-   child->removeChild(*lowerChild);
-   CPPUNIT_ASSERT_EQUAL(false, root.isDynamic());
-   CPPUNIT_ASSERT_EQUAL(true, child->isDynamic());
-   CPPUNIT_ASSERT_EQUAL(false, lowerChild->isDynamic());
-
-   delete child;
-   delete lowerChild;
-}
 
 ///////////////////////////////////////////////////////////////////////////////

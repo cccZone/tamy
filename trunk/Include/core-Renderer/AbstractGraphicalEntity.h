@@ -14,7 +14,7 @@ struct Triangle;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This node represents a graphical entity 
+ * This node represents a graphical entity (a mesh)
  * that can be rendered on a graphical device
  */
 class AbstractGraphicalEntity

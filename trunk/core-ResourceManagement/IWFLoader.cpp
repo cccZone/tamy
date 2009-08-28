@@ -1,25 +1,10 @@
 #include "core-ResourceManagement\IWFLoader.h"
 #include "core-ResourceManagement\libIWF\iwfFile.h"
 #include "core-ResourceManagement\libIWF\iwfObjects.h"
-#include "core\SceneManager.h"
+#include "core-ResourceManagement\IWFScene.h"
+#include "core-ResourceManagement\IWFMeshLoader.h"
 #include <map>
 #include <sstream>
-#include "core-ResourceManagement\IWFMeshLoader.h"
-#include "core-ResourceManagement\GraphicalEntityLoader.h"
-
-#include "core-Renderer\GraphicalEntitiesFactory.h"
-#include "core-Renderer\GraphicalNode.h"
-#include "core-Renderer\Material.h"
-#include "core-Renderer\MaterialStage.h"
-#include "core-Renderer\MaterialOperation.h"
-#include "core-Renderer\Light.h"
-#include "core-Renderer\SkyBox.h"
-#include "core-Renderer\Renderer.h"
-#include "core-Renderer\GraphicalEntity.h"
-#include "core-Renderer\GraphicalEntityInstantiator.h"
-#include "core-Renderer\LightReflectingProperties.h"
-#include "core-Renderer\Texture.h"
-#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,17 +16,8 @@ namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 
-IWFLoader::IWFLoader(GraphicalEntitiesFactory& entitiesFactory,
-                     GraphicalDataSource& externalEntitiesSource,
-                     SceneManager& sceneManager,
-                     ResourceStorage<AbstractGraphicalEntity>& entitiesStorage,
-                     ResourceStorage<Material>& materialsStorage)
-      : m_entitiesFactory(entitiesFactory),
-      m_entityLoader(new GraphicalEntityLoader(entitiesFactory, materialsStorage)),
-      m_externalEntitiesSource(externalEntitiesSource),
-      m_sceneManager(sceneManager),
-      m_entitiesStorage(entitiesStorage),
-      m_materialsStorage(materialsStorage)
+IWFLoader::IWFLoader(IWFScene& scene)
+      : m_scene(scene)
 {
 }
 
@@ -49,8 +25,6 @@ IWFLoader::IWFLoader(GraphicalEntitiesFactory& entitiesFactory,
 
 IWFLoader::~IWFLoader()
 {
-   delete m_entityLoader;
-   m_entityLoader = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,29 +42,22 @@ void IWFLoader::load(const std::string& fileName)
       processEntities(sceneFile.m_vpEntityList[i]);
    }
 
-   // parse meshes
+   // parse internal meshes
    for (UINT i = 0; i < sceneFile.m_vpMeshList.size(); ++i)
    {
       std::string meshName = getUniqueNameForMesh(sceneFile.m_vpMeshList[i]->Name);
-      AbstractGraphicalEntity* entity = NULL;
-      if (m_entitiesStorage.is(meshName))
-      {
-         entity = &(m_entitiesStorage.get(meshName));
-      }
-      else
-      {
-         IWFMeshLoader source(sceneFile.m_vpMeshList[i], 
-                              sceneFile.m_vpTextureList, 
-                              sceneFile.m_vpMaterialList);
-         entity = m_entityLoader->load(meshName, source); 
-         m_entitiesStorage.add(entity);
-      }
 
-      GraphicalEntityInstantiator* entityInstance = new GraphicalEntityInstantiator("meshName", false);
-      entityInstance->attachEntity(*entity);
-      entityInstance->setLocalMtx(reinterpret_cast<D3DXMATRIX&> (sceneFile.m_vpMeshList[i]->ObjectMatrix));
+      IWFMeshLoader meshLoader(sceneFile.m_vpMeshList[i], 
+                               sceneFile.m_vpTextureList, 
+                               sceneFile.m_vpMaterialList);
 
-      m_sceneManager.addNode(entityInstance);
+      MeshDefinition mesh; 
+      AnimationDefinition animation;
+      std::vector<MaterialDefinition> materials;
+      meshLoader.parseMesh(mesh, animation, materials, meshName);
+
+      D3DXMATRIX objMtx = reinterpret_cast<D3DXMATRIX&> (sceneFile.m_vpMeshList[i]->ObjectMatrix);
+      m_scene.addStaticGeometry(mesh, materials, objMtx);
    }
 
    // cleanup
@@ -125,25 +92,22 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
       specular.b = lightEntity.SpecularBlue;
       specular.a = lightEntity.SpecularAlpha;
 
-      Light* light = m_entitiesFactory.createLight(fileEntity->Name);
-
-      light->setAmbientColor(ambient);
-      light->setDiffuseColor(diffuse);
-      light->setSpecularColor(specular);
-
+      IWFLightType lightType;
       switch(lightEntity.LightType)
       {
-         case LIGHTTYPE_POINT:         light->setType(Light::LT_POINT);        break;
-         case LIGHTTYPE_SPOT:          light->setType(Light::LT_SPOT);         break;
-         case LIGHTTYPE_DIRECTIONAL:   light->setType(Light::LT_DIRECTIONAL);  break;
-         default:                                                             break;
+         case LIGHTTYPE_POINT:         lightType = LT_POINT;        break;
+         case LIGHTTYPE_SPOT:          lightType = LT_SPOT;         break;
+         case LIGHTTYPE_DIRECTIONAL:   lightType = LT_DIRECTIONAL;  break;
+         default:                      lightType = LT_POINT;        break;
       }
-      light->setRange(lightEntity.Range);
-      light->setAttenuation(lightEntity.Attenuation0, lightEntity.Attenuation1, lightEntity.Attenuation2);
-      light->setSpotlightFeatures(lightEntity.FallOff, lightEntity.Theta, lightEntity.Phi);
-      light->setLocalMtx(reinterpret_cast<const D3DXMATRIX&> (fileEntity->ObjectMatrix));
 
-      m_sceneManager.addNode(light);
+      m_scene.addLight(fileEntity->Name,
+                       ambient, diffuse, specular,
+                       lightType,
+                       lightEntity.Range,
+                       lightEntity.Attenuation0, lightEntity.Attenuation1, lightEntity.Attenuation2,
+                       lightEntity.FallOff, lightEntity.Theta, lightEntity.Phi,
+                       reinterpret_cast<const D3DXMATRIX&> (fileEntity->ObjectMatrix));                
    }
 
    // sky boxes
@@ -151,16 +115,10 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
        (fileEntity->EntityTypeID == CUSTOM_ENTITY_SKYBOX))
    {
       std::vector<std::string> textures = extractSkyBoxTextures(fileEntity->DataArea);
+      m_scene.addSkyBox(textures[0], textures[1], 
+                        textures[2], textures[3], 
+                        textures[4], textures[5]);
 
-      SkyBox* skyBox = m_entitiesFactory.createSkyBox(
-                           createSkyboxMaterial(textures.at(0)),
-                           createSkyboxMaterial(textures.at(1)),
-                           createSkyboxMaterial(textures.at(2)),
-                           createSkyboxMaterial(textures.at(3)),
-                           createSkyboxMaterial(textures.at(4)),
-                           createSkyboxMaterial(textures.at(5)));
-
-      m_sceneManager.addNode(skyBox);
    }
 
    // references
@@ -171,46 +129,9 @@ void IWFLoader::processEntities(iwfEntity* fileEntity)
       if (reference.referenceType == EXTERNAL_REFERENCE)
       {
          std::string meshName = reference.referenceName;
-
-         AbstractGraphicalEntity* entity = NULL;
-         if (m_entitiesStorage.is(meshName))
-         {
-            entity = &(m_entitiesStorage.get(meshName));
-         }
-         else
-         {
-            entity = m_entityLoader->load(meshName, m_externalEntitiesSource);
-            m_entitiesStorage.add(entity);
-         }
-         
-         static int refCount = 0;
-         std::stringstream refName;
-         refName << "reference_" << refCount++;
-         GraphicalEntityInstantiator* entityInstance = new GraphicalEntityInstantiator(refName.str(), false);
-         entityInstance->attachEntity(*entity);
-         entityInstance->setLocalMtx(reinterpret_cast<D3DXMATRIX&> (fileEntity->ObjectMatrix));
-
-         m_sceneManager.addNode(entityInstance);
+         D3DXMATRIX objMtx = reinterpret_cast<D3DXMATRIX&> (fileEntity->ObjectMatrix);
+         m_scene.addDynamicMesh(meshName, objMtx);
       }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Texture& IWFLoader::createSkyboxMaterial(const std::string& textureName) const
-{
-   std::string materialName = std::string("skyBox_") + textureName;
-   ResourceStorage<Texture>& texStorage = m_entitiesFactory.getTexturesStorage();
-
-   if (texStorage.is(textureName))
-   {
-      return texStorage.get(textureName);
-   }
-   else
-   {    
-      Texture* texture = m_entitiesFactory.createTexture(textureName);
-      texStorage.add(texture);
-      return *texture;
    }
 }
 

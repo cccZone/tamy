@@ -151,6 +151,14 @@
 			Name="Core"
 			>
 			<File
+				RelativePath="..\Include\core-Renderer\Renderable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderablesStorage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Renderer.cpp"
 				>
 			</File>
@@ -159,67 +167,27 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RenderingMechanism.cpp"
+				RelativePath="..\Include\core-Renderer\RendererImpl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingAction.h"
 				>
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\RenderingMechanism.h"
 				>
 			</File>
-			<Filter
-				Name="Mechanisms"
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingTargetsCleaner.h"
 				>
-				<Filter
-					Name="SceneRendering"
-					>
-					<File
-						RelativePath=".\GraphicalNodesProcessor.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\core-Renderer\GraphicalNodesProcessor.h"
-						>
-					</File>
-					<File
-						RelativePath=".\RenderingProcessor.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\core-Renderer\RenderingProcessor.h"
-						>
-					</File>
-					<File
-						RelativePath=".\SceneRenderingMechanism.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\core-Renderer\SceneRenderingMechanism.h"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="PostProcess"
-					>
-					<File
-						RelativePath=".\PostProcessEffectRenderable.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\core-Renderer\PostProcessEffectRenderable.h"
-						>
-					</File>
-					<File
-						RelativePath=".\PostProcessMechanism.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\core-Renderer\PostProcessMechanism.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingTargetsPolicy.h"
+				>
+			</File>
 			<Filter
-				Name="Techniques"
+				Name="RenderingTargets"
 				>
 				<File
 					RelativePath=".\CyclicRenderingTarget.cpp"
@@ -230,15 +198,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\Renderable.h"
-					>
-				</File>
-				<File
 					RelativePath="..\Include\core-Renderer\RenderingTarget.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\RenderingTargetsPolicy.h"
 					>
 				</File>
 				<File
@@ -250,14 +210,6 @@
 				Name="RenderingTargetPolicies"
 				>
 				<File
-					RelativePath=".\RenderingTargetsPolicyProxy.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\RenderingTargetsPolicyProxy.h"
-					>
-				</File>
-				<File
 					RelativePath=".\SettableRenderingTargetsPolicy.cpp"
 					>
 				</File>
@@ -266,90 +218,94 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="RenderingActions"
+				>
+				<File
+					RelativePath=".\RenderingActionsComposite.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\RenderingActionsComposite.h"
+					>
+				</File>
+				<Filter
+					Name="Lights"
+					>
+					<File
+						RelativePath=".\LightsSorter.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\LightsSorter.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\LightsSortingStorage.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\LightsSortingStorage.inl"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\LightsStorage.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\RenderLights.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\RenderLights.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Materials"
+					>
+					<File
+						RelativePath=".\RenderMaterial.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\RenderMaterial.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Mechanisms"
+				>
+				<File
+					RelativePath=".\CompositeRenderingMechanism.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\CompositeRenderingMechanism.h"
+					>
+				</File>
+				<File
+					RelativePath=".\RenderingMechanismLeaf.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\RenderingMechanismLeaf.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TargetsCleaningMechanism.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\TargetsCleaningMechanism.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Entities"
 			>
-			<Filter
-				Name="GraphicalEntities"
-				>
-				<File
-					RelativePath=".\AbstractGraphicalEntity.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\AbstractGraphicalEntity.h"
-					>
-				</File>
-				<File
-					RelativePath=".\CompositeGraphicalEntity.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\CompositeGraphicalEntity.h"
-					>
-				</File>
-				<File
-					RelativePath=".\GraphicalEntity.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\GraphicalEntity.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\LeafGraphicalEntity.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\SkinBoneDefinition.h"
-					>
-				</File>
-				<File
-					RelativePath=".\SkinnedGraphicalEntity.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\SkinnedGraphicalEntity.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="GraphicalNodes"
-				>
-				<File
-					RelativePath=".\AbstractGraphicalNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\AbstractGraphicalNode.h"
-					>
-				</File>
-				<File
-					RelativePath=".\GraphicalEntityInstantiator.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\GraphicalEntityInstantiator.h"
-					>
-				</File>
-				<File
-					RelativePath=".\GraphicalNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\GraphicalNode.h"
-					>
-				</File>
-				<File
-					RelativePath=".\SkinnedGraphicalNode.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\SkinnedGraphicalNode.h"
-					>
-				</File>
-			</Filter>
 			<Filter
 				Name="Particles"
 				>
@@ -419,22 +375,6 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="GraphicalData"
-				>
-				<File
-					RelativePath="..\Include\core-Renderer\Face.h"
-					>
-				</File>
-				<File
-					RelativePath=".\LitVertex.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\LitVertex.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Misc"
 				>
 				<File
@@ -454,6 +394,18 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\core-Renderer\Light.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\PostProcessEffectRenderable.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\PostProcessEffectRenderable.h"
+					>
+				</File>
+				<File
 					RelativePath="..\Include\core-Renderer\ProjectionCalculator.h"
 					>
 				</File>
@@ -463,14 +415,6 @@
 				</File>
 				<File
 					RelativePath="..\Include\core-Renderer\Skeleton.h"
-					>
-				</File>
-				<File
-					RelativePath=".\SkyBox.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\Include\core-Renderer\SkyBox.h"
 					>
 				</File>
 				<Filter
@@ -494,34 +438,134 @@
 					</File>
 				</Filter>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="SceneManager"
-			>
-			<File
-				RelativePath=".\ActiveCameraNode.cpp"
+			<Filter
+				Name="Meshes"
 				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\ActiveCameraNode.h"
+				<File
+					RelativePath=".\RenderableNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\RenderableNode.h"
+					>
+				</File>
+				<Filter
+					Name="GraphicalData"
+					>
+					<File
+						RelativePath="..\Include\core-Renderer\Face.h"
+						>
+					</File>
+					<File
+						RelativePath=".\LitVertex.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\LitVertex.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="GraphicalNodes"
+					>
+					<File
+						RelativePath=".\AbstractGraphicalNode.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\AbstractGraphicalNode.h"
+						>
+					</File>
+					<File
+						RelativePath=".\GraphicalEntityInstantiator.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\GraphicalEntityInstantiator.h"
+						>
+					</File>
+					<File
+						RelativePath=".\GraphicalNode.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\GraphicalNode.h"
+						>
+					</File>
+					<File
+						RelativePath=".\SkinnedGraphicalNode.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\SkinnedGraphicalNode.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="GraphicalEntities"
+					>
+					<File
+						RelativePath=".\AbstractGraphicalEntity.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\AbstractGraphicalEntity.h"
+						>
+					</File>
+					<File
+						RelativePath=".\CompositeGraphicalEntity.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\CompositeGraphicalEntity.h"
+						>
+					</File>
+					<File
+						RelativePath=".\GraphicalEntity.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\GraphicalEntity.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\LeafGraphicalEntity.h"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\SkinBoneDefinition.h"
+						>
+					</File>
+					<File
+						RelativePath=".\SkinnedGraphicalEntity.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\Include\core-Renderer\SkinnedGraphicalEntity.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Backgrounds"
 				>
-			</File>
-			<File
-				RelativePath=".\BatchingStrategy.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\BatchingStrategy.h"
-				>
-			</File>
-			<File
-				RelativePath=".\VisualSceneManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\VisualSceneManager.h"
-				>
-			</File>
+				<File
+					RelativePath=".\SkyBoxSide.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\SkyBoxSide.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SkyBoxStorage.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\SkyBoxStorage.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Material"
@@ -552,10 +596,6 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\Material.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-Renderer\MaterialImpl.h"
 				>
 			</File>
 			<File
@@ -627,15 +667,23 @@
 			Name="Effects"
 			>
 			<File
-				RelativePath="..\Include\core-Renderer\EffectDataSource.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GraphicalEffect.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\GraphicalEffect.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\GraphicalEffect.inl"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingEffectRenderer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingEffectRenderer.h"
 				>
 			</File>
 		</Filter>
@@ -672,6 +720,90 @@
 			</File>
 			<File
 				RelativePath="..\Include\core-Renderer\RenderingDevice.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="RenderablesStorages"
+			>
+			<Filter
+				Name="DynamicNodes"
+				>
+				<File
+					RelativePath=".\BatchingStrategy.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\BatchingStrategy.h"
+					>
+				</File>
+				<File
+					RelativePath=".\DistanceComparator.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\DistanceComparator.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\DistanceComparator.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\DynamicNodesStorage.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\DynamicNodesStorage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\GraphicalNodesProcessor.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\GraphicalNodesProcessor.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="PostProcessEffects"
+				>
+				<File
+					RelativePath=".\PostProcessSceneStorage.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core-Renderer\PostProcessSceneStorage.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="PipelineConfigurator"
+			>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingGraph.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingMechanismBuilder.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingMechanismBuilder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderingPipelineBuilder.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingPipelineBuilder.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core-Renderer\RenderingPipelineDefinition.h"
 				>
 			</File>
 		</Filter>

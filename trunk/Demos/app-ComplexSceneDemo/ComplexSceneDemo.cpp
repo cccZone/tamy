@@ -1,161 +1,92 @@
 #include "ComplexSceneDemo.h"
 #include "tamy\Tamy.h"
-#include "core-AppFlow\ExecutionContext.h"
-#include "core-AppFlow\UserInputController.h"
-#include "core-AppFlow\ApplicationManager.h"
-#include "core-Renderer\Renderer.h"
-#include "core\Point.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
-#include "core\CompositeSceneManager.h"
-#include "core-Renderer\VisualSceneManager.h"
-#include "core-Renderer\GraphicalEntityInstantiator.h"
-#include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
+#include "core-Renderer\RenderingPipelineBuilder.h"
+#include "core-Renderer\DynamicNodesStorage.h"
 #include "core-ResourceManagement\IWFLoader.h"
-#include "core-Renderer\GraphicalEntity.h"
-#include "core-Renderer\Skeleton.h"
-#include "core-ResourceManagement\GraphicalEntityLoader.h"
-#include "ext-MotionControllers\UnconstrainedMotionController.h"
-#include "core-Renderer\RenderingTarget.h"
-#include "core-Renderer\SceneRenderingMechanism.h"
-#include "core-Renderer\SettableRenderingTargetsPolicy.h"
-#include "core-Renderer\SceneRenderingMechanism.h"
-#include "core-Renderer\SettableRenderingTargetsPolicy.h"
-#include <windows.h>
-#include "tamy\SimpleTamyConfigurator.h"
+#include "core-Renderer\LightsSortingStorage.h"
+#include "core-Renderer\LightsSorter.h"
+#include "ext-Demo\DemoRendererDefinition.h"
+#include "ext-Demo\LightsScene.h"
+#include "ext-Demo\DemoIWFScene.h"
+#include "ext-Demo\RERCreator.h"
+#include "RenderEffectController.h"
 
+
+using namespace demo;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ComplexSceneDemo::ComplexSceneDemo(Tamy& tamy)
-      : Application("Demo"),
-      m_tamy(tamy),
-      m_renderer(&(tamy.renderer())),
-      m_renderingTarget(NULL),
-      m_uiController(m_tamy.uiController()),
-      m_sceneManager(NULL),
-      m_cameraController(NULL)
+: DemoApp(tamy)
 {
-   timeController().add("regularTrack");
-   timeController().get("regularTrack").add(new TTimeDependent<ComplexSceneDemo>(*this));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSceneDemo::initialize()
+RenderingMechanism* 
+ComplexSceneDemo::initRenderingPipeline(DemoRendererDefinition& rendererDefinition,
+                                        DynMeshesScene* dynamicScene, 
+                                        LightsScene* lights)
 {
-   m_rotating = false;
-   m_sceneManager = new CompositeSceneManager();
-   VisualSceneManager* visualSceneManager = new VisualSceneManager(64, 2000);
-   m_sceneManager->addSceneManager(visualSceneManager);
+   rendererDefinition.addSource("scene", new DynamicNodesStorage(dynamicScene));
+   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "backgroundRenderer");
+   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "fixedSceneRenderer");
+   rendererDefinition.aliasMechanism("..\\Data\\renderer.fx", "programmableSceneRenderer");
+   rendererDefinition.setProgrammableMechanismLoader("..\\Data\\renderer.fx", new demo::TRERCreator<RenderEffectController>());
 
-   SettableRenderingTargetsPolicy* sceneRenderingTargetPolicy = new SettableRenderingTargetsPolicy();
-   SceneRenderingMechanism* sceneRenderer = m_tamy.graphicalFactory().createSceneRenderingMechanism(sceneRenderingTargetPolicy);
-   m_renderer->addMechanism(sceneRenderer);
-   m_renderingTarget = m_tamy.graphicalFactory().createDefaultRenderingTarget();
-   sceneRenderingTargetPolicy->addTarget(0, *m_renderingTarget);
-   sceneRenderer->addVisualSceneManager(*visualSceneManager);
-
-
-   IWFLoader loader(m_tamy.graphicalFactory(), 
-                    m_tamy.meshLoaders(),
-                    *m_sceneManager, 
-                    m_entitiesStorage,
-                    m_materialsStorage);
-   loader.load("..\\Data\\Colony5.iwf");
+   // using a sorted lights storage we're providing for dynamic lights in our scene
+   LightsSortingStorage<LightsSorter>* dynamicLightsStorage = new LightsSortingStorage<LightsSorter> (lights);
+   rendererDefinition.addLightsForMechanism("fixedSceneRenderer", dynamicLightsStorage);
+   rendererDefinition.addLightsForMechanism("programmableSceneRenderer", dynamicLightsStorage);
 
    Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
-   m_sceneManager->addNode(camera);
-   m_cameraController = new UnconstrainedMotionController(*camera);
+   initDefaultCamera(camera);
+   rendererDefinition.defineCamera("backgroundRenderer", *camera);
+   rendererDefinition.defineCamera("fixedSceneRenderer", *camera);
+   rendererDefinition.defineCamera("programmableSceneRenderer", *camera);
+
+   RenderingPipelineBuilder builder(rendererDefinition);
+   RenderingMechanism* sceneRenderer = builder
+      .defineTransform("backgroundRenderer")
+         .in("<<background>>")
+         .out("<<screen>>")
+      .end()
+      .defineTransform("fixedSceneRenderer")
+         .dep("backgroundRenderer")
+         .in("scene")
+         .out("<<screen>>")
+      .end()
+   .end();
+
+   return sceneRenderer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSceneDemo::deinitialize()
-{
-   delete m_renderingTarget;
-   m_renderingTarget = NULL;
-
-   delete m_cameraController;
-   m_cameraController = NULL;
-
-   delete m_sceneManager;
-   m_sceneManager = NULL;
+void ComplexSceneDemo::initializeScene(DynMeshesScene& dynamicScene, 
+                                       LightsScene& lights)
+{   
+   DemoIWFScene sceneAdapter(m_tamy.graphicalFactory(), 
+                             m_tamy.meshLoaders(),
+                             demo::LightsSceneSetter::from_method<LightsScene, &LightsScene::insert> (&lights),
+                             demo::SkyBoxSceneSetter::from_method<demo::DemoApp, &demo::DemoApp::setBackground> (this),
+                             demo::DynamicObjectsSceneSetter::from_method<demo::DynMeshesScene, &demo::DynMeshesScene::addNode> (&dynamicScene),
+                             m_entitiesStorage,
+                             m_materialsStorage);
+   IWFLoader loader(sceneAdapter);
+   loader.load("..\\Data\\Colony5.iwf");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSceneDemo::update(float timeElapsed)
+void ComplexSceneDemo::onDeinitialize()
 {
-   m_uiController.update(timeElapsed);
-   float movementSpeed = 40 * timeElapsed;
-   float rotationSpeed = 0.1f * timeElapsed;
-
-
-   // process the keys
-   if (m_uiController.isKeyPressed(VK_ESCAPE))     {context().signal(*this, ON_EXIT);}
-   if (m_uiController.isKeyPressed(VK_UP))     {m_cameraController->move(m_cameraController->getLookVec()   * movementSpeed);}
-   if (m_uiController.isKeyPressed(VK_DOWN))   {m_cameraController->move(-m_cameraController->getLookVec()  * movementSpeed);}
-   if (m_uiController.isKeyPressed(VK_LEFT))   {m_cameraController->move(-m_cameraController->getRightVec() * movementSpeed);}
-   if (m_uiController.isKeyPressed(VK_RIGHT))  {m_cameraController->move(m_cameraController->getRightVec()  * movementSpeed);}
-
-   if (m_uiController.isKeyPressed(VK_LBUTTON) && (m_rotating == false))
-   {
-      m_uiController.setRelativeMouseMovement(true);
-      m_rotating = true;
-   }
-   else if ((m_uiController.isKeyPressed(VK_LBUTTON) == false) && m_rotating)
-   {
-      m_uiController.setRelativeMouseMovement(false);
-      m_rotating = false;
-   }
-
-   // process the mouse
-   if (m_rotating)
-   {
-      D3DXVECTOR2 mouseSpeed = m_uiController.getMouseSpeed() * rotationSpeed;
-      m_cameraController->rotate(mouseSpeed.y, mouseSpeed.x, 0);
-   }
-
-   m_renderer->render();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int WINAPI WinMain(HINSTANCE hInstance,
-                   HINSTANCE hPrevInstance,
-                   LPSTR    lpCmdLine,
-                   int       nCmdShow)
-{
-   #ifndef _DEBUG
-   try
-   {
-   #endif
-      SimpleTamyConfigurator configurator(1024, 768, false);
-      Tamy::initialize(hInstance, nCmdShow, "Complex Scene Demo", configurator);
-
-      // create the application components
-	   ComplexSceneDemo app(TAMY);
-
-      ApplicationManager& appMgr = TAMY.appManager();
-
-      appMgr.addApplication(app);
-      appMgr.setEntryApplication(app.getName());
-
-      // run the app
-      while (appMgr.step()) {Sleep(0);}
-   #ifndef _DEBUG
-   }
-   catch(std::exception& ex)
-   {
-      MessageBox(NULL, ex.what(), "Spiral Of Madness - EXCEPTION", MB_OK);
-   }
-   catch(...)
-   {
-      MessageBox(NULL, "Unknown error has occured.", "Spiral Of Madness - EXCEPTION", MB_OK);
-   }
-   #endif
-	return 0;
-}
+DEMO(ComplexSceneDemo)
 
 ///////////////////////////////////////////////////////////////////////////////

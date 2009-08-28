@@ -13,7 +13,6 @@ struct Point;
 class RendererObserver;
 class RenderingMechanism;
 class RenderingTargetsPolicy;
-class RenderingTargetsPolicyProxy;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -58,8 +57,7 @@ private:
    };
 
 private:
-   Array<RenderingMechanism*> m_mechanisms;
-   RenderingTargetsPolicyProxy* m_globalRenderTargetsPolicy;
+   RenderingMechanism* m_mechanism;
 
    unsigned int m_viewportWidth;
    unsigned int m_viewportHeight;
@@ -100,19 +98,11 @@ public:
    void screenToViewport(const Point& inScreenPt, D3DXVECTOR2& outViewportPt) const;
 
    /**
-    * This method returns the current number of rendering targets set
+    * This method set a new rendering mechanism.
+    *
+    * @param mech    new mechanism that will be used for rendering.
     */
-   unsigned int getMechanismsCount() const {return m_mechanisms.size();}
-
-   /**
-    * This method adds a new rendering mechanism to the pipeline.
-    */
-   void addMechanism(RenderingMechanism* mech);
-
-   /**
-    * Removes the rendering mechanism with the given index
-    */
-   void removeMechanism(RenderingMechanism& mech);
+   void setMechanism(RenderingMechanism* mech);
 
    /**
     * This method returns the width of currently set viewport
@@ -123,16 +113,6 @@ public:
     * This method returns the height of currently set viewport
     */
    unsigned int getViewportHeight() const {return m_viewportHeight;}
-
-   /**
-    * This method returns a renderer-owned (and thus considered globally
-    * accessible) instance of the RenderTargetsPolicy interface.
-    *
-    * This class should be set on each and every rendering material
-    * that is rendered on this renderer, so that it can be assured
-    * that proper rendering targets are used throughout the rendering process
-    */
-   RenderingTargetsPolicy& getRenderingTargetsPolicy();
 
 protected:
    /**
@@ -146,11 +126,6 @@ protected:
     * the device ready for rendering
     */
    virtual void resetViewport(unsigned int width, unsigned int height) = 0;
-
-   /**
-    * The method cleans up the specified number of rendering target
-    */
-   virtual void cleanAllTargets(unsigned int count) = 0;
 
    /**
     * The method opens up the rendering conduct

@@ -26,7 +26,7 @@ TEST(Skeleton, basicAnimation)
    anim.animSets.push_back(walk);
 
    // prepare the nodes
-   Node kneeNode("knee", false);
+   Node kneeNode("knee");
 
    Skeleton skeleton(anim, kneeNode);
    skeleton.activateAnimation("walk", true);
@@ -74,7 +74,7 @@ TEST(Skeleton, animationSequenceLengts)
    AnimationDefinition anim;
    anim.animSets.push_back(walk);
 
-   Node kneeNode("knee", false);
+   Node kneeNode("knee");
 
    Skeleton skeleton(anim, kneeNode);
    
@@ -103,7 +103,7 @@ TEST(Skeleton, settingAnimationPosition)
    anim.animSets.push_back(walk);
 
    // prepare the nodes
-   Node kneeNode("knee", false);
+   Node kneeNode("knee");
 
    Skeleton skeleton(anim, kneeNode);
    skeleton.activateAnimation("walk", true);
@@ -151,7 +151,7 @@ TEST(Skeleton, blendingTwoAnimations)
    anim.animSets.push_back(run);
 
    // prepare the nodes
-   Node kneeNode("knee", false);
+   Node kneeNode("knee");
 
    Skeleton skeleton(anim, kneeNode);
    skeleton.activateAnimation("walk", true);
@@ -201,7 +201,7 @@ TEST(Skeleton, changingAnimationSpeed)
    anim.animSets.push_back(walk);
 
    // prepare the nodes
-   Node kneeNode("knee", false);
+   Node kneeNode("knee");
 
    Skeleton skeleton(anim, kneeNode);
    skeleton.activateAnimation("walk", true);

@@ -8,7 +8,7 @@
 
 TEST(UpdatingGlobalMatrices, singleNode)
 {
-   Node root("root", false);
+   Node root("root");
    
    D3DXMATRIX matrix;
    D3DXMatrixIdentity(&matrix);
@@ -23,8 +23,8 @@ TEST(UpdatingGlobalMatrices, singleNode)
 
 TEST(UpdatingGlobalMatrices, simpleHierarchy)
 {
-   Node root("root", false);
-   Node* child = new Node("child", false);
+   Node root("root");
+   Node* child = new Node("child");
    root.addChild(child);
    
    D3DXMATRIX childLocalMatrix = child->getLocalMtx();
@@ -41,9 +41,9 @@ TEST(UpdatingGlobalMatrices, simpleHierarchy)
 
 TEST(UpdatingGlobalMatrices, parentMatrixChangesTwoLevelsAboveTheCheckedNode)
 {
-   Node root("root", false);
-   Node* childLevel1 = new Node("childLevel1", false);
-   Node* childLevel2 = new Node("childLevel2", false);
+   Node root("root");
+   Node* childLevel1 = new Node("childLevel1");
+   Node* childLevel2 = new Node("childLevel2");
    root.addChild(childLevel1);
    childLevel1->addChild(childLevel2);
    
@@ -59,8 +59,8 @@ TEST(UpdatingGlobalMatrices, parentMatrixChangesTwoLevelsAboveTheCheckedNode)
 
 TEST(UpdatingGlobalMatrices, sequenceOfUpdatesInfluencingChild)
 {
-   Node root("root", false);
-   Node* child = new Node("child", false);
+   Node root("root");
+   Node* child = new Node("child");
    root.addChild(child);
 
    // 1st update

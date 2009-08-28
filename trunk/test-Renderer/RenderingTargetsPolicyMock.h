@@ -50,36 +50,7 @@ namespace GraphicalEffectTests
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace RendererTests
-{
-   class RenderingTargetsPolicyMock : public RenderingTargetsPolicy
-   {
-   private:
-      std::string m_id;
-      std::vector<std::string>& m_seqLog;
-
-   public:
-      RenderingTargetsPolicyMock(const std::string& id,
-                                 std::vector<std::string>& seqLog)
-         : m_id(id), m_seqLog(seqLog)
-      {}
-
-      unsigned int setTargets(unsigned int passIdx)
-      {
-         char tmpStr[64];
-         sprintf_s(tmpStr, 64, "%s - setTargets", m_id.c_str());
-         m_seqLog.push_back(tmpStr);
-
-         return 0;
-      }
-
-      unsigned int getDefinedPassesCount() const {return 0;}
-   };
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-namespace RenderingProcessorTests
+namespace CallSeqTrack
 {
    class RenderingTargetsPolicyMock : public RenderingTargetsPolicy
    {

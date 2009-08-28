@@ -1,9 +1,10 @@
 #pragma once
 
-#include "core-Renderer\AbstractGraphicalNode.h"
 #include <d3dx9.h>
+#include <string>
 #include "core\Array.h"
 #include "core-Renderer\Particle.h"
+#include "core-Renderer\RenderableNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,9 +16,9 @@ class Material;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This is a node that will spit out particles around
+ * This is an entity that spits particles around
  */
-class ParticleSystem : public AbstractGraphicalNode
+class ParticleSystem : public RenderableNode
 {
 private:
    class EmissionMode
@@ -61,6 +62,8 @@ private:
    };
 
 private:
+   Array<D3DXMATRIX> m_renderingMatrices;
+
    Array<Particle*>* m_particles;
 
    unsigned int m_desiredParticlesCount;
@@ -80,7 +83,6 @@ private:
 
 public:
    ParticleSystem(const std::string& name, 
-                  bool isDynamic, 
                   Material& material,
                   unsigned int particlesCount);
    virtual ~ParticleSystem();
@@ -147,6 +149,13 @@ public:
     * This method tells the number of active particles
     */
    unsigned int getActiveParticlesCount() const {return m_particles->size();}
+
+   /**
+    * @Inherited
+    */
+   void render() = 0;
+
+   const Array<D3DXMATRIX>& getRenderingMatrices();
 
 protected:
    inline const Particle& getParticle(unsigned int idx) const {return *(*m_particles)[idx];}

@@ -18,9 +18,9 @@ BoundingVolume* Ray::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Ray::testCollision(const D3DXVECTOR3& point) const
+bool Ray::testCollision(const PointVolume& point) const
 {
-   ASSERT(false, "Ray::testCollision(const D3DXVECTOR3&) - Method not implemented");
+   ASSERT(false, "Ray::testCollision(const PointVolume&) - Method not implemented");
    return false;
 }
 

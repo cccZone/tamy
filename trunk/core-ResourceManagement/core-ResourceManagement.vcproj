@@ -183,6 +183,10 @@
 					RelativePath="..\Include\core-ResourceManagement\IWFMeshLoader.h"
 					>
 				</File>
+				<File
+					RelativePath="..\Include\core-ResourceManagement\IWFScene.h"
+					>
+				</File>
 				<Filter
 					Name="IWFLib"
 					>

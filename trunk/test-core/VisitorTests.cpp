@@ -35,8 +35,8 @@ TEST(NodeVisitor, visitingNodesHierarchy)
 
 TEST(NodeVisitor, visitingSpecializedNodesHierarchy)
 {
-   Node root("root", false);
-   Node* child = new Node("child", false);
+   Node root("root");
+   Node* child = new Node("child");
    SpecializedNodeStub* specializedNode = new SpecializedNodeStub();
    root.addChild(child);
    root.addChild(specializedNode);

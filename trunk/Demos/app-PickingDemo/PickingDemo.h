@@ -1,40 +1,38 @@
 #pragma once
 
-#include "core-AppFlow\Application.h"
-#include "core\Array.h"
-#include <math.h>
+#include "ext-Demo\DemoApp.h"
 #include "core-Renderer\AbstractGraphicalEntity.h"
 #include "core-Renderer\Material.h"
 #include "core\ResourceStorage.h"
+#include <math.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class CompositeSceneManager;
-class VisualSceneManager;
+class RenderingMechanism;
 class NodeActionsExecutor;
 class Node;
 class ParticleSystem;
 class WaypointCameraController;
-class Renderer;
-class Tamy;
-class RenderingTarget;
-class UserInputController;
+class Camera;
+class InputController;
+
+namespace demo
+{
+   class DemoRendererDefinition;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class PickingDemo : public Application
+class PickingDemo : public demo::DemoApp
 {
 private:
-   Renderer* m_renderer;
-   Tamy& m_tamy;
-   RenderingTarget* m_renderingTarget;
-   UserInputController& m_uiController;
+   Camera* m_sceneCamera;
+   Camera* m_hudCamera;
+   demo::DynMeshesScene* m_hudMeshesScene;
+   demo::LightsScene* m_hudLightsScene;
+   demo::DynMeshesScene* m_mainScene;
 
-   CompositeSceneManager* m_sceneManager;
-   CompositeSceneManager * m_hudSceneManager;
-   VisualSceneManager * m_visualSceneManager;
-   
    ParticleSystem* m_atmosphere;
    ParticleSystem* m_cursor;
    ParticleSystem* m_burst;
@@ -44,25 +42,22 @@ private:
    WaypointCameraController* m_cameraController;
    int m_shownNode;
 
+   InputController* m_inputController;
+
    ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
    ResourceStorage<Material> m_materialsStorage;
 
 public:
    PickingDemo(Tamy& tamy);
 
-   void initialize();
+protected:
+   RenderingMechanism* initRenderingPipeline(demo::DemoRendererDefinition& rendererDefinition,
+                                             demo::DynMeshesScene* dynamicScene, 
+                                             demo::LightsScene* lights);
+   void initializeScene(demo::DynMeshesScene& dynamicScene, demo::LightsScene& lights);
+   void onDeinitialize();
 
-   void deinitialize();
-
-   void hibernate() {}
-   void dehibernate() {}
-
-   void update(float timeElapsed);
-
-   void notify(const std::string& senderApp, int signalCode) {}
-
-private:
-   void performQuery(Array<Node*>& nodes);
+   void initInput(UserInputController& uiController);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

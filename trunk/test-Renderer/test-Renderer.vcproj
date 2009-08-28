@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\BatchingStrategyTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\CyclicRenderingTargetTests.cpp"
 				>
 			</File>
@@ -185,33 +189,25 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PostProcessMechanismTests.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\RendererTests.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\RenderingProcessorTests.cpp"
+				RelativePath=".\RenderingMechanismLeafTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderLightsTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderMaterialTests.cpp"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Utils"
 			>
-			<File
-				RelativePath=".\AbstractGraphicalNodeMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\CoordinatesOperationMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalEffectMock.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\GraphicalEffectMock.h"
 				>
@@ -230,14 +226,6 @@
 			</File>
 			<File
 				RelativePath=".\GraphicalNodeMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\LightMock.h"
-				>
-			</File>
-			<File
-				RelativePath=".\MaterialImplMock.h"
 				>
 			</File>
 			<File
@@ -261,19 +249,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RenderableMock.h"
-				>
-			</File>
-			<File
 				RelativePath=".\RendererImplementationMock.h"
 				>
 			</File>
 			<File
-				RelativePath=".\RenderingAttributeStub.h"
+				RelativePath=".\RendererImplMock.h"
 				>
 			</File>
 			<File
-				RelativePath=".\RenderingMechanismMock.h"
+				RelativePath=".\RenderingProcessorStub.h"
 				>
 			</File>
 			<File
@@ -285,35 +269,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SceneRenderingMechanismMock.h"
-				>
-			</File>
-			<File
 				RelativePath=".\SkinnedGraphicalEntityMock.h"
 				>
 			</File>
 			<File
-				RelativePath=".\SkyBoxMock.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SkyBoxMock.h"
-				>
-			</File>
-			<File
 				RelativePath=".\TextureRenderingTargetMock.h"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="SceneManager"
-			>
-			<File
-				RelativePath=".\BatchingStrategyTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\VisualSceneManagerTests.cpp"
 				>
 			</File>
 		</Filter>
@@ -348,6 +308,10 @@
 				RelativePath=".\SkinnedGraphicalNodeTests.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\SkyBoxTests.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Materials"
@@ -370,6 +334,14 @@
 			>
 			<File
 				RelativePath=".\GraphicalEffectTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="PipelineConfigurator"
+			>
+			<File
+				RelativePath=".\RenderingPipelineGraphTests.cpp"
 				>
 			</File>
 		</Filter>

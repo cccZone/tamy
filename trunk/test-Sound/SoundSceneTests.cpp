@@ -21,21 +21,17 @@ TEST(SoundSceneManager, soundsAreHeardOnlyToCertainDistance)
    SoundMock barking;
    float dogSoundHearingRadius = 5;
    float listenerHearingRadius = 1;
-   Sound3DMock* dogSound = new Sound3DMock("dogSound", barking, dogSoundHearingRadius);
-   
-   Node dog("dog", false);
-   dog.addChild(dogSound);
-   soundScene.addNode(&dog);
-
-   SoundListenerMock listener;
-   soundScene.addNode(&listener);
+   Sound3DMock dogSound("dogSound", barking, dogSoundHearingRadius);
+   soundScene.addEmitter(dogSound);
+   SoundListenerMock* listener = new SoundListenerMock();
+   soundScene.setListener(listener);
 
    Array<Sound3D*> soundsToEnable;
    Array<Sound3D*> soundsToDisable;
    Array<Sound3D*>* activeSounds = NULL;
 
    activeSounds = &(soundScene.update(soundsToDisable, soundsToEnable));
-   CPPUNIT_ASSERT_EQUAL(dogSound->getGlobalMtx(), listener.getGlobalMtx());
+   CPPUNIT_ASSERT_EQUAL(dogSound.getGlobalMtx(), listener->getGlobalMtx());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundsToEnable.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToDisable.size());
 
@@ -46,14 +42,14 @@ TEST(SoundSceneManager, soundsAreHeardOnlyToCertainDistance)
    soundsToEnable.clear();
    soundsToDisable.clear();
    activeSounds = &(soundScene.update(soundsToDisable, soundsToEnable));
-   CPPUNIT_ASSERT_EQUAL(dogSound->getGlobalMtx(), listener.getGlobalMtx());
+   CPPUNIT_ASSERT_EQUAL(dogSound.getGlobalMtx(), listener->getGlobalMtx());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToEnable.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToDisable.size());
 
    // we're completely outside the sound hearing are - no sound is heard
    soundsToEnable.clear();
    soundsToDisable.clear();
-   D3DXMatrixTranslation(&(listener.accessLocalMtx()), dogSoundHearingRadius + 1, 0, 0);
+   D3DXMatrixTranslation(&(listener->accessLocalMtx()), dogSoundHearingRadius + 1, 0, 0);
    activeSounds = &(soundScene.update(soundsToDisable, soundsToEnable));
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToEnable.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundsToDisable.size());
@@ -63,7 +59,7 @@ TEST(SoundSceneManager, soundsAreHeardOnlyToCertainDistance)
 
    soundsToEnable.clear();
    soundsToDisable.clear();
-   D3DXMatrixTranslation(&(listener.accessLocalMtx()), dogSoundHearingRadius - 1, 0, 0);
+   D3DXMatrixTranslation(&(listener->accessLocalMtx()), dogSoundHearingRadius - 1, 0, 0);
    activeSounds = &(soundScene.update(soundsToDisable, soundsToEnable));
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundsToEnable.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToDisable.size());

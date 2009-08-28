@@ -26,14 +26,14 @@ TEST(SkinnedGraphicalNode, basics)
    D3DXMATRIX kneeMtx; D3DXMatrixTranslation(&kneeMtx, 1, 2, 3);
 
    std::vector<std::pair<Node*, D3DXMATRIX> > bones;
-   Node pelvis("pelvis", false); pelvis.setLocalMtx(pelvisMtx);
-   Node knee("knee", false); knee.setLocalMtx(kneeMtx);
+   Node pelvis("pelvis"); pelvis.setLocalMtx(pelvisMtx);
+   Node knee("knee"); knee.setLocalMtx(kneeMtx);
 
    bones.push_back(std::make_pair(&pelvis, pelvisOffsetMtx));
    bones.push_back(std::make_pair(&knee, kneeOffsetMtx));
 
    SkinnedGraphicalEntityMock entity("legSkin", skinBonesStub, boneSetsStub, materialsStub);
-   SkinnedGraphicalNode skin("legSkin", false, entity, 0, bones);
+   SkinnedGraphicalNode skin("legSkin", entity, 0, bones);
 
    // prepare results
    D3DXMATRIX resMtx;
@@ -45,7 +45,7 @@ TEST(SkinnedGraphicalNode, basics)
    // run the test
    skin.render();
   
-   const std::vector<D3DXMATRIX>& results = entity.getMatricesUsedForRendering();
+   const Array<D3DXMATRIX>& results = skin.getRenderingMatrices();
    CPPUNIT_ASSERT_EQUAL(expectedResults.size(), results.size());
 
    for (unsigned int i = 0; i < results.size(); ++i)

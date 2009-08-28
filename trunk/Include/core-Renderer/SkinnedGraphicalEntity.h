@@ -32,10 +32,6 @@ public:
 
    virtual ~SkinnedGraphicalEntity();
 
-   /**
-    * Each entity has some material set with which it should be rendered.
-    * This method returns a reference to it.
-    */
    Material& getMaterial(DWORD subsetIdx) const;
 
    unsigned int getNumSubsets() const;
@@ -43,13 +39,12 @@ public:
    /**
     * This method creates an instance of the CompositeGraphicalEntity
     */
-   Node* instantiate(Node& boneStructure, bool dynamic);
+   Node* instantiate(Node& boneStructure);
 
    /**
-    * Renders the entity in a skinned way - where each face can have 
-    * many global matrices influencing it
+    * @Inherited
     */
-   virtual void render(const std::vector<D3DXMATRIX>& matrices, DWORD subset) = 0;
+   virtual void render(DWORD subset) = 0;
 
 protected:
    void accept(GraphicalEntityInstantiator& instantiator);

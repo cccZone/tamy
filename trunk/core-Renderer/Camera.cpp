@@ -10,7 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 Camera::Camera(const std::string& name, Renderer& renderer)
-      : Node(name, true),
+      : Node(name),
       m_renderer(renderer),
       m_fov(D3DXToRadian(60)),
       m_aspectRatio(1.3333f),

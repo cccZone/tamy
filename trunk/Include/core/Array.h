@@ -36,7 +36,7 @@ public:
 
       if (size > 1)
       {
-         resize(size);
+         allocate(size);
       }
    }
 
@@ -85,7 +85,7 @@ public:
     */
    void copyFrom(const Array<T>& rhs)
    {
-      resize(size() + rhs.size());
+      allocate(size() + rhs.size());
       for (unsigned int i = 0; i < rhs.m_elementsCount; ++i)
       {
          m_arr[m_elementsCount + i] = rhs.m_arr[i];
@@ -94,12 +94,13 @@ public:
    }
 
    /**
-    * The method resizes the array, preparing it to accumulate
-    * a number of elements without a need to resize in the process.
+    * The method reallocates th memory the array is using, preparing it 
+    * for accumulation of a number of elements without a need to resize 
+    * in the process.
     *
     * CAUTION: An array can't be downsized
     */
-   void resize(unsigned int newSize)
+   void allocate(unsigned int newSize)
    {
       if (newSize < m_size) {return;}
 
@@ -121,6 +122,35 @@ public:
    }
 
    /**
+    * The method resizes the array, creating new elements
+    * as necessary
+    *
+    * CAUTION: An array can't be downsized - the number of
+    * reserved elems will remain the same - however the overflow
+    * of the elements will be released.
+    */
+   void resize(unsigned int newSize, const T& defaultValue = 0)
+   {
+      allocate(newSize);
+
+      if (newSize < m_elementsCount)
+      {
+         for (unsigned int i = newSize; i < m_elementsCount; ++i)
+         {
+            m_arr[i] = defaultValue;
+         }
+      }
+      else
+      {
+         for (unsigned int i = m_elementsCount; i < newSize; ++i)
+         {
+            m_arr[i] = defaultValue;
+         }
+      }
+      m_elementsCount = newSize;
+   }
+
+   /**
     * The method appends a new element at the end of the array, 
     * resizing it if necessary
     */
@@ -129,7 +159,7 @@ public:
       unsigned int newElementsCount = m_elementsCount + 1;
       if (newElementsCount > m_size)
       {
-         resize(m_size << 1);
+         allocate(m_size << 1);
       }
 
       m_arr[m_elementsCount] = elem;

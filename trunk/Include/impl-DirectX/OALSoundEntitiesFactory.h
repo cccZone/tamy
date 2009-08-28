@@ -18,7 +18,6 @@ public:
    OALSoundEntitiesFactory(OpenALSoundSystem& soundSystem);
 
    Sound3D* createEmiter(const std::string& name, 
-                         bool dynamic,
                          Sound& sound, 
                          float hearingRadius);
 

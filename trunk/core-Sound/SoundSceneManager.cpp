@@ -6,33 +6,25 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SoundSceneManager::SoundSceneManager(unsigned int maxElemsPerSector, float worldSize)
-      : SceneAspectManager<SoundListener>(maxElemsPerSector, worldSize),
-      SceneAspectManager<Sound3D>(maxElemsPerSector, worldSize),
-      m_activeListener(NULL)
+SoundSceneManager::SoundSceneManager()
+: m_activeListener(NULL)
 {
-   REGISTER_SCENE_ASPECT(SoundListener);
-   REGISTER_SCENE_ASPECT(Sound3D);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SoundSceneManager::~SoundSceneManager()
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SoundSceneManager::onAdd(SoundListener& listener)
-{
-   m_activeListener = &listener;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SoundSceneManager::onRemove(SoundListener& listener)
-{
+   delete m_activeListener;
    m_activeListener = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SoundSceneManager::setListener(SoundListener* listener)
+{
+   delete m_activeListener;
+   m_activeListener = listener;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,24 +40,27 @@ SoundListener& SoundSceneManager::getActiveListener()
 {
    if (m_activeListener == NULL)
    {
-      throw std::logic_error("No active listener set");
+      throw std::runtime_error("No active listener set");
    }
    return *m_activeListener;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundSceneManager::onAdd(Sound3D& sound)
+void SoundSceneManager::addEmitter(Sound3D& sound)
 {
    m_soundsArr.push_back(&sound);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundSceneManager::onRemove(Sound3D& sound)
+void SoundSceneManager::removeEmitter(Sound3D& sound)
 {
    unsigned int idx = m_soundsArr.find(&sound);
-   m_soundsArr.remove(idx);
+   if (idx != EOA)
+   {
+      m_soundsArr.remove(idx);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,6 +69,8 @@ Array<Sound3D*>& SoundSceneManager::update(Array<Sound3D*>& soundsToDisable,
                                            Array<Sound3D*>& soundsToEnable)
 {
    if (m_activeListener == NULL) {return m_soundsArr;}
+
+   m_activeSoundsArr.clear();
 
    D3DXMATRIX listenerMtx = m_activeListener->getGlobalMtx();
    D3DXVECTOR3 listenerPos(listenerMtx._41, listenerMtx._42, listenerMtx._43);
@@ -100,9 +97,14 @@ Array<Sound3D*>& SoundSceneManager::update(Array<Sound3D*>& soundsToDisable,
       {
          soundsToDisable.push_back(sound);
       }
+
+      if (hearable)
+      {
+         m_activeSoundsArr.push_back(sound);
+      }
    }
 
-   return m_soundsArr;
+   return m_activeSoundsArr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

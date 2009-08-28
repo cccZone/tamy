@@ -184,22 +184,6 @@
 				RelativePath="..\Include\core-AI\Agent.h"
 				>
 			</File>
-			<File
-				RelativePath=".\AgentNode.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-AI\AgentNode.h"
-				>
-			</File>
-			<File
-				RelativePath=".\AISceneManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\core-AI\AISceneManager.h"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>

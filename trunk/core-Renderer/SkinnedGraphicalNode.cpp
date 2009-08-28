@@ -1,48 +1,36 @@
 #include "core-Renderer\SkinnedGraphicalNode.h"
-#include "core-Renderer\SkinnedGraphicalEntity.h"
-#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SkinnedGraphicalNode::SkinnedGraphicalNode(const std::string& name,
-                                           bool dynamic, 
-                                           SkinnedGraphicalEntity& entity,
+                                           LeafGraphicalEntity& entity,
                                            DWORD subset,
                                            const std::vector<std::pair<Node*, D3DXMATRIX> >& bones) 
-      : AbstractGraphicalNode(name, dynamic, entity.getMaterial(subset), subset), 
-      m_entity(entity),
-      m_bones(bones)
+      : AbstractGraphicalNode(name, entity, subset), 
+      m_bones(bones),
+      m_renderingMatrices(m_bones.size())
 {
+   unsigned int bonesCount = m_bones.size();
+   for (unsigned int i = 0; i < bonesCount; ++i)
+   {
+      m_renderingMatrices.push_back(D3DXMATRIX());
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinnedGraphicalNode::render()
+const Array<D3DXMATRIX>& SkinnedGraphicalNode::getRenderingMatrices()
 {
-   std::vector<D3DXMATRIX> matrices(m_bones.size());
-   for (unsigned int i = 0; i < m_bones.size(); ++i)
+   unsigned int bonesCount = m_bones.size();
+   for (unsigned int i = 0; i < bonesCount; ++i)
    {
-      const D3DXMATRIX& offsetMtx = m_bones.at(i).second;
-      const D3DXMATRIX& globalMtx = m_bones.at(i).first->getGlobalMtx();
-      D3DXMatrixMultiply(&(matrices[i]), &offsetMtx, &globalMtx);
+      const D3DXMATRIX& offsetMtx = m_bones[i].second;
+      const D3DXMATRIX& globalMtx = m_bones[i].first->getGlobalMtx();
+      D3DXMatrixMultiply(&(m_renderingMatrices[i]), &offsetMtx, &globalMtx);
    }
 
-   m_entity.render(matrices, getSubsetIdx());
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const AbstractGraphicalEntity& SkinnedGraphicalNode::getEntity() const 
-{
-   return m_entity;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const Array<Triangle*>& SkinnedGraphicalNode::getBoundingGeometry() const
-{
-   return m_entity.getGeometry();
+   return m_renderingMatrices;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

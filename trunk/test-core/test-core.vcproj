@@ -198,10 +198,6 @@
 				Name="Scene"
 				>
 				<File
-					RelativePath=".\SceneManagerMock.h"
-					>
-				</File>
-				<File
 					RelativePath=".\SpecializedNodeVisitorMock.h"
 					>
 				</File>
@@ -239,11 +235,11 @@
 			Name="Scene"
 			>
 			<File
-				RelativePath=".\SceneManagerTests.cpp"
+				RelativePath=".\TNodesSpatialStorageQueriesTests.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\SceneQueriesTests.cpp"
+				RelativePath=".\TNodesSpatialStorageTests.cpp"
 				>
 			</File>
 		</Filter>
@@ -263,6 +259,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GraphTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\OctreesTests.cpp"
 				>
 			</File>
@@ -270,6 +270,14 @@
 		<Filter
 			Name="Misc"
 			>
+			<File
+				RelativePath=".\GraphBuilderTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\GraphDijkstraTests.cpp"
+				>
+			</File>
 			<File
 				RelativePath=".\MatrixInterpolatorTests.cpp"
 				>

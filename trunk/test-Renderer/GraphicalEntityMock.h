@@ -13,9 +13,7 @@ class GraphicalEntityMock : public GraphicalEntity
 {
 private:
    static Material s_material;
-   D3DXMATRIX m_mtx;
    std::vector<std::string>* m_messageSink;
-   std::vector<D3DXMATRIX> m_matrices;
 
 public:
    GraphicalEntityMock(const std::string& id, 
@@ -24,7 +22,6 @@ public:
          : GraphicalEntity(id, materials),
          m_messageSink(&messageSink)
    {
-      D3DXMatrixIdentity(&m_mtx);
    }
 
    GraphicalEntityMock(const std::string& id, 
@@ -32,13 +29,10 @@ public:
          : GraphicalEntity(id, materials),
          m_messageSink(NULL)
    {
-      D3DXMatrixIdentity(&m_mtx);
    }
 
-   void render(const D3DXMATRIX& globalMtx, DWORD subset)
+   void render(DWORD subset)
    {
-      m_mtx = globalMtx;
-
       if (m_messageSink != NULL)
       {
          std::stringstream msg;
@@ -46,15 +40,6 @@ public:
          m_messageSink->push_back(msg.str());
       }
    }
-
-   void render(const std::vector<D3DXMATRIX>& matrices, DWORD subset)
-   {
-      m_matrices = matrices;
-   }
-
-   const std::vector<D3DXMATRIX>& getMatricesUsedForRendering() const {return m_matrices;}
-
-   const D3DXMATRIX& getMatrixSet() const {return m_mtx;}
 
    void addTriangle(const Triangle& tri)
    {

@@ -16,22 +16,14 @@ class GraphicalEntity;
 class GraphicalNode : public AbstractGraphicalNode
 {
 private:
-   GraphicalEntity& m_entity;
+   Array<D3DXMATRIX> m_renderingMatrices;
 
 public:
    GraphicalNode(const std::string& name, 
-                 bool dynamic, 
-                 GraphicalEntity& entity, 
+                 LeafGraphicalEntity& entity, 
                  DWORD subset);
 
-   /**
-    * ...self explanatory I think...
-    */
-   void render();
-
-   const AbstractGraphicalEntity& getEntity() const;
-
-   const Array<Triangle*>& getBoundingGeometry() const;
+   const Array<D3DXMATRIX>& getRenderingMatrices();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

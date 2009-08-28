@@ -1,38 +1,22 @@
 #include "core-Renderer\GraphicalNode.h"
-#include "core-Renderer\GraphicalEntity.h"
-#include "core-Renderer\Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 GraphicalNode::GraphicalNode(const std::string& name, 
-                             bool dynamic, 
-                             GraphicalEntity& entity, 
+                             LeafGraphicalEntity& entity, 
                              DWORD subset)
-      : AbstractGraphicalNode(name, dynamic, entity.getMaterial(subset), subset),
-      m_entity(entity)
+      : AbstractGraphicalNode(name, entity, subset)
 {
+   m_renderingMatrices.push_back(D3DXMATRIX());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphicalNode::render() 
+const Array<D3DXMATRIX>& GraphicalNode::getRenderingMatrices()
 {
-   m_entity.render(getGlobalMtx(), getSubsetIdx());
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const AbstractGraphicalEntity& GraphicalNode::getEntity() const 
-{
-   return m_entity;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const Array<Triangle*>& GraphicalNode::getBoundingGeometry() const
-{
-   return m_entity.getGeometry();
+   m_renderingMatrices[0] = getGlobalMtx();
+   return m_renderingMatrices;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

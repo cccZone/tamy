@@ -7,20 +7,20 @@ class RenderingTargetsPolicy;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** 
+ * Rendering pipeline is combined from the rendering mechanisms.
+ * Each mechanism is a building brick that adds some aspect
+ * to the final rendering of a scene.
+ */ 
 class RenderingMechanism
 {
-private:
-   RenderingTargetsPolicy* m_ownRenderTargetsPolicy;
-
 public:
-   virtual ~RenderingMechanism();
+   virtual ~RenderingMechanism() {}
 
+   /**
+    * Performs the rendering operation defined by the mechanism.
+    */
    virtual void render() = 0;
-
-   inline RenderingTargetsPolicy& getRenderingTargetPolicy() {return *m_ownRenderTargetsPolicy;}
-
-protected:
-   RenderingMechanism(RenderingTargetsPolicy* policy);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

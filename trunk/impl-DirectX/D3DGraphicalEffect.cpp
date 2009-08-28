@@ -7,12 +7,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 D3DGraphicalEffect::D3DGraphicalEffect(const std::string& name, 
-                                       RenderingTargetsPolicy& policy,
-                                       EffectDataSource* dataSource,
                                        IDirect3DDevice9& d3Device, 
                                        D3DRenderer& renderer,
                                        ID3DXEffect* effect)
-      : GraphicalEffect(name, policy, dataSource),
+      : GraphicalEffect(name),
       m_d3Device(d3Device),
       m_renderer(renderer),
       m_effect(effect)
@@ -69,63 +67,71 @@ void D3DGraphicalEffect::setTechnique(const std::string& material)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, bool val)
+void D3DGraphicalEffect::setBool(const std::string& paramName, bool val)
 {
    m_effect->SetBool(paramName.c_str(), val);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, int val)
+void D3DGraphicalEffect::setInt(const std::string& paramName, int val)
 {
    m_effect->SetInt(paramName.c_str(), val);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, const Array<int>& val)
+void D3DGraphicalEffect::setInt(const std::string& paramName, 
+                             const int* arr, 
+                             unsigned int size)
 {
-   m_effect->SetIntArray(paramName.c_str(), val, val.size());
+   m_effect->SetIntArray(paramName.c_str(), arr,size);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, float val)
+void D3DGraphicalEffect::setFloat(const std::string& paramName, float val)
 {
    m_effect->SetFloat(paramName.c_str(), val);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, const Array<float>& val)
+void D3DGraphicalEffect::setFloat(const std::string& paramName, 
+                                  const float* arr, 
+                                  unsigned int size)
 {
-   m_effect->SetFloatArray(paramName.c_str(), val, val.size());
+   m_effect->SetFloatArray(paramName.c_str(), arr, size);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, const D3DXMATRIX& val)
+void D3DGraphicalEffect::setMtx(const std::string& paramName, 
+                                const D3DXMATRIX& val)
 {
    m_effect->SetMatrix(paramName.c_str(), &val);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, const Array<D3DXMATRIX>& val)
+void D3DGraphicalEffect::setMtx(const std::string& paramName, 
+                                const D3DXMATRIX* arr, 
+                                unsigned int size)
 {
-   m_effect->SetMatrixArray(paramName.c_str(), val, val.size());
+   m_effect->SetMatrixArray(paramName.c_str(), arr, size);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, const std::string& val)
+void D3DGraphicalEffect::setString(const std::string& paramName, 
+                                   const std::string& val)
 {
    m_effect->SetString(paramName.c_str(), val.c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, Texture& val)
+void D3DGraphicalEffect::setTexture(const std::string& paramName, Texture& val)
 {
    TextureImpl& textureImpl = val.getImpl();
 
@@ -142,16 +148,19 @@ void D3DGraphicalEffect::set(const std::string& paramName, Texture& val)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, const D3DXVECTOR4& val)
+void D3DGraphicalEffect::setVec4(const std::string& paramName, 
+                                 const D3DXVECTOR4& val)
 {
    m_effect->SetVector(paramName.c_str(), &val);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void D3DGraphicalEffect::set(const std::string& paramName, const Array<D3DXVECTOR4>& val)
+void D3DGraphicalEffect::setVec4(const std::string& paramName, 
+                                 const D3DXVECTOR4* arr, 
+                                 unsigned int size)
 {
-   m_effect->SetVectorArray(paramName.c_str(), val, val.size());
+   m_effect->SetVectorArray(paramName.c_str(), arr, size);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

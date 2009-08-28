@@ -178,6 +178,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\InputController.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\InputController.h"
+				>
+			</File>
+			<File
 				RelativePath=".\JumpToNodeAction.h"
 				>
 			</File>

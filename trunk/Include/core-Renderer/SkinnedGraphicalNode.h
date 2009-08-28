@@ -26,23 +26,18 @@ public:
    typedef std::vector<std::pair<Node*, D3DXMATRIX> > BonesDef;
 
 private:
-   SkinnedGraphicalEntity& m_entity;
    BonesDef m_bones;
+   Array<D3DXMATRIX> m_renderingMatrices;
 
 public:
    SkinnedGraphicalNode(const std::string& name,
-                        bool dynamic, 
-                        SkinnedGraphicalEntity& entity,
+                        LeafGraphicalEntity& entity,
                         DWORD subset,
                         const BonesDef& bones);
 
-   void render();
-
-   const AbstractGraphicalEntity& getEntity() const;
+   const Array<D3DXMATRIX>& getRenderingMatrices();
 
    inline const BonesDef& getBonesDefinition() const {return m_bones;}
-
-   const Array<Triangle*>& getBoundingGeometry() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

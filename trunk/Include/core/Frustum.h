@@ -21,7 +21,7 @@ struct Frustum : public BoundingVolume
 
    BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
 
-   bool testCollision(const D3DXVECTOR3& point) const;
+   bool testCollision(const PointVolume& point) const;
    bool testCollision(const AABoundingBox& rhs) const;
    bool testCollision(const BoundingSphere& rhs) const;
    bool testCollision(const Frustum& rhs) const;

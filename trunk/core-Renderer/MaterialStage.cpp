@@ -2,7 +2,7 @@
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\CoordinatesOperation.h"
-#include "core-Renderer\MaterialImpl.h"
+#include "core-Renderer\RendererImpl.h"
 #include <stdexcept>
 
 
@@ -14,7 +14,6 @@ MaterialStage::MaterialStage(Texture& texture,
                              CoordinatesOperation* coordsOp)
       : m_index(-1),
       m_texture(texture),
-      m_textureImpl(texture.getImpl()),
       m_colorOperation(colorOp),
       m_alphaOperation(alphaOp),
       m_coordsOp(coordsOp)
@@ -40,7 +39,6 @@ MaterialStage::MaterialStage(Texture& texture,
 MaterialStage::MaterialStage(const MaterialStage& rhs)
       : m_index(rhs.m_index),
       m_texture(rhs.m_texture),
-      m_textureImpl(rhs.m_textureImpl),
       m_colorOperation(new MaterialOperation(*rhs.m_colorOperation)),
       m_alphaOperation(new MaterialOperation(*rhs.m_alphaOperation)),
       m_coordsOp(new CoordinatesOperation(*rhs.m_coordsOp))
@@ -82,9 +80,9 @@ bool MaterialStage::operator!=(const MaterialStage& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialStage::setForRendering(MaterialImpl& impl)
+void MaterialStage::setForRendering(RendererImpl& impl) const
 {
-   impl.setTexture(m_index, m_textureImpl);
+   impl.setTexture(m_index, m_texture);
    impl.setColorOperation(m_index, *m_colorOperation);
    impl.setAlphaOperation(m_index, *m_alphaOperation);
    impl.setCoordsOperation(m_index, *m_coordsOp);

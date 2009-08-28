@@ -1,6 +1,7 @@
 #include "core\AABoundingBox.h"
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
+#include "core\PointVolume.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,9 +51,9 @@ BoundingVolume* AABoundingBox::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool AABoundingBox::testCollision(const D3DXVECTOR3& point) const
+bool AABoundingBox::testCollision(const PointVolume& point) const
 {
-   return ::testCollision(*this, point);
+   return ::testCollision(*this, point.point);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

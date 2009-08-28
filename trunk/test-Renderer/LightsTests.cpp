@@ -1,92 +1,76 @@
 #include "core-TestFramework\TestFramework.h"
-#include "SceneRenderingMechanismMock.h"
-#include "RendererImplementationMock.h"
-#include "LightMock.h"
-#include "core\Node.h"
-#include "core-Renderer\VisualSceneManager.h"
-#include "core-Renderer\Camera.h"
-#include "RendererImplementationMock.h"
+#include "core-Renderer\Light.h"
+#include "core\BoundingVolume.h"
+#include "core\BoundingSphere.h"
+#include "core\BoundingSpace.h"
 
-
-using namespace RegularTests;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Lights, singleLight)
+TEST(Lights, boundingVolumeOfPointLight)
 {
-   RendererImplementationMock renderer;
-   Camera camera("camera", renderer);
-   SceneRenderingMechanismMock renderingMechanism; 
-   LightMock* light = new LightMock();
+   Light light("light");
+   light.setType(Light::LT_POINT);
+   light.setRange(10);
+   D3DXMatrixTranslation(&(light.accessLocalMtx()), 10, 20, 30);
 
-   VisualSceneManager sceneManager;
-   renderingMechanism.addVisualSceneManager(sceneManager);
-   sceneManager.setActiveCamera(camera);
-   sceneManager.addNode(light);
+   const BoundingSphere* bs = dynamic_cast<const BoundingSphere*>(&(light.getBoundingVolume()));
+   CPPUNIT_ASSERT(NULL != bs);
 
-   renderingMechanism.render();
-   CPPUNIT_ASSERT_EQUAL(true, light->hasBeenEnabled()); // lights get enabled during the rendering pass
-   CPPUNIT_ASSERT_EQUAL(false, light->isEnabled()); // lights get turned off after rendering pass is complete
+   COMPARE_VEC(D3DXVECTOR3(10, 20, 30), bs->origin);
+   CPPUNIT_ASSERT_EQUAL(10.f, bs->radius);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Lights, renderingHierarchyOfLights)
+TEST(Lights, boundingVolumeOfDirectionalLight)
 {
-   RendererImplementationMock renderer;
-   Camera camera("camera", renderer);
-   SceneRenderingMechanismMock renderingMechanism; 
+   Light light("light");
+   light.setType(Light::LT_DIRECTIONAL);
 
-   Node* root = new Node("node", false);
-   LightMock* light1 = new LightMock();
-   LightMock* light2 = new LightMock();
-   root->addChild(light1);
-   root->addChild(light2);
-
-   VisualSceneManager sceneManager;
-   renderingMechanism.addVisualSceneManager(sceneManager);
-   sceneManager.setActiveCamera(camera);
-   sceneManager.addNode(root);
-      
-   renderingMechanism.render();
-
-   // only as many lights can be set as the device light limit allows
-   CPPUNIT_ASSERT_EQUAL(true, light1->hasBeenEnabled());
-   CPPUNIT_ASSERT_EQUAL(true, light2->hasBeenEnabled());
-
-   // lights get turned off after rendering pass is complete
-   CPPUNIT_ASSERT_EQUAL(false, light1->isEnabled());
-   CPPUNIT_ASSERT_EQUAL(false, light2->isEnabled());
+   const BoundingSpace* bs = dynamic_cast<const BoundingSpace*>(&(light.getBoundingVolume()));
+   CPPUNIT_ASSERT(NULL != bs);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Lights, tooManyLights)
+TEST(Lights, boundingVolumeOfSpotLight)
 {
-   RendererImplementationMock renderer;
-   Camera camera("camera", renderer);
-   SceneRenderingMechanismMock renderingMechanism(1); // we can only render using ONE LIGHT at a time !!!!
+   Light light("light");
+   light.setType(Light::LT_SPOT);
+   light.setRange(10); // we'll be using this range for all cases
+   
+   D3DXMATRIX direction;
+   D3DXMATRIX translation;
+   const BoundingSphere* bs = NULL;
 
-   Node* root = new Node("root", false);
-   LightMock* light1 = new LightMock();
-   LightMock* light2 = new LightMock();
-   root->addChild(light1);
-   root->addChild(light2);
+   // check the light in its default position
+   D3DXMatrixTranslation(&translation, 0, 0, 0);
+   D3DXMatrixRotationYawPitchRoll(&direction, 0, 0, 0);
+   light.accessLocalMtx() = translation * direction;
 
-   VisualSceneManager sceneManager;
-   renderingMechanism.addVisualSceneManager(sceneManager);
-   sceneManager.setActiveCamera(camera);
-   sceneManager.addNode(root);
+   bs = dynamic_cast<const BoundingSphere*>(&(light.getBoundingVolume()));
+   CPPUNIT_ASSERT(NULL != bs);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 5), bs->origin);
+   CPPUNIT_ASSERT_EQUAL(5.f, bs->radius);
 
-   renderingMechanism.render();
+   // rotate the light a bit
+   D3DXMatrixRotationYawPitchRoll(&direction, D3DXToRadian(90), 0, 0);
+   light.accessLocalMtx() = translation * direction;
 
-   // only as many lights can be set as the device light limit allows
-   CPPUNIT_ASSERT_EQUAL(true, light1->hasBeenEnabled());
-   CPPUNIT_ASSERT_EQUAL(false, light2->hasBeenEnabled());
+   bs = dynamic_cast<const BoundingSphere*>(&(light.getBoundingVolume()));
+   CPPUNIT_ASSERT(NULL != bs);
+   COMPARE_VEC(D3DXVECTOR3(5, 0, 0), bs->origin);
+   CPPUNIT_ASSERT_EQUAL(5.f, bs->radius);
 
-   // lights get turned off after rendering pass is complete
-   CPPUNIT_ASSERT_EQUAL(false, light1->isEnabled());
-   CPPUNIT_ASSERT_EQUAL(false, light2->isEnabled());
+   // and move it around
+   D3DXMatrixTranslation(&translation, 0, 10, 0);
+   light.accessLocalMtx() = translation * direction;
+
+   bs = dynamic_cast<const BoundingSphere*>(&(light.getBoundingVolume()));
+   CPPUNIT_ASSERT(NULL != bs);
+   COMPARE_VEC(D3DXVECTOR3(5, 10, 0), bs->origin);
+   CPPUNIT_ASSERT_EQUAL(5.f, bs->radius);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

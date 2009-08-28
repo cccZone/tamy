@@ -14,7 +14,7 @@ MaterialReplacer::MaterialReplacer(const Material& source,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialReplacer::visit(AbstractGraphicalNode& node)
+void MaterialReplacer::visit(RenderableNode& node)
 {
    if (m_source == node.getMaterial())
    {

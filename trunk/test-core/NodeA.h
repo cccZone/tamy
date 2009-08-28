@@ -15,8 +15,8 @@ private:
    Array<Triangle*> m_geometry;
 
 public:
-   NodeA(bool isDynamic = false) 
-      : Node("nodeA", isDynamic) 
+   NodeA() 
+      : Node("nodeA") 
    {}
 
    ~NodeA()

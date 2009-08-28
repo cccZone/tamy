@@ -10,12 +10,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Node::Node(const std::string& name, bool dynamic)
-      : m_name(name),
-      m_dynamic(dynamic),
-      m_parent(NULL),
-      m_volume(new BoundingSphere(D3DXVECTOR3(0, 0, 0), 0)),
-      m_globalVolume(NULL)
+Node::Node(const std::string& name)
+: m_name(name)
+, m_parent(NULL)
+, m_volume(new BoundingSphere(D3DXVECTOR3(0, 0, 0), 0))
+, m_globalVolume(NULL)
 {
    D3DXMatrixIdentity(&m_localMtx);
    D3DXMatrixIdentity(&m_globalMtx);
@@ -53,14 +52,6 @@ Node::~Node()
       delete *it;
    }
    m_children.clear();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool Node::isDynamic() const 
-{
-   if (hasParent() == false) {return m_dynamic;}
-   return m_parent->isDynamic() | m_dynamic;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

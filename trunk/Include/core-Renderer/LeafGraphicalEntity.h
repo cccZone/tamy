@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Node;
+class Material;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -45,6 +46,26 @@ public:
       m_geometry = NULL;
    }
 
+   /**
+    * Each entity has some rendering material set with which it should be rendered.
+    * This method returns a reference to it.
+    */
+   virtual Material& getMaterial(DWORD subsetIdx) const = 0;
+
+   /**
+    * This method returns a number of rednering subsets the entity has
+    */
+   virtual unsigned int getNumSubsets() const = 0;
+
+   /**
+    * Renders the entity's specified subset
+    */
+   virtual void render(DWORD subset) = 0;
+
+   /**
+    * A leaf can't have any children - all the children added to it will
+    * immediately get deleted
+    */
    void addChild(AbstractGraphicalEntity* child) {delete child;}
 
    const std::list<AbstractGraphicalEntity*>& getChildren() const {return m_noChildren;}
@@ -56,7 +77,7 @@ public:
    */
    float getBoundingSphereRadius() const {return m_boundingSphereRadius;}
 
-   const Array<Triangle*>&  getGeometry() const {return *m_geometry;}
+   const Array<Triangle*>& getGeometry() const {return *m_geometry;}
 
 protected:
    void setBoundingSphereRadius(float radius)

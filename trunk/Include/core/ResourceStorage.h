@@ -1,4 +1,8 @@
-#pragma once
+#ifndef _RESOURCE_STORAGE_H
+#define _RESOURCE_STORAGE_H
+
+/// @file   core\ResourceStorage.h
+/// @brief  and implementation of IWFScene
 
 #include <map>
 #include <string>
@@ -7,6 +11,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/** 
+ * A generic storage capable of managing objects of a certain type.
+ * All registered object MUST implement a 'const std::string& getName() const'
+ * method.
+ */
 template<typename ResourceType>
 class ResourceStorage
 {
@@ -15,53 +24,48 @@ private:
    ResourceMap m_resources;
 
 public:
-   virtual ~ResourceStorage()
-   {
-      for (ResourceMap::iterator it = m_resources.begin();
-         it != m_resources.end(); ++it)
-      {
-         delete it->second;
-      }
-   }
+   ~ResourceStorage();
 
-   ResourceType& get(const std::string& name)
-   {
-      ResourceMap::iterator it = m_resources.find(name);
-      if (it != m_resources.end()) {return *(it->second);}
+   /** 
+    * Retrieves a reference to a resource from the storage.
+    *
+    * @param name    resource id
+    * @return        reference to the resource
+    */ 
+   ResourceType& get(const std::string& name);
 
-      throw std::runtime_error(std::string("Resource ") + std::string(name) + " doesn't exist");
-   }
+   /** 
+    * Retrieves a reference to a resource from the storage.
+    * (const version)
+    *
+    * @param name    resource id
+    * @return        reference to the resource
+    */
+   const ResourceType& get(const std::string& name) const;
 
-   const ResourceType& get(const std::string& name) const
-   {
-      ResourceMap::const_iterator it = m_resources.find(name);
-      if (it != m_resources.end()) {return *(it->second);}
+   /**
+    * Checks if the resource exists.
+    *
+    * @param name    resource id
+    * @return        'true' if it exists, 'false' otherwise
+    */
+   bool is(const std::string& name) const;
 
-      throw std::runtime_error(std::string("Resource ") + std::string(name) + " doesn't exist");
-   }
-
-   bool is(const std::string& name) const
-   {
-      ResourceMap::const_iterator it = m_resources.find(name);
-      return (it != m_resources.end());
-   }
-
-   bool add(ResourceType* resource)
-   {
-      ASSERT (resource != NULL, "NULL pointer instead a valid resource");
-
-      ResourceMap::iterator it = m_resources.find(resource->getName());
-      if (it != m_resources.end()) 
-      {
-         // resource like this already exists
-         delete resource;
-         return false;
-      } 
-
-      m_resources.insert(std::make_pair(resource->getName(), resource));
-
-      return true;
-   }
+   /**
+    * Adds a new resource to the storage.
+    *
+    * @param resource   resource to add
+    * @return           'true' if the resource was successfully added
+    *                   (no other resource with same name was found),
+    *                   'false' otherwise
+    */
+   bool add(ResourceType* resource);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "core\ResourceStorage.inl"
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif _RESOURCE_STORAGE_H

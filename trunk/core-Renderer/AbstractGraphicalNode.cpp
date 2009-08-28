@@ -2,25 +2,19 @@
 #include "core\NodeVisitor.h"
 #include "core\TNodesVisitor.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\LeafGraphicalEntity.h"
 #include "core\BoundingSphere.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 AbstractGraphicalNode::AbstractGraphicalNode(const std::string& name, 
-                                             bool dynamic, 
-                                             Material& material, 
+                                             LeafGraphicalEntity& entity,
                                              DWORD subset)
-      : Node(name, dynamic),
-      m_material(&material), 
+      : RenderableNode(name, entity.getMaterial(subset)),
+      m_entity(entity),
       m_subset(subset)
 {
-}
-///////////////////////////////////////////////////////////////////////////////
-
-void AbstractGraphicalNode::onAccept(NodeVisitor& visitor)
-{
-   REGISTER_NODE_VISITOR(TNodesVisitor<AbstractGraphicalNode>);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,9 +27,23 @@ void AbstractGraphicalNode::setBoundingSphereRadius(float radius)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AbstractGraphicalNode::setMaterial(Material& material)
+void AbstractGraphicalNode::render()
 {
-   m_material = &material;
+   m_entity.render(m_subset);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const Array<Triangle*>& AbstractGraphicalNode::getBoundingGeometry() const
+{
+   return m_entity.getGeometry();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const LeafGraphicalEntity& AbstractGraphicalNode::getEntity() const 
+{
+   return m_entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

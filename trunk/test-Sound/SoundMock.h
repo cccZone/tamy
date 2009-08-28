@@ -14,6 +14,20 @@ private:
    int m_blockAlignment;
 
 public:
+   SoundMock(const std::string& name)
+         : Sound(name)
+   {
+      m_bufSize = 16;
+      m_bytesPerSec = 0xffff;
+      m_blockAlignment =  1;
+
+      m_someBuf = new char[m_bufSize];
+      for (int i = 0; i < m_bufSize; ++i)
+      {
+         m_someBuf[i] = i;
+      }
+   }
+
    SoundMock(int bufSize = 16, int bytesPerSec = 0xffff, int blockAlignment = 1)
          : Sound("SoundMock")
    {

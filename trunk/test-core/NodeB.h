@@ -10,7 +10,7 @@
 class NodeB : public Node
 {
 public:
-   NodeB() : Node("nodeB", false) {}
+   NodeB() : Node("nodeB") {}
 
 protected:
    void onAccept(NodeVisitor& visitor)

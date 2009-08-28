@@ -27,7 +27,7 @@ public:
 class NodeStub : public Node
 {
 public:
-   NodeStub() : Node("nodeStub", false) {}
+   NodeStub() : Node("nodeStub") {}
 
 protected:
    void onAccept(NodeVisitor& visitor)

@@ -19,9 +19,9 @@ BoundingVolume* Frustum::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Frustum::testCollision(const D3DXVECTOR3& point) const
+bool Frustum::testCollision(const PointVolume& point) const
 {
-   ASSERT(false, "Frustum::testCollision(const D3DXVECTOR3&) - Method not implemented");
+   ASSERT(false, "Frustum::testCollision(const PointVolume&) - Method not implemented");
    return false;
 }
 

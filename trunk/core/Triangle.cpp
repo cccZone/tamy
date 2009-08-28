@@ -63,9 +63,9 @@ BoundingVolume* Triangle::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Triangle::testCollision(const D3DXVECTOR3& point) const
+bool Triangle::testCollision(const PointVolume& point) const
 {
-   ASSERT(false, "Triangle::testCollision(const D3DXVECTOR3&) - Method not implemented");
+   ASSERT(false, "Triangle::testCollision(const PointVolume&) - Method not implemented");
    return false;
 }
 

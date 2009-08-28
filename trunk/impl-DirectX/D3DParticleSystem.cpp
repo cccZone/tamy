@@ -11,10 +11,9 @@
 
 D3DParticleSystem::D3DParticleSystem(IDirect3DDevice9& d3Device, 
                                      const std::string& name,
-                                     bool isDynamic, 
                                      Material& material,
                                      unsigned int particlesCount)
-      : ParticleSystem(name, isDynamic, material, particlesCount),
+      : ParticleSystem(name, material, particlesCount),
       m_d3Device(d3Device),
       m_vertexBuffer(NULL),
       m_particlesCount(0),

@@ -185,14 +185,14 @@
 				RelativePath=".\EffectsDemo.h"
 				>
 			</File>
+			<File
+				RelativePath=".\PostProcessRenderer.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Effects"
 			>
-			<File
-				RelativePath="..\..\Build\app-EffectsDemo\Data\blur.fx"
-				>
-			</File>
 			<File
 				RelativePath="..\..\Build\app-EffectsDemo\Data\dizzy.fx"
 				>
@@ -203,26 +203,6 @@
 			</File>
 			<File
 				RelativePath="..\..\Build\app-EffectsDemo\Data\wavyImage.fx"
-				>
-			</File>
-		</Filter>
-		<Filter
-			Name="FXDataSources"
-			>
-			<File
-				RelativePath=".\BlurEffectDataSource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DizzyDataSource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\OldTVDataSource.h"
-				>
-			</File>
-			<File
-				RelativePath=".\WavyImageDataSource.h"
 				>
 			</File>
 		</Filter>

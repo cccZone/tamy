@@ -80,7 +80,30 @@ TEST(Array, removingElements)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Array, resizing)
+TEST(Array, allocate)
+{
+   Array<int> arr;
+
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, arr.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, arr.containerSize());
+
+   arr.allocate(5);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, arr.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)8, arr.containerSize());
+
+   arr.allocate(27);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, arr.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)32, arr.containerSize());
+
+   // it doesn't work backwards
+   arr.allocate(1);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)0, arr.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)32, arr.containerSize());
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(Array, resize)
 {
    Array<int> arr;
 
@@ -88,16 +111,17 @@ TEST(Array, resizing)
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, arr.containerSize());
 
    arr.resize(5);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)0, arr.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)5, arr.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)8, arr.containerSize());
 
    arr.resize(27);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)0, arr.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)27, arr.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)32, arr.containerSize());
 
-   // it doesn't work backwards
+   CPPUNIT_ASSERT_EQUAL(0, arr.at(22));
+
    arr.resize(1);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)0, arr.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, arr.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)32, arr.containerSize());
 };
 

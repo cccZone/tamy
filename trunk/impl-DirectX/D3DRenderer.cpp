@@ -3,7 +3,6 @@
 #include <string>
 #include <cassert>
 #include "core-Renderer\GraphicalNode.h"
-#include "impl-DirectX\D3DLight.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -117,16 +116,6 @@ void D3DRenderer::resetViewport(unsigned int width, unsigned int height)
 void D3DRenderer::renderingBegin()
 {
    m_d3Device->BeginScene();
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-void D3DRenderer::cleanAllTargets(unsigned int count)
-{
-   for (unsigned int i = 0; i < count; ++i)
-   {
-      m_d3Device->Clear(i, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0x0032C1FF, 1.0f, 0);
-   }
 }
 
 /////////////////////////////////////////////////////////////////////////////

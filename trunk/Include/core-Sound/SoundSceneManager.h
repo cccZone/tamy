@@ -1,7 +1,8 @@
 #pragma once
 
-#include "core\AbstractSceneManager.h"
-#include "core\TNodesVisitor.h"
+/// @file   core-Sound\SoundSceneManager.h
+/// @brief  a sound scene
+
 #include "core\Array.h"
 #include <windows.h>
 
@@ -10,57 +11,71 @@
 
 class Sound3D;
 class SoundListener;
-typedef Sound3D* Sound3DP;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This scene manager manages the audio representation of a 3D scene
+ * This scene manager manages the audio representation of a 3D scene.
  */
-class SoundSceneManager : public AbstractSceneManager,
-                          public SceneAspectManager<SoundListener>,
-                          public SceneAspectManager<Sound3D>
+class SoundSceneManager
 {
 private:
    SoundListener* m_activeListener;
 
+   Array<Sound3D*> m_activeSoundsArr;
    Array<Sound3D*> m_soundsArr;
 
 public:
-   SoundSceneManager(unsigned int maxElemsPerSector = 64, float worldSize = 1000);
-   virtual ~SoundSceneManager();
+   SoundSceneManager();
+   ~SoundSceneManager();
 
    /**
-    * The method returns true if there's an active listener set for the scene
+    * The method returns true if there's an active listener set for the scene.
     */
    bool hasActiveListener() const;
 
    /**
     * This method returns an instance of a sound listener currently activated
-    * in this scene
+    * in this scene.
     *
     * @throw std::logic_error if there's no listener set
+    * @return                 currently active sound listener
     */
    SoundListener& getActiveListener();
 
    /**
+    * Sets a new listener for the scene.
+    *
+    * @param                  new sound listener
+    */
+   void setListener(SoundListener* listener);
+
+   /**
+    * Adds a new sound emitter to the sound scene.
+    *
+    * @param sound            new sound emiter
+    */
+   void addEmitter(Sound3D& sound);
+
+   /**
+    * Removes an emitter from the sound scene.
+    *
+    * @param sound            sound to remove
+    */
+   void removeEmitter(Sound3D& sound);
+
+   /**
     * The method checks which sounds that could be heard before
-    * aren't now, and which of those that weren't are
+    * aren't now, and which of those that weren't are.
+    *
+    * @param soundsToDisable  upon method return this array will contain
+    *                         sounds that should be disabled
+    * @param soundsToEnable   upon method return this array will contain
+    *                         sounds that should be enabled
+    * @return                 an array of currently hearable sounds
     */
    Array<Sound3D*>& update(Array<Sound3D*>& soundsToDisable, 
                            Array<Sound3D*>& soundsToEnable);
-
-protected:
-   void onAdd(Sound3D& sound);
-   void onRemove(Sound3D& sound);
-
-   /**
-   * A 3D sound in order to be perceived requires someone
-   * to listen to it - this someone needs to have a position in the 3D world etc.
-   * This someone is represented by the SoundListener
-   */
-   void onAdd(SoundListener& sound);
-   void onRemove(SoundListener& sound);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,8 @@
 #pragma once
 
+/// @file      core-ResourceManagement\IWFLoader.h
+/// @brief     IWF files loader
+
 #include "core\ResourceStorage.h"
 #include <string>
 #include <list>
@@ -15,42 +18,32 @@ class iwfTexture;
 class iwfMaterial;
 class iwfSurface;
 struct ReferenceEntity;
-class SceneManager;
-class GraphicalEntitiesFactory;
-class Material;
-class GraphicalEntityLoader;
-class GraphicalDataSource;
-class AbstractGraphicalEntity;
-class Material;
-class Texture;
+class IWFScene;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This class will load a scene form an IWF file
+ * This class will load a scene form an IWF file.
  */
 class IWFLoader
 {
 private:
-   GraphicalEntitiesFactory& m_entitiesFactory;
-   GraphicalEntityLoader* m_entityLoader;
-   GraphicalDataSource& m_externalEntitiesSource;
-   SceneManager& m_sceneManager;
-   ResourceStorage<AbstractGraphicalEntity>& m_entitiesStorage;
-   ResourceStorage<Material>& m_materialsStorage;
+   IWFScene& m_scene;
 
 public:
-   IWFLoader(GraphicalEntitiesFactory& entitiesFactory, 
-             GraphicalDataSource& externalEntitiesSource,
-             SceneManager& sceneManager,
-             ResourceStorage<AbstractGraphicalEntity>& entitiesStorage,
-             ResourceStorage<Material>& materialsStorage);
+   /** 
+    * Constructor.
+    *
+    * @param scene      a storage that will be used to store
+    *                   the contents of the IWF file
+    */
+   IWFLoader(IWFScene& scene);
    ~IWFLoader();
 
    /**
-    * The method will load a scene from an IWF file
-    * name of which is passed in 'fileName' param,
-    * and attach it to the 'rootNode'
+    * The method will load a scene from an IWF file.
+    *
+    * @param fleName    name of the IWF file
     */
    void load(const std::string& fileName);
 
@@ -62,8 +55,6 @@ private:
    ReferenceEntity extractReference(UCHAR* referenceData) const;
 
    std::string getUniqueNameForMesh(const char* originalMeshName) const;
-
-   Texture& createSkyboxMaterial(const std::string& textureName) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

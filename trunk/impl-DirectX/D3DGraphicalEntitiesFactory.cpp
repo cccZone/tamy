@@ -3,8 +3,7 @@
 #include "impl-DirectX\D3DSkinnedGraphicalEntity.h"
 #include "impl-DirectX\D3DRenderer.h"
 #include "core-Renderer\LitVertex.h"
-#include "impl-DirectX\D3DLight.h"
-#include "impl-DirectX\D3DSkyBox.h"
+#include "impl-DirectX\D3DSkyBoxSide.h"
 #include "core-Renderer\MaterialStage.h"
 #include "core-Renderer\MaterialOperation.h"
 #include "core-Renderer\Material.h"
@@ -15,8 +14,9 @@
 #include "impl-DirectX\D3DTextureRenderingTarget.h"
 #include "impl-DirectX\D3DGraphicalEffect.h"
 #include "impl-DirectX\D3DPostProcessEffectRenderable.h"
-#include "impl-DirectX\D3DSceneRenderingMechanism.h"
-#include "impl-DirectX\D3DMaterialImpl.h"
+#include "impl-DirectX\D3DRendererImpl.h"
+#include "impl-DirectX\D3DRenderingTargetsCleaner.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,13 +33,6 @@ D3DGraphicalEntitiesFactory::D3DGraphicalEntitiesFactory(const std::string& text
 
 D3DGraphicalEntitiesFactory::~D3DGraphicalEntitiesFactory()
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Light* D3DGraphicalEntitiesFactory::createLight(const std::string& name)
-{
-   return new D3DLight(name, m_d3Device);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,9 +67,49 @@ SkinnedGraphicalEntity* D3DGraphicalEntitiesFactory::createSkinnedGraphicalEntit
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkyBox* D3DGraphicalEntitiesFactory::createSkyBox()
+SkyBoxSide* D3DGraphicalEntitiesFactory::createSkyBoxSide(SkyBoxSideId side, Texture* tex)
 {
-   IDirect3DVertexBuffer9* vb = m_renderer.createVertexBuffer(sizeof(D3DSkyBoxVertex) * 24, 
+   static D3DSkyBoxVertex vertices[] = 
+   {
+      // Front quad (remember all quads point inward)
+      D3DSkyBoxVertex( -10.0f,  10.0f,  10.0f, 0.0f, 0.0f ),
+      D3DSkyBoxVertex(  10.0f,  10.0f,  10.0f, 1.0f, 0.0f ),
+      D3DSkyBoxVertex( -10.0f, -10.0f,  10.0f, 0.0f, 1.0f ),
+      D3DSkyBoxVertex(  10.0f, -10.0f,  10.0f, 1.0f, 1.0f ),
+
+      // Back Quad
+      D3DSkyBoxVertex(  10.0f,  10.0f, -10.0f, 0.0f, 0.0f ),
+      D3DSkyBoxVertex( -10.0f,  10.0f, -10.0f, 1.0f, 0.0f ),
+      D3DSkyBoxVertex(  10.0f, -10.0f, -10.0f, 0.0f, 1.0f ),
+      D3DSkyBoxVertex( -10.0f, -10.0f, -10.0f, 1.0f, 1.0f ),
+
+      // Left Quad
+      D3DSkyBoxVertex( -10.0f,  10.0f, -10.0f, 0.0f, 0.0f ),
+      D3DSkyBoxVertex( -10.0f,  10.0f,  10.0f, 1.0f, 0.0f ),
+      D3DSkyBoxVertex( -10.0f, -10.0f, -10.0f, 0.0f, 1.0f ),
+      D3DSkyBoxVertex( -10.0f, -10.0f,  10.0f, 1.0f, 1.0f ),
+
+      // Right Quad
+      D3DSkyBoxVertex(  10.0f,  10.0f,  10.0f, 0.0f, 0.0f ),
+      D3DSkyBoxVertex(  10.0f,  10.0f, -10.0f, 1.0f, 0.0f ),
+      D3DSkyBoxVertex(  10.0f, -10.0f,  10.0f, 0.0f, 1.0f ),
+      D3DSkyBoxVertex(  10.0f, -10.0f, -10.0f, 1.0f, 1.0f ),
+
+      // Top Quad
+      D3DSkyBoxVertex( -10.0f,  10.0f, -10.0f, 0.0f, 0.0f ),
+      D3DSkyBoxVertex(  10.0f,  10.0f, -10.0f, 1.0f, 0.0f ),
+      D3DSkyBoxVertex( -10.0f,  10.0f,  10.0f, 0.0f, 1.0f ),
+      D3DSkyBoxVertex(  10.0f,  10.0f,  10.0f, 1.0f, 1.0f ),
+
+      // Bottom Quad
+      D3DSkyBoxVertex( -10.0f, -10.0f,  10.0f, 0.0f, 0.0f ),
+      D3DSkyBoxVertex(  10.0f, -10.0f,  10.0f, 1.0f, 0.0f ),
+      D3DSkyBoxVertex( -10.0f, -10.0f, -10.0f, 0.0f, 1.0f ),
+      D3DSkyBoxVertex(  10.0f, -10.0f, -10.0f, 1.0f, 1.0f )
+   };
+
+   int vtxIdx = side * 4;
+   IDirect3DVertexBuffer9* vb = m_renderer.createVertexBuffer(sizeof(D3DSkyBoxVertex) * 4, 
                                                               D3DUSAGE_WRITEONLY,
                                                               D3DSkyBoxVertex::FVF,
                                                               D3DPOOL_MANAGED);
@@ -88,45 +121,14 @@ SkyBox* D3DGraphicalEntitiesFactory::createSkyBox()
          std::string("Cannot lock a vertex buffer"));
    }
 
-   // Front quad (remember all quads point inward)
-   *pVertex++  = D3DSkyBoxVertex( -10.0f,  10.0f,  10.0f, 0.0f, 0.0f );
-   *pVertex++  = D3DSkyBoxVertex(  10.0f,  10.0f,  10.0f, 1.0f, 0.0f );
-   *pVertex++  = D3DSkyBoxVertex( -10.0f, -10.0f,  10.0f, 0.0f, 1.0f );
-   *pVertex++  = D3DSkyBoxVertex(  10.0f, -10.0f,  10.0f, 1.0f, 1.0f );
-
-   // Back Quad
-   *pVertex++  = D3DSkyBoxVertex(  10.0f,  10.0f, -10.0f, 0.0f, 0.0f );
-   *pVertex++  = D3DSkyBoxVertex( -10.0f,  10.0f, -10.0f, 1.0f, 0.0f );
-   *pVertex++  = D3DSkyBoxVertex(  10.0f, -10.0f, -10.0f, 0.0f, 1.0f );
-   *pVertex++  = D3DSkyBoxVertex( -10.0f, -10.0f, -10.0f, 1.0f, 1.0f );
-
-   // Left Quad
-   *pVertex++  = D3DSkyBoxVertex( -10.0f,  10.0f, -10.0f, 0.0f, 0.0f );
-   *pVertex++  = D3DSkyBoxVertex( -10.0f,  10.0f,  10.0f, 1.0f, 0.0f );
-   *pVertex++ = D3DSkyBoxVertex( -10.0f, -10.0f, -10.0f, 0.0f, 1.0f );
-   *pVertex++ = D3DSkyBoxVertex( -10.0f, -10.0f,  10.0f, 1.0f, 1.0f );
-
-   // Right Quad
-   *pVertex++ = D3DSkyBoxVertex(  10.0f,  10.0f,  10.0f, 0.0f, 0.0f );
-   *pVertex++ = D3DSkyBoxVertex(  10.0f,  10.0f, -10.0f, 1.0f, 0.0f );
-   *pVertex++ = D3DSkyBoxVertex(  10.0f, -10.0f,  10.0f, 0.0f, 1.0f );
-   *pVertex++ = D3DSkyBoxVertex(  10.0f, -10.0f, -10.0f, 1.0f, 1.0f );
-
-   // Top Quad
-   *pVertex++ = D3DSkyBoxVertex( -10.0f,  10.0f, -10.0f, 0.0f, 0.0f );
-   *pVertex++ = D3DSkyBoxVertex(  10.0f,  10.0f, -10.0f, 1.0f, 0.0f );
-   *pVertex++ = D3DSkyBoxVertex( -10.0f,  10.0f,  10.0f, 0.0f, 1.0f );
-   *pVertex++ = D3DSkyBoxVertex(  10.0f,  10.0f,  10.0f, 1.0f, 1.0f );
-
-   // Bottom Quad
-   *pVertex++ = D3DSkyBoxVertex( -10.0f, -10.0f,  10.0f, 0.0f, 0.0f );
-   *pVertex++ = D3DSkyBoxVertex(  10.0f, -10.0f,  10.0f, 1.0f, 0.0f );
-   *pVertex++ = D3DSkyBoxVertex( -10.0f, -10.0f, -10.0f, 0.0f, 1.0f );
-   *pVertex++ = D3DSkyBoxVertex(  10.0f, -10.0f, -10.0f, 1.0f, 1.0f );
+   *pVertex++  = vertices[vtxIdx++];
+   *pVertex++  = vertices[vtxIdx++];
+   *pVertex++  = vertices[vtxIdx++];
+   *pVertex++  = vertices[vtxIdx++];
 
    vb->Unlock();
 
-   return new D3DSkyBox(new D3DMaterialImpl(m_d3Device), m_renderer.getRenderingTargetsPolicy(), m_d3Device, vb);
+   return new D3DSkyBoxSide(tex, m_d3Device, vb);
 
 }
 
@@ -211,12 +213,10 @@ Texture* D3DGraphicalEntitiesFactory::createEmptyTexture()
 
 ParticleSystem* D3DGraphicalEntitiesFactory::createParticleSystem(
                                               const std::string& name, 
-                                              bool isDynamic, 
                                               Material& material,
                                               unsigned int particlesCount)
 {
-   return new D3DParticleSystem(m_d3Device,
-                                name, isDynamic, material, particlesCount);
+   return new D3DParticleSystem(m_d3Device, name, material, particlesCount);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -244,9 +244,7 @@ D3DGraphicalEntitiesFactory::createPostProcessEffectRenderable()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEffect* D3DGraphicalEntitiesFactory::createEffectImpl(const std::string& name, 
-                                                               RenderingTargetsPolicy& policy,
-                                                               EffectDataSource* dataSource)
+GraphicalEffect* D3DGraphicalEntitiesFactory::createEffect(const std::string& name)
 {
    ID3DXEffect* effect = NULL;
 	ID3DXBuffer* errorsBuf = NULL;
@@ -261,13 +259,28 @@ GraphicalEffect* D3DGraphicalEntitiesFactory::createEffectImpl(const std::string
 
    if (FAILED(res) || (effect == NULL))
 	{
-      std::string compilationErrors = (const char*)errorsBuf->GetBufferPointer();
-      throw std::runtime_error(std::string("Effect compilation error: ") + compilationErrors);
+      if (errorsBuf != NULL)
+      {
+         std::string compilationErrors = (const char*)errorsBuf->GetBufferPointer();
+         throw std::runtime_error(std::string("Effect compilation error: ") + compilationErrors);
+      }
+      else
+      {
+         std::string errMsg = "Error while loading an effect: ";
+
+         switch(res)
+         {
+         case D3DERR_INVALIDCALL:   errMsg += "System is not properly initialized"; break;
+         case D3DXERR_INVALIDDATA:  errMsg += "Invalid data used"; break;
+         case E_OUTOFMEMORY:        errMsg += "Out of memory"; break;
+         default:                   errMsg += "Unknown error"; break;
+         }
+
+         throw std::runtime_error(errMsg);
+      }
 	}
 
    return new D3DGraphicalEffect(name, 
-                                 policy, 
-                                 dataSource, 
                                  m_d3Device, 
                                  m_renderer, 
                                  effect);
@@ -275,13 +288,16 @@ GraphicalEffect* D3DGraphicalEntitiesFactory::createEffectImpl(const std::string
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SceneRenderingMechanism* 
-D3DGraphicalEntitiesFactory::createSceneRenderingMechanism(RenderingTargetsPolicy* policy)
+RendererImpl* D3DGraphicalEntitiesFactory::createFixedRendererImpl()
 {
-   return new D3DSceneRenderingMechanism(policy,
-                                         m_renderer.getMaxLightsCount(),
-                                         new D3DMaterialImpl(m_d3Device),
-                                         m_d3Device);
+   return new D3DRendererImpl(m_d3Device, m_renderer.getMaxLightsCount());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+RenderingTargetsCleaner* D3DGraphicalEntitiesFactory::createTargetsCleaner()
+{
+   return new D3DRenderingTargetsCleaner(m_d3Device);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

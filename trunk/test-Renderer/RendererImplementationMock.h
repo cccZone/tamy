@@ -21,8 +21,6 @@ namespace RegularTests
       bool isGraphicsSystemReady() const {return true;}
 
       void attemptToRecoverGraphicsSystem() {}
-
-      void cleanAllTargets(unsigned int count) {}
    };
 }
 
@@ -63,8 +61,6 @@ namespace RendererTests
          m_seqLog.push_back("Renderer - attemptToRecoverGraphicsSystem");
          m_deviceReady = true;
       }
-
-      void cleanAllTargets(unsigned int count) {m_seqLog.push_back("Renderer - cleanAllTargets");}
    };
 }
 

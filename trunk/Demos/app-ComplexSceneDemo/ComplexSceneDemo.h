@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core-AppFlow\Application.h"
+#include "ext-Demo\DemoApp.h"
 #include "core-Renderer\AbstractGraphicalEntity.h"
 #include "core-Renderer\Material.h"
 #include "core\ResourceStorage.h"
@@ -8,44 +8,32 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Tamy;
-class Renderer;
-class CompositeSceneManager;
-class UnconstrainedMotionController;
-class ResourceManager;
-class AbstractGraphicalEntity;
-class RenderingTarget;
-class UserInputController;
+class Camera;
+
+namespace demo
+{
+   class DemoRendererDefinition;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ComplexSceneDemo : public Application
+class ComplexSceneDemo : public demo::DemoApp
 {
 private:
-   Tamy& m_tamy;
-   Renderer* m_renderer;
-   RenderingTarget* m_renderingTarget;
-   UserInputController& m_uiController;
-
-   CompositeSceneManager* m_sceneManager;
-   UnconstrainedMotionController* m_cameraController;
-   bool m_rotating;
-
    ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
    ResourceStorage<Material> m_materialsStorage;
+   Camera* m_camera;
 
 public:
    ComplexSceneDemo(Tamy& tamy);
 
-   void initialize();
-   void deinitialize();
-
-   void hibernate() {}
-   void dehibernate() {}
-
-   void update(float timeElapsed);
-
-   void notify(const std::string& senderApp, int signalCode) {}
+protected:
+   RenderingMechanism* initRenderingPipeline(demo::DemoRendererDefinition& rendererDefinition,
+                                             demo::DynMeshesScene* dynamicScene, 
+                                             demo::LightsScene* lights);
+   void initializeScene(demo::DynMeshesScene& dynamicScene, 
+                        demo::LightsScene& lights);
+   void onDeinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

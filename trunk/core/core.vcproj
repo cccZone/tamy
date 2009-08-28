@@ -211,11 +211,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\LinearNodesStorage.h"
+				RelativePath="..\Include\core\Graph.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Octree.h"
+				RelativePath="..\Include\core\Graph.inl"
 				>
 			</File>
 			<File
@@ -224,6 +224,10 @@
 			</File>
 			<File
 				RelativePath="..\Include\core\ResourceStorage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core\ResourceStorage.inl"
 				>
 			</File>
 			<File
@@ -255,10 +259,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\DistanceComparator.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Include\core\HierarchyWriter.h"
 				>
 			</File>
@@ -276,6 +276,14 @@
 			</File>
 			<File
 				RelativePath="..\Include\core\MatrixWriter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UniqueObject.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core\UniqueObject.h"
 				>
 			</File>
 			<Filter
@@ -306,32 +314,68 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="Graphs"
+				>
+				<File
+					RelativePath="..\Include\core\GraphBFS.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\GraphBFS.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\GraphBuilder.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\GraphBuilder.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\GraphBuilderFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\GraphDijkstra.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\GraphDijkstra.inl"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
-			Name="Scene"
+			Name="SpatialStorage"
 			>
 			<File
-				RelativePath="..\Include\core\AbstractSceneManager.h"
+				RelativePath="..\Include\core\LinearStorage.h"
 				>
 			</File>
 			<File
-				RelativePath=".\CompositeSceneManager.cpp"
+				RelativePath="..\Include\core\LinearStorage.inl"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\CompositeSceneManager.h"
+				RelativePath="..\Include\core\Octree.h"
 				>
 			</File>
 			<File
-				RelativePath=".\ObservingSceneManager.cpp"
+				RelativePath="..\Include\core\Octree.inl"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\ObservingSceneManager.h"
+				RelativePath="..\Include\core\SpatialStorage.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\SceneManager.h"
+				RelativePath="..\Include\core\TNodesSpatialStorage.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core\TNodesSpatialStorage.inl"
 				>
 			</File>
 		</Filter>
@@ -354,6 +398,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\Include\core\BoundingSpace.h"
+					>
+				</File>
+				<File
 					RelativePath=".\BoundingSphere.cpp"
 					>
 				</File>
@@ -367,6 +415,14 @@
 				</File>
 				<File
 					RelativePath="..\Include\core\Frustum.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PointVolume.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\core\PointVolume.h"
 					>
 				</File>
 				<File

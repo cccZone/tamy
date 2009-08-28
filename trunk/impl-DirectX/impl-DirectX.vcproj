@@ -179,14 +179,6 @@
 					Name="Materials"
 					>
 					<File
-						RelativePath=".\D3DMaterialImpl.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\impl-DirectX\D3DMaterialImpl.h"
-						>
-					</File>
-					<File
 						RelativePath="..\Include\impl-DirectX\D3DTexture.h"
 						>
 					</File>
@@ -211,19 +203,11 @@
 					Name="Misc"
 					>
 					<File
-						RelativePath=".\D3DLight.cpp"
+						RelativePath=".\D3DSkyBoxSide.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DLight.h"
-						>
-					</File>
-					<File
-						RelativePath=".\D3DSkyBox.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\impl-DirectX\D3DSkyBox.h"
+						RelativePath="..\Include\impl-DirectX\D3DSkyBoxSide.h"
 						>
 					</File>
 				</Filter>
@@ -263,6 +247,22 @@
 					RelativePath="..\Include\impl-DirectX\D3DRenderer.h"
 					>
 				</File>
+				<File
+					RelativePath=".\D3DRendererImpl.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\D3DRendererImpl.h"
+					>
+				</File>
+				<File
+					RelativePath=".\D3DRenderingTargetsCleaner.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\Include\impl-DirectX\D3DRenderingTargetsCleaner.h"
+					>
+				</File>
 				<Filter
 					Name="RanderingTargets"
 					>
@@ -292,14 +292,6 @@
 					</File>
 					<File
 						RelativePath="..\Include\impl-DirectX\D3DPostProcessEffectRenderable.h"
-						>
-					</File>
-					<File
-						RelativePath=".\D3DSceneRenderingMechanism.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\Include\impl-DirectX\D3DSceneRenderingMechanism.h"
 						>
 					</File>
 				</Filter>

@@ -16,8 +16,9 @@ namespace PostProcessMechanismTests
    private:
       std::string m_name;
       static RegularTests::RendererImplementationMock s_renderer;
+      Array<D3DXMATRIX> m_renderingMatrices;
       std::vector<std::string>& m_seqLog;
-
+      
    public:
       PostProcessEffectRenderableMock(const std::string& name,
                                 std::vector<std::string>& seqLog)

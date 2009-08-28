@@ -1,5 +1,8 @@
 #pragma once
 
+/// @file   core-ResourceManagement\GraphicalEntityLoader
+/// @brief  mesh loading utility
+
 #include "core-ResourceManagement\MeshDefinition.h"
 #include "core-Renderer\Skeleton.h"
 #include "core\ResourceStorage.h"
@@ -32,12 +35,21 @@ private:
    ResourceStorage<Material>& m_materialsStorage;
 
 public:
+   /**
+    * Constructor.
+    *
+    * @param factory             factory that will create
+    *                            graphical representations of object 
+    *                            a mesh is comprised of
+    * @param materialsStorage    this is where the materials created during
+    *                            mesh creation will be stored.
+    */
    GraphicalEntityLoader(GraphicalEntitiesFactory& factory,
                          ResourceStorage<Material>& materialsStorage);
 
    /**
     * Creates a mesh based on the data received from the implementation 
-    * (via the parseMesh method)
+    * (via the parseMesh method).
     *
     * @throw std::logic_error if no mesh was created for some reason.
     */

@@ -9,7 +9,7 @@
 
 TEST(ParticleSystem, particlesCreation)
 {
-   ParticleSystemMock particleSystem("ps", false, 2);
+   ParticleSystemMock particleSystem("ps", 2);
 
    D3DXVECTOR3 positioningOffset(0, 0, 0);
    particleSystem.setParticleInitializer(new ParticlePositionerMock(positioningOffset));
@@ -35,7 +35,7 @@ TEST(ParticleSystem, particlesCreation)
 TEST(ParticleSystem, emmisionTime)
 {
    // quick particle system emits all its particles at once
-   ParticleSystemMock psQuick("psQuick", false, 3);
+   ParticleSystemMock psQuick("psQuick", 3);
    psQuick.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    psQuick.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    psQuick.setLifeSpan(2, 0);
@@ -49,7 +49,7 @@ TEST(ParticleSystem, emmisionTime)
 
    // while the slow one distributes the emmision in time - in this
    // case it will be emitting them for 3 seconds
-   ParticleSystemMock psSlow("psQuick", false, 3);
+   ParticleSystemMock psSlow("psQuick", 3);
    psSlow.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    psSlow.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    psSlow.setLifeSpan(4, 0);
@@ -75,7 +75,7 @@ TEST(ParticleSystem, emmisionTime)
 
 TEST(ParticleSystem, particlesCreationWhenToMuchTimePassesAndWeNeedtoCreateMoreParticlesAtOnce)
 {
-   ParticleSystemMock particleSystem("ps", false, 2);
+   ParticleSystemMock particleSystem("ps", 2);
 
    D3DXVECTOR3 positioningOffset(0, 0, 0);
    particleSystem.setParticleInitializer(new ParticlePositionerMock(positioningOffset));
@@ -89,7 +89,7 @@ TEST(ParticleSystem, particlesCreationWhenToMuchTimePassesAndWeNeedtoCreateMoreP
 
 TEST(ParticleSystem, particlesCreatedWhereTheSystemIsPositioned)
 {
-   ParticleSystemMock particleSystem("ps", false, 1);
+   ParticleSystemMock particleSystem("ps", 1);
 
    D3DXVECTOR3 positioningOffset(0, 0, 0);
    particleSystem.setParticleInitializer(new ParticlePositionerMock(positioningOffset));
@@ -106,7 +106,7 @@ TEST(ParticleSystem, particlesCreatedWhereTheSystemIsPositioned)
 
 TEST(ParticleSystem, particlesAlternativePositioning)
 {
-   ParticleSystemMock particleSystem("ps", false, 1);
+   ParticleSystemMock particleSystem("ps", 1);
 
    D3DXVECTOR3 positioningOffset(5, 0, 0);
    particleSystem.setParticleInitializer(new ParticlePositionerMock(positioningOffset));
@@ -123,7 +123,7 @@ TEST(ParticleSystem, particlesAlternativePositioning)
 
 TEST(ParticleSystem, particlesMovement)
 {
-   ParticleSystemMock particleSystem("ps", false, 1);
+   ParticleSystemMock particleSystem("ps", 1);
 
    D3DXVECTOR3 positioningOffset(0, 0, 0);
    particleSystem.setParticleInitializer(new ParticlePositionerMock(positioningOffset));
@@ -148,7 +148,7 @@ TEST(ParticleSystem, particlesMovement)
 TEST(ParticleSystem, boundingVolume)
 {
    // testing first system
-   ParticleSystemMock ps1("ps", false, 1);
+   ParticleSystemMock ps1("ps", 1);
    ps1.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    ps1.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    ps1.setLifeSpan(1, 0);
@@ -160,7 +160,7 @@ TEST(ParticleSystem, boundingVolume)
 
    // testing another system - here the particles fly with the same speed,
    // but have a longer range
-   ParticleSystemMock ps2("ps", false, 1);
+   ParticleSystemMock ps2("ps", 1);
    ps2.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    ps2.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    ps2.setLifeSpan(10, 0);
@@ -175,7 +175,7 @@ TEST(ParticleSystem, boundingVolume)
 
 TEST(ParticleSystem, singleImpulseParticlesEmission)
 {
-   ParticleSystemMock ps("ps", false, 10);
+   ParticleSystemMock ps("ps", 10);
    ps.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    ps.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    ps.setLifeSpan(2, 0);
@@ -211,7 +211,7 @@ TEST(ParticleSystem, singleImpulseParticlesEmission)
 
 TEST(ParticleSystem, loopedPerticlesEmission)
 {
-   ParticleSystemMock ps("ps", false, 1);
+   ParticleSystemMock ps("ps", 1);
    ps.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    ps.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    ps.setLifeSpan(2, 0);
@@ -237,7 +237,7 @@ TEST(ParticleSystem, loopedPerticlesEmission)
 
 TEST(ParticleSystem, activationAndDeactivation_impulse)
 {
-   ParticleSystemMock ps("ps", false, 1);
+   ParticleSystemMock ps("ps", 1);
    ps.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    ps.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    ps.setLifeSpan(2, 0);
@@ -269,7 +269,7 @@ TEST(ParticleSystem, activationAndDeactivation_impulse)
 
 TEST(ParticleSystem, activatingParticlesDuringInputSystemActivityTime)
 {
-   ParticleSystemMock ps("ps", false, 4);
+   ParticleSystemMock ps("ps", 4);
    ps.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    ps.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    ps.setLifeSpan(20, 0);
@@ -307,7 +307,7 @@ TEST(ParticleSystem, activatingParticlesDuringInputSystemActivityTime)
 
 TEST(ParticleSystem, impulseActivactedAfterLongInactivity)
 {
-   ParticleSystemMock ps("ps", false, 4);
+   ParticleSystemMock ps("ps", 4);
    ps.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    ps.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    ps.setLifeSpan(4, 0);
@@ -334,7 +334,7 @@ TEST(ParticleSystem, impulseActivactedAfterLongInactivity)
 TEST(ParticleSystem, activationAndDeactivation_looped)
 {
    
-   ParticleSystemMock ps("ps", false, 1);
+   ParticleSystemMock ps("ps", 1);
    ps.setParticleInitializer(new ParticlePositionerMock(D3DXVECTOR3(0, 0, 0)));
    ps.setParticleAnimator(new ParticleAnimatorMock(D3DXVECTOR3(0, 0, 1)));
    ps.setLifeSpan(2, 0);

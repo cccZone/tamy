@@ -35,9 +35,8 @@ public:
       }
    }
 
-   void render(const D3DXMATRIX& globalMtx, DWORD subset)
+   void render(DWORD subset)
    {
-      m_d3Device.SetTransform(D3DTS_WORLD, &globalMtx);
       m_mesh->DrawSubset(subset);
    }
 };

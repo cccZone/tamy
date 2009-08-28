@@ -1,5 +1,8 @@
 #pragma once
 
+/// @file      core-Renderer\GraphicalEntityInstantiator.h
+/// @brief     class that creates instances of complex graphical entities
+
 #include "core\Node.h"
 
 
@@ -13,7 +16,7 @@ class SkinnedGraphicalEntity;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This type of node allows to bring the graphical entities into the scene
+ * This type of node allows to bring graphical entities into the scene.
  */
 class GraphicalEntityInstantiator : public Node
 {
@@ -22,7 +25,7 @@ private:
    std::list<std::pair<Node*, SkinnedGraphicalEntity*> > m_skinsToPostprocess;
 
 public:
-   GraphicalEntityInstantiator(const std::string& name, bool dynamic);
+   GraphicalEntityInstantiator(const std::string& name);
 
    void attachEntity(AbstractGraphicalEntity& entity);
 

@@ -185,6 +185,14 @@
 				RelativePath=".\ComplexSceneDemo.h"
 				>
 			</File>
+			<File
+				RelativePath=".\RenderEffectController.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Build\app-ComplexSceneDemo\Data\renderer.fx"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

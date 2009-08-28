@@ -22,18 +22,21 @@ public:
                                D3DRenderer& renderer);
    ~D3DGraphicalEntitiesFactory();
 
-   Light* createLight(const std::string& name);
-
    ParticleSystem* createParticleSystem(const std::string& name, 
-                                        bool isDynamic, 
                                         Material& material,
                                         unsigned int particlesCount);
+
+   SkyBoxSide* createSkyBoxSide(SkyBoxSideId side, Texture* tex);
 
    RenderingTarget* createDefaultRenderingTarget();
 
    TextureRenderingTarget* createTextureRenderingTarget(const std::string& name);
 
-   SceneRenderingMechanism* createSceneRenderingMechanism(RenderingTargetsPolicy* policy);
+   RendererImpl* createFixedRendererImpl();
+
+   GraphicalEffect* createEffect(const std::string& name);
+
+   RenderingTargetsCleaner* createTargetsCleaner();
 
 protected:
    GraphicalEntity* createGraphicalEntity(const std::string& name,
@@ -48,14 +51,8 @@ protected:
                                                         const std::vector<SkinBoneDefinition>& skinBones,
                                                         const std::vector<Material*>& materials);
 
-   SkyBox* createSkyBox();
-
    Texture* loadTexture(const std::string& path, const std::string& fileName);
    Texture* createEmptyTexture();
-
-   GraphicalEffect* createEffectImpl(const std::string& name,
-                                     RenderingTargetsPolicy& policy,
-                                     EffectDataSource* dataSource);
 
    PostProcessEffectRenderable* createPostProcessEffectRenderable();
 };

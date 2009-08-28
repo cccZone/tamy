@@ -17,7 +17,7 @@
 class GraphicalEntityLoader;
 class AbstractGraphicalEntity;
 class Light;
-class SkyBox;
+class SkyBoxSide;
 class Material;
 class MaterialStage;
 class LightReflectingProperties;
@@ -32,14 +32,28 @@ class RenderingTarget;
 class TextureRenderingTarget;
 class Material;
 class GraphicalEffect;
-class EffectDataSource;
+class PostProcessEffectController;
 class AbstractGraphicalNode;
 class Renderer;
 class Camera;
 class PostProcessEffectRenderable;
 class RenderingTargetsPolicy;
 class PostProcessMechanism;
-class SceneRenderingMechanism;
+class RendererImpl;
+class PostProcessEffectController;
+class RenderingTargetsCleaner;
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum SkyBoxSideId
+{
+   SBS_FRONT = 0,
+   SBS_BACK = 1,
+   SBS_LEFT = 2,
+   SBS_RIGHT = 3,
+   SBS_TOP = 4,
+   SBS_BOTTOM  = 5
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -58,6 +72,8 @@ public:
    virtual ~GraphicalEntitiesFactory();
 
    Camera* createCamera(const std::string& name);
+
+   Light* createLight(const std::string& name);
 
    /**
     * Returns an instance of the built in textures storage
@@ -78,11 +94,7 @@ public:
                                                                 const std::vector<SkinBoneDefinition>& skinBones,
                                                                 const std::vector<Material*>& materials) = 0;
 
-   virtual Light* createLight(const std::string& name) = 0;
-
-   SkyBox* createSkyBox(Texture& front, Texture& back,
-                        Texture& left, Texture& right,
-                        Texture& top, Texture& bottom);
+   virtual SkyBoxSide* createSkyBoxSide(SkyBoxSideId side, Texture* tex) = 0;
 
    LightReflectingProperties* createLightReflectingProperties();
 
@@ -91,11 +103,15 @@ public:
                                       MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
                                       CoordsOpCode coordsOperation);
 
+   MaterialStage* createMaterialStage(Texture& texture,
+                                      MatOpCode colorOp, SourceCode colorArg1, SourceCode colorArg2,
+                                      MatOpCode alphaOp, SourceCode alphaArg1, SourceCode alphaArg2,
+                                      CoordsOpCode coordsOperation);
+
    Material* createMaterial(const std::string& materialName,
                             LightReflectingProperties* lrp);
 
    virtual ParticleSystem* createParticleSystem(const std::string& name, 
-                                                bool isDynamic, 
                                                 Material& material,
                                                 unsigned int particlesCount) = 0;
 
@@ -103,39 +119,31 @@ public:
 
    virtual TextureRenderingTarget* createTextureRenderingTarget(const std::string& name) = 0;
 
-   GraphicalEffect* createEffect(const std::string& name, 
-                                 EffectDataSource* dataSource);
+   virtual GraphicalEffect* createEffect(const std::string& name) = 0;
 
    /**
-    * This method will create a mechanism that allows to render the contents
-    * of a single (and multiple) VisualSceneManager(s)
+    * This method will create a render implementation that uses the fixed
+    * pipeline.
+    *
+    * @return  fixed pipeline renderer implementation
     */
-   virtual SceneRenderingMechanism* createSceneRenderingMechanism(RenderingTargetsPolicy* policy) = 0;
-
-   /**
-    * This method will create a mechanism that allows to change
-    * the appearance of a rendered scene
-    */
-   PostProcessMechanism* createPostProcessMechanism(RenderingTargetsPolicy* policy,
-                                                    GraphicalEffect& effect);
-
-protected:
-   GraphicalEntitiesFactory(const std::string& texturesPath, Renderer& renderer);
-
-   virtual SkyBox* createSkyBox() = 0;
-
-   virtual Texture* loadTexture(const std::string& path, const std::string& fileName) = 0;
-   virtual Texture* createEmptyTexture() = 0;
-
-   virtual GraphicalEffect* createEffectImpl(const std::string& name, 
-                                             RenderingTargetsPolicy& policy,
-                                             EffectDataSource* dataSource) = 0;
+   virtual RendererImpl* createFixedRendererImpl() = 0;
 
    /** 
     * This method creates a quad that can be used to render a full screen texture on.
     */
    virtual PostProcessEffectRenderable* createPostProcessEffectRenderable() = 0;
 
+   /**
+    * This method creates a utility that can clean rendering targets' contents.
+    */
+   virtual RenderingTargetsCleaner* createTargetsCleaner() = 0;
+
+protected:
+   GraphicalEntitiesFactory(const std::string& texturesPath, Renderer& renderer);
+
+   virtual Texture* loadTexture(const std::string& path, const std::string& fileName) = 0;
+   virtual Texture* createEmptyTexture() = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

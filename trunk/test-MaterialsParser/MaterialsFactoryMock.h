@@ -36,14 +36,28 @@ public:
    }
 
    ParticleSystem* createParticleSystem(const std::string& name, 
-                                        bool isDynamic, 
                                         Material& material,
                                         unsigned int particlesCount)
    {
        return NULL;
    }
 
-   SceneRenderingMechanism* createSceneRenderingMechanism(RenderingTargetsPolicy* policy)
+   RendererImpl* createFixedRendererImpl()
+   {
+      return NULL;
+   }
+
+   GraphicalEffect* createEffect(const std::string& name)
+   {
+      return NULL;
+   }
+
+   SkyBoxSide* createSkyBoxSide(SkyBoxSideId side, Texture* tex) 
+   {
+      return NULL;
+   }
+
+   RenderingTargetsCleaner* createTargetsCleaner()
    {
       return NULL;
    }
@@ -53,8 +67,8 @@ protected:
                                           const std::vector<LitVertex>& vertices,
                                           const std::list<Face<USHORT> >& faces,
                                           const std::vector<Material*>& materials)
-    {
-       return NULL;
+   {
+      return NULL;
    }
 
    SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
@@ -63,14 +77,10 @@ protected:
                                                         const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                         const std::vector<SkinBoneDefinition>& skinBones,
                                                         const std::vector<Material*>& materials)
-    {
-       return NULL;
-   }
-
-   SkyBox* createSkyBox() 
    {
       return NULL;
    }
+
 
    Texture* loadTexture(const std::string& path, const std::string& fileName)
    {
@@ -85,13 +95,6 @@ protected:
    RenderingTarget* createDefaultRenderingTarget() {return NULL;}
 
    TextureRenderingTarget* createTextureRenderingTarget(const std::string& name) {return NULL;}
-
-   GraphicalEffect* createEffectImpl(const std::string& name,
-                                     RenderingTargetsPolicy& policy,
-                                     EffectDataSource* dataSource)
-   {
-      return NULL;
-   }
 
    PostProcessEffectRenderable* createPostProcessEffectRenderable(void)
    {

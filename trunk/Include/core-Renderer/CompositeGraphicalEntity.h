@@ -36,7 +36,7 @@ public:
    /**
     * This method creates an instance of the CompositeGraphicalEntity
     */
-   Node* instantiate(bool dynamic);
+   Node* instantiate();
 
    const Array<Triangle*>& getGeometry() const {return m_noGeometry;}
 

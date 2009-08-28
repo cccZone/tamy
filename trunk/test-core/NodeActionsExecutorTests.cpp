@@ -11,7 +11,7 @@
 
 TEST(NodeActionsExecutor, registeringActionForNode)
 {
-   Node node("node", false);
+   Node node("node");
    NodeActionMock* nodeAction = new NodeActionMock();
 
    NodeActionsExecutor executor;
@@ -27,8 +27,8 @@ TEST(NodeActionsExecutor, registeringActionForNode)
 
 TEST(NodeActionsExecutor, executingMultipleActionsOneByOne)
 {
-   Node node1("node1", false);
-   Node node2("node2", false);
+   Node node1("node1");
+   Node node2("node2");
    NodeActionMock* action1 = new NodeActionMock();
    NodeActionMock* action2 = new NodeActionMock();
 
@@ -52,8 +52,8 @@ TEST(NodeActionsExecutor, executingMultipleActionsOneByOne)
 
 TEST(NodeActionsExecutor, executingMultipleActionsSimultaneously)
 {
-   Node node1("node1", false);
-   Node node2("node2", false);
+   Node node1("node1");
+   Node node2("node2");
    NodeActionMock* action1 = new NodeActionMock();
    NodeActionMock* action2 = new NodeActionMock();
 
@@ -76,8 +76,8 @@ TEST(NodeActionsExecutor, executingMultipleActionsSimultaneously)
 
 TEST(NodeActionsExecutor, executingActionOfParentNodeThroughChildNode)
 {
-   Node root("root", false);
-   Node* child = new Node("child", false);
+   Node root("root");
+   Node* child = new Node("child");
    root.addChild(child);
 
    NodeActionMock* action = new NodeActionMock();
@@ -95,9 +95,9 @@ TEST(NodeActionsExecutor, executingActionOfParentNodeThroughChildNode)
 
 TEST(NodeActionsExecutor, actionsOnTreeExecutedOnlyOnceWhenHierarchyPassed)
 {
-   Node root("root", false);
-   Node* child1 = new Node("child1", false);
-   Node* child2 = new Node("child2", false);
+   Node root("root");
+   Node* child1 = new Node("child1");
+   Node* child2 = new Node("child2");
    root.addChild(child1);
    root.addChild(child2);
 
@@ -119,15 +119,15 @@ TEST(NodeActionsExecutor, actionsOnTreeExecutedOnlyOnceWhenHierarchyPassed)
 
 TEST(NodeActionsExecutor, nodesFromDifferentHierarchyTrees)
 {
-   Node root1("root1", false);
-   Node* child1 = new Node("child1", false);
-   Node* child2 = new Node("child2", false);
+   Node root1("root1");
+   Node* child1 = new Node("child1");
+   Node* child2 = new Node("child2");
    root1.addChild(child1);
    root1.addChild(child2);
 
-   Node root2("root2", false);
-   Node* child3 = new Node("child3", false);
-   Node* child4 = new Node("child4", false);
+   Node root2("root2");
+   Node* child3 = new Node("child3");
+   Node* child4 = new Node("child4");
    root2.addChild(child3);
    root2.addChild(child4);
 

@@ -1,7 +1,11 @@
 #pragma once
 
-#include "core-Renderer\Renderable.h"
+/// @file   core-Renderer\PostProcessEffectRenderable.h
+/// @brief  a post process effect renderable object
+
+
 #include "core\Observer.h"
+#include "core-Renderer\Renderable.h"
 #include <string>
 
 
@@ -9,11 +13,13 @@
 
 class Renderer;
 enum RendererOps;
+class Texture;
+class GraphicalEntitiesFactory;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This is a very special graphical node. It is supposed to contain 
+ * This is a very special renderable. It is supposed to contain 
  * geometry that creates a rectangle covering the entire screen.
  *
  * It should also:
@@ -23,11 +29,14 @@ enum RendererOps;
  *   - clamp the textures displayed on it
  *   - be rendered irrespective of the z-buffer contents (ensuring it's always rendered)
  */
-class PostProcessEffectRenderable : public Renderable,
-                              public Observer<Renderer, RendererOps>
+class PostProcessEffectRenderable : public Observer<Renderer, RendererOps>,
+                                    public Renderable
 {
 private:
    Renderer& m_renderer;
+   Array<D3DXMATRIX> m_renderingMatrices;
+   D3DXMATRIX m_worldTransform;
+   Material* m_defaultMat;
 
 public:
    PostProcessEffectRenderable(Renderer& renderer);
@@ -35,9 +44,29 @@ public:
    virtual ~PostProcessEffectRenderable();
 
    /**
-    * @derrived
+    * @inherited
     */
    virtual void render() = 0;
+
+   const Array<D3DXMATRIX>& getRenderingMatrices();
+   
+   const Material& getMaterial() const;
+
+   /**
+    * The looks of this renderable is defined by the textures 
+    * that are set on its material.
+    * To facilitate the process of changing this look, this method was added.
+    * It allows to easily add a number of textures, which the post process
+    * effect will be operating on.
+    *
+    * @param texture    texture for an effect to process
+    * @param factory    graphical entities factory needed by the method
+    *                   to create proper strucutres that will be needed
+    *                   to set the texture up correctly
+    */
+   void addInputTexture(Texture& texture, GraphicalEntitiesFactory& factory);
+
+   const D3DXMATRIX& getGlobalTransform();
 
    /**
     * Since the object needs to always cover the entire screen,

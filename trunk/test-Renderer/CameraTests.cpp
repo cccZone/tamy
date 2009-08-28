@@ -1,11 +1,8 @@
 #include "core-TestFramework\TestFramework.h"
-#include "SceneRenderingMechanismMock.h"
-#include "RendererImplementationMock.h"
 #include "GraphicalEntityMock.h"
 #include "core-Renderer\GraphicalNode.h"
 #include "core-Renderer\Camera.h"
 #include "core\MatrixWriter.h"
-#include "core-Renderer\VisualSceneManager.h"
 #include "core-Renderer\Material.h"
 #include "core\Frustum.h"
 #include "core\BoundingSphere.h"
@@ -16,48 +13,6 @@
 
 using namespace RegularTests;
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(Camera, renderingWithActiveCamera)
-{
-   RendererImplementationMock renderer;
-
-   SceneRenderingMechanismMock renderingMechanism;
-   Camera camera1("camera1", renderer);
-   Camera camera2("camera2", renderer);
-
-   D3DXMATRIX camera1Mtx = camera1.getLocalMtx();
-   camera1Mtx._41 = 5;
-   camera1.setLocalMtx(camera1Mtx);
-
-   D3DXMATRIX camera2Mtx = camera2.getLocalMtx();
-   camera2Mtx._41 = 10;
-   camera2.setLocalMtx(camera2Mtx);
-
-   Material material("material");
-   std::vector<Material*> materials; 
-   materials.push_back(&material);
-   GraphicalEntityMock entity("", materials);
-   GraphicalNode* node = new GraphicalNode("", false, entity, 0);
-
-   VisualSceneManager sceneManager;
-   renderingMechanism.addVisualSceneManager(sceneManager);
-   sceneManager.setActiveCamera(camera1);
-   sceneManager.addNode(node);
-
-   renderingMechanism.render();     
-
-   D3DXMatrixInverse(&camera1Mtx, NULL, &camera1Mtx);
-   D3DXMATRIX viewMtx = renderingMechanism.getViewMatrixSet();
-   for (int col = 0; col < 4; col++)
-   {
-      for (int row = 0; row < 4; row++)
-      {
-         CPPUNIT_ASSERT_DOUBLES_EQUAL(camera1Mtx.m[col][row], viewMtx.m[col][row], 0.01);
-      }
-   }
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 

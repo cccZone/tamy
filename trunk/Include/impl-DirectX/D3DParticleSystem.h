@@ -34,7 +34,6 @@ private:
 public:
    D3DParticleSystem(IDirect3DDevice9& d3Device, 
                      const std::string& name,
-                     bool isDynamic, 
                      Material& material,
                      unsigned int particlesCount);
    ~D3DParticleSystem();

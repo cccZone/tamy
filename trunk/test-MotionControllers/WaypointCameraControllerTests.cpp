@@ -23,8 +23,8 @@ TEST(WaypointCameraController, rotationsIncludedInMovementScheme)
 {
    D3DXMATRIX expectedTrans;
 
-   Node page("page", false);
-   Node camera("camera", false);
+   Node page("page");
+   Node camera("camera");
 
    WaypointCameraController menuController(camera, D3DXVECTOR3(0, 0, -20), new LinearTimeFuncMock());
 
@@ -48,8 +48,8 @@ TEST(WaypointCameraController, complexMovementx)
 {
    D3DXMATRIX expectedTrans;
 
-   Node page("page", false);
-   Node camera("camera", false);
+   Node page("page");
+   Node camera("camera");
 
    WaypointCameraController menuController(camera, D3DXVECTOR3(0, 10, -30), new LinearTimeFuncMock());
 
@@ -77,9 +77,9 @@ TEST(WaypointCameraController, switchingBetweenPagesCanBeSpreadInTime)
 {
    D3DXMATRIX expectedTrans;
 
-   Node page0("page0", false);
-   Node page1("page1", false);
-   Node camera("camera", false);
+   Node page0("page0");
+   Node page1("page1");
+   Node camera("camera");
 
    float dist = 10;
    float zOffset = -20;

@@ -8,10 +8,9 @@
 
 OALSound3D::OALSound3D(OpenALSoundSystem& soundSystem, 
                        const std::string& name, 
-                       bool dynamic,
                        Sound& sound, 
                        float soundHearingRadius)
-      : Sound3D(name, dynamic, sound, soundHearingRadius),
+      : Sound3D(name, sound, soundHearingRadius),
       m_soundSystem(soundSystem),
       m_oalSource(0)
 {

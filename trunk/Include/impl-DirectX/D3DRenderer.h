@@ -64,7 +64,6 @@ public:
 
 protected:
    void resetViewport(unsigned int width, unsigned int height);
-   void cleanAllTargets(unsigned int count);
    void renderingBegin();
    void renderingEnd();
    bool isGraphicsSystemReady() const;

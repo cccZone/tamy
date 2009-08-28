@@ -15,8 +15,8 @@ private:
    static Material s_material;
 
 public:
-   ParticleSystemMock(const std::string& name, bool isDynamic, unsigned int particlesCount) 
-      : ParticleSystem(name, isDynamic, s_material, particlesCount)
+   ParticleSystemMock(const std::string& name, unsigned int particlesCount) 
+      : ParticleSystem(name, s_material, particlesCount)
    {}
 
    void render() {}

@@ -14,11 +14,10 @@ OALSoundEntitiesFactory::OALSoundEntitiesFactory(OpenALSoundSystem& soundSystem)
 ///////////////////////////////////////////////////////////////////////////////
 
 Sound3D* OALSoundEntitiesFactory::createEmiter(const std::string& name, 
-                                               bool dynamic,
                                                Sound& sound, 
                                                float hearingRadius)
 {
-   return new OALSound3D(m_soundSystem, name, dynamic, sound, hearingRadius);
+   return new OALSound3D(m_soundSystem, name, sound, hearingRadius);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

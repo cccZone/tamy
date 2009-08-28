@@ -9,8 +9,8 @@
 
 TEST(UnconstrainedMotionController, settingPosition)
 {
-   Node root("root", true);
-   Node* node = new Node("node", true);
+   Node root("root");
+   Node* node = new Node("node");
    root.addChild(node);
    
    // let's translate the parent node, so that we can check the differences
@@ -53,8 +53,8 @@ TEST(UnconstrainedMotionController, settingPosition)
 
 TEST(UnconstrainedMotionController, moving)
 {
-   Node root("root", true);
-   Node* node = new Node("node", true);
+   Node root("root");
+   Node* node = new Node("node");
    root.addChild(node);
    
    // let's translate the parent node, so that we can check the differences
@@ -86,7 +86,7 @@ TEST(UnconstrainedMotionController, moving)
 
 TEST(UnconstrainedMotionController, changingPitch)
 {
-   Node node("node", true);
+   Node node("node");
 
    // let's put the controller into play...
    UnconstrainedMotionController controller(node);
@@ -112,7 +112,7 @@ TEST(UnconstrainedMotionController, changingPitch)
 
 TEST(UnconstrainedMotionController, changingYaw)
 {
-   Node node("node", true);
+   Node node("node");
 
    // let's put the controller into play...
    UnconstrainedMotionController controller(node);
@@ -138,7 +138,7 @@ TEST(UnconstrainedMotionController, changingYaw)
 
 TEST(UnconstrainedMotionController, changingRoll)
 {
-   Node node("node", true);
+   Node node("node");
 
    // let's put the controller into play...
    UnconstrainedMotionController controller(node);

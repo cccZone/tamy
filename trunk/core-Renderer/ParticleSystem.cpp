@@ -4,16 +4,17 @@
 #include "core-Renderer\ParticleAnimator.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\LightReflectingProperties.h"
+#include "core\Assert.h"
+#include "core\BoundingSphere.h"
 #include <stdexcept>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ParticleSystem::ParticleSystem(const std::string& name, 
-                               bool isDynamic, 
                                Material& material,
                                unsigned int particlesCount)
-      : AbstractGraphicalNode(name, isDynamic, material, 0),
+      : RenderableNode(name, material),
       m_particles(new Array<Particle*>(particlesCount)),
       m_desiredParticlesCount(particlesCount),
       m_spawnInterval(0),
@@ -27,6 +28,7 @@ ParticleSystem::ParticleSystem(const std::string& name,
       m_particleInitializer(new NullParticleInitializer()),
       m_particleAnimator(new NullParticleAnimator())
 {
+   m_renderingMatrices.push_back(D3DXMATRIX());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -125,7 +127,7 @@ void ParticleSystem::updateBoundingVolume()
    float initialRadius = m_particleInitializer->getBoundingSphereRadius();
    float speedRadius = m_particleAnimator->getBoundingSphereRadius(m_lifeSpan + m_lifeSpanVar * 0.5f);
    float radius = (initialRadius > speedRadius) ? initialRadius : speedRadius;
-   setBoundingSphereRadius(radius * 1.1f);
+   setBoundingVolume(new BoundingSphere(D3DXVECTOR3(0, 0, 0), radius * 1.1f));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -242,14 +244,21 @@ void ParticleSystem::initializeParticle(const D3DXMATRIX& systemGlobalMtx,
    // Should a different rendering material be used for a particle system,
    // a default particle color (white) will be used
    // Refactor it if it turns out to be a problem
-   Material& mat = getMaterial();
-   particle.color = mat.getLightReflectingProperties().getDiffuseColor();
+   particle.color = getMaterial().getLightReflectingProperties().getDiffuseColor();
 
    float randomVar = (-0.5f * m_lifeSpanVar) + ((float)rand() / (float)RAND_MAX) * m_lifeSpanVar;
    particle.timeToLive = m_lifeSpan + randomVar;
    particle.lifeSpan = particle.timeToLive;
 
    m_particleInitializer->initialize(systemGlobalMtx, particle);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const Array<D3DXMATRIX>& ParticleSystem::getRenderingMatrices()
+{
+   m_renderingMatrices[0] = getGlobalMtx();
+   return m_renderingMatrices;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
