@@ -6,19 +6,22 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class BoundedObjectMock
+namespace // anonymous
 {
-private:
-   BoundingSphere m_boundingSphere;
+   class BoundedObjectMock
+   {
+   private:
+      BoundingSphere m_boundingSphere;
 
-public:
-   BoundedObjectMock(float ox, float oy, float oz, float rad)
-      : m_boundingSphere(D3DXVECTOR3(ox, oy, oz), rad)
-   {}
+   public:
+      BoundedObjectMock(float ox, float oy, float oz, float rad)
+         : m_boundingSphere(D3DXVECTOR3(ox, oy, oz), rad)
+      {}
 
-   const BoundingSphere& getBoundingVolume() const {return m_boundingSphere;}
-};
+      const BoundingSphere& getBoundingVolume() const {return m_boundingSphere;}
+   };
 
+} // namespace anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 

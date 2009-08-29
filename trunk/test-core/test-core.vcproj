@@ -259,6 +259,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DynamicOctreesTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GraphTests.cpp"
 				>
 			</File>

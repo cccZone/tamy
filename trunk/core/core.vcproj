@@ -351,6 +351,14 @@
 			Name="SpatialStorage"
 			>
 			<File
+				RelativePath="..\Include\core\DynamicOctree.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Include\core\DynamicOctree.inl"
+				>
+			</File>
+			<File
 				RelativePath="..\Include\core\LinearStorage.h"
 				>
 			</File>
