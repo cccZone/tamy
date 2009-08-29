@@ -149,7 +149,7 @@
 			Name="Core"
 			>
 			<File
-				RelativePath="..\Include\ext-Fonts\Font.h"
+				RelativePath="..\..\Include\ext-Fonts\Font.h"
 				>
 			</File>
 			<File
@@ -157,7 +157,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\ext-Fonts\VisibleString.h"
+				RelativePath="..\..\Include\ext-Fonts\VisibleString.h"
 				>
 			</File>
 		</Filter>

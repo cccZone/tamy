@@ -151,11 +151,11 @@
 			Name="Core"
 			>
 			<File
-				RelativePath="..\Include\core-Renderer\Renderable.h"
+				RelativePath="..\..\Include\core-Renderer\Renderable.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderablesStorage.h"
+				RelativePath="..\..\Include\core-Renderer\RenderablesStorage.h"
 				>
 			</File>
 			<File
@@ -163,27 +163,27 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\Renderer.h"
+				RelativePath="..\..\Include\core-Renderer\Renderer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RendererImpl.h"
+				RelativePath="..\..\Include\core-Renderer\RendererImpl.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingAction.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingAction.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingMechanism.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingMechanism.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingTargetsCleaner.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingTargetsCleaner.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingTargetsPolicy.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingTargetsPolicy.h"
 				>
 			</File>
 			<Filter
@@ -194,15 +194,15 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\CyclicRenderingTarget.h"
+					RelativePath="..\..\Include\core-Renderer\CyclicRenderingTarget.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\RenderingTarget.h"
+					RelativePath="..\..\Include\core-Renderer\RenderingTarget.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\TextureRenderingTarget.h"
+					RelativePath="..\..\Include\core-Renderer\TextureRenderingTarget.h"
 					>
 				</File>
 			</Filter>
@@ -214,7 +214,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\SettableRenderingTargetsPolicy.h"
+					RelativePath="..\..\Include\core-Renderer\SettableRenderingTargetsPolicy.h"
 					>
 				</File>
 			</Filter>
@@ -226,7 +226,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\RenderingActionsComposite.h"
+					RelativePath="..\..\Include\core-Renderer\RenderingActionsComposite.h"
 					>
 				</File>
 				<Filter
@@ -237,27 +237,27 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\LightsSorter.h"
+						RelativePath="..\..\Include\core-Renderer\LightsSorter.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\LightsSortingStorage.h"
+						RelativePath="..\..\Include\core-Renderer\LightsSortingStorage.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\LightsSortingStorage.inl"
+						RelativePath="..\..\Include\core-Renderer\LightsSortingStorage.inl"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\LightsStorage.h"
+						RelativePath="..\..\Include\core-Renderer\LightsStorage.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\RenderLights.cpp"
+						RelativePath=".\RenderLights.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\RenderLights.h"
+						RelativePath="..\..\Include\core-Renderer\RenderLights.h"
 						>
 					</File>
 				</Filter>
@@ -269,7 +269,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\RenderMaterial.h"
+						RelativePath="..\..\Include\core-Renderer\RenderMaterial.h"
 						>
 					</File>
 				</Filter>
@@ -282,7 +282,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\CompositeRenderingMechanism.h"
+					RelativePath="..\..\Include\core-Renderer\CompositeRenderingMechanism.h"
 					>
 				</File>
 				<File
@@ -290,7 +290,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\RenderingMechanismLeaf.h"
+					RelativePath="..\..\Include\core-Renderer\RenderingMechanismLeaf.h"
 					>
 				</File>
 				<File
@@ -298,7 +298,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\TargetsCleaningMechanism.h"
+					RelativePath="..\..\Include\core-Renderer\TargetsCleaningMechanism.h"
 					>
 				</File>
 			</Filter>
@@ -310,11 +310,11 @@
 				Name="Particles"
 				>
 				<File
-					RelativePath="..\Include\core-Renderer\Particle.h"
+					RelativePath="..\..\Include\core-Renderer\Particle.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\ParticleAnimator.h"
+					RelativePath="..\..\Include\core-Renderer\ParticleAnimator.h"
 					>
 				</File>
 				<File
@@ -322,7 +322,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\ParticleInitializer.h"
+					RelativePath="..\..\Include\core-Renderer\ParticleInitializer.h"
 					>
 				</File>
 				<File
@@ -330,7 +330,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\ParticleSystem.h"
+					RelativePath="..\..\Include\core-Renderer\ParticleSystem.h"
 					>
 				</File>
 				<Filter
@@ -341,7 +341,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\CircularParticleInitializer.h"
+						RelativePath="..\..\Include\core-Renderer\CircularParticleInitializer.h"
 						>
 					</File>
 					<File
@@ -349,7 +349,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\PlanarParticleInitializer.h"
+						RelativePath="..\..\Include\core-Renderer\PlanarParticleInitializer.h"
 						>
 					</File>
 					<File
@@ -357,7 +357,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\PointParticleInitializer.h"
+						RelativePath="..\..\Include\core-Renderer\PointParticleInitializer.h"
 						>
 					</File>
 				</Filter>
@@ -369,7 +369,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\ParticleFader.h"
+						RelativePath="..\..\Include\core-Renderer\ParticleFader.h"
 						>
 					</File>
 				</Filter>
@@ -382,7 +382,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\Camera.h"
+					RelativePath="..\..\Include\core-Renderer\Camera.h"
 					>
 				</File>
 				<File
@@ -390,11 +390,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\Light.h"
+					RelativePath="..\..\Include\core-Renderer\Light.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\Light.inl"
+					RelativePath="..\..\Include\core-Renderer\Light.inl"
 					>
 				</File>
 				<File
@@ -402,11 +402,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\PostProcessEffectRenderable.h"
+					RelativePath="..\..\Include\core-Renderer\PostProcessEffectRenderable.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\ProjectionCalculator.h"
+					RelativePath="..\..\Include\core-Renderer\ProjectionCalculator.h"
 					>
 				</File>
 				<File
@@ -414,7 +414,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\Skeleton.h"
+					RelativePath="..\..\Include\core-Renderer\Skeleton.h"
 					>
 				</File>
 				<Filter
@@ -425,7 +425,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\ProjCalc2D.h"
+						RelativePath="..\..\Include\core-Renderer\ProjCalc2D.h"
 						>
 					</File>
 					<File
@@ -433,7 +433,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\ProjCalc3D.h"
+						RelativePath="..\..\Include\core-Renderer\ProjCalc3D.h"
 						>
 					</File>
 				</Filter>
@@ -446,14 +446,14 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\RenderableNode.h"
+					RelativePath="..\..\Include\core-Renderer\RenderableNode.h"
 					>
 				</File>
 				<Filter
 					Name="GraphicalData"
 					>
 					<File
-						RelativePath="..\Include\core-Renderer\Face.h"
+						RelativePath="..\..\Include\core-Renderer\Face.h"
 						>
 					</File>
 					<File
@@ -461,7 +461,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\LitVertex.h"
+						RelativePath="..\..\Include\core-Renderer\LitVertex.h"
 						>
 					</File>
 				</Filter>
@@ -473,7 +473,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\AbstractGraphicalNode.h"
+						RelativePath="..\..\Include\core-Renderer\AbstractGraphicalNode.h"
 						>
 					</File>
 					<File
@@ -481,7 +481,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\GraphicalEntityInstantiator.h"
+						RelativePath="..\..\Include\core-Renderer\GraphicalEntityInstantiator.h"
 						>
 					</File>
 					<File
@@ -489,7 +489,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\GraphicalNode.h"
+						RelativePath="..\..\Include\core-Renderer\GraphicalNode.h"
 						>
 					</File>
 					<File
@@ -497,7 +497,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\SkinnedGraphicalNode.h"
+						RelativePath="..\..\Include\core-Renderer\SkinnedGraphicalNode.h"
 						>
 					</File>
 				</Filter>
@@ -509,7 +509,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\AbstractGraphicalEntity.h"
+						RelativePath="..\..\Include\core-Renderer\AbstractGraphicalEntity.h"
 						>
 					</File>
 					<File
@@ -517,7 +517,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\CompositeGraphicalEntity.h"
+						RelativePath="..\..\Include\core-Renderer\CompositeGraphicalEntity.h"
 						>
 					</File>
 					<File
@@ -525,15 +525,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\GraphicalEntity.h"
+						RelativePath="..\..\Include\core-Renderer\GraphicalEntity.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\LeafGraphicalEntity.h"
+						RelativePath="..\..\Include\core-Renderer\LeafGraphicalEntity.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\SkinBoneDefinition.h"
+						RelativePath="..\..\Include\core-Renderer\SkinBoneDefinition.h"
 						>
 					</File>
 					<File
@@ -541,7 +541,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-Renderer\SkinnedGraphicalEntity.h"
+						RelativePath="..\..\Include\core-Renderer\SkinnedGraphicalEntity.h"
 						>
 					</File>
 				</Filter>
@@ -554,7 +554,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\SkyBoxSide.h"
+					RelativePath="..\..\Include\core-Renderer\SkyBoxSide.h"
 					>
 				</File>
 				<File
@@ -562,7 +562,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\SkyBoxStorage.h"
+					RelativePath="..\..\Include\core-Renderer\SkyBoxStorage.h"
 					>
 				</File>
 			</Filter>
@@ -571,7 +571,7 @@
 			Name="Material"
 			>
 			<File
-				RelativePath="..\Include\core-Renderer\Color.h"
+				RelativePath="..\..\Include\core-Renderer\Color.h"
 				>
 			</File>
 			<File
@@ -579,7 +579,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\CoordinatesOperation.h"
+				RelativePath="..\..\Include\core-Renderer\CoordinatesOperation.h"
 				>
 			</File>
 			<File
@@ -587,7 +587,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\LightReflectingProperties.h"
+				RelativePath="..\..\Include\core-Renderer\LightReflectingProperties.h"
 				>
 			</File>
 			<File
@@ -595,7 +595,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\Material.h"
+				RelativePath="..\..\Include\core-Renderer\Material.h"
 				>
 			</File>
 			<File
@@ -603,7 +603,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\MaterialOperation.h"
+				RelativePath="..\..\Include\core-Renderer\MaterialOperation.h"
 				>
 			</File>
 			<File
@@ -611,30 +611,30 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\MaterialStage.h"
+				RelativePath="..\..\Include\core-Renderer\MaterialStage.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\NullGraphicalEffect.h"
+				RelativePath="..\..\Include\core-Renderer\NullGraphicalEffect.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\NullLightReflectingProperties.h"
+				RelativePath="..\..\Include\core-Renderer\NullLightReflectingProperties.h"
 				>
 			</File>
 			<Filter
 				Name="Textures"
 				>
 				<File
-					RelativePath="..\Include\core-Renderer\ChangableTexture.h"
+					RelativePath="..\..\Include\core-Renderer\ChangableTexture.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\ManagedTexture.h"
+					RelativePath="..\..\Include\core-Renderer\ManagedTexture.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\Texture.h"
+					RelativePath="..\..\Include\core-Renderer\Texture.h"
 					>
 				</File>
 			</Filter>
@@ -646,7 +646,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\MaterialReplacer.h"
+					RelativePath="..\..\Include\core-Renderer\MaterialReplacer.h"
 					>
 				</File>
 			</Filter>
@@ -659,7 +659,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\GraphicalEntitiesFactory.h"
+				RelativePath="..\..\Include\core-Renderer\GraphicalEntitiesFactory.h"
 				>
 			</File>
 		</Filter>
@@ -671,11 +671,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\GraphicalEffect.h"
+				RelativePath="..\..\Include\core-Renderer\GraphicalEffect.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\GraphicalEffect.inl"
+				RelativePath="..\..\Include\core-Renderer\GraphicalEffect.inl"
 				>
 			</File>
 			<File
@@ -683,7 +683,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingEffectRenderer.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingEffectRenderer.h"
 				>
 			</File>
 		</Filter>
@@ -695,15 +695,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\DeviceFilter.h"
+				RelativePath="..\..\Include\core-Renderer\DeviceFilter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\DeviceFilterElem.h"
+				RelativePath="..\..\Include\core-Renderer\DeviceFilterElem.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\DevicesSorter.h"
+				RelativePath="..\..\Include\core-Renderer\DevicesSorter.h"
 				>
 			</File>
 			<File
@@ -711,7 +711,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderDevicesEnumerator.h"
+				RelativePath="..\..\Include\core-Renderer\RenderDevicesEnumerator.h"
 				>
 			</File>
 			<File
@@ -719,7 +719,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingDevice.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingDevice.h"
 				>
 			</File>
 		</Filter>
@@ -734,7 +734,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\BatchingStrategy.h"
+					RelativePath="..\..\Include\core-Renderer\BatchingStrategy.h"
 					>
 				</File>
 				<File
@@ -742,11 +742,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\DistanceComparator.h"
+					RelativePath="..\..\Include\core-Renderer\DistanceComparator.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\DistanceComparator.inl"
+					RelativePath="..\..\Include\core-Renderer\DistanceComparator.inl"
 					>
 				</File>
 				<File
@@ -754,7 +754,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\DynamicNodesStorage.h"
+					RelativePath="..\..\Include\core-Renderer\DynamicNodesStorage.h"
 					>
 				</File>
 				<File
@@ -762,7 +762,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\GraphicalNodesProcessor.h"
+					RelativePath="..\..\Include\core-Renderer\GraphicalNodesProcessor.h"
 					>
 				</File>
 			</Filter>
@@ -774,7 +774,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-Renderer\PostProcessSceneStorage.h"
+					RelativePath="..\..\Include\core-Renderer\PostProcessSceneStorage.h"
 					>
 				</File>
 			</Filter>
@@ -783,7 +783,7 @@
 			Name="PipelineConfigurator"
 			>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingGraph.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingGraph.h"
 				>
 			</File>
 			<File
@@ -791,7 +791,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingMechanismBuilder.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingMechanismBuilder.h"
 				>
 			</File>
 			<File
@@ -799,11 +799,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingPipelineBuilder.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingPipelineBuilder.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Renderer\RenderingPipelineDefinition.h"
+				RelativePath="..\..\Include\core-Renderer\RenderingPipelineDefinition.h"
 				>
 			</File>
 		</Filter>

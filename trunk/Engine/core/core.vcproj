@@ -153,11 +153,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\WindowBuilder.h"
+				RelativePath="..\..\Include\core\WindowBuilder.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\WindowMessagesProcessor.h"
+				RelativePath="..\..\Include\core\WindowMessagesProcessor.h"
 				>
 			</File>
 		</Filter>
@@ -171,19 +171,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Node.h"
+				RelativePath="..\..\Include\core\Node.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\NodeObserver.h"
+				RelativePath="..\..\Include\core\NodeObserver.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\NodeVisitor.h"
+				RelativePath="..\..\Include\core\NodeVisitor.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\TNodesVisitor.h"
+				RelativePath="..\..\Include\core\TNodesVisitor.h"
 				>
 			</File>
 		</Filter>
@@ -195,7 +195,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Timer.h"
+				RelativePath="..\..\Include\core\Timer.h"
 				>
 			</File>
 		</Filter>
@@ -203,35 +203,35 @@
 			Name="DataStructures"
 			>
 			<File
-				RelativePath="..\Include\core\Array.h"
+				RelativePath="..\..\Include\core\Array.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\CellSpacePartition.h"
+				RelativePath="..\..\Include\core\CellSpacePartition.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Graph.h"
+				RelativePath="..\..\Include\core\Graph.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Graph.inl"
+				RelativePath="..\..\Include\core\Graph.inl"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Point.h"
+				RelativePath="..\..\Include\core\Point.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\ResourceStorage.h"
+				RelativePath="..\..\Include\core\ResourceStorage.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\ResourceStorage.inl"
+				RelativePath="..\..\Include\core\ResourceStorage.inl"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Stack.h"
+				RelativePath="..\..\Include\core\Stack.h"
 				>
 			</File>
 		</Filter>
@@ -239,7 +239,7 @@
 			Name="Delegates"
 			>
 			<File
-				RelativePath="..\Include\core\Delegate.h"
+				RelativePath="..\..\Include\core\Delegate.h"
 				>
 			</File>
 		</Filter>
@@ -247,7 +247,7 @@
 			Name="Streams"
 			>
 			<File
-				RelativePath="..\Include\core\dostream.h"
+				RelativePath="..\..\Include\core\dostream.h"
 				>
 			</File>
 		</Filter>
@@ -255,19 +255,19 @@
 			Name="Misc"
 			>
 			<File
-				RelativePath="..\Include\core\Assert.h"
+				RelativePath="..\..\Include\core\Assert.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\HierarchyWriter.h"
+				RelativePath="..\..\Include\core\HierarchyWriter.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\IntervalOperation.h"
+				RelativePath="..\..\Include\core\IntervalOperation.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\MatrixInterpolator.h"
+				RelativePath="..\..\Include\core\MatrixInterpolator.h"
 				>
 			</File>
 			<File
@@ -275,7 +275,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\MatrixWriter.h"
+				RelativePath="..\..\Include\core\MatrixWriter.h"
 				>
 			</File>
 			<File
@@ -283,14 +283,14 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\UniqueObject.h"
+				RelativePath="..\..\Include\core\UniqueObject.h"
 				>
 			</File>
 			<Filter
 				Name="NodeActionsExecutor"
 				>
 				<File
-					RelativePath="..\Include\core\NodeAction.h"
+					RelativePath="..\..\Include\core\NodeAction.h"
 					>
 				</File>
 				<File
@@ -298,7 +298,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\NodeActionsExecutor.h"
+					RelativePath="..\..\Include\core\NodeActionsExecutor.h"
 					>
 				</File>
 			</Filter>
@@ -306,11 +306,11 @@
 				Name="ObserverPattern"
 				>
 				<File
-					RelativePath="..\Include\core\Observer.h"
+					RelativePath="..\..\Include\core\Observer.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\Subject.h"
+					RelativePath="..\..\Include\core\Subject.h"
 					>
 				</File>
 			</Filter>
@@ -318,31 +318,31 @@
 				Name="Graphs"
 				>
 				<File
-					RelativePath="..\Include\core\GraphBFS.h"
+					RelativePath="..\..\Include\core\GraphBFS.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\GraphBFS.inl"
+					RelativePath="..\..\Include\core\GraphBFS.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\GraphBuilder.h"
+					RelativePath="..\..\Include\core\GraphBuilder.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\GraphBuilder.inl"
+					RelativePath="..\..\Include\core\GraphBuilder.inl"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\GraphBuilderFactory.h"
+					RelativePath="..\..\Include\core\GraphBuilderFactory.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\GraphDijkstra.h"
+					RelativePath="..\..\Include\core\GraphDijkstra.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\GraphDijkstra.inl"
+					RelativePath="..\..\Include\core\GraphDijkstra.inl"
 					>
 				</File>
 			</Filter>
@@ -351,39 +351,39 @@
 			Name="SpatialStorage"
 			>
 			<File
-				RelativePath="..\Include\core\DynamicOctree.h"
+				RelativePath="..\..\Include\core\DynamicOctree.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\DynamicOctree.inl"
+				RelativePath="..\..\Include\core\DynamicOctree.inl"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\LinearStorage.h"
+				RelativePath="..\..\Include\core\LinearStorage.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\LinearStorage.inl"
+				RelativePath="..\..\Include\core\LinearStorage.inl"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Octree.h"
+				RelativePath="..\..\Include\core\Octree.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\Octree.inl"
+				RelativePath="..\..\Include\core\Octree.inl"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\SpatialStorage.h"
+				RelativePath="..\..\Include\core\SpatialStorage.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\TNodesSpatialStorage.h"
+				RelativePath="..\..\Include\core\TNodesSpatialStorage.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core\TNodesSpatialStorage.inl"
+				RelativePath="..\..\Include\core\TNodesSpatialStorage.inl"
 				>
 			</File>
 		</Filter>
@@ -391,7 +391,7 @@
 			Name="BoundingVolumes"
 			>
 			<File
-				RelativePath="..\Include\core\BoundingVolume.h"
+				RelativePath="..\..\Include\core\BoundingVolume.h"
 				>
 			</File>
 			<Filter
@@ -402,11 +402,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\AABoundingBox.h"
+					RelativePath="..\..\Include\core\AABoundingBox.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\BoundingSpace.h"
+					RelativePath="..\..\Include\core\BoundingSpace.h"
 					>
 				</File>
 				<File
@@ -414,7 +414,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\BoundingSphere.h"
+					RelativePath="..\..\Include\core\BoundingSphere.h"
 					>
 				</File>
 				<File
@@ -422,7 +422,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\Frustum.h"
+					RelativePath="..\..\Include\core\Frustum.h"
 					>
 				</File>
 				<File
@@ -430,7 +430,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\PointVolume.h"
+					RelativePath="..\..\Include\core\PointVolume.h"
 					>
 				</File>
 				<File
@@ -438,7 +438,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\Ray.h"
+					RelativePath="..\..\Include\core\Ray.h"
 					>
 				</File>
 				<File
@@ -446,7 +446,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\Triangle.h"
+					RelativePath="..\..\Include\core\Triangle.h"
 					>
 				</File>
 			</Filter>
@@ -458,7 +458,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\CollisionTests.h"
+					RelativePath="..\..\Include\core\CollisionTests.h"
 					>
 				</File>
 				<File
@@ -466,7 +466,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core\QuadraticEquations.h"
+					RelativePath="..\..\Include\core\QuadraticEquations.h"
 					>
 				</File>
 			</Filter>

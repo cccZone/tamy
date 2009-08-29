@@ -149,11 +149,11 @@
 			Name="FiniteStateMachine"
 			>
 			<File
-				RelativePath="..\Include\core-AI\State.h"
+				RelativePath="..\..\Include\core-AI\State.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AI\StateMachine.h"
+				RelativePath="..\..\Include\core-AI\StateMachine.h"
 				>
 			</File>
 		</Filter>
@@ -161,11 +161,11 @@
 			Name="MessagingSystem"
 			>
 			<File
-				RelativePath="..\Include\core-AI\Messagable.h"
+				RelativePath="..\..\Include\core-AI\Messagable.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AI\Message.h"
+				RelativePath="..\..\Include\core-AI\Message.h"
 				>
 			</File>
 			<File
@@ -173,7 +173,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AI\MessageDispatcher.h"
+				RelativePath="..\..\Include\core-AI\MessageDispatcher.h"
 				>
 			</File>
 		</Filter>
@@ -181,7 +181,7 @@
 			Name="Core"
 			>
 			<File
-				RelativePath="..\Include\core-AI\Agent.h"
+				RelativePath="..\..\Include\core-AI\Agent.h"
 				>
 			</File>
 		</Filter>

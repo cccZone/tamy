@@ -157,7 +157,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-ResourceManagement\GeometryBuilder.h"
+				RelativePath="..\..\Include\core-ResourceManagement\GeometryBuilder.h"
 				>
 			</File>
 		</Filter>
@@ -172,7 +172,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\IWFLoader.h"
+					RelativePath="..\..\Include\core-ResourceManagement\IWFLoader.h"
 					>
 				</File>
 				<File
@@ -180,11 +180,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\IWFMeshLoader.h"
+					RelativePath="..\..\Include\core-ResourceManagement\IWFMeshLoader.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\IWFScene.h"
+					RelativePath="..\..\Include\core-ResourceManagement\IWFScene.h"
 					>
 				</File>
 				<Filter
@@ -199,7 +199,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-ResourceManagement\libIWF\iwfFile.h"
+						RelativePath="..\..\Include\core-ResourceManagement\libIWF\iwfFile.h"
 						>
 					</File>
 					<File
@@ -207,11 +207,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-ResourceManagement\libIWF\iwfObjects.h"
+						RelativePath="..\..\Include\core-ResourceManagement\libIWF\iwfObjects.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\core-ResourceManagement\libIWF\libIWF.h"
+						RelativePath="..\..\Include\core-ResourceManagement\libIWF\libIWF.h"
 						>
 					</File>
 				</Filter>
@@ -224,7 +224,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\CompositeGraphicalDataSource.h"
+					RelativePath="..\..\Include\core-ResourceManagement\CompositeGraphicalDataSource.h"
 					>
 				</File>
 				<File
@@ -232,11 +232,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\FileGraphicalDataSource.h"
+					RelativePath="..\..\Include\core-ResourceManagement\FileGraphicalDataSource.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\GraphicalDataSource.h"
+					RelativePath="..\..\Include\core-ResourceManagement\GraphicalDataSource.h"
 					>
 				</File>
 				<File
@@ -244,11 +244,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\GraphicalEntityLoader.h"
+					RelativePath="..\..\Include\core-ResourceManagement\GraphicalEntityLoader.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\core-ResourceManagement\MeshDefinition.h"
+					RelativePath="..\..\Include\core-ResourceManagement\MeshDefinition.h"
 					>
 				</File>
 			</Filter>
@@ -261,7 +261,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-ResourceManagement\XMLFont.h"
+				RelativePath="..\..\Include\core-ResourceManagement\XMLFont.h"
 				>
 			</File>
 			<Filter
@@ -277,7 +277,7 @@
 			Name="SingletonsManager"
 			>
 			<File
-				RelativePath="..\Include\core-ResourceManagement\Managable.h"
+				RelativePath="..\..\Include\core-ResourceManagement\Managable.h"
 				>
 			</File>
 			<File
@@ -285,7 +285,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-ResourceManagement\SingletonsManager.h"
+				RelativePath="..\..\Include\core-ResourceManagement\SingletonsManager.h"
 				>
 			</File>
 		</Filter>

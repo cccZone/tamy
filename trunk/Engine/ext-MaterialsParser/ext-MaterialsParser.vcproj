@@ -157,7 +157,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\ext-MaterialsParser\CompositeElement.h"
+				RelativePath="..\..\Include\ext-MaterialsParser\CompositeElement.h"
 				>
 			</File>
 			<File
@@ -165,7 +165,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\ext-MaterialsParser\MaterialLeaf.h"
+				RelativePath="..\..\Include\ext-MaterialsParser\MaterialLeaf.h"
 				>
 			</File>
 			<File
@@ -173,7 +173,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\ext-MaterialsParser\MaterialsParser.h"
+				RelativePath="..\..\Include\ext-MaterialsParser\MaterialsParser.h"
 				>
 			</File>
 			<File
@@ -181,11 +181,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\ext-MaterialsParser\MaterialStageLeaf.h"
+				RelativePath="..\..\Include\ext-MaterialsParser\MaterialStageLeaf.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\ext-MaterialsParser\MaterialXmlElement.h"
+				RelativePath="..\..\Include\ext-MaterialsParser\MaterialXmlElement.h"
 				>
 			</File>
 			<File
@@ -193,7 +193,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\ext-MaterialsParser\MultipleElement.h"
+				RelativePath="..\..\Include\ext-MaterialsParser\MultipleElement.h"
 				>
 			</File>
 		</Filter>

@@ -157,7 +157,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\impl-DirectX\TTFont.h"
+				RelativePath="..\..\Include\impl-DirectX\TTFont.h"
 				>
 			</File>
 			<File
@@ -165,7 +165,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\impl-DirectX\XFileGraphicalEntityLoader.h"
+				RelativePath="..\..\Include\impl-DirectX\XFileGraphicalEntityLoader.h"
 				>
 			</File>
 		</Filter>
@@ -179,7 +179,7 @@
 					Name="Materials"
 					>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DTexture.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DTexture.h"
 						>
 					</File>
 				</Filter>
@@ -187,15 +187,15 @@
 					Name="GraphicalEntity"
 					>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DAbstractGraphicalEntity.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DAbstractGraphicalEntity.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DGraphicalEntity.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DGraphicalEntity.h"
 						>
 					</File>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DSkinnedGraphicalEntity.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DSkinnedGraphicalEntity.h"
 						>
 					</File>
 				</Filter>
@@ -207,7 +207,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DSkyBoxSide.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DSkyBoxSide.h"
 						>
 					</File>
 				</Filter>
@@ -219,7 +219,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DParticleSystem.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DParticleSystem.h"
 						>
 					</File>
 				</Filter>
@@ -231,7 +231,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DGraphicalEffect.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DGraphicalEffect.h"
 						>
 					</File>
 				</Filter>
@@ -244,7 +244,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\D3DRenderer.h"
+					RelativePath="..\..\Include\impl-DirectX\D3DRenderer.h"
 					>
 				</File>
 				<File
@@ -252,7 +252,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\D3DRendererImpl.h"
+					RelativePath="..\..\Include\impl-DirectX\D3DRendererImpl.h"
 					>
 				</File>
 				<File
@@ -260,7 +260,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\D3DRenderingTargetsCleaner.h"
+					RelativePath="..\..\Include\impl-DirectX\D3DRenderingTargetsCleaner.h"
 					>
 				</File>
 				<Filter
@@ -271,7 +271,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DDefaultRenderingTarget.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DDefaultRenderingTarget.h"
 						>
 					</File>
 					<File
@@ -279,7 +279,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DTextureRenderingTarget.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DTextureRenderingTarget.h"
 						>
 					</File>
 				</Filter>
@@ -291,7 +291,7 @@
 						>
 					</File>
 					<File
-						RelativePath="..\Include\impl-DirectX\D3DPostProcessEffectRenderable.h"
+						RelativePath="..\..\Include\impl-DirectX\D3DPostProcessEffectRenderable.h"
 						>
 					</File>
 				</Filter>
@@ -304,7 +304,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\D3DGraphicalEntitiesFactory.h"
+					RelativePath="..\..\Include\impl-DirectX\D3DGraphicalEntitiesFactory.h"
 					>
 				</File>
 			</Filter>
@@ -316,7 +316,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\D3DInitializer.h"
+					RelativePath="..\..\Include\impl-DirectX\D3DInitializer.h"
 					>
 				</File>
 			</Filter>
@@ -329,7 +329,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\impl-DirectX\D3DApplicationManager.h"
+				RelativePath="..\..\Include\impl-DirectX\D3DApplicationManager.h"
 				>
 			</File>
 			<File
@@ -337,7 +337,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\impl-DirectX\D3DUserInputController.h"
+				RelativePath="..\..\Include\impl-DirectX\D3DUserInputController.h"
 				>
 			</File>
 		</Filter>
@@ -352,7 +352,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\OALSoundChannel.h"
+					RelativePath="..\..\Include\impl-DirectX\OALSoundChannel.h"
 					>
 				</File>
 				<File
@@ -360,7 +360,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\OALSoundDevice.h"
+					RelativePath="..\..\Include\impl-DirectX\OALSoundDevice.h"
 					>
 				</File>
 				<File
@@ -368,11 +368,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\OpenALSoundSystem.h"
+					RelativePath="..\..\Include\impl-DirectX\OpenALSoundSystem.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\SoundDeviceInfo.h"
+					RelativePath="..\..\Include\impl-DirectX\SoundDeviceInfo.h"
 					>
 				</File>
 				<File
@@ -380,7 +380,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\SoundInitializer.h"
+					RelativePath="..\..\Include\impl-DirectX\SoundInitializer.h"
 					>
 				</File>
 			</Filter>
@@ -392,7 +392,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\OALSound3D.h"
+					RelativePath="..\..\Include\impl-DirectX\OALSound3D.h"
 					>
 				</File>
 				<File
@@ -400,7 +400,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\OALSoundListener.h"
+					RelativePath="..\..\Include\impl-DirectX\OALSoundListener.h"
 					>
 				</File>
 			</Filter>
@@ -412,7 +412,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\impl-DirectX\OALSoundEntitiesFactory.h"
+					RelativePath="..\..\Include\impl-DirectX\OALSoundEntitiesFactory.h"
 					>
 				</File>
 			</Filter>

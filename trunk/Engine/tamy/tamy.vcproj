@@ -153,11 +153,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\tamy\Tamy.h"
+				RelativePath="..\..\Include\tamy\Tamy.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\tamy\TamyConfigurator.h"
+				RelativePath="..\..\Include\tamy\TamyConfigurator.h"
 				>
 			</File>
 		</Filter>
@@ -172,7 +172,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\tamy\BestFullScreenDevice.h"
+					RelativePath="..\..\Include\tamy\BestFullScreenDevice.h"
 					>
 				</File>
 				<File
@@ -180,19 +180,19 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\tamy\BestWindowedDevice.h"
+					RelativePath="..\..\Include\tamy\BestWindowedDevice.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\tamy\DevTypeFilter.h"
+					RelativePath="..\..\Include\tamy\DevTypeFilter.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\tamy\FullScreenModeFilter.h"
+					RelativePath="..\..\Include\tamy\FullScreenModeFilter.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Include\tamy\ResolutionFilter.h"
+					RelativePath="..\..\Include\tamy\ResolutionFilter.h"
 					>
 				</File>
 				<File
@@ -200,7 +200,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Include\tamy\SimpleTamyConfigurator.h"
+					RelativePath="..\..\Include\tamy\SimpleTamyConfigurator.h"
 					>
 				</File>
 			</Filter>

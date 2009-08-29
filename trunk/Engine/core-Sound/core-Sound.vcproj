@@ -151,7 +151,7 @@
 			Name="Core"
 			>
 			<File
-				RelativePath="..\Include\core-Sound\Sound.h"
+				RelativePath="..\..\Include\core-Sound\Sound.h"
 				>
 			</File>
 			<File
@@ -159,7 +159,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Sound\SoundChannel.h"
+				RelativePath="..\..\Include\core-Sound\SoundChannel.h"
 				>
 			</File>
 			<File
@@ -167,7 +167,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Sound\SoundDevice.h"
+				RelativePath="..\..\Include\core-Sound\SoundDevice.h"
 				>
 			</File>
 		</Filter>
@@ -179,7 +179,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Sound\OggFile.h"
+				RelativePath="..\..\Include\core-Sound\OggFile.h"
 				>
 			</File>
 			<File
@@ -187,7 +187,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Sound\WavFile.h"
+				RelativePath="..\..\Include\core-Sound\WavFile.h"
 				>
 			</File>
 		</Filter>
@@ -199,7 +199,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Sound\Sound3D.h"
+				RelativePath="..\..\Include\core-Sound\Sound3D.h"
 				>
 			</File>
 			<File
@@ -207,7 +207,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Sound\SoundListener.h"
+				RelativePath="..\..\Include\core-Sound\SoundListener.h"
 				>
 			</File>
 			<File
@@ -215,7 +215,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Sound\SoundRenderer.h"
+				RelativePath="..\..\Include\core-Sound\SoundRenderer.h"
 				>
 			</File>
 			<File
@@ -223,7 +223,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-Sound\SoundSceneManager.h"
+				RelativePath="..\..\Include\core-Sound\SoundSceneManager.h"
 				>
 			</File>
 		</Filter>
@@ -231,7 +231,7 @@
 			Name="Factories"
 			>
 			<File
-				RelativePath="..\Include\core-Sound\SoundEntitiesFactory.h"
+				RelativePath="..\..\Include\core-Sound\SoundEntitiesFactory.h"
 				>
 			</File>
 		</Filter>

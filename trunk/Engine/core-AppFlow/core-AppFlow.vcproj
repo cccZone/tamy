@@ -155,7 +155,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AppFlow\Application.h"
+				RelativePath="..\..\Include\core-AppFlow\Application.h"
 				>
 			</File>
 			<File
@@ -163,11 +163,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AppFlow\ApplicationManager.h"
+				RelativePath="..\..\Include\core-AppFlow\ApplicationManager.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AppFlow\ExecutionContext.h"
+				RelativePath="..\..\Include\core-AppFlow\ExecutionContext.h"
 				>
 			</File>
 		</Filter>
@@ -175,7 +175,7 @@
 			Name="Blackboard"
 			>
 			<File
-				RelativePath="..\Include\core-AppFlow\ApplicationData.h"
+				RelativePath="..\..\Include\core-AppFlow\ApplicationData.h"
 				>
 			</File>
 		</Filter>
@@ -187,7 +187,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AppFlow\TimeController.h"
+				RelativePath="..\..\Include\core-AppFlow\TimeController.h"
 				>
 			</File>
 			<File
@@ -195,15 +195,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AppFlow\TimeControllerTrack.h"
+				RelativePath="..\..\Include\core-AppFlow\TimeControllerTrack.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AppFlow\TimeDependent.h"
+				RelativePath="..\..\Include\core-AppFlow\TimeDependent.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AppFlow\TimeEvent.h"
+				RelativePath="..\..\Include\core-AppFlow\TimeEvent.h"
 				>
 			</File>
 		</Filter>
@@ -215,7 +215,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\core-AppFlow\UserInputController.h"
+				RelativePath="..\..\Include\core-AppFlow\UserInputController.h"
 				>
 			</File>
 		</Filter>
