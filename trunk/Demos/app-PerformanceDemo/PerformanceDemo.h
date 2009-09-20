@@ -8,26 +8,29 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class Camera;
+
 namespace demo
 {
-   class DemoRendererDefinition;
-};
+   class BasicRenderingPipeline;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class PerformanceDemo : public demo::DemoApp
 {
 private:
+   Camera* m_camera;
+   demo::BasicRenderingPipeline* m_renderingPipeline;
+
    ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
    ResourceStorage<Material> m_materialsStorage;
 
 public:
    PerformanceDemo(Tamy& tamy);
 
-protected:
-   void initializeScene(demo::DynMeshesScene& dynamicScene, 
-                        demo::LightsScene& lights);
-   void onDeinitialize();
+   void initialize();
+   void deinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

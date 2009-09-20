@@ -17,8 +17,10 @@ class GraphicalDataSource;
 class Material;
 class Texture;
 class GraphicalEntityLoader;
+class StaticGeometryLoader;
 class Light;
 class SkyBoxStorage;
+class StaticGeometryRenderable;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -45,6 +47,11 @@ typedef Delegate<void (SkyBoxStorage*)> SkyBoxSceneSetter;
  */
 typedef Delegate<void (Node*)> DynamicObjectsSceneSetter;
 
+/**
+ * This delegate should add a new static mesh to the scene.
+ */
+typedef Delegate<void (StaticGeometryRenderable*)> StaticGeometrySetter;
+
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -58,10 +65,12 @@ private:
    LightsSceneSetter& m_addLight;
    SkyBoxSceneSetter& m_setSkyBox;
    DynamicObjectsSceneSetter& m_addDynamicObj;
+   StaticGeometrySetter& m_addStaticObj;
    ResourceStorage<AbstractGraphicalEntity>& m_entitiesStorage;
    ResourceStorage<Material>& m_materialsStorage;
 
    GraphicalEntityLoader* m_entityLoader;
+   StaticGeometryLoader* m_staticGeometryLoader;
 
 public:
    DemoIWFScene(GraphicalEntitiesFactory& entitiesFactory,
@@ -69,6 +78,7 @@ public:
                 LightsSceneSetter& addLight,
                 SkyBoxSceneSetter& setSkyBox,
                 DynamicObjectsSceneSetter& addDynamicObj,
+                StaticGeometrySetter& addStaticObj,
                 ResourceStorage<AbstractGraphicalEntity>& entitiesStorage,
                 ResourceStorage<Material>& materialsStorage);
 

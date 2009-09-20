@@ -264,12 +264,12 @@ TEST(Triangle, intersects_Ray)
    CPPUNIT_ASSERT_EQUAL(true, testCollision(Ray(D3DXVECTOR3(-3, -1, 0), D3DXVECTOR3(0, 0, 1)), tri));
 
    // test against triangle exterior
-   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(-3.1, 1.1, 0), D3DXVECTOR3(0, 0, 1)), tri));
-   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(3.1, 1.1, 0), D3DXVECTOR3(0, 0, 1)), tri));
-   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(-3.1, -1.1, 0), D3DXVECTOR3(0, 0, 1)), tri));
-   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(-3.1, 0, 0), D3DXVECTOR3(0, 0, 1)), tri));
-   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(0, 1.1, 0), D3DXVECTOR3(0, 0, 1)), tri));
-   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(0, -0.1, 0), D3DXVECTOR3(0, 0, 1)), tri));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(-3.1f, 1.1f, 0), D3DXVECTOR3(0, 0, 1)), tri));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(3.1f, 1.1f, 0), D3DXVECTOR3(0, 0, 1)), tri));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(-3.1f, -1.1f, 0), D3DXVECTOR3(0, 0, 1)), tri));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(-3.1f, 0, 0), D3DXVECTOR3(0, 0, 1)), tri));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(0, 1.1f, 0), D3DXVECTOR3(0, 0, 1)), tri));
+   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(0, -0.1f, 0), D3DXVECTOR3(0, 0, 1)), tri));
 
    CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(0, 0, 8), D3DXVECTOR3(0, 1, 0)), tri));
    CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(0, 0, 12), D3DXVECTOR3(0, 1, 0)), tri));

@@ -1,7 +1,7 @@
 #pragma once
 
 /// @file   core-ResourceManagement\GraphicalEntityLoader
-/// @brief  mesh loading utility
+/// @brief  dynamic mesh loading utility
 
 #include "core-ResourceManagement\MeshDefinition.h"
 #include "core-Renderer\Skeleton.h"
@@ -21,7 +21,7 @@ class Material;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This abstract class allows to load meshes from various sources.
+ * This class allows to load meshes from various sources.
  * The source of the mesh is implementation-dependent, however
  * the rules how to create a mesh are defined here.
  * This ensures that all the meshes will be created in a way

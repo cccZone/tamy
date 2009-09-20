@@ -9,8 +9,11 @@
 #include "core-AppFlow\ApplicationManager.h"
 #include "core-AppFlow\Application.h"
 #include "core\TNodesSpatialStorage.h"
-#include "core\Octree.h"
+#include "core\LinearStorage.h"
 #include "core-Renderer\RenderableNode.h"
+#include "core-Renderer\AbstractGraphicalEntity.h"
+#include "core-Renderer\Material.h"
+#include "core\ResourceStorage.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,9 +21,13 @@
 class Tamy;
 class Renderer;
 class UserInputController;
+class RenderingTarget;
+class Camera;
 class RenderingMechanism;
 class SkyBoxStorage;
-class Camera;
+class TextField;
+class Overlay;
+class Font;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,10 +36,11 @@ namespace demo
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class DemoRendererDefinition;
-typedef TNodesSpatialStorage<RenderableNode, Octree> DynMeshesScene;
+typedef TNodesSpatialStorage<RenderableNode, LinearStorage> DynMeshesScene;
 class LightsScene;
 class DefaultDemoInputController;
+class StaticSceneManager;
+class FpsCounter;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -41,70 +49,60 @@ class DemoApp : public Application
 protected:
    Tamy& m_tamy;
    Renderer* m_renderer;
+   UserInputController& m_uiController;
 
 private:
-   UserInputController& m_uiController;
-   DemoRendererDefinition* m_rendererDefinition;
+   ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
+   ResourceStorage<Material> m_materialsStorage;
 
-   Camera* m_camera;
    DefaultDemoInputController* m_demoController;
-   DynMeshesScene* m_dynamicMeshesScene;
-   LightsScene* m_lightsScene;
+
+   Font* m_font;
+   TextField* m_fpsView;
+   FpsCounter* m_fpsCounter;
 
 public:
    DemoApp(Tamy& tamy);
    virtual ~DemoApp();
 
-   void initialize();
-   void deinitialize();
+   virtual void initialize() {};
+   virtual void deinitialize() {};
 
    void hibernate() {}
    void dehibernate() {}
 
-   void update(float timeElapsed);
-
    void notify(const std::string& senderApp, int signalCode) {}
 
 protected:
-   virtual RenderingMechanism* initRenderingPipeline(DemoRendererDefinition& rendererDefinition,
-                                                     DynMeshesScene* dynamicScene, 
-                                                     LightsScene* lights);
-   virtual void initializeScene(DynMeshesScene& dynamicScene, LightsScene& lights) {}
-   virtual void onDeinitialize() {}
 
    /**
-    * Override this method if you want to use your own demo input controller.
+    * This method creates a default demo input controller.
     *
-    * @param uiController  user input system that can be used to check
-    *                      for the user's input
+    * @param camera  camera the controller should control
     */
-   virtual void initInput(UserInputController& uiController);
+   virtual void createDefaultInput(Camera& camera);
 
-   /**
-    * The method sets a new background on the default
-    * DemoRendererDefinition.
-    * 
-    * @param skyBox  storage with a skbox we want to have
-    *                accessible during pipeline assembly under 
-    *                <<background>> source
-    */
-   void setBackground(SkyBoxStorage* skyBox);
-
-   /** 
-    * If you implemented 'initRenderingPipeline' method in your demo,
-    * but haven't implemented the 'initInput' method, you're probably gonna 
-    * need to call this one. It sets up a camera instance
-    * of which is used by 'initInput' method to set up a default
-    * demo input controller.
-    *
-    * @param camera     camera to be used as a default demo camera.
-    */
-   void initDefaultCamera(Camera* camera);
+   // -------------------------------------------------------------------------
+   // Utility methods
+   // -------------------------------------------------------------------------
 
    /** 
     * Call me if you're sick and tired of the demo.
     */
    void endDemo();
+
+   void loadIWF(const std::string& fileName,
+                SkyBoxStorage** outSkyBox,
+                StaticSceneManager** outStaticScene,
+                DynMeshesScene** outDynamicScene, 
+                LightsScene** outLights);
+
+   Overlay& getFpsView();
+
+   ResourceStorage<AbstractGraphicalEntity>& getEntitiesStorage();
+
+   ResourceStorage<Material>& getMaterialsStorage();
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

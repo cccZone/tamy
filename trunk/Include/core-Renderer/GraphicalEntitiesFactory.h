@@ -6,6 +6,7 @@
 #include "core-Renderer\SkinBoneDefinition.h"
 #include "core-Renderer\Face.h"
 #include "core-Renderer\Texture.h"
+#include <d3dx9.h>
 #include <string>
 #include <map>
 #include <vector>
@@ -42,6 +43,8 @@ class PostProcessMechanism;
 class RendererImpl;
 class PostProcessEffectController;
 class RenderingTargetsCleaner;
+class StaticGeometryRenderable;
+class Font;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -84,15 +87,19 @@ public:
 
    virtual GraphicalEntity* createGraphicalEntity(const std::string& name,
                                                   const std::vector<LitVertex>& vertices,
-                                                  const std::list<Face<USHORT> >& faces,
+                                                  const std::vector<Face<USHORT> >& faces,
                                                   const std::vector<Material*>& materials) = 0;
 
    virtual SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                                 const std::vector<LitVertex>& vertices,
-                                                                const std::list<Face<USHORT> >& faces,
+                                                                const std::vector<Face<USHORT> >& faces,
                                                                 const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                                 const std::vector<SkinBoneDefinition>& skinBones,
                                                                 const std::vector<Material*>& materials) = 0;
+
+   virtual StaticGeometryRenderable* createStaticGeometry(Material& material,
+                                                          const std::vector<LitVertex>& vertices,
+                                                          const std::vector<Face<USHORT> >& faces) = 0;
 
    virtual SkyBoxSide* createSkyBoxSide(SkyBoxSideId side, Texture* tex) = 0;
 
@@ -120,6 +127,8 @@ public:
    virtual TextureRenderingTarget* createTextureRenderingTarget(const std::string& name) = 0;
 
    virtual GraphicalEffect* createEffect(const std::string& name) = 0;
+
+   virtual Font* createFont(const D3DXFONT_DESC& fontDesc) = 0;
 
    /**
     * This method will create a render implementation that uses the fixed

@@ -33,6 +33,8 @@ public:
     */
    virtual const Array<D3DXMATRIX>& getRenderingMatrices() = 0;
 
+   const BoundingVolume& getVolume();
+
    /**
     * This method allows to set an arbitrary material that will be used
     * to render this node's contents

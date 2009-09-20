@@ -27,10 +27,10 @@ void DefaultDemoInputController::update(float timeElapsed)
 
    // process the keys
    if (m_uiController.isKeyPressed(VK_ESCAPE))     {m_endDemo();}
-   if (m_uiController.isKeyPressed(VK_UP))     {m_cameraController->move(m_cameraController->getLookVec()   * movementSpeed);}
-   if (m_uiController.isKeyPressed(VK_DOWN))   {m_cameraController->move(-m_cameraController->getLookVec()  * movementSpeed);}
-   if (m_uiController.isKeyPressed(VK_LEFT))   {m_cameraController->move(-m_cameraController->getRightVec() * movementSpeed);}
-   if (m_uiController.isKeyPressed(VK_RIGHT))  {m_cameraController->move(m_cameraController->getRightVec()  * movementSpeed);}
+   if (m_uiController.isKeyPressed('W'))     {m_cameraController->move(m_cameraController->getLookVec()   * movementSpeed);}
+   if (m_uiController.isKeyPressed('S'))   {m_cameraController->move(-m_cameraController->getLookVec()  * movementSpeed);}
+   if (m_uiController.isKeyPressed('A'))   {m_cameraController->move(-m_cameraController->getRightVec() * movementSpeed);}
+   if (m_uiController.isKeyPressed('D'))  {m_cameraController->move(m_cameraController->getRightVec()  * movementSpeed);}
 
    if (m_uiController.isKeyPressed(VK_LBUTTON) && (m_rotating == false))
    {

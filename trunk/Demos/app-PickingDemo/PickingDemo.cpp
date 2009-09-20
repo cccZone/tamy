@@ -2,14 +2,14 @@
 #include "tamy\Tamy.h"
 #include "core\Assert.h"
 #include "core\NodeActionsExecutor.h"
+#include "core\RegularOctree.h"
 #include "core-AppFlow\UserInputController.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\LightReflectingProperties.h"
-#include "core-Renderer\RenderingPipelineBuilder.h"
-#include "core-Renderer\DynamicNodesStorage.h"
+#include "core-Renderer\SortingRenderablesStorage.h"
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\ParticleSystem.h"
 #include "core-Renderer\ParticleFader.h"
@@ -18,10 +18,13 @@
 #include "core-Renderer\CircularParticleInitializer.h"
 #include "core-Renderer\ProjCalc2D.h"
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
-#include "ext-Demo\DemoRendererDefinition.h"
+#include "ext-Demo\LightsScene.h"
+#include "ext-Demo\SharedOverlay.h"
+#include "ext-Demo\RERCreator.h"
 #include "ext-Demo\LightsScene.h"
 #include "ext-MotionControllers\TimeFunction.h"
 #include "ext-MotionControllers\WaypointCameraController.h"
+#include "PipelineWithHud.h"
 #include "JumpToNodeAction.h"
 #include "InputController.h"
 
@@ -52,8 +55,6 @@ PickingDemo::PickingDemo(Tamy& tamy)
    timeController().add("animationTrack");
    TimeControllerTrack& animationTrack = timeController().get("animationTrack");
 
-   m_hudMeshesScene = new DynMeshesScene(new Octree<RenderableNode>(64, 2000));
-   m_hudLightsScene = new LightsScene();
 
    m_sceneCamera = m_tamy.graphicalFactory().createCamera("sceneCamera");
    m_cameraController = new WaypointCameraController(*m_sceneCamera, D3DXVECTOR3(0, 10, -30), new LinearTimeFunc());
@@ -61,46 +62,15 @@ PickingDemo::PickingDemo(Tamy& tamy)
 
    m_hudCamera = m_tamy.graphicalFactory().createCamera("hudCamera");
    m_hudCamera->setProjectionCalculator(new ProjCalc2D());
+
+   m_renderingPipeline = new PipelineWithHud(m_tamy.graphicalFactory(), m_tamy.renderer(), *m_sceneCamera, *m_hudCamera);
+   timeController().add("rendererTrack");
+   timeController().get("rendererTrack").add(new TTimeDependent<PipelineWithHud> (*m_renderingPipeline));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingMechanism* PickingDemo::initRenderingPipeline(DemoRendererDefinition& rendererDefinition,
-                                                       DynMeshesScene* dynamicScene, 
-                                                       LightsScene* lights)
-{
-   m_mainScene = dynamicScene;
-
-   rendererDefinition.addSource("scene", new DynamicNodesStorage(dynamicScene));
-   rendererDefinition.addSource("hud", new DynamicNodesStorage(m_hudMeshesScene));
-   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "hudRenderer");
-   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "sceneRenderer");
-   rendererDefinition.addLightsForMechanism("hudRenderer", m_hudLightsScene);
-   rendererDefinition.addLightsForMechanism("sceneRenderer", lights);
-
-   rendererDefinition.defineCamera("hudRenderer", *m_hudCamera);
-   rendererDefinition.defineCamera("sceneRenderer", *m_sceneCamera);
-
-   RenderingPipelineBuilder builder(rendererDefinition);
-   RenderingMechanism* sceneRenderer = builder
-      .defineTransform("sceneRenderer")
-         .in("scene")
-         .out("<<screen>>")
-      .end()
-      .defineTransform("hudRenderer")
-         .dep("sceneRenderer")
-         .in("hud")
-         .out("<<screen>>")
-      .end()
-   .end();
-
-   return sceneRenderer;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PickingDemo::initializeScene(DynMeshesScene& dynamicScene, 
-                                  LightsScene& lights)
+void PickingDemo::initialize()
 {   
    TimeControllerTrack& animationTrack = timeController().get("animationTrack");
 
@@ -115,16 +85,20 @@ void PickingDemo::initializeScene(DynMeshesScene& dynamicScene,
    light->setDiffuseColor(Color(1, 1, 1, 1));
    light->setSpecularColor(Color(0.2f, 0.2f, 0.2f, 1));
    D3DXMatrixRotationYawPitchRoll(&(light->accessLocalMtx()), D3DXToRadian(-45), D3DXToRadian(45), 0);
-   lights.insert(light);
+   demo::LightsScene* regularLights = new demo::LightsScene();
+   regularLights->insert(light);
 
    Light* hudLight = factory.createLight("hudLight");
    hudLight->setType(Light::LT_DIRECTIONAL);
    hudLight->setDiffuseColor(Color(1, 1, 1, 1));
    hudLight->setSpecularColor(Color(0.2f, 0.2f, 0.2f, 1));
-   m_hudLightsScene->insert(hudLight);
-
+   demo::LightsScene* hudLights = new demo::LightsScene();
+   hudLights->insert(hudLight);
 
    // add a particle system
+   demo::DynMeshesScene* regularScene = new demo::DynMeshesScene(new LinearStorage<RenderableNode>());
+   demo::DynMeshesScene* hudScene = new demo::DynMeshesScene(new LinearStorage<RenderableNode>());
+
    LightReflectingProperties* particleLrp = factory.createLightReflectingProperties();
    particleLrp->setDiffuseColor(Color(1, 1, 1, 1));
    MaterialStage* particleMatStage = factory.createMaterialStage("particle.tga",
@@ -141,7 +115,7 @@ void PickingDemo::initializeScene(DynMeshesScene& dynamicScene,
    m_atmosphere->setParticleAnimator(new ParticleFader());
    m_atmosphere->setParticleInitializer(new PlanarParticleInitializer(200, 0.2f, 0.1f, 20));
    D3DXMatrixTranslation(&(m_atmosphere->accessLocalMtx()), 0, -20, 50);
-   dynamicScene.addNode(m_atmosphere);
+   regularScene->addNode(m_atmosphere);
    animationTrack.add(new TTimeDependent<ParticleSystem> (*m_atmosphere));
 
    // create the cursor
@@ -160,7 +134,7 @@ void PickingDemo::initializeScene(DynMeshesScene& dynamicScene,
    m_cursor->setParticleAnimator(new ParticleFader());
    m_cursor->setParticleInitializer(new PointParticleInitializer(0.02f, 0.01f, 0.5f));
    D3DXMatrixTranslation(&(m_cursor->accessLocalMtx()), 0, 0, 10);
-   m_hudMeshesScene->addNode(m_cursor);
+   hudScene->addNode(m_cursor);
    animationTrack.add(new TTimeDependent<ParticleSystem> (*m_cursor));
 
    // create the particel burst that will be activated each time mouse is clicked
@@ -190,7 +164,7 @@ void PickingDemo::initializeScene(DynMeshesScene& dynamicScene,
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile1");
    entInstance->attachEntity(*ent);
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 0, 0, 30);
-   dynamicScene.addNode(entInstance);
+   regularScene->addNode(entInstance);
    m_cameraController->registerWaypoint(0, *entInstance);
    m_actionsExecutor->add(*entInstance, new JumpToNodeAction(*m_cameraController, m_shownNode));
 
@@ -199,7 +173,7 @@ void PickingDemo::initializeScene(DynMeshesScene& dynamicScene,
    D3DXMatrixRotationYawPitchRoll(&helperMtx, D3DXToRadian(60), 0, 0);
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), 20, 5, 40);
    D3DXMatrixMultiply(&(entInstance->accessLocalMtx()), &helperMtx, &(entInstance->accessLocalMtx()));
-   dynamicScene.addNode(entInstance);
+   regularScene->addNode(entInstance);
    m_cameraController->registerWaypoint(1, *entInstance);
    m_actionsExecutor->add(*entInstance, new JumpToNodeAction(*m_cameraController, m_shownNode));
 
@@ -208,7 +182,7 @@ void PickingDemo::initializeScene(DynMeshesScene& dynamicScene,
    D3DXMatrixRotationYawPitchRoll(&helperMtx, D3DXToRadian(-30), 0, 0);
    D3DXMatrixTranslation(&(entInstance->accessLocalMtx()), -15, -10, 35);
    D3DXMatrixMultiply(&(entInstance->accessLocalMtx()), &helperMtx, &(entInstance->accessLocalMtx()));
-   dynamicScene.addNode(entInstance);
+   regularScene->addNode(entInstance);
    m_cameraController->registerWaypoint(2, *entInstance);
    m_actionsExecutor->add(*entInstance, new JumpToNodeAction(*m_cameraController, m_shownNode));
 
@@ -236,27 +210,29 @@ void PickingDemo::initializeScene(DynMeshesScene& dynamicScene,
    m_shownNode = 0;
    m_cameraController->goTo(m_shownNode);
 
-}
+   // assemble rendering pipeline
+   m_renderingPipeline->setRegularScene(regularScene);
+   m_renderingPipeline->setHudScene(hudScene);
+   m_renderingPipeline->setRegularLights(regularLights);
+   m_renderingPipeline->setHudLights(hudLights);
+   m_renderingPipeline->setOverlay(new demo::SharedOverlay(getFpsView()));
+   m_renderingPipeline->create();
 
-///////////////////////////////////////////////////////////////////////////////
-
-void PickingDemo::initInput(UserInputController& uiController)
-{
-   m_inputController = new InputController(uiController, m_tamy.renderer(),
+   m_inputController = new InputController(m_uiController, m_tamy.renderer(),
                                           *m_actionsExecutor, *m_burst,
-                                          *m_cursor, *m_sceneCamera, *m_mainScene);
+                                          *m_cursor, *m_sceneCamera, *regularScene);
 
    timeController().get("animationTrack").add(new TTimeDependent<InputController> (*m_inputController));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PickingDemo::onDeinitialize()
+void PickingDemo::deinitialize()
 {   
    timeController().remove("animationTrack");
 
-   m_hudMeshesScene = NULL;
-   m_hudLightsScene = NULL;
+   delete m_renderingPipeline;
+   m_renderingPipeline = NULL;
 
    delete m_inputController;
    m_inputController = NULL;

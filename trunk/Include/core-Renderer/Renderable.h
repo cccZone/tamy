@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Material;
+class BoundingVolume;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -36,6 +37,13 @@ public:
     * @return        array of D3DXMATRIX sturctures
     */
    virtual const Array<D3DXMATRIX>& getRenderingMatrices() = 0;
+
+   /** 
+    * This method returns a volume bounding the renderable.
+    *
+    * @return        bounding volume
+    */
+   virtual const BoundingVolume& getVolume() = 0;
    
    /**
     * Returns a material that should be used to render the node.

@@ -37,7 +37,7 @@ private:
                                       std::vector<MaterialDefinition>& materials);
 
    void addSurface(iwfSurface* surface, USHORT vertexStart, 
-                   std::list<Face<USHORT> >& faces, unsigned int matIdx);
+                   std::vector<Face<USHORT> >& faces, unsigned int matIdx);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

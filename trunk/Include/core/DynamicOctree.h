@@ -4,13 +4,7 @@
 /// @file   core\DynamicOctree.h
 /// @brief  an octree capable of storing dynamic (moving) objects
 
-#include "core\SpatialStorage.h"
-#include "core\Array.h"
-#include "core\Stack.h"
-#include "core\AABoundingBox.h"
-#include "core\BoundingVolume.h"
-#include "core\Assert.h"
-#include <list>
+#include "core\Octree.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,22 +14,9 @@
  * whenever the objects change their location.
  */
 template<typename Elem>
-class DynamicOctree : public SpatialStorage<Elem>
+class DynamicOctree : public Octree<Elem>
 {
 private:
-   /**
-    * A helper structure that describes a single tree node.
-    */
-   struct Sector
-   {
-      AABoundingBox m_bb;
-      Sector** m_children;
-      Array<unsigned int> m_elems;
-
-      Sector();
-      ~Sector();
-   };
-
    /**
     * A helper structure for storing elements added to the tree.
     */
@@ -47,10 +28,9 @@ private:
       TreeElem(Elem* _elem);
    };
 
-
 private:
    Array<TreeElem*> m_elements;
-   Sector* m_root;
+   Stack<unsigned int> m_freePos;
 
 public:
    /**
@@ -69,10 +49,11 @@ public:
    ~DynamicOctree();
 
    /**
-    * This method checks the position of objects added to the tree and
-    * updates their positions in the tree sectors accordingly.
+    * This method checks the position of an object.
+    *
+    * @param elem    object in the tree
     */
-   void update();
+   void update(Elem& elem);
 
    /**
     * The method checks if an element is present in the tree.
@@ -101,27 +82,12 @@ public:
     */
    void remove(Elem& elem);
 
-   /**
-    * This method allows to query all the elements that are contained
-    * in the passed bounding volume.
-    *
-    * What is important here is that a function:
-    *    bool testCollision(const AABoundingBox& bb, const BoundingVolumeType& bv)
-    * is made available to the linker.
-    *
-    * @param boundingVol   volume that bounds the elements we want
-    * @param output        upon method return this array will be filled with
-    *                      elements overlapping the query volume
-    */
-   void query(const BoundingVolume& boundingVol, Array<Elem*>& output) const;
+protected:
+   unsigned int getElementsCount() const;
+
+   Elem& getElement(unsigned int idx) const;
 
 private:
-   void querySectors(const BoundingVolume& boundingVol, 
-                     Sector& searchRoot,
-                     Array<Sector*>& output) const;
-
-   void subdivideSector(Sector& sector);
-
    void putElemInTree(unsigned int elemIdx, TreeElem& treeElem);
 
    void clearTree();

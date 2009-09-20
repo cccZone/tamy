@@ -13,6 +13,7 @@ struct Triangle;
 struct BoundingSpace;
 struct D3DXMATRIX;
 struct PointVolume;
+struct D3DXPLANE;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,6 +24,17 @@ class BoundingVolume
 {
 public:
    virtual ~BoundingVolume() {}
+
+   /**
+    * This method checks on which side of the specified plane
+    * is the volume situated.
+    *
+    * @param plane   plane against which we want to perform a check
+    * @return        <0 - the volume is behind the plane
+    *                =0 - the volume intersects the plane
+    *                >0 - the volume is in front of the plane
+    */
+   virtual float classifyAgainstPlane(const D3DXPLANE& plane) const = 0;
 
    virtual bool testCollision(const PointVolume& point) const = 0;
 

@@ -34,6 +34,17 @@ BoundingVolume* BoundingSphere::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+float BoundingSphere::classifyAgainstPlane(const D3DXPLANE& plane) const
+{
+   D3DXVECTOR3 planeNormal(plane.a, plane.b, plane.c);
+   float distance = D3DXVec3Dot(&origin, &planeNormal) + plane.d;
+   
+   if (fabs(distance) <= radius) {return 0;}
+   else                          {return distance;}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool BoundingSphere::testCollision(const PointVolume& rhs) const
 {
    return ::testCollision(*this, rhs.point);

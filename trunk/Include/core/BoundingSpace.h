@@ -12,6 +12,8 @@
  */
 struct BoundingSpace : public BoundingVolume
 {
+   float classifyAgainstPlane(const D3DXPLANE& plane) const {return 0;}
+
    bool testCollision(const PointVolume& point) const {return true;}
 
    bool testCollision(const AABoundingBox& rhs) const {return true;}

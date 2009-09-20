@@ -58,7 +58,7 @@ TEST(WaypointCameraController, complexMovementx)
    end = D3DXMATRIX(0.5f,      0,        -0.866025f,  0,
                     0,         1,         0,          0,
                     0.866025f, 0,         0.5f,       0,
-                    -5.980762, 14.99999f, 24.999998f, 1);
+                    -5.980762f, 14.99999f, 24.999998f, 1);
 
    MatrixInterpolator interpolator;
    COMPARE_MTX(start, interpolator(start, end, 0));

@@ -11,7 +11,7 @@ class Renderable;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A helper to the GraphicalNodesProcessor class that allows
+ * A helper to the RenderablesSorter class that allows
  * to sort renderables based on their distance from a specified
  * point in space
  */

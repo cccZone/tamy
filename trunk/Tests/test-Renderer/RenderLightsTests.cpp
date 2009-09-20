@@ -4,8 +4,7 @@
 #include "core-Renderer\Light.h"
 #include "core-Renderer\RenderableNode.h"
 #include "core-Renderer\Material.h"
-#include "core-Renderer\LightsSortingStorage.h"
-#include "core-Renderer\LightsSorter.h"
+#include "core\BoundingSpace.h"
 #include "RendererImplMock.h"
 
 
@@ -43,42 +42,13 @@ namespace   // anonymous
    public:
       void add(Light& light) {m_lights.push_back(&light);}
 
-      void query(const D3DXVECTOR3& point, Array<Light*>& outLights) 
+      void query(const BoundingVolume& volume, Array<Light*>& outLights) 
       {
          unsigned int lightsCount = m_lights.size();
          for (unsigned int i = 0; i < lightsCount; ++i)
          {
             outLights.push_back(m_lights[i]);
          }
-      }
-   };
-
-   // -------------------------------------------------------------------------
-
-   class LightsSorterMock
-   {
-   private:
-      bool m_used;
-
-   public:
-      LightsSorterMock() 
-         : m_used(false) 
-      {
-      }
-
-      void setInfluencedPos(const D3DXVECTOR3& pos)
-      {
-         m_used = true;
-      }
-
-      bool operator()(Light* lhs, Light* rhs) const
-      {
-         return (DWORD)lhs < (DWORD)rhs;
-      }
-
-      bool wasUsed() const
-      {
-         return m_used;
       }
    };
 
@@ -113,47 +83,6 @@ TEST(RenderLights, lightsEnabledAreDisabledLaterOn)
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, results.size());
    CPPUNIT_ASSERT_EQUAL(std::string("Disabling lights: light1, light2"), results[0]);
 
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(LightsSorter, pointLights)
-{
-   Light light1("light1");
-   Light light2("light2");
-
-   D3DXMatrixTranslation(&(light1.accessLocalMtx()), 10, 0, 0);
-   D3DXMatrixTranslation(&(light1.accessLocalMtx()), -10, 0, 0);
-   light1.setRange(15);
-   light2.setRange(15);
-
-   LightsSorter sorter;
-   CPPUNIT_ASSERT_EQUAL(false, sorter(&light1, &light2)); // equal influence over the point
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(LightsSortingStorage, lightsSortedOnline)
-{   
-   Light light1("light1");
-   Light light2("light2");
-   SimpleLightsStorage* baseStorage = new SimpleLightsStorage();
-   baseStorage->add(light1);
-   baseStorage->add(light2);
-
-   LightsSorterMock* sorter = new LightsSorterMock();
-   LightsSortingStorage<LightsSorterMock> storage(baseStorage, sorter);
-   
-   Array<Light*> outLights;
-
-   baseStorage->query(D3DXVECTOR3(0, 0, 0), outLights);
-   CPPUNIT_ASSERT_EQUAL(false, sorter->wasUsed());
-   CPPUNIT_ASSERT_EQUAL((unsigned int)2, outLights.size());
-
-   outLights.clear();
-   storage.query(D3DXVECTOR3(0, 0, 0), outLights);
-   CPPUNIT_ASSERT_EQUAL(true, sorter->wasUsed());
-   CPPUNIT_ASSERT_EQUAL((unsigned int)2, outLights.size());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

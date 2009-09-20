@@ -177,15 +177,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\BatchingStrategyTests.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\CyclicRenderingTargetTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\GraphicalNodesProcessorTests.cpp"
 				>
 			</File>
 			<File
@@ -278,7 +270,7 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Entities"
+			Name="Geometry"
 			>
 			<File
 				RelativePath=".\CameraTests.cpp"
@@ -312,6 +304,10 @@
 				RelativePath=".\SkyBoxTests.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\StaticGeometryRenderableTests.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Materials"
@@ -338,10 +334,22 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="PipelineConfigurator"
+			Name="RenderablesStorages"
 			>
 			<File
-				RelativePath=".\RenderingPipelineGraphTests.cpp"
+				RelativePath=".\BatchingStrategyTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RenderablesSorterTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Overlay"
+			>
+			<File
+				RelativePath=".\OverlayRenderingMechanismTests.cpp"
 				>
 			</File>
 		</Filter>

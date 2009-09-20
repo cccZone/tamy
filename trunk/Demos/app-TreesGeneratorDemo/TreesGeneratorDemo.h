@@ -9,17 +9,21 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Skeleton;
+class Camera;
 
 namespace demo
 {
-   class DemoRendererDefinition;
-};
+   class BasicRenderingPipeline;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class TreesGeneratorDemo : public demo::DemoApp
 {
 private:
+   Camera* m_camera;
+   demo::BasicRenderingPipeline* m_renderingPipeline;
+
    AbstractGraphicalEntity* m_treeEntity;
    Skeleton* m_animationController;
 
@@ -29,9 +33,8 @@ private:
 public:
    TreesGeneratorDemo(Tamy& tamy);
 
-protected:
-   void initializeScene(demo::DynMeshesScene& dynamicScene, demo::LightsScene& lights);
-   void onDeinitialize();
+   void initialize();
+   void deinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

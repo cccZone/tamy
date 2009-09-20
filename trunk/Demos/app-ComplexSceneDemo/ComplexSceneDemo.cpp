@@ -1,15 +1,17 @@
 #include "ComplexSceneDemo.h"
 #include "tamy\Tamy.h"
+#include "core-Renderer\CompositeRenderingMechanism.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core-Renderer\Light.h"
-#include "core-Renderer\RenderingPipelineBuilder.h"
-#include "core-Renderer\DynamicNodesStorage.h"
-#include "core-ResourceManagement\IWFLoader.h"
-#include "core-Renderer\LightsSortingStorage.h"
-#include "core-Renderer\LightsSorter.h"
-#include "ext-Demo\DemoRendererDefinition.h"
+#include "core-Renderer\Camera.h"
+#include "core-Renderer\Overlay.h"
+#include "core-Renderer\SkyBoxStorage.h"
+#include "core-Renderer\SortingRenderablesStorage.h"
+#include "core-Renderer\StaticGeometryRenderable.h"
+#include "ext-Demo\BasicRenderingPipeline.h"
 #include "ext-Demo\LightsScene.h"
-#include "ext-Demo\DemoIWFScene.h"
+#include "ext-Demo\StaticSceneManager.h"
+#include "ext-Demo\SharedOverlay.h"
 #include "ext-Demo\RERCreator.h"
 #include "RenderEffectController.h"
 
@@ -20,69 +22,51 @@ using namespace demo;
 
 ComplexSceneDemo::ComplexSceneDemo(Tamy& tamy)
 : DemoApp(tamy)
+, m_camera(NULL)
+, m_renderingPipeline(NULL)
 {
+   m_camera = m_tamy.graphicalFactory().createCamera("camera");
+   m_renderingPipeline = new BasicRenderingPipeline(m_tamy.graphicalFactory(), m_tamy.renderer(), *m_camera);
+
+   timeController().add("rendererTrack");
+   timeController().get("rendererTrack").add(new TTimeDependent<BasicRenderingPipeline> (*m_renderingPipeline));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingMechanism* 
-ComplexSceneDemo::initRenderingPipeline(DemoRendererDefinition& rendererDefinition,
-                                        DynMeshesScene* dynamicScene, 
-                                        LightsScene* lights)
+void ComplexSceneDemo::initialize()
 {
-   rendererDefinition.addSource("scene", new DynamicNodesStorage(dynamicScene));
-   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "backgroundRenderer");
-   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "fixedSceneRenderer");
-   rendererDefinition.aliasMechanism("..\\Data\\renderer.fx", "programmableSceneRenderer");
-   rendererDefinition.setProgrammableMechanismLoader("..\\Data\\renderer.fx", new demo::TRERCreator<RenderEffectController>());
+   SkyBoxStorage* skyBox = NULL;
+   StaticSceneManager* staticSceneStorage = NULL;
+   DynMeshesScene* dynamicSceneStorage = NULL;
+   LightsScene* lights = NULL;
+   loadIWF("..\\Data\\Colony5.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
+   delete skyBox;
 
-   // using a sorted lights storage we're providing for dynamic lights in our scene
-   LightsSortingStorage<LightsSorter>* dynamicLightsStorage = new LightsSortingStorage<LightsSorter> (lights);
-   rendererDefinition.addLightsForMechanism("fixedSceneRenderer", dynamicLightsStorage);
-   rendererDefinition.addLightsForMechanism("programmableSceneRenderer", dynamicLightsStorage);
+   // assemble rendering pipeline
+   m_renderingPipeline->setStaticScene(staticSceneStorage);
+   m_renderingPipeline->setDynamicScene(dynamicSceneStorage);
+   m_renderingPipeline->setLights(lights);
+   m_renderingPipeline->setOverlay(new demo::SharedOverlay(getFpsView()));
 
-   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
-   initDefaultCamera(camera);
-   rendererDefinition.defineCamera("backgroundRenderer", *camera);
-   rendererDefinition.defineCamera("fixedSceneRenderer", *camera);
-   rendererDefinition.defineCamera("programmableSceneRenderer", *camera);
+   m_renderingPipeline->setRendererImpl("..\\Data\\renderer.fx", new demo::TRERCreator<RenderEffectController>());
+   m_renderingPipeline->create();
 
-   RenderingPipelineBuilder builder(rendererDefinition);
-   RenderingMechanism* sceneRenderer = builder
-      .defineTransform("backgroundRenderer")
-         .in("<<background>>")
-         .out("<<screen>>")
-      .end()
-      .defineTransform("fixedSceneRenderer")
-         .dep("backgroundRenderer")
-         .in("scene")
-         .out("<<screen>>")
-      .end()
-   .end();
-
-   return sceneRenderer;
+   // initialize input controller
+   createDefaultInput(*m_camera);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ComplexSceneDemo::initializeScene(DynMeshesScene& dynamicScene, 
-                                       LightsScene& lights)
-{   
-   DemoIWFScene sceneAdapter(m_tamy.graphicalFactory(), 
-                             m_tamy.meshLoaders(),
-                             demo::LightsSceneSetter::from_method<LightsScene, &LightsScene::insert> (&lights),
-                             demo::SkyBoxSceneSetter::from_method<demo::DemoApp, &demo::DemoApp::setBackground> (this),
-                             demo::DynamicObjectsSceneSetter::from_method<demo::DynMeshesScene, &demo::DynMeshesScene::addNode> (&dynamicScene),
-                             m_entitiesStorage,
-                             m_materialsStorage);
-   IWFLoader loader(sceneAdapter);
-   loader.load("..\\Data\\Colony5.iwf");
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ComplexSceneDemo::onDeinitialize()
+void ComplexSceneDemo::deinitialize()
 {
+   timeController().remove("rendererTrack");
+
+   delete m_renderingPipeline;
+   m_renderingPipeline = NULL;
+
+   delete m_camera;
+   m_camera = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

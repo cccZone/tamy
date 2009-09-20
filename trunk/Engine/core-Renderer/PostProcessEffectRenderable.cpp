@@ -57,6 +57,13 @@ const Material& PostProcessEffectRenderable::getMaterial() const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+const BoundingVolume& PostProcessEffectRenderable::getVolume()
+{
+   return m_volume;
+}
+
+///////////////////////////////////////////////////////////////////////////////
    
 void PostProcessEffectRenderable::addInputTexture(Texture& texture, 
                                                   GraphicalEntitiesFactory& factory)

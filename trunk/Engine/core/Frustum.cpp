@@ -19,6 +19,14 @@ BoundingVolume* Frustum::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+float Frustum::classifyAgainstPlane(const D3DXPLANE& plane) const
+{
+   ASSERT(false, "Frustum::classifyAgainstPlane(const D3DXPLANE&) - Method not implemented");
+   return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool Frustum::testCollision(const PointVolume& point) const
 {
    ASSERT(false, "Frustum::testCollision(const PointVolume&) - Method not implemented");

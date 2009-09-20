@@ -1,18 +1,28 @@
 #pragma once
 
+/// @file   core\Triangle.h
+/// @brief  a triangle representation
+
 #include "core\BoundingVolume.h"
 #include <d3dx9.h>
 #include "core\Assert.h"
+#include "core\TriangleSplitter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * This struture represents a triangle with some basic operations
+ * we can perform on it.
+ */
 struct Triangle : public BoundingVolume
 {
 private:
    D3DXVECTOR3 v[3];
    D3DXVECTOR3 e[3];
    D3DXVECTOR3 en[3];
+
+   TriangleSplitter<D3DXVECTOR3, Triangle> m_splitter;
 
 public:
    Triangle(const Triangle& rhs);
@@ -46,6 +56,12 @@ public:
    }
 
    BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
+
+   float classifyAgainstPlane(const D3DXPLANE& plane) const;
+
+   void split(const D3DXPLANE& splitPlane, 
+              Array<Triangle*>& frontSplit, 
+              Array<Triangle*>& backSplit);
 
    bool testCollision(const PointVolume& point) const;
    bool testCollision(const AABoundingBox& rhs) const;

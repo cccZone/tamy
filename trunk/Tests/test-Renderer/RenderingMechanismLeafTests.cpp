@@ -1,5 +1,5 @@
 #include "core-TestFramework\TestFramework.h"
-#include "core-Renderer\RenderingMechanismLeaf.h"
+#include "core-Renderer\GeometryRenderingMechanism.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\RenderingAction.h"
 #include "core-Renderer\RenderableNode.h"
@@ -66,11 +66,11 @@ namespace   // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(RenderingMechanismLeaf, renderingSingleObject)
+TEST(GeometryRenderingMechanism, renderingSingleObject)
 {
    std::vector<std::string> results;
    D3DXMATRIX sampleViewMtx, sampleProjMtx;
-   RenderingMechanismLeaf processor(new CallSeqTrack::RenderingTargetsPolicyMock(results), 
+   GeometryRenderingMechanism processor(new CallSeqTrack::RenderingTargetsPolicyMock(results), 
                                     new CallSeqTrack::RendererImplMock(results));
 
    // create the node we'll use for rendering
@@ -97,11 +97,11 @@ TEST(RenderingMechanismLeaf, renderingSingleObject)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(RenderingMechanismLeaf, renderingMultipleObjects)
+TEST(GeometryRenderingMechanism, renderingMultipleObjects)
 {
    std::vector<std::string> results;
    D3DXMATRIX sampleViewMtx, sampleProjMtx;
-   RenderingMechanismLeaf processor(new CallSeqTrack::RenderingTargetsPolicyMock(results), 
+   GeometryRenderingMechanism processor(new CallSeqTrack::RenderingTargetsPolicyMock(results), 
                                     new CallSeqTrack::RendererImplMock(results));
 
    // create the node we'll use for rendering

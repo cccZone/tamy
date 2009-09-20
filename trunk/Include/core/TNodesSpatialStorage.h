@@ -1,8 +1,8 @@
 #ifndef _T_NODES_SPATIAL_STORAGE_H
 #define _T_NODES_SPATIAL_STORAGE_H
 
-/// @file   core\AbstractSceneManager.h
-/// @file   a manager that can deal with a single entity type
+/// @file   core\TNodesSpatialStorage.h
+/// @file   a spatial storage for keeping nodes
 
 #include "core\SpatialStorage.h"
 #include "core\Node.h"
@@ -17,7 +17,7 @@
 /**
  * This storage is designed for storing hierarchy of nodes.
  * It provides a mechanism for extracting nodes of specific types
- * and querying them. That way we can stora arbitrary hierarchies of nodes
+ * and querying them. That way we can store arbitrary hierarchies of nodes
  * here, and we can query only the nodes the storage was designed 
  * for querying.
  *
@@ -25,7 +25,7 @@
  * storage implementation, which will be responsible for storing
  * the extracted nodes of the specified type.
  */
-template<typename NodeType, template<class> class SpatialStorage>
+template<typename NodeType, template<class> class ConcreteSpatialStorage>
 class TNodesSpatialStorage : public SpatialStorage<NodeType>,
                              public NodeVisitor, 
                              public TNodesVisitor<NodeType>,
@@ -33,7 +33,7 @@ class TNodesSpatialStorage : public SpatialStorage<NodeType>,
 {
 private:
    Node* m_root;
-   SpatialStorage<NodeType>* m_storage;
+   ConcreteSpatialStorage<NodeType>* m_storage;
 
    // the flag is set temporarily when a new node is added
    // or removed to inform the visitor mechanism about an action
@@ -51,7 +51,7 @@ public:
     * @param storage    underlying storage that will store the specified
     *                   type of nodes.
     */
-   TNodesSpatialStorage(SpatialStorage<NodeType>* storage);
+   TNodesSpatialStorage(ConcreteSpatialStorage<NodeType>* storage);
    ~TNodesSpatialStorage();
 
    /**
@@ -121,6 +121,7 @@ public:
     * @return     composite root node
     */
    inline Node& root();
+
 
    // -------------------------------------------------------------------------
    // NodeObserver implementation

@@ -10,6 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Light;
+class BoundingVolume;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,11 +26,11 @@ public:
    /**
     * Query the lights affecting the specified point.
     *
-    * @param point      point in space lights for which we want to check
+    * @param volume     volume in space lights for which we want to check
     * @param outLights  upon method return this array will contain lights
     *                   that shine upon the specified point
     */
-   virtual void query(const D3DXVECTOR3& point, Array<Light*>& outLights) = 0;
+   virtual void query(const BoundingVolume& volume, Array<Light*>& outLights) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

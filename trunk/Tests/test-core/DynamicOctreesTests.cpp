@@ -2,7 +2,6 @@
 #include <d3dx9.h>
 #include "core\DynamicOctree.h"
 #include "core\BoundingSphere.h"
-#include "core\Subject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,7 +32,7 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(DynamicOctree, treeIsDefinedOnlyDuringUpdates)
+TEST(DynamicOctree, addingObjects)
 {
    AABoundingBox treeBB(D3DXVECTOR3(-10, -10, -10), D3DXVECTOR3(10, 10, 10));
    int depth = 1;
@@ -45,17 +44,7 @@ TEST(DynamicOctree, treeIsDefinedOnlyDuringUpdates)
 
    D3DXVECTOR3 searchLocation(5, 5, 5);
 
-   // let's check where the object is before we move it
-   // to verify the queries work correctly
-   tree.query(BoundingSphere(searchLocation, 3), result);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)0, result.size());
-
-
-   // now let's update the tree
-   tree.update();
-
    // query finally finds the object
-   result.clear();
    tree.query(BoundingSphere(searchLocation, 3), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
    CPPUNIT_ASSERT_EQUAL(&ob1, result[0]);
@@ -72,7 +61,6 @@ TEST(DynamicOctree, queryingElements)
 
    BoundedObjectMock ob1(5, 5, 5, 1);
    tree.insert(ob1);
-   tree.update();
 
    D3DXVECTOR3 location1(4, 4, 4);
    D3DXVECTOR3 location2(-4, -4, -4);
@@ -89,7 +77,7 @@ TEST(DynamicOctree, queryingElements)
 
    // now let's move the object
    ob1.move(-5, -5, -5);
-   tree.update();
+   tree.update(ob1);
 
    result.clear();
    tree.query(BoundingSphere(location1, 1), result);
@@ -112,7 +100,6 @@ TEST(DynamicOctree, removingElementsBetweenUpdates)
 
    BoundedObjectMock ob1(5, 5, 5, 1);
    tree.insert(ob1);
-   tree.update();
 
    D3DXVECTOR3 searchLocation(5, 5, 5);
 

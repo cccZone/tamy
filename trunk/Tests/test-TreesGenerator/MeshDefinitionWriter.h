@@ -81,7 +81,7 @@ protected:
       if (m_writeFaces)
       {
          stream << "faces : {" << std::endl;
-         for (std::list<Face<USHORT> >::iterator it = entity.faces.begin();
+         for (std::vector<Face<USHORT> >::iterator it = entity.faces.begin();
               it != entity.faces.end(); ++it)
          {
             stream << "[" << it->idx[0] << ", " << it->idx[1] << 

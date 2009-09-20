@@ -153,14 +153,6 @@
 			Name="ResourceManager"
 			>
 			<File
-				RelativePath=".\TTFont.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\impl-DirectX\TTFont.h"
-				>
-			</File>
-			<File
 				RelativePath=".\XFileGraphicalEntityLoader.cpp"
 				>
 			</File>
@@ -184,7 +176,7 @@
 					</File>
 				</Filter>
 				<Filter
-					Name="GraphicalEntity"
+					Name="Meshes"
 					>
 					<File
 						RelativePath="..\..\Include\impl-DirectX\D3DAbstractGraphicalEntity.h"
@@ -196,6 +188,14 @@
 					</File>
 					<File
 						RelativePath="..\..\Include\impl-DirectX\D3DSkinnedGraphicalEntity.h"
+						>
+					</File>
+					<File
+						RelativePath=".\D3DStaticGeometryRenderable.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\Include\impl-DirectX\D3DStaticGeometryRenderable.h"
 						>
 					</File>
 				</Filter>
@@ -317,6 +317,18 @@
 				</File>
 				<File
 					RelativePath="..\..\Include\impl-DirectX\D3DInitializer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Overlays"
+				>
+				<File
+					RelativePath=".\D3DFont.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\impl-DirectX\D3DFont.h"
 					>
 				</File>
 			</Filter>

@@ -129,6 +129,8 @@ void D3DRendererImpl::setTransparency(bool enable)
       m_d3Device.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
       m_d3Device.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
+      // TODO: jak tylko beda drzewa BSP do prezchowywania obiektow przezroczystych,
+      //       wywalic wylaczanie z bufora tutaj...
       m_d3Device.SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
    }
    else

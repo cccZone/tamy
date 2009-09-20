@@ -252,23 +252,19 @@
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Fonts"
-			>
-			<File
-				RelativePath=".\XMLFont.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-ResourceManagement\XMLFont.h"
-				>
-			</File>
 			<Filter
-				Name="XMLDefinitions"
+				Name="StaticGeometryLoader"
 				>
 				<File
-					RelativePath="..\Fonts\Curlz.fnt"
+					RelativePath="..\..\Include\core-ResourceManagement\StaticGeometry.h"
+					>
+				</File>
+				<File
+					RelativePath=".\StaticGeometryLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-ResourceManagement\StaticGeometryLoader.h"
 					>
 				</File>
 			</Filter>

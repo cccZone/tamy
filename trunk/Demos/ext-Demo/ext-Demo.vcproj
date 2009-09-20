@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)\Libs\$(ConfigurationName)"
 			IntermediateDirectory="$(SolutionDir)\Temp\$(ProjectName)\$(ConfigurationName)"
 			ConfigurationType="4"
-			CharacterSet="1"
+			CharacterSet="2"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -156,30 +156,54 @@
 				RelativePath="..\..\Include\ext-Demo\DemoIWFScene.h"
 				>
 			</File>
-			<File
-				RelativePath=".\DemoRendererDefinition.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\ext-Demo\DemoRendererDefinition.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\ext-Demo\RERCreator.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Renderer"
 			>
-			<File
-				RelativePath=".\LightsScene.cpp"
+			<Filter
+				Name="Pipelines"
 				>
-			</File>
-			<File
-				RelativePath="..\..\Include\ext-Demo\LightsScene.h"
+				<File
+					RelativePath=".\BasicRenderingPipeline.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\ext-Demo\BasicRenderingPipeline.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\ext-Demo\RERCreator.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Storages"
 				>
-			</File>
+				<File
+					RelativePath=".\LightsScene.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\ext-Demo\LightsScene.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\ext-Demo\SharedOverlay.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\ext-Demo\SharedRenderablesStorage.h"
+					>
+				</File>
+				<File
+					RelativePath=".\StaticSceneManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\ext-Demo\StaticSceneManager.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Main"
@@ -198,6 +222,14 @@
 			</File>
 			<File
 				RelativePath="..\..\Include\ext-Demo\DemoApp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FpsCounter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\ext-Demo\FpsCounter.h"
 				>
 			</File>
 		</Filter>

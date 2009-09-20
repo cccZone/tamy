@@ -35,7 +35,7 @@ public:
 
    void insert(Light* light);
 
-   void query(const D3DXVECTOR3& point, Array<Light*>& outLights);
+   void query(const BoundingVolume& volume, Array<Light*>& outLights);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -5,7 +5,9 @@
 #include "core-Renderer\GraphicalEntityInstantiator.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core-ResourceManagement\GraphicalEntityLoader.h"
+#include "core-ResourceManagement\StaticGeometryLoader.h"
 #include "core-ResourceManagement\GraphicalDataSource.h"
+#include "core-ResourceManagement\StaticGeometry.h"
 #include <algorithm>
 #include <sstream>
 
@@ -19,6 +21,7 @@ DemoIWFScene::DemoIWFScene(GraphicalEntitiesFactory& entitiesFactory,
                            LightsSceneSetter& addLight,
                            SkyBoxSceneSetter& setSkyBox,
                            DynamicObjectsSceneSetter& addDynamicObj,
+                           StaticGeometrySetter& addStaticObj,
                            ResourceStorage<AbstractGraphicalEntity>& entitiesStorage,
                            ResourceStorage<Material>& materialsStorage)
 : m_entitiesFactory(entitiesFactory)
@@ -26,9 +29,11 @@ DemoIWFScene::DemoIWFScene(GraphicalEntitiesFactory& entitiesFactory,
 , m_addLight(addLight)
 , m_setSkyBox(setSkyBox)
 , m_addDynamicObj(addDynamicObj)
+, m_addStaticObj(addStaticObj)
 , m_entitiesStorage(entitiesStorage)
 , m_materialsStorage(materialsStorage)
 , m_entityLoader(new GraphicalEntityLoader(entitiesFactory, materialsStorage))
+, m_staticGeometryLoader(new StaticGeometryLoader(entitiesFactory))
 {
 }
 
@@ -38,6 +43,9 @@ DemoIWFScene::~DemoIWFScene()
 {
    delete m_entityLoader;
    m_entityLoader = NULL;
+
+   delete m_staticGeometryLoader;
+   m_staticGeometryLoader = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -132,9 +140,6 @@ void DemoIWFScene::addStaticGeometry(MeshDefinition& mesh,
                                      std::vector<MaterialDefinition>& materials,
                                      const D3DXMATRIX& situation)
 {
-   // TODO: use a different representation of a graphical entity 
-   // (something static that can go to a static scene manager)
-
    class ExistingDefSource : public GraphicalDataSource
    {
    private:
@@ -158,26 +163,34 @@ void DemoIWFScene::addStaticGeometry(MeshDefinition& mesh,
       }
    };
 
-   AbstractGraphicalEntity* entity = NULL;
-   if (m_entitiesStorage.is(mesh.name))
+   class StaticGeometryOutputAdapter : public StaticGeometry
    {
-      entity = &(m_entitiesStorage.get(mesh.name));
-   }
-   else
-   {
-      ExistingDefSource source(mesh, materials);
-      entity = m_entityLoader->load(mesh.name, source);
-      m_entitiesStorage.add(entity);
-   }
-   
-   static int refCount = 0;
-   std::stringstream refName;
-   refName << "reference_" << refCount++;
-   GraphicalEntityInstantiator* entityInstance = new GraphicalEntityInstantiator(refName.str());
-   entityInstance->attachEntity(*entity);
-   entityInstance->setLocalMtx(situation);
+   private:
+      GraphicalEntitiesFactory& m_factory;
+      StaticGeometrySetter& m_addObj;
 
-   m_addDynamicObj(entityInstance);  
+   public:
+      StaticGeometryOutputAdapter(GraphicalEntitiesFactory& factory,
+                                  StaticGeometrySetter& addObj)
+         : m_factory(factory)
+         , m_addObj(addObj)
+      {
+      }
+
+      void addMesh(const std::vector<LitVertex>& vertices,
+                   const std::vector<Face<USHORT> >& faces,
+                   Material& material)
+      {
+         m_addObj(m_factory.createStaticGeometry(material, vertices, faces));
+      }
+   };
+
+   D3DXMatrixMultiply(&(mesh.localMtx), &(mesh.localMtx), &situation);
+   ExistingDefSource dataSource(mesh, materials);
+
+   StaticGeometryOutputAdapter output(m_entitiesFactory, m_addStaticObj);
+
+   m_staticGeometryLoader->load(m_materialsStorage, dataSource, output);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

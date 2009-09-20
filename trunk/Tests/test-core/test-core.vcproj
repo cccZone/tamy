@@ -250,6 +250,14 @@
 				RelativePath=".\BoundingVolumesTests.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\PlaneIntersectionTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TriangleSplittingTests.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="DataStructures"
@@ -259,15 +267,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\DynamicOctreesTests.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\GraphTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\OctreesTests.cpp"
 				>
 			</File>
 		</Filter>
@@ -288,6 +288,22 @@
 			</File>
 			<File
 				RelativePath=".\NodeActionsExecutorTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="SpatialStorage"
+			>
+			<File
+				RelativePath=".\DynamicOctreesTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RegularOctreesTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\StaticGeometryOctreesTests.cpp"
 				>
 			</File>
 		</Filter>

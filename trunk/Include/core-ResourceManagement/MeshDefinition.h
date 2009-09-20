@@ -78,7 +78,7 @@ struct MeshDefinition
 
    std::vector<std::string> materials;
    std::vector<LitVertex> vertices;
-   std::list<Face<USHORT> > faces;
+   std::vector<Face<USHORT> > faces;
 
    // these two attributes have meaning only if the mesh is a skin
    std::vector<BonesInfluenceDefinition> bonesInfluencingAttribute;

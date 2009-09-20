@@ -1,5 +1,8 @@
 #pragma once
 
+/// @file   core\AABoundingBox.h
+/// @brief  an axis aligned bounding box
+
 #include "core\BoundingVolume.h"
 #include <d3dx9.h>
 
@@ -19,6 +22,8 @@ struct AABoundingBox : public BoundingVolume
 
    AABoundingBox operator+(const AABoundingBox& rhs) const; 
    BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
+
+   float classifyAgainstPlane(const D3DXPLANE& plane) const;
 
    bool testCollision(const PointVolume& point) const;
    bool testCollision(const AABoundingBox& rhs) const;

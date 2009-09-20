@@ -8,6 +8,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * This class is a storage for the actual DirectX geometry that can be rendered.
+ */
 template<typename VertexStruct>
 class D3DAbstractGraphicalEntity
 {
@@ -15,15 +18,12 @@ protected:
    IDirect3DDevice9& m_d3Device;
    ID3DXMesh* m_mesh;
 
-   float m_maxCoord;
-
 public:
    D3DAbstractGraphicalEntity(IDirect3DDevice9& d3Device, 
-                              const std::vector<LitVertex>& vertices,
-                              const std::list<Face<USHORT> >& faces)
-      : m_d3Device(d3Device),
-      m_mesh(NULL),
-      m_maxCoord(-10000000.f)
+                              const std::vector<VertexStruct>& vertices,
+                              const std::vector<Face<USHORT> >& faces)
+      : m_d3Device(d3Device)
+      , m_mesh(NULL)
    {
       HRESULT res = D3DXCreateMeshFVF(faces.size(), vertices.size(), 
                                       D3DXMESH_MANAGED, VertexStruct::FVF, 
@@ -38,10 +38,6 @@ public:
       for (typename std::vector<VertexStruct>::const_iterator it = vertices.begin(); 
            it != vertices.end(); ++it)
       {
-         m_maxCoord = max(m_maxCoord, fabs((*it).m_coords.x));
-         m_maxCoord = max(m_maxCoord, fabs((*it).m_coords.y));
-         m_maxCoord = max(m_maxCoord, fabs((*it).m_coords.z));
-
          *pVertex++ = *it;
       }
       m_mesh->UnlockVertexBuffer();
@@ -54,7 +50,7 @@ public:
       res = m_mesh->LockAttributeBuffer(D3DLOCK_DISCARD, &pAttrib);
       if (FAILED(res)) { throw std::logic_error(std::string("Can't lock the mesh's attributes buffer")); }
 
-      for (std::list<Face<USHORT> >::const_iterator it = faces.begin(); 
+      for (std::vector<Face<USHORT> >::const_iterator it = faces.begin(); 
            it != faces.end(); ++it)
       {
          const Face<USHORT>& face = *it;
@@ -72,7 +68,7 @@ public:
       }
    }
 
-   ~D3DAbstractGraphicalEntity()
+   virtual ~D3DAbstractGraphicalEntity()
    {
       if (m_mesh != NULL)
       {

@@ -16,17 +16,32 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * An octree representation.
+ * An octree representation. This is an abstract version of such a tree.
+ * Each tree inherited from it will be queried in the same way, however
+ * the way it is constructed depends on particular implementations.
  */
 template<typename Elem>
 class Octree : public SpatialStorage<Elem>
 {
-private:
+protected:
+   enum ChildSectors
+   {
+      CS_FRONT_RIGHT_UPPER,
+      CS_FRONT_RIGHT_LOWER,
+      CS_FRONT_LEFT_UPPER,
+      CS_FRONT_LEFT_LOWER,
+      CS_BACK_RIGHT_UPPER,
+      CS_BACK_RIGHT_LOWER,
+      CS_BACK_LEFT_UPPER,
+      CS_BACK_LEFT_LOWER,
+   };
+
    /**
     * A helper structure that describes a single tree node.
     */
    struct Sector
    {
+      unsigned int m_depth;
       AABoundingBox m_bb;
       Sector** m_children;
       Array<unsigned int> m_elems;
@@ -37,16 +52,19 @@ private:
    };
 
 
-private:
-   Array<Elem*> m_elements;
-
-   unsigned int m_maxElemsPerSector;
+protected:
+   // root node of the tree
    Sector* m_root;
 
 public:
-   Octree(unsigned int maxElemsPerSector = 64, float worldSize = 1000);
+   /**
+    * Constructor. 
+    *
+    * @param treeBB     bounding box for the tree
+    */
+   Octree(const AABoundingBox& treeBB);
 
-   ~Octree();
+   virtual ~Octree();
 
    /**
     * The method checks if an element is present in the tree.
@@ -55,21 +73,21 @@ public:
     * @return        'true' if element was successfully added,
     *                'false' otherwise
     */
-   bool isAdded(const Elem& elem) const;
+   virtual bool isAdded(const Elem& elem) const = 0;
 
    /**
     * The method inserts a new element into the tree.
     *
     * @param elem    element we want to add
     */
-   void insert(Elem& elem);
+   virtual void insert(Elem& elem) = 0;
 
    /**
     * The method allows to remove an element from a tree.
     *
     * @param elem    element we want to remove
     */
-   void remove(Elem& elem);
+   virtual void remove(Elem& elem) = 0;
 
    /**
     * This method allows to query all the elements that are contained
@@ -85,12 +103,54 @@ public:
     */
    void query(const BoundingVolume& boundingVol, Array<Elem*>& output) const;
 
-private:
+protected:
+   /**
+    * This method returns a total number of elements stored in the tree.
+    * 
+    * @return     tree elements count
+    */
+   virtual unsigned int getElementsCount() const = 0;
+
+   /**
+    * The method returns an element specified with the index.
+    *
+    * @param idx  index of the element in the tree
+    * @return     element corresponding to the specified index
+    */
+   virtual Elem& getElement(unsigned int idx) const = 0;
+
+   /**
+    * This utility method allows to subdivide the specified sector
+    * so that it becomes an octree itself.
+    *
+    * @param sector     sector we want to divide.
+    */
+   void subdivideSector(Sector& sector);
+
+   /**
+    * This utility method will subdivide the specified subtree
+    * to the specified depth. The depth is relative to
+    * the subtree root, so if we pass a sector at depth 4 i.e.,
+    * and specify the depth as 2, the subtree's gonna get subdivided
+    * up to level 6.
+    *
+    * @param root    root of the subtree we wish  to subdivide
+    * @param depth   relative depth of partitioning
+    */
+   void subdivideTree(Sector& root, unsigned int depth);
+
+   /**
+    * The method allows to query for sectors that overlap
+    * the specified bounding volume.
+    *
+    * @param boundingVol   volume we want to use for the overlap test
+    * @param searchRoot    root of a subtree we want to search in
+    * @param output        upon method reeturn this array will be filled
+    *                      with found sectors that match the query criteria.
+    */
    void querySectors(const BoundingVolume& boundingVol, 
                      Sector& searchRoot,
                      Array<Sector*>& output) const;
-
-   void subdivideSector(Sector& sector);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

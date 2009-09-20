@@ -2,17 +2,17 @@
 #include "tamy\Tamy.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core-Renderer\Light.h"
+#include "core-Renderer\Camera.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Skeleton.h"
-#include "core-Renderer\RenderingPipelineBuilder.h"
-#include "core-Renderer\DynamicNodesStorage.h"
+#include "core-Renderer\SkyBoxStorage.h"
+#include "core-Renderer\SortingRenderablesStorage.h"
 #include "core-Renderer\PostProcessEffectRenderable.h"
 #include "core-Renderer\PostProcessSceneStorage.h"
-#include "core-ResourceManagement\IWFLoader.h"
-#include "ext-Demo\DemoRendererDefinition.h"
 #include "ext-Demo\LightsScene.h"
-#include "ext-Demo\DemoIWFScene.h"
+#include "ext-Demo\SharedOverlay.h"
 #include "ext-Demo\RERCreator.h"
+#include "PostProcessPipeline.h"
 #include "PostProcessRenderer.h"
 
 
@@ -22,76 +22,29 @@ using namespace demo;
 
 EffectsDemo::EffectsDemo(Tamy& tamy)
 : DemoApp(tamy)
+, m_camera(NULL)
+, m_renderingPipeline(NULL)
 {
+   m_camera = m_tamy.graphicalFactory().createCamera("camera");
+   m_renderingPipeline = new PostProcessPipeline(m_tamy.graphicalFactory(), m_tamy.renderer(), *m_camera);
+
+   timeController().add("rendererTrack");
+   timeController().get("rendererTrack").add(new TTimeDependent<PostProcessPipeline> (*m_renderingPipeline));
    timeController().add("animationTrack");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingMechanism* EffectsDemo::initRenderingPipeline(DemoRendererDefinition& rendererDefinition,
-                                                       DynMeshesScene* dynamicScene, 
-                                                       LightsScene* lights)
-{
-   rendererDefinition.createTarget("target", RT_COLOR);
-   Texture& targetTex = rendererDefinition.getTargetAsTexture("target");
-
-   GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
-   PostProcessEffectRenderable* ppRenderable = factory.createPostProcessEffectRenderable();
-   ppRenderable->addInputTexture(targetTex, factory);
-
-   rendererDefinition.addSource("scene", new DynamicNodesStorage(dynamicScene));
-   rendererDefinition.addSource("renderedScene", new PostProcessSceneStorage(ppRenderable));
-   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "backgroundRenderer");
-   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "fixedSceneRenderer");
-   rendererDefinition.aliasMechanism("..\\Data\\oldTV.fx", "postProcessRenderer");
-   rendererDefinition.setProgrammableMechanismLoader("..\\Data\\oldTV.fx", new demo::TRERCreator<PostProcessRenderer>());
-   rendererDefinition.addLightsForMechanism("fixedSceneRenderer", lights);
-
-   Camera* camera = m_tamy.graphicalFactory().createCamera("camera");
-   initDefaultCamera(camera);
-   rendererDefinition.defineCamera("backgroundRenderer", *camera);
-   rendererDefinition.defineCamera("fixedSceneRenderer", *camera);
-   rendererDefinition.defineCamera("postProcessRenderer", *camera);
-
-   RenderingPipelineBuilder builder(rendererDefinition);
-   RenderingMechanism* sceneRenderer = builder
-      .defineTransform("backgroundRenderer")
-         .in("<<background>>")
-         .out("target")
-      .end()
-      .defineTransform("fixedSceneRenderer")
-         .dep("backgroundRenderer")
-         .in("scene")
-         .out("target")
-      .end()
-      .defineTransform("postProcessRenderer")
-         .dep("fixedSceneRenderer")
-         .in("renderedScene")
-         .out("<<screen>>")
-      .end()
-   .end();
-
-
-   return sceneRenderer;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectsDemo::initializeScene(DynMeshesScene& dynamicScene, 
-                                  LightsScene& lights)
+void EffectsDemo::initialize()
 {   
-   DemoIWFScene sceneAdapter(m_tamy.graphicalFactory(), 
-                             m_tamy.meshLoaders(),
-                             demo::LightsSceneSetter::from_method<LightsScene, &LightsScene::insert> (&lights),
-                             demo::SkyBoxSceneSetter::from_method<demo::DemoApp, &demo::DemoApp::setBackground> (this),
-                             demo::DynamicObjectsSceneSetter::from_method<demo::DynMeshesScene, &demo::DynMeshesScene::addNode> (&dynamicScene),
-                             m_entitiesStorage,
-                             m_materialsStorage);
-   IWFLoader loader(sceneAdapter);
-   loader.load("..\\Data\\AnimLandscape.iwf");
+   SkyBoxStorage* skyBox = NULL;
+   StaticSceneManager* staticSceneStorage = NULL;
+   DynMeshesScene* dynamicSceneStorage = NULL;
+   LightsScene* lights = NULL;
+   loadIWF("..\\Data\\AnimLandscape.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
 
-   AbstractGraphicalEntity& ent = m_entitiesStorage.get("animlandscape.x");
-   m_animationController = ent.instantiateSkeleton(dynamicScene.root());
+   AbstractGraphicalEntity& ent = getEntitiesStorage().get("animlandscape.x");
+   m_animationController = ent.instantiateSkeleton(dynamicSceneStorage->root());
    m_animationController->activateAnimation("Cutscene_01", true);
    timeController().get("animationTrack").add(new TTimeDependent<Skeleton>(*m_animationController));
 
@@ -99,19 +52,38 @@ void EffectsDemo::initializeScene(DynMeshesScene& dynamicScene,
    light->setType(Light::LT_DIRECTIONAL);
    light->setDiffuseColor(Color(1, 1, 1, 0));
    light->setLookVec(D3DXVECTOR3(0, 0, -1));
-   lights.insert(light);
+   lights->insert(light);
+
+   // assemble rendering pipeline
+   m_renderingPipeline->setBackground(skyBox);
+   m_renderingPipeline->setStaticScene(staticSceneStorage);
+   m_renderingPipeline->setDynamicScene(dynamicSceneStorage);
+   m_renderingPipeline->setLights(lights);
+   m_renderingPipeline->setOverlay(new demo::SharedOverlay(getFpsView()));
+   m_renderingPipeline->setPostProcessScene(m_tamy.graphicalFactory().createPostProcessEffectRenderable());
+   m_renderingPipeline->setRendererImpl("..\\Data\\oldTV.fx", new demo::TRERCreator<PostProcessRenderer>());
+   m_renderingPipeline->create();
+
+   // initialize input controller
+   createDefaultInput(*m_camera);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void EffectsDemo::onDeinitialize()
+void EffectsDemo::deinitialize()
 {   
    timeController().remove("animationTrack");
+   timeController().remove("rendererTrack");
+
+   delete m_renderingPipeline;
+   m_renderingPipeline = NULL;
+
+   delete m_camera;
+   m_camera = NULL;
 
    delete m_animationController;
    m_animationController = NULL;
 }
-
 
 ///////////////////////////////////////////////////////////////////////////////
 

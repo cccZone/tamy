@@ -34,6 +34,13 @@ const Material& RenderableNode::getMaterial() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+const BoundingVolume& RenderableNode::getVolume()
+{
+   return getBoundingVolume();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Material& RenderableNode::getMaterial() 
 {
    return *m_material;

@@ -4,6 +4,42 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+namespace 
+{
+   template<>
+   class SplittableTriangle<D3DXVECTOR3>
+   {
+   private:
+      Triangle& m_triangle;
+
+   public:
+      SplittableTriangle<D3DXVECTOR3>(Triangle& triangle)
+         : m_triangle(triangle)
+      {}
+
+      const D3DXVECTOR3& vertex(unsigned int vtxIdx) const
+      {
+         return m_triangle.vertex(vtxIdx);
+      }
+
+      const D3DXVECTOR3& vertexPos(unsigned int vtxIdx) const
+      {
+         return m_triangle.vertex(vtxIdx);
+      }
+
+      D3DXVECTOR3 splitEdge(float percentage,
+                            unsigned int startVtxIdx, 
+                            unsigned int endVtxIdx) const
+      {
+         D3DXVECTOR3 v1 = m_triangle.vertex(startVtxIdx);
+         D3DXVECTOR3 edge = m_triangle.vertex(endVtxIdx) - v1;
+         return v1 + (edge * percentage);
+      }
+   };
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 Triangle::Triangle(const Triangle& rhs)
 {
    v[0] = rhs.v[0];
@@ -59,6 +95,42 @@ BoundingVolume* Triangle::operator*(const D3DXMATRIX& mtx) const
    D3DXVec3TransformCoord(&newV[2], &v[2], &mtx);
 
    return new Triangle(newV[0], newV[1], newV[2]);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Triangle::classifyAgainstPlane(const D3DXPLANE& plane) const
+{
+   int frontCount = 0;
+   int backCount = 0;
+   for (unsigned int i = 0; i < 3; ++i)
+   {
+      D3DXVECTOR3 planeNormal(plane.a, plane.b, plane.c);
+      float dist = D3DXVec3Dot(&v[i], &planeNormal) + plane.d;
+
+      if (dist > 0.0001f)
+      {
+         ++frontCount;
+      }
+      else if (dist < -0.0001f)
+      {
+         ++backCount;
+      }
+   }
+
+   if (frontCount == 3) {return 1;}
+   else if (backCount == 3) {return -1;}
+   else {return 0;}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Triangle::split(const D3DXPLANE& splitPlane, 
+                     Array<Triangle*>& frontSplit, 
+                     Array<Triangle*>& backSplit)
+{
+   SplittableTriangle<D3DXVECTOR3> tri(*this);
+   m_splitter.split(tri, splitPlane, frontSplit, backSplit);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

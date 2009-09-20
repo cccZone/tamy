@@ -30,9 +30,9 @@ void LightsScene::insert(Light* light)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void LightsScene::query(const D3DXVECTOR3& point, Array<Light*>& outLights)
+void LightsScene::query(const BoundingVolume& volume, Array<Light*>& outLights)
 {
-   m_storage.query(PointVolume(point), outLights);
+   m_storage.query(volume, outLights);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,33 +1,30 @@
 #pragma once
 
 #include "ext-Demo\DemoApp.h"
-#include "core-Renderer\AbstractGraphicalEntity.h"
-#include "core-Renderer\Material.h"
-#include "core\ResourceStorage.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class Camera;
+
 namespace demo
 {
-   class DemoRendererDefinition;
-};
+   class BasicRenderingPipeline;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class TransparencyDemo : public demo::DemoApp
 {
 private:
-   ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
-   ResourceStorage<Material> m_materialsStorage;
+   Camera* m_camera;
+   demo::BasicRenderingPipeline* m_renderingPipeline;
 
 public:
    TransparencyDemo(Tamy& tamy);
 
-protected:
-   void initializeScene(demo::DynMeshesScene& dynamicScene, 
-                        demo::LightsScene& lights);
-   void onDeinitialize();
+   void initialize();
+   void deinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

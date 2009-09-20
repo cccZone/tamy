@@ -105,7 +105,7 @@ void IWFMeshLoader::parseMesh(MeshDefinition& mesh,
 
 void IWFMeshLoader::addSurface(iwfSurface* surface, 
                                USHORT vertexStart, 
-                               std::list<Face<USHORT> >& faces,
+                               std::vector<Face<USHORT> >& faces,
                                unsigned int matIdx)
 {
    if (surface->IndexCount > 0)

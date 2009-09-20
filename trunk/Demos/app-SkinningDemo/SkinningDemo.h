@@ -9,17 +9,20 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Skeleton;
+class Camera;
 
 namespace demo
 {
-   class DemoRendererDefinition;
-};
+   class BasicRenderingPipeline;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class SkinningDemo : public demo::DemoApp
 {
 private:
+   Camera* m_camera;
+   demo::BasicRenderingPipeline* m_renderingPipeline;
    Skeleton* m_animationController;
 
    ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
@@ -28,9 +31,8 @@ private:
 public:
    SkinningDemo(Tamy& tamy);
 
-protected:
-   void initializeScene(demo::DynMeshesScene& dynamicScene, demo::LightsScene& lights);
-   void onDeinitialize();
+   void initialize();
+   void deinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

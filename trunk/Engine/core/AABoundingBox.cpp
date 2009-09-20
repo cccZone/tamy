@@ -51,6 +51,37 @@ BoundingVolume* AABoundingBox::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+float AABoundingBox::classifyAgainstPlane(const D3DXPLANE& plane) const
+{
+   D3DXVECTOR3 planeNormal(plane.a, plane.b, plane.c);
+
+   D3DXVECTOR3 nearPoint, farPoint;
+
+   if (planeNormal.x > 0.0f) {farPoint.x = max.x; nearPoint.x = min.x;}
+   else {farPoint.x = min.x; nearPoint.x = max.x;}
+   if (planeNormal.y > 0.0f) {farPoint.y = max.y; nearPoint.y = min.y;}
+   else {farPoint.y = min.y; nearPoint.y = max.y;}
+   if (planeNormal.z > 0.0f) {farPoint.z = max.z; nearPoint.z = min.z;}
+   else {farPoint.z = min.z; nearPoint.z = max.z;}
+
+   if ((D3DXVec3Dot(&planeNormal, &nearPoint) + plane.d) > 0.0f)
+   {
+      // the box is in front
+      return 1;
+   }
+   if ((D3DXVec3Dot( &planeNormal, &farPoint ) + plane.d) >= 0.0f)
+   {
+      return 0;
+   }
+   else
+   {
+      // the box is behind
+      return -1;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool AABoundingBox::testCollision(const PointVolume& point) const
 {
    return ::testCollision(*this, point.point);

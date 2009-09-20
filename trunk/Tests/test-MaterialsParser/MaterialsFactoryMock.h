@@ -62,10 +62,15 @@ public:
       return NULL;
    }
 
+   Font* createFont(const D3DXFONT_DESC& fontDesc)
+   {
+      return NULL;
+   }
+
 protected:
    GraphicalEntity* createGraphicalEntity(const std::string& name,
                                           const std::vector<LitVertex>& vertices,
-                                          const std::list<Face<USHORT> >& faces,
+                                          const std::vector<Face<USHORT> >& faces,
                                           const std::vector<Material*>& materials)
    {
       return NULL;
@@ -73,7 +78,7 @@ protected:
 
    SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                         const std::vector<LitVertex>& vertices,
-                                                        const std::list<Face<USHORT> >& faces,
+                                                        const std::vector<Face<USHORT> >& faces,
                                                         const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                         const std::vector<SkinBoneDefinition>& skinBones,
                                                         const std::vector<Material*>& materials)
@@ -81,6 +86,12 @@ protected:
       return NULL;
    }
 
+   StaticGeometryRenderable* createStaticGeometry(Material& material,
+                                                  const std::vector<LitVertex>& vertices,
+                                                  const std::vector<Face<USHORT> >& faces)
+   {
+      return NULL;
+   }
 
    Texture* loadTexture(const std::string& path, const std::string& fileName)
    {

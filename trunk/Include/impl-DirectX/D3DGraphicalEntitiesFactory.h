@@ -36,20 +36,26 @@ public:
 
    GraphicalEffect* createEffect(const std::string& name);
 
+   Font* createFont(const D3DXFONT_DESC& fontDesc);
+
    RenderingTargetsCleaner* createTargetsCleaner();
 
 protected:
    GraphicalEntity* createGraphicalEntity(const std::string& name,
                                           const std::vector<LitVertex>& vertices,
-                                          const std::list<Face<USHORT> >& faces,
+                                          const std::vector<Face<USHORT> >& faces,
                                           const std::vector<Material*>& materials);
 
    SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                         const std::vector<LitVertex>& vertices,
-                                                        const std::list<Face<USHORT> >& faces,
+                                                        const std::vector<Face<USHORT> >& faces,
                                                         const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                         const std::vector<SkinBoneDefinition>& skinBones,
                                                         const std::vector<Material*>& materials);
+
+   StaticGeometryRenderable* createStaticGeometry(Material& material,
+                                                  const std::vector<LitVertex>& vertices,
+                                                  const std::vector<Face<USHORT> >& faces);
 
    Texture* loadTexture(const std::string& path, const std::string& fileName);
    Texture* createEmptyTexture();

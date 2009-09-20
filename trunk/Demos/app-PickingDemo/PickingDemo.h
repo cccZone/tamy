@@ -16,11 +16,7 @@ class ParticleSystem;
 class WaypointCameraController;
 class Camera;
 class InputController;
-
-namespace demo
-{
-   class DemoRendererDefinition;
-};
+class PipelineWithHud;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,9 +25,7 @@ class PickingDemo : public demo::DemoApp
 private:
    Camera* m_sceneCamera;
    Camera* m_hudCamera;
-   demo::DynMeshesScene* m_hudMeshesScene;
-   demo::LightsScene* m_hudLightsScene;
-   demo::DynMeshesScene* m_mainScene;
+   PipelineWithHud* m_renderingPipeline;
 
    ParticleSystem* m_atmosphere;
    ParticleSystem* m_cursor;
@@ -50,14 +44,8 @@ private:
 public:
    PickingDemo(Tamy& tamy);
 
-protected:
-   RenderingMechanism* initRenderingPipeline(demo::DemoRendererDefinition& rendererDefinition,
-                                             demo::DynMeshesScene* dynamicScene, 
-                                             demo::LightsScene* lights);
-   void initializeScene(demo::DynMeshesScene& dynamicScene, demo::LightsScene& lights);
-   void onDeinitialize();
-
-   void initInput(UserInputController& uiController);
+   void initialize();
+   void deinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

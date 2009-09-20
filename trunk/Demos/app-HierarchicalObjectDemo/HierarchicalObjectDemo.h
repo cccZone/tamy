@@ -8,25 +8,26 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class Camera;
+
 namespace demo
 {
-   class DemoRendererDefinition;
-};
+   class BasicRenderingPipeline;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class HierarchicalObjectDemo : public demo::DemoApp
 {
 private:
-   ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
-   ResourceStorage<Material> m_materialsStorage;
+   Camera* m_camera;
+   demo::BasicRenderingPipeline* m_renderingPipeline;
 
 public:
    HierarchicalObjectDemo(Tamy& tamy);
 
-protected:
-   void initializeScene(demo::DynMeshesScene& dynamicScene, demo::LightsScene& lights);
-   void onDeinitialize();
+   void initialize();
+   void deinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

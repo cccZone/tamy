@@ -6,12 +6,18 @@
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
-#include "core-Renderer\DynamicNodesStorage.h"
+#include "core-Renderer\SortingRenderablesStorage.h"
 #include "core-Renderer\LightsStorage.h"
-#include "core-Renderer\RenderingPipelineBuilder.h"
-#include "ext-Demo\DemoRendererDefinition.h"
+#include "core-Renderer\RenderingTarget.h"
+#include "core-Renderer\SkyBoxStorage.h"
+#include "core-Renderer\TextField.h"
+#include "core-Renderer\Font.h"
+#include "core-ResourceManagement\IWFLoader.h"
+#include "ext-Demo\DemoIWFScene.h"
 #include "ext-Demo\LightsScene.h"
 #include "ext-Demo\DefaultDemoInputController.h"
+#include "ext-Demo\StaticSceneManager.h"
+#include "ext-Demo\FpsCounter.h"
 
 
 using namespace demo;
@@ -24,119 +30,141 @@ DemoApp::DemoApp(Tamy& tamy)
 , m_renderer(&(tamy.renderer()))
 , m_uiController(m_tamy.uiController())
 , m_demoController(NULL)
-, m_camera(NULL)
 {
    timeController().add("regularTrack");
-   timeController().get("regularTrack").add(new TTimeDependent<DemoApp>(*this));
    timeController().get("regularTrack").add(new TTimeDependent<UserInputController>(m_uiController));
 
-   m_rendererDefinition = new DemoRendererDefinition(m_tamy.graphicalFactory());
+   D3DXFONT_DESC fontDesc = {24,
+                          0,
+                          400,
+                          0,
+                          false,
+                          DEFAULT_CHARSET,
+                          OUT_TT_PRECIS,
+                          CLIP_DEFAULT_PRECIS,
+                          DEFAULT_PITCH,
+                          "Arial"};
 
-   m_dynamicMeshesScene = new DynMeshesScene(new Octree<RenderableNode>(64, 2000));
-   m_lightsScene = new LightsScene();
+   m_font = m_tamy.graphicalFactory().createFont(fontDesc);
+
+   m_fpsView = new TextField(*m_renderer);
+   m_fpsView->setFont(*m_font);
+   m_fpsView->setSize(0, 0, 0.2f, 0.2f);
+
+   timeController().add("fpsTrack");
+   timeController().get("fpsTrack").add(new FpsCounter(*m_fpsView));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 DemoApp::~DemoApp()
 {
-   m_dynamicMeshesScene = NULL;
-   m_lightsScene = NULL;
-
-   delete m_rendererDefinition;
-   m_rendererDefinition = NULL;
-
-   delete m_camera;
-   m_camera = NULL;
-
    delete m_demoController;
    m_demoController = NULL;
+
+   timeController().remove("fpsTrack");
+
+   delete m_font;
+   m_font = NULL;
+
+   delete m_fpsView;
+   m_fpsView = NULL;
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingMechanism* DemoApp::initRenderingPipeline(DemoRendererDefinition& rendererDefinition,
-                                                   DynMeshesScene* dynamicScene, 
-                                                   LightsScene* lights)
+void DemoApp::loadIWF(const std::string& fileName,
+                      SkyBoxStorage** outSkyBox,
+                      StaticSceneManager** outStaticScene,
+                      DynMeshesScene** outDynamicScene, 
+                      LightsScene** outLights)
 {
-   rendererDefinition.addSource("scene", new DynamicNodesStorage(dynamicScene));
-   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "backgroundRenderer");
-   rendererDefinition.aliasMechanism("<<fixedPipeline>>", "fixedSceneRenderer");
-   rendererDefinition.addLightsForMechanism("fixedSceneRenderer", lights);
+   class SkyBoxSetter
+   {
+   private:
+      SkyBoxStorage* m_outSkyBox;
 
-   m_camera = m_tamy.graphicalFactory().createCamera("camera");
-   rendererDefinition.defineCamera("backgroundRenderer", *m_camera);
-   rendererDefinition.defineCamera("fixedSceneRenderer", *m_camera);
+   public:
+      SkyBoxSetter() : m_outSkyBox(NULL) {}
 
-   RenderingPipelineBuilder builder(rendererDefinition);
-   RenderingMechanism* sceneRenderer = builder
-      .defineTransform("backgroundRenderer")
-         .in("<<background>>")
-         .out("<<screen>>")
-      .end()
-      .defineTransform("fixedSceneRenderer")
-         .dep("backgroundRenderer")
-         .in("scene")
-         .out("<<screen>>")
-      .end()
-   .end();
+      void setBackground(SkyBoxStorage* bg) 
+      {
+         delete m_outSkyBox;
+         m_outSkyBox = bg;
+      }
 
-   return sceneRenderer;
+      SkyBoxStorage* getSkyBox() {return m_outSkyBox;}
+   };
+   SkyBoxSetter skyBoxSetter;
+
+   AABoundingBox worldSize(D3DXVECTOR3(-2000, -2000, -2000), 
+                           D3DXVECTOR3(2000, 2000, 2000));
+   int treeDepth = 3;
+   int maxTreeLeafElems = 64;
+   *outStaticScene = new StaticSceneManager(worldSize, maxTreeLeafElems, treeDepth);
+   *outDynamicScene = new DynMeshesScene(new LinearStorage<RenderableNode>());
+   *outLights = new LightsScene();
+
+   DemoIWFScene sceneAdapter(m_tamy.graphicalFactory(), 
+                             m_tamy.meshLoaders(),
+                             demo::LightsSceneSetter::from_method<LightsScene, &LightsScene::insert> (*outLights),
+                             demo::SkyBoxSceneSetter::from_method<SkyBoxSetter, &SkyBoxSetter::setBackground> (&skyBoxSetter),
+                             demo::DynamicObjectsSceneSetter::from_method<demo::DynMeshesScene, &demo::DynMeshesScene::addNode> (*outDynamicScene),
+                             demo::StaticGeometrySetter::from_method<StaticSceneManager, &StaticSceneManager::addObj> (*outStaticScene),
+                             m_entitiesStorage,
+                             m_materialsStorage);
+   IWFLoader loader(sceneAdapter);
+   loader.load(fileName);
+
+   if (skyBoxSetter.getSkyBox() == NULL)
+   {
+      GraphicalEntitiesFactory& factory = m_tamy.graphicalFactory();
+      *outSkyBox = new SkyBoxStorage(factory.createSkyBoxSide(SBS_LEFT, factory.createTexture("")),
+                                     factory.createSkyBoxSide(SBS_RIGHT, factory.createTexture("")),
+                                     factory.createSkyBoxSide(SBS_TOP, factory.createTexture("")),
+                                     factory.createSkyBoxSide(SBS_BOTTOM, factory.createTexture("")),
+                                     factory.createSkyBoxSide(SBS_FRONT, factory.createTexture("")),
+                                     factory.createSkyBoxSide(SBS_BACK, factory.createTexture("")));
+   }
+   else
+   {
+      *outSkyBox = skyBoxSetter.getSkyBox();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DemoApp::initInput(UserInputController& uiController)
+Overlay& DemoApp::getFpsView()
 {
-   ASSERT(m_camera != NULL, "Default demo camera not initialized");
-   m_demoController = new DefaultDemoInputController(uiController, 
-                                                     *m_camera, 
+   return *m_fpsView;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ResourceStorage<AbstractGraphicalEntity>& DemoApp::getEntitiesStorage()
+{
+   return m_entitiesStorage;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ResourceStorage<Material>& DemoApp::getMaterialsStorage()
+{
+   return m_materialsStorage;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DemoApp::createDefaultInput(Camera& camera)
+{
+   delete m_demoController;
+   m_demoController = new DefaultDemoInputController(m_uiController, 
+                                                     camera, 
                                                      EndDemoCommand::from_method<DemoApp, &DemoApp::endDemo>(this));
-   timeController().get("regularTrack").add(new TTimeDependent<DefaultDemoInputController>(*m_demoController));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DemoApp::setBackground(SkyBoxStorage* skyBox)
-{
-   m_rendererDefinition->setBackground(skyBox);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DemoApp::initialize()
-{
-   initializeScene(*m_dynamicMeshesScene, *m_lightsScene);
-
-   RenderingMechanism* mech = initRenderingPipeline(*m_rendererDefinition, 
-                                                    m_dynamicMeshesScene, 
-                                                    m_lightsScene);
-
-   m_renderer->setMechanism(mech);
-
-   initInput(m_uiController);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DemoApp::deinitialize()
-{  
-   onDeinitialize();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DemoApp::update(float timeElapsed)
-{
-   m_renderer->render();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DemoApp::initDefaultCamera(Camera* camera)
-{
-   ASSERT (m_camera == NULL, "Default demo camera already initialized");
-   m_camera = camera;
+   timeController().remove("uiTrack");
+   timeController().add("uiTrack");
+   timeController().get("uiTrack").add(new TTimeDependent<DefaultDemoInputController>(*m_demoController));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

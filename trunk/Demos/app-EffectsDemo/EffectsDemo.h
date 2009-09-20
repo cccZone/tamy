@@ -9,32 +9,23 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Skeleton;
-class RenderingMechanism;
-
-namespace demo
-{
-   class DemoRendererDefinition;
-};
+class Camera;
+class PostProcessPipeline;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class EffectsDemo : public demo::DemoApp
 {
 private:
+   Camera* m_camera;
+   PostProcessPipeline* m_renderingPipeline;
    Skeleton* m_animationController;
-
-   ResourceStorage<AbstractGraphicalEntity> m_entitiesStorage;
-   ResourceStorage<Material> m_materialsStorage;
 
 public:
    EffectsDemo(Tamy& tamy);
 
-protected:
-   RenderingMechanism* initRenderingPipeline(demo::DemoRendererDefinition& rendererDefinition,
-                                             demo::DynMeshesScene* dynamicScene, 
-                                             demo::LightsScene* lights);
-   void initializeScene(demo::DynMeshesScene& dynamicScene, demo::LightsScene& lights);
-   void onDeinitialize();
+   void initialize();
+   void deinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

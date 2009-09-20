@@ -197,6 +197,14 @@
 				RelativePath=".\PickingDemo.h"
 				>
 			</File>
+			<File
+				RelativePath=".\PipelineWithHud.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PipelineWithHud.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

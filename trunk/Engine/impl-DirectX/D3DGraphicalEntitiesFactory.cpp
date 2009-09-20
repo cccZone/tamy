@@ -16,6 +16,8 @@
 #include "impl-DirectX\D3DPostProcessEffectRenderable.h"
 #include "impl-DirectX\D3DRendererImpl.h"
 #include "impl-DirectX\D3DRenderingTargetsCleaner.h"
+#include "impl-DirectX\D3DStaticGeometryRenderable.h"
+#include "impl-DirectX\D3DFont.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,7 +42,7 @@ D3DGraphicalEntitiesFactory::~D3DGraphicalEntitiesFactory()
 GraphicalEntity* D3DGraphicalEntitiesFactory::createGraphicalEntity(
                                                            const std::string& name,
                                                            const std::vector<LitVertex>& vertices,
-                                                           const std::list<Face<USHORT> >& faces,
+                                                           const std::vector<Face<USHORT> >& faces,
                                                            const std::vector<Material*>& materials)
 {
     return new D3DGraphicalEntity<LitVertex>(name, m_d3Device, vertices, faces, materials);
@@ -51,7 +53,7 @@ GraphicalEntity* D3DGraphicalEntitiesFactory::createGraphicalEntity(
 SkinnedGraphicalEntity* D3DGraphicalEntitiesFactory::createSkinnedGraphicalEntity(
                                                            const std::string& name,
                                                            const std::vector<LitVertex>& vertices,
-                                                           const std::list<Face<USHORT> >& faces,
+                                                           const std::vector<Face<USHORT> >& faces,
                                                            const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                            const std::vector<SkinBoneDefinition>& skinBones,
                                                            const std::vector<Material*>& materials)
@@ -63,6 +65,19 @@ SkinnedGraphicalEntity* D3DGraphicalEntitiesFactory::createSkinnedGraphicalEntit
                                                    bonesInfluencingAttribute, 
                                                    skinBones, 
                                                    materials);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+StaticGeometryRenderable* 
+D3DGraphicalEntitiesFactory::createStaticGeometry(Material& material,
+                                                  const std::vector<LitVertex>& vertices,
+                                                  const std::vector<Face<USHORT> >& faces)
+{
+   return new D3DStaticGeometryRenderable(material,
+                                          vertices, 
+                                          faces, 
+                                          m_d3Device);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -284,6 +299,13 @@ GraphicalEffect* D3DGraphicalEntitiesFactory::createEffect(const std::string& na
                                  m_d3Device, 
                                  m_renderer, 
                                  effect);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Font* D3DGraphicalEntitiesFactory::createFont(const D3DXFONT_DESC& fontDesc)
+{
+   return new D3DFont(fontDesc, m_d3Device, m_renderer);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

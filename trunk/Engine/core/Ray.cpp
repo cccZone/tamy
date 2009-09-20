@@ -15,6 +15,13 @@ BoundingVolume* Ray::operator*(const D3DXMATRIX& mtx) const
    return newRay;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
+float Ray::classifyAgainstPlane(const D3DXPLANE& plane) const
+{
+   ASSERT(false, "Ray::classifyAgainstPlane(const D3DXPLANE&) - Method not implemented");
+   return 0;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

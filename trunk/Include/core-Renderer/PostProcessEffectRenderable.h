@@ -6,6 +6,7 @@
 
 #include "core\Observer.h"
 #include "core-Renderer\Renderable.h"
+#include "core\BoundingSpace.h"
 #include <string>
 
 
@@ -37,6 +38,7 @@ private:
    Array<D3DXMATRIX> m_renderingMatrices;
    D3DXMATRIX m_worldTransform;
    Material* m_defaultMat;
+   BoundingSpace m_volume;
 
 public:
    PostProcessEffectRenderable(Renderer& renderer);
@@ -51,6 +53,8 @@ public:
    const Array<D3DXMATRIX>& getRenderingMatrices();
    
    const Material& getMaterial() const;
+
+   const BoundingVolume& getVolume();
 
    /**
     * The looks of this renderable is defined by the textures 

@@ -186,6 +186,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PostProcessPipeline.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PostProcessPipeline.h"
+				>
+			</File>
+			<File
 				RelativePath=".\PostProcessRenderer.h"
 				>
 			</File>

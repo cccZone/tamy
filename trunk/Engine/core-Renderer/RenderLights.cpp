@@ -18,11 +18,10 @@ RenderLights::RenderLights(LightsStorage& lightsStorage)
 
 void RenderLights::onRenderingBegin(Renderable& renderable, RendererImpl& impl)
 {
-   const D3DXMATRIX& situation = renderable.getGlobalTransform();
-   D3DXVECTOR3 pos(situation._41, situation._42, situation._43);
+   const BoundingVolume& volume = renderable.getVolume();
 
    m_enabledLights.clear();
-   m_lightsStorage.query(pos, m_enabledLights);
+   m_lightsStorage.query(volume, m_enabledLights);
 
    impl.enableLights(m_enabledLights);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core-Renderer\Renderable.h"
+#include "core\BoundingSpace.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,7 @@ private:
    
    D3DXMATRIX m_globalMtx;
    Array<D3DXMATRIX> m_renderingMatrices;
+   BoundingSpace m_volume;
 
 public:
    SkyBoxSide(Texture* texture);
@@ -29,6 +31,8 @@ public:
     * @inherited
     */
    virtual void render() = 0;
+
+   const BoundingVolume& getVolume();
 
    const Array<D3DXMATRIX>& getRenderingMatrices();
    
