@@ -8,6 +8,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class File;
+
+///////////////////////////////////////////////////////////////////////////////
+
 #define MAX_NUM_WAVEID			1024
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,13 +69,13 @@ private:
 	WAVEFORMATEXTENSIBLE m_ext;		// For non-WAVEFORMATEXTENSIBLE wavefiles, the header is stored in the Format member of wfEXT
 	char*          m_data;
 	DWORD          m_dataSize;
-	FILE*          m_file;
+	File*          m_file;
 	DWORD	         m_dataOffset;
 
    std::string m_format;
 
 public:
-   WavFile(const std::string& fileName);
+   WavFile(File* file);
 	~WavFile();
 
    DWORD getData(DWORD periodicPos, char* data, DWORD bufSize);
@@ -83,7 +87,7 @@ public:
    DWORD getBlockAlignment() const;
 
 private:
-	void parseFile(const std::string& fileName);
+	void parseFile();
    std::string recognizeFormat();
 };
 

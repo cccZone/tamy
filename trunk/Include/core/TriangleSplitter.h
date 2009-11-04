@@ -19,13 +19,15 @@ template<typename VERTEX>
 class SplittableTriangle
 {
 public:
+   virtual ~SplittableTriangle() {}
+
    /**
     * This method returns a vertex with the specified index.
     *
     * @param vtxIdx  index of the vertex <0, 2>
     * @return        the vertex itself
     */
-   const VERTEX& vertex(unsigned int vtxIdx) const;
+   virtual const VERTEX& vertex(unsigned int vtxIdx) const = 0;
 
    /**
     * This method returns position of the specified vertex.
@@ -33,7 +35,7 @@ public:
     * @param vtxIdx  index of the vertex <0, 2>
     * @return        position of the vertex
     */
-   const D3DXVECTOR3& vertexPos(unsigned int vtxIdx) const;
+   virtual const D3DXVECTOR3& vertexPos(unsigned int vtxIdx) const = 0;
 
    /**
     * The method creates a new vertex somewhere on the specified edge.
@@ -43,9 +45,9 @@ public:
     * @param startVtxIdx   the beginning of the edge
     * @param endVtxIdx     the end of the edge
     */
-   VERTEX splitEdge(float percentage, 
-                    unsigned int startVtxIdx, 
-                    unsigned int endVtxIdx) const;
+   virtual VERTEX splitEdge(float percentage, 
+                            unsigned int startVtxIdx, 
+                            unsigned int endVtxIdx) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

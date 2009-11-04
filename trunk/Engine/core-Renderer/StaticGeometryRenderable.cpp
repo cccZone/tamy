@@ -105,8 +105,8 @@ void StaticGeometryRenderable::split(const D3DXPLANE& splitPlane,
    for (unsigned int i = 0; i < trianglesCount; ++i)
    {
       MeshTriangle triangle(m_vertices[m_faces[i].idx[0]],
-                            m_vertices[m_faces[i].idx[1]],
-                            m_vertices[m_faces[i].idx[2]]);
+                                  m_vertices[m_faces[i].idx[1]],
+                                  m_vertices[m_faces[i].idx[2]]);
       m_splitter.split(triangle, splitPlane, frontTriangles, backTriangles);
    }
 

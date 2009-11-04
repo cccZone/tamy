@@ -1,4 +1,5 @@
 #include "core-Sound\WavFile.h"
+#include "core\File.h"
 #include <ks.h>
 #include <ksmedia.h>
 #include <stdexcept>
@@ -66,14 +67,14 @@ struct WAVEFMT
 
 ///////////////////////////////////////////////////////////////////////////////
 
-WavFile::WavFile(const std::string& fileName)
-      : Sound(fileName),
-      m_data(NULL),
-	   m_dataSize(0),
-	   m_file(NULL),
-	   m_dataOffset(0)
+WavFile::WavFile(File* file)
+: Sound(file->getName())
+, m_data(NULL)
+, m_dataSize(0)
+, m_file(file)
+, m_dataOffset(0)
 {
-	parseFile(fileName);
+	parseFile();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,7 +86,7 @@ WavFile::~WavFile()
 
    m_dataSize = 0;
 
-   fclose(m_file);
+   delete m_file;
    m_file = NULL;
 
    m_dataOffset = 0;
@@ -93,39 +94,29 @@ WavFile::~WavFile()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void WavFile::parseFile(const std::string& fileName)
+void WavFile::parseFile()
 {
 	RIFFCHUNK		riffChunk;
 	WAVEFMT			waveFmt;
 
-   if (fileName.length() == 0) {throw std::invalid_argument("No *.wav file name specified");}
-
-
-	// open the wave file for reading
-	m_file = fopen(fileName.c_str(), "rb");
-	if (m_file == NULL)
-   {
-      throw std::runtime_error(std::string("Can't open file ") + fileName);
-   }
-
 	// read Wave file header
    WAVEFILEHEADER	waveFileHeader;
-	fread(&waveFileHeader, 1, sizeof(WAVEFILEHEADER), m_file);
+	m_file->read((byte*)&waveFileHeader, sizeof(WAVEFILEHEADER));
 	if ((_strnicmp(waveFileHeader.szRIFF, "RIFF", 4) != 0) || 
        (_strnicmp(waveFileHeader.szWAVE, "WAVE", 4) != 0))
 	{
-      throw std::runtime_error(std::string("File ") + fileName + 
+      throw std::runtime_error(std::string("File ") + m_file->getName() + 
                                std::string(" is not a valid *.wav file"));
    }
 
 
-	while (fread(&riffChunk, 1, sizeof(RIFFCHUNK), m_file) == sizeof(RIFFCHUNK))
+	while (m_file->read((byte*)&riffChunk, sizeof(RIFFCHUNK)) == sizeof(RIFFCHUNK))
 	{
 		if (!_strnicmp(riffChunk.szChunkName, "fmt ", 4))
 		{
 			if (riffChunk.ulChunkSize <= sizeof(WAVEFMT))
 			{
-				fread(&waveFmt, 1, riffChunk.ulChunkSize, m_file);
+				m_file->read((byte*)&waveFmt, riffChunk.ulChunkSize);
 			
 				// determine if this is a WAVEFORMATEX or WAVEFORMATEXTENSIBLE wave file
 				if (waveFmt.usFormatTag == WAVE_FORMAT_PCM)
@@ -141,30 +132,31 @@ void WavFile::parseFile(const std::string& fileName)
 			}
 			else
 			{
-				fseek(m_file, riffChunk.ulChunkSize, SEEK_CUR);
+            m_file->seek(riffChunk.ulChunkSize, std::ios_base::cur);
 			}
 		}
 		else if (!_strnicmp(riffChunk.szChunkName, "data", 4))
 		{
 			m_dataSize = riffChunk.ulChunkSize;
-			m_dataOffset = ftell(m_file);
-			fseek(m_file, riffChunk.ulChunkSize, SEEK_CUR);
+			m_dataOffset = m_file->tell();
+			m_file->seek(riffChunk.ulChunkSize, std::ios_base::cur);
 		}
 		else
 		{
-			fseek(m_file, riffChunk.ulChunkSize, SEEK_CUR);
+			m_file->seek(riffChunk.ulChunkSize, std::ios_base::cur);
 		}
 
 		// ensure that we are correctly aligned for next chunk
 		if (riffChunk.ulChunkSize & 1)
       {
-			fseek(m_file, 1, SEEK_CUR);
+			m_file->seek(1, std::ios_base::cur);
       }
 	}
 
 	if ((m_dataSize == 0) || (m_dataOffset == 0) || ((m_type != WF_EX) && (m_type != WF_EXT)))
    {
-      fclose(m_file);
+      std::string fileName = m_file->getName();
+      delete m_file; m_file = NULL;
       throw std::runtime_error(std::string("Error occured during parsing ") + fileName);
    }
 
@@ -172,7 +164,7 @@ void WavFile::parseFile(const std::string& fileName)
    // recognize the data format
    m_format = recognizeFormat();
 
-   fseek(m_file, m_dataOffset, SEEK_SET);
+   m_file->seek(m_dataOffset, std::ios_base::beg);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -241,14 +233,14 @@ DWORD WavFile::getData(DWORD periodicPos, char* data, DWORD bufSize)
    {
       throw std::out_of_range("Trying to move past the end of the sound file");
    }
-   fseek(m_file, periodicPos + m_dataOffset, SEEK_SET);
+   m_file->seek(periodicPos + m_dataOffset, std::ios_base::beg);
 
    DWORD leftToRead = m_dataSize - periodicPos;
 	if (leftToRead == 0) {return 0;}
 
    if (leftToRead > bufSize) {leftToRead = bufSize;}
 
-	DWORD bytesRead = (DWORD)fread(data, 1, leftToRead, m_file);
+	DWORD bytesRead = (DWORD)m_file->read((byte*)data, leftToRead);
    return bytesRead;
 }
 

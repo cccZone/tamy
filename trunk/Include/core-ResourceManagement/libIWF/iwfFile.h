@@ -39,6 +39,7 @@ class iwfTexture;
 class iwfShader;
 class iwfScriptRef;
 class iwfScript;
+class Filesystem;
 
 //-----------------------------------------------------------------------------
 // Load Flag Definitions
@@ -83,7 +84,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Functions for This Class.
     //-------------------------------------------------------------------------
-    void            Load( LPCSTR FileName, ULONG Flags = 0 );
+    void            Load( Filesystem& filesystem, const std::string& fileName, ULONG Flags = 0 );
     void            ClearObjects();
 
     //-------------------------------------------------------------------------

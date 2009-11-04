@@ -1,5 +1,8 @@
 #pragma once
 
+/// @file   core-ResourceManagement\CompositeGraphicalDataSource.h
+/// @brief  multiple sources mesh loader
+
 #include "core-ResourceManagement\GraphicalDataSource.h"
 #include <string>
 #include <vector>
@@ -18,11 +21,10 @@ class FileGraphicalDataSource;
 class CompositeGraphicalDataSource : public GraphicalDataSource
 {
 private:
-   std::string m_meshesDir;
    std::vector<FileGraphicalDataSource*> m_sources;
 
 public:
-   CompositeGraphicalDataSource(const std::string& dir);
+   CompositeGraphicalDataSource();
    ~CompositeGraphicalDataSource();
 
    void addSource(FileGraphicalDataSource* source);

@@ -4,42 +4,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace 
-{
-   template<>
-   class SplittableTriangle<D3DXVECTOR3>
-   {
-   private:
-      Triangle& m_triangle;
-
-   public:
-      SplittableTriangle<D3DXVECTOR3>(Triangle& triangle)
-         : m_triangle(triangle)
-      {}
-
-      const D3DXVECTOR3& vertex(unsigned int vtxIdx) const
-      {
-         return m_triangle.vertex(vtxIdx);
-      }
-
-      const D3DXVECTOR3& vertexPos(unsigned int vtxIdx) const
-      {
-         return m_triangle.vertex(vtxIdx);
-      }
-
-      D3DXVECTOR3 splitEdge(float percentage,
-                            unsigned int startVtxIdx, 
-                            unsigned int endVtxIdx) const
-      {
-         D3DXVECTOR3 v1 = m_triangle.vertex(startVtxIdx);
-         D3DXVECTOR3 edge = m_triangle.vertex(endVtxIdx) - v1;
-         return v1 + (edge * percentage);
-      }
-   };
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 Triangle::Triangle(const Triangle& rhs)
 {
    v[0] = rhs.v[0];
@@ -99,7 +63,44 @@ BoundingVolume* Triangle::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Triangle::classifyAgainstPlane(const D3DXPLANE& plane) const
+D3DXVECTOR3 Triangle::splitEdge(float percentage,
+                                unsigned int startVtxIdx, 
+                                unsigned int endVtxIdx) const
+{
+   D3DXVECTOR3 v1 = v[startVtxIdx];
+   D3DXVECTOR3 edge = v[endVtxIdx] - v1;
+   return v1 + (edge * percentage);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+PlaneClassification Triangle::classifyAgainsPlane(const D3DXPLANE& plane) const
+{
+    float dist1 = D3DXPlaneDotCoord(&plane, &v[0]);
+    float dist2 = D3DXPlaneDotCoord(&plane, &v[1]);
+    float dist3 = D3DXPlaneDotCoord(&plane, &v[2]);
+
+    if ((dist1 < 0) && (dist2 < 0) && (dist3 < 0))
+    {
+        return PPC_BACK;
+    }
+    else if ((dist1 > 0) && (dist2 > 0) && (dist3 > 0))
+    {
+        return PPC_FRONT;
+    }
+    else if ((dist1 == 0) && (dist2 == 0) && (dist3 == 0))
+    {
+        return PPC_COPLANAR;
+    }
+    else
+    {
+        return PPC_SPANNING;
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Triangle::distanceToPlane(const D3DXPLANE& plane) const
 {
    int frontCount = 0;
    int backCount = 0;
@@ -129,8 +130,7 @@ void Triangle::split(const D3DXPLANE& splitPlane,
                      Array<Triangle*>& frontSplit, 
                      Array<Triangle*>& backSplit)
 {
-   SplittableTriangle<D3DXVECTOR3> tri(*this);
-   m_splitter.split(tri, splitPlane, frontSplit, backSplit);
+   m_splitter.split(*this, splitPlane, frontSplit, backSplit);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

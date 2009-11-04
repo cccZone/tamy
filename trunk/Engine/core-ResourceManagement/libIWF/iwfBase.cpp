@@ -23,6 +23,8 @@
 // CBaseIWF Specific Includes
 //-----------------------------------------------------------------------------
 #include "core-ResourceManagement\libIWF\libIWF.h"
+#include "core\Filesystem.h"
+#include "core\File.h"
 
 //-----------------------------------------------------------------------------
 // Name : CBaseIWF () (Constructor)
@@ -38,25 +40,6 @@ CBaseIWF::CBaseIWF()
     m_AuthorLength   = 0;
     m_StreamStartPos = 0;
     m_LastEOCPos     = 0;
-}
-
-//-----------------------------------------------------------------------------
-// Name : CBaseIWF () (Alternate Constructor)
-// Desc : CBaseIWF Class Constructor. Attaches this IWF to a stream.
-//-----------------------------------------------------------------------------
-CBaseIWF::CBaseIWF( LPCSTR FileName, IWFPROCESSMODE Mode, IWFFILEHEADER * pHeader )
-{
-    // Reset / Clear all required values
-    m_CurrentMode    = MODE_CLOSED;
-    m_pOpenChunks    = NULL;
-    m_pFile          = NULL;
-    m_pChunkProc     = NULL;
-    m_AuthorLength   = 0;
-    m_StreamStartPos = 0;
-    m_LastEOCPos     = 0;
-
-    // Attach here
-    Open( FileName, Mode, pHeader );
 }
 
 //-----------------------------------------------------------------------------
@@ -78,7 +61,7 @@ void CBaseIWF::Close()
     CHUNKDETAILS * Details;
 
     // Close the file
-    if (m_pFile) fclose( m_pFile );
+    delete m_pFile; m_pFile = NULL;
 
     // Free up any open chunks
     while (Details = GetOpenChunkHead()) 
@@ -146,7 +129,10 @@ bool CBaseIWF::CheckValidAuthor( LPVOID pAuthor, unsigned char Length ) const
 //        or MODE_WRITE) to allow the IWF functionality to correctly interpret
 //        the correct use of some of the multi-purpose read+write functions.
 //-----------------------------------------------------------------------------
-void CBaseIWF::Open( LPCSTR FileName, IWFPROCESSMODE Mode, IWFFILEHEADER * pHeader )
+void CBaseIWF::Open( Filesystem& filesystem, 
+                     const std::string& fileName, 
+                     IWFPROCESSMODE Mode, 
+                     IWFFILEHEADER * pHeader )
 {
     ULONG Version    = MAKEVERSION(2,0,1), Flags = 0;
     ULONG CheckSum   = 0;
@@ -165,26 +151,26 @@ void CBaseIWF::Open( LPCSTR FileName, IWFPROCESSMODE Mode, IWFFILEHEADER * pHead
     if (Mode == MODE_READ || Mode == MODE_READUNFILTERED) 
     {
         // Check if this is a valid IWF if in read mode
-        if (!IsValid(FileName)) throw IWF_ERR_INVALIDFORMAT;
+        if (!IsValid(filesystem, fileName)) throw IWF_ERR_INVALIDFORMAT;
 
         // Attempt to open the file
-        m_pFile = fopen( FileName, "rb" );
+        m_pFile = filesystem.open( fileName, std::ios_base::in | std::ios::binary );
         if (!m_pFile) throw IWF_ERR_ACCESSDENIED;
 
         // Read file header if requested etc.
         if ( pHeader )
         {
-            fread( pHeader->Signature  , 1, FILE_SIG_SIZE, m_pFile );
-            fread( &pHeader->Version   , 1, sizeof(ULONG), m_pFile );
-            fread( &pHeader->Flags     , 1, sizeof(ULONG), m_pFile );
-            fread( &pHeader->Checksum  , 1, sizeof(ULONG), m_pFile );
+            m_pFile->read( pHeader->Signature  , FILE_SIG_SIZE );
+            m_pFile->read( (byte*)&pHeader->Version   , sizeof(ULONG) );
+            m_pFile->read( (byte*)&pHeader->Flags     , sizeof(ULONG) );
+            m_pFile->read( (byte*)&pHeader->Checksum  , sizeof(ULONG) );
         } // End if
     
     } 
     else if (Mode == MODE_WRITE) 
     {
         // Attempt to open the file
-        m_pFile = fopen( FileName, "wb" );
+        m_pFile = filesystem.open( fileName, std::ios_base::out | std::ios::binary );
         if (!m_pFile) throw IWF_ERR_ACCESSDENIED;
 
         // Write out the file header
@@ -209,20 +195,21 @@ void CBaseIWF::Open( LPCSTR FileName, IWFPROCESSMODE Mode, IWFFILEHEADER * pHead
 //        start of the stream expected to be tested, and will also return the
 //        stream back to that same position once testing has completed.
 //-----------------------------------------------------------------------------
-bool CBaseIWF::IsValid( LPCSTR FileName )
+bool CBaseIWF::IsValid( Filesystem& filesystem, 
+                        const std::string& fileName )
 {
     bool            SuccessCode = true;
     IWFFILEHEADER   FileHeader;
 
     // Attempt to open the file
-    FILE * pFile = fopen( FileName, "r" );
+    File * pFile = filesystem.open( fileName, std::ios_base::in );
     if (!pFile) return false;
 
     // Read file signature etc.
-    if ( fread( FileHeader.Signature  , 1, FILE_SIG_SIZE, pFile ) < FILE_SIG_SIZE) SuccessCode = false;
-    if ( fread( &FileHeader.Version   , 1, sizeof(ULONG), pFile ) < sizeof(ULONG)) SuccessCode = false;
-    if ( fread( &FileHeader.Flags     , 1, sizeof(ULONG), pFile ) < sizeof(ULONG)) SuccessCode = false;
-    if ( fread( &FileHeader.Checksum  , 1, sizeof(ULONG), pFile ) < sizeof(ULONG)) SuccessCode = false;
+    if ( pFile->read( FileHeader.Signature  , FILE_SIG_SIZE ) < FILE_SIG_SIZE) SuccessCode = false;
+    if ( pFile->read( (byte*)&FileHeader.Version   , sizeof(ULONG) ) < sizeof(ULONG)) SuccessCode = false;
+    if ( pFile->read( (byte*)&FileHeader.Flags     , sizeof(ULONG) ) < sizeof(ULONG)) SuccessCode = false;
+    if ( pFile->read( (byte*)&FileHeader.Checksum  , sizeof(ULONG) ) < sizeof(ULONG)) SuccessCode = false;
 
     // If we read them successfully
     if (SuccessCode) 
@@ -235,7 +222,7 @@ bool CBaseIWF::IsValid( LPCSTR FileName )
     } // End If
 
     // Close the file
-    fclose( pFile );
+    delete pFile;
 
     // Success?
     return SuccessCode;
@@ -851,32 +838,51 @@ void CBaseIWF::ClearChunkProcs()
 //-------------------------------------------------------------------------
 size_t CBaseIWF::Read( LPVOID pBuffer, unsigned long BufferSize ) 
 { 
-    return fread( pBuffer, 1, BufferSize, m_pFile );
+    return m_pFile->read( (byte*)pBuffer, BufferSize );
 } // End Function
 
 size_t CBaseIWF::Write( LPVOID pBuffer, unsigned long BufferSize ) 
 { 
-    return fwrite( pBuffer, 1, BufferSize, m_pFile );   
+    return m_pFile->write( (byte*)pBuffer, BufferSize );   
 } // End Function
 
 LPSTR CBaseIWF::ReadString( LPSTR strData, unsigned long BufferSize ) 
 { 
-    return fgets( strData, BufferSize, m_pFile );
+    m_pFile->readString( strData, BufferSize );
+    return strData;
 } // End Function
 
 int CBaseIWF::WriteString( LPCSTR strData ) 
 { 
-    return fputs( strData, m_pFile );
+   try
+   {
+      m_pFile->writeString( strData );
+      return 0;
+   }
+   catch (std::runtime_error&)
+   {
+      return EOF;
+   }
 } // End Function
 
 int CBaseIWF::Seek( long Offset, int Origin ) 
 { 
-    return fseek( m_pFile, Offset, Origin );
+    std::ios_base::seekdir seekDir;
+    switch (Origin)
+    {
+    case SEEK_SET:  seekDir = std::ios_base::beg; break;
+    case SEEK_END:  seekDir = std::ios_base::end; break;
+    case SEEK_CUR:  // fallthrough
+    default:        seekDir = std::ios_base::cur; break;
+    }
+    m_pFile->seek( Offset, seekDir );
+    return 0;
 } // End Function
 
 int CBaseIWF::Flush( ) 
 { 
-    return fflush( m_pFile );
+    m_pFile->flush( );
+    return 0;
 } // End Function
 
 bool CBaseIWF::IsOpen( ) const 
@@ -886,22 +892,30 @@ bool CBaseIWF::IsOpen( ) const
 
 bool CBaseIWF::IsEOF()
 { 
-    return (feof( m_pFile ) != 0);
+    return (m_pFile->eof( ) != 0);
 } // End Function
 
 long CBaseIWF::GetPosition( ) 
 { 
-    return ftell( m_pFile );
+    return m_pFile->tell( );
 } // End Function
 
 long CBaseIWF::GetLength() 
 {
-    return _filelength( m_pFile->_file );
+    return m_pFile->size();
 } // End Function
 
 bool CBaseIWF::SetLength( long Length ) 
 {
-    return (_chsize( m_pFile->_file, Length ) == 0);
+   try
+   {
+      m_pFile->setSize(Length);
+      return true;
+   }
+   catch (std::runtime_error&)
+   {
+      return false;
+   }
 } // End Function
 
 //-----------------------------------------------------------------------------

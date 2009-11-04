@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 struct D3DXMESHCONTAINER_DERRIVED;
+class Filesystem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,9 +17,10 @@ class XFileGraphicalEntityLoader : public FileGraphicalDataSource,
 {
 private:
    IDirect3DDevice9& m_d3Device;
+   Filesystem& m_filesystem;
 
 public:
-   XFileGraphicalEntityLoader(IDirect3DDevice9& d3Device);
+   XFileGraphicalEntityLoader(IDirect3DDevice9& d3Device, Filesystem& filesystem);
 
    bool canHandleFile(const std::string& fileName) const;
 

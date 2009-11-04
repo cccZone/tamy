@@ -10,6 +10,7 @@
 class GraphicalEntitiesFactory;
 class MultipleElement;
 class Material;
+class File;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +22,6 @@ class MaterialsParser
 {
 private:
    MultipleElement* m_parser;
-
    Material* m_parsedMaterial;
 
 public:
@@ -29,7 +29,7 @@ public:
                    ResourceStorage<Material>& storage);
    ~MaterialsParser();
 
-   void load(const std::string& fileName);
+   void load(File* file);
 
    bool isMaterialParsed() const;
    Material& getMaterialParsed();

@@ -38,7 +38,7 @@ void AnimationDemo::initialize()
    StaticSceneManager* staticSceneStorage = NULL;
    DynMeshesScene* dynamicSceneStorage = NULL;
    LightsScene* lights = NULL;
-   loadIWF("..\\Data\\AnimLandscape.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
+   loadIWF("AnimLandscape.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
 
    AbstractGraphicalEntity& ent = getEntitiesStorage().get("animlandscape.x");
    m_animationController = ent.instantiateSkeleton(dynamicSceneStorage->root());

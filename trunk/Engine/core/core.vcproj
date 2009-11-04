@@ -186,6 +186,22 @@
 				RelativePath="..\..\Include\core\TNodesVisitor.h"
 				>
 			</File>
+			<Filter
+				Name="NodeActionsExecutor"
+				>
+				<File
+					RelativePath="..\..\Include\core\NodeAction.h"
+					>
+				</File>
+				<File
+					RelativePath=".\NodeActionsExecutor.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\NodeActionsExecutor.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Timer"
@@ -287,22 +303,6 @@
 				>
 			</File>
 			<Filter
-				Name="NodeActionsExecutor"
-				>
-				<File
-					RelativePath="..\..\Include\core\NodeAction.h"
-					>
-				</File>
-				<File
-					RelativePath=".\NodeActionsExecutor.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Include\core\NodeActionsExecutor.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="ObserverPattern"
 				>
 				<File
@@ -346,10 +346,26 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="AbstractFactoryPattern"
+				>
+				<File
+					RelativePath="..\..\Include\core\GenericFactory.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="SpatialStorage"
 			>
+			<File
+				RelativePath="..\..\Include\core\BSPNodeTree.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\BSPNodeTree.inl"
+				>
+			</File>
 			<File
 				RelativePath="..\..\Include\core\DynamicOctree.h"
 				>
@@ -406,6 +422,10 @@
 		<Filter
 			Name="BoundingVolumes"
 			>
+			<File
+				RelativePath=".\BoundingVolume.cpp"
+				>
+			</File>
 			<File
 				RelativePath="..\..\Include\core\BoundingVolume.h"
 				>
@@ -494,6 +514,34 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Filesystem"
+			>
+			<File
+				RelativePath=".\File.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\File.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Filesystem.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\Filesystem.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\StreamBuffer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\StreamBuffer.inl"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -1,5 +1,6 @@
 #include "SoundDemo.h"
 #include "tamy\Tamy.h"
+#include "core\Filesystem.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\Camera.h"
@@ -64,7 +65,7 @@ void SoundDemo::initialize()
    GraphicalEntityInstantiator* entInstance = new GraphicalEntityInstantiator("tile");
    entInstance->attachEntity(*ent);
 
-   m_sound = new WavFile("..\\Data\\Footsteps.wav");
+   m_sound = new WavFile(m_tamy.filesystem().open("Footsteps.wav", std::ios_base::in | std::ios_base::binary));
    Sound3D* tileSound = m_tamy.soundFactory().createEmiter("tileSound", *m_sound, 100);
    entInstance->addChild(tileSound);
    m_audioSoundScene->addEmitter(*tileSound);

@@ -115,7 +115,7 @@ void DemoApp::loadIWF(const std::string& fileName,
                              m_entitiesStorage,
                              m_materialsStorage);
    IWFLoader loader(sceneAdapter);
-   loader.load(fileName);
+   loader.load(TAMY.filesystem(), fileName);
 
    if (skyBoxSetter.getSkyBox() == NULL)
    {

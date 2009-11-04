@@ -29,12 +29,10 @@ IWFLoader::~IWFLoader()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void IWFLoader::load(const std::string& fileName)
+void IWFLoader::load(Filesystem& filesystem, const std::string& fileName)
 {
    CFileIWF sceneFile;
-
-   LPCSTR strFileName = fileName.c_str();
-   sceneFile.Load(strFileName);
+   sceneFile.Load(filesystem, fileName);
 
    // parse entities
    for (ULONG i = 0; i < sceneFile.m_vpEntityList.size(); ++i)

@@ -13,7 +13,7 @@
  * This octree is specialized for storing static geometry.
  * It requires from elements that are added to it an ability
  * to be subdivided if they span across sector boundaries,
- * and for this reason only geomtry related elements fall into
+ * and for this reason only geometry related elements fall into
  * the domain of this tree elements.
  *
  * All elements added to this storage, apart from the methods

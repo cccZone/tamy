@@ -19,6 +19,7 @@ class iwfMaterial;
 class iwfSurface;
 struct ReferenceEntity;
 class IWFScene;
+class Filesystem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,9 +44,10 @@ public:
    /**
     * The method will load a scene from an IWF file.
     *
-    * @param fleName    name of the IWF file
+    * @param filesystem    filesystem from which we want to load the file
+    * @param fileName      IWF file name
     */
-   void load(const std::string& fileName);
+   void load(Filesystem& filesystem, const std::string& fileName);
 
 private:
    void processEntities(iwfEntity* fileEntity);

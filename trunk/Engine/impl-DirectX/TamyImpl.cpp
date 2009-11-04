@@ -125,7 +125,7 @@ void Tamy::createRenderer(IDirect3D9& d3d9,
    }
    s_theInstance.m_winMsgsProcessor->add(*(s_tamyGraphImpl.m_renderer));
 
-   s_tamyGraphImpl.m_graphicalFactory = new D3DGraphicalEntitiesFactory("..\\Data",  // TODO: zastapic odwolaniem do VFS'a
+   s_tamyGraphImpl.m_graphicalFactory = new D3DGraphicalEntitiesFactory(*m_filesystem,
                                                                         s_tamyGraphImpl.m_renderer->getD3Device(), 
                                                                         *(s_tamyGraphImpl.m_renderer));
 }
@@ -146,7 +146,8 @@ void Tamy::destroyRenderer()
 void Tamy::registerMeshLoaders(CompositeGraphicalDataSource& composite)
 {
    ASSERT(s_tamyGraphImpl.m_renderer != NULL, "Renderer instance doesn't exist");
-   composite.addSource(new XFileGraphicalEntityLoader(s_tamyGraphImpl.m_renderer->getD3Device()));
+   composite.addSource(new XFileGraphicalEntityLoader(s_tamyGraphImpl.m_renderer->getD3Device(),
+                                                      *m_filesystem));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

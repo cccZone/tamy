@@ -129,7 +129,7 @@ void StaticGeometryOctree<Elem, RGS>::addElemToTree(Elem& elem,
 
             if (currElem != NULL)
             {
-               float objPlaneClassification = currElem->getBoundingVolume().classifyAgainstPlane(planes[planeIdx]);
+               float objPlaneClassification = currElem->getBoundingVolume().distanceToPlane(planes[planeIdx]);
 
                if (objPlaneClassification < 0)
                {

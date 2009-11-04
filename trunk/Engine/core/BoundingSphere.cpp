@@ -34,7 +34,7 @@ BoundingVolume* BoundingSphere::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float BoundingSphere::classifyAgainstPlane(const D3DXPLANE& plane) const
+float BoundingSphere::distanceToPlane(const D3DXPLANE& plane) const
 {
    D3DXVECTOR3 planeNormal(plane.a, plane.b, plane.c);
    float distance = D3DXVec3Dot(&origin, &planeNormal) + plane.d;
@@ -84,6 +84,13 @@ bool BoundingSphere::testCollision(const Triangle& rhs) const
 {
    ASSERT(false, "BoundingSphere::testCollision(const Triangle&) - Method not implemented");
    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool BoundingSphere::hasVolume() const
+{
+   return radius > 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

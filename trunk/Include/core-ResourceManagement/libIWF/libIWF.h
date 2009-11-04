@@ -30,6 +30,13 @@
 #include <tchar.h>
 #include <stdio.h>
 #include <io.h>
+#include <string>
+
+//-----------------------------------------------------------------------------
+// Forward declarations
+//-----------------------------------------------------------------------------
+class Filesystem;
+class File;
 
 //-----------------------------------------------------------------------------
 // Miscellaneous Macros
@@ -316,7 +323,6 @@ public:
     //-------------------------------------------------------------------------
     // Constructors & Destructors for This Class.
     //-------------------------------------------------------------------------
-             CBaseIWF( LPCSTR FileName, IWFPROCESSMODE Mode, IWFFILEHEADER * pHeader = NULL );
              CBaseIWF( );
     virtual ~CBaseIWF( );
 
@@ -343,14 +349,18 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Functions for This Class.
     //-------------------------------------------------------------------------
-    virtual void    Open                ( LPCSTR FileName, IWFPROCESSMODE Mode, IWFFILEHEADER * pHeader = NULL );
+    virtual void    Open                ( Filesystem& filesystem, 
+                                          const std::string& fileName, 
+                                          IWFPROCESSMODE Mode, 
+                                          IWFFILEHEADER * pHeader = NULL );
     virtual void    ProcessChunk        ( CHUNKHEADER& Header, LPVOID pCustomData );
     virtual void    Close               ( );
     
     //-------------------------------------------------------------------------
     // Public Static Functions for This Class.
     //-------------------------------------------------------------------------
-    static bool     IsValid             ( LPCSTR FileName );
+    static bool     IsValid             ( Filesystem& filesystem, 
+                                          const std::string& fileName );
     static bool     IsStandardChunk     ( USHORT ChunkTypeID );
     static bool     IsLockedChunk       ( USHORT ChunkTypeID );
     static USHORT   GetHeaderLength     ( CHUNKHEADER * pHeader );
@@ -401,7 +411,7 @@ protected:
     // Protected Variables for This Class.
     //-------------------------------------------------------------------------
     IWFPROCESSMODE  m_CurrentMode;      // Are we reading or writing this IWF.
-    FILE           *m_pFile;            // Main stream object we are accessing.
+    File           *m_pFile;            // Main stream object we are accessing.
     CHUNKDETAILS   *m_pOpenChunks;      // List of all the chunks currently open for processing.
     unsigned char   m_pAuthor[255];     // Duplicate of the currently set author data.
     unsigned char   m_AuthorLength;     // Length of the stored author data.

@@ -1,5 +1,7 @@
 #include "impl-DirectX\XFileGraphicalEntityLoader.h"
 #include "core-Renderer\LitVertex.h"
+#include "core\Filesystem.h"
+#include "core\StreamBuffer.h"
 #include <vector>
 #include <cassert>
 #include <sstream>
@@ -7,8 +9,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-XFileGraphicalEntityLoader::XFileGraphicalEntityLoader(IDirect3DDevice9& d3Device)
-      : m_d3Device(d3Device)
+XFileGraphicalEntityLoader::XFileGraphicalEntityLoader(IDirect3DDevice9& d3Device,
+                                                       Filesystem& filesystem)
+: m_d3Device(d3Device)
+, m_filesystem(filesystem)
 {
 }
 
@@ -30,9 +34,14 @@ void XFileGraphicalEntityLoader::parseMesh(MeshDefinition& mesh,
    D3DXFRAME* outFrame = NULL;
    ID3DXAnimationController* outAnimationController = NULL;
 
-   HRESULT hRet = D3DXLoadMeshHierarchyFromX(name.c_str(), 
-                                             D3DXMESH_MANAGED, &m_d3Device, this,
-                                             NULL, &outFrame, &outAnimationController);
+   File* file = m_filesystem.open(name, std::ios_base::in | std::ios_base::binary);
+   StreamBuffer<byte>* fileBuf = new StreamBuffer<byte>(file);
+
+   HRESULT hRet = D3DXLoadMeshHierarchyFromXInMemory(fileBuf->getBuffer(), fileBuf->size(),
+                                                     D3DXMESH_MANAGED, &m_d3Device, this,
+                                                     NULL, &outFrame, &outAnimationController);
+
+   delete fileBuf;
 
    if (FAILED(hRet))
    {

@@ -405,11 +405,11 @@
 						>
 					</File>
 					<File
-						RelativePath=".\SplittableRenderableTriangle.cpp"
+						RelativePath=".\MeshTriangle.cpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\Include\core-Renderer\SplittableRenderableTriangle.h"
+						RelativePath="..\..\Include\core-Renderer\MeshTriangle.h"
 						>
 					</File>
 				</Filter>

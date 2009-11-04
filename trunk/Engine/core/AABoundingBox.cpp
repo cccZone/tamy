@@ -51,7 +51,7 @@ BoundingVolume* AABoundingBox::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float AABoundingBox::classifyAgainstPlane(const D3DXPLANE& plane) const
+float AABoundingBox::distanceToPlane(const D3DXPLANE& plane) const
 {
    D3DXVECTOR3 planeNormal(plane.a, plane.b, plane.c);
 
@@ -64,12 +64,12 @@ float AABoundingBox::classifyAgainstPlane(const D3DXPLANE& plane) const
    if (planeNormal.z > 0.0f) {farPoint.z = max.z; nearPoint.z = min.z;}
    else {farPoint.z = min.z; nearPoint.z = max.z;}
 
-   if ((D3DXVec3Dot(&planeNormal, &nearPoint) + plane.d) > 0.0f)
+   if ((D3DXPlaneDotCoord(&plane, &nearPoint)) > 0.0f)
    {
       // the box is in front
       return 1;
    }
-   if ((D3DXVec3Dot( &planeNormal, &farPoint ) + plane.d) >= 0.0f)
+   if ((D3DXPlaneDotCoord(&plane, &farPoint)) >= 0.0f)
    {
       return 0;
    }
@@ -121,6 +121,13 @@ bool AABoundingBox::testCollision(const Triangle& rhs) const
 {
    ASSERT(false, "AABoundingBox::testCollision(const Triangle&) - Method not implemented");
    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool AABoundingBox::hasVolume() const
+{
+   return min != max;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

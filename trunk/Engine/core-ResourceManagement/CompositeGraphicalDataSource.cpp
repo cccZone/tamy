@@ -5,8 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-CompositeGraphicalDataSource::CompositeGraphicalDataSource(const std::string& dir)
-      : m_meshesDir(dir)
+CompositeGraphicalDataSource::CompositeGraphicalDataSource()
 {
 }
 
@@ -47,7 +46,7 @@ void CompositeGraphicalDataSource::parseMesh(MeshDefinition& mesh,
       FileGraphicalDataSource* source = m_sources[i];
       if (source->canHandleFile(name) == true)
       {
-         source->parseMesh(mesh, animation, materials, m_meshesDir + std::string("\\") + name);
+         source->parseMesh(mesh, animation, materials, name);
          return;
       }
    }

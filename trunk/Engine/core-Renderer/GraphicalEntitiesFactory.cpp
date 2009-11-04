@@ -14,9 +14,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphicalEntitiesFactory::GraphicalEntitiesFactory(const std::string& texturesPath,
+GraphicalEntitiesFactory::GraphicalEntitiesFactory(Filesystem& filesystem,
                                                    Renderer& renderer)
-      : m_texturesPath(texturesPath),
+      : m_filesystem(filesystem),
       m_renderer(renderer)
 {
 }
@@ -59,7 +59,7 @@ Texture* GraphicalEntitiesFactory::createTexture(const std::string& name)
    }
    else
    {
-      texture = loadTexture(m_texturesPath, name);
+      texture = loadTexture(name);
    }
 
    return texture;

@@ -22,11 +22,9 @@ BoundingVolume* PointVolume::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float PointVolume::classifyAgainstPlane(const D3DXPLANE& plane) const
+float PointVolume::distanceToPlane(const D3DXPLANE& plane) const
 {
-   D3DXVECTOR3 planeNormal(plane.a, plane.b, plane.c);
-   float distance = D3DXVec3Dot(&point, &planeNormal) + plane.d;
-
+   float distance = D3DXPlaneDotCoord(&plane, &point);
    return distance;
 }
 

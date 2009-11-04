@@ -40,7 +40,7 @@ void ComplexSceneDemo::initialize()
    StaticSceneManager* staticSceneStorage = NULL;
    DynMeshesScene* dynamicSceneStorage = NULL;
    LightsScene* lights = NULL;
-   loadIWF("..\\Data\\Colony5.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
+   loadIWF("Colony5.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
    delete skyBox;
 
    // assemble rendering pipeline
@@ -49,7 +49,7 @@ void ComplexSceneDemo::initialize()
    m_renderingPipeline->setLights(lights);
    m_renderingPipeline->setOverlay(new demo::SharedOverlay(getFpsView()));
 
-   m_renderingPipeline->setRendererImpl("..\\Data\\renderer.fx", new demo::TRERCreator<RenderEffectController>());
+   m_renderingPipeline->setRendererImpl("renderer.fx", new demo::TRERCreator<RenderEffectController>());
    m_renderingPipeline->create();
 
    // initialize input controller

@@ -6,6 +6,7 @@
 #include "RendererStub.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\MaterialStage.h"
+#include "core\Filesystem.h"
 #include <vector>
 #include <algorithm>
 #include <cassert>
@@ -26,9 +27,10 @@ class MaterialsFactoryMock : public GraphicalEntitiesFactory
 {
 private:
    static RendererStub s_renderer;
+   static Filesystem s_filesystem;
 
 public:
-   MaterialsFactoryMock() : GraphicalEntitiesFactory("", s_renderer) {}
+   MaterialsFactoryMock() : GraphicalEntitiesFactory(s_filesystem, s_renderer) {}
 
    Light* createLight(const std::string& name)
    {
@@ -93,7 +95,7 @@ protected:
       return NULL;
    }
 
-   Texture* loadTexture(const std::string& path, const std::string& fileName)
+   Texture* loadTexture(const std::string& fileName)
    {
       return new ManagedTexture(fileName, new TTextureImpl<int>());
    }

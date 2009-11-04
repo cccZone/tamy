@@ -50,23 +50,23 @@ bool testCollision(const AABoundingBox& aabb1, const AABoundingBox& aabb2)
 
 bool testCollision(const AABoundingBox& aabb, const BoundingSphere& sphere)
 {
-   D3DXPLANE plane = D3DXPLANE(0, 0, -1, aabb.min.z);
-   if (D3DXPlaneDotCoord(&plane, &(sphere.origin)) > sphere.radius) {return false;}
+   D3DXPLANE plane(0, 0, -1, aabb.min.z);
+   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
 
    plane = D3DXPLANE(0, 0,  1, -aabb.max.z);
-   if (D3DXPlaneDotCoord(&plane, &(sphere.origin)) > sphere.radius) {return false;}
+   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
 
    plane = D3DXPLANE(0, -1, 0, aabb.min.y);
-   if (D3DXPlaneDotCoord(&plane, &(sphere.origin)) > sphere.radius) {return false;}
+   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
 
    plane = D3DXPLANE(0,  1, 0, -aabb.max.y);
-   if (D3DXPlaneDotCoord(&plane, &(sphere.origin)) > sphere.radius) {return false;}
+   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
 
    plane = D3DXPLANE(-1, 0, 0, aabb.min.x);
-   if (D3DXPlaneDotCoord(&plane, &(sphere.origin)) > sphere.radius) {return false;}
+   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
 
    plane = D3DXPLANE( 1, 0, 0, -aabb.max.x);
-   if (D3DXPlaneDotCoord(&plane, &(sphere.origin)) > sphere.radius) {return false;}
+   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
 
    return true;
 }

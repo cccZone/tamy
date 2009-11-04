@@ -12,10 +12,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This struture represents a triangle with some basic operations
+ * This structure represents a triangle with some basic operations
  * we can perform on it.
  */
-struct Triangle : public BoundingVolume
+struct Triangle : public BoundingVolume,
+                  public SplittableTriangle<D3DXVECTOR3>
 {
 private:
    D3DXVECTOR3 v[3];
@@ -41,6 +42,12 @@ public:
       return v[idx];
    }
 
+   const D3DXVECTOR3& vertexPos(unsigned int idx) const
+   {
+      ASSERT(idx <= 2, "Vertex index should be <= 2");
+      return v[idx];
+   }
+
    const D3DXVECTOR3& edge(unsigned int idx) const
    {
       ASSERT(idx <= 2, "Edge index should be <= 2");
@@ -55,9 +62,15 @@ public:
       return en[idx];
    }
 
+   D3DXVECTOR3 splitEdge(float percentage,
+                         unsigned int startVtxIdx, 
+                         unsigned int endVtxIdx) const;
+
    BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
 
-   float classifyAgainstPlane(const D3DXPLANE& plane) const;
+   PlaneClassification classifyAgainsPlane(const D3DXPLANE& plane) const;
+
+   float distanceToPlane(const D3DXPLANE& plane) const;
 
    void split(const D3DXPLANE& splitPlane, 
               Array<Triangle*>& frontSplit, 

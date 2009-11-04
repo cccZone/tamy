@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class D3DRenderer;
+class Filesystem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,7 +18,7 @@ private:
    D3DRenderer& m_renderer;
 
 public:
-   D3DGraphicalEntitiesFactory(const std::string& texturesPath,
+   D3DGraphicalEntitiesFactory(Filesystem& filesystem,
                                IDirect3DDevice9& d3Device,
                                D3DRenderer& renderer);
    ~D3DGraphicalEntitiesFactory();
@@ -57,7 +58,7 @@ protected:
                                                   const std::vector<LitVertex>& vertices,
                                                   const std::vector<Face<USHORT> >& faces);
 
-   Texture* loadTexture(const std::string& path, const std::string& fileName);
+   Texture* loadTexture(const std::string& fileName);
    Texture* createEmptyTexture();
 
    PostProcessEffectRenderable* createPostProcessEffectRenderable();

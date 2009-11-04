@@ -45,6 +45,7 @@ class PostProcessEffectController;
 class RenderingTargetsCleaner;
 class StaticGeometryRenderable;
 class Font;
+class Filesystem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -66,8 +67,10 @@ enum SkyBoxSideId
  */
 class GraphicalEntitiesFactory
 {
+protected:
+   Filesystem& m_filesystem;
+
 private:
-   std::string m_texturesPath;
    Renderer& m_renderer;
    ResourceStorage<Texture> m_textures;
 
@@ -149,9 +152,9 @@ public:
    virtual RenderingTargetsCleaner* createTargetsCleaner() = 0;
 
 protected:
-   GraphicalEntitiesFactory(const std::string& texturesPath, Renderer& renderer);
+   GraphicalEntitiesFactory(Filesystem& filesystem, Renderer& renderer);
 
-   virtual Texture* loadTexture(const std::string& path, const std::string& fileName) = 0;
+   virtual Texture* loadTexture(const std::string& fileName) = 0;
    virtual Texture* createEmptyTexture() = 0;
 };
 

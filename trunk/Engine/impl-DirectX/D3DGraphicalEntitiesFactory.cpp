@@ -18,14 +18,16 @@
 #include "impl-DirectX\D3DRenderingTargetsCleaner.h"
 #include "impl-DirectX\D3DStaticGeometryRenderable.h"
 #include "impl-DirectX\D3DFont.h"
+#include "core\Filesystem.h"
+#include "core\StreamBuffer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DGraphicalEntitiesFactory::D3DGraphicalEntitiesFactory(const std::string& texturesPath,
+D3DGraphicalEntitiesFactory::D3DGraphicalEntitiesFactory(Filesystem& filesystem,
                                                          IDirect3DDevice9& d3Device,
                                                          D3DRenderer& renderer)
-      : GraphicalEntitiesFactory(texturesPath, renderer),
+      : GraphicalEntitiesFactory(filesystem, renderer),
       m_d3Device(d3Device),
       m_renderer(renderer)
 {
@@ -149,25 +151,29 @@ SkyBoxSide* D3DGraphicalEntitiesFactory::createSkyBoxSide(SkyBoxSideId side, Tex
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Texture* D3DGraphicalEntitiesFactory::loadTexture(const std::string& path, const std::string& fileName)
+Texture* D3DGraphicalEntitiesFactory::loadTexture(const std::string& fileName)
 {
    IDirect3DTexture9* loadedTex = NULL;
-   std::string fullPathToTexture = path + std::string("\\") + fileName;
+
+   File* file = m_filesystem.open(fileName, std::ios_base::in | std::ios_base::binary);
+   StreamBuffer<byte>* fileBuf = new StreamBuffer<byte>(file);
 
    D3DFORMAT texFormat = m_renderer.getOptimalTextureFormat();
    HRESULT res;
 
-   res = D3DXCreateTextureFromFileEx(&m_d3Device,
-                                     fullPathToTexture.c_str(),
-                                     D3DX_DEFAULT, D3DX_DEFAULT,
-                                     D3DX_DEFAULT, 0, texFormat,
-                                     D3DPOOL_MANAGED, 
-                                     D3DX_DEFAULT, D3DX_DEFAULT,
-                                     D3DCOLOR(), NULL, NULL, &loadedTex);
+   res = D3DXCreateTextureFromFileInMemoryEx(&m_d3Device,
+                                             fileBuf->getBuffer(), fileBuf->size(),
+                                             D3DX_DEFAULT, D3DX_DEFAULT,
+                                             D3DX_DEFAULT, 0, texFormat,
+                                             D3DPOOL_MANAGED, 
+                                             D3DX_DEFAULT, D3DX_DEFAULT,
+                                             D3DCOLOR(), NULL, NULL, &loadedTex);
+
+   delete fileBuf;
 
    if (FAILED(res))
    {
-      std::string errorMsg = std::string("Can't load texture from file ") + fullPathToTexture;
+      std::string errorMsg = std::string("Can't load texture from file ") + fileName;
       switch(res)
       {
       case D3DERR_INVALIDCALL:
@@ -263,14 +269,20 @@ GraphicalEffect* D3DGraphicalEntitiesFactory::createEffect(const std::string& na
 {
    ID3DXEffect* effect = NULL;
 	ID3DXBuffer* errorsBuf = NULL;
-	HRESULT res = D3DXCreateEffectFromFile(&m_d3Device, 
-		                                    name.c_str(),
-		                                    NULL, 
-		                                    NULL, 
-		                                    0, 
-		                                    NULL, 
-		                                    &effect, 
-		                                    &errorsBuf);
+
+   File* effectFile = m_filesystem.open(name, std::ios_base::in | std::ios_base::binary);
+   StreamBuffer<char>* effectContents = new StreamBuffer<char>(effectFile);
+
+	HRESULT res = D3DXCreateEffect(&m_d3Device, 
+		                            effectContents->getBuffer(), 
+                                  effectContents->size(),
+		                            NULL, 
+                                  NULL, 
+                                  0, 
+                                  NULL, 
+                                  &effect, 
+                                  &errorsBuf);
+   delete  effectContents;
 
    if (FAILED(res) || (effect == NULL))
 	{

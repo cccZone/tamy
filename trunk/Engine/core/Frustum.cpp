@@ -19,9 +19,9 @@ BoundingVolume* Frustum::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Frustum::classifyAgainstPlane(const D3DXPLANE& plane) const
+float Frustum::distanceToPlane(const D3DXPLANE& plane) const
 {
-   ASSERT(false, "Frustum::classifyAgainstPlane(const D3DXPLANE&) - Method not implemented");
+   ASSERT(false, "Frustum::distanceToPlane(const D3DXPLANE&) - Method not implemented");
    return 0;
 }
 

@@ -2,6 +2,7 @@
 #include "tamy\TamyConfigurator.h"
 #include <tchar.h>
 #include "core\WindowBuilder.h"
+#include "core\Filesystem.h"
 #include <stdexcept>
 #include <windows.h>
 #include "core-Sound\SoundRenderer.h"
@@ -19,11 +20,12 @@ Tamy Tamy::s_theInstance;
 ///////////////////////////////////////////////////////////////////////////////
 
 Tamy::Tamy()
-      : m_hWnd(NULL),
-      m_winMsgsProcessor(NULL),
-      m_d3d9(NULL),
-      m_meshLoaders(NULL),
-      m_soundRenderer(NULL)
+: m_hWnd(NULL)
+, m_winMsgsProcessor(NULL)
+, m_d3d9(NULL)
+, m_filesystem(NULL)
+, m_meshLoaders(NULL)
+, m_soundRenderer(NULL)
 {
 }
 
@@ -35,6 +37,9 @@ Tamy::~Tamy()
    m_soundRenderer = NULL;
 
    destroySoundSystem();
+
+   delete m_filesystem;
+   m_filesystem = NULL;
 
    delete m_meshLoaders;
    m_meshLoaders = NULL;
@@ -75,6 +80,9 @@ void Tamy::initialize(HINSTANCE hInstance,
       throw std::logic_error("Tamy has already been initialized");
    }
 
+   s_theInstance.m_filesystem = new Filesystem();
+   s_theInstance.m_filesystem->changeRootDir("..\\Data");
+
    s_theInstance.m_d3d9 = s_theInstance.initializeRenderingSystem();
 
    // create the database of all valid rendering devices and their modes,
@@ -93,7 +101,7 @@ void Tamy::initialize(HINSTANCE hInstance,
 
    s_theInstance.createRenderer(*(s_theInstance.m_d3d9), device, s_theInstance.m_hWnd);
 
-   s_theInstance.m_meshLoaders = new CompositeGraphicalDataSource("..\\Data");  // TODO: zastapic odwolaniem do VFS'a
+   s_theInstance.m_meshLoaders = new CompositeGraphicalDataSource();
    s_theInstance.registerMeshLoaders(*(s_theInstance.m_meshLoaders));
 
    s_theInstance.createAppManager(appName);
@@ -188,6 +196,14 @@ GraphicalDataSource& Tamy::meshLoaders()
 {
    ASSERT(m_meshLoaders != NULL, "GraphicalDataSource not initialized by Tamy");
    return *m_meshLoaders;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Filesystem& Tamy::filesystem()
+{
+   ASSERT(m_filesystem != NULL, "Filesystem not initialized by Tamy");
+   return *m_filesystem;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

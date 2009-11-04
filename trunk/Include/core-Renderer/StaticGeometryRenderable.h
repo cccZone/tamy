@@ -8,14 +8,14 @@
 #include "core-Renderer\Renderable.h"
 #include "core-Renderer\LitVertex.h"
 #include "core-Renderer\Face.h"
-#include "core-Renderer\SplittableRenderableTriangle.h"
+#include "core-Renderer\MeshTriangle.h"
 #include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * 
+ * This class represents a static geometry object that can be rendered.
  */
 class StaticGeometryRenderable : public Renderable
 {

@@ -21,7 +21,7 @@ struct Frustum : public BoundingVolume
 
    BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
 
-   float classifyAgainstPlane(const D3DXPLANE& plane) const;
+   float distanceToPlane(const D3DXPLANE& plane) const;
    bool testCollision(const PointVolume& point) const;
    bool testCollision(const AABoundingBox& rhs) const;
    bool testCollision(const BoundingSphere& rhs) const;

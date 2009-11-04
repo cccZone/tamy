@@ -41,7 +41,7 @@ void EffectsDemo::initialize()
    StaticSceneManager* staticSceneStorage = NULL;
    DynMeshesScene* dynamicSceneStorage = NULL;
    LightsScene* lights = NULL;
-   loadIWF("..\\Data\\AnimLandscape.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
+   loadIWF("AnimLandscape.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
 
    AbstractGraphicalEntity& ent = getEntitiesStorage().get("animlandscape.x");
    m_animationController = ent.instantiateSkeleton(dynamicSceneStorage->root());
@@ -61,7 +61,7 @@ void EffectsDemo::initialize()
    m_renderingPipeline->setLights(lights);
    m_renderingPipeline->setOverlay(new demo::SharedOverlay(getFpsView()));
    m_renderingPipeline->setPostProcessScene(m_tamy.graphicalFactory().createPostProcessEffectRenderable());
-   m_renderingPipeline->setRendererImpl("..\\Data\\oldTV.fx", new demo::TRERCreator<PostProcessRenderer>());
+   m_renderingPipeline->setRendererImpl("oldTV.fx", new demo::TRERCreator<PostProcessRenderer>());
    m_renderingPipeline->create();
 
    // initialize input controller

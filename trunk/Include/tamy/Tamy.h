@@ -23,12 +23,13 @@ class UserInputController;
 struct RenderingDevice;
 class DeviceFilter;
 class TamyConfigurator;
+class Filesystem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * This is the engine factory class.
- * It will build proper implementaiton dependent versions
+ * It will build proper implementation dependent versions
  * of the basic engine components
  */
 class Tamy
@@ -41,6 +42,7 @@ private:
    IDirect3D9* m_d3d9;
    std::vector<RenderingDevice*> m_devicesDB;
 
+   Filesystem* m_filesystem;
    CompositeGraphicalDataSource* m_meshLoaders;
 
    SoundRenderer* m_soundRenderer;
@@ -72,7 +74,7 @@ public:
    UserInputController& uiController();
 
    /**
-    * This method will create an instance of the UserInputController clas
+    * This method will create an instance of the UserInputController class
     */
    UserInputController* createUserInputController();
 
@@ -81,6 +83,8 @@ public:
    SoundRenderer& soundRenderer();
 
    SoundEntitiesFactory& soundFactory();
+
+   Filesystem& filesystem();
 
 private:
    Tamy();

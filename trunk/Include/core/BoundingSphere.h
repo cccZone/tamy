@@ -19,7 +19,7 @@ struct BoundingSphere : public BoundingVolume
 
    BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
 
-   float classifyAgainstPlane(const D3DXPLANE& plane) const;
+   float distanceToPlane(const D3DXPLANE& plane) const;
    bool testCollision(const PointVolume& point) const;
    bool testCollision(const AABoundingBox& rhs) const;
    bool testCollision(const BoundingSphere& rhs) const;
@@ -27,6 +27,9 @@ struct BoundingSphere : public BoundingVolume
    bool testCollision(const Ray& rhs) const;
    bool testCollision(const Triangle& rhs) const;
    bool testCollision(const BoundingVolume& rhs) const {return rhs.testCollision(*this);}
+
+protected:
+   bool hasVolume() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

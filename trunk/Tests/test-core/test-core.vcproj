@@ -275,6 +275,10 @@
 			Name="Misc"
 			>
 			<File
+				RelativePath=".\GenericFactoryTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GraphBuilderTests.cpp"
 				>
 			</File>
@@ -295,6 +299,10 @@
 			Name="SpatialStorage"
 			>
 			<File
+				RelativePath=".\BSPNodeTreeTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DynamicOctreesTests.cpp"
 				>
 			</File>
@@ -304,6 +312,14 @@
 			</File>
 			<File
 				RelativePath=".\StaticGeometryOctreesTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Filesystem"
+			>
+			<File
+				RelativePath=".\FilesystemTests.cpp"
 				>
 			</File>
 		</Filter>

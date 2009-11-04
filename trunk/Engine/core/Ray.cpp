@@ -17,9 +17,17 @@ BoundingVolume* Ray::operator*(const D3DXMATRIX& mtx) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Ray::classifyAgainstPlane(const D3DXPLANE& plane) const
+PlaneClassification Ray::classifyAgainsPlane(const D3DXPLANE& plane) const
 {
-   ASSERT(false, "Ray::classifyAgainstPlane(const D3DXPLANE&) - Method not implemented");
+   ASSERT(false, "Ray::classifyAgainsPlane(const D3DXPLANE&) - Method not implemented");
+   return PPC_SPANNING;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Ray::distanceToPlane(const D3DXPLANE& plane) const
+{
+   ASSERT(false, "Ray::distanceToPlane(const D3DXPLANE&) - Method not implemented");
    return 0;
 }
 

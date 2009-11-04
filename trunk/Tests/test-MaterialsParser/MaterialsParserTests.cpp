@@ -6,6 +6,7 @@
 #include "MaterialsFactoryMock.h"
 #include "core-Renderer\Material.h"
 #include "core\ResourceStorage.h"
+#include "core\Filesystem.h"
 #include "core-Renderer\LightReflectingProperties.h"
 
 
@@ -15,11 +16,13 @@ TEST(MaterialsParser, simpleMaterial)
 {
    ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
+   Filesystem filesystem;
+   filesystem.changeRootDir("..\\Data");
    MaterialsParser parser(factory, matStorage);
 
    CPPUNIT_ASSERT_EQUAL(false, matStorage.is("SomeMaterial"));
 
-   parser.load("..\\Data\\SimpleMaterial.xml");
+   parser.load(filesystem.open("SimpleMaterial.xml"));
    CPPUNIT_ASSERT_EQUAL(true, matStorage.is("SomeMaterial"));
 }
 
@@ -29,12 +32,14 @@ TEST(MaterialsParser, manyMaterialsInOneFile)
 {
    ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
+   Filesystem filesystem;
+   filesystem.changeRootDir("..\\Data");
    MaterialsParser parser(factory, matStorage);
 
    CPPUNIT_ASSERT_EQUAL(false, matStorage.is("material_1"));
    CPPUNIT_ASSERT_EQUAL(false, matStorage.is("material_2"));
 
-   parser.load("..\\Data\\ManyMaterials.xml");
+   parser.load(filesystem.open("ManyMaterials.xml"));
    CPPUNIT_ASSERT_EQUAL(true, matStorage.is("material_1"));
    CPPUNIT_ASSERT_EQUAL(true, matStorage.is("material_2"));
 }
@@ -45,11 +50,13 @@ TEST(MaterialsParser, materialWithNoName)
 {
    ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
+   Filesystem filesystem;
+   filesystem.changeRootDir("..\\Data");
    MaterialsParser parser(factory, matStorage);
 
    CPPUNIT_ASSERT_EQUAL(false, matStorage.is(""));
 
-   CPPUNIT_ASSERT_THROW(parser.load("..\\Data\\UnnamedMaterial.xml"), std::runtime_error);
+   CPPUNIT_ASSERT_THROW(parser.load(filesystem.open("UnnamedMaterial.xml")), std::runtime_error);
 
    CPPUNIT_ASSERT_EQUAL(false, matStorage.is(""));
 }
@@ -60,9 +67,11 @@ TEST(MaterialsParser, defaultLightReflectingProperties)
 {
    ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
+   Filesystem filesystem;
+   filesystem.changeRootDir("..\\Data");
    MaterialsParser parser(factory, matStorage);
 
-   parser.load("..\\Data\\SimpleMaterial.xml");
+   parser.load(filesystem.open("SimpleMaterial.xml"));
 
    Material& mat = dynamic_cast<Material&>(matStorage.get("SomeMaterial"));
    const LightReflectingProperties& lrp = mat.getLightReflectingProperties();
@@ -85,9 +94,11 @@ TEST(MaterialsParser, readingLightReflectingProperties)
 {
    ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
+   Filesystem filesystem;
+   filesystem.changeRootDir("..\\Data");
    MaterialsParser parser(factory, matStorage);
 
-   parser.load("..\\Data\\MatWithLRP.xml");
+   parser.load(filesystem.open("MatWithLRP.xml"));
 
    Material& mat = dynamic_cast<Material&>(matStorage.get("MatWithLRP"));
    const LightReflectingProperties& lrp = mat.getLightReflectingProperties();
@@ -110,9 +121,11 @@ TEST(MaterialsParser, readingParitalLightReflectingPropertiesDefinition)
 {
    ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
+   Filesystem filesystem;
+   filesystem.changeRootDir("..\\Data");
    MaterialsParser parser(factory, matStorage);
 
-   parser.load("..\\Data\\MatWithPartialLRP.xml");
+   parser.load(filesystem.open("MatWithPartialLRP.xml"));
 
    Material& mat = dynamic_cast<Material&>(matStorage.get("MatWithPartialLRP"));
    const LightReflectingProperties& lrp = mat.getLightReflectingProperties();
@@ -135,8 +148,11 @@ TEST(MaterialsParser, textureStage)
 {
    ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
+   Filesystem filesystem;
+   filesystem.changeRootDir("..\\Data");
    MaterialsParser parser(factory, matStorage);
-   parser.load("..\\Data\\SingleTextureStage.xml");
+
+   parser.load(filesystem.open("SingleTextureStage.xml"));
 
    Material& mat = dynamic_cast<Material&>(matStorage.get("SingleTextureStage"));
 
@@ -157,8 +173,11 @@ TEST(MaterialsParser, multipleTextureStages)
 {
    ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
+   Filesystem filesystem;
+   filesystem.changeRootDir("..\\Data");
    MaterialsParser parser(factory, matStorage);
-   parser.load("..\\Data\\MultipleTextureStages.xml");
+
+   parser.load(filesystem.open("MultipleTextureStages.xml"));
 
    Material& mat = dynamic_cast<Material&>(matStorage.get("MultipleTextureStages"));
 
@@ -191,8 +210,11 @@ TEST(MaterialsParser, multipleMaterialsWithTextureStages)
 {
    ResourceStorage<Material> matStorage;
    MaterialsFactoryMock factory;
+   Filesystem filesystem;
+   filesystem.changeRootDir("..\\Data");
    MaterialsParser parser(factory, matStorage);
-   parser.load("..\\Data\\MultMatsMultStages.xml");
+
+   parser.load(filesystem.open("MultMatsMultStages.xml"));
 
    Material& mat1 = dynamic_cast<Material&>(matStorage.get("Material_1"));
 

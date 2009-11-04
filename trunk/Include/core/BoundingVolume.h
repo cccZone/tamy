@@ -17,6 +17,16 @@ struct D3DXPLANE;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+enum PlaneClassification
+{
+    PPC_BACK,
+    PPC_FRONT,
+    PPC_SPANNING,
+    PPC_COPLANAR
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * This interface allows to check collisions between all available collision shapes
  */
@@ -30,11 +40,20 @@ public:
     * is the volume situated.
     *
     * @param plane   plane against which we want to perform a check
+    * @return        position of the volume in relation to the plane
+    */
+   virtual PlaneClassification classifyAgainsPlane(const D3DXPLANE& plane) const;
+
+   /**
+    * This method checks on which side of the specified plane
+    * is the volume situated.
+    *
+    * @param plane   plane against which we want to perform a check
     * @return        <0 - the volume is behind the plane
     *                =0 - the volume intersects the plane
     *                >0 - the volume is in front of the plane
     */
-   virtual float classifyAgainstPlane(const D3DXPLANE& plane) const = 0;
+   virtual float distanceToPlane(const D3DXPLANE& plane) const = 0;
 
    virtual bool testCollision(const PointVolume& point) const = 0;
 
@@ -57,6 +76,17 @@ public:
    virtual bool testCollision(const BoundingVolume& rhs) const = 0;
 
    virtual BoundingVolume* operator*(const D3DXMATRIX& mtx) const = 0;
+
+protected:
+   /**
+    * The method should return true if an instance has a non-zero volume.
+    * I.e. points and rays don't have a volume, so they will always return
+    * false, but an axis aligned box can return false only if both
+    * its extents represent the same point in space.
+    *
+    * @return     true if the instance has a non-zero volume, false otherwise
+    */
+   virtual bool hasVolume() const {return false;}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

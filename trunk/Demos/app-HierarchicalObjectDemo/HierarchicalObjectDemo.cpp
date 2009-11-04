@@ -35,7 +35,7 @@ void HierarchicalObjectDemo::initialize()
    StaticSceneManager* staticSceneStorage = NULL;
    DynMeshesScene* dynamicSceneStorage = NULL;
    LightsScene* lights = NULL;
-   loadIWF("..\\Data\\Space_Scene.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
+   loadIWF("Space_Scene.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
 
    // assemble rendering pipeline
    m_renderingPipeline->setBackground(skyBox);

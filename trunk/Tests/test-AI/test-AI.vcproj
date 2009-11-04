@@ -175,6 +175,14 @@
 			Name="Core"
 			>
 			<File
+				RelativePath=".\BehaviorTreeTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\ControllersManagerTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\FiniteStateMachineTests.cpp"
 				>
 			</File>
@@ -183,7 +191,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UsabilityTests.cpp"
+				RelativePath=".\ModelTests.cpp"
 				>
 			</File>
 		</Filter>
@@ -194,58 +202,14 @@
 				RelativePath=".\MessagableMock.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="SteeringBehaviors"
+			>
 			<File
-				RelativePath=".\StateMock.h"
+				RelativePath=".\CompositeSteeringBehaviorTests.cpp"
 				>
 			</File>
-			<Filter
-				Name="RamboScenario"
-				>
-				<File
-					RelativePath=".\Enemy.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Enemy.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Rambo.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Rambo.h"
-					>
-				</File>
-				<File
-					RelativePath=".\RamboScenarioMessages.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="SpecialistScenario"
-				>
-				<File
-					RelativePath=".\DemolitionMan.h"
-					>
-				</File>
-				<File
-					RelativePath=".\ExplosiveCharge.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\ExplosiveCharge.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Grunt.h"
-					>
-				</File>
-				<File
-					RelativePath=".\SpecialistScenarioMessages.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

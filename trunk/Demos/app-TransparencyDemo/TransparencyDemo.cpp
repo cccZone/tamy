@@ -1,5 +1,6 @@
 #include "TransparencyDemo.h"
 #include "tamy\Tamy.h"
+#include "core\Filesystem.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\Camera.h"
@@ -34,13 +35,13 @@ TransparencyDemo::TransparencyDemo(Tamy& tamy)
 void TransparencyDemo::initialize()
 {   
    MaterialsParser parser(m_tamy.graphicalFactory(), getMaterialsStorage());
-   parser.load("..\\Data\\materials.xml");
+   parser.load(TAMY.filesystem().open("materials.xml"));
 
    SkyBoxStorage* skyBox = NULL;
    StaticSceneManager* staticSceneStorage = NULL;
    DynMeshesScene* dynamicSceneStorage = NULL;
    LightsScene* lights = NULL;
-   loadIWF("..\\Data\\Dolphin.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
+   loadIWF("Dolphin.iwf", &skyBox, &staticSceneStorage, &dynamicSceneStorage, &lights);
    delete skyBox;
 
    // assemble rendering pipeline

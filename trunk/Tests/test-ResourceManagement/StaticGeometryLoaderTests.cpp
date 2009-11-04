@@ -3,6 +3,7 @@
 #include "core-ResourceManagement\GraphicalDataSource.h"
 #include "core-ResourceManagement\StaticGeometry.h"
 #include "core\ResourceStorage.h"
+#include "core\Filesystem.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\GraphicalEntitiesFactory.h"
 #include "core-Renderer\Renderer.h"
@@ -45,9 +46,10 @@ namespace // anonymous
    {
    private:
       static RendererStub s_renderer;
+      static Filesystem s_filesystem;
 
    public:
-      GraphicalEntitiesFactoryMock() : GraphicalEntitiesFactory("", s_renderer) {}
+      GraphicalEntitiesFactoryMock() : GraphicalEntitiesFactory(s_filesystem, s_renderer) {}
 
       Light* createLight(const std::string& name) {return NULL;}
 
@@ -86,7 +88,7 @@ namespace // anonymous
                                                      const std::vector<Face<USHORT> >& faces)
       { return NULL; }
 
-      Texture* loadTexture(const std::string& path, const std::string& fileName) { return NULL; }
+      Texture* loadTexture(const std::string& fileName) { return NULL; }
 
       Texture* createEmptyTexture() { return new ManagedTexture("", new TTextureImpl<int>()); }
 
@@ -98,6 +100,7 @@ namespace // anonymous
    };
 
    RendererStub GraphicalEntitiesFactoryMock::s_renderer;
+   Filesystem GraphicalEntitiesFactoryMock::s_filesystem;
 
    // -------------------------------------------------------------------------
 

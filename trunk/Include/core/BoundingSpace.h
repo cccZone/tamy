@@ -6,13 +6,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Space is infite - thus is this volume. It should be used
+ * Space is infinte - thus is this volume. It should be used
  * to bound things that should be considered ubiquitous,
  * like directional and ambient lighting
  */
 struct BoundingSpace : public BoundingVolume
 {
-   float classifyAgainstPlane(const D3DXPLANE& plane) const {return 0;}
+   float distanceToPlane(const D3DXPLANE& plane) const {return 0;}
 
    bool testCollision(const PointVolume& point) const {return true;}
 
@@ -29,6 +29,9 @@ struct BoundingSpace : public BoundingVolume
    bool testCollision(const BoundingVolume& rhs) const {return true;}
 
    BoundingVolume* operator*(const D3DXMATRIX& mtx) const {return new BoundingSpace();}
+
+protected:
+   bool hasVolume() const {return true;}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

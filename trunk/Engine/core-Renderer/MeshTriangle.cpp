@@ -1,16 +1,16 @@
-#include "core-Renderer\SplittableRenderableTriangle.h"
+#include "core-Renderer\MeshTriangle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SplittableTriangle<LitVertex>::SplittableTriangle()
+MeshTriangle::MeshTriangle()
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SplittableTriangle<LitVertex>::SplittableTriangle(const LitVertex& v1, 
-                                                  const LitVertex& v2, 
-                                                  const LitVertex& v3)
+MeshTriangle::MeshTriangle(const LitVertex& v1, 
+                           const LitVertex& v2, 
+                           const LitVertex& v3)
 {
    vtx[0] = v1;
    vtx[1] = v2;
@@ -19,23 +19,29 @@ SplittableTriangle<LitVertex>::SplittableTriangle(const LitVertex& v1,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const LitVertex& SplittableTriangle<LitVertex>::vertex(unsigned int vtxIdx) const 
+MeshTriangle::~MeshTriangle()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const LitVertex& MeshTriangle::vertex(unsigned int vtxIdx) const 
 {
    return vtx[vtxIdx];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const D3DXVECTOR3& SplittableTriangle<LitVertex>::vertexPos(unsigned int vtxIdx) const 
+const D3DXVECTOR3& MeshTriangle::vertexPos(unsigned int vtxIdx) const 
 {
    return vtx[vtxIdx].m_coords;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LitVertex SplittableTriangle<LitVertex>::splitEdge(float percentage, 
-                                                   unsigned int startVtxIdx, 
-                                                   unsigned int endVtxIdx) const
+LitVertex MeshTriangle::splitEdge(float percentage, 
+                                  unsigned int startVtxIdx, 
+                                  unsigned int endVtxIdx) const
 {
    LitVertex newVertex;
    const LitVertex& startVtx = vtx[startVtxIdx];

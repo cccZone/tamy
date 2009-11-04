@@ -108,12 +108,12 @@ void CFileIWF::ClearObjects()
 // Name : Load ()
 // Desc : Starts off the IWF loading process
 //-----------------------------------------------------------------------------
-void CFileIWF::Load( LPCSTR FileName, ULONG Flags )
+void CFileIWF::Load( Filesystem& filesystem, const std::string& fileName, ULONG Flags )
 {
     IWFFILEHEADER FileHeader;
 
     // First attempt to open the file.
-    Open( FileName, MODE_READ, &FileHeader );
+    Open( filesystem, fileName, MODE_READ, &FileHeader );
 
     
     // Note : Registering is not required, you can process all the
