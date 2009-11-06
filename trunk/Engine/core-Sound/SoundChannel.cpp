@@ -35,7 +35,8 @@ SoundChannel::SoundChannel(Sound& sound, int buffersCount)
 
 SoundChannel::~SoundChannel()
 {
-   for (int i = 0; i < m_data.size(); ++i)
+   unsigned int count = m_data.size();
+   for (unsigned int i = 0; i < count; ++i)
    {
       delete [] m_data[i];
    }

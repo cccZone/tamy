@@ -32,7 +32,7 @@ float PointVolume::distanceToPlane(const D3DXPLANE& plane) const
 
 bool PointVolume::testCollision(const PointVolume& rhs) const
 {
-   return point == rhs.point;
+   return (bool)(point == rhs.point);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -213,7 +213,7 @@ unsigned int ParticleSystem::activateParticles()
    }
    else
    {
-      noParticlesToSpawn = (float)(m_spawnTimeline - m_nextSpawnTime) / (float)m_spawnInterval;
+      noParticlesToSpawn = (int)((float)(m_spawnTimeline - m_nextSpawnTime) / (float)m_spawnInterval);
       ++noParticlesToSpawn;
    }
 

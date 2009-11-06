@@ -52,7 +52,7 @@ namespace // anonymous
 
       unsigned int getNodeIdx(const std::vector<BTNode*>& nodes)
       {
-         if ((m_selectIdx < 0) || (m_selectIdx >= nodes.size()))
+         if ((m_selectIdx < 0) || (m_selectIdx >= (int)nodes.size()))
          {
             return nodes.size() - 1;
          }

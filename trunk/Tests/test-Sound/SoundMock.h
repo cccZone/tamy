@@ -22,7 +22,7 @@ public:
       m_blockAlignment =  1;
 
       m_someBuf = new char[m_bufSize];
-      for (int i = 0; i < m_bufSize; ++i)
+      for (unsigned int i = 0; i < m_bufSize; ++i)
       {
          m_someBuf[i] = i;
       }

@@ -248,7 +248,7 @@ bool Skeleton::isActive(const std::string& animationName) const
    D3DXTRACK_DESC desc;
    m_animationController->GetTrackDesc(trackId, &desc);
 
-   return desc.Enable;
+   return (bool)desc.Enable;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

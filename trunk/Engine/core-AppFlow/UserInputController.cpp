@@ -65,7 +65,7 @@ void UserInputController::update(float timeElapsed)
 
 bool UserInputController::isKeyPressed(unsigned char keyCode) const
 {
-   return (bool)(m_keyBuffer[keyCode] & 0xF0); 
+   return (m_keyBuffer[keyCode] & 0xF0) != 0; 
 }
 
 ///////////////////////////////////////////////////////////////////////////////

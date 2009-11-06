@@ -308,7 +308,7 @@ bool testCollision(const BoundingSphere& sphere, const Ray& ray)
 
 bool testCollision(const Ray& ray, const Triangle& triangle)
 {
-   return D3DXIntersectTri(&triangle.vertex(0), &triangle.vertex(1), &triangle.vertex(2),
+   return (bool)D3DXIntersectTri(&triangle.vertex(0), &triangle.vertex(1), &triangle.vertex(2),
       &ray.origin, &ray.direction, NULL, NULL, NULL);
 }
 

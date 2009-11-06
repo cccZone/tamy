@@ -34,7 +34,7 @@ WaypointCameraController::~WaypointCameraController()
 
 void WaypointCameraController::registerWaypoint(int waypointIdx, Node& waypoint)
 {
-   while (waypointIdx >= m_waypoints.size())
+   while (waypointIdx >= (int)m_waypoints.size())
    {
       m_waypoints.push_back(NULL);
    }
@@ -46,7 +46,7 @@ void WaypointCameraController::registerWaypoint(int waypointIdx, Node& waypoint)
 
 void WaypointCameraController::goTo(int waypointIdx)
 {
-   ASSERT(waypointIdx < m_waypoints.size(), "Waypoint index out of range");
+   ASSERT(waypointIdx < (int)m_waypoints.size(), "Waypoint index out of range");
    ASSERT(m_waypoints[waypointIdx] != NULL, "Waypoint doesn't exist");
 
    D3DXMATRIX destination = m_waypoints[waypointIdx]->getGlobalMtx();

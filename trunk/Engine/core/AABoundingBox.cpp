@@ -127,7 +127,7 @@ bool AABoundingBox::testCollision(const Triangle& rhs) const
 
 bool AABoundingBox::hasVolume() const
 {
-   return min != max;
+   return (bool)(min != max);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
