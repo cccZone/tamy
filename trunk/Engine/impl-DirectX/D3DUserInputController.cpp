@@ -29,8 +29,8 @@ void D3DUserInputController::checkUserInput(unsigned char* keysBuffer, Point& mo
 {
    if (!GetKeyboardState(keysBuffer)) return;
 
-   if (m_rightMouseButton) keysBuffer[VK_RBUTTON] = 0xF0;
-   if (m_leftMouseButton) keysBuffer[VK_LBUTTON] = 0xF0;
+   setKey(keysBuffer, VK_RBUTTON, m_rightMouseButton);
+   setKey(keysBuffer, VK_RBUTTON, m_leftMouseButton);
 
    POINT cursorPos;
    GetCursorPos(&cursorPos);

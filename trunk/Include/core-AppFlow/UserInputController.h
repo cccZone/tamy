@@ -1,11 +1,17 @@
 #pragma once
 
+/// @file   core-AppFlow\UserInputController.h
+/// @brief  user input handling mechanism
+
 #include <d3dx9.h>
 #include "core\Point.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * User input handling mechanism.
+ */
 class UserInputController
 {
 private:
@@ -26,7 +32,7 @@ public:
 
    /**
     * In relative mouse movement mode the cursor stops moving
-    * and becomes obsolete - because what we realy care about here
+    * and becomes obsolete - because what we really care about here
     * is the speed of the mouse movement.
     *
     * In the limited mouse movement mode cursor moves and
@@ -39,6 +45,16 @@ public:
    const D3DXVECTOR2& getMouseSpeed() const {return m_mouseSpeed;}
 
 protected:
+   /**
+    * Using this utility method, an implementation can inform about a key
+    * being pressed or released
+    *
+    * @param buf        buffer containing states of keys
+    * @param keyCode    code of the changed key
+    * @param pressed    'true' if  pressed, 'false' - if released
+    */
+   void setKey(unsigned char* buf, unsigned char keyCode, bool pressed);
+
    virtual void onRelativeMouseMovement() = 0;
    virtual void onAbsoluteMouseMovement() = 0;
 

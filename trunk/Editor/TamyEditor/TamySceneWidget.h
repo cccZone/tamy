@@ -5,6 +5,8 @@
 
 #include <QWidget>
 #include <windows.h>
+#include "core-AppFlow\UserInputController.h"
+#include "core\Point.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,12 +15,16 @@ class IWindowMessagesProcessor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class TamySceneWidget : public QWidget
+class TamySceneWidget : public QWidget, public UserInputController
 {
+   Q_OBJECT
+
 private:
    IWindowMessagesProcessor* m_winMsgProcessor;
    IWindowMessagesProcessor* m_activeWinMsgProcessor;
    HWND m_hWnd;
+
+   unsigned char m_keyBuffer[256];
 
 public:
    /**
@@ -53,6 +59,28 @@ protected:
    void moveEvent(QMoveEvent* event);
 
    void resizeEvent(QResizeEvent* event);
+
+   void keyPressEvent(QKeyEvent* event);
+
+   void keyReleaseEvent(QKeyEvent* event);
+
+   void mousePressEvent(QMouseEvent* event);
+
+   void mouseReleaseEvent(QMouseEvent* event);
+
+   // -------------------------------------------------------------------------
+   // UserInputController implementation
+   // -------------------------------------------------------------------------
+   void onRelativeMouseMovement();
+
+   void onAbsoluteMouseMovement();
+
+   void checkUserInput(unsigned char* keyBuffer, Point& mousePos);
+
+   void setMousePos(const Point& pos);
+
+private:
+   unsigned char toDXKey(int qtKeyCode) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -69,3 +69,19 @@ bool UserInputController::isKeyPressed(unsigned char keyCode) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void UserInputController::setKey(unsigned char* buf, 
+                                 unsigned char keyCode, 
+                                 bool pressed)
+{
+   if (pressed)
+   {
+      buf[keyCode] = 0xF0; 
+   }
+   else
+   {
+       buf[keyCode] = 0; 
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

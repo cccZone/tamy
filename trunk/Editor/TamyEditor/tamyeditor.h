@@ -14,6 +14,9 @@ class QApplication;
 class QTimer;
 class Renderer;
 class Model;
+class UserInputController;
+class UnconstrainedMotionController;
+class CTimer;
 
 namespace RendererView
 {
@@ -32,11 +35,16 @@ class TamyEditor : public QMainWindow
 private:
    QApplication& m_app;
    Ui::TamyEditorClass ui;
+   CTimer* m_timeMeasurement;
    QTimer* m_timer;
    Renderer* m_renderer;
 
    Model* m_scene;
    RendererView::RendererView* m_renderView;
+
+   UserInputController* m_renderWinUiController;
+   bool m_rotating;
+   UnconstrainedMotionController* m_cameraController;
 
 public:
    /**
@@ -58,6 +66,9 @@ public slots:
     void loadScene();
     void saveScene();
     void importScene();
+
+private:
+   void handleInput(float timeElapsed);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
