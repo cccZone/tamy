@@ -1,5 +1,9 @@
 #pragma once
 
+/// @file   core-Renderer\SkyBoxStorage.h
+/// @brief  a sky box
+
+
 #include "core-Renderer\RenderablesStorage.h"
 #include "core\Array.h"
 

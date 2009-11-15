@@ -2,21 +2,21 @@
 #error "This file can only be included from StaticGeometryOctree.h"
 #else
 
+#include <algorithm>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename RGS>
-StaticGeometryOctree<Elem, RGS>::StaticGeometryOctree(
+template<typename Elem>
+StaticGeometryOctree<Elem>::StaticGeometryOctree(
                                           const AABoundingBox& treeBB, 
                                           int maxElements,
                                           int maxDepth,
-                                          RGS& outputGeometry,
                                           int initDepth)
 : Octree(treeBB)
 , m_elements(65536)
 , m_maxElemsPerSector(maxElements)
 , m_maxDepth(maxDepth)
-, m_outputGeometry(outputGeometry)
 {
    if (m_maxElemsPerSector <= 0)      {m_maxElemsPerSector = 1;}
    if (m_maxDepth < 0)                {m_maxDepth = 0;}
@@ -27,34 +27,29 @@ StaticGeometryOctree<Elem, RGS>::StaticGeometryOctree(
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename RGS>
-StaticGeometryOctree<Elem, RGS>::~StaticGeometryOctree()
+template<typename Elem>
+StaticGeometryOctree<Elem>::~StaticGeometryOctree()
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<typename Elem, typename RGS>
-bool StaticGeometryOctree<Elem, RGS>::isAdded(const Elem& elem) const
-{
-   unsigned int elemsCount = m_elements.size();
-   for (unsigned int i = 0; i < elemsCount; ++i)
+   unsigned int count = m_elements.size();
+   for (unsigned int i = 0; i < count; ++i)
    {
-      if (&elem == m_elements[i]) {return true;}
+      delete m_elements[i];
    }
+   m_elements.clear();
 
-   return false;
+   m_handles.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename RGS>
-void StaticGeometryOctree<Elem, RGS>::insert(Elem& elem)
+template<typename Elem>
+SGHandle StaticGeometryOctree<Elem>::insert(Elem* elem)
 {
-   if (isAdded(elem) == true) {return;}
+   SGHandle handle = addHandle();
+   SGElementParts& elemParts = m_handles[handle];
 
    Array<Sector*> changedSectors;
-   addElemToTree(elem, *m_root, changedSectors);
+   addElemToTree(new SGElement(handle, elem), *m_root, changedSectors);
 
    Sector* sector = NULL;
    unsigned int sectorsCount = changedSectors.size();
@@ -67,12 +62,14 @@ void StaticGeometryOctree<Elem, RGS>::insert(Elem& elem)
          performSectorSubdivision(*sector);
       }
    }
+
+   return handle;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename RGS>
-void StaticGeometryOctree<Elem, RGS>::performSectorSubdivision(Sector& sector)
+template<typename Elem>
+void StaticGeometryOctree<Elem>::performSectorSubdivision(Sector& sector)
 {
    subdivideSector(sector);
 
@@ -84,9 +81,17 @@ void StaticGeometryOctree<Elem, RGS>::performSectorSubdivision(Sector& sector)
    for (unsigned int i = 0; i < elemsCount; ++i)
    {
       elemIdx = sector.m_elems[i];
-      Elem* elementToInsert = m_elements[elemIdx];
-      m_freeSpaces.push(elemIdx);
-      addElemToTree(*elementToInsert, sector, changedSectors);
+      SGElement* elementToInsert = releaseElement(elemIdx);
+
+      SGElementParts::iterator sgElemPartIt = std::find(m_handles[elementToInsert->handle].begin(),
+                                                        m_handles[elementToInsert->handle].end(),
+                                                        elemIdx);
+      if (sgElemPartIt != m_handles[elementToInsert->handle].end())
+      {
+         m_handles[elementToInsert->handle].erase(sgElemPartIt);
+      }
+
+      addElemToTree(elementToInsert, sector, changedSectors);
    }
 
    sector.m_elems.clear();
@@ -94,12 +99,12 @@ void StaticGeometryOctree<Elem, RGS>::performSectorSubdivision(Sector& sector)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename RGS>
-void StaticGeometryOctree<Elem, RGS>::addElemToTree(Elem& elem, 
-                                                    Sector& subTreeRoot,
-                                                    Array<Sector*>& changedSectors)
+template<typename Elem>
+void StaticGeometryOctree<Elem>::addElemToTree(SGElement* element, 
+                                               Sector& subTreeRoot,
+                                               Array<Sector*>& changedSectors)
 {
-   if (subTreeRoot.m_bb.testCollision(elem.getBoundingVolume()) == false) {return;}
+   if (subTreeRoot.m_bb.testCollision(element->elem->getBoundingVolume()) == false) {return;}
 
    if (subTreeRoot.m_children != NULL)
    {
@@ -113,13 +118,13 @@ void StaticGeometryOctree<Elem, RGS>::addElemToTree(Elem& elem,
       D3DXPlaneFromPointNormal(&planes[1], &bbMidPoint, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
       D3DXPlaneFromPointNormal(&planes[2], &bbMidPoint, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
       
-      Array<Elem*> splitElems(16);
-      splitElems.push_back(&elem);
+      Array<SGElement*> splitElems(16);
+      splitElems.push_back(element);
       unsigned int elemStartIdx = 0;
       unsigned int elemEndIdx = 1;
-      Elem* currElem = NULL;
-      Elem* frontSplit = NULL;
-      Elem* backSplit = NULL;
+      SGElement* currElem = NULL;
+      SGElement* frontSplit = NULL;
+      SGElement* backSplit = NULL;
       for (unsigned int planeIdx = 0; planeIdx < 3; ++planeIdx)
       {
          for (unsigned int elemIdx = elemStartIdx; elemIdx < elemEndIdx; ++elemIdx)
@@ -129,7 +134,7 @@ void StaticGeometryOctree<Elem, RGS>::addElemToTree(Elem& elem,
 
             if (currElem != NULL)
             {
-               float objPlaneClassification = currElem->getBoundingVolume().distanceToPlane(planes[planeIdx]);
+               float objPlaneClassification = currElem->elem->getBoundingVolume().distanceToPlane(planes[planeIdx]);
 
                if (objPlaneClassification < 0)
                {
@@ -138,10 +143,21 @@ void StaticGeometryOctree<Elem, RGS>::addElemToTree(Elem& elem,
                else if (objPlaneClassification == 0)
                {
                   // object intersects the plane
-                  currElem->split(planes[planeIdx], &frontSplit, &backSplit);
-                  m_outputGeometry.unmanage(*currElem);
-                  if (frontSplit != NULL) {m_outputGeometry.manage(frontSplit);}
-                  if (backSplit != NULL) {m_outputGeometry.manage(backSplit);}
+                  Elem* frontElem = NULL;
+                  Elem* backElem = NULL;
+                  currElem->elem->split(planes[planeIdx], &frontElem, &backElem);
+
+                  SGHandle oldHandle = currElem->handle;
+                  delete currElem;
+
+                  if (frontElem != NULL) 
+                  {
+                     frontSplit = new SGElement(oldHandle, frontElem);
+                  }
+                  if (backElem != NULL) 
+                  {
+                     backSplit = new SGElement(oldHandle, backElem);
+                  }
                }
                else
                {
@@ -159,69 +175,133 @@ void StaticGeometryOctree<Elem, RGS>::addElemToTree(Elem& elem,
 
       for (unsigned int subSectorIdx = 0; subSectorIdx < 8; ++subSectorIdx)
       {
-         Elem* elem = splitElems[subSectorIdx + 7];
+         SGElement* elem = splitElems[subSectorIdx + 7];
          if (elem != NULL) 
          {
-            addElemToTree(*elem, *(subTreeRoot.m_children[subSectorIdx]), changedSectors);
+            addElemToTree(elem, *(subTreeRoot.m_children[subSectorIdx]), changedSectors);
          }
       }
    }
    else
    {
       // this is a leaf - add the element to it
-      unsigned int elemIdx = 0;
-      if (m_freeSpaces.empty() == true)
-      {
-         elemIdx = m_elements.size();
-         m_elements.push_back(&elem);
-      }
-      else
-      {
-         elemIdx = m_freeSpaces.pop();
-         m_elements[elemIdx] = &elem;
-      }
+      unsigned int elemIdx = addElement(element);
+
       subTreeRoot.m_elems.push_back(elemIdx);
+      m_handles[element->handle].push_back(elemIdx);
       changedSectors.push_back(&subTreeRoot);
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename RGS>
-void StaticGeometryOctree<Elem, RGS>::remove(Elem& elem)
+template<typename Elem>
+void StaticGeometryOctree<Elem>::remove(SGHandle elemHandle)
 {
-   unsigned int elemIdx = m_elements.find(&elem);
-   if (elemIdx == EOA) {return;}
-   m_elements[elemIdx] = NULL;
-   m_freeSpaces.push(elemIdx);
-
    Array<Sector*> sectors;
-   querySectors(elem.getBoundingVolume(), *m_root, sectors);
 
-   unsigned int count = sectors.size();
-   unsigned int idx;
+   SGElementParts& elemParts = m_handles[elemHandle];
+   unsigned int count = elemParts.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      idx = sectors[i]->m_elems.find(elemIdx);
-      if (idx == EOA) {continue;}
-      else {sectors[i]->m_elems.remove(idx);}
+      unsigned int elemIdx = elemParts[i];
+
+      // remove the element from the tree sectors
+      sectors.clear();
+      querySectors(m_elements[elemIdx]->elem->getBoundingVolume(), *m_root, sectors);
+      unsigned int sectorsCount = sectors.size();
+      unsigned int idx;
+      for (unsigned int j = 0; j < sectorsCount; ++j)
+      {
+         idx = sectors[j]->m_elems.find(elemIdx);
+         if (idx == EOA) {continue;}
+         else {sectors[j]->m_elems.remove(idx);}
+      }
+
+      // delete the element
+      delete releaseElement(elemIdx);
    }
+
+   // release the handle to the element
+   releaseHandle(elemHandle);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename RGS>
-unsigned int StaticGeometryOctree<Elem, RGS>::getElementsCount() const
+template<typename Elem>
+unsigned int StaticGeometryOctree<Elem>::getElementsCount() const
 {
    return m_elements.size();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem, typename RGS>
-Elem& StaticGeometryOctree<Elem, RGS>::getElement(unsigned int idx) const
+template<typename Elem>
+Elem& StaticGeometryOctree<Elem>::getElement(unsigned int idx) const
 {
-   return *(m_elements[idx]);
+   return *(m_elements[idx]->elem);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename Elem>
+unsigned int StaticGeometryOctree<Elem>::addElement(SGElement* element)
+{
+   unsigned int elemIdx = -1;
+   if (m_freeSpaces.empty() == true)
+   {
+      elemIdx = m_elements.size();
+      m_elements.push_back(element);
+   }
+   else
+   {
+      elemIdx = m_freeSpaces.pop();
+      m_elements[elemIdx] = element;
+   }
+
+   return elemIdx;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename Elem>
+typename StaticGeometryOctree<Elem>::SGElement* 
+StaticGeometryOctree<Elem>::releaseElement(unsigned int idx)
+{
+   SGElement* element = m_elements[idx];
+   m_elements[idx] = NULL;
+   m_freeSpaces.push(idx);
+
+   return element;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename Elem>
+SGHandle StaticGeometryOctree<Elem>::addHandle()
+{
+   SGHandle handle = -1;
+   
+   if (m_freeHandles.empty() == true)
+   {
+      handle = m_handles.size();
+      m_handles.push_back(SGElementParts());
+   }
+   else
+   {
+      handle = m_freeHandles.pop();
+   }
+
+   return handle;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename Elem>
+void StaticGeometryOctree<Elem>::releaseHandle(SGHandle idx)
+{
+   m_handles[idx].clear();
+   m_freeHandles.push(idx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

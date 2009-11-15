@@ -44,19 +44,19 @@ public:
 protected:
    GraphicalEntity* createGraphicalEntity(const std::string& name,
                                           const std::vector<LitVertex>& vertices,
-                                          const std::vector<Face<USHORT> >& faces,
+                                          const std::vector<Face >& faces,
                                           const std::vector<Material*>& materials);
 
    SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                         const std::vector<LitVertex>& vertices,
-                                                        const std::vector<Face<USHORT> >& faces,
+                                                        const std::vector<Face >& faces,
                                                         const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                         const std::vector<SkinBoneDefinition>& skinBones,
                                                         const std::vector<Material*>& materials);
 
    StaticGeometryRenderable* createStaticGeometry(Material& material,
                                                   const std::vector<LitVertex>& vertices,
-                                                  const std::vector<Face<USHORT> >& faces);
+                                                  const std::vector<Face >& faces);
 
    Texture* loadTexture(const std::string& fileName);
    Texture* createEmptyTexture();

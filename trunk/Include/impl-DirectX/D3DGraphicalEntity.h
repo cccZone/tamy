@@ -19,7 +19,7 @@ public:
    D3DGraphicalEntity(const std::string& name,
                       IDirect3DDevice9& d3Device,
                       const std::vector<LitVertex>& vertices,
-                      const std::vector<Face<USHORT> >& faces,
+                      const std::vector<Face >& faces,
                       const std::vector<Material*>& materials)
          : D3DAbstractGraphicalEntity<VertexStruct>(d3Device, vertices, faces),
          GraphicalEntity(name, materials)
@@ -36,7 +36,7 @@ public:
       setBoundingSphereRadius(maxCoord);
 
       // extract the geometry copy into a list of triangles
-      for (std::vector<Face<USHORT> >::const_iterator faceIt = faces.begin();
+      for (std::vector<Face >::const_iterator faceIt = faces.begin();
          faceIt != faces.end(); ++faceIt)
       {
          addTriangle(Triangle(vertices.at(faceIt->idx[0]).m_coords,

@@ -1,6 +1,6 @@
 #include "impl-DirectX\D3DFont.h"
 #include "impl-DirectX\D3DRenderer.h"
-#include "core-Renderer\Color.h"
+#include "core\Color.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

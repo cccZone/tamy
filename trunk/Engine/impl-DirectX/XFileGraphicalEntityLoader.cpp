@@ -194,7 +194,7 @@ void XFileGraphicalEntityLoader::parseGeometry(D3DXMESHCONTAINER_DERRIVED* meshC
       USHORT idx1 = *pIndices; pIndices++;
       USHORT idx2 = *pIndices; pIndices++;
       USHORT idx3 = *pIndices; pIndices++;
-      mesh.faces.push_back(Face<USHORT>(idx1, idx2, idx3, *pAttribs));
+      mesh.faces.push_back(Face(idx1, idx2, idx3, *pAttribs));
    }
 
    for (DWORD i = 0; i < pMesh->GetNumVertices(); ++i, ++pVertices)

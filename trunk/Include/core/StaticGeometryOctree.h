@@ -5,7 +5,13 @@
 /// @brief  an octree for storing static geometry
 
 #include "core\Octree.h"
+#include <vector>
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+typedef unsigned int SGHandle;
+typedef std::vector<unsigned int> SGElementParts;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,17 +34,38 @@
  * passing NULL in case a new element wasn't created in the corresponding 
  * subspace.
  */
-template<typename Elem, typename ResultingGeometryStorage>
+template<typename Elem>
 class StaticGeometryOctree : public Octree<Elem>
 {
 private:
-   Array<Elem*> m_elements;
+   struct SGElement
+   {
+      /* This is the handle assigned to the original element.
+       * Since it can be split into many sub elements, we want to 
+       * keep track which elements comprise iterator. */
+      SGHandle handle;
+
+      Elem* elem;
+
+      SGElement(SGHandle _handle, Elem* _elem)
+         : handle(_handle), elem(_elem)
+      {}
+
+      ~SGElement()
+      {
+         delete elem; elem = NULL;
+      }
+   };
+
+private:
+   Array<SGElement*> m_elements;
    Stack<unsigned int> m_freeSpaces;
 
+   std::vector<SGElementParts> m_handles;
+   Stack<unsigned int> m_freeHandles;
+   
    unsigned int m_maxElemsPerSector;
    unsigned int m_maxDepth;
-
-   ResultingGeometryStorage& m_outputGeometry;
 
 public:
    /**
@@ -58,8 +85,6 @@ public:
     *                         into play. It also helps stabilizing query times, by
     *                         preventing the tree to be very tall in one place, and
     *                         ultra shallow in another.
-    * @param outputGeometry   The tree's gonna perform geometry splitting. This is where
-    *                         the resulting geometry be held.
     * @param initDepth        for convenience tree can be initially subdivided to
     *                         a certain depth. This depth is limited by the value
     *                         specified in 'maxDepth' param
@@ -67,45 +92,52 @@ public:
    StaticGeometryOctree(const AABoundingBox& treeBB, 
                         int maxElements, 
                         int maxDepth,
-                        ResultingGeometryStorage& outputGeometry,
                         int initDepth = 0);
 
    ~StaticGeometryOctree();
-
-   /**
-    * The method checks if an element is present in the tree.
-    *
-    * @param elem    element presence of which we want to check
-    * @return        'true' if element was successfully added,
-    *                'false' otherwise
-    */
-   bool isAdded(const Elem& elem) const;
 
    /**
     * The method inserts a new element into the tree, splitting
     * it if the element crosses the boundaries of sectors.
     *
     * @param elem    element we want to add
+    * @return        handle to the element we've just added
     */
-   void insert(Elem& elem);
+   SGHandle insert(Elem* elem);
 
    /**
-    * The method allows to remove an element from a tree.
+    * The method allows to remove an element from a tree. The element 
+    * will be destroyed.
     *
-    * @param elem    element we want to remove
+    * @param elemHandle    handle to an element we want to remove
     */
-   void remove(Elem& elem);
+   void remove(SGHandle elemHandle);
 
-protected:
+   // -------------------------------------------------------------------------
+   // Octree implementation
+   // -------------------------------------------------------------------------
    unsigned int getElementsCount() const;
 
    Elem& getElement(unsigned int idx) const;
 
-   void addElemToTree(Elem& elem, 
+protected:
+   void addElemToTree(SGElement* element, 
                       Sector& subTreeRoot,
                       Array<Sector*>& changedSectors);
 
    void performSectorSubdivision(Sector& sector);
+
+   // -------------------------------------------------------------------------
+   // Elements management
+   // -------------------------------------------------------------------------
+   unsigned int addElement(SGElement* element);
+   SGElement* releaseElement(unsigned int idx);
+
+   // -------------------------------------------------------------------------
+   // Handles management
+   // -------------------------------------------------------------------------
+   SGHandle addHandle();
+   void releaseHandle(SGHandle idx);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -55,12 +55,16 @@ Renderer::~Renderer()
 
 void Renderer::setMechanism(RenderingMechanism* mechanism)
 {
+   delete m_mechanism;
+
    if (mechanism == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a RenderingMechanism instance");
+      m_mechanism = new NullRenderingMechanism();
    }
-
-   m_mechanism = mechanism;
+   else
+   {
+      m_mechanism = mechanism;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

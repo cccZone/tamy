@@ -1,11 +1,15 @@
 #pragma once
 
+/// @file   core-ResourceManagement\MeshDefinition.h
+/// @brief  definitions of mesh-related entities loaded by resource 
+///         management system
+
 #include <list>
 #include <vector>
 #include "core-Renderer\LitVertex.h"
 #include "core-Renderer\Face.h"
 #include <string>
-#include "core-Renderer\Color.h"
+#include "core\Color.h"
 #include <d3dx9.h>
 #include "core-Renderer\SkinBoneDefinition.h"
 #include "core-Renderer\MaterialOperation.h"
@@ -78,7 +82,7 @@ struct MeshDefinition
 
    std::vector<std::string> materials;
    std::vector<LitVertex> vertices;
-   std::vector<Face<USHORT> > faces;
+   std::vector<Face > faces;
 
    // these two attributes have meaning only if the mesh is a skin
    std::vector<BonesInfluenceDefinition> bonesInfluencingAttribute;

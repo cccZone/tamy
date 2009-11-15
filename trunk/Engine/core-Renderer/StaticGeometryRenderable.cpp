@@ -6,7 +6,7 @@
 
 StaticGeometryRenderable::StaticGeometryRenderable(Material& material,
                                                    const std::vector<LitVertex>& vertices,
-                                                   const std::vector<Face<USHORT> >& faces)
+                                                   const std::vector<Face >& faces)
 : m_material(material)
 , m_vertices(vertices)
 , m_faces(faces)
@@ -59,7 +59,7 @@ const std::vector<LitVertex>& StaticGeometryRenderable::getVertices() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const std::vector<Face<USHORT> >& StaticGeometryRenderable::getFaces() const
+const std::vector<Face >& StaticGeometryRenderable::getFaces() const
 {
    return m_faces;
 }
@@ -111,7 +111,7 @@ void StaticGeometryRenderable::split(const D3DXPLANE& splitPlane,
    }
 
    std::vector<LitVertex> vertices;
-   std::vector<Face<USHORT> > faces;
+   std::vector<Face > faces;
 
    if (frontTriangles.size() > 0) 
    {
@@ -152,7 +152,7 @@ const AABoundingBox& StaticGeometryRenderable::getBoundingVolume() const
 
 void StaticGeometryRenderable::createNewObject(const Array<MeshTriangle*>& triangles,
                                                std::vector<LitVertex>& outVertices,
-                                               std::vector<Face<USHORT> >& outFaces)
+                                               std::vector<Face >& outFaces)
 {
    unsigned int trianglesCount = triangles.size();
    MeshTriangle* triangle;
@@ -165,7 +165,7 @@ void StaticGeometryRenderable::createNewObject(const Array<MeshTriangle*>& trian
       outVertices.push_back(triangle->vtx[2]);
 
       idx = i * 3;
-      outFaces.push_back(Face<USHORT>(idx, idx + 1, idx + 2, 0));
+      outFaces.push_back(Face(idx, idx + 1, idx + 2, 0));
    }
 }
 

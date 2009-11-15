@@ -4,7 +4,22 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ClassesRegistry Entity::s_entitiesRegistry;
+namespace // anonymous
+{
+   ClassesRegistry* g_entitiesRegistry = NULL;
+
+} // anonymous
+
+///////////////////////////////////////////////////////////////////////////////
+
+ClassesRegistry& getEntitiesRegistry()
+{
+   if (g_entitiesRegistry == NULL)
+   {
+      g_entitiesRegistry = new ClassesRegistry();
+   }
+   return *g_entitiesRegistry;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +36,7 @@ Entity::Entity(int classHandle)
 
 Entity* Entity::create(int entityClassHandle)
 {
-   return (Entity*)(s_entitiesRegistry.create(entityClassHandle));
+   return (Entity*)(getEntitiesRegistry().create(entityClassHandle));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

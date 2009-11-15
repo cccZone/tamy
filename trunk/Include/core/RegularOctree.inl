@@ -8,13 +8,18 @@
 template<typename Elem>
 RegularOctree<Elem>::RegularOctree(const AABoundingBox& treeBB, 
                                    unsigned int maxElemsPerSector,
-                                   unsigned int maxTreeDepth)
+                                   unsigned int maxTreeDepth,
+                                   unsigned int initDepth)
 : Octree(treeBB)
 , m_elements(65536)
 , m_maxElemsPerSector(maxElemsPerSector)
 , m_maxTreeDepth(maxTreeDepth)
 {
    if (m_maxElemsPerSector == 0) {m_maxElemsPerSector = 1;}
+
+   if (initDepth < 0) {initDepth = 0;}
+   if (initDepth > m_maxTreeDepth) {initDepth = m_maxTreeDepth;}
+   subdivideTree(*m_root, initDepth);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

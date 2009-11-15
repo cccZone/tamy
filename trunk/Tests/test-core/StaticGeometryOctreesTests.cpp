@@ -105,53 +105,6 @@ namespace // anonymous
       }
    };
 
-   // -------------------------------------------------------------------------
-
-   class ResultingGeometryStorageMock
-   {
-   private:
-      std::vector<GeometricalObjectMock*> m_objects;
-
-   public:
-      ~ResultingGeometryStorageMock()
-      {
-         unsigned int count = m_objects.size();
-         for (unsigned int i = 0; i < count; ++i)
-         {
-            delete m_objects[i];
-         }
-      }
-
-      void getObjects(Array<GeometricalObjectMock*>& output)
-      {
-         unsigned int count = m_objects.size();
-         for (unsigned int i = 0; i < count; ++i)
-         {
-            output.push_back(m_objects[i]);
-         }
-      }
-
-      void manage(GeometricalObjectMock* obj)
-      {
-         m_objects.push_back(obj);
-      }
-
-      void unmanage(GeometricalObjectMock& obj)
-      {
-         unsigned int count = m_objects.size();
-         for (std::vector<GeometricalObjectMock*>::iterator it = m_objects.begin();
-              it != m_objects.end(); ++it)
-         {
-            if (&obj == *it)
-            {
-               delete *it;
-               m_objects.erase(it);
-               break;
-            }
-         }
-      }
-   };
-
 } // namespace anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -163,27 +116,23 @@ TEST(StaticGeometryOctree, geometryCrossingSectorsBoundaryIsSplit)
    int initDepth = 1;
    int maxDepth = 2;
 
-   ResultingGeometryStorageMock resultingGeometryStorage;
-   StaticGeometryOctree<GeometricalObjectMock, ResultingGeometryStorageMock> tree(treeBB, 
+   StaticGeometryOctree<GeometricalObjectMock> tree(treeBB, 
                                                     maxObjects, 
                                                     maxDepth,
-                                                    resultingGeometryStorage,
                                                     initDepth);
 
-   GeometricalObjectMock object;
-   object.addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
-                               D3DXVECTOR3( 1, 11, 10),
-                               D3DXVECTOR3(-1,  9, 10)));
+   GeometricalObjectMock* object = new GeometricalObjectMock();
+   object->addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
+                                D3DXVECTOR3( 1, 11, 10),
+                                D3DXVECTOR3(-1,  9, 10)));
    tree.insert(object);
 
    // after the object's been added to the tree, we should receive
    // two resulting objects
-   Array<GeometricalObjectMock*> result;
-   resultingGeometryStorage.getObjects(result);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)2, result.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, tree.getElementsCount());
 
-   GeometricalObjectMock& clippedObj1 = *(result[0]);
-   GeometricalObjectMock& clippedObj2 = *(result[1]);
+   GeometricalObjectMock& clippedObj1 = tree.getElement(0);
+   GeometricalObjectMock& clippedObj2 = tree.getElement(1);
 
    // their bounding volumes should be clipped accordingly
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.707f, clippedObj1.getBoundingVolume().radius, 0.001f);
@@ -210,7 +159,7 @@ TEST(StaticGeometryOctree, geometryCrossingSectorsBoundaryIsSplit)
    COMPARE_VEC(D3DXVECTOR3(-1,  9, 10), obj2Tri2.vertex(2));
 
    // let's query them
-   result.clear();
+   Array<GeometricalObjectMock*> result;
    tree.query(BoundingSphere(D3DXVECTOR3(2, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
    COMPARE_VEC(D3DXVECTOR3(0.5f, 10.5f, 10), result[0]->getBoundingVolume().origin);
@@ -233,40 +182,33 @@ TEST(StaticGeometryOctree, subdivisionOfAddedObjectsWhenNewViolatePartitioningLi
    int maxObjects = 1;
    int maxDepth = 2;
 
-   ResultingGeometryStorageMock resultingGeometryStorage;
-   StaticGeometryOctree<GeometricalObjectMock, ResultingGeometryStorageMock> tree(treeBB, 
+   StaticGeometryOctree<GeometricalObjectMock> tree(treeBB, 
                                                     maxObjects, 
-                                                    maxDepth,
-                                                    resultingGeometryStorage);
+                                                    maxDepth);
 
-   GeometricalObjectMock object1;
-   object1.addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
-                                D3DXVECTOR3( 1, 11, 10),
-                                D3DXVECTOR3(-1,  9, 10)));
-   GeometricalObjectMock object2;
-   object2.addTriangle(Triangle(D3DXVECTOR3( 8, 9, 10),
-                                D3DXVECTOR3(10, 9, 10),
-                                D3DXVECTOR3( 9, 9, 8)));
+   GeometricalObjectMock* object1 = new GeometricalObjectMock();
+   object1->addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
+                                 D3DXVECTOR3( 1, 11, 10),
+                                 D3DXVECTOR3(-1,  9, 10)));
+   GeometricalObjectMock* object2 = new GeometricalObjectMock();
+   object2->addTriangle(Triangle(D3DXVECTOR3( 8, 9, 10),
+                                 D3DXVECTOR3(10, 9, 10),
+                                 D3DXVECTOR3( 9, 9, 8)));
 
 
    // first object doesn't change anything - the limit is not violated,
    // so no subdivision takes place
    tree.insert(object1);
-
-   Array<GeometricalObjectMock*> result;
-   resultingGeometryStorage.getObjects(result);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)0, result.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, tree.getElementsCount());
 
 
    // but as soon as we add second object, a subdivision is performed,
    // and unfortunately it splits the first object in half
    tree.insert(object2);
-   result.clear();
-   resultingGeometryStorage.getObjects(result);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)2, result.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)3, tree.getElementsCount());
 
-   GeometricalObjectMock& clippedObj1 = *(result[0]);
-   GeometricalObjectMock& clippedObj2 = *(result[1]);
+   GeometricalObjectMock& clippedObj1 = tree.getElement(0);
+   GeometricalObjectMock& clippedObj2 = tree.getElement(2);
 
    // their bounding volumes should be clipped accordingly
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.707f, clippedObj1.getBoundingVolume().radius, 0.001f);
@@ -293,7 +235,7 @@ TEST(StaticGeometryOctree, subdivisionOfAddedObjectsWhenNewViolatePartitioningLi
    COMPARE_VEC(D3DXVECTOR3(-1,  9, 10), obj2Tri2.vertex(2));
 
    // and finally let's do some querying just to be sure everything works
-   result.clear();
+   Array<GeometricalObjectMock*> result;
    tree.query(BoundingSphere(D3DXVECTOR3(2, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
    COMPARE_VEC(D3DXVECTOR3(0.5f, 10.5f, 10), result[0]->getBoundingVolume().origin);
@@ -316,40 +258,34 @@ TEST(StaticGeometryOctree, partitioningLimits)
    int maxElementsPerSector = 1;
    int maxDepth = 0;
 
-   ResultingGeometryStorageMock resultingGeometryStorage;
-   StaticGeometryOctree<GeometricalObjectMock, ResultingGeometryStorageMock> tree(treeBB, 
+   StaticGeometryOctree<GeometricalObjectMock> tree(treeBB, 
                                                     maxElementsPerSector, 
-                                                    maxDepth,
-                                                    resultingGeometryStorage);
+                                                    maxDepth);
 
-   GeometricalObjectMock object1;
-   object1.addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
-                                D3DXVECTOR3( 1, 11, 10),
-                                D3DXVECTOR3(-1,  9, 10)));
-   GeometricalObjectMock object2;
-   object2.addTriangle(Triangle(D3DXVECTOR3( 8, 9, 10),
-                                D3DXVECTOR3(10, 9, 10),
-                                D3DXVECTOR3( 9, 9, 8)));
+   GeometricalObjectMock* object1 = new GeometricalObjectMock();
+   object1->addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
+                                 D3DXVECTOR3( 1, 11, 10),
+                                 D3DXVECTOR3(-1,  9, 10)));
+   GeometricalObjectMock* object2 = new GeometricalObjectMock();
+   object2->addTriangle(Triangle(D3DXVECTOR3( 8, 9, 10),
+                                 D3DXVECTOR3(10, 9, 10),
+                                 D3DXVECTOR3( 9, 9, 8)));
 
 
    // first object doesn't change anything - the limit is not violated,
    // so no subdivision takes place
    tree.insert(object1);
 
-   Array<GeometricalObjectMock*> result;
-   resultingGeometryStorage.getObjects(result);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)0, result.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, tree.getElementsCount());
 
-   // even though we're adding a second element - thus violationg the maxElementsPerSector limit, 
+   // even though we're adding a second element - thus violating the maxElementsPerSector limit, 
    // maxDepth limit is stronger and prevents the tree from further subdivision (and thus the
    // subdivision of the objects the sector contains)
    tree.insert(object2);
-   result.clear();
-   resultingGeometryStorage.getObjects(result);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)0, result.size());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, tree.getElementsCount());
 
    // let's do some querying just to be sure everything works
-   result.clear();
+   Array<GeometricalObjectMock*> result;
    tree.query(BoundingSphere(D3DXVECTOR3(2, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
    COMPARE_VEC(D3DXVECTOR3(0, 10, 10), result[0]->getBoundingVolume().origin);
@@ -372,32 +308,25 @@ TEST(StaticGeometryOctree, removingObjects)
    int maxElementsPerSector = 1;
    int maxDepth = 0;
 
-   ResultingGeometryStorageMock resultingGeometryStorage;
-   StaticGeometryOctree<GeometricalObjectMock, ResultingGeometryStorageMock> tree(treeBB, 
+   StaticGeometryOctree<GeometricalObjectMock> tree(treeBB, 
                                                     maxElementsPerSector, 
-                                                    maxDepth,
-                                                    resultingGeometryStorage);
+                                                    maxDepth);
 
-   GeometricalObjectMock object;
-   object.addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
-                               D3DXVECTOR3( 1, 11, 10),
-                               D3DXVECTOR3(-1,  9, 10)));
+   GeometricalObjectMock* object = new GeometricalObjectMock();
+   object->addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
+                                D3DXVECTOR3( 1, 11, 10),
+                                D3DXVECTOR3(-1,  9, 10)));
 
-   tree.insert(object);
+   SGHandle objectHandle = tree.insert(object);
 
    Array<GeometricalObjectMock*> result;
    tree.query(BoundingSphere(D3DXVECTOR3(0, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
 
-   tree.remove(object);
+   tree.remove(objectHandle);
    result.clear();
    tree.query(BoundingSphere(D3DXVECTOR3(0, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, result.size());
-
-   tree.insert(object);
-   result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(0, 10, 10), 1.5f), result);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -409,17 +338,15 @@ TEST(StaticGeometryOctree, addingObjectWithBoundingBoxOverTwoSectorsAndGeometryO
    int maxDepth = 1;
    int initialDepth = 1;
 
-   ResultingGeometryStorageMock resultingGeometryStorage;
-   StaticGeometryOctree<GeometricalObjectMock, ResultingGeometryStorageMock> tree(treeBB, 
+   StaticGeometryOctree<GeometricalObjectMock> tree(treeBB, 
                                                     maxElementsPerSector, 
                                                     maxDepth,
-                                                    resultingGeometryStorage,
                                                     initialDepth);
 
-   GeometricalObjectMock object;
-   object.addTriangle(Triangle(D3DXVECTOR3(-1, 11,  9),
-                               D3DXVECTOR3(-1, 11, 11),
-                               D3DXVECTOR3(-1,  3,  9)));
+   GeometricalObjectMock* object = new GeometricalObjectMock();
+   object->addTriangle(Triangle(D3DXVECTOR3(-1, 11,  9),
+                                D3DXVECTOR3(-1, 11, 11),
+                                D3DXVECTOR3(-1,  3,  9)));
 
    tree.insert(object);
 

@@ -71,13 +71,13 @@ namespace // anonymous
    protected:
       GraphicalEntity* createGraphicalEntity(const std::string& name,
                                              const std::vector<LitVertex>& vertices,
-                                             const std::vector<Face<USHORT> >& faces,
+                                             const std::vector<Face >& faces,
                                              const std::vector<Material*>& materials)
       { return NULL; }
 
       SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                            const std::vector<LitVertex>& vertices,
-                                                           const std::vector<Face<USHORT> >& faces,
+                                                           const std::vector<Face >& faces,
                                                            const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                            const std::vector<SkinBoneDefinition>& skinBones,
                                                            const std::vector<Material*>& materials)
@@ -85,7 +85,7 @@ namespace // anonymous
 
       StaticGeometryRenderable* createStaticGeometry(Material& material,
                                                      const std::vector<LitVertex>& vertices,
-                                                     const std::vector<Face<USHORT> >& faces)
+                                                     const std::vector<Face >& faces)
       { return NULL; }
 
       Texture* loadTexture(const std::string& fileName) { return NULL; }
@@ -108,7 +108,7 @@ namespace // anonymous
    {
    private:
       std::vector<std::vector<LitVertex> > m_vertices;
-      std::vector<std::vector<Face<USHORT> > > m_faces;
+      std::vector<std::vector<Face > > m_faces;
       std::vector<unsigned int> m_materials;
 
    public:
@@ -123,13 +123,13 @@ namespace // anonymous
          return m_vertices.at(renderableIdx);
       }
 
-      const std::vector<Face<USHORT> >& getFaces(unsigned int renderableIdx) const
+      const std::vector<Face >& getFaces(unsigned int renderableIdx) const
       {
          return m_faces.at(renderableIdx);
       }
 
       void addMesh(const std::vector<LitVertex>& vertices,
-                   const std::vector<Face<USHORT> >& faces,
+                   const std::vector<Face >& faces,
                    Material& material)
       {
          m_materials.push_back(material.getIndex());
@@ -158,7 +158,7 @@ TEST(StaticGeometryLoader, loadingSimpleMesh)
          mesh.vertices.push_back(LitVertex::unskinnedNoTex( 1, 0, 0, 0, 0, 1));
          mesh.vertices.push_back(LitVertex::unskinnedNoTex( 0, 1, 0, 0, 0, 1));
 
-         mesh.faces.push_back(Face<USHORT> (0, 1, 2, 0));
+         mesh.faces.push_back(Face (0, 1, 2, 0));
       }
    };
 
@@ -199,8 +199,8 @@ TEST(StaticGeometryLoader, loadingSimpleMeshWithTwoMaterials)
          mesh.vertices.push_back(LitVertex::unskinnedNoTex( 1, 0, 0, 0, 0, 1));
          mesh.vertices.push_back(LitVertex::unskinnedNoTex( 0, -1, 0, 0, 0, 1));
 
-         mesh.faces.push_back(Face<USHORT> (0, 1, 2, 0));
-         mesh.faces.push_back(Face<USHORT> (3, 4, 5, 1));
+         mesh.faces.push_back(Face (0, 1, 2, 0));
+         mesh.faces.push_back(Face (3, 4, 5, 1));
       }
    };
 
@@ -223,7 +223,7 @@ TEST(StaticGeometryLoader, loadingSimpleMeshWithTwoMaterials)
    COMPARE_VEC(D3DXVECTOR3( 1, 0, 0), vert1[1].m_coords);
    COMPARE_VEC(D3DXVECTOR3( 0, 1, 0), vert1[2].m_coords);
 
-   const std::vector<Face<USHORT> >& faces1 = output.getFaces(0);
+   const std::vector<Face >& faces1 = output.getFaces(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, faces1.size());
    CPPUNIT_ASSERT_EQUAL((USHORT)0, faces1[0].idx[0]);
    CPPUNIT_ASSERT_EQUAL((USHORT)1, faces1[0].idx[1]);
@@ -237,7 +237,7 @@ TEST(StaticGeometryLoader, loadingSimpleMeshWithTwoMaterials)
    COMPARE_VEC(D3DXVECTOR3( 1, 0, 0), vert2[1].m_coords);
    COMPARE_VEC(D3DXVECTOR3( 0, -1, 0), vert2[2].m_coords);
 
-   const std::vector<Face<USHORT> >& faces2 = output.getFaces(0);
+   const std::vector<Face >& faces2 = output.getFaces(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, faces2.size());
    CPPUNIT_ASSERT_EQUAL((USHORT)0, faces2[0].idx[0]);
    CPPUNIT_ASSERT_EQUAL((USHORT)1, faces2[0].idx[1]);
@@ -269,8 +269,8 @@ TEST(StaticGeometryLoader, hierarchicalMeshWithTwoMaterials)
          mesh.vertices.push_back(LitVertex::unskinnedNoTex( 1, 0, 0, 0, 0, 1));
          mesh.vertices.push_back(LitVertex::unskinnedNoTex( 0, -1, 0, 0, 0, 1));
 
-         mesh.faces.push_back(Face<USHORT> (0, 1, 2, 0));
-         mesh.faces.push_back(Face<USHORT> (3, 4, 5, 1));
+         mesh.faces.push_back(Face (0, 1, 2, 0));
+         mesh.faces.push_back(Face (3, 4, 5, 1));
 
          D3DXMatrixTranslation(&(mesh.localMtx), 10, 20, 30);
 
@@ -284,7 +284,7 @@ TEST(StaticGeometryLoader, hierarchicalMeshWithTwoMaterials)
          child->vertices.push_back(LitVertex::unskinnedNoTex( 1, 0, 0, 0, 0, 1));
          child->vertices.push_back(LitVertex::unskinnedNoTex( 0, 1, 0, 0, 0, 1));
 
-         child->faces.push_back(Face<USHORT> (0, 1, 2, 0));
+         child->faces.push_back(Face (0, 1, 2, 0));
          D3DXMatrixTranslation(&(child->localMtx), 5, 0, 0);
 
          mesh.children.push_back(child);
@@ -310,7 +310,7 @@ TEST(StaticGeometryLoader, hierarchicalMeshWithTwoMaterials)
    COMPARE_VEC(D3DXVECTOR3(11, 20, 30), vert1[1].m_coords);
    COMPARE_VEC(D3DXVECTOR3(10, 21, 30), vert1[2].m_coords);
 
-   const std::vector<Face<USHORT> >& faces1 = output.getFaces(0);
+   const std::vector<Face >& faces1 = output.getFaces(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, faces1.size());
    CPPUNIT_ASSERT_EQUAL((USHORT)0, faces1[0].idx[0]);
    CPPUNIT_ASSERT_EQUAL((USHORT)1, faces1[0].idx[1]);
@@ -327,7 +327,7 @@ TEST(StaticGeometryLoader, hierarchicalMeshWithTwoMaterials)
    COMPARE_VEC(D3DXVECTOR3(16, 20, 30), vert2[4].m_coords);
    COMPARE_VEC(D3DXVECTOR3(15, 21, 30), vert2[5].m_coords);
 
-   const std::vector<Face<USHORT> >& faces2 = output.getFaces(1);
+   const std::vector<Face >& faces2 = output.getFaces(1);
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, faces2.size());
    CPPUNIT_ASSERT_EQUAL((USHORT)0, faces2[0].idx[0]);
    CPPUNIT_ASSERT_EQUAL((USHORT)1, faces2[0].idx[1]);
@@ -357,8 +357,8 @@ TEST(StaticGeometryLoader, sameVertexUsedForTwoFacesDoesntGetDuplicated)
          mesh.vertices.push_back(LitVertex::unskinnedNoTex( 1, 0, 0, 0, 0, 1));
          mesh.vertices.push_back(LitVertex::unskinnedNoTex( 0, 1, 0, 0, 0, 1));
 
-         mesh.faces.push_back(Face<USHORT> (0, 1, 2, 0));
-         mesh.faces.push_back(Face<USHORT> (2, 1, 0, 0));
+         mesh.faces.push_back(Face (0, 1, 2, 0));
+         mesh.faces.push_back(Face (2, 1, 0, 0));
       }
    };
 

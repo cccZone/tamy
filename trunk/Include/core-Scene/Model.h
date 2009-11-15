@@ -11,6 +11,7 @@
 class Entity;
 class ModelSerializer;
 class ModelView;
+class Serializer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,6 +21,23 @@ class ModelView;
  */
 class Model
 {
+public:
+   /**
+    * Interface that gets notified about the progress in model serialization
+    */
+   class ProgressObserver
+   {
+   public:
+      virtual ~ProgressObserver() {}
+
+      /**
+       * The method is called when some progress in serialization is made.
+       *
+       * @param percentage    percentage <0, 1> of data already loaded
+       */
+      virtual void setProgress(float percentage) = 0;
+   };
+
 private:
    typedef std::vector<Entity*> Entities;
    Entities m_entities;
@@ -58,19 +76,25 @@ public:
    /**
     * This method allows to save model's state.
     *
-    * @param modelSerializer  serializer that will take care of writing
+    * @param serializer       serializer that will take care of writing
     *                         stuff to an external storage
+    * @param observer         a progress observer that will get informed about
+    *                         serialization progress
     */
-   void save(ModelSerializer& modelSerializer);
+   void save(Serializer& serializer, 
+             ProgressObserver* observer = NULL);
 
    /**
     * This method loads a model from an external storage. 
     * Current model's state WILL NOT BE ERASED.
     *
-    * @param modelSerializer  serializer that will take care of reading
+    * @param serializer       serializer that will take care of reading
     *                         stuff from an external storage
+    * @param observer         a progress observer that will get informed about
+    *                         serialization progress
     */
-   void load(ModelSerializer& modelSerializer);
+   void load(Serializer& modelSerializer, 
+             ProgressObserver* observer = NULL);
 
    // -------------------------------------------------------------------------
    // Housekeeping

@@ -67,29 +67,6 @@ public:
    virtual ~Octree();
 
    /**
-    * The method checks if an element is present in the tree.
-    *
-    * @param elem    element presence of which we want to check
-    * @return        'true' if element was successfully added,
-    *                'false' otherwise
-    */
-   virtual bool isAdded(const Elem& elem) const = 0;
-
-   /**
-    * The method inserts a new element into the tree.
-    *
-    * @param elem    element we want to add
-    */
-   virtual void insert(Elem& elem) = 0;
-
-   /**
-    * The method allows to remove an element from a tree.
-    *
-    * @param elem    element we want to remove
-    */
-   virtual void remove(Elem& elem) = 0;
-
-   /**
     * This method allows to query all the elements that are contained
     * in the passed bounding volume.
     *
@@ -103,7 +80,6 @@ public:
     */
    void query(const BoundingVolume& boundingVol, Array<Elem*>& output) const;
 
-protected:
    /**
     * This method returns a total number of elements stored in the tree.
     * 
@@ -145,7 +121,7 @@ protected:
     *
     * @param boundingVol   volume we want to use for the overlap test
     * @param searchRoot    root of a subtree we want to search in
-    * @param output        upon method reeturn this array will be filled
+    * @param output        upon method return this array will be filled
     *                      with found sectors that match the query criteria.
     */
    void querySectors(const BoundingVolume& boundingVol, 

@@ -256,6 +256,14 @@
 				Name="StaticGeometryLoader"
 				>
 				<File
+					RelativePath=".\MeshHierarchyFlattener.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-ResourceManagement\MeshHierarchyFlattener.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\Include\core-ResourceManagement\StaticGeometry.h"
 					>
 				</File>

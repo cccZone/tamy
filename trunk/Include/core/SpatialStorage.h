@@ -25,20 +25,6 @@ public:
    virtual ~SpatialStorage() {}
 
    /**
-    * The method inserts a new element into the storage.
-    *
-    * @param elem    element we want to add
-    */
-   virtual void insert(Elem& elem) = 0;
-
-   /**
-    * The method allows to remove an element from the storage.
-    *
-    * @param elem    element we want to remove
-    */
-   virtual void remove(Elem& elem) = 0;
-
-   /**
     * This method allows to query all the elements that are contained
     * in the passed bounding volume.
     *

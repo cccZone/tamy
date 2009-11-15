@@ -1,10 +1,21 @@
 #include "core-Scene\Model.h"
 #include "core-Scene\Entity.h"
-#include "core-Scene\ModelSerializer.h"
+#include "core\Serializer.h"
 #include "core-Scene\ModelView.h"
 #include <stdexcept>
 #include <algorithm>
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace // anonymous
+{
+   class NullProgressObserver : public Model::ProgressObserver
+   {
+   public:
+      void setProgress(float percentage) {}
+   };
+} // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -65,34 +76,54 @@ void Model::clear()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Model::save(ModelSerializer& modelSerializer)
+void Model::save(Serializer& serializer, ProgressObserver* observer)
 {
+   ProgressObserver* po = observer;
+   if (po == NULL)
+   {
+      po = new NullProgressObserver();
+   }
+
    unsigned int count = m_entities.size();
-   modelSerializer.saveInt(count);
+   serializer.saveInt(count);
    for (unsigned int i = 0; i < count; ++i)
    {
       Entity& entity = *(m_entities[i]);
 
-      modelSerializer.saveInt(entity.getClassHandle());
-      entity.save(modelSerializer);
+      serializer.saveInt(entity.getClassHandle());
+      entity.save(serializer);
+
+      po->setProgress((float)i / (float)count);
    }
+
+   delete po;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Model::load(ModelSerializer& modelSerializer)
+void Model::load(Serializer& serializer, ProgressObserver* observer)
 {
-   unsigned int entitiesCount = modelSerializer.loadInt();
+   ProgressObserver* po = observer;
+   if (po == NULL)
+   {
+      po = new NullProgressObserver();
+   }
+
+   unsigned int entitiesCount = serializer.loadInt();
 
    for (unsigned int i = 0; i < entitiesCount; ++i)
    {
-      int entityClassID = modelSerializer.loadInt();
+      int entityClassID = serializer.loadInt();
       Entity* entity = Entity::create(entityClassID);
 
-      entity->load(modelSerializer);
+      entity->load(serializer);
 
       add(entity);
+
+      po->setProgress((float)i / (float)entitiesCount);
    }
+
+   delete po;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

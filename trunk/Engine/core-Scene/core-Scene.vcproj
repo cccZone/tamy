@@ -181,10 +181,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Include\core-Scene\ModelSerializer.h"
-				>
-			</File>
-			<File
 				RelativePath=".\ModelView.cpp"
 				>
 			</File>
@@ -208,6 +204,106 @@
 				RelativePath="..\..\Include\core-Scene\ClassesRegistry.inl"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Entities"
+			>
+			<Filter
+				Name="Lights"
+				>
+				<File
+					RelativePath=".\DirectionalLightEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\DirectionalLightEntity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\PointLightEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\PointLightEntity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SpotLightEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\SpotLightEntity.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Cameras"
+				>
+				<File
+					RelativePath=".\CameraEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\CameraEntity.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Scenery"
+				>
+				<File
+					RelativePath=".\SkyBoxEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\SkyBoxEntity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\StaticGeometryEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\StaticGeometryEntity.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Helpers"
+				>
+				<File
+					RelativePath=".\MeshDesc.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\MeshDesc.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Materials"
+				>
+				<File
+					RelativePath=".\MaterialEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\MaterialEntity.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Movies"
+				>
+				<File
+					RelativePath=".\AnimatedCutsceneEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\AnimatedCutsceneEntity.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

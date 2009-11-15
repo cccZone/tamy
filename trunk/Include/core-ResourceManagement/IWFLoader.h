@@ -28,8 +28,27 @@ class Filesystem;
  */
 class IWFLoader
 {
+public:
+   /**
+    * Interface that gets notified about the progress in loading an IWF file.
+    */
+   class ProgressObserver
+   {
+   public:
+      virtual ~ProgressObserver() {}
+
+      /**
+       * The method is called when some progress in loading is made.
+       *
+       * @param percentage    percentage <0, 1> of data already loaded
+       */
+      virtual void setProgress(float percentage) = 0;
+   };
+
 private:
    IWFScene& m_scene;
+   ProgressObserver* m_defaultProgressObserver;
+   ProgressObserver* m_progressObserver;
 
 public:
    /** 
@@ -40,6 +59,13 @@ public:
     */
    IWFLoader(IWFScene& scene);
    ~IWFLoader();
+
+   /**
+    * The method attaches a new progress observer.
+    *
+    * @param observer   progress observer instance
+    */
+   void attach(ProgressObserver& observer);
 
    /**
     * The method will load a scene from an IWF file.

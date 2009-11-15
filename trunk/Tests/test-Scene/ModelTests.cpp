@@ -1,7 +1,7 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core-Scene\Model.h"
 #include "core-Scene\Entity.h"
-#include "core-Scene\ModelSerializer.h"
+#include "core\Serializer.h"
 #include "core-Scene\ModelView.h"
 
 
@@ -19,18 +19,19 @@ namespace // anonymous
       EntityAMock() : INIT_ENTITY(EntityAMock), m_index(-1) {}
       EntityAMock(int idx) : INIT_ENTITY(EntityAMock), m_index(idx) {}
 
-      void save(ModelSerializer& serializer)
+      void save(Serializer& serializer)
       {
          serializer.saveInt(m_index);
       }
 
-      void load(ModelSerializer& serializer)
+      void load(Serializer& serializer)
       {
          m_index = serializer.loadInt();
       }
 
       int getIndex() const {return m_index;}
    };
+   DEFINE_ENTITY(EntityAMock);
 
    // -------------------------------------------------------------------------
 
@@ -43,22 +44,23 @@ namespace // anonymous
       EntityBMock() : INIT_ENTITY(EntityBMock), m_index(-1) {}
       EntityBMock(int idx) : INIT_ENTITY(EntityBMock), m_index(idx) {}
 
-      void save(ModelSerializer& serializer)
+      void save(Serializer& serializer)
       {
          serializer.saveInt(m_index);
       }
 
-      void load(ModelSerializer& serializer)
+      void load(Serializer& serializer)
       {
          m_index = serializer.loadInt();
       }
 
       int getIndex() const {return m_index;}
    };
+   DEFINE_ENTITY(EntityBMock);
 
    // -------------------------------------------------------------------------
 
-   class ModelSerializerMock : public ModelSerializer
+   class ModelSerializerMock : public Serializer
    {
    private:
       std::vector<int>& m_storage;
@@ -80,6 +82,21 @@ namespace // anonymous
 
          return val;
       }
+
+      void saveFloat(float val) {}
+      float loadFloat() {return 0;}
+      void saveBool(bool val) {}
+      bool loadBool() {return false;}
+      void saveChar(char val) {}
+      char loadChar() {return 0;}
+      void saveLong(long val) {}
+      long loadLong() {return 0;}
+      void saveString(const std::string& str) {}
+      void loadString(std::string& str) {}
+      void saveMatrix(const D3DXMATRIX& mtx) {}
+      void loadMatrix(D3DXMATRIX& mtx) {}
+      void saveVec3(const D3DXVECTOR3& vec) {}
+      void loadVec3(D3DXVECTOR3& vec) {}
    };
 
    // -------------------------------------------------------------------------
@@ -112,6 +129,22 @@ namespace // anonymous
       }
    };
 
+   // -------------------------------------------------------------------------
+   
+   class ProgressObserverMock : public Model::ProgressObserver
+   {
+   private:
+      int& m_entriesCount;
+
+   public:
+      ProgressObserverMock(int& entriesCount) : m_entriesCount(entriesCount) {}
+
+      void setProgress(float val)
+      {
+         ++m_entriesCount;
+      }
+   };
+
 } // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -141,6 +174,32 @@ TEST(Model, serialization)
    CPPUNIT_ASSERT_EQUAL(5,  dynamic_cast<EntityAMock*> (&model.getEntity(0))->getIndex());
    CPPUNIT_ASSERT_EQUAL(10, dynamic_cast<EntityBMock*> (&model.getEntity(1))->getIndex());
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(Model, serializationProgress)
+{
+   Model model;
+
+   model.add(new EntityAMock(1));
+   model.add(new EntityAMock(2));
+   model.add(new EntityAMock(3));
+   model.add(new EntityAMock(4));
+
+   int saveProgressEntries = 0;
+   int loadProgressEntries = 0;
+
+   std::vector<int> storage;
+   ModelSerializerMock serializer(storage);
+   model.save(serializer, new ProgressObserverMock(saveProgressEntries));
+   CPPUNIT_ASSERT_EQUAL(4, saveProgressEntries);
+
+   model.clear();
+
+   model.load(serializer, new ProgressObserverMock(loadProgressEntries));
+   CPPUNIT_ASSERT_EQUAL(4, loadProgressEntries);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -240,9 +299,3 @@ TEST(Model, reattachingViewBetweenModels)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-/*
-Scena moze:
-1.) obiekty sa kontrolowane przez przypisane kontrolery
-2.) jest wyswietlana przez widoki, a kazdy obiekt ma odpowiednia reprezentacje
-*/

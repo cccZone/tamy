@@ -72,7 +72,7 @@ public:
 protected:
    GraphicalEntity* createGraphicalEntity(const std::string& name,
                                           const std::vector<LitVertex>& vertices,
-                                          const std::vector<Face<USHORT> >& faces,
+                                          const std::vector<Face >& faces,
                                           const std::vector<Material*>& materials)
    {
       return NULL;
@@ -80,7 +80,7 @@ protected:
 
    SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                         const std::vector<LitVertex>& vertices,
-                                                        const std::vector<Face<USHORT> >& faces,
+                                                        const std::vector<Face >& faces,
                                                         const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                         const std::vector<SkinBoneDefinition>& skinBones,
                                                         const std::vector<Material*>& materials)
@@ -90,7 +90,7 @@ protected:
 
    StaticGeometryRenderable* createStaticGeometry(Material& material,
                                                   const std::vector<LitVertex>& vertices,
-                                                  const std::vector<Face<USHORT> >& faces)
+                                                  const std::vector<Face >& faces)
    {
       return NULL;
    }

@@ -1,5 +1,8 @@
 #pragma once
 
+/// @file   core-Renderer\MaterialStage
+/// @brief  description of rasterizer stage
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -11,6 +14,10 @@ class RendererImpl;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * This class describes a single rasterizer stage - what should it do with 
+ * the textures and materials etc.
+ */
 class MaterialStage
 {
 private:

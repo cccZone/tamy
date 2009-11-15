@@ -1,5 +1,8 @@
 #pragma once
 
+/// @file   core-Renderer\Skeleton.h
+/// @brief  low level animation controller
+
 #include <list>
 #include <string>
 #include <d3dx9.h>
@@ -26,7 +29,10 @@ class Skeleton
 private:
    Node* m_skeletonRootBone;
    ID3DXAnimationController* m_animationController;
-   std::map<std::string, int> m_animPerTrack;
+
+   typedef std::map<std::string, int> AnimationsMap;
+   AnimationsMap m_animPerTrack;
+
    std::vector<ID3DXAnimationSet*> m_animSets;
 
 public:
@@ -36,7 +42,7 @@ public:
     *
     * The idea is that the bones in the skeletal structure of bones
     * (described by the 'skeletonRootBone' param) need to bear names
-    * matching those of the bone animation defintions in the animation
+    * matching those of the bone animation definitions in the animation
     * definition template. There may be more bones there, but all the 
     * slots need to be filled.
     *
@@ -119,6 +125,14 @@ public:
     * Updates the global time line, thus moving the active animations forward
     */
    void update(float timeElapsed);
+
+   /**
+    * Returns a set of names of all animations for this skeleton.
+    *
+    * @param names   this is where the method will place names
+    *                of all skeleton animations.
+    */
+   void getAnimationNames(std::set<std::string>& names) const;
 
 private:
    void createAnimationController(DWORD requiredBonesCount, 

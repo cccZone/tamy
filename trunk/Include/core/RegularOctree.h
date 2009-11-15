@@ -24,7 +24,7 @@ private:
 
 public:
    /**
-    * Contructor.
+    * Constructor.
     *
     * @param treeBB              bounding box of the entire tree
     * @param maxElemsPerSector   maximum elements per sector. If there are more 
@@ -32,37 +32,25 @@ public:
     *                            the sector gets subdivided, unless the sector
     *                            is located at the depth == maxTreeDepth.
     * @param maxTreeDepth        maximum depth of the tree
+    * @param initDepth           initial depth to which the tree should be 
+    *                            subdivided upon creation
     */
    RegularOctree(const AABoundingBox& treeBB, 
                  unsigned int maxElemsPerSector = 64,
-                 unsigned int maxTreeDepth = 5);
+                 unsigned int maxTreeDepth = 5,
+                 unsigned int initDepth = 0);
 
    ~RegularOctree();
 
-   /**
-    * The method checks if an element is present in the tree.
-    *
-    * @param elem    element presence of which we want to check
-    * @return        'true' if element was successfully added,
-    *                'false' otherwise
-    */
+   // -------------------------------------------------------------------------
+   // Octree implementation
+   // -------------------------------------------------------------------------
    bool isAdded(const Elem& elem) const;
 
-   /**
-    * The method inserts a new element into the tree.
-    *
-    * @param elem    element we want to add
-    */
    void insert(Elem& elem);
 
-   /**
-    * The method allows to remove an element from a tree.
-    *
-    * @param elem    element we want to remove
-    */
    void remove(Elem& elem);
 
-protected:
    unsigned int getElementsCount() const;
 
    Elem& getElement(unsigned int idx) const;

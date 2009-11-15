@@ -21,7 +21,7 @@ protected:
 public:
    D3DAbstractGraphicalEntity(IDirect3DDevice9& d3Device, 
                               const std::vector<VertexStruct>& vertices,
-                              const std::vector<Face<USHORT> >& faces)
+                              const std::vector<Face>& faces)
       : m_d3Device(d3Device)
       , m_mesh(NULL)
    {
@@ -50,10 +50,10 @@ public:
       res = m_mesh->LockAttributeBuffer(D3DLOCK_DISCARD, &pAttrib);
       if (FAILED(res)) { throw std::logic_error(std::string("Can't lock the mesh's attributes buffer")); }
 
-      for (std::vector<Face<USHORT> >::const_iterator it = faces.begin(); 
+      for (std::vector<Face>::const_iterator it = faces.begin(); 
            it != faces.end(); ++it)
       {
-         const Face<USHORT>& face = *it;
+         const Face& face = *it;
          *pIndex++  = face.idx[0]; 
          *pIndex++  = face.idx[1]; 
          *pIndex++  = face.idx[2];

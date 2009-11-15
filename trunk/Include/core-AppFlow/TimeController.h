@@ -1,5 +1,8 @@
 #pragma once
 
+/// @file   core-AppFlow\TimeController.h
+/// @brief  tool for scheduling tasks in time
+
 #include <vector>
 #include <string>
 #include "core-AppFlow\TimeControllerTrack.h"
@@ -9,14 +12,14 @@
 
 /**
  * TimeController provides the means to update multiple 'updatable' classes
- * siultaneously in a timely fashion.
+ * simultaneously in a timely fashion.
  *
  * It can have many time tracks defined, each running with a different speed.
  * Each 'updatable' can be added to such track, and thus effectively
  * be running with a different speed.
  *
  * It also provides the facility to limit the execution of a particular track
- * to a specified framerate.
+ * to a specified frame rate.
  */
 class TimeController
 {

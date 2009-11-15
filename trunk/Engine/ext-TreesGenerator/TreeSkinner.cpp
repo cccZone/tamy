@@ -556,20 +556,20 @@ void TreeSkinner::addCylindricalFaces(unsigned int skinningResolution,
 
    for (unsigned int i = 0; i < skinningResolution; ++i)
    {
-      outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx + i, 
+      outMesh.faces.push_back(Face ((USHORT)startVertexIdx + i, 
                                             (USHORT)startVertexIdx + skinningResolution + 1 + i, 
                                             (USHORT)startVertexIdx + i + 1, 
                                             attributeID));
-      outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx + i + 1, 
+      outMesh.faces.push_back(Face ((USHORT)startVertexIdx + i + 1, 
                                             (USHORT)startVertexIdx + skinningResolution + 1 + i, 
                                             (USHORT)startVertexIdx + skinningResolution + 2 + i, 
                                             attributeID));
    }
-   outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx + skinningResolution, 
+   outMesh.faces.push_back(Face ((USHORT)startVertexIdx + skinningResolution, 
                                          (USHORT)startVertexIdx + 2*skinningResolution + 1, 
                                          (USHORT)startVertexIdx, 
                                          attributeID));
-   outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx, 
+   outMesh.faces.push_back(Face ((USHORT)startVertexIdx, 
                                          (USHORT)startVertexIdx + 2*skinningResolution + 1, 
                                          (USHORT)startVertexIdx + skinningResolution + 1, 
                                          attributeID));
@@ -586,12 +586,12 @@ void TreeSkinner::addEndFaces(unsigned int skinningResolution,
    assert(startVertexIdx >= 0);
    for (unsigned int i = 0; i < skinningResolution; ++i)
    {
-      outMesh.faces.push_back(Face<USHORT> ((USHORT)startVertexIdx + i, 
+      outMesh.faces.push_back(Face ((USHORT)startVertexIdx + i, 
                                              lastVertexIdx, 
                                              (USHORT)startVertexIdx + i + 1, 
                                              attributeID));
    }
-   outMesh.faces.push_back(Face<USHORT> (lastVertexIdx - 1, 
+   outMesh.faces.push_back(Face (lastVertexIdx - 1, 
                                          lastVertexIdx, 
                                          (USHORT)startVertexIdx, 
                                          attributeID));

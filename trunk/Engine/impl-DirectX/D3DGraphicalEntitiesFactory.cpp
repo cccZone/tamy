@@ -44,7 +44,7 @@ D3DGraphicalEntitiesFactory::~D3DGraphicalEntitiesFactory()
 GraphicalEntity* D3DGraphicalEntitiesFactory::createGraphicalEntity(
                                                            const std::string& name,
                                                            const std::vector<LitVertex>& vertices,
-                                                           const std::vector<Face<USHORT> >& faces,
+                                                           const std::vector<Face >& faces,
                                                            const std::vector<Material*>& materials)
 {
     return new D3DGraphicalEntity<LitVertex>(name, m_d3Device, vertices, faces, materials);
@@ -55,7 +55,7 @@ GraphicalEntity* D3DGraphicalEntitiesFactory::createGraphicalEntity(
 SkinnedGraphicalEntity* D3DGraphicalEntitiesFactory::createSkinnedGraphicalEntity(
                                                            const std::string& name,
                                                            const std::vector<LitVertex>& vertices,
-                                                           const std::vector<Face<USHORT> >& faces,
+                                                           const std::vector<Face >& faces,
                                                            const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                            const std::vector<SkinBoneDefinition>& skinBones,
                                                            const std::vector<Material*>& materials)
@@ -74,7 +74,7 @@ SkinnedGraphicalEntity* D3DGraphicalEntitiesFactory::createSkinnedGraphicalEntit
 StaticGeometryRenderable* 
 D3DGraphicalEntitiesFactory::createStaticGeometry(Material& material,
                                                   const std::vector<LitVertex>& vertices,
-                                                  const std::vector<Face<USHORT> >& faces)
+                                                  const std::vector<Face >& faces)
 {
    return new D3DStaticGeometryRenderable(material,
                                           vertices, 

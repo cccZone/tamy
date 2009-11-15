@@ -73,20 +73,8 @@ public:
    void removeNode(Node& node);
 
    /**
-    * This is not the way to add nodes to this storage.
-    * Use @see addNode method instead.
-    */
-   void insert(NodeType& node);
-
-   /**
-    * This is not the way to remove nodes from this storage.
-    * Use @see removeNode method instead.
-    */
-   void remove(NodeType& node);
-
-   /**
     * This visitor will check the nodes it's specialized for
-    * and try adding them to the gobal storage.
+    * and try adding them to the global storage.
     *
     * @param node    currently visited node
     */

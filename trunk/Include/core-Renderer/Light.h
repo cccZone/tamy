@@ -5,7 +5,7 @@
 /// @brief  representation of a light
 
 #include "core\Node.h"
-#include "core-Renderer\Color.h"
+#include "core\Color.h"
 #include "core\UniqueObject.h"
 
 

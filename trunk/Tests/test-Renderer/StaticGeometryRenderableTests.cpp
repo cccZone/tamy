@@ -17,7 +17,7 @@ namespace // anonymous
    public:
       StaticGeometryRenderableMock(Material& material,
                                    const std::vector<LitVertex>& vertices,
-                                   const std::vector<Face<USHORT> >& faces) 
+                                   const std::vector<Face >& faces) 
          : StaticGeometryRenderable(material, vertices, faces)
       {}
 
@@ -28,7 +28,7 @@ namespace // anonymous
    protected:
       StaticGeometryRenderable* createSelf(Material& material,
                                            const std::vector<LitVertex>& vertices,
-                                           const std::vector<Face<USHORT> >& faces)
+                                           const std::vector<Face >& faces)
       {
          return new StaticGeometryRenderableMock(material, vertices, faces);
       }
@@ -46,7 +46,7 @@ TEST(StaticGeometryRenderable, creatingNewObjects)
    vertices.push_back(LitVertex::unskinnedNoTex(0, 0, 0, 0, 1, 0));
    vertices.push_back(LitVertex::unskinnedNoTex(1, 0, 0, 0, 1, 0));
    vertices.push_back(LitVertex::unskinnedNoTex(1, 0, 1, 0, 1, 0));
-   std::vector<Face<USHORT> > faces;
+   std::vector<Face > faces;
    
    StaticGeometryRenderableMock renderable(material, vertices, faces);
    const AABoundingBox& vol = renderable.getBoundingVolume();
@@ -60,12 +60,12 @@ TEST(StaticGeometryRenderable, geometrySplittingBasics)
 {
    Material material("material");
    std::vector<LitVertex> vertices;
-   std::vector<Face<USHORT> > faces;
+   std::vector<Face > faces;
 
    vertices.push_back(LitVertex::unskinnedNoTex(-1, 0, 0, 0, 1, 0));
    vertices.push_back(LitVertex::unskinnedNoTex( 1, 0, 0, 0, 1, 0));
    vertices.push_back(LitVertex::unskinnedNoTex( 0, 0, 1, 0, 1, 0));
-   faces.push_back(Face<USHORT>(0, 1, 2, 0));
+   faces.push_back(Face(0, 1, 2, 0));
    StaticGeometryRenderableMock renderable1(material, vertices, faces);
 
    StaticGeometryRenderable* frontRenderable = NULL;

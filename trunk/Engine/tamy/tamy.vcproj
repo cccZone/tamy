@@ -160,6 +160,10 @@
 				RelativePath="..\..\Include\tamy\TamyConfigurator.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\Include\tamy\TamyWindowBuilder.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Configurators"
@@ -204,6 +208,18 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="WindowBuilder"
+			>
+			<File
+				RelativePath=".\DefaultWindowBuilder.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\tamy\DefaultWindowBuilder.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

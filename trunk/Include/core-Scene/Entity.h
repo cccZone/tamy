@@ -4,11 +4,8 @@
 /// @brief  object populating a model
 
 #include "core-Scene\ClassesRegistry.h"
+#include "core\Serializable.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class ModelSerializer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,32 +13,13 @@ class ModelSerializer;
  * Models consist of various entities that interact with each other
  * and create the model state.
  */
-class Entity
+class Entity : public Serializable
 {
-protected:
-   static ClassesRegistry s_entitiesRegistry;
-
 private:
    int m_classHandle;
 
 public:
    virtual ~Entity() {}
-
-   /**
-    * The method allows to save entity's state.
-    *
-    * @param modelSerializer  serializer that will take care of writing
-    *                         stuff to an external storage
-    */
-   virtual void save(ModelSerializer& serializer) = 0;
-
-   /**
-    * The method restores the entity's state from an external storage.
-    *
-    * @param modelSerializer  serializer that will take care of reading
-    *                         stuff from an external storage
-    */
-   virtual void load(ModelSerializer& serializer) = 0;
 
    // -------------------------------------------------------------------------
    // Reflection for entities
@@ -67,6 +45,30 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define INIT_ENTITY(DerrivedClassName) Entity(s_entitiesRegistry.define<DerrivedClassName> ())
+ClassesRegistry& getEntitiesRegistry();
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Use this macro in derived entity constructor to initialize the 
+ * base Entity class.
+ */
+#define INIT_ENTITY(DerivedClassName) Entity(getEntitiesRegistry().getHandle<DerivedClassName> ())
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Use this macro to register an entity with the reflection system.
+ */
+#define DEFINE_ENTITY(EntityClassName)                                        \
+class Register##EntityClassName                                               \
+{                                                                             \
+public:                                                                       \
+   Register##EntityClassName()                                                \
+   {                                                                          \
+      getEntitiesRegistry().define<EntityClassName> ();                       \
+   }                                                                          \
+};                                                                            \
+Register##EntityClassName register##EntityClassName;
 
 ///////////////////////////////////////////////////////////////////////////////

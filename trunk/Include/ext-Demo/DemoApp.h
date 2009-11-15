@@ -6,6 +6,7 @@
 #include <windows.h>
 #include "tamy\Tamy.h"
 #include "tamy\SimpleTamyConfigurator.h"
+#include "tamy\DefaultWindowBuilder.h"
 #include "core-AppFlow\ApplicationManager.h"
 #include "core-AppFlow\Application.h"
 #include "core\TNodesSpatialStorage.h"
@@ -117,8 +118,11 @@ int WINAPI WinMain(HINSTANCE hInstance,                                       \
                    LPSTR    lpCmdLine,                                        \
                    int       nCmdShow)                                        \
 {                                                                             \
-   SimpleTamyConfigurator configurator(1024, 768, false);                     \
-   Tamy::initialize(hInstance, nCmdShow, #AppClass, configurator);            \
+   bool fullScreen = false;                                                   \
+   SimpleTamyConfigurator configurator(1024, 768, fullScreen);                \
+   DefaultWindowBuilder winBuilder(hInstance, nCmdShow, #AppClass,            \
+      1024, 768, !fullScreen, NULL);                                          \
+   Tamy::initialize(#AppClass, configurator, winBuilder);                     \
                                                                               \
 	AppClass app(TAMY);                                                        \
                                                                               \

@@ -9,15 +9,26 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace
+namespace // anonymous
 {
     const UCHAR authorID[5] = { 'G', 'I', 'L', 'E', 'S' };
-};
+
+    // ------------------------------------------------------------------------
+
+    class NullProgressObserver : public IWFLoader::ProgressObserver
+    {
+    public:
+       void setProgress(float percentage) {}
+    };
+
+} // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
 IWFLoader::IWFLoader(IWFScene& scene)
-      : m_scene(scene)
+: m_scene(scene)
+, m_defaultProgressObserver(new NullProgressObserver())
+, m_progressObserver(m_defaultProgressObserver)
 {
 }
 
@@ -25,6 +36,17 @@ IWFLoader::IWFLoader(IWFScene& scene)
 
 IWFLoader::~IWFLoader()
 {
+   delete m_defaultProgressObserver;
+   m_defaultProgressObserver = NULL;
+
+   m_progressObserver = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void IWFLoader::attach(ProgressObserver& observer)
+{
+   m_progressObserver = &observer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,14 +56,20 @@ void IWFLoader::load(Filesystem& filesystem, const std::string& fileName)
    CFileIWF sceneFile;
    sceneFile.Load(filesystem, fileName);
 
+   ULONG allEntitiesCount = sceneFile.m_vpEntityList.size() + sceneFile.m_vpMeshList.size();
+   ULONG entitiesProcessedCount = 0;
+
    // parse entities
-   for (ULONG i = 0; i < sceneFile.m_vpEntityList.size(); ++i)
+   for (ULONG i = 0; i < sceneFile.m_vpEntityList.size(); ++i, ++entitiesProcessedCount)
    {
       processEntities(sceneFile.m_vpEntityList[i]);
+
+      // update the progress status
+      m_progressObserver->setProgress((float)entitiesProcessedCount / (float)allEntitiesCount);
    }
 
    // parse internal meshes
-   for (UINT i = 0; i < sceneFile.m_vpMeshList.size(); ++i)
+   for (UINT i = 0; i < sceneFile.m_vpMeshList.size(); ++i, ++entitiesProcessedCount)
    {
       std::string meshName = getUniqueNameForMesh(sceneFile.m_vpMeshList[i]->Name);
 
@@ -56,6 +84,9 @@ void IWFLoader::load(Filesystem& filesystem, const std::string& fileName)
 
       D3DXMATRIX objMtx = reinterpret_cast<D3DXMATRIX&> (sceneFile.m_vpMeshList[i]->ObjectMatrix);
       m_scene.addStaticGeometry(mesh, materials, objMtx);
+
+      // update the progress status
+      m_progressObserver->setProgress((float)entitiesProcessedCount / (float)allEntitiesCount);
    }
 
    // cleanup

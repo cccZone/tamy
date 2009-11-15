@@ -25,7 +25,7 @@ private:
 public:
    D3DStaticGeometryRenderable(Material& material, 
                                const std::vector<LitVertex>& vertices,
-                               const std::vector<Face<USHORT> >& faces,
+                               const std::vector<Face >& faces,
                                IDirect3DDevice9& d3Device);
 
    void render();
@@ -33,7 +33,7 @@ public:
 protected:
    StaticGeometryRenderable* createSelf(Material& material,
                                         const std::vector<LitVertex>& vertices,
-                                        const std::vector<Face<USHORT> >& faces);
+                                        const std::vector<Face >& faces);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

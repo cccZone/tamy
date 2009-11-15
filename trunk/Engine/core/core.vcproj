@@ -275,6 +275,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Color.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\Color.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Include\core\HierarchyWriter.h"
 				>
 			</File>
@@ -542,6 +550,30 @@
 				RelativePath="..\..\Include\core\StreamBuffer.inl"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Serialization"
+			>
+			<File
+				RelativePath="..\..\Include\core\Serializable.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\Serializer.h"
+				>
+			</File>
+			<Filter
+				Name="Serializers"
+				>
+				<File
+					RelativePath=".\FileSerializer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\FileSerializer.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

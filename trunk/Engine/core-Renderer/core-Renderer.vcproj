@@ -531,10 +531,6 @@
 			Name="Material"
 			>
 			<File
-				RelativePath="..\..\Include\core-Renderer\Color.h"
-				>
-			</File>
-			<File
 				RelativePath=".\CoordinatesOperation.cpp"
 				>
 			</File>

@@ -1,7 +1,6 @@
 #include "tamy\Tamy.h"
 #include "tamy\TamyConfigurator.h"
-#include <tchar.h>
-#include "core\WindowBuilder.h"
+#include "tamy\TamyWindowBuilder.h"
 #include "core\Filesystem.h"
 #include <stdexcept>
 #include <windows.h>
@@ -70,10 +69,9 @@ Tamy::~Tamy()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Tamy::initialize(HINSTANCE hInstance,
-                      int nCmdShow,
-                      const std::string& appName,
-                      TamyConfigurator& configurator)
+void Tamy::initialize(const std::string& appName,
+                      TamyConfigurator& configurator,
+                      TamyWindowBuilder& windowBuilder)
 {
    if (s_theInstance.m_hWnd != NULL)
    {
@@ -91,13 +89,8 @@ void Tamy::initialize(HINSTANCE hInstance,
 
    RenderingDevice& device = configurator.selectRenderingDevice(s_theInstance.m_devicesDB);
 
-   s_theInstance.createMainWindow(hInstance, 
-                                  nCmdShow, 
-                                  appName, 
-                                  device.displayMode.Width, 
-                                  device.displayMode.Height, 
-                                  device.windowed,
-                                  configurator.getApplicationIcon());
+   s_theInstance.m_winMsgsProcessor = new CompositeWindowMessagesProcessor();
+   s_theInstance.m_hWnd = windowBuilder.create(*(s_theInstance.m_winMsgsProcessor));
 
    s_theInstance.createRenderer(*(s_theInstance.m_d3d9), device, s_theInstance.m_hWnd);
 
@@ -143,42 +136,6 @@ void Tamy::createRenderingDevicesDB()
    for (unsigned int i = 0; i < allDevicesCount; ++i)
    {
       delete allDevicesDB[i];
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Tamy::createMainWindow(HINSTANCE hInstance,
-                            int nCmdShow,
-                            const std::string& appName,
-                            unsigned int winWidth,
-                            unsigned int winHeight,
-                            bool windowed,
-                            HICON icon)
-{
-   m_winMsgsProcessor = new CompositeWindowMessagesProcessor();
-
-   CWindowBuilder winBuilder;
-   WindowParams params;
-   strcpy_s(params.windowTitle, appName.c_str());
-   strcpy_s(params.windowClassName, (appName + "Class").c_str());
-   params.ptrMsgProc = m_winMsgsProcessor;
-   params.width = winWidth;
-   params.height = winHeight;
-   params.smallIcon = icon;
-   params.largeIcon = icon;
-
-   if (windowed)
-   {
-      m_hWnd = winBuilder.createWindowedModeWindow(hInstance, nCmdShow, params);
-   }
-   else
-   {
-      m_hWnd = winBuilder.createFullScreenWindow(hInstance, nCmdShow, params);
-   }
-   if (m_hWnd == NULL)
-   {
-      std::runtime_error("Application window could not be created");
    }
 }
 

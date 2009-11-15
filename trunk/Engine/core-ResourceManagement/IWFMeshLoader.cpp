@@ -105,7 +105,7 @@ void IWFMeshLoader::parseMesh(MeshDefinition& mesh,
 
 void IWFMeshLoader::addSurface(iwfSurface* surface, 
                                USHORT vertexStart, 
-                               std::vector<Face<USHORT> >& faces,
+                               std::vector<Face >& faces,
                                unsigned int matIdx)
 {
    if (surface->IndexCount > 0)
@@ -121,7 +121,7 @@ void IWFMeshLoader::addSurface(iwfSurface* surface,
             for (ULONG i = 0; i < numFaces; i++) 
             {
                ULONG startIdx = i * 3;
-               faces.push_back(Face<USHORT>((USHORT)surface->Indices[startIdx] + vertexStart,
+               faces.push_back(Face((USHORT)surface->Indices[startIdx] + vertexStart,
                                             (USHORT)surface->Indices[startIdx + 1] + vertexStart,
                                             (USHORT)surface->Indices[startIdx + 2] + vertexStart,
                                             matIdx));
@@ -138,14 +138,14 @@ void IWFMeshLoader::addSurface(iwfSurface* surface,
                // Is this an 'Odd' or 'Even' triangle
                if ((i % 2) == 0)
                {
-                  faces.push_back(Face<USHORT>((USHORT)surface->Indices[i] + vertexStart,
+                  faces.push_back(Face((USHORT)surface->Indices[i] + vertexStart,
                                                (USHORT)surface->Indices[i + 1] + vertexStart,
                                                (USHORT)surface->Indices[i + 2] + vertexStart,
                                                matIdx));
                } // End if 'Even' triangle
                else
                {
-                  faces.push_back(Face<USHORT>((USHORT)surface->Indices[i] + vertexStart,
+                  faces.push_back(Face((USHORT)surface->Indices[i] + vertexStart,
                                                (USHORT)surface->Indices[i + 2] + vertexStart,
                                                (USHORT)surface->Indices[i + 1] + vertexStart,
                                                matIdx));
@@ -160,7 +160,7 @@ void IWFMeshLoader::addSurface(iwfSurface* surface,
             // Index in fan order.
             for (long i = 1; i < surface->VertexCount - 1; i++)
             {
-               faces.push_back(Face<USHORT>((USHORT)surface->Indices[0] + vertexStart,
+               faces.push_back(Face((USHORT)surface->Indices[0] + vertexStart,
                                             (USHORT)surface->Indices[i] + vertexStart,
                                             (USHORT)surface->Indices[i + 1] + vertexStart,
                                             matIdx));
@@ -184,7 +184,7 @@ void IWFMeshLoader::addSurface(iwfSurface* surface,
             for (USHORT i = 0; i < numFaces; i++) 
             {
                USHORT startIdx = i * 3;
-               faces.push_back(Face<USHORT>(startIdx + vertexStart,
+               faces.push_back(Face(startIdx + vertexStart,
                                             startIdx + 1 + vertexStart,
                                             startIdx + 2 + vertexStart,
                                             matIdx));
@@ -201,14 +201,14 @@ void IWFMeshLoader::addSurface(iwfSurface* surface,
             // Is this an 'Odd' or 'Even' triangle
             if ( (i % 2) == 0 )
             {
-               faces.push_back(Face<USHORT>(i + vertexStart, 
+               faces.push_back(Face(i + vertexStart, 
                                              i + 1 + vertexStart, 
                                              i + 2 + vertexStart,
                                              matIdx));
             } // End if 'Even' triangle
             else
             {
-               faces.push_back(Face<USHORT>(i + vertexStart, 
+               faces.push_back(Face(i + vertexStart, 
                                              i + 2 + vertexStart, 
                                              i + 1 + vertexStart,
                                              matIdx));
@@ -223,7 +223,7 @@ void IWFMeshLoader::addSurface(iwfSurface* surface,
          // Index in fan order.
          for (USHORT i = 1; i < surface->VertexCount - 1; i++)
          {
-            faces.push_back(Face<USHORT>(vertexStart, 
+            faces.push_back(Face(vertexStart, 
                                           i + vertexStart, 
                                           i + 1 + vertexStart,
                                           matIdx));

@@ -3,6 +3,7 @@
 #include <d3dx9.h>
 #include <iostream>
 #include <string.h>
+#include "core\Serializer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -116,6 +117,28 @@ struct LitVertex
    float m_texCoords[2];
 
    static DWORD FVF;
+
+   void save(Serializer& serializer)
+   {
+      serializer.saveVec3(m_coords);
+      serializer.saveFloat(m_weight0);
+      serializer.saveFloat(m_weight1);
+      serializer.saveFloat(m_weight2);
+      serializer.saveVec3(m_normal);
+      serializer.saveFloat(m_texCoords[0]);
+      serializer.saveFloat(m_texCoords[1]);
+   }
+
+   void load(Serializer& serializer)
+   {
+      serializer.loadVec3(m_coords);
+      m_weight0 = serializer.loadFloat();
+      m_weight1 = serializer.loadFloat();
+      m_weight2 = serializer.loadFloat();
+      serializer.loadVec3(m_normal);
+      m_texCoords[0] = serializer.loadFloat();
+      m_texCoords[1] = serializer.loadFloat();
+   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

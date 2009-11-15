@@ -5,7 +5,7 @@
 
 D3DStaticGeometryRenderable::D3DStaticGeometryRenderable(Material& material, 
                                                          const std::vector<LitVertex>& vertices,
-                                                         const std::vector<Face<USHORT> >& faces,
+                                                         const std::vector<Face >& faces,
                                                          IDirect3DDevice9& d3Device)
 : StaticGeometryRenderable(material, vertices, faces)
 , D3DAbstractGraphicalEntity(d3Device, vertices, faces)
@@ -25,7 +25,7 @@ void D3DStaticGeometryRenderable::render()
 StaticGeometryRenderable* D3DStaticGeometryRenderable::createSelf(
                                        Material& material,
                                        const std::vector<LitVertex>& vertices,
-                                       const std::vector<Face<USHORT> >& faces)
+                                       const std::vector<Face >& faces)
 {
    return new D3DStaticGeometryRenderable(material, 
                                           vertices, 

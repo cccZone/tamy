@@ -1,7 +1,8 @@
 #pragma once
 
-/// @file   core-ResourceManagement\StaticEntityLoader
+/// @file   core-ResourceManagement\StaticGeometryLoader.h
 /// @brief  static mesh loading utility
+
 
 #include "core-ResourceManagement\MeshDefinition.h"
 #include "core-Renderer\Skeleton.h"
@@ -67,11 +68,6 @@ public:
 private:
    Material& createMaterial(MaterialDefinition& material,
                             ResourceStorage<Material>& materialsStorage);
-
-   void extractSubMeshes(const std::string& extractedMaterialName,
-                         MeshDefinition& inMesh, 
-                         std::vector<LitVertex>& outVertices,
-                         std::vector<Face<USHORT> >& outFaces);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

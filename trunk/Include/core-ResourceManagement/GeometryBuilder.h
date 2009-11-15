@@ -14,7 +14,7 @@
 struct MeshData
 {
    std::list<LitVertex> vertices;
-   std::list<Face<USHORT> > indices;
+   std::list<Face > indices;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

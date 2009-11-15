@@ -24,6 +24,7 @@ struct RenderingDevice;
 class DeviceFilter;
 class TamyConfigurator;
 class Filesystem;
+class TamyWindowBuilder;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -50,10 +51,9 @@ private:
 public:
    ~Tamy();
 
-   static void initialize(HINSTANCE hInstance,
-                          int nCmdShow,
-                          const std::string& appName,
-                          TamyConfigurator& configurator);
+   static void initialize(const std::string& appName,
+                          TamyConfigurator& configurator,
+                          TamyWindowBuilder& windowBuilder);
 
    static Tamy& getInstance() {return s_theInstance;}
 
@@ -91,14 +91,6 @@ private:
    Tamy(const Tamy& rhs) {}
 
    void createRenderingDevicesDB();
-
-   void createMainWindow(HINSTANCE hInstance,
-                         int nCmdShow,
-                         const std::string& appName,
-                         unsigned int winWidth,
-                         unsigned int winHeight,
-                         bool windowed,
-                         HICON icon);
 
    void createRenderer(HWND window, RenderingDevice& device);
    IDirect3D9* initializeRenderingSystem();

@@ -1,5 +1,9 @@
 #pragma once
 
+/// @file   core\WindowMessagesProcessor.h
+/// @brief  classes for window messages processing
+
+
 #include <windows.h>
 #include <vector>
 #include <map>
@@ -7,6 +11,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * A window will notify about 'system events' (change of size, input etc),
+ * happening in it via this interface.
+ */
 class IWindowMessagesProcessor
 {
 public:

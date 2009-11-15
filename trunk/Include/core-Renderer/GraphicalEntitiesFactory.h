@@ -90,19 +90,19 @@ public:
 
    virtual GraphicalEntity* createGraphicalEntity(const std::string& name,
                                                   const std::vector<LitVertex>& vertices,
-                                                  const std::vector<Face<USHORT> >& faces,
+                                                  const std::vector<Face >& faces,
                                                   const std::vector<Material*>& materials) = 0;
 
    virtual SkinnedGraphicalEntity* createSkinnedGraphicalEntity(const std::string& name,
                                                                 const std::vector<LitVertex>& vertices,
-                                                                const std::vector<Face<USHORT> >& faces,
+                                                                const std::vector<Face >& faces,
                                                                 const std::vector<BonesInfluenceDefinition>& bonesInfluencingAttribute,
                                                                 const std::vector<SkinBoneDefinition>& skinBones,
                                                                 const std::vector<Material*>& materials) = 0;
 
    virtual StaticGeometryRenderable* createStaticGeometry(Material& material,
                                                           const std::vector<LitVertex>& vertices,
-                                                          const std::vector<Face<USHORT> >& faces) = 0;
+                                                          const std::vector<Face >& faces) = 0;
 
    virtual SkyBoxSide* createSkyBoxSide(SkyBoxSideId side, Texture* tex) = 0;
 

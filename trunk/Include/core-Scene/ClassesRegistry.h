@@ -40,6 +40,7 @@ private:
    ClassHandlesMap m_handlesMap;
 
 public:
+   ClassesRegistry();
    ~ClassesRegistry();
 
    /**
@@ -51,6 +52,18 @@ public:
     */
    template <typename ClassType>
    int define();
+
+   /**
+    * This method can be used to obtain a handle of a registered
+    * class.
+    *
+    * @throw std::out_of_range   if the class hasn't been registered
+    *
+    * @param ClassType  class type to register
+    * @return           handle assigned to this class type
+    */
+   template <typename ClassType>
+   int getHandle();
 
    /**
     * This method allows to create an instance of a class based

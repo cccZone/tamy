@@ -334,7 +334,7 @@ void Skeleton::update(float timeElapsed)
 
 int Skeleton::getTrackForAnimation(const std::string& animationName) const
 {
-   std::map<std::string, int>::const_iterator it = m_animPerTrack.find(animationName);
+   AnimationsMap::const_iterator it = m_animPerTrack.find(animationName);
    if (it == m_animPerTrack.end())
    {
       throw std::invalid_argument(std::string("Animation '") + animationName + 
@@ -342,6 +342,17 @@ int Skeleton::getTrackForAnimation(const std::string& animationName) const
    }
 
    return it->second;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::getAnimationNames(std::set<std::string>& names) const
+{
+   for (AnimationsMap::const_iterator it = m_animPerTrack.begin();
+        it != m_animPerTrack.end(); ++it)
+   {
+      names.insert(it->first);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

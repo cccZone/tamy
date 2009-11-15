@@ -50,11 +50,6 @@ public:
     */
    const std::string& getName() const {return m_name;}
 
- /*  bool operator<(const Material& rhs) const {return m_index < rhs.m_index;}
-   bool operator==(const Material& rhs) const {return m_index == rhs.m_index;}
-   bool operator!=(const Material& rhs) const {return m_index != rhs.m_index;}
-*/
-
    unsigned int getStagesCount() const {return m_stagesCount;}
 
    void addStage(MaterialStage* stage);

@@ -32,6 +32,13 @@ public:
    void changeRootDir(const std::string& rootDir);
 
    /**
+    * Returns the current filesystem root directory.
+    *
+    * @return           filesystem root directory name
+    */
+   const std::string& getCurrRoot() const;
+
+   /**
     * A quick way to check if the given file exists in the file system.
     *
     * @param fileName   name of the file we want to find

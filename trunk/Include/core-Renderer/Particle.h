@@ -1,7 +1,7 @@
 #pragma once
 
 #include <d3dx9.h>
-#include "core-Renderer\Color.h"
+#include "core\Color.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

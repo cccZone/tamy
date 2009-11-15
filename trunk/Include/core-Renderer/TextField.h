@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core-Renderer\Overlay.h"
-#include "core-Renderer\Color.h"
+#include "core\Color.h"
 #include "core\Observer.h"
 #include <windows.h>
 #include <string>

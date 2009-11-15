@@ -21,7 +21,7 @@ public:
    virtual ~StaticGeometry() {}
 
    virtual void addMesh(const std::vector<LitVertex>& vertices,
-                        const std::vector<Face<USHORT> >& faces,
+                        const std::vector<Face >& faces,
                         Material& material) = 0;
 };
 

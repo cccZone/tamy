@@ -11,7 +11,7 @@ File::File(const std::string& name,
 {
    std::string openModeStr;
 
-   if (openMode & (std::ios_base::in | std::ios_base::out))
+   if ((openMode & std::ios_base::in) && (openMode & std::ios_base::out))
    {
       if (openMode & std::ios_base::trunc)
       {
@@ -19,7 +19,7 @@ File::File(const std::string& name,
       }
       else
       {
-         openModeStr += "r+";
+         openModeStr += "a+";
       }
    }
    else if (openMode & std::ios_base::in)

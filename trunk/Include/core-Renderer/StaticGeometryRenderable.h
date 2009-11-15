@@ -22,7 +22,7 @@ class StaticGeometryRenderable : public Renderable
 private:
    Material& m_material;
    std::vector<LitVertex> m_vertices;
-   std::vector<Face<USHORT> > m_faces;
+   std::vector<Face > m_faces;
    AABoundingBox m_boundingVol;
    Array<D3DXMATRIX> m_renderingMtcs;
    D3DXMATRIX m_situation;
@@ -39,7 +39,7 @@ public:
     */
    StaticGeometryRenderable(Material& material,
                             const std::vector<LitVertex>& vertices,
-                            const std::vector<Face<USHORT> >& faces);
+                            const std::vector<Face >& faces);
 
    virtual ~StaticGeometryRenderable();
 
@@ -55,7 +55,7 @@ public:
     *
     * @return     vector of face definitions
     */
-   const std::vector<Face<USHORT> >& getFaces() const;
+   const std::vector<Face >& getFaces() const;
 
    // -------------------------------------------------------------------------
    // Renderable implementation
@@ -90,12 +90,12 @@ protected:
     */
    virtual StaticGeometryRenderable* createSelf(Material& material,
                                                 const std::vector<LitVertex>& vertices,
-                                                const std::vector<Face<USHORT> >& faces) = 0;
+                                                const std::vector<Face >& faces) = 0;
 
 private:
    void createNewObject(const Array<MeshTriangle*>& triangles,
                         std::vector<LitVertex>& outVertices,
-                        std::vector<Face<USHORT> >& outFaces);
+                        std::vector<Face >& outFaces);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

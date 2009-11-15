@@ -18,6 +18,13 @@ void Filesystem::changeRootDir(const std::string& rootDir)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+const std::string& Filesystem::getCurrRoot() const
+{
+   return m_rootDir;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool Filesystem::doesExist(const std::string& fileName) const
 {
    File* file = NULL;

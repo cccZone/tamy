@@ -319,16 +319,16 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0));
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0));
 
-   branch0Skin->faces.push_back(Face<USHORT> (0, 5, 1, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (1, 5, 6, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (1, 6, 2, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (2, 6, 7, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (2, 7, 3, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (3, 7, 8, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (3, 8, 4, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (4, 8, 9, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (4, 9, 0, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (0, 9, 5, 0));
+   branch0Skin->faces.push_back(Face (0, 5, 1, 0));
+   branch0Skin->faces.push_back(Face (1, 5, 6, 0));
+   branch0Skin->faces.push_back(Face (1, 6, 2, 0));
+   branch0Skin->faces.push_back(Face (2, 6, 7, 0));
+   branch0Skin->faces.push_back(Face (2, 7, 3, 0));
+   branch0Skin->faces.push_back(Face (3, 7, 8, 0));
+   branch0Skin->faces.push_back(Face (3, 8, 4, 0));
+   branch0Skin->faces.push_back(Face (4, 8, 9, 0));
+   branch0Skin->faces.push_back(Face (4, 9, 0, 0));
+   branch0Skin->faces.push_back(Face (0, 9, 5, 0));
 
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 10, 0,   1, 0, 0,    1, 0, 0,   0, 0.25f)); 
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.25f));
@@ -336,16 +336,16 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.25f));
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 10, 0,   1, 0, 0,    1, 0, 0,   1, 0.25f));
 
-   branch0Skin->faces.push_back(Face<USHORT> (5, 10,  6, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (6, 10, 11, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (6, 11,  7, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (7, 11, 12, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (7, 12,  8, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (8, 12, 13, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (8, 13,  9, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (9, 13, 14, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (9, 14,  5, 0));
-   branch0Skin->faces.push_back(Face<USHORT> (5, 14, 10, 0));
+   branch0Skin->faces.push_back(Face (5, 10,  6, 0));
+   branch0Skin->faces.push_back(Face (6, 10, 11, 0));
+   branch0Skin->faces.push_back(Face (6, 11,  7, 0));
+   branch0Skin->faces.push_back(Face (7, 11, 12, 0));
+   branch0Skin->faces.push_back(Face (7, 12,  8, 0));
+   branch0Skin->faces.push_back(Face (8, 12, 13, 0));
+   branch0Skin->faces.push_back(Face (8, 13,  9, 0));
+   branch0Skin->faces.push_back(Face (9, 13, 14, 0));
+   branch0Skin->faces.push_back(Face (9, 14,  5, 0));
+   branch0Skin->faces.push_back(Face (5, 14, 10, 0));
 
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 20, 0,   1, 0, 0,    1, 0, 0,   0, 0.5f)); 
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 20, 5,   1, 0, 0,    0, 0, 1,   0.25f, 0.5f));
@@ -357,16 +357,16 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
    bonesForAttibute.push_back("branch_0_Bone_0"); 
    branch0Skin->bonesInfluencingAttribute.push_back(bonesForAttibute);
 
-   branch0Skin->faces.push_back(Face<USHORT> (10, 15, 11, 1));
-   branch0Skin->faces.push_back(Face<USHORT> (11, 15, 16, 1));
-   branch0Skin->faces.push_back(Face<USHORT> (11, 16, 12, 1));
-   branch0Skin->faces.push_back(Face<USHORT> (12, 16, 17, 1));
-   branch0Skin->faces.push_back(Face<USHORT> (12, 17, 13, 1));
-   branch0Skin->faces.push_back(Face<USHORT> (13, 17, 18, 1));
-   branch0Skin->faces.push_back(Face<USHORT> (13, 18, 14, 1));
-   branch0Skin->faces.push_back(Face<USHORT> (14, 18, 19, 1));
-   branch0Skin->faces.push_back(Face<USHORT> (14, 19, 10, 1));
-   branch0Skin->faces.push_back(Face<USHORT> (10, 19, 15, 1));
+   branch0Skin->faces.push_back(Face (10, 15, 11, 1));
+   branch0Skin->faces.push_back(Face (11, 15, 16, 1));
+   branch0Skin->faces.push_back(Face (11, 16, 12, 1));
+   branch0Skin->faces.push_back(Face (12, 16, 17, 1));
+   branch0Skin->faces.push_back(Face (12, 17, 13, 1));
+   branch0Skin->faces.push_back(Face (13, 17, 18, 1));
+   branch0Skin->faces.push_back(Face (13, 18, 14, 1));
+   branch0Skin->faces.push_back(Face (14, 18, 19, 1));
+   branch0Skin->faces.push_back(Face (14, 19, 10, 1));
+   branch0Skin->faces.push_back(Face (10, 19, 15, 1));
 
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 30, 0,   0, 1, 0,    1, 0, 0,   0, 0.75f)); 
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 30, 5,   0, 1, 0,    0, 0, 1,   0.25f, 0.75f));
@@ -379,11 +379,11 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
    bonesForAttibute.push_back("branch_0_Bone_1");
    branch0Skin->bonesInfluencingAttribute.push_back(bonesForAttibute);
 
-   branch0Skin->faces.push_back(Face<USHORT> (15, 20, 16, 2));
-   branch0Skin->faces.push_back(Face<USHORT> (16, 20, 17, 2));
-   branch0Skin->faces.push_back(Face<USHORT> (17, 20, 18, 2));
-   branch0Skin->faces.push_back(Face<USHORT> (18, 20, 19, 2));
-   branch0Skin->faces.push_back(Face<USHORT> (19, 20, 15, 2));
+   branch0Skin->faces.push_back(Face (15, 20, 16, 2));
+   branch0Skin->faces.push_back(Face (16, 20, 17, 2));
+   branch0Skin->faces.push_back(Face (17, 20, 18, 2));
+   branch0Skin->faces.push_back(Face (18, 20, 19, 2));
+   branch0Skin->faces.push_back(Face (19, 20, 15, 2));
    
    branch0Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 40, 0,   1, 0, 0,    0, 1, 0,   0.5f, 1));
 
@@ -415,11 +415,11 @@ TEST(TreeSkinner, skinDetailsOfSparseMesh)
       branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 0,-5,   1, 0, 0,    0, 0,-1,   0.75f, 0.75f));
       branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 5, 0, 0,   1, 0, 0,    1, 0, 0,   1, 0.75f));
 
-      branch1Skin->faces.push_back(Face<USHORT> (0, 5, 1, 0));
-      branch1Skin->faces.push_back(Face<USHORT> (1, 5, 2, 0));
-      branch1Skin->faces.push_back(Face<USHORT> (2, 5, 3, 0));
-      branch1Skin->faces.push_back(Face<USHORT> (3, 5, 4, 0));
-      branch1Skin->faces.push_back(Face<USHORT> (4, 5, 0, 0));
+      branch1Skin->faces.push_back(Face (0, 5, 1, 0));
+      branch1Skin->faces.push_back(Face (1, 5, 2, 0));
+      branch1Skin->faces.push_back(Face (2, 5, 3, 0));
+      branch1Skin->faces.push_back(Face (3, 5, 4, 0));
+      branch1Skin->faces.push_back(Face (4, 5, 0, 0));
 
       branch1Skin->vertices.push_back(LitVertex::skinnedOneTex( 0, 10, 0,   1, 0, 0,          0, 1, 0,   0.5f, 1));
 

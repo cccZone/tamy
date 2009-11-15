@@ -50,22 +50,6 @@ void TNodesSpatialStorage<NodeType, ConcreteSpatialStorage>::removeNode(Node& no
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename NodeType, template<class> class ConcreteSpatialStorage>
-void TNodesSpatialStorage<NodeType, ConcreteSpatialStorage>::insert(NodeType& node)
-{
-   throw std::logic_error("Use addNode method to add a node to this storage");
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<typename NodeType, template<class> class ConcreteSpatialStorage>
-void TNodesSpatialStorage<NodeType, ConcreteSpatialStorage>::remove(NodeType& node)
-{
-   throw std::logic_error("Use removeNode method to remove a node from this storage");
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<typename NodeType, template<class> class ConcreteSpatialStorage>
 void TNodesSpatialStorage<NodeType, ConcreteSpatialStorage>::visit(NodeType& node)
 {
    if (m_isAdding)
