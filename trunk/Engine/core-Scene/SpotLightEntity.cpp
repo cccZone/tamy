@@ -17,6 +17,7 @@ SpotLightEntity::SpotLightEntity()
 , m_fallOff(0)
 , m_theta(0)
 , m_phi(0)
+, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 1))
 {
    D3DXMatrixIdentity(&m_situation);
 }
@@ -44,7 +45,50 @@ SpotLightEntity::SpotLightEntity(const std::string& name,
 , m_theta(theta)
 , m_phi(phi)
 , m_situation(situation)
+, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 1))
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SpotLightEntity::registerProperties()
+{
+   PROPERTY("name", std::string, m_name);
+   PROPERTY("position", D3DXMATRIX, m_situation);
+   PROPERTY("ambient color", Color, m_ambient);
+   PROPERTY("diffuse color", Color, m_diffuse);
+   PROPERTY("specular color", Color, m_specular);
+   PROPERTY("range", float, m_range);
+   PROPERTY("attenuation: constant", float, m_constAtt);
+   PROPERTY("attenuation: linear", float, m_linearAtt);
+   PROPERTY("attenuation: quadratic", float, m_quadAtt);
+   PROPERTY("spot cone: fall off", float, m_constAtt);
+   PROPERTY("spot cone: theta", float, m_linearAtt);
+   PROPERTY("spot cone: phi", float, m_quadAtt);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const BoundingVolume& SpotLightEntity::getBoundingVolume()
+{
+   m_boundingVol.origin.x = m_situation._41;
+   m_boundingVol.origin.y = m_situation._42;
+   m_boundingVol.origin.z = m_situation._43;
+   return m_boundingVol;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const D3DXMATRIX& SpotLightEntity::getGlobalMtx()
+{
+   return m_situation;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const Array<Triangle*>& SpotLightEntity::getBoundingGeometry()
+{
+   return m_noGeometry;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

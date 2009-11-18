@@ -230,7 +230,6 @@ Ray Camera::createRay(float viewportX, float viewportY)
 
    // now I just need to find the vector between this point and the camera world space position and normalize it, and I should get my direction:
    D3DXVECTOR3 direction = mouseOnNearPlane - origin;
-   D3DXVec3Normalize(&direction, &direction);
 
    return Ray(origin, direction);
 }

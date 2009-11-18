@@ -57,6 +57,19 @@ MaterialEntity::MaterialEntity(const std::string& matName,
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void MaterialEntity::registerProperties()
+{
+   PROPERTY("name", std::string, m_matName);
+   PROPERTY("ambient color", Color, m_ambient);
+   PROPERTY("diffuse color", Color, m_diffuse);
+   PROPERTY("specular color", Color, m_specular);
+   PROPERTY("emissive color", Color, m_emissive);
+   PROPERTY("specular power factor", float, m_power);
+   PROPERTY("texture", std::string, m_texName);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void MaterialEntity::save(Serializer& serializer)
 {
    serializer.saveString(m_matName);

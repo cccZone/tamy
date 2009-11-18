@@ -179,19 +179,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ControllersManagerTests.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\FiniteStateMachineTests.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\MessagingSystemTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\ModelTests.cpp"
 				>
 			</File>
 		</Filter>

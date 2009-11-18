@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\KeyStatusHandlerTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TimeControllerTests.cpp"
 				>
 			</File>

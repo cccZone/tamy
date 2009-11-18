@@ -166,50 +166,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Core"
-			>
-			<File
-				RelativePath=".\CompositeWorldView.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-AI\CompositeWorldView.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-AI\Controller.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ControllersManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-AI\ControllersManager.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Entity.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-AI\Entity.h"
-				>
-			</File>
-			<File
-				RelativePath=".\GameWorld.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-AI\GameWorld.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-AI\GameWorldView.h"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="ControlStructures"
 			>
 			<Filter
@@ -301,6 +257,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\core-AI.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

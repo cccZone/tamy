@@ -4,6 +4,7 @@
 #include "core\BoundingSphere.h"
 #include "core\Frustum.h"
 #include "core\Triangle.h"
+#include "core\PointVolume.h"
 #include "core\QuadraticEquations.h"
 
 
@@ -154,66 +155,16 @@ bool testCollision(const Frustum& frustum, const BoundingSphere& sphere)
 
 bool testCollision(const AABoundingBox& aabb, const Ray& ray)
 {
-   // 'slabs' algorithm
-   float tMin = -FLT_MAX;
-   float tMax = FLT_MAX;
-   float t1, t2, fTemp;
-
-   D3DXVECTOR3 extentsMin = aabb.min - ray.origin;
-   D3DXVECTOR3 extentsMax = aabb.max - ray.origin;
-
-   for (int i = 0; i < 3; ++i)
-   {
-      if (fabsf(ray.direction[i]) > 1e-3f)
-      {
-         fTemp = 1.0f / ray.direction[i];
-         t1 = extentsMax[i] * fTemp;
-         t2 = extentsMin[i] * fTemp;
-         if (t1 > t2) {fTemp = t1; t1 = t2; t2 = fTemp; }
-
-         if (t1 > tMin) tMin = t1;
-         if (t2 < tMax) tMax = t2;
-
-         if (tMin > tMax) return false;
-         if (tMax < 0) return false;
-      }
-      else
-      {
-         if ((ray.origin[i] < aabb.min[i]) || (ray.origin.x > aabb.max.x))
-         {
-            return false;
-         }
-      }
-   }
-
-   return true;
+   return (rayToAABBDistance(ray, aabb) < FLT_MAX);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool testCollision(const Ray& ray, const D3DXPLANE& plane, D3DXVECTOR3& intersectionPt)
 {
-   float planeDistance = D3DXPlaneDotCoord(&plane, &ray.origin);
-   float projRayLength = D3DXPlaneDotNormal(&plane, &ray.direction);
+   float t = rayToPlaneDistance(ray, plane);
 
-   float t;
-   if (projRayLength == 0)
-   {
-      if (planeDistance == 0)
-      {
-         t = 0;
-      }
-      else
-      {
-         t = -1;
-      }
-   }
-   else
-   {
-      t = - (planeDistance / projRayLength);
-   }
-
-   if (t < 0) {return false;}
+   if (t >= FLT_MAX) {return false;}
 
    intersectionPt = ray.origin + (ray.direction * t);
 
@@ -288,20 +239,7 @@ D3DXVECTOR3 findIntersectionRemovalVector(const AABoundingBox& aabb, const AABou
 
 bool testCollision(const BoundingSphere& sphere, const Ray& ray)
 {
-   float a, b, c, l2, t;
-
-   D3DXVECTOR3 L = ray.origin - sphere.origin;
-   l2 = D3DXVec3LengthSq( &L );
-
-   a = D3DXVec3LengthSq(&ray.direction);
-   b = 2.0f * D3DXVec3Dot(&ray.direction, &L);
-   c = l2 - (sphere.radius * sphere.radius);
-
-   if (c < 0.0f) {return true;}
-
-   if (!solveQuadratic(a, b, c, t)) {return false;}
-
-   return true;
+   return (rayToBSDistance(ray, sphere) < FLT_MAX);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -310,6 +248,136 @@ bool testCollision(const Ray& ray, const Triangle& triangle)
 {
    return (bool)D3DXIntersectTri(&triangle.vertex(0), &triangle.vertex(1), &triangle.vertex(2),
       &ray.origin, &ray.direction, NULL, NULL, NULL);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float rayToPlaneDistance(const Ray& ray, const D3DXPLANE& plane)
+{
+   float planeDistance = D3DXPlaneDotCoord(&plane, &ray.origin);
+   float projRayLength = D3DXPlaneDotNormal(&plane, &ray.direction);
+
+   float t;
+   if (projRayLength == 0)
+   {
+      if (planeDistance == 0)
+      {
+         t = 0;
+      }
+      else
+      {
+         t = -1;
+      }
+   }
+   else
+   {
+      t = - (planeDistance / projRayLength);
+   }
+
+   if (t < 0) 
+   {
+      return FLT_MAX;
+   }
+   else
+   {
+      return t;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float rayToPointDistance(const Ray& ray, const D3DXVECTOR3& point)
+{
+   D3DXVECTOR3 vecToPt = point - ray.origin;
+
+   float t = D3DXVec3Dot(&vecToPt, &ray.direction);
+   if (t < 0)
+   {
+      // if the point lies behind the ray's origin, the distance is infinite
+      return FLT_MAX;
+   }
+
+   // check if the projected point lies on the ray
+   D3DXVECTOR3 resultPt = t * ray.direction + ray.origin;
+   resultPt -= vecToPt;
+   if (D3DXVec3LengthSq(&resultPt) < 1e-3)
+   {
+      // if it does - return the calculated distance
+      return t;
+   }
+   else
+   {
+      // if not - it's not on the ray, so the distance to it is infinite
+      return FLT_MAX;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float rayToAABBDistance(const Ray& ray, const AABoundingBox& aabb)
+{
+   // 'slabs' algorithm
+   float tMin = -FLT_MAX;
+   float tMax = FLT_MAX;
+   float t1, t2, fTemp;
+
+   D3DXVECTOR3 extentsMin = aabb.min - ray.origin;
+   D3DXVECTOR3 extentsMax = aabb.max - ray.origin;
+
+   for (int i = 0; i < 3; ++i)
+   {
+      if (fabsf(ray.direction[i]) > 1e-3f)
+      {
+         fTemp = 1.0f / ray.direction[i];
+         t1 = extentsMax[i] * fTemp;
+         t2 = extentsMin[i] * fTemp;
+         if (t1 > t2) {fTemp = t1; t1 = t2; t2 = fTemp; }
+
+         if (t1 > tMin) tMin = t1;
+         if (t2 < tMax) tMax = t2;
+
+         if (tMin > tMax) return FLT_MAX;
+         if (tMax < 0) return FLT_MAX;
+      }
+      else
+      {
+         if ((ray.origin[i] < aabb.min[i]) || (ray.origin[i] > aabb.max[i]))
+         {
+            return FLT_MAX;
+         }
+      }
+   }
+
+   if (tMin < 0) tMin = 0;
+   return tMin;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float rayToBSDistance(const Ray& ray, const BoundingSphere& bs)
+{
+   float a, b, c, l2, t;
+
+   D3DXVECTOR3 L = ray.origin - bs.origin;
+   l2 = D3DXVec3LengthSq(&L);
+
+   a = D3DXVec3LengthSq(&ray.direction);
+   b = 2.0f * D3DXVec3Dot(&ray.direction, &L);
+   c = l2 - (bs.radius * bs.radius);
+
+   if (c < 0.0f) 
+   {
+      // the ray starts inside the sphere
+      return 0;
+   }
+
+   if (!solveQuadratic(a, b, c, t)) 
+   {
+      // the sphere doesn't intersect the plane
+      return FLT_MAX;
+   }
+
+   return t;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

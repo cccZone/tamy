@@ -211,6 +211,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\ext-TreesGenerator.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

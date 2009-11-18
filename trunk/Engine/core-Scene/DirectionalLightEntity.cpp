@@ -10,8 +10,20 @@ DEFINE_ENTITY(DirectionalLightEntity);
 
 DirectionalLightEntity::DirectionalLightEntity()
 : INIT_ENTITY(DirectionalLightEntity)
+, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 1))
 {
    D3DXMatrixIdentity(&m_situation);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLightEntity::registerProperties()
+{
+   PROPERTY("name", std::string, m_name);
+   PROPERTY("situation", D3DXMATRIX, m_situation);
+   PROPERTY("ambient color", Color, m_ambient);
+   PROPERTY("diffuse color", Color, m_diffuse);
+   PROPERTY("specular color", Color, m_specular);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,7 +39,32 @@ DirectionalLightEntity::DirectionalLightEntity(const std::string& name,
 , m_diffuse(diffuse)
 , m_specular(specular)
 , m_situation(situation)
+, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 1))
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const BoundingVolume& DirectionalLightEntity::getBoundingVolume()
+{
+   m_boundingVol.origin.x = m_situation._41;
+   m_boundingVol.origin.y = m_situation._42;
+   m_boundingVol.origin.z = m_situation._43;
+   return m_boundingVol;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const D3DXMATRIX& DirectionalLightEntity::getGlobalMtx()
+{
+   return m_situation;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const Array<Triangle*>& DirectionalLightEntity::getBoundingGeometry()
+{
+   return m_noGeometry;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

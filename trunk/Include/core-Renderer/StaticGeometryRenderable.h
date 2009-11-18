@@ -14,6 +14,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct Triangle;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * This class represents a static geometry object that can be rendered.
  */
@@ -77,7 +81,7 @@ public:
               StaticGeometryRenderable** frontSplit,
               StaticGeometryRenderable** backSplit);
 
-   const AABoundingBox& getBoundingVolume() const;
+   const BoundingVolume& getBoundingVolume();
 
 protected:
    /**

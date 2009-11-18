@@ -232,18 +232,6 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Scene"
-			>
-			<File
-				RelativePath=".\TNodesSpatialStorageQueriesTests.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\TNodesSpatialStorageTests.cpp"
-				>
-			</File>
-		</Filter>
-		<Filter
 			Name="BoundingVolumes"
 			>
 			<File
@@ -252,6 +240,10 @@
 			</File>
 			<File
 				RelativePath=".\PlaneIntersectionTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\RayDistancesTests.cpp"
 				>
 			</File>
 			<File
@@ -307,11 +299,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\NarrowPhaseStorageFilterTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\RegularOctreesTests.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\StaticGeometryOctreesTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TNodesSpatialStorageQueriesTests.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TNodesSpatialStorageTests.cpp"
 				>
 			</File>
 		</Filter>

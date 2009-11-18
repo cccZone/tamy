@@ -2,8 +2,6 @@
 #define _FSM_LOGIC_STATE_CONTROLLER_H
 
 #include "core-AI\FsmLogicState.h"
-#include "core-AI\Controller.h"
-
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,7 +13,7 @@
  * that operate with such controller implementation.
  */
 template<class Impl>
-class FsmLogicStateController : public Controller
+class FsmLogicStateController
 {
 private:
    FsmLogicState<Impl>* m_currentState;

@@ -218,7 +218,31 @@
 				RelativePath="..\..\Include\core-AppFlow\UserInputController.h"
 				>
 			</File>
+			<Filter
+				Name="KeyStatusObservation"
+				>
+				<File
+					RelativePath=".\KeysStatusManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-AppFlow\KeysStatusManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-AppFlow\KeysStatusModel.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-AppFlow\KeyStatusHandler.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\core-AppFlow.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

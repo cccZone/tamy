@@ -3,10 +3,9 @@
 /// @file   TamyEditor\tamyeditor.h
 /// @brief  editor's main window class
 
-
 #include <QtGui/QMainWindow>
 #include "ui_tamyeditor.h"
-
+#include "core.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +16,11 @@ class Model;
 class UserInputController;
 class UnconstrainedMotionController;
 class CTimer;
+class SpatiallyQueryable;
+class EntitiesStorageView;
+class KeysStatusManager;
+struct Point;
+class PropertiesView;
 
 namespace RendererView
 {
@@ -26,25 +30,31 @@ namespace RendererView
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This is the editor's main window class.
- */
+* This is the editor's main window class.
+*/
 class TamyEditor : public QMainWindow
 {
-    Q_OBJECT
+   Q_OBJECT
 
 private:
    QApplication& m_app;
    Ui::TamyEditorClass ui;
-   CTimer* m_timeMeasurement;
-   QTimer* m_timer;
+   CTimer* m_mainTime;
+   CTimer* m_inputTime;
+   QTimer* m_mainTimeSlot;
+   QTimer* m_inputTimeSlot;
    Renderer* m_renderer;
 
    Model* m_scene;
    RendererView::RendererView* m_renderView;
 
    UserInputController* m_renderWinUiController;
-   bool m_rotating;
+   KeysStatusManager* m_keysStatusManager;
    UnconstrainedMotionController* m_cameraController;
+
+   SpatialStorage<SpatiallyQueryable>* m_entitiesQueryStorage;
+
+   PropertiesView* m_selectionManager;
 
 public:
    /**
@@ -54,21 +64,19 @@ public:
     * @param parent     parent widget
     * @param flags      widget creation flags
     */
-    TamyEditor(QApplication& app, QWidget *parent = 0, Qt::WFlags flags = 0);
-    ~TamyEditor();
+   TamyEditor(QApplication& app, QWidget *parent = 0, Qt::WFlags flags = 0);
+   ~TamyEditor();
 
 public slots:
-    /**
-     * Internal timer will call this method periodically.
-     */
-    void update();
+   void updateMain();
+   void updateInput();
 
-    void loadScene();
-    void saveScene();
-    void importScene();
+   void loadScene();
+   void saveScene();
+   void importScene();
 
 private:
-   void handleInput(float timeElapsed);
+   void performSceneQuery(const Point& mousePos, Array<SpatiallyQueryable*>& nodes);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

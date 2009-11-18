@@ -49,6 +49,12 @@ struct SkyBoxEntity : public Entity
    void save(Serializer& serializer);
 
    void load(Serializer& serializer);
+
+   // -------------------------------------------------------------------------
+   // Entity implementation
+   // -------------------------------------------------------------------------
+protected:
+   void registerProperties();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

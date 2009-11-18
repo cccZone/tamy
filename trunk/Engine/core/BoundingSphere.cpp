@@ -7,16 +7,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BoundingSphere::BoundingSphere()
-      : origin(0, 0, 0),
-      radius(0)
+: origin(0, 0, 0)
+, radius(0)
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BoundingSphere::BoundingSphere(const D3DXVECTOR3& _origin, float _radius)
-      : origin(_origin),
-      radius(_radius)
+: origin(_origin)
+, radius(_radius)
 {
 }
 

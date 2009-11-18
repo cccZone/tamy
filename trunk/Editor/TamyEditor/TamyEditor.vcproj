@@ -428,13 +428,6 @@
 					RelativePath=".\GeneratedFiles\Release\moc_TamySceneWidget.cpp"
 					>
 					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Debug|Win32"
 						ExcludedFromBuild="true"
 						>
@@ -460,15 +453,28 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="Views"
+			>
+			<File
+				RelativePath=".\EntitiesStorageView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EntitiesStorageView.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MousePropertiesView.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MousePropertiesView.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

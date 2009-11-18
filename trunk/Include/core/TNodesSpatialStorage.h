@@ -91,18 +91,6 @@ public:
    void query(const BoundingVolume& volume, Array<NodeType*>& output) const;
 
    /**
-   * The method allows to query the scene for nodes that overlap
-   * the specified volume. The query is performed in broad and narrow phase,
-   * meaning that not only the bounding volumes of the scene nodes, but also
-   * the underlying geometry will be tested
-   *
-   * @param volume   volume used for the query
-   * @param output   upon method return this array will be filled with
-   *                 nodes that fit inside or overlap the query volume
-   */
-   void detailedQuery(const BoundingVolume& volume, Array<NodeType*>& output) const;
-
-   /**
     * The method allows to access the root node all the nodes added
     * to this storage are attached to
     *

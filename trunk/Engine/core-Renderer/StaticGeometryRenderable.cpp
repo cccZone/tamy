@@ -1,4 +1,5 @@
 #include "core-Renderer\StaticGeometryRenderable.h"
+#include "core\Triangle.h"
 #include <algorithm>
 
 
@@ -6,7 +7,7 @@
 
 StaticGeometryRenderable::StaticGeometryRenderable(Material& material,
                                                    const std::vector<LitVertex>& vertices,
-                                                   const std::vector<Face >& faces)
+                                                   const std::vector<Face>& faces)
 : m_material(material)
 , m_vertices(vertices)
 , m_faces(faces)
@@ -143,7 +144,7 @@ void StaticGeometryRenderable::split(const D3DXPLANE& splitPlane,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const AABoundingBox& StaticGeometryRenderable::getBoundingVolume() const 
+const BoundingVolume& StaticGeometryRenderable::getBoundingVolume() 
 {
    return m_boundingVol;
 }

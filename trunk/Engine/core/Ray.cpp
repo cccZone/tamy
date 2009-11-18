@@ -1,6 +1,10 @@
 #include "core\Ray.h"
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
+#include "core\PointVolume.h"
+#include "core\AABoundingBox.h"
+#include "core\BoundingSphere.h"
+#include "core\QuadraticEquations.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,14 +25,6 @@ PlaneClassification Ray::classifyAgainsPlane(const D3DXPLANE& plane) const
 {
    ASSERT(false, "Ray::classifyAgainsPlane(const D3DXPLANE&) - Method not implemented");
    return PPC_SPANNING;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float Ray::distanceToPlane(const D3DXPLANE& plane) const
-{
-   ASSERT(false, "Ray::distanceToPlane(const D3DXPLANE&) - Method not implemented");
-   return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,6 +70,36 @@ bool Ray::testCollision(const Ray& rhs) const
 bool Ray::testCollision(const Triangle& rhs) const
 {
    return ::testCollision(*this, rhs);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Ray::getDistanceTo(const BoundingVolume& rhs) const
+{
+   if (dynamic_cast<const PointVolume*> (&rhs) != NULL)
+   {
+      return rayToPointDistance(*this, (dynamic_cast<const PointVolume*> (&rhs))->point);
+   }
+   else if (dynamic_cast<const AABoundingBox*> (&rhs) != NULL)
+   {
+      return rayToAABBDistance(*this, *(dynamic_cast<const AABoundingBox*> (&rhs)));
+   }
+   else if (dynamic_cast<const BoundingSphere*> (&rhs) != NULL)
+   {
+      return rayToBSDistance(*this, *(dynamic_cast<const BoundingSphere*> (&rhs)));
+   }
+   else
+   {
+      ASSERT(false, "Ray::getDistanceTo(...) not implemented for this type of bounding volume");
+      return FLT_MAX;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Ray::distanceToPlane(const D3DXPLANE& plane) const
+{
+   return rayToPlaneDistance(*this, plane);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

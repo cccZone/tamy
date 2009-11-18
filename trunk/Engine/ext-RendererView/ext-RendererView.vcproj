@@ -257,6 +257,10 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\ext-RendererView.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

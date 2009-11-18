@@ -11,9 +11,15 @@
 AbstractGraphicalNode::AbstractGraphicalNode(const std::string& name, 
                                              LeafGraphicalEntity& entity,
                                              DWORD subset)
-      : RenderableNode(name, entity.getMaterial(subset)),
-      m_entity(entity),
-      m_subset(subset)
+: RenderableNode(name, entity.getMaterial(subset))
+, m_entity(entity)
+, m_subset(subset)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+AbstractGraphicalNode::~AbstractGraphicalNode()
 {
 }
 
@@ -30,13 +36,6 @@ void AbstractGraphicalNode::setBoundingSphereRadius(float radius)
 void AbstractGraphicalNode::render()
 {
    m_entity.render(m_subset);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const Array<Triangle*>& AbstractGraphicalNode::getBoundingGeometry() const
-{
-   return m_entity.getGeometry();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

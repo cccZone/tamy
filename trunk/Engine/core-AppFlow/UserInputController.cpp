@@ -80,7 +80,7 @@ void UserInputController::setKey(unsigned char* buf,
    }
    else
    {
-       buf[keyCode] = 0; 
+      buf[keyCode] = 0; 
    }
 }
 

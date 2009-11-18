@@ -3,6 +3,7 @@
 #include "core-Scene\Entity.h"
 #include "core\Serializer.h"
 #include "core-Scene\ModelView.h"
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,6 +31,9 @@ namespace // anonymous
       }
 
       int getIndex() const {return m_index;}
+
+   protected:
+      void registerProperties() {}
    };
    DEFINE_ENTITY(EntityAMock);
 
@@ -55,6 +59,9 @@ namespace // anonymous
       }
 
       int getIndex() const {return m_index;}
+
+   protected:
+      void registerProperties() {}
    };
    DEFINE_ENTITY(EntityBMock);
 

@@ -197,6 +197,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\ext-MaterialsParser.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

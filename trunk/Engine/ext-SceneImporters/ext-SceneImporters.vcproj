@@ -161,6 +161,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\ext-SceneImporters.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -3,6 +3,7 @@
 #include "core-Renderer\LitVertex.h"
 #include "core-Renderer\Face.h"
 #include "core-Renderer\Material.h"
+#include "core\AABoundingBox.h"
 #include <vector>
 #include <d3dx9.h>
 
@@ -49,7 +50,7 @@ TEST(StaticGeometryRenderable, creatingNewObjects)
    std::vector<Face > faces;
    
    StaticGeometryRenderableMock renderable(material, vertices, faces);
-   const AABoundingBox& vol = renderable.getBoundingVolume();
+   const AABoundingBox& vol = dynamic_cast<const AABoundingBox&> (renderable.getBoundingVolume());
    COMPARE_VEC(D3DXVECTOR3(0, 0, 0), vol.min);
    COMPARE_VEC(D3DXVECTOR3(1, 0, 1), vol.max);
 }

@@ -15,7 +15,6 @@
 class NodeVisitor;
 class NodeObserver;
 class BoundingVolume;
-struct Triangle;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -40,8 +39,6 @@ private:
    Node* m_parent;
    std::list<Node*> m_children;
    std::list<NodeObserver*> m_observers;
-
-   Array<Triangle*> m_noGeometry;
 
 public:
    Node(const std::string& name);
@@ -75,7 +72,7 @@ public:
     * skipping the setters.
     * Manipulating the matrix in this way is sometimes necessary
     * as various libs manipulate pointers to matrices. 
-    * Not to worry - the global matrix will always remain in synch
+    * Not to worry - the global matrix will always remain in sync
     */
    virtual D3DXMATRIX& accessLocalMtx() {return m_localMtx;}
 
@@ -92,26 +89,17 @@ public:
    virtual D3DXVECTOR3 getPosition() const;
 
    /**
-    * This method returns the global bounding volume that bounds the node's contents
-    */
-   const BoundingVolume& getBoundingVolume();
-
-   /**
     * This method allows to set a bounding volume for the node
     */
    void setBoundingVolume(BoundingVolume* volume);
 
    /**
-    * This method returns the detailed geometry that bounds the
-    * contents of a node. 
+    * Returns the bounding volume that bounds the node's contents. 
+    * The bounding volume is located in the world space.
     *
-    * This geometry will be used in detailed scene queries, 
-    * and doesn't necessarily have to be the same as for instance 
-    * the geometry of a graphical node.
-    * It simply is something more detailed than the BoundingVolume, which
-    * is used during the broad phase scene queries
+    * @return  node's contents bounding volume
     */
-   virtual const Array<Triangle*>& getBoundingGeometry() const {return m_noGeometry;}
+   const BoundingVolume& getBoundingVolume();
 
    /**
     * A node can have a single parent node. This method will return true
@@ -177,7 +165,7 @@ protected:
     * the Visitor pattern. Simply overload this method to accept a visitor.
     *
     * This particular type of node doesn't react to visitors - if it's
-    * used as this class only (and it's not something deived from it),
+    * used as this class only (and it's not something derived from it),
     * then it's used as a Composite for other nodes.
     */
    virtual void onAccept(NodeVisitor& visitor) {}

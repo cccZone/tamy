@@ -187,10 +187,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Include\core-Renderer\RenderingTargetsCleaner.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Include\core-Renderer\RenderingTargetsPolicy.h"
 				>
 			</File>
@@ -235,6 +231,10 @@
 				</File>
 				<File
 					RelativePath="..\..\Include\core-Renderer\CompositeRenderingMechanism.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Renderer\RenderingTargetsCleaner.h"
 					>
 				</File>
 				<File
@@ -570,14 +570,6 @@
 				RelativePath="..\..\Include\core-Renderer\MaterialStage.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\Include\core-Renderer\NullGraphicalEffect.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-Renderer\NullLightReflectingProperties.h"
-				>
-			</File>
 			<Filter
 				Name="Textures"
 				>
@@ -815,6 +807,10 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\core-Renderer.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

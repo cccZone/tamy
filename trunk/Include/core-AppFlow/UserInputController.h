@@ -5,6 +5,7 @@
 
 #include <d3dx9.h>
 #include "core\Point.h"
+#include "core-AppFlow\KeysStatusModel.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,7 +13,7 @@
 /**
  * User input handling mechanism.
  */
-class UserInputController
+class UserInputController : public KeysStatusModel
 {
 private:
    Point m_relativePt;

@@ -28,7 +28,7 @@ public:
    AbstractGraphicalNode(const std::string& name, 
                          LeafGraphicalEntity& entity,
                          DWORD subset);
-   virtual ~AbstractGraphicalNode() {}
+   virtual ~AbstractGraphicalNode();
 
    /**
     * The method allows to adjust the bounding sphere's radius
@@ -49,8 +49,6 @@ public:
    inline DWORD getSubsetIdx() const {return m_subset;}
 
    const LeafGraphicalEntity& getEntity() const;
-
-   const Array<Triangle*>& getBoundingGeometry() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -75,61 +75,6 @@ void TNodesSpatialStorage<NodeType, ConcreteSpatialStorage>::query(
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename NodeType, template<class> class ConcreteSpatialStorage>
-void TNodesSpatialStorage<NodeType, ConcreteSpatialStorage>::detailedQuery(
-                                                  const BoundingVolume& volume, 
-                                                  Array<NodeType*>& output) const
-{
-   Array<NodeType*> possiblyVisibleNodes;
-   query(volume, possiblyVisibleNodes);
-
-   unsigned int nodesCount = possiblyVisibleNodes.size();
-   if (nodesCount == 0) {return;}
-
-   // perform a narrow phase query
-   unsigned int trisCount;
-   const Array<Triangle*>* geometry;
-
-   NodeType* node = NULL;
-   bool visible = false;
-   D3DXMATRIX volumeTransformMtx;
-   for (unsigned int i = 0; i < nodesCount; ++i)
-   {
-      visible = false;
-      node = possiblyVisibleNodes[i];
-
-      geometry = &(node->getBoundingGeometry());
-      trisCount = geometry->size();
-      if (trisCount == 0)
-      {
-         visible = true;
-      }
-      else
-      {
-         D3DXMatrixInverse(&volumeTransformMtx, NULL, &(node->getGlobalMtx()));
-         for (unsigned int j = 0; j < trisCount; ++j)
-         {
-            BoundingVolume* transformedVolume = volume * volumeTransformMtx;
-            Triangle* tri = (*geometry)[j];
-            if (tri->testCollision(*transformedVolume) == true) 
-            {
-               visible = true;
-               delete transformedVolume;
-               break;
-            }
-            delete transformedVolume;
-         }
-      }
-
-      if (visible)
-      {
-         output.push_back(node);
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<typename NodeType, template<class> class ConcreteSpatialStorage>
 Node& TNodesSpatialStorage<NodeType, ConcreteSpatialStorage>::root()
 {
    return *m_root;

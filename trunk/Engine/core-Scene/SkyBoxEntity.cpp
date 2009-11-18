@@ -33,6 +33,18 @@ SkyBoxEntity::SkyBoxEntity(const std::string& frontTex,
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void SkyBoxEntity::registerProperties()
+{
+   PROPERTY("front", std::string, m_frontTex);
+   PROPERTY("back", std::string, m_backTex);
+   PROPERTY("left", std::string, m_leftTex);
+   PROPERTY("right", std::string, m_rightTex);
+   PROPERTY("top", std::string, m_topTex);
+   PROPERTY("bottom", std::string, m_bottomTex);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void SkyBoxEntity::save(Serializer& serializer)
 {
    serializer.saveString(m_frontTex);

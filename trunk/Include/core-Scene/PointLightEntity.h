@@ -3,8 +3,10 @@
 /// @file   core-Scene\PointLightEntity.h
 /// @brief  a point light description
 
+#include "core-Scene\SpatiallyQueryable.h"
 #include "core-Scene\Entity.h"
 #include "core\Color.h"
+#include "core\BoundingSphere.h"
 #include <d3dx9.h>
 #include <string>
 
@@ -14,8 +16,9 @@
 /**
  * This class describes a point light.
  */
-struct PointLightEntity : public Entity
+struct PointLightEntity : public Entity, public SpatiallyQueryable
 {
+public:
    std::string m_name;
    Color m_ambient;
    Color m_diffuse;
@@ -26,6 +29,12 @@ struct PointLightEntity : public Entity
    float m_quadAtt;
    D3DXVECTOR3 m_situation;
 
+private:
+   D3DXMATRIX m_situationMtx;
+   BoundingSphere m_boundingVol;
+   Array<Triangle*> m_noGeometry;
+
+public:
    /**
     * Default constructor.
     */
@@ -53,11 +62,26 @@ struct PointLightEntity : public Entity
                     const D3DXVECTOR3& situation);
 
    // -------------------------------------------------------------------------
+   // SpatiallyQueryable implementation
+   // -------------------------------------------------------------------------
+   const BoundingVolume& getBoundingVolume();
+
+   const D3DXMATRIX& getGlobalMtx();
+
+   const Array<Triangle*>& getBoundingGeometry();
+
+   // -------------------------------------------------------------------------
    // Entity implementation
    // -------------------------------------------------------------------------
    void save(Serializer& serializer);
 
    void load(Serializer& serializer);
+
+   // -------------------------------------------------------------------------
+   // Entity implementation
+   // -------------------------------------------------------------------------
+protected:
+   void registerProperties();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

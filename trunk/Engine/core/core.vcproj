@@ -367,65 +367,105 @@
 			Name="SpatialStorage"
 			>
 			<File
-				RelativePath="..\..\Include\core\BSPNodeTree.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\BSPNodeTree.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\DynamicOctree.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\DynamicOctree.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\LinearStorage.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\LinearStorage.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\Octree.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\Octree.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\RegularOctree.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\RegularOctree.inl"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Include\core\SpatialStorage.h"
 				>
 			</File>
-			<File
-				RelativePath="..\..\Include\core\StaticGeometryOctree.h"
+			<Filter
+				Name="Utils"
 				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\StaticGeometryOctree.inl"
+				<File
+					RelativePath="..\..\Include\core\AdaptingSpatialStorage.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\AdaptingSpatialStorage.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\CompositeSpatialStorage.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\CompositeSpatialStorage.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\NarrowPhaseStorageFilter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\NarrowPhaseStorageFilter.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\SharedSpatialStorage.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\SharedSpatialStorage.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\TNodesSpatialStorage.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\TNodesSpatialStorage.inl"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Solids"
 				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\TNodesSpatialStorage.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\TNodesSpatialStorage.inl"
-				>
-			</File>
+				<File
+					RelativePath="..\..\Include\core\BSPNodeTree.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\BSPNodeTree.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\DynamicOctree.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\DynamicOctree.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\LinearStorage.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\LinearStorage.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\Octree.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\Octree.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\RegularOctree.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\RegularOctree.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\StaticGeometryOctree.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\StaticGeometryOctree.inl"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="BoundingVolumes"
@@ -575,6 +615,10 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\core.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

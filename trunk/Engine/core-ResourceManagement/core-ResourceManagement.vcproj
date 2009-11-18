@@ -293,6 +293,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\..\Include\core-ResourceManagement.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
