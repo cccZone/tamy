@@ -1,18 +1,5 @@
 #include "ext-Demo\DemoApp.h"
-#include "tamy\Tamy.h"
-#include "core-AppFlow\ExecutionContext.h"
-#include "core-AppFlow\UserInputController.h"
-#include "core-Renderer\Renderer.h"
-#include "core-Renderer\Camera.h"
-#include "core-Renderer\Light.h"
-#include "core-Renderer\GraphicalEntitiesFactory.h"
-#include "core-Renderer\SortingRenderablesStorage.h"
-#include "core-Renderer\LightsStorage.h"
-#include "core-Renderer\RenderingTarget.h"
-#include "core-Renderer\SkyBoxStorage.h"
-#include "core-Renderer\TextField.h"
-#include "core-Renderer\Font.h"
-#include "core-ResourceManagement\IWFLoader.h"
+#include "core-ResourceManagement.h"
 #include "ext-Demo\DemoIWFScene.h"
 #include "ext-Demo\LightsScene.h"
 #include "ext-Demo\DefaultDemoInputController.h"
@@ -110,7 +97,7 @@ void DemoApp::loadIWF(const std::string& fileName,
                              demo::LightsSceneSetter::from_method<LightsScene, &LightsScene::insert> (*outLights),
                              demo::SkyBoxSceneSetter::from_method<SkyBoxSetter, &SkyBoxSetter::setBackground> (&skyBoxSetter),
                              demo::DynamicObjectsSceneSetter::from_method<demo::DynMeshesScene, &demo::DynMeshesScene::addNode> (*outDynamicScene),
-                             demo::StaticGeometrySetter::from_method<StaticSceneManager, &StaticSceneManager::addObj> (*outStaticScene),
+                             demo::StaticGeometrySetter::from_method<StaticSceneManager, &StaticSceneManager::insert> (*outStaticScene),
                              m_entitiesStorage,
                              m_materialsStorage);
    IWFLoader loader(sceneAdapter);

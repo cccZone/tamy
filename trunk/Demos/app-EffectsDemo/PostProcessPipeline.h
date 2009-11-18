@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core\SpatialStorage.h"
+#include "ext-Demo\DemoApp.h"
 #include <string>
 
 
@@ -25,7 +26,6 @@ class TextureRenderingTarget;
 
 namespace demo
 {
-   class StaticSceneManager;
    class RERCreator;
 }
 
