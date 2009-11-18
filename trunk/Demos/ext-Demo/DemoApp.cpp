@@ -16,7 +16,6 @@
 #include "ext-Demo\DemoIWFScene.h"
 #include "ext-Demo\LightsScene.h"
 #include "ext-Demo\DefaultDemoInputController.h"
-#include "ext-Demo\StaticSceneManager.h"
 #include "ext-Demo\FpsCounter.h"
 
 

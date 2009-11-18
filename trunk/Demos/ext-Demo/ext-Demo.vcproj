@@ -195,14 +195,6 @@
 					RelativePath="..\..\Include\ext-Demo\SharedRenderablesStorage.h"
 					>
 				</File>
-				<File
-					RelativePath=".\StaticSceneManager.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\Include\ext-Demo\StaticSceneManager.h"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter

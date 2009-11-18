@@ -76,7 +76,7 @@ void InputController::performQuery(Array<Node*>& nodes)
 
    // perform the query
    Array<RenderableNode*> queriedNodes;
-   m_mainScene.detailedQuery(queryRay, queriedNodes);
+   m_mainScene.query(queryRay, queriedNodes);
 
    // output the results
    for (unsigned int i = 0; i < queriedNodes.size(); ++i)

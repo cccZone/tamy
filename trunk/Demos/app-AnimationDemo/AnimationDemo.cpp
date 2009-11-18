@@ -6,7 +6,6 @@
 #include "core-Renderer\Skeleton.h"
 #include "core-Renderer\SkyBoxStorage.h"
 #include "ext-Demo\BasicRenderingPipeline.h"
-#include "ext-Demo\StaticSceneManager.h"
 #include "ext-Demo\LightsScene.h"
 #include "ext-Demo\SharedOverlay.h"
 #include "ext-Demo\RERCreator.h"

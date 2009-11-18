@@ -14,7 +14,6 @@
 #include "core-Renderer\OverlayRenderingMechanism.h"
 #include "core-Renderer\Overlay.h"
 #include "core-Renderer\Renderer.h"
-#include "ext-Demo\StaticSceneManager.h"
 #include "ext-Demo\SharedOverlay.h"
 #include "ext-Demo\SharedRenderablesStorage.h"
 

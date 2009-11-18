@@ -18,7 +18,6 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\PostProcessSceneStorage.h"
 #include "core-Renderer\PostProcessEffectRenderable.h"
-#include "ext-Demo\StaticSceneManager.h"
 #include "ext-Demo\SharedOverlay.h"
 #include "ext-Demo\SharedRenderablesStorage.h"
 #include "ext-Demo\RERCreator.h"
