@@ -7,6 +7,7 @@
 #include "core-Renderer\AbstractGraphicalEntity.h"
 #include "core\ResourceStorage.h"
 #include "core\Delegate.h"
+#include "core\StaticGeometryOctree.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,7 +51,7 @@ typedef Delegate<void (Node*)> DynamicObjectsSceneSetter;
 /**
  * This delegate should add a new static mesh to the scene.
  */
-typedef Delegate<void (StaticGeometryRenderable*)> StaticGeometrySetter;
+typedef Delegate<SGHandle (StaticGeometryRenderable*)> StaticGeometrySetter;
 
 ///////////////////////////////////////////////////////////////////////////////
 

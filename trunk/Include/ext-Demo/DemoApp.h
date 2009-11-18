@@ -4,17 +4,10 @@
 /// @brief  a simple framework for creating demos
 
 #include <windows.h>
-#include "tamy\Tamy.h"
-#include "tamy\SimpleTamyConfigurator.h"
-#include "tamy\DefaultWindowBuilder.h"
-#include "core-AppFlow\ApplicationManager.h"
-#include "core-AppFlow\Application.h"
-#include "core\TNodesSpatialStorage.h"
-#include "core\LinearStorage.h"
-#include "core-Renderer\RenderableNode.h"
-#include "core-Renderer\AbstractGraphicalEntity.h"
-#include "core-Renderer\Material.h"
-#include "core\ResourceStorage.h"
+#include "tamy.h"
+#include "core-AppFlow.h"
+#include "core.h"
+#include "core-Renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,10 +30,10 @@ namespace demo
 
 ///////////////////////////////////////////////////////////////////////////////
 
+typedef StaticGeometryOctree<StaticGeometryRenderable> StaticSceneManager;
 typedef TNodesSpatialStorage<RenderableNode, LinearStorage> DynMeshesScene;
 class LightsScene;
 class DefaultDemoInputController;
-class StaticSceneManager;
 class FpsCounter;
 
 ///////////////////////////////////////////////////////////////////////////////
