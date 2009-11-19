@@ -223,7 +223,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Include\core\Array.inl"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Include\core\CellSpacePartition.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\ConstSizeArray.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\ConstSizeArray.inl"
 				>
 			</File>
 			<File
@@ -611,6 +623,42 @@
 				</File>
 				<File
 					RelativePath="..\..\Include\core\FileSerializer.h"
+					>
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="ComponentsSystem"
+			>
+			<File
+				RelativePath="..\..\Include\core\Component.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\ComponentsManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\ComponentsManager.inl"
+				>
+			</File>
+			<Filter
+				Name="SingletonsManager"
+				>
+				<File
+					RelativePath="..\..\Include\core\Manageable.h"
+					>
+				</File>
+				<File
+					RelativePath=".\SingletonsManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\SingletonsManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\SingletonsManager.inl"
 					>
 				</File>
 			</Filter>

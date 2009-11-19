@@ -5,6 +5,7 @@
 /// @brief  an octree capable of storing dynamic (moving) objects
 
 #include "core\Octree.h"
+#include "core\ConstSizeArray.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,22 +27,23 @@ private:
       Array<Sector*> hostSectors;
 
       TreeElem(Elem* _elem);
+      ~TreeElem();
    };
 
 private:
-   Array<TreeElem*> m_elements;
-   Stack<unsigned int> m_freePos;
+   typedef ConstSizeArray<TreeElem*> ElementsArray;
+   ElementsArray m_elements;
 
 public:
    /**
     * Constructor. 
-    * The tree is precreated here - no further subdivision
+    * The tree is pre-created here - no further subdivision
     * will happen after the tree's been created.
     *
     * @param treeBB     bounding box for the tree
     * @param treeDepth  depth at which we want the tree to have its leaves.
     *                   Depth == 0 is allowed and means that the tree has
-    *                   only one node where everything is sotred - thus it
+    *                   only one node where everything is stored - thus it
     *                   becomes nothing more than a mere linear storage.
     */
    DynamicOctree(const AABoundingBox& treeBB, int treeDepth);

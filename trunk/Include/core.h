@@ -21,6 +21,7 @@
 // DataStructures
 // ----------------------------------------------------------------------------
 #include "core\Array.h"
+#include "core\ConstSizeArray.h"
 #include "core\CellSpacePartition.h"
 #include "core\Graph.h"
 #include "core\Point.h"
@@ -64,6 +65,16 @@
 #include "core\IntervalOperation.h"
 #include "core\MatrixInterpolator.h"
 #include "core\UniqueObject.h"
+
+// ----------------------------------------------------------------------------
+// ComponentsSystem
+// ----------------------------------------------------------------------------
+#include "core\Component.h"
+#include "core\ComponentsManager.h"
+// ----------------------------------------------------------------------------
+// -->SingletonsManager
+// ----------------------------------------------------------------------------
+#include "core\SingletonsManager.h"
 
 // ----------------------------------------------------------------------------
 // Serialization

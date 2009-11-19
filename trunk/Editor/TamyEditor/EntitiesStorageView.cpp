@@ -62,11 +62,7 @@ void EntitiesStorageView::onEntityRemoved(Entity& entity)
 
 void EntitiesStorageView::resetContents()
 {
-   while (m_storage->getElementsCount())
-   {
-      SpatiallyQueryable* queryable = &(m_storage->getElement(0));
-      m_storage->remove(*queryable);
-   }
+   m_storage->clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

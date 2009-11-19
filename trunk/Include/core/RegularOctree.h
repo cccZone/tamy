@@ -5,6 +5,7 @@
 /// @brief  an octree spatial container
 
 #include "core\Octree.h"
+#include "core\ConstSizeArray.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,11 +17,11 @@ template<typename Elem>
 class RegularOctree : public Octree<Elem>
 {
 private:
-   Array<Elem*> m_elements;
+   typedef ConstSizeArray<Elem*> ElementsArray;
+   ElementsArray m_elements;
+
    unsigned int m_maxElemsPerSector;
    unsigned int m_maxTreeDepth;
-
-   Stack<unsigned int> m_freePos;
 
 public:
    /**
@@ -51,6 +52,9 @@ public:
 
    void remove(Elem& elem);
 
+   void clear();
+
+protected:
    unsigned int getElementsCount() const;
 
    Elem& getElement(unsigned int idx) const;

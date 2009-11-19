@@ -5,6 +5,7 @@
 /// @brief  an octree for storing static geometry
 
 #include "core\Octree.h"
+#include "core\ConstSizeArray.h"
 #include <vector>
 
 
@@ -58,11 +59,11 @@ private:
    };
 
 private:
-   Array<SGElement*> m_elements;
-   Stack<unsigned int> m_freeSpaces;
+   typedef ConstSizeArray<SGElement*> ElementsArray;
+   ElementsArray m_elements;
 
-   std::vector<SGElementParts> m_handles;
-   Stack<unsigned int> m_freeHandles;
+   typedef ConstSizeArray<SGElementParts*> HandlesArray;
+   HandlesArray m_handles;
    
    unsigned int m_maxElemsPerSector;
    unsigned int m_maxDepth;
@@ -113,6 +114,15 @@ public:
     */
    void remove(SGHandle elemHandle);
 
+   /**
+    * This method returns the number of elements in the tree, 
+    * counting each split part as a separate element.
+    *
+    * @return     number of elements in the tree including splits
+    */
+   unsigned int getSplitElementsCount() const;
+
+protected:
    // -------------------------------------------------------------------------
    // Octree implementation
    // -------------------------------------------------------------------------

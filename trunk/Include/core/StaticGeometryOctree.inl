@@ -30,13 +30,18 @@ StaticGeometryOctree<Elem>::StaticGeometryOctree(
 template<typename Elem>
 StaticGeometryOctree<Elem>::~StaticGeometryOctree()
 {
-   unsigned int count = m_elements.size();
-   for (unsigned int i = 0; i < count; ++i)
+   for (ElementsArray::iterator it = m_elements.begin();
+      it != m_elements.end(); ++it)
    {
-      delete m_elements[i];
+      delete *it;
    }
    m_elements.clear();
 
+   for (HandlesArray::iterator it = m_handles.begin();
+      it != m_handles.end(); ++it)
+   {
+      delete *it;
+   }
    m_handles.clear();
 }
 
@@ -46,7 +51,7 @@ template<typename Elem>
 SGHandle StaticGeometryOctree<Elem>::insert(Elem* elem)
 {
    SGHandle handle = addHandle();
-   SGElementParts& elemParts = m_handles[handle];
+   SGElementParts& elemParts = *(m_handles[handle]);
 
    Array<Sector*> changedSectors;
    addElemToTree(new SGElement(handle, elem), *m_root, changedSectors);
@@ -78,17 +83,19 @@ void StaticGeometryOctree<Elem>::performSectorSubdivision(Sector& sector)
    Array<Sector*> changedSectors(elemsCount * 8);
 
    unsigned int elemIdx = 0;
+   SGElementParts* vecParts = NULL;
    for (unsigned int i = 0; i < elemsCount; ++i)
    {
       elemIdx = sector.m_elems[i];
       SGElement* elementToInsert = releaseElement(elemIdx);
 
-      SGElementParts::iterator sgElemPartIt = std::find(m_handles[elementToInsert->handle].begin(),
-                                                        m_handles[elementToInsert->handle].end(),
+      vecParts = m_handles[elementToInsert->handle];
+      SGElementParts::iterator sgElemPartIt = std::find(vecParts->begin(),
+                                                        vecParts->end(),
                                                         elemIdx);
-      if (sgElemPartIt != m_handles[elementToInsert->handle].end())
+      if (sgElemPartIt != vecParts->end())
       {
-         m_handles[elementToInsert->handle].erase(sgElemPartIt);
+         vecParts->erase(sgElemPartIt);
       }
 
       addElemToTree(elementToInsert, sector, changedSectors);
@@ -188,7 +195,7 @@ void StaticGeometryOctree<Elem>::addElemToTree(SGElement* element,
       unsigned int elemIdx = addElement(element);
 
       subTreeRoot.m_elems.push_back(elemIdx);
-      m_handles[element->handle].push_back(elemIdx);
+      m_handles[element->handle]->push_back(elemIdx);
       changedSectors.push_back(&subTreeRoot);
    }
 }
@@ -200,7 +207,7 @@ void StaticGeometryOctree<Elem>::remove(SGHandle elemHandle)
 {
    Array<Sector*> sectors;
 
-   SGElementParts& elemParts = m_handles[elemHandle];
+   SGElementParts& elemParts = *(m_handles[elemHandle]);
    unsigned int count = elemParts.size();
    for (unsigned int i = 0; i < count; ++i)
    {
@@ -247,19 +254,7 @@ Elem& StaticGeometryOctree<Elem>::getElement(unsigned int idx) const
 template<typename Elem>
 unsigned int StaticGeometryOctree<Elem>::addElement(SGElement* element)
 {
-   unsigned int elemIdx = -1;
-   if (m_freeSpaces.empty() == true)
-   {
-      elemIdx = m_elements.size();
-      m_elements.push_back(element);
-   }
-   else
-   {
-      elemIdx = m_freeSpaces.pop();
-      m_elements[elemIdx] = element;
-   }
-
-   return elemIdx;
+   return m_elements.insert(element);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -270,7 +265,7 @@ StaticGeometryOctree<Elem>::releaseElement(unsigned int idx)
 {
    SGElement* element = m_elements[idx];
    m_elements[idx] = NULL;
-   m_freeSpaces.push(idx);
+   m_elements.remove(idx);
 
    return element;
 }
@@ -280,18 +275,7 @@ StaticGeometryOctree<Elem>::releaseElement(unsigned int idx)
 template<typename Elem>
 SGHandle StaticGeometryOctree<Elem>::addHandle()
 {
-   SGHandle handle = -1;
-   
-   if (m_freeHandles.empty() == true)
-   {
-      handle = m_handles.size();
-      m_handles.push_back(SGElementParts());
-   }
-   else
-   {
-      handle = m_freeHandles.pop();
-   }
-
+   SGHandle handle = m_handles.insert(new SGElementParts());
    return handle;
 }
 
@@ -300,8 +284,16 @@ SGHandle StaticGeometryOctree<Elem>::addHandle()
 template<typename Elem>
 void StaticGeometryOctree<Elem>::releaseHandle(SGHandle idx)
 {
-   m_handles[idx].clear();
-   m_freeHandles.push(idx);
+   delete m_handles[idx];
+   m_handles.remove(idx);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename Elem>
+unsigned int StaticGeometryOctree<Elem>::getSplitElementsCount() const
+{
+   return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

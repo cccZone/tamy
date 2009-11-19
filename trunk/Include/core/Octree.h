@@ -81,21 +81,6 @@ public:
    void query(const BoundingVolume& boundingVol, Array<Elem*>& output) const;
 
    /**
-    * This method returns a total number of elements stored in the tree.
-    * 
-    * @return     tree elements count
-    */
-   virtual unsigned int getElementsCount() const = 0;
-
-   /**
-    * The method returns an element specified with the index.
-    *
-    * @param idx  index of the element in the tree
-    * @return     element corresponding to the specified index
-    */
-   virtual Elem& getElement(unsigned int idx) const = 0;
-
-   /**
     * This utility method allows to subdivide the specified sector
     * so that it becomes an octree itself.
     *
@@ -127,6 +112,27 @@ public:
    void querySectors(const BoundingVolume& boundingVol, 
                      Sector& searchRoot,
                      Array<Sector*>& output) const;
+
+protected:
+      /**
+    * This method returns a total number of elements stored in the tree.
+    * 
+    * @return     tree elements count
+    */
+   virtual unsigned int getElementsCount() const = 0;
+
+   /**
+    * The method returns an element specified with the index.
+    *
+    * @param idx  index of the element in the tree
+    * @return     element corresponding to the specified index
+    */
+   virtual Elem& getElement(unsigned int idx) const = 0;
+
+   /**
+    * Deletes all sectors.
+    */
+   void clearSectors();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

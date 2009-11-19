@@ -189,6 +189,17 @@ void Octree<Elem>::subdivideTree(Sector& root, unsigned int depth)
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
+void Octree<Elem>::clearSectors()
+{
+   AABoundingBox treeBB = m_root->m_bb;
+   delete m_root;
+   m_root = new Sector();
+   m_root->m_bb = treeBB;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename Elem>
 Octree<Elem>::Sector::Sector()
 : m_depth(0)
 , m_children(NULL)

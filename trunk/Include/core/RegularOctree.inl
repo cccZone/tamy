@@ -34,12 +34,11 @@ RegularOctree<Elem>::~RegularOctree()
 template<typename Elem>
 bool RegularOctree<Elem>::isAdded(const Elem& elem) const
 {
-   unsigned int elemsCount = m_elements.size();
-   for (unsigned int i = 0; i < elemsCount; ++i)
+   for (ElementsArray::iterator it = m_elements.begin(); 
+        it != m_elements.end(); ++it)
    {
-      if (&elem == m_elements[i]) {return true;}
+      if (&elem == (*it)) {return true;}
    }
-
    return false;
 }
 
@@ -50,18 +49,8 @@ void RegularOctree<Elem>::insert(Elem& elem)
 {
    if (isAdded(elem) == true) {return;}
 
-   // add the element to the collection of elements
-   unsigned int elemIdx;
-   if (m_freePos.empty() == true)
-   {
-      elemIdx = m_elements.size();
-      m_elements.push_back(&elem);
-   }
-   else
-   {
-      elemIdx = m_freePos.pop();
-      m_elements[elemIdx] = &elem;
-   }
+   // insert the element to the collection of elements
+   unsigned int elemIdx = m_elements.insert(&elem);
 
    // place the element id in the correct sector
    Array<Sector*> candidateSectors;
@@ -94,8 +83,7 @@ void RegularOctree<Elem>::remove(Elem& elem)
 {
    // remove the element from the array of elements
    unsigned int removedElemIdx = m_elements.find(&elem);
-   m_elements[removedElemIdx] = NULL;
-   m_freePos.push(removedElemIdx);
+   m_elements.remove(removedElemIdx);
 
    // step through the tree and remove all the references to this element
    Stack<Sector*> stack;
@@ -161,6 +149,15 @@ void RegularOctree<Elem>::spreadChildren(Sector& sector)
          candidateSectors[j]->m_elems.push_back(elemsToDistribute[i]);
       }
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename Elem>
+void RegularOctree<Elem>::clear()
+{
+   m_elements.clear();
+   clearSectors();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

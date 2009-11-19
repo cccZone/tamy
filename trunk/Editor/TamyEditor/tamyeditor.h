@@ -7,54 +7,32 @@
 #include "ui_tamyeditor.h"
 #include "core.h"
 
+
 ///////////////////////////////////////////////////////////////////////////////
 
 class QApplication;
-class QTimer;
-class Renderer;
 class Model;
-class UserInputController;
-class UnconstrainedMotionController;
-class CTimer;
-class SpatiallyQueryable;
-class EntitiesStorageView;
-class KeysStatusManager;
-struct Point;
-class PropertiesView;
-
-namespace RendererView
-{
-   class RendererView;
-}
+class TimeController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
 * This is the editor's main window class.
 */
-class TamyEditor : public QMainWindow
+class TamyEditor : public QMainWindow, public ComponentsManager<TamyEditor>
 {
    Q_OBJECT
 
 private:
    QApplication& m_app;
    Ui::TamyEditorClass ui;
+
+   // time tracking
    CTimer* m_mainTime;
-   CTimer* m_inputTime;
    QTimer* m_mainTimeSlot;
-   QTimer* m_inputTimeSlot;
-   Renderer* m_renderer;
 
    Model* m_scene;
-   RendererView::RendererView* m_renderView;
-
-   UserInputController* m_renderWinUiController;
-   KeysStatusManager* m_keysStatusManager;
-   UnconstrainedMotionController* m_cameraController;
-
-   SpatialStorage<SpatiallyQueryable>* m_entitiesQueryStorage;
-
-   PropertiesView* m_selectionManager;
+   TimeController* m_timeController;
 
 public:
    /**
@@ -67,16 +45,35 @@ public:
    TamyEditor(QApplication& app, QWidget *parent = 0, Qt::WFlags flags = 0);
    ~TamyEditor();
 
+   // -------------------------------------------------------------------------
+   // window space management
+   // -------------------------------------------------------------------------
+   /**
+    * Adds a new widget to the main window widget.
+    *
+    * @param widget     widget to add
+    */
+   void addToMainWidget(QWidget* widget);
+
+   /**
+    * Removes a widget from the main window widget.
+    *
+    * @param widget     widget to remove
+    */
+   void removeFromMainWidget(QWidget& widget);
+
+   /**
+    * This method gives access to the 'View' menu.
+    * 
+    * @return           view menu instance
+    */
+   QMenu& getViewMenu();
+
 public slots:
    void updateMain();
-   void updateInput();
-
    void loadScene();
    void saveScene();
    void importScene();
-
-private:
-   void performSceneQuery(const Point& mousePos, Array<SpatiallyQueryable*>& nodes);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

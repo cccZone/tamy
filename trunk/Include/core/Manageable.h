@@ -1,28 +1,38 @@
 #pragma once
 
+/// @file   core\Managable.h
+/// @brief  instance that can be managed by the SingletonsManager
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Managable
+/**
+ * A common interface for all manageables that gives possibility to store them
+ * in collections.
+ */
+class Manageable
 {
 public:
-   virtual ~Managable() {}
+   virtual ~Manageable() {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * A manageable of a specific type.
+ */
 template<typename T>
-class TManagable : public Managable
+class TManageable : public Manageable
 {
 private:
    T* m_object;
    bool m_destroy;
 
 public:
-   TManagable(T* object) : m_object(object), m_destroy(true) {}
-   TManagable(T& object) : m_object(&object), m_destroy(false) {}
+   TManageable(T* object) : m_object(object), m_destroy(true) {}
+   TManageable(T& object) : m_object(&object), m_destroy(false) {}
 
-   ~TManagable() 
+   ~TManageable() 
    {
       if (m_destroy)
       {

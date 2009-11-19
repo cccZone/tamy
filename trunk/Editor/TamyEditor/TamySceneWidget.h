@@ -5,6 +5,7 @@
 
 #include <QWidget>
 #include <windows.h>
+#include "core\Component.h"
 #include "core-AppFlow\UserInputController.h"
 #include "core\Point.h"
 
@@ -12,19 +13,42 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class IWindowMessagesProcessor;
+class TamyEditor;
+class QTimer;
+class CTimer;
+class Renderer;
+class GraphicalEntitiesFactory;
+class KeysStatusManager;
+
+namespace RendererView
+{
+   class RendererView;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class TamySceneWidget : public QWidget, public UserInputController
+class TamySceneWidget : public QWidget, 
+                        public UserInputController,
+                        public Component<TamyEditor>
 {
    Q_OBJECT
 
 private:
+   // window definition & messages processing
    IWindowMessagesProcessor* m_winMsgProcessor;
    IWindowMessagesProcessor* m_activeWinMsgProcessor;
    HWND m_hWnd;
 
+   // input tracking
    unsigned char m_keyBuffer[256];
+   KeysStatusManager* m_keysStatusManager;
+
+   // required services
+   Renderer* m_renderer;
+   GraphicalEntitiesFactory* m_graphicalFactory;
+
+   // scene rendering
+   RendererView::RendererView* m_renderView;
 
 public:
    /**
@@ -51,6 +75,11 @@ public:
     * @return     window handle
     */
    HWND getWinHandle() const;
+
+   // -------------------------------------------------------------------------
+   // Component implementation
+   // -------------------------------------------------------------------------
+   void initialize(TamyEditor& mgr);
 
 protected:
    // -------------------------------------------------------------------------

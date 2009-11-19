@@ -1,21 +1,12 @@
-#ifndef _ARRAY_H
-#define _ARRAY_H
+#ifndef _FAST_RELEASE_ARRAY
+#define _FAST_RELEASE_ARRAY
 
-/// @file   core\Array.h
-/// @brief  a reusable array container
+/// @file   core\ConstSizeArray.h
+/// @brief  a speedy array for often object releases
 
+#include "core\Array.h"
+#include "core\Stack.h"
 
-#include "core\Assert.h"
-#include <stdio.h>
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-/** 
- * A marker used to indicate that the element is not there in the array.
- */
-
-#define EOA (unsigned int)-1
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,12 +15,49 @@
  * of c-style array, and the powers of object oriented containers.
  */
 template<typename T>
-class Array
+class ConstSizeArray
 {
+public:
+   class iterator
+   {
+   private:
+      const Array<T>* m_elements;
+      const Array<bool>* m_isFree;
+      unsigned int m_idx;
+
+   public:
+      iterator(const iterator& rhs);
+
+      bool operator==(const iterator& rhs) const;
+      bool operator!=(const iterator& rhs) const;
+
+      iterator& operator=(const iterator& rhs);
+
+      // prefix
+      iterator& operator++();
+      iterator& operator--();
+
+      // postfix
+      iterator operator++(int);
+      iterator operator--(int);
+
+      const T& operator*() const;
+
+   private:
+      iterator(const Array<T>& elements,
+               const Array<bool>& isFree,
+               unsigned int idx);
+
+      unsigned int getNext() const;
+      unsigned int getPrev() const;
+
+      friend class ConstSizeArray;
+   };
+
 private:
-   unsigned int m_size;
-   unsigned int m_elementsCount;
-   T* m_arr;
+   Array<T>* m_elements;
+   Array<bool>* m_isFree;
+   Stack<unsigned int>* m_freePos;
 
 public:
    /**
@@ -42,11 +70,11 @@ public:
     * @param size    initial array size (array will allocate memory to
     *                incorporate at least that many elements up front).
     */
-   Array(unsigned int size = 1);
+   ConstSizeArray(unsigned int size = 1);
 
-   Array(const Array& rhs);
+   ConstSizeArray(const ConstSizeArray& rhs);
 
-   ~Array();
+   ~ConstSizeArray();
 
    /**
     * Clears the contents of the array.
@@ -54,23 +82,9 @@ public:
    void clear();
 
    /**
-    * The method returns the number of elements that can be put
-    * in the array without it being resized.
-    */
-   unsigned int containerSize() const;
-
-   /**
     * The method returns the number of elements in the array.
     */
    unsigned int size() const;
-
-   /**
-    * This method copies the contents of the array passed in as a parameter
-    * and appends it to the back of its own array.
-    *
-    * @param rhs  array from which we want to copy elements
-    */
-   void copyFrom(const Array<T>& rhs);
 
    /**
     * The method reallocates th memory the array is using, preparing it 
@@ -100,23 +114,12 @@ public:
    void resize(unsigned int newSize, const T& defaultValue = 0);
 
    /**
-    * The method appends a new element at the end of the array, 
-    * resizing it if necessary.
+    * The method inserts a new element to the array, resizing it if necessary.
     *
     * @param elem    elements that's gonna be appended
+    * @return        array index at which it was inserted
     */
-   void push_back(const T& elem);
-
-   /**
-    * Accesses the last element in the array (providing there is one).
-    * (const version)
-    */
-   const T& back() const;
-
-   /**
-    * Accesses the last element in the array (providing there is one).
-    */
-   T& back();
+   unsigned int insert(const T& elem);
 
    /**
     * The method removes an element at the given index.
@@ -126,15 +129,26 @@ public:
    void remove(unsigned int idx);
 
    /**
-    * The method allows to access the given element of the array.
+    * The method gives access to the specified element of the array.
     */
    T& at(unsigned int idx);
 
    /**
-    * The method allows to access the given element of the array,
+    * The method gives access to the specified element of the array,
     * making sure it doesn't get modified though (read-only access)
     */
    const T& at(unsigned int idx) const;
+
+   /**
+    * The operator gives access to the specified element of the array.
+    */
+   T& operator[](unsigned int idx);
+
+   /**
+    * The operator gives access to the specified element of the array,
+    * making sure it doesn't get modified though (read-only access)
+    */
+   const T& operator[](unsigned int idx) const;
 
    /**
     * The method locates an element in the array (using the operator==)
@@ -149,22 +163,24 @@ public:
    unsigned int find(const T& elem, unsigned int startPos = 0) const;
 
    /**
-    * Cast operator that allows to use the container as a plain vanilla 
-    * c++ standard array.
+    * Creates an iterator set at the beginning of the collection.
+    *
+    * @return  array iterator
     */
-   operator T*();
+   iterator begin() const;
 
    /**
-    * Cast operator that allows to use the container as a plain vanilla 
-    * c++ standard array. (in a read-only way)
+    * Creates an iterator set at the end of the collection.
+    *
+    * @return  array iterator
     */
-   operator const T*() const;
+   iterator end() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "core\Array.inl"
+#include "core\ConstSizeArray.inl"
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // _ARRAY_H
+#endif // _FAST_RELEASE_ARRAY_H

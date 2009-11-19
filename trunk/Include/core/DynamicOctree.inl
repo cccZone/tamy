@@ -20,10 +20,10 @@ DynamicOctree<Elem>::DynamicOctree(const AABoundingBox& treeBB, int treeDepth)
 template<typename Elem>
 DynamicOctree<Elem>::~DynamicOctree()
 {
-   unsigned int elemsCount = m_elements.size();
-   for (unsigned int i = 0; i < elemsCount; ++i)
+   for (ElementsArray::iterator it = m_elements.begin();
+        it != m_elements.end(); ++it)
    {
-      delete m_elements[i];
+      delete *it;
    }
 }
 
@@ -86,10 +86,10 @@ void DynamicOctree<Elem>::clearTree()
 template<typename Elem>
 bool DynamicOctree<Elem>::isAdded(const Elem& elem) const
 {
-   unsigned int elemsCount = m_elements.size();
-   for (unsigned int i = 0; i < elemsCount; ++i)
+   for (ElementsArray::iterator it = m_elements.begin();
+      it != m_elements.end(); ++it)
    {
-      if (&elem == m_elements[i]->elem) {return true;}
+      if (&elem == (*it)->elem) {return true;}
    }
 
    return false;
@@ -106,14 +106,7 @@ void DynamicOctree<Elem>::insert(Elem& elem)
    unsigned int elemIdx = m_elements.size();
 
    TreeElem* newElem = new TreeElem(&elem);
-   if (m_freePos.empty() == false)
-   {
-      m_elements[m_freePos.pop()] = newElem;
-   }
-   else
-   {
-      m_elements.push_back(newElem);
-   }
+   m_elements.insert(newElem);
 
    putElemInTree(elemIdx, *newElem);
 }
@@ -165,16 +158,14 @@ template<typename Elem>
 void DynamicOctree<Elem>::remove(Elem& elem)
 {
    TreeElem* treeElem = NULL;
+
    unsigned int removedElemIdx = 0;
-   unsigned int elemsCount = m_elements.size();
-   for (unsigned int i = 0; i < elemsCount; ++i)
+   for (ElementsArray::iterator it = m_elements.begin();
+        it != m_elements.end(); ++it, ++removedElemIdx)
    {
-      if (&elem == m_elements[i]->elem) 
+      if (&elem == (*it)->elem) 
       {
-         treeElem = m_elements[i];
-         m_elements[i] = NULL;
-         removedElemIdx = i;
-         m_freePos.push(i);
+         treeElem =(*it);
          break;
       }
    }
@@ -187,7 +178,9 @@ void DynamicOctree<Elem>::remove(Elem& elem)
       unsigned int idx = sectorElems.find(removedElemIdx);
       if (idx != EOA) {sectorElems.remove(idx);}
    }
+
    delete treeElem;
+   m_elements[removedElemIdx] = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,6 +189,14 @@ template<typename Elem>
 DynamicOctree<Elem>::TreeElem::TreeElem(Elem* _elem)
 : elem(_elem)
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename Elem>
+DynamicOctree<Elem>::TreeElem::~TreeElem()
+{
+   elem = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

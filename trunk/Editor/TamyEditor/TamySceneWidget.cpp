@@ -1,7 +1,12 @@
 #include "TamySceneWidget.h"
-#include "core\WindowMessagesProcessor.h"
+#include "core.h"
+#include "core-AppFlow.h"
+#include "core-Scene.h"
+#include "core-Renderer.h"
+#include "ext-RendererView.h"
 #include <stdexcept>
 #include <QEvent.h>
+#include "tamyeditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +22,24 @@ namespace // anonymous
       }
    };
 
+   // -------------------------------------------------------------------------
+
+   class RendererUpdater : public TimeDependent
+   {
+   private:
+      Renderer& m_renderer;
+
+   public:
+      RendererUpdater(Renderer& renderer)
+      : m_renderer(renderer)
+      {}
+
+      void update(float timeElapsed)
+      {
+         m_renderer.render();
+      }
+   };
+
 } // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,19 +49,61 @@ TamySceneWidget::TamySceneWidget(QWidget* parent,
 : QWidget(parent, f)
 , m_winMsgProcessor(new NullWindowMessagesProcessor())
 , m_activeWinMsgProcessor(m_winMsgProcessor)
+, m_keysStatusManager(NULL)
+, m_renderer(NULL)
+, m_graphicalFactory(NULL)
+, m_renderView(NULL)
 {
    m_hWnd = static_cast<HWND> (winId());
    memset(m_keyBuffer, 0, sizeof(unsigned char) * 256);
 
    setFocusPolicy(Qt::ClickFocus);
+
+   m_keysStatusManager = new KeysStatusManager(*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TamySceneWidget::~TamySceneWidget()
 {
+   delete m_keysStatusManager; m_keysStatusManager = NULL;
+   delete m_renderView; m_renderView = NULL;
+
    delete m_winMsgProcessor; m_winMsgProcessor = NULL;
    m_activeWinMsgProcessor = NULL;
+
+   m_renderer = NULL;
+   m_graphicalFactory = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::initialize(TamyEditor& mgr)
+{
+   mgr.addToMainWidget(this);
+
+   // obtain required services
+   m_renderer = &(mgr.requestService<Renderer>());
+   m_graphicalFactory = &(mgr.requestService<GraphicalEntitiesFactory>());
+
+   // initialize subsystems
+   m_renderView = new RendererView::RendererView(*m_graphicalFactory, *m_renderer);
+
+   TimeController& timeController = mgr.requestService<TimeController> ();
+   timeController.add("rendering");
+   timeController.get("rendering").add(new TTimeDependent<RendererView::RendererView> (*m_renderView));
+   timeController.get("rendering").add(new RendererUpdater(*m_renderer));
+   timeController.add("input");
+   timeController.get("input").add(new TTimeDependent<UserInputController> (*this));
+   timeController.get("input").add(new TTimeDependent<KeysStatusManager> (*m_keysStatusManager));
+
+   Model& scene = mgr.requestService<Model> ();
+   scene.attach(*m_renderView);
+
+   // register new services
+   mgr.registerService<Camera> (m_renderView->camera());
+   mgr.registerService<KeysStatusManager> (*m_keysStatusManager);
+   mgr.registerService<UserInputController> (*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

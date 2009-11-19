@@ -29,10 +29,3 @@
 #include "core-ResourceManagement\StaticGeometryLoader.h"
 #include "core-ResourceManagement\StaticGeometry.h"
 #include "core-ResourceManagement\MeshHierarchyFlattener.h"
-
-// ----------------------------------------------------------------------------
-// SingletonsManager
-// ----------------------------------------------------------------------------
-#include "core-ResourceManagement\Managable.h"
-#include "core-ResourceManagement\SingletonsManager.h"
-

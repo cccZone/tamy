@@ -1,12 +1,15 @@
 #pragma once
 
+/// @file   core\Stack
+/// @brief  simple stack implementation
+
 #include <stdio.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This is an extremally simple implementation of a stack
+ * This is an extremely simple implementation of a stack.
  */
 template<typename T>
 struct Stack
@@ -17,7 +20,14 @@ private:
    {
       T elem;
       StackSeg* prev;
+
       StackSeg() : elem(NULL), prev(NULL) {}
+
+      StackSeg(const StackSeg& rhs) 
+      : elem(rhs.elem)
+      , prev(new StackSeg(*(rhs.prev))) 
+      {}
+
       ~StackSeg() {delete prev; prev = NULL; elem = NULL;}
    };
 
@@ -26,6 +36,7 @@ private:
 
 public:
    Stack() : top(NULL) {}
+   Stack(const Stack& rhs) : top(new StackSeg<T>(*(rhs.top))) {}
    ~Stack() {delete top; top = NULL;}
 
    void push(T elem)

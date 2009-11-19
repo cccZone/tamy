@@ -277,22 +277,6 @@
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
-			Name="SingletonsManager"
-			>
-			<File
-				RelativePath="..\..\Include\core-ResourceManagement\Managable.h"
-				>
-			</File>
-			<File
-				RelativePath=".\SingletonsManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-ResourceManagement\SingletonsManager.h"
-				>
-			</File>
-		</Filter>
 		<File
 			RelativePath="..\..\Include\core-ResourceManagement.h"
 			>

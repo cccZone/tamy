@@ -259,6 +259,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ConstSizeArrayTests.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GraphTests.cpp"
 				>
 			</File>
@@ -324,6 +328,14 @@
 			>
 			<File
 				RelativePath=".\FilesystemTests.cpp"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="ComponentsSystem"
+			>
+			<File
+				RelativePath=".\ComponentsSystemTests.cpp"
 				>
 			</File>
 		</Filter>
