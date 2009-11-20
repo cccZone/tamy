@@ -45,7 +45,14 @@ private:
    typedef std::vector<ModelView*> Views;
    Views m_views;
 
+   Views m_viewsToAdd;
+   unsigned int m_viewsToRemoveCount;
+
 public:
+   /**
+    * Constructor.
+    */
+   Model();
    ~Model();
 
    // -------------------------------------------------------------------------
@@ -144,6 +151,7 @@ public:
 private:
    void notifyEntityAdded(Entity& entity);
    void notifyEntityRemoved(Entity& entity);
+   void processViewsOperations();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

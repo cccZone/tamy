@@ -39,7 +39,7 @@ struct AABoundingBox : public BoundingVolume
     *
     * @param pt   point we want to bound inside the box
     */
-   void modifyUsing(const D3DXVECTOR3& pt);
+   void include(const D3DXVECTOR3& pt);
 
 protected:
    bool hasVolume() const;

@@ -30,8 +30,8 @@ CameraEntity::CameraEntity(const std::string& name,
 
 void CameraEntity::registerProperties()
 {
-   PROPERTY("m_name", "name", std::string, m_name);
-   PROPERTY("m_situation", "situation", D3DXMATRIX, m_situation);
+   PROPERTY("name", std::string, m_name);
+   PROPERTY("situation", D3DXMATRIX, m_situation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

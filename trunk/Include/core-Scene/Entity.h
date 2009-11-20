@@ -95,6 +95,6 @@ Register##EntityClassName register##EntityClassName;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PROPERTY(name, label, type, variable) properties().add<type>(name, label, variable)
+#define PROPERTY(label, type, variable) properties().add<type>(#variable, label, variable)
 
 ///////////////////////////////////////////////////////////////////////////////

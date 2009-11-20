@@ -6,14 +6,13 @@
 #include "core-Scene\ModelView.h"
 #include "core\GenericFactory.h"
 #include "core\ResourceStorage.h"
-#include "core\LinearStorage.h"
-#include "core\TNodesSpatialStorage.h"
-#include "core\StaticGeometryOctree.h"
+#include "ext-RendererView\SceneManagers.h"
 #include <map>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class GeometryRenderingMechanism;
 class GraphicalEntitiesFactory;
 class Renderer;
 class Material;
@@ -21,10 +20,6 @@ class RenderingTarget;
 class Camera;
 class Texture;
 class AbstractGraphicalEntity;
-class RenderableNode;
-typedef TNodesSpatialStorage<RenderableNode, LinearStorage> DynamicSceneManager;
-class StaticGeometryRenderable;
-typedef StaticGeometryOctree<StaticGeometryRenderable> StaticSceneManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -49,13 +44,21 @@ private:
    Representations m_representations;
 
    RenderingTarget* m_screenTarget;
-   LightsScene* m_lights;
+   ::Camera* m_camera;
+
+   // resource storages
    ResourceStorage<Texture>* m_textures;
    ResourceStorage<::Material>* m_materials;
    ResourceStorage<AbstractGraphicalEntity>* m_dynamicEntities;
+
+   // scene managers
    StaticSceneManager* m_staticGeometry;
    DynamicSceneManager* m_dynamicGeometry;
-   ::Camera* m_camera;
+   LightsScene* m_lights;
+
+   // rendering pipeline components
+   GeometryRenderingMechanism* m_statSceneRenderer;
+   GeometryRenderingMechanism* m_dynSceneRenderer;
 
 public:
    /**
@@ -117,12 +120,26 @@ public:
    ResourceStorage<AbstractGraphicalEntity>& dynamicEntities();
 
    /**
+    * The method sets a new static scene manager, replacing the old one.
+    *
+    * @param mgr  static scene manager instance
+    */
+   void setStaticSceneManager(StaticSceneManager* mgr);
+
+   /**
     * This method gives access to static geometry management system used
     * by this view to aggregate the static geometry comprising the scene.
     *
     * @return  StaticSceneManager instance
     */
    StaticSceneManager& staticGeometry();
+
+   /**
+    * The method sets a new dynamic scene manager, replacing the old one.
+    *
+    * @param mgr  dynamic scene manager instance
+    */
+   void setDynamicSceneManager(DynamicSceneManager* mgr);
 
    /**
     * This method gives access to dynamic geometry management system used

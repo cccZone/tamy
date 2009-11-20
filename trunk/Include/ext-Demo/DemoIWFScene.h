@@ -109,6 +109,8 @@ public:
                           std::vector<MaterialDefinition>& materials,
                           const D3DXMATRIX& situation);
 
+   void onFinish() {}
+
 private:
    Texture* createSkyboxMaterial(const std::string& textureName) const;
 };

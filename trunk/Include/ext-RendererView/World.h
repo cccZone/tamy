@@ -1,18 +1,14 @@
 #pragma once
 
-/// @file   ext-RendererView\StaticGeometry.h
-/// @brief  graphical representation of static geometry
+/// @file   ext-RendererView\World.h
+/// @brief  graphical representation of the world.
 
 #include "ext-RendererView\GraphicalRepresentation.h"
-#include "core\StaticGeometryOctree.h"
-#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct StaticGeometryEntity;
-class GraphicalEntitiesFactory;
-class StaticGeometryRenderable;
+struct WorldEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,28 +18,30 @@ namespace RendererView
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This is a graphical representation of static geometry.
+ * This is a graphical representation of the world - all the data storages
+ * required to contain it etc.
  */
-class StaticGeometry : public GraphicalRepresentation
+class World : public GraphicalRepresentation
 {
 private:
-   StaticGeometryEntity& m_entity;
-   std::vector<SGHandle> m_geometry;
+   WorldEntity& m_entity;
 
 public:
    /**
     * Constructor.
-    *
-    * @param entity     static geometry entity this representation is for
+    * 
+    * @param entity     sky box entity this representation is for
     */
-   StaticGeometry(StaticGeometryEntity& entity);
-   ~StaticGeometry();
+   World(WorldEntity& entity);
+   ~World();
 
    // -------------------------------------------------------------------------
    // GraphicalRepresentation implementation
    // -------------------------------------------------------------------------
    void initialize(RendererView& rendererView);
+
    void deinitialize(RendererView& rendererView);
+
    void update(float timeElapsed);
 };
 

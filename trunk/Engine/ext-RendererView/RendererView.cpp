@@ -28,6 +28,7 @@
 #include "core-Scene\StaticGeometryEntity.h"
 #include "core-Scene\MaterialEntity.h"
 #include "core-Scene\AnimatedCutsceneEntity.h"
+#include "core-Scene\WorldEntity.h"
 
 // graphical representations
 #include "ext-RendererView\Camera.h"
@@ -38,7 +39,21 @@
 #include "ext-RendererView\StaticGeometry.h"
 #include "ext-RendererView\Material.h"
 #include "ext-RendererView\AnimatedCutscene.h"
+#include "ext-RendererView\World.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace // anonymous
+{
+   class NullGeometryStorage : public RenderablesStorage
+   {
+   public:
+      void query(Camera& camera, Array<Renderable*>& outNodes) {}
+   };
+} // anonymous
+
+///////////////////////////////////////////////////////////////////////////////
 
 namespace RendererView
 {
@@ -52,12 +67,18 @@ RendererView::RendererView(GraphicalEntitiesFactory& factory,
 , m_lights(new LightsScene())
 , m_textures(new ResourceStorage<Texture>())
 , m_materials(new ResourceStorage<::Material>())
-, m_dynamicEntities(new ResourceStorage<AbstractGraphicalEntity>())
-, m_staticGeometry(new StaticSceneManager(AABoundingBox(D3DXVECTOR3(-2000, -2000, -2000), D3DXVECTOR3(2000, 2000, 2000)), 64, 5))
-, m_dynamicGeometry(new DynamicSceneManager(new LinearStorage<RenderableNode>()))
+, m_dynamicEntities(new ResourceStorage<::AbstractGraphicalEntity>())
+, m_staticGeometry(NULL)
+, m_dynamicGeometry(NULL)
 , m_camera(new ::Camera("camera", m_renderer))
 {
    m_screenTarget = m_factory.createDefaultRenderingTarget();
+
+   // default storages
+   AABoundingBox defaultWorldSize(D3DXVECTOR3(-FLT_MAX, -FLT_MAX, -FLT_MAX),
+                                  D3DXVECTOR3(FLT_MAX, FLT_MAX, FLT_MAX));
+   m_staticGeometry = new StaticSceneManager(defaultWorldSize, 0, INT_MAX);
+   m_dynamicGeometry = new DynamicSceneManager(new LinearStorage<RenderableNode>());
 
    // assemble the rendering pipeline
    CompositeRenderingMechanism* mechanism = new CompositeRenderingMechanism();
@@ -76,18 +97,15 @@ RendererView::RendererView(GraphicalEntitiesFactory& factory,
 
 
       RendererImpl* rendererImpl = m_factory.createFixedRendererImpl();
-      GeometryRenderingMechanism* statSceneRenderer = new GeometryRenderingMechanism(statScenePolicy, rendererImpl);
-
-      statSceneRenderer->setActiveCamera(*m_camera);
-
-      statSceneRenderer->setStorage(new SortingRenderablesStorage<StaticGeometryRenderable>(*m_staticGeometry));
+      m_statSceneRenderer = new GeometryRenderingMechanism(statScenePolicy, rendererImpl);
+      m_statSceneRenderer->setActiveCamera(*m_camera);
 
       RenderingActionsComposite* renderingAction = new RenderingActionsComposite();
       renderingAction->addAction(new RenderMaterial());
       if (m_lights != NULL) {renderingAction->addAction(new RenderLights(*m_lights));}
-      statSceneRenderer->setRenderingAction(renderingAction);
+      m_statSceneRenderer->setRenderingAction(renderingAction);
 
-      mechanism->add(statSceneRenderer);
+      mechanism->add(m_statSceneRenderer);
    }
 
    // dynamic objects renderer
@@ -96,18 +114,15 @@ RendererView::RendererView(GraphicalEntitiesFactory& factory,
       statScenePolicy->addTarget(0, *m_screenTarget);
 
       RendererImpl* rendererImpl = m_factory.createFixedRendererImpl();
-      GeometryRenderingMechanism* statSceneRenderer = new GeometryRenderingMechanism(statScenePolicy, rendererImpl);
-
-      statSceneRenderer->setActiveCamera(*m_camera);
-
-      statSceneRenderer->setStorage(new SortingRenderablesStorage<RenderableNode>(*m_dynamicGeometry));
+      m_dynSceneRenderer = new GeometryRenderingMechanism(statScenePolicy, rendererImpl);
+      m_dynSceneRenderer->setActiveCamera(*m_camera);
 
       RenderingActionsComposite* renderingAction = new RenderingActionsComposite();
       renderingAction->addAction(new RenderMaterial());
       if (m_lights != NULL) {renderingAction->addAction(new RenderLights(*m_lights));}
-      statSceneRenderer->setRenderingAction(renderingAction);
+      m_dynSceneRenderer->setRenderingAction(renderingAction);
 
-      mechanism->add(statSceneRenderer);
+      mechanism->add(m_dynSceneRenderer);
    }
 
    m_renderer.setMechanism(mechanism);
@@ -120,7 +135,8 @@ RendererView::RendererView(GraphicalEntitiesFactory& factory,
    .associate<SkyBoxEntity,           SkyBox> ()
    .associate<StaticGeometryEntity,   StaticGeometry> ()
    .associate<MaterialEntity,         Material> ()
-   .associate<AnimatedCutsceneEntity, AnimatedCutscene> ();
+   .associate<AnimatedCutsceneEntity, AnimatedCutscene> ()
+   .associate<WorldEntity,            World> ();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -233,9 +249,39 @@ ResourceStorage<AbstractGraphicalEntity>& RendererView::dynamicEntities()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void RendererView::setStaticSceneManager(StaticSceneManager* mgr)
+{
+   if (mgr == NULL)
+   {
+      throw std::invalid_argument("NULL pointer instead a StaticSceneManager instance");
+   }
+
+   delete m_staticGeometry;
+   m_staticGeometry = mgr;
+
+   m_statSceneRenderer->setStorage(new SortingRenderablesStorage<StaticGeometryRenderable>(*m_staticGeometry));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 StaticSceneManager& RendererView::staticGeometry()
 {
    return *m_staticGeometry;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RendererView::setDynamicSceneManager(DynamicSceneManager* mgr)
+{
+   if (mgr == NULL)
+   {
+      throw std::invalid_argument("NULL pointer instead a DynamicSceneManager instance");
+   }
+
+   delete m_dynamicGeometry;
+   m_dynamicGeometry = mgr;
+
+   m_dynSceneRenderer->setStorage(new SortingRenderablesStorage<RenderableNode>(*m_dynamicGeometry));
 }
 
 ///////////////////////////////////////////////////////////////////////////////

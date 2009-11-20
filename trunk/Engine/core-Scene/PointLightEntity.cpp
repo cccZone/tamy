@@ -46,15 +46,15 @@ PointLightEntity::PointLightEntity(const std::string& name,
 
 void PointLightEntity::registerProperties()
 {
-   PROPERTY("m_name", "name", std::string, m_name);
-   PROPERTY("m_situation", "position", D3DXVECTOR3, m_situation);
-   PROPERTY("m_ambient", "ambient", Color, m_ambient);
-   PROPERTY("m_diffuse", "diffuse", Color, m_diffuse);
-   PROPERTY("m_specular", "specular", Color, m_specular);
-   PROPERTY("m_range", "range", float, m_range);
-   PROPERTY("m_constAtt", "attenuation: constant", float, m_constAtt);
-   PROPERTY("m_linearAtt", "attenuation: linear", float, m_linearAtt);
-   PROPERTY("m_quadAtt", "attenuation: quadratic", float, m_quadAtt);
+   PROPERTY("name", std::string, m_name);
+   PROPERTY("position", D3DXVECTOR3, m_situation);
+   PROPERTY("ambient", Color, m_ambient);
+   PROPERTY("diffuse", Color, m_diffuse);
+   PROPERTY("specular", Color, m_specular);
+   PROPERTY("range", float, m_range);
+   PROPERTY("attenuation: constant", float, m_constAtt);
+   PROPERTY("attenuation: linear", float, m_linearAtt);
+   PROPERTY("attenuation: quadratic", float, m_quadAtt);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

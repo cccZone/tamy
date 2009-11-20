@@ -308,6 +308,18 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="World"
+				>
+				<File
+					RelativePath=".\WorldEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core-Scene\WorldEntity.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Properties"

@@ -32,8 +32,7 @@ public:
     * @param outRenderables   the method will fill this array with renderables
     *                         it finds
     */
-   virtual void query(Camera& camera,
-                      Array<Renderable*>& outNodes) = 0;
+   virtual void query(Camera& camera, Array<Renderable*>& outNodes) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

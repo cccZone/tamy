@@ -3,6 +3,7 @@
 /// @file   TamyEditor\EntitiesStorageView.h
 /// @brief  spatial storage for model entities
 
+#include "SceneQueriesModelRepresentation.h"
 #include "core-Scene\ModelView.h"
 #include "core\SpatialStorage.h"
 #include "core\RegularOctree.h"
@@ -11,6 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class SpatiallyQueryable;
+struct WorldEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,26 +22,19 @@ class SpatiallyQueryable;
  * in a spatially-oriented manner (i.e. bounding volume queries).
  */
 class EntitiesStorageView : public ModelView, 
-                            public SpatialStorage<SpatiallyQueryable>
+                            public SpatialStorage<SpatiallyQueryable>,
+                            public SceneQueriesModelRepresentation
 {
 private:
+   WorldEntity& m_entity;
    RegularOctree<SpatiallyQueryable>* m_storage;
 
 public:
    /**
     * Constructor.
     *
-    * @param treeBB              bounding box of the entire tree
-    * @param maxElemsPerSector   maximum elements per sector. If there are more 
-    *                            elements in a given sector than this value,
-    *                            the sector gets subdivided, unless the sector
-    *                            is located at the depth == maxTreeDepth.
-    * @param maxTreeDepth        maximum depth of the tree
-    * @param initDepth           initial depth to which the tree should be 
     */
-   EntitiesStorageView(const AABoundingBox& treeBB, 
-                       unsigned int maxElemsPerSector = 64,
-                       unsigned int maxTreeDepth = 5);
+   EntitiesStorageView(WorldEntity& entity);
    ~EntitiesStorageView();
 
    // -------------------------------------------------------------------------
@@ -54,6 +49,13 @@ public:
    void onEntityAdded(Entity& entity);
 
    void onEntityRemoved(Entity& entity);
+
+   // -------------------------------------------------------------------------
+   // SceneQueriesModelRepresentation implementation
+   // -------------------------------------------------------------------------
+   void initialize(SceneQueries& parent);
+
+   void deinitialize(SceneQueries& parent);
 
 protected:
    void resetContents();

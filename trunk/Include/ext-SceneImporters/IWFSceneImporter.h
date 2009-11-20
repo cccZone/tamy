@@ -5,11 +5,14 @@
 
 #include <string>
 #include "core-ResourceManagement\IWFScene.h"
+#include "core\AABoundingBox.h"
+#include <list>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Model;
+class Entity;
 struct MeshDesc;
 struct MaterialEntity;
 
@@ -22,6 +25,11 @@ class IWFSceneImporter : public IWFScene
 {
 private:
    Model& m_scene;
+
+   AABoundingBox m_worldDimensions;
+
+   typedef std::list<Entity*> Entities;
+   Entities m_entities;
 
 public:
    /**
@@ -58,6 +66,8 @@ public:
    void addStaticGeometry(MeshDefinition& mesh, 
                           std::vector<MaterialDefinition>& materials,
                           const D3DXMATRIX& situation);
+
+   void onFinish();
 
 private:
    void adaptMesh(MeshDefinition& inMesh, MeshDesc& outMesh);

@@ -19,10 +19,12 @@ StaticGeometryEntity::StaticGeometryEntity()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-StaticGeometryEntity::StaticGeometryEntity(const std::vector<MeshDesc*> meshes,
+StaticGeometryEntity::StaticGeometryEntity(const std::string& name,
+                                           const std::vector<MeshDesc*> meshes,
                                            const D3DXMATRIX& situation)
 : INIT_ENTITY(StaticGeometryEntity)
 , m_meshes(meshes)
+, m_name(name)
 , m_situation(situation)
 , m_localBoundingVol(AABoundingBox())
 {
@@ -47,7 +49,8 @@ StaticGeometryEntity::~StaticGeometryEntity()
 
 void StaticGeometryEntity::registerProperties()
 {
-   PROPERTY("m_situation", "situation", D3DXMATRIX, m_situation);
+   PROPERTY("name", std::string, m_name);
+   PROPERTY("situation", D3DXMATRIX, m_situation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,6 +81,8 @@ const Array<Triangle*>& StaticGeometryEntity::getBoundingGeometry()
 
 void StaticGeometryEntity::save(Serializer& serializer)
 {
+   serializer.saveString(m_name);
+
    unsigned int count = m_meshes.size();
    serializer.saveInt(count);
    for (unsigned int i = 0; i < count; ++i)
@@ -92,6 +97,8 @@ void StaticGeometryEntity::save(Serializer& serializer)
 
 void StaticGeometryEntity::load(Serializer& serializer)
 {
+   serializer.loadString(m_name);
+
    unsigned int count = serializer.loadInt();
    for (unsigned int i = 0; i < count; ++i)
    {
@@ -143,9 +150,9 @@ void StaticGeometryEntity::calculateGeometry()
          m_geometry.push_back(new Triangle(v1, v2, v3));
 
          // calculate geometry bounds
-         m_localBoundingVol.modifyUsing(v1);
-         m_localBoundingVol.modifyUsing(v2);
-         m_localBoundingVol.modifyUsing(v3);
+         m_localBoundingVol.include(v1);
+         m_localBoundingVol.include(v2);
+         m_localBoundingVol.include(v3);
       }
    }
 }

@@ -91,6 +91,7 @@ void IWFLoader::load(Filesystem& filesystem, const std::string& fileName)
 
    // cleanup
    sceneFile.ClearObjects();
+   m_scene.onFinish();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

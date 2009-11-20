@@ -137,6 +137,58 @@ namespace // anonymous
    };
 
    // -------------------------------------------------------------------------
+
+   class ViewsCreatingViewMock : public ModelView
+   {
+   private:
+      typedef std::map<Entity*, ModelView*> Views;
+      Views m_views;
+
+      Model& m_model;
+
+   public:
+      ViewsCreatingViewMock(Model& model) : m_model(model) {}
+
+      ~ViewsCreatingViewMock()
+      {
+         resetContents();
+      }
+
+      void onEntityAdded(Entity& entity) 
+      {
+         Views::iterator it = m_views.find(&entity);
+         if (it == m_views.end())
+         {
+            ModelView* newView = new ViewMock();
+            m_model.attach(*newView);
+
+            m_views.insert(std::make_pair(&entity, newView));
+         }
+      }
+
+      void onEntityRemoved(Entity& entity) 
+      {
+         Views::iterator it = m_views.find(&entity);
+         if (it != m_views.end())
+         {
+            delete it->second;
+            m_views.erase(it);
+         }
+      }
+
+   protected:
+      void resetContents()
+      {
+         for (Views::iterator it = m_views.begin();
+            it != m_views.end(); ++it)
+         {
+            delete it->second;
+         }
+         m_views.clear();
+      }
+   };
+
+   // -------------------------------------------------------------------------
    
    class ProgressObserverMock : public Model::ProgressObserver
    {
@@ -250,6 +302,7 @@ TEST(Model, attachingAndDetachingViews)
    ViewMock* view = new ViewMock();
 
    model->attach(*view);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, model->getViewsCount());
 
    // let's remove the view without explicitly detaching it
    // from the model and see if model-view link is properly
@@ -267,8 +320,11 @@ TEST(Model, attachingAndDetachingViews)
    // deleted ok.
    view = new ViewMock();
    model->attach(*view);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, model->getViewsCount());
+
    delete model;
    CPPUNIT_ASSERT_EQUAL(false, view->isAttachedToModel());
+
    delete view;
    
    // if it hasn't crashed till this point, means that every thing's a-OK :).
@@ -303,6 +359,28 @@ TEST(Model, reattachingViewBetweenModels)
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, model2.getViewsCount());
    CPPUNIT_ASSERT_EQUAL(true, view.isAttachedToModel());
    CPPUNIT_ASSERT_EQUAL(2, view.getEntitiesObserved());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST(Model, nestedViews)
+{
+   Model* model = new Model();
+   
+   ViewsCreatingViewMock view(*model);
+   model->attach(view);
+
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, model->getViewsCount());
+
+   EntityAMock entity1(10);
+   model->add(&entity1);
+   model->add(new EntityAMock(10));
+   CPPUNIT_ASSERT_EQUAL((unsigned int)3, model->getViewsCount());
+
+   model->remove(entity1, false);
+   CPPUNIT_ASSERT_EQUAL((unsigned int)2, model->getViewsCount());
+   
+   delete model;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

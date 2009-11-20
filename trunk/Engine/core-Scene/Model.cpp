@@ -19,14 +19,31 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Model::Model()
+: m_viewsToRemoveCount(0)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Model::~Model() 
 {
-   unsigned int viewsCount = m_views.size();
-   for (unsigned int i = 0; i < viewsCount; ++i)
+   unsigned int count = m_views.size();
+   for (unsigned int i = 0; i < count; ++i)
    {
-      m_views[i]->onDetachedFromModel();
+      if (m_views[i] != NULL)
+      {
+         m_views[i]->onDetachedFromModel();
+      }
    }
    m_views.clear();
+
+   count = m_viewsToAdd.size();
+   for (unsigned int i = 0; i < count; ++i)
+   {
+      m_viewsToAdd[i]->onDetachedFromModel();
+   }
+   m_viewsToAdd.clear();
 
    clear();
 }
@@ -144,7 +161,7 @@ Entity& Model::getEntity(unsigned int idx)
 
 void Model::attach(ModelView& view)
 {
-   m_views.push_back(&view);
+   m_viewsToAdd.push_back(&view);
    view.onAttachedToModel(*this);
 
    // notify the view about all entities
@@ -162,7 +179,42 @@ void Model::detach(ModelView& view)
    Views::iterator it = std::find(m_views.begin(), m_views.end(), &view);
    if (it != m_views.end())
    {
-      m_views.erase(it);
+      *it = NULL;
+      ++m_viewsToRemoveCount;
+   }
+
+   // we may be trying to remove the view we just added
+   it = std::find(m_viewsToAdd.begin(), m_viewsToAdd.end(), &view);
+   if (it != m_viewsToAdd.end())
+   {
+      m_viewsToAdd.erase(it);
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Model::processViewsOperations()
+{
+   // remove obsolete view
+   for (Views::iterator it = m_views.begin();
+        (it != m_views.end()) && (m_viewsToRemoveCount > 0);)
+   {
+      if (*it == NULL)
+      {
+         it = m_views.erase(it);
+         --m_viewsToRemoveCount;
+      }
+      else
+      {
+         ++it;
+      }
+   }
+
+   // add new views
+   if (m_viewsToAdd.empty() == false)
+   {
+      m_views.insert(m_views.end(), m_viewsToAdd.begin(), m_viewsToAdd.end());
+      m_viewsToAdd.clear();
    }
 }
 
@@ -170,29 +222,43 @@ void Model::detach(ModelView& view)
 
 void Model::notifyEntityAdded(Entity& entity)
 {
+   processViewsOperations();
+
    unsigned int count = m_views.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      m_views[i]->onEntityAdded(entity);
+      if (m_views[i] != NULL)
+      {
+         m_views[i]->onEntityAdded(entity);
+      }
    }
+
+   processViewsOperations();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Model::notifyEntityRemoved(Entity& entity)
 {
+   processViewsOperations();
+   
    unsigned int count = m_views.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      m_views[i]->onEntityRemoved(entity);
+      if (m_views[i] != NULL)
+      {
+         m_views[i]->onEntityRemoved(entity);
+      }
    }
+
+   processViewsOperations();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 unsigned int Model::getViewsCount() const
 {
-   return m_views.size();
+   return m_views.size() + m_viewsToAdd.size() - m_viewsToRemoveCount;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

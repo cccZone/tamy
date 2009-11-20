@@ -21,6 +21,7 @@ struct StaticGeometryEntity : public Entity, public SpatiallyQueryable
 {
 public:
    std::vector<MeshDesc*> m_meshes;
+   std::string m_name;
    D3DXMATRIX m_situation;
 
 private:
@@ -37,11 +38,12 @@ public:
    /**
     * Constructor.
     *
-    * @param mesh
-    * @param materials
+    * @param name
+    * @param meshes
     * @param situation
     */
-   StaticGeometryEntity(const std::vector<MeshDesc*> meshes,
+   StaticGeometryEntity(const std::string& name,
+                        const std::vector<MeshDesc*> meshes,
                         const D3DXMATRIX& situation);
    ~StaticGeometryEntity();
 

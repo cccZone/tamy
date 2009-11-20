@@ -160,6 +160,10 @@
 				RelativePath="..\..\Include\ext-RendererView\RendererView.h"
 				>
 			</File>
+			<File
+				RelativePath="..\..\Include\ext-RendererView\SceneManagers.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Representations"
@@ -253,6 +257,18 @@
 				</File>
 				<File
 					RelativePath="..\..\Include\ext-RendererView\AnimatedCutscene.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="World"
+				>
+				<File
+					RelativePath=".\World.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\ext-RendererView\World.h"
 					>
 				</File>
 			</Filter>

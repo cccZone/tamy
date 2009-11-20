@@ -99,6 +99,11 @@ public:
    virtual void addStaticGeometry(MeshDefinition& mesh, 
                                   std::vector<MaterialDefinition>& materials,
                                   const D3DXMATRIX& situation) = 0;
+
+   /**
+    * The method will be called when the loading process is finished.
+    */
+   virtual void onFinish() = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

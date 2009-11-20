@@ -91,7 +91,7 @@ void AnimatedCutscene::deinitialize(RendererView& rendererView)
 void AnimatedCutscene::update(float timeElapsed)
 {
    if (m_animation == NULL) {return;}
-   m_animation->setPosition(m_entity.m_animationName, timeElapsed);
+   // TODO:
 }
 
 ///////////////////////////////////////////////////////////////////////////////

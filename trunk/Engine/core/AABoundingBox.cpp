@@ -8,8 +8,8 @@
 
 AABoundingBox::AABoundingBox()
 {
-   min = D3DXVECTOR3(99999999.f, 99999999.f, 99999999.f);
-   max = D3DXVECTOR3(-99999999.f, -99999999.f, -99999999.f);
+   min = D3DXVECTOR3(FLT_MAX, FLT_MAX, FLT_MAX);
+   max = D3DXVECTOR3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -132,7 +132,7 @@ bool AABoundingBox::hasVolume() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AABoundingBox::modifyUsing(const D3DXVECTOR3& pt)
+void AABoundingBox::include(const D3DXVECTOR3& pt)
 {
    for (char i = 0; i < 3; ++i)
    {

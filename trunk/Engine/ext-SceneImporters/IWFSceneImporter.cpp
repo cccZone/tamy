@@ -10,6 +10,7 @@
 #include "core-Scene\MeshDesc.h"
 #include "core-Scene\MaterialEntity.h"
 #include "core-Scene\AnimatedCutsceneEntity.h"
+#include "core-Scene\WorldEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,12 +32,13 @@ void IWFSceneImporter::addLight(const std::string& name,
                                 float fallOff, float theta, float phi,
                                 const D3DXMATRIX& situation)
 {
+   D3DXVECTOR3 pos(situation._41, situation._42, situation._43);
+
    switch(lightType)
    {
    case LT_POINT:
       {
-         D3DXVECTOR3 pos(situation._41, situation._42, situation._43);
-         m_scene.add(new PointLightEntity(name, 
+         m_entities.push_back(new PointLightEntity(name, 
                                           ambient, diffuse, specular, 
                                           range, constAtt, linearAtt, quadAtt, 
                                           pos));
@@ -45,7 +47,7 @@ void IWFSceneImporter::addLight(const std::string& name,
 
    case LT_SPOT:
       {
-         m_scene.add(new SpotLightEntity(name, 
+         m_entities.push_back(new SpotLightEntity(name, 
                                          ambient, diffuse, specular, 
                                          range, constAtt, linearAtt, quadAtt, 
                                          fallOff, theta, phi,
@@ -56,12 +58,15 @@ void IWFSceneImporter::addLight(const std::string& name,
    case LT_DIRECTIONAL: // fall through
    default:
       {
-         m_scene.add(new DirectionalLightEntity(name, 
+         m_entities.push_back(new DirectionalLightEntity(name, 
                                                 ambient, diffuse, specular, 
                                                 situation));
          break;
       }
    }
+
+   // include light's position in world's dimensions
+   m_worldDimensions.include(pos);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -73,7 +78,7 @@ void IWFSceneImporter::addSkyBox(const std::string& frontTex,
                                  const std::string& topTex,
                                  const std::string& bottomTex)
 {
-   m_scene.add(new SkyBoxEntity(frontTex, backTex, leftTex, 
+   m_entities.push_back(new SkyBoxEntity(frontTex, backTex, leftTex, 
                                 rightTex, topTex, bottomTex));
 }
 
@@ -82,7 +87,11 @@ void IWFSceneImporter::addSkyBox(const std::string& frontTex,
 void IWFSceneImporter::addDynamicMesh(const std::string& meshFileName, 
                                       const D3DXMATRIX& situation)
 {
-   m_scene.add(new AnimatedCutsceneEntity(meshFileName, "unnamedAnim0", situation));
+   m_entities.push_back(new AnimatedCutsceneEntity(meshFileName, "unnamedAnim0", situation));
+
+   // include object's position in world's dimensions
+   D3DXVECTOR3 pos(situation._41, situation._42, situation._43);
+   m_worldDimensions.include(pos);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,7 +108,7 @@ void IWFSceneImporter::addStaticGeometry(MeshDefinition& mesh,
       MaterialEntity* materialEntity = new MaterialEntity();
 
       adaptMaterial(materials[i], *materialEntity);
-      m_scene.add(materialEntity);
+      m_entities.push_back(materialEntity);
    }
 
    // extract and convert meshes
@@ -123,7 +132,21 @@ void IWFSceneImporter::addStaticGeometry(MeshDefinition& mesh,
 
       meshDescs.push_back(newMesh);
    }
-   m_scene.add(new StaticGeometryEntity(meshDescs, situation));
+   m_entities.push_back(new StaticGeometryEntity(mesh.name.c_str(), meshDescs, situation));
+
+
+   // include meshes in world's dimensions
+   D3DXVECTOR3 vtxWorldPos;
+   for (unsigned int meshIdx = 0; meshIdx < meshesCount; ++meshIdx)
+   {
+      const std::vector<LitVertex>& vertices = meshDescs[meshIdx]->m_vertices;
+      unsigned int verticesCount = vertices.size();
+      for (unsigned int vtxIdx = 0; vtxIdx < verticesCount; ++vtxIdx)
+      {
+         D3DXVec3TransformCoord(&vtxWorldPos, &(vertices[vtxIdx].m_coords), &situation);
+         m_worldDimensions.include(vtxWorldPos);
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -168,6 +191,23 @@ void IWFSceneImporter::adaptMaterial(MaterialDefinition& inMat,
    outMat.m_alphaArg1 = inMat.alphaArg1;
    outMat.m_alphaArg2 = inMat.alphaArg2;
    outMat.m_coordsOp = inMat.coordsOp;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void IWFSceneImporter::onFinish()
+{
+   // add an entity with the world dimensions
+   m_scene.add(new WorldEntity(m_worldDimensions));
+   m_worldDimensions = AABoundingBox();
+
+   // add all created entities
+   for (Entities::iterator it = m_entities.begin();
+        it != m_entities.end(); ++it)
+   {
+      m_scene.add(*it);
+   }
+   m_entities.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
