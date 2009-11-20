@@ -3,6 +3,8 @@
 /// @file   core-Scene\Property.h
 /// @brief  generic property interface
 
+#include <string>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,10 +27,33 @@ template <typename T>
 class TProperty : public Property
 {
 private:
+   std::string m_name;
+   std::string m_label;
    T& m_val;
 
 public:
-   TProperty(T& val) : m_val(val) {}
+   TProperty(T& val, 
+             const std::string& name, 
+             const std::string& label) 
+   : m_val(val)
+   , m_name(name)
+   , m_label(label)
+   {}
+
+   /**
+    * This method returns the name assigned to this property.
+    *
+    * @return  property name
+    */
+   const std::string& getName() const {return m_name;}
+
+   /**
+    * This method returns a label under which the property should
+    * be advertised (in editor i.e.)
+    *
+    * @return  property label
+    */
+   const std::string& getLabel() const {return m_label;}
 
    /**
     * Sets new property value.

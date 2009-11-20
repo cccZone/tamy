@@ -2,16 +2,17 @@
 #include "core\Ray.h"
 #include "core-Renderer\Camera.h"
 #include "core-Scene\Entity.h"
+#include "PropertiesEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SelectEntityCommand::SelectEntityCommand(Camera& camera,
                                          QueryableScene& scene, 
-                                         const Output& selectEntity)
+                                         PropertiesEditor& editor)
 : m_camera(camera)
 , m_scene(scene)
-, m_selectEntity(selectEntity)
+, m_editor(editor)
 {
 }
 
@@ -24,10 +25,26 @@ void SelectEntityCommand::execute(const D3DXVECTOR2& mousePos)
    Array<SpatiallyQueryable*> objects;
    m_scene.query(queryRay, objects);
 
-   SpatiallyQueryable* closestObject = findClosest(queryRay, objects);
-   Entity* closestEntity = dynamic_cast<Entity*> (closestObject);
+   if (objects.size() == 0) 
+   {
+      m_editor.resetSelection();
+   }
+   else
+   {
+      SpatiallyQueryable* closestObject = findClosest(queryRay, objects);
+      if (closestObject == NULL)
+      {
+         throw std::logic_error("Error finding the closest object");
+      }
 
-   m_selectEntity(*closestEntity);
+      Entity* closestEntity = dynamic_cast<Entity*> (closestObject);
+      if (closestEntity == NULL)
+      {
+         throw std::logic_error("Closest object is not an entity");
+      }
+
+      m_editor.selectEntity(*closestEntity);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

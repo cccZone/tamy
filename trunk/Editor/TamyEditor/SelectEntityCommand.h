@@ -14,6 +14,7 @@
 class Entity;
 class Camera;
 struct Ray;
+class PropertiesEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,13 +23,11 @@ struct Ray;
  */
 class SelectEntityCommand : public CameraCommand
 {
-public:
-   typedef Delegate<void (Entity&)> Output;
 
 private:
    Camera& m_camera;
    QueryableScene& m_scene;
-   Output m_selectEntity;
+   PropertiesEditor& m_editor;
 
 public:
    /**
@@ -36,12 +35,12 @@ public:
     *
     * @param camera        camera that shows the scene
     * @param scene         scene we want to query
-    * @param selectEntity  output interface that will be informed about
-    *                      the selected entity
+    * @param editor        properties editor that will edit the selected 
+    *                      properties
     */
    SelectEntityCommand(Camera& camera,
                        QueryableScene& scene, 
-                       const Output& selectEntity);
+                       PropertiesEditor& editor);
 
    // -------------------------------------------------------------------------
    // MousePointerCommand implementation

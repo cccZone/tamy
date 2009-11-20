@@ -23,11 +23,26 @@ public:
    typedef std::map<std::string, Property*> PropsMap;
 
 private:
+   std::string m_entityClassName;
+
    PropsMap m_properties;
    Names m_names;
 
 public:
+   /**
+    * Constructor.
+    *
+    * @param entityClassName  name of the class the properties represent.
+    */
+   Properties(const std::string& entityClassName);
    ~Properties();
+
+   /**
+    * Returns the name of the class the properties represent.
+    *
+    * @return     class name
+    */
+   const std::string& getClassName() const;
 
    /**
     * This method allows to define a new property. All properties
@@ -38,11 +53,13 @@ public:
     * @param T          type of the property we want to define
     * @param id         unique name for the property (good rule of thumb is to
     *                   name the properties after the variables they refer to)
+    * @param label      label under which the property should be advertised 
+    *                   (in editor i.e.)
     * @param propValue  variable that holds the property value and that will
     *                   be edited by this property
     */
    template <typename T>
-   void add(const std::string& id, T& propVal);
+   void add(const std::string& id, const std::string& label, T& propVal);
 
    /**
     * This method allows to verify if a property with the given name exists.

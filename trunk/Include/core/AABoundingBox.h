@@ -33,6 +33,14 @@ struct AABoundingBox : public BoundingVolume
    bool testCollision(const Triangle& rhs) const;
    bool testCollision(const BoundingVolume& rhs) const {return rhs.testCollision(*this);}
 
+   /**
+    * This method will modify the bounding box such that it includes
+    * the specified point.
+    *
+    * @param pt   point we want to bound inside the box
+    */
+   void modifyUsing(const D3DXVECTOR3& pt);
+
 protected:
    bool hasVolume() const;
 };

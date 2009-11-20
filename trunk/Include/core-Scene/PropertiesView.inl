@@ -8,18 +8,18 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
-TPropertiesView<Derrived>::~TPropertiesView() 
+template <typename Derived>
+TPropertiesView<Derived>::~TPropertiesView() 
 {
    reset();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
-void TPropertiesView<Derrived>::set(Properties& properties)
+template <typename Derived>
+void TPropertiesView<Derived>::set(Properties& properties)
 {
-   Derrived* thisDerrived = dynamic_cast<Derrived*> (this);
+   Derived* thisDerived = dynamic_cast<Derived*> (this);
 
    const Properties::Names& names = properties.getNames();
    for (Properties::Names::const_iterator it = names.begin();
@@ -28,31 +28,42 @@ void TPropertiesView<Derrived>::set(Properties& properties)
       Property& property = properties.get(*it);
 
       PropertyEditor* editor = create(property);
-      TPropertyEditor<Derrived>* editorWithProperType = dynamic_cast<TPropertyEditor<Derrived>*> (editor);
+      if (editor == NULL)
+      {
+         continue;
+      }
+
+      TPropertyEditor<Derived>* editorWithProperType = dynamic_cast<TPropertyEditor<Derived>*> (editor);
       if (editorWithProperType == NULL)
       {
          delete editor;
          throw std::runtime_error("Editors must be specialized to a specific view type");
       }
 
-      editorWithProperType->initialize(*thisDerrived);
+      editorWithProperType->initialize(*thisDerived);
       m_editors.push_back(editor);
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
-void TPropertiesView<Derrived>::reset()
+template <typename Derived>
+void TPropertiesView<Derived>::reset()
 {
-   Derrived* thisDerrived = dynamic_cast<Derrived*> (this);
+   Derived* thisDerived = dynamic_cast<Derived*> (this);
 
    unsigned int count = m_editors.size();
    for (unsigned int i = 0; i < count; ++i)
    {
       PropertyEditor* editor = m_editors[i];
-      TPropertyEditor<Derrived>* editorWithProperType = dynamic_cast<TPropertyEditor<Derrived>*> (editor);
-      editorWithProperType->deinitialize(*thisDerrived);
+      TPropertyEditor<Derived>* editorWithProperType = dynamic_cast<TPropertyEditor<Derived>*> (editor);
+
+      if (thisDerived != NULL)
+      {
+         // deinitialize only if the derived view still exists
+         // (which it may not if it's actually undergoing the destruction process)
+         editorWithProperType->deinitialize(*thisDerived);
+      }
 
       delete editor;
    }
@@ -61,8 +72,8 @@ void TPropertiesView<Derrived>::reset()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
-unsigned int TPropertiesView<Derrived>::getEditorsCount() const
+template <typename Derived>
+unsigned int TPropertiesView<Derived>::getEditorsCount() const
 {
    return m_editors.size();
 }

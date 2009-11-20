@@ -2,6 +2,7 @@
 #include "core-Scene\Properties.h"
 #include "core\Triangle.h"
 #include <stdexcept>
+#include <typeinfo>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,7 +63,8 @@ Properties& Entity::properties()
 {
    if (m_properties == NULL)
    {
-      m_properties = new Properties();
+      std::string className = typeid(*this).name();
+      m_properties = new Properties(className);
       registerProperties();
    }
 

@@ -11,11 +11,11 @@ class SingletonsManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
+template <typename Derived>
 class ComponentsManager
 {
 private:
-   std::vector<Component<Derrived>*> m_comps;
+   std::vector<Component<Derived>*> m_comps;
    SingletonsManager* m_services;
 
 public:
@@ -30,7 +30,7 @@ public:
     * 
     * @param component     component we want to add.
     */
-   void add(Component<Derrived>* component);
+   void add(Component<Derived>* component);
 
    /**
     * Returns the number of registered components.

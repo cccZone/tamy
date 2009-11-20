@@ -8,16 +8,16 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
-ComponentsManager<Derrived>::ComponentsManager() 
+template <typename Derived>
+ComponentsManager<Derived>::ComponentsManager() 
 : m_services(new SingletonsManager())
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
-ComponentsManager<Derrived>::~ComponentsManager() 
+template <typename Derived>
+ComponentsManager<Derived>::~ComponentsManager() 
 {
    unsigned int count = m_comps.size();
    for (unsigned int i = 0; i < count; ++i)
@@ -31,12 +31,12 @@ ComponentsManager<Derrived>::~ComponentsManager()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
-void ComponentsManager<Derrived>::add(Component<Derrived>* component)
+template <typename Derived>
+void ComponentsManager<Derived>::add(Component<Derived>* component)
 {
    try
    {
-      component->initialize(*(dynamic_cast<Derrived*> (this)));
+      component->initialize(*(dynamic_cast<Derived*> (this)));
    }
    catch (std::exception&)
    {
@@ -48,9 +48,9 @@ void ComponentsManager<Derrived>::add(Component<Derrived>* component)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
+template <typename Derived>
 template <typename T>
-void ComponentsManager<Derrived>::registerService(T& service)
+void ComponentsManager<Derived>::registerService(T& service)
 {
    bool result = m_services->setShared<T> (service);
    if (result == false)
@@ -61,17 +61,17 @@ void ComponentsManager<Derrived>::registerService(T& service)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
+template <typename Derived>
 template <typename T>
-T& ComponentsManager<Derrived>::requestService()
+T& ComponentsManager<Derived>::requestService()
 {
    return m_services->shared<T> ();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derrived>
-unsigned int ComponentsManager<Derrived>::getComponentsCount() const
+template <typename Derived>
+unsigned int ComponentsManager<Derived>::getComponentsCount() const
 {
    return m_comps.size();
 }

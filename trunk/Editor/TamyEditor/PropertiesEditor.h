@@ -4,6 +4,7 @@
 /// @brief  component for editing entity properties
 
 #include "core\Component.h"
+#include "core-Scene\PropertiesView.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,16 +13,23 @@ class TamyEditor;
 class Entity;
 class QMainWindow;
 class QMenu;
+class QLayout;
+class QWidget;
+class QSpacerItem;
+class QLabel;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * This component is responsible for navigating scene.
  */
-class PropertiesEditor : public Component<TamyEditor>
+class PropertiesEditor : public Component<TamyEditor>, 
+                         public TPropertiesView<PropertiesEditor>
 {
 private:
-   bool m_isUIVisible;
+   QLayout* m_propertiesLayout;
+   QSpacerItem* m_spacer;
+   QLabel* m_entityClassName;
 
 public:
    /**
@@ -30,6 +38,33 @@ public:
    PropertiesEditor();
    ~PropertiesEditor();
 
+   // -------------------------------------------------------------------------
+   // Editor widgets management
+   // -------------------------------------------------------------------------
+   /**
+    * This method adds a new single-property editor widget to the properties
+    * editor window.
+    *
+    * @param editorWidget  widget of the editor we want to add
+    */
+   void addPropertyEditor(QWidget* editorWidget);
+
+   /**
+    * This method removes a single-property editor widget from the properties
+    * editor window.
+    *
+    * @param editorWidget  widget of the editor we want to remove
+    */
+   void removePropertyEditor(QWidget& editorWidget);
+
+   // -------------------------------------------------------------------------
+   // Component implementation
+   // -------------------------------------------------------------------------
+   void initialize(TamyEditor& mgr);
+
+   // -------------------------------------------------------------------------
+   // Selected entities management
+   // -------------------------------------------------------------------------
    /**
     * This method allows to select an entity for edition.
     *
@@ -37,12 +72,13 @@ public:
     */
    void selectEntity(Entity& entity);
 
-   // -------------------------------------------------------------------------
-   // Component implementation
-   // -------------------------------------------------------------------------
-   void initialize(TamyEditor& mgr);
+   /**
+    * Removes the selected entity's properties from the view.
+    */
+   void resetSelection();
 
 private:
+
    void initUI(QMainWindow& mainWindow, QMenu& viewMenu);
 };
 

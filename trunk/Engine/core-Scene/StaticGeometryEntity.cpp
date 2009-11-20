@@ -12,7 +12,7 @@ DEFINE_ENTITY(StaticGeometryEntity);
 
 StaticGeometryEntity::StaticGeometryEntity()
 : INIT_ENTITY(StaticGeometryEntity)
-, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 1))
+, m_localBoundingVol(AABoundingBox())
 {
    D3DXMatrixIdentity(&m_situation);
 }
@@ -24,7 +24,7 @@ StaticGeometryEntity::StaticGeometryEntity(const std::vector<MeshDesc*> meshes,
 : INIT_ENTITY(StaticGeometryEntity)
 , m_meshes(meshes)
 , m_situation(situation)
-, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 1))
+, m_localBoundingVol(AABoundingBox())
 {
    calculateGeometry();
 }
@@ -47,17 +47,17 @@ StaticGeometryEntity::~StaticGeometryEntity()
 
 void StaticGeometryEntity::registerProperties()
 {
-   PROPERTY("situation", D3DXMATRIX, m_situation);
+   PROPERTY("m_situation", "situation", D3DXMATRIX, m_situation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 const BoundingVolume& StaticGeometryEntity::getBoundingVolume()
 {
-   m_boundingVol.origin.x = m_situation._41;
-   m_boundingVol.origin.y = m_situation._42;
-   m_boundingVol.origin.z = m_situation._43;
-   return m_boundingVol;
+   BoundingVolume* bv = m_localBoundingVol * m_situation;
+   m_globalBoundingVol = *(dynamic_cast<AABoundingBox*> (bv));
+   delete bv;
+   return m_globalBoundingVol;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,12 +115,39 @@ void StaticGeometryEntity::resetGeometry()
       delete m_geometry[i];
    }
    m_geometry.clear();
+
+   m_localBoundingVol = AABoundingBox();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void StaticGeometryEntity::calculateGeometry()
 {
+   m_localBoundingVol = AABoundingBox(D3DXVECTOR3(FLT_MAX, FLT_MAX, FLT_MAX),
+                                      D3DXVECTOR3(-FLT_MAX, -FLT_MAX, -FLT_MAX));
+
+   unsigned int count = m_meshes.size();
+   for (unsigned int meshIdx = 0; meshIdx < count; ++meshIdx)
+   {
+      const std::vector<LitVertex>& vertices = m_meshes[meshIdx]->m_vertices;
+      const std::vector<Face>& faces = m_meshes[meshIdx]->m_faces;
+
+      unsigned int trisCount = faces.size();
+      for (unsigned int triIdx = 0; triIdx < trisCount; ++triIdx)
+      {
+         const D3DXVECTOR3& v1 = vertices[faces[triIdx].idx[0]].m_coords;
+         const D3DXVECTOR3& v2 = vertices[faces[triIdx].idx[1]].m_coords;
+         const D3DXVECTOR3& v3 = vertices[faces[triIdx].idx[2]].m_coords;
+
+         // create a new triangle
+         m_geometry.push_back(new Triangle(v1, v2, v3));
+
+         // calculate geometry bounds
+         m_localBoundingVol.modifyUsing(v1);
+         m_localBoundingVol.modifyUsing(v2);
+         m_localBoundingVol.modifyUsing(v3);
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

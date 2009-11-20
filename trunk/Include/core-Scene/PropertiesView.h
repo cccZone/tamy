@@ -56,7 +56,7 @@ public:
  * all the applicable implementation data (window details etc), and expose
  * them to the editors that are meant to operate with that view.
  */
-template <typename Derrived>
+template <typename Derived>
 class TPropertiesView : public PropertiesView,
                         public GenericFactory<Property, PropertyEditor>
 {

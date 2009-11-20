@@ -6,7 +6,7 @@
 #include "core-Scene\SpatiallyQueryable.h"
 #include "core-Scene\Entity.h"
 #include "core-Scene\MeshDesc.h"
-#include "core\BoundingSphere.h"
+#include "core\AABoundingBox.h"
 #include <vector>
 #include <d3dx9.h>
 #include <string>
@@ -24,7 +24,8 @@ public:
    D3DXMATRIX m_situation;
 
 private:
-   BoundingSphere m_boundingVol;
+   AABoundingBox m_localBoundingVol;
+   AABoundingBox m_globalBoundingVol;
    Array<Triangle*> m_geometry;
 
 public:

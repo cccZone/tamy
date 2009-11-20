@@ -1,8 +1,8 @@
 #include "tamyeditor.h"
 #include <QtGui/QApplication>
 #include "SceneQueries.h"
-#include "PropertiesEditor.h"
 #include "SceneNavigator.h"
+#include "PropertiesEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,8 +15,8 @@ int main(int argc, char *argv[])
 
    // register services
    w.add(new SceneQueries());
-   w.add(new PropertiesEditor());
    w.add(new SceneNavigator());
+   w.add(new PropertiesEditor());
 
    // start the application
    w.show();

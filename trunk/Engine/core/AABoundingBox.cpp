@@ -131,3 +131,14 @@ bool AABoundingBox::hasVolume() const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void AABoundingBox::modifyUsing(const D3DXVECTOR3& pt)
+{
+   for (char i = 0; i < 3; ++i)
+   {
+      if      (pt[i] < min[i]) {min[i] = pt[i];}
+      if      (pt[i] > max[i]) {max[i] = pt[i];}
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

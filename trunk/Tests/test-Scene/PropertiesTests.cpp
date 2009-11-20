@@ -38,9 +38,9 @@ TEST(Properties, settingProperties)
    D3DXVECTOR3 position(0, 0, 0);
    D3DXVECTOR3 speed(0, 0, 0);
 
-   Properties properties;
-   properties.add<D3DXVECTOR3>("Pos", position);
-   properties.add<D3DXVECTOR3>("Speed", speed);
+   Properties properties("");
+   properties.add<D3DXVECTOR3>("Pos", "PosLabel", position);
+   properties.add<D3DXVECTOR3>("Speed", "SpeedLabel", speed);
 
    CPPUNIT_ASSERT_EQUAL(true, properties.has("Pos"));
    CPPUNIT_ASSERT_EQUAL(true, properties.has("Speed"));
@@ -53,8 +53,8 @@ TEST(Properties, changingPropertyValue)
 {
    D3DXVECTOR3 position(0, 0, 0);
 
-   Properties properties;
-   properties.add<D3DXVECTOR3>("Pos", position);
+   Properties properties("");
+   properties.add<D3DXVECTOR3>("Pos", "PosLabel", position);
 
    D3DXVECTOR3 newPosition(10, 20, 30);
    properties.get<D3DXVECTOR3>("Pos").set(D3DXVECTOR3(10, 20, 30));
@@ -68,9 +68,9 @@ TEST(TPropertiesView, editors)
    D3DXVECTOR3 position(0, 0, 0);
    D3DXVECTOR3 speed(0, 0, 0);
 
-   Properties properties;
-   properties.add<D3DXVECTOR3>("position", position);
-   properties.add<D3DXVECTOR3>("speed", speed);
+   Properties properties("");
+   properties.add<D3DXVECTOR3>("position", "positionLabel", position);
+   properties.add<D3DXVECTOR3>("speed", "speedLabel", speed);
 
    PropertiesViewMock view;
    view.associate<TProperty<D3DXVECTOR3>, VecEditorMock>();

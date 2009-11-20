@@ -7,9 +7,6 @@
 #include "CameraController.h"
 #include "PropertiesEditor.h"
 
-// camera commands
-#include "SelectEntityCommand.h"
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,15 +40,8 @@ void SceneNavigator::initialize(TamyEditor& mgr)
    timeController.add("sceneNavigation");
    timeController.get("sceneNavigation").add(new TTimeDependent<CameraController> (*cameraAnimator));
 
-   // configure input commands
-   QueryableScene& scene = mgr.requestService<QueryableScene> ();
-   PropertiesEditor& propertiesEdit = mgr.requestService<PropertiesEditor> ();
-
-   SelectEntityCommand::Output output = 
-      SelectEntityCommand::Output::from_method<PropertiesEditor, &PropertiesEditor::selectEntity> (&propertiesEdit);
-
-   cameraAnimator->addButtonPressCommand(VK_LBUTTON, 
-      new SelectEntityCommand(camera, scene, output));
+   // register new services
+   mgr.registerService<CameraController> (*cameraAnimator);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -59,13 +59,13 @@ MaterialEntity::MaterialEntity(const std::string& matName,
 
 void MaterialEntity::registerProperties()
 {
-   PROPERTY("name", std::string, m_matName);
-   PROPERTY("ambient color", Color, m_ambient);
-   PROPERTY("diffuse color", Color, m_diffuse);
-   PROPERTY("specular color", Color, m_specular);
-   PROPERTY("emissive color", Color, m_emissive);
-   PROPERTY("specular power factor", float, m_power);
-   PROPERTY("texture", std::string, m_texName);
+   PROPERTY("m_matName", "name", std::string, m_matName);
+   PROPERTY("m_ambient", "ambient", Color, m_ambient);
+   PROPERTY("m_diffuse", "diffuse", Color, m_diffuse);
+   PROPERTY("m_specular", "specular", Color, m_specular);
+   PROPERTY("m_emissive", "emissive", Color, m_emissive);
+   PROPERTY("m_power", "specular power factor", float, m_power);
+   PROPERTY("m_texName", "texture", std::string, m_texName);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

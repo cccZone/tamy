@@ -383,8 +383,34 @@
 				SourceControlFiles="false"
 				>
 				<File
-					RelativePath=".\GeneratedFiles\Release\moc_TamySceneWidget.cpp"
+					RelativePath=".\GeneratedFiles\Release\moc_ColorPropertyEditor.cpp"
 					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GeneratedFiles\Release\moc_StringPropertyEditor.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
 						ExcludedFromBuild="true"
@@ -401,11 +427,91 @@
 				SourceControlFiles="false"
 				>
 				<File
-					RelativePath=".\GeneratedFiles\Debug\moc_TamySceneWidget.cpp"
+					RelativePath=".\GeneratedFiles\Debug\moc_ColorPropertyEditor.cpp"
 					>
 					<FileConfiguration
 						Name="Release|Win32"
 						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GeneratedFiles\Debug\moc_MtxPropertyEditor.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GeneratedFiles\Debug\moc_QPropertyEditor.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GeneratedFiles\Debug\moc_StringPropertyEditor.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GeneratedFiles\Debug\moc_TamySceneWidget.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\GeneratedFiles\Debug\moc_Vec3PropertyEditor.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -494,18 +600,6 @@
 					RelativePath=".\SceneNavigator.h"
 					>
 				</File>
-				<Filter
-					Name="Commands"
-					>
-					<File
-						RelativePath=".\SelectEntityCommand.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\SelectEntityCommand.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="SceneQueries"
@@ -564,6 +658,232 @@
 						/>
 					</FileConfiguration>
 				</File>
+				<Filter
+					Name="Properties"
+					>
+					<File
+						RelativePath=".\ColorPropertyEditor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ColorPropertyEditor.h"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\FloatPropertyEditor.h"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description=""
+								CommandLine=""
+								AdditionalDependencies=""
+								Outputs=""
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description=""
+								CommandLine=""
+								AdditionalDependencies=""
+								Outputs=""
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\FloatPropertyEditor.inl"
+						>
+					</File>
+					<File
+						RelativePath=".\IntPropertyEditor.h"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description=""
+								CommandLine=""
+								AdditionalDependencies=""
+								Outputs=""
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description=""
+								CommandLine=""
+								AdditionalDependencies=""
+								Outputs=""
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\IntPropertyEditor.inl"
+						>
+					</File>
+					<File
+						RelativePath=".\MtxPropertyEditor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\MtxPropertyEditor.h"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\QPropertyEditor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\QPropertyEditor.h"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\StringPropertyEditor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\StringPropertyEditor.h"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\Vec3PropertyEditor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Vec3PropertyEditor.h"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+					</File>
+				</Filter>
+				<Filter
+					Name="NavigatorCommands"
+					>
+					<File
+						RelativePath=".\SelectEntityCommand.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\SelectEntityCommand.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 	</Files>

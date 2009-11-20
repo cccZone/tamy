@@ -34,10 +34,10 @@ AnimatedCutsceneEntity::AnimatedCutsceneEntity(const std::string& sceneFileName,
 
 void AnimatedCutsceneEntity::registerProperties()
 {
-   PROPERTY("name", std::string, m_sceneFileName);
-   PROPERTY("animation", std::string, m_animationName);
-   PROPERTY("situation", D3DXMATRIX, m_situation);
-   PROPERTY("time", float, m_time);
+   PROPERTY("m_sceneFileName", "name", std::string, m_sceneFileName);
+   PROPERTY("m_animationName", "animation", std::string, m_animationName);
+   PROPERTY("m_situation", "situation", D3DXMATRIX, m_situation);
+   PROPERTY("m_time", "time", float, m_time);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

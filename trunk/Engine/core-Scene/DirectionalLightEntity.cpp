@@ -19,11 +19,11 @@ DirectionalLightEntity::DirectionalLightEntity()
 
 void DirectionalLightEntity::registerProperties()
 {
-   PROPERTY("name", std::string, m_name);
-   PROPERTY("situation", D3DXMATRIX, m_situation);
-   PROPERTY("ambient color", Color, m_ambient);
-   PROPERTY("diffuse color", Color, m_diffuse);
-   PROPERTY("specular color", Color, m_specular);
+   PROPERTY("m_name", "name", std::string, m_name);
+   PROPERTY("m_situation", "situation", D3DXMATRIX, m_situation);
+   PROPERTY("m_ambient", "ambient", Color, m_ambient);
+   PROPERTY("m_diffuse", "diffuse", Color, m_diffuse);
+   PROPERTY("m_specular", "specular", Color, m_specular);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
