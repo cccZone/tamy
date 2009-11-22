@@ -15,7 +15,6 @@ PointLightEntity::PointLightEntity()
 , m_linearAtt(0)
 , m_quadAtt(0)
 , m_situation(0, 0, 0)
-, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 1))
 {
 }
 
@@ -38,7 +37,6 @@ PointLightEntity::PointLightEntity(const std::string& name,
 , m_linearAtt(linearAtt)
 , m_quadAtt(quadAtt)
 , m_situation(situation)
-, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 1))
 {
 }
 
@@ -59,28 +57,13 @@ void PointLightEntity::registerProperties()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const BoundingVolume& PointLightEntity::getBoundingVolume()
-{
-   m_boundingVol.origin = m_situation;
-   return m_boundingVol;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const D3DXMATRIX& PointLightEntity::getGlobalMtx()
+const D3DXMATRIX& PointLightEntity::getSituation() const
 {
    D3DXMatrixTranslation(&m_situationMtx, 
                          m_situation.x, 
                          m_situation.y, 
                          m_situation.z);
    return m_situationMtx;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const Array<Triangle*>& PointLightEntity::getBoundingGeometry()
-{
-   return m_noGeometry;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

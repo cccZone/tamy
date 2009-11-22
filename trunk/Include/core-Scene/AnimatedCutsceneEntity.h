@@ -3,9 +3,8 @@
 /// @file   core-Scene\AnimatedCutsceneEntity.h
 /// @brief  an entity with animated cutscene
 
-#include "core-Scene\SpatiallyQueryable.h"
+#include "core-Scene\Situated.h"
 #include "core-Scene\Entity.h"
-#include "core\BoundingSphere.h"
 #include <string>
 #include <d3dx9.h>
 
@@ -17,7 +16,7 @@
  * that plays on its own and doesn't require any sophisticated AI control over
  * the character - all movement and logics is encoded in the animation within.
  */
-struct AnimatedCutsceneEntity : public Entity, public SpatiallyQueryable
+struct AnimatedCutsceneEntity : public Entity, public Situated
 {
 public:
    std::string m_sceneFileName;
@@ -26,10 +25,6 @@ public:
 
    /// current time in the cutscene (with respect to its time line)
    float m_time;
-
-private:
-   BoundingSphere m_boundingVol;
-   Array<Triangle*> m_noGeometry;
 
 public:
 
@@ -46,13 +41,9 @@ public:
                           const D3DXMATRIX& situation);
 
    // -------------------------------------------------------------------------
-   // SpatiallyQueryable implementation
+   // Situated implementation
    // -------------------------------------------------------------------------
-   const BoundingVolume& getBoundingVolume();
-
-   const D3DXMATRIX& getGlobalMtx();
-
-   const Array<Triangle*>& getBoundingGeometry();
+   const D3DXMATRIX& getSituation() const {return m_situation;}
 
    // -------------------------------------------------------------------------
    // Entity implementation

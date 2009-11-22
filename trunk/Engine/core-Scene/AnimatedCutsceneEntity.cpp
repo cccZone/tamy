@@ -11,7 +11,6 @@ DEFINE_ENTITY(AnimatedCutsceneEntity);
 AnimatedCutsceneEntity::AnimatedCutsceneEntity()
 : INIT_ENTITY(AnimatedCutsceneEntity)
 , m_time(0)
-, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 100))
 {
    D3DXMatrixIdentity(&m_situation);
 }
@@ -26,7 +25,6 @@ AnimatedCutsceneEntity::AnimatedCutsceneEntity(const std::string& sceneFileName,
 , m_animationName(animationName)
 , m_situation(situation)
 , m_time(0)
-, m_boundingVol(BoundingSphere(D3DXVECTOR3(0, 0, 0), 100))
 {
 }
 
@@ -38,30 +36,6 @@ void AnimatedCutsceneEntity::registerProperties()
    PROPERTY("animation", std::string, m_animationName);
    PROPERTY("situation", D3DXMATRIX, m_situation);
    PROPERTY("time", float, m_time);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const BoundingVolume& AnimatedCutsceneEntity::getBoundingVolume()
-{
-   m_boundingVol.origin.x = m_situation._41;
-   m_boundingVol.origin.y = m_situation._42;
-   m_boundingVol.origin.z = m_situation._43;
-   return m_boundingVol;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const D3DXMATRIX& AnimatedCutsceneEntity::getGlobalMtx()
-{
-   return m_situation;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const Array<Triangle*>& AnimatedCutsceneEntity::getBoundingGeometry()
-{
-   return m_noGeometry;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

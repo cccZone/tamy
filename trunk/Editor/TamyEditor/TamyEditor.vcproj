@@ -563,14 +563,6 @@
 				Name="SceneQueries"
 				>
 				<File
-					RelativePath=".\EntitiesStorageView.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\EntitiesStorageView.h"
-					>
-				</File>
-				<File
 					RelativePath=".\QueryableScene.h"
 					>
 				</File>
@@ -594,6 +586,38 @@
 					RelativePath=".\SceneQueriesModelRepresentation.h"
 					>
 				</File>
+				<File
+					RelativePath=".\SpatiallyQueryable.h"
+					>
+				</File>
+				<Filter
+					Name="Representations"
+					>
+					<File
+						RelativePath=".\QueryableGhost.h"
+						>
+					</File>
+					<File
+						RelativePath=".\QueryableGhost.inl"
+						>
+					</File>
+					<File
+						RelativePath=".\QueryableSpatial.h"
+						>
+					</File>
+					<File
+						RelativePath=".\QueryableSpatial.inl"
+						>
+					</File>
+					<File
+						RelativePath=".\QueryableWorld.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\QueryableWorld.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="PropertiesEditor"

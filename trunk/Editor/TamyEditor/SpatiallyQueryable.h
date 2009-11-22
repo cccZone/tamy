@@ -47,6 +47,13 @@ public:
     */
    virtual const D3DXMATRIX& getGlobalMtx() = 0;
 
+   /**
+    * Gives access to the encapsulated entity.
+    *
+    * @return  entity
+    */
+   virtual Entity& getEntity() = 0;
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

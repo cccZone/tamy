@@ -65,7 +65,7 @@ const BoundingVolume& StaticGeometryEntity::getBoundingVolume()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const D3DXMATRIX& StaticGeometryEntity::getGlobalMtx()
+const D3DXMATRIX& StaticGeometryEntity::getSituation() const
 {
    return m_situation;
 }

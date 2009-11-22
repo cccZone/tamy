@@ -40,6 +40,10 @@ public:
    // -------------------------------------------------------------------------
    void query(const BoundingVolume& boundingVol, 
               Array<SpatiallyQueryable*>& output) const;
+
+   void insert(SpatiallyQueryable& entity);
+
+   void remove(SpatiallyQueryable& entity);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,7 @@
 #include "core-Renderer\Camera.h"
 #include "core-Scene\Entity.h"
 #include "PropertiesEditor.h"
+#include "SpatiallyQueryable.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,13 +38,7 @@ void SelectEntityCommand::execute(const D3DXVECTOR2& mousePos)
          throw std::logic_error("Error finding the closest object");
       }
 
-      Entity* closestEntity = dynamic_cast<Entity*> (closestObject);
-      if (closestEntity == NULL)
-      {
-         throw std::logic_error("Closest object is not an entity");
-      }
-
-      m_editor.selectEntity(*closestEntity);
+      m_editor.selectEntity(closestObject->getEntity());
    }
 }
 

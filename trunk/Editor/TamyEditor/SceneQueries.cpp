@@ -2,17 +2,26 @@
 #include "TamyEditor.h"
 #include "core-Scene.h"
 #include "core.h"
-#include "EntitiesStorageView.h"
 #include "QueryableSceneProxy.h"
+
+// representations
+#include "QueryableWorld.h"
+#include "QueryableGhost.h"
+#include "QueryableSpatial.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SceneQueries::SceneQueries()
 : m_entitiesQueryStorage(new QueryableSceneProxy())
-, m_scene(NULL)
 {
-   associate<WorldEntity, EntitiesStorageView> ();
+   associate<WorldEntity, QueryableWorld> ();
+   associate<CameraEntity, QueryableGhost<CameraEntity> > ();
+   associate<DirectionalLightEntity, QueryableGhost<DirectionalLightEntity> > ();
+   associate<PointLightEntity, QueryableGhost<PointLightEntity> > ();
+   associate<SpotLightEntity, QueryableGhost<SpotLightEntity> > ();
+   associate<AnimatedCutsceneEntity, QueryableGhost<AnimatedCutsceneEntity> > ();
+   associate<StaticGeometryEntity, QueryableSpatial<StaticGeometryEntity> > ();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,15 +31,14 @@ SceneQueries::~SceneQueries()
    resetContents();
 
    delete m_entitiesQueryStorage; m_entitiesQueryStorage = NULL;
-   m_scene = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SceneQueries::initialize(TamyEditor& mgr)
 {
-   m_scene = &(mgr.requestService<Model> ());
-   m_scene->attach(*this);
+   Model& scene = mgr.requestService<Model> ();
+   scene.attach(*this);
 
    // register new service
    mgr.registerService<QueryableScene> (*m_entitiesQueryStorage);
@@ -38,32 +46,16 @@ void SceneQueries::initialize(TamyEditor& mgr)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneQueries::setStorage(QueryableScene& storage)
+void SceneQueries::setStorage(QueryableScene* storage)
 {
-   // filter will take care of deleting 'entitiesQueryView'
-   NarrowPhaseStorageFilter<SpatiallyQueryable>* filteredStorage = 
-      new NarrowPhaseStorageFilter<SpatiallyQueryable>(
-         new SharedSpatialStorage<SpatiallyQueryable>(storage));
-
-   m_entitiesQueryStorage->plugin(filteredStorage);
+   m_entitiesQueryStorage->plugin(storage);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneQueries::resetStorage(QueryableScene& storage)
+QueryableScene& SceneQueries::storage()
 {
-   m_entitiesQueryStorage->plugin(NULL);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Model& SceneQueries::scene()
-{
-   if (m_scene == NULL)
-   {
-      throw std::runtime_error("Scene is not initialized");
-   }
-   return *m_scene;
+   return *m_entitiesQueryStorage;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -92,9 +84,11 @@ void SceneQueries::onEntityRemoved(Entity& entity)
    Representations::iterator it = m_representations.find(&entity);
    if (it != m_representations.end())
    {
-      it->second->deinitialize(*this);
-      delete it->second;
+      SceneQueriesModelRepresentation* repr = it->second;
       m_representations.erase(it);
+
+      repr->deinitialize(*this);
+      delete repr;
    }
 }
 

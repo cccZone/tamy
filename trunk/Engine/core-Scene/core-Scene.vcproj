@@ -208,10 +208,6 @@
 		<Filter
 			Name="Entities"
 			>
-			<File
-				RelativePath="..\..\Include\core-Scene\SpatiallyQueryable.h"
-				>
-			</File>
 			<Filter
 				Name="Lights"
 				>
@@ -350,6 +346,18 @@
 			</File>
 			<File
 				RelativePath="..\..\Include\core-Scene\PropertyEditor.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="EntityCapabilities"
+			>
+			<File
+				RelativePath="..\..\Include\core-Scene\Situated.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core-Scene\Spatial.h"
 				>
 			</File>
 		</Filter>

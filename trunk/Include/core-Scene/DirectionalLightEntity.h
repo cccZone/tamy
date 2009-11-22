@@ -3,10 +3,9 @@
 /// @file   core-Scene\DirectionalLightEntity.h
 /// @brief  a directional light description
 
-#include "core-Scene\SpatiallyQueryable.h"
+#include "core-Scene\Situated.h"
 #include "core-Scene\Entity.h"
 #include "core\Color.h"
-#include "core\BoundingSphere.h"
 #include <d3dx9.h>
 #include <string>
 
@@ -16,7 +15,7 @@
 /**
  * This class describes a directional light.
  */
-struct DirectionalLightEntity : public Entity, public SpatiallyQueryable
+struct DirectionalLightEntity : public Entity, public Situated
 {
 public:
    std::string m_name;
@@ -24,10 +23,6 @@ public:
    Color m_diffuse;
    Color m_specular;
    D3DXMATRIX m_situation;
-
-private:
-   BoundingSphere m_boundingVol;
-   Array<Triangle*> m_noGeometry;
 
 public:
    /**
@@ -51,13 +46,9 @@ public:
                           const D3DXMATRIX& situation);
 
    // -------------------------------------------------------------------------
-   // SpatiallyQueryable implementation
+   // Situated implementation
    // -------------------------------------------------------------------------
-   const BoundingVolume& getBoundingVolume();
-
-   const D3DXMATRIX& getGlobalMtx();
-
-   const Array<Triangle*>& getBoundingGeometry();
+   const D3DXMATRIX& getSituation() const {return m_situation;}
 
    // -------------------------------------------------------------------------
    // Entity implementation

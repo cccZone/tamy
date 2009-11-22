@@ -3,7 +3,8 @@
 /// @file   core-Scene\StaticGeometryEntity.h
 /// @brief  description of scenery made up of static geometry
 
-#include "core-Scene\SpatiallyQueryable.h"
+#include "core-Scene\Situated.h"
+#include "core-Scene\Spatial.h"
 #include "core-Scene\Entity.h"
 #include "core-Scene\MeshDesc.h"
 #include "core\AABoundingBox.h"
@@ -17,7 +18,9 @@
 /**
  * This class describes a scenery made up of static geometry.
  */
-struct StaticGeometryEntity : public Entity, public SpatiallyQueryable
+struct StaticGeometryEntity : public Entity, 
+                              public Situated, 
+                              public Spatial
 {
 public:
    std::vector<MeshDesc*> m_meshes;
@@ -48,11 +51,14 @@ public:
    ~StaticGeometryEntity();
 
    // -------------------------------------------------------------------------
-   // SpatiallyQueryable implementation
+   // Situated implementation
+   // -------------------------------------------------------------------------
+   const D3DXMATRIX& getSituation() const;
+
+   // -------------------------------------------------------------------------
+   // Spatial implementation
    // -------------------------------------------------------------------------
    const BoundingVolume& getBoundingVolume();
-
-   const D3DXMATRIX& getGlobalMtx();
 
    const Array<Triangle*>& getBoundingGeometry();
 

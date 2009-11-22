@@ -32,8 +32,6 @@ private:
    typedef std::map<Entity*, SceneQueriesModelRepresentation*> Representations;
    Representations m_representations;
 
-   Model* m_scene;
-
 public:
    /**
     * Constructor.
@@ -49,21 +47,14 @@ public:
     *
     * @param storage    storage with queryable scene entities
     */
-   void setStorage(QueryableScene& storage);
-
+   void setStorage(QueryableScene* storage);
    /**
-    * Removes currently used queryable entities storage.
+    * Gives access to the storage that contains all queryable entity
+    * representations.
     *
-    * @param storage    storage with queryable scene entities
+    * @retur      queryable scene
     */
-   void resetStorage(QueryableScene& storage);
-
-   /**
-    * Returns the instance of the scene this instance is working with.
-    *
-    * @return           scene model
-    */
-   Model& scene();
+   QueryableScene& storage();
 
    // -------------------------------------------------------------------------
    // Component implementation

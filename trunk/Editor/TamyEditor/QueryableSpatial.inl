@@ -1,0 +1,71 @@
+#ifndef _QUERYABLE_SPATIAL_H
+#error "This file can only be included from QueryableSpatial.h"
+#else
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+QueryableSpatial<T>::QueryableSpatial(T& entity)
+: m_entity(entity)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+QueryableSpatial<T>::~QueryableSpatial()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+void QueryableSpatial<T>::initialize(SceneQueries& parent)
+{
+   parent.storage().insert(*this);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+void QueryableSpatial<T>::deinitialize(SceneQueries& parent)
+{
+   parent.storage().remove(*this);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+const BoundingVolume& QueryableSpatial<T>::getBoundingVolume()
+{
+   return m_entity.getBoundingVolume();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+const Array<Triangle*>& QueryableSpatial<T>::getBoundingGeometry()
+{
+   return m_entity.getBoundingGeometry();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+const D3DXMATRIX& QueryableSpatial<T>::getGlobalMtx()
+{
+   return m_entity.getSituation();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template <typename T>
+Entity& QueryableSpatial<T>::getEntity()
+{
+   return m_entity;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _QUERYABLE_SPATIAL_H

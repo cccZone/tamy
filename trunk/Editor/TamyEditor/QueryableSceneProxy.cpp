@@ -11,6 +11,10 @@ namespace // anonymous
       void query(const BoundingVolume& boundingVol, 
                  Array<SpatiallyQueryable*>& output) const
       {}
+
+      void insert(SpatiallyQueryable& entity) {}
+
+      void remove(SpatiallyQueryable& entity) {}
    };
 } // anonymous
 
@@ -55,6 +59,20 @@ void QueryableSceneProxy::query(const BoundingVolume& boundingVol,
               Array<SpatiallyQueryable*>& output) const
 {
    m_currentImpl->query(boundingVol, output);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void QueryableSceneProxy::insert(SpatiallyQueryable& entity)
+{
+   m_currentImpl->insert(entity);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void QueryableSceneProxy::remove(SpatiallyQueryable& entity)
+{
+   m_currentImpl->remove(entity);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
