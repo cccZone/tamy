@@ -1,0 +1,22 @@
+#include "EntityPropertyEditor.h"
+#include <QLabel>
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+EntityPropertyEditor::EntityPropertyEditor(TProperty<Entity*>& property)
+: QPropertyEditor(property.getLabel().c_str())
+, m_property(property)
+{
+   setupUi();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void EntityPropertyEditor::setupUi()
+{
+   addWidget(new QLabel("Entity pointer editor", this));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+

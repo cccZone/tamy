@@ -1,0 +1,13 @@
+#include "core-Sound\SoundListener.h"
+#include "core\NodeVisitor.h"
+#include "core\TNodesVisitor.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SoundListener::onAccept(NodeVisitor& visitor)
+{
+   REGISTER_NODE_VISITOR(TNodesVisitor<SoundListener>);
+}
+
+///////////////////////////////////////////////////////////////////////////////
