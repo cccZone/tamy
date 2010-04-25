@@ -400,7 +400,7 @@ TEST(Model, nestedViews)
 
 TEST(Entity, entitiesReflection)
 {
-   Entity* entity = dynamic_cast<Entity*>(Class::createInstance("EntityAMock"));
+   Entity* entity = Class::createInstance< Entity >( "EntityAMock" );
    CPPUNIT_ASSERT(NULL != entity);
 
    EntityAMock* solidTypeEntity = dynamic_cast<EntityAMock*> (entity);

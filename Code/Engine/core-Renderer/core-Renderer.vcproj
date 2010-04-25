@@ -510,7 +510,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\Entity\core-Renderer\RenderableJoint.cpp"
+					RelativePath=".\RenderableJoint.cpp"
 					>
 				</File>
 				<File
