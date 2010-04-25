@@ -1,0 +1,55 @@
+#pragma once
+
+/// @file   core-Renderer\MaterialStage
+/// @brief  description of rasterizer stage
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+class Texture;
+class MaterialOperation;
+class CoordinatesOperation;
+class StageTextureRenderer;
+class RendererImpl;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * This class describes a single rasterizer stage - what should it do with 
+ * the textures and materials etc.
+ */
+class MaterialStage
+{
+private:
+   int m_index;
+   Texture& m_texture;
+   MaterialOperation* m_colorOperation;
+   MaterialOperation* m_alphaOperation;
+   CoordinatesOperation* m_coordsOp;
+
+public:
+   MaterialStage(Texture& texture, 
+                 MaterialOperation* defaultColorOp, 
+                 MaterialOperation* defaultAlphaOp,
+                 CoordinatesOperation* coordsOp);
+   MaterialStage(const MaterialStage& rhs);
+   ~MaterialStage();
+
+   void setIndex(int val) {m_index = val;}
+   int getIndex() const {return m_index;}
+
+   bool operator==(const MaterialStage& rhs) const;
+   bool operator!=(const MaterialStage& rhs) const;
+
+   const CoordinatesOperation& getCoordOperation() const {return *m_coordsOp;}
+
+   const MaterialOperation& getColorOperation() const {return *m_colorOperation;}
+
+   const MaterialOperation& getAlphaOperation() const {return *m_alphaOperation;}
+
+   const Texture& getTexture() const {return m_texture;}
+
+   void setForRendering(RendererImpl& impl) const;
+};
+
+///////////////////////////////////////////////////////////////////////////////

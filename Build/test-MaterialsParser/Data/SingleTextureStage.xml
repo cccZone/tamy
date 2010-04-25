@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Root>
+   <Material name="SingleTextureStage">
+      
+      <Stage texture="tex" Coords="clamp">
+         <Color op="add" arg1="texture" arg2="lrp" />
+         <Alpha op="mul" arg1="texture" arg2="prev" />
+      </Stage>
+      
+   </Material>
+</Root>
