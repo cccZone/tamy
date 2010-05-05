@@ -25,32 +25,30 @@ class SingletonsManager;
 /**
  * A shader class represents a program written in HLSL.
  */
-class Shader : public TRendererObject<ShaderImpl>, public Resource
+class Shader : public TRendererObject<ShaderImpl>, 
+               public Resource
 {
-   DECLARE_RTTI_CLASS
+   DECLARE_RESOURCE( Shader )
 
 private:
-   std::string m_name;
+   std::string m_fileName;
    std::string m_script;
 
 public:
    /**
-    * Default constructor.
+    * Constuctor loading a shader from an .fx file
+    *
+    * @param fileName   name of a file with an HLSL shader
     */
-   Shader();
-
-   /**
-    * Resource-compliant constructor.
-    */
-   Shader(Filesystem& fs, const std::string& fileName);
+   Shader( const std::string& fileName = "" );
 
    /**
     * Constructor.
     *
-    * @param name    name of the HLSL shader script file
+    * @param name    name for the resource
     * @param script  HLSL script
     */
-   Shader(const std::string& name, const std::string& script);
+   Shader( const std::string& name, const std::string& script );
    virtual ~Shader();
 
    /**
@@ -59,11 +57,6 @@ public:
     * @return  HLSL shader script
     */
    const std::string& getScript() const;
-
-   /**
-    * Returns the name of the shader script.
-    */
-   const std::string& getName() const;
 
    /**
     * Starts the shader rendering process.
@@ -119,7 +112,7 @@ public:
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
-   void onLoaded(ResourcesManager& mgr);
+   void onResourceLoaded(ResourcesManager& mgr);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

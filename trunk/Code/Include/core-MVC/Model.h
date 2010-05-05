@@ -7,6 +7,7 @@
 #include <vector>
 #include "core\Delegate.h"
 #include "core\ComponentsManager.h"
+#include "core\Resource.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,33 +24,9 @@ class Loader;
  * Model stores entities and allows to serialize them. Model
  * can be observed and 'illustrated' using views.
  */
-class Model : public ComponentsManager<Model>
+class Model : public ComponentsManager<Model>, public Resource
 {
-public:
-   /**
-    * Interface that gets notified about the progress in model serialization
-    */
-   class ProgressObserver
-   {
-   public:
-      virtual ~ProgressObserver() {}
-
-      /**
-       * The method is called when some progress in serialization is made.
-       *
-       * @param percentage    percentage <0, 1> of data already loaded
-       */
-      virtual void setProgress(float percentage) = 0;
-   };
-
-   /**
-    * Default progress observer implementation
-    */
-   class NullProgressObserver : public ProgressObserver
-   {
-   public:
-      void setProgress(float percentage) {}
-   };
+   DECLARE_RESOURCE( Model )
 
 private:
    typedef Delegate<void (Entity&)> Functor;
@@ -95,29 +72,6 @@ public:
     * The method removes all entities from the model.
     */
    void clear();
-
-   /**
-    * This method allows to save model's state.
-    *
-    * @param serializer       serializer that will take care of writing
-    *                         stuff to an external storage
-    * @param observer         a progress observer that will get informed about
-    *                         serialization progress
-    */
-   void save(Saver& serializer, 
-             ProgressObserver& observer = NullProgressObserver());
-
-   /**
-    * This method loads a model from an external storage. 
-    * Current model's state WILL NOT BE ERASED.
-    *
-    * @param serializer       serializer that will take care of reading
-    *                         stuff from an external storage
-    * @param observer         a progress observer that will get informed about
-    *                         serialization progress
-    */
-   void load(Loader& modelSerializer, 
-             ProgressObserver& observer = NullProgressObserver());
 
    // -------------------------------------------------------------------------
    // Housekeeping

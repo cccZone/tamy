@@ -349,7 +349,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Virtual Functions for This Class.
     //-------------------------------------------------------------------------
-    virtual void    Open                ( Filesystem& filesystem, 
+    virtual void    Open                ( const Filesystem& filesystem, 
                                           const std::string& fileName, 
                                           IWFPROCESSMODE Mode, 
                                           IWFFILEHEADER * pHeader = NULL );
@@ -359,7 +359,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Static Functions for This Class.
     //-------------------------------------------------------------------------
-    static bool     IsValid             ( Filesystem& filesystem, 
+    static bool     IsValid             ( const Filesystem& filesystem, 
                                           const std::string& fileName );
     static bool     IsStandardChunk     ( USHORT ChunkTypeID );
     static bool     IsLockedChunk       ( USHORT ChunkTypeID );

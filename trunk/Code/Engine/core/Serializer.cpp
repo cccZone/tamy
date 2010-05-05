@@ -2,13 +2,16 @@
 #include "core\SerializerImpl.h"
 #include "core\Serializable.h"
 #include "core\Object.h"
+#include "core\Resource.h"
+#include "core\ResourcesManager.h"
 #include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DependenciesMapper::DependenciesMapper( DependenciesSet& dependencies, PointerSaveState state )
-: m_dependencies( dependencies )
+DependenciesMapper::DependenciesMapper( InternalDependenciesSet& internalDependencies,  
+                                        PointerSaveState state )
+: m_internalDependencies( internalDependencies )
 , m_state( state )
 {
 }
@@ -34,26 +37,22 @@ void DependenciesMapper::operator<<(D3DXVECTOR3& vec)
 ///////////////////////////////////////////////////////////////////////////////
 
 void DependenciesMapper::operator<<(Serializable** ptr)
-{
+{ 
    if ( m_state == PSS_SAVE )
    {
-      unsigned int count = m_dependencies.size();
-      for (unsigned int idx = 0; idx < count; ++idx)
+      Resource* resource = dynamic_cast< Resource* >( *ptr );
+      if ( resource == NULL )
       {
-         if (m_dependencies[idx] == *ptr)
-         {
-            // yes - we have it mapped
-            return;
-         }
+         saveDependency< Serializable >( m_internalDependencies, *ptr );
       }
-
-      m_dependencies.push_back( *ptr );
-      (*ptr)->save( *this );
    }
    else if ( m_state == PSS_UPDATE )
    {
       unsigned int idx = reinterpret_cast< unsigned int >( *ptr );
-      *ptr = m_dependencies[ idx ];
+      if ( idx < m_internalDependencies.size() )
+      {
+         *ptr = m_internalDependencies[ idx ];
+      }
    }
 }
 
@@ -69,6 +68,7 @@ void DependenciesMapper::serializeBuf(byte* buf, size_t size)
 
 Saver::Saver( SerializerImpl* impl )
 : m_impl( impl )
+, m_externalDependencies( NULL )
 {
 }
 
@@ -82,28 +82,29 @@ Saver::~Saver()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Saver::save( Serializable& serializable )
+void Saver::save( Resource& resource, ExternalDependenciesSet& outExternalDependencies )
 {
    // map the dependencies
-   m_dependencies.clear();
-   m_dependencies.push_back( NULL );
+   m_externalDependencies = &outExternalDependencies;
+   m_internalDependencies.clear();
+   m_internalDependencies.push_back( NULL );
 
-   // dependency 1 is always going to be the serializable we want to save
-   m_dependencies.push_back( &serializable );
+   // dependency 1 is always going to be the resource we want to save
+   m_internalDependencies.push_back( &resource );
 
-   DependenciesMapper mapper( m_dependencies, PSS_SAVE );
-   serializable.save( mapper );
+   DependenciesMapper mapper( m_internalDependencies, PSS_SAVE );
+   resource.save( mapper );
 
    // save the objects recovered during the dependencies mapping
-   unsigned int dependenciesToSaveCount = m_dependencies.size() - 1;
+   unsigned int dependenciesToSaveCount = m_internalDependencies.size() - 1;
    m_impl->write( ( byte* )&dependenciesToSaveCount, sizeof( unsigned int ) );
 
    // We'll save from the first dependency - 'cause we know
    // the dependency 0 is the NULL pointer.
-   unsigned int count = m_dependencies.size();
+   unsigned int count = m_internalDependencies.size();
    for ( unsigned int i = 1; i < count; ++i )
    {
-      m_dependencies[ i ]->save( *this );
+      m_internalDependencies[ i ]->save( *this );
    }
 }
 
@@ -141,19 +142,34 @@ void Saver::operator<<(D3DXVECTOR3& vec)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Saver::operator<<(Serializable** ptr)
+void Saver::operator<<( Serializable** ptr )
 {
-   unsigned int count = m_dependencies.size();
-   unsigned int idx = 0;
-
-   // check if we have the dependency mapped
-   for (; idx < count; ++idx)
+   // check if that's an internal dependency - if so, save it's path
+   byte checkedDepType = DPT_INTERNAL;
+   unsigned int count = m_internalDependencies.size();
+   for ( unsigned int idx = 0; idx < count; ++idx )
    {
-      if (m_dependencies[idx] == *ptr)
+      if (m_internalDependencies[idx] == *ptr)
       {
-         m_impl->write((byte*)&idx, sizeof(idx));
+         m_impl->write( ( byte* )&checkedDepType, sizeof( byte ) );
+         m_impl->write( ( byte* )&idx, sizeof( idx ) );
          return;
       }
+   }
+
+   // check if that's an external dependency
+   checkedDepType = DPT_EXTERNAL;
+   Resource* resource = dynamic_cast< Resource* >( *ptr );
+   if ( resource != NULL )
+   {
+      m_externalDependencies->push_back( resource );
+
+      m_impl->write( ( byte* )&checkedDepType, sizeof( byte ) );
+
+      std::string filePath = resource->getFilePath();
+      *this << filePath;
+     
+      return;
    }
 
    ASSERT( false, "Unmapped dependency encountered" );
@@ -165,6 +181,7 @@ void Saver::operator<<(Serializable** ptr)
 
 Loader::Loader(SerializerImpl* impl)
 : m_impl(impl)
+, m_resMgr( NULL )
 {
 }
 
@@ -174,6 +191,45 @@ Loader::~Loader()
 {
    delete m_impl;
    m_impl = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Resource& Loader::load( ResourcesManager& resMgr )
+{
+   m_resMgr = &resMgr;
+
+   // recover the dependencies
+   m_dependencies.clear();
+   m_dependencies.push_back( NULL );
+
+   // load the dependencies
+   unsigned int count = 0;
+   m_impl->read( ( byte* )&count, sizeof( unsigned int ) );
+
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      Serializable* ptr = Serializable::load<Serializable>(*this);
+      m_dependencies.push_back( ptr );
+   }
+
+   // the root object is always the second one in the dependencies map
+   // ('cause the first one is the NULL pointer)
+   Serializable* root = m_dependencies[1];
+
+   // update the dependencies between the objects
+   DependenciesMapper mapper( m_dependencies, PSS_UPDATE );
+   count = m_dependencies.size();
+   for ( unsigned int i = 1; i < count; ++i )
+   {
+      m_dependencies[ i ]->save( mapper );
+   }
+
+   // add the new resource to the resources manager
+   Resource* resource = dynamic_cast< Resource* >( root );
+   m_resMgr->addResource( resource );
+
+   return *resource;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -225,9 +281,34 @@ void Loader::operator<<(D3DXVECTOR3& vec)
 
 void Loader::operator<<(Serializable** ptr)
 {
-   unsigned int idx = 0;
-   m_impl->read((byte*)&idx, sizeof(idx));
-   *ptr = reinterpret_cast< Serializable*>( idx );
+   byte checkedDepType;
+   m_impl->read( ( byte* )&checkedDepType, sizeof( byte ) );
+
+   switch( checkedDepType )
+   {
+   case DPT_INTERNAL:
+      {
+         unsigned int idx = 0;
+         m_impl->read((byte*)&idx, sizeof(idx));
+         *ptr = reinterpret_cast< Serializable* >( idx );
+         break;
+      }
+
+   case DPT_EXTERNAL:
+      {
+         std::string resourceFilePath;
+         *this << resourceFilePath;
+         *ptr = &( m_resMgr->create( resourceFilePath ) );
+
+         break;
+      }
+
+   default:
+      {
+         ASSERT( false, "Invalid dependency type" );
+         break;
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

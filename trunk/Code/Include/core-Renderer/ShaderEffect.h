@@ -17,32 +17,31 @@
  */
 class ShaderEffect : public Effect
 {
+   DECLARE_ABSTRACT_CLASS(ShaderEffect)
+
 private:
    Shader* m_shader;
 
 public:
    virtual ~ShaderEffect();
 
-protected:
    /**
-    * Constructor.
-    */
-   ShaderEffect();
-
-   /**
-    * Method called by the EffectResource that creates
-    * an instance of this class. It initializes the effect
-    * with a shader instance.
+    * It initializes the effect with a shader instance.
     *
     * @param shader  shader program the effect will be using
     */
    void initialize(Shader& shader); 
 
+protected:
+   /**
+    * Default constructor.
+    */
+   ShaderEffect();
+
    /**
     * Gives access to the shader program instance.
     */
    inline Shader& shader();
-   friend class EffectResource;
 
    // -------------------------------------------------------------------------
    // Effect implementation

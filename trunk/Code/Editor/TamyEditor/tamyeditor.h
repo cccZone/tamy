@@ -79,14 +79,6 @@ public slots:
    void loadScene();
    void saveScene();
    void importFromIWF();
-
-private:
-   std::string extractFileName(const std::string& fileName, 
-      const std::string& rootDir) const;
-
-   void tokenize(const std::string& str, 
-      std::vector<std::string>& output,
-      const std::string& tokens) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

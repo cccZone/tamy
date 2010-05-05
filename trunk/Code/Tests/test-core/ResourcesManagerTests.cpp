@@ -21,22 +21,16 @@ namespace // anonymous
 
    class ResourceMock : public Resource
    {
+      DECLARE_RESOURCE(ResourceMock)
+
    private:
       int m_val;
 
    public:
-      ResourceMock(Filesystem& fs, const std::string& fileName) 
-         : m_val(-1) 
-      {
-         File* file = fs.open(fileName, std::ios_base::in);
-         if (file == NULL)
-         {
-            throw std::invalid_argument("Test file doesn't exist");
-         }
-
-         file->read((byte*)(&m_val), sizeof(int));
-         delete file;
-      }
+      ResourceMock( const std::string& fileName = "", int val = -1 ) 
+         : Resource( fileName )
+         , m_val( val ) 
+      {}
 
       int getValue() const { return m_val; }
 
@@ -45,21 +39,14 @@ namespace // anonymous
          ++initializer.objsCount;
       }
 
-      void onLoaded(ResourcesManager& mgr) 
+      void onResourceLoaded(ResourcesManager& mgr) 
       {
          initialize(mgr.getInitializers().shared<InitializerMock>());
       }
    };
-
-   // -------------------------------------------------------------------------
-
-   class DifferentResourceMock : public Resource
-   {
-   public:
-      DifferentResourceMock(Filesystem& fs, const std::string& fileName) {}
-
-      void onLoaded(ResourcesManager& mgr) {}
-   };
+   BEGIN_RESOURCE(ResourceMock, txt, AM_BINARY)
+      PROPERTY("val", int, m_val)
+   END_OBJECT()
 
 } // anonymous
 
@@ -73,33 +60,22 @@ TEST(ResourcesManager, basic)
    InitializerMock initializer;
    manager.associate(initializer);
 
-   ResourceMock& res1 = manager.create<ResourceMock>("resourceMock.txt");
+   ResourceMock* resourceMock = new ResourceMock( "resourceMock.txt", 5 );
+   manager.addResource( resourceMock );
+   resourceMock->saveResource();
+
+   manager.reset();
+   initializer.objsCount = 0;
+
+   ResourceMock& res1 = dynamic_cast< ResourceMock& >( manager.create("resourceMock.txt") );
    CPPUNIT_ASSERT_EQUAL(5, res1.getValue());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
    CPPUNIT_ASSERT_EQUAL(1, initializer.objsCount);
 
-   ResourceMock& res2 = manager.create<ResourceMock>("resourceMock.txt");
+   ResourceMock& res2 = dynamic_cast< ResourceMock& >( manager.create("resourceMock.txt") );
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
    CPPUNIT_ASSERT_EQUAL(1, initializer.objsCount);
    CPPUNIT_ASSERT(&res1 == &res2);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(ResourcesManager, tryingToReloadSameResourceWithADifferentType)
-{
-   ResourcesManager manager;
-   manager.setFilesystem(new Filesystem("..\\Data"));
-
-   InitializerMock initializer;
-   manager.associate(initializer);
-
-   ResourceMock& res1 = manager.create<ResourceMock>("resourceMock.txt");
-   CPPUNIT_ASSERT_EQUAL(5, res1.getValue());
-   CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
-
-   CPPUNIT_ASSERT_NO_THROW(manager.create<DifferentResourceMock>("resourceMock.txt"));
-   CPPUNIT_ASSERT_EQUAL((unsigned int)2, manager.getResourcesCount());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

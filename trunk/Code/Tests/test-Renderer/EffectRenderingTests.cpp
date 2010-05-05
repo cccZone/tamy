@@ -34,7 +34,7 @@ namespace   // anonymous
 
       BoundingVolume* calculateBoundingVolume() const {return NULL;}
 
-      void onLoaded(ResourcesManager& mgr) {}
+      void onResourceLoaded(ResourcesManager& mgr) {}
    };
 
    // -------------------------------------------------------------------------

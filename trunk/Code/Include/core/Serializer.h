@@ -15,6 +15,8 @@
 
 class Serializable;
 class SerializerImpl;
+class Resource;
+class ResourcesManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +35,13 @@ protected:
    {
       PSS_SAVE,
       PSS_LOAD,
-      PSS_UPDATE
+      PSS_UPDATE,
+   };
+
+   enum DependencyType
+   {
+      DPT_INTERNAL = 1,
+      DPT_EXTERNAL = 2
    };
 
 public:
@@ -102,7 +110,8 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-typedef std::vector<Serializable*>  DependenciesSet;
+typedef std::vector<Resource*>      ExternalDependenciesSet;
+typedef std::vector<Serializable*>  InternalDependenciesSet;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -114,11 +123,11 @@ typedef std::vector<Serializable*>  DependenciesSet;
 class DependenciesMapper : public Serializer
 {
 private:
-   DependenciesSet&     m_dependencies;
-   PointerSaveState     m_state;
+   InternalDependenciesSet&      m_internalDependencies;
+   PointerSaveState              m_state;
   
 public:
-   DependenciesMapper( DependenciesSet& dependencies, PointerSaveState state );
+   DependenciesMapper( InternalDependenciesSet& internalDependencies, PointerSaveState state );
 
    // -------------------------------------------------------------------------
    // Serializer implementation
@@ -132,6 +141,10 @@ protected:
    void serializeBuf(byte* buf, size_t size);
 
    PointerSaveState getState() const { return m_state; }
+
+private:
+   template< typename T >
+   void saveDependency( typename std::vector< T* >& depsMap, T* ptr );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -142,19 +155,22 @@ protected:
 class Saver : public Serializer
 {
 private:
-   SerializerImpl*      m_impl;
-   DependenciesSet      m_dependencies;
+   SerializerImpl*               m_impl;
+   ExternalDependenciesSet*      m_externalDependencies;
+   InternalDependenciesSet       m_internalDependencies;
 
 public:
    Saver( SerializerImpl* impl );
    ~Saver();
 
    /**
-    * Use this method to save an object capable of being serialized.
+    * Use this method to save a resource capable of being serialized and
+    * learn about other resources that it uses that may need to be saved as well.
     *
-    * @param serializable  object to save
+    * @param resource                  resource to save
+    * @param outExternalDependencies   other resources used by this resource
     */
-   void save( Serializable& serializable );
+   void save( Resource& resource, ExternalDependenciesSet& outExternalDependencies = ExternalDependenciesSet() );
 
    // -------------------------------------------------------------------------
    // Serializer implementation
@@ -178,20 +194,20 @@ class Loader : public Serializer
 {
 private:
    SerializerImpl*                  m_impl;
-   DependenciesSet                  m_dependencies;
+   InternalDependenciesSet          m_dependencies;
+   ResourcesManager*                m_resMgr;
 
 public:
    Loader( SerializerImpl* impl );
    ~Loader();
 
    /**
-    * Use this method to load a serialized object.
+    * Use this method to load a serialized resource.
     *
-    * @param Derived    expected type of the object
-    * @return           instance of the load object
+    * @param resMgr              external resources manager
+    * @return                    instance of the load resource
     */
-   template< typename Derived >
-   Derived* load();
+   Resource& load( ResourcesManager& resMgr );
 
    // -------------------------------------------------------------------------
    // Serializer implementation

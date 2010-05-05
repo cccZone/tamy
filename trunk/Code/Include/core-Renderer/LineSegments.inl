@@ -7,9 +7,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LineSegment::LineSegment(const D3DXVECTOR3& _start, const D3DXVECTOR3& _end)
-: start(_start)
-, end(_end)
+LineSegment::LineSegment()
+: start( 0, 0, 0 )
+, end( 0, 0, 0 )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+LineSegment::LineSegment( const D3DXVECTOR3& _start, const D3DXVECTOR3& _end )
+: start( _start )
+, end( _end )
 {
 }
 

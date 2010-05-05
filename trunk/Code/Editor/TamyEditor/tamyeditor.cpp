@@ -22,19 +22,30 @@
 
 namespace // anonymous
 {
-   template <typename INTERFACE>
-   class TProgressObserver : public INTERFACE
+   class ProgressObserver
    {
    private:
-      QProgressBar& m_progressBar;
+      ProgressDialog*   m_progressDialog;
+      QProgressBar&     m_progressBar;
 
    public:
-      TProgressObserver(QProgressBar& progressBar)
-         : m_progressBar(progressBar)
+      ProgressObserver( QWidget* parent )
+         : m_progressDialog( new ProgressDialog( parent ) )
+         , m_progressBar( m_progressDialog->getProgressBar() )
       {
+         m_progressDialog->show();
+
          m_progressBar.setMaximum(INT_MAX);
          m_progressBar.setMinimum(0);
          m_progressBar.setValue(0);
+      }
+
+      ~ProgressObserver()
+      {
+         m_progressDialog->hide();
+
+         delete m_progressDialog;
+         m_progressDialog = NULL;
       }
 
       void setProgress(float percentage)
@@ -43,7 +54,6 @@ namespace // anonymous
          m_progressBar.setValue(val);
       }
    };
-
 } // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -121,12 +131,15 @@ QMenu& TamyEditor::getViewMenu()
 
 void TamyEditor::loadScene()
 {
-   std::string rootDir = m_resourceMgr->getFilesystem().getCurrRoot();
+   const Filesystem& fs = m_resourceMgr->getFilesystem();
+   std::string rootDir = fs.getCurrRoot();
+   std::string filter( "Scene files (*." );
+   filter += std::string( Model::getExtension() ) + ")";
 
    QString fullFileName = QFileDialog::getOpenFileName(this, 
       tr("Load scene"), 
       rootDir.c_str(), 
-      tr("Scene Files (*.tsc)"));
+      filter.c_str());
 
    if (fullFileName.isEmpty() == true) 
    {
@@ -135,24 +148,14 @@ void TamyEditor::loadScene()
    }
 
    // once the file is open, extract the directory name
-   std::string fileName = extractFileName(fullFileName.toStdString(), rootDir);
-
-   // show the progress dialog
-   ProgressDialog progressDialog(this);
-   progressDialog.show();
-   m_scene->clear();
+   std::string fileName = fs.toRelativePath( fullFileName.toStdString() );
 
    try
    {
-      if (fileName.find(".tsc") != std::string::npos)
-      {
-         TProgressObserver<Model::ProgressObserver> progressObserver(progressDialog.getProgressBar());
-
-         Filesystem fs(rootDir);
-         File* archive = fs.open(fileName, std::ios_base::in | std::ios_base::binary);
-         Loader loader(new FileSerializer(archive));
-         m_scene->load(loader, progressObserver);
-      }
+      ProgressObserver progressObserver( this );
+      progressObserver.setProgress( 0 );
+      Model& newScene = dynamic_cast< Model& >( m_resourceMgr->create( fileName ) );
+      progressObserver.setProgress( 1 );
    }
    catch (std::exception& ex)
    {
@@ -161,62 +164,46 @@ void TamyEditor::loadScene()
          QMessageBox::Ok);
    }
 
-   // close the dialog
-   progressDialog.hide();
+   // TODO: (TOP !!!!!!) rozeslac notyfikacje o nowym modelu
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TamyEditor::saveScene()
 {
-   std::string rootDir = m_resourceMgr->getFilesystem().getCurrRoot();
-
-   QString fullFileName = QFileDialog::getSaveFileName(this, 
-      tr("Save scene"), 
-      rootDir.c_str(), 
-      tr("Scene Files (*.tsc)"));
-
-   if (fullFileName.isEmpty() == true) 
-   {
-      // no file was selected or user pressed 'cancel'
-      return;
-   }
-   // once the file is open, extract the directory name
-   std::string fileName = extractFileName(fullFileName.toStdString(), rootDir);
-
-   // show the progress dialog
-   ProgressDialog progressDialog(this);
-   progressDialog.show();
-   TProgressObserver<Model::ProgressObserver> progressObserver(progressDialog.getProgressBar());
-
-   Filesystem fs(rootDir);
-   File* archive = NULL;
    try
    {
-      archive = fs.open(fileName, std::ios_base::out | std::ios_base::binary);
+      ProgressObserver progressObserver( this );
+      progressObserver.setProgress( 0 );
+      ExternalDependenciesSet externalDependencies;
+      m_scene->saveResource( externalDependencies );
+
+      progressObserver.setProgress( 0.5f );
+
+      for ( unsigned int i = 0; i < externalDependencies.size(); ++i )
+      {
+         externalDependencies[ i ]->saveResource( externalDependencies );
+         float progress = (float)i / (float)externalDependencies.size();
+         progressObserver.setProgress( progress );
+      }
+
    }
    catch (std::exception& ex)
    {
       QMessageBox::warning(this, "Save scene error",
-         QString("Error occurred while saving scene ") + fileName.c_str(),
+         QString("Error occurred while saving scene"),
          QMessageBox::Ok);
 
       return;
    }
-
-   // import the scene
-   Saver saver(new FileSerializer(archive));
-   m_scene->save(saver, progressObserver);
-
-   // close the dialog
-   progressDialog.hide();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TamyEditor::importFromIWF()
 {
-   std::string rootDir = m_resourceMgr->getFilesystem().getCurrRoot();
+   const Filesystem& fs = m_resourceMgr->getFilesystem();
+   std::string rootDir = fs.getCurrRoot();
 
    QString iwfFileName = QFileDialog::getOpenFileName(this, 
       tr("Import scene from IWF"), 
@@ -230,21 +217,14 @@ void TamyEditor::importFromIWF()
    }
 
    // once the file is open, extract the directory name
-   std::string importFileName = extractFileName(iwfFileName.toStdString(), rootDir);
-
-   // show the progress dialog
-   ProgressDialog progressDialog(this);
-   progressDialog.show();
-   m_scene->clear();
+   std::string importFileName = fs.toRelativePath( iwfFileName.toStdString() );
 
    try
    {
-      if (importFileName.find(".iwf") != std::string::npos)
-      {
-         TProgressObserver<IWFScene::ProgressObserver> progressObserver(progressDialog.getProgressBar());  
-         IWFScene& res = m_resourceMgr->create<IWFScene> (importFileName);
-         res.load(*m_scene, progressObserver);
-      }
+      ProgressObserver progressObserver( this );
+      IWFScene res( fs, importFileName );
+      res.load( *m_scene, *m_resourceMgr, progressObserver );
+
    }
    catch (std::exception& ex)
    {
@@ -253,8 +233,8 @@ void TamyEditor::importFromIWF()
          QMessageBox::Ok);
    }
 
-   // close the dialog
-   progressDialog.hide();
+   // TODO: (TOP !!!!!!) rozeslac notyfikacje o nowym modelu
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -265,69 +245,6 @@ void TamyEditor::updateMain()
    float timeElapsed = m_mainTime->getTimeElapsed();
 
    m_timeController->update(timeElapsed);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-std::string TamyEditor::extractFileName(const std::string& fileName, 
-                                        const std::string& rootDir) const
-{
-   // tokenize both the filename and the root dir
-   std::vector<std::string> fileNameTokens;
-   std::vector<std::string> rootDirTokens;
-
-   tokenize(fileName, fileNameTokens, "\\/");
-   tokenize(rootDir, rootDirTokens, "\\/");
-
-   // if the root dir path contains more or equal amount of nodes
-   // as the filename, file can't possibly be located inside that directory
-   if (rootDirTokens.size() >= fileNameTokens.size())
-   {
-      return "";
-   }
-
-   // compare all the nodes from the root directory to those on the file
-   // to make sure the file is indeed located inside the root director
-   unsigned int rootDirTokensCount = rootDirTokens.size();
-   for (unsigned int i = 0; i < rootDirTokensCount; ++i)
-   {
-      if (rootDirTokens[i] != fileNameTokens[i])
-      {
-         return "";
-      }
-   }
-
-   // assemble a file name relative to the root directory
-   std::string relativeFileName = ".";
-   unsigned int fileNameTokensCount = fileNameTokens.size();
-   for (unsigned int i = rootDirTokensCount; i < fileNameTokensCount; ++i)
-   {
-      relativeFileName += "/" + fileNameTokens[i];
-   }
-   return relativeFileName;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamyEditor::tokenize(const std::string& str, 
-                          std::vector<std::string>& output,
-                          const std::string& tokens) const
-{
-   std::size_t start, end;
-   std::string tmp;
-   start = 0;
-   end = 0;
-
-   while (end != std::string::npos)
-   {
-      end = str.find_first_of(tokens, start);
-      tmp = str.substr(start, end - start);
-      if (tmp.size() > 0)
-      {
-         output.push_back(tmp);
-      }
-      start = end + 1;
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

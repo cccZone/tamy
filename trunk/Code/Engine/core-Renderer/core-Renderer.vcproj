@@ -187,10 +187,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RendererObject.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\Include\core-Renderer\RendererObject.h"
 				>
 			</File>
@@ -446,14 +442,6 @@
 		<Filter
 			Name="Resources"
 			>
-			<File
-				RelativePath=".\EffectResource.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core-Renderer\EffectResource.h"
-				>
-			</File>
 			<File
 				RelativePath="..\..\Include\core-Renderer\GeometryResource.h"
 				>

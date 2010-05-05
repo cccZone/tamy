@@ -7,9 +7,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_RTTI(TriangleMesh)
-   PARENT(RendererObject)
-END_RTTI
+BEGIN_RESOURCE( TriangleMesh, ttm, AM_BINARY )
+   PROPERTY( "vertices", std::vector<LitVertex>, m_vertices )
+   PROPERTY( "faces", std::vector<Face>, m_faces )
+END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,11 +20,22 @@ TriangleMesh::TriangleMesh()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TriangleMesh::TriangleMesh(const std::vector<LitVertex>& vertices,
-                           const std::vector<Face>& faces)
-: m_vertices(vertices)
+TriangleMesh::TriangleMesh( const std::string& name,
+                            const std::vector<LitVertex>& vertices,
+                            const std::vector<Face>& faces )
+: Resource( name )
+, m_vertices(vertices)
 , m_faces(faces)
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TriangleMesh::onResourceLoaded(ResourcesManager& mgr)
+{
+   Renderer& renderer = mgr.getInitializers().shared<Renderer>();
+   renderer.implement<TriangleMesh> (*this);
+
    // calculate the bounding volume
    unsigned int verticesCount = m_vertices.size();
    for (unsigned int i = 0; i < verticesCount; ++i)
@@ -32,22 +44,6 @@ TriangleMesh::TriangleMesh(const std::vector<LitVertex>& vertices,
    }
 
    D3DXMatrixIdentity(&m_identityMtx);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TriangleMesh::TriangleMesh(Filesystem& fs, 
-                           const std::string& fileName)
-{
-   // TODO: wczytywanie z pliku
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TriangleMesh::onLoaded(ResourcesManager& mgr)
-{
-   Renderer& renderer = mgr.getInitializers().shared<Renderer>();
-   renderer.implement<TriangleMesh> (*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

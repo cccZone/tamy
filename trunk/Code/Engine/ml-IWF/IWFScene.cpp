@@ -20,13 +20,9 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-IWFScene::IWFScene(Filesystem& fs, 
-                   const std::string& fileName)
-: m_progressObserver(NULL)
-, m_model(NULL)
-, m_renderer(NULL)
-, m_rm(NULL)
-, m_fs(fs)
+IWFScene::IWFScene( const Filesystem& fs, 
+                    const std::string& fileName )
+: m_fs(fs)
 {
    std::size_t lastPos = fileName.find_last_of( "/\\" );
    if ( lastPos != std::string::npos )
@@ -44,66 +40,6 @@ IWFScene::IWFScene(Filesystem& fs,
 
 IWFScene::~IWFScene()
 {
-   m_progressObserver = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void IWFScene::onLoaded(ResourcesManager& mgr)
-{
-   m_renderer = &(mgr.getInitializers().shared<Renderer> ());
-   m_rm = &mgr;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void IWFScene::load(Model& scene, IWFScene::ProgressObserver& observer)
-{
-   m_model = &scene;
-   m_progressObserver = &observer;
-   loadScene();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void IWFScene::loadScene()
-{
-   CFileIWF sceneFile;
-   sceneFile.Load(m_fs, m_sceneDir + std::string("/") + m_fileName);
-
-   ULONG allEntitiesCount = sceneFile.m_vpEntityList.size() + sceneFile.m_vpMeshList.size();
-   ULONG entitiesProcessedCount = 0;
-
-   // parse entities
-   for (ULONG i = 0; i < sceneFile.m_vpEntityList.size(); ++i, ++entitiesProcessedCount)
-   {
-      processEntities(sceneFile.m_vpEntityList[i]);
-
-      // update the progress status
-      m_progressObserver->setProgress((float)entitiesProcessedCount / (float)allEntitiesCount);
-   }
-
-   // parse internal meshes
-   for (UINT i = 0; i < sceneFile.m_vpMeshList.size(); ++i, ++entitiesProcessedCount)
-   {
-      std::string meshName = getUniqueNameForMesh(sceneFile.m_vpMeshList[i]->Name);
-
-      IWFMeshLoader meshLoader(sceneFile.m_vpMeshList[i], 
-         sceneFile.m_vpTextureList, 
-         sceneFile.m_vpMaterialList);
-
-      std::vector<MeshDefinition> meshes;
-      meshLoader.parseMesh(meshes, meshName);
-
-      D3DXMATRIX objMtx = reinterpret_cast<D3DXMATRIX&> (sceneFile.m_vpMeshList[i]->ObjectMatrix);
-      addStaticGeometry(meshes, objMtx);
-
-      // update the progress status
-      m_progressObserver->setProgress((float)entitiesProcessedCount / (float)allEntitiesCount);
-   }
-
-   // cleanup
-   sceneFile.ClearObjects();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -286,10 +222,21 @@ void IWFScene::addDynamicMesh(const std::string& meshFileName,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void IWFScene::addStaticGeometry(std::vector<MeshDefinition> meshes,
+void IWFScene::addStaticGeometry(Model& scene,
+                                 ResourcesManager& rm,
+                                 std::vector<MeshDefinition> meshes,
                                  const D3DXMATRIX& situation)
 {
-   EffectResource& effectRes = m_rm->create<EffectResource> ("Renderer/Shaders/SingleTextureEffect.fx");
+   Renderer& renderer = rm.getInitializers().shared< Renderer > ();
+
+   // aquire the default shader resource
+   std::string shaderFilename = "Renderer/Shaders/SingleTextureEffect.fx";
+   Shader* shader = NULL;
+   if ( ( shader = dynamic_cast< Shader* >( rm.findResource( shaderFilename ) ) ) == NULL )
+   {
+      shader = new Shader( shaderFilename );
+      rm.addResource( shader );
+   }
 
    // create main mesh
    RenderableJoint* root = new RenderableJoint();
@@ -300,34 +247,45 @@ void IWFScene::addStaticGeometry(std::vector<MeshDefinition> meshes,
    {
       MeshDefinition& currMesh = meshes[i];
 
-      TriangleMesh* geometry = new TriangleMesh(currMesh.vertices, currMesh.faces);
+      // create the geometry
       char geomName[128];
       static int loadedMeshesUniqueID = 0;
       sprintf_s(geomName, 128, "%s/%s_geom_%d.tgt", m_sceneDir.c_str(), currMesh.name.c_str(), ++loadedMeshesUniqueID);
-      m_rm->addResource(geometry, geomName);
 
-      Renderable* renderable = new Renderable();
-      renderable->add(geometry->load());
-      renderable->setLocalMtx(currMesh.localMtx);
+      TriangleMesh* geometry = new TriangleMesh( geomName, currMesh.vertices, currMesh.faces );
+      rm.addResource( geometry );
 
-      SingleTextureEffect* effect = dynamic_cast<SingleTextureEffect*> (effectRes.load());
+      // create a rendering effect instance
+      SingleTextureEffect* effect = new SingleTextureEffect();
+      effect->initialize( *shader );
    
       MaterialDefinition& mat = currMesh.material;
       effect->setMaterial(Material(mat.ambient, mat.diffuse, mat.specular, mat.emissive, mat.power));
       
       if (mat.texName.length() > 0)
       {
-         Texture& texture = m_rm->create<Texture> ( m_sceneDir + std::string( "/" ) + mat.texName );
-         effect->setTexture(texture);
+         std::string texName = m_sceneDir + std::string( "/" ) + mat.texName; 
+         Texture* texture = NULL;
+         if ( ( texture = dynamic_cast< Texture* >( rm.findResource( texName ) ) ) == NULL )
+         {
+            texture = new Texture( texName );
+            rm.addResource( texture );
+         }
+         effect->setTexture( *texture );
       }
 
-      renderable->add(effect);
+      // setup the renderable
+      Renderable* renderable = new Renderable();
+      renderable->add( new Geometry( *geometry ) );
+      renderable->add( effect );
+      renderable->setLocalMtx( currMesh.localMtx );
 
+      // add the renderable to the mesh
       root->add(renderable);
    }
 
    // add the mesh to the scene
-   m_model->add(root);
+   scene.add(root);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

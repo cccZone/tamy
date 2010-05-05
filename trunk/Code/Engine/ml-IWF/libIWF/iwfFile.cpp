@@ -108,7 +108,7 @@ void CFileIWF::ClearObjects()
 // Name : Load ()
 // Desc : Starts off the IWF loading process
 //-----------------------------------------------------------------------------
-void CFileIWF::Load( Filesystem& filesystem, const std::string& fileName, ULONG Flags )
+void CFileIWF::Load( const Filesystem& filesystem, const std::string& fileName, ULONG Flags )
 {
     IWFFILEHEADER FileHeader;
 

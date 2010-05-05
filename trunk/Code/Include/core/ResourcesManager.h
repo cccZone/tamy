@@ -7,6 +7,7 @@
 #include <map>
 #include <string>
 #include "core\SingletonsManager.h"
+#include "core\Serializer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,10 +29,8 @@ private:
 
    Filesystem* m_filesystem;
 
-   typedef std::vector<Resource*> ResourcesVec;
-   typedef std::map<std::string, ResourcesVec > ResourcesMap;
+   typedef std::map<std::string, Resource* > ResourcesMap;
    ResourcesMap m_resources;
-   unsigned int m_resourcesCount;
 
 public:
    /**
@@ -39,6 +38,11 @@ public:
     */
    ResourcesManager();
    ~ResourcesManager();
+
+   /**
+    * Reset the manager by removing all registered resources.
+    */
+   void reset();
 
    /**
     * Sets a new filesystem the manager should use to load the resources from.
@@ -83,26 +87,33 @@ public:
     * Registers a new resource instance with the resources manager.
     *
     * @param resource   new resource instance to register
-    * @param name       name of the resource file (should exist in the
-    *                   currently set filesystem)
-    * @param RES_TYPE   resource class type
     */
-   template<typename RES_TYPE>
-   void addResource(RES_TYPE* resource, const std::string& name);
+   void addResource( Resource* resource );
 
    /**
     * Creates a resource based on a file with the specified name.
     *
     * @param name       name of the resource file (should exist in the
     *                   currently set filesystem)
-    * @param RES_TYPE   resource class type
     */
-   template<typename RES_TYPE>
-   RES_TYPE& create(const std::string& name);
+   Resource& create(const std::string& name);
 
-private:
-   template<typename RES_TYPE>
-   RES_TYPE* findResource(ResourcesVec& resources);
+   /**
+    * Saves a resource associated with the specified file onto the filesystem.
+    *
+    * @param name       name of the resource file (should exist in the
+    *                   currently set filesystem)
+    * @param outExternalDependencies   other resources used by this resource
+    */
+   void save( const std::string& name, ExternalDependenciesSet& outExternalDependencies = ExternalDependenciesSet() );
+
+   /**
+    * Looks up a resource with the given name.
+    *
+    * @param name       name of the resource
+    * @return           pointer to the resource or NULL if the manager does not have one.
+    */
+   Resource* findResource( const std::string& name );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

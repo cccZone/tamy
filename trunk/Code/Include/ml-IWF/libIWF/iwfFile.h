@@ -84,7 +84,7 @@ public:
     //-------------------------------------------------------------------------
     // Public Functions for This Class.
     //-------------------------------------------------------------------------
-    void            Load( Filesystem& filesystem, const std::string& fileName, ULONG Flags = 0 );
+    void            Load( const Filesystem& filesystem, const std::string& fileName, ULONG Flags = 0 );
     void            ClearObjects();
 
     //-------------------------------------------------------------------------

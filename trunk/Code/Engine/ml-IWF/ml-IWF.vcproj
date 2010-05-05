@@ -169,6 +169,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Include\ml-IWF\IWFScene.inl"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Include\ml-IWF\MeshDefinition.h"
 				>
 			</File>

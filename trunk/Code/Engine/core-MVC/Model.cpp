@@ -9,14 +9,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace // anonymous
-{
-   class NullProgressObserver : public Model::ProgressObserver
-   {
-   public:
-      void setProgress(float percentage) {}
-   };
-} // anonymous
+BEGIN_RESOURCE( Model, tsc, AM_BINARY )
+   PROPERTY( "entities", Entities, m_entities )
+END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -103,38 +98,6 @@ void Model::clear()
       {
          m_views[i]->resetContents();
       }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Model::save(Saver& serializer, ProgressObserver& observer)
-{
-   unsigned int count = m_entities.size();
-   dynamic_cast< Serializer& >( serializer )<< count;
-
-   for (unsigned int i = 0; i < count; ++i)
-   {
-      Entity& entity = *(m_entities[i]);
-      serializer.save(entity);
-
-      observer.setProgress((float)i / (float)count);
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Model::load(Loader& serializer, ProgressObserver& observer)
-{
-   unsigned int entitiesCount = 0;
-   dynamic_cast< Serializer& >( serializer ) << entitiesCount;
-
-   for (unsigned int i = 0; i < entitiesCount; ++i)
-   {
-      Entity* entity = serializer.load< Entity >();
-      add(entity);
-
-      observer.setProgress((float)i / (float)entitiesCount);
    }
 }
 

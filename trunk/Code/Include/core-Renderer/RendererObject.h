@@ -4,7 +4,6 @@
 /// @file   core-Renderer\RendererObject.h
 /// @brief  A base for all renderer objects
 
-
 #include "core\Class.h"
 
 
@@ -25,8 +24,6 @@ class RendererObjectImpl;
  */
 class RendererObject : public RTTIObject
 {
-   DECLARE_RTTI_CLASS
-
 public:
    virtual ~RendererObject() {}
 

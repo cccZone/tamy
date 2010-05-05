@@ -33,7 +33,7 @@ namespace // anonymous
          return *m_vol * idMtx;
       }
 
-      void onLoaded(ResourcesManager& mgr) {}
+      void onResourceLoaded(ResourcesManager& mgr) {}
    };
 
 } // anonymous

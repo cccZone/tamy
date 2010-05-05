@@ -4,35 +4,35 @@
 #include "core\SingletonsManager.h"
 #include <math.h>
 
-// TODO: TOP(1) !!!!! Save'owanie (przy zapisie swiata zapis resource'ow z resource manager'a).
-// Innymi slowy - zintegrowac zapisywanie z resources manager'em
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_RTTI(LineSegments)
-   PARENT(RendererObject)
-END_RTTI
+BEGIN_RESOURCE( LineSegments, tls, AM_BINARY )
+   PROPERTY( "segments", std::vector<LineSegment>, m_segments )
+END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LineSegments::LineSegments()
+LineSegments::LineSegments( const std::string& name )
+: Resource( name )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LineSegments::LineSegments(Filesystem& fs, 
-                           const std::string& fileName)
-{
-   // TODO: wczytywanie z pliku
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void LineSegments::onLoaded(ResourcesManager& mgr)
+void LineSegments::onResourceLoaded(ResourcesManager& mgr)
 {
    Renderer& renderer = mgr.getInitializers().shared<Renderer>();
    renderer.implement<LineSegments> (*this);
+
+   // calculate the bounding box
+   m_bb = AABoundingBox();
+   for (std::vector<LineSegment>::iterator it = m_segments.begin();
+      it != m_segments.end(); ++it )
+   {
+      m_bb.include(it->start);
+      m_bb.include(it->end);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
