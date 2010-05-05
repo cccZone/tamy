@@ -48,45 +48,28 @@ public:
  *       them to operate with Shaders etc.
  */
 class Texture : public TRendererObject<TextureImpl>, 
-   public UniqueObject, public Resource
+                public UniqueObject, 
+                public Resource
 {
-   DECLARE_RTTI_CLASS
+   DECLARE_RESOURCE( Texture )
 
 private:
-   std::string m_name;
+   std::string m_texFileName;
    
    byte* m_imgBuffer;
    unsigned int m_bufSize;
 
 public:
    /**
-    * Default constructor.
-    */
-   Texture();
-
-   /**
-    * Resource-compliant constructor.
-    */
-   Texture(Filesystem& fs, const std::string& fileName);
-
-   /**
     * Constructor.
-    *
-    * @param name       texture name
-    * @param imgBuffer  buffer with the texture image
-    * @param bufSize    image buffer size
     */
-   Texture(const std::string& name, 
-           byte* imgBuffer,
-           unsigned int bufSize);
+   Texture( const std::string& fileName = "" );
    ~Texture();
 
    /**
-    * Returns the name of the texture.
-    *
-    * @return  texture's name
+    * Returns the name of th eimage file.
     */
-   const std::string& getName() const;
+   inline const std::string& getTextureName() const { return m_texFileName; }
 
    /**
     * Returns a pointer to the platform specific implementation
@@ -117,7 +100,10 @@ public:
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
-   void onLoaded(ResourcesManager& mgr);
+   void onResourceLoaded(ResourcesManager& mgr);
+
+private:
+   void loadFromFile( const Filesystem& fs );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

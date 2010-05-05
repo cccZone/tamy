@@ -9,38 +9,22 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_RTTI(Shader)
-   PARENT(RendererObject)
-END_RTTI
+BEGIN_RESOURCE( Shader, tfx, AM_BINARY )
+   PROPERTY( "hlsl", std::string, m_script )
+END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Shader::Shader()
+Shader::Shader( const std::string& fileName )
+: Resource( Filesystem::changeFileExtension( fileName, Shader::getExtension() ) )
+, m_fileName( fileName )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Shader::Shader(Filesystem& fs, const std::string& fileName)
-{
-   File* file = fs.open(fileName, std::ios_base::in | std::ios_base::binary);
-   if (file == NULL)
-   {
-      throw std::invalid_argument("HLSL file doesn't exist");
-   }
-   StreamBuffer<byte> buf(*file);
-
-   m_name = file->getName();
-
-   StreamBuffer<char> shaderScript(*file);
-   m_script = shaderScript.getBuffer();
-   delete file;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Shader::Shader(const std::string& name, const std::string& script)
-: m_name(name)
+Shader::Shader( const std::string& name, const std::string& script )
+: Resource( name )
 , m_script(script)
 {
 }
@@ -53,8 +37,29 @@ Shader::~Shader()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Shader::onLoaded(ResourcesManager& mgr)
+void Shader::onResourceLoaded( ResourcesManager& mgr )
 {
+   if ( m_script.empty() )
+   {
+      ASSERT( !m_fileName.empty(), "Neither .fx file nor a shader script specified" );
+      if ( m_fileName.empty() )
+      {
+         return;
+      }
+
+      const Filesystem& fs = mgr.getFilesystem();
+      File* file = fs.open( m_fileName, std::ios_base::in | std::ios_base::binary );
+      if (file == NULL)
+      {
+         throw std::invalid_argument("HLSL file doesn't exist");
+      }
+      StreamBuffer<byte> buf(*file);
+
+      StreamBuffer<char> shaderScript(*file);
+      m_script = shaderScript.getBuffer();
+      delete file;
+   }
+
    Renderer& renderer = mgr.getInitializers().shared<Renderer>();
    renderer.implement<Shader>(*this);
 }
@@ -64,13 +69,6 @@ void Shader::onLoaded(ResourcesManager& mgr)
 const std::string& Shader::getScript() const
 {
    return m_script;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const std::string& Shader::getName() const
-{
-   return m_name;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

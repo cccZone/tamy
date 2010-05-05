@@ -61,7 +61,6 @@
 // Resources
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Shader.h"
-#include "core-Renderer\EffectResource.h"
 #include "core-Renderer\GeometryResource.h"
 
 // ----------------------------------------------------------------------------

@@ -129,7 +129,7 @@ bool CBaseIWF::CheckValidAuthor( LPVOID pAuthor, unsigned char Length ) const
 //        or MODE_WRITE) to allow the IWF functionality to correctly interpret
 //        the correct use of some of the multi-purpose read+write functions.
 //-----------------------------------------------------------------------------
-void CBaseIWF::Open( Filesystem& filesystem, 
+void CBaseIWF::Open( const Filesystem& filesystem, 
                      const std::string& fileName, 
                      IWFPROCESSMODE Mode, 
                      IWFFILEHEADER * pHeader )
@@ -195,7 +195,7 @@ void CBaseIWF::Open( Filesystem& filesystem,
 //        start of the stream expected to be tested, and will also return the
 //        stream back to that same position once testing has completed.
 //-----------------------------------------------------------------------------
-bool CBaseIWF::IsValid( Filesystem& filesystem, 
+bool CBaseIWF::IsValid( const Filesystem& filesystem, 
                         const std::string& fileName )
 {
     bool            SuccessCode = true;

@@ -21,9 +21,6 @@ class Grid : public Entity
 {
    DECLARE_CLASS(Grid)
 
-private:
-   LineSegments* m_gridLines;
-
 public:
    /**
     * Default constructor.
@@ -36,7 +33,6 @@ public:
     * @param renderer         renderer used to display the component
     */
    Grid(Renderer& renderer, ResourcesManager& rm);
-   ~Grid();
 
 protected:
    // -------------------------------------------------------------------------

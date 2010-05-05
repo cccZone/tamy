@@ -5,15 +5,24 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT(SelectionMarker, ShaderEffect)
+BEGIN_OBJECT( SelectionMarker, ShaderEffect )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Effect* SelectionMarker::create( ResourcesManager& rm )
 {
-   EffectResource& effectRes = rm.create<EffectResource>("Editor/Shaders/SelectionMarker.fx");
-   Effect* effect = effectRes.load();
+   std::string shaderFileName = "Editor/Shaders/SelectionMarker.fx";
+   Shader* shader = NULL;
+   if ( ( shader = dynamic_cast< Shader* >( rm.findResource( shaderFileName ) ) ) == NULL )
+   {
+      shader = new Shader( shaderFileName );
+      rm.addResource( shader );
+   }
+
+   SelectionMarker* effect = new SelectionMarker();
+   effect->initialize( *shader );
+
    return effect;
 }
 

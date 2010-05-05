@@ -5,22 +5,24 @@
 #include "core\PropertyEditor.h"
 #include "core\Serializer.h"
 #include "core\SerializerImpl.h"
+#include "core\Resource.h"
+#include "core\ResourcesManager.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace // anonymous
 {
-   struct BaseObject : public Object
+   struct BaseObject : public Resource
    {
       DECLARE_STRUCT(BaseObject)
 
       int   m_val;
 
-      BaseObject(int val = -1) : m_val(val) {}
+      BaseObject(int val = -1) : Resource( "BaseObject" ), m_val(val) {}
       virtual ~BaseObject() {}
    };
-   BEGIN_OBJECT(BaseObject, Object)
+   BEGIN_OBJECT(BaseObject, Resource)
       PROPERTY("some label", int, m_val)
    END_OBJECT()
 
@@ -40,21 +42,21 @@ namespace // anonymous
 
    // -------------------------------------------------------------------------
 
-   struct DependentObject : public Object
+   struct DependentObject : public Resource
    {
       DECLARE_STRUCT(DependentObject)
 
       BaseObject* m_obj;
 
-      DependentObject(BaseObject* obj = NULL) : m_obj(obj) {}
+      DependentObject(BaseObject* obj = NULL) : Resource( "DependentObject" ), m_obj(obj) {}
    };
-   BEGIN_OBJECT(DependentObject, Object)
+   BEGIN_OBJECT(DependentObject, Resource)
       PROPERTY("some label", BaseObject*, m_obj)
    END_OBJECT()
 
    // -------------------------------------------------------------------------
 
-   class AbstractClass : public Object
+   class AbstractClass : public Resource
    {
       DECLARE_ABSTRACT_CLASS(AbstractClass)
 
@@ -71,9 +73,9 @@ namespace // anonymous
       virtual int getVal() const = 0;
 
    protected:
-      AbstractClass() : m_baseVal(-1) {}
+      AbstractClass( const std::string& resName = "AbstractClass" ) : Resource( resName ),  m_baseVal(-1) {}
    };
-   BEGIN_ABSTRACT_OBJECT(AbstractClass, Object)
+   BEGIN_ABSTRACT_OBJECT(AbstractClass, Resource)
       PROPERTY("baseVal", int, m_baseVal)
    END_OBJECT()
 
@@ -87,7 +89,7 @@ namespace // anonymous
       int m_val;
 
    public:
-      ImplementingClass() : m_val(-1) {}
+      ImplementingClass() : AbstractClass( "ImplementingClass" ), m_val(-1) {}
 
       void setVal(int val) { m_val = val; }
       int getVal() const { return m_val; }
@@ -98,43 +100,19 @@ namespace // anonymous
 
    // -------------------------------------------------------------------------
 
-   class HierachicalClass : public Object
+   class RegularObject : public Object
    {
-      DECLARE_CLASS(HierachicalClass)
+      DECLARE_CLASS(RegularObject)
 
    public:
-      HierachicalClass*                m_parent;
-      std::vector< HierachicalClass* > m_children;
+      Object* m_parent;
 
-   public:
-      HierachicalClass() : m_parent(NULL) {}
-      ~HierachicalClass() 
-      {
-         unsigned int count = m_children.size();
-         for ( unsigned int i = 0; i < count; ++i )
-         {
-            delete m_children[i];
-         }
-         m_children.clear();
-      }
-
-
-      void addChild( HierachicalClass* child )
-      {
-         if ( !child )
-         {
-            return;
-         }
-         child->m_parent = this;
-         m_children.push_back( child );
-      }
+      RegularObject() : m_parent( NULL ) {}
 
    };
-   BEGIN_OBJECT(HierachicalClass, Object)
-      PROPERTY("parent", HierachicalClass*, m_parent)
-      PROPERTY("children", std::vector< HierachicalClass* >, m_children)
+   BEGIN_OBJECT(RegularObject, Object)
+      PROPERTY("parent", Object*, m_parent)
    END_OBJECT()
-
 
    // -------------------------------------------------------------------------
 
@@ -216,33 +194,33 @@ TEST(Object, properties)
 
 TEST(Object, serialization)
 {
-   BaseObject baseObj(1);
+   ResourcesManager mgr;
 
+   BaseObject baseObj(1);
    DerivedObject derivedObj(3, 2);
 
    std::vector<byte> storage;
    Saver saver(new SerializerImplMock(storage));
    Loader loader(new SerializerImplMock(storage));
 
-   saver.save(baseObj);
-   BaseObject* restoredObj = loader.load< BaseObject >();
-   CPPUNIT_ASSERT_EQUAL(1, restoredObj->m_val);
-   delete restoredObj;
+   saver.save( baseObj );
+   BaseObject& restoredObj1 = dynamic_cast< BaseObject& >( loader.load( mgr ) );
+   CPPUNIT_ASSERT_EQUAL(1, restoredObj1.m_val);
 
    storage.clear();
 
-   saver.save(derivedObj);
-   restoredObj = loader.load< DerivedObject >();
-
-   CPPUNIT_ASSERT_EQUAL(2, restoredObj->m_val);
-   CPPUNIT_ASSERT_EQUAL(3, ((DerivedObject*)(restoredObj))->m_val);
-   delete restoredObj;
+   saver.save( derivedObj );
+   BaseObject& restoredObj2 = dynamic_cast< BaseObject& >( loader.load( mgr ) );
+   CPPUNIT_ASSERT_EQUAL(2, restoredObj2.m_val);
+   CPPUNIT_ASSERT_EQUAL(3, (dynamic_cast< DerivedObject& >( restoredObj2 )).m_val);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(Object, dependencies)
 {
+   ResourcesManager mgr;
+
    // case 1: dependency not set
    {
       DependentObject depObj;
@@ -252,60 +230,56 @@ TEST(Object, dependencies)
       Loader loader(new SerializerImplMock(storage));
 
       saver.save(depObj);
-      DependentObject* restoredObj = loader.load< DependentObject >();
-
-      CPPUNIT_ASSERT(restoredObj->m_obj == NULL);
-      delete restoredObj;
+      DependentObject& restoredObj = dynamic_cast< DependentObject& >( loader.load( mgr ) );
+      CPPUNIT_ASSERT(restoredObj.m_obj == NULL);
    }
 
    // case 2: dependency set
    {
-      BaseObject baseObj(5);
-      DependentObject depObj(&baseObj);
+      BaseObject* baseObj = new BaseObject(5);
+      mgr.addResource( baseObj );
+      DependentObject depObj( baseObj );
 
       std::vector<byte> storage;
       Saver saver(new SerializerImplMock(storage));
       Loader loader(new SerializerImplMock(storage));
 
       saver.save( depObj );
-      DependentObject* restoredObj = loader.load< DependentObject >();
-      CPPUNIT_ASSERT(restoredObj->m_obj != NULL);
-      CPPUNIT_ASSERT_EQUAL(5, restoredObj->m_obj->m_val);
-      delete restoredObj->m_obj;
-      delete restoredObj;
+      DependentObject& restoredObj = dynamic_cast< DependentObject& >( loader.load( mgr ) );
+      CPPUNIT_ASSERT(restoredObj.m_obj != NULL);
+      CPPUNIT_ASSERT_EQUAL(5, restoredObj.m_obj->m_val);
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST( Object, dependenciesMapping )
+TEST( Object, resourcesTreatedAsSingletons )
 {
-   HierachicalClass parent;
-   parent.addChild( new HierachicalClass() );
+   BaseObject* baseObj = new BaseObject(5);
+   DependentObject depObj1( baseObj );
+   DependentObject depObj2( baseObj );
 
    std::vector<byte> storage;
-   Saver saver( new SerializerImplMock( storage ) );
-   Loader loader( new SerializerImplMock( storage ) );
+   ResourcesManager mgr;
+   mgr.addResource( baseObj );
 
-   saver.save( parent );
-   HierachicalClass* restoredParent = loader.load< HierachicalClass >();
+   Saver saver(new SerializerImplMock(storage));
+   saver.save( depObj1 );
+   saver.save( depObj2 );
 
-   CPPUNIT_ASSERT( restoredParent != NULL );
-   CPPUNIT_ASSERT( restoredParent->m_parent == NULL );
-   CPPUNIT_ASSERT_EQUAL( (unsigned int)1, restoredParent->m_children.size() );
-
-   HierachicalClass* restoredChild = restoredParent->m_children[0];
-   CPPUNIT_ASSERT( restoredChild != NULL );
-   CPPUNIT_ASSERT( restoredChild->m_parent == restoredParent );
-   CPPUNIT_ASSERT_EQUAL( (unsigned int)0, restoredChild->m_children.size() );
-
-   delete restoredParent;
+   Loader loader(new SerializerImplMock(storage));
+   DependentObject& restoredObj1 = dynamic_cast< DependentObject& >( loader.load( mgr ) );
+   DependentObject& restoredObj2 = dynamic_cast< DependentObject& >( loader.load( mgr ) );
+   CPPUNIT_ASSERT(&restoredObj1 != &restoredObj2);
+   CPPUNIT_ASSERT(restoredObj1.m_obj == restoredObj2.m_obj);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(Object, inheritance)
 {
+   ResourcesManager mgr;
+
    ImplementingClass obj;
    obj.setBaseVal(1);
    obj.setVal(2);
@@ -315,10 +289,9 @@ TEST(Object, inheritance)
    Loader loader(new SerializerImplMock(storage));
 
    saver.save(obj);
-   AbstractClass* restoredObj = loader.load< AbstractClass >();
-   CPPUNIT_ASSERT_EQUAL(1, restoredObj->getBaseVal());
-   CPPUNIT_ASSERT_EQUAL(2, restoredObj->getVal());
-   delete restoredObj;
+   AbstractClass& restoredObj = dynamic_cast< AbstractClass& >( loader.load( mgr ) );
+   CPPUNIT_ASSERT_EQUAL(1, restoredObj.getBaseVal());
+   CPPUNIT_ASSERT_EQUAL(2, restoredObj.getVal());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

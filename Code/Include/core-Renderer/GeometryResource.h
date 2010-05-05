@@ -3,28 +3,18 @@
 /// @file   core-Renderer\GeometryResource.h
 /// @brief  resource with geometry data
 
-#include <core\Array.h>
-#include "core\Resource.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\Geometry.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class Filesystem;
-class SingletonsManager;
+class BoundingVolume;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * A resource for creating geometry data.
  */
-class GeometryResource : public Resource
+class GeometryResource
 {
 public:
    virtual ~GeometryResource() {}
-
-   inline Geometry* load() {return new Geometry(*this);}
 
    /**
     * Renders the geometry.

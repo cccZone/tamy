@@ -6,6 +6,7 @@
 
 #include <vector>
 #include "core-Renderer\GeometryResource.h"
+#include "core\Resource.h"
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
 #include "core\AABoundingBox.h"
@@ -25,6 +26,7 @@ struct LineSegment
    /**
     * Constructor.
     */
+   inline LineSegment();
    inline LineSegment(const D3DXVECTOR3& start, const D3DXVECTOR3& end);
 
    inline bool operator==(const LineSegment& rhs) const;
@@ -59,12 +61,14 @@ public:
  * line segments.
  */
 class LineSegments : public GeometryResource, 
+                     public Resource,
                      public TRendererObject<LineSegmentsImpl>
 {
-   DECLARE_RTTI_CLASS
+   DECLARE_RESOURCE( LineSegments )
 
 private:
    std::vector<LineSegment> m_segments;
+
    D3DXMATRIX m_identityMtx;
    AABoundingBox m_bb;
 
@@ -72,13 +76,7 @@ public:
    /**
     * Constructor.
     */
-   LineSegments();
-
-   /**
-    * Resource-compliant constructor.
-    */
-   LineSegments(Filesystem& fs, 
-      const std::string& fileName);
+   LineSegments( const std::string& name = "" );
 
    /**
     * Adds a new line segment to the geometry.
@@ -112,7 +110,7 @@ public:
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
-   void onLoaded(ResourcesManager& mgr);
+   void onResourceLoaded(ResourcesManager& mgr);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

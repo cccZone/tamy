@@ -50,7 +50,7 @@ void DX9Texture::initialize(Renderer& renderer)
 
    if (FAILED(res))
    {
-      std::string errorMsg = std::string("Can't load texture ") + m_texture.getName();
+      std::string errorMsg = std::string("Can't load texture ") + m_texture.getTextureName();
       switch(res)
       {
       case D3DERR_INVALIDCALL:

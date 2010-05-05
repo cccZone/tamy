@@ -4,6 +4,7 @@
 /// @brief  filesystem manager
 
 #include <string>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,6 +63,36 @@ public:
     */
    File* open(const std::string& fileName, 
               const std::ios_base::openmode mode = std::ios_base::in) const;
+
+   // -------------------------------------------------------------------------
+   // Utility methods
+   // -------------------------------------------------------------------------
+   /**
+    * Extracts an extension of the specified filename.
+    *
+    * @param fileName
+    */
+   static std::string extractExtension( const std::string& fileName );
+
+   /**
+    * Changes the extension on a filename, and returns it in a brand new string.
+    *
+    * @param fileName
+    * @param newExtension
+    */
+   static std::string changeFileExtension( const std::string& fileName, const std::string& newExtension );
+
+   /**
+    * Converts the specified absolute path to the filesystem-relative path.
+    *
+    * @param absoluteFilePath
+    */
+   std::string toRelativePath( const std::string& absoluteFilePath ) const;
+
+private:
+   void tokenize(const std::string& str, 
+      std::vector<std::string>& output,
+      const std::string& tokens) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

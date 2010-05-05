@@ -5,6 +5,7 @@
 /// @brief  geometry of a mesh composed of triangles
 
 #include <vector>
+#include "core\Resource.h"
 #include "core-Renderer\GeometryResource.h"
 #include "core-Renderer\VertexArray.h"
 #include "core-Renderer\Face.h"
@@ -12,7 +13,6 @@
 #include "core\AABoundingBox.h"
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -41,9 +41,10 @@ public:
  * this responsibility on the TriangleMeshImpl.
  */
 class TriangleMesh : public GeometryResource, 
+                     public Resource,
                      public TRendererObject<TriangleMeshImpl>
 {
-   DECLARE_RTTI_CLASS
+   DECLARE_RESOURCE( TriangleMesh )
 
 private:
    std::vector<LitVertex> m_vertices;
@@ -61,17 +62,13 @@ public:
    /**
     * Constructor.
     *
+    * @param name       resource name
     * @param vertices   mesh vertices
     * @param faces      mesh faces
     */
-   TriangleMesh(const std::vector<LitVertex>& vertices,
-                const std::vector<Face>& faces);
-
-   /**
-    * Resource-compliant constructor.
-    */
-   TriangleMesh(Filesystem& fs, 
-      const std::string& fileName);
+   TriangleMesh( const std::string& name,
+                 const std::vector<LitVertex>& vertices,
+                 const std::vector<Face>& faces );
 
    /**
     * Returns an array of vertices of the mesh (in their generic form.)
@@ -97,7 +94,7 @@ public:
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
-   void onLoaded(ResourcesManager& mgr);
+   void onResourceLoaded(ResourcesManager& mgr);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

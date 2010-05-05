@@ -9,40 +9,6 @@
 #include "core\Serializer.h"
 #include "core\SerializerImpl.h"
 
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename Derived >
-Derived* Loader::load()
-{
-   // recover the dependencies
-   m_dependencies.clear();
-   m_dependencies.push_back( NULL );
-
-   // load the dependencies
-   unsigned int count = 0;
-   m_impl->read( ( byte* )&count, sizeof( unsigned int ) );
-
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      Serializable* ptr = Serializable::load<Serializable>(*this);
-      m_dependencies.push_back( ptr );
-   }
-
-   // the root object is always the second one in the dependencies map
-   // ('cause the first one is the NULL pointer)
-   Serializable* root = m_dependencies[1];
-
-   // update the dependencies between the objects
-   DependenciesMapper mapper( m_dependencies, PSS_UPDATE );
-   count = m_dependencies.size();
-   for ( unsigned int i = 1; i < count; ++i )
-   {
-      m_dependencies[ i ]->save( mapper );
-   }
-
-   Derived* derRoot = dynamic_cast< Derived* >( root );
-   return derRoot;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -65,8 +31,9 @@ void Serializer::operator<<(std::vector<T>& vec)
       *this << count;
       for (unsigned int i = 0; i < count; ++i)
       {
-         vec.push_back(0);
-         *this << vec.back();
+         T data;
+         *this << data;
+         vec.push_back( data );
       }
    }
 }
@@ -111,6 +78,26 @@ void Serializer::operator<<(std::vector<T*>& vec)
       }
    }
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void DependenciesMapper::saveDependency( typename std::vector< T* >& depsMap, T* ptr )
+{
+   unsigned int count = depsMap.size();
+   for ( unsigned int idx = 0; idx < count; ++idx )
+   {
+      if ( depsMap[idx] == ptr )
+      {
+         // yes - we have it mapped
+         return;
+      }
+   }
+
+   depsMap.push_back( ptr );
+   ptr->save( *this );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 #endif // _SERIALIZER_H

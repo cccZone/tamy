@@ -64,7 +64,7 @@ namespace // anonymous
    };
    BEGIN_OBJECT(GridRenderingEffect, ShaderEffect)
    END_OBJECT()
- 
+
 } // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,21 +75,28 @@ END_OBJECT()
 ///////////////////////////////////////////////////////////////////////////////
 
 Grid::Grid()
-: m_gridLines(NULL)
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Grid::Grid(Renderer& renderer, ResourcesManager& rm)
+Grid::Grid( Renderer& renderer, ResourcesManager& rm )
 {
-   m_gridLines = new LineSegments();
-   rm.addResource(m_gridLines, "Editor/Geometry/grid.tgl");
+   LineSegments* gridLines = new LineSegments();
+   renderer.implement< LineSegments >( *gridLines );
 
-   EffectResource& effectRes = rm.create<EffectResource>("Editor/Shaders/GridRenderingEffect.fx");
-   Effect* effect = effectRes.load();
+   std::string gridShaderFilename = "Editor/Shaders/GridRenderingEffect.fx";
+   Shader* shader = NULL;
+   if ( ( shader = dynamic_cast< Shader* >( rm.findResource( gridShaderFilename ) ) ) == NULL )
+   {
+      shader = new Shader( gridShaderFilename );
+      rm.addResource( shader );
+   }
+   ShaderEffect* effect = new GridRenderingEffect();
+   effect->initialize( *shader );
+
    Renderable* renderable = new Renderable();
-   renderable->add(m_gridLines->load());
+   renderable->add( new Geometry( *gridLines ) );
    renderable->add(effect); 
    this->add(renderable);
 
@@ -98,17 +105,10 @@ Grid::Grid(Renderer& renderer, ResourcesManager& rm)
    for (int i = -25; i <= 25; ++i)
    {
       varPos = i * 4.0f;
-      m_gridLines->add(LineSegment(D3DXVECTOR3(-dim, 0, varPos), D3DXVECTOR3(dim, 0, varPos)));
-      m_gridLines->add(LineSegment(D3DXVECTOR3(varPos, 0, -dim), D3DXVECTOR3(varPos, 0, dim)));
+      gridLines->add(LineSegment(D3DXVECTOR3(-dim, 0, varPos), D3DXVECTOR3(dim, 0, varPos)));
+      gridLines->add(LineSegment(D3DXVECTOR3(varPos, 0, -dim), D3DXVECTOR3(varPos, 0, dim)));
    }
-   m_gridLines->rebuild();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Grid::~Grid()
-{
-   m_gridLines = NULL;
+   gridLines->rebuild();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

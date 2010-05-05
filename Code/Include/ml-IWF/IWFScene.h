@@ -1,9 +1,9 @@
-#pragma once
+#ifndef _IWF_SCENE_H
+#define _IWF_SCENE_H
 
 /// @file      ml-IWF\IWFScene.h
 /// @brief     IWF files loader
 
-#include "core\Resource.h"
 #include "core-MVC.h"
 #include <string>
 #include <list>
@@ -20,7 +20,6 @@ class iwfMaterial;
 class iwfSurface;
 struct ReferenceEntity;
 class Filesystem;
-class Renderer;
 class SingletonsManager;
 class ResourcesManager;
 struct Color;
@@ -31,65 +30,31 @@ struct MeshDefinition;
 /**
  * This class will load a scene form an IWF file.
  */
- class IWFScene : public Resource
+ class IWFScene
 {
-public:
-   /**
-    * Interface that gets notified about the progress in loading an IWF file.
-    */
-   class ProgressObserver
-   {
-   public:
-      virtual ~ProgressObserver() {}
-
-      /**
-       * The method is called when some progress in loading is made.
-       *
-       * @param percentage    percentage <0, 1> of data already loaded
-       */
-      virtual void setProgress(float percentage) = 0;
-   };
-
 private:
-   ProgressObserver* m_defaultProgressObserver;
-   ProgressObserver* m_progressObserver;
-
-   Model* m_model;
-   Renderer* m_renderer;
-   ResourcesManager* m_rm;
-
-   Filesystem& m_fs;
+   const Filesystem& m_fs;
    std::string m_sceneDir;
    std::string m_fileName;
 
 public:
    /** 
-    * Constructor (resource compliant).
+    * Constructor.
     */
-   IWFScene(Filesystem& fs, 
-      const std::string& fileName);
+   IWFScene( const Filesystem& fs, const std::string& fileName );
    ~IWFScene();
 
    /**
     * The method will load a scene from an IWF file.
     *
     * @param scene         a model to which the scene should be uploaded
+    * @param rm            resources manager that manages the scene resources
     * @param observer      loading progress observer
     */
-   void load(Model& scene, IWFScene::ProgressObserver& observer);
-
-   // -------------------------------------------------------------------------
-   // Resource implementation
-   // -------------------------------------------------------------------------
-   void onLoaded(ResourcesManager& mgr);
+   template< typename TProgressObserver >
+   void load( Model& scene, ResourcesManager& rm, TProgressObserver& observer );
 
 private:
-
-   // -------------------------------------------------------------------------
-   // helper methods
-   // -------------------------------------------------------------------------
-   void loadScene();
-
    void processEntities(iwfEntity* fileEntity);
 
    std::vector<std::string> extractSkyBoxTextures(UCHAR* skyBoxData) const;
@@ -159,11 +124,15 @@ private:
    /**
     * Adds a new static mesh to the scene.
     * 
+    * @param scene            scene to which the data will be added
+    * @param rm               resources manager that manages the scene resources
     * @param mesh             mesh data
     * @param situation        matrix describing the position and orientation 
     *                         of the mesh
     */
-   virtual void addStaticGeometry(std::vector<MeshDefinition> meshes,
+   virtual void addStaticGeometry(Model& scene,
+                                  ResourcesManager& rm,
+                                  std::vector<MeshDefinition> meshes,
                                   const D3DXMATRIX& situation);
 };
 
@@ -185,3 +154,9 @@ struct ReferenceEntity
 #define EXTERNAL_REFERENCE      1
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "ml-IWF\IWFScene.inl"
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _IWF_SCENE_H

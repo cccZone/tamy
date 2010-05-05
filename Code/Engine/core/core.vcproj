@@ -746,34 +746,38 @@
 					>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Resources"
-			>
-			<File
-				RelativePath="..\..\Include\core\Resource.h"
+			<Filter
+				Name="Resources"
 				>
-			</File>
-			<File
-				RelativePath=".\ResourcesManager.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\ResourcesManager.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\ResourcesManager.inl"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\ResourceStorage.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Include\core\ResourceStorage.inl"
-				>
-			</File>
+				<File
+					RelativePath=".\Resource.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\Resource.h"
+					>
+				</File>
+				<File
+					RelativePath=".\ResourcesManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\ResourcesManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\ResourcesManager.inl"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\ResourceStorage.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\ResourceStorage.inl"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Math"

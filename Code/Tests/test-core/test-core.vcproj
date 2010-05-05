@@ -354,10 +354,6 @@
 				RelativePath=".\ReflectionTests.cpp"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Resources"
-			>
 			<File
 				RelativePath=".\ResourcesManagerTests.cpp"
 				>
