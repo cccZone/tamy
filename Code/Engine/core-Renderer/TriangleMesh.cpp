@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( TriangleMesh, ttm, AM_BINARY )
+BEGIN_RESOURCE( TriangleMesh, GeometryResource, ttm, AM_BINARY )
    PROPERTY( "vertices", std::vector<LitVertex>, m_vertices )
    PROPERTY( "faces", std::vector<Face>, m_faces )
 END_RESOURCE()

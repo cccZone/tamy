@@ -4,6 +4,8 @@
 #include "core\Assert.h"
 
 
+// TODO: przeliczanie bounding vol'a po zmianie geometrii
+
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT(Geometry, Entity)
@@ -38,7 +40,10 @@ Geometry::~Geometry()
 
 void Geometry::render()
 {
-   m_resource->render();
+   if ( m_resource )
+   {
+      m_resource->render();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

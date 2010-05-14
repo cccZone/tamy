@@ -23,8 +23,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QPropertiesView::QPropertiesView()
+QPropertiesView::QPropertiesView( TamyEditor& mgr )
 : QPropertyEditor("")
+, m_mgr( mgr )
 , m_propertiesLayout(NULL)
 {
    initFactory();
@@ -33,8 +34,9 @@ QPropertiesView::QPropertiesView()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QPropertiesView::QPropertiesView(VectorProperty& property)
+QPropertiesView::QPropertiesView( TamyEditor& mgr, VectorProperty& property )
 : QPropertyEditor(property.getLabel().c_str())
+, m_mgr( mgr )
 , m_propertiesLayout(NULL)
 {
    initFactory();
@@ -81,42 +83,38 @@ void QPropertiesView::initFactory()
    associate< unsigned int,        IntPropertyEditor< unsigned int > >();
    associate< long,                IntPropertyEditor< long > >();
    associate< unsigned long,       IntPropertyEditor< unsigned long > >();
-   associatePtr< Entity*,          EntityPropertyEditor >();
-   associatePtr< Resource*,        ResourcePropertyEditor >();
-   //associateAbstract< VectorProperty,           QPropertiesView >();
+   associatePtr< Entity,           EntityPropertyEditor >();
+   associatePtr< Resource,         ResourcePropertyEditor >();
+   //associate< VectorProperty,      QPropertiesView >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void QPropertiesView::initUI()
 {
-   QScrollArea* scrollArea = new QScrollArea(this); addWidget(scrollArea);
-   scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
-   scrollArea->setWidgetResizable(true);
+  /* QWidget* viewWidget = new QWidget( this );
+   addWidget(viewWidget);
 
-   m_propertiesLayout = new QVBoxLayout(scrollArea);
+   m_propertiesLayout = new QVBoxLayout( viewWidget );
    m_propertiesLayout->setSpacing(0);
    m_propertiesLayout->setMargin(1);
-   m_propertiesLayout->setObjectName(QString::fromUtf8("propertiesLayout"));
-   scrollArea->setLayout(m_propertiesLayout);
-
-   m_spacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+   viewWidget->setLayout(m_propertiesLayout);*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void QPropertiesView::addPropertyEditor(QWidget* editorWidget)
 {
-   m_propertiesLayout->removeItem(m_spacer);
-   m_propertiesLayout->addWidget(editorWidget);
-   m_propertiesLayout->addItem(m_spacer);
+   //editorWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+   addWidget( editorWidget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void QPropertiesView::removePropertyEditor(QWidget& editorWidget)
 {
-   m_propertiesLayout->removeWidget(&editorWidget);
+   removeWidget( editorWidget );
+   //m_propertiesLayout->removeWidget(&editorWidget);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -126,7 +124,9 @@ void QPropertiesView::onSet(Properties& properties)
    QLabel* classNameLabel = new QLabel(properties.getClassName().c_str(), this);
    classNameLabel->setPalette(QPalette(qRgb(53, 191, 255)));
    classNameLabel->setAutoFillBackground(true);
-   m_propertiesLayout->addWidget(classNameLabel);
+   addWidget( classNameLabel );
+   //classNameLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+   //m_propertiesLayout->addWidget(classNameLabel);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

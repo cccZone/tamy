@@ -5,6 +5,7 @@
 #include "core\PropertiesView.h"
 #include "core\MatrixWriter.h"
 #include "core\Serializable.h"
+#include "core\Class.h"
 #include <d3dx9.h>
 
 
@@ -48,22 +49,37 @@ namespace // anonymous
 
    // -------------------------------------------------------------------------
 
+   template<typename T>
+   class PtrEditorMock : public TPropertyEditor< PropertiesViewMock >
+   {
+   public:
+      PtrEditorMock( T*& val, const Class& acceptableType, const std::string& label ) {}
+
+      void initialize( PropertiesViewMock& view ) {}
+
+      void deinitialize( PropertiesViewMock& view ) {}
+   };
+
+   // -------------------------------------------------------------------------
+
    class SerializableMock : public Serializable
    {
    private:
-      int m_handle;
+      Class m_handle;
 
    public:
       SerializableMock()
       {
          ClassTemplate& temp = getClassesRegistry().defineClass< SerializableMock >();
-         m_handle = temp.getHandle();
+         m_handle = Class( temp );
       }
 
       void onSave(Serializer& serializer) {}
       void onLoad(Serializer& serializer) {}
       
-      int getClassID() const { return m_handle; }
+      int getClassID() const { return m_handle.getHandle(); }
+
+      Class getVirtualClass() const { return m_handle; }
    };
 
 } // anonymous
@@ -127,9 +143,9 @@ TEST(TPropertiesView, editors)
 TEST(Properties, dynamicEditorCreation)
 {
    PropertiesViewMock factory;
-   factory.mockAssociate< int, EditorMock<int> >();
-   factory.mockAssociate< float, EditorMock<float> >();
-   factory.mockAssociatePtr< SerializableMock*, EditorMock<SerializableMock*> >();
+   factory.mockAssociate< int, EditorMock< int > >();
+   factory.mockAssociate< float, EditorMock< float > >();
+   factory.mockAssociatePtr< SerializableMock, PtrEditorMock< SerializableMock > >();
    
    int intVal;
    float floatVal;
@@ -150,7 +166,7 @@ TEST(Properties, dynamicEditorCreation)
 
    editor = factory.mockCreate(floatPtrProperty);
    CPPUNIT_ASSERT(NULL != editor);
-   CPPUNIT_ASSERT(NULL != dynamic_cast<EditorMock<SerializableMock*>*> (editor));
+   CPPUNIT_ASSERT(NULL != dynamic_cast< PtrEditorMock< SerializableMock >* > (editor));
    delete editor;
    delete ptr;
 }

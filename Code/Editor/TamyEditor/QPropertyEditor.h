@@ -12,6 +12,8 @@
 
 class QPropertiesView;
 class QVBoxLayout;
+class QSpacerItem;
+class TamyEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +26,9 @@ class QPropertyEditor : public QFrame,
    Q_OBJECT
 
 private:
-   QVBoxLayout* m_layout;
+   TamyEditor*       m_mgr;
+   QVBoxLayout*      m_layout;
+   QSpacerItem*      m_spacer;
 
 public:
    virtual ~QPropertyEditor();
@@ -32,8 +36,8 @@ public:
    // -------------------------------------------------------------------------
    // TPropertyEditor implementation
    // -------------------------------------------------------------------------
-   void initialize(QPropertiesView& view);
-   void deinitialize(QPropertiesView& view);
+   void initialize( QPropertiesView& view );
+   void deinitialize( QPropertiesView& view );
 
 protected:
    /**
@@ -44,12 +48,28 @@ protected:
    QPropertyEditor(const QString& propertyLabel);
 
    /**
+    * Called when the editor gets initialized.
+    */
+   virtual void onInitialize() {}
+
+   /**
     * Adds a new widget.
     *
     * @param widget
     */
    void addWidget(QWidget* widget);
 
+   /**
+    * Adds an existing widget.
+    *
+    * @param widget
+    */
+   void removeWidget(QWidget& widget);
+
+   /**
+    * Returns the working instance of the main services manager.
+    */
+   inline TamyEditor& getServicesMgr() { return *m_mgr; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -34,7 +34,7 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( Model, tsc, AM_BINARY )
+BEGIN_RESOURCE( Model, Resource, tsc, AM_BINARY )
    PROPERTY( "entities", Entities, m_entities )
 END_RESOURCE()
 

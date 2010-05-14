@@ -83,6 +83,7 @@ public:
    // Type identification mechanism.
    // -------------------------------------------------------------------------
    virtual Class getVirtualClass() const = 0;
+   virtual Class getPropertyClass() const = 0;
 
    // -------------------------------------------------------------------------
    // Change observation mechanism
@@ -167,6 +168,7 @@ public:
    // Type identification mechanism implementation.
    // -------------------------------------------------------------------------
    Class getVirtualClass() const;
+   Class getPropertyClass() const;
    static Class getRTTIClass();
 };
 
@@ -236,6 +238,7 @@ public:
    // Type identification mechanism implementation.
    // -------------------------------------------------------------------------
    Class getVirtualClass() const;
+   Class getPropertyClass() const;
    static Class getRTTIClass();
 };
 
@@ -317,6 +320,7 @@ public:
    // Type identification mechanism implementation.
    // -------------------------------------------------------------------------
    Class getVirtualClass() const;
+   Class getPropertyClass() const;
    static Class getRTTIClass();
 };
 

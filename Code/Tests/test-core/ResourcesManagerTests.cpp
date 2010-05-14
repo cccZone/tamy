@@ -44,7 +44,7 @@ namespace // anonymous
          initialize(mgr.getInitializers().shared<InitializerMock>());
       }
    };
-   BEGIN_RESOURCE(ResourceMock, txt, AM_BINARY)
+   BEGIN_RESOURCE(ResourceMock, Resource, txt, AM_BINARY)
       PROPERTY("val", int, m_val)
    END_OBJECT()
 
