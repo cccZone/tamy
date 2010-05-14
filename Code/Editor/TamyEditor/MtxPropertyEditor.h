@@ -22,7 +22,7 @@ class MtxPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   D3DXMATRIX&  m_property;
+   TEditableProperty< D3DXMATRIX >*    m_property;
 
 public:
    /**
@@ -30,7 +30,8 @@ public:
     *
     * @param property   property this editor edits
     */
-   MtxPropertyEditor( D3DXMATRIX& property, const std::string& label );
+   MtxPropertyEditor( TEditableProperty< D3DXMATRIX >* property );
+   ~MtxPropertyEditor();
 
 public slots:
    void yawValChanged(double val);

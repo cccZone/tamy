@@ -12,6 +12,14 @@ template <typename Derived>
 TPropertiesView<Derived>::~TPropertiesView() 
 {
    reset();
+
+   // delete the creators
+   unsigned int count = m_creators.size();
+   for (unsigned int i = 0; i < count; ++i)
+   {
+      delete m_creators[ i ];
+   }
+   m_creators.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -54,6 +62,7 @@ void TPropertiesView<Derived>::reset()
 {
    Derived* thisDerived = dynamic_cast<Derived*> (this);
 
+   // delete the editors
    unsigned int count = m_editors.size();
    for (unsigned int i = 0; i < count; ++i)
    {
@@ -85,57 +94,18 @@ unsigned int TPropertiesView<Derived>::getEditorsCount() const
 template <typename Derived>
 PropertyEditor* TPropertiesView<Derived>::create( Property& property )
 {
-   // first try to find a solid creator for it...
-   PropertyEditor* editor = createSolid( property );
-
-   if ( !editor )
-   {
-      // ...if that's not possible - check if the class matches to 
-      // any of the registered abstract types
-      editor = createAbstract( property );
-   }
-
-   return editor;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template <typename Derived>
-PropertyEditor* TPropertiesView< Derived >::createSolid( Property& property )
-{
    const Class& checkedClassType = property.getVirtualClass();
 
-   for ( CreatorsVec::iterator it = m_solidCreators.begin();  
-         it != m_solidCreators.end(); ++it )
+   for ( CreatorsVec::iterator it = m_creators.begin();  
+      it != m_creators.end(); ++it )
    {
-      Class& refClassType = (*it)->classType;
-      if ( refClassType.isExactlyA( checkedClassType ) )
+      Creator& creator = **it;
+      if ( creator.doesMatch( checkedClassType ) )
       {
-         PropertyEditor* editor = (*((*it)->creator))( &property );
+         PropertyEditor* editor = creator( &property );
          return editor;
       }
    }
-   return NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template <typename Derived>
-PropertyEditor* TPropertiesView< Derived >::createAbstract( Property& property )
-{
-   const Class& checkedClassType = property.getVirtualClass();
-
-   for ( CreatorsVec::iterator it = m_abstractCreators.begin();  
-         it != m_abstractCreators.end(); ++it )
-   {
-      Class& refClassType = (*it)->classType;
-      if ( refClassType.isA(checkedClassType) )
-      {
-         PropertyEditor* editor = (*((*it)->creator))( &property );
-         return editor;
-      }
-   }
-
    return NULL;
 }
 

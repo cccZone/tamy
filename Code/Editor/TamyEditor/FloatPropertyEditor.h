@@ -21,7 +21,7 @@ template <typename FLOAT_TYPE>
 class FloatPropertyEditor : public QPropertyEditor
 {
 private:
-   FLOAT_TYPE& m_property;
+   TEditableProperty< FLOAT_TYPE >*    m_property;
 
 public:
    /**
@@ -29,7 +29,8 @@ public:
     *
     * @param property   property this editor edits
     */
-   FloatPropertyEditor( FLOAT_TYPE& property, const std::string& label );
+   FloatPropertyEditor( TEditableProperty< FLOAT_TYPE >* property );
+   ~FloatPropertyEditor();
 
 public slots:
    void valChanged(double val);

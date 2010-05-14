@@ -60,6 +60,7 @@ protected:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
+   void onPropertyChanged( Property& property );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

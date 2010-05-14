@@ -12,12 +12,18 @@ namespace // anonymous
                              public MousePropertiesView::Observer
    {
    private:
-      D3DXVECTOR3& m_property;
+      TEditableProperty< D3DXVECTOR3 >*   m_property;
 
    public:
-      Vec3MousePropEdit( D3DXVECTOR3& property, const std::string& label )
+      Vec3MousePropEdit( TEditableProperty< D3DXVECTOR3 >* property )
       : m_property(property)
       {
+      }
+
+      ~Vec3MousePropEdit()
+      {
+         delete m_property;
+         m_property = NULL;
       }
 
       void initialize(MousePropertiesView& view)
@@ -42,12 +48,18 @@ namespace // anonymous
                             public MousePropertiesView::Observer
    {
    private:
-      D3DXMATRIX& m_property;
+      TEditableProperty< D3DXMATRIX >*    m_property;
 
    public:
-      MtxMousePropEdit( D3DXMATRIX& property, const std::string& label )
+      MtxMousePropEdit( TEditableProperty< D3DXMATRIX >* property )
          : m_property( property )
       {
+      }
+
+      ~MtxMousePropEdit()
+      {
+         delete m_property;
+         m_property = NULL;
       }
 
       void initialize(MousePropertiesView& view)

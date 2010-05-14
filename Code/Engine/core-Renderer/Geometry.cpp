@@ -1,10 +1,9 @@
 #include "core-Renderer\Geometry.h"
 #include "core-Renderer\GeometryResource.h"
 #include "core\BoundingVolume.h"
+#include "core\AABoundingBox.h"
 #include "core\Assert.h"
 
-
-// TODO: przeliczanie bounding vol'a po zmianie geometrii
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -79,6 +78,25 @@ std::string Geometry::getGeometryName() const
    else
    {
       return "<<uninitialized geometry>>";
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Geometry::onPropertyChanged( Property& property )
+{
+   if ( property.getName() == "m_resource" )
+   {
+      delete m_vol;
+
+      if ( m_resource )
+      {
+         m_vol = m_resource->calculateBoundingVolume();
+      }
+      else
+      {
+         m_vol = new AABoundingBox();
+      }
    }
 }
 

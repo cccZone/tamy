@@ -22,7 +22,7 @@ class Vec3PropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   D3DXVECTOR3& m_property;
+   TEditableProperty< D3DXVECTOR3 >* m_property;
 
 public:
    /**
@@ -30,7 +30,8 @@ public:
     *
     * @param property   property this editor edits
     */
-   Vec3PropertyEditor( D3DXVECTOR3& property, const std::string& label );
+   Vec3PropertyEditor( TEditableProperty< D3DXVECTOR3 >* property );
+   ~Vec3PropertyEditor();
 
 public slots:
    void xValChanged(double val);

@@ -40,20 +40,10 @@ namespace // anonymous
    class EditorMock : public TPropertyEditor< PropertiesViewMock >
    {
    public:
-      EditorMock( T& val, const std::string& label ) {}
-
-      void initialize( PropertiesViewMock& view ) {}
-
-      void deinitialize( PropertiesViewMock& view ) {}
-   };
-
-   // -------------------------------------------------------------------------
-
-   template<typename T>
-   class PtrEditorMock : public TPropertyEditor< PropertiesViewMock >
-   {
-   public:
-      PtrEditorMock( T*& val, const Class& acceptableType, const std::string& label ) {}
+      EditorMock( TEditableProperty< T >* property ) 
+      {
+         delete property;
+      }
 
       void initialize( PropertiesViewMock& view ) {}
 
@@ -64,23 +54,16 @@ namespace // anonymous
 
    class SerializableMock : public Serializable
    {
-   private:
-      Class m_handle;
+      DECLARE_RTTI_CLASS
 
    public:
-      SerializableMock()
-      {
-         ClassTemplate& temp = getClassesRegistry().defineClass< SerializableMock >();
-         m_handle = Class( temp );
-      }
-
       void onSave(Serializer& serializer) {}
       void onLoad(Serializer& serializer) {}
       
-      int getClassID() const { return m_handle.getHandle(); }
-
-      Class getVirtualClass() const { return m_handle; }
+      int getClassID() const { return getRTTIClass().getHandle(); }
    };
+   BEGIN_RTTI( SerializableMock )
+   END_RTTI
 
 } // anonymous
 
@@ -98,20 +81,6 @@ TEST(Properties, settingProperties)
    CPPUNIT_ASSERT_EQUAL(true, properties.has("Pos"));
    CPPUNIT_ASSERT_EQUAL(true, properties.has("Speed"));
    CPPUNIT_ASSERT_EQUAL(false, properties.has("Orientation"));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(Properties, changingPropertyValue)
-{
-   D3DXVECTOR3 position(0, 0, 0);
-
-   Properties properties("");
-   properties.add<D3DXVECTOR3>("Pos", "PosLabel", position);
-
-   D3DXVECTOR3 newPosition(10, 20, 30);
-   properties.get<D3DXVECTOR3>("Pos").set(D3DXVECTOR3(10, 20, 30));
-   CPPUNIT_ASSERT_EQUAL(newPosition, position);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,7 +114,7 @@ TEST(Properties, dynamicEditorCreation)
    PropertiesViewMock factory;
    factory.mockAssociate< int, EditorMock< int > >();
    factory.mockAssociate< float, EditorMock< float > >();
-   factory.mockAssociatePtr< SerializableMock, PtrEditorMock< SerializableMock > >();
+   factory.mockAssociatePtr< SerializableMock*, EditorMock< SerializableMock* > >();
    
    int intVal;
    float floatVal;
@@ -166,7 +135,7 @@ TEST(Properties, dynamicEditorCreation)
 
    editor = factory.mockCreate(floatPtrProperty);
    CPPUNIT_ASSERT(NULL != editor);
-   CPPUNIT_ASSERT(NULL != dynamic_cast< PtrEditorMock< SerializableMock >* > (editor));
+   CPPUNIT_ASSERT(NULL != dynamic_cast< EditorMock< SerializableMock* >* > (editor));
    delete editor;
    delete ptr;
 }

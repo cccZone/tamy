@@ -72,64 +72,70 @@ private:
       virtual ~Creator() {}
 
       virtual PropertyEditor* operator()( Property* obj ) = 0;
+
+      virtual bool doesMatch( const Class& checkedClassType ) const = 0;
    };
 
    // -------------------------------------------------------------------------
 
    template< class REPR_IMPL, class ENTITY_IMPL >
-   class TCreator : public Creator
+   class TStaticCreator : public Creator
    {
+   private:
+      Class    m_refClass;
+
    public:
+      TStaticCreator()
+      {
+         m_refClass = TProperty< ENTITY_IMPL >::getRTTIClass();
+      }
+
       PropertyEditor* operator()( Property* property )
       {
-         void* val = property->edit();
-         ASSERT( val != NULL, "Non-pointer properties must be initialized before thay can be edited" );
+         TEditableProperty< ENTITY_IMPL >* editableProperty = new TEditableProperty< ENTITY_IMPL >( *property );
+         return new REPR_IMPL( editableProperty );
+      }
 
-         ENTITY_IMPL* typedVal = reinterpret_cast< ENTITY_IMPL* >( val );
-         return new REPR_IMPL( *typedVal, property->getLabel() );
+      bool doesMatch( const Class& checkedClassType ) const
+      {
+         return m_refClass.isExactlyA( checkedClassType );
       }
    };
 
    // -------------------------------------------------------------------------
 
    template< class REPR_IMPL, class ENTITY_IMPL >
-   class TPtrCreator : public Creator
+   class TPolymorphicCreator : public Creator
    {
+   private:
+      Class    m_refClass;
+
    public:
+      TPolymorphicCreator()
+      {
+         m_refClass = TProperty< ENTITY_IMPL >::getRTTIClass();
+      }
+
       PropertyEditor* operator()( Property* property )
       {
-         Object** val = property->editPtr();
-         ENTITY_IMPL** typedVal = reinterpret_cast< ENTITY_IMPL** >( val );
+         TEditableProperty< ENTITY_IMPL >* editableProperty = new TEditableProperty< ENTITY_IMPL >( *property );
+         return new REPR_IMPL( editableProperty );
+      }
 
-         Class propertyType = property->getPropertyClass();
-         return new REPR_IMPL( *typedVal, propertyType, property->getLabel() );
+      bool doesMatch( const Class& checkedClassType ) const
+      {
+         return m_refClass.isA( checkedClassType );
       }
    };
 
    // -------------------------------------------------------------------------
 
-   struct TypeDef
-   {
-      Class                                  classType;
-      Creator*                               creator;
-
-      TypeDef( Class _classType, Creator* _creator )
-         : classType(_classType)
-         , creator(_creator)
-      {}
-      ~TypeDef()
-      {
-         delete creator;
-         creator = NULL;
-      }
-   };
-   typedef std::vector< TypeDef* > CreatorsVec;
+   typedef std::vector< Creator* > CreatorsVec;
 
 private:
    std::vector< PropertyEditor* >   m_editors;
 
-   CreatorsVec                      m_solidCreators;
-   CreatorsVec                      m_abstractCreators;
+   CreatorsVec                      m_creators;
 
 public:
    virtual ~TPropertiesView();
@@ -169,11 +175,9 @@ protected:
       // make a dummy instantiation so that if the entity is a template class,
       // we make sure it gets its rtti type registered
       PROPERTY_IMPL();
-      TProperty< PROPERTY_IMPL >( NULL , "", "");
+      TProperty< PROPERTY_IMPL >( NULL , "", "" );
 
-      const Class& entityClass = TProperty< PROPERTY_IMPL >::getRTTIClass();
-      m_solidCreators.push_back( new TypeDef( entityClass,
-         new TCreator< EDITOR_IMPL, PROPERTY_IMPL >() ) );
+      m_creators.push_back( new TStaticCreator< EDITOR_IMPL, PROPERTY_IMPL >() );
    }
 
    /**
@@ -186,11 +190,9 @@ protected:
    void associatePtr()
    {
       ABSTRACT_PROPERTY_IMPL();
-      TProperty< ABSTRACT_PROPERTY_IMPL >( NULL , "", "");
+      TProperty< ABSTRACT_PROPERTY_IMPL >( NULL , "", "" );
 
-      const Class& entityClass = TProperty< ABSTRACT_PROPERTY_IMPL >::getRTTIClass();
-      m_abstractCreators.push_back( new TypeDef( entityClass,
-         new TPtrCreator< EDITOR_IMPL, ABSTRACT_PROPERTY_IMPL >() ) );
+      m_creators.push_back( new TPolymorphicCreator< EDITOR_IMPL, ABSTRACT_PROPERTY_IMPL >() );
    }
 
       /**

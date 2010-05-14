@@ -21,7 +21,7 @@ template <typename INT_TYPE>
 class IntPropertyEditor : public QPropertyEditor
 {
 private:
-   INT_TYPE& m_property;
+   TEditableProperty< INT_TYPE >*   m_property;
 
 public:
    /**
@@ -29,7 +29,8 @@ public:
     *
     * @param property   property this editor edits
     */
-   IntPropertyEditor( INT_TYPE& property, const std::string& label );
+   IntPropertyEditor( TEditableProperty< INT_TYPE >* property );
+   ~IntPropertyEditor();
 
 public slots:
    void valChanged(int val);

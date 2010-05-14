@@ -4,14 +4,19 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EntityPropertyEditor::EntityPropertyEditor( Entity*& property, 
-                                            const Class& acceptableType, 
-                                            const std::string& label )
-: QPropertyEditor( label.c_str() )
+EntityPropertyEditor::EntityPropertyEditor( TEditableProperty< Entity* >* property )
+: QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
-, m_acceptableType( acceptableType )
 {
    setupUi();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+EntityPropertyEditor::~EntityPropertyEditor()
+{
+   delete m_property;
+   m_property = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

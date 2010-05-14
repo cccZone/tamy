@@ -6,11 +6,19 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vec3PropertyEditor::Vec3PropertyEditor( D3DXVECTOR3& property, const std::string& label )
-: QPropertyEditor( label.c_str() )
+Vec3PropertyEditor::Vec3PropertyEditor( TEditableProperty< D3DXVECTOR3 >* property )
+: QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {
    setupUi();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vec3PropertyEditor::~Vec3PropertyEditor()
+{
+   delete m_property;
+   m_property = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,9 +37,10 @@ void Vec3PropertyEditor::setupUi()
    layout->addWidget(new QLabel("Z:", this));
    QDoubleSpinBox* zVal = new QDoubleSpinBox(this); layout->addWidget(zVal);
 
-   xVal->setValue(m_property.x);
-   yVal->setValue(m_property.y);
-   zVal->setValue(m_property.z);
+   const D3DXVECTOR3& currVal = m_property->get();
+   xVal->setValue(currVal.x);
+   yVal->setValue(currVal.y);
+   zVal->setValue(currVal.z);
 
    connect(xVal, SIGNAL(valueChanged(double)), this, SLOT(xValChanged(double)));
    connect(yVal, SIGNAL(valueChanged(double)), this, SLOT(yValChanged(double)));
@@ -42,21 +51,27 @@ void Vec3PropertyEditor::setupUi()
 
 void Vec3PropertyEditor::xValChanged(double val)
 {
-   m_property.x = val;
+   D3DXVECTOR3 currVal = m_property->get();
+   currVal.x = val;
+   m_property->set( currVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vec3PropertyEditor::yValChanged(double val)
 {
-   m_property.y = val;
+   D3DXVECTOR3 currVal = m_property->get();
+   currVal.y = val;
+   m_property->set( currVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vec3PropertyEditor::zValChanged(double val)
 {
-   m_property.z = val;
+   D3DXVECTOR3 currVal = m_property->get();
+   currVal.z = val;
+   m_property->set( currVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
