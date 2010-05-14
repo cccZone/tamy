@@ -43,34 +43,18 @@ const std::string& TProperty< T >::getLabel() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TProperty< T >::set( const T& val ) 
-{
-   *m_val = val;
-   notifyAboutChange();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-const T& TProperty< T >::get() const 
-{
-   return *m_val;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-T& TProperty< T >::get() 
-{
-   return *m_val;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
 void TProperty< T >::serialize(Serializer& serializer) 
 { 
    serializer << *m_val; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TProperty< T >::set( void* val )
+{
+   *m_val = *( reinterpret_cast< T* >( val ) );
+   notifyAboutChange();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -146,31 +130,6 @@ const std::string& TProperty< T* >::getLabel() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TProperty< T* >::set(const T* val) 
-{
-   *m_val = val;
-   notifyAboutChange();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-const T* TProperty< T* >::get() const 
-{
-   return *m_val;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-T* TProperty< T* >::get() 
-{
-   return *m_val;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
 void TProperty< T* >::serialize(Serializer& serializer) 
 { 
    Serializable* newValPtr = dynamic_cast<Serializable*> (*m_val);
@@ -189,17 +148,18 @@ void TProperty< T* >::serialize(Serializer& serializer)
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void* TProperty< T* >::edit()
+void TProperty< T* >::set( void* val )
 {
-   return *m_val;
+   *m_val = *( reinterpret_cast< T** >( val ) );
+   notifyAboutChange();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-Object** TProperty< T* >::editPtr()
+void* TProperty< T* >::edit()
 {
-   return reinterpret_cast< Object** >( m_val );
+   return m_val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -307,6 +267,15 @@ void TProperty< std::vector< T* > >::serialize(Serializer& serializer)
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
+void TProperty< std::vector< T* > >::set( void* val )
+{
+   *m_val = *( reinterpret_cast< std::vector< T* >* >( val ) );
+   notifyAboutChange();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
 void* TProperty< std::vector< T* > >::edit()
 {
    return m_val;
@@ -334,6 +303,73 @@ template< typename T >
 Class TProperty< std::vector< T* > >::getRTTIClass()
 {
    return s_class;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+TEditableProperty< T >::TEditableProperty( Property& property )
+: m_property( property )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+TEditableProperty< T >::~TEditableProperty()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const std::string& TEditableProperty< T >::getLabel() const
+{
+   return m_property.getLabel();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TEditableProperty< T >::set( const T& val ) 
+{
+   m_property.set( ( void* )( &val ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const T& TEditableProperty< T >::get() const 
+{
+   void* val = m_property.edit();
+   ASSERT( val != NULL, "Non-pointer properties must be initialized before thay can be edited" );
+
+   T* typedVal = reinterpret_cast< T* >( val );
+
+   return *typedVal;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+T& TEditableProperty< T >::get() 
+{
+   void* val = m_property.edit();
+   ASSERT( val != NULL, "Non-pointer properties must be initialized before thay can be edited" );
+
+   T* typedVal = reinterpret_cast< T* >( val );
+
+   return *typedVal;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+Class TEditableProperty< T >::getType() const
+{
+   return m_property.getPropertyClass();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

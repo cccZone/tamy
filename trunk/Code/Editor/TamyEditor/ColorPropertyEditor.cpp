@@ -7,11 +7,19 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ColorPropertyEditor::ColorPropertyEditor( Color& property, const std::string& label )
-: QPropertyEditor( label.c_str() )
+ColorPropertyEditor::ColorPropertyEditor( TEditableProperty< Color >* property )
+: QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {
    setupUi();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ColorPropertyEditor::~ColorPropertyEditor()
+{
+   delete m_property;
+   m_property = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,10 +41,11 @@ void ColorPropertyEditor::setupUi()
    layout->addWidget(new QLabel("A:", this));
    QDoubleSpinBox* aVal = new QDoubleSpinBox(this); layout->addWidget(aVal);
 
-   rVal->setValue(m_property.r);
-   gVal->setValue(m_property.g);
-   bVal->setValue(m_property.b);
-   aVal->setValue(m_property.a);
+   const Color& val = m_property->get();
+   rVal->setValue(val.r);
+   gVal->setValue(val.g);
+   bVal->setValue(val.b);
+   aVal->setValue(val.a);
 
    connect(rVal, SIGNAL(valueChanged(double)), this, SLOT(rValChanged(double)));
    connect(gVal, SIGNAL(valueChanged(double)), this, SLOT(gValChanged(double)));
@@ -48,28 +57,36 @@ void ColorPropertyEditor::setupUi()
 
 void ColorPropertyEditor::rValChanged(double val)
 {
-   m_property.r = val;
+   Color newVal = m_property->get();
+   newVal.r = val;
+   m_property->set( newVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ColorPropertyEditor::gValChanged(double val)
 {
-   m_property.g = val;
+   Color newVal = m_property->get();
+   newVal.g = val;
+   m_property->set( newVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ColorPropertyEditor::bValChanged(double val)
 {
-   m_property.b = val;
+   Color newVal = m_property->get();
+   newVal.b = val;
+   m_property->set( newVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ColorPropertyEditor::aValChanged(double val)
 {
-   m_property.a = val;
+   Color newVal = m_property->get();
+   newVal.a = val;
+   m_property->set( newVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -8,13 +8,16 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourcePropertyEditor::ResourcePropertyEditor( Resource*& property, 
-                                                const Class& acceptableType,
-                                                const std::string& label )
-: QPropertyEditor( label.c_str() )
+ResourcePropertyEditor::ResourcePropertyEditor( TEditableProperty< Resource* >* property )
+: QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
-, m_acceptableType( acceptableType )
 , m_resourceName( NULL )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ResourcePropertyEditor::~ResourcePropertyEditor()
 {
 }
 
@@ -56,9 +59,10 @@ void ResourcePropertyEditor::onInitialize()
 
 void ResourcePropertyEditor::refreshPropertyName()
 {
-   if ( m_property )
+   Resource* res = m_property->get();
+   if ( res )
    {
-      m_resourceName->setText( m_property->getResourceName().c_str() );
+      m_resourceName->setText( res->getResourceName().c_str() );
    }
    else
    {
@@ -78,7 +82,8 @@ void ResourcePropertyEditor::valChanged()
 
       // verify that the types match
       Class newTypeClass = newVal->getVirtualClass();
-      if ( !m_acceptableType.isA( newTypeClass ) )
+      Class acceptableType = m_property->getType();
+      if ( !acceptableType.isA( newTypeClass ) )
       {
          newVal = NULL;
       }
@@ -86,7 +91,7 @@ void ResourcePropertyEditor::valChanged()
 
    if ( newVal )
    {
-      m_property = newVal;
+      m_property->set( newVal );
       refreshPropertyName();
    }
 
@@ -97,7 +102,7 @@ void ResourcePropertyEditor::valChanged()
 
 void ResourcePropertyEditor::valErased( bool ) 
 {
-   m_property = NULL;
+   m_property->set( NULL );
    refreshPropertyName();
 }
 

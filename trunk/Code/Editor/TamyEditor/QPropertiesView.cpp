@@ -83,8 +83,8 @@ void QPropertiesView::initFactory()
    associate< unsigned int,        IntPropertyEditor< unsigned int > >();
    associate< long,                IntPropertyEditor< long > >();
    associate< unsigned long,       IntPropertyEditor< unsigned long > >();
-   associatePtr< Entity,           EntityPropertyEditor >();
-   associatePtr< Resource,         ResourcePropertyEditor >();
+   associatePtr< Entity*,          EntityPropertyEditor >();
+   associatePtr< Resource*,        ResourcePropertyEditor >();
    //associate< VectorProperty,      QPropertiesView >();
 }
 

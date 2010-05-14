@@ -69,26 +69,55 @@ public:
    virtual const std::string& getLabel() const = 0;
 
    /**
+    * Sets a new value of the property.
+    *
+    * @param val
+    */
+   virtual void set( void* val ) = 0;
+
+   /**
     * Allows to edit the property contents by a property editor.
     */
    virtual void* edit() = 0;
 
-   /**
-    * Allows to edit the property contents by a property editor,
-    * treating its contents as a pointer to an object
-    */
-   virtual Object** editPtr() = 0;
-
    // -------------------------------------------------------------------------
    // Type identification mechanism.
    // -------------------------------------------------------------------------
+   /**
+    * Retrieves the virtual (topmost in terms of inheritance hierarchy) class
+    * of the element stored in the property.
+    *
+    * i.e. lets take the following classes hierarchy:
+    *       class A {};  class B : public A {};
+    *    and property setup:
+    *       B* val;
+    *       TProperty< A* > property( val );
+    *    then:
+    *       property.getVirtualClass() == B;
+    */
    virtual Class getVirtualClass() const = 0;
+
    virtual Class getPropertyClass() const = 0;
 
    // -------------------------------------------------------------------------
-   // Change observation mechanism
+   // Observation mechanism
    // -------------------------------------------------------------------------
+   /**
+    * Retrieves the observer of this property.
+    */
+   PropertyObserver& getObserver();
+
+   /**
+    * Sets a new property observer.
+    * 
+    * @param observer
+    */
    void setObserver(PropertyObserver& observer);
+
+   /**
+    * Call this method when the value of the property changes.
+    */
+   void notifyAboutChange();
 
 protected:
    /**
@@ -96,10 +125,6 @@ protected:
     */
    Property();
 
-   /**
-    * Call this method when the value of the property changes.
-    */
-   void notifyAboutChange();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -136,33 +161,12 @@ public:
     */
    const std::string& getLabel() const;
 
-   /**
-    * Sets new property value.
-    *
-    * @param val     new property value
-    */
-   void set(const T& val);
-
-   /**
-    * Returns current property value (const version).
-    *
-    * @return        property value.
-    */
-   const T& get() const;
-
-   /**
-    * Returns current property value.
-    *
-    * @return        property value.
-    */
-   T& get();
-
    // -------------------------------------------------------------------------
    // Property implementation
    // -------------------------------------------------------------------------
    void serialize(Serializer& serializer);
+   void set( void* val );
    void* edit();
-   Object** editPtr() { return NULL; }
 
    // -------------------------------------------------------------------------
    // Type identification mechanism implementation.
@@ -206,33 +210,12 @@ public:
     */
    const std::string& getLabel() const;
 
-   /**
-    * Sets new property value.
-    *
-    * @param val     new property value
-    */
-   void set(const T* val);
-
-   /**
-    * Returns current property value (const version).
-    *
-    * @return        property value.
-    */
-   const T* get() const;
-
-   /**
-    * Returns current property value.
-    *
-    * @return        property value.
-    */
-   T* get();
-
    // -------------------------------------------------------------------------
    // Property implementation
    // -------------------------------------------------------------------------
    void serialize(Serializer& serializer);
+   void set( void* val );
    void* edit();
-   Object** editPtr();
 
    // -------------------------------------------------------------------------
    // Type identification mechanism implementation.
@@ -313,8 +296,8 @@ public:
    // Property implementation
    // -------------------------------------------------------------------------
    void serialize( Serializer& serializer );
+   void set( void* val );
    void* edit();
-   Object** editPtr() { return NULL; }
 
    // -------------------------------------------------------------------------
    // Type identification mechanism implementation.
@@ -322,6 +305,55 @@ public:
    Class getVirtualClass() const;
    Class getPropertyClass() const;
    static Class getRTTIClass();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Editable version of a property.
+ */
+template< typename T >
+class TEditableProperty
+{
+   Property&   m_property;
+
+public:
+   TEditableProperty( Property& property );
+   ~TEditableProperty();
+
+   /**
+    * This method returns a label under which the property should
+    * be advertised (in editor i.e.)
+    *
+    * @return  property label
+    */
+   const std::string& getLabel() const;
+
+   /**
+    * Sets new property value.
+    *
+    * @param val     new property value
+    */
+   void set(const T& val);
+
+   /**
+    * Returns current property value (const version).
+    *
+    * @return        property value.
+    */
+   const T& get() const;
+
+   /**
+    * Returns current property value.
+    *
+    * @return        property value.
+    */
+   T& get();
+
+   /**
+    * Returns the type the property is parametrized with.
+    */
+   Class getType() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -17,9 +17,16 @@ void Property::setObserver(PropertyObserver& observer)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+PropertyObserver& Property::getObserver()
+{
+   return *m_observer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Property::notifyAboutChange()
 {
-   if (m_observer)
+   if ( m_observer )
    {
       m_observer->onPropertyChanged(*this);
    }

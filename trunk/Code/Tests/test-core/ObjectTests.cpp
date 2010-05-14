@@ -120,8 +120,9 @@ namespace // anonymous
       class IntEditorMock : public TPropertyEditor<PropertiesViewMock>
       {
       public:
-         IntEditorMock( int& property, const std::string& label )
+         IntEditorMock( TEditableProperty< int >* property )
          {
+            delete property;
          }
 
          void initialize(PropertiesViewMock& view) {}
