@@ -3,71 +3,46 @@
 #else
 
 #include <stdexcept>
-#include <typeinfo>
+#include "core\TypeID.h"
+#include "core\ClassTemplate.h"
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename ClassType>
-int ClassesRegistry::defineAbstract(const std::string& className)
+template < typename ClassType >
+ClassTemplate& ClassesRegistry::defineClass()
 {
-   ClassHandlesMap::iterator it = m_handlesMap.find(className);
-   if (it != m_handlesMap.end())
+   TypeID< ClassType > classType;
+   ClassHandlesMap::iterator it = m_classHandlesMap.find( classType.hash() );
+   if (it != m_classHandlesMap.end())
    {
-      return it->second;
+      // verify that the class's name matches the type name of the defined class .
+      // If it doesn't it means that we have a hash- value clash and should
+      // change either the hashing function, or the class name.
+      ClassTemplate& temp = *m_classes[ it->second ];
+      ASSERT( temp.getName() == classType.name(), "Class names clash - consider changing the class name or the hashing function!!!" );
+
+      return temp;
    }
    else
    {
-      int handle = (int)m_creators.size();
-      m_creators.push_back(new AbstractClassCreator());
-      m_handlesMap.insert(std::make_pair(className, handle));
+      int handle = (int)m_classes.size();
+      m_classes.push_back( new ClassTemplate( classType.hash(), classType.name(), new SolidCreator< ClassType >() ) );
+      m_classHandlesMap.insert( std::make_pair( classType.hash(), handle ) );
+      m_classNamesMap.insert( std::make_pair( classType.name(), handle ) );
 
-      std::string realTypeName = typeid(ClassType).name();
-      m_typesMap.insert(std::make_pair(realTypeName, handle));
-
-      return handle;
+      return *m_classes.back();
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename ClassType>
-int ClassesRegistry::defineSolid(const std::string& className)
+template< typename ClassType >
+ClassTemplate& ClassesRegistry::getClassByType()
 {
-   ClassHandlesMap::iterator it = m_handlesMap.find(className);
-   if (it != m_handlesMap.end())
-   {
-      return it->second;
-   }
-   else
-   {
-      int handle = (int)m_creators.size();
-      m_creators.push_back(new TClassCreator<ClassType> ());
-      m_handlesMap.insert(std::make_pair(className, handle));
-
-      std::string realTypeName = typeid(ClassType).name();
-      m_typesMap.insert(std::make_pair(realTypeName, handle));
-
-      return handle;
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<typename ClassType>
-int ClassesRegistry::getHandle()
-{
-   std::string realTypeName = typeid(ClassType).name();
-
-   ClassHandlesMap::const_iterator it = m_typesMap.find(realTypeName);
-   if (it != m_typesMap.end())
-   {
-      return it->second;
-   }
-   else
-   {
-      throw std::out_of_range(realTypeName + " hasn't been registered with the reflection mechanism");
-   }
+   TypeID< ClassType > classType;
+   return getClassByHandle( classType.hash() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

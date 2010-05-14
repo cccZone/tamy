@@ -14,6 +14,7 @@
 
 SceneQueries::SceneQueries()
 : m_entitiesQueryStorage(new QueryableSceneProxy())
+, m_currObservedScene( NULL )
 {
    associate<Renderable, QueryableSpatial<Renderable> > ();
    associate<RenderableJoint, QueryableGhost<RenderableJoint> > ();
@@ -26,17 +27,42 @@ SceneQueries::~SceneQueries()
    resetContents();
 
    delete m_entitiesQueryStorage; m_entitiesQueryStorage = NULL;
+   m_currObservedScene = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneQueries::initialize(TamyEditor& mgr)
+void SceneQueries::initialize( TamyEditor& mgr )
 {
-   Model& scene = mgr.requestService<Model> ();
-   scene.attach(*this);
-
    // register new service
-   mgr.registerService<QueryableScene> (*m_entitiesQueryStorage);
+   mgr.registerService< QueryableScene >( *this, *m_entitiesQueryStorage );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneQueries::onServiceRegistered( TamyEditor& mgr )
+{
+   if ( m_currObservedScene )
+   {
+      m_currObservedScene->detach( *this );
+   }
+
+   if ( mgr.needsUpdate< Model >( *m_currObservedScene ) )
+   {
+      if ( mgr.hasService< Model >() )
+      {
+         m_currObservedScene = &mgr.requestService< Model >();
+      }
+      else
+      {
+         m_currObservedScene = NULL;
+      }
+   }
+
+   if ( m_currObservedScene )
+   {
+      m_currObservedScene->attach( *this );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

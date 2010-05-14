@@ -23,7 +23,7 @@ TriangleMesh::TriangleMesh()
 TriangleMesh::TriangleMesh( const std::string& name,
                             const std::vector<LitVertex>& vertices,
                             const std::vector<Face>& faces )
-: Resource( name )
+: GeometryResource( name )
 , m_vertices(vertices)
 , m_faces(faces)
 {

@@ -21,7 +21,7 @@ class EffectAttribute;
  */
 class Effect : public Entity
 {
-   DECLARE_ABSTRACT_CLASS(Effect)
+   DECLARE_CLASS(Effect)
 
 public:
    typedef std::vector<EffectAttribute*> Attributes;
@@ -30,6 +30,10 @@ private:
    Attributes* m_attributes;
 
 public:
+   /**
+    * Constructor.
+    */
+   Effect();
    virtual ~Effect();
 
    /**
@@ -48,11 +52,6 @@ public:
 
 protected:
    /**
-    * Constructor.
-    */
-   Effect();
-
-   /**
     * This method is called when the effect starts being rendered.
     *
     * An effect can comprise multiple rendering passes - each adding
@@ -61,26 +60,26 @@ protected:
     *
     * @return  number of rendering passes
     */
-   virtual unsigned int beginRendering() = 0;
+   virtual unsigned int beginRendering() { return -1; }
 
    /**
     * This method is called as a new rendering pass begins.
     *
     * @param passIdx    index of the pass that is about to commence
     */
-   virtual void beginPass(unsigned int passIdx) = 0;
+   virtual void beginPass(unsigned int passIdx) {}
 
    /**
     * This method is called as a rendering pass ends.
     *
     * @param passIdx    index of the pass that has ended.
     */
-   virtual void endPass(unsigned int passIdx) = 0;
+   virtual void endPass(unsigned int passIdx) {}
 
    /**
     * This method is called once the effect ends all rendering.
     */
-   virtual void endRendering() = 0;
+   virtual void endRendering() {}
 
    /**
     * This method allows to register an effect attribute
@@ -89,18 +88,6 @@ protected:
     * @param attribute  attribute we want to add
     */
    void addAttribute(EffectAttribute* attribute);
-
-   // -------------------------------------------------------------------------
-   // Entity default implementation
-   // -------------------------------------------------------------------------
-   void onSaveEntity(Serializer& serializer) {}
-   void onLoadEntity(Serializer& serializer) {}
-   void onChildAttached(Entity& child) {}
-   void onChildDetached(Entity& child) {}
-   void onAttached(Entity& parent) {}
-   void onDetached(Entity& parent) {}
-   void onAttached(Model& hostModel) {}
-   void onDetached(Model& hostModel) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

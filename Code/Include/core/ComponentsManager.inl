@@ -9,37 +9,41 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derived>
-ComponentsManager<Derived>::ComponentsManager() 
-: m_services(new SingletonsManager())
+template< typename Derived >
+ComponentsManager< Derived >::ComponentsManager() 
+: m_services( new SingletonsManager( ))
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derived>
-ComponentsManager<Derived>::~ComponentsManager() 
+template< typename Derived >
+ComponentsManager< Derived >::~ComponentsManager() 
 {
-   unsigned int count = m_comps.size();
-   for (unsigned int i = 0; i < count; ++i)
-   {
-      delete m_comps[i];
-   }
+   ComponentsArr compsToRemove = m_comps;
    m_comps.clear();
+
+   unsigned int count = compsToRemove.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      delete compsToRemove[i];
+   }
 
    delete m_services; m_services = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derived>
-void ComponentsManager<Derived>::addComponent(Component<Derived>* component)
+template< typename Derived >
+void ComponentsManager< Derived >::addComponent( Component< Derived >* component )
 {
    try
    {
-      component->initialize(*(dynamic_cast<Derived*> (this)));
+      Derived& derivedMgr = *( dynamic_cast< Derived* >( this ) );
+      component->initialize( derivedMgr );
+      component->onServiceRegistered( derivedMgr );
    }
-   catch (std::exception& ex)
+   catch ( std::exception& ex )
    {
       delete component;
 
@@ -49,48 +53,144 @@ void ComponentsManager<Derived>::addComponent(Component<Derived>* component)
       return;
 #endif
    }
-   m_comps.push_back(component);
+   m_comps.push_back( component );
+   onComponentAdded( *component );
 }
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derived>
-Component<Derived>* ComponentsManager<Derived>::getComponent(unsigned int idx)
+template< typename Derived >
+Component<Derived>* ComponentsManager< Derived >::getComponent( unsigned int idx )
 {
-   ASSERT(idx < m_comps.size(), "Component index out of range");
+   ASSERT( idx < m_comps.size(), "Component index out of range" );
    return m_comps[idx];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derived>
-template <typename T>
-void ComponentsManager<Derived>::registerService(T& service)
+template< typename Derived >
+void ComponentsManager< Derived >::findComponents( const std::string& name, 
+                                                   ComponentsArr& outComponents ) const
 {
-   bool result = m_services->setShared<T> (service);
-   if (result == false)
+   unsigned int count = m_comps.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      throw std::runtime_error("Service is already registered");
+      if ( m_comps[ i ]->getComponentName() == name )
+      {
+         outComponents.push_back( m_comps[ i ] );
+      }
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derived>
-template <typename T>
-T& ComponentsManager<Derived>::requestService()
+template< typename Derived >
+template< typename T >
+void ComponentsManager< Derived >::findComponents( std::vector< T* >& outComponents ) const
 {
-   return m_services->shared<T> ();
+   unsigned int count = m_comps.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      T* comp = dynamic_cast< T* >( m_comps[ i ] );
+      if ( comp != NULL )
+      {
+         outComponents.push_back( comp );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Derived>
-unsigned int ComponentsManager<Derived>::getComponentsCount() const
+template< typename Derived >
+template< typename T >
+void ComponentsManager< Derived >::registerService( Component< Derived >& host, T& service )
+{
+   m_services->removeShared< T >();
+   host.removeService( &service );
+
+   bool result = m_services->setShared< T >( service );
+   if ( result == false )
+   {
+      throw std::runtime_error( "Service is already registered" );
+   }
+   host.addService( &service );
+
+   notifyAboutService( &service );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Derived >
+template< typename T >
+void ComponentsManager< Derived >::removeService( Component< Derived >& host )
+{
+   if ( !m_services->hasShared< T >() )
+   {
+      return;
+   }
+
+   T& service = m_services->shared< T >();
+   m_services->removeShared< T >();
+
+   notifyAboutService( &service );
+   host.removeService( &service );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Derived >
+template< typename T >
+bool ComponentsManager< Derived >::hasService() const
+{
+   return m_services->hasShared< T >();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Derived >
+template < typename T >
+bool ComponentsManager< Derived >::needsUpdate( T& service ) const
+{
+   return ( &service != NULL && m_services->hasShared< T >() == false )
+      || ( m_services->hasShared< T >() && &m_services->shared< T >() != &service );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Derived >
+template< typename T >
+T& ComponentsManager< Derived >::requestService()
+{
+   return m_services->shared< T >();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Derived >
+unsigned int ComponentsManager< Derived >::getComponentsCount() const
 {
    return m_comps.size();
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Derived >
+void ComponentsManager< Derived >::notifyAboutService( void* service )
+{
+   Derived& derivedMgr = *( dynamic_cast< Derived* >( this ) );
+
+   unsigned int count = m_comps.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      if ( m_comps[ i ]->isHost( service ) == false )
+      {
+         m_comps[ i ]->onServiceRegistered( derivedMgr );
+      }
+   }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

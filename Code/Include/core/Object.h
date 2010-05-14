@@ -40,6 +40,10 @@ private:
    std::vector<Properties*>   m_properties;
 
 public:
+   /**
+    * Constructor.
+    */
+   Object();
    virtual ~Object();
 
    /**
@@ -56,11 +60,6 @@ public:
    int getClassID() const;
 
 protected:
-   /**
-    * Constructor.
-    */
-   Object();
-
    /**
     * Adds a new set of properties - to be called when a new derived class is created.
     */
@@ -79,17 +78,12 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define DECLARE_ABSTRACT_CLASS(ClassName)                                     \
+#define DECLARE_CLASS(ClassName)                                              \
    DECLARE_RTTI_CLASS                                                         \
 private:                                                                      \
    Properties* m_properties;                                                  \
 protected:                                                                    \
    void implementObject();                                                    \
-
-///////////////////////////////////////////////////////////////////////////////
-
-#define DECLARE_CLASS(ClassName)                                              \
-   DECLARE_ABSTRACT_CLASS(ClassName)
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -109,14 +103,6 @@ public:
       __super::implementObject();                                             \
       m_properties = new Properties(#ClassName);                              \
       addProperties(m_properties);
-
-///////////////////////////////////////////////////////////////////////////////
-
-#define BEGIN_ABSTRACT_OBJECT(ClassName, ParentClassName)                     \
-   BEGIN_ABSTRACT_RTTI(ClassName)                                             \
-      PARENT(ParentClassName)                                                 \
-   END_RTTI                                                                   \
-   IMPLEMENT_OBJECT(ClassName)
 
 ///////////////////////////////////////////////////////////////////////////////
 

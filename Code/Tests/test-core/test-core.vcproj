@@ -358,6 +358,10 @@
 				RelativePath=".\ResourcesManagerTests.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\TypeIDTests.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Math"

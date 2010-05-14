@@ -47,9 +47,9 @@ public:
  *   3.) Create a common Texture interface for both that will allow
  *       them to operate with Shaders etc.
  */
-class Texture : public TRendererObject<TextureImpl>, 
-                public UniqueObject, 
-                public Resource
+class Texture : public Resource,
+                public TRendererObject<TextureImpl>, 
+                public UniqueObject
 {
    DECLARE_RESOURCE( Texture )
 

@@ -85,6 +85,11 @@ public:
    void addHandler(KeyStatusHandler* handler);
 
    /**
+    * Removes all attached handlers.
+    */
+   void removeAllHandlers();
+
+   /**
     * Sets a new time limit after which if the key is still pressed, it
     * will be considered held, not smashed.
     *

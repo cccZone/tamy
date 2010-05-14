@@ -6,7 +6,6 @@
 
 #include <vector>
 #include "core-Renderer\GeometryResource.h"
-#include "core\Resource.h"
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
 #include "core\AABoundingBox.h"
@@ -61,7 +60,6 @@ public:
  * line segments.
  */
 class LineSegments : public GeometryResource, 
-                     public Resource,
                      public TRendererObject<LineSegmentsImpl>
 {
    DECLARE_RESOURCE( LineSegments )

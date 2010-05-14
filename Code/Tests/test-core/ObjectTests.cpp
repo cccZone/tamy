@@ -58,24 +58,22 @@ namespace // anonymous
 
    class AbstractClass : public Resource
    {
-      DECLARE_ABSTRACT_CLASS(AbstractClass)
+      DECLARE_CLASS(AbstractClass)
 
    private:
       int m_baseVal;
 
    public:
+            AbstractClass( const std::string& resName = "AbstractClass" ) : Resource( resName ),  m_baseVal(-1) {}
       virtual ~AbstractClass() {}
 
       void setBaseVal(int val) { m_baseVal = val; }
       int getBaseVal() const { return m_baseVal; }
 
-      virtual void setVal(int val) = 0;
-      virtual int getVal() const = 0;
-
-   protected:
-      AbstractClass( const std::string& resName = "AbstractClass" ) : Resource( resName ),  m_baseVal(-1) {}
+      virtual void setVal(int val) {}
+      virtual int getVal() const { return -1; }
    };
-   BEGIN_ABSTRACT_OBJECT(AbstractClass, Resource)
+   BEGIN_OBJECT(AbstractClass, Resource)
       PROPERTY("baseVal", int, m_baseVal)
    END_OBJECT()
 
@@ -122,7 +120,7 @@ namespace // anonymous
       class IntEditorMock : public TPropertyEditor<PropertiesViewMock>
       {
       public:
-         IntEditorMock(TProperty<int>& property)
+         IntEditorMock( int& property, const std::string& label )
          {
          }
 
@@ -134,7 +132,7 @@ namespace // anonymous
    public:
       PropertiesViewMock()
       {
-         associate<TProperty<int>, IntEditorMock>();
+         associate< int, IntEditorMock >();
       }
    };
 

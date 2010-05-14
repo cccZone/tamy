@@ -29,9 +29,11 @@ public:
    typedef std::vector<Effect*> Effects;
 
 private:
-   Attributes m_attributes;
    Geometry* m_geometry;
    Effects m_effects;
+
+   // runtime data
+   Attributes m_attributes;
    bool m_visible;
 
 public:
@@ -78,6 +80,11 @@ public:
 
 protected:
    // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onObjectLoaded();
+
+   // -------------------------------------------------------------------------
    // Entity implementation
    // -------------------------------------------------------------------------
    void onChildAttached(Entity& child);
@@ -89,8 +96,8 @@ protected:
    void onPropertyChanged(Property& property);
 
 private:
-   void addEffect(Effect* effect);
    void removeEffect(Effect* effect);
+   void addAttributes( Effect& effect );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

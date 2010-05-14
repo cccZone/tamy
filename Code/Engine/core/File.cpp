@@ -11,9 +11,10 @@ File::File(const std::string& name,
 {
    std::string openModeStr;
 
-   if ((openMode & std::ios_base::in) && (openMode & std::ios_base::out))
+   if ( ( ( openMode & std::ios_base::in ) == std::ios_base::in ) 
+     && ( ( openMode & std::ios_base::out ) == std::ios_base::out ) )
    {
-      if (openMode & std::ios_base::trunc)
+      if ( ( openMode & std::ios_base::trunc ) == std::ios_base::trunc )
       {
          openModeStr += "w+";
       }
@@ -22,22 +23,21 @@ File::File(const std::string& name,
          openModeStr += "a+";
       }
    }
-   else if (openMode & std::ios_base::in)
+   else if ( ( openMode & std::ios_base::in ) == std::ios_base::in )
    {
       openModeStr += "r";
    }
-   else if (openMode & std::ios_base::out)
+   else if ( ( openMode & std::ios_base::out ) == std::ios_base::out )
    {
       openModeStr += "w";
    }
 
-   if (openMode & std::ios_base::binary)
+   if ( ( openMode & std::ios_base::binary ) == std::ios_base::binary )
    {
       openModeStr += "b";
    }
 
-   fopen_s(&m_file, name.c_str(), openModeStr.c_str());
-
+   fopen_s( &m_file, name.c_str(), openModeStr.c_str() );
    if (m_file == NULL)
    {
       throw std::runtime_error(std::string("Can't open file ") + name);

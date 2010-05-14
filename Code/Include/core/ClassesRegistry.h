@@ -11,7 +11,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Class;
+class ClassTemplate;
+class ClassCreator;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,34 +22,15 @@ class Class;
  */
 class ClassesRegistry
 {
-private:
-   class ClassCreator
-   {
-   public:
-      virtual ~ClassCreator() {}
+   typedef std::vector< ClassTemplate* >         ClassesArr;
+   typedef std::map< std::string, int >          ClassNameMap;
+   typedef std::map< unsigned int, int >         ClassHandlesMap;
 
-      virtual void* create() = 0;
-   };
-
-   template <typename T>
-   class TClassCreator : public ClassCreator
-   {
-   public:
-      void* create() {return new T();}
-   };
-
-   class AbstractClassCreator : public ClassCreator
-   {
-   public:
-      void* create() {return NULL;}
-   };
-   
-   typedef std::map<std::string, int> ClassHandlesMap;
 
 private:
-   std::vector<ClassCreator*> m_creators;
-   ClassHandlesMap            m_handlesMap;
-   ClassHandlesMap            m_typesMap;
+   ClassesArr                       m_classes;
+   ClassNameMap                     m_classNamesMap;
+   ClassHandlesMap                  m_classHandlesMap;
 
 public:
    ClassesRegistry();
@@ -59,32 +41,21 @@ public:
     * a unique handle using which an instance of the class can be identified.
     *
     * @param ClassType     class type to register
-
-    * @return              handle assigned to this class type
+    * @return              created class
     */
-   template <typename ClassType>
-   int defineAbstract(const std::string& className);
+   template < typename ClassType >
+   ClassTemplate& defineClass();
 
    /**
-    * This method registers a new solid class with the registry, assigning it
-    * a unique handle using which an instance of the class can be identified.
-    *
-    * @param className     name of the class type
-    * @return              handle assigned to this class type
-    */
-   template <typename ClassType>
-   int defineSolid(const std::string& className);
-
-   /**
-    * This method can be used to obtain a handle of a registered
+    * This method can be used to obtain an instance of a registered
     * class.
     *
     * @throw std::out_of_range   if the class hasn't been registered
     *
     * @param className  name of the class type
-    * @return           handle assigned to this class type
+    * @return           class instance
     */
-   int getHandle(const std::string& className);
+   ClassTemplate& getClassByName( const std::string& className );
 
    /**
     * Returns the name of a class to which the specified handle is assigned.
@@ -92,9 +63,9 @@ public:
     * @throw std::out_of_range   if the class hasn't been registered
     *
     * @param handle     class handle
-    * @return           name of the class
+    * @return           class instance
     */
-   const std::string& getClassName(int handle) const;
+   ClassTemplate& getClassByHandle( unsigned int handle );
 
    /**
     * This method can be used to obtain a handle of a registered
@@ -106,17 +77,8 @@ public:
     *
     * @return              handle assigned to this class type
     */
-   template<typename ClassType>
-   int getHandle();
-
-   /**
-    * This method allows to create an instance of a class based
-    * on a unique handle assigned to each class during registration.
-    *
-    * @param classHandle   handle of a class an instance of which we want to create
-    * @return              instance of the class
-    */
-   void* create(int classHandle);
+   template< typename ClassType >
+   ClassTemplate& getClassByType();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

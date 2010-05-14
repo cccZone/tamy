@@ -50,3 +50,24 @@ TEST(Filesystem, accessingFileLikeAMemoryBuffer)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST(Filesystem, extractingPathParts)
+{
+   std::string fileName( "/ola/ula/pies.txt" );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ola/ula/" ), Filesystem::extractDir( fileName ) );
+   CPPUNIT_ASSERT_EQUAL( std::string( "pies.txt" ), Filesystem::extractNodeName( fileName ) );
+
+   fileName = "/ola/ula/";
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ola/" ), Filesystem::extractDir( fileName ) );
+   CPPUNIT_ASSERT_EQUAL( std::string( "ula/" ), Filesystem::extractNodeName( fileName ) );
+
+   fileName = "/";
+   CPPUNIT_ASSERT_EQUAL( std::string( "" ), Filesystem::extractDir( fileName ) );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/" ), Filesystem::extractNodeName( fileName ) );
+
+   fileName = "";
+   CPPUNIT_ASSERT_EQUAL( std::string( "" ), Filesystem::extractDir( fileName ) );
+   CPPUNIT_ASSERT_EQUAL( std::string( "" ), Filesystem::extractNodeName( fileName ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////

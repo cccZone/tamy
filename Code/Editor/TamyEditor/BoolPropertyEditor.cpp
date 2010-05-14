@@ -4,9 +4,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoolPropertyEditor::BoolPropertyEditor(TProperty<bool>& property)
-: QPropertyEditor(property.getLabel().c_str())
-, m_property(property)
+BoolPropertyEditor::BoolPropertyEditor( bool& val, const std::string& label )
+: QPropertyEditor( label.c_str())
+, m_val( val )
 {
    setupUi();
 }
@@ -16,7 +16,7 @@ BoolPropertyEditor::BoolPropertyEditor(TProperty<bool>& property)
 void BoolPropertyEditor::setupUi()
 {
    QCheckBox* val = new QCheckBox(this); addWidget(val);
-   val->setChecked(m_property.get());
+   val->setChecked( m_val );
 
    connect(val, SIGNAL(stateChanged(int)), this, SLOT(valChanged(int)));
 }
@@ -25,7 +25,7 @@ void BoolPropertyEditor::setupUi()
 
 void BoolPropertyEditor::valChanged(int val)
 {
-   m_property.set(val != 0);
+   m_val = (val != 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

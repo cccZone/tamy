@@ -25,14 +25,14 @@ public:
    /**
     * Constructor.
     */
-   ProgressDialog(QWidget *parent = 0, Qt::WFlags flags = 0);
+   ProgressDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
 
    /**
-    * The method gives access to the progress bar from the dialog.
+    * Sets the progress on the bar.
     *
-    * @return  progress bar widget
+    * @param percentage    value in range <0, 1>
     */
-   QProgressBar& getProgressBar();
+   void setProgress( float percentage );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

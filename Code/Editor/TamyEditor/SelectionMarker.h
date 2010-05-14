@@ -15,8 +15,8 @@ class Node;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
-* An effect for rendering selected entities
-*/
+ * An effect rendering a selection hull around an entity.
+ */
 class SelectionMarker : public ShaderEffect
 {
    DECLARE_CLASS(SelectionMarker)
@@ -39,6 +39,7 @@ protected:
    void onDetached(Entity& parent);
    void onAttached(Model& hostModel);
    void onDetached(Model& hostModel);
+   void onComponentAdded( Component< Model >& component );
 };
 
 

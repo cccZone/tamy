@@ -16,9 +16,9 @@ namespace // anonymous
    public:
       virtual ~TemplateObject() {}
 
-      virtual void f() = 0;
+      virtual void f() {}
    };
-   BEGIN_ABSTRACT_RTTI(TemplateObject)
+   BEGIN_RTTI(TemplateObject)
    END_RTTI
 
    // -------------------------------------------------------------------------

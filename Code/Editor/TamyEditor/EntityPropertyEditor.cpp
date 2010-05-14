@@ -4,9 +4,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EntityPropertyEditor::EntityPropertyEditor(TProperty<Entity*>& property)
-: QPropertyEditor(property.getLabel().c_str())
-, m_property(property)
+EntityPropertyEditor::EntityPropertyEditor( Entity*& property, const std::string& label )
+: QPropertyEditor( label.c_str() )
+, m_property( property )
 {
    setupUi();
 }

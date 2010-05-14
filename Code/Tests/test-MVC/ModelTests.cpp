@@ -25,14 +25,6 @@ namespace // anonymous
       EntityAMock(int idx) : m_index(idx) {}
 
       int getIndex() const {return m_index;}
-
-   protected:
-      void onChildAttached(Entity& child) {}
-      void onChildDetached(Entity& child) {}
-      void onAttached(Entity& parent) {}
-      void onDetached(Entity& parent) {}
-      void onAttached(Model& hostModel) {}
-      void onDetached(Model& hostModel) {}
    };
    BEGIN_OBJECT(EntityAMock, Entity)
       PROPERTY("index", int, m_index)
@@ -52,14 +44,6 @@ namespace // anonymous
       EntityBMock(int idx) : m_index(idx) {}
 
       int getIndex() const {return m_index;}
-
-   protected:
-      void onChildAttached(Entity& child) {}
-      void onChildDetached(Entity& child) {}
-      void onAttached(Entity& parent) {}
-      void onDetached(Entity& parent) {}
-      void onAttached(Model& hostModel) {}
-      void onDetached(Model& hostModel) {}
    };
    BEGIN_OBJECT(EntityBMock, Entity)
       PROPERTY("index", int, m_index)
@@ -313,11 +297,11 @@ TEST(Model, nestedViews)
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, model->getViewsCount());
 
    EntityAMock entity1(10);
-   model->add(&entity1);
+   model->add(&entity1, false);
    model->add(new EntityAMock(10));
    CPPUNIT_ASSERT_EQUAL((unsigned int)3, model->getViewsCount());
 
-   model->remove(entity1, false);
+   model->remove(entity1);
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, model->getViewsCount());
    
    delete model;
@@ -334,21 +318,6 @@ TEST(Entity, entitiesReflection)
    CPPUNIT_ASSERT(NULL != solidTypeEntity);
 
    delete entity;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(Model, components)
-{
-   Model model;
-   
-   MockComponentA* compA = new MockComponentA();
-   MockComponentB* compB = new MockComponentB();
-   model.addComponent(compA);
-   model.addComponent(compB);
-
-   CPPUNIT_ASSERT_EQUAL(compA, model.getComponent<MockComponentA>());
-   CPPUNIT_ASSERT_EQUAL(compB, model.getComponent<MockComponentB>());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

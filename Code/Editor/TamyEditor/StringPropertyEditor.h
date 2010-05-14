@@ -22,7 +22,7 @@ class StringPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TProperty<std::string>& m_property;
+   std::string& m_property;
 
 public:
    /**
@@ -30,7 +30,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   StringPropertyEditor(TProperty<std::string>& property);
+   StringPropertyEditor( std::string& property, const std::string& label );
 
 public slots:
    void valChanged(const QString& val);

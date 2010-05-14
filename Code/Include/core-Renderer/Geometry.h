@@ -50,18 +50,16 @@ public:
     */
    const BoundingVolume& calculateBoundingVolume() const;
 
+   /**
+    * Returns the name of the geometry resource used by this geometry entity.
+    */
+   std::string getGeometryName() const;
+
 protected:
    // -------------------------------------------------------------------------
-   // Entity implementation
+   // Object implementation
    // -------------------------------------------------------------------------
-   void onSaveEntity(Serializer& serializer) {}
-   void onLoadEntity(Serializer& serializer) {}
-   void onChildAttached(Entity& child) {}
-   void onChildDetached(Entity& child) {}
-   void onAttached(Entity& parent) {}
-   void onDetached(Entity& parent) {}
-   void onAttached(Model& hostModel) {}
-   void onDetached(Model& hostModel) {}
+   void onObjectLoaded();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

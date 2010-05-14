@@ -1,34 +1,53 @@
 #include "core\ClassesRegistry.h"
 #include "core\Class.h"
 #include <stdexcept>
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ClassesRegistry::ClassesRegistry()
 {
+   // define external classes we intend to use
+   defineClass< bool >();
+   defineClass< int >();
+   defineClass< unsigned int >();
+   defineClass< char >();
+   defineClass< unsigned char >();
+   defineClass< short >();
+   defineClass< unsigned short >();
+   defineClass< long >();
+   defineClass< unsigned long >();
+   defineClass< float >();
+   defineClass< double >();
+   defineClass< std::string >();
+   defineClass< D3DXVECTOR3 >();
+   defineClass< D3DXMATRIX >();
+   defineClass< D3DXQUATERNION >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ClassesRegistry::~ClassesRegistry()
 {
-   unsigned int count = m_creators.size();
-   for (unsigned int i = 0; i < count; ++i)
+   unsigned int count = m_classes.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      delete m_creators[i];
+      delete m_classes[ i ];
    }
-   m_creators.clear();
+   m_classes.clear();
+   m_classNamesMap.clear();
+   m_classHandlesMap.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int ClassesRegistry::getHandle(const std::string& className)
+ClassTemplate& ClassesRegistry::getClassByName( const std::string& className )
 {
-   ClassHandlesMap::iterator it = m_handlesMap.find(className);
-   if (it != m_handlesMap.end())
+   ClassNameMap::iterator it = m_classNamesMap.find( className );
+   if (it != m_classNamesMap.end())
    {
-      return it->second;
+      return *m_classes[ it->second ];
    }
    else
    {
@@ -38,25 +57,17 @@ int ClassesRegistry::getHandle(const std::string& className)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const std::string& ClassesRegistry::getClassName(int handle) const
+ClassTemplate& ClassesRegistry::getClassByHandle( unsigned int handle )
 {
-   for (ClassHandlesMap::const_iterator it = m_handlesMap.begin();
-        it != m_handlesMap.end(); ++it)
+   ClassHandlesMap::iterator it = m_classHandlesMap.find( handle );
+   if (it != m_classHandlesMap.end())
    {
-      if (it->second == handle)
-      {
-         return it->first;
-      }
+      return *m_classes[ it->second ];
    }
-   
-   throw std::out_of_range("No class is assigned to this handle");
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void* ClassesRegistry::create(int classHandle)
-{
-   return m_creators.at(classHandle)->create();
+   else
+   {
+      throw std::out_of_range("No class is assigned to this handle");
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

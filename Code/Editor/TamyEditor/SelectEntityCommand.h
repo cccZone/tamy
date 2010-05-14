@@ -14,7 +14,7 @@
 class Entity;
 class Camera;
 struct Ray;
-class PropertiesEditor;
+class SelectionManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,9 +25,9 @@ class SelectEntityCommand : public CameraCommand
 {
 
 private:
-   Camera& m_camera;
-   QueryableScene& m_scene;
-   PropertiesEditor& m_editor;
+   Camera&              m_camera;
+   QueryableScene&      m_scene;
+   SelectionManager&    m_selectionMgr;
 
 public:
    /**
@@ -35,12 +35,11 @@ public:
     *
     * @param camera        camera that shows the scene
     * @param scene         scene we want to query
-    * @param editor        properties editor that will edit the selected 
-    *                      properties
+    * @param selectionMgr  selection manager
     */
-   SelectEntityCommand(Camera& camera,
-                       QueryableScene& scene, 
-                       PropertiesEditor& editor);
+   SelectEntityCommand( Camera& camera,
+                        QueryableScene& scene, 
+                        SelectionManager& selectionMgr );
 
    // -------------------------------------------------------------------------
    // MousePointerCommand implementation

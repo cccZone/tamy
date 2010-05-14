@@ -1,5 +1,6 @@
 #include "core\Filesystem.h"
 #include "core\File.h"
+#include "core\StringUtils.h"
 #include <stdexcept>
 
 
@@ -56,8 +57,17 @@ File* Filesystem::open(const std::string& fileName,
                        const std::ios_base::openmode mode) const
 {
    std::string fullFileName = m_rootDir + fileName;
+   File* file = new File(fullFileName, mode);
 
-   return new File(fullFileName, mode);
+   // we're writing to a file - that changes the fs contents, therefore
+   // send out the notifications
+   if ( ( mode & std::ios_base::out ) == std::ios_base::out )
+   {
+      std::string dir = extractDir( fileName );
+      notifyDirChange( dir );
+   }
+
+   return file;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -77,13 +87,59 @@ std::string Filesystem::extractExtension( const std::string& fileName )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+std::string Filesystem::extractDir( const std::string& fileName )
+{
+   std::size_t pos = fileName.length();
+   std::size_t len = fileName.length() - 1;
+   while( true )
+   {
+      pos = fileName.find_last_of( "/", pos - 1 );
+      if ( pos == std::string::npos || pos == 0 )
+      {
+         return "";
+      }
+
+      if ( pos < len ) 
+      {
+         return fileName.substr( 0, pos + 1 );
+      }
+   }
+
+   return "";
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::string Filesystem::extractNodeName( const std::string& fileName )
+{
+   std::size_t pos = fileName.length();
+   std::size_t len = fileName.length() - 1;
+   while( true )
+   {
+      pos = fileName.find_last_of( "/", pos - 1 );
+      if ( pos == std::string::npos || pos == 0)
+      {
+         return fileName;
+      }
+
+      if ( pos < len ) 
+      {
+         return fileName.substr( pos + 1 );
+      }
+   }
+
+   return fileName;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 std::string Filesystem::changeFileExtension( const std::string& fileName, 
                                              const std::string& newExtension )
 {
    std::size_t pos = fileName.find_last_of( "." );
    if ( pos != std::string::npos )
    {
-      return fileName.substr( 0, pos ) + newExtension;
+      return fileName.substr( 0, pos + 1 ) + newExtension;
    }
    else
    {
@@ -99,8 +155,8 @@ std::string Filesystem::toRelativePath(const std::string& absoluteFilePath) cons
    std::vector<std::string> fileNameTokens;
    std::vector<std::string> rootDirTokens;
 
-   tokenize(absoluteFilePath, fileNameTokens, "\\/");
-   tokenize(m_rootDir, rootDirTokens, "\\/");
+   StringUtils::tokenize( absoluteFilePath, "/", fileNameTokens );
+   StringUtils::tokenize( m_rootDir, "/", rootDirTokens );
 
    // if the root dir path contains more or equal amount of nodes
    // as the filename, file can't possibly be located inside that directory
@@ -121,35 +177,119 @@ std::string Filesystem::toRelativePath(const std::string& absoluteFilePath) cons
    }
 
    // assemble a file name relative to the root directory
-   std::string relativeFileName = ".";
+   std::string relativeFileName = "";
    unsigned int fileNameTokensCount = fileNameTokens.size();
    for (unsigned int i = rootDirTokensCount; i < fileNameTokensCount; ++i)
    {
       relativeFileName += "/" + fileNameTokens[i];
+   }
+
+   // if the path ended with a backslash (meaning that it was a path to a directory),
+   // finish it with one as well
+   if ( absoluteFilePath[ absoluteFilePath.length() - 1 ] == '/' )
+   {
+      relativeFileName += "/";
    }
    return relativeFileName;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Filesystem::tokenize(const std::string& str, 
-                          std::vector<std::string>& output,
-                          const std::string& tokens) const
+void Filesystem::setShortcut( const std::string& shortcut, const std::string& relativePath )
 {
-   std::size_t start, end;
-   std::string tmp;
-   start = 0;
-   end = 0;
-
-   while (end != std::string::npos)
+   Shortcuts::iterator it = m_shortcuts.find( shortcut );
+   if ( it != m_shortcuts.end() )
    {
-      end = str.find_first_of(tokens, start);
-      tmp = str.substr(start, end - start);
-      if (tmp.size() > 0)
+      it->second = relativePath;
+   }
+   else
+   {
+      m_shortcuts.insert( std::make_pair( shortcut, relativePath ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::string Filesystem::getShortcut( const std::string& shortcut ) const
+{
+   Shortcuts::const_iterator it = m_shortcuts.find( shortcut );
+   if ( it != m_shortcuts.end() )
+   {
+      return m_rootDir + it->second;
+   }
+   else
+   {
+      return "";
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::attach( FilesystemListener& listener )
+{
+   m_listeners.insert( &listener );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::detach( FilesystemListener& listener )
+{
+   Listeners::iterator it = m_listeners.find( &listener );
+   if ( it != m_listeners.end() )
+   {
+      m_listeners.erase( it );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::notifyDirChange( const std::string& dir ) const
+{
+   for ( Listeners::const_iterator it = m_listeners.begin();
+         it != m_listeners.end(); ++it )
+   {
+      ( *it )->onDirChanged( dir );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::scan( const std::string& rootDir, FilesystemScanner& scanner ) const
+{
+   std::vector< std::string > pathsStack;
+   pathsStack.push_back( m_rootDir + rootDir + "/" );
+
+   while( !pathsStack.empty() )
+   {
+      std::string currPath = pathsStack.back();
+      pathsStack.pop_back();
+
+      WIN32_FIND_DATA findFileData;
+      HANDLE hFind;
+      bool result = true;
+      for ( hFind = FindFirstFile( ( currPath + "*" ).c_str(), &findFileData );
+            hFind != INVALID_HANDLE_VALUE && result; 
+            result = FindNextFile( hFind, &findFileData ) )
       {
-         output.push_back(tmp);
+         std::string name = findFileData.cFileName;
+         if ( ( findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY )
+         {
+            // we found a directory
+            if ( name != "." && name != ".." )
+            {
+               std::string dirName = currPath + name + "/";
+               scanner.onDirectory( dirName );
+               pathsStack.push_back( dirName );
+            }
+         }
+         else
+         {
+            // we found a file
+            scanner.onFile( currPath + name );
+         }
       }
-      start = end + 1;
+
+      FindClose( hFind );
    }
 }
 

@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT(Entity, Object)
+BEGIN_OBJECT(Entity, Object)
    PROPERTY("parent", Entity*, m_parent)
    PROPERTY("children", Entity::Children, m_children)
 END_OBJECT()
@@ -77,7 +77,7 @@ void Entity::remove(Entity& entity, bool release)
    // and from all affiliated models
    if (m_hostModel != NULL)
    {
-      m_hostModel->remove(entity, false);
+      m_hostModel->remove(entity);
    }
 
    Children::iterator it = std::find(m_children.begin(), m_children.end(), &entity);

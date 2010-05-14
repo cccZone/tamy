@@ -6,6 +6,7 @@
 #include "core\Component.h"
 #include "core\PropertiesView.h"
 #include "QPropertyEditor.h"
+#include "SelectionManager.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,17 +21,15 @@ class Entity;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This component is responsible for navigating scene.
+ * Component for editing entity properties.
  */
-class PropertiesEditor : public Component<TamyEditor>
+class PropertiesEditor : public Component<TamyEditor>, public SelectionManagerListener
 {
 private:
    QVBoxLayout*      m_layout;
    QPropertiesView*  m_rootView;
 
-   Effect*           m_selectionMarker;
-
-   Entity*           m_selectedEntity;
+   SelectionManager* m_selectionManager;
 
 public:
    /**
@@ -43,25 +42,16 @@ public:
    // Component implementation
    // -------------------------------------------------------------------------
    void initialize(TamyEditor& mgr);
+   void onServiceRegistered( TamyEditor& mgr );
 
    // -------------------------------------------------------------------------
-   // Selected entities management
+   // SelectionManagerListener implementation
    // -------------------------------------------------------------------------
-   /**
-    * This method allows to select an object for edition.
-    *
-    * @param object  object properties of which we want to edit.
-    */
-   void selectObject(Object& object);
-
-   /**
-    * Removes the selected object's properties from the view.
-    */
-   void resetSelection();
+   void onObjectSelected( Entity& entity );
+   void onObjectDeselected( Entity& entity );
 
 private:
    void initUI(QMainWindow& mainWindow, QMenu& viewMenu);
-   void visualizeSelection( Entity* newSelection );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

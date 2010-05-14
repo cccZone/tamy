@@ -22,7 +22,9 @@ Derived* Serializable::load(Serializer& serializer)
 {
    int entityClassID;
    serializer << entityClassID;
-   Derived* object = reinterpret_cast<Derived*> (getClassesRegistry().create(entityClassID));
+
+   Class entityClass( entityClassID );
+   Derived* object = entityClass.instantiate< Derived >();
 
    object->onLoad(serializer);
    return object;

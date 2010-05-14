@@ -38,6 +38,15 @@ public:
    static Derived* load(Serializer& serializer);
 
    /**
+    * Returns an id uniquely identifying the serialized class.
+    */
+   virtual int getClassID() const = 0;
+
+   // -------------------------------------------------------------------------
+   // Notifications
+   // -------------------------------------------------------------------------
+
+   /**
     * Method called when an object is being saved - it should
     * contain implementation specific state saving code.
     *
@@ -56,9 +65,9 @@ public:
    virtual void onLoad(Serializer& serializer) = 0;
 
    /**
-    * Returns an id uniquely identifying the serialized class.
+    * Called once an object is fully loaded.
     */
-   virtual int getClassID() const = 0;
+   virtual void onObjectLoaded() {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
