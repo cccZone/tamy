@@ -22,13 +22,18 @@ class QPropertiesView : public QPropertyEditor,
    Q_OBJECT
 
 private:
-   QLayout* m_propertiesLayout;
-   QSpacerItem* m_spacer;
+   TamyEditor&    m_mgr;
+   QLayout*       m_propertiesLayout;
 
 public:
-   QPropertiesView();
-   QPropertiesView(VectorProperty& property);
+   QPropertiesView( TamyEditor& mgr );
+   QPropertiesView( TamyEditor& mgr, VectorProperty& property );
    ~QPropertiesView();
+
+   /**
+    * Returns the working instance of the main services manager.
+    */
+   inline TamyEditor& getServicesMgr() { return m_mgr; }
 
    // -------------------------------------------------------------------------
    // Editor widgets management

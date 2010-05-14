@@ -18,6 +18,7 @@
 class QTreeWidget;
 class QPushButton;
 class MainAppComponent;
+class FSTreeEntry;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,63 +29,6 @@ class ResourcesBrowser : public QObject,
                          public GenericFactory< Resource, ResourceEditor >
 {
    Q_OBJECT
-
-private:
-   /**
-    * An item describing an fs node in the tree structure
-    */
-   class FSTreeEntry : public QTreeWidgetItem 
-   {
-   private:
-      std::string    m_fsNodeName;
-      bool           m_isDir;
-
-   public:
-      /**
-       * Constructor creating the root node.
-       *
-       * @param hostTree
-       * @param fs         file system from which we can access entry icons
-       */
-      FSTreeEntry( QTreeWidget* hostTree, const Filesystem& fs );
-
-      /**
-       * Constructor that attaches a new sub node to a parent.
-       *
-       * @param nodeName
-       * @param isDir
-       * @param parent
-       * @param fs         file system from which we can access entry icons
-       */
-      FSTreeEntry( const std::string& nodeName, bool isDir, QTreeWidgetItem* parent, const Filesystem& fs  );
-
-      /**
-       * Removes all node's children.
-       */
-      void clear();
-
-      /**
-       * Returns a relative path leading to this fs node.
-       */
-      std::string getRelativePath() const;
-
-      /**
-       * Searches for a child entry with the specified name.
-       *
-       * @param nodeName
-       */
-      FSTreeEntry* find( const std::string& nodeName );
-
-      /**
-       * Tells whether the node corresponds to a directory.
-       */
-      inline bool isDir() const { return m_isDir; }
-
-   private:
-      void setEntryIcon( const Filesystem& fs );
-      void setEntryName( const Filesystem& fs );
-      void setEntrySize( const Filesystem& fs );
-   };
 
 private:
    TamyEditor*          m_mgr;
@@ -127,6 +71,77 @@ private:
    void initUI( TamyEditor& mgr );
    void refresh( const std::string& rootDir = "/" );
    FSTreeEntry* find( const std::string& dir );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * An item describing an fs node in the tree structure
+ */
+class FSTreeEntry : public QTreeWidgetItem 
+{
+private:
+   std::string    m_fsNodeName;
+   bool           m_isDir;
+
+public:
+   /**
+    * Constructor creating the root node.
+    *
+    * @param hostTree
+    * @param fs         file system from which we can access entry icons
+    */
+   FSTreeEntry( QTreeWidget* hostTree, const Filesystem& fs );
+
+   /**
+    * Constructor that attaches a new sub node to a parent.
+    *
+    * @param nodeName
+    * @param isDir
+    * @param parent
+    * @param fs         file system from which we can access entry icons
+    */
+   FSTreeEntry( const std::string& nodeName, bool isDir, QTreeWidgetItem* parent, const Filesystem& fs  );
+
+   /**
+    * Removes all node's children.
+    */
+   void clear();
+
+   /**
+    * Returns a relative path leading to this fs node.
+    */
+   std::string getRelativePath() const;
+
+   /**
+    * Searches for a child entry with the specified name.
+    *
+    * @param nodeName
+    */
+   FSTreeEntry* find( const std::string& nodeName );
+
+   /**
+    * Tells whether the node corresponds to a directory.
+    */
+   inline bool isDir() const { return m_isDir; }
+
+private:
+   void setEntryIcon( const Filesystem& fs );
+   void setEntryName( const Filesystem& fs );
+   void setEntrySize( const Filesystem& fs );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class FSTreeWidget : public QTreeWidget
+{
+   Q_OBJECT
+
+public:
+   FSTreeWidget( QWidget* parent = 0 );
+
+protected:
+   QMimeData* mimeData( const QList<QTreeWidgetItem *> items ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

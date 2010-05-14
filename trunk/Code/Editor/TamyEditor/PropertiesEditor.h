@@ -26,6 +26,8 @@ class Entity;
 class PropertiesEditor : public Component<TamyEditor>, public SelectionManagerListener
 {
 private:
+   TamyEditor*       m_mgr;
+
    QVBoxLayout*      m_layout;
    QPropertiesView*  m_rootView;
 

@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( LineSegments, tls, AM_BINARY )
+BEGIN_RESOURCE( LineSegments, GeometryResource, tls, AM_BINARY )
    PROPERTY( "segments", std::vector<LineSegment>, m_segments )
 END_RESOURCE()
 

@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( Shader, tfx, AM_BINARY )
+BEGIN_RESOURCE( Shader, Resource, tfx, AM_BINARY )
    PROPERTY( "hlsl", std::string, m_script )
 END_RESOURCE()
 

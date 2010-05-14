@@ -10,7 +10,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( Texture, tex, AM_BINARY )
+BEGIN_RESOURCE( Texture, Resource, tex, AM_BINARY )
    PROPERTY( "imageFile", std::string, m_texFileName )
 END_RESOURCE()
 

@@ -443,6 +443,10 @@
 			Name="Resources"
 			>
 			<File
+				RelativePath=".\GeometryResource.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Include\core-Renderer\GeometryResource.h"
 				>
 			</File>

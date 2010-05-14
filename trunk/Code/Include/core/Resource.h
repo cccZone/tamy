@@ -115,7 +115,7 @@ protected:
 ///////////////////////////////////////////////////////////////////////////////
 
 // Declares a specific resource
-#define BEGIN_RESOURCE( ClassName, Extension, AccessMode )                    \
+#define BEGIN_RESOURCE( ClassName, ParentClassName, Extension, AccessMode )   \
    class RegisterResource##Extension                                          \
    {                                                                          \
    public:                                                                    \
@@ -126,7 +126,7 @@ protected:
    };                                                                         \
    RegisterResource##Extension resourceTypeRegistryFor_##Extension;           \
    const char* ClassName::getExtension() { return #Extension; }               \
-   BEGIN_OBJECT( ClassName, Resource )
+   BEGIN_OBJECT( ClassName, ParentClassName )
 
 ///////////////////////////////////////////////////////////////////////////////
 

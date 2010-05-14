@@ -92,6 +92,14 @@ Class TProperty< T >::getVirtualClass() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
+Class TProperty< T >::getPropertyClass() const
+{
+   return Class( getClassesRegistry().getClassByType< T >() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
 Class TProperty< T >::getRTTIClass()
 {
    return Class( getClassesRegistry().getClassByType< T >() );
@@ -212,6 +220,14 @@ Class TProperty< T* >::getVirtualClass() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
+Class TProperty< T* >::getPropertyClass() const
+{
+   return Class( getClassesRegistry().getClassByType< T >() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
 Class TProperty< T* >::getRTTIClass()
 {
    return Class( getClassesRegistry().getClassByType< T >() );
@@ -300,6 +316,14 @@ void* TProperty< std::vector< T* > >::edit()
 
 template< typename T >
 Class TProperty< std::vector< T* > >::getVirtualClass() const
+{
+   return s_class;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+Class TProperty< std::vector< T* > >::getPropertyClass() const
 {
    return s_class;
 }

@@ -99,8 +99,10 @@ private:
       PropertyEditor* operator()( Property* property )
       {
          Object** val = property->editPtr();
-         ENTITY_IMPL* typedVal = reinterpret_cast< ENTITY_IMPL* >( val );
-         return new REPR_IMPL( *typedVal, property->getLabel() );
+         ENTITY_IMPL** typedVal = reinterpret_cast< ENTITY_IMPL** >( val );
+
+         Class propertyType = property->getPropertyClass();
+         return new REPR_IMPL( *typedVal, propertyType, property->getLabel() );
       }
    };
 

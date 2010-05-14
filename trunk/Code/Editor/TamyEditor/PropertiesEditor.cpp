@@ -7,13 +7,15 @@
 #include <QBoxLayout.h>
 #include <QMenu.h>
 #include <QAction.h>
+#include <QScrollArea.h>
 #include "QPropertiesView.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 PropertiesEditor::PropertiesEditor()
-: m_rootView( NULL )
+: m_mgr( NULL )
+, m_rootView( NULL )
 , m_layout( NULL )
 , m_selectionManager( NULL )
 {
@@ -37,6 +39,8 @@ PropertiesEditor::~PropertiesEditor()
 
 void PropertiesEditor::initialize(TamyEditor& mgr)
 {
+   m_mgr = &mgr;
+
    // register new services
    mgr.registerService< PropertiesEditor >( *this, *this );
 
@@ -76,7 +80,7 @@ void PropertiesEditor::onObjectSelected( Entity& entity )
       m_layout->removeWidget(m_rootView);
       delete m_rootView;
    }
-   m_rootView = new QPropertiesView();
+   m_rootView = new QPropertiesView( *m_mgr );
    m_layout->addWidget(m_rootView);
    entity.viewProperties( *m_rootView );
 }
@@ -103,9 +107,12 @@ void PropertiesEditor::initUI(QMainWindow& mainWindow, QMenu& viewMenu)
    dockWidget->setObjectName(QString::fromUtf8("dockWidget"));
    dockWidget->setWindowTitle(QString::fromUtf8("Properties"));
 
-   QWidget* dockWidgetContents = new QWidget();
-   dockWidgetContents->setObjectName(QString::fromUtf8("dockWidgetContents"));
-   dockWidget->setWidget(dockWidgetContents);
+   QScrollArea* scrollableDockWidgetContents = new QScrollArea( dockWidget );
+   dockWidget->setWidget( scrollableDockWidgetContents );
+
+   QWidget* dockWidgetContents = new QWidget( scrollableDockWidgetContents );
+   scrollableDockWidgetContents->setWidget( dockWidgetContents );
+   scrollableDockWidgetContents->setWidgetResizable( true );
 
    m_layout = new QVBoxLayout(dockWidgetContents);
    dockWidgetContents->setLayout(m_layout);

@@ -8,6 +8,7 @@
 #include "MainAppComponent.h"
 #include "core.h"
 #include "progressdialog.h"
+#include "FSNodeMimeData.h"
 
 // editors
 #include "core-MVC.h"
@@ -84,7 +85,7 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
    toolbarLayout->addSpacerItem( new QSpacerItem(40, 1, QSizePolicy::Expanding, QSizePolicy::Fixed) );
 
    // setup the scene tree container widget
-   m_fsTree = new QTreeWidget( dockWidgetContents );
+   m_fsTree = new FSTreeWidget( dockWidgetContents );
    layout->addWidget( m_fsTree );
 
    QStringList columnLabels; 
@@ -138,7 +139,7 @@ void ResourcesBrowser::refresh( const std::string& rootDir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourcesBrowser::FSTreeEntry* ResourcesBrowser::find( const std::string& dir )
+FSTreeEntry* ResourcesBrowser::find( const std::string& dir )
 {
    std::vector< std::string > pathParts;
    StringUtils::tokenize( dir, "/", pathParts );
@@ -275,7 +276,7 @@ void ResourcesBrowser::toggleFilesFiltering( bool )
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourcesBrowser::FSTreeEntry::FSTreeEntry( QTreeWidget* hostTree, const Filesystem& fs )
+FSTreeEntry::FSTreeEntry( QTreeWidget* hostTree, const Filesystem& fs )
 : QTreeWidgetItem( hostTree )
 , m_fsNodeName( "/" )
 , m_isDir( true )
@@ -287,13 +288,13 @@ ResourcesBrowser::FSTreeEntry::FSTreeEntry( QTreeWidget* hostTree, const Filesys
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourcesBrowser::FSTreeEntry::FSTreeEntry( const std::string& nodeName,
-                                           bool isDir,
-                                           QTreeWidgetItem* parent,
-                                           const Filesystem& fs )
-                                           : QTreeWidgetItem( parent ) 
-                                           , m_fsNodeName( nodeName )
-                                           , m_isDir( isDir )
+FSTreeEntry::FSTreeEntry( const std::string& nodeName,
+                          bool isDir,
+                          QTreeWidgetItem* parent,
+                          const Filesystem& fs )
+: QTreeWidgetItem( parent ) 
+, m_fsNodeName( nodeName )
+, m_isDir( isDir )
 {
    ASSERT( m_fsNodeName.length() > 0, "Invalid filesystem node name" );
 
@@ -304,7 +305,7 @@ ResourcesBrowser::FSTreeEntry::FSTreeEntry( const std::string& nodeName,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::FSTreeEntry::clear()
+void FSTreeEntry::clear()
 {
    int count = childCount();
    for( int i = 0; i < count; ++i )
@@ -315,7 +316,7 @@ void ResourcesBrowser::FSTreeEntry::clear()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::FSTreeEntry::setEntryIcon( const Filesystem& fs )
+void FSTreeEntry::setEntryIcon( const Filesystem& fs )
 {
    std::string iconsDir = fs.getShortcut( "editorIcons" );
    if ( m_isDir )
@@ -345,7 +346,7 @@ void ResourcesBrowser::FSTreeEntry::setEntryIcon( const Filesystem& fs )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::FSTreeEntry::setEntryName( const Filesystem& fs )
+void FSTreeEntry::setEntryName( const Filesystem& fs )
 {
    if ( m_isDir )
    {
@@ -361,7 +362,7 @@ void ResourcesBrowser::FSTreeEntry::setEntryName( const Filesystem& fs )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::FSTreeEntry::setEntrySize( const Filesystem& fs )
+void FSTreeEntry::setEntrySize( const Filesystem& fs )
 {
    if ( m_isDir )
    {
@@ -390,7 +391,7 @@ void ResourcesBrowser::FSTreeEntry::setEntrySize( const Filesystem& fs )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::string ResourcesBrowser::FSTreeEntry::getRelativePath() const
+std::string FSTreeEntry::getRelativePath() const
 {
    // get the hierarchy of nodes leading up th this entry
    std::list< const FSTreeEntry* > entriesList;
@@ -414,7 +415,7 @@ std::string ResourcesBrowser::FSTreeEntry::getRelativePath() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourcesBrowser::FSTreeEntry* ResourcesBrowser::FSTreeEntry::find( const std::string& nodeName )
+FSTreeEntry* FSTreeEntry::find( const std::string& nodeName )
 {
    int count = childCount();
    for( int i = 0; i < count; ++i )
@@ -427,6 +428,38 @@ ResourcesBrowser::FSTreeEntry* ResourcesBrowser::FSTreeEntry::find( const std::s
    }
 
    return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+FSTreeWidget::FSTreeWidget( QWidget* parent )
+: QTreeWidget( parent )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+QMimeData* FSTreeWidget::mimeData( const QList<QTreeWidgetItem *> items ) const
+{
+   QMimeData* data = __super::mimeData( items );
+
+   std::vector< std::string > paths;
+   unsigned int count = items.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      FSTreeEntry* node = dynamic_cast< FSTreeEntry* >( items[ i ] );
+      if ( node )
+      {
+         paths.push_back( node->getRelativePath() );
+      }
+   }
+
+   FSNodeMimeData dataEncoder( paths );
+   dataEncoder.save( *data );
+
+   return data;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

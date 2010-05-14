@@ -16,7 +16,7 @@
 #include "ResourcesBrowser.h"
 
 
-// TODO: (TOP 1) resources editor as one of the properties editors
+// TODO: (TOP 1) entities editor as one of the properties editors
 
 ///////////////////////////////////////////////////////////////////////////////
 

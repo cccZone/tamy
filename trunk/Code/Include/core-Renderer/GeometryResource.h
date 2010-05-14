@@ -15,6 +15,8 @@ class BoundingVolume;
  */
 class GeometryResource : public Resource
 {
+   DECLARE_CLASS( GeometryResource )
+
 public:
    /**
     * Constructor.

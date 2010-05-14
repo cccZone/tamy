@@ -23,15 +23,18 @@ class EntityPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   Entity*& m_property;
+   Entity*&          m_property;
+   Class             m_acceptableType;
 
 public:
    /**
     * Constructor.
     *
     * @param property   property this editor edits
+    * @param acceptableType   type this editor can accept
+    * @param label            property label
     */
-   EntityPropertyEditor( Entity*& property, const std::string& label );
+   EntityPropertyEditor( Entity*& property, const Class& acceptableType, const std::string& label );
 
 private:
    void setupUi();
