@@ -26,12 +26,10 @@
  */
 
 #include "core\Object.h"
+#include "core-MVC\Model.h"
+#include "core\Component.h"
 #include <vector>
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class Model;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +42,7 @@ class Model;
  */
 class Entity : public Object
 {
-   DECLARE_ABSTRACT_CLASS(Entity)
+   DECLARE_CLASS(Entity)
 
 public:
    typedef std::vector<Entity*> Children;
@@ -55,6 +53,10 @@ public:
    Model* m_hostModel;
 
 public:
+   /**
+    * Constructor.
+    */
+   Entity();
    virtual ~Entity();
 
    // -------------------------------------------------------------------------
@@ -77,9 +79,14 @@ public:
    void remove(Entity& entity, bool release = true);
 
    /**
-    * Tells whether this entity is attached to another entity.
+    * Tells whether this entity is attached to another entity (thus has a parent)
     */
    inline bool isAttached() const;
+
+   /**
+    * Returns the parent of this entity (if it's attached to one).
+    */
+   inline Entity& getParent();
 
    /**
     * Returns the entity's children.
@@ -87,11 +94,6 @@ public:
    inline const Children& getEntityChildren() const;
 
 protected:
-   /**
-    * Constructor.
-    */
-   Entity();
-
    // -------------------------------------------------------------------------
    // Model interaction
    // -------------------------------------------------------------------------
@@ -121,7 +123,7 @@ protected:
     *
     * @param child      child entity that was attached
     */
-   virtual void onChildAttached(Entity& child) = 0;
+   virtual void onChildAttached(Entity& child) {}
 
    /**
     * Method called when a child entity is about to be detached
@@ -129,15 +131,14 @@ protected:
     *
     * @param child      child entity about to be detached
     */
-   virtual void onChildDetached(Entity& child) = 0;
-
+   virtual void onChildDetached(Entity& child) {}
    /**
     * Method called to inform a child entity about its 
     * new parent when it's being attached to it.
     *
     * @param parent     instance of the new parent entity
     */
-   virtual void onAttached(Entity& parent) = 0;
+   virtual void onAttached(Entity& parent) {}
 
    /**
     * Method called to inform a child that it's being
@@ -145,7 +146,7 @@ protected:
     *
     * @param parent     entity instance this entity is being detached from
     */
-   virtual void onDetached(Entity& parent) = 0;
+   virtual void onDetached(Entity& parent) {}
 
    /**
     * Method called to inform an entity that it's being attached
@@ -153,7 +154,7 @@ protected:
     *
     * @param hostModel     model the entity is being attached to
     */
-   virtual void onAttached(Model& hostModel) = 0;
+   virtual void onAttached(Model& hostModel) {}
 
    /**
     * Method called to inform an entity that it's about to be detached
@@ -161,7 +162,15 @@ protected:
     *
     * @param hostModel     model the entity is being detached from
     */
-   virtual void onDetached(Model& hostModel) = 0;
+   virtual void onDetached(Model& hostModel) {}
+
+   /**
+    * Called when a component is added to a model managing the entity.
+    * It's up to the implementation to find the components it needs.
+    *
+    * @param component
+    */
+   virtual void onComponentAdded( Component< Model >& component ) {}
 
    friend class Model;
 };

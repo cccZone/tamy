@@ -12,10 +12,11 @@ END_OBJECT()
 
 Effect* SelectionMarker::create( ResourcesManager& rm )
 {
-   std::string shaderFileName = "Editor/Shaders/SelectionMarker.fx";
+   std::string shaderResourceName = "Editor/Shaders/SelectionMarker.tfx";
    Shader* shader = NULL;
-   if ( ( shader = dynamic_cast< Shader* >( rm.findResource( shaderFileName ) ) ) == NULL )
+   if ( ( shader = dynamic_cast< Shader* >( rm.findResource( shaderResourceName ) ) ) == NULL )
    {
+      std::string shaderFileName = "Editor/Shaders/SelectionMarker.fx";
       shader = new Shader( shaderFileName );
       rm.addResource( shader );
    }
@@ -70,11 +71,7 @@ void SelectionMarker::onDetached(Entity& parent)
 
 void SelectionMarker::onAttached(Model& hostModel) 
 {
-   CameraComponent* camComp = hostModel.getComponent<CameraComponent> ();
-   if (camComp != NULL)
-   {
-      m_camera = &(camComp->getCamera());
-   }
+   m_camera = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -82,6 +79,17 @@ void SelectionMarker::onAttached(Model& hostModel)
 void SelectionMarker::onDetached(Model& hostModel) 
 {
    m_camera = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SelectionMarker::onComponentAdded( Component< Model >& component )
+{
+   CameraComponent* comp = dynamic_cast< CameraComponent* >( &component );
+   if ( comp )
+   {
+      m_camera = &comp->getCamera();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

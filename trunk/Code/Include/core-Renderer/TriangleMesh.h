@@ -41,7 +41,6 @@ public:
  * this responsibility on the TriangleMeshImpl.
  */
 class TriangleMesh : public GeometryResource, 
-                     public Resource,
                      public TRendererObject<TriangleMeshImpl>
 {
    DECLARE_RESOURCE( TriangleMesh )

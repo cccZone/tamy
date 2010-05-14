@@ -12,10 +12,10 @@ namespace // anonymous
                              public MousePropertiesView::Observer
    {
    private:
-      TProperty<D3DXVECTOR3>& m_property;
+      D3DXVECTOR3& m_property;
 
    public:
-      Vec3MousePropEdit(TProperty<D3DXVECTOR3>& property)
+      Vec3MousePropEdit( D3DXVECTOR3& property, const std::string& label )
       : m_property(property)
       {
       }
@@ -42,11 +42,11 @@ namespace // anonymous
                             public MousePropertiesView::Observer
    {
    private:
-      TProperty<D3DXMATRIX>& m_property;
+      D3DXMATRIX& m_property;
 
    public:
-      MtxMousePropEdit(TProperty<D3DXMATRIX>& property)
-         : m_property(property)
+      MtxMousePropEdit( D3DXMATRIX& property, const std::string& label )
+         : m_property( property )
       {
       }
 
@@ -72,8 +72,8 @@ namespace // anonymous
 
 MousePropertiesView::MousePropertiesView()
 {
-   associate<TProperty<D3DXVECTOR3>, Vec3MousePropEdit>();
-   associate<TProperty<D3DXMATRIX>, MtxMousePropEdit>();
+   associate< D3DXVECTOR3, Vec3MousePropEdit>();
+   associate< D3DXMATRIX, MtxMousePropEdit>();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

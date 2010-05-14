@@ -15,30 +15,23 @@
  */
 class SpatialEntity : public Entity, public Node
 {
-   DECLARE_ABSTRACT_CLASS(SpatialEntity)
+   DECLARE_CLASS(SpatialEntity)
 
 public:
-   virtual ~SpatialEntity();
-
-protected:
    /**
     * Constructor.
     *
     * @param name    node name
     */
-   SpatialEntity(const std::string& name);
+   SpatialEntity( const std::string& name = "" );
+   virtual ~SpatialEntity();
 
+protected:
    // -------------------------------------------------------------------------
    // Entity implementation
    // -------------------------------------------------------------------------
-   void onSaveEntity(Serializer& serializer) {}
-   void onLoadEntity(Serializer& serializer) {}
    void onChildAttached(Entity& child);
    void onChildDetached(Entity& child);
-   void onAttached(Entity& entity) {}
-   void onDetached(Entity& entity) {}
-   void onAttached(Model& hostModel) {}
-   void onDetached(Model& hostModel) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

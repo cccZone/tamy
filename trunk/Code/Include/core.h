@@ -81,6 +81,7 @@
 #include "core\IntervalOperation.h"
 #include "core\MatrixInterpolator.h"
 #include "core\UniqueObject.h"
+#include "core\StringUtils.h"
 
 // ----------------------------------------------------------------------------
 // Resources

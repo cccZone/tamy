@@ -230,9 +230,10 @@ void IWFScene::addStaticGeometry(Model& scene,
    Renderer& renderer = rm.getInitializers().shared< Renderer > ();
 
    // aquire the default shader resource
+   std::string shaderResourceName = "Renderer/Shaders/SingleTextureEffect.tfx";
    std::string shaderFilename = "Renderer/Shaders/SingleTextureEffect.fx";
    Shader* shader = NULL;
-   if ( ( shader = dynamic_cast< Shader* >( rm.findResource( shaderFilename ) ) ) == NULL )
+   if ( ( shader = dynamic_cast< Shader* >( rm.findResource( shaderResourceName ) ) ) == NULL )
    {
       shader = new Shader( shaderFilename );
       rm.addResource( shader );
@@ -250,8 +251,7 @@ void IWFScene::addStaticGeometry(Model& scene,
       // create the geometry
       char geomName[128];
       static int loadedMeshesUniqueID = 0;
-      sprintf_s(geomName, 128, "%s/%s_geom_%d.tgt", m_sceneDir.c_str(), currMesh.name.c_str(), ++loadedMeshesUniqueID);
-
+      sprintf_s(geomName, 128, "%s/%s_geom_%d.%s", m_sceneDir.c_str(), currMesh.name.c_str(), ++loadedMeshesUniqueID, TriangleMesh::getExtension());
       TriangleMesh* geometry = new TriangleMesh( geomName, currMesh.vertices, currMesh.faces );
       rm.addResource( geometry );
 
@@ -264,9 +264,10 @@ void IWFScene::addStaticGeometry(Model& scene,
       
       if (mat.texName.length() > 0)
       {
-         std::string texName = m_sceneDir + std::string( "/" ) + mat.texName; 
+         std::string texName = m_sceneDir + std::string( "/" ) + mat.texName;
+         std::string texResourceName = Filesystem::changeFileExtension( texName, Texture::getExtension() );
          Texture* texture = NULL;
-         if ( ( texture = dynamic_cast< Texture* >( rm.findResource( texName ) ) ) == NULL )
+         if ( ( texture = dynamic_cast< Texture* >( rm.findResource( texResourceName ) ) ) == NULL )
          {
             texture = new Texture( texName );
             rm.addResource( texture );

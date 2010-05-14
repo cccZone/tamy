@@ -23,7 +23,7 @@ class EntityPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TProperty<Entity*>& m_property;
+   Entity*& m_property;
 
 public:
    /**
@@ -31,7 +31,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   EntityPropertyEditor(TProperty<Entity*>& property);
+   EntityPropertyEditor( Entity*& property, const std::string& label );
 
 private:
    void setupUi();

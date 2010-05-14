@@ -5,8 +5,8 @@
 /// @brief  MVC model
 
 #include <vector>
-#include "core\Delegate.h"
 #include "core\ComponentsManager.h"
+#include "core\Delegate.h"
 #include "core\Resource.h"
 
 
@@ -24,7 +24,7 @@ class Loader;
  * Model stores entities and allows to serialize them. Model
  * can be observed and 'illustrated' using views.
  */
-class Model : public ComponentsManager<Model>, public Resource
+class Model : public Resource, public ComponentsManager< Model >
 {
    DECLARE_RESOURCE( Model )
 
@@ -43,8 +43,10 @@ private:
 public:
    /**
     * Constructor.
+    *
+    * @param name    scene name
     */
-   Model();
+   Model( const std::string& name = "" );
    ~Model();
 
    // -------------------------------------------------------------------------
@@ -55,7 +57,7 @@ public:
     * This method adds a new entity to the model.
     *
     * @param entity     new entity we want to add to the model
-    * @param manage        should the model manage the entity
+    * @param manage     should the model manage the entity
     */
    void add(Entity* entity, bool manage = true);
 
@@ -63,10 +65,8 @@ public:
     * This method removes an entity from the model.
     *
     * @param entity     entity we want to remove
-    * @param release    this parameter specifies whether the entity
-    *                   should be deleted when it's removed.
     */
-   void remove(Entity& entity, bool release = true);
+   void remove( Entity& entity );
 
    /**
     * The method removes all entities from the model.
@@ -118,24 +118,23 @@ public:
     */
    unsigned int getViewsCount() const;
 
+protected:
    // -------------------------------------------------------------------------
-   // Components management
+   // ComponentsManager implementation
    // -------------------------------------------------------------------------
-
-   /**
-    * This helper method allows to quickly retrieve a component of the specified
-    * type, if one was added to the model.
-    *
-    * @param COMPONENT_TYPE   type of the component we wish to retrive
-    */
-   template<typename COMPONENT_TYPE>
-   COMPONENT_TYPE* getComponent();
+   void onComponentAdded( Component< Model >& component );
 
 private:
-   void notifyEntityAdded(Entity& entity);
-   void notifyEntityRemoved(Entity& entity);
+   void notifyEntityAdded( Entity& entity );
+   void notifyEntityRemoved( Entity& entity );
+   void notifyComponentAdded( Entity& entity, Component< Model >& component );
    void processViewsOperations();
-   void entityDFS(Entity& entity, const Functor& operation);
+   void entityDFS( Entity& entity, const Functor& operation );
+
+   // -------------------------------------------------------------------------
+   // Befriended operations
+   // -------------------------------------------------------------------------
+   friend class ComponentAddOperation;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -39,6 +39,12 @@ private:
    ProjectionCalculator* m_projCalc;
 
 public:
+   /**
+    * Constructor.
+    *
+    * @param name       camera name
+    * @param renderer   main renderer the application uses
+    */
    Camera(const std::string& name, Renderer& renderer);
    ~Camera();
 
@@ -54,6 +60,15 @@ public:
    void setClippingPlanes(float nearZPlane, float farZPlane);
    float getNearClippingPlane() const {return m_nearZPlane;}
    float getFarClippingPlane() const {return m_farZPlane;}
+
+   /**
+    * Sets the camera so that it looks at the specified node from
+    * the specified distance.
+    *
+    * @param node
+    * @param distance      ( must be >0 )
+    */
+   void lookAt( Node& node, float distance );
 
    /**
     * Sets the fov of the camera (angle specified in degrees)

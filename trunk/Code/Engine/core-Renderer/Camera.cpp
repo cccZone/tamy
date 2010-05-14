@@ -235,3 +235,19 @@ Ray Camera::createRay(float viewportX, float viewportY)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void Camera::lookAt( Node& node, float distance )
+{
+   const D3DXMATRIX& targetNodeMtx = node.getGlobalMtx();
+   D3DXVECTOR3 targetNodePos( targetNodeMtx._41, targetNodeMtx._42, targetNodeMtx._43 );
+   D3DXVECTOR3 targetNodeLookVec( targetNodeMtx._31, targetNodeMtx._32, targetNodeMtx._33 );
+
+   D3DXVec3Normalize( &targetNodeLookVec, &targetNodeLookVec );
+   D3DXVECTOR3 newPosition = targetNodePos - ( targetNodeLookVec * distance );
+
+   D3DXMATRIX lookAtMtx;
+   D3DXMatrixLookAtLH( &lookAtMtx, &newPosition, &targetNodePos, &D3DXVECTOR3( 0, 1, 0 ) );
+   setLocalMtx( lookAtMtx );
+}
+
+///////////////////////////////////////////////////////////////////////////////

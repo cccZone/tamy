@@ -40,10 +40,11 @@ void DependenciesMapper::operator<<(Serializable** ptr)
 { 
    if ( m_state == PSS_SAVE )
    {
-      Resource* resource = dynamic_cast< Resource* >( *ptr );
+      Serializable* serializable = *ptr;
+      Resource* resource = dynamic_cast< Resource* >( serializable );
       if ( resource == NULL )
       {
-         saveDependency< Serializable >( m_internalDependencies, *ptr );
+         saveDependency< Serializable >( m_internalDependencies, serializable );
       }
    }
    else if ( m_state == PSS_UPDATE )
@@ -144,12 +145,14 @@ void Saver::operator<<(D3DXVECTOR3& vec)
 
 void Saver::operator<<( Serializable** ptr )
 {
+   Serializable* serializable = *ptr;
+
    // check if that's an internal dependency - if so, save it's path
    byte checkedDepType = DPT_INTERNAL;
    unsigned int count = m_internalDependencies.size();
    for ( unsigned int idx = 0; idx < count; ++idx )
    {
-      if (m_internalDependencies[idx] == *ptr)
+      if (m_internalDependencies[idx] == serializable)
       {
          m_impl->write( ( byte* )&checkedDepType, sizeof( byte ) );
          m_impl->write( ( byte* )&idx, sizeof( idx ) );
@@ -159,13 +162,28 @@ void Saver::operator<<( Serializable** ptr )
 
    // check if that's an external dependency
    checkedDepType = DPT_EXTERNAL;
-   Resource* resource = dynamic_cast< Resource* >( *ptr );
+   Resource* resource = dynamic_cast< Resource* >( serializable );
    if ( resource != NULL )
    {
-      m_externalDependencies->push_back( resource );
+      // check if the dependency is not already mapped
+      bool isDependencyMapped = false;
+      count = m_externalDependencies->size();
+      for ( unsigned int idx = 0; idx < count; ++idx )
+      {
+         if ( ( *m_externalDependencies )[idx] == resource )
+         {
+            isDependencyMapped = true;
+            break;
+         }
+      }
+      // map the dependency, if it's not been mapped yet
+      if ( !isDependencyMapped )
+      {
+         m_externalDependencies->push_back( resource );
+      }
 
+      // store a link to the external dependency - it's file name
       m_impl->write( ( byte* )&checkedDepType, sizeof( byte ) );
-
       std::string filePath = resource->getFilePath();
       *this << filePath;
      
@@ -223,6 +241,9 @@ Resource& Loader::load( ResourcesManager& resMgr )
    for ( unsigned int i = 1; i < count; ++i )
    {
       m_dependencies[ i ]->save( mapper );
+
+      // notify the dependencies that they were successfully loaded
+      m_dependencies[ i ]->onObjectLoaded();
    }
 
    // add the new resource to the resources manager

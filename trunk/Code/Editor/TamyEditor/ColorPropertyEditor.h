@@ -22,7 +22,7 @@ class ColorPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TProperty<Color>& m_property;
+   Color& m_property;
 
 public:
    /**
@@ -30,7 +30,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   ColorPropertyEditor(TProperty<Color>& property);
+   ColorPropertyEditor( Color& property, const std::string& label );
 
 public slots:
    void rValChanged(double val);

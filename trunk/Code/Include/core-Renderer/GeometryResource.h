@@ -3,6 +3,8 @@
 /// @file   core-Renderer\GeometryResource.h
 /// @brief  resource with geometry data
 
+#include "core\Resource.h"
+
 
 class BoundingVolume;
 
@@ -11,23 +13,27 @@ class BoundingVolume;
 /**
  * A resource for creating geometry data.
  */
-class GeometryResource
+class GeometryResource : public Resource
 {
 public:
+   /**
+    * Constructor.
+    */
+   GeometryResource( const std::string& name = "" ) : Resource( name ) {}
+
    virtual ~GeometryResource() {}
 
    /**
     * Renders the geometry.
     */
-   virtual void render() = 0;
+   virtual void render() {}
 
    /**
     * Calculates a bounding volume around the geometry.
     *
     * @param   new bounding volume instance
     */
-   virtual BoundingVolume* calculateBoundingVolume() const = 0;
-
+   virtual BoundingVolume* calculateBoundingVolume() const { return NULL;}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

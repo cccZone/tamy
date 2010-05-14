@@ -5,8 +5,12 @@
 /// @file   a definition of an RTTI class
 
 #include "core\ClassesRegistry.h"
-#include <typeinfo>
+#include "core\ClassTemplate.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+class Class;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,30 +22,36 @@ public:
    virtual const Class& getVirtualClass() const = 0;
 };
 
+
 ///////////////////////////////////////////////////////////////////////////////
 
 class Class
 {
-   std::string                m_name;
-   int                        m_handle;
-
-   std::vector<std::string>   m_parents;
+private:
+   ClassTemplate*    m_template;
 
 public:
    /**
-    * Constructor (default).
+    * Default constructor.
     */
    Class();
 
    /**
-    * Class based constructor.
+    * Type based constructor.
     */
    template<typename T>
    static Class createClass()
    {
-      int handle = getClassesRegistry().getHandle<T>();
-      return Class(handle);
+      ClassTemplate& temp = getClassesRegistry().getClassByType<T>();
+      return Class( temp );
    }
+
+   /**
+    * Template based constructor.
+    *
+    * @param temp    class template
+    */
+   Class( ClassTemplate& temp );
 
    /**
     * Constructor (name based).
@@ -51,7 +61,7 @@ public:
    /**
     * Constructor (handle based).
     */
-   Class(int handle);
+   Class(unsigned int handle);
 
    /**
     * Copy constructor.
@@ -61,12 +71,12 @@ public:
    /**
     * Returns the name of the class type.
     */
-   inline const std::string& getName() const { return m_name; }
+   const std::string& getName() const;
 
    /**
     * Returns a unique handle assigned to this class type.
     */
-   inline int getHandle() const { return m_handle; }
+   unsigned int getHandle() const;
 
    /**
     * Checks if the specified class can be safely cast
@@ -113,23 +123,15 @@ public:
     * @param outParentHandles    collection that will be filled with
     *                            the parents' handles
     */
-   void getParents(std::vector<Class>& outParentHandles) const;
-
-   /**
-    * Defines a new parent for the class.
-    */
-   void addParent(const std::string& classTypeName);
+   void getParents( std::vector<Class>& outParentHandles ) const;
 
    /**
     * Creates a new instance of the class.
     */
    template<typename T>
-   static T* createInstance(const std::string& typeName)
+   T* instantiate()
    {
-      ClassesRegistry& registry = getClassesRegistry();
-      int handle = registry.getHandle(typeName);
-
-      void* ptr = getClassesRegistry().create(handle);
+      void* ptr = m_template->instantiate();
       T* obj = reinterpret_cast<T*> (ptr);
 
       return obj;
@@ -151,13 +153,12 @@ ClassesRegistry& getClassesRegistry();
  */
 #define DECLARE_RTTI_CLASS                                                    \
    private:                                                                   \
-      class RegisterClass                                                     \
+      class RegisterMe                                                        \
       {                                                                       \
       public:                                                                 \
-         RegisterClass();                                                     \
-         void realize() {}                                                    \
+         RegisterMe();                                                        \
       };                                                                      \
-      static RegisterClass s_classRegistryTool;                               \
+      static RegisterMe s_classRegistryTool;                                  \
       static Class s_class;                                                   \
    public:                                                                    \
       static Class& getRTTIClass() { return s_class; }                        \
@@ -172,13 +173,12 @@ ClassesRegistry& getClassesRegistry();
  */
 #define DECLARE_RTTI_STRUCT                                                   \
    private:                                                                   \
-      class RegisterClass                                                     \
+      class RegisterMe                                                        \
       {                                                                       \
       public:                                                                 \
-         RegisterClass();                                                     \
-         void realize() {}                                                    \
+         RegisterMe();                                                        \
       };                                                                      \
-      static RegisterClass s_classRegistryTool;                               \
+      static RegisterMe s_classRegistryTool;                                  \
       static Class s_class;                                                   \
    public:                                                                    \
       static Class& getRTTIClass() { return s_class; }                        \
@@ -189,57 +189,14 @@ ClassesRegistry& getClassesRegistry();
 /**
  * Use this macro to register a class with the reflection system.
  */
-#define BEGIN_ABSTRACT_RTTI(ClassType)                                        \
-Class ClassType::s_class;                                                     \
-ClassType::RegisterClass ClassType::s_classRegistryTool;                      \
-ClassType::RegisterClass::RegisterClass()                                     \
-{                                                                             \
-   getClassesRegistry().defineAbstract<ClassType>(#ClassType);                \
-   Class& thisClass = ClassType::getRTTIClass();                              \
-   thisClass = Class(#ClassType);
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Use this macro to register a class with the reflection system.
- */
 #define BEGIN_RTTI(ClassType)                                                 \
 Class ClassType::s_class;                                                     \
-ClassType::RegisterClass ClassType::s_classRegistryTool;                      \
-ClassType::RegisterClass::RegisterClass()                                     \
+ClassType::RegisterMe ClassType::s_classRegistryTool;                         \
+ClassType::RegisterMe::RegisterMe()                                           \
 {                                                                             \
-   getClassesRegistry().defineSolid<ClassType>(#ClassType);                   \
-   Class& thisClass = ClassType::getRTTIClass();                              \
-   thisClass = Class(#ClassType);
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Use this macro to register a template class with the reflection system.
- */
-#define BEGIN_TEMPLATE_RTTI(T, ClassType)                                     \
-template<typename T>                                                          \
-Class ClassType::s_class;                                                     \
-template<typename T>                                                          \
-typename ClassType::RegisterClass ClassType::s_classRegistryTool;             \
-template<typename T>                                                          \
-ClassType::RegisterClass::RegisterClass()                                     \
-{                                                                             \
-   std::string fullName = #ClassType + std::string("<") +                     \
-                           typeid(T).name() + std::string(">");               \
-   getClassesRegistry().defineSolid< ClassType >(fullName);                   \
-   Class& thisClass = ClassType::getRTTIClass();                              \
-   thisClass = Class(fullName);
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Call this macro in the RTTI class's constructors in order to ensure its
- * proper registration with the RTTI system.
- */
-#define REALIZE_TEMPLATE_RTTI()                                               \
-   s_classRegistryTool.realize();
-
+   ClassTemplate& thisClass =                                                 \
+      getClassesRegistry().defineClass< ClassType >();                        \
+   s_class = Class( thisClass );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -251,7 +208,7 @@ ClassType::RegisterClass::RegisterClass()                                     \
 ///////////////////////////////////////////////////////////////////////////////
 
 #define PARENT(ParentClassType)                                               \
-   thisClass.addParent(#ParentClassType);
+   thisClass.addParent( TypeID< ParentClassType >().name() );
 
 ///////////////////////////////////////////////////////////////////////////////
 

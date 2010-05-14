@@ -27,10 +27,12 @@ class SceneQueries : public Component<TamyEditor>,
                      public ModelView
 {
 private:
-   QueryableSceneProxy* m_entitiesQueryStorage;
-
    typedef std::map<Entity*, SceneQueriesModelRepresentation*> Representations;
-   Representations m_representations;
+
+private:
+   QueryableSceneProxy* m_entitiesQueryStorage;
+   Representations      m_representations;
+   Model*               m_currObservedScene;
 
 public:
    /**
@@ -60,14 +62,14 @@ public:
    // -------------------------------------------------------------------------
    // Component implementation
    // -------------------------------------------------------------------------
-   void initialize(TamyEditor& mgr);
+   void initialize( TamyEditor& mgr );
+   void onServiceRegistered( TamyEditor& mgr );
 
    // -------------------------------------------------------------------------
    // ModelView implementation
    // -------------------------------------------------------------------------
-   void onEntityAdded(Entity& entity);
-
-   void onEntityRemoved(Entity& entity);
+   void onEntityAdded( Entity& entity );
+   void onEntityRemoved( Entity& entity );
 
 protected:
    void resetContents();

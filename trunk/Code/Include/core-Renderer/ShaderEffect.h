@@ -17,12 +17,16 @@
  */
 class ShaderEffect : public Effect
 {
-   DECLARE_ABSTRACT_CLASS(ShaderEffect)
+   DECLARE_CLASS(ShaderEffect)
 
 private:
    Shader* m_shader;
 
 public:
+   /**
+    * Default constructor.
+    */
+   ShaderEffect();
    virtual ~ShaderEffect();
 
    /**
@@ -32,12 +36,12 @@ public:
     */
    void initialize(Shader& shader); 
 
-protected:
    /**
-    * Default constructor.
+    * Returns the name of the shader used by this effect.
     */
-   ShaderEffect();
+   std::string getShaderName() const;
 
+protected:
    /**
     * Gives access to the shader program instance.
     */

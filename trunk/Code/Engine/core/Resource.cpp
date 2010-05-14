@@ -22,8 +22,8 @@ namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( Resource, Object )
-PROPERTY( "filePath", std::string, m_filePath )
+BEGIN_OBJECT( Resource, Object )
+   PROPERTY( "filePath", std::string, m_filePath )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -54,6 +54,16 @@ void Resource::setResourcesManager( ResourcesManager& mgr )
    m_host = &mgr;
 
    onResourceLoaded( mgr );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Resource::isResource( const std::string& extension )
+{
+   ResourceAccessModes& accessModesMap = getResourceAccesModesMap();
+   ResourceAccessModes::const_iterator it = accessModesMap.find( extension );
+
+   return it != accessModesMap.end();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

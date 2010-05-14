@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( ShaderEffect, Effect )
+BEGIN_OBJECT( ShaderEffect, Effect )
    PROPERTY( "shader", Shader*, m_shader)
 END_OBJECT()
 
@@ -27,6 +27,20 @@ void ShaderEffect::initialize(Shader& shader)
 {
    ASSERT(m_shader == NULL, "ShaderEffect already initialized");
    m_shader = &shader;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::string ShaderEffect::getShaderName() const
+{
+   if ( m_shader )
+   {
+      return m_shader->getResourceName();
+   }
+   else
+   {
+      return "<<uninitialized shader effect>>";
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

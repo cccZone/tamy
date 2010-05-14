@@ -18,12 +18,7 @@ KeysStatusManager::KeysStatusManager(KeysStatusModel& model)
 
 KeysStatusManager::~KeysStatusManager()
 {
-   unsigned int handlersCount = m_handlers.size();
-   for (unsigned int j = 0; j < handlersCount; ++j)
-   {
-      delete m_handlers[j];
-   }
-   m_handlers.clear();
+   removeAllHandlers();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,6 +83,18 @@ void KeysStatusManager::addHandler(KeyStatusHandler* handler)
    }
 
    m_handlers.push_back(handler);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void KeysStatusManager::removeAllHandlers()
+{
+   unsigned int handlersCount = m_handlers.size();
+   for (unsigned int j = 0; j < handlersCount; ++j)
+   {
+      delete m_handlers[j];
+   }
+   m_handlers.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

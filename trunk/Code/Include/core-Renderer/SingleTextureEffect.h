@@ -27,10 +27,13 @@ class SingleTextureEffect : public ShaderEffect
    DECLARE_CLASS(SingleTextureEffect)
 
 private:
-   Renderable* m_renderable;
-   Camera* m_camera;
-   Material m_material;
-   Texture* m_texture;
+   // instance data
+   Material       m_material;
+   Texture*       m_texture;
+
+   // runtime data
+   Renderable*    m_renderable;
+   Camera*        m_camera;
 
 public:
    /**
@@ -54,12 +57,18 @@ public:
 
 protected:
    // -------------------------------------------------------------------------
+   // Object implementation 
+   // -------------------------------------------------------------------------
+   void onObjectLoaded();
+
+   // -------------------------------------------------------------------------
    // Entity implementation 
    // -------------------------------------------------------------------------
    void onAttached(Entity& parent);
    void onDetached(Entity& parent);
    void onAttached(Model& hostModel);
    void onDetached(Model& hostModel);
+   void onComponentAdded( Component< Model >& component );
 
    // -------------------------------------------------------------------------
    // ShaderEffect implementation 

@@ -23,56 +23,73 @@ ClassesRegistry& getClassesRegistry()
 ///////////////////////////////////////////////////////////////////////////////
 
 Class::Class()
-: m_handle(-1)
+: m_template( NULL )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Class::Class(const std::string& name)
+Class::Class( ClassTemplate& temp )
+: m_template( &temp )
 {
-   m_name = name;
-   m_handle = getClassesRegistry().getHandle(m_name);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Class::Class(int handle)
+Class::Class( const std::string& name )
+: m_template( &getClassesRegistry().getClassByName(name) )
 {
-   m_handle = handle;
-   m_name = getClassesRegistry().getClassName(m_handle);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Class::Class( unsigned int handle )
+: m_template( &getClassesRegistry().getClassByHandle( handle ) )
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Class::Class(const Class& rhs)
+: m_template( rhs.m_template )
 {
-   m_name = rhs.m_name;
-   m_handle = rhs.m_handle;
-   m_parents = rhs.m_parents;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Class::isA(const Class& rhs) const
+const std::string& Class::getName() const
 {
-   std::vector<Class> classHierarchy;
+   return m_template->getName();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+unsigned int Class::getHandle() const
+{
+   return m_template->getHandle();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Class::isA( const Class& rhs ) const
+{
+   std::vector< Class > classHierarchy;
    classHierarchy.push_back(rhs);
 
    Class classType;
-   while(classHierarchy.empty() == false)
+   while( classHierarchy.empty() == false )
    {
       classType = classHierarchy.back();
       classHierarchy.pop_back();
 
-      if (classType == *this)
+      if ( classType == *this )
       {
          // we found it - a parent of rhs's matches the type of this class
          return true;
       }
 
       // .. so far nothing - let's dig deeper
-      classType.getParents(classHierarchy);
+      classType.getParents( classHierarchy );
    }
 
    return false;
@@ -82,14 +99,14 @@ bool Class::isA(const Class& rhs) const
 
 bool Class::isExactlyA(const Class& rhs) const
 {
-   return m_handle == rhs.m_handle;
+   return *m_template == *rhs.m_template;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool Class::operator==(const Class& rhs) const
 {
-   return m_handle == rhs.m_handle;
+   return *m_template == *rhs.m_template;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,25 +120,21 @@ bool Class::operator!=(const Class& rhs) const
 
 bool Class::operator<(const Class& rhs) const
 {
-   return m_handle < rhs.m_handle;
+   return *m_template < *rhs.m_template;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Class::getParents(std::vector<Class>& outParentHandles) const
+void Class::getParents(std::vector< Class >& outParentHandles) const
 {
-   unsigned int count = m_parents.size();
+   const std::vector< std::string >& parents = m_template->getParents();
+   ClassesRegistry& reg = getClassesRegistry();
+
+   unsigned int count = parents.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      outParentHandles.push_back(Class(m_parents[i]));
+      outParentHandles.push_back( Class( parents[i] ) );
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Class::addParent(const std::string& classType)
-{
-   m_parents.push_back(classType);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

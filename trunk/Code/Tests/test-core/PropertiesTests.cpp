@@ -12,35 +12,38 @@
 
 namespace // anonymous
 {
-   class PropertiesViewMock : public TPropertiesView<PropertiesViewMock>
+   class PropertiesViewMock : public TPropertiesView< PropertiesViewMock >
    {
-   private:
-      class VecEditorMock : public TPropertyEditor<PropertiesViewMock>
-      {
-      public:
-         VecEditorMock(TProperty<D3DXVECTOR3>& property)
-         {
-         }
-
-         void initialize(PropertiesViewMock& view) {}
-
-         void deinitialize(PropertiesViewMock& view) {}
-      };
-
    public:
-      PropertiesViewMock()
+      template< typename T, typename E >
+      void mockAssociate()
       {
-         associate<TProperty<D3DXVECTOR3>, VecEditorMock>();
+         associate< T, E >();
+      }
+
+      template< typename T, typename E >
+      void mockAssociatePtr()
+      {
+         associatePtr< T, E >();
+      }
+
+      PropertyEditor* mockCreate( Property& property )
+      {
+         return create( property );
       }
    };
 
    // -------------------------------------------------------------------------
 
    template<typename T>
-   class EditorMock : public PropertyEditor
+   class EditorMock : public TPropertyEditor< PropertiesViewMock >
    {
    public:
-      EditorMock(TProperty<T>& val) {}
+      EditorMock( T& val, const std::string& label ) {}
+
+      void initialize( PropertiesViewMock& view ) {}
+
+      void deinitialize( PropertiesViewMock& view ) {}
    };
 
    // -------------------------------------------------------------------------
@@ -53,7 +56,8 @@ namespace // anonymous
    public:
       SerializableMock()
       {
-         m_handle = getClassesRegistry().defineSolid<SerializableMock>("SerializableMock");
+         ClassTemplate& temp = getClassesRegistry().defineClass< SerializableMock >();
+         m_handle = temp.getHandle();
       }
 
       void onSave(Serializer& serializer) {}
@@ -106,6 +110,7 @@ TEST(TPropertiesView, editors)
    properties.add<D3DXVECTOR3>("speed", "speedLabel", speed);
 
    PropertiesViewMock view;
+   view.mockAssociate< D3DXVECTOR3, EditorMock< D3DXVECTOR3 > >();
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, view.getEditorsCount());
 
    view.set(properties);
@@ -121,10 +126,10 @@ TEST(TPropertiesView, editors)
 
 TEST(Properties, dynamicEditorCreation)
 {
-   GenericFactory<Property, PropertyEditor> factory;
-   factory.associate<TProperty<int>, EditorMock<int> >()
-      .associate<TProperty<float>, EditorMock<float> >()
-      .associate<TProperty<SerializableMock*>, EditorMock<SerializableMock*> >();
+   PropertiesViewMock factory;
+   factory.mockAssociate< int, EditorMock<int> >();
+   factory.mockAssociate< float, EditorMock<float> >();
+   factory.mockAssociatePtr< SerializableMock*, EditorMock<SerializableMock*> >();
    
    int intVal;
    float floatVal;
@@ -133,17 +138,17 @@ TEST(Properties, dynamicEditorCreation)
    TProperty<float> floatProperty(&floatVal, "floatVal", "floatVal");
    TProperty<SerializableMock*> floatPtrProperty(&ptr, "ptrProperty", "ptrProperty");
 
-   PropertyEditor* editor = factory.create(intProperty);
+   PropertyEditor* editor = factory.mockCreate(intProperty);
    CPPUNIT_ASSERT(NULL != editor);
    CPPUNIT_ASSERT(NULL != dynamic_cast<EditorMock<int>*> (editor));
    delete editor;
 
-   editor = factory.create(floatProperty);
+   editor = factory.mockCreate(floatProperty);
    CPPUNIT_ASSERT(NULL != editor);
    CPPUNIT_ASSERT(NULL != dynamic_cast<EditorMock<float>*> (editor));
    delete editor;
 
-   editor = factory.create(floatPtrProperty);
+   editor = factory.mockCreate(floatPtrProperty);
    CPPUNIT_ASSERT(NULL != editor);
    CPPUNIT_ASSERT(NULL != dynamic_cast<EditorMock<SerializableMock*>*> (editor));
    delete editor;

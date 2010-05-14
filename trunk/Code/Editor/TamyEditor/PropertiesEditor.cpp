@@ -1,6 +1,7 @@
 #include "PropertiesEditor.h"
 #include "tamyeditor.h"
 #include "core\Object.h"
+#include "core-MVC\Entity.h"
 #include <QWidget.h>
 #include <QDockWidget.h>
 #include <QBoxLayout.h>
@@ -8,19 +9,13 @@
 #include <QAction.h>
 #include "QPropertiesView.h"
 
-// camera commands
-#include "CameraController.h"
-#include "SelectEntityCommand.h"
-#include "SelectionMarker.h"
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
 PropertiesEditor::PropertiesEditor()
 : m_rootView( NULL )
 , m_layout( NULL )
-, m_selectionMarker( NULL )
-, m_selectedEntity( NULL )
+, m_selectionManager( NULL )
 {
 }
 
@@ -28,9 +23,6 @@ PropertiesEditor::PropertiesEditor()
 
 PropertiesEditor::~PropertiesEditor()
 {
-   m_selectedEntity = NULL;
-   m_selectionMarker = NULL;
-
    if (m_layout)
    {
       m_layout->removeWidget(m_rootView);
@@ -46,25 +38,38 @@ PropertiesEditor::~PropertiesEditor()
 void PropertiesEditor::initialize(TamyEditor& mgr)
 {
    // register new services
-   mgr.registerService<PropertiesEditor> (*this);
+   mgr.registerService< PropertiesEditor >( *this, *this );
 
    // initialize user interface
    initUI(mgr, mgr.getViewMenu());
-
-   // configure input commands
-   QueryableScene& scene = mgr.requestService<QueryableScene> ();
-   CameraController& camController = mgr.requestService<CameraController> ();
-   Camera& camera = mgr.requestService<Camera> ();
-
-   camController.addButtonPressCommand(VK_LBUTTON, new SelectEntityCommand(camera, scene, *this));
-
-   ResourcesManager& resMgr = mgr.requestService<ResourcesManager> ();
-   m_selectionMarker = SelectionMarker::create(resMgr);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PropertiesEditor::selectObject(Object& object)
+void PropertiesEditor::onServiceRegistered( TamyEditor& mgr )
+{
+   if ( mgr.needsUpdate< SelectionManager >( *m_selectionManager ) )
+   {
+      if ( m_selectionManager )
+      {
+         m_selectionManager->detach( *this );
+      }
+
+      if ( mgr.hasService< SelectionManager >() )
+      {
+         m_selectionManager = &mgr.requestService< SelectionManager >();
+         m_selectionManager->attach( *this );
+      }
+      else
+      {
+         m_selectionManager = NULL;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PropertiesEditor::onObjectSelected( Entity& entity )
 {
    if (m_rootView != NULL)
    {
@@ -73,41 +78,18 @@ void PropertiesEditor::selectObject(Object& object)
    }
    m_rootView = new QPropertiesView();
    m_layout->addWidget(m_rootView);
-   object.viewProperties(*m_rootView);
-
-
-   Entity* entity = dynamic_cast< Entity* >( &object );
-   visualizeSelection( entity );
+   entity.viewProperties( *m_rootView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PropertiesEditor::resetSelection()
+void PropertiesEditor::onObjectDeselected( Entity& entity )
 {
    if ( m_rootView != NULL )
    {
       m_layout->removeWidget( m_rootView );
       delete m_rootView;
       m_rootView = NULL;
-   }
-
-   visualizeSelection( NULL );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PropertiesEditor::visualizeSelection( Entity* newSelection )
-{
-   if ( m_selectedEntity )
-   {
-      m_selectedEntity->remove( *m_selectionMarker, false );
-   }
-
-   m_selectedEntity = newSelection;
-
-   if ( m_selectedEntity )
-   {
-      m_selectedEntity->add( m_selectionMarker );
    }
 }
 

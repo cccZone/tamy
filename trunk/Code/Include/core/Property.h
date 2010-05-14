@@ -38,10 +38,8 @@ public:
  * A property can be observed - its observers will get notified about changes 
  * the property undergoes.
  */
-class Property : public RTTIObject
+class Property
 {
-   DECLARE_RTTI_CLASS
-
 private:
    PropertyObserver* m_observer;
 
@@ -61,6 +59,30 @@ public:
     * @return  property name
     */
    virtual const std::string& getName() const = 0;
+
+   /**
+    * This method returns a label under which the property should
+    * be advertised (in editor i.e.)
+    *
+    * @return  property label
+    */
+   virtual const std::string& getLabel() const = 0;
+
+   /**
+    * Allows to edit the property contents by a property editor.
+    */
+   virtual void* edit() = 0;
+
+   /**
+    * Allows to edit the property contents by a property editor,
+    * treating its contents as a pointer to an object
+    */
+   virtual Object** editPtr() = 0;
+
+   // -------------------------------------------------------------------------
+   // Type identification mechanism.
+   // -------------------------------------------------------------------------
+   virtual Class getVirtualClass() const = 0;
 
    // -------------------------------------------------------------------------
    // Change observation mechanism
@@ -87,18 +109,16 @@ protected:
 template <typename T>
 class TProperty : public Property
 {
-   DECLARE_RTTI_CLASS
-
 private:
-   std::string m_name;
-   std::string m_label;
-   T* m_val;
+   std::string    m_name;
+   std::string    m_label;
+   T*             m_val;
 
 public:
    TProperty();
-   TProperty(T* val, 
-             const std::string& name, 
-             const std::string& label);
+   TProperty( T* val, 
+              const std::string& name, 
+              const std::string& label );
 
    /**
     * This method returns the name assigned to this property.
@@ -140,9 +160,15 @@ public:
    // Property implementation
    // -------------------------------------------------------------------------
    void serialize(Serializer& serializer);
+   void* edit();
+   Object** editPtr() { return NULL; }
+
+   // -------------------------------------------------------------------------
+   // Type identification mechanism implementation.
+   // -------------------------------------------------------------------------
+   Class getVirtualClass() const;
+   static Class getRTTIClass();
 };
-BEGIN_TEMPLATE_RTTI(T, TProperty<T>)
-END_RTTI
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -152,8 +178,6 @@ END_RTTI
 template <typename T>
 class TProperty<T*> : public Property
 {
-   DECLARE_RTTI_CLASS
-
 private:
    std::string m_name;
    std::string m_label;
@@ -205,9 +229,15 @@ public:
    // Property implementation
    // -------------------------------------------------------------------------
    void serialize(Serializer& serializer);
+   void* edit();
+   Object** editPtr();
+
+   // -------------------------------------------------------------------------
+   // Type identification mechanism implementation.
+   // -------------------------------------------------------------------------
+   Class getVirtualClass() const;
+   static Class getRTTIClass();
 };
-BEGIN_TEMPLATE_RTTI(T, TProperty<T*>)
-END_RTTI
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -217,18 +247,8 @@ END_RTTI
  */
 class VectorProperty : public Property
 {
-   DECLARE_RTTI_CLASS
-
 public:
    virtual ~VectorProperty() {}
-
-   /**
-    * This method returns a label under which the property should
-    * be advertised (in editor i.e.)
-    *
-    * @return  property label
-    */
-   virtual const std::string& getLabel() const = 0;
 
    /**
     * This method returns the vector's size.
@@ -246,15 +266,26 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This specialized property can hold a vector of types
+ * This specialized property can hold a vector of pointers
  */
-template <typename T>
-class TProperty< std::vector<T*> > : public VectorProperty
+template< typename T >
+class TProperty< std::vector< T* > > : public VectorProperty
 {
 private:
-   std::string m_name;
-   std::string m_label;
-   std::vector<T*>* m_val;
+   class RTTITypeInit
+   {
+   public:
+      RTTITypeInit();
+      void realize() {};
+   };
+
+private:
+   static Class         s_class;
+   static RTTITypeInit  s_typeRegistrationTool;
+
+   std::string          m_name;
+   std::string          m_label;
+   std::vector<T*>*     m_val;
 
 public:
    TProperty(std::vector<T*>* val, 
@@ -273,12 +304,20 @@ public:
    // -------------------------------------------------------------------------
    const std::string& getLabel() const;
    unsigned int size() const;
-   Object* get(unsigned int idx);
+   Object* get( unsigned int idx );
 
    // -------------------------------------------------------------------------
    // Property implementation
    // -------------------------------------------------------------------------
-   void serialize(Serializer& serializer);
+   void serialize( Serializer& serializer );
+   void* edit();
+   Object** editPtr() { return NULL; }
+
+   // -------------------------------------------------------------------------
+   // Type identification mechanism implementation.
+   // -------------------------------------------------------------------------
+   Class getVirtualClass() const;
+   static Class getRTTIClass();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

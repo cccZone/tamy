@@ -9,14 +9,40 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * This operation allows to apply Model::entityDFS method when
+ * calling the Entity's parametrized method 'notifyComponentAdded',
+ * (which requires a Component< Model >& param)
+ */
+class ComponentAddOperation
+{
+private:
+   Model&               m_hostModel;
+   Component< Model >&  m_component;
+
+public:
+   ComponentAddOperation( Model& hostModel, Component< Model >& component )
+      : m_hostModel( hostModel )
+      , m_component( component )
+   {}
+
+   void notify( Entity& entity )
+   {
+      m_hostModel.notifyComponentAdded( entity, m_component );
+   }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 BEGIN_RESOURCE( Model, tsc, AM_BINARY )
    PROPERTY( "entities", Entities, m_entities )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Model::Model()
-: m_viewsToRemoveCount(0)
+Model::Model( const std::string& name )
+: Resource( name )
+, m_viewsToRemoveCount(0)
 {
 }
 
@@ -46,7 +72,7 @@ Model::~Model()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Model::add(Entity* entity, bool manage)
+void Model::add( Entity* entity, bool manage )
 {
    if (entity == NULL)
    {
@@ -57,13 +83,22 @@ void Model::add(Entity* entity, bool manage)
    {
       m_entities.push_back(entity);
    }
+
    entity->onAttachToModel(*this);
    entityDFS(*entity, Functor::FROM_METHOD(Model, notifyEntityAdded, this));
+
+   // inform the entity about the registered components
+   unsigned int count = getComponentsCount();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      ComponentAddOperation op( *this, *getComponent( i ) );
+      entityDFS( *entity, Functor::FROM_METHOD(ComponentAddOperation, notify, &op) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Model::remove(Entity& entity, bool release)
+void Model::remove( Entity& entity/*, bool release*/ )
 {
    entity.onDetachFromModel(*this);
    entityDFS(entity, Functor::FROM_METHOD(Model, notifyEntityRemoved, this));
@@ -72,11 +107,13 @@ void Model::remove(Entity& entity, bool release)
    if (it != m_entities.end())
    {
       m_entities.erase(it);
+      delete &entity;
+   }
 
-      if (release == true)
-      {
-         delete &entity;
-      }
+   it = std::find(m_entities.begin(), m_entities.end(), &entity);
+   if (it != m_entities.end())
+   {
+      m_entities.erase(it);
    }
 }
 
@@ -216,6 +253,13 @@ void Model::notifyEntityRemoved(Entity& entity)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Model::notifyComponentAdded( Entity& entity, Component< Model >& component )
+{
+   entity.onComponentAdded( component );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 unsigned int Model::getViewsCount() const
 {
    return m_views.size() + m_viewsToAdd.size() - m_viewsToRemoveCount;
@@ -235,11 +279,24 @@ void Model::entityDFS(Entity& entity, const Functor& operation)
 
       const Entity::Children& children = currEntity->getEntityChildren();
       unsigned int count = children.size();
-
       for (unsigned int i = 0; i < count; ++i)
       {
          entities.push(children[i]);
       }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Model::onComponentAdded( Component< Model >& component )
+{
+   ComponentAddOperation op( *this, component );
+
+   // inform all attached entities about the component
+   unsigned int count = m_entities.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      entityDFS( *m_entities[i], Functor::FROM_METHOD(ComponentAddOperation, notify, &op) );
    }
 }
 

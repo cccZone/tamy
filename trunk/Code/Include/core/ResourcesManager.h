@@ -56,6 +56,13 @@ public:
     *
     * @return filesystem
     */
+   inline Filesystem& getFilesystem();
+
+   /**
+    * Returns the currently set filesystem (const version).
+    *
+    * @return filesystem
+    */
    inline const Filesystem& getFilesystem() const;
 
    /**

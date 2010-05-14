@@ -3,13 +3,15 @@
 #include "core-Renderer\Renderable.h"
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Texture.h"
-#include "core-Renderer\Camera.h"
 #include "core-Renderer\CameraComponent.h"
+#include "core-Renderer\Camera.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT(SingleTextureEffect, ShaderEffect)
+   PROPERTY( "material", Material, m_material )
+   PROPERTY( "texture", Texture*, m_texture )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,8 +57,8 @@ void SingleTextureEffect::onBeginRendering()
       shader().setMtx("g_mProjection", m_camera->getProjectionMtx());
    }
 
-   shader().setVec4("g_MaterialAmbientColor", reinterpret_cast<const D3DXVECTOR4&> (m_material.getAmbientColor()));
-   shader().setVec4("g_MaterialDiffuseColor", reinterpret_cast<const D3DXVECTOR4&> (m_material.getDiffuseColor()));
+   shader().setVec4("g_MaterialAmbientColor", (D3DXVECTOR4)m_material.getAmbientColor() );
+   shader().setVec4("g_MaterialDiffuseColor", (D3DXVECTOR4)m_material.getDiffuseColor() );
 
    shader().setBool("g_UseTexture", (m_texture != NULL));
    if (m_texture != NULL)
@@ -83,20 +85,37 @@ void SingleTextureEffect::onDetached(Entity& parent)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureEffect::onAttached(Model& hostModel)
+void SingleTextureEffect::onAttached(Model& hostModel) 
 {
-   CameraComponent* camComp = hostModel.getComponent<CameraComponent> ();
-   if (camComp != NULL)
+   m_camera = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SingleTextureEffect::onDetached(Model& hostModel) 
+{
+   m_camera = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SingleTextureEffect::onComponentAdded( Component< Model >& component )
+{
+   CameraComponent* comp = dynamic_cast< CameraComponent* >( &component );
+   if ( comp )
    {
-      m_camera = &(camComp->getCamera());
+      m_camera = &comp->getCamera();
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureEffect::onDetached(Model& hostModel)
+void SingleTextureEffect::onObjectLoaded()
 {
-   m_camera = NULL;
+   if ( isAttached() )
+   {
+      m_renderable = dynamic_cast< Renderable *>( &getParent() );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

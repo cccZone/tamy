@@ -291,6 +291,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\StringUtils.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Include\core\StringUtils.h"
+				>
+			</File>
+			<File
 				RelativePath=".\UniqueObject.cpp"
 				>
 			</File>
@@ -603,6 +611,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\Include\core\Component.inl"
+				>
+			</File>
+			<File
 				RelativePath="..\..\Include\core\ComponentsManager.h"
 				>
 			</File>
@@ -703,6 +715,22 @@
 				</File>
 				<File
 					RelativePath="..\..\Include\core\ClassesRegistry.inl"
+					>
+				</File>
+				<File
+					RelativePath=".\ClassTemplate.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\ClassTemplate.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\TypeID.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\Include\core\TypeID.inl"
 					>
 				</File>
 			</Filter>

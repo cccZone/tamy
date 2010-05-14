@@ -7,9 +7,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ColorPropertyEditor::ColorPropertyEditor(TProperty<Color>& property)
-: QPropertyEditor(property.getLabel().c_str())
-, m_property(property)
+ColorPropertyEditor::ColorPropertyEditor( Color& property, const std::string& label )
+: QPropertyEditor( label.c_str() )
+, m_property( property )
 {
    setupUi();
 }
@@ -33,11 +33,10 @@ void ColorPropertyEditor::setupUi()
    layout->addWidget(new QLabel("A:", this));
    QDoubleSpinBox* aVal = new QDoubleSpinBox(this); layout->addWidget(aVal);
 
-   Color currVal = m_property.get();
-   rVal->setValue(currVal.r);
-   gVal->setValue(currVal.g);
-   bVal->setValue(currVal.b);
-   aVal->setValue(currVal.a);
+   rVal->setValue(m_property.r);
+   gVal->setValue(m_property.g);
+   bVal->setValue(m_property.b);
+   aVal->setValue(m_property.a);
 
    connect(rVal, SIGNAL(valueChanged(double)), this, SLOT(rValChanged(double)));
    connect(gVal, SIGNAL(valueChanged(double)), this, SLOT(gValChanged(double)));
@@ -49,36 +48,28 @@ void ColorPropertyEditor::setupUi()
 
 void ColorPropertyEditor::rValChanged(double val)
 {
-   Color newVal = m_property.get();
-   newVal.r = val;
-   m_property.set(newVal);
+   m_property.r = val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ColorPropertyEditor::gValChanged(double val)
 {
-   Color newVal = m_property.get();
-   newVal.g = val;
-   m_property.set(newVal);
+   m_property.g = val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ColorPropertyEditor::bValChanged(double val)
 {
-   Color newVal = m_property.get();
-   newVal.b = val;
-   m_property.set(newVal);
+   m_property.b = val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ColorPropertyEditor::aValChanged(double val)
 {
-   Color newVal = m_property.get();
-   newVal.a = val;
-   m_property.set(newVal);
+   m_property.a = val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -8,9 +8,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template <typename FLOAT_TYPE>
-FloatPropertyEditor<FLOAT_TYPE>::FloatPropertyEditor(TProperty<FLOAT_TYPE>& property)
-: QPropertyEditor(property.getLabel().c_str())
-, m_property(property)
+FloatPropertyEditor<FLOAT_TYPE>::FloatPropertyEditor( FLOAT_TYPE& property, const std::string& label )
+: QPropertyEditor( label.c_str() )
+, m_property( property )
 {
    setupUi();
 }
@@ -22,8 +22,7 @@ void FloatPropertyEditor<FLOAT_TYPE>::setupUi()
 {
    QDoubleSpinBox* val = new QDoubleSpinBox(this); addWidget(val);
 
-   FLOAT_TYPE currVal = m_property.get();
-   val->setValue(currVal);
+   val->setValue(m_property);
 
    connect(val, SIGNAL(valueChanged(double)), this, SLOT(valChanged(double)));
 }
@@ -33,7 +32,7 @@ void FloatPropertyEditor<FLOAT_TYPE>::setupUi()
 template <typename FLOAT_TYPE>
 void FloatPropertyEditor<FLOAT_TYPE>::valChanged(double val)
 {
-   m_property.set(val);
+   m_property = val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

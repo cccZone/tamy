@@ -33,21 +33,21 @@ class TamySceneWidget : public QWidget,
    Q_OBJECT
 
 private:
-   static IDirect3D9* s_d3d9;
+   static IDirect3D9*   s_d3d9;
 
    // window definition
-   HWND m_hWnd;
+   HWND                 m_hWnd;
 
    // input tracking
-   unsigned char m_keyBuffer[256];
-   KeysStatusManager* m_keysStatusManager;
+   unsigned char        m_keyBuffer[256];
+   KeysStatusManager*   m_keysStatusManager;
 
    // required services
-   Renderer* m_renderer;
-   Camera* m_camera;
-   ResourcesManager& m_resourcesManager;
+   Renderer*            m_renderer;
+   Camera*              m_camera;
 
-   Model* m_localModel;
+   Model*               m_scene;
+   Model*               m_localModel;
 
 public:
    /**
@@ -55,47 +55,39 @@ public:
     *
     * @param parent           parent widget
     * @param f                creation flags
-    * @param editorRM         resources manager capable of loading editor 
-    *                         specific resources
     */
-   TamySceneWidget(QWidget* parent, 
-      Qt::WindowFlags f, ResourcesManager& editorRM);
+   TamySceneWidget( QWidget* parent, Qt::WindowFlags f );
    ~TamySceneWidget();
 
    // -------------------------------------------------------------------------
    // Component implementation
    // -------------------------------------------------------------------------
-   void initialize(TamyEditor& mgr);
+   void initialize( TamyEditor& mgr );
+   void onServiceRegistered( TamyEditor& mgr );
 
 protected:
    // -------------------------------------------------------------------------
    // QWidget implementation
    // -------------------------------------------------------------------------
    void moveEvent(QMoveEvent* event);
-
    void resizeEvent(QResizeEvent* event);
-
    void keyPressEvent(QKeyEvent* event);
-
    void keyReleaseEvent(QKeyEvent* event);
-
    void mousePressEvent(QMouseEvent* event);
-
    void mouseReleaseEvent(QMouseEvent* event);
 
    // -------------------------------------------------------------------------
    // UserInputController implementation
    // -------------------------------------------------------------------------
    void onRelativeMouseMovement();
-
    void onAbsoluteMouseMovement();
-
    void checkUserInput(unsigned char* keyBuffer, Point& mousePos);
-
    void setMousePos(const Point& pos);
 
 private:
    unsigned char toDXKey(int qtKeyCode) const;
+   void setupTimeController( TamyEditor& mgr );
+   void createRenderer( TamyEditor& mgr );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

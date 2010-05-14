@@ -16,6 +16,13 @@ unsigned int ResourcesManager::getResourcesCount() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Filesystem& ResourcesManager::getFilesystem()
+{
+   return *m_filesystem;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 const Filesystem& ResourcesManager::getFilesystem() const
 {
    return *m_filesystem;

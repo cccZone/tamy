@@ -21,7 +21,7 @@ class BoolPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TProperty<bool>& m_property;
+   bool& m_val;
 
 public:
    /**
@@ -29,7 +29,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   BoolPropertyEditor(TProperty<bool>& property);
+   BoolPropertyEditor( bool& property, const std::string& label );
 
 public slots:
    void valChanged(int val);

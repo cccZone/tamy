@@ -11,9 +11,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class QApplication;
-class Model;
-class TimeController;
-class ResourcesManager;
+class MainAppComponent;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,19 +23,13 @@ class TamyEditor : public QMainWindow, public ComponentsManager<TamyEditor>
    Q_OBJECT
 
 private:
-   QApplication& m_app;
    Ui::TamyEditorClass ui;
 
    // time tracking
    CTimer* m_mainTime;
    QTimer* m_mainTimeSlot;
-   TimeController* m_timeController;
 
-   // scene the editor is operating on
-   Model* m_scene;
-
-   // resources manager
-   ResourcesManager* m_resourceMgr;
+   MainAppComponent* m_mainAppComponent;
 
 public:
    /**
@@ -68,17 +60,28 @@ public:
    void removeFromMainWidget(QWidget& widget);
 
    /**
+    * This method gives access to the 'File' menu.
+    * 
+    * @return           file menu instance
+    */
+   QMenu& getFileMenu();
+
+   /**
     * This method gives access to the 'View' menu.
     * 
     * @return           view menu instance
     */
    QMenu& getViewMenu();
 
+   /**
+    * This method gives access to the main toolbar.
+    * 
+    * @return           toolbar instance
+    */
+   QToolBar& getToolBar();
+
 public slots:
    void updateMain();
-   void loadScene();
-   void saveScene();
-   void importFromIWF();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

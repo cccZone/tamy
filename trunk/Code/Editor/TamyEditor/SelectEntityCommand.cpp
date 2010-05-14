@@ -2,24 +2,24 @@
 #include "core\Ray.h"
 #include "core-Renderer\Camera.h"
 #include "core-MVC\Entity.h"
-#include "PropertiesEditor.h"
+#include "SelectionManager.h"
 #include "SpatiallyQueryable.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SelectEntityCommand::SelectEntityCommand(Camera& camera,
-                                         QueryableScene& scene, 
-                                         PropertiesEditor& editor)
-: m_camera(camera)
-, m_scene(scene)
-, m_editor(editor)
+SelectEntityCommand::SelectEntityCommand( Camera& camera,
+                                          QueryableScene& scene, 
+                                          SelectionManager& selectionMgr )
+: m_camera( camera )
+, m_scene( scene )
+, m_selectionMgr( selectionMgr )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SelectEntityCommand::execute(const D3DXVECTOR2& mousePos)
+void SelectEntityCommand::execute( const D3DXVECTOR2& mousePos )
 {
    Ray queryRay = m_camera.createRay(mousePos.x, mousePos.y);
 
@@ -28,7 +28,7 @@ void SelectEntityCommand::execute(const D3DXVECTOR2& mousePos)
 
    if (objects.size() == 0) 
    {
-      m_editor.resetSelection();
+      m_selectionMgr.resetSelection();
    }
    else
    {
@@ -38,14 +38,14 @@ void SelectEntityCommand::execute(const D3DXVECTOR2& mousePos)
          throw std::logic_error("Error finding the closest object");
       }
 
-      m_editor.selectObject(closestObject->getEntity());
+      m_selectionMgr.selectObject(closestObject->getEntity());
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SpatiallyQueryable* SelectEntityCommand::findClosest(const Ray& ray,
-                                                     const Array<SpatiallyQueryable*>& queryables)
+SpatiallyQueryable* SelectEntityCommand::findClosest( const Ray& ray,
+                                                      const Array<SpatiallyQueryable*>& queryables )
 {
    float minDist = FLT_MAX;
    SpatiallyQueryable* closest = NULL;

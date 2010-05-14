@@ -7,6 +7,7 @@
 #include <QLabel.h>
 #include <QtGui\QSpacerItem>
 #include "core-MVC\Entity.h"
+#include "core\Resource.h"
 
 // properties
 #include "Vec3PropertyEditor.h"
@@ -17,6 +18,7 @@
 #include "IntPropertyEditor.h"
 #include "BoolPropertyEditor.h"
 #include "EntityPropertyEditor.h"
+#include "ResourcePropertyEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,19 +70,20 @@ QPropertiesView::~QPropertiesView()
 
 void QPropertiesView::initFactory()
 {
-   associate<TProperty<D3DXVECTOR3>, Vec3PropertyEditor>();
-   associate<TProperty<D3DXMATRIX>, MtxPropertyEditor>();
-   associate<TProperty<std::string>, StringPropertyEditor>();
-   associate<TProperty<Color>, ColorPropertyEditor>();
-   associate<TProperty<bool>, BoolPropertyEditor>();
-   associate<TProperty<float>, FloatPropertyEditor<float> >();
-   associate<TProperty<double>, FloatPropertyEditor<double> >();
-   associate<TProperty<int>, IntPropertyEditor<int> >();
-   associate<TProperty<unsigned int>, IntPropertyEditor<unsigned int> >();
-   associate<TProperty<long>, IntPropertyEditor<long> >();
-   associate<TProperty<unsigned long>, IntPropertyEditor<unsigned long> >();
-   associateAbstract<TProperty<Entity*>, EntityPropertyEditor>();
-   associateAbstract<VectorProperty, QPropertiesView>();
+   associate< D3DXVECTOR3,         Vec3PropertyEditor >();
+   associate< D3DXMATRIX,          MtxPropertyEditor >();
+   associate< std::string,         StringPropertyEditor >();
+   associate< Color,               ColorPropertyEditor >();
+   associate< bool,                BoolPropertyEditor >();
+   associate< float,               FloatPropertyEditor< float > >();
+   associate< double,              FloatPropertyEditor< double > >();
+   associate< int,                 IntPropertyEditor< int > >();
+   associate< unsigned int,        IntPropertyEditor< unsigned int > >();
+   associate< long,                IntPropertyEditor< long > >();
+   associate< unsigned long,       IntPropertyEditor< unsigned long > >();
+   associatePtr< Entity*,          EntityPropertyEditor >();
+   associatePtr< Resource*,        ResourcePropertyEditor >();
+   //associateAbstract< VectorProperty,           QPropertiesView >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

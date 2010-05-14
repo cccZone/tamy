@@ -8,9 +8,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template <typename INT_TYPE>
-IntPropertyEditor<INT_TYPE>::IntPropertyEditor(TProperty<INT_TYPE>& property)
-: QPropertyEditor(property.getLabel().c_str())
-, m_property(property)
+IntPropertyEditor<INT_TYPE>::IntPropertyEditor( INT_TYPE& property, const std::string& label )
+: QPropertyEditor( label.c_str() )
+, m_property( property )
 {
    setupUi();
 }
@@ -22,8 +22,7 @@ void IntPropertyEditor<INT_TYPE>::setupUi()
 {
    QSpinBox* val = new QSpinBox(this); addWidget(val);
 
-   INT_TYPE currVal = m_property.get();
-   val->setValue(currVal);
+   val->setValue(m_property);
 
    connect(val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));
 }
@@ -33,7 +32,7 @@ void IntPropertyEditor<INT_TYPE>::setupUi()
 template <typename INT_TYPE>
 void IntPropertyEditor<INT_TYPE>::valChanged(int val)
 {
-   m_property.set(val);
+   m_property = val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

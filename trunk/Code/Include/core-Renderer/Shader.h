@@ -25,8 +25,7 @@ class SingletonsManager;
 /**
  * A shader class represents a program written in HLSL.
  */
-class Shader : public TRendererObject<ShaderImpl>, 
-               public Resource
+class Shader : public Resource, public TRendererObject<ShaderImpl>
 {
    DECLARE_RESOURCE( Shader )
 
@@ -36,7 +35,7 @@ private:
 
 public:
    /**
-    * Constuctor loading a shader from an .fx file
+    * Constructor loading a shader from an .fx file
     *
     * @param fileName   name of a file with an HLSL shader
     */

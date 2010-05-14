@@ -19,7 +19,7 @@ class ResourcesManager;
  */
 class Resource : public Object
 {
-   DECLARE_ABSTRACT_CLASS( Resource )
+   DECLARE_CLASS( Resource )
 
 public:
    enum AccessMode
@@ -33,6 +33,12 @@ private:
    ResourcesManager*             m_host;
 
 public:
+   /**
+    * Constructor.
+    *
+    * @param filePath   path to the file where we want to save the resource.
+    */
+   Resource( const std::string& filePath = std::string() );
    virtual ~Resource() {}
 
    /**
@@ -67,8 +73,17 @@ public:
    // -------------------------------------------------------------------------
 
    /**
+    * Tells whether the specified extension can be mapped to a specific resource.
+    *
+    * @param extension     resource file extension
+    */
+   static bool isResource( const std::string& extension );
+
+   /**
     * A method telling how each resource file should be opened
     * (using binary or text access mode).
+    *
+    * @param extension     resource file extension
     */
    static std::ios_base::openmode getFileAccessMode( const std::string& extension );
 
@@ -81,13 +96,6 @@ public:
    static void registerResource( const std::string& extension, AccessMode accessMode );
 
 protected:
-   /**
-    * Constructor.
-    *
-    * @param filePath   path to the file where we want to save the resource.
-    */
-   Resource( const std::string& filePath = std::string() );
-
    /**
     * The method is called by the resources manager once
     * the resource has successfully been registered with the manager.

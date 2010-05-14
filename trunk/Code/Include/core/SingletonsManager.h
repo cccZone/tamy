@@ -43,6 +43,18 @@ public:
    bool setShared(Type& shared);
 
    /**
+    * Removes a shared instance of the specified type.
+    */
+   template< typename Type >
+   void removeShared();
+
+   /**
+    * This method tells whether a specific shared instance is registered..
+    */
+   template<typename Type>
+   bool hasShared() const;
+
+   /**
     * This method returns a shared instance of a certain class.
     *
     * @throw out_of_range if the instance of this class wasn't registered

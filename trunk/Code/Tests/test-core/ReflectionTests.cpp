@@ -29,18 +29,18 @@ namespace // anonymous
 TEST(ClassesRegistry, registeringClasses)
 {
    ClassesRegistry registry;
-   int classAHandle = registry.defineSolid<ClassA>("ClassA");
-   int classBHandle = registry.defineSolid<ClassB>("ClassB");
+   ClassTemplate& classAHandle = registry.defineClass< ClassA >();
+   ClassTemplate& classBHandle = registry.defineClass< ClassB >();
 
-   ClassA* instanceOfA = (ClassA*)(registry.create(classAHandle));
+   ClassA* instanceOfA = (ClassA*)(classAHandle.instantiate());
    CPPUNIT_ASSERT(NULL != instanceOfA);
    CPPUNIT_ASSERT_EQUAL(5, instanceOfA->value);
 
-   ClassB* instanceOfB = (ClassB*)(registry.create(classBHandle));
+   ClassB* instanceOfB = (ClassB*)(classBHandle.instantiate());
    CPPUNIT_ASSERT(NULL != instanceOfB);
    CPPUNIT_ASSERT_EQUAL(10, instanceOfB->value);
 
-   ClassA* instanceOfBReferencedByA = (ClassA*)(registry.create(classBHandle));
+   ClassA* instanceOfBReferencedByA = (ClassA*)(classBHandle.instantiate());
    CPPUNIT_ASSERT(NULL != instanceOfBReferencedByA);
    CPPUNIT_ASSERT_EQUAL(10, instanceOfBReferencedByA->value);
 
@@ -55,29 +55,10 @@ TEST(ClassesRegistry, registeringSameClassTwice)
 {
    ClassesRegistry registry;
 
-   int classAFirstHandle = registry.defineSolid<ClassA>("ClassA");
-   int classASecondHandle = registry.defineSolid<ClassA>("ClassA");
+   ClassTemplate& classAFirstHandle = registry.defineClass< ClassA >();
+   ClassTemplate& classASecondHandle = registry.defineClass< ClassA >();
 
    CPPUNIT_ASSERT_EQUAL(classAFirstHandle, classASecondHandle);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(ClassesRegistry, creatingInstanceByName)
-{
-   ClassesRegistry registry;
-   registry.defineSolid<ClassA>("ClassA");
-   registry.defineSolid<ClassB>("ClassB");
-
-   int handle = registry.getHandle("ClassA");
-   ClassA* instance = (ClassA*)registry.create(handle);
-   CPPUNIT_ASSERT(NULL != instance);
-   delete instance;
-
-   handle = registry.getHandle("ClassB");
-   instance = (ClassB*)registry.create(handle);
-   CPPUNIT_ASSERT(NULL != instance);
-   delete instance;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

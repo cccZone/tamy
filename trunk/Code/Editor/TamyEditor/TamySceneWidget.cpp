@@ -37,14 +37,12 @@ IDirect3D9* TamySceneWidget::s_d3d9 = NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TamySceneWidget::TamySceneWidget(QWidget* parent, 
-                                 Qt::WindowFlags f,
-                                 ResourcesManager& editorRM)
-: QWidget(parent, f)
-, m_keysStatusManager(NULL)
-, m_renderer(NULL)
-, m_camera(NULL)
-, m_resourcesManager(editorRM)
+TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
+: QWidget( parent, f )
+, m_keysStatusManager( NULL )
+, m_renderer( NULL )
+, m_camera( NULL )
+, m_scene( NULL )
 {
    m_hWnd = static_cast<HWND> (winId());
    memset(m_keyBuffer, 0, sizeof(unsigned char) * 256);
@@ -69,6 +67,8 @@ TamySceneWidget::TamySceneWidget(QWidget* parent,
 
 TamySceneWidget::~TamySceneWidget()
 {
+   m_scene = NULL;
+
    delete m_keysStatusManager; m_keysStatusManager = NULL;
 
    delete m_camera; m_camera = NULL;
@@ -79,7 +79,7 @@ TamySceneWidget::~TamySceneWidget()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::initialize(TamyEditor& mgr)
+void TamySceneWidget::initialize( TamyEditor& mgr )
 {
    mgr.addToMainWidget(this);
 
@@ -94,37 +94,71 @@ void TamySceneWidget::initialize(TamyEditor& mgr)
    m_camera = new Camera("Camera", *m_renderer);
    D3DXMatrixTranslation(&(m_camera->accessLocalMtx()), 0, 5, 0);
 
+   // register new services
+   mgr.registerService< Renderer >( *this, *m_renderer );
+   mgr.registerService< Camera >( *this, *m_camera );
+   mgr.registerService< KeysStatusManager >( *this, *m_keysStatusManager );
+   mgr.registerService< UserInputController >( *this, *this );
+
+   ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
+   resMgr.associate< Renderer >( *m_renderer );
+
+   // set up local scene
+   m_localModel->add( new Grid( *m_renderer, resMgr ) );
+   m_localModel->addComponent( new CameraComponent( *m_camera ) );
+
+   createRenderer( mgr );
+   setupTimeController( mgr );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::onServiceRegistered( TamyEditor& mgr )
+{
+   if ( mgr.needsUpdate< Model >( *m_scene ) )
+   {
+      createRenderer( mgr );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::setupTimeController( TamyEditor& mgr )
+{
    TimeController& timeController = mgr.requestService<TimeController> ();
+   timeController.remove("rendering");
    timeController.add("rendering");
    timeController.get("rendering").add(new RendererUpdater(*m_renderer));
+   timeController.remove("input");
    timeController.add("input");
    timeController.get("input").add(new TTimeDependent<UserInputController> (*this));
    timeController.get("input").add(new TTimeDependent<KeysStatusManager> (*m_keysStatusManager));
+}
 
-   // register new services
-   mgr.registerService<Renderer> (*m_renderer);
-   mgr.registerService<Camera> (*m_camera);
-   mgr.registerService<KeysStatusManager> (*m_keysStatusManager);
-   mgr.registerService<UserInputController> (*this);
+///////////////////////////////////////////////////////////////////////////////
 
-   m_resourcesManager.associate<Renderer> (*m_renderer);
-
-   // attach self to the main model and register the required components
-   Model& mainScene = mgr.requestService<Model> ();
-   mainScene.addComponent(new CameraComponent(*m_camera));
-   m_localModel->addComponent(new CameraComponent(*m_camera));
-
+void TamySceneWidget::createRenderer( TamyEditor& mgr )
+{
    // create a rendering mechanism
-   Scene3DRM* widgetsRenderingMech = new Scene3DRM(*m_localModel, *m_camera);
-   Scene3DRM* sceneRenderingMech = new Scene3DRM(mainScene, *m_camera);
    CompositeRenderingMechanism* compRM = new CompositeRenderingMechanism();
-   compRM->add(widgetsRenderingMech);
-   compRM->add(sceneRenderingMech);
-   m_renderer->setMechanism(compRM);
 
-   // add a grid widget
-   Grid* gridWidget = new Grid(*m_renderer, m_resourcesManager);
-   m_localModel->add(gridWidget);
+   Scene3DRM* widgetsRenderingMech = new Scene3DRM( *m_localModel, *m_camera );
+   compRM->add( widgetsRenderingMech );
+
+   if ( mgr.hasService< Model >() )
+   {
+      m_scene = &mgr.requestService< Model >();
+      m_scene->addComponent( new CameraComponent( *m_camera ) );
+
+      Scene3DRM* sceneRenderingMech = new Scene3DRM( *m_scene, *m_camera );
+      compRM->add( sceneRenderingMech );
+   }
+   else
+   {
+      m_scene = NULL;
+   }
+
+   m_renderer->setMechanism( compRM );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

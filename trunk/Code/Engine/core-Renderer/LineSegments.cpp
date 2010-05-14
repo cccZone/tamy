@@ -14,7 +14,7 @@ END_RESOURCE()
 ///////////////////////////////////////////////////////////////////////////////
 
 LineSegments::LineSegments( const std::string& name )
-: Resource( name )
+: GeometryResource( name )
 {
 }
 

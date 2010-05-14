@@ -4,9 +4,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-StringPropertyEditor::StringPropertyEditor(TProperty<std::string>& property)
-: QPropertyEditor(property.getLabel().c_str())
-, m_property(property)
+StringPropertyEditor::StringPropertyEditor( std::string& property, const std::string& label )
+: QPropertyEditor( label.c_str() )
+, m_property( property )
 {
    setupUi();
 }
@@ -18,8 +18,7 @@ void StringPropertyEditor::setupUi()
    QLineEdit* edit = new QLineEdit(this);
    addWidget(edit);
    
-   std::string currVal = m_property.get();
-   edit->setText(currVal.c_str());
+   edit->setText(m_property.c_str());
 
    connect(edit, SIGNAL(textChanged(const QString&)), this, SLOT(valChanged(const QString&)));
 }
@@ -28,7 +27,7 @@ void StringPropertyEditor::setupUi()
 
 void StringPropertyEditor::valChanged(const QString& val)
 {
-   m_property.set(val.toStdString());
+   m_property = val.toStdString();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

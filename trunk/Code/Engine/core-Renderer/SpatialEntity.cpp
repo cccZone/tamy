@@ -5,7 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT(SpatialEntity, Entity)
+BEGIN_OBJECT(SpatialEntity, Entity)
    PROPERTY("Local transformation", D3DXMATRIX, m_localMtx)
 END_OBJECT()
 

@@ -10,6 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT(Renderable, SpatialEntity)
+   PROPERTY( "geometry", Geometry*, m_geometry )
+   PROPERTY( "effects", Effects, m_effects )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,22 +36,6 @@ Renderable::~Renderable()
 const Renderable::Attributes& Renderable::getAttributes() const 
 {
    return m_attributes;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Renderable::addEffect(Effect* effect)
-{
-   ASSERT(effect != NULL, "NULL pointer instead an Effect instance");
-
-   const Effect::Attributes& attribs = effect->getAttributes();
-   for (Effect::Attributes::const_iterator it = attribs.begin();
-      it != attribs.end(); ++it)
-   {
-      m_attributes.push_back(*it);
-   }
-
-   m_effects.push_back(effect);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,7 +72,8 @@ void Renderable::onChildAttached(Entity& child)
    Effect* effect = dynamic_cast<Effect*> (&child);
    if (effect != NULL)
    {
-      addEffect(effect);
+      addAttributes( *effect );
+      m_effects.push_back( effect );
       return;
    }
 
@@ -157,6 +144,30 @@ bool Renderable::isVisible() const
 
 void Renderable::onPropertyChanged(Property& property)
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderable::onObjectLoaded()
+{
+   // add attributes of the effects
+   for ( Effects::iterator it = m_effects.begin(); it != m_effects.end(); ++it )
+   {
+      Effect* effect = *it;
+      addAttributes( *effect );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderable::addAttributes( Effect& effect )
+{
+   const Effect::Attributes& attribs = effect.getAttributes();
+   for (Effect::Attributes::const_iterator it = attribs.begin();
+      it != attribs.end(); ++it)
+   {
+      m_attributes.push_back(*it);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

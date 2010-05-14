@@ -14,8 +14,9 @@ class Camera;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This component allows to attach a camera to a model. This
- * camera will be used by the entities added to the model during their 
+ * This component allows to attach a single camera to many models at
+ * the same time, showing the scenes they contain from the same perspective.
+ * This camera will be used by the entities added to the model during their 
  * rendering.
  */
 class CameraComponent : public Component<Model>
