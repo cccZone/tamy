@@ -10,8 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT(SingleTextureEffect, ShaderEffect)
-   PROPERTY( "material", Material, m_material )
-   PROPERTY( "texture", Texture*, m_texture )
+   PROPERTY_EDIT( "material", Material, m_material )
+   PROPERTY_EDIT( "texture", Texture*, m_texture )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////

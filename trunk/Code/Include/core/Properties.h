@@ -55,17 +55,15 @@ public:
     * @throws std::runtime_error if we try to override an existing property 
     *                            name
     * @param T          type of the property we want to define
-    * @param id         unique name for the property (good rule of thumb is to
-    *                   name the properties after the variables they refer to)
-    * @param label      label under which the property should be advertised 
-    *                   (in editor i.e.)
     * @param propValue  variable that holds the property value and that will
     *                   be edited by this property
+    * @param id         unique name for the property (good rule of thumb is to
+    *                   name the properties after the variables they refer to)
     *
     * @return a reference to the newly created property
     */
    template <typename T>
-   Property& add(const std::string& id, const std::string& label, T& propVal);
+   Property& add( T& propVal, const std::string& id );
 
    /**
     * This method allows to verify if a property with the given name exists.

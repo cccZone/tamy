@@ -36,7 +36,10 @@ void TPropertiesView<Derived>::set(Properties& properties)
       it != names.end(); ++it)
    {
       Property& property = properties.get(*it);
-
+      if ( !property.canBeEdited() )
+      {
+         continue;
+      }
       PropertyEditor* editor = create(property);
       if (editor == NULL)
       {

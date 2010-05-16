@@ -8,9 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
-Property& Properties::add(const std::string& id, 
-                          const std::string& label, 
-                          T& propVal)
+Property& Properties::add( T& propVal, const std::string& id )
 {
    PropsMap::const_iterator it = m_properties.find(id);
    if (it != m_properties.end())
@@ -18,7 +16,7 @@ Property& Properties::add(const std::string& id,
       throw std::runtime_error("Cannot override an existing property");
    }
 
-   Property* newProperty = new TProperty<T>(&propVal, id, label);
+   Property* newProperty = new TProperty<T>( &propVal );
    m_properties.insert(std::make_pair(id, newProperty));
    m_names.insert(id);
 

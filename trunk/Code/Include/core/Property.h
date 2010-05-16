@@ -15,6 +15,7 @@
 
 class Object;
 class Property;
+class PropertiesView;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -42,6 +43,9 @@ class Property
 {
 private:
    PropertyObserver* m_observer;
+   std::string       m_name;
+   std::string       m_label;
+   bool              m_canBeEdited;
 
 public:
    virtual ~Property() {}
@@ -54,11 +58,20 @@ public:
    virtual void serialize(Serializer& serializer) = 0;
 
    /**
+    * Sets the property name.
+    *
+    * @param name
+    * @param label
+    * @param canBeEdited
+    */
+   inline void setParams( const std::string& name, const std::string& label, bool canBeEdited );
+
+   /**
     * This method returns the name assigned to this property.
     *
     * @return  property name
     */
-   virtual const std::string& getName() const = 0;
+   inline const std::string& getName() const;
 
    /**
     * This method returns a label under which the property should
@@ -66,7 +79,12 @@ public:
     *
     * @return  property label
     */
-   virtual const std::string& getLabel() const = 0;
+   inline const std::string& getLabel() const;
+
+   /**
+    * Tells whether we want to edit this property or not.
+    */
+   inline bool canBeEdited() const;
 
    /**
     * Sets a new value of the property.
@@ -136,30 +154,11 @@ template <typename T>
 class TProperty : public Property
 {
 private:
-   std::string    m_name;
-   std::string    m_label;
    T*             m_val;
 
 public:
    TProperty();
-   TProperty( T* val, 
-              const std::string& name, 
-              const std::string& label );
-
-   /**
-    * This method returns the name assigned to this property.
-    *
-    * @return  property name
-    */
-   const std::string& getName() const;
-
-   /**
-    * This method returns a label under which the property should
-    * be advertised (in editor i.e.)
-    *
-    * @return  property label
-    */
-   const std::string& getLabel() const;
+   TProperty( T* val );
 
    // -------------------------------------------------------------------------
    // Property implementation
@@ -185,30 +184,11 @@ template <typename T>
 class TProperty<T*> : public Property
 {
 private:
-   std::string m_name;
-   std::string m_label;
    T** m_val;
 
 public:
    TProperty();
-   TProperty(T** val, 
-             const std::string& name, 
-             const std::string& label);
-
-   /**
-    * This method returns the name assigned to this property.
-    *
-    * @return  property name
-    */
-   const std::string& getName() const;
-
-   /**
-    * This method returns a label under which the property should
-    * be advertised (in editor i.e.)
-    *
-    * @return  property label
-    */
-   const std::string& getLabel() const;
+   TProperty(T** val );
 
    // -------------------------------------------------------------------------
    // Property implementation
@@ -233,30 +213,6 @@ public:
  */
 class VectorProperty : public Property
 {
-public:
-   virtual ~VectorProperty() {}
-
-   /**
-    * This method returns the vector's size.
-    */
-   virtual unsigned int size() const = 0;
-
-   /**
-    * Retrieves a value stored under the specified index.
-    *
-    * @param idx     index of the property
-    */
-   virtual Object* get(unsigned int idx) = 0;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * This specialized property can hold a vector of pointers
- */
-template< typename T >
-class TProperty< std::vector< T* > > : public VectorProperty
-{
 private:
    class RTTITypeInit
    {
@@ -269,35 +225,32 @@ private:
    static Class         s_class;
    static RTTITypeInit  s_typeRegistrationTool;
 
-   std::string          m_name;
-   std::string          m_label;
-   std::vector<T*>*     m_val;
+   std::string          m_emptyStr;
 
 public:
-   TProperty(std::vector<T*>* val, 
-             const std::string& name, 
-             const std::string& label);
+   virtual ~VectorProperty() {}
 
    /**
-    * This method returns the name assigned to this property.
-    *
-    * @return  property name
+    * Returns the size of the array.
     */
-   const std::string& getName() const;
+   virtual unsigned int size() const { return 0; }
 
-   // -------------------------------------------------------------------------
-   // VectorProperty implementation
-   // -------------------------------------------------------------------------
-   const std::string& getLabel() const;
-   unsigned int size() const;
-   Object* get( unsigned int idx );
+   /**
+    * Allows to view the properties of the selected item.
+    *
+    * @param idx     item's index
+    * @param view    properties viewer
+    */
+   virtual void viewProperties( unsigned int idx, PropertiesView& view ) {}
 
    // -------------------------------------------------------------------------
    // Property implementation
    // -------------------------------------------------------------------------
-   void serialize( Serializer& serializer );
-   void set( void* val );
-   void* edit();
+   const std::string& getName() const { return m_emptyStr; }
+   const std::string& getLabel() const { return m_emptyStr; }
+   void serialize( Serializer& serializer ) {}
+   void set( void* val ) {}
+   void* edit() { return NULL; }
 
    // -------------------------------------------------------------------------
    // Type identification mechanism implementation.
@@ -305,6 +258,34 @@ public:
    Class getVirtualClass() const;
    Class getPropertyClass() const;
    static Class getRTTIClass();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * This specialized property can hold a vector of pointers
+ */
+template< typename T >
+class TProperty< std::vector< T* > > : public VectorProperty
+{
+private:
+   std::vector<T*>*     m_val;
+
+public:
+   TProperty( std::vector<T*>* val );
+
+   // -------------------------------------------------------------------------
+   // Property implementation
+   // -------------------------------------------------------------------------
+   unsigned int size() const;
+   void viewProperties( unsigned int idx, PropertiesView& view );
+
+   // -------------------------------------------------------------------------
+   // Property implementation
+   // -------------------------------------------------------------------------
+   void serialize( Serializer& serializer );
+   void set( void* val );
+   void* edit();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

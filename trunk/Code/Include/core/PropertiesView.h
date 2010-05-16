@@ -175,7 +175,7 @@ protected:
       // make a dummy instantiation so that if the entity is a template class,
       // we make sure it gets its rtti type registered
       PROPERTY_IMPL();
-      TProperty< PROPERTY_IMPL >( NULL , "", "" );
+      TProperty< PROPERTY_IMPL >( NULL );
 
       m_creators.push_back( new TStaticCreator< EDITOR_IMPL, PROPERTY_IMPL >() );
    }
@@ -190,7 +190,7 @@ protected:
    void associatePtr()
    {
       ABSTRACT_PROPERTY_IMPL();
-      TProperty< ABSTRACT_PROPERTY_IMPL >( NULL , "", "" );
+      TProperty< ABSTRACT_PROPERTY_IMPL >( NULL );
 
       m_creators.push_back( new TPolymorphicCreator< EDITOR_IMPL, ABSTRACT_PROPERTY_IMPL >() );
    }

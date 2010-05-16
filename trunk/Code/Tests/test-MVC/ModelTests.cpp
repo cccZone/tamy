@@ -27,7 +27,7 @@ namespace // anonymous
       int getIndex() const {return m_index;}
    };
    BEGIN_OBJECT(EntityAMock, Entity)
-      PROPERTY("index", int, m_index)
+      PROPERTY_EDIT("index", int, m_index)
    END_OBJECT()
 
    // -------------------------------------------------------------------------
@@ -46,7 +46,7 @@ namespace // anonymous
       int getIndex() const {return m_index;}
    };
    BEGIN_OBJECT(EntityBMock, Entity)
-      PROPERTY("index", int, m_index)
+      PROPERTY_EDIT("index", int, m_index)
    END_OBJECT()
 
    // -------------------------------------------------------------------------

@@ -8,6 +8,9 @@
 #include <QtGui\QSpacerItem>
 #include "core-MVC\Entity.h"
 #include "core\Resource.h"
+#include <QToolBox.h>
+#include <QCommonStyle.h>
+#include <QStyleOption.h>
 
 // properties
 #include "Vec3PropertyEditor.h"
@@ -19,53 +22,41 @@
 #include "BoolPropertyEditor.h"
 #include "EntityPropertyEditor.h"
 #include "ResourcePropertyEditor.h"
-
+#include "ArrayPropertyEditor.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
 QPropertiesView::QPropertiesView( TamyEditor& mgr )
 : QPropertyEditor("")
 , m_mgr( mgr )
-, m_propertiesLayout(NULL)
+, m_toolBox(NULL)
 {
+   m_toolBox = new QToolBox( this );
+   m_toolBox->setStyleSheet( "QToolBox::tab {                                 \
+      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 \
+      stop: 0 #DDFC77, stop: 0.4 #DDFC77,                                     \
+      stop: 0.4 #9BCE4F, stop: 1.0 #9BCE4F);                                  \
+         border-radius: 5px;                                                  \
+      color: black;                                                           \
+      }                                                                       \
+      QToolBox::tab:selected {                                                \
+      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 \
+      stop: 0 #9BCE4F, stop: 0.4 #9BCE4F,                                     \
+      stop: 0.4 #DDFC77, stop: 1.0 #DDFC77);                                  \
+      font: italic;                                                           \
+      color: black;                                                           \
+      }" );
+
+   addWidget( m_toolBox );
+
    initFactory();
-   initUI();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-QPropertiesView::QPropertiesView( TamyEditor& mgr, VectorProperty& property )
-: QPropertyEditor(property.getLabel().c_str())
-, m_mgr( mgr )
-, m_propertiesLayout(NULL)
-{
-   initFactory();
-   initUI();
-
-   // add the contents of the property vector to this view
-   unsigned int count = property.size();
-   if (count == 0)
-   {
-      m_propertiesLayout->addWidget(new QLabel("<<no properties>>", this));
-   }
-   else
-   {
-      for (unsigned int i = 0; i < count; ++i)
-      {
-         Object* obj = property.get(i);
-         if (obj != NULL)
-         {
-            obj->viewProperties(*this);
-         }
-      }
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 QPropertiesView::~QPropertiesView()
 {
-   m_propertiesLayout = NULL;
+   m_toolBox = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,48 +76,34 @@ void QPropertiesView::initFactory()
    associate< unsigned long,       IntPropertyEditor< unsigned long > >();
    associatePtr< Entity*,          EntityPropertyEditor >();
    associatePtr< Resource*,        ResourcePropertyEditor >();
-   //associate< VectorProperty,      QPropertiesView >();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void QPropertiesView::initUI()
-{
-  /* QWidget* viewWidget = new QWidget( this );
-   addWidget(viewWidget);
-
-   m_propertiesLayout = new QVBoxLayout( viewWidget );
-   m_propertiesLayout->setSpacing(0);
-   m_propertiesLayout->setMargin(1);
-   viewWidget->setLayout(m_propertiesLayout);*/
+   associate< VectorProperty,      ArrayPropertyEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void QPropertiesView::addPropertyEditor(QWidget* editorWidget)
 {
-   //editorWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-   addWidget( editorWidget );
+   editorWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+   m_currWidget->addWidget( editorWidget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void QPropertiesView::removePropertyEditor(QWidget& editorWidget)
 {
-   removeWidget( editorWidget );
-   //m_propertiesLayout->removeWidget(&editorWidget);
+   m_currWidget->removeWidget( &editorWidget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void QPropertiesView::onSet(Properties& properties)
 {
-   QLabel* classNameLabel = new QLabel(properties.getClassName().c_str(), this);
-   classNameLabel->setPalette(QPalette(qRgb(53, 191, 255)));
-   classNameLabel->setAutoFillBackground(true);
-   addWidget( classNameLabel );
-   //classNameLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
-   //m_propertiesLayout->addWidget(classNameLabel);
+   QFrame* frame = new QFrame( this );
+   frame->setLayout( m_currWidget = new QVBoxLayout( frame ) );
+   m_currWidget->setSpacing(0);
+   m_currWidget->setMargin(0);
+
+   m_toolBox->addItem( frame, properties.getClassName().c_str() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
