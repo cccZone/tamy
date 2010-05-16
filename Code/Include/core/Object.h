@@ -114,9 +114,25 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define PROPERTY(label, type, variable)                                       \
+/**
+ * This macro defines a non-editable property.
+ */
+#define PROPERTY(type, variable)                                              \
    {                                                                          \
-      Property& p = m_properties->add<type>(#variable, label, variable);      \
+      Property& p = m_properties->add< type >( variable, #variable );         \
+      p.setParams( #variable, "", false );                                    \
+      p.setObserver(*this);                                                   \
+   }
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * This macro defines an editable property.
+ */
+#define PROPERTY_EDIT(label, type, variable)                                  \
+   {                                                                          \
+      Property& p = m_properties->add< type >( variable, #variable );         \
+      p.setParams( #variable, label, true );                                  \
       p.setObserver(*this);                                                   \
    }
 

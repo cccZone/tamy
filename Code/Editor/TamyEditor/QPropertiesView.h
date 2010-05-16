@@ -10,9 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class TamyEditor;
-class QLayout;
+class QToolBox;
 class QWidget;
-class QSpacerItem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,11 +22,11 @@ class QPropertiesView : public QPropertyEditor,
 
 private:
    TamyEditor&    m_mgr;
-   QLayout*       m_propertiesLayout;
+   QToolBox*      m_toolBox;
+   QLayout*       m_currWidget;
 
 public:
    QPropertiesView( TamyEditor& mgr );
-   QPropertiesView( TamyEditor& mgr, VectorProperty& property );
    ~QPropertiesView();
 
    /**
@@ -58,7 +57,6 @@ protected:
    void onSet(Properties& properties);
 
 private:
-   void initUI();
    void initFactory();
 };
 

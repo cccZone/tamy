@@ -23,7 +23,7 @@ namespace // anonymous
       virtual ~BaseObject() {}
    };
    BEGIN_OBJECT(BaseObject, Resource)
-      PROPERTY("some label", int, m_val)
+      PROPERTY_EDIT("some label", int, m_val)
    END_OBJECT()
 
    // -------------------------------------------------------------------------
@@ -37,7 +37,7 @@ namespace // anonymous
       DerivedObject(int val = -2, int baseVal = -1) : BaseObject(baseVal), m_val(val) {}
    };
    BEGIN_OBJECT(DerivedObject, BaseObject)
-      PROPERTY("some label", int, m_val)
+      PROPERTY_EDIT("some label", int, m_val)
    END_OBJECT()
 
    // -------------------------------------------------------------------------
@@ -51,7 +51,7 @@ namespace // anonymous
       DependentObject(BaseObject* obj = NULL) : Resource( "DependentObject" ), m_obj(obj) {}
    };
    BEGIN_OBJECT(DependentObject, Resource)
-      PROPERTY("some label", BaseObject*, m_obj)
+      PROPERTY_EDIT("some label", BaseObject*, m_obj)
    END_OBJECT()
 
    // -------------------------------------------------------------------------
@@ -74,7 +74,7 @@ namespace // anonymous
       virtual int getVal() const { return -1; }
    };
    BEGIN_OBJECT(AbstractClass, Resource)
-      PROPERTY("baseVal", int, m_baseVal)
+      PROPERTY_EDIT("baseVal", int, m_baseVal)
    END_OBJECT()
 
    // -------------------------------------------------------------------------
@@ -93,7 +93,7 @@ namespace // anonymous
       int getVal() const { return m_val; }
    };
    BEGIN_OBJECT(ImplementingClass, AbstractClass)
-      PROPERTY("val", int, m_val)
+      PROPERTY_EDIT("val", int, m_val)
    END_OBJECT()
 
    // -------------------------------------------------------------------------
@@ -109,7 +109,7 @@ namespace // anonymous
 
    };
    BEGIN_OBJECT(RegularObject, Object)
-      PROPERTY("parent", Object*, m_parent)
+      PROPERTY_EDIT("parent", Object*, m_parent)
    END_OBJECT()
 
    // -------------------------------------------------------------------------

@@ -10,8 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT(Renderable, SpatialEntity)
-   PROPERTY( "geometry", Geometry*, m_geometry )
-   PROPERTY( "effects", Effects, m_effects )
+   PROPERTY_EDIT( "geometry", Geometry*, m_geometry )
+   PROPERTY_EDIT( "effects", Effects, m_effects )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////

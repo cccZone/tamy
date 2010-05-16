@@ -3,7 +3,38 @@
 #else
 
 
+///////////////////////////////////////////////////////////////////////////////
 
+void Property::setParams( const std::string& name, const std::string& label, bool canBeEdited )
+{
+   m_name = name;
+   m_label = label;
+   m_canBeEdited = canBeEdited;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const std::string& Property::getName() const
+{
+   return m_name;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const std::string& Property::getLabel() const
+{
+   return Property::m_label;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Property::canBeEdited() const
+{
+   return m_canBeEdited;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
@@ -15,29 +46,9 @@ TProperty< T >::TProperty()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-TProperty< T >::TProperty( T* val, 
-                           const std::string& name, 
-                           const std::string& label ) 
+TProperty< T >::TProperty( T* val ) 
 : m_val(val)
-, m_name(name)
-, m_label(label)
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-const std::string& TProperty< T >::getName() const 
-{
-   return m_name;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-const std::string& TProperty< T >::getLabel() const 
-{
-   return m_label;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -102,29 +113,9 @@ TProperty<T*>::TProperty()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-TProperty< T* >::TProperty( T** val, 
-                            const std::string& name, 
-                            const std::string& label ) 
+TProperty< T* >::TProperty( T** val ) 
 : m_val(val)
-, m_name(name)
-, m_label(label)
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-const std::string& TProperty< T* >::getName() const 
-{
-   return m_name;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-const std::string& TProperty< T* >::getLabel() const 
-{
-   return m_label;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -198,62 +189,9 @@ Class TProperty< T* >::getRTTIClass()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-Class TProperty< std::vector< T* > >::s_class;
-
-template< typename T >
-typename TProperty< std::vector< T* > >::RTTITypeInit TProperty< std::vector< T* > >::s_typeRegistrationTool;
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-TProperty< std::vector< T* > >::RTTITypeInit::RTTITypeInit()
-{
-   s_class = Class( getClassesRegistry().defineClass< std::vector< T* > >() );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-TProperty< std::vector< T* > >::TProperty( std::vector< T* >* val, 
-                                         const std::string& name, 
-                                         const std::string& label ) 
+TProperty< std::vector< T* > >::TProperty( std::vector< T* >* val ) 
 : m_val(val)
-, m_name(name)
-, m_label(label)
 {
-   s_typeRegistrationTool.realize();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-const std::string& TProperty< std::vector< T* > >::getName() const 
-{
-   return m_name;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-const std::string& TProperty< std::vector< T* > >::getLabel() const 
-{
-   return m_label;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-unsigned int TProperty< std::vector< T* > >::size() const
-{
-   return m_val->size();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-Object* TProperty< std::vector< T* > >::get(unsigned int idx)
-{
-   return m_val->at(idx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -269,7 +207,6 @@ void TProperty< std::vector< T* > >::serialize(Serializer& serializer)
 template< typename T >
 void TProperty< std::vector< T* > >::set( void* val )
 {
-   *m_val = *( reinterpret_cast< std::vector< T* >* >( val ) );
    notifyAboutChange();
 }
 
@@ -278,31 +215,27 @@ void TProperty< std::vector< T* > >::set( void* val )
 template< typename T >
 void* TProperty< std::vector< T* > >::edit()
 {
-   return m_val;
+   return this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-Class TProperty< std::vector< T* > >::getVirtualClass() const
+unsigned int TProperty< std::vector< T* > >::size() const
 {
-   return s_class;
+   return m_val->size();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-Class TProperty< std::vector< T* > >::getPropertyClass() const
+void TProperty< std::vector< T* > >::viewProperties( unsigned int idx, PropertiesView& view )
 {
-   return s_class;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-Class TProperty< std::vector< T* > >::getRTTIClass()
-{
-   return s_class;
+   T* item = ( *m_val )[idx];
+   if ( item )
+   {
+      item->viewProperties( view );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

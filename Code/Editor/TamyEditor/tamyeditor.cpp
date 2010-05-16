@@ -16,7 +16,8 @@
 #include "ResourcesBrowser.h"
 
 
-// TODO: (TOP 1) entities editor as one of the properties editors
+// TODO: (TOP 1) dodawanie entities'ow do drzewa scenki
+// TODO: (TOP 2) entities editor as one of the properties editors
 
 ///////////////////////////////////////////////////////////////////////////////
 

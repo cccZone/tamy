@@ -8,8 +8,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT(Entity, Object)
-   PROPERTY("parent", Entity*, m_parent)
-   PROPERTY("children", Entity::Children, m_children)
+   PROPERTY(Entity*, m_parent)
+   PROPERTY(Entity::Children, m_children)
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
