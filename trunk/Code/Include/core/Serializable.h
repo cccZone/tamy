@@ -43,9 +43,8 @@ public:
    virtual int getClassID() const = 0;
 
    // -------------------------------------------------------------------------
-   // Notifications
+   // State serialization implementation
    // -------------------------------------------------------------------------
-
    /**
     * Method called when an object is being saved - it should
     * contain implementation specific state saving code.
@@ -64,6 +63,9 @@ public:
     */
    virtual void onLoad(Serializer& serializer) = 0;
 
+   // -------------------------------------------------------------------------
+   // Notifications
+   // -------------------------------------------------------------------------
    /**
     * Called once an object is fully loaded.
     */

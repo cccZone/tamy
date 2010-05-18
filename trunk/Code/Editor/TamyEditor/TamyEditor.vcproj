@@ -431,6 +431,18 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\GeneratedFiles\Release\moc_EntityEditor.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath=".\GeneratedFiles\Release\moc_EntityPropertyEditor.cpp"
 					>
 					<FileConfiguration
@@ -444,6 +456,18 @@
 				</File>
 				<File
 					RelativePath=".\GeneratedFiles\Release\moc_MainAppComponent.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GeneratedFiles\Release\moc_ModelEditor.cpp"
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
@@ -576,6 +600,18 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\GeneratedFiles\Debug\moc_EntityEditor.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
 					RelativePath=".\GeneratedFiles\Debug\moc_EntityPropertyEditor.cpp"
 					>
 					<FileConfiguration
@@ -589,6 +625,18 @@
 				</File>
 				<File
 					RelativePath=".\GeneratedFiles\Debug\moc_MainAppComponent.cpp"
+					>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\GeneratedFiles\Debug\moc_ModelEditor.cpp"
 					>
 					<FileConfiguration
 						Name="Release|Win32"
@@ -1325,6 +1373,10 @@
 				Name="SceneTreeViewer"
 				>
 				<File
+					RelativePath=".\SceneTreeEditor.h"
+					>
+				</File>
+				<File
 					RelativePath=".\SceneTreeViewer.cpp"
 					>
 				</File>
@@ -1354,6 +1406,70 @@
 						/>
 					</FileConfiguration>
 				</File>
+				<Filter
+					Name="Editors"
+					>
+					<File
+						RelativePath=".\EntityEditor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\EntityEditor.h"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath=".\ModelEditor.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\ModelEditor.h"
+						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description="Moc&apos;ing $(InputFileName)..."
+								CommandLine="&quot;$(QTDIR)\bin\moc.exe&quot;  &quot;$(InputPath)&quot; -o &quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot; -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I&quot;$(DXSDK_DIR)\Include\.&quot; -I&quot;$(QTDIR)\include\.&quot; -I&quot;$(QTDIR)\include\QtCore\.&quot; -I&quot;$(QTDIR)\include\QtGui\.&quot; -I&quot;$(SolutionDir)\Include\.&quot; -I&quot;.\.&quot; -I&quot;.\GeneratedFiles\$(ConfigurationName)\.&quot; -I&quot;.\GeneratedFiles\.&quot;&#x0D;&#x0A;"
+								AdditionalDependencies="&quot;$(QTDIR)\bin\moc.exe&quot;;$(InputPath)"
+								Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
+							/>
+						</FileConfiguration>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="SelectionManager"

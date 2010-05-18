@@ -47,4 +47,23 @@ ClassTemplate& ClassesRegistry::getClassByType()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template< typename ClassType >
+void ClassesRegistry::getClassesMatchingType( std::vector< Class >& outClasses )
+{
+   TypeID< ClassType > classType;
+   Class refClass = getClassByHandle( classType.hash() );
+
+   unsigned int count = m_classes.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      Class testedClass( *m_classes[i] );
+      if ( refClass.isA( testedClass ) )
+      {
+         outClasses.push_back( testedClass );
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 #endif // _CLASSES_REGISTRY_H

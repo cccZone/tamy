@@ -18,7 +18,7 @@ END_OBJECT()
 
 Renderable::Renderable()
 : SpatialEntity("Renderable")
-, m_geometry(NULL)
+, m_geometry()
 , m_visible(true)
 {}
 
@@ -117,6 +117,13 @@ void Renderable::onChildDetached(Entity& child)
 Renderable::Effects& Renderable::getEffects()
 {
    return m_effects;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Renderable::hasGeometry() const
+{
+   return m_geometry != NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

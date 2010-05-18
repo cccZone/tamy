@@ -17,6 +17,7 @@ class QTreeWidget;
 class Entity;
 class SelectionManager;
 class Camera;
+class SceneTreeEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -110,11 +111,13 @@ public:
 public slots:
    void selectItem( QTreeWidgetItem* item, int column );
    void focusOnItem( QTreeWidgetItem* item, int column );
+   void showPopupMenu( const QPoint& pos );
 
 private:
    void initUI( TamyEditor& mgr );
    void buildEntitiesStack( Entity& entity, std::list< Entity* >& stack ) const;
    EntityTreeItem* find( Entity& entity );
+   SceneTreeEditor* createEditor( EntityTreeItem* item );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

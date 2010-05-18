@@ -8,8 +8,7 @@
 template <typename T>
 QueryableSpatial<T>::QueryableSpatial(T& entity)
 : m_entity(entity)
-, m_localVol(m_entity.getGeometry().calculateBoundingVolume())
-, m_globalVol(NULL)
+, m_globalVol( new AABoundingBox( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( 0, 0, 0 ) ) )
 {
 }
 
@@ -42,8 +41,12 @@ void QueryableSpatial<T>::deinitialize(SceneQueries& parent)
 template <typename T>
 const BoundingVolume& QueryableSpatial<T>::getBoundingVolume()
 {
-   delete m_globalVol;
-   m_globalVol = m_localVol * m_entity.getGlobalMtx();
+   if ( m_entity.hasGeometry() )
+   {
+      delete m_globalVol;
+      m_globalVol = m_entity.getGeometry().calculateBoundingVolume() * m_entity.getGlobalMtx();
+   }
+
    return *m_globalVol;
 }
 

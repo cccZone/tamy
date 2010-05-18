@@ -2,6 +2,7 @@
 #include "core-Renderer\Renderable.h"
 #include "core-Renderer\Geometry.h"
 #include "core\BoundingVolume.h"
+#include "core\AABoundingBox.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -9,7 +10,7 @@
 SpatialRepresentation::SpatialRepresentation(Renderable& renderable)
 : m_renderable(renderable)
 , m_visibilityTag(-1)
-, m_globalBoundingVolume(NULL)
+, m_globalBoundingVolume( new AABoundingBox( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( 0, 0, 0 ) ) )
 {
 }
 
@@ -25,8 +26,12 @@ SpatialRepresentation::~SpatialRepresentation()
 
 const BoundingVolume& SpatialRepresentation::getBoundingVolume() 
 {
-   delete m_globalBoundingVolume;
-   m_globalBoundingVolume = m_renderable.getGeometry().calculateBoundingVolume() * m_renderable.getGlobalMtx();
+   if ( m_renderable.hasGeometry() )
+   {
+      delete m_globalBoundingVolume;
+      m_globalBoundingVolume = m_renderable.getGeometry().calculateBoundingVolume() * m_renderable.getGlobalMtx();
+   }
+
    return *m_globalBoundingVolume;
 }
 

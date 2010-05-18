@@ -26,7 +26,6 @@ class QueryableSpatial : public SceneQueriesModelRepresentation,
 {
 private:
    T& m_entity;
-   const BoundingVolume& m_localVol;
    BoundingVolume* m_globalVol;
    Array<Triangle*> m_noTriangles;
 

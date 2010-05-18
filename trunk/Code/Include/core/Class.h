@@ -74,6 +74,14 @@ public:
    const std::string& getName() const;
 
    /**
+    * Returns a short name of the class, which would be the last 
+    * part of its full name.
+    *    i.e. ::Namespace::ClassA            ---> ClassA
+    *         ::Namespace::ClassA< Class B > ---> ClassA (templates are discarded)
+    */
+   std::string getShortName() const;
+
+   /**
     * Returns a unique handle assigned to this class type.
     */
    unsigned int getHandle() const;

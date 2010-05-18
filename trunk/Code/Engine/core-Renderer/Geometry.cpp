@@ -15,7 +15,7 @@ END_OBJECT()
 
 Geometry::Geometry()
 : m_resource(NULL)
-, m_vol(NULL)
+, m_vol( new AABoundingBox() )
 {
 }
 

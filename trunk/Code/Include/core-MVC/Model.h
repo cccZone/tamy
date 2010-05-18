@@ -118,6 +118,11 @@ public:
     */
    unsigned int getViewsCount() const;
 
+   // -------------------------------------------------------------------------
+   // Serializable implementation
+   // -------------------------------------------------------------------------
+   void onObjectLoaded();
+
 protected:
    // -------------------------------------------------------------------------
    // ComponentsManager implementation

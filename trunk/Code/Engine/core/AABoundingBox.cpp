@@ -8,8 +8,8 @@
 
 AABoundingBox::AABoundingBox()
 {
-   min = D3DXVECTOR3(FLT_MAX, FLT_MAX, FLT_MAX);
-   max = D3DXVECTOR3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+   min = D3DXVECTOR3(0, 0, 0);
+   max = D3DXVECTOR3(0, 0, 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

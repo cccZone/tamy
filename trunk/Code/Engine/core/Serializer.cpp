@@ -241,8 +241,11 @@ Resource& Loader::load( ResourcesManager& resMgr )
    for ( unsigned int i = 1; i < count; ++i )
    {
       m_dependencies[ i ]->save( mapper );
+   }
 
-      // notify the dependencies that they were successfully loaded
+   // notify the dependencies that they were successfully loaded
+   for ( unsigned int i = 1; i < count; ++i )
+   {
       m_dependencies[ i ]->onObjectLoaded();
    }
 

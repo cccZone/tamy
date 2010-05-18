@@ -47,7 +47,10 @@ std::string ShaderEffect::getShaderName() const
 
 unsigned int ShaderEffect::beginRendering()
 {
-   ASSERT(m_shader != NULL, "ShaderEffect instance not initialized");
+   if ( !m_shader )
+   {
+      return 0;
+   }
 
    onBeginRendering();
    return m_shader->beginRendering();
@@ -57,7 +60,10 @@ unsigned int ShaderEffect::beginRendering()
 
 void ShaderEffect::beginPass(unsigned int passIdx)
 {
-   ASSERT(m_shader != NULL, "ShaderEffect instance not initialized");
+   if ( !m_shader )
+   {
+      return;
+   }
 
    onBeginPass(passIdx);
    m_shader->beginPass(passIdx);
@@ -67,8 +73,10 @@ void ShaderEffect::beginPass(unsigned int passIdx)
 
 void ShaderEffect::endPass(unsigned int passIdx)
 {
-   ASSERT(m_shader != NULL, "ShaderEffect instance not initialized");
-
+   if ( !m_shader )
+   {
+      return;
+   }
    m_shader->endPass(passIdx);
    onEndPass(passIdx);
 }
@@ -77,7 +85,10 @@ void ShaderEffect::endPass(unsigned int passIdx)
 
 void ShaderEffect::endRendering()
 {
-   ASSERT(m_shader != NULL, "ShaderEffect instance not initialized");
+   if ( !m_shader )
+   {
+      return;
+   }
 
    m_shader->endRendering();
    onEndRendering();

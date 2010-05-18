@@ -34,15 +34,15 @@ QPropertiesView::QPropertiesView( TamyEditor& mgr )
    m_toolBox = new QToolBox( this );
    m_toolBox->setStyleSheet( "QToolBox::tab {                                 \
       background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 \
-      stop: 0 #DDFC77, stop: 0.4 #DDFC77,                                     \
-      stop: 0.4 #9BCE4F, stop: 1.0 #9BCE4F);                                  \
+      stop: 0 #DDFC77, stop: 0.4 #F1F9D4,                                     \
+      stop: 0.4 #5C7A2F, stop: 1.0 #9BCE4F);                                  \
          border-radius: 5px;                                                  \
       color: black;                                                           \
       }                                                                       \
       QToolBox::tab:selected {                                                \
       background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 \
-      stop: 0 #9BCE4F, stop: 0.4 #9BCE4F,                                     \
-      stop: 0.4 #DDFC77, stop: 1.0 #DDFC77);                                  \
+      stop: 0 #9BCE4F, stop: 0.4 #5C7A2F,                                     \
+      stop: 0.4 #F1F9D4, stop: 1.0 #DDFC77);                                  \
       font: italic;                                                           \
       color: black;                                                           \
       }" );
