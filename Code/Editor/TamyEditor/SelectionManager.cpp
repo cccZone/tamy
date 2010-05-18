@@ -6,6 +6,7 @@
 SelectionManager::SelectionManager()
 : m_selectedEntity( NULL )
 , m_selectionMarker( NULL )
+, m_observedScene( NULL )
 {
 }
 
@@ -23,6 +24,24 @@ void SelectionManager::initialize( TamyEditor& mgr )
 
 void SelectionManager::onServiceRegistered( TamyEditor& mgr )
 {
+   // scene
+   if ( mgr.needsUpdate< Model >( *m_observedScene ) )
+   {
+      if ( m_observedScene )
+      {
+         m_observedScene->detach( *this );
+      }
+
+      if ( mgr.hasService< Model >() )
+      {
+         m_observedScene = &mgr.requestService< Model >();
+         m_observedScene->attach( *this );
+      }
+      else
+      {
+         m_observedScene = NULL;
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -125,6 +144,29 @@ void SelectionManager::visualizeSelection( Entity* newSelection )
    {
       m_selectedEntity->add( m_selectionMarker );
    }*/
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SelectionManager::onEntityAdded( Entity& entity )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SelectionManager::onEntityRemoved( Entity& entity )
+{
+   if ( m_selectedEntity == &entity )
+   {
+      m_selectedEntity = NULL;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SelectionManager::resetContents()
+{
+   m_selectedEntity = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -60,6 +60,11 @@ public:
    Effects& getEffects();
 
    /**
+    * Tells whether the geometry entity is set
+    */
+   bool hasGeometry() const;
+
+   /**
     * Returns the geometry used by the renderable
     *
     * @return  underlying geometry

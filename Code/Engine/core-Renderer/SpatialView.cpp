@@ -91,6 +91,8 @@ void SpatialView::onEntityRemoved(Entity& entity)
 
 void SpatialView::resetContents()
 {
+   m_storage->clear();
+
    for (RepresentationsMap::iterator it = m_representations.begin();
       it != m_representations.end(); ++it)
    {

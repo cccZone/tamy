@@ -64,6 +64,28 @@ const std::string& Class::getName() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+std::string Class::getShortName() const
+{
+   std::string fullName = m_template->getName();
+   std::size_t lastPartStart = fullName.find_last_of( ":" );
+   if ( lastPartStart == std::string::npos )
+   {
+      lastPartStart = -1;
+   }
+
+   std::size_t templateStart = fullName.find_first_of( "<", lastPartStart );
+   if ( templateStart != std::string::npos )
+   {
+      return fullName.substr( lastPartStart + 1, templateStart - lastPartStart - 1 );
+   }
+   else
+   {
+      return fullName.substr( lastPartStart + 1 );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 unsigned int Class::getHandle() const
 {
    return m_template->getHandle();

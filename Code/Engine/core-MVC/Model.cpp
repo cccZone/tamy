@@ -100,8 +100,8 @@ void Model::add( Entity* entity, bool manage )
 
 void Model::remove( Entity& entity/*, bool release*/ )
 {
-   entity.onDetachFromModel(*this);
    entityDFS(entity, Functor::FROM_METHOD(Model, notifyEntityRemoved, this));
+   entity.onDetachFromModel(*this);
 
    Entities::iterator it = std::find(m_entities.begin(), m_entities.end(), &entity);
    if (it != m_entities.end())
@@ -121,6 +121,8 @@ void Model::remove( Entity& entity/*, bool release*/ )
 
 void Model::clear()
 {
+   processViewsOperations();
+
    unsigned int count = m_entities.size();
    for (unsigned int i = 0; i < count; ++i)
    {
@@ -298,6 +300,18 @@ void Model::onComponentAdded( Component< Model >& component )
    {
       entityDFS( *m_entities[i], Functor::FROM_METHOD(ComponentAddOperation, notify, &op) );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Model::onObjectLoaded()
+{
+   // inform all entities that they are loaded
+   for ( Entities::iterator it = m_entities.begin(); it != m_entities.end(); ++it )
+   {
+      (*it)->onAttachToModel(*this);
+   }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

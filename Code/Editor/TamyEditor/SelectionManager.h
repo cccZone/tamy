@@ -4,6 +4,7 @@
 /// @brief  Component that manages the scene entities selection
 
 #include "core/Component.h"
+#include "core-MVC\ModelView.h"
 #include "tamyeditor.h"
 #include <vector>
 
@@ -12,6 +13,7 @@
 
 class Entity;
 class Effect;
+class Model;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -30,7 +32,7 @@ public:
 /**
  * Component that manages the scene entities selection.
  */
-class SelectionManager: public Component< TamyEditor >
+class SelectionManager: public Component< TamyEditor >, public ModelView
 {
 private:
    typedef std::vector< SelectionManagerListener* > Listeners;
@@ -40,6 +42,7 @@ private:
 
    Entity*        m_selectedEntity;
    Effect*        m_selectionMarker;
+   Model*         m_observedScene;
 
 public:
    /**
@@ -84,6 +87,13 @@ public:
    // -------------------------------------------------------------------------
    void initialize( TamyEditor& mgr );
    void onServiceRegistered( TamyEditor& mgr );
+
+   // -------------------------------------------------------------------------
+   // ModelView implementation
+   // -------------------------------------------------------------------------
+   void onEntityAdded( Entity& entity );
+   void onEntityRemoved( Entity& entity );
+   void resetContents();
 
 private:
    void visualizeSelection( Entity* newSelection );

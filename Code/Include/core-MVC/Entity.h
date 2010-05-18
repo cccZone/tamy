@@ -93,6 +93,11 @@ public:
     */
    inline const Children& getEntityChildren() const;
 
+   // -------------------------------------------------------------------------
+   // Serializable implementation
+   // -------------------------------------------------------------------------
+   void onObjectLoaded();
+
 protected:
    // -------------------------------------------------------------------------
    // Model interaction

@@ -90,6 +90,11 @@ public:
     * Returns the tree depth this node is at.
     */
    inline unsigned int getDepth() const;
+
+   /**
+    * Returns the bounding box of the node.
+    */
+   inline const AABoundingBox& getBoundingBox() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

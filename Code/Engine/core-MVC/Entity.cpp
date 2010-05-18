@@ -71,7 +71,6 @@ void Entity::remove(Entity& entity, bool release)
    // send proper notifications
    onChildDetached(entity);
    entity.onDetached(*this);
-   entity.m_parent = NULL;
 
    // remove the record of the entity from the children collections
    // and from all affiliated models
@@ -79,6 +78,7 @@ void Entity::remove(Entity& entity, bool release)
    {
       m_hostModel->remove(entity);
    }
+   entity.m_parent = NULL;
 
    Children::iterator it = std::find(m_children.begin(), m_children.end(), &entity);
    if (it != m_children.end())
@@ -128,6 +128,17 @@ void Entity::onDetachFromModel(Model& model)
 
    onDetached(model);
    m_hostModel = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Entity::onObjectLoaded()
+{
+   for ( Children::iterator it = m_children.begin();
+         it != m_children.end(); ++it )
+   {
+      onChildAttached( **it );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -13,6 +13,7 @@
 
 class ClassTemplate;
 class ClassCreator;
+class Class;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -79,6 +80,18 @@ public:
     */
    template< typename ClassType >
    ClassTemplate& getClassByType();
+
+   /**
+    * This method creates a list of all classes that can be substituted
+    * dynamically cast to the specified class type.
+    *
+    * @throw std::out_of_range   if the class hasn't been registered
+    *
+    * @param ClassType     class type
+    * @param outClasses    results
+    */
+   template< typename ClassType >
+   void getClassesMatchingType( std::vector< Class >& outClasses );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

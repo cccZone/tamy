@@ -5,109 +5,16 @@
 #include <QBoxLayout.h>
 #include <QTreeWidget.h>
 #include <QObject.h>
+#include <QMouseEvent>
 #include "core-MVC.h"
 #include "core\Assert.h"
 #include "core-Renderer.h"
 
+// editors
+#include "ModelEditor.h"
+#include "EntityEditor.h"
 
-///////////////////////////////////////////////////////////////////////////////
 
-SceneTreeViewer::EntityTreeItem::EntityTreeItem( QTreeWidget* parent, TamyEditor& mgr )
-: QTreeWidgetItem( parent )
-, m_entity( NULL )
-{
-   setText( 0, "World" );
-   setText( 1, "Model" );
-
-   ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
-   QString iconsDir = resMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
-   setIcon( 0, QIcon( iconsDir + "/world.png" ) );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-SceneTreeViewer::EntityTreeItem::EntityTreeItem( Entity* entity, QTreeWidgetItem* parent, TamyEditor& mgr )
-: QTreeWidgetItem( parent )
-, m_entity( entity )
-{
-   ASSERT( entity != NULL, "Entity can't be NULL" );
-
-   setText( 0, getEntityName( entity ) );
-   setText( 1, entity->getVirtualClass().getName().c_str() );
-
-   setIcon( 0, getEntityIcon( entity, mgr ) );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-QString SceneTreeViewer::EntityTreeItem::getEntityName( Entity* entity ) const
-{
-   SpatialEntity* spatial;
-   ShaderEffect* shader;
-   Geometry* geometry;
-
-   if ( ( spatial = dynamic_cast< SpatialEntity* >( entity ) ) != NULL )
-   {
-      return spatial->getName().c_str();
-   }
-   else if ( ( shader = dynamic_cast< ShaderEffect* >( entity ) ) != NULL )
-   {
-      return shader->getShaderName().c_str();
-   }
-   else if ( ( geometry = dynamic_cast< Geometry* >( entity ) ) != NULL )
-   {
-      return geometry->getGeometryName().c_str();
-   }
-   else
-   {
-      return "<<anonymous>>";
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-QIcon SceneTreeViewer::EntityTreeItem::getEntityIcon( Entity* entity, TamyEditor& mgr ) const
-{
-   ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
-   QString iconsDir = resMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
-
-   if ( dynamic_cast< SpatialEntity* >( entity ) != NULL )
-   {
-      return QIcon( iconsDir + "/spatialEntityIcon.png" );
-   }
-   else if ( dynamic_cast< ShaderEffect* >( entity ) != NULL )
-   {
-      return QIcon( iconsDir + "/shaderEffectIcon.png" );
-   }
-   else if ( dynamic_cast< Geometry* >( entity ) != NULL )
-   {
-      return QIcon( iconsDir + "/geometryIcon.png" );
-   }
-   else
-   {
-      return QIcon( iconsDir + "/unknownTypeIcon.png" );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-SceneTreeViewer::EntityTreeItem* SceneTreeViewer::EntityTreeItem::find( Entity* entity )
-{
-   int count = childCount();
-   for ( int i = 0; i < count; ++i )
-   {
-      EntityTreeItem* thisItem = dynamic_cast< EntityTreeItem* >( child( i ) );
-      if ( thisItem->getEntity() == entity )
-      {
-         return thisItem;
-      }
-   }
-
-   return NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 SceneTreeViewer::SceneTreeViewer()
@@ -224,8 +131,10 @@ void SceneTreeViewer::initUI( TamyEditor& mgr )
    columnLabels.push_back( "Type" );
    m_sceneTree->setColumnCount( columnLabels.size() );
    m_sceneTree->setHeaderLabels( columnLabels );
+   m_sceneTree->setContextMenuPolicy( Qt::CustomContextMenu );
    connect( m_sceneTree, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( selectItem( QTreeWidgetItem*, int ) ) );
    connect( m_sceneTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( focusOnItem( QTreeWidgetItem*, int ) ) );
+   connect( m_sceneTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( showPopupMenu( const QPoint& ) ) );
 
    m_rootItem = new EntityTreeItem( m_sceneTree, mgr );
    m_sceneTree->addTopLevelItem( m_rootItem );
@@ -365,6 +274,79 @@ void SceneTreeViewer::focusOnItem( QTreeWidgetItem* item, int column )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void SceneTreeViewer::showPopupMenu( const QPoint& pos )
+{
+   if ( !m_observedScene )
+   {
+      return;
+   }
+
+   EntityTreeItem* item = dynamic_cast< EntityTreeItem* >( m_sceneTree->itemAt( pos ) );
+   SceneTreeEditor* parentEditor = NULL;
+   SceneTreeEditor* entityEditor = createEditor( item );
+   if ( item )
+   {
+      parentEditor = createEditor( dynamic_cast< EntityTreeItem* >( item->parent() ) );
+   }  
+
+   QMenu* popupMenu = new QMenu( m_sceneTree );
+
+   // populate with classes we can add here
+   std::vector< Class > classes;
+   ClassesRegistry& classesReg = getClassesRegistry();
+   classesReg.getClassesMatchingType< Entity >( classes );
+
+   if ( !classes.empty() )
+   {
+      QMenu* addMenu = popupMenu->addMenu( "Add" );
+
+      unsigned int count = classes.size();
+      for ( unsigned int i = 0; i < count; ++i )
+      {
+         entityEditor->createAddEntityAction( *addMenu, classes[i] );
+      }
+   }
+
+   // add additional actions
+   if ( parentEditor && item->getEntity() )
+   {
+      parentEditor->createRemoveEntityAction( *popupMenu, item->getEntity() );
+   }
+   entityEditor->createClearAction( *popupMenu ) ;
+
+   // display the menu
+   popupMenu->popup( m_sceneTree->mapToGlobal( pos ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SceneTreeEditor* SceneTreeViewer::createEditor( EntityTreeItem* item )
+{
+   const Filesystem& fs = m_mgr->requestService< ResourcesManager >().getFilesystem();
+   SceneTreeEditor* editor = NULL;
+
+   if ( item )
+   {
+      Entity* entity = item->getEntity();
+      if ( entity )
+      {
+         editor = new EntityEditor( fs, *entity );
+      }
+      else
+      {
+         editor = new ModelEditor( fs, *m_observedScene );
+      }
+   }
+   else
+   {
+      editor = new ModelEditor( fs, *m_observedScene );
+   }
+
+   return editor;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void SceneTreeViewer::onObjectSelected( Entity& entity )
 {
    EntityTreeItem* entityItem = find( entity );
@@ -423,6 +405,104 @@ SceneTreeViewer::EntityTreeItem* SceneTreeViewer::find( Entity& entity )
    }
 
    // we didn't manage to find the entity
+   return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+SceneTreeViewer::EntityTreeItem::EntityTreeItem( QTreeWidget* parent, TamyEditor& mgr )
+: QTreeWidgetItem( parent )
+, m_entity( NULL )
+{
+   setText( 0, "World" );
+   setText( 1, "Model" );
+
+   ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
+   QString iconsDir = resMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
+   setIcon( 0, QIcon( iconsDir + "/world.png" ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SceneTreeViewer::EntityTreeItem::EntityTreeItem( Entity* entity, QTreeWidgetItem* parent, TamyEditor& mgr )
+: QTreeWidgetItem( parent )
+, m_entity( entity )
+{
+   ASSERT( entity != NULL, "Entity can't be NULL" );
+
+   setText( 0, getEntityName( entity ) );
+   setText( 1, entity->getVirtualClass().getName().c_str() );
+
+   setIcon( 0, getEntityIcon( entity, mgr ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+QString SceneTreeViewer::EntityTreeItem::getEntityName( Entity* entity ) const
+{
+   SpatialEntity* spatial;
+   ShaderEffect* shader;
+   Geometry* geometry;
+
+   if ( ( spatial = dynamic_cast< SpatialEntity* >( entity ) ) != NULL )
+   {
+      return spatial->getName().c_str();
+   }
+   else if ( ( shader = dynamic_cast< ShaderEffect* >( entity ) ) != NULL )
+   {
+      return shader->getShaderName().c_str();
+   }
+   else if ( ( geometry = dynamic_cast< Geometry* >( entity ) ) != NULL )
+   {
+      return geometry->getGeometryName().c_str();
+   }
+   else
+   {
+      return "<<anonymous>>";
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+QIcon SceneTreeViewer::EntityTreeItem::getEntityIcon( Entity* entity, TamyEditor& mgr ) const
+{
+   ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
+   QString iconsDir = resMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
+
+   if ( dynamic_cast< SpatialEntity* >( entity ) != NULL )
+   {
+      return QIcon( iconsDir + "/spatialEntityIcon.png" );
+   }
+   else if ( dynamic_cast< ShaderEffect* >( entity ) != NULL )
+   {
+      return QIcon( iconsDir + "/shaderEffectIcon.png" );
+   }
+   else if ( dynamic_cast< Geometry* >( entity ) != NULL )
+   {
+      return QIcon( iconsDir + "/geometryIcon.png" );
+   }
+   else
+   {
+      return QIcon( iconsDir + "/unknownTypeIcon.png" );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SceneTreeViewer::EntityTreeItem* SceneTreeViewer::EntityTreeItem::find( Entity* entity )
+{
+   int count = childCount();
+   for ( int i = 0; i < count; ++i )
+   {
+      EntityTreeItem* thisItem = dynamic_cast< EntityTreeItem* >( child( i ) );
+      if ( thisItem->getEntity() == entity )
+      {
+         return thisItem;
+      }
+   }
+
    return NULL;
 }
 

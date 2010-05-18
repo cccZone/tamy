@@ -75,8 +75,8 @@ TEST(Properties, settingProperties)
    D3DXVECTOR3 speed(0, 0, 0);
 
    Properties properties("");
-   properties.add<D3DXVECTOR3>("Pos", "PosLabel", position);
-   properties.add<D3DXVECTOR3>("Speed", "SpeedLabel", speed);
+   properties.add<D3DXVECTOR3>( position, "Pos" );
+   properties.add<D3DXVECTOR3>( speed, "Speed" );
 
    CPPUNIT_ASSERT_EQUAL(true, properties.has("Pos"));
    CPPUNIT_ASSERT_EQUAL(true, properties.has("Speed"));
@@ -91,8 +91,8 @@ TEST(TPropertiesView, editors)
    D3DXVECTOR3 speed(0, 0, 0);
 
    Properties properties("");
-   properties.add<D3DXVECTOR3>("position", "positionLabel", position);
-   properties.add<D3DXVECTOR3>("speed", "speedLabel", speed);
+   properties.add<D3DXVECTOR3>( position, "position" ).setParams( "position", "", true );
+   properties.add<D3DXVECTOR3>( speed, "speed" ).setParams( "speed", "", true );
 
    PropertiesViewMock view;
    view.mockAssociate< D3DXVECTOR3, EditorMock< D3DXVECTOR3 > >();
@@ -119,9 +119,9 @@ TEST(Properties, dynamicEditorCreation)
    int intVal;
    float floatVal;
    SerializableMock* ptr = new SerializableMock();
-   TProperty<int> intProperty(&intVal, "intVal", "intVal");
-   TProperty<float> floatProperty(&floatVal, "floatVal", "floatVal");
-   TProperty<SerializableMock*> floatPtrProperty(&ptr, "ptrProperty", "ptrProperty");
+   TProperty<int> intProperty(&intVal);
+   TProperty<float> floatProperty(&floatVal);
+   TProperty<SerializableMock*> floatPtrProperty(&ptr);
 
    PropertyEditor* editor = factory.mockCreate(intProperty);
    CPPUNIT_ASSERT(NULL != editor);
