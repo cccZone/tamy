@@ -112,9 +112,11 @@ void SceneTreeViewer::initUI( TamyEditor& mgr )
 {
    // setup dockable properties view widget
    QDockWidget* dockWidget = new QDockWidget( "Scene Tree", &mgr );
+   dockWidget->setObjectName("SceneTreeViewer/dockWidget");
    mgr.addDockWidget( static_cast<Qt::DockWidgetArea>(2), dockWidget );
 
    QWidget* dockWidgetContents = new QWidget( &mgr );
+   dockWidgetContents->setObjectName("SceneTreeViewer/dockWidgetContents");
    dockWidget->setWidget( dockWidgetContents );
 
    QVBoxLayout* layout = new QVBoxLayout( dockWidgetContents );
@@ -124,6 +126,7 @@ void SceneTreeViewer::initUI( TamyEditor& mgr )
 
    // setup the scene tree container widget
    m_sceneTree = new QTreeWidget( &mgr );
+   m_sceneTree->setObjectName("SceneTreeViewer/m_sceneTree");
    layout->addWidget( m_sceneTree );
 
    QStringList columnLabels; 

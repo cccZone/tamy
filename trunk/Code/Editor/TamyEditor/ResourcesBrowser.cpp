@@ -58,9 +58,11 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
 {
    // setup dockable properties view widget
    QDockWidget* dockWidget = new QDockWidget( "Resources Browser", &mgr );
+   dockWidget->setObjectName("ResourcesBrowser/dockWidget");
    mgr.addDockWidget( Qt::LeftDockWidgetArea, dockWidget );
 
    QWidget* dockWidgetContents = new QWidget( &mgr );
+   dockWidgetContents->setObjectName("ResourcesBrowser/dockWidgetContents");
    dockWidget->setWidget( dockWidgetContents );
 
    QVBoxLayout* layout = new QVBoxLayout( dockWidgetContents );
@@ -70,6 +72,7 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
 
    // toolbar
    QWidget* toolbar = new QWidget( dockWidgetContents );
+   dockWidgetContents->setObjectName("ResourcesBrowser/toolbar");
    layout->addWidget( toolbar );
 
    QHBoxLayout* toolbarLayout = new QHBoxLayout( dockWidgetContents );
@@ -86,6 +89,7 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
 
    // setup the scene tree container widget
    m_fsTree = new FSTreeWidget( dockWidgetContents );
+   m_fsTree->setObjectName("ResourcesBrowser/m_fsTree");
    layout->addWidget( m_fsTree );
 
    QStringList columnLabels; 
