@@ -104,13 +104,15 @@ void PropertiesEditor::initUI(QMainWindow& mainWindow, QMenu& viewMenu)
    // setup dockable properties view widget
    QDockWidget* dockWidget = new QDockWidget(&mainWindow);
    mainWindow.addDockWidget(static_cast<Qt::DockWidgetArea>(2), dockWidget);
-   dockWidget->setObjectName(QString::fromUtf8("dockWidget"));
-   dockWidget->setWindowTitle(QString::fromUtf8("Properties"));
+   dockWidget->setObjectName( "PropertiesEditor/DockWidget" );
+   dockWidget->setWindowTitle( "Properties");
 
    QScrollArea* scrollableDockWidgetContents = new QScrollArea( dockWidget );
+   scrollableDockWidgetContents->setObjectName( "PropertiesEditor/ScrollableDockWidgetContents" );
    dockWidget->setWidget( scrollableDockWidgetContents );
 
    QWidget* dockWidgetContents = new QWidget( scrollableDockWidgetContents );
+   dockWidgetContents->setObjectName( "PropertiesEditor/DockWidgetContents" );
    scrollableDockWidgetContents->setWidget( dockWidgetContents );
    scrollableDockWidgetContents->setWidgetResizable( true );
 
@@ -121,7 +123,7 @@ void PropertiesEditor::initUI(QMainWindow& mainWindow, QMenu& viewMenu)
 
    // setup menu entries
    QAction* actionProperties = dockWidget->toggleViewAction();
-   actionProperties->setObjectName(QString::fromUtf8("actionProperties"));
+   actionProperties->setObjectName("PropertiesEditor/actionProperties");
    actionProperties->setText(QApplication::translate("TamyEditorClass", "Properties", 0, QApplication::UnicodeUTF8));
    viewMenu.addAction(actionProperties);
 }

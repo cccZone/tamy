@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _TAMY_EDITOR_H
+#define _TAMY_EDITOR_H
 
 /// @file   TamyEditor\tamyeditor.h
 /// @brief  editor's main window class
@@ -12,6 +13,9 @@
 
 class QApplication;
 class MainAppComponent;
+class QSettings;
+class QDockWidget;
+class QTreeWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,13 +27,16 @@ class TamyEditor : public QMainWindow, public ComponentsManager<TamyEditor>
    Q_OBJECT
 
 private:
-   Ui::TamyEditorClass ui;
+   Ui::TamyEditorClass        ui;
 
    // time tracking
-   CTimer* m_mainTime;
-   QTimer* m_mainTimeSlot;
+   CTimer*                    m_mainTime;
+   QTimer*                    m_mainTimeSlot;
 
-   MainAppComponent* m_mainAppComponent;
+   MainAppComponent*          m_mainAppComponent;
+
+   // ui settings management
+   QSettings*                 m_uiSettings;
 
 public:
    /**
@@ -82,6 +89,16 @@ public:
 
 public slots:
    void updateMain();
+
+protected:
+   void closeEvent( QCloseEvent *event );
+   void serializeUISettings( bool save );
+
+   void serializeWidgetSettings( QWidget& widget, bool save );
+   void serializeDockWidgetSettings( QDockWidget& widget, bool save );
+   void serializeTreeWidgetSettings( QTreeWidget& widget, bool save );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#endif // _TAMY_EDITOR_H

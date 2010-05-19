@@ -4,6 +4,11 @@
 #include "core-MVC.h"
 #include "progressdialog.h"
 #include <QTimer.h>
+#include <QSettings.h>
+#include <QCloseEvent>
+#include <QDockWidget.h>
+#include <QTreeWidget.h>
+
 
 // components
 #include "MainAppComponent.h"
@@ -16,8 +21,7 @@
 #include "ResourcesBrowser.h"
 
 
-// TODO: (TOP 1) dodawanie entities'ow do drzewa scenki
-// TODO: (TOP 2) entities editor as one of the properties editors
+// TODO: (TOP 1) entities editor as one of the properties editors
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -41,6 +45,9 @@ TamyEditor::TamyEditor(QApplication& app, QWidget *parent, Qt::WFlags flags)
    addComponent( new PropertiesEditor() );
    addComponent( new SceneTreeViewer() );
    addComponent( new ResourcesBrowser() );
+
+   m_uiSettings = new QSettings( "Coversion", "TamyEditor" );
+   serializeUISettings( false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,6 +57,7 @@ TamyEditor::~TamyEditor()
    m_mainAppComponent = NULL;
    delete m_mainTime; m_mainTime = NULL;
    delete m_mainTimeSlot; m_mainTimeSlot = NULL;
+   delete m_uiSettings; m_uiSettings = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -95,6 +103,127 @@ void TamyEditor::updateMain()
    float timeElapsed = m_mainTime->getTimeElapsed();
 
    m_mainAppComponent->update( timeElapsed );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::closeEvent( QCloseEvent *event )
+{
+   serializeUISettings( true );
+
+   // accept the event
+   event->accept();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::serializeUISettings( bool save )
+{
+   std::list< QWidget* >   widgetsQueue;
+   widgetsQueue.push_back( this );
+
+   while( !widgetsQueue.empty() )
+   {
+      QWidget* currWidget = widgetsQueue.front();
+      widgetsQueue.pop_front();
+
+      serializeWidgetSettings( *currWidget, save );
+
+      // analyze the widget's children
+      const QObjectList& children = currWidget->children();
+      foreach( QObject* obj, children )
+      {
+         QWidget* childWidget = dynamic_cast< QWidget* >( obj );
+         if ( childWidget )
+         {
+            widgetsQueue.push_back( childWidget );
+         }
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::serializeWidgetSettings( QWidget& widget, bool save )
+{
+   QString objName = widget.objectName();
+   if ( objName.isEmpty() )
+   {
+      return;
+   }
+   m_uiSettings->beginGroup( objName );
+
+   // serialize common widget settings
+   if ( save )
+   {
+      m_uiSettings->setValue( "size", widget.size() );
+      m_uiSettings->setValue( "pos", widget.pos() );
+   }
+   else
+   {
+      widget.resize( m_uiSettings->value( "size", widget.size() ).toSize() );
+      widget.move( m_uiSettings->value( "pos", widget.pos() ).toPoint() );
+   }
+
+   // serialize type specific settings (non-exclusive ifs block)
+   if ( dynamic_cast< QDockWidget* >( &widget ) )
+   {
+      serializeDockWidgetSettings( *dynamic_cast< QDockWidget* >( &widget ), save );
+   }
+
+   if ( dynamic_cast< QTreeWidget* >( &widget ) )
+   {
+      serializeTreeWidgetSettings( *dynamic_cast< QTreeWidget* >( &widget ), save );
+   }
+
+   // close the widget's settings group
+   m_uiSettings->endGroup();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::serializeDockWidgetSettings( QDockWidget& widget, bool save )
+{
+   if ( save )
+   {
+      m_uiSettings->setValue( "features", (int)widget.features() );
+      m_uiSettings->setValue( "floating", widget.isFloating() );
+   }
+   else
+   {
+      widget.setFeatures( ( QDockWidget::DockWidgetFeatures )m_uiSettings->value( "features", (int)widget.features() ).toInt() );
+      widget.setFloating( m_uiSettings->value( "floating", widget.isFloating() ).toBool() );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::serializeTreeWidgetSettings( QTreeWidget& widget, bool save )
+{
+   // gather info about present columns count
+   QList< QVariant > columnSizes;
+   int count = widget.columnCount();
+   for ( int i = 0; i < count; ++i )
+   {
+      columnSizes.push_back( widget.columnWidth( i ) );
+   }
+
+   if ( save )
+   {
+      m_uiSettings->setValue( "columnSizes", columnSizes );
+   }
+   else
+   {
+      columnSizes = m_uiSettings->value( "columnSizes", columnSizes ).toList();
+
+      // set the column sizes
+      widget.setColumnCount( columnSizes.size() );
+      int colIdx = 0;
+      foreach( QVariant width, columnSizes )
+      {
+         widget.setColumnWidth( colIdx++, width.toInt() );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
