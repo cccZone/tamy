@@ -1,28 +1,28 @@
 #pragma once
 
-/// @file   TamyEditor\ColorPropertyEditor.h
-/// @brief  color property editor
+/// @file   TamyEditor\MaterialPropertyEditor.h
+/// @brief  material property editor
 
 #include "core\Property.h"
+#include "core-Renderer\Material.h"
 #include "QPropertyEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class PropertiesEditor;
-struct Color;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Editor widget that will edit color properties.
  */
-class ColorPropertyEditor : public QPropertyEditor
+class MaterialPropertyEditor : public QPropertyEditor
 {
    Q_OBJECT
 
 private:
-   TEditableProperty< Color >*   m_property;
+   TEditableProperty< Material >*   m_property;
 
 public:
    /**
@@ -30,14 +30,15 @@ public:
     *
     * @param property   property this editor edits
     */
-   ColorPropertyEditor( TEditableProperty< Color >* property );
-   ~ColorPropertyEditor();
+   MaterialPropertyEditor( TEditableProperty< Material >* property );
+   ~MaterialPropertyEditor();
 
 public slots:
-   void rValChanged(double val);
-   void gValChanged(double val);
-   void bValChanged(double val);
-   void aValChanged(double val);
+   void ambientChanged( const QColor& color );
+   void diffuseChanged( const QColor& color );
+   void specularChanged( const QColor& color );
+   void emissiveChanged( const QColor& color );
+   void powerChanged( double val );
 
 private:
    void setupUi();

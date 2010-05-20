@@ -27,6 +27,8 @@ void Vec3PropertyEditor::setupUi()
 {
    QFrame* frame = new QFrame(this); addWidget(frame);
    QHBoxLayout* layout = new QHBoxLayout(frame);
+   layout->setSpacing( 0 );
+   layout->setMargin( 0 );
 
    layout->addWidget(new QLabel("X:", this));
    QDoubleSpinBox* xVal = new QDoubleSpinBox(this); layout->addWidget(xVal);

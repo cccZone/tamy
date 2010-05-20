@@ -16,7 +16,7 @@
 #include "Vec3PropertyEditor.h"
 #include "MtxPropertyEditor.h"
 #include "StringPropertyEditor.h"
-#include "ColorPropertyEditor.h"
+#include "MaterialPropertyEditor.h"
 #include "FloatPropertyEditor.h"
 #include "IntPropertyEditor.h"
 #include "BoolPropertyEditor.h"
@@ -66,7 +66,7 @@ void QPropertiesView::initFactory()
    associate< D3DXVECTOR3,         Vec3PropertyEditor >();
    associate< D3DXMATRIX,          MtxPropertyEditor >();
    associate< std::string,         StringPropertyEditor >();
-   associate< Color,               ColorPropertyEditor >();
+   associate< Material,            MaterialPropertyEditor >();
    associate< bool,                BoolPropertyEditor >();
    associate< float,               FloatPropertyEditor< float > >();
    associate< double,              FloatPropertyEditor< double > >();
