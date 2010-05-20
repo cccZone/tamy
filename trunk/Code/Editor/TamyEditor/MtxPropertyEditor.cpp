@@ -1,5 +1,5 @@
 #include "MtxPropertyEditor.h"
-#include <QFrame.h>
+#include <QGroupBox.h>
 #include <QBoxLayout.h>
 #include <QLabel.h>
 #include <QSpinBox.h>
@@ -29,8 +29,10 @@ MtxPropertyEditor::~MtxPropertyEditor()
 
 void MtxPropertyEditor::setupUi()
 {
-   QFrame* rotRow = new QFrame(this); addWidget(rotRow);
+   QGroupBox* rotRow = new QGroupBox( "orientation", this ); addWidget(rotRow);
    QHBoxLayout* rotRowLayout = new QHBoxLayout(rotRow);
+   rotRowLayout->setSpacing( 0 );
+   rotRowLayout->setMargin( 0 );
 
    QDoubleSpinBox* yawVal = new QDoubleSpinBox(rotRow); 
    rotRowLayout->addWidget(new QLabel("yaw:", rotRow)); 
@@ -44,8 +46,10 @@ void MtxPropertyEditor::setupUi()
    rotRowLayout->addWidget(new QLabel("roll:", rotRow));
    rotRowLayout->addWidget(rollVal);
 
-   QFrame* posRow = new QFrame(this); addWidget(posRow);
+   QGroupBox* posRow = new QGroupBox( "translation", this ); addWidget(posRow);
    QHBoxLayout* posRowLayout = new QHBoxLayout(posRow);
+   posRowLayout->setSpacing( 0 );
+   posRowLayout->setMargin( 0 );
    QDoubleSpinBox* xVal = new QDoubleSpinBox(posRow);
    posRowLayout->addWidget(new QLabel("x:", posRow));
    posRowLayout->addWidget(xVal);
