@@ -41,6 +41,11 @@ public:
     */
    std::string getShaderName() const;
 
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged( Property& property );
+
 protected:
    /**
     * Gives access to the shader program instance.

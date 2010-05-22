@@ -11,6 +11,10 @@
 #include "..\src\gui\dialogs\qfiledialog.h"
 
 
+// TODO: nazywanie entities'ow
+// TODO: widocznosc
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 MainAppComponent::MainAppComponent( QApplication& app )
@@ -76,6 +80,11 @@ void MainAppComponent::initUI( TamyEditor& mgr )
    QToolBar& toolBar = mgr.getToolBar();
 
    // setup menu entries
+   QAction* actionNewScene = new QAction( QIcon( iconsDir + tr( "/world.png" ) ), tr( "New Scene" ), &mgr );
+   fileMenu.addAction( actionNewScene );
+   toolBar.addAction( actionNewScene );
+   connect( actionNewScene, SIGNAL( triggered() ), this, SLOT( newScene() ) );
+
    QAction* actionLoadScene = new QAction( QIcon( iconsDir + tr( "/openFile.png" ) ), tr( "Load Scene" ), &mgr );
    fileMenu.addAction( actionLoadScene );
    toolBar.addAction( actionLoadScene );
@@ -107,6 +116,53 @@ void MainAppComponent::initUI( TamyEditor& mgr )
    QAction* actionQuit = new QAction( QIcon( iconsDir + tr( "/quit.png" ) ), tr( "Quit" ), &mgr );
    fileMenu.addAction( actionQuit );
    connect( actionQuit, SIGNAL( triggered() ), &m_app, SLOT( quit() ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MainAppComponent::newScene()
+{
+   const Filesystem& fs = m_resourceMgr->getFilesystem();
+   std::string rootDir = fs.getCurrRoot();
+   std::string filter( "Scene files (*." );
+   filter += std::string( Model::getExtension() ) + ")";
+
+   QString fullFileName = QFileDialog::getSaveFileName( m_mgr, 
+      tr("New scene"), 
+      rootDir.c_str(), 
+      filter.c_str() );
+
+   if ( fullFileName.isEmpty() == true ) 
+   {
+      // no file was selected or user pressed 'cancel'
+      return;
+   }
+
+   // once the file is open, extract the directory name
+   std::string fileName = fs.toRelativePath( fullFileName.toStdString() );
+
+   if ( fs.doesExist( fileName ) )
+   {
+      QMessageBox::warning( m_mgr , "New scene creation",
+         QString( "Scene " ) + fileName.c_str() + "already exists - pick a different name",
+         QMessageBox::Ok );
+      return;
+   }
+
+   try
+   {
+      Model* newScene = new Model( fileName );
+      m_resourceMgr->addResource( newScene );
+      newScene->saveResource();
+
+      setScene( *newScene );
+   }
+   catch (std::exception& ex)
+   {
+      QMessageBox::warning( m_mgr , "New scene error",
+         QString( "Error occurred while creating a new scene " ) + fileName.c_str(),
+         QMessageBox::Ok );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

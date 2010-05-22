@@ -20,7 +20,6 @@
 #include "FloatPropertyEditor.h"
 #include "IntPropertyEditor.h"
 #include "BoolPropertyEditor.h"
-#include "EntityPropertyEditor.h"
 #include "ResourcePropertyEditor.h"
 #include "ArrayPropertyEditor.h"
 
@@ -74,7 +73,6 @@ void QPropertiesView::initFactory()
    associate< unsigned int,        IntPropertyEditor< unsigned int > >();
    associate< long,                IntPropertyEditor< long > >();
    associate< unsigned long,       IntPropertyEditor< unsigned long > >();
-   associatePtr< Entity*,          EntityPropertyEditor >();
    associatePtr< Resource*,        ResourcePropertyEditor >();
    associate< VectorProperty,      ArrayPropertyEditor >();
 }

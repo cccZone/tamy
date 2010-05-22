@@ -45,6 +45,15 @@ std::string ShaderEffect::getShaderName() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void ShaderEffect::onPropertyChanged( Property& property )
+{
+   if ( property.getName() == "m_shader" )
+   {
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 unsigned int ShaderEffect::beginRendering()
 {
    if ( !m_shader )

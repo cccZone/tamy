@@ -22,7 +22,7 @@ const Attributed::Attributes& RenderableRepresentation::getAttributes() const
 
 void RenderableRepresentation::render()
 {
-   if (m_renderable.isVisible() == false)
+   if ( !m_renderable.isVisible() || !m_renderable.hasGeometry() )
    {
       return;
    }
