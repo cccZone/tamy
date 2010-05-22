@@ -16,8 +16,8 @@ END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Renderable::Renderable()
-: SpatialEntity("Renderable")
+Renderable::Renderable( const std::string& name )
+: SpatialEntity( name )
 , m_geometry()
 , m_visible(true)
 {}
@@ -77,15 +77,10 @@ void Renderable::onChildAttached(Entity& child)
       return;
    }
 
+   // attach new geometry if and only if the current geometry is empty
    Geometry* geometry = dynamic_cast<Geometry*> (&child);
-   if (geometry != NULL)
+   if (m_geometry == NULL)
    {
-      // remove the old geometry instance
-      if (m_geometry != NULL)
-      {
-         remove(*m_geometry);
-      }
-
       m_geometry = geometry;
       return;
    }
@@ -151,12 +146,15 @@ bool Renderable::isVisible() const
 
 void Renderable::onPropertyChanged(Property& property)
 {
+   __super::onPropertyChanged( property );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Renderable::onObjectLoaded()
 {
+   __super::onObjectLoaded();
+
    // add attributes of the effects
    for ( Effects::iterator it = m_effects.begin(); it != m_effects.end(); ++it )
    {

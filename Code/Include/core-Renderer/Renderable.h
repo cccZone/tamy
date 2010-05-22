@@ -40,7 +40,7 @@ public:
    /**
     * Default constructor.
     */
-   Renderable();
+   Renderable( const std::string& name = "" );
    ~Renderable();
 
    /**

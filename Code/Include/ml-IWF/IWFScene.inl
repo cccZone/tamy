@@ -41,7 +41,7 @@ void IWFScene::load( Model& scene, ResourcesManager& rm, TProgressObserver& obse
       meshLoader.parseMesh(meshes, meshName);
 
       D3DXMATRIX objMtx = reinterpret_cast<D3DXMATRIX&> (sceneFile.m_vpMeshList[i]->ObjectMatrix);
-      addStaticGeometry( scene, rm, meshes, objMtx );
+      addStaticGeometry( scene, rm, meshes, objMtx, meshName );
 
       // update the progress status
       observer.setProgress((float)entitiesProcessedCount / (float)allEntitiesCount);

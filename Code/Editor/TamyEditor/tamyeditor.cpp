@@ -21,8 +21,6 @@
 #include "ResourcesBrowser.h"
 
 
-// TODO: (TOP 1) entities editor as one of the properties editors
-
 ///////////////////////////////////////////////////////////////////////////////
 
 TamyEditor::TamyEditor(QApplication& app, QWidget *parent, Qt::WFlags flags)

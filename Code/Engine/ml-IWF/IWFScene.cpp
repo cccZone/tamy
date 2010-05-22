@@ -222,10 +222,11 @@ void IWFScene::addDynamicMesh(const std::string& meshFileName,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void IWFScene::addStaticGeometry(Model& scene,
-                                 ResourcesManager& rm,
-                                 std::vector<MeshDefinition> meshes,
-                                 const D3DXMATRIX& situation)
+void IWFScene::addStaticGeometry( Model& scene,
+                                  ResourcesManager& rm,
+                                  std::vector<MeshDefinition> meshes,
+                                  const D3DXMATRIX& situation,
+                                  const std::string& objName )
 {
    Renderer& renderer = rm.getInitializers().shared< Renderer > ();
 
@@ -240,18 +241,21 @@ void IWFScene::addStaticGeometry(Model& scene,
    }
 
    // create main mesh
-   RenderableJoint* root = new RenderableJoint();
-   root->setLocalMtx(situation);
-
    unsigned int count = meshes.size();
+   SpatialEntity* root = NULL;
+   if ( count > 1 )
+   {
+      root = new RenderableJoint( objName );
+      root->setLocalMtx(situation);
+   }
+
    for (unsigned int i = 0; i < count; ++i)
    {
       MeshDefinition& currMesh = meshes[i];
 
       // create the geometry
       char geomName[128];
-      static int loadedMeshesUniqueID = 0;
-      sprintf_s(geomName, 128, "%s/%s_geom_%d.%s", m_sceneDir.c_str(), currMesh.name.c_str(), ++loadedMeshesUniqueID, TriangleMesh::getExtension());
+      sprintf_s(geomName, 128, "%s/%s.%s", m_sceneDir.c_str(), currMesh.name.c_str(), TriangleMesh::getExtension());
       TriangleMesh* geometry = new TriangleMesh( geomName, currMesh.vertices, currMesh.faces );
       rm.addResource( geometry );
 
@@ -276,17 +280,25 @@ void IWFScene::addStaticGeometry(Model& scene,
       }
 
       // setup the renderable
-      Renderable* renderable = new Renderable();
+      Renderable* renderable = new Renderable( currMesh.name );
       renderable->add( new Geometry( *geometry ) );
       renderable->add( effect );
       renderable->setLocalMtx( currMesh.localMtx );
 
       // add the renderable to the mesh
-      root->add(renderable);
+      if ( root )
+      {
+         root->add(renderable);
+      }
+      else
+      {
+         ASSERT( count == 1, "Only a single mesh can be dealt with this way" );
+         root = renderable;
+      }
    }
 
    // add the mesh to the scene
-   scene.add(root);
+   scene.add( root );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -85,7 +85,7 @@ void IWFMeshLoader::parseMesh(std::vector<MeshDefinition>& meshes,
    unsigned int meshesCount = meshes.size();
    for (unsigned int i = 0; i < meshesCount; ++i)
    {
-       mesh = &(meshes[i]);
+      mesh = &(meshes[i]);
       for (std::vector<LitVertex>::iterator vertexIt = mesh->vertices.begin();
            vertexIt != mesh->vertices.end(); ++vertexIt)
       {
@@ -93,6 +93,23 @@ void IWFMeshLoader::parseMesh(std::vector<MeshDefinition>& meshes,
       }
 
       D3DXMatrixTranslation(&(mesh->localMtx), meshTranslation.x, meshTranslation.y, meshTranslation.z);
+   }
+
+
+   // set meshes names
+   if ( meshesCount == 1 )
+   {
+      // set the mesh's name
+      meshes[0].name = name;
+   }
+   else
+   {
+      char tmpName[512];
+      for (unsigned int i = 0; i < meshesCount; ++i)
+      {
+         sprintf_s( tmpName, "%s_%d", name.c_str(), i );
+         meshes[i].name = tmpName;
+      }
    }
 }
 

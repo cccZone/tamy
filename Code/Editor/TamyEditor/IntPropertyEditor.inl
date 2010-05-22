@@ -30,7 +30,7 @@ template <typename INT_TYPE>
 void IntPropertyEditor<INT_TYPE>::setupUi()
 {
    QSpinBox* val = new QSpinBox(this); addWidget(val);
-
+   val->setRange( -INT_MAX, INT_MAX );
    val->setValue( m_property->get() );
 
    connect(val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));

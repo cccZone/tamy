@@ -28,6 +28,8 @@ public:
       AM_TEXT
    };
 
+   friend class ResourcesManager;
+
 private:
    std::string                   m_filePath;
    ResourcesManager*             m_host;
@@ -45,6 +47,14 @@ public:
     * Returns the name of the resource.
     */
    inline const std::string& getResourceName() const{ return m_filePath; }
+
+   /**
+    * Sets a new path to the resource.
+    *
+    * @param path
+    * @param host    host manager performing the operation
+    */
+   void setFilePath( const std::string& path, ResourcesManager* host = NULL );
 
    /**
     * Returns the path to the file holding this resource.
@@ -88,12 +98,22 @@ public:
    static std::ios_base::openmode getFileAccessMode( const std::string& extension );
 
    /**
+    * Searches for a resource type matching the specified extension.
+    *
+    * @param extension
+    */
+   static Class findResourceClass( const std::string& extension );
+
+   /**
     * Registers a new resource type.
     *
     * @param extension     resource file extension
     * @param accessMode    resource file access mode
+    * @param typeName      resource type name
     */
-   static void registerResource( const std::string& extension, AccessMode accessMode );
+   static void registerResource( const std::string& extension, 
+                                 AccessMode accessMode, 
+                                 const std::string& typeName );
 
 protected:
    /**
@@ -121,7 +141,8 @@ protected:
    public:                                                                    \
       RegisterResource##Extension()                                           \
       {                                                                       \
-         Resource::registerResource( #Extension, Resource::AccessMode );      \
+         TypeID< ClassName > type;                                            \
+         Resource::registerResource( #Extension, Resource::AccessMode, type.name() ); \
       }                                                                       \
    };                                                                         \
    RegisterResource##Extension resourceTypeRegistryFor_##Extension;           \

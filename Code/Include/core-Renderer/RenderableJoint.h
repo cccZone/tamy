@@ -21,7 +21,7 @@ public:
    /**
     * Constructor.
     */
-   RenderableJoint() : SpatialEntity("RenderableJoint") {}
+   RenderableJoint( const std::string& name = "" ) : SpatialEntity( name ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

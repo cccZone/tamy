@@ -11,8 +11,7 @@
 #include "..\src\gui\dialogs\qfiledialog.h"
 
 
-// TODO: nazywanie entities'ow
-// TODO: widocznosc
+// TODO: widocznosc ( swobodne obracanie + podswietlanie -> i wtedy przetestowac box'a i frustrum ksztalt czy sie przecinaja)
 
 
 ///////////////////////////////////////////////////////////////////////////////

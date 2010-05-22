@@ -69,6 +69,11 @@ public:
    Class(const Class& rhs);
 
    /**
+    * Tells whether the class instance describes an existing data type.
+    */
+   bool isValid() const;
+
+   /**
     * Returns the name of the class type.
     */
    const std::string& getName() const;
@@ -137,7 +142,7 @@ public:
     * Creates a new instance of the class.
     */
    template<typename T>
-   T* instantiate()
+   T* instantiate() const
    {
       void* ptr = m_template->instantiate();
       T* obj = reinterpret_cast<T*> (ptr);

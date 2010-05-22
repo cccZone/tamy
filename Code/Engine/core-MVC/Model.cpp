@@ -255,6 +255,24 @@ void Model::notifyEntityRemoved(Entity& entity)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Model::notifyEntityChanged( Entity& entity )
+{
+   processViewsOperations();
+
+   unsigned int count = m_views.size();
+   for (unsigned int i = 0; i < count; ++i)
+   {
+      if (m_views[i] != NULL)
+      {
+         m_views[i]->onEntityChanged(entity);
+      }
+   }
+
+   processViewsOperations();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Model::notifyComponentAdded( Entity& entity, Component< Model >& component )
 {
    entity.onComponentAdded( component );
@@ -306,12 +324,13 @@ void Model::onComponentAdded( Component< Model >& component )
 
 void Model::onObjectLoaded()
 {
+   __super::onObjectLoaded();
+
    // inform all entities that they are loaded
    for ( Entities::iterator it = m_entities.begin(); it != m_entities.end(); ++it )
    {
       (*it)->onAttachToModel(*this);
    }
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////

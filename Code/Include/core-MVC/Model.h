@@ -132,6 +132,7 @@ protected:
 private:
    void notifyEntityAdded( Entity& entity );
    void notifyEntityRemoved( Entity& entity );
+   void notifyEntityChanged( Entity& entity );
    void notifyComponentAdded( Entity& entity, Component< Model >& component );
    void processViewsOperations();
    void entityDFS( Entity& entity, const Functor& operation );
@@ -140,6 +141,7 @@ private:
    // Befriended operations
    // -------------------------------------------------------------------------
    friend class ComponentAddOperation;
+   friend class Entity;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

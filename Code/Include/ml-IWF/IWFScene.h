@@ -129,11 +129,13 @@ private:
     * @param mesh             mesh data
     * @param situation        matrix describing the position and orientation 
     *                         of the mesh
+    * @param objName          name of the whole static geometry object
     */
-   virtual void addStaticGeometry(Model& scene,
-                                  ResourcesManager& rm,
-                                  std::vector<MeshDefinition> meshes,
-                                  const D3DXMATRIX& situation);
+   virtual void addStaticGeometry( Model& scene,
+                                   ResourcesManager& rm,
+                                   std::vector<MeshDefinition> meshes,
+                                   const D3DXMATRIX& situation,
+                                   const std::string& objName );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

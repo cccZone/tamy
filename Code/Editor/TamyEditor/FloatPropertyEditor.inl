@@ -30,7 +30,7 @@ template <typename FLOAT_TYPE>
 void FloatPropertyEditor<FLOAT_TYPE>::setupUi()
 {
    QDoubleSpinBox* val = new QDoubleSpinBox(this); addWidget(val);
-
+   val->setRange( -FLT_MAX, FLT_MAX );
    val->setValue( m_property->get() );
 
    connect(val, SIGNAL(valueChanged(double)), this, SLOT(valChanged(double)));

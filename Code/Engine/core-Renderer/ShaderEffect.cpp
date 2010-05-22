@@ -47,9 +47,7 @@ std::string ShaderEffect::getShaderName() const
 
 void ShaderEffect::onPropertyChanged( Property& property )
 {
-   if ( property.getName() == "m_shader" )
-   {
-   }
+   __super::onPropertyChanged( property );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

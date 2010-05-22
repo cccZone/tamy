@@ -69,6 +69,31 @@ void ResourcesManager::addResource( Resource* resource )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void ResourcesManager::moveResource( Resource* resource, const std::string& newPath )
+{
+   if ( resource == NULL )
+   {
+      throw std::invalid_argument("NULL pointer instead a Resource instance");
+   }
+
+   if ( resource->isManaged() )
+   {
+      return;
+   }
+
+   ResourcesMap::iterator it = m_resources.find( resource->getFilePath() );
+   if ( it == m_resources.end() )
+   {
+      return;
+   }
+
+   resource->setFilePath( newPath );
+   m_resources.erase( it );
+   m_resources.insert( std::make_pair( newPath, resource ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Resource* ResourcesManager::findResource( const std::string& name )
 {
    ResourcesMap::iterator it = m_resources.find( name );

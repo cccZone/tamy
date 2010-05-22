@@ -32,12 +32,15 @@ void Vec3PropertyEditor::setupUi()
 
    layout->addWidget(new QLabel("X:", this));
    QDoubleSpinBox* xVal = new QDoubleSpinBox(this); layout->addWidget(xVal);
+   xVal->setRange( -FLT_MAX, FLT_MAX );
 
    layout->addWidget(new QLabel("Y:", this));
    QDoubleSpinBox* yVal = new QDoubleSpinBox(this); layout->addWidget(yVal);
+   yVal->setRange( -FLT_MAX, FLT_MAX );
 
    layout->addWidget(new QLabel("Z:", this));
    QDoubleSpinBox* zVal = new QDoubleSpinBox(this); layout->addWidget(zVal);
+   zVal->setRange( -FLT_MAX, FLT_MAX );
 
    const D3DXVECTOR3& currVal = m_property->get();
    xVal->setValue(currVal.x);

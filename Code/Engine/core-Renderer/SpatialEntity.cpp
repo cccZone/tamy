@@ -12,7 +12,8 @@ END_OBJECT()
 ///////////////////////////////////////////////////////////////////////////////
 
 SpatialEntity::SpatialEntity(const std::string& name)
-: Node(name)
+: Entity( name )
+, Node( name )
 {
 }
 

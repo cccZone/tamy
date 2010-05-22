@@ -47,17 +47,23 @@ class Entity : public Object
 public:
    typedef std::vector<Entity*> Children;
 
-   Entity* m_parent;
-   Children m_children;
+   std::string    m_name;
+   Entity*        m_parent;
+   Children       m_children;
 
-   Model* m_hostModel;
+   Model*         m_hostModel;
 
 public:
    /**
     * Constructor.
     */
-   Entity();
+   Entity( const std::string& name = "" );
    virtual ~Entity();
+
+   /**
+    * Returns the entity name.
+    */
+   inline const std::string& getEntityName() const;
 
    // -------------------------------------------------------------------------
    // Entity hierarchy management
@@ -97,6 +103,7 @@ public:
    // Serializable implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
+   void onPropertyChanged( Property& property );
 
 protected:
    // -------------------------------------------------------------------------

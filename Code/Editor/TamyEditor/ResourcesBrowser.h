@@ -11,11 +11,13 @@
 #include <QTreeWidgetItem>
 #include <QPoint>
 #include "ResourceEditor.h"
+#include "TypeDescFactory.h"
+#include "TreeWidget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class QTreeWidget;
+class TreeWidget;
 class QPushButton;
 class MainAppComponent;
 class FSTreeEntry;
@@ -31,20 +33,23 @@ class ResourcesBrowser : public QObject,
    Q_OBJECT
 
 private:
-   TamyEditor*          m_mgr;
-   QTreeWidget*         m_fsTree;
-   FSTreeEntry*         m_rootDir;
-   QPushButton*         m_toggleFileTypesViewBtn;
-   bool                 m_viewResourcesOnly;
+   TamyEditor*                   m_mgr;
+   TreeWidget*                   m_fsTree;
+   FSTreeEntry*                  m_rootDir;
+   QPushButton*                  m_toggleFileTypesViewBtn;
+   bool                          m_viewResourcesOnly;
 
-   ResourcesManager*    m_rm;
-   MainAppComponent*    m_mainApp;
+   ResourcesManager*             m_rm;
+   MainAppComponent*             m_mainApp;
+   QString                       m_iconsDir;
+   TypeDescFactory< Resource >*  m_itemsFactory;
 
 public:
    /**
     * Constructor.
     */
    ResourcesBrowser();
+   ~ResourcesBrowser();
 
    // -------------------------------------------------------------------------
    // Component initialization
@@ -65,6 +70,10 @@ public:
 public slots:
    void editResource( QTreeWidgetItem* item, int column );
    void toggleFilesFiltering( bool = false );
+   void getItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr );
+   void addNode( QTreeWidgetItem* parent, unsigned int typeIdx );
+   void removeNode( QTreeWidgetItem* parent, QTreeWidgetItem* child );
+   void clearNode( QTreeWidgetItem* node );
 
 private:
    void initializeEditors();
@@ -99,9 +108,10 @@ public:
     * @param nodeName
     * @param isDir
     * @param parent
-    * @param fs         file system from which we can access entry icons
+    * @param fs         file system from which we can access entry files
+    * @param itemsFactory
     */
-   FSTreeEntry( const std::string& nodeName, bool isDir, QTreeWidgetItem* parent, const Filesystem& fs  );
+   FSTreeEntry( const std::string& nodeName, bool isDir, QTreeWidgetItem* parent, const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory  );
 
    /**
     * Removes all node's children.
@@ -126,19 +136,19 @@ public:
    inline bool isDir() const { return m_isDir; }
 
 private:
-   void setEntryIcon( const Filesystem& fs );
+   void setEntryIcon( const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory );
    void setEntryName( const Filesystem& fs );
    void setEntrySize( const Filesystem& fs );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class FSTreeWidget : public QTreeWidget
+class FSTreeWidget : public TreeWidget
 {
    Q_OBJECT
 
 public:
-   FSTreeWidget( QWidget* parent = 0 );
+   FSTreeWidget( QWidget* parent, const QString& objName, const QString& iconsDir );
 
 protected:
    QMimeData* mimeData( const QList<QTreeWidgetItem *> items ) const;
