@@ -112,6 +112,8 @@ void SingleTextureEffect::onComponentAdded( Component< Model >& component )
 
 void SingleTextureEffect::onObjectLoaded()
 {
+   __super::onObjectLoaded();
+
    if ( isAttached() )
    {
       m_renderable = dynamic_cast< Renderable *>( &getParent() );

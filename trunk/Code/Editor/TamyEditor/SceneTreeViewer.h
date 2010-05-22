@@ -5,19 +5,21 @@
 
 #include "core\Component.h"
 #include "core-MVC\ModelView.h"
+#include "TreeWidget.h"
 #include <QTreeWidgetItem>
 #include <QObject>
 #include "SelectionManager.h"
+#include "TypeDescFactory.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class TamyEditor;
-class QTreeWidget;
 class Entity;
 class SelectionManager;
 class Camera;
 class SceneTreeEditor;
+class TreeWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -49,7 +51,12 @@ private:
       /**
        * Constructor for the regular entity-related entires.
        */
-      EntityTreeItem( Entity* entity, QTreeWidgetItem* parent, TamyEditor& mgr );
+      EntityTreeItem( Entity* entity, QTreeWidgetItem* parent, TypeDescFactory< Entity >& itemsFactory );
+
+      /**
+       * Updates the item's description.
+       */
+      void update();
 
       /**
        * Returns the entity stored under the entry.
@@ -70,17 +77,20 @@ private:
 
    private:
       QString getEntityName( Entity* entity ) const;
-      QIcon getEntityIcon( Entity* entity, TamyEditor& mgr ) const;
    };
 
 private:
-   TamyEditor*       m_mgr;
-   QTreeWidget*      m_sceneTree;
-   EntityTreeItem*   m_rootItem;
+   TamyEditor*                   m_mgr;
+   TreeWidget*                   m_sceneTree;
+   EntityTreeItem*               m_rootItem;
 
-   Model*            m_observedScene;
-   SelectionManager* m_selectionMgr;
-   Camera*           m_camera;
+   QString                       m_iconsDir;
+
+   Model*                        m_observedScene;
+   SelectionManager*             m_selectionMgr;
+   Camera*                       m_camera;
+
+   TypeDescFactory< Entity >*    m_itemsFactory;
 
 public:
    /**
@@ -100,6 +110,7 @@ public:
    // -------------------------------------------------------------------------
    void onEntityAdded( Entity& entity );
    void onEntityRemoved( Entity& entity );
+   void onEntityChanged( Entity& entity );
    void resetContents();
 
    // -------------------------------------------------------------------------
@@ -111,7 +122,10 @@ public:
 public slots:
    void selectItem( QTreeWidgetItem* item, int column );
    void focusOnItem( QTreeWidgetItem* item, int column );
-   void showPopupMenu( const QPoint& pos );
+   void getItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr );
+   void addNode( QTreeWidgetItem* parent, unsigned int typeIdx );
+   void removeNode( QTreeWidgetItem* parent, QTreeWidgetItem* child );
+   void clearNode( QTreeWidgetItem* node );
 
 private:
    void initUI( TamyEditor& mgr );

@@ -9,7 +9,6 @@
 #include "core-AppFlow\UserInputController.h"
 #include "core\Point.h"
 #include "core-Renderer\Camera.h"
-#include "core-MVC\ModelView.h"
 #include <d3d9.h>
 #include <set>
 

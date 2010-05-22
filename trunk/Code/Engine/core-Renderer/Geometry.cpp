@@ -57,6 +57,8 @@ const BoundingVolume& Geometry::calculateBoundingVolume() const
 
 void Geometry::onObjectLoaded()
 {
+   __super::onObjectLoaded();
+
    delete m_vol;
    m_vol = NULL;
 
@@ -85,6 +87,8 @@ std::string Geometry::getGeometryName() const
 
 void Geometry::onPropertyChanged( Property& property )
 {
+   __super::onPropertyChanged( property );
+
    if ( property.getName() == "m_resource" )
    {
       delete m_vol;

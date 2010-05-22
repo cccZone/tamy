@@ -35,14 +35,17 @@ void MtxPropertyEditor::setupUi()
    rotRowLayout->setMargin( 0 );
 
    QDoubleSpinBox* yawVal = new QDoubleSpinBox(rotRow); 
+   yawVal->setRange( -FLT_MAX, FLT_MAX );
    rotRowLayout->addWidget(new QLabel("yaw:", rotRow)); 
    rotRowLayout->addWidget(yawVal);
 
    QDoubleSpinBox* pitchVal = new QDoubleSpinBox(rotRow); 
+   pitchVal->setRange( -FLT_MAX, FLT_MAX );
    rotRowLayout->addWidget(new QLabel("pitch:", rotRow));
    rotRowLayout->addWidget(pitchVal);
 
    QDoubleSpinBox* rollVal = new QDoubleSpinBox(rotRow); 
+   rollVal->setRange( -FLT_MAX, FLT_MAX );
    rotRowLayout->addWidget(new QLabel("roll:", rotRow));
    rotRowLayout->addWidget(rollVal);
 
@@ -51,12 +54,15 @@ void MtxPropertyEditor::setupUi()
    posRowLayout->setSpacing( 0 );
    posRowLayout->setMargin( 0 );
    QDoubleSpinBox* xVal = new QDoubleSpinBox(posRow);
+   xVal->setRange( -FLT_MAX, FLT_MAX );
    posRowLayout->addWidget(new QLabel("x:", posRow));
    posRowLayout->addWidget(xVal);
    QDoubleSpinBox* yVal = new QDoubleSpinBox(posRow); 
+   yVal->setRange( -FLT_MAX, FLT_MAX );
    posRowLayout->addWidget(new QLabel("y:", posRow));
    posRowLayout->addWidget(yVal);
    QDoubleSpinBox* zVal = new QDoubleSpinBox(posRow); 
+   zVal->setRange( -FLT_MAX, FLT_MAX );
    posRowLayout->addWidget(new QLabel("z:", posRow));
    posRowLayout->addWidget(zVal);
 

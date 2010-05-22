@@ -93,6 +93,7 @@ public:
    // -------------------------------------------------------------------------
    void onEntityAdded( Entity& entity );
    void onEntityRemoved( Entity& entity );
+   void onEntityChanged( Entity& entity );
    void resetContents();
 
 private:

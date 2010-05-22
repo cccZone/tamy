@@ -19,30 +19,23 @@ public:
    virtual ~SceneTreeEditor() {}
 
    /**
-    * Creates an action that adds a new entity to the selected 
-    * scene object.
+    * Adds a new entity to the selected scene object.
     *
-    * @param parent        widget running the action
     * @param entityClass   class of the entity we want to create
     */
-   virtual void createAddEntityAction( QMenu& parent, 
-                                       const Class& entityClass ) = 0;
+   virtual void addEntity( const Class& entityClass ) = 0;
 
    /**
-    * Creates an action that removes the selected scene object.
+    * Removes an entity from the selected object
     *
-    * @param parent        widget running the action
     * @param entity        removed entity
     */
-   virtual void createRemoveEntityAction( QMenu& parent, Entity* entity ) = 0;
+   virtual void removeEntity( Entity* entity ) = 0;
 
    /**
-    * Creates an action that removes all children of the selected
-    * scene object.
-    *
-    * @param parent        widget running the action
+    * Removes all children of the selected scene object.
     */
-   virtual void createClearAction( QMenu& parent  ) = 0;
+   virtual void clearEntity() = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

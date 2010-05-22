@@ -38,6 +38,13 @@ public:
    virtual void onEntityRemoved(Entity& entity) = 0;
 
    /**
+    * This method is called to inform that some aspect of an entity has changed.
+    *
+    * @param entity
+    */
+   virtual void onEntityChanged(Entity& entity) = 0;
+
+   /**
     * The method will should clear view contents.
     */
    virtual void resetContents() {}

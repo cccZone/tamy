@@ -92,6 +92,12 @@ void RenderingView::onEntityRemoved(Entity& entity)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void RenderingView::onEntityChanged(Entity& entity)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void RenderingView::resetContents()
 {
    for (RenderablesMap::iterator it = m_renderables.begin();

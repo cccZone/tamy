@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QDrag>
 #include <QMimeData>
+#include <QFileDialog>
 #include "MainAppComponent.h"
 #include "core.h"
 #include "progressdialog.h"
@@ -30,6 +31,14 @@ ResourcesBrowser::ResourcesBrowser()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+ResourcesBrowser::~ResourcesBrowser()
+{
+   delete m_itemsFactory;
+   m_itemsFactory = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void ResourcesBrowser::initializeEditors()
 {
    associate< Model, SceneEditor >();
@@ -44,7 +53,10 @@ void ResourcesBrowser::initialize( TamyEditor& mgr )
 
    m_mainApp = &mgr.requestService< MainAppComponent > ();
    m_rm = &mgr.requestService< ResourcesManager >();
-   m_rm->getFilesystem().attach( *this );
+   const Filesystem& fs = m_rm->getFilesystem();
+   m_iconsDir = fs.getShortcut( "editorIcons" ).c_str();
+
+   m_itemsFactory = new TypeDescFactory< Resource >( m_iconsDir, fs, "unknownResourceIcon.png" );
 
    // initialize user interface
    initUI( mgr );
@@ -88,8 +100,7 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
    toolbarLayout->addSpacerItem( new QSpacerItem(40, 1, QSizePolicy::Expanding, QSizePolicy::Fixed) );
 
    // setup the scene tree container widget
-   m_fsTree = new FSTreeWidget( dockWidgetContents );
-   m_fsTree->setObjectName("ResourcesBrowser/m_fsTree");
+   m_fsTree = new FSTreeWidget( dockWidgetContents, "ResourcesBrowser/m_fsTree", m_iconsDir );
    layout->addWidget( m_fsTree );
 
    QStringList columnLabels; 
@@ -100,6 +111,10 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
    m_fsTree->setDragEnabled( true ); 
    m_fsTree->setDropIndicatorShown( true ); 
    connect( m_fsTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( editResource( QTreeWidgetItem*, int ) ) );
+   connect( m_fsTree, SIGNAL( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ), this, SLOT( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ) );
+   connect( m_fsTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( addNode( QTreeWidgetItem*, unsigned int ) ) );
+   connect( m_fsTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
+   connect( m_fsTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( clearNode( QTreeWidgetItem* ) ) );
 
    m_rootDir = new FSTreeEntry( m_fsTree, m_rm->getFilesystem() );
    m_fsTree->addTopLevelItem( m_rootDir );
@@ -190,7 +205,7 @@ void ResourcesBrowser::onDirectory( const std::string& name )
    ASSERT( parent != NULL, "Parent directory not found" );
    if ( parent )
    { 
-      new FSTreeEntry( newNodeName, true, parent, fs );
+      new FSTreeEntry( newNodeName, true, parent, fs, *m_itemsFactory );
    }
 }
 
@@ -219,7 +234,7 @@ void ResourcesBrowser::onFile( const std::string& name )
    ASSERT( parent != NULL, "Parent directory not found" );
    if ( parent )
    {  
-      new FSTreeEntry( newNodeName, false, parent, fs );
+      new FSTreeEntry( newNodeName, false, parent, fs, *m_itemsFactory );
    }
 }
 
@@ -256,24 +271,80 @@ void ResourcesBrowser::toggleFilesFiltering( bool )
    m_viewResourcesOnly = !m_viewResourcesOnly;
 
    // update the icon on the view type toggling button
-   const Filesystem& fs = m_rm->getFilesystem();
-   std::string iconsDir = fs.getShortcut( "editorIcons" );
-   std::string iconName;
+   QString iconName;
    if ( m_viewResourcesOnly )
    {
-      iconName = iconsDir + "resource.png";
+      iconName = m_iconsDir + "resource.png";
       m_toggleFileTypesViewBtn->setToolTip( "Switch to viewing all files" );
    }
    else
    {
-      iconName = iconsDir + "fileInDir.png";
+      iconName = m_iconsDir + "fileInDir.png";
       m_toggleFileTypesViewBtn->setToolTip( "Switch to viewing resources only" );
    }
-   m_toggleFileTypesViewBtn->setIcon( QIcon( iconName.c_str() ) );
+   m_toggleFileTypesViewBtn->setIcon( QIcon( iconName ) );
 
    // refresh the view
    m_rootDir->clear();
    refresh();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::getItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr )
+{
+   outFactoryPtr = m_itemsFactory;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::addNode( QTreeWidgetItem* parent, unsigned int typeIdx )
+{  
+   // learn the new file's name
+   const Filesystem& fs = m_rm->getFilesystem();
+   std::string rootDir = fs.getCurrRoot();
+   std::string filter( "Scene files (*." );
+   filter += std::string( Model::getExtension() ) + ")";
+
+   QString fullFileName = QFileDialog::getSaveFileName( m_mgr, 
+      tr("New scene"), 
+      rootDir.c_str(), 
+      filter.c_str() );
+
+   if ( fullFileName.isEmpty() == true ) 
+   {
+      // no file was selected or user pressed 'cancel'
+      return;
+   }
+
+   // once the file is open, extract the directory name
+   std::string fileName = fs.toRelativePath( fullFileName.toStdString() );
+
+   // create & save the resource
+   FSTreeEntry* parentItem = dynamic_cast< FSTreeEntry* >( parent );
+   Class type = m_itemsFactory->getClass( typeIdx );
+   Resource* newResource = type.instantiate< Resource >();
+   newResource->setFilePath( fileName );
+   m_rm->addResource( newResource );
+   newResource->saveResource();
+}
+
+
+// TODO: !!!! mechanizm abstrakcyjnych klas, ktorych nie mozna instancjonowac
+// TODO: zmiana nazw resource'ow
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::removeNode( QTreeWidgetItem* parent, QTreeWidgetItem* child )
+{
+   // TODO: !!!!!!!!!!!!!!!!!!!!!!!!
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::clearNode( QTreeWidgetItem* node )
+{
+   // TODO: !!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -285,7 +356,9 @@ FSTreeEntry::FSTreeEntry( QTreeWidget* hostTree, const Filesystem& fs )
 , m_fsNodeName( "/" )
 , m_isDir( true )
 {
-   setEntryIcon( fs );
+   std::string iconsDir = fs.getShortcut( "editorIcons" );
+   setIcon( 0, QIcon( ( iconsDir + "dirIcon.png" ).c_str() ) );
+
    setEntryName( fs );
    setEntrySize( fs );
 }
@@ -295,14 +368,15 @@ FSTreeEntry::FSTreeEntry( QTreeWidget* hostTree, const Filesystem& fs )
 FSTreeEntry::FSTreeEntry( const std::string& nodeName,
                           bool isDir,
                           QTreeWidgetItem* parent,
-                          const Filesystem& fs )
+                          const Filesystem& fs,
+                          TypeDescFactory< Resource >& itemsFactory )
 : QTreeWidgetItem( parent ) 
 , m_fsNodeName( nodeName )
 , m_isDir( isDir )
 {
    ASSERT( m_fsNodeName.length() > 0, "Invalid filesystem node name" );
 
-   setEntryIcon( fs );
+   setEntryIcon( fs, itemsFactory );
    setEntryName( fs );
    setEntrySize( fs );
 }
@@ -320,12 +394,12 @@ void FSTreeEntry::clear()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FSTreeEntry::setEntryIcon( const Filesystem& fs )
+void FSTreeEntry::setEntryIcon( const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory )
 {
-   std::string iconsDir = fs.getShortcut( "editorIcons" );
+   QString iconsDir = fs.getShortcut( "editorIcons" ).c_str();
    if ( m_isDir )
    {
-      setIcon( 0, QIcon( ( iconsDir + "dirIcon.png" ).c_str() ) );
+      setIcon( 0, QIcon( iconsDir + "dirIcon.png" ) );
    }
    else
    {
@@ -334,16 +408,18 @@ void FSTreeEntry::setEntryIcon( const Filesystem& fs )
       //       <<ext>>Icon.png
 
       std::string extension = fs.extractExtension( m_fsNodeName ).c_str();
-      std::string absIconName = iconsDir + extension + "Icon.png";
-      std::string relativeIconName = fs.toRelativePath( absIconName );
-
-      if ( fs.doesExist( relativeIconName ) )
+      
+      Class resourceType = Resource::findResourceClass( extension );
+      if ( resourceType.isValid() )
       {
-         setIcon( 0, QIcon( absIconName.c_str() ) );
+         QString typeName;
+         QIcon icon;
+         itemsFactory.getDesc( resourceType, typeName, icon );
+         setIcon( 0, icon );
       }
       else
       {
-         setIcon( 0, QIcon( ( iconsDir + "unknownFileIcon.png" ).c_str() ) );
+         setIcon( 0, QIcon( iconsDir + "unknownFileIcon.png" ) );
       }
    }
 }
@@ -438,8 +514,8 @@ FSTreeEntry* FSTreeEntry::find( const std::string& nodeName )
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-FSTreeWidget::FSTreeWidget( QWidget* parent )
-: QTreeWidget( parent )
+FSTreeWidget::FSTreeWidget( QWidget* parent, const QString& objName, const QString& iconsDir )
+: TreeWidget( parent, objName, iconsDir )
 {
 }
 

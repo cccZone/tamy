@@ -98,6 +98,14 @@ public:
    void addResource( Resource* resource );
 
    /**
+    * Moves an existing resource to a different path.
+    *
+    * @param resource
+    * @param newPath
+    */
+   void moveResource( Resource* resource, const std::string& newPath );
+
+   /**
     * Creates a resource based on a file with the specified name.
     *
     * @param name       name of the resource file (should exist in the

@@ -8,16 +8,18 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT(Entity, Object)
+   PROPERTY_EDIT( "name", std::string, m_name )
    PROPERTY(Entity*, m_parent)
    PROPERTY(Entity::Children, m_children)
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Entity::Entity()
-: m_parent(NULL)
-, m_properties(NULL)
-, m_hostModel(NULL)
+Entity::Entity( const std::string& name )
+: m_name( name )
+, m_parent( NULL )
+, m_properties( NULL )
+, m_hostModel( NULL )
 {
 }
 
@@ -134,10 +136,25 @@ void Entity::onDetachFromModel(Model& model)
 
 void Entity::onObjectLoaded()
 {
-   for ( Children::iterator it = m_children.begin();
-         it != m_children.end(); ++it )
+   __super::onObjectLoaded();
+
+   Children children = m_children;
+   for ( Children::iterator it = children.begin();
+         it != children.end(); ++it )
    {
       onChildAttached( **it );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Entity::onPropertyChanged( Property& property )
+{
+   __super::onPropertyChanged( property );
+
+   if ( m_hostModel )
+   {
+      m_hostModel->notifyEntityChanged( *this );
    }
 }
 

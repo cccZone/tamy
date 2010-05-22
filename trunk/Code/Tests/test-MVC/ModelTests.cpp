@@ -119,9 +119,14 @@ namespace // anonymous
       {
          m_entitiesCount++;
       }
+      
       void onEntityRemoved(Entity& entity) 
       {
          m_entitiesCount--;
+      }
+
+      void onEntityChanged( Entity& entity )
+      {
       }
 
       void resetContents()
@@ -168,6 +173,10 @@ namespace // anonymous
             delete it->second;
             m_views.erase(it);
          }
+      }
+
+      void onEntityChanged( Entity& entity )
+      {
       }
 
    protected:
