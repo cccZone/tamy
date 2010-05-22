@@ -57,6 +57,7 @@ public:
    void initialize( TamyEditor& mgr );
 
 public slots:
+   void newScene();
    void loadScene();
    void saveScene();
    void importFromIWF();

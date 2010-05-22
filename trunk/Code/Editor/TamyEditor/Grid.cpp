@@ -22,11 +22,11 @@ Grid::Grid( Renderer& renderer, ResourcesManager& rm )
    LineSegments* gridLines = new LineSegments();
    renderer.implement< LineSegments >( *gridLines );
 
-   std::string gridShaderResourceName = "Editor/Shaders/GridRenderingEffect.tfx";
+   std::string gridShaderResourceName = "/Editor/Shaders/GridRenderingEffect.tfx";
    Shader* shader = NULL;
    if ( ( shader = dynamic_cast< Shader* >( rm.findResource( gridShaderResourceName ) ) ) == NULL )
    {
-      std::string gridShaderFilename = "Editor/Shaders/GridRenderingEffect.fx";
+      std::string gridShaderFilename = "/Editor/Shaders/GridRenderingEffect.fx";
       shader = new Shader( gridShaderFilename );
       rm.addResource( shader );
    }
