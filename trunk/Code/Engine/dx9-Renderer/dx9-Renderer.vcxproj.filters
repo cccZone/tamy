@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{1a0e829f-ea83-46db-9dfd-a2d5dd58a301}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{2a16e6e7-d40a-4d4d-a4a9-38e5c69a9859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{719dc849-7a9d-478e-b5e8-2febfd1f235a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Initializer">
+      <UniqueIdentifier>{e451281e-fb38-4515-bc54-9eee720566ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Overlays">
+      <UniqueIdentifier>{7d229100-470e-4b77-a76b-ccbae572a38c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DX9Renderer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9Shader.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9Texture.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9LineSegments.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9TriangleMesh.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9Initializer.cpp">
+      <Filter>Initializer</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9Font.cpp">
+      <Filter>Overlays</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Shader.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Texture.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegments.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9TriangleMesh.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Initializer.h">
+      <Filter>Initializer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Font.h">
+      <Filter>Overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer.h" />
+  </ItemGroup>
+</Project>

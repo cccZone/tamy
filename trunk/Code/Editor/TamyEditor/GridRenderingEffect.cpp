@@ -5,16 +5,72 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT(GridRenderingEffect, ShaderEffect)
-END_OBJECT()
+namespace // anonymous
+{
+   const char* shaderCode = ""
+   "float4x4 g_mWorldViewProj;"
+   ""
+   "struct VS_OUTPUT"
+   "{"
+   "   float4 pos   : POSITION;"
+   "};"
+   ""
+   "VS_OUTPUT vertexShader(float4 inPos : POSITION, float3 inNorm : NORMAL)"
+   "{"
+   "   VS_OUTPUT output = (VS_OUTPUT)0;"
+   ""
+   "   output.pos = mul(inPos, g_mWorldViewProj);"
+   ""
+   "   return output;"
+   "}"
+   ""
+   "struct PS_OUTPUT"
+   "{"
+   "   float4 color : COLOR0;   "
+   "};"
+   ""
+   "PS_OUTPUT pixelShader(VS_OUTPUT vsIn)"
+   "{"
+   "   PS_OUTPUT output = (PS_OUTPUT)0;"
+   ""
+   "   output.color.ra = 1;"
+   "   output.color.gb = 0;"
+   ""
+   "   return output;"
+   "}"
+   ""
+   "technique tec0"
+   "{"
+   "   pass P0"
+   "   {"
+   "      Lighting = FALSE;"
+   "      ZENABLE = true;"
+   ""
+   "      VertexShader = compile vs_2_0 vertexShader();"
+   "      PixelShader  = compile ps_2_0 pixelShader();"
+   "   }"
+   "}";
+} // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GridRenderingEffect::GridRenderingEffect()
+GridRenderingEffect::GridRenderingEffect( Renderer& renderer )
 : m_camera(NULL)
 , m_renderedNode(NULL)
+, m_shader( NULL )
 {
+   m_shader = new Shader( "GridRenderingEffect", shaderCode );
+   renderer.implement< Shader >( *m_shader );
+   initialize( *m_shader );
 } 
+
+///////////////////////////////////////////////////////////////////////////////
+
+GridRenderingEffect::~GridRenderingEffect()
+{
+   delete m_shader;
+   m_shader = NULL;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

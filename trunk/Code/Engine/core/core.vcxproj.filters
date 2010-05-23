@@ -1,0 +1,531 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="HierarchicalNodes">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="HierarchicalNodes\NodeActionsExecutor">
+      <UniqueIdentifier>{da6cc9da-7371-4f90-bcc2-674b968e8c0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{ff971eb1-7113-4629-8db2-520665ab4691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStructures">
+      <UniqueIdentifier>{961c3900-6c8a-4cf3-a142-24c99e99c9cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Delegates">
+      <UniqueIdentifier>{34e11e46-e5bc-4f0d-bc77-db7d4b6b6738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams">
+      <UniqueIdentifier>{c0f4c77b-c1da-490e-8d0f-b289a6d9f379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{e1b7b45f-0df7-4034-abb0-bf9f02fbdc9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc\ObserverPattern">
+      <UniqueIdentifier>{db9241cd-4fae-435e-872d-d1f59656d797}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc\Graphs">
+      <UniqueIdentifier>{0fe037a9-ad64-41fb-9bee-c6e1721d61a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc\AbstractFactoryPattern">
+      <UniqueIdentifier>{5f62bb7d-3841-4554-ba21-1a411a3be78a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpatialStorage">
+      <UniqueIdentifier>{c950ea53-68c0-47f5-912e-057536bdce20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpatialStorage\Utils">
+      <UniqueIdentifier>{e0e0c6cd-7e2d-44fc-bccb-b0502f5e0c45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpatialStorage\Solids">
+      <UniqueIdentifier>{ccf8b482-9769-443c-93e9-76e8aff27fdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpatialStorage\Nodes">
+      <UniqueIdentifier>{9b474f79-f4b3-43b8-a901-c97870a5e378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BoundingVolumes">
+      <UniqueIdentifier>{a35d6303-a2ad-4f10-b862-ed3fd5ef8b93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BoundingVolumes\Volumes">
+      <UniqueIdentifier>{60851c2c-be56-4ece-98e2-ef2c7c8b6bec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BoundingVolumes\Algorithms">
+      <UniqueIdentifier>{cb7efd48-d1b9-44ec-90c4-4a6196041857}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filesystem">
+      <UniqueIdentifier>{8ef7176a-a012-4a0d-8d42-18deef2f0baa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ComponentsSystem">
+      <UniqueIdentifier>{58519d11-dc22-40a1-a716-3ce9d1eb7c01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ComponentsSystem\SingletonsManager">
+      <UniqueIdentifier>{f1726c59-336f-412a-90e2-a2fea7248789}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI">
+      <UniqueIdentifier>{3f912abe-f9cc-47f7-aeb8-c293a3e4f92c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI\Serialization">
+      <UniqueIdentifier>{ac0259ad-2b2a-47af-9806-b1d391c4c063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI\Serialization\SerializerImplementations">
+      <UniqueIdentifier>{d2be9b57-cdb2-466f-831a-8634fc0d7ee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI\Classes">
+      <UniqueIdentifier>{56b8ebb9-6ac6-4956-8eab-ac6e7e0e73f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI\Properties">
+      <UniqueIdentifier>{0a7610fb-7c0b-42bf-9439-0f8da95a2aa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI\Resources">
+      <UniqueIdentifier>{e97b6a8d-3630-46e6-a0d6-f6ffad3f818b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{02e931f0-fe38-444e-9402-41963299770c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Node.cpp">
+      <Filter>HierarchicalNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeActionsExecutor.cpp">
+      <Filter>HierarchicalNodes\NodeActionsExecutor</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixWriter.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUtils.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="UniqueObject.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingVolume.cpp">
+      <Filter>BoundingVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="AABoundingBox.cpp">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingSphere.cpp">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="Frustum.cpp">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="PointVolume.cpp">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionTests.cpp">
+      <Filter>BoundingVolumes\Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="QuadraticEquations.cpp">
+      <Filter>BoundingVolumes\Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Filesystem.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="SingletonsManager.cpp">
+      <Filter>ComponentsSystem\SingletonsManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="Serializer.cpp">
+      <Filter>RTTI\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSerializer.cpp">
+      <Filter>RTTI\Serialization\SerializerImplementations</Filter>
+    </ClCompile>
+    <ClCompile Include="Class.cpp">
+      <Filter>RTTI\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassesRegistry.cpp">
+      <Filter>RTTI\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassTemplate.cpp">
+      <Filter>RTTI\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="Properties.cpp">
+      <Filter>RTTI\Properties</Filter>
+    </ClCompile>
+    <ClCompile Include="Property.cpp">
+      <Filter>RTTI\Properties</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource.cpp">
+      <Filter>RTTI\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesManager.cpp">
+      <Filter>RTTI\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="EulerAngles.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\core\Node.h">
+      <Filter>HierarchicalNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\NodeObserver.h">
+      <Filter>HierarchicalNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\NodeVisitor.h">
+      <Filter>HierarchicalNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\TNodesVisitor.h">
+      <Filter>HierarchicalNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\NodeAction.h">
+      <Filter>HierarchicalNodes\NodeActionsExecutor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\NodeActionsExecutor.h">
+      <Filter>HierarchicalNodes\NodeActionsExecutor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Array.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\CellSpacePartition.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ConstSizeArray.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Graph.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Point.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Stack.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Delegate.h">
+      <Filter>Delegates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\dostream.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Assert.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Color.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\HierarchyWriter.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\IntervalOperation.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MatrixInterpolator.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MatrixWriter.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\StringUtils.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\UniqueObject.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Observer.h">
+      <Filter>Misc\ObserverPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Subject.h">
+      <Filter>Misc\ObserverPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\GraphBFS.h">
+      <Filter>Misc\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\GraphBuilder.h">
+      <Filter>Misc\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\GraphBuilderFactory.h">
+      <Filter>Misc\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\GraphDijkstra.h">
+      <Filter>Misc\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\GenericFactory.h">
+      <Filter>Misc\AbstractFactoryPattern</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\SpatialStorage.h">
+      <Filter>SpatialStorage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\AdaptingSpatialStorage.h">
+      <Filter>SpatialStorage\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\CompositeSpatialStorage.h">
+      <Filter>SpatialStorage\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\NarrowPhaseStorageFilter.h">
+      <Filter>SpatialStorage\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\SharedSpatialStorage.h">
+      <Filter>SpatialStorage\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\TNodesSpatialStorage.h">
+      <Filter>SpatialStorage\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\BSPNodeTree.h">
+      <Filter>SpatialStorage\Solids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\DynamicOctree.h">
+      <Filter>SpatialStorage\Solids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\LinearStorage.h">
+      <Filter>SpatialStorage\Solids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Octree.h">
+      <Filter>SpatialStorage\Solids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\RegularOctree.h">
+      <Filter>SpatialStorage\Solids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\StaticGeometryOctree.h">
+      <Filter>SpatialStorage\Solids</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\OctreeNode.h">
+      <Filter>SpatialStorage\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\BoundingVolume.h">
+      <Filter>BoundingVolumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\AABoundingBox.h">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\BoundingSpace.h">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\BoundingSphere.h">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Frustum.h">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\PointVolume.h">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Ray.h">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Triangle.h">
+      <Filter>BoundingVolumes\Volumes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\CollisionTests.h">
+      <Filter>BoundingVolumes\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\QuadraticEquations.h">
+      <Filter>BoundingVolumes\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\TriangleSplitter.h">
+      <Filter>BoundingVolumes\Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\File.h">
+      <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Filesystem.h">
+      <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\StreamBuffer.h">
+      <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Component.h">
+      <Filter>ComponentsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ComponentsManager.h">
+      <Filter>ComponentsSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Manageable.h">
+      <Filter>ComponentsSystem\SingletonsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\SingletonsManager.h">
+      <Filter>ComponentsSystem\SingletonsManager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Object.h">
+      <Filter>RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Serializable.h">
+      <Filter>RTTI\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Serializer.h">
+      <Filter>RTTI\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\SerializerImpl.h">
+      <Filter>RTTI\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\FileSerializer.h">
+      <Filter>RTTI\Serialization\SerializerImplementations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Class.h">
+      <Filter>RTTI\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ClassesRegistry.h">
+      <Filter>RTTI\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ClassTemplate.h">
+      <Filter>RTTI\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\TypeID.h">
+      <Filter>RTTI\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Properties.h">
+      <Filter>RTTI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\PropertiesView.h">
+      <Filter>RTTI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Property.h">
+      <Filter>RTTI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\PropertyEditor.h">
+      <Filter>RTTI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Resource.h">
+      <Filter>RTTI\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ResourcesManager.h">
+      <Filter>RTTI\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ResourceStorage.h">
+      <Filter>RTTI\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\EulerAngles.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Matrix.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Vector.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core.h">
+      <Filter>HierarchicalNodes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Include\core\Array.inl">
+      <Filter>DataStructures</Filter>
+    </None>
+    <None Include="..\..\Include\core\ConstSizeArray.inl">
+      <Filter>DataStructures</Filter>
+    </None>
+    <None Include="..\..\Include\core\Graph.inl">
+      <Filter>DataStructures</Filter>
+    </None>
+    <None Include="..\..\Include\core\GraphBFS.inl">
+      <Filter>Misc\Graphs</Filter>
+    </None>
+    <None Include="..\..\Include\core\GraphBuilder.inl">
+      <Filter>Misc\Graphs</Filter>
+    </None>
+    <None Include="..\..\Include\core\GraphDijkstra.inl">
+      <Filter>Misc\Graphs</Filter>
+    </None>
+    <None Include="..\..\Include\core\GenericFactory.inl">
+      <Filter>Misc\AbstractFactoryPattern</Filter>
+    </None>
+    <None Include="..\..\Include\core\AdaptingSpatialStorage.inl">
+      <Filter>SpatialStorage\Utils</Filter>
+    </None>
+    <None Include="..\..\Include\core\CompositeSpatialStorage.inl">
+      <Filter>SpatialStorage\Utils</Filter>
+    </None>
+    <None Include="..\..\Include\core\NarrowPhaseStorageFilter.inl">
+      <Filter>SpatialStorage\Utils</Filter>
+    </None>
+    <None Include="..\..\Include\core\SharedSpatialStorage.inl">
+      <Filter>SpatialStorage\Utils</Filter>
+    </None>
+    <None Include="..\..\Include\core\TNodesSpatialStorage.inl">
+      <Filter>SpatialStorage\Utils</Filter>
+    </None>
+    <None Include="..\..\Include\core\BSPNodeTree.inl">
+      <Filter>SpatialStorage\Solids</Filter>
+    </None>
+    <None Include="..\..\Include\core\DynamicOctree.inl">
+      <Filter>SpatialStorage\Solids</Filter>
+    </None>
+    <None Include="..\..\Include\core\LinearStorage.inl">
+      <Filter>SpatialStorage\Solids</Filter>
+    </None>
+    <None Include="..\..\Include\core\Octree.inl">
+      <Filter>SpatialStorage\Solids</Filter>
+    </None>
+    <None Include="..\..\Include\core\RegularOctree.inl">
+      <Filter>SpatialStorage\Solids</Filter>
+    </None>
+    <None Include="..\..\Include\core\StaticGeometryOctree.inl">
+      <Filter>SpatialStorage\Solids</Filter>
+    </None>
+    <None Include="..\..\Include\core\OctreeNode.inl">
+      <Filter>SpatialStorage\Nodes</Filter>
+    </None>
+    <None Include="..\..\Include\core\TriangleSplitter.inl">
+      <Filter>BoundingVolumes\Algorithms</Filter>
+    </None>
+    <None Include="..\..\Include\core\StreamBuffer.inl">
+      <Filter>Filesystem</Filter>
+    </None>
+    <None Include="..\..\Include\core\Component.inl">
+      <Filter>ComponentsSystem</Filter>
+    </None>
+    <None Include="..\..\Include\core\ComponentsManager.inl">
+      <Filter>ComponentsSystem</Filter>
+    </None>
+    <None Include="..\..\Include\core\SingletonsManager.inl">
+      <Filter>ComponentsSystem\SingletonsManager</Filter>
+    </None>
+    <None Include="..\..\Include\core\Serializable.inl">
+      <Filter>RTTI\Serialization</Filter>
+    </None>
+    <None Include="..\..\Include\core\Serializer.inl">
+      <Filter>RTTI\Serialization</Filter>
+    </None>
+    <None Include="..\..\Include\core\ClassesRegistry.inl">
+      <Filter>RTTI\Classes</Filter>
+    </None>
+    <None Include="..\..\Include\core\TypeID.inl">
+      <Filter>RTTI\Classes</Filter>
+    </None>
+    <None Include="..\..\Include\core\Properties.inl">
+      <Filter>RTTI\Properties</Filter>
+    </None>
+    <None Include="..\..\Include\core\PropertiesView.inl">
+      <Filter>RTTI\Properties</Filter>
+    </None>
+    <None Include="..\..\Include\core\Property.inl">
+      <Filter>RTTI\Properties</Filter>
+    </None>
+    <None Include="..\..\Include\core\ResourcesManager.inl">
+      <Filter>RTTI\Resources</Filter>
+    </None>
+    <None Include="..\..\Include\core\ResourceStorage.inl">
+      <Filter>RTTI\Resources</Filter>
+    </None>
+  </ItemGroup>
+</Project>

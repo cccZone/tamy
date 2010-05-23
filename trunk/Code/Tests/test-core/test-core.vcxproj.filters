@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="HierarchicalNodesTests">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Utils\Scene">
+      <UniqueIdentifier>{d9110dbf-cfd9-4402-9558-3457b378b161}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils\HierarchicalNodes">
+      <UniqueIdentifier>{99b0472d-ac76-4708-a647-71afb0e7f6d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Delegates">
+      <UniqueIdentifier>{b7e7f186-78a0-4fda-969d-3cda30c88ac7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BoundingVolumes">
+      <UniqueIdentifier>{bd7943d2-e658-4d19-a794-b62da93bd655}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStructures">
+      <UniqueIdentifier>{2c26918c-da0f-45f0-8b9d-e878f48ed409}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{bee178f3-67a5-4fa5-b941-f2b0869bbd55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpatialStorage">
+      <UniqueIdentifier>{438e9081-ecc3-4327-bc1c-4c8e43d18e87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filesystem">
+      <UniqueIdentifier>{5e54b2a0-d0cd-439a-9b99-96dcfcef2111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ComponentsSystem">
+      <UniqueIdentifier>{3bc15d3e-bae4-4393-b97f-44fab8805b26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI">
+      <UniqueIdentifier>{2ef540e8-9e80-4f61-b734-bd3a129ce4a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{543eeab2-a737-4bbe-a03a-4d36b3bf4ddf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="NodesHierarchyTests.cpp">
+      <Filter>HierarchicalNodesTests</Filter>
+    </ClCompile>
+    <ClCompile Include="UpdatingGlobalMatricesTests.cpp">
+      <Filter>HierarchicalNodesTests</Filter>
+    </ClCompile>
+    <ClCompile Include="VisitorTests.cpp">
+      <Filter>HierarchicalNodesTests</Filter>
+    </ClCompile>
+    <ClCompile Include="DelegatesTests.cpp">
+      <Filter>Delegates</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingVolumesTests.cpp">
+      <Filter>BoundingVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneIntersectionTests.cpp">
+      <Filter>BoundingVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="RayDistancesTests.cpp">
+      <Filter>BoundingVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleSplittingTests.cpp">
+      <Filter>BoundingVolumes</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayTests.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="ConstSizeArrayTests.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphTests.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="GenericFactoryTests.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphBuilderTests.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphDijkstraTests.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixInterpolatorTests.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeActionsExecutorTests.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="BSPNodeTreeTests.cpp">
+      <Filter>SpatialStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicOctreesTests.cpp">
+      <Filter>SpatialStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="NarrowPhaseStorageFilterTests.cpp">
+      <Filter>SpatialStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="RegularOctreesTests.cpp">
+      <Filter>SpatialStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticGeometryOctreesTests.cpp">
+      <Filter>SpatialStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="TNodesSpatialStorageQueriesTests.cpp">
+      <Filter>SpatialStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="TNodesSpatialStorageTests.cpp">
+      <Filter>SpatialStorage</Filter>
+    </ClCompile>
+    <ClCompile Include="FilesystemTests.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentsSystemTests.cpp">
+      <Filter>ComponentsSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertiesTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesManagerTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="TypeIDTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="MathTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SpecializedNodeVisitorMock.h">
+      <Filter>Utils\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeA.h">
+      <Filter>Utils\HierarchicalNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeActionMock.h">
+      <Filter>Utils\HierarchicalNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeB.h">
+      <Filter>Utils\HierarchicalNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeVisitorMock.h">
+      <Filter>Utils\HierarchicalNodes</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

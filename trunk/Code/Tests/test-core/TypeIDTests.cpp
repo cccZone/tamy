@@ -38,9 +38,9 @@ TEST( TypeID, names )
 
 TEST( Class, short )
 {
-   ClassTemplate temp1( 0, "::Namespace::ClassA", NULL );
-   ClassTemplate temp2( 0, "::Namespace::ClassA< ClassB >", NULL );
-   ClassTemplate temp3( 0, "ClassB", NULL );
+   ClassTemplate temp1( 0, "::Namespace::ClassA" );
+   ClassTemplate temp2( 0, "::Namespace::ClassA< ClassB >" );
+   ClassTemplate temp3( 0, "ClassB" );
 
    Class class1( temp1 );
    Class class2( temp2 );

@@ -30,7 +30,9 @@ TEST(ClassesRegistry, registeringClasses)
 {
    ClassesRegistry registry;
    ClassTemplate& classAHandle = registry.defineClass< ClassA >();
+   classAHandle.setCreator( new SolidCreator< ClassA >() );
    ClassTemplate& classBHandle = registry.defineClass< ClassB >();
+   classBHandle.setCreator( new SolidCreator< ClassB >() );
 
    ClassA* instanceOfA = (ClassA*)(classAHandle.instantiate());
    CPPUNIT_ASSERT(NULL != instanceOfA);

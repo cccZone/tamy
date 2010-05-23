@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <QEvent.h>
 #include "tamyeditor.h"
-#include "Grid.h"
+#include "DebugRenderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,6 +43,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
 , m_renderer( NULL )
 , m_camera( NULL )
 , m_scene( NULL )
+, m_debugRenderer( NULL )
 {
    m_hWnd = static_cast<HWND> (winId());
    memset(m_keyBuffer, 0, sizeof(unsigned char) * 256);
@@ -59,8 +60,6 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
          throw std::runtime_error("Cannot initialize DirectX library");
       }
    }
-
-   m_localModel = new Model();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,7 +73,7 @@ TamySceneWidget::~TamySceneWidget()
    delete m_camera; m_camera = NULL;
    delete m_renderer; m_renderer = NULL;
 
-   delete m_localModel; m_localModel = NULL;
+   delete m_debugRenderer; m_debugRenderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -82,6 +81,8 @@ TamySceneWidget::~TamySceneWidget()
 void TamySceneWidget::initialize( TamyEditor& mgr )
 {
    mgr.addToMainWidget(this);
+
+   ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
 
    // create a renderer
    SimpleTamyConfigurator configurator;
@@ -91,21 +92,22 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
    m_renderer = initializer.createDisplay(DX9Settings(*device), m_hWnd);
    delete device;
 
+   // create a camera
    m_camera = new Camera("Camera", *m_renderer);
    D3DXMatrixTranslation(&(m_camera->accessLocalMtx()), 0, 5, 0);
+
+
+   // create a debug renderer
+   m_debugRenderer = new DebugRenderer( *m_renderer, *m_camera );
 
    // register new services
    mgr.registerService< Renderer >( *this, *m_renderer );
    mgr.registerService< Camera >( *this, *m_camera );
    mgr.registerService< KeysStatusManager >( *this, *m_keysStatusManager );
    mgr.registerService< UserInputController >( *this, *this );
+   mgr.registerService< DebugRenderer >( *this, *m_debugRenderer );
 
-   ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
    resMgr.associate< Renderer >( *m_renderer );
-
-   // set up local scene
-   m_localModel->add( new Grid( *m_renderer, resMgr ) );
-   m_localModel->addComponent( new CameraComponent( *m_camera ) );
 
    createRenderer( mgr );
    setupTimeController( mgr );
@@ -142,9 +144,7 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
    // create a rendering mechanism
    CompositeRenderingMechanism* compRM = new CompositeRenderingMechanism();
 
-   Scene3DRM* widgetsRenderingMech = new Scene3DRM( *m_localModel, *m_camera );
-   compRM->add( widgetsRenderingMech );
-
+   // render the main scene first ( if there's one )
    if ( mgr.hasService< Model >() )
    {
       m_scene = &mgr.requestService< Model >();
@@ -157,6 +157,10 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
    {
       m_scene = NULL;
    }
+
+   // renderer the debug info
+   Scene3DRM* debugRenderingMech = new Scene3DRM( m_debugRenderer->getModel(), *m_camera );
+   compRM->add( debugRenderingMech );
 
    m_renderer->setMechanism( compRM );
 }

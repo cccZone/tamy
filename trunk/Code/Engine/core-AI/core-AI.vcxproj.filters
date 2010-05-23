@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="MessagingSystem">
+      <UniqueIdentifier>{ab3c1821-f586-499f-ab8d-ef46defd1ee1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ControlStructures">
+      <UniqueIdentifier>{fc1cf0f9-6b3d-4b64-a56d-1f57864a9e85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ControlStructures\BehaviorTrees">
+      <UniqueIdentifier>{9bf44471-918a-461c-8a2c-a91294f7f537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ControlStructures\BehaviorTrees\NodeSelectionStrategies">
+      <UniqueIdentifier>{584ce497-1e3a-47bd-b57e-64eec23de2c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ControlStructures\FSM">
+      <UniqueIdentifier>{986d3c5a-9d10-4131-8b1b-b54f9acdbd47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SteeringBehaviors">
+      <UniqueIdentifier>{dbcec436-c427-40f1-b9d2-0bf8e100ecf6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\core-AI\Messagable.h">
+      <Filter>MessagingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\Message.h">
+      <Filter>MessagingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\MessageDispatcher.h">
+      <Filter>MessagingSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\BTCompositeNode.h">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\BTNode.h">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\BTNodeSelectionStrategy.h">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\BTPrecondition.h">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\BTSelectorNode.h">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\BTSequenceNode.h">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\PreconditionSelectionStrategy.h">
+      <Filter>ControlStructures\BehaviorTrees\NodeSelectionStrategies</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\FsmLogicState.h">
+      <Filter>ControlStructures\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\FsmLogicStateController.h">
+      <Filter>ControlStructures\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\CompositeSteeringBehavior.h">
+      <Filter>SteeringBehaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\SteeringBehavior.h">
+      <Filter>SteeringBehaviors</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="MessageDispatcher.cpp">
+      <Filter>MessagingSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="BTCompositeNode.cpp">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClCompile>
+    <ClCompile Include="BTNode.cpp">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClCompile>
+    <ClCompile Include="BTSelectorNode.cpp">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClCompile>
+    <ClCompile Include="BTSequenceNode.cpp">
+      <Filter>ControlStructures\BehaviorTrees</Filter>
+    </ClCompile>
+    <ClCompile Include="PreconditionSelectionStrategy.cpp">
+      <Filter>ControlStructures\BehaviorTrees\NodeSelectionStrategies</Filter>
+    </ClCompile>
+    <ClCompile Include="CompositeSteeringBehavior.cpp">
+      <Filter>SteeringBehaviors</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Include\core-AI\FsmLogicStateController.inl">
+      <Filter>ControlStructures\FSM</Filter>
+    </None>
+  </ItemGroup>
+</Project>

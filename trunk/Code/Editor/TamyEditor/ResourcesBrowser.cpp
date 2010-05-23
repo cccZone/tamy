@@ -5,7 +5,7 @@
 #include <QPushButton>
 #include <QDrag>
 #include <QMimeData>
-#include <QFileDialog>
+#include <QInputDialog>
 #include "MainAppComponent.h"
 #include "core.h"
 #include "progressdialog.h"
@@ -21,8 +21,6 @@
 // editors
 #include "SceneEditor.h"
 
-
-// TODO: zmiana nazw resource'ow
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -207,22 +205,18 @@ void ResourcesBrowser::createResource( const Class& type, const std::string& par
 
    // learn the new file's name
    const Filesystem& fs = m_rm->getFilesystem();
-   std::string rootDir = fs.toAbsolutePath( parentDir );
-   std::string filter = std::string( "*." ) + newResource->getVirtualExtension();
+   std::string extension = newResource->getVirtualExtension();
 
-   QString fullFileName = QFileDialog::getSaveFileName( m_mgr, 
-                                                       tr("New resource"), 
-                                                       rootDir.c_str(), 
-                                                       filter.c_str() );
-
-   if ( fullFileName.isEmpty() == true ) 
+   bool ok = false;
+   QString fullFileName = QInputDialog::getText( m_mgr, "New resource", "Resource name:", QLineEdit::Normal, "", &ok );
+   if ( !ok ) 
    {
       // no file was selected or user pressed 'cancel'
       return;
    }
 
    // once the file is open, extract the directory name
-   std::string fileName = fs.toRelativePath( fullFileName.toStdString() );
+   std::string fileName = parentDir + fullFileName.toStdString() + "." + extension;
 
    // create & save the resource
    newResource->setFilePath( fileName );
@@ -393,15 +387,13 @@ void ResourcesBrowser::addNode( unsigned int idx, const std::string& parentDir )
    {
       // learn the new file's name
       const Filesystem& fs = m_rm->getFilesystem();
-      std::string rootDir = fs.toAbsolutePath( parentDir );
-      QString newDirName = QFileDialog::getSaveFileName( m_mgr, 
-         tr("New directory"), 
-         rootDir.c_str(), 
-         "",
-         NULL,
-         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+      bool ok = false;
+      QString newDirName = QInputDialog::getText( m_mgr, "New directory", "Dir name:", QLineEdit::Normal, "", &ok );
+      if ( ok )
+      {
 
-      fs.mkdir( fs.toRelativePath( newDirName.toStdString() ) );
+         fs.mkdir( parentDir + newDirName.toStdString() );
+      }
    }
    else
    {

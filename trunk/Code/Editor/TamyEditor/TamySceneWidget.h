@@ -22,6 +22,7 @@ class Renderer;
 class KeysStatusManager;
 class Camera;
 class Model;
+class DebugRenderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -46,7 +47,7 @@ private:
    Camera*              m_camera;
 
    Model*               m_scene;
-   Model*               m_localModel;
+   DebugRenderer*       m_debugRenderer;
 
 public:
    /**

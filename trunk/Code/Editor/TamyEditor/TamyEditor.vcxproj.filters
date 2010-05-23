@@ -1,0 +1,505 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="QtImplementation">
+      <UniqueIdentifier>{7548806f-c12e-446e-9b66-1298751745ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QtImplementation\Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="QtImplementation\Generated Files\Release">
+      <UniqueIdentifier>{c61d66f5-015a-43e4-b8fd-b7edcb9bf875}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="QtImplementation\Generated Files\Debug">
+      <UniqueIdentifier>{1261b02b-e408-4e1a-883b-f3304340c81e}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="QtImplementation\Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="QtImplementation\Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{73f4ad88-8c16-47b1-a99b-f18a059ae772}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{9aa9a89d-8484-4b11-9d16-5284cbafb07f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SceneNavigator">
+      <UniqueIdentifier>{e8be9650-42c1-4713-a2e3-329371cc5d29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SceneNavigator\Commands">
+      <UniqueIdentifier>{233ee4ca-f6df-4b23-895a-4c5a16db3c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SceneNavigator\Editors">
+      <UniqueIdentifier>{b41fc449-4117-4dc6-ab90-3105b8b110e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SceneQueries">
+      <UniqueIdentifier>{65c05c11-b4fb-40af-9d34-79a22520830a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SceneQueries\Representations">
+      <UniqueIdentifier>{13050031-aded-4b92-b918-c24fc1ccc5f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\PropertiesEditor">
+      <UniqueIdentifier>{b6b1999b-4163-4295-94d3-6b1fc6e4b1b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\PropertiesEditor\Editors">
+      <UniqueIdentifier>{fd5f3c59-02db-4b10-b334-3fd96042b190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SceneRenderer">
+      <UniqueIdentifier>{14af7a61-986e-40b6-a23c-9f911c8aabac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SceneRenderer\Effects">
+      <UniqueIdentifier>{597fcbf3-b98f-48cf-9230-3505bc94b1c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\MainApp">
+      <UniqueIdentifier>{45b38212-52bb-48b5-814a-f4290be91c3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SceneTreeViewer">
+      <UniqueIdentifier>{83a51f51-4786-42cf-91c5-4a6ef3c52b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SceneTreeViewer\Editors">
+      <UniqueIdentifier>{06a1dfb4-deca-4972-9144-6563bc944319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SelectionManager">
+      <UniqueIdentifier>{a97472d8-947e-4b1f-9a28-dcb99956383b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SelectionManager\Visualisation">
+      <UniqueIdentifier>{73130267-9dcf-4fc3-b145-f001f12ce254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\ResourcesBrowser">
+      <UniqueIdentifier>{e6f94e6b-b366-4a87-987b-4c261f72106e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\ResourcesBrowser\Nodes">
+      <UniqueIdentifier>{c700c38d-9216-4d62-9788-a5425978b4ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors">
+      <UniqueIdentifier>{a1409a83-fe22-4e38-9884-c734131814ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\SceneEditor">
+      <UniqueIdentifier>{195655b7-5ea1-4897-8828-b3a010b2d87a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{d04b78f7-64d0-4232-ae4b-406d8a04580f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\DropArea">
+      <UniqueIdentifier>{b4038eb5-b260-48c9-9dce-f9b4dfc01665}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ColorFrame">
+      <UniqueIdentifier>{135fe30a-3e85-4b80-b75f-af434099c911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\TreeWidget">
+      <UniqueIdentifier>{9173226e-dd2e-414a-a92a-dfda7c1cc74d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_tamyeditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraCommand.h">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraController.h">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneNavigator.h">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectEntityCommand.h">
+      <Filter>Components\SceneNavigator\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="MousePropertiesView.h">
+      <Filter>Components\SceneNavigator\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryableScene.h">
+      <Filter>Components\SceneQueries</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryableSceneProxy.h">
+      <Filter>Components\SceneQueries</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneQueries.h">
+      <Filter>Components\SceneQueries</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneQueriesModelRepresentation.h">
+      <Filter>Components\SceneQueries</Filter>
+    </ClInclude>
+    <ClInclude Include="SpatiallyQueryable.h">
+      <Filter>Components\SceneQueries</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryableGhost.h">
+      <Filter>Components\SceneQueries\Representations</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryableSpatial.h">
+      <Filter>Components\SceneQueries\Representations</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderer.h">
+      <Filter>Components\SceneRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="GridRenderingEffect.h">
+      <Filter>Components\SceneRenderer\Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneTreeEditor.h">
+      <Filter>Components\SceneTreeViewer</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionManager.h">
+      <Filter>Components\SelectionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionMarker.h">
+      <Filter>Components\SelectionManager\Visualisation</Filter>
+    </ClInclude>
+    <ClInclude Include="FSTreeNode.h">
+      <Filter>Components\ResourcesBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceEditor.h">
+      <Filter>Components\ResourcesBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="FSRootNode.h">
+      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneEditor.h">
+      <Filter>ResourceEditors\SceneEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="FSNodeMimeData.h">
+      <Filter>Widgets\DropArea</Filter>
+    </ClInclude>
+    <ClInclude Include="MimeDataEncoder.h">
+      <Filter>Widgets\DropArea</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeWidgetDescFactory.h">
+      <Filter>Widgets\TreeWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeDescFactory.h">
+      <Filter>Widgets\TreeWidget</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_tamyeditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_progressdialog.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_tamyeditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="progressDialog.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="tamyeditor.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ArrayPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_BoolPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ColorFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_DropArea.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_MainAppComponent.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_MaterialPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QPropertiesView.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ResourcePropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ResourcesBrowser.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SceneTreeViewer.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_StringPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_TreeWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ArrayPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_BoolPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ColorFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_DropArea.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MainAppComponent.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MaterialPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MtxPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QPropertiesView.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ResourcePropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ResourcesBrowser.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SceneTreeViewer.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_StringPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_TamySceneWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_TreeWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_Vec3PropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraController.cpp">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneNavigator.cpp">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectEntityCommand.cpp">
+      <Filter>Components\SceneNavigator\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="MousePropertiesView.cpp">
+      <Filter>Components\SceneNavigator\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryableSceneProxy.cpp">
+      <Filter>Components\SceneQueries</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneQueries.cpp">
+      <Filter>Components\SceneQueries</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertiesEditor.cpp">
+      <Filter>Components\PropertiesEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="QPropertiesView.cpp">
+      <Filter>Components\PropertiesEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="QPropertyEditor.cpp">
+      <Filter>Components\PropertiesEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="ArrayPropertyEditor.cpp">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="BoolPropertyEditor.cpp">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialPropertyEditor.cpp">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="MtxPropertyEditor.cpp">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcePropertyEditor.cpp">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="StringPropertyEditor.cpp">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec3PropertyEditor.cpp">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderer.cpp">
+      <Filter>Components\SceneRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="TamySceneWidget.cpp">
+      <Filter>Components\SceneRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="GridRenderingEffect.cpp">
+      <Filter>Components\SceneRenderer\Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="MainAppComponent.cpp">
+      <Filter>Components\MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneTreeViewer.cpp">
+      <Filter>Components\SceneTreeViewer</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityEditor.cpp">
+      <Filter>Components\SceneTreeViewer\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelEditor.cpp">
+      <Filter>Components\SceneTreeViewer\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionManager.cpp">
+      <Filter>Components\SelectionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionMarker.cpp">
+      <Filter>Components\SelectionManager\Visualisation</Filter>
+    </ClCompile>
+    <ClCompile Include="FSTreeNode.cpp">
+      <Filter>Components\ResourcesBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesBrowser.cpp">
+      <Filter>Components\ResourcesBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="FSDirNode.cpp">
+      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="FSLeafNode.cpp">
+      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="FSRootNode.cpp">
+      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneEditor.cpp">
+      <Filter>ResourceEditors\SceneEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="DropArea.cpp">
+      <Filter>Widgets\DropArea</Filter>
+    </ClCompile>
+    <ClCompile Include="FSNodeMimeData.cpp">
+      <Filter>Widgets\DropArea</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorFrame.cpp">
+      <Filter>Widgets\ColorFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="TreeWidget.cpp">
+      <Filter>Widgets\TreeWidget</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="tamyeditor.qrc">
+      <Filter>QtImplementation\Resource Files</Filter>
+    </None>
+    <None Include="QueryableGhost.inl">
+      <Filter>Components\SceneQueries\Representations</Filter>
+    </None>
+    <None Include="QueryableSpatial.inl">
+      <Filter>Components\SceneQueries\Representations</Filter>
+    </None>
+    <None Include="FloatPropertyEditor.inl">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </None>
+    <None Include="IntPropertyEditor.inl">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.fx">
+      <Filter>Components\SelectionManager\Visualisation</Filter>
+    </None>
+    <None Include="TypeDescFactory.inl">
+      <Filter>Widgets\TreeWidget</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="progressdialog.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="tamyeditor.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="progressDialog.h">
+      <Filter>Core</Filter>
+    </CustomBuild>
+    <CustomBuild Include="tamyeditor.h">
+      <Filter>Core</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PropertiesEditor.h">
+      <Filter>Components\PropertiesEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QPropertiesView.h">
+      <Filter>Components\PropertiesEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QPropertyEditor.h">
+      <Filter>Components\PropertiesEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ArrayPropertyEditor.h">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="BoolPropertyEditor.h">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FloatPropertyEditor.h">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="IntPropertyEditor.h">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MaterialPropertyEditor.h">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MtxPropertyEditor.h">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ResourcePropertyEditor.h">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="StringPropertyEditor.h">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Vec3PropertyEditor.h">
+      <Filter>Components\PropertiesEditor\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TamySceneWidget.h">
+      <Filter>Components\SceneRenderer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MainAppComponent.h">
+      <Filter>Components\MainApp</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SceneTreeViewer.h">
+      <Filter>Components\SceneTreeViewer</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EntityEditor.h">
+      <Filter>Components\SceneTreeViewer\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ModelEditor.h">
+      <Filter>Components\SceneTreeViewer\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ResourcesBrowser.h">
+      <Filter>Components\ResourcesBrowser</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FSDirNode.h">
+      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FSLeafNode.h">
+      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DropArea.h">
+      <Filter>Widgets\DropArea</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ColorFrame.h">
+      <Filter>Widgets\ColorFrame</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TreeWidget.h">
+      <Filter>Widgets\TreeWidget</Filter>
+    </CustomBuild>
+  </ItemGroup>
+</Project>
