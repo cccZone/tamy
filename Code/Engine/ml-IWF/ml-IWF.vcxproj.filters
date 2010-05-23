@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Loaders">
+      <UniqueIdentifier>{2a0151bb-1bad-41e1-8f31-68aeef3491fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loaders\IWFLib">
+      <UniqueIdentifier>{ac16f39c-e3a4-4731-ad26-a3af937e9793}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="IWFMeshLoader.cpp">
+      <Filter>Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="IWFScene.cpp">
+      <Filter>Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="libIWF\iwfBase.cpp">
+      <Filter>Loaders\IWFLib</Filter>
+    </ClCompile>
+    <ClCompile Include="libIWF\iwfFile.cpp">
+      <Filter>Loaders\IWFLib</Filter>
+    </ClCompile>
+    <ClCompile Include="libIWF\iwfObjects.cpp">
+      <Filter>Loaders\IWFLib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\ml-IWF\IWFMeshLoader.h">
+      <Filter>Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-IWF\IWFScene.h">
+      <Filter>Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-IWF\MeshDefinition.h">
+      <Filter>Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-IWF\libIWF\iwfFile.h">
+      <Filter>Loaders\IWFLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-IWF\libIWF\iwfObjects.h">
+      <Filter>Loaders\IWFLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-IWF\libIWF\libIWF.h">
+      <Filter>Loaders\IWFLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-IWF.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Include\ml-IWF\IWFScene.inl">
+      <Filter>Loaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

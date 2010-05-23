@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Effects">
+      <UniqueIdentifier>{18448573-3296-4c93-9584-7222ad1bce66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{81a310df-1a84-43cb-ad7c-0164a55459ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{ec716647-fce2-4f1a-a57b-7417ca64819e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools\ProjectionCalculators">
+      <UniqueIdentifier>{748a440c-5adb-4c1d-80b1-c3089a381123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{5bd9a96f-320d-4930-8c4a-2ed358c34b07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Initialization">
+      <UniqueIdentifier>{de1812a5-f234-4156-80c9-4e01c393c2ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Initialization\Simple">
+      <UniqueIdentifier>{60f9ab6c-b0b8-459f-92d5-fba412bf758b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{6d2e42ba-ea7e-47dc-bcb6-99e005776d93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OverlayRenderer">
+      <UniqueIdentifier>{b356757b-adc7-4be2-a1ed-247c79d751d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OverlayRenderer\Mechanism">
+      <UniqueIdentifier>{00f2694b-d7e3-44dd-a5ee-56d0cc5cba1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OverlayRenderer\Elements">
+      <UniqueIdentifier>{e788649b-7b14-4322-8f63-2ae1d57c10bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{d3f5a141-06b6-41c8-805a-11d99f76b082}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{60fc8284-5482-49ed-b73b-75d774ea83c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Entities">
+      <UniqueIdentifier>{794a9a83-d410-4599-b1ed-8dc38016a3ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Views">
+      <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Views\RenderingView">
+      <UniqueIdentifier>{b8462dc0-2baa-4dc4-ae07-85d88d10e6f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Views\RenderingView\AttributeSorters">
+      <UniqueIdentifier>{5b9c7ef5-b042-4d94-a5b4-bf73358f9abd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Views\RenderingView\Attributes">
+      <UniqueIdentifier>{b1f3ce20-ef71-4896-a5ac-6c186f097d3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Views\SpatialView">
+      <UniqueIdentifier>{84514925-a186-42f6-b881-24213372128c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\Components">
+      <UniqueIdentifier>{0d510a06-7aa6-4746-b9a0-759d4092b12f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SingleTextureEffect.cpp">
+      <Filter>Effects</Filter>
+    </ClCompile>
+    <ClCompile Include="CompositeRenderingMechanism.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjCalc2D.cpp">
+      <Filter>Tools\ProjectionCalculators</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjCalc3D.cpp">
+      <Filter>Tools\ProjectionCalculators</Filter>
+    </ClCompile>
+    <ClCompile Include="LineSegments.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="LitVertex.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleMesh.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="DeviceFilter.cpp">
+      <Filter>Initialization</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderDevicesEnumerator.cpp">
+      <Filter>Initialization</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingDevice.cpp">
+      <Filter>Initialization</Filter>
+    </ClCompile>
+    <ClCompile Include="BestFullScreenDevice.cpp">
+      <Filter>Initialization\Simple</Filter>
+    </ClCompile>
+    <ClCompile Include="BestWindowedDevice.cpp">
+      <Filter>Initialization\Simple</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleTamyConfigurator.cpp">
+      <Filter>Initialization\Simple</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Materials</Filter>
+    </ClCompile>
+    <ClCompile Include="OverlayRenderingMechanism.cpp">
+      <Filter>OverlayRenderer\Mechanism</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>OverlayRenderer\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="TextField.cpp">
+      <Filter>OverlayRenderer\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryResource.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene3DRM.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>Scene\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>Scene\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderable.cpp">
+      <Filter>Scene\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableJoint.cpp">
+      <Filter>Scene\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderEffect.cpp">
+      <Filter>Scene\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialEntity.cpp">
+      <Filter>Scene\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableRepresentation.cpp">
+      <Filter>Scene\Views\RenderingView</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingView.cpp">
+      <Filter>Scene\Views\RenderingView</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultAttributeSorter.cpp">
+      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialRepresentation.cpp">
+      <Filter>Scene\Views\SpatialView</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialView.cpp">
+      <Filter>Scene\Views\SpatialView</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx">
+      <Filter>Effects</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\Renderer.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\RendererObject.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\Light.inl">
+      <Filter>Tools</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\LineSegments.inl">
+      <Filter>Geometry</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\TriangleMesh.inl">
+      <Filter>Geometry</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\ShaderEffect.inl">
+      <Filter>Scene\Entities</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\AttributeSorterNode.inl">
+      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl">
+      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\SingleTextureEffect.h">
+      <Filter>Effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\CompositeRenderingMechanism.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Renderer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RendererObject.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RendererObjectImpl.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingMechanism.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Camera.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Light.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ProjectionCalculator.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Skeleton.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ProjCalc2D.h">
+      <Filter>Tools\ProjectionCalculators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ProjCalc3D.h">
+      <Filter>Tools\ProjectionCalculators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Face.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\LitVertex.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DeviceFilter.h">
+      <Filter>Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DeviceFilterElem.h">
+      <Filter>Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DevicesSorter.h">
+      <Filter>Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderDevicesEnumerator.h">
+      <Filter>Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingDevice.h">
+      <Filter>Initialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\BestFullScreenDevice.h">
+      <Filter>Initialization\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\BestWindowedDevice.h">
+      <Filter>Initialization\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DevTypeFilter.h">
+      <Filter>Initialization\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\FullScreenModeFilter.h">
+      <Filter>Initialization\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ResolutionFilter.h">
+      <Filter>Initialization\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SimpleTamyConfigurator.h">
+      <Filter>Initialization\Simple</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Material.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Texture.h">
+      <Filter>Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Overlay.h">
+      <Filter>OverlayRenderer\Mechanism</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\OverlayRenderingMechanism.h">
+      <Filter>OverlayRenderer\Mechanism</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Font.h">
+      <Filter>OverlayRenderer\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\TextField.h">
+      <Filter>OverlayRenderer\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GeometryResource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Shader.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Scene3DRM.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Effect.h">
+      <Filter>Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\EffectAttribute.h">
+      <Filter>Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Geometry.h">
+      <Filter>Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Renderable.h">
+      <Filter>Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderableJoint.h">
+      <Filter>Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderEffect.h">
+      <Filter>Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h">
+      <Filter>Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h">
+      <Filter>Scene\Views\RenderingView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderableRepresentation.h">
+      <Filter>Scene\Views\RenderingView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h">
+      <Filter>Scene\Views\RenderingView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorterNode.h">
+      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DefaultAttributeSorter.h">
+      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\LeafAttributeSorter.h">
+      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\TransparencyAttribute.h">
+      <Filter>Scene\Views\RenderingView\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\UniqueObjectAttribute.h">
+      <Filter>Scene\Views\RenderingView\Attributes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\CameraContext.h">
+      <Filter>Scene\Views\SpatialView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SpatialRepresentation.h">
+      <Filter>Scene\Views\SpatialView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SpatialView.h">
+      <Filter>Scene\Views\SpatialView</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\CameraComponent.h">
+      <Filter>Scene\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer.h" />
+  </ItemGroup>
+</Project>

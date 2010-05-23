@@ -10,6 +10,7 @@
 
 class Camera;
 class Node;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,14 +19,14 @@ class Node;
  */
 class GridRenderingEffect : public ShaderEffect
 {
-   DECLARE_CLASS(GridRenderingEffect)
-
 private:
-   Camera* m_camera;
-   Node* m_renderedNode;
+   Camera*     m_camera;
+   Node*       m_renderedNode;
+   Shader*     m_shader;
 
 public:
-   GridRenderingEffect();
+   GridRenderingEffect( Renderer& renderer );
+   ~GridRenderingEffect();
 
 protected:
    void onBeginRendering();

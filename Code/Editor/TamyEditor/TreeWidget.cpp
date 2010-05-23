@@ -21,11 +21,10 @@ TreeWidget::TreeWidget( QWidget* parent, const QString& objName, const QString& 
 
 void TreeWidget::showPopupMenu( const QPoint& pos )
 {
-   QMenu* popupMenu = new QMenu( this );
-
    m_popupMenuItem = itemAt( pos );
    if ( m_popupMenuItem )
    {
+      QMenu* popupMenu = new QMenu( this );
       // add basic actions:
 
       // nodes collapsing and expansion - but these two work only
@@ -76,13 +75,12 @@ void TreeWidget::showPopupMenu( const QPoint& pos )
       connect( clearNodeAction, SIGNAL( triggered() ), this, SLOT( clearNode() ) );
       popupMenu->addAction( clearNodeAction );
 
+      // inform about a menu being shown
+      emit popupMenuShown( m_popupMenuItem, *popupMenu );
+
+      // display the menu
+      popupMenu->popup( mapToGlobal( pos ) );
    }
-
-   // inform about a menu being shown
-   emit popupMenuShown( *popupMenu );
-
-   // display the menu
-   popupMenu->popup( mapToGlobal( pos ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

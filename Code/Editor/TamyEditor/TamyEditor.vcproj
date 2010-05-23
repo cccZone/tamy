@@ -525,6 +525,13 @@
 					RelativePath=".\GeneratedFiles\Release\moc_TreeWidget.cpp"
 					>
 					<FileConfiguration
+						Name="Release|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
 						Name="Debug|Win32"
 						ExcludedFromBuild="true"
 						>
@@ -713,6 +720,13 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\GeneratedFiles\Debug\moc_TreeWidget.cpp"
@@ -720,6 +734,13 @@
 					<FileConfiguration
 						Name="Release|Win32"
 						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -739,18 +760,6 @@
 					</FileConfiguration>
 				</File>
 			</Filter>
-		</Filter>
-		<Filter
-			Name="Views"
-			>
-			<File
-				RelativePath=".\MousePropertiesView.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\MousePropertiesView.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Components"
@@ -787,6 +796,18 @@
 					</File>
 					<File
 						RelativePath=".\SelectEntityCommand.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="Editors"
+					>
+					<File
+						RelativePath=".\MousePropertiesView.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\MousePropertiesView.h"
 						>
 					</File>
 				</Filter>
@@ -1215,23 +1236,11 @@
 				Name="SceneRenderer"
 				>
 				<File
-					RelativePath=".\Grid.cpp"
+					RelativePath=".\DebugRenderer.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\Grid.h"
-					>
-				</File>
-				<File
-					RelativePath=".\GridRenderingEffect.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\Assets\Editor\Shaders\GridRenderingEffect.fx"
-					>
-				</File>
-				<File
-					RelativePath=".\GridRenderingEffect.h"
+					RelativePath=".\DebugRenderer.h"
 					>
 				</File>
 				<File
@@ -1264,6 +1273,18 @@
 						/>
 					</FileConfiguration>
 				</File>
+				<Filter
+					Name="Effects"
+					>
+					<File
+						RelativePath=".\GridRenderingEffect.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\GridRenderingEffect.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="MainApp"
@@ -1484,6 +1505,28 @@
 					<File
 						RelativePath=".\FSDirNode.h"
 						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description=""
+								CommandLine=""
+								AdditionalDependencies=""
+								Outputs=""
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description=""
+								CommandLine=""
+								AdditionalDependencies=""
+								Outputs=""
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath=".\FSLeafNode.cpp"
@@ -1492,6 +1535,28 @@
 					<File
 						RelativePath=".\FSLeafNode.h"
 						>
+						<FileConfiguration
+							Name="Release|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description=""
+								CommandLine=""
+								AdditionalDependencies=""
+								Outputs=""
+							/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="Debug|Win32"
+							>
+							<Tool
+								Name="VCCustomBuildTool"
+								Description=""
+								CommandLine=""
+								AdditionalDependencies=""
+								Outputs=""
+							/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath=".\FSRootNode.cpp"

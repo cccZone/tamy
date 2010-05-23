@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{4F4CEC82-B5C6-4F0E-B69B-855FA55F4B80}</ProjectGuid>
+    <RootNamespace>core</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\Libs\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\Temp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\Libs\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\Temp\$(ProjectName)\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)\Include;$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)\Include;$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Node.cpp" />
+    <ClCompile Include="NodeActionsExecutor.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Color.cpp" />
+    <ClCompile Include="MatrixWriter.cpp" />
+    <ClCompile Include="StringUtils.cpp" />
+    <ClCompile Include="UniqueObject.cpp" />
+    <ClCompile Include="BoundingVolume.cpp" />
+    <ClCompile Include="AABoundingBox.cpp" />
+    <ClCompile Include="BoundingSphere.cpp" />
+    <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="PointVolume.cpp" />
+    <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="CollisionTests.cpp" />
+    <ClCompile Include="QuadraticEquations.cpp" />
+    <ClCompile Include="File.cpp" />
+    <ClCompile Include="Filesystem.cpp" />
+    <ClCompile Include="SingletonsManager.cpp" />
+    <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Serializer.cpp" />
+    <ClCompile Include="FileSerializer.cpp" />
+    <ClCompile Include="Class.cpp" />
+    <ClCompile Include="ClassesRegistry.cpp" />
+    <ClCompile Include="ClassTemplate.cpp" />
+    <ClCompile Include="Properties.cpp" />
+    <ClCompile Include="Property.cpp" />
+    <ClCompile Include="Resource.cpp" />
+    <ClCompile Include="ResourcesManager.cpp" />
+    <ClCompile Include="EulerAngles.cpp" />
+    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="Vector.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\core\Node.h" />
+    <ClInclude Include="..\..\Include\core\NodeObserver.h" />
+    <ClInclude Include="..\..\Include\core\NodeVisitor.h" />
+    <ClInclude Include="..\..\Include\core\TNodesVisitor.h" />
+    <ClInclude Include="..\..\Include\core\NodeAction.h" />
+    <ClInclude Include="..\..\Include\core\NodeActionsExecutor.h" />
+    <ClInclude Include="..\..\Include\core\Timer.h" />
+    <ClInclude Include="..\..\Include\core\Array.h" />
+    <ClInclude Include="..\..\Include\core\CellSpacePartition.h" />
+    <ClInclude Include="..\..\Include\core\ConstSizeArray.h" />
+    <ClInclude Include="..\..\Include\core\Graph.h" />
+    <ClInclude Include="..\..\Include\core\Point.h" />
+    <ClInclude Include="..\..\Include\core\Stack.h" />
+    <ClInclude Include="..\..\Include\core\Delegate.h" />
+    <ClInclude Include="..\..\Include\core\dostream.h" />
+    <ClInclude Include="..\..\Include\core\Assert.h" />
+    <ClInclude Include="..\..\Include\core\Color.h" />
+    <ClInclude Include="..\..\Include\core\HierarchyWriter.h" />
+    <ClInclude Include="..\..\Include\core\IntervalOperation.h" />
+    <ClInclude Include="..\..\Include\core\MatrixInterpolator.h" />
+    <ClInclude Include="..\..\Include\core\MatrixWriter.h" />
+    <ClInclude Include="..\..\Include\core\StringUtils.h" />
+    <ClInclude Include="..\..\Include\core\UniqueObject.h" />
+    <ClInclude Include="..\..\Include\core\Observer.h" />
+    <ClInclude Include="..\..\Include\core\Subject.h" />
+    <ClInclude Include="..\..\Include\core\GraphBFS.h" />
+    <ClInclude Include="..\..\Include\core\GraphBuilder.h" />
+    <ClInclude Include="..\..\Include\core\GraphBuilderFactory.h" />
+    <ClInclude Include="..\..\Include\core\GraphDijkstra.h" />
+    <ClInclude Include="..\..\Include\core\GenericFactory.h" />
+    <ClInclude Include="..\..\Include\core\SpatialStorage.h" />
+    <ClInclude Include="..\..\Include\core\AdaptingSpatialStorage.h" />
+    <ClInclude Include="..\..\Include\core\CompositeSpatialStorage.h" />
+    <ClInclude Include="..\..\Include\core\NarrowPhaseStorageFilter.h" />
+    <ClInclude Include="..\..\Include\core\SharedSpatialStorage.h" />
+    <ClInclude Include="..\..\Include\core\TNodesSpatialStorage.h" />
+    <ClInclude Include="..\..\Include\core\BSPNodeTree.h" />
+    <ClInclude Include="..\..\Include\core\DynamicOctree.h" />
+    <ClInclude Include="..\..\Include\core\LinearStorage.h" />
+    <ClInclude Include="..\..\Include\core\Octree.h" />
+    <ClInclude Include="..\..\Include\core\RegularOctree.h" />
+    <ClInclude Include="..\..\Include\core\StaticGeometryOctree.h" />
+    <ClInclude Include="..\..\Include\core\OctreeNode.h" />
+    <ClInclude Include="..\..\Include\core\BoundingVolume.h" />
+    <ClInclude Include="..\..\Include\core\AABoundingBox.h" />
+    <ClInclude Include="..\..\Include\core\BoundingSpace.h" />
+    <ClInclude Include="..\..\Include\core\BoundingSphere.h" />
+    <ClInclude Include="..\..\Include\core\Frustum.h" />
+    <ClInclude Include="..\..\Include\core\PointVolume.h" />
+    <ClInclude Include="..\..\Include\core\Ray.h" />
+    <ClInclude Include="..\..\Include\core\Triangle.h" />
+    <ClInclude Include="..\..\Include\core\CollisionTests.h" />
+    <ClInclude Include="..\..\Include\core\QuadraticEquations.h" />
+    <ClInclude Include="..\..\Include\core\TriangleSplitter.h" />
+    <ClInclude Include="..\..\Include\core\File.h" />
+    <ClInclude Include="..\..\Include\core\Filesystem.h" />
+    <ClInclude Include="..\..\Include\core\StreamBuffer.h" />
+    <ClInclude Include="..\..\Include\core\Component.h" />
+    <ClInclude Include="..\..\Include\core\ComponentsManager.h" />
+    <ClInclude Include="..\..\Include\core\Manageable.h" />
+    <ClInclude Include="..\..\Include\core\SingletonsManager.h" />
+    <ClInclude Include="..\..\Include\core\Object.h" />
+    <ClInclude Include="..\..\Include\core\Serializable.h" />
+    <ClInclude Include="..\..\Include\core\Serializer.h" />
+    <ClInclude Include="..\..\Include\core\SerializerImpl.h" />
+    <ClInclude Include="..\..\Include\core\FileSerializer.h" />
+    <ClInclude Include="..\..\Include\core\Class.h" />
+    <ClInclude Include="..\..\Include\core\ClassesRegistry.h" />
+    <ClInclude Include="..\..\Include\core\ClassTemplate.h" />
+    <ClInclude Include="..\..\Include\core\TypeID.h" />
+    <ClInclude Include="..\..\Include\core\Properties.h" />
+    <ClInclude Include="..\..\Include\core\PropertiesView.h" />
+    <ClInclude Include="..\..\Include\core\Property.h" />
+    <ClInclude Include="..\..\Include\core\PropertyEditor.h" />
+    <ClInclude Include="..\..\Include\core\Resource.h" />
+    <ClInclude Include="..\..\Include\core\ResourcesManager.h" />
+    <ClInclude Include="..\..\Include\core\ResourceStorage.h" />
+    <ClInclude Include="..\..\Include\core\EulerAngles.h" />
+    <ClInclude Include="..\..\Include\core\Matrix.h" />
+    <ClInclude Include="..\..\Include\core\Vector.h" />
+    <ClInclude Include="..\..\Include\core.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Include\core\Array.inl" />
+    <None Include="..\..\Include\core\ConstSizeArray.inl" />
+    <None Include="..\..\Include\core\Graph.inl" />
+    <None Include="..\..\Include\core\GraphBFS.inl" />
+    <None Include="..\..\Include\core\GraphBuilder.inl" />
+    <None Include="..\..\Include\core\GraphDijkstra.inl" />
+    <None Include="..\..\Include\core\GenericFactory.inl" />
+    <None Include="..\..\Include\core\AdaptingSpatialStorage.inl" />
+    <None Include="..\..\Include\core\CompositeSpatialStorage.inl" />
+    <None Include="..\..\Include\core\NarrowPhaseStorageFilter.inl" />
+    <None Include="..\..\Include\core\SharedSpatialStorage.inl" />
+    <None Include="..\..\Include\core\TNodesSpatialStorage.inl" />
+    <None Include="..\..\Include\core\BSPNodeTree.inl" />
+    <None Include="..\..\Include\core\DynamicOctree.inl" />
+    <None Include="..\..\Include\core\LinearStorage.inl" />
+    <None Include="..\..\Include\core\Octree.inl" />
+    <None Include="..\..\Include\core\RegularOctree.inl" />
+    <None Include="..\..\Include\core\StaticGeometryOctree.inl" />
+    <None Include="..\..\Include\core\OctreeNode.inl" />
+    <None Include="..\..\Include\core\TriangleSplitter.inl" />
+    <None Include="..\..\Include\core\StreamBuffer.inl" />
+    <None Include="..\..\Include\core\Component.inl" />
+    <None Include="..\..\Include\core\ComponentsManager.inl" />
+    <None Include="..\..\Include\core\SingletonsManager.inl" />
+    <None Include="..\..\Include\core\Serializable.inl" />
+    <None Include="..\..\Include\core\Serializer.inl" />
+    <None Include="..\..\Include\core\ClassesRegistry.inl" />
+    <None Include="..\..\Include\core\TypeID.inl" />
+    <None Include="..\..\Include\core\Properties.inl" />
+    <None Include="..\..\Include\core\PropertiesView.inl" />
+    <None Include="..\..\Include\core\Property.inl" />
+    <None Include="..\..\Include\core\ResourcesManager.inl" />
+    <None Include="..\..\Include\core\ResourceStorage.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

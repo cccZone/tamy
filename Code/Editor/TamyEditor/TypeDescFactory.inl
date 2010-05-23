@@ -56,10 +56,10 @@ void TypeDescFactory< T >::getDesc( const Class& type,
    while ( !typesQueue.empty() )
    {
       const Class& currType = typesQueue.front();
-      QString iconName = getIconName( currType );
-      if ( m_fs.doesExist( m_fs.toRelativePath( iconName.toStdString() ) ) )
+      std::string iconName = getIconName( currType ).toStdString();
+      if ( m_fs.doesExist( m_fs.toRelativePath( iconName ) ) )
       {
-         validIconName = iconName;
+         validIconName = iconName.c_str();
          break;
       }
 

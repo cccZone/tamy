@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DBCD9F77-4064-4DB9-AC18-516ED35B24CE}</ProjectGuid>
+    <RootNamespace>coreRenderer</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\Libs\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\Temp\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\Libs\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\Temp\$(ProjectName)\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)\Include;$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)\Include;$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <IgnoreSpecificDefaultLibraries>MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="SingleTextureEffect.cpp" />
+    <ClCompile Include="CompositeRenderingMechanism.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Skeleton.cpp" />
+    <ClCompile Include="ProjCalc2D.cpp" />
+    <ClCompile Include="ProjCalc3D.cpp" />
+    <ClCompile Include="LineSegments.cpp" />
+    <ClCompile Include="LitVertex.cpp" />
+    <ClCompile Include="TriangleMesh.cpp" />
+    <ClCompile Include="DeviceFilter.cpp" />
+    <ClCompile Include="RenderDevicesEnumerator.cpp" />
+    <ClCompile Include="RenderingDevice.cpp" />
+    <ClCompile Include="BestFullScreenDevice.cpp" />
+    <ClCompile Include="BestWindowedDevice.cpp" />
+    <ClCompile Include="SimpleTamyConfigurator.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="OverlayRenderingMechanism.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="TextField.cpp" />
+    <ClCompile Include="GeometryResource.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Scene3DRM.cpp" />
+    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="Geometry.cpp" />
+    <ClCompile Include="Renderable.cpp" />
+    <ClCompile Include="RenderableJoint.cpp" />
+    <ClCompile Include="ShaderEffect.cpp" />
+    <ClCompile Include="SpatialEntity.cpp" />
+    <ClCompile Include="RenderableRepresentation.cpp" />
+    <ClCompile Include="RenderingView.cpp" />
+    <ClCompile Include="DefaultAttributeSorter.cpp" />
+    <ClCompile Include="SpatialRepresentation.cpp" />
+    <ClCompile Include="SpatialView.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx" />
+    <None Include="..\..\Include\core-Renderer\Renderer.inl" />
+    <None Include="..\..\Include\core-Renderer\RendererObject.inl" />
+    <None Include="..\..\Include\core-Renderer\Light.inl" />
+    <None Include="..\..\Include\core-Renderer\LineSegments.inl" />
+    <None Include="..\..\Include\core-Renderer\TriangleMesh.inl" />
+    <None Include="..\..\Include\core-Renderer\ShaderEffect.inl" />
+    <None Include="..\..\Include\core-Renderer\AttributeSorterNode.inl" />
+    <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\SingleTextureEffect.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\CompositeRenderingMechanism.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Renderer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RendererObject.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RendererObjectImpl.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingMechanism.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Camera.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Light.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ProjectionCalculator.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Skeleton.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ProjCalc2D.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ProjCalc3D.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Face.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\LitVertex.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DeviceFilter.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DeviceFilterElem.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DevicesSorter.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderDevicesEnumerator.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingDevice.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\BestFullScreenDevice.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\BestWindowedDevice.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DevTypeFilter.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\FullScreenModeFilter.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ResolutionFilter.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\SimpleTamyConfigurator.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Material.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Texture.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Overlay.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\OverlayRenderingMechanism.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Font.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\TextField.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GeometryResource.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Shader.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Scene3DRM.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Effect.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\EffectAttribute.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Geometry.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Renderable.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderableJoint.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderEffect.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderableRepresentation.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorterNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DefaultAttributeSorter.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\LeafAttributeSorter.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\TransparencyAttribute.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\UniqueObjectAttribute.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\CameraContext.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\SpatialRepresentation.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\SpatialView.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\CameraComponent.h" />
+    <ClInclude Include="..\..\Include\core-Renderer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core-MVC\core-MVC.vcxproj">
+      <Project>{0b2b1dfd-5071-413a-bef9-5f8d265df56a}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\core\core.vcxproj">
+      <Project>{4f4cec82-b5c6-4f0e-b69b-855fa55f4b80}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

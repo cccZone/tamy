@@ -80,9 +80,10 @@ signals:
    /**
     * Called when a popup menu is displayed.
     *
+    * @param parent
     * @param menu
     */
-   void popupMenuShown( QMenu& menu );
+   void popupMenuShown( QTreeWidgetItem* parent, QMenu& menu );
 
 public slots:
    void showPopupMenu( const QPoint& pos );

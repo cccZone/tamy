@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{bcbe981f-8806-433e-86dd-d35d87181053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderables">
+      <UniqueIdentifier>{8de54746-b95c-4f87-8c78-f90427bf035d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{1a23c03f-55c4-48b9-921a-bbe03063ce4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{d132f724-ac29-4668-a6ac-b90412c6e585}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RendererTests.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexArrayTests.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="AttributeSorterTests.cpp">
+      <Filter>Renderables</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectRenderingTests.cpp">
+      <Filter>Renderables</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderablesHierarchyTests.cpp">
+      <Filter>Renderables</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingViewTests.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialViewTests.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraTests.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonTests.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

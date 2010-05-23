@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{10962721-388c-43d0-ac41-75a41f515ff7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mocks">
+      <UniqueIdentifier>{896c9933-4e97-40da-81a1-f8ab2f2edb49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SteeringBehaviors">
+      <UniqueIdentifier>{23e0d74f-eded-4c18-9b31-d9548ac3223f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BehaviorTreeTests.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="FiniteStateMachineTests.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MessagingSystemTests.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="CompositeSteeringBehaviorTests.cpp">
+      <Filter>SteeringBehaviors</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MessagableMock.h">
+      <Filter>Mocks</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

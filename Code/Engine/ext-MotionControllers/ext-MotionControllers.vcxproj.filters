@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Manual">
+      <UniqueIdentifier>{ce9a7afb-77ed-452c-b365-ea23d9ceca63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Automatic">
+      <UniqueIdentifier>{f52b8f0d-6b04-4e70-a37c-13ef79bb883c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="UnconstrainedMotionController.cpp">
+      <Filter>Manual</Filter>
+    </ClCompile>
+    <ClCompile Include="WaypointCameraController.cpp">
+      <Filter>Automatic</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\ext-MotionControllers\UnconstrainedMotionController.h">
+      <Filter>Manual</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ext-MotionControllers\TimeFunction.h">
+      <Filter>Automatic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ext-MotionControllers\WaypointCameraController.h">
+      <Filter>Automatic</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ext-MotionControllers.h" />
+  </ItemGroup>
+</Project>

@@ -29,6 +29,7 @@ public:
    std::string getRelativePath() const;
    TreeWidgetDescFactory* getDescFactory( ResourcesBrowser& resourcesFactory );
    void addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory );
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////
