@@ -122,6 +122,20 @@ public:
     */
    void scan( const std::string& rootDir, FilesystemScanner& scanner ) const;
 
+   /**
+    * Creates a new directory.
+    *
+    * @param dirName    relative path to the directory we want to create.
+    */
+   void mkdir( const std::string dirName ) const;
+
+   /**
+    * Removes an fs element specified by the path from the file system.
+    *
+    * @param path       path to an element we want to remove
+    */
+   void remove( const std::string path ) const;
+
    // -------------------------------------------------------------------------
    // Listeners management
    // -------------------------------------------------------------------------
@@ -204,6 +218,13 @@ public:
     * @param absoluteFilePath
     */
    std::string toRelativePath( const std::string& absoluteFilePath ) const;
+
+   /**
+    * Converts the specified relative path to the file system absolute path.
+    *
+    * @param relativeFilePath
+    */
+   std::string toAbsolutePath( const std::string& relativeFilePath ) const;
 
 private:
    void notifyDirChange( const std::string& dir ) const;

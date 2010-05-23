@@ -2,7 +2,67 @@
 #include "core\File.h"
 #include "core\StringUtils.h"
 #include <stdexcept>
+#include <list>
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace // anonymous
+{
+   class HierarchicalFilesDeleter : public FilesystemScanner
+   {
+   private:
+      struct DeletionDesc
+      {
+         std::string path;
+         bool        isDir;
+
+         DeletionDesc( const std::string& _path, bool _isDir )
+            : path( _path )
+            , isDir( _isDir )
+         {}
+      };
+
+   private:
+      std::string                m_rootDir;
+      std::list< DeletionDesc >  m_deletionList;
+      
+   public:
+      HierarchicalFilesDeleter( const std::string& rootDir )
+         : m_rootDir( rootDir )
+      {}
+
+      void perform()
+      {
+         for ( std::list< DeletionDesc >::const_iterator it = m_deletionList.begin();
+            it != m_deletionList.end(); ++it )
+         {
+            const DeletionDesc& desc = *it;
+            if ( desc.isDir )
+            {
+               RemoveDirectory( desc.path.c_str() );
+            }
+            else
+            {
+               DeleteFile( desc.path.c_str() );
+            }
+         }
+      }
+
+      // ----------------------------------------------------------------------
+      // FilesystemScanner
+      // ----------------------------------------------------------------------
+      void onDirectory( const std::string& name ) 
+      { 
+         m_deletionList.push_front( DeletionDesc( m_rootDir + name, true ) ); 
+      }
+
+      void onFile( const std::string& name )
+      {
+         m_deletionList.push_front( DeletionDesc( m_rootDir + name, false ) ); 
+      }
+   };
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -72,6 +132,47 @@ File* Filesystem::open(const std::string& fileName,
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Filesystem::mkdir( const std::string dirName ) const
+{
+   std::string absPath = toAbsolutePath( dirName );
+   CreateDirectory( absPath.c_str(), NULL );
+
+   std::string parentDir = extractDir( dirName );
+   notifyDirChange( parentDir );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::remove( const std::string path ) const
+{
+   // create a double-null terminated string with the absolute path
+   // to the element we want to remove
+   std::string absPathStr = toAbsolutePath( path );
+   std::size_t strLen = absPathStr.length() + 2;
+   char* absPath = new char[ strLen ];
+   memset( absPath, 0, strLen );
+   strcpy_s( absPath, strLen, absPathStr.c_str() );
+   absPath[ strLen - 2 ] = 0;
+   absPath[ strLen - 1 ] = 0;
+
+   // setup a shell operation that will remove the element
+   SHFILEOPSTRUCT fileOp;
+   ZeroMemory( &fileOp, sizeof( SHFILEOPSTRUCT ) );
+   fileOp.pFrom = absPath;
+   fileOp.wFunc = FO_DELETE;
+   fileOp.fFlags = FOF_SILENT | FOF_ALLOWUNDO;
+   int result = SHFileOperation( &fileOp );
+   
+   // cleanup
+   delete [] absPath;
+
+   // send notifications
+   std::string parentDir = extractDir( path );
+   notifyDirChange( parentDir );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 std::string Filesystem::extractExtension( const std::string& fileName )
 {
    std::size_t pos = fileName.find_last_of( "." );
@@ -89,46 +190,70 @@ std::string Filesystem::extractExtension( const std::string& fileName )
 
 std::string Filesystem::extractDir( const std::string& fileName )
 {
-   std::size_t pos = fileName.length();
-   std::size_t len = fileName.length() - 1;
-   while( true )
+   std::size_t lastSlash = fileName.find_last_of( "/" );
+   if ( lastSlash == std::string::npos )
    {
-      pos = fileName.find_last_of( "/", pos - 1 );
-      if ( pos == std::string::npos || pos == 0 )
+      // the name doesn't contain any slash - therefore there's no dir
+      // definition in the path
+      return "";
+   }
+   else if ( lastSlash < fileName.length() - 1 )
+   {
+      // this is a file name - we can just cut the name
+      // at the slash position and take the right splice
+      return fileName.substr( 0, lastSlash + 1 );
+   }
+   else
+   {
+      // this is a directory ( ends with a slash ) - we need to find
+      // a previous slash and cut the name up till there
+      std::size_t prevSlash = fileName.find_last_of( "/", lastSlash - 1 );
+
+      if ( lastSlash == 0 || prevSlash == std::string::npos )
       {
+         // no directory is specified
          return "";
       }
-
-      if ( pos < len ) 
+      else 
       {
-         return fileName.substr( 0, pos + 1 );
+         return fileName.substr( 0, prevSlash + 1 );
       }
    }
-
-   return "";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 std::string Filesystem::extractNodeName( const std::string& fileName )
 {
-   std::size_t pos = fileName.length();
-   std::size_t len = fileName.length() - 1;
-   while( true )
+   std::size_t lastSlash = fileName.find_last_of( "/" );
+   if ( lastSlash == std::string::npos )
    {
-      pos = fileName.find_last_of( "/", pos - 1 );
-      if ( pos == std::string::npos || pos == 0)
+      // the name doesn't contain any slash - therefore there's no dir
+      // definition in the path
+      return fileName;
+   }
+   else if ( lastSlash < fileName.length() - 1 )
+   {
+      // this is a file name - we can just cut the name
+      // at the slash position and take the right splice
+      return fileName.substr( lastSlash + 1 );
+   }
+   else
+   {
+      // this is a directory ( ends with a slash ) - we need to find
+      // a previous slash and cut the name up till there
+      std::size_t prevSlash = fileName.find_last_of( "/", lastSlash - 1 );
+
+      if ( lastSlash == 0 || prevSlash == std::string::npos )
       {
+         // no directory is specified
          return fileName;
       }
-
-      if ( pos < len ) 
+      else 
       {
-         return fileName.substr( pos + 1 );
+         return fileName.substr( prevSlash + 1 );
       }
    }
-
-   return fileName;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -191,6 +316,13 @@ std::string Filesystem::toRelativePath(const std::string& absoluteFilePath) cons
       relativeFileName += "/";
    }
    return relativeFileName;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::string Filesystem::toAbsolutePath( const std::string& relativeFilePath ) const
+{
+   return m_rootDir + relativeFilePath;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -278,14 +410,14 @@ void Filesystem::scan( const std::string& rootDir, FilesystemScanner& scanner ) 
             if ( name != "." && name != ".." )
             {
                std::string dirName = currPath + name + "/";
-               scanner.onDirectory( dirName );
+               scanner.onDirectory( toRelativePath( dirName ) );
                pathsStack.push_back( dirName );
             }
          }
          else
          {
             // we found a file
-            scanner.onFile( currPath + name );
+            scanner.onFile( toRelativePath( currPath + name ) );
          }
       }
 

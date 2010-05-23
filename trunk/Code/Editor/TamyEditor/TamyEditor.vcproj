@@ -458,13 +458,6 @@
 					RelativePath=".\GeneratedFiles\Release\moc_QPropertiesView.cpp"
 					>
 					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Debug|Win32"
 						ExcludedFromBuild="true"
 						>
@@ -507,13 +500,6 @@
 				<File
 					RelativePath=".\GeneratedFiles\Release\moc_SceneTreeViewer.cpp"
 					>
-					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 					<FileConfiguration
 						Name="Debug|Win32"
 						ExcludedFromBuild="true"
@@ -655,13 +641,6 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath=".\GeneratedFiles\Debug\moc_QPropertyEditor.cpp"
@@ -712,13 +691,6 @@
 					<FileConfiguration
 						Name="Release|Win32"
 						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1475,6 +1447,14 @@
 				Name="ResourcesBrowser"
 				>
 				<File
+					RelativePath=".\FSTreeNode.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\FSTreeNode.h"
+					>
+				</File>
+				<File
 					RelativePath=".\ResourceEditor.h"
 					>
 				</File>
@@ -1508,6 +1488,34 @@
 						/>
 					</FileConfiguration>
 				</File>
+				<Filter
+					Name="Nodes"
+					>
+					<File
+						RelativePath=".\FSDirNode.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\FSDirNode.h"
+						>
+					</File>
+					<File
+						RelativePath=".\FSLeafNode.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\FSLeafNode.h"
+						>
+					</File>
+					<File
+						RelativePath=".\FSRootNode.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\FSRootNode.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -1641,6 +1649,10 @@
 							Outputs="&quot;.\GeneratedFiles\$(ConfigurationName)\moc_$(InputName).cpp&quot;"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\TreeWidgetDescFactory.h"
+					>
 				</File>
 				<File
 					RelativePath=".\TypeDescFactory.h"

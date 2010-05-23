@@ -12,11 +12,11 @@ END_OBJECT()
 
 Effect* SelectionMarker::create( ResourcesManager& rm )
 {
-   std::string shaderResourceName = "Editor/Shaders/SelectionMarker.tfx";
+   std::string shaderResourceName = "/Editor/Shaders/SelectionMarker.tfx";
    Shader* shader = NULL;
    if ( ( shader = dynamic_cast< Shader* >( rm.findResource( shaderResourceName ) ) ) == NULL )
    {
-      std::string shaderFileName = "Editor/Shaders/SelectionMarker.fx";
+      std::string shaderFileName = "/Editor/Shaders/SelectionMarker.fx";
       shader = new Shader( shaderFileName );
       rm.addResource( shader );
    }

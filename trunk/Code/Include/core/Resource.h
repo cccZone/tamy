@@ -78,6 +78,11 @@ public:
     */
    void setResourcesManager( ResourcesManager& mgr );
 
+   /**
+    * Returns an extension of this resource instance.
+    */
+   virtual const char* getVirtualExtension() { return ""; }
+
    // -------------------------------------------------------------------------
    // Resource types management
    // -------------------------------------------------------------------------
@@ -130,6 +135,7 @@ protected:
    DECLARE_CLASS( ClassName )                                                 \
    public:                                                                    \
       static const char* getExtension();                                      \
+      virtual const char* getVirtualExtension();                              \
    private:
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,6 +153,7 @@ protected:
    };                                                                         \
    RegisterResource##Extension resourceTypeRegistryFor_##Extension;           \
    const char* ClassName::getExtension() { return #Extension; }               \
+   const char* ClassName::getVirtualExtension() { return ClassName::getExtension(); } \
    BEGIN_OBJECT( ClassName, ParentClassName )
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,7 +4,8 @@
 /// @file   TamyEditor/TypeDescFactory.h
 /// @brief  Factory creating descriptions of types.
 
-#include "TreeWidget.h"
+#include "TreeWidgetDescFactory.h"
+#include "core.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

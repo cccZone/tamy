@@ -19,7 +19,7 @@ void tokenize( const std::string& str,
    {
       end = str.find_first_of(tokens, start);
       tmp = str.substr(start, end - start);
-      if (tmp.size() > 0)
+      if (tmp.length() > 0)
       {
          output.push_back(tmp);
       }
