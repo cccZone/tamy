@@ -27,6 +27,9 @@ public:
  *
  * A ClassTemplate instance describes the features of a single class,
  * while a Class instance can be thought of as a handle to that class type.
+ *
+ * If one doesn't specify the creator, the class is considered 
+ * abstract and can't be instantiated.
  */
 class ClassTemplate
 {
@@ -42,9 +45,8 @@ public:
     * 
     * @param handle
     * @param className
-    * @param creator    instance creator
     */
-   ClassTemplate( unsigned int handle, const std::string& className, ClassCreator* creator );
+   ClassTemplate( unsigned int handle, const std::string& className );
 
    /**
     * Copy constructor.
@@ -63,9 +65,21 @@ public:
    inline unsigned int getHandle() const { return m_handle; }
 
    /**
+    * Sets a new instance creator for the class.
+    *
+    * @param creator
+    */
+   void setCreator( ClassCreator* creator );
+
+   /**
+    * Tells whether the class can be instantiated.
+    */
+   inline bool isAbstract() const { return m_creator == NULL; }
+
+   /**
     * Creates a new class instance.
     */
-   inline void* instantiate() const { return m_creator->create(); }
+   void* instantiate() const;
 
    /**
     * This method fills the specified collection with handles

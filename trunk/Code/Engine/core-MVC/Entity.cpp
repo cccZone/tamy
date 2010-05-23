@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT(Entity, Object)
+BEGIN_ABSTRACT_OBJECT(Entity, Object)
    PROPERTY_EDIT( "name", std::string, m_name )
    PROPERTY(Entity*, m_parent)
    PROPERTY(Entity::Children, m_children)

@@ -525,13 +525,6 @@
 					RelativePath=".\GeneratedFiles\Release\moc_TreeWidget.cpp"
 					>
 					<FileConfiguration
-						Name="Release|Win32"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
 						Name="Debug|Win32"
 						ExcludedFromBuild="true"
 						>
@@ -727,13 +720,6 @@
 					<FileConfiguration
 						Name="Release|Win32"
 						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Debug|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1224,22 +1210,6 @@
 						</FileConfiguration>
 					</File>
 				</Filter>
-				<Filter
-					Name="Visualisation"
-					>
-					<File
-						RelativePath=".\SelectionMarker.cpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\..\Assets\Editor\Shaders\SelectionMarker.fx"
-						>
-					</File>
-					<File
-						RelativePath=".\SelectionMarker.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="SceneRenderer"
@@ -1442,6 +1412,22 @@
 					RelativePath=".\SelectionManager.h"
 					>
 				</File>
+				<Filter
+					Name="Visualisation"
+					>
+					<File
+						RelativePath=".\SelectionMarker.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\Assets\Editor\Shaders\SelectionMarker.fx"
+						>
+					</File>
+					<File
+						RelativePath=".\SelectionMarker.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="ResourcesBrowser"

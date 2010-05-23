@@ -36,7 +36,7 @@ namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( Resource, Object )
+BEGIN_ABSTRACT_OBJECT( Resource, Object )
    PROPERTY( std::string, m_filePath )
 END_OBJECT()
 
