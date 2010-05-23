@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( ShaderEffect, Effect )
+BEGIN_ABSTRACT_OBJECT( ShaderEffect, Effect )
    PROPERTY_EDIT( "shader", Shader*, m_shader)
 END_OBJECT()
 

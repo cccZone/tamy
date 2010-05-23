@@ -6,6 +6,7 @@
 
 #include "core\ClassesRegistry.h"
 #include "core\ClassTemplate.h"
+#include <stdexcept>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,6 +73,11 @@ public:
     * Tells whether the class instance describes an existing data type.
     */
    bool isValid() const;
+
+   /**
+    * Tells whether the class can be instantiated.
+    */
+   bool isAbstract() const;
 
    /**
     * Returns the name of the class type.
@@ -144,6 +150,10 @@ public:
    template<typename T>
    T* instantiate() const
    {
+      if ( m_template->isAbstract() )
+      {
+         throw std::logic_error( "Abstract classes can't be instantiated" );
+      }
       void* ptr = m_template->instantiate();
       T* obj = reinterpret_cast<T*> (ptr);
 
@@ -203,6 +213,21 @@ ClassesRegistry& getClassesRegistry();
  * Use this macro to register a class with the reflection system.
  */
 #define BEGIN_RTTI(ClassType)                                                 \
+Class ClassType::s_class;                                                     \
+ClassType::RegisterMe ClassType::s_classRegistryTool;                         \
+ClassType::RegisterMe::RegisterMe()                                           \
+{                                                                             \
+   ClassTemplate& thisClass =                                                 \
+      getClassesRegistry().defineClass< ClassType >();                        \
+   thisClass.setCreator( new SolidCreator< ClassType >() );                   \
+   s_class = Class( thisClass );
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Use this macro to register an abstract class with the reflection system.
+ */
+#define BEGIN_ABSTRACT_RTTI(ClassType)                                         \
 Class ClassType::s_class;                                                     \
 ClassType::RegisterMe ClassType::s_classRegistryTool;                         \
 ClassType::RegisterMe::RegisterMe()                                           \

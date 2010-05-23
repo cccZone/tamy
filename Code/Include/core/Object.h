@@ -114,6 +114,14 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#define BEGIN_ABSTRACT_OBJECT(ClassName, ParentClassName)                     \
+   BEGIN_ABSTRACT_RTTI(ClassName)                                             \
+   PARENT(ParentClassName)                                                    \
+   END_RTTI                                                                   \
+   IMPLEMENT_OBJECT(ClassName)
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * This macro defines a non-editable property.
  */

@@ -28,7 +28,7 @@ ClassTemplate& ClassesRegistry::defineClass()
    else
    {
       int handle = (int)m_classes.size();
-      m_classes.push_back( new ClassTemplate( classType.hash(), classType.name(), new SolidCreator< ClassType >() ) );
+      m_classes.push_back( new ClassTemplate( classType.hash(), classType.name() ) );
       m_classHandlesMap.insert( std::make_pair( classType.hash(), handle ) );
       m_classNamesMap.insert( std::make_pair( classType.name(), handle ) );
 
@@ -48,7 +48,7 @@ ClassTemplate& ClassesRegistry::getClassByType()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename ClassType >
-void ClassesRegistry::getClassesMatchingType( std::vector< Class >& outClasses )
+void ClassesRegistry::getClassesMatchingType( std::vector< Class >& outClasses, bool includeAbstract )
 {
    TypeID< ClassType > classType;
    Class refClass = getClassByHandle( classType.hash() );
@@ -57,7 +57,7 @@ void ClassesRegistry::getClassesMatchingType( std::vector< Class >& outClasses )
    for ( unsigned int i = 0; i < count; ++i )
    {
       Class testedClass( *m_classes[i] );
-      if ( refClass.isA( testedClass ) )
+      if ( refClass.isA( testedClass ) && ( includeAbstract || !testedClass.isAbstract() ) )
       {
          outClasses.push_back( testedClass );
       }

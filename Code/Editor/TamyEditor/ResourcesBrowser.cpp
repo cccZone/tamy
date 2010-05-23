@@ -22,10 +22,7 @@
 #include "SceneEditor.h"
 
 
-// TODO: !!!! mechanizm abstrakcyjnych klas, ktorych nie mozna instancjonowac
 // TODO: zmiana nazw resource'ow
-// TODO: dodawanie katalogow
-// TODO: niemozliwosc dodawania entities'ow do lisci
 
 ///////////////////////////////////////////////////////////////////////////////
 
