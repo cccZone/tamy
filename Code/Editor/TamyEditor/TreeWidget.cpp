@@ -1,6 +1,7 @@
 #include "TreeWidget.h"
 #include <QMenu.h>
 #include "core\Assert.h"
+#include "TreeWidgetDescFactory.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,17 +28,22 @@ void TreeWidget::showPopupMenu( const QPoint& pos )
    {
       // add basic actions:
 
-      // expanding the entire node's hierarchy
-      QAction* expandNodeAction = new QAction( "Expand All", this );
-      connect( expandNodeAction, SIGNAL( triggered() ), this, SLOT( expandNode() ) );
-      popupMenu->addAction( expandNodeAction );
+      // nodes collapsing and expansion - but these two work only
+      // if a node has any children
+      if ( m_popupMenuItem->childCount() > 0 )
+      {
+         // expanding the entire node's hierarchy
+         QAction* expandNodeAction = new QAction( "Expand All", this );
+         connect( expandNodeAction, SIGNAL( triggered() ), this, SLOT( expandNode() ) );
+         popupMenu->addAction( expandNodeAction );
 
-      // ... and collapsing it ( for symmetry of operations )
-      QAction* collapseNodeAction = new QAction( "Collapse All", this );
-      connect( collapseNodeAction, SIGNAL( triggered() ), this, SLOT( collapseNode() ) );
-      popupMenu->addAction( collapseNodeAction );
+         // ... and collapsing it ( for symmetry of operations )
+         QAction* collapseNodeAction = new QAction( "Collapse All", this );
+         connect( collapseNodeAction, SIGNAL( triggered() ), this, SLOT( collapseNode() ) );
+         popupMenu->addAction( collapseNodeAction );
 
-      popupMenu->addSeparator();
+         popupMenu->addSeparator();
+      }
 
       // adding new nodes
       TreeWidgetDescFactory* itemsFactory = NULL;

@@ -61,6 +61,14 @@ TEST(Filesystem, extractingPathParts)
    CPPUNIT_ASSERT_EQUAL( std::string( "/ola/" ), Filesystem::extractDir( fileName ) );
    CPPUNIT_ASSERT_EQUAL( std::string( "ula/" ), Filesystem::extractNodeName( fileName ) );
 
+   fileName = "/ola/";
+   CPPUNIT_ASSERT_EQUAL( std::string( "/" ), Filesystem::extractDir( fileName ) );
+   CPPUNIT_ASSERT_EQUAL( std::string( "ola/" ), Filesystem::extractNodeName( fileName ) );
+
+   fileName = "/.svn/";
+   CPPUNIT_ASSERT_EQUAL( std::string( "/" ), Filesystem::extractDir( fileName ) );
+   CPPUNIT_ASSERT_EQUAL( std::string( ".svn/" ), Filesystem::extractNodeName( fileName ) );
+
    fileName = "/";
    CPPUNIT_ASSERT_EQUAL( std::string( "" ), Filesystem::extractDir( fileName ) );
    CPPUNIT_ASSERT_EQUAL( std::string( "/" ), Filesystem::extractNodeName( fileName ) );

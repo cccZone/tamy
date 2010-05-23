@@ -10,11 +10,22 @@
 #include "core.h"
 #include "progressdialog.h"
 #include "FSNodeMimeData.h"
+#include "core-MVC.h"
+
+// nodes
+#include "FSTreeNode.h"
+#include "FSRootNode.h"
+#include "FSDirNode.h"
+#include "FSLeafNode.h"
 
 // editors
-#include "core-MVC.h"
 #include "SceneEditor.h"
 
+
+// TODO: !!!! mechanizm abstrakcyjnych klas, ktorych nie mozna instancjonowac
+// TODO: zmiana nazw resource'ow
+// TODO: dodawanie katalogow
+// TODO: niemozliwosc dodawania entities'ow do lisci
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,14 +64,16 @@ void ResourcesBrowser::initialize( TamyEditor& mgr )
 
    m_mainApp = &mgr.requestService< MainAppComponent > ();
    m_rm = &mgr.requestService< ResourcesManager >();
-   const Filesystem& fs = m_rm->getFilesystem();
+   Filesystem& fs = m_rm->getFilesystem();
+   fs.attach( *this );
+
    m_iconsDir = fs.getShortcut( "editorIcons" ).c_str();
 
    m_itemsFactory = new TypeDescFactory< Resource >( m_iconsDir, fs, "unknownResourceIcon.png" );
 
    // initialize user interface
    initUI( mgr );
-   toggleFilesFiltering();
+   onToggleFilesFiltering();
    initializeEditors();
 }
 
@@ -95,7 +108,7 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
    m_toggleFileTypesViewBtn = new QPushButton( toolbar );
    m_toggleFileTypesViewBtn->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
    toolbarLayout->addWidget( m_toggleFileTypesViewBtn );
-   connect( m_toggleFileTypesViewBtn, SIGNAL( clicked( bool ) ), this, SLOT( toggleFilesFiltering( bool ) ) );
+   connect( m_toggleFileTypesViewBtn, SIGNAL( clicked( bool ) ), this, SLOT( onToggleFilesFiltering( bool ) ) );
 
    toolbarLayout->addSpacerItem( new QSpacerItem(40, 1, QSizePolicy::Expanding, QSizePolicy::Fixed) );
 
@@ -110,13 +123,13 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
    m_fsTree->setHeaderLabels( columnLabels );
    m_fsTree->setDragEnabled( true ); 
    m_fsTree->setDropIndicatorShown( true ); 
-   connect( m_fsTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( editResource( QTreeWidgetItem*, int ) ) );
-   connect( m_fsTree, SIGNAL( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ), this, SLOT( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ) );
-   connect( m_fsTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( addNode( QTreeWidgetItem*, unsigned int ) ) );
-   connect( m_fsTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
-   connect( m_fsTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( clearNode( QTreeWidgetItem* ) ) );
+   connect( m_fsTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( onEditResource( QTreeWidgetItem*, int ) ) );
+   connect( m_fsTree, SIGNAL( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ), this, SLOT( onGetItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ) );
+   connect( m_fsTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( onAddNode( QTreeWidgetItem*, unsigned int ) ) );
+   connect( m_fsTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( onRemoveNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
+   connect( m_fsTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( onClearNode( QTreeWidgetItem* ) ) );
 
-   m_rootDir = new FSTreeEntry( m_fsTree, m_rm->getFilesystem() );
+   m_rootDir = new FSRootNode( m_fsTree, m_rm->getFilesystem() );
    m_fsTree->addTopLevelItem( m_rootDir );
    
 
@@ -138,7 +151,7 @@ void ResourcesBrowser::onDirChanged( const std::string& dir )
 void ResourcesBrowser::refresh( const std::string& rootDir )
 {
    // find the entry corresponding to the specified root directory
-   FSTreeEntry* entry = find( rootDir );
+   FSTreeNode* entry = find( rootDir );
    if ( !entry )
    {
       return;
@@ -158,7 +171,7 @@ void ResourcesBrowser::refresh( const std::string& rootDir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FSTreeEntry* ResourcesBrowser::find( const std::string& dir )
+FSTreeNode* ResourcesBrowser::find( const std::string& dir )
 {
    std::vector< std::string > pathParts;
    StringUtils::tokenize( dir, "/", pathParts );
@@ -167,12 +180,12 @@ FSTreeEntry* ResourcesBrowser::find( const std::string& dir )
       return m_rootDir;
    }
 
-   FSTreeEntry* currItem = m_rootDir;
+   FSTreeNode* currItem = m_rootDir;
    unsigned int count = pathParts.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
       std::string currPathPart = pathParts[i] + "/";
-      FSTreeEntry* nextItem = currItem->find( currPathPart );
+      FSTreeNode* nextItem = currItem->find( currPathPart );
       if ( !nextItem )
       {
          return NULL;
@@ -191,6 +204,54 @@ FSTreeEntry* ResourcesBrowser::find( const std::string& dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void ResourcesBrowser::createResource( const Class& type, const std::string& parentDir )
+{
+   Resource* newResource = type.instantiate< Resource >();
+
+   // learn the new file's name
+   const Filesystem& fs = m_rm->getFilesystem();
+   std::string rootDir = fs.toAbsolutePath( parentDir );
+   std::string filter = std::string( "*." ) + newResource->getVirtualExtension();
+
+   QString fullFileName = QFileDialog::getSaveFileName( m_mgr, 
+                                                       tr("New resource"), 
+                                                       rootDir.c_str(), 
+                                                       filter.c_str() );
+
+   if ( fullFileName.isEmpty() == true ) 
+   {
+      // no file was selected or user pressed 'cancel'
+      return;
+   }
+
+   // once the file is open, extract the directory name
+   std::string fileName = fs.toRelativePath( fullFileName.toStdString() );
+
+   // create & save the resource
+   newResource->setFilePath( fileName );
+   m_rm->addResource( newResource );
+   newResource->saveResource();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::editResource( const std::string& path )
+{
+   ProgressDialog progressDlg;
+   progressDlg.setProgress( 0 );
+   Resource& resource = m_rm->create( path );
+   progressDlg.setProgress( 1 );
+
+   ResourceEditor* editor = create( resource );
+   if ( editor )
+   {
+      editor->initialize( *m_mgr );
+   }
+   // CAUTION: we don't manage the editor's lifetime - it has to take care of itself
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void ResourcesBrowser::onDirectory( const std::string& name )
 {
    ASSERT( m_rm != NULL, "This method can only be called when ResourcesManager instance is available" );
@@ -198,14 +259,13 @@ void ResourcesBrowser::onDirectory( const std::string& name )
    const Filesystem& fs = m_rm->getFilesystem();
 
    std::string parentDirName = fs.extractDir( name );
-   parentDirName = fs.toRelativePath( parentDirName );
    std::string newNodeName = fs.extractNodeName( name );
 
-   FSTreeEntry* parent = find( parentDirName );
+   FSTreeNode* parent = find( parentDirName );
    ASSERT( parent != NULL, "Parent directory not found" );
    if ( parent )
    { 
-      new FSTreeEntry( newNodeName, true, parent, fs, *m_itemsFactory );
+      new FSDirNode( parent, newNodeName, fs );
    }
 }
 
@@ -227,45 +287,27 @@ void ResourcesBrowser::onFile( const std::string& name )
    }
 
    std::string parentDirName = fs.extractDir( name );
-   parentDirName = fs.toRelativePath( parentDirName );
    std::string newNodeName = fs.extractNodeName( name );
 
-   FSTreeEntry* parent = find( parentDirName );
+   FSTreeNode* parent = find( parentDirName );
    ASSERT( parent != NULL, "Parent directory not found" );
    if ( parent )
    {  
-      new FSTreeEntry( newNodeName, false, parent, fs, *m_itemsFactory );
+      new FSLeafNode( parent, newNodeName, fs, *m_itemsFactory );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::editResource( QTreeWidgetItem* item, int column )
+void ResourcesBrowser::onEditResource( QTreeWidgetItem* item, int column )
 {
-   FSTreeEntry* entry = dynamic_cast< FSTreeEntry* >( item );
-   if ( !entry || entry->isDir() )
-   {
-      return;
-   }
-
-   std::string fileName = entry->getRelativePath();
-
-   ProgressDialog progressDlg;
-   progressDlg.setProgress( 0 );
-   Resource& resource = m_rm->create( fileName );
-   progressDlg.setProgress( 1 );
-
-   ResourceEditor* editor = create( resource );
-   if ( editor )
-   {
-      editor->initialize( *m_mgr );
-   }
-   // CAUTION: we don't manage the editor's lifetime - it has to take care of itself
+   FSTreeNode* entry = dynamic_cast< FSTreeNode* >( item );
+   entry->editResource( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::toggleFilesFiltering( bool )
+void ResourcesBrowser::onToggleFilesFiltering( bool )
 {
    // change the view mode flag
    m_viewResourcesOnly = !m_viewResourcesOnly;
@@ -291,223 +333,84 @@ void ResourcesBrowser::toggleFilesFiltering( bool )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::getItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr )
+void ResourcesBrowser::onGetItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr )
 {
-   outFactoryPtr = m_itemsFactory;
+   FSTreeNode* item = dynamic_cast< FSTreeNode* >( parent );
+   outFactoryPtr = item->getDescFactory( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::addNode( QTreeWidgetItem* parent, unsigned int typeIdx )
+void ResourcesBrowser::onAddNode( QTreeWidgetItem* parent, unsigned int typeIdx )
 {  
-   // learn the new file's name
-   const Filesystem& fs = m_rm->getFilesystem();
-   std::string rootDir = fs.getCurrRoot();
-   std::string filter( "Scene files (*." );
-   filter += std::string( Model::getExtension() ) + ")";
+   FSTreeNode* item = dynamic_cast< FSTreeNode* >( parent );
+   item->addNode( typeIdx, *this );
+}
 
-   QString fullFileName = QFileDialog::getSaveFileName( m_mgr, 
-      tr("New scene"), 
-      rootDir.c_str(), 
-      filter.c_str() );
+///////////////////////////////////////////////////////////////////////////////
 
-   if ( fullFileName.isEmpty() == true ) 
+void ResourcesBrowser::onRemoveNode( QTreeWidgetItem* parent, QTreeWidgetItem* child )
+{
+   FSTreeNode* parentItem = dynamic_cast< FSTreeNode* >( parent );
+   FSTreeNode* childItem = dynamic_cast< FSTreeNode* >( child );
+   parentItem->removeNode( childItem );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::onClearNode( QTreeWidgetItem* node )
+{
+   FSTreeNode* item = dynamic_cast< FSTreeNode* >( node );
+   item->clearNodes();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+unsigned int ResourcesBrowser::typesCount() const
+{
+   return m_itemsFactory->typesCount() + 1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::getDesc( unsigned int idx, QString& outDesc, QIcon& outIcon ) const
+{
+   if ( idx == 0 )
    {
-      // no file was selected or user pressed 'cancel'
-      return;
-   }
-
-   // once the file is open, extract the directory name
-   std::string fileName = fs.toRelativePath( fullFileName.toStdString() );
-
-   // create & save the resource
-   FSTreeEntry* parentItem = dynamic_cast< FSTreeEntry* >( parent );
-   Class type = m_itemsFactory->getClass( typeIdx );
-   Resource* newResource = type.instantiate< Resource >();
-   newResource->setFilePath( fileName );
-   m_rm->addResource( newResource );
-   newResource->saveResource();
-}
-
-
-// TODO: !!!! mechanizm abstrakcyjnych klas, ktorych nie mozna instancjonowac
-// TODO: zmiana nazw resource'ow
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::removeNode( QTreeWidgetItem* parent, QTreeWidgetItem* child )
-{
-   // TODO: !!!!!!!!!!!!!!!!!!!!!!!!
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::clearNode( QTreeWidgetItem* node )
-{
-   // TODO: !!!!!!!!!!!!!!!!!!!!!!!!
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-FSTreeEntry::FSTreeEntry( QTreeWidget* hostTree, const Filesystem& fs )
-: QTreeWidgetItem( hostTree )
-, m_fsNodeName( "/" )
-, m_isDir( true )
-{
-   std::string iconsDir = fs.getShortcut( "editorIcons" );
-   setIcon( 0, QIcon( ( iconsDir + "dirIcon.png" ).c_str() ) );
-
-   setEntryName( fs );
-   setEntrySize( fs );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-FSTreeEntry::FSTreeEntry( const std::string& nodeName,
-                          bool isDir,
-                          QTreeWidgetItem* parent,
-                          const Filesystem& fs,
-                          TypeDescFactory< Resource >& itemsFactory )
-: QTreeWidgetItem( parent ) 
-, m_fsNodeName( nodeName )
-, m_isDir( isDir )
-{
-   ASSERT( m_fsNodeName.length() > 0, "Invalid filesystem node name" );
-
-   setEntryIcon( fs, itemsFactory );
-   setEntryName( fs );
-   setEntrySize( fs );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void FSTreeEntry::clear()
-{
-   int count = childCount();
-   for( int i = 0; i < count; ++i )
-   {
-      removeChild( child( 0 ) );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void FSTreeEntry::setEntryIcon( const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory )
-{
-   QString iconsDir = fs.getShortcut( "editorIcons" ).c_str();
-   if ( m_isDir )
-   {
-      setIcon( 0, QIcon( iconsDir + "dirIcon.png" ) );
+      // a directory
+      outDesc = "Directory";
+      outIcon = QIcon( m_iconsDir + "dirIcon.png" );
    }
    else
    {
-      // check the extension look for a matching icon.
-      // Icons for the specific extensions use the filename format:
-      //       <<ext>>Icon.png
-
-      std::string extension = fs.extractExtension( m_fsNodeName ).c_str();
-      
-      Class resourceType = Resource::findResourceClass( extension );
-      if ( resourceType.isValid() )
-      {
-         QString typeName;
-         QIcon icon;
-         itemsFactory.getDesc( resourceType, typeName, icon );
-         setIcon( 0, icon );
-      }
-      else
-      {
-         setIcon( 0, QIcon( iconsDir + "unknownFileIcon.png" ) );
-      }
+      // a resource
+      m_itemsFactory->getDesc( idx - 1, outDesc, outIcon );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FSTreeEntry::setEntryName( const Filesystem& fs )
+void ResourcesBrowser::addNode( unsigned int idx, const std::string& parentDir )
 {
-   if ( m_isDir )
+   if ( idx == 0 )
    {
-      unsigned int nameLen = m_fsNodeName.length();
-      std::string nameWithoutSlash = m_fsNodeName.substr( 0, nameLen - 1 );
-      setText( 0, nameWithoutSlash.c_str() );
+      // learn the new file's name
+      const Filesystem& fs = m_rm->getFilesystem();
+      std::string rootDir = fs.toAbsolutePath( parentDir );
+      QString newDirName = QFileDialog::getSaveFileName( m_mgr, 
+         tr("New directory"), 
+         rootDir.c_str(), 
+         "",
+         NULL,
+         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks );
+
+      fs.mkdir( fs.toRelativePath( newDirName.toStdString() ) );
    }
    else
    {
-      setText( 0, m_fsNodeName.c_str() );
+      Class type = m_itemsFactory->getClass( idx - 1 );
+      createResource( type, parentDir );
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void FSTreeEntry::setEntrySize( const Filesystem& fs )
-{
-   if ( m_isDir )
-   {
-      setText( 1, "DIR" );
-   }
-   else
-   {
-      std::string relativePath = getRelativePath();
-
-      std::size_t fileSize = 0;
-      try
-      {
-         File* file = fs.open( relativePath );
-         fileSize = file->size();
-         delete file;
-      }
-      catch ( std::exception& ex)
-      {
-      }
-
-      char fileSizeStr[ 32 ];
-      sprintf_s( fileSizeStr, "%d", fileSize );
-      setText( 1, fileSizeStr );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-std::string FSTreeEntry::getRelativePath() const
-{
-   // get the hierarchy of nodes leading up th this entry
-   std::list< const FSTreeEntry* > entriesList;
-   entriesList.push_front( this );
-
-   while ( entriesList.front()->parent() != NULL )
-   {
-      entriesList.push_front( dynamic_cast< const FSTreeEntry* >( entriesList.front()->parent() ) );
-   }
-
-   // concatenate the full path from the hierarchy
-   std::string path = "";
-   for ( std::list< const FSTreeEntry* >::const_iterator it = entriesList.begin();
-      it != entriesList.end(); ++it )
-   {
-      path += ( *it )->m_fsNodeName;
-   }
-
-   return path;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-FSTreeEntry* FSTreeEntry::find( const std::string& nodeName )
-{
-   int count = childCount();
-   for( int i = 0; i < count; ++i )
-   {
-      FSTreeEntry* entry = dynamic_cast< FSTreeEntry* >( child( i ) );
-      if ( entry && entry->m_fsNodeName == nodeName )
-      {
-         return entry;
-      }
-   }
-
-   return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -529,7 +432,7 @@ QMimeData* FSTreeWidget::mimeData( const QList<QTreeWidgetItem *> items ) const
    unsigned int count = items.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      FSTreeEntry* node = dynamic_cast< FSTreeEntry* >( items[ i ] );
+      FSTreeNode* node = dynamic_cast< FSTreeNode* >( items[ i ] );
       if ( node )
       {
          paths.push_back( node->getRelativePath() );

@@ -13,22 +13,7 @@ class QMenu;
 class QPoint;
 class QTreeWidgetItem;
 class TypeSelectionAction;
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * A factory for creating the description of node types 
- * the tree will be able to create.
- */
-class TreeWidgetDescFactory
-{
-public:
-   virtual ~TreeWidgetDescFactory() {}
-
-   virtual unsigned int typesCount() const = 0;
-
-   virtual void getDesc( unsigned int idx, QString& outDesc, QIcon& outIcon ) const = 0;
-};
+class TreeWidgetDescFactory;
 
 ///////////////////////////////////////////////////////////////////////////////
 
