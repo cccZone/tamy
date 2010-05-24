@@ -23,8 +23,8 @@ ComponentsManager< Derived >::~ComponentsManager()
    ComponentsArr compsToRemove = m_comps;
    m_comps.clear();
 
-   unsigned int count = compsToRemove.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   int count = (int)compsToRemove.size();
+   for ( int i = count - 1; i >= 0; --i )
    {
       delete compsToRemove[i];
    }
@@ -57,7 +57,21 @@ void ComponentsManager< Derived >::addComponent( Component< Derived >* component
    onComponentAdded( *component );
 }
 
+///////////////////////////////////////////////////////////////////////////////
 
+template< typename Derived >
+void ComponentsManager< Derived >::removeComponent( Component< Derived >& component )
+{
+   for ( ComponentsArr::iterator it = m_comps.begin(); it != m_comps.end(); ++it )
+   {
+      if ( *it == &component )
+      {
+         onComponentRemoved( component );
+         m_comps.erase( it );
+         break;
+      }
+   }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 

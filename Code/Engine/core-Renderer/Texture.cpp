@@ -1,5 +1,5 @@
 #include "core-Renderer\Texture.h"
-#include "core-Renderer\Renderer.h"
+#include "core-Renderer\RendererComponent.h"
 #include "core\StreamBuffer.h"
 #include "core\SingletonsManager.h"
 #include "core\FileSystem.h"
@@ -66,8 +66,28 @@ Texture::~Texture()
 void Texture::onResourceLoaded( ResourcesManager& mgr )
 {
    loadFromFile( mgr.getFilesystem() );
-   Renderer& renderer = mgr.getInitializers().shared<Renderer>();
-   renderer.implement<Texture>(*this);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Texture::onComponentAdded( Component< ResourcesManager >& component )
+{
+   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   if ( rendererComp )
+   {
+      rendererComp->getRenderer().implement< Texture >( *this );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Texture::onComponentRemoved( Component< ResourcesManager >& component )
+{
+   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   if ( rendererComp )
+   {
+      setImplementation( NULL );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

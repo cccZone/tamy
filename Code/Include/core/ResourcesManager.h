@@ -6,8 +6,8 @@
 
 #include <map>
 #include <string>
-#include "core\SingletonsManager.h"
 #include "core\Serializer.h"
+#include "core\ComponentsManager.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,11 +22,9 @@ class Resource;
  * be loaded from files and usually contain large amount of data we don't want 
  * to scatter the precious memory with.
  */
-class ResourcesManager
+class ResourcesManager : public ComponentsManager< ResourcesManager >
 {
 private:
-   SingletonsManager m_initializers;
-
    Filesystem* m_filesystem;
 
    typedef std::map<std::string, Resource* > ResourcesMap;
@@ -71,26 +69,6 @@ public:
    inline unsigned int getResourcesCount() const;
 
    /**
-    * Adds an initialization component required by some resources.
-    *
-    * @param instance      initialization component instance
-    * @return              this resources manager instance, allowing
-    *                      to chain subsequent calls to this method
-    */
-   template<typename INIT_COMP>
-   ResourcesManager& associate(INIT_COMP& instance);
-
-   /**
-    * Returns a storage with the initialization components.
-    */
-   inline SingletonsManager& getInitializers();
-
-   /**
-    * Returns a storage with the initialization components (const version).
-    */
-   inline const SingletonsManager& getInitializers() const;
-
-   /**
     * Registers a new resource instance with the resources manager.
     *
     * @param resource   new resource instance to register
@@ -129,6 +107,13 @@ public:
     * @return           pointer to the resource or NULL if the manager does not have one.
     */
    Resource* findResource( const std::string& name );
+
+protected:
+   // -------------------------------------------------------------------------
+   // ComponentsManager implementation
+   // -------------------------------------------------------------------------
+   void onComponentAdded( Component< ResourcesManager >& component );
+   void onComponentRemoved( Component< ResourcesManager >& component );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

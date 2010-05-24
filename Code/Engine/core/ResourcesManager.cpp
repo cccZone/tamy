@@ -8,7 +8,6 @@
 ResourcesManager::ResourcesManager()
 : m_filesystem(new Filesystem())
 {
-   associate<ResourcesManager> (*this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,6 +63,13 @@ void ResourcesManager::addResource( Resource* resource )
    {
       m_resources.insert( std::make_pair( resource->getFilePath(), resource ) );
       resource->setResourcesManager( *this );
+   }
+
+   // inform the resource about the registered components
+   unsigned int count = getComponentsCount();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      resource->onComponentAdded( *getComponent( i ) );
    }
 }
 
@@ -138,6 +144,28 @@ void ResourcesManager::save( const std::string& name, ExternalDependenciesSet& o
       File* file = m_filesystem->open( name, std::ios_base::out | fileAccessMode );
       Saver saver( new FileSerializer( file ) );
       saver.save( *res, outExternalDependencies );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesManager::onComponentAdded( Component< ResourcesManager >& component )
+{
+   for ( ResourcesMap::iterator it = m_resources.begin(); 
+      it != m_resources.end(); ++it )
+   {
+      it->second->onComponentAdded( component );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesManager::onComponentRemoved( Component< ResourcesManager >& component )
+{
+   for ( ResourcesMap::iterator it = m_resources.begin(); 
+      it != m_resources.end(); ++it )
+   {
+      it->second->onComponentRemoved( component );
    }
 }
 

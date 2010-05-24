@@ -177,8 +177,7 @@ protected:
    virtual void onDetached(Model& hostModel) {}
 
    /**
-    * Called when a component is added to a model managing the entity.
-    * It's up to the implementation to find the components it needs.
+    * Called when a component is added to the model managing the entity.
     *
     * @param component
     */

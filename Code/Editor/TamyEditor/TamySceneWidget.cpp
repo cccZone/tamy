@@ -40,6 +40,7 @@ IDirect3D9* TamySceneWidget::s_d3d9 = NULL;
 TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
 : QWidget( parent, f )
 , m_keysStatusManager( NULL )
+, m_rendererComponent( NULL )
 , m_renderer( NULL )
 , m_camera( NULL )
 , m_scene( NULL )
@@ -68,12 +69,16 @@ TamySceneWidget::~TamySceneWidget()
 {
    m_scene = NULL;
 
+   m_renderer->setMechanism( NULL );
+   delete m_debugRenderer; m_debugRenderer = NULL;
+
    delete m_keysStatusManager; m_keysStatusManager = NULL;
 
    delete m_camera; m_camera = NULL;
-   delete m_renderer; m_renderer = NULL;
 
-   delete m_debugRenderer; m_debugRenderer = NULL;
+   m_resMgr->removeComponent( *m_rendererComponent );
+   delete m_rendererComponent; m_rendererComponent = NULL;
+   delete m_renderer; m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -82,7 +87,7 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
 {
    mgr.addToMainWidget(this);
 
-   ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
+   m_resMgr = &mgr.requestService< ResourcesManager >();
 
    // create a renderer
    SimpleTamyConfigurator configurator;
@@ -107,7 +112,8 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
    mgr.registerService< UserInputController >( *this, *this );
    mgr.registerService< DebugRenderer >( *this, *m_debugRenderer );
 
-   resMgr.associate< Renderer >( *m_renderer );
+   m_rendererComponent = new RendererComponent( *m_renderer );
+   m_resMgr->addComponent( m_rendererComponent );
 
    createRenderer( mgr );
    setupTimeController( mgr );

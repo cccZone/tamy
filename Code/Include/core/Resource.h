@@ -5,6 +5,7 @@
 
 #include "core\Object.h"
 #include "core\Serializer.h"
+#include "core\Component.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,6 +84,7 @@ public:
     */
    virtual const char* getVirtualExtension() { return ""; }
 
+
    // -------------------------------------------------------------------------
    // Resource types management
    // -------------------------------------------------------------------------
@@ -121,6 +123,23 @@ public:
                                  const std::string& typeName );
 
 protected:
+   // -------------------------------------------------------------------------
+   // Notifications
+   // -------------------------------------------------------------------------
+   /**
+    * Called when a component is added to the manager managing this resource.
+    *
+    * @param component
+    */
+   virtual void onComponentAdded( Component< ResourcesManager >& component ) {}
+
+   /**
+    * Called when a component is removed from the manager managing this resource.
+    *
+    * @param component
+    */
+   virtual void onComponentRemoved( Component< ResourcesManager >& component ) {}
+
    /**
     * The method is called by the resources manager once
     * the resource has successfully been registered with the manager.

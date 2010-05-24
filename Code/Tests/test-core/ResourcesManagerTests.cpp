@@ -11,7 +11,7 @@
 
 namespace // anonymous
 {
-   struct InitializerMock
+   struct InitializerMock : public Component< ResourcesManager >
    {
       int objsCount;
       InitializerMock() : objsCount(0) {}
@@ -39,9 +39,13 @@ namespace // anonymous
          ++initializer.objsCount;
       }
 
-      void onResourceLoaded(ResourcesManager& mgr) 
+      void onComponentAdded( Component< ResourcesManager >& component ) 
       {
-         initialize(mgr.getInitializers().shared<InitializerMock>());
+         InitializerMock* initializer = dynamic_cast< InitializerMock* >( &component );
+         if ( initializer )
+         {
+            initialize( *initializer );
+         }
       }
    };
    BEGIN_RESOURCE(ResourceMock, Resource, txt, AM_BINARY)
@@ -57,24 +61,24 @@ TEST(ResourcesManager, basic)
    ResourcesManager manager;
    manager.setFilesystem(new Filesystem("..\\Data"));
 
-   InitializerMock initializer;
-   manager.associate(initializer);
+   InitializerMock* initializer = new InitializerMock();
+   manager.addComponent( initializer );
 
    ResourceMock* resourceMock = new ResourceMock( "resourceMock.txt", 5 );
    manager.addResource( resourceMock );
    resourceMock->saveResource();
 
    manager.reset();
-   initializer.objsCount = 0;
+   initializer->objsCount = 0;
 
    ResourceMock& res1 = dynamic_cast< ResourceMock& >( manager.create("resourceMock.txt") );
    CPPUNIT_ASSERT_EQUAL(5, res1.getValue());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
-   CPPUNIT_ASSERT_EQUAL(1, initializer.objsCount);
+   CPPUNIT_ASSERT_EQUAL(1, initializer->objsCount);
 
    ResourceMock& res2 = dynamic_cast< ResourceMock& >( manager.create("resourceMock.txt") );
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
-   CPPUNIT_ASSERT_EQUAL(1, initializer.objsCount);
+   CPPUNIT_ASSERT_EQUAL(1, initializer->objsCount);
    CPPUNIT_ASSERT(&res1 == &res2);
 }
 

@@ -28,28 +28,6 @@ const Filesystem& ResourcesManager::getFilesystem() const
    return *m_filesystem;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
-SingletonsManager& ResourcesManager::getInitializers()
-{
-   return m_initializers;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const SingletonsManager& ResourcesManager::getInitializers() const
-{
-   return m_initializers;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<typename INIT_COMP>
-ResourcesManager& ResourcesManager::associate(INIT_COMP& instance)
-{
-   m_initializers.setShared<INIT_COMP>(instance);
-   return *this;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 

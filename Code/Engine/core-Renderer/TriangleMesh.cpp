@@ -1,5 +1,5 @@
 #include "core-Renderer\TriangleMesh.h"
-#include "core-Renderer\Renderer.h"
+#include "core-Renderer\RendererComponent.h"
 #include "core\Filesystem.h"
 #include "core\SingletonsManager.h"
 #include "core\ResourcesManager.h"
@@ -31,12 +31,30 @@ TriangleMesh::TriangleMesh( const std::string& name,
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void TriangleMesh::onComponentAdded( Component< ResourcesManager >& component )
+{
+   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   if ( rendererComp )
+   {
+      rendererComp->getRenderer().implement< TriangleMesh >( *this );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TriangleMesh::onComponentRemoved( Component< ResourcesManager >& component )
+{
+   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   if ( rendererComp )
+   {
+      setImplementation( NULL );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void TriangleMesh::onResourceLoaded(ResourcesManager& mgr)
 {
-   Renderer& renderer = mgr.getInitializers().shared<Renderer>();
-   renderer.implement<TriangleMesh> (*this);
-
-   // calculate the bounding volume
    unsigned int verticesCount = m_vertices.size();
    for (unsigned int i = 0; i < verticesCount; ++i)
    {
