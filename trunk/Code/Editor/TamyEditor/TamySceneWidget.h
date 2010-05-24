@@ -23,6 +23,8 @@ class KeysStatusManager;
 class Camera;
 class Model;
 class DebugRenderer;
+class ResourcesManager;
+class RendererComponent;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,6 +45,8 @@ private:
    KeysStatusManager*   m_keysStatusManager;
 
    // required services
+   ResourcesManager*    m_resMgr;
+   RendererComponent*   m_rendererComponent;
    Renderer*            m_renderer;
    Camera*              m_camera;
 

@@ -228,8 +228,6 @@ void IWFScene::addStaticGeometry( Model& scene,
                                   const D3DXMATRIX& situation,
                                   const std::string& objName )
 {
-   Renderer& renderer = rm.getInitializers().shared< Renderer > ();
-
    // aquire the default shader resource
    std::string shaderResourceName = "/Renderer/Shaders/SingleTextureEffect.tfx";
    std::string shaderFilename = "/Renderer/Shaders/SingleTextureEffect.fx";

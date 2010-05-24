@@ -50,6 +50,13 @@ public:
    void addComponent( Component< Derived >* component );
 
    /**
+    * Removes the selected component.
+    *
+    * @param component
+    */
+   void removeComponent( Component< Derived >& component );
+
+   /**
     * Returns the number of registered components.
     *
     * @return           number of registered components
@@ -142,6 +149,13 @@ protected:
     * @param component
     */
    virtual void onComponentAdded( Component< Derived >& component ) {}
+
+   /**
+    * Called when a component is about to be removed from the manager.
+    *
+    * @param component
+    */
+   virtual void onComponentRemoved( Component< Derived >& component ) {}
 
 private:
    void notifyAboutService( void* service );

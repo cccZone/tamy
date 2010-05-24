@@ -1,5 +1,5 @@
 #include "core-Renderer\LineSegments.h"
-#include "core-Renderer\Renderer.h"
+#include "core-Renderer\RendererComponent.h"
 #include "core\ResourcesManager.h"
 #include "core\SingletonsManager.h"
 #include <math.h>
@@ -20,11 +20,31 @@ LineSegments::LineSegments( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void LineSegments::onResourceLoaded(ResourcesManager& mgr)
+void LineSegments::onComponentAdded( Component< ResourcesManager >& component )
 {
-   Renderer& renderer = mgr.getInitializers().shared<Renderer>();
-   renderer.implement<LineSegments> (*this);
+   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   if ( rendererComp )
+   {
+      rendererComp->getRenderer().implement< LineSegments >( *this );
+   }
+}
 
+///////////////////////////////////////////////////////////////////////////////
+
+void LineSegments::onComponentRemoved( Component< ResourcesManager >& component )
+{
+   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   if ( rendererComp )
+   {
+      setImplementation( NULL );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+void LineSegments::onResourceLoaded(ResourcesManager& mgr) 
+{
    // calculate the bounding box
    m_bb = AABoundingBox();
    for (std::vector<LineSegment>::iterator it = m_segments.begin();

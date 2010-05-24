@@ -1,5 +1,5 @@
 #include "core-Renderer\Shader.h"
-#include "core-Renderer\Renderer.h"
+#include "core-Renderer\RendererComponent.h"
 #include "core\File.h"
 #include "core\StreamBuffer.h"
 #include "core\SingletonsManager.h"
@@ -59,9 +59,28 @@ void Shader::onResourceLoaded( ResourcesManager& mgr )
       m_script = shaderScript.getBuffer();
       delete file;
    }
+}
 
-   Renderer& renderer = mgr.getInitializers().shared<Renderer>();
-   renderer.implement<Shader>(*this);
+///////////////////////////////////////////////////////////////////////////////
+
+void Shader::onComponentAdded( Component< ResourcesManager >& component )
+{
+   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   if ( rendererComp )
+   {
+      rendererComp->getRenderer().implement< Shader >( *this );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Shader::onComponentRemoved( Component< ResourcesManager >& component )
+{
+   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   if ( rendererComp )
+   {
+      setImplementation( NULL );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

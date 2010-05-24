@@ -101,6 +101,8 @@ public:
    // Resource implementation
    // -------------------------------------------------------------------------
    void onResourceLoaded(ResourcesManager& mgr);
+   void onComponentAdded( Component< ResourcesManager >& component );
+   void onComponentRemoved( Component< ResourcesManager >& component );
 
 private:
    void loadFromFile( const Filesystem& fs );

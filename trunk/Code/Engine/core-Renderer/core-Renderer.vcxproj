@@ -132,6 +132,7 @@
     <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\RendererComponent.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureEffect.h" />
     <ClInclude Include="..\..\Include\core-Renderer\CompositeRenderingMechanism.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Renderer.h" />

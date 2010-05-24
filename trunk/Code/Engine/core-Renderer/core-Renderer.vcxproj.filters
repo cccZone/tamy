@@ -58,8 +58,8 @@
     <Filter Include="Scene\Views\SpatialView">
       <UniqueIdentifier>{84514925-a186-42f6-b881-24213372128c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Components">
-      <UniqueIdentifier>{0d510a06-7aa6-4746-b9a0-759d4092b12f}</UniqueIdentifier>
+    <Filter Include="Components">
+      <UniqueIdentifier>{1042044a-a9ed-4c6a-840a-21b8f942049f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -367,9 +367,12 @@
     <ClInclude Include="..\..\Include\core-Renderer\SpatialView.h">
       <Filter>Scene\Views\SpatialView</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\CameraComponent.h">
-      <Filter>Scene\Components</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\CameraComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RendererComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

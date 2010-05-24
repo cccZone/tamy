@@ -108,7 +108,9 @@ public:
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
-   void onResourceLoaded(ResourcesManager& mgr);
+   void onResourceLoaded( ResourcesManager& mgr );
+   void onComponentAdded( Component< ResourcesManager >& component );
+   void onComponentRemoved( Component< ResourcesManager >& component );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
