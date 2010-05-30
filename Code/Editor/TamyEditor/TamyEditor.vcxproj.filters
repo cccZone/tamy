@@ -100,6 +100,9 @@
     <Filter Include="Widgets\TreeWidget">
       <UniqueIdentifier>{9173226e-dd2e-414a-a92a-dfda7c1cc74d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\SelectionManager\Representations">
+      <UniqueIdentifier>{aee2c34d-2ea7-443b-925b-ca99eac39b5e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -144,9 +147,6 @@
     <ClInclude Include="QueryableSpatial.h">
       <Filter>Components\SceneQueries\Representations</Filter>
     </ClInclude>
-    <ClInclude Include="DebugRenderer.h">
-      <Filter>Components\SceneRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="GridRenderingEffect.h">
       <Filter>Components\SceneRenderer\Effects</Filter>
     </ClInclude>
@@ -182,6 +182,24 @@
     </ClInclude>
     <ClInclude Include="TypeDescFactory.h">
       <Filter>Widgets\TreeWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderer.h">
+      <Filter>Components\SceneRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectedEntityRepresentation.h">
+      <Filter>Components\SelectionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectedRenderableJoint.h">
+      <Filter>Components\SelectionManager\Representations</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectedRenderable.h">
+      <Filter>Components\SelectionManager\Representations</Filter>
+    </ClInclude>
+    <ClInclude Include="Gizmo.h">
+      <Filter>Components\SelectionManager\Visualisation</Filter>
+    </ClInclude>
+    <ClInclude Include="GizmoEffect.h">
+      <Filter>Components\SelectionManager\Visualisation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -338,9 +356,6 @@
     <ClCompile Include="Vec3PropertyEditor.cpp">
       <Filter>Components\PropertiesEditor\Editors</Filter>
     </ClCompile>
-    <ClCompile Include="DebugRenderer.cpp">
-      <Filter>Components\SceneRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="TamySceneWidget.cpp">
       <Filter>Components\SceneRenderer</Filter>
     </ClCompile>
@@ -395,6 +410,21 @@
     <ClCompile Include="TreeWidget.cpp">
       <Filter>Widgets\TreeWidget</Filter>
     </ClCompile>
+    <ClCompile Include="DebugRenderer.cpp">
+      <Filter>Components\SceneRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectedRenderableJoint.cpp">
+      <Filter>Components\SelectionManager\Representations</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectedRenderable.cpp">
+      <Filter>Components\SelectionManager\Representations</Filter>
+    </ClCompile>
+    <ClCompile Include="Gizmo.cpp">
+      <Filter>Components\SelectionManager\Visualisation</Filter>
+    </ClCompile>
+    <ClCompile Include="GizmoEffect.cpp">
+      <Filter>Components\SelectionManager\Visualisation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -417,6 +447,9 @@
     </None>
     <None Include="TypeDescFactory.inl">
       <Filter>Widgets\TreeWidget</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Editor\Shaders\GizmoEffect.fx">
+      <Filter>Components\SelectionManager\Visualisation</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

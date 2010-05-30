@@ -20,8 +20,12 @@ private:
    struct LineVertex
    {
       D3DXVECTOR3 pos;
+      D3DXVECTOR4 color;
 
-      LineVertex(const D3DXVECTOR3& _pos) : pos(_pos) {}
+      LineVertex( const D3DXVECTOR3& _pos, const D3DXVECTOR4& _color ) 
+         : pos( _pos )
+         , color( _color )
+      {}
    };
 
 private:

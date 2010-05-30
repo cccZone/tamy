@@ -1,4 +1,5 @@
 #include "core-Renderer\Scene3DRM.h"
+#include "core-Renderer\Renderer.h"
 #include "core-Renderer\RenderingView.h"
 #include "core-Renderer\SpatialView.h"
 #include "core-Renderer\CameraContext.h"
@@ -40,7 +41,6 @@ Scene3DRM::Scene3DRM(Model& scene, Camera& camera)
       D3DXVECTOR3(10000, 10000, 10000));
 
    m_renderingView = new RenderingView();
-   // TODO: m_renderingView->setAttributeSorter( transparencySorter );
 
    m_spatialView = new SpatialView(sceneBB);
    m_scene.attach(*m_renderingView);
@@ -62,10 +62,16 @@ Scene3DRM::~Scene3DRM()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Scene3DRM::initialize( Renderer& renderer )
+{
+   m_renderingView->setAttributeSorter( renderer.getAttributeSorter() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Scene3DRM::render()
 {
    m_spatialView->update(*m_camera);
-   m_renderingView->update();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

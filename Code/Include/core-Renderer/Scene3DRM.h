@@ -37,6 +37,7 @@ public:
    // -------------------------------------------------------------------------
    // RenderingMechanism implementation
    // -------------------------------------------------------------------------
+   void initialize( Renderer& renderer );
    void render();
 };
 

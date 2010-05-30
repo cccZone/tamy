@@ -1,13 +1,37 @@
 #include "SelectionManager.h"
-#include "SelectionMarker.h"
+#include "SelectedEntityRepresentation.h"
+#include "core-Renderer.h"
+#include "core-MVC\Model.h"
+#include "Gizmo.h"
+
+// representations
+#include "SelectedRenderableJoint.h"
+#include "SelectedRenderable.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SelectionManager::SelectionManager()
 : m_selectedEntity( NULL )
-, m_selectionMarker( NULL )
+, m_selectedRepresentation( NULL )
+, m_gizmo( NULL )
 , m_observedScene( NULL )
+, m_resMgr( NULL )
+, m_camera( NULL )
+, m_attributeSorter( NULL )
 {
+   associate< Renderable, SelectedRenderable >();
+   associate< RenderableJoint, SelectedRenderableJoint >();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SelectionManager::~SelectionManager()
+{
+   resetContents();
+
+   delete m_gizmo;
+   m_gizmo = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,8 +40,16 @@ void SelectionManager::initialize( TamyEditor& mgr )
 {
    mgr.registerService< SelectionManager >( *this, *this );
 
-   ResourcesManager& resMgr = mgr.requestService<ResourcesManager> ();
-   m_selectionMarker = SelectionMarker::create(resMgr);
+   // acquire an instance of the resources manager and a camera
+   m_resMgr = &mgr.requestService< ResourcesManager >();
+   m_camera = &mgr.requestService< Camera >();
+
+   // register self as a rendering mechanism
+   Renderer& renderer = mgr.requestService< Renderer >();
+   m_attributeSorter = &renderer.getAttributeSorter();
+
+   // create the gizmo
+   m_gizmo = new Gizmo( *m_resMgr, *m_camera );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,6 +83,17 @@ void SelectionManager::selectObject( Entity& entity )
    resetSelection();
    m_selectedEntity = &entity;
 
+   // add the representation to an attribute sorter so that it gets rendered
+   if ( m_attributeSorter )
+   {
+      m_selectedRepresentation = create( entity );
+      if ( m_selectedRepresentation )
+      {
+         m_selectedRepresentation->initialize( *this );
+         m_attributeSorter->add( *m_selectedRepresentation );
+      }
+   }
+
    if ( m_selectedEntity )
    {
       notifyEntitySelected( *m_selectedEntity );
@@ -67,6 +110,13 @@ void SelectionManager::resetSelection()
    }
 
    m_selectedEntity = NULL;
+
+   if ( m_attributeSorter && m_selectedRepresentation )
+   {
+      m_attributeSorter->remove( *m_selectedRepresentation );
+      delete m_selectedRepresentation;
+      m_selectedRepresentation = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,8 +160,6 @@ void SelectionManager::notifyEntitySelected( Entity& entity )
    {
       m_listeners[i]->onObjectSelected( entity );
    }
-
-   visualizeSelection( &entity );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -123,27 +171,6 @@ void SelectionManager::notifyEntityDeselected( Entity& entity )
    {
       m_listeners[i]->onObjectDeselected( entity );
    }
-
-   visualizeSelection( NULL );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SelectionManager::visualizeSelection( Entity* newSelection )
-{/*
-   // TODO: przerobic tak zeby tu byla odrebna scena, na ktorej tworzymy
-   // kopie zaznaczonego obiektu i dodajemy my marker
-   if ( m_selectedEntity )
-   {
-      m_selectedEntity->remove( *m_selectionMarker, false );
-   }
-
-   m_selectedEntity = newSelection;
-
-   if ( m_selectedEntity )
-   {
-      m_selectedEntity->add( m_selectionMarker );
-   }*/
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,9 +183,17 @@ void SelectionManager::onEntityAdded( Entity& entity )
 
 void SelectionManager::onEntityRemoved( Entity& entity )
 {
+   // if the entity was selected, remove the selection
    if ( m_selectedEntity == &entity )
    {
       m_selectedEntity = NULL;
+
+      if ( m_attributeSorter && m_selectedRepresentation )
+      {
+         m_attributeSorter->remove( *m_selectedRepresentation );
+         delete m_selectedRepresentation;
+         m_selectedRepresentation = NULL;
+      }
    }
 }
 
@@ -173,6 +208,13 @@ void SelectionManager::onEntityChanged( Entity& entity )
 void SelectionManager::resetContents()
 {
    m_selectedEntity = NULL;
+
+   if ( m_attributeSorter && m_selectedRepresentation )
+   {
+      m_attributeSorter->remove( *m_selectedRepresentation );
+      delete m_selectedRepresentation;
+      m_selectedRepresentation = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

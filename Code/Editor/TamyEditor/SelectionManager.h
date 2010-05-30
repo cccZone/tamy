@@ -4,6 +4,7 @@
 /// @brief  Component that manages the scene entities selection
 
 #include "core/Component.h"
+#include "core/GenericFactory.h"
 #include "core-MVC\ModelView.h"
 #include "tamyeditor.h"
 #include <vector>
@@ -12,8 +13,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Entity;
-class Effect;
 class Model;
+class SelectedEntityRepresentation;
+class ResourcesManager;
+class Camera;
+class AttributeSorter;
+class Gizmo;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -32,23 +37,58 @@ public:
 /**
  * Component that manages the scene entities selection.
  */
-class SelectionManager: public Component< TamyEditor >, public ModelView
+class SelectionManager: public Component< TamyEditor >, 
+                        public ModelView, 
+                        public GenericFactory< Entity, SelectedEntityRepresentation >
 {
 private:
-   typedef std::vector< SelectionManagerListener* > Listeners;
+   typedef std::vector< SelectionManagerListener* >                     Listeners;
 
 private:
-   Listeners      m_listeners;
+   Listeners                           m_listeners;
 
-   Entity*        m_selectedEntity;
-   Effect*        m_selectionMarker;
-   Model*         m_observedScene;
+   Entity*                             m_selectedEntity;
+   SelectedEntityRepresentation*       m_selectedRepresentation;
+   Gizmo*                              m_gizmo;
+
+   Model*                              m_observedScene;
+
+   ResourcesManager*                   m_resMgr;
+   Camera*                             m_camera;
+   AttributeSorter*                    m_attributeSorter;
 
 public:
    /**
     * Constructor.
     */
    SelectionManager();
+   ~SelectionManager();
+
+   /**
+    * The method renders the selected objects on screen.
+    */
+   void render();
+
+   // -------------------------------------------------------------------------
+   // An interface for the representations
+   // -------------------------------------------------------------------------
+   /**
+    * Returns a reference to the resources manager instance the representations
+    * should reference to get the resources they need.
+    */
+   inline ResourcesManager& getResourcesManager() const { return *m_resMgr; }
+
+   /**
+    * Returns an instance of the camera representations should use to render 
+    * themselves.
+    */
+   inline Camera& getCamera() const { return *m_camera; }
+
+   /**
+    * Returns an instance of a gizmo visualizing the selected object's 
+    * manipulation mode.
+    */
+   inline Gizmo& getGizmo() const { return *m_gizmo; }
 
    // -------------------------------------------------------------------------
    // Selected entities management
@@ -64,6 +104,11 @@ public:
     * Removes the selected object's properties from the view.
     */
    void resetSelection();
+
+   /**
+    * Returns a pointer to the currently selected entity.
+    */
+   inline const Entity* getSelectedEntity() const { return m_selectedEntity; }
 
    // -------------------------------------------------------------------------
    // Listeners management
@@ -97,7 +142,6 @@ public:
    void resetContents();
 
 private:
-   void visualizeSelection( Entity* newSelection );
    void notifyEntitySelected( Entity& entity );
    void notifyEntityDeselected( Entity& entity );
 };

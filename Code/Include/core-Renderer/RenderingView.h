@@ -34,17 +34,11 @@ public:
    ~RenderingView();
 
    /**
-    * Changes the way the renderables will be batched for rendering
-    * by using a different attribute sorting strategy.
+    * Sets an attributes sorter.
     *
-    * @param sorter  new effect attributes sorter
+    * @param sorter
     */
-   void setAttributeSorter(AttributeSorter* sorter);
-
-   /**
-    * Updates the view (by rendering the renderables it contains).
-    */
-   void update();
+   void setAttributeSorter( AttributeSorter& sorter );
 
    // ----------------------------------------------------------------------
    // ModelView implementation

@@ -49,17 +49,17 @@
     <Filter Include="Scene\Views\RenderingView">
       <UniqueIdentifier>{b8462dc0-2baa-4dc4-ae07-85d88d10e6f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Views\RenderingView\AttributeSorters">
-      <UniqueIdentifier>{5b9c7ef5-b042-4d94-a5b4-bf73358f9abd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Views\RenderingView\Attributes">
-      <UniqueIdentifier>{b1f3ce20-ef71-4896-a5ac-6c186f097d3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Views\SpatialView">
       <UniqueIdentifier>{84514925-a186-42f6-b881-24213372128c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components">
       <UniqueIdentifier>{1042044a-a9ed-4c6a-840a-21b8f942049f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Attributes">
+      <UniqueIdentifier>{b1f3ce20-ef71-4896-a5ac-6c186f097d3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\AttributeSorters">
+      <UniqueIdentifier>{5b9c7ef5-b042-4d94-a5b4-bf73358f9abd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -163,7 +163,7 @@
       <Filter>Scene\Views\RenderingView</Filter>
     </ClCompile>
     <ClCompile Include="DefaultAttributeSorter.cpp">
-      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+      <Filter>Core\AttributeSorters</Filter>
     </ClCompile>
     <ClCompile Include="SpatialRepresentation.cpp">
       <Filter>Scene\Views\SpatialView</Filter>
@@ -195,10 +195,10 @@
       <Filter>Scene\Entities</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\AttributeSorterNode.inl">
-      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+      <Filter>Core\AttributeSorters</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl">
-      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+      <Filter>Core\AttributeSorters</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -334,9 +334,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h">
       <Filter>Scene\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h">
-      <Filter>Scene\Views\RenderingView</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderableRepresentation.h">
       <Filter>Scene\Views\RenderingView</Filter>
     </ClInclude>
@@ -344,19 +341,19 @@
       <Filter>Scene\Views\RenderingView</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\AttributeSorterNode.h">
-      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+      <Filter>Core\AttributeSorters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DefaultAttributeSorter.h">
-      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+      <Filter>Core\AttributeSorters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\LeafAttributeSorter.h">
-      <Filter>Scene\Views\RenderingView\AttributeSorters</Filter>
+      <Filter>Core\AttributeSorters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\TransparencyAttribute.h">
-      <Filter>Scene\Views\RenderingView\Attributes</Filter>
+      <Filter>Core\Attributes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\UniqueObjectAttribute.h">
-      <Filter>Scene\Views\RenderingView\Attributes</Filter>
+      <Filter>Core\Attributes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\CameraContext.h">
       <Filter>Scene\Views\SpatialView</Filter>
@@ -373,6 +370,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RendererComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

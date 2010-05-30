@@ -95,7 +95,8 @@ TEST(RendererView, entitiesAreSorted)
    RenderingView view;
    scene3D.attach(view);
 
-   view.setAttributeSorter(new LeafAttributeSorter<AttribMock>());
+   LeafAttributeSorter<AttribMock> sorter;
+   view.setAttributeSorter( sorter );
 
    GeometryMock geometry1("geometry1", log);
    GeometryMock geometry2("geometry2", log);
@@ -114,7 +115,7 @@ TEST(RendererView, entitiesAreSorted)
    scene3D.add(entity2);
    scene3D.add(entity3);
    // case 1 - rendering with all entities added
-   view.update();
+   sorter.render();
    CPPUNIT_ASSERT_EQUAL((unsigned int)3, log.size());
    
    Log::iterator logIt = log.begin();
@@ -126,7 +127,7 @@ TEST(RendererView, entitiesAreSorted)
    // case 2 - rendering after an entity's been removed
    scene3D.remove(*entity3);
 
-   view.update();
+   sorter.render();
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, log.size());
 
    logIt = log.begin();
@@ -160,9 +161,10 @@ TEST(RendererView, changingSorterAfterAddingTheEntities)
    scene3D.add(entity2);
    scene3D.add(entity3);
 
-   view.setAttributeSorter(new LeafAttributeSorter<AttribMock>());
+   LeafAttributeSorter<AttribMock> sorter;
+   view.setAttributeSorter( sorter );
 
-   view.update();
+   sorter.render();
    CPPUNIT_ASSERT_EQUAL((unsigned int)3, log.size());
 
    Log::iterator logIt = log.begin();
@@ -180,6 +182,9 @@ TEST(RendererView, renderingVisibleRenderablesOnly)
    RenderingView view;
    scene3D.attach(view);
 
+   DefaultAttributeSorter sorter;
+   view.setAttributeSorter( sorter );
+
    GeometryMock geometry1("geometry1", log);
    GeometryMock geometry2("geometry2", log);
    Renderable* entity1 = new Renderable();
@@ -194,7 +199,7 @@ TEST(RendererView, renderingVisibleRenderablesOnly)
 
    // hiding an entity
    entity1->setVisible(false);
-   view.update();
+   sorter.render();
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, log.size());
 
    Log::iterator logIt = log.begin();

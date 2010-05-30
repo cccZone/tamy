@@ -45,6 +45,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
 , m_camera( NULL )
 , m_scene( NULL )
 , m_debugRenderer( NULL )
+, m_renderingMech( NULL )
 {
    m_hWnd = static_cast<HWND> (winId());
    memset(m_keyBuffer, 0, sizeof(unsigned char) * 256);
@@ -52,6 +53,9 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
    setFocusPolicy(Qt::ClickFocus);
 
    m_keysStatusManager = new KeysStatusManager(*this);
+
+   // create a rendering mechanism
+   m_renderingMech = new CompositeRenderingMechanism();
 
    if (s_d3d9 == NULL)
    {
@@ -68,6 +72,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
 TamySceneWidget::~TamySceneWidget()
 {
    m_scene = NULL;
+   m_renderingMech = NULL;
 
    m_renderer->setMechanism( NULL );
    delete m_debugRenderer; m_debugRenderer = NULL;
@@ -95,6 +100,7 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
 
    DX9Initializer initializer(*s_d3d9);
    m_renderer = initializer.createDisplay(DX9Settings(*device), m_hWnd);
+   m_renderer->setMechanism( m_renderingMech );
    delete device;
 
    // create a camera
@@ -111,6 +117,7 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
    mgr.registerService< KeysStatusManager >( *this, *m_keysStatusManager );
    mgr.registerService< UserInputController >( *this, *this );
    mgr.registerService< DebugRenderer >( *this, *m_debugRenderer );
+   mgr.registerService< CompositeRenderingMechanism >( *this, *m_renderingMech );
 
    m_rendererComponent = new RendererComponent( *m_renderer );
    m_resMgr->addComponent( m_rendererComponent );
@@ -157,7 +164,7 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
       m_scene->addComponent( new CameraComponent( *m_camera ) );
 
       Scene3DRM* sceneRenderingMech = new Scene3DRM( *m_scene, *m_camera );
-      compRM->add( sceneRenderingMech );
+      m_renderingMech->add( "mainScene", sceneRenderingMech );
    }
    else
    {
@@ -166,9 +173,7 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
 
    // renderer the debug info
    Scene3DRM* debugRenderingMech = new Scene3DRM( m_debugRenderer->getModel(), *m_camera );
-   compRM->add( debugRenderingMech );
-
-   m_renderer->setMechanism( compRM );
+   m_renderingMech->add( "debugScene", debugRenderingMech );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

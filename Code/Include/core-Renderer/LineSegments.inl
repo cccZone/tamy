@@ -15,9 +15,10 @@ LineSegment::LineSegment()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LineSegment::LineSegment( const D3DXVECTOR3& _start, const D3DXVECTOR3& _end )
+LineSegment::LineSegment( const D3DXVECTOR3& _start, const D3DXVECTOR3& _end, const Color& _color )
 : start( _start )
 , end( _end )
+, color( _color )
 {
 }
 

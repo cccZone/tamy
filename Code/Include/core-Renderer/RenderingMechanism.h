@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderingTargetsPolicy;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +16,13 @@ class RenderingMechanism
 {
 public:
    virtual ~RenderingMechanism() {}
+
+   /**
+    * Initializes the mechanism with the renderer that will be using it.
+    *
+    * @param renderer
+    */
+   virtual void initialize( Renderer& renderer ) = 0;
 
    /**
     * Performs the rendering operation defined by the mechanism.
