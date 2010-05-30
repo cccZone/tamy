@@ -23,6 +23,8 @@ namespace // anonymous
       {
       }
 
+      void initialize( Renderer& renderer ) {}
+
       void render() 
       {
          char tmpStr[64];

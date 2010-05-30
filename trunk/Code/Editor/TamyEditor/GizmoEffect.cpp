@@ -1,21 +1,21 @@
-#include "SelectionMarker.h"
+#include "GizmoEffect.h"
 #include "core.h"
 #include "core-Renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SelectionMarker::SelectionMarker( ResourcesManager& rm, Camera& camera, Node& renderedNode )
+GizmoEffect::GizmoEffect( ResourcesManager& rm, Camera& camera )
 : m_camera( camera )
-, m_renderedNode( renderedNode )
+, m_renderedNode( NULL )
 {
-   Shader* shader = dynamic_cast< Shader*>( rm.findResource( "SelectionMarker" ) );
+   Shader* shader = dynamic_cast< Shader*>( rm.findResource( "GizmoEffect" ) );
 
    if ( !shader )
    {
       // load the shader's code
       const Filesystem& fs = rm.getFilesystem();
-      std::string shaderFileName = "/Editor/Shaders/SelectionMarker.fx";
+      std::string shaderFileName = "/Editor/Shaders/GizmoEffect.fx";
       File* shaderFile = fs.open( shaderFileName );
 
       StreamBuffer< char > fileReader( *shaderFile );
@@ -25,7 +25,7 @@ SelectionMarker::SelectionMarker( ResourcesManager& rm, Camera& camera, Node& re
       delete shaderFile;
 
       // create the shader 
-      shader = new Shader( "SelectionMarker", shaderCode );
+      shader = new Shader( "GizmoEffect", shaderCode );
       rm.addResource( shader );
    }
 
@@ -35,9 +35,28 @@ SelectionMarker::SelectionMarker( ResourcesManager& rm, Camera& camera, Node& re
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SelectionMarker::onBeginRendering()
+void GizmoEffect::onAttached(Entity& parent)
 {
-   D3DXMATRIX worldViewProjMtx = m_renderedNode.getGlobalMtx() 
+   m_renderedNode = dynamic_cast< SpatialEntity* >( &parent );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GizmoEffect::onDetached(Entity& parent)
+{
+   m_renderedNode = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GizmoEffect::onBeginRendering()
+{
+   if ( !m_renderedNode )
+   {
+      return;
+   }
+
+   D3DXMATRIX worldViewProjMtx = m_renderedNode->getGlobalMtx() 
       * m_camera.getViewMtx() 
       * m_camera.getProjectionMtx();
    shader().setMtx("g_mWorldViewProj", worldViewProjMtx);

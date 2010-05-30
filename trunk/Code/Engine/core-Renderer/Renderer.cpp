@@ -2,6 +2,7 @@
 #include "core-Renderer\RenderingMechanism.h"
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
+#include "core-Renderer\DefaultAttributeSorter.h"
 #include "core\Point.h"
 #include "core\Assert.h"
 
@@ -13,6 +14,7 @@ namespace // anonymous
    class NullRenderingMechanism : public RenderingMechanism
    {
    public:
+      void initialize( Renderer& renderer ) {}
       void render() {}
    };
 
@@ -23,6 +25,7 @@ namespace // anonymous
 Renderer::Renderer(unsigned int viewportWidth,
                    unsigned int viewportHeight)
 : m_mechanism(new NullRenderingMechanism())
+, m_sorter( new DefaultAttributeSorter() )
 , m_viewportWidth(viewportWidth)
 , m_viewportHeight(viewportHeight)
 , m_leftClientArea(0)
@@ -42,6 +45,9 @@ Renderer::~Renderer()
 {
    delete m_mechanism;
    m_mechanism = NULL;
+
+   delete m_sorter;
+   m_sorter = NULL;
 
    m_currentRendererState = NULL;
 
@@ -68,6 +74,7 @@ void Renderer::setMechanism(RenderingMechanism* mechanism)
    else
    {
       m_mechanism = mechanism;
+      m_mechanism->initialize( *this );
    }
 }
 
@@ -103,6 +110,7 @@ void Renderer::RenderingState::render(Renderer& renderer)
 
    renderer.renderingBegin();
    renderer.m_mechanism->render();
+   renderer.m_sorter->render();
    renderer.renderingEnd();
 }
 

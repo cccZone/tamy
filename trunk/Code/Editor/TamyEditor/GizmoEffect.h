@@ -1,7 +1,7 @@
 #pragma once
 
-/// @file   TamyEditor\SelectionMarker.h
-/// @brief  an effect visualizing the selected object
+/// @file   TamyEditor\GizmoEffect.h
+/// @brief  an effect visualizing an object selection gizmo
 
 #include "core-Renderer\ShaderEffect.h"
 
@@ -15,13 +15,13 @@ class Node;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * An effect rendering a selection hull around an entity.
+ * An effect rendering a gizmo.
  */
-class SelectionMarker : public ShaderEffect
+class GizmoEffect : public ShaderEffect
 {
 private:
    Camera&     m_camera;
-   Node&       m_renderedNode;
+   Node*       m_renderedNode;
 
 public:
    /**
@@ -29,13 +29,17 @@ public:
     * 
     * @param rm            resources manager
     * @param camera
-    * @param renderedNode
     */
-   SelectionMarker( ResourcesManager& rm, Camera& camera, Node& renderedNode );
+   GizmoEffect( ResourcesManager& rm, Camera& camera );
 
 protected:
    void onBeginRendering();
-};
 
+   // -------------------------------------------------------------------------
+   // Entity implementation 
+   // -------------------------------------------------------------------------
+   void onAttached(Entity& parent);
+   void onDetached(Entity& parent);
+};
 
 ///////////////////////////////////////////////////////////////////////////////

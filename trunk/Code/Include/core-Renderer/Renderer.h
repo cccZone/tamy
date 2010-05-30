@@ -18,6 +18,7 @@ class RenderingMechanism;
 class RenderingTargetsPolicy;
 class RendererObject;
 class RendererObjectImpl;
+class AttributeSorter;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -63,19 +64,20 @@ private:
    };
 
 private:
-   RenderingMechanism* m_mechanism;
+   RenderingMechanism*     m_mechanism;
+   AttributeSorter*        m_sorter;            // a sorter that will render all gathered renderables
 
-   unsigned int m_viewportWidth;
-   unsigned int m_viewportHeight;
-   unsigned int m_leftClientArea;
-   unsigned int m_topClientArea;
-   unsigned int m_rightClientArea;
-   unsigned int m_bottomClientArea;
+   unsigned int            m_viewportWidth;
+   unsigned int            m_viewportHeight;
+   unsigned int            m_leftClientArea;
+   unsigned int            m_topClientArea;
+   unsigned int            m_rightClientArea;
+   unsigned int            m_bottomClientArea;
 
-   RendererState* m_initialState;
-   RendererState* m_renderingState;
-   RendererState* m_deviceLostState;
-   RendererState* m_currentRendererState;
+   RendererState*          m_initialState;
+   RendererState*          m_renderingState;
+   RendererState*          m_deviceLostState;
+   RendererState*          m_currentRendererState;
 
 public:
    Renderer(unsigned int viewportWidth = 800,
@@ -128,6 +130,11 @@ public:
     */
    template <typename I>
    void implement(RendererObject& object);
+
+   /**
+    * The method returns an attribute sorter the renderer uses.
+    */
+   inline AttributeSorter& getAttributeSorter() const;
 
 protected:
    /**

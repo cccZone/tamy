@@ -114,7 +114,12 @@
     </CustomBuild>
     <ClInclude Include="CameraCommand.h" />
     <ClInclude Include="CameraController.h" />
+    <ClInclude Include="Gizmo.h" />
+    <ClInclude Include="GizmoEffect.h" />
     <ClInclude Include="SceneNavigator.h" />
+    <ClInclude Include="SelectedEntityRepresentation.h" />
+    <ClInclude Include="SelectedRenderable.h" />
+    <ClInclude Include="SelectedRenderableJoint.h" />
     <ClInclude Include="SelectEntityCommand.h" />
     <ClInclude Include="MousePropertiesView.h" />
     <ClInclude Include="QueryableScene.h" />
@@ -441,8 +446,12 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_tamyeditor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GizmoEffect.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Gizmo.cpp" />
     <ClCompile Include="progressDialog.cpp" />
+    <ClCompile Include="SelectedRenderable.cpp" />
+    <ClCompile Include="SelectedRenderableJoint.cpp" />
     <ClCompile Include="tamyeditor.cpp" />
     <ClCompile Include="GeneratedFiles\Release\moc_ArrayPropertyEditor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -589,6 +598,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
     </CustomBuild>
+    <None Include="..\..\..\Assets\Editor\Shaders\GizmoEffect.fx" />
     <None Include="tamyeditor.qrc" />
     <None Include="QueryableGhost.inl" />
     <None Include="QueryableSpatial.inl" />

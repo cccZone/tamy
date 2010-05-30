@@ -15,7 +15,7 @@ namespace // anonymous
    "   float4 pos   : POSITION;"
    "};"
    ""
-   "VS_OUTPUT vertexShader(float4 inPos : POSITION, float3 inNorm : NORMAL)"
+   "VS_OUTPUT vertexShader(float4 inPos : POSITION)"
    "{"
    "   VS_OUTPUT output = (VS_OUTPUT)0;"
    ""

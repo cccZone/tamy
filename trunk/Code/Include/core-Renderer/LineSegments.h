@@ -9,6 +9,7 @@
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
 #include "core\AABoundingBox.h"
+#include "core\Color.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,15 +22,23 @@ struct LineSegment
 {
    D3DXVECTOR3 start;
    D3DXVECTOR3 end;
+   Color       color;
 
    /**
     * Constructor.
     */
    inline LineSegment();
-   inline LineSegment(const D3DXVECTOR3& start, const D3DXVECTOR3& end);
+   /**
+    * Constructor.
+    *
+    * @param start   segment start pos
+    * @param end     segment end pos
+    * @param color   segment color
+    */
+   inline LineSegment( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color = Color() );
 
-   inline bool operator==(const LineSegment& rhs) const;
-   inline bool operator!=(const LineSegment& rhs) const;
+   inline bool operator==( const LineSegment& rhs ) const;
+   inline bool operator!=( const LineSegment& rhs ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

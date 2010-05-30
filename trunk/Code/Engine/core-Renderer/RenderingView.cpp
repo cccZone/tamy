@@ -25,28 +25,20 @@ RenderingView::~RenderingView()
    }
    m_renderables.clear();
 
-   delete m_sorter; m_sorter;
+   m_sorter;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingView::setAttributeSorter(AttributeSorter* sorter)
+void RenderingView::setAttributeSorter(AttributeSorter& sorter)
 {
-   delete m_sorter;
-   m_sorter = sorter;
+   m_sorter = &sorter;
 
    for (RenderablesMap::iterator it = m_renderables.begin();
       it != m_renderables.end(); ++it)
    {
       m_sorter->add(*(it->second));
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingView::update()
-{
-   m_sorter->render();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

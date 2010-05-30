@@ -64,7 +64,7 @@ void MaterialPropertyEditor::setupUi()
       emissiveLayout->setMargin( 0 );
 
       emissiveLayout->addWidget( new QLabel( "Emissive:", this ) );
-      ColorFrame* emissiveVal = new ColorFrame( emissiveFrame, val.getDiffuseColor() ); 
+      ColorFrame* emissiveVal = new ColorFrame( emissiveFrame, val.getEmissiveColor() ); 
       emissiveLayout->addWidget( emissiveVal );
       connect( emissiveVal, SIGNAL( changed( const QColor& ) ), this, SLOT( emissiveChanged( const QColor& ) ) );
    }
@@ -76,7 +76,7 @@ void MaterialPropertyEditor::setupUi()
       specularLayout->setMargin( 0 );
 
       specularLayout->addWidget( new QLabel( "Specular:", this ) );
-      ColorFrame* specularVal = new ColorFrame( specularFrame, val.getDiffuseColor() ); 
+      ColorFrame* specularVal = new ColorFrame( specularFrame, val.getSpecularColor() ); 
       specularLayout->addWidget( specularVal );
       connect( specularVal, SIGNAL( changed( const QColor& ) ), this, SLOT( specularChanged( const QColor& ) ) );
    }

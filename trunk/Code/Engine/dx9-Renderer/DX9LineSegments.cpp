@@ -8,6 +8,7 @@
 D3DVERTEXELEMENT9 DX9LineSegments::s_vtxDecl[] = 
 {
    {0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
+   {0, 12, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
    D3DDECL_END()
 };
 
@@ -82,10 +83,18 @@ void DX9LineSegments::update(const std::vector<LineSegment>& segments)
       throw std::logic_error("Can't lock a vertex buffer");
    }
 
+   D3DXVECTOR4 tmpColor;
    for (unsigned int i = 0; i < m_segsCount; ++i)
    {
-      *pVertex++ = segments[i].start;
-      *pVertex++ = segments[i].end;
+      tmpColor = ( D3DXVECTOR4 )( segments[i].color );
+
+      pVertex->pos = segments[i].start;
+      pVertex->color = tmpColor;
+      pVertex++;
+
+      pVertex->pos = segments[i].end;
+      pVertex->color = tmpColor;
+      pVertex++;
    }
 
    res = m_vb->Unlock();
