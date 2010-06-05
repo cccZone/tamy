@@ -55,19 +55,29 @@ public:
 
    const std::string& getID() const {return m_id;}
 
-   void add(TimeDependent* object);
+   /**
+    * Adds a new time dependent object to the track.
+    *
+    * @param object
+    */
+   void add( TimeDependent* object );
 
-   void update(float timeElapsed);
+   /**
+    * Updates the state of the track.
+    *
+    * @param timeElapsed   time elapsed since the last time this method was called.
+    */
+   void update( float timeElapsed );
 
    /**
     * This allows to set the track's speed. The speed
     * determines what time value will the objects residing
-    * on the track's timeline receive.
+    * on the track's time line receive.
     *
     * For instance - if the speed = 2 and one sec has passed,
     * the objects will be updated with the timeElapsed value = 2.
     *
-    * Track's internal timeline is not affected by this parameter.
+    * Track's internal time line is not affected by this parameter.
     * This means that the events are not influenced by the track's speed.
     * It considers only TimeDependent objects !!!
     */

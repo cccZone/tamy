@@ -86,6 +86,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EntityManualEditor.h" />
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h" />
     <ClInclude Include="GeneratedFiles\ui_tamyeditor.h" />
     <CustomBuild Include="progressDialog.h">
@@ -112,10 +113,11 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <ClInclude Include="CameraCommand.h" />
-    <ClInclude Include="CameraController.h" />
+    <ClInclude Include="InputCommand.h" />
+    <ClInclude Include="InputInterpreter.h" />
     <ClInclude Include="Gizmo.h" />
     <ClInclude Include="GizmoEffect.h" />
+    <ClInclude Include="NodeManualEditor.h" />
     <ClInclude Include="QueryableRenderable.h" />
     <ClInclude Include="QueryRenderingPass.h" />
     <ClInclude Include="SceneNavigator.h" />
@@ -124,8 +126,7 @@
     <ClInclude Include="SelectedEntityRepresentation.h" />
     <ClInclude Include="SelectedRenderable.h" />
     <ClInclude Include="SelectedRenderableJoint.h" />
-    <ClInclude Include="SelectEntityCommand.h" />
-    <ClInclude Include="MousePropertiesView.h" />
+    <ClInclude Include="EditEntityCommand.h" />
     <ClInclude Include="SceneQueries.h" />
     <ClInclude Include="QueryableEntity.h" />
     <CustomBuild Include="PropertiesEditor.h">
@@ -449,6 +450,7 @@
     <ClCompile Include="GizmoEffect.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Gizmo.cpp" />
+    <ClCompile Include="NodeManualEditor.cpp" />
     <ClCompile Include="progressDialog.cpp" />
     <ClCompile Include="QueryableRenderable.cpp" />
     <ClCompile Include="QueryRenderingPass.cpp" />
@@ -541,10 +543,9 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_Vec3PropertyEditor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="CameraController.cpp" />
+    <ClCompile Include="InputInterpreter.cpp" />
     <ClCompile Include="SceneNavigator.cpp" />
-    <ClCompile Include="SelectEntityCommand.cpp" />
-    <ClCompile Include="MousePropertiesView.cpp" />
+    <ClCompile Include="EditEntityCommand.cpp" />
     <ClCompile Include="SceneQueries.cpp" />
     <ClCompile Include="PropertiesEditor.cpp" />
     <ClCompile Include="QPropertiesView.cpp" />

@@ -16,14 +16,14 @@
 class UserInputController : public KeysStatusModel
 {
 private:
-   Point m_relativePt;
-   Point m_prevMousePos;
+   Point             m_relativePt;
+   Point             m_prevMousePos;
 
-   unsigned char m_keyBuffer[256];
-   Point m_mousePos;
-   D3DXVECTOR2 m_mouseSpeed;
+   unsigned char     m_keyBuffer[256];
+   Point             m_mousePos;
+   D3DXVECTOR2       m_mouseSpeed;
 
-   bool m_relativeModeOn;
+   bool              m_relativeModeOn;
 
 public:
    UserInputController();
@@ -74,6 +74,9 @@ protected:
     * This method sets the mouse at the specified position
     */
    virtual void setMousePos(const Point& pos) = 0;
+
+private:
+   inline bool isRelativeMouseMovementOn() const { return m_relativeModeOn; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

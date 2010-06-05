@@ -40,9 +40,6 @@
     <Filter Include="Components\SceneNavigator\Commands">
       <UniqueIdentifier>{233ee4ca-f6df-4b23-895a-4c5a16db3c43}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\SceneNavigator\Editors">
-      <UniqueIdentifier>{b41fc449-4117-4dc6-ab90-3105b8b110e3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\SceneQueries">
       <UniqueIdentifier>{65c05c11-b4fb-40af-9d34-79a22520830a}</UniqueIdentifier>
     </Filter>
@@ -106,6 +103,9 @@
     <Filter Include="Components\SceneQueries\PixelPerfectQuery">
       <UniqueIdentifier>{8099c230-c5c7-42ed-83be-12a346b63828}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\SceneNavigator\Editors">
+      <UniqueIdentifier>{ffc98458-0d71-4b8c-a205-517c5cde77b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -114,20 +114,8 @@
     <ClInclude Include="GeneratedFiles\ui_tamyeditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="CameraCommand.h">
-      <Filter>Components\SceneNavigator</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraController.h">
-      <Filter>Components\SceneNavigator</Filter>
-    </ClInclude>
     <ClInclude Include="SceneNavigator.h">
       <Filter>Components\SceneNavigator</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectEntityCommand.h">
-      <Filter>Components\SceneNavigator\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="MousePropertiesView.h">
-      <Filter>Components\SceneNavigator\Editors</Filter>
     </ClInclude>
     <ClInclude Include="SceneQueries.h">
       <Filter>Components\SceneQueries</Filter>
@@ -203,6 +191,21 @@
     </ClInclude>
     <ClInclude Include="QueryRenderingPass.h">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
+    </ClInclude>
+    <ClInclude Include="InputCommand.h">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClInclude>
+    <ClInclude Include="InputInterpreter.h">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClInclude>
+    <ClInclude Include="EditEntityCommand.h">
+      <Filter>Components\SceneNavigator\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManualEditor.h">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeManualEditor.h">
+      <Filter>Components\SceneNavigator\Editors</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -311,17 +314,8 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_Vec3PropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="CameraController.cpp">
-      <Filter>Components\SceneNavigator</Filter>
-    </ClCompile>
     <ClCompile Include="SceneNavigator.cpp">
       <Filter>Components\SceneNavigator</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectEntityCommand.cpp">
-      <Filter>Components\SceneNavigator\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="MousePropertiesView.cpp">
-      <Filter>Components\SceneNavigator\Editors</Filter>
     </ClCompile>
     <ClCompile Include="SceneQueries.cpp">
       <Filter>Components\SceneQueries</Filter>
@@ -436,6 +430,15 @@
     </ClCompile>
     <ClCompile Include="QueryRenderingPass.cpp">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
+    </ClCompile>
+    <ClCompile Include="InputInterpreter.cpp">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClCompile>
+    <ClCompile Include="EditEntityCommand.cpp">
+      <Filter>Components\SceneNavigator\Commands</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeManualEditor.cpp">
+      <Filter>Components\SceneNavigator\Editors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
