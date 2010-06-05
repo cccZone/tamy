@@ -71,7 +71,7 @@ void DX9TriangleMesh::initialize(Renderer& renderer)
 
    // fill the vertex buffer, analyze the bounding sphere radius on the way
    void* pVertex = NULL;
-   res = m_dxMesh->LockVertexBuffer(D3DLOCK_DISCARD, (void**)&pVertex);
+   res = m_dxMesh->LockVertexBuffer(0, (void**)&pVertex);
    if (FAILED(res)) 
    { 
       throw std::logic_error("Can't lock the mesh's vertex buffer");
@@ -82,12 +82,12 @@ void DX9TriangleMesh::initialize(Renderer& renderer)
    // fill the index buffer & the attributes table
    USHORT* pIndex = NULL;
    DWORD* pAttrib = NULL;
-   res = m_dxMesh->LockIndexBuffer(D3DLOCK_DISCARD, (void**)&pIndex);
+   res = m_dxMesh->LockIndexBuffer(0, (void**)&pIndex);
    if (FAILED(res)) 
    { 
       throw std::logic_error("Can't lock the mesh's index buffer"); 
    }
-   res = m_dxMesh->LockAttributeBuffer(D3DLOCK_DISCARD, &pAttrib);
+   res = m_dxMesh->LockAttributeBuffer(0, &pAttrib);
    if (FAILED(res)) 
    { 
       throw std::logic_error("Can't lock the mesh's attributes buffer");

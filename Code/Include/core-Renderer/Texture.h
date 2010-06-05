@@ -7,6 +7,7 @@
 #include "core\UniqueObject.h"
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
+#include "core-Renderer\ShaderTexture.h"
 #include <string>
 #include <windows.h>
 
@@ -38,18 +39,11 @@ public:
 
 /**
  * An image that can be drawn on a rendered surface.
- *
- * CAUTION: If I want to create a texture render target,
- * I need to:
- *   1.) create a separate class RenderTarget
- *   2.) rename this one to an ImageTexture (and its implementation
- *       to ImageTextureImpl)
- *   3.) Create a common Texture interface for both that will allow
- *       them to operate with Shaders etc.
  */
 class Texture : public Resource,
                 public TRendererObject<TextureImpl>, 
-                public UniqueObject
+                public UniqueObject,
+                public ShaderTexture
 {
    DECLARE_RESOURCE( Texture )
 
@@ -67,7 +61,7 @@ public:
    ~Texture();
 
    /**
-    * Returns the name of th eimage file.
+    * Returns the name of the image file.
     */
    inline const std::string& getTextureName() const { return m_texFileName; }
 

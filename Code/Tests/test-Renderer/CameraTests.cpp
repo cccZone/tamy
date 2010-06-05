@@ -16,14 +16,12 @@ namespace // anonymous
    {
    protected:
       void resetViewport(unsigned int width, unsigned int height) {}
-
       void renderingBegin() {}
-
       void renderingEnd() {}
-
       bool isGraphicsSystemReady() const {return true;}
-
       void attemptToRecoverGraphicsSystem() {}
+      void activateRenderTarget( RenderTarget* renderTarget ) {}
+      void cleanRenderTarget( const Color& bgColor ) {}
    };
 } // anonymous
 

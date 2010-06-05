@@ -15,7 +15,7 @@ class Camera;
 class UserInputController;
 class Renderer;
 class KeysStatusManager;
-class QueryableScene;
+class SceneQueries;
 class SelectionManager;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@ private:
    UserInputController*             m_uic;
    Renderer*                        m_renderer;
    KeysStatusManager*               m_ksm; 
-   QueryableScene*                  m_scene;
+   SceneQueries*                  m_scene;
    TimeController*                  m_timeController;
    SelectionManager*                m_selectionMgr;
 

@@ -21,10 +21,13 @@ class AttributeSorter;
 class RenderingView : public ModelView
 {
 private:
-   typedef std::map<Renderable*, RenderableRepresentation*> RenderablesMap;
-   RenderablesMap m_renderables;
+   typedef std::map<Renderable*, RenderableRepresentation*>    RenderablesMap;
 
-   AttributeSorter* m_sorter;
+private:
+   RenderablesMap       m_renderables;
+
+   AttributeSorter*     m_defaultSorter;
+   AttributeSorter*     m_sorter;
 
 public:
    /**

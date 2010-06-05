@@ -116,19 +116,18 @@
     <ClInclude Include="CameraController.h" />
     <ClInclude Include="Gizmo.h" />
     <ClInclude Include="GizmoEffect.h" />
+    <ClInclude Include="QueryableRenderable.h" />
+    <ClInclude Include="QueryRenderingPass.h" />
     <ClInclude Include="SceneNavigator.h" />
+    <ClInclude Include="SceneQuery.h" />
+    <ClInclude Include="SceneQueryEffect.h" />
     <ClInclude Include="SelectedEntityRepresentation.h" />
     <ClInclude Include="SelectedRenderable.h" />
     <ClInclude Include="SelectedRenderableJoint.h" />
     <ClInclude Include="SelectEntityCommand.h" />
     <ClInclude Include="MousePropertiesView.h" />
-    <ClInclude Include="QueryableScene.h" />
-    <ClInclude Include="QueryableSceneProxy.h" />
     <ClInclude Include="SceneQueries.h" />
-    <ClInclude Include="SceneQueriesModelRepresentation.h" />
-    <ClInclude Include="SpatiallyQueryable.h" />
-    <ClInclude Include="QueryableGhost.h" />
-    <ClInclude Include="QueryableSpatial.h" />
+    <ClInclude Include="QueryableEntity.h" />
     <CustomBuild Include="PropertiesEditor.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </Message>
@@ -430,6 +429,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="SelectionRenderingPass.h" />
     <ClInclude Include="TreeWidgetDescFactory.h" />
     <ClInclude Include="TypeDescFactory.h" />
   </ItemGroup>
@@ -450,8 +450,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Gizmo.cpp" />
     <ClCompile Include="progressDialog.cpp" />
+    <ClCompile Include="QueryableRenderable.cpp" />
+    <ClCompile Include="QueryRenderingPass.cpp" />
+    <ClCompile Include="SceneQueryEffect.cpp" />
     <ClCompile Include="SelectedRenderable.cpp" />
     <ClCompile Include="SelectedRenderableJoint.cpp" />
+    <ClCompile Include="SelectionRenderingPass.cpp" />
     <ClCompile Include="tamyeditor.cpp" />
     <ClCompile Include="GeneratedFiles\Release\moc_ArrayPropertyEditor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -541,7 +545,6 @@
     <ClCompile Include="SceneNavigator.cpp" />
     <ClCompile Include="SelectEntityCommand.cpp" />
     <ClCompile Include="MousePropertiesView.cpp" />
-    <ClCompile Include="QueryableSceneProxy.cpp" />
     <ClCompile Include="SceneQueries.cpp" />
     <ClCompile Include="PropertiesEditor.cpp" />
     <ClCompile Include="QPropertiesView.cpp" />
@@ -599,9 +602,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
     </CustomBuild>
     <None Include="..\..\..\Assets\Editor\Shaders\GizmoEffect.fx" />
+    <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.fx" />
     <None Include="tamyeditor.qrc" />
-    <None Include="QueryableGhost.inl" />
-    <None Include="QueryableSpatial.inl" />
     <None Include="FloatPropertyEditor.inl" />
     <None Include="IntPropertyEditor.inl" />
     <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.fx" />

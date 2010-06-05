@@ -64,6 +64,8 @@ protected:
    void renderingEnd();
    bool isGraphicsSystemReady() const;
    void attemptToRecoverGraphicsSystem();
+   void activateRenderTarget( RenderTarget* renderTarget );
+   void cleanRenderTarget( const Color& bgColor );
 
 private:
    void initRenderer();

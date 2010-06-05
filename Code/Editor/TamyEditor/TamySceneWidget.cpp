@@ -155,16 +155,16 @@ void TamySceneWidget::setupTimeController( TamyEditor& mgr )
 void TamySceneWidget::createRenderer( TamyEditor& mgr )
 {
    // create a rendering mechanism
-   CompositeRenderingMechanism* compRM = new CompositeRenderingMechanism();
+   VisibilityPass* visiblityPass = new VisibilityPass( *m_camera );
+   SceneRenderingPass* renderingPass = new SceneRenderingPass();
+   m_renderingMech->add( "sceneVisibility", visiblityPass );
+   m_renderingMech->add( "sceneRendering", renderingPass );
 
-   // render the main scene first ( if there's one )
    if ( mgr.hasService< Model >() )
    {
       m_scene = &mgr.requestService< Model >();
-      m_scene->addComponent( new CameraComponent( *m_camera ) );
-
-      Scene3DRM* sceneRenderingMech = new Scene3DRM( *m_scene, *m_camera );
-      m_renderingMech->add( "mainScene", sceneRenderingMech );
+      visiblityPass->addScene( *m_scene );
+      renderingPass->addScene( *m_scene );
    }
    else
    {
@@ -172,8 +172,8 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
    }
 
    // renderer the debug info
-   Scene3DRM* debugRenderingMech = new Scene3DRM( m_debugRenderer->getModel(), *m_camera );
-   m_renderingMech->add( "debugScene", debugRenderingMech );
+   visiblityPass->addScene( m_debugRenderer->getModel() );
+   renderingPass->addScene( m_debugRenderer->getModel() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

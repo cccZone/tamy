@@ -5,7 +5,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ModelView::ModelView()
-: m_model(NULL)
 {
 }
 
@@ -13,37 +12,40 @@ ModelView::ModelView()
 
 ModelView::~ModelView()
 {
-   if (m_model != NULL)
+   std::set< Model* > modelsCache = m_models;
+   m_models.clear();
+
+   for ( std::set< Model* >::iterator it = modelsCache.begin();
+         it != modelsCache.end(); ++it )
    {
-      m_model->detach(*this);
+      (*it)->detach( *this );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ModelView::onAttachedToModel(Model& model)
+void ModelView::onAttachedToModel( Model& model  )
 {
-   if (m_model != NULL)
+   m_models.insert( &model );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ModelView::onDetachedFromModel( Model& model )
+{
+   std::set< Model* >::iterator it = m_models.find( &model );
+   if ( it != m_models.end() )
    {
-      m_model->detach(*this);
+      m_models.erase( it );
       resetContents();
    }
-   m_model = &model;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ModelView::onDetachedFromModel()
-{
-   m_model = NULL;
-   resetContents();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool ModelView::isAttachedToModel() const
 {
-   return (m_model != NULL);
+   return !m_models.empty();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

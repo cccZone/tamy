@@ -1,7 +1,8 @@
 #include "dx9-Renderer\DX9Shader.h"
 #include "dx9-Renderer\DX9Renderer.h"
-#include "core-Renderer\Texture.h"
+#include "core-Renderer\ShaderTexture.h"
 #include "core\File.h"
+#include "dx9-Renderer\DXErrorParser.h"
 #include <stdexcept>
 
 
@@ -75,16 +76,7 @@ void DX9Shader::initialize(Renderer& renderer)
       }
       else
       {
-         std::string errMsg = "Error while loading an effect: ";
-
-         switch(res)
-         {
-         case D3DERR_INVALIDCALL:   errMsg += "System is not properly initialized"; break;
-         case D3DXERR_INVALIDDATA:  errMsg += "Invalid data used"; break;
-         case E_OUTOFMEMORY:        errMsg += "Out of memory"; break;
-         default:                   errMsg += "Unknown error"; break;
-         }
-
+         std::string errMsg = translateDxError( "Error while loading an effect", res );
          throw std::runtime_error(errMsg);
       }
    }
@@ -192,7 +184,7 @@ void DX9Shader::setString(const std::string& paramName,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setTexture(const std::string& paramName, Texture& val)
+void DX9Shader::setTexture(const std::string& paramName, ShaderTexture& val)
 {
    IDirect3DTexture9* texture = reinterpret_cast<IDirect3DTexture9*> (val.getPlatformSpecific());
    m_effect->SetTexture(paramName.c_str(), texture);

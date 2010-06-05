@@ -3,8 +3,8 @@
 /// @file   TamyEditor\SelectEntityCommand.h
 /// @brief  command for selecting entity from a scene
 
-#include "QueryableScene.h"
-#include "core\Delegate.h"
+#include "SceneQueries.h"
+#include "SceneQuery.h"
 #include "CameraCommand.h"
 #include "core\Array.h"
 
@@ -21,34 +21,34 @@ class SelectionManager;
 /**
  * Command for selecting entity from a scene.
  */
-class SelectEntityCommand : public CameraCommand
+class SelectEntityCommand : public CameraCommand, public SceneQuery
 {
 
 private:
-   Camera&              m_camera;
-   QueryableScene&      m_scene;
+   SceneQueries&        m_scene;
    SelectionManager&    m_selectionMgr;
+   D3DXVECTOR2          m_queriedPos;
 
 public:
    /**
     * Constructor.
     *
-    * @param camera        camera that shows the scene
     * @param scene         scene we want to query
     * @param selectionMgr  selection manager
     */
-   SelectEntityCommand( Camera& camera,
-                        QueryableScene& scene, 
+   SelectEntityCommand( SceneQueries& scene, 
                         SelectionManager& selectionMgr );
 
    // -------------------------------------------------------------------------
    // MousePointerCommand implementation
    // -------------------------------------------------------------------------
-   void execute(const D3DXVECTOR2& mousePos);
+   void execute( const D3DXVECTOR2& mousePos );
 
-private:
-   SpatiallyQueryable* findClosest(const Ray& ray,
-                                   const Array<SpatiallyQueryable*>& queryables);
+   // -------------------------------------------------------------------------
+   // SceneQuery implementation
+   // -------------------------------------------------------------------------
+   const D3DXVECTOR2& getQueriedPosition() const { return m_queriedPos; }
+   void setResult( Entity* foundEntity );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

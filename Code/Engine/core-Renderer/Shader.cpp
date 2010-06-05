@@ -183,7 +183,7 @@ void Shader::setString(const std::string& paramName, const std::string& val)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Shader::setTexture(const std::string& paramName, Texture& val)
+void Shader::setTexture(const std::string& paramName, ShaderTexture& val)
 {
    impl().setTexture(paramName, val);
 }

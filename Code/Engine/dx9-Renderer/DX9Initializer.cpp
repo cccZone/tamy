@@ -25,7 +25,7 @@ DX9Settings::DX9Settings(RenderingDevice& device)
 /////////////////////////////////////////////////////////////////////////////
 
 DX9Initializer::DX9Initializer(IDirect3D9& d3d9)
-      : m_d3d9(d3d9)
+: m_d3d9(d3d9)
 {
 }
 

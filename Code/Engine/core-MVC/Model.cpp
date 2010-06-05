@@ -55,7 +55,7 @@ Model::~Model()
    {
       if (m_views[i] != NULL)
       {
-         m_views[i]->onDetachedFromModel();
+         m_views[i]->onDetachedFromModel( *this );
       }
    }
    m_views.clear();
@@ -63,7 +63,7 @@ Model::~Model()
    count = m_viewsToAdd.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      m_viewsToAdd[i]->onDetachedFromModel();
+      m_viewsToAdd[i]->onDetachedFromModel( *this );
    }
    m_viewsToAdd.clear();
 
@@ -173,7 +173,7 @@ void Model::attach(ModelView& view)
 
 void Model::detach(ModelView& view)
 {
-   view.onDetachedFromModel();
+   view.onDetachedFromModel( *this );
 
    Views::iterator it = std::find(m_views.begin(), m_views.end(), &view);
    if (it != m_views.end())

@@ -68,6 +68,10 @@ namespace // anonymous
          m_seqLog.push_back("Renderer - attemptToRecoverGraphicsSystem");
          m_deviceReady = true;
       }
+
+      void activateRenderTarget( RenderTarget* renderTarget ) {}
+
+      void cleanRenderTarget( const Color& bgColor ) {}
    };
 
 } // namespace anonymous

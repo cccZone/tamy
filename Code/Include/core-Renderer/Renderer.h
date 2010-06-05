@@ -6,8 +6,10 @@
 #include "core\Array.h"
 #include "core\Subject.h"
 #include "core\GenericFactory.h"
+#include "core\Color.h"
 #include <vector>
 #include <map>
+#include <set>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,7 +20,7 @@ class RenderingMechanism;
 class RenderingTargetsPolicy;
 class RendererObject;
 class RendererObjectImpl;
-class AttributeSorter;
+class RenderTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -63,9 +65,10 @@ private:
       virtual void render(Renderer& renderer) = 0;
    };
 
+   typedef std::set< RenderTarget* >   RenderTargetsList;
+
 private:
    RenderingMechanism*     m_mechanism;
-   AttributeSorter*        m_sorter;            // a sorter that will render all gathered renderables
 
    unsigned int            m_viewportWidth;
    unsigned int            m_viewportHeight;
@@ -78,6 +81,8 @@ private:
    RendererState*          m_renderingState;
    RendererState*          m_deviceLostState;
    RendererState*          m_currentRendererState;
+
+   RenderTargetsList       m_renderTargetsList;
 
 public:
    Renderer(unsigned int viewportWidth = 800,
@@ -132,9 +137,17 @@ public:
    void implement(RendererObject& object);
 
    /**
-    * The method returns an attribute sorter the renderer uses.
+    * A command for setting a render target.
+    *
+    * Targets are scoped during rendering - each target will be cleaned
+    * only the first time it's set during a rendering frame - that's
+    * why we need this centralized command that operates in the context
+    * of a rendering frame, which is managed by the main renderer.
+    *
+    * @param renderTarget     a pointer to a rendering target, or NULL
+    *                         if we want to use the back buffer.
     */
-   inline AttributeSorter& getAttributeSorter() const;
+   void setRenderTarget( RenderTarget* renderTarget );
 
 protected:
    /**
@@ -170,6 +183,31 @@ protected:
     * for us.
     */
    virtual void attemptToRecoverGraphicsSystem() = 0;
+
+   // -------------------------------------------------------------------------
+   // render targets management
+   // -------------------------------------------------------------------------
+   /**
+    * This method should make the specified render target an active rendering
+    * target on the underlying rendering device.
+    * If NULL is specified, it should activate the back buffer.
+    *
+    * @param renderTarget
+    */
+   virtual void activateRenderTarget( RenderTarget* renderTarget ) = 0;
+
+   /**
+    * This method should clean the currently set rendering target
+    * using the specified color.
+    *
+    * @param bgColor
+    */
+   virtual void cleanRenderTarget( const Color& bgColor ) = 0;
+
+private:
+   bool shouldRenderTargetBeCleaned( RenderTarget* renderTarget ) const;
+   void markRenderTargetCleaned( RenderTarget* renderTarget );
+   void resetRenderTargetsList();
 
 private:
    // ---------------- Renderer states ---------------

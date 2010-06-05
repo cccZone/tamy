@@ -2,7 +2,7 @@
 #include "core-Renderer\RenderingMechanism.h"
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
-#include "core-Renderer\DefaultAttributeSorter.h"
+#include "core-Renderer\RenderTarget.h"
 #include "core\Point.h"
 #include "core\Assert.h"
 
@@ -25,7 +25,6 @@ namespace // anonymous
 Renderer::Renderer(unsigned int viewportWidth,
                    unsigned int viewportHeight)
 : m_mechanism(new NullRenderingMechanism())
-, m_sorter( new DefaultAttributeSorter() )
 , m_viewportWidth(viewportWidth)
 , m_viewportHeight(viewportHeight)
 , m_leftClientArea(0)
@@ -45,9 +44,6 @@ Renderer::~Renderer()
 {
    delete m_mechanism;
    m_mechanism = NULL;
-
-   delete m_sorter;
-   m_sorter = NULL;
 
    m_currentRendererState = NULL;
 
@@ -108,9 +104,9 @@ void Renderer::RenderingState::render(Renderer& renderer)
       return;
    }
 
+   renderer.resetRenderTargetsList();
    renderer.renderingBegin();
    renderer.m_mechanism->render();
-   renderer.m_sorter->render();
    renderer.renderingEnd();
 }
 
@@ -178,6 +174,50 @@ void Renderer::screenToViewport(const Point& screenPt,
 
    viewportPt.x = (x / (m_viewportWidth * 0.5f)) - 1;
    viewportPt.y = 1 - (y / (m_viewportHeight * 0.5f));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::setRenderTarget( RenderTarget* renderTarget )
+{
+   static Color backBufferColor( 81, 176, 255 );
+
+   activateRenderTarget( renderTarget );
+   if ( !shouldRenderTargetBeCleaned( renderTarget ) )
+   {
+      return;
+   }
+
+   if ( renderTarget )
+   {
+      cleanRenderTarget( renderTarget->getBackgroundColor() );
+   }
+   else
+   {
+      cleanRenderTarget( backBufferColor );
+   }
+   markRenderTargetCleaned( renderTarget );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Renderer::shouldRenderTargetBeCleaned( RenderTarget* renderTarget ) const
+{
+   return m_renderTargetsList.find( renderTarget ) == m_renderTargetsList.end();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::markRenderTargetCleaned( RenderTarget* renderTarget )
+{
+   m_renderTargetsList.insert( renderTarget );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::resetRenderTargetsList()
+{
+   m_renderTargetsList.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

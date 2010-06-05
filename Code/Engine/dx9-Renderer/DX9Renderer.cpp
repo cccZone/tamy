@@ -1,4 +1,5 @@
 #include "dx9-Renderer\DX9Renderer.h"
+#include "dx9-Renderer\DXErrorParser.h"
 #include <stdexcept>
 #include <string>
 #include <cassert>
@@ -10,11 +11,14 @@
 #include "dx9-Renderer\DX9LineSegments.h"
 #include "core-Renderer\Texture.h"
 #include "dx9-Renderer\DX9Texture.h"
+#include "core-Renderer\RenderTarget.h"
+#include "dx9-Renderer\DX9RenderTarget.h"
 #include "core-Renderer\Shader.h"
 #include "dx9-Renderer\DX9Shader.h"
 #include "core-Renderer\Font.h"
 #include "dx9-Renderer\DX9Font.h"
-
+#include "core-Renderer\RenderingPass.h"
+#include "dx9-Renderer\DX9RenderingPass.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -47,11 +51,13 @@ DX9Renderer::DX9Renderer(IDirect3DDevice9* d3Device,
    m_viewport.MaxZ = 1.0f;
 
    // associate implementations
-   associate<TriangleMesh, DX9TriangleMesh> ();
-   associate<LineSegments, DX9LineSegments> ();
-   associate<Texture, DX9Texture> ();
-   associate<Shader, DX9Shader> ();
-   associate<Font, DX9Font> ();
+   associate< TriangleMesh, DX9TriangleMesh > ();
+   associate< LineSegments, DX9LineSegments > ();
+   associate< Texture, DX9Texture > ();
+   associate< RenderTarget, DX9RenderTarget > ();
+   associate< Shader, DX9Shader > ();
+   associate< Font, DX9Font > ();
+   associate< RenderingPass, DX9RenderingPass > ();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -118,20 +124,15 @@ void DX9Renderer::resetViewport(unsigned int width, unsigned int height)
 
 void DX9Renderer::renderingBegin()
 {
-   m_d3Device->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xFF514FFF, 1.0f, 0);
-
-   m_d3Device->BeginScene();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void DX9Renderer::renderingEnd()
 {
-   m_d3Device->EndScene();
-   if (FAILED(m_d3Device->Present(NULL, NULL, NULL, NULL)))
+   if ( FAILED( m_d3Device->Present( NULL, NULL, NULL, NULL ) ) )
    {
       m_deviceLost = true;
-      return;
    }
 }
 
@@ -179,6 +180,40 @@ void DX9Renderer::attemptToRecoverGraphicsSystem()
 
 /////////////////////////////////////////////////////////////////////////////
 
+void DX9Renderer::activateRenderTarget( RenderTarget* renderTarget )
+{
+   IDirect3DSurface9* renderTargetSurface = NULL;
+
+   if ( renderTarget )
+   {
+      // rendering target is set - use it
+      IDirect3DTexture9* rtTexture = reinterpret_cast< IDirect3DTexture9* >( renderTarget->getPlatformSpecific() );
+      HRESULT res = rtTexture->GetSurfaceLevel( 0, &renderTargetSurface );
+      if ( FAILED( res ) || !renderTargetSurface )
+      {
+         std::string errorMsg = translateDxError( "Could not acquire a render target surface", res );
+         throw std::runtime_error( errorMsg );
+      }
+   }
+   else
+   {
+      // we're gonna be using the back buffer
+      m_d3Device->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, &renderTargetSurface );
+   }
+
+   m_d3Device->SetRenderTarget( 0, renderTargetSurface );
+   renderTargetSurface->Release();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DX9Renderer::cleanRenderTarget( const Color& bgColor )
+{
+   m_d3Device->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, bgColor, 1.0f, 0 );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 UINT DX9Renderer::getMaxLightsCount() const
 {
    return m_maxLights;
@@ -217,26 +252,8 @@ IDirect3DVertexBuffer9* DX9Renderer::createVertexBuffer(UINT length,
 
    if (FAILED(res))
    {
-      std::string errCode = "Cannot create a vertex buffer ";
-      switch(res)
-      {
-      case D3DERR_INVALIDCALL:
-         errCode += "- invalid parameters used";
-         break;
-
-      case D3DERR_OUTOFVIDEOMEMORY:
-         errCode += "- not enough video memory left";
-         break;
-
-      case E_OUTOFMEMORY:
-         errCode += "- not enough system memory left";
-         break;
-
-      default:
-         errCode += "for an unknown reason";
-         break;
-      }
-      throw std::logic_error(errCode);
+      std::string errorMsg = translateDxError( "Cannot create a vertex buffer", res );
+      throw std::runtime_error( errorMsg );
    }
 
    return vertexBuffer;
