@@ -20,6 +20,16 @@ class SelectionManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+enum MovementDirection
+{
+   MD_LEFT,
+   MD_RIGHT,
+   MD_FRONT,
+   MD_BACK
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * This component is responsible for navigating scene.
  */
@@ -31,9 +41,13 @@ private:
    UserInputController*             m_uic;
    Renderer*                        m_renderer;
    KeysStatusManager*               m_ksm; 
-   SceneQueries*                  m_scene;
+   SceneQueries*                    m_scene;
    TimeController*                  m_timeController;
    SelectionManager*                m_selectionMgr;
+
+   // camera movement state
+   bool                             m_rotating;
+   bool                             m_movementDir[4];
 
    // instance data
    TamyEditor*                      m_mgr;
@@ -45,6 +59,32 @@ public:
     */
    SceneNavigator();
    ~SceneNavigator();
+
+   /**
+    * Updates the position of the camera.
+    */
+   void update( float timeElapsed ); 
+
+   // -------------------------------------------------------------------------
+   // Camera movement commands
+   // -------------------------------------------------------------------------
+
+   /**
+    * Sets or resets camera rotation mode direction.
+    *
+    * @param engage     'true' will make camera rotate, 
+    *                   'false' will stop it
+    */
+   void setCameraRotation( bool engage );
+
+   /**
+    * Sets or resets camera movement in the specified direction.
+    *
+    * @param direction
+    * @param engage     if 'true', camera will start moving in the specified
+    *                   direction, 'false' will stop it
+    */
+   void setCameraMove( MovementDirection direction, bool engage );
 
    // -------------------------------------------------------------------------
    // Component implementation

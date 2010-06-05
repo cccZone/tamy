@@ -4,9 +4,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 UserInputController::UserInputController()
-      : m_relativePt(512, 512),
-      m_mouseSpeed(0, 0),
-      m_relativeModeOn(false)
+: m_relativePt(512, 512)
+, m_mouseSpeed(0, 0)
+, m_relativeModeOn(0)
 {
    ZeroMemory(m_keyBuffer, 256 * sizeof(unsigned char));
 }
@@ -16,7 +16,16 @@ UserInputController::UserInputController()
 void UserInputController::setRelativeMouseMovement(bool enable)
 {
    m_relativeModeOn = enable;
-   if (enable)
+   /*(if ( enable )
+   {
+      ++m_relativeModeOn;
+   }
+   else
+   {
+      --m_relativeModeOn;
+   }*/
+
+   if ( isRelativeMouseMovementOn() )
    {
       setMousePos(m_relativePt);
       onRelativeMouseMovement();
@@ -35,7 +44,7 @@ void UserInputController::update(float timeElapsed)
    checkUserInput(m_keyBuffer, newMousePos);
 
    Point mousePosChange;
-   if (m_relativeModeOn)
+   if ( isRelativeMouseMovementOn() )
    {
       setMousePos(m_relativePt);
       mousePosChange = newMousePos - m_relativePt;
