@@ -83,6 +83,9 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="RenderingPass.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="SceneRenderingPass.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -107,7 +110,6 @@
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="GeometryResource.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Scene3DRM.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="Renderable.cpp" />
@@ -119,6 +121,7 @@
     <ClCompile Include="DefaultAttributeSorter.cpp" />
     <ClCompile Include="SpatialRepresentation.cpp" />
     <ClCompile Include="SpatialView.cpp" />
+    <ClCompile Include="VisibilityPass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx" />
@@ -133,6 +136,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-Renderer\RendererComponent.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureEffect.h" />
     <ClInclude Include="..\..\Include\core-Renderer\CompositeRenderingMechanism.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Renderer.h" />
@@ -169,7 +176,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\TextField.h" />
     <ClInclude Include="..\..\Include\core-Renderer\GeometryResource.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Shader.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\Scene3DRM.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Effect.h" />
     <ClInclude Include="..\..\Include\core-Renderer\EffectAttribute.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Geometry.h" />
@@ -190,6 +196,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\SpatialView.h" />
     <ClInclude Include="..\..\Include\core-Renderer\CameraComponent.h" />
     <ClInclude Include="..\..\Include\core-Renderer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\VisibilityPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core-MVC\core-MVC.vcxproj">

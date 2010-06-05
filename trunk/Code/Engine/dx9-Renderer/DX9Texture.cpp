@@ -1,5 +1,6 @@
 #include "dx9-Renderer\DX9Texture.h"
 #include "dx9-Renderer\DX9Renderer.h"
+#include "dx9-Renderer\DXErrorParser.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,47 +51,8 @@ void DX9Texture::initialize(Renderer& renderer)
 
    if (FAILED(res))
    {
-      std::string errorMsg = std::string("Can't load texture ") + m_texture.getTextureName();
-      switch(res)
-      {
-      case D3DERR_INVALIDCALL:
-         {
-            errorMsg += " due to invalid parameters passed";
-            break;
-         }
-
-      case D3DERR_NOTAVAILABLE:
-         {
-            errorMsg += " - this format is unavailable";
-            break;
-         }
-
-      case D3DERR_OUTOFVIDEOMEMORY:
-         {
-            errorMsg += " due to the lack of video memory";
-            break;
-         }
-
-      case D3DXERR_INVALIDDATA:
-         {
-            errorMsg += " due to invalid data";
-            break;
-         }
-
-      case E_OUTOFMEMORY:
-         {
-            errorMsg += " due to the lack of system memory";
-            break;
-         }
-
-      default:
-         {
-            errorMsg += " for unknown reason";
-            break;
-         }
-      }
-
-      throw std::logic_error(errorMsg);
+      std::string errorMsg = translateDxError( std::string( "Can't load texture ") + m_texture.getTextureName(), res );
+      throw std::runtime_error( errorMsg );
    }
 }
 

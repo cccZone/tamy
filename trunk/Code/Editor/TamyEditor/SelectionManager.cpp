@@ -3,25 +3,21 @@
 #include "core-Renderer.h"
 #include "core-MVC\Model.h"
 #include "Gizmo.h"
-
-// representations
-#include "SelectedRenderableJoint.h"
-#include "SelectedRenderable.h"
+#include "SelectionRenderingPass.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SelectionManager::SelectionManager()
 : m_selectedEntity( NULL )
-, m_selectedRepresentation( NULL )
+, m_renderingPass( NULL )
 , m_gizmo( NULL )
 , m_observedScene( NULL )
 , m_resMgr( NULL )
 , m_camera( NULL )
-, m_attributeSorter( NULL )
 {
-   associate< Renderable, SelectedRenderable >();
-   associate< RenderableJoint, SelectedRenderableJoint >();
+   // create the rendering pass
+   m_renderingPass = new SelectionRenderingPass( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,6 +28,8 @@ SelectionManager::~SelectionManager()
 
    delete m_gizmo;
    m_gizmo = NULL;
+
+   m_renderingPass = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,12 +42,12 @@ void SelectionManager::initialize( TamyEditor& mgr )
    m_resMgr = &mgr.requestService< ResourcesManager >();
    m_camera = &mgr.requestService< Camera >();
 
-   // register self as a rendering mechanism
-   Renderer& renderer = mgr.requestService< Renderer >();
-   m_attributeSorter = &renderer.getAttributeSorter();
-
    // create the gizmo
    m_gizmo = new Gizmo( *m_resMgr, *m_camera );
+
+   // register a rendering pass
+   CompositeRenderingMechanism& compRenderingMech = mgr.requestService< CompositeRenderingMechanism >();
+   compRenderingMech.add( "SelectionManager", m_renderingPass );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,17 +81,10 @@ void SelectionManager::selectObject( Entity& entity )
    resetSelection();
    m_selectedEntity = &entity;
 
-   // add the representation to an attribute sorter so that it gets rendered
-   if ( m_attributeSorter )
-   {
-      m_selectedRepresentation = create( entity );
-      if ( m_selectedRepresentation )
-      {
-         m_selectedRepresentation->initialize( *this );
-         m_attributeSorter->add( *m_selectedRepresentation );
-      }
-   }
+   // visualize the selection
+   m_renderingPass->set( &entity );
 
+   // notify about the selection
    if ( m_selectedEntity )
    {
       notifyEntitySelected( *m_selectedEntity );
@@ -111,12 +102,8 @@ void SelectionManager::resetSelection()
 
    m_selectedEntity = NULL;
 
-   if ( m_attributeSorter && m_selectedRepresentation )
-   {
-      m_attributeSorter->remove( *m_selectedRepresentation );
-      delete m_selectedRepresentation;
-      m_selectedRepresentation = NULL;
-   }
+   // unvisualise the selection
+   m_renderingPass->set( NULL );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -187,13 +174,7 @@ void SelectionManager::onEntityRemoved( Entity& entity )
    if ( m_selectedEntity == &entity )
    {
       m_selectedEntity = NULL;
-
-      if ( m_attributeSorter && m_selectedRepresentation )
-      {
-         m_attributeSorter->remove( *m_selectedRepresentation );
-         delete m_selectedRepresentation;
-         m_selectedRepresentation = NULL;
-      }
+      m_renderingPass->set( NULL );
    }
 }
 
@@ -208,13 +189,7 @@ void SelectionManager::onEntityChanged( Entity& entity )
 void SelectionManager::resetContents()
 {
    m_selectedEntity = NULL;
-
-   if ( m_attributeSorter && m_selectedRepresentation )
-   {
-      m_attributeSorter->remove( *m_selectedRepresentation );
-      delete m_selectedRepresentation;
-      m_selectedRepresentation = NULL;
-   }
+   m_renderingPass->set( NULL );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

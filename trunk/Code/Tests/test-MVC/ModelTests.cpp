@@ -265,7 +265,7 @@ TEST(Model, attachingAndDetachingViews)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(Model, reattachingViewBetweenModels)
+TEST(Model, attachingToMultipleModels)
 {
    Model model1;
    Model model2;
@@ -288,10 +288,10 @@ TEST(Model, reattachingViewBetweenModels)
    CPPUNIT_ASSERT_EQUAL(1, view.getEntitiesObserved());
 
    model2.attach(view);
-   CPPUNIT_ASSERT_EQUAL((unsigned int)0, model1.getViewsCount());
+   CPPUNIT_ASSERT_EQUAL((unsigned int)1, model1.getViewsCount());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, model2.getViewsCount());
    CPPUNIT_ASSERT_EQUAL(true, view.isAttachedToModel());
-   CPPUNIT_ASSERT_EQUAL(2, view.getEntitiesObserved());
+   CPPUNIT_ASSERT_EQUAL(3, view.getEntitiesObserved());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

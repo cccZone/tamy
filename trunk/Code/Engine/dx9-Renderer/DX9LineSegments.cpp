@@ -77,7 +77,7 @@ void DX9LineSegments::update(const std::vector<LineSegment>& segments)
       D3DPOOL_MANAGED);
 
    DX9LineSegments::LineVertex* pVertex = NULL;
-   HRESULT res = m_vb->Lock(0, 0, (void**)&pVertex, D3DLOCK_DISCARD);
+   HRESULT res = m_vb->Lock(0, 0, (void**)&pVertex, 0);
    if (FAILED(res)) 
    { 
       throw std::logic_error("Can't lock a vertex buffer");

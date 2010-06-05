@@ -43,7 +43,7 @@ public:
    void setMtx(const std::string& paramName, const D3DXMATRIX& val);
    void setMtx(const std::string& paramName, const D3DXMATRIX* arr, unsigned int size);
    void setString(const std::string& paramName, const std::string& val);
-   void setTexture(const std::string& paramName, Texture& val);
+   void setTexture(const std::string& paramName, ShaderTexture& val);
    void setVec4(const std::string& paramName, const D3DXVECTOR4& val);
    void setVec4(const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size);
    unsigned int beginRendering();

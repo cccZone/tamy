@@ -3,6 +3,8 @@
 /// @file   core-MVC\ModelView.h
 /// @brief  view that observes changes of a model
 
+#include <set>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,7 +19,7 @@ class Model;
 class ModelView 
 {
 private:
-   Model* m_model;
+   std::set< Model* >   m_models;
 
 public:
    virtual ~ModelView();
@@ -27,7 +29,7 @@ public:
     *
     * @param entity  entity that's been added to the model
     */
-   virtual void onEntityAdded(Entity& entity) = 0;
+   virtual void onEntityAdded( Entity& entity ) = 0;
 
    /**
     * This method is called just before an entity is removed from the observed 
@@ -35,14 +37,14 @@ public:
     *
     * @param entity  entity that is about to be removed the model
     */
-   virtual void onEntityRemoved(Entity& entity) = 0;
+   virtual void onEntityRemoved( Entity& entity ) = 0;
 
    /**
     * This method is called to inform that some aspect of an entity has changed.
     *
     * @param entity
     */
-   virtual void onEntityChanged(Entity& entity) = 0;
+   virtual void onEntityChanged( Entity& entity ) = 0;
 
    /**
     * The method will should clear view contents.
@@ -58,7 +60,7 @@ public:
     *
     * @param model   instance of Model the view is now observing
     */
-   void onAttachedToModel(Model& model);
+   void onAttachedToModel( Model& model );
 
    /**
     * A Model instance calls this method to inform the view that the link
@@ -66,7 +68,7 @@ public:
     *
     * @param model   instance of Model the view used to be observing.
     */
-   void onDetachedFromModel();
+   void onDetachedFromModel( Model& model );
 
    /**
     * The method can be used to check if the view is actively observing 

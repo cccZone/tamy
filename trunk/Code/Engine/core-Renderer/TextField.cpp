@@ -14,7 +14,7 @@ TextField::TextField(Renderer& renderer)
 , m_y(0)
 , m_width(0)
 , m_height(0)
-, m_color(1, 1, 1, 1)
+, m_color( 1.f, 1.f, 1.f, 1.f )
 , m_justification(TJ_LEFT)
 {
    m_renderer.attachObserver(*this);

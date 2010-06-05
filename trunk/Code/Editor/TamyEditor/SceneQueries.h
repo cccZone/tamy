@@ -3,36 +3,44 @@
 /// @file   TamyEditor\SceneQueries.h
 /// @brief  component that allows to query scene for entities
 
-#include "core\Component.h"
-#include "core\GenericFactory.h"
+#include "core.h"
 #include "core-MVC\ModelView.h"
-#include "QueryableScene.h"
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class TamyEditor;
-class SceneQueriesModelRepresentation;
 class Entity;
 class Model;
-class QueryableSceneProxy;
+class SceneQuery;
+class RenderTarget;
+class QueryRenderingPass;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This component is responsible for managing the selected entities.
+ * This component is responsible for querying a scene for the objects
+ * it contains.
  */
-class SceneQueries : public Component<TamyEditor>,
-                     public GenericFactory<Entity, SceneQueriesModelRepresentation>,
+class SceneQueries : public Component< TamyEditor >,
                      public ModelView
 {
 private:
-   typedef std::map<Entity*, SceneQueriesModelRepresentation*> Representations;
+   union PtrAsBytes
+   {
+      long ptr;
+      struct
+      {
+         unsigned char b[4];
+      };
+   };
 
 private:
-   QueryableSceneProxy* m_entitiesQueryStorage;
-   Representations      m_representations;
-   Model*               m_currObservedScene;
+   Model*                  m_currObservedScene;
+
+   RenderTarget*           m_sceneSnapshot;
+   QueryRenderingPass*     m_renderingPass;
 
 public:
    /**
@@ -41,23 +49,29 @@ public:
    SceneQueries();
    ~SceneQueries();
 
-   // -------------------------------------------------------------------------
-   // Storage management
-   // -------------------------------------------------------------------------
    /**
-    * Sets a new instance of the storage which will contain queryable entities.
+    * Registers a new scene query.
     *
-    * @param storage    storage with queryable scene entities
+    * @param query
     */
-   void setStorage(QueryableScene* storage);
+   void query( SceneQuery& query );
 
    /**
-    * Gives access to the storage that contains all queryable entity
-    * representations.
+    * Converts a regular pointer to a vector, which can be used as an argument
+    * of the SceneQueryEffect.
     *
-    * @return      queryable scene
+    * @param ptr     pointer we want to convert
+    * @return        pointer in a vector form
     */
-   QueryableScene& storage();
+   static D3DXVECTOR4 ptrToVec( void* ptr );
+
+   /**
+    * Inverted conversion to the one introduced by method 'ptrToVec'
+    *
+    * @param vec     a vector representation of a pointer
+    * @return        a pointer
+    */
+   static void* vecToPtr( const D3DXVECTOR4& vec );
 
    // -------------------------------------------------------------------------
    // Component implementation
@@ -73,6 +87,7 @@ public:
    void onEntityChanged( Entity& entity );
 
 protected:
+   void renderRepresentations();
    void resetContents();
 };
 

@@ -50,6 +50,7 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Texture.h"
+#include "core-Renderer\RenderTarget.h"
 
 // ----------------------------------------------------------------------------
 // OverlayRenderer
@@ -72,7 +73,15 @@
 // ----------------------------------------------------------------------------
 // Scene
 // ----------------------------------------------------------------------------
-#include "core-Renderer\Scene3DRM.h"
+#include "core-Renderer\RenderingPass.h"
+#include "core-Renderer\SceneRenderingPass.h"
+#include "core-Renderer\VisibilityPass.h"
+#include "core-Renderer\AttributeSorter.h"
+// ----------------------------------------------------------------------------
+// --> Attributes
+// ----------------------------------------------------------------------------
+#include "core-Renderer\TransparencyAttribute.h"
+#include "core-Renderer\UniqueObjectAttribute.h"
 // ----------------------------------------------------------------------------
 // --> Entities
 // ----------------------------------------------------------------------------

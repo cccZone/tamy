@@ -65,7 +65,10 @@ void CompositeRenderingMechanism::add( const std::string& name, RenderingMechani
       m_members.push_back( mechanism );
    }
 
-   mechanism->initialize( *m_renderer );
+   if ( m_renderer )
+   {
+      mechanism->initialize( *m_renderer );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

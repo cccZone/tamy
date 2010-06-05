@@ -9,7 +9,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingView::RenderingView()
-: m_sorter(new DefaultAttributeSorter())
+: m_defaultSorter( new DefaultAttributeSorter() )
+, m_sorter( m_defaultSorter )
 {
 }
 
@@ -25,20 +26,26 @@ RenderingView::~RenderingView()
    }
    m_renderables.clear();
 
-   m_sorter;
+   delete m_defaultSorter; m_defaultSorter = NULL;
+   m_sorter = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingView::setAttributeSorter(AttributeSorter& sorter)
+void RenderingView::setAttributeSorter( AttributeSorter& sorter )
 {
-   m_sorter = &sorter;
-
-   for (RenderablesMap::iterator it = m_renderables.begin();
-      it != m_renderables.end(); ++it)
+   for ( RenderablesMap::iterator it = m_renderables.begin();
+      it != m_renderables.end(); ++it )
    {
-      m_sorter->add(*(it->second));
+      // remove all renderables from the previous sorter
+      m_sorter->remove( *(it->second) );
+
+      // add them to the new one instead
+      sorter.add( *(it->second) );
    }
+
+   // memorize pointer to the new sorter
+   m_sorter = &sorter;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

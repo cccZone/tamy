@@ -55,10 +55,10 @@
     <Filter Include="Components">
       <UniqueIdentifier>{1042044a-a9ed-4c6a-840a-21b8f942049f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Attributes">
+    <Filter Include="Scene\Attributes">
       <UniqueIdentifier>{b1f3ce20-ef71-4896-a5ac-6c186f097d3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\AttributeSorters">
+    <Filter Include="Scene\AttributeSorters">
       <UniqueIdentifier>{5b9c7ef5-b042-4d94-a5b4-bf73358f9abd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -135,9 +135,6 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Scene3DRM.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Effect.cpp">
       <Filter>Scene\Entities</Filter>
     </ClCompile>
@@ -163,13 +160,25 @@
       <Filter>Scene\Views\RenderingView</Filter>
     </ClCompile>
     <ClCompile Include="DefaultAttributeSorter.cpp">
-      <Filter>Core\AttributeSorters</Filter>
+      <Filter>Scene\AttributeSorters</Filter>
     </ClCompile>
     <ClCompile Include="SpatialRepresentation.cpp">
       <Filter>Scene\Views\SpatialView</Filter>
     </ClCompile>
     <ClCompile Include="SpatialView.cpp">
       <Filter>Scene\Views\SpatialView</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingPass.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="VisibilityPass.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneRenderingPass.cpp">
+      <Filter>Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -195,10 +204,10 @@
       <Filter>Scene\Entities</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\AttributeSorterNode.inl">
-      <Filter>Core\AttributeSorters</Filter>
+      <Filter>Scene\AttributeSorters</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl">
-      <Filter>Core\AttributeSorters</Filter>
+      <Filter>Scene\AttributeSorters</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -310,9 +319,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\Shader.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Scene3DRM.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Effect.h">
       <Filter>Scene\Entities</Filter>
     </ClInclude>
@@ -341,19 +347,19 @@
       <Filter>Scene\Views\RenderingView</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\AttributeSorterNode.h">
-      <Filter>Core\AttributeSorters</Filter>
+      <Filter>Scene\AttributeSorters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DefaultAttributeSorter.h">
-      <Filter>Core\AttributeSorters</Filter>
+      <Filter>Scene\AttributeSorters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\LeafAttributeSorter.h">
-      <Filter>Core\AttributeSorters</Filter>
+      <Filter>Scene\AttributeSorters</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\TransparencyAttribute.h">
-      <Filter>Core\Attributes</Filter>
+      <Filter>Scene\Attributes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\UniqueObjectAttribute.h">
-      <Filter>Core\Attributes</Filter>
+      <Filter>Scene\Attributes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\CameraContext.h">
       <Filter>Scene\Views\SpatialView</Filter>
@@ -371,8 +377,23 @@
     <ClInclude Include="..\..\Include\core-Renderer\RendererComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VisibilityPass.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h">
-      <Filter>Core</Filter>
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

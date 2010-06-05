@@ -50,7 +50,7 @@ void SceneNavigator::onServiceRegistered( TamyEditor& mgr )
       || !mgr.needsUpdate< Renderer >( *m_renderer )
       || !mgr.needsUpdate< TimeController >( *m_timeController )
       || !mgr.needsUpdate< KeysStatusManager >( *m_ksm ) 
-      || !mgr.needsUpdate< QueryableScene >( *m_scene )
+      || !mgr.needsUpdate< SceneQueries >( *m_scene )
       || !mgr.needsUpdate< SelectionManager >( *m_selectionMgr ))
    {
       return;
@@ -63,7 +63,7 @@ void SceneNavigator::onServiceRegistered( TamyEditor& mgr )
       || !mgr.hasService< Renderer >() 
       || !mgr.hasService< TimeController >() 
       || !mgr.hasService< KeysStatusManager >() 
-      || !mgr.hasService< QueryableScene >()
+      || !mgr.hasService< SceneQueries >()
       || !mgr.hasService< SelectionManager >())
    {
       return;
@@ -74,7 +74,7 @@ void SceneNavigator::onServiceRegistered( TamyEditor& mgr )
    m_renderer = &mgr.requestService<Renderer> ();
    m_ksm = &mgr.requestService< KeysStatusManager >();
    m_timeController = &mgr.requestService< TimeController >();
-   m_scene = &mgr.requestService< QueryableScene >();
+   m_scene = &mgr.requestService< SceneQueries >();
    m_selectionMgr = &mgr.requestService< SelectionManager >();
 
    m_cameraController = new UnconstrainedMotionController( *m_camera );
@@ -87,7 +87,7 @@ void SceneNavigator::onServiceRegistered( TamyEditor& mgr )
    m_timeController->get( "sceneNavigation" ).add( new TTimeDependent< CameraController >( *cameraAnimator ) );
 
    // configure input commands
-   cameraAnimator->addButtonPressCommand( VK_LBUTTON, new SelectEntityCommand( *m_camera, *m_scene, *m_selectionMgr ) );
+   cameraAnimator->addButtonPressCommand( VK_LBUTTON, new SelectEntityCommand( *m_scene, *m_selectionMgr ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

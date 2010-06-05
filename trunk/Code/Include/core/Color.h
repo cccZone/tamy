@@ -39,9 +39,14 @@ struct Color : public RTTIObject
    Color();
 
    /**
-    * Constructor.
+    * Constructor ( using float values from range <0, 1> )
     */
-   Color(float _r, float _g, float _b, float _a);
+   Color( float _r, float _g, float _b, float _a );
+
+   /**
+    * Constructor ( using integer values from range <0, 255> )
+    */
+   Color( unsigned char _r, unsigned char _g, unsigned char _b );
 
    bool operator==(const Color& rhs) const;
 
@@ -53,6 +58,11 @@ struct Color : public RTTIObject
     * Conversion operator to a dx-native type.
     */
    operator D3DXVECTOR4() const { return D3DXVECTOR4( c ); }
+
+   /**
+    * Conversion operator to a DWORD representation.
+    */
+   operator unsigned long() const;
 
    friend Serializer& operator<<(Serializer& serializer, Color& color);
 };

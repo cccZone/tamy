@@ -4,7 +4,6 @@
 /// @brief  Component that manages the scene entities selection
 
 #include "core/Component.h"
-#include "core/GenericFactory.h"
 #include "core-MVC\ModelView.h"
 #include "tamyeditor.h"
 #include <vector>
@@ -14,10 +13,9 @@
 
 class Entity;
 class Model;
-class SelectedEntityRepresentation;
+class SelectionRenderingPass;
 class ResourcesManager;
 class Camera;
-class AttributeSorter;
 class Gizmo;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,8 +36,7 @@ public:
  * Component that manages the scene entities selection.
  */
 class SelectionManager: public Component< TamyEditor >, 
-                        public ModelView, 
-                        public GenericFactory< Entity, SelectedEntityRepresentation >
+                        public ModelView
 {
 private:
    typedef std::vector< SelectionManagerListener* >                     Listeners;
@@ -48,14 +45,13 @@ private:
    Listeners                           m_listeners;
 
    Entity*                             m_selectedEntity;
-   SelectedEntityRepresentation*       m_selectedRepresentation;
+   SelectionRenderingPass*             m_renderingPass;
    Gizmo*                              m_gizmo;
 
    Model*                              m_observedScene;
 
    ResourcesManager*                   m_resMgr;
    Camera*                             m_camera;
-   AttributeSorter*                    m_attributeSorter;
 
 public:
    /**

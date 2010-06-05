@@ -15,7 +15,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Texture;
+class ShaderTexture;
 class ShaderImpl;
 class Filesystem;
 class SingletonsManager;
@@ -102,7 +102,7 @@ public:
    
    void setString(const std::string& paramName, const std::string& val);
    
-   void setTexture(const std::string& paramName, Texture& val);
+   void setTexture(const std::string& paramName, ShaderTexture& val);
    
    void setVec4(const std::string& paramName, const D3DXVECTOR4& val);
    
@@ -135,7 +135,7 @@ public:
    virtual void setMtx(const std::string& paramName, const D3DXMATRIX& val) {}
    virtual void setMtx(const std::string& paramName, const D3DXMATRIX* arr, unsigned int size) {}
    virtual void setString(const std::string& paramName, const std::string& val) {}
-   virtual void setTexture(const std::string& paramName, Texture& val) {}
+   virtual void setTexture(const std::string& paramName, ShaderTexture& val) {}
    virtual void setVec4(const std::string& paramName, const D3DXVECTOR4& val) {}
    virtual void setVec4(const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size) {}
 
