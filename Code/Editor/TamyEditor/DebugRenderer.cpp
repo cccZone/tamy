@@ -1,6 +1,7 @@
 #include "DebugRenderer.h"
 #include "core-MVC.h"
 #include "core-Renderer.h"
+#include <stdexcept>
 
 // effects
 #include "GridRenderingEffect.h"
@@ -34,6 +35,9 @@ DebugRenderer::~DebugRenderer()
 
    delete m_localModel;
    m_localModel = NULL;
+
+   m_entities.clear();
+   m_freeHandles.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,15 +62,53 @@ LineSegments* DebugRenderer::createGrid() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DebugHandle DebugRenderer::drawMesh( Geometry& geometry )
+DebugHandle DebugRenderer::drawMesh( Geometry* geometry )
 {
+   // TODO: create a renderable with this geometry and add it using 'drawEntity' method
    return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+DebugHandle DebugRenderer::drawEntity( SpatialEntity* entity )
+{
+   if ( !entity )
+   {
+      throw std::invalid_argument( "NULL pointer instead a SpatialEntity instance" );
+   }
+
+   // find a handle for out entity
+   DebugHandle handle;
+   if ( !m_freeHandles.empty() )
+   {
+      handle = m_freeHandles.back();
+      m_freeHandles.pop_back();
+   }
+   else
+   {
+      handle = m_entities.size();
+      m_entities.push_back( NULL );
+   }
+
+   // add the entity to the entities array at the location the handle specifies
+   m_entities[ handle ] = entity;
+
+   // add the entity to the model
+   m_localModel->add( entity );
+
+   return handle;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void DebugRenderer::stopDrawing( DebugHandle handle )
 {
+   SpatialEntity* entity = m_entities.at( handle );
+   m_entities[ handle ] = NULL;
+   m_freeHandles.push_back( handle );
+
+   m_localModel->remove( *entity );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+

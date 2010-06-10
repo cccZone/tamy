@@ -4,6 +4,8 @@
 /// @brief  a debug scene allowing to display all sorts of 
 ///         additional visual information
 
+#include <vector>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -12,6 +14,7 @@ class Renderer;
 class Camera;
 class LineSegments;
 class Geometry;
+class SpatialEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,12 +25,16 @@ typedef unsigned int DebugHandle;
 class DebugRenderer
 {
 private:
-   Renderer&            m_renderer;
-   Camera&              m_camera;
-   Model*               m_localModel;
+   Renderer&                        m_renderer;
+   Camera&                          m_camera;
+   Model*                           m_localModel;
 
    // grid components
-   LineSegments*        m_gridLines;
+   LineSegments*                    m_gridLines;
+
+   // entities
+   std::vector< SpatialEntity* >    m_entities;
+   std::vector< DebugHandle >       m_freeHandles;
 
 public:
    DebugRenderer( Renderer& renderer, Camera& camera );
@@ -41,7 +48,12 @@ public:
    /**
     * Adds a new mesh to the debug view
     */
-   DebugHandle drawMesh( Geometry& geometry );
+   DebugHandle drawMesh( Geometry* geometry );
+
+   /**
+    * Adds a spatial entity to the debug view.
+    */
+   DebugHandle drawEntity( SpatialEntity* entity );
 
    /**
     * Removes an object from being drawn.

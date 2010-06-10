@@ -5,29 +5,34 @@
 #include "core-Renderer.h"
 #include "EntityManualEditor.h"
 
-
 // editors
 #include "NodeManualEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EditEntityCommand::EditEntityCommand( SceneQueries& scene, 
-                                      SelectionManager& selectionMgr, 
-                                      UserInputController& uic,
-                                      Camera& camera,
-                                      TimeControllerTrack& timeTrack )
-: m_scene( scene )
-, m_selectionMgr( selectionMgr )
-, m_uic( uic )
-, m_camera( camera )
-, m_edition( false )
+EditEntityCommand::EditEntityCommand( TamyEditor& servicesMgr, TimeControllerTrack& timeTrack )
+: m_servicesMgr( servicesMgr )
 , m_editor( NULL )
+, m_editionMode( NEM_TRANSLATE )
+, m_editionStart( new EditionStart( *this ) )
+, m_editionInProgress( new EditionInProgress( *this ) )
+, m_editionStop( new EditionStop( *this ) )
+, m_noEdition( new NoEdition( *this ) )
+, m_activeState( NULL )
 {
+   m_activeState = m_noEdition;
+
+   // acquire required services
+   m_scene = &servicesMgr.requestService< SceneQueries >();
+   m_selectionMgr = &servicesMgr.requestService< SelectionManager >();
+   m_uic = &servicesMgr.requestService< UserInputController >();
+
+   // register self for regular updates
    timeTrack.add( new TTimeDependent< EditEntityCommand >( *this ) );
 
    // attach self to observe selected objects
-   m_selectionMgr.attach( *this );
+   m_selectionMgr->attach( *this );
 
    // associate editors
    associateAbstract< SpatialEntity, NodeManualEditor >();
@@ -38,11 +43,25 @@ EditEntityCommand::EditEntityCommand( SceneQueries& scene,
 EditEntityCommand::~EditEntityCommand()
 {
    // detach self from the selection manager
-   m_selectionMgr.detach( *this );
+   m_selectionMgr->detach( *this );
 
    // cleanup
    delete m_editor;
    m_editor = NULL;
+
+   delete m_editionStart;
+   m_editionStart = NULL;
+
+   delete m_editionInProgress;
+   m_editionInProgress = NULL;
+
+   delete m_editionStop;
+   m_editionStop = NULL;
+
+   delete m_noEdition;
+   m_noEdition = NULL;
+
+   m_activeState = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,23 +74,20 @@ void EditEntityCommand::execute( InputState state, const D3DXVECTOR2& mousePos )
       {
          // setup a scene selection query
          m_queriedPos = mousePos;
-         m_scene.query( *this );
+         m_scene->query( *this );
+         m_activeState->stop();
          break;
       }
 
    case IS_HELD:
       {
-         // get ready for the edition - engage relative mouse movement mode
-         m_uic.setRelativeMouseMovement( true );
-         m_edition = true;
+         m_activeState->start();
          return;
       }
 
    case IS_RELEASED:
       {
-         // return to the regular mouse movement mode
-         m_uic.setRelativeMouseMovement( false );
-         m_edition = false;
+         m_activeState->stop();
          return;
       }
    }
@@ -83,36 +99,38 @@ void EditEntityCommand::setResult( Entity* foundEntity )
 {
    if ( !foundEntity ) 
    {
-      m_selectionMgr.resetSelection();
+      m_selectionMgr->resetSelection();
    }
    else
    {
-      m_selectionMgr.selectObject( *foundEntity );
+      m_selectionMgr->selectObject( *foundEntity );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void EditEntityCommand::setEditionMode( EntityEditionMode mode )
+void EditEntityCommand::setNodeEditionMode( NodeEditionMode mode )
 {
    m_editionMode = mode;
+
+   if ( m_editor )
+   {
+      m_editor->notifyEditModeChange();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+NodeEditionMode EditEntityCommand::getNodeEditionMode() const
+{
+   return m_editionMode;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void EditEntityCommand::update( float timeElapsed )
 {
-   // we need to be in the edition mode and have an entity selected in order
-   // to edit its params
-   if ( !m_edition || !m_editor )
-   {
-      return;
-   }
-
-   // calculate the parameter change factor ( relative to the camera orientation )
-   float rotationSpeed = 0.1f * timeElapsed;
-   D3DXVECTOR2 mouseSpeed = m_uic.getMouseSpeed() * rotationSpeed;
-   m_editor->edit( mouseSpeed, m_camera );
+   m_activeState->edit( timeElapsed );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -126,6 +144,7 @@ void EditEntityCommand::onObjectSelected( Entity& entity )
    if ( m_editor )
    {
       m_editor->initialize( *this );
+      m_editor->notifyEditModeChange();
    }
 }
 
@@ -135,6 +154,42 @@ void EditEntityCommand::onObjectDeselected( Entity& entity )
 {
    delete m_editor;
    m_editor = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void EditEntityCommand::startEdition()
+{
+   if ( !m_editor )
+   {
+      return;
+   }
+
+   const Point& pt = m_uic->getMousePos();
+   m_editor->startEdition( D3DXVECTOR2 ( pt.x, pt.y ) );
+   m_uic->setRelativeMouseMovement( true );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void EditEntityCommand::edit( float timeElapsed )
+{
+   if ( !m_editor )
+   {
+      return;
+   }
+   
+   // calculate the parameter change factor ( relative to the camera orientation )
+   float rotationSpeed = 0.1f * timeElapsed;
+   D3DXVECTOR2 mouseSpeed = m_uic->getMouseSpeed() * rotationSpeed;
+   m_editor->edit( mouseSpeed );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void EditEntityCommand::stopEdition()
+{
+   m_uic->setRelativeMouseMovement( false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

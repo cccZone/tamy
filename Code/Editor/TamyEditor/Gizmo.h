@@ -13,6 +13,7 @@ class GizmoEffect;
 class Camera;
 class ResourcesManager;
 class Geometry;
+class Renderable;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +23,7 @@ class Geometry;
  */
 class Gizmo : public SpatialEntity
 {
-private:
+public:
    enum Mode
    {
       GM_TRANSLATION,
@@ -31,6 +32,7 @@ private:
    };
 
 private:
+   SpatialEntity& m_node;
    Mode           m_mode;
 
    LineSegments*  m_translationAxes;
@@ -39,26 +41,19 @@ private:
 
    GizmoEffect*   m_effect;
    Geometry*      m_geometry;
+   Renderable*    m_renderable;
 
 public:
    /**
     * Constructor.
     */
-   Gizmo( ResourcesManager& rm, Camera& camera );
+   Gizmo( SpatialEntity& node, ResourcesManager& rm, Camera& camera );
    ~Gizmo();
 
    /**
     * Sets a new mode in which the gizmo will be displayed.
     */
    void setMode( Mode mode );
-
-   /**
-    * Renders the gizmo on screen.
-    *
-    * @param objectGlobalMtx     global matrix of an object which the gizmo
-    *                            represents
-    */
-   void render( const D3DXMATRIX& objectGlobalMtx );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

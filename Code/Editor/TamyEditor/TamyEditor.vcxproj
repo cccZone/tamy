@@ -117,10 +117,20 @@
     <ClInclude Include="InputInterpreter.h" />
     <ClInclude Include="Gizmo.h" />
     <ClInclude Include="GizmoEffect.h" />
+    <ClInclude Include="ManualEditionModes.h" />
     <ClInclude Include="NodeManualEditor.h" />
     <ClInclude Include="QueryableRenderable.h" />
     <ClInclude Include="QueryRenderingPass.h" />
-    <ClInclude Include="SceneNavigator.h" />
+    <CustomBuild Include="SceneNavigator.h">
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp" -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I"$(DXSDK_DIR)\Include\." -I"$(QTDIR)\include\." -I"$(QTDIR)\include\QtCore\." -I"$(QTDIR)\include\QtGui\." -I"$(SolutionDir)\Include\." -I".\." -I".\GeneratedFiles\$(Configuration)\." -I".\GeneratedFiles\."</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Filename)%(Extension)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp" -DNDEBUG -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_NO_DEBUG -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I"$(DXSDK_DIR)\Include\." -I"$(QTDIR)\include\." -I"$(QTDIR)\include\QtCore\." -I"$(QTDIR)\include\QtGui\." -I"$(SolutionDir)\Include\." -I".\." -I".\GeneratedFiles\$(Configuration)\." -I".\GeneratedFiles\."</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Moc%27ing %(Filename)%(Extension)...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
+    </CustomBuild>
     <ClInclude Include="SceneQuery.h" />
     <ClInclude Include="SceneQueryEffect.h" />
     <ClInclude Include="SelectedEntityRepresentation.h" />
@@ -435,6 +445,7 @@
     <ClInclude Include="TypeDescFactory.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SceneNavigator.cpp" />
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>

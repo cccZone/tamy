@@ -98,7 +98,7 @@ void Model::add( Entity* entity, bool manage )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Model::remove( Entity& entity/*, bool release*/ )
+void Model::remove( Entity& entity )
 {
    entityDFS(entity, Functor::FROM_METHOD(Model, notifyEntityRemoved, this));
    entity.onDetachFromModel(*this);
