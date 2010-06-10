@@ -34,9 +34,9 @@ private:
    BoundingVolume* m_volume;
 
    // global coordinate system
-   D3DXMATRIX m_globalMtx;
-   D3DXMATRIX m_parentGlobalMtxCache;
-   D3DXMATRIX m_localMtxCache;
+   mutable D3DXMATRIX m_globalMtx;
+   mutable D3DXMATRIX m_parentGlobalMtxCache;
+   mutable D3DXMATRIX m_localMtxCache;
    BoundingVolume* m_globalVolume;
 
    Node* m_parent;
@@ -58,7 +58,7 @@ public:
     * (unlike the local matrix which describes the position relative to node's
     * parent).
     */
-   virtual const D3DXMATRIX& getGlobalMtx();
+   virtual const D3DXMATRIX& getGlobalMtx() const;
 
    /**
     * This is the matrix that describes the node's position in relation
@@ -90,6 +90,11 @@ public:
    virtual D3DXVECTOR3 getUpVec() const;
    virtual D3DXVECTOR3 getLookVec() const;
    virtual D3DXVECTOR3 getPosition() const;
+
+   /*
+    * Returns the global coordinate system vectors
+    */
+   void getGlobalVectors( D3DXVECTOR3& right, D3DXVECTOR3& up, D3DXVECTOR3& look, D3DXVECTOR3& pos ) const;
 
    /**
     * This method allows to set a bounding volume for the node

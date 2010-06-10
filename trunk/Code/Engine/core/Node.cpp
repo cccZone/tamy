@@ -127,7 +127,7 @@ D3DXVECTOR3 Node::getPosition() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const D3DXMATRIX& Node::getGlobalMtx()
+const D3DXMATRIX& Node::getGlobalMtx() const
 {
    if (hasParent() == false) {return m_localMtx;}
 
@@ -155,6 +155,17 @@ const D3DXMATRIX& Node::getGlobalMtx()
    }
 
    return m_globalMtx;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Node::getGlobalVectors( D3DXVECTOR3& right, D3DXVECTOR3& up, D3DXVECTOR3& look, D3DXVECTOR3& pos ) const
+{
+   D3DXMATRIX globalMtx = getGlobalMtx();
+   right = D3DXVECTOR3(globalMtx._11, globalMtx._12, globalMtx._13);
+   up = D3DXVECTOR3(globalMtx._21, globalMtx._22, globalMtx._23);
+   look = D3DXVECTOR3(globalMtx._31, globalMtx._32, globalMtx._33);
+   pos = D3DXVECTOR3(globalMtx._41, globalMtx._42, globalMtx._43);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -9,8 +9,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Gizmo::Gizmo( ResourcesManager& rm, Camera& camera )
-: m_geometry( NULL )
+Gizmo::Gizmo( SpatialEntity& node, ResourcesManager& rm, Camera& camera )
+: m_node( node )
+, m_geometry( NULL )
+, m_renderable( NULL )
 {
    const float SIZE = 10.f;
    const Color oxColor( 1, 0, 0, 1 );
@@ -113,9 +115,13 @@ Gizmo::Gizmo( ResourcesManager& rm, Camera& camera )
       m_scalingAxes->rebuild();
    }
 
+   // create the renderable and attach it
+   m_renderable = new Renderable( "GizmoRenderable" );
+   add( m_renderable );
+
    // create a rendering effect
-   m_effect = new GizmoEffect( rm, camera );
-   add( m_effect );
+   m_effect = new GizmoEffect( rm, camera, node );
+   m_renderable->add( m_effect );
 
    // set the initial mode
    setMode( GM_TRANSLATION );
@@ -129,8 +135,7 @@ Gizmo::~Gizmo()
    m_rotationAxes = NULL;
    m_scalingAxes = NULL;
    m_effect = NULL;
-
-   delete m_geometry;
+   m_renderable = NULL;
    m_geometry = NULL;
 }
 
@@ -138,9 +143,12 @@ Gizmo::~Gizmo()
 
 void Gizmo::setMode( Mode mode )
 {
-   // reset the old geometry
-   delete m_geometry;
-   m_geometry = NULL;
+   if ( m_geometry )
+   {
+      // reset the old geometry
+      m_renderable->remove( *m_geometry );
+      m_geometry = NULL;
+   }
 
    // set the new mode and the related geometry
    m_mode = mode;
@@ -164,18 +172,8 @@ void Gizmo::setMode( Mode mode )
          break;
       }
    }
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-void Gizmo::render( const D3DXMATRIX& objectGlobalMtx )
-{
-   setLocalMtx( objectGlobalMtx );
-
-   if ( m_geometry && m_effect )
-   {
-      m_effect->render( *m_geometry );
-   }
+   m_renderable->add( m_geometry );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

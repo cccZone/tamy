@@ -7,6 +7,8 @@
 #include "InputInterpreter.h"
 #include "PropertiesEditor.h"
 #include "core\Assert.h"
+#include <QAction.h>
+#include <QActionGroup.h>
 
 // commands
 #include "EditEntityCommand.h"
@@ -87,6 +89,7 @@ SceneNavigator::SceneNavigator()
 , m_cameraController( NULL )
 , m_timeController( NULL )
 , m_rotating( false )
+, m_manualEntityEditor( NULL )
 {
    m_movementDir[0] = m_movementDir[1] = m_movementDir[2] = m_movementDir[3] = false;
 }
@@ -104,6 +107,31 @@ void SceneNavigator::initialize( TamyEditor& mgr )
 {
    ASSERT( !m_mgr, "Component is already managed" );
    m_mgr = &mgr;
+
+   // initialize UI
+   ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
+
+   QString iconsDir = resMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
+   QToolBar& toolBar = mgr.getToolBar();
+
+   // setup menu entries
+   QActionGroup* actionGroup = new QActionGroup( &toolBar );
+
+   QAction* actionTranslate = new QAction( QIcon( iconsDir + tr( "/translate.png" ) ), tr( "Translate" ), &mgr );
+   actionTranslate->setCheckable( true );
+   toolBar.addAction( actionTranslate );
+   actionGroup->addAction( actionTranslate );
+   connect( actionTranslate, SIGNAL( triggered() ), this, SLOT( setTranslateMode() ) );
+
+   QAction* actionRotate = new QAction( QIcon( iconsDir + tr( "/rotate.png" ) ), tr( "Rotate" ), &mgr );
+   actionRotate->setCheckable( true );
+   toolBar.addAction( actionRotate );
+   actionGroup->addAction( actionRotate );
+   connect( actionRotate, SIGNAL( triggered() ), this, SLOT( setRotateMode() ) );
+
+   actionTranslate->setChecked( true );
+
+   toolBar.addSeparator();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -152,7 +180,8 @@ void SceneNavigator::onServiceRegistered( TamyEditor& mgr )
    m_ksm->addHandler( inputHandler );
 
    // configure input commands
-   inputHandler->addCommand( VK_LBUTTON, new EditEntityCommand( *m_scene, *m_selectionMgr, *m_uic, *m_camera, timeTrack ) );
+   m_manualEntityEditor =  new EditEntityCommand( *m_mgr, timeTrack );
+   inputHandler->addCommand( VK_LBUTTON, m_manualEntityEditor );
 
    inputHandler->addCommand( VK_RBUTTON, new CameraRotateCommand( *this ) );
    inputHandler->addCommand( 'W', new CameraMoveCommand( MD_FRONT, *this ) );
@@ -214,6 +243,26 @@ void SceneNavigator::setCameraRotation( bool engage )
 void SceneNavigator::setCameraMove( MovementDirection direction, bool engage )
 {
    m_movementDir[direction] = engage;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneNavigator::setTranslateMode()
+{
+   if ( m_manualEntityEditor )
+   {
+      m_manualEntityEditor->setNodeEditionMode( NEM_TRANSLATE );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneNavigator::setRotateMode()
+{
+   if ( m_manualEntityEditor )
+   {
+      m_manualEntityEditor->setNodeEditionMode( NEM_ROTATE );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -67,9 +67,6 @@
     <Filter Include="Components\SelectionManager">
       <UniqueIdentifier>{a97472d8-947e-4b1f-9a28-dcb99956383b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\SelectionManager\Visualisation">
-      <UniqueIdentifier>{73130267-9dcf-4fc3-b145-f001f12ce254}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\ResourcesBrowser">
       <UniqueIdentifier>{e6f94e6b-b366-4a87-987b-4c261f72106e}</UniqueIdentifier>
     </Filter>
@@ -106,6 +103,12 @@
     <Filter Include="Components\SceneNavigator\Editors">
       <UniqueIdentifier>{ffc98458-0d71-4b8c-a205-517c5cde77b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\SceneNavigator\Visualization">
+      <UniqueIdentifier>{483a1900-36b4-4b75-8863-0ae897606b06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\SelectionManager\Visualization">
+      <UniqueIdentifier>{73130267-9dcf-4fc3-b145-f001f12ce254}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -113,9 +116,6 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_tamyeditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneNavigator.h">
-      <Filter>Components\SceneNavigator</Filter>
     </ClInclude>
     <ClInclude Include="SceneQueries.h">
       <Filter>Components\SceneQueries</Filter>
@@ -130,7 +130,7 @@
       <Filter>Components\SelectionManager</Filter>
     </ClInclude>
     <ClInclude Include="SelectionMarker.h">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
+      <Filter>Components\SelectionManager\Visualization</Filter>
     </ClInclude>
     <ClInclude Include="FSTreeNode.h">
       <Filter>Components\ResourcesBrowser</Filter>
@@ -168,12 +168,6 @@
     <ClInclude Include="SelectedRenderable.h">
       <Filter>Components\SelectionManager\Representations</Filter>
     </ClInclude>
-    <ClInclude Include="Gizmo.h">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
-    </ClInclude>
-    <ClInclude Include="GizmoEffect.h">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
-    </ClInclude>
     <ClInclude Include="QueryableEntity.h">
       <Filter>Components\SceneQueries</Filter>
     </ClInclude>
@@ -187,7 +181,7 @@
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
     </ClInclude>
     <ClInclude Include="SelectionRenderingPass.h">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
+      <Filter>Components\SelectionManager\Visualization</Filter>
     </ClInclude>
     <ClInclude Include="QueryRenderingPass.h">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
@@ -206,6 +200,15 @@
     </ClInclude>
     <ClInclude Include="NodeManualEditor.h">
       <Filter>Components\SceneNavigator\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="ManualEditionModes.h">
+      <Filter>Components\SceneNavigator</Filter>
+    </ClInclude>
+    <ClInclude Include="GizmoEffect.h">
+      <Filter>Components\SceneNavigator\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="Gizmo.h">
+      <Filter>Components\SceneNavigator\Visualization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -372,7 +375,7 @@
       <Filter>Components\SelectionManager</Filter>
     </ClCompile>
     <ClCompile Include="SelectionMarker.cpp">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
+      <Filter>Components\SelectionManager\Visualization</Filter>
     </ClCompile>
     <ClCompile Include="FSTreeNode.cpp">
       <Filter>Components\ResourcesBrowser</Filter>
@@ -413,12 +416,6 @@
     <ClCompile Include="SelectedRenderable.cpp">
       <Filter>Components\SelectionManager\Representations</Filter>
     </ClCompile>
-    <ClCompile Include="Gizmo.cpp">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
-    </ClCompile>
-    <ClCompile Include="GizmoEffect.cpp">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
-    </ClCompile>
     <ClCompile Include="QueryableRenderable.cpp">
       <Filter>Components\SceneQueries\Representations</Filter>
     </ClCompile>
@@ -426,7 +423,7 @@
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
     </ClCompile>
     <ClCompile Include="SelectionRenderingPass.cpp">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
+      <Filter>Components\SelectionManager\Visualization</Filter>
     </ClCompile>
     <ClCompile Include="QueryRenderingPass.cpp">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
@@ -440,6 +437,15 @@
     <ClCompile Include="NodeManualEditor.cpp">
       <Filter>Components\SceneNavigator\Editors</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SceneNavigator.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Gizmo.cpp">
+      <Filter>Components\SceneNavigator\Visualization</Filter>
+    </ClCompile>
+    <ClCompile Include="GizmoEffect.cpp">
+      <Filter>Components\SceneNavigator\Visualization</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -452,16 +458,16 @@
       <Filter>Components\PropertiesEditor\Editors</Filter>
     </None>
     <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.fx">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
+      <Filter>Components\SelectionManager\Visualization</Filter>
     </None>
     <None Include="TypeDescFactory.inl">
       <Filter>Widgets\TreeWidget</Filter>
     </None>
-    <None Include="..\..\..\Assets\Editor\Shaders\GizmoEffect.fx">
-      <Filter>Components\SelectionManager\Visualisation</Filter>
-    </None>
     <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.fx">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Editor\Shaders\GizmoEffect.fx">
+      <Filter>Components\SceneNavigator\Visualization</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -545,6 +551,9 @@
     </CustomBuild>
     <CustomBuild Include="TreeWidget.h">
       <Filter>Widgets\TreeWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SceneNavigator.h">
+      <Filter>Components\SceneNavigator</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

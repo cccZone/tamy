@@ -2,7 +2,6 @@
 #include "SelectedEntityRepresentation.h"
 #include "core-Renderer.h"
 #include "core-MVC\Model.h"
-#include "Gizmo.h"
 #include "SelectionRenderingPass.h"
 
 
@@ -11,10 +10,8 @@
 SelectionManager::SelectionManager()
 : m_selectedEntity( NULL )
 , m_renderingPass( NULL )
-, m_gizmo( NULL )
 , m_observedScene( NULL )
-, m_resMgr( NULL )
-, m_camera( NULL )
+, m_servicesMgr( NULL )
 {
    // create the rendering pass
    m_renderingPass = new SelectionRenderingPass( *this );
@@ -26,24 +23,17 @@ SelectionManager::~SelectionManager()
 {
    resetContents();
 
-   delete m_gizmo;
-   m_gizmo = NULL;
-
    m_renderingPass = NULL;
+   m_servicesMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SelectionManager::initialize( TamyEditor& mgr )
 {
+   m_servicesMgr = &mgr;
+
    mgr.registerService< SelectionManager >( *this, *this );
-
-   // acquire an instance of the resources manager and a camera
-   m_resMgr = &mgr.requestService< ResourcesManager >();
-   m_camera = &mgr.requestService< Camera >();
-
-   // create the gizmo
-   m_gizmo = new Gizmo( *m_resMgr, *m_camera );
 
    // register a rendering pass
    CompositeRenderingMechanism& compRenderingMech = mgr.requestService< CompositeRenderingMechanism >();

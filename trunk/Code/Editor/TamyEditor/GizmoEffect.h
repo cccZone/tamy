@@ -21,7 +21,7 @@ class GizmoEffect : public ShaderEffect
 {
 private:
    Camera&     m_camera;
-   Node*       m_renderedNode;
+   Node&       m_renderedNode;
 
 public:
    /**
@@ -29,17 +29,12 @@ public:
     * 
     * @param rm            resources manager
     * @param camera
+    * @param renderedNode
     */
-   GizmoEffect( ResourcesManager& rm, Camera& camera );
+   GizmoEffect( ResourcesManager& rm, Camera& camera, Node& renderedNode );
 
 protected:
    void onBeginRendering();
-
-   // -------------------------------------------------------------------------
-   // Entity implementation 
-   // -------------------------------------------------------------------------
-   void onAttached(Entity& parent);
-   void onDetached(Entity& parent);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

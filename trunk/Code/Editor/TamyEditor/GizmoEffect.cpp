@@ -5,9 +5,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GizmoEffect::GizmoEffect( ResourcesManager& rm, Camera& camera )
+GizmoEffect::GizmoEffect( ResourcesManager& rm, Camera& camera, Node& renderedNode )
 : m_camera( camera )
-, m_renderedNode( NULL )
+, m_renderedNode( renderedNode )
 {
    Shader* shader = dynamic_cast< Shader*>( rm.findResource( "GizmoEffect" ) );
 
@@ -35,28 +35,9 @@ GizmoEffect::GizmoEffect( ResourcesManager& rm, Camera& camera )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GizmoEffect::onAttached(Entity& parent)
-{
-   m_renderedNode = dynamic_cast< SpatialEntity* >( &parent );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void GizmoEffect::onDetached(Entity& parent)
-{
-   m_renderedNode = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void GizmoEffect::onBeginRendering()
 {
-   if ( !m_renderedNode )
-   {
-      return;
-   }
-
-   D3DXMATRIX worldViewProjMtx = m_renderedNode->getGlobalMtx() 
+   D3DXMATRIX worldViewProjMtx = m_renderedNode.getGlobalMtx() 
       * m_camera.getViewMtx() 
       * m_camera.getProjectionMtx();
    shader().setMtx("g_mWorldViewProj", worldViewProjMtx);

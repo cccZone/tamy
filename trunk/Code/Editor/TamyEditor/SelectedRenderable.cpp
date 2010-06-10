@@ -2,7 +2,7 @@
 #include "core-Renderer\Renderable.h"
 #include "SelectionManager.h"
 #include "SelectionMarker.h"
-#include "Gizmo.h"
+#include "tamyeditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -10,7 +10,6 @@
 SelectedRenderable::SelectedRenderable( Renderable& renderable )
 : m_renderable( renderable )
 , m_selectionMarker( NULL )
-, m_gizmo( NULL )
 {
 }
 
@@ -26,12 +25,14 @@ SelectedRenderable::~SelectedRenderable()
 
 void SelectedRenderable::initialize( SelectionManager& host )
 {
-   // create a selection marker effect
-   m_selectionMarker = new SelectionMarker( host.getResourcesManager(), host.getCamera(), m_renderable );
+   TamyEditor& servicesMgr = host.getServicesMgr();
 
-   // get the gizmo the manager is using that visualizes the objects
-   // manipulation mode
-   m_gizmo = &host.getGizmo();
+   // acquire an instance of the resources manager and a camera
+   ResourcesManager& resMgr = servicesMgr.requestService< ResourcesManager >();
+   Camera& camera = servicesMgr.requestService< Camera >();
+
+   // create a selection marker effect
+   m_selectionMarker = new SelectionMarker( resMgr, camera, m_renderable );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,11 +45,6 @@ void SelectedRenderable::render()
    }
 
    m_selectionMarker->render( m_renderable.getGeometry() );
-
-   if ( m_gizmo )
-   {
-      m_gizmo->render( m_renderable.getGlobalMtx() );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

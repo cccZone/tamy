@@ -10,7 +10,6 @@
 
 class Renderable;
 class Effect;
-class Gizmo;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +21,6 @@ class SelectedRenderable : public SelectedEntityRepresentation
 private:
    Renderable&                m_renderable;
    Effect*                    m_selectionMarker;
-   Gizmo*                     m_gizmo;
    Attributes                 m_attributes;
 
 public:

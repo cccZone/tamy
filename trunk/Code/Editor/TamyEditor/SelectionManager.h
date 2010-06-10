@@ -14,9 +14,6 @@
 class Entity;
 class Model;
 class SelectionRenderingPass;
-class ResourcesManager;
-class Camera;
-class Gizmo;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -42,16 +39,13 @@ private:
    typedef std::vector< SelectionManagerListener* >                     Listeners;
 
 private:
+   TamyEditor*                         m_servicesMgr;
    Listeners                           m_listeners;
 
    Entity*                             m_selectedEntity;
    SelectionRenderingPass*             m_renderingPass;
-   Gizmo*                              m_gizmo;
 
    Model*                              m_observedScene;
-
-   ResourcesManager*                   m_resMgr;
-   Camera*                             m_camera;
 
 public:
    /**
@@ -65,26 +59,10 @@ public:
     */
    void render();
 
-   // -------------------------------------------------------------------------
-   // An interface for the representations
-   // -------------------------------------------------------------------------
    /**
-    * Returns a reference to the resources manager instance the representations
-    * should reference to get the resources they need.
+    * Returns an instance of the services manager.
     */
-   inline ResourcesManager& getResourcesManager() const { return *m_resMgr; }
-
-   /**
-    * Returns an instance of the camera representations should use to render 
-    * themselves.
-    */
-   inline Camera& getCamera() const { return *m_camera; }
-
-   /**
-    * Returns an instance of a gizmo visualizing the selected object's 
-    * manipulation mode.
-    */
-   inline Gizmo& getGizmo() const { return *m_gizmo; }
+   inline TamyEditor& getServicesMgr() const { return *m_servicesMgr; }
 
    // -------------------------------------------------------------------------
    // Selected entities management

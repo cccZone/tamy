@@ -94,6 +94,8 @@ void MainAppComponent::initUI( TamyEditor& mgr )
    toolBar.addAction( actionSaveScene );
    connect( actionSaveScene, SIGNAL( triggered() ), this, SLOT( saveScene() ) );
 
+   toolBar.addSeparator();
+
    QAction* separator1 = new QAction( &fileMenu );
    separator1->setSeparator( true );
    fileMenu.addAction( separator1 );

@@ -9,7 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class RenderableJoint;
-class Gizmo;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +19,6 @@ class SelectedRenderableJoint : public SelectedEntityRepresentation
 {
 private:
    RenderableJoint&           m_joint;
-   Gizmo*                     m_gizmo;
    Attributes                 m_attributes;
 
 public:

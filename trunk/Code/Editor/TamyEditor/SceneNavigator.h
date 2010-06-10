@@ -4,6 +4,7 @@
 /// @brief  scene navigation component
 
 #include "core\Component.h"
+#include <QObject>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,8 @@ class Renderer;
 class KeysStatusManager;
 class SceneQueries;
 class SelectionManager;
+class EditEntityCommand;
+class ResourcesManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,8 +36,10 @@ enum MovementDirection
 /**
  * This component is responsible for navigating scene.
  */
-class SceneNavigator : public Component<TamyEditor>
+class SceneNavigator : public QObject, public Component<TamyEditor>
 {
+   Q_OBJECT
+
 private:
    // required services
    Camera*                          m_camera;
@@ -44,6 +49,7 @@ private:
    SceneQueries*                    m_scene;
    TimeController*                  m_timeController;
    SelectionManager*                m_selectionMgr;
+   ResourcesManager*                m_resMgr;
 
    // camera movement state
    bool                             m_rotating;
@@ -52,6 +58,9 @@ private:
    // instance data
    TamyEditor*                      m_mgr;
    UnconstrainedMotionController*   m_cameraController;
+
+   // editors
+   EditEntityCommand*               m_manualEntityEditor;
 
 public:
    /**
@@ -91,6 +100,10 @@ public:
    // -------------------------------------------------------------------------
    void initialize( TamyEditor& mgr );
    void onServiceRegistered( TamyEditor& mgr );
+
+public slots:
+   void setTranslateMode();
+   void setRotateMode();
 
 private:
    void reset();
