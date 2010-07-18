@@ -84,6 +84,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
     </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="EntityManualEditor.h" />
@@ -648,6 +652,10 @@
     </ProjectReference>
     <ProjectReference Include="..\..\Engine\ml-IWF\ml-IWF.vcxproj">
       <Project>{6258ff02-94e3-4527-89c7-ecffab554aee}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+	<ProjectReference Include="..\..\Engine\ml-Blender\ml-Blender.vcxproj">
+      <Project>{269AD9D8-247F-4F55-8438-C6DC4532A12F}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\..\Engine\win-AppFlow\win-AppFlow.vcxproj">

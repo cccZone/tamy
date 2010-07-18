@@ -72,6 +72,7 @@
 #include "core\MatrixInterpolator.h"
 #include "core\UniqueObject.h"
 #include "core\StringUtils.h"
+#include "core\IProgressObserver.h"
 
 // ----------------------------------------------------------------------------
 // Resources

@@ -2,6 +2,7 @@
 #include "core-AppFlow.h"
 #include "core.h"
 #include "ml-IWF.h"
+#include "ml-Blender.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QProgressBar.h>
@@ -105,6 +106,10 @@ void MainAppComponent::initUI( TamyEditor& mgr )
       QMenu* importSubMenu = new QMenu( tr( "Import" ), &fileMenu );
       fileMenu.addMenu( importSubMenu );
 
+      QAction* actionImportFromBlender = new QAction( QIcon( iconsDir + tr( "/importFromBlender.png" ) ), tr( "From Blender" ), &mgr );
+      importSubMenu->addAction( actionImportFromBlender );
+      connect( actionImportFromBlender, SIGNAL( triggered() ), this, SLOT( importFromBlender() ) );
+
       QAction* actionImportFromIWF = new QAction( QIcon( iconsDir + tr( "/importFromIWF.png" ) ), tr( "From IWF" ), &mgr );
       importSubMenu->addAction( actionImportFromIWF );
       connect( actionImportFromIWF, SIGNAL( triggered() ), this, SLOT( importFromIWF() ) );
@@ -192,9 +197,9 @@ void MainAppComponent::loadScene()
    try
    {
       ProgressDialog progressObserver( m_mgr );
-      progressObserver.setProgress( 0 );
+      progressObserver.initialize( "Loading a scene", 1 );
       Model& newScene = dynamic_cast< Model& >( m_resourceMgr->create( fileName ) );
-      progressObserver.setProgress( 1 );
+      progressObserver.advance();
 
       setScene( newScene );
    }
@@ -215,17 +220,18 @@ void MainAppComponent::saveScene()
    try
    {
       ProgressDialog progressObserver( m_mgr );
-      progressObserver.setProgress( 0 );
+      progressObserver.initialize( "Mapping the dependencies", 1 );
       ExternalDependenciesSet externalDependencies;
       scene.saveResource( externalDependencies );
 
-      progressObserver.setProgress( 0.5f );
+      progressObserver.advance();
+      progressObserver.initialize( "Saving the dependencies", externalDependencies.size() );
 
       for ( unsigned int i = 0; i < externalDependencies.size(); ++i )
       {
          externalDependencies[ i ]->saveResource( externalDependencies );
          float progress = (float)i / (float)externalDependencies.size();
-         progressObserver.setProgress( progress );
+         progressObserver.advance();
       }
 
    }
@@ -275,6 +281,53 @@ void MainAppComponent::importFromIWF()
       ProgressDialog progressObserver( m_mgr );
       IWFScene res( fs, importFileName );
       res.load( *newScene, *m_resourceMgr, progressObserver );
+
+      setScene( *newScene );
+   }
+   catch (std::exception& ex)
+   {
+      QMessageBox::warning( m_mgr, "Load scene error",
+         QString("Error occurred while loading scene ") + importFileName.c_str(),
+         QMessageBox::Ok );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MainAppComponent::importFromBlender()
+{
+   const Filesystem& fs = m_resourceMgr->getFilesystem();
+   std::string rootDir = fs.getCurrRoot();
+
+   QString blenderFileName = QFileDialog::getOpenFileName( m_mgr , 
+      tr( "Import scene from Blender" ), 
+      rootDir.c_str(), 
+      tr( "Scene Files (*.btm)" ) );
+
+   if (blenderFileName.isEmpty() == true) 
+   {
+      // no file was selected or user pressed 'cancel'
+      return;
+   }
+
+   // once the file is open, extract the directory name
+   std::string importFileName = fs.toRelativePath( blenderFileName.toStdString() );
+   std::string sceneName = fs.changeFileExtension( importFileName, Model::getExtension() );
+
+   Model* newScene = dynamic_cast< Model* >( m_resourceMgr->findResource( sceneName ) );
+   if ( !newScene )
+   {
+      newScene = new Model( sceneName ); 
+      m_resourceMgr->addResource( newScene );
+   }
+
+   try
+   {
+      newScene->clear();
+
+      ProgressDialog progressObserver( m_mgr );
+      BlenderScene res( fs, importFileName, *m_resourceMgr, progressObserver );
+      res.load( *newScene );
 
       setScene( *newScene );
    }

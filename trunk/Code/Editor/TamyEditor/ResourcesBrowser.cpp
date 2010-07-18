@@ -229,9 +229,9 @@ void ResourcesBrowser::createResource( const Class& type, const std::string& par
 void ResourcesBrowser::editResource( const std::string& path )
 {
    ProgressDialog progressDlg;
-   progressDlg.setProgress( 0 );
+   progressDlg.initialize( "Loading a resource", 1 );
    Resource& resource = m_rm->create( path );
-   progressDlg.setProgress( 1 );
+   progressDlg.advance();
 
    ResourceEditor* editor = create( resource );
    if ( editor )

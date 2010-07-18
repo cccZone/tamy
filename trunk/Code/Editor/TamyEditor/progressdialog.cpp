@@ -17,10 +17,19 @@ ProgressDialog::ProgressDialog( QWidget *parent, Qt::WFlags flags )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ProgressDialog::setProgress( float percentage )
+void ProgressDialog::initialize( const std::string& tag, unsigned int elemsCount )
 {
-   int val = ( int )( INT_MAX * percentage );
-   m_progressDialogUI.progressBar->setValue( val );
+   m_progressDialogUI.caption->setText( tag.c_str() );
+   m_progressDialogUI.progressBar->setMaximum( elemsCount );
+   m_progressDialogUI.progressBar->setValue( 0 );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ProgressDialog::advance()
+{
+   unsigned int currVal = m_progressDialogUI.progressBar->value();
+   m_progressDialogUI.progressBar->setValue( currVal + 1 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

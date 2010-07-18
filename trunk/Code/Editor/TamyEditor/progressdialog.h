@@ -6,6 +6,7 @@
 
 #include <QtGui/QDialog>
 #include "ui_progressdialog.h"
+#include "core/IProgressObserver.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,13 +14,12 @@
 /**
 * This is a dialog that shows the progress of an operation.
 */
-class ProgressDialog : public QDialog
+class ProgressDialog : public QDialog, public IProgressObserver
 {
    Q_OBJECT
 
 private:
-   Ui::ProgressDialog m_progressDialogUI;
-   float m_progressPercentage;
+   Ui::ProgressDialog   m_progressDialogUI;
 
 public:
    /**
@@ -27,12 +27,11 @@ public:
     */
    ProgressDialog( QWidget *parent = 0, Qt::WFlags flags = 0 );
 
-   /**
-    * Sets the progress on the bar.
-    *
-    * @param percentage    value in range <0, 1>
-    */
-   void setProgress( float percentage );
+   // -------------------------------------------------------------------------
+   // IProgressObserver implementation
+   // -------------------------------------------------------------------------
+   void initialize( const std::string& tag, unsigned int elemsCount );
+   void advance();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

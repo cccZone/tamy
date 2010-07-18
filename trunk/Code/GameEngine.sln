@@ -43,6 +43,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test-Sound", "Tests\test-Sound\test-Sound.vcxproj", "{1AF86129-C1A3-47DC-A10D-A1AAC2FF6118}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TamyEditor", "Editor\TamyEditor\TamyEditor.vcxproj", "{8A569D2A-986B-432B-8D69-A4140764C6D6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F} = {269AD9D8-247F-4F55-8438-C6DC4532A12F}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "oal-Sound", "Engine\oal-Sound\oal-Sound.vcxproj", "{7EFC6528-3D9A-480F-BD1F-15BCEB1BCC4D}"
 EndProject
@@ -55,6 +58,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test-MVC", "Tests\test-MVC\test-MVC.vcxproj", "{B1DCFD3D-2BB3-4F1D-8139-A8FC7434D31F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ml-IWF", "Engine\ml-IWF\ml-IWF.vcxproj", "{6258FF02-94E3-4527-89C7-ECFFAB554AEE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ml-Blender", "Engine\ml-Blender\ml-Blender.vcxproj", "{269AD9D8-247F-4F55-8438-C6DC4532A12F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4F4CEC82-B5C6-4F0E-B69B-855FA55F4B80} = {4F4CEC82-B5C6-4F0E-B69B-855FA55F4B80}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -266,6 +274,16 @@ Global
 		{6258FF02-94E3-4527-89C7-ECFFAB554AEE}.Release|Win32.ActiveCfg = Release|Win32
 		{6258FF02-94E3-4527-89C7-ECFFAB554AEE}.Release|Win32.Build.0 = Release|Win32
 		{6258FF02-94E3-4527-89C7-ECFFAB554AEE}.Release|x64.ActiveCfg = Release|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Debug|Win32.Build.0 = Debug|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Debug|x64.ActiveCfg = Debug|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Release|Win32.ActiveCfg = Release|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Release|Win32.Build.0 = Release|Win32
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -291,6 +309,7 @@ Global
 		{DA28A8FA-DFA7-432E-A228-7CA4DDB49076} = {E3D515B3-0ABB-4340-B837-98F20DBE5CB2}
 		{6259B6C0-58C1-4CDA-ADF7-4E3DA807BCA9} = {EF7BA2A3-5FE9-4A35-BDF2-26A7540799DC}
 		{6258FF02-94E3-4527-89C7-ECFFAB554AEE} = {52EF70A2-943E-4282-BB92-F64C3CB486D8}
+		{269AD9D8-247F-4F55-8438-C6DC4532A12F} = {52EF70A2-943E-4282-BB92-F64C3CB486D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		AMDCaProjectFile = D:\Docs\Projects\GameEngine\CodeAnalyst\GameEngine.caw

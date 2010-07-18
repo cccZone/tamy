@@ -4,8 +4,7 @@
 #include "ml-IWF\IWFMeshLoader.h"
 #include "ml-IWF\MeshDefinition.h"
 #include "core-Renderer.h"
-#include "core\SingletonsManager.h"
-#include "core\ResourcesManager.h"
+#include "core.h"
 #include <map>
 #include <sstream>
 
@@ -40,6 +39,44 @@ IWFScene::IWFScene( const Filesystem& fs,
 
 IWFScene::~IWFScene()
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void IWFScene::load( Model& scene, ResourcesManager& rm, IProgressObserver& observer )
+{
+   CFileIWF sceneFile;
+   sceneFile.Load(m_fs, m_sceneDir + std::string("/") + m_fileName);
+
+   // parse entities
+   observer.initialize( "Importing entities", sceneFile.m_vpEntityList.size() );
+   for ( ULONG i = 0; i < sceneFile.m_vpEntityList.size(); ++i )
+   {
+      processEntities(sceneFile.m_vpEntityList[i]);
+      observer.advance();
+   }
+
+   // parse internal meshes
+   observer.initialize( "Importing meshes", sceneFile.m_vpMeshList.size() );
+   for ( UINT i = 0; i < sceneFile.m_vpMeshList.size(); ++i )
+   {
+      std::string meshName = getUniqueNameForMesh(sceneFile.m_vpMeshList[i]->Name);
+
+      IWFMeshLoader meshLoader(sceneFile.m_vpMeshList[i], 
+         sceneFile.m_vpTextureList, 
+         sceneFile.m_vpMaterialList);
+
+      std::vector<MeshDefinition> meshes;
+      meshLoader.parseMesh(meshes, meshName);
+
+      D3DXMATRIX objMtx = reinterpret_cast<D3DXMATRIX&> (sceneFile.m_vpMeshList[i]->ObjectMatrix);
+      addStaticGeometry( scene, rm, meshes, objMtx, meshName );
+
+      observer.advance();
+   }
+
+   // cleanup
+   sceneFile.ClearObjects();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

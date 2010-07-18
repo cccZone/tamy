@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="BlenderScene.cpp" />
+    <ClCompile Include="MeshInstantiator.cpp">
+      <Filter>Instantiators</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Include\ml-Blender\BlenderScene.h" />
+    <ClInclude Include="..\..\Include\ml-Blender.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\IResourceInstantiator.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\MeshInstantiator.h">
+      <Filter>Instantiators</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Instantiators">
+      <UniqueIdentifier>{83e053b3-101e-47bc-8cb1-0497c589fd07}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

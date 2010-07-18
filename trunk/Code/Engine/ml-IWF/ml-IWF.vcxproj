@@ -101,9 +101,6 @@
     <ClInclude Include="..\..\Include\ml-IWF.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Include\ml-IWF\IWFScene.inl" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\core-MVC\core-MVC.vcxproj">
       <Project>{0b2b1dfd-5071-413a-bef9-5f8d265df56a}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

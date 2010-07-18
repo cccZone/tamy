@@ -24,6 +24,7 @@ class SingletonsManager;
 class ResourcesManager;
 struct Color;
 struct MeshDefinition;
+class IProgressObserver;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -51,8 +52,7 @@ public:
     * @param rm            resources manager that manages the scene resources
     * @param observer      loading progress observer
     */
-   template< typename TProgressObserver >
-   void load( Model& scene, ResourcesManager& rm, TProgressObserver& observer );
+   void load( Model& scene, ResourcesManager& rm, IProgressObserver& observer );
 
 private:
    void processEntities(iwfEntity* fileEntity);
@@ -154,10 +154,6 @@ struct ReferenceEntity
 #define CUSTOM_ENTITY_SKYBOX    0x202       // Skybox entity identifier
 #define CUSTOM_ENTITY_REFERENCE 0x203       // Reference entity identifier
 #define EXTERNAL_REFERENCE      1
-
-///////////////////////////////////////////////////////////////////////////////
-
-#include "ml-IWF\IWFScene.inl"
 
 ///////////////////////////////////////////////////////////////////////////////
 
