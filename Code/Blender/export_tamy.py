@@ -30,10 +30,14 @@ import bpy
 from bpy.props import *
 
 
-def export_mesh( file, mesh ):
+class TamyMesh:
+
+	def __init__( self, mesh ):
+		self.mesh = mesh
+
 
 #	HELPER METHODS
-	def faceToTriangles(face):
+	def faceToTriangles( self, face ):
 		indices = []
 		for vIdx in face.verts:
 			indices.append( vIdx )
@@ -45,35 +49,35 @@ def export_mesh( file, mesh ):
 		else:
 			triangles.append(indices)
 		return triangles
+			
+	def export_resource( self, file ):
+	
+#		Calculate normals
+		self.mesh.calc_normals()
 
-#	METHOD'S BODY
+		file.write( '<Resource type="MESH" name="%s">\n' % self.mesh.name )
 
-#	Calculate normals
-	mesh.calc_normals()
+#		...next - the vertices
+		file.write('<Vertices>\n')
+		for v in self.mesh.verts:
+			file.write('<Vtx pos="%.6f %.6f %.6f" />\n' % tuple(v.co) )
+		file.write('</Vertices>\n')
 
-	file.write('<Mesh>\n')
+#		...and last but not least - the faces
+		triangles = []
+		for face in self.mesh.faces:
+			triangles.extend( self.faceToTriangles( face ) )
 
-#	...next - the vertices
-	file.write('<Vertices>\n')
-	for v in mesh.verts:
-		file.write('<Vtx x="%.6f" y="%.6f" z="%.6f" />\n' % tuple(v.co))
-	file.write('</Vertices>\n')
+		file.write('<Faces>\n')
+		for tri in triangles:
+			file.write('<Face idx="%d %d %d"/>\n' % tuple(tri) )
+		file.write('</Faces>\n')
 
-#	...and last but not least - the faces
-	triangles = []
-	for face in mesh.faces:
-		triangles.extend(faceToTriangles(face))
-
-	file.write('<Faces>\n')
-	for tri in triangles:
-		file.write('<Face i1="%d" i2="%d" i3="%d"/>\n' % tuple(tri) )
-	file.write('</Faces>\n')
-
-#	end of a mesh
-	file.write('</Mesh>\n')
+#		end of a mesh
+		file.write('</Resource>\n')
 
 
-def export_object( file, object ):
+def export_object( file, object, resources ):
 
 #	HELPER METHODS
 	def fixName(name):
@@ -109,19 +113,20 @@ def export_object( file, object ):
 	rot = quat.axis
 	file.write('<Transform translation="%.6f %.6f %.6f" rotation="%.6f %.6f %.6f %.6f" />\n' % \
 			(loc[0], loc[1], loc[2], rot[0], rot[1], rot[2], quat.angle) )
-
-#	if this is a mesh
+	
 	if object.type == 'MESH':
 		me = object.create_mesh(True, 'PREVIEW')
-		if (len(me.faces)+len(me.verts)): # Make sure there is somthing to write
-			export_mesh( file, me )
+		if (len(me.faces)+len(me.verts)): # Make sure there is something to write
+#			save the mesh
+			file.write('<Resource id="%s"/>\n' % len( resources ) )
+			resources.append( TamyMesh( me ) )
 		else:
 #			clean up
 			bpy.data.meshes.remove(me)
 
 #	save the object's children
 	for child in object.children:
-		export_object( file, child )
+		export_object( file, child, resources )
 
 	file.write('</Object>\n');
 
@@ -142,8 +147,11 @@ def export_scene( filename, context,
 
 #	append an xml header
 	file.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+	
+	resources = []
 
-# 	go through all root objects ( ones withut parents
+# 	gather all the resources used in the scene
+	file.write('<Objects>\n')
 	for main_obj in export_objects:
 
 		if main_obj.parent is not None:
@@ -168,7 +176,15 @@ def export_scene( filename, context,
 
 # 		2.) go throgough the analyzed object's hierarchy and serialize the meshes
 		for ob in obs:
-			export_object( file, ob )
+			export_object( file, ob, resources )
+	
+	file.write('</Objects>\n')
+	
+#	save the resources
+	file.write('<Resources>\n')
+	for res in resources:
+		res.export_resource( file )
+	file.write('</Resources>\n')
 
 #	close the file
 	file.close()
@@ -211,4 +227,3 @@ def unregister():
 
 if __name__ == "__main__":
 	register()
-

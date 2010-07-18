@@ -46,9 +46,4 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\ml-IWF.h" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Include\ml-IWF\IWFScene.inl">
-      <Filter>Loaders</Filter>
-    </None>
-  </ItemGroup>
 </Project>

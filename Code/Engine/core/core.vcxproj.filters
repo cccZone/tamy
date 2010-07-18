@@ -181,6 +181,9 @@
     <ClCompile Include="Vector.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="Assert.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -424,6 +427,9 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core.h" />
+    <ClInclude Include="..\..\Include\core\IProgressObserver.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">

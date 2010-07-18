@@ -1,11 +1,20 @@
-#pragma once
+/// @file   core/Assert.h
+/// @brief  definition of code asserts
 
-#include <cassert>
+#pragma once
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define ASSERT(cond, msg)                                                     \
-   assert((cond) && msg);
+/**
+ * An assert without a message
+ */
+void ASSERT( bool condition );
+
+/**
+ * An assert with some message.
+ */
+void ASSERT( bool condition, const char* format, ... );
+
 
 ///////////////////////////////////////////////////////////////////////////////
