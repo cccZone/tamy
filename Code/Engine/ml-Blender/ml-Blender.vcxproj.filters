@@ -5,12 +5,18 @@
     <ClCompile Include="MeshInstantiator.cpp">
       <Filter>Instantiators</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialInstantiator.cpp">
+      <Filter>Instantiators</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ml-Blender\BlenderScene.h" />
     <ClInclude Include="..\..\Include\ml-Blender.h" />
     <ClInclude Include="..\..\Include\ml-Blender\IResourceInstantiator.h" />
     <ClInclude Include="..\..\Include\ml-Blender\MeshInstantiator.h">
+      <Filter>Instantiators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-Blender\MaterialInstantiator.h">
       <Filter>Instantiators</Filter>
     </ClInclude>
   </ItemGroup>

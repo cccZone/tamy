@@ -58,7 +58,7 @@ private:
    /**
     * Parses the resources and creates a table of instantiators.
     */
-   void parseResources();
+   void parseResources( TiXmlNode* sceneSlice );
 
    /**
     * Releases the resource instantiators.
@@ -71,7 +71,7 @@ private:
    /**
     * Creates the scene objects and hooks them up with required resources.
     */
-   void parseObjects( Model& scene );
+   void parseObjects( TiXmlNode* sceneSlice, Model& scene );
 
    /**
     * A method that creates a hierarchical object described in the specified
