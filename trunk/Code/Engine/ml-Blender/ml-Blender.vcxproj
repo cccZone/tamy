@@ -12,12 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlenderScene.cpp" />
+    <ClCompile Include="MaterialInstantiator.cpp" />
     <ClCompile Include="MeshInstantiator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ml-Blender.h" />
     <ClInclude Include="..\..\Include\ml-Blender\BlenderScene.h" />
     <ClInclude Include="..\..\Include\ml-Blender\IResourceInstantiator.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\MaterialInstantiator.h" />
     <ClInclude Include="..\..\Include\ml-Blender\MeshInstantiator.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

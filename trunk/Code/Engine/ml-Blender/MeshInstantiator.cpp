@@ -33,6 +33,10 @@ MeshInstantiator::MeshInstantiator( TiXmlNode* meshNode, ResourcesManager& rm )
          // parse vertex position
          std::string vtxStr = vtxElem->Attribute( "pos" );
          sscanf_s( vtxStr.c_str(), "%f %f %f", &vtx.m_coords.x, &vtx.m_coords.y, &vtx.m_coords.z );
+
+         // parse vertex normal
+         std::string normStr = vtxElem->Attribute( "norm" );
+         sscanf_s( normStr.c_str(), "%f %f %f", &vtx.m_normal.x, &vtx.m_normal.y, &vtx.m_normal.z );
       }
    }
 

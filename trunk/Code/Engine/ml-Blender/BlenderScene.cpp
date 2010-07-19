@@ -3,8 +3,10 @@
 #include "core.h"
 #include "core-MVC.h"
 #include "core-Renderer.h"
-#include "ml-Blender/IResourceInstantiator.h"
+
+// resources instantiators
 #include "ml-Blender/MeshInstantiator.h"
+#include "ml-Blender/MaterialInstantiator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,16 +49,21 @@ void BlenderScene::load( Model& scene )
 {
    releaseResourceInstantiators();
 
-   parseResources();
+   TiXmlNode* sceneSlice = m_document->FirstChild( "Scene" );
+   if ( !sceneSlice )
+   {
+      return;
+   }
+   parseResources( sceneSlice );
 
-   parseObjects( scene );
+   parseObjects( sceneSlice, scene );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderScene::parseResources()
+void BlenderScene::parseResources( TiXmlNode* sceneSlice )
 {
-   TiXmlElement* objectsSlice = m_document->FirstChildElement( "Resources" );
+   TiXmlElement* objectsSlice = sceneSlice->FirstChildElement( "Resources" );
    if ( !objectsSlice )
    {
       return;
@@ -81,6 +88,10 @@ void BlenderScene::parseResources()
       {
          instantiator = new MeshInstantiator( resNode, m_rm );
       }
+      else if ( type == "MATERIAL" )
+      {
+         instantiator = new MaterialInstantiator( resNode, m_rm );
+      }
 
       // register the instantiator
       m_instantiators.push_back( instantiator );
@@ -103,9 +114,9 @@ void BlenderScene::releaseResourceInstantiators()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderScene::parseObjects( Model& scene )
+void BlenderScene::parseObjects( TiXmlNode* sceneSlice, Model& scene )
 {
-   TiXmlElement* objectsSlice = m_document->FirstChildElement( "Objects" );
+   TiXmlElement* objectsSlice = sceneSlice->FirstChildElement( "Objects" );
    if ( !objectsSlice )
    {
       return;
