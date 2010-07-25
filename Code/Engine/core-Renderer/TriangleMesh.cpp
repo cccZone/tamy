@@ -16,6 +16,7 @@ END_RESOURCE()
 
 TriangleMesh::TriangleMesh()
 {
+   D3DXMatrixIdentity(&m_identityMtx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,6 +28,7 @@ TriangleMesh::TriangleMesh( const std::string& name,
 , m_vertices(vertices)
 , m_faces(faces)
 {
+   D3DXMatrixIdentity(&m_identityMtx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,8 +62,6 @@ void TriangleMesh::onResourceLoaded(ResourcesManager& mgr)
    {
       m_boundingVol.include(m_vertices[i].m_coords);
    }
-
-   D3DXMatrixIdentity(&m_identityMtx);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

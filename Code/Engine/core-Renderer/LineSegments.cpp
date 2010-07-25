@@ -16,6 +16,7 @@ END_RESOURCE()
 LineSegments::LineSegments( const std::string& name )
 : GeometryResource( name )
 {
+   D3DXMatrixIdentity( &m_identityMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

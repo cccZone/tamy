@@ -213,11 +213,15 @@ class ExportTamy(bpy.types.Operator):
 
 		for f_index, f in enumerate( mesh.faces ):
 			f_mat = min( f.material_index, len( materialNames )-1 )
-			tface = mesh.active_uv_texture.data[ f_index ]
-			f_image = tface.image
-			f_uv = tface.uv
 			
-			if f_image: # Object is always true.
+			f_image = None
+
+			if mesh.active_uv_texture is not None:
+				tface = mesh.active_uv_texture.data[ f_index ]
+				f_image = tface.image
+				f_uv = tface.uv
+				
+			if f_image is not None:
 				key = materialNames[f_mat],	f_image.name
 			else:
 				key = materialNames[f_mat],	None # No image, use None instead.

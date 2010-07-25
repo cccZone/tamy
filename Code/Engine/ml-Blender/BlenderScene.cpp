@@ -220,13 +220,15 @@ void BlenderScene::getObjectTransform( TiXmlElement* transformElem, D3DXMATRIX& 
 
    D3DXVECTOR3 objectPos;
    sscanf_s( translationStr.c_str(), "%f %f %f", &objectPos.x, &objectPos.y, &objectPos.z );
-   D3DXQUATERNION objectOrientiation;
-   sscanf_s( orientationStr.c_str(), "%f %f %f %f", &objectOrientiation.w, &objectOrientiation.x, &objectOrientiation.y, &objectOrientiation.z );
+
+   D3DXVECTOR3 rotAxis;
+   float rotAngle;
+   sscanf_s( orientationStr.c_str(), "%f %f %f %f", &rotAxis.x, &rotAxis.y, &rotAxis.z, &rotAngle );
 
    D3DXMATRIX mtxTranslation;
    D3DXMatrixTranslation( &mtxTranslation, objectPos.x, objectPos.y, objectPos.z );
-   D3DXMatrixRotationQuaternion( &outTransform, &objectOrientiation );
-   D3DXMatrixMultiply( &outTransform, &mtxTranslation, &outTransform );
+   D3DXMatrixRotationAxis( &outTransform, &rotAxis, rotAngle );
+   D3DXMatrixMultiply( &outTransform, &outTransform, &mtxTranslation );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
