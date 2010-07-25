@@ -43,8 +43,27 @@ BoundingVolume* AABoundingBox::operator*(const D3DXMATRIX& mtx) const
 {
    AABoundingBox* newBB = new AABoundingBox();
 
-   D3DXVec3TransformCoord(&newBB->min, &min, &mtx);
-   D3DXVec3TransformCoord(&newBB->max, &max, &mtx);
+   float av, bv;
+   newBB->min = newBB->max = D3DXVECTOR3( mtx.m[0][1], mtx.m[0][2], mtx.m[0][3] );
+
+   for ( int i = 0; i < 3; ++ i)
+   {
+      for ( int j = 0; j < 3; ++j )
+      {
+         av = mtx.m[i][j] * min[j];
+         bv = mtx.m[i][j] * max[j];
+         if (av < bv)
+         {
+            newBB->min[i] += av;
+            newBB->max[i] += bv;
+         } 
+         else 
+         {
+            newBB->min[i] += bv;
+            newBB->max[i] += av;
+         }
+      }
+   }
 
    return newBB;
 }
@@ -53,8 +72,31 @@ BoundingVolume* AABoundingBox::operator*(const D3DXMATRIX& mtx) const
 
 void AABoundingBox::operator*=(const D3DXMATRIX& mtx)
 {
-   D3DXVec3TransformCoord(&min, &min, &mtx);
-   D3DXVec3TransformCoord(&max, &max, &mtx);
+   float av, bv;
+   D3DXVECTOR3 newMin( mtx.m[0][1], mtx.m[0][2], mtx.m[0][3] );
+   D3DXVECTOR3 newMax( mtx.m[0][1], mtx.m[0][2], mtx.m[0][3] );
+
+   for ( int i = 0; i < 3; ++ i)
+   {
+      for ( int j = 0; j < 3; ++j )
+      {
+         av = mtx.m[i][j] * min[j];
+         bv = mtx.m[i][j] * max[j];
+         if (av < bv)
+         {
+            newMin[i] += av;
+            newMax[i] += bv;
+         } 
+         else 
+         {
+            newMin[i] += bv;
+            newMax[i] += av;
+         }
+      }
+   }
+
+   min = newMin;
+   max = newMax;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

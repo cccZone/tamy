@@ -12,9 +12,6 @@
 #include "..\src\gui\dialogs\qfiledialog.h"
 
 
-// TODO: widocznosc ( swobodne obracanie + podswietlanie -> i wtedy przetestowac box'a i frustrum ksztalt czy sie przecinaja)
-
-
 ///////////////////////////////////////////////////////////////////////////////
 
 MainAppComponent::MainAppComponent( QApplication& app )
