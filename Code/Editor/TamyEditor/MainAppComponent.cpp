@@ -299,7 +299,7 @@ void MainAppComponent::importFromBlender()
    QString blenderFileName = QFileDialog::getOpenFileName( m_mgr , 
       tr( "Import scene from Blender" ), 
       rootDir.c_str(), 
-      tr( "Scene Files (*.btm)" ) );
+      tr( "Scene Files (*.dae)" ) );
 
    if (blenderFileName.isEmpty() == true) 
    {

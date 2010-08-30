@@ -5,8 +5,10 @@
 #include "core-Renderer.h"
 
 // resources instantiators
-#include "ml-Blender/MeshInstantiator.h"
-#include "ml-Blender/MaterialInstantiator.h"
+#include "ml-Blender/EffectCS.h"
+#include "ml-Blender/MaterialCS.h"
+#include "ml-Blender/MeshCS.h"
+#include "ml-Blender/SceneCS.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,13 +33,29 @@ BlenderScene::BlenderScene( const Filesystem& fs, const std::string& fileName, R
    {
       throw std::runtime_error( "Error loading an XML file" );
    }
+
+   // define the slices
+   m_definitions.push_back( new TSliceDefinition< MaterialCS >( "library_effects", "effect" ) );
+   m_definitions.push_back( new TSliceDefinition< EffectCS >( "library_materials", "material" ) );
+   m_definitions.push_back( new TSliceDefinition< MeshCS >( "library_geometries", "geometry" ) );
+   m_definitions.push_back( new TSliceDefinition< SceneCS >( "library_visual_scenes", "visual_scene" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BlenderScene::~BlenderScene()
 {
-   releaseResourceInstantiators();
+   for ( SlicesDefinitions::const_iterator it = m_definitions.begin(); it != m_definitions.end(); ++it )
+   {
+      delete *it;
+   }
+   m_definitions.clear();
+
+   for ( SlicesMap::const_iterator it = m_slicesMap.begin(); it != m_slicesMap.end(); ++it )
+   {
+      delete it->second;
+   }
+   m_slicesMap.clear();
 
    delete m_document;
    m_document = NULL;
@@ -47,188 +65,89 @@ BlenderScene::~BlenderScene()
 
 void BlenderScene::load( Model& scene )
 {
-   releaseResourceInstantiators();
+   ASSERT( m_slicesMap.empty() );
+   ASSERT( m_sceneSlicesMap.empty() );
 
-   TiXmlNode* sceneSlice = m_document->FirstChild( "Scene" );
+   TiXmlNode* sceneSlice = m_document->FirstChild( "COLLADA" );
    if ( !sceneSlice )
    {
       return;
    }
-   parseResources( sceneSlice );
 
-   parseObjects( sceneSlice, scene );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void BlenderScene::parseResources( TiXmlNode* sceneSlice )
-{
-   TiXmlElement* objectsSlice = sceneSlice->FirstChildElement( "Resources" );
-   if ( !objectsSlice )
+   // parse the definitions
+   for ( SlicesDefinitions::const_iterator it = m_definitions.begin(); it != m_definitions.end(); ++it )
    {
-      return;
+      SliceDefinition* def = *it;
+      def->parse( sceneSlice, *this );
    }
 
-   // initialize the observer
-   unsigned int elemsCount = 0;
-   for ( TiXmlNode* res = objectsSlice->FirstChild( "Resource" ); res; res = res->NextSibling( "Resource" ), ++elemsCount ) {}
-   m_observer.initialize( "Loading resources", elemsCount );
-
-   // load the resources
-   for ( TiXmlNode* resNode = objectsSlice->FirstChild( "Resource" ); resNode; resNode = resNode->NextSibling( "Resource" ) ) 
+   // instantiate the scene
+   m_observer.initialize( "Instantiating scene objects", m_sceneSlicesMap.size() );
+   for ( SceneSlicesMap::const_iterator it = m_sceneSlicesMap.begin(); it != m_sceneSlicesMap.end(); ++it )
    {
-      TiXmlElement* resElem = resNode->ToElement();
-      ASSERT( resElem != NULL );
-
-      IResourceInstantiator* instantiator = NULL;
-
-      // create an instantiator suitable to the resource type
-      std::string type = resElem->Attribute( "type" );
-      if ( type == "MESH" )
-      {
-         instantiator = new MeshInstantiator( resNode, m_rm );
-      }
-      else if ( type == "MATERIAL" )
-      {
-         instantiator = new MaterialInstantiator( resNode, m_rm );
-      }
-
-      // register the instantiator
-      m_instantiators.push_back( instantiator );
+      ISceneSlice* slice = *it;
+      slice->instantiate( *this, scene );
+      delete slice;
 
       m_observer.advance();
    }
+   m_sceneSlicesMap.clear();
+
+   // cleanup
+   for ( SlicesMap::iterator it = m_slicesMap.begin(); it != m_slicesMap.end(); ++it )
+   {
+      delete it->second;
+   }
+   m_slicesMap.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderScene::releaseResourceInstantiators()
+void BlenderScene::addSceneSlice( ISceneSlice* slice )
 {
-   unsigned int count = m_instantiators.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   if ( slice == NULL )
    {
-      delete m_instantiators[i];
+      throw std::invalid_argument( "NULL pointer instead an IColladaSlice instance ");
    }
-   m_instantiators.clear();
+
+   m_sceneSlicesMap.push_back( slice );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderScene::parseObjects( TiXmlNode* sceneSlice, Model& scene )
+void BlenderScene::addSlice( const std::string& id, IColladaSlice* slice )
 {
-   TiXmlElement* objectsSlice = sceneSlice->FirstChildElement( "Objects" );
-   if ( !objectsSlice )
+   if ( slice == NULL )
    {
-      return;
+      throw std::invalid_argument( "NULL pointer instead an IColladaSlice instance ");
    }
 
-   // initialize the observer
-   unsigned int elemsCount = 0;
-   for ( TiXmlNode* objNode = objectsSlice->FirstChild( "Object" ); objNode; objNode = objNode->NextSibling( "Object" ), ++elemsCount ) {}
-   m_observer.initialize( "Creating objects", elemsCount );
-
-   // create the objects hierarchy
-   for ( TiXmlNode* objNode = objectsSlice->FirstChild( "Object" ); objNode; objNode = objNode->NextSibling( "Object" ) )
+   SlicesMap::const_iterator it = m_slicesMap.find( id );
+   if ( it != m_slicesMap.end() )
    {
-      ASSERT( objNode != NULL );
-      SpatialEntity* renderable = createHierarchicalObject( objNode );
-      if ( renderable )
-      {
-         // add the renderable to the scene
-         scene.add( renderable );
-      }
-
-      // advance the observer
-      m_observer.advance();
+      throw std::runtime_error( "Slice already exists" );
    }
 
+   m_slicesMap.insert( std::make_pair( id, slice ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SpatialEntity* BlenderScene::createHierarchicalObject( TiXmlNode* rootNode )
+Entity* BlenderScene::getEntity( const std::string& id ) const
 {
-   TiXmlElement* elem = rootNode->ToElement();
-   if ( !elem )
+   SlicesMap::const_iterator it = m_slicesMap.find( id );
+   if ( it == m_slicesMap.end() )
    {
-      return NULL;
+      throw std::runtime_error( "Slice doesn't exist" );
    }
 
-   std::string name = elem->Attribute( "name" );
-
-   // if there are any embedded resources in this object, 
-   // we're gonna need a Renderable - otherwise we can use
-   // a cheaper version - a RenderableJoint
-   SpatialEntity* rootRenderable = NULL;
-   if ( rootNode->FirstChild( "Resource" ) == NULL )
+   const IEntitySlice* entitySlice = dynamic_cast< const IEntitySlice* >( it->second );
+   if ( entitySlice == NULL )
    {
-      rootRenderable = new RenderableJoint( name );
-   }
-   else
-   {
-      rootRenderable = new Renderable( name );
+      throw std::runtime_error( "Required slice is does not describe an entity" );
    }
 
-   // get the transformation of the object
-   TiXmlNode* transformNode = rootNode->FirstChild ("Transform" );
-   ASSERT( transformNode != NULL );
-   TiXmlElement* transformElem = transformNode->ToElement();
-   ASSERT( transformElem != NULL );
-   getObjectTransform( transformElem, rootRenderable->accessLocalMtx() );
-
-   // go through the embedded resources and add them
-   for ( TiXmlNode* resNode = rootNode->FirstChild( "Resource" ); resNode; resNode = resNode->NextSibling( "Resource" ) )
-   {
-      ASSERT( resNode != NULL );
-      TiXmlElement* resElem = resNode->ToElement();
-      ASSERT( resElem != NULL );
-
-      int resourceIdx = -1;
-      resElem->Attribute( "id", &resourceIdx );
-      ASSERT( resourceIdx >= 0 );
-
-      IResourceInstantiator* instantiator = m_instantiators.at( resourceIdx );
-      if ( instantiator ) // an instantiator may not exist - take that into account
-      {
-         Entity* resEntity = instantiator->instantiate();
-         ASSERT( resEntity != NULL );
-         rootRenderable->add( resEntity );
-      }
-   }
-
-   // go through the children and add them
-   for ( TiXmlNode* objNode = rootNode->FirstChild( "Object" ); objNode; objNode = objNode->NextSibling( "Object" ) )
-   {
-      SpatialEntity* child = createHierarchicalObject( objNode );
-      if ( child )
-      {
-         rootRenderable->add( child );
-      }
-   }
-
-   return rootRenderable;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void BlenderScene::getObjectTransform( TiXmlElement* transformElem, D3DXMATRIX& outTransform ) const
-{
-   ASSERT( transformElem != NULL );
-
-   std::string translationStr = transformElem->Attribute( "translation" );
-   std::string orientationStr = transformElem->Attribute( "rotation" );
-
-   D3DXVECTOR3 objectPos;
-   sscanf_s( translationStr.c_str(), "%f %f %f", &objectPos.x, &objectPos.y, &objectPos.z );
-
-   D3DXVECTOR3 rotAxis;
-   float rotAngle;
-   sscanf_s( orientationStr.c_str(), "%f %f %f %f", &rotAxis.x, &rotAxis.y, &rotAxis.z, &rotAngle );
-
-   D3DXMATRIX mtxTranslation;
-   D3DXMatrixTranslation( &mtxTranslation, objectPos.x, objectPos.y, objectPos.z );
-   D3DXMatrixRotationAxis( &outTransform, &rotAxis, rotAngle );
-   D3DXMatrixMultiply( &outTransform, &outTransform, &mtxTranslation );
+   return entitySlice->instantiate( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

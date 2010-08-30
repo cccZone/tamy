@@ -1,16 +1,14 @@
-/// @file   ml-Blender/MaterialInstantiator.h
-/// @brief  an instantiator of material resource
+/// @file   ml-Blender/IColladaSlice.h
+/// @brief  a slice representing a visual effect
 
 #pragma once
 
-#include "ml-Blender/IResourceInstantiator.h"
+#include "ml-Blender/IColladaSlice.h"
 #include <string>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Material;
-class Texture;
 class Shader;
 class ResourcesManager;
 class TiXmlNode;
@@ -20,22 +18,20 @@ class TiXmlNode;
 /**
  * An instantiator of triangle mesh resource.
  */
-class MaterialInstantiator : public IResourceInstantiator
+class EffectCS : public IColladaSlice, public IEntitySlice
 {
 private:
-   std::string    m_name;
-   Material*      m_material;
-   Texture*       m_texture;
    Shader*        m_shader;
+   std::string    m_materialId;
 
 public:
-   MaterialInstantiator( TiXmlNode* materialNode, ResourcesManager& rm );
-   ~MaterialInstantiator();
+   EffectCS( TiXmlNode* effectNode, ResourcesManager& rm );
+   ~EffectCS();
 
    // -------------------------------------------------------------------------
-   // IResourceInstantiator implementation
+   // IEntitySlice implementation
    // -------------------------------------------------------------------------
-   Entity* instantiate() const;
+   Entity* instantiate( const BlenderScene& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
