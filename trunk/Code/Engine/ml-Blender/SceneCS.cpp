@@ -81,17 +81,7 @@ SceneCS::NodeDef* SceneCS::parseEntityNode( TiXmlElement* nodeElem )
    // transformation
    float a, b, c, d;
 
-   D3DXMATRIX translationMtx;
-   {
-      TiXmlElement* translateElem = nodeElem->FirstChildElement( "translate" );
-      ASSERT( translateElem != NULL );
-      sscanf_s( translateElem->GetText(), "%f %f %f", &a, &b, &c );
-
-      D3DXMatrixTranslation( &translationMtx, a, b, c );
-   }
-
-   D3DXMATRIX rotationMtx;
-   D3DXMatrixIdentity( &rotationMtx );
+   D3DXMatrixIdentity( &node->localMtx );
    for ( TiXmlElement* rotateElem = nodeElem->FirstChildElement( "rotate" ); rotateElem != NULL; rotateElem = rotateElem->NextSiblingElement( "rotate" ) )
    {
       sscanf_s( rotateElem->GetText(), "%f %f %f %f", &a, &b, &c, &d );
@@ -99,10 +89,18 @@ SceneCS::NodeDef* SceneCS::parseEntityNode( TiXmlElement* nodeElem )
       D3DXMATRIX axisRotMtx;
       D3DXMatrixIdentity( &axisRotMtx );
       D3DXMatrixRotationAxis( &axisRotMtx, &D3DXVECTOR3( a, b, c ), DEG2RAD( d ) );
-      D3DXMatrixMultiply( &rotationMtx, &axisRotMtx, &rotationMtx );
+      D3DXMatrixMultiply( &node->localMtx, &axisRotMtx, &node->localMtx );
    }
 
-   D3DXMatrixMultiply( &node->localMtx, &translationMtx, &rotationMtx );
+   {
+      TiXmlElement* translateElem = nodeElem->FirstChildElement( "translate" );
+      ASSERT( translateElem != NULL );
+      sscanf_s( translateElem->GetText(), "%f %f %f", &a, &b, &c );
+
+      node->localMtx._41 = a;
+      node->localMtx._42 = b;
+      node->localMtx._43 = c;
+   }
 
    // geometry
    for ( TiXmlElement* geometryElem = nodeElem->FirstChildElement( "instance_geometry" ); geometryElem != NULL; geometryElem = geometryElem->NextSiblingElement( "instance_geometry" ))
