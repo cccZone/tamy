@@ -1,9 +1,9 @@
-/// @file   ml-Blender/MeshInstantiator.h
-/// @brief  an instantiator of triangle mesh resource
+/// @file   ml-Blender/MeshCS.h
+/// @brief  a slice that represents a triangle mesh resource
 
 #pragma once
 
-#include "ml-Blender/IResourceInstantiator.h"
+#include "ml-Blender/IColladaSlice.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,18 +17,18 @@ class TiXmlNode;
 /**
  * An instantiator of triangle mesh resource.
  */
-class MeshInstantiator : public IResourceInstantiator
+class MeshCS : public IColladaSlice, public IEntitySlice
 {
 private:
    TriangleMesh*  m_mesh;
 
 public:
-   MeshInstantiator( TiXmlNode* meshNode, ResourcesManager& rm );
+   MeshCS( TiXmlNode* geometryNode, ResourcesManager& rm );
 
    // -------------------------------------------------------------------------
-   // IResourceInstantiator implementation
+   // IEntitySlice implementation
    // -------------------------------------------------------------------------
-   Entity* instantiate() const;
+   Entity* instantiate( const BlenderScene& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

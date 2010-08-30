@@ -2,27 +2,42 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="BlenderScene.cpp" />
-    <ClCompile Include="MeshInstantiator.cpp">
-      <Filter>Instantiators</Filter>
+    <ClCompile Include="EffectCS.cpp">
+      <Filter>Slices</Filter>
     </ClCompile>
-    <ClCompile Include="MaterialInstantiator.cpp">
-      <Filter>Instantiators</Filter>
+    <ClCompile Include="MeshCS.cpp">
+      <Filter>Slices</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialCS.cpp">
+      <Filter>Slices</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneCS.cpp">
+      <Filter>Slices</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ml-Blender\BlenderScene.h" />
     <ClInclude Include="..\..\Include\ml-Blender.h" />
-    <ClInclude Include="..\..\Include\ml-Blender\IResourceInstantiator.h" />
-    <ClInclude Include="..\..\Include\ml-Blender\MeshInstantiator.h">
-      <Filter>Instantiators</Filter>
+    <ClInclude Include="..\..\Include\ml-Blender\IColladaSlice.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\EffectCS.h">
+      <Filter>Slices</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\MaterialInstantiator.h">
-      <Filter>Instantiators</Filter>
+    <ClInclude Include="..\..\Include\ml-Blender\MeshCS.h">
+      <Filter>Slices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-Blender\MaterialCS.h">
+      <Filter>Slices</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-Blender\SceneCS.h">
+      <Filter>Slices</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Instantiators">
+    <Filter Include="Slices">
       <UniqueIdentifier>{83e053b3-101e-47bc-8cb1-0497c589fd07}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Include\ml-Blender\BlenderScene.inl" />
   </ItemGroup>
 </Project>

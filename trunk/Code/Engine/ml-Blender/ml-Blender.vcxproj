@@ -12,15 +12,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlenderScene.cpp" />
-    <ClCompile Include="MaterialInstantiator.cpp" />
-    <ClCompile Include="MeshInstantiator.cpp" />
+    <ClCompile Include="EffectCS.cpp" />
+    <ClCompile Include="MaterialCS.cpp" />
+    <ClCompile Include="MeshCS.cpp" />
+    <ClCompile Include="SceneCS.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ml-Blender.h" />
     <ClInclude Include="..\..\Include\ml-Blender\BlenderScene.h" />
-    <ClInclude Include="..\..\Include\ml-Blender\IResourceInstantiator.h" />
-    <ClInclude Include="..\..\Include\ml-Blender\MaterialInstantiator.h" />
-    <ClInclude Include="..\..\Include\ml-Blender\MeshInstantiator.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\IColladaSlice.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\EffectCS.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\MaterialCS.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\MeshCS.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\SceneCS.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Include\ml-Blender\BlenderScene.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{269AD9D8-247F-4F55-8438-C6DC4532A12F}</ProjectGuid>
