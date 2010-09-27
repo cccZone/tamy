@@ -19,6 +19,9 @@
     <Filter Include="SteeringBehaviors">
       <UniqueIdentifier>{dbcec436-c427-40f1-b9d2-0bf8e100ecf6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{2a3fcde2-6455-4ca1-a21b-dcce20fbbc65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-AI\Messagable.h">

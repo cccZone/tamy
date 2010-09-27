@@ -162,9 +162,7 @@ void MainAppComponent::newScene()
    }
    catch (std::exception& ex)
    {
-      QMessageBox::warning( m_mgr , "New scene error",
-         QString( "Error occurred while creating a new scene " ) + fileName.c_str(),
-         QMessageBox::Ok );
+      QMessageBox::warning( m_mgr, QString("Error occurred while creating scene ") + fileName.c_str(), ex.what(), QMessageBox::Ok );
    }
 }
 
@@ -202,9 +200,7 @@ void MainAppComponent::loadScene()
    }
    catch (std::exception& ex)
    {
-      QMessageBox::warning( m_mgr , "Load scene error",
-         QString( "Error occurred while loading scene " ) + fileName.c_str(),
-         QMessageBox::Ok );
+      QMessageBox::warning( m_mgr, QString("Error occurred while loading scene ") + fileName.c_str(), ex.what(), QMessageBox::Ok );
    }
 }
 
@@ -234,9 +230,7 @@ void MainAppComponent::saveScene()
    }
    catch (std::exception& ex)
    {
-      QMessageBox::warning( m_mgr, "Save scene error",
-         QString( "Error occurred while saving scene" ),
-         QMessageBox::Ok );
+      QMessageBox::warning( m_mgr, QString("Error occurred while saving scene"), ex.what(), QMessageBox::Ok );
 
       return;
    }
@@ -283,9 +277,7 @@ void MainAppComponent::importFromIWF()
    }
    catch (std::exception& ex)
    {
-      QMessageBox::warning( m_mgr, "Load scene error",
-         QString("Error occurred while loading scene ") + importFileName.c_str(),
-         QMessageBox::Ok );
+      QMessageBox::warning( m_mgr, QString("Error occurred while importing scene ") + importFileName.c_str(), ex.what(), QMessageBox::Ok );
    }
 }
 
@@ -330,9 +322,7 @@ void MainAppComponent::importFromBlender()
    }
    catch (std::exception& ex)
    {
-      QMessageBox::warning( m_mgr, "Load scene error",
-         QString("Error occurred while loading scene ") + importFileName.c_str(),
-         QMessageBox::Ok );
+      QMessageBox::warning( m_mgr, QString("Error occurred while importing scene ") + importFileName.c_str(), ex.what(), QMessageBox::Ok );
    }
 }
 

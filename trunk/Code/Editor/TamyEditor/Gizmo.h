@@ -13,7 +13,6 @@ class GizmoEffect;
 class Camera;
 class ResourcesManager;
 class Geometry;
-class Renderable;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -40,8 +39,7 @@ private:
    LineSegments*  m_scalingAxes;
 
    GizmoEffect*   m_effect;
-   Geometry*      m_geometry;
-   Renderable*    m_renderable;
+   LineSegments*  m_geometry;
 
 public:
    /**

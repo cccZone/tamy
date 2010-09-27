@@ -86,8 +86,7 @@ public:
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
-   BoundingVolume* calculateBoundingVolume() const;
-
+   inline  const BoundingVolume& getBoundingVolume() const { return m_boundingVol; }
    void render();
 
    // -------------------------------------------------------------------------

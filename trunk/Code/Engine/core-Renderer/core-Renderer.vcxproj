@@ -96,6 +96,9 @@
     <ClCompile Include="ProjCalc3D.cpp" />
     <ClCompile Include="LineSegments.cpp" />
     <ClCompile Include="LitVertex.cpp" />
+    <ClCompile Include="SkinnedGeometry.cpp" />
+    <ClCompile Include="SpatialEntity.cpp" />
+    <ClCompile Include="StaticGeometry.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="DeviceFilter.cpp" />
     <ClCompile Include="RenderDevicesEnumerator.cpp" />
@@ -109,33 +112,33 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="GeometryResource.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Effect.cpp" />
+    <ClCompile Include="EffectShader.cpp" />
     <ClCompile Include="Geometry.cpp" />
-    <ClCompile Include="Renderable.cpp" />
-    <ClCompile Include="RenderableJoint.cpp" />
-    <ClCompile Include="ShaderEffect.cpp" />
-    <ClCompile Include="SpatialEntity.cpp" />
+    <ClCompile Include="SingleTextureMaterial.cpp" />
     <ClCompile Include="RenderableRepresentation.cpp" />
     <ClCompile Include="RenderingView.cpp" />
     <ClCompile Include="DefaultAttributeSorter.cpp" />
     <ClCompile Include="SpatialRepresentation.cpp" />
     <ClCompile Include="SpatialView.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="VertexDescriptions.cpp" />
     <ClCompile Include="VisibilityPass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh" />
     <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx" />
+    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh" />
+    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh" />
     <None Include="..\..\Include\core-Renderer\Renderer.inl" />
     <None Include="..\..\Include\core-Renderer\RendererObject.inl" />
     <None Include="..\..\Include\core-Renderer\Light.inl" />
     <None Include="..\..\Include\core-Renderer\LineSegments.inl" />
     <None Include="..\..\Include\core-Renderer\TriangleMesh.inl" />
-    <None Include="..\..\Include\core-Renderer\ShaderEffect.inl" />
     <None Include="..\..\Include\core-Renderer\AttributeSorterNode.inl" />
     <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Include\core-Renderer\RendererComponent.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Renderable.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h" />
@@ -155,6 +158,9 @@
     <ClInclude Include="..\..\Include\core-Renderer\Face.h" />
     <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h" />
     <ClInclude Include="..\..\Include\core-Renderer\LitVertex.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\SkinnedGeometry.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DeviceFilter.h" />
@@ -175,14 +181,10 @@
     <ClInclude Include="..\..\Include\core-Renderer\Font.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TextField.h" />
     <ClInclude Include="..\..\Include\core-Renderer\GeometryResource.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\Shader.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\Effect.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\EffectShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\EffectAttribute.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Geometry.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\Renderable.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RenderableJoint.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\ShaderEffect.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\SingleTextureMaterial.h" />
     <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderableRepresentation.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h" />
@@ -194,8 +196,9 @@
     <ClInclude Include="..\..\Include\core-Renderer\CameraContext.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SpatialRepresentation.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SpatialView.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\CameraComponent.h" />
     <ClInclude Include="..\..\Include\core-Renderer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Shader.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VisibilityPass.h" />
   </ItemGroup>
   <ItemGroup>

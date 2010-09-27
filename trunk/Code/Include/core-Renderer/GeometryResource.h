@@ -35,7 +35,7 @@ public:
     *
     * @param   new bounding volume instance
     */
-   virtual BoundingVolume* calculateBoundingVolume() const { return NULL;}
+   virtual const BoundingVolume& getBoundingVolume() const { return *( reinterpret_cast< BoundingVolume* >( NULL ) ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -57,7 +57,7 @@ void IWFMeshLoader::parseMesh(std::vector<MeshDefinition>& meshes,
                                surface->Vertices[i].y,
                                surface->Vertices[i].z);
 
-         mesh->vertices.push_back(LitVertex::unskinnedOneTex(
+         mesh->vertices.push_back(LitVertex(
             vertexPos.x,
             vertexPos.y,
             vertexPos.z,

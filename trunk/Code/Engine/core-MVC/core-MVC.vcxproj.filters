@@ -27,6 +27,9 @@
       <Filter>MVC</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-MVC.h" />
+    <ClInclude Include="..\..\Include\core-MVC\ModelComponent.h">
+      <Filter>MVC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-MVC\Entity.inl">

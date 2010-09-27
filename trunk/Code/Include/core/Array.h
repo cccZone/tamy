@@ -23,7 +23,7 @@
  * A plain c-style array turned into object oriented gizmo - has the speed
  * of c-style array, and the powers of object oriented containers.
  */
-template<typename T>
+template< typename T >
 class Array
 {
 private:
@@ -97,7 +97,7 @@ public:
     * @param defaultValue  value for the automatically created
     *                      elements
     */
-   void resize(unsigned int newSize, const T& defaultValue = 0);
+   void resize(unsigned int newSize, const T& defaultValue = 0 );
 
    /**
     * The method appends a new element at the end of the array, 

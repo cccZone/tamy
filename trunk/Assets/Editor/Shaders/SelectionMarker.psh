@@ -1,0 +1,10 @@
+float4 main( float4 pos   : POSITION ) : COLOR0
+{
+   float4 output;
+   
+   output.rb = 0;
+   output.g = 1;
+   output.a = 0.5;
+   
+   return output;
+}

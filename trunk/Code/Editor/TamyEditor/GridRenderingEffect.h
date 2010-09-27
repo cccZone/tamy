@@ -1,40 +1,42 @@
-#pragma once
-
 /// @file   TamyEditor\GridRenderingEffect.h
 /// @brief  an effect for simple grid rendering
 
-#include "core-Renderer\ShaderEffect.h"
+#pragma once
+
+#include "core-Renderer\Renderable.h"
+#include "core-MVC.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class GeometryResource;
 class Camera;
-class Node;
-class Renderer;
+class ResourcesManager;
+class EffectShader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * An effect rendering a simple grid
  */
-class GridRenderingEffect : public ShaderEffect
+class GridRenderingEffect : public Entity, public Renderable
 {
 private:
-   Camera*     m_camera;
-   Node*       m_renderedNode;
-   Shader*     m_shader;
+   GeometryResource* m_geometry;
+   Camera&           m_camera;
+   EffectShader*     m_shader;
+
+   Attributes        m_attributes;
 
 public:
-   GridRenderingEffect( Renderer& renderer );
+   GridRenderingEffect( GeometryResource* geometry, ResourcesManager& rm, Camera& camera );
    ~GridRenderingEffect();
 
-protected:
-   void onBeginRendering();
-   void onAttached(Entity& parent);
-   void onDetached(Entity& parent);
-   void onAttached(Model& hostModel);
-   void onDetached(Model& hostModel);
-   void onComponentAdded( Component< Model >& component );
+   // -------------------------------------------------------------------------
+   // Renderable representation
+   // -------------------------------------------------------------------------
+   void render();
+   const Attributes& getAttributes() const { return m_attributes; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

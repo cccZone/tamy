@@ -1,7 +1,6 @@
 #include "core-Renderer\LineSegments.h"
-#include "core-Renderer\RendererComponent.h"
-#include "core\ResourcesManager.h"
-#include "core\SingletonsManager.h"
+#include "core-Renderer\Renderer.h"
+#include "core.h"
 #include <math.h>
 
 
@@ -23,10 +22,10 @@ LineSegments::LineSegments( const std::string& name )
 
 void LineSegments::onComponentAdded( Component< ResourcesManager >& component )
 {
-   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
    if ( rendererComp )
    {
-      rendererComp->getRenderer().implement< LineSegments >( *this );
+      rendererComp->get().implement< LineSegments >( *this );
    }
 }
 
@@ -34,7 +33,7 @@ void LineSegments::onComponentAdded( Component< ResourcesManager >& component )
 
 void LineSegments::onComponentRemoved( Component< ResourcesManager >& component )
 {
-   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
    if ( rendererComp )
    {
       setImplementation( NULL );
@@ -108,13 +107,6 @@ void LineSegments::rebuild()
 void LineSegments::render()
 {
    impl().render();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-BoundingVolume* LineSegments::calculateBoundingVolume() const
-{
-   return m_bb * m_identityMtx;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

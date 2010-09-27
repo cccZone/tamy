@@ -77,11 +77,11 @@
     <Filter Include="RTTI\Properties">
       <UniqueIdentifier>{0a7610fb-7c0b-42bf-9439-0f8da95a2aa7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RTTI\Resources">
-      <UniqueIdentifier>{e97b6a8d-3630-46e6-a0d6-f6ffad3f818b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{02e931f0-fe38-444e-9402-41963299770c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{e97b6a8d-3630-46e6-a0d6-f6ffad3f818b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -167,10 +167,10 @@
       <Filter>RTTI\Properties</Filter>
     </ClCompile>
     <ClCompile Include="Resource.cpp">
-      <Filter>RTTI\Resources</Filter>
+      <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="ResourcesManager.cpp">
-      <Filter>RTTI\Resources</Filter>
+      <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="EulerAngles.cpp">
       <Filter>Math</Filter>
@@ -409,13 +409,13 @@
       <Filter>RTTI\Properties</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Resource.h">
-      <Filter>RTTI\Resources</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\ResourcesManager.h">
-      <Filter>RTTI\Resources</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\ResourceStorage.h">
-      <Filter>RTTI\Resources</Filter>
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\EulerAngles.h">
       <Filter>Math</Filter>
@@ -429,6 +429,9 @@
     <ClInclude Include="..\..\Include\core.h" />
     <ClInclude Include="..\..\Include\core\IProgressObserver.h">
       <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -526,10 +529,10 @@
       <Filter>RTTI\Properties</Filter>
     </None>
     <None Include="..\..\Include\core\ResourcesManager.inl">
-      <Filter>RTTI\Resources</Filter>
+      <Filter>Resources</Filter>
     </None>
     <None Include="..\..\Include\core\ResourceStorage.inl">
-      <Filter>RTTI\Resources</Filter>
+      <Filter>Resources</Filter>
     </None>
   </ItemGroup>
 </Project>

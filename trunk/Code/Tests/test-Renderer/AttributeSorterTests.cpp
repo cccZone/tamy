@@ -21,7 +21,7 @@ namespace   // anonymous
    private:
       std::string m_id;
       Log& m_log;
-      Attributed::Attributes m_attribs;
+      Attributes m_attribs;
 
    public:
       AttributedMock(const std::string& id, Log& log)

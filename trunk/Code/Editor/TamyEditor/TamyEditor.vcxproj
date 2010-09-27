@@ -123,7 +123,7 @@
     <ClInclude Include="GizmoEffect.h" />
     <ClInclude Include="ManualEditionModes.h" />
     <ClInclude Include="NodeManualEditor.h" />
-    <ClInclude Include="QueryableRenderable.h" />
+    <ClInclude Include="QueryableGeometry.h" />
     <ClInclude Include="QueryRenderingPass.h" />
     <CustomBuild Include="SceneNavigator.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp" -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I"$(DXSDK_DIR)\Include\." -I"$(QTDIR)\include\." -I"$(QTDIR)\include\QtCore\." -I"$(QTDIR)\include\QtGui\." -I"$(SolutionDir)\Include\." -I".\." -I".\GeneratedFiles\$(Configuration)\." -I".\GeneratedFiles\."</Command>
@@ -138,8 +138,7 @@
     <ClInclude Include="SceneQuery.h" />
     <ClInclude Include="SceneQueryEffect.h" />
     <ClInclude Include="SelectedEntityRepresentation.h" />
-    <ClInclude Include="SelectedRenderable.h" />
-    <ClInclude Include="SelectedRenderableJoint.h" />
+    <ClInclude Include="SelectedGeometry.h" />
     <ClInclude Include="EditEntityCommand.h" />
     <ClInclude Include="SceneQueries.h" />
     <ClInclude Include="QueryableEntity.h" />
@@ -361,7 +360,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="SelectionManager.h" />
-    <ClInclude Include="SelectionMarker.h" />
     <ClInclude Include="FSTreeNode.h" />
     <ClInclude Include="ResourceEditor.h" />
     <CustomBuild Include="ResourcesBrowser.h">
@@ -467,11 +465,10 @@
     <ClCompile Include="Gizmo.cpp" />
     <ClCompile Include="NodeManualEditor.cpp" />
     <ClCompile Include="progressDialog.cpp" />
-    <ClCompile Include="QueryableRenderable.cpp" />
+    <ClCompile Include="QueryableGeometry.cpp" />
     <ClCompile Include="QueryRenderingPass.cpp" />
     <ClCompile Include="SceneQueryEffect.cpp" />
-    <ClCompile Include="SelectedRenderable.cpp" />
-    <ClCompile Include="SelectedRenderableJoint.cpp" />
+    <ClCompile Include="SelectedGeometry.cpp" />
     <ClCompile Include="SelectionRenderingPass.cpp" />
     <ClCompile Include="tamyeditor.cpp" />
     <ClCompile Include="GeneratedFiles\Release\moc_ArrayPropertyEditor.cpp">
@@ -580,7 +577,6 @@
     <ClCompile Include="EntityEditor.cpp" />
     <ClCompile Include="ModelEditor.cpp" />
     <ClCompile Include="SelectionManager.cpp" />
-    <ClCompile Include="SelectionMarker.cpp" />
     <ClCompile Include="FSTreeNode.cpp" />
     <ClCompile Include="ResourcesBrowser.cpp" />
     <ClCompile Include="FSDirNode.cpp" />
@@ -618,11 +614,11 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
     </CustomBuild>
     <None Include="..\..\..\Assets\Editor\Shaders\GizmoEffect.fx" />
-    <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.fx" />
+    <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.psh" />
     <None Include="tamyeditor.qrc" />
     <None Include="FloatPropertyEditor.inl" />
     <None Include="IntPropertyEditor.inl" />
-    <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.fx" />
+    <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.psh" />
     <None Include="TypeDescFactory.inl" />
   </ItemGroup>
   <ItemGroup>
@@ -654,7 +650,7 @@
       <Project>{6258ff02-94e3-4527-89c7-ecffab554aee}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-	<ProjectReference Include="..\..\Engine\ml-Blender\ml-Blender.vcxproj">
+    <ProjectReference Include="..\..\Engine\ml-Blender\ml-Blender.vcxproj">
       <Project>{269AD9D8-247F-4F55-8438-C6DC4532A12F}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>

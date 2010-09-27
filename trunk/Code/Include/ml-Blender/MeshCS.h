@@ -17,7 +17,7 @@ class TiXmlNode;
 /**
  * An instantiator of triangle mesh resource.
  */
-class MeshCS : public IColladaSlice, public IEntitySlice
+class MeshCS : public IColladaSlice, public TResourceSlice< TriangleMesh >
 {
 private:
    TriangleMesh*  m_mesh;
@@ -25,10 +25,12 @@ private:
 public:
    MeshCS( TiXmlNode* geometryNode, ResourcesManager& rm );
 
+protected:
    // -------------------------------------------------------------------------
-   // IEntitySlice implementation
+   //  TResourceSlice< TriangleMesh > implementation
    // -------------------------------------------------------------------------
-   Entity* instantiate( const BlenderScene& host ) const;
+   void* getResourcePtr() const { return m_mesh; }
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

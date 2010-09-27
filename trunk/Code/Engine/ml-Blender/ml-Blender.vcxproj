@@ -12,6 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BlenderScene.cpp" />
+    <ClCompile Include="ColladaParser.cpp" />
+    <ClCompile Include="ControllerCS.cpp" />
+    <ClCompile Include="DataSource.cpp" />
+    <ClCompile Include="DSBindStructure.cpp" />
+    <ClCompile Include="DSIndexed.cpp" />
+    <ClCompile Include="DSIndexedBindStructure.cpp" />
     <ClCompile Include="EffectCS.cpp" />
     <ClCompile Include="MaterialCS.cpp" />
     <ClCompile Include="MeshCS.cpp" />
@@ -20,6 +26,12 @@
   <ItemGroup>
     <ClInclude Include="..\..\Include\ml-Blender.h" />
     <ClInclude Include="..\..\Include\ml-Blender\BlenderScene.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\ControllerCS.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\ColladaParser.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\DataSource.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\DSBindStructure.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\DSIndexed.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\DSIndexedBindStructure.h" />
     <ClInclude Include="..\..\Include\ml-Blender\IColladaSlice.h" />
     <ClInclude Include="..\..\Include\ml-Blender\EffectCS.h" />
     <ClInclude Include="..\..\Include\ml-Blender\MaterialCS.h" />
@@ -28,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\ml-Blender\BlenderScene.inl" />
+    <None Include="..\..\Include\ml-Blender\ColladaParser.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{269AD9D8-247F-4F55-8438-C6DC4532A12F}</ProjectGuid>

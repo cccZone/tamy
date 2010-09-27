@@ -12,7 +12,6 @@
 Gizmo::Gizmo( SpatialEntity& node, ResourcesManager& rm, Camera& camera )
 : m_node( node )
 , m_geometry( NULL )
-, m_renderable( NULL )
 {
    const float SIZE = 10.f;
    const Color oxColor( 1, 0, 0, 1 );
@@ -115,13 +114,9 @@ Gizmo::Gizmo( SpatialEntity& node, ResourcesManager& rm, Camera& camera )
       m_scalingAxes->rebuild();
    }
 
-   // create the renderable and attach it
-   m_renderable = new Renderable( "GizmoRenderable" );
-   add( m_renderable );
 
    // create a rendering effect
    m_effect = new GizmoEffect( rm, camera, node );
-   m_renderable->add( m_effect );
 
    // set the initial mode
    setMode( GM_TRANSLATION );
@@ -135,7 +130,6 @@ Gizmo::~Gizmo()
    m_rotationAxes = NULL;
    m_scalingAxes = NULL;
    m_effect = NULL;
-   m_renderable = NULL;
    m_geometry = NULL;
 }
 
@@ -143,12 +137,6 @@ Gizmo::~Gizmo()
 
 void Gizmo::setMode( Mode mode )
 {
-   if ( m_geometry )
-   {
-      // reset the old geometry
-      m_renderable->remove( *m_geometry );
-      m_geometry = NULL;
-   }
 
    // set the new mode and the related geometry
    m_mode = mode;
@@ -156,24 +144,24 @@ void Gizmo::setMode( Mode mode )
    {
    case GM_TRANSLATION:
       {
-         m_geometry = new Geometry( *m_translationAxes );
+         m_geometry = m_translationAxes;
          break;
       }
 
    case GM_ROTATION:
       {
-         m_geometry = new Geometry( *m_rotationAxes );
+         m_geometry = m_rotationAxes;
          break;
       }
 
    case GM_SCALING:
       {
-         m_geometry = new Geometry( *m_scalingAxes );
+         m_geometry = m_scalingAxes ;
          break;
       }
    }
-
-   m_renderable->add( m_geometry );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+// TODO : renderowanie( m_effect->render( *m_geometry ); )

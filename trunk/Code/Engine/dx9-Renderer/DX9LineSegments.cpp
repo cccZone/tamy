@@ -73,14 +73,14 @@ void DX9LineSegments::update(const std::vector<LineSegment>& segments)
 
    m_vb = m_renderer->createVertexBuffer(m_segsCount * 2 * sizeof(DX9LineSegments::LineVertex), 
       0, 
-      0,
+      D3DFVF_XYZ | D3DFVF_DIFFUSE,
       D3DPOOL_MANAGED);
 
    DX9LineSegments::LineVertex* pVertex = NULL;
-   HRESULT res = m_vb->Lock(0, 0, (void**)&pVertex, 0);
-   if (FAILED(res)) 
+   HRESULT res = m_vb->Lock( 0, 0, (void**)&pVertex, 0 );
+   if ( FAILED( res) ) 
    { 
-      throw std::logic_error("Can't lock a vertex buffer");
+      throw std::runtime_error( "Can't lock a vertex buffer" );
    }
 
    D3DXVECTOR4 tmpColor;
@@ -98,9 +98,9 @@ void DX9LineSegments::update(const std::vector<LineSegment>& segments)
    }
 
    res = m_vb->Unlock();
-   if (FAILED(res)) 
+   if ( FAILED( res ) ) 
    { 
-      throw std::logic_error("Failed to unlock the vertex buffer");
+      throw std::runtime_error( "Failed to unlock the vertex buffer" );
    }
 
 }

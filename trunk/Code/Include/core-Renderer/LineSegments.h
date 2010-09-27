@@ -74,10 +74,10 @@ class LineSegments : public GeometryResource,
    DECLARE_RESOURCE( LineSegments )
 
 private:
-   std::vector<LineSegment> m_segments;
+   std::vector<LineSegment>   m_segments;
 
-   D3DXMATRIX m_identityMtx;
-   AABoundingBox m_bb;
+   D3DXMATRIX                 m_identityMtx;
+   AABoundingBox              m_bb;
 
 public:
    /**
@@ -110,9 +110,8 @@ public:
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
+   inline const BoundingVolume& getBoundingVolume() const { return m_bb; }
    void render();
-
-   BoundingVolume* calculateBoundingVolume() const;
 
    // -------------------------------------------------------------------------
    // Resource implementation

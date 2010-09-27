@@ -42,8 +42,7 @@ void SceneQueries::initialize( TamyEditor& mgr )
    // register a rendering pass
    CompositeRenderingMechanism& compRenderingMech = mgr.requestService< CompositeRenderingMechanism >();
    ResourcesManager& rm = mgr.requestService< ResourcesManager >();
-   Camera& camera = mgr.requestService< Camera >();
-   m_renderingPass = new QueryRenderingPass( *m_sceneSnapshot, rm, camera );
+   m_renderingPass = new QueryRenderingPass( *m_sceneSnapshot, rm );
    compRenderingMech.add( "SceneQueries", m_renderingPass );
 }
 
@@ -78,14 +77,20 @@ void SceneQueries::onServiceRegistered( TamyEditor& mgr )
 
 void SceneQueries::onEntityAdded( Entity& entity )
 {
-   m_renderingPass->addEntity( entity );
+   if ( m_renderingPass )
+   {
+      m_renderingPass->addEntity( entity );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SceneQueries::onEntityRemoved( Entity& entity )
 {
-   m_renderingPass->removeEntity( entity );
+   if ( m_renderingPass )
+   {
+      m_renderingPass->removeEntity( entity );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -98,14 +103,20 @@ void SceneQueries::onEntityChanged( Entity& entity )
 
 void SceneQueries::resetContents()
 {
-   m_renderingPass->reset();
+   if ( m_renderingPass )
+   {
+      m_renderingPass->reset();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SceneQueries::query( SceneQuery& query )
 {
-   m_renderingPass->query( query );
+   if ( m_renderingPass )
+   {
+      m_renderingPass->query( query );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

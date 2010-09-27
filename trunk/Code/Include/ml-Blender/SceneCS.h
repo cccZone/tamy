@@ -18,24 +18,26 @@ class SpatialEntity;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * An instantiator of triangle mesh resource.
- */
-class SceneCS : public IColladaSlice, public ISceneSlice
+* An instantiator of triangle mesh resource.
+    */
+ class SceneCS : public IColladaSlice, public ISceneSlice
 {
 private:
    struct NodeDef
    {
-      std::string                id;
-      D3DXMATRIX                 localMtx;
-      std::vector< std::string > geometryURI;
-      std::vector< std::string > materialURI;
-
+      TiXmlElement*              nodeElem;
       std::vector< NodeDef* >    children;
 
-      NodeDef( const std::string& _id );
+      NodeDef( TiXmlElement* elem );
       ~NodeDef();
-      SpatialEntity* instantiate( const BlenderScene& scene ) const;
+
+      SpatialEntity* instantiate( const BlenderScene& scene, const SceneCS& hostSlice ) const;
+
+   private:
+      void parseMaterial( TiXmlElement& elem, const BlenderScene& scene, Entity* entity ) const;
+      void parseSkeletons( TiXmlElement& elem, const SceneCS& hostSlice, const BlenderScene& scene, Entity* entity ) const;
    };
+   friend struct NodeDef;
 
 private:
    ResourcesManager&                m_rm;
@@ -52,8 +54,7 @@ public:
 
 private:
    NodeDef* createNode( TiXmlElement* nodeElem );
-   NodeDef* parseEntityNode( TiXmlElement* nodeElem );
+   NodeDef* findNode( const std::string& id ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-

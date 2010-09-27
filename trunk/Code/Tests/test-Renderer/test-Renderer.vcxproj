@@ -96,14 +96,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="RendererTests.cpp" />
+    <ClCompile Include="SkeletonTests.cpp" />
     <ClCompile Include="VertexArrayTests.cpp" />
     <ClCompile Include="AttributeSorterTests.cpp" />
-    <ClCompile Include="EffectRenderingTests.cpp" />
-    <ClCompile Include="RenderablesHierarchyTests.cpp" />
-    <ClCompile Include="RenderingViewTests.cpp" />
     <ClCompile Include="SpatialViewTests.cpp" />
     <ClCompile Include="CameraTests.cpp" />
-    <ClCompile Include="SkeletonTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\core-Renderer\core-Renderer.vcxproj">

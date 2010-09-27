@@ -23,9 +23,8 @@ LeafAttributeSorter<T>::~LeafAttributeSorter()
 template <typename T>
 void LeafAttributeSorter<T>::add(Attributed& object)
 {
-   const Attributed::Attributes& attribs = object.getAttributes();
-   for (Attributed::Attributes::const_iterator it = attribs.begin();
-      it != attribs.end(); ++it)
+   const Attributes& attribs = object.getAttributes();
+   for ( Attributes::const_iterator it = attribs.begin(); it != attribs.end(); ++it)
    {
       T* requiredAttrib = dynamic_cast<T*> (*it);
       if (requiredAttrib != NULL)

@@ -1,28 +1,22 @@
 #pragma once
 
-/// @file   core-Renderer\CameraComponent.h
-/// @brief  component that introduces a camera into the model
+/// @file   core-Renderer\ResourceManagerComponent.h
+/// @brief  A component that can be attached to a resource manager.
 
 #include "core\Component.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Model;
-class Camera;
+class ResourcesManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * This component allows to attach a single camera to many models at
- * the same time, showing the scenes they contain from the same perspective.
- * This camera will be used by the entities added to the model during their 
- * rendering.
- */
-class CameraComponent : public Component<Model>
+template< typename T >
+class ResourceManagerComponent : public Component< ResourcesManager >
 {
 private:
-   Camera& m_camera;
+   T&          m_component;
 
 public:
    /**
@@ -30,17 +24,17 @@ public:
     *
     * @param camera
     */
-   CameraComponent(Camera& camera) : m_camera(camera) {}
+   ResourceManagerComponent( T& component ) : m_component( component ) {}
 
    /**
     * Returns a camera instance.
     */
-   inline Camera& getCamera() {return m_camera;}
+   inline T& get()  {return m_component; }
 
    // -------------------------------------------------------------------------
    // Component implementation
    // -------------------------------------------------------------------------
-   void initialize(Model& mgr) {}
+   void initialize( ResourcesManager& mgr ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,61 +1,66 @@
 #include "core-Renderer\Shader.h"
-#include "core-Renderer\RendererComponent.h"
-#include "core\File.h"
-#include "core\StreamBuffer.h"
-#include "core\SingletonsManager.h"
-#include "core\ResourcesManager.h"
+#include "core-Renderer\Renderer.h"
+#include "core-Renderer\GeometryResource.h"
+#include "core-Renderer\LitVertex.h"
+#include "core.h"
 #include <stdexcept>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( Shader, Resource, tfx, AM_BINARY )
-   PROPERTY_EDIT( "hlsl", std::string, m_script )
+BEGIN_RESOURCE( Shader, Resource, tsh, AM_BINARY )
+   PROPERTY( ShaderType, m_type )
+   PROPERTY( VertexDescId, m_vertexDescId )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Shader::Shader( const std::string& fileName )
-: Resource( Filesystem::changeFileExtension( fileName, Shader::getExtension() ) )
-, m_fileName( fileName )
+Shader::Shader()
+   : m_type( SHT_VERTEX_SHADER )
+   , m_vertexDescId( VDI_SIMPLE )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Shader::Shader( const std::string& name, const std::string& script )
-: Resource( name )
-, m_script(script)
+Shader::Shader( const std::string& scriptPath, ShaderType type )
+   : Resource( scriptPath )
+   , m_type( type )
+   , m_vertexDescId( VDI_SIMPLE ) 
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Shader::~Shader() 
+void Shader::setVertexDescription( VertexDescId vertexDescId )
 {
+   ASSERT( m_type == SHT_VERTEX_SHADER, "Only vertex shaders support vertex descriptions" );
+   m_vertexDescId = vertexDescId;
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Shader::onResourceLoaded( ResourcesManager& mgr )
 {
+   std::string scriptPath = getFilePath();
    if ( m_script.empty() )
    {
-      ASSERT( !m_fileName.empty(), "Neither .fx file nor a shader script specified" );
-      if ( m_fileName.empty() )
+      ASSERT( !scriptPath.empty(), "Neither .vsh file nor a shader script specified" );
+      if ( scriptPath.empty() )
       {
          return;
       }
 
       const Filesystem& fs = mgr.getFilesystem();
-      File* file = fs.open( m_fileName, std::ios_base::in | std::ios_base::binary );
+      File* file = fs.open( scriptPath, std::ios_base::in | std::ios_base::binary );
       if (file == NULL)
       {
-         throw std::invalid_argument("HLSL file doesn't exist");
+         throw std::invalid_argument("HLSL vertex shader file doesn't exist");
       }
       StreamBuffer<byte> buf(*file);
 
-      StreamBuffer<char> shaderScript(*file);
+      StreamBuffer<char> shaderScript( *file );
       m_script = shaderScript.getBuffer();
       delete file;
    }
@@ -65,10 +70,10 @@ void Shader::onResourceLoaded( ResourcesManager& mgr )
 
 void Shader::onComponentAdded( Component< ResourcesManager >& component )
 {
-   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
    if ( rendererComp )
    {
-      rendererComp->getRenderer().implement< Shader >( *this );
+      rendererComp->get().implement< Shader >( *this );
    }
 }
 
@@ -76,7 +81,7 @@ void Shader::onComponentAdded( Component< ResourcesManager >& component )
 
 void Shader::onComponentRemoved( Component< ResourcesManager >& component )
 {
-   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
    if ( rendererComp )
    {
       setImplementation( NULL );
@@ -85,16 +90,9 @@ void Shader::onComponentRemoved( Component< ResourcesManager >& component )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const std::string& Shader::getScript() const
+void Shader::beginRendering()
 {
-   return m_script;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-unsigned int Shader::beginRendering()
-{
-   return impl().beginRendering();
+   impl().beginRendering();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -106,100 +104,37 @@ void Shader::endRendering()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Shader::beginPass(unsigned int passIdx)
+void Shader::setBool( const char* paramName, bool val )
 {
-   impl().beginPass(passIdx);
+   impl().setBool( paramName, val );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Shader::endPass(const unsigned int& passIdx)
+void Shader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 {
-   impl().endPass(passIdx);
+   impl().setMtx( paramName, matrix );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Shader::setTechnique(const std::string& techniqueName)
+void Shader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int count )
 {
-   impl().setTechnique(techniqueName);
+   impl().setMtxArray( paramName, matrices, count );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Shader::setBool(const std::string& paramName, bool val)
+void Shader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 {
-   impl().setBool(paramName, val);
+   impl().setVec4( paramName, vec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Shader::setInt(const std::string& paramName, int val)
+void Shader::setTexture( const char* paramName, ShaderTexture& val )
 {
-   impl().setInt(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Shader::setInt(const std::string& paramName, const int* arr, unsigned int size)
-{
-   impl().setInt(paramName, arr, size);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Shader::setFloat(const std::string& paramName, float val)
-{
-   impl().setFloat(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Shader::setFloat(const std::string& paramName, const float* arr, unsigned int size)
-{
-   impl().setFloat(paramName, arr, size);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Shader::setMtx(const std::string& paramName, const D3DXMATRIX& val)
-{
-   impl().setMtx(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Shader::setMtx(const std::string& paramName, const D3DXMATRIX* arr, unsigned int size)
-{
-   impl().setMtx(paramName, arr, size);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Shader::setString(const std::string& paramName, const std::string& val)
-{
-   impl().setString(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Shader::setTexture(const std::string& paramName, ShaderTexture& val)
-{
-   impl().setTexture(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Shader::setVec4(const std::string& paramName, const D3DXVECTOR4& val)
-{
-   impl().setVec4(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Shader::setVec4(const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size)
-{
-   impl().setVec4(paramName, arr, size);
+   impl().setTexture( paramName, val );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

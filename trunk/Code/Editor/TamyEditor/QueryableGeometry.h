@@ -1,33 +1,34 @@
 #pragma once
 
-/// @file   TamyEditor/QueryableRenderable.h
-/// @brief  a queryable representation of a renderable entity
+/// @file   TamyEditor/QueryableGeometry.h
+/// @brief  a queryable representation of a geometrical entity
 
 #include "QueryableEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Renderable;
+class Geometry;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A queryable representation of a renderable entity.
+ * A queryable representation of a geometrical entity.
  */
-class QueryableRenderable : public QueryableEntity
+class QueryableGeometry : public QueryableEntity
 {
 private:
-   Renderable&          m_renderable;
+   Geometry&            m_geometry;
    SceneQueryEffect*    m_effect;
    Attributes           m_attributes;
+
 public:
    /**
     * Constructor.
     *
     * @param renderable
     */
-   QueryableRenderable( Renderable& renderable );
+   QueryableGeometry( Geometry& geometry );
 
    // -------------------------------------------------------------------------
    // QueryableEntity implementation

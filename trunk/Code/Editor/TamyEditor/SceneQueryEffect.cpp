@@ -5,36 +5,27 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SceneQueryEffect::SceneQueryEffect( ResourcesManager& rm, Camera& camera )
-: m_camera( camera )
-, m_renderedPtr( 0, 0, 0, 0 )
+SceneQueryEffect::SceneQueryEffect( ResourcesManager& rm )
+   : m_renderedPtr( 0, 0, 0, 0 )
 {
-   D3DXMatrixIdentity( &m_objMtx );
-
    // load the shader
-   Shader* shader = dynamic_cast< Shader* >( rm.findResource( "SceneQueryEffect" ) );
-   if ( !shader )
+   static const char* shaderName = "Editor/Shaders/SceneQueryEffect.psh";
+   m_shader = dynamic_cast< Shader* >( rm.findResource( shaderName ) );
+   if ( !m_shader )
    {
-      // load the shader script
-      File* shaderFile = rm.getFilesystem().open( "Editor/Shaders/SceneQueryEffect.fx" );
-      StreamBuffer< char > shaderFileBuf( *shaderFile );
-      shader = new Shader( "SceneQueryEffect", shaderFileBuf.getBuffer() );
-      rm.addResource( shader );
-      delete shaderFile;
+      m_shader = new Shader( shaderName, SHT_PIXEL_SHADER );
+      rm.addResource( m_shader );
    }
-   initialize( *shader );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneQueryEffect::onBeginRendering()
+void SceneQueryEffect::render( Geometry& geometry )
 {
-   D3DXMATRIX worldViewProjMtx = m_objMtx * m_camera.getViewMtx() * m_camera.getProjectionMtx();
-   shader().setMtx( "g_mWorldViewProj", worldViewProjMtx );
-
-   shader().setVec4( "g_ptr", m_renderedPtr );
-
-   shader().setTechnique("tec0");
+   m_shader->setVec4( "g_ptr", m_renderedPtr );
+   m_shader->beginRendering();
+   geometry.render();
+   m_shader->endRendering();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -129,9 +129,6 @@
     <ClInclude Include="SelectionManager.h">
       <Filter>Components\SelectionManager</Filter>
     </ClInclude>
-    <ClInclude Include="SelectionMarker.h">
-      <Filter>Components\SelectionManager\Visualization</Filter>
-    </ClInclude>
     <ClInclude Include="FSTreeNode.h">
       <Filter>Components\ResourcesBrowser</Filter>
     </ClInclude>
@@ -162,20 +159,11 @@
     <ClInclude Include="SelectedEntityRepresentation.h">
       <Filter>Components\SelectionManager</Filter>
     </ClInclude>
-    <ClInclude Include="SelectedRenderableJoint.h">
-      <Filter>Components\SelectionManager\Representations</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectedRenderable.h">
-      <Filter>Components\SelectionManager\Representations</Filter>
-    </ClInclude>
     <ClInclude Include="QueryableEntity.h">
       <Filter>Components\SceneQueries</Filter>
     </ClInclude>
     <ClInclude Include="SceneQuery.h">
       <Filter>Components\SceneQueries</Filter>
-    </ClInclude>
-    <ClInclude Include="QueryableRenderable.h">
-      <Filter>Components\SceneQueries\Representations</Filter>
     </ClInclude>
     <ClInclude Include="SceneQueryEffect.h">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
@@ -209,6 +197,12 @@
     </ClInclude>
     <ClInclude Include="Gizmo.h">
       <Filter>Components\SceneNavigator\Visualization</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryableGeometry.h">
+      <Filter>Components\SceneQueries\Representations</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectedGeometry.h">
+      <Filter>Components\SelectionManager\Representations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -374,9 +368,6 @@
     <ClCompile Include="SelectionManager.cpp">
       <Filter>Components\SelectionManager</Filter>
     </ClCompile>
-    <ClCompile Include="SelectionMarker.cpp">
-      <Filter>Components\SelectionManager\Visualization</Filter>
-    </ClCompile>
     <ClCompile Include="FSTreeNode.cpp">
       <Filter>Components\ResourcesBrowser</Filter>
     </ClCompile>
@@ -410,15 +401,6 @@
     <ClCompile Include="DebugRenderer.cpp">
       <Filter>Components\SceneRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="SelectedRenderableJoint.cpp">
-      <Filter>Components\SelectionManager\Representations</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectedRenderable.cpp">
-      <Filter>Components\SelectionManager\Representations</Filter>
-    </ClCompile>
-    <ClCompile Include="QueryableRenderable.cpp">
-      <Filter>Components\SceneQueries\Representations</Filter>
-    </ClCompile>
     <ClCompile Include="SceneQueryEffect.cpp">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
     </ClCompile>
@@ -446,6 +428,12 @@
     <ClCompile Include="GizmoEffect.cpp">
       <Filter>Components\SceneNavigator\Visualization</Filter>
     </ClCompile>
+    <ClCompile Include="QueryableGeometry.cpp">
+      <Filter>Components\SceneQueries\Representations</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectedGeometry.cpp">
+      <Filter>Components\SelectionManager\Representations</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -457,17 +445,17 @@
     <None Include="IntPropertyEditor.inl">
       <Filter>Components\PropertiesEditor\Editors</Filter>
     </None>
-    <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.fx">
-      <Filter>Components\SelectionManager\Visualization</Filter>
-    </None>
     <None Include="TypeDescFactory.inl">
       <Filter>Widgets\TreeWidget</Filter>
     </None>
-    <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.fx">
-      <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
-    </None>
     <None Include="..\..\..\Assets\Editor\Shaders\GizmoEffect.fx">
       <Filter>Components\SceneNavigator\Visualization</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.psh">
+      <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.psh">
+      <Filter>Components\SelectionManager\Representations</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,6 @@
 #include "core-Renderer\Texture.h"
-#include "core-Renderer\RendererComponent.h"
-#include "core\StreamBuffer.h"
-#include "core\SingletonsManager.h"
-#include "core\FileSystem.h"
-#include "core\File.h"
-#include "core\ResourcesManager.h"
+#include "core-Renderer\Renderer.h"
+#include "core.h"
 #include <stdexcept>
 
 
@@ -72,10 +68,10 @@ void Texture::onResourceLoaded( ResourcesManager& mgr )
 
 void Texture::onComponentAdded( Component< ResourcesManager >& component )
 {
-   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
    if ( rendererComp )
    {
-      rendererComp->getRenderer().implement< Texture >( *this );
+      rendererComp->get().implement< Texture >( *this );
    }
 }
 
@@ -83,7 +79,7 @@ void Texture::onComponentAdded( Component< ResourcesManager >& component )
 
 void Texture::onComponentRemoved( Component< ResourcesManager >& component )
 {
-   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
    if ( rendererComp )
    {
       setImplementation( NULL );

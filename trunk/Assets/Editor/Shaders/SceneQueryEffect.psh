@@ -1,0 +1,7 @@
+float4   g_ptr;
+
+float4 main( float4 pos : POSITION ) : COLOR0
+{
+   float4 output = g_ptr;
+   return output;
+}

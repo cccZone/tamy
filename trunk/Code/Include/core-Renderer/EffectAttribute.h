@@ -3,6 +3,8 @@
 /// @file   core-Renderer\EffectAttribute.h
 /// @brief  attribute an effect features
 
+#include <vector>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,5 +18,7 @@ class EffectAttribute
 public:
    virtual ~EffectAttribute() {}
 };
+
+typedef std::vector<EffectAttribute*> Attributes;
 
 ///////////////////////////////////////////////////////////////////////////////

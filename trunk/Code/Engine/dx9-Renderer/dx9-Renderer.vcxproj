@@ -88,25 +88,29 @@
     <ClCompile Include="DX9Renderer.cpp" />
     <ClCompile Include="DX9RenderingPass.cpp" />
     <ClCompile Include="DX9RenderTarget.cpp" />
-    <ClCompile Include="DX9Shader.cpp" />
+    <ClCompile Include="DX9EffectShader.cpp" />
+    <ClCompile Include="DX9Skeleton.cpp" />
     <ClCompile Include="DX9Texture.cpp" />
     <ClCompile Include="DX9LineSegments.cpp" />
     <ClCompile Include="DX9TriangleMesh.cpp" />
     <ClCompile Include="DX9Initializer.cpp" />
     <ClCompile Include="DX9Font.cpp" />
+    <ClCompile Include="DX9Shader.cpp" />
     <ClCompile Include="DXErrorParser.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderingPass.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderTarget.h" />
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Shader.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9EffectShader.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Skeleton.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Texture.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegments.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9TriangleMesh.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Initializer.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Font.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Shader.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DXErrorParser.h" />
   </ItemGroup>
   <ItemGroup>

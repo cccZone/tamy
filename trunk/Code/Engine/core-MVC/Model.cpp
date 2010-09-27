@@ -1,6 +1,7 @@
 #include "core-MVC\Model.h"
 #include "core-MVC\Entity.h"
 #include "core-MVC\ModelView.h"
+#include "core-MVC\ModelComponent.h"
 #include "core\Serializer.h"
 #include "core\Stack.h"
 #include <stdexcept>
@@ -318,6 +319,13 @@ void Model::onComponentAdded( Component< Model >& component )
    {
       entityDFS( *m_entities[i], Functor::FROM_METHOD(ComponentAddOperation, notify, &op) );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Model::onResourceLoaded( ResourcesManager& mgr )
+{
+   addComponent( new ModelComponent< ResourcesManager >( mgr ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

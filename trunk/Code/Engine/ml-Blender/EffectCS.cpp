@@ -18,20 +18,13 @@ EffectCS::EffectCS( TiXmlNode* effectNode, ResourcesManager& rm )
    TiXmlElement* effectElem = effectNode->ToElement();
    ASSERT( effectElem != NULL );
 
+   m_materialName = effectElem->Attribute( "name" );
+
    TiXmlElement* matInstanceElem = effectElem->FirstChildElement( "instance_effect" );
    ASSERT( matInstanceElem != NULL);
 
    std::string url = matInstanceElem->Attribute( "url" );
    m_materialId = url.substr( url.find_first_of( '#' ) + 1 );
-
-   // load a shader
-   std::string shaderResourceName = "/Renderer/Shaders/SingleTextureEffect.tfx";
-   std::string shaderFilename = "/Renderer/Shaders/SingleTextureEffect.fx";
-   if ( ( m_shader = dynamic_cast< Shader* >( rm.findResource( shaderResourceName ) ) ) == NULL )
-   {
-      m_shader = new Shader( shaderFilename );
-      rm.addResource( m_shader );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,12 +37,11 @@ EffectCS::~EffectCS()
 
 Entity* EffectCS::instantiate( const BlenderScene& host ) const
 {
-   SingleTextureEffect* effect = new SingleTextureEffect();
-   Material& material = host.getResource< Material >( m_materialId );
-   effect->setMaterial( material );
+   SingleTextureMaterial* material = new SingleTextureMaterial( m_materialName );
+   Material& materialRes = host.getResource< Material >( m_materialId );
+   material->setMaterial( materialRes );
 
-   effect->initialize( *m_shader );
-   return effect;
+   return material;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

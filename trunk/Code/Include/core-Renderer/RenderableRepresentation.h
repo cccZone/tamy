@@ -19,8 +19,8 @@ class RenderingView;
 class RenderableRepresentation : public Attributed
 {
 private:
-   Renderable& m_renderable;
-   RenderingView& m_view;
+   Renderable&       m_renderable;
+   RenderingView&    m_view;
 
 public:
    /**
@@ -29,12 +29,12 @@ public:
     * @param renderable    entity this instance represents
     * @param view          view that manages this instance
     */
-   RenderableRepresentation(Renderable& renderable, RenderingView& view);
+   RenderableRepresentation( Renderable& renderable, RenderingView& view );
 
    // -------------------------------------------------------------------------
    // Attributed implementation
    // -------------------------------------------------------------------------
-   const Attributed::Attributes& getAttributes() const;
+   const Attributes& getAttributes() const;
 
    void render();
 };

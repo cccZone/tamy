@@ -4,144 +4,79 @@
 #include "core.h"
 #include "tinyxml/tinyxml.h"
 #include <stdexcept>
-#include <sstream>
+
+#include "ml-Blender/ColladaParser.h"
+#include "ml-Blender/DSBindStructure.h"
+#include "ml-Blender/DSIndexedBindStructure.h"
+#include "ml-Blender/DSIndexed.h"
 
 
-class DataInput
+///////////////////////////////////////////////////////////////////////////////
+
+namespace // anonymous
 {
-public:
-   virtual ~DataInput() {}
 
-   virtual void initialize( LitVertex& vertex, int dataOffset ) const = 0;
-};
-
-class DataSource
-{
-public:
-   virtual ~DataSource() {}
-
-   virtual void readData( int dataOffset, void* data ) = 0;
-};
-
-class SimpleInput : public DataInput
-{
-private:
-   DataSource&    m_source;
-   std::string    m_semantic;
-public:
-   SimpleInput( DataSource& source, const std::string& semantic )
-      : m_source( source )
-      , m_semantic( semantic )
+   class DSVertices : public DSBindStructure
    {
-   }
-
-   void initialize( LitVertex& vertex, int dataOffset ) const
-   {
-      if ( m_semantic == "NORMAL" )
+   public:
+      DSVertices( TiXmlElement& elem, const ColladaParser& sourcesDB )
+         : DSBindStructure( elem, sourcesDB )
       {
-         m_source.readData( dataOffset, &(vertex.m_normal) );
-      }
-      else if ( m_semantic == "POSITION" )
-      {
-         m_source.readData( dataOffset, &(vertex.m_coords) );
-      }
-      else if ( m_semantic == "VERTEX" )
-      {
-         m_source.readData( dataOffset, &vertex );
-      }
-   }
-};
-
-class DSArray : public DataSource
-{
-private:
-   std::vector< D3DXVECTOR3 >      m_elems;
-
-public:
-   DSArray( TiXmlElement& elem )
-   {
-      TiXmlElement* techniqueElem = elem.FirstChildElement( "technique_common" );
-      ASSERT( techniqueElem != NULL );
-
-      TiXmlElement* accessorElem = techniqueElem->FirstChildElement( "accessor" );
-      ASSERT( techniqueElem != NULL );
-
-      int count = 0;
-      accessorElem->Attribute( "count", &count );
-
-      TiXmlElement* floatArrayElem = elem.FirstChildElement( "float_array" );
-      ASSERT( floatArrayElem != NULL );
-      std::string floatArrayData = floatArrayElem->GetText();
-      std::stringstream floatArrayStr( floatArrayData );
-
-      float x, y, z;
-      for ( int i = 0; i < count; ++i )
-      {
-         floatArrayStr >> x >> y >> z;
-         m_elems.push_back( D3DXVECTOR3( x, y, z ) );
-      }
-   }
-
-   void readData( int dataOffset, void* data )
-   {
-      D3DXVECTOR3& vec = *( static_cast< D3DXVECTOR3* >( data ) );
-      vec = m_elems[ dataOffset ];
-   }
-};
-
-class DSVertex : public DataSource
-{
-private:
-   std::map< std::string, DataSource* >&           m_sources;
-   std::vector< DataInput* >                       m_inputs;
-
-public:
-   DSVertex( TiXmlElement& elem, std::map< std::string, DataSource* >& sources )
-      : m_sources( sources )
-   {
-      for ( TiXmlElement* inputElem = elem.FirstChildElement( "input" ); inputElem != NULL; inputElem = inputElem->NextSiblingElement( "input" ) ) 
-      {
-         m_inputs.push_back( NULL );
       }
 
-      for ( TiXmlElement* inputElem = elem.FirstChildElement( "input" ); inputElem != NULL; inputElem = inputElem->NextSiblingElement( "input" ) ) 
+   protected:
+      void readData( int dataOffset, void* data )
       {
-         std::string semantic = inputElem->Attribute( "semantic" );
-         std::string source = inputElem->Attribute( "source" );
-         source = source.substr( 1 );
+         LitVertex& vtx = *( static_cast< LitVertex* >( data ) );
+         getSource( "POSITION" ).readData( dataOffset, &vtx.m_coords );
+      }
+   };
 
-         int offset = 0;
-         inputElem->Attribute( "offset", &offset );
-         ASSERT( m_inputs[offset] == NULL );
+   struct MeshData
+   {
+      std::vector< Face >        faces;
+      std::vector< LitVertex >   vertices;
+   };
 
-         if ( semantic == "POSITION" )
+   class DSPolygonVertices : public DSIndexedBindStructure
+   {
+   public:
+      DSPolygonVertices( TiXmlElement& elem, const ColladaParser& sourcesDB )
+         : DSIndexedBindStructure( elem, sourcesDB )
+      {
+      }
+
+      void readData( int dataOffset, void* data )
+      {
+         MeshData* faceData = reinterpret_cast< MeshData* >( data );
+         std::vector< Face >& faces = faceData->faces;
+
+         unsigned int indicesCount = getIndicesCount( dataOffset );
+         if ( indicesCount == 3 )
          {
-            m_inputs[offset] = new SimpleInput( *m_sources[ source ], semantic );
+            // a triangle
+            faces.push_back( Face( getIndex( dataOffset, "VERTEX", 0 ), getIndex( dataOffset, "VERTEX", 1 ), getIndex( dataOffset, "VERTEX", 2 ) ) );
+         }
+         else
+         {
+            // a quad
+            faces.push_back( Face( getIndex( dataOffset, "VERTEX", 0 ), getIndex( dataOffset, "VERTEX", 1 ), getIndex( dataOffset, "VERTEX", 2 ) ) );
+            faces.push_back( Face( getIndex( dataOffset, "VERTEX", 0 ), getIndex( dataOffset, "VERTEX", 2 ), getIndex( dataOffset, "VERTEX", 3 ) ) );
+         }
+
+         std::vector< LitVertex >& vertices = faceData->vertices;
+         
+         for ( unsigned int i = 0; i < indicesCount; ++i )
+         {
+            unsigned int vtxIdx = getIndex( dataOffset, "VERTEX", i );
+            unsigned int normalIdx = getIndex( dataOffset, "NORMAL", i );
+
+            getSource( "NORMAL" ).readData( normalIdx, &vertices[vtxIdx].m_normal );
          }
       }
-   }
+   };
 
-   ~DSVertex()
-   {
-      unsigned int count = m_inputs.size();
-      for ( unsigned int i = 0; i < count; ++i )
-      {
-         delete m_inputs[i];
-      }
-      m_inputs.clear();
-   }
-
-   void readData( int dataOffset, void* data )
-   {
-      LitVertex& vertex = *( static_cast< LitVertex* >( data ) );
-
-      unsigned int count = m_inputs.size();
-      for ( unsigned int i = 0; i < count; ++i )
-      {
-         m_inputs[i]->initialize( vertex, dataOffset );
-      }
-   }
-};
+} // namespace anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -160,124 +95,37 @@ MeshCS::MeshCS( TiXmlNode* geometryNode, ResourcesManager& rm )
    TiXmlElement* meshElem = geometryElem->FirstChildElement( "mesh" );
    ASSERT( meshElem != NULL );
 
-   TiXmlElement* polylistElem = meshElem->FirstChildElement( "polylist" );
-   ASSERT( polylistElem != NULL );
+   ColladaParser parser( *meshElem );
+   parser.associate< DSVertices >( "vertices" );
+   parser.associate< DSPolygonVertices >( "polylist" );
+   parser.initialize();
 
-   TiXmlElement* vcountElem = polylistElem->FirstChildElement( "vcount" );
-   ASSERT( vcountElem != NULL );
-   std::string vcountData = vcountElem->GetText();
-   std::stringstream vcountStr( vcountData );
+   MeshData meshData;
 
-   TiXmlElement* polyDataElem = polylistElem->FirstChildElement( "p" );
-   ASSERT( polyDataElem != NULL );
-   std::string polyData = polyDataElem->GetText();
-   std::stringstream polyDataStr( polyData );
-
-   std::map< std::string, DataSource* > sources;
-   for ( TiXmlElement* sourceElem = meshElem->FirstChildElement( "source" ); sourceElem != NULL; sourceElem = sourceElem->NextSiblingElement( "source" ) ) 
+   DataSource* verticesData = parser.getStructure( "vertices" );
+   unsigned int count = verticesData->size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      std::string sourceId = sourceElem->Attribute( "id" );
-      sources.insert( std::make_pair( sourceId, new DSArray( *sourceElem ) ) );
+      meshData.vertices.push_back( LitVertex() );
+      LitVertex& vtx = meshData.vertices.back();
+      verticesData->readData( i, &vtx );
    }
 
+   DataSource* facesData = parser.getStructure( "polylist" );
+   count = facesData->size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      TiXmlElement* verticesElem = meshElem->FirstChildElement( "vertices" );
-      ASSERT( verticesElem != NULL );
-
-      std::string sourceId = verticesElem->Attribute( "id" );
-      sources.insert( std::make_pair( sourceId, new DSVertex( *verticesElem, sources ) ) );
+      facesData->readData( i, &meshData.faces );
    }
 
-   // calculate the number of inputs
-   std::vector< DataInput* > inputs;
-   for ( TiXmlElement* inputElem = polylistElem->FirstChildElement( "input" ); inputElem != NULL; inputElem = inputElem->NextSiblingElement( "input" ) ) 
-   {
-      inputs.push_back( NULL );
-   }
-
-   for ( TiXmlElement* inputElem = polylistElem->FirstChildElement( "input" ); inputElem != NULL; inputElem = inputElem->NextSiblingElement( "input" ) ) 
-   {
-      std::string semantic = inputElem->Attribute( "semantic" );
-      std::string source = inputElem->Attribute( "source" );
-      source = source.substr( 1 );
-
-      int offset = 0;
-      inputElem->Attribute( "offset", &offset );
-      ASSERT( inputs[offset] == NULL );
-
-      inputs[offset] = new SimpleInput( *sources[ source ], semantic );
-   }
-
-   // parse the elements
-   int facesCount;
-   polylistElem->Attribute( "count", &facesCount );
-
-   int                           indicesCount;
-   std::vector< LitVertex >      vertices;
-   std::vector< Face >           faces;
-   LitVertex*                    pVertex = NULL;
-   int                           dataOffset;
-
-   for ( int faceIdx = 0; faceIdx < facesCount; ++faceIdx )
-   {
-      vcountStr >> indicesCount;
-      ASSERT( indicesCount >= 3 );
-      ASSERT( indicesCount <= 4 );
-
-      unsigned int startVertexIdx = vertices.size();
-
-      // create vertices describing this face
-      int inputsCount = inputs.size();
-      for ( int i = 0; i < indicesCount; ++i )
-      {
-         vertices.push_back( LitVertex() );
-         pVertex = &vertices.back();
-
-         for ( int j = 0; j < inputsCount; ++j )
-         {
-            polyDataStr >> dataOffset;
-            inputs[ j ]->initialize( *pVertex, dataOffset );
-         }
-      }
-
-      if ( indicesCount == 3 )
-      {
-         // a triangle
-         faces.push_back( Face( startVertexIdx, startVertexIdx + 1, startVertexIdx + 2 ) );
-      }
-      else
-      {
-         // a quad
-         faces.push_back( Face( startVertexIdx, startVertexIdx + 1, startVertexIdx + 2 ) );
-         faces.push_back( Face( startVertexIdx, startVertexIdx + 2, startVertexIdx + 3 ) );
-      }
-   }
-
-   if ( vertices.empty() || faces.empty() )
+   if ( meshData.vertices.empty() || meshData.faces.empty() )
    {
       throw std::runtime_error( "Insufficient data to create a mesh" );
    }
-   m_mesh = new TriangleMesh( geometryName, vertices, faces );
-   
+   m_mesh = new TriangleMesh( geometryName, meshData.vertices, meshData.faces );
+
    // register a mesh with the resources manager
    rm.addResource( m_mesh );
-
-   // cleanup
-   for ( std::map< std::string, DataSource* >::iterator it = sources.begin(); it != sources.end(); ++it )
-   {
-      delete it->second;
-   }
-   for ( std::vector< DataInput* >::iterator it = inputs.begin(); it != inputs.end(); ++it )
-   {
-      delete *it;
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Entity* MeshCS::instantiate( const BlenderScene& host ) const
-{
-   return new Geometry( *m_mesh );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

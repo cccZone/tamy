@@ -99,6 +99,7 @@
     <ClCompile Include="FiniteStateMachineTests.cpp" />
     <ClCompile Include="MessagingSystemTests.cpp" />
     <ClCompile Include="CompositeSteeringBehaviorTests.cpp" />
+    <ClCompile Include="AnimationTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MessagableMock.h" />

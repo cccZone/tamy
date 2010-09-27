@@ -17,11 +17,15 @@ class TriangleMesh;
 class DX9TriangleMesh : public TriangleMeshImpl
 {
 private:
-   TriangleMesh& m_mesh;
-   ID3DXMesh* m_dxMesh;
+   TriangleMesh&                 m_mesh;
+   IDirect3DDevice9*             m_d3Device;
+   IDirect3DVertexBuffer9*       m_vb;
+   IDirect3DIndexBuffer9*        m_ib;
+   unsigned int                  m_verticesCount;
+   unsigned int                  m_facesCount;
 
 public:
-   DX9TriangleMesh(TriangleMesh& mesh);
+   DX9TriangleMesh( TriangleMesh& mesh );
    ~DX9TriangleMesh();
 
    // -------------------------------------------------------------------------
@@ -29,7 +33,7 @@ public:
    // -------------------------------------------------------------------------
    void render();
 
-   void initialize(Renderer& renderer);
+   void initialize( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

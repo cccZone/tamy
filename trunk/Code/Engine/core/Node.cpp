@@ -241,6 +241,34 @@ void Node::removeChild(Node& childNode)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Node* Node::findNode( const std::string& name )
+{
+   std::list< Node* >   nodesQueue;
+   nodesQueue.push_back( this );
+
+   while ( !nodesQueue.empty() )
+   {
+      Node* currNode = nodesQueue.front();
+      nodesQueue.pop_front();
+      if ( currNode->getName() == name )
+      {
+         return currNode;
+      }
+
+      for ( std::list<Node*>::iterator it = currNode->m_childrenNodes.begin(); it != currNode->m_childrenNodes.end(); ++it )
+      {
+         if ( *it != NULL )
+         {
+            nodesQueue.push_back( *it );
+         }
+      }
+   }
+
+   return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Node::accept(NodeVisitor& visitor)
 {
    onAccept(visitor);

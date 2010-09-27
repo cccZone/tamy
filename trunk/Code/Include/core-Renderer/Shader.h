@@ -1,112 +1,99 @@
+/// @file   core-Renderer/Shader.h
+/// @brief  a vertex shader resource
+
 #pragma once
 
-/// @file   core-Renderer\Shader.h
-/// @brief  shader abstraction
-
-#include <core\Array.h>
-#include "core\Resource.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
-#include <string>
-#include <vector>
-#include <map>
+#include "core-Renderer/RendererObject.h"
+#include "core-Renderer/RendererObjectImpl.h"
+#include "core-Renderer/VertexDescriptions.h"
+#include "core/Resource.h"
 #include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ShaderTexture;
 class ShaderImpl;
-class Filesystem;
-class SingletonsManager;
+class ShaderTexture;
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum ShaderType
+{
+   SHT_VERTEX_SHADER,
+   SHT_PIXEL_SHADER,
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A shader class represents a program written in HLSL.
+ * This class represents a vertex shader program resource.
  */
-class Shader : public Resource, public TRendererObject<ShaderImpl>
+class Shader : public Resource, public TRendererObject< ShaderImpl >
 {
    DECLARE_RESOURCE( Shader )
 
 private:
-   std::string m_fileName;
-   std::string m_script;
+   ShaderType                    m_type;
+   std::string                   m_script;
+   VertexDescId                  m_vertexDescId;
 
 public:
    /**
-    * Constructor loading a shader from an .fx file
-    *
-    * @param fileName   name of a file with an HLSL shader
+    * Constructor.
     */
-   Shader( const std::string& fileName = "" );
+   Shader();
 
    /**
     * Constructor.
     *
-    * @param name    name for the resource
-    * @param script  HLSL script
+    * @param scriptPath    path to the .vsh file containing the shader's HLSL code
     */
-   Shader( const std::string& name, const std::string& script );
-   virtual ~Shader();
+   Shader( const std::string& scriptPath, ShaderType type );
+
+   /**
+    * Sets a new vertex description. Supported only for vertex shaders.
+    */
+   void setVertexDescription( VertexDescId vertexDescId );
+
+   /**
+    * Returns the description of the vertex the shader supports( providing it's vertex shader )
+    */
+   inline const D3DVERTEXELEMENT9* getVerexDescription() const { return g_vertexDescriptions[ m_vertexDescId ]; }
 
    /**
     * Returns the HLSL script of this shader.
     *
     * @return  HLSL shader script
     */
-   const std::string& getScript() const;
+   inline const std::string& getScript() const { return m_script; }
 
    /**
-    * Starts the shader rendering process.
+    * Returns the type of the shader.
     */
-   unsigned int beginRendering();
+   inline ShaderType getType() const { return m_type; }
 
-   /** 
-    * End the shader rendering process.
+   /**
+    * Starts the rendering process.
+    */
+   void beginRendering();
+
+   /**
+    * Ends the rendering process.
     */
    void endRendering();
-
-   /** 
-    * Start a single rendering pass.
-    *
-    * @param passIdx    index of the started rendering pass.
-    */
-   void beginPass(unsigned int passIdx);
-
-   /** 
-    * Finish a single rendering pass.
-    *
-    * @param passIdx    index of the finished rendering pass.
-    */
-   void endPass(const unsigned int& passIdx);
 
    // -------------------------------------------------------------------------
    // Shader program setters
    // -------------------------------------------------------------------------
-   void setTechnique(const std::string& techniqueName);
+   void setBool( const char* paramName, bool val );
 
-   void setBool(const std::string& paramName, bool val);
-   
-   void setInt(const std::string& paramName, int val);
-   
-   void setInt(const std::string& paramName, const int* arr, unsigned int size);
-   
-   void setFloat(const std::string& paramName, float val);
-   
-   void setFloat(const std::string& paramName, const float* arr, unsigned int size);
-   
-   void setMtx(const std::string& paramName, const D3DXMATRIX& val);
-   
-   void setMtx(const std::string& paramName, const D3DXMATRIX* arr, unsigned int size);
-   
-   void setString(const std::string& paramName, const std::string& val);
-   
-   void setTexture(const std::string& paramName, ShaderTexture& val);
-   
-   void setVec4(const std::string& paramName, const D3DXVECTOR4& val);
-   
-   void setVec4(const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size);
+   void setMtx( const char* paramName, const D3DXMATRIX& matrix );
+
+   void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int count );
+
+   void setVec4( const char* paramName, const D3DXVECTOR4& vec );
+
+   void setTexture( const char* paramName, ShaderTexture& val );
 
    // -------------------------------------------------------------------------
    // Resource implementation
@@ -119,51 +106,26 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Library dependent shader implementation.
+ * A vertex shader implementation interface.
  */
 class ShaderImpl : public RendererObjectImpl
 {
 public:
    virtual ~ShaderImpl() {}
 
-   virtual void setTechnique(const std::string& techniqueName) {}
-   virtual void setBool(const std::string& paramName, bool val) {}
-   virtual void setInt(const std::string& paramName, int val) {}
-   virtual void setInt(const std::string& paramName, const int* arr, unsigned int size) {}
-   virtual void setFloat(const std::string& paramName, float val) {}
-   virtual void setFloat(const std::string& paramName, const float* arr, unsigned int size) {}
-   virtual void setMtx(const std::string& paramName, const D3DXMATRIX& val) {}
-   virtual void setMtx(const std::string& paramName, const D3DXMATRIX* arr, unsigned int size) {}
-   virtual void setString(const std::string& paramName, const std::string& val) {}
-   virtual void setTexture(const std::string& paramName, ShaderTexture& val) {}
-   virtual void setVec4(const std::string& paramName, const D3DXVECTOR4& val) {}
-   virtual void setVec4(const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size) {}
+   virtual void beginRendering() {}
 
-   /**
-    * Provide the implementation specific code that starts 
-    * the effect rendering process.
-    * 
-    * @return  number of rendering passes in the script.
-    */
-   virtual unsigned int beginRendering() {return 0;}
-
-   /** 
-    * This method signals the implementation that 
-    * we finished the rendering process.
-    */
    virtual void endRendering() {}
 
-   /** 
-    * This method signals the implementation that 
-    * we're starting a rendering pass.
-    */
-   virtual void beginPass(unsigned int passIdx) {}
+   virtual void setBool( const char* paramName, bool val ) {}
 
-   /**
-    * This method signals the implementation that 
-    * we finished the rendering pass.
-    */
-   virtual void endPass(unsigned int passIdx) {}
+   virtual void setMtx( const char* paramName, const D3DXMATRIX& matrix ) {}
+
+   virtual void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int count ) {}
+
+   virtual void setVec4( const char* paramName, const D3DXVECTOR4& vec ) {}
+
+   virtual void setTexture( const char* paramName, ShaderTexture& val ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

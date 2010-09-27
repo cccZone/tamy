@@ -11,6 +11,7 @@
 
 class Model;
 class Renderer;
+class ResourcesManager;
 class Camera;
 class LineSegments;
 class Geometry;
@@ -26,18 +27,16 @@ class DebugRenderer
 {
 private:
    Renderer&                        m_renderer;
+   ResourcesManager&                m_resMgr;
    Camera&                          m_camera;
    Model*                           m_localModel;
-
-   // grid components
-   LineSegments*                    m_gridLines;
 
    // entities
    std::vector< SpatialEntity* >    m_entities;
    std::vector< DebugHandle >       m_freeHandles;
 
 public:
-   DebugRenderer( Renderer& renderer, Camera& camera );
+   DebugRenderer( Renderer& renderer, ResourcesManager& resMgr, Camera& camera );
    ~DebugRenderer();
 
    /**

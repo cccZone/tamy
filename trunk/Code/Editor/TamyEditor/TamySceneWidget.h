@@ -24,7 +24,6 @@ class Camera;
 class Model;
 class DebugRenderer;
 class ResourcesManager;
-class RendererComponent;
 class CompositeRenderingMechanism;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,24 +35,24 @@ class TamySceneWidget : public QWidget,
    Q_OBJECT
 
 private:
-   static IDirect3D9*            s_d3d9;
+   static IDirect3D9*                                 s_d3d9;
 
    // window definition
-   HWND                          m_hWnd;
+   HWND                                               m_hWnd;
 
    // input tracking
-   unsigned char                 m_keyBuffer[256];
-   KeysStatusManager*            m_keysStatusManager;
+   unsigned char                                      m_keyBuffer[256];
+   KeysStatusManager*                                 m_keysStatusManager;
 
    // required services
-   ResourcesManager*             m_resMgr;
-   RendererComponent*            m_rendererComponent;
-   Renderer*                     m_renderer;
-   Camera*                       m_camera;
+   ResourcesManager*                                  m_resMgr;
+   ResourceManagerComponent< Renderer >*              m_rendererComponent;
+   Renderer*                                          m_renderer;
+   Camera*                                            m_camera;
 
-   Model*                        m_scene;
-   DebugRenderer*                m_debugRenderer;
-   CompositeRenderingMechanism*  m_renderingMech;
+   Model*                                             m_scene;
+   DebugRenderer*                                     m_debugRenderer;
+   CompositeRenderingMechanism*                       m_renderingMech;
 
 public:
    /**

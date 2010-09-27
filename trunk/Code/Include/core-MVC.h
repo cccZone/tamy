@@ -9,4 +9,5 @@
 // ----------------------------------------------------------------------------
 #include "core-MVC\Entity.h"
 #include "core-MVC\Model.h"
+#include "core-MVC\ModelComponent.h"
 #include "core-MVC\ModelView.h"

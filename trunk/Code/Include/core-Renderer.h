@@ -14,23 +14,34 @@
 #include "core-Renderer\RendererObjectImpl.h"
 
 // ----------------------------------------------------------------------------
-// Components
-// ----------------------------------------------------------------------------
-#include "core-Renderer\CameraComponent.h"
-#include "core-Renderer\RendererComponent.h"
-
-// ----------------------------------------------------------------------------
 // Effects
+// -->Entities
 // ----------------------------------------------------------------------------
 #include "core-Renderer\SingleTextureEffect.h"
+// ----------------------------------------------------------------------------
+// -->Resources
+// ----------------------------------------------------------------------------
+#include "core-Renderer\EffectShader.h"
 
 // ----------------------------------------------------------------------------
 // Geometry
+// -->Entities
+// ----------------------------------------------------------------------------
+#include "core-Renderer\StaticGeometry.h"
+#include "core-Renderer\SkinnedGeometry.h"
+// ----------------------------------------------------------------------------
+// -->Primitives
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Face.h"
 #include "core-Renderer\LitVertex.h"
+// ----------------------------------------------------------------------------
+// -->Resources
+// ----------------------------------------------------------------------------
+#include "core-Renderer\GeometryResource.h"
 #include "core-Renderer\TriangleMesh.h"
 #include "core-Renderer\LineSegments.h"
+#include "core-Renderer\Skeleton.h"
+#include "core-Renderer\Shader.h"
 
 // ----------------------------------------------------------------------------
 // Initialization
@@ -47,6 +58,11 @@
 
 // ----------------------------------------------------------------------------
 // Materials
+// --> Entities
+// ----------------------------------------------------------------------------
+#include "core-Renderer\SingleTextureMaterial.h"
+// ----------------------------------------------------------------------------
+// --> Resources
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Texture.h"
@@ -65,18 +81,13 @@
 #include "core-Renderer\OverlayRenderingMechanism.h"
 
 // ----------------------------------------------------------------------------
-// Resources
-// ----------------------------------------------------------------------------
-#include "core-Renderer\Shader.h"
-#include "core-Renderer\GeometryResource.h"
-
-// ----------------------------------------------------------------------------
 // Scene
 // ----------------------------------------------------------------------------
 #include "core-Renderer\RenderingPass.h"
 #include "core-Renderer\SceneRenderingPass.h"
 #include "core-Renderer\VisibilityPass.h"
 #include "core-Renderer\AttributeSorter.h"
+#include "core-Renderer\EffectAttribute.h"
 // ----------------------------------------------------------------------------
 // --> Attributes
 // ----------------------------------------------------------------------------
@@ -86,17 +97,12 @@
 // --> Entities
 // ----------------------------------------------------------------------------
 #include "core-Renderer\SpatialEntity.h"
-#include "core-Renderer\Renderable.h"
-#include "core-Renderer\RenderableJoint.h"
-#include "core-Renderer\Effect.h"
-#include "core-Renderer\ShaderEffect.h"
-#include "core-Renderer\EffectAttribute.h"
-#include "core-Renderer\Geometry.h"
 // ----------------------------------------------------------------------------
 // --> Views
 // ----------------------------------------------------------------------------
 #include "core-Renderer\UniqueObjectAttribute.h"
 #include "core-Renderer\TransparencyAttribute.h"
+#include "core-Renderer\Renderable.h"
 
 // ----------------------------------------------------------------------------
 // Tools
@@ -104,7 +110,6 @@
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
 #include "core-Renderer\ProjectionCalculator.h"
-#include "core-Renderer\Skeleton.h"
 // ----------------------------------------------------------------------------
 // --> ProjectionCalculators
 // ----------------------------------------------------------------------------

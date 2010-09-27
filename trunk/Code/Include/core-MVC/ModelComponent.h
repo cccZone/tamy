@@ -1,42 +1,43 @@
 #pragma once
 
-/// @file   core-Renderer\RendererComponent.h
-/// @brief  A component with an active renderer instance.
+/// @file   core-Renderer\ModelComponent.h
+/// @brief  A component that can be attached to a model.
 
 #include "core\Component.h"
-#include "core-Renderer\Renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Renderer;
-class ResourcesManager;
+class Model;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RendererComponent : public Component< ResourcesManager >
+/**
+ * This component allows to attach a shared component to a model.
+ */
+template< typename T >
+class ModelComponent : public Component<Model>
 {
 private:
-   Renderer&   m_renderer;
+   T&          m_component;
 
 public:
    /**
     * Constructor.
     *
-    * @param renderer
+    * @param camera
     */
-   RendererComponent( Renderer& renderer ) : m_renderer( renderer ) {}
+   ModelComponent( T& component ) : m_component( component ) {}
 
    /**
     * Returns a camera instance.
     */
-   inline Renderer& getRenderer()  {return m_renderer; }
-
+   inline T& get()  {return m_component; }
 
    // -------------------------------------------------------------------------
    // Component implementation
    // -------------------------------------------------------------------------
-   void initialize( ResourcesManager& mgr ) {}
+   void initialize( Model& mgr ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

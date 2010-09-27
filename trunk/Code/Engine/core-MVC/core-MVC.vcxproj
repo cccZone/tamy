@@ -92,6 +92,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-MVC\Entity.h" />
     <ClInclude Include="..\..\Include\core-MVC\Model.h" />
+    <ClInclude Include="..\..\Include\core-MVC\ModelComponent.h" />
     <ClInclude Include="..\..\Include\core-MVC\ModelView.h" />
     <ClInclude Include="..\..\Include\core-MVC.h" />
   </ItemGroup>

@@ -134,10 +134,6 @@ public:
     */
    void addChild(Node* childNode);
 
-   unsigned int getChildrenCount() const {return m_childrenNodes.size();}
-
-   const std::list<Node*>& getChildren() const {return m_childrenNodes;}
-   
    /**
     * Removes a child from the list of children and resets its
     * parental information.
@@ -146,6 +142,24 @@ public:
     * lookups are provided.
     */
    void removeChild(Node& childNode);
+
+   /**
+    * Returns the number of attached children.
+    */
+   inline unsigned int getChildrenCount() const { return m_childrenNodes.size(); }
+
+   /**
+    * Returns an array of attached children.
+    */
+   inline const std::list<Node*>& getChildren() const {return m_childrenNodes;}
+
+   /**
+    * Looks for a node with the specified name in the attached hierarchy.
+    *
+    * @param name    searched node name
+    * @return        pointer to the node, or NULL if none was found
+    */
+   Node* findNode( const std::string& name );
 
    /**
     * The hierarchy of nodes can be penetrated from outside using

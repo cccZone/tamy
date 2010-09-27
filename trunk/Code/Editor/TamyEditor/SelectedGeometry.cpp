@@ -1,29 +1,27 @@
-#include "SelectedRenderable.h"
-#include "core-Renderer\Renderable.h"
+#include "SelectedGeometry.h"
+#include "core-Renderer.h"
 #include "SelectionManager.h"
-#include "SelectionMarker.h"
 #include "tamyeditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SelectedRenderable::SelectedRenderable( Renderable& renderable )
-: m_renderable( renderable )
+SelectedGeometry::SelectedGeometry( Geometry& geometry )
+: m_geometry( geometry )
 , m_selectionMarker( NULL )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SelectedRenderable::~SelectedRenderable()
+SelectedGeometry::~SelectedGeometry()
 {
-   delete m_selectionMarker;
    m_selectionMarker = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SelectedRenderable::initialize( SelectionManager& host )
+void SelectedGeometry::initialize( SelectionManager& host )
 {
    TamyEditor& servicesMgr = host.getServicesMgr();
 
@@ -32,24 +30,32 @@ void SelectedRenderable::initialize( SelectionManager& host )
    Camera& camera = servicesMgr.requestService< Camera >();
 
    // create a selection marker effect
-   m_selectionMarker = new SelectionMarker( resMgr, camera, m_renderable );
+   static const char* shaderName = "Editor/Shaders/SelectionMarker.psh";
+   m_selectionMarker = dynamic_cast< Shader* >( resMgr.findResource( shaderName ) );
+   if ( !m_selectionMarker )
+   {
+      m_selectionMarker = new Shader( shaderName, SHT_PIXEL_SHADER );
+      resMgr.addResource( m_selectionMarker );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SelectedRenderable::render()
+void SelectedGeometry::render()
 {
-   if ( !m_selectionMarker || !m_renderable.isVisible() || !m_renderable.hasGeometry() )
+   if ( !m_selectionMarker || !m_geometry.isVisible() || !m_geometry.hasGeometry() )
    {
       return;
    }
 
-   m_selectionMarker->render( m_renderable.getGeometry() );
+   m_selectionMarker->beginRendering();
+   m_geometry.render();
+   m_selectionMarker->endRendering();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const Attributed::Attributes& SelectedRenderable::getAttributes() const
+const Attributes& SelectedGeometry::getAttributes() const
 {
    return m_attributes;
 }

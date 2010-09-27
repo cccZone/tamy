@@ -1,0 +1,62 @@
+//--------------------------------------------------------------------------------------
+// Vertex shader output structure
+//--------------------------------------------------------------------------------------
+struct PS_INPUT
+{
+    float4 Position     : POSITION;   // vertex position 
+    float4 Diffuse      : COLOR0;     // vertex diffuse color (note that COLOR0 is clamped from 0..1)
+    float2 TextureUV    : TEXCOORD0;  // vertex texture coords 
+    float3 Normal       : TEXCOORD1;
+    float3 ViewPosition : TEXCOORD2;
+};
+
+//--------------------------------------------------------------------------------------
+// Pixel shader output structure
+//--------------------------------------------------------------------------------------
+struct PS_OUTPUT
+{
+    float4 Color : COLOR0;       // Pixel color    
+    float4 Normal : COLOR1;      // Normal
+    float4 Position : COLOR2;    // Position
+};
+
+//--------------------------------------------------------------------------------------
+// Global variables
+//--------------------------------------------------------------------------------------
+float4 g_MaterialAmbientColor;      // Material's ambient color
+float4 g_MaterialDiffuseColor;      // Material's diffuse color
+
+bool g_UseTexture;
+
+//--------------------------------------------------------------------------------------
+// Texture samplers
+//--------------------------------------------------------------------------------------
+sampler g_MeshTexture = sampler_state
+{
+    MipFilter = LINEAR;
+    MinFilter = LINEAR;
+    MagFilter = LINEAR;
+};
+
+//--------------------------------------------------------------------------------------
+// This shader outputs the pixel's color by modulating the texture's
+// color with diffuse material color
+//--------------------------------------------------------------------------------------
+PS_OUTPUT main(PS_INPUT In) 
+{ 
+    PS_OUTPUT Output;
+
+    // Lookup mesh texture and modulate it with diffuse
+	if (g_UseTexture)
+        Output.Color = tex2D(g_MeshTexture, In.TextureUV) * g_MaterialDiffuseColor;
+    else
+        Output.Color = g_MaterialDiffuseColor;
+
+    // calculate normal
+    Output.Normal = float4(normalize(In.Normal), 1.0f);
+    
+    // calculate positon
+    Output.Position = float4(In.ViewPosition, 1.0f);
+
+    return Output;
+}
