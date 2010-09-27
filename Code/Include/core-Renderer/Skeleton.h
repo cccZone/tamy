@@ -1,22 +1,32 @@
 #pragma once
 
 /// @file   core-Renderer\Skeleton.h
-/// @brief  low level animation controller
+/// @brief  a resource with a skeletal structure of a model
 
-#include <list>
 #include <string>
+#include "core\Resource.h"
+#include "core-Renderer\RendererObject.h"
+#include "core-Renderer\RendererObjectImpl.h"
+#include "core-Renderer\LitVertex.h"
 #include <d3dx9.h>
-#include <set>
 #include <vector>
-#include <map>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Node;
-struct AnimationDefinition;
-struct AnimationSetDefinition;
-struct BoneAnimDefinition;
+/**
+ * Graphics library dependent implementation of the skin vertex weights stream.
+ */
+class SkeletonImpl : public RendererObjectImpl
+{
+public:
+   virtual ~SkeletonImpl() {}
+
+   /**
+    * Sets the representation in the graphics device vertex stream.
+    */
+   virtual void setInStream() {}
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,258 +34,90 @@ struct BoneAnimDefinition;
  * A skeleton represents a hierarchy of nodes along with
  * a set of animations that operate on it
  */
-class Skeleton
+class Skeleton : public Resource, public TRendererObject< SkeletonImpl >
 {
+   DECLARE_RESOURCE( Skeleton )
+
 private:
-   Node* m_skeletonRootBone;
-   ID3DXAnimationController* m_animationController;
+   D3DXMATRIX                    m_bindShapeMtx;
+   std::vector< std::string >    m_boneNames;
+   std::vector< D3DXMATRIX >     m_invBoneMatrices;
+   std::vector< VertexWeight >   m_weights;
 
-   typedef std::map<std::string, int> AnimationsMap;
-   AnimationsMap m_animPerTrack;
+   D3DXMATRIX                    m_identityMtx;
 
-   std::vector<ID3DXAnimationSet*> m_animSets;
-
-public:
+public:  
    /**
-    * A skeleton is created based on a template definition of
-    * a set of animations and a skeletal structure of bones.
-    *
-    * The idea is that the bones in the skeletal structure of bones
-    * (described by the 'skeletonRootBone' param) need to bear names
-    * matching those of the bone animation definitions in the animation
-    * definition template. There may be more bones there, but all the 
-    * slots need to be filled.
-    *
-    * @throws std::invalid_argument - flags the lack of bones for some animations,
-    *                                 or if the skeleton contains two or more
-    *                                 nodes with the same name
+    * Constructor.
     */
-   Skeleton(const AnimationDefinition& animTemplate, Node& skeletonRootBone);
+   Skeleton( const std::string& path = "" );
    ~Skeleton();
 
    /**
-    * Activates an animation sequence
+    * Sets a new shape bind matrix.
     *
-    * @throws std::invalid_argument if the animation with this name doesn't exist
+    * @param bindShapeMtx
     */
-   void activateAnimation(const std::string& animationName, bool enable);
+   void setShapeBindMatrix( const D3DXMATRIX& bindShapeMtx );
 
    /**
-    * @see activateAnimation method counterpart
-    */
-   bool isActive(const std::string& animationName) const;
-
-   /**
-    * Returns the length of an animation (in seconds)
+    * Sets a transformation definition for the specified bone.
     *
-    * @throws std::invalid_argument if the animation with this name doesn't exist
+    * @param boneName      name of the bone
+    * @param invBoneMtx    inverted transformation matrix of the bone
     */
-   float getAnimationLength(const std::string& animationName) const;
+   void setTransformation( const std::string& boneName, const D3DXMATRIX& invBoneMtx );
 
    /**
-    * Sets the position in the animation sequence.
-    * Obeys the rules of wrapping etc. if the passed position is
-    * larger than the periodic length of the track
+    * Adds a new vertex bone weight definition.
     *
-    * @param position - specifies the position (in seconds)
-    * @throws std::invalid_argument if the animation with this name doesn't exist
+    * @param vertexIdx
+    * @param boneId
+    * @param weight
     */
-   void setPosition(const std::string& animationName, float position) const;
+   void addWeight( unsigned int vertexIdx, const std::string& boneId, float weight );
 
    /**
-    * @see setPosition method counterpart
+    * Returns the index assigned to the specified bone.
+    * 
+    * @param boneId
     */
-   float getPosition(const std::string& animationName) const;
+   int getBoneIndex( const std::string& boneId ) const;
 
    /**
-    * This method sets the weight of an animation so that it can be blended
-    * with other animations
+    * Returns the number of bones defined.
+    */
+   inline unsigned int getBonesCount() const { return m_boneNames.size(); }
+
+   /**
+    * Returns a name of the specified bone.
     *
-    * @param weight - <0, 1> corrsponds to <0%, 100%> range. Greater (or lesser) values
-    *                 are acceptable as well
-    * @throws std::invalid_argument if the animation with this name doesn't exist
+    * @param boneIdx       index of the bone in the skeleton
     */
-   void setBlendWeight(const std::string& animationName, float weight) const;
+   inline const std::string getBoneName( unsigned int boneIdx ) const { return m_boneNames[boneIdx]; }
 
    /**
-    * @see setBlendWeight method counterpart
-    */
-   float getBlendWeight(const std::string& animationName) const;
-
-   /**
-    * This method sets the speed of an animation
+    * Returns an inverted bind pose matrix assigned to the specified bone.
     *
-    * @param speed - 1 - 100%
-    *                2 - 200%, 
-    *                0.5 - 50%, 
-    *                -1 - play backwards with normal speed 
-    *                0 - even though the animation is active, don't play it
-    *                etc.
-    *
-    * @throws std::invalid_argument if the animation with this name doesn't exist
+    * @param boneName      name of the bone
     */
-   void setSpeed(const std::string& animationName, float speed) const;
+   const D3DXMATRIX& getInvBindPoseMtx( const std::string& boneName ) const;
 
    /**
-    * @see setSpeed method counterpart
+    * Returns the weights assigned to a mesh vertices.
     */
-   float getSpeed(const std::string& animationName) const;
+   inline const std::vector< VertexWeight >& getVertexWeights() const { return m_weights; }
 
    /**
-    * Updates the global time line, thus moving the active animations forward
+    * Sets the data in the rendering stream. Call this before the mesh gets rendered.
     */
-   void update(float timeElapsed);
+   void setInStream();
 
-   /**
-    * Returns a set of names of all animations for this skeleton.
-    *
-    * @param names   this is where the method will place names
-    *                of all skeleton animations.
-    */
-   void getAnimationNames(std::set<std::string>& names) const;
-
-private:
-   void createAnimationController(DWORD requiredBonesCount, 
-                                  const AnimationDefinition& animTemplate);
-   DWORD registerBoneStructure(Node& skeletonRootBone, 
-                               std::set<std::string>& bonesSet);
-
-   inline int getTrackForAnimation(const std::string& animationName) const;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/** 
- * A complete skeleton will be created according to the data
- * stored in this structure
- */
-struct AnimationDefinition
-{
-   std::list<AnimationSetDefinition> animSets;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * This structure holds data that represent a single
- * animation (like "walk" or "idle")
- */
-struct AnimationSetDefinition
-{
-   std::string name;
-   double ticksPerSec;
-   D3DXPLAYBACK_TYPE playbackType;
-
-   std::list<BoneAnimDefinition> boneAnims;
-
-   AnimationSetDefinition()
-      : ticksPerSec(4800), playbackType(D3DXPLAY_LOOP)
-   {}
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * This structure represents a series of keyframes that 
- * animate a specific bone of a skeleton in an animation
- */
-struct BoneAnimDefinition
-{
-   std::string boneName;
-   UINT scaleKeysCount;
-   UINT rotationKeysCount;
-   UINT translationKeysCount;
-   D3DXKEY_VECTOR3* scaleKeysArr;
-   D3DXKEY_QUATERNION* rotationKeysArr;
-   D3DXKEY_VECTOR3* translationKeysArr;
-
-   BoneAnimDefinition(UINT _scaleKeysCount,
-                      UINT _rotationKeysCount,
-                      UINT _translationKeysCount)
-         : scaleKeysCount(_scaleKeysCount),
-         rotationKeysCount(_rotationKeysCount),
-         translationKeysCount(_translationKeysCount)
-   {
-      if (scaleKeysCount > 0)
-      {
-         scaleKeysArr = new D3DXKEY_VECTOR3[scaleKeysCount];
-      }
-      else
-      {
-         scaleKeysArr = NULL;
-      }
-
-      if (rotationKeysCount > 0)
-      {
-         rotationKeysArr = new D3DXKEY_QUATERNION[rotationKeysCount];
-      }
-      else
-      {
-         rotationKeysArr = NULL;
-      }
-
-      if (translationKeysCount > 0)
-      {
-         translationKeysArr = new D3DXKEY_VECTOR3[translationKeysCount];
-      }
-      else
-      {
-         translationKeysArr = NULL;
-      }
-   }
-
-   BoneAnimDefinition(const BoneAnimDefinition& rhs)
-         : boneName(rhs.boneName),
-         scaleKeysCount(rhs.scaleKeysCount),
-         rotationKeysCount(rhs.rotationKeysCount),
-         translationKeysCount(rhs.translationKeysCount)
-   {
-      if (scaleKeysCount > 0)
-      {
-         scaleKeysArr = new D3DXKEY_VECTOR3[scaleKeysCount];
-         memcpy(scaleKeysArr, rhs.scaleKeysArr, sizeof(D3DXKEY_VECTOR3) * scaleKeysCount);
-      }
-      else
-      {
-         scaleKeysArr = NULL;
-      }
-
-      if (rotationKeysCount > 0)
-      {
-         rotationKeysArr = new D3DXKEY_QUATERNION[rotationKeysCount];
-         memcpy(rotationKeysArr, rhs.rotationKeysArr, sizeof(D3DXKEY_QUATERNION) * rotationKeysCount);
-      }
-      else
-      {
-         rotationKeysArr = NULL;
-      }
-
-      if (translationKeysCount > 0)
-      {
-         translationKeysArr = new D3DXKEY_VECTOR3[translationKeysCount];
-         memcpy(translationKeysArr, rhs.translationKeysArr, sizeof(D3DXKEY_VECTOR3) * translationKeysCount);
-      }
-      else
-      {
-         translationKeysArr = NULL;
-      }
-   }
-
-   ~BoneAnimDefinition()
-   {
-      delete [] scaleKeysArr;
-      scaleKeysArr = NULL;
-
-      delete [] rotationKeysArr;
-      rotationKeysArr = NULL;
-
-      delete [] translationKeysArr;
-      translationKeysArr = NULL;
-
-      scaleKeysCount = 0;
-      rotationKeysCount = 0;
-      translationKeysCount = 0;
-   }
+   // -------------------------------------------------------------------------
+   // Resource implementation
+   // -------------------------------------------------------------------------
+   void onComponentAdded( Component< ResourcesManager >& component );
+   void onComponentRemoved( Component< ResourcesManager >& component );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -265,22 +265,12 @@ void IWFScene::addStaticGeometry( Model& scene,
                                   const D3DXMATRIX& situation,
                                   const std::string& objName )
 {
-   // aquire the default shader resource
-   std::string shaderResourceName = "/Renderer/Shaders/SingleTextureEffect.tfx";
-   std::string shaderFilename = "/Renderer/Shaders/SingleTextureEffect.fx";
-   Shader* shader = NULL;
-   if ( ( shader = dynamic_cast< Shader* >( rm.findResource( shaderResourceName ) ) ) == NULL )
-   {
-      shader = new Shader( shaderFilename );
-      rm.addResource( shader );
-   }
-
    // create main mesh
    unsigned int count = meshes.size();
    SpatialEntity* root = NULL;
    if ( count > 1 )
    {
-      root = new RenderableJoint( objName );
+      root = new SpatialEntity( objName );
       root->setLocalMtx(situation);
    }
 
@@ -291,15 +281,13 @@ void IWFScene::addStaticGeometry( Model& scene,
       // create the geometry
       char geomName[128];
       sprintf_s(geomName, 128, "%s/%s.%s", m_sceneDir.c_str(), currMesh.name.c_str(), TriangleMesh::getExtension());
-      TriangleMesh* geometry = new TriangleMesh( geomName, currMesh.vertices, currMesh.faces );
-      rm.addResource( geometry );
+      TriangleMesh* geometryRes = new TriangleMesh( geomName, currMesh.vertices, currMesh.faces );
+      rm.addResource( geometryRes );
 
       // create a rendering effect instance
-      SingleTextureEffect* effect = new SingleTextureEffect();
-      effect->initialize( *shader );
-   
       MaterialDefinition& mat = currMesh.material;
-      effect->setMaterial(Material(mat.ambient, mat.diffuse, mat.specular, mat.emissive, mat.power));
+      SingleTextureMaterial* material = new SingleTextureMaterial( mat.matName );
+      material->setMaterial(Material(mat.ambient, mat.diffuse, mat.specular, mat.emissive, mat.power));
       
       if (mat.texName.length() > 0)
       {
@@ -311,19 +299,22 @@ void IWFScene::addStaticGeometry( Model& scene,
             texture = new Texture( texName );
             rm.addResource( texture );
          }
-         effect->setTexture( *texture );
+         material->setTexture( *texture );
       }
 
       // setup the renderable
-      Renderable* renderable = new Renderable( currMesh.name );
-      renderable->add( new Geometry( *geometry ) );
-      renderable->add( effect );
+      SpatialEntity* renderable = new SpatialEntity( currMesh.name );
       renderable->setLocalMtx( currMesh.localMtx );
+
+      Geometry* geometry = new StaticGeometry( *geometryRes );
+      renderable->add( geometry );
+
+      geometry->add( material );
 
       // add the renderable to the mesh
       if ( root )
       {
-         root->add(renderable);
+         root->add( renderable );
       }
       else
       {

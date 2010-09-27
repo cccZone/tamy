@@ -1,7 +1,7 @@
 #include "core-Renderer\SpatialView.h"
 #include "core-Renderer\SpatialRepresentation.h"
 #include "core-Renderer\CameraContext.h"
-#include "core-Renderer\Renderable.h"
+#include "core-Renderer\Geometry.h"
 #include "core\BoundingSphere.h"
 #include "core\BoundingSpace.h"
 #include "core\AABoundingBox.h"
@@ -10,9 +10,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SpatialView::SpatialView(const AABoundingBox& treeBB)
-: m_storage(new RegularOctree<SpatialRepresentation>(treeBB))
-, m_visibilityTag(-1)
+SpatialView::SpatialView( const AABoundingBox& treeBB )
+   : m_storage( new RegularOctree< SpatialRepresentation >( treeBB ) )
+   , m_visibilityTag( -1 )
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,62 +26,61 @@ SpatialView::~SpatialView()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SpatialView::update(CameraContext& camera)
+void SpatialView::update( CameraContext& camera )
 {
    const BoundingVolume& volume = camera.getViewVolume();
    ++m_visibilityTag;
 
-   Array<SpatialRepresentation*> visibleElems;
+   Array< SpatialRepresentation *> visibleElems;
    m_storage->query(volume, visibleElems);
 
    unsigned int count = visibleElems.size();
-   for (unsigned int i = 0; i < count; ++i)
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      visibleElems[i]->tagAsVisible(m_visibilityTag);
+      visibleElems[i]->tagAsVisible( m_visibilityTag );
    }
 
-   for (RepresentationsMap::iterator it = m_representations.begin();
-      it != m_representations.end(); ++it)
+   for ( RepresentationsMap::iterator it = m_representations.begin(); it != m_representations.end(); ++it )
    {
-      it->second->setVisible(m_visibilityTag);
+      it->second->setVisible( m_visibilityTag );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SpatialView::onEntityAdded(Entity& entity)
+void SpatialView::onEntityAdded( Entity& entity )
 {
-   Renderable* renderable = dynamic_cast<Renderable*> (&entity);
-   if (renderable == NULL)
+   Geometry* geometry = dynamic_cast< Geometry* >( &entity );
+   if ( geometry == NULL )
    {
       return;
    }
 
-   RepresentationsMap::iterator it = m_representations.find(renderable);
-   if (it != m_representations.end())
+   RepresentationsMap::iterator it = m_representations.find( geometry );
+   if ( it != m_representations.end() )
    {
       return;
    }
 
-   SpatialRepresentation* repr = new SpatialRepresentation(*renderable);
-   m_representations.insert(std::make_pair(renderable, repr));
-   m_storage->insert(*repr);
+   SpatialRepresentation* repr = new SpatialRepresentation( *geometry );
+   m_representations.insert( std::make_pair( geometry, repr) );
+   m_storage->insert( *repr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SpatialView::onEntityRemoved(Entity& entity)
 {
-   Renderable* renderable = dynamic_cast<Renderable*> (&entity);
-   if (renderable == NULL)
+   Geometry* geometry = dynamic_cast< Geometry* >( &entity );
+   if (geometry == NULL)
    {
       return;
    }
 
-   RepresentationsMap::iterator it = m_representations.find(renderable);
-   if (it != m_representations.end())
+   RepresentationsMap::iterator it = m_representations.find( geometry );
+   if ( it != m_representations.end() )
    {
-      m_storage->remove(*(it->second));
+      m_storage->remove( *it->second );
       delete it->second;
       m_representations.erase(it);
    }
@@ -99,8 +98,7 @@ void SpatialView::resetContents()
 {
    m_storage->clear();
 
-   for (RepresentationsMap::iterator it = m_representations.begin();
-      it != m_representations.end(); ++it)
+   for ( RepresentationsMap::iterator it = m_representations.begin(); it != m_representations.end(); ++it )
    {
       delete it->second;
    }

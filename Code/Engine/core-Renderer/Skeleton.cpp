@@ -1,357 +1,174 @@
 #include "core-Renderer\Skeleton.h"
-#include "core\Node.h"
-#include <set>
-#include <deque>
-#include <cassert>
+#include "core-Renderer\Renderer.h"
+#include "core.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Skeleton::Skeleton(const AnimationDefinition& animTemplate, Node& skeletonRootBone)
-      : m_skeletonRootBone(&skeletonRootBone),
-      m_animationController(NULL)
+BEGIN_RESOURCE( Skeleton, Resource, tsk, AM_BINARY )
+   PROPERTY( D3DXMATRIX, m_bindShapeMtx )
+   PROPERTY( std::vector< std::string >, m_boneNames )
+   PROPERTY( std::vector< D3DXMATRIX >, m_invBoneMatrices )
+   PROPERTY( std::vector< VertexWeight >, m_weights )
+END_RESOURCE()
+
+///////////////////////////////////////////////////////////////////////////////
+
+Skeleton::Skeleton( const std::string& path )
+   : Resource( path )
 {
-   // check how many bones are used (eliminate reappearing names)
-   std::set<std::string> bonesSet;
-   for (std::list<AnimationSetDefinition>::const_iterator animSetIt = animTemplate.animSets.begin();
-        animSetIt != animTemplate.animSets.end(); ++animSetIt)
-   {
-      for (std::list<BoneAnimDefinition>::const_iterator boneIt = animSetIt->boneAnims.begin();
-           boneIt != animSetIt->boneAnims.end(); ++boneIt)
-      {
-         bonesSet.insert(boneIt->boneName);
-      }
-   }
-
-   try
-   {
-      DWORD requiredBonesCount = bonesSet.size();
-      createAnimationController(requiredBonesCount, animTemplate);
-      DWORD registeredBonesCount = registerBoneStructure(skeletonRootBone, bonesSet);
-      if (registeredBonesCount < requiredBonesCount)
-      {
-         throw std::invalid_argument("There are bones missing in the passed bones hierarchy");
-      }
-   }
-   catch(std::exception& ex)
-   {
-      // cleanup
-      delete m_skeletonRootBone;
-      m_skeletonRootBone = NULL;
-
-      if (m_animationController != NULL)
-      {
-         m_animationController->Release();
-         m_animationController = NULL;
-      }
-
-      throw ex;
-   }
-
+   D3DXMatrixIdentity( &m_identityMtx );
+   D3DXMatrixIdentity( &m_bindShapeMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Skeleton::~Skeleton()
 {
-   m_animPerTrack.clear();
-   for (unsigned int i = 0; i < m_animSets.size(); ++i)
-   {
-      m_animSets.at(i)->Release();
-   }
-   m_animSets.clear();
-
-   m_skeletonRootBone = NULL;
-
-   m_animationController->Release();
-   m_animationController = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Skeleton::createAnimationController(DWORD requiredBonesCount, const AnimationDefinition& animTemplate)
+void Skeleton::setShapeBindMatrix( const D3DXMATRIX& bindShapeMtx )
 {
-   DWORD animationSetsCount = animTemplate.animSets.size();
+   D3DXMATRIX prevInvMtx;
+   D3DXMatrixInverse( &prevInvMtx, NULL, &m_bindShapeMtx );
 
-   // we're gonna set the same number of tracks as the number of available animations,
-   // so that we can activate them all at once
-   DWORD animationTracksCount = animTemplate.animSets.size();
+   m_bindShapeMtx = bindShapeMtx;
 
-   // create an animation controller
-   HRESULT res;
-   if ((requiredBonesCount == 0) || (animTemplate.animSets.size() == 0))
+   // transform the matrices to the new bind shape mtx
+   unsigned int count = m_invBoneMatrices.size();
+   for( unsigned int i = 0; i < count; ++i )
    {
-      res = D3DXCreateAnimationController(1, 1, 1, 1, &m_animationController);
+      m_invBoneMatrices[i] = m_bindShapeMtx * m_invBoneMatrices[i] * prevInvMtx;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::setTransformation( const std::string& boneName, const D3DXMATRIX& invBoneMtx )
+{
+   // first check if we're not trying to replace an existing definition
+   unsigned int count = m_boneNames.size();
+   unsigned int i;
+   for( i = 0; i < count; ++i )
+   {
+      if ( m_boneNames[i] == boneName )
+      {
+         break;
+      }
+   }
+
+   if ( i >= count )
+   {
+      // this is a new bone
+      m_boneNames.push_back( boneName );
+      m_invBoneMatrices.push_back( m_bindShapeMtx * invBoneMtx );
    }
    else
    {
-      res = D3DXCreateAnimationController(requiredBonesCount, 
-                                          animationSetsCount, 
-                                          animationTracksCount,
-                                          1, // just one event (otherwise the method fails) - we don't need any for now though...
-                                          &m_animationController);
+      // we're replacing an existing bone definition
+      m_invBoneMatrices[i] = m_bindShapeMtx * invBoneMtx;
    }
-   if (FAILED(res) || (m_animationController == NULL))
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::addWeight( unsigned int vertexIdx, const std::string& boneId, float weight )
+{
+   // make sure the vertex we're trying to describe is in our array
+   while ( vertexIdx >= m_weights.size() )
    {
-      throw std::runtime_error("Can't create an animation controller");
-   }
-
-   // create the animations and register them with the controller
-   int animSetId = 0;
-   for (std::list<AnimationSetDefinition>::const_iterator animSetIt = animTemplate.animSets.begin();
-        animSetIt != animTemplate.animSets.end(); ++animSetIt, ++animSetId)
-   {
-      const AnimationSetDefinition& animSetDef = *animSetIt;
-      ID3DXKeyframedAnimationSet* newAnimSet = NULL;
-      res = D3DXCreateKeyframedAnimationSet(animSetDef.name.c_str(),
-                                            animSetDef.ticksPerSec,
-                                            animSetDef.playbackType,
-                                            animSetDef.boneAnims.size(),
-                                            0,
-                                            NULL,
-                                            &newAnimSet);
-
-      m_animPerTrack.insert(std::make_pair(animSetDef.name, animSetId));
-      m_animSets.push_back(newAnimSet);
-      newAnimSet->AddRef();
-
-      if (FAILED(res) || (newAnimSet == NULL))
-      {
-         throw std::runtime_error("Can't create an animation set controller");
-      }
-
-      // register particular bone animation sequences
-      for (std::list<BoneAnimDefinition>::const_iterator boneIt = animSetIt->boneAnims.begin();
-           boneIt != animSetIt->boneAnims.end(); ++boneIt)
-      {
-         res = newAnimSet->RegisterAnimationSRTKeys(boneIt->boneName.c_str(),
-                                                    boneIt->scaleKeysCount,
-                                                    boneIt->rotationKeysCount,
-                                                    boneIt->translationKeysCount,
-                                                    boneIt->scaleKeysArr,
-                                                    boneIt->rotationKeysArr,
-                                                    boneIt->translationKeysArr,
-                                                    NULL);
-         if (FAILED(res))
-         {
-            newAnimSet->Release();
-            throw std::runtime_error("Can't register an animation controller");
-         }
-      }
-
-      // once the animation set is successfully created, register it with the animation controller
-      m_animationController->RegisterAnimationSet(newAnimSet);
-      newAnimSet->Release();
+      m_weights.push_back( VertexWeight() );
    }
 
-   // set up all the animatin tracks descriptions to the default values
-   for (DWORD i = 0; i < animationTracksCount; ++i)
+   // find the index assigned to the specified bone
+   int boneIdx = getBoneIndex( boneId );
+   if ( boneIdx < 0 )
    {
-      m_animationController->SetTrackEnable(i, false);
-      m_animationController->SetTrackSpeed(i, 1);
-      m_animationController->SetTrackWeight(i, 1);
-      m_animationController->SetTrackPriority(i, D3DXPRIORITY_HIGH);
-      m_animationController->SetTrackPosition(i, 0);
+      boneIdx = m_boneNames.size();
+      m_boneNames.push_back( boneId );
    }
 
-   // at this point the animation controller should exist !
-   assert(m_animationController != NULL);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-DWORD Skeleton::registerBoneStructure(Node& skeletonRootBone, std::set<std::string>& bonesSet)
-{
-   // animation controller needs to exist in order to perform this task
-   assert(m_animationController != NULL);
-
-   // we'll use BFS to explore the nodes structure and register the matrices with the animation controller
-   std::set<std::string> distinctBoneNamesUsed;
-   std::deque<Node*> nodesQueue;
-   nodesQueue.push_back(&skeletonRootBone);
-   
-   HRESULT res;
-
-   while ((nodesQueue.size() > 0) && (bonesSet.size() > 0))
+   // find the next index to fill in
+   unsigned int nextIdx = 0;
+   for ( nextIdx = 0; nextIdx < 4; ++nextIdx )
    {
-      Node* currentNode = nodesQueue.front();
-      nodesQueue.pop_front();
-
-      // add all the children of the node for the BFS to search through
-      const std::list<Node*>& children = currentNode->getChildren();
-      for (std::list<Node*>::const_iterator childNodeIt = children.begin();
-           childNodeIt != children.end(); ++childNodeIt)
+      if ( m_weights[ vertexIdx ].m_indices[ nextIdx ] < 0 )
       {
-         nodesQueue.push_back(*childNodeIt);
-      }
-
-      // check if the node is the one of the ones we're looking for
-      const std::string& nodeName = currentNode->getName();
-      std::set<std::string>::iterator requiredBoneIt = bonesSet.find(nodeName);
-      if (requiredBoneIt == bonesSet.end()) 
-      {
-         continue;
-      }
-      else
-      {
-         bonesSet.erase(requiredBoneIt);
-      }
-
-      // check to see if the bone was previously used and if not, register its name
-      // since we're using a set - we can accomplish both goals 
-      // with one shot - using the 'insert' method
-      if (distinctBoneNamesUsed.insert(nodeName).second == false)
-      {
-         throw std::invalid_argument(
-            std::string("Same name assigned to more than two nodes in the skeleton: ") + 
-            nodeName);
-      }
-
-      // register the matrix of the node as the animation output
-      res = m_animationController->RegisterAnimationOutput(nodeName.c_str(),
-                                                           &(currentNode->accessLocalMtx()),
-                                                           NULL, 
-                                                           NULL, 
-                                                           NULL);
-      if (FAILED(res))
-      {
-         throw std::runtime_error("Failed to register an animation output");
+         break;
       }
    }
-
-   return distinctBoneNamesUsed.size();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Skeleton::activateAnimation(const std::string& animationName, bool enable)
-{
-   int trackId = getTrackForAnimation(animationName);
-   ID3DXAnimationSet* animSet = m_animSets.at(trackId);
-
-   HRESULT res = m_animationController->SetTrackAnimationSet(trackId, animSet);
-   if (FAILED(res))
+   // TODO: zrobic porzadne okienko assert'a: ASSERT( nextIdx < 4, "Too many skin weights assigned" );
+   if ( nextIdx >= 4 )
    {
-      throw std::invalid_argument(std::string("Animation '") + animationName + 
-                                  std::string("' could not be activated"));
+      nextIdx = 3; // let's overwrite the last weight
    }
 
-   m_animationController->SetTrackEnable(trackId, enable);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool Skeleton::isActive(const std::string& animationName) const
-{
-   int trackId = getTrackForAnimation(animationName);
-
-   D3DXTRACK_DESC desc;
-   m_animationController->GetTrackDesc(trackId, &desc);
-
-   return (bool)desc.Enable;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float Skeleton::getAnimationLength(const std::string& animationName) const
-{
-   int trackId = getTrackForAnimation(animationName);
-   ID3DXAnimationSet* animSet = m_animSets.at(trackId);
-   float length = static_cast<float> (animSet->GetPeriod());
-   return length;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Skeleton::setPosition(const std::string& animationName, 
-                           float position) const
-{
-   int trackId = getTrackForAnimation(animationName);
-   m_animationController->SetTrackPosition(trackId, position);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float Skeleton::getPosition(const std::string& animationName) const
-{
-   int trackId = getTrackForAnimation(animationName);
-
-   D3DXTRACK_DESC desc;
-   m_animationController->GetTrackDesc(trackId, &desc);
-
-   return static_cast<float> (desc.Position);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Skeleton::setBlendWeight(const std::string& animationName, 
-                              float weight) const
-{
-   int trackId = getTrackForAnimation(animationName);
-   m_animationController->SetTrackWeight(trackId, weight);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float Skeleton::getBlendWeight(const std::string& animationName) const
-{
-   int trackId = getTrackForAnimation(animationName);
-
-   D3DXTRACK_DESC desc;
-   m_animationController->GetTrackDesc(trackId, &desc);
-
-   return static_cast<float> (desc.Weight);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Skeleton::setSpeed(const std::string& animationName, float speed) const
-{
-   int trackId = getTrackForAnimation(animationName);
-   m_animationController->SetTrackSpeed(trackId, speed);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float Skeleton::getSpeed(const std::string& animationName) const
-{
-   int trackId = getTrackForAnimation(animationName);
-
-   D3DXTRACK_DESC desc;
-   m_animationController->GetTrackDesc(trackId, &desc);
-
-   return static_cast<float> (desc.Speed);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Skeleton::update(float timeElapsed)
-{
-   m_animationController->AdvanceTime(timeElapsed, NULL);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-int Skeleton::getTrackForAnimation(const std::string& animationName) const
-{
-   AnimationsMap::const_iterator it = m_animPerTrack.find(animationName);
-   if (it == m_animPerTrack.end())
+   if ( nextIdx < 3 )
    {
-      throw std::invalid_argument(std::string("Animation '") + animationName + 
-                                  std::string("' doesn't exist"));
+      m_weights[ vertexIdx ].m_weights[ nextIdx ] = weight;
    }
-
-   return it->second;
+   m_weights[ vertexIdx ].m_indices[ nextIdx ] = (float)boneIdx;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Skeleton::getAnimationNames(std::set<std::string>& names) const
+const D3DXMATRIX& Skeleton::getInvBindPoseMtx( const std::string& boneName ) const
 {
-   for (AnimationsMap::const_iterator it = m_animPerTrack.begin();
-        it != m_animPerTrack.end(); ++it)
+   int idx = getBoneIndex( boneName );
+   if ( idx < 0 )
    {
-      names.insert(it->first);
+      return m_identityMtx;
+   }
+   else
+   {
+      return m_invBoneMatrices[ idx ];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+int Skeleton::getBoneIndex( const std::string& boneId ) const
+{
+   unsigned int count = m_boneNames.size();
+   int idx = 0;
+   for ( idx = 0; idx < (int)count; ++idx )
+   {
+      if ( m_boneNames[idx] == boneId )
+      {
+         return idx;
+      }
+   }
+   return -1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::setInStream()
+{
+   impl().setInStream();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::onComponentAdded( Component< ResourcesManager >& component )
+{
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
+   if ( rendererComp )
+   {
+      rendererComp->get().implement< Skeleton >( *this );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Skeleton::onComponentRemoved( Component< ResourcesManager >& component )
+{
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
+   if ( rendererComp )
+   {
+      setImplementation( NULL );
    }
 }
 

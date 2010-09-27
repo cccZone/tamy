@@ -10,6 +10,9 @@
     <Filter Include="SteeringBehaviors">
       <UniqueIdentifier>{23e0d74f-eded-4c18-9b31-d9548ac3223f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{679b19c2-0c9a-45e1-b56a-ae52811f29cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BehaviorTreeTests.cpp">
@@ -23,6 +26,9 @@
     </ClCompile>
     <ClCompile Include="CompositeSteeringBehaviorTests.cpp">
       <Filter>SteeringBehaviors</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationTests.cpp">
+      <Filter>Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -109,7 +109,7 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
 
 
    // create a debug renderer
-   m_debugRenderer = new DebugRenderer( *m_renderer, *m_camera );
+   m_debugRenderer = new DebugRenderer( *m_renderer, *m_resMgr, *m_camera );
 
    // register new services
    mgr.registerService< Renderer >( *this, *m_renderer );
@@ -119,7 +119,7 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
    mgr.registerService< DebugRenderer >( *this, *m_debugRenderer );
    mgr.registerService< CompositeRenderingMechanism >( *this, *m_renderingMech );
 
-   m_rendererComponent = new RendererComponent( *m_renderer );
+   m_rendererComponent = new ResourceManagerComponent< Renderer >( *m_renderer );
    m_resMgr->addComponent( m_rendererComponent );
 
    createRenderer( mgr );

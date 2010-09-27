@@ -46,9 +46,9 @@ public:
    // ----------------------------------------------------------------------
    // ModelView implementation
    // ----------------------------------------------------------------------
-   void onEntityAdded(Entity& entity);
-   void onEntityRemoved(Entity& entity);
-   void onEntityChanged(Entity& entity);
+   void onEntityAdded( Entity& entity );
+   void onEntityRemoved( Entity& entity );
+   void onEntityChanged( Entity& entity );
 
 protected:
    void resetContents();

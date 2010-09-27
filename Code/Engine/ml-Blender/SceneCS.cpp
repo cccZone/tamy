@@ -38,96 +38,25 @@ SceneCS::~SceneCS()
 
 SceneCS::NodeDef* SceneCS::createNode( TiXmlElement* nodeElem )
 {
-   struct NodeStackElem
-   {
-      TiXmlElement*     parentElem;
-      NodeDef*          node;
-
-      NodeStackElem( TiXmlElement* _elem, NodeDef* _node )
-         : parentElem( _elem ), node( _node )
-      {}
-   };
-
-   std::list< NodeStackElem* >   nodes;
-   NodeDef* node = parseEntityNode( nodeElem );
-   nodes.push_back( new NodeStackElem( nodeElem, node ) );
+   std::list< NodeDef* >   nodes;
+   NodeDef* root = new NodeDef( nodeElem );
+   nodes.push_back( root );
 
    while( !nodes.empty() )
    {
-      NodeStackElem* nodeDef = nodes.front();
+      NodeDef* nodeDef = nodes.front();
       nodes.pop_front();
 
-      for ( TiXmlElement* nodeElem = nodeDef->parentElem->FirstChildElement( "node" ); nodeElem != NULL; nodeElem = nodeElem->NextSiblingElement( "node" ) )
+      for ( TiXmlElement* childElem = nodeDef->nodeElem->FirstChildElement( "node" ); childElem != NULL; childElem = childElem->NextSiblingElement( "node" ) )
       {
-         NodeDef* child = parseEntityNode( nodeElem );
-         nodeDef->node->children.push_back( child );
+         NodeDef* child = new NodeDef( childElem );
+         nodeDef->children.push_back( child );
 
-         nodes.push_back( new NodeStackElem( nodeElem, child ) );
-      }
-
-      delete nodeDef;
-   }
-
-   return node;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-SceneCS::NodeDef* SceneCS::parseEntityNode( TiXmlElement* nodeElem )
-{
-   std::string id = nodeElem->Attribute( "id" );
-   NodeDef* node = new NodeDef( id );
-
-   // transformation
-   float a, b, c, d;
-
-   D3DXMatrixIdentity( &node->localMtx );
-   for ( TiXmlElement* rotateElem = nodeElem->FirstChildElement( "rotate" ); rotateElem != NULL; rotateElem = rotateElem->NextSiblingElement( "rotate" ) )
-   {
-      sscanf_s( rotateElem->GetText(), "%f %f %f %f", &a, &b, &c, &d );
-
-      D3DXMATRIX axisRotMtx;
-      D3DXMatrixIdentity( &axisRotMtx );
-      D3DXMatrixRotationAxis( &axisRotMtx, &D3DXVECTOR3( a, b, c ), DEG2RAD( d ) );
-      D3DXMatrixMultiply( &node->localMtx, &axisRotMtx, &node->localMtx );
-   }
-
-   {
-      TiXmlElement* translateElem = nodeElem->FirstChildElement( "translate" );
-      ASSERT( translateElem != NULL );
-      sscanf_s( translateElem->GetText(), "%f %f %f", &a, &b, &c );
-
-      node->localMtx._41 = a;
-      node->localMtx._42 = b;
-      node->localMtx._43 = c;
-   }
-
-   // geometry
-   for ( TiXmlElement* geometryElem = nodeElem->FirstChildElement( "instance_geometry" ); geometryElem != NULL; geometryElem = geometryElem->NextSiblingElement( "instance_geometry" ))
-   {
-      std::string geometryURI = geometryElem->Attribute( "url" );
-      node->geometryURI.push_back( geometryURI.substr( 1 ) );
-
-      // material
-      TiXmlElement* materialBindElem = geometryElem->FirstChildElement( "bind_material" );
-      if ( !materialBindElem )
-      {
-         node->materialURI.push_back( "" );
-      }
-      else
-      {
-         TiXmlElement* materialTechniqueElem = materialBindElem->FirstChildElement( "technique_common" );
-         ASSERT( materialTechniqueElem != NULL );
-
-         TiXmlElement* materialInstanceElem = materialTechniqueElem->FirstChildElement( "instance_material" );
-         ASSERT( materialInstanceElem != NULL );
-
-         std::string materialURI = materialInstanceElem->Attribute( "target" );
-         node->materialURI.push_back( materialURI.substr( 1 ) );
+         nodes.push_back( child );
       }
    }
 
-   return node;
+   return root;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -137,18 +66,48 @@ void SceneCS::instantiate( const BlenderScene& host, Model& scene ) const
    unsigned int count = m_nodes.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      scene.add( m_nodes[i]->instantiate( host ) );
+      scene.add( m_nodes[i]->instantiate( host, *this ) );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SceneCS::NodeDef* SceneCS::findNode( const std::string& id ) const
+{
+   unsigned int count = m_nodes.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      std::list< NodeDef* > nodes;
+      nodes.push_back( m_nodes[i] );
+
+      while( !nodes.empty() )
+      {
+         NodeDef* nodeDef = nodes.front();
+         nodes.pop_front();
+
+         if ( id ==  nodeDef->nodeElem->Attribute( "id" ) )
+         {
+            return nodeDef;
+         }
+
+         unsigned int childrenCount = nodeDef->children.size();
+         for (unsigned int i = 0; i < childrenCount; ++i )
+         {
+            nodes.push_back( nodeDef->children[i] );
+         }
+      }
+   }
+
+   return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-SceneCS::NodeDef::NodeDef( const std::string& _id )
-   : id( _id )
+SceneCS::NodeDef::NodeDef( TiXmlElement* elem )
+   : nodeElem( elem )
 {
-   D3DXMatrixIdentity( &localMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -165,50 +124,102 @@ SceneCS::NodeDef::~NodeDef()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene ) const
+SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene, const SceneCS& hostSlice ) const
 {
-   SpatialEntity* entity = NULL;
-   if ( geometryURI.empty() || materialURI.empty() )
+   std::string id = nodeElem->Attribute( "id" );
+   SpatialEntity* entity = new SpatialEntity( id );
+
+   // transformation
+   float a, b, c, d;
+   D3DXMATRIX& localMtx = entity->accessLocalMtx();
+   D3DXMatrixIdentity( &localMtx );
+   for ( TiXmlElement* rotateElem = nodeElem->FirstChildElement( "rotate" ); rotateElem != NULL; rotateElem = rotateElem->NextSiblingElement( "rotate" ) )
    {
-      entity = new RenderableJoint( id );
-   }
-   else
-   {
-      entity = new Renderable( id );
+      sscanf_s( rotateElem->GetText(), "%f %f %f %f", &a, &b, &c, &d );
+
+      D3DXMATRIX axisRotMtx;
+      D3DXMatrixIdentity( &axisRotMtx );
+      D3DXMatrixRotationAxis( &axisRotMtx, &D3DXVECTOR3( a, b, c ), DEG2RAD( d ) );
+      D3DXMatrixMultiply( &localMtx, &axisRotMtx, &localMtx );
    }
 
-   // matrix
-   entity->setLocalMtx( localMtx );
+   {
+      TiXmlElement* translateElem = nodeElem->FirstChildElement( "translate" );
+      ASSERT( translateElem != NULL );
+      sscanf_s( translateElem->GetText(), "%f %f %f", &a, &b, &c );
+
+      localMtx._41 = a;
+      localMtx._42 = b;
+      localMtx._43 = c;
+   }
 
    // geometry
-   unsigned int count = geometryURI.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   for ( TiXmlElement* geometryElem = nodeElem->FirstChildElement( "instance_geometry" ); geometryElem != NULL; geometryElem = geometryElem->NextSiblingElement( "instance_geometry" ))
    {
-      Entity* geometry = scene.getEntity( geometryURI[i] );
+      std::string geometryURI = geometryElem->Attribute( "url" );
+      geometryURI = geometryURI.substr( 1 );
+
+      GeometryResource& geometryRes = scene.getResource< GeometryResource >( geometryURI );
+      Entity* geometry = new StaticGeometry( geometryRes );
       entity->add( geometry );
+
+      parseMaterial( *geometryElem, scene, geometry );
    }
 
-   // material
-   count = materialURI.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   // controllers
+   for ( TiXmlElement* controllerElem = nodeElem->FirstChildElement( "instance_controller" ); controllerElem != NULL; controllerElem = controllerElem->NextSiblingElement( "instance_controller" ))
    {
-      if ( materialURI.empty() )
-      {
-         continue;
-      }
+      parseSkeletons( *controllerElem, hostSlice, scene, entity );
 
-      Entity* material = scene.getEntity( materialURI[i] );
-      entity->add( material );
+      std::string controllerURI = controllerElem->Attribute( "url" );
+      controllerURI = controllerURI.substr( 1 );
+      Entity* controller = scene.getEntity( controllerURI );
+      entity->add( controller );
+
+      parseMaterial( *controllerElem, scene, controller );
    }
 
-   // instantiate the children
-   count = children.size();
+   // children
+   unsigned int count = children.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      entity->add( children[i]->instantiate( scene ) );
+      NodeDef* child = children[i];
+      SpatialEntity* childEntity = child->instantiate( scene, hostSlice );
+      entity->add( childEntity );
    }
 
    return entity;
 }
 
-///////////////////////////////////////////////////////////////////////////////
+void SceneCS::NodeDef::parseMaterial( TiXmlElement& elem, const BlenderScene& scene, Entity* entity ) const
+{
+   // material
+   TiXmlElement* materialBindElem = elem.FirstChildElement( "bind_material" );
+   if ( materialBindElem )
+   {
+      TiXmlElement* materialTechniqueElem = materialBindElem->FirstChildElement( "technique_common" );
+      ASSERT( materialTechniqueElem != NULL );
+
+      TiXmlElement* materialInstanceElem = materialTechniqueElem->FirstChildElement( "instance_material" );
+      ASSERT( materialInstanceElem != NULL );
+
+      std::string materialURI = materialInstanceElem->Attribute( "target" );
+      materialURI = materialURI.substr( 1 );
+
+      Entity* material = scene.getEntity( materialURI );
+      entity->add( material );
+   }
+}
+
+void SceneCS::NodeDef::parseSkeletons( TiXmlElement& elem, const SceneCS& hostSlice, const BlenderScene& scene, Entity* entity ) const
+{
+   TiXmlElement* skeletonElem = elem.FirstChildElement( "skeleton" );
+   if ( skeletonElem )
+   {
+      std::string skeletonURI = skeletonElem->GetText();
+      skeletonURI = skeletonURI.substr( 1 );
+      
+      Entity* skeleton = hostSlice.findNode( skeletonURI )->instantiate( scene, hostSlice );
+      entity->add( skeleton );
+   }
+}

@@ -1,6 +1,6 @@
 #pragma once
 
-/// @file   TamyEditor/SelectedRenderable.h
+/// @file   TamyEditor/SelectedGeometry.h
 /// @brief  A visual representation of a selected renderable
 
 #include "SelectedEntityRepresentation.h"
@@ -8,19 +8,19 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Renderable;
-class Effect;
+class Geometry;
+class Shader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A visual representation of a selected renderable.
+ * A visual representation of a selected geometry.
  */
-class SelectedRenderable : public SelectedEntityRepresentation
+class SelectedGeometry : public SelectedEntityRepresentation
 {
 private:
-   Renderable&                m_renderable;
-   Effect*                    m_selectionMarker;
+   Geometry&                  m_geometry;
+   Shader*                    m_selectionMarker;
    Attributes                 m_attributes;
 
 public:
@@ -29,8 +29,8 @@ public:
     *
     * @param renderable
     */
-   SelectedRenderable( Renderable& renderable );
-   ~SelectedRenderable();
+   SelectedGeometry( Geometry& geometry );
+   ~SelectedGeometry();
 
    // -------------------------------------------------------------------------
    // Attributed implementation

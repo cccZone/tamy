@@ -9,7 +9,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Shader;
 class ResourcesManager;
 class TiXmlNode;
 
@@ -21,7 +20,7 @@ class TiXmlNode;
 class EffectCS : public IColladaSlice, public IEntitySlice
 {
 private:
-   Shader*        m_shader;
+   std::string    m_materialName;
    std::string    m_materialId;
 
 public:

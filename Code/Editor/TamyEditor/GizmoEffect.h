@@ -3,25 +3,26 @@
 /// @file   TamyEditor\GizmoEffect.h
 /// @brief  an effect visualizing an object selection gizmo
 
-#include "core-Renderer\ShaderEffect.h"
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class ResourcesManager;
 class Camera;
 class Node;
+class EffectShader;
+class GeometryResource;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * An effect rendering a gizmo.
  */
-class GizmoEffect : public ShaderEffect
+class GizmoEffect
 {
 private:
-   Camera&     m_camera;
-   Node&       m_renderedNode;
+   EffectShader*     m_effect;
+   Camera&           m_camera;
+   Node&             m_renderedNode;
 
 public:
    /**
@@ -33,8 +34,12 @@ public:
     */
    GizmoEffect( ResourcesManager& rm, Camera& camera, Node& renderedNode );
 
-protected:
-   void onBeginRendering();
+   /**
+    * Renders the geometry.
+    *
+    * @param geometry
+    */
+   void render( GeometryResource& geometry );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

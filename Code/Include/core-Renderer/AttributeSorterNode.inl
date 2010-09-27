@@ -63,9 +63,8 @@ void TAttributeSorterNode<T>::add(Attributed& object)
 {
    bool attribFound = false;
 
-   const Renderable::Attributes& attribs = object.getAttributes();
-   for (Renderable::Attributes::const_iterator it = attribs.begin();
-      (it != attribs.end()) && (attribFound == false); ++it)
+   const Attributes& attribs = object.getAttributes();
+   for ( Attributes::const_iterator it = attribs.begin(); it != attribs.end() && attribFound == false; ++it )
    {
       attribFound = (dynamic_cast<T*> (*it) != NULL);
    }
@@ -87,9 +86,8 @@ void TAttributeSorterNode<T>::remove(Attributed& object)
 {
    bool attribFound = false;
 
-   const Renderable::Attributes& attribs = object.getAttributes();
-   for (Renderable::Attributes::const_iterator it = attribs.begin();
-      (it != attribs.end()) && (attribFound == false); ++it)
+   const Attributes& attribs = object.getAttributes();
+   for ( Attributes::const_iterator it = attribs.begin(); it != attribs.end() && attribFound == false; ++it )
    {
       attribFound = (dynamic_cast<T*> (*it) != NULL);
    }

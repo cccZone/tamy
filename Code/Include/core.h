@@ -79,6 +79,7 @@
 // ----------------------------------------------------------------------------
 #include "core\Resource.h"
 #include "core\ResourcesManager.h"
+#include "core\ResourceManagerComponent.h"
 #include "core\ResourceStorage.h"
 
 // ----------------------------------------------------------------------------

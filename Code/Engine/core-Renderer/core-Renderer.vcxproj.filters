@@ -13,9 +13,6 @@
     <Filter Include="Tools\ProjectionCalculators">
       <UniqueIdentifier>{748a440c-5adb-4c1d-80b1-c3089a381123}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Geometry">
-      <UniqueIdentifier>{5bd9a96f-320d-4930-8c4a-2ed358c34b07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Initialization">
       <UniqueIdentifier>{de1812a5-f234-4156-80c9-4e01c393c2ad}</UniqueIdentifier>
     </Filter>
@@ -34,9 +31,6 @@
     <Filter Include="OverlayRenderer\Elements">
       <UniqueIdentifier>{e788649b-7b14-4322-8f63-2ae1d57c10bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resources">
-      <UniqueIdentifier>{d3f5a141-06b6-41c8-805a-11d99f76b082}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene">
       <UniqueIdentifier>{60fc8284-5482-49ed-b73b-75d774ea83c6}</UniqueIdentifier>
     </Filter>
@@ -52,20 +46,44 @@
     <Filter Include="Scene\Views\SpatialView">
       <UniqueIdentifier>{84514925-a186-42f6-b881-24213372128c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components">
-      <UniqueIdentifier>{1042044a-a9ed-4c6a-840a-21b8f942049f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Attributes">
       <UniqueIdentifier>{b1f3ce20-ef71-4896-a5ac-6c186f097d3b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scene\AttributeSorters">
       <UniqueIdentifier>{5b9c7ef5-b042-4d94-a5b4-bf73358f9abd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{5bd9a96f-320d-4930-8c4a-2ed358c34b07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Resources">
+      <UniqueIdentifier>{90bfe15a-4fe7-44de-b30d-25aa634289b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Entities">
+      <UniqueIdentifier>{ef16875f-4c74-4a38-9f87-4568354f62b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\Entities">
+      <UniqueIdentifier>{7891e001-1b81-4b57-a71e-9945c3731940}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Shaders">
+      <UniqueIdentifier>{1c8e67c7-3872-408a-bf1f-3146cc6b2aeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials\Resources">
+      <UniqueIdentifier>{46c48c5f-a2a1-40ee-a254-5d4b8bf5c0e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools\Resources">
+      <UniqueIdentifier>{9885c467-2a83-46d5-b474-1a1573c3059d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Core">
+      <UniqueIdentifier>{56299d89-a619-4ae9-9206-55cd8d42df67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials\Shaders">
+      <UniqueIdentifier>{d4502db5-c145-4ea8-ac4a-5bdbfb4c4e0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials\Entities">
+      <UniqueIdentifier>{f446a617-128e-4ab8-aa1b-c3da1f2b37de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="SingleTextureEffect.cpp">
-      <Filter>Effects</Filter>
-    </ClCompile>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -78,23 +96,11 @@
     <ClCompile Include="Light.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Skeleton.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
     <ClCompile Include="ProjCalc2D.cpp">
       <Filter>Tools\ProjectionCalculators</Filter>
     </ClCompile>
     <ClCompile Include="ProjCalc3D.cpp">
       <Filter>Tools\ProjectionCalculators</Filter>
-    </ClCompile>
-    <ClCompile Include="LineSegments.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="LitVertex.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="TriangleMesh.cpp">
-      <Filter>Geometry</Filter>
     </ClCompile>
     <ClCompile Include="DeviceFilter.cpp">
       <Filter>Initialization</Filter>
@@ -114,12 +120,6 @@
     <ClCompile Include="SimpleTamyConfigurator.cpp">
       <Filter>Initialization\Simple</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Materials</Filter>
-    </ClCompile>
     <ClCompile Include="OverlayRenderingMechanism.cpp">
       <Filter>OverlayRenderer\Mechanism</Filter>
     </ClCompile>
@@ -128,30 +128,6 @@
     </ClCompile>
     <ClCompile Include="TextField.cpp">
       <Filter>OverlayRenderer\Elements</Filter>
-    </ClCompile>
-    <ClCompile Include="GeometryResource.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Effect.cpp">
-      <Filter>Scene\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Scene\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderable.cpp">
-      <Filter>Scene\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderableJoint.cpp">
-      <Filter>Scene\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderEffect.cpp">
-      <Filter>Scene\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="SpatialEntity.cpp">
-      <Filter>Scene\Entities</Filter>
     </ClCompile>
     <ClCompile Include="RenderableRepresentation.cpp">
       <Filter>Scene\Views\RenderingView</Filter>
@@ -180,11 +156,56 @@
     <ClCompile Include="SceneRenderingPass.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
+    <ClCompile Include="SpatialEntity.cpp">
+      <Filter>Scene\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="LineSegments.cpp">
+      <Filter>Geometry\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleMesh.cpp">
+      <Filter>Geometry\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryResource.cpp">
+      <Filter>Geometry\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Skeleton.cpp">
+      <Filter>Geometry\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="SkinnedGeometry.cpp">
+      <Filter>Geometry\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleTextureEffect.cpp">
+      <Filter>Effects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Materials\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Materials\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>Geometry\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="LitVertex.cpp">
+      <Filter>Geometry\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticGeometry.cpp">
+      <Filter>Geometry\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectShader.cpp">
+      <Filter>Tools\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleTextureMaterial.cpp">
+      <Filter>Materials\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexDescriptions.cpp">
+      <Filter>Geometry\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx">
-      <Filter>Effects</Filter>
-    </None>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
       <Filter>Core</Filter>
     </None>
@@ -194,26 +215,32 @@
     <None Include="..\..\Include\core-Renderer\Light.inl">
       <Filter>Tools</Filter>
     </None>
-    <None Include="..\..\Include\core-Renderer\LineSegments.inl">
-      <Filter>Geometry</Filter>
-    </None>
-    <None Include="..\..\Include\core-Renderer\TriangleMesh.inl">
-      <Filter>Geometry</Filter>
-    </None>
-    <None Include="..\..\Include\core-Renderer\ShaderEffect.inl">
-      <Filter>Scene\Entities</Filter>
-    </None>
     <None Include="..\..\Include\core-Renderer\AttributeSorterNode.inl">
       <Filter>Scene\AttributeSorters</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl">
       <Filter>Scene\AttributeSorters</Filter>
     </None>
+    <None Include="..\..\Include\core-Renderer\LineSegments.inl">
+      <Filter>Geometry\Resources</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\TriangleMesh.inl">
+      <Filter>Geometry\Resources</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx">
+      <Filter>Effects\Entities</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
+      <Filter>Geometry\Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
+      <Filter>Geometry\Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
+      <Filter>Materials\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Include\core-Renderer\SingleTextureEffect.h">
-      <Filter>Effects</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\CompositeRenderingMechanism.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -238,29 +265,11 @@
     <ClInclude Include="..\..\Include\core-Renderer\ProjectionCalculator.h">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Skeleton.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ProjCalc2D.h">
       <Filter>Tools\ProjectionCalculators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ProjCalc3D.h">
       <Filter>Tools\ProjectionCalculators</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Face.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\LitVertex.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h">
-      <Filter>Geometry</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DeviceFilter.h">
       <Filter>Initialization</Filter>
@@ -295,12 +304,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\SimpleTamyConfigurator.h">
       <Filter>Initialization\Simple</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Material.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Texture.h">
-      <Filter>Materials</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Overlay.h">
       <Filter>OverlayRenderer\Mechanism</Filter>
     </ClInclude>
@@ -312,33 +315,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\TextField.h">
       <Filter>OverlayRenderer\Elements</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\GeometryResource.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Shader.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Effect.h">
-      <Filter>Scene\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\EffectAttribute.h">
-      <Filter>Scene\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Geometry.h">
-      <Filter>Scene\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Renderable.h">
-      <Filter>Scene\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RenderableJoint.h">
-      <Filter>Scene\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ShaderEffect.h">
-      <Filter>Scene\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h">
-      <Filter>Scene\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderableRepresentation.h">
       <Filter>Scene\Views\RenderingView</Filter>
@@ -371,15 +347,6 @@
       <Filter>Scene\Views\SpatialView</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\CameraComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RendererComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h">
       <Filter>Scene</Filter>
     </ClInclude>
@@ -394,6 +361,69 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h">
       <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h">
+      <Filter>Scene\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h">
+      <Filter>Geometry\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h">
+      <Filter>Geometry\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h">
+      <Filter>Geometry\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GeometryResource.h">
+      <Filter>Geometry\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Skeleton.h">
+      <Filter>Geometry\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SkinnedGeometry.h">
+      <Filter>Geometry\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SingleTextureEffect.h">
+      <Filter>Effects\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Texture.h">
+      <Filter>Materials\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Material.h">
+      <Filter>Materials\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Shader.h">
+      <Filter>Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Geometry.h">
+      <Filter>Geometry\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Face.h">
+      <Filter>Geometry\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\LitVertex.h">
+      <Filter>Geometry\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h">
+      <Filter>Geometry\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\EffectAttribute.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Renderable.h">
+      <Filter>Scene\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h">
+      <Filter>Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\EffectShader.h">
+      <Filter>Tools\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SingleTextureMaterial.h">
+      <Filter>Materials\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h">
+      <Filter>Geometry\Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -116,6 +116,7 @@
     <ClInclude Include="..\..\Include\core\Node.h" />
     <ClInclude Include="..\..\Include\core\NodeObserver.h" />
     <ClInclude Include="..\..\Include\core\NodeVisitor.h" />
+    <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h" />
     <ClInclude Include="..\..\Include\core\TNodesVisitor.h" />
     <ClInclude Include="..\..\Include\core\NodeAction.h" />
     <ClInclude Include="..\..\Include\core\NodeActionsExecutor.h" />

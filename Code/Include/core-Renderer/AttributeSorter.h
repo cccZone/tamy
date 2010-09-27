@@ -4,6 +4,7 @@
 /// @brief  sorters of effect attributes
 
 #include <vector>
+#include "core-Renderer/EffectAttribute.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,9 +20,6 @@ class EffectAttribute;
  */
 class Attributed
 {
-public:
-   typedef std::vector<EffectAttribute*> Attributes;
-
 public:
    virtual ~Attributed() {}
 

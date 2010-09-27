@@ -1,8 +1,6 @@
 #include "core-Renderer\TriangleMesh.h"
-#include "core-Renderer\RendererComponent.h"
-#include "core\Filesystem.h"
-#include "core\SingletonsManager.h"
-#include "core\ResourcesManager.h"
+#include "core-Renderer\Renderer.h"
+#include "core.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,10 +33,10 @@ TriangleMesh::TriangleMesh( const std::string& name,
 
 void TriangleMesh::onComponentAdded( Component< ResourcesManager >& component )
 {
-   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
    if ( rendererComp )
    {
-      rendererComp->getRenderer().implement< TriangleMesh >( *this );
+      rendererComp->get().implement< TriangleMesh >( *this );
    }
 }
 
@@ -46,7 +44,7 @@ void TriangleMesh::onComponentAdded( Component< ResourcesManager >& component )
 
 void TriangleMesh::onComponentRemoved( Component< ResourcesManager >& component )
 {
-   RendererComponent* rendererComp = dynamic_cast< RendererComponent* >( &component );
+   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
    if ( rendererComp )
    {
       setImplementation( NULL );
@@ -62,13 +60,6 @@ void TriangleMesh::onResourceLoaded(ResourcesManager& mgr)
    {
       m_boundingVol.include(m_vertices[i].m_coords);
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-BoundingVolume* TriangleMesh::calculateBoundingVolume() const
-{
-   return m_boundingVol * m_identityMtx;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

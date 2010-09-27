@@ -478,14 +478,9 @@ SceneTreeViewer::EntityTreeItem::EntityTreeItem( Entity* entity,
 QString SceneTreeViewer::EntityTreeItem::getEntityName( Entity* entity ) const
 {
    SpatialEntity* spatial;
-   ShaderEffect* shader;
    Geometry* geometry;
 
-   if ( ( shader = dynamic_cast< ShaderEffect* >( entity ) ) != NULL )
-   {
-      return shader->getShaderName().c_str();
-   }
-   else if ( ( geometry = dynamic_cast< Geometry* >( entity ) ) != NULL )
+   if ( ( geometry = dynamic_cast< Geometry* >( entity ) ) != NULL )
    {
       return geometry->getGeometryName().c_str();
    }

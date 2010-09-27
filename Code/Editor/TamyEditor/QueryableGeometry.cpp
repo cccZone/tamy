@@ -1,4 +1,4 @@
-#include "QueryableRenderable.h"
+#include "QueryableGeometry.h"
 #include "core-Renderer.h"
 #include "core.h"
 #include "SceneQueries.h"
@@ -7,30 +7,30 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QueryableRenderable::QueryableRenderable( Renderable& renderable )
-: m_renderable( renderable )
+QueryableGeometry::QueryableGeometry( Geometry& geometry )
+: m_geometry( geometry )
 , m_effect( NULL )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QueryableRenderable::initialize( SceneQueryEffect& effect )
+void QueryableGeometry::initialize( SceneQueryEffect& effect )
 {
    m_effect = &effect;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QueryableRenderable::render()
+void QueryableGeometry::render()
 {
-   if ( !m_effect || !m_renderable.hasGeometry() || !m_renderable.isVisible() )
+   if ( !m_effect || !m_geometry.hasGeometry() || !m_geometry.isVisible() )
    {
       return;
    }
 
-   m_effect->setObject( m_renderable.getGlobalMtx(), SceneQueries::ptrToVec( &m_renderable ) );
-   m_effect->render( m_renderable.getGeometry() );
+   m_effect->setObject( SceneQueries::ptrToVec( &m_geometry ) );
+   m_effect->render( m_geometry );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,8 +3,7 @@
 #include "SelectedEntityRepresentation.h"
 
 // representations
-#include "SelectedRenderableJoint.h"
-#include "SelectedRenderable.h"
+#include "SelectedGeometry.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -14,8 +13,7 @@ SelectionRenderingPass::SelectionRenderingPass( SelectionManager& host )
 , m_selectedRepresentation( NULL )
 {
    // define associations
-   associate< Renderable,      SelectedRenderable >();
-   associate< RenderableJoint, SelectedRenderableJoint >();
+   associateAbstract< Geometry, SelectedGeometry >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

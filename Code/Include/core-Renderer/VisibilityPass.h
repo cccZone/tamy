@@ -4,6 +4,7 @@
 /// @brief  checks the visibility of objects on the added scenes.
 
 #include "core-Renderer\RenderingMechanism.h"
+#include "core-MVC\ModelComponent.h"
 #include <map>
 
 
@@ -13,7 +14,6 @@ class Model;
 class SpatialView;
 class CameraContext;
 class Camera;
-class CameraComponent;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +24,7 @@ class CameraComponent;
 class VisibilityPass : public RenderingMechanism
 {
 private:
-   typedef std::map< Model*, CameraComponent* > ScenesMap;
+   typedef std::map< Model*, ModelComponent< Camera >* > ScenesMap;
 
 private:
    SpatialView*               m_spatialView;

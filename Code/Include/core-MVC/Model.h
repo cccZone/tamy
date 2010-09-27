@@ -129,6 +129,11 @@ protected:
    // -------------------------------------------------------------------------
    void onComponentAdded( Component< Model >& component );
 
+   // -------------------------------------------------------------------------
+   // Resource implementation
+   // -------------------------------------------------------------------------
+   void onResourceLoaded( ResourcesManager& mgr );
+
 private:
    void notifyEntityAdded( Entity& entity );
    void notifyEntityRemoved( Entity& entity );

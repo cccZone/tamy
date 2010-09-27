@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Renderable;
+class Geometry;
 class BoundingVolume;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,10 +17,10 @@ class BoundingVolume;
 class SpatialRepresentation
 {
 private:
-   Renderable& m_renderable;
+   Geometry&            m_geometry;
 
-   BoundingVolume* m_globalBoundingVolume;
-   int m_visibilityTag;
+   BoundingVolume*      m_globalBoundingVolume;
+   int                  m_visibilityTag;
 
 public:
    /**
@@ -28,7 +28,7 @@ public:
     *
     * @param renderable    renderable this representation represents
     */
-   SpatialRepresentation(Renderable& renderable);
+   SpatialRepresentation( Geometry& geometry );
    ~SpatialRepresentation();
 
    /**
@@ -41,7 +41,7 @@ public:
     *
     * @param tag  new visibility tag
     */
-   void tagAsVisible(int tag);
+   void tagAsVisible( int tag );
 
    /**
     * This method evaluates if the renderable is visible or not.
@@ -51,7 +51,7 @@ public:
     *
     * @param referenceVisiblilityTag
     */
-   void setVisible(int referenceVisiblilityTag);
+   void setVisible( int referenceVisiblilityTag );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

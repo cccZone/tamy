@@ -43,9 +43,8 @@ public:
     *
     * @param sceneSnapshot    render target
     * @param rm               resources manager
-    * @param camera           camera observing the rendered scene
     */
-   QueryRenderingPass( RenderTarget& sceneSnapshot, ResourcesManager& rm, Camera& camera );
+   QueryRenderingPass( RenderTarget& sceneSnapshot, ResourcesManager& rm );
    ~QueryRenderingPass();
 
    /**

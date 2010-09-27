@@ -21,9 +21,6 @@
     <ClCompile Include="DX9Renderer.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="DX9Shader.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
     <ClCompile Include="DX9Texture.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
@@ -48,13 +45,19 @@
     <ClCompile Include="DXErrorParser.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="DX9EffectShader.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9Skeleton.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9Shader.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Shader.h">
-      <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Texture.h">
       <Filter>Tools</Filter>
@@ -80,6 +83,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DXErrorParser.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9EffectShader.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Skeleton.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Shader.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

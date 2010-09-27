@@ -11,7 +11,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Renderable;
+class Geometry;
 class SpatialRepresentation;
 class CameraContext;
 struct AABoundingBox;
@@ -24,11 +24,11 @@ struct AABoundingBox;
 class SpatialView : public ModelView
 {
 private:
-   typedef std::map<Renderable*, SpatialRepresentation*> RepresentationsMap;
-   RepresentationsMap m_representations;
+   typedef std::map< Geometry*, SpatialRepresentation* >    RepresentationsMap;
+   RepresentationsMap                                       m_representations;
 
-   RegularOctree<SpatialRepresentation>* m_storage;
-   int m_visibilityTag;
+   RegularOctree<SpatialRepresentation>*                    m_storage;
+   int                                                      m_visibilityTag;
 
 public:
    /**
@@ -37,7 +37,7 @@ public:
     * @param sceneBB    a bounding box large enough to encompass 
     *                   the entire scene
     */
-   SpatialView(const AABoundingBox& sceneBB);
+   SpatialView( const AABoundingBox& sceneBB );
    ~SpatialView();
 
    /**
@@ -46,14 +46,14 @@ public:
     * @param camera  context that will be used to determine the objects' 
     *                visibility
     */
-   void update(CameraContext& camera);
+   void update( CameraContext& camera );
 
    // -------------------------------------------------------------------------
    // ModelView implementation
    // -------------------------------------------------------------------------
-   void onEntityAdded(Entity& entity);
-   void onEntityRemoved(Entity& entity);
-   void onEntityChanged(Entity& entity);
+   void onEntityAdded( Entity& entity );
+   void onEntityRemoved( Entity& entity );
+   void onEntityChanged( Entity& entity );
 
 protected:
    void resetContents();

@@ -9,30 +9,23 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DebugRenderer::DebugRenderer( Renderer& renderer, Camera& camera )
+DebugRenderer::DebugRenderer( Renderer& renderer, ResourcesManager& resMgr, Camera& camera )
 : m_renderer( renderer )
+, m_resMgr( resMgr )
 , m_camera( camera )
 , m_localModel( new Model() )
 {
    // create a reference grid
-   m_gridLines = createGrid();
-
-   Renderable* grid = new Renderable();
-   grid->add( new Geometry( *m_gridLines ) );
-   grid->add( new GridRenderingEffect( m_renderer ) ); 
-   m_localModel->add( grid );
+   m_localModel->add( new GridRenderingEffect( createGrid(), m_resMgr, camera ) );
 
    // add a camera to the scene
-   m_localModel->addComponent( new CameraComponent( m_camera ) );
+   m_localModel->addComponent( new ModelComponent< Camera >( m_camera ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 DebugRenderer::~DebugRenderer()
 {
-   delete m_gridLines;
-   m_gridLines = NULL;
-
    delete m_localModel;
    m_localModel = NULL;
 

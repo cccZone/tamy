@@ -8,11 +8,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DX9Shader::DX9Shader(Shader& shader)
-: m_shader(shader)
-, m_renderer(NULL)
-, m_d3Device(NULL)
-, m_effect(NULL)
+DX9Shader::DX9Shader( Shader& shader )
+   : m_shader( shader )
+   , m_renderer( NULL )
+   , m_d3Device( NULL )
+   , m_dxVertexShader( NULL )
+   , m_dxPixelShader( NULL )
+   , m_shaderConstants( NULL )
+   , m_vertexDecl( NULL )
 {
 }
 
@@ -22,220 +25,250 @@ DX9Shader::~DX9Shader()
 {
    m_d3Device = NULL;
 
-   if (m_renderer != NULL)
+   if ( m_dxVertexShader != NULL )
    {
-      dynamic_cast<Subject<DX9Renderer, DX9GraphResourceOp>*>(m_renderer)->detachObserver(*this);
-      m_renderer = NULL;
+      m_dxVertexShader->Release();
+      m_dxVertexShader = NULL;
    }
 
-   if (m_effect != NULL)
+   if ( m_dxPixelShader != NULL )
    {
-      m_effect->Release();
-      m_effect = NULL;
+      m_dxPixelShader->Release();
+      m_dxPixelShader = NULL;
+   }
+
+   if ( m_shaderConstants )
+   {
+      m_shaderConstants->Release();
+      m_shaderConstants = NULL;
+   }
+
+   if ( m_vertexDecl )
+   {
+      m_vertexDecl->Release();
+      m_vertexDecl = NULL;
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::initialize(Renderer& renderer)
+void DX9Shader::initialize( Renderer& renderer )
 {
-   m_renderer = dynamic_cast<DX9Renderer*> (&renderer);
-   if (m_renderer == NULL)
+   m_renderer = dynamic_cast< DX9Renderer* >( &renderer );
+   if ( m_renderer == NULL )
    {
-      throw std::runtime_error("This implementation can work only with DX9Renderer");
+      throw std::runtime_error( "This implementation can work only with DX9Renderer" );
    }
 
-   if (m_effect != NULL)
+   if ( m_dxVertexShader != NULL )
    {
-      m_effect->Release();
-      m_effect = NULL;
+      m_dxVertexShader->Release();
+      m_dxVertexShader = NULL;
+   }
+
+   if ( m_dxPixelShader != NULL )
+   {
+      m_dxPixelShader->Release();
+      m_dxPixelShader = NULL;
+   }
+
+   if ( m_shaderConstants )
+   {
+      m_shaderConstants->Release();
+      m_shaderConstants = NULL;
    }
 
    // load the effect
-   ID3DXBuffer* errorsBuf = NULL;
+   const std::string& shaderContents = m_shader.getScript();
+   m_d3Device = &m_renderer->getD3Device();
 
-   const std::string& effectContents = m_shader.getScript();
-
-   m_d3Device = &(m_renderer->getD3Device());
-   HRESULT res = D3DXCreateEffect(m_d3Device, 
-      effectContents.c_str(), 
-      effectContents.length(),
-      NULL, 
-      NULL, 
-      0, 
-      NULL, 
-      &m_effect, 
-      &errorsBuf);
-
-   if (FAILED(res) || (m_effect == NULL))
+   const char* shaderProfile = NULL;
+   switch ( m_shader.getType() )
    {
-      if (errorsBuf != NULL)
+   case SHT_VERTEX_SHADER: shaderProfile = D3DXGetVertexShaderProfile( m_d3Device ); break;
+   case SHT_PIXEL_SHADER: shaderProfile = D3DXGetPixelShaderProfile( m_d3Device ); break;
+   };
+
+   DWORD flags = 0;
+#ifdef _DEBUG
+   flags = D3DXSHADER_DEBUG;
+#endif
+
+   ID3DXBuffer* shaderBuf = NULL;
+   ID3DXBuffer* errorsBuf = NULL;
+   HRESULT res = D3DXCompileShader(
+      shaderContents.c_str(), 
+      shaderContents.length(),
+      NULL,                            // defines
+      NULL,                            // includes
+      "main",                          // entry function
+      shaderProfile, 
+      flags,
+      &shaderBuf, 
+      &errorsBuf,
+      &m_shaderConstants );
+
+   if ( FAILED(res) || shaderBuf == NULL )
+   {
+      if ( errorsBuf != NULL )
       {
-         std::string compilationErrors = (const char*)errorsBuf->GetBufferPointer();
-         throw std::runtime_error(std::string("Effect compilation error: ") + compilationErrors);
+         std::string compilationErrors = ( const char* )errorsBuf->GetBufferPointer();
+         errorsBuf->Release();
+         throw std::runtime_error( std::string( "Shader compilation error: " ) + compilationErrors );
       }
       else
       {
-         std::string errMsg = translateDxError( "Error while loading an effect", res );
-         throw std::runtime_error(errMsg);
+         std::string errMsg = translateDxError( "Error while compiling a shader", res );
+         throw std::runtime_error( errMsg );
       }
    }
 
-   // attach the instance as the renderer observer
-   dynamic_cast<Subject<DX9Renderer, DX9GraphResourceOp>*>(m_renderer)->attachObserver(*this);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9Shader::update(DX9Renderer& renderer)
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9Shader::update(DX9Renderer& renderer, const DX9GraphResourceOp& operation)
-{
-   switch(operation)
+   switch ( m_shader.getType() )
    {
-   case GRO_RELEASE_RES:
+   case SHT_VERTEX_SHADER: 
       {
-         m_effect->OnLostDevice();
+         res = m_d3Device->CreateVertexShader( ( const DWORD* )shaderBuf->GetBufferPointer(), &m_dxVertexShader );
          break;
       }
-   
-   case GRO_CREATE_RES:
+
+   case SHT_PIXEL_SHADER: 
       {
-         m_effect->OnResetDevice();
+         res = m_d3Device->CreatePixelShader( ( const DWORD* )shaderBuf->GetBufferPointer(), &m_dxPixelShader );
          break;
       }
+
+   default:
+      {
+         res = E_FAIL;
+      }
+   };
+
+   shaderBuf->Release();
+   if ( FAILED(res) )
+   {
+      std::string errMsg = translateDxError( "Error while creating a shader", res );
+      throw std::runtime_error( errMsg );
+   }
+
+   // create the vertex declaration
+   res = m_d3Device->CreateVertexDeclaration( m_shader.getVerexDescription(), &m_vertexDecl );
+   if ( FAILED( res ) )
+   {
+      throw std::logic_error("Can't create a vertex declaration");
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setTechnique(const std::string& technique)
+void DX9Shader::setBool( const char* paramName, bool val )
 {
-   m_effect->SetTechnique(technique.c_str());
+   if ( m_shaderConstants && m_d3Device )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      m_shaderConstants->SetBool( m_d3Device, hConstant, val );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setBool(const std::string& paramName, bool val)
+void DX9Shader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 {
-   m_effect->SetBool(paramName.c_str(), val);
+   if ( m_shaderConstants && m_d3Device )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      m_shaderConstants->SetMatrix( m_d3Device, hConstant, &matrix );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setInt(const std::string& paramName, int val)
+void DX9Shader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size )
 {
-   m_effect->SetInt(paramName.c_str(), val);
+   if ( m_shaderConstants && m_d3Device )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      HRESULT res = m_shaderConstants->SetMatrixArray( m_d3Device, hConstant, matrices, size );
+      ASSERT( SUCCEEDED( res ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setInt(const std::string& paramName, 
-                             const int* arr, 
-                             unsigned int size)
+void DX9Shader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 {
-   m_effect->SetIntArray(paramName.c_str(), arr,size);
+   if ( m_shaderConstants && m_d3Device )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      m_shaderConstants->SetVector( m_d3Device, hConstant, &vec );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setFloat(const std::string& paramName, float val)
+void DX9Shader::setTexture( const char* paramName, ShaderTexture& val )
 {
-   m_effect->SetFloat(paramName.c_str(), val);
+   if ( m_shaderConstants && m_d3Device )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      UINT samplerIdx = m_shaderConstants->GetSamplerIndex( hConstant );
+      
+      IDirect3DTexture9* texture = reinterpret_cast< IDirect3DTexture9* >( val.getPlatformSpecific() );
+      m_d3Device->SetTexture( samplerIdx, texture );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setFloat(const std::string& paramName, 
-                                  const float* arr, 
-                                  unsigned int size)
+void DX9Shader::beginRendering()
 {
-   m_effect->SetFloatArray(paramName.c_str(), arr, size);
-}
+   if ( !m_d3Device )
+   {
+      return;
+   }
 
-///////////////////////////////////////////////////////////////////////////////
+   switch ( m_shader.getType() )
+   {
+   case SHT_VERTEX_SHADER: 
+      {
+         ASSERT( m_vertexDecl );
+         m_d3Device->SetVertexDeclaration( m_vertexDecl );
+         m_d3Device->SetVertexShader( m_dxVertexShader );
+         break;
+      }
 
-void DX9Shader::setMtx(const std::string& paramName, 
-                                const D3DXMATRIX& val)
-{
-   m_effect->SetMatrix(paramName.c_str(), &val);
-}
+   case SHT_PIXEL_SHADER: 
+      {
+         m_d3Device->SetPixelShader( m_dxPixelShader );
+         break;
+      }
+   };
 
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9Shader::setMtx(const std::string& paramName, 
-                                const D3DXMATRIX* arr, 
-                                unsigned int size)
-{
-   m_effect->SetMatrixArray(paramName.c_str(), arr, size);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9Shader::setString(const std::string& paramName, 
-                                   const std::string& val)
-{
-   m_effect->SetString(paramName.c_str(), val.c_str());
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9Shader::setTexture(const std::string& paramName, ShaderTexture& val)
-{
-   IDirect3DTexture9* texture = reinterpret_cast<IDirect3DTexture9*> (val.getPlatformSpecific());
-   m_effect->SetTexture(paramName.c_str(), texture);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9Shader::setVec4(const std::string& paramName, 
-                                 const D3DXVECTOR4& val)
-{
-   m_effect->SetVector(paramName.c_str(), &val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9Shader::setVec4(const std::string& paramName, 
-                                 const D3DXVECTOR4* arr, 
-                                 unsigned int size)
-{
-   m_effect->SetVectorArray(paramName.c_str(), arr, size);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-unsigned int DX9Shader::beginRendering()
-{
-   unsigned int passesCount;
-   m_effect->Begin(&passesCount, 0);
-
-   return passesCount;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void DX9Shader::endRendering()
 {
-   m_effect->End();
-}
+   if ( !m_d3Device )
+   {
+      return;
+   }
 
-///////////////////////////////////////////////////////////////////////////////
+   switch ( m_shader.getType() )
+   {
+   case SHT_VERTEX_SHADER: 
+      {
+         m_d3Device->SetVertexDeclaration( NULL );
+         m_d3Device->SetVertexShader( NULL );
+         break;
+      }
 
-void DX9Shader::beginPass(unsigned int passIdx)
-{
-   m_effect->BeginPass(passIdx);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9Shader::endPass(unsigned int passIdx)
-{
-   m_effect->EndPass();
+   case SHT_PIXEL_SHADER: 
+      {
+         m_d3Device->SetPixelShader( NULL );
+         break;
+      }
+   };
 }
 
 ///////////////////////////////////////////////////////////////////////////////

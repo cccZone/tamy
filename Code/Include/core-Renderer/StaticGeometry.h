@@ -1,44 +1,53 @@
 #pragma once
 
-/// @file   TamyEditor/SelectedRenderableJoint.h
-/// @brief  A visual representation of a selected renderable joint
+/// @file   core-Renderer\StaticGeometry.h
+/// @brief  A static geometry entity
 
-#include "SelectedEntityRepresentation.h"
+#include "core-Renderer\Geometry.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderableJoint;
+class Shader;
+class SpatialEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A visual representation of a selected renderable joint.
+ * A static geometry entity.
  */
-class SelectedRenderableJoint : public SelectedEntityRepresentation
+class StaticGeometry : public Geometry
 {
+   DECLARE_CLASS( StaticGeometry )
+
 private:
-   RenderableJoint&           m_joint;
-   Attributes                 m_attributes;
+   Shader*           m_vertexShader;
 
 public:
    /**
+    * Default constructor.
+    */
+   StaticGeometry();
+
+   /**
     * Constructor.
     *
-    * @param joint
+    * @param resource   shared geometry resource
     */
-   SelectedRenderableJoint( RenderableJoint& joint );
+   StaticGeometry( GeometryResource& resource );
+   ~StaticGeometry();
+
+protected:
+   // -------------------------------------------------------------------------
+   // Entity implementation
+   // -------------------------------------------------------------------------
+   void onComponentAdded( Component< Model >& component );
 
    // -------------------------------------------------------------------------
-   // Attributed implementation
+   // Geometry implementation
    // -------------------------------------------------------------------------
-   const Attributes& getAttributes() const;
-   void render();
-
-   // -------------------------------------------------------------------------
-   // SelectedEntityRepresentation implementation
-   // -------------------------------------------------------------------------
-   void initialize( SelectionManager& host );
+   void onPreRender();
+   void onPostRender();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -7,10 +7,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SpatialRepresentation::SpatialRepresentation(Renderable& renderable)
-: m_renderable(renderable)
-, m_visibilityTag(-1)
-, m_globalBoundingVolume( new AABoundingBox( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( 0, 0, 0 ) ) )
+SpatialRepresentation::SpatialRepresentation( Geometry& geometry )
+   : m_geometry( geometry )
+   , m_visibilityTag(-1)
+   , m_globalBoundingVolume( new AABoundingBox( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( 0, 0, 0 ) ) )
 {
 }
 
@@ -26,10 +26,10 @@ SpatialRepresentation::~SpatialRepresentation()
 
 const BoundingVolume& SpatialRepresentation::getBoundingVolume() 
 {
-   if ( m_renderable.hasGeometry() )
+   if ( m_geometry.hasGeometry() )
    {
       delete m_globalBoundingVolume;
-      m_globalBoundingVolume = m_renderable.getGeometry().calculateBoundingVolume() * m_renderable.getGlobalMtx();
+      m_globalBoundingVolume = m_geometry.calculateBoundingVolume();
    }
 
    return *m_globalBoundingVolume;
@@ -37,16 +37,16 @@ const BoundingVolume& SpatialRepresentation::getBoundingVolume()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SpatialRepresentation::tagAsVisible(int tag)
+void SpatialRepresentation::tagAsVisible( int tag )
 {
    m_visibilityTag = tag;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SpatialRepresentation::setVisible(int tag)
+void SpatialRepresentation::setVisible( int tag )
 {
-   m_renderable.setVisible(m_visibilityTag == tag);
+   m_geometry.setVisible( m_visibilityTag == tag );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

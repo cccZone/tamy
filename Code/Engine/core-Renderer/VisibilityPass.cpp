@@ -3,10 +3,8 @@
 #include "core-Renderer\SpatialView.h"
 #include "core-Renderer\CameraContext.h"
 #include "core-Renderer\Camera.h"
-#include "core-Renderer\CameraComponent.h"
-#include "core-MVC\Model.h"
-#include "core\AABoundingBox.h"
-#include "core\Frustum.h"
+#include "core-MVC.h"
+#include "core.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,7 +50,7 @@ VisibilityPass::~VisibilityPass()
       Model* scene = it->first;
       scene->detach( *m_spatialView );
 
-      CameraComponent* cameraComponent = it->second;
+      ModelComponent< Camera >* cameraComponent = it->second;
       scene->removeComponent( *cameraComponent );
       delete cameraComponent;
    }
@@ -75,7 +73,7 @@ void VisibilityPass::addScene( Model& model )
    model.attach( *m_spatialView );
 
    // set the scene with a camera
-   CameraComponent* camComp = new CameraComponent( m_camera );
+   ModelComponent< Camera >* camComp = new ModelComponent< Camera >( m_camera );
    model.addComponent( camComp );
 
    // memorize the scene
@@ -97,7 +95,7 @@ void VisibilityPass::removeScene( Model& model )
    scene->detach( *m_spatialView );
 
    // remove the camera component
-   CameraComponent* cameraComponent = it->second;
+   ModelComponent< Camera >* cameraComponent = it->second;
    scene->removeComponent( *cameraComponent );
    delete cameraComponent;
 

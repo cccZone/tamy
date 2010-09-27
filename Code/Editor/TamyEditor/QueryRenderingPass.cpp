@@ -7,20 +7,20 @@
 #include "SceneQueries.h"
 
 // representations
-#include "QueryableRenderable.h"
+#include "QueryableGeometry.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QueryRenderingPass::QueryRenderingPass( RenderTarget& sceneSnapshot, ResourcesManager& rm, Camera& camera )
+QueryRenderingPass::QueryRenderingPass( RenderTarget& sceneSnapshot, ResourcesManager& rm )
 : RenderingPass( &sceneSnapshot )
 , m_sceneSnapshot( sceneSnapshot )
 {
    // create the query effect
-   m_effect = new SceneQueryEffect( rm, camera );
+   m_effect = new SceneQueryEffect( rm );
 
    // define associations
-   associate< Renderable, QueryableRenderable > ();
+   associateAbstract< Geometry, QueryableGeometry > ();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

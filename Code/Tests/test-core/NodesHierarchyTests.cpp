@@ -51,3 +51,26 @@ TEST(NodesHierarchy, switchingChildren)
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST(NodesHierarchy, findingChildren)
+{
+   Node root("root");
+   Node* children[] = { new Node("child1"), new Node("child2"), new Node("child3"), new Node("child4") };
+   root.addChild( children[0] );
+   root.addChild( children[1] );
+   children[0]->addChild( children[2] );
+   children[1]->addChild( children[3] );
+
+   CPPUNIT_ASSERT_EQUAL( children[0], root.findNode( "child1" ) );
+   CPPUNIT_ASSERT_EQUAL( children[1], root.findNode( "child2" ) );
+   CPPUNIT_ASSERT_EQUAL( children[2], root.findNode( "child3" ) );
+   CPPUNIT_ASSERT_EQUAL( children[3], root.findNode( "child4" ) );
+
+   CPPUNIT_ASSERT_EQUAL( (Node*)NULL, children[0]->findNode( "child4" ) );
+   CPPUNIT_ASSERT_EQUAL( children[3], children[1]->findNode( "child4" ) );
+
+   CPPUNIT_ASSERT_EQUAL( children[2], children[0]->findNode( "child3" ) );
+   CPPUNIT_ASSERT_EQUAL( (Node*)NULL, children[1]->findNode( "child3" ) );
+};
+
+///////////////////////////////////////////////////////////////////////////////
