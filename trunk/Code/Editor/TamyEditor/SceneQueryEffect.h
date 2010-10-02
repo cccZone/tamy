@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Shader;
+class PixelShader;
 class Geometry;
 class ResourcesManager;
 
@@ -20,7 +20,7 @@ class ResourcesManager;
 class SceneQueryEffect
 {
 private:
-   Shader*           m_shader;
+   PixelShader*      m_shader;
    D3DXVECTOR4       m_renderedPtr;
 
 public:

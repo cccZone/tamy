@@ -1,64 +1,44 @@
-/// @file   core-Renderer/Shader.h
-/// @brief  a vertex shader resource
+/// @file   core-Renderer/PixelShader.h
+/// @brief  a pixel shader resource
 
 #pragma once
 
 #include "core-Renderer/RendererObject.h"
 #include "core-Renderer/RendererObjectImpl.h"
-#include "core-Renderer/VertexDescriptions.h"
 #include "core/Resource.h"
 #include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ShaderImpl;
+class PixelShaderImpl;
 class ShaderTexture;
-
-///////////////////////////////////////////////////////////////////////////////
-
-enum ShaderType
-{
-   SHT_VERTEX_SHADER,
-   SHT_PIXEL_SHADER,
-};
+class Filesystem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This class represents a vertex shader program resource.
+ * This class represents a pixel shader program resource.
  */
-class Shader : public Resource, public TRendererObject< ShaderImpl >
+class PixelShader : public Resource, public TRendererObject< PixelShaderImpl >
 {
-   DECLARE_RESOURCE( Shader )
+   DECLARE_RESOURCE( PixelShader )
 
 private:
-   ShaderType                    m_type;
    std::string                   m_script;
-   VertexDescId                  m_vertexDescId;
 
 public:
    /**
     * Constructor.
-    */
-   Shader();
-
-   /**
-    * Constructor.
     *
-    * @param scriptPath    path to the .vsh file containing the shader's HLSL code
+    * @param scriptPath    path to the .psh file containing the shader's HLSL code
     */
-   Shader( const std::string& scriptPath, ShaderType type );
+   PixelShader( const std::string& fileName = "" );
 
    /**
-    * Sets a new vertex description. Supported only for vertex shaders.
+    * Loads a script from a file.
     */
-   void setVertexDescription( VertexDescId vertexDescId );
-
-   /**
-    * Returns the description of the vertex the shader supports( providing it's vertex shader )
-    */
-   inline const D3DVERTEXELEMENT9* getVerexDescription() const { return g_vertexDescriptions[ m_vertexDescId ]; }
+   void loadFromFile( const Filesystem& fs, const std::string& fileName );
 
    /**
     * Returns the HLSL script of this shader.
@@ -68,9 +48,11 @@ public:
    inline const std::string& getScript() const { return m_script; }
 
    /**
-    * Returns the type of the shader.
+    * Sets a new script.
+    *
+    * @param script
     */
-   inline ShaderType getType() const { return m_type; }
+   inline void setScript( const std::string& script ) { m_script = script; }
 
    /**
     * Starts the rendering process.
@@ -98,7 +80,6 @@ public:
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
-   void onResourceLoaded(ResourcesManager& mgr);
    void onComponentAdded( Component< ResourcesManager >& component );
    void onComponentRemoved( Component< ResourcesManager >& component );
 };
@@ -106,12 +87,12 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A vertex shader implementation interface.
+ * A pixel shader implementation interface.
  */
-class ShaderImpl : public RendererObjectImpl
+class PixelShaderImpl : public RendererObjectImpl
 {
 public:
-   virtual ~ShaderImpl() {}
+   virtual ~PixelShaderImpl() {}
 
    virtual void beginRendering() {}
 

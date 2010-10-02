@@ -41,7 +41,7 @@
 #include "core-Renderer\TriangleMesh.h"
 #include "core-Renderer\LineSegments.h"
 #include "core-Renderer\Skeleton.h"
-#include "core-Renderer\Shader.h"
+#include "core-Renderer\VertexShader.h"
 
 // ----------------------------------------------------------------------------
 // Initialization
@@ -66,7 +66,7 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Texture.h"
-#include "core-Renderer\RenderTarget.h"
+#include "core-Renderer\PixelShader.h"
 
 // ----------------------------------------------------------------------------
 // OverlayRenderer
@@ -88,6 +88,7 @@
 #include "core-Renderer\VisibilityPass.h"
 #include "core-Renderer\AttributeSorter.h"
 #include "core-Renderer\EffectAttribute.h"
+#include "core-Renderer\RenderTarget.h"
 // ----------------------------------------------------------------------------
 // --> Attributes
 // ----------------------------------------------------------------------------

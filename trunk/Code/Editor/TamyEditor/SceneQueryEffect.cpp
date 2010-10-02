@@ -10,10 +10,11 @@ SceneQueryEffect::SceneQueryEffect( ResourcesManager& rm )
 {
    // load the shader
    static const char* shaderName = "Editor/Shaders/SceneQueryEffect.psh";
-   m_shader = dynamic_cast< Shader* >( rm.findResource( shaderName ) );
+   m_shader = dynamic_cast< PixelShader* >( rm.findResource( "SceneQueryEffect" ) );
    if ( !m_shader )
    {
-      m_shader = new Shader( shaderName, SHT_PIXEL_SHADER );
+      m_shader = new PixelShader( "SceneQueryEffect" );
+      m_shader->loadFromFile( rm.getFilesystem(), shaderName );
       rm.addResource( m_shader );
    }
 }
