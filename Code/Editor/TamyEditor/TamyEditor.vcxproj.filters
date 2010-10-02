@@ -109,6 +109,9 @@
     <Filter Include="Components\SelectionManager\Visualization">
       <UniqueIdentifier>{73130267-9dcf-4fc3-b145-f001f12ce254}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\MaterialEditor">
+      <UniqueIdentifier>{01274f29-65ff-44c8-a660-7a2d3ecb06f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -203,6 +206,9 @@
     </ClInclude>
     <ClInclude Include="SelectedGeometry.h">
       <Filter>Components\SelectionManager\Representations</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_materialeditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -434,6 +440,18 @@
     <ClCompile Include="SelectedGeometry.cpp">
       <Filter>Components\SelectionManager\Representations</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialEditor.cpp">
+      <Filter>Components\MaterialEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MaterialEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialSyntaxHighlighter.cpp">
+      <Filter>Components\MainApp</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MaterialSyntaxHighlighter.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -542,6 +560,15 @@
     </CustomBuild>
     <CustomBuild Include="SceneNavigator.h">
       <Filter>Components\SceneNavigator</Filter>
+    </CustomBuild>
+    <CustomBuild Include="materialeditor.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MaterialEditor.h">
+      <Filter>Components\MaterialEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MaterialSyntaxHighlighter.h">
+      <Filter>Components\MainApp</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

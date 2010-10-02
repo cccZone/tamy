@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Geometry;
-class Shader;
+class PixelShader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +20,7 @@ class SelectedGeometry : public SelectedEntityRepresentation
 {
 private:
    Geometry&                  m_geometry;
-   Shader*                    m_selectionMarker;
+   PixelShader*               m_selectionMarker;
    Attributes                 m_attributes;
 
 public:

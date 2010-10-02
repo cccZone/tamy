@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Shader;
+class VertexShader;
 class SpatialEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ class StaticGeometry : public Geometry
    DECLARE_CLASS( StaticGeometry )
 
 private:
-   Shader*           m_vertexShader;
+   VertexShader*              m_vertexShader;
 
 public:
    /**

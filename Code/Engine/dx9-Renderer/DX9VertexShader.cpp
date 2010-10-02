@@ -1,4 +1,4 @@
-#include "dx9-Renderer\DX9Shader.h"
+#include "dx9-Renderer\DX9VertexShader.h"
 #include "dx9-Renderer\DX9Renderer.h"
 #include "core-Renderer\ShaderTexture.h"
 #include "core\File.h"
@@ -8,12 +8,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DX9Shader::DX9Shader( Shader& shader )
+DX9VertexShader::DX9VertexShader( VertexShader& shader )
    : m_shader( shader )
    , m_renderer( NULL )
    , m_d3Device( NULL )
    , m_dxVertexShader( NULL )
-   , m_dxPixelShader( NULL )
    , m_shaderConstants( NULL )
    , m_vertexDecl( NULL )
 {
@@ -21,7 +20,7 @@ DX9Shader::DX9Shader( Shader& shader )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DX9Shader::~DX9Shader()
+DX9VertexShader::~DX9VertexShader()
 {
    m_d3Device = NULL;
 
@@ -29,12 +28,6 @@ DX9Shader::~DX9Shader()
    {
       m_dxVertexShader->Release();
       m_dxVertexShader = NULL;
-   }
-
-   if ( m_dxPixelShader != NULL )
-   {
-      m_dxPixelShader->Release();
-      m_dxPixelShader = NULL;
    }
 
    if ( m_shaderConstants )
@@ -52,7 +45,7 @@ DX9Shader::~DX9Shader()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::initialize( Renderer& renderer )
+void DX9VertexShader::initialize( Renderer& renderer )
 {
    m_renderer = dynamic_cast< DX9Renderer* >( &renderer );
    if ( m_renderer == NULL )
@@ -66,12 +59,6 @@ void DX9Shader::initialize( Renderer& renderer )
       m_dxVertexShader = NULL;
    }
 
-   if ( m_dxPixelShader != NULL )
-   {
-      m_dxPixelShader->Release();
-      m_dxPixelShader = NULL;
-   }
-
    if ( m_shaderConstants )
    {
       m_shaderConstants->Release();
@@ -82,12 +69,7 @@ void DX9Shader::initialize( Renderer& renderer )
    const std::string& shaderContents = m_shader.getScript();
    m_d3Device = &m_renderer->getD3Device();
 
-   const char* shaderProfile = NULL;
-   switch ( m_shader.getType() )
-   {
-   case SHT_VERTEX_SHADER: shaderProfile = D3DXGetVertexShaderProfile( m_d3Device ); break;
-   case SHT_PIXEL_SHADER: shaderProfile = D3DXGetPixelShaderProfile( m_d3Device ); break;
-   };
+   const char* shaderProfile = D3DXGetVertexShaderProfile( m_d3Device );
 
    DWORD flags = 0;
 #ifdef _DEBUG
@@ -123,26 +105,7 @@ void DX9Shader::initialize( Renderer& renderer )
       }
    }
 
-   switch ( m_shader.getType() )
-   {
-   case SHT_VERTEX_SHADER: 
-      {
-         res = m_d3Device->CreateVertexShader( ( const DWORD* )shaderBuf->GetBufferPointer(), &m_dxVertexShader );
-         break;
-      }
-
-   case SHT_PIXEL_SHADER: 
-      {
-         res = m_d3Device->CreatePixelShader( ( const DWORD* )shaderBuf->GetBufferPointer(), &m_dxPixelShader );
-         break;
-      }
-
-   default:
-      {
-         res = E_FAIL;
-      }
-   };
-
+   res = m_d3Device->CreateVertexShader( ( const DWORD* )shaderBuf->GetBufferPointer(), &m_dxVertexShader );
    shaderBuf->Release();
    if ( FAILED(res) )
    {
@@ -160,7 +123,7 @@ void DX9Shader::initialize( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setBool( const char* paramName, bool val )
+void DX9VertexShader::setBool( const char* paramName, bool val )
 {
    if ( m_shaderConstants && m_d3Device )
    {
@@ -171,7 +134,7 @@ void DX9Shader::setBool( const char* paramName, bool val )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
+void DX9VertexShader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 {
    if ( m_shaderConstants && m_d3Device )
    {
@@ -182,7 +145,7 @@ void DX9Shader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size )
+void DX9VertexShader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size )
 {
    if ( m_shaderConstants && m_d3Device )
    {
@@ -194,7 +157,7 @@ void DX9Shader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
+void DX9VertexShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 {
    if ( m_shaderConstants && m_d3Device )
    {
@@ -205,7 +168,7 @@ void DX9Shader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::setTexture( const char* paramName, ShaderTexture& val )
+void DX9VertexShader::setTexture( const char* paramName, ShaderTexture& val )
 {
    if ( m_shaderConstants && m_d3Device )
    {
@@ -219,56 +182,25 @@ void DX9Shader::setTexture( const char* paramName, ShaderTexture& val )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::beginRendering()
+void DX9VertexShader::beginRendering()
 {
-   if ( !m_d3Device )
+   if ( m_d3Device )
    {
-      return;
+      ASSERT( m_vertexDecl != NULL );
+      m_d3Device->SetVertexDeclaration( m_vertexDecl );
+      m_d3Device->SetVertexShader( m_dxVertexShader );
    }
-
-   switch ( m_shader.getType() )
-   {
-   case SHT_VERTEX_SHADER: 
-      {
-         ASSERT( m_vertexDecl );
-         m_d3Device->SetVertexDeclaration( m_vertexDecl );
-         m_d3Device->SetVertexShader( m_dxVertexShader );
-         break;
-      }
-
-   case SHT_PIXEL_SHADER: 
-      {
-         m_d3Device->SetPixelShader( m_dxPixelShader );
-         break;
-      }
-   };
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9Shader::endRendering()
+void DX9VertexShader::endRendering()
 {
-   if ( !m_d3Device )
+   if ( m_d3Device )
    {
-      return;
+      m_d3Device->SetVertexDeclaration( NULL );
+      m_d3Device->SetVertexShader( NULL );
    }
-
-   switch ( m_shader.getType() )
-   {
-   case SHT_VERTEX_SHADER: 
-      {
-         m_d3Device->SetVertexDeclaration( NULL );
-         m_d3Device->SetVertexShader( NULL );
-         break;
-      }
-
-   case SHT_PIXEL_SHADER: 
-      {
-         m_d3Device->SetPixelShader( NULL );
-         break;
-      }
-   };
 }
 
 ///////////////////////////////////////////////////////////////////////////////

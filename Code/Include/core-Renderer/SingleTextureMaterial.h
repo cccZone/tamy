@@ -14,7 +14,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Geometry;
-class Shader;
+class PixelShader;
 class Camera;
 class Texture;
 
@@ -29,7 +29,7 @@ class SingleTextureMaterial : public Entity, public Renderable
    DECLARE_CLASS( SingleTextureMaterial )
 
 private:
-   Shader*              m_shader;
+   PixelShader*         m_shader;
    Material             m_material;
    Texture*             m_texture;
 

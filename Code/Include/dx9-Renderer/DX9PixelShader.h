@@ -1,6 +1,9 @@
+/// @file   dx9-Renderer/DX9PixelShader.h
+/// @brief  a DirectX9 pixel shader implementation
+
 #pragma once
 
-#include "core-Renderer\Shader.h"
+#include "core-Renderer\PixelShader.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 
@@ -11,20 +14,18 @@ class DX9Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class DX9Shader : public ShaderImpl
+class DX9PixelShader : public PixelShaderImpl
 {
 private:
-   Shader&                       m_shader;
+   PixelShader&                  m_shader;
    DX9Renderer*                  m_renderer;
    IDirect3DDevice9*             m_d3Device;
-   IDirect3DVertexShader9*       m_dxVertexShader;
    IDirect3DPixelShader9*        m_dxPixelShader;
    ID3DXConstantTable*           m_shaderConstants;
-   IDirect3DVertexDeclaration9*  m_vertexDecl;
 
 public:
-   DX9Shader( Shader& shader );
-   ~DX9Shader();
+   DX9PixelShader( PixelShader& shader );
+   ~DX9PixelShader();
 
    // -------------------------------------------------------------------------
    // RendererObjectImpl implementation

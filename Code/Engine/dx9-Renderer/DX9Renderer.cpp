@@ -19,8 +19,10 @@
 #include "dx9-Renderer\DX9Font.h"
 #include "core-Renderer\RenderingPass.h"
 #include "dx9-Renderer\DX9RenderingPass.h"
-#include "core-Renderer\Shader.h"
-#include "dx9-Renderer\DX9Shader.h"
+#include "core-Renderer\VertexShader.h"
+#include "dx9-Renderer\DX9VertexShader.h"
+#include "core-Renderer\PixelShader.h"
+#include "dx9-Renderer\DX9PixelShader.h"
 #include "core-Renderer\Skeleton.h"
 #include "dx9-Renderer\DX9Skeleton.h"
 
@@ -62,7 +64,8 @@ DX9Renderer::DX9Renderer(IDirect3DDevice9* d3Device,
    associate< EffectShader, DX9EffectShader > ();
    associate< Font, DX9Font > ();
    associate< RenderingPass, DX9RenderingPass > ();
-   associate< Shader, DX9Shader > ();
+   associate< VertexShader, DX9VertexShader > ();
+   associate< PixelShader, DX9PixelShader > ();
    associate< Skeleton, DX9Skeleton > ();
 }
 

@@ -70,9 +70,6 @@
     <Filter Include="Materials\Resources">
       <UniqueIdentifier>{46c48c5f-a2a1-40ee-a254-5d4b8bf5c0e4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tools\Resources">
-      <UniqueIdentifier>{9885c467-2a83-46d5-b474-1a1573c3059d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Geometry\Core">
       <UniqueIdentifier>{56299d89-a619-4ae9-9206-55cd8d42df67}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,9 @@
     </Filter>
     <Filter Include="Materials\Entities">
       <UniqueIdentifier>{f446a617-128e-4ab8-aa1b-c3da1f2b37de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Effects\Resources">
+      <UniqueIdentifier>{9885c467-2a83-46d5-b474-1a1573c3059d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -183,9 +183,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Tools\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Geometry.cpp">
       <Filter>Geometry\Core</Filter>
     </ClCompile>
@@ -195,14 +192,20 @@
     <ClCompile Include="StaticGeometry.cpp">
       <Filter>Geometry\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="EffectShader.cpp">
-      <Filter>Tools\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="SingleTextureMaterial.cpp">
       <Filter>Materials\Entities</Filter>
     </ClCompile>
     <ClCompile Include="VertexDescriptions.cpp">
       <Filter>Geometry\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShader.cpp">
+      <Filter>Materials\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShader.cpp">
+      <Filter>Geometry\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectShader.cpp">
+      <Filter>Effects\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -392,9 +395,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\Material.h">
       <Filter>Materials\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Shader.h">
-      <Filter>Tools\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Geometry.h">
       <Filter>Geometry\Core</Filter>
     </ClInclude>
@@ -413,17 +413,23 @@
     <ClInclude Include="..\..\Include\core-Renderer\Renderable.h">
       <Filter>Scene\Views</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h">
-      <Filter>Tools\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\EffectShader.h">
-      <Filter>Tools\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureMaterial.h">
       <Filter>Materials\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h">
       <Filter>Geometry\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\PixelShader.h">
+      <Filter>Materials\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h">
+      <Filter>Materials\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShader.h">
+      <Filter>Geometry\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\EffectShader.h">
+      <Filter>Effects\Resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

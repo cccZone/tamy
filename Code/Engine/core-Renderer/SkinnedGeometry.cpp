@@ -3,7 +3,7 @@
 #include "core-Renderer\Skeleton.h"
 #include "core-Renderer\SpatialEntity.h"
 #include "core-Renderer\Camera.h"
-#include "core-Renderer\Shader.h"
+#include "core-Renderer\VertexShader.h"
 #include "core-MVC.h"
 #include "core.h"
 
@@ -150,10 +150,10 @@ void SkinnedGeometry::onComponentAdded( Component< Model >& component )
       // load the shader
       ResourcesManager& rm = comp->get();
       static const char* shaderName = "Renderer/Shaders/SkinnedGeometry.vsh";
-      m_vertexShader = dynamic_cast< Shader* >( rm.findResource( shaderName ) );
+      m_vertexShader = dynamic_cast< VertexShader* >( rm.findResource( shaderName ) );
       if ( !m_vertexShader )
       {
-         m_vertexShader = new Shader( shaderName, SHT_VERTEX_SHADER );
+         m_vertexShader = new VertexShader( shaderName );
          m_vertexShader->setVertexDescription( VDI_SIMPLE_SKINNING );
          rm.addResource( m_vertexShader );
       }

@@ -138,6 +138,12 @@ void Entity::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
+
+   if ( m_parent )
+   {
+      onAttached( *m_parent );
+   }
+
    Children children = m_children;
    for ( Children::iterator it = children.begin();
          it != children.end(); ++it )

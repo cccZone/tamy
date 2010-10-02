@@ -31,10 +31,11 @@ void SelectedGeometry::initialize( SelectionManager& host )
 
    // create a selection marker effect
    static const char* shaderName = "Editor/Shaders/SelectionMarker.psh";
-   m_selectionMarker = dynamic_cast< Shader* >( resMgr.findResource( shaderName ) );
+   m_selectionMarker = dynamic_cast< PixelShader* >( resMgr.findResource( "SelectionMarker" ) );
    if ( !m_selectionMarker )
    {
-      m_selectionMarker = new Shader( shaderName, SHT_PIXEL_SHADER );
+      m_selectionMarker = new PixelShader( "SelectionMarker" );
+      m_selectionMarker->loadFromFile( resMgr.getFilesystem(), shaderName );
       resMgr.addResource( m_selectionMarker );
    }
 }

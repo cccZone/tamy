@@ -51,7 +51,10 @@
     <ClCompile Include="DX9Skeleton.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="DX9Shader.cpp">
+    <ClCompile Include="DX9VertexShader.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9PixelShader.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
   </ItemGroup>
@@ -90,7 +93,10 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Skeleton.h">
       <Filter>Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Shader.h">
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShader.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShader.h">
       <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>

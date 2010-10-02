@@ -1,6 +1,6 @@
 #include "core-Renderer\SingleTextureMaterial.h"
 #include "core-Renderer\Geometry.h"
-#include "core-Renderer\Shader.h"
+#include "core-Renderer\PixelShader.h"
 #include "core-Renderer\Texture.h"
 #include "core-MVC.h"
 #include "core.h"
@@ -95,10 +95,11 @@ void SingleTextureMaterial::onComponentAdded( Component< Model >& component )
          // load the shader
          ResourcesManager& rm = comp->get();
          static const char* shaderName = "Renderer/Shaders/MaterialShader.psh";
-         m_shader = dynamic_cast< Shader* >( rm.findResource( shaderName ) );
+         m_shader = dynamic_cast< PixelShader* >( rm.findResource( "SingleTextureMaterial" ) );
          if ( !m_shader )
          {
-            m_shader = new Shader( shaderName, SHT_PIXEL_SHADER );
+            m_shader = new PixelShader( "SingleTextureMaterial" );
+            m_shader->loadFromFile( rm.getFilesystem(), shaderName );
             rm.addResource( m_shader );
          }
 

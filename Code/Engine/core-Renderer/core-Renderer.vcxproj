@@ -120,8 +120,9 @@
     <ClCompile Include="DefaultAttributeSorter.cpp" />
     <ClCompile Include="SpatialRepresentation.cpp" />
     <ClCompile Include="SpatialView.cpp" />
-    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="VertexDescriptions.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="VisibilityPass.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -197,8 +198,9 @@
     <ClInclude Include="..\..\Include\core-Renderer\SpatialRepresentation.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SpatialView.h" />
     <ClInclude Include="..\..\Include\core-Renderer.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\Shader.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\PixelShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VisibilityPass.h" />
   </ItemGroup>
   <ItemGroup>

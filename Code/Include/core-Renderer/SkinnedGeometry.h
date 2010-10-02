@@ -17,7 +17,7 @@ class GeometryResource;
 class Skeleton;
 class SpatialEntity;
 class Camera;
-class Shader;
+class VertexShader;
 class Node;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@ class SkinnedGeometry : public Geometry
 
 private:
    Skeleton*                           m_skeleton;
-   Shader*                             m_vertexShader;
+   VertexShader*                       m_vertexShader;
 
    // runtime data
    BoundingVolume*                     m_vol;

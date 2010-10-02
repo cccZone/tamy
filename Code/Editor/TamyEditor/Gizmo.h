@@ -4,6 +4,7 @@
 /// @brief  A selected object manipulation gizmo.
 
 #include "core-Renderer\SpatialEntity.h"
+#include "core-Renderer\Renderable.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,7 +21,7 @@ class Geometry;
  * A gizmo showing the selected object's orientation and indicating 
  * the selected manipulation mode ( moving, rotating, scaling ).
  */
-class Gizmo : public SpatialEntity
+class Gizmo : public SpatialEntity, public Renderable
 {
 public:
    enum Mode
@@ -41,6 +42,8 @@ private:
    GizmoEffect*   m_effect;
    LineSegments*  m_geometry;
 
+   Attributes     m_attributes;
+
 public:
    /**
     * Constructor.
@@ -52,6 +55,12 @@ public:
     * Sets a new mode in which the gizmo will be displayed.
     */
    void setMode( Mode mode );
+
+   // -------------------------------------------------------------------------
+   // Renderable representation
+   // -------------------------------------------------------------------------
+   void render();
+   const Attributes& getAttributes() const { return m_attributes; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

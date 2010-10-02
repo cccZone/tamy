@@ -11,6 +11,7 @@
 #include "progressdialog.h"
 #include "FSNodeMimeData.h"
 #include "core-MVC.h"
+#include "core-Renderer.h"
 
 // nodes
 #include "FSTreeNode.h"
@@ -20,6 +21,7 @@
 
 // editors
 #include "SceneEditor.h"
+#include "MaterialEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,6 +50,7 @@ ResourcesBrowser::~ResourcesBrowser()
 void ResourcesBrowser::initializeEditors()
 {
    associate< Model, SceneEditor >();
+   associate< PixelShader, MaterialEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
