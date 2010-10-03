@@ -51,7 +51,7 @@ void MainAppComponent::setScene( Model& scene )
 
 void MainAppComponent::initialize( TamyEditor& mgr )
 {
-   ASSERT( m_mgr == NULL, "MainAppComponent is already initialized" );
+   ASSERT_MSG( m_mgr == NULL, "MainAppComponent is already initialized" );
    m_mgr = &mgr;
 
    // setup services

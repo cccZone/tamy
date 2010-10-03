@@ -87,7 +87,7 @@ void TreeWidget::showPopupMenu( const QPoint& pos )
 
 void TreeWidget::expandNode()
 {
-   ASSERT( m_popupMenuItem, "No tree item selected" );
+   ASSERT_MSG( m_popupMenuItem, "No tree item selected" );
    deepCollapse( m_popupMenuItem, true );
 }
 
@@ -95,7 +95,7 @@ void TreeWidget::expandNode()
 
 void TreeWidget::collapseNode()
 {
-   ASSERT( m_popupMenuItem, "No tree item selected" );
+   ASSERT_MSG( m_popupMenuItem, "No tree item selected" );
    deepCollapse( m_popupMenuItem, false );
 }
 
@@ -129,7 +129,7 @@ void TreeWidget::deepCollapse( QTreeWidgetItem* root, bool expand )
 
 void TreeWidget::addNode( int typeIdx )
 {
-   ASSERT( m_popupMenuItem, "No tree item selected" );
+   ASSERT_MSG( m_popupMenuItem, "No tree item selected" );
 
    emit addNode( m_popupMenuItem, typeIdx );
 }
@@ -138,8 +138,8 @@ void TreeWidget::addNode( int typeIdx )
 
 void TreeWidget::removeNode()
 {
-   ASSERT( m_popupMenuItem, "No tree item selected" );
-   ASSERT( m_popupMenuItem->parent(), "Item needsto have a parent in order to be removed from it" );
+   ASSERT_MSG( m_popupMenuItem, "No tree item selected" );
+   ASSERT_MSG( m_popupMenuItem->parent(), "Item needsto have a parent in order to be removed from it" );
 
    emit removeNode( m_popupMenuItem->parent(), m_popupMenuItem );
 }
@@ -148,7 +148,7 @@ void TreeWidget::removeNode()
 
 void TreeWidget::clearNode()
 {
-   ASSERT( m_popupMenuItem, "No tree item selected" );
+   ASSERT_MSG( m_popupMenuItem, "No tree item selected" );
 
    emit clearNode( m_popupMenuItem );
 }

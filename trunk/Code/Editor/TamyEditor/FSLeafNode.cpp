@@ -66,7 +66,7 @@ void FSLeafNode::setEntrySize( const Filesystem& fs )
 
 std::string FSLeafNode::getRelativePath() const
 {
-   ASSERT ( parent(), "Leaf node has to have a parent" );
+   ASSERT_MSG ( parent(), "Leaf node has to have a parent" );
 
    std::string path = dynamic_cast< FSTreeNode* >( parent() )->getRelativePath();
    path += m_fsNodeName;

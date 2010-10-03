@@ -49,7 +49,7 @@ SceneTreeViewer::~SceneTreeViewer()
 
 void SceneTreeViewer::initialize( TamyEditor& mgr )
 {
-   ASSERT( m_mgr == NULL, "SceneTreeViewer component is already initialized" );
+   ASSERT_MSG( m_mgr == NULL, "SceneTreeViewer component is already initialized" );
    m_mgr = &mgr;
 
    ResourcesManager& resMgr = mgr.requestService< ResourcesManager >();
@@ -461,7 +461,7 @@ SceneTreeViewer::EntityTreeItem::EntityTreeItem( Entity* entity,
 : QTreeWidgetItem( parent )
 , m_entity( entity )
 {
-   ASSERT( entity != NULL, "Entity can't be NULL" );
+   ASSERT_MSG( entity != NULL, "Entity can't be NULL" );
 
    QString typeDesc;
    QIcon icon;

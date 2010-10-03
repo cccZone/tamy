@@ -21,7 +21,7 @@ ClassTemplate& ClassesRegistry::defineClass()
       // If it doesn't it means that we have a hash- value clash and should
       // change either the hashing function, or the class name.
       ClassTemplate& temp = *m_classes[ it->second ];
-      ASSERT( temp.getName() == classType.name(), "Class names clash - consider changing the class name or the hashing function!!!" );
+      ASSERT_MSG( temp.getName() == classType.name(), "Class names clash - consider changing the class name or the hashing function!!!" );
 
       return temp;
    }

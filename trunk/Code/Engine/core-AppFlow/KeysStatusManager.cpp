@@ -36,7 +36,8 @@ void KeysStatusManager::update(float timeElapsed)
       {
          switch (oldState)
          {
-         case KEY_FREE:       
+         case KEY_FREE:
+         case KEY_RELEASED: 
             {
                newState = KEY_PRESSED; 
                m_statuses[keyCode].timePressed = m_time; 
@@ -48,12 +49,6 @@ void KeysStatusManager::update(float timeElapsed)
                {
                   newState = KEY_HELD; 
                }
-               break;
-            }
-         case KEY_RELEASED:   
-            {
-               newState = KEY_PRESSED; 
-               m_statuses[keyCode].timePressed = m_time;
                break;
             }
          }

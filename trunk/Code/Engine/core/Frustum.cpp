@@ -31,7 +31,7 @@ void Frustum::operator*=(const D3DXMATRIX& mtx)
 
 float Frustum::distanceToPlane(const D3DXPLANE& plane) const
 {
-   ASSERT(false, "Frustum::distanceToPlane(const D3DXPLANE&) - Method not implemented");
+   ASSERT_MSG(false, "Frustum::distanceToPlane(const D3DXPLANE&) - Method not implemented");
    return 0;
 }
 
@@ -39,7 +39,7 @@ float Frustum::distanceToPlane(const D3DXPLANE& plane) const
 
 bool Frustum::testCollision(const PointVolume& point) const
 {
-   ASSERT(false, "Frustum::testCollision(const PointVolume&) - Method not implemented");
+   ASSERT_MSG(false, "Frustum::testCollision(const PointVolume&) - Method not implemented");
    return false;
 }
 
@@ -61,7 +61,7 @@ bool Frustum::testCollision(const BoundingSphere& rhs) const
 
 bool Frustum::testCollision(const Frustum& rhs) const
 {
-   ASSERT(false, "Frustum::testCollision(const Frustum&) - Method not implemented");
+   ASSERT_MSG(false, "Frustum::testCollision(const Frustum&) - Method not implemented");
    return false;
 }
 
@@ -69,7 +69,7 @@ bool Frustum::testCollision(const Frustum& rhs) const
 
 bool Frustum::testCollision(const Ray& rhs) const
 {
-   ASSERT(false, "Frustum::testCollision(const Ray&) - Method not implemented");
+   ASSERT_MSG(false, "Frustum::testCollision(const Ray&) - Method not implemented");
    return false;
 }
 
@@ -77,7 +77,7 @@ bool Frustum::testCollision(const Ray& rhs) const
 
 bool Frustum::testCollision(const Triangle& rhs) const
 {
-   ASSERT(false, "Frustum::testCollision(const Triangle&) - Method not implemented");
+   ASSERT_MSG(false, "Frustum::testCollision(const Triangle&) - Method not implemented");
    return false;
 }
 

@@ -41,7 +41,7 @@ void VertexShader::onResourceLoaded( ResourcesManager& mgr )
    std::string scriptPath = getFilePath();
    if ( m_script.empty() )
    {
-      ASSERT( !scriptPath.empty(), "Neither .vsh file nor a shader script specified" );
+      ASSERT_MSG( !scriptPath.empty(), "Neither .vsh file nor a shader script specified" );
       if ( scriptPath.empty() )
       {
          return;

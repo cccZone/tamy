@@ -149,7 +149,7 @@ void Array<T>::push_back(const T& elem)
 template<typename T>
 const T& Array<T>::back() const
 {
-   ASSERT(m_elementsCount > 0,  "array is empty"); 
+   ASSERT_MSG(m_elementsCount > 0,  "array is empty"); 
    return m_arr[m_elementsCount - 1];
 }
 
@@ -158,7 +158,7 @@ const T& Array<T>::back() const
 template<typename T>
 T& Array<T>::back()
 {
-   ASSERT(m_elementsCount > 0,  "array is empty"); 
+   ASSERT_MSG(m_elementsCount > 0,  "array is empty"); 
    return m_arr[m_elementsCount - 1];
 }
 
@@ -167,7 +167,7 @@ T& Array<T>::back()
 template<typename T>
 void Array<T>::remove(unsigned int idx)
 {
-   ASSERT(idx < m_elementsCount, "index out of array boundaries"); 
+   ASSERT_MSG(idx < m_elementsCount, "index out of array boundaries"); 
 
    for (unsigned int i = idx + 1; i < m_elementsCount; ++i)
    {
@@ -181,7 +181,7 @@ void Array<T>::remove(unsigned int idx)
 template<typename T>
 T& Array<T>::at(unsigned int idx)
 {
-   ASSERT(idx < m_elementsCount,  "index out of array boundaries"); 
+   ASSERT_MSG(idx < m_elementsCount,  "index out of array boundaries"); 
    return m_arr[idx];
 }
 
@@ -190,7 +190,7 @@ T& Array<T>::at(unsigned int idx)
 template<typename T>
 const T& Array<T>::at(unsigned int idx) const
 {
-   ASSERT(idx < m_elementsCount, "index out of array boundaries"); 
+   ASSERT_MSG(idx < m_elementsCount, "index out of array boundaries"); 
    return m_arr[idx];
 }
 

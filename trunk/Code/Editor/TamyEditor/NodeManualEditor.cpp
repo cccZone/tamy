@@ -166,7 +166,7 @@ D3DXVECTOR3 NodeManualEditor::calculateRotationAxis() const
          axisIdx = i;
       }
    }
-   ASSERT( axisIdx >= 0, "Rotation axis not found" );
+   ASSERT_MSG( axisIdx >= 0, "Rotation axis not found" );
 
    return globalAxes[ axisIdx ];
 }

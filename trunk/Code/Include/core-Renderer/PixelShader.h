@@ -8,12 +8,56 @@
 #include "core/Resource.h"
 #include <d3dx9.h>
 
+// TODO: !!!!!!!!!!!! Entity do ktorego mozna podlaczac ten konfigurowalny shader
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class PixelShaderImpl;
 class ShaderTexture;
 class Filesystem;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Texture mapping params
+ */
+struct PixelShaderParams
+{
+   D3DCULL                       m_cullingMode;
+   bool                          m_useZBuffer;
+   bool                          m_writeToZBuffer;
+   D3DTEXTUREADDRESS             m_addressU;
+   D3DTEXTUREADDRESS             m_addressV;
+   D3DTEXTUREADDRESS             m_addressW;
+   D3DTEXTUREFILTERTYPE          m_minFilter;
+   D3DTEXTUREFILTERTYPE          m_magFilter;
+   D3DTEXTUREFILTERTYPE          m_mipFilter;
+
+   PixelShaderParams()
+      : m_cullingMode( D3DCULL_CCW )
+      , m_useZBuffer( true )
+      , m_writeToZBuffer( true )
+      , m_addressU( D3DTADDRESS_WRAP )
+      , m_addressV( D3DTADDRESS_WRAP )
+      , m_addressW( D3DTADDRESS_WRAP )
+      , m_minFilter( D3DTEXF_LINEAR )
+      , m_magFilter( D3DTEXF_LINEAR )
+      , m_mipFilter( D3DTEXF_LINEAR )
+   {}
+
+   void serialize( Serializer& serializer )
+   {
+      serializer << m_cullingMode;
+      serializer << m_useZBuffer;
+      serializer << m_writeToZBuffer;
+      serializer << m_addressU;
+      serializer << m_addressV;
+      serializer << m_addressW;
+      serializer << m_minFilter;
+      serializer << m_magFilter;
+      serializer << m_mipFilter;
+   }
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +70,7 @@ class PixelShader : public Resource, public TRendererObject< PixelShaderImpl >
 
 private:
    std::string                   m_script;
+   PixelShaderParams             m_params;
 
 public:
    /**
@@ -53,6 +98,16 @@ public:
     * @param script
     */
    inline void setScript( const std::string& script ) { m_script = script; }
+
+   /**
+    * Returns the params used for texture mapping.
+    */
+   inline const PixelShaderParams& getParams() const { return m_params; }
+
+   /**
+    * Returns the params used for texture mapping (non-const version)
+    */
+   inline PixelShaderParams& getParams() { return m_params; }
 
    /**
     * Starts the rendering process.

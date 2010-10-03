@@ -122,8 +122,8 @@ void StaticGeometryOctree<Elem>::addElemToTree(SGElement* element,
 
       // generate the three split planes
       unsigned int splitPlanesCount = subTreeRoot.getSplitPlanesCount();
-      ASSERT(splitPlanesCount > 0, "invalid number of split planes");
-      ASSERT(splitPlanesCount <= 3, "invalid number of split planes");
+      ASSERT_MSG(splitPlanesCount > 0, "invalid number of split planes");
+      ASSERT_MSG(splitPlanesCount <= 3, "invalid number of split planes");
       D3DXPLANE* planes = new D3DXPLANE[splitPlanesCount];
       for (unsigned int i = 0; i < splitPlanesCount; ++i)
       {
@@ -194,7 +194,7 @@ void StaticGeometryOctree<Elem>::addElemToTree(SGElement* element,
       case 1: elemOffsetShift = 1; break;
       case 2: elemOffsetShift = 3; break;
       case 3: elemOffsetShift = 7; break;
-      default: ASSERT(false, "invalid number of split planes");
+      default: ASSERT_MSG(false, "invalid number of split planes");
       };
       for (unsigned int subSectorIdx = 0; subSectorIdx < childrenCount; ++subSectorIdx)
       {

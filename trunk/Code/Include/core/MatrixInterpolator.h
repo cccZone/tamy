@@ -13,8 +13,8 @@ public:
                          const D3DXMATRIX& end, 
                          float advancement) const
    {
-      ASSERT(advancement <= 1, "The value for advancement should be <= 1");
-      ASSERT(advancement >= 0, "The value for advancement should be >= 0");
+      ASSERT_MSG(advancement <= 1, "The value for advancement should be <= 1");
+      ASSERT_MSG(advancement >= 0, "The value for advancement should be >= 0");
 
       // translation
       D3DXMATRIX translation;

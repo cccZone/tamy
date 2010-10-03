@@ -129,8 +129,8 @@ unsigned int OctreeNode<Elem>::getChildrenCount() const
 template<typename Elem>
 OctreeNode<Elem>& OctreeNode<Elem>::getChild(unsigned int idx)
 {
-   ASSERT (m_children != NULL, "This is a leaf node - it doesn't have any children");
-   ASSERT (idx < 8, "Child node index out of range");
+   ASSERT_MSG (m_children != NULL, "This is a leaf node - it doesn't have any children");
+   ASSERT_MSG (idx < 8, "Child node index out of range");
 
    return *(m_children[idx]);
 }
@@ -140,8 +140,8 @@ OctreeNode<Elem>& OctreeNode<Elem>::getChild(unsigned int idx)
 template<typename Elem>
 const OctreeNode<Elem>& OctreeNode<Elem>::getChild(unsigned int idx) const
 {
-   ASSERT (m_children != NULL, "This is a leaf node - it doesn't have any children");
-   ASSERT (idx < 8, "Child node index out of range");
+   ASSERT_MSG (m_children != NULL, "This is a leaf node - it doesn't have any children");
+   ASSERT_MSG (idx < 8, "Child node index out of range");
 
    return *(m_children[idx]);
 }
@@ -151,7 +151,7 @@ const OctreeNode<Elem>& OctreeNode<Elem>::getChild(unsigned int idx) const
 template<typename Elem>
 const D3DXPLANE& OctreeNode<Elem>::getSplitPlane(unsigned int idx) const
 {
-   ASSERT (idx < 3, "Split plane index out of range");
+   ASSERT_MSG (idx < 3, "Split plane index out of range");
    return m_splitPlanes[idx];
 }
 

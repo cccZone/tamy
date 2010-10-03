@@ -124,7 +124,7 @@ void DynamicOctree<Elem>::putElemInTree(unsigned int elemIdx,
    querySectors(treeElem.elem->getBoundingVolume(), *m_root, candidateSectors);
    sectorsCount = candidateSectors.size();
 
-   ASSERT(sectorsCount > 0, "The world is too small to add this element");
+   ASSERT_MSG(sectorsCount > 0, "The world is too small to add this element");
 
    treeElem.hostSectors.clear();
    Sector* sector = NULL;

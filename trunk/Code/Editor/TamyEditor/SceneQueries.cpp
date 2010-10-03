@@ -30,7 +30,7 @@ SceneQueries::~SceneQueries()
 
 void SceneQueries::initialize( TamyEditor& mgr )
 {
-   ASSERT( m_sceneSnapshot == NULL, "SceneQueries is already initialized" );
+   ASSERT_MSG( m_sceneSnapshot == NULL, "SceneQueries is already initialized" );
 
    // register new service
    mgr.registerService< SceneQueries >( *this, *this );

@@ -190,7 +190,7 @@ void Saver::operator<<( Serializable** ptr )
       return;
    }
 
-   ASSERT( false, "Unmapped dependency encountered" );
+   ASSERT_MSG( false, "Unmapped dependency encountered" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -261,7 +261,7 @@ Resource& Loader::load( ResourcesManager& resMgr )
 void Loader::serializeBuf(byte* buf, size_t size)
 {
    std::size_t bytesRead = m_impl->read( buf, size );
-   ASSERT((bytesRead == size), "Error reading a binary archive");
+   ASSERT_MSG((bytesRead == size), "Error reading a binary archive");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -270,14 +270,14 @@ void Loader::operator<<(std::string& str)
 {
    unsigned int strLen = 0;
    std::size_t bytesRead = m_impl->read((byte*)&strLen, sizeof(unsigned int));
-   ASSERT( ( bytesRead == sizeof( unsigned int ) ), "Error reading a binary archive" );
+   ASSERT_MSG( ( bytesRead == sizeof( unsigned int ) ), "Error reading a binary archive" );
 
    char* strBuf = new char[strLen + 1];
    bytesRead = m_impl->read((byte*)strBuf, sizeof(char) * strLen);
    strBuf[strLen] = 0;
    str = strBuf;
    delete [] strBuf;
-   ASSERT( ( bytesRead == strLen * sizeof( char ) ), "Error reading a binary archive" );
+   ASSERT_MSG( ( bytesRead == strLen * sizeof( char ) ), "Error reading a binary archive" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -287,7 +287,7 @@ void Loader::operator<<(D3DXMATRIX& mtx)
    std::size_t bytesToRead = 16 * sizeof( float );
    std::size_t bytesRead = m_impl->read((byte*)&(mtx.m), bytesToRead);
 
-   ASSERT( ( bytesRead == bytesToRead ), "Error reading a binary archive" );
+   ASSERT_MSG( ( bytesRead == bytesToRead ), "Error reading a binary archive" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -298,7 +298,7 @@ void Loader::operator<<(D3DXVECTOR3& vec)
    bytesRead += m_impl->read((byte*)&(vec.y), sizeof(float));
    bytesRead += m_impl->read((byte*)&(vec.z), sizeof(float));
 
-   ASSERT( ( bytesRead == 3 * sizeof( float ) ), "Error reading a binary archive" );
+   ASSERT_MSG( ( bytesRead == 3 * sizeof( float ) ), "Error reading a binary archive" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -329,7 +329,7 @@ void Loader::operator<<(Serializable** ptr)
 
    default:
       {
-         ASSERT( false, "Invalid dependency type" );
+         ASSERT_MSG( false, "Invalid dependency type" );
          break;
       }
    }

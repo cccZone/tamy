@@ -38,26 +38,26 @@ public:
 
    const D3DXVECTOR3& vertex(unsigned int idx) const
    {
-      ASSERT(idx <= 2, "Vertex index should be <= 2");
+      ASSERT_MSG(idx <= 2, "Vertex index should be <= 2");
       return v[idx];
    }
 
    const D3DXVECTOR3& vertexPos(unsigned int idx) const
    {
-      ASSERT(idx <= 2, "Vertex index should be <= 2");
+      ASSERT_MSG(idx <= 2, "Vertex index should be <= 2");
       return v[idx];
    }
 
    const D3DXVECTOR3& edge(unsigned int idx) const
    {
-      ASSERT(idx <= 2, "Edge index should be <= 2");
+      ASSERT_MSG(idx <= 2, "Edge index should be <= 2");
 
       return e[idx];
    }
 
    const D3DXVECTOR3& edgeNormal(unsigned int idx) const
    {
-      ASSERT(idx <= 2, "Edge normal index should be <= 2");
+      ASSERT_MSG(idx <= 2, "Edge normal index should be <= 2");
 
       return en[idx];
    }

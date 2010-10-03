@@ -277,7 +277,7 @@ template< typename T >
 const T& TEditableProperty< T >::get() const 
 {
    void* val = m_property.edit();
-   ASSERT( val != NULL, "Non-pointer properties must be initialized before thay can be edited" );
+   ASSERT_MSG( val != NULL, "Non-pointer properties must be initialized before thay can be edited" );
 
    T* typedVal = reinterpret_cast< T* >( val );
 
@@ -290,7 +290,7 @@ template< typename T >
 T& TEditableProperty< T >::get() 
 {
    void* val = m_property.edit();
-   ASSERT( val != NULL, "Non-pointer properties must be initialized before thay can be edited" );
+   ASSERT_MSG( val != NULL, "Non-pointer properties must be initialized before thay can be edited" );
 
    T* typedVal = reinterpret_cast< T* >( val );
 

@@ -57,7 +57,7 @@ void ResourcesBrowser::initializeEditors()
 
 void ResourcesBrowser::initialize( TamyEditor& mgr )
 {
-   ASSERT( m_mgr == NULL, "ResourcesBrowser component is already initialized" );
+   ASSERT_MSG( m_mgr == NULL, "ResourcesBrowser component is already initialized" );
    m_mgr = &mgr;
 
    m_mainApp = &mgr.requestService< MainAppComponent > ();
@@ -248,7 +248,7 @@ void ResourcesBrowser::editResource( const std::string& path )
 
 void ResourcesBrowser::onDirectory( const std::string& name )
 {
-   ASSERT( m_rm != NULL, "This method can only be called when ResourcesManager instance is available" );
+   ASSERT_MSG( m_rm != NULL, "This method can only be called when ResourcesManager instance is available" );
 
    const Filesystem& fs = m_rm->getFilesystem();
 
@@ -256,7 +256,7 @@ void ResourcesBrowser::onDirectory( const std::string& name )
    std::string newNodeName = fs.extractNodeName( name );
 
    FSTreeNode* parent = find( parentDirName );
-   ASSERT( parent != NULL, "Parent directory not found" );
+   ASSERT_MSG( parent != NULL, "Parent directory not found" );
    if ( parent )
    { 
       new FSDirNode( parent, newNodeName, fs );
@@ -267,7 +267,7 @@ void ResourcesBrowser::onDirectory( const std::string& name )
 
 void ResourcesBrowser::onFile( const std::string& name )
 {
-   ASSERT( m_rm != NULL, "This method can only be called when ResourcesManager instance is available" );
+   ASSERT_MSG( m_rm != NULL, "This method can only be called when ResourcesManager instance is available" );
 
    const Filesystem& fs = m_rm->getFilesystem();
 
@@ -284,7 +284,7 @@ void ResourcesBrowser::onFile( const std::string& name )
    std::string newNodeName = fs.extractNodeName( name );
 
    FSTreeNode* parent = find( parentDirName );
-   ASSERT( parent != NULL, "Parent directory not found" );
+   ASSERT_MSG( parent != NULL, "Parent directory not found" );
    if ( parent )
    {  
       new FSLeafNode( parent, newNodeName, fs, *m_itemsFactory );

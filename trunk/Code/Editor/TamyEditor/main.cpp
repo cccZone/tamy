@@ -1,6 +1,8 @@
 #include "tamyeditor.h"
 #include <QtGui/QApplication>
 #include <QMessageBox.h>
+#include "assertDialog.h"
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,6 +38,8 @@ protected:
 int main(int argc, char *argv[])
 {
    TamyEditorApp a(argc, argv);
+
+   registerAssertCallback( &AssertDialog::createDialog );
 
    TamyEditor w(a);
 

@@ -33,7 +33,7 @@ namespace // anonymous
       // ----------------------------------------------------------------------
       void execute( InputState mode, const D3DXVECTOR2& mousePos )
       {
-         if ( mode == IS_PRESSED || mode == IS_HELD )
+         if ( mode == IS_HELD )
          {
             m_host.setCameraRotation( true );
          }
@@ -63,7 +63,7 @@ namespace // anonymous
       // ----------------------------------------------------------------------
       void execute( InputState mode, const D3DXVECTOR2& mousePos )
       {
-         if ( mode == IS_PRESSED || mode == IS_HELD )
+         if ( mode == IS_HELD )
          {
             m_host.setCameraMove( m_direction, true );
          }
@@ -105,7 +105,7 @@ SceneNavigator::~SceneNavigator()
 
 void SceneNavigator::initialize( TamyEditor& mgr )
 {
-   ASSERT( !m_mgr, "Component is already managed" );
+   ASSERT_MSG( !m_mgr, "Component is already managed" );
    m_mgr = &mgr;
 
    // initialize UI

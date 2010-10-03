@@ -78,7 +78,7 @@ void ComponentsManager< Derived >::removeComponent( Component< Derived >& compon
 template< typename Derived >
 Component<Derived>* ComponentsManager< Derived >::getComponent( unsigned int idx )
 {
-   ASSERT( idx < m_comps.size(), "Component index out of range" );
+   ASSERT_MSG( idx < m_comps.size(), "Component index out of range" );
    return m_comps[idx];
 }
 

@@ -9,6 +9,7 @@
 
 BEGIN_RESOURCE( PixelShader, Resource, tpsh, AM_BINARY )
    PROPERTY( std::string, m_script )
+   PROPERTY(PixelShaderParams, m_params )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,7 +23,7 @@ PixelShader::PixelShader( const std::string& fileName )
 
 void PixelShader::loadFromFile( const Filesystem& fs, const std::string& fileName )
 {
-   ASSERT( !fileName.empty(), "Neither .psh file nor a shader script specified" );
+   ASSERT_MSG( !fileName.empty(), "Neither .psh file nor a shader script specified" );
    if ( fileName.empty() )
    {
       return;

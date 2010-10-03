@@ -166,6 +166,14 @@ void DX9PixelShader::setTexture( const char* paramName, ShaderTexture& val )
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       UINT samplerIdx = m_shaderConstants->GetSamplerIndex( hConstant );
 
+      const PixelShaderParams& params = m_shader.getParams();
+      m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_ADDRESSU, params.m_addressU );
+      m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_ADDRESSV, params.m_addressV );
+      m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_ADDRESSW, params.m_addressW );
+      m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_MINFILTER, params.m_minFilter );
+      m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_MAGFILTER, params.m_magFilter );
+      m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_MIPFILTER, params.m_mipFilter );
+
       IDirect3DTexture9* texture = reinterpret_cast< IDirect3DTexture9* >( val.getPlatformSpecific() );
       m_d3Device->SetTexture( samplerIdx, texture );
    }
@@ -177,7 +185,11 @@ void DX9PixelShader::beginRendering()
 {
    if ( m_d3Device )
    {
-       m_d3Device->SetPixelShader( m_dxPixelShader );
+      const PixelShaderParams& params = m_shader.getParams();
+      m_d3Device->SetRenderState( D3DRS_CULLMODE, params.m_cullingMode );
+      m_d3Device->SetRenderState( D3DRS_ZENABLE, params.m_useZBuffer );
+      m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, params.m_writeToZBuffer );
+      m_d3Device->SetPixelShader( m_dxPixelShader );
    }
 }
 

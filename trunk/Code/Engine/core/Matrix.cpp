@@ -317,7 +317,7 @@ Matrix& Matrix::operator*=(float val)
 
 Matrix Matrix::operator/(float val) const
 {
-   ASSERT( val != 0, "Division by 0 not supported" );
+   ASSERT_MSG( val != 0, "Division by 0 not supported" );
 
    Matrix newMtx( *this );
 
@@ -336,7 +336,7 @@ Matrix Matrix::operator/(float val) const
 
 Matrix& Matrix::operator/=(float val)
 {
-   ASSERT( val != 0, "Division by 0 not supported" );
+   ASSERT_MSG( val != 0, "Division by 0 not supported" );
 
    for ( int row = 0; row < 4; ++row )
    {

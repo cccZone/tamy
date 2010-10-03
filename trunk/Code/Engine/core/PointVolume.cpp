@@ -60,7 +60,7 @@ bool PointVolume::testCollision(const BoundingSphere& rhs) const
 
 bool PointVolume::testCollision(const Frustum& rhs) const
 {
-   ASSERT(false, "PointVolume::testCollision(const Frustum&) - Method not implemented");
+   ASSERT_MSG(false, "PointVolume::testCollision(const Frustum&) - Method not implemented");
    return false;
 }
 
@@ -68,7 +68,7 @@ bool PointVolume::testCollision(const Frustum& rhs) const
 
 bool PointVolume::testCollision(const Ray& rhs) const
 {
-   ASSERT(false, "PointVolume::testCollision(const Ray&) - Method not implemented");
+   ASSERT_MSG(false, "PointVolume::testCollision(const Ray&) - Method not implemented");
    return false;
 }
 
@@ -76,7 +76,7 @@ bool PointVolume::testCollision(const Ray& rhs) const
 
 bool PointVolume::testCollision(const Triangle& rhs) const
 {
-   ASSERT(false, "PointVolume::testCollision(const Triangle&) - Method not implemented");
+   ASSERT_MSG(false, "PointVolume::testCollision(const Triangle&) - Method not implemented");
    return false;
 }
 

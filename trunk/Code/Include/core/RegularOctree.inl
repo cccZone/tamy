@@ -59,7 +59,7 @@ void RegularOctree<Elem>::insert(Elem& elem)
    querySectors(elem.getBoundingVolume(), *m_root, candidateSectors);
    sectorsCount = candidateSectors.size();
 
-   ASSERT(sectorsCount > 0, "The world is too small to add this element");
+   ASSERT_MSG(sectorsCount > 0, "The world is too small to add this element");
 
    Sector* sector = NULL;
    for (unsigned int i = 0; i < sectorsCount; ++i)
@@ -96,7 +96,7 @@ void RegularOctree<Elem>::remove(Elem& elem)
       unsigned int childrenCount = currSector->getChildrenCount();
       if (childrenCount > 0)
       {
-         ASSERT(currSector->m_elems.size() == 0, "Composite node has an element assigned");
+         ASSERT_MSG(currSector->m_elems.size() == 0, "Composite node has an element assigned");
          for (unsigned int i = 0; i < childrenCount; ++i)
          {
             stack.push(&currSector->getChild(i));
