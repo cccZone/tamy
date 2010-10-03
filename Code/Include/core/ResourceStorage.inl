@@ -51,7 +51,7 @@ bool ResourceStorage<ResourceType>::is(const std::string& name) const
 template<typename ResourceType>
 bool ResourceStorage<ResourceType>::add(ResourceType* resource)
 {
-   ASSERT (resource != NULL, "NULL pointer instead a valid resource");
+   ASSERT_MSG (resource != NULL, "NULL pointer instead a valid resource");
 
    ResourceMap::iterator it = m_resources.find(resource->getName());
    if (it != m_resources.end()) 

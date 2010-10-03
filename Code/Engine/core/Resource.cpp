@@ -75,7 +75,7 @@ void Resource::saveResource( ExternalDependenciesSet& outExternalDependencies )
 
 void Resource::setResourcesManager( ResourcesManager& mgr )
 {
-   ASSERT( m_host == NULL, "This resource is already added to a resources manager" );
+   ASSERT_MSG( m_host == NULL, "This resource is already added to a resources manager" );
    m_host = &mgr;
 
    onResourceLoaded( mgr );

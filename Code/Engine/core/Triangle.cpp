@@ -154,7 +154,7 @@ void Triangle::split(const D3DXPLANE& splitPlane,
 
 bool Triangle::testCollision(const PointVolume& point) const
 {
-   ASSERT(false, "Triangle::testCollision(const PointVolume&) - Method not implemented");
+   ASSERT_MSG(false, "Triangle::testCollision(const PointVolume&) - Method not implemented");
    return false;
 }
 
@@ -162,7 +162,7 @@ bool Triangle::testCollision(const PointVolume& point) const
 
 bool Triangle::testCollision(const AABoundingBox& rhs) const
 {
-   ASSERT(false, "Triangle::testCollision(const AABoundingBox&) - Method not implemented");
+   ASSERT_MSG(false, "Triangle::testCollision(const AABoundingBox&) - Method not implemented");
    return false;
 }
 
@@ -170,7 +170,7 @@ bool Triangle::testCollision(const AABoundingBox& rhs) const
 
 bool Triangle::testCollision(const BoundingSphere& rhs) const
 {
-   ASSERT(false, "Triangle::testCollision(const BoundingSphere&) - Method not implemented");
+   ASSERT_MSG(false, "Triangle::testCollision(const BoundingSphere&) - Method not implemented");
    return false;
 }
 
@@ -178,7 +178,7 @@ bool Triangle::testCollision(const BoundingSphere& rhs) const
 
 bool Triangle::testCollision(const Frustum& rhs) const
 {
-   ASSERT(false, "Triangle::testCollision(const Frustum&) - Method not implemented");
+   ASSERT_MSG(false, "Triangle::testCollision(const Frustum&) - Method not implemented");
    return false;
 }
 
@@ -193,7 +193,7 @@ bool Triangle::testCollision(const Ray& rhs) const
 
 bool Triangle::testCollision(const Triangle& rhs) const
 {
-   ASSERT(false, "Triangle::testCollision(const Triangle&) - Method not implemented");
+   ASSERT_MSG(false, "Triangle::testCollision(const Triangle&) - Method not implemented");
    return false;
 }
 

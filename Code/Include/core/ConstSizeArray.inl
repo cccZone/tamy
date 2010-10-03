@@ -103,7 +103,7 @@ unsigned int ConstSizeArray<T>::insert(const T& elem)
 template<typename T>
 void ConstSizeArray<T>::remove(unsigned int idx)
 {
-   ASSERT(idx < m_elements->size(), "index out of array boundaries"); 
+   ASSERT_MSG(idx < m_elements->size(), "index out of array boundaries"); 
 
    if ((*m_isFree)[idx] == true) {return;}
 
@@ -116,7 +116,7 @@ void ConstSizeArray<T>::remove(unsigned int idx)
 template<typename T>
 T& ConstSizeArray<T>::at(unsigned int idx)
 {
-   ASSERT(idx < m_elements->size(),  "index out of array boundaries");
+   ASSERT_MSG(idx < m_elements->size(),  "index out of array boundaries");
    if ((*m_isFree)[idx] == true)
    {
       throw std::out_of_range("This element has been removed");
@@ -129,7 +129,7 @@ T& ConstSizeArray<T>::at(unsigned int idx)
 template<typename T>
 const T& ConstSizeArray<T>::at(unsigned int idx) const
 {
-   ASSERT(idx < m_elements->size(), "index out of array boundaries"); 
+   ASSERT_MSG(idx < m_elements->size(), "index out of array boundaries"); 
    if ((*m_isFree)[idx] == true)
    {
       throw std::out_of_range("This element has been removed");
@@ -142,7 +142,7 @@ const T& ConstSizeArray<T>::at(unsigned int idx) const
 template<typename T>
 T& ConstSizeArray<T>::operator[](unsigned int idx)
 {
-   ASSERT(idx < m_elements->size(),  "index out of array boundaries"); 
+   ASSERT_MSG(idx < m_elements->size(),  "index out of array boundaries"); 
    if ((*m_isFree)[idx] == true)
    {
       throw std::out_of_range("This element has been removed");
@@ -155,7 +155,7 @@ T& ConstSizeArray<T>::operator[](unsigned int idx)
 template<typename T>
 const T& ConstSizeArray<T>::operator[](unsigned int idx) const
 {
-   ASSERT(idx < m_elements->size(), "index out of array boundaries");
+   ASSERT_MSG(idx < m_elements->size(), "index out of array boundaries");
    if ((*m_isFree)[idx] == true)
    {
       throw std::out_of_range("This element has been removed");

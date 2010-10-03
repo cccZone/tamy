@@ -39,7 +39,7 @@ void EffectShader::onResourceLoaded( ResourcesManager& mgr )
 {
    if ( m_script.empty() )
    {
-      ASSERT( !m_fileName.empty(), "Neither .fx file nor a shader script specified" );
+      ASSERT_MSG( !m_fileName.empty(), "Neither .fx file nor a shader script specified" );
       if ( m_fileName.empty() )
       {
          return;

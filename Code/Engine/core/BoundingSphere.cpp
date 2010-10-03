@@ -89,7 +89,7 @@ bool BoundingSphere::testCollision(const Ray& rhs) const
 
 bool BoundingSphere::testCollision(const Triangle& rhs) const
 {
-   ASSERT(false, "BoundingSphere::testCollision(const Triangle&) - Method not implemented");
+   ASSERT_MSG(false, "BoundingSphere::testCollision(const Triangle&) - Method not implemented");
    return false;
 }
 

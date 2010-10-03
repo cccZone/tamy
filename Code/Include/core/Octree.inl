@@ -77,7 +77,7 @@ void Octree<Elem>::querySectors(const BoundingVolume& boundingVol,
       unsigned int childrenCount = currSector->getChildrenCount();
       if (childrenCount > 0)
       {
-         ASSERT(currSector->m_elems.size() == 0, "Composite node has an element assigned");
+         ASSERT_MSG(currSector->m_elems.size() == 0, "Composite node has an element assigned");
          for (unsigned int i = 0; i < childrenCount; ++i)
          {
             stack.push(&currSector->getChild(i));

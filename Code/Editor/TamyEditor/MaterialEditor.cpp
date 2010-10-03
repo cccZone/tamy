@@ -41,11 +41,43 @@ void MaterialEditor::initialize( TamyEditor& mgr )
    m_ui.setupUi(this);
    m_highlighter = new MaterialSyntaxHighlighter( m_ui.scriptEditor->document() );
 
+   // set the editor up
    m_ui.scriptEditor->setPlainText( m_shader.getScript().c_str() );
    m_ui.scriptEditor->setTabStopWidth( 15 );
    connect( m_ui.scriptEditor, SIGNAL( textChanged() ), this, SLOT( onScriptModified() ) );
    m_docModified = false;
 
+   // set the propersties
+   const PixelShaderParams& params = m_shader.getParams();
+
+   m_ui.cullingMode->setCurrentIndex( params.m_cullingMode - 1 );
+   connect( m_ui.cullingMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+   m_ui.zBufferEnabled->setChecked( params.m_useZBuffer );
+   connect( m_ui.zBufferEnabled, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
+
+   m_ui.zBufferWriteEnabled->setChecked( params.m_writeToZBuffer );
+   connect( m_ui.zBufferWriteEnabled, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
+
+   m_ui.uAddressMode->setCurrentIndex( params.m_addressU - 1 );
+   connect( m_ui.uAddressMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+   m_ui.vAddressMode->setCurrentIndex( params.m_addressV - 1 );
+   connect( m_ui.vAddressMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+   m_ui.wAddressMode->setCurrentIndex( params.m_addressW - 1 );
+   connect( m_ui.wAddressMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+   m_ui.minFilter->setCurrentIndex( params.m_minFilter );
+   connect( m_ui.minFilter, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+   m_ui.magFilter->setCurrentIndex( params.m_magFilter );
+   connect( m_ui.magFilter, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+   m_ui.mipFilter->setCurrentIndex( params.m_mipFilter );
+   connect( m_ui.mipFilter, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+   // set the menu
    QString iconsDir = m_resourceMgr->getFilesystem().getShortcut( "editorIcons" ).c_str();
    QToolBar& toolBar = mgr.getToolBar();
 
@@ -176,6 +208,23 @@ void MaterialEditor::compile()
    {
       QMessageBox::warning( this, tr("Compilation error"), ex.what(), QMessageBox::Ok );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialEditor::onParamChange()
+{
+   PixelShaderParams& params = m_shader.getParams();
+
+   params.m_cullingMode = (D3DCULL)( m_ui.cullingMode->currentIndex() + 1 );
+   params.m_useZBuffer = m_ui.zBufferEnabled->isChecked();
+   params.m_writeToZBuffer = m_ui.zBufferWriteEnabled->isChecked();
+   params.m_addressU = (D3DTEXTUREADDRESS)( m_ui.uAddressMode->currentIndex() + 1 );
+   params.m_addressV = (D3DTEXTUREADDRESS)( m_ui.vAddressMode->currentIndex() + 1 );
+   params.m_addressW = (D3DTEXTUREADDRESS)( m_ui.wAddressMode->currentIndex() + 1 );
+   params.m_minFilter = (D3DTEXTUREFILTERTYPE)( m_ui.minFilter->currentIndex() );
+   params.m_magFilter = (D3DTEXTUREFILTERTYPE)( m_ui.magFilter->currentIndex() );
+   params.m_mipFilter = (D3DTEXTUREFILTERTYPE)( m_ui.mipFilter->currentIndex() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

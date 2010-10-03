@@ -110,7 +110,9 @@ void SkinnedGeometry::instantiateSkeleton( Entity& parent )
       Node* bone = parentNode->findNode( boneId );
 
       // verify that we get the bone - we either address the entire skeleton, or none of it
-      ASSERT( bone != NULL, "Bone '%s' does not exist", boneId.c_str() );
+      static char tmpStr[256];
+      sprintf( tmpStr, "Bone '%s' does not exist", boneId.c_str() );
+      ASSERT_MSG( bone != NULL, tmpStr );
       if ( !bone )
       {
          m_bones.clear();

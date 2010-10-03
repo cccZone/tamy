@@ -31,7 +31,7 @@ void Ray::operator*=(const D3DXMATRIX& mtx)
 
 PlaneClassification Ray::classifyAgainsPlane(const D3DXPLANE& plane) const
 {
-   ASSERT(false, "Ray::classifyAgainsPlane(const D3DXPLANE&) - Method not implemented");
+   ASSERT_MSG(false, "Ray::classifyAgainsPlane(const D3DXPLANE&) - Method not implemented");
    return PPC_SPANNING;
 }
 
@@ -39,7 +39,7 @@ PlaneClassification Ray::classifyAgainsPlane(const D3DXPLANE& plane) const
 
 bool Ray::testCollision(const PointVolume& point) const
 {
-   ASSERT(false, "Ray::testCollision(const PointVolume&) - Method not implemented");
+   ASSERT_MSG(false, "Ray::testCollision(const PointVolume&) - Method not implemented");
    return false;
 }
 
@@ -61,7 +61,7 @@ bool Ray::testCollision(const BoundingSphere& rhs) const
 
 bool Ray::testCollision(const Frustum& rhs) const
 {
-   ASSERT(false, "Ray::testCollision(const Frustum&) - Method not implemented");
+   ASSERT_MSG(false, "Ray::testCollision(const Frustum&) - Method not implemented");
    return false;
 }
 
@@ -69,7 +69,7 @@ bool Ray::testCollision(const Frustum& rhs) const
 
 bool Ray::testCollision(const Ray& rhs) const
 {
-   ASSERT(false, "Ray::testCollision(const Frustum&) - Method not implemented");
+   ASSERT_MSG(false, "Ray::testCollision(const Frustum&) - Method not implemented");
    return false;
 }
 
@@ -98,7 +98,7 @@ float Ray::getDistanceTo(const BoundingVolume& rhs) const
    }
    else
    {
-      ASSERT(false, "Ray::getDistanceTo(...) not implemented for this type of bounding volume");
+      ASSERT_MSG(false, "Ray::getDistanceTo(...) not implemented for this type of bounding volume");
       return FLT_MAX;
    }
 }

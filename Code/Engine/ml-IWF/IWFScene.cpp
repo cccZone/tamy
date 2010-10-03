@@ -318,7 +318,7 @@ void IWFScene::addStaticGeometry( Model& scene,
       }
       else
       {
-         ASSERT( count == 1, "Only a single mesh can be dealt with this way" );
+         ASSERT_MSG( count == 1, "Only a single mesh can be dealt with this way" );
          root = renderable;
       }
    }

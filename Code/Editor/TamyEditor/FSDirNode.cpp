@@ -22,7 +22,7 @@ FSDirNode::FSDirNode( FSTreeNode* parent, const std::string& nodeName, const Fil
 
 std::string FSDirNode::getRelativePath() const
 {
-   ASSERT ( parent(), "Directory node has to have a parent" );
+   ASSERT_MSG ( parent(), "Directory node has to have a parent" );
 
    std::string path = dynamic_cast< FSTreeNode* >( parent() )->getRelativePath();
    path += m_fsNodeName;

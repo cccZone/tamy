@@ -99,7 +99,7 @@ void Skeleton::addWeight( unsigned int vertexIdx, const std::string& boneId, flo
          break;
       }
    }
-   // TODO: zrobic porzadne okienko assert'a: ASSERT( nextIdx < 4, "Too many skin weights assigned" );
+   ASSERT_MSG( nextIdx < 4, "Too many skin weights assigned" );
    if ( nextIdx >= 4 )
    {
       nextIdx = 3; // let's overwrite the last weight

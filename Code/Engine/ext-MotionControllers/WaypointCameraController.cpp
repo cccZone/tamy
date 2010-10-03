@@ -46,8 +46,8 @@ void WaypointCameraController::registerWaypoint(int waypointIdx, Node& waypoint)
 
 void WaypointCameraController::goTo(int waypointIdx)
 {
-   ASSERT(waypointIdx < (int)m_waypoints.size(), "Waypoint index out of range");
-   ASSERT(m_waypoints[waypointIdx] != NULL, "Waypoint doesn't exist");
+   ASSERT_MSG(waypointIdx < (int)m_waypoints.size(), "Waypoint index out of range");
+   ASSERT_MSG(m_waypoints[waypointIdx] != NULL, "Waypoint doesn't exist");
 
    D3DXMATRIX destination = m_waypoints[waypointIdx]->getGlobalMtx();
    D3DXVECTOR3 lookVec;

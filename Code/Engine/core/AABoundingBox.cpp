@@ -169,7 +169,7 @@ bool AABoundingBox::testCollision(const Ray& rhs) const
 
 bool AABoundingBox::testCollision(const Triangle& rhs) const
 {
-   ASSERT(false, "AABoundingBox::testCollision(const Triangle&) - Method not implemented");
+   ASSERT_MSG(false, "AABoundingBox::testCollision(const Triangle&) - Method not implemented");
    return false;
 }
 

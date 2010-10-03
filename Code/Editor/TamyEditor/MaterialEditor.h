@@ -53,6 +53,7 @@ public slots:
    void save();
    void compile();
    void onScriptModified();
+   void onParamChange();
 
 protected:
    void closeEvent( QCloseEvent *event );
