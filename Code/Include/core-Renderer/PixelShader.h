@@ -70,20 +70,25 @@ class PixelShader : public Resource, public TRendererObject< PixelShaderImpl >
 
 private:
    std::string                   m_script;
+   std::string                   m_entryFunctionName;
    PixelShaderParams             m_params;
 
 public:
    /**
     * Constructor.
     *
-    * @param scriptPath    path to the .psh file containing the shader's HLSL code
+    * @param scriptPath             shader resource name
     */
    PixelShader( const std::string& fileName = "" );
 
    /**
     * Loads a script from a file.
+    *
+    * @param fs                  file system that contains the file
+    * @param fileName            name of the file with the shader's code
+    * @param entryFunctionName   name of a function in the file that's to be used as the shader's entry function
     */
-   void loadFromFile( const Filesystem& fs, const std::string& fileName );
+   void loadFromFile( const Filesystem& fs, const std::string& fileName, const std::string& entryFunctionName = "main" );
 
    /**
     * Returns the HLSL script of this shader.
@@ -110,6 +115,11 @@ public:
    inline PixelShaderParams& getParams() { return m_params; }
 
    /**
+    * Returns the name of the shader entry function
+    */
+   inline const std::string& getEntryFunctionName() const { return m_entryFunctionName; }
+
+   /**
     * Starts the rendering process.
     */
    void beginRendering();
@@ -124,11 +134,17 @@ public:
    // -------------------------------------------------------------------------
    void setBool( const char* paramName, bool val );
 
+   void setFloat( const char* paramName, float val );
+
+   void setFloatArray( const char* paramName, float* valsArr, unsigned int size );
+
    void setMtx( const char* paramName, const D3DXMATRIX& matrix );
 
-   void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int count );
+   void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size );
 
    void setVec4( const char* paramName, const D3DXVECTOR4& vec );
+
+   void setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size );
 
    void setTexture( const char* paramName, ShaderTexture& val );
 
@@ -155,11 +171,17 @@ public:
 
    virtual void setBool( const char* paramName, bool val ) {}
 
+   virtual void setFloat( const char* paramName, float val ) {}
+
+   virtual void setFloatArray( const char* paramName, float* valsArr, unsigned int size ) {}
+
    virtual void setMtx( const char* paramName, const D3DXMATRIX& matrix ) {}
 
-   virtual void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int count ) {}
+   virtual void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size ) {}
 
    virtual void setVec4( const char* paramName, const D3DXVECTOR4& vec ) {}
+
+   virtual void setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size ) {}
 
    virtual void setTexture( const char* paramName, ShaderTexture& val ) {}
 };

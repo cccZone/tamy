@@ -98,8 +98,6 @@ DX9Renderer* DX9Initializer::createDisplay(DX9Settings& settings,
       }
    }
 
-   D3DFORMAT optimalTextureFormat = findOptimalTextureFormat(settings);
-
    IDirect3DDevice9* d3Device = NULL;
    HRESULT deviceCreationResult = m_d3d9.CreateDevice(settings.adapterOrdinal, 
                                                       settings.deviceType, 
@@ -122,36 +120,14 @@ DX9Renderer* DX9Initializer::createDisplay(DX9Settings& settings,
    }
    else
    {
-      return new DX9Renderer(d3Device, 
+      return new DX9Renderer(m_d3d9,
+                             d3Device, 
+                             settings,
                              presentParams, 
-                             settings.caps,
                              width,
                              height,
-                             hardwareTLOn,
-                             optimalTextureFormat);
+                             hardwareTLOn);
    }
-}
-
-/////////////////////////////////////////////////////////////////////////////
-const UINT TextureFormatsCount = 6;
-const D3DFORMAT TextureFormats[6] = {D3DFMT_DXT5, D3DFMT_DXT3, D3DFMT_X8R8G8B8,
-                                     D3DFMT_DXT1, D3DFMT_X1R5G5B5, D3DFMT_R5G6B5};
-
-D3DFORMAT DX9Initializer::findOptimalTextureFormat(DX9Settings& settings)
-{
-   for (UINT i = 0; i < TextureFormatsCount; ++i)
-   {
-      if (SUCCEEDED(m_d3d9.CheckDeviceFormat(settings.adapterOrdinal, 
-                                             settings.deviceType, 
-                                             settings.displayMode.Format,
-                                             0, D3DRTYPE_TEXTURE, 
-                                             TextureFormats[i])))
-      {
-         return TextureFormats[i];
-      }
-   }
-
-   return D3DFMT_UNKNOWN;
 }
 
 /////////////////////////////////////////////////////////////////////////////

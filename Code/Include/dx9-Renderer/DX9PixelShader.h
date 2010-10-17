@@ -36,9 +36,12 @@ public:
    // ShaderImpl implementation
    // -------------------------------------------------------------------------
    void setBool( const char* paramName, bool val );
+   void setFloat( const char* paramName, float val );
+   void setFloatArray( const char* paramName, float* valsArr, unsigned int size );
    void setMtx( const char* paramName, const D3DXMATRIX& matrix );
-   void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int count );
+   void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size );
    void setVec4( const char* paramName, const D3DXVECTOR4& vec );
+   void setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size );
    void setTexture( const char* paramName, ShaderTexture& val );
    void beginRendering();
    void endRendering();

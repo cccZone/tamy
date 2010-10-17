@@ -50,7 +50,8 @@ void DX9VertexShader::initialize( Renderer& renderer )
    m_renderer = dynamic_cast< DX9Renderer* >( &renderer );
    if ( m_renderer == NULL )
    {
-      throw std::runtime_error( "This implementation can work only with DX9Renderer" );
+      ASSERT_MSG( false, "This implementation can work only with DX9Renderer" );
+      return;
    }
 
    if ( m_dxVertexShader != NULL )
@@ -96,12 +97,15 @@ void DX9VertexShader::initialize( Renderer& renderer )
       {
          std::string compilationErrors = ( const char* )errorsBuf->GetBufferPointer();
          errorsBuf->Release();
-         throw std::runtime_error( std::string( "Shader compilation error: " ) + compilationErrors );
+         std::string errMsg = std::string( "Shader compilation error: " ) + compilationErrors;
+         ASSERT_MSG( false, errMsg.c_str() );
+         return;
       }
       else
       {
          std::string errMsg = translateDxError( "Error while compiling a shader", res );
-         throw std::runtime_error( errMsg );
+         ASSERT_MSG( false, errMsg.c_str() );
+         return;
       }
    }
 
@@ -110,14 +114,16 @@ void DX9VertexShader::initialize( Renderer& renderer )
    if ( FAILED(res) )
    {
       std::string errMsg = translateDxError( "Error while creating a shader", res );
-      throw std::runtime_error( errMsg );
+      ASSERT_MSG( false, errMsg.c_str() );
+      return;
    }
 
    // create the vertex declaration
    res = m_d3Device->CreateVertexDeclaration( m_shader.getVerexDescription(), &m_vertexDecl );
    if ( FAILED( res ) )
    {
-      throw std::logic_error("Can't create a vertex declaration");
+      ASSERT_MSG( false, "Can't create a vertex declaration" );
+      return;
    }
 }
 

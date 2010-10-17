@@ -1,5 +1,5 @@
 #include "core\File.h"
-#include <stdexcept>
+#include "core\Assert.h"
 #include <io.h>
 
 
@@ -40,7 +40,9 @@ File::File(const std::string& name,
    fopen_s( &m_file, name.c_str(), openModeStr.c_str() );
    if (m_file == NULL)
    {
-      throw std::runtime_error(std::string("Can't open file ") + name);
+      std::string errorMsg = std::string( "Can't open file " ) + name;
+      ASSERT_MSG( false, errorMsg.c_str() );
+      throw std::runtime_error( errorMsg );
    }
 }
 
@@ -122,9 +124,9 @@ void File::readString(char* outStrData, std::size_t size)
 
 void File::writeString(const char* strData)
 {
-   if (fputs(strData, m_file) == EOF)
+   if ( fputs(strData, m_file) == EOF )
    {
-      throw std::runtime_error("Can't write a string to a file");
+      ASSERT_MSG( false, "Can't write a string to a file" );
    }
 }
 
@@ -153,9 +155,9 @@ std::size_t File::size() const
 
 void File::setSize(std::size_t newSize)
 {
-   if (_chsize(m_file->_file, newSize) != 0)
+   if ( _chsize(m_file->_file, newSize) != 0 )
    {
-      throw std::runtime_error("Couldn't resize a file");
+      ASSERT_MSG( false, "Couldn't resize a file" );
    }
 }
 

@@ -37,7 +37,7 @@ void SceneQueries::initialize( TamyEditor& mgr )
 
    // create the texture to which the snapshot of a scene will be made
    Renderer& renderer = mgr.requestService< Renderer >();
-   m_sceneSnapshot = new RenderTarget( &renderer, true, Color( 0, 0, 0, 0 ) );
+   m_sceneSnapshot = new RenderTarget( new RTSPDynamic( renderer ), TU_COLOR, true, Color( 0, 0, 0, 0 ) );
 
    // register a rendering pass
    CompositeRenderingMechanism& compRenderingMech = mgr.requestService< CompositeRenderingMechanism >();

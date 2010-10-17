@@ -51,7 +51,9 @@ void VertexShader::onResourceLoaded( ResourcesManager& mgr )
       File* file = fs.open( scriptPath, std::ios_base::in | std::ios_base::binary );
       if (file == NULL)
       {
-         throw std::invalid_argument("HLSL vertex shader file doesn't exist");
+         std::string errorMsg = std::string( "HLSL vertex shader file " ) + scriptPath + " doesn't exist";
+         ASSERT_MSG( false, errorMsg.c_str() );
+         return;
       }
       StreamBuffer<byte> buf(*file);
 

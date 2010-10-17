@@ -5,6 +5,7 @@
 ///         additional visual information
 
 #include <vector>
+#include "core-Renderer/RenderingMechanism.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,6 +17,7 @@ class Camera;
 class LineSegments;
 class Geometry;
 class SpatialEntity;
+class SceneRenderingPass;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,20 +25,22 @@ typedef unsigned int DebugHandle;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class DebugRenderer
+class DebugRenderer : public RenderingMechanism
 {
 private:
-   Renderer&                        m_renderer;
+   Renderer*                        m_renderer;
    ResourcesManager&                m_resMgr;
    Camera&                          m_camera;
    Model*                           m_localModel;
+
+   SceneRenderingPass*              m_renderingPass;
 
    // entities
    std::vector< SpatialEntity* >    m_entities;
    std::vector< DebugHandle >       m_freeHandles;
 
 public:
-   DebugRenderer( Renderer& renderer, ResourcesManager& resMgr, Camera& camera );
+   DebugRenderer( ResourcesManager& resMgr, Camera& camera );
    ~DebugRenderer();
 
    /**
@@ -59,8 +63,14 @@ public:
     */
    void stopDrawing( DebugHandle handle );
 
+   // -------------------------------------------------------------------------
+   // RenderingMEchanism implementation
+   // -------------------------------------------------------------------------
+   void initialize( Renderer& renderer );
+   void render();
+
 private:
-   LineSegments* createGrid() const;
+   LineSegments* createGrid( Renderer* renderer ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

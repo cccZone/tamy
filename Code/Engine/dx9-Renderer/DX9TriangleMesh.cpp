@@ -110,15 +110,7 @@ void DX9TriangleMesh::initialize(Renderer& renderer)
    }
    dxMesh->UnlockIndexBuffer();
    dxMesh->UnlockAttributeBuffer();
-   /*
-   if (trianglesCount > 2)
-   {
-      DWORD *adjacency = new DWORD[ dxMesh->GetNumFaces() * 3 ];
-      dxMesh->GenerateAdjacency( 0.001f, adjacency );
-      dxMesh->OptimizeInplace( D3DXMESHOPT_VERTEXCACHE, adjacency, NULL, NULL, NULL );
-      delete [] adjacency;
-   }
-   */
+  
    delete vertices;
 
    // copy the buffers

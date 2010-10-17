@@ -45,13 +45,13 @@ struct LitVertex
 
 struct VertexWeight
 {
-   D3DXVECTOR3          m_weights;
+   D3DXVECTOR4          m_weights;
    D3DXVECTOR4          m_indices;
 
    static DWORD FVF;
 
    VertexWeight()
-      : m_weights( 0, 0, 0 )
+      : m_weights( 0, 0, 0, 0 )
       , m_indices( -1, -1, -1, -1 )
    {
    }

@@ -100,15 +100,7 @@ void Skeleton::addWeight( unsigned int vertexIdx, const std::string& boneId, flo
       }
    }
    ASSERT_MSG( nextIdx < 4, "Too many skin weights assigned" );
-   if ( nextIdx >= 4 )
-   {
-      nextIdx = 3; // let's overwrite the last weight
-   }
-
-   if ( nextIdx < 3 )
-   {
-      m_weights[ vertexIdx ].m_weights[ nextIdx ] = weight;
-   }
+   m_weights[ vertexIdx ].m_weights[ nextIdx ] = weight;
    m_weights[ vertexIdx ].m_indices[ nextIdx ] = (float)boneIdx;
 }
 

@@ -57,6 +57,9 @@
     <ClCompile Include="DX9PixelShader.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="DX9FullscreenQuad.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">
@@ -98,6 +101,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShader.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9FullscreenQuad.h">
+      <Filter>Geometry</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

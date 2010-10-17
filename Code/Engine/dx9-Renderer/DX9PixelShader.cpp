@@ -2,6 +2,7 @@
 #include "dx9-Renderer\DX9Renderer.h"
 #include "core-Renderer\ShaderTexture.h"
 #include "core\File.h"
+#include "core\Assert.h"
 #include "dx9-Renderer\DXErrorParser.h"
 #include <stdexcept>
 
@@ -41,9 +42,10 @@ DX9PixelShader::~DX9PixelShader()
 void DX9PixelShader::initialize( Renderer& renderer )
 {
    m_renderer = dynamic_cast< DX9Renderer* >( &renderer );
+   ASSERT_MSG( m_renderer != NULL, "This implementation can work only with DX9Renderer" );
    if ( m_renderer == NULL )
    {
-      throw std::runtime_error( "This implementation can work only with DX9Renderer" );
+      return;
    }
 
    if ( m_dxPixelShader != NULL )
@@ -81,7 +83,7 @@ void DX9PixelShader::initialize( Renderer& renderer )
       shaderContents.length(),
       NULL,                            // defines
       NULL,                            // includes
-      "main",                          // entry function
+      m_shader.getEntryFunctionName().c_str(),
       shaderProfile, 
       flags,
       &shaderBuf, 
@@ -94,11 +96,14 @@ void DX9PixelShader::initialize( Renderer& renderer )
       {
          std::string compilationErrors = ( const char* )errorsBuf->GetBufferPointer();
          errorsBuf->Release();
-         throw std::runtime_error( std::string( "Shader compilation error: " ) + compilationErrors );
+         std::string errMsg = std::string( "Shader compilation error: " ) + compilationErrors;
+         ASSERT_MSG( false, errMsg.c_str() );
+         throw std::runtime_error( errMsg );
       }
       else
       {
          std::string errMsg = translateDxError( "Error while compiling a shader", res );
+         ASSERT_MSG( false, errMsg.c_str() );
          throw std::runtime_error( errMsg );
       }
    }
@@ -108,6 +113,7 @@ void DX9PixelShader::initialize( Renderer& renderer )
    if ( FAILED(res) )
    {
       std::string errMsg = translateDxError( "Error while creating a shader", res );
+      ASSERT_MSG( false, errMsg.c_str() );
       throw std::runtime_error( errMsg );
    }
 }
@@ -120,6 +126,29 @@ void DX9PixelShader::setBool( const char* paramName, bool val )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       m_shaderConstants->SetBool( m_d3Device, hConstant, val );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9PixelShader::setFloat( const char* paramName, float val )
+{
+   if ( m_shaderConstants && m_d3Device )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      m_shaderConstants->SetFloat( m_d3Device, hConstant, val );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9PixelShader::setFloatArray( const char* paramName, float* valsArr, unsigned int size )
+{
+   if ( m_shaderConstants && m_d3Device )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      HRESULT res = m_shaderConstants->SetFloatArray( m_d3Device, hConstant, valsArr, size );
+      ASSERT( SUCCEEDED( res ) );
    }
 }
 
@@ -154,6 +183,18 @@ void DX9PixelShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       m_shaderConstants->SetVector( m_d3Device, hConstant, &vec );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9PixelShader::setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size )
+{
+   if ( m_shaderConstants && m_d3Device )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      HRESULT res = m_shaderConstants->SetVectorArray( m_d3Device, hConstant, vecArr, size );
+      ASSERT( SUCCEEDED( res ) );
    }
 }
 

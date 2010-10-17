@@ -175,7 +175,7 @@ void MaterialEditor::loadFromFile()
 
    // once the file is open, extract the directory name
    std::string fileName = fs.toRelativePath( fullFileName.toStdString() );
-   m_shader.loadFromFile( fs, fileName );
+   m_shader.loadFromFile( fs, fileName, "main" );
 
    m_ui.scriptEditor->setPlainText( m_shader.getScript().c_str() );
 }

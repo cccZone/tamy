@@ -17,6 +17,92 @@
 
 class Renderer;
 enum RendererOps;
+class RenderTargetImpl;
+class RenderTargetSizePolicy;
+enum TextureFormat;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A special kind of texture which a renderer uses as an output.
+ */
+class RenderTarget : public TRendererObject< RenderTargetImpl >, 
+                     public UniqueObject,
+                     public ShaderTexture
+{
+   DECLARE_RTTI_CLASS
+
+private:
+   RenderTargetSizePolicy*       m_sizePolicy;
+   TextureUsage                  m_usage;
+   bool                          m_isReadable;
+   Color                         m_bgColor;
+
+   unsigned int                  m_width;
+   unsigned int                  m_height;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param sizePolicy    size policy
+    * @param usage         render target usage
+    * @param isReadable    tells if we can perform reading operations on the texture
+    * @param bgColor       color the background of the target should be filled with
+    */
+   RenderTarget( RenderTargetSizePolicy* sizePolicy = NULL, TextureUsage usage = TU_COLOR, bool isReadable = false, const Color& bgColor = Color( 0.f, 0.f, 0.f, 0.f ) );
+   ~RenderTarget();
+
+   /**
+    * Returns a pointer to the platform specific implementation
+    * of the texture.
+    *
+    * Only the implementation will know what to do with it.
+    *
+    * @return     pointer to impl-specific texture structure
+    */
+   void* getPlatformSpecific() const;
+
+   /**
+    * Returns the width of the texture.
+    */
+   inline unsigned int getWidth() const { return m_width; }
+
+   /**
+    * Returns the height of the texture.
+    */
+   inline unsigned int getHeight() const { return m_height; }
+
+   /**
+    * Sets the new size of the render target.
+    */
+   inline void resize( unsigned int width, unsigned int height ) { m_width = width; m_height = height; }
+
+   /**
+    * Returns the render target usage.
+    */
+   inline TextureUsage getUsage() const { return m_usage; }
+
+   /**
+    * Tells if the texture supports reading operation.
+    */
+   inline bool isReadable() const { return m_isReadable; }
+
+   /**
+    * Returns the color the target's background should be filled with
+    * when it's being cleaned.
+    */
+   inline const Color& getBackgroundColor() const { return m_bgColor; }
+
+   /**
+    * Returns the color of the specified pixel.
+    *
+    * @throw std::logic_error    if the texture doesn't support reading operation
+    *
+    * @param pos     pixel position
+    */
+   Color getPixel( const D3DXVECTOR2& pos ) const;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -46,78 +132,69 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A special kind of texture which a renderer uses as an output.
+ * Size policy scales a render target.
  */
-class RenderTarget : public TRendererObject< RenderTargetImpl >, 
-                     public UniqueObject,
-                     public ShaderTexture,
-                     public Observer< Renderer, RendererOps >
+class RenderTargetSizePolicy
 {
-   DECLARE_RTTI_CLASS
+public:
+   virtual ~RenderTargetSizePolicy() {}
 
+   /**
+    * Initializes the policy.
+    *
+    * @param target        host render target
+    */
+   virtual void initialize( RenderTarget& target ) = 0;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Dynamically adjusts render target's size to the size of an active viewport
+ */
+class RTSPDynamic : public RenderTargetSizePolicy, public Observer< Renderer, RendererOps >
+{
 private:
-   Renderer*      m_renderer;
+   Renderer&         m_renderer;
+   float             m_widthScale;
+   float             m_heightScale;
 
-   unsigned int   m_width;
-   unsigned int   m_height;
-   bool           m_isReadable;
-   Color          m_bgColor;
+   RenderTarget*     m_hostTarget;
 
 public:
-   /**
-    * Constructor.
-    *
-    * @param renderer
-    * @param isReadable    tells if we can perform reading operations on the texture
-    */
-   RenderTarget( Renderer* renderer = NULL, bool isReadable = false, const Color& bgColor = Color( 0.f, 0.f, 0.f, 0.f ) );
-   ~RenderTarget();
+   RTSPDynamic( Renderer& renderer, float widthScale = 1.f, float heightScale = 1.f );
+   ~RTSPDynamic();
 
-   /**
-    * Returns a pointer to the platform specific implementation
-    * of the texture.
-    *
-    * Only the implementation will know what to do with it.
-    *
-    * @return     pointer to impl-specific texture structure
-    */
-   void* getPlatformSpecific() const;
-
-   /**
-    * Returns the width of the texture.
-    */
-   inline unsigned int getWidth() const { return m_width; }
-
-   /**
-    * Returns the height of the texture.
-    */
-   inline unsigned int getHeight() const { return m_height; }
-
-   /**
-    * Tells if the texture supports reading operation.
-    */
-   inline bool isReadable() const { return m_isReadable; }
-
-   /**
-    * Returns the color the target's background should be filled with
-    * when it's being cleaned.
-    */
-   inline const Color& getBackgroundColor() const { return m_bgColor; }
-
-   /**
-    * Returns the color of the specified pixel.
-    *
-    * @throw std::logic_error    if the texture doesn't support reading operation
-    *
-    * @param pos     pixel position
-    */
-   Color getPixel( const D3DXVECTOR2& pos ) const;
+   // -------------------------------------------------------------------------
+   // RenderTargetSizePolicy implementation
+   // -------------------------------------------------------------------------
+   void initialize( RenderTarget& target );
 
    // -------------------------------------------------------------------------
    // Renderer observer implementation
    // -------------------------------------------------------------------------
    void update(Renderer& renderer);
    void update(Renderer& renderer, const RendererOps& operation);
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Defines a single size for the render target.
+ */
+class RTSPStatic : public RenderTargetSizePolicy
+{
+private:
+   unsigned int      m_width;
+   unsigned int      m_height;
+
+public:
+   RTSPStatic( unsigned int width, unsigned int height );
+
+   // -------------------------------------------------------------------------
+   // RenderTargetSizePolicy implementation
+   // -------------------------------------------------------------------------
+   void initialize( RenderTarget& target );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
