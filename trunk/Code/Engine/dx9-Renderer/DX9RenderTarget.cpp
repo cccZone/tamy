@@ -165,7 +165,7 @@ void DX9RenderTarget::update( DX9Renderer& renderer, const DX9GraphResourceOp& o
 void DX9RenderTarget::createTexture( DX9Renderer& renderer )
 {
    // create the texture
-   D3DFORMAT texFormat = renderer.getOptimalTextureFormat();
+   D3DFORMAT texFormat = renderer.getOptimalTextureFormat( m_renderTarget.getUsage() );
    unsigned int width = m_renderTarget.getWidth();
    unsigned int height = m_renderTarget.getHeight();
 

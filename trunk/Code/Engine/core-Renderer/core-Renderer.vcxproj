@@ -83,6 +83,8 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="FullscreenQuad.cpp" />
+    <ClCompile Include="HDRPipeline.cpp" />
     <ClCompile Include="RenderingPass.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="SceneRenderingPass.cpp" />
@@ -126,6 +128,9 @@
     <ClCompile Include="VisibilityPass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\FinalPass.psh" />
+    <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\Luminance.psh" />
+    <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\Postprocess.psh" />
     <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh" />
     <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx" />
     <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh" />
@@ -139,6 +144,8 @@
     <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\HDRPipeline.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Renderable.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />

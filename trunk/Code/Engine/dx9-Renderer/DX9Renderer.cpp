@@ -25,30 +25,27 @@
 #include "dx9-Renderer\DX9PixelShader.h"
 #include "core-Renderer\Skeleton.h"
 #include "dx9-Renderer\DX9Skeleton.h"
+#include "core-Renderer\FullscreenQuad.h"
+#include "dx9-Renderer\DX9FullscreenQuad.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 
-DX9Renderer::DX9Renderer(IDirect3DDevice9* d3Device, 
-                         D3DPRESENT_PARAMETERS creationParams,
-                         D3DCAPS9 caps,
-                         UINT frontBufferWidth,
-                         UINT frontBufferHeight,
-                         bool hardwareTLOn,
-                         D3DFORMAT optimalTextureFormat)
-      : Renderer(frontBufferWidth, frontBufferHeight),
-      m_d3Device(d3Device),
-      m_creationParams(creationParams),
-      m_caps(caps),
-      m_deviceLost(false),
-      m_hardwareTLOn(hardwareTLOn),
-      m_maxLights(255),
-      m_optimalTextureFormat(optimalTextureFormat)
+DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
+                          IDirect3DDevice9* d3Device, 
+                          const DX9Settings& settings,
+                          D3DPRESENT_PARAMETERS creationParams,
+                          UINT frontBufferWidth,
+                          UINT frontBufferHeight,
+                          bool hardwareTLOn)
+      : Renderer(frontBufferWidth, frontBufferHeight)
+      , m_d3d9( d3d9 )
+      , m_d3Device(d3Device)
+      , m_settings( settings )
+      , m_creationParams(creationParams)
+      , m_deviceLost(false)
+      , m_hardwareTLOn(hardwareTLOn)
 {
-   if (m_hardwareTLOn)
-   {
-      m_maxLights = m_caps.MaxActiveLights;
-   }
-
    m_viewport.X = 0;
    m_viewport.Y = 0;
    m_viewport.Width = frontBufferWidth;
@@ -67,6 +64,10 @@ DX9Renderer::DX9Renderer(IDirect3DDevice9* d3Device,
    associate< VertexShader, DX9VertexShader > ();
    associate< PixelShader, DX9PixelShader > ();
    associate< Skeleton, DX9Skeleton > ();
+   associate< FullscreenQuad, DX9FullscreenQuad > ();
+
+   // sample texture formats
+   sampleOptimalTextureFormats();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -85,7 +86,7 @@ DX9Renderer::~DX9Renderer()
 void DX9Renderer::initRenderer()
 {
    // Setup our D3D Device initial states
-   m_d3Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);//D3DCULL_CCW);
+   m_d3Device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
    m_d3Device->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
    m_d3Device->SetViewport(&m_viewport);
@@ -223,23 +224,6 @@ void DX9Renderer::cleanRenderTarget( const Color& bgColor )
 
 /////////////////////////////////////////////////////////////////////////////
 
-UINT DX9Renderer::getMaxLightsCount() const
-{
-   return m_maxLights;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
-UINT DX9Renderer::getSimultaneouslyRenderedTexturesCount() const
-{
-   UINT count = m_caps.MaxSimultaneousTextures;
-   if (count > m_caps.MaxTextureBlendStages) count = m_caps.MaxTextureBlendStages;
-
-   return count;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-
 IDirect3DVertexBuffer9* DX9Renderer::createVertexBuffer(UINT length, 
                                                         DWORD usageFlags, 
                                                         DWORD fvf, 
@@ -293,6 +277,49 @@ IDirect3DIndexBuffer9* DX9Renderer::createIndexBuffer(UINT length,
    }
 
    return indexBuffer;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+const D3DFORMAT g_ColorTextureFormats[] = { D3DFMT_DXT5, D3DFMT_DXT3, D3DFMT_X8R8G8B8, D3DFMT_DXT1, D3DFMT_X1R5G5B5, D3DFMT_R5G6B5, D3DFMT_UNKNOWN };
+const D3DFORMAT g_DepthTextureFormats[] = { D3DFMT_D32, D3DFMT_D24S8, D3DFMT_D24X8, D3DFMT_D24X4S4, D3DFMT_D16, D3DFMT_UNKNOWN };
+const D3DFORMAT g_LuminanceTextureFormats[] = { D3DFMT_G32R32F, D3DFMT_G16R16F, D3DFMT_UNKNOWN };
+const D3DFORMAT g_HDRTextureFormats[] = { D3DFMT_A32B32G32R32F, D3DFMT_A16B16G16R16F, D3DFMT_UNKNOWN };
+
+const D3DFORMAT* g_textureFormats[] =
+{
+   g_ColorTextureFormats,           // TU_COLOR
+   g_DepthTextureFormats,           // TU_DEPTH
+   g_LuminanceTextureFormats,       // TU_LUMINANCE 
+   g_HDRTextureFormats,             // TU_HDR
+};
+
+void DX9Renderer::sampleOptimalTextureFormats()
+{
+   for ( UINT usage = 0; usage < TU_MAX; ++usage )
+   {
+      const D3DFORMAT* formats = g_textureFormats[ usage ];
+
+      UINT i = 0;
+      D3DFORMAT bestFormat = D3DFMT_UNKNOWN;
+      for ( UINT i = 0; formats[i] != D3DFMT_UNKNOWN; ++i )
+      {
+         HRESULT res = m_d3d9.CheckDeviceFormat( m_settings.adapterOrdinal, 
+            m_settings.deviceType, 
+            m_settings.displayMode.Format,
+            0, D3DRTYPE_TEXTURE, 
+            formats[i] );
+
+         if ( SUCCEEDED( res ) )
+         {
+            bestFormat = formats[i];
+            break;
+         }
+      }
+
+      ASSERT_MSG( bestFormat != D3DFMT_UNKNOWN, "No dedicated texture format found for this usage." );
+      m_bestTextureFormats[usage] = bestFormat;
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////

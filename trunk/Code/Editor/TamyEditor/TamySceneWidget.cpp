@@ -73,9 +73,9 @@ TamySceneWidget::~TamySceneWidget()
 {
    m_scene = NULL;
    m_renderingMech = NULL;
+   m_debugRenderer = NULL;
 
    m_renderer->setMechanism( NULL );
-   delete m_debugRenderer; m_debugRenderer = NULL;
 
    delete m_keysStatusManager; m_keysStatusManager = NULL;
 
@@ -109,7 +109,7 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
 
 
    // create a debug renderer
-   m_debugRenderer = new DebugRenderer( *m_renderer, *m_resMgr, *m_camera );
+   m_debugRenderer = new DebugRenderer( *m_resMgr, *m_camera );
 
    // register new services
    mgr.registerService< Renderer >( *this, *m_renderer );
@@ -123,6 +123,10 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
    m_resMgr->addComponent( m_rendererComponent );
 
    createRenderer( mgr );
+   
+   // add the debug info renderer
+   m_renderingMech->add( "debugRenderer", m_debugRenderer );
+
    setupTimeController( mgr );
 }
 
@@ -154,26 +158,21 @@ void TamySceneWidget::setupTimeController( TamyEditor& mgr )
 
 void TamySceneWidget::createRenderer( TamyEditor& mgr )
 {
-   // create a rendering mechanism
-   VisibilityPass* visiblityPass = new VisibilityPass( *m_camera );
-   SceneRenderingPass* renderingPass = new SceneRenderingPass();
-   m_renderingMech->add( "sceneVisibility", visiblityPass );
-   m_renderingMech->add( "sceneRendering", renderingPass );
-
-   if ( mgr.hasService< Model >() )
+   // HDR 
    {
-      m_scene = &mgr.requestService< Model >();
-      visiblityPass->addScene( *m_scene );
-      renderingPass->addScene( *m_scene );
-   }
-   else
-   {
-      m_scene = NULL;
+      HDRPipeline* hdrPipeline = new HDRPipeline( *m_resMgr, *m_camera );
+      m_renderingMech->add( "hdr", hdrPipeline );
+      if ( mgr.hasService< Model >() )
+      {
+         m_scene = &mgr.requestService< Model >();
+         hdrPipeline->addScene( *m_scene );
+      }
+      else
+      {
+         m_scene = NULL;
+      }
    }
 
-   // renderer the debug info
-   visiblityPass->addScene( m_debugRenderer->getModel() );
-   renderingPass->addScene( m_debugRenderer->getModel() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

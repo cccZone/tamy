@@ -82,6 +82,12 @@
     <Filter Include="Effects\Resources">
       <UniqueIdentifier>{9885c467-2a83-46d5-b474-1a1573c3059d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderers">
+      <UniqueIdentifier>{9b46f48d-dd62-4541-a1d5-88ec2aa760a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderers\HDR">
+      <UniqueIdentifier>{a844b996-76fd-4f98-9e06-85837df10072}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -207,6 +213,12 @@
     <ClCompile Include="EffectShader.cpp">
       <Filter>Effects\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="HDRPipeline.cpp">
+      <Filter>Renderers\HDR</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenQuad.cpp">
+      <Filter>Geometry\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -241,6 +253,15 @@
     </None>
     <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
       <Filter>Materials\Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\Postprocess.psh">
+      <Filter>Renderers\HDR</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\Luminance.psh">
+      <Filter>Renderers\HDR</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\FinalPass.psh">
+      <Filter>Renderers\HDR</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -374,9 +395,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h">
       <Filter>Geometry\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h">
-      <Filter>Geometry\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\GeometryResource.h">
       <Filter>Geometry\Resources</Filter>
     </ClInclude>
@@ -430,6 +448,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\EffectShader.h">
       <Filter>Effects\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h">
+      <Filter>Geometry\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\HDRPipeline.h">
+      <Filter>Renderers\HDR</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h">
+      <Filter>Geometry\Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

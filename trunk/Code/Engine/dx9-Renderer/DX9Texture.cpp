@@ -33,7 +33,7 @@ void DX9Texture::initialize(Renderer& renderer)
    }
 
    // create the texture
-   D3DFORMAT texFormat = dxRenderer->getOptimalTextureFormat();
+   D3DFORMAT texFormat = dxRenderer->getOptimalTextureFormat( TU_COLOR );
    HRESULT res;
 
    byte* imageBuffer = NULL;

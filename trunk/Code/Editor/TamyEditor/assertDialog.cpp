@@ -26,7 +26,7 @@ AssertDialog::AssertDialog( const char* msg, AssertionHandle& assertHandle )
 
 void AssertDialog::onBreak()
 {
-   exit( 0 );
+   __asm int 3;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

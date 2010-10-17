@@ -9,6 +9,7 @@ enum VertexDescId
 {
    VDI_SIMPLE,
    VDI_SIMPLE_SKINNING,
+   VDI_SIMPLE_SCREENSPACE,
    VDI_MAX,
 };
 
