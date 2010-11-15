@@ -62,14 +62,14 @@ TamyEditor::~TamyEditor()
 
 void TamyEditor::addToMainWidget(QWidget* widget)
 {
-   ui.renderWindow->layout()->addWidget(widget);
+   ui.renderWindow->layout()->addWidget( widget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TamyEditor::removeFromMainWidget(QWidget& widget)
 {
-   ui.renderWindow->layout()->removeWidget(&widget);
+   ui.renderWindow->layout()->removeWidget( &widget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

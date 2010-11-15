@@ -9,6 +9,8 @@
 #include "core\Filesystem.h"
 
 
+// TODO: !!!!!!!! jak tylko bedzie mozliwoc edytowania pipeline'u, zdebugowac dlaczego HDR szaleje
+
 ///////////////////////////////////////////////////////////////////////////////
 
 HDRPipeline::HDRPipeline( ResourcesManager& rm, Camera& camera )
@@ -31,10 +33,10 @@ HDRPipeline::HDRPipeline( ResourcesManager& rm, Camera& camera )
    , m_hdrFinalPass( NULL )
    , m_fullscreenQuad( NULL )
    , m_brightThreshold( 0.8f )
-   , m_gaussMultiplier( 0.4f )
+   , m_gaussMultiplier( 2.04f )
    , m_gaussMean( 0.0f )
    , m_gaussStdDev( 0.8f )
-   , m_exposure( 0.5f )
+   , m_exposure( 0.8f )
    , m_luminanceStepsCount( 6 )
 {
 }

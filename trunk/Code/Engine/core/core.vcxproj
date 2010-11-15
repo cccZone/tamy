@@ -140,8 +140,6 @@
     <ClInclude Include="..\..\Include\core\Observer.h" />
     <ClInclude Include="..\..\Include\core\Subject.h" />
     <ClInclude Include="..\..\Include\core\GraphBFS.h" />
-    <ClInclude Include="..\..\Include\core\GraphBuilder.h" />
-    <ClInclude Include="..\..\Include\core\GraphBuilderFactory.h" />
     <ClInclude Include="..\..\Include\core\GraphDijkstra.h" />
     <ClInclude Include="..\..\Include\core\GenericFactory.h" />
     <ClInclude Include="..\..\Include\core\SpatialStorage.h" />
@@ -201,7 +199,6 @@
     <None Include="..\..\Include\core\ConstSizeArray.inl" />
     <None Include="..\..\Include\core\Graph.inl" />
     <None Include="..\..\Include\core\GraphBFS.inl" />
-    <None Include="..\..\Include\core\GraphBuilder.inl" />
     <None Include="..\..\Include\core\GraphDijkstra.inl" />
     <None Include="..\..\Include\core\GenericFactory.inl" />
     <None Include="..\..\Include\core\AdaptingSpatialStorage.inl" />

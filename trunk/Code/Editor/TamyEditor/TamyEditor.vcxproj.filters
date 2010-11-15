@@ -112,6 +112,12 @@
     <Filter Include="ResourceEditors\MaterialEditor">
       <UniqueIdentifier>{01274f29-65ff-44c8-a660-7a2d3ecb06f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\RenderingPipelineEditor">
+      <UniqueIdentifier>{26961b85-6645-4ae9-aea3-210da473364f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\GraphWidget">
+      <UniqueIdentifier>{afad0961-9279-47d6-b5e5-dcc717807671}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -212,6 +218,12 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_assertdialog.h">
       <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_renderingpipelineeditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphBlock.h">
+      <Filter>Widgets\GraphWidget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -461,6 +473,21 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_assertDialog.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="GraphWidget.cpp">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphBlock.cpp">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_GraphWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingPipelineEditor.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_RenderingPipelineEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -483,6 +510,9 @@
     </None>
     <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.psh">
       <Filter>Components\SelectionManager\Representations</Filter>
+    </None>
+    <None Include="GraphWidget.inl">
+      <Filter>Widgets\GraphWidget</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -583,6 +613,15 @@
       <Filter>Core</Filter>
     </CustomBuild>
     <CustomBuild Include="assertdialog.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GraphWidget.h">
+      <Filter>Widgets\GraphWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="RenderingPipelineEditor.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="renderingpipelineeditor.ui">
       <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
   </ItemGroup>

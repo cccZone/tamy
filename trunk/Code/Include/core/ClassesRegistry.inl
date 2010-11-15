@@ -53,15 +53,7 @@ void ClassesRegistry::getClassesMatchingType( std::vector< Class >& outClasses, 
    TypeID< ClassType > classType;
    Class refClass = getClassByHandle( classType.hash() );
 
-   unsigned int count = m_classes.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      Class testedClass( *m_classes[i] );
-      if ( refClass.isA( testedClass ) && ( includeAbstract || !testedClass.isAbstract() ) )
-      {
-         outClasses.push_back( testedClass );
-      }
-   }
+   getClassesMatchingType( refClass, outClasses, includeAbstract );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

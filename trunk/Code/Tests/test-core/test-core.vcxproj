@@ -107,7 +107,6 @@
     <ClCompile Include="ConstSizeArrayTests.cpp" />
     <ClCompile Include="GraphTests.cpp" />
     <ClCompile Include="GenericFactoryTests.cpp" />
-    <ClCompile Include="GraphBuilderTests.cpp" />
     <ClCompile Include="GraphDijkstraTests.cpp" />
     <ClCompile Include="MatrixInterpolatorTests.cpp" />
     <ClCompile Include="NodeActionsExecutorTests.cpp" />

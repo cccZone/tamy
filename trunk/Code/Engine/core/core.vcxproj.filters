@@ -26,9 +26,6 @@
     <Filter Include="Misc\ObserverPattern">
       <UniqueIdentifier>{db9241cd-4fae-435e-872d-d1f59656d797}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Misc\Graphs">
-      <UniqueIdentifier>{0fe037a9-ad64-41fb-9bee-c6e1721d61a4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Misc\AbstractFactoryPattern">
       <UniqueIdentifier>{5f62bb7d-3841-4554-ba21-1a411a3be78a}</UniqueIdentifier>
     </Filter>
@@ -82,6 +79,9 @@
     </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{e97b6a8d-3630-46e6-a0d6-f6ffad3f818b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataStructures\Graphs">
+      <UniqueIdentifier>{0fe037a9-ad64-41fb-9bee-c6e1721d61a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -216,9 +216,6 @@
     <ClInclude Include="..\..\Include\core\ConstSizeArray.h">
       <Filter>DataStructures</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\Graph.h">
-      <Filter>DataStructures</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\Point.h">
       <Filter>DataStructures</Filter>
     </ClInclude>
@@ -262,16 +259,10 @@
       <Filter>Misc\ObserverPattern</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\GraphBFS.h">
-      <Filter>Misc\Graphs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\GraphBuilder.h">
-      <Filter>Misc\Graphs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\GraphBuilderFactory.h">
-      <Filter>Misc\Graphs</Filter>
+      <Filter>DataStructures\Graphs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\GraphDijkstra.h">
-      <Filter>Misc\Graphs</Filter>
+      <Filter>DataStructures\Graphs</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\GenericFactory.h">
       <Filter>Misc\AbstractFactoryPattern</Filter>
@@ -433,6 +424,9 @@
     <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\Graph.h">
+      <Filter>DataStructures\Graphs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">
@@ -441,17 +435,11 @@
     <None Include="..\..\Include\core\ConstSizeArray.inl">
       <Filter>DataStructures</Filter>
     </None>
-    <None Include="..\..\Include\core\Graph.inl">
-      <Filter>DataStructures</Filter>
-    </None>
     <None Include="..\..\Include\core\GraphBFS.inl">
-      <Filter>Misc\Graphs</Filter>
-    </None>
-    <None Include="..\..\Include\core\GraphBuilder.inl">
-      <Filter>Misc\Graphs</Filter>
+      <Filter>DataStructures\Graphs</Filter>
     </None>
     <None Include="..\..\Include\core\GraphDijkstra.inl">
-      <Filter>Misc\Graphs</Filter>
+      <Filter>DataStructures\Graphs</Filter>
     </None>
     <None Include="..\..\Include\core\GenericFactory.inl">
       <Filter>Misc\AbstractFactoryPattern</Filter>
@@ -533,6 +521,9 @@
     </None>
     <None Include="..\..\Include\core\ResourceStorage.inl">
       <Filter>Resources</Filter>
+    </None>
+    <None Include="..\..\Include\core\Graph.inl">
+      <Filter>DataStructures\Graphs</Filter>
     </None>
   </ItemGroup>
 </Project>
