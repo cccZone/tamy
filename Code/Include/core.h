@@ -23,9 +23,14 @@
 #include "core\Array.h"
 #include "core\ConstSizeArray.h"
 #include "core\CellSpacePartition.h"
-#include "core\Graph.h"
 #include "core\Point.h"
 #include "core\Stack.h"
+// ----------------------------------------------------------------------------
+// -->Graphs
+// ----------------------------------------------------------------------------
+#include "core\Graph.h"
+#include "core\GraphBFS.h"
+#include "core\GraphDijkstra.h"
 
 // ----------------------------------------------------------------------------
 // Delegates
@@ -60,10 +65,6 @@
 // Misc
 // ----------------------------------------------------------------------------
 #include "core\GenericFactory.h"
-#include "core\GraphBFS.h"
-#include "core\GraphBuilder.h"
-#include "core\GraphBuilderFactory.h"
-#include "core\GraphDijkstra.h"
 #include "core\Observer.h"
 #include "core\Subject.h"
 #include "core\Assert.h"

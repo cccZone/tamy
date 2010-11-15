@@ -22,6 +22,7 @@
 // editors
 #include "SceneEditor.h"
 #include "MaterialEditor.h"
+#include "RenderingPipelineEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,6 +52,7 @@ void ResourcesBrowser::initializeEditors()
 {
    associate< Model, SceneEditor >();
    associate< PixelShader, MaterialEditor >();
+   associate< RenderingPipeline, RenderingPipelineEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

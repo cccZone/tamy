@@ -8,7 +8,6 @@
 #include "core/Resource.h"
 #include <d3dx9.h>
 
-// TODO: !!!!!!!!!!!! Entity do ktorego mozna podlaczac ten konfigurowalny shader
 
 ///////////////////////////////////////////////////////////////////////////////
 

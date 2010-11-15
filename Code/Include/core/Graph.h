@@ -37,6 +37,8 @@ private:
     std::vector<EdgeIndices> m_graphRepr;
 
 public:
+    virtual ~Graph() {}
+
     /**
      * Adds a new node to the graph.
      *

@@ -219,6 +219,9 @@
     <ClCompile Include="FullscreenQuad.cpp">
       <Filter>Geometry\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="RenderingPipeline.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -457,6 +460,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h">
       <Filter>Geometry\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -12,6 +12,7 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
+#include "core-Renderer\RenderingPipeline.h"
 
 // ----------------------------------------------------------------------------
 // Effects

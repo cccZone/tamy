@@ -93,6 +93,18 @@ public:
     */
    template< typename ClassType >
    void getClassesMatchingType( std::vector< Class >& outClasses, bool includeAbstract = false );
+
+   /**
+    * This method creates a list of all classes that can be substituted
+    * dynamically cast to the specified class type.
+    *
+    * @throw std::out_of_range   if the class hasn't been registered
+    *
+    * @param ClassType        class type
+    * @param includeAbstract  includes abstract classes in the results
+    * @param outClasses       results
+    */
+   void getClassesMatchingType( Class refClass, std::vector< Class >& outClasses, bool includeAbstract = false );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

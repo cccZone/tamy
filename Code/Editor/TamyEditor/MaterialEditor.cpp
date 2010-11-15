@@ -38,7 +38,7 @@ void MaterialEditor::initialize( TamyEditor& mgr )
    ASSERT( m_resourceMgr != NULL );
    ASSERT( m_renderer != NULL );
 
-   m_ui.setupUi(this);
+   m_ui.setupUi( this );
    m_highlighter = new MaterialSyntaxHighlighter( m_ui.scriptEditor->document() );
 
    // set the editor up

@@ -80,9 +80,6 @@
     <ClCompile Include="GenericFactoryTests.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="GraphBuilderTests.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
     <ClCompile Include="GraphDijkstraTests.cpp">
       <Filter>Misc</Filter>
     </ClCompile>

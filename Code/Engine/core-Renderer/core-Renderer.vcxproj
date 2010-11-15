@@ -86,6 +86,7 @@
     <ClCompile Include="FullscreenQuad.cpp" />
     <ClCompile Include="HDRPipeline.cpp" />
     <ClCompile Include="RenderingPass.cpp" />
+    <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="SceneRenderingPass.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\HDRPipeline.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Renderable.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h" />
