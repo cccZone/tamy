@@ -112,6 +112,7 @@
     <ClCompile Include="Vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core\Algorithms.h" />
     <ClInclude Include="..\..\Include\core\IProgressObserver.h" />
     <ClInclude Include="..\..\Include\core\Node.h" />
     <ClInclude Include="..\..\Include\core\NodeObserver.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="..\..\Include\core.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Include\core\Algorithms.inl" />
     <None Include="..\..\Include\core\Array.inl" />
     <None Include="..\..\Include\core\ConstSizeArray.inl" />
     <None Include="..\..\Include\core\Graph.inl" />

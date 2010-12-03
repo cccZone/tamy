@@ -24,6 +24,9 @@
 #include "MaterialEditor.h"
 #include "RenderingPipelineEditor.h"
 
+// resources
+#include "RenderingPipelineLayout.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -52,7 +55,7 @@ void ResourcesBrowser::initializeEditors()
 {
    associate< Model, SceneEditor >();
    associate< PixelShader, MaterialEditor >();
-   associate< RenderingPipeline, RenderingPipelineEditor >();
+   associate< RenderingPipelineLayout, RenderingPipelineEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

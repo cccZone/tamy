@@ -79,7 +79,6 @@ void MaterialEditor::initialize( TamyEditor& mgr )
 
    // set the menu
    QString iconsDir = m_resourceMgr->getFilesystem().getShortcut( "editorIcons" ).c_str();
-   QToolBar& toolBar = mgr.getToolBar();
 
    QMenu* fileMenu = m_ui.menubar->addMenu( "File" );
    {

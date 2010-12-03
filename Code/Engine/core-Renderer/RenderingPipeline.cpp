@@ -1,10 +1,10 @@
 #include "core-Renderer/RenderingPipeline.h"
 
 
-BEGIN_RTTI(TestNode)
-END_RTTI
-BEGIN_RTTI(TestEdge)
-END_RTTI
+BEGIN_OBJECT( TestNode, Object )
+END_OBJECT()
+BEGIN_OBJECT( TestEdge, Object )
+END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 

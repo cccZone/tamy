@@ -10,7 +10,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderingPipeline;
+class RenderingPipelineLayout;
 class GraphWidget;
 class Class;
 class GraphBlock;
@@ -24,9 +24,8 @@ class RenderingPipelineEditor : public QMainWindow, public ResourceEditor
 private:
    Ui::RenderingPipelineEditorWindow         m_ui;
 
-   RenderingPipeline&                        m_renderingPipeline;
+   RenderingPipelineLayout&                  m_renderingPipelineLayout;
    GraphWidget*                              m_graphWidget;
-   bool                                      m_docModified;
 
 public:
    /**
@@ -34,7 +33,7 @@ public:
     *
     * @param renderingPipeline      pipeline to be edited
     */
-   RenderingPipelineEditor( RenderingPipeline& renderingPipeline );
+   RenderingPipelineEditor( RenderingPipelineLayout& renderingPipelineLayout );
 
    // -------------------------------------------------------------------------
    // ResourceEditor implementation
@@ -45,8 +44,6 @@ public slots:
    void save();
    void onGetNodesClasses( std::vector< Class >& classes );
    void onGetEdgesClasses( std::vector< Class >& classes );
-   void onAddNode( void* pNode );
-   void onRemoveNode( void* pNode );
    void onPopupMenuShown( QMenu& menu );
 
 protected:

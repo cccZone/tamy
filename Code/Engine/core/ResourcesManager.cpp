@@ -127,6 +127,8 @@ Resource& ResourcesManager::create( const std::string& name )
       Loader loader( new FileSerializer( file ) );
       res = &loader.load( *this );
    }
+   
+   ASSERT_MSG( res != NULL, "Resource not found" );
 
    return *res;
 }

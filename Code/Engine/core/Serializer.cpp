@@ -240,6 +240,7 @@ Resource& Loader::load( ResourcesManager& resMgr )
    count = m_dependencies.size();
    for ( unsigned int i = 1; i < count; ++i )
    {
+      ASSERT_MSG( m_dependencies[i] != NULL, "Invalid dependency found" );
       m_dependencies[ i ]->save( mapper );
    }
 

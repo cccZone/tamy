@@ -41,7 +41,6 @@ File::File(const std::string& name,
    if (m_file == NULL)
    {
       std::string errorMsg = std::string( "Can't open file " ) + name;
-      ASSERT_MSG( false, errorMsg.c_str() );
       throw std::runtime_error( errorMsg );
    }
 }
