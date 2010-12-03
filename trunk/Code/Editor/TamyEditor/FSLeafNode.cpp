@@ -53,8 +53,9 @@ void FSLeafNode::setEntrySize( const Filesystem& fs )
       fileSize = file->size();
       delete file;
    }
-   catch ( std::exception& ex)
+   catch ( std::exception& ex )
    {
+      fileSize = 0;
    }
 
    char fileSizeStr[ 32 ];

@@ -10,14 +10,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // TEMP: this is a temporary structure for now ...
-struct TestNode
+class TestNode : public Object
 {
-   DECLARE_RTTI_STRUCT
+   DECLARE_CLASS( TestNode )
 };
 
-struct TestEdge
+class TestEdge : public Object
 {
-   DECLARE_RTTI_STRUCT
+   DECLARE_CLASS( TestEdge )
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,8 +25,6 @@ struct TestEdge
 class RenderingPipeline : public Resource
 {
    DECLARE_RESOURCE( RenderingPipeline );
-
-
 
 public:
    /**

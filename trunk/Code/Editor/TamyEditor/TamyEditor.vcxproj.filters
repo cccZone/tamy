@@ -225,6 +225,12 @@
     <ClInclude Include="GraphBlock.h">
       <Filter>Widgets\GraphWidget</Filter>
     </ClInclude>
+    <ClInclude Include="GraphLayout.h">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingPipelineLayout.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -487,6 +493,12 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_RenderingPipelineEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphLayout.cpp">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingPipelineLayout.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,24 +3,23 @@
 #include <QMouseEvent>
 #include <QMenu.h>
 #include <QTimer>
-
+#include "GraphLayout.h"
 
 
 // TODO !!!!!!!!!!!!!!!! : 
-//  1.) pamietanie layout'u node'ow
-//  2.) naglowek node'a
-//  3.) ogladanie propertiesow node'a
+//  1.) naglowek node'a
+//  2.) ogladanie propertiesow node'a
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphWidget::GraphWidget( QWidget* parent )
+GraphWidget::GraphWidget( QWidget* parent, GraphLayout& layout )
    : QGraphicsView( parent )
+   , m_layout( layout )
    , m_selectionMode( SM_EXCLUSIVE )
    , m_isDraggingBlocks( false )
 {
-   m_scene = new QGraphicsScene( this );
-   setScene( m_scene );
+   setScene( &layout );
 
    m_dragTimer = new QTimer( this );
    connect( m_dragTimer, SIGNAL( timeout() ), this, SLOT( onDragTimerTimeout() ) );
@@ -30,16 +29,6 @@ GraphWidget::GraphWidget( QWidget* parent )
 
 GraphWidget::~GraphWidget()
 {
-   unsigned int count = m_blocks.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      delete m_blocks[i];
-   }
-   m_blocks.clear();
-
-   delete m_scene;
-   m_scene = NULL;
-
    delete m_dragTimer;
    m_dragTimer = NULL;
 }
@@ -48,16 +37,14 @@ GraphWidget::~GraphWidget()
 
 void GraphWidget::addNodeAction( const Class& nodeType, const QPointF& addingPos )
 {
-   void* node = nodeType.instantiate< void >();
-   emit addNode( node );
+   Object* node = nodeType.instantiate< Object >();
 
    GraphBlock* representation = createBlock( nodeType, node );
    ASSERT_MSG( representation != NULL, "Node representation was not created" );
    if ( representation )
    {
-      m_blocks.push_back( representation );
       representation->setPos( addingPos );
-      m_scene->addItem( representation );
+      m_layout.add( representation );
    }
 }
 
@@ -65,22 +52,13 @@ void GraphWidget::addNodeAction( const Class& nodeType, const QPointF& addingPos
 
 void GraphWidget::removeNodeAction( QGraphicsItem* item )
 {
-   m_scene->removeItem( item );
-
-   GraphBlock* block = dynamic_cast< GraphBlock* >( item );
-   if ( !block )
+   GraphBlock* representation = dynamic_cast< GraphBlock* >( item );
+   if ( !representation )
    {
       return;
    }
 
-   std::vector< GraphBlock* >::iterator it = std::find( m_blocks.begin(), m_blocks.end(), block );
-   ASSERT_MSG( it != m_blocks.end(), "Attempting to remove an unregistered graph block" );
-   m_blocks.erase( it );
-
-   void* node = block->getNode();
-   delete block;
-
-   emit removeNode( node );
+   m_layout.remove( representation );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,13 +66,13 @@ void GraphWidget::removeNodeAction( QGraphicsItem* item )
 void GraphWidget::handleBlockSelection( const QPointF& scenePos )
 {
    // select a block if the mouse points at any
-   QGraphicsItem* pointedBlock = m_scene->itemAt( scenePos, transform() );
+   QGraphicsItem* pointedBlock = m_layout.itemAt( scenePos, transform() );
 
    switch( m_selectionMode )
    {
    case SM_EXCLUSIVE:
       {
-         m_scene->clearSelection();
+         m_layout.clearSelection();
          if ( pointedBlock )
          {
             pointedBlock->setSelected( true );
@@ -164,13 +142,13 @@ void GraphWidget::mouseMoveEvent( QMouseEvent* event )
       // handle blocks dragging action
       QPointF dPos = mapToScene( event->pos() ) - mapToScene( m_prevMousePos );
 
-      QList< QGraphicsItem* > items = m_scene->selectedItems();
+      QList< QGraphicsItem* > items = m_layout.selectedItems();
       foreach( QGraphicsItem* item, items )
       {
          item->setPos( item->pos() + dPos );
       }
 
-      m_scene->update();
+      m_layout.update();
    }
 
    // memorize the mouse pos
@@ -217,7 +195,7 @@ void GraphWidget::showPopupMenu( const QPoint& activationPoint )
 
    QPointF scenePos = mapToScene( activationPoint );
 
-   QGraphicsItem* pointedBlock = m_scene->itemAt( scenePos, transform() );
+   QGraphicsItem* pointedBlock = m_layout.itemAt( scenePos, transform() );
    if ( pointedBlock == NULL )
    {
       // we clicked an empty spot - show a menu for adding new nodes
@@ -235,7 +213,7 @@ void GraphWidget::showPopupMenu( const QPoint& activationPoint )
    }
    
    // if there are blocks selected, show additional options
-   QList< QGraphicsItem* > selectedItems = m_scene->selectedItems();
+   QList< QGraphicsItem* > selectedItems = m_layout.selectedItems();
    if ( selectedItems.isEmpty() == false )
    {
       // an option for removing existing nodes
@@ -263,7 +241,7 @@ void GraphWidget::showPopupMenu( const QPoint& activationPoint )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphBlock* GraphWidget::createBlock( const Class& nodeType, void* node )
+GraphBlock* GraphWidget::createBlock( const Class& nodeType, Object* node )
 {
    NodeAssociacion* associacion = findAssociacion( nodeType );
    if ( !associacion )
@@ -273,7 +251,6 @@ GraphBlock* GraphWidget::createBlock( const Class& nodeType, void* node )
    else
    {
       GraphBlock* block = new GraphBlock( associacion->m_shape, associacion->m_bgColor, node );
-      m_scene->addItem( block );
       return block;
    }
 }
@@ -288,22 +265,6 @@ GraphWidget::NodeAssociacion* GraphWidget::findAssociacion( const Class& nodeTyp
       if ( m_associacions[i] == nodeType )
       {
          return &m_associacions[i];
-      }
-   }
-
-   return NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-GraphBlock* GraphWidget::findBlock( const QPointF& scenePos )
-{
-   unsigned int count = m_blocks.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      if ( m_blocks[i]->doesOverlap( scenePos ) )
-      {
-         return m_blocks[i];
       }
    }
 

@@ -5,12 +5,23 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+BEGIN_OBJECT( GraphBlock, Object )
+   PROPERTY( Object*, m_node )
+   PROPERTY( Shape, m_shape )
+   PROPERTY( QPointF, m_position )
+   PROPERTY( QRectF, m_bounds )
+   PROPERTY( QColor, m_fillColor )
+   PROPERTY( std::string, m_caption )
+END_OBJECT()
+
+///////////////////////////////////////////////////////////////////////////////
+
 QPen GraphBlock::s_borderPen( QBrush( QColor( 0, 0, 0 ) ), 3.0f );
 QPen GraphBlock::s_selectionPen( QBrush( QColor( 255, 226, 96 ) ), 3.0f );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphBlock::GraphBlock( Shape shape, const QColor& fillColor, void* node )
+GraphBlock::GraphBlock( Shape shape, const QColor& fillColor, Object* node )
    : QGraphicsItem( NULL )
    , m_node( node )
    , m_shape( shape )
@@ -28,7 +39,7 @@ GraphBlock::~GraphBlock()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphBlock::setCaption( const QString& caption )
+void GraphBlock::setCaption( const std::string& caption )
 {
    m_caption = caption;
 
@@ -75,6 +86,20 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
    painter->setPen( isSelected() ? s_selectionPen : s_borderPen );
    painter->setBrush( m_fillColor );
    painter->drawPath( path );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlock::saveState()
+{
+   m_position = pos();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlock::restoreState()
+{
+   setPos( m_position );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

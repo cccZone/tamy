@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QRectF>
 #include <QPen>
+#include "core/Object.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,8 +19,10 @@ class QGraphicsScene;
 /**
  * A graphical representation of a graph node.
  */
-class GraphBlock : public QGraphicsItem
+class GraphBlock :  public Object, public QGraphicsItem
 {
+   DECLARE_CLASS( GraphBlock )
+
 public:
    enum Shape
    {
@@ -29,22 +32,23 @@ public:
    };
 
 private:
-   void*             m_node;
+   Object*           m_node;
 
    Shape             m_shape;
+   QPointF           m_position;
    QRectF            m_bounds;
 
    QColor            m_fillColor;
    static QPen       s_borderPen;
    static QPen       s_selectionPen;
 
-   QString           m_caption;
+   std::string       m_caption;
 
 public:
    /**
     * Constructor.
     */
-   GraphBlock( Shape shape, const QColor& fillColor, void* node );
+   GraphBlock( Shape shape = GBS_RECTANGLE, const QColor& fillColor = QColor( 0, 0, 0 ), Object* node = NULL );
    virtual ~GraphBlock();
 
    /**
@@ -52,7 +56,7 @@ public:
     * 
     * @param caption
     */
-   void setCaption( const QString& caption );
+   void setCaption( const std::string& caption );
 
    /**
     * Checks if the block overlaps the specified position.
@@ -64,13 +68,31 @@ public:
    /**
     * Returns the represented node instance.
     */
-   void* getNode() const { return m_node; }
+   Object* getNode() const { return m_node; }
+
+   /**
+    * Caches the block's state for storing purposes.
+    */
+   void saveState();
+
+   /**
+    * Restores the cached block state after the load.
+    */
+   void restoreState();
 
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
-   QRectF boundingRect() const { return m_bounds; }
+   /**
+    * Returns the bounds of the block.
+    */
+   inline QRectF boundingRect() const { return m_bounds; }
+
+   /**
+    * Paints the block.
+    */
    void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+

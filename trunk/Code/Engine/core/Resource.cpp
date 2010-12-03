@@ -68,6 +68,8 @@ void Resource::saveResource( ExternalDependenciesSet& outExternalDependencies )
       throw std::runtime_error( "Only managed resources can be saved using this method" );
    }
 
+   onResourceSave( *m_host );
+
    m_host->save( m_filePath, outExternalDependencies );
 }
 

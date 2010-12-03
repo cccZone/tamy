@@ -72,7 +72,7 @@ void Serializer::operator<<(std::vector<T*>& vec)
       unsigned int count = vec.size();
       for (unsigned int i = 0; i < count; ++i)
       {
-         Serializable* obj = dynamic_cast<Serializable*>(vec[i]);
+         Serializable* obj = reinterpret_cast<Serializable*>(vec[i]);
          *this << &obj;
          vec[i] = dynamic_cast< T* >( obj );
       }

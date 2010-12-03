@@ -142,9 +142,15 @@ protected:
 
    /**
     * The method is called by the resources manager once
+    * before the resource gets saved to give it a chance to perform pre-save state caching etc.
+    */
+    virtual void onResourceSave( ResourcesManager& mgr ) {}
+
+   /**
+    * The method is called by the resources manager once
     * the resource has successfully been registered with the manager.
     */
-    virtual void onResourceLoaded(ResourcesManager& mgr) {}
+    virtual void onResourceLoaded( ResourcesManager& mgr ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

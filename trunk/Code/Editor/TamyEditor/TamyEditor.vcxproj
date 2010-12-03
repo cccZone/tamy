@@ -162,6 +162,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
     </ClInclude>
+    <ClInclude Include="GraphLayout.h" />
     <ClInclude Include="InputCommand.h" />
     <ClInclude Include="InputInterpreter.h" />
     <ClInclude Include="Gizmo.h" />
@@ -214,6 +215,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="RenderingPipelineLayout.h" />
     <ClInclude Include="SceneQuery.h" />
     <ClInclude Include="SceneQueryEffect.h" />
     <ClInclude Include="SelectedEntityRepresentation.h" />
@@ -557,6 +559,8 @@
     <ClCompile Include="QueryableGeometry.cpp" />
     <ClCompile Include="QueryRenderingPass.cpp" />
     <ClCompile Include="RenderingPipelineEditor.cpp" />
+    <ClCompile Include="GraphLayout.cpp" />
+    <ClCompile Include="RenderingPipelineLayout.cpp" />
     <ClCompile Include="SceneQueryEffect.cpp" />
     <ClCompile Include="SelectedGeometry.cpp" />
     <ClCompile Include="SelectionRenderingPass.cpp" />

@@ -427,6 +427,9 @@
     <ClInclude Include="..\..\Include\core\Graph.h">
       <Filter>DataStructures\Graphs</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\Algorithms.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">
@@ -524,6 +527,9 @@
     </None>
     <None Include="..\..\Include\core\Graph.inl">
       <Filter>DataStructures\Graphs</Filter>
+    </None>
+    <None Include="..\..\Include\core\Algorithms.inl">
+      <Filter>Misc</Filter>
     </None>
   </ItemGroup>
 </Project>

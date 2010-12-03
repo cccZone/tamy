@@ -15,6 +15,7 @@
 
 class QMenu;
 class QTimer;
+class GraphLayout;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -46,8 +47,8 @@ private:
    };
 
 private:
-   QGraphicsScene*                     m_scene;
-   std::vector< GraphBlock* >          m_blocks;
+   GraphLayout&                        m_layout;
+
    std::vector< NodeAssociacion >      m_associacions;
 
    SelectionMode                       m_selectionMode;
@@ -62,8 +63,9 @@ public:
     * Constructor.
     *
     * @param parent              parent widget
+    * @param layout              layout to edit
     */
-   GraphWidget( QWidget* parent );
+   GraphWidget( QWidget* parent, GraphLayout& layout );
    ~GraphWidget();
 
    /**
@@ -106,20 +108,6 @@ signals:
    void getEdgesClasses( std::vector< Class >& classes );
 
    /**
-    * Called when we want to add a node to the graph.
-    *
-    * @param nodeClass
-    */
-   void addNode( void* pNode );
-
-   /**
-    * Called when we are removing a node from the graph.
-    *
-    * @param block
-    */
-   void removeNode( void* pNode );
-
-   /**
     * Called when a popup menu is displayed.
     *
     * @param menu
@@ -140,9 +128,8 @@ protected:
 private:
    void showPopupMenu( const QPoint& activationPoint );
    void handleBlockSelection( const QPointF& scenePos );
-   GraphBlock* createBlock( const Class& nodeType, void* node );
+   GraphBlock* createBlock( const Class& nodeType, Object* node );
    NodeAssociacion* findAssociacion( const Class& nodeType );
-   GraphBlock* findBlock( const QPointF& scenePos );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
