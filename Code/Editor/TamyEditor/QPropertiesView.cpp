@@ -25,9 +25,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QPropertiesView::QPropertiesView( TamyEditor& mgr )
+QPropertiesView::QPropertiesView()
 : QPropertyEditor("")
-, m_mgr( mgr )
 , m_toolBox(NULL)
 {
    m_toolBox = new QToolBox( this );
@@ -77,7 +76,7 @@ void QPropertiesView::initFactory()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QPropertiesView::addPropertyEditor(QWidget* editorWidget)
+void QPropertiesView::addPropertyEditor( QWidget* editorWidget )
 {
    editorWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
    m_currWidget->addWidget( editorWidget );
@@ -85,14 +84,14 @@ void QPropertiesView::addPropertyEditor(QWidget* editorWidget)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QPropertiesView::removePropertyEditor(QWidget& editorWidget)
+void QPropertiesView::removePropertyEditor( QWidget& editorWidget )
 {
    m_currWidget->removeWidget( &editorWidget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QPropertiesView::onSet(Properties& properties)
+void QPropertiesView::onSet( Properties& properties )
 {
    QFrame* frame = new QFrame( this );
    frame->setLayout( m_currWidget = new QVBoxLayout( frame ) );

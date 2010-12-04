@@ -46,9 +46,6 @@
     <Filter Include="Components\PropertiesEditor">
       <UniqueIdentifier>{b6b1999b-4163-4295-94d3-6b1fc6e4b1b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\PropertiesEditor\Editors">
-      <UniqueIdentifier>{fd5f3c59-02db-4b10-b334-3fd96042b190}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\SceneRenderer">
       <UniqueIdentifier>{14af7a61-986e-40b6-a23c-9f911c8aabac}</UniqueIdentifier>
     </Filter>
@@ -117,6 +114,12 @@
     </Filter>
     <Filter Include="Widgets\GraphWidget">
       <UniqueIdentifier>{afad0961-9279-47d6-b5e5-dcc717807671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\PropertiesEditorWidget">
+      <UniqueIdentifier>{f09e027f-0b6b-4f2f-a703-991f4acc9dc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\PropertiesEditorWidget\Editors">
+      <UniqueIdentifier>{fd5f3c59-02db-4b10-b334-3fd96042b190}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -347,32 +350,26 @@
     <ClCompile Include="PropertiesEditor.cpp">
       <Filter>Components\PropertiesEditor</Filter>
     </ClCompile>
-    <ClCompile Include="QPropertiesView.cpp">
-      <Filter>Components\PropertiesEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="QPropertyEditor.cpp">
-      <Filter>Components\PropertiesEditor</Filter>
-    </ClCompile>
     <ClCompile Include="ArrayPropertyEditor.cpp">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
     <ClCompile Include="BoolPropertyEditor.cpp">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
     <ClCompile Include="MaterialPropertyEditor.cpp">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
     <ClCompile Include="MtxPropertyEditor.cpp">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
     <ClCompile Include="ResourcePropertyEditor.cpp">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
     <ClCompile Include="StringPropertyEditor.cpp">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
     <ClCompile Include="Vec3PropertyEditor.cpp">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
     <ClCompile Include="TamySceneWidget.cpp">
       <Filter>Components\SceneRenderer</Filter>
@@ -500,16 +497,22 @@
     <ClCompile Include="RenderingPipelineLayout.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </ClCompile>
+    <ClCompile Include="QPropertiesView.cpp">
+      <Filter>Widgets\PropertiesEditorWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="QPropertyEditor.cpp">
+      <Filter>Widgets\PropertiesEditorWidget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
       <Filter>QtImplementation\Resource Files</Filter>
     </None>
     <None Include="FloatPropertyEditor.inl">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </None>
     <None Include="IntPropertyEditor.inl">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </None>
     <None Include="TypeDescFactory.inl">
       <Filter>Widgets\TreeWidget</Filter>
@@ -543,38 +546,32 @@
     <CustomBuild Include="PropertiesEditor.h">
       <Filter>Components\PropertiesEditor</Filter>
     </CustomBuild>
-    <CustomBuild Include="QPropertiesView.h">
-      <Filter>Components\PropertiesEditor</Filter>
-    </CustomBuild>
-    <CustomBuild Include="QPropertyEditor.h">
-      <Filter>Components\PropertiesEditor</Filter>
-    </CustomBuild>
     <CustomBuild Include="ArrayPropertyEditor.h">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="BoolPropertyEditor.h">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="FloatPropertyEditor.h">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="IntPropertyEditor.h">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="MaterialPropertyEditor.h">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="MtxPropertyEditor.h">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="ResourcePropertyEditor.h">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="StringPropertyEditor.h">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="Vec3PropertyEditor.h">
-      <Filter>Components\PropertiesEditor\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="TamySceneWidget.h">
       <Filter>Components\SceneRenderer</Filter>
@@ -635,6 +632,12 @@
     </CustomBuild>
     <CustomBuild Include="renderingpipelineeditor.ui">
       <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QPropertyEditor.h">
+      <Filter>Widgets\PropertiesEditorWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QPropertiesView.h">
+      <Filter>Widgets\PropertiesEditorWidget</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

@@ -83,6 +83,9 @@
     <Filter Include="DataStructures\Graphs">
       <UniqueIdentifier>{0fe037a9-ad64-41fb-9bee-c6e1721d61a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc\Singleton">
+      <UniqueIdentifier>{ea704aa1-924f-4d1a-baa3-bbe73a7797cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -183,6 +186,9 @@
     </ClCompile>
     <ClCompile Include="Assert.cpp">
       <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Misc\Singleton</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -429,6 +435,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Algorithms.h">
       <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Singleton.h">
+      <Filter>Misc\Singleton</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

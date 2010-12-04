@@ -26,7 +26,7 @@ void ArrayPropertyEditor::onInitialize()
    unsigned int count = array.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      QPropertiesView* newView = new QPropertiesView( getServicesMgr() );
+      QPropertiesView* newView = new QPropertiesView();
       addWidget( newView );
       array.viewProperties( i, *newView );
    }

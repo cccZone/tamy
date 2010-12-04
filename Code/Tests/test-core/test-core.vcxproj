@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AlgorithmTests.cpp" />
     <ClCompile Include="NodesHierarchyTests.cpp" />
     <ClCompile Include="UpdatingGlobalMatricesTests.cpp" />
     <ClCompile Include="VisitorTests.cpp" />

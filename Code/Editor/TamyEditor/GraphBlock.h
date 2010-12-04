@@ -6,6 +6,7 @@
 #include <QColor>
 #include <QRectF>
 #include <QPen>
+#include <QFont>
 #include "core/Object.h"
 
 
@@ -32,15 +33,20 @@ public:
    };
 
 private:
+   const int         CHARACTER_SIZE;
+
    Object*           m_node;
 
    Shape             m_shape;
    QPointF           m_position;
    QRectF            m_bounds;
+   QRectF            m_captionBounds;
 
    QColor            m_fillColor;
+   static QPen       s_textPen;
    static QPen       s_borderPen;
    static QPen       s_selectionPen;
+   QFont             m_font;
 
    std::string       m_caption;
 
@@ -50,13 +56,6 @@ public:
     */
    GraphBlock( Shape shape = GBS_RECTANGLE, const QColor& fillColor = QColor( 0, 0, 0 ), Object* node = NULL );
    virtual ~GraphBlock();
-
-   /**
-    * Sets a new caption of the block.
-    * 
-    * @param caption
-    */
-   void setCaption( const std::string& caption );
 
    /**
     * Checks if the block overlaps the specified position.
@@ -92,6 +91,14 @@ public:
     * Paints the block.
     */
    void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
+
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged( Property& property );
+
+private:
+   void calculateBounds();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

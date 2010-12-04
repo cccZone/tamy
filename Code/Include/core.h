@@ -75,6 +75,7 @@
 #include "core\StringUtils.h"
 #include "core\IProgressObserver.h"
 #include "core\Algorithms.h"
+#include "core\Singleton.h"
 
 // ----------------------------------------------------------------------------
 // Resources

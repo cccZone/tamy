@@ -21,18 +21,14 @@ class QPropertiesView : public QPropertyEditor,
    Q_OBJECT
 
 private:
-   TamyEditor&    m_mgr;
    QToolBox*      m_toolBox;
    QLayout*       m_currWidget;
 
 public:
-   QPropertiesView( TamyEditor& mgr );
+   QPropertiesView();
    ~QPropertiesView();
 
-   /**
-    * Returns the working instance of the main services manager.
-    */
-   inline TamyEditor& getServicesMgr() { return m_mgr; }
+
 
    // -------------------------------------------------------------------------
    // Editor widgets management

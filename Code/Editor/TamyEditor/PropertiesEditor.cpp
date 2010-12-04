@@ -77,11 +77,11 @@ void PropertiesEditor::onObjectSelected( Entity& entity )
 {
    if (m_rootView != NULL)
    {
-      m_layout->removeWidget(m_rootView);
+      m_layout->removeWidget( m_rootView );
       delete m_rootView;
    }
-   m_rootView = new QPropertiesView( *m_mgr );
-   m_layout->addWidget(m_rootView);
+   m_rootView = new QPropertiesView();
+   m_layout->addWidget( m_rootView );
    entity.viewProperties( *m_rootView );
 }
 
