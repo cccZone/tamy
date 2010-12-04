@@ -3,20 +3,26 @@
 #pragma once
 
 #include "GraphLayout.h"
-#include "core/Resource.h"
+#include "core.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+class RenderingPipelineNode;
+class GraphBlock;
+class RenderingPipeline;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Layout for a rendering pipeline
  */
-class RenderingPipelineLayout : public Resource, public GraphLayout
+class RenderingPipelineLayout : public Resource, public GraphLayout, public GenericFactory< RenderingPipelineNode, GraphBlock >
 {
    DECLARE_RESOURCE( RenderingPipelineLayout )
 
 private:
-   Resource*                        m_model;
+   RenderingPipeline*                  m_model;
 
 public:
    /**
@@ -25,6 +31,13 @@ public:
     * @param path
     */
    RenderingPipelineLayout( const std::string& path = "" );
+
+   // -------------------------------------------------------------------------
+   // GraphLayout implementation
+   // -------------------------------------------------------------------------
+   GraphBlock* createNode( const Class& type );
+   void removeNode( Object& node );
+   void getNodesClasses( std::vector< Class >& classes );
 
 protected:
    // -------------------------------------------------------------------------

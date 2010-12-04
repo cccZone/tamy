@@ -2,11 +2,17 @@
 #include "core.h"
 #include "core-Renderer/RenderingPipeline.h"
 
+// nodes
+#include "core-Renderer/RPPostProcessNode.h"
+
+// blocks
+#include "RPBPostProcess.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_RESOURCE( RenderingPipelineLayout, Resource, rpl, AM_BINARY );
-   PROPERTY( Resource*, m_model );
+   PROPERTY( RenderingPipeline*, m_model );
    PROPERTY( std::vector< GraphBlock* >, m_blocks );
 END_RESOURCE();
 
@@ -16,6 +22,7 @@ RenderingPipelineLayout::RenderingPipelineLayout( const std::string& path )
    : Resource( path )
    , m_model( NULL )
 {
+   associate< RPPostProcessNode, RPBPostProcess >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,6 +52,35 @@ void RenderingPipelineLayout::onResourceLoaded( ResourcesManager& mgr )
 
    // initialize the layout
    restoreState();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+GraphBlock* RenderingPipelineLayout::createNode( const Class& type )
+{
+   RenderingPipelineNode* node = type.instantiate< RenderingPipelineNode >();
+   GraphBlock* block = create( *node );
+   m_model->addNode( node );
+
+   return block;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineLayout::removeNode( Object& node )
+{
+   RenderingPipelineNode* rpNode = dynamic_cast< RenderingPipelineNode* >( &node );
+   ASSERT_MSG( rpNode != NULL, "Attempting to remove a node that's not a RenderingPipelineNode" );
+
+   m_model->removeNode( *rpNode );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineLayout::getNodesClasses( std::vector< Class >& classes )
+{
+   ClassesRegistry& classesReg = getClassesRegistry();
+   classesReg.getClassesMatchingType< RenderingPipelineNode >( classes );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

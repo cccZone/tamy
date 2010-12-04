@@ -6,10 +6,6 @@
 #include "GraphLayout.h"
 
 
-// TODO: !!!!!
-// 1.) polaczenia miedzy node'ami
-
-
 ///////////////////////////////////////////////////////////////////////////////
 
 GraphWidget::GraphWidget( QWidget* parent, GraphLayout& layout )
@@ -37,15 +33,8 @@ GraphWidget::~GraphWidget()
 
 void GraphWidget::addNodeAction( const Class& nodeType, const QPointF& addingPos )
 {
-   Object* node = nodeType.instantiate< Object >();
-
-   GraphBlock* representation = createBlock( nodeType, node );
-   ASSERT_MSG( representation != NULL, "Node representation was not created" );
-   if ( representation )
-   {
-      representation->setPos( addingPos );
-      m_layout.add( representation );
-   }
+   GraphBlock& representation = m_layout.add( nodeType );
+   representation.setPos( addingPos );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -217,7 +206,7 @@ void GraphWidget::showPopupMenu( const QPoint& activationPoint )
       QMenu* addMenu = popupMenu->addMenu( "Add" );
 
       std::vector< Class > classes;
-      emit getNodesClasses( classes );
+      m_layout.getNodesClasses( classes );
       for( std::vector< Class >::const_iterator it = classes.begin(); it != classes.end(); ++it )
       {
          const Class& nodeClass = *it;
@@ -252,38 +241,6 @@ void GraphWidget::showPopupMenu( const QPoint& activationPoint )
 
    // display the menu
    popupMenu->popup( mapToGlobal( activationPoint ) );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-GraphBlock* GraphWidget::createBlock( const Class& nodeType, Object* node )
-{
-   NodeAssociacion* associacion = findAssociacion( nodeType );
-   if ( !associacion )
-   {
-      return NULL;
-   }
-   else
-   {
-      GraphBlock* block = new GraphBlock( associacion->m_shape, associacion->m_bgColor, node );
-      return block;
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-GraphWidget::NodeAssociacion* GraphWidget::findAssociacion( const Class& nodeType )
-{
-   unsigned int count = m_associacions.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      if ( m_associacions[i] == nodeType )
-      {
-         return &m_associacions[i];
-      }
-   }
-
-   return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

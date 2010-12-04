@@ -79,9 +79,6 @@ void RenderingPipelineEditor::initialize( TamyEditor& mgr )
       connect( actionExit, SIGNAL( triggered() ), this, SLOT( close() ) );
    }
 
-   // configure the editor to display nodes in certain way
-   m_graphWidget->associate< TestNode >( GraphBlock::GBS_RECTANGLE, QColor( 100, 200, 100 )  );
-
    // show the resource
    show();
 }
@@ -97,22 +94,6 @@ void RenderingPipelineEditor::save()
    {
       externalDependencies[ i ]->saveResource( externalDependencies );
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineEditor::onGetNodesClasses( std::vector< Class >& classes )
-{
-   ClassesRegistry& classesReg = getClassesRegistry();
-   classesReg.getClassesMatchingType< TestNode >( classes );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineEditor::onGetEdgesClasses( std::vector< Class >& classes )
-{
-   ClassesRegistry& classesReg = getClassesRegistry();
-   classesReg.getClassesMatchingType< TestEdge >( classes );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

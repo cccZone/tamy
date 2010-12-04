@@ -4,27 +4,31 @@
 #pragma once
 
 #include "core/Resource.h"
-#include "core/Graph.h"
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TEMP: this is a temporary structure for now ...
-class TestNode : public Object
+/**
+ * A rendering pipeline node.
+ */
+class RenderingPipelineNode : public Object
 {
-   DECLARE_CLASS( TestNode )
-};
-
-class TestEdge : public Object
-{
-   DECLARE_CLASS( TestEdge )
+   DECLARE_CLASS( RenderingPipelineNode )
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Rendering pipeline represents a structure that performs all rendering related
+ * image processing and presents the final image in the back buffer.
+ */
 class RenderingPipeline : public Resource
 {
    DECLARE_RESOURCE( RenderingPipeline );
+
+private:
+   std::vector< RenderingPipelineNode* >     m_nodes;
 
 public:
    /**
@@ -33,20 +37,21 @@ public:
     * @param fileName   name of the resource file
     */
    RenderingPipeline( const std::string& fileName = "" );
+   ~RenderingPipeline();
 
    /**
     * Adds a new node to the pipeline.
     *
     * @param node       node to add
     */
-   void addNode( TestNode* node );
+   void addNode( RenderingPipelineNode* node );
 
    /**
     * Removes a node from the pipeline
     *
     * @param node       node to remove
     */
-   void removeNode( TestNode& node );
+   void removeNode( RenderingPipelineNode& node );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

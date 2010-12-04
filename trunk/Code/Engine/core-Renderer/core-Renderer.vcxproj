@@ -88,6 +88,7 @@
     <ClCompile Include="RenderingPass.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="RPPostProcessNode.cpp" />
     <ClCompile Include="SceneRenderingPass.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureEffect.h" />

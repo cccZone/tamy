@@ -216,6 +216,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="RenderingPipelineLayout.h" />
+    <ClInclude Include="RPBPostProcess.h" />
     <ClInclude Include="SceneQuery.h" />
     <ClInclude Include="SceneQueryEffect.h" />
     <ClInclude Include="SelectedEntityRepresentation.h" />
@@ -561,6 +562,7 @@
     <ClCompile Include="RenderingPipelineEditor.cpp" />
     <ClCompile Include="GraphLayout.cpp" />
     <ClCompile Include="RenderingPipelineLayout.cpp" />
+    <ClCompile Include="RPBPostProcess.cpp" />
     <ClCompile Include="SceneQueryEffect.cpp" />
     <ClCompile Include="SelectedGeometry.cpp" />
     <ClCompile Include="SelectionRenderingPass.cpp" />

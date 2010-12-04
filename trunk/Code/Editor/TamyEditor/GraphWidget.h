@@ -27,19 +27,6 @@ class GraphWidget : public QGraphicsView
    Q_OBJECT
 
 private:
-   struct NodeAssociacion
-   {
-   private:
-      Class                m_type;
-
-   public:
-      GraphBlock::Shape    m_shape;
-      QColor               m_bgColor;
-
-      NodeAssociacion( const Class& type ) : m_type( type ) {}
-      bool operator==( const Class& type ) const { return m_type == type; }
-   };
-
    enum SelectionMode
    {
       SM_EXCLUSIVE,
@@ -49,14 +36,11 @@ private:
 private:
    GraphLayout&                        m_layout;
 
-   std::vector< NodeAssociacion >      m_associacions;
-
    SelectionMode                       m_selectionMode;
 
    QTimer*                             m_dragTimer;
    bool                                m_isDraggingBlocks;
    QPoint                              m_prevMousePos;
-
 
 public:
    /**
@@ -67,12 +51,6 @@ public:
     */
    GraphWidget( QWidget* parent, GraphLayout& layout );
    ~GraphWidget();
-
-   /**
-    * Associates a specified node type with its representation's appearance
-    */
-   template< typename T >
-   void associate( GraphBlock::Shape shape, const QColor& bgColor );
 
    /**
     * Adds a new node to the graph onto the specified position.
@@ -94,20 +72,6 @@ public slots:
    void onSceneSelectionChanged();
 
 signals:
-   /**
-    * Acquires a list of applicable node classes.
-    *
-    * @param classes
-    */
-   void getNodesClasses( std::vector< Class >& classes );
-
-   /**
-    * Acquires a list of applicable edges classes.
-    *
-    * @param classes
-    */
-   void getEdgesClasses( std::vector< Class >& classes );
-
    /**
     * Called when a popup menu is displayed.
     *
@@ -136,8 +100,6 @@ protected:
 private:
    void showPopupMenu( const QPoint& activationPoint );
    void handleBlockSelection( const QPointF& scenePos );
-   GraphBlock* createBlock( const Class& nodeType, Object* node );
-   NodeAssociacion* findAssociacion( const Class& nodeType );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

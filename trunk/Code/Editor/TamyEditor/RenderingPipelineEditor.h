@@ -47,8 +47,6 @@ public:
 
 public slots:
    void save();
-   void onGetNodesClasses( std::vector< Class >& classes );
-   void onGetEdgesClasses( std::vector< Class >& classes );
    void onPopupMenuShown( QMenu& menu );
    void onBlockSelected( Object* object );
 

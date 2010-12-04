@@ -6,13 +6,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GraphBlock, Object )
+BEGIN_ABSTRACT_OBJECT( GraphBlock, Object )
    PROPERTY_EDIT( "caption", std::string, m_caption )
-   PROPERTY_EDIT( "node", Object*, m_node )
-   PROPERTY( Shape, m_shape )
    PROPERTY( QPointF, m_position )
    PROPERTY( QRectF, m_bounds )
-   PROPERTY( QColor, m_fillColor )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,16 +20,12 @@ QPen GraphBlock::s_selectionPen( QBrush( QColor( 255, 226, 96 ) ), 3.0f );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphBlock::GraphBlock( Shape shape, const QColor& fillColor, Object* node )
+GraphBlock::GraphBlock()
    : QGraphicsItem( NULL )
-   , CHARACTER_SIZE( 14 )
-   , m_node( node )
-   , m_shape( shape )
+   , m_caption( "" )
    , m_bounds( QPointF( 0, 0 ), QSizeF( 100, 100 ) )
    , m_captionBounds( QPointF( 0, 0 ), QSizeF( 100, 0 ) )
-   , m_fillColor( fillColor )
-   , m_font( "Arial", CHARACTER_SIZE, QFont::Light )
-   , m_caption( "Block" )
+   , m_font( "Arial", 15, QFont::Light )
 {
    m_font.setStyle( QFont::StyleNormal );
    m_font.setStyleHint( QFont::AnyStyle );
@@ -61,8 +54,11 @@ bool GraphBlock::doesOverlap( const QPointF& pos ) const
 
 void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
 { 
+   Shape shape = getShape();
+   QColor fillColor = getBgColor();
+
    // draw the block based on the shape
-   switch( m_shape )
+   switch( shape )
    {
    case GBS_RECTANGLE:
       {
@@ -70,20 +66,20 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
          {
             QPainterPath shapePath;
             shapePath.addRect( m_bounds );
-            painter->setBrush( m_fillColor );
+            painter->setBrush( fillColor );
             painter->drawPath( shapePath );
    
             QPainterPath captionPath;
             captionPath.addRoundedRect( m_captionBounds, 1.0f, 1.0f );
 
-            painter->setBrush( m_fillColor.darker() );
+            painter->setBrush( fillColor.darker() );
             painter->drawPath( captionPath );
          }
 
          QPainterPath textPath;
          textPath.addText( 3, m_captionBounds.height() - 3, m_font, m_caption.c_str() );
          painter->setPen( s_textPen );
-         painter->setBrush( m_fillColor.darker( 400 ) );
+         painter->setBrush( fillColor.darker( 400 ) );
          painter->drawPath( textPath );
 
          break;
@@ -95,7 +91,7 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
          QPainterPath path;
          path.addEllipse( m_bounds );
          painter->setPen( isSelected() ? s_selectionPen : s_borderPen );
-         painter->setBrush( m_fillColor );
+         painter->setBrush( fillColor );
          painter->drawPath( path );
 
          break;
@@ -108,7 +104,7 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
          path.addRoundedRect( m_bounds, 3.0f, 3.0f );
 
          painter->setPen( isSelected() ? s_selectionPen : s_borderPen );
-         painter->setBrush( m_fillColor );
+         painter->setBrush( fillColor );
          painter->drawPath( path );
 
          break;
@@ -146,6 +142,14 @@ void GraphBlock::onPropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void GraphBlock::setCaption( const char* caption )
+{
+   m_caption = caption;
+   calculateBounds();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void GraphBlock::calculateBounds()
 {
    QFontMetrics metrics( m_font );
@@ -156,6 +160,14 @@ void GraphBlock::calculateBounds()
 
    m_captionBounds = m_bounds;
    m_captionBounds.setHeight( metrics.height() + 6 );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlock::addSocket( SocketPosition position, const char* name )
+{
+   // TODO: !!!!!!!!!!! polaczenia
+   m_sockets.push_back( new socket( position, name ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
