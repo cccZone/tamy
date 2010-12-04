@@ -21,17 +21,17 @@ GraphLayout::~GraphLayout()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphLayout::add( GraphBlock* block )
+GraphBlock& GraphLayout::add( const Class& type )
 {
-   ASSERT_MSG( block != NULL, "NULL blocks can't be added to the layout" );
-
-   // check if the block isn't already present in the layout
-   ASSERT_MSG( std::find( m_blocks.begin(), m_blocks.end(), block ) == m_blocks.end(), "The block already exists in the layout" );
+   GraphBlock* block = createNode( type );
+   ASSERT_MSG( block != NULL, "No representation ready for this type of node" );
    
    m_blocks.push_back( block );
 
    // add the block to the scene
    addItem( block );
+
+   return *block;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,6 +39,12 @@ void GraphLayout::add( GraphBlock* block )
 void GraphLayout::remove( GraphBlock* block )
 {
    ASSERT_MSG( block != NULL, "NULL blocks can't be removed from the layout" );
+   if ( block == NULL )
+   {
+      return;
+   }
+
+   removeNode( *block->getNode() );
 
    std::vector< GraphBlock* >::iterator it = std::find( m_blocks.begin(), m_blocks.end(), block );
    if ( it != m_blocks.end() )

@@ -32,30 +32,37 @@ public:
       GBS_ROUNDED,
    };
 
+   enum SocketPosition
+   {
+      GBSP_LEFT,
+      GBSP_RIGHT,
+   };
+
 private:
-   const int         CHARACTER_SIZE;
+   std::string       m_caption;
 
-   Object*           m_node;
-
-   Shape             m_shape;
    QPointF           m_position;
    QRectF            m_bounds;
    QRectF            m_captionBounds;
 
-   QColor            m_fillColor;
    static QPen       s_textPen;
    static QPen       s_borderPen;
    static QPen       s_selectionPen;
    QFont             m_font;
 
-   std::string       m_caption;
-
 public:
    /**
     * Constructor.
     */
-   GraphBlock( Shape shape = GBS_RECTANGLE, const QColor& fillColor = QColor( 0, 0, 0 ), Object* node = NULL );
+   GraphBlock();
    virtual ~GraphBlock();
+
+   /**
+    * Sets the caption of the block.h
+    *
+    * @param caption
+    */
+   void setCaption( const char* caption );
 
    /**
     * Checks if the block overlaps the specified position.
@@ -67,7 +74,7 @@ public:
    /**
     * Returns the represented node instance.
     */
-   Object* getNode() const { return m_node; }
+   virtual Object* getNode() const { return NULL; }
 
    /**
     * Caches the block's state for storing purposes.
@@ -96,6 +103,28 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onPropertyChanged( Property& property );
+
+protected:
+   // -------------------------------------------------------------------------
+   // Block layout settings
+   // -------------------------------------------------------------------------
+   /**
+    * Returns the shape of the block.
+    */
+   virtual Shape getShape() const { return GBS_RECTANGLE; }
+
+   /**
+    * Returns the color of the block background.
+    */
+   virtual QColor getBgColor() const { return QColor( 255, 255, 255 ); }
+
+   /**
+    * Adds a new socket to the block.
+    *
+    * @param position      socket position
+    * @param name          socket name
+    */
+   void addSocket( SocketPosition position, const char* name );
 
 private:
    void calculateBounds();

@@ -88,6 +88,9 @@
     <Filter Include="Renderers\HDR">
       <UniqueIdentifier>{a844b996-76fd-4f98-9e06-85837df10072}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\PipelineNodes">
+      <UniqueIdentifier>{b7de2671-afb7-471e-9881-7dd4812c6bc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -221,6 +224,9 @@
     </ClCompile>
     <ClCompile Include="RenderingPipeline.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="RPPostProcessNode.cpp">
+      <Filter>Core\PipelineNodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -463,6 +469,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h">
+      <Filter>Core\PipelineNodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

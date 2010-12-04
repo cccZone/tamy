@@ -30,7 +30,7 @@ public:
     *
     * @param block
     */
-   void add( GraphBlock* block );
+   GraphBlock& add( const Class& type );
 
    /**
     * Removes a block from the layout.
@@ -38,6 +38,13 @@ public:
     * @param block
     */
    void remove( GraphBlock* block );
+
+   /**
+    * Returns a list of types we can select from when creating a new node.
+    *
+    * @param classes          fill this list with available node types
+    */
+   virtual void getNodesClasses( std::vector< Class >& classes ) = 0;
    
 protected:
    /**
@@ -56,6 +63,24 @@ protected:
     * Restores the cached layout state after the load.
     */
    void restoreState();
+
+   // -------------------------------------------------------------------------
+   // Representations factory
+   // -------------------------------------------------------------------------
+
+   /**
+    * Called when the widget creates a new representation for the specified node type.
+    *
+    * @param type    node type
+    */
+   virtual GraphBlock* createNode( const Class& type ) = 0;
+
+   /**
+    * Called when the widget removes a node.
+    *
+    * @param node
+    */
+   virtual void removeNode( Object& node ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

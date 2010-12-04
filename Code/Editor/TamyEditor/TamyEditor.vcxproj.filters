@@ -121,6 +121,9 @@
     <Filter Include="Widgets\PropertiesEditorWidget\Editors">
       <UniqueIdentifier>{fd5f3c59-02db-4b10-b334-3fd96042b190}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\RenderingPipelineEditor\Blocks">
+      <UniqueIdentifier>{684af1ca-eef5-4500-a6a7-ed0877e768ec}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -233,6 +236,9 @@
     </ClInclude>
     <ClInclude Include="RenderingPipelineLayout.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBPostProcess.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -502,6 +508,9 @@
     </ClCompile>
     <ClCompile Include="QPropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBPostProcess.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
