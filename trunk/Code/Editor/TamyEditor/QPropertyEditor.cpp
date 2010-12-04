@@ -8,7 +8,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 QPropertyEditor::QPropertyEditor(const QString& propertyLabel)
-: m_mgr( NULL )
 {
    m_layout = new QVBoxLayout( this );
    m_layout->setSpacing(0);
@@ -40,7 +39,6 @@ QPropertyEditor::~QPropertyEditor()
 
 void QPropertyEditor::initialize( QPropertiesView& view )
 {
-   m_mgr = &view.getServicesMgr();
    view.addPropertyEditor(this);
    onInitialize();
 }
@@ -50,7 +48,6 @@ void QPropertyEditor::initialize( QPropertiesView& view )
 void QPropertyEditor::deinitialize( QPropertiesView& view )
 {
    view.removePropertyEditor(*this);
-   m_mgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

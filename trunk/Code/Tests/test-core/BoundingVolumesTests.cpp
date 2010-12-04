@@ -221,14 +221,14 @@ TEST(Ray, intersects_Plane)
    D3DXVECTOR3 intersectionPt;
 
    CPPUNIT_ASSERT_EQUAL(true, testCollision(Ray(D3DXVECTOR3(0, 0, -1), D3DXVECTOR3(0, 0, 1)), plane, intersectionPt));
-   CPPUNIT_ASSERT_EQUAL(D3DXVECTOR3(0, 0, 0), intersectionPt);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 0), intersectionPt);
    
    CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(0, 0, -1), D3DXVECTOR3(0, 0, -1)), plane, intersectionPt));
 
    // ray coming in from behind the plane - in that case even if it crosses it, 
    // there will be no intersection - the plane points elsewhere
    CPPUNIT_ASSERT_EQUAL(true, testCollision(Ray(D3DXVECTOR3(0, 0, 1), D3DXVECTOR3(0, 0, -1)), plane, intersectionPt));
-   CPPUNIT_ASSERT_EQUAL(D3DXVECTOR3(0, 0, 0), intersectionPt);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 0), intersectionPt);
 
    CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(0, 0, 1), D3DXVECTOR3(0, 0, 1)), plane, intersectionPt));
 
@@ -236,7 +236,7 @@ TEST(Ray, intersects_Plane)
    CPPUNIT_ASSERT_EQUAL(true, testCollision(Ray(D3DXVECTOR3(0, 0, 0.5f), D3DXVECTOR3(0, 0, 1)), 
                                              D3DXPLANE(0, -1, 0, 0), 
                                              intersectionPt));
-   CPPUNIT_ASSERT_EQUAL(D3DXVECTOR3(0, 0, 0.5f), intersectionPt);
+   COMPARE_VEC(D3DXVECTOR3(0, 0, 0.5f), intersectionPt);
 
    // another case
    CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(D3DXVECTOR3(-2, 0, 0), D3DXVECTOR3(0, 0, 1)), 

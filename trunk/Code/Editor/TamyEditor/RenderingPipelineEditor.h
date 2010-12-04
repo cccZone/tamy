@@ -14,6 +14,8 @@ class RenderingPipelineLayout;
 class GraphWidget;
 class Class;
 class GraphBlock;
+class QPropertiesView;
+class Object;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +28,8 @@ private:
 
    RenderingPipelineLayout&                  m_renderingPipelineLayout;
    GraphWidget*                              m_graphWidget;
+   QVBoxLayout*                              m_propertiesLayout;
+   QPropertiesView*                          m_rootView;
 
 public:
    /**
@@ -34,6 +38,7 @@ public:
     * @param renderingPipeline      pipeline to be edited
     */
    RenderingPipelineEditor( RenderingPipelineLayout& renderingPipelineLayout );
+   ~RenderingPipelineEditor();
 
    // -------------------------------------------------------------------------
    // ResourceEditor implementation
@@ -45,6 +50,7 @@ public slots:
    void onGetNodesClasses( std::vector< Class >& classes );
    void onGetEdgesClasses( std::vector< Class >& classes );
    void onPopupMenuShown( QMenu& menu );
+   void onBlockSelected( Object* object );
 
 protected:
    void closeEvent( QCloseEvent *event );

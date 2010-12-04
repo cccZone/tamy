@@ -91,6 +91,7 @@ public:
 
 public slots:
    void onDragTimerTimeout();
+   void onSceneSelectionChanged();
 
 signals:
    /**
@@ -113,6 +114,13 @@ signals:
     * @param menu
     */
    void popupMenuShown( QMenu& menu );
+
+   /**
+    * Called when a block is selected.
+    *
+    * @param object        object enclosed in the selected block ( can be NULL - in that case a block was deselected )
+    */
+   void blockSelected( Object* object );
 
 protected:
    // -------------------------------------------------------------------------

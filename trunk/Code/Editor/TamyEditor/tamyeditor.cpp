@@ -23,7 +23,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TamyEditor::TamyEditor(QApplication& app, QWidget *parent, Qt::WFlags flags)
+TamyEditor* GTamyEditor = NULL;
+
+///////////////////////////////////////////////////////////////////////////////
+
+TamyEditor::TamyEditor( QApplication& app, QWidget *parent, Qt::WFlags flags )
 : QMainWindow( parent, flags )
 , m_mainTime( new CTimer() )
 , m_mainAppComponent( new MainAppComponent( app ) )
@@ -46,6 +50,9 @@ TamyEditor::TamyEditor(QApplication& app, QWidget *parent, Qt::WFlags flags)
 
    m_uiSettings = new QSettings( "Coversion", "TamyEditor" );
    serializeUISettings( false );
+
+   // initialize the singleton instance
+   GTamyEditor = this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

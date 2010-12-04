@@ -6,9 +6,8 @@
 #include "GraphLayout.h"
 
 
-// TODO !!!!!!!!!!!!!!!! : 
-//  1.) naglowek node'a
-//  2.) ogladanie propertiesow node'a
+// TODO: !!!!!
+// 1.) polaczenia miedzy node'ami
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +19,7 @@ GraphWidget::GraphWidget( QWidget* parent, GraphLayout& layout )
    , m_isDraggingBlocks( false )
 {
    setScene( &layout );
+   connect( &layout, SIGNAL( selectionChanged() ), this, SLOT( onSceneSelectionChanged() ) );
 
    m_dragTimer = new QTimer( this );
    connect( m_dragTimer, SIGNAL( timeout() ), this, SLOT( onDragTimerTimeout() ) );
@@ -89,6 +89,21 @@ void GraphWidget::handleBlockSelection( const QPointF& scenePos )
       }
    }
    
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphWidget::onSceneSelectionChanged()
+{
+   GraphBlock* selectedBlock = NULL;
+
+   QList< QGraphicsItem* > selectedItems = m_layout.selectedItems();
+   if ( selectedItems.size() == 1 )
+   {
+      selectedBlock = dynamic_cast< GraphBlock* >( selectedItems.back() );
+   }
+
+   emit blockSelected( selectedBlock );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

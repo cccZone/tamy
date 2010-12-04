@@ -26,7 +26,6 @@ class QPropertyEditor : public QFrame,
    Q_OBJECT
 
 private:
-   TamyEditor*       m_mgr;
    QVBoxLayout*      m_layout;
    QSpacerItem*      m_spacer;
 
@@ -65,11 +64,6 @@ protected:
     * @param widget
     */
    void removeWidget(QWidget& widget);
-
-   /**
-    * Returns the working instance of the main services manager.
-    */
-   inline TamyEditor& getServicesMgr() { return *m_mgr; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -22,7 +22,7 @@ class QTreeWidget;
 /**
 * This is the editor's main window class.
 */
-class TamyEditor : public QMainWindow, public ComponentsManager<TamyEditor>
+class TamyEditor : public QMainWindow, public ComponentsManager< TamyEditor >
 {
    Q_OBJECT
 
@@ -46,7 +46,7 @@ public:
     * @param parent     parent widget
     * @param flags      widget creation flags
     */
-   TamyEditor(QApplication& app, QWidget *parent = 0, Qt::WFlags flags = 0);
+   TamyEditor( QApplication& app, QWidget *parent = 0, Qt::WFlags flags = 0 );
    ~TamyEditor();
 
    // -------------------------------------------------------------------------
@@ -98,6 +98,10 @@ protected:
    void serializeDockWidgetSettings( QDockWidget& widget, bool save );
    void serializeTreeWidgetSettings( QTreeWidget& widget, bool save );
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+extern TamyEditor* GTamyEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
