@@ -15,8 +15,8 @@ RPBPostProcess::RPBPostProcess( RPPostProcessNode& node )
 {
    setCaption( "PostProcess" );
 
-   addSocket( GBSP_LEFT, "Input" );
-   addSocket( GBSP_RIGHT, "Output" );
+   addSocket().initialize( GBSP_LEFT, "Input" );
+   addSocket().initialize( GBSP_RIGHT, "Output" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

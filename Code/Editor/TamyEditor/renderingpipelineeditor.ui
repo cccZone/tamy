@@ -25,10 +25,19 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>592</width>
+         <width>687</width>
          <height>527</height>
         </rect>
        </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QGraphicsView" name="graphWidget">
+          <property name="contextMenuPolicy">
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
@@ -72,7 +81,7 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>164</width>
+          <width>69</width>
           <height>505</height>
          </rect>
         </property>

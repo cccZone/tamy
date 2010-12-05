@@ -433,11 +433,11 @@
     <ClInclude Include="..\..\Include\core\Graph.h">
       <Filter>DataStructures\Graphs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\Algorithms.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\Singleton.h">
       <Filter>Misc\Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Algorithms.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -538,7 +538,7 @@
       <Filter>DataStructures\Graphs</Filter>
     </None>
     <None Include="..\..\Include\core\Algorithms.inl">
-      <Filter>Misc</Filter>
+      <Filter>Math</Filter>
     </None>
   </ItemGroup>
 </Project>

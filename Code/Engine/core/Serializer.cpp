@@ -105,6 +105,7 @@ void Saver::save( Resource& resource, ExternalDependenciesSet& outExternalDepend
    unsigned int count = m_internalDependencies.size();
    for ( unsigned int i = 1; i < count; ++i )
    {
+      m_internalDependencies[ i ]->onObjectPreSave();
       m_internalDependencies[ i ]->save( *this );
    }
 }
