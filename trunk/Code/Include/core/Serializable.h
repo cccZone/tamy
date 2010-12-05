@@ -70,6 +70,11 @@ public:
     * Called once an object is fully loaded.
     */
    virtual void onObjectLoaded() {}
+
+   /**
+    * Called before an object is serialized.
+    */
+   virtual void onObjectPreSave() {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

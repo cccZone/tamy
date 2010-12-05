@@ -29,7 +29,6 @@ RenderingPipelineLayout::RenderingPipelineLayout( const std::string& path )
 
 void RenderingPipelineLayout::onResourceSave( ResourcesManager& mgr )
 {
-   saveState();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,7 +49,6 @@ void RenderingPipelineLayout::onResourceLoaded( ResourcesManager& mgr )
       }
    }
 
-   // initialize the layout
    restoreState();
 }
 

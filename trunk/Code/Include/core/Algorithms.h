@@ -4,6 +4,8 @@
 #ifndef _ALGORITHMS_H
 #define _ALGORITHMS_H
 
+#include <algorithm>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +23,13 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Clamps the value to the specified range.
+ *
+ * @param val
+ * @param min
+ * @param max
+ */
 template< typename T >
 T clamp( T val, T min, T max );
 

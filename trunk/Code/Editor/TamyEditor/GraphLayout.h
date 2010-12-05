@@ -6,6 +6,7 @@
 #include <QPointF>
 #include "GraphBlock.h"
 #include <QGraphicsScene>
+#include <QAction>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,8 +20,9 @@
 class GraphLayout : public QGraphicsScene
 {
 protected:
-   // the blocks will be managed by an outside resource
-   std::vector< GraphBlock* >       m_blocks;
+   std::vector< GraphBlock* >          m_blocks;            // the blocks will be managed by an outside resource
+
+   GraphBlockSocket*                   m_sourceSocket;      // memorized graph socket instance where a newly created connection starts at
 
 public:
    virtual ~GraphLayout();
@@ -30,7 +32,7 @@ public:
     *
     * @param block
     */
-   GraphBlock& add( const Class& type );
+   GraphBlock& add( const Class& type, const QPointF& pos );
 
    /**
     * Removes a block from the layout.
@@ -40,11 +42,26 @@ public:
    void remove( GraphBlock* block );
 
    /**
-    * Returns a list of types we can select from when creating a new node.
+    * Creates a context menu for the graph.
     *
-    * @param classes          fill this list with available node types
+    * @param menu       menu to fill in with entries
+    * @param scenePos   position on the scene clicked
     */
-   virtual void getNodesClasses( std::vector< Class >& classes ) = 0;
+   void createContextMenu( QMenu* menu, const QPointF& scenePos );
+
+   /**
+    * Opens the process of connecting two blocks through their sockets.
+    *
+    * @param sourceSocket
+    */
+   void startNegotiatingConnection( GraphBlockSocket& sourceSocket );
+
+   /**
+    * Finishes the process of connecting two blocks through their sockets.
+    *
+    * @param destinationSocket
+    */
+   void finishNegotiatingConnection( GraphBlockSocket& destinationSocket );
    
 protected:
    /**
@@ -52,22 +69,21 @@ protected:
     *
     * @param path
     */
-   GraphLayout( const std::string& path = "" );
+   GraphLayout();
 
    /**
-    * Caches the layout's state for storing purposes.
-    */
-   void saveState();
-
-   /**
-    * Restores the cached layout state after the load.
+    * Called after the layout is loaded in order to re-add the deserialized blocks to the graphics scene
     */
    void restoreState();
 
    // -------------------------------------------------------------------------
+   // QGraphicsScene implementation
+   // -------------------------------------------------------------------------
+   void drawForeground( QPainter* painter, const QRectF& rect );
+
+   // -------------------------------------------------------------------------
    // Representations factory
    // -------------------------------------------------------------------------
-
    /**
     * Called when the widget creates a new representation for the specified node type.
     *
@@ -81,6 +97,61 @@ protected:
     * @param node
     */
    virtual void removeNode( Object& node ) = 0;
+
+   /**
+    * Returns a list of types we can select from when creating a new node.
+    *
+    * @param classes          fill this list with available node types
+    */
+   virtual void getNodesClasses( std::vector< Class >& classes ) = 0;  
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class GraphNodeCreationAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   GraphLayout&   m_parent;
+   Class          m_type;
+   QPointF        m_pos;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param parent
+    * @param type        type of the node added
+    * @param pos         position in graph onto which the node should be added
+    */
+   GraphNodeCreationAction( GraphLayout& parent, const Class& type, const QPointF& pos );
+
+public slots:
+   void onTriggered();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class GraphNodeRemoveAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   GraphLayout&               m_parent;
+   QList< QGraphicsItem* >    m_items;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param parent
+    * @param items       items to remove
+    */
+   GraphNodeRemoveAction( GraphLayout& parent, const QList< QGraphicsItem* >& items );
+
+public slots:
+   void onTriggered();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

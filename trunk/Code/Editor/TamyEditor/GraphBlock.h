@@ -14,13 +14,23 @@
 
 class QPainter;
 class QGraphicsScene;
+class GraphBlockSocket;
+class GraphBlockConnection;
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum GraphBlockSocketPosition
+{
+   GBSP_LEFT,
+   GBSP_RIGHT,
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * A graphical representation of a graph node.
  */
-class GraphBlock :  public Object, public QGraphicsItem
+class GraphBlock : public Object, public QGraphicsItem
 {
    DECLARE_CLASS( GraphBlock )
 
@@ -32,23 +42,23 @@ public:
       GBS_ROUNDED,
    };
 
-   enum SocketPosition
-   {
-      GBSP_LEFT,
-      GBSP_RIGHT,
-   };
-
 private:
-   std::string       m_caption;
+   std::string                         m_caption;
 
-   QPointF           m_position;
-   QRectF            m_bounds;
-   QRectF            m_captionBounds;
+   QPointF                             m_position;
+   QRectF                              m_bounds;
+   QRectF                              m_captionBounds;
+   QRectF                              m_totalBounds;
 
-   static QPen       s_textPen;
-   static QPen       s_borderPen;
-   static QPen       s_selectionPen;
-   QFont             m_font;
+   static QPen                         s_textPen;
+   static QPen                         s_borderPen;
+   static QPen                         s_selectionPen;
+   QFont                               m_font;
+
+   // sockets
+   std::vector< GraphBlockSocket* >    m_sockets;
+   unsigned int                        m_leftSocketsCount;
+   unsigned int                        m_rightSocketsCount;
 
 public:
    /**
@@ -76,27 +86,10 @@ public:
     */
    virtual Object* getNode() const { return NULL; }
 
-   /**
-    * Caches the block's state for storing purposes.
-    */
-   void saveState();
-
-   /**
-    * Restores the cached block state after the load.
-    */
-   void restoreState();
-
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
-   /**
-    * Returns the bounds of the block.
-    */
-   inline QRectF boundingRect() const { return m_bounds; }
-
-   /**
-    * Paints the block.
-    */
+   inline QRectF boundingRect() const { return m_totalBounds; }
    void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
 
    // -------------------------------------------------------------------------
@@ -104,7 +97,21 @@ public:
    // -------------------------------------------------------------------------
    void onPropertyChanged( Property& property );
 
+   // -------------------------------------------------------------------------
+   // Block layout operation
+   // -------------------------------------------------------------------------
+   /**
+    * Forces the block to recalculate its layout
+    */
+   void calculateBounds();
+
 protected:
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onObjectPreSave();
+   void onObjectLoaded();
+
    // -------------------------------------------------------------------------
    // Block layout settings
    // -------------------------------------------------------------------------
@@ -121,10 +128,91 @@ protected:
    /**
     * Adds a new socket to the block.
     *
-    * @param position      socket position
-    * @param name          socket name
+    * @return     reference to the newly created socket
     */
-   void addSocket( SocketPosition position, const char* name );
+   GraphBlockSocket& addSocket();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A single socket placed on a graph block.
+ */
+class GraphBlockSocket : public Object, public QGraphicsItem
+{
+   DECLARE_CLASS( GraphBlockSocket )
+
+
+   friend class GraphBlockConnection;
+
+private:
+   GraphBlock*                               m_parent;
+
+   GraphBlockSocketPosition                  m_blockSide;
+   std::string                               m_name;
+
+   std::vector< GraphBlockConnection* >      m_connections;
+
+   QFont                                     m_font;
+   QRectF                                    m_bounds;
+   QRectF                                    m_nameBounds;
+   QPointF                                   m_position;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param parent
+    */
+   GraphBlockSocket( GraphBlock* parent = NULL );
+
+   /**
+    * Initializes the socket
+    *
+    * @param pos     socket's position ( left or right )
+    * @param name    socket's name
+    */
+   void initialize( GraphBlockSocketPosition pos, const char* name );
+
+   /**
+    * Returns the current socket position.
+    */
+   inline GraphBlockSocketPosition getPosition() const { return m_blockSide; }
+
+   /**
+    * Returns the width of the socket's name.
+    */
+   float getNameWidth() const;
+
+   // -------------------------------------------------------------------------
+   // QGraphicsItem implementation
+   // -------------------------------------------------------------------------
+   QRectF boundingRect() const { return m_bounds; }
+   void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
+
+protected:
+   // -------------------------------------------------------------------------
+   // QGraphicsItem implementation
+   // -------------------------------------------------------------------------
+   void mousePressEvent( QGraphicsSceneMouseEvent* event );
+   void mouseReleaseEvent( QGraphicsSceneMouseEvent* event );
+
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onObjectPreSave();
+   void onObjectLoaded();
+
+private:
+   // -------------------------------------------------------------------------
+   // Interface for connections management
+   // -------------------------------------------------------------------------
+   /**
+    * Adds a new connection between this socket and another one.
+    *
+    * @param connection
+    */
+   void addConnection( GraphBlockConnection* connection );
 
 private:
    void calculateBounds();
@@ -132,3 +220,41 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Connection between two graph block sockets.
+ */
+class GraphBlockConnection : public Object, public QGraphicsItem
+{
+   DECLARE_CLASS( GraphBlockConnection )
+
+private:
+   GraphBlockSocket*       m_source;
+   GraphBlockSocket*       m_destination;
+
+   QRectF                  m_bounds;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param parent
+    */
+   GraphBlockConnection( GraphBlockSocket* source = NULL, GraphBlockSocket* destination = NULL );
+
+   // -------------------------------------------------------------------------
+   // QGraphicsItem implementation
+   // -------------------------------------------------------------------------
+   inline QRectF boundingRect() const { return m_bounds; }
+   void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
+
+protected:
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onObjectLoaded();
+
+private:
+   void calculateBounds();
+};
+
+///////////////////////////////////////////////////////////////////////////////

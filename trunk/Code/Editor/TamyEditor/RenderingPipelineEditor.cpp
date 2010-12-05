@@ -1,7 +1,6 @@
 #include "RenderingPipelineEditor.h"
 #include "core.h"
 #include "core-Renderer.h"
-#include "GraphWidget.h"
 #include "RenderingPipelineLayout.h"
 #include "QPropertiesView.h"
 #include "tamyeditor.h"
@@ -14,7 +13,6 @@
 RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& renderingPipelineLayout )
 : QMainWindow( NULL, 0 )
 , m_renderingPipelineLayout( renderingPipelineLayout )
-, m_graphWidget( NULL )
 , m_propertiesLayout( NULL )
 , m_rootView( NULL )
 {
@@ -42,12 +40,11 @@ void RenderingPipelineEditor::initialize( TamyEditor& mgr )
    m_ui.setupUi( this );
    
    // attach the graph viewer
-   m_graphWidget = new GraphWidget( m_ui.mainEditorPanel, m_renderingPipelineLayout );
-   m_ui.mainEditorPanel->setWidget( m_graphWidget );
-   connect( m_graphWidget, SIGNAL( getNodesClasses( std::vector< Class >& ) ), this, SLOT( onGetNodesClasses( std::vector< Class >& ) ) );
-   connect( m_graphWidget, SIGNAL( getEdgesClasses( std::vector< Class >& ) ), this, SLOT( onGetEdgesClasses( std::vector< Class >& ) ) );
-   connect( m_graphWidget, SIGNAL( popupMenuShown( QMenu& ) ), this, SLOT( onPopupMenuShown( QMenu& ) ) );
-   connect( m_graphWidget, SIGNAL( blockSelected( Object* ) ), this, SLOT( onBlockSelected( Object* ) ) );
+   m_ui.graphWidget->setScene( &m_renderingPipelineLayout );
+   connect( m_ui.graphWidget, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( onShowContextMenu( const QPoint& ) ) );
+
+   // set handlers for the signals emitted by the scene
+   connect( &m_renderingPipelineLayout, SIGNAL( selectionChanged() ), this, SLOT( onSceneSelectionChanged() ) );
 
    // attach the properties viewer
    m_propertiesLayout = new QVBoxLayout( m_ui.scrollablePropertiesPanel );
@@ -98,15 +95,16 @@ void RenderingPipelineEditor::save()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineEditor::onPopupMenuShown( QMenu& menu )
+void RenderingPipelineEditor::onSceneSelectionChanged()
 {
-}
+   GraphBlock* selectedBlock = NULL;
 
-///////////////////////////////////////////////////////////////////////////////
+   QList< QGraphicsItem* > selectedItems = m_renderingPipelineLayout.selectedItems();
+   if ( selectedItems.size() == 1 )
+   {
+      selectedBlock = dynamic_cast< GraphBlock* >( selectedItems.back() );
+   }
 
-void RenderingPipelineEditor::onBlockSelected( Object* object )
-{
-  
    if ( m_rootView != NULL )
    {
       m_propertiesLayout->removeWidget( m_rootView );
@@ -115,12 +113,21 @@ void RenderingPipelineEditor::onBlockSelected( Object* object )
       m_rootView = NULL;
    }
 
-   if ( object != NULL )
+   if ( selectedBlock != NULL )
    {
       m_rootView = new QPropertiesView();
       m_propertiesLayout->addWidget( m_rootView );
-      object->viewProperties( *m_rootView );
+      selectedBlock->viewProperties( *m_rootView );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::onShowContextMenu( const QPoint& pos )
+{
+   QMenu* contextMenu = new QMenu( m_ui.graphWidget );
+   m_renderingPipelineLayout.createContextMenu( contextMenu, m_ui.graphWidget->mapToScene( pos ) );
+   contextMenu->popup( m_ui.graphWidget->mapToGlobal( pos ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

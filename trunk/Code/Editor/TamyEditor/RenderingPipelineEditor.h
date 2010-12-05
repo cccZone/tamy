@@ -27,7 +27,6 @@ private:
    Ui::RenderingPipelineEditorWindow         m_ui;
 
    RenderingPipelineLayout&                  m_renderingPipelineLayout;
-   GraphWidget*                              m_graphWidget;
    QVBoxLayout*                              m_propertiesLayout;
    QPropertiesView*                          m_rootView;
 
@@ -47,8 +46,8 @@ public:
 
 public slots:
    void save();
-   void onPopupMenuShown( QMenu& menu );
-   void onBlockSelected( Object* object );
+   void onSceneSelectionChanged();
+   void onShowContextMenu( const QPoint& pos );
 
 protected:
    void closeEvent( QCloseEvent *event );

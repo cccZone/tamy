@@ -231,9 +231,6 @@
     <ClInclude Include="GraphBlock.h">
       <Filter>Widgets\GraphWidget</Filter>
     </ClInclude>
-    <ClInclude Include="GraphLayout.h">
-      <Filter>Widgets\GraphWidget</Filter>
-    </ClInclude>
     <ClInclude Include="RenderingPipelineLayout.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </ClInclude>
@@ -482,14 +479,8 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_assertDialog.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GraphWidget.cpp">
-      <Filter>Widgets\GraphWidget</Filter>
-    </ClCompile>
     <ClCompile Include="GraphBlock.cpp">
       <Filter>Widgets\GraphWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_GraphWidget.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipelineEditor.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
@@ -511,6 +502,9 @@
     </ClCompile>
     <ClCompile Include="RPBPostProcess.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_GraphLayout.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -534,9 +528,6 @@
     </None>
     <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.psh">
       <Filter>Components\SelectionManager\Representations</Filter>
-    </None>
-    <None Include="GraphWidget.inl">
-      <Filter>Widgets\GraphWidget</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -633,9 +624,6 @@
     <CustomBuild Include="assertdialog.ui">
       <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="GraphWidget.h">
-      <Filter>Widgets\GraphWidget</Filter>
-    </CustomBuild>
     <CustomBuild Include="RenderingPipelineEditor.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </CustomBuild>
@@ -647,6 +635,9 @@
     </CustomBuild>
     <CustomBuild Include="QPropertiesView.h">
       <Filter>Widgets\PropertiesEditorWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GraphLayout.h">
+      <Filter>Widgets\GraphWidget</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>
