@@ -7,6 +7,7 @@
 #include <QRectF>
 #include <QPen>
 #include <QFont>
+#include <QGraphicsLineItem>
 #include "core/Object.h"
 
 
@@ -91,6 +92,7 @@ public:
    // -------------------------------------------------------------------------
    inline QRectF boundingRect() const { return m_totalBounds; }
    void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
+   void mouseMoveEvent( QGraphicsSceneMouseEvent* event );
 
    // -------------------------------------------------------------------------
    // Object implementation
@@ -184,6 +186,18 @@ public:
     */
    float getNameWidth() const;
 
+   /**
+    * Recalculates the bounds of the connections this socket is involved in.
+    */
+   void calculateConnectionBounds();
+
+   /**
+    * Checks the connection between this socket and the specified one.
+    *
+    * @param socket     socket a connection to which we want to confirm.
+    */
+   bool isConnectedTo( GraphBlockSocket& socket ) const;
+
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
@@ -223,7 +237,7 @@ private:
 /**
  * Connection between two graph block sockets.
  */
-class GraphBlockConnection : public Object, public QGraphicsItem
+class GraphBlockConnection : public Object, public QGraphicsLineItem
 {
    DECLARE_CLASS( GraphBlockConnection )
 
@@ -231,7 +245,6 @@ private:
    GraphBlockSocket*       m_source;
    GraphBlockSocket*       m_destination;
 
-   QRectF                  m_bounds;
 
 public:
    /**
@@ -241,20 +254,26 @@ public:
     */
    GraphBlockConnection( GraphBlockSocket* source = NULL, GraphBlockSocket* destination = NULL );
 
-   // -------------------------------------------------------------------------
-   // QGraphicsItem implementation
-   // -------------------------------------------------------------------------
-   inline QRectF boundingRect() const { return m_bounds; }
-   void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
+   /**
+    * Calculates the bounds of the connection.
+    */
+   void calculateBounds();
+
+   /**
+    * Returns the source socket.
+    */
+   inline GraphBlockSocket& getSource() { return *m_source; }
+
+   /**
+    * Returns the destination socket.
+    */
+   inline GraphBlockSocket& getDestination() { return *m_destination; }
 
 protected:
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-
-private:
-   void calculateBounds();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
