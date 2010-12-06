@@ -5,12 +5,14 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
 #include <QMenu>
+#include <QGraphicsLineItem>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 GraphLayout::GraphLayout()
    : m_sourceSocket( NULL )
+   , m_drawnConnection( NULL )
 {
 }
 
@@ -22,6 +24,7 @@ GraphLayout::~GraphLayout()
    m_blocks.clear();
 
    m_sourceSocket = NULL;
+   m_drawnConnection = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,27 +71,51 @@ void GraphLayout::remove( GraphBlock* block )
 
 void GraphLayout::startNegotiatingConnection( GraphBlockSocket& sourceSocket )
 {
-   m_sourceSocket = &sourceSocket;
+   // we can only start connections from the sockets on the right
+   if ( sourceSocket.getPosition() == GBSP_RIGHT )
+   {
+      m_sourceSocket = &sourceSocket;
+
+      // visualize the drawn connection
+      ASSERT( m_drawnConnection == NULL);
+      m_drawnConnection = new QGraphicsLineItem();
+      addItem( m_drawnConnection );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphLayout::finishNegotiatingConnection( GraphBlockSocket& destinationSocket )
+void GraphLayout::finishNegotiatingConnection( GraphBlockSocket* destinationSocket )
 {
-   if ( m_sourceSocket == NULL )
+   if ( m_drawnConnection )
+   {
+      // remove the visualization of the drawn connection
+      removeItem( m_drawnConnection );
+      delete m_drawnConnection;
+      m_drawnConnection = NULL;
+   }
+
+   if ( m_sourceSocket == NULL || destinationSocket == NULL )
    {
       // there was no source socket memorized to begin with - drop the whole thing
       return;
    }
 
-   // verify that we're trying to connect two distinct sockets
-   if ( m_sourceSocket == &destinationSocket )
+   // verify that we're trying to connect two distinct sockets that belong to two distinct blocks
+   bool belongToTheSameBlock = ( m_sourceSocket->parentItem() == destinationSocket->parentItem() );
+   if ( m_sourceSocket == destinationSocket || belongToTheSameBlock )
    {
       return;
    }
 
-   // create a connection
-   new GraphBlockConnection( m_sourceSocket, &destinationSocket );
+   // verify that the connection doesn't exist and that we're connecting to a correctly positioned socket
+   if ( destinationSocket->getPosition() == GBSP_LEFT && !m_sourceSocket->isConnectedTo( *destinationSocket ) )
+   {
+      // create a connection
+      GraphBlockConnection* connection = new GraphBlockConnection( m_sourceSocket, destinationSocket );
+      m_connections.push_back( connection );
+      addItem( connection );
+   }
 
    // cleanup
    m_sourceSocket = NULL;
@@ -96,26 +123,35 @@ void GraphLayout::finishNegotiatingConnection( GraphBlockSocket& destinationSock
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphLayout::restoreState()
+void GraphLayout::mouseMoveEvent( QGraphicsSceneMouseEvent* mouseEvent )
 {
-   for ( std::vector< GraphBlock* >::iterator it = m_blocks.begin(); it != m_blocks.end(); ++it )
+   __super::mouseMoveEvent( mouseEvent );
+
+   if ( !m_drawnConnection )
    {
-      addItem( *it );
+      return;
    }
+   ASSERT( m_sourceSocket != NULL );
+
+   QPointF start = m_sourceSocket->scenePos();
+   QPointF end = mouseEvent->scenePos();
+   m_drawnConnection->setLine( start.rx(), start.ry(), end.rx(), end.ry() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphLayout::drawForeground( QPainter* painter, const QRectF& rect )
+void GraphLayout::restoreState()
 {
-   __super::drawForeground( painter, rect );
-
-   if ( m_sourceSocket != NULL )
+   // restore blocks
+   for ( std::vector< GraphBlock* >::iterator it = m_blocks.begin(); it != m_blocks.end(); ++it )
    {
-      // we're in the process of connecting two blocks together - visualize that
+      addItem( *it );
+   }
 
-      painter->setRenderHint( QPainter::Antialiasing, true );
-      painter->setPen( QPen( QBrush( QColor( 0, 0, 0 ) ), 3.0f ) );
+   // restore connections
+   for ( std::vector< GraphBlockConnection* >::iterator it = m_connections.begin(); it != m_connections.end(); ++it )
+   {
+      addItem( *it );
    }
 }
 

@@ -11,6 +11,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class QGraphicsLineItem;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * An abstract graph layout interface. It stores a list of blocks, however those
  * are managed by a solid class implementing this interface.
@@ -20,9 +24,11 @@
 class GraphLayout : public QGraphicsScene
 {
 protected:
-   std::vector< GraphBlock* >          m_blocks;            // the blocks will be managed by an outside resource
+   std::vector< GraphBlock* >                m_blocks;            // the blocks will be managed by an outside resource
+   std::vector< GraphBlockConnection* >      m_connections;       // connections between the blocks
 
-   GraphBlockSocket*                   m_sourceSocket;      // memorized graph socket instance where a newly created connection starts at
+   GraphBlockSocket*                         m_sourceSocket;      // memorized graph socket instance where a newly created connection starts at
+   QGraphicsLineItem*                        m_drawnConnection;
 
 public:
    virtual ~GraphLayout();
@@ -61,7 +67,7 @@ public:
     *
     * @param destinationSocket
     */
-   void finishNegotiatingConnection( GraphBlockSocket& destinationSocket );
+   void finishNegotiatingConnection( GraphBlockSocket* destinationSocket );
    
 protected:
    /**
@@ -79,7 +85,7 @@ protected:
    // -------------------------------------------------------------------------
    // QGraphicsScene implementation
    // -------------------------------------------------------------------------
-   void drawForeground( QPainter* painter, const QRectF& rect );
+   virtual void mouseMoveEvent( QGraphicsSceneMouseEvent* mouseEvent );
 
    // -------------------------------------------------------------------------
    // Representations factory

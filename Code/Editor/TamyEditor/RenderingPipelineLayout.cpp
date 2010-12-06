@@ -14,6 +14,7 @@
 BEGIN_RESOURCE( RenderingPipelineLayout, Resource, rpl, AM_BINARY );
    PROPERTY( RenderingPipeline*, m_model );
    PROPERTY( std::vector< GraphBlock* >, m_blocks );
+   PROPERTY( std::vector< GraphBlockConnection* >, m_connections );
 END_RESOURCE();
 
 ///////////////////////////////////////////////////////////////////////////////

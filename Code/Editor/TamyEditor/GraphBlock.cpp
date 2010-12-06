@@ -7,6 +7,8 @@
 #include <algorithm>
 
 
+// TODO: !!!!!!!!! zapamietywanie node'a we wlasciwym resource'ie i w bloczku go opisujacym - zeby to byly wskazniki na ta sama instancje
+
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_ABSTRACT_OBJECT( GraphBlock, Object );
@@ -102,6 +104,20 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void GraphBlock::mouseMoveEvent( QGraphicsSceneMouseEvent* event )
+{
+   __super::mouseMoveEvent( event );
+
+   // inform the sockets about the move, so that they in turn can refresh 
+   // the connections bounds
+   for ( std::vector< GraphBlockSocket* >::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it )
+   {
+      (*it)->calculateConnectionBounds();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void GraphBlock::onObjectPreSave()
 {
    __super::onObjectPreSave();
@@ -119,6 +135,13 @@ void GraphBlock::onObjectLoaded()
 
    // recalculate the objects bounds
    calculateBounds();
+
+   // inform the sockets about the move, so that they in turn can refresh 
+   // the connections bounds
+   for ( std::vector< GraphBlockSocket* >::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it )
+   {
+      (*it)->calculateConnectionBounds();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -291,10 +314,6 @@ void GraphBlockSocket::onObjectLoaded()
    setPos( m_position );
 
    calculateBounds();
-   if ( m_parent )
-   {
-      m_parent->calculateBounds();
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -305,10 +324,6 @@ void GraphBlockSocket::initialize( GraphBlockSocketPosition pos, const char* nam
    m_name = name;
 
    calculateBounds();
-   if ( m_parent )
-   {
-      m_parent->calculateBounds();
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -337,6 +352,16 @@ void GraphBlockSocket::paint( QPainter* painter, const QStyleOptionGraphicsItem*
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void GraphBlockSocket::calculateConnectionBounds()
+{
+   for( std::vector< GraphBlockConnection* >::iterator it = m_connections.begin(); it != m_connections.end(); ++it )
+   {
+      (*it)->calculateBounds();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void GraphBlockSocket::calculateBounds()
 {
    QFontMetrics metrics( m_font );
@@ -361,6 +386,12 @@ void GraphBlockSocket::calculateBounds()
          break;
       }
    }
+
+   // recalculate bounds of the parent
+   if ( m_parent )
+   {
+      m_parent->calculateBounds();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -368,6 +399,7 @@ void GraphBlockSocket::calculateBounds()
 void GraphBlockSocket::mousePressEvent( QGraphicsSceneMouseEvent* event )
 {
    GraphLayout* graphScene = dynamic_cast< GraphLayout* >( scene() );
+
    if ( graphScene )
    {
       graphScene->startNegotiatingConnection( *this );
@@ -380,14 +412,14 @@ void GraphBlockSocket::mousePressEvent( QGraphicsSceneMouseEvent* event )
 
 void GraphBlockSocket::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 {
+   event->accept();
+
    GraphLayout* graphScene = dynamic_cast< GraphLayout* >( scene() );
    if ( graphScene )
    {
       GraphBlockSocket* destinationSocket = dynamic_cast< GraphBlockSocket* >( graphScene->itemAt( event->scenePos() ) );
-      graphScene->finishNegotiatingConnection( *destinationSocket );
+      graphScene->finishNegotiatingConnection( destinationSocket );
    }
-
-   event->accept();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -403,6 +435,22 @@ void GraphBlockSocket::addConnection( GraphBlockConnection* connection )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+bool GraphBlockSocket::isConnectedTo( GraphBlockSocket& socket ) const
+{
+   for( std::vector< GraphBlockConnection* >::const_iterator it = m_connections.begin(); it != m_connections.end(); ++it )
+   {
+      GraphBlockConnection* connection = *it;
+      if ( ( &connection->getSource() == this ) && ( &connection->getDestination() == &socket ) )
+      {
+         return true;
+      }
+   }
+
+   return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -414,27 +462,15 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GraphBlockConnection::GraphBlockConnection( GraphBlockSocket* source, GraphBlockSocket* destination )
-   : QGraphicsItem( source )
-   , m_source( source )
+   : m_source( source )
    , m_destination( destination )
 {
-   source->addConnection( this );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void GraphBlockConnection::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
-{
-   painter->setRenderHint( QPainter::Antialiasing, true );
-
-   QPointF start, end;
-   start = m_source->pos();
-   end = m_source->mapFromItem( m_destination, m_destination->pos() );
-   painter->drawLine( start, end );
-
-   // TODO: uwzglednic polaczenia w bound'sach danego bloczka
-   // TODO: rozkminic jakk przemapowac pozycje, zeby sie dobrze rysowalo ( chyba trzeba do zrodlowego polaczenia mapowac )
-   // TODO: zapamietywanie node'a we wlasciwym resource'ie i w bloczku go opisujacym - zeby to byly wskazniki na ta sama instancje
+   if ( m_source && m_destination )
+   {
+      source->addConnection( this );
+      destination->addConnection( this );
+      calculateBounds();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -445,7 +481,6 @@ void GraphBlockConnection::onObjectLoaded()
 
    ASSERT_MSG( m_source != NULL, "Information about this connection's source socket was not deserialized properly" );
    ASSERT_MSG( m_destination != NULL, "Information about this connection's destination socket was not deserialized properly" );
-   setParentItem( m_source );
 
    calculateBounds();
 }
@@ -454,8 +489,10 @@ void GraphBlockConnection::onObjectLoaded()
 
 void GraphBlockConnection::calculateBounds()
 {
-   m_bounds = m_source->boundingRect();
-   m_bounds = m_bounds.united( m_destination->boundingRect() );
+   QPointF start = m_source->scenePos();
+   QPointF end = m_destination->scenePos();
+
+   setLine( start.rx(), start.ry(), end.rx(), end.ry() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
