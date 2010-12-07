@@ -198,6 +198,11 @@ public:
     */
    bool isConnectedTo( GraphBlockSocket& socket ) const;
 
+   /**
+    * Returns a list of all connections the socket has.
+    */
+   inline const std::vector< GraphBlockConnection* >& getConnections() const { return m_connections; }
+
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
@@ -226,7 +231,14 @@ private:
     *
     * @param connection
     */
-   void addConnection( GraphBlockConnection* connection );
+   void addConnection( GraphBlockConnection& connection );
+
+   /**
+    * Removes the specified connection from the socket.
+    *
+    * @param connection
+    */
+   void removeConnection( GraphBlockConnection& connection );
 
 private:
    void calculateBounds();
@@ -258,6 +270,11 @@ public:
     * Calculates the bounds of the connection.
     */
    void calculateBounds();
+
+   /**
+    * Called when the connection gets removed.
+    */
+   void onRemoved();
 
    /**
     * Returns the source socket.

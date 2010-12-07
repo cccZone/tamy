@@ -123,6 +123,23 @@ void GraphLayout::finishNegotiatingConnection( GraphBlockSocket* destinationSock
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void GraphLayout::removeConnection( GraphBlockConnection& connection )
+{
+   for( std::vector< GraphBlockConnection* >::iterator it = m_connections.begin(); it != m_connections.end(); ++it )
+   {
+      if ( *it == &connection )
+      {
+         connection.onRemoved();
+         removeItem( *it );
+         delete *it;
+         m_connections.erase( it );
+         break;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void GraphLayout::mouseMoveEvent( QGraphicsSceneMouseEvent* mouseEvent )
 {
    __super::mouseMoveEvent( mouseEvent );
@@ -159,11 +176,14 @@ void GraphLayout::restoreState()
 
 void GraphLayout::createContextMenu( QMenu* menu, const QPointF& scenePos )
 {
-   QGraphicsItem* pointedBlock = itemAt( scenePos );
-   if ( pointedBlock == NULL )
+   QGraphicsItem* pointedItem = itemAt( scenePos );
+   GraphBlock* block = dynamic_cast< GraphBlock* >( pointedItem );
+   GraphBlockSocket* socket = dynamic_cast< GraphBlockSocket* >( pointedItem );
+
+   if ( pointedItem == NULL )
    {
       // we clicked an empty spot - show a menu for adding new nodes
-      QMenu* addMenu = menu->addMenu( "Add" );
+      QMenu* addMenu = menu->addMenu( "Add nodes" );
 
       std::vector< Class > classes;
       getNodesClasses( classes );
@@ -174,6 +194,16 @@ void GraphLayout::createContextMenu( QMenu* menu, const QPointF& scenePos )
          QAction* addNodeAction = new GraphNodeCreationAction( *this, nodeClass, scenePos );
          addMenu->addAction( addNodeAction );
       }
+   }
+   else if ( block != NULL )
+   {
+      // if the clicked item is a block...
+   }
+   else if ( socket != NULL )
+   {
+      // if the clicked item is a socket...
+      QAction* removeConnectionsAction = new GraphSocketRemoveConnectionsAction( *this, *socket );
+      menu->addAction( removeConnectionsAction );
    }
    
    // if there are blocks selected, show additional options
@@ -211,7 +241,7 @@ void GraphNodeCreationAction::onTriggered()
 ///////////////////////////////////////////////////////////////////////////////
 
 GraphNodeRemoveAction::GraphNodeRemoveAction( GraphLayout& parent, const QList< QGraphicsItem* >& items )
-   : QAction( "Remove", &parent )
+   : QAction( "Remove nodes", &parent )
    , m_parent( parent )
    , m_items( items )
 {
@@ -225,6 +255,29 @@ void GraphNodeRemoveAction::onTriggered()
    foreach( QGraphicsItem* item, m_items )
    {
       m_parent.remove( dynamic_cast< GraphBlock* >( item ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+GraphSocketRemoveConnectionsAction::GraphSocketRemoveConnectionsAction( GraphLayout& parent, GraphBlockSocket& socket )
+   : QAction( "Remove all connections", &parent )
+   , m_parent( parent )
+   , m_socket( socket )
+{
+   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphSocketRemoveConnectionsAction::onTriggered()
+{
+   std::vector< GraphBlockConnection* > connections = m_socket.getConnections();
+   for ( std::vector< GraphBlockConnection* >::iterator it = connections.begin(); it != connections.end(); ++it )
+   {
+      m_parent.removeConnection( **it );
    }
 }
 
