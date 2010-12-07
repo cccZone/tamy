@@ -424,14 +424,9 @@ void GraphBlockSocket::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphBlockSocket::addConnection( GraphBlockConnection* connection )
+void GraphBlockSocket::addConnection( GraphBlockConnection& connection )
 {
-   ASSERT_MSG( connection != NULL, "NULL pointer instead a GraphBlockConnection instance" );
-   if ( connection == NULL )
-   {
-      return;
-   }
-   m_connections.push_back( connection );
+   m_connections.push_back( &connection );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -451,6 +446,20 @@ bool GraphBlockSocket::isConnectedTo( GraphBlockSocket& socket ) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlockSocket::removeConnection( GraphBlockConnection& connection )
+{
+   for( std::vector< GraphBlockConnection* >::iterator it = m_connections.begin(); it != m_connections.end(); ++it )
+   {
+      if ( *it == &connection )
+      {
+         m_connections.erase( it );
+         break;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -467,8 +476,8 @@ GraphBlockConnection::GraphBlockConnection( GraphBlockSocket* source, GraphBlock
 {
    if ( m_source && m_destination )
    {
-      source->addConnection( this );
-      destination->addConnection( this );
+      source->addConnection( *this );
+      destination->addConnection( *this );
       calculateBounds();
    }
 }
@@ -493,6 +502,16 @@ void GraphBlockConnection::calculateBounds()
    QPointF end = m_destination->scenePos();
 
    setLine( start.rx(), start.ry(), end.rx(), end.ry() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlockConnection::onRemoved()
+{
+   m_source->removeConnection( *this );
+   m_destination->removeConnection( *this );
+   m_source = NULL;
+   m_destination = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

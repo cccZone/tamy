@@ -68,6 +68,13 @@ public:
     * @param destinationSocket
     */
    void finishNegotiatingConnection( GraphBlockSocket* destinationSocket );
+
+   /**
+    * Removes the specified connection.
+    *
+    * @param connection
+    */
+   void removeConnection( GraphBlockConnection& connection );
    
 protected:
    /**
@@ -155,6 +162,28 @@ public:
     * @param items       items to remove
     */
    GraphNodeRemoveAction( GraphLayout& parent, const QList< QGraphicsItem* >& items );
+
+public slots:
+   void onTriggered();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class GraphSocketRemoveConnectionsAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   GraphLayout&               m_parent;
+   GraphBlockSocket&          m_socket;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param socket
+    */
+   GraphSocketRemoveConnectionsAction( GraphLayout& parent, GraphBlockSocket& socket );
 
 public slots:
    void onTriggered();
