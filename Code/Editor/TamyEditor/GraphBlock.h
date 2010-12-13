@@ -85,7 +85,7 @@ public:
    /**
     * Returns the represented node instance.
     */
-   virtual Object* getNode() const { return NULL; }
+   virtual Object& getNode() { return *( reinterpret_cast< Object* >( NULL ) ); }
 
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation

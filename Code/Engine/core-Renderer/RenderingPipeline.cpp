@@ -5,7 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( RenderingPipelineNode, Object );
+BEGIN_ABSTRACT_OBJECT( RenderingPipelineNode, ResourceObject );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,13 +25,14 @@ RenderingPipeline::RenderingPipeline( const std::string& fileName )
 
 RenderingPipeline::~RenderingPipeline()
 {
-   Collection::clear( m_nodes );
+   m_nodes.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void RenderingPipeline::addNode( RenderingPipelineNode* node )
 {
+   addObject( node );
    m_nodes.push_back( node );
 }
 
@@ -43,7 +44,7 @@ void RenderingPipeline::removeNode( RenderingPipelineNode& node )
    if ( it != m_nodes.end() )
    {
       m_nodes.erase( it );
-      delete &node;
+      removeObject( node.getObjectId() );
    }
    else
    {

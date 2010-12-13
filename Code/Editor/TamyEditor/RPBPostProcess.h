@@ -2,7 +2,8 @@
 /// @brief  rendering pipeline block representing a single post process stage
 #pragma once
 
-#include "GraphBlock.h"
+#include "RenderingPipelineBlock.h"
+#include "core/ResourceHandle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,18 +12,19 @@ class RPPostProcessNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPBPostProcess : public GraphBlock
+class RPBPostProcess : public RenderingPipelineBlock
 {
    DECLARE_CLASS( RPBPostProcess )
 
 private:
-   RPPostProcessNode*         m_node;
+   RPPostProcessNode*                           m_nodePtr;
+   TResourceHandle< RPPostProcessNode >*        m_node;
 
 public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBPostProcess() : m_node( NULL ) {}
+   RPBPostProcess() : m_nodePtr( NULL ), m_node( NULL ) {}
 
    /**
     * Parametrized constructor required by the generic factory.
@@ -30,11 +32,13 @@ public:
     * @param node    represented node
     */
    RPBPostProcess( RPPostProcessNode& node );
+   ~RPBPostProcess();
 
    // -------------------------------------------------------------------------
    // GraphBlock implementation
    // -------------------------------------------------------------------------
-   Object* getNode() const;
+   Object& getNode();
+   void initialize( RenderingPipeline& parentResource );
 
 protected:
    /**

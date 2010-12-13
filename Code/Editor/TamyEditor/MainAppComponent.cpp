@@ -17,7 +17,7 @@
 MainAppComponent::MainAppComponent( QApplication& app )
 : m_app( app )
 , m_timeController( new TimeController() )
-, m_resourceMgr( new ResourcesManager() )
+, m_resourceMgr( &ResourcesManager::getInstance() )
 , m_mgr( NULL )
 {}
 
@@ -26,7 +26,7 @@ MainAppComponent::MainAppComponent( QApplication& app )
 MainAppComponent::~MainAppComponent()
 {
    m_mgr = NULL;
-   delete m_resourceMgr; m_resourceMgr = NULL;
+   m_resourceMgr->reset(); m_resourceMgr = NULL;
    delete m_timeController; m_timeController = NULL;
 }
 

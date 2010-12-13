@@ -10,6 +10,9 @@
 class RPPostProcessNode : public RenderingPipelineNode
 {
    DECLARE_CLASS( RPPostProcessNode )
+
+private:
+   int         m_testVal;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

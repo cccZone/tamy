@@ -46,6 +46,7 @@ private:
    std::string       m_name;
    std::string       m_label;
    bool              m_canBeEdited;
+   bool              m_canBeSaved;
 
 public:
    virtual ~Property() {}
@@ -63,8 +64,9 @@ public:
     * @param name
     * @param label
     * @param canBeEdited
+    * @param canBeSaved
     */
-   inline void setParams( const std::string& name, const std::string& label, bool canBeEdited );
+   inline void setParams( const std::string& name, const std::string& label, bool canBeEdited, bool canBeSaved );
 
    /**
     * This method returns the name assigned to this property.

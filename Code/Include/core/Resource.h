@@ -1,11 +1,12 @@
-#pragma once
-
 /// @file   core\Resource.h
 /// @brief  interface marking all resources
+#ifndef _RESOURCE_H
+#define _RESOURCE_H
 
 #include "core\Object.h"
 #include "core\Serializer.h"
 #include "core\Component.h"
+#include "core\ResourceHandle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,10 +31,14 @@ public:
    };
 
    friend class ResourcesManager;
+   friend class Object;
 
 private:
-   std::string                   m_filePath;
-   ResourcesManager*             m_host;
+   std::string                      m_filePath;
+   ResourcesManager*                m_host;
+
+   std::vector< ResourceObject* >   m_managedObjects;
+   std::vector< int >               m_freeIds;
 
 public:
    /**
@@ -42,7 +47,7 @@ public:
     * @param filePath   path to the file where we want to save the resource.
     */
    Resource( const std::string& filePath = std::string() );
-   virtual ~Resource() {}
+   virtual ~Resource();
 
    /**
     * Returns the name of the resource.
@@ -122,6 +127,14 @@ public:
                                  AccessMode accessMode, 
                                  const std::string& typeName );
 
+   // -------------------------------------------------------------------------
+   // Managed objects
+   // -------------------------------------------------------------------------
+   /**
+    * Returns an instance of the managed object using its ID.
+    */
+   ResourceObject& getObject( int objectId );
+
 protected:
    // -------------------------------------------------------------------------
    // Notifications
@@ -151,6 +164,23 @@ protected:
     * the resource has successfully been registered with the manager.
     */
     virtual void onResourceLoaded( ResourcesManager& mgr ) {}
+
+    // -------------------------------------------------------------------------
+    // Managed objects
+    // -------------------------------------------------------------------------
+    /**
+    * Adds a new object under the resource control.
+    *
+    * @param object
+    */
+   void addObject( ResourceObject* object );
+
+   /**
+    * Removes an object from the resource's control.
+    *
+    * @param handle
+    */
+   void removeObject( int objectId );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -186,3 +216,5 @@ protected:
 #define END_RESOURCE() END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#endif // _RESOURCE_H 

@@ -193,7 +193,8 @@ TEST(Object, properties)
 
 TEST(Object, serialization)
 {
-   ResourcesManager mgr;
+   ResourcesManager& mgr = ResourcesManager::getInstance();
+   mgr.reset();
 
    BaseObject baseObj(1);
    DerivedObject derivedObj(3, 2);
@@ -218,7 +219,8 @@ TEST(Object, serialization)
 
 TEST(Object, dependencies)
 {
-   ResourcesManager mgr;
+   ResourcesManager& mgr = ResourcesManager::getInstance();
+   mgr.reset();
 
    // case 1: dependency not set
    {
@@ -259,7 +261,7 @@ TEST( Object, resourcesTreatedAsSingletons )
    DependentObject depObj2( baseObj );
 
    std::vector<byte> storage;
-   ResourcesManager mgr;
+   ResourcesManager& mgr = ResourcesManager::getInstance();
    mgr.addResource( baseObj );
 
    Saver saver(new SerializerImplMock(storage));
@@ -277,7 +279,7 @@ TEST( Object, resourcesTreatedAsSingletons )
 
 TEST(Object, inheritance)
 {
-   ResourcesManager mgr;
+   ResourcesManager& mgr = ResourcesManager::getInstance();
 
    ImplementingClass obj;
    obj.setBaseVal(1);

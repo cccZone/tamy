@@ -237,6 +237,9 @@
     <ClInclude Include="RPBPostProcess.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
+    <ClInclude Include="RenderingPipelineBlock.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -506,16 +509,25 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_GraphLayout.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
+    <ClCompile Include="RenderingPipelineBlock.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="IntPropertyEditor.cpp">
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_IntPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_FloatPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="FloatPropertyEditor.cpp">
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
       <Filter>QtImplementation\Resource Files</Filter>
-    </None>
-    <None Include="FloatPropertyEditor.inl">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
-    </None>
-    <None Include="IntPropertyEditor.inl">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </None>
     <None Include="TypeDescFactory.inl">
       <Filter>Widgets\TreeWidget</Filter>

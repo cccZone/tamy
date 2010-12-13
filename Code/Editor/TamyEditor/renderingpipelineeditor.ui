@@ -72,19 +72,85 @@
    <widget class="QWidget" name="dockWidgetContents">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QScrollArea" name="scrollablePropertiesPanel">
-       <property name="widgetResizable">
-        <bool>true</bool>
+      <widget class="QToolBox" name="toolBox">
+       <property name="currentIndex">
+        <number>0</number>
        </property>
-       <widget class="QWidget" name="scrollAreaWidgetContents_2">
+       <widget class="QWidget" name="blockPropertiesPage">
         <property name="geometry">
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>69</width>
-          <height>505</height>
+          <width>71</width>
+          <height>453</height>
          </rect>
         </property>
+        <attribute name="label">
+         <string>Block properties</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="scrollableBlockPropertiesPanel">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollableBlockPropertiesPanel_2">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>69</width>
+              <height>451</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="nodePropertiesPage">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>71</width>
+          <height>453</height>
+         </rect>
+        </property>
+        <attribute name="label">
+         <string>Node properties</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <property name="margin">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QScrollArea" name="scrollableNodePropertiesPanel">
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="scrollableNodePropertiesPanel_2">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>69</width>
+              <height>451</height>
+             </rect>
+            </property>
+           </widget>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </widget>
      </item>

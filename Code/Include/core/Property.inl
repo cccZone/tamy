@@ -5,11 +5,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Property::setParams( const std::string& name, const std::string& label, bool canBeEdited )
+void Property::setParams( const std::string& name, const std::string& label, bool canBeEdited, bool canBeSaved )
 {
    m_name = name;
    m_label = label;
    m_canBeEdited = canBeEdited;
+   m_canBeSaved = canBeSaved;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

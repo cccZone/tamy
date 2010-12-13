@@ -8,6 +8,7 @@ Property::Property()
 , m_name( "" )
 , m_label( "" )
 , m_canBeEdited( false )
+, m_canBeSaved( true )
 {
 }
 

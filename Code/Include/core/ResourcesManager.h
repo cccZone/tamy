@@ -21,20 +21,22 @@ class Resource;
  * This manager manages the lifetime and accessibility of resources that can 
  * be loaded from files and usually contain large amount of data we don't want 
  * to scatter the precious memory with.
+ *
+ * Since there can only be a single instance of a resource manager ( there's no point
+ * in having two instances managing resources ), this class is made into a singleton
  */
 class ResourcesManager : public ComponentsManager< ResourcesManager >
 {
 private:
-   Filesystem* m_filesystem;
-
    typedef std::map<std::string, Resource* > ResourcesMap;
-   ResourcesMap m_resources;
+
+private:
+   static ResourcesManager    s_theInstance;
+
+   Filesystem*                m_filesystem;
+   ResourcesMap               m_resources;
 
 public:
-   /**
-    * Constructor.
-    */
-   ResourcesManager();
    ~ResourcesManager();
 
    /**
@@ -108,12 +110,23 @@ public:
     */
    Resource* findResource( const std::string& name );
 
+   /**
+    * Returns the singleton instance of the resources manager.
+    */
+   static inline ResourcesManager& getInstance() { return s_theInstance; }
+
 protected:
    // -------------------------------------------------------------------------
    // ComponentsManager implementation
    // -------------------------------------------------------------------------
    void onComponentAdded( Component< ResourcesManager >& component );
    void onComponentRemoved( Component< ResourcesManager >& component );
+
+private:
+   /**
+    * Constructor.
+    */
+   ResourcesManager();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
