@@ -4,14 +4,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBPostProcess, GraphBlock )
-   PROPERTY_EDIT( "node", RPPostProcessNode*, m_node )
-END_OBJECT()
+BEGIN_OBJECT( RPBPostProcess, RenderingPipelineBlock );
+   PROPERTY( TResourceHandle< RPPostProcessNode >*, m_node );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBPostProcess::RPBPostProcess( RPPostProcessNode& node )
-: m_node( &node )
+   : m_nodePtr( &node )
 {
    setCaption( "PostProcess" );
 
@@ -21,9 +21,24 @@ RPBPostProcess::RPBPostProcess( RPPostProcessNode& node )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Object* RPBPostProcess::getNode() const 
+RPBPostProcess::~RPBPostProcess()
+{
+   delete m_node;
+   m_node = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPBPostProcess::initialize( RenderingPipeline& parentResource )
+{
+   m_node = new TResourceHandle< RPPostProcessNode >( *m_nodePtr );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Object& RPBPostProcess::getNode() 
 { 
-   return m_node; 
+   return m_node->get();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

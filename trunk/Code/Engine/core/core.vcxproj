@@ -80,6 +80,7 @@
     <ClCompile Include="Assert.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NodeActionsExecutor.cpp" />
+    <ClCompile Include="ResourceHandle.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Color.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="..\..\Include\core\Node.h" />
     <ClInclude Include="..\..\Include\core\NodeObserver.h" />
     <ClInclude Include="..\..\Include\core\NodeVisitor.h" />
+    <ClInclude Include="..\..\Include\core\ResourceHandle.h" />
     <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h" />
     <ClInclude Include="..\..\Include\core\Singleton.h" />
     <ClInclude Include="..\..\Include\core\TNodesVisitor.h" />
@@ -208,6 +210,7 @@
     <None Include="..\..\Include\core\AdaptingSpatialStorage.inl" />
     <None Include="..\..\Include\core\CompositeSpatialStorage.inl" />
     <None Include="..\..\Include\core\NarrowPhaseStorageFilter.inl" />
+    <None Include="..\..\Include\core\ResourceHandle.inl" />
     <None Include="..\..\Include\core\SharedSpatialStorage.inl" />
     <None Include="..\..\Include\core\TNodesSpatialStorage.inl" />
     <None Include="..\..\Include\core\BSPNodeTree.inl" />

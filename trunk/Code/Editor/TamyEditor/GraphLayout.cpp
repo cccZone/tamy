@@ -33,7 +33,7 @@ GraphBlock& GraphLayout::add( const Class& type, const QPointF& pos )
 {
    GraphBlock* block = createNode( type );
    ASSERT_MSG( block != NULL, "No representation ready for this type of node" );
-   
+  
    m_blocks.push_back( block );
 
    // add the block to the scene
@@ -53,7 +53,7 @@ void GraphLayout::remove( GraphBlock* block )
       return;
    }
 
-   removeNode( *block->getNode() );
+   removeNode( block->getNode() );
 
    std::vector< GraphBlock* >::iterator it = std::find( m_blocks.begin(), m_blocks.end(), block );
    if ( it != m_blocks.end() )

@@ -13,8 +13,10 @@
 RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& renderingPipelineLayout )
 : QMainWindow( NULL, 0 )
 , m_renderingPipelineLayout( renderingPipelineLayout )
-, m_propertiesLayout( NULL )
-, m_rootView( NULL )
+, m_blockPropertiesLayout( NULL )
+, m_blockPropertiesRootView( NULL )
+, m_nodePropertiesLayout( NULL )
+, m_nodePropertiesRootView( NULL )
 {
 }
 
@@ -22,14 +24,23 @@ RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& rende
 
 RenderingPipelineEditor::~RenderingPipelineEditor()
 {
-   if ( m_propertiesLayout )
+   if ( m_blockPropertiesLayout )
    {
-      m_propertiesLayout->removeWidget( m_rootView );
-      m_propertiesLayout = NULL;
+      m_blockPropertiesLayout->removeWidget( m_blockPropertiesRootView );
+      m_blockPropertiesLayout = NULL;
    }
 
-   delete m_rootView;
-   m_rootView = NULL;
+   delete m_blockPropertiesRootView;
+   m_blockPropertiesRootView = NULL;
+
+   if ( m_nodePropertiesLayout )
+   {
+      m_nodePropertiesLayout->removeWidget( m_nodePropertiesRootView );
+      m_nodePropertiesLayout = NULL;
+   }
+
+   delete m_nodePropertiesRootView;
+   m_nodePropertiesRootView = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,11 +57,17 @@ void RenderingPipelineEditor::initialize( TamyEditor& mgr )
    // set handlers for the signals emitted by the scene
    connect( &m_renderingPipelineLayout, SIGNAL( selectionChanged() ), this, SLOT( onSceneSelectionChanged() ) );
 
-   // attach the properties viewer
-   m_propertiesLayout = new QVBoxLayout( m_ui.scrollablePropertiesPanel );
-   m_ui.scrollablePropertiesPanel->setLayout( m_propertiesLayout );
-   m_propertiesLayout->setSpacing(0);
-   m_propertiesLayout->setMargin(0);
+   // attach the block properties viewer
+   m_blockPropertiesLayout = new QVBoxLayout( m_ui.scrollableBlockPropertiesPanel );
+   m_ui.scrollableBlockPropertiesPanel->setLayout( m_blockPropertiesLayout );
+   m_blockPropertiesLayout->setSpacing(0);
+   m_blockPropertiesLayout->setMargin(0);
+
+   // attach the node properties viewer
+   m_nodePropertiesLayout = new QVBoxLayout( m_ui.scrollableNodePropertiesPanel );
+   m_ui.scrollableNodePropertiesPanel->setLayout( m_nodePropertiesLayout );
+   m_nodePropertiesLayout->setSpacing(0);
+   m_nodePropertiesLayout->setMargin(0);
 
 
    // set the menu
@@ -105,19 +122,41 @@ void RenderingPipelineEditor::onSceneSelectionChanged()
       selectedBlock = dynamic_cast< GraphBlock* >( selectedItems.back() );
    }
 
-   if ( m_rootView != NULL )
+   // block properties
    {
-      m_propertiesLayout->removeWidget( m_rootView );
+      if ( m_blockPropertiesRootView != NULL )
+      {
+         m_blockPropertiesLayout->removeWidget( m_blockPropertiesRootView );
 
-      delete m_rootView;
-      m_rootView = NULL;
+         delete m_blockPropertiesRootView;
+         m_blockPropertiesRootView = NULL;
+      }
+
+      if ( selectedBlock != NULL )
+      {
+         m_blockPropertiesRootView = new QPropertiesView();
+         m_blockPropertiesLayout->addWidget( m_blockPropertiesRootView );
+         selectedBlock->viewProperties( *m_blockPropertiesRootView );
+      }
    }
 
-   if ( selectedBlock != NULL )
+   // node properties
    {
-      m_rootView = new QPropertiesView();
-      m_propertiesLayout->addWidget( m_rootView );
-      selectedBlock->viewProperties( *m_rootView );
+      if ( m_nodePropertiesRootView != NULL )
+      {
+         m_nodePropertiesLayout->removeWidget( m_nodePropertiesRootView );
+
+         delete m_nodePropertiesRootView;
+         m_nodePropertiesRootView = NULL;
+      }
+
+      if ( selectedBlock != NULL )
+      {
+         Object& node = selectedBlock->getNode();
+         m_nodePropertiesRootView = new QPropertiesView();
+         m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
+         node.viewProperties( *m_nodePropertiesRootView );
+      }
    }
 }
 

@@ -12,7 +12,7 @@
 /**
  * A rendering pipeline node.
  */
-class RenderingPipelineNode : public Object
+class RenderingPipelineNode : public ResourceObject
 {
    DECLARE_CLASS( RenderingPipelineNode )
 };

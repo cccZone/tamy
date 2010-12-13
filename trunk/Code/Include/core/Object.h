@@ -13,6 +13,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class PropertiesView;
+class Resource;
+
+template< typename T >
+class TResourceHandle;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,13 +35,23 @@ class PropertiesView;
  * A bad one would be something shared between object - such as
  * a camera that is used to render the entire scene, or a renderer
  * instance.
+ *
+ * Management by a resource:
+ * -------------------------
+ * An object can be embedded in a resource. In order to allow other objects to reference
+ * it after the resource's been deserialized, we're exposing a system of resource
+ * handles.
+ * An object can be added to and managed by a resource - this resource becomes 
+ * its host resource and from now on a handle to this object can be queried.
+ * An object can have only a single host resource - adding it to another one
+ * will cause an exception to be thrown.
  */
 class Object : public Serializable, public RTTIObject, public PropertyObserver
 {
    DECLARE_RTTI_CLASS
 
 private:
-   std::vector<Properties*>   m_properties;
+   std::vector< Properties* >    m_properties;
 
 public:
    /**
@@ -128,7 +142,7 @@ public:
 #define PROPERTY(type, variable)                                              \
    {                                                                          \
       Property& p = m_properties->add< type >( variable, #variable );         \
-      p.setParams( #variable, "", false );                                    \
+      p.setParams( #variable, "", false, true );                              \
       p.setObserver(*this);                                                   \
    }
 
@@ -140,7 +154,20 @@ public:
 #define PROPERTY_EDIT(label, type, variable)                                  \
    {                                                                          \
       Property& p = m_properties->add< type >( variable, #variable );         \
-      p.setParams( #variable, label, true );                                  \
+      p.setParams( #variable, label, true, true );                            \
+      p.setObserver(*this);                                                   \
+   }
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * This macro defines an editable property that will not be saved ( is valid
+ * only for one runtime ).
+ */
+#define PROPERTY_EDIT_RUNTIME(label, type, variable)                          \
+   {                                                                          \
+      Property& p = m_properties->add< type >( variable, #variable );         \
+      p.setParams( #variable, label, true, false );                           \
       p.setObserver(*this);                                                   \
    }
 

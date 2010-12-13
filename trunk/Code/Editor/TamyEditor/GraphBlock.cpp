@@ -7,8 +7,6 @@
 #include <algorithm>
 
 
-// TODO: !!!!!!!!! zapamietywanie node'a we wlasciwym resource'ie i w bloczku go opisujacym - zeby to byly wskazniki na ta sama instancje
-
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_ABSTRACT_OBJECT( GraphBlock, Object );

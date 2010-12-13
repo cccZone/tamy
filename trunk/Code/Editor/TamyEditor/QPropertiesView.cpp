@@ -64,12 +64,12 @@ void QPropertiesView::initFactory()
    associate< std::string,         StringPropertyEditor >();
    associate< Material,            MaterialPropertyEditor >();
    associate< bool,                BoolPropertyEditor >();
-   associate< float,               FloatPropertyEditor< float > >();
-   associate< double,              FloatPropertyEditor< double > >();
-   associate< int,                 IntPropertyEditor< int > >();
-   associate< unsigned int,        IntPropertyEditor< unsigned int > >();
-   associate< long,                IntPropertyEditor< long > >();
-   associate< unsigned long,       IntPropertyEditor< unsigned long > >();
+   associate< float,               FloatPropertyEditor >();
+   associate< double,              DoublePropertyEditor >();
+   associate< int,                 IntPropertyEditor >();
+   associate< unsigned int,        UIntPropertyEditor >();
+   associate< long,                LongPropertyEditor >();
+   associate< unsigned long,       ULongPropertyEditor >();
    associatePtr< Resource*,        ResourcePropertyEditor >();
    associate< VectorProperty,      ArrayPropertyEditor >();
 }

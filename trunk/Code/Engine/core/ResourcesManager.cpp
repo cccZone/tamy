@@ -5,6 +5,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+ResourcesManager ResourcesManager::s_theInstance;
+
+///////////////////////////////////////////////////////////////////////////////
+
 ResourcesManager::ResourcesManager()
 : m_filesystem(new Filesystem())
 {
@@ -33,12 +37,15 @@ void ResourcesManager::reset()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::setFilesystem(Filesystem* filesystem)
+void ResourcesManager::setFilesystem( Filesystem* filesystem )
 {
    if (filesystem == NULL)
    {
       throw std::invalid_argument("NULL pointer instead a Filesystem instance");
    }
+
+   // we need to delete all resources along with changing the filesystem
+   reset();
 
    delete m_filesystem;
    m_filesystem = filesystem;

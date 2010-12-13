@@ -38,6 +38,8 @@ namespace
 
 BEGIN_ABSTRACT_OBJECT( Resource, Object )
    PROPERTY( std::string, m_filePath )
+   PROPERTY( std::vector< ResourceObject* >, m_managedObjects )
+   PROPERTY( std::vector< int >, m_freeIds )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,6 +48,19 @@ Resource::Resource( const std::string& filePath )
 : m_filePath( filePath )
 , m_host( NULL )
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Resource::~Resource()
+{
+   unsigned int count = m_managedObjects.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      delete m_managedObjects[i];
+   }
+   m_managedObjects.clear();
+   m_freeIds.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,6 +162,78 @@ void Resource::registerResource( const std::string& extension,
    {
       throw std::runtime_error( std::string( "Resource with extension ") + extension + " is already registered");
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Resource::addObject( ResourceObject* object )
+{
+   ASSERT_MSG( object != NULL, "NULL pointer instead an object instance" );
+   int id = -1;
+
+   if ( object )
+   {
+      if ( m_freeIds.size() > 0 )
+      {
+         id = m_freeIds.back();
+         m_freeIds.pop_back();
+
+         ASSERT_MSG( m_managedObjects[ id ] == NULL, "The supposed free id doesn't point to a free object entry." );
+         m_managedObjects[ id ] = object;
+      }
+      else
+      {
+         id = m_managedObjects.size();
+         m_managedObjects.push_back( object );
+      }
+
+      object->setHostResource( *this, id );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Resource::removeObject( int objectId )
+{
+   ASSERT_MSG( objectId < (int)m_managedObjects.size(), "Trying to remove an object that doesn't exist" );
+   if ( objectId >= (int)m_managedObjects.size() )
+   {
+      return;
+   }
+
+   ASSERT_MSG( m_managedObjects[ objectId ] != NULL, "Trying to remove an object that's already been removed" );
+   if ( (int)m_managedObjects[ objectId ] == NULL )
+   {
+      return;
+   }
+
+   m_freeIds.push_back( objectId );
+   if ( m_managedObjects[ objectId ] != NULL )
+   {
+      m_managedObjects[ objectId ]->resetHostResource();
+   }
+
+   delete m_managedObjects[ objectId ];
+   m_managedObjects[ objectId ] = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ResourceObject& Resource::getObject( int objectId )
+{
+   if ( objectId >= (int)m_managedObjects.size() )
+   {
+      ASSERT_MSG( objectId < (int)m_managedObjects.size(), "Trying to access an object that doesn't exist" );
+      throw std::runtime_error( "Trying to access an object that doesn't exist" );
+   }
+
+   if ( (int)m_managedObjects[ objectId ] == NULL )
+   {
+      ASSERT_MSG( m_managedObjects[ objectId ] != NULL, "Trying to access an object that was removed" );
+      throw std::runtime_error( "Trying to access an object that was removed" );
+   }
+
+   return *( m_managedObjects[ objectId ] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

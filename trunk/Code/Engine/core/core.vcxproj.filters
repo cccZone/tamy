@@ -190,6 +190,9 @@
     <ClCompile Include="Singleton.cpp">
       <Filter>Misc\Singleton</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceHandle.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -439,6 +442,9 @@
     <ClInclude Include="..\..\Include\core\Algorithms.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\ResourceHandle.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">
@@ -539,6 +545,9 @@
     </None>
     <None Include="..\..\Include\core\Algorithms.inl">
       <Filter>Math</Filter>
+    </None>
+    <None Include="..\..\Include\core\ResourceHandle.inl">
+      <Filter>Resources</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -58,8 +58,9 @@ void RenderingPipelineLayout::onResourceLoaded( ResourcesManager& mgr )
 GraphBlock* RenderingPipelineLayout::createNode( const Class& type )
 {
    RenderingPipelineNode* node = type.instantiate< RenderingPipelineNode >();
-   GraphBlock* block = create( *node );
+   RenderingPipelineBlock* block = create( *node );
    m_model->addNode( node );
+   block->initialize( *m_model );
 
    return block;
 }

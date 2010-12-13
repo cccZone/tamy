@@ -27,8 +27,12 @@ private:
    Ui::RenderingPipelineEditorWindow         m_ui;
 
    RenderingPipelineLayout&                  m_renderingPipelineLayout;
-   QVBoxLayout*                              m_propertiesLayout;
-   QPropertiesView*                          m_rootView;
+
+   QVBoxLayout*                              m_blockPropertiesLayout;
+   QPropertiesView*                          m_blockPropertiesRootView;
+
+   QVBoxLayout*                              m_nodePropertiesLayout;
+   QPropertiesView*                          m_nodePropertiesRootView;
 
 public:
    /**

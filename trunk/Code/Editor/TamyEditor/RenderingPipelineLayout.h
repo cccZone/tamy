@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class RenderingPipelineNode;
-class GraphBlock;
+class RenderingPipelineBlock;
 class RenderingPipeline;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,7 +17,7 @@ class RenderingPipeline;
 /**
  * Layout for a rendering pipeline
  */
-class RenderingPipelineLayout : public Resource, public GraphLayout, public GenericFactory< RenderingPipelineNode, GraphBlock >
+class RenderingPipelineLayout : public Resource, public GraphLayout, public GenericFactory< RenderingPipelineNode, RenderingPipelineBlock >
 {
    DECLARE_RESOURCE( RenderingPipelineLayout )
 
