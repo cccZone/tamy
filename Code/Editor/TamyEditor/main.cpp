@@ -41,7 +41,8 @@ int main(int argc, char *argv[])
 
    registerAssertCallback( &AssertDialog::createDialog );
 
-   TamyEditor w(a);
+   // TODO: filesystem root configuration
+   TamyEditor w( a, "D:/Docs/Projects/Tamy/Assets/" );
 
    // start the application
    w.show();

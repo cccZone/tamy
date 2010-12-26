@@ -27,16 +27,19 @@ TamyEditor* GTamyEditor = NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TamyEditor::TamyEditor( QApplication& app, QWidget *parent, Qt::WFlags flags )
+TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, Qt::WFlags flags )
 : QMainWindow( parent, flags )
 , m_mainTime( new CTimer() )
-, m_mainAppComponent( new MainAppComponent( app ) )
+, m_mainAppComponent( new MainAppComponent( app, fsRoot ) )
 {
    ui.setupUi(this);
 
    m_mainTimeSlot = new QTimer(this);
    connect(m_mainTimeSlot, SIGNAL(timeout()), this, SLOT(updateMain()));
    m_mainTimeSlot->start(1);
+
+   // load the settings file
+   m_editorSettings = new QSettings( ( std::string( fsRoot ) + "/Editor/Settings.ini" ).c_str(), QSettings::IniFormat );
 
    // add components
    addComponent( m_mainAppComponent );
@@ -63,6 +66,7 @@ TamyEditor::~TamyEditor()
    delete m_mainTime; m_mainTime = NULL;
    delete m_mainTimeSlot; m_mainTimeSlot = NULL;
    delete m_uiSettings; m_uiSettings = NULL;
+   delete m_editorSettings; m_editorSettings = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

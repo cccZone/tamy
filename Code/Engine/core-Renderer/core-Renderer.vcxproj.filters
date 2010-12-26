@@ -88,8 +88,14 @@
     <Filter Include="Renderers\HDR">
       <UniqueIdentifier>{a844b996-76fd-4f98-9e06-85837df10072}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\PipelineNodes">
+    <Filter Include="RenderingPipeline">
+      <UniqueIdentifier>{c91f1825-625c-42f0-8469-826c27be0b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderingPipeline\Nodes">
       <UniqueIdentifier>{b7de2671-afb7-471e-9881-7dd4812c6bc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\RenderingMechanism">
+      <UniqueIdentifier>{882644f7-0b0d-46f9-a21a-e64db531d203}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -153,16 +159,7 @@
     <ClCompile Include="SpatialView.cpp">
       <Filter>Scene\Views\SpatialView</Filter>
     </ClCompile>
-    <ClCompile Include="RenderingPass.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="VisibilityPass.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneRenderingPass.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="SpatialEntity.cpp">
@@ -222,11 +219,44 @@
     <ClCompile Include="FullscreenQuad.cpp">
       <Filter>Geometry\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="RenderingPipeline.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="RPPostProcessNode.cpp">
-      <Filter>Core\PipelineNodes</Filter>
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSceneRenderNode.cpp">
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingPipeline.cpp">
+      <Filter>RenderingPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingPipelineNode.cpp">
+      <Filter>RenderingPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="RPStartNode.cpp">
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingPass.cpp">
+      <Filter>Scene\RenderingMechanism</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneRenderingPass.cpp">
+      <Filter>Scene\RenderingMechanism</Filter>
+    </ClCompile>
+    <ClCompile Include="VisibilityPass.cpp">
+      <Filter>Scene\RenderingMechanism</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingPipelineMechanism.cpp">
+      <Filter>RenderingPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="RPRenderTargetNode.cpp">
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPConcentratorNode.cpp">
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTargetDescriptor.cpp">
+      <Filter>RenderingPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBackBufferNode.cpp">
+      <Filter>RenderingPipeline\Nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -380,16 +410,7 @@
       <Filter>Scene\Views\SpatialView</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\VisibilityPass.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h">
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h">
@@ -467,11 +488,44 @@
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h">
       <Filter>Geometry\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h">
-      <Filter>Core\PipelineNodes</Filter>
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h">
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineNode.h">
+      <Filter>RenderingPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h">
+      <Filter>RenderingPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h">
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h">
+      <Filter>Scene\RenderingMechanism</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h">
+      <Filter>Scene\RenderingMechanism</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VisibilityPass.h">
+      <Filter>Scene\RenderingMechanism</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineMechanism.h">
+      <Filter>RenderingPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPRenderTargetNode.h">
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPConcentratorNode.h">
+      <Filter>RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h">
+      <Filter>RenderingPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPBackBufferNode.h">
+      <Filter>RenderingPipeline\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

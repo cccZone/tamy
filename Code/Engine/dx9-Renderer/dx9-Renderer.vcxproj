@@ -89,6 +89,7 @@
     <ClCompile Include="DX9PixelShader.cpp" />
     <ClCompile Include="DX9Renderer.cpp" />
     <ClCompile Include="DX9RenderingPass.cpp" />
+    <ClCompile Include="DX9RenderingPipelineMechanism.cpp" />
     <ClCompile Include="DX9RenderTarget.cpp" />
     <ClCompile Include="DX9EffectShader.cpp" />
     <ClCompile Include="DX9Skeleton.cpp" />
@@ -105,6 +106,7 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShader.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderingPass.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderingPipelineMechanism.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderTarget.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9EffectShader.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Skeleton.h" />

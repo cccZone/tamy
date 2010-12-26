@@ -1,8 +1,8 @@
 /// @file   core-Renderer/RPPostProcessNode.h
-/// @brief  a rendering pipeline node responsible for applying a postprocess effect.
+/// @brief  a rendering pipeline node responsible for applying a post process effect.
 #pragma once
 
-#include "core-Renderer/RenderingPipeline.h"
+#include "core-Renderer/RenderingPipelineNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

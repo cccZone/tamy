@@ -14,12 +14,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MainAppComponent::MainAppComponent( QApplication& app )
+MainAppComponent::MainAppComponent( QApplication& app, const char* fsRoot )
 : m_app( app )
 , m_timeController( new TimeController() )
 , m_resourceMgr( &ResourcesManager::getInstance() )
 , m_mgr( NULL )
-{}
+{
+   // add components
+   Filesystem* fs = new Filesystem( fsRoot );
+   fs->setShortcut( "editorIcons", "/Editor/Icons/" );
+   m_resourceMgr->setFilesystem( fs );
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -58,11 +63,6 @@ void MainAppComponent::initialize( TamyEditor& mgr )
    mgr.registerService< TimeController >( *this, *m_timeController );
    mgr.registerService< ResourcesManager >( *this, *m_resourceMgr );
    mgr.registerService< MainAppComponent >( *this, *this );
-
-   // add components
-   Filesystem* fs = new Filesystem( "D:/Docs/Projects/Tamy/Assets/" );
-   fs->setShortcut( "editorIcons", "/Editor/Icons/" );
-   m_resourceMgr->setFilesystem( fs );
 
    // initialize user interface
    initUI( mgr );

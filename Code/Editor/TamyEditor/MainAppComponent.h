@@ -32,8 +32,9 @@ public:
     * Contructor.
     *
     * @param app     instance of QApplication running this component
+    * @param fsRoot  filesystem root
     */
-   MainAppComponent( QApplication& app );
+   MainAppComponent( QApplication& app, const char* fsRoot );
    ~MainAppComponent();
 
    /**

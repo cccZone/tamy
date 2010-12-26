@@ -37,16 +37,18 @@ private:
 
    // ui settings management
    QSettings*                 m_uiSettings;
+   QSettings*                 m_editorSettings;
 
 public:
    /**
     * Constructor.
     *
     * @param app        qt application running the show
+    * @param fsRoot     filesystem root
     * @param parent     parent widget
     * @param flags      widget creation flags
     */
-   TamyEditor( QApplication& app, QWidget *parent = 0, Qt::WFlags flags = 0 );
+   TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent = 0, Qt::WFlags flags = 0 );
    ~TamyEditor();
 
    // -------------------------------------------------------------------------
@@ -86,6 +88,11 @@ public:
     * @return           toolbar instance
     */
    QToolBar& getToolBar();
+
+   /**
+    * Returns editor related settings.
+    */
+   inline QSettings& getSettings() { return *m_editorSettings; }
 
 public slots:
    void updateMain();

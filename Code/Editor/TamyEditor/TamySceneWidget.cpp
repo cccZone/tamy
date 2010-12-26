@@ -6,6 +6,7 @@
 #include "dx9-Renderer.h"
 #include <stdexcept>
 #include <QEvent.h>
+#include <QSettings>
 #include "tamyeditor.h"
 #include "DebugRenderer.h"
 
@@ -158,21 +159,34 @@ void TamySceneWidget::setupTimeController( TamyEditor& mgr )
 
 void TamySceneWidget::createRenderer( TamyEditor& mgr )
 {
-   // HDR 
-   {
-      HDRPipeline* hdrPipeline = new HDRPipeline( *m_resMgr, *m_camera );
-      m_renderingMech->add( "hdr", hdrPipeline );
-      if ( mgr.hasService< Model >() )
-      {
-         m_scene = &mgr.requestService< Model >();
-         hdrPipeline->addScene( *m_scene );
-      }
-      else
-      {
-         m_scene = NULL;
-      }
-   }
+   QSettings& settings = mgr.getSettings();
 
+   settings.beginGroup( "MainRenderer" );
+   std::string mainRendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
+   settings.endGroup();
+
+   RenderingPipeline* pipeline = NULL;
+   if ( !mainRendererPipelineName.empty() )
+   {
+      pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( mainRendererPipelineName ) );
+   }
+   RenderingPipelineMechanism* sceneRenderer = new RenderingPipelineMechanism( pipeline );
+   m_renderingMech->add( "sceneRenderer", sceneRenderer );
+
+   sceneRenderer->setCamera( *m_camera );
+
+   if ( mgr.hasService< Model >() )
+   {
+      // new scene requires a camera component - some entities are using it
+      m_scene = &mgr.requestService< Model >();
+      m_scene->addComponent( new ModelComponent< Camera >( *m_camera ) );
+
+      sceneRenderer->addScene( *m_scene );
+   }
+   else
+   {
+      m_scene = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

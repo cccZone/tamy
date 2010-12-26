@@ -426,11 +426,11 @@ float HDRPipeline::computeGaussianValue( float x, float mean, float std_deviatio
 {
     // The gaussian equation is defined as such:
     /*    
-      -(x - mean)^2
-      -------------
-      1.0               2*std_dev^2
+                                                   -(x - mean)^2
+                                                   -------------
+                                   1.0              2*std_dev^2
       f(x,mean,std_dev) = -------------------- * e^
-      sqrt(2*pi*std_dev^2)
+                           sqrt(2*pi*std_dev^2)
       
      */
 

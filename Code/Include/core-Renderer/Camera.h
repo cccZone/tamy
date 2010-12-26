@@ -3,6 +3,8 @@
 #include "core\Node.h"
 #include <d3dx9.h>
 #include "core\Observer.h"
+#include "core\Frustum.h"
+#include "core-Renderer\CameraContext.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -107,6 +109,27 @@ protected:
 private:
    void updateViewMtx();
    void updateProjectionMtx();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A simple camera context.
+ */
+class PlainCameraContext : public CameraContext
+{
+private:
+   Camera&              m_camera;
+   mutable Frustum      m_frustum;
+
+public:
+   PlainCameraContext( Camera& camera ) : m_camera(camera) {}
+
+   inline const BoundingVolume& getViewVolume() const
+   {
+      m_frustum = m_camera.getFrustum();
+      return m_frustum;
+   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

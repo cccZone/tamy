@@ -156,9 +156,6 @@
     <ClInclude Include="SceneEditor.h">
       <Filter>ResourceEditors\SceneEditor</Filter>
     </ClInclude>
-    <ClInclude Include="FSNodeMimeData.h">
-      <Filter>Widgets\DropArea</Filter>
-    </ClInclude>
     <ClInclude Include="MimeDataEncoder.h">
       <Filter>Widgets\DropArea</Filter>
     </ClInclude>
@@ -239,6 +236,30 @@
     </ClInclude>
     <ClInclude Include="RenderingPipelineBlock.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBStart.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBSceneRender.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBRenderTarget.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBConcentrator.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBBackBuffer.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_rendertargetdescriptordialog.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTargetMimeData.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="FSNodeMimeData.h">
+      <Filter>Components\ResourcesBrowser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -419,9 +440,6 @@
     <ClCompile Include="DropArea.cpp">
       <Filter>Widgets\DropArea</Filter>
     </ClCompile>
-    <ClCompile Include="FSNodeMimeData.cpp">
-      <Filter>Widgets\DropArea</Filter>
-    </ClCompile>
     <ClCompile Include="ColorFrame.cpp">
       <Filter>Widgets\ColorFrame</Filter>
     </ClCompile>
@@ -523,6 +541,33 @@
     </ClCompile>
     <ClCompile Include="FloatPropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBStart.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBSceneRender.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBRenderTarget.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBConcentrator.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBBackBuffer.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTargetDescriptorDialog.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_RenderTargetDescriptorDialog.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="FSNodeMimeData.cpp">
+      <Filter>Components\ResourcesBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTargetMimeData.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -650,6 +695,12 @@
     </CustomBuild>
     <CustomBuild Include="GraphLayout.h">
       <Filter>Widgets\GraphWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="RenderTargetDescriptorDialog.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="rendertargetdescriptordialog.ui">
+      <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

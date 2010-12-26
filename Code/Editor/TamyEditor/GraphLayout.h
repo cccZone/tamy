@@ -116,7 +116,7 @@ protected:
     *
     * @param classes          fill this list with available node types
     */
-   virtual void getNodesClasses( std::vector< Class >& classes ) = 0;  
+   virtual void getNodesClasses( std::vector< Class >& classes ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

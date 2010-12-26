@@ -1,12 +1,14 @@
 #include "RenderingPipelineLayout.h"
 #include "core.h"
-#include "core-Renderer/RenderingPipeline.h"
-
-// nodes
-#include "core-Renderer/RPPostProcessNode.h"
+#include "core-Renderer.h"
 
 // blocks
 #include "RPBPostProcess.h"
+#include "RPBSceneRender.h"
+#include "RPBStart.h"
+#include "RPBRenderTarget.h"
+#include "RPBConcentrator.h"
+#include "RPBBackBuffer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,7 +25,16 @@ RenderingPipelineLayout::RenderingPipelineLayout( const std::string& path )
    : Resource( path )
    , m_model( NULL )
 {
+   // create block-to-node associations
    associate< RPPostProcessNode, RPBPostProcess >();
+   associate< RPSceneRenderNode, RPBSceneRender >();
+   associate< RPStartNode, RPBStart >();
+   associate< RPRenderTargetNode, RPBRenderTarget >();
+   associate< RPConcentratorNode, RPBConcentrator >();
+   associate< RPBackBufferNode, RPBBackBuffer >();
+
+   // customize the looks
+   setBackgroundBrush( QColor( 209, 226, 165 ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

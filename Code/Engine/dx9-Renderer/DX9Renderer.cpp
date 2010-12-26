@@ -27,7 +27,8 @@
 #include "dx9-Renderer\DX9Skeleton.h"
 #include "core-Renderer\FullscreenQuad.h"
 #include "dx9-Renderer\DX9FullscreenQuad.h"
-
+#include "core-Renderer\RenderingPipelineMechanism.h"
+#include "dx9-Renderer\DX9RenderingPipelineMechanism.h"
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -65,6 +66,7 @@ DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
    associate< PixelShader, DX9PixelShader > ();
    associate< Skeleton, DX9Skeleton > ();
    associate< FullscreenQuad, DX9FullscreenQuad > ();
+   associate< RenderingPipelineMechanism, DX9RenderingPipelineMechanism > ();
 
    // sample texture formats
    sampleOptimalTextureFormats();
