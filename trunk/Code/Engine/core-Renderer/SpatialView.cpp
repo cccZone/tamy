@@ -26,7 +26,7 @@ SpatialView::~SpatialView()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SpatialView::update( CameraContext& camera )
+void SpatialView::update( const CameraContext& camera )
 {
    const BoundingVolume& volume = camera.getViewVolume();
    ++m_visibilityTag;

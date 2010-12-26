@@ -46,7 +46,7 @@ public:
     * @param camera  context that will be used to determine the objects' 
     *                visibility
     */
-   void update( CameraContext& camera );
+   void update( const CameraContext& camera );
 
    // -------------------------------------------------------------------------
    // ModelView implementation

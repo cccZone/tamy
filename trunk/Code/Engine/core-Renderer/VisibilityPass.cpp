@@ -9,27 +9,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace // anonymous
-{
-   class PlainCameraContext : public CameraContext
-   {
-   private:
-      Camera& m_camera;
-      Frustum m_frustum;
-
-   public:
-      PlainCameraContext(Camera& camera) : m_camera(camera) {}
-
-      inline const BoundingVolume& getViewVolume() 
-      {
-         m_frustum = m_camera.getFrustum();
-         return m_frustum;
-      }
-   };
-} // anonymous
-
-///////////////////////////////////////////////////////////////////////////////
-
 VisibilityPass::VisibilityPass( Camera& camera )
 : m_camera( camera )
 , m_cameraContext( new PlainCameraContext( camera ) )

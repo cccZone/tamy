@@ -6,6 +6,7 @@
 #include <QtGui/QMainWindow>
 #include "ui_renderingpipelineeditor.h"
 #include "ResourceEditor.h"
+#include <QListWidget>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,6 +35,8 @@ private:
    QVBoxLayout*                              m_nodePropertiesLayout;
    QPropertiesView*                          m_nodePropertiesRootView;
 
+   QListWidget*                              m_renderTargetsList;
+
 public:
    /**
     * Constructor.
@@ -52,9 +55,27 @@ public slots:
    void save();
    void onSceneSelectionChanged();
    void onShowContextMenu( const QPoint& pos );
+   void addRenderTarget();
+   void removeRenderTarget();
 
 protected:
    void closeEvent( QCloseEvent *event );
+
+private:
+   void updateRenderTargetsList();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class RenderTargetsListWidget : public QListWidget
+{
+   Q_OBJECT
+
+public:
+   RenderTargetsListWidget( QWidget* parent );
+
+protected:
+   QMimeData* mimeData( const QList< QListWidgetItem *> items ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

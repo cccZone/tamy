@@ -12,11 +12,6 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
-#include "core-Renderer\RenderingPipeline.h"
-// ----------------------------------------------------------------------------
-// -->PipelineNodes
-// ----------------------------------------------------------------------------
-#include "core-Renderer/RPPostProcessNode.h"
 
 // ----------------------------------------------------------------------------
 // Effects
@@ -84,6 +79,23 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Overlay.h"
 #include "core-Renderer\OverlayRenderingMechanism.h"
+
+// ----------------------------------------------------------------------------
+// RenderingPipeline
+// ----------------------------------------------------------------------------
+#include "core-Renderer\RenderingPipeline.h"
+#include "core-Renderer\RenderingPipelineNode.h"
+#include "core-Renderer\RenderingPipelineMechanism.h"
+#include "core-Renderer\RenderTargetDescriptor.h"
+// ----------------------------------------------------------------------------
+// -->PipelineNodes
+// ----------------------------------------------------------------------------
+#include "core-Renderer/RPBackBufferNode.h"
+#include "core-Renderer/RPConcentratorNode.h"
+#include "core-Renderer/RPPostProcessNode.h"
+#include "core-Renderer/RPSceneRenderNode.h"
+#include "core-Renderer/RPStartNode.h"
+#include "core-Renderer/RPRenderTargetNode.h"
 
 // ----------------------------------------------------------------------------
 // Renderers

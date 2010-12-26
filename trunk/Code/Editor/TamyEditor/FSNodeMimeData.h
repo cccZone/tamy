@@ -1,8 +1,7 @@
-#pragma once
-
 /// @file   TamyEditor\FSNodeMimeData.h
-/// @brief  This class manages the data used during a during a drag&drop operation
-///         to describe nodes in a file system
+/// @brief  Filesystem node drag&drop related data
+
+#pragma once
 
 #include "MimeDataEncoder.h"
 #include <vector>
@@ -11,6 +10,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * This class manages the data used during a during a drag&drop operation
+ * to describe nodes in a file system.
+ */
 class FSNodeMimeData : public MimeDataEncoder
 {
 private:
@@ -20,7 +23,6 @@ public:
    /**
     * Constructor.
     *
-    * @param data       data the encoder operates on
     * @param paths      paths we want to persist
     */
    FSNodeMimeData( std::vector< std::string >& paths );

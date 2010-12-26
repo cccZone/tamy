@@ -2,10 +2,13 @@
 #include "core.h"
 #include "core-Renderer.h"
 #include "RenderingPipelineLayout.h"
+#include "RenderTargetDescriptorDialog.h"
 #include "QPropertiesView.h"
 #include "tamyeditor.h"
+#include "RenderTargetMimeData.h"
 #include <QCloseEvent>
 #include <QMessageBox.h>
+#include <QListWidget>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +20,7 @@ RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& rende
 , m_blockPropertiesRootView( NULL )
 , m_nodePropertiesLayout( NULL )
 , m_nodePropertiesRootView( NULL )
+, m_renderTargetsList( NULL )
 {
 }
 
@@ -41,12 +45,17 @@ RenderingPipelineEditor::~RenderingPipelineEditor()
 
    delete m_nodePropertiesRootView;
    m_nodePropertiesRootView = NULL;
+
+   m_renderTargetsList = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void RenderingPipelineEditor::initialize( TamyEditor& mgr )
 {
+   ResourcesManager& resourceMgr = mgr.requestService< ResourcesManager >();
+   QString iconsDir = resourceMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
+
    // setup the UI
    m_ui.setupUi( this );
    
@@ -69,11 +78,22 @@ void RenderingPipelineEditor::initialize( TamyEditor& mgr )
    m_nodePropertiesLayout->setSpacing(0);
    m_nodePropertiesLayout->setMargin(0);
 
+   // configure the rendering targets list
+   {
+      m_ui.addTargetButton->setIcon( QIcon( iconsDir + tr( "/plus.png" ) ) );
+      m_ui.removeTargetButton->setIcon( QIcon( iconsDir + tr( "/minus.png" ) ) );
+      
+      connect( m_ui.addTargetButton, SIGNAL( clicked() ), this, SLOT( addRenderTarget() ) );
+      connect( m_ui.removeTargetButton, SIGNAL( clicked() ), this, SLOT( removeRenderTarget() ) );
+
+      m_renderTargetsList = new RenderTargetsListWidget( this );
+      m_ui.renderTargetsPageLayout->addWidget( m_renderTargetsList );
+
+      updateRenderTargetsList();
+   }
+   
 
    // set the menu
-   ResourcesManager& resourceMgr = mgr.requestService< ResourcesManager >();
-   QString iconsDir = resourceMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
-
    QMenu* fileMenu = m_ui.menubar->addMenu( "File" );
    {
       QAction* actionSave = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save" ), fileMenu );
@@ -179,6 +199,91 @@ void RenderingPipelineEditor::closeEvent( QCloseEvent *event )
    event->accept();
 
    delete this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::updateRenderTargetsList()
+{
+   m_renderTargetsList->clear();
+
+   const std::vector< RenderTargetDescriptor* >& descriptors = m_renderingPipelineLayout.getModel().getRenderTargets();
+   unsigned int count = descriptors.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+     m_renderTargetsList->addItem( descriptors[i]->getTargetID().c_str() );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::addRenderTarget()
+{
+   RenderTargetDescriptor* desc = new RenderTargetDescriptor();
+   RenderTargetDescriptorDialog dialog( this, *desc );
+   if ( dialog.exec() != QDialog::Accepted )
+   {
+      delete desc;
+      return;
+   }
+
+   if ( desc->getTargetID().empty() )
+   {
+      delete desc;
+      return;
+   }
+
+   RenderingPipeline& pipeline = m_renderingPipelineLayout.getModel();
+   if ( pipeline.addRenderTarget( desc ) )
+   {
+      m_renderTargetsList->addItem( desc->getTargetID().c_str() );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::removeRenderTarget()
+{
+   RenderingPipeline& pipeline = m_renderingPipelineLayout.getModel();
+
+   QList< QListWidgetItem* > itemsToRemove = m_renderTargetsList->selectedItems();
+   foreach( QListWidgetItem* item, itemsToRemove )
+   {
+      QString selectedTargetId = item->text();
+      pipeline.removeRenderTarget( selectedTargetId.toStdString() );
+      
+      delete item;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+RenderTargetsListWidget::RenderTargetsListWidget( QWidget* parent )
+   : QListWidget( parent )
+{
+   setDragEnabled( true );
+   setDragDropMode( QAbstractItemView::DragOnly );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+QMimeData* RenderTargetsListWidget::mimeData( const QList< QListWidgetItem* > items ) const
+{
+   QMimeData* data = __super::mimeData( items );
+
+   std::string selectedTargetID;
+   foreach( QListWidgetItem* item, items )
+   {
+      selectedTargetID = item->text().toStdString();
+      break;
+   }
+
+   RenderTargetMimeData dataEncoder( selectedTargetID );
+   dataEncoder.save( *data );
+
+   return data;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

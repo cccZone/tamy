@@ -6,6 +6,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class BoundingVolume;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Observation point from which we want to render the scene.
  */
@@ -18,7 +22,7 @@ public:
     * Returns the global space volume that bounds all visible objects
     * in the scene.
     */
-   virtual const BoundingVolume& getViewVolume() = 0;
+   virtual const BoundingVolume& getViewVolume() const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,7 +43,7 @@ struct TCameraContext : public CameraContext
     */
    explicit TCameraContext(const T& vol) : volume(vol) {}
 
-   const BoundingVolume& getViewVolume() {return volume;}
+   const BoundingVolume& getViewVolume() const { return volume; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

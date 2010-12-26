@@ -32,6 +32,11 @@ public:
     */
    RenderingPipelineLayout( const std::string& path = "" );
 
+   /**
+    * Returns a rendering pipeline the layout edits.
+    */
+   RenderingPipeline& getModel() { return *m_model; }
+
    // -------------------------------------------------------------------------
    // GraphLayout implementation
    // -------------------------------------------------------------------------

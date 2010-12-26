@@ -22,6 +22,12 @@ public:
     * @param parentResource      resource that manages the object the block represents
     */
    virtual void initialize( RenderingPipeline& parentResource ) {}
+
+   // -------------------------------------------------------------------------
+   // GraphBlock implementation
+   // -------------------------------------------------------------------------
+   void onConnectionCreated( GraphBlockConnection& connection );
+   void onConnectionRemoved( GraphBlockConnection& connection );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

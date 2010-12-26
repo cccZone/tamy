@@ -45,7 +45,7 @@ protected:
     * Returns the shape of the block.
     */
    virtual Shape getShape() const { return GBS_RECTANGLE; }
-   virtual QColor getBgColor() const { return QColor( 255, 100, 0 ); }
+   virtual QColor getBgColor() const { return QColor( 224, 166, 175 ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

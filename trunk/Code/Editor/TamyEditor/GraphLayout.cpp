@@ -53,6 +53,15 @@ void GraphLayout::remove( GraphBlock* block )
       return;
    }
 
+   // remove all connections the block's sockets is involved in
+   std::vector< GraphBlockConnection* > connections;
+   block->getConnections( connections );
+   for ( std::vector< GraphBlockConnection* >::iterator it = connections.begin(); it != connections.end(); ++it )
+   {
+      removeConnection( **it );
+   }
+
+   // remove the block itself
    removeNode( block->getNode() );
 
    std::vector< GraphBlock* >::iterator it = std::find( m_blocks.begin(), m_blocks.end(), block );
@@ -130,6 +139,7 @@ void GraphLayout::removeConnection( GraphBlockConnection& connection )
       if ( *it == &connection )
       {
          connection.onRemoved();
+         
          removeItem( *it );
          delete *it;
          m_connections.erase( it );

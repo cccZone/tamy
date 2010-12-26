@@ -60,6 +60,9 @@
     <ClCompile Include="DX9FullscreenQuad.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="DX9RenderingPipelineMechanism.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">
@@ -104,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9FullscreenQuad.h">
       <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderingPipelineMechanism.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

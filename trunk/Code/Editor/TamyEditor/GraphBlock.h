@@ -87,6 +87,13 @@ public:
     */
    virtual Object& getNode() { return *( reinterpret_cast< Object* >( NULL ) ); }
 
+   /**
+    * Returns a list of connections the block's involved in.
+    *
+    * @param outConnections
+    */
+   void getConnections( std::vector< GraphBlockConnection* >& outConnections ) const;
+
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
@@ -106,6 +113,20 @@ public:
     * Forces the block to recalculate its layout
     */
    void calculateBounds();
+
+   /**
+    * Notifies the block that a connection has been created.
+    *
+    * @param connection       created connection
+    */
+   virtual void onConnectionCreated( GraphBlockConnection& connection ) {}
+
+   /**
+    * Notifies the block that a connection is about to be removed.
+    *
+    * @param connection       connection to be removed
+    */
+   virtual void onConnectionRemoved( GraphBlockConnection& connection ) {}
 
 protected:
    // -------------------------------------------------------------------------
@@ -128,6 +149,11 @@ protected:
    virtual QColor getBgColor() const { return QColor( 255, 255, 255 ); }
 
    /**
+    * Returns the pen used to draw the border.
+    */
+   virtual QPen getBorderPen() const { return isSelected() ? s_selectionPen : s_borderPen; }
+
+   /**
     * Adds a new socket to the block.
     *
     * @return     reference to the newly created socket
@@ -139,6 +165,15 @@ protected:
 
 /**
  * A single socket placed on a graph block.
+ *
+ * Each socket maintains a list of all the connections it participates
+ * in so that when it changes it's position, it can inform the connection
+ * that it needs to recalculate its bounds.
+ * 
+ * The socket is responsible for notifying a block that a new connection
+ * has been established - providing it's the source socket.
+ * The responsibility of a destination socket is just to inform the connection
+ * about the changes in its whereabouts.
  */
 class GraphBlockSocket : public Object, public QGraphicsItem
 {
@@ -177,6 +212,11 @@ public:
    void initialize( GraphBlockSocketPosition pos, const char* name );
 
    /**
+    * Returns the parent graph block.
+    */
+   inline GraphBlock& getParentBlock() const { return *m_parent; }
+
+   /**
     * Returns the current socket position.
     */
    inline GraphBlockSocketPosition getPosition() const { return m_blockSide; }
@@ -190,6 +230,23 @@ public:
     * Recalculates the bounds of the connections this socket is involved in.
     */
    void calculateConnectionBounds();
+
+   // -------------------------------------------------------------------------
+   // Interface for connections management
+   // -------------------------------------------------------------------------
+   /**
+    * Adds a new connection between this socket and another one.
+    *
+    * @param connection
+    */
+   void addConnection( GraphBlockConnection& connection );
+
+   /**
+    * Removes the specified connection from the socket.
+    *
+    * @param connection
+    */
+   void removeConnection( GraphBlockConnection& connection );
 
    /**
     * Checks the connection between this socket and the specified one.
@@ -223,24 +280,6 @@ protected:
    void onObjectLoaded();
 
 private:
-   // -------------------------------------------------------------------------
-   // Interface for connections management
-   // -------------------------------------------------------------------------
-   /**
-    * Adds a new connection between this socket and another one.
-    *
-    * @param connection
-    */
-   void addConnection( GraphBlockConnection& connection );
-
-   /**
-    * Removes the specified connection from the socket.
-    *
-    * @param connection
-    */
-   void removeConnection( GraphBlockConnection& connection );
-
-private:
    void calculateBounds();
 };
 
@@ -248,6 +287,9 @@ private:
 
 /**
  * Connection between two graph block sockets.
+ *
+ * The connection manages the information kept in the participating socket
+ * (it's sort of a mediator in this context).
  */
 class GraphBlockConnection : public Object, public QGraphicsLineItem
 {
