@@ -28,7 +28,7 @@ sampler		inputTex : register( s0 );          // Whatever texture is set using ID
 // performs the 2x2 down sample, and then accepts any pixels
 // that are greater or equal to the configured threshold
 //------------------------------------------------------------------
-float4 BrightPass( in float2 t : TEXCOORD0 ) : COLOR
+float4 BrightPassDownSample( in float2 t : TEXCOORD0 ) : COLOR
 {
     
     float4 average = { 0.0f, 0.0f, 0.0f, 0.0f };

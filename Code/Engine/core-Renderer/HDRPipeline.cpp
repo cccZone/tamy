@@ -135,7 +135,7 @@ void HDRPipeline::initialize( Renderer& renderer )
    renderer.implement< RenderTarget >( *m_brightPassTarget );
 
    m_brightPass = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_BrightPass.psh" );
-   m_brightPass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "BrightPass" );
+   m_brightPass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "BrightPassDownSample" );
    renderer.implement< PixelShader >( *m_brightPass );
 
    // downsample pass
@@ -158,7 +158,7 @@ void HDRPipeline::initialize( Renderer& renderer )
    m_vertBlurTarget = new RenderTarget( new RTSPDynamic( renderer, 0.125f, 0.125f ) );
    renderer.implement< RenderTarget >( *m_vertBlurTarget );
 
-   m_vertBlurPass = new PixelShader( "Renderer/Shaders/HDRPipeline/Postproces_sVerticalBlur.psh" );
+   m_vertBlurPass = new PixelShader( "Renderer/Shaders/HDRPipeline/Postproces_VerticalBlur.psh" );
    m_vertBlurPass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "VerticalBlur" );
    renderer.implement< PixelShader >( *m_vertBlurPass );
 

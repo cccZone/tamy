@@ -83,18 +83,23 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
     <ClCompile Include="HDRPipeline.cpp" />
     <ClCompile Include="RenderingPass.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="RenderingPipelineNode.cpp" />
     <ClCompile Include="RenderingPipelineMechanism.cpp" />
+    <ClCompile Include="RenderingPipelineSockets.cpp" />
     <ClCompile Include="RenderTargetDescriptor.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
-    <ClCompile Include="RPBackBufferNode.cpp" />
-    <ClCompile Include="RPConcentratorNode.cpp" />
+    <ClCompile Include="RPBlurNode.cpp" />
+    <ClCompile Include="RPBrightnessNode.cpp" />
+    <ClCompile Include="RPDownsampleNode.cpp" />
+    <ClCompile Include="FloatSockets.cpp" />
+    <ClCompile Include="RPHDRNode.cpp" />
+    <ClCompile Include="RPLuminanceNode.cpp" />
     <ClCompile Include="RPPostProcessNode.cpp" />
-    <ClCompile Include="RPRenderTargetNode.cpp" />
     <ClCompile Include="RPSceneRenderNode.cpp" />
     <ClCompile Include="RPStartNode.cpp" />
     <ClCompile Include="SceneRenderingPass.cpp" />
@@ -111,6 +116,7 @@
     <ClCompile Include="SkinnedGeometry.cpp" />
     <ClCompile Include="SpatialEntity.cpp" />
     <ClCompile Include="StaticGeometry.cpp" />
+    <ClCompile Include="TextureSockets.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="DeviceFilter.cpp" />
     <ClCompile Include="RenderDevicesEnumerator.cpp" />
@@ -136,6 +142,7 @@
     <ClCompile Include="VertexDescriptions.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="VisibilityPass.cpp" />
+    <ClCompile Include="VoidSockets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\FinalPass.psh" />
@@ -149,24 +156,29 @@
     <None Include="..\..\Include\core-Renderer\RendererObject.inl" />
     <None Include="..\..\Include\core-Renderer\Light.inl" />
     <None Include="..\..\Include\core-Renderer\LineSegments.inl" />
+    <None Include="..\..\Include\core-Renderer\RenderingPipelineNode.inl" />
     <None Include="..\..\Include\core-Renderer\TriangleMesh.inl" />
     <None Include="..\..\Include\core-Renderer\AttributeSorterNode.inl" />
     <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\FloatSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
     <ClInclude Include="..\..\Include\core-Renderer\HDRPipeline.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Renderable.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineMechanism.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPBackBufferNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPConcentratorNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPBlurNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPBrightnessNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPDownsampleNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPHDRNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPLuminanceNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPRenderTargetNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h" />
@@ -189,6 +201,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\SkinnedGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h" />
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\TextureSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DeviceFilter.h" />
@@ -229,6 +242,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VisibilityPass.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\VoidSockets.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core-MVC\core-MVC.vcxproj">

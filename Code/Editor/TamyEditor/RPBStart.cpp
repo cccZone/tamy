@@ -11,11 +11,10 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBStart::RPBStart( RPStartNode& node )
-   : m_nodePtr( &node )
+   : RenderingPipelineBlock( node )
+   , m_nodePtr( &node )
 {
    setCaption( "Start" );
-
-   addSocket().initialize( GBSP_RIGHT, "Output" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

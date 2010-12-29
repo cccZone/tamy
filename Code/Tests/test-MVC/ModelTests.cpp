@@ -8,6 +8,7 @@
 #include <d3dx9.h>
 
 
+
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace // anonymous
@@ -29,6 +30,7 @@ namespace // anonymous
    BEGIN_OBJECT(EntityAMock, Entity)
       PROPERTY_EDIT("index", int, m_index)
    END_OBJECT()
+   REGISTER_RTTI( EntityAMock );
 
    // -------------------------------------------------------------------------
 
@@ -48,6 +50,7 @@ namespace // anonymous
    BEGIN_OBJECT(EntityBMock, Entity)
       PROPERTY_EDIT("index", int, m_index)
    END_OBJECT()
+   REGISTER_RTTI( EntityBMock );
 
    // -------------------------------------------------------------------------
 

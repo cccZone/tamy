@@ -21,6 +21,7 @@ class RenderTarget;
 class RenderTargetDescriptor;
 class SpatialView;
 class RenderingView;
+class RenderingPipelineNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,6 +39,8 @@ private:
    Renderer*                                    m_renderer;
    std::vector< Model* >                        m_scenes;
    CameraContext*                               m_cameraContext;
+
+   std::vector< RenderingPipelineNode* >        m_nodesQueue;
 
    // we're using a single camera and a some scenes - but all are defined here - so render them before 
    // the pipeline
@@ -115,6 +118,17 @@ public:
    // -------------------------------------------------------------------------
    void initialize( Renderer& renderer );
    void render();
+
+private:
+   /**
+    * Caches the nodes for quicker processing.
+    */
+   void cacheNodes();
+
+   /**
+    * Deinitializes the pipeline.
+    */
+   void deinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

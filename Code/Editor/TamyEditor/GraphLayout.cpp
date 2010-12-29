@@ -81,7 +81,7 @@ void GraphLayout::remove( GraphBlock* block )
 void GraphLayout::startNegotiatingConnection( GraphBlockSocket& sourceSocket )
 {
    // we can only start connections from the sockets on the right
-   if ( sourceSocket.getPosition() == GBSP_RIGHT )
+   if ( sourceSocket.getPosition() == GBSP_OUTPUT )
    {
       m_sourceSocket = &sourceSocket;
 
@@ -118,12 +118,15 @@ void GraphLayout::finishNegotiatingConnection( GraphBlockSocket* destinationSock
    }
 
    // verify that the connection doesn't exist and that we're connecting to a correctly positioned socket
-   if ( destinationSocket->getPosition() == GBSP_LEFT && !m_sourceSocket->isConnectedTo( *destinationSocket ) )
+   if ( destinationSocket->getPosition() == GBSP_INPUT && !m_sourceSocket->isConnectedTo( *destinationSocket ) )
    {
       // create a connection
-      GraphBlockConnection* connection = new GraphBlockConnection( m_sourceSocket, destinationSocket );
-      m_connections.push_back( connection );
-      addItem( connection );
+      GraphBlockConnection* connection = GraphBlockConnection::createConnection( m_sourceSocket, destinationSocket );
+      if ( connection )
+      {
+         m_connections.push_back( connection );
+         addItem( connection );
+      }
    }
 
    // cleanup

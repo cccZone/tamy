@@ -15,6 +15,7 @@
     <ClCompile Include="ModelView.cpp">
       <Filter>MVC</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Include\core-MVC\TypesRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-MVC\Entity.h">

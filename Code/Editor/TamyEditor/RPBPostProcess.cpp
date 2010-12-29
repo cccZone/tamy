@@ -11,12 +11,10 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBPostProcess::RPBPostProcess( RPPostProcessNode& node )
-   : m_nodePtr( &node )
+   : RenderingPipelineBlock( node )
+   , m_nodePtr( &node )
 {
    setCaption( "PostProcess" );
-
-   addSocket().initialize( GBSP_LEFT, "Input" );
-   addSocket().initialize( GBSP_RIGHT, "Output" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

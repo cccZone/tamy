@@ -28,9 +28,6 @@ private:
    std::vector< RenderingPipelineNode* >        m_nodes;
    std::vector< RenderTargetDescriptor* >       m_renderTargets;
 
-   // runtime queue of the nodes
-   std::vector< RenderingPipelineNode* >        m_nodesQueue;
-
 public:
    /**
     * Constructor.
@@ -56,6 +53,11 @@ public:
     * @param node       node to remove
     */
    void removeNode( RenderingPipelineNode& node );
+
+   /**
+    * Returns a list of all defined nodes.
+    */
+   inline const std::vector< RenderingPipelineNode* >& getNodes() const { return m_nodes; }
 
    /**
     * Performs a structural check of the graph and flags all inconsistencies.
@@ -91,36 +93,7 @@ public:
     * Returns a list of all defined render targets.
     */
    inline const std::vector< RenderTargetDescriptor* >& getRenderTargets() const { return m_renderTargets; }
-
-   // -------------------------------------------------------------------------
-   // Pipeline runtime management
-   // -------------------------------------------------------------------------
-   /**
-    * Initializes the pipeline for the use with the specified rendering pass.
-    *
-    * @param host       host rendering pass
-    */
-   void initialize( RenderingPipelineMechanism& host );
-
-   /**
-    * Deinitializes the pipeline.
-    *
-    * @param host       host rendering pass
-    */
-   void deinitialize( RenderingPipelineMechanism& host );
-
-   /**
-    * Renders using the pipeline.
-    *
-    * @param host       rendering pass the pipeline will be used to render
-    */
-   void render( RenderingPipelineMechanism& host );
-
-private:
-   /**
-    * Caches the nodes for quicker processing.
-    */
-   void cacheNodes();
+  
 
     /**
     * Looks for a render target descriptor with the specified id.

@@ -166,14 +166,22 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
    settings.endGroup();
 
    RenderingPipeline* pipeline = NULL;
+   RenderingPipelineMechanism* sceneRenderer = NULL;
+
    if ( !mainRendererPipelineName.empty() )
    {
-      pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( mainRendererPipelineName ) );
+      try
+      {
+         pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( mainRendererPipelineName ) );
+         sceneRenderer = new RenderingPipelineMechanism( pipeline );
+         m_renderingMech->add( "sceneRenderer", sceneRenderer );
+         sceneRenderer->setCamera( *m_camera );
+      }
+      catch ( std::exception& ex)
+      {
+      }
    }
-   RenderingPipelineMechanism* sceneRenderer = new RenderingPipelineMechanism( pipeline );
-   m_renderingMech->add( "sceneRenderer", sceneRenderer );
-
-   sceneRenderer->setCamera( *m_camera );
+   
 
    if ( mgr.hasService< Model >() )
    {
@@ -181,7 +189,10 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
       m_scene = &mgr.requestService< Model >();
       m_scene->addComponent( new ModelComponent< Camera >( *m_camera ) );
 
-      sceneRenderer->addScene( *m_scene );
+      if ( sceneRenderer )
+      {
+         sceneRenderer->addScene( *m_scene );
+      }
    }
    else
    {

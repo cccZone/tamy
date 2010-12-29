@@ -176,16 +176,11 @@ ClassesRegistry& getClassesRegistry();
  */
 #define DECLARE_RTTI_CLASS                                                    \
    private:                                                                   \
-      class RegisterMe                                                        \
-      {                                                                       \
-      public:                                                                 \
-         RegisterMe();                                                        \
-      };                                                                      \
-      static RegisterMe s_classRegistryTool;                                  \
-      static Class s_class;                                                   \
+      static Class* s_class;                                                  \
    public:                                                                    \
-      static Class& getRTTIClass() { return s_class; }                        \
-      const Class& getVirtualClass() const { return s_class; }                \
+      static Class& getRTTIClass() { return *s_class; }                       \
+      const Class& getVirtualClass() const { return *s_class; }               \
+      static void registerRTTI();                                             \
    private:
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,16 +191,11 @@ ClassesRegistry& getClassesRegistry();
  */
 #define DECLARE_RTTI_STRUCT                                                   \
    private:                                                                   \
-      class RegisterMe                                                        \
-      {                                                                       \
-      public:                                                                 \
-         RegisterMe();                                                        \
-      };                                                                      \
-      static RegisterMe s_classRegistryTool;                                  \
-      static Class s_class;                                                   \
+      static Class* s_class;                                                  \
    public:                                                                    \
-      static Class& getRTTIClass() { return s_class; }                        \
-      const Class& getVirtualClass() const { return s_class; }
+      static Class& getRTTIClass() { return *s_class; }                       \
+      const Class& getVirtualClass() const { return *s_class; }               \
+      static void registerRTTI();
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -213,28 +203,26 @@ ClassesRegistry& getClassesRegistry();
  * Use this macro to register a class with the reflection system.
  */
 #define BEGIN_RTTI(ClassType)                                                 \
-Class ClassType::s_class;                                                     \
-ClassType::RegisterMe ClassType::s_classRegistryTool;                         \
-ClassType::RegisterMe::RegisterMe()                                           \
-{                                                                             \
-   ClassTemplate& thisClass =                                                 \
-      getClassesRegistry().defineClass< ClassType >();                        \
-   thisClass.setCreator( new SolidCreator< ClassType >() );                   \
-   s_class = Class( thisClass );
+   Class* ClassType::s_class;                                                 \
+   void ClassType::registerRTTI()                                             \
+   {                                                                          \
+      ClassTemplate& thisClass =                                              \
+         getClassesRegistry().defineClass< ClassType >();                     \
+      thisClass.setCreator( new SolidCreator< ClassType >() );                \
+      s_class = new Class( thisClass );
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Use this macro to register an abstract class with the reflection system.
  */
-#define BEGIN_ABSTRACT_RTTI(ClassType)                                         \
-Class ClassType::s_class;                                                     \
-ClassType::RegisterMe ClassType::s_classRegistryTool;                         \
-ClassType::RegisterMe::RegisterMe()                                           \
-{                                                                             \
-   ClassTemplate& thisClass =                                                 \
-      getClassesRegistry().defineClass< ClassType >();                        \
-   s_class = Class( thisClass );
+#define BEGIN_ABSTRACT_RTTI(ClassType)                                        \
+   Class* ClassType::s_class;                                                 \
+   void ClassType::registerRTTI()                                             \
+   {                                                                          \
+      ClassTemplate& thisClass =                                              \
+         getClassesRegistry().defineClass< ClassType >();                     \
+      s_class = new Class( thisClass );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -242,6 +230,21 @@ ClassType::RegisterMe::RegisterMe()                                           \
  * This macro ends the RTTI type implementation
  */
 #define END_RTTI }
+
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef IMPORT_RTTI_REGISTRATIONS
+#define REGISTER_RTTI(ClassType)
+#else
+#define REGISTER_RTTI(ClassType)                                              \
+   struct ClassType##RTTIImporter                                             \
+   {                                                                          \
+      ClassType##RTTIImporter()                                               \
+      {                                                                       \
+         ClassType::registerRTTI();                                           \
+      }                                                                       \
+} registerClass##ClassType;
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 

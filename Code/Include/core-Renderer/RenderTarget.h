@@ -76,7 +76,7 @@ public:
    /**
     * Sets the new size of the render target.
     */
-   inline void resize( unsigned int width, unsigned int height ) { m_width = width; m_height = height; }
+   void resize( unsigned int width, unsigned int height );
 
    /**
     * Returns the render target usage.
@@ -195,6 +195,41 @@ public:
    // RenderTargetSizePolicy implementation
    // -------------------------------------------------------------------------
    void initialize( RenderTarget& target );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A dynamic render target policy that matches the size to the size 
+ * of another texture.
+ */
+class RTSPTexture : public RenderTargetSizePolicy, public Observer< ShaderTexture, ShaderTextureOps >
+{
+private:
+   Renderer&         m_renderer;
+   ShaderTexture&    m_texture;
+   RenderTarget*     m_hostTarget;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param renderer   renderer on which the render target should be implemented
+    * @param texture    tracked texture
+    */
+   RTSPTexture( Renderer& renderer, ShaderTexture& texture );
+   ~RTSPTexture();
+
+   // -------------------------------------------------------------------------
+   // RenderTargetSizePolicy implementation
+   // -------------------------------------------------------------------------
+   void initialize( RenderTarget& target );
+
+   // -------------------------------------------------------------------------
+   // Renderer observer implementation
+   // -------------------------------------------------------------------------
+   void update( ShaderTexture& texture );
+   void update( ShaderTexture& texture, const ShaderTextureOps& operation );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

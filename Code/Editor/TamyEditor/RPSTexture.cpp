@@ -1,5 +1,5 @@
-#include "RPBRenderTarget.h"
-#include "core-Renderer/RPRenderTargetNode.h"
+#include "RPSTexture.h"
+#include "core-Renderer/RenderingPipelineNode.h"
 #include "RenderTargetMimeData.h"
 #include <QGraphicsSceneDragDropEvent>
 #include <QMimeData>
@@ -7,66 +7,43 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBRenderTarget, RenderingPipelineBlock );
-   PROPERTY( TResourceHandle< RPRenderTargetNode >*, m_node );
+BEGIN_OBJECT( RPSTextureInput, RenderingPipelineSocketRepresentation );
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( RPSTextureOutput, RenderingPipelineSocketRepresentation );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QPen RPBRenderTarget::s_dragPen( QBrush( QColor( 100, 100, 255 ) ), 3.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+QPen RPSTextureOutput::s_dragPen( QBrush( QColor( 100, 100, 255 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RPBRenderTarget::RPBRenderTarget() 
-   : m_nodePtr( NULL )
-   , m_node( NULL )
-   , m_renderTargetDraggedIn( false ) 
-{
-   // we're gonna accept drops from the render targets list
-   setAcceptDrops( true );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-RPBRenderTarget::RPBRenderTarget( RPRenderTargetNode& node )
-   : m_nodePtr( &node )
+RPSTextureOutput::RPSTextureOutput() 
+   : RenderingPipelineSocketRepresentation()
    , m_renderTargetDraggedIn( false )
 {
-   setCaption( "RenderTarget" );
-
-   addSocket().initialize( GBSP_LEFT, "Input" );
-   addSocket().initialize( GBSP_RIGHT, "Output" );
-
    // we're gonna accept drops from the render targets list
    setAcceptDrops( true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RPBRenderTarget::~RPBRenderTarget()
+RPSTextureOutput::RPSTextureOutput( RPTextureOutput& socket ) 
+   : RenderingPipelineSocketRepresentation( socket ) 
+   , m_renderTargetDraggedIn( false )
 {
-   delete m_node;
-   m_node = NULL;
+   // we're gonna accept drops from the render targets list
+   setAcceptDrops( true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBRenderTarget::initialize( RenderingPipeline& parentResource )
-{
-   m_node = new TResourceHandle< RPRenderTargetNode >( *m_nodePtr );
-   m_renderTargetDraggedIn = false;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Object& RPBRenderTarget::getNode() 
-{ 
-   return m_node->get();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPBRenderTarget::dragEnterEvent( QGraphicsSceneDragDropEvent *event )
+void RPSTextureOutput::dragEnterEvent( QGraphicsSceneDragDropEvent *event )
 {
    m_renderTargetDraggedIn = true;
    event->acceptProposedAction();
@@ -76,14 +53,14 @@ void RPBRenderTarget::dragEnterEvent( QGraphicsSceneDragDropEvent *event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBRenderTarget::dragMoveEvent( QGraphicsSceneDragDropEvent *event )
+void RPSTextureOutput::dragMoveEvent( QGraphicsSceneDragDropEvent *event )
 {
    event->acceptProposedAction();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBRenderTarget::dragLeaveEvent( QGraphicsSceneDragDropEvent *event )
+void RPSTextureOutput::dragLeaveEvent( QGraphicsSceneDragDropEvent *event )
 {
    m_renderTargetDraggedIn = false;
    event->acceptProposedAction();
@@ -92,7 +69,7 @@ void RPBRenderTarget::dragLeaveEvent( QGraphicsSceneDragDropEvent *event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBRenderTarget::dropEvent( QGraphicsSceneDragDropEvent *event )
+void RPSTextureOutput::dropEvent( QGraphicsSceneDragDropEvent *event )
 {
    // decode the dragged data
    const QMimeData* mimeData = event->mimeData();
@@ -103,8 +80,13 @@ void RPBRenderTarget::dropEvent( QGraphicsSceneDragDropEvent *event )
 
    if ( selectedTargetID.empty() == false )
    {
-      RPRenderTargetNode& node = m_node->get();
-      node.setRenderTargetID( selectedTargetID );
+      RenderingPipelineNode& parentNode = dynamic_cast< RenderingPipelineNode& >( getParentBlock().getNode() );
+      RPTextureOutput* socket = dynamic_cast< RPTextureOutput* >( parentNode.findOutput( getSocketName() ) );
+
+      if ( socket )
+      {
+         socket->setRenderTargetID( selectedTargetID );
+      }
    }
 
    // process the event
@@ -115,7 +97,7 @@ void RPBRenderTarget::dropEvent( QGraphicsSceneDragDropEvent *event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QPen RPBRenderTarget::getBorderPen() const
+QPen RPSTextureOutput::getBorderPen() const
 {
    return m_renderTargetDraggedIn ? s_dragPen : __super::getBorderPen();
 }

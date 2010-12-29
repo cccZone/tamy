@@ -20,7 +20,7 @@ namespace // anonymous
    };
    BEGIN_RTTI(TemplateObject)
    END_RTTI
-
+   REGISTER_RTTI( TemplateObject )
    // -------------------------------------------------------------------------
 
    class TemplateObjectA : public TemplateObject
@@ -33,7 +33,7 @@ namespace // anonymous
    BEGIN_RTTI(TemplateObjectA)
       PARENT(TemplateObject)
    END_RTTI
-
+   REGISTER_RTTI( TemplateObjectA )
    // -------------------------------------------------------------------------
 
    class TemplateObjectB : public TemplateObject
@@ -46,7 +46,7 @@ namespace // anonymous
    BEGIN_RTTI(TemplateObjectB)
       PARENT(TemplateObject)
    END_RTTI
-
+   REGISTER_RTTI( TemplateObjectB )
    // -------------------------------------------------------------------------
 
    class IRepresentation

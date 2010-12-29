@@ -64,3 +64,23 @@ void* DX9Texture::getPlatformSpecific() const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+unsigned int DX9Texture::getWidth() const
+{
+   D3DSURFACE_DESC desc;
+   m_dxTexture->GetLevelDesc( 0, &desc );
+
+   return desc.Width;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+unsigned int DX9Texture::getHeight() const
+{
+   D3DSURFACE_DESC desc;
+   m_dxTexture->GetLevelDesc( 0, &desc );
+
+   return desc.Height;
+}
+
+///////////////////////////////////////////////////////////////////////////////

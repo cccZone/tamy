@@ -64,7 +64,7 @@ namespace // anonymous
    };
    BEGIN_RTTI( SerializableMock )
    END_RTTI
-
+   REGISTER_RTTI( SerializableMock )
 } // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,8 +91,8 @@ TEST(TPropertiesView, editors)
    D3DXVECTOR3 speed(0, 0, 0);
 
    Properties properties("");
-   properties.add<D3DXVECTOR3>( position, "position" ).setParams( "position", "", true );
-   properties.add<D3DXVECTOR3>( speed, "speed" ).setParams( "speed", "", true );
+   properties.add<D3DXVECTOR3>( position, "position" ).setParams( "position", "", true, true );
+   properties.add<D3DXVECTOR3>( speed, "speed" ).setParams( "speed", "", true, true );
 
    PropertiesViewMock view;
    view.mockAssociate< D3DXVECTOR3, EditorMock< D3DXVECTOR3 > >();

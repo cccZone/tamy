@@ -22,8 +22,8 @@ class GraphBlockConnection;
 
 enum GraphBlockSocketPosition
 {
-   GBSP_LEFT,
-   GBSP_RIGHT,
+   GBSP_INPUT,
+   GBSP_OUTPUT,
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -114,20 +114,6 @@ public:
     */
    void calculateBounds();
 
-   /**
-    * Notifies the block that a connection has been created.
-    *
-    * @param connection       created connection
-    */
-   virtual void onConnectionCreated( GraphBlockConnection& connection ) {}
-
-   /**
-    * Notifies the block that a connection is about to be removed.
-    *
-    * @param connection       connection to be removed
-    */
-   virtual void onConnectionRemoved( GraphBlockConnection& connection ) {}
-
 protected:
    // -------------------------------------------------------------------------
    // Object implementation
@@ -156,9 +142,9 @@ protected:
    /**
     * Adds a new socket to the block.
     *
-    * @return     reference to the newly created socket
+    * @param socket
     */
-   GraphBlockSocket& addSocket();
+   void addSocket( GraphBlockSocket* socket );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -190,6 +176,7 @@ private:
 
    std::vector< GraphBlockConnection* >      m_connections;
 
+   static QPen                               s_borderPen;
    QFont                                     m_font;
    QRectF                                    m_bounds;
    QRectF                                    m_nameBounds;
@@ -198,18 +185,17 @@ private:
 public:
    /**
     * Constructor.
-    *
-    * @param parent
     */
-   GraphBlockSocket( GraphBlock* parent = NULL );
+   GraphBlockSocket();
 
    /**
     * Initializes the socket
     *
+    * @param parent  parent block
     * @param pos     socket's position ( left or right )
     * @param name    socket's name
     */
-   void initialize( GraphBlockSocketPosition pos, const char* name );
+   void initialize( GraphBlock* parent, GraphBlockSocketPosition pos, const char* name );
 
    /**
     * Returns the parent graph block.
@@ -227,6 +213,11 @@ public:
    float getNameWidth() const;
 
    /**
+    * Returns the represented socket instance.
+    */
+   virtual Object& getSocket() { return *( reinterpret_cast< Object* >( NULL ) ); }
+
+   /**
     * Recalculates the bounds of the connections this socket is involved in.
     */
    void calculateConnectionBounds();
@@ -238,8 +229,10 @@ public:
     * Adds a new connection between this socket and another one.
     *
     * @param connection
+    *
+    * @return        the result of adding a connection
     */
-   void addConnection( GraphBlockConnection& connection );
+   bool addConnection( GraphBlockConnection& connection );
 
    /**
     * Removes the specified connection from the socket.
@@ -267,6 +260,30 @@ public:
    void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
 
 protected:
+   /**
+    * Notification called when a new connection is added.
+    *
+    * @param connection.
+    */
+   virtual bool onConnectionAdded( GraphBlockConnection& connection ) { return false; }
+
+   /**
+    * Notification called when an existing connection is removed.
+    *
+    * @param connection.
+    */
+   virtual void onConnectionRemoved( GraphBlockConnection& connection ) {}
+
+   /**
+    * Returns the background color the socket should be drawn with.
+    */
+   virtual QColor getBgColor() const { return QColor( 255, 255, 255 ); }
+
+   /**
+    * Returns the p[en the socket's frame should be drawn with
+    */
+   virtual QPen getBorderPen() const { return s_borderPen; }
+
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
@@ -304,9 +321,18 @@ public:
    /**
     * Constructor.
     *
-    * @param parent
+    * @param source           source socket
+    * @param destination      destination socket
     */
    GraphBlockConnection( GraphBlockSocket* source = NULL, GraphBlockSocket* destination = NULL );
+
+   /**
+    * Creates a new connection between two sockets, if that's possible.
+    *
+    * @param source
+    * @param destination
+    */
+   static GraphBlockConnection* createConnection( GraphBlockSocket* source, GraphBlockSocket* destination );
 
    /**
     * Calculates the bounds of the connection.

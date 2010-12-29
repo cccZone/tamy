@@ -134,50 +134,69 @@ void RenderingPipelineEditor::save()
 
 void RenderingPipelineEditor::onSceneSelectionChanged()
 {
-   GraphBlock* selectedBlock = NULL;
-
-   QList< QGraphicsItem* > selectedItems = m_renderingPipelineLayout.selectedItems();
-   if ( selectedItems.size() == 1 )
+   // cleanup previous selection
+   if ( m_blockPropertiesRootView != NULL )
    {
-      selectedBlock = dynamic_cast< GraphBlock* >( selectedItems.back() );
+      m_blockPropertiesLayout->removeWidget( m_blockPropertiesRootView );
+
+      delete m_blockPropertiesRootView;
+      m_blockPropertiesRootView = NULL;
+   }
+
+   if ( m_nodePropertiesRootView != NULL )
+   {
+      m_nodePropertiesLayout->removeWidget( m_nodePropertiesRootView );
+
+      delete m_nodePropertiesRootView;
+      m_nodePropertiesRootView = NULL;
+   }
+
+   // handle selection of new item
+   QList< QGraphicsItem* > selectedItems = m_renderingPipelineLayout.selectedItems();
+   if ( selectedItems.size() != 1 )
+   {
+      return;
+   }
+
+   handleBlockSelection( dynamic_cast< GraphBlock* >( selectedItems.back() ) );
+   handleSocketSelection( dynamic_cast< GraphBlockSocket* >( selectedItems.back() ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::handleBlockSelection( GraphBlock* selectedBlock )
+{
+   if ( !selectedBlock )
+   {
+      return;
    }
 
    // block properties
+   m_blockPropertiesRootView = new QPropertiesView();
+   m_blockPropertiesLayout->addWidget( m_blockPropertiesRootView );
+   selectedBlock->viewProperties( *m_blockPropertiesRootView );
+
+   // node properties
+   Object& node = selectedBlock->getNode();
+   m_nodePropertiesRootView = new QPropertiesView();
+   m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
+   node.viewProperties( *m_nodePropertiesRootView );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::handleSocketSelection( GraphBlockSocket* selectedSocket )
+{
+   if ( !selectedSocket )
    {
-      if ( m_blockPropertiesRootView != NULL )
-      {
-         m_blockPropertiesLayout->removeWidget( m_blockPropertiesRootView );
-
-         delete m_blockPropertiesRootView;
-         m_blockPropertiesRootView = NULL;
-      }
-
-      if ( selectedBlock != NULL )
-      {
-         m_blockPropertiesRootView = new QPropertiesView();
-         m_blockPropertiesLayout->addWidget( m_blockPropertiesRootView );
-         selectedBlock->viewProperties( *m_blockPropertiesRootView );
-      }
+      return;
    }
 
    // node properties
-   {
-      if ( m_nodePropertiesRootView != NULL )
-      {
-         m_nodePropertiesLayout->removeWidget( m_nodePropertiesRootView );
-
-         delete m_nodePropertiesRootView;
-         m_nodePropertiesRootView = NULL;
-      }
-
-      if ( selectedBlock != NULL )
-      {
-         Object& node = selectedBlock->getNode();
-         m_nodePropertiesRootView = new QPropertiesView();
-         m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
-         node.viewProperties( *m_nodePropertiesRootView );
-      }
-   }
+   Object& node = selectedSocket->getSocket();
+   m_nodePropertiesRootView = new QPropertiesView();
+   m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
+   node.viewProperties( *m_nodePropertiesRootView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

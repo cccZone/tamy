@@ -54,7 +54,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <AdditionalIncludeDirectories>.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(Configuration);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;.\;$(DXSDK_DIR)\Include;$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMPORT_RTTI_REGISTRATIONS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <DebugInformationFormat>
@@ -72,7 +72,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>.\GeneratedFiles;$(QTDIR)\include;.\GeneratedFiles\$(Configuration);$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;.\;$(DXSDK_DIR)\Include;$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_CORE_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMPORT_RTTI_REGISTRATIONS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_THREAD_SUPPORT;QT_CORE_LIB;QT_GUI_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -83,11 +83,22 @@
       <AdditionalLibraryDirectories>$(QTDIR)\lib;$(DXSDK_DIR)\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>IMPORT_RTTI_REGISTRATIONS;</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CustomBuild Include="assertDialog.h">
@@ -231,13 +242,14 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="RenderingPipelineSocketRepresentation.h" />
     <ClInclude Include="RenderTargetMimeData.h" />
-    <ClInclude Include="RPBBackBuffer.h" />
-    <ClInclude Include="RPBConcentrator.h" />
     <ClInclude Include="RPBPostProcess.h" />
-    <ClInclude Include="RPBRenderTarget.h" />
     <ClInclude Include="RPBSceneRender.h" />
     <ClInclude Include="RPBStart.h" />
+    <ClInclude Include="RPSFloat.h" />
+    <ClInclude Include="RPSTexture.h" />
+    <ClInclude Include="RPSVoid.h" />
     <ClInclude Include="SceneQuery.h" />
     <ClInclude Include="SceneQueryEffect.h" />
     <ClInclude Include="SelectedEntityRepresentation.h" />
@@ -587,14 +599,15 @@
     <ClCompile Include="RenderingPipelineEditor.cpp" />
     <ClCompile Include="GraphLayout.cpp" />
     <ClCompile Include="RenderingPipelineLayout.cpp" />
+    <ClCompile Include="RenderingPipelineSocketRepresentation.cpp" />
     <ClCompile Include="RenderTargetDescriptorDialog.cpp" />
     <ClCompile Include="RenderTargetMimeData.cpp" />
-    <ClCompile Include="RPBBackBuffer.cpp" />
-    <ClCompile Include="RPBConcentrator.cpp" />
     <ClCompile Include="RPBPostProcess.cpp" />
-    <ClCompile Include="RPBRenderTarget.cpp" />
     <ClCompile Include="RPBSceneRender.cpp" />
     <ClCompile Include="RPBStart.cpp" />
+    <ClCompile Include="RPSFloat.cpp" />
+    <ClCompile Include="RPSTexture.cpp" />
+    <ClCompile Include="RPSVoid.cpp" />
     <ClCompile Include="SceneQueryEffect.cpp" />
     <ClCompile Include="SelectedGeometry.cpp" />
     <ClCompile Include="SelectionRenderingPass.cpp" />
@@ -696,6 +709,7 @@
     <ClCompile Include="MtxPropertyEditor.cpp" />
     <ClCompile Include="ResourcePropertyEditor.cpp" />
     <ClCompile Include="StringPropertyEditor.cpp" />
+    <ClCompile Include="TypesRegistry.cpp" />
     <ClCompile Include="Vec3PropertyEditor.cpp" />
     <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="TamySceneWidget.cpp" />

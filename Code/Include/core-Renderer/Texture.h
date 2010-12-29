@@ -32,7 +32,17 @@ public:
     *
     * @return     pointer to impl-specific texture structure
     */
-   virtual void* getPlatformSpecific() const {return NULL;}
+   virtual void* getPlatformSpecific() const { return NULL; }
+
+   /**
+    * Returns the width of the texture.
+    */
+   virtual unsigned int getWidth() const { return 0; }
+
+   /**
+    * Returns the height of the texture.
+    */
+   virtual unsigned int getHeight() const { return 0; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,6 +100,16 @@ public:
     * The method releases the image buffer when it's no longer needed.
     */
    void releaseData();
+
+   /**
+    * Returns the width of the texture.
+    */
+   unsigned int getWidth() const;
+
+   /**
+    * Returns the height of the texture.
+    */
+   unsigned int getHeight() const;
 
    // -------------------------------------------------------------------------
    // Resource implementation
