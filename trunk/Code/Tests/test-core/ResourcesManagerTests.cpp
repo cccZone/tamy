@@ -56,7 +56,7 @@ namespace // anonymous
    BEGIN_RESOURCE(ResourceMock, Resource, txt, AM_BINARY)
       PROPERTY_EDIT("val", int, m_val)
    END_OBJECT()
-
+   REGISTER_RTTI( ResourceMock )
    // -------------------------------------------------------------------------
 
    class ObjMock : public ResourceObject
@@ -77,7 +77,7 @@ namespace // anonymous
    };
    BEGIN_OBJECT( ObjMock, ResourceObject )
    END_OBJECT()
-
+   REGISTER_RTTI( ObjMock )
 } // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////

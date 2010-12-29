@@ -1,9 +1,9 @@
-#include "core-Renderer/RPConcentratorNode.h"
+#include "RPSFloat.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPConcentratorNode, RenderingPipelineNode )
-END_OBJECT()
+BEGIN_OBJECT( RPSFloat, RenderingPipelineSocketRepresentation );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -15,6 +15,7 @@ class RenderingPipelineLayout;
 class GraphWidget;
 class Class;
 class GraphBlock;
+class GraphBlockSocket;
 class QPropertiesView;
 class Object;
 
@@ -63,6 +64,8 @@ protected:
 
 private:
    void updateRenderTargetsList();
+   void handleBlockSelection( GraphBlock* selectedBlock );
+   void handleSocketSelection( GraphBlockSocket* selectedSocket );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

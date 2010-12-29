@@ -29,6 +29,8 @@ public:
    // TextureImpl implementation
    // -------------------------------------------------------------------------
    void* getPlatformSpecific() const;
+   unsigned int getWidth() const;
+   unsigned int getHeight() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

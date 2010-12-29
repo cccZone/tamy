@@ -27,6 +27,10 @@ void Serializer::operator<<(std::vector<T>& vec)
    }
    else if ( state == PSS_LOAD )
    {
+      // clear all previous data
+      vec.clear();
+
+      // deserialize vector's contents
       unsigned int count = 0;
       *this << count;
       for (unsigned int i = 0; i < count; ++i)
@@ -56,7 +60,16 @@ void Serializer::operator<<(std::vector<T*>& vec)
    }
    else if ( state == PSS_LOAD )
    {
-      unsigned int count = 0;
+      // clear all previous data
+      unsigned int count = vec.size();
+      for (unsigned int i = 0; i < count; ++i)
+      {
+         delete vec[i];
+      }
+      vec.clear();
+
+      // deserialize vector's contents
+      count = 0;
       *this << count;
       for (unsigned int i = 0; i < count; ++i)
       {
@@ -64,6 +77,8 @@ void Serializer::operator<<(std::vector<T*>& vec)
          *this << &obj;
 
          T* tObj = reinterpret_cast<T*>(obj);
+
+         // if there's an object there
          vec.push_back(tObj);
       }
    }

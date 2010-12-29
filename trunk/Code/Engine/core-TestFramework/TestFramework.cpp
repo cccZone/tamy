@@ -40,6 +40,13 @@ CppUnit::TestSuite& registerSuite(const char* name)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// type includes
+#include "core/TypesRegistry.cpp"
+#include "core-MVC/TypesRegistry.cpp"
+#include "core-Renderer/TypesRegistry.cpp"
+
+///////////////////////////////////////////////////////////////////////////////
+
 int main(int argc, char** argv)
 {
    if (g_SuiteRegistry == NULL)

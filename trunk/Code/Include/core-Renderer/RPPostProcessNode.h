@@ -7,12 +7,35 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class FullscreenQuad;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A rendering pipeline node responsible for applying a post process effect.
+ */
 class RPPostProcessNode : public RenderingPipelineNode
 {
    DECLARE_CLASS( RPPostProcessNode )
 
 private:
-   int         m_testVal;
+   FullscreenQuad*                           m_fullscreenQuad;
+
+public:
+   RPPostProcessNode();
+   virtual ~RPPostProcessNode();
+
+   // -------------------------------------------------------------------------
+   // RenderingPipelineNode implementation
+   // -------------------------------------------------------------------------
+   void onInitialize( RenderingPipelineMechanism& host );
+   void onDeinitialize( RenderingPipelineMechanism& host );
+
+protected:
+   /**
+    * Renders the full screen quad geometry.
+    */
+   void renderQuad();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

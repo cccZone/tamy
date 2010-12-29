@@ -166,14 +166,15 @@ void GraphBlock::setCaption( const char* caption )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphBlockSocket& GraphBlock::addSocket()
+void GraphBlock::addSocket( GraphBlockSocket* socket )
 {
-   GraphBlockSocket* socket = new GraphBlockSocket( this );
+   if ( !socket )
+   {
+      return;
+   }
+
    m_sockets.push_back( socket );
-
    calculateBounds();
-
-   return *socket;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -197,14 +198,14 @@ void GraphBlock::calculateBounds()
       GraphBlockSocket* socket = *it;
       switch( socket->getPosition() )
       {
-      case GBSP_LEFT:
+      case GBSP_INPUT:
          {
             longestLeftSocketName = max( longestLeftSocketName, socket->getNameWidth() );
             ++leftSocketsCount;
             break;
          }
       
-      case GBSP_RIGHT:
+      case GBSP_OUTPUT:
          {
             longestRightSocketName = max( longestRightSocketName, socket->getNameWidth() );
             ++rightSocketsCount;
@@ -245,14 +246,14 @@ void GraphBlock::calculateBounds()
 
       switch( socket->getPosition() )
       {
-      case GBSP_LEFT:
+      case GBSP_INPUT:
          {
             socket->setPos( 0, captionHeight + leftSocketY );
             leftSocketY += leftSocketsSpacing;
             break;
          }
 
-      case GBSP_RIGHT:
+      case GBSP_OUTPUT:
          {
             socket->setPos( blockWidth, captionHeight + rightSocketY );
             rightSocketY += rightSocketsSpacing;
@@ -289,10 +290,14 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphBlockSocket::GraphBlockSocket( GraphBlock* parent )
-   : QGraphicsItem( parent )
-   , m_parent( parent )
-   , m_blockSide( GBSP_LEFT )
+QPen GraphBlockSocket::s_borderPen( QBrush( QColor( 0, 0, 0 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+
+///////////////////////////////////////////////////////////////////////////////
+
+GraphBlockSocket::GraphBlockSocket()
+   : QGraphicsItem( NULL )
+   , m_parent( NULL )
+   , m_blockSide( GBSP_INPUT )
    , m_name( "" )
    , m_font( "Arial", 10, QFont::Light )
 {
@@ -327,10 +332,12 @@ void GraphBlockSocket::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphBlockSocket::initialize( GraphBlockSocketPosition pos, const char* name )
+void GraphBlockSocket::initialize( GraphBlock* parent, GraphBlockSocketPosition pos, const char* name )
 { 
+   m_parent = parent;
    m_blockSide = pos;
    m_name = name;
+   setParentItem( parent );
 
    calculateBounds();
 }
@@ -350,8 +357,11 @@ void GraphBlockSocket::paint( QPainter* painter, const QStyleOptionGraphicsItem*
    painter->setRenderHint( QPainter::Antialiasing, true );
    painter->setRenderHint( QPainter::TextAntialiasing, true );
 
-   painter->setPen( QPen( QBrush( QColor( 0, 0, 0 ) ), 1.0f ) );
-   painter->setBrush( QColor( 100, 100, 100 ) );
+   QPen borderPen = getBorderPen();
+   QColor bgColor = getBgColor();
+
+   painter->setPen( borderPen );
+   painter->setBrush( bgColor );
    painter->drawRect( m_bounds );
 
    painter->setFont( m_font );
@@ -381,14 +391,14 @@ void GraphBlockSocket::calculateBounds()
 
    switch( m_blockSide )
    {
-   case GBSP_LEFT:
+   case GBSP_INPUT:
       {
          m_bounds = QRectF( QPointF( -10.0f, -5.0f ), QSizeF( 10.0f, 10.0f ) );
          m_nameBounds = QRectF( QPointF( textMarginSize, -fontHeight * 0.5f ), QSizeF( nameWidth, fontHeight ) );
          break;
       }
 
-   case GBSP_RIGHT:
+   case GBSP_OUTPUT:
       {
          m_bounds = QRectF( QPointF( 0, -5.0f ), QSizeF( 10.0f, 10.0f ) );
          m_nameBounds = QRectF( QPointF( -nameWidth - textMarginSize, -fontHeight * 0.5f ), QSizeF( nameWidth, fontHeight ) );
@@ -414,14 +424,14 @@ void GraphBlockSocket::mousePressEvent( QGraphicsSceneMouseEvent* event )
       graphScene->startNegotiatingConnection( *this );
    }
 
-   event->accept();
+   __super::mousePressEvent( event );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void GraphBlockSocket::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 {
-   event->accept();
+   __super::mouseReleaseEvent( event );
 
    GraphLayout* graphScene = dynamic_cast< GraphLayout* >( scene() );
    if ( graphScene )
@@ -433,14 +443,16 @@ void GraphBlockSocket::mouseReleaseEvent( QGraphicsSceneMouseEvent* event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphBlockSocket::addConnection( GraphBlockConnection& connection )
+bool GraphBlockSocket::addConnection( GraphBlockConnection& connection )
 {
-   m_connections.push_back( &connection );
-   
-   if ( &connection.getSource() == this )
+   if ( onConnectionAdded( connection ) )
    {
-      // notify the parent block that a connection's been setup
-      m_parent->onConnectionCreated( connection );
+      m_connections.push_back( &connection );
+      return true;
+   }
+   else
+   {
+      return false;
    }
 }
 
@@ -468,12 +480,7 @@ void GraphBlockSocket::removeConnection( GraphBlockConnection& connection )
    {
       if ( *it == &connection )
       {
-         if ( &connection.getSource() == this )
-         {
-            // notify the parent block that a connection's been setup
-            m_parent->onConnectionRemoved( connection );
-         }
-
+         onConnectionRemoved( connection );
          m_connections.erase( it );
          break;
       }
@@ -491,15 +498,37 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
+GraphBlockConnection* GraphBlockConnection::createConnection( GraphBlockSocket* source, GraphBlockSocket* destination )
+{
+   if ( !source || !destination )
+   {
+      return NULL;
+   }
+
+   GraphBlockConnection* connection = new GraphBlockConnection( source, destination );
+    
+   if ( source->addConnection( *connection ) == false )
+   {
+      return NULL;
+   }
+
+   if ( destination->addConnection( *connection ) == false )
+   {
+      source->removeConnection( *connection );
+      return NULL;
+   }
+   
+   return connection;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 GraphBlockConnection::GraphBlockConnection( GraphBlockSocket* source, GraphBlockSocket* destination )
    : m_source( source )
    , m_destination( destination )
 {
    if ( m_source && m_destination )
    {
-      source->addConnection( *this );
-      destination->addConnection( *this );
-
       calculateBounds();
    }
 }

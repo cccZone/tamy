@@ -11,12 +11,10 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBSceneRender::RPBSceneRender( RPSceneRenderNode& node )
-   : m_nodePtr( &node )
+   : RenderingPipelineBlock( node )
+   , m_nodePtr( &node )
 {
    setCaption( "Scene" );
-
-   addSocket().initialize( GBSP_LEFT, "Input" );
-   addSocket().initialize( GBSP_RIGHT, "Output" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

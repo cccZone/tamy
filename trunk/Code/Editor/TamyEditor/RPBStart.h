@@ -27,7 +27,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBStart() : m_nodePtr( NULL ), m_node( NULL ) {}
+   RPBStart() : RenderingPipelineBlock(), m_nodePtr( NULL ), m_node( NULL ) {}
 
    /**
     * Parametrized constructor required by the generic factory.

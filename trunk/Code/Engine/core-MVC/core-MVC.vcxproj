@@ -85,6 +85,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Include\core-MVC\TypesRegistry.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelView.cpp" />

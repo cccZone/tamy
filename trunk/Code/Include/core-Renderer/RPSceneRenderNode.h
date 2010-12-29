@@ -7,15 +7,29 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class RenderTarget;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A rendering pipeline node responsible for rendering a scene.
+ */
 class RPSceneRenderNode : public RenderingPipelineNode
 {
    DECLARE_CLASS( RPSceneRenderNode )
 
+private:
+   RenderTarget*        m_renderTarget;
+
 public:
+   RPSceneRenderNode();
+
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
-   void update( RenderingPipelineMechanism& host );
+   void onInitialize( RenderingPipelineMechanism& host );
+   void onDeinitialize( RenderingPipelineMechanism& host );
+   void onUpdate( RenderingPipelineMechanism& host );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

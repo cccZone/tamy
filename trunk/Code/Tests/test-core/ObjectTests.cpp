@@ -25,7 +25,7 @@ namespace // anonymous
    BEGIN_OBJECT(BaseObject, Resource)
       PROPERTY_EDIT("some label", int, m_val)
    END_OBJECT()
-
+   REGISTER_RTTI( BaseObject )
    // -------------------------------------------------------------------------
 
    struct DerivedObject : public BaseObject
@@ -39,7 +39,7 @@ namespace // anonymous
    BEGIN_OBJECT(DerivedObject, BaseObject)
       PROPERTY_EDIT("some label", int, m_val)
    END_OBJECT()
-
+   REGISTER_RTTI( DerivedObject )
    // -------------------------------------------------------------------------
 
    struct DependentObject : public Resource
@@ -53,7 +53,7 @@ namespace // anonymous
    BEGIN_OBJECT(DependentObject, Resource)
       PROPERTY_EDIT("some label", BaseObject*, m_obj)
    END_OBJECT()
-
+   REGISTER_RTTI( DependentObject )
    // -------------------------------------------------------------------------
 
    class AbstractClass : public Resource
@@ -76,7 +76,7 @@ namespace // anonymous
    BEGIN_OBJECT(AbstractClass, Resource)
       PROPERTY_EDIT("baseVal", int, m_baseVal)
    END_OBJECT()
-
+   REGISTER_RTTI( AbstractClass )
    // -------------------------------------------------------------------------
 
    class ImplementingClass : public AbstractClass
@@ -95,7 +95,7 @@ namespace // anonymous
    BEGIN_OBJECT(ImplementingClass, AbstractClass)
       PROPERTY_EDIT("val", int, m_val)
    END_OBJECT()
-
+   REGISTER_RTTI( ImplementingClass )
    // -------------------------------------------------------------------------
 
    class RegularObject : public Object
@@ -111,7 +111,7 @@ namespace // anonymous
    BEGIN_OBJECT(RegularObject, Object)
       PROPERTY_EDIT("parent", Object*, m_parent)
    END_OBJECT()
-
+   REGISTER_RTTI( RegularObject )
    // -------------------------------------------------------------------------
 
    class PropertiesViewMock : public TPropertiesView<PropertiesViewMock>

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GraphBlock.h"
+#include "core-Renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,17 +18,23 @@ class RenderingPipelineBlock : public GraphBlock
 
 public:
    /**
+    * Default constructor.
+    */
+   RenderingPipelineBlock() {}
+
+   /**
+    * Constructor.
+    *
+    * @param node       represented node
+    */
+   RenderingPipelineBlock( RenderingPipelineNode& node );
+
+   /**
     * Called in order to initialize the block
     *
     * @param parentResource      resource that manages the object the block represents
     */
    virtual void initialize( RenderingPipeline& parentResource ) {}
-
-   // -------------------------------------------------------------------------
-   // GraphBlock implementation
-   // -------------------------------------------------------------------------
-   void onConnectionCreated( GraphBlockConnection& connection );
-   void onConnectionRemoved( GraphBlockConnection& connection );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

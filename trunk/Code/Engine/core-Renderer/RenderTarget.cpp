@@ -50,6 +50,16 @@ Color RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void RenderTarget::resize( unsigned int width, unsigned int height ) 
+{ 
+   m_width = width; 
+   m_height = height;
+   
+   notify( STO_RESIZE );
+}
+
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -137,6 +147,57 @@ RTSPStatic::RTSPStatic( unsigned int width, unsigned int height )
 void RTSPStatic::initialize( RenderTarget& target )
 {
    target.resize( m_width, m_height );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+RTSPTexture::RTSPTexture( Renderer& renderer, ShaderTexture& texture )
+   : m_renderer( renderer )
+   , m_texture( texture )
+   , m_hostTarget( NULL )
+{
+   m_texture.attachObserver( *this );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+RTSPTexture::~RTSPTexture()
+{
+   m_texture.detachObserver( *this );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RTSPTexture::initialize( RenderTarget& target )
+{
+   m_hostTarget = &target;
+
+   m_hostTarget->resize( m_texture.getWidth(), m_texture.getHeight() );
+   m_renderer.implement< RenderTarget >( *m_hostTarget );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RTSPTexture::update( ShaderTexture& texture )
+{
+   if ( m_hostTarget )
+   {
+      m_hostTarget->resize( m_texture.getWidth(), m_texture.getHeight() );
+      m_renderer.implement< RenderTarget >( *m_hostTarget );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RTSPTexture::update( ShaderTexture& texture, const ShaderTextureOps& operation )
+{
+   if ( operation == STO_RESIZE && m_hostTarget )
+   {
+      m_hostTarget->resize( m_texture.getWidth(), m_texture.getHeight() );
+      m_renderer.implement< RenderTarget >( *m_hostTarget );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

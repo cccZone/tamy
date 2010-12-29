@@ -1,33 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="QtImplementation">
-      <UniqueIdentifier>{7548806f-c12e-446e-9b66-1298751745ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="QtImplementation\Generated Files">
-      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
-      <Extensions>moc;h;cpp</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
-    <Filter Include="QtImplementation\Generated Files\Release">
-      <UniqueIdentifier>{c61d66f5-015a-43e4-b8fd-b7edcb9bf875}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
-    <Filter Include="QtImplementation\Generated Files\Debug">
-      <UniqueIdentifier>{1261b02b-e408-4e1a-883b-f3304340c81e}</UniqueIdentifier>
-      <Extensions>cpp;moc</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
-    <Filter Include="QtImplementation\Form Files">
-      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
-      <Extensions>ui</Extensions>
-    </Filter>
-    <Filter Include="QtImplementation\Resource Files">
-      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
-      <Extensions>qrc;*</Extensions>
-      <ParseFiles>false</ParseFiles>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{73f4ad88-8c16-47b1-a99b-f18a059ae772}</UniqueIdentifier>
     </Filter>
@@ -123,6 +96,36 @@
     </Filter>
     <Filter Include="ResourceEditors\RenderingPipelineEditor\Blocks">
       <UniqueIdentifier>{684af1ca-eef5-4500-a6a7-ed0877e768ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\RenderingPipelineEditor\Sockets">
+      <UniqueIdentifier>{6bd35b41-b88a-4898-b6da-78786d103805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QtImplementation">
+      <UniqueIdentifier>{7548806f-c12e-446e-9b66-1298751745ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QtImplementation\Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="QtImplementation\Generated Files\Release">
+      <UniqueIdentifier>{c61d66f5-015a-43e4-b8fd-b7edcb9bf875}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="QtImplementation\Generated Files\Debug">
+      <UniqueIdentifier>{1261b02b-e408-4e1a-883b-f3304340c81e}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="QtImplementation\Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="QtImplementation\Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -243,15 +246,6 @@
     <ClInclude Include="RPBSceneRender.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
-    <ClInclude Include="RPBRenderTarget.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBConcentrator.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBBackBuffer.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_rendertargetdescriptordialog.h">
       <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
@@ -260,6 +254,18 @@
     </ClInclude>
     <ClInclude Include="FSNodeMimeData.h">
       <Filter>Components\ResourcesBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingPipelineSocketRepresentation.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="RPSFloat.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="RPSTexture.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="RPSVoid.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -548,15 +554,6 @@
     <ClCompile Include="RPBSceneRender.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
-    <ClCompile Include="RPBRenderTarget.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBConcentrator.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBBackBuffer.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
     <ClCompile Include="RenderTargetDescriptorDialog.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </ClCompile>
@@ -569,6 +566,19 @@
     <ClCompile Include="RenderTargetMimeData.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </ClCompile>
+    <ClCompile Include="RenderingPipelineSocketRepresentation.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSFloat.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSTexture.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSVoid.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="TypesRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">

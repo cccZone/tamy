@@ -3,7 +3,9 @@
 #include "core-Renderer/SpatialView.h"
 #include "core-Renderer/RenderingView.h"
 #include "core-Renderer/AttributeSorter.h"
-
+#include "core-Renderer/Renderer.h"
+#include "core-Renderer/VoidSockets.h"
+#include "core-Renderer/TextureSockets.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,10 +15,35 @@ END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSceneRenderNode::update( RenderingPipelineMechanism& host )
+RPSceneRenderNode::RPSceneRenderNode()
+: m_renderTarget( NULL )
 {
-   host.getStatesMgr().render();
+   defineInput( new RPVoidInput( "Input" ) );
+   defineOutput( new RPTextureOutput( "Output" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void RPSceneRenderNode::onInitialize( RenderingPipelineMechanism& host )
+{
+   m_renderTarget = getOutput< RPTextureOutput >( "Output" ).getRenderTarget();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPSceneRenderNode::onDeinitialize( RenderingPipelineMechanism& host )
+{
+   m_renderTarget = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host )
+{
+   Renderer& renderer = host.getRenderer();
+   renderer.setRenderTarget( m_renderTarget );
+
+   host.getStatesMgr().render();
+}
+
+///////////////////////////////////////////////////////////////////////////////
