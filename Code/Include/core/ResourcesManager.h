@@ -86,7 +86,8 @@ public:
    void moveResource( Resource* resource, const std::string& newPath );
 
    /**
-    * Creates a resource based on a file with the specified name.
+    * Creates a resource based on a file with the specified name and registers it
+    * with the manager, if it hasn't been registered before.
     *
     * @param name       name of the resource file (should exist in the
     *                   currently set filesystem)

@@ -35,8 +35,12 @@ RenderingPipeline::~RenderingPipeline()
 
 void RenderingPipeline::addNode( RenderingPipelineNode* node )
 {
+   notify( RPO_PRE_CHANGE );
+
    addObject( node );
    m_nodes.push_back( node );
+   
+   notify( RPO_POST_CHANGE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,8 +50,12 @@ void RenderingPipeline::removeNode( RenderingPipelineNode& node )
    std::vector< RenderingPipelineNode* >::iterator it = std::find( m_nodes.begin(), m_nodes.end(), &node );
    if ( it != m_nodes.end() )
    {
+      notify( RPO_PRE_CHANGE );
+
       m_nodes.erase( it );
       removeObject( node.getObjectId() );
+
+      notify( RPO_POST_CHANGE );
    }
    else
    {
@@ -94,8 +102,12 @@ void RenderingPipeline::removeRenderTarget( const std::string& id )
    {
       if ( m_renderTargets[i]->getTargetID() == id )
       {
+         notify( RPO_PRE_CHANGE );
+
          delete m_renderTargets[i];
          m_renderTargets.erase( m_renderTargets.begin() + i );
+
+         notify( RPO_POST_CHANGE );
          break;
       }
    }

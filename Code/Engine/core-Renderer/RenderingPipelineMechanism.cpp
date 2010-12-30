@@ -34,12 +34,24 @@ RenderingPipelineMechanism::RenderingPipelineMechanism( RenderingPipeline* pipel
 
    m_renderingView = new RenderingView();
    m_renderingView->setAttributeSorter( *m_statesManager );
+
+   // attach self as the observer
+   if ( m_pipeline )
+   {
+      m_pipeline->attachObserver( *this );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingPipelineMechanism::~RenderingPipelineMechanism()
 {
+   // detach the observer
+   if ( m_pipeline )
+   {
+      m_pipeline->detachObserver( *this );
+   }
+
    m_renderer = NULL;
 
    deinitialize();
@@ -131,6 +143,7 @@ void RenderingPipelineMechanism::initialize( Renderer& renderer )
       cacheNodes();
       for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
       {
+         (*it)->attachObserver( *this );
          (*it)->initialize( *this );
       }
    }
@@ -140,9 +153,11 @@ void RenderingPipelineMechanism::initialize( Renderer& renderer )
 
 void RenderingPipelineMechanism::deinitialize()
 {
-   // deintialize nodes
+   // deinitialize nodes
    for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
    {
+      // some of the nodes might not be there - verify that
+      (*it)->detachObserver( *this );
       (*it)->deinitialize( *this );
    }
    m_nodesQueue.clear();
@@ -180,6 +195,45 @@ void RenderingPipelineMechanism::render()
    }
 
    impl().passEnd();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::update( RenderingPipeline& subject )
+{
+   // do nothing - this is an initial update
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::update( RenderingPipeline& subject, const RenderingPipelineOperation& msg )
+{
+   if ( msg == RPO_PRE_CHANGE )
+   {
+      deinitialize();
+   }
+   else if ( msg == RPO_POST_CHANGE && m_renderer != NULL )
+   {
+      initialize( *m_renderer );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::update( RenderingPipelineNode& subject )
+{
+   // do nothing - this is an initial update
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::update( RenderingPipelineNode& subject, const RenderingPipelineNodeOperation& msg )
+{
+   if ( msg == RPNO_CHANGED && m_renderer != NULL )
+   {
+      deinitialize();
+      initialize( *m_renderer );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -241,3 +295,4 @@ void RenderingPipelineMechanism::cacheNodes()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
