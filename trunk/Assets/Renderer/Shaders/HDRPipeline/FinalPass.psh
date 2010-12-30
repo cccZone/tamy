@@ -11,9 +11,10 @@
 //  GLOBAL VARIABLES
 //------------------------------------------------------------------
 sampler     original_scene  : register( s0 );   // The HDR data
-sampler     luminance       : register( s1 );   // The 1x1 luminance map
 sampler     bloom           : register( s2 );   // The post processing results
 
+float		fMaxLuminance;						// Maximum luminance value
+float		fAvgLuminance;						// Average luminance value
 float       fExposure;                          // A user configurable bias to under/over expose the image
 float       fGaussianScalar;                    // Used in the post-processing, but also useful here
 float       g_rcp_bloom_tex_w;                  // The reciprocal WIDTH of the texture in 'bloom'
@@ -28,35 +29,31 @@ float4 main( in float2 t : TEXCOORD0 ) : COLOR0
 {
 
     // Read the HDR value that was computed as part of the original scene
-        float4 c = tex2D( original_scene, t );
-    
-    // Read the luminance value, target the centre of the texture
-    // which will map to the only pixel in it!
-        float4 l = tex2D( luminance, float2( 0.5f, 0.5f ) );
-        
+    float4 c = tex2D( original_scene, t );
+            
     // Compute the blur value using a bilinear filter
     // It is worth noting that if the hardware supports linear filtering of a
     // floating point render target that this step can probably be skipped.
-        float xWeight = frac( t.x / g_rcp_bloom_tex_w ) - 0.5;
-        float xDir = xWeight;
-        xWeight = abs( xWeight );
-        xDir /= xWeight;
-        xDir *= g_rcp_bloom_tex_w;
+    float xWeight = frac( t.x / g_rcp_bloom_tex_w ) - 0.5;
+    float xDir = xWeight;
+    xWeight = abs( xWeight );
+    xDir /= xWeight;
+    xDir *= g_rcp_bloom_tex_w;
 
-        float yWeight = frac( t.y / g_rcp_bloom_tex_h ) - 0.5;
-        float yDir = yWeight;
-        yWeight = abs( yWeight );
-        yDir /= yWeight;
-        yDir *= g_rcp_bloom_tex_h;
+    float yWeight = frac( t.y / g_rcp_bloom_tex_h ) - 0.5;
+    float yDir = yWeight;
+    yWeight = abs( yWeight );
+    yDir /= yWeight;
+    yDir *= g_rcp_bloom_tex_h;
 
     // sample the blur texture for the 4 relevant pixels, weighted accordingly
-        float4 b = ((1.0f - xWeight) * (1.0f - yWeight))    * tex2D( bloom, t );        
-        b +=       (xWeight * (1.0f - yWeight))             * tex2D( bloom, t + float2( xDir, 0.0f ) );
-        b +=       (yWeight * (1.0f - xWeight))             * tex2D( bloom, t + float2( 0.0f, yDir ) );
-        b +=       (xWeight * yWeight)                      * tex2D( bloom, t + float2( xDir, yDir ) );
+    float4 b = ((1.0f - xWeight) * (1.0f - yWeight))    * tex2D( bloom, t );        
+    b +=       (xWeight * (1.0f - yWeight))             * tex2D( bloom, t + float2( xDir, 0.0f ) );
+    b +=       (yWeight * (1.0f - xWeight))             * tex2D( bloom, t + float2( 0.0f, yDir ) );
+    b +=       (xWeight * yWeight)                      * tex2D( bloom, t + float2( xDir, yDir ) );
             
     // Compute the actual colour:
-        float4 final = c + 0.25f * b;
+    float4 final = c + 0.25f * b;
             
     // Reinhard's tone mapping equation (See Eqn#3 from 
     // "Photographic Tone Reproduction for Digital Images" for more details) is:
@@ -71,14 +68,13 @@ float4 main( in float2 t : TEXCOORD0 ) : COLOR0
     //
     //        exposure
     //   Lp = -------- * HDRPixelIntensity
-    //          l.r
+    //      fAvgLuminance
     //
     // The exposure ("key" in the above paper) can be used to adjust the overall "balance" of 
-    // the image. "l.r" is the average luminance across the scene, computed via the luminance
-    // downsampling process. 'HDRPixelIntensity' is the measured brightness of the current pixel
+    // the image. 'HDRPixelIntensity' is the measured brightness of the current pixel
     // being processed.
     
-        float Lp = (fExposure / l.r) * max( final.r, max( final.g, final.b ) );
+    float Lp = (fExposure / fAvgLuminance) * max( final.r, max( final.g, final.b ) );
     
     // A slight difference is that we have a bloom component in the final image - this is *added* to the 
     // final result, therefore potentially increasing the maximum luminance across the whole image. 
@@ -87,16 +83,15 @@ float4 main( in float2 t : TEXCOORD0 ) : COLOR0
     // be AT MOST 1.0; but the sample code adds a scalar to the front of this, making it a good enough
     // approximation to the *real* integral.
     
-        float LmSqr = (l.g + fGaussianScalar * l.g) * (l.g + fGaussianScalar * l.g);
+    float LmSqr = (fMaxLuminance + fGaussianScalar * fMaxLuminance) * (fMaxLuminance + fGaussianScalar * fMaxLuminance);
     
     // Compute Eqn#3:
-        float toneScalar = ( Lp * ( 1.0f + ( Lp / ( LmSqr ) ) ) ) / ( 1.0f + Lp );
+    float toneScalar = ( Lp * ( 1.0f + ( Lp / ( LmSqr ) ) ) ) / ( 1.0f + Lp );
     
     // Tonemap the final outputted pixel:
-        c = final * toneScalar;
+    c = final * toneScalar;
     
     // Return the fully composed colour
-        c.a = 1.0f;
-        return c;
-
+    c.a = 1.0f;
+    return c;
 }

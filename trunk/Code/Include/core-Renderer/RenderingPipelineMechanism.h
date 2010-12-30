@@ -5,6 +5,7 @@
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
 #include "core-Renderer\RenderingMechanism.h"
+#include "core\Observer.h"
 #include <vector>
 
 
@@ -22,6 +23,8 @@ class RenderTargetDescriptor;
 class SpatialView;
 class RenderingView;
 class RenderingPipelineNode;
+enum RenderingPipelineOperation;
+enum RenderingPipelineNodeOperation;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,7 +32,9 @@ class RenderingPipelineNode;
  * A pass responsible for rendering using a rendering pipeline.
  */
 class RenderingPipelineMechanism : public TRendererObject< RenderingPipelineMechanismImpl >,  
-                                   public RenderingMechanism
+                                   public RenderingMechanism,
+                                   public Observer< RenderingPipeline, RenderingPipelineOperation >,
+                                   public Observer< RenderingPipelineNode, RenderingPipelineNodeOperation >
 {
    DECLARE_RTTI_CLASS
 
@@ -118,6 +123,14 @@ public:
    // -------------------------------------------------------------------------
    void initialize( Renderer& renderer );
    void render();
+
+   // -------------------------------------------------------------------------
+   // Observer implementation
+   // -------------------------------------------------------------------------
+   void update( RenderingPipeline& subject );
+   void update( RenderingPipeline& subject, const RenderingPipelineOperation& msg );
+   void update( RenderingPipelineNode& subject );
+   void update( RenderingPipelineNode& subject, const RenderingPipelineNodeOperation& msg );
 
 private:
    /**

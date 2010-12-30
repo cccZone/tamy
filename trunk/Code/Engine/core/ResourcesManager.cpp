@@ -133,6 +133,11 @@ Resource& ResourcesManager::create( const std::string& name )
       File* file = m_filesystem->open( name, std::ios_base::in | fileAccessMode );
       Loader loader( new FileSerializer( file ) );
       res = &loader.load( *this );
+
+      if ( res )
+      {
+         addResource( res );
+      }
    }
    
    ASSERT_MSG( res != NULL, "Resource not found" );

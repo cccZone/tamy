@@ -4,6 +4,8 @@
 #define _RENDERING_PIPELINE_NODE_H
 
 #include "core/Resource.h"
+#include "core/Subject.h"
+#include "core/Observer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,6 +13,15 @@
 class RenderingPipelineMechanism;
 class RPNodeInput;
 class RPNodeOutput;
+class RPNodeSocket;
+enum RPNodeSocketOperation;
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum RenderingPipelineNodeOperation
+{
+   RPNO_CHANGED
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +42,9 @@ class RPNodeOutput;
  * 5.) After an implementation-specific update takes place, the node
  *     schedules all outgoing connections for further processing with the host mechanism.
  */
-class RenderingPipelineNode : public ResourceObject
+class RenderingPipelineNode : public ResourceObject, 
+                              public Subject< RenderingPipelineNode, RenderingPipelineNodeOperation >,
+                              public Observer< RPNodeSocket, RPNodeSocketOperation >
 {
    DECLARE_CLASS( RenderingPipelineNode )
 
@@ -141,6 +154,18 @@ public:
     * @param outputName
     */
    RPNodeOutput* findOutput( const std::string& outputName ) const;
+
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onObjectLoaded();
+   void onPropertyChanged( Property& property );
+
+   // -------------------------------------------------------------------------
+   // Observer implementation
+   // -------------------------------------------------------------------------
+   void update( RPNodeSocket& subject );
+   void update( RPNodeSocket& subject, const RPNodeSocketOperation& msg );
 
 protected:
    // -------------------------------------------------------------------------

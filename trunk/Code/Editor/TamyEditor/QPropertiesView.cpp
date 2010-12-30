@@ -80,6 +80,7 @@ void QPropertiesView::addPropertyEditor( QWidget* editorWidget )
 {
    editorWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
    m_currWidget->addWidget( editorWidget );
+   m_toolBox->setCurrentIndex( m_toolBox->count() - 1 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,6 +88,7 @@ void QPropertiesView::addPropertyEditor( QWidget* editorWidget )
 void QPropertiesView::removePropertyEditor( QWidget& editorWidget )
 {
    m_currWidget->removeWidget( &editorWidget );
+   m_toolBox->setCurrentIndex( m_toolBox->count() - 1 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

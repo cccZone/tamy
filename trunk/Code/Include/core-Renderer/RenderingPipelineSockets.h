@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core/Object.h"
+#include "core/Subject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,7 +13,14 @@ class RenderingPipelineMechanism;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPNodeSocket : public Object
+enum RPNodeSocketOperation
+{
+   RPNSO_CHANGED
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class RPNodeSocket : public Object, public Subject< RPNodeSocket, RPNodeSocketOperation >
 {
    DECLARE_CLASS( RPNodeSocket )
 
@@ -32,6 +40,10 @@ public:
     */
    inline const std::string& getName() const { return m_name; }
 
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged( Property& property );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

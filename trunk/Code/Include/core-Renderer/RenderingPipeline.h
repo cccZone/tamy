@@ -5,6 +5,7 @@
 
 #include "core/Resource.h"
 #include <vector>
+#include "core/Subject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,11 +17,19 @@ class RenderTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+enum RenderingPipelineOperation
+{
+   RPO_PRE_CHANGE,
+   RPO_POST_CHANGE
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Rendering pipeline represents a structure that performs all rendering related
  * image processing and presents the final image in the back buffer.
  */
-class RenderingPipeline : public Resource
+class RenderingPipeline : public Resource, public Subject< RenderingPipeline, RenderingPipelineOperation >
 {
    DECLARE_RESOURCE( RenderingPipeline );
 

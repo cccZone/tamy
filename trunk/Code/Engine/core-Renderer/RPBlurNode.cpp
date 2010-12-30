@@ -7,10 +7,12 @@
 
 // TODO: enums editing
 
-// TODO: !!!!!! real time pipeline resource edition - at this point if we are to remove
-// something, the cache doesn't get updated and everything craps out
+// TODO: some sort of validation of paths that go to the ResourcesManager - if we skip the initial slash (/),
+// the resource doesn't get registered
 
-// TODO: !!!! adding a blur post process doesn't work - everything's white
+// TODO: when exiting the main editor - all sub editors get closed as well
+
+// TODO: !!!! adding a blur post process doesn't work - every thing's white
 
 
 ///////////////////////////////////////////////////////////////////////////////
