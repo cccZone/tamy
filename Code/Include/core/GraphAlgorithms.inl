@@ -1,9 +1,10 @@
-#ifndef _GRAPH_DIJKSTRA_H
-#error "This file can only be included from GraphDijkstra.h"
+#ifndef _GRAPH_ALGORITHMS_H
+#error "This file can only be included from GraphAlgorithms.h"
 #else
 
 #include <algorithm>
 #include <vector>
+#include <list>
 #include <stdexcept>
 
 
@@ -35,10 +36,36 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename NODE, typename EDGE>
-void GraphDijkstra(Graph<NODE, EDGE>& outGraph,
-                   const Graph<NODE, EDGE>& graph, 
-                   typename Graph<NODE, EDGE>::Index start)
+template < typename GRAPH, typename OPERATION >
+void GraphBFS( const GRAPH& graph, 
+               typename GRAPH::Index start, 
+               OPERATION& operation )
+{
+   std::list<GRAPH::Index> nodesQueue;
+   nodesQueue.push_back(start);
+
+   while (nodesQueue.size())
+   {
+      GRAPH::Index currNodeIdx = nodesQueue.front();
+      nodesQueue.pop_front();
+
+      operation(graph.getNode(currNodeIdx));
+
+      const GRAPH::EdgeIndices& edges = graph.getEdges(currNodeIdx);
+      for (GRAPH::EdgeIndices::const_iterator it = edges.begin();
+         it != edges.end(); ++it)
+      {
+         nodesQueue.push_back((GRAPH::Index)graph.getEdge(*it));
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename NODE, typename EDGE >
+void GraphDijkstra( Graph<NODE, EDGE>& outGraph,
+                    const Graph<NODE, EDGE>& graph, 
+                    typename Graph<NODE, EDGE>::Index start )
 {
    if (outGraph.getNodesCount() > 0)
    {
@@ -48,11 +75,11 @@ void GraphDijkstra(Graph<NODE, EDGE>& outGraph,
    // -------------------------------------------------------------------------
    // helper types
    // -------------------------------------------------------------------------
-   typedef Graph<NODE, EDGE> GRAPH;
+   typedef Graph< NODE, EDGE > GRAPH;
    typedef typename GRAPH::Index NodeIndex;
    typedef typename GRAPH::Index EdgeIndex;
    typedef typename GRAPH::EdgeIndices EdgesList;
-   typedef std::vector<NodeIndex> NodesList;
+   typedef std::vector< NodeIndex > NodesList;
 
    // -------------------------------------------------------------------------
    // algorithm
@@ -145,4 +172,82 @@ void GraphDijkstra(Graph<NODE, EDGE>& outGraph,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // _GRAPH_DIJKSTRA_H
+template< typename NODE, typename EDGE >
+void GraphTopologicalSort( std::vector< typename Graph<NODE, EDGE>::Index >& outNodesArr,
+                           const Graph< NODE, EDGE >& inGraph )
+{
+   // -------------------------------------------------------------------------
+   // helper types
+   // -------------------------------------------------------------------------
+   typedef Graph< NODE, EDGE > GRAPH;
+   typedef typename GRAPH::Index NodeIndex;
+   typedef typename GRAPH::EdgeIndices EdgesList;
+   typedef std::vector< NodeIndex > NodesList;
+
+   // -------------------------------------------------------------------------
+   // algorithm
+   // -------------------------------------------------------------------------
+   GRAPH tempGraph = inGraph;
+
+   // find nodes that don't have any incoming connections, and add them as start nodes 
+   std::list< NodeIndex >  nodesToAnalyze;
+   NodeIndex nodesCount = (NodeIndex)tempGraph.getNodesCount();
+   for ( NodeIndex i = 0; i < nodesCount; ++i )
+   {
+      EdgesList incomingEdgeIndices;
+      tempGraph.getIncomingEdges( i, incomingEdgeIndices );
+      if ( incomingEdgeIndices.empty() )
+      {
+         nodesToAnalyze.push_back( i );
+      }
+   }
+
+   while( !nodesToAnalyze.empty() )
+   {
+      // remove the node from the temporary list of nodes
+      NodeIndex nodeIdx = nodesToAnalyze.front();
+      nodesToAnalyze.pop_front();
+
+      // if the node's already in the final list - skip it
+      NodesList::const_iterator finalListNodeIt = std::find( outNodesArr.begin(), outNodesArr.end(), nodeIdx );
+      if ( finalListNodeIt != outNodesArr.end() )
+      {
+         continue;
+      }
+      // add the node to the final list of nodes
+      outNodesArr.push_back( nodeIdx );
+
+      // gather subsequent nodes
+      const EdgesList& outEdgeIndices = tempGraph.getEdges( nodeIdx );
+      NodesList nextNodes;
+      for ( EdgesList::const_iterator it = outEdgeIndices.begin(); it != outEdgeIndices.end(); ++it )
+      {
+         NodeIndex idx = ( NodeIndex )( tempGraph.getEdge( *it ) );
+         nextNodes.push_back( idx );
+      }
+
+      // remove the edges from the graph
+      tempGraph.disconnect( nodeIdx );
+
+      // analyze the subsequent nodes - and if they don't have any incoming edges,
+      // add them to the temporary list
+      for ( NodesList::const_iterator it = nextNodes.begin(); it != nextNodes.end(); ++it )
+      {
+         EdgesList incomingEdgeIndices;
+         tempGraph.getIncomingEdges( *it, incomingEdgeIndices );
+         if ( incomingEdgeIndices.empty() )
+         {
+            nodesToAnalyze.push_back( *it );
+         }
+      }
+   }
+
+   if ( tempGraph.getEdgesCount() > 0 )
+   {
+      throw std::runtime_error( "The graph is not a DAG" );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _GRAPH_ALGORITHMS_H

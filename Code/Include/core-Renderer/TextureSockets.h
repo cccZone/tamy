@@ -54,7 +54,7 @@ public:
     *
     * @param renderTargetId
     */
-   inline void setRenderTargetID( const std::string renderTargetId ) { m_renderTargetId = renderTargetId; m_useBackBuffer = m_renderTargetId.empty(); }
+   void setRenderTargetID( const std::string renderTargetId );
 
    /**
     * Returns the render target set.

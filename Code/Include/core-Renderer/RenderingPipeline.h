@@ -6,7 +6,7 @@
 #include "core/Resource.h"
 #include <vector>
 #include "core/Subject.h"
-
+#include "core/Graph.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -14,6 +14,8 @@ class RenderingPipelineNode;
 class RenderingPipelineMechanism;
 class RenderTargetDescriptor;
 class RenderTarget;
+
+typedef Graph< RenderingPipelineNode* > RPGraph;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -72,6 +74,13 @@ public:
     * Performs a structural check of the graph and flags all inconsistencies.
     */
    void checkGraph();
+
+   /**
+    * Constructs a graph based on the pipeline.
+    *
+    * @param outGraph      resulting graph
+    */
+   void buildGraph( RPGraph& outGraph ) const;
 
    // -------------------------------------------------------------------------
    // Render targets management

@@ -80,9 +80,6 @@
     <ClCompile Include="GenericFactoryTests.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="GraphDijkstraTests.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
     <ClCompile Include="MatrixInterpolatorTests.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
@@ -136,6 +133,12 @@
     </ClCompile>
     <ClCompile Include="AlgorithmTests.cpp">
       <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphDijkstraTests.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphTopologicalSortTests.cpp">
+      <Filter>DataStructures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

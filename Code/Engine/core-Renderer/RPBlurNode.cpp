@@ -12,9 +12,6 @@
 
 // TODO: when exiting the main editor - all sub editors get closed as well
 
-// TODO: !!!! adding a blur post process doesn't work - every thing's white
-
-
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RPBlurNode, RPPostProcessNode );
