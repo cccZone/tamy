@@ -2,6 +2,7 @@
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core-Renderer/RenderTargetDescriptor.h"
 #include "core-Renderer/RenderingPipelineMechanism.h"
+#include "core-Renderer/RPStartNode.h"
 #include <algorithm>
 #include "core/Algorithms.h"
 
@@ -68,6 +69,61 @@ void RenderingPipeline::removeNode( RenderingPipelineNode& node )
 void RenderingPipeline::checkGraph()
 {
    // TODO : !!!!!!! zrobic sprawdzanie poprawnosci grafu
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipeline::buildGraph( RPGraph& outGraph ) const
+{
+   // add all nodes to the graph, and find the start node while you're at it
+   RenderingPipelineNode* startNode = NULL;
+   for ( std::vector< RenderingPipelineNode* >::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
+   {
+      if ( startNode == NULL )
+      {
+         startNode = dynamic_cast< RPStartNode* >( *it );
+      }
+
+      outGraph.addNode( *it );
+   }
+   if ( startNode == NULL )
+   {
+      return;
+   }
+
+   // go through the nodes and add them to the graph
+   std::set< RenderingPipelineNode* > analyzedNodes;
+   std::list< RenderingPipelineNode* > nodesToAnalyze;
+   nodesToAnalyze.push_back( startNode );
+
+   while( !nodesToAnalyze.empty() )
+   {
+      RenderingPipelineNode* checkedNode = nodesToAnalyze.front();
+      nodesToAnalyze.pop_front();
+
+      // make sure the node's not already in the cache - we don't allow the same node to be updated twice
+      // with this algorithm
+      std::set< RenderingPipelineNode* >::const_iterator analyzedNodeIt = analyzedNodes.find( checkedNode );
+      if ( analyzedNodeIt != analyzedNodes.end() )
+      {
+         continue;
+      }
+
+      RPGraph::Index nodeIdx = outGraph.getNodeIdx( checkedNode );
+
+      std::vector< RenderingPipelineNode* > neighbors;
+      checkedNode->getSubsequentNodes( neighbors );
+      for ( std::vector< RenderingPipelineNode* >::const_iterator it = neighbors.begin(); it != neighbors.end(); ++it )
+      {
+         RPGraph::Index neighboringNodeIdx = outGraph.getNodeIdx( *it );
+
+         // create a connection in the graph
+         outGraph.connect( nodeIdx, neighboringNodeIdx );
+
+         // put he neighbor up for analysis
+         nodesToAnalyze.push_back( *it );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

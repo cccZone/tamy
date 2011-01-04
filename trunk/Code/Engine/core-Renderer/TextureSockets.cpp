@@ -85,6 +85,15 @@ void RPTextureOutput::deinitialize( RenderingPipelineMechanism& host )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void RPTextureOutput::setRenderTargetID( const std::string renderTargetId ) 
+{ 
+   m_renderTargetId = renderTargetId; 
+   m_useBackBuffer = m_renderTargetId.empty();
+   notify( RPNSO_CHANGED );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 ShaderTexture* RPTextureOutput::getTexture() const
 {
    if ( m_useBackBuffer )

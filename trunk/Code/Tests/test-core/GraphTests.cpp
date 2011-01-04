@@ -1,6 +1,6 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core\Graph.h"
-#include "core\GraphBFS.h"
+#include "core\GraphAlgorithms.h"
 #include <vector>
 #include <list>
 
