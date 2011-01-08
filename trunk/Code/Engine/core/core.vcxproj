@@ -83,6 +83,7 @@
     <ClCompile Include="NodeActionsExecutor.cpp" />
     <ClCompile Include="ResourceHandle.cpp" />
     <ClCompile Include="Singleton.cpp" />
+    <ClCompile Include="Enum.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="MatrixWriter.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\..\Include\core\ResourceHandle.h" />
     <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h" />
     <ClInclude Include="..\..\Include\core\Singleton.h" />
+    <ClInclude Include="..\..\Include\core\Enum.h" />
     <ClInclude Include="..\..\Include\core\TNodesVisitor.h" />
     <ClInclude Include="..\..\Include\core\NodeAction.h" />
     <ClInclude Include="..\..\Include\core\NodeActionsExecutor.h" />
@@ -211,6 +213,7 @@
     <None Include="..\..\Include\core\NarrowPhaseStorageFilter.inl" />
     <None Include="..\..\Include\core\ResourceHandle.inl" />
     <None Include="..\..\Include\core\SharedSpatialStorage.inl" />
+    <None Include="..\..\Include\core\Enum.inl" />
     <None Include="..\..\Include\core\TNodesSpatialStorage.inl" />
     <None Include="..\..\Include\core\BSPNodeTree.inl" />
     <None Include="..\..\Include\core\DynamicOctree.inl" />

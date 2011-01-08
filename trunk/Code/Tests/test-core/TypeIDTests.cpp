@@ -2,7 +2,7 @@
 #include "core\TypeID.h"
 #include "core\ClassTemplate.h"
 #include "core\Class.h"
-
+#include "core\Enum.h"
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace // anonymous
@@ -22,6 +22,16 @@ namespace // anonymous
    };
 
 } // anonymous
+
+enum GirlNames
+{
+   Ala,
+   Ola,
+   Ula
+};
+BEGIN_ENUM( GirlNames );
+END_ENUM( GirlNames );
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -48,6 +58,14 @@ TEST( Class, short )
    CPPUNIT_ASSERT_EQUAL( std::string( "ClassA" ), class1.getShortName() );
    CPPUNIT_ASSERT_EQUAL( std::string( "ClassA" ), class2.getShortName() );
    CPPUNIT_ASSERT_EQUAL( std::string( "ClassB" ), class3.getShortName() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST( Class, enums )
+{
+   CPPUNIT_ASSERT_EQUAL( std::string( "GirlNames" ), TypeID< GirlNames >().name() );
+   CPPUNIT_ASSERT_EQUAL( std::string( "GirlNames" ), TypeID< Enum< GirlNames > >().name() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

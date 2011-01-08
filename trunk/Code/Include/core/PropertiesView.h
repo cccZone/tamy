@@ -58,8 +58,7 @@ public:
  * them to the editors that are meant to operate with that view.
  */
 template <typename Derived>
-class TPropertiesView : public PropertiesView,
-                        public GenericFactory<Property, PropertyEditor>
+class TPropertiesView : public PropertiesView
 {
 private:
    // -------------------------------------------------------------------------
@@ -215,10 +214,6 @@ protected:
     * @param ownerNpropertiesame  properties that are being set
     */
    virtual void onSet( Properties& properties ) {}
-
-private:
-   PropertyEditor* createSolid( Property& property );
-   PropertyEditor* createAbstract( Property& property );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

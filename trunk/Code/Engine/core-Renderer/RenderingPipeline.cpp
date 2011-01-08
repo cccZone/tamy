@@ -7,10 +7,6 @@
 #include "core/Algorithms.h"
 
 
-// TODO: jak juz bedzie wsjo dzialalo, zrobic ten resource const'owym - zrobic cos 
-// jak runtime data buffer, gdzie node'y beda przechowywaly sobie dane na ktorych
-// operuja, i niech tym buforem bedzie dla nich RenderingPipelineMechanism
-
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_RESOURCE( RenderingPipeline, Resource, trp, AM_BINARY );
@@ -62,13 +58,6 @@ void RenderingPipeline::removeNode( RenderingPipelineNode& node )
    {
       ASSERT_MSG( false, "Trying to remove a non-existent rendering pipeline node" );
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipeline::checkGraph()
-{
-   // TODO : !!!!!!! zrobic sprawdzanie poprawnosci grafu
 }
 
 ///////////////////////////////////////////////////////////////////////////////

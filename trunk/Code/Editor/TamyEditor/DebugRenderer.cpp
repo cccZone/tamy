@@ -7,8 +7,6 @@
 #include "GridRenderingEffect.h"
 
 
-// TODO: dodac full pro API do rysowania debug'owych informacji
-
 ///////////////////////////////////////////////////////////////////////////////
 
 DebugRenderer::DebugRenderer( ResourcesManager& resMgr, Camera& camera )

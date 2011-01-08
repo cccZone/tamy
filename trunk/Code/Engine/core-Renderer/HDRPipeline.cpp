@@ -9,8 +9,6 @@
 #include "core\Filesystem.h"
 
 
-// TODO: !!!!!!!! jak tylko bedzie mozliwoc edytowania pipeline'u, zdebugowac dlaczego HDR szaleje
-
 ///////////////////////////////////////////////////////////////////////////////
 
 HDRPipeline::HDRPipeline( ResourcesManager& rm, Camera& camera )
@@ -112,10 +110,6 @@ void HDRPipeline::addScene( Model& scene )
 
 void HDRPipeline::initialize( Renderer& renderer )
 {
-   // TODO: !!!!!!! wywalic renderowanie samej sceny do innego mechanizmu.
-   // takie zas mechanizmy jak HDR niech korzystaja z produktow innych mechanizmow *( ktorymi sa tekstury z odpowiednim shitem )
-   // WYSTAWIC mozliwosc graficznego konfigurowania pipeline'u
-
    m_renderer = &renderer;
    const Filesystem& fs = m_rm.getFilesystem();
 

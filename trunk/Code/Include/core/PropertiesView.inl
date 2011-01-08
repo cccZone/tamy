@@ -32,8 +32,7 @@ void TPropertiesView<Derived>::set(Properties& properties)
    Derived* thisDerived = dynamic_cast<Derived*> (this);
 
    const Properties::Names& names = properties.getNames();
-   for (Properties::Names::const_iterator it = names.begin();
-      it != names.end(); ++it)
+   for (Properties::Names::const_iterator it = names.begin(); it != names.end(); ++it)
    {
       Property& property = properties.get(*it);
       if ( !property.canBeEdited() )
@@ -99,8 +98,7 @@ PropertyEditor* TPropertiesView<Derived>::create( Property& property )
 {
    const Class& checkedClassType = property.getVirtualClass();
 
-   for ( CreatorsVec::iterator it = m_creators.begin();  
-      it != m_creators.end(); ++it )
+   for ( CreatorsVec::iterator it = m_creators.begin();  it != m_creators.end(); ++it )
    {
       Creator& creator = **it;
       if ( creator.doesMatch( checkedClassType ) )

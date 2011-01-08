@@ -27,10 +27,10 @@ public:
    typedef std::map<std::string, Property*> PropsMap;
 
 private:
-   std::string m_entityClassName;
+   std::string       m_entityClassName;
 
-   PropsMap m_properties;
-   Names m_names;
+   PropsMap          m_properties;
+   Names             m_names;
 
 public:
    /**

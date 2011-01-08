@@ -194,6 +194,9 @@
       <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Include\core\TypesRegistry.cpp" />
+    <ClCompile Include="Enum.cpp">
+      <Filter>RTTI\Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -443,6 +446,9 @@
     <ClInclude Include="..\..\Include\core\GraphAlgorithms.h">
       <Filter>DataStructures\Graphs</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\Enum.h">
+      <Filter>RTTI\Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">
@@ -543,6 +549,9 @@
     </None>
     <None Include="..\..\Include\core\GraphAlgorithms.inl">
       <Filter>DataStructures\Graphs</Filter>
+    </None>
+    <None Include="..\..\Include\core\Enum.inl">
+      <Filter>RTTI\Classes</Filter>
     </None>
   </ItemGroup>
 </Project>

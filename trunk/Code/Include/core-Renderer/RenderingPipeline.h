@@ -71,11 +71,6 @@ public:
    inline const std::vector< RenderingPipelineNode* >& getNodes() const { return m_nodes; }
 
    /**
-    * Performs a structural check of the graph and flags all inconsistencies.
-    */
-   void checkGraph();
-
-   /**
     * Constructs a graph based on the pipeline.
     *
     * @param outGraph      resulting graph

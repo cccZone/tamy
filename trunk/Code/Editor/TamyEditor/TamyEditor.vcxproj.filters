@@ -579,6 +579,12 @@
       <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
     </ClCompile>
     <ClCompile Include="TypesRegistry.cpp" />
+    <ClCompile Include="EnumPropertyEditor.cpp">
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_EnumPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -711,6 +717,9 @@
     </CustomBuild>
     <CustomBuild Include="rendertargetdescriptordialog.ui">
       <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="EnumPropertyEditor.h">
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

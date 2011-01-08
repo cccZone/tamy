@@ -11,8 +11,6 @@
 #include <QListWidget>
 
 
-// TODO: !!!!! ability to edit the properties of existing render targets
-
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& renderingPipelineLayout )

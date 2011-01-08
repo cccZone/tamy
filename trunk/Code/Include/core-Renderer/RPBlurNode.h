@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPPostProcessNode.h"
+#include "core/Enum.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,7 +15,6 @@ class RenderTarget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: !!!!!!!!!!!!! rejestorwanie enum'ow jako typow RTTI
 enum BlurOptions
 {
    BO_HORIZONTAL,

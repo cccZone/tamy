@@ -55,10 +55,6 @@ void* DX9RenderTarget::getPlatformSpecific() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: do robienia snapshot'ow, albo tekstur - opakowac  IDirect3DSurface9 w jakas
-// klase (w stylu Bitmap albo cos), tam wpakowac metody w stylu getPixel itd,
-// a tu tylko zostawic metode ktora tworzy taka bitmape (grabSnapshot)
-
 Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
 {
    if ( !m_dxTexture )

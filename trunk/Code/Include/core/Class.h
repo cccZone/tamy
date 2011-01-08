@@ -233,6 +233,9 @@ ClassesRegistry& getClassesRegistry();
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * RTTI type registration macro.
+ */
 #ifndef IMPORT_RTTI_REGISTRATIONS
 #define REGISTER_RTTI(ClassType)
 #else
