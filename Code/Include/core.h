@@ -25,6 +25,7 @@
 #include "core\CellSpacePartition.h"
 #include "core\Point.h"
 #include "core\Stack.h"
+#include "core/Enum.h"
 // ----------------------------------------------------------------------------
 // -->Graphs
 // ----------------------------------------------------------------------------

@@ -5,6 +5,7 @@
 #include <typeinfo.h>
 #include "core\StringUtils.h"
 #include <vector>
+#include "core/Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,7 +41,7 @@ std::string TypeID< T >::getSingleTypeName( const std::string& typeName ) const
 {
    std::string name = typeName;
 
-   // remove 'class' and 'struct' prefixes
+   // remove 'class', 'struct', 'enum' prefixes
    std::size_t pos = name.find( "class " );
    if ( pos != std::string::npos )
    {
@@ -50,6 +51,11 @@ std::string TypeID< T >::getSingleTypeName( const std::string& typeName ) const
    if ( pos != std::string::npos )
    {
       name = name.substr( pos + 7 );
+   }
+   pos = name.find( "enum " );
+   if ( pos != std::string::npos )
+   {
+      name = name.substr( pos + 5 );
    }
 
    // remove all preceding namespaces

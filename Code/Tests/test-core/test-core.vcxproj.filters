@@ -140,6 +140,9 @@
     <ClCompile Include="GraphTopologicalSortTests.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
+    <ClCompile Include="EnumsTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">

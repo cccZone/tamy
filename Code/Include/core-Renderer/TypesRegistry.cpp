@@ -53,6 +53,7 @@ REGISTER_RTTI( RPTextureOutput );
 REGISTER_RTTI( RPVoidInput );
 REGISTER_RTTI( RPVoidOutput );
 REGISTER_RTTI( RenderTargetDescriptor );
+REGISTER_ENUM_RTTI( BlurOptions );
 
 ///////////////////////////////////////////////////////////////////////////////
 

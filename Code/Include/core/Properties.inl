@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename T>
+template< typename T >
 Property& Properties::add( T& propVal, const std::string& id )
 {
    PropsMap::const_iterator it = m_properties.find(id);
@@ -25,7 +25,7 @@ Property& Properties::add( T& propVal, const std::string& id )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename T>
+template< typename T >
 typename TProperty<T>& Properties::get(const std::string& id)
 {
    PropsMap::iterator it = m_properties.find(id);

@@ -5,21 +5,23 @@
 #include "core-Renderer/TextureSockets.h"
 #include "core-Renderer/RenderTarget.h"
 
-// TODO: enums editing
-
-// TODO: some sort of validation of paths that go to the ResourcesManager - if we skip the initial slash (/),
-// the resource doesn't get registered
-
-// TODO: when exiting the main editor - all sub editors get closed as well
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RPBlurNode, RPPostProcessNode );
-//   PROPERTY_EDIT( "Blur option", int, m_blurOption );
+   PROPERTY_EDIT( "Blur option", BlurOptions, m_blurOption );
    PROPERTY_EDIT( "Gauss multiplier", float, m_gaussMultiplier );
    PROPERTY_EDIT( "Gauss mean", float, m_gaussMean );
    PROPERTY_EDIT( "Gauss standard deviation", float, m_gaussStdDev );
 END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_ENUM( BlurOptions );
+   ENUM_VAL( BO_HORIZONTAL );
+   ENUM_VAL( BO_VERTICAL );
+   ENUM_VAL( BO_BOTH );
+END_ENUM( BlurOptions );
 
 ///////////////////////////////////////////////////////////////////////////////
 

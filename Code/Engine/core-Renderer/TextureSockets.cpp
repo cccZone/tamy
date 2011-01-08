@@ -98,7 +98,6 @@ ShaderTexture* RPTextureOutput::getTexture() const
 {
    if ( m_useBackBuffer )
    {
-      // TODO: !!!!!!!! return m_renderer->getBackBufferTexture();
       return NULL;
    }
    else

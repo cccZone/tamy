@@ -117,6 +117,9 @@ public:
     */
    virtual Class getVirtualClass() const = 0;
 
+   /**
+    * Returns the type the property is parametrized with.
+    */
    virtual Class getPropertyClass() const = 0;
 
    // -------------------------------------------------------------------------
@@ -277,7 +280,7 @@ public:
    TProperty( std::vector<T*>* val );
 
    // -------------------------------------------------------------------------
-   // Property implementation
+   // VectorProperty implementation
    // -------------------------------------------------------------------------
    unsigned int size() const;
    void viewProperties( unsigned int idx, PropertiesView& view );
@@ -317,7 +320,7 @@ public:
     *
     * @param val     new property value
     */
-   void set(const T& val);
+   void set( const T& val );
 
    /**
     * Returns current property value (const version).
