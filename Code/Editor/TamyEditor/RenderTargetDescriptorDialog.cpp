@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, RenderTargetDescriptor& descriptor )
+RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, RenderTargetDescriptor& descriptor, bool canChangeName )
    : QDialog( parent )
    , m_descriptor( descriptor )
 {
@@ -22,6 +22,25 @@ RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, Ren
    connect( m_ui.heightScaleValueBox, SIGNAL( valueChanged( double ) ), this, SLOT( dynamicSizeChanged( double ) ) );
    connect( m_ui.widthValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticcSizeChanged( int ) ) );
    connect( m_ui.heightValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticcSizeChanged( int ) ) );
+
+   m_ui.renderTargetIdEdit->setEnabled( canChangeName );
+
+   // initialize the data fields
+   m_ui.renderTargetIdEdit->setText( descriptor.getTargetID().c_str() );
+   m_ui.isReadableBox->setChecked( descriptor.isReadable() );
+   m_ui.isDynamicCheckBox->setChecked( descriptor.isDynamic() );
+
+   unsigned int width, height;
+   descriptor.getStaticSize( width, height );
+   m_ui.widthValueBox->setValue( width );
+   m_ui.heightValueBox->setValue( height );
+
+   float widthScale, heightScale;
+   descriptor.getDynamicSize( widthScale, heightScale );
+   m_ui.widthScaleValueBox->setValue( widthScale );
+   m_ui.heightScaleValueBox->setValue( heightScale );
+
+   m_ui.usageComboBox->setCurrentIndex( (int)descriptor.getUsage() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

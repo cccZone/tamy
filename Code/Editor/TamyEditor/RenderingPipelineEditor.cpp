@@ -94,12 +94,13 @@ void RenderingPipelineEditor::initialize( TamyEditor& mgr )
    {
       m_ui.addTargetButton->setIcon( QIcon( iconsDir + tr( "/plus.png" ) ) );
       m_ui.removeTargetButton->setIcon( QIcon( iconsDir + tr( "/minus.png" ) ) );
-      
-      connect( m_ui.addTargetButton, SIGNAL( clicked() ), this, SLOT( addRenderTarget() ) );
-      connect( m_ui.removeTargetButton, SIGNAL( clicked() ), this, SLOT( removeRenderTarget() ) );
 
       m_renderTargetsList = new RenderTargetsListWidget( this );
       m_ui.renderTargetsPageLayout->addWidget( m_renderTargetsList );
+
+      connect( m_ui.addTargetButton, SIGNAL( clicked() ), this, SLOT( addRenderTarget() ) );
+      connect( m_ui.removeTargetButton, SIGNAL( clicked() ), this, SLOT( removeRenderTarget() ) );
+      connect( m_renderTargetsList, SIGNAL( itemClicked( QListWidgetItem* ) ), this, SLOT( editRenderTarget( QListWidgetItem* ) ) );
 
       updateRenderTargetsList();
    }
@@ -285,6 +286,18 @@ void RenderingPipelineEditor::removeRenderTarget()
       
       delete item;
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::editRenderTarget( QListWidgetItem* rtItem )
+{
+   RenderingPipeline& pipeline = m_renderingPipelineLayout.getModel();
+   RenderTargetDescriptor& desc = pipeline.lockRenderTarget( rtItem->text().toStdString() );
+
+   RenderTargetDescriptorDialog dialog( this, desc, false );
+   dialog.exec();
+   pipeline.unlockRenderTarget( rtItem->text().toStdString() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

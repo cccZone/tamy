@@ -25,7 +25,7 @@ private:
    RenderTargetDescriptor&                      m_descriptor;
 
 public:
-   RenderTargetDescriptorDialog( QWidget* parent, RenderTargetDescriptor& descriptor );
+   RenderTargetDescriptorDialog( QWidget* parent, RenderTargetDescriptor& descriptor, bool canChangeName = true );
 
 public slots:
    void changeTargetID( const QString& value );

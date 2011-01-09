@@ -24,6 +24,7 @@ FloatPropertyEditor::~FloatPropertyEditor()
 void FloatPropertyEditor::setupUi()
 {
    QDoubleSpinBox* val = new QDoubleSpinBox(this); addWidget(val);
+   val->setSingleStep( 0.1 );
    val->setRange( -FLT_MAX, FLT_MAX );
    val->setValue( m_property->get() );
 
@@ -61,6 +62,7 @@ DoublePropertyEditor::~DoublePropertyEditor()
 void DoublePropertyEditor::setupUi()
 {
    QDoubleSpinBox* val = new QDoubleSpinBox(this); addWidget(val);
+   val->setSingleStep( 0.1 );
    val->setRange( -FLT_MAX, FLT_MAX );
    val->setValue( m_property->get() );
 
