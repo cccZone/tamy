@@ -25,7 +25,7 @@ public:
     * This method will be called once the editor is created to initialize
     * and start it up.
     *
-    * @param mgr    main editor and the main  services database.
+    * @param mgr     main editor and the main  services database.
     */
    virtual void initialize( TamyEditor& mgr ) = 0;
 };

@@ -118,6 +118,15 @@ void TamyEditor::updateMain()
 
 void TamyEditor::closeEvent( QCloseEvent *event )
 {
+   // close all active sub editors
+   std::vector< QMainWindow* > editorsToClose = m_subEditors;
+   m_subEditors.clear();
+   for ( std::vector< QMainWindow* >::iterator it = editorsToClose.begin(); it != editorsToClose.end(); ++it )
+   {
+      (*it)->close();
+   }
+
+   // serialize the settings
    serializeUISettings( true );
 
    // accept the event
@@ -232,6 +241,28 @@ void TamyEditor::serializeTreeWidgetSettings( QTreeWidget& widget, bool save )
       {
          widget.setColumnWidth( colIdx++, width.toInt() );
       }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::registerSubEditor( QMainWindow* editor )
+{
+   std::vector< QMainWindow* >::iterator it = std::find( m_subEditors.begin(), m_subEditors.end(), editor );
+   if ( it == m_subEditors.end() )
+   {
+      m_subEditors.push_back( editor );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::unregisterSubEditor( QMainWindow& editor )
+{
+   std::vector< QMainWindow* >::iterator it = std::find( m_subEditors.begin(), m_subEditors.end(), &editor );
+   if ( it != m_subEditors.end() )
+   {
+      m_subEditors.erase( it );
    }
 }
 
