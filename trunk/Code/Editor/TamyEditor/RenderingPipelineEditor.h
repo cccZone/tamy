@@ -59,6 +59,7 @@ public slots:
    void onShowContextMenu( const QPoint& pos );
    void addRenderTarget();
    void removeRenderTarget();
+   void editRenderTarget( QListWidgetItem* rtItem );
 
 protected:
    void closeEvent( QCloseEvent *event );

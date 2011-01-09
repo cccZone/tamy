@@ -39,6 +39,9 @@ private:
    std::vector< RenderingPipelineNode* >        m_nodes;
    std::vector< RenderTargetDescriptor* >       m_renderTargets;
 
+   // runtime data
+   std::string                                  m_lockedRT;
+
 public:
    /**
     * Constructor.
@@ -107,8 +110,20 @@ public:
     */
    inline const std::vector< RenderTargetDescriptor* >& getRenderTargets() const { return m_renderTargets; }
   
+   /**
+    * Locks the specified render target descriptor, allowing to change it.
+    *
+    * @param id         render target id
+    */
+   RenderTargetDescriptor& lockRenderTarget( const std::string& id );
 
-    /**
+   /**
+    * Unlocks the specified render target.
+    */
+   void unlockRenderTarget( const std::string& id );
+
+private:
+   /**
     * Looks for a render target descriptor with the specified id.
     *
     * @param id         render target id

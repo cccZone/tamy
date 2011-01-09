@@ -55,11 +55,21 @@ public:
    inline void setTargetID( const std::string& id ) { m_id = id; }
 
    /**
+    * Tells if the render target has dynamic size.
+    */
+   inline bool isDynamic() const { return m_isDynamic; }
+
+   /**
     * Sets the type of the render target.
     *
     * @param dynamic       defines whether the render target is dynamic or static
     */
    inline void setType( bool dynamic ) { m_isDynamic = dynamic; }
+
+   /**
+    * Returns texture usage.
+    */
+   inline TextureUsage getUsage() const { return m_usage; }
 
    /**
     * Sets the target usage.
@@ -69,11 +79,21 @@ public:
    inline void setUsage( TextureUsage usage ) { m_usage = usage; }
 
    /**
+    * Tells if the render target is readable.
+    */
+   inline bool isReadable() const { return m_isReadable; }
+
+   /**
     * Enables/disables reading ability of the render target.
     *
     * @param readable
     */
    inline void setReadable( bool readable ) { m_isReadable = readable; }
+
+   /**
+    * Returns the background color of the target.
+    */
+   inline const Color& getBgColor() const { return m_bgColor; }
 
    /**
     * Sets the target's background color.
@@ -83,12 +103,28 @@ public:
    inline void setBgColor( const Color& bgColor ) { m_bgColor = bgColor; }
 
    /**
+    * Returns the static size settings of the target.
+    *
+    * @param outWidth
+    * @param outHeight
+    */
+   inline void getStaticSize( unsigned int& outWidth, unsigned int& outHeight ) { outWidth = m_initialWidth; outHeight = m_initialHeight; }
+
+   /**
     * Changes the definition of the render target's static size.
     *
     * @param width
     * @param height
     */
    inline void setStaticSize( unsigned int width, unsigned int height ) { m_initialWidth = width; m_initialHeight = height; }
+
+   /**
+    * Returns the dynamic size settings of the target.
+    *
+    * @param outWidthScale
+    * @param outHeightScale
+    */
+   inline void getDynamicSize( float& outWidthScale, float& outHeightScale ) { outWidthScale = m_widthScale; outHeightScale = m_heightScale; }
 
    /**
     * Changes the definition of the render target's dynamic size.
