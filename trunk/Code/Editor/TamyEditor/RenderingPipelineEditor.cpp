@@ -15,6 +15,7 @@
 
 RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& renderingPipelineLayout )
 : QMainWindow( NULL, 0 )
+, m_mgr( NULL )
 , m_renderingPipelineLayout( renderingPipelineLayout )
 , m_blockPropertiesLayout( NULL )
 , m_blockPropertiesRootView( NULL )
@@ -22,12 +23,19 @@ RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& rende
 , m_nodePropertiesRootView( NULL )
 , m_renderTargetsList( NULL )
 {
+   setAttribute( Qt::WA_DeleteOnClose );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingPipelineEditor::~RenderingPipelineEditor()
 {
+   if ( m_mgr )
+   {
+      // unregister the sub editor
+      m_mgr->unregisterSubEditor( *this );
+   }
+
    if ( m_blockPropertiesLayout )
    {
       m_blockPropertiesLayout->removeWidget( m_blockPropertiesRootView );
@@ -55,6 +63,10 @@ void RenderingPipelineEditor::initialize( TamyEditor& mgr )
 {
    ResourcesManager& resourceMgr = mgr.requestService< ResourcesManager >();
    QString iconsDir = resourceMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
+
+   // register the sub editor with the main editor
+   m_mgr = &mgr;
+   m_mgr->registerSubEditor( this );
 
    // setup the UI
    m_ui.setupUi( this );

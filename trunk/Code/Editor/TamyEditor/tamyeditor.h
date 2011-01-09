@@ -27,24 +27,26 @@ class TamyEditor : public QMainWindow, public ComponentsManager< TamyEditor >
    Q_OBJECT
 
 private:
-   Ui::TamyEditorClass        ui;
+   Ui::TamyEditorClass              ui;
 
    // time tracking
-   CTimer*                    m_mainTime;
-   QTimer*                    m_mainTimeSlot;
+   CTimer*                          m_mainTime;
+   QTimer*                          m_mainTimeSlot;
 
-   MainAppComponent*          m_mainAppComponent;
+   MainAppComponent*                m_mainAppComponent;
 
    // ui settings management
-   QSettings*                 m_uiSettings;
-   QSettings*                 m_editorSettings;
+   QSettings*                       m_uiSettings;
+   QSettings*                       m_editorSettings;
+
+   std::vector< QMainWindow* >      m_subEditors;
 
 public:
    /**
     * Constructor.
     *
     * @param app        qt application running the show
-    * @param fsRoot     filesystem root
+    * @param fsRoot     file system root
     * @param parent     parent widget
     * @param flags      widget creation flags
     */
@@ -59,14 +61,14 @@ public:
     *
     * @param widget     widget to add
     */
-   void addToMainWidget(QWidget* widget);
+   void addToMainWidget( QWidget* widget );
 
    /**
     * Removes a widget from the main window widget.
     *
     * @param widget     widget to remove
     */
-   void removeFromMainWidget(QWidget& widget);
+   void removeFromMainWidget( QWidget& widget );
 
    /**
     * This method gives access to the 'File' menu.
@@ -93,6 +95,23 @@ public:
     * Returns editor related settings.
     */
    inline QSettings& getSettings() { return *m_editorSettings; }
+
+   // -------------------------------------------------------------------------
+   // Sub editor windows management
+   // -------------------------------------------------------------------------
+   /**
+    * Puts a sub editor up for management.
+    *
+    * @param editor
+    */
+   void registerSubEditor( QMainWindow* editor );
+
+   /**
+    * Umanages a sub editor.
+    *
+    * @param editor
+    */
+   void unregisterSubEditor( QMainWindow& editor );
 
 public slots:
    void updateMain();

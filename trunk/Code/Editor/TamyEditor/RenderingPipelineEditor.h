@@ -28,6 +28,7 @@ class RenderingPipelineEditor : public QMainWindow, public ResourceEditor
 private:
    Ui::RenderingPipelineEditorWindow         m_ui;
 
+   TamyEditor*                               m_mgr;
    RenderingPipelineLayout&                  m_renderingPipelineLayout;
 
    QVBoxLayout*                              m_blockPropertiesLayout;

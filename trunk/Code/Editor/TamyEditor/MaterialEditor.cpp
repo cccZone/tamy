@@ -13,17 +13,25 @@
 
 MaterialEditor::MaterialEditor( PixelShader& shader )
 : QMainWindow( NULL, 0 )
+, m_mgr( NULL )
 , m_shader( shader )
 , m_highlighter( NULL )
 , m_resourceMgr( NULL )
 , m_renderer( NULL )
 {
+   setAttribute( Qt::WA_DeleteOnClose );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialEditor::~MaterialEditor()
 {
+   if ( m_mgr )
+   {
+      // unregister the sub editor
+      m_mgr->unregisterSubEditor( *this );
+   }
+
    delete m_highlighter;
    m_highlighter = NULL;
 }
@@ -38,6 +46,11 @@ void MaterialEditor::initialize( TamyEditor& mgr )
    ASSERT( m_resourceMgr != NULL );
    ASSERT( m_renderer != NULL );
 
+   // register the sub editor with the main editor
+   m_mgr = &mgr;
+   m_mgr->registerSubEditor( this );
+
+   // setup ui
    m_ui.setupUi( this );
    m_highlighter = new MaterialSyntaxHighlighter( m_ui.scriptEditor->document() );
 

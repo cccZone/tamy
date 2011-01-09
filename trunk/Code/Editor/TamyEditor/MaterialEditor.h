@@ -27,6 +27,8 @@ class MaterialEditor : public QMainWindow, public ResourceEditor
 private:
    Ui::MaterialEditorWindow         m_ui;
 
+   TamyEditor*                      m_mgr;
+
    PixelShader&                     m_shader;
    MaterialSyntaxHighlighter*       m_highlighter;
 
