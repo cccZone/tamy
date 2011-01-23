@@ -30,12 +30,6 @@ RPBlurNode::RPBlurNode()
    , m_gaussMultiplier( 2.04f )
    , m_gaussMean( 0.0f )
    , m_gaussStdDev( 0.8f )
-   , m_horizBlurPass( NULL )
-   , m_vertBlurPass( NULL )
-   , m_inputTex( NULL )
-   , m_blurTarget( NULL )
-   , m_tempBlurTarget( NULL )
-   , m_renderer( NULL )
 {
    defineInput( new RPTextureInput( "InputTex" ) );
    defineOutput( new RPTextureOutput( "Output" ) );
@@ -45,70 +39,76 @@ RPBlurNode::RPBlurNode()
 
 RPBlurNode::~RPBlurNode()
 {
-   delete m_horizBlurPass;
-   m_horizBlurPass = NULL;
-
-   delete m_vertBlurPass;
-   m_vertBlurPass = NULL;
-
-   delete m_tempBlurTarget;
-   m_tempBlurTarget = NULL;
-
-   m_inputTex = NULL;
-   m_blurTarget = NULL;
-   m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBlurNode::onInitialize( RenderingPipelineMechanism& host )
+void RPBlurNode::onCreateLayout( RenderingPipelineMechanism& host ) const
+{
+   __super::onCreateLayout( host );
+
+   RuntimeDataBuffer& data = host.data();
+
+   data.registerVar( m_renderer );
+   data.registerVar( m_horizBlurPass );
+   data.registerVar( m_vertBlurPass );
+   data.registerVar( m_inputTex );
+   data.registerVar( m_blurTarget );
+   data.registerVar( m_tempBlurTarget );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPBlurNode::onInitialize( RenderingPipelineMechanism& host ) const
 {
    __super::onInitialize( host );
 
-   // aquire the input texture
-   m_inputTex = getInput< RPTextureInput >( "InputTex" ).getTexture();
-   m_blurTarget = getOutput< RPTextureOutput >( "Output" ).getRenderTarget();
+   RuntimeDataBuffer& data = host.data();
+
+   // acquire the input texture
+   data[ m_inputTex ] = getInput< RPTextureInput >( "InputTex" ).getTexture( data );
+   data[ m_blurTarget ] = getOutput< RPTextureOutput >( "Output" ).getRenderTarget( data );
    
-   if( !m_inputTex )
+   if( !data[ m_inputTex ] )
    {
       return;
    }
 
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   m_renderer = &host.getRenderer();
+   data[ m_renderer ] = &host.getRenderer();
 
    switch( m_blurOption )
    {
    case BO_HORIZONTAL:
       {
-         m_horizBlurPass = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_HorizontalBlur.psh" );
-         m_horizBlurPass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "HorizontalBlur" );
-         m_renderer->implement< PixelShader >( *m_horizBlurPass );
+         data[ m_horizBlurPass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_HorizontalBlur.psh" );
+         data[ m_horizBlurPass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "HorizontalBlur" );
+         data[ m_renderer ]->implement< PixelShader >( *data[ m_horizBlurPass ] );
 
          break;
       }
 
    case BO_VERTICAL:
       {
-         m_vertBlurPass = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_VerticalBlur.psh" );
-         m_vertBlurPass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "VerticalBlur" );
-         m_renderer->implement< PixelShader >( *m_vertBlurPass );
+         data[ m_vertBlurPass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_VerticalBlur.psh" );
+         data[ m_vertBlurPass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "VerticalBlur" );
+         data[ m_renderer ]->implement< PixelShader >( *data[ m_vertBlurPass ] );
 
          break;
       }
 
    case BO_BOTH:
       {
-         m_horizBlurPass = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_HorizontalBlur.psh" );
-         m_horizBlurPass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "HorizontalBlur" );
-         m_renderer->implement< PixelShader >( *m_horizBlurPass );
+         data[ m_horizBlurPass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_HorizontalBlur.psh" );
+         data[ m_horizBlurPass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "HorizontalBlur" );
+         data[ m_renderer ]->implement< PixelShader >( *data[ m_horizBlurPass ] );
 
-         m_vertBlurPass = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_VerticalBlur.psh" );
-         m_vertBlurPass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "VerticalBlur" );
-         m_renderer->implement< PixelShader >( *m_vertBlurPass );
+         data[ m_vertBlurPass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_VerticalBlur.psh" );
+         data[ m_vertBlurPass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "VerticalBlur" );
+         data[ m_renderer ]->implement< PixelShader >( *data[ m_vertBlurPass ] );
 
-         m_tempBlurTarget = new RenderTarget( new RTSPTexture( *m_renderer, *m_inputTex ) );
-         m_renderer->implement< RenderTarget >( *m_tempBlurTarget );
+         data[ m_tempBlurTarget ] = new RenderTarget( new RTSPTexture( *data[ m_renderer ], *data[ m_inputTex ] ) );
+         data[ m_renderer ]->implement< RenderTarget >( *data[ m_tempBlurTarget ] );
          break;
       }
    }
@@ -117,29 +117,40 @@ void RPBlurNode::onInitialize( RenderingPipelineMechanism& host )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBlurNode::onDeinitialize( RenderingPipelineMechanism& host )
+void RPBlurNode::onDeinitialize( RenderingPipelineMechanism& host ) const
 {
-   delete m_horizBlurPass;
-   m_horizBlurPass = NULL;
+   RuntimeDataBuffer& data = host.data();
 
-   delete m_vertBlurPass;
-   m_vertBlurPass = NULL;
+   delete data[ m_horizBlurPass ];
+   data[ m_horizBlurPass ] = NULL;
 
-   delete m_tempBlurTarget;
-   m_tempBlurTarget = NULL;
+   delete data[ m_vertBlurPass ];
+   data[ m_vertBlurPass ] = NULL;
 
-   m_inputTex = NULL;
-   m_blurTarget = NULL;
-   m_renderer = NULL;
+   delete data[ m_tempBlurTarget ];
+   data[ m_tempBlurTarget  ] = NULL;
+
+   data[ m_inputTex ] = NULL;
+   data[ m_blurTarget ] = NULL;
+   data[ m_renderer ] = NULL;
 
    __super::onDeinitialize( host );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBlurNode::onUpdate( RenderingPipelineMechanism& host )
+void RPBlurNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-   if ( !m_inputTex )
+   RuntimeDataBuffer& data = host.data();
+
+   Renderer* renderer = data[ m_renderer ];
+   PixelShader* horizBlurPass = data[ m_horizBlurPass ];
+   PixelShader* vertBlurPass = data[ m_vertBlurPass ];
+   ShaderTexture* inputTex = data[ m_inputTex ];
+   RenderTarget* blurTarget = data[ m_blurTarget ];
+   RenderTarget* tempBlurTarget = data[ m_tempBlurTarget ];
+
+   if ( !inputTex )
    {
       return;
    }
@@ -153,7 +164,7 @@ void RPBlurNode::onUpdate( RenderingPipelineMechanism& host )
       // Compute the offsets. We take 9 samples - 4 either side and one in the middle:
       //     i =  0,  1,  2,  3, 4,  5,  6,  7,  8
       //Offset = -4, -3, -2, -1, 0, +1, +2, +3, +4
-      bloomOffsets[i] = ( static_cast< float >( i ) - 4.0f ) * ( 1.0f / static_cast< float >( m_inputTex->getWidth() ) );
+      bloomOffsets[i] = ( static_cast< float >( i ) - 4.0f ) * ( 1.0f / static_cast< float >( inputTex->getWidth() ) );
 
       // 'x' is just a simple alias to map the [0,8] range down to a [-1,+1]
       float x = ( static_cast< float >( i ) - 4.0f ) / 4.0f;
@@ -168,32 +179,32 @@ void RPBlurNode::onUpdate( RenderingPipelineMechanism& host )
    {
    case BO_HORIZONTAL:
       {
-         m_horizBlurPass->setTexture( "inputTex", *m_inputTex );
+         horizBlurPass->setTexture( "inputTex", *inputTex );
 
-         m_horizBlurPass->setFloatArray( "HBloomWeights", bloomWeights, 9 );
-         m_horizBlurPass->setFloatArray( "HBloomOffsets", bloomOffsets, 9 );
+         horizBlurPass->setFloatArray( "HBloomWeights", bloomWeights, 9 );
+         horizBlurPass->setFloatArray( "HBloomOffsets", bloomOffsets, 9 );
 
          // render
-         m_renderer->setRenderTarget( m_blurTarget );
-         m_horizBlurPass->beginRendering();
-         renderQuad();
-         m_horizBlurPass->endRendering();
+         renderer->setRenderTarget( blurTarget );
+         horizBlurPass->beginRendering();
+         renderQuad( data );
+         horizBlurPass->endRendering();
 
          break;
       }
 
    case BO_VERTICAL:
       {
-         m_vertBlurPass->setTexture( "inputTex", *m_inputTex );
+         vertBlurPass->setTexture( "inputTex", *inputTex );
 
-         m_vertBlurPass->setFloatArray( "VBloomWeights", bloomWeights, 9 );
-         m_vertBlurPass->setFloatArray( "VBloomOffsets", bloomOffsets, 9 );
+         vertBlurPass->setFloatArray( "VBloomWeights", bloomWeights, 9 );
+         vertBlurPass->setFloatArray( "VBloomOffsets", bloomOffsets, 9 );
 
          // render
-         m_renderer->setRenderTarget( m_blurTarget );
-         m_vertBlurPass->beginRendering();
-         renderQuad();
-         m_vertBlurPass->endRendering();
+         renderer->setRenderTarget( blurTarget );
+         vertBlurPass->beginRendering();
+         renderQuad( data );
+         vertBlurPass->endRendering();
 
          break;
       }
@@ -202,30 +213,30 @@ void RPBlurNode::onUpdate( RenderingPipelineMechanism& host )
       {
          // horizontal blur
          {
-            m_horizBlurPass->setTexture( "inputTex", *m_inputTex );
+            horizBlurPass->setTexture( "inputTex", *inputTex );
 
-            m_horizBlurPass->setFloatArray( "HBloomWeights", bloomWeights, 9 );
-            m_horizBlurPass->setFloatArray( "HBloomOffsets", bloomOffsets, 9 );
+            horizBlurPass->setFloatArray( "HBloomWeights", bloomWeights, 9 );
+            horizBlurPass->setFloatArray( "HBloomOffsets", bloomOffsets, 9 );
 
             // render
-            m_renderer->setRenderTarget( m_tempBlurTarget );
-            m_horizBlurPass->beginRendering();
-            renderQuad();
-            m_horizBlurPass->endRendering();
+            renderer->setRenderTarget( tempBlurTarget );
+            horizBlurPass->beginRendering();
+            renderQuad( data );
+            horizBlurPass->endRendering();
          }
 
          // vertical blur
          {
-            m_vertBlurPass->setTexture( "inputTex", *m_tempBlurTarget );
+            vertBlurPass->setTexture( "inputTex", *tempBlurTarget );
 
-            m_vertBlurPass->setFloatArray( "VBloomWeights", bloomWeights, 9 );
-            m_vertBlurPass->setFloatArray( "VBloomOffsets", bloomOffsets, 9 );
+            vertBlurPass->setFloatArray( "VBloomWeights", bloomWeights, 9 );
+            vertBlurPass->setFloatArray( "VBloomOffsets", bloomOffsets, 9 );
 
             // render
-            m_renderer->setRenderTarget( m_blurTarget );
-            m_vertBlurPass->beginRendering();
-            renderQuad();
-            m_vertBlurPass->endRendering();
+            renderer->setRenderTarget( blurTarget );
+            vertBlurPass->beginRendering();
+            renderQuad( data );
+            vertBlurPass->endRendering();
          }
 
          break;

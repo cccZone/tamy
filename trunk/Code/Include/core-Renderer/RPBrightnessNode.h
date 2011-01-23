@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPPostProcessNode.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,12 +23,12 @@ class RPBrightnessNode : public RPPostProcessNode
    DECLARE_CLASS( RPBrightnessNode )
 
 private:
-   float                m_brightThreshold;
+   float                            m_brightThreshold;
 
-   Renderer*            m_renderer;
-   PixelShader*         m_brightnessPass;
-   ShaderTexture*       m_inputTex;
-   RenderTarget*        m_brightPassTarget;
+   TRuntimeVar< Renderer* >         m_renderer;
+   TRuntimeVar< PixelShader* >      m_brightnessPass;
+   TRuntimeVar< ShaderTexture* >    m_inputTex;
+   TRuntimeVar< RenderTarget* >     m_brightPassTarget;
 
 public:
    RPBrightnessNode();
@@ -36,9 +37,10 @@ public:
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
-   void onInitialize( RenderingPipelineMechanism& host );
-   void onDeinitialize( RenderingPipelineMechanism& host );
-   void onUpdate( RenderingPipelineMechanism& host );
+   void onCreateLayout( RenderingPipelineMechanism& host ) const;
+   void onInitialize( RenderingPipelineMechanism& host ) const;
+   void onDeinitialize( RenderingPipelineMechanism& host ) const;
+   void onUpdate( RenderingPipelineMechanism& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

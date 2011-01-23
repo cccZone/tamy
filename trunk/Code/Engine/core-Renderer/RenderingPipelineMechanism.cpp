@@ -11,6 +11,7 @@
 #include "core-MVC/Model.h"
 #include "core/Graph.h"
 #include "core/GraphAlgorithms.h"
+#include "core/RuntimeData.h"
 #include <algorithm>
 
 
@@ -28,6 +29,7 @@ RenderingPipelineMechanism::RenderingPipelineMechanism( RenderingPipeline* pipel
    , m_renderingView( NULL )
    , m_statesManager( new DefaultAttributeSorter() )
    , m_renderer( NULL )
+   , m_runtimeDataBuffer( NULL )
 {
    // create the model views
    AABoundingBox sceneBB(D3DXVECTOR3( -10000, -10000, -10000 ), D3DXVECTOR3( 10000, 10000, 10000 ) );
@@ -68,6 +70,9 @@ RenderingPipelineMechanism::~RenderingPipelineMechanism()
 
    delete m_renderingView;
    m_renderingView = NULL;
+
+   delete m_runtimeDataBuffer;
+   m_runtimeDataBuffer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -114,7 +119,7 @@ RenderTarget& RenderingPipelineMechanism::getRenderTarget( const std::string& id
 {
    if ( m_pipeline )
    {
-      return m_pipeline->getRenderTarget( id );
+      return m_pipeline->getRenderTarget( id, *m_runtimeDataBuffer );
    }
    else
    {
@@ -132,16 +137,29 @@ void RenderingPipelineMechanism::initialize( Renderer& renderer )
 
    if ( m_pipeline )
    {
-
-      // initialize render targets
+      // first - initialize data layouts
+      delete m_runtimeDataBuffer;
+      m_runtimeDataBuffer = new RuntimeDataBuffer();
       const std::vector< RenderTargetDescriptor* >& renderTargets = m_pipeline->getRenderTargets();
-      for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
-      {
-         (*it)->initialize( renderer );
-      }
 
       // initialize nodes
       cacheNodes();
+
+      // 1.) create data layout
+      for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
+      {
+         (*it)->createLayout( *m_runtimeDataBuffer );
+      }
+      for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
+      {
+         (*it)->createLayout( *this );
+      }
+
+      // 2.) initialize render targets and nodes
+      for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
+      {
+         (*it)->initialize( *m_runtimeDataBuffer, renderer );
+      }
       for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
       {
          (*it)->attachObserver( *this );
@@ -169,9 +187,13 @@ void RenderingPipelineMechanism::deinitialize()
       const std::vector< RenderTargetDescriptor* >& renderTargets = m_pipeline->getRenderTargets();
       for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
       {
-         (*it)->deinitialize();
+         (*it)->deinitialize( *m_runtimeDataBuffer );
       }
    }
+
+   // remove the runtime data buffer
+   delete m_runtimeDataBuffer;
+   m_runtimeDataBuffer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

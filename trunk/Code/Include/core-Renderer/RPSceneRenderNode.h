@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RenderingPipelineNode.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +20,7 @@ class RPSceneRenderNode : public RenderingPipelineNode
    DECLARE_CLASS( RPSceneRenderNode )
 
 private:
-   RenderTarget*        m_renderTarget;
+   TRuntimeVar< RenderTarget* >        m_renderTarget;
 
 public:
    RPSceneRenderNode();
@@ -27,9 +28,10 @@ public:
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
-   void onInitialize( RenderingPipelineMechanism& host );
-   void onDeinitialize( RenderingPipelineMechanism& host );
-   void onUpdate( RenderingPipelineMechanism& host );
+   void onCreateLayout( RenderingPipelineMechanism& host ) const;
+   void onInitialize( RenderingPipelineMechanism& host ) const;
+   void onDeinitialize( RenderingPipelineMechanism& host ) const;
+   void onUpdate( RenderingPipelineMechanism& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RenderingPipelineSockets.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,8 +20,10 @@ public:
 
    /**
     * Returns the float value exposed by the output the socket's connected to.
+    *
+    * @param data       runtime data buffer.
     */
-   float getValue();
+   float getValue( RuntimeDataBuffer& data ) const;
 
 protected:
    bool canConnect( RPNodeOutput& output ) const;
@@ -33,7 +36,7 @@ class RPFloatOutput : public RPNodeOutput
    DECLARE_CLASS( RPFloatOutput )
 
 private:
-   float             m_value;
+   TRuntimeVar< float >             m_value;
 
 public:
    /**
@@ -46,12 +49,17 @@ public:
     *
     * @param val
     */
-   inline void setValue( float val ) { m_value = val; }
+   inline void setValue( RuntimeDataBuffer& data, float val ) const { data[ m_value ] = val; }
 
    /**
     * Returns the socket's value.
     */
-   inline float getValue() const { return m_value; }
+   inline float getValue( RuntimeDataBuffer& data ) const { return data[ m_value ]; }
+
+   // -------------------------------------------------------------------------
+   // RPNodeOutput implementation
+   // -------------------------------------------------------------------------
+   void createLayout( RenderingPipelineMechanism& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

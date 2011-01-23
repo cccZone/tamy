@@ -60,12 +60,19 @@ public:
    virtual ~RenderingPipelineNode();
 
    /**
+    * Called in order to initialize node's runtime data layout.
+    *
+    * @param host    pass from the context of which the rendering takes place
+    */
+   void createLayout( RenderingPipelineMechanism& host ) const;
+
+   /**
     * Called in order to initialize the node. This takes place before the pipeline
     * is first use in the rendering process.
     *
     * @param host    pass from the context of which the rendering takes place
     */
-   void initialize( RenderingPipelineMechanism& host );
+   void initialize( RenderingPipelineMechanism& host ) const;
 
    /**
     * Called in order to initialize the node. This takes place once
@@ -73,14 +80,14 @@ public:
     *
     * @param host    pass from the context of which the rendering takes place
     */
-   void deinitialize( RenderingPipelineMechanism& host );
+   void deinitialize( RenderingPipelineMechanism& host ) const;
    
    /**
     * Called in order to perform all rendering-related things.
     *
     * @param host    pass from the context of which the rendering takes place
     */
-   void update( RenderingPipelineMechanism& host );
+   void update( RenderingPipelineMechanism& host ) const;
 
    /**
     * Returns nodes that should be run after this node.
@@ -192,7 +199,7 @@ protected:
     * @param inputName
     */
    template< typename T >
-   T& getInput( const std::string& inputName );
+   const T& getInput( const std::string& inputName ) const;
 
    /**
     * Returns the specified output.
@@ -201,7 +208,14 @@ protected:
     * @param outputName
     */
    template< typename T >
-   T& getOutput( const std::string& outputName );
+   const T& getOutput( const std::string& outputName ) const;
+
+   /**
+    * Called when the rendering mechanism creates a data layout for the runtime data.
+    *
+    * @param host    pass from the context of which the rendering takes place
+    */
+   virtual void onCreateLayout( RenderingPipelineMechanism& host ) const {}
 
    /**
     * Called in order to initialize the node implementation. This takes place before the pipeline
@@ -209,7 +223,7 @@ protected:
     *
     * @param host    pass from the context of which the rendering takes place
     */
-   virtual void onInitialize( RenderingPipelineMechanism& host ) {}
+   virtual void onInitialize( RenderingPipelineMechanism& host ) const {}
 
    /**
     * Called in order to initialize the node implementation. This takes place once
@@ -217,14 +231,14 @@ protected:
     *
     * @param host    pass from the context of which the rendering takes place
     */
-   virtual void onDeinitialize( RenderingPipelineMechanism& host ) {}
+   virtual void onDeinitialize( RenderingPipelineMechanism& host ) const {}
    
    /**
     * Called in order to perform all rendering-related things the implementation is responsible for.
     *
     * @param host    pass from the context of which the rendering takes place
     */
-   virtual void onUpdate( RenderingPipelineMechanism& host ) {}
+   virtual void onUpdate( RenderingPipelineMechanism& host ) const {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

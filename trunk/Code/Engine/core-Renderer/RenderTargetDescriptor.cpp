@@ -25,7 +25,6 @@ RenderTargetDescriptor::RenderTargetDescriptor()
    , m_widthScale( 1.0f )
    , m_heightScale( 1.0f )
    , m_isDynamic( false )
-   , m_renderTarget( NULL )
    , m_usage( TU_COLOR )
    , m_isReadable( false )
 {
@@ -35,34 +34,37 @@ RenderTargetDescriptor::RenderTargetDescriptor()
 
 RenderTargetDescriptor::~RenderTargetDescriptor()
 {
-   delete m_renderTarget;
-   m_renderTarget = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderTargetDescriptor::initialize( Renderer& renderer )
+void RenderTargetDescriptor::createLayout( RuntimeDataBuffer& runtimeData ) const
 {
-   delete m_renderTarget;
+   runtimeData.registerVar< RenderTarget* >( m_renderTarget );
+}
 
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderTargetDescriptor::initialize( RuntimeDataBuffer& runtimeData, Renderer& renderer ) const
+{
    if ( m_isDynamic )
    {
-      m_renderTarget = new RenderTarget( new RTSPDynamic( renderer, m_widthScale, m_heightScale ), m_usage, m_isReadable, m_bgColor );
+      runtimeData[m_renderTarget] = new RenderTarget( new RTSPDynamic( renderer, m_widthScale, m_heightScale ), m_usage, m_isReadable, m_bgColor );
    }
    else
    {
-      m_renderTarget = new RenderTarget( new RTSPStatic( m_initialWidth, m_initialHeight ), m_usage, m_isReadable, m_bgColor );
+      runtimeData[m_renderTarget] = new RenderTarget( new RTSPStatic( m_initialWidth, m_initialHeight ), m_usage, m_isReadable, m_bgColor );
    }
 
-   renderer.implement< RenderTarget >( *m_renderTarget );
+   renderer.implement< RenderTarget >( *runtimeData[m_renderTarget] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderTargetDescriptor::deinitialize()
+void RenderTargetDescriptor::deinitialize( RuntimeDataBuffer& runtimeData ) const
 {
-   delete m_renderTarget;
-   m_renderTarget = NULL;
+   delete runtimeData[m_renderTarget];
+   runtimeData[m_renderTarget] = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

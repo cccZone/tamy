@@ -160,7 +160,7 @@ void RenderingPipeline::removeRenderTarget( const std::string& id )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderTarget& RenderingPipeline::getRenderTarget( const std::string& id ) const
+RenderTarget& RenderingPipeline::getRenderTarget( const std::string& id, RuntimeDataBuffer& runtimeData ) const
 {
    RenderTargetDescriptor* desc = findRenderTarget( id );
    if ( desc == NULL )
@@ -171,7 +171,7 @@ RenderTarget& RenderingPipeline::getRenderTarget( const std::string& id ) const
       throw std::runtime_error( errorMsg );
    }
    
-   return desc->getTarget();
+   return desc->getTarget( runtimeData );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

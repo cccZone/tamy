@@ -87,18 +87,25 @@ public:
    void disconnect( RenderingPipelineNode& node );
 
    /**
+    * Initializes runtime data layout for the socket.
+    *
+    * @param host    host mechanism
+    */
+   virtual void createLayout( RenderingPipelineMechanism& host ) const {}
+
+   /**
     * Initializes the socket.
     *
     * @param host    host mechanism
     */
-   virtual void initialize( RenderingPipelineMechanism& host ) {}
+   virtual void initialize( RenderingPipelineMechanism& host ) const {}
    
    /**
     * Deinitializes the socket.
     *
     * @param host    host mechanism
     */
-   void deinitialize( RenderingPipelineMechanism& host ) {}
+   void deinitialize( RenderingPipelineMechanism& host ) const {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -141,7 +148,7 @@ protected:
     * Returns the output socket this socket is connected to, or NULL if the socket
     * isn't connected to anything.
     */
-   inline RPNodeOutput* getOutput() { return m_connectedOutput; }
+   inline const RPNodeOutput* getOutput() const { return m_connectedOutput; }
 
    /**
     * Checks if the two sockets can be connected.

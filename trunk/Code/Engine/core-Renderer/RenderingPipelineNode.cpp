@@ -32,9 +32,21 @@ RenderingPipelineNode::~RenderingPipelineNode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineNode::initialize( RenderingPipelineMechanism& host )
+void RenderingPipelineNode::createLayout( RenderingPipelineMechanism& host ) const
 {
-   for( OutputsMap::iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
+   for( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
+   {
+      (*it)->createLayout( host );
+   }
+
+   onCreateLayout( host );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineNode::initialize( RenderingPipelineMechanism& host ) const
+{
+   for( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
    {
       (*it)->initialize( host );
    }
@@ -44,11 +56,11 @@ void RenderingPipelineNode::initialize( RenderingPipelineMechanism& host )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineNode::deinitialize( RenderingPipelineMechanism& host )
+void RenderingPipelineNode::deinitialize( RenderingPipelineMechanism& host ) const
 {
    onDeinitialize( host );
 
-   for( OutputsMap::iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
+   for( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
    {
       (*it)->deinitialize( host );
    }
@@ -56,7 +68,7 @@ void RenderingPipelineNode::deinitialize( RenderingPipelineMechanism& host )
    
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineNode::update( RenderingPipelineMechanism& host )
+void RenderingPipelineNode::update( RenderingPipelineMechanism& host ) const
 {
    onUpdate( host );
 }

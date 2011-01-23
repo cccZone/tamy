@@ -16,10 +16,6 @@ END_OBJECT()
 
 RPBrightnessNode::RPBrightnessNode()
 : m_brightThreshold( 0.8f )
-, m_brightnessPass( NULL )
-, m_inputTex( NULL )
-, m_brightPassTarget( NULL )
-, m_renderer( NULL )
 {
    defineInput( new RPTextureInput( "InputTex" ) );
    defineOutput( new RPTextureOutput( "Output" ) );
@@ -29,58 +25,77 @@ RPBrightnessNode::RPBrightnessNode()
 
 RPBrightnessNode::~RPBrightnessNode()
 {
-   delete m_brightnessPass;
-   m_brightnessPass = NULL;
-
-   m_inputTex = NULL;
-   m_brightPassTarget = NULL;
-   m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBrightnessNode::onInitialize( RenderingPipelineMechanism& host )
+void RPBrightnessNode::onCreateLayout( RenderingPipelineMechanism& host ) const
+{
+   __super::onCreateLayout( host );
+
+   RuntimeDataBuffer& data = host.data();
+
+   data.registerVar( m_brightnessPass );
+   data.registerVar( m_inputTex );
+   data.registerVar( m_brightPassTarget );
+   data.registerVar( m_renderer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPBrightnessNode::onInitialize( RenderingPipelineMechanism& host ) const
 {
    __super::onInitialize( host );
 
-   // aquire the input texture
-   m_inputTex = getInput< RPTextureInput >( "InputTex" ).getTexture();
-   m_brightPassTarget = getOutput< RPTextureOutput >( "Output" ).getRenderTarget();
+   RuntimeDataBuffer& data = host.data();
+
+   // acquire the input texture
+   data[ m_inputTex ] = getInput< RPTextureInput >( "InputTex" ).getTexture( data );
+   data[ m_brightPassTarget ] = getOutput< RPTextureOutput >( "Output" ).getRenderTarget( data );
 
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   m_brightnessPass = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_BrightPassDownSample.psh" );
-   m_brightnessPass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "BrightPassDownSample" );
+   data[ m_brightnessPass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_BrightPassDownSample.psh" );
+   data[ m_brightnessPass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "BrightPassDownSample" );
 
-   m_renderer = &host.getRenderer();
-   m_renderer->implement< PixelShader >( *m_brightnessPass );
+   data[ m_renderer ] = &host.getRenderer();
+   data[ m_renderer ]->implement< PixelShader >( *data[ m_brightnessPass ] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBrightnessNode::onDeinitialize( RenderingPipelineMechanism& host )
+void RPBrightnessNode::onDeinitialize( RenderingPipelineMechanism& host ) const
 {
-   delete m_brightnessPass;
-   m_brightnessPass = NULL;
+   RuntimeDataBuffer& data = host.data();
 
-   m_inputTex = NULL;
-   m_brightPassTarget = NULL;
-   m_renderer = NULL;
+   delete data[ m_brightnessPass ];
+   data[ m_brightnessPass ] = NULL;
+
+   data[ m_inputTex ] = NULL;
+   data[ m_brightPassTarget ] = NULL;
+   data[ m_renderer ] = NULL;
 
    __super::onDeinitialize( host );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPBrightnessNode::onUpdate( RenderingPipelineMechanism& host )
+void RPBrightnessNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-   if ( !m_inputTex )
+   RuntimeDataBuffer& data = host.data();
+
+   Renderer* renderer = data[ m_renderer ];
+   PixelShader* brightnessPass = data[ m_brightnessPass ];
+   ShaderTexture* inputTex = data[ m_inputTex ];
+   RenderTarget* brightPassTarget = data[ m_brightPassTarget ];
+
+   if ( !inputTex )
    {
       return;
    }
 
-   m_brightnessPass->setTexture( "inputTex", *m_inputTex );
-   m_brightnessPass->setFloat( "fBrightPassThreshold", m_brightThreshold );
+   brightnessPass->setTexture( "inputTex", *inputTex );
+   brightnessPass->setFloat( "fBrightPassThreshold", m_brightThreshold );
 
    // We need to compute the sampling offsets used for this pass.
    // A 2x2 sampling pattern is used, so we need to generate 4 offsets
@@ -88,8 +103,8 @@ void RPBrightnessNode::onUpdate( RenderingPipelineMechanism& host )
 
    // Because the source and destination are NOT the same sizes, we
    // need to provide offsets to correctly map between them.
-   float sU = ( 1.0f / static_cast< float >( m_inputTex->getWidth() ) );
-   float sV = ( 1.0f / static_cast< float >( m_inputTex->getHeight() ) );
+   float sU = ( 1.0f / static_cast< float >( inputTex->getWidth() ) );
+   float sV = ( 1.0f / static_cast< float >( inputTex->getHeight() ) );
 
    // The last two components (z,w) are unused. This makes for simpler code, but if
    // constant-storage is limited then it is possible to pack 4 offsets into 2 float4's
@@ -98,13 +113,13 @@ void RPBrightnessNode::onUpdate( RenderingPipelineMechanism& host )
    offsets[2] = D3DXVECTOR4( -0.5f * sU, -0.5f * sV, 0.0f, 0.0f );
    offsets[3] = D3DXVECTOR4( 0.5f * sU, -0.5f * sV, 0.0f, 0.0f );
 
-   m_brightnessPass->setVec4Array( "tcDownSampleOffsets", offsets, 4 );
+   brightnessPass->setVec4Array( "tcDownSampleOffsets", offsets, 4 );
 
    // render
-   m_renderer->setRenderTarget( m_brightPassTarget );
-   m_brightnessPass->beginRendering();
-   renderQuad();
-   m_brightnessPass->endRendering();
+   renderer->setRenderTarget( brightPassTarget );
+   brightnessPass->beginRendering();
+   renderQuad( data );
+   brightnessPass->endRendering();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

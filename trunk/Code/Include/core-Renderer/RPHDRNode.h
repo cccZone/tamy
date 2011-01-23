@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPPostProcessNode.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,16 +24,14 @@ class RPHDRNode : public RPPostProcessNode
    DECLARE_CLASS( RPHDRNode )
 
 private:
-   float                m_exposure;
-   float                m_gaussMultiplier;
+   float                            m_exposure;
+   float                            m_gaussMultiplier;
 
-   Renderer*            m_renderer;
-   PixelShader*         m_hdrPass;
-   ShaderTexture*       m_baseTex;
-   ShaderTexture*       m_bloomedTex;
-   RPFloatInput*        m_maxLuminanceInput;
-   RPFloatInput*        m_avgLuminanceInput;
-   RenderTarget*        m_hdrTarget;
+   TRuntimeVar< Renderer* >         m_renderer;
+   TRuntimeVar< PixelShader* >      m_hdrPass;
+   TRuntimeVar< ShaderTexture* >    m_baseTex;
+   TRuntimeVar< ShaderTexture* >    m_bloomedTex;
+   TRuntimeVar< RenderTarget* >     m_hdrTarget;
 
 public:
    RPHDRNode();
@@ -41,9 +40,10 @@ public:
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
-   void onInitialize( RenderingPipelineMechanism& host );
-   void onDeinitialize( RenderingPipelineMechanism& host );
-   void onUpdate( RenderingPipelineMechanism& host );
+   void onCreateLayout( RenderingPipelineMechanism& host ) const;
+   void onInitialize( RenderingPipelineMechanism& host ) const;
+   void onDeinitialize( RenderingPipelineMechanism& host ) const;
+   void onUpdate( RenderingPipelineMechanism& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

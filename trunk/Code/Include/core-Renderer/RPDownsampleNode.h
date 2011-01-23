@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPPostProcessNode.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,10 +23,10 @@ class RPDownsampleNode : public RPPostProcessNode
    DECLARE_CLASS( RPDownsampleNode )
 
 private:
-   Renderer*            m_renderer;
-   PixelShader*         m_downsamplePass;
-   ShaderTexture*       m_inputTex;
-   RenderTarget*        m_downsampleTarget;
+   TRuntimeVar< Renderer* >         m_renderer;
+   TRuntimeVar< PixelShader* >      m_downsamplePass;
+   TRuntimeVar< ShaderTexture* >    m_inputTex;
+   TRuntimeVar< RenderTarget* >     m_downsampleTarget;
 
 public:
    RPDownsampleNode();
@@ -34,9 +35,10 @@ public:
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
-   void onInitialize( RenderingPipelineMechanism& host );
-   void onDeinitialize( RenderingPipelineMechanism& host );
-   void onUpdate( RenderingPipelineMechanism& host );
+   void onCreateLayout( RenderingPipelineMechanism& host ) const;
+   void onInitialize( RenderingPipelineMechanism& host ) const;
+   void onDeinitialize( RenderingPipelineMechanism& host ) const;
+   void onUpdate( RenderingPipelineMechanism& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

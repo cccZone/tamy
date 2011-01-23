@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RenderingPipelineNode.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +20,7 @@ class RPPostProcessNode : public RenderingPipelineNode
    DECLARE_CLASS( RPPostProcessNode )
 
 private:
-   FullscreenQuad*                           m_fullscreenQuad;
+   TRuntimeVar< FullscreenQuad* >               m_fullscreenQuad;
 
 public:
    RPPostProcessNode();
@@ -28,14 +29,17 @@ public:
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
-   void onInitialize( RenderingPipelineMechanism& host );
-   void onDeinitialize( RenderingPipelineMechanism& host );
+   void onCreateLayout( RenderingPipelineMechanism& host ) const;
+   void onInitialize( RenderingPipelineMechanism& host ) const;
+   void onDeinitialize( RenderingPipelineMechanism& host ) const;
 
 protected:
    /**
     * Renders the full screen quad geometry.
+    *
+    * @param data       runtime data buffer
     */
-   void renderQuad();
+   void renderQuad( RuntimeDataBuffer& data ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

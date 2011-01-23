@@ -99,6 +99,7 @@
     <ClCompile Include="GraphTopologicalSortTests.cpp" />
     <ClCompile Include="NodesHierarchyTests.cpp" />
     <ClCompile Include="EnumsTests.cpp" />
+    <ClCompile Include="RuntimeDataTests.cpp" />
     <ClCompile Include="UpdatingGlobalMatricesTests.cpp" />
     <ClCompile Include="VisitorTests.cpp" />
     <ClCompile Include="DelegatesTests.cpp" />

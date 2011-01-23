@@ -25,6 +25,7 @@ class RenderingView;
 class RenderingPipelineNode;
 enum RenderingPipelineOperation;
 enum RenderingPipelineNodeOperation;
+class RuntimeDataBuffer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -52,6 +53,9 @@ private:
    AttributeSorter*                             m_statesManager;
    SpatialView*                                 m_spatialView;
    RenderingView*                               m_renderingView;
+
+   // a buffer for storing runtime data the pipeline will operate on
+   RuntimeDataBuffer*                           m_runtimeDataBuffer;
  
 public:
    /**
@@ -71,6 +75,11 @@ public:
     * Returns the currently used renderer instance.
     */
    inline Renderer& getRenderer() { return *m_renderer; }
+
+   /**
+    * Gives access to a runtime data buffer.
+    */
+   inline RuntimeDataBuffer& data() { return *m_runtimeDataBuffer; }
 
    // -------------------------------------------------------------------------
    // Params management
