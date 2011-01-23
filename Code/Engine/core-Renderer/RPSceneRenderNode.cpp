@@ -16,7 +16,6 @@ END_OBJECT()
 ///////////////////////////////////////////////////////////////////////////////
 
 RPSceneRenderNode::RPSceneRenderNode()
-: m_renderTarget( NULL )
 {
    defineInput( new RPVoidInput( "Input" ) );
    defineOutput( new RPTextureOutput( "Output" ) );
@@ -24,24 +23,32 @@ RPSceneRenderNode::RPSceneRenderNode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSceneRenderNode::onInitialize( RenderingPipelineMechanism& host )
+void RPSceneRenderNode::onCreateLayout( RenderingPipelineMechanism& host ) const
 {
-   m_renderTarget = getOutput< RPTextureOutput >( "Output" ).getRenderTarget();
+   host.data().registerVar( m_renderTarget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSceneRenderNode::onDeinitialize( RenderingPipelineMechanism& host )
+void RPSceneRenderNode::onInitialize( RenderingPipelineMechanism& host ) const
 {
-   m_renderTarget = NULL;
+   host.data()[ m_renderTarget ] = getOutput< RPTextureOutput >( "Output" ).getRenderTarget( host.data() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host )
+void RPSceneRenderNode::onDeinitialize( RenderingPipelineMechanism& host ) const
+{
+   host.data()[ m_renderTarget ] = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
    Renderer& renderer = host.getRenderer();
-   renderer.setRenderTarget( m_renderTarget );
+   RenderTarget* trg = host.data()[ m_renderTarget ];
+   renderer.setRenderTarget( trg );
 
    host.getStatesMgr().render();
 }

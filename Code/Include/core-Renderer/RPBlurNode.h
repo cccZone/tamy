@@ -4,6 +4,7 @@
 
 #include "core-Renderer/RPPostProcessNode.h"
 #include "core/Enum.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,17 +33,17 @@ class RPBlurNode : public RPPostProcessNode
    DECLARE_CLASS( RPBlurNode )
 
 private:
-   BlurOptions          m_blurOption;
-   float                m_gaussMultiplier;
-   float                m_gaussMean;
-   float                m_gaussStdDev;
+   BlurOptions                      m_blurOption;
+   float                            m_gaussMultiplier;
+   float                            m_gaussMean;
+   float                            m_gaussStdDev;
 
-   Renderer*            m_renderer;
-   PixelShader*         m_horizBlurPass;
-   PixelShader*         m_vertBlurPass;
-   ShaderTexture*       m_inputTex;
-   RenderTarget*        m_blurTarget;
-   RenderTarget*        m_tempBlurTarget;
+   TRuntimeVar< Renderer* >         m_renderer;
+   TRuntimeVar< PixelShader* >      m_horizBlurPass;
+   TRuntimeVar< PixelShader* >      m_vertBlurPass;
+   TRuntimeVar< ShaderTexture* >    m_inputTex;
+   TRuntimeVar< RenderTarget* >     m_blurTarget;
+   TRuntimeVar< RenderTarget* >     m_tempBlurTarget;
 
 public:
    RPBlurNode();
@@ -51,9 +52,10 @@ public:
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
-   void onInitialize( RenderingPipelineMechanism& host );
-   void onDeinitialize( RenderingPipelineMechanism& host );
-   void onUpdate( RenderingPipelineMechanism& host );
+   void onCreateLayout( RenderingPipelineMechanism& host ) const;
+   void onInitialize( RenderingPipelineMechanism& host ) const;
+   void onDeinitialize( RenderingPipelineMechanism& host ) const;
+   void onUpdate( RenderingPipelineMechanism& host ) const;
 
 private:
    float computeGaussianValue( float x, float mean, float std_deviation ) const;

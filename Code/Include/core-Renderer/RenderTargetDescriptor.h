@@ -5,6 +5,7 @@
 #include "core/Object.h"
 #include "core/Color.h"
 #include "core-Renderer/ShaderTexture.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,18 +23,18 @@ class RenderTargetDescriptor : public Object
    DECLARE_CLASS( RenderTargetDescriptor )
 
 private:
-   std::string    m_id;
-   unsigned int   m_initialWidth;
-   unsigned int   m_initialHeight;
-   float          m_widthScale;
-   float          m_heightScale;
-   bool           m_isDynamic;
-   TextureUsage   m_usage;
-   bool           m_isReadable;
-   Color          m_bgColor;
+   std::string                   m_id;
+   unsigned int                  m_initialWidth;
+   unsigned int                  m_initialHeight;
+   float                         m_widthScale;
+   float                         m_heightScale;
+   bool                          m_isDynamic;
+   TextureUsage                  m_usage;
+   bool                          m_isReadable;
+   Color                         m_bgColor;
 
    // runtime data
-   RenderTarget*  m_renderTarget;
+   TRuntimeVar< RenderTarget* >  m_renderTarget;
 
 public:
    /**
@@ -135,21 +136,33 @@ public:
    inline void setDynamicSize( float widthScale, float heightScale ) { m_widthScale = widthScale; m_heightScale = heightScale; }
 
    /**
-    * Initializes the render target descriptor.
+    * Initializes runtime data layout.
     *
     * @param renderer         renderer that will be using this render target
     */
-   void initialize( Renderer& renderer );
+   void createLayout( RuntimeDataBuffer& runtimeData ) const;
+
+   /**
+    * Initializes the render target descriptor.
+    *
+    * @param runtimeData      runtimeDataBuffer
+    * @param renderer         renderer that will be using this render target
+    */
+   void initialize( RuntimeDataBuffer& runtimeData, Renderer& renderer ) const;
 
    /**
     * Deinitializes the descriptor.
+    *
+    * @param runtimeData      runtimeDataBuffer
     */
-   void deinitialize();
+   void deinitialize( RuntimeDataBuffer& runtimeData ) const;
 
    /**
     * Returns the render target.
+    *
+    * @param runtimeData      runtimeDataBuffer
     */
-   inline RenderTarget& getTarget() { return *m_renderTarget; }
+   inline RenderTarget& getTarget( RuntimeDataBuffer& runtimeData ) { return *runtimeData[m_renderTarget]; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

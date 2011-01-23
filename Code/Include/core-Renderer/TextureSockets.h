@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RenderingPipelineSockets.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,8 +25,10 @@ public:
 
    /**
     * Returns the texture exposed by the output the socket's connected to.
+    *
+    * @param data       runtime data buffer
     */
-   ShaderTexture* getTexture();
+   ShaderTexture* getTexture( RuntimeDataBuffer& data ) const;
 
 protected:
    bool canConnect( RPNodeOutput& output ) const;
@@ -38,10 +41,10 @@ class RPTextureOutput : public RPNodeOutput
    DECLARE_CLASS( RPTextureOutput )
 
 private:
-   bool              m_useBackBuffer;
-   std::string       m_renderTargetId;
+   bool                                m_useBackBuffer;
+   std::string                         m_renderTargetId;
 
-   RenderTarget*     m_renderTarget;
+   TRuntimeVar< RenderTarget* >        m_renderTarget;
 
 public:
    /**
@@ -58,19 +61,24 @@ public:
 
    /**
     * Returns the render target set.
+    *
+    * @param data       runtime data buffer
     */
-   inline RenderTarget* getRenderTarget() { return m_renderTarget; }
+   RenderTarget* getRenderTarget( RuntimeDataBuffer& data ) const;
 
    /**
     * Returns a texture the output is using.
+    *
+    * @param data       runtime data buffer
     */
-   ShaderTexture* getTexture() const;
+   ShaderTexture* getTexture( RuntimeDataBuffer& data ) const;
 
    // -------------------------------------------------------------------------
    // RPNodeOutput implementation
    // -------------------------------------------------------------------------
-   void initialize( RenderingPipelineMechanism& host );
-   void deinitialize( RenderingPipelineMechanism& host );
+   void createLayout( RenderingPipelineMechanism& host ) const;
+   void initialize( RenderingPipelineMechanism& host ) const;
+   void deinitialize( RenderingPipelineMechanism& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

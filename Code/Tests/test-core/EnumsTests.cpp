@@ -37,11 +37,11 @@ END_ENUM( WeekDays );
 
 TEST( Enum, simpleEnum )
 {
-   const std::string &str = Enum< WeekEnd >::from( Saturday );
+   const std::string &str = TEnum< WeekEnd >::from( Saturday );
    CPPUNIT_ASSERT_EQUAL( std::string( "Saturday" ), str );
 
    WeekEnd w;
-   Enum< WeekEnd >::to( "Sunday", w );
+   TEnum< WeekEnd >::to( "Sunday", w );
    CPPUNIT_ASSERT_EQUAL( w, Sunday );
 }
 
@@ -51,13 +51,15 @@ TEST( Enum, valuesEnumeration )
 {
    std::vector< std::string > values;
 
-   Enum< WeekEnd >::getEnumerators( values );
+   TEnum< WeekEnd > weekendEnum;
+   weekendEnum.getEnumerators( values );
    CPPUNIT_ASSERT_EQUAL( (unsigned int)2, values.size() );
    CPPUNIT_ASSERT_EQUAL( std::string( "Sunday" ), values[0] );
    CPPUNIT_ASSERT_EQUAL( std::string( "Saturday" ), values[1] );
 
    values.clear();
-   Enum< WeekDays >::getEnumerators( values );
+   TEnum< WeekDays > weekdaysEnum;
+   weekdaysEnum.getEnumerators( values );
    CPPUNIT_ASSERT_EQUAL( (unsigned int)5, values.size() );
    CPPUNIT_ASSERT_EQUAL( std::string( "Monday" ), values[0] );
    CPPUNIT_ASSERT_EQUAL( std::string( "Tuesday" ), values[1] );

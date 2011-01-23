@@ -14,7 +14,7 @@ class RenderingPipelineNode;
 class RenderingPipelineMechanism;
 class RenderTargetDescriptor;
 class RenderTarget;
-
+class RuntimeDataBuffer;
 typedef Graph< RenderingPipelineNode* > RPGraph;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,9 +101,10 @@ public:
    /**
     * Returns a render target registered under the specified ID.
     *
-    * @param id         render target id
+    * @param id            render target id
+    * @param runtimeData   runtime data buffer the target is stored in
     */
-   RenderTarget& getRenderTarget( const std::string& id ) const;
+   RenderTarget& getRenderTarget( const std::string& id, RuntimeDataBuffer& runtimeData ) const;
 
    /**
     * Returns a list of all defined render targets.

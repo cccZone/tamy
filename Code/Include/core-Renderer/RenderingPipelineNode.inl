@@ -9,7 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-T& RenderingPipelineNode::getInput( const std::string& inputName )
+const T& RenderingPipelineNode::getInput( const std::string& inputName ) const
 {
    RPNodeInput* input = findInput( inputName );
    if ( input == NULL)
@@ -33,7 +33,7 @@ T& RenderingPipelineNode::getInput( const std::string& inputName )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-T& RenderingPipelineNode::getOutput( const std::string& outputName )
+const T& RenderingPipelineNode::getOutput( const std::string& outputName ) const
 {
    RPNodeOutput* output = findOutput( outputName );
    if ( output == NULL )

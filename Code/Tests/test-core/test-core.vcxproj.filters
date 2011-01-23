@@ -143,6 +143,9 @@
     <ClCompile Include="EnumsTests.cpp">
       <Filter>RTTI</Filter>
     </ClCompile>
+    <ClCompile Include="RuntimeDataTests.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">

@@ -3,6 +3,7 @@
 #include "core\ClassTemplate.h"
 #include "core\Class.h"
 #include "core\Enum.h"
+
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace // anonymous
@@ -65,7 +66,7 @@ TEST( Class, short )
 TEST( Class, enums )
 {
    CPPUNIT_ASSERT_EQUAL( std::string( "GirlNames" ), TypeID< GirlNames >().name() );
-   CPPUNIT_ASSERT_EQUAL( std::string( "GirlNames" ), TypeID< Enum< GirlNames > >().name() );
+   CPPUNIT_ASSERT_EQUAL( std::string( "GirlNames" ), TypeID< TEnum< GirlNames > >().name() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

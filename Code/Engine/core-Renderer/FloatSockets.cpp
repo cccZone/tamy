@@ -1,4 +1,5 @@
 #include "core-Renderer/FloatSockets.h"
+#include "core-Renderer/RenderingPipelineMechanism.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,18 +16,18 @@ RPFloatInput::RPFloatInput( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float RPFloatInput::getValue()
+float RPFloatInput::getValue( RuntimeDataBuffer& data ) const
 {
-   RPNodeOutput* output = getOutput();
+   const RPNodeOutput* output = getOutput();
    if ( !output )
    {
       return 0.0f;
    }
 
-   RPFloatOutput* typedOutput = dynamic_cast< RPFloatOutput* >( output );
+   const RPFloatOutput* typedOutput = dynamic_cast< const RPFloatOutput* >( output );
    if ( typedOutput != NULL )
    {
-      return typedOutput->getValue();
+      return typedOutput->getValue( data );
    }
    else
    {
@@ -55,8 +56,14 @@ END_OBJECT();
 
 RPFloatOutput::RPFloatOutput( const std::string& name )
    : RPNodeOutput( name )
-   , m_value( 0.0f )
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPFloatOutput::createLayout( RenderingPipelineMechanism& host ) const
+{
+   host.data().registerVar( m_value );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

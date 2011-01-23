@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPPostProcessNode.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,16 +24,15 @@ class RPLuminanceNode : public RPPostProcessNode
    DECLARE_CLASS( RPLuminanceNode )
 
 private:
-   unsigned int                        m_stepsCount;
+   typedef RenderTarget*                           PRenderTarget;
+private:
+   unsigned int                                    m_stepsCount;
 
-   Renderer*                           m_renderer;
-   PixelShader*                        m_greyscalePass;
-   PixelShader*                        m_downSamplePass;
-   ShaderTexture*                      m_inputTex;
-   RPFloatOutput*                       m_maxLuminanceOutput;
-   RPFloatOutput*                       m_avgLuminanceOutput;
-
-   std::vector< RenderTarget* >        m_luminanceTarget;
+   TRuntimeVar< Renderer* >                        m_renderer;
+   TRuntimeVar< PixelShader* >                     m_greyscalePass;
+   TRuntimeVar< PixelShader* >                     m_downSamplePass;
+   TRuntimeVar< ShaderTexture* >                   m_inputTex;
+   TRuntimeVar< PRenderTarget* >                   m_luminanceTarget;
 
 public:
    RPLuminanceNode();
@@ -41,9 +41,10 @@ public:
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
-   void onInitialize( RenderingPipelineMechanism& host );
-   void onDeinitialize( RenderingPipelineMechanism& host );
-   void onUpdate( RenderingPipelineMechanism& host );
+   void onCreateLayout( RenderingPipelineMechanism& host ) const;
+   void onInitialize( RenderingPipelineMechanism& host ) const;
+   void onDeinitialize( RenderingPipelineMechanism& host ) const;
+   void onUpdate( RenderingPipelineMechanism& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

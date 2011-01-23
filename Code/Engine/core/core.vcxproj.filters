@@ -197,6 +197,9 @@
     <ClCompile Include="Enum.cpp">
       <Filter>RTTI\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="RuntimeData.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -449,6 +452,9 @@
     <ClInclude Include="..\..\Include\core\Enum.h">
       <Filter>RTTI\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\RuntimeData.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">
@@ -552,6 +558,9 @@
     </None>
     <None Include="..\..\Include\core\Enum.inl">
       <Filter>RTTI\Classes</Filter>
+    </None>
+    <None Include="..\..\Include\core\RuntimeData.inl">
+      <Filter>DataStructures</Filter>
     </None>
   </ItemGroup>
 </Project>

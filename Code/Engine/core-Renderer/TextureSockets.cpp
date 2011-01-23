@@ -17,15 +17,15 @@ RPTextureInput::RPTextureInput( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderTexture* RPTextureInput::getTexture()
+ShaderTexture* RPTextureInput::getTexture( RuntimeDataBuffer& data ) const
 {
-   RPNodeOutput* output = getOutput();
+   const RPNodeOutput* output = getOutput();
    if ( !output )
    {
       return NULL;
    }
 
-   RPTextureOutput* typedOutput = dynamic_cast< RPTextureOutput* >( output );
+   const RPTextureOutput* typedOutput = dynamic_cast< const RPTextureOutput* >( output );
    if ( typedOutput == NULL )
    {
       char tmp[256];
@@ -33,7 +33,7 @@ ShaderTexture* RPTextureInput::getTexture()
       throw std::runtime_error( tmp );
    }
 
-   return typedOutput->getTexture();
+   return typedOutput->getTexture( data );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,29 +58,42 @@ END_OBJECT();
 RPTextureOutput::RPTextureOutput( const std::string& name )
    : RPNodeOutput( name )
    , m_useBackBuffer( true )
-   , m_renderTarget( NULL )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPTextureOutput::initialize( RenderingPipelineMechanism& host )
+void RPTextureOutput::createLayout( RenderingPipelineMechanism& host ) const
+{
+   host.data().registerVar( m_renderTarget );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPTextureOutput::initialize( RenderingPipelineMechanism& host ) const
 {
    if ( m_useBackBuffer )
    {
-      m_renderTarget = NULL;
+      host.data()[ m_renderTarget ] = NULL;
    }
    else
    {
-      m_renderTarget = &host.getRenderTarget( m_renderTargetId );
+      host.data()[ m_renderTarget ] = &host.getRenderTarget( m_renderTargetId );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPTextureOutput::deinitialize( RenderingPipelineMechanism& host )
+void RPTextureOutput::deinitialize( RenderingPipelineMechanism& host ) const
 {
-   m_renderTarget = NULL;
+   host.data()[ m_renderTarget ] = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+RenderTarget* RPTextureOutput::getRenderTarget( RuntimeDataBuffer& data ) const 
+{ 
+   return data[ m_renderTarget ]; 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -94,7 +107,7 @@ void RPTextureOutput::setRenderTargetID( const std::string renderTargetId )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderTexture* RPTextureOutput::getTexture() const
+ShaderTexture* RPTextureOutput::getTexture( RuntimeDataBuffer& data ) const
 {
    if ( m_useBackBuffer )
    {
@@ -102,7 +115,7 @@ ShaderTexture* RPTextureOutput::getTexture() const
    }
    else
    {
-      return m_renderTarget;
+      return data[ m_renderTarget ];
    }
 }
 

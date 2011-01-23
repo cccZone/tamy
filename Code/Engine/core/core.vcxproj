@@ -82,6 +82,7 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NodeActionsExecutor.cpp" />
     <ClCompile Include="ResourceHandle.cpp" />
+    <ClCompile Include="RuntimeData.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="Enum.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="..\..\Include\core\NodeVisitor.h" />
     <ClInclude Include="..\..\Include\core\ResourceHandle.h" />
     <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h" />
+    <ClInclude Include="..\..\Include\core\RuntimeData.h" />
     <ClInclude Include="..\..\Include\core\Singleton.h" />
     <ClInclude Include="..\..\Include\core\Enum.h" />
     <ClInclude Include="..\..\Include\core\TNodesVisitor.h" />
@@ -212,6 +214,7 @@
     <None Include="..\..\Include\core\CompositeSpatialStorage.inl" />
     <None Include="..\..\Include\core\NarrowPhaseStorageFilter.inl" />
     <None Include="..\..\Include\core\ResourceHandle.inl" />
+    <None Include="..\..\Include\core\RuntimeData.inl" />
     <None Include="..\..\Include\core\SharedSpatialStorage.inl" />
     <None Include="..\..\Include\core\Enum.inl" />
     <None Include="..\..\Include\core\TNodesSpatialStorage.inl" />

@@ -12,7 +12,6 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPPostProcessNode::RPPostProcessNode()
-   : m_fullscreenQuad( NULL )
 {
 }
 
@@ -20,36 +19,41 @@ RPPostProcessNode::RPPostProcessNode()
 
 RPPostProcessNode::~RPPostProcessNode()
 {
-   delete m_fullscreenQuad;
-   m_fullscreenQuad = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPPostProcessNode::onInitialize( RenderingPipelineMechanism& host )
+void RPPostProcessNode::onCreateLayout( RenderingPipelineMechanism& host ) const
+{
+   host.data().registerVar( m_fullscreenQuad );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPPostProcessNode::onInitialize( RenderingPipelineMechanism& host ) const
 {
    Renderer& renderer = host.getRenderer();
    ResourcesManager& rm = ResourcesManager::getInstance();
 
    // fullscreen quad
-   m_fullscreenQuad = new FullscreenQuad( &renderer );
-   m_fullscreenQuad->initialize( rm );
-   renderer.implement< FullscreenQuad >( *m_fullscreenQuad );
+   host.data()[ m_fullscreenQuad ] = new FullscreenQuad( &renderer );
+   host.data()[ m_fullscreenQuad ]->initialize( rm );
+   renderer.implement< FullscreenQuad >( *host.data()[ m_fullscreenQuad ] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPPostProcessNode::onDeinitialize( RenderingPipelineMechanism& host )
+void RPPostProcessNode::onDeinitialize( RenderingPipelineMechanism& host ) const
 {
-   delete m_fullscreenQuad;
-   m_fullscreenQuad = NULL;
+   delete host.data()[ m_fullscreenQuad ];
+   host.data()[ m_fullscreenQuad ] = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPPostProcessNode::renderQuad()
+void RPPostProcessNode::renderQuad( RuntimeDataBuffer& data ) const
 {
-   m_fullscreenQuad->render();
+   data[ m_fullscreenQuad ]->render();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

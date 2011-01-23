@@ -14,10 +14,6 @@ END_OBJECT()
 ///////////////////////////////////////////////////////////////////////////////
 
 RPDownsampleNode::RPDownsampleNode()
-   : m_inputTex( NULL )
-   , m_downsamplePass( NULL )
-   , m_downsampleTarget( NULL )
-   , m_renderer( NULL )
 {
    defineInput( new RPTextureInput ( "InputTex" ) );
    defineOutput( new RPTextureOutput( "Output" ) );
@@ -27,57 +23,76 @@ RPDownsampleNode::RPDownsampleNode()
 
 RPDownsampleNode::~RPDownsampleNode()
 {
-   delete m_downsamplePass;
-   m_downsamplePass = NULL;
-
-   m_inputTex = NULL;
-   m_downsampleTarget = NULL;
-   m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPDownsampleNode::onInitialize( RenderingPipelineMechanism& host )
+void RPDownsampleNode::onCreateLayout( RenderingPipelineMechanism& host ) const
+{
+   __super::onCreateLayout( host );
+
+   RuntimeDataBuffer& data = host.data();
+
+   data.registerVar( m_downsamplePass );
+   data.registerVar( m_inputTex );
+   data.registerVar( m_downsampleTarget );
+   data.registerVar( m_renderer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPDownsampleNode::onInitialize( RenderingPipelineMechanism& host ) const
 {
    __super::onInitialize( host );
 
-   // aquire the input texture
-   m_inputTex = getInput< RPTextureInput >( "InputTex" ).getTexture();
-   m_downsampleTarget = getOutput< RPTextureOutput >( "Output" ).getRenderTarget();
+   RuntimeDataBuffer& data = host.data();
+
+   // acquire the input texture
+   data[ m_inputTex ] = getInput< RPTextureInput >( "InputTex" ).getTexture( data );
+   data[ m_downsampleTarget ] = getOutput< RPTextureOutput >( "Output" ).getRenderTarget( data );
 
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   m_downsamplePass = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_DownSample4x4.psh" );
-   m_downsamplePass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "DownSample4x4" );
+   data[ m_downsamplePass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_DownSample4x4.psh" );
+   data[ m_downsamplePass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "DownSample4x4" );
 
-   m_renderer = &host.getRenderer();
-   m_renderer->implement< PixelShader >( *m_downsamplePass );
+   data[ m_renderer ] = &host.getRenderer();
+   data[ m_renderer ]->implement< PixelShader >( *data[ m_downsamplePass ] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPDownsampleNode::onDeinitialize( RenderingPipelineMechanism& host )
+void RPDownsampleNode::onDeinitialize( RenderingPipelineMechanism& host ) const
 {
-   delete m_downsamplePass;
-   m_downsamplePass = NULL;
+   RuntimeDataBuffer& data = host.data();
 
-   m_inputTex = NULL;
-   m_downsampleTarget = NULL;
-   m_renderer = NULL;
+   delete data[ m_downsamplePass ];
+   data[ m_downsamplePass ] = NULL;
+
+   data[ m_inputTex ] = NULL;
+   data[ m_downsampleTarget ] = NULL;
+   data[ m_renderer ] = NULL;
 
    __super::onDeinitialize( host );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPDownsampleNode::onUpdate( RenderingPipelineMechanism& host )
+void RPDownsampleNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-   if ( !m_inputTex )
+   RuntimeDataBuffer& data = host.data();
+
+   Renderer* renderer = data[ m_renderer ];
+   PixelShader* downsamplePass = data[ m_downsamplePass ];
+   ShaderTexture* inputTex = data[ m_inputTex ];
+   RenderTarget* downsampleTarget = data[ m_downsampleTarget ];
+
+   if ( !inputTex )
    {
       return;
    }
 
-   m_downsamplePass->setTexture( "inputTex", *m_inputTex );
+   downsamplePass->setTexture( "inputTex", *inputTex );
 
    // We need to compute the sampling offsets used for this pass.
    // A 4x4 sampling pattern is used, so we need to generate 16 offsets
@@ -92,21 +107,21 @@ void RPDownsampleNode::onUpdate( RenderingPipelineMechanism& host )
       for( int j = -2; j < 2; j++ )
       {
          dsOffsets[idx++] = D3DXVECTOR4(
-            ( static_cast< float >( i ) + 0.5f ) * ( 1.0f / static_cast< float >( m_downsampleTarget->getWidth() ) ),
-            ( static_cast< float >( j ) + 0.5f ) * ( 1.0f / static_cast< float >( m_downsampleTarget->getHeight() ) ),
+            ( static_cast< float >( i ) + 0.5f ) * ( 1.0f / static_cast< float >( downsampleTarget->getWidth() ) ),
+            ( static_cast< float >( j ) + 0.5f ) * ( 1.0f / static_cast< float >( downsampleTarget->getHeight() ) ),
             0.0f, // unused 
             0.0f  // unused
             );
       }
    }
 
-   m_downsamplePass->setVec4Array( "tcDownSampleOffsets", dsOffsets, 16 );
+   downsamplePass->setVec4Array( "tcDownSampleOffsets", dsOffsets, 16 );
 
    // render
-   m_renderer->setRenderTarget( m_downsampleTarget );
-   m_downsamplePass->beginRendering();
-   renderQuad();
-   m_downsamplePass->endRendering();
+   renderer->setRenderTarget( downsampleTarget );
+   downsamplePass->beginRendering();
+   renderQuad( data );
+   downsamplePass->endRendering();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -19,13 +19,6 @@ END_OBJECT()
 RPHDRNode::RPHDRNode()
    : m_exposure( 0.8f )
    , m_gaussMultiplier( 2.04f )
-   , m_hdrPass( NULL )
-   , m_baseTex( NULL )
-   , m_bloomedTex( NULL )
-   , m_maxLuminanceInput( NULL )
-   , m_avgLuminanceInput( NULL )
-   , m_hdrTarget( NULL )
-   , m_renderer( NULL )
 {
    defineInput( new RPTextureInput( "BaseTex" ) );
    defineInput( new RPTextureInput( "BloomedTex" ) );
@@ -38,81 +31,98 @@ RPHDRNode::RPHDRNode()
 
 RPHDRNode::~RPHDRNode()
 {
-   delete m_hdrPass;
-   m_hdrPass = NULL;
-
-   m_baseTex = NULL;
-   m_bloomedTex = NULL;
-   m_maxLuminanceInput = NULL;
-   m_avgLuminanceInput = NULL;
-   m_hdrTarget = NULL;
-   m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPHDRNode::onInitialize( RenderingPipelineMechanism& host )
+void RPHDRNode::onCreateLayout( RenderingPipelineMechanism& host ) const
+{
+   __super::onCreateLayout( host );
+
+   RuntimeDataBuffer& data = host.data();
+
+   data.registerVar( m_hdrPass );
+   data.registerVar( m_baseTex );
+   data.registerVar( m_bloomedTex );
+   data.registerVar( m_hdrTarget );
+   data.registerVar( m_renderer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPHDRNode::onInitialize( RenderingPipelineMechanism& host ) const
 {
    __super::onInitialize( host );
 
-   // aquire the input texture
-   m_baseTex = getInput< RPTextureInput >( "BaseTex" ).getTexture();
-   m_bloomedTex = getInput< RPTextureInput >( "BloomedTex" ).getTexture();
-   m_maxLuminanceInput = &getInput< RPFloatInput >( "Luminance max" );
-   m_avgLuminanceInput = &getInput< RPFloatInput >( "Luminance avg" );
-   m_hdrTarget = getOutput< RPTextureOutput >( "Output" ).getRenderTarget();
+   RuntimeDataBuffer& data = host.data();
+
+   // acquire the input texture
+   data[ m_baseTex ] = getInput< RPTextureInput >( "BaseTex" ).getTexture( data );
+   data[ m_bloomedTex ] = getInput< RPTextureInput >( "BloomedTex" ).getTexture( data );
+   data[ m_hdrTarget ] = getOutput< RPTextureOutput >( "Output" ).getRenderTarget( data );
 
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   m_hdrPass = new PixelShader( "Renderer/Shaders/HDRPipeline/FinalPass.psh" );
-   m_hdrPass->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/FinalPass.psh", "main" );
+   data[ m_hdrPass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/FinalPass.psh" );
+   data[ m_hdrPass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/FinalPass.psh", "main" );
 
-   m_renderer = &host.getRenderer();
-   m_renderer->implement< PixelShader >( *m_hdrPass );
+   data[ m_renderer ] = &host.getRenderer();
+   data[ m_renderer ]->implement< PixelShader >( *data[ m_hdrPass ] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPHDRNode::onDeinitialize( RenderingPipelineMechanism& host )
+void RPHDRNode::onDeinitialize( RenderingPipelineMechanism& host ) const
 {
-   delete m_hdrPass;
-   m_hdrPass = NULL;
+   RuntimeDataBuffer& data = host.data();
 
-   m_baseTex = NULL;
-   m_bloomedTex = NULL;
-   m_maxLuminanceInput = NULL;
-   m_avgLuminanceInput = NULL;
-   m_hdrTarget = NULL;
-   m_renderer = NULL;
+   delete data[ m_hdrPass ];
+   data[ m_hdrPass ] = NULL;
+
+   data[ m_baseTex ] = NULL;
+   data[ m_bloomedTex ] = NULL;
+   data[ m_hdrTarget ] = NULL;
+   data[ m_renderer ] = NULL;
 
    __super::onDeinitialize( host );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPHDRNode::onUpdate( RenderingPipelineMechanism& host )
+void RPHDRNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-   if ( !m_baseTex || !m_bloomedTex || !m_maxLuminanceInput || !m_avgLuminanceInput )
+   RuntimeDataBuffer& data = host.data();
+
+   Renderer* renderer = data[ m_renderer ];
+   PixelShader* hdrPass = data[ m_hdrPass ];
+   ShaderTexture* baseTex = data[ m_baseTex ];
+   ShaderTexture* bloomedTex = data[ m_bloomedTex ];
+   RenderTarget* hdrTarget = data[ m_hdrTarget ];
+
+   const RPFloatInput* maxLuminanceInput = &getInput< RPFloatInput >( "Luminance max" );
+   const RPFloatInput* avgLuminanceInput = &getInput< RPFloatInput >( "Luminance avg" );
+
+   if ( !baseTex || !bloomedTex || !maxLuminanceInput || !avgLuminanceInput )
    {
       return;
    }
 
-   m_hdrPass->setTexture( "original_scene", *m_baseTex );
-   m_hdrPass->setTexture( "bloom", *m_bloomedTex );
+   hdrPass->setTexture( "original_scene", *baseTex );
+   hdrPass->setTexture( "bloom", *bloomedTex );
 
-   m_hdrPass->setFloat( "maxLuminance", m_maxLuminanceInput->getValue() );
-   m_hdrPass->setFloat( "avgLuminance", m_avgLuminanceInput->getValue() );
+   hdrPass->setFloat( "maxLuminance", maxLuminanceInput->getValue( data ) );
+   hdrPass->setFloat( "avgLuminance", avgLuminanceInput->getValue( data ) );
 
-   m_hdrPass->setFloat( "g_rcp_bloom_tex_w", 1.0f / static_cast< float >( m_bloomedTex->getWidth() ) );
-   m_hdrPass->setFloat( "g_rcp_bloom_tex_h", 1.0f / static_cast< float >( m_bloomedTex->getHeight() ) );
-   m_hdrPass->setFloat( "fExposure", m_exposure );
-   m_hdrPass->setFloat( "fGaussianScalar", m_gaussMultiplier );
+   hdrPass->setFloat( "g_rcp_bloom_tex_w", 1.0f / static_cast< float >( bloomedTex->getWidth() ) );
+   hdrPass->setFloat( "g_rcp_bloom_tex_h", 1.0f / static_cast< float >( bloomedTex->getHeight() ) );
+   hdrPass->setFloat( "fExposure", m_exposure );
+   hdrPass->setFloat( "fGaussianScalar", m_gaussMultiplier );
 
    // render
-   m_renderer->setRenderTarget( m_hdrTarget );
-   m_hdrPass->beginRendering();
-   renderQuad();
-   m_hdrPass->endRendering();
+   renderer->setRenderTarget( hdrTarget );
+   hdrPass->beginRendering();
+   renderQuad( data );
+   hdrPass->endRendering();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
