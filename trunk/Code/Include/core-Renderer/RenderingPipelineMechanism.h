@@ -30,6 +30,19 @@ class RuntimeDataBuffer;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Scenes a rendering pipeline can render ( contains a list of all scenes 
+ * we can possibly register and operate on ).
+ */
+enum RPMSceneId
+{
+   RPS_Main,
+   RPS_Debug,
+   RPS_MaxScenes
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
  * A pass responsible for rendering using a rendering pipeline.
  */
 class RenderingPipelineMechanism : public TRendererObject< RenderingPipelineMechanismImpl >,  
@@ -40,19 +53,38 @@ class RenderingPipelineMechanism : public TRendererObject< RenderingPipelineMech
    DECLARE_RTTI_CLASS
 
 private:
+   /**
+    * A helper structure that binds a rendered scene to the rendering mechanisms.
+    */
+   class RenderedScene
+   {
+   private:
+      AttributeSorter*                             m_statesManager;
+      SpatialView*                                 m_spatialView;
+      RenderingView*                               m_renderingView;
+      Model*                                       m_model;
+
+   public:
+      RenderedScene();
+      ~RenderedScene();
+
+      bool operator==( const Model& model ) const;
+
+      void setModel( Model* model );
+
+      void performVisibilityCheck( CameraContext& cameraContext );
+
+      void render();
+   };
+
+private:
    RenderingPipeline*                           m_pipeline;
 
    Renderer*                                    m_renderer;
-   std::vector< Model* >                        m_scenes;
+   std::vector< RenderedScene* >                m_scenes;
    CameraContext*                               m_cameraContext;
 
    std::vector< RenderingPipelineNode* >        m_nodesQueue;
-
-   // we're using a single camera and a some scenes - but all are defined here - so render them before 
-   // the pipeline
-   AttributeSorter*                             m_statesManager;
-   SpatialView*                                 m_spatialView;
-   RenderingView*                               m_renderingView;
 
    // a buffer for storing runtime data the pipeline will operate on
    RuntimeDataBuffer*                           m_runtimeDataBuffer;
@@ -65,11 +97,6 @@ public:
     */
    RenderingPipelineMechanism( RenderingPipeline* pipeline = NULL );
    ~RenderingPipelineMechanism();
-
-   /**
-    * Returns instance of the states manager this pass uses.
-    */
-   inline AttributeSorter& getStatesMgr() { return *m_statesManager; }
 
    /**
     * Returns the currently used renderer instance.
@@ -89,19 +116,21 @@ public:
     *
     * @param scene
     */
-   void addScene( Model& scene );
+   void addScene( RPMSceneId sceneId, Model& scene );
 
    /**
-    * Removes a scene from rendering.
+    * Removes the specified scene from rendering.
     *
     * @param scene
     */
    void removeScene( Model& scene );
 
    /**
-    * Returns an array of scenes the pass is set up with.
+    * Removes a scene registered under the specified sceneId from rendering.
+    *
+    * @param sceneId
     */
-   inline const std::vector< Model* >& getScenes() const { return m_scenes; }
+   void removeScene( RPMSceneId sceneId );
 
    /**
     * Sets a new active camera.
@@ -126,6 +155,14 @@ public:
     * @param id         render target id
     */
    RenderTarget& getRenderTarget( const std::string& id ) const;
+
+   /**
+    * Renders a scene with the specified id on the specified render target
+    *
+    * @param sceneId
+    * @param renderTarget
+    */
+   void renderScene( RPMSceneId sceneId, RenderTarget* renderTarget ) const;
 
    // -------------------------------------------------------------------------
    // RenderingMechanism implementation

@@ -44,6 +44,9 @@ TEST( RuntimeData, pointers )
    buffer1.registerVar( val );
    buffer2.registerVar( val );
 
+   CPPUNIT_ASSERT_EQUAL( ( MockObj* )NULL, buffer1[val] );
+   CPPUNIT_ASSERT_EQUAL( ( MockObj* )NULL, buffer2[val] );
+
    buffer1[val] = new MockObj( 2 );
    buffer2[val] = new MockObj( 4 );
 
@@ -79,7 +82,7 @@ TEST( RuntimeData, immutableTypes )
    RuntimeDataBuffer buffer;
 
    TRuntimeVar< std::string > val;
-   buffer.registerVar( val );
+   buffer.registerVar( val, std::string( "" ) );
 
    buffer[val] = "dupa";
    CPPUNIT_ASSERT_EQUAL( std::string( "dupa" ), buffer[val] );

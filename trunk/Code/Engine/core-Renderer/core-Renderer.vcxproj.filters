@@ -286,6 +286,9 @@
       <Filter>Materials\Resources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
+    <ClCompile Include="RPAdapterNode.cpp">
+      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -575,6 +578,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h">
       <Filter>Materials\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h">
+      <Filter>RenderingPipeline\Nodes\Misc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -32,7 +32,7 @@ unsigned int TRuntimeVar< T >::getTypeSize() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void RuntimeDataBuffer::registerVar( const typename TRuntimeVar< T >& var )
+void RuntimeDataBuffer::registerVar( const typename TRuntimeVar< T >& var, const T& defaultVal )
 {
    unsigned int size = var.getTypeSize();
    unsigned long newSize = m_size + size;
@@ -56,8 +56,7 @@ void RuntimeDataBuffer::registerVar( const typename TRuntimeVar< T >& var )
    m_varsLayout.insert( std::make_pair( varId, m_size ) );
 
    // initialize the memory 
-   T defaultInstance;
-   memcpy( m_buffer + m_size, &defaultInstance, sizeof( T ) );
+   memcpy( m_buffer + m_size, &defaultVal, size );
 
    // store the new size of the data held in the buffer
    m_size = newSize;

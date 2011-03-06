@@ -63,25 +63,30 @@ private:
 
 public:
    RuntimeDataBuffer();
-
    ~RuntimeDataBuffer();
 
+   /**
+    * Registers a new runtime variable.
+    *
+    * @param var           variable to register
+    * @param defaultVal    variable's default value
+    */
    template< typename T >
-   void registerVar( const typename TRuntimeVar< T >& var );
+   void registerVar( const typename TRuntimeVar< T >& var, const T& defaultVal = T(0) );
 
    /**
-      * An access operator.
-      *
-      * @param var     variable data of which we want to access
-      */
+    * An access operator.
+    *
+    * @param var     variable data of which we want to access
+    */
    template< typename T >
    T& operator[]( const typename TRuntimeVar< T >& var );
 
    /**
-      * An access operator ( const version ).
-      *
-      * @param var     variable data of which we want to access
-      */
+    * An access operator ( const version ).
+    *
+    * @param var     variable data of which we want to access
+    */
    template< typename T >
    const T& operator[]( const typename TRuntimeVar< T >& var ) const;
 };

@@ -43,6 +43,7 @@ REGISTER_RTTI( RPBrightnessNode );
 REGISTER_RTTI( RPDownsampleNode );
 REGISTER_RTTI( RPHDRNode );
 REGISTER_RTTI( RPLuminanceNode );
+REGISTER_RTTI( RPAdapterNode );
 REGISTER_RTTI( RPNodeSocket );
 REGISTER_RTTI( RPNodeInput );
 REGISTER_RTTI( RPNodeOutput );
@@ -54,6 +55,7 @@ REGISTER_RTTI( RPVoidInput );
 REGISTER_RTTI( RPVoidOutput );
 REGISTER_RTTI( RenderTargetDescriptor );
 REGISTER_ENUM_RTTI( BlurOptions );
+REGISTER_ENUM_RTTI( RPMSceneId );
 
 ///////////////////////////////////////////////////////////////////////////////
 

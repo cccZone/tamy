@@ -267,6 +267,9 @@
     <ClInclude Include="RPSVoid.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
     </ClInclude>
+    <ClInclude Include="RPBAdapter.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -584,6 +587,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_EnumPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBAdapter.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

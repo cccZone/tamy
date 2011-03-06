@@ -103,6 +103,7 @@
 #include "core-Renderer/RPDownsampleNode.h"
 #include "core-Renderer/RPHDRNode.h"
 #include "core-Renderer/RPLuminanceNode.h"
+#include "core-Renderer/RPAdapterNode.h"
 // ----------------------------------------------------------------------------
 // -->Sockets
 // ----------------------------------------------------------------------------

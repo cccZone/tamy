@@ -9,24 +9,23 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DebugRenderer::DebugRenderer( ResourcesManager& resMgr, Camera& camera )
-: m_renderer( NULL )
+DebugRenderer::DebugRenderer( Renderer& renderer, ResourcesManager& resMgr, Camera& camera )
+: m_renderer( renderer )
 , m_resMgr( resMgr )
 , m_camera( camera )
 , m_localModel( new Model() )
-, m_renderingPass( NULL )
 {
    // add a camera to the scene
    m_localModel->addComponent( new ModelComponent< Camera >( m_camera ) );
+
+   // create a reference grid
+   m_localModel->add( new GridRenderingEffect( createGrid(), m_resMgr, m_camera ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 DebugRenderer::~DebugRenderer()
 {
-   delete m_renderingPass;
-   m_renderingPass = NULL;
-
    delete m_localModel;
    m_localModel = NULL;
 
@@ -38,7 +37,6 @@ DebugRenderer::~DebugRenderer()
 
 DebugHandle DebugRenderer::drawMesh( Geometry* geometry )
 {
-   // TODO: create a renderable with this geometry and add it using 'drawEntity' method
    return 0;
 }
 
@@ -86,25 +84,10 @@ void DebugRenderer::stopDrawing( DebugHandle handle )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DebugRenderer::initialize( Renderer& renderer )
-{
-   m_renderer = &renderer;
-
-   // create a reference grid
-   m_localModel->add( new GridRenderingEffect( createGrid( m_renderer ), m_resMgr, m_camera ) );
-
-   delete m_renderingPass;
-   m_renderingPass = new SceneRenderingPass();
-   m_renderingPass->addScene( *m_localModel );
-   m_renderingPass->initialize( renderer );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-LineSegments* DebugRenderer::createGrid( Renderer* renderer ) const
+LineSegments* DebugRenderer::createGrid() const
 {
    LineSegments* gridLines = new LineSegments();
-   renderer->implement< LineSegments >( *gridLines );
+   m_renderer.implement< LineSegments >( *gridLines );
 
    float dim = 100.0f;
    float varPos;
@@ -117,17 +100,6 @@ LineSegments* DebugRenderer::createGrid( Renderer* renderer ) const
    gridLines->rebuild();
 
    return gridLines;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DebugRenderer::render()
-{
-   if ( m_renderer && m_renderingPass )
-   {
-      m_renderer->setRenderTarget( NULL );
-      m_renderingPass->render();
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

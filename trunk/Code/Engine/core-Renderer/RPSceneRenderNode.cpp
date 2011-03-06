@@ -11,11 +11,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RPSceneRenderNode, RenderingPipelineNode )
+   PROPERTY_EDIT( "Rendered scene id", RPMSceneId, m_renderedSceneId );
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPSceneRenderNode::RPSceneRenderNode()
+: m_renderedSceneId( RPS_Main )
 {
    defineInput( new RPVoidInput( "Input" ) );
    defineOutput( new RPTextureOutput( "Output" ) );
@@ -46,11 +48,8 @@ void RPSceneRenderNode::onDeinitialize( RenderingPipelineMechanism& host ) const
 
 void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-   Renderer& renderer = host.getRenderer();
    RenderTarget* trg = host.data()[ m_renderTarget ];
-   renderer.setRenderTarget( trg );
-
-   host.getStatesMgr().render();
+   host.renderScene( m_renderedSceneId, trg );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
