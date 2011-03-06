@@ -99,6 +99,7 @@
     <ClCompile Include="FloatSockets.cpp" />
     <ClCompile Include="RPHDRNode.cpp" />
     <ClCompile Include="RPLuminanceNode.cpp" />
+    <ClCompile Include="RPAdapterNode.cpp" />
     <ClCompile Include="RPPostProcessNode.cpp" />
     <ClCompile Include="RPSceneRenderNode.cpp" />
     <ClCompile Include="RPStartNode.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPDownsampleNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPHDRNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPLuminanceNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h" />

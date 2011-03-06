@@ -110,7 +110,7 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
 
 
    // create a debug renderer
-   m_debugRenderer = new DebugRenderer( *m_resMgr, *m_camera );
+   m_debugRenderer = new DebugRenderer( *m_renderer, *m_resMgr, *m_camera );
 
    // register new services
    mgr.registerService< Renderer >( *this, *m_renderer );
@@ -124,9 +124,6 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
    m_resMgr->addComponent( m_rendererComponent );
 
    createRenderer( mgr );
-   
-   // add the debug info renderer
-   m_renderingMech->add( "debugRenderer", m_debugRenderer );
 
    setupTimeController( mgr );
 }
@@ -182,7 +179,13 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
       }
    }
    
+   // setup the debug scene
+   if ( sceneRenderer )
+   {
+      sceneRenderer->addScene( RPS_Debug, m_debugRenderer->getModel() );
+   }
 
+   // setup the main scene
    if ( mgr.hasService< Model >() )
    {
       // new scene requires a camera component - some entities are using it
@@ -191,7 +194,7 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
 
       if ( sceneRenderer )
       {
-         sceneRenderer->addScene( *m_scene );
+         sceneRenderer->addScene( RPS_Main, *m_scene );
       }
    }
    else

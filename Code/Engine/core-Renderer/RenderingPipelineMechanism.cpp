@@ -12,6 +12,7 @@
 #include "core/Graph.h"
 #include "core/GraphAlgorithms.h"
 #include "core/RuntimeData.h"
+#include "core/Enum.h"
 #include <algorithm>
 
 
@@ -22,26 +23,30 @@ END_RTTI
 
 ///////////////////////////////////////////////////////////////////////////////
 
+BEGIN_ENUM( RPMSceneId );
+   ENUM_VAL( RPS_Main );
+   ENUM_VAL( RPS_Debug );
+END_ENUM( RPMSceneId );
+
+///////////////////////////////////////////////////////////////////////////////
+
 RenderingPipelineMechanism::RenderingPipelineMechanism( RenderingPipeline* pipeline )
    : m_pipeline( pipeline )
    , m_cameraContext( NULL )
-   , m_spatialView( NULL )
-   , m_renderingView( NULL )
-   , m_statesManager( new DefaultAttributeSorter() )
    , m_renderer( NULL )
    , m_runtimeDataBuffer( NULL )
 {
-   // create the model views
-   AABoundingBox sceneBB(D3DXVECTOR3( -10000, -10000, -10000 ), D3DXVECTOR3( 10000, 10000, 10000 ) );
-   m_spatialView = new SpatialView( sceneBB );
-
-   m_renderingView = new RenderingView();
-   m_renderingView->setAttributeSorter( *m_statesManager );
-
    // attach self as the observer
    if ( m_pipeline )
    {
       m_pipeline->attachObserver( *this );
+   }
+
+   // initialize the scenes vector
+   m_scenes.resize( RPS_MaxScenes );
+   for ( int i = 0; i < RPS_MaxScenes; ++i )
+   {
+      m_scenes[i] = new RenderedScene();
    }
 }
 
@@ -55,6 +60,12 @@ RenderingPipelineMechanism::~RenderingPipelineMechanism()
       m_pipeline->detachObserver( *this );
    }
 
+   for ( int i = 0; i < RPS_MaxScenes; ++i )
+   {
+      delete m_scenes[i];
+   }
+   m_scenes.clear();
+
    m_renderer = NULL;
 
    deinitialize();
@@ -62,46 +73,56 @@ RenderingPipelineMechanism::~RenderingPipelineMechanism()
    delete m_cameraContext;
    m_cameraContext = NULL;
 
-   delete m_statesManager;
-   m_statesManager = NULL;
-
-   delete m_spatialView;
-   m_spatialView = NULL;
-
-   delete m_renderingView;
-   m_renderingView = NULL;
-
    delete m_runtimeDataBuffer;
    m_runtimeDataBuffer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineMechanism::addScene( Model& scene )
+void RenderingPipelineMechanism::addScene( RPMSceneId sceneId, Model& scene )
 {
-   // check if the scene is there, and if it is - don't add it twice
-   std::vector< Model* >::const_iterator it = std::find( m_scenes.begin(), m_scenes.end(), &scene );
-   if ( it == m_scenes.end() )
+   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to add a scene with an invalid sceneId" );
+   if ( ( unsigned int )sceneId < RPS_MaxScenes )
    {
-      m_scenes.push_back( &scene );
-   }
+      // make sure we're not trying to set the same scene for two different ids by removing it
+      removeScene( scene );
 
-   // notify the pipeline that the runtime params have changed
-   scene.attach( *m_spatialView );
-   scene.attach( *m_renderingView );
+      // detach the listeners from the old scene
+      removeScene( sceneId );
+
+      // set the new scene
+      m_scenes[sceneId]->setModel( &scene );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::removeScene( RPMSceneId sceneId )
+{
+   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to add a scene with an invalid sceneId" );
+   if ( ( unsigned int )sceneId < RPS_MaxScenes )
+   {
+      m_scenes[sceneId]->setModel( NULL );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void RenderingPipelineMechanism::removeScene( Model& scene )
 {
-   scene.detach( *m_spatialView );
-   scene.detach( *m_renderingView );
+   bool foundMatch = false;
 
-   std::vector< Model* >::const_iterator it = std::find( m_scenes.begin(), m_scenes.end(), &scene );
-   if ( it != m_scenes.end() )
+   for( std::vector< RenderedScene* >::iterator it = m_scenes.begin(); it != m_scenes.end(); ++it )
    {
-      m_scenes.erase( it );
+      if ( **it == scene )
+      {
+         // verify that the scene's not registered twice - that would prove the addition mechanism
+         // that tries to remove the duplicates before registering the scene fails
+         ASSERT_MSG( foundMatch == false, "Check the addition mechanism - it allowed for a scene to be registered under two distinct ids" );
+
+         foundMatch = true;
+         (*it)->setModel( NULL );
+      }
    }
 }
 
@@ -205,8 +226,11 @@ void RenderingPipelineMechanism::render()
       return;
    }
 
-   // run through the scene visibility
-   m_spatialView->update( *m_cameraContext );
+   // check the visibility of the scenes
+   for( unsigned int i = 0; i < RPS_MaxScenes; ++i )
+   {
+      m_scenes[i]->performVisibilityCheck( *m_cameraContext );
+   }
 
    // render the pipeline
    impl().passBegin();
@@ -282,5 +306,95 @@ void RenderingPipelineMechanism::cacheNodes()
    }
 }
 
+void RenderingPipelineMechanism::renderScene( RPMSceneId sceneId, RenderTarget* renderTarget ) const
+{
+   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to add a scene with an invalid sceneId" );
+   if ( ( unsigned int )sceneId < RPS_MaxScenes )
+   {
+      m_renderer->setRenderTarget( renderTarget );
+      m_scenes[ sceneId ]->render();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
+RenderingPipelineMechanism::RenderedScene::RenderedScene()
+   :  m_spatialView( NULL )
+   , m_renderingView( NULL )
+   , m_statesManager( new DefaultAttributeSorter() )
+   , m_model( NULL )
+{
+   // create the model views
+   AABoundingBox sceneBB(D3DXVECTOR3( -10000, -10000, -10000 ), D3DXVECTOR3( 10000, 10000, 10000 ) );
+   m_spatialView = new SpatialView( sceneBB );
+
+   m_renderingView = new RenderingView();
+   m_renderingView->setAttributeSorter( *m_statesManager );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+RenderingPipelineMechanism::RenderedScene::~RenderedScene()
+{
+   delete m_statesManager;
+   m_statesManager = NULL;
+
+   delete m_spatialView;
+   m_spatialView = NULL;
+
+   delete m_renderingView;
+   m_renderingView = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool RenderingPipelineMechanism::RenderedScene::operator==( const Model& model ) const
+{
+   return m_model == &model;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::RenderedScene::setModel( Model* model )
+{
+   if ( m_model )
+   {
+      // detach the old model from the views
+      m_model->detach( *m_spatialView );
+      m_model->detach( *m_renderingView );
+   }
+
+   // set the new model
+   m_model = model;
+
+   if ( m_model )
+   {
+      // detach the old model from the views
+      m_model->attach( *m_spatialView );
+      m_model->attach( *m_renderingView );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::RenderedScene::performVisibilityCheck( CameraContext& cameraContext )
+{
+   if ( m_model )
+   {
+      m_spatialView->update( cameraContext );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::RenderedScene::render()
+{
+   if ( m_model )
+   {
+      m_statesManager->render();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

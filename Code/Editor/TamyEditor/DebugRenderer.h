@@ -25,22 +25,20 @@ typedef unsigned int DebugHandle;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class DebugRenderer : public RenderingMechanism
+class DebugRenderer
 {
 private:
-   Renderer*                        m_renderer;
+   Renderer&                        m_renderer;
    ResourcesManager&                m_resMgr;
    Camera&                          m_camera;
    Model*                           m_localModel;
-
-   SceneRenderingPass*              m_renderingPass;
 
    // entities
    std::vector< SpatialEntity* >    m_entities;
    std::vector< DebugHandle >       m_freeHandles;
 
 public:
-   DebugRenderer( ResourcesManager& resMgr, Camera& camera );
+   DebugRenderer( Renderer& renderer, ResourcesManager& resMgr, Camera& camera );
    ~DebugRenderer();
 
    /**
@@ -63,14 +61,9 @@ public:
     */
    void stopDrawing( DebugHandle handle );
 
-   // -------------------------------------------------------------------------
-   // RenderingMEchanism implementation
-   // -------------------------------------------------------------------------
-   void initialize( Renderer& renderer );
-   void render();
 
 private:
-   LineSegments* createGrid( Renderer* renderer ) const;
+   LineSegments* createGrid() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

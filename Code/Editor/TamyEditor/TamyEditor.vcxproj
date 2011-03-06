@@ -258,6 +258,7 @@
     </CustomBuild>
     <ClInclude Include="RenderingPipelineSocketRepresentation.h" />
     <ClInclude Include="RenderTargetMimeData.h" />
+    <ClInclude Include="RPBAdapter.h" />
     <ClInclude Include="RPBPostProcess.h" />
     <ClInclude Include="RPBSceneRender.h" />
     <ClInclude Include="RPBStart.h" />
@@ -618,6 +619,7 @@
     <ClCompile Include="RenderingPipelineSocketRepresentation.cpp" />
     <ClCompile Include="RenderTargetDescriptorDialog.cpp" />
     <ClCompile Include="RenderTargetMimeData.cpp" />
+    <ClCompile Include="RPBAdapter.cpp" />
     <ClCompile Include="RPBPostProcess.cpp" />
     <ClCompile Include="RPBSceneRender.cpp" />
     <ClCompile Include="RPBStart.cpp" />

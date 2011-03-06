@@ -2,6 +2,7 @@
 /// @brief  a rendering pipeline node responsible for rendering a scene
 #pragma once
 
+#include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core/RuntimeData.h"
 
@@ -20,6 +21,8 @@ class RPSceneRenderNode : public RenderingPipelineNode
    DECLARE_CLASS( RPSceneRenderNode )
 
 private:
+   RPMSceneId                          m_renderedSceneId;
+
    TRuntimeVar< RenderTarget* >        m_renderTarget;
 
 public:
