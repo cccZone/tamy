@@ -180,6 +180,7 @@ private:
    QFont                                     m_font;
    QRectF                                    m_bounds;
    QRectF                                    m_nameBounds;
+   QRectF                                    m_totalBounds;
    QPointF                                   m_position;
 
 public:
@@ -256,7 +257,7 @@ public:
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
-   QRectF boundingRect() const { return m_bounds; }
+   QRectF boundingRect() const { return m_totalBounds; }
    void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget );
 
 protected:
