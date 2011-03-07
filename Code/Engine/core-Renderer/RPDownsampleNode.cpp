@@ -53,8 +53,9 @@ void RPDownsampleNode::onInitialize( RenderingPipelineMechanism& host ) const
 
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   data[ m_downsamplePass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/Postprocess_DownSample4x4.psh" );
-   data[ m_downsamplePass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Postprocess.psh", "DownSample4x4" );
+   data[ m_downsamplePass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Postprocess_DownSample4x4.psh" );
+   data[ m_downsamplePass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Postprocess.psh", "DownSample4x4" );
+   data[ m_downsamplePass ]->getParams().m_writeToZBuffer = false;
 
    data[ m_renderer ] = &host.getRenderer();
    data[ m_renderer ]->implement< PixelShader >( *data[ m_downsamplePass ] );

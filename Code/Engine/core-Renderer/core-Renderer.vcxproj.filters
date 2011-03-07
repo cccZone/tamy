@@ -82,12 +82,6 @@
     <Filter Include="Effects\Resources">
       <UniqueIdentifier>{9885c467-2a83-46d5-b474-1a1573c3059d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renderers">
-      <UniqueIdentifier>{9b46f48d-dd62-4541-a1d5-88ec2aa760a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Renderers\HDR">
-      <UniqueIdentifier>{a844b996-76fd-4f98-9e06-85837df10072}</UniqueIdentifier>
-    </Filter>
     <Filter Include="RenderingPipeline">
       <UniqueIdentifier>{c91f1825-625c-42f0-8469-826c27be0b92}</UniqueIdentifier>
     </Filter>
@@ -105,6 +99,9 @@
     </Filter>
     <Filter Include="RenderingPipeline\Sockets">
       <UniqueIdentifier>{a13cfdb3-3552-48ee-a50d-dc079e4927c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderingPipeline\Shaders">
+      <UniqueIdentifier>{64bd2a52-fe15-4cca-b215-619c922b8876}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -219,9 +216,6 @@
     <ClCompile Include="EffectShader.cpp">
       <Filter>Effects\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="HDRPipeline.cpp">
-      <Filter>Renderers\HDR</Filter>
-    </ClCompile>
     <ClCompile Include="FullscreenQuad.cpp">
       <Filter>Geometry\Entities</Filter>
     </ClCompile>
@@ -324,17 +318,17 @@
     <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
       <Filter>Materials\Shaders</Filter>
     </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\Postprocess.psh">
-      <Filter>Renderers\HDR</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\Luminance.psh">
-      <Filter>Renderers\HDR</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\HDRPipeline\FinalPass.psh">
-      <Filter>Renderers\HDR</Filter>
-    </None>
     <None Include="..\..\Include\core-Renderer\RenderingPipelineNode.inl">
       <Filter>RenderingPipeline</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
+      <Filter>RenderingPipeline\Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Luminance.psh">
+      <Filter>RenderingPipeline\Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh">
+      <Filter>RenderingPipeline\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -512,9 +506,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h">
       <Filter>Geometry\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\HDRPipeline.h">
-      <Filter>Renderers\HDR</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h">
       <Filter>Geometry\Entities</Filter>
