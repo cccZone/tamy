@@ -67,7 +67,7 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
    // draw the header
    {
       painter->setPen( pen );
-      painter->setBrush( fillColor.darker( 200 ) );
+      painter->setBrush( fillColor );
 
       switch( shape )
       {
@@ -79,7 +79,15 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
 
       case GBS_CIRCLE:
          {
-            painter->drawArc( m_captionBounds, 0.0f, 16.0f * 180.0f );
+            QPainterPath path;
+            int halfHeight = ( m_captionBounds.bottom() + m_captionBounds.top() ) * 0.5;
+            path.moveTo( m_captionBounds.right(), m_captionBounds.bottom() );
+            path.lineTo( m_captionBounds.right(), halfHeight );
+            path.arcTo( m_captionBounds, 0.0f, 180.0f );
+            path.lineTo( m_captionBounds.left(), m_captionBounds.bottom() );
+
+            painter->drawPath( path );
+
             break;
          }
 
@@ -96,7 +104,7 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
    // draw the block's layout
    {
       painter->setPen( pen );
-      painter->setBrush( fillColor );
+      painter->setBrush( QColor( 150, 150, 150 ) );
       painter->drawRect( m_bounds );
    }
 }
@@ -260,9 +268,10 @@ void GraphBlock::calculateBounds()
             break;
          }
       }
-
-      m_totalBounds = m_totalBounds.united( socket->boundingRect() );
    }
+
+   // include the size of the sockets in the block's bounding box
+   m_totalBounds = QRectF( m_totalBounds.left() - 11, m_totalBounds.top(), m_totalBounds.right() + 21, m_totalBounds.bottom() ); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -405,6 +414,8 @@ void GraphBlockSocket::calculateBounds()
          break;
       }
    }
+
+   m_totalBounds = m_bounds.united( m_nameBounds );
 
    // recalculate bounds of the parent
    if ( m_parent )

@@ -182,6 +182,7 @@ void GraphLayout::restoreState()
    for ( std::vector< GraphBlockConnection* >::iterator it = m_connections.begin(); it != m_connections.end(); ++it )
    {
       addItem( *it );
+      (*it)->calculateBounds();
    }
 }
 
