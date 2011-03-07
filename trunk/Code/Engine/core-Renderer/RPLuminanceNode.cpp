@@ -56,11 +56,11 @@ void RPLuminanceNode::onInitialize( RenderingPipelineMechanism& host ) const
 
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   data[ m_greyscalePass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/Luminance_GreyScaleDownSample.psh" );
-   data[ m_greyscalePass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Luminance.psh", "GreyScaleDownSample" );
+   data[ m_greyscalePass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Luminance_GreyScaleDownSample.psh" );
+   data[ m_greyscalePass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Luminance.psh", "GreyScaleDownSample" );
 
-   data[ m_downSamplePass ] = new PixelShader( "Renderer/Shaders/HDRPipeline/Luminance_DownSample3x3.psh" );
-   data[ m_downSamplePass ]->loadFromFile( fs, "Renderer/Shaders/HDRPipeline/Luminance.psh", "DownSample3x3" );
+   data[ m_downSamplePass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Luminance_DownSample3x3.psh" );
+   data[ m_downSamplePass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Luminance.psh", "DownSample3x3" );
 
    Renderer* renderer = &host.getRenderer();
    data[ m_renderer ] = renderer;
