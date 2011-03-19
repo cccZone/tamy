@@ -41,12 +41,38 @@ public:
    TimeController();
    ~TimeController();
 
-   void add(const std::string& trackID);
-   TimeControllerTrack& get(const std::string& trackID);
-   void remove(const std::string& trackID);
+   /**
+    * Adds a new track.
+    *
+    * @param trackID
+    */
+   void add( const std::string& trackID );
 
-   void update(float timeElapsed);
+   /**
+    * Returns a track with the specified ID.
+    *
+    * @param trackID
+    */
+   TimeControllerTrack& get( const std::string& trackID );
 
+   /**
+    * Removes a track with the specified ID
+    *
+    * @param trackID
+    */
+   void remove( const std::string& trackID );
+
+   /**
+    * Updates all registered tracks.
+    *
+    * @param timeElapsed
+    */
+   void update( float timeElapsed );
+
+   /**
+    * Resets all tracks by resetting their speeds and removing all
+    * attached objects and events.
+    */
    void resetAll();
 };
 

@@ -85,6 +85,13 @@ public:
    void remove(Entity& entity, bool release = true);
 
    /**
+    * The method responsible for updating the state of the entity and of its children.
+    *
+    * @param timeElapsed      time elapsed since the last frame
+    */
+   void update( float timeElapsed );
+
+   /**
     * Tells whether this entity is attached to another entity (thus has a parent)
     */
    inline bool isAttached() const;
@@ -182,6 +189,13 @@ protected:
     * @param component
     */
    virtual void onComponentAdded( Component< Model >& component ) {}
+
+   /**
+    * Called when entity's state is being updated.
+    *
+    * @param timeElapsed      time elapsed since the last frame
+    */
+   virtual void onUpdate( float timeElapsed ) {}
 
    friend class Model;
 };

@@ -38,6 +38,13 @@ private:
 public:
    virtual ~ComponentsManager();
 
+    /**
+    * Updates the state of the components.
+    *
+    * @param timeElapsed      time elapsed since the last frame
+    */
+   virtual void update( float timeElapsed );
+
    // -------------------------------------------------------------------------
    // Components management
    // -------------------------------------------------------------------------

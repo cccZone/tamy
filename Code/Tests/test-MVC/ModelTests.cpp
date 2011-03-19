@@ -54,6 +54,21 @@ namespace // anonymous
 
    // -------------------------------------------------------------------------
 
+   class UpdatedEntityMock : public Entity
+   {
+   private:
+      float m_value;
+
+   public:
+      UpdatedEntityMock() : m_value( 0.f ) {}
+
+      void onUpdate( float timeElapsed ) { m_value = timeElapsed; }
+
+      float getValue() const { return m_value; }
+   };
+
+   // -------------------------------------------------------------------------
+
    class MockComponentA : public Component<Model>
    {
    public:
@@ -331,6 +346,32 @@ TEST(Entity, entitiesReflection)
    CPPUNIT_ASSERT(NULL != solidTypeEntity);
 
    delete entity;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST( Model, stateUpdate )
+{
+   Model model;
+
+   UpdatedEntityMock* parentEntity = new UpdatedEntityMock();
+   UpdatedEntityMock* child1Entity = new UpdatedEntityMock();
+   UpdatedEntityMock* child2Entity = new UpdatedEntityMock();
+   model.add( parentEntity );
+   parentEntity->add( child1Entity );
+   parentEntity->add( child2Entity );
+
+   // the entities are gonna memorize the last tileElapsed value - so we can check that
+
+   model.update( 1.f );
+   CPPUNIT_ASSERT_EQUAL( 1.f, parentEntity->getValue() );
+   CPPUNIT_ASSERT_EQUAL( 1.f, child1Entity->getValue() );
+   CPPUNIT_ASSERT_EQUAL( 1.f, child2Entity->getValue() );
+  
+   model.update( 5.f );
+   CPPUNIT_ASSERT_EQUAL( 5.f, parentEntity->getValue() );
+   CPPUNIT_ASSERT_EQUAL( 5.f, child1Entity->getValue() );
+   CPPUNIT_ASSERT_EQUAL( 5.f, child2Entity->getValue() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -27,6 +27,11 @@ private:
 
    TamyEditor*          m_mgr;
 
+   // editor related stuff
+   QIcon                m_runSceneIcon;
+   QIcon                m_stopSceneIcon;
+   QAction*             m_actionRun;
+
 public:
    /**
     * Contructor.
@@ -61,11 +66,22 @@ public slots:
    void newScene();
    void loadScene();
    void saveScene();
+   void toggleSceneExecution();
    void importFromIWF();
    void importFromBlender();
 
 private:
    void initUI( TamyEditor& mgr );
+
+   /**
+    * Runs a scene.
+    */
+   bool runScene();
+
+   /**
+    * Stops a running scene.
+    */
+   void stopScene();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

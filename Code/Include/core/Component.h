@@ -45,6 +45,13 @@ public:
     */
    virtual void onServiceRegistered( Manager& mgr ) {}
 
+   /**
+    * Updates the state of the component.
+    *
+    * @param timeElapsed      time elapsed since the last frame
+    */
+   virtual void update( float timeElapsed ) {}
+
    // -------------------------------------------------------------------------
    // Services management
    // -------------------------------------------------------------------------

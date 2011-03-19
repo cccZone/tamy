@@ -35,6 +35,18 @@ ComponentsManager< Derived >::~ComponentsManager()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Derived >
+void ComponentsManager< Derived >::update( float timeElapsed )
+{
+   unsigned int count = m_comps.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      m_comps[i]->update( timeElapsed );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Derived >
 void ComponentsManager< Derived >::addComponent( Component< Derived >* component )
 {
    try

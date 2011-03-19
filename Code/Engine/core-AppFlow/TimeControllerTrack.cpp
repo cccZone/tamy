@@ -20,18 +20,7 @@ TimeControllerTrack::TimeControllerTrack(const std::string& id)
 
 TimeControllerTrack::~TimeControllerTrack()
 {
-   unsigned int count = m_objects.size();
-   for (unsigned int i = 0; i < count; ++i)
-   {
-      delete m_objects[i];
-   }
-
-   for (std::vector<Event*>::iterator it = m_events.begin();
-        it != m_events.end(); ++it)
-   {
-      delete *it;
-   }
-   m_events.clear();
+   reset();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -160,10 +149,17 @@ void TimeControllerTrack::reset()
 {
    m_speed = 1;
 
-   for (std::vector<Event*>::iterator it = m_events.begin();
-        it != m_events.end(); ++it)
+   unsigned int count = m_objects.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      delete *it;
+      delete m_objects[i];
+   }
+   m_objects.clear();
+
+   count = m_events.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      delete m_events[i];
    }
    m_events.clear();
 }
