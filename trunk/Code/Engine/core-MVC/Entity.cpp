@@ -96,6 +96,20 @@ void Entity::remove(Entity& entity, bool release)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Entity::update( float timeElapsed )
+{
+   // update the state of the entity
+   onUpdate( timeElapsed );
+
+   // pass the request down the tree
+   for ( Children::iterator it = m_children.begin(); it != m_children.end(); ++it )
+   {
+      (*it)->update( timeElapsed );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Entity::onAttachToModel(Model& model)
 {
    if (m_hostModel != NULL)

@@ -24,6 +24,9 @@ MainAppComponent::MainAppComponent( QApplication& app, const char* fsRoot )
    Filesystem* fs = new Filesystem( fsRoot );
    fs->setShortcut( "editorIcons", "/Editor/Icons/" );
    m_resourceMgr->setFilesystem( fs );
+
+   // configure the scene execution track
+   m_timeController->add( "scene" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,8 +51,66 @@ void MainAppComponent::setScene( Model& scene )
 {
    if ( m_mgr )
    {
+      // stop any scene that may be running
+      stopScene();
+
       m_mgr->registerService< Model >( *this, scene );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MainAppComponent::toggleSceneExecution()
+{
+   TimeControllerTrack& sceneTrack = m_timeController->get( "scene" );
+   if ( sceneTrack.getItemsCount() > 0 )
+   {
+      // the scene is running
+      stopScene();
+   }
+   else
+   {
+      runScene();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MainAppComponent::stopScene()
+{
+   TimeControllerTrack& sceneTrack = m_timeController->get( "scene" );
+   sceneTrack.reset();
+
+   // update the UI
+   m_actionRun->setIcon( m_runSceneIcon );
+   m_actionRun->setText( "Run" );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool MainAppComponent::runScene()
+{
+   if ( !m_mgr )
+   {
+      return false;
+   }
+
+   if ( m_mgr->hasService< Model >() == false )
+   {
+      return false;
+   }
+  
+   TimeControllerTrack& sceneTrack = m_timeController->get( "scene" );
+   sceneTrack.reset();
+
+   Model& scene = m_mgr->requestService< Model >();
+   sceneTrack.add( new TTimeDependent< Model >( scene ) );
+
+   // update the UI
+   m_actionRun->setIcon( m_stopSceneIcon );
+   m_actionRun->setText( "Stop" );
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -76,49 +137,64 @@ void MainAppComponent::initUI( TamyEditor& mgr )
    QMenu& fileMenu = mgr.getFileMenu();
    QToolBar& toolBar = mgr.getToolBar();
 
-   // setup menu entries
-   QAction* actionNewScene = new QAction( QIcon( iconsDir + tr( "/world.png" ) ), tr( "New Scene" ), &mgr );
-   fileMenu.addAction( actionNewScene );
-   toolBar.addAction( actionNewScene );
-   connect( actionNewScene, SIGNAL( triggered() ), this, SLOT( newScene() ) );
-
-   QAction* actionLoadScene = new QAction( QIcon( iconsDir + tr( "/openFile.png" ) ), tr( "Load Scene" ), &mgr );
-   fileMenu.addAction( actionLoadScene );
-   toolBar.addAction( actionLoadScene );
-   connect( actionLoadScene, SIGNAL( triggered() ), this, SLOT( loadScene() ) );
-
-   QAction* actionSaveScene = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save Scene" ), &mgr );
-   fileMenu.addAction( actionSaveScene );
-   toolBar.addAction( actionSaveScene );
-   connect( actionSaveScene, SIGNAL( triggered() ), this, SLOT( saveScene() ) );
-
-   toolBar.addSeparator();
-
-   QAction* separator1 = new QAction( &fileMenu );
-   separator1->setSeparator( true );
-   fileMenu.addAction( separator1 );
-
-   // submenu Import
+   // setup file menu entries
    {
-      QMenu* importSubMenu = new QMenu( tr( "Import" ), &fileMenu );
-      fileMenu.addMenu( importSubMenu );
+      QAction* actionNewScene = new QAction( QIcon( iconsDir + tr( "/world.png" ) ), tr( "New Scene" ), &mgr );
+      fileMenu.addAction( actionNewScene );
+      toolBar.addAction( actionNewScene );
+      connect( actionNewScene, SIGNAL( triggered() ), this, SLOT( newScene() ) );
 
-      QAction* actionImportFromBlender = new QAction( QIcon( iconsDir + tr( "/importFromBlender.png" ) ), tr( "From Blender" ), &mgr );
-      importSubMenu->addAction( actionImportFromBlender );
-      connect( actionImportFromBlender, SIGNAL( triggered() ), this, SLOT( importFromBlender() ) );
+      QAction* actionLoadScene = new QAction( QIcon( iconsDir + tr( "/openFile.png" ) ), tr( "Load Scene" ), &mgr );
+      fileMenu.addAction( actionLoadScene );
+      toolBar.addAction( actionLoadScene );
+      connect( actionLoadScene, SIGNAL( triggered() ), this, SLOT( loadScene() ) );
 
-      QAction* actionImportFromIWF = new QAction( QIcon( iconsDir + tr( "/importFromIWF.png" ) ), tr( "From IWF" ), &mgr );
-      importSubMenu->addAction( actionImportFromIWF );
-      connect( actionImportFromIWF, SIGNAL( triggered() ), this, SLOT( importFromIWF() ) );
-   }
+      QAction* actionSaveScene = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save Scene" ), &mgr );
+      fileMenu.addAction( actionSaveScene );
+      toolBar.addAction( actionSaveScene );
+      connect( actionSaveScene, SIGNAL( triggered() ), this, SLOT( saveScene() ) );
+
+      toolBar.addSeparator();
+
+      QAction* separator1 = new QAction( &fileMenu );
+      separator1->setSeparator( true );
+      fileMenu.addAction( separator1 );
+
+      // submenu Import
+      {
+         QMenu* importSubMenu = new QMenu( tr( "Import" ), &fileMenu );
+         fileMenu.addMenu( importSubMenu );
+
+         QAction* actionImportFromBlender = new QAction( QIcon( iconsDir + tr( "/importFromBlender.png" ) ), tr( "From Blender" ), &mgr );
+         importSubMenu->addAction( actionImportFromBlender );
+         connect( actionImportFromBlender, SIGNAL( triggered() ), this, SLOT( importFromBlender() ) );
+
+         QAction* actionImportFromIWF = new QAction( QIcon( iconsDir + tr( "/importFromIWF.png" ) ), tr( "From IWF" ), &mgr );
+         importSubMenu->addAction( actionImportFromIWF );
+         connect( actionImportFromIWF, SIGNAL( triggered() ), this, SLOT( importFromIWF() ) );
+      }
       
-   QAction* separator2 = new QAction( &fileMenu );
-   separator2->setSeparator( true );
-   fileMenu.addAction( separator2 );
+      QAction* separator2 = new QAction( &fileMenu );
+      separator2->setSeparator( true );
+      fileMenu.addAction( separator2 );
 
-   QAction* actionQuit = new QAction( QIcon( iconsDir + tr( "/quit.png" ) ), tr( "Quit" ), &mgr );
-   fileMenu.addAction( actionQuit );
-   connect( actionQuit, SIGNAL( triggered() ), &m_app, SLOT( quit() ) );
+      QAction* actionQuit = new QAction( QIcon( iconsDir + tr( "/quit.png" ) ), tr( "Quit" ), &mgr );
+      fileMenu.addAction( actionQuit );
+      connect( actionQuit, SIGNAL( triggered() ), &m_app, SLOT( quit() ) );
+   }
+
+   //setup execution commands
+   {
+      m_runSceneIcon = QIcon( iconsDir + tr( "/play.png" ) );
+      m_stopSceneIcon = QIcon( iconsDir + tr( "/stop.png" ) );
+
+      m_actionRun = new QAction( m_runSceneIcon, tr( "Run" ), &mgr );
+      m_actionRun->setShortcut( QKeySequence( tr( "F5" ) ) );
+      toolBar.addAction( m_actionRun );
+      connect( m_actionRun, SIGNAL( triggered() ), this, SLOT( toggleSceneExecution() ) );
+
+      toolBar.addSeparator();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -327,3 +403,4 @@ void MainAppComponent::importFromBlender()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+

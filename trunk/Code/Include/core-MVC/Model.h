@@ -73,6 +73,13 @@ public:
     */
    void clear();
 
+   /**
+    * Updates the state of the model.
+    *
+    * @param timeElapsed      time elapsed since the last frame
+    */
+   void update( float timeElapsed );
+
    // -------------------------------------------------------------------------
    // Housekeeping
    // -------------------------------------------------------------------------

@@ -37,23 +37,31 @@ private:
    };
 
 private:
-   std::string m_id;
-   float m_speed;
-   float m_updateFreq;
+   std::string                   m_id;
+   float                         m_speed;
+   float                         m_updateFreq;
 
-   float m_timeline;
-   float m_lastUpdate;
-   float m_nextUpdate;
+   float                         m_timeline;
+   float                         m_lastUpdate;
+   float                         m_nextUpdate;
 
-   std::vector<TimeDependent*> m_objects;
-   std::vector<Event*> m_events;
-   EventComparator m_eventComparator;
+   std::vector<TimeDependent*>   m_objects;
+   std::vector<Event*>           m_events;
+   EventComparator               m_eventComparator;
 
 public:
+   /**
+    * Constructor.
+    *
+    * @param id      track ID
+    */
    TimeControllerTrack(const std::string& id);
    ~TimeControllerTrack();
 
-   const std::string& getID() const {return m_id;}
+   /**
+    * Returns the track ID.
+    */
+   const std::string& getID() const { return m_id; }
 
    /**
     * Adds a new time dependent object to the track.
@@ -61,6 +69,11 @@ public:
     * @param object
     */
    void add( TimeDependent* object );
+
+   /**
+    * Returns the number of time dependent objects running on the track.
+    */
+   inline unsigned int getItemsCount() const { return m_objects.size(); }
 
    /**
     * Updates the state of the track.
@@ -81,33 +94,50 @@ public:
     * This means that the events are not influenced by the track's speed.
     * It considers only TimeDependent objects !!!
     */
-   float getSpeed() const {return m_speed;}
+   float getSpeed() const { return m_speed; }
 
-   void setSpeed(float multiplier);
+   /**
+    * Allows to adjust the speed with which the track is running.
+    *
+    * @param multiplier       speed multiplier
+    */
+   void setSpeed( float multiplier );
 
-   void setLimit(float timesPerSec);
+   /**
+    * Allows to set an execution frequency limit.
+    *
+    * @param timesPerSec      how many times per second can the track be updated
+    */
+   void setLimit( float timesPerSec );
 
-   float getTime() const {return m_timeline;}
+   /**
+    * Returns current track time.
+    */
+   inline float getTime() const { return m_timeline; }
 
    /** 
     * This method sets a new event to be executed somewhere in time
     * @param time specifies the period of time from the current track
     * time the event should take place
     */
-   void setEvent(float time, TimeEvent* e);
+   void setEvent( float time, TimeEvent* e );
 
    /**
     * This method removes the first occurance
     * of this event instance (there can be many)
     */
-   void removeFirstEvent(const std::string& id);
+   void removeFirstEvent( const std::string& id );
 
    /**
     * This method removes all occurances
     * of this event instance (there can be many)
     */
-   void removeAllEvents(const std::string& id);
+   void removeAllEvents( const std::string& id );
 
+   /**
+    * Resets the track's contents ( events and objects )
+    * as well as resets its settings ( speed ).
+    */
    void reset();
 };
 

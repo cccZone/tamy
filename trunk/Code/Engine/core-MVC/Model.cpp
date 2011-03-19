@@ -143,6 +143,21 @@ void Model::clear()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Model::update( float timeElapsed )
+{
+   // update the state of the components
+   __super::update( timeElapsed );
+
+   // update the state of the entities
+   unsigned int count = m_entities.size();
+   for (unsigned int i = 0; i < count; ++i)
+   {
+      m_entities[i]->update( timeElapsed );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 unsigned int Model::getEntitiesCount() const
 {
    return m_entities.size();
