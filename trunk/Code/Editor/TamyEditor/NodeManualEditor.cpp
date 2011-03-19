@@ -24,7 +24,7 @@ namespace // anonymous
 NodeManualEditor::NodeManualEditor( SpatialEntity& node )
 : m_node( node )
 , m_host( NULL )
-, m_debugRenderer( NULL )
+, m_debugScene( NULL )
 , m_gizmo( NULL )
 , m_rotationAxis( globalAxes[0] )
 {
@@ -34,9 +34,11 @@ NodeManualEditor::NodeManualEditor( SpatialEntity& node )
 
 NodeManualEditor::~NodeManualEditor()
 {
-   if ( m_debugRenderer )
+   if ( m_debugScene )
    {
-      m_debugRenderer->stopDrawing( m_gizmoRenderID );
+      m_debugScene->remove( *m_gizmo );
+      
+      delete m_gizmo;
       m_gizmo = NULL;
    }
 }
@@ -52,11 +54,11 @@ void NodeManualEditor::initialize( EditEntityCommand& host )
    // acquire an instance of the resources manager and a camera
    ResourcesManager& resMgr = servicesMgr.requestService< ResourcesManager >();
    m_camera = &servicesMgr.requestService< Camera >();
-   m_debugRenderer = &servicesMgr.requestService< DebugRenderer >();
+   m_debugScene = &servicesMgr.requestService< DebugScene >();
 
    // create the gizmo
-   m_gizmo = new Gizmo( m_node, resMgr, *m_camera );
-   m_gizmoRenderID = m_debugRenderer->drawEntity( m_gizmo );
+   m_gizmo = new Gizmo( m_node );
+   m_debugScene->add( *m_gizmo );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

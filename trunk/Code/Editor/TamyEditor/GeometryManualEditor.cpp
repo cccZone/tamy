@@ -1,0 +1,13 @@
+#include "GeometryManualEditor.h"
+#include "core-Renderer.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+GeometryManualEditor::GeometryManualEditor( Geometry& geometry )
+   : NodeManualEditor( dynamic_cast< SpatialEntity& >( geometry.getParent() ) )
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////

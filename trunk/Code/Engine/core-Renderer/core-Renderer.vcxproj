@@ -94,6 +94,7 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="RPBlurNode.cpp" />
     <ClCompile Include="RPBrightnessNode.cpp" />
+    <ClCompile Include="RPDebugRendererNode.cpp" />
     <ClCompile Include="RPDownsampleNode.cpp" />
     <ClCompile Include="FloatSockets.cpp" />
     <ClCompile Include="RPHDRNode.cpp" />
@@ -174,6 +175,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPBlurNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPBrightnessNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPDebugRendererNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPDownsampleNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPHDRNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPLuminanceNode.h" />

@@ -5,6 +5,7 @@
 #include "core-Renderer\RendererObject.h"
 #include "core-Renderer\RendererObjectImpl.h"
 #include "core-Renderer\RenderingMechanism.h"
+#include "core\IDebugDraw.h"
 #include "core\Observer.h"
 #include <vector>
 
@@ -26,6 +27,7 @@ class RenderingPipelineNode;
 enum RenderingPipelineOperation;
 enum RenderingPipelineNodeOperation;
 class RuntimeDataBuffer;
+class Camera;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -82,6 +84,8 @@ private:
 
    Renderer*                                    m_renderer;
    std::vector< RenderedScene* >                m_scenes;
+   IDebugDrawable*                              m_debugScene;
+   Camera*                                      m_activeCamera;
    CameraContext*                               m_cameraContext;
 
    std::vector< RenderingPipelineNode* >        m_nodesQueue;
@@ -133,6 +137,13 @@ public:
    void removeScene( RPMSceneId sceneId );
 
    /**
+    * Sets a debug scene instance.
+    *
+    * @param debug scene
+    */
+   void setDebugScene( IDebugDrawable& debugScene );
+
+   /**
     * Sets a new active camera.
     *
     * @param camera
@@ -164,6 +175,13 @@ public:
     */
    void renderScene( RPMSceneId sceneId, RenderTarget* renderTarget ) const;
 
+   /**
+    * Renders the debug scene on the specified render target.
+    *
+    * @param renderTarget
+    */
+   void renderDebugScene( RenderTarget* renderTarget );
+
    // -------------------------------------------------------------------------
    // RenderingMechanism implementation
    // -------------------------------------------------------------------------
@@ -188,6 +206,11 @@ private:
     * Deinitializes the pipeline.
     */
    void deinitialize();
+
+   /**
+    * Draws a debug grid.
+    */
+   void drawGrid( IDebugDraw& debugRenderer ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -195,7 +218,7 @@ private:
 /**
  * A rendering pipeline mechanism implementation.
  */
-class RenderingPipelineMechanismImpl : public RendererObjectImpl
+class RenderingPipelineMechanismImpl : public RendererObjectImpl, public IDebugDraw
 {
 public:
    virtual ~RenderingPipelineMechanismImpl() {}
@@ -209,6 +232,21 @@ public:
     * Ends a rendering pass.
     */
    virtual void passEnd() {}
+
+   /**
+    * Renders the debug info on screen.
+    */
+   virtual void renderDebug( Camera& activeCamera ) {}
+
+   // -------------------------------------------------------------------------
+   // IDebugDraw implementation
+   // -------------------------------------------------------------------------
+   void drawLine( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color ) {}
+   void drawArc( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color ) {}
+   void drawArrow( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color ) {}
+   void drawBox( const D3DXMATRIX& transform, const D3DXVECTOR3& size, const Color& color ) {}
+   void drawSphere( const D3DXMATRIX& transform, float radius, const Color& color ) {}
+   void drawCylinder( const D3DXMATRIX& transform, float radius, float height, const Color& color ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

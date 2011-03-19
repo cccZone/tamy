@@ -1,19 +1,15 @@
 #pragma once
 
-/// @file   TamyEditor\PositionGizmo.h
+/// @file   TamyEditor\Gizmo.h
 /// @brief  A selected object manipulation gizmo.
 
-#include "core-Renderer\SpatialEntity.h"
-#include "core-Renderer\Renderable.h"
+#include "core\IDebugDraw.h"
+#include "core\Color.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class LineSegments;
-class GizmoEffect;
-class Camera;
-class ResourcesManager;
-class Geometry;
+class SpatialEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +17,7 @@ class Geometry;
  * A gizmo showing the selected object's orientation and indicating 
  * the selected manipulation mode ( moving, rotating, scaling ).
  */
-class Gizmo : public SpatialEntity, public Renderable
+class Gizmo : public IDebugDrawable
 {
 public:
    enum Mode
@@ -32,23 +28,21 @@ public:
    };
 
 private:
+   const float       SIZE;
+   const Color       OX_COLOR;
+   const Color       OY_COLOR;
+   const Color       OZ_COLOR;
+
    SpatialEntity& m_node;
    Mode           m_mode;
-
-   LineSegments*  m_translationAxes;
-   LineSegments*  m_rotationAxes;
-   LineSegments*  m_scalingAxes;
-
-   GizmoEffect*   m_effect;
-   LineSegments*  m_geometry;
-
-   Attributes     m_attributes;
 
 public:
    /**
     * Constructor.
+    *
+    * @param node       node for which the gizmo will be drawn
     */
-   Gizmo( SpatialEntity& node, ResourcesManager& rm, Camera& camera );
+   Gizmo( SpatialEntity& node );
    ~Gizmo();
 
    /**
@@ -57,10 +51,14 @@ public:
    void setMode( Mode mode );
 
    // -------------------------------------------------------------------------
-   // Renderable representation
+   // IDebugDrawable representation
    // -------------------------------------------------------------------------
-   void render();
-   const Attributes& getAttributes() const { return m_attributes; }
+   void onDebugRender( IDebugDraw& renderer ) const;
+
+private:
+   void drawTranslationGizmo( IDebugDraw& renderer ) const;
+   void drawRotationGizmo( IDebugDraw& renderer ) const;
+   void drawScalingGizmo( IDebugDraw& renderer ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

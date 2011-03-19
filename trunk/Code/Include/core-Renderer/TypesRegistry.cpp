@@ -38,6 +38,7 @@ REGISTER_RTTI( RenderingPipelineNode );
 REGISTER_RTTI( RPSceneRenderNode );
 REGISTER_RTTI( RPPostProcessNode );
 REGISTER_RTTI( RPStartNode );
+REGISTER_RTTI( RPDebugRendererNode );
 REGISTER_RTTI( RPBlurNode );
 REGISTER_RTTI( RPBrightnessNode );
 REGISTER_RTTI( RPDownsampleNode );

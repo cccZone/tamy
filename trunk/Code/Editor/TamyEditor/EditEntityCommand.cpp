@@ -7,6 +7,7 @@
 
 // editors
 #include "NodeManualEditor.h"
+#include "GeometryManualEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,6 +37,7 @@ EditEntityCommand::EditEntityCommand( TamyEditor& servicesMgr, TimeControllerTra
 
    // associate editors
    associateAbstract< SpatialEntity, NodeManualEditor >();
+   associateAbstract< Geometry, GeometryManualEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

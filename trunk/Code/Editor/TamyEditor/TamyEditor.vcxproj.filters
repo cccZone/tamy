@@ -22,9 +22,6 @@
     <Filter Include="Components\SceneRenderer">
       <UniqueIdentifier>{14af7a61-986e-40b6-a23c-9f911c8aabac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\SceneRenderer\Effects">
-      <UniqueIdentifier>{597fcbf3-b98f-48cf-9230-3505bc94b1c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\MainApp">
       <UniqueIdentifier>{45b38212-52bb-48b5-814a-f4290be91c3a}</UniqueIdentifier>
     </Filter>
@@ -138,9 +135,6 @@
     <ClInclude Include="SceneQueries.h">
       <Filter>Components\SceneQueries</Filter>
     </ClInclude>
-    <ClInclude Include="GridRenderingEffect.h">
-      <Filter>Components\SceneRenderer\Effects</Filter>
-    </ClInclude>
     <ClInclude Include="SceneTreeEditor.h">
       <Filter>Components\SceneTreeViewer</Filter>
     </ClInclude>
@@ -167,9 +161,6 @@
     </ClInclude>
     <ClInclude Include="TypeDescFactory.h">
       <Filter>Widgets\TreeWidget</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugRenderer.h">
-      <Filter>Components\SceneRenderer</Filter>
     </ClInclude>
     <ClInclude Include="SelectedEntityRepresentation.h">
       <Filter>Components\SelectionManager</Filter>
@@ -206,9 +197,6 @@
     </ClInclude>
     <ClInclude Include="ManualEditionModes.h">
       <Filter>Components\SceneNavigator</Filter>
-    </ClInclude>
-    <ClInclude Include="GizmoEffect.h">
-      <Filter>Components\SceneNavigator\Visualization</Filter>
     </ClInclude>
     <ClInclude Include="Gizmo.h">
       <Filter>Components\SceneNavigator\Visualization</Filter>
@@ -268,6 +256,12 @@
       <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
     </ClInclude>
     <ClInclude Include="RPBAdapter.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryManualEditor.h">
+      <Filter>Components\SceneNavigator\Editors</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBDebugRender.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
   </ItemGroup>
@@ -410,9 +404,6 @@
     <ClCompile Include="TamySceneWidget.cpp">
       <Filter>Components\SceneRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="GridRenderingEffect.cpp">
-      <Filter>Components\SceneRenderer\Effects</Filter>
-    </ClCompile>
     <ClCompile Include="MainAppComponent.cpp">
       <Filter>Components\MainApp</Filter>
     </ClCompile>
@@ -455,9 +446,6 @@
     <ClCompile Include="TreeWidget.cpp">
       <Filter>Widgets\TreeWidget</Filter>
     </ClCompile>
-    <ClCompile Include="DebugRenderer.cpp">
-      <Filter>Components\SceneRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="SceneQueryEffect.cpp">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
     </ClCompile>
@@ -480,9 +468,6 @@
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="Gizmo.cpp">
-      <Filter>Components\SceneNavigator\Visualization</Filter>
-    </ClCompile>
-    <ClCompile Include="GizmoEffect.cpp">
       <Filter>Components\SceneNavigator\Visualization</Filter>
     </ClCompile>
     <ClCompile Include="QueryableGeometry.cpp">
@@ -591,6 +576,12 @@
     <ClCompile Include="RPBAdapter.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="GeometryManualEditor.cpp">
+      <Filter>Components\SceneNavigator\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBDebugRender.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -598,9 +589,6 @@
     </None>
     <None Include="TypeDescFactory.inl">
       <Filter>Widgets\TreeWidget</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Editor\Shaders\GizmoEffect.fx">
-      <Filter>Components\SceneNavigator\Visualization</Filter>
     </None>
     <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.psh">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>

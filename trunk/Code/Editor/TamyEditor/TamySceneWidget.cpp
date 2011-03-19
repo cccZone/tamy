@@ -8,7 +8,6 @@
 #include <QEvent.h>
 #include <QSettings>
 #include "tamyeditor.h"
-#include "DebugRenderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,7 +44,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
 , m_renderer( NULL )
 , m_camera( NULL )
 , m_scene( NULL )
-, m_debugRenderer( NULL )
+, m_debugScene( NULL )
 , m_renderingMech( NULL )
 {
    m_hWnd = static_cast<HWND> (winId());
@@ -74,7 +73,9 @@ TamySceneWidget::~TamySceneWidget()
 {
    m_scene = NULL;
    m_renderingMech = NULL;
-   m_debugRenderer = NULL;
+
+   delete m_debugScene;
+   m_debugScene = NULL;
 
    m_renderer->setMechanism( NULL );
 
@@ -110,14 +111,14 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
 
 
    // create a debug renderer
-   m_debugRenderer = new DebugRenderer( *m_renderer, *m_resMgr, *m_camera );
+   m_debugScene = new DebugScene();
 
    // register new services
    mgr.registerService< Renderer >( *this, *m_renderer );
    mgr.registerService< Camera >( *this, *m_camera );
    mgr.registerService< KeysStatusManager >( *this, *m_keysStatusManager );
    mgr.registerService< UserInputController >( *this, *this );
-   mgr.registerService< DebugRenderer >( *this, *m_debugRenderer );
+   mgr.registerService< DebugScene >( *this, *m_debugScene );
    mgr.registerService< CompositeRenderingMechanism >( *this, *m_renderingMech );
 
    m_rendererComponent = new ResourceManagerComponent< Renderer >( *m_renderer );
@@ -182,7 +183,7 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
    // setup the debug scene
    if ( sceneRenderer )
    {
-      sceneRenderer->addScene( RPS_Debug, m_debugRenderer->getModel() );
+      sceneRenderer->setDebugScene( *m_debugScene );
    }
 
    // setup the main scene

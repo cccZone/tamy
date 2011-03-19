@@ -5,6 +5,7 @@
 // blocks
 #include "RPBPostProcess.h"
 #include "RPBSceneRender.h"
+#include "RPBDebugRender.h"
 #include "RPBStart.h"
 #include "RPBAdapter.h"
 
@@ -25,6 +26,7 @@ RenderingPipelineLayout::RenderingPipelineLayout( const std::string& path )
 {
    // create block-to-node associations
    associate< RPSceneRenderNode, RPBSceneRender >();
+   associate< RPDebugRendererNode, RPBDebugRender >();
    associate< RPStartNode, RPBStart >();
    associate< RPAdapterNode, RPBAdapter >();
    associateAbstract< RPPostProcessNode, RPBPostProcess >();

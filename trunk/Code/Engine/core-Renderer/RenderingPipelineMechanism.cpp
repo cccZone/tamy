@@ -13,6 +13,7 @@
 #include "core/GraphAlgorithms.h"
 #include "core/RuntimeData.h"
 #include "core/Enum.h"
+#include "core/IDebugDraw.h"
 #include <algorithm>
 
 
@@ -32,9 +33,11 @@ END_ENUM( RPMSceneId );
 
 RenderingPipelineMechanism::RenderingPipelineMechanism( RenderingPipeline* pipeline )
    : m_pipeline( pipeline )
+   , m_activeCamera( NULL )
    , m_cameraContext( NULL )
    , m_renderer( NULL )
    , m_runtimeDataBuffer( NULL )
+   , m_debugScene( NULL )
 {
    // attach self as the observer
    if ( m_pipeline )
@@ -66,9 +69,13 @@ RenderingPipelineMechanism::~RenderingPipelineMechanism()
    }
    m_scenes.clear();
 
+   m_debugScene = NULL;
+
    m_renderer = NULL;
 
    deinitialize();
+
+   m_activeCamera = NULL;
 
    delete m_cameraContext;
    m_cameraContext = NULL;
@@ -128,10 +135,19 @@ void RenderingPipelineMechanism::removeScene( Model& scene )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void RenderingPipelineMechanism::setDebugScene( IDebugDrawable& debugScene )
+{
+   m_debugScene = &debugScene;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void RenderingPipelineMechanism::setCamera( Camera& camera )
 {
    delete m_cameraContext;
    m_cameraContext = new PlainCameraContext( camera );
+
+   m_activeCamera = &camera;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -306,6 +322,8 @@ void RenderingPipelineMechanism::cacheNodes()
    }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void RenderingPipelineMechanism::renderScene( RPMSceneId sceneId, RenderTarget* renderTarget ) const
 {
    ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to add a scene with an invalid sceneId" );
@@ -313,6 +331,51 @@ void RenderingPipelineMechanism::renderScene( RPMSceneId sceneId, RenderTarget* 
    {
       m_renderer->setRenderTarget( renderTarget );
       m_scenes[ sceneId ]->render();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::renderDebugScene( RenderTarget* renderTarget )
+{
+   if ( !m_activeCamera )
+   {
+      return;
+   }
+
+   // get the debug renderer instance
+   IDebugDraw& debugRenderer = impl();
+
+   // set the rendering target
+   m_renderer->setRenderTarget( renderTarget );
+
+   // draw a reference grid
+   drawGrid( debugRenderer );
+
+   // draw the debug info
+   if ( m_debugScene != NULL )
+   {
+      m_debugScene->onDebugRender( debugRenderer );
+   }
+
+   // render the scene
+   impl().renderDebug( *m_activeCamera );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::drawGrid( IDebugDraw& debugRenderer ) const
+{
+   const float spacing = 10;
+   const float dim = 1000;
+   float varPos;
+   float boundPos = dim * spacing;
+   static Color gridColor( 100, 100, 255 );
+   for ( float i = -dim; i <= dim; ++i )
+   {
+      varPos = i * spacing;
+      debugRenderer.drawLine( D3DXVECTOR3( -boundPos, 0, varPos ), D3DXVECTOR3( boundPos, 0, varPos ), gridColor );
+      debugRenderer.drawLine( D3DXVECTOR3( varPos, 0, -boundPos ), D3DXVECTOR3( varPos, 0, boundPos ), gridColor );
    }
 }
 

@@ -92,9 +92,11 @@
 // ----------------------------------------------------------------------------
 // -->Nodes\Misc
 // ----------------------------------------------------------------------------
+#include "core-Renderer/RPAdapterNode.h"
 #include "core-Renderer/RPSceneRenderNode.h"
 #include "core-Renderer/RPStartNode.h"
 #include "core-Renderer/RPPostProcessNode.h"
+#include "core-Renderer/RPDebugRendererNode.h"
 // ----------------------------------------------------------------------------
 // -->Nodes\PostProcess
 // ----------------------------------------------------------------------------
@@ -103,7 +105,6 @@
 #include "core-Renderer/RPDownsampleNode.h"
 #include "core-Renderer/RPHDRNode.h"
 #include "core-Renderer/RPLuminanceNode.h"
-#include "core-Renderer/RPAdapterNode.h"
 // ----------------------------------------------------------------------------
 // -->Sockets
 // ----------------------------------------------------------------------------

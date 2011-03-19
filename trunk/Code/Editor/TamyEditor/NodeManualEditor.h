@@ -4,7 +4,6 @@
 /// @brief  A manual editor capable of changing spatial entity's transformation
 
 #include "EntityManualEditor.h"
-#include "DebugRenderer.h"
 #include <d3dx9.h>
 
 
@@ -12,6 +11,8 @@
 
 class SpatialEntity;
 class Gizmo;
+class DebugScene;
+class Camera;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -27,13 +28,12 @@ private:
 
    D3DXVECTOR3          m_rotationAxis;
 
-   DebugRenderer*       m_debugRenderer;
+   DebugScene*          m_debugScene;
    Gizmo*               m_gizmo;
-   DebugHandle          m_gizmoRenderID;
 
 public:
    NodeManualEditor( SpatialEntity& node );
-   ~NodeManualEditor();
+   virtual ~NodeManualEditor();
 
    // -------------------------------------------------------------------------
    // EntityManualEditor implementation
