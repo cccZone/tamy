@@ -22,7 +22,7 @@ class Renderer;
 class KeysStatusManager;
 class Camera;
 class Model;
-class DebugRenderer;
+class DebugScene;
 class ResourcesManager;
 class CompositeRenderingMechanism;
 
@@ -51,7 +51,7 @@ private:
    Camera*                                            m_camera;
 
    Model*                                             m_scene;
-   DebugRenderer*                                     m_debugRenderer;
+   DebugScene*                                        m_debugScene;
    CompositeRenderingMechanism*                       m_renderingMech;
 
 public:

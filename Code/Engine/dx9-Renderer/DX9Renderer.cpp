@@ -39,13 +39,13 @@ DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
                           UINT frontBufferWidth,
                           UINT frontBufferHeight,
                           bool hardwareTLOn)
-      : Renderer(frontBufferWidth, frontBufferHeight)
+      : Renderer( frontBufferWidth, frontBufferHeight )
       , m_d3d9( d3d9 )
-      , m_d3Device(d3Device)
+      , m_d3Device( d3Device )
       , m_settings( settings )
-      , m_creationParams(creationParams)
-      , m_deviceLost(false)
-      , m_hardwareTLOn(hardwareTLOn)
+      , m_creationParams( creationParams )
+      , m_deviceLost( false )
+      , m_hardwareTLOn( hardwareTLOn )
 {
    m_viewport.X = 0;
    m_viewport.Y = 0;

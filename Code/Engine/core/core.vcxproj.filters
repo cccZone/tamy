@@ -200,6 +200,9 @@
     <ClCompile Include="RuntimeData.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
+    <ClCompile Include="IDebugDraw.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -454,6 +457,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\RuntimeData.h">
       <Filter>DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\IDebugDraw.h">
+      <Filter>Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

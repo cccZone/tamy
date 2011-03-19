@@ -160,6 +160,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
+    <ClInclude Include="GeometryManualEditor.h" />
     <ClInclude Include="GraphBlock.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp" -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I"$(DXSDK_DIR)\Include\." -I"$(QTDIR)\include\." -I"$(QTDIR)\include\QtCore\." -I"$(QTDIR)\include\QtGui\." -I"$(SolutionDir)\Include\." -I".\." -I".\GeneratedFiles\$(Configuration)\." -I".\GeneratedFiles\."</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp" -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I"$(DXSDK_DIR)\Include\." -I"$(QTDIR)\include\." -I"$(QTDIR)\include\QtCore\." -I"$(QTDIR)\include\QtGui\." -I"$(SolutionDir)\Include\." -I".\." -I".\GeneratedFiles\$(Configuration)\." -I".\GeneratedFiles\."</Command>
@@ -191,7 +192,6 @@
     <ClInclude Include="InputCommand.h" />
     <ClInclude Include="InputInterpreter.h" />
     <ClInclude Include="Gizmo.h" />
-    <ClInclude Include="GizmoEffect.h" />
     <ClInclude Include="ManualEditionModes.h" />
     <CustomBuild Include="MaterialEditor.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp" -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I"$(QTDIR)\include\." -I"$(QTDIR)\include\QtCore\." -I"$(QTDIR)\include\QtGui\." -I".\." -I".\GeneratedFiles\$(Configuration)\." -I".\GeneratedFiles\."</Command>
@@ -259,6 +259,7 @@
     <ClInclude Include="RenderingPipelineSocketRepresentation.h" />
     <ClInclude Include="RenderTargetMimeData.h" />
     <ClInclude Include="RPBAdapter.h" />
+    <ClInclude Include="RPBDebugRender.h" />
     <ClInclude Include="RPBPostProcess.h" />
     <ClInclude Include="RPBSceneRender.h" />
     <ClInclude Include="RPBStart.h" />
@@ -422,7 +423,6 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <ClInclude Include="DebugRenderer.h" />
     <CustomBuild Include="TamySceneWidget.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Filename)%(Extension)...</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp" -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I"$(DXSDK_DIR)\Include\." -I"$(QTDIR)\include\." -I"$(QTDIR)\include\QtCore\." -I"$(QTDIR)\include\QtGui\." -I"$(SolutionDir)\Include\." -I".\." -I".\GeneratedFiles\$(Configuration)\." -I".\GeneratedFiles\."
@@ -435,7 +435,6 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <ClInclude Include="GridRenderingEffect.h" />
     <CustomBuild Include="MainAppComponent.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Filename)%(Extension)...</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(Configuration)\moc_%(Filename).cpp" -DQT_CORE_LIB -DQT_GUI_LIB -DQT_LARGEFILE_SUPPORT -DQT_THREAD_SUPPORT -DUNICODE -DWIN32 -I"$(DXSDK_DIR)\Include\." -I"$(QTDIR)\include\." -I"$(QTDIR)\include\QtCore\." -I"$(QTDIR)\include\QtGui\." -I"$(SolutionDir)\Include\." -I".\." -I".\GeneratedFiles\$(Configuration)\." -I".\GeneratedFiles\."
@@ -585,6 +584,7 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_IntPropertyEditor.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_RenderingPipelineEditor.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_RenderTargetDescriptorDialog.cpp" />
+    <ClCompile Include="GeometryManualEditor.cpp" />
     <ClCompile Include="GraphBlock.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_assertDialog.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_MaterialEditor.cpp" />
@@ -602,7 +602,6 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_tamyeditor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GizmoEffect.cpp" />
     <ClCompile Include="IntPropertyEditor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Gizmo.cpp" />
@@ -620,6 +619,7 @@
     <ClCompile Include="RenderTargetDescriptorDialog.cpp" />
     <ClCompile Include="RenderTargetMimeData.cpp" />
     <ClCompile Include="RPBAdapter.cpp" />
+    <ClCompile Include="RPBDebugRender.cpp" />
     <ClCompile Include="RPBPostProcess.cpp" />
     <ClCompile Include="RPBSceneRender.cpp" />
     <ClCompile Include="RPBStart.cpp" />
@@ -729,9 +729,7 @@
     <ClCompile Include="StringPropertyEditor.cpp" />
     <ClCompile Include="TypesRegistry.cpp" />
     <ClCompile Include="Vec3PropertyEditor.cpp" />
-    <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="TamySceneWidget.cpp" />
-    <ClCompile Include="GridRenderingEffect.cpp" />
     <ClCompile Include="MainAppComponent.cpp" />
     <ClCompile Include="SceneTreeViewer.cpp" />
     <ClCompile Include="EntityEditor.cpp" />
@@ -773,7 +771,6 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\uic.exe;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
     </CustomBuild>
-    <None Include="..\..\..\Assets\Editor\Shaders\GizmoEffect.fx" />
     <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.psh" />
     <CustomBuild Include="materialeditor.ui">
       <FileType>Document</FileType>

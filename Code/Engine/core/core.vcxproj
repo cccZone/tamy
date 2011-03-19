@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Include\core\TypesRegistry.cpp" />
     <ClCompile Include="Assert.cpp" />
+    <ClCompile Include="IDebugDraw.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NodeActionsExecutor.cpp" />
     <ClCompile Include="ResourceHandle.cpp" />
@@ -118,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Algorithms.h" />
+    <ClInclude Include="..\..\Include\core\IDebugDraw.h" />
     <ClInclude Include="..\..\Include\core\IProgressObserver.h" />
     <ClInclude Include="..\..\Include\core\Node.h" />
     <ClInclude Include="..\..\Include\core\NodeObserver.h" />

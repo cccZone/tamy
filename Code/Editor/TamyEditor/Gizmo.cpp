@@ -1,123 +1,17 @@
 #include "Gizmo.h"
 #include "core-Renderer.h"
 #include "core.h"
-#include "GizmoEffect.h"
-
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Gizmo::Gizmo( SpatialEntity& node, ResourcesManager& rm, Camera& camera )
+Gizmo::Gizmo( SpatialEntity& node )
 : m_node( node )
-, m_geometry( NULL )
+, SIZE( 10.f )
+, OX_COLOR( 1, 0, 0, 1 )
+, OY_COLOR( 0, 1, 0, 1 )
+, OZ_COLOR( 0, 0, 1, 1 )
 {
-   const float SIZE = 10.f;
-   const Color oxColor( 1, 0, 0, 1 );
-   const Color oyColor( 0, 1, 0, 1 );
-   const Color ozColor( 0, 0, 1, 1 );
-
-   // prepare the geometry of translation axes
-   m_translationAxes = dynamic_cast< LineSegments*>( rm.findResource( "TranslationAxes" ) );
-   if ( !m_translationAxes )
-   {
-      m_translationAxes = new LineSegments( "TranslationAxes" );
-      rm.addResource( m_translationAxes );
-      m_translationAxes->add( LineSegment( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( SIZE, 0, 0 ), oxColor ) );  // OX
-      m_translationAxes->add( LineSegment( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( 0, SIZE, 0 ), oyColor ) );  // OY
-      m_translationAxes->add( LineSegment( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( 0, 0, SIZE ), ozColor ) );  // OZ
-      m_translationAxes->rebuild();
-   }
-
-   // prepare the geometry of rotation circles
-   m_rotationAxes = dynamic_cast< LineSegments*>( rm.findResource( "RotationAxes" ) );
-   if ( !m_rotationAxes )
-   {
-      m_rotationAxes = new LineSegments( "RotationAxes" );
-      rm.addResource( m_rotationAxes );
-
-      std::vector< D3DXVECTOR3 > points;
-      const float dAng = M_PI / 32.f;
-
-      // OX
-      m_rotationAxes->add( LineSegment( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( SIZE, 0, 0 ), oxColor ) );
-      points.push_back( D3DXVECTOR3( 0, SIZE, 0 ) );
-      for ( unsigned int i = 0; i < 17; ++i )
-      {
-         points.push_back( D3DXVECTOR3( 0, SIZE * cos( dAng * (float)i ), SIZE * sin( dAng * (float)i ) ) );
-      }
-      for ( unsigned int i = 1; i < points.size(); ++i )
-      {
-         m_rotationAxes->add( LineSegment( points[i - 1], points[i], oxColor ) );
-      }
-
-      
-      // OY
-      points.clear();
-      m_rotationAxes->add( LineSegment( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( 0, SIZE, 0 ), oyColor ) );
-      points.push_back( D3DXVECTOR3( SIZE, 0, 0 ) );
-      for ( unsigned int i = 0; i < 17; ++i )
-      {
-         points.push_back( D3DXVECTOR3( SIZE * cos( dAng * (float)i ), 0, SIZE * sin( dAng * (float)i ) ) );
-      }
-      for ( unsigned int i = 1; i < points.size(); ++i )
-      {
-         m_rotationAxes->add( LineSegment( points[i - 1], points[i], oyColor ) );
-      }
-
-
-      // OZ
-      points.clear();
-      m_rotationAxes->add( LineSegment( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( 0, 0, SIZE ), ozColor ) );
-      points.push_back( D3DXVECTOR3( 0, SIZE, 0 ) );
-      for ( unsigned int i = 0; i < 17; ++i )
-      {
-         points.push_back( D3DXVECTOR3( SIZE * sin( dAng * (float)i ), SIZE * cos( dAng * (float)i ), 0 ) );
-      }
-      for ( unsigned int i = 1; i < points.size(); ++i )
-      {
-         m_rotationAxes->add( LineSegment( points[i - 1], points[i], ozColor ) );
-      }
-
-      m_rotationAxes->rebuild();
-   }
-
-   // prepare the geometry of scaling axes
-   m_scalingAxes = dynamic_cast< LineSegments*>( rm.findResource( "ScalingAxes" ) );
-   if ( !m_scalingAxes )
-   {
-      m_scalingAxes = new LineSegments( "ScalingAxes" );
-      rm.addResource( m_scalingAxes );
-
-      // OX
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( 0, 0, 0 ),      D3DXVECTOR3( SIZE,  0,  0 ), oxColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( SIZE,  1, -1 ), D3DXVECTOR3( SIZE, -1, -1 ), oxColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( SIZE, -1, -1 ), D3DXVECTOR3( SIZE, -1,  1 ), oxColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( SIZE, -1,  1 ), D3DXVECTOR3( SIZE,  1,  1 ), oxColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( SIZE,  1,  1 ), D3DXVECTOR3( SIZE,  1, -1 ), oxColor ) );
-
-      // OY
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( 0, 0, 0 ),      D3DXVECTOR3(  0, SIZE,  0 ), oyColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3(  1, SIZE, -1 ), D3DXVECTOR3( -1, SIZE, -1 ), oyColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( -1, SIZE, -1 ), D3DXVECTOR3( -1, SIZE,  1 ), oyColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( -1, SIZE,  1 ), D3DXVECTOR3(  1, SIZE,  1 ), oyColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3(  1, SIZE,  1 ), D3DXVECTOR3(  1, SIZE, -1 ), oyColor ) );
-
-      // OZ
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( 0, 0, 0 ),      D3DXVECTOR3(  0,  0, SIZE ), ozColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3(  1, -1, SIZE ), D3DXVECTOR3( -1, -1, SIZE ), ozColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( -1, -1, SIZE ), D3DXVECTOR3( -1,  1, SIZE ), ozColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3( -1,  1, SIZE ), D3DXVECTOR3(  1,  1, SIZE ), ozColor ) );
-      m_scalingAxes->add( LineSegment( D3DXVECTOR3(  1,  1, SIZE ), D3DXVECTOR3(  1, -1, SIZE ), ozColor ) );
-
-      m_scalingAxes->rebuild();
-   }
-
-
-   // create a rendering effect
-   m_effect = new GizmoEffect( rm, camera, node );
-
    // set the initial mode
    setMode( GM_TRANSLATION );
 }
@@ -126,37 +20,37 @@ Gizmo::Gizmo( SpatialEntity& node, ResourcesManager& rm, Camera& camera )
 
 Gizmo::~Gizmo()
 {
-   m_translationAxes = NULL;
-   m_rotationAxes = NULL;
-   m_scalingAxes = NULL;
-   m_effect = NULL;
-   m_geometry = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Gizmo::setMode( Mode mode )
 {
-
    // set the new mode and the related geometry
    m_mode = mode;
-   switch( mode )
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Gizmo::onDebugRender( IDebugDraw& renderer ) const
+{
+   switch( m_mode )
    {
    case GM_TRANSLATION:
       {
-         m_geometry = m_translationAxes;
+         drawTranslationGizmo( renderer );
          break;
       }
 
    case GM_ROTATION:
       {
-         m_geometry = m_rotationAxes;
+         drawRotationGizmo( renderer );
          break;
       }
 
    case GM_SCALING:
       {
-         m_geometry = m_scalingAxes ;
+         drawScalingGizmo( renderer );
          break;
       }
    }
@@ -164,9 +58,76 @@ void Gizmo::setMode( Mode mode )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Gizmo::render()
+void Gizmo::drawTranslationGizmo( IDebugDraw& renderer ) const
 {
-   m_effect->render( *m_geometry );
+   const D3DXMATRIX& mtx = m_node.getGlobalMtx();
+
+   D3DXVECTOR3 orig, ox, oy, oz;
+   D3DXVec3TransformCoord( &orig, &D3DXVECTOR3( 0, 0, 0 ), &mtx );
+   D3DXVec3TransformCoord( &ox, &D3DXVECTOR3( SIZE, 0, 0 ), &mtx );
+   D3DXVec3TransformCoord( &oy, &D3DXVECTOR3( 0, SIZE, 0 ), &mtx );
+   D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
+
+   renderer.drawLine( orig, ox, OX_COLOR ); // OX
+   renderer.drawLine( orig, oy, OY_COLOR ); // OY
+   renderer.drawLine( orig, oz, OZ_COLOR ); // OZ
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Gizmo::drawRotationGizmo( IDebugDraw& renderer ) const
+{
+   const D3DXMATRIX& mtx = m_node.getGlobalMtx();
+
+   D3DXVECTOR3 orig, ox, oy, oz;
+   D3DXVec3TransformCoord( &orig, &D3DXVECTOR3( 0, 0, 0 ), &mtx );
+   D3DXVec3TransformCoord( &ox, &D3DXVECTOR3( SIZE, 0, 0 ), &mtx );
+   D3DXVec3TransformCoord( &oy, &D3DXVECTOR3( 0, SIZE, 0 ), &mtx );
+   D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
+
+   // OX
+   renderer.drawLine( orig, ox, OX_COLOR );
+   renderer.drawArc( ox, oz, OX_COLOR );
+
+   // OY
+   renderer.drawLine( orig, oy, OY_COLOR );
+   renderer.drawArc( oy, oz, OX_COLOR );
+
+
+   // OZ
+   renderer.drawLine( orig, oz, OZ_COLOR );
+   renderer.drawArc( oz, ox, OX_COLOR );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Gizmo::drawScalingGizmo( IDebugDraw& renderer ) const
+{
+   const D3DXMATRIX& mtx = m_node.getGlobalMtx();
+
+   D3DXVECTOR3 orig, ox, oy, oz;
+   D3DXVec3TransformCoord( &orig, &D3DXVECTOR3( 0, 0, 0 ), &mtx );
+   D3DXVec3TransformCoord( &ox, &D3DXVECTOR3( SIZE, 0, 0 ), &mtx );
+   D3DXVec3TransformCoord( &oy, &D3DXVECTOR3( 0, SIZE, 0 ), &mtx );
+   D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
+
+   const D3DXVECTOR3 boxSize( 0.2f, 0.2f, 0.2f );
+
+   // OX
+   D3DXMATRIX boxMtx = mtx;
+   boxMtx._41 = ox.x; boxMtx._42 = ox.y; boxMtx._43 = ox.z;
+   renderer.drawLine( orig, ox, OX_COLOR );
+   renderer.drawBox( boxMtx, boxSize, OX_COLOR );
+
+   // OY
+   boxMtx._41 = oy.x; boxMtx._42 = oy.y; boxMtx._43 = oy.z;
+   renderer.drawLine( orig, oy, OY_COLOR );
+   renderer.drawBox( boxMtx, boxSize, OY_COLOR );
+
+   // OZ
+   boxMtx._41 = oz.x; boxMtx._42 = oz.y; boxMtx._43 = oz.z;
+   renderer.drawLine( orig, oz, OZ_COLOR );
+   renderer.drawBox( boxMtx, boxSize, OZ_COLOR );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

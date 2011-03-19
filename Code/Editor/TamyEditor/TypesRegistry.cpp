@@ -8,6 +8,7 @@
 #include "RPBSceneRender.h"
 #include "RPBStart.h"
 #include "RPBAdapter.h"
+#include "RPBDebugRender.h"
 #include "RPSFloat.h"
 #include "RPSTexture.h"
 #include "RPSVoid.h"
@@ -21,6 +22,7 @@ REGISTER_RTTI( RPBPostProcess );
 REGISTER_RTTI( RPBSceneRender );
 REGISTER_RTTI( RPBStart );
 REGISTER_RTTI( RPBAdapter );
+REGISTER_RTTI( RPBDebugRender );
 REGISTER_RTTI( RPSFloat );
 REGISTER_RTTI( RPSTextureInput );
 REGISTER_RTTI( RPSTextureOutput );
