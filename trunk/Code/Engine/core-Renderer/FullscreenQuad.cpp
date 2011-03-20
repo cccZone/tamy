@@ -11,24 +11,14 @@ END_RTTI
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FullscreenQuad::FullscreenQuad( Renderer* renderer )
-   : m_renderer( renderer )
+FullscreenQuad::FullscreenQuad()
 {
-   if ( m_renderer )
-   {
-      m_renderer->attachObserver( *this );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 FullscreenQuad::~FullscreenQuad()
 {
-   if ( m_renderer )
-   {
-      m_renderer->detachObserver( *this );
-      m_renderer = NULL;
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,31 +29,9 @@ void FullscreenQuad::initialize( ResourcesManager& rm )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FullscreenQuad::update( Renderer& renderer )
+void FullscreenQuad::render( unsigned int width, unsigned int height )
 {
-   m_width = renderer.getViewportWidth();
-   m_height = renderer.getViewportHeight();
-   renderer.implement< FullscreenQuad >( *this );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void FullscreenQuad::update( Renderer& renderer, const RendererOps& operation )
-{
-   if ( operation == RO_RESIZE_VIEWPORT )
-   {
-      m_width = renderer.getViewportWidth();
-      m_height = renderer.getViewportHeight();
-      renderer.implement< FullscreenQuad >( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-void FullscreenQuad::render()
-{
-   impl().render();
+   impl().render( width, height );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

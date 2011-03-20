@@ -4,6 +4,7 @@
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/TextureSockets.h"
 #include "core-Renderer/ShaderTexture.h"
+#include "core-Renderer/RenderTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,8 +105,10 @@ void RPBrightnessNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    // Because the source and destination are NOT the same sizes, we
    // need to provide offsets to correctly map between them.
-   float sU = ( 1.0f / static_cast< float >( inputTex->getWidth() ) );
-   float sV = ( 1.0f / static_cast< float >( inputTex->getHeight() ) );
+   unsigned int texWidth = inputTex->getWidth();
+   unsigned int texHeight = inputTex->getHeight();
+   float sU = ( 1.0f / static_cast< float >( texWidth ) );
+   float sV = ( 1.0f / static_cast< float >( texHeight ) );
 
    // The last two components (z,w) are unused. This makes for simpler code, but if
    // constant-storage is limited then it is possible to pack 4 offsets into 2 float4's
@@ -116,10 +119,10 @@ void RPBrightnessNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    brightnessPass->setVec4Array( "tcDownSampleOffsets", offsets, 4 );
 
+
    // render
-   renderer->setRenderTarget( brightPassTarget );
    brightnessPass->beginRendering();
-   renderQuad( data );
+   renderQuad( data, *renderer, brightPassTarget );
    brightnessPass->endRendering();
 }
 

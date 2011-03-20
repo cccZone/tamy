@@ -155,9 +155,8 @@ void RPLuminanceNode::onUpdate( RenderingPipelineMechanism& host ) const
       greyscalePass->setVec4Array( "tcLumOffsets", offsets, 4 );
 
       // render
-      renderer->setRenderTarget( luminanceTargets[0] );
       greyscalePass->beginRendering();
-      renderQuad( data );
+      renderQuad( data, *renderer, luminanceTargets[0] );
       greyscalePass->endRendering();
    }
 
@@ -186,9 +185,8 @@ void RPLuminanceNode::onUpdate( RenderingPipelineMechanism& host ) const
       downSamplePass->setVec4Array( "tcDSOffsets", DSoffsets, 9 );
 
       // render
-      renderer->setRenderTarget( luminanceTargets[i] );
       downSamplePass->beginRendering();
-      renderQuad( data );
+      renderQuad( data, *renderer, luminanceTargets[i] );
       downSamplePass->endRendering();
    }
 

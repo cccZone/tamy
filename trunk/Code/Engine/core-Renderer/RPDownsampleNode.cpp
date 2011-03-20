@@ -93,6 +93,21 @@ void RPDownsampleNode::onUpdate( RenderingPipelineMechanism& host ) const
       return;
    }
 
+   // get the down sample target size
+   unsigned int dstWidth, dstHeight;
+   if ( downsampleTarget )
+   {
+      dstWidth = downsampleTarget->getWidth();
+      dstHeight = downsampleTarget->getHeight();
+   }
+   else
+   {
+      dstWidth = renderer->getViewportWidth();
+      dstHeight = renderer->getViewportHeight();
+   }
+   float widthInv = 1.0f / (float)dstWidth;
+   float heightInv = 1.0f /(float)dstHeight;
+
    downsamplePass->setTexture( "inputTex", *inputTex );
 
    // We need to compute the sampling offsets used for this pass.
@@ -103,13 +118,14 @@ void RPDownsampleNode::onUpdate( RenderingPipelineMechanism& host ) const
    // is intentionally less efficient to aid readability...
    D3DXVECTOR4 dsOffsets[16];
    int idx = 0;
+
    for( int i = -2; i < 2; i++ )
    {
       for( int j = -2; j < 2; j++ )
       {
          dsOffsets[idx++] = D3DXVECTOR4(
-            ( static_cast< float >( i ) + 0.5f ) * ( 1.0f / static_cast< float >( downsampleTarget->getWidth() ) ),
-            ( static_cast< float >( j ) + 0.5f ) * ( 1.0f / static_cast< float >( downsampleTarget->getHeight() ) ),
+            ( static_cast< float >( i ) + 0.5f ) * widthInv,
+            ( static_cast< float >( j ) + 0.5f ) * heightInv,
             0.0f, // unused 
             0.0f  // unused
             );
@@ -119,9 +135,8 @@ void RPDownsampleNode::onUpdate( RenderingPipelineMechanism& host ) const
    downsamplePass->setVec4Array( "tcDownSampleOffsets", dsOffsets, 16 );
 
    // render
-   renderer->setRenderTarget( downsampleTarget );
    downsamplePass->beginRendering();
-   renderQuad( data );
+   renderQuad( data, *renderer, downsampleTarget );
    downsamplePass->endRendering();
 }
 

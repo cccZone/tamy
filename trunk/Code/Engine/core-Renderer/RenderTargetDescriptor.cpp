@@ -27,6 +27,7 @@ RenderTargetDescriptor::RenderTargetDescriptor()
    , m_isDynamic( false )
    , m_usage( TU_COLOR )
    , m_isReadable( false )
+   , m_bgColor( 0, 0, 0, 1 )
 {
 }
 

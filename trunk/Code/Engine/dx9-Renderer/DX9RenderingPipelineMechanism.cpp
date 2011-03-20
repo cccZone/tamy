@@ -70,7 +70,11 @@ void DX9RenderingPipelineMechanism::passBegin()
 
 void DX9RenderingPipelineMechanism::passEnd()
 {
-   ASSERT_MSG( m_pVertex == NULL, "Debug lines VB wasn't properly unlocked" );
+   if ( m_pVertex != NULL )
+   {
+      m_linesBuffer->Unlock();
+      m_pVertex = NULL;
+   }
 
    if ( m_d3Device )
    {

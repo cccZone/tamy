@@ -20,8 +20,8 @@ RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, Ren
    connect( m_ui.isDynamicCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( changeTargetType( int ) ) );
    connect( m_ui.widthScaleValueBox, SIGNAL( valueChanged( double ) ), this, SLOT( dynamicSizeChanged( double ) ) );
    connect( m_ui.heightScaleValueBox, SIGNAL( valueChanged( double ) ), this, SLOT( dynamicSizeChanged( double ) ) );
-   connect( m_ui.widthValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticcSizeChanged( int ) ) );
-   connect( m_ui.heightValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticcSizeChanged( int ) ) );
+   connect( m_ui.widthValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticSizeChanged( int ) ) );
+   connect( m_ui.heightValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticSizeChanged( int ) ) );
 
    m_ui.renderTargetIdEdit->setEnabled( canChangeName );
 
@@ -32,7 +32,11 @@ RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, Ren
 
    unsigned int width, height;
    descriptor.getStaticSize( width, height );
+   m_ui.widthValueBox->setMinimum(1);
+   m_ui.widthValueBox->setMaximum(65535);
    m_ui.widthValueBox->setValue( width );
+   m_ui.heightValueBox->setMinimum(1);
+   m_ui.heightValueBox->setMaximum(65535);
    m_ui.heightValueBox->setValue( height );
 
    float widthScale, heightScale;
@@ -98,9 +102,9 @@ void RenderTargetDescriptorDialog::dynamicSizeChanged( double val )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderTargetDescriptorDialog::staticSizeChanged( double val )
+void RenderTargetDescriptorDialog::staticSizeChanged( int val )
 {
-   float width = m_ui.widthValueBox->value();
+   int width = m_ui.widthValueBox->value();
    float height = m_ui.heightValueBox->value();
    m_descriptor.setStaticSize( width, height );
 }

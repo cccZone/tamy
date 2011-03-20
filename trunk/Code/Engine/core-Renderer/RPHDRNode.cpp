@@ -111,18 +111,21 @@ void RPHDRNode::onUpdate( RenderingPipelineMechanism& host ) const
    hdrPass->setTexture( "original_scene", *baseTex );
    hdrPass->setTexture( "bloom", *bloomedTex );
 
-   hdrPass->setFloat( "maxLuminance", maxLuminanceInput->getValue( data ) );
-   hdrPass->setFloat( "avgLuminance", avgLuminanceInput->getValue( data ) );
+   float maxLumVal = maxLuminanceInput->getValue( data );
+   float avgLumVal = avgLuminanceInput->getValue( data );
+   hdrPass->setFloat( "maxLuminance", maxLumVal );
+   hdrPass->setFloat( "avgLuminance", avgLumVal );
 
-   hdrPass->setFloat( "g_rcp_bloom_tex_w", 1.0f / static_cast< float >( bloomedTex->getWidth() ) );
-   hdrPass->setFloat( "g_rcp_bloom_tex_h", 1.0f / static_cast< float >( bloomedTex->getHeight() ) );
+   unsigned int bloomedTexWidth = bloomedTex->getWidth();
+   unsigned int bloomedTexHeight = bloomedTex->getHeight();
+   hdrPass->setFloat( "g_rcp_bloom_tex_w", 1.0f / static_cast< float >( bloomedTexWidth ) );
+   hdrPass->setFloat( "g_rcp_bloom_tex_h", 1.0f / static_cast< float >( bloomedTexHeight ) );
    hdrPass->setFloat( "fExposure", m_exposure );
    hdrPass->setFloat( "fGaussianScalar", m_gaussMultiplier );
 
    // render
-   renderer->setRenderTarget( hdrTarget );
    hdrPass->beginRendering();
-   renderQuad( data );
+   renderQuad( data, *renderer, hdrTarget );
    hdrPass->endRendering();
 }
 

@@ -33,7 +33,7 @@ public slots:
    void usageChanged( const QString& usage );
    void changeTargetType( int isDynamic );
    void dynamicSizeChanged( double val );
-   void staticSizeChanged( double val );
+   void staticSizeChanged( int val );
 
 private:
    void updateTargetType();
