@@ -10,8 +10,8 @@
 //------------------------------------------------------------------
 //  GLOBAL VARIABLES
 //------------------------------------------------------------------
-sampler     original_scene  : register( s0 );   // The HDR data
-sampler     bloom           : register( s2 );   // The post processing results
+sampler     original_scene  : register( s1 );   // The HDR data
+sampler     bloom           : register( s0 );   // The post processing results
 
 float		fMaxLuminance;						// Maximum luminance value
 float		fAvgLuminance;						// Average luminance value

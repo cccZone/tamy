@@ -34,7 +34,7 @@ public:
    // -------------------------------------------------------------------------
    // FullscreenQuadImpl implementation
    // -------------------------------------------------------------------------
-   void render();
+   void render( unsigned int width, unsigned int height );
    void initialize( Renderer& renderer );
 };
 

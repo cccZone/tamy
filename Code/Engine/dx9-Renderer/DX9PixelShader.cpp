@@ -194,7 +194,7 @@ void DX9PixelShader::setVec4Array( const char* paramName, const D3DXVECTOR4* vec
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       HRESULT res = m_shaderConstants->SetVectorArray( m_d3Device, hConstant, vecArr, size );
-      ASSERT( SUCCEEDED( res ) );
+      ASSERT_MSG( SUCCEEDED( res ), translateDxError( "setVec4Array", res ).c_str() );
    }
 }
 

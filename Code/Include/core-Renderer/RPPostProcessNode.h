@@ -9,6 +9,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class FullscreenQuad;
+class RenderTarget;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,8 +40,10 @@ protected:
     * Renders the full screen quad geometry.
     *
     * @param data       runtime data buffer
+    * @param renderer
+    * @param rt         render target
     */
-   void renderQuad( RuntimeDataBuffer& data ) const;
+   void renderQuad( RuntimeDataBuffer& data, Renderer& renderer, RenderTarget* rt ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

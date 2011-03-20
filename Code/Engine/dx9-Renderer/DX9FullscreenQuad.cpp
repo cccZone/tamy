@@ -35,14 +35,14 @@ void DX9FullscreenQuad::initialize( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9FullscreenQuad::render()
+void DX9FullscreenQuad::render( unsigned int width, unsigned int height )
 {
    if ( m_d3Device )
    {
       // To correctly map from texels->pixels we offset the coordinates
       // by -0.5f:
-      float fWidth = static_cast< float >( m_quad.getWidth() ) - 0.5f;
-      float fHeight = static_cast< float >( m_quad.getHeight() ) - 0.5f;
+      float fWidth = static_cast< float >( width ) + 0.5f;
+      float fHeight = static_cast< float >( height ) + 0.5f;
 
       // Now we can actually assemble the screen-space geometry
       QuadVertex v[4];

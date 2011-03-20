@@ -161,14 +161,32 @@ void RPBlurNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    // Configure the sampling offsets and their weights
    float bloomWeights[9];
-   float bloomOffsets[9];
+   float horizBloomOffsets[9];
+   float vertBloomOffsets[9];
+
+   // get target texture sizes
+   unsigned int dstWidth, dstHeight;
+   if ( blurTarget )
+   {
+      dstWidth = blurTarget->getWidth();
+      dstHeight = blurTarget->getHeight();
+   }
+   else
+   {
+      dstWidth = renderer->getViewportWidth();
+      dstHeight = renderer->getViewportHeight();
+   }
+
+   float widthInv = 1.0f / (float)dstWidth;
+   float heightInv = 1.0f /(float)dstHeight;
 
    for( int i = 0; i < 9; i++ )
    {
       // Compute the offsets. We take 9 samples - 4 either side and one in the middle:
       //     i =  0,  1,  2,  3, 4,  5,  6,  7,  8
       //Offset = -4, -3, -2, -1, 0, +1, +2, +3, +4
-      bloomOffsets[i] = ( static_cast< float >( i ) - 4.0f ) * ( 1.0f / static_cast< float >( inputTex->getWidth() ) );
+      horizBloomOffsets[i] = ( static_cast< float >( i ) - 4.0f ) * widthInv;
+      vertBloomOffsets[i] = ( static_cast< float >( i ) - 4.0f ) * heightInv;
 
       // 'x' is just a simple alias to map the [0,8] range down to a [-1,+1]
       float x = ( static_cast< float >( i ) - 4.0f ) / 4.0f;
@@ -186,12 +204,11 @@ void RPBlurNode::onUpdate( RenderingPipelineMechanism& host ) const
          horizBlurPass->setTexture( "inputTex", *inputTex );
 
          horizBlurPass->setFloatArray( "HBloomWeights", bloomWeights, 9 );
-         horizBlurPass->setFloatArray( "HBloomOffsets", bloomOffsets, 9 );
+         horizBlurPass->setFloatArray( "HBloomOffsets", horizBloomOffsets, 9 );
 
          // render
-         renderer->setRenderTarget( blurTarget );
          horizBlurPass->beginRendering();
-         renderQuad( data );
+         renderQuad( data, *renderer, blurTarget );
          horizBlurPass->endRendering();
 
          break;
@@ -202,12 +219,11 @@ void RPBlurNode::onUpdate( RenderingPipelineMechanism& host ) const
          vertBlurPass->setTexture( "inputTex", *inputTex );
 
          vertBlurPass->setFloatArray( "VBloomWeights", bloomWeights, 9 );
-         vertBlurPass->setFloatArray( "VBloomOffsets", bloomOffsets, 9 );
+         vertBlurPass->setFloatArray( "VBloomOffsets", vertBloomOffsets, 9 );
 
          // render
-         renderer->setRenderTarget( blurTarget );
          vertBlurPass->beginRendering();
-         renderQuad( data );
+         renderQuad( data, *renderer, blurTarget );
          vertBlurPass->endRendering();
 
          break;
@@ -220,12 +236,12 @@ void RPBlurNode::onUpdate( RenderingPipelineMechanism& host ) const
             horizBlurPass->setTexture( "inputTex", *inputTex );
 
             horizBlurPass->setFloatArray( "HBloomWeights", bloomWeights, 9 );
-            horizBlurPass->setFloatArray( "HBloomOffsets", bloomOffsets, 9 );
+            horizBlurPass->setFloatArray( "HBloomOffsets", horizBloomOffsets, 9 );
 
             // render
             renderer->setRenderTarget( tempBlurTarget );
             horizBlurPass->beginRendering();
-            renderQuad( data );
+            renderQuad( data, *renderer, tempBlurTarget );
             horizBlurPass->endRendering();
          }
 
@@ -234,12 +250,11 @@ void RPBlurNode::onUpdate( RenderingPipelineMechanism& host ) const
             vertBlurPass->setTexture( "inputTex", *tempBlurTarget );
 
             vertBlurPass->setFloatArray( "VBloomWeights", bloomWeights, 9 );
-            vertBlurPass->setFloatArray( "VBloomOffsets", bloomOffsets, 9 );
+            vertBlurPass->setFloatArray( "VBloomOffsets", vertBloomOffsets, 9 );
 
             // render
-            renderer->setRenderTarget( blurTarget );
             vertBlurPass->beginRendering();
-            renderQuad( data );
+            renderQuad( data, *renderer, blurTarget );
             vertBlurPass->endRendering();
          }
 
