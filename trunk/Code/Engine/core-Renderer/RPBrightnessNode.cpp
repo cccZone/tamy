@@ -59,6 +59,7 @@ void RPBrightnessNode::onInitialize( RenderingPipelineMechanism& host ) const
    data[ m_brightnessPass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Postprocess_BrightPassDownSample.psh" );
    data[ m_brightnessPass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Postprocess.psh", "BrightPassDownSample" );
    data[ m_brightnessPass ]->getParams().m_writeToZBuffer = false;
+   data[ m_brightnessPass ]->getParams().m_useZBuffer = false;
 
    data[ m_renderer ] = &host.getRenderer();
    data[ m_renderer ]->implement< PixelShader >( *data[ m_brightnessPass ] );

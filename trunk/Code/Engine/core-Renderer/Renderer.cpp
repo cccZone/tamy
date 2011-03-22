@@ -190,10 +190,12 @@ void Renderer::setRenderTarget( RenderTarget* renderTarget )
 
    if ( renderTarget )
    {
+      // when rendering to a render target, we DON'T want the z-buffer cleaned ( at least not at this point )
       cleanRenderTarget( renderTarget->getBackgroundColor() );
    }
    else
    {
+      // we only want the z-buffer cleaned when we're cleaning the back buffer
       cleanRenderTarget( backBufferColor );
    }
    markRenderTargetCleaned( renderTarget );

@@ -58,9 +58,13 @@ void RPLuminanceNode::onInitialize( RenderingPipelineMechanism& host ) const
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
    data[ m_greyscalePass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Luminance_GreyScaleDownSample.psh" );
    data[ m_greyscalePass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Luminance.psh", "GreyScaleDownSample" );
+   data[ m_greyscalePass ]->getParams().m_writeToZBuffer = false;
+   data[ m_greyscalePass ]->getParams().m_useZBuffer = false;
 
    data[ m_downSamplePass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Luminance_DownSample3x3.psh" );
    data[ m_downSamplePass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Luminance.psh", "DownSample3x3" );
+   data[ m_downSamplePass ]->getParams().m_writeToZBuffer = false;
+   data[ m_downSamplePass ]->getParams().m_useZBuffer = false;
 
    Renderer* renderer = &host.getRenderer();
    data[ m_renderer ] = renderer;

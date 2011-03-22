@@ -136,6 +136,8 @@ void DX9Renderer::resetViewport(unsigned int width, unsigned int height)
 
 void DX9Renderer::renderingBegin()
 {
+   // clean the Z buffer
+   m_d3Device->Clear( 0, NULL, D3DCLEAR_ZBUFFER, 0, 1.0f, 0 );
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -221,7 +223,7 @@ void DX9Renderer::activateRenderTarget( RenderTarget* renderTarget )
 
 void DX9Renderer::cleanRenderTarget( const Color& bgColor )
 {
-   m_d3Device->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, bgColor, 1.0f, 0 );
+   m_d3Device->Clear( 0, NULL, D3DCLEAR_TARGET, bgColor, 1.0f, 0 );
 }
 
 /////////////////////////////////////////////////////////////////////////////
