@@ -1,7 +1,7 @@
 #include "core-Renderer\Geometry.h"
 #include "core-Renderer\GeometryResource.h"
 #include "core-Renderer\Camera.h"
-#include "core-Renderer\SpatialEntity.h"
+#include "core-MVC\SpatialEntity.h"
 #include "core-MVC.h"
 #include "core.h"
 

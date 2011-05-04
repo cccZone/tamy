@@ -3,6 +3,7 @@
 #include "ManualEditionModes.h"
 #include "tamyeditor.h"
 #include "core-Renderer.h"
+#include "core-MVC.h"
 #include "Gizmo.h"
 #include <d3dx9.h>
 #include <math.h>

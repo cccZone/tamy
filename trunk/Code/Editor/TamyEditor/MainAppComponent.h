@@ -69,6 +69,7 @@ public slots:
    void toggleSceneExecution();
    void importFromIWF();
    void importFromBlender();
+   void importFromBVH();
 
 private:
    void initUI( TamyEditor& mgr );

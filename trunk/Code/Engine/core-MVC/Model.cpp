@@ -10,28 +10,53 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * This operation allows to apply Model::entityDFS method when
- * calling the Entity's parametrized method 'notifyComponentAdded',
- * (which requires a Component< Model >& param)
- */
-class ComponentAddOperation
-{
-private:
-   Model&               m_hostModel;
-   Component< Model >&  m_component;
-
-public:
-   ComponentAddOperation( Model& hostModel, Component< Model >& component )
-      : m_hostModel( hostModel )
-      , m_component( component )
-   {}
-
-   void notify( Entity& entity )
+   /**
+    * This operation allows to apply Model::entityDFS method when
+    * calling the Entity's parametrized method 'notifyComponentAdded',
+    * (which requires a Component< Model >& param)
+    */
+   class ComponentAddOperation
    {
-      m_hostModel.notifyComponentAdded( entity, m_component );
-   }
-};
+   private:
+      Model&               m_hostModel;
+      Component< Model >&  m_component;
+
+   public:
+      ComponentAddOperation( Model& hostModel, Component< Model >& component )
+         : m_hostModel( hostModel )
+         , m_component( component )
+      {}
+
+      void notify( Entity& entity )
+      {
+         m_hostModel.notifyComponentAdded( entity, m_component );
+      }
+   };
+
+   // -------------------------------------------------------------------------
+
+   /**
+    * This operation allows to apply Model::entityDFS method when
+    * calling the Entity's parametrized method 'notifyComponentAdded',
+    * (which requires a Component< Model >& param)
+    */
+   class ComponentRemoveOperation
+   {
+   private:
+      Model&               m_hostModel;
+      Component< Model >&  m_component;
+
+   public:
+      ComponentRemoveOperation( Model& hostModel, Component< Model >& component )
+         : m_hostModel( hostModel )
+         , m_component( component )
+      {}
+
+      void notify( Entity& entity )
+      {
+         m_hostModel.notifyComponentRemoved( entity, m_component );
+      }
+   };
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -51,6 +76,7 @@ Model::Model( const std::string& name )
 
 Model::~Model() 
 {
+   // detach the views
    unsigned int count = m_views.size();
    for (unsigned int i = 0; i < count; ++i)
    {
@@ -124,9 +150,19 @@ void Model::clear()
 {
    processViewsOperations();
 
+   unsigned int componentsCount = getComponentsCount();
    unsigned int count = m_entities.size();
    for (unsigned int i = 0; i < count; ++i)
    {
+      if ( m_entities[i] )
+      {
+         // inform the entity about the components being removed
+         for ( unsigned int compIdx = 0; compIdx < componentsCount; ++compIdx )
+         {
+            Component< Model >* comp = getComponent( compIdx );
+            m_entities[i]->onComponentRemoved( *comp );
+         }
+      }
       delete m_entities[i];
    }
    m_entities.clear();
@@ -296,6 +332,13 @@ void Model::notifyComponentAdded( Entity& entity, Component< Model >& component 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Model::notifyComponentRemoved( Entity& entity, Component< Model >& component )
+{
+   entity.onComponentRemoved( component );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 unsigned int Model::getViewsCount() const
 {
    return m_views.size() + m_viewsToAdd.size() - m_viewsToRemoveCount;
@@ -333,6 +376,20 @@ void Model::onComponentAdded( Component< Model >& component )
    for ( unsigned int i = 0; i < count; ++i )
    {
       entityDFS( *m_entities[i], Functor::FROM_METHOD(ComponentAddOperation, notify, &op) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Model::onComponentRemoved( Component< Model >& component )
+{
+   ComponentRemoveOperation op( *this, component );
+
+   // inform all attached entities about the component
+   unsigned int count = m_entities.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      entityDFS( *m_entities[i], Functor::FROM_METHOD(ComponentRemoveOperation, notify, &op) );
    }
 }
 

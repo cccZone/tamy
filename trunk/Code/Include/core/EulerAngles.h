@@ -71,6 +71,8 @@ struct EulerAngles : public RTTIObject
    EulerAngles operator/(float val) const;
    EulerAngles& operator/=(float val);
 
+   operator D3DXQUATERNION() const;
+
    // -------------------------------------------------------------------------
    // Operations
    // -------------------------------------------------------------------------

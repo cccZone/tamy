@@ -34,9 +34,6 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{60fc8284-5482-49ed-b73b-75d774ea83c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\Entities">
-      <UniqueIdentifier>{794a9a83-d410-4599-b1ed-8dc38016a3ee}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scene\Views">
       <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
     </Filter>
@@ -164,9 +161,6 @@
     </ClCompile>
     <ClCompile Include="SpatialView.cpp">
       <Filter>Scene\Views\SpatialView</Filter>
-    </ClCompile>
-    <ClCompile Include="SpatialEntity.cpp">
-      <Filter>Scene\Entities</Filter>
     </ClCompile>
     <ClCompile Include="LineSegments.cpp">
       <Filter>Geometry\Resources</Filter>
@@ -443,9 +437,6 @@
     <ClInclude Include="..\..\Include\core-Renderer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h">
-      <Filter>Scene\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h">
       <Filter>Geometry\Resources</Filter>

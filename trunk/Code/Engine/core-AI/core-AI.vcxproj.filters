@@ -19,8 +19,11 @@
     <Filter Include="SteeringBehaviors">
       <UniqueIdentifier>{dbcec436-c427-40f1-b9d2-0bf8e100ecf6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Animation">
+    <Filter Include="SkeletonAnimation">
       <UniqueIdentifier>{2a3fcde2-6455-4ca1-a21b-dcce20fbbc65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SkeletonAnimation\Resources">
+      <UniqueIdentifier>{f6091b5b-72b9-4ee8-a1fb-878c2e2b1445}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -67,6 +70,21 @@
       <Filter>SteeringBehaviors</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-AI.h" />
+    <ClInclude Include="..\..\Include\core-AI\AnimationTimeline.h">
+      <Filter>SkeletonAnimation\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\BoneSRTAnimation.h">
+      <Filter>SkeletonAnimation\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\SkeletonAnimationController.h">
+      <Filter>SkeletonAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\SkeletonAnimation.h">
+      <Filter>SkeletonAnimation\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\BoneEntity.h">
+      <Filter>SkeletonAnimation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MessageDispatcher.cpp">
@@ -90,10 +108,26 @@
     <ClCompile Include="CompositeSteeringBehavior.cpp">
       <Filter>SteeringBehaviors</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Include\core-AI\TypesRegistry.cpp" />
+    <ClCompile Include="BoneSRTAnimation.cpp">
+      <Filter>SkeletonAnimation\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonAnimationController.cpp">
+      <Filter>SkeletonAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonAnimation.cpp">
+      <Filter>SkeletonAnimation\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="BoneEntity.cpp">
+      <Filter>SkeletonAnimation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-AI\FsmLogicStateController.inl">
       <Filter>ControlStructures\FSM</Filter>
+    </None>
+    <None Include="..\..\Include\core-AI\AnimationTimeline.inl">
+      <Filter>SkeletonAnimation\Resources</Filter>
     </None>
   </ItemGroup>
 </Project>

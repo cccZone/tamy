@@ -77,6 +77,10 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-AI\BoneEntity.h" />
+    <ClInclude Include="..\..\Include\core-AI\SkeletonAnimationController.h" />
+    <ClInclude Include="..\..\Include\core-AI\AnimationTimeline.h" />
+    <ClInclude Include="..\..\Include\core-AI\BoneSRTAnimation.h" />
     <ClInclude Include="..\..\Include\core-AI\Messagable.h" />
     <ClInclude Include="..\..\Include\core-AI\Message.h" />
     <ClInclude Include="..\..\Include\core-AI\MessageDispatcher.h" />
@@ -90,10 +94,15 @@
     <ClInclude Include="..\..\Include\core-AI\FsmLogicState.h" />
     <ClInclude Include="..\..\Include\core-AI\FsmLogicStateController.h" />
     <ClInclude Include="..\..\Include\core-AI\CompositeSteeringBehavior.h" />
+    <ClInclude Include="..\..\Include\core-AI\SkeletonAnimation.h" />
     <ClInclude Include="..\..\Include\core-AI\SteeringBehavior.h" />
     <ClInclude Include="..\..\Include\core-AI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Include\core-AI\TypesRegistry.cpp" />
+    <ClCompile Include="BoneEntity.cpp" />
+    <ClCompile Include="SkeletonAnimationController.cpp" />
+    <ClCompile Include="BoneSRTAnimation.cpp" />
     <ClCompile Include="MessageDispatcher.cpp" />
     <ClCompile Include="BTCompositeNode.cpp" />
     <ClCompile Include="BTNode.cpp" />
@@ -101,8 +110,10 @@
     <ClCompile Include="BTSequenceNode.cpp" />
     <ClCompile Include="PreconditionSelectionStrategy.cpp" />
     <ClCompile Include="CompositeSteeringBehavior.cpp" />
+    <ClCompile Include="SkeletonAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\Include\core-AI\AnimationTimeline.inl" />
     <None Include="..\..\Include\core-AI\FsmLogicStateController.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

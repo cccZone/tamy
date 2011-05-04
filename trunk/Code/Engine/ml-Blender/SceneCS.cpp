@@ -1,6 +1,7 @@
 #include "ml-Blender/SceneCS.h"
 #include "ml-Blender/BlenderScene.h"
 #include "core.h"
+#include "core-MVC.h"
 #include "core-Renderer.h"
 #include "tinyxml/tinyxml.h"
 #include <stdexcept>

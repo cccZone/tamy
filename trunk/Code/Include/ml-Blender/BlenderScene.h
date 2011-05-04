@@ -46,6 +46,8 @@ public:
    /**
     * Constructor.
     *
+    * @param fs            filesystem
+    * @param fileName      name of the loaded file
     * @param rm            resources manager that manages the scene resources
     * @param observer      loading progress observer
     */

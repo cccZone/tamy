@@ -3,7 +3,7 @@
 #include "core-MVC\ModelView.h"
 #include "core-Renderer\SpatialView.h"
 #include "core-Renderer\CameraContext.h"
-#include "core-Renderer\SpatialEntity.h"
+#include "core-MVC\SpatialEntity.h"
 #include "core-Renderer\Geometry.h"
 #include "core-Renderer\GeometryResource.h"
 #include "core\BoundingSphere.h"

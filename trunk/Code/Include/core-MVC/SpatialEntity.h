@@ -1,6 +1,6 @@
 #pragma once
 
-/// @file   core-Renderer\SpatialEntity.h
+/// @file   core-MVC\SpatialEntity.h
 /// @brief  abstract entity that has a location in 3D space
 
 #include "core\Node.h"

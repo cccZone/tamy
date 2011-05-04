@@ -64,8 +64,8 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>cppunitd.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)\Lib\x86;$(SolutionDir)\Libs\External\CPPUNIT\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cppunitd.lib;d3dx9.lib;core.lib;core-MVC.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Libs\$(Configuration);$(DXSDK_DIR)\Lib\x86;$(SolutionDir)\Libs\External\CPPUNIT\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -85,8 +85,8 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>cppunit.lib;d3dx9.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)\Lib\x86;$(SolutionDir)\Libs\External\CPPUNIT\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cppunit.lib;d3dx9.lib;core.lib;core-MVC.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)\Libs\$(Configuration);$(DXSDK_DIR)\Lib\x86;$(SolutionDir)\Libs\External\CPPUNIT\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -96,10 +96,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BehaviorTreeTests.cpp" />
+    <ClCompile Include="BoneSRTAnimationTests.cpp" />
     <ClCompile Include="FiniteStateMachineTests.cpp" />
     <ClCompile Include="MessagingSystemTests.cpp" />
     <ClCompile Include="CompositeSteeringBehaviorTests.cpp" />
-    <ClCompile Include="AnimationTests.cpp" />
+    <ClCompile Include="SkeletonAnimationTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MessagableMock.h" />

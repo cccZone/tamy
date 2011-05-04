@@ -99,7 +99,7 @@ public:
    /**
     * Returns the parent of this entity (if it's attached to one).
     */
-   inline Entity& getParent();
+   inline Entity& getParent() const;
 
    /**
     * Returns the entity's children.
@@ -151,6 +151,7 @@ protected:
     * @param child      child entity about to be detached
     */
    virtual void onChildDetached(Entity& child) {}
+
    /**
     * Method called to inform a child entity about its 
     * new parent when it's being attached to it.
@@ -189,6 +190,13 @@ protected:
     * @param component
     */
    virtual void onComponentAdded( Component< Model >& component ) {}
+
+   /**
+    * Called when a component is removed from the model managing the entity.
+    *
+    * @param component
+    */
+   virtual void onComponentRemoved( Component< Model >& component ) {}
 
    /**
     * Called when entity's state is being updated.

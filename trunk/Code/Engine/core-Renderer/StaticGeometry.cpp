@@ -1,5 +1,5 @@
 #include "core-Renderer\StaticGeometry.h"
-#include "core-Renderer\SpatialEntity.h"
+#include "core-MVC\SpatialEntity.h"
 #include "core-Renderer\VertexShader.h"
 #include "core-Renderer\Camera.h"
 #include "core-MVC.h"

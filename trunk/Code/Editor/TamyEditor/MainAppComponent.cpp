@@ -3,6 +3,7 @@
 #include "core.h"
 #include "ml-IWF.h"
 #include "ml-Blender.h"
+#include "ml-BVH.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QProgressBar.h>
@@ -168,6 +169,10 @@ void MainAppComponent::initUI( TamyEditor& mgr )
          QAction* actionImportFromBlender = new QAction( QIcon( iconsDir + tr( "/importFromBlender.png" ) ), tr( "From Blender" ), &mgr );
          importSubMenu->addAction( actionImportFromBlender );
          connect( actionImportFromBlender, SIGNAL( triggered() ), this, SLOT( importFromBlender() ) );
+
+         QAction* actionImportFromBVH = new QAction( QIcon( iconsDir + tr( "/importFromBVH.png" ) ), tr( "From BVH" ), &mgr );
+         importSubMenu->addAction( actionImportFromBVH );
+         connect( actionImportFromBVH, SIGNAL( triggered() ), this, SLOT( importFromBVH() ) );
 
          QAction* actionImportFromIWF = new QAction( QIcon( iconsDir + tr( "/importFromIWF.png" ) ), tr( "From IWF" ), &mgr );
          importSubMenu->addAction( actionImportFromIWF );
@@ -404,3 +409,47 @@ void MainAppComponent::importFromBlender()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void MainAppComponent::importFromBVH()
+{
+   const Filesystem& fs = m_resourceMgr->getFilesystem();
+   std::string rootDir = fs.getCurrRoot();
+
+   QString bvhFileName = QFileDialog::getOpenFileName( m_mgr, 
+      tr( "Import MoCap from BVH" ), 
+      rootDir.c_str(), 
+      tr( "MoCap Files (*.bvh)" ) );
+
+   if ( bvhFileName.isEmpty() == true ) 
+   {
+      // no file was selected or user pressed 'cancel'
+      return;
+   }
+
+   // once the file is open, extract the directory name
+   std::string importFileName = fs.toRelativePath( bvhFileName.toStdString() );
+   std::string sceneName = fs.changeFileExtension( importFileName, Model::getExtension() );
+
+   Model* newScene = dynamic_cast< Model* >( m_resourceMgr->findResource( sceneName ) );
+   if ( !newScene )
+   {
+      newScene = new Model( sceneName ); 
+      m_resourceMgr->addResource( newScene );
+   }
+
+   try
+   {
+      newScene->clear();
+
+      ProgressDialog progressObserver( m_mgr );
+      BVHLoader res( fs, importFileName, *m_resourceMgr, progressObserver );
+      res.load( *newScene );
+
+      setScene( *newScene );
+   }
+   catch (std::exception& ex)
+   {
+      QMessageBox::warning( m_mgr, QString("Error occurred while importing MoCap animation ") + importFileName.c_str(), ex.what(), QMessageBox::Ok );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

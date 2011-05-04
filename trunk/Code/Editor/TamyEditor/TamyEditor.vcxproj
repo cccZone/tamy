@@ -868,6 +868,10 @@
       <Project>{269AD9D8-247F-4F55-8438-C6DC4532A12F}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\..\Engine\ml-BVH\ml-BVH.vcxproj">
+      <Project>{1E2B772F-3F08-43B8-B75C-5302A6CBA9BE}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\..\Engine\win-AppFlow\win-AppFlow.vcxproj">
       <Project>{dfe951ea-7c00-424c-91f4-d8c82631d191}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

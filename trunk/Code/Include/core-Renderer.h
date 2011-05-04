@@ -127,10 +127,6 @@
 #include "core-Renderer\TransparencyAttribute.h"
 #include "core-Renderer\UniqueObjectAttribute.h"
 // ----------------------------------------------------------------------------
-// --> Entities
-// ----------------------------------------------------------------------------
-#include "core-Renderer\SpatialEntity.h"
-// ----------------------------------------------------------------------------
 // --> Views
 // ----------------------------------------------------------------------------
 #include "core-Renderer\UniqueObjectAttribute.h"
