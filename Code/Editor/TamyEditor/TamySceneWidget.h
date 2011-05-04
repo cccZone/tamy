@@ -9,6 +9,7 @@
 #include "core-AppFlow\UserInputController.h"
 #include "core\Point.h"
 #include "core-Renderer\Camera.h"
+#include "core-MVC\ModelComponent.h"
 #include <d3d9.h>
 #include <set>
 
@@ -52,6 +53,7 @@ private:
 
    Model*                                             m_scene;
    DebugScene*                                        m_debugScene;
+   ModelComponent< DebugScene >*                      m_debugSceneComponent;
    CompositeRenderingMechanism*                       m_renderingMech;
 
 public:

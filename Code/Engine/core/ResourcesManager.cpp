@@ -27,10 +27,21 @@ ResourcesManager::~ResourcesManager()
 
 void ResourcesManager::reset()
 {
-   for (ResourcesMap::iterator it = m_resources.begin();
-      it != m_resources.end(); ++it)
+   unsigned int componentsCount = getComponentsCount();
+
+   for (ResourcesMap::iterator it = m_resources.begin(); it != m_resources.end(); ++it)
    {
-      delete it->second;
+      Resource* resource = it->second;
+      if ( resource )
+      {
+         // inform the resource about the components being removed
+         for ( unsigned int compIdx = 0; compIdx < componentsCount; ++compIdx )
+         {
+            Component< ResourcesManager >* comp = getComponent( compIdx );
+            resource->onComponentRemoved( *comp );
+         }
+      }
+      delete resource;
    }
    m_resources.clear();
 }

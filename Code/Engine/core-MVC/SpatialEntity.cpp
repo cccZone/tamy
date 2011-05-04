@@ -1,4 +1,4 @@
-#include "core-Renderer\SpatialEntity.h"
+#include "core-MVC\SpatialEntity.h"
 #include "core\Assert.h"
 #include <algorithm>
 

@@ -115,7 +115,6 @@
     <ClCompile Include="LineSegments.cpp" />
     <ClCompile Include="LitVertex.cpp" />
     <ClCompile Include="SkinnedGeometry.cpp" />
-    <ClCompile Include="SpatialEntity.cpp" />
     <ClCompile Include="StaticGeometry.cpp" />
     <ClCompile Include="TextureSockets.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
@@ -201,7 +200,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h" />
     <ClInclude Include="..\..\Include\core-Renderer\LitVertex.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SkinnedGeometry.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\SpatialEntity.h" />
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TextureSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h" />

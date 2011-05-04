@@ -10,7 +10,7 @@
     <Filter Include="SteeringBehaviors">
       <UniqueIdentifier>{23e0d74f-eded-4c18-9b31-d9548ac3223f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Animation">
+    <Filter Include="SkeletonAnimation">
       <UniqueIdentifier>{679b19c2-0c9a-45e1-b56a-ae52811f29cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -27,8 +27,11 @@
     <ClCompile Include="CompositeSteeringBehaviorTests.cpp">
       <Filter>SteeringBehaviors</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationTests.cpp">
-      <Filter>Animation</Filter>
+    <ClCompile Include="BoneSRTAnimationTests.cpp">
+      <Filter>SkeletonAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonAnimationTests.cpp">
+      <Filter>SkeletonAnimation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

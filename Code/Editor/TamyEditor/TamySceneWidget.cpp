@@ -41,6 +41,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
 : QWidget( parent, f )
 , m_keysStatusManager( NULL )
 , m_rendererComponent( NULL )
+, m_debugSceneComponent( NULL )
 , m_renderer( NULL )
 , m_camera( NULL )
 , m_scene( NULL )
@@ -71,8 +72,17 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
 
 TamySceneWidget::~TamySceneWidget()
 {
-   m_scene = NULL;
    m_renderingMech = NULL;
+
+   if ( m_scene )
+   {
+      // remove the associated debug scene component from the scene
+      m_scene->removeComponent( *m_debugSceneComponent );
+      m_scene = NULL;
+   }
+
+   delete m_debugSceneComponent;
+   m_debugSceneComponent = NULL;
 
    delete m_debugScene;
    m_debugScene = NULL;
@@ -112,6 +122,7 @@ void TamySceneWidget::initialize( TamyEditor& mgr )
 
    // create a debug renderer
    m_debugScene = new DebugScene();
+   m_debugSceneComponent = new ModelComponent< DebugScene >( *m_debugScene );
 
    // register new services
    mgr.registerService< Renderer >( *this, *m_renderer );
@@ -192,6 +203,7 @@ void TamySceneWidget::createRenderer( TamyEditor& mgr )
       // new scene requires a camera component - some entities are using it
       m_scene = &mgr.requestService< Model >();
       m_scene->addComponent( new ModelComponent< Camera >( *m_camera ) );
+      m_scene->addComponent( m_debugSceneComponent );
 
       if ( sceneRenderer )
       {

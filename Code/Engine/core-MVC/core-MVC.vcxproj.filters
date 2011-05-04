@@ -4,6 +4,9 @@
     <Filter Include="MVC">
       <UniqueIdentifier>{9503924f-5861-4b7c-a65f-4d2ffd2584a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Hierarchy">
+      <UniqueIdentifier>{1fe7cf8c-1acb-4bbd-bc55-282a58e97488}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -16,6 +19,9 @@
       <Filter>MVC</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Include\core-MVC\TypesRegistry.cpp" />
+    <ClCompile Include="SpatialEntity.cpp">
+      <Filter>Hierarchy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-MVC\Entity.h">
@@ -30,6 +36,9 @@
     <ClInclude Include="..\..\Include\core-MVC.h" />
     <ClInclude Include="..\..\Include\core-MVC\ModelComponent.h">
       <Filter>MVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-MVC\SpatialEntity.h">
+      <Filter>Hierarchy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

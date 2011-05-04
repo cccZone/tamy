@@ -3,6 +3,7 @@
 #include "SelectionManager.h"
 #include "core-AppFlow.h"
 #include "core-Renderer.h"
+#include "core-MVC.h"
 #include "EntityManualEditor.h"
 
 // editors

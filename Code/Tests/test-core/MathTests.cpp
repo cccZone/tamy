@@ -57,6 +57,26 @@ TEST(EulerAngles, angleBetweenTwoVectors)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+TEST(EulerAngles, toQuaternion)
+{
+   EulerAngles eulerAngle( 90.f, 0, 0 );
+   Matrix eulerMtx( eulerAngle );
+
+   D3DXQUATERNION quat = eulerAngle;
+   D3DXMATRIX quatMtx; 
+   D3DXMatrixIdentity( &quatMtx );
+   D3DXMatrixRotationQuaternion( &quatMtx, &quat );
+
+   D3DXVECTOR3 oz( 0, 0, 1 );
+   D3DXVECTOR3 eaTransformed = eulerMtx.transform( oz );
+   D3DXVECTOR3 quatTransformed;
+   D3DXVec3TransformCoord( &quatTransformed, &oz, &quatMtx );
+   
+   COMPARE_VEC( eaTransformed, quatTransformed );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 TEST(Matrix, rotationMatrix)
 {
    // lets make a matrix out of Euler angles

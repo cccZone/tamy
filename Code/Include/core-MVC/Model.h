@@ -135,6 +135,7 @@ protected:
    // ComponentsManager implementation
    // -------------------------------------------------------------------------
    void onComponentAdded( Component< Model >& component );
+   void onComponentRemoved( Component< Model >& component );
 
    // -------------------------------------------------------------------------
    // Resource implementation
@@ -146,6 +147,7 @@ private:
    void notifyEntityRemoved( Entity& entity );
    void notifyEntityChanged( Entity& entity );
    void notifyComponentAdded( Entity& entity, Component< Model >& component );
+   void notifyComponentRemoved( Entity& entity, Component< Model >& component );
    void processViewsOperations();
    void entityDFS( Entity& entity, const Functor& operation );
 
@@ -153,6 +155,7 @@ private:
    // Befriended operations
    // -------------------------------------------------------------------------
    friend class ComponentAddOperation;
+   friend class ComponentRemoveOperation;
    friend class Entity;
 };
 

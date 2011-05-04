@@ -223,6 +223,31 @@ EulerAngles& EulerAngles::operator/=(float val)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+EulerAngles::operator D3DXQUATERNION() const
+{
+   const double radYaw = toRadians( yaw );
+   const double radPitch = toRadians( pitch );
+   const double radRoll = toRadians( roll );
+
+   double c1 = cos( radYaw * 0.5f );
+   double s1 = sin( radYaw * 0.5f );
+   double c2 = cos( radPitch * 0.5f );
+   double s2 = sin( radPitch * 0.5f );
+   double c3 = cos( radRoll * 0.5f );
+   double s3 = sin( radRoll * 0.5f );
+   double c1c2 = c1*c2;
+   double s1s2 = s1*s2;
+
+   D3DXQUATERNION result;
+   result.w = (float)( c1c2*c3 - s1s2*s3 );
+   result.x = (float)( c1c2*s3 + s1s2*c3 );
+   result.y = (float)( s1*c2*c3 + c1*s2*s3 );
+   result.z = (float)( c1*s2*c3 - s1*c2*s3 );
+   return result;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 EulerAngles EulerAngles::normalized() const
 {
    EulerAngles o(yaw, pitch, roll);
