@@ -131,6 +131,11 @@ public:
     */
    void remove( IDebugDrawable& drawable );
 
+   /**
+    * Clears the contents of the debug scene.
+    */
+   void clear();
+
    // -------------------------------------------------------------------------
    // IDebugDrawable implementation
    // -------------------------------------------------------------------------

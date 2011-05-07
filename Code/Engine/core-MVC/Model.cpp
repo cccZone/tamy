@@ -150,23 +150,23 @@ void Model::clear()
 {
    processViewsOperations();
 
+   // inform the attached entities about the components being removed from them
    unsigned int componentsCount = getComponentsCount();
+   for ( unsigned int compIdx = 0; compIdx < componentsCount; ++compIdx )
+   {
+      Component< Model >* comp = getComponent( compIdx );
+      onComponentRemoved( *comp );
+   }
+
+   // delete the entities
    unsigned int count = m_entities.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      if ( m_entities[i] )
-      {
-         // inform the entity about the components being removed
-         for ( unsigned int compIdx = 0; compIdx < componentsCount; ++compIdx )
-         {
-            Component< Model >* comp = getComponent( compIdx );
-            m_entities[i]->onComponentRemoved( *comp );
-         }
-      }
       delete m_entities[i];
    }
    m_entities.clear();
 
+   // clear the views
    count = m_views.size();
    for (unsigned int i = 0; i < count; ++i)
    {

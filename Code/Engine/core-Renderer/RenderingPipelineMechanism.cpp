@@ -9,6 +9,7 @@
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core/AABoundingBox.h"
 #include "core-MVC/Model.h"
+#include "core-MVC/ModelDebugScene.h"
 #include "core/Graph.h"
 #include "core/GraphAlgorithms.h"
 #include "core/RuntimeData.h"
@@ -109,6 +110,7 @@ void RenderingPipelineMechanism::removeScene( RPMSceneId sceneId )
    ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to add a scene with an invalid sceneId" );
    if ( ( unsigned int )sceneId < RPS_MaxScenes )
    {
+      // remove the model
       m_scenes[sceneId]->setModel( NULL );
    }
 }
@@ -128,6 +130,8 @@ void RenderingPipelineMechanism::removeScene( Model& scene )
          ASSERT_MSG( foundMatch == false, "Check the addition mechanism - it allowed for a scene to be registered under two distinct ids" );
 
          foundMatch = true;
+
+         // remove the model
          (*it)->setModel( NULL );
       }
    }
@@ -135,9 +139,16 @@ void RenderingPipelineMechanism::removeScene( Model& scene )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineMechanism::setDebugScene( IDebugDrawable& debugScene )
+void RenderingPipelineMechanism::setDebugScene( DebugScene& debugScene )
 {
    m_debugScene = &debugScene;
+
+   // attach it to the models
+   unsigned int count = m_scenes.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      m_scenes[i]->setDebugScene( debugScene );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -384,8 +395,9 @@ void RenderingPipelineMechanism::drawGrid( IDebugDraw& debugRenderer ) const
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingPipelineMechanism::RenderedScene::RenderedScene()
-   :  m_spatialView( NULL )
+   : m_spatialView( NULL )
    , m_renderingView( NULL )
+   , m_debugSceneView( NULL )
    , m_statesManager( new DefaultAttributeSorter() )
    , m_model( NULL )
 {
@@ -409,6 +421,9 @@ RenderingPipelineMechanism::RenderedScene::~RenderedScene()
 
    delete m_renderingView;
    m_renderingView = NULL;
+
+   delete m_debugSceneView;
+   m_debugSceneView = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -427,6 +442,11 @@ void RenderingPipelineMechanism::RenderedScene::setModel( Model* model )
       // detach the old model from the views
       m_model->detach( *m_spatialView );
       m_model->detach( *m_renderingView );
+
+      if ( m_debugSceneView )
+      {
+         m_model->detach( *m_debugSceneView );
+      }
    }
 
    // set the new model
@@ -434,9 +454,32 @@ void RenderingPipelineMechanism::RenderedScene::setModel( Model* model )
 
    if ( m_model )
    {
-      // detach the old model from the views
+      // attach the new model to the views
       m_model->attach( *m_spatialView );
       m_model->attach( *m_renderingView );
+
+      if ( m_debugSceneView )
+      {
+         m_model->attach( *m_debugSceneView );
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::RenderedScene::setDebugScene( DebugScene& scene )
+{
+   if ( m_model && m_debugSceneView )
+   {
+      m_model->detach( *m_debugSceneView );
+   }
+
+   delete m_debugSceneView;
+   m_debugSceneView = new ModelDebugScene( scene );
+
+   if ( m_model )
+   {
+      m_model->attach( *m_debugSceneView );
    }
 }
 

@@ -53,7 +53,6 @@ private:
 
    Model*                                             m_scene;
    DebugScene*                                        m_debugScene;
-   ModelComponent< DebugScene >*                      m_debugSceneComponent;
    CompositeRenderingMechanism*                       m_renderingMech;
 
 public:

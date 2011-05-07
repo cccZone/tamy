@@ -27,6 +27,13 @@ void DebugScene::remove( IDebugDrawable& drawable )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void DebugScene::clear()
+{
+   m_drawables.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void DebugScene::onDebugRender( IDebugDraw& renderer ) const
 {
    unsigned int count = m_drawables.size();

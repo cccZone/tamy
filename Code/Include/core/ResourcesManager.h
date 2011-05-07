@@ -36,6 +36,8 @@ private:
    Filesystem*                m_filesystem;
    ResourcesMap               m_resources;
 
+   friend class Resource;
+
 public:
    ~ResourcesManager();
 
@@ -122,6 +124,13 @@ protected:
    // -------------------------------------------------------------------------
    void onComponentAdded( Component< ResourcesManager >& component );
    void onComponentRemoved( Component< ResourcesManager >& component );
+
+   /**
+    * Releases the resource from the memory, leaving it untouched in the filesystem.
+    *
+    * @param resource
+    */
+   void free( Resource* resource );
 
 private:
    /**

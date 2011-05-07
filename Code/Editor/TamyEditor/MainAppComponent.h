@@ -57,6 +57,11 @@ public:
     */
    void setScene( Model& scene );
 
+   /**
+    * Closes the active scene.
+    */
+   void closeScene();
+
    // -------------------------------------------------------------------------
    // Component initialization
    // -------------------------------------------------------------------------

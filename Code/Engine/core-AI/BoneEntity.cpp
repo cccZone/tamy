@@ -23,34 +23,6 @@ BoneEntity::~BoneEntity()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoneEntity::onComponentAdded( Component< Model >& component )
-{
-   __super::onComponentAdded( component );
-
-   m_debugDraw = dynamic_cast< ModelComponent< DebugScene >* >( &component );
-   if ( m_debugDraw )
-   {
-      DebugScene& scene = m_debugDraw->get();
-      scene.add( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void BoneEntity::onComponentRemoved( Component< Model >& component )
-{
-   __super::onComponentRemoved( component );
-
-   m_debugDraw = dynamic_cast< ModelComponent< DebugScene >* >( &component );
-   if ( m_debugDraw )
-   {
-      DebugScene& scene = m_debugDraw->get();
-      scene.remove( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void BoneEntity::onDebugRender( IDebugDraw& renderer ) const
 {
    SpatialEntity* parentNode = NULL;

@@ -29,9 +29,9 @@ void ResourcesManager::reset()
 {
    unsigned int componentsCount = getComponentsCount();
 
-   for (ResourcesMap::iterator it = m_resources.begin(); it != m_resources.end(); ++it)
+   while( m_resources.empty() == false )
    {
-      Resource* resource = it->second;
+      Resource* resource = m_resources.begin()->second;
       if ( resource )
       {
          // inform the resource about the components being removed
@@ -154,6 +154,38 @@ Resource& ResourcesManager::create( const std::string& name )
    ASSERT_MSG( res != NULL, "Resource not found" );
 
    return *res;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesManager::free( Resource* resource )
+{
+   if ( resource == NULL )
+   {
+      return;
+   }
+
+   ResourcesMap::iterator it = m_resources.find( resource->getResourceName() );
+   if ( it != m_resources.end() && it->second != resource )
+   {
+      char errMsg[512];
+      sprintf_s( errMsg, "Resources discrepancy - two resources share the same name '%s'", resource->getResourceName().c_str() );
+      ASSERT_MSG( false, errMsg );
+
+      // find a matching resource the hard way
+      for ( it = m_resources.begin(); it != m_resources.end(); ++it )
+      {
+         if ( it->second == resource )
+         {
+            break;
+         }
+      }
+   }
+
+   if ( it != m_resources.end() )
+   {
+      m_resources.erase( it );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
