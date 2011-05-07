@@ -29,12 +29,6 @@ public:
    ~BoneEntity();
 
    // -------------------------------------------------------------------------
-   // Entity implementation
-   // -------------------------------------------------------------------------
-   void onComponentAdded( Component< Model >& component );
-   void onComponentRemoved( Component< Model >& component );
-
-   // -------------------------------------------------------------------------
    // IDebugDrawable representation
    // -------------------------------------------------------------------------
    void onDebugRender( IDebugDraw& renderer ) const;

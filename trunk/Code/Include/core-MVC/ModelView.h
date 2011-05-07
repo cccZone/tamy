@@ -25,6 +25,11 @@ public:
    virtual ~ModelView();
 
    /**
+    * Deletes the view instance.
+    */
+   void release();
+
+   /**
     * This method is called when a new entity is added to the observed model.
     *
     * @param entity  entity that's been added to the model

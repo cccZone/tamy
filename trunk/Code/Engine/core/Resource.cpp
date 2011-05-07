@@ -54,6 +54,13 @@ Resource::Resource( const std::string& filePath )
 
 Resource::~Resource()
 {
+   // remove the resource from the resources manager
+   if ( m_host )
+   {
+      m_host->free( this );
+   }
+
+   // free all managed objects
    unsigned int count = m_managedObjects.size();
    for ( unsigned int i = 0; i < count; ++i )
    {

@@ -86,12 +86,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Include\core-MVC\TypesRegistry.cpp" />
+    <ClCompile Include="ModelDebugScene.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelView.cpp" />
     <ClCompile Include="SpatialEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-MVC\ModelDebugScene.h" />
     <ClInclude Include="..\..\Include\core-MVC\Entity.h" />
     <ClInclude Include="..\..\Include\core-MVC\Model.h" />
     <ClInclude Include="..\..\Include\core-MVC\ModelComponent.h" />

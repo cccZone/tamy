@@ -28,6 +28,8 @@ enum RenderingPipelineOperation;
 enum RenderingPipelineNodeOperation;
 class RuntimeDataBuffer;
 class Camera;
+class ModelDebugScene;
+class ModelView;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +66,8 @@ private:
       AttributeSorter*                             m_statesManager;
       SpatialView*                                 m_spatialView;
       RenderingView*                               m_renderingView;
+      ModelDebugScene*                             m_debugSceneView;
+
       Model*                                       m_model;
 
    public:
@@ -73,6 +77,8 @@ private:
       bool operator==( const Model& model ) const;
 
       void setModel( Model* model );
+
+      void setDebugScene( DebugScene& scene );
 
       void performVisibilityCheck( CameraContext& cameraContext );
 
@@ -84,7 +90,9 @@ private:
 
    Renderer*                                    m_renderer;
    std::vector< RenderedScene* >                m_scenes;
-   IDebugDrawable*                              m_debugScene;
+
+   DebugScene*                                  m_debugScene;
+
    Camera*                                      m_activeCamera;
    CameraContext*                               m_cameraContext;
 
@@ -141,7 +149,7 @@ public:
     *
     * @param debug scene
     */
-   void setDebugScene( IDebugDrawable& debugScene );
+   void setDebugScene( DebugScene& debugScene );
 
    /**
     * Sets a new active camera.

@@ -48,6 +48,28 @@ void MainAppComponent::update( float timeElapsed )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void MainAppComponent::closeScene()
+{
+   if ( m_mgr )
+   {
+      // stop any scene that may be running
+      stopScene();
+
+      // delete the old scene
+      Model* oldScene = NULL;
+      if ( m_mgr->hasService< Model >() )
+      {
+         oldScene = &( m_mgr->requestService< Model >() );
+         m_mgr->removeService< Model >( *this );
+
+         // delete the old scene
+         delete oldScene;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void MainAppComponent::setScene( Model& scene )
 {
    if ( m_mgr )
@@ -55,7 +77,19 @@ void MainAppComponent::setScene( Model& scene )
       // stop any scene that may be running
       stopScene();
 
+      // we-re managing the scenes - so check if one's registered, and memorize
+      // a pointer to it so that we can dispose of it afterwards
+      Model* oldScene = NULL;
+      if ( m_mgr->hasService< Model >() )
+      {
+         oldScene = &( m_mgr->requestService< Model >() );
+      }
+
+      // register the new scene
       m_mgr->registerService< Model >( *this, scene );
+
+      // delete the old scene
+      delete oldScene;
    }
 }
 
@@ -272,6 +306,9 @@ void MainAppComponent::loadScene()
 
    try
    {
+      // close the old scene
+      closeScene();
+
       ProgressDialog progressObserver( m_mgr );
       progressObserver.initialize( "Loading a scene", 1 );
       Model& newScene = dynamic_cast< Model& >( m_resourceMgr->create( fileName ) );
@@ -339,6 +376,10 @@ void MainAppComponent::importFromIWF()
    std::string importFileName = fs.toRelativePath( iwfFileName.toStdString() );
    std::string sceneName = fs.changeFileExtension( importFileName, Model::getExtension() );
 
+   // close the old scene
+   closeScene();
+
+   // create a new scene
    Model* newScene = dynamic_cast< Model* >( m_resourceMgr->findResource( sceneName ) );
    if ( !newScene )
    {
@@ -384,6 +425,10 @@ void MainAppComponent::importFromBlender()
    std::string importFileName = fs.toRelativePath( blenderFileName.toStdString() );
    std::string sceneName = fs.changeFileExtension( importFileName, Model::getExtension() );
 
+   // close the old scene
+   closeScene();
+
+   // create a new scene
    Model* newScene = dynamic_cast< Model* >( m_resourceMgr->findResource( sceneName ) );
    if ( !newScene )
    {
@@ -429,6 +474,10 @@ void MainAppComponent::importFromBVH()
    std::string importFileName = fs.toRelativePath( bvhFileName.toStdString() );
    std::string sceneName = fs.changeFileExtension( importFileName, Model::getExtension() );
 
+   // close the old scene
+   closeScene();
+
+   // create a new scene
    Model* newScene = dynamic_cast< Model* >( m_resourceMgr->findResource( sceneName ) );
    if ( !newScene )
    {

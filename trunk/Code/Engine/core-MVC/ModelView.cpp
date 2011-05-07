@@ -12,13 +12,10 @@ ModelView::ModelView()
 
 ModelView::~ModelView()
 {
-   std::set< Model* > modelsCache = m_models;
-   m_models.clear();
-
-   for ( std::set< Model* >::iterator it = modelsCache.begin();
-         it != modelsCache.end(); ++it )
+   while( m_models.empty() == false )
    {
-      (*it)->detach( *this );
+      Model* model = *m_models.begin();
+      model->detach( *this );
    }
 }
 
