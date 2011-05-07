@@ -14,27 +14,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BlenderScene::BlenderScene( const Filesystem& fs, const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer )
-   : m_rm( rm )
-   , m_observer( observer ) 
+BlenderScene::BlenderScene()
+   : m_rm( NULL )
+   , m_observer( NULL )
 {
-   // load the file contents into a string
-   File* sceneFile = fs.open( fileName );
-   StreamBuffer< char > fileReader( *sceneFile );
-   std::string sceneContents = fileReader.getBuffer();
-   delete sceneFile;
-
-   unsigned int bufSize = sceneContents.size() + 1;
-   char* xmlStr = new char[ bufSize ];
-   strcpy_s( xmlStr, bufSize, sceneContents.c_str() );
-   m_document = new TiXmlDocument( fileName.c_str() );
-   bool result = m_document->LoadFile( xmlStr, sceneContents.size(), TIXML_DEFAULT_ENCODING );
-
-   if ( !result )
-   {
-      throw std::runtime_error( "Error loading an XML file" );
-   }
-
    // define the slices
    m_definitions.push_back( new TSliceDefinition< MaterialCS >( "library_effects", "effect" ) );
    m_definitions.push_back( new TSliceDefinition< EffectCS >( "library_materials", "material" ) );
@@ -65,8 +48,39 @@ BlenderScene::~BlenderScene()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderScene::load( Model& scene )
+Resource* BlenderScene::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer )
 {
+   Model* scene = new Model( fileName );
+   load( fileName, rm, observer, *scene );
+   return scene;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BlenderScene::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer, Model& scene )
+{
+   // load the file contents into a string
+   const Filesystem& fs = rm.getFilesystem();
+   File* sceneFile = fs.open( fileName );
+   StreamBuffer< char > fileReader( *sceneFile );
+   std::string sceneContents = fileReader.getBuffer();
+   delete sceneFile;
+
+   unsigned int bufSize = sceneContents.size() + 1;
+   char* xmlStr = new char[ bufSize ];
+   strcpy_s( xmlStr, bufSize, sceneContents.c_str() );
+   m_document = new TiXmlDocument( fileName.c_str() );
+   bool result = m_document->LoadFile( xmlStr, sceneContents.size(), TIXML_DEFAULT_ENCODING );
+
+   if ( !result )
+   {
+      throw std::runtime_error( "Error loading an XML file" );
+   }
+
+   m_rm = &rm;
+   m_observer = &observer;
+
+   // start parsing the document
    ASSERT( m_slicesMap.empty() );
    ASSERT( m_sceneSlicesMap.empty() );
 
@@ -84,14 +98,14 @@ void BlenderScene::load( Model& scene )
    }
 
    // instantiate the scene
-   m_observer.initialize( "Instantiating scene objects", m_sceneSlicesMap.size() );
+   observer.initialize( "Instantiating scene objects", m_sceneSlicesMap.size() );
    for ( SceneSlicesMap::const_iterator it = m_sceneSlicesMap.begin(); it != m_sceneSlicesMap.end(); ++it )
    {
       ISceneSlice* slice = *it;
       slice->instantiate( *this, scene );
       delete slice;
 
-      m_observer.advance();
+      observer.advance();
    }
    m_sceneSlicesMap.clear();
 
@@ -101,6 +115,9 @@ void BlenderScene::load( Model& scene )
       delete it->second;
    }
    m_slicesMap.clear();
+
+   m_rm = NULL;
+   m_observer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -153,4 +170,3 @@ Entity* BlenderScene::getEntity( const std::string& id ) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-

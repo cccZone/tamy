@@ -72,9 +72,6 @@ public slots:
    void loadScene();
    void saveScene();
    void toggleSceneExecution();
-   void importFromIWF();
-   void importFromBlender();
-   void importFromBVH();
 
 private:
    void initUI( TamyEditor& mgr );

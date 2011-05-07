@@ -119,8 +119,9 @@ public:
     *
     * @param rootDir    directory from which the scanning should begin
     * @param scanner
+    * @param recursive  use recursive search through the directories tree
     */
-   void scan( const std::string& rootDir, FilesystemScanner& scanner ) const;
+   void scan( const std::string& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
 
    /**
     * Creates a new directory.

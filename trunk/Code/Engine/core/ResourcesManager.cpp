@@ -1,6 +1,8 @@
 #include "core\ResourcesManager.h"
+#include "core\ResourceLoader.h"
 #include "core\Serializer.h"
 #include "core\FileSerializer.h"
+#include "core\IProgressObserver.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -10,14 +12,25 @@ ResourcesManager ResourcesManager::s_theInstance;
 ///////////////////////////////////////////////////////////////////////////////
 
 ResourcesManager::ResourcesManager()
-: m_filesystem(new Filesystem())
+: m_filesystem( new Filesystem() )
+, m_progressObserverCreator( NULL )
 {
+   
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ResourcesManager::~ResourcesManager()
 {
+   // delete the loaders
+   for ( ResourceLoadersMap::iterator it = m_loaders.begin(); it != m_loaders.end(); ++it )
+   {
+      delete it->second;
+   }
+   m_loaders.clear();
+
+   delete m_progressObserverCreator; m_progressObserverCreator = NULL;
+
    delete m_filesystem; m_filesystem = NULL;
 
    reset();
@@ -138,12 +151,11 @@ Resource& ResourcesManager::create( const std::string& name )
    Resource* res = findResource( name );
    if ( res == NULL )
    {
-      std::string extension = Filesystem::extractExtension( name );
-      std::ios_base::openmode fileAccessMode = Resource::getFileAccessMode( extension );
-
-      File* file = m_filesystem->open( name, std::ios_base::in | fileAccessMode );
-      Loader loader( new FileSerializer( file ) );
-      res = &loader.load( *this );
+      ResourceLoader* loader = createResourceLoader( name );
+      IProgressObserver* observer = createObserver();
+      res = loader->load( name, *this, *observer );
+      delete loader;
+      delete observer;
 
       if ( res )
       {
@@ -201,6 +213,38 @@ void ResourcesManager::save( const std::string& name, ExternalDependenciesSet& o
       File* file = m_filesystem->open( name, std::ios_base::out | fileAccessMode );
       Saver saver( new FileSerializer( file ) );
       saver.save( *res, outExternalDependencies );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ResourceLoader* ResourcesManager::createResourceLoader( const std::string& name ) const
+{
+   std::string extension = Filesystem::extractExtension( name );
+
+   ResourceLoadersMap::const_iterator it = m_loaders.find( extension );
+   if ( it != m_loaders.end() )
+   {
+      ResourceLoader* loader = it->second->create();
+      return loader;
+   }
+   else
+   {
+      return new DefaultResourceLoader();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+IProgressObserver* ResourcesManager::createObserver()
+{
+   if ( m_progressObserverCreator )
+   {
+      return m_progressObserverCreator->create();
+   }
+   else
+   {
+      return new NullProgressObserver();
    }
 }
 

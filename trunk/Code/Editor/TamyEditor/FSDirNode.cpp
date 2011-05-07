@@ -47,3 +47,10 @@ void FSDirNode::addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactor
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void FSDirNode::editResource( ResourcesBrowser& editorsFactory )
+{
+   std::string thisDir = getRelativePath();
+   editorsFactory.refresh( thisDir );
+}
+
+///////////////////////////////////////////////////////////////////////////////

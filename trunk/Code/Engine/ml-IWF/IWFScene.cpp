@@ -19,20 +19,8 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-IWFScene::IWFScene( const Filesystem& fs, 
-                    const std::string& fileName )
-: m_fs(fs)
+IWFScene::IWFScene()
 {
-   std::size_t lastPos = fileName.find_last_of( "/\\" );
-   if ( lastPos != std::string::npos )
-   {
-      m_sceneDir = fileName.substr( 0, lastPos );
-      m_fileName = fileName.substr( lastPos + 1 );
-   }
-   else
-   {
-      m_fileName = fileName;
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,10 +31,33 @@ IWFScene::~IWFScene()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void IWFScene::load( Model& scene, ResourcesManager& rm, IProgressObserver& observer )
+Resource* IWFScene::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer )
 {
+   Model* scene = new Model( fileName );
+   load( fileName, rm, observer, *scene );
+   return scene;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void IWFScene::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer, Model& scene )
+{
+   // extract the scene directory
+   std::size_t lastPos = fileName.find_last_of( "/\\" );
+   if ( lastPos != std::string::npos )
+   {
+      m_sceneDir = fileName.substr( 0, lastPos );
+      m_fileName = fileName.substr( lastPos + 1 );
+   }
+   else
+   {
+      m_fileName = fileName;
+   }
+   const Filesystem& fs = rm.getFilesystem();
+
+   // load the IWF file
    CFileIWF sceneFile;
-   sceneFile.Load(m_fs, m_sceneDir + std::string("/") + m_fileName);
+   sceneFile.Load( fs, m_sceneDir + std::string("/") + m_fileName );
 
    // parse entities
    observer.initialize( "Importing entities", sceneFile.m_vpEntityList.size() );

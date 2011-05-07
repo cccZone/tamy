@@ -344,35 +344,29 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BVHLoader::BVHLoader( const Filesystem& fs, const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer )
-   : m_fs( fs )
-   , m_fileName( fileName )
-   , m_rm( rm )
-   , m_observer( observer )
+void BVHLoader::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer, Model& scene )
 {
-}
+   const Filesystem& fs = rm.getFilesystem();
 
-///////////////////////////////////////////////////////////////////////////////
-
-BVHLoader::~BVHLoader()
-{
-
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void BVHLoader::load( Model& scene )
-{
    // load the file contents into a string
-   File* bvhFile = m_fs.open( m_fileName );
+   File* bvhFile = fs.open( fileName );
    StreamBuffer< char > fileReader( *bvhFile );
    std::string fileContents = fileReader.getBuffer();
    delete bvhFile;
 
    // parse the bone structure
    std::stringstream inStream( fileContents );
-   BVHHierarchy hierarchy( m_rm, m_observer );
-   hierarchy.parse( m_fileName.c_str(), inStream, scene);
+   BVHHierarchy hierarchy( rm, observer );
+   hierarchy.parse( fileName.c_str(), inStream, scene );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Resource* BVHLoader::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer )
+{
+   Model* model = new Model( fileName );
+   load( fileName, rm, observer, *model );
+   return model;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
