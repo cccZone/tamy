@@ -26,6 +26,12 @@ MainAppComponent::MainAppComponent( QApplication& app, const char* fsRoot )
    fs->setShortcut( "editorIcons", "/Editor/Icons/" );
    m_resourceMgr->setFilesystem( fs );
 
+   // register external resources
+   m_resourceMgr->addLoader< BVHLoader >( "bvh" );
+   m_resourceMgr->addLoader< IWFScene >( "iwf" );
+   m_resourceMgr->addLoader< BlenderScene >( "dae" );
+   m_resourceMgr->setProgressObserver< ProgressDialog >();
+
    // configure the scene execution track
    m_timeController->add( "scene" );
 }
@@ -194,24 +200,6 @@ void MainAppComponent::initUI( TamyEditor& mgr )
       QAction* separator1 = new QAction( &fileMenu );
       separator1->setSeparator( true );
       fileMenu.addAction( separator1 );
-
-      // submenu Import
-      {
-         QMenu* importSubMenu = new QMenu( tr( "Import" ), &fileMenu );
-         fileMenu.addMenu( importSubMenu );
-
-         QAction* actionImportFromBlender = new QAction( QIcon( iconsDir + tr( "/importFromBlender.png" ) ), tr( "From Blender" ), &mgr );
-         importSubMenu->addAction( actionImportFromBlender );
-         connect( actionImportFromBlender, SIGNAL( triggered() ), this, SLOT( importFromBlender() ) );
-
-         QAction* actionImportFromBVH = new QAction( QIcon( iconsDir + tr( "/importFromBVH.png" ) ), tr( "From BVH" ), &mgr );
-         importSubMenu->addAction( actionImportFromBVH );
-         connect( actionImportFromBVH, SIGNAL( triggered() ), this, SLOT( importFromBVH() ) );
-
-         QAction* actionImportFromIWF = new QAction( QIcon( iconsDir + tr( "/importFromIWF.png" ) ), tr( "From IWF" ), &mgr );
-         importSubMenu->addAction( actionImportFromIWF );
-         connect( actionImportFromIWF, SIGNAL( triggered() ), this, SLOT( importFromIWF() ) );
-      }
       
       QAction* separator2 = new QAction( &fileMenu );
       separator2->setSeparator( true );
@@ -351,153 +339,6 @@ void MainAppComponent::saveScene()
       QMessageBox::warning( m_mgr, QString("Error occurred while saving scene"), ex.what(), QMessageBox::Ok );
 
       return;
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MainAppComponent::importFromIWF()
-{
-   const Filesystem& fs = m_resourceMgr->getFilesystem();
-   std::string rootDir = fs.getCurrRoot();
-
-   QString iwfFileName = QFileDialog::getOpenFileName( m_mgr , 
-      tr( "Import scene from IWF" ), 
-      rootDir.c_str(), 
-      tr( "Scene Files (*.iwf)" ) );
-
-   if (iwfFileName.isEmpty() == true) 
-   {
-      // no file was selected or user pressed 'cancel'
-      return;
-   }
-
-   // once the file is open, extract the directory name
-   std::string importFileName = fs.toRelativePath( iwfFileName.toStdString() );
-   std::string sceneName = fs.changeFileExtension( importFileName, Model::getExtension() );
-
-   // close the old scene
-   closeScene();
-
-   // create a new scene
-   Model* newScene = dynamic_cast< Model* >( m_resourceMgr->findResource( sceneName ) );
-   if ( !newScene )
-   {
-      newScene = new Model( sceneName ); 
-      m_resourceMgr->addResource( newScene );
-   }
-
-   try
-   {
-      newScene->clear();
-
-      ProgressDialog progressObserver( m_mgr );
-      IWFScene res( fs, importFileName );
-      res.load( *newScene, *m_resourceMgr, progressObserver );
-
-      setScene( *newScene );
-   }
-   catch (std::exception& ex)
-   {
-      QMessageBox::warning( m_mgr, QString("Error occurred while importing scene ") + importFileName.c_str(), ex.what(), QMessageBox::Ok );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MainAppComponent::importFromBlender()
-{
-   const Filesystem& fs = m_resourceMgr->getFilesystem();
-   std::string rootDir = fs.getCurrRoot();
-
-   QString blenderFileName = QFileDialog::getOpenFileName( m_mgr , 
-      tr( "Import scene from Blender" ), 
-      rootDir.c_str(), 
-      tr( "Scene Files (*.dae)" ) );
-
-   if (blenderFileName.isEmpty() == true) 
-   {
-      // no file was selected or user pressed 'cancel'
-      return;
-   }
-
-   // once the file is open, extract the directory name
-   std::string importFileName = fs.toRelativePath( blenderFileName.toStdString() );
-   std::string sceneName = fs.changeFileExtension( importFileName, Model::getExtension() );
-
-   // close the old scene
-   closeScene();
-
-   // create a new scene
-   Model* newScene = dynamic_cast< Model* >( m_resourceMgr->findResource( sceneName ) );
-   if ( !newScene )
-   {
-      newScene = new Model( sceneName ); 
-      m_resourceMgr->addResource( newScene );
-   }
-
-   try
-   {
-      newScene->clear();
-
-      ProgressDialog progressObserver( m_mgr );
-      BlenderScene res( fs, importFileName, *m_resourceMgr, progressObserver );
-      res.load( *newScene );
-
-      setScene( *newScene );
-   }
-   catch (std::exception& ex)
-   {
-      QMessageBox::warning( m_mgr, QString("Error occurred while importing scene ") + importFileName.c_str(), ex.what(), QMessageBox::Ok );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MainAppComponent::importFromBVH()
-{
-   const Filesystem& fs = m_resourceMgr->getFilesystem();
-   std::string rootDir = fs.getCurrRoot();
-
-   QString bvhFileName = QFileDialog::getOpenFileName( m_mgr, 
-      tr( "Import MoCap from BVH" ), 
-      rootDir.c_str(), 
-      tr( "MoCap Files (*.bvh)" ) );
-
-   if ( bvhFileName.isEmpty() == true ) 
-   {
-      // no file was selected or user pressed 'cancel'
-      return;
-   }
-
-   // once the file is open, extract the directory name
-   std::string importFileName = fs.toRelativePath( bvhFileName.toStdString() );
-   std::string sceneName = fs.changeFileExtension( importFileName, Model::getExtension() );
-
-   // close the old scene
-   closeScene();
-
-   // create a new scene
-   Model* newScene = dynamic_cast< Model* >( m_resourceMgr->findResource( sceneName ) );
-   if ( !newScene )
-   {
-      newScene = new Model( sceneName ); 
-      m_resourceMgr->addResource( newScene );
-   }
-
-   try
-   {
-      newScene->clear();
-
-      ProgressDialog progressObserver( m_mgr );
-      BVHLoader res( fs, importFileName, *m_resourceMgr, progressObserver );
-      res.load( *newScene );
-
-      setScene( *newScene );
-   }
-   catch (std::exception& ex)
-   {
-      QMessageBox::warning( m_mgr, QString("Error occurred while importing MoCap animation ") + importFileName.c_str(), ex.what(), QMessageBox::Ok );
    }
 }
 

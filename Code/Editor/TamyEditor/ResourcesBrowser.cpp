@@ -169,7 +169,7 @@ void ResourcesBrowser::refresh( const std::string& rootDir )
       return;
    }
    const Filesystem& fs = m_rm->getFilesystem();
-   fs.scan( rootDir, *this );
+   fs.scan( rootDir, *this, false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -244,9 +244,10 @@ void ResourcesBrowser::editResource( const std::string& path )
    ResourceEditor* editor = create( resource );
    if ( editor )
    {
+      // CAUTION: we don't manage the editor's lifetime - it has to take care of itself
       editor->initialize( *m_mgr );
    }
-   // CAUTION: we don't manage the editor's lifetime - it has to take care of itself
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

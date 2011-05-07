@@ -203,6 +203,9 @@
     <ClCompile Include="IDebugDraw.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceLoader.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -460,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\IDebugDraw.h">
       <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ResourceLoader.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -85,6 +85,7 @@
 #include "core\ResourceManagerComponent.h"
 #include "core\ResourceStorage.h"
 #include "core\ResourceHandle.h"
+#include "core\ResourceLoader.h"
 
 // ----------------------------------------------------------------------------
 // RTTI

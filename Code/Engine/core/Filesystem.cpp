@@ -386,7 +386,7 @@ void Filesystem::notifyDirChange( const std::string& dir ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Filesystem::scan( const std::string& rootDir, FilesystemScanner& scanner ) const
+void Filesystem::scan( const std::string& rootDir, FilesystemScanner& scanner, bool recursive ) const
 {
    std::vector< std::string > pathsStack;
    pathsStack.push_back( m_rootDir + rootDir + "/" );
@@ -411,7 +411,12 @@ void Filesystem::scan( const std::string& rootDir, FilesystemScanner& scanner ) 
             {
                std::string dirName = currPath + name + "/";
                scanner.onDirectory( toRelativePath( dirName ) );
-               pathsStack.push_back( dirName );
+
+               if ( recursive )
+               {
+                  // this is a recursive search, so add the found directory to the search tree
+                  pathsStack.push_back( dirName );
+               }
             }
          }
          else

@@ -83,6 +83,7 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NodeActionsExecutor.cpp" />
     <ClCompile Include="ResourceHandle.cpp" />
+    <ClCompile Include="ResourceLoader.cpp" />
     <ClCompile Include="RuntimeData.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="Enum.cpp" />
@@ -125,6 +126,7 @@
     <ClInclude Include="..\..\Include\core\NodeObserver.h" />
     <ClInclude Include="..\..\Include\core\NodeVisitor.h" />
     <ClInclude Include="..\..\Include\core\ResourceHandle.h" />
+    <ClInclude Include="..\..\Include\core\ResourceLoader.h" />
     <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h" />
     <ClInclude Include="..\..\Include\core\RuntimeData.h" />
     <ClInclude Include="..\..\Include\core\Singleton.h" />

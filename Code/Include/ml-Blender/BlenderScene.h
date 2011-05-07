@@ -4,6 +4,7 @@
 #ifndef _BLENDER_SCENE_H
 #define _BLENDER_SCENE_H
 
+#include "core/ResourceLoader.h"
 #include <string>
 #include <d3dx9.h>
 #include <vector>
@@ -26,12 +27,12 @@ class Entity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class BlenderScene
+class BlenderScene : public ResourceLoader
 {
 private:
    TiXmlDocument*                                  m_document;
-   ResourcesManager&                               m_rm;
-   IProgressObserver&                              m_observer;
+   ResourcesManager*                               m_rm;
+   IProgressObserver*                              m_observer;
 
    typedef std::vector< SliceDefinition* >         SlicesDefinitions;
    SlicesDefinitions                               m_definitions;
@@ -45,31 +46,34 @@ private:
 public:
    /**
     * Constructor.
-    *
-    * @param fs            filesystem
-    * @param fileName      name of the loaded file
-    * @param rm            resources manager that manages the scene resources
-    * @param observer      loading progress observer
     */
-   BlenderScene( const Filesystem& fs, const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer );
+   BlenderScene();
    ~BlenderScene();
 
    /**
     * The method will load a scene from a Blender export file.
     *
+    * @param fileName
+    * @param rm
+    * @param observer
     * @param scene         a model to which the scene should be uploaded
     */
-   void load( Model& scene );
+   void load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer, Model& scene );
 
    /**
     * Returns the used instance of progress observer.
     */
-   inline IProgressObserver& getObserver() { return m_observer; }
+   inline IProgressObserver& getObserver() { return *m_observer; }
 
    /**
     * Returns the used instance of resources manager.
     */
-   inline ResourcesManager& getResourcesManager() { return m_rm; }
+   inline ResourcesManager& getResourcesManager() { return *m_rm; }
+
+   // -------------------------------------------------------------------------
+   // ResourceLoader implementation
+   // -------------------------------------------------------------------------
+   Resource* load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer );
 
    // -------------------------------------------------------------------------
    // Slices management

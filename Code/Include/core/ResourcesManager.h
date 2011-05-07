@@ -14,6 +14,8 @@
 
 class Filesystem;
 class Resource;
+class ResourceLoader;
+class IProgressObserver;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,13 +30,51 @@ class Resource;
 class ResourcesManager : public ComponentsManager< ResourcesManager >
 {
 private:
-   typedef std::map<std::string, Resource* > ResourcesMap;
+   template< typename T >
+   class InstanceCreator
+   {
+   public:
+      virtual ~InstanceCreator() {}
+      
+      /**
+       * Instantiates a class.
+       */
+      virtual T* create() const = 0;
+   };
+
+   typedef InstanceCreator< ResourceLoader >       ResourceLoaderCreator;
+   template< typename T >
+   class TResourceLoaderCreator : public ResourceLoaderCreator
+   {
+   public:
+      ResourceLoader* create() const
+      {
+         return new T();
+      }
+   };
+
+   typedef InstanceCreator< IProgressObserver >    ProgressObserverCreator;
+   template< typename T >
+   class TProgressObserverCreator : public ProgressObserverCreator
+   {
+   public:
+      IProgressObserver* create() const
+      {
+         return new T();
+      }
+   };
+
+private:
+   typedef std::map< std::string, Resource* >               ResourcesMap;
+   typedef std::map< std::string, ResourceLoaderCreator* >  ResourceLoadersMap;
 
 private:
    static ResourcesManager    s_theInstance;
 
    Filesystem*                m_filesystem;
    ResourcesMap               m_resources;
+   ResourceLoadersMap         m_loaders;
+   ProgressObserverCreator*   m_progressObserverCreator;
 
    friend class Resource;
 
@@ -114,6 +154,18 @@ public:
    Resource* findResource( const std::string& name );
 
    /**
+    * Registers a loader of the specified type.
+    */
+   template< typename T >
+   void addLoader( const std::string& extension );
+
+   /**
+    * Registers a class that will be used as a progress observer
+    */
+   template< typename T >
+   void setProgressObserver();
+
+   /**
     * Returns the singleton instance of the resources manager.
     */
    static inline ResourcesManager& getInstance() { return s_theInstance; }
@@ -137,6 +189,16 @@ private:
     * Constructor.
     */
    ResourcesManager();
+
+   /**
+    * Creates a resource loader for the specified extension
+    */
+   ResourceLoader* createResourceLoader( const std::string& extension ) const;
+
+   /**
+    * Creates a progress observer.
+    */
+   IProgressObserver* createObserver();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
