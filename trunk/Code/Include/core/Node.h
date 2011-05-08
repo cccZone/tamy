@@ -48,10 +48,17 @@ public:
    virtual ~Node();
 
    /**
+    * Changes the node's name.
+    *
+    * @param name
+    */
+   inline void setName( const std::string& name ) { m_name = name; }
+
+   /**
     * Each node has a name(meaningful or otherwise) which serves
     * the node identification purpose. 
     */
-   const std::string& getName() const {return m_name;}
+   inline const std::string& getName() const {return m_name;}
 
    /**
     * This is the matrix that describes the node's absolute world position

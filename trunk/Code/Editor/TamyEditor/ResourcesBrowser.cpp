@@ -131,6 +131,7 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
    connect( m_fsTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( onAddNode( QTreeWidgetItem*, unsigned int ) ) );
    connect( m_fsTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( onRemoveNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
    connect( m_fsTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( onClearNode( QTreeWidgetItem* ) ) );
+   connect( m_fsTree, SIGNAL( popupMenuShown( QTreeWidgetItem*, QMenu& ) ), this, SLOT( onPopupMenuShown( QTreeWidgetItem*, QMenu& ) ) );
 
    m_rootDir = new FSRootNode( m_fsTree, m_rm->getFilesystem() );
    m_fsTree->addTopLevelItem( m_rootDir );
@@ -163,13 +164,11 @@ void ResourcesBrowser::refresh( const std::string& rootDir )
    // clean it up
    entry->clear();
 
-   // if we have a resources manager instance, refill its contents
-   if ( !m_rm )
+   // scan the contents of the resources manager
+   if ( m_rm != NULL )
    {
-      return;
+      m_rm->scan( rootDir, *this, false );
    }
-   const Filesystem& fs = m_rm->getFilesystem();
-   fs.scan( rootDir, *this, false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -263,8 +262,9 @@ void ResourcesBrowser::onDirectory( const std::string& name )
 
    FSTreeNode* parent = find( parentDirName );
    ASSERT_MSG( parent != NULL, "Parent directory not found" );
-   if ( parent )
+   if ( parent && parent->find( newNodeName ) == NULL )
    { 
+      // add the new node ( but only if it's unique )
       new FSDirNode( parent, newNodeName, fs );
    }
 }
@@ -291,8 +291,9 @@ void ResourcesBrowser::onFile( const std::string& name )
 
    FSTreeNode* parent = find( parentDirName );
    ASSERT_MSG( parent != NULL, "Parent directory not found" );
-   if ( parent )
-   {  
+   if ( parent && parent->find( newNodeName ) == NULL )
+   {
+      // add the new node ( but only if it's unique )
       new FSLeafNode( parent, newNodeName, fs, *m_itemsFactory );
    }
 }
@@ -362,6 +363,29 @@ void ResourcesBrowser::onClearNode( QTreeWidgetItem* node )
 {
    FSTreeNode* item = dynamic_cast< FSTreeNode* >( node );
    item->clearNodes();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu )
+{
+   // create additional save actions, providing the item we clicked
+   // is a loaded resource
+   FSLeafNode* nodeItem = dynamic_cast< FSLeafNode* >( node );
+   if ( nodeItem )
+   {
+      Resource* resource = m_rm->findResource( nodeItem->getRelativePath() );
+      if ( resource != NULL )
+      {
+         menu.addSeparator();
+
+         QAction* saveNodeAction = new SaveResourceAction( QIcon( m_iconsDir + "saveFile.png" ), "Save", this, *resource, false );
+         menu.addAction( saveNodeAction );
+
+         QAction* saveHierarchyAction = new SaveResourceAction( QIcon( m_iconsDir + "saveFile.png" ), "Save All", this, *resource, true );
+         menu.addAction( saveHierarchyAction );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -441,6 +465,34 @@ QMimeData* FSTreeWidget::mimeData( const QList<QTreeWidgetItem *> items ) const
    dataEncoder.save( *data );
 
    return data;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+SaveResourceAction::SaveResourceAction( const QIcon& icon, const char* name, QObject* parent, Resource& resource, bool recursive )
+   : QAction( icon, name, parent )
+   , m_resource( resource )
+   , m_recursive( recursive )
+{
+   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SaveResourceAction::onTriggered()
+{
+   ExternalDependenciesSet externalDependencies;
+   m_resource.saveResource( externalDependencies );
+
+   if ( m_recursive )
+   {
+      for ( unsigned int i = 0; i < externalDependencies.size(); ++i )
+      {
+         externalDependencies[ i ]->saveResource( externalDependencies );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

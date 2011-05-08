@@ -9,6 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( SkeletonAnimationController, Entity );
+   PROPERTY_EDIT( "Animation", SkeletonAnimation*, m_source );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,6 +30,7 @@ SkeletonAnimationController::~SkeletonAnimationController()
    {
       delete m_bonePlayers[i];
    }
+   m_bonePlayers.clear();
 
    m_source = NULL;
 
@@ -49,6 +51,7 @@ void SkeletonAnimationController::setAnimationSource( SkeletonAnimation& source 
    {
       delete m_bonePlayers[i];
    }
+   m_bonePlayers.clear();
 
    if ( m_source != NULL && m_skeleton.empty() == false )
    {
@@ -129,6 +132,7 @@ void SkeletonAnimationController::onAttached( Entity& parent )
    {
       delete m_bonePlayers[i];
    }
+   m_bonePlayers.clear();
 
    if ( m_source != NULL && m_skeleton.empty() == false )
    {
