@@ -101,6 +101,7 @@ public slots:
    void onAddNode( QTreeWidgetItem* parent, unsigned int typeIdx );
    void onRemoveNode( QTreeWidgetItem* parent, QTreeWidgetItem* child );
    void onClearNode( QTreeWidgetItem* node );
+   void onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu );
 
 private:
    void initializeEditors();
@@ -129,6 +130,35 @@ public:
 
 protected:
    QMimeData* mimeData( const QList<QTreeWidgetItem *> items ) const;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * An action that saves the selected resource.
+ */
+class SaveResourceAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   Resource&               m_resource;
+   bool                    m_recursive;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param icon
+    * @param name
+    * @param parent
+    * @param resource
+    * @param recursive     should all dependencies be saved as well?
+    */
+   SaveResourceAction( const QIcon& icon, const char* name, QObject* parent, Resource& resource, bool recursive );
+
+public slots:
+   void onTriggered();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

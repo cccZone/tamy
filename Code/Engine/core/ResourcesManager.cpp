@@ -146,6 +146,42 @@ Resource* ResourcesManager::findResource( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void ResourcesManager::scan( const std::string& rootDir, FilesystemScanner& scanner, bool recursive ) const
+{
+   // scan the contents of the filesystem
+   m_filesystem->scan( rootDir, scanner, recursive );
+
+   // scan the registered resources
+   const std::size_t rootDirNameLen = rootDir.length();
+   for ( ResourcesMap::const_iterator it = m_resources.begin(); it != m_resources.end(); ++it )
+   {
+      std::size_t rootDirPos = it->first.find( rootDir );
+      if ( rootDirPos != 0 )
+      {
+         // we only want to consider files located in the root directory
+         continue;
+      }
+
+      if ( recursive )
+      {
+         // it's a recursive search - add all files
+         scanner.onFile( it->first );
+      }
+      else
+      {
+         // it's not a recursive search - add only the files in this directory
+         std::size_t subDirCharPos = it->first.find_first_of( "/\\", rootDirNameLen );
+         if ( subDirCharPos == std::string::npos )
+         {
+            scanner.onFile( it->first );
+         }
+      }
+
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Resource& ResourcesManager::create( const std::string& name )
 {
    Resource* res = findResource( name );

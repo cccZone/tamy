@@ -11,7 +11,7 @@ END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SpatialEntity::SpatialEntity(const std::string& name)
+SpatialEntity::SpatialEntity( const std::string& name )
 : Entity( name )
 , Node( name )
 {
@@ -47,6 +47,16 @@ void SpatialEntity::onChildDetached(Entity& child)
    if (se == NULL) { return; }
 
    removeChild(*se);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SpatialEntity::onObjectLoaded()
+{
+   __super::onObjectLoaded();
+
+   // update the node name
+   setName( getEntityName() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -16,6 +16,7 @@ class Filesystem;
 class Resource;
 class ResourceLoader;
 class IProgressObserver;
+class FilesystemScanner;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -152,6 +153,17 @@ public:
     * @return           pointer to the resource or NULL if the manager does not have one.
     */
    Resource* findResource( const std::string& name );
+
+   /**
+    * The method scans the resource manager memory in search for loaded resources, 
+    * starting from the specified root directory, and informs via the FilesystemScanner 
+    * interface about its finding.
+    *
+    * @param rootDir    directory from which the scanning should begin
+    * @param scanner
+    * @param recursive  use recursive search through the directories tree
+    */
+   void scan( const std::string& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
 
    /**
     * Registers a loader of the specified type.

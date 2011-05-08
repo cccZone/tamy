@@ -67,7 +67,7 @@ END_RESOURCE()
 ///////////////////////////////////////////////////////////////////////////////
 
 Model::Model( const std::string& name )
-: Resource( name )
+: Resource( Filesystem::changeFileExtension( name, Model::getExtension() ) )
 , m_viewsToRemoveCount(0)
 {
 }

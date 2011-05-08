@@ -1,6 +1,7 @@
 #include "FSLeafNode.h"
 #include "ResourcesBrowser.h"
 #include <stdexcept>
+#include <QFileIconProvider>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,21 +24,40 @@ FSLeafNode::FSLeafNode( FSTreeNode* parent,
 
 void FSLeafNode::setEntryIcon( const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory )
 {
-   QString iconsDir = fs.getShortcut( "editorIcons" ).c_str();
-   std::string extension = fs.extractExtension( m_fsNodeName ).c_str();
+   std::string iconsDir = fs.getShortcut( "editorIcons" );
+   std::string extension = fs.extractExtension( m_fsNodeName );
 
-   Class resourceType = Resource::findResourceClass( extension );
+   QIcon icon;
+
+   Class resourceType = Resource::findResourceClass( extension.c_str() );
    if ( resourceType.isValid() )
    {
+      // as the first shot, try creating an icon corresponding to the type of the resource
       QString typeName;
-      QIcon icon;
       itemsFactory.getDesc( resourceType, typeName, icon );
-      setIcon( 0, icon );
    }
-   else
+   
+   if ( icon.isNull() )
    {
-      setIcon( 0, QIcon( iconsDir + "unknownFileIcon.png" ) );
+      // if the resource is of an unknown type, try finding an icon matching the file extension
+      std::string iconName = iconsDir + "/" + extension + "Icon.png";
+      if ( fs.doesExist( fs.toRelativePath( iconName ) ) )
+      {
+         icon = QIcon( iconName.c_str() );
+      }
    }
+
+   if ( icon.isNull() )
+   {
+      // as a last resort, try using a system icon
+      QFileIconProvider iconProvider;
+
+      std::string absolutePath = fs.toAbsolutePath( getRelativePath() );
+      QFileInfo fileInfo( absolutePath.c_str() );
+      icon = iconProvider.icon( fileInfo );
+   }
+
+   setIcon( 0, icon );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
