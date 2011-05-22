@@ -80,7 +80,38 @@ public:
    /**
     * Returns the bone name.
     */
-   inline const std::string& getBoneName() const { return  m_boneName; }
+   inline const std::string& getBoneName() const { return m_boneName; }
+
+   // -------------------------------------------------------------------------
+   // Raw data access
+   // -------------------------------------------------------------------------
+   /**
+    * Returns the number of translation keys.
+    */
+   inline unsigned int getTranslationKeysCount() const { return m_translation.m_keys.size(); }
+
+   /**
+    * Returns a requested translation key.
+    *
+    * @param keyIdx     requested key index
+    * @param outValue
+    * @param outTime
+    */
+   void getTranslationKey( unsigned int keyIdx, D3DXVECTOR3& outValue, float& outTime ) const;
+
+   /**
+    * Returns the number of orientation keys.
+    */
+   inline unsigned int getOrientationKeysCount() const { return m_orientation.m_keys.size(); }
+
+   /**
+    * Returns a requested orientation key.
+    *
+    * @param keyIdx     requested key index
+    * @param outValue
+    * @param outTime
+    */
+   void getOrientationKey( unsigned int keyIdx, D3DXQUATERNION& outValue, float& outTime ) const;
 
    // -------------------------------------------------------------------------
    // Serializable implementation

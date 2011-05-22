@@ -124,6 +124,18 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
+    <Filter Include="ResourceEditors\SkeletonAnimationEditor">
+      <UniqueIdentifier>{ec933e20-bb44-4680-8a4f-2c6dd86a4710}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\SkeletonAnimationEditor\KeysChart">
+      <UniqueIdentifier>{3951c879-3dac-4490-90ee-cba72565e813}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\SkeletonAnimationEditor\EventsChart">
+      <UniqueIdentifier>{1cb7b66f-1794-41b1-9ca9-f6529fc8815a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Chart">
+      <UniqueIdentifier>{e28708dd-7275-48dd-a185-3285f3b86ce8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -263,6 +275,18 @@
     </ClInclude>
     <ClInclude Include="RPBDebugRender.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_skeletonanimationeditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonAnimationKeysChart.h">
+      <Filter>ResourceEditors\SkeletonAnimationEditor\KeysChart</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonAnimationEventsChart.h">
+      <Filter>ResourceEditors\SkeletonAnimationEditor\EventsChart</Filter>
+    </ClInclude>
+    <ClInclude Include="ChartLine.h">
+      <Filter>Widgets\Chart</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -582,6 +606,21 @@
     <ClCompile Include="RPBDebugRender.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="SkeletonAnimationEditor.cpp">
+      <Filter>ResourceEditors\SkeletonAnimationEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SkeletonAnimationEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonAnimationKeysChart.cpp">
+      <Filter>ResourceEditors\SkeletonAnimationEditor\KeysChart</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonAnimationEventsChart.cpp">
+      <Filter>ResourceEditors\SkeletonAnimationEditor\EventsChart</Filter>
+    </ClCompile>
+    <ClCompile Include="ChartLine.cpp">
+      <Filter>Widgets\Chart</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -714,6 +753,12 @@
     </CustomBuild>
     <CustomBuild Include="EnumPropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="skeletonanimationeditor.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SkeletonAnimationEditor.h">
+      <Filter>ResourceEditors\SkeletonAnimationEditor</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

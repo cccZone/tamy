@@ -160,3 +160,14 @@ void SkeletonAnimation::initializePlayer( const std::vector< Node* >& skeleton, 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimation::collectBonesNames( std::vector< std::string>& outNames ) const
+{
+   unsigned int count = m_boneAnimations.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      outNames.push_back( m_boneAnimations[i]->getBoneName() );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
