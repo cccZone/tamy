@@ -12,6 +12,7 @@
 #include "FSNodeMimeData.h"
 #include "core-MVC.h"
 #include "core-Renderer.h"
+#include "core-AI.h"
 
 // nodes
 #include "FSTreeNode.h"
@@ -23,6 +24,7 @@
 #include "SceneEditor.h"
 #include "MaterialEditor.h"
 #include "RenderingPipelineEditor.h"
+#include "SkeletonAnimationEditor.h"
 
 // resources
 #include "RenderingPipelineLayout.h"
@@ -53,9 +55,11 @@ ResourcesBrowser::~ResourcesBrowser()
 
 void ResourcesBrowser::initializeEditors()
 {
+   // associate resources with their respective editors
    associate< Model, SceneEditor >();
    associate< PixelShader, MaterialEditor >();
    associate< RenderingPipelineLayout, RenderingPipelineEditor >();
+   associate< SkeletonAnimation, SkeletonAnimationEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

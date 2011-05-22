@@ -76,7 +76,6 @@ public:
     */
    void initializePlayer( const std::vector< Node* >& skeleton, std::vector< BoneSRTAnimationPlayer* >& outBonePlayers ) const;
 
-private:
    /**
     * Finds an animation stream for the specified bone.
     *
@@ -84,6 +83,13 @@ private:
     * @return pointer to an animation stream
     */
    BoneSRTAnimation* getBoneDef( const std::string& boneName ) const;
+
+   /**
+    * Collects the names of the bones used in this animation.
+    *
+    * @param outNames
+    */
+   void collectBonesNames( std::vector< std::string>& outNames ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

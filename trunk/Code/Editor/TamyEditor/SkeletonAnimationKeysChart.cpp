@@ -1,0 +1,218 @@
+#include "SkeletonAnimationKeysChart.h"
+#include "core-AI/SkeletonAnimation.h"
+#include "core-AI/BoneSRTAnimation.h"
+#include "ChartLine.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+namespace // anonymous
+{
+   class PtsProvider : public ChartLinePointsProvider
+   {
+   private:
+      BoneSRTAnimation&       m_boneAnimation;
+      unsigned int            m_keyIdx;
+
+   public:
+      PtsProvider( BoneSRTAnimation& boneAnimation, unsigned int keyIdx )
+         : m_boneAnimation( boneAnimation )
+         , m_keyIdx( keyIdx )
+      {}
+
+      void getPoints( QPointF*& outPoints, unsigned int& outCount ) const
+      {
+         if ( m_keyIdx == BAKEY_POS_X || m_keyIdx == BAKEY_POS_Y || m_keyIdx == BAKEY_POS_Z )
+         {
+            // translation keys
+            outCount = m_boneAnimation.getTranslationKeysCount();
+            if ( outCount == 0 )
+            {
+               return;
+            }
+
+            outPoints = new QPointF[ outCount ];
+            D3DXVECTOR3 pos;
+            float time;
+            for ( unsigned int i = 0; i < outCount; ++i )
+            {
+               m_boneAnimation.getTranslationKey( i, pos, time );
+               outPoints[i].setX( time );
+
+               switch( m_keyIdx )
+               {
+               case BAKEY_POS_X: { outPoints[i].setY( pos.x ); break; }
+               case BAKEY_POS_Y: { outPoints[i].setY( pos.y ); break; }
+               case BAKEY_POS_Z: { outPoints[i].setY( pos.z ); break; }
+               }
+            }
+         }
+         else
+         {
+            // orientation keys
+            outCount = m_boneAnimation.getOrientationKeysCount();
+            if ( outCount == 0 )
+            {
+               return;
+            }
+
+            outPoints = new QPointF[ outCount ];
+            D3DXQUATERNION orient;
+            float time;
+            for ( unsigned int i = 0; i < outCount; ++i )
+            {
+               m_boneAnimation.getOrientationKey( i, orient, time );
+               outPoints[i].setX( time );
+
+               float angle = 0.0f;
+               switch( m_keyIdx )
+               {
+               case BAKEY_YAW: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 0, 1, 0 ), &angle ); break; }
+               case BAKEY_PITCH: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 1, 0, 0 ), &angle ); break; }
+               case BAKEY_ROLL: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 0, 0, 1 ), &angle ); break; }
+               }
+               outPoints[i].setY( angle );
+            }
+         }
+      }
+   };
+} // anonymous
+
+///////////////////////////////////////////////////////////////////////////////
+
+SkeletonAnimationKeysChart::SkeletonAnimationKeysChart( SkeletonAnimation& animation )
+   : m_animation( animation )
+{
+   for ( unsigned int i = BAKEY_MIN; i < BAKEY_MAX; ++i )
+   {
+      m_keysVisibility[i] = false;
+   }
+
+   m_colors[BAKEY_POS_X] = QColor( 166, 78, 229 );
+   m_colors[BAKEY_POS_Y] = QColor( 255, 71, 138 );
+   m_colors[BAKEY_POS_Z] = QColor( 255, 125, 61 );
+   m_colors[BAKEY_YAW] = QColor( 163, 206, 76 );
+   m_colors[BAKEY_PITCH] = QColor( 65, 193, 136 );
+   m_colors[BAKEY_ROLL] = QColor( 84, 206, 255 );
+
+   // go through the animation keys and draw proper lines showing them
+
+   // TODO: create a graphics item corresponding to a single key value, that is drawn as a line
+   // and allow for its edition
+   // TODO: add accessors allowing to display/hide certain animation keys
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SkeletonAnimationKeysChart::~SkeletonAnimationKeysChart()
+{
+   for ( ChartsMap::iterator it = m_charts.begin(); it != m_charts.end(); ++it )
+   {
+      delete it->second;
+   }
+   m_charts.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationKeysChart::toggleBone( const std::string& boneName )
+{
+   ChartsMap::iterator it = m_charts.find( boneName );
+   if ( it != m_charts.end() )
+   {
+      // the bone's chart's being displayed - hide it
+      delete it->second;
+      m_charts.erase( it );
+   }
+   else
+   {
+      // the bone's not displayed - show it
+      BoneSRTAnimation* boneAnimation = m_animation.getBoneDef( boneName );
+      if ( boneAnimation != NULL )
+      {
+         BoneSRTAnimationChart* chart = new BoneSRTAnimationChart( *this, *boneAnimation );
+         m_charts.insert( std::make_pair( boneName, chart ) );
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool SkeletonAnimationKeysChart::isBoneDisplayed( const std::string& boneName ) const
+{
+   ChartsMap::const_iterator it = m_charts.find( boneName );
+   return it != m_charts.end();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationKeysChart::toggleKeyVisibility( EBoneKeyId keyIdx )
+{
+   m_keysVisibility[keyIdx] = !m_keysVisibility[keyIdx];
+
+   for ( ChartsMap::iterator it = m_charts.begin(); it != m_charts.end(); ++it )
+   {
+      it->second->onKeysVisibilityChanged();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+BoneSRTAnimationChart::BoneSRTAnimationChart( SkeletonAnimationKeysChart& scene, BoneSRTAnimation& boneAnimation )
+   : m_scene( scene )
+   , m_boneAnimation( boneAnimation )
+{
+   for ( unsigned int i = BAKEY_MIN; i < BAKEY_MAX; ++i )
+   {
+      m_lines[i] = NULL;
+   }
+   updateVisibleKeys();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+BoneSRTAnimationChart::~BoneSRTAnimationChart()
+{
+   for ( unsigned int i = BAKEY_MIN; i < BAKEY_MAX; ++i )
+   {
+      if ( m_lines[i] )
+      {
+         m_scene.removeItem( m_lines[i] );
+         delete m_lines[i];
+         m_lines[i] = NULL;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BoneSRTAnimationChart::onKeysVisibilityChanged()
+{
+   updateVisibleKeys();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BoneSRTAnimationChart::updateVisibleKeys()
+{
+   for ( unsigned int keyIdx = BAKEY_MIN; keyIdx < BAKEY_MAX; ++keyIdx )
+   {
+      if ( m_scene.isKeyVisible( (EBoneKeyId)keyIdx ) && m_lines[keyIdx] == NULL )
+      {
+         // the key should be visible, but it's not at the moment - display it
+         m_lines[keyIdx] = new ChartLine( m_scene.getColor( (EBoneKeyId)keyIdx ), 2.f, new PtsProvider( m_boneAnimation, keyIdx ) );
+         m_scene.addItem( m_lines[keyIdx] );
+      }
+      else if ( m_scene.isKeyVisible( (EBoneKeyId)keyIdx ) == false && m_lines[keyIdx] != NULL )
+      {
+         // the key should not be visible, bu it is at the moment - hide it
+         m_scene.removeItem( m_lines[keyIdx] );
+         delete m_lines[keyIdx];
+         m_lines[keyIdx] = NULL;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
