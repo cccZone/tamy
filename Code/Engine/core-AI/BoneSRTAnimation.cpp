@@ -92,10 +92,24 @@ void BoneSRTAnimation::getTranslationKey( unsigned int keyIdx, D3DXVECTOR3& outV
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void BoneSRTAnimation::setTranslationKey( unsigned int keyIdx, const D3DXVECTOR3& value )
+{
+   m_translation.m_keys[keyIdx] = value;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void BoneSRTAnimation::getOrientationKey( unsigned int keyIdx, D3DXQUATERNION& outValue, float& outTime ) const
 {
    outValue = m_orientation.m_keys[keyIdx]; 
    outTime = m_orientation.m_time[keyIdx]; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BoneSRTAnimation::setOrientationKey( unsigned int keyIdx, const D3DXQUATERNION& value )
+{
+   m_orientation.m_keys[keyIdx] = value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -5,6 +5,7 @@
 #include <QGraphicsView>
 #include <QListWidget>
 #include <QCheckBox>
+#include <QScrollArea>
 #include "SkeletonAnimationKeysChart.h"
 #include "SkeletonAnimationEventsChart.h"
 #include "core-AI/SkeletonAnimation.h"
@@ -127,11 +128,19 @@ void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
 
          QGraphicsView* animationKeysChartView = new QGraphicsView( m_animationKeysChart, chartsSplitter );
          animationKeysChartFrameLayout->addWidget( animationKeysChartView );
+         animationKeysChartView->setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
       }
 
       QGraphicsView* animationEventsChartView = new QGraphicsView( m_animationEventsChart, chartsSplitter );
       chartsSplitter->addWidget( animationEventsChartView );
+      animationEventsChartView->setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
    }
+
+   // adjust the main splitter size
+   QList< int > sizes;
+   sizes.push_back( 150 );
+   sizes.push_back( 1000 );
+   mainSplitter->setSizes( sizes );
 
    // show the editor
    show();

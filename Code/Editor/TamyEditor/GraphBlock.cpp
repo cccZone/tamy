@@ -61,6 +61,8 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
    QColor fillColor = getBgColor();
    QPen pen = getBorderPen();
 
+   painter->save();
+
    painter->setRenderHint( QPainter::Antialiasing, true );
    painter->setRenderHint( QPainter::TextAntialiasing, true );
    painter->setFont( m_font );
@@ -107,6 +109,8 @@ void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* optio
       painter->setBrush( QColor( 150, 150, 150 ) );
       painter->drawRect( m_bounds );
    }
+
+   painter->restore();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -363,6 +367,8 @@ float GraphBlockSocket::getNameWidth() const
 
 void GraphBlockSocket::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
 {
+   painter->save();
+
    painter->setRenderHint( QPainter::Antialiasing, true );
    painter->setRenderHint( QPainter::TextAntialiasing, true );
 
@@ -376,6 +382,8 @@ void GraphBlockSocket::paint( QPainter* painter, const QStyleOptionGraphicsItem*
    painter->setFont( m_font );
    painter->setBrush( QColor( 0, 0, 0 ) );
    painter->drawText( m_nameBounds, m_name.c_str(), QTextOption( Qt::AlignCenter ) );
+
+   painter->restore();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -78,6 +78,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Include\core\TypesRegistry.cpp" />
+    <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="Assert.cpp" />
     <ClCompile Include="IDebugDraw.cpp" />
     <ClCompile Include="Node.cpp" />

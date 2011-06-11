@@ -288,6 +288,9 @@
     <ClInclude Include="ChartLine.h">
       <Filter>Widgets\Chart</Filter>
     </ClInclude>
+    <ClInclude Include="ChartScene.h">
+      <Filter>Widgets\Chart</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -619,6 +622,9 @@
       <Filter>ResourceEditors\SkeletonAnimationEditor\EventsChart</Filter>
     </ClCompile>
     <ClCompile Include="ChartLine.cpp">
+      <Filter>Widgets\Chart</Filter>
+    </ClCompile>
+    <ClCompile Include="ChartScene.cpp">
       <Filter>Widgets\Chart</Filter>
     </ClCompile>
   </ItemGroup>

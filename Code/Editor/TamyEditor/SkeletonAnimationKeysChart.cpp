@@ -2,6 +2,9 @@
 #include "core-AI/SkeletonAnimation.h"
 #include "core-AI/BoneSRTAnimation.h"
 #include "ChartLine.h"
+#include <QPainter>
+#include <math.h>
+#include "core/Algorithms.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,8 +14,8 @@ namespace // anonymous
    class PtsProvider : public ChartLinePointsProvider
    {
    private:
-      BoneSRTAnimation&       m_boneAnimation;
-      unsigned int            m_keyIdx;
+      BoneSRTAnimation&                   m_boneAnimation;
+      unsigned int                        m_keyIdx;
 
    public:
       PtsProvider( BoneSRTAnimation& boneAnimation, unsigned int keyIdx )
@@ -75,9 +78,117 @@ namespace // anonymous
             }
          }
       }
+
+      QPointF getPoint( unsigned int pointIdx ) const
+      {
+         QPointF result;
+
+         if ( m_keyIdx == BAKEY_POS_X || m_keyIdx == BAKEY_POS_Y || m_keyIdx == BAKEY_POS_Z )
+         {
+            // translation keys
+            unsigned int count = m_boneAnimation.getTranslationKeysCount();
+            if ( pointIdx < count )
+            {
+               D3DXVECTOR3 pos;
+               float time;
+               m_boneAnimation.getTranslationKey( pointIdx, pos, time );
+               result.setX( time );
+
+               switch( m_keyIdx )
+               {
+               case BAKEY_POS_X: { result.setY( pos.x ); break; }
+               case BAKEY_POS_Y: { result.setY( pos.y ); break; }
+               case BAKEY_POS_Z: { result.setY( pos.z ); break; }
+               }
+            }
+         }
+         else
+         {
+            // orientation keys
+            unsigned int count = m_boneAnimation.getOrientationKeysCount();
+            if ( pointIdx < count )
+            {
+               D3DXQUATERNION orient;
+               float time;
+               m_boneAnimation.getOrientationKey( pointIdx, orient, time );
+               result.setX( time );
+
+               float angle = 0.0f;
+               switch( m_keyIdx )
+               {
+               case BAKEY_YAW: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 0, 1, 0 ), &angle ); break; }
+               case BAKEY_PITCH: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 1, 0, 0 ), &angle ); break; }
+               case BAKEY_ROLL: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 0, 0, 1 ), &angle ); break; }
+               }
+               result.setY( angle );
+            }
+         }
+
+         return result;
+      }
+
+      void setPointPos( unsigned int pointIdx, const QPointF& pos )
+      {
+         if ( m_keyIdx == BAKEY_POS_X || m_keyIdx == BAKEY_POS_Y || m_keyIdx == BAKEY_POS_Z )
+         {
+            // translation keys
+            unsigned int keysCount = m_boneAnimation.getTranslationKeysCount();
+            if ( pointIdx >= keysCount )
+            {
+               return;
+            }
+
+            D3DXVECTOR3 posKey;
+            float time;
+            m_boneAnimation.getTranslationKey( pointIdx, posKey, time );
+
+            switch( m_keyIdx )
+            {
+            case BAKEY_POS_X: { posKey.x = pos.y(); break; }
+            case BAKEY_POS_Y: { posKey.y = pos.y(); break; }
+            case BAKEY_POS_Z: { posKey.z = pos.y(); break; }
+            }
+
+            m_boneAnimation.setTranslationKey( pointIdx, posKey );
+         }
+         else
+         {
+            // orientation keys
+            unsigned int keysCount = m_boneAnimation.getOrientationKeysCount();
+            if ( pointIdx >= keysCount )
+            {
+               return;
+            }
+
+            D3DXQUATERNION orientKey;
+            float time;
+            m_boneAnimation.getOrientationKey( pointIdx, orientKey, time );
+
+            // extract Euler angle values
+            float yaw, pitch, roll;
+            D3DXQuaternionToAxisAngle( &orientKey, &D3DXVECTOR3( 0, 1, 0 ), &yaw );
+            D3DXQuaternionToAxisAngle( &orientKey, &D3DXVECTOR3( 1, 0, 0 ), &pitch );
+            D3DXQuaternionToAxisAngle( &orientKey, &D3DXVECTOR3( 0, 0, 1 ), &roll );
+
+            // update the edited key feature
+            switch( m_keyIdx )
+            {
+            case BAKEY_YAW: { yaw = pos.y(); break; }
+            case BAKEY_PITCH: { pitch = pos.y(); break; }
+            case BAKEY_ROLL: { roll = pos.y(); break; }
+            }
+
+            // put the Euler angle back together into a quaternion value
+            D3DXQuaternionRotationYawPitchRoll( &orientKey, yaw, pitch, roll );
+            m_boneAnimation.setOrientationKey( pointIdx, orientKey );
+
+         }
+      }
    };
 } // anonymous
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 SkeletonAnimationKeysChart::SkeletonAnimationKeysChart( SkeletonAnimation& animation )
@@ -94,12 +205,6 @@ SkeletonAnimationKeysChart::SkeletonAnimationKeysChart( SkeletonAnimation& anima
    m_colors[BAKEY_YAW] = QColor( 163, 206, 76 );
    m_colors[BAKEY_PITCH] = QColor( 65, 193, 136 );
    m_colors[BAKEY_ROLL] = QColor( 84, 206, 255 );
-
-   // go through the animation keys and draw proper lines showing them
-
-   // TODO: create a graphics item corresponding to a single key value, that is drawn as a line
-   // and allow for its edition
-   // TODO: add accessors allowing to display/hide certain animation keys
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -202,8 +307,9 @@ void BoneSRTAnimationChart::updateVisibleKeys()
       if ( m_scene.isKeyVisible( (EBoneKeyId)keyIdx ) && m_lines[keyIdx] == NULL )
       {
          // the key should be visible, but it's not at the moment - display it
-         m_lines[keyIdx] = new ChartLine( m_scene.getColor( (EBoneKeyId)keyIdx ), 2.f, new PtsProvider( m_boneAnimation, keyIdx ) );
+         m_lines[keyIdx] = new ChartLine( m_scene, m_scene.getColor( (EBoneKeyId)keyIdx ), 2.f, new PtsProvider( m_boneAnimation, keyIdx ) );
          m_scene.addItem( m_lines[keyIdx] );
+         m_lines[keyIdx]->setPos( QPointF( 0.0f, 0.0f ) );
       }
       else if ( m_scene.isKeyVisible( (EBoneKeyId)keyIdx ) == false && m_lines[keyIdx] != NULL )
       {
@@ -216,3 +322,6 @@ void BoneSRTAnimationChart::updateVisibleKeys()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+// TODO: add a widget for manual edition of the selected key value
+// TODO: add an animation preview feature

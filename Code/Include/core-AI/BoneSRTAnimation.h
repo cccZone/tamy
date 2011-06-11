@@ -100,6 +100,14 @@ public:
    void getTranslationKey( unsigned int keyIdx, D3DXVECTOR3& outValue, float& outTime ) const;
 
    /**
+    * Sets a value of a translation key.
+    *
+    * @param keyIdx     requested key index
+    * @param value
+    */
+   void setTranslationKey( unsigned int keyIdx, const D3DXVECTOR3& value );
+
+   /**
     * Returns the number of orientation keys.
     */
    inline unsigned int getOrientationKeysCount() const { return m_orientation.m_keys.size(); }
@@ -112,6 +120,14 @@ public:
     * @param outTime
     */
    void getOrientationKey( unsigned int keyIdx, D3DXQUATERNION& outValue, float& outTime ) const;
+
+   /**
+    * Sets a value of an orientation key.
+    *
+    * @param keyIdx     requested key index
+    * @param value
+    */
+   void setOrientationKey( unsigned int keyIdx, const D3DXQUATERNION& value );
 
    // -------------------------------------------------------------------------
    // Serializable implementation
