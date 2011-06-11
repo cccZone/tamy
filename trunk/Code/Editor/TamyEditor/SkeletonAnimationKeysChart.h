@@ -2,8 +2,8 @@
 /// @brief  skeleton animation keys chart visualizer
 #pragma once
 
-#include <QGraphicsScene>
 #include <map>
+#include "ChartScene.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ enum EBoneKeyId
 /**
  * Skeleton animation keys chart visualizer.
  */
-class SkeletonAnimationKeysChart : public QGraphicsScene
+class SkeletonAnimationKeysChart : public ChartScene
 {
 private:
    typedef std::map< std::string, BoneSRTAnimationChart* >  ChartsMap;
@@ -43,6 +43,7 @@ private:
 
    bool                    m_keysVisibility[BAKEY_MAX];
    QColor                  m_colors[BAKEY_MAX];
+
 public:
    /**
     * Constructor.
@@ -86,6 +87,7 @@ public:
     * @param keyIdx           bone animation key idx
     */
    inline const QColor& getColor( EBoneKeyId keyIdx ) const { return m_colors[keyIdx]; }
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

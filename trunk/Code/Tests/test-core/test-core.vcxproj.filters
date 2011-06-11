@@ -131,9 +131,6 @@
     <ClCompile Include="MathTests.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="AlgorithmTests.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
     <ClCompile Include="GraphDijkstraTests.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
@@ -145,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="RuntimeDataTests.cpp">
       <Filter>DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="AlgorithmTests.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

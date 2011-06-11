@@ -116,6 +116,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);%(AdditionalInputs)</AdditionalInputs>
     </CustomBuild>
     <ClInclude Include="ChartLine.h" />
+    <ClInclude Include="ChartScene.h" />
     <ClInclude Include="SkeletonAnimationEventsChart.h" />
     <ClInclude Include="SkeletonAnimationKeysChart.h" />
     <ClInclude Include="GeneratedFiles\ui_skeletonanimationeditor.h" />
@@ -595,6 +596,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChartLine.cpp" />
+    <ClCompile Include="ChartScene.cpp" />
     <ClCompile Include="SkeletonAnimationEventsChart.cpp" />
     <ClCompile Include="SkeletonAnimationKeysChart.cpp" />
     <ClCompile Include="assertDialog.cpp" />
