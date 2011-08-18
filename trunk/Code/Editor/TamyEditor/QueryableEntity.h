@@ -4,29 +4,29 @@
 /// @brief  An entity representation which can be picked of the screen 
 ///         by pointing at it
 
-#include "core-Renderer\AttributeSorter.h"
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneQueryEffect;
+class PixelShader;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * An entity representation which can be picked of the screen by pointing at it.
  */
-class QueryableEntity : public Attributed
+class QueryableEntity
 {
 public:
    virtual ~QueryableEntity() {}
 
    /**
-    * Initializes the representation.
+    * Renders the geometry.
     *
-    * @param effect
+    * @param renderer
+    * @param shader
     */
-   virtual void initialize( SceneQueryEffect& effect ) = 0;
+   virtual void render( Renderer& renderer, PixelShader& shader ) = 0;
 
 };
 

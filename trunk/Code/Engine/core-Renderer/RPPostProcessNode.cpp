@@ -24,35 +24,7 @@ RPPostProcessNode::~RPPostProcessNode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPPostProcessNode::onCreateLayout( RenderingPipelineMechanism& host ) const
-{
-   host.data().registerVar( m_fullscreenQuad );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPPostProcessNode::onInitialize( RenderingPipelineMechanism& host ) const
-{
-   Renderer& renderer = host.getRenderer();
-   ResourcesManager& rm = ResourcesManager::getInstance();
-
-   // fullscreen quad
-   host.data()[ m_fullscreenQuad ] = new FullscreenQuad();
-   host.data()[ m_fullscreenQuad ]->initialize( rm );
-   renderer.implement< FullscreenQuad >( *host.data()[ m_fullscreenQuad ] );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPPostProcessNode::onDeinitialize( RenderingPipelineMechanism& host ) const
-{
-   delete host.data()[ m_fullscreenQuad ];
-   host.data()[ m_fullscreenQuad ] = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPPostProcessNode::renderQuad( RuntimeDataBuffer& data, Renderer& renderer, RenderTarget* rt ) const
+void RPPostProcessNode::renderQuad( Renderer& renderer, RenderTarget* rt ) const
 {
    // get the render target size
    unsigned int trgWidth, trgHeight;
@@ -67,8 +39,8 @@ void RPPostProcessNode::renderQuad( RuntimeDataBuffer& data, Renderer& renderer,
       trgHeight = renderer.getViewportHeight();
    }
 
-   renderer.setRenderTarget( rt );
-   data[ m_fullscreenQuad ]->render( trgWidth, trgHeight );
+   new ( renderer() ) RCActivateRenderTarget( rt );
+   new ( renderer() ) RCFullscreenQuad( trgWidth, trgHeight );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

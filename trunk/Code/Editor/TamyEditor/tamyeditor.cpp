@@ -13,7 +13,7 @@
 // components
 #include "MainAppComponent.h"
 #include "SelectionManager.h"
-#include "TamySceneWidget.h"
+#include "SceneRenderer.h"
 #include "SceneNavigator.h"
 #include "SceneQueries.h"
 #include "PropertiesEditor.h"
@@ -43,7 +43,7 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 
    // add components
    addComponent( m_mainAppComponent );
-   addComponent( new TamySceneWidget( ui.renderWindow, 0 ) );
+   addComponent( new SceneRenderer( ui.renderWindow ) );
    addComponent( new SelectionManager() );
    addComponent( new SceneNavigator() );
    addComponent( new SceneQueries() );

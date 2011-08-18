@@ -214,7 +214,6 @@ void MaterialEditor::compile()
    try
    {
       synchronize();
-      m_renderer->implement< PixelShader >( m_shader );
    }
    catch ( std::exception& ex )
    {

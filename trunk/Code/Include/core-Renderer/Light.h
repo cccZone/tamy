@@ -14,7 +14,7 @@
 /**
  * This is a special kind of node that represents a light lighting the scene
  */
-class Light : public Node, public UniqueObject
+class Light : public Node, public UniqueObject< Light >
 {
 public:
    enum LightType

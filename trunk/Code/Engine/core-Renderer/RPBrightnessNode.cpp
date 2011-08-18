@@ -61,8 +61,9 @@ void RPBrightnessNode::onInitialize( RenderingPipelineMechanism& host ) const
    data[ m_brightnessPass ]->getParams().m_writeToZBuffer = false;
    data[ m_brightnessPass ]->getParams().m_useZBuffer = false;
 
-   data[ m_renderer ] = &host.getRenderer();
-   data[ m_renderer ]->implement< PixelShader >( *data[ m_brightnessPass ] );
+   Renderer& renderer = host.getRenderer();
+
+   data[ m_renderer ] = &renderer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,7 +72,8 @@ void RPBrightnessNode::onDeinitialize( RenderingPipelineMechanism& host ) const
 {
    RuntimeDataBuffer& data = host.data();
 
-   delete data[ m_brightnessPass ];
+   PixelShader* shader = data[ m_brightnessPass ];
+   delete shader;
    data[ m_brightnessPass ] = NULL;
 
    data[ m_inputTex ] = NULL;
@@ -87,7 +89,7 @@ void RPBrightnessNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
    RuntimeDataBuffer& data = host.data();
 
-   Renderer* renderer = data[ m_renderer ];
+   Renderer& renderer = *data[ m_renderer ];
    PixelShader* brightnessPass = data[ m_brightnessPass ];
    ShaderTexture* inputTex = data[ m_inputTex ];
    RenderTarget* brightPassTarget = data[ m_brightPassTarget ];
@@ -97,8 +99,9 @@ void RPBrightnessNode::onUpdate( RenderingPipelineMechanism& host ) const
       return;
    }
 
-   brightnessPass->setTexture( "inputTex", *inputTex );
-   brightnessPass->setFloat( "fBrightPassThreshold", m_brightThreshold );
+   RCBindPixelShader* brightnessPassComm = new ( renderer() ) RCBindPixelShader( *brightnessPass );
+   brightnessPassComm->setTexture( "inputTex", *inputTex );
+   brightnessPassComm->setFloat( "fBrightPassThreshold", m_brightThreshold );
 
    // We need to compute the sampling offsets used for this pass.
    // A 2x2 sampling pattern is used, so we need to generate 4 offsets
@@ -118,13 +121,12 @@ void RPBrightnessNode::onUpdate( RenderingPipelineMechanism& host ) const
    offsets[2] = D3DXVECTOR4( -0.5f * sU, -0.5f * sV, 0.0f, 0.0f );
    offsets[3] = D3DXVECTOR4( 0.5f * sU, -0.5f * sV, 0.0f, 0.0f );
 
-   brightnessPass->setVec4Array( "tcDownSampleOffsets", offsets, 4 );
+   brightnessPassComm->setVec4( "tcDownSampleOffsets", offsets, 4 );
 
 
    // render
-   brightnessPass->beginRendering();
-   renderQuad( data, *renderer, brightPassTarget );
-   brightnessPass->endRendering();
+   renderQuad( renderer, brightPassTarget );
+   new ( renderer() ) RCUnbindPixelShader( *brightnessPass );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

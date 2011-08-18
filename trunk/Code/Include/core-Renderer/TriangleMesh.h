@@ -7,28 +7,13 @@
 #include <vector>
 #include "core\Resource.h"
 #include "core-Renderer\GeometryResource.h"
+#include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\VertexArray.h"
 #include "core-Renderer\Face.h"
 #include "core-Renderer\LitVertex.h"
+#include "core-Renderer\RenderResource.h"
 #include "core\AABoundingBox.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
 
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Graphics library dependent implementation of the triangle mesh.
- */
-class TriangleMeshImpl : public RendererObjectImpl
-{
-public:
-   virtual ~TriangleMeshImpl() {}
-
-   /**
-    * Renders the mesh using the library calls.
-    */
-   virtual void render() {}
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -40,17 +25,16 @@ public:
  * some low level 3D lib (DirectX, OpenGL), thus we'll put
  * this responsibility on the TriangleMeshImpl.
  */
-class TriangleMesh : public GeometryResource, 
-                     public TRendererObject<TriangleMeshImpl>
+class TriangleMesh : public GeometryResource, public RenderResource
 {
    DECLARE_RESOURCE( TriangleMesh )
 
 private:
-   std::vector<LitVertex> m_vertices;
-   std::vector<Face> m_faces;
+   std::vector< LitVertex >      m_vertices;
+   std::vector< Face >           m_faces;
 
-   D3DXMATRIX m_identityMtx;
-   AABoundingBox m_boundingVol;
+   D3DXMATRIX                    m_identityMtx;
+   AABoundingBox                 m_boundingVol;
 
 public:
    /**
@@ -74,7 +58,7 @@ public:
     *
     * @return  model vertices.
     */
-   VertexArray* getGenericVertexArray();
+   VertexArray* getGenericVertexArray() const;
 
    /**
     * Returns the faces of the model.
@@ -87,14 +71,31 @@ public:
    // Geometry implementation
    // -------------------------------------------------------------------------
    inline  const BoundingVolume& getBoundingVolume() const { return m_boundingVol; }
-   void render();
+   void render( Renderer& renderer );
 
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
    void onResourceLoaded(ResourcesManager& mgr);
-   void onComponentAdded( Component< ResourcesManager >& component );
-   void onComponentRemoved( Component< ResourcesManager >& component );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Triangle mesh rendering command.
+ */
+class RCRenderTriangleMesh : public RenderCommand
+{
+private:
+   TriangleMesh&        m_mesh;
+
+public:
+   RCRenderTriangleMesh( TriangleMesh& mesh ) : m_mesh( mesh ) {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

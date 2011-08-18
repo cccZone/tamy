@@ -9,18 +9,24 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class ChartLineKeyValue;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Chart scene.
  */
 class ChartScene : public QGraphicsScene
 {
 private:
-   float             m_scale;
+   float                   m_scale;
 
    QBrush                  m_bgBrush;
    QPen                    m_axisPen;
    QPen                    m_gridPen;
    QPen                    m_textPen;
+
+   ChartLineKeyValue*      m_trackedItem;
 
 public:
    /**

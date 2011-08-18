@@ -6,51 +6,46 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DX9RenderTarget::DX9RenderTarget( RenderTarget& renderTarget )
-: m_renderTarget( renderTarget )
-, m_renderer(NULL)
-, m_dxTexture( NULL )
+void RCCreateRenderTarget::execute( Renderer& renderer )
 {
+   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+   dxRenderer.getRenderTarget( m_rt );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RCGetPixel::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+
+   DX9RenderTarget* dxRenderTarget = dxRenderer.getRenderTarget( m_renderTarget );
+   if ( dxRenderTarget )
+   {
+      m_outColorVal = dxRenderTarget->getPixel( m_queryPos );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+DX9RenderTarget::DX9RenderTarget( const DX9Renderer& renderer, const RenderTarget& renderTarget )
+   : m_renderer( renderer )
+   , m_renderTarget( renderTarget )
+   , m_dxTexture( NULL )
+{
+   createTexture();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 DX9RenderTarget::~DX9RenderTarget()
 {
-   if (m_renderer != NULL)
-   {
-      dynamic_cast< Subject< DX9Renderer, DX9GraphResourceOp >* >( m_renderer )->detachObserver( *this );
-      m_renderer = NULL;
-   }
-
    if ( m_dxTexture != NULL )
    {
       m_dxTexture->Release();
       m_dxTexture = NULL;
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9RenderTarget::initialize( Renderer& renderer )
-{
-   m_renderer = dynamic_cast< DX9Renderer* >( &renderer );
-   if (m_renderer == NULL)
-   {
-      throw std::runtime_error("This implementation can work only with DX9Renderer");
-   }
-
-   createTexture( *m_renderer );
-
-   // attach the instance as the renderer observer
-   dynamic_cast< Subject< DX9Renderer, DX9GraphResourceOp >* >( m_renderer )->attachObserver( *this );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void* DX9RenderTarget::getPlatformSpecific() const
-{
-   return m_dxTexture;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,7 +57,7 @@ Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
       return Color();
    }
 
-   IDirect3DDevice9& d3Dev = m_renderer->getD3Device();
+   IDirect3DDevice9& d3Dev = m_renderer.getD3Device();
    D3DSURFACE_DESC rtDesc;
    m_dxTexture->GetLevelDesc( 0, &rtDesc );
 
@@ -128,44 +123,32 @@ Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9RenderTarget::update( DX9Renderer& renderer )
+void DX9RenderTarget::onLostDevice()
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9RenderTarget::update( DX9Renderer& renderer, const DX9GraphResourceOp& operation )
-{
-   switch(operation)
+   if ( m_dxTexture )
    {
-   case GRO_RELEASE_RES:
-      {
-         if ( m_dxTexture )
-         {
-            m_dxTexture->Release();
-            m_dxTexture = NULL;
-         }
-         break;
-      }
-
-   case GRO_CREATE_RES:
-      {
-         createTexture( renderer );
-         break;
-      }
+      m_dxTexture->Release();
+      m_dxTexture = NULL;
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9RenderTarget::createTexture( DX9Renderer& renderer )
+void DX9RenderTarget::onResetDevice()
+{
+   createTexture();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9RenderTarget::createTexture()
 {
    // create the texture
-   D3DFORMAT texFormat = renderer.getOptimalTextureFormat( m_renderTarget.getUsage() );
+   D3DFORMAT texFormat = m_renderer.getOptimalTextureFormat( m_renderTarget.getUsage() );
    unsigned int width = m_renderTarget.getWidth();
    unsigned int height = m_renderTarget.getHeight();
 
-   HRESULT res = D3DXCreateTexture( &renderer.getD3Device(),
+   HRESULT res = D3DXCreateTexture( &m_renderer.getD3Device(),
       width, height,          // dimensions
       1,                      // MIP levels
       D3DUSAGE_RENDERTARGET,  // usage

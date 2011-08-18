@@ -14,7 +14,7 @@ class DX9Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class DX9LineSegments : public LineSegmentsImpl
+class DX9LineSegments
 {
 private:
    struct LineVertex
@@ -29,31 +29,33 @@ private:
    };
 
 private:
-   static D3DVERTEXELEMENT9 s_vtxDecl[];
+   static D3DVERTEXELEMENT9         s_vtxDecl[];
 
-   LineSegments& m_lines;
+   const DX9Renderer&               m_renderer;
+   IDirect3DDevice9&                m_d3Device;
+   const LineSegments&              m_lines;
 
-   IDirect3DDevice9* m_d3Device;
-   DX9Renderer* m_renderer;
-   LPDIRECT3DVERTEXDECLARATION9 m_vertexDecl;
-   IDirect3DVertexBuffer9* m_vb;
-   UINT m_segsCount;
+   LPDIRECT3DVERTEXDECLARATION9     m_vertexDecl;
+   IDirect3DVertexBuffer9*          m_vb;
+   UINT                             m_segsCount;
 
 public:
-   DX9LineSegments(LineSegments& lines);
+   /**
+    * Constructor.
+    *
+    * @param renderer
+    * @param lines
+    */
+   DX9LineSegments( const DX9Renderer& renderer, const LineSegments& lines );
    ~DX9LineSegments();
 
-   // -------------------------------------------------------------------------
-   // LineSegmentsImpl implementation
-   // -------------------------------------------------------------------------
    void render();
-
-   void update(const std::vector<LineSegment>& segments);
-
-   void initialize(Renderer& renderer);
-
+   void onLostDevice();
+   void onResetDevice();
+ 
 private:
-   void resetVB();
+   void create();
+   void destroy();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -8,9 +8,6 @@
     <Filter Include="Geometry">
       <UniqueIdentifier>{bcbe981f-8806-433e-86dd-d35d87181053}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{1a23c03f-55c4-48b9-921a-bbe03063ce4f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tools">
       <UniqueIdentifier>{d132f724-ac29-4668-a6ac-b90412c6e585}</UniqueIdentifier>
     </Filter>
@@ -22,17 +19,17 @@
     <ClCompile Include="VertexArrayTests.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="SpatialViewTests.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="CameraTests.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="AttributeSorterTests.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="SkeletonTests.cpp">
       <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderCommandTests.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingViewTests.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

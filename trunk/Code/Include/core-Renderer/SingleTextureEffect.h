@@ -5,41 +5,36 @@
 
 #include "core-MVC\Entity.h"
 #include "core-Renderer\Material.h"
-#include "core-Renderer\Renderable.h"
+#include "core-Renderer\RenderState.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class SpatialEntity;
-class GeometryResource;
 class EffectShader;
 class Material;
 class Texture;
-class Camera;
 class ResourcesManager;
 
 ///////////////////////////////////////////////////////////////////////////////
+
+// TODO: setting the renderState in case based on the texture used etc.
 
 /**
 * This effect will render the geometry using a single texture
 * and a material definition.
 */
-class SingleTextureEffect : public Entity, public Renderable
+class SingleTextureEffect : public Entity, public RenderState
 {
    DECLARE_CLASS( SingleTextureEffect )
 
 private:
-   // instance data
-   GeometryResource*    m_geometry;
    Material             m_material;
    Texture*             m_texture;
 
    // runtime data
    EffectShader*        m_effect;
    SpatialEntity*       m_parentNode;
-   Camera*              m_camera;
-
-   Attributes           m_attributes;
 
 public:
    /**
@@ -61,18 +56,11 @@ public:
     */
    void setTexture(Texture& texture);
 
-   /**
-    * Sets the geometry the effect should use.
-    *
-    * @param geometry
-    */
-   void setGeometry( GeometryResource& geometry );
-
    // -------------------------------------------------------------------------
-   // Renderable implementation
+   // RenderState implementation
    // -------------------------------------------------------------------------
-   void render();
-   const Attributes& getAttributes() const { return m_attributes; }
+   void onPreRender( Renderer& renderer );
+   void onPostRender( Renderer& renderer );
 
 protected:
    // -------------------------------------------------------------------------
@@ -85,8 +73,6 @@ protected:
    // -------------------------------------------------------------------------
    void onAttached( Entity& parent );
    void onDetached( Entity& parent );
-   void onAttached( Model& hostModel );
-   void onDetached( Model& hostModel );
    void onComponentAdded( Component< Model >& component );
 };
 

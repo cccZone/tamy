@@ -5,8 +5,9 @@
 #include <list>
 #include "core\Array.h"
 #include "core\Subject.h"
-#include "core\GenericFactory.h"
 #include "core\Color.h"
+#include "core\UniqueObject.h"
+#include "core/RoundBuffer.h"
 #include <vector>
 #include <map>
 #include <set>
@@ -18,9 +19,9 @@ struct Point;
 class RendererObserver;
 class RenderingMechanism;
 class RenderingTargetsPolicy;
-class RendererObject;
-class RendererObjectImpl;
 class RenderTarget;
+class Camera;
+class RenderCommand;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -47,8 +48,7 @@ enum RendererOps
  * The renderer can be observer - it will notify it's observers about the
  * changes in its state (rendering, device lost, device recovered)
  */
-class Renderer : public Subject<Renderer, RendererOps>,
-                 public GenericFactory<RendererObject, RendererObjectImpl>
+class Renderer : public Subject< Renderer, RendererOps >, public UniqueObject< Renderer >
 {
 private:
    
@@ -62,27 +62,30 @@ private:
    public:
       virtual ~RendererState() {}
 
-      virtual void render(Renderer& renderer) = 0;
+      virtual void render( Renderer& renderer ) = 0;
    };
 
    typedef std::set< RenderTarget* >   RenderTargetsList;
 
 private:
-   RenderingMechanism*     m_mechanism;
+   RenderingMechanism*              m_mechanism;
+   Camera*                          m_defaultCamera;
 
-   unsigned int            m_viewportWidth;
-   unsigned int            m_viewportHeight;
-   unsigned int            m_leftClientArea;
-   unsigned int            m_topClientArea;
-   unsigned int            m_rightClientArea;
-   unsigned int            m_bottomClientArea;
+   unsigned int                     m_viewportWidth;
+   unsigned int                     m_viewportHeight;
+   unsigned int                     m_leftClientArea;
+   unsigned int                     m_topClientArea;
+   unsigned int                     m_rightClientArea;
+   unsigned int                     m_bottomClientArea;
 
-   RendererState*          m_initialState;
-   RendererState*          m_renderingState;
-   RendererState*          m_deviceLostState;
-   RendererState*          m_currentRendererState;
+   RendererState*                   m_initialState;
+   RendererState*                   m_renderingState;
+   RendererState*                   m_deviceLostState;
+   RendererState*                   m_currentRendererState;
 
-   RenderTargetsList       m_renderTargetsList;
+   RenderTargetsList                m_renderTargetsList;
+
+   RoundBuffer                      m_renderCommands;
 
 public:
    Renderer(unsigned int viewportWidth = 800,
@@ -128,15 +131,6 @@ public:
    unsigned int getViewportHeight() const {return m_viewportHeight;}
 
    /**
-    * This method finds and sets up a proper implementation for 
-    * a renderer object.
-    *
-    * @param object  object we want to implement.
-    */
-   template <typename I>
-   void implement(RendererObject& object);
-
-   /**
     * A command for setting a render target.
     *
     * Targets are scoped during rendering - each target will be cleaned
@@ -148,6 +142,27 @@ public:
     *                         if we want to use the back buffer.
     */
    void setRenderTarget( RenderTarget* renderTarget );
+
+   // ----------------------------------------------------------------------------
+   // Camera management
+   // ----------------------------------------------------------------------------
+   /**
+    * Returns the currently active camera ( const version )
+    */
+   inline const Camera& getActiveCamera() const { return *m_defaultCamera; }
+
+   /**
+    * Returns the currently active camera.
+    */
+   inline Camera& getActiveCamera() { return *m_defaultCamera; }
+
+   // ----------------------------------------------------------------------------
+   // Render commands queue
+   // ----------------------------------------------------------------------------
+   /**
+    * Gives access to the commands buffer.
+    */
+   inline RoundBuffer& operator()() { return m_renderCommands; }
 
 protected:
    /**
@@ -208,6 +223,12 @@ private:
    bool shouldRenderTargetBeCleaned( RenderTarget* renderTarget ) const;
    void markRenderTargetCleaned( RenderTarget* renderTarget );
    void resetRenderTargetsList();
+
+   /**
+    * Executes the render commands.
+    */
+   void executeCommands();
+
 
 private:
    // ---------------- Renderer states ---------------

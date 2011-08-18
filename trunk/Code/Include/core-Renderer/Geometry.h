@@ -3,36 +3,37 @@
 /// @file   core-Renderer\Geometry.h
 /// @brief  3D geometry representation
 
-#include "core-MVC\Entity.h"
+#include "core-MVC\SpatialEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class BoundingVolume;
 class GeometryResource;
-class SpatialEntity;
-class Camera;
+class RenderState;
+class Renderer;
+
+///////////////////////////////////////////////////////////////////////////////
+
+typedef std::vector< RenderState* >    RenderStatesVec;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * A common interface for 3D geometry which can be rendered.
  */
-class Geometry : public Entity
+class Geometry : public SpatialEntity
 {
    DECLARE_CLASS( Geometry )
 
 protected:
    // runtime data
-   Camera*                 m_camera;
-   SpatialEntity*          m_parentNode;
+   SpatialEntity*                   m_parentNode;
+   RenderStatesVec                  m_states;
 
 private:
    // static data
-   GeometryResource*       m_resource;
-
-   // runtime data
-   bool                    m_visible;
+   GeometryResource*                m_resource;
 
 public:
    /**
@@ -51,15 +52,40 @@ public:
    /**
     * Renders the geometry.
     */
-   void render();
+   virtual void render( Renderer& renderer );
 
+   // -------------------------------------------------------------------------
+   // Render states management
+   // -------------------------------------------------------------------------
+   /**
+    * Adds a new render state.
+    *
+    * @param state
+    */
+   void addState( RenderState& state );
+
+   /**
+    * Removes a render state.
+    *
+    * @param state
+    */
+   void removeState( RenderState& state );
+
+   /**
+    * Returns a vector of the render states that affect the geometry.
+    */
+   const RenderStatesVec& getRenderStates() { return m_states; }
+
+   // -------------------------------------------------------------------------
+   // Geometry resource management
+   // -------------------------------------------------------------------------
    /**
     * Calculates a bounding volume around the geometry ( in the parent's space,
     * if the entity is attached to one ).
     *
     * @param   bounding volume instance
     */
-   BoundingVolume* calculateBoundingVolume() const;
+   virtual BoundingVolume* calculateBoundingVolume() const;
 
    /**
     * Returns the name of the geometry resource used by this geometry entity.
@@ -76,28 +102,16 @@ public:
     */
    inline GeometryResource& getGeometry() const { return *m_resource; }
 
-   /**
-    * Changes visibility status of the renderable.
-    *
-    * @param visible    new visibility status
-    */
-   inline void setVisible( bool visible ) { m_visible = visible; }
-
-   /**
-    * Returns current visibility status of the entity
-    */
-   inline bool isVisible() const { return m_visible; }
-
 protected:
    /**
-    * Called just before the geometry is rendered.
+    * Called before the geometry rendering command is issued.
     */
-   virtual void onPreRender() {}
+   virtual void onPreRender( Renderer& renderer ) {}
 
    /**
-    * Called right after the geometry is rendered.
+    * Called after the geometry rendering command is issued.
     */
-   virtual void onPostRender() {}
+   virtual void onPostRender( Renderer& renderer ) {}
 
    // -------------------------------------------------------------------------
    // Object implementation 
@@ -107,11 +121,8 @@ protected:
    // -------------------------------------------------------------------------
    // Entity implementation
    // -------------------------------------------------------------------------
-   void onAttached( Model& hostModel );
-   void onDetached( Model& hostModel );
    void onAttached( Entity& parent );
    void onDetached( Entity& parent );
-   void onComponentAdded( Component< Model >& component );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

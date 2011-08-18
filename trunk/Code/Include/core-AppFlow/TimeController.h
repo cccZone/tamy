@@ -35,10 +35,20 @@ private:
       bool operator()(const TimeControllerTrack* track) const;
    };
 
-   std::vector<TimeControllerTrack*> m_tracks;
+   TimeController*                           m_parentController;
+   std::vector< TimeControllerTrack* >       m_tracks;
+   std::vector< TimeController* >            m_childControllers;
 
 public:
+   /**
+    * Constructor.
+    */
    TimeController();
+
+   /**
+    * Constructor setting a controllers hierarchy.
+    */
+   TimeController( TimeController& parentController );
    ~TimeController();
 
    /**
@@ -74,6 +84,21 @@ public:
     * attached objects and events.
     */
    void resetAll();
+
+protected:
+   /**
+    * Attaches a new child controller.
+    *
+    * @param child
+    */
+   void attach( TimeController& child );
+
+   /**
+    * Detaches a child controller.
+    *
+    * @param child
+    */
+   void detach( TimeController& child );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

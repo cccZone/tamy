@@ -41,6 +41,7 @@ void RPLuminanceNode::onCreateLayout( RenderingPipelineMechanism& host ) const
    data.registerVar( m_downSamplePass );
    data.registerVar( m_inputTex );
    data.registerVar( m_luminanceTarget );
+   data.registerVar( m_luminanceVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -54,6 +55,9 @@ void RPLuminanceNode::onInitialize( RenderingPipelineMechanism& host ) const
    // acquire the input texture
    data[ m_inputTex ] = getInput< RPTextureInput >( "InputTex" ).getTexture( data );
 
+   Renderer& renderer = host.getRenderer();
+   data[ m_renderer ] = &renderer;
+
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
    data[ m_greyscalePass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Luminance_GreyScaleDownSample.psh" );
@@ -66,11 +70,6 @@ void RPLuminanceNode::onInitialize( RenderingPipelineMechanism& host ) const
    data[ m_downSamplePass ]->getParams().m_writeToZBuffer = false;
    data[ m_downSamplePass ]->getParams().m_useZBuffer = false;
 
-   Renderer* renderer = &host.getRenderer();
-   data[ m_renderer ] = renderer;
-   renderer->implement< PixelShader >( *data[ m_greyscalePass ] );
-   renderer->implement< PixelShader >( *data[ m_downSamplePass ] );
-
    // luminance render targets
    PRenderTarget* luminanceTargets = new PRenderTarget[ m_stepsCount ];
    data[ m_luminanceTarget ] = luminanceTargets;
@@ -79,11 +78,12 @@ void RPLuminanceNode::onInitialize( RenderingPipelineMechanism& host ) const
    for ( unsigned int i = 0; i < m_stepsCount; ++i )
    {
       RenderTarget* target = new RenderTarget( new RTSPStatic( textureSize, textureSize ), TU_LUMINANCE, i == 0 /* we want to be able to read from the last RT */ );
-      renderer->implement< RenderTarget >( *target );
 
       luminanceTargets[ m_stepsCount - i - 1 ] = target;
       textureSize *= 3;
    }
+
+   data[ m_luminanceVal ] = Color();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +117,7 @@ void RPLuminanceNode::onDeinitialize( RenderingPipelineMechanism& host ) const
 void RPLuminanceNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
    RuntimeDataBuffer& data = host.data();
-   Renderer* renderer = data[ m_renderer ];
+   Renderer& renderer = *data[ m_renderer ];
    PixelShader* greyscalePass = data[ m_greyscalePass ];
    PixelShader* downSamplePass = data[ m_downSamplePass ];
    ShaderTexture* inputTex = data[ m_inputTex ];
@@ -130,7 +130,8 @@ void RPLuminanceNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    // turn to greyscale and downsample
    {
-      greyscalePass->setTexture( "inputTex", *inputTex );
+      RCBindPixelShader* greyscalePassComm = new ( renderer() ) RCBindPixelShader( *greyscalePass );
+      greyscalePassComm->setTexture( "inputTex", *inputTex );
 
       // We need to compute the sampling offsets used for this pass.
       // A 2x2 sampling pattern is used, so we need to generate 4 offsets.
@@ -156,18 +157,18 @@ void RPLuminanceNode::onUpdate( RenderingPipelineMechanism& host ) const
       offsets[3] = D3DXVECTOR4( 0.5f * sU, -0.5f * sV, 0.0f, 0.0f );
 
       // Set the offsets to the constant table
-      greyscalePass->setVec4Array( "tcLumOffsets", offsets, 4 );
+      greyscalePassComm->setVec4( "tcLumOffsets", offsets, 4 );
 
       // render
-      greyscalePass->beginRendering();
-      renderQuad( data, *renderer, luminanceTargets[0] );
-      greyscalePass->endRendering();
+      renderQuad( renderer, luminanceTargets[0] );
+      new ( renderer() ) RCUnbindPixelShader( *greyscalePass );
    }
 
    // perform subsequent downscaling
    for ( unsigned int i = 1; i < m_stepsCount; ++i )
    {
-      downSamplePass->setTexture( "inputTex", *luminanceTargets[i - 1] );
+      RCBindPixelShader* downSamplePassComm = new ( renderer() ) RCBindPixelShader( *downSamplePass );
+      downSamplePassComm->setTexture( "inputTex", *luminanceTargets[i - 1] );
 
       // Create the 3x3 grid of offsets
       D3DXVECTOR4 DSoffsets[9];
@@ -186,15 +187,18 @@ void RPLuminanceNode::onUpdate( RenderingPipelineMechanism& host ) const
       }
 
       // Set them to the current pixel shader
-      downSamplePass->setVec4Array( "tcDSOffsets", DSoffsets, 9 );
+      downSamplePassComm->setVec4( "tcDSOffsets", DSoffsets, 9 );
 
       // render
-      downSamplePass->beginRendering();
-      renderQuad( data, *renderer, luminanceTargets[i] );
-      downSamplePass->endRendering();
+      renderQuad( renderer, luminanceTargets[i] );
+      new ( renderer() ) RCUnbindPixelShader( *downSamplePass );
    }
 
-   Color luminanceVal = luminanceTargets[m_stepsCount - 1]->getPixel( D3DXVECTOR2( 0, 0 ) );
+   // set a command that will update the color value ( unfortunately - it will be available the next frame )
+   Color& luminanceVal = data[ m_luminanceVal ];
+   new ( renderer() ) RCGetPixel( *luminanceTargets[m_stepsCount - 1], D3DXVECTOR2( 0, 0 ), luminanceVal );
+
+   // set the output values
    const RPFloatOutput* maxLuminanceOutput = &getOutput< RPFloatOutput >( "Max" );
    const RPFloatOutput* avgLuminanceOutput = &getOutput< RPFloatOutput >( "Avg" );
 

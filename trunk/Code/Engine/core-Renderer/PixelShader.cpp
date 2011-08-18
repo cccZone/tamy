@@ -1,6 +1,8 @@
 #include "core-Renderer\PixelShader.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\LitVertex.h"
+#include "core-Renderer\ShaderParam.h"
+#include "core-Renderer\ShaderTexture.h"
 #include "core.h"
 #include <stdexcept>
 
@@ -19,6 +21,13 @@ PixelShader::PixelShader( const std::string& fileName )
    : Resource( Filesystem::changeFileExtension( fileName, PixelShader::getExtension() ) )
    , m_entryFunctionName( "main" )
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+PixelShader::~PixelShader()
+{
+    ASSERT( true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,94 +56,9 @@ void PixelShader::loadFromFile( const Filesystem& fs, const std::string& fileNam
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PixelShader::onComponentAdded( Component< ResourcesManager >& component )
+ShaderParam< PixelShader >* PixelShader::createTextureSetter( const std::string& paramName, ShaderTexture& val )
 {
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      rendererComp->get().implement< PixelShader >( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::onComponentRemoved( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      setImplementation( NULL );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::beginRendering()
-{
-   impl().beginRendering();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::endRendering()
-{
-   impl().endRendering();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::setBool( const char* paramName, bool val )
-{
-   impl().setBool( paramName, val );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::setFloat( const char* paramName, float val )
-{
-   impl().setFloat( paramName, val );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::setFloatArray( const char* paramName, float* valsArr, unsigned int size )
-{
-   impl().setFloatArray( paramName, valsArr, size );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
-{
-   impl().setMtx( paramName, matrix );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size )
-{
-   impl().setMtxArray( paramName, matrices, size );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
-{
-   impl().setVec4( paramName, vec );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size )
-{
-   impl().setVec4Array( paramName, vecArr, size );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::setTexture( const char* paramName, ShaderTexture& val )
-{
-   impl().setTexture( paramName, val );
+   return val.createPixelShaderTextureSetter( paramName );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

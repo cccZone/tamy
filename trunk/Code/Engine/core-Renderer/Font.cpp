@@ -3,20 +3,15 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RTTI(Font)
-END_RTTI
-
-///////////////////////////////////////////////////////////////////////////////
-
 Font::Font()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Font::Font(const D3DXFONT_DESC& desc)
-: m_name(desc.FaceName)
-, m_desc(desc)
+Font::Font( const D3DXFONT_DESC& desc )
+: m_name( desc.FaceName )
+, m_desc( desc )
 {
 }
 
@@ -35,13 +30,16 @@ const D3DXFONT_DESC& Font::getDescription() const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
-void Font::drawText(const std::string& text,
-                    RECT& position,
-                    TextJustification justification,
-                    const Color& color)
+RCDrawText::RCDrawText( Font& font, const std::string& text, const RECT& overlaySize, TextJustification justification, const Color& color )
+   : m_font( font )
+   , m_text( text )
+   , m_overlaySize( overlaySize )
+   , m_justification( justification )
+   , m_color( color )
 {
-   impl().drawText(text, position, justification, color);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

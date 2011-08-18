@@ -22,33 +22,6 @@
     <Filter Include="Materials">
       <UniqueIdentifier>{6d2e42ba-ea7e-47dc-bcb6-99e005776d93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="OverlayRenderer">
-      <UniqueIdentifier>{b356757b-adc7-4be2-a1ed-247c79d751d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="OverlayRenderer\Mechanism">
-      <UniqueIdentifier>{00f2694b-d7e3-44dd-a5ee-56d0cc5cba1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="OverlayRenderer\Elements">
-      <UniqueIdentifier>{e788649b-7b14-4322-8f63-2ae1d57c10bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{60fc8284-5482-49ed-b73b-75d774ea83c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Views">
-      <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Views\RenderingView">
-      <UniqueIdentifier>{b8462dc0-2baa-4dc4-ae07-85d88d10e6f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Views\SpatialView">
-      <UniqueIdentifier>{84514925-a186-42f6-b881-24213372128c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\Attributes">
-      <UniqueIdentifier>{b1f3ce20-ef71-4896-a5ac-6c186f097d3b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scene\AttributeSorters">
-      <UniqueIdentifier>{5b9c7ef5-b042-4d94-a5b4-bf73358f9abd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Geometry">
       <UniqueIdentifier>{5bd9a96f-320d-4930-8c4a-2ed358c34b07}</UniqueIdentifier>
     </Filter>
@@ -61,17 +34,11 @@
     <Filter Include="Effects\Entities">
       <UniqueIdentifier>{7891e001-1b81-4b57-a71e-9945c3731940}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Geometry\Shaders">
-      <UniqueIdentifier>{1c8e67c7-3872-408a-bf1f-3146cc6b2aeb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Materials\Resources">
       <UniqueIdentifier>{46c48c5f-a2a1-40ee-a254-5d4b8bf5c0e4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Geometry\Core">
       <UniqueIdentifier>{56299d89-a619-4ae9-9206-55cd8d42df67}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Materials\Shaders">
-      <UniqueIdentifier>{d4502db5-c145-4ea8-ac4a-5bdbfb4c4e0c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Materials\Entities">
       <UniqueIdentifier>{f446a617-128e-4ab8-aa1b-c3da1f2b37de}</UniqueIdentifier>
@@ -79,26 +46,41 @@
     <Filter Include="Effects\Resources">
       <UniqueIdentifier>{9885c467-2a83-46d5-b474-1a1573c3059d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingPipeline">
+    <Filter Include="Mechanisms">
+      <UniqueIdentifier>{276eb3c8-13a8-40f4-bd45-12038506cd29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Views">
+      <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\RenderingPipeline">
       <UniqueIdentifier>{c91f1825-625c-42f0-8469-826c27be0b92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingPipeline\Nodes">
+    <Filter Include="Mechanisms\RenderingPipeline\Nodes">
       <UniqueIdentifier>{b7de2671-afb7-471e-9881-7dd4812c6bc1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene\RenderingMechanism">
-      <UniqueIdentifier>{882644f7-0b0d-46f9-a21a-e64db531d203}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RenderingPipeline\Nodes\Misc">
+    <Filter Include="Mechanisms\RenderingPipeline\Nodes\Misc">
       <UniqueIdentifier>{98884766-dadd-4e55-bb64-638fae7eea59}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingPipeline\Nodes\PostProcess">
+    <Filter Include="Mechanisms\RenderingPipeline\Nodes\PostProcess">
       <UniqueIdentifier>{eb27d960-9aba-49ce-a6a5-9271ab2f0bb9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingPipeline\Sockets">
+    <Filter Include="Mechanisms\RenderingPipeline\Sockets">
       <UniqueIdentifier>{a13cfdb3-3552-48ee-a50d-dc079e4927c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingPipeline\Shaders">
-      <UniqueIdentifier>{64bd2a52-fe15-4cca-b215-619c922b8876}</UniqueIdentifier>
+    <Filter Include="Mechanisms\OverlayRenderer">
+      <UniqueIdentifier>{b356757b-adc7-4be2-a1ed-247c79d751d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\OverlayRenderer\Mechanism">
+      <UniqueIdentifier>{00f2694b-d7e3-44dd-a5ee-56d0cc5cba1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\OverlayRenderer\Elements">
+      <UniqueIdentifier>{e788649b-7b14-4322-8f63-2ae1d57c10bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\DebugDraw">
+      <UniqueIdentifier>{aa2b1f47-28b0-4661-a691-3c0e33f6dfc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Resources">
+      <UniqueIdentifier>{334e02c4-4c10-4596-a912-36ec0b7ff55e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -139,28 +121,13 @@
       <Filter>Initialization\Simple</Filter>
     </ClCompile>
     <ClCompile Include="OverlayRenderingMechanism.cpp">
-      <Filter>OverlayRenderer\Mechanism</Filter>
+      <Filter>Mechanisms\OverlayRenderer\Mechanism</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
-      <Filter>OverlayRenderer\Elements</Filter>
+      <Filter>Mechanisms\OverlayRenderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="TextField.cpp">
-      <Filter>OverlayRenderer\Elements</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderableRepresentation.cpp">
-      <Filter>Scene\Views\RenderingView</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderingView.cpp">
-      <Filter>Scene\Views\RenderingView</Filter>
-    </ClCompile>
-    <ClCompile Include="DefaultAttributeSorter.cpp">
-      <Filter>Scene\AttributeSorters</Filter>
-    </ClCompile>
-    <ClCompile Include="SpatialRepresentation.cpp">
-      <Filter>Scene\Views\SpatialView</Filter>
-    </ClCompile>
-    <ClCompile Include="SpatialView.cpp">
-      <Filter>Scene\Views\SpatialView</Filter>
+      <Filter>Mechanisms\OverlayRenderer\Elements</Filter>
     </ClCompile>
     <ClCompile Include="LineSegments.cpp">
       <Filter>Geometry\Resources</Filter>
@@ -214,88 +181,79 @@
       <Filter>Geometry\Entities</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipeline.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipelineNode.cpp">
-      <Filter>RenderingPipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderingPass.cpp">
-      <Filter>Scene\RenderingMechanism</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneRenderingPass.cpp">
-      <Filter>Scene\RenderingMechanism</Filter>
-    </ClCompile>
-    <ClCompile Include="VisibilityPass.cpp">
-      <Filter>Scene\RenderingMechanism</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipelineMechanism.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="RenderTargetDescriptor.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="RPSceneRenderNode.cpp">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClCompile>
     <ClCompile Include="RPStartNode.cpp">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClCompile>
     <ClCompile Include="RPPostProcessNode.cpp">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClCompile>
     <ClCompile Include="RPLuminanceNode.cpp">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="RPBrightnessNode.cpp">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="RPBlurNode.cpp">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="RPDownsampleNode.cpp">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="RPHDRNode.cpp">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipelineSockets.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="TextureSockets.cpp">
-      <Filter>RenderingPipeline\Sockets</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClCompile>
     <ClCompile Include="FloatSockets.cpp">
-      <Filter>RenderingPipeline\Sockets</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClCompile>
     <ClCompile Include="VoidSockets.cpp">
-      <Filter>RenderingPipeline\Sockets</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="RPAdapterNode.cpp">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClCompile>
     <ClCompile Include="RPDebugRendererNode.cpp">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingView.cpp">
+      <Filter>Core\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="SpatialRepresentation.cpp">
+      <Filter>Core\Views</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderResource.cpp">
+      <Filter>Core\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
       <Filter>Core</Filter>
     </None>
-    <None Include="..\..\Include\core-Renderer\RendererObject.inl">
-      <Filter>Core</Filter>
-    </None>
     <None Include="..\..\Include\core-Renderer\Light.inl">
       <Filter>Tools</Filter>
-    </None>
-    <None Include="..\..\Include\core-Renderer\AttributeSorterNode.inl">
-      <Filter>Scene\AttributeSorters</Filter>
-    </None>
-    <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl">
-      <Filter>Scene\AttributeSorters</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\LineSegments.inl">
       <Filter>Geometry\Resources</Filter>
@@ -303,29 +261,17 @@
     <None Include="..\..\Include\core-Renderer\TriangleMesh.inl">
       <Filter>Geometry\Resources</Filter>
     </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx">
-      <Filter>Effects\Entities</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
-      <Filter>Geometry\Shaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
-      <Filter>Geometry\Shaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
-      <Filter>Materials\Shaders</Filter>
-    </None>
     <None Include="..\..\Include\core-Renderer\RenderingPipelineNode.inl">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
-      <Filter>RenderingPipeline\Shaders</Filter>
+    <None Include="..\..\Include\core-Renderer\ShaderRenderCommand.inl">
+      <Filter>Core</Filter>
     </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Luminance.psh">
-      <Filter>RenderingPipeline\Shaders</Filter>
+    <None Include="..\..\Include\core-Renderer\ShaderParam.inl">
+      <Filter>Core</Filter>
     </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh">
-      <Filter>RenderingPipeline\Shaders</Filter>
+    <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl">
+      <Filter>Core\Resources</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -333,12 +279,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Renderer.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RendererObject.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RendererObjectImpl.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingMechanism.h">
@@ -393,51 +333,18 @@
       <Filter>Initialization\Simple</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Overlay.h">
-      <Filter>OverlayRenderer\Mechanism</Filter>
+      <Filter>Mechanisms\OverlayRenderer\Mechanism</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\OverlayRenderingMechanism.h">
-      <Filter>OverlayRenderer\Mechanism</Filter>
+      <Filter>Mechanisms\OverlayRenderer\Mechanism</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Font.h">
-      <Filter>OverlayRenderer\Elements</Filter>
+      <Filter>Mechanisms\OverlayRenderer\Elements</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\TextField.h">
-      <Filter>OverlayRenderer\Elements</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RenderableRepresentation.h">
-      <Filter>Scene\Views\RenderingView</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h">
-      <Filter>Scene\Views\RenderingView</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorterNode.h">
-      <Filter>Scene\AttributeSorters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\DefaultAttributeSorter.h">
-      <Filter>Scene\AttributeSorters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\LeafAttributeSorter.h">
-      <Filter>Scene\AttributeSorters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\TransparencyAttribute.h">
-      <Filter>Scene\Attributes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\UniqueObjectAttribute.h">
-      <Filter>Scene\Attributes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\CameraContext.h">
-      <Filter>Scene\Views\SpatialView</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\SpatialRepresentation.h">
-      <Filter>Scene\Views\SpatialView</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\SpatialView.h">
-      <Filter>Scene\Views\SpatialView</Filter>
+      <Filter>Mechanisms\OverlayRenderer\Elements</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h">
       <Filter>Geometry\Resources</Filter>
     </ClInclude>
@@ -474,12 +381,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h">
       <Filter>Geometry\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\EffectAttribute.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Renderable.h">
-      <Filter>Scene\Views</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureMaterial.h">
       <Filter>Materials\Entities</Filter>
     </ClInclude>
@@ -505,70 +406,88 @@
       <Filter>Geometry\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineNode.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h">
-      <Filter>RenderingPipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h">
-      <Filter>Scene\RenderingMechanism</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h">
-      <Filter>Scene\RenderingMechanism</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\VisibilityPass.h">
-      <Filter>Scene\RenderingMechanism</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineMechanism.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPLuminanceNode.h">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPBrightnessNode.h">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPBlurNode.h">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPDownsampleNode.h">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPHDRNode.h">
-      <Filter>RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\TextureSockets.h">
-      <Filter>RenderingPipeline\Sockets</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\FloatSockets.h">
-      <Filter>RenderingPipeline\Sockets</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VoidSockets.h">
-      <Filter>RenderingPipeline\Sockets</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h">
       <Filter>Materials\Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPDebugRendererNode.h">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SpatialRepresentation.h">
+      <Filter>Core\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h">
+      <Filter>Core\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderState.h">
+      <Filter>Core\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h">
+      <Filter>Mechanisms\DebugDraw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderRenderCommand.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderResourceStorage.h">
+      <Filter>Core\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderResource.h">
+      <Filter>Core\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

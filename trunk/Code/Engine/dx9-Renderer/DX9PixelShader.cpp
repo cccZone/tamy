@@ -9,60 +9,44 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DX9PixelShader::DX9PixelShader( PixelShader& shader )
-   : m_shader( shader )
-   , m_renderer( NULL )
-   , m_d3Device( NULL )
-   , m_dxPixelShader( NULL )
-   , m_shaderConstants( NULL )
+void RCBindPixelShader::execute( Renderer& renderer )
 {
-}
+   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
 
-///////////////////////////////////////////////////////////////////////////////
-
-DX9PixelShader::~DX9PixelShader()
-{
-   m_d3Device = NULL;
-
-   if ( m_dxPixelShader != NULL )
-   {
-      m_dxPixelShader->Release();
-      m_dxPixelShader = NULL;
-   }
-
-   if ( m_shaderConstants )
-   {
-      m_shaderConstants->Release();
-      m_shaderConstants = NULL;
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9PixelShader::initialize( Renderer& renderer )
-{
-   m_renderer = dynamic_cast< DX9Renderer* >( &renderer );
-   ASSERT_MSG( m_renderer != NULL, "This implementation can work only with DX9Renderer" );
-   if ( m_renderer == NULL )
+   DX9PixelShader* dxShader = dxRenderer.getPixelShader( m_shader );
+   if ( !dxShader )
    {
       return;
    }
 
-   if ( m_dxPixelShader != NULL )
-   {
-      m_dxPixelShader->Release();
-      m_dxPixelShader = NULL;
-   }
+   // set the shader parameters
+   setParams( renderer, dxShader );
+   dxShader->beginRendering();
+}
 
-   if ( m_shaderConstants )
-   {
-      m_shaderConstants->Release();
-      m_shaderConstants = NULL;
-   }
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
+void RCUnbindPixelShader::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+   dxRenderer.getD3Device().SetPixelShader( NULL );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+DX9PixelShader::DX9PixelShader( const DX9Renderer& renderer, const PixelShader& shader )
+   : m_shader( shader )
+   , m_renderer( renderer )
+   , m_d3Device( &renderer.getD3Device() )
+   , m_dxPixelShader( NULL )
+   , m_shaderConstants( NULL )
+{
    // load the effect
    const std::string& shaderContents = m_shader.getScript();
-   m_d3Device = &m_renderer->getD3Device();
 
    if ( shaderContents.empty() )
    {
@@ -120,9 +104,28 @@ void DX9PixelShader::initialize( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+DX9PixelShader::~DX9PixelShader()
+{
+   m_d3Device = NULL;
+
+   if ( m_dxPixelShader != NULL )
+   {
+      m_dxPixelShader->Release();
+      m_dxPixelShader = NULL;
+   }
+
+   if ( m_shaderConstants )
+   {
+      m_shaderConstants->Release();
+      m_shaderConstants = NULL;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void DX9PixelShader::setBool( const char* paramName, bool val )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       m_shaderConstants->SetBool( m_d3Device, hConstant, val );
@@ -131,9 +134,32 @@ void DX9PixelShader::setBool( const char* paramName, bool val )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void DX9PixelShader::setInt( const char* paramName, int val )
+{
+   if ( m_shaderConstants )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      m_shaderConstants->SetInt( m_d3Device, hConstant, val );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9PixelShader::setIntArray( const char* paramName, int* valsArr, unsigned int size )
+{
+   if ( m_shaderConstants )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      HRESULT res = m_shaderConstants->SetIntArray( m_d3Device, hConstant, valsArr, size );
+      ASSERT( SUCCEEDED( res ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void DX9PixelShader::setFloat( const char* paramName, float val )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       m_shaderConstants->SetFloat( m_d3Device, hConstant, val );
@@ -144,7 +170,7 @@ void DX9PixelShader::setFloat( const char* paramName, float val )
 
 void DX9PixelShader::setFloatArray( const char* paramName, float* valsArr, unsigned int size )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       HRESULT res = m_shaderConstants->SetFloatArray( m_d3Device, hConstant, valsArr, size );
@@ -156,7 +182,7 @@ void DX9PixelShader::setFloatArray( const char* paramName, float* valsArr, unsig
 
 void DX9PixelShader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       m_shaderConstants->SetMatrix( m_d3Device, hConstant, &matrix );
@@ -167,7 +193,7 @@ void DX9PixelShader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 
 void DX9PixelShader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       HRESULT res = m_shaderConstants->SetMatrixArray( m_d3Device, hConstant, matrices, size );
@@ -179,7 +205,7 @@ void DX9PixelShader::setMtxArray( const char* paramName, const D3DXMATRIX* matri
 
 void DX9PixelShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       m_shaderConstants->SetVector( m_d3Device, hConstant, &vec );
@@ -190,7 +216,7 @@ void DX9PixelShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 
 void DX9PixelShader::setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       HRESULT res = m_shaderConstants->SetVectorArray( m_d3Device, hConstant, vecArr, size );
@@ -200,9 +226,9 @@ void DX9PixelShader::setVec4Array( const char* paramName, const D3DXVECTOR4* vec
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9PixelShader::setTexture( const char* paramName, ShaderTexture& val )
+void DX9PixelShader::setTexture( const char* paramName, IDirect3DTexture9* texture )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       UINT samplerIdx = m_shaderConstants->GetSamplerIndex( hConstant );
@@ -215,7 +241,6 @@ void DX9PixelShader::setTexture( const char* paramName, ShaderTexture& val )
       m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_MAGFILTER, params.m_magFilter );
       m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_MIPFILTER, params.m_mipFilter );
 
-      IDirect3DTexture9* texture = reinterpret_cast< IDirect3DTexture9* >( val.getPlatformSpecific() );
       m_d3Device->SetTexture( samplerIdx, texture );
    }
 }
@@ -224,24 +249,11 @@ void DX9PixelShader::setTexture( const char* paramName, ShaderTexture& val )
 
 void DX9PixelShader::beginRendering()
 {
-   if ( m_d3Device )
-   {
-      const PixelShaderParams& params = m_shader.getParams();
-      m_d3Device->SetRenderState( D3DRS_CULLMODE, params.m_cullingMode );
-      m_d3Device->SetRenderState( D3DRS_ZENABLE, params.m_useZBuffer );
-      m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, params.m_writeToZBuffer );
-      m_d3Device->SetPixelShader( m_dxPixelShader );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9PixelShader::endRendering()
-{
-   if ( m_d3Device )
-   {
-      m_d3Device->SetPixelShader( NULL );
-   }
+   const PixelShaderParams& params = m_shader.getParams();
+   m_d3Device->SetRenderState( D3DRS_CULLMODE, params.m_cullingMode );
+   m_d3Device->SetRenderState( D3DRS_ZENABLE, params.m_useZBuffer );
+   m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, params.m_writeToZBuffer );
+   m_d3Device->SetPixelShader( m_dxPixelShader );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

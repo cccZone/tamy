@@ -53,12 +53,12 @@ public:
    // -------------------------------------------------------------------------
    // IDebugDrawable representation
    // -------------------------------------------------------------------------
-   void onDebugRender( IDebugDraw& renderer ) const;
+   void onDebugRender( Renderer& renderer ) const;
 
 private:
-   void drawTranslationGizmo( IDebugDraw& renderer ) const;
-   void drawRotationGizmo( IDebugDraw& renderer ) const;
-   void drawScalingGizmo( IDebugDraw& renderer ) const;
+   void drawTranslationGizmo( Renderer& renderer ) const;
+   void drawRotationGizmo( Renderer& renderer ) const;
+   void drawScalingGizmo( Renderer& renderer ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -140,11 +140,14 @@
     <ClCompile Include="EnumsTests.cpp">
       <Filter>RTTI</Filter>
     </ClCompile>
+    <ClCompile Include="AlgorithmTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
     <ClCompile Include="RuntimeDataTests.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
-    <ClCompile Include="AlgorithmTests.cpp">
-      <Filter>Math</Filter>
+    <ClCompile Include="RoundBufferTest.cpp">
+      <Filter>DataStructures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

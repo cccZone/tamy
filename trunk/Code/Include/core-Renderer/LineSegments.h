@@ -6,8 +6,8 @@
 
 #include <vector>
 #include "core-Renderer\GeometryResource.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
+#include "core-Renderer\RenderCommand.h"
+#include "core-Renderer\RenderResource.h"
 #include "core\AABoundingBox.h"
 #include "core\Color.h"
 
@@ -44,32 +44,10 @@ struct LineSegment
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Graphics library dependent implementation of geometry composed of lines.
- */
-class LineSegmentsImpl : public RendererObjectImpl
-{
-public:
-   virtual ~LineSegmentsImpl() {}
-
-   /**
-    * Renders the mesh using the library calls.
-    */
-   virtual void render() {}
-
-   /**
-    * Updates the buffer containing the lines.
-    */
-   virtual void update(const std::vector<LineSegment>& segments) {}
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
  * This is an abstract representation of a mesh geometry composed of
  * line segments.
  */
-class LineSegments : public GeometryResource, 
-                     public TRendererObject<LineSegmentsImpl>
+class LineSegments : public GeometryResource, public RenderResource
 {
    DECLARE_RESOURCE( LineSegments )
 
@@ -101,24 +79,39 @@ public:
    void clear();
 
    /**
-    * Rebuilds the geometry stored on the implementation side.
-    * Without running this method, you won't notice any changes 
-    * you've made with add & remove methods.
+    * Returns the line segments of this geometry.
     */
-   void rebuild();
+   inline const std::vector< LineSegment >& getSegments() const { return m_segments; }
 
    // -------------------------------------------------------------------------
-   // Geometry implementation
+   // GeometryResource implementation
    // -------------------------------------------------------------------------
    inline const BoundingVolume& getBoundingVolume() const { return m_bb; }
-   void render();
+   void render( Renderer& renderer );
 
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
    void onResourceLoaded( ResourcesManager& mgr );
-   void onComponentAdded( Component< ResourcesManager >& component );
-   void onComponentRemoved( Component< ResourcesManager >& component );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Line segments rendering command.
+ */
+class RCRenderLineSegments : public RenderCommand
+{
+private:
+   LineSegments&        m_segments;
+
+public:
+   RCRenderLineSegments( LineSegments& segments ) : m_segments( segments ) {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,28 +4,26 @@
 /// @brief  a rendering pass dedicated to scene queries mechanism
 
 #include "core.h"
-#include "core-Renderer\RenderingPass.h"
 #include <list>
 #include <map>
+#include "core-Renderer/RenderingMechanism.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ResourcesManager;
 class Camera;
 class RenderTarget;
 class Entity;
 class SceneQuery;
+class PixelShader;
 class QueryableEntity;
-class SceneQueryEffect;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * A rendering pass dedicated to scene queries mechanism.
  */
-class QueryRenderingPass : public RenderingPass,
-                           public GenericFactory< Entity, QueryableEntity >
+class QueryRenderingPass : public RenderingMechanism, public GenericFactory< Entity, QueryableEntity >
 {
 private:
    typedef std::map< Entity*, QueryableEntity* > Representations;
@@ -34,17 +32,17 @@ private:
 private:
    RenderTarget&           m_sceneSnapshot;
    Representations         m_representations;
-   SceneQueryEffect*       m_effect;
+   PixelShader*            m_shader;
    QueriesList             m_queriesList;
+   QueriesList             m_completedQueriesList;
 
 public:
    /**
     * Constructor.
     *
     * @param sceneSnapshot    render target
-    * @param rm               resources manager
     */
-   QueryRenderingPass( RenderTarget& sceneSnapshot, ResourcesManager& rm );
+   QueryRenderingPass( RenderTarget& sceneSnapshot );
    ~QueryRenderingPass();
 
    /**
@@ -73,13 +71,11 @@ public:
 
 protected:
    // -------------------------------------------------------------------------
-   // RenderingPass implementation
+   // RenderingMechanism implementation
    // -------------------------------------------------------------------------
-   bool onPreRender();
-   void onPostRender();
-
-private:
-   Entity* getEntityFromPos( const D3DXVECTOR2& pos );
+   void initialize( Renderer& renderer );
+   void deinitialize( Renderer& renderer );
+   void render( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

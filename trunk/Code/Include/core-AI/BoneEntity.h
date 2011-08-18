@@ -31,7 +31,7 @@ public:
    // -------------------------------------------------------------------------
    // IDebugDrawable representation
    // -------------------------------------------------------------------------
-   void onDebugRender( IDebugDraw& renderer ) const;
+   void onDebugRender( Renderer& renderer ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

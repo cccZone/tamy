@@ -4,17 +4,20 @@
     <Filter Include="Core">
       <UniqueIdentifier>{1a0e829f-ea83-46db-9dfd-a2d5dd58a301}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tools">
-      <UniqueIdentifier>{2a16e6e7-d40a-4d4d-a4a9-38e5c69a9859}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Geometry">
-      <UniqueIdentifier>{719dc849-7a9d-478e-b5e8-2febfd1f235a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Initializer">
       <UniqueIdentifier>{e451281e-fb38-4515-bc54-9eee720566ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Overlays">
-      <UniqueIdentifier>{7d229100-470e-4b77-a76b-ccbae572a38c}</UniqueIdentifier>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{a1bc06f2-62ac-4637-95f5-b21e91e7a145}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderCommands">
+      <UniqueIdentifier>{2a16e6e7-d40a-4d4d-a4a9-38e5c69a9859}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ShaderParams">
+      <UniqueIdentifier>{c065ad9a-f330-40b9-83e8-4ba3ed87a4f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderResources">
+      <UniqueIdentifier>{59e02a1b-87bd-4992-9da3-741e56a57a42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -22,94 +25,186 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="DX9Texture.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="DX9LineSegments.cpp">
-      <Filter>Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="DX9TriangleMesh.cpp">
-      <Filter>Geometry</Filter>
+      <Filter>RenderCommands</Filter>
     </ClCompile>
     <ClCompile Include="DX9Initializer.cpp">
       <Filter>Initializer</Filter>
     </ClCompile>
-    <ClCompile Include="DX9Font.cpp">
-      <Filter>Overlays</Filter>
-    </ClCompile>
     <ClCompile Include="DX9RenderTarget.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="DX9RenderingPass.cpp">
-      <Filter>Tools</Filter>
+      <Filter>RenderCommands</Filter>
     </ClCompile>
     <ClCompile Include="DXErrorParser.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="DX9EffectShader.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="DX9Skeleton.cpp">
-      <Filter>Geometry</Filter>
+      <Filter>RenderCommands</Filter>
     </ClCompile>
     <ClCompile Include="DX9VertexShader.cpp">
-      <Filter>Tools</Filter>
+      <Filter>RenderCommands</Filter>
     </ClCompile>
     <ClCompile Include="DX9PixelShader.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="DX9FullscreenQuad.cpp">
-      <Filter>Geometry</Filter>
+      <Filter>RenderCommands</Filter>
     </ClCompile>
     <ClCompile Include="DX9RenderingPipelineMechanism.cpp">
-      <Filter>Tools</Filter>
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamTexture.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamString.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamVec4Array.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamVec4.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamMtxArray.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamMtx.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamFloatArray.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamFloat.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamIntArray.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamInt.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamBool.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9FullscreenQuad.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9LineSegments.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9Skeleton.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9TriangleMesh.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9Font.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9EffectsResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9FontResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9LineSegmentsResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9PixelShaderResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9DebugDrawCommands.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9SkeletonResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9TriangleMeshResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9VertexShaderResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9TextureResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9RenderTargetResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderParamRenderTarget.cpp">
+      <Filter>ShaderParams</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Texture.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegments.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9TriangleMesh.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Initializer.h">
       <Filter>Initializer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Font.h">
-      <Filter>Overlays</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderTarget.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderingPass.h">
-      <Filter>Tools</Filter>
+      <Filter>RenderCommands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DXErrorParser.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9EffectShader.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Skeleton.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShader.h">
-      <Filter>Tools</Filter>
+      <Filter>RenderCommands</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShader.h">
-      <Filter>Tools</Filter>
+      <Filter>RenderCommands</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9FullscreenQuad.h">
-      <Filter>Geometry</Filter>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9TriangleMesh.h">
+      <Filter>RenderCommands</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderingPipelineMechanism.h">
-      <Filter>Tools</Filter>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegments.h">
+      <Filter>RenderCommands</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9EffectsResourcesStorage.h">
+      <Filter>RenderResources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9FontResourcesStorage.h">
+      <Filter>RenderResources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegmentsResourcesStorage.h">
+      <Filter>RenderResources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShaderResourcesStorage.h">
+      <Filter>RenderResources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9SkeletonResourcesStorage.h">
+      <Filter>RenderResources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9TriangleMeshResourcesStorage.h">
+      <Filter>RenderResources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderResourcesStorage.h">
+      <Filter>RenderResources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9TextureResourcesStorage.h">
+      <Filter>RenderResources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderTargetResourcesStorage.h">
+      <Filter>RenderResources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Luminance.psh">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

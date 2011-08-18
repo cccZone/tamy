@@ -41,8 +41,7 @@ void SceneQueries::initialize( TamyEditor& mgr )
 
    // register a rendering pass
    CompositeRenderingMechanism& compRenderingMech = mgr.requestService< CompositeRenderingMechanism >();
-   ResourcesManager& rm = mgr.requestService< ResourcesManager >();
-   m_renderingPass = new QueryRenderingPass( *m_sceneSnapshot, rm );
+   m_renderingPass = new QueryRenderingPass( *m_sceneSnapshot );
    compRenderingMech.add( "SceneQueries", m_renderingPass );
 }
 

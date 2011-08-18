@@ -129,7 +129,7 @@ D3DXVECTOR3 Node::getPosition() const
 
 const D3DXMATRIX& Node::getGlobalMtx() const
 {
-   if (hasParent() == false) {return m_localMtx;}
+   if (hasParentNode() == false) {return m_localMtx;}
 
    // this node's global matrix can be influenced by the change
    // in this node's local matrix, or any of it's parents' global matrices.
@@ -191,7 +191,7 @@ void Node::setBoundingVolume(BoundingVolume* volume)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Node& Node::getParent()
+Node& Node::getParentNode()
 {
    if (m_parent == NULL) 
    {
@@ -205,9 +205,9 @@ Node& Node::getParent()
 
 void Node::addChild(Node* childNode)
 {
-   if (childNode->hasParent())
+   if (childNode->hasParentNode())
    {
-      Node& prevParent = childNode->getParent();
+      Node& prevParent = childNode->getParentNode();
       prevParent.removeChild(*childNode);
    }
 

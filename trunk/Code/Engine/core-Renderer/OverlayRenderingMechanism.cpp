@@ -31,7 +31,21 @@ void OverlayRenderingMechanism::setOverlay(Overlay* overlay)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void OverlayRenderingMechanism::render()
+void OverlayRenderingMechanism::initialize( Renderer& renderer )
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void OverlayRenderingMechanism::deinitialize( Renderer& renderer )
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void OverlayRenderingMechanism::render( Renderer& renderer )
 {
    if (m_overlay != NULL) 
    {

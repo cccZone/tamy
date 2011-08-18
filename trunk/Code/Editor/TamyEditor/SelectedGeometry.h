@@ -21,27 +21,20 @@ class SelectedGeometry : public SelectedEntityRepresentation
 private:
    Geometry&                  m_geometry;
    PixelShader*               m_selectionMarker;
-   Attributes                 m_attributes;
 
 public:
    /**
     * Constructor.
     *
-    * @param renderable
+    * @param geometry
     */
    SelectedGeometry( Geometry& geometry );
    ~SelectedGeometry();
 
    // -------------------------------------------------------------------------
-   // Attributed implementation
-   // -------------------------------------------------------------------------
-   const Attributes& getAttributes() const;
-   void render();
-
-   // -------------------------------------------------------------------------
    // SelectedEntityRepresentation implementation
    // -------------------------------------------------------------------------
-   void initialize( SelectionManager& host );
+   void render( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

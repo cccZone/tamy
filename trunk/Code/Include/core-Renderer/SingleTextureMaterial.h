@@ -4,27 +4,26 @@
 /// @brief  a material that can include up to one texture
 
 #include "core-MVC\Entity.h"
-#include "core-Renderer\EffectAttribute.h"
-#include "core-Renderer\Renderable.h"
 #include "core-Renderer\Material.h"
+#include "core-Renderer\RenderState.h"
 #include <d3dx9.h>
 #include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Geometry;
 class PixelShader;
-class Camera;
 class Texture;
 
 ///////////////////////////////////////////////////////////////////////////////
+
+// TODO: setting the renderState in case based on the texture used etc.
 
 /**
  * An atomic object that can be rendered Such an object consists of geometry
  * and effects that render the object in a particular way.
  */
-class SingleTextureMaterial : public Entity, public Renderable
+class SingleTextureMaterial : public Entity, public RenderState
 {
    DECLARE_CLASS( SingleTextureMaterial )
 
@@ -32,11 +31,6 @@ private:
    PixelShader*         m_shader;
    Material             m_material;
    Texture*             m_texture;
-
-   // runtime data
-   Camera*              m_camera;
-   Geometry*            m_geometry;
-   Attributes           m_attributes;
 
 public:
    /**
@@ -60,10 +54,10 @@ public:
    inline void setTexture( Texture& texture ) { m_texture = &texture; }
 
    // -------------------------------------------------------------------------
-   // Renderable implementation
+   // RenderState implementation
    // -------------------------------------------------------------------------
-   void render();
-   inline const Attributes& getAttributes() const { return m_attributes; }
+   void onPreRender( Renderer& renderer );
+   void onPostRender( Renderer& renderer );
 
 protected:
    // -------------------------------------------------------------------------

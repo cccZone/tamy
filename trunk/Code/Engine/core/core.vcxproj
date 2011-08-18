@@ -85,6 +85,7 @@
     <ClCompile Include="NodeActionsExecutor.cpp" />
     <ClCompile Include="ResourceHandle.cpp" />
     <ClCompile Include="ResourceLoader.cpp" />
+    <ClCompile Include="RoundBuffer.cpp" />
     <ClCompile Include="RuntimeData.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="Enum.cpp" />
@@ -92,7 +93,6 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="MatrixWriter.cpp" />
     <ClCompile Include="StringUtils.cpp" />
-    <ClCompile Include="UniqueObject.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
     <ClCompile Include="AABoundingBox.cpp" />
     <ClCompile Include="BoundingSphere.cpp" />
@@ -129,6 +129,7 @@
     <ClInclude Include="..\..\Include\core\ResourceHandle.h" />
     <ClInclude Include="..\..\Include\core\ResourceLoader.h" />
     <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h" />
+    <ClInclude Include="..\..\Include\core\RoundBuffer.h" />
     <ClInclude Include="..\..\Include\core\RuntimeData.h" />
     <ClInclude Include="..\..\Include\core\Singleton.h" />
     <ClInclude Include="..\..\Include\core\Enum.h" />
@@ -219,6 +220,7 @@
     <None Include="..\..\Include\core\CompositeSpatialStorage.inl" />
     <None Include="..\..\Include\core\NarrowPhaseStorageFilter.inl" />
     <None Include="..\..\Include\core\ResourceHandle.inl" />
+    <None Include="..\..\Include\core\RoundBuffer.inl" />
     <None Include="..\..\Include\core\RuntimeData.inl" />
     <None Include="..\..\Include\core\SharedSpatialStorage.inl" />
     <None Include="..\..\Include\core\Enum.inl" />
@@ -244,6 +246,7 @@
     <None Include="..\..\Include\core\Property.inl" />
     <None Include="..\..\Include\core\ResourcesManager.inl" />
     <None Include="..\..\Include\core\ResourceStorage.inl" />
+    <None Include="..\..\Include\core\UniqueObject.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

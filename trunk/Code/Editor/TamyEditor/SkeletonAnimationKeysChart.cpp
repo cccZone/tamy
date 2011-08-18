@@ -323,5 +323,4 @@ void BoneSRTAnimationChart::updateVisibleKeys()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: add a widget for manual edition of the selected key value
 // TODO: add an animation preview feature

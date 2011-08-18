@@ -43,7 +43,8 @@ public:
    // RenderingMechanism implementation
    // -------------------------------------------------------------------------
    void initialize( Renderer& renderer );
-   void render();
+   void deinitialize( Renderer& renderer );
+   void render( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

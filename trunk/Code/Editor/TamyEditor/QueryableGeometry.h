@@ -9,6 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Geometry;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,27 +20,19 @@ class QueryableGeometry : public QueryableEntity
 {
 private:
    Geometry&            m_geometry;
-   SceneQueryEffect*    m_effect;
-   Attributes           m_attributes;
 
 public:
    /**
     * Constructor.
     *
-    * @param renderable
+    * @param geometry
     */
    QueryableGeometry( Geometry& geometry );
 
    // -------------------------------------------------------------------------
    // QueryableEntity implementation
    // -------------------------------------------------------------------------
-   void initialize( SceneQueryEffect& effect );
-
-   // -------------------------------------------------------------------------
-   // Attributed implementation
-   // -------------------------------------------------------------------------
-   const Attributes& getAttributes() const { return m_attributes; }
-   void render();
+   void render( Renderer& renderer, PixelShader& shader );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

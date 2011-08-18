@@ -1,5 +1,13 @@
+/// @file   core/Timer.h
+/// @brief  simple timer
 #pragma once
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Simple timer class.
+ */
 class CTimer
 {
 private:
@@ -12,16 +20,33 @@ private:
 	float           m_fpsTimeElapsed;
 
 public:
-   CTimer(void);
-   ~CTimer(void);
+   CTimer();
+   ~CTimer();
 
-   void reset(void);
+   /**
+    * Resets the timer.
+    */
+   void reset();
 
-   void tick(void);
+   /**
+    * Updates the timer.
+    */
+   void tick();
 
+   /**
+    * Returns the time that elapsed since the last reset.
+    */
    float getTimeElapsed() const;
 
+   /**
+    * Returns current time.
+    */
    double getCurrentTime() const;
 
+   /**
+    * Returns the framerate ( number of ticks / time elapsed )
+    */
    unsigned long getFrameRate() const;
 };
+
+///////////////////////////////////////////////////////////////////////////////

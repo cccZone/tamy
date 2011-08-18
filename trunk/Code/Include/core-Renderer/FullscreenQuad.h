@@ -2,65 +2,27 @@
 /// @brief  full screen quad geometry
 #pragma once
 
-#include "core-Renderer\Renderable.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
+#include "core-Renderer/RenderCommand.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class FullscreenQuadImpl;
-class ResourcesManager;
-class Renderer;
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Full screen quad geometry.
- */
-class FullscreenQuad : public TRendererObject< FullscreenQuadImpl >
-{
-   DECLARE_RTTI_CLASS
-
-public:
-   /**
-    * Constructor.
-    *
-    * @param renderer
-    */
-   FullscreenQuad();
-   ~FullscreenQuad();
-
-   /**
-    * Initializes the quad
-    * 
-    * @param rm         resources manager
-    */
-   void initialize( ResourcesManager& rm );
-
-   /**
-    * Renders the quad on screen.
-    *
-    * @param width      quad width
-    * @param height     quad height
-    */
-   void render( unsigned int width, unsigned int height );
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Graphics library dependent implementation of a full-screen quad.
  */
-class FullscreenQuadImpl : public RendererObjectImpl
+class RCFullscreenQuad : public RenderCommand
 {
-public:
-   virtual ~FullscreenQuadImpl() {}
+private:
+   unsigned int m_width;
+   unsigned int m_height;
 
-   /**
-    * Renders the full-screen quad geometry.
-    */
-   virtual void render( unsigned int width, unsigned int height ) {}
+public:
+   RCFullscreenQuad( unsigned int width, unsigned int height );
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

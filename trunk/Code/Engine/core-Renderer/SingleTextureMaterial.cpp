@@ -2,6 +2,7 @@
 #include "core-Renderer\Geometry.h"
 #include "core-Renderer\PixelShader.h"
 #include "core-Renderer\Texture.h"
+#include "core-Renderer\Renderer.h"
 #include "core-MVC.h"
 #include "core.h"
 #include <stdexcept>
@@ -20,8 +21,6 @@ END_OBJECT()
 SingleTextureMaterial::SingleTextureMaterial( const std::string& name )
    : Entity( name )
    , m_shader( NULL )
-   , m_camera( NULL )
-   , m_geometry( NULL )
    , m_texture( NULL )
 {}
 
@@ -29,81 +28,80 @@ SingleTextureMaterial::SingleTextureMaterial( const std::string& name )
 
 SingleTextureMaterial::~SingleTextureMaterial()
 {
-   m_attributes.clear();
    m_shader = NULL;
-   m_camera = NULL;
-   m_geometry = NULL;
    m_texture = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureMaterial::render()
+void SingleTextureMaterial::onPreRender( Renderer& renderer )
 {
-   if ( !m_camera || !m_shader || !m_geometry )
+   if ( !m_shader )
    {
       return;
    }
    
-   m_shader->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_material.getAmbientColor() );
-   m_shader->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_material.getDiffuseColor() );
-   m_shader->setBool( "g_UseTexture", m_texture != NULL );
+   RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
+
+   comm->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_material.getAmbientColor() );
+   comm->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_material.getDiffuseColor() );
+   comm->setBool( "g_UseTexture", m_texture != NULL );
    if ( m_texture != NULL )
    {
-      m_shader->setTexture( "g_MeshTexture", *m_texture );
+      comm->setTexture( "g_MeshTexture", *m_texture );
    }
-   m_shader->beginRendering();
-   m_geometry->render();
-   m_shader->endRendering();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SingleTextureMaterial::onPostRender( Renderer& renderer )
+{
+   if ( !m_shader )
+   {
+      return;
+   }
+
+   new ( renderer() ) RCUnbindPixelShader( *m_shader );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SingleTextureMaterial::onAttached( Entity& parent )
 {
-   m_geometry = dynamic_cast< Geometry* >( &parent );
-   m_attributes.push_back( new EffectAttribute() );
+   Geometry* geometry = dynamic_cast< Geometry* >( &parent );
+   if ( geometry )
+   {
+      geometry->addState( *this );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SingleTextureMaterial::onDetached( Entity& parent )
 {
-   m_geometry = NULL;
-
-   delete m_attributes[0];
-   m_attributes.clear();
+   Geometry* geometry = dynamic_cast< Geometry* >( &parent );
+   if ( geometry )
+   {
+      geometry->removeState( *this );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SingleTextureMaterial::onComponentAdded( Component< Model >& component )
 {
+   ModelComponent< ResourcesManager >* comp = dynamic_cast< ModelComponent< ResourcesManager >* >( &component );
+   if ( comp )
    {
-      ModelComponent< Camera >* comp = dynamic_cast< ModelComponent< Camera >* >( &component );
-      if ( comp )
+      // load the shader
+      ResourcesManager& rm = comp->get();
+      static const char* shaderName = "Renderer/Shaders/MaterialShader.psh";
+      m_shader = dynamic_cast< PixelShader* >( rm.findResource( "SingleTextureMaterial" ) );
+      if ( !m_shader )
       {
-         m_camera = &comp->get();
-         return;
-      }
-   }
-
-   {
-      ModelComponent< ResourcesManager >* comp = dynamic_cast< ModelComponent< ResourcesManager >* >( &component );
-      if ( comp )
-      {
-         // load the shader
-         ResourcesManager& rm = comp->get();
-         static const char* shaderName = "Renderer/Shaders/MaterialShader.psh";
-         m_shader = dynamic_cast< PixelShader* >( rm.findResource( "SingleTextureMaterial" ) );
-         if ( !m_shader )
-         {
-            m_shader = new PixelShader( "SingleTextureMaterial" );
-            m_shader->loadFromFile( rm.getFilesystem(), shaderName );
-            rm.addResource( m_shader );
-         }
-
-         return;
+         m_shader = new PixelShader( "SingleTextureMaterial" );
+         m_shader->loadFromFile( rm.getFilesystem(), shaderName );
+         rm.addResource( m_shader );
       }
    }
 }

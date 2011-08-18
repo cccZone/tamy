@@ -58,8 +58,9 @@ void RPDownsampleNode::onInitialize( RenderingPipelineMechanism& host ) const
    data[ m_downsamplePass ]->getParams().m_writeToZBuffer = false;
    data[ m_downsamplePass ]->getParams().m_useZBuffer = false;
 
-   data[ m_renderer ] = &host.getRenderer();
-   data[ m_renderer ]->implement< PixelShader >( *data[ m_downsamplePass ] );
+   Renderer& renderer = host.getRenderer();
+
+   data[ m_renderer ] = &renderer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,7 +85,7 @@ void RPDownsampleNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
    RuntimeDataBuffer& data = host.data();
 
-   Renderer* renderer = data[ m_renderer ];
+   Renderer& renderer = *data[ m_renderer ];
    PixelShader* downsamplePass = data[ m_downsamplePass ];
    ShaderTexture* inputTex = data[ m_inputTex ];
    RenderTarget* downsampleTarget = data[ m_downsampleTarget ];
@@ -103,13 +104,14 @@ void RPDownsampleNode::onUpdate( RenderingPipelineMechanism& host ) const
    }
    else
    {
-      dstWidth = renderer->getViewportWidth();
-      dstHeight = renderer->getViewportHeight();
+      dstWidth = renderer.getViewportWidth();
+      dstHeight = renderer.getViewportHeight();
    }
    float widthInv = 1.0f / (float)dstWidth;
    float heightInv = 1.0f /(float)dstHeight;
 
-   downsamplePass->setTexture( "inputTex", *inputTex );
+   RCBindPixelShader* downsamplePassComm = new ( renderer() ) RCBindPixelShader( *downsamplePass );
+   downsamplePassComm->setTexture( "inputTex", *inputTex );
 
    // We need to compute the sampling offsets used for this pass.
    // A 4x4 sampling pattern is used, so we need to generate 16 offsets
@@ -133,12 +135,11 @@ void RPDownsampleNode::onUpdate( RenderingPipelineMechanism& host ) const
       }
    }
 
-   downsamplePass->setVec4Array( "tcDownSampleOffsets", dsOffsets, 16 );
+   downsamplePassComm->setVec4( "tcDownSampleOffsets", dsOffsets, 16 );
 
    // render
-   downsamplePass->beginRendering();
-   renderQuad( data, *renderer, downsampleTarget );
-   downsamplePass->endRendering();
+   renderQuad( renderer, downsampleTarget );
+   new ( renderer() ) RCUnbindPixelShader( *downsamplePass );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

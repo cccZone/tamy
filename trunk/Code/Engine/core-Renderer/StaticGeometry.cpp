@@ -2,6 +2,7 @@
 #include "core-MVC\SpatialEntity.h"
 #include "core-Renderer\VertexShader.h"
 #include "core-Renderer\Camera.h"
+#include "core-Renderer\Renderer.h"
 #include "core-MVC.h"
 #include "core.h"
 
@@ -35,27 +36,31 @@ StaticGeometry::~StaticGeometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void StaticGeometry::onPreRender()
+void StaticGeometry::onPreRender( Renderer& renderer )
 {
    if ( !m_vertexShader )
    {
       return;
    }
 
-   D3DXMATRIX worldViewMtx = m_parentNode->getGlobalMtx() * m_camera->getViewMtx();
-   m_vertexShader->setMtx( "g_mWorldView", worldViewMtx );
-   m_vertexShader->setMtx( "g_mProjection", m_camera->getProjectionMtx() );
-   m_vertexShader->beginRendering();
+   Camera& camera = renderer.getActiveCamera();
+
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
+   D3DXMATRIX worldViewMtx = m_parentNode->getGlobalMtx() * camera.getViewMtx();
+   comm->setMtx( "g_mWorldView", worldViewMtx );
+   comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void StaticGeometry::onPostRender()
+void StaticGeometry::onPostRender( Renderer& renderer )
 {
-   if ( m_vertexShader )
+   if ( !m_vertexShader )
    {
-      m_vertexShader->endRendering();
+      return;
    }
+
+   new ( renderer() ) RCUnbindVertexShader( *m_vertexShader );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

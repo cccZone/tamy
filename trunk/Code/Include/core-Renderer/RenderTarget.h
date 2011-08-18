@@ -3,11 +3,13 @@
 /// @file   core-Renderer\RenderTarget.h
 /// @brief  a special kind of texture which a renderer uses as an output
 
-#include "core\UniqueObject.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
 #include "core\Observer.h"
 #include "core-Renderer\ShaderTexture.h"
+#include "core-Renderer\RenderState.h"
+#include "core-Renderer\RenderCommand.h"
+#include "core-Renderer\ShaderParam.h"
+#include "core-Renderer\RenderResource.h"
+#include "core\UniqueObject.h"
 #include "core\Color.h"
 #include <string>
 #include <windows.h>
@@ -17,7 +19,6 @@
 
 class Renderer;
 enum RendererOps;
-class RenderTargetImpl;
 class RenderTargetSizePolicy;
 enum TextureFormat;
 
@@ -26,9 +27,7 @@ enum TextureFormat;
 /**
  * A special kind of texture which a renderer uses as an output.
  */
-class RenderTarget : public TRendererObject< RenderTargetImpl >, 
-                     public UniqueObject,
-                     public ShaderTexture
+class RenderTarget : public RenderState, public ShaderTexture, public UniqueObject< RenderTarget >, public RenderResource
 {
    DECLARE_RTTI_CLASS
 
@@ -52,26 +51,6 @@ public:
     */
    RenderTarget( RenderTargetSizePolicy* sizePolicy = NULL, TextureUsage usage = TU_COLOR, bool isReadable = false, const Color& bgColor = Color( 0.f, 0.f, 0.f, 0.f ) );
    ~RenderTarget();
-
-   /**
-    * Returns a pointer to the platform specific implementation
-    * of the texture.
-    *
-    * Only the implementation will know what to do with it.
-    *
-    * @return     pointer to impl-specific texture structure
-    */
-   void* getPlatformSpecific() const;
-
-   /**
-    * Returns the width of the texture.
-    */
-   inline unsigned int getWidth() const { return m_width; }
-
-   /**
-    * Returns the height of the texture.
-    */
-   inline unsigned int getHeight() const { return m_height; }
 
    /**
     * Sets the new size of the render target.
@@ -102,31 +81,21 @@ public:
     * @param pos     pixel position
     */
    Color getPixel( const D3DXVECTOR2& pos ) const;
-};
 
-///////////////////////////////////////////////////////////////////////////////
+   // -------------------------------------------------------------------------
+   // RenderState implementation
+   // -------------------------------------------------------------------------
+   void onPreRender( Renderer& renderer );
+   void onPostRender( Renderer& renderer );
 
-/**
- * Library dependent texture implementation.
- */
-class RenderTargetImpl : public RendererObjectImpl
-{
-public:
-   virtual ~RenderTargetImpl() {}
-
-   /**
-    * Should return a pointer to the library-specific render target representation.
-    *
-    * @return     pointer to impl-specific render target structure
-    */
-   virtual void* getPlatformSpecific() const { return NULL; }
-
-   /**
-    * Should return the color of the specified pixel.
-    *
-    * @param pos     pixel position
-    */
-   virtual Color getPixel( const D3DXVECTOR2& pos ) const { return Color(); }
+   // -------------------------------------------------------------------------
+   // ShaderTexture implementation
+   // -------------------------------------------------------------------------
+   inline unsigned int getWidth() const { return m_width; }
+   inline unsigned int getHeight() const { return m_height; }
+   inline ShaderParam< EffectShader >* createEffectShaderTextureSetter( const std::string& paramName ) { return new ShaderParamRenderTarget< EffectShader >( paramName, *this ); }
+   inline ShaderParam< PixelShader >* createPixelShaderTextureSetter( const std::string& paramName ) { return new ShaderParamRenderTarget< PixelShader >( paramName, *this ); }
+   inline ShaderParam< VertexShader >* createVertexShaderTextureSetter( const std::string& paramName ){ return new ShaderParamRenderTarget< VertexShader >( paramName, *this ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -233,3 +202,72 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Command that ensures a render target existence.
+ */
+class RCCreateRenderTarget : public RenderCommand
+{
+private:
+   RenderTarget&    m_rt;
+
+public:
+   RCCreateRenderTarget( RenderTarget& rt ) : m_rt( rt ) {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Command that sets a render target for rendering.
+ */
+class RCActivateRenderTarget  : public RenderCommand
+{
+private:
+   RenderTarget*    m_renderTarget;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param renderTarget     ptr to the render target ( NULL value also accepted )
+    */
+   RCActivateRenderTarget( RenderTarget* renderTarget );
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Command that allows you to query for the specified pixel color.
+ */
+class RCGetPixel : public RenderCommand
+{
+private:
+   RenderTarget&        m_renderTarget;
+   D3DXVECTOR2          m_queryPos;
+   Color&               m_outColorVal;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param renderTarget        queried render target
+    * @param queryPos            pixel position
+    * @param outColorVal         this is where the queried color value will be stored
+    */
+   RCGetPixel( RenderTarget& renderTarget, const D3DXVECTOR2& queryPos, Color& outColorVal );
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};

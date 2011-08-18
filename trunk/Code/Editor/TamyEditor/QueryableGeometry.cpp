@@ -2,35 +2,31 @@
 #include "core-Renderer.h"
 #include "core.h"
 #include "SceneQueries.h"
-#include "SceneQueryEffect.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 QueryableGeometry::QueryableGeometry( Geometry& geometry )
 : m_geometry( geometry )
-, m_effect( NULL )
 {
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QueryableGeometry::initialize( SceneQueryEffect& effect )
+void QueryableGeometry::render( Renderer& renderer, PixelShader& shader )
 {
-   m_effect = &effect;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void QueryableGeometry::render()
-{
-   if ( !m_effect || !m_geometry.hasGeometry() || !m_geometry.isVisible() )
+   if ( !m_geometry.hasGeometry() )
    {
       return;
    }
 
-   m_effect->setObject( SceneQueries::ptrToVec( &m_geometry ) );
-   m_effect->render( m_geometry );
+   RCBindPixelShader* effectComm = new ( renderer() ) RCBindPixelShader( shader );
+   effectComm->setVec4( "g_ptr", SceneQueries::ptrToVec( &m_geometry ) );
+
+   m_geometry.render( renderer );
+
+   new ( renderer() ) RCUnbindPixelShader( shader );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

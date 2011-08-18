@@ -9,6 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class PixelShader;
+class PixelShaderImpl;
 class ShaderTexture;
 class Renderer;
 class RenderTarget;

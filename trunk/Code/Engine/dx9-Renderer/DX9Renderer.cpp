@@ -1,34 +1,15 @@
 #include "dx9-Renderer\DX9Renderer.h"
 #include "dx9-Renderer\DXErrorParser.h"
+#include "dx9-Renderer\DX9RenderTarget.h"
+#include "core-Renderer\Camera.h"
 #include <stdexcept>
 #include <string>
 #include <cassert>
 
-// implementations
-#include "core-Renderer\TriangleMesh.h"
-#include "dx9-Renderer\DX9TriangleMesh.h"
-#include "core-Renderer\LineSegments.h"
-#include "dx9-Renderer\DX9LineSegments.h"
-#include "core-Renderer\Texture.h"
-#include "dx9-Renderer\DX9Texture.h"
-#include "core-Renderer\RenderTarget.h"
-#include "dx9-Renderer\DX9RenderTarget.h"
-#include "core-Renderer\EffectShader.h"
-#include "dx9-Renderer\DX9EffectShader.h"
-#include "core-Renderer\Font.h"
-#include "dx9-Renderer\DX9Font.h"
-#include "core-Renderer\RenderingPass.h"
-#include "dx9-Renderer\DX9RenderingPass.h"
-#include "core-Renderer\VertexShader.h"
-#include "dx9-Renderer\DX9VertexShader.h"
-#include "core-Renderer\PixelShader.h"
-#include "dx9-Renderer\DX9PixelShader.h"
-#include "core-Renderer\Skeleton.h"
-#include "dx9-Renderer\DX9Skeleton.h"
-#include "core-Renderer\FullscreenQuad.h"
-#include "dx9-Renderer\DX9FullscreenQuad.h"
-#include "core-Renderer\RenderingPipelineMechanism.h"
-#include "dx9-Renderer\DX9RenderingPipelineMechanism.h"
+
+/////////////////////////////////////////////////////////////////////////////
+
+#define ADD_RESOURCE_STORAGE( Class, Member )  Member = new Class( *this );  m_storages.push_back( Member );
 
 /////////////////////////////////////////////////////////////////////////////
 
@@ -46,6 +27,10 @@ DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
       , m_creationParams( creationParams )
       , m_deviceLost( false )
       , m_hardwareTLOn( hardwareTLOn )
+      , DEBUG_LINES_MAX_COUNT( 65535 )
+      , m_linesBuffer( NULL )
+      , m_pVertex( NULL )
+      , m_linesCount( 0 )
 {
    m_viewport.X = 0;
    m_viewport.Y = 0;
@@ -54,29 +39,48 @@ DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
    m_viewport.MinZ = 0.0f;
    m_viewport.MaxZ = 1.0f;
 
-   // associate implementations
-   associate< TriangleMesh, DX9TriangleMesh > ();
-   associate< LineSegments, DX9LineSegments > ();
-   associate< Texture, DX9Texture > ();
-   associate< RenderTarget, DX9RenderTarget > ();
-   associate< EffectShader, DX9EffectShader > ();
-   associate< Font, DX9Font > ();
-   associate< RenderingPass, DX9RenderingPass > ();
-   associate< VertexShader, DX9VertexShader > ();
-   associate< PixelShader, DX9PixelShader > ();
-   associate< Skeleton, DX9Skeleton > ();
-   associate< FullscreenQuad, DX9FullscreenQuad > ();
-   associate< RenderingPipelineMechanism, DX9RenderingPipelineMechanism > ();
+   D3DXMatrixIdentity( &m_identityMtx );
 
    // sample texture formats
    sampleOptimalTextureFormats();
+
+   // create resource storages
+   ADD_RESOURCE_STORAGE( EffectsStorage, m_effects );
+   ADD_RESOURCE_STORAGE( FontStorage, m_fonts );
+   ADD_RESOURCE_STORAGE( LineSegmentsStorage, m_lineSegments );
+   ADD_RESOURCE_STORAGE( TriangleMeshesStorage, m_triMeshes );
+   ADD_RESOURCE_STORAGE( PixelShadersStorage, m_pixelShaders );
+   ADD_RESOURCE_STORAGE( SkeletonsStorage, m_skeletons );
+   ADD_RESOURCE_STORAGE( VertexShadersStorage, m_vertexShaders );
+   ADD_RESOURCE_STORAGE( TexturesStorage, m_textures );
+   ADD_RESOURCE_STORAGE( RenderTargetsStorage, m_renderTargets );
+
+   // setup debug data
+   m_linesBuffer = createVertexBuffer( DEBUG_LINES_MAX_COUNT * sizeof( DebugVertex ), 0, D3DFVF_XYZ | D3DFVF_DIFFUSE, D3DPOOL_MANAGED );
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 DX9Renderer::~DX9Renderer()
 {
-   if (m_d3Device != NULL)
+   // release resource storages
+   unsigned int count = m_storages.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      delete m_storages[i];
+   }
+   m_storages.clear();
+   
+   // release debug stuff
+   if ( m_linesBuffer )
+   {
+      m_linesBuffer->Release();
+      m_linesBuffer = NULL;
+   }
+   m_pVertex = NULL;
+
+   // release the rendering device
+   if ( m_d3Device != NULL )
    {
       m_d3Device->Release();
       m_d3Device = NULL;
@@ -93,7 +97,12 @@ void DX9Renderer::initRenderer()
    m_d3Device->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
    m_d3Device->SetViewport(&m_viewport);
 
-   Subject<DX9Renderer, DX9GraphResourceOp>::notify(GRO_CREATE_RES);
+   // notify the storages about restored device context
+   unsigned int count = m_storages.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      m_storages[i]->onDeviceRestored();
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -120,15 +129,23 @@ void DX9Renderer::resetViewport(unsigned int width, unsigned int height)
       creationParams.BackBufferWidth = 0;
       creationParams.BackBufferHeight = 0;
 
-      Subject<DX9Renderer, DX9GraphResourceOp>::notify(GRO_RELEASE_RES);
+      // notify the storages about lost device context
+      unsigned int count = m_storages.size();
+      for ( unsigned int i = 0; i < count; ++i )
+      {
+         m_storages[i]->onDeviceLost();
+      }
 
-      if (FAILED(m_d3Device->Reset(&creationParams)))
+      // try recovering the device
+      if ( FAILED( m_d3Device->Reset( &creationParams ) ) )
       {
          throw std::runtime_error("Could not reset the graphical device");
       }
 
       m_creationParams = creationParams;
    }
+
+   // reinitialize the device
    initRenderer();
 }
 
@@ -201,8 +218,14 @@ void DX9Renderer::activateRenderTarget( RenderTarget* renderTarget )
    if ( renderTarget )
    {
       // rendering target is set - use it
-      IDirect3DTexture9* rtTexture = reinterpret_cast< IDirect3DTexture9* >( renderTarget->getPlatformSpecific() );
-      HRESULT res = rtTexture->GetSurfaceLevel( 0, &renderTargetSurface );
+      DX9RenderTarget* dxRenderTarget = m_renderTargets->getInstance( *renderTarget );
+      if ( !dxRenderTarget )
+      {
+         throw std::runtime_error( "Could not create a render target implementation" );
+      }
+
+      IDirect3DTexture9* dxTex = dxRenderTarget->getDxTexture();
+      HRESULT res = dxTex->GetSurfaceLevel( 0, &renderTargetSurface );
       if ( FAILED( res ) || !renderTargetSurface )
       {
          std::string errorMsg = translateDxError( "Could not acquire a render target surface", res );
@@ -228,24 +251,19 @@ void DX9Renderer::cleanRenderTarget( const Color& bgColor )
 
 /////////////////////////////////////////////////////////////////////////////
 
-IDirect3DVertexBuffer9* DX9Renderer::createVertexBuffer(UINT length, 
-                                                        DWORD usageFlags, 
-                                                        DWORD fvf, 
-                                                        D3DPOOL memoryPool)
+IDirect3DVertexBuffer9* DX9Renderer::createVertexBuffer( UINT length, DWORD usageFlags, DWORD fvf, D3DPOOL memoryPool ) const
 {
-   assert(length > 0);
+   ASSERT_MSG( length > 0, "Invalid size of a vertex buffer specified" );
 
-   if (!m_hardwareTLOn) usageFlags |= D3DUSAGE_SOFTWAREPROCESSING;
+   if ( !m_hardwareTLOn )
+   {
+      usageFlags |= D3DUSAGE_SOFTWAREPROCESSING;
+   }
 
-   length = (length < 16) ? 16 : length;
+   length = ( length < 16 ) ? 16 : length;
 
    IDirect3DVertexBuffer9* vertexBuffer = NULL;
-   HRESULT res = m_d3Device->CreateVertexBuffer(length,
-                                                usageFlags,
-                                                fvf,
-                                                memoryPool,
-                                                &vertexBuffer,
-                                                NULL);
+   HRESULT res = m_d3Device->CreateVertexBuffer( length, usageFlags, fvf, memoryPool, &vertexBuffer, NULL );
 
    if (FAILED(res))
    {
@@ -258,26 +276,19 @@ IDirect3DVertexBuffer9* DX9Renderer::createVertexBuffer(UINT length,
 
 /////////////////////////////////////////////////////////////////////////////
 
-IDirect3DIndexBuffer9* DX9Renderer::createIndexBuffer(UINT length, 
-                                                      DWORD usageFlags, 
-                                                      D3DFORMAT format, 
-                                                      D3DPOOL memoryPool)
+IDirect3DIndexBuffer9* DX9Renderer::createIndexBuffer( UINT length,  DWORD usageFlags, D3DFORMAT format, D3DPOOL memoryPool ) const
 {
-   if (!m_hardwareTLOn) usageFlags |= D3DUSAGE_SOFTWAREPROCESSING;
+   if ( !m_hardwareTLOn ) 
+   {
+      usageFlags |= D3DUSAGE_SOFTWAREPROCESSING;
+   }
 
    IDirect3DIndexBuffer9* indexBuffer = NULL;
+   HRESULT res = m_d3Device->CreateIndexBuffer (length, usageFlags, format, memoryPool, &indexBuffer, NULL );
 
-   HRESULT res = m_d3Device->CreateIndexBuffer(length,
-      usageFlags,
-      format,
-      memoryPool,
-      &indexBuffer,
-      NULL);
-
-   if (FAILED(res))
+   if (  FAILED(res) )
    {
-      throw std::logic_error(
-         std::string("Cannot create an index buffer"));
+      throw std::logic_error( "Cannot create an index buffer" );
    }
 
    return indexBuffer;
@@ -324,6 +335,144 @@ void DX9Renderer::sampleOptimalTextureFormats()
       ASSERT_MSG( bestFormat != D3DFMT_UNKNOWN, "No dedicated texture format found for this usage." );
       m_bestTextureFormats[usage] = bestFormat;
    }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+ID3DXEffect* DX9Renderer::getEffect( EffectShader& shader )
+{
+   return m_effects->getInstance( shader );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+ID3DXFont* DX9Renderer::getFont( Font& font )
+{
+   return m_fonts->getInstance( font );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+DX9LineSegments* DX9Renderer::getLineSegments( LineSegments& segments )
+{
+   return m_lineSegments->getInstance( segments );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+DX9TriangleMesh* DX9Renderer::getTriangleMesh( TriangleMesh& mesh )
+{
+   return m_triMeshes->getInstance( mesh );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+DX9PixelShader* DX9Renderer::getPixelShader( PixelShader& shader )
+{
+   return m_pixelShaders->getInstance( shader );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+IDirect3DVertexBuffer9* DX9Renderer::getSkeletonVertexBuffer( Skeleton& skeleton )
+{
+   return m_skeletons->getInstance( skeleton );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+DX9VertexShader* DX9Renderer::getVertexShader( VertexShader& shader )
+{
+   return m_vertexShaders->getInstance( shader );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+IDirect3DTexture9* DX9Renderer::getTexture( Texture& texture )
+{
+   return m_textures->getInstance( texture );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+DX9RenderTarget* DX9Renderer::getRenderTarget( RenderTarget& renderTarget )
+{
+   return m_renderTargets->getInstance( renderTarget );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DX9Renderer::beginScene()
+{
+   m_d3Device->BeginScene();
+
+   // reset the debug data
+   m_linesCount = 0;
+   ASSERT_MSG( m_pVertex == NULL, "Debug lines VB wasn't properly unlocked" );
+   m_linesBuffer->Lock( 0, DEBUG_LINES_MAX_COUNT * sizeof( DebugVertex ), (void**)&m_pVertex, 0 );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DX9Renderer::endScene()
+{
+   if ( m_pVertex != NULL )
+   {
+      m_linesBuffer->Unlock();
+      m_pVertex = NULL;
+   }
+
+   m_d3Device->EndScene();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DX9Renderer::flushDebugScene()
+{
+   // set transformations
+   Camera& camera = getActiveCamera();
+   const D3DXMATRIX& projectionMtx = camera.getProjectionMtx();
+   const D3DXMATRIX& viewMtx = camera.getViewMtx();
+
+   m_d3Device->SetTransform( D3DTS_WORLD, &m_identityMtx );
+   m_d3Device->SetTransform( D3DTS_PROJECTION, &projectionMtx );
+   m_d3Device->SetTransform( D3DTS_VIEW, &viewMtx );
+
+   // unlock the lines buffer
+   m_linesBuffer->Unlock();
+   m_pVertex = NULL;
+
+   // draw the lines
+   m_d3Device->SetRenderState( D3DRS_AMBIENT, 0xFFFFFFFF );
+   m_d3Device->SetRenderState( D3DRS_AMBIENTMATERIALSOURCE, D3DMCS_COLOR1 );
+   m_d3Device->SetRenderState( D3DRS_ZENABLE, true );
+   m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, true );
+   m_d3Device->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
+   m_d3Device->SetStreamSource( 0, m_linesBuffer, 0, sizeof( DebugVertex ) );
+   m_d3Device->DrawPrimitive( D3DPT_LINELIST, 0, m_linesCount );
+
+   // cleanup
+   m_d3Device->SetRenderState( D3DRS_AMBIENT, 0 );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DX9Renderer::addDebugLine( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
+{
+   if ( !m_pVertex )
+   {
+      return;
+   }
+
+   m_pVertex->m_vtx = start;
+   m_pVertex->m_color = D3DCOLOR_COLORVALUE( color.r, color.g, color.b, color.a );
+   ++m_pVertex;
+
+   m_pVertex->m_vtx = end;
+   m_pVertex->m_color = D3DCOLOR_COLORVALUE( color.r, color.g, color.b, color.a );
+   ++m_pVertex;
+
+   ++m_linesCount;
 }
 
 /////////////////////////////////////////////////////////////////////////////

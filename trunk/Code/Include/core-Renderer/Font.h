@@ -1,16 +1,12 @@
 #pragma once
 
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
 #include <d3dx9.h>
 #include <windows.h>
 #include <string>
+#include "core-Renderer\RenderCommand.h"
+#include "core-Renderer\RenderResource.h"
+#include "core\Color.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-struct Color;
-class FontImpl;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,13 +22,11 @@ enum TextJustification
 /**
  * This interface represents a font and its capabilities.
  */
-class Font : public TRendererObject<FontImpl>
+class Font : public RenderResource
 {
-   DECLARE_RTTI_CLASS
-
 private:
-   std::string m_name;
-   D3DXFONT_DESC m_desc;
+   std::string          m_name;
+   D3DXFONT_DESC        m_desc;
 
 public:
    /**
@@ -45,7 +39,7 @@ public:
     *
     * @param desc    font description
     */
-   Font(const D3DXFONT_DESC& desc);
+   Font( const D3DXFONT_DESC& desc );
 
    /**
     * Returns the name of the font. This method allows
@@ -61,44 +55,29 @@ public:
     * @return  font description
     */
    const D3DXFONT_DESC& getDescription() const;
-
-   /**
-    * The method draws a text on the currently set rendering target.
-    *
-    * @param text             text to be drawn
-    * @param position         a window on the screen the text should be 
-    *                         displayed in
-    * @param justification    the way the text should be justified 
-    *                         in the positioning window
-    * @param color            color in which the text should be displayed
-    */
-   void drawText(const std::string& text,
-                 RECT& position,
-                 TextJustification justification,
-                 const Color& color);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class FontImpl : public RendererObjectImpl
+/**
+ * Text drawing command.
+ */
+class RCDrawText : public RenderCommand
 {
-public:
-   virtual ~FontImpl() {}
+private:
+   Font&                m_font;
+   std::string          m_text;
+   RECT                 m_overlaySize;
+   TextJustification    m_justification;
+   Color                m_color;
 
-   /**
-    * The method draws a text on the currently set rendering target.
-    *
-    * @param text             text to be drawn
-    * @param position         a window on the screen the text should be 
-    *                         displayed in
-    * @param justification    the way the text should be justified 
-    *                         in the positioning window
-    * @param color            color in which the text should be displayed
-    */
-   virtual void drawText(const std::string& text,
-                         RECT& position,
-                         TextJustification justification,
-                         const Color& color) {}
+public:
+   RCDrawText( Font& font, const std::string& text, const RECT& overlaySize, TextJustification justification, const Color& color );
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

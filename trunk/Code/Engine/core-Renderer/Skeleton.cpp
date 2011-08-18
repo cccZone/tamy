@@ -136,32 +136,3 @@ int Skeleton::getBoneIndex( const std::string& boneId ) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-void Skeleton::setInStream()
-{
-   impl().setInStream();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Skeleton::onComponentAdded( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      rendererComp->get().implement< Skeleton >( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Skeleton::onComponentRemoved( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      setImplementation( NULL );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////

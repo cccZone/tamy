@@ -33,7 +33,7 @@ void Gizmo::setMode( Mode mode )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Gizmo::onDebugRender( IDebugDraw& renderer ) const
+void Gizmo::onDebugRender( Renderer& renderer ) const
 {
    switch( m_mode )
    {
@@ -59,7 +59,7 @@ void Gizmo::onDebugRender( IDebugDraw& renderer ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Gizmo::drawTranslationGizmo( IDebugDraw& renderer ) const
+void Gizmo::drawTranslationGizmo( Renderer& renderer ) const
 {
    const D3DXMATRIX& mtx = m_node.getGlobalMtx();
 
@@ -69,14 +69,14 @@ void Gizmo::drawTranslationGizmo( IDebugDraw& renderer ) const
    D3DXVec3TransformCoord( &oy, &D3DXVECTOR3( 0, SIZE, 0 ), &mtx );
    D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
 
-   renderer.drawLine( orig, ox, OX_COLOR ); // OX
-   renderer.drawLine( orig, oy, OY_COLOR ); // OY
-   renderer.drawLine( orig, oz, OZ_COLOR ); // OZ
+   new ( renderer() ) RCDrawLine( orig, ox, OX_COLOR ); // OX
+   new ( renderer() ) RCDrawLine( orig, oy, OY_COLOR ); // OY
+   new ( renderer() ) RCDrawLine( orig, oz, OZ_COLOR ); // OZ
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Gizmo::drawRotationGizmo( IDebugDraw& renderer ) const
+void Gizmo::drawRotationGizmo( Renderer& renderer ) const
 {
    const D3DXMATRIX& mtx = m_node.getGlobalMtx();
 
@@ -87,22 +87,22 @@ void Gizmo::drawRotationGizmo( IDebugDraw& renderer ) const
    D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
 
    // OX
-   renderer.drawLine( orig, ox, OX_COLOR );
-   renderer.drawArc( ox, oz, OX_COLOR );
+   new ( renderer() ) RCDrawLine( orig, ox, OX_COLOR );
+   new ( renderer() ) RCDrawArc( ox, oz, OX_COLOR );
 
    // OY
-   renderer.drawLine( orig, oy, OY_COLOR );
-   renderer.drawArc( oy, oz, OX_COLOR );
+   new ( renderer() ) RCDrawLine( orig, oy, OY_COLOR );
+   new ( renderer() ) RCDrawArc( oy, oz, OX_COLOR );
 
 
    // OZ
-   renderer.drawLine( orig, oz, OZ_COLOR );
-   renderer.drawArc( oz, ox, OX_COLOR );
+   new ( renderer() ) RCDrawLine( orig, oz, OZ_COLOR );
+   new ( renderer() ) RCDrawArc( oz, ox, OX_COLOR );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Gizmo::drawScalingGizmo( IDebugDraw& renderer ) const
+void Gizmo::drawScalingGizmo( Renderer& renderer ) const
 {
    const D3DXMATRIX& mtx = m_node.getGlobalMtx();
 
@@ -117,18 +117,18 @@ void Gizmo::drawScalingGizmo( IDebugDraw& renderer ) const
    // OX
    D3DXMATRIX boxMtx = mtx;
    boxMtx._41 = ox.x; boxMtx._42 = ox.y; boxMtx._43 = ox.z;
-   renderer.drawLine( orig, ox, OX_COLOR );
-   renderer.drawBox( boxMtx, boxSize, OX_COLOR );
+   new ( renderer() ) RCDrawLine( orig, ox, OX_COLOR );
+   new ( renderer() ) RCDrawBox( boxMtx, boxSize, OX_COLOR );
 
    // OY
    boxMtx._41 = oy.x; boxMtx._42 = oy.y; boxMtx._43 = oy.z;
-   renderer.drawLine( orig, oy, OY_COLOR );
-   renderer.drawBox( boxMtx, boxSize, OY_COLOR );
+   new ( renderer() ) RCDrawLine( orig, oy, OY_COLOR );
+   new ( renderer() ) RCDrawBox( boxMtx, boxSize, OY_COLOR );
 
    // OZ
    boxMtx._41 = oz.x; boxMtx._42 = oz.y; boxMtx._43 = oz.z;
-   renderer.drawLine( orig, oz, OZ_COLOR );
-   renderer.drawBox( boxMtx, boxSize, OZ_COLOR );
+   new ( renderer() ) RCDrawLine( orig, oz, OZ_COLOR );
+   new ( renderer() ) RCDrawBox( boxMtx, boxSize, OZ_COLOR );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

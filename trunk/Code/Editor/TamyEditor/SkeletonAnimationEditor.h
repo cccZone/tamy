@@ -14,6 +14,7 @@ class SkeletonAnimationKeysChart;
 class SkeletonAnimationEventsChart;
 class QListWidget;
 class QListWidgetItem;
+class TamySceneWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +30,7 @@ private:
    SkeletonAnimationKeysChart*               m_animationKeysChart;
    SkeletonAnimationEventsChart*             m_animationEventsChart;
    QListWidget*                              m_bonesList;
+   TamySceneWidget*                          m_sceneWidget;
 
 public:
    /**

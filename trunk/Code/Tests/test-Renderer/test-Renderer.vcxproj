@@ -95,11 +95,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="RenderCommandTests.cpp" />
     <ClCompile Include="RendererTests.cpp" />
+    <ClCompile Include="RenderingViewTests.cpp" />
     <ClCompile Include="SkeletonTests.cpp" />
     <ClCompile Include="VertexArrayTests.cpp" />
-    <ClCompile Include="AttributeSorterTests.cpp" />
-    <ClCompile Include="SpatialViewTests.cpp" />
     <ClCompile Include="CameraTests.cpp" />
   </ItemGroup>
   <ItemGroup>

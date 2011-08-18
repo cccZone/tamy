@@ -34,7 +34,7 @@ void DebugScene::clear()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DebugScene::onDebugRender( IDebugDraw& renderer ) const
+void DebugScene::onDebugRender( Renderer& renderer ) const
 {
    unsigned int count = m_drawables.size();
    for ( unsigned int i = 0; i < count; ++i )

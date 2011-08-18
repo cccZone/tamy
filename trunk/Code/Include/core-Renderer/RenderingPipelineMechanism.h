@@ -2,9 +2,8 @@
 /// @brief  a mechanism responsible for rendering using a rendering pipeline
 #pragma once
 
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
 #include "core-Renderer\RenderingMechanism.h"
+#include "core-Renderer\RenderCommand.h"
 #include "core\IDebugDraw.h"
 #include "core\Observer.h"
 #include <vector>
@@ -14,20 +13,15 @@
 
 class RenderingPipeline;
 class Model;
-class CameraContext;
 class Camera;
-class RenderingPipelineMechanismImpl;
-class AttributeSorter;
 class Renderer;
 class RenderTarget;
 class RenderTargetDescriptor;
-class SpatialView;
 class RenderingView;
 class RenderingPipelineNode;
 enum RenderingPipelineOperation;
 enum RenderingPipelineNodeOperation;
 class RuntimeDataBuffer;
-class Camera;
 class ModelDebugScene;
 class ModelView;
 
@@ -49,13 +43,10 @@ enum RPMSceneId
 /**
  * A pass responsible for rendering using a rendering pipeline.
  */
-class RenderingPipelineMechanism : public TRendererObject< RenderingPipelineMechanismImpl >,  
-                                   public RenderingMechanism,
+class RenderingPipelineMechanism : public RenderingMechanism,
                                    public Observer< RenderingPipeline, RenderingPipelineOperation >,
                                    public Observer< RenderingPipelineNode, RenderingPipelineNodeOperation >
 {
-   DECLARE_RTTI_CLASS
-
 private:
    /**
     * A helper structure that binds a rendered scene to the rendering mechanisms.
@@ -63,8 +54,6 @@ private:
    class RenderedScene
    {
    private:
-      AttributeSorter*                             m_statesManager;
-      SpatialView*                                 m_spatialView;
       RenderingView*                               m_renderingView;
       ModelDebugScene*                             m_debugSceneView;
 
@@ -74,13 +63,13 @@ private:
       RenderedScene();
       ~RenderedScene();
 
+      void initialize( Renderer& renderer );
+
       bool operator==( const Model& model ) const;
 
       void setModel( Model* model );
 
       void setDebugScene( DebugScene& scene );
-
-      void performVisibilityCheck( CameraContext& cameraContext );
 
       void render();
    };
@@ -92,9 +81,6 @@ private:
    std::vector< RenderedScene* >                m_scenes;
 
    DebugScene*                                  m_debugScene;
-
-   Camera*                                      m_activeCamera;
-   CameraContext*                               m_cameraContext;
 
    std::vector< RenderingPipelineNode* >        m_nodesQueue;
 
@@ -152,23 +138,6 @@ public:
    void setDebugScene( DebugScene& debugScene );
 
    /**
-    * Sets a new active camera.
-    *
-    * @param camera
-    */
-   void setCamera( Camera& camera );
-
-   /**
-    * Checks if there's an active camera set.
-    */
-   inline bool hasActiveCamera() const { return m_cameraContext != NULL; }
-
-   /**
-    * Returns context of the currently used camera.
-    */
-   inline const CameraContext& getCameraContext() const { return *m_cameraContext; }
-
-   /**
     * Returns a render target registered under the specified ID.
     *
     * @param id         render target id
@@ -194,7 +163,8 @@ public:
    // RenderingMechanism implementation
    // -------------------------------------------------------------------------
    void initialize( Renderer& renderer );
-   void render();
+   void deinitialize( Renderer& renderer );
+   void render( Renderer& renderer );
 
    // -------------------------------------------------------------------------
    // Observer implementation
@@ -211,50 +181,37 @@ private:
    void cacheNodes();
 
    /**
-    * Deinitializes the pipeline.
-    */
-   void deinitialize();
-
-   /**
     * Draws a debug grid.
     */
-   void drawGrid( IDebugDraw& debugRenderer ) const;
+   void drawGrid() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A rendering pipeline mechanism implementation.
+ * Render command that begins the process of rendering a scene.
  */
-class RenderingPipelineMechanismImpl : public RendererObjectImpl, public IDebugDraw
+class RCBeginScene : public RenderCommand
 {
 public:
-   virtual ~RenderingPipelineMechanismImpl() {}
-
-   /**
-    * Begins a rendering pass.
-    */
-   virtual void passBegin() {}
-
-   /**
-    * Ends a rendering pass.
-    */
-   virtual void passEnd() {}
-
-   /**
-    * Renders the debug info on screen.
-    */
-   virtual void renderDebug( Camera& activeCamera ) {}
-
    // -------------------------------------------------------------------------
-   // IDebugDraw implementation
+   // RenderCommand implementation
    // -------------------------------------------------------------------------
-   void drawLine( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color ) {}
-   void drawArc( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color ) {}
-   void drawArrow( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color ) {}
-   void drawBox( const D3DXMATRIX& transform, const D3DXVECTOR3& size, const Color& color ) {}
-   void drawSphere( const D3DXMATRIX& transform, float radius, const Color& color ) {}
-   void drawCylinder( const D3DXMATRIX& transform, float radius, float height, const Color& color ) {}
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Render command that ends the process of rendering a scene.
+ */
+class RCEndScene : public RenderCommand
+{
+public:
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -6,7 +6,10 @@
 #include "core\Resource.h"
 
 
+///////////////////////////////////////////////////////////////////////////////
+
 class BoundingVolume;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,13 +25,7 @@ public:
     * Constructor.
     */
    GeometryResource( const std::string& name = "" ) : Resource( name ) {}
-
    virtual ~GeometryResource() {}
-
-   /**
-    * Renders the geometry.
-    */
-   virtual void render() {}
 
    /**
     * Calculates a bounding volume around the geometry.
@@ -36,6 +33,13 @@ public:
     * @param   new bounding volume instance
     */
    virtual const BoundingVolume& getBoundingVolume() const { return *( reinterpret_cast< BoundingVolume* >( NULL ) ); }
+
+   /**
+    * Renders the resource.
+    *
+    * @param renderer
+    */
+   virtual void render( Renderer& renderer ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

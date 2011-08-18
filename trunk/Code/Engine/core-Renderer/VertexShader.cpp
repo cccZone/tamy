@@ -1,6 +1,8 @@
 #include "core-Renderer\VertexShader.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\LitVertex.h"
+#include "core-Renderer\ShaderParam.h"
+#include "core-Renderer\ShaderTexture.h"
 #include "core.h"
 #include <stdexcept>
 
@@ -65,73 +67,9 @@ void VertexShader::onResourceLoaded( ResourcesManager& mgr )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VertexShader::onComponentAdded( Component< ResourcesManager >& component )
+ShaderParam< VertexShader >* VertexShader::createTextureSetter( const std::string& paramName, ShaderTexture& val )
 {
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      rendererComp->get().implement< VertexShader >( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VertexShader::onComponentRemoved( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      setImplementation( NULL );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VertexShader::beginRendering()
-{
-   impl().beginRendering();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VertexShader::endRendering()
-{
-   impl().endRendering();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VertexShader::setBool( const char* paramName, bool val )
-{
-   impl().setBool( paramName, val );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VertexShader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
-{
-   impl().setMtx( paramName, matrix );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VertexShader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int count )
-{
-   impl().setMtxArray( paramName, matrices, count );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VertexShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
-{
-   impl().setVec4( paramName, vec );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VertexShader::setTexture( const char* paramName, ShaderTexture& val )
-{
-   impl().setTexture( paramName, val );
+   return val.createVertexShaderTextureSetter( paramName );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

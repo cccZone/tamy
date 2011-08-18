@@ -3,11 +3,14 @@
 /// @file   core-Renderer\SpatialRepresentation.h
 /// @brief  representation of a renderable from the spatial point of view
 
+#include "core-Renderer\Geometry.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Geometry;
 class BoundingVolume;
+class Renderer;
+class StateComparator;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,15 +21,15 @@ class SpatialRepresentation
 {
 private:
    Geometry&            m_geometry;
+   RenderStatesVec      m_renderStates;
 
    BoundingVolume*      m_globalBoundingVolume;
-   int                  m_visibilityTag;
 
 public:
    /**
     * Constructor.
     *
-    * @param renderable    renderable this representation represents
+    * @param geometry               geometry this representation represents
     */
    SpatialRepresentation( Geometry& geometry );
    ~SpatialRepresentation();
@@ -37,21 +40,14 @@ public:
    const BoundingVolume& getBoundingVolume();
 
    /**
-    * This method assigns a new visibility tag to the renderable.
-    *
-    * @param tag  new visibility tag
+    * Returns the stored geometry.
     */
-   void tagAsVisible( int tag );
+   inline Geometry& getGeometry() { return m_geometry; }
 
    /**
-    * This method evaluates if the renderable is visible or not.
-    * If it's current visibility tag matches the value of the reference
-    * tag specified as the method parameter, the renderable is considered
-    * visible.
-    *
-    * @param referenceVisiblilityTag
+    * Returns the sorted array of the geometry's render states.
     */
-   void setVisible( int referenceVisiblilityTag );
+   inline const RenderStatesVec& getRenderStates() { return m_renderStates; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

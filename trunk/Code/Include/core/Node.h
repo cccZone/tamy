@@ -75,6 +75,9 @@ public:
     */
    virtual const D3DXMATRIX& getLocalMtx() const {return m_localMtx;}
 
+   /**
+    * Assings the node a new local matrix.
+    */
    virtual void setLocalMtx(const D3DXMATRIX& localMtx);
 
    /**
@@ -120,7 +123,7 @@ public:
     * A node can have a single parent node. This method will return true
     * if this is the case.
     */
-   bool hasParent() const {return m_parent != NULL;}
+   bool hasParentNode() const {return m_parent != NULL;}
 
    /**
     * A node can have a single parent node. This method will return 
@@ -128,7 +131,7 @@ public:
     *
     * @throws std::logic_error if the parent doesn't have a node set
     */
-   Node& getParent();
+   Node& getParentNode();
 
    /**
     * A node can have any number of children. Their positions

@@ -57,8 +57,8 @@ protected:
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
-   void onPreRender();
-   void onPostRender();
+   void onPreRender( Renderer& renderer );
+   void onPostRender( Renderer& renderer );
 
    // -------------------------------------------------------------------------
    // Entity implementation
