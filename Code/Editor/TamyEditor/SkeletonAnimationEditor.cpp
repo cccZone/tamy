@@ -9,6 +9,8 @@
 #include "SkeletonAnimationKeysChart.h"
 #include "SkeletonAnimationEventsChart.h"
 #include "core-AI/SkeletonAnimation.h"
+#include "TamySceneWidget.h"
+#include <QSettings>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,8 +66,15 @@ void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
       mainSplitter->addWidget( operationsSplitter );
       operationsSplitter->setOrientation( Qt::Vertical );
 
+      TimeController& timeController = mgr.requestService< TimeController >();
+      QSettings& settings = mgr.getSettings();
+      settings.beginGroup( "MainRenderer" );
+      std::string mainRendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
+      settings.endGroup();
+
       QFrame* animationPreviewFrame = new QFrame( operationsSplitter );
       operationsSplitter->addWidget( animationPreviewFrame );
+      m_sceneWidget = new TamySceneWidget( animationPreviewFrame, 0, mainRendererPipelineName, timeController );
 
       m_bonesList = new QListWidget( operationsSplitter );
       operationsSplitter->addWidget( m_bonesList );

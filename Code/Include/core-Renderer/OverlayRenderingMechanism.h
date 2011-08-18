@@ -33,7 +33,12 @@ public:
     */
    void setOverlay(Overlay* overlay);
 
-   void render();
+   // -------------------------------------------------------------------------
+   // Rendering mechanism implementation
+   // -------------------------------------------------------------------------
+   void initialize( Renderer& renderer );
+   void deinitialize( Renderer& renderer );
+   void render( Renderer& Renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
 
 #include "core-Renderer/RPPostProcessNode.h"
 #include "core/RuntimeData.h"
+#include "core/Color.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,6 +34,7 @@ private:
    TRuntimeVar< PixelShader* >                     m_downSamplePass;
    TRuntimeVar< ShaderTexture* >                   m_inputTex;
    TRuntimeVar< PRenderTarget* >                   m_luminanceTarget;
+   TRuntimeVar< Color >                            m_luminanceVal;
 
 public:
    RPLuminanceNode();

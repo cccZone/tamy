@@ -115,7 +115,8 @@ private:
    unsigned int               m_pointIdx;
    ChartLine&                 m_parentLine;
 
-   QPen                       m_pen;
+   QPen                       m_regularPen;
+   QPen                       m_selectedPen;
    QBrush                     m_focusedBrush;
    QBrush                     m_unfocusedBrush;
    QRectF                     m_rect;

@@ -56,8 +56,6 @@ void RenderTargetDescriptor::initialize( RuntimeDataBuffer& runtimeData, Rendere
    {
       runtimeData[m_renderTarget] = new RenderTarget( new RTSPStatic( m_initialWidth, m_initialHeight ), m_usage, m_isReadable, m_bgColor );
    }
-
-   renderer.implement< RenderTarget >( *runtimeData[m_renderTarget] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

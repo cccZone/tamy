@@ -4,14 +4,31 @@
 
 #include "core-Renderer\LitVertex.h"
 
+
 ///////////////////////////////////////////////////////////////////////////////
 
-DX9TriangleMesh::DX9TriangleMesh(TriangleMesh& mesh)
+void RCRenderTriangleMesh::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+   DX9TriangleMesh* mesh = dxRenderer.getTriangleMesh( m_mesh );
+   if ( mesh )
+   {
+      mesh->render();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+DX9TriangleMesh::DX9TriangleMesh( const DX9Renderer& renderer, const TriangleMesh& mesh )
 : m_mesh( mesh )
-, m_d3Device( NULL )
+, m_renderer( renderer )
+, m_d3Device( &renderer.getD3Device() )
 , m_vb( NULL )
 , m_ib( NULL )
 {
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,22 +62,14 @@ void DX9TriangleMesh::render()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9TriangleMesh::initialize(Renderer& renderer)
+void DX9TriangleMesh::initialize()
 {
-   DX9Renderer* d3dRenderer = dynamic_cast<DX9Renderer*> (&renderer);
-   if (d3dRenderer == NULL)
-   {
-      throw std::runtime_error("This class works only with DX9Renderer instance");
-   }
-
-   m_d3Device = &d3dRenderer->getD3Device();
-
    VertexArray* vertices = m_mesh.getGenericVertexArray();
-   const std::vector<Face>& faces = m_mesh.getFaces();
+   const std::vector< Face >& faces = m_mesh.getFaces();
    unsigned int verticesCount = vertices->size();
    unsigned int trianglesCount = faces.size();
 
-   if ((verticesCount == 0) || (trianglesCount == 0))
+   if ( verticesCount == 0 || trianglesCount == 0 )
    {
       delete vertices;
       return;
@@ -68,12 +77,10 @@ void DX9TriangleMesh::initialize(Renderer& renderer)
 
    ID3DXMesh* dxMesh = NULL;
    DWORD FVF = vertices->getFVF();
-   HRESULT res = D3DXCreateMeshFVF( trianglesCount, verticesCount, 
-                                    D3DXMESH_MANAGED, FVF, 
-                                    &(d3dRenderer->getD3Device()), &dxMesh );
+   HRESULT res = D3DXCreateMeshFVF( trianglesCount, verticesCount, D3DXMESH_MANAGED, FVF, m_d3Device, &dxMesh );
    if ( FAILED(res) ) 
    { 
-      throw std::logic_error("Can't create a mesh"); 
+      throw std::logic_error( "Can't create a mesh" ); 
    }
 
    // fill the vertex buffer, analyze the bounding sphere radius on the way
@@ -92,12 +99,12 @@ void DX9TriangleMesh::initialize(Renderer& renderer)
    res = dxMesh->LockIndexBuffer( 0, (void**)&pIndex );
    if ( FAILED( res ) ) 
    { 
-      throw std::logic_error("Can't lock the mesh's index buffer"); 
+      throw std::logic_error( "Can't lock the mesh's index buffer" ); 
    }
    res = dxMesh->LockAttributeBuffer(0, &pAttrib );
    if ( FAILED( res ) ) 
    { 
-      throw std::logic_error("Can't lock the mesh's attributes buffer");
+      throw std::logic_error( "Can't lock the mesh's attributes buffer" );
    }
 
    for ( unsigned int i = 0; i < trianglesCount; ++i )

@@ -94,9 +94,9 @@ void NodeActionsExecutor::findActionNodes(Node& inNodeToAnalyze,
          foundActionNode = true;
       }
 
-      if (analyzedNode->hasParent())
+      if (analyzedNode->hasParentNode())
       {
-         analyzedNode = &(analyzedNode->getParent());
+         analyzedNode = &(analyzedNode->getParentNode());
       }
       else
       {

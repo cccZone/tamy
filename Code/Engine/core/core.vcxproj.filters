@@ -106,9 +106,6 @@
     <ClCompile Include="StringUtils.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="UniqueObject.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
     <ClCompile Include="BoundingVolume.cpp">
       <Filter>BoundingVolumes</Filter>
     </ClCompile>
@@ -197,17 +194,20 @@
     <ClCompile Include="Enum.cpp">
       <Filter>RTTI\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="RuntimeData.cpp">
-      <Filter>DataStructures</Filter>
-    </ClCompile>
-    <ClCompile Include="IDebugDraw.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceLoader.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="Algorithms.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="IDebugDraw.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RuntimeData.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="RoundBuffer.cpp">
+      <Filter>DataStructures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -461,14 +461,17 @@
     <ClInclude Include="..\..\Include\core\Enum.h">
       <Filter>RTTI\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\RuntimeData.h">
-      <Filter>DataStructures</Filter>
+    <ClInclude Include="..\..\Include\core\ResourceLoader.h">
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\IDebugDraw.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\ResourceLoader.h">
-      <Filter>Resources</Filter>
+    <ClInclude Include="..\..\Include\core\RoundBuffer.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\RuntimeData.h">
+      <Filter>DataStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -573,6 +576,12 @@
     </None>
     <None Include="..\..\Include\core\Enum.inl">
       <Filter>RTTI\Classes</Filter>
+    </None>
+    <None Include="..\..\Include\core\UniqueObject.inl">
+      <Filter>Misc</Filter>
+    </None>
+    <None Include="..\..\Include\core\RoundBuffer.inl">
+      <Filter>DataStructures</Filter>
     </None>
     <None Include="..\..\Include\core\RuntimeData.inl">
       <Filter>DataStructures</Filter>

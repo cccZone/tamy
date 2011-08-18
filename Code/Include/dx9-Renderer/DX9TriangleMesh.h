@@ -10,14 +10,16 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class DX9Renderer;
 class TriangleMesh;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class DX9TriangleMesh : public TriangleMeshImpl
+class DX9TriangleMesh
 {
 private:
-   TriangleMesh&                 m_mesh;
+   const TriangleMesh&           m_mesh;
+   const DX9Renderer&            m_renderer;
    IDirect3DDevice9*             m_d3Device;
    IDirect3DVertexBuffer9*       m_vb;
    IDirect3DIndexBuffer9*        m_ib;
@@ -25,15 +27,13 @@ private:
    unsigned int                  m_facesCount;
 
 public:
-   DX9TriangleMesh( TriangleMesh& mesh );
+   DX9TriangleMesh( const DX9Renderer& renderer, const TriangleMesh& mesh );
    ~DX9TriangleMesh();
 
-   // -------------------------------------------------------------------------
-   // TriangleMeshImpl implementation
-   // -------------------------------------------------------------------------
    void render();
 
-   void initialize( Renderer& renderer );
+private:
+   void initialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

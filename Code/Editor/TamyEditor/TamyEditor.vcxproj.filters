@@ -136,6 +136,9 @@
     <Filter Include="Widgets\Chart">
       <UniqueIdentifier>{e28708dd-7275-48dd-a185-3285f3b86ce8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\SceneRenderWidget">
+      <UniqueIdentifier>{19fe3b4b-db85-4402-896f-e2f8ff54b582}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -182,9 +185,6 @@
     </ClInclude>
     <ClInclude Include="SceneQuery.h">
       <Filter>Components\SceneQueries</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneQueryEffect.h">
-      <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
     </ClInclude>
     <ClInclude Include="SelectionRenderingPass.h">
       <Filter>Components\SelectionManager\Visualization</Filter>
@@ -290,6 +290,9 @@
     </ClInclude>
     <ClInclude Include="ChartScene.h">
       <Filter>Widgets\Chart</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneRenderer.h">
+      <Filter>Components\SceneRenderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -428,9 +431,6 @@
     <ClCompile Include="Vec3PropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
-    <ClCompile Include="TamySceneWidget.cpp">
-      <Filter>Components\SceneRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="MainAppComponent.cpp">
       <Filter>Components\MainApp</Filter>
     </ClCompile>
@@ -472,9 +472,6 @@
     </ClCompile>
     <ClCompile Include="TreeWidget.cpp">
       <Filter>Widgets\TreeWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneQueryEffect.cpp">
-      <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
     </ClCompile>
     <ClCompile Include="SelectionRenderingPass.cpp">
       <Filter>Components\SelectionManager\Visualization</Filter>
@@ -627,6 +624,15 @@
     <ClCompile Include="ChartScene.cpp">
       <Filter>Widgets\Chart</Filter>
     </ClCompile>
+    <ClCompile Include="SceneRenderer.cpp">
+      <Filter>Components\SceneRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="TamySceneWidget.cpp">
+      <Filter>Widgets\SceneRenderWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneQuery.cpp">
+      <Filter>Components\SceneQueries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -684,9 +690,6 @@
     </CustomBuild>
     <CustomBuild Include="Vec3PropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
-    </CustomBuild>
-    <CustomBuild Include="TamySceneWidget.h">
-      <Filter>Components\SceneRenderer</Filter>
     </CustomBuild>
     <CustomBuild Include="MainAppComponent.h">
       <Filter>Components\MainApp</Filter>
@@ -765,6 +768,9 @@
     </CustomBuild>
     <CustomBuild Include="SkeletonAnimationEditor.h">
       <Filter>ResourceEditors\SkeletonAnimationEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TamySceneWidget.h">
+      <Filter>Widgets\SceneRenderWidget</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

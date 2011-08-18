@@ -1,8 +1,8 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RenderingMechanism.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
 #include "core-Renderer\RenderTarget.h"
+#include "core-Renderer\RenderCommand.h"
+#include "core-Renderer\Camera.h"
 #include "core\Point.h"
 #include "core\Assert.h"
 
@@ -15,7 +15,8 @@ namespace // anonymous
    {
    public:
       void initialize( Renderer& renderer ) {}
-      void render() {}
+      void deinitialize( Renderer& renderer ) {}
+      void render( Renderer& renderer ) {}
    };
 
 } // namespace anonymous
@@ -24,7 +25,7 @@ namespace // anonymous
 
 Renderer::Renderer(unsigned int viewportWidth,
                    unsigned int viewportHeight)
-: m_mechanism(new NullRenderingMechanism())
+: m_mechanism( new NullRenderingMechanism() )
 , m_viewportWidth(viewportWidth)
 , m_viewportHeight(viewportHeight)
 , m_leftClientArea(0)
@@ -34,16 +35,25 @@ Renderer::Renderer(unsigned int viewportWidth,
 , m_initialState(new InitialState())
 , m_renderingState(new RenderingState())
 , m_deviceLostState(new DeviceLostState())
-, m_currentRendererState(m_initialState) // we always start in the initial state
+, m_currentRendererState( m_initialState ) // we always start in the initial state
+, m_renderCommands( 1024 * 1024 ) // 1 MB for the commands
 {
+   m_defaultCamera = new Camera( "defaultCamera", *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Renderer::~Renderer()
 {
+   if ( m_mechanism )
+   {
+      m_mechanism->deinitialize( *this );
+   }
    delete m_mechanism;
    m_mechanism = NULL;
+
+   delete m_defaultCamera;
+   m_defaultCamera = NULL;
 
    m_currentRendererState = NULL;
 
@@ -59,19 +69,25 @@ Renderer::~Renderer()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::setMechanism(RenderingMechanism* mechanism)
+void Renderer::setMechanism( RenderingMechanism* mechanism )
 {
+   // deinitialize and release the old mechanism
+   if ( m_mechanism )
+   {
+      m_mechanism->deinitialize( *this );
+   }
    delete m_mechanism;
 
-   if (mechanism == NULL)
+   // setup and initialize a new one
+   if ( mechanism == NULL )
    {
       m_mechanism = new NullRenderingMechanism();
    }
    else
    {
       m_mechanism = mechanism;
-      m_mechanism->initialize( *this );
    }
+   m_mechanism->initialize( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -96,9 +112,9 @@ void Renderer::InitialState::render(Renderer& renderer)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::RenderingState::render(Renderer& renderer)
+void Renderer::RenderingState::render( Renderer& renderer )
 {
-   if (renderer.isGraphicsSystemReady() == false)
+   if ( renderer.isGraphicsSystemReady() == false )
    {
       renderer.setDeviceLostState();
       return;
@@ -106,7 +122,8 @@ void Renderer::RenderingState::render(Renderer& renderer)
 
    renderer.resetRenderTargetsList();
    renderer.renderingBegin();
-   renderer.m_mechanism->render();
+   renderer.m_mechanism->render( renderer );
+   renderer.executeCommands();
    renderer.renderingEnd();
 }
 
@@ -220,6 +237,18 @@ void Renderer::markRenderTargetCleaned( RenderTarget* renderTarget )
 void Renderer::resetRenderTargetsList()
 {
    m_renderTargetsList.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::executeCommands()
+{
+   RenderCommand* c = NULL;
+   while ( c = m_renderCommands.front< RenderCommand >() )
+   {
+      c->execute( *this );
+      c->~RenderCommand();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

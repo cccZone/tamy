@@ -8,7 +8,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class FullscreenQuad;
 class RenderTarget;
 class Renderer;
 
@@ -21,29 +20,18 @@ class RPPostProcessNode : public RenderingPipelineNode
 {
    DECLARE_CLASS( RPPostProcessNode )
 
-private:
-   TRuntimeVar< FullscreenQuad* >               m_fullscreenQuad;
-
 public:
    RPPostProcessNode();
    virtual ~RPPostProcessNode();
-
-   // -------------------------------------------------------------------------
-   // RenderingPipelineNode implementation
-   // -------------------------------------------------------------------------
-   void onCreateLayout( RenderingPipelineMechanism& host ) const;
-   void onInitialize( RenderingPipelineMechanism& host ) const;
-   void onDeinitialize( RenderingPipelineMechanism& host ) const;
 
 protected:
    /**
     * Renders the full screen quad geometry.
     *
-    * @param data       runtime data buffer
     * @param renderer
     * @param rt         render target
     */
-   void renderQuad( RuntimeDataBuffer& data, Renderer& renderer, RenderTarget* rt ) const;
+   void renderQuad( Renderer& renderer, RenderTarget* rt ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

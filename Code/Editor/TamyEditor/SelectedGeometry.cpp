@@ -10,27 +10,9 @@ SelectedGeometry::SelectedGeometry( Geometry& geometry )
 : m_geometry( geometry )
 , m_selectionMarker( NULL )
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-SelectedGeometry::~SelectedGeometry()
-{
-   m_selectionMarker = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SelectedGeometry::initialize( SelectionManager& host )
-{
-   TamyEditor& servicesMgr = host.getServicesMgr();
-
-   // acquire an instance of the resources manager and a camera
-   ResourcesManager& resMgr = servicesMgr.requestService< ResourcesManager >();
-   Camera& camera = servicesMgr.requestService< Camera >();
-
    // create a selection marker effect
    static const char* shaderName = "Editor/Shaders/SelectionMarker.psh";
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
    m_selectionMarker = dynamic_cast< PixelShader* >( resMgr.findResource( "SelectionMarker" ) );
    if ( !m_selectionMarker )
    {
@@ -42,23 +24,23 @@ void SelectedGeometry::initialize( SelectionManager& host )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SelectedGeometry::render()
+SelectedGeometry::~SelectedGeometry()
 {
-   if ( !m_selectionMarker || !m_geometry.isVisible() || !m_geometry.hasGeometry() )
-   {
-      return;
-   }
-
-   m_selectionMarker->beginRendering();
-   m_geometry.render();
-   m_selectionMarker->endRendering();
+   m_selectionMarker = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const Attributes& SelectedGeometry::getAttributes() const
+void SelectedGeometry::render( Renderer& renderer )
 {
-   return m_attributes;
+   if ( !m_geometry.hasGeometry() )
+   {
+      return;
+   }
+
+   new ( renderer() ) RCBindPixelShader( *m_selectionMarker );
+   m_geometry.render( renderer );
+   new ( renderer() ) RCUnbindPixelShader( *m_selectionMarker );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

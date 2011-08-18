@@ -4,10 +4,11 @@
 /// @brief  image rendered on a surface
 
 #include "core\Resource.h"
-#include "core\UniqueObject.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
+#include "core-Renderer\RenderState.h"
 #include "core-Renderer\ShaderTexture.h"
+#include "core-Renderer\RenderCommand.h"
+#include "core-Renderer\RenderResource.h"
+#include "core/UniqueObject.h"
 #include <string>
 #include <windows.h>
 
@@ -20,48 +21,17 @@ class SingletonsManager;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Library dependent texture implementation.
- */
-class TextureImpl : public RendererObjectImpl
-{
-public:
-   virtual ~TextureImpl() {}
-
-   /**
-    * Should return a pointer to the library-specific texture representation.
-    *
-    * @return     pointer to impl-specific texture structure
-    */
-   virtual void* getPlatformSpecific() const { return NULL; }
-
-   /**
-    * Returns the width of the texture.
-    */
-   virtual unsigned int getWidth() const { return 0; }
-
-   /**
-    * Returns the height of the texture.
-    */
-   virtual unsigned int getHeight() const { return 0; }
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
  * An image that can be drawn on a rendered surface.
  */
-class Texture : public Resource,
-                public TRendererObject<TextureImpl>, 
-                public UniqueObject,
-                public ShaderTexture
+class Texture : public Resource, public RenderState, public ShaderTexture, public UniqueObject< Texture >, public RenderResource
 {
    DECLARE_RESOURCE( Texture )
 
 private:
-   std::string m_texFileName;
+   std::string       m_texFileName;
    
-   byte* m_imgBuffer;
-   unsigned int m_bufSize;
+   unsigned int      m_width;
+   unsigned int      m_height;
 
 public:
    /**
@@ -76,16 +46,6 @@ public:
    inline const std::string& getTextureName() const { return m_texFileName; }
 
    /**
-    * Returns a pointer to the platform specific implementation
-    * of the texture.
-    *
-    * Only the implementation will know what to do with it.
-    *
-    * @return     pointer to impl-specific texture structure
-    */
-   void* getPlatformSpecific() const;
-
-   /**
     * A texture is just an image. This method returns a pointer
     * to the memory buffer occupied by the image.
     *
@@ -94,32 +54,47 @@ public:
     * @param outBuffer  output parameter that will be initialized
     *                   with a pointer to the image memory buffer
     */
-   void getBuffer(unsigned int& outSize, byte** outBuffer);
-
-   /**
-    * The method releases the image buffer when it's no longer needed.
-    */
-   void releaseData();
-
-   /**
-    * Returns the width of the texture.
-    */
-   unsigned int getWidth() const;
-
-   /**
-    * Returns the height of the texture.
-    */
-   unsigned int getHeight() const;
+   void getBuffer(  byte*& imgBuffer, unsigned int& bufSize ) const;
 
    // -------------------------------------------------------------------------
-   // Resource implementation
+   // RenderState implementation
    // -------------------------------------------------------------------------
-   void onResourceLoaded(ResourcesManager& mgr);
-   void onComponentAdded( Component< ResourcesManager >& component );
-   void onComponentRemoved( Component< ResourcesManager >& component );
+   void onPreRender( Renderer& renderer );
+   void onPostRender( Renderer& renderer );
 
+   // -------------------------------------------------------------------------
+   // ShaderTexture implementation
+   // -------------------------------------------------------------------------
+   inline unsigned int getWidth() const { return m_width; }
+   inline unsigned int getHeight() const { return m_height; }
+   inline ShaderParam< EffectShader >* createEffectShaderTextureSetter( const std::string& paramName ) { return new ShaderParamTexture< EffectShader >( paramName, *this ); }
+   inline ShaderParam< PixelShader >* createPixelShaderTextureSetter( const std::string& paramName ) { return new ShaderParamTexture< PixelShader >( paramName, *this ); }
+   inline ShaderParam< VertexShader >* createVertexShaderTextureSetter( const std::string& paramName ){ return new ShaderParamTexture< VertexShader >( paramName, *this ); }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Command that ensures a texture existence.
+ */
+class RCCreateTexture : public RenderCommand
+{
 private:
-   void loadFromFile( const Filesystem& fs );
+   Texture&          m_texture;
+   unsigned int&     m_width;
+   unsigned int&     m_height;
+
+public:
+   RCCreateTexture( Texture& texture, unsigned int& width, unsigned int& height ) 
+      : m_texture( texture )
+      , m_width( width ) 
+      , m_height( height )
+   {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

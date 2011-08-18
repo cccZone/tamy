@@ -6,8 +6,6 @@
 #include "dx9-Renderer.h"
 #include <stdexcept>
 #include <QEvent.h>
-#include <QSettings>
-#include "tamyeditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,25 +35,24 @@ IDirect3D9* TamySceneWidget::s_d3d9 = NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
+TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std::string& rendererPipelineName, TimeController& timeController )
 : QWidget( parent, f )
+, m_rendererPipelineName( rendererPipelineName )
+, m_localTimeController( NULL )
 , m_keysStatusManager( NULL )
-, m_rendererComponent( NULL )
 , m_renderer( NULL )
 , m_camera( NULL )
 , m_scene( NULL )
 , m_debugScene( NULL )
 , m_renderingMech( NULL )
+, m_resMgr( NULL )
 {
    m_hWnd = static_cast<HWND> (winId());
    memset(m_keyBuffer, 0, sizeof(unsigned char) * 256);
 
    setFocusPolicy(Qt::ClickFocus);
 
-   m_keysStatusManager = new KeysStatusManager(*this);
-
-   // create a rendering mechanism
-   m_renderingMech = new CompositeRenderingMechanism();
+   m_keysStatusManager = new KeysStatusManager( *this );
 
    if (s_d3d9 == NULL)
    {
@@ -65,140 +62,126 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f )
          throw std::runtime_error("Cannot initialize DirectX library");
       }
    }
+
+   // create a time controller
+   m_localTimeController = new TimeController( timeController );
+
+   // acquire the application's resources manager instance
+   m_resMgr = &ResourcesManager::getInstance();
+
+   // create a renderer
+   SimpleTamyConfigurator configurator;
+   RenderingDevice* device = configurator.selectRenderingDevice( *s_d3d9, 800, 600, false );
+   DX9Initializer initializer(*s_d3d9);
+   m_renderer = initializer.createDisplay( DX9Settings(*device), m_hWnd );
+   delete device;
+
+   // create a rendering mechanism
+   m_renderingMech = new CompositeRenderingMechanism();
+   m_renderer->setMechanism( m_renderingMech );
+
+   // create a camera
+   m_camera = &m_renderer->getActiveCamera();
+   D3DXMatrixTranslation(&(m_camera->accessLocalMtx()), 0, 5, 0);
+
+   // initialize the widget
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TamySceneWidget::~TamySceneWidget()
 {
+   delete m_localTimeController;
+   m_localTimeController = NULL;
+
+   delete m_keysStatusManager; 
+   m_keysStatusManager = NULL;
+
+   m_camera = NULL;
+
    m_renderingMech = NULL;
    m_renderer->setMechanism( NULL );
 
-   delete m_debugScene; m_debugScene = NULL;
-
-   delete m_keysStatusManager; m_keysStatusManager = NULL;
-
-   delete m_camera; m_camera = NULL;
-
-   m_resMgr->removeComponent( *m_rendererComponent );
-   delete m_rendererComponent; m_rendererComponent = NULL;
    delete m_renderer; m_renderer = NULL;
+
+   m_resMgr = NULL;
+
+   deinitialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::initialize( TamyEditor& mgr )
+void TamySceneWidget::setScene( Model& scene )
 {
-   mgr.addToMainWidget(this);
+   deinitialize();
+   
+   m_scene = &scene;
+   if ( m_scene )
+   {
+      m_scene->addComponent( new ModelComponent< Camera >( *m_camera ) );
+   }
 
-   m_resMgr = &mgr.requestService< ResourcesManager >();
+   initialize();
+}
 
-   // create a renderer
-   SimpleTamyConfigurator configurator;
-   RenderingDevice* device = configurator.selectRenderingDevice(*s_d3d9, 800, 600, false);
+///////////////////////////////////////////////////////////////////////////////
 
-   DX9Initializer initializer(*s_d3d9);
-   m_renderer = initializer.createDisplay(DX9Settings(*device), m_hWnd);
-   m_renderer->setMechanism( m_renderingMech );
-   delete device;
+void TamySceneWidget::deinitialize()
+{
+   delete m_debugScene; m_debugScene = NULL;
+}
 
-   // create a camera
-   m_camera = new Camera("Camera", *m_renderer);
-   D3DXMatrixTranslation(&(m_camera->accessLocalMtx()), 0, 5, 0);
+///////////////////////////////////////////////////////////////////////////////
 
-
+void TamySceneWidget::initialize()
+{
    // create a debug renderer
    m_debugScene = new DebugScene();
 
-   // register new services
-   mgr.registerService< Renderer >( *this, *m_renderer );
-   mgr.registerService< Camera >( *this, *m_camera );
-   mgr.registerService< KeysStatusManager >( *this, *m_keysStatusManager );
-   mgr.registerService< UserInputController >( *this, *this );
-   mgr.registerService< DebugScene >( *this, *m_debugScene );
-   mgr.registerService< CompositeRenderingMechanism >( *this, *m_renderingMech );
+   // setup the time controller
+   setupTimeController();
 
-   m_rendererComponent = new ResourceManagerComponent< Renderer >( *m_renderer );
-   m_resMgr->addComponent( m_rendererComponent );
-
-   createRenderer( mgr );
-
-   setupTimeController( mgr );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamySceneWidget::onServiceRegistered( TamyEditor& mgr )
-{
-   if ( mgr.needsUpdate< Model >( *m_scene ) )
-   {
-      createRenderer( mgr );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamySceneWidget::setupTimeController( TamyEditor& mgr )
-{
-   TimeController& timeController = mgr.requestService<TimeController> ();
-   timeController.remove("rendering");
-   timeController.add("rendering");
-   timeController.get("rendering").add(new RendererUpdater(*m_renderer));
-   timeController.remove("input");
-   timeController.add("input");
-   timeController.get("input").add(new TTimeDependent<UserInputController> (*this));
-   timeController.get("input").add(new TTimeDependent<KeysStatusManager> (*m_keysStatusManager));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamySceneWidget::createRenderer( TamyEditor& mgr )
-{
-   QSettings& settings = mgr.getSettings();
-
-   settings.beginGroup( "MainRenderer" );
-   std::string mainRendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
-   settings.endGroup();
-
+   // initialize the rendering pipeline
    RenderingPipeline* pipeline = NULL;
    RenderingPipelineMechanism* sceneRenderer = NULL;
 
-   if ( !mainRendererPipelineName.empty() )
+   if ( !m_rendererPipelineName.empty() )
    {
       try
       {
-         pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( mainRendererPipelineName ) );
+         pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( m_rendererPipelineName ) );
          sceneRenderer = new RenderingPipelineMechanism( pipeline );
          m_renderingMech->add( "sceneRenderer", sceneRenderer );
-         sceneRenderer->setCamera( *m_camera );
       }
       catch ( std::exception& ex)
       {
       }
    }
-   
+
    // setup the debug scene
    if ( sceneRenderer )
    {
       sceneRenderer->setDebugScene( *m_debugScene );
-   }
 
-   // setup the main scene
-   if ( mgr.hasService< Model >() )
-   {
-      // new scene requires a camera component - some entities are using it
-      m_scene = &mgr.requestService< Model >();
-      m_scene->addComponent( new ModelComponent< Camera >( *m_camera ) );
-
-      if ( sceneRenderer )
+      if ( m_scene )
       {
          sceneRenderer->addScene( RPS_Main, *m_scene );
       }
    }
-   else
-   {
-      m_scene = NULL;
-   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::setupTimeController()
+{
+   m_localTimeController->remove("rendering");
+   m_localTimeController->add("rendering");
+   m_localTimeController->get("rendering").add( new RendererUpdater( *m_renderer ) );
+   m_localTimeController->remove("input");
+   m_localTimeController->add("input");
+   m_localTimeController->get("input").add( new TTimeDependent<UserInputController>( *this ) );
+   m_localTimeController->get("input").add( new TTimeDependent<KeysStatusManager>( *m_keysStatusManager ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

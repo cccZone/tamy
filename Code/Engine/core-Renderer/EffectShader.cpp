@@ -1,6 +1,8 @@
 #include "core-Renderer\EffectShader.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\GeometryResource.h"
+#include "core-Renderer\ShaderParam.h"
+#include "core-Renderer\ShaderTexture.h"
 #include "core.h"
 #include <stdexcept>
 
@@ -61,28 +63,6 @@ void EffectShader::onResourceLoaded( ResourcesManager& mgr )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void EffectShader::onComponentAdded( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      rendererComp->get().implement< EffectShader >( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::onComponentRemoved( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      setImplementation( NULL );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 const std::string& EffectShader::getScript() const
 {
    return m_script;
@@ -90,100 +70,9 @@ const std::string& EffectShader::getScript() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void EffectShader::render( GeometryResource& geometry )
+ShaderParam< EffectShader >* EffectShader::createTextureSetter( const std::string& paramName, ShaderTexture& val )
 {
-   unsigned int count = impl().beginRendering();
-   for ( unsigned int passIdx = 0; passIdx < count; ++passIdx )
-   {
-      impl().beginPass( passIdx );
-      geometry.render();
-      impl().endPass( passIdx );
-   }
-   impl().endRendering();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setTechnique(const std::string& techniqueName)
-{
-   impl().setTechnique(techniqueName);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setBool(const std::string& paramName, bool val)
-{
-   impl().setBool(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setInt(const std::string& paramName, int val)
-{
-   impl().setInt(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setInt(const std::string& paramName, const int* arr, unsigned int size)
-{
-   impl().setInt(paramName, arr, size);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setFloat(const std::string& paramName, float val)
-{
-   impl().setFloat(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setFloat(const std::string& paramName, const float* arr, unsigned int size)
-{
-   impl().setFloat(paramName, arr, size);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setMtx(const std::string& paramName, const D3DXMATRIX& val)
-{
-   impl().setMtx(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setMtx(const std::string& paramName, const D3DXMATRIX* arr, unsigned int size)
-{
-   impl().setMtx(paramName, arr, size);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setString(const std::string& paramName, const std::string& val)
-{
-   impl().setString(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setTexture(const std::string& paramName, ShaderTexture& val)
-{
-   impl().setTexture(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setVec4(const std::string& paramName, const D3DXVECTOR4& val)
-{
-   impl().setVec4(paramName, val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void EffectShader::setVec4(const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size)
-{
-   impl().setVec4(paramName, arr, size);
+   return val.createEffectShaderTextureSetter( paramName );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

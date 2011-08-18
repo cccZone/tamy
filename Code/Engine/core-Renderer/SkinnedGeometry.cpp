@@ -4,6 +4,7 @@
 #include "core-MVC\SpatialEntity.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\VertexShader.h"
+#include "core-Renderer\Renderer.h"
 #include "core-MVC.h"
 #include "core.h"
 
@@ -43,12 +44,17 @@ SkinnedGeometry::~SkinnedGeometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinnedGeometry::onPreRender()
+void SkinnedGeometry::onPreRender( Renderer& renderer )
 {
    if ( !m_skeleton || !m_vertexShader || m_bones.empty() )
    {
       return;
    }
+
+   Camera& camera = renderer.getActiveCamera();
+
+   new ( renderer() ) RCBindSkeleton( *m_skeleton );
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
 
    // set the transformation matrices
    unsigned int bonesCount = m_bones.size();
@@ -58,25 +64,23 @@ void SkinnedGeometry::onPreRender()
       D3DXMATRIX& boneMatrix = m_boneMatrices[i];
       const D3DXMATRIX& invBindPoseMtx = m_skeleton->getInvBindPoseMtx( bone->getName() );
 
-      boneMatrix = invBindPoseMtx * bone->getGlobalMtx() * m_camera->getViewMtx();
+      boneMatrix = invBindPoseMtx * bone->getGlobalMtx() * camera.getViewMtx();
    }
-   m_vertexShader->setMtxArray( "g_mSkinningMatrices", m_boneMatrices, m_boneMatrices.size() );
-   m_vertexShader->setMtx( "g_mProjection", m_camera->getProjectionMtx() );
-
-   // set the stream with blend weights
-   m_skeleton->setInStream();
-
-   m_vertexShader->beginRendering();
+   comm->setMtx( "g_mSkinningMatrices", m_boneMatrices, m_boneMatrices.size() );
+   comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinnedGeometry::onPostRender()
+void SkinnedGeometry::onPostRender( Renderer& renderer )
 {
-   if ( m_vertexShader )
+   if ( !m_skeleton || !m_vertexShader || m_bones.empty() )
    {
-      m_vertexShader->endRendering();
+      return;
    }
+
+   new ( renderer() ) RCUnbindVertexShader( *m_vertexShader );
+   new ( renderer() ) RCUnbindSkeleton( *m_skeleton );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

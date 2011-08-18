@@ -4,7 +4,11 @@
 /// @brief  an interface describing a single scene query
 
 #include <d3dx9.h>
+#include "core/Color.h"
 
+///////////////////////////////////////////////////////////////////////////////
+
+class Entity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,6 +21,9 @@
  */
 class SceneQuery
 {
+private:
+   Color          m_resultBuf;
+
 public:
    virtual ~SceneQuery() {}
 
@@ -24,6 +31,19 @@ public:
     * Returns the queried position
     */
    virtual const D3DXVECTOR2& getQueriedPosition() const = 0;
+
+   /**
+    * Notifies about the query completion.
+    */
+   void notifyResult();
+
+   /**
+    * Returns the result buffer.
+    */
+   inline Color& getResultBuffer() { return m_resultBuf; }
+
+protected:
+   SceneQuery();
 
    /**
     * The manager will call this method to inform that the query's been

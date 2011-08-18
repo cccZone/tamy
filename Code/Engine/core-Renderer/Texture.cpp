@@ -13,21 +13,26 @@ END_RESOURCE()
 ///////////////////////////////////////////////////////////////////////////////
 
 Texture::Texture( const std::string& fileName )
-: Resource( Filesystem::changeFileExtension( fileName, Texture::getExtension() ) )
-, m_texFileName( fileName )
-, m_imgBuffer(NULL)
-, m_bufSize(0)
+   : Resource( Filesystem::changeFileExtension( fileName, Texture::getExtension() ) )
+   , m_texFileName( fileName )
+   , m_width( 0 )
+   , m_height( 0 )
+{
+   setRenderStateId( UniqueObject::getIndex() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Texture::~Texture()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Texture::loadFromFile( const Filesystem& fs )
+void Texture::getBuffer( byte*& imgBuffer, unsigned int& bufSize ) const
 {
-   // cleanup previous data
-   delete [] m_imgBuffer;
-   m_imgBuffer = NULL;
-   m_bufSize = 0;
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
+   const Filesystem& fs = resMgr.getFilesystem();
 
    // load the file
    File* file = fs.open( m_texFileName, std::ios_base::in | std::ios_base::binary );
@@ -36,91 +41,31 @@ void Texture::loadFromFile( const Filesystem& fs )
       throw std::invalid_argument( "Texture file doesn't exist" );
    }
    StreamBuffer<byte> buf(*file);
-  
-   m_bufSize = buf.size();
-   if (m_bufSize == 0)
+
+   bufSize = buf.size();
+   if ( bufSize == 0 )
    {
       delete file;
       throw std::invalid_argument( "Empty texture image" );
    }
 
-   m_imgBuffer = new byte[ m_bufSize ];
-   memcpy( m_imgBuffer, buf.getBuffer(), m_bufSize);
+   imgBuffer = new byte[ bufSize ];
+   memcpy( imgBuffer, buf.getBuffer(), bufSize );
    delete file;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Texture::~Texture()
+void Texture::onPreRender( Renderer& renderer )
 {
-   delete [] m_imgBuffer; m_imgBuffer = NULL;
-   m_bufSize = 0;
+   new ( renderer() ) RCCreateTexture( *this, m_width, m_height );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Texture::onResourceLoaded( ResourcesManager& mgr )
+void Texture::onPostRender( Renderer& renderer )
 {
-   loadFromFile( mgr.getFilesystem() );
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-void Texture::onComponentAdded( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      rendererComp->get().implement< Texture >( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Texture::onComponentRemoved( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      setImplementation( NULL );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void* Texture::getPlatformSpecific() const
-{
-   return impl().getPlatformSpecific();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Texture::getBuffer(unsigned int& outSize, byte** outBuffer)
-{
-   outSize = m_bufSize;
-   *outBuffer = m_imgBuffer;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Texture::releaseData()
-{
-   delete [] m_imgBuffer; m_imgBuffer = NULL;
-   m_bufSize = 0;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-unsigned int Texture::getWidth() const
-{
-   return impl().getWidth();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-unsigned int Texture::getHeight() const
-{
-   return impl().getHeight();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

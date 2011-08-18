@@ -31,28 +31,6 @@ TriangleMesh::TriangleMesh( const std::string& name,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TriangleMesh::onComponentAdded( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      rendererComp->get().implement< TriangleMesh >( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TriangleMesh::onComponentRemoved( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      setImplementation( NULL );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void TriangleMesh::onResourceLoaded(ResourcesManager& mgr)
 {
    unsigned int verticesCount = m_vertices.size();
@@ -64,7 +42,7 @@ void TriangleMesh::onResourceLoaded(ResourcesManager& mgr)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-VertexArray* TriangleMesh::getGenericVertexArray()
+VertexArray* TriangleMesh::getGenericVertexArray() const
 {
    TVertexArray<LitVertex>* array = new TVertexArray<LitVertex>();
 
@@ -77,11 +55,12 @@ VertexArray* TriangleMesh::getGenericVertexArray()
    return array;
 
 }
+
 ///////////////////////////////////////////////////////////////////////////////
 
-void TriangleMesh::render()
+void TriangleMesh::render( Renderer& renderer )
 {
-   impl().render();
+   new ( renderer() ) RCRenderTriangleMesh( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

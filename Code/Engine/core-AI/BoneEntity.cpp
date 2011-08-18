@@ -1,5 +1,7 @@
 #include "core-AI/BoneEntity.h"
 #include "core/Color.h"
+#include "core-Renderer/Renderer.h"
+#include "core-Renderer/DebugDrawCommands.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,10 +25,10 @@ BoneEntity::~BoneEntity()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoneEntity::onDebugRender( IDebugDraw& renderer ) const
+void BoneEntity::onDebugRender( Renderer& renderer ) const
 {
    SpatialEntity* parentNode = NULL;
-   if ( hasParent() )
+   if ( isAttached() )
    {
       parentNode = dynamic_cast< SpatialEntity* >( &Entity::getParent() );
    }
@@ -38,7 +40,7 @@ void BoneEntity::onDebugRender( IDebugDraw& renderer ) const
       getGlobalVectors( start[0], start[1], start[2], start[3] );
       parentNode->getGlobalVectors( end[0], end[1], end[2], end[3] );
 
-      renderer.drawLine( start[3], end[3], Color( 0, 0, 0 ) );
+      new ( renderer() ) RCDrawLine( start[3], end[3], Color( 0, 0, 0 ) );
    }
 }
 

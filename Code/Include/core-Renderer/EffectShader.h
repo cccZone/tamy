@@ -5,8 +5,8 @@
 
 #include <core\Array.h>
 #include "core\Resource.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
+#include "core-Renderer\RenderResource.h"
+#include "core-Renderer\ShaderRenderCommand.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -15,18 +15,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ShaderTexture;
-class EffectShaderImpl;
-class Filesystem;
-class SingletonsManager;
-class GeometryResource;
-
-///////////////////////////////////////////////////////////////////////////////
-
 /**
  * A shader class represents a program written in HLSL.
  */
-class EffectShader : public Resource, public TRendererObject<EffectShaderImpl>
+class EffectShader : public Resource, public RenderResource
 {
    DECLARE_RESOURCE( EffectShader )
 
@@ -59,95 +51,61 @@ public:
    const std::string& getScript() const;
 
    /**
-    * Renders the geometry.
-    *
-    * @param geometry      geometry to render
+    * Creates a texture setting shader parameter for the effect shader.
     */
-   void render( GeometryResource& geometry );
-
-   // -------------------------------------------------------------------------
-   // EffectShader program setters
-   // -------------------------------------------------------------------------
-   void setTechnique(const std::string& techniqueName);
-
-   void setBool(const std::string& paramName, bool val);
-   
-   void setInt(const std::string& paramName, int val);
-   
-   void setInt(const std::string& paramName, const int* arr, unsigned int size);
-   
-   void setFloat(const std::string& paramName, float val);
-   
-   void setFloat(const std::string& paramName, const float* arr, unsigned int size);
-   
-   void setMtx(const std::string& paramName, const D3DXMATRIX& val);
-   
-   void setMtx(const std::string& paramName, const D3DXMATRIX* arr, unsigned int size);
-   
-   void setString(const std::string& paramName, const std::string& val);
-   
-   void setTexture(const std::string& paramName, ShaderTexture& val);
-   
-   void setVec4(const std::string& paramName, const D3DXVECTOR4& val);
-   
-   void setVec4(const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size);
+   static ShaderParam< EffectShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
 
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
    void onResourceLoaded(ResourcesManager& mgr);
-   void onComponentAdded( Component< ResourcesManager >& component );
-   void onComponentRemoved( Component< ResourcesManager >& component );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Library dependent shader implementation.
+ * Render commands that binds an effect to a render device.
  */
-class EffectShaderImpl : public RendererObjectImpl
+class RCBindEffect : public ShaderRenderCommand< EffectShader >
 {
+private:
+   EffectShader&              m_shader;
+
+   std::string                m_techniqueName;
+
 public:
-   virtual ~EffectShaderImpl() {}
-
-   virtual void setTechnique(const std::string& techniqueName) {}
-   virtual void setBool(const std::string& paramName, bool val) {}
-   virtual void setInt(const std::string& paramName, int val) {}
-   virtual void setInt(const std::string& paramName, const int* arr, unsigned int size) {}
-   virtual void setFloat(const std::string& paramName, float val) {}
-   virtual void setFloat(const std::string& paramName, const float* arr, unsigned int size) {}
-   virtual void setMtx(const std::string& paramName, const D3DXMATRIX& val) {}
-   virtual void setMtx(const std::string& paramName, const D3DXMATRIX* arr, unsigned int size) {}
-   virtual void setString(const std::string& paramName, const std::string& val) {}
-   virtual void setTexture(const std::string& paramName, ShaderTexture& val) {}
-   virtual void setVec4(const std::string& paramName, const D3DXVECTOR4& val) {}
-   virtual void setVec4(const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size) {}
+   RCBindEffect( EffectShader& shader ) : m_shader( shader ) {}
 
    /**
-    * Provide the implementation specific code that starts 
-    * the effect rendering process.
-    * 
-    * @return  number of rendering passes in the script.
+    * Sets the specified rendering technique.
+    *
+    * @param techniqueName
     */
-   virtual unsigned int beginRendering() {return 0;}
+   inline void setTechnique( const std::string& techniqueName ) { m_techniqueName = techniqueName; }
 
-   /** 
-    * This method signals the implementation that 
-    * we finished the rendering process.
-    */
-   virtual void endRendering() {}
+   // -------------------------------------------------------------------------
+   // ShaderRenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
 
-   /** 
-    * This method signals the implementation that 
-    * we're starting a rendering pass.
-    */
-   virtual void beginPass(unsigned int passIdx) {}
+///////////////////////////////////////////////////////////////////////////////
 
-   /**
-    * This method signals the implementation that 
-    * we finished the rendering pass.
-    */
-   virtual void endPass(unsigned int passIdx) {}
+/**
+ * Render commands that unbinds an effect from a render device.
+ */
+class RCUnbindEffect : public RenderCommand
+{
+private:
+   EffectShader&        m_shader;
+
+public:
+   RCUnbindEffect( EffectShader& shader ) : m_shader( shader ) {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

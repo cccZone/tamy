@@ -3,7 +3,8 @@
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\EffectShader.h"
-#include "core-Renderer\GeometryResource.h"
+#include "core-Renderer\Geometry.h"
+#include "core-Renderer\Renderer.h"
 #include "core-MVC\SpatialEntity.h"
 #include "core-MVC.h"
 #include "core.h"
@@ -21,9 +22,7 @@ END_OBJECT()
 SingleTextureEffect::SingleTextureEffect()
    : m_parentNode( NULL )
    , m_effect( NULL )
-   , m_camera( NULL )
    , m_texture( NULL )
-   , m_geometry( NULL )
 {
 }
 
@@ -43,92 +42,83 @@ void SingleTextureEffect::setTexture( Texture& texture )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureEffect::setGeometry( GeometryResource& geometry )
+void SingleTextureEffect::onPreRender( Renderer& renderer )
 {
-   m_geometry = &geometry;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SingleTextureEffect::render()
-{
-   if ( !m_parentNode || !m_camera || !m_effect || !m_geometry )
+   if ( !m_parentNode || !m_effect )
    {
       return;
    }
 
-   D3DXMATRIX worldViewMtx = m_parentNode->getGlobalMtx() * m_camera->getViewMtx();
-   m_effect->setMtx( "g_mWorldView", worldViewMtx );
-   m_effect->setMtx( "g_mProjection", m_camera->getProjectionMtx() );
+   Camera& camera = renderer.getActiveCamera();
+   RCBindEffect* comm = new ( renderer() ) RCBindEffect( *m_effect );
 
-   m_effect->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_material.getAmbientColor() );
-   m_effect->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_material.getDiffuseColor() );
+   D3DXMATRIX worldViewMtx = m_parentNode->getGlobalMtx() * camera.getViewMtx();
+   comm->setMtx( "g_mWorldView", worldViewMtx );
+   comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
 
-   m_effect->setBool( "g_UseTexture", m_texture != NULL );
+   comm->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_material.getAmbientColor() );
+   comm->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_material.getDiffuseColor() );
+
+   comm->setBool( "g_UseTexture", m_texture != NULL );
    if ( m_texture != NULL )
    {
-      m_effect->setTexture( "g_MeshTexture", *m_texture );
+      comm->setTexture( "g_MeshTexture", *m_texture );
    }
 
-   m_effect->setTechnique( "singleTextureRenderer" );
+   comm->setTechnique( "singleTextureRenderer" );
+}
 
-   m_effect->render( *m_geometry );
+///////////////////////////////////////////////////////////////////////////////
+
+void SingleTextureEffect::onPostRender( Renderer& renderer )
+{
+   if ( !m_parentNode || !m_effect )
+   {
+      return;
+   }
+
+   new ( renderer() ) RCUnbindEffect( *m_effect );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SingleTextureEffect::onAttached( Entity& parent )
 {
-   m_parentNode = dynamic_cast< SpatialEntity *>( &parent );
+   Geometry* geometry = dynamic_cast< Geometry* >( &parent );
+   if ( geometry )
+   {
+      m_parentNode = geometry;
+      geometry->addState( *this );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureEffect::onDetached(Entity& parent)
+void SingleTextureEffect::onDetached( Entity& parent )
 {
-   m_parentNode = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SingleTextureEffect::onAttached( Model& hostModel ) 
-{
-   m_camera = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SingleTextureEffect::onDetached( Model& hostModel ) 
-{
-   m_camera = NULL;
+   Geometry* geometry = dynamic_cast< Geometry* >( &parent );
+   if ( geometry )
+   {
+      m_parentNode = NULL;
+      geometry->removeState( *this );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SingleTextureEffect::onComponentAdded( Component< Model >& component )
 {
+   ModelComponent< ResourcesManager >* comp = dynamic_cast< ModelComponent< ResourcesManager >* >( &component );
+   if ( comp )
    {
-      ModelComponent< Camera >* comp = dynamic_cast< ModelComponent< Camera >* >( &component );
-      if ( comp )
+      // load the shader
+      ResourcesManager& rm = comp->get();
+      static const char* shaderName = "/Renderer/Shaders/SingleTextureEffect.fx";
+      m_effect = dynamic_cast< EffectShader* >( rm.findResource( shaderName ) );
+      if ( !m_effect )
       {
-         m_camera = &comp->get();
-         return;
-      }
-   }
-
-   {
-      ModelComponent< ResourcesManager >* comp = dynamic_cast< ModelComponent< ResourcesManager >* >( &component );
-      if ( comp )
-      {
-         // load the shader
-         ResourcesManager& rm = comp->get();
-         static const char* shaderName = "/Renderer/Shaders/SingleTextureEffect.fx";
-         m_effect = dynamic_cast< EffectShader* >( rm.findResource( shaderName ) );
-         if ( !m_effect )
-         {
-            m_effect = new EffectShader( shaderName );
-            rm.addResource( m_effect );
-         }
+         m_effect = new EffectShader( shaderName );
+         rm.addResource( m_effect );
       }
    }
 }
@@ -146,3 +136,5 @@ void SingleTextureEffect::onObjectLoaded()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+// TODO: remove the camera component

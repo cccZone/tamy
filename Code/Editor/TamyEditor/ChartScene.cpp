@@ -10,6 +10,7 @@
 
 ChartScene::ChartScene()
    : m_scale( 0.001f )
+   , m_trackedItem( NULL )
 {
    m_bgBrush = QBrush( QColor( 200, 200, 200 ) );
    m_axisPen = QPen( QBrush( QColor( 100, 100, 100 ) ), 3.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );

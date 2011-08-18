@@ -10,8 +10,8 @@
 #include "core-Renderer\RenderingMechanism.h"
 #include "core-Renderer\CompositeRenderingMechanism.h"
 #include "core-Renderer\Renderer.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
+#include "core-Renderer\RenderCommand.h"
+#include "core-Renderer\ShaderParam.h"
 
 // ----------------------------------------------------------------------------
 // Effects
@@ -70,19 +70,24 @@
 #include "core-Renderer\PixelShader.h"
 
 // ----------------------------------------------------------------------------
-// OverlayRenderer
-// -->Elements
+// Mechanisms
+// -->DebugDraw
+// ----------------------------------------------------------------------------
+#include "core-Renderer\DebugDrawCommands.h"
+// ----------------------------------------------------------------------------
+// -->OverlayRenderer
+// ---->Elements
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Font.h"
 #include "core-Renderer\TextField.h"
 // ----------------------------------------------------------------------------
-// --> Mechanism
+// ----> Mechanism
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Overlay.h"
 #include "core-Renderer\OverlayRenderingMechanism.h"
 
 // ----------------------------------------------------------------------------
-// RenderingPipeline
+// -->RenderingPipeline
 // ----------------------------------------------------------------------------
 #include "core-Renderer/RenderingPipeline.h"
 #include "core-Renderer/RenderingPipelineNode.h"
@@ -90,7 +95,7 @@
 #include "core-Renderer/RenderTargetDescriptor.h"
 #include "core-Renderer/RenderingPipelineSockets.h"
 // ----------------------------------------------------------------------------
-// -->Nodes\Misc
+// ---->Nodes\Misc
 // ----------------------------------------------------------------------------
 #include "core-Renderer/RPAdapterNode.h"
 #include "core-Renderer/RPSceneRenderNode.h"
@@ -98,7 +103,7 @@
 #include "core-Renderer/RPPostProcessNode.h"
 #include "core-Renderer/RPDebugRendererNode.h"
 // ----------------------------------------------------------------------------
-// -->Nodes\PostProcess
+// ---->Nodes\PostProcess
 // ----------------------------------------------------------------------------
 #include "core-Renderer/RPBlurNode.h"
 #include "core-Renderer/RPBrightnessNode.h"
@@ -106,32 +111,20 @@
 #include "core-Renderer/RPHDRNode.h"
 #include "core-Renderer/RPLuminanceNode.h"
 // ----------------------------------------------------------------------------
-// -->Sockets
+// ---->Sockets
 // ----------------------------------------------------------------------------
 #include "core-Renderer/TextureSockets.h"
 #include "core-Renderer/FloatSockets.h"
 #include "core-Renderer/VoidSockets.h"
+// ----------------------------------------------------------------------------
+// -->RenderingPipeline
+// ----------------------------------------------------------------------------
+#include "core-Renderer/DebugDrawCommands.h"
 
 // ----------------------------------------------------------------------------
 // Scene
 // ----------------------------------------------------------------------------
-#include "core-Renderer\RenderingPass.h"
-#include "core-Renderer\SceneRenderingPass.h"
-#include "core-Renderer\VisibilityPass.h"
-#include "core-Renderer\AttributeSorter.h"
-#include "core-Renderer\EffectAttribute.h"
 #include "core-Renderer\RenderTarget.h"
-// ----------------------------------------------------------------------------
-// --> Attributes
-// ----------------------------------------------------------------------------
-#include "core-Renderer\TransparencyAttribute.h"
-#include "core-Renderer\UniqueObjectAttribute.h"
-// ----------------------------------------------------------------------------
-// --> Views
-// ----------------------------------------------------------------------------
-#include "core-Renderer\UniqueObjectAttribute.h"
-#include "core-Renderer\TransparencyAttribute.h"
-#include "core-Renderer\Renderable.h"
 
 // ----------------------------------------------------------------------------
 // Tools

@@ -8,14 +8,43 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DX9VertexShader::DX9VertexShader( VertexShader& shader )
+void RCBindVertexShader::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+   DX9VertexShader* dxShader = dxRenderer.getVertexShader( m_shader );
+   if ( dxShader )
+   {
+      // set the shader parameters
+      setParams( renderer, dxShader );
+      dxShader->beginRendering();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RCUnbindVertexShader::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+   DX9VertexShader* dxShader = dxRenderer.getVertexShader( m_shader );
+   if ( !dxShader )
+   {
+      dxShader->endRendering();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+DX9VertexShader::DX9VertexShader( const DX9Renderer& renderer, const VertexShader& shader )
    : m_shader( shader )
-   , m_renderer( NULL )
-   , m_d3Device( NULL )
+   , m_renderer( renderer )
+   , m_d3Device( &renderer.getD3Device() )
    , m_dxVertexShader( NULL )
    , m_shaderConstants( NULL )
    , m_vertexDecl( NULL )
 {
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,31 +74,10 @@ DX9VertexShader::~DX9VertexShader()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9VertexShader::initialize( Renderer& renderer )
+void DX9VertexShader::initialize()
 {
-   m_renderer = dynamic_cast< DX9Renderer* >( &renderer );
-   if ( m_renderer == NULL )
-   {
-      ASSERT_MSG( false, "This implementation can work only with DX9Renderer" );
-      return;
-   }
-
-   if ( m_dxVertexShader != NULL )
-   {
-      m_dxVertexShader->Release();
-      m_dxVertexShader = NULL;
-   }
-
-   if ( m_shaderConstants )
-   {
-      m_shaderConstants->Release();
-      m_shaderConstants = NULL;
-   }
-
    // load the effect
    const std::string& shaderContents = m_shader.getScript();
-   m_d3Device = &m_renderer->getD3Device();
-
    const char* shaderProfile = D3DXGetVertexShaderProfile( m_d3Device );
 
    DWORD flags = 0;
@@ -131,7 +139,7 @@ void DX9VertexShader::initialize( Renderer& renderer )
 
 void DX9VertexShader::setBool( const char* paramName, bool val )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       m_shaderConstants->SetBool( m_d3Device, hConstant, val );
@@ -140,9 +148,55 @@ void DX9VertexShader::setBool( const char* paramName, bool val )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void DX9VertexShader::setInt( const char* paramName, int val )
+{
+   if ( m_shaderConstants )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      m_shaderConstants->SetInt( m_d3Device, hConstant, val );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9VertexShader::setIntArray( const char* paramName, int* valsArr, unsigned int size )
+{
+   if ( m_shaderConstants )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      HRESULT res = m_shaderConstants->SetIntArray( m_d3Device, hConstant, valsArr, size );
+      ASSERT( SUCCEEDED( res ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9VertexShader::setFloat( const char* paramName, float val )
+{
+   if ( m_shaderConstants )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      m_shaderConstants->SetFloat( m_d3Device, hConstant, val );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9VertexShader::setFloatArray( const char* paramName, float* valsArr, unsigned int size )
+{
+   if ( m_shaderConstants )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      HRESULT res = m_shaderConstants->SetFloatArray( m_d3Device, hConstant, valsArr, size );
+      ASSERT( SUCCEEDED( res ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void DX9VertexShader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       m_shaderConstants->SetMatrix( m_d3Device, hConstant, &matrix );
@@ -153,7 +207,7 @@ void DX9VertexShader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 
 void DX9VertexShader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       HRESULT res = m_shaderConstants->SetMatrixArray( m_d3Device, hConstant, matrices, size );
@@ -165,7 +219,7 @@ void DX9VertexShader::setMtxArray( const char* paramName, const D3DXMATRIX* matr
 
 void DX9VertexShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       m_shaderConstants->SetVector( m_d3Device, hConstant, &vec );
@@ -174,14 +228,25 @@ void DX9VertexShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9VertexShader::setTexture( const char* paramName, ShaderTexture& val )
+void DX9VertexShader::setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size )
 {
-   if ( m_shaderConstants && m_d3Device )
+   if ( m_shaderConstants )
+   {
+      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
+      HRESULT res = m_shaderConstants->SetVectorArray( m_d3Device, hConstant, vecArr, size );
+      ASSERT_MSG( SUCCEEDED( res ), translateDxError( "setVec4Array", res ).c_str() );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9VertexShader::setTexture( const char* paramName, IDirect3DTexture9* texture )
+{
+   if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       UINT samplerIdx = m_shaderConstants->GetSamplerIndex( hConstant );
       
-      IDirect3DTexture9* texture = reinterpret_cast< IDirect3DTexture9* >( val.getPlatformSpecific() );
       m_d3Device->SetTexture( samplerIdx, texture );
    }
 }
@@ -190,23 +255,17 @@ void DX9VertexShader::setTexture( const char* paramName, ShaderTexture& val )
 
 void DX9VertexShader::beginRendering()
 {
-   if ( m_d3Device )
-   {
-      ASSERT( m_vertexDecl != NULL );
-      m_d3Device->SetVertexDeclaration( m_vertexDecl );
-      m_d3Device->SetVertexShader( m_dxVertexShader );
-   }
+   ASSERT( m_vertexDecl != NULL );
+   m_d3Device->SetVertexDeclaration( m_vertexDecl );
+   m_d3Device->SetVertexShader( m_dxVertexShader );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void DX9VertexShader::endRendering()
 {
-   if ( m_d3Device )
-   {
-      m_d3Device->SetVertexDeclaration( NULL );
-      m_d3Device->SetVertexShader( NULL );
-   }
+   m_d3Device->SetVertexDeclaration( NULL );
+   m_d3Device->SetVertexShader( NULL );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

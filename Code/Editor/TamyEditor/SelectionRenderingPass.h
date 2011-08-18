@@ -4,7 +4,7 @@
 /// @brief  a rendering pass dedicated to entities selection mechanism
 
 #include "core.h"
-#include "core-Renderer\RenderingPass.h"
+#include "core-Renderer/RenderingMechanism.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,8 +18,7 @@ class SelectionManager;
 /**
  * A rendering pass dedicated to entities selection mechanism.
  */
-class SelectionRenderingPass : public RenderingPass,
-                               public GenericFactory< Entity, SelectedEntityRepresentation >
+class SelectionRenderingPass : public RenderingMechanism, public GenericFactory< Entity, SelectedEntityRepresentation >
 {
 private:
    SelectionManager&                   m_host;
@@ -41,6 +40,13 @@ public:
     * @param entity
     */
    void set( Entity* entity );
+
+   // -------------------------------------------------------------------------
+   // RenderingMechanism implementation
+   // -------------------------------------------------------------------------
+   void initialize( Renderer& renderer );
+   void deinitialize( Renderer& renderer );
+   void render( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

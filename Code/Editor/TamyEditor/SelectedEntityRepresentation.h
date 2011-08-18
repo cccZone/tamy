@@ -3,34 +3,27 @@
 /// @file   TamyEditor/SelectedEntityRepresentation.h
 /// @brief  a visual representation of a selected entity
 
-#include "core-Renderer\AttributeSorter.h"
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SelectionManager;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * A visual representation of a selected entity.
  */
-class SelectedEntityRepresentation : public Attributed
+class SelectedEntityRepresentation
 {
 public:
    virtual ~SelectedEntityRepresentation() {}
 
    /**
-    * Initializes the representation once it's created by the host.
-    *
-    * @param host    host that created this representation
-    */
-   virtual void initialize( SelectionManager& host ) = 0;
-
-   /**
     * Renders the representation.
+    *
+    * @param renderer
     */
-   virtual void render() = 0;
+   virtual void render( Renderer& renderer ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

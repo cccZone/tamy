@@ -3,24 +3,20 @@
 
 #pragma once
 
-#include "core-Renderer/RendererObject.h"
-#include "core-Renderer/RendererObjectImpl.h"
 #include "core-Renderer/VertexDescriptions.h"
+#include "core-Renderer\ShaderRenderCommand.h"
 #include "core/Resource.h"
+#include "core/UniqueObject.h"
+#include "core-Renderer\RenderResource.h"
 #include <d3dx9.h>
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class VertexShaderImpl;
-class ShaderTexture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * This class represents a vertex shader program resource.
  */
-class VertexShader : public Resource, public TRendererObject< VertexShaderImpl >
+class VertexShader : public Resource, public UniqueObject< VertexShader >, public RenderResource
 {
    DECLARE_RESOURCE( VertexShader )
 
@@ -59,59 +55,52 @@ public:
    inline const std::string& getScript() const { return m_script; }
 
    /**
-    * Starts the rendering process.
+    * Creates a texture setting shader parameter for the effect shader.
     */
-   void beginRendering();
-
-   /**
-    * Ends the rendering process.
-    */
-   void endRendering();
-
-   // -------------------------------------------------------------------------
-   // Shader program setters
-   // -------------------------------------------------------------------------
-   void setBool( const char* paramName, bool val );
-
-   void setMtx( const char* paramName, const D3DXMATRIX& matrix );
-
-   void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int count );
-
-   void setVec4( const char* paramName, const D3DXVECTOR4& vec );
-
-   void setTexture( const char* paramName, ShaderTexture& val );
+   static ShaderParam< VertexShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
 
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
    void onResourceLoaded(ResourcesManager& mgr);
-   void onComponentAdded( Component< ResourcesManager >& component );
-   void onComponentRemoved( Component< ResourcesManager >& component );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A vertex shader implementation interface.
+ * Binds a vertex shader to a rendering device.
  */
-class VertexShaderImpl : public RendererObjectImpl
+class RCBindVertexShader : public ShaderRenderCommand< VertexShader >
 {
+private:
+   VertexShader&              m_shader;
+
 public:
-   virtual ~VertexShaderImpl() {}
+   RCBindVertexShader( VertexShader& shader ) : m_shader( shader ) {}
 
-   virtual void beginRendering() {}
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
 
-   virtual void endRendering() {}
+///////////////////////////////////////////////////////////////////////////////
 
-   virtual void setBool( const char* paramName, bool val ) {}
+/**
+ * Unbinds a vertex shader from a rendering device.
+ */
+class RCUnbindVertexShader : public RenderCommand
+{
+private:
+   VertexShader&           m_shader;
 
-   virtual void setMtx( const char* paramName, const D3DXMATRIX& matrix ) {}
+public:
+   RCUnbindVertexShader( VertexShader& shader ) : m_shader( shader ) {}
 
-   virtual void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int count ) {}
-
-   virtual void setVec4( const char* paramName, const D3DXVECTOR4& vec ) {}
-
-   virtual void setTexture( const char* paramName, ShaderTexture& val ) {}
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

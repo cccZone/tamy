@@ -8,78 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct Color;
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * A common debug draw interface the engine entities can use to output
- * debug information onto the screen.
- * The reason the interface is kept here and not in the renderer library
- * is that we want all the projects of the engine to have access to it,
- * however we don't want to make them dependent on the renderer - because
- * we might simply not be using the same renderer implementation on all occasions.
- */
-class IDebugDraw
-{
-public:
-   virtual ~IDebugDraw() {}
-
-   /**
-    * Adds a line to drawing.
-    *
-    * @param start
-    * @param end
-    * @param color
-    */
-   virtual void drawLine( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color ) = 0;
-
-   /**
-    * Draws an arced line.
-    *
-    * @param start
-    * @param end
-    * @param color
-    */
-   virtual void drawArc( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color ) = 0;
-
-   /**
-    * Adds a line with an arrow to drawing.
-    *
-    * @param start
-    * @param end
-    * @param color
-    */
-   virtual void drawArrow( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color ) = 0;
-
-   /**
-    * Adds a box to drawing. The origin is located in the box's center.
-    *
-    * @param transform
-    * @param size
-    * @param color
-    */
-   virtual void drawBox( const D3DXMATRIX& transform, const D3DXVECTOR3& size, const Color& color ) = 0;
-
-   /**
-    * Adds a sphere to drawing.
-    *
-    * @param transform
-    * @param radius
-    * @param color
-    */
-   virtual void drawSphere( const D3DXMATRIX& transform, float radius, const Color& color ) = 0;
-
-   /**
-    * Adds a cylinder to drawing. The origin is located in the cylinder's bottom face's center.
-    *
-    * @param transform
-    * @param radius
-    * @param height
-    * @param color
-    */
-   virtual void drawCylinder( const D3DXMATRIX& transform, float radius, float height, const Color& color ) = 0;
-};
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -100,9 +29,9 @@ public:
    /**
     * Should be called when it's time to render some stuff using a debug renderer.
     *
-    * @param renderer      debug renderer
+    * @param renderer
     */
-   virtual void onDebugRender( IDebugDraw& renderer ) const = 0;
+   virtual void onDebugRender( Renderer& renderer ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -139,7 +68,7 @@ public:
    // -------------------------------------------------------------------------
    // IDebugDrawable implementation
    // -------------------------------------------------------------------------
-   void onDebugRender( IDebugDraw& renderer ) const;
+   void onDebugRender( Renderer& renderer ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

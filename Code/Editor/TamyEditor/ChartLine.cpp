@@ -207,7 +207,8 @@ void ChartLine::paint( QPainter* painter, const QStyleOptionGraphicsItem* option
 ChartLineKeyValue::ChartLineKeyValue( ChartLine& parent, const QColor& color, unsigned int pointIdx )
    : QGraphicsItem( &parent )
    , m_parentLine( parent )
-   , m_pen( QBrush( color.darker( 150 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin )
+   , m_regularPen( QBrush( color.darker( 150 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin )
+   , m_selectedPen( QBrush( QColor( 255, 226, 96 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin )
    , m_unfocusedBrush( color.lighter( 120 ) )
    , m_focusedBrush( color.lighter( 150 ) )
    , m_pointIdx( pointIdx )
@@ -238,7 +239,7 @@ void ChartLineKeyValue::paint( QPainter* painter, const QStyleOptionGraphicsItem
 {
    painter->save();
 
-   painter->setPen( m_pen );
+   painter->setPen( isSelected() ? m_selectedPen : m_regularPen );
    painter->setBrush( m_focused ? m_focusedBrush : m_unfocusedBrush );
    painter->drawRect( m_rect );
 

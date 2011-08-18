@@ -22,6 +22,7 @@ class StaticGeometry : public Geometry
 
 private:
    VertexShader*              m_vertexShader;
+   GeometryResource*                m_resource;
 
 public:
    /**
@@ -46,8 +47,8 @@ protected:
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
-   void onPreRender();
-   void onPostRender();
+   void onPreRender( Renderer& renderer );
+   void onPostRender( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

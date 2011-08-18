@@ -5,17 +5,57 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 TimeController::TimeController()
+   : m_parentController( NULL )
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TimeController::TimeController( TimeController& parentController )
+   : m_parentController( &parentController )
+{
+   m_parentController->attach( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TimeController::~TimeController()
 {
+   if ( m_parentController )
+   {
+      m_parentController->detach( *this );
+      m_parentController = NULL;
+   }
+
    unsigned int count = m_tracks.size();
    for (unsigned int i = 0; i < count; ++i)
    {
       delete m_tracks[i];
+   }
+
+   m_childControllers.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TimeController::attach( TimeController& child )
+{
+   // make sure the controller's not already attached
+   std::vector< TimeController* >::iterator it = std::find( m_childControllers.begin(), m_childControllers.end(), &child );
+   if ( it == m_childControllers.end() )
+   {
+      m_childControllers.push_back( &child );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TimeController::detach( TimeController& child )
+{
+   std::vector< TimeController* >::iterator it = std::find( m_childControllers.begin(), m_childControllers.end(), &child );
+   if ( it != m_childControllers.end() )
+   {
+      m_childControllers.erase( it );
    }
 }
 
@@ -24,9 +64,15 @@ TimeController::~TimeController()
 void TimeController::update(float timeElapsed)
 {
    unsigned int count = m_tracks.size();
-   for (unsigned int i = 0; i < count; ++i)
+   for( unsigned int i = 0; i < count; ++i )
    {
-      m_tracks[i]->update(timeElapsed);
+      m_tracks[i]->update( timeElapsed );
+   }
+
+   count = m_childControllers.size();
+   for( unsigned int i = 0; i < count; ++i )
+   {
+      m_childControllers[i]->update( timeElapsed );
    }
 }
 
@@ -34,8 +80,7 @@ void TimeController::update(float timeElapsed)
 
 void TimeController::add(const std::string& trackID)
 {
-   std::vector<TimeControllerTrack*>::iterator it =
-      std::find_if(m_tracks.begin(), m_tracks.end(), FindTrack(trackID));
+   std::vector<TimeControllerTrack*>::iterator it = std::find_if(m_tracks.begin(), m_tracks.end(), FindTrack(trackID));
 
    if (it == m_tracks.end())
    {
@@ -47,8 +92,7 @@ void TimeController::add(const std::string& trackID)
 
 TimeControllerTrack& TimeController::get(const std::string& trackID)
 {
-   std::vector<TimeControllerTrack*>::iterator it =
-      std::find_if(m_tracks.begin(), m_tracks.end(), FindTrack(trackID));
+   std::vector<TimeControllerTrack*>::iterator it = std::find_if(m_tracks.begin(), m_tracks.end(), FindTrack(trackID));
 
    if (it == m_tracks.end())
    {
@@ -62,8 +106,7 @@ TimeControllerTrack& TimeController::get(const std::string& trackID)
 
 void TimeController::remove(const std::string& trackID)
 {
-   std::vector<TimeControllerTrack*>::iterator it =
-      std::find_if(m_tracks.begin(), m_tracks.end(), FindTrack(trackID));
+   std::vector<TimeControllerTrack*>::iterator it = std::find_if(m_tracks.begin(), m_tracks.end(), FindTrack(trackID));
 
    if (it != m_tracks.end())
    {

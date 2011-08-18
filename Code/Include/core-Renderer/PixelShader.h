@@ -3,16 +3,15 @@
 
 #pragma once
 
-#include "core-Renderer/RendererObject.h"
-#include "core-Renderer/RendererObjectImpl.h"
 #include "core/Resource.h"
+#include "core-Renderer/ShaderRenderCommand.h"
+#include "core/UniqueObject.h"
+#include "core-Renderer\RenderResource.h"
 #include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class PixelShaderImpl;
-class ShaderTexture;
 class Filesystem;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,7 +62,7 @@ struct PixelShaderParams
 /**
  * This class represents a pixel shader program resource.
  */
-class PixelShader : public Resource, public TRendererObject< PixelShaderImpl >
+class PixelShader : public Resource, public UniqueObject< PixelShader >, public RenderResource
 {
    DECLARE_RESOURCE( PixelShader )
 
@@ -79,6 +78,7 @@ public:
     * @param scriptPath             shader resource name
     */
    PixelShader( const std::string& fileName = "" );
+   ~PixelShader();
 
    /**
     * Loads a script from a file.
@@ -119,70 +119,53 @@ public:
    inline const std::string& getEntryFunctionName() const { return m_entryFunctionName; }
 
    /**
-    * Starts the rendering process.
+    * Creates a texture setting shader parameter for the effect shader.
     */
-   void beginRendering();
-
-   /**
-    * Ends the rendering process.
-    */
-   void endRendering();
-
-   // -------------------------------------------------------------------------
-   // Shader program setters
-   // -------------------------------------------------------------------------
-   void setBool( const char* paramName, bool val );
-
-   void setFloat( const char* paramName, float val );
-
-   void setFloatArray( const char* paramName, float* valsArr, unsigned int size );
-
-   void setMtx( const char* paramName, const D3DXMATRIX& matrix );
-
-   void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size );
-
-   void setVec4( const char* paramName, const D3DXVECTOR4& vec );
-
-   void setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size );
-
-   void setTexture( const char* paramName, ShaderTexture& val );
-
-   // -------------------------------------------------------------------------
-   // Resource implementation
-   // -------------------------------------------------------------------------
-   void onComponentAdded( Component< ResourcesManager >& component );
-   void onComponentRemoved( Component< ResourcesManager >& component );
+   static ShaderParam< PixelShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A pixel shader implementation interface.
+ * Binds a pixel shader to the render device.
  */
-class PixelShaderImpl : public RendererObjectImpl
+class RCBindPixelShader : public ShaderRenderCommand< PixelShader >
 {
+private:
+   PixelShader&               m_shader;
+   
 public:
-   virtual ~PixelShaderImpl() {}
+   /**
+    * Constructor.
+    */
+   RCBindPixelShader( PixelShader& shader ) : m_shader( shader ) {}
 
-   virtual void beginRendering() {}
+   // -------------------------------------------------------------------------
+   // Shader program setters
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
 
-   virtual void endRendering() {}
+///////////////////////////////////////////////////////////////////////////////
 
-   virtual void setBool( const char* paramName, bool val ) {}
+/**
+ * Binds a pixel shader to the render device.
+ */
+class RCUnbindPixelShader : public RenderCommand
+{
+private:
+   PixelShader&         m_shader;
 
-   virtual void setFloat( const char* paramName, float val ) {}
+public:
+   /**
+    * Constructor.
+    */
+   RCUnbindPixelShader( PixelShader& shader ) : m_shader( shader ) {}
 
-   virtual void setFloatArray( const char* paramName, float* valsArr, unsigned int size ) {}
-
-   virtual void setMtx( const char* paramName, const D3DXMATRIX& matrix ) {}
-
-   virtual void setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size ) {}
-
-   virtual void setVec4( const char* paramName, const D3DXVECTOR4& vec ) {}
-
-   virtual void setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size ) {}
-
-   virtual void setTexture( const char* paramName, ShaderTexture& val ) {}
+   // -------------------------------------------------------------------------
+   // Shader program setters
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

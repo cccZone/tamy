@@ -3,7 +3,6 @@
 #include "core-Renderer.h"
 #include "QueryableEntity.h"
 #include "SceneQuery.h"
-#include "SceneQueryEffect.h"
 #include "SceneQueries.h"
 
 // representations
@@ -12,13 +11,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QueryRenderingPass::QueryRenderingPass( RenderTarget& sceneSnapshot, ResourcesManager& rm )
-: RenderingPass( &sceneSnapshot )
-, m_sceneSnapshot( sceneSnapshot )
+QueryRenderingPass::QueryRenderingPass( RenderTarget& sceneSnapshot )
+   : m_sceneSnapshot( sceneSnapshot )
+   , m_shader( NULL )
 {
-   // create the query effect
-   m_effect = new SceneQueryEffect( rm );
-
    // define associations
    associateAbstract< Geometry, QueryableGeometry > ();
 }
@@ -29,8 +25,8 @@ QueryRenderingPass::~QueryRenderingPass()
 {
    reset();
 
-   delete m_effect; m_effect = NULL;
    m_queriesList.clear();
+   m_completedQueriesList.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,11 +41,9 @@ void QueryRenderingPass::addEntity( Entity& entity )
    }
 
    QueryableEntity* representation = create( entity );
-   if (representation != NULL)
+   if ( representation != NULL )
    {
-      representation->initialize( *m_effect );
       m_representations.insert( std::make_pair( &entity, representation ) );
-      statesMgr().add( *representation );
    }
 }
 
@@ -57,12 +51,11 @@ void QueryRenderingPass::addEntity( Entity& entity )
 
 void QueryRenderingPass::removeEntity( Entity& entity )
 {
-   Representations::iterator it = m_representations.find(&entity);
-   if (it != m_representations.end())
+   Representations::iterator it = m_representations.find( &entity );
+   if ( it != m_representations.end() )
    {
       QueryableEntity* repr = it->second;
-      statesMgr().remove( *repr );
-      m_representations.erase(it);
+      m_representations.erase( it );
 
       delete repr;
    }
@@ -72,10 +65,8 @@ void QueryRenderingPass::removeEntity( Entity& entity )
 
 void QueryRenderingPass::reset()
 {
-   for ( Representations::iterator it = m_representations.begin();
-      it != m_representations.end(); ++it )
+   for ( Representations::iterator it = m_representations.begin(); it != m_representations.end(); ++it )
    {
-      statesMgr().remove( *it->second );
       delete it->second;
    }
    m_representations.clear();
@@ -90,34 +81,60 @@ void QueryRenderingPass::query( SceneQuery& query )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool QueryRenderingPass::onPreRender()
+void QueryRenderingPass::initialize( Renderer& renderer )
 {
-   return !m_queriesList.empty();
+   // load the shader
+   static const char* shaderName = "Editor/Shaders/SceneQueryEffect.psh";
+   ResourcesManager& rm = ResourcesManager::getInstance();
+   m_shader = dynamic_cast< PixelShader* >( rm.findResource( "SceneQueryEffect" ) );
+   if ( !m_shader )
+   {
+      m_shader = new PixelShader( "SceneQueryEffect" );
+      m_shader->loadFromFile( rm.getFilesystem(), shaderName );
+      rm.addResource( m_shader );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QueryRenderingPass::onPostRender()
+void QueryRenderingPass::deinitialize( Renderer& renderer )
 {
+   delete m_shader; m_shader = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void QueryRenderingPass::render( Renderer& renderer )
+{
+   // notify about the completed queries
+   for ( QueriesList::iterator it = m_completedQueriesList.begin(); it != m_completedQueriesList.end(); ++it )
+   {
+      (*it)->notifyResult();
+   }
+   m_completedQueriesList.clear();
+
+   // check if there are any new queries
+   if ( m_queriesList.empty() )
+   {
+      // don't render anything if there were no queries made
+      return;
+   }
+
+   // draw the representations
+   for ( Representations::iterator it = m_representations.begin(); it != m_representations.end(); ++it )
+   {
+      it->second->render( renderer, *m_shader );
+   }
+
+   // create the commands that will get the queried results
    for ( QueriesList::iterator it = m_queriesList.begin(); it != m_queriesList.end(); ++it )
    {
-      const D3DXVECTOR2& queryPos = (*it)->getQueriedPosition();
-      Entity* entityAtPos = getEntityFromPos( queryPos );
-      (*it)->setResult( entityAtPos );
+      new ( renderer() ) RCGetPixel( m_sceneSnapshot, (*it)->getQueriedPosition(), (*it)->getResultBuffer() );
    }
 
    // remove all queries from the list - we have fulfilled them
+   m_completedQueriesList = m_queriesList;
    m_queriesList.clear();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Entity* QueryRenderingPass::getEntityFromPos( const D3DXVECTOR2& pos )
-{
-   D3DXVECTOR4 value = ( D3DXVECTOR4 )( m_sceneSnapshot.getPixel( pos ) );
-   Entity* entity = reinterpret_cast< Entity* >( SceneQueries::vecToPtr( value ) );
-
-   return entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

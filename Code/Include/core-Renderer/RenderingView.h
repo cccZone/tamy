@@ -4,14 +4,19 @@
 /// @brief  view that renders renderable entities
 
 #include <map>
+#include <vector>
 #include "core-MVC\ModelView.h"
+#include "core/RegularOctree.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Renderable;
-class RenderableRepresentation;
-class AttributeSorter;
+class SpatialRepresentation;
+class Renderer;
+class Geometry;
+struct AABoundingBox;
+class Camera;
+class RenderState;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,27 +26,25 @@ class AttributeSorter;
 class RenderingView : public ModelView
 {
 private:
-   typedef std::map<Renderable*, RenderableRepresentation*>    RenderablesMap;
+   typedef std::map< Geometry*, SpatialRepresentation* >    SpatialsMap;
 
 private:
-   RenderablesMap       m_renderables;
+   Renderer&                                                m_renderer;
 
-   AttributeSorter*     m_defaultSorter;
-   AttributeSorter*     m_sorter;
+   SpatialsMap                                              m_spatials;
+   RegularOctree< SpatialRepresentation >*                  m_storage;
 
 public:
    /**
     * Constructor.
     */
-   RenderingView();
+   RenderingView( Renderer& renderer, const AABoundingBox& sceneBB );
    ~RenderingView();
 
    /**
-    * Sets an attributes sorter.
-    *
-    * @param sorter
+    * Renders the view contents.
     */
-   void setAttributeSorter( AttributeSorter& sorter );
+   void render();
 
    // ----------------------------------------------------------------------
    // ModelView implementation
@@ -52,6 +55,39 @@ public:
 
 protected:
    void resetContents();
+
+private:
+   // ----------------------------------------------------------------------
+   // State tree
+   // ----------------------------------------------------------------------
+   struct GeometryNode
+   {
+      GeometryNode*  m_next;
+      Geometry&      m_geometry;
+
+      GeometryNode( GeometryNode*& nextNode, Geometry& geometry );
+      ~GeometryNode();
+
+      void render( Renderer& renderer ) const;
+   };
+
+   struct StateTreeNode
+   {
+      StateTreeNode*    m_child;
+      StateTreeNode*    m_sibling;
+
+      RenderState*      m_state;
+      GeometryNode*     m_geometryNode;
+
+      StateTreeNode( RenderState* state );
+      ~StateTreeNode();
+
+      bool compareState( RenderState* state );
+      void render( Renderer& renderer ) const;
+   };
+
+   StateTreeNode* buildStateTree( const Array< SpatialRepresentation* >& visibleElems ) const;
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

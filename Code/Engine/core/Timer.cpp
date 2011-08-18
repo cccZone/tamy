@@ -5,7 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-CTimer::CTimer(void)
+CTimer::CTimer()
       : m_frameRate(0),
       m_fpsFrameCount(0),
 	   m_fpsTimeElapsed(0)
@@ -20,13 +20,13 @@ CTimer::CTimer(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-CTimer::~CTimer(void)
+CTimer::~CTimer()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CTimer::reset(void)
+void CTimer::reset()
 {
    m_fpsTimeElapsed = 0;
    m_fpsFrameCount = 0;
@@ -35,7 +35,7 @@ void CTimer::reset(void)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CTimer::tick(void)
+void CTimer::tick()
 {
    __int64 currTime;
    QueryPerformanceCounter((LARGE_INTEGER*)&currTime);

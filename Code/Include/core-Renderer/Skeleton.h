@@ -5,9 +5,9 @@
 
 #include <string>
 #include "core\Resource.h"
-#include "core-Renderer\RendererObject.h"
-#include "core-Renderer\RendererObjectImpl.h"
 #include "core-Renderer\LitVertex.h"
+#include "core-Renderer\RenderCommand.h"
+#include "core-Renderer\RenderResource.h"
 #include <d3dx9.h>
 #include <vector>
 
@@ -15,26 +15,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Graphics library dependent implementation of the skin vertex weights stream.
- */
-class SkeletonImpl : public RendererObjectImpl
-{
-public:
-   virtual ~SkeletonImpl() {}
-
-   /**
-    * Sets the representation in the graphics device vertex stream.
-    */
-   virtual void setInStream() {}
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
  * A skeleton represents a hierarchy of nodes along with
  * a set of animations that operate on it
  */
-class Skeleton : public Resource, public TRendererObject< SkeletonImpl >
+class Skeleton : public Resource, public RenderResource
 {
    DECLARE_RESOURCE( Skeleton )
 
@@ -107,17 +91,44 @@ public:
     * Returns the weights assigned to a mesh vertices.
     */
    inline const std::vector< VertexWeight >& getVertexWeights() const { return m_weights; }
+};
 
-   /**
-    * Sets the data in the rendering stream. Call this before the mesh gets rendered.
-    */
-   void setInStream();
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Render command that binds a skeleton to a render device.
+ */
+class RCBindSkeleton : public RenderCommand
+{
+private:
+   Skeleton&         m_skeleton;
+
+public:
+   RCBindSkeleton( Skeleton& skeleton ) : m_skeleton( skeleton ) {}
 
    // -------------------------------------------------------------------------
-   // Resource implementation
+   // RenderCommand
    // -------------------------------------------------------------------------
-   void onComponentAdded( Component< ResourcesManager >& component );
-   void onComponentRemoved( Component< ResourcesManager >& component );
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Render command that unbinds a skeleton from a render device.
+ */
+class RCUnbindSkeleton : public RenderCommand
+{
+private:
+   Skeleton&         m_skeleton;
+
+public:
+   RCUnbindSkeleton( Skeleton& skeleton ) : m_skeleton( skeleton ) {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

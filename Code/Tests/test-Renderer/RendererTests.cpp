@@ -25,7 +25,9 @@ namespace // anonymous
 
       void initialize( Renderer& renderer ) {}
 
-      void render() 
+      void deinitialize( Renderer& renderer ) {}
+
+      void render( Renderer& renderer ) 
       {
          char tmpStr[64];
          sprintf_s(tmpStr, 64, "%s - render", m_id.c_str());

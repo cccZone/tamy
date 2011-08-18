@@ -22,24 +22,24 @@ enum RendererOps;
 class TextField : public Overlay, public Observer<Renderer, RendererOps>
 {
 private:
-   Renderer& m_renderer;
-   Font* m_font;
-   std::string m_text;
+   Renderer&         m_renderer;
+   Font*             m_font;
+   std::string       m_text;
 
    // overlay window dimensions
-   float m_screenWidth;
-   float m_screenHeight;
-   float m_x;
-   float m_y;
-   float m_width;
-   float m_height;
-   RECT m_overlaySize;
+   float             m_screenWidth;
+   float             m_screenHeight;
+   float             m_x;
+   float             m_y;
+   float             m_width;
+   float             m_height;
+   RECT              m_overlaySize;
 
-   Color m_color;
+   Color             m_color;
    TextJustification m_justification;
 
 public:
-   TextField(Renderer& renderer);
+   TextField( Renderer& renderer );
    ~TextField();
 
    /**
@@ -47,7 +47,7 @@ public:
     *
     * @param text    text to be displayed
     */
-   void setText(const std::string& text);
+   void setText( const std::string& text );
 
    /**
     * This method sets the size of the overlay.
@@ -59,40 +59,39 @@ public:
     * @param width   field width
     * @param height  field height
     */
-   void setSize(float x, float y, float width, float height);
+   void setSize( float x, float y, float width, float height );
 
    /**
     * This method sets the color in which the text will be rendered.
     * 
     * @param color   color for the text
     */
-   void setColor(const Color& color);
+   void setColor( const Color& color );
 
    /**
     * This method sets the justification for the text in this overlay.
     * 
     * @param justification   text justification
     */
-   void setJustification(TextJustification justification);
+   void setJustification( TextJustification justification );
 
    /**
     * The method sets the font in which the text will be displayed.
     *
     * @param font    font for the text
     */
-   void setFont(Font& font);
+   void setFont( Font& font );
 
    // -------------------------------------------------------------------------
    // Overlay implementation
    // -------------------------------------------------------------------------
-   void render();
+   void render( Renderer& renderer );
 
    // -------------------------------------------------------------------------
    // Observer<Renderer, RendererOps> implementation
    // -------------------------------------------------------------------------
-   void update(Renderer& renderer);
-
-   void update(Renderer& renderer, const RendererOps& operation);
+   void update( Renderer& renderer );
+   void update( Renderer& renderer, const RendererOps& operation );
 
 private:
    void recalculateOverlayRect();

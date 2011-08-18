@@ -68,8 +68,9 @@ void RPHDRNode::onInitialize( RenderingPipelineMechanism& host ) const
    data[ m_hdrPass ]->getParams().m_writeToZBuffer = false;
    data[ m_hdrPass ]->getParams().m_useZBuffer = false;
 
-   data[ m_renderer ] = &host.getRenderer();
-   data[ m_renderer ]->implement< PixelShader >( *data[ m_hdrPass ] );
+   Renderer& renderer = host.getRenderer();
+
+   data[ m_renderer ] = &renderer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -95,7 +96,7 @@ void RPHDRNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
    RuntimeDataBuffer& data = host.data();
 
-   Renderer* renderer = data[ m_renderer ];
+   Renderer& renderer = *data[ m_renderer ];
    PixelShader* hdrPass = data[ m_hdrPass ];
    ShaderTexture* baseTex = data[ m_baseTex ];
    ShaderTexture* bloomedTex = data[ m_bloomedTex ];
@@ -109,25 +110,25 @@ void RPHDRNode::onUpdate( RenderingPipelineMechanism& host ) const
       return;
    }
 
-   hdrPass->setTexture( "original_scene", *baseTex );
-   hdrPass->setTexture( "bloom", *bloomedTex );
+   RCBindPixelShader* hdrPassComm = new ( renderer() ) RCBindPixelShader( *hdrPass );
+   hdrPassComm->setTexture( "original_scene", *baseTex );
+   hdrPassComm->setTexture( "bloom", *bloomedTex );
 
    float maxLumVal = maxLuminanceInput->getValue( data );
    float avgLumVal = avgLuminanceInput->getValue( data );
-   hdrPass->setFloat( "maxLuminance", maxLumVal );
-   hdrPass->setFloat( "avgLuminance", avgLumVal );
+   hdrPassComm->setFloat( "maxLuminance", maxLumVal );
+   hdrPassComm->setFloat( "avgLuminance", avgLumVal );
 
    unsigned int bloomedTexWidth = bloomedTex->getWidth();
    unsigned int bloomedTexHeight = bloomedTex->getHeight();
-   hdrPass->setFloat( "g_rcp_bloom_tex_w", 1.0f / static_cast< float >( bloomedTexWidth ) );
-   hdrPass->setFloat( "g_rcp_bloom_tex_h", 1.0f / static_cast< float >( bloomedTexHeight ) );
-   hdrPass->setFloat( "fExposure", m_exposure );
-   hdrPass->setFloat( "fGaussianScalar", m_gaussMultiplier );
+   hdrPassComm->setFloat( "g_rcp_bloom_tex_w", 1.0f / static_cast< float >( bloomedTexWidth ) );
+   hdrPassComm->setFloat( "g_rcp_bloom_tex_h", 1.0f / static_cast< float >( bloomedTexHeight ) );
+   hdrPassComm->setFloat( "fExposure", m_exposure );
+   hdrPassComm->setFloat( "fGaussianScalar", m_gaussMultiplier );
 
    // render
-   hdrPass->beginRendering();
-   renderQuad( data, *renderer, hdrTarget );
-   hdrPass->endRendering();
+   renderQuad( renderer, hdrTarget );
+   new ( renderer() ) RCUnbindPixelShader( *hdrPass );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

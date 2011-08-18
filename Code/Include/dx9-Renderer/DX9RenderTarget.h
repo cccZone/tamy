@@ -10,42 +10,37 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class DX9Renderer;
-enum DX9GraphResourceOp;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-
-class DX9RenderTarget : public RenderTargetImpl,
-                        public Observer< DX9Renderer, DX9GraphResourceOp >
+class DX9RenderTarget
 {
 private:
-   RenderTarget&        m_renderTarget;
-   DX9Renderer*         m_renderer;
-   IDirect3DTexture9*   m_dxTexture;
+   const  DX9Renderer&     m_renderer;
+   const RenderTarget&     m_renderTarget;
+   IDirect3DTexture9*      m_dxTexture;
 
 public:
-   DX9RenderTarget( RenderTarget& renderTarget );
+   DX9RenderTarget( const DX9Renderer& renderer, const RenderTarget& renderTarget );
    ~DX9RenderTarget();
 
-   // -------------------------------------------------------------------------
-   // RendererObjectImpl implementation
-   // -------------------------------------------------------------------------
-   void initialize( Renderer& renderer );
-
-   // -------------------------------------------------------------------------
-   // RenderTargetImpl implementation
-   // -------------------------------------------------------------------------
-   void* getPlatformSpecific() const;
+   /**
+    * Returns the color of the specified pixel.
+    *
+    * @param pos     pixel position
+    */
    Color getPixel( const D3DXVECTOR2& pos ) const;
 
-   // -------------------------------------------------------------------------
-   // Observer implementation
-   // -------------------------------------------------------------------------
-   void update( DX9Renderer& renderer );
-   void update( DX9Renderer& renderer, const DX9GraphResourceOp& operation );
+   /**
+    * Returns the DirectX texture instance.
+    */
+   inline IDirect3DTexture9* getDxTexture() const { return m_dxTexture; }
+
+   void onLostDevice();
+   void onResetDevice();
 
 private:
-   void createTexture( DX9Renderer& renderer );
+   void createTexture();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

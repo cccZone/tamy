@@ -20,28 +20,6 @@ LineSegments::LineSegments( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void LineSegments::onComponentAdded( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      rendererComp->get().implement< LineSegments >( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void LineSegments::onComponentRemoved( Component< ResourcesManager >& component )
-{
-   ResourceManagerComponent< Renderer >* rendererComp = dynamic_cast< ResourceManagerComponent< Renderer >* >( &component );
-   if ( rendererComp )
-   {
-      setImplementation( NULL );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 
 void LineSegments::onResourceLoaded(ResourcesManager& mgr) 
 {
@@ -97,16 +75,9 @@ void LineSegments::clear()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void LineSegments::rebuild()
+void LineSegments::render( Renderer& renderer )
 {
-   impl().update(m_segments);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void LineSegments::render()
-{
-   impl().render();
+   new ( renderer() ) RCRenderLineSegments( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

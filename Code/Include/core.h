@@ -26,6 +26,7 @@
 #include "core\Point.h"
 #include "core\Stack.h"
 #include "core\RuntimeData.h"
+#include "core\RoundBuffer.h"
 // ----------------------------------------------------------------------------
 // -->Graphs
 // ----------------------------------------------------------------------------
@@ -76,6 +77,7 @@
 #include "core\IProgressObserver.h"
 #include "core\Algorithms.h"
 #include "core\Singleton.h"
+#include "core\IDebugDraw.h"
 
 // ----------------------------------------------------------------------------
 // Resources

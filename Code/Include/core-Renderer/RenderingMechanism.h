@@ -25,9 +25,18 @@ public:
    virtual void initialize( Renderer& renderer ) = 0;
 
    /**
-    * Performs the rendering operation defined by the mechanism.
+    * Deinitializes the mechanism with the renderer that was using it.
+    *
+    * @param renderer
     */
-   virtual void render() = 0;
+   virtual void deinitialize( Renderer& renderer ) = 0;
+
+   /**
+    * Performs the rendering operation defined by the mechanism.
+    *
+    * @param renderer
+    */
+   virtual void render( Renderer& renderer ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

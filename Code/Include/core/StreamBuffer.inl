@@ -8,25 +8,26 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
-StreamBuffer<T>::StreamBuffer(File& file)
-: m_buffer(NULL)
-, m_size(0)
+StreamBuffer<T>::StreamBuffer (File& file )
+: m_buffer( NULL )
+, m_size( 0 )
 {
-   file.seek(0, std::ios_base::end);
+   file.seek( 0, std::ios_base::end );
    unsigned int size = file.tell();
-   file.seek(0, std::ios_base::beg);
+   file.seek( 0, std::ios_base::beg );
 
-   if (size < sizeof(T))
+   if ( size < sizeof(T) )
    {
       m_size = 0;
       m_buffer = new T[1];
    }
    else
    {
-      m_size = (size + (sizeof(T) - 1)) / sizeof(T);
+      m_size = ( size + ( sizeof(T) - 1 ) ) / sizeof(T);
       m_buffer = new T[m_size + 1];
-      memset(m_buffer, 0, m_size * sizeof(T));
-      file.read((byte*)(m_buffer), size);
+      memset( m_buffer, 0, ( m_size + 1 ) * sizeof(T) );
+      std::size_t bytesRead = file.read( ( byte* )( m_buffer ), size );
+
    }
 }
 

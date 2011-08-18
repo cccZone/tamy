@@ -85,11 +85,11 @@
   <ItemGroup>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
-    <ClCompile Include="RenderingPass.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="RenderingPipelineNode.cpp" />
     <ClCompile Include="RenderingPipelineMechanism.cpp" />
     <ClCompile Include="RenderingPipelineSockets.cpp" />
+    <ClCompile Include="RenderResource.cpp" />
     <ClCompile Include="RenderTargetDescriptor.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="RPBlurNode.cpp" />
@@ -103,7 +103,6 @@
     <ClCompile Include="RPPostProcessNode.cpp" />
     <ClCompile Include="RPSceneRenderNode.cpp" />
     <ClCompile Include="RPStartNode.cpp" />
-    <ClCompile Include="SceneRenderingPass.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -133,43 +132,35 @@
     <ClCompile Include="EffectShader.cpp" />
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="SingleTextureMaterial.cpp" />
-    <ClCompile Include="RenderableRepresentation.cpp" />
     <ClCompile Include="RenderingView.cpp" />
-    <ClCompile Include="DefaultAttributeSorter.cpp" />
     <ClCompile Include="SpatialRepresentation.cpp" />
-    <ClCompile Include="SpatialView.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="VertexDescriptions.cpp" />
     <ClCompile Include="PixelShader.cpp" />
-    <ClCompile Include="VisibilityPass.cpp" />
     <ClCompile Include="VoidSockets.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh" />
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh" />
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Luminance.psh" />
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh" />
-    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx" />
-    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh" />
-    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh" />
     <None Include="..\..\Include\core-Renderer\Renderer.inl" />
-    <None Include="..\..\Include\core-Renderer\RendererObject.inl" />
     <None Include="..\..\Include\core-Renderer\Light.inl" />
     <None Include="..\..\Include\core-Renderer\LineSegments.inl" />
     <None Include="..\..\Include\core-Renderer\RenderingPipelineNode.inl" />
+    <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl" />
+    <None Include="..\..\Include\core-Renderer\ShaderParam.inl" />
+    <None Include="..\..\Include\core-Renderer\ShaderRenderCommand.inl" />
     <None Include="..\..\Include\core-Renderer\TriangleMesh.inl" />
-    <None Include="..\..\Include\core-Renderer\AttributeSorterNode.inl" />
-    <None Include="..\..\Include\core-Renderer\LeafAttributeSorter.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FloatSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\Renderable.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RenderingPass.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineMechanism.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderResource.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderResourceStorage.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderState.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPBlurNode.h" />
@@ -182,13 +173,12 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\SceneRenderingPass.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderRenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureEffect.h" />
     <ClInclude Include="..\..\Include\core-Renderer\CompositeRenderingMechanism.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Renderer.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RendererObject.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RendererObjectImpl.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingMechanism.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Camera.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Light.h" />
@@ -223,25 +213,14 @@
     <ClInclude Include="..\..\Include\core-Renderer\TextField.h" />
     <ClInclude Include="..\..\Include\core-Renderer\GeometryResource.h" />
     <ClInclude Include="..\..\Include\core-Renderer\EffectShader.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\EffectAttribute.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Geometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureMaterial.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorter.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RenderableRepresentation.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\AttributeSorterNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\DefaultAttributeSorter.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\LeafAttributeSorter.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\TransparencyAttribute.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\UniqueObjectAttribute.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\CameraContext.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SpatialRepresentation.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\SpatialView.h" />
     <ClInclude Include="..\..\Include\core-Renderer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShader.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\VisibilityPass.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VoidSockets.h" />
   </ItemGroup>
   <ItemGroup>

@@ -13,15 +13,6 @@ CompositeRenderingMechanism::CompositeRenderingMechanism()
 
 CompositeRenderingMechanism::~CompositeRenderingMechanism() 
 {
-   unsigned int count = m_members.size();
-   for (unsigned int i = 0; i < count; ++i)
-   {
-      delete m_members[i];
-   }
-   m_members.clear();
-   m_mechanismsMap.clear();
-
-   m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,9 +35,25 @@ void CompositeRenderingMechanism::initialize( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void CompositeRenderingMechanism::deinitialize( Renderer& renderer )
+{
+   unsigned int count = m_members.size();
+   for (unsigned int i = 0; i < count; ++i)
+   {
+      m_members[i]->deinitialize( renderer );
+      delete m_members[i];
+   }
+   m_members.clear();
+   m_mechanismsMap.clear();
+
+   m_renderer = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void CompositeRenderingMechanism::add( const std::string& name, RenderingMechanism* mechanism )
 {
-   if (mechanism == NULL)
+   if ( mechanism == NULL )
    {
       throw std::invalid_argument("NULL pointer instead a RenderingMechanism instance");
    }
@@ -55,6 +62,7 @@ void CompositeRenderingMechanism::add( const std::string& name, RenderingMechani
    if ( it != m_mechanismsMap.end() )
    {
       // such mechanism already exists - replace it
+      m_members[ it->second ]->deinitialize( *m_renderer );
       delete m_members[ it->second ];
       m_members[ it->second ] = mechanism;
    }
@@ -73,12 +81,12 @@ void CompositeRenderingMechanism::add( const std::string& name, RenderingMechani
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CompositeRenderingMechanism::render()
+void CompositeRenderingMechanism::render( Renderer& renderer )
 {
    unsigned int count = m_members.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      m_members[i]->render();
+      m_members[i]->render( renderer );
    }
 }
 

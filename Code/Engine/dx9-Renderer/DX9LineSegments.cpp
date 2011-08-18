@@ -5,6 +5,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void RCRenderLineSegments::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+   DX9LineSegments* segments = dxRenderer.getLineSegments( m_segments );
+   if ( segments )
+   {
+      segments->render();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 D3DVERTEXELEMENT9 DX9LineSegments::s_vtxDecl[] = 
 {
    {0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
@@ -14,24 +28,23 @@ D3DVERTEXELEMENT9 DX9LineSegments::s_vtxDecl[] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DX9LineSegments::DX9LineSegments(LineSegments& lines)
-: m_lines(lines)
-, m_d3Device(NULL)
-, m_renderer(NULL)
-, m_vertexDecl(NULL)
-, m_vb(NULL)
-, m_segsCount(0)
+DX9LineSegments::DX9LineSegments( const DX9Renderer& renderer, const LineSegments& lines )
+   : m_renderer( renderer )
+   , m_d3Device( renderer.getD3Device() )
+   , m_lines( lines )
+   , m_vertexDecl(NULL)
+   , m_vb(NULL)
+   , m_segsCount(0)
 {
+   m_d3Device.CreateVertexDeclaration( s_vtxDecl, &m_vertexDecl );
+   create();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 DX9LineSegments::~DX9LineSegments()
 {
-   resetVB();
-
-   m_renderer = NULL;
-   m_d3Device = NULL;
+   destroy();
 
    if (m_vertexDecl != NULL)
    {
@@ -45,36 +58,45 @@ DX9LineSegments::~DX9LineSegments()
 
 void DX9LineSegments::render()
 {
-   if ((m_d3Device == NULL) || (m_vb == NULL))
+   if ( m_vb == NULL )
    {
       return;
    }
 
-   m_d3Device->SetStreamSource(0, m_vb, 0, sizeof(LineVertex));
-   m_d3Device->SetVertexDeclaration(m_vertexDecl);
-   m_d3Device->DrawPrimitive(D3DPT_LINELIST, 0, m_segsCount);
+   m_d3Device.SetStreamSource( 0, m_vb, 0, sizeof( LineVertex ) );
+   m_d3Device.SetVertexDeclaration( m_vertexDecl );
+   m_d3Device.DrawPrimitive( D3DPT_LINELIST, 0, m_segsCount );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9LineSegments::update(const std::vector<LineSegment>& segments)
+void DX9LineSegments::onLostDevice()
 {
-   if ((m_d3Device == NULL) || (m_renderer == NULL))
-   {
-      return;
-   }
+   destroy();
+}
 
-   resetVB();
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9LineSegments::onResetDevice()
+{
+   create();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9LineSegments::create()
+{
+   const std::vector<LineSegment>& segments = m_lines.getSegments();
    m_segsCount = segments.size();
    if (m_segsCount == 0)
    {
       return;
    }
 
-   m_vb = m_renderer->createVertexBuffer(m_segsCount * 2 * sizeof(DX9LineSegments::LineVertex), 
+   m_vb = m_renderer.createVertexBuffer( m_segsCount * 2 * sizeof( DX9LineSegments::LineVertex ), 
       0, 
       D3DFVF_XYZ | D3DFVF_DIFFUSE,
-      D3DPOOL_MANAGED);
+      D3DPOOL_MANAGED );
 
    DX9LineSegments::LineVertex* pVertex = NULL;
    HRESULT res = m_vb->Lock( 0, 0, (void**)&pVertex, 0 );
@@ -107,25 +129,9 @@ void DX9LineSegments::update(const std::vector<LineSegment>& segments)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9LineSegments::initialize(Renderer& renderer)
+void DX9LineSegments::destroy()
 {
-   m_renderer = dynamic_cast<DX9Renderer*> (&renderer);
-   if (m_renderer == NULL)
-   {
-      throw std::runtime_error("This class works only with DX9Renderer instance");
-   }
-
-   m_d3Device = &(m_renderer->getD3Device());
-   m_d3Device->CreateVertexDeclaration(s_vtxDecl, &m_vertexDecl);
-
-   resetVB();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DX9LineSegments::resetVB()
-{
-   if (m_vb != NULL)
+   if ( m_vb != NULL )
    {
       m_vb->Release();
       m_vb = NULL;

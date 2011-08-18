@@ -1,14 +1,16 @@
 #include "core-Renderer\Geometry.h"
 #include "core-Renderer\GeometryResource.h"
 #include "core-Renderer\Camera.h"
+#include "core-Renderer\RenderState.h"
 #include "core-MVC\SpatialEntity.h"
 #include "core-MVC.h"
 #include "core.h"
+#include <algorithm>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT(Geometry, Entity)
+BEGIN_ABSTRACT_OBJECT( Geometry, SpatialEntity )
    PROPERTY_EDIT( "resource", GeometryResource*, m_resource )
 END_OBJECT()
 
@@ -16,19 +18,15 @@ END_OBJECT()
 
 Geometry::Geometry()
    : m_resource(NULL)
-   , m_camera( NULL )
    , m_parentNode( NULL )
-   , m_visible( true )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Geometry::Geometry(GeometryResource& resource)
+Geometry::Geometry( GeometryResource& resource )
    : m_resource( &resource )
-   , m_camera( NULL )
    , m_parentNode( NULL )
-   , m_visible( true )
 {
 }
 
@@ -37,17 +35,44 @@ Geometry::Geometry(GeometryResource& resource)
 Geometry::~Geometry()
 {
    m_resource = NULL;
+   m_states.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Geometry::render()
+void Geometry::render( Renderer& renderer )
 {
-   if ( m_resource && m_camera && m_parentNode )
+   if ( m_resource )
    {
-      onPreRender();
-      m_resource->render();
-      onPostRender();
+      onPreRender( renderer );
+      m_resource->render( renderer );
+      onPostRender( renderer );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Geometry::addState( RenderState& state )
+{
+   // we don't want duplicates - so look for one
+   RenderStatesVec::const_iterator it = std::find( m_states.begin(), m_states.end(), &state );
+   if ( it == m_states.end() )
+   {
+      // add the state
+      m_states.push_back( &state );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Geometry::removeState( RenderState& state )
+{
+   // find the position of the requested state
+   RenderStatesVec::const_iterator it = std::find( m_states.begin(), m_states.end(), &state );
+   if ( it != m_states.end() )
+   {
+      // remove the state
+      m_states.erase( it );
    }
 }
 
@@ -93,21 +118,6 @@ std::string Geometry::getGeometryName() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Geometry::onAttached( Model& hostModel ) 
-{
-   m_camera = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Geometry::onDetached( Model& hostModel ) 
-{
-   m_camera = NULL;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-
 void Geometry::onAttached( Entity& parent )
 {
    m_parentNode = dynamic_cast< SpatialEntity* >( &parent );
@@ -122,24 +132,13 @@ void Geometry::onDetached( Entity& parent )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Geometry::onComponentAdded( Component< Model >& component )
-{
-   ModelComponent< Camera >* comp = dynamic_cast< ModelComponent< Camera >* >( &component );
-   if ( comp )
-   {
-      m_camera = &comp->get();
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void Geometry::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
    if ( isAttached() )
    {
-      m_parentNode = dynamic_cast< SpatialEntity *>( &getParent() );
+      m_parentNode = dynamic_cast< SpatialEntity *>( &getParentNode() );
    }
 }
 

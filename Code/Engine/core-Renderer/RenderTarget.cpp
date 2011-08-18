@@ -16,6 +16,8 @@ RenderTarget::RenderTarget( RenderTargetSizePolicy* sizePolicy, TextureUsage usa
 , m_width( 0 )
 , m_height( 0 )
 {
+   setRenderStateId( UniqueObject::getIndex() );
+
    if ( m_sizePolicy )
    {
       m_sizePolicy->initialize( *this );
@@ -32,31 +34,25 @@ RenderTarget::~RenderTarget()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void* RenderTarget::getPlatformSpecific() const
-{
-   return impl().getPlatformSpecific();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Color RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
-{
-   if ( !m_isReadable )
-   {
-      throw std::logic_error( "This render target does not support reading operations" );
-   }
-
-   return impl().getPixel( pos );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void RenderTarget::resize( unsigned int width, unsigned int height ) 
 { 
    m_width = width; 
    m_height = height;
    
    notify( STO_RESIZE );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderTarget::onPreRender( Renderer& renderer )
+{
+   new ( renderer() ) RCCreateRenderTarget( *this );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderTarget::onPostRender( Renderer& renderer )
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,7 +97,6 @@ void RTSPDynamic::initialize( RenderTarget& target )
    unsigned int height = ( unsigned int )( m_renderer.getViewportHeight() * m_heightScale );
 
    m_hostTarget->resize( width, height );
-   m_renderer.implement< RenderTarget >( *m_hostTarget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -114,7 +109,6 @@ void RTSPDynamic::update( Renderer& renderer )
       unsigned int height = ( unsigned int )( renderer.getViewportHeight() * m_heightScale );
 
       m_hostTarget->resize( width, height );
-      renderer.implement< RenderTarget >( *m_hostTarget );
    }
 }
 
@@ -128,7 +122,6 @@ void RTSPDynamic::update( Renderer& renderer, const RendererOps& operation )
       unsigned int height = ( unsigned int )( renderer.getViewportHeight() * m_heightScale );
 
       m_hostTarget->resize( width, height );
-      renderer.implement< RenderTarget >( *m_hostTarget );
    }
 }
 
@@ -175,7 +168,6 @@ void RTSPTexture::initialize( RenderTarget& target )
    m_hostTarget = &target;
 
    m_hostTarget->resize( m_texture.getWidth(), m_texture.getHeight() );
-   m_renderer.implement< RenderTarget >( *m_hostTarget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -185,7 +177,6 @@ void RTSPTexture::update( ShaderTexture& texture )
    if ( m_hostTarget )
    {
       m_hostTarget->resize( m_texture.getWidth(), m_texture.getHeight() );
-      m_renderer.implement< RenderTarget >( *m_hostTarget );
    }
 }
 
@@ -196,8 +187,34 @@ void RTSPTexture::update( ShaderTexture& texture, const ShaderTextureOps& operat
    if ( operation == STO_RESIZE && m_hostTarget )
    {
       m_hostTarget->resize( m_texture.getWidth(), m_texture.getHeight() );
-      m_renderer.implement< RenderTarget >( *m_hostTarget );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+RCActivateRenderTarget::RCActivateRenderTarget( RenderTarget* renderTarget ) 
+   : m_renderTarget( renderTarget ) 
+{}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RCActivateRenderTarget::execute( Renderer& renderer )
+{
+   renderer.setRenderTarget( m_renderTarget );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+RCGetPixel::RCGetPixel( RenderTarget& renderTarget, const D3DXVECTOR2& queryPos, Color& outColorVal )
+   : m_renderTarget( renderTarget )
+   , m_queryPos( queryPos )
+   , m_outColorVal( outColorVal )
+{
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

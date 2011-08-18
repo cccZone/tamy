@@ -5,8 +5,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TextField::TextField(Renderer& renderer)
-: m_renderer(renderer)
+TextField::TextField( Renderer& renderer )
+: m_renderer( renderer )
 , m_font(NULL)
 , m_screenWidth(1)
 , m_screenHeight(1)
@@ -17,7 +17,7 @@ TextField::TextField(Renderer& renderer)
 , m_color( 1.f, 1.f, 1.f, 1.f )
 , m_justification(TJ_LEFT)
 {
-   m_renderer.attachObserver(*this);
+   m_renderer.attachObserver( *this );
    recalculateOverlayRect();
 }
 
@@ -25,19 +25,19 @@ TextField::TextField(Renderer& renderer)
 
 TextField::~TextField()
 {
-   m_renderer.detachObserver(*this);
+   m_renderer.detachObserver( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextField::setText(const std::string& text)
+void TextField::setText( const std::string& text )
 {
    m_text = text;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextField::setSize(float x, float y, float width, float height)
+void TextField::setSize( float x, float y, float width, float height )
 {
    m_x = x;
    m_y = y;
@@ -48,38 +48,38 @@ void TextField::setSize(float x, float y, float width, float height)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextField::setColor(const Color& color)
+void TextField::setColor( const Color& color )
 {
    m_color = color;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextField::setJustification(TextJustification justification)
+void TextField::setJustification( TextJustification justification )
 {
    m_justification = justification;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextField::setFont(Font& font)
+void TextField::setFont( Font& font )
 {
    m_font = &font;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextField::render()
+void TextField::render( Renderer& renderer )
 {
    if (m_font != NULL)
    {
-      m_font->drawText(m_text, m_overlaySize, m_justification, m_color);
+      new ( renderer() ) RCDrawText( *m_font, m_text, m_overlaySize, m_justification, m_color );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextField::update(Renderer& renderer)
+void TextField::update( Renderer& renderer )
 {
    m_screenWidth = (float)renderer.getViewportWidth();
    m_screenHeight = (float)renderer.getViewportHeight();
@@ -88,7 +88,7 @@ void TextField::update(Renderer& renderer)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextField::update(Renderer& renderer, const RendererOps& operation)
+void TextField::update( Renderer& renderer, const RendererOps& operation )
 {
    if (operation == RO_RESIZE_VIEWPORT)
    {

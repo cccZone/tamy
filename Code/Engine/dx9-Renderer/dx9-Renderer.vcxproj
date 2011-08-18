@@ -62,8 +62,8 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Lib>
-      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxguid.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)\Lib\x86;$(OPENAL_DIR)\libs\Win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(DXSDK_DIR)\Lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -85,38 +85,61 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DX9DebugDrawCommands.cpp" />
+    <ClCompile Include="DX9EffectsResourcesStorage.cpp" />
+    <ClCompile Include="DX9FontResourcesStorage.cpp" />
     <ClCompile Include="DX9FullscreenQuad.cpp" />
+    <ClCompile Include="DX9LineSegmentsResourcesStorage.cpp" />
     <ClCompile Include="DX9PixelShader.cpp" />
+    <ClCompile Include="DX9PixelShaderResourcesStorage.cpp" />
     <ClCompile Include="DX9Renderer.cpp" />
-    <ClCompile Include="DX9RenderingPass.cpp" />
     <ClCompile Include="DX9RenderingPipelineMechanism.cpp" />
     <ClCompile Include="DX9RenderTarget.cpp" />
     <ClCompile Include="DX9EffectShader.cpp" />
+    <ClCompile Include="DX9RenderTargetResourcesStorage.cpp" />
+    <ClCompile Include="DX9ShaderParamBool.cpp" />
+    <ClCompile Include="DX9ShaderParamFloat.cpp" />
+    <ClCompile Include="DX9ShaderParamFloatArray.cpp" />
+    <ClCompile Include="DX9ShaderParamInt.cpp" />
+    <ClCompile Include="DX9ShaderParamIntArray.cpp" />
+    <ClCompile Include="DX9ShaderParamMtx.cpp" />
+    <ClCompile Include="DX9ShaderParamMtxArray.cpp" />
+    <ClCompile Include="DX9ShaderParamRenderTarget.cpp" />
+    <ClCompile Include="DX9ShaderParamString.cpp" />
+    <ClCompile Include="DX9ShaderParamVec4.cpp" />
+    <ClCompile Include="DX9ShaderParamVec4Array.cpp" />
     <ClCompile Include="DX9Skeleton.cpp" />
+    <ClCompile Include="DX9SkeletonResourcesStorage.cpp" />
     <ClCompile Include="DX9Texture.cpp" />
     <ClCompile Include="DX9LineSegments.cpp" />
+    <ClCompile Include="DX9TextureResourcesStorage.cpp" />
     <ClCompile Include="DX9TriangleMesh.cpp" />
     <ClCompile Include="DX9Initializer.cpp" />
     <ClCompile Include="DX9Font.cpp" />
+    <ClCompile Include="DX9TriangleMeshResourcesStorage.cpp" />
     <ClCompile Include="DX9VertexShader.cpp" />
+    <ClCompile Include="DX9VertexShaderResourcesStorage.cpp" />
     <ClCompile Include="DXErrorParser.cpp" />
+    <ClCompile Include="DX9ShaderParamTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9FullscreenQuad.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9EffectsResourcesStorage.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9FontResourcesStorage.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegmentsResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShader.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShaderResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h" />
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderingPass.h" />
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderingPipelineMechanism.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderTarget.h" />
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9EffectShader.h" />
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Skeleton.h" />
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Texture.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderTargetResourcesStorage.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9SkeletonResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegments.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9TextureResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9TriangleMesh.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Initializer.h" />
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9Font.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9TriangleMeshResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShader.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DXErrorParser.h" />
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +147,29 @@
       <Project>{dbcd9f77-4064-4db9-ac18-516ed35b24ce}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Luminance.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
