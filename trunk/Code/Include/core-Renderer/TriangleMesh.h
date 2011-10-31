@@ -53,6 +53,8 @@ public:
                  const std::vector<LitVertex>& vertices,
                  const std::vector<Face>& faces );
 
+   ~TriangleMesh();
+
    /**
     * Returns an array of vertices of the mesh (in their generic form.)
     *

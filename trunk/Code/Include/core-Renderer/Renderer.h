@@ -229,7 +229,6 @@ private:
     */
    void executeCommands();
 
-
 private:
    // ---------------- Renderer states ---------------
 

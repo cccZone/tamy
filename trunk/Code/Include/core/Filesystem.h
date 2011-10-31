@@ -183,6 +183,14 @@ public:
    // Utility methods
    // -------------------------------------------------------------------------
    /**
+    * Normalizes the file path - setting proper directories separators etc.
+    *
+    * @param fileName
+    * @param outFileName
+    */
+   static void normalize( const std::string& fileName, std::string& outFileName );
+
+   /**
     * Extracts an extension of the specified filename.
     *
     * @param fileName
@@ -195,6 +203,21 @@ public:
     * @param fileName   path to a file along with that file name.
     */
    static std::string extractDir( const std::string& fileName );
+
+   /**
+    * The method allows to move up in the directories hierarchy by the specified
+    * amount of levels.
+    *
+    * i.e.: A call like:
+    *    leaveDir( "d:/dirA/dirB/dirC/dirD", 2, outDir );
+    * initializes outDir with:
+    *    "d:/dirA/dirB"
+    *
+    * @param directory
+    * @param levels
+    * @param outDirectory
+    */
+   static void leaveDir( const std::string& directory, unsigned int levels, std::string& outDirectory );
 
    /**
     * Just as the 'extractDir' method extracts a name of a directory

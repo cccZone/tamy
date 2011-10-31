@@ -23,7 +23,7 @@ class SingletonsManager;
 /**
  * An image that can be drawn on a rendered surface.
  */
-class Texture : public Resource, public RenderState, public ShaderTexture, public UniqueObject< Texture >, public RenderResource
+class Texture : public Resource, public TRenderState< Texture >, public ShaderTexture, public UniqueObject< Texture >, public RenderResource
 {
    DECLARE_RESOURCE( Texture )
 
@@ -61,6 +61,8 @@ public:
    // -------------------------------------------------------------------------
    void onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
+   bool onEquals( const Texture& rhs ) const;
+   bool onLess( const Texture& rhs ) const;
 
    // -------------------------------------------------------------------------
    // ShaderTexture implementation

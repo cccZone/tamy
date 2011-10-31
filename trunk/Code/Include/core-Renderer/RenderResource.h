@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Renderer;
+class IRenderResourceStorage;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,9 +21,11 @@ class Renderer;
 class RenderResource
 {
 private:
-   std::vector< int >         m_resourceId;
+   std::vector< IRenderResourceStorage* >    m_hostStorage;
+   std::vector< int >                        m_resourceId;
 
 public:
+   virtual ~RenderResource();
 
    /**
     * Returns a resource id identifying a resource managed by the specified renderer.
@@ -35,9 +38,15 @@ public:
     * Assigns an id of the resource managed by the specified renderer.
     *
     * @param renderer
+    * @param hostStorage
     * @param id
     */
-   void setRenderResourceId( const Renderer& renderer, int id );
+   void setRenderResourceId( const Renderer& renderer, IRenderResourceStorage& hostStorage, int id );
+
+   /**
+    * Called when the resource is being flushed out from the storage ( i.e. when the renderer is being deleted )
+    */
+   void onRenderResourceReleased( const Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

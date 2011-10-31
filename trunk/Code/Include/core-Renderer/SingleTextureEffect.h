@@ -24,7 +24,7 @@ class ResourcesManager;
 * This effect will render the geometry using a single texture
 * and a material definition.
 */
-class SingleTextureEffect : public Entity, public RenderState
+class SingleTextureEffect : public Entity, public TRenderState< SingleTextureEffect >
 {
    DECLARE_CLASS( SingleTextureEffect )
 
@@ -61,6 +61,8 @@ public:
    // -------------------------------------------------------------------------
    void onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
+   bool onEquals( const SingleTextureEffect& rhs ) const;
+   bool onLess( const SingleTextureEffect& rhs ) const;
 
 protected:
    // -------------------------------------------------------------------------

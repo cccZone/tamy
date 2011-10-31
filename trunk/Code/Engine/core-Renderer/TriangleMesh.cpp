@@ -31,6 +31,13 @@ TriangleMesh::TriangleMesh( const std::string& name,
 
 ///////////////////////////////////////////////////////////////////////////////
 
+TriangleMesh::~TriangleMesh()
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void TriangleMesh::onResourceLoaded(ResourcesManager& mgr)
 {
    unsigned int verticesCount = m_vertices.size();

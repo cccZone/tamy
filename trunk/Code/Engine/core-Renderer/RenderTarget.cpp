@@ -16,8 +16,6 @@ RenderTarget::RenderTarget( RenderTargetSizePolicy* sizePolicy, TextureUsage usa
 , m_width( 0 )
 , m_height( 0 )
 {
-   setRenderStateId( UniqueObject::getIndex() );
-
    if ( m_sizePolicy )
    {
       m_sizePolicy->initialize( *this );
@@ -53,6 +51,20 @@ void RenderTarget::onPreRender( Renderer& renderer )
 
 void RenderTarget::onPostRender( Renderer& renderer )
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool RenderTarget::onEquals( const RenderTarget& rhs ) const
+{
+   return getIndex() == rhs.getIndex();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool RenderTarget::onLess( const RenderTarget& rhs ) const
+{
+   return getIndex() < rhs.getIndex();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

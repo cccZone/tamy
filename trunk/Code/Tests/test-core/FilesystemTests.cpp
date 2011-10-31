@@ -79,3 +79,71 @@ TEST(Filesystem, extractingPathParts)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST( Filesystem, leaveDir )
+{
+   std::string dirWithSlash( "/ola/ula/" );
+   std::string outDir;
+
+   Filesystem::leaveDir( dirWithSlash, 0, outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ola/ula" ), outDir );
+
+   Filesystem::leaveDir( dirWithSlash, 1, outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ola" ), outDir );
+
+   Filesystem::leaveDir( dirWithSlash, 2, outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "" ), outDir );
+
+   Filesystem::leaveDir( dirWithSlash, 5, outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "" ), outDir );
+
+
+   std::string dirWithoutSlash( "/ola/ula" );
+   Filesystem::leaveDir( dirWithoutSlash, 0, outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ola/ula" ), outDir );
+
+   Filesystem::leaveDir( dirWithoutSlash, 1, outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ola" ), outDir );
+
+   Filesystem::leaveDir( dirWithoutSlash, 2, outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "" ), outDir );
+
+   Filesystem::leaveDir( dirWithoutSlash, 5, outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "" ), outDir );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST( Filesystem, normalize )
+{
+   std::string outDir;
+
+   Filesystem::normalize( "", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "" ), outDir );
+
+   Filesystem::normalize( "/", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/" ), outDir );
+
+   Filesystem::normalize( "/dupa", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/dupa" ), outDir );
+
+   Filesystem::normalize( "/ula/ala.txt", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ula/ala.txt" ), outDir );
+
+   Filesystem::normalize( "\\", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/" ), outDir );
+
+   Filesystem::normalize( "\\dupa", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/dupa" ), outDir );
+
+   Filesystem::normalize( "\\ula\\ala.txt", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ula/ala.txt" ), outDir );
+
+   Filesystem::normalize( "ala\\ula\\ala.txt", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "ala/ula/ala.txt" ), outDir );
+
+   Filesystem::normalize( "\\ala\\ula\\ala.txt", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ala/ula/ala.txt" ), outDir );
+}
+
+///////////////////////////////////////////////////////////////////////////////
