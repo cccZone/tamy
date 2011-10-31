@@ -67,6 +67,7 @@ DX9Renderer::~DX9Renderer()
    unsigned int count = m_storages.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
+      m_storages[i]->clear( *this );
       delete m_storages[i];
    }
    m_storages.clear();

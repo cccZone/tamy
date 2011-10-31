@@ -107,3 +107,17 @@ void SingleTextureMaterial::onComponentAdded( Component< Model >& component )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+bool SingleTextureMaterial::onEquals( const SingleTextureMaterial& rhs ) const
+{
+   return ( m_texture == rhs.m_texture ) && ( m_material == rhs.m_material );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool SingleTextureMaterial::onLess( const SingleTextureMaterial& rhs ) const
+{
+   return( m_texture < rhs.m_texture ) && ( &m_material < &rhs.m_material );
+}
+
+///////////////////////////////////////////////////////////////////////////////

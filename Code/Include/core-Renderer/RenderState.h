@@ -14,9 +14,6 @@ class Renderer;
  */
 class RenderState
 {
-private:
-   unsigned long     m_rendereStateId;
-
 public:
    virtual ~RenderState() {}
 
@@ -25,14 +22,14 @@ public:
     *
     * @param rhs     other state
     */
-   bool operator==( const RenderState& rhs ) const { return m_rendereStateId == rhs.m_rendereStateId; }
+   virtual bool equals( const RenderState& rhs ) const = 0;
 
    /**
     * Compares two states together.
     *
     * @param rhs     other state
     */
-   bool operator<( const RenderState& rhs ) const { return m_rendereStateId < rhs.m_rendereStateId; }
+   virtual bool less( const RenderState& rhs ) const = 0;
 
    /**
     * Called before the geometry rendering - sets the render state on the device.
@@ -47,19 +44,46 @@ public:
     * @param renderer
     */
    virtual void onPostRender( Renderer& renderer ) = 0;
+};
 
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Type specific render state.
+ */
+template< typename T >
+class TRenderState : public RenderState
+{
+   // TODO: switch dynamic_casts to RTTI once the functionality is stable
+
+public:
+   // -------------------------------------------------------------------------
+   // RenderStat implementation
+   // -------------------------------------------------------------------------
+   inline bool equals( const RenderState& rhs ) const
+   {
+      const T* typedRhs = dynamic_cast< const T* >( &rhs );
+      if ( typedRhs == NULL )
+      {
+         return false;
+      }
+
+      return onEquals( static_cast< const T& >( rhs ) );
+   }
+
+   inline bool less( const RenderState& rhs ) const
+   {
+      const T* typedRhs = dynamic_cast< const T* >( &rhs );
+      if ( typedRhs == NULL )
+      {
+         return this < &rhs;
+      }
+
+      return onLess( static_cast< const T& >( rhs ) );
+   }
 protected:
-   /**
-    * Constructor.
-    */
-   RenderState() : m_rendereStateId( 0 ) {}
-
-   /**
-    * Sets the render state id.
-    *
-    * @param id
-    */
-   inline void setRenderStateId( unsigned long id ) { m_rendereStateId = id; }
+   virtual bool onEquals( const T& rhs ) const = 0;
+   virtual bool onLess( const T& rhs ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,7 +96,7 @@ class StateComparator
 public:
    inline bool operator()( const RenderState* lhs, const RenderState* rhs ) const
    {
-      return *lhs < *rhs;
+      return lhs->less( *rhs );
    }
 };
 

@@ -82,6 +82,20 @@ void SingleTextureEffect::onPostRender( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool SingleTextureEffect::onEquals( const SingleTextureEffect& rhs ) const
+{
+   return ( m_texture == rhs.m_texture ) && ( m_material == rhs.m_material );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool SingleTextureEffect::onLess( const SingleTextureEffect& rhs ) const
+{
+   return ( m_texture < rhs.m_texture ) && ( &m_material < &rhs.m_material );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void SingleTextureEffect::onAttached( Entity& parent )
 {
    Geometry* geometry = dynamic_cast< Geometry* >( &parent );

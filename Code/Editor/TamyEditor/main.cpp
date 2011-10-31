@@ -49,7 +49,21 @@ int main(int argc, char *argv[])
 
    registerAssertCallback( &AssertDialog::createDialog );
 
-   TamyEditor w( a, "D:/Docs/Projects/Tamy/Assets/" );
+   // get the directory the application was started from and acquire path to the data repository
+   char szDirectory[ MAX_PATH ];
+   if( !::GetCurrentDirectoryA( sizeof( szDirectory ) - 1, szDirectory ) )
+   {
+      return -1;
+   }
+
+   // the application is started from Build\$(ProjectName)\$(Configuration)\ subdir - we have to escape
+   // from there, and there should be our Assets directory
+   std::string assetsDir;
+   Filesystem::normalize( szDirectory, assetsDir ); 
+   Filesystem::leaveDir( assetsDir, 3, assetsDir ); 
+   assetsDir += "/Assets/";
+
+   TamyEditor w( a, assetsDir.c_str() );
 
    // start the application
    w.show();

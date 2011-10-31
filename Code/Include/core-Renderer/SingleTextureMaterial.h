@@ -23,7 +23,7 @@ class Texture;
  * An atomic object that can be rendered Such an object consists of geometry
  * and effects that render the object in a particular way.
  */
-class SingleTextureMaterial : public Entity, public RenderState
+class SingleTextureMaterial : public Entity, public TRenderState< SingleTextureMaterial >
 {
    DECLARE_CLASS( SingleTextureMaterial )
 
@@ -58,6 +58,8 @@ public:
    // -------------------------------------------------------------------------
    void onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
+   bool onEquals( const SingleTextureMaterial& rhs ) const;
+   bool onLess( const SingleTextureMaterial& rhs ) const;
 
 protected:
    // -------------------------------------------------------------------------

@@ -223,6 +223,58 @@ std::string Filesystem::extractDir( const std::string& fileName )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Filesystem::normalize( const std::string& fileName, std::string& outFileName )
+{
+   outFileName = "";
+
+   int lastSlash = 0;
+   int nextSlash = fileName.find_first_of( "\\" );
+
+   while( (std::size_t)nextSlash != std::string::npos )
+   {
+      outFileName += fileName.substr( lastSlash, nextSlash - lastSlash );
+      outFileName += "/";
+
+      lastSlash = nextSlash + 1;
+      nextSlash = fileName.find_first_of( "\\", lastSlash );
+   }
+
+   outFileName += fileName.substr( lastSlash, fileName.length() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::leaveDir( const std::string& directory, unsigned int levels, std::string& outDirectory )
+{
+   // first - remove the last slash, if any's appended
+   std::size_t lastSlash = directory.find_last_of( "/" );
+   if ( lastSlash == directory.length() - 1 )
+   {
+      outDirectory = directory.substr( 0, directory.length() - 1 );
+   }
+   else
+   {
+      outDirectory = directory;
+   }
+
+   // now remove the proper amount of directories in the path
+   while( levels > 0 )
+   {
+      std::size_t lastSlash = outDirectory.find_last_of( "/" );
+      if ( lastSlash == std::string::npos )
+      {
+         // the name doesn't contain any slash - therefore there's no dir
+         // definition in the path
+         return;
+      }
+
+      outDirectory = outDirectory.substr( 0, lastSlash );
+      --levels;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 std::string Filesystem::extractNodeName( const std::string& fileName )
 {
    std::size_t lastSlash = fileName.find_last_of( "/" );

@@ -108,18 +108,19 @@ namespace // anonymous
 
    // -------------------------------------------------------------------------
 
-   class RenderStateMock : public RenderState
+   class RenderStateMock : public TRenderState< RenderStateMock >
    {
    private:
       std::string    m_preId;
       std::string    m_postId;
+      int            m_rsId;
 
    public:
       RenderStateMock( const std::string& id ) 
          : m_preId( std::string( "set RS " ) + id )
          , m_postId( std::string( "reset RS " ) + id )
       {
-         setRenderStateId( atoi( id.c_str() ) );
+         m_rsId = atoi( id.c_str() );
       }
 
       void onPreRender( Renderer& renderer )
@@ -130,6 +131,16 @@ namespace // anonymous
       void onPostRender( Renderer& renderer )
       {
          new ( renderer() ) RenderingCommandMock( m_postId );
+      }
+
+      bool onEquals( const RenderStateMock& rhs ) const
+      {
+         return m_rsId == rhs.m_rsId;
+      }
+
+      bool onLess( const RenderStateMock& rhs ) const
+      {
+         return m_rsId < rhs.m_rsId;
       }
    };
 }
@@ -197,3 +208,71 @@ TEST( RenderingView, statesBatching )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+TEST( RenderingView, manySingleStatesBatching )
+{
+   RenderStateMock state1( "1" );
+   RenderStateMock state2( "2" );
+   RenderStateMock state3( "3" );
+   RenderStateMock state4( "4" );
+
+   GeometryMock* g1 = new GeometryMock( "1" );
+   GeometryMock* g2 = new GeometryMock( "2" );
+   GeometryMock* g3 = new GeometryMock( "3" );
+   GeometryMock* g4 = new GeometryMock( "4" );
+
+   g1->addState( state1 );
+   g2->addState( state2 );
+   g3->addState( state3 );
+   g4->addState( state3 );
+
+   Model model;
+   model.add( g1 );
+   model.add( g2 );
+   model.add( g3 );
+   model.add( g4 );
+
+   // setup the renderer
+   RendererMock renderer;
+   renderer.setMechanism( new RenderingMechanismMock( model ) );
+
+   // move the camera so that the entire scene is visible
+   D3DXMatrixTranslation( &renderer.getActiveCamera().accessLocalMtx(), 0, 0, -10 );
+
+   // render the scene
+   renderer.render();
+   CPPUNIT_ASSERT_EQUAL( std::string( "set RS 1;RenderGeometry_1;reset RS 1;set RS 2;RenderGeometry_2;reset RS 2;set RS 3;RenderGeometry_4;RenderGeometry_3;reset RS 3;" ), renderer.m_seqLog );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+TEST( RenderingView, simpleMultipleStatesBatching )
+{
+   RenderStateMock state1( "1" );
+   RenderStateMock state2( "2" );
+
+   GeometryMock* g1 = new GeometryMock( "1" );
+   GeometryMock* g2 = new GeometryMock( "2" );
+
+   g1->addState( state1 );
+   g1->addState( state2 );
+   g2->addState( state2 );
+   g2->addState( state1 );
+
+   Model model;
+   model.add( g1 );
+   model.add( g2 );
+
+   // setup the renderer
+   RendererMock renderer;
+   renderer.setMechanism( new RenderingMechanismMock( model ) );
+
+   // move the camera so that the entire scene is visible
+   D3DXMatrixTranslation( &renderer.getActiveCamera().accessLocalMtx(), 0, 0, -10 );
+
+   // render the scene
+   renderer.render();
+   CPPUNIT_ASSERT_EQUAL( std::string( "set RS 1;set RS 2;RenderGeometry_2;RenderGeometry_1;reset RS 2;reset RS 1;" ), renderer.m_seqLog );
+}
+
+///////////////////////////////////////////////////////////////////////////////

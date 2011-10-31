@@ -104,6 +104,8 @@ void RenderingView::resetContents()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// TODO: create the node in a memory pool - will be much faster
+
 RenderingView::StateTreeNode* RenderingView::buildStateTree( const Array< SpatialRepresentation* >& visibleElems ) const
 {
    StateTreeNode* root = new StateTreeNode( NULL );
@@ -117,38 +119,36 @@ RenderingView::StateTreeNode* RenderingView::buildStateTree( const Array< Spatia
 
       // states span into the tree depth - so each branch is a unique state,
       // and its leaves contain geometry to render
+
+      // find the child node for the state of the added element
       StateTreeNode* currNode = root;
       unsigned int statesCount = states.size();
-      for( unsigned int j = 0; j < statesCount;  )
+
+      for( unsigned int j = 0; j < statesCount; ++j )
       {
-         if ( currNode->compareState( states[j] ) )
+         RenderState* checkedState = states[j];
+
+         // get the child of the current node, and if there's none - create one
+         if ( currNode->m_child == NULL )
          {
-            // state of this node matches that of the checked state - so go deeper with the tree exploration
-            if ( currNode->m_child == NULL )
-            {
-               // create it if necessary
-               currNode->m_child = new StateTreeNode( NULL ); 
-            }
-            currNode = currNode->m_child;
-            ++j; // check the next state
+            currNode->m_child = new StateTreeNode( NULL );
          }
-         else
+         currNode = currNode->m_child;
+
+
+         // check the siblings and look for a similar state
+         StateTreeNode* prevNode = currNode;
+         while ( currNode && currNode->compareState( checkedState ) == false )
          {
-            // state of this node doesn't match the checked state - check the sibling, and keep checking
-            // until you either find a match, or you need to create a brand new one
-            while( currNode->m_sibling != NULL && currNode->m_sibling->compareState( states[j] ) )
-            {
-               currNode = currNode->m_sibling;
-            }
-            
-            if ( currNode->m_sibling == NULL )
-            {
-               // ok - we went out of siblings - create a new one
-               currNode->m_sibling = new StateTreeNode( states[j] );
-               currNode = currNode->m_sibling;
-            }
-            
-            ++j;
+            prevNode = currNode;
+            currNode = currNode->m_sibling;
+         }
+
+         if ( currNode == NULL )
+         {
+            // there is no node with a matching state - create a new one
+            prevNode->m_sibling = new StateTreeNode( checkedState );
+            currNode = prevNode->m_sibling;
          }
       }
 
@@ -225,7 +225,7 @@ bool RenderingView::StateTreeNode::compareState( RenderState* state )
    }
    else
    {
-      return *m_state == *state;
+      return m_state->equals( *state );
    }
 }
 

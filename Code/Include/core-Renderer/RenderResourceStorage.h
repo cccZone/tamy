@@ -5,7 +5,12 @@
 
 #include "core\Delegate.h"
 #include <vector>
+#include <list>
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -13,6 +18,18 @@ class IRenderResourceStorage
 {
 public:
    virtual ~IRenderResourceStorage() {}
+
+   /**
+    * Clears the storage, deleting all objects in it.
+    */
+   virtual void clear( const Renderer& renderer ) = 0;
+
+   /**
+    * Removes a render resource from the storage.
+    *
+    * @param resourceId
+    */
+   virtual void removeResource( int resourceId ) = 0;
 
    /**
     * Method called when the render device looses its context.
@@ -35,7 +52,9 @@ class RenderResourceStorage : public IRenderResourceStorage
 {
 private:
    const RENDERER&                  m_renderer;
+   std::vector< ENGINE_TYPE* >      m_engineObjects;
    std::vector< RENDER_RESOURCE* >  m_resources;
+   std::list< int >                 m_freeSlots;
 
 public:
    /**
@@ -56,6 +75,8 @@ public:
    // -------------------------------------------------------------------------
    // IRenderResourceStorage implementation
    // -------------------------------------------------------------------------
+   void clear( const Renderer& renderer );
+   void removeResource( int resourceId );
    void onDeviceLost();
    void onDeviceRestored();
 

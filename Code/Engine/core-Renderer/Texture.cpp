@@ -18,7 +18,6 @@ Texture::Texture( const std::string& fileName )
    , m_width( 0 )
    , m_height( 0 )
 {
-   setRenderStateId( UniqueObject::getIndex() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,6 +65,20 @@ void Texture::onPreRender( Renderer& renderer )
 void Texture::onPostRender( Renderer& renderer )
 {
 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Texture::onEquals( const Texture& rhs ) const
+{
+   return getIndex() == rhs.getIndex();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool Texture::onLess( const Texture& rhs ) const
+{
+   return getIndex() < rhs.getIndex();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

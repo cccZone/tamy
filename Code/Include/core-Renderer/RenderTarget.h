@@ -27,7 +27,7 @@ enum TextureFormat;
 /**
  * A special kind of texture which a renderer uses as an output.
  */
-class RenderTarget : public RenderState, public ShaderTexture, public UniqueObject< RenderTarget >, public RenderResource
+class RenderTarget : public TRenderState< RenderTarget >, public ShaderTexture, public UniqueObject< RenderTarget >, public RenderResource
 {
    DECLARE_RTTI_CLASS
 
@@ -87,6 +87,8 @@ public:
    // -------------------------------------------------------------------------
    void onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
+   bool onEquals( const RenderTarget& rhs ) const;
+   bool onLess( const RenderTarget& rhs ) const;
 
    // -------------------------------------------------------------------------
    // ShaderTexture implementation

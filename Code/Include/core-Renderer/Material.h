@@ -33,7 +33,7 @@ public:
    Material(const Material& rhs);
 
    bool operator==(const Material& rhs) const;
-   bool operator!=(const Material& rhs) const
+   inline bool operator!=(const Material& rhs) const
    {
       return !(*this == rhs);
    }

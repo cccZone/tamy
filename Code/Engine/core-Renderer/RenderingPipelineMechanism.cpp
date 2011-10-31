@@ -205,7 +205,6 @@ void RenderingPipelineMechanism::initialize( Renderer& renderer )
 
 void RenderingPipelineMechanism::deinitialize( Renderer& renderer )
 {
-   ASSERT_MSG( m_renderer == &renderer, "The mechanism was set up to work with a different renderer instance" );
    if ( m_renderer != &renderer )
    {
       return;
@@ -294,6 +293,10 @@ void RenderingPipelineMechanism::update( RenderingPipelineNode& subject, const R
    if ( msg == RPNO_CHANGED && m_renderer != NULL )
    {
       deinitialize( *m_renderer );
+   }
+
+   if ( msg == RPNO_CHANGED && m_renderer != NULL )
+   {
       initialize( *m_renderer );
    }
 }
