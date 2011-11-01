@@ -12,19 +12,20 @@ PointVolume::PointVolume(const D3DXVECTOR3& _point)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingVolume* PointVolume::operator*(const D3DXMATRIX& mtx) const
+BoundingVolume* PointVolume::clone() const
 {
-   D3DXVECTOR3 newPt;
-   D3DXVec3TransformCoord(&newPt, &point, &mtx);
-
-   return new PointVolume(newPt);
+   return new PointVolume( point );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PointVolume::operator*=(const D3DXMATRIX& mtx)
+void PointVolume::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
 {
-   D3DXVec3TransformCoord(&point, &point, &mtx);
+   // verify that the volume is a PointVolume
+   ASSERT( dynamic_cast< PointVolume* >( &transformedVolume ) != NULL );
+   PointVolume& transformedPoint = static_cast< PointVolume& >( transformedVolume );
+
+   D3DXVec3TransformCoord( &transformedPoint.point, &point, &mtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

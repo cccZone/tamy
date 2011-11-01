@@ -26,7 +26,7 @@ void RCUnbindVertexShader::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
    DX9VertexShader* dxShader = dxRenderer.getVertexShader( m_shader );
-   if ( !dxShader )
+   if ( dxShader )
    {
       dxShader->endRendering();
    }

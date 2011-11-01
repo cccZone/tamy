@@ -23,8 +23,6 @@ private:
    Geometry&            m_geometry;
    RenderStatesVec      m_renderStates;
 
-   BoundingVolume*      m_globalBoundingVolume;
-
 public:
    /**
     * Constructor.

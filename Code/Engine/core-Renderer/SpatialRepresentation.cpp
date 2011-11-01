@@ -10,7 +10,6 @@
 
 SpatialRepresentation::SpatialRepresentation( Geometry& geometry )
    : m_geometry( geometry )
-   , m_globalBoundingVolume( new AABoundingBox( D3DXVECTOR3( 0, 0, 0 ), D3DXVECTOR3( 0, 0, 0 ) ) )
 {
    // sort the states vector
    m_renderStates = geometry.getRenderStates();
@@ -21,18 +20,13 @@ SpatialRepresentation::SpatialRepresentation( Geometry& geometry )
 
 SpatialRepresentation::~SpatialRepresentation()
 {
-   delete m_globalBoundingVolume;
-   m_globalBoundingVolume = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 const BoundingVolume& SpatialRepresentation::getBoundingVolume() 
 {
-   delete m_globalBoundingVolume;
-   m_globalBoundingVolume = m_geometry.calculateBoundingVolume();
-
-   return *m_globalBoundingVolume;
+   return m_geometry.calculateBoundingVolume();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

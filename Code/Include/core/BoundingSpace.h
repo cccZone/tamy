@@ -12,27 +12,22 @@
  */
 struct BoundingSpace : public BoundingVolume
 {
-   float distanceToPlane(const D3DXPLANE& plane) const {return 0;}
-
-   bool testCollision(const PointVolume& point) const {return true;}
-
-   bool testCollision(const AABoundingBox& rhs) const {return true;}
-
-   bool testCollision(const BoundingSphere& rhs) const {return true;}
-
-   bool testCollision(const Frustum& rhs) const {return true;}
-
-   bool testCollision(const Ray& rhs) const {return true;}
-
-   bool testCollision(const Triangle& rhs) const {return true;}
-
-   bool testCollision(const BoundingVolume& rhs) const {return true;}
-
-   BoundingVolume* operator*(const D3DXMATRIX& mtx) const {return new BoundingSpace();}
-   void operator*=(const D3DXMATRIX& mtx) {}
+   // -------------------------------------------------------------------------
+   // BoundingVolume implementation
+   // -------------------------------------------------------------------------
+   BoundingVolume* clone() const { return new BoundingSpace(); }
+   void transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const {}
+   float distanceToPlane( const D3DXPLANE& plane ) const { return 0; }
+   bool testCollision( const PointVolume& point ) const { return true; }
+   bool testCollision( const AABoundingBox& rhs ) const { return true; }
+   bool testCollision( const BoundingSphere& rhs ) const { return true; }
+   bool testCollision( const Frustum& rhs ) const { return true; }
+   bool testCollision( const Ray& rhs ) const { return true; }
+   bool testCollision( const Triangle& rhs ) const { return true; }
+   bool testCollision( const BoundingVolume& rhs ) const { return true; }
 
 protected:
-   bool hasVolume() const {return true;}
+   bool hasVolume() const { return true; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

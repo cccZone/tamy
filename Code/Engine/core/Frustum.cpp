@@ -5,25 +5,22 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingVolume* Frustum::operator*(const D3DXMATRIX& mtx) const
+BoundingVolume* Frustum::clone() const
 {
-   Frustum* newFrustum = new Frustum();
-
-   for (char i = 0; i < 6; ++i)
-   {
-      D3DXPlaneTransform(&newFrustum->planes[i], &planes[i], &mtx);
-   }
-
-   return newFrustum;
+   return new Frustum( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Frustum::operator*=(const D3DXMATRIX& mtx)
+void Frustum::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
 {
+   // verify that the volume is a Frustum
+   ASSERT( dynamic_cast< Frustum* >( &transformedVolume ) != NULL );
+   Frustum& transformedFrustum = static_cast< Frustum& >( transformedVolume );
+
    for (char i = 0; i < 6; ++i)
    {
-      D3DXPlaneTransform(&planes[i], &planes[i], &mtx);
+      D3DXPlaneTransform( &transformedFrustum.planes[i], &planes[i], &mtx );
    }
 }
 

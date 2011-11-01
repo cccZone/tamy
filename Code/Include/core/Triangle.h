@@ -66,24 +66,25 @@ public:
                          unsigned int startVtxIdx, 
                          unsigned int endVtxIdx) const;
 
-   BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
-   void operator*=(const D3DXMATRIX& mtx);
+   void split(const D3DXPLANE& splitPlane, Array<Triangle*>& frontSplit, Array<Triangle*>& backSplit);
 
-   PlaneClassification classifyAgainsPlane(const D3DXPLANE& plane) const;
-
+   // -------------------------------------------------------------------------
+   // BoundingVolume implementation
+   // -------------------------------------------------------------------------
+   BoundingVolume* clone() const;
+   void transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const;
    float distanceToPlane(const D3DXPLANE& plane) const;
-
-   void split(const D3DXPLANE& splitPlane, 
-              Array<Triangle*>& frontSplit, 
-              Array<Triangle*>& backSplit);
-
+   PlaneClassification classifyAgainsPlane(const D3DXPLANE& plane) const;
    bool testCollision(const PointVolume& point) const;
    bool testCollision(const AABoundingBox& rhs) const;
    bool testCollision(const BoundingSphere& rhs) const;
    bool testCollision(const Frustum& rhs) const;
    bool testCollision(const Ray& rhs) const;
    bool testCollision(const Triangle& rhs) const;
-   bool testCollision(const BoundingVolume& rhs) const {return rhs.testCollision(*this);}
+   bool testCollision(const BoundingVolume& rhs) const { return rhs.testCollision(*this); }
+
+protected:
+   void initFromCoplanarPoints( const D3DXVECTOR3& pt1, const D3DXVECTOR3& pt2, const D3DXVECTOR3& pt3 );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -94,7 +94,14 @@ void RCDrawCylinder::execute( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RCRenderDebugScene::execute( Renderer& renderer )
+void RCBeginDebugScene::execute( Renderer& renderer )
+{
+   // nothing to do here
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RCEndDebugScene::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
    dxRenderer.flushDebugScene();

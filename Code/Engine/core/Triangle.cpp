@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Triangle::Triangle(const Triangle& rhs)
+Triangle::Triangle( const Triangle& rhs )
 {
    v[0] = rhs.v[0];
    v[1] = rhs.v[1];
@@ -21,9 +21,14 @@ Triangle::Triangle(const Triangle& rhs)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Triangle::Triangle(const D3DXVECTOR3& pt1,
-                   const D3DXVECTOR3& pt2,
-                   const D3DXVECTOR3& pt3)
+Triangle::Triangle( const D3DXVECTOR3& pt1, const D3DXVECTOR3& pt2, const D3DXVECTOR3& pt3 )
+{
+   initFromCoplanarPoints( pt1, pt2, pt3 );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Triangle::initFromCoplanarPoints( const D3DXVECTOR3& pt1, const D3DXVECTOR3& pt2, const D3DXVECTOR3& pt3 )
 {
    v[0] = pt1;
    v[1] = pt2;
@@ -51,31 +56,25 @@ Triangle::Triangle(const D3DXVECTOR3& pt1,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingVolume* Triangle::operator*(const D3DXMATRIX& mtx) const
+BoundingVolume* Triangle::clone() const
 {
+   return new Triangle( *this );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Triangle::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
+{
+   // verify that the volume is a Triangle
+   ASSERT( dynamic_cast< Triangle* >( &transformedVolume ) != NULL );
+   Triangle& transformedTriangle = static_cast< Triangle& >( transformedVolume );
+
    D3DXVECTOR3 newV[3];
    D3DXVec3TransformCoord(&newV[0], &v[0], &mtx);
    D3DXVec3TransformCoord(&newV[1], &v[1], &mtx);
    D3DXVec3TransformCoord(&newV[2], &v[2], &mtx);
 
-   return new Triangle(newV[0], newV[1], newV[2]);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Triangle::operator*=(const D3DXMATRIX& mtx)
-{
-   D3DXVec3TransformCoord(&v[0], &v[0], &mtx);
-   D3DXVec3TransformCoord(&v[1], &v[1], &mtx);
-   D3DXVec3TransformCoord(&v[2], &v[2], &mtx);
-
-   D3DXVec3TransformCoord(&e[0], &e[0], &mtx);
-   D3DXVec3TransformCoord(&e[1], &e[1], &mtx);
-   D3DXVec3TransformCoord(&e[2], &e[2], &mtx);
-
-   D3DXVec3TransformNormal(&en[0], &en[0], &mtx);
-   D3DXVec3TransformNormal(&en[1], &en[1], &mtx);
-   D3DXVec3TransformNormal(&en[2], &en[2], &mtx);
+   transformedTriangle.initFromCoplanarPoints( newV[0], newV[1], newV[2] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -22,48 +22,50 @@ Octree<Elem>::~Octree()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem>
-void Octree<Elem>::query(const BoundingVolume& boundingVol, Array<Elem*>& output) const
+template< typename Elem >
+void Octree< Elem >::query( const BoundingVolume& boundingVol, Array< Elem* >& output ) const
 {
-   Array<Sector*> candidateSectors;
-   querySectors(boundingVol, *m_root, candidateSectors);
+   Array< Sector* > candidateSectors;
+   querySectors( boundingVol, *m_root, candidateSectors );
 
    unsigned int elemsCount = getElementsCount();
-   Array<bool> elemsToOutput;
-   elemsToOutput.resize(elemsCount, false);
+   Array< bool > elemsToOutput;
+   elemsToOutput.resize( elemsCount, false );
 
    unsigned int sectorsCount = candidateSectors.size();
-   Array<unsigned int>* elemsList = NULL;
+   Array< unsigned int >* elemsList = NULL;
    unsigned int sectorElemsCount = 0;
-   for (unsigned int i = 0; i < sectorsCount; ++i)
+   for ( unsigned int i = 0; i < sectorsCount; ++i )
    {
-      elemsList = (&candidateSectors[i]->m_elems);
+      elemsList = ( &candidateSectors[i]->m_elems );
       sectorElemsCount = elemsList->size();
-      for (unsigned int j = 0; j < sectorElemsCount; ++j)
+      for ( unsigned int j = 0; j < sectorElemsCount; ++j )
       {
-         elemsToOutput[(*elemsList)[j]] = true;
+         int elemIdx = ( *elemsList )[j];
+         elemsToOutput[elemIdx] = true;
       }
    }
 
    // add each element only once - providing it's inside the query volume
-   for (unsigned int i = 0; i < elemsCount; ++i)
+   for ( unsigned int i = 0; i < elemsCount; ++i )
    {
-      if (elemsToOutput[i] == false) continue;
+      if ( elemsToOutput[i] == false ) 
+      {
+         continue;
+      }
       
       Elem& elem = getElement(i);
-      if (elem.getBoundingVolume().testCollision(boundingVol))
+      if ( elem.getBoundingVolume().testCollision( boundingVol ) )
       {
-         output.push_back(&elem);
+         output.push_back( &elem );
       }
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename Elem>
-void Octree<Elem>::querySectors(const BoundingVolume& boundingVol, 
-                  Sector& searchRoot,
-                  Array<Sector*>& output) const
+template< typename Elem >
+void Octree< Elem >::querySectors( const BoundingVolume& boundingVol, Sector& searchRoot, Array<Sector*>& output ) const
 {
    Stack<Sector*> stack;
    stack.push(&searchRoot);

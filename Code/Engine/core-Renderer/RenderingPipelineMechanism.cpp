@@ -353,6 +353,9 @@ void RenderingPipelineMechanism::renderDebugScene( RenderTarget* renderTarget )
    // set the rendering target
    new ( (*m_renderer)() ) RCActivateRenderTarget( renderTarget );
 
+   // prepare for debug scene rendering
+   new ( (*m_renderer)() ) RCBeginDebugScene();
+
    // draw a reference grid
    drawGrid(  );
 
@@ -363,7 +366,7 @@ void RenderingPipelineMechanism::renderDebugScene( RenderTarget* renderTarget )
    }
 
    // render the scene
-   new ( (*m_renderer)() ) RCRenderDebugScene();
+   new ( (*m_renderer)() ) RCEndDebugScene();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -375,6 +378,7 @@ void RenderingPipelineMechanism::drawGrid() const
    float varPos;
    float boundPos = dim * spacing;
    static Color gridColor( 100, 100, 255 );
+
    for ( float i = -dim; i <= dim; ++i )
    {
       varPos = i * spacing;
