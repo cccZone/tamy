@@ -445,9 +445,11 @@ void DX9Renderer::flushDebugScene()
 
    // draw the lines
    m_d3Device->SetRenderState( D3DRS_AMBIENT, 0xFFFFFFFF );
+   m_d3Device->SetRenderState( D3DRS_LIGHTING, false );
    m_d3Device->SetRenderState( D3DRS_AMBIENTMATERIALSOURCE, D3DMCS_COLOR1 );
-   m_d3Device->SetRenderState( D3DRS_ZENABLE, true );
-   m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, true );
+   m_d3Device->SetRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1 );
+   m_d3Device->SetRenderState( D3DRS_ZENABLE, false );
+   m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, false );
    m_d3Device->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
    m_d3Device->SetStreamSource( 0, m_linesBuffer, 0, sizeof( DebugVertex ) );
    m_d3Device->DrawPrimitive( D3DPT_LINELIST, 0, m_linesCount );

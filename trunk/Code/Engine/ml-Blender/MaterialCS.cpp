@@ -24,39 +24,38 @@ MaterialCS::MaterialCS( TiXmlNode* materialNode, ResourcesManager& rm )
    ASSERT( technique != NULL );
 
    TiXmlElement* lambert = technique->FirstChildElement( "lambert" );
-   ASSERT( lambert != NULL );
 
    // create a material
-   float power = 0;
-   if ( lambert->FirstChildElement( "reflectivity" ) )
+   float power = 2;
+   if ( lambert && lambert->FirstChildElement( "reflectivity" ) )
    {
       const char* valStr = lambert->FirstChildElement( "reflectivity" )->FirstChildElement( "float" )->GetText();
       sscanf_s( valStr, "%f", &power );
    }
 
-   Color ambient;
-   if ( lambert->FirstChildElement( "ambient" ) )
+   Color ambient( 0.7f, 0.7f, 0.7f, 1 );
+   if ( lambert&& lambert->FirstChildElement( "ambient" ) )
    {
       const char* valStr = lambert->FirstChildElement( "ambient" )->FirstChildElement( "color" )->GetText();
       sscanf_s( valStr, "%f %f %f %f", &ambient.r, &ambient.g, &ambient.b, &ambient.a );
    }
 
-   Color diffuse;
-   if ( lambert->FirstChildElement( "diffuse" ) )
+   Color diffuse( 0.7f, 0.7f, 0.7f, 1 );
+   if ( lambert && lambert->FirstChildElement( "diffuse" ) )
    {
       const char* valStr = lambert->FirstChildElement( "diffuse" )->FirstChildElement( "color" )->GetText();
       sscanf_s( valStr, "%f %f %f %f", &diffuse.r, &diffuse.g, &diffuse.b, &diffuse.a );
    }
 
-   Color specular;
-   if ( lambert->FirstChildElement( "reflective" ) )
+   Color specular( 0.9f, 0.9f, 0.9f, 1 );
+   if ( lambert && lambert->FirstChildElement( "reflective" ) )
    {
       const char* valStr = lambert->FirstChildElement( "reflective" )->FirstChildElement( "color" )->GetText();
       sscanf_s( valStr, "%f %f %f %f", &specular.r, &specular.g, &specular.b, &specular.a );
    }
 
    Color emissive( 0, 0, 0 );
-   if ( lambert->FirstChildElement( "emission" ) )
+   if ( lambert && lambert->FirstChildElement( "emission" ) )
    {
       const char* valStr = lambert->FirstChildElement( "emission" )->FirstChildElement( "color" )->GetText();
       sscanf_s( valStr, "%f %f %f %f", &emissive.r, &emissive.g, &emissive.b, &emissive.a );
