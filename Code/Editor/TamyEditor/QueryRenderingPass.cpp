@@ -120,6 +120,9 @@ void QueryRenderingPass::render( Renderer& renderer )
       return;
    }
 
+   // set the rendering target
+   new ( renderer() ) RCActivateRenderTarget( &m_sceneSnapshot );
+
    // draw the representations
    for ( Representations::iterator it = m_representations.begin(); it != m_representations.end(); ++it )
    {
