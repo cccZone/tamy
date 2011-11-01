@@ -29,28 +29,32 @@ NarrowPhaseStorageFilter<Elem>::~NarrowPhaseStorageFilter()
 ///////////////////////////////////////////////////////////////////////////////
 
 template <typename Elem>
-void NarrowPhaseStorageFilter<Elem>::query(const BoundingVolume& boundingVol, 
-                                           Array<Elem*>& output) const
+void NarrowPhaseStorageFilter< Elem >::query( const BoundingVolume& boundingVol, Array<Elem*>& output ) const
 {
-   Array<Elem*> possiblyVisibleNodes;
-   m_storage->query(boundingVol, possiblyVisibleNodes);
+   Array< Elem* > possiblyVisibleNodes;
+   m_storage->query( boundingVol, possiblyVisibleNodes );
 
    unsigned int nodesCount = possiblyVisibleNodes.size();
-   if (nodesCount == 0) {return;}
+   if ( nodesCount == 0 ) 
+   {
+      return;
+   }
+
+   BoundingVolume* transformedVolume = boundingVol.clone();
 
    // perform a narrow phase query
    unsigned int trisCount;
-   const Array<Triangle*>* geometry;
+   const Array< Triangle* >* geometry;
 
    Elem* node = NULL;
    bool visible = false;
    D3DXMATRIX volumeTransformMtx;
-   for (unsigned int i = 0; i < nodesCount; ++i)
+   for ( unsigned int i = 0; i < nodesCount; ++i )
    {
       visible = false;
       node = possiblyVisibleNodes[i];
 
-      geometry = &(node->getBoundingGeometry());
+      geometry = &node->getBoundingGeometry();
       trisCount = geometry->size();
       if (trisCount == 0)
       {
@@ -58,18 +62,16 @@ void NarrowPhaseStorageFilter<Elem>::query(const BoundingVolume& boundingVol,
       }
       else
       {
-         D3DXMatrixInverse(&volumeTransformMtx, NULL, &(node->getGlobalMtx()));
+         D3DXMatrixInverse( &volumeTransformMtx, NULL, &node->getGlobalMtx() );
          for (unsigned int j = 0; j < trisCount; ++j)
          {
-            BoundingVolume* transformedVolume = boundingVol * volumeTransformMtx;
-            Triangle* tri = (*geometry)[j];
-            if (tri->testCollision(*transformedVolume) == true) 
+            boundingVol.transform( volumeTransformMtx, *transformedVolume );
+            Triangle* tri = ( *geometry )[j];
+            if ( tri->testCollision( *transformedVolume ) == true ) 
             {
                visible = true;
-               delete transformedVolume;
                break;
             }
-            delete transformedVolume;
          }
       }
 
@@ -78,6 +80,9 @@ void NarrowPhaseStorageFilter<Elem>::query(const BoundingVolume& boundingVol,
          output.push_back(node);
       }
    }
+
+   // cleanup
+   delete transformedVolume;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

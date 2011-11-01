@@ -133,7 +133,12 @@ bool testCollision(const AABoundingBox& aabb, const Frustum& frustum)
          }
       }
 
-      if ((D3DXVec3Dot(&planeNormal, &nearPoint) + frustum.planes[i].d) > 0) {return false;}
+      float dist = D3DXVec3Dot( &planeNormal, &nearPoint );
+      dist = dist + frustum.planes[i].d;
+      if ( dist > 0 )
+      {
+         return false;
+      }
    }
 
    return true;

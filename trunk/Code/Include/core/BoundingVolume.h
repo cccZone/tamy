@@ -36,6 +36,11 @@ public:
    virtual ~BoundingVolume() {}
 
    /**
+    * Clones this volume.
+    */
+   virtual BoundingVolume* clone() const = 0;
+
+   /**
     * This method checks on which side of the specified plane
     * is the volume situated.
     *
@@ -43,6 +48,15 @@ public:
     * @return        position of the volume in relation to the plane
     */
    virtual PlaneClassification classifyAgainsPlane(const D3DXPLANE& plane) const;
+
+   /**
+    * Transforms the volume by a matrix. A volume can only be transformed into the volume
+    * of the same type - be sure to supply one.
+    *
+    * @param mtx
+    * @param transformedVolume
+    */
+   virtual void transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const = 0;
 
    /**
     * This method checks on which side of the specified plane
@@ -71,12 +85,12 @@ public:
     * Collision with a bounding space always exists, as the space is
     * infinite and ubiquitous
     */
-   bool testCollision(const BoundingSpace& rhs) const {return true;}
+   bool testCollision( const BoundingSpace& rhs ) const { return true; }
 
-   virtual bool testCollision(const BoundingVolume& rhs) const = 0;
-
-   virtual BoundingVolume* operator*(const D3DXMATRIX& mtx) const = 0;
-   virtual void operator*=(const D3DXMATRIX& mtx) = 0;
+   /**
+    * Tests a collision with another bounding volume.
+    */
+   virtual bool testCollision( const BoundingVolume& rhs ) const = 0;
 
 protected:
    /**
@@ -87,7 +101,7 @@ protected:
     *
     * @return     true if the instance has a non-zero volume, false otherwise
     */
-   virtual bool hasVolume() const {return false;}
+   virtual bool hasVolume() const { return false; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

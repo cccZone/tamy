@@ -14,7 +14,7 @@ AABoundingBox::AABoundingBox()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AABoundingBox::AABoundingBox(const D3DXVECTOR3& _min, const D3DXVECTOR3& _max)
+AABoundingBox::AABoundingBox( const D3DXVECTOR3& _min, const D3DXVECTOR3& _max )
 {
    min = _min;
    max = _max;
@@ -22,31 +22,36 @@ AABoundingBox::AABoundingBox(const D3DXVECTOR3& _min, const D3DXVECTOR3& _max)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AABoundingBox AABoundingBox::operator+(const AABoundingBox& rhs) const
+void AABoundingBox::add( const AABoundingBox& otherBox, AABoundingBox& unionBox ) const
 {
-   AABoundingBox newBB;
+   unionBox.min.x = this->min.x < otherBox.min.x ? this->min.x : otherBox.min.x;
+   unionBox.min.y = this->min.y < otherBox.min.y ? this->min.y : otherBox.min.y;
+   unionBox.min.z = this->min.z < otherBox.min.z ? this->min.z : otherBox.min.z;
 
-   newBB.min.x = this->min.x < rhs.min.x ? this->min.x : rhs.min.x;
-   newBB.min.y = this->min.y < rhs.min.y ? this->min.y : rhs.min.y;
-   newBB.min.z = this->min.z < rhs.min.z ? this->min.z : rhs.min.z;
-
-   newBB.max.x = this->max.x > rhs.max.x ? this->max.x : rhs.max.x;
-   newBB.max.y = this->max.y > rhs.max.y ? this->max.y : rhs.max.y;
-   newBB.max.z = this->max.z > rhs.max.z ? this->max.z : rhs.max.z;
-
-   return newBB;
+   unionBox.max.x = this->max.x > otherBox.max.x ? this->max.x : otherBox.max.x;
+   unionBox.max.y = this->max.y > otherBox.max.y ? this->max.y : otherBox.max.y;
+   unionBox.max.z = this->max.z > otherBox.max.z ? this->max.z : otherBox.max.z;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingVolume* AABoundingBox::operator*(const D3DXMATRIX& mtx) const
+BoundingVolume* AABoundingBox::clone() const
 {
-   AABoundingBox* newBB = new AABoundingBox();
+   return new AABoundingBox( min, max );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void AABoundingBox::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
+{
+   // verify that the volume is an AABoundingBox
+   ASSERT( dynamic_cast< AABoundingBox* >( &transformedVolume ) != NULL );
+   AABoundingBox& transformedBox = static_cast< AABoundingBox& >( transformedVolume );
 
    float av, bv;
-   newBB->min = newBB->max = D3DXVECTOR3( mtx.m[0][1], mtx.m[0][2], mtx.m[0][3] );
+   transformedBox.min = transformedBox.max = D3DXVECTOR3( mtx.m[3][0], mtx.m[3][1], mtx.m[3][2] );
 
-   for ( int i = 0; i < 3; ++ i)
+   for ( int i = 0; i < 3; ++i)
    {
       for ( int j = 0; j < 3; ++j )
       {
@@ -54,49 +59,16 @@ BoundingVolume* AABoundingBox::operator*(const D3DXMATRIX& mtx) const
          bv = mtx.m[i][j] * max[j];
          if (av < bv)
          {
-            newBB->min[i] += av;
-            newBB->max[i] += bv;
+            transformedBox.min[i] += av;
+            transformedBox.max[i] += bv;
          } 
          else 
          {
-            newBB->min[i] += bv;
-            newBB->max[i] += av;
+            transformedBox.min[i] += bv;
+            transformedBox.max[i] += av;
          }
       }
    }
-
-   return newBB;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void AABoundingBox::operator*=(const D3DXMATRIX& mtx)
-{
-   float av, bv;
-   D3DXVECTOR3 newMin( mtx.m[0][1], mtx.m[0][2], mtx.m[0][3] );
-   D3DXVECTOR3 newMax( mtx.m[0][1], mtx.m[0][2], mtx.m[0][3] );
-
-   for ( int i = 0; i < 3; ++ i)
-   {
-      for ( int j = 0; j < 3; ++j )
-      {
-         av = mtx.m[i][j] * min[j];
-         bv = mtx.m[i][j] * max[j];
-         if (av < bv)
-         {
-            newMin[i] += av;
-            newMax[i] += bv;
-         } 
-         else 
-         {
-            newMin[i] += bv;
-            newMax[i] += av;
-         }
-      }
-   }
-
-   min = newMin;
-   max = newMax;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

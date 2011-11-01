@@ -13,8 +13,8 @@
 Node::Node(const std::string& name)
 : m_name(name)
 , m_parent(NULL)
-, m_volume(new BoundingSphere(D3DXVECTOR3(0, 0, 0), 0))
-, m_globalVolume(NULL)
+, m_volume( new BoundingSphere( D3DXVECTOR3( 0, 0, 0 ), 0) )
+, m_globalVolume( new BoundingSphere( D3DXVECTOR3( 0, 0, 0 ), 0) )
 {
    D3DXMatrixIdentity(&m_localMtx);
    D3DXMatrixIdentity(&m_globalMtx);
@@ -172,14 +172,14 @@ void Node::getGlobalVectors( D3DXVECTOR3& right, D3DXVECTOR3& up, D3DXVECTOR3& l
 
 const BoundingVolume& Node::getBoundingVolume()
 {
-   delete m_globalVolume;
-   m_globalVolume = *m_volume * getGlobalMtx();
+   const D3DXMATRIX& globalMtx = getGlobalMtx();
+   m_volume->transform( globalMtx, *m_globalVolume );
    return *m_globalVolume;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Node::setBoundingVolume(BoundingVolume* volume)
+void Node::setBoundingVolume( BoundingVolume* volume )
 {
    if (volume == NULL)
    {
@@ -187,6 +187,9 @@ void Node::setBoundingVolume(BoundingVolume* volume)
    }
    delete m_volume;
    m_volume = volume;
+
+   delete m_globalVolume;
+   m_globalVolume = m_volume->clone();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

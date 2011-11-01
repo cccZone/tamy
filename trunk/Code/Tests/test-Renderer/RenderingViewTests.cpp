@@ -91,18 +91,22 @@ namespace // anonymous
    {
    private:
       std::string    m_id;
+      AABoundingBox  m_bounds;
 
    public:
-      GeometryMock( const std::string& id ) : m_id( std::string( "RenderGeometry_" ) + id ) {}
+      GeometryMock( const std::string& id ) 
+         : m_id( std::string( "RenderGeometry_" ) + id )
+         , m_bounds( D3DXVECTOR3( -1, -1, -1 ), D3DXVECTOR3( 1, 1, 1 ) )
+      {}
 
       void render( Renderer& renderer )
       {
          new ( renderer() ) RenderingCommandMock( m_id );
       }
 
-      BoundingVolume* calculateBoundingVolume() const
+      const BoundingVolume& calculateBoundingVolume() const
       {
-         return new AABoundingBox( D3DXVECTOR3( -1, -1, -1 ), D3DXVECTOR3( 1, 1, 1 ) );
+         return m_bounds;
       }
    };
 

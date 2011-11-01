@@ -14,12 +14,24 @@ struct BoundingSphere : public BoundingVolume
    D3DXVECTOR3 origin;
    float radius;
 
+   /**
+    * Default constructor.
+    */
    BoundingSphere();
+
+   /**
+    * Constructor.
+    *
+    * @param origin
+    * @param radius
+    */
    BoundingSphere(const D3DXVECTOR3& origin, float radius);
 
-   BoundingVolume* operator*(const D3DXMATRIX& mtx) const;
-   void operator*=(const D3DXMATRIX& mtx);
-
+   // -------------------------------------------------------------------------
+   // BoundingVolume implementation
+   // -------------------------------------------------------------------------
+   BoundingVolume* clone() const;
+   void transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const;
    float distanceToPlane(const D3DXPLANE& plane) const;
    bool testCollision(const PointVolume& point) const;
    bool testCollision(const AABoundingBox& rhs) const;

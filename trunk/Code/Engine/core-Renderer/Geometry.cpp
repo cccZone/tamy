@@ -16,10 +16,16 @@ END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+D3DXMATRIX Geometry::s_identityMtx;
+
+///////////////////////////////////////////////////////////////////////////////
+
 Geometry::Geometry()
    : m_resource(NULL)
    , m_parentNode( NULL )
+   , m_globalBounds( new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) ) )
 {
+   D3DXMatrixIsIdentity( &s_identityMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,7 +33,9 @@ Geometry::Geometry()
 Geometry::Geometry( GeometryResource& resource )
    : m_resource( &resource )
    , m_parentNode( NULL )
+   , m_globalBounds( resource.getBoundingVolume().clone() )
 {
+   D3DXMatrixIsIdentity( &s_identityMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,6 +44,9 @@ Geometry::~Geometry()
 {
    m_resource = NULL;
    m_states.clear();
+
+   delete m_globalBounds;
+   m_globalBounds = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,28 +89,24 @@ void Geometry::removeState( RenderState& state )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingVolume* Geometry::calculateBoundingVolume() const
+const BoundingVolume& Geometry::calculateBoundingVolume() const
 {
-   BoundingVolume* vol = NULL;
    if ( m_resource )
    {
+      const BoundingVolume& geomBoundingVol = m_resource->getBoundingVolume();
+
       if ( m_parentNode )
       {
-         vol = m_resource->getBoundingVolume() * m_parentNode->getGlobalMtx();
+         const D3DXMATRIX& parentMtx = m_parentNode->getGlobalMtx();
+         geomBoundingVol.transform( parentMtx, *m_globalBounds );
       }
       else
       {
-         D3DXMATRIX identityMtx;
-         D3DXMatrixIsIdentity( &identityMtx );
-         vol = m_resource->getBoundingVolume() * identityMtx;
+         geomBoundingVol.transform( s_identityMtx, *m_globalBounds );
       }
    }
-   else
-   {
-      vol = new AABoundingBox();
-   }
 
-   return vol;
+   return *m_globalBounds;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -139,6 +146,17 @@ void Geometry::onObjectLoaded()
    if ( isAttached() )
    {
       m_parentNode = dynamic_cast< SpatialEntity *>( &getParentNode() );
+
+      // refresh the global bounds
+      delete m_globalBounds;
+      if ( m_resource != NULL )
+      {
+         m_globalBounds = m_resource->getBoundingVolume().clone();
+      }
+      else
+      {
+         m_globalBounds = new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) );
+      }
    }
 }
 

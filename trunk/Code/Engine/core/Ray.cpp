@@ -9,22 +9,36 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingVolume* Ray::operator*(const D3DXMATRIX& mtx) const
+Ray::Ray() 
+   : origin( 0, 0, 0 )
+   , direction( 0, 0, 1 ) 
+{}
+
+///////////////////////////////////////////////////////////////////////////////
+Ray::Ray( const D3DXVECTOR3& _origin, const D3DXVECTOR3& _direction )
+   : origin( _origin )
+   , direction( _direction )
 {
-   Ray* newRay = new Ray();
-
-   D3DXVec3TransformCoord(&newRay->origin, &origin, &mtx);
-   D3DXVec3TransformNormal(&newRay->direction, &direction, &mtx);
-
-   return newRay;
+   D3DXVec3Normalize( &direction, &direction );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Ray::operator*=(const D3DXMATRIX& mtx)
+BoundingVolume* Ray::clone() const
 {
-   D3DXVec3TransformCoord(&origin, &origin, &mtx);
-   D3DXVec3TransformNormal(&direction, &direction, &mtx);
+   return new Ray( origin, direction );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Ray::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
+{
+   // verify that the volume is a Ray
+   ASSERT( dynamic_cast< Ray* >( &transformedVolume ) != NULL );
+   Ray& transformedRay = static_cast< Ray& >( transformedVolume );
+
+   D3DXVec3TransformCoord( &transformedRay.origin, &origin, &mtx );
+   D3DXVec3TransformNormal( &transformedRay.direction, &direction, &mtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

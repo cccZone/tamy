@@ -212,9 +212,21 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Rendering command that renders the debug scene.
+ * Rendering command that begins the rendering process of a debug scene.
  */
-class RCRenderDebugScene : public RenderCommand
+class RCBeginDebugScene : public RenderCommand
+{
+public:
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+/**
+ * Rendering command that ends the rendering process of a debug scene.
+ */
+class RCEndDebugScene : public RenderCommand
 {
 public:
    // -------------------------------------------------------------------------

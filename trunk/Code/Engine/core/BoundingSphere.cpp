@@ -22,21 +22,21 @@ BoundingSphere::BoundingSphere(const D3DXVECTOR3& _origin, float _radius)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingVolume* BoundingSphere::operator*(const D3DXMATRIX& mtx) const
+BoundingVolume* BoundingSphere::clone() const
 {
-   BoundingSphere* newSphere = new BoundingSphere();
-
-   D3DXVec3TransformCoord(&newSphere->origin, &origin, &mtx);
-   newSphere->radius = radius;
-
-   return newSphere;
+   return new BoundingSphere( origin, radius );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoundingSphere::operator*=(const D3DXMATRIX& mtx)
+void BoundingSphere::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
 {
-   D3DXVec3TransformCoord(&origin, &origin, &mtx);
+   // verify that the volume is a BoundingSphere
+   ASSERT( dynamic_cast< BoundingSphere* >( &transformedVolume ) != NULL );
+   BoundingSphere& transformedSphere = static_cast< BoundingSphere& >( transformedVolume );
+
+   D3DXVec3TransformCoord( &transformedSphere.origin, &origin, &mtx );
+   transformedSphere.radius = radius;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
