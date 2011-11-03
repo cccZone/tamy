@@ -27,4 +27,4 @@
   * [RenderingPipeline Rendering pipeline]
   * [Camera Camera]
 * [ Importers ]
-* [ Platform specific implementations ]
+* [ Platform-specific implementations ]
