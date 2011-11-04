@@ -9,8 +9,14 @@
 #include "SkeletonAnimationKeysChart.h"
 #include "SkeletonAnimationEventsChart.h"
 #include "core-AI/SkeletonAnimation.h"
+#include "core-AI/SkeletonAnimationController.h"
+#include "core-MVC/ModelEntity.h"
+#include "core-MVC/Model.h"
+#include "core-AppFlow.h"
+#include "core-Renderer/Skeleton.h"
 #include "TamySceneWidget.h"
 #include <QSettings>
+#include <QFileDialog>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,6 +27,9 @@ SkeletonAnimationEditor::SkeletonAnimationEditor( SkeletonAnimation& animation )
    , m_animationKeysChart( new SkeletonAnimationKeysChart( animation ) )
    , m_animationEventsChart( new SkeletonAnimationEventsChart( animation ) )
    , m_bonesList( NULL )
+   , m_scene( NULL )
+   , m_timeTrack( NULL )
+   , m_playing( false )
 {
    setAttribute( Qt::WA_DeleteOnClose );
 }
@@ -34,6 +43,15 @@ SkeletonAnimationEditor::~SkeletonAnimationEditor()
       // unregister the sub editor
       m_mgr->unregisterSubEditor( *this );
    }
+
+   if ( m_scene )
+   {
+      m_timeTrack->remove( *m_scene );
+   }
+   m_timeTrack = NULL;
+
+   delete m_scene;
+   m_scene = NULL;
 
    delete m_animationKeysChart;
    m_animationKeysChart = NULL;
@@ -51,6 +69,12 @@ void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
    // register the sub editor with the main editor
    m_mgr = &mgr;
    m_mgr->registerSubEditor( this );
+
+   TimeController& controller = mgr.getTimeController();
+   m_timeTrack = &controller.add( "animationEditor" );
+
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
+   QString iconsDir = resMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
 
    // setup ui
    m_ui.setupUi( this );
@@ -72,9 +96,41 @@ void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
       std::string mainRendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
       settings.endGroup();
 
+      // create the preview frame
       QFrame* animationPreviewFrame = new QFrame( operationsSplitter );
       operationsSplitter->addWidget( animationPreviewFrame );
-      m_sceneWidget = new TamySceneWidget( animationPreviewFrame, 0, mainRendererPipelineName, timeController );
+      QVBoxLayout* previewFrameMasterLayout = new QVBoxLayout();
+      animationPreviewFrame->setLayout( previewFrameMasterLayout );
+      animationPreviewFrame->resize( 200, 200 );
+
+      {
+         // create the scene renderer
+         QFrame* renderViewportFrame = new QFrame( animationPreviewFrame );
+         previewFrameMasterLayout->addWidget( renderViewportFrame, 1 );
+         QLayout* renderViewportLayout = new QHBoxLayout();
+         renderViewportFrame->setLayout( renderViewportLayout );
+         renderViewportLayout->setMargin( 0 );
+         renderViewportLayout->setSpacing( 0 );
+         renderViewportFrame->setFrameStyle( QFrame::Panel | QFrame::Sunken );
+         renderViewportFrame->setLineWidth( 2 );
+
+         m_sceneWidget = new TamySceneWidget( renderViewportFrame, 0, mainRendererPipelineName, timeController );
+         renderViewportLayout->addWidget( m_sceneWidget );
+
+         // add a control panel so that we can play the scene
+         QToolBar* playbackControlPanel = new QToolBar( animationPreviewFrame );
+         previewFrameMasterLayout->addWidget( playbackControlPanel, 0 );
+
+         m_runSceneIcon = QIcon( iconsDir + tr( "/play.png" ) );
+         m_stopSceneIcon = QIcon( iconsDir + tr( "/stop.png" ) );
+
+         m_actionPlay = new QAction( m_runSceneIcon, tr( "Run" ), playbackControlPanel );
+         playbackControlPanel->addAction( m_actionPlay );
+         connect( m_actionPlay, SIGNAL( triggered() ), this, SLOT( togglePlay() ) );
+      }
+
+
+      // TODO: camera controller
 
       m_bonesList = new QListWidget( operationsSplitter );
       operationsSplitter->addWidget( m_bonesList );
@@ -224,3 +280,93 @@ void SkeletonAnimationEditor::onToggleOrientKeyRoll( int state )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationEditor::togglePlay()
+{
+   if ( m_scene == NULL && !visualizeAnimation() )
+   {
+      // still no scene - break it
+      return;
+   }
+
+   if ( m_playing )
+   {
+      m_timeTrack->remove( *m_scene );
+
+      // update the UI
+      m_actionPlay->setIcon( m_runSceneIcon );
+      m_actionPlay->setText( "Run" );
+   }
+   else
+   {
+      m_timeTrack->add( *m_scene );
+
+      // update the UI
+      m_actionPlay->setIcon( m_stopSceneIcon );
+      m_actionPlay->setText( "Stop" );
+   }
+   m_playing = !m_playing;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool SkeletonAnimationEditor::visualizeAnimation()
+{
+   // TODO: ability to drag and drop a model resource from the resources browser
+
+   // destroy the previous scene
+   if ( m_scene )
+   {
+      m_sceneWidget->clearScene();
+   }
+   delete m_scene;
+
+   // no scene with an animation - try creating one, but you're gonna need a skeleton first
+   const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+   std::string rootDir = fs.getCurrRoot();
+   std::string filter( "Model files (*." );
+   filter += std::string( Model::getExtension() ) + ")";
+
+   QString fullFileName = QFileDialog::getOpenFileName( m_mgr, tr("Load model"), rootDir.c_str(), filter.c_str() );
+
+   if ( fullFileName.isEmpty() == true ) 
+   {
+      // no file was selected or user pressed 'cancel'
+      return false;
+   }
+
+   // once the file is open, extract the directory name
+   std::string modelResourcePath = fs.toRelativePath( fullFileName.toStdString() );
+
+   // load the skeleton
+   Model* modelForAnimation = DynamicCast< Model >( &ResourcesManager::getInstance().create( modelResourcePath ) );
+   if ( !modelForAnimation )
+   {
+      // couldn't load the model resource
+      return false;
+   }
+
+   m_scene = new Model();
+   m_scene->add( new ModelEntity( *modelForAnimation, "animatedModel" ) );
+
+   Entity* skeletonRootEntity = m_scene->findFirstEntity( "Hips" );
+   if ( !skeletonRootEntity )
+   {
+      // no root bone
+      return false;
+   }
+
+   // create a scene using the animation
+   SkeletonAnimationController* animationController = new SkeletonAnimationController( "animation" );
+   animationController->setAnimationSource( m_animation );
+   skeletonRootEntity->add( animationController );
+
+   m_sceneWidget->setScene( *m_scene );
+
+   return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+// TODO: one of the bones is drawn invalidly - learn why
+// TODO: visualisation of the time position and ability to change it by hand

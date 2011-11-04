@@ -12,10 +12,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class QApplication;
-class MainAppComponent;
 class QSettings;
 class QDockWidget;
 class QTreeWidget;
+class TimeController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -32,8 +32,7 @@ private:
    // time tracking
    CTimer*                          m_mainTime;
    QTimer*                          m_mainTimeSlot;
-
-   MainAppComponent*                m_mainAppComponent;
+   TimeController*                  m_timeController;
 
    // ui settings management
    QSettings*                       m_uiSettings;
@@ -95,6 +94,11 @@ public:
     * Returns editor related settings.
     */
    inline QSettings& getSettings() { return *m_editorSettings; }
+
+   /**
+    * Returns the time controller instance.
+    */
+   inline TimeController& getTimeController() const { return *m_timeController; }
 
    // -------------------------------------------------------------------------
    // Sub editor windows management

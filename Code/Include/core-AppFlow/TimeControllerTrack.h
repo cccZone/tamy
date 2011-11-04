@@ -8,6 +8,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// TODO: remove the events-related functionality from here - move it to the animation controllers instead
+
 class TimeControllerTrack
 {
 private:
@@ -68,7 +70,14 @@ public:
     *
     * @param object
     */
-   void add( TimeDependent* object );
+   void add( TimeDependent& object );
+
+   /**
+    * Removes a time dependent object to the track.
+    *
+    * @param object
+    */
+   void remove( TimeDependent& object );
 
    /**
     * Returns the number of time dependent objects running on the track.

@@ -30,7 +30,6 @@ TamyEditor* GTamyEditor = NULL;
 TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, Qt::WFlags flags )
 : QMainWindow( parent, flags )
 , m_mainTime( new CTimer() )
-, m_mainAppComponent( new MainAppComponent( app, fsRoot ) )
 {
    ui.setupUi(this);
 
@@ -41,8 +40,11 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
    // load the settings file
    m_editorSettings = new QSettings( ( std::string( fsRoot ) + "/Editor/Settings.ini" ).c_str(), QSettings::IniFormat );
 
+   // create the main subsystems
+   m_timeController = new TimeController();
+
    // add components
-   addComponent( m_mainAppComponent );
+   addComponent( new MainAppComponent( app, fsRoot ) );
    addComponent( new SceneRenderer( ui.renderWindow ) );
    addComponent( new SelectionManager() );
    addComponent( new SceneNavigator() );
@@ -62,7 +64,9 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 
 TamyEditor::~TamyEditor()
 {
-   m_mainAppComponent = NULL;
+   removeAllComponents();
+
+   delete m_timeController; m_timeController = NULL;
    delete m_mainTime; m_mainTime = NULL;
    delete m_mainTimeSlot; m_mainTimeSlot = NULL;
    delete m_uiSettings; m_uiSettings = NULL;
@@ -111,7 +115,7 @@ void TamyEditor::updateMain()
    m_mainTime->tick();
    float timeElapsed = m_mainTime->getTimeElapsed();
 
-   m_mainAppComponent->update( timeElapsed );
+   m_timeController->update( timeElapsed );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

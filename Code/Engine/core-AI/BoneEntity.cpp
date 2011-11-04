@@ -13,7 +13,6 @@ END_OBJECT()
 
 BoneEntity::BoneEntity( const std::string& boneName )
    : SpatialEntity( boneName )
-   , m_debugDraw( NULL )
 {
 }
 
@@ -42,6 +41,14 @@ void BoneEntity::onDebugRender( Renderer& renderer ) const
 
       new ( renderer() ) RCDrawLine( start[3], end[3], Color( 0, 0, 0 ) );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Entity* BoneEntity::cloneSelf() const
+{
+   BoneEntity* entity = new BoneEntity( *this );
+   return entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

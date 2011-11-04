@@ -6,6 +6,7 @@
 #include <d3dx9.h>
 #include "core\Point.h"
 #include "core-AppFlow\KeysStatusModel.h"
+#include "core-AppFlow\TimeDependent.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,7 +14,7 @@
 /**
  * User input handling mechanism.
  */
-class UserInputController : public KeysStatusModel
+class UserInputController : public KeysStatusModel, public TimeDependent
 {
 private:
    Point             m_relativePt;
@@ -29,6 +30,9 @@ public:
    UserInputController();
    virtual ~UserInputController() {}
 
+   // ----------------------------------------------------------------------------
+   // TimeDependent implementation
+   // ----------------------------------------------------------------------------
    void update(float timeElapsed);
 
    /**

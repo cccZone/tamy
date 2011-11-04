@@ -64,18 +64,17 @@ REPR_BASE* GenericFactory<ENTITY, REPR_BASE>::createSolid(ENTITY& entity)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class ENTITY, class REPR_BASE>
-REPR_BASE* GenericFactory<ENTITY, REPR_BASE>::createAbstract(ENTITY& entity)
+template< class ENTITY, class REPR_BASE >
+REPR_BASE* GenericFactory< ENTITY, REPR_BASE >::createAbstract( ENTITY& entity )
 {
    const Class& checkedClassType = entity.getVirtualClass();
 
-   for (CreatorsVec::iterator it = m_abstractCreators.begin();  
-      it != m_abstractCreators.end(); ++it)
+   for ( CreatorsVec::iterator it = m_abstractCreators.begin(); it != m_abstractCreators.end(); ++it )
    {
       Class& refClassType = (*it)->classType;
-      if (refClassType.isA(checkedClassType) == true)
+      if ( checkedClassType.isA( refClassType ) == true )
       {
-         REPR_BASE* rep = (*((*it)->creator))(&entity);
+         REPR_BASE* rep = ( *( ( *it )->creator ) )( &entity );
 
          return rep;
       }

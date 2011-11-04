@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TimeControllerTrack::TimeControllerTrack(const std::string& id)
+TimeControllerTrack::TimeControllerTrack( const std::string& id )
       : m_id(id),
       m_speed(1),
       m_updateFreq(0),
@@ -25,14 +25,35 @@ TimeControllerTrack::~TimeControllerTrack()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TimeControllerTrack::add(TimeDependent* object)
+void TimeControllerTrack::add( TimeDependent& object )
 {
-   if (object == NULL)
+   // check if the object isn't already on the track
+   unsigned int count = m_objects.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      throw std::invalid_argument("NULL pointer instead a TimeDependent instance");
+      if ( m_objects[i] == &object )
+      {
+         // yup - it's already there
+         return;
+      }
    }
 
-   m_objects.push_back(object);
+   m_objects.push_back( &object );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TimeControllerTrack::remove( TimeDependent& object )
+{
+   unsigned int count = m_objects.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      if ( m_objects[i] == &object )
+      {
+         m_objects.erase( m_objects.begin() + i );
+         break;
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,15 +169,9 @@ void TimeControllerTrack::update(float timeElapsed)
 void TimeControllerTrack::reset()
 {
    m_speed = 1;
-
-   unsigned int count = m_objects.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      delete m_objects[i];
-   }
    m_objects.clear();
 
-   count = m_events.size();
+   unsigned int count = m_events.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
       delete m_events[i];

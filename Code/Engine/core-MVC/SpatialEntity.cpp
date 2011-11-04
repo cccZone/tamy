@@ -22,31 +22,37 @@ SpatialEntity::SpatialEntity( const std::string& name )
 SpatialEntity::~SpatialEntity() 
 {
    unsigned int count = m_children.size();
-   for (unsigned int i = 0; i < count; ++i)
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      SpatialEntity* se = dynamic_cast<SpatialEntity*> (m_children[i]);
-      removeChild(*se);
+      SpatialEntity* se = DynamicCast< SpatialEntity >( m_children[i] );
+      removeChild( *se );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SpatialEntity::onChildAttached(Entity& child) 
+void SpatialEntity::onChildAttached( Entity& child ) 
 {
-   SpatialEntity* se = dynamic_cast<SpatialEntity*> (&child);
-   if (se == NULL) { return; }
+   SpatialEntity* se = DynamicCast< SpatialEntity >( &child );
+   if ( se == NULL ) 
+   { 
+      return; 
+   }
 
-   addChild(se);
+   addChild( se );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SpatialEntity::onChildDetached(Entity& child)
+void SpatialEntity::onChildDetached( Entity& child )
 {
-   SpatialEntity* se = dynamic_cast<SpatialEntity*> (&child);
-   if (se == NULL) { return; }
+   SpatialEntity* se = DynamicCast< SpatialEntity >( &child );
+   if (se == NULL) 
+   { 
+      return; 
+   }
 
-   removeChild(*se);
+   removeChild( *se );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,6 +63,14 @@ void SpatialEntity::onObjectLoaded()
 
    // update the node name
    setName( getEntityName() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Entity* SpatialEntity::cloneSelf() const
+{
+   SpatialEntity* entity = new SpatialEntity( *this );
+   return entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

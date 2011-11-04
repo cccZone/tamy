@@ -15,6 +15,8 @@ class SkeletonAnimationEventsChart;
 class QListWidget;
 class QListWidgetItem;
 class TamySceneWidget;
+class TimeControllerTrack;
+class Model;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -27,10 +29,18 @@ private:
 
    TamyEditor*                               m_mgr;
    SkeletonAnimation&                        m_animation;
+   Model*                                    m_scene;
    SkeletonAnimationKeysChart*               m_animationKeysChart;
    SkeletonAnimationEventsChart*             m_animationEventsChart;
    QListWidget*                              m_bonesList;
    TamySceneWidget*                          m_sceneWidget;
+   TimeControllerTrack*                      m_timeTrack;
+
+   // animation playback control panel
+   QIcon                                     m_runSceneIcon;
+   QIcon                                     m_stopSceneIcon;
+   QAction*                                  m_actionPlay;
+   bool                                      m_playing;
 
 public:
    /**
@@ -54,9 +64,13 @@ public slots:
    void onToggleOrientKeyYaw( int state );
    void onToggleOrientKeyPitch( int state );
    void onToggleOrientKeyRoll( int state );
+   void togglePlay();
 
 protected:
    void closeEvent( QCloseEvent *event );
+
+private:
+   bool visualizeAnimation();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

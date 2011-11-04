@@ -5,6 +5,7 @@
 
 #include "core\Component.h"
 #include <QObject>
+#include "core-AppFlow\TimeDependent.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,7 +37,7 @@ enum MovementDirection
 /**
  * This component is responsible for navigating scene.
  */
-class SceneNavigator : public QObject, public Component<TamyEditor>
+class SceneNavigator : public QObject, public Component< TamyEditor >, public TimeDependent
 {
    Q_OBJECT
 
@@ -69,9 +70,9 @@ public:
    SceneNavigator();
    ~SceneNavigator();
 
-   /**
-    * Updates the position of the camera.
-    */
+   // -------------------------------------------------------------------------
+   // TimeDependent implementation
+   // -------------------------------------------------------------------------
    void update( float timeElapsed ); 
 
    // -------------------------------------------------------------------------

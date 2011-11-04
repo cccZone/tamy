@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <map>
+#include "core-AppFlow/TimeDependent.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,7 +19,7 @@ class KeyStatusHandler;
 /**
  * Tool for handling 3 different key states (smashed, pressed and released).
  */
-class KeysStatusManager
+class KeysStatusManager : public TimeDependent
 {
 private:
    enum KeyState
@@ -63,19 +64,6 @@ public:
    ~KeysStatusManager();
 
    /**
-    * Call this method if you want to use the manager - it updates its
-    * internal status, making it track changes in key states.
-    *
-    * You can define sensitivity by calling it more or less frequently.
-    * The pause between subsequent calls will define how sensitive the
-    * checks will be.
-    * For instance - if you want to consider a 'Key Smash' to be an event
-    * where you press a key for max. 0.2 sec, then you need to call this method
-    * at most every 0.2 sec.
-    */
-   void update(float timeElapsed);
-
-   /**
     * This method adds a new event handler that will react to changes
     * in states of the keys.
     *
@@ -103,6 +91,11 @@ public:
     * @return        smash time limit (in seconds)
     */
    float getSmashTimeLimit() const;
+
+   // ----------------------------------------------------------------------------
+   // TimeDependent implementation
+   // ----------------------------------------------------------------------------
+   void update(float timeElapsed);
 
 private:
    void executeAction(unsigned char c, KeyState oldState, KeyState newState);

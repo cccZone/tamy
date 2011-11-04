@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ApplicationMock : public Application
+class ApplicationMock : public Application, public TimeDependent
 {
 private:
    bool m_initialized;
@@ -25,12 +25,12 @@ public:
          m_sendSignalInsideStepLoop(-1)
    {
       timeController().add("regularTrack");
-      timeController().get("regularTrack").add(new TTimeDependent<ApplicationMock>(*this));
+      timeController().get("regularTrack").add( *this );
    }
 
-   bool isInitialized() const {return m_initialized;}
+   bool isInitialized() const  {return m_initialized; }
 
-   bool isHibernated() const {return m_hibernated;}
+   bool isHibernated() const { return m_hibernated; }
 
    float getTimeElapsed() 
    {

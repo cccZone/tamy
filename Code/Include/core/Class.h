@@ -98,12 +98,11 @@ public:
    unsigned int getHandle() const;
 
    /**
-    * Checks if the specified class can be safely cast
-    * onto this class's type
+    * Checks if this class can be safely cast onto the specified reference type
     * 
-    * @param rhs  class the type of which we want to check
+    * @param referenceType  type the compatibility with which we want to verify
     */
-   bool isA(const Class& rhs) const;
+   bool isA( const Class& referenceType ) const;
 
    /**
     * Checks if the specified class is of the exactly same type as this class.

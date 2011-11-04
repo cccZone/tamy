@@ -83,7 +83,7 @@ void ResourcePropertyEditor::valChanged()
       // verify that the types match
       Class newTypeClass = newVal->getVirtualClass();
       Class acceptableType = m_property->getType();
-      if ( !acceptableType.isA( newTypeClass ) )
+      if ( !newTypeClass.isA( acceptableType ) )
       {
          newVal = NULL;
       }

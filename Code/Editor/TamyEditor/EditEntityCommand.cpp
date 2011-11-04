@@ -15,6 +15,7 @@
 
 EditEntityCommand::EditEntityCommand( TamyEditor& servicesMgr, TimeControllerTrack& timeTrack )
 : m_servicesMgr( servicesMgr )
+, m_timeTrack( timeTrack )
 , m_editor( NULL )
 , m_editionMode( NEM_TRANSLATE )
 , m_editionStart( new EditionStart( *this ) )
@@ -31,7 +32,7 @@ EditEntityCommand::EditEntityCommand( TamyEditor& servicesMgr, TimeControllerTra
    m_uic = &servicesMgr.requestService< UserInputController >();
 
    // register self for regular updates
-   timeTrack.add( new TTimeDependent< EditEntityCommand >( *this ) );
+   m_timeTrack.add( *this );
 
    // attach self to observe selected objects
    m_selectionMgr->attach( *this );
@@ -45,6 +46,8 @@ EditEntityCommand::EditEntityCommand( TamyEditor& servicesMgr, TimeControllerTra
 
 EditEntityCommand::~EditEntityCommand()
 {
+   m_timeTrack.remove( *this );
+
    // detach self from the selection manager
    m_selectionMgr->detach( *this );
 

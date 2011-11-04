@@ -33,6 +33,12 @@ TimeController::~TimeController()
       delete m_tracks[i];
    }
 
+   // auto detach child controllers
+   count = m_childControllers.size();
+   for (unsigned int i = 0; i < count; ++i)
+   {
+      m_childControllers[i]->clearParent();
+   }
    m_childControllers.clear();
 }
 
@@ -61,6 +67,13 @@ void TimeController::detach( TimeController& child )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void TimeController::clearParent()
+{
+   m_parentController = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void TimeController::update(float timeElapsed)
 {
    unsigned int count = m_tracks.size();
@@ -78,14 +91,22 @@ void TimeController::update(float timeElapsed)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TimeController::add(const std::string& trackID)
+TimeControllerTrack& TimeController::add(const std::string& trackID)
 {
-   std::vector<TimeControllerTrack*>::iterator it = std::find_if(m_tracks.begin(), m_tracks.end(), FindTrack(trackID));
+   std::vector< TimeControllerTrack* >::iterator it = std::find_if( m_tracks.begin(), m_tracks.end(), FindTrack( trackID ) );
 
-   if (it == m_tracks.end())
+   TimeControllerTrack* track;
+   if ( it == m_tracks.end() )
    {
-      m_tracks.push_back(new TimeControllerTrack(trackID));
+      track = new TimeControllerTrack( trackID );
+      m_tracks.push_back( track );
    }
+   else
+   {
+      track = *it;
+   }
+
+   return *track;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

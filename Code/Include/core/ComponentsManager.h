@@ -64,6 +64,11 @@ public:
    void removeComponent( Component< Derived >& component );
 
    /**
+    * Removes all attached components.
+    */
+   void removeAllComponents();
+
+   /**
     * Returns the number of registered components.
     *
     * @return           number of registered components

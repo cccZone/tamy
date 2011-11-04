@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(TimeController, multipleTracks)
+TEST( TimeController, multipleTracks )
 {
    TimeController controller;
    controller.add("track1");
@@ -15,8 +15,8 @@ TEST(TimeController, multipleTracks)
 
    UpdatableMock updatable1;
    UpdatableMock updatable2;
-   controller.get("track1").add(new TTimeDependent<UpdatableMock>(updatable1));
-   controller.get("track2").add(new TTimeDependent<UpdatableMock>(updatable2));
+   controller.get("track1").add( updatable1 );
+   controller.get("track2").add( updatable2 );
 
    controller.update(1);
    CPPUNIT_ASSERT_EQUAL(1.f, updatable1.getLastTime());
@@ -35,8 +35,8 @@ TEST(TimeControllerTrack, timeScaling)
    UpdatableMock updatable2;
    TimeControllerTrack track1("track1");
    TimeControllerTrack track2("track2");
-   track1.add(new TTimeDependent<UpdatableMock>(updatable1));
-   track2.add(new TTimeDependent<UpdatableMock>(updatable2));
+   track1.add( updatable1 );
+   track2.add( updatable2 );
 
    track1.update(1);
    track2.update(1);
@@ -58,7 +58,7 @@ TEST(TimeControllerTrack, framerateLimitation)
 {
    UpdatableMock updatable;
    TimeControllerTrack track("track");
-   track.add(new TTimeDependent<UpdatableMock>(updatable));
+   track.add( updatable );
 
    // this limit means that the track can be updated maximally twice per second
    track.setLimit(2);

@@ -35,8 +35,9 @@ protected:
    // -------------------------------------------------------------------------
    // Entity implementation
    // -------------------------------------------------------------------------
-   void onChildAttached(Entity& child);
-   void onChildDetached(Entity& child);
+   void onChildAttached( Entity& child );
+   void onChildDetached( Entity& child );
+   Entity* cloneSelf() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

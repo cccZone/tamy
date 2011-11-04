@@ -45,19 +45,27 @@ class Entity : public Object
    DECLARE_CLASS(Entity)
 
 public:
-   typedef std::vector<Entity*> Children;
+   typedef std::vector< Entity* >      Children;
 
-   std::string    m_name;
-   Entity*        m_parent;
-   Children       m_children;
+   // static data
+   std::string                         m_name;
+   Entity*                             m_parent;
+   Children                            m_managedChildren;
 
-   Model*         m_hostModel;
+   // runtime data
+   Children                            m_children;
+   Model*                              m_hostModel;
 
 public:
    /**
     * Constructor.
     */
    Entity( const std::string& name = "" );
+
+   /**
+    * Copy contructor.
+    */
+   Entity( const Entity& rhs );
    virtual ~Entity();
 
    /**
@@ -65,15 +73,22 @@ public:
     */
    inline const std::string& getEntityName() const;
 
+   /**
+    * Clones the entity.
+    */
+   virtual Entity* clone() const;
+
    // -------------------------------------------------------------------------
    // Entity hierarchy management
    // -------------------------------------------------------------------------
    /**
     * Adds a new child to the entity's hierarchy.
     *
-    * @param entity    new child entity
+    * @param entity     new child entity
+    * @param manage     should the entity be serialized as part 
+    *                   of entity's hierarchy, or is it just a runtime thing?
     */
-   void add(Entity* entity);
+   void add( Entity* entity, bool manage = true );
 
    /**
     * This method removes a child from the entity.
@@ -82,7 +97,7 @@ public:
     * @param release    this parameter specifies whether the entity
     *                   should be deleted when it's removed.
     */
-   void remove(Entity& entity, bool release = true);
+   void remove( Entity& entity, bool release = true );
 
    /**
     * The method responsible for updating the state of the entity and of its children.
@@ -204,6 +219,11 @@ protected:
     * @param timeElapsed      time elapsed since the last frame
     */
    virtual void onUpdate( float timeElapsed ) {}
+
+   /**
+    * Clone the entity instance.
+    */
+   virtual Entity* cloneSelf() const { return new Entity( *this ); }
 
    friend class Model;
 };

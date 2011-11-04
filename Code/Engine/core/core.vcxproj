@@ -121,6 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Algorithms.h" />
+    <ClInclude Include="..\..\Include\core\Casts.h" />
     <ClInclude Include="..\..\Include\core\IDebugDraw.h" />
     <ClInclude Include="..\..\Include\core\IProgressObserver.h" />
     <ClInclude Include="..\..\Include\core\Node.h" />

@@ -114,11 +114,28 @@ public:
    inline unsigned int getResourcesCount() const;
 
    /**
+    * Creates a resource based on a file with the specified name and registers it
+    * with the manager, if it hasn't been registered before.
+    *
+    * @param name       name of the resource file (should exist in the
+    *                   currently set filesystem)
+    */
+   Resource& create( const std::string& name );
+
+   /**
     * Registers a new resource instance with the resources manager.
     *
     * @param resource   new resource instance to register
     */
    void addResource( Resource* resource );
+
+   /**
+    * Looks up a resource with the given name.
+    *
+    * @param name       name of the resource
+    * @return           pointer to the resource or NULL if the manager does not have one.
+    */
+   Resource* findResource( const std::string& name );
 
    /**
     * Moves an existing resource to a different path.
@@ -129,15 +146,6 @@ public:
    void moveResource( Resource* resource, const std::string& newPath );
 
    /**
-    * Creates a resource based on a file with the specified name and registers it
-    * with the manager, if it hasn't been registered before.
-    *
-    * @param name       name of the resource file (should exist in the
-    *                   currently set filesystem)
-    */
-   Resource& create(const std::string& name);
-
-   /**
     * Saves a resource associated with the specified file onto the filesystem.
     *
     * @param name       name of the resource file (should exist in the
@@ -145,14 +153,6 @@ public:
     * @param outExternalDependencies   other resources used by this resource
     */
    void save( const std::string& name, ExternalDependenciesSet& outExternalDependencies = ExternalDependenciesSet() );
-
-   /**
-    * Looks up a resource with the given name.
-    *
-    * @param name       name of the resource
-    * @return           pointer to the resource or NULL if the manager does not have one.
-    */
-   Resource* findResource( const std::string& name );
 
    /**
     * The method scans the resource manager memory in search for loaded resources, 
@@ -210,7 +210,14 @@ private:
    /**
     * Creates a progress observer.
     */
-   IProgressObserver* createObserver();
+   IProgressObserver* createObserver() const;
+
+   /**
+    * Helper method for loading a resource from the filesystem.
+    *
+    * @param name
+    */
+   Resource* loadResource( const std::string& name );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

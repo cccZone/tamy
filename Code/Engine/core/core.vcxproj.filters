@@ -473,6 +473,9 @@
     <ClInclude Include="..\..\Include\core\RuntimeData.h">
       <Filter>DataStructures</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\Casts.h">
+      <Filter>RTTI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">

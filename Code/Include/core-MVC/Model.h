@@ -8,6 +8,7 @@
 #include "core\ComponentsManager.h"
 #include "core\Delegate.h"
 #include "core\Resource.h"
+#include "core-AppFlow\TimeDependent.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,21 +25,23 @@ class Loader;
  * Model stores entities and allows to serialize them. Model
  * can be observed and 'illustrated' using views.
  */
-class Model : public Resource, public ComponentsManager< Model >
+class Model : public Resource, public ComponentsManager< Model >, public TimeDependent
 {
    DECLARE_RESOURCE( Model )
 
 private:
-   typedef Delegate<void (Entity&)> Functor;
+   typedef Delegate< void ( Entity& ) >   Functor;
+   typedef std::vector< Entity* >         Entities;
+   typedef std::vector< ModelView* >      Views;
 
-   typedef std::vector<Entity*> Entities;
-   Entities m_entities;
+   // static data
+   Entities                               m_managedEntities;
 
-   typedef std::vector<ModelView*> Views;
-   Views m_views;
-
-   Views m_viewsToAdd;
-   unsigned int m_viewsToRemoveCount;
+   // runtime data
+   Entities                               m_entities;
+   Views                                  m_views;
+   Views                                  m_viewsToAdd;
+   unsigned int                           m_viewsToRemoveCount;
 
 public:
    /**
@@ -74,10 +77,15 @@ public:
    void clear();
 
    /**
-    * Updates the state of the model.
+    * Clones the entities the model contains.
     *
-    * @param timeElapsed      time elapsed since the last frame
+    * @param outClonedEntities
     */
+   void clone( std::vector< Entity* >& outClonedEntities ) const;
+
+   // -------------------------------------------------------------------------
+   // TimeDependent implementation
+   // -------------------------------------------------------------------------
    void update( float timeElapsed );
 
    // -------------------------------------------------------------------------
@@ -98,7 +106,19 @@ public:
     * @param idx  index of an entity we want to access.
     * @return     reference to the specified entity
     */
-   Entity& getEntity(unsigned int idx);
+   Entity& getEntity( unsigned int idx ) const;
+
+   /**
+    * Looks for an entity with the specified name and returns
+    * the first one that meets that criteria, or NULL if none is found.
+    *
+    * CAUTION: Even though the method returns a pointer, it doesn't relinquish the
+    * the lifetime control over the entity - it's just for the sake of being able
+    * to return NULL.
+    *
+    * @param name
+    */
+   Entity* findFirstEntity( const std::string& name ) const;
 
    // -------------------------------------------------------------------------
    // Views management

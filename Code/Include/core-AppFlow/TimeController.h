@@ -56,7 +56,7 @@ public:
     *
     * @param trackID
     */
-   void add( const std::string& trackID );
+   TimeControllerTrack& add( const std::string& trackID );
 
    /**
     * Returns a track with the specified ID.
@@ -99,6 +99,11 @@ protected:
     * @param child
     */
    void detach( TimeController& child );
+
+   /**
+    * Removes the parent information.
+    */
+   void clearParent();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

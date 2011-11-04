@@ -17,25 +17,39 @@ END_OBJECT();
 SkeletonAnimationController::SkeletonAnimationController( const std::string& name )
    : Entity( name )
    , m_source( NULL )
+   , m_parent( NULL )
    , m_trackTime( 0.f )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
+SkeletonAnimationController::SkeletonAnimationController( const SkeletonAnimationController& rhs )
+   : Entity( rhs )
+   , m_source( rhs.m_source )
+   , m_parent( NULL )
+   , m_trackTime( 0.f )
+{
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 SkeletonAnimationController::~SkeletonAnimationController()
 {
+   m_source = NULL;
+   m_parent = NULL;
+   
+   m_referenceMtcs.clear();
+   m_skeleton.clear();
+
+   // clear the runtime play data
    unsigned int count = m_bonePlayers.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
       delete m_bonePlayers[i];
    }
    m_bonePlayers.clear();
-
-   m_source = NULL;
-
-   m_skeleton.clear();
-   m_referenceMtcs.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,17 +59,18 @@ void SkeletonAnimationController::setAnimationSource( SkeletonAnimation& source 
    // set the new animation source
    m_source = &source;
 
-   // initialize the play data
-   unsigned int count = m_bonePlayers.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      delete m_bonePlayers[i];
-   }
-   m_bonePlayers.clear();
+   onDataChanged();
+}
 
-   if ( m_source != NULL && m_skeleton.empty() == false )
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationController::onPropertyChanged( Property& property )
+{
+   __super::onPropertyChanged( property );
+
+   if ( property.getName() == "m_source" )
    {
-      m_source->initializePlayer( m_skeleton, m_bonePlayers );
+      onDataChanged();
    }
 }
 
@@ -63,105 +78,16 @@ void SkeletonAnimationController::setAnimationSource( SkeletonAnimation& source 
 
 void SkeletonAnimationController::onAttached( Entity& parent )
 {
-   // iterate over the hierarchy of nodes and parse the skeleton nodes
-   std::list< SpatialEntity* > nodesQueue;
-   std::set< std::string > usedBoneNames;
-
-   // The parent must be a root spatial entity - otherwise
-   // we don't parse.
-   // We can't allow for a parent's child to be a root node due to the following reasons:
-   //  - many of the children could be spatial entities, so we wouldn't know which one to select
-   //    as a root
-   //  - we have a direct link only to the parent - we get notifications about changes it undergoes etc.
-   //    but we don't have the same for its children - that's why it would be difficult to track
-   //    if such a child was detached for instance.
-   //  - a child operating in the scope of its parent is a supported architectural 
-   //    choice in this engine
-   SpatialEntity* spatialEntity = dynamic_cast< SpatialEntity* >( &parent );
-   if ( spatialEntity != NULL )
-   {
-      nodesQueue.push_back( spatialEntity );
-   }
-   else
-   {
-      return;
-   }
-
-   // clean the present skeleton definition
-   m_skeleton.clear();
-   m_referenceMtcs.clear();
-
-   // parse the nodes in the queue
-   while( nodesQueue.empty() == false )
-   {
-      SpatialEntity* currNode = nodesQueue.front();
-      nodesQueue.pop_front();
-
-      const std::string& boneName = currNode->getName();
-      if ( usedBoneNames.find( boneName ) != usedBoneNames.end() )
-      {
-         // the bone with this name is already used - don't map it
-         continue;
-      }
-
-      // Add the node to the skeleton and memorize its name.
-      // We're using the node's name, although from the scope of a spatial entity
-      // this and the entity's name are guaranteed to be the same
-      m_skeleton.push_back( currNode );
-      usedBoneNames.insert( currNode->getName() );
-
-      // memorize node's local matrix
-      m_referenceMtcs.push_back( currNode->getLocalMtx() );
-
-      // go through all the children and add those that are spatial entities
-      const Entity::Children& children = currNode->getEntityChildren();
-      unsigned int count = children.size();
-      for( unsigned int i = 0; i < count; ++i )
-      {
-         spatialEntity = dynamic_cast< SpatialEntity* >( children[i] );
-         if ( spatialEntity != NULL )
-         {
-            nodesQueue.push_back( spatialEntity );
-         }
-      }
-   }
-
-   // create the runtime play data
-   unsigned int count = m_bonePlayers.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      delete m_bonePlayers[i];
-   }
-   m_bonePlayers.clear();
-
-   if ( m_source != NULL && m_skeleton.empty() == false )
-   {
-      m_source->initializePlayer( m_skeleton, m_bonePlayers );
-   }
+   m_parent = DynamicCast< SpatialEntity >( &parent );
+   onDataChanged();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SkeletonAnimationController::onDetached( Entity& parent ) 
 {
-   // reset the skeleton to the reference pose
-   unsigned int count = m_skeleton.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      m_skeleton[i]->setLocalMtx( m_referenceMtcs[i] );
-   }
-   m_referenceMtcs.clear();
-
-   // clear the skeleton definition
-   m_skeleton.clear();
-
-   // clear the runtime play data
-   count = m_bonePlayers.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      delete m_bonePlayers[i];
-   }
-   m_bonePlayers.clear();
+   m_parent = NULL;
+   onDataChanged();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -216,6 +142,99 @@ void SkeletonAnimationController::onUpdate( float timeElapsed )
       
       D3DXMatrixMultiply( &tmpMtx, &updateMtx, &( m_referenceMtcs[i] ) );
       m_skeleton[i]->setLocalMtx( tmpMtx );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Entity* SkeletonAnimationController::cloneSelf() const
+{
+   SkeletonAnimationController* entity = new SkeletonAnimationController( *this );
+   return entity;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationController::onDataChanged()
+{
+   // reset the skeleton to the reference pose
+   unsigned int count = m_skeleton.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      m_skeleton[i]->setLocalMtx( m_referenceMtcs[i] );
+   }
+   m_referenceMtcs.clear();
+
+   // clear the skeleton definition
+   m_skeleton.clear();
+
+   // clear the runtime play data
+   count = m_bonePlayers.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      delete m_bonePlayers[i];
+   }
+   m_bonePlayers.clear();
+
+
+   // if we have a parent node and an animation source, we can try parsing the skeleton
+   if ( m_parent && m_source )
+   {
+      // iterate over the hierarchy of nodes and parse the skeleton nodes
+      std::list< SpatialEntity* > nodesQueue;
+      std::set< std::string > usedBoneNames;
+
+      // The parent must be a root spatial entity - otherwise
+      // we don't parse.
+      // We can't allow for a parent's child to be a root node due to the following reasons:
+      //  - many of the children could be spatial entities, so we wouldn't know which one to select
+      //    as a root
+      //  - we have a direct link only to the parent - we get notifications about changes it undergoes etc.
+      //    but we don't have the same for its children - that's why it would be difficult to track
+      //    if such a child was detached for instance.
+      //  - a child operating in the scope of its parent is a supported architectural 
+      //    choice in this engine
+
+      // parse the nodes in the queue
+      nodesQueue.push_back( m_parent );
+      while( nodesQueue.empty() == false )
+      {
+         SpatialEntity* currNode = nodesQueue.front();
+         nodesQueue.pop_front();
+
+         const std::string& boneName = currNode->getName();
+         if ( usedBoneNames.find( boneName ) != usedBoneNames.end() )
+         {
+            // the bone with this name is already used - don't map it
+            continue;
+         }
+
+         // Add the node to the skeleton and memorize its name.
+         // We're using the node's name, although from the scope of a spatial entity
+         // this and the entity's name are guaranteed to be the same
+         m_skeleton.push_back( currNode );
+         usedBoneNames.insert( currNode->getName() );
+
+         // memorize node's local matrix
+         m_referenceMtcs.push_back( currNode->getLocalMtx() );
+
+         // go through all the children and add those that are spatial entities
+         const Entity::Children& children = currNode->getEntityChildren();
+         unsigned int count = children.size();
+         for( unsigned int i = 0; i < count; ++i )
+         {
+            SpatialEntity* spatialEntity = DynamicCast< SpatialEntity >( children[i] );
+            if ( spatialEntity != NULL )
+            {
+               nodesQueue.push_back( spatialEntity );
+            }
+         }
+      }
+
+      if ( m_skeleton.empty() == false )
+      {
+         m_source->initializePlayer( m_skeleton, m_bonePlayers );
+      }
    }
 }
 

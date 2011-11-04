@@ -151,4 +151,10 @@ void SingleTextureEffect::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: remove the camera component
+Entity* SingleTextureEffect::cloneSelf() const
+{
+   SingleTextureEffect* entity = new SingleTextureEffect( *this );
+   return entity;
+}
+
+///////////////////////////////////////////////////////////////////////////////

@@ -16,9 +16,6 @@ class BoneEntity : public SpatialEntity, public IDebugDrawable
 {
    DECLARE_CLASS( BoneEntity );
 
-private:
-   ModelComponent< DebugScene >*     m_debugDraw;
-
 public:
    /**
     * Constructor.
@@ -32,6 +29,12 @@ public:
    // IDebugDrawable representation
    // -------------------------------------------------------------------------
    void onDebugRender( Renderer& renderer ) const;
+
+protected:
+   // -------------------------------------------------------------------------
+   // Entity implementation
+   // -------------------------------------------------------------------------
+   Entity* cloneSelf() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

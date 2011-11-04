@@ -45,6 +45,11 @@ public:
    Geometry();
 
    /**
+    * Copy constructor.
+    */
+   Geometry( const Geometry& rhs );
+
+   /**
     * Constructor.
     *
     * @param resource   shared geometry resource
@@ -126,6 +131,7 @@ protected:
    // -------------------------------------------------------------------------
    void onAttached( Entity& parent );
    void onDetached( Entity& parent );
+   Entity* cloneSelf() const; 
 };
 
 ///////////////////////////////////////////////////////////////////////////////

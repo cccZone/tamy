@@ -251,10 +251,8 @@ Resource& Loader::load( ResourcesManager& resMgr )
       m_dependencies[ i ]->onObjectLoaded();
    }
 
-   // add the new resource to the resources manager
+   // return the resource
    Resource* resource = dynamic_cast< Resource* >( root );
-   m_resMgr->addResource( resource );
-
    return *resource;
 }
 
