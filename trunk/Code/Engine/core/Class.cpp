@@ -107,10 +107,10 @@ unsigned int Class::getHandle() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Class::isA( const Class& rhs ) const
+bool Class::isA( const Class& referenceType ) const
 {
    std::vector< Class > classHierarchy;
-   classHierarchy.push_back(rhs);
+   classHierarchy.push_back( *this );
 
    Class classType;
    while( classHierarchy.empty() == false )
@@ -118,9 +118,9 @@ bool Class::isA( const Class& rhs ) const
       classType = classHierarchy.back();
       classHierarchy.pop_back();
 
-      if ( classType == *this )
+      if ( classType == referenceType )
       {
-         // we found it - a parent of rhs's matches the type of this class
+         // we found it - a parent of this matches the reference type
          return true;
       }
 

@@ -11,6 +11,7 @@
 
 class SkeletonAnimation;
 class BoneSRTAnimationPlayer;
+class SpatialEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,7 +26,11 @@ class SkeletonAnimationController : public Entity
    DECLARE_CLASS( SkeletonAnimationController )
 
 private:
+   // static data
    SkeletonAnimation*                        m_source;
+
+   // runtime data
+   SpatialEntity*                            m_parent;
    std::vector< Node* >                      m_skeleton;
    float                                     m_trackTime;
    std::vector< BoneSRTAnimationPlayer* >    m_bonePlayers;
@@ -36,6 +41,11 @@ public:
     * Constructor.
     */
    SkeletonAnimationController( const std::string& name = "" );
+
+   /**
+    * Copy constructor.
+    */
+   SkeletonAnimationController( const SkeletonAnimationController& rhs );
    ~SkeletonAnimationController();
 
    /**
@@ -52,11 +62,20 @@ public:
 
 protected:
    // ----------------------------------------------------------------------
+   // Object implementation
+   // ----------------------------------------------------------------------
+   void onPropertyChanged( Property& property );
+
+   // ----------------------------------------------------------------------
    // Entity implementation
    // ----------------------------------------------------------------------
    void onAttached( Entity& parent );
    void onDetached( Entity& parent );
    void onUpdate( float timeElapsed );
+   Entity* cloneSelf() const;
+
+private:
+   void onDataChanged();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

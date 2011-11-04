@@ -30,6 +30,15 @@ Geometry::Geometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Geometry::Geometry( const Geometry& rhs )
+   : SpatialEntity( rhs )
+   , m_parentNode( NULL )
+   , m_globalBounds( new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) ) )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Geometry::Geometry( GeometryResource& resource )
    : m_resource( &resource )
    , m_parentNode( NULL )
@@ -158,6 +167,14 @@ void Geometry::onObjectLoaded()
          m_globalBounds = new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) );
       }
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Entity* Geometry::cloneSelf() const
+{
+   Geometry* entity = new Geometry( *this );
+   return entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

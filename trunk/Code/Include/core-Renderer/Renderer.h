@@ -8,6 +8,7 @@
 #include "core\Color.h"
 #include "core\UniqueObject.h"
 #include "core/RoundBuffer.h"
+#include "core-AppFlow/TimeDependent.h"
 #include <vector>
 #include <map>
 #include <set>
@@ -48,7 +49,7 @@ enum RendererOps
  * The renderer can be observer - it will notify it's observers about the
  * changes in its state (rendering, device lost, device recovered)
  */
-class Renderer : public Subject< Renderer, RendererOps >, public UniqueObject< Renderer >
+class Renderer : public Subject< Renderer, RendererOps >, public UniqueObject< Renderer >, public TimeDependent
 {
 private:
    
@@ -163,6 +164,14 @@ public:
     * Gives access to the commands buffer.
     */
    inline RoundBuffer& operator()() { return m_renderCommands; }
+
+   // ----------------------------------------------------------------------------
+   // TimeDependent implementation
+   // ----------------------------------------------------------------------------
+   inline void update( float timeDelta )
+   {
+      render();
+   }
 
 protected:
    /**

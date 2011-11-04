@@ -10,6 +10,8 @@
 #include "core\Array.h"
 #include "SelectionManager.h"
 #include "ManualEditionModes.h"
+#include "core-AppFlow\TimeDependent.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,7 +30,8 @@ class TamyEditor;
 class EditEntityCommand :  public InputCommand, 
                            public SceneQuery, 
                            public SelectionManagerListener,
-                           public GenericFactory< Entity, EntityManualEditor >
+                           public GenericFactory< Entity, EntityManualEditor >,
+                           public TimeDependent
 {
 private:
    class State
@@ -103,6 +106,7 @@ private:
 
 private:
    TamyEditor&          m_servicesMgr;
+   TimeControllerTrack& m_timeTrack;
    SceneQueries*        m_scene;
    SelectionManager*    m_selectionMgr;
    UserInputController* m_uic;
@@ -132,14 +136,14 @@ public:
    ~EditEntityCommand();
 
    /**
-    * Changes parameters of the edited object.
-    */
-   void update( float timeElapsed );
-
-   /**
     * Returns an instance of the services manager.
     */
    inline TamyEditor& getServicesMgr() const { return m_servicesMgr; }
+
+   // -------------------------------------------------------------------------
+   // TimeDependent implementation
+   // -------------------------------------------------------------------------
+   void update( float timeElapsed );
 
    // -------------------------------------------------------------------------
    // Edition modes settings

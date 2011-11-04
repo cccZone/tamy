@@ -2,6 +2,7 @@
 #include "core.h"
 #include "core-MVC.h"
 #include "core-AI.h"
+#include "core-Renderer/Skeleton.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -328,12 +329,8 @@ namespace // anonymous
             animation->clear();
          }
 
-         // the parsing is complete - instantiate the skeleton and the animation controller
-         SkeletonAnimationController* animationController = new SkeletonAnimationController( animationName );
-         animationController->setAnimationSource( *animation );
-
+         // finally - instantiate the animation controller and add it to the scene
          SpatialEntity* skeletonRootEntity = skeletonRoot->instantiate( *animation );
-         skeletonRootEntity->add( animationController );
          scene.add( skeletonRootEntity );
 
          m_observer.advance();

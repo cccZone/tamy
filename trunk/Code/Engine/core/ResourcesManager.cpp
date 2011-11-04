@@ -182,17 +182,25 @@ void ResourcesManager::scan( const std::string& rootDir, FilesystemScanner& scan
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Resource* ResourcesManager::loadResource( const std::string& name )
+{
+   ResourceLoader* loader = createResourceLoader( name );
+   IProgressObserver* observer = createObserver();
+   Resource* res = loader->load( name, *this, *observer );
+   delete loader;
+   delete observer;
+
+   return res;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Resource& ResourcesManager::create( const std::string& name )
 {
    Resource* res = findResource( name );
    if ( res == NULL )
    {
-      ResourceLoader* loader = createResourceLoader( name );
-      IProgressObserver* observer = createObserver();
-      res = loader->load( name, *this, *observer );
-      delete loader;
-      delete observer;
-
+      res = loadResource( name );
       if ( res )
       {
          addResource( res );
@@ -272,7 +280,7 @@ ResourceLoader* ResourcesManager::createResourceLoader( const std::string& name 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-IProgressObserver* ResourcesManager::createObserver()
+IProgressObserver* ResourcesManager::createObserver() const
 {
    if ( m_progressObserverCreator )
    {

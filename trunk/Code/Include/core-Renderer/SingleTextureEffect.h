@@ -76,6 +76,7 @@ protected:
    void onAttached( Entity& parent );
    void onDetached( Entity& parent );
    void onComponentAdded( Component< Model >& component );
+   Entity* cloneSelf() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

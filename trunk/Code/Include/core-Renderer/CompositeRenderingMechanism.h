@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <list>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,6 +23,7 @@ private:
 
    MechanismsMap                       m_mechanismsMap;      
    std::vector< RenderingMechanism* >  m_members;
+   std::list< int >                    m_freeSlots;
 
 public:
    /**
@@ -38,6 +40,13 @@ public:
     * @param mechanism     rendering mechanism we want to run in the composite
     */
    void add( const std::string& name, RenderingMechanism* mechanism );
+
+   /**
+    * REmoves a mechanism from the composite.
+    *
+    * @param name          unique name for the mechanism
+    */
+   void remove( const std::string& name );
 
    // -------------------------------------------------------------------------
    // RenderingMechanism implementation

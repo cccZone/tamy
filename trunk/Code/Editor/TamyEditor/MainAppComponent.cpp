@@ -17,7 +17,7 @@
 
 MainAppComponent::MainAppComponent( QApplication& app, const char* fsRoot )
 : m_app( app )
-, m_timeController( new TimeController() )
+, m_timeController( NULL )
 , m_resourceMgr( &ResourcesManager::getInstance() )
 , m_mgr( NULL )
 {
@@ -31,9 +31,6 @@ MainAppComponent::MainAppComponent( QApplication& app, const char* fsRoot )
    m_resourceMgr->addLoader< IWFScene >( "iwf" );
    m_resourceMgr->addLoader< BlenderScene >( "dae" );
    m_resourceMgr->setProgressObserver< ProgressDialog >();
-
-   // configure the scene execution track
-   m_timeController->add( "scene" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,14 +39,12 @@ MainAppComponent::~MainAppComponent()
 {
    m_mgr = NULL;
    m_resourceMgr->reset(); m_resourceMgr = NULL;
-   delete m_timeController; m_timeController = NULL;
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-void MainAppComponent::update( float timeElapsed )
-{
-   m_timeController->update( timeElapsed );
+   if ( m_timeController )
+   {
+      m_timeController->remove( "scene" );
+      m_timeController = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -145,7 +140,7 @@ bool MainAppComponent::runScene()
    sceneTrack.reset();
 
    Model& scene = m_mgr->requestService< Model >();
-   sceneTrack.add( new TTimeDependent< Model >( scene ) );
+   sceneTrack.add( scene );
 
    // update the UI
    m_actionRun->setIcon( m_stopSceneIcon );
@@ -160,6 +155,9 @@ void MainAppComponent::initialize( TamyEditor& mgr )
 {
    ASSERT_MSG( m_mgr == NULL, "MainAppComponent is already initialized" );
    m_mgr = &mgr;
+
+   m_timeController = &mgr.getTimeController();
+   m_timeController->add( "scene" );
 
    // setup services
    mgr.registerService< TimeController >( *this, *m_timeController );
@@ -278,10 +276,7 @@ void MainAppComponent::loadScene()
    std::string filter( "Scene files (*." );
    filter += std::string( Model::getExtension() ) + ")";
 
-   QString fullFileName = QFileDialog::getOpenFileName( m_mgr, 
-      tr("Load scene"), 
-      rootDir.c_str(), 
-      filter.c_str() );
+   QString fullFileName = QFileDialog::getOpenFileName( m_mgr, tr("Load scene"), rootDir.c_str(), filter.c_str() );
 
    if ( fullFileName.isEmpty() == true ) 
    {

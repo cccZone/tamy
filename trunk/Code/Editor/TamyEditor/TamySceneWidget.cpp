@@ -8,29 +8,6 @@
 #include <QEvent.h>
 
 
-///////////////////////////////////////////////////////////////////////////////
-
-namespace // anonymous
-{
-
-   class RendererUpdater : public TimeDependent
-   {
-   private:
-      Renderer& m_renderer;
-
-   public:
-      RendererUpdater(Renderer& renderer)
-      : m_renderer(renderer)
-      {}
-
-      void update(float timeElapsed)
-      {
-         m_renderer.render();
-      }
-   };
-
-} // anonymous
-
 IDirect3D9* TamySceneWidget::s_d3d9 = NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,9 +40,6 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std:
       }
    }
 
-   // create a time controller
-   m_localTimeController = new TimeController( timeController );
-
    // acquire the application's resources manager instance
    m_resMgr = &ResourcesManager::getInstance();
 
@@ -84,6 +58,14 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std:
    m_camera = &m_renderer->getActiveCamera();
    D3DXMatrixTranslation(&(m_camera->accessLocalMtx()), 0, 5, 0);
 
+   // create and setup the time controller
+   m_localTimeController = new TimeController( timeController );
+   m_localTimeController->add("rendering");
+   m_localTimeController->get("rendering").add( *m_renderer );
+   m_localTimeController->add("input");
+   m_localTimeController->get("input").add( *this );
+   m_localTimeController->get("input").add( *m_keysStatusManager );
+
    // initialize the widget
    initialize();
 }
@@ -92,6 +74,8 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std:
 
 TamySceneWidget::~TamySceneWidget()
 {
+   deinitialize();
+
    delete m_localTimeController;
    m_localTimeController = NULL;
 
@@ -106,8 +90,6 @@ TamySceneWidget::~TamySceneWidget()
    delete m_renderer; m_renderer = NULL;
 
    m_resMgr = NULL;
-
-   deinitialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -127,9 +109,24 @@ void TamySceneWidget::setScene( Model& scene )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void TamySceneWidget::clearScene()
+{
+   deinitialize();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void TamySceneWidget::deinitialize()
 {
+   // reset the rendering mechanism
+   if ( m_renderingMech )
+   {
+      m_renderingMech->remove( "sceneRenderer" );
+   }
+
+   // remove the scenes
    delete m_debugScene; m_debugScene = NULL;
+   m_scene = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -137,10 +134,8 @@ void TamySceneWidget::deinitialize()
 void TamySceneWidget::initialize()
 {
    // create a debug renderer
+   delete m_debugScene;
    m_debugScene = new DebugScene();
-
-   // setup the time controller
-   setupTimeController();
 
    // initialize the rendering pipeline
    RenderingPipeline* pipeline = NULL;
@@ -169,19 +164,6 @@ void TamySceneWidget::initialize()
          sceneRenderer->addScene( RPS_Main, *m_scene );
       }
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamySceneWidget::setupTimeController()
-{
-   m_localTimeController->remove("rendering");
-   m_localTimeController->add("rendering");
-   m_localTimeController->get("rendering").add( new RendererUpdater( *m_renderer ) );
-   m_localTimeController->remove("input");
-   m_localTimeController->add("input");
-   m_localTimeController->get("input").add( new TTimeDependent<UserInputController>( *this ) );
-   m_localTimeController->get("input").add( new TTimeDependent<KeysStatusManager>( *m_keysStatusManager ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -29,7 +29,10 @@ void CompositeRenderingMechanism::initialize( Renderer& renderer )
    unsigned int count = m_members.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      m_members[i]->initialize( renderer );
+      if ( m_members[i] )
+      {
+         m_members[i]->initialize( renderer );
+      }
    }
 }
 
@@ -40,11 +43,15 @@ void CompositeRenderingMechanism::deinitialize( Renderer& renderer )
    unsigned int count = m_members.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      m_members[i]->deinitialize( renderer );
-      delete m_members[i];
+      if ( m_members[i] )
+      {
+         m_members[i]->deinitialize( renderer );
+         delete m_members[i];
+      }
    }
    m_members.clear();
    m_mechanismsMap.clear();
+   m_freeSlots.clear();
 
    m_renderer = NULL;
 }
@@ -68,9 +75,21 @@ void CompositeRenderingMechanism::add( const std::string& name, RenderingMechani
    }
    else
    {
+      int freeSpotIdx;
+      if ( !m_freeSlots.empty() )
+      {
+         freeSpotIdx = m_freeSlots.front();
+         m_freeSlots.pop_front();
+      }
+      else
+      {
+         freeSpotIdx = m_members.size();
+         m_members.push_back( NULL );
+      }
+
       // this is a brand new mechanism
-      m_mechanismsMap.insert( std::make_pair( name, m_members.size() ) );
-      m_members.push_back( mechanism );
+      m_mechanismsMap.insert( std::make_pair( name, freeSpotIdx ) );
+      m_members[freeSpotIdx] = mechanism;
    }
 
    if ( m_renderer )
@@ -81,12 +100,32 @@ void CompositeRenderingMechanism::add( const std::string& name, RenderingMechani
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void CompositeRenderingMechanism::remove( const std::string& name )
+{
+   MechanismsMap::iterator it = m_mechanismsMap.find( name );
+   if ( it != m_mechanismsMap.end() )
+   {
+      // such mechanism already exists - replace it
+      m_members[ it->second ]->deinitialize( *m_renderer );
+      delete m_members[ it->second ];
+      m_members[ it->second ] = NULL;
+      m_freeSlots.push_back( it->second );
+
+      m_mechanismsMap.erase( it );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void CompositeRenderingMechanism::render( Renderer& renderer )
 {
    unsigned int count = m_members.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      m_members[i]->render( renderer );
+      if ( m_members[i] )
+      {
+         m_members[i]->render( renderer );
+      }
    }
 }
 

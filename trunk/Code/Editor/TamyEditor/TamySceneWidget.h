@@ -28,8 +28,7 @@ class TimeController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class TamySceneWidget : public QWidget, 
-                        public UserInputController
+class TamySceneWidget : public QWidget, public UserInputController
 {
    Q_OBJECT
 
@@ -73,6 +72,11 @@ public:
     */
    void setScene( Model& scene );
 
+   /**
+    * Stops rendering the scene that was previously set.
+    */
+   void clearScene();
+
    // -------------------------------------------------------------------------
    // Accessors
    // -------------------------------------------------------------------------
@@ -107,7 +111,6 @@ protected:
 
 private:
    unsigned char toDXKey(int qtKeyCode) const;
-   void setupTimeController();
    void initialize();
    void deinitialize();
 };

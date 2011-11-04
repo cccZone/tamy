@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EntityTests.cpp" />
     <ClCompile Include="ModelTests.cpp" />
   </ItemGroup>
   <ItemGroup>

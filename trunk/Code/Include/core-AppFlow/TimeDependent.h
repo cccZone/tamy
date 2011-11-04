@@ -3,29 +3,21 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * An interface all objects that can be updated can implement.
+ */
 class TimeDependent
 {
 public:
    virtual ~TimeDependent() {}
 
-   virtual void update(float timeElapsed) = 0;
+   /**
+    * Updates the object's state.
+    *
+    * @param timeElapsed      time elapsed since the last time this method was called.
+    */
+   virtual void update( float timeElapsed ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<typename T>
-class TTimeDependent : public TimeDependent
-{
-private:
-   T& m_instance;
-
-public:
-   TTimeDependent(T& instance) : m_instance(instance) {}
-
-   void update(float timeElapsed)
-   {
-      m_instance.update(timeElapsed);
-   }
-};
-
-///////////////////////////////////////////////////////////////////////////////

@@ -108,6 +108,14 @@ void SingleTextureMaterial::onComponentAdded( Component< Model >& component )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Entity* SingleTextureMaterial::cloneSelf() const
+{
+   SingleTextureMaterial* entity = new SingleTextureMaterial( *this );
+   return entity;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool SingleTextureMaterial::onEquals( const SingleTextureMaterial& rhs ) const
 {
    return ( m_texture == rhs.m_texture ) && ( m_material == rhs.m_material );

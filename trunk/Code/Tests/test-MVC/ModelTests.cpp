@@ -22,10 +22,16 @@ namespace // anonymous
       int m_index;
 
    public:
-      EntityAMock() : m_index(-1) {}
-      EntityAMock(int idx) : m_index(idx) {}
+      EntityAMock() : m_index( -1 ) {}
+      EntityAMock( int idx ) : m_index( idx ) {}
 
-      int getIndex() const {return m_index;}
+      int getIndex() const { return m_index; }
+
+   protected:
+      Entity* cloneSelf() const
+      {
+         return new EntityAMock( m_index );
+      }
    };
    BEGIN_OBJECT(EntityAMock, Entity)
       PROPERTY_EDIT("index", int, m_index)
@@ -42,10 +48,16 @@ namespace // anonymous
       int m_index;
 
    public:
-      EntityBMock() : m_index(-1) {}
-      EntityBMock(int idx) : m_index(idx) {}
+      EntityBMock() : m_index( -1 ) {}
+      EntityBMock( int idx ) : m_index( idx ) {}
 
-      int getIndex() const {return m_index;}
+      int getIndex() const { return m_index; }
+
+   protected:
+      Entity* cloneSelf() const
+      {
+         return new EntityBMock( m_index );
+      }
    };
    BEGIN_OBJECT(EntityBMock, Entity)
       PROPERTY_EDIT("index", int, m_index)
@@ -61,10 +73,17 @@ namespace // anonymous
 
    public:
       UpdatedEntityMock() : m_value( 0.f ) {}
+      UpdatedEntityMock( int value ) : m_value( value ) {}
 
       void onUpdate( float timeElapsed ) { m_value = timeElapsed; }
 
       float getValue() const { return m_value; }
+
+   protected:
+      Entity* cloneSelf() const
+      {
+         return new UpdatedEntityMock( m_value );
+      }
    };
 
    // -------------------------------------------------------------------------
@@ -375,3 +394,4 @@ TEST( Model, stateUpdate )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+

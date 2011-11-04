@@ -42,11 +42,6 @@ public:
    MainAppComponent( QApplication& app, const char* fsRoot );
    ~MainAppComponent();
 
-   /**
-    * Updates the state of the editor.
-    */
-   void update( float timeElapsed );
-
    // -------------------------------------------------------------------------
    // Scene management
    // -------------------------------------------------------------------------

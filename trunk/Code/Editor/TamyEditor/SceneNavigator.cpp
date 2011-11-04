@@ -172,7 +172,7 @@ void SceneNavigator::onServiceRegistered( TamyEditor& mgr )
 
    m_timeController->add( "sceneNavigation" );
    TimeControllerTrack& timeTrack = m_timeController->get( "sceneNavigation" );
-   timeTrack.add( new TTimeDependent< SceneNavigator >( *this ) );
+   timeTrack.add( *this );
 
    m_cameraController = new UnconstrainedMotionController( *m_camera );
    InputInterpreter* inputHandler = new InputInterpreter( *m_uic, 
@@ -197,11 +197,7 @@ void SceneNavigator::reset()
    delete m_cameraController; 
    m_cameraController = NULL;
 
-   if ( m_timeController )
-   {
-      m_timeController->remove("sceneNavigation");
-      m_timeController = NULL;
-   }
+   m_timeController = NULL;
 
    if ( m_ksm )
    {

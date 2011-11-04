@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class UpdatableMock
+class UpdatableMock : public TimeDependent
 {
 private:
    int m_timesCalled;

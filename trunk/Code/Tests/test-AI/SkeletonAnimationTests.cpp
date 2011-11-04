@@ -16,6 +16,9 @@ namespace // anonymous
       DECLARE_CLASS( MockNonAnimatedEntity )
    public:
       MockNonAnimatedEntity( const std::string& id = "" ) : Entity( id ) {}
+
+   protected:
+      Entity* cloneSelf() const { return new MockNonAnimatedEntity(); }
    };
    BEGIN_OBJECT( MockNonAnimatedEntity, Entity );
    END_OBJECT();

@@ -20,14 +20,7 @@ ComponentsManager< Derived >::ComponentsManager()
 template< typename Derived >
 ComponentsManager< Derived >::~ComponentsManager() 
 {
-   ComponentsArr compsToRemove = m_comps;
-   m_comps.clear();
-
-   int count = (int)compsToRemove.size();
-   for ( int i = count - 1; i >= 0; --i )
-   {
-      delete compsToRemove[i];
-   }
+   removeAllComponents();
 
    delete m_services; m_services = NULL;
 }
@@ -82,6 +75,21 @@ void ComponentsManager< Derived >::removeComponent( Component< Derived >& compon
          m_comps.erase( it );
          break;
       }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Derived >
+void ComponentsManager< Derived >::removeAllComponents()
+{
+   ComponentsArr compsToRemove = m_comps;
+   m_comps.clear();
+
+   int count = (int)compsToRemove.size();
+   for ( int i = count - 1; i >= 0; --i )
+   {
+      delete compsToRemove[i];
    }
 }
 

@@ -123,7 +123,7 @@ private:
 
       bool doesMatch( const Class& checkedClassType ) const
       {
-         return m_refClass.isA( checkedClassType );
+         return checkedClassType.isA( m_refClass );
       }
    };
 
