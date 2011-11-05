@@ -139,6 +139,14 @@
     <Filter Include="Widgets\SceneRenderWidget">
       <UniqueIdentifier>{19fe3b4b-db85-4402-896f-e2f8ff54b582}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\Chart\Items">
+      <UniqueIdentifier>{70fdc8c1-f1e8-4a6a-b88d-02eb6bc29d01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="QtImplementation\Generated Files\Template">
+      <UniqueIdentifier>{300eec33-8400-4808-ab01-3c8f5a1998e2}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -285,14 +293,26 @@
     <ClInclude Include="SkeletonAnimationEventsChart.h">
       <Filter>ResourceEditors\SkeletonAnimationEditor\EventsChart</Filter>
     </ClInclude>
-    <ClInclude Include="ChartLine.h">
-      <Filter>Widgets\Chart</Filter>
+    <ClInclude Include="SceneRenderer.h">
+      <Filter>Components\SceneRenderer</Filter>
     </ClInclude>
     <ClInclude Include="ChartScene.h">
       <Filter>Widgets\Chart</Filter>
     </ClInclude>
-    <ClInclude Include="SceneRenderer.h">
-      <Filter>Components\SceneRenderer</Filter>
+    <ClInclude Include="ChartLine.h">
+      <Filter>Widgets\Chart\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="ChartItem.h">
+      <Filter>Widgets\Chart</Filter>
+    </ClInclude>
+    <ClInclude Include="VerticalChartMarker.h">
+      <Filter>Widgets\Chart\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimChartScales.h">
+      <Filter>ResourceEditors\SkeletonAnimationEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationTimeValueGetter.h">
+      <Filter>ResourceEditors\SkeletonAnimationEditor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -618,12 +638,6 @@
     <ClCompile Include="SkeletonAnimationEventsChart.cpp">
       <Filter>ResourceEditors\SkeletonAnimationEditor\EventsChart</Filter>
     </ClCompile>
-    <ClCompile Include="ChartLine.cpp">
-      <Filter>Widgets\Chart</Filter>
-    </ClCompile>
-    <ClCompile Include="ChartScene.cpp">
-      <Filter>Widgets\Chart</Filter>
-    </ClCompile>
     <ClCompile Include="SceneRenderer.cpp">
       <Filter>Components\SceneRenderer</Filter>
     </ClCompile>
@@ -632,6 +646,27 @@
     </ClCompile>
     <ClCompile Include="SceneQuery.cpp">
       <Filter>Components\SceneQueries</Filter>
+    </ClCompile>
+    <ClCompile Include="ChartView.cpp">
+      <Filter>Widgets\Chart</Filter>
+    </ClCompile>
+    <ClCompile Include="ChartScene.cpp">
+      <Filter>Widgets\Chart</Filter>
+    </ClCompile>
+    <ClCompile Include="ChartLine.cpp">
+      <Filter>Widgets\Chart\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ChartView.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ChartView.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ChartView.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="VerticalChartMarker.cpp">
+      <Filter>Widgets\Chart\Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -771,6 +806,9 @@
     </CustomBuild>
     <CustomBuild Include="TamySceneWidget.h">
       <Filter>Widgets\SceneRenderWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ChartView.h">
+      <Filter>Widgets\Chart</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

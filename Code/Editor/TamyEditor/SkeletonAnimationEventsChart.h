@@ -2,7 +2,7 @@
 /// @brief  skeleton animation events chart visualizer
 #pragma once
 
-#include <QGraphicsScene>
+#include "ChartScene.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,7 +14,7 @@ class SkeletonAnimation;
 /**
  * Skeleton animation keys chart visualizer.
  */
-class SkeletonAnimationEventsChart : public QGraphicsScene
+class SkeletonAnimationEventsChart : public ChartScene
 {
 private:
    SkeletonAnimation&      m_animation;

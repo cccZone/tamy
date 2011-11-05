@@ -2,7 +2,7 @@
 /// @brief  chart line related graphic items
 #pragma once
 
-#include <QGraphicsItem>
+#include "ChartItem.h"
 #include <QColor>
 #include <QRectF>
 #include <QPen>
@@ -52,17 +52,17 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ChartLine : public QGraphicsItem
+class ChartLine : public ChartItem
 {
 private:
    ChartScene&                            m_scene;
    QColor                                 m_color;
+   float                                  m_penWidth;
    QPen                                   m_pen;
    ChartLinePointsProvider*               m_pointsProvider;
 
    QRectF                                 m_rect;
    QPointF*                               m_points;
-   QPointF*                               m_scaledPoints;
    unsigned int                           m_pointsCount;
 
    std::vector< ChartLineKeyValue* >      m_keys;
@@ -78,18 +78,6 @@ public:
     */
    ChartLine( ChartScene& scene, const QColor& color, float width, ChartLinePointsProvider* pointsProvider );
    ~ChartLine();
-
-   /**
-    * Updates the line based on the data.
-    */
-   void updateLine();
-
-   /**
-    * Called when the scale of the parent chart scene changes.
-    *
-    * @param newScale
-    */
-   void onScaleChanged();
 
    /**
     * Called when a key value changes.

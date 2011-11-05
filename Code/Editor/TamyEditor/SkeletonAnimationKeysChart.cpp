@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <math.h>
 #include "core/Algorithms.h"
+#include "AnimChartScales.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,13 +41,13 @@ namespace // anonymous
             for ( unsigned int i = 0; i < outCount; ++i )
             {
                m_boneAnimation.getTranslationKey( i, pos, time );
-               outPoints[i].setX( time );
+               outPoints[i].setX( time * ANIMATION_TIME_SCALE );
 
                switch( m_keyIdx )
                {
-               case BAKEY_POS_X: { outPoints[i].setY( pos.x ); break; }
-               case BAKEY_POS_Y: { outPoints[i].setY( pos.y ); break; }
-               case BAKEY_POS_Z: { outPoints[i].setY( pos.z ); break; }
+               case BAKEY_POS_X: { outPoints[i].setY( pos.x * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_Y: { outPoints[i].setY( pos.y * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_Z: { outPoints[i].setY( pos.z * ANIMATION_VALUE_SCALE ); break; }
                }
             }
          }
@@ -65,7 +66,7 @@ namespace // anonymous
             for ( unsigned int i = 0; i < outCount; ++i )
             {
                m_boneAnimation.getOrientationKey( i, orient, time );
-               outPoints[i].setX( time );
+               outPoints[i].setX( time * ANIMATION_TIME_SCALE );
 
                float angle = 0.0f;
                switch( m_keyIdx )
@@ -92,13 +93,13 @@ namespace // anonymous
                D3DXVECTOR3 pos;
                float time;
                m_boneAnimation.getTranslationKey( pointIdx, pos, time );
-               result.setX( time );
+               result.setX( time * ANIMATION_TIME_SCALE );
 
                switch( m_keyIdx )
                {
-               case BAKEY_POS_X: { result.setY( pos.x ); break; }
-               case BAKEY_POS_Y: { result.setY( pos.y ); break; }
-               case BAKEY_POS_Z: { result.setY( pos.z ); break; }
+               case BAKEY_POS_X: { result.setY( pos.x * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_Y: { result.setY( pos.y * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_Z: { result.setY( pos.z * ANIMATION_VALUE_SCALE ); break; }
                }
             }
          }
@@ -111,7 +112,7 @@ namespace // anonymous
                D3DXQUATERNION orient;
                float time;
                m_boneAnimation.getOrientationKey( pointIdx, orient, time );
-               result.setX( time );
+               result.setX( time * ANIMATION_TIME_SCALE );
 
                float angle = 0.0f;
                switch( m_keyIdx )
@@ -144,9 +145,9 @@ namespace // anonymous
 
             switch( m_keyIdx )
             {
-            case BAKEY_POS_X: { posKey.x = pos.y(); break; }
-            case BAKEY_POS_Y: { posKey.y = pos.y(); break; }
-            case BAKEY_POS_Z: { posKey.z = pos.y(); break; }
+            case BAKEY_POS_X: { posKey.x = pos.y() / ANIMATION_VALUE_SCALE; break; }
+            case BAKEY_POS_Y: { posKey.y = pos.y() / ANIMATION_VALUE_SCALE; break; }
+            case BAKEY_POS_Z: { posKey.z = pos.y() / ANIMATION_VALUE_SCALE; break; }
             }
 
             m_boneAnimation.setTranslationKey( pointIdx, posKey );
@@ -205,6 +206,10 @@ SkeletonAnimationKeysChart::SkeletonAnimationKeysChart( SkeletonAnimation& anima
    m_colors[BAKEY_YAW] = QColor( 163, 206, 76 );
    m_colors[BAKEY_PITCH] = QColor( 65, 193, 136 );
    m_colors[BAKEY_ROLL] = QColor( 84, 206, 255 );
+
+   float animLength = animation.getAnimationLength();
+   float maxVal = 100.0f * ANIMATION_VALUE_SCALE; // we can edit an animation up to 100 meters - should be more than enough
+   setSceneRect( 0, -maxVal, animLength * ANIMATION_TIME_SCALE, 2.0f * maxVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -322,5 +327,3 @@ void BoneSRTAnimationChart::updateVisibleKeys()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-// TODO: add an animation preview feature
