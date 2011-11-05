@@ -8,6 +8,7 @@
 #include <QScrollArea>
 #include "SkeletonAnimationKeysChart.h"
 #include "SkeletonAnimationEventsChart.h"
+#include "VerticalChartMarker.h"
 #include "core-AI/SkeletonAnimation.h"
 #include "core-AI/SkeletonAnimationController.h"
 #include "core-MVC/ModelEntity.h"
@@ -15,9 +16,12 @@
 #include "core-AppFlow.h"
 #include "core-Renderer/Skeleton.h"
 #include "TamySceneWidget.h"
+#include "ChartView.h"
 #include <QSettings>
 #include <QFileDialog>
-
+#include <QSlider>
+#include "AnimChartScales.h"
+#include "AnimationTimeValueGetter.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,6 +33,9 @@ SkeletonAnimationEditor::SkeletonAnimationEditor( SkeletonAnimation& animation )
    , m_bonesList( NULL )
    , m_scene( NULL )
    , m_timeTrack( NULL )
+   , m_animationController( NULL )
+   , m_keysTimeTrackingMarker( NULL )
+   , m_eventsTimeTrackingMarker( NULL )
    , m_playing( false )
 {
    setAttribute( Qt::WA_DeleteOnClose );
@@ -44,11 +51,24 @@ SkeletonAnimationEditor::~SkeletonAnimationEditor()
       m_mgr->unregisterSubEditor( *this );
    }
 
+   m_timeTrack->remove( *m_animationKeysChartView );
+   m_timeTrack->remove( *m_animationEventsChartView );
+
+   if ( m_keysTimeTrackingMarker )
+   {
+      m_timeTrack->remove( *m_keysTimeTrackingMarker );
+   }
+   if ( m_eventsTimeTrackingMarker )
+   {
+      m_timeTrack->remove( *m_eventsTimeTrackingMarker );
+   }
    if ( m_scene )
    {
       m_timeTrack->remove( *m_scene );
    }
    m_timeTrack = NULL;
+
+   m_animationController = NULL;
 
    delete m_scene;
    m_scene = NULL;
@@ -146,59 +166,81 @@ void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
 
    // right side frames
    {
-      QSplitter* chartsSplitter = new QSplitter( mainSplitter );
-      mainSplitter->addWidget( chartsSplitter );
-      chartsSplitter->setOrientation( Qt::Vertical );
+      QFrame* mainChartsFrame = new QFrame( mainSplitter );
+      mainSplitter->addWidget( mainChartsFrame );
 
-      // animation keys chart
+      QHBoxLayout* mainChartsFrameLayout = new QHBoxLayout( mainChartsFrame );
+      mainChartsFrame->setLayout( mainChartsFrameLayout );
+
+      // keys selection frame
       {
-         QFrame* animationKeysChartFrame = new QFrame( chartsSplitter );
-         chartsSplitter->addWidget( animationKeysChartFrame );
+         QFrame* keysSelectionFrame = new QFrame( mainChartsFrame );
+         mainChartsFrameLayout->addWidget( keysSelectionFrame );
 
-         QHBoxLayout* animationKeysChartFrameLayout = new QHBoxLayout( animationKeysChartFrame );
-         animationKeysChartFrame->setLayout( animationKeysChartFrameLayout );
+         QVBoxLayout* keysSelectionLayout = new QVBoxLayout( keysSelectionFrame );
+         keysSelectionFrame->setLayout( keysSelectionLayout );
 
-         // keys selection frame
-         {
-            QFrame* keysSelectionFrame = new QFrame( animationKeysChartFrame );
-            animationKeysChartFrameLayout->addWidget( keysSelectionFrame );
+         QCheckBox* posKeyXCheckBox = new QCheckBox( "X", keysSelectionFrame );
+         keysSelectionLayout->addWidget( posKeyXCheckBox );
+         connect( posKeyXCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyX( int ) ) );
 
-            QVBoxLayout* keysSelectionLayout = new QVBoxLayout( keysSelectionFrame );
-            keysSelectionFrame->setLayout( keysSelectionLayout );
+         QCheckBox* posKeyYCheckBox = new QCheckBox( "Y", keysSelectionFrame );
+         keysSelectionLayout->addWidget( posKeyYCheckBox );
+         connect( posKeyYCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyY( int ) ) );
 
-            QCheckBox* posKeyXCheckBox = new QCheckBox( "X", keysSelectionFrame );
-            keysSelectionLayout->addWidget( posKeyXCheckBox );
-            connect( posKeyXCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyX( int ) ) );
+         QCheckBox* posKeyZCheckBox = new QCheckBox( "Z", keysSelectionFrame );
+         keysSelectionLayout->addWidget( posKeyZCheckBox );
+         connect( posKeyZCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyZ( int ) ) );
 
-            QCheckBox* posKeyYCheckBox = new QCheckBox( "Y", keysSelectionFrame );
-            keysSelectionLayout->addWidget( posKeyYCheckBox );
-            connect( posKeyYCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyY( int ) ) );
+         QCheckBox* orientKeyYawCheckBox = new QCheckBox( "Yaw", keysSelectionFrame );
+         keysSelectionLayout->addWidget( orientKeyYawCheckBox );
+         connect( orientKeyYawCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyYaw( int ) ) );
 
-            QCheckBox* posKeyZCheckBox = new QCheckBox( "Z", keysSelectionFrame );
-            keysSelectionLayout->addWidget( posKeyZCheckBox );
-            connect( posKeyZCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyZ( int ) ) );
+         QCheckBox* orientKeyPitchCheckBox = new QCheckBox( "Pitch", keysSelectionFrame );
+         keysSelectionLayout->addWidget( orientKeyPitchCheckBox );
+         connect( orientKeyPitchCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyPitch( int ) ) );
 
-            QCheckBox* orientKeyYawCheckBox = new QCheckBox( "Yaw", keysSelectionFrame );
-            keysSelectionLayout->addWidget( orientKeyYawCheckBox );
-            connect( orientKeyYawCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyYaw( int ) ) );
-
-            QCheckBox* orientKeyPitchCheckBox = new QCheckBox( "Pitch", keysSelectionFrame );
-            keysSelectionLayout->addWidget( orientKeyPitchCheckBox );
-            connect( orientKeyPitchCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyPitch( int ) ) );
-
-            QCheckBox* orientKeyRollCheckBox = new QCheckBox( "Roll", keysSelectionFrame );
-            keysSelectionLayout->addWidget( orientKeyRollCheckBox );
-            connect( orientKeyRollCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyRoll( int ) ) );
-         }
-
-         QGraphicsView* animationKeysChartView = new QGraphicsView( m_animationKeysChart, chartsSplitter );
-         animationKeysChartFrameLayout->addWidget( animationKeysChartView );
-         animationKeysChartView->setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
+         QCheckBox* orientKeyRollCheckBox = new QCheckBox( "Roll", keysSelectionFrame );
+         keysSelectionLayout->addWidget( orientKeyRollCheckBox );
+         connect( orientKeyRollCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyRoll( int ) ) );
       }
 
-      QGraphicsView* animationEventsChartView = new QGraphicsView( m_animationEventsChart, chartsSplitter );
-      chartsSplitter->addWidget( animationEventsChartView );
-      animationEventsChartView->setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
+      // charts section
+      {
+         QFrame* animationChartsFrame = new QFrame( mainChartsFrame );
+         mainChartsFrameLayout->addWidget( animationChartsFrame );
+         QVBoxLayout* animationChartsFrameLayout = new QVBoxLayout( animationChartsFrame );
+         animationChartsFrame->setLayout( animationChartsFrameLayout );
+
+         // splitter with the keys and events charts
+         {
+            QSplitter* animationChartsSplitter = new QSplitter( animationChartsFrame );
+            animationChartsSplitter->setOrientation( Qt::Vertical );
+            animationChartsFrameLayout->addWidget( animationChartsSplitter );
+
+            // keys chart
+            {
+               m_animationKeysChartView = new ChartView( m_animationKeysChart, animationChartsSplitter );
+               animationChartsSplitter->addWidget( m_animationKeysChartView );
+               m_animationKeysChartView->setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
+            }
+
+            // events chart
+            {
+               m_animationEventsChartView = new ChartView( m_animationEventsChart, animationChartsSplitter );
+               animationChartsSplitter->addWidget( m_animationEventsChartView );
+               m_animationEventsChartView->setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
+            }
+         }
+         
+         // time control slider
+         {
+            m_timeControlWidget = new QSlider( Qt::Horizontal, animationChartsFrame );
+            animationChartsFrameLayout->addWidget( m_timeControlWidget );
+
+            // connect( m_timeControlWidget, SIGNAL( valueChanged() ), this, SLOT( onTimeValueChanged() ) );
+         }
+      }
    }
 
    // adjust the main splitter size
@@ -292,6 +334,17 @@ void SkeletonAnimationEditor::togglePlay()
    if ( m_playing )
    {
       m_timeTrack->remove( *m_scene );
+      m_timeTrack->remove( *m_animationKeysChartView );
+      m_timeTrack->remove( *m_animationEventsChartView );
+      m_timeTrack->remove( *m_keysTimeTrackingMarker );
+      m_timeTrack->remove( *m_eventsTimeTrackingMarker );
+
+      // remove the time tracking widgets
+      m_animationKeysChart->removeItem( m_keysTimeTrackingMarker );
+      m_animationEventsChart->removeItem( m_eventsTimeTrackingMarker );
+
+      delete m_keysTimeTrackingMarker;
+      delete m_eventsTimeTrackingMarker;
 
       // update the UI
       m_actionPlay->setIcon( m_runSceneIcon );
@@ -300,6 +353,17 @@ void SkeletonAnimationEditor::togglePlay()
    else
    {
       m_timeTrack->add( *m_scene );
+      m_timeTrack->add( *m_animationKeysChartView );
+      m_timeTrack->add( *m_animationEventsChartView );
+
+      // add the time tracking widgets
+      m_keysTimeTrackingMarker = new VerticalChartMarker( new AnimationTimeValueGetter( *m_animationController, ANIMATION_TIME_SCALE ) );
+      m_eventsTimeTrackingMarker = new VerticalChartMarker( new AnimationTimeValueGetter( *m_animationController, ANIMATION_TIME_SCALE ) );
+      m_timeTrack->add( *m_keysTimeTrackingMarker );
+      m_timeTrack->add( *m_eventsTimeTrackingMarker );
+
+      m_animationKeysChart->addItem( m_keysTimeTrackingMarker );
+      m_animationEventsChart->addItem( m_eventsTimeTrackingMarker );
 
       // update the UI
       m_actionPlay->setIcon( m_stopSceneIcon );
@@ -312,8 +376,6 @@ void SkeletonAnimationEditor::togglePlay()
 
 bool SkeletonAnimationEditor::visualizeAnimation()
 {
-   // TODO: ability to drag and drop a model resource from the resources browser
-
    // destroy the previous scene
    if ( m_scene )
    {
@@ -357,9 +419,9 @@ bool SkeletonAnimationEditor::visualizeAnimation()
    }
 
    // create a scene using the animation
-   SkeletonAnimationController* animationController = new SkeletonAnimationController( "animation" );
-   animationController->setAnimationSource( m_animation );
-   skeletonRootEntity->add( animationController );
+   m_animationController = new SkeletonAnimationController( "animation" );
+   m_animationController->setAnimationSource( m_animation );
+   skeletonRootEntity->add( m_animationController );
 
    m_sceneWidget->setScene( *m_scene );
 
@@ -369,4 +431,4 @@ bool SkeletonAnimationEditor::visualizeAnimation()
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODO: one of the bones is drawn invalidly - learn why
-// TODO: visualisation of the time position and ability to change it by hand
+// TODO: ability to drag and drop a model resource from the resources browser

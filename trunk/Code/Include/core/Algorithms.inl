@@ -44,7 +44,8 @@ float mag( T value )
    }
    else
    {
-      int intMag = (int)log10( value );
+      float logVal = log10( value );
+      int intMag = (int)logVal;
       if ( intMag > 0 )
       {
          return (float)pow( 10.0, intMag );
@@ -62,6 +63,10 @@ float mag( T value )
       }
       else // intMag < 0
       {
+         if ( logVal - intMag < 0 )
+         {
+            --intMag;
+         }
          intMag = -intMag;
          return (float)( 1.0 / pow( 10.0, intMag ) );
       }

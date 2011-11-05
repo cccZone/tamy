@@ -10,6 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class SkeletonAnimation;
+class SkeletonAnimationController;
 class SkeletonAnimationKeysChart;
 class SkeletonAnimationEventsChart;
 class QListWidget;
@@ -17,6 +18,10 @@ class QListWidgetItem;
 class TamySceneWidget;
 class TimeControllerTrack;
 class Model;
+class QSplitter;
+class ChartView;
+class ChartScene;
+class VerticalChartMarker;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +40,13 @@ private:
    QListWidget*                              m_bonesList;
    TamySceneWidget*                          m_sceneWidget;
    TimeControllerTrack*                      m_timeTrack;
+
+   ChartView*                                m_animationKeysChartView;
+   VerticalChartMarker*                      m_keysTimeTrackingMarker;
+   ChartView*                                m_animationEventsChartView;
+   VerticalChartMarker*                      m_eventsTimeTrackingMarker;
+   QSlider*                                  m_timeControlWidget;
+   SkeletonAnimationController*              m_animationController;
 
    // animation playback control panel
    QIcon                                     m_runSceneIcon;
@@ -55,6 +67,11 @@ public:
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
    void initialize( TamyEditor& mgr );
+
+   // -------------------------------------------------------------------------
+   // TimeDependent implementation
+   // -------------------------------------------------------------------------
+   void update( float timeElapsed );
 
 public slots:
    void onBoneSelected( QListWidgetItem* item );

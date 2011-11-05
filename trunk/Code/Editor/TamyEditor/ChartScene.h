@@ -1,54 +1,29 @@
 /// @file   TamyEditor/ChartScene.h
-/// @brief  chart scene
+/// @brief  a chart scene
 #pragma once
 
 #include <QGraphicsScene>
-#include <QBrush>
-#include <QPen>
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class ChartLineKeyValue;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Chart scene.
+ * A chart scene.
  */
 class ChartScene : public QGraphicsScene
 {
-private:
-   float                   m_scale;
-
-   QBrush                  m_bgBrush;
-   QPen                    m_axisPen;
-   QPen                    m_gridPen;
-   QPen                    m_textPen;
-
-   ChartLineKeyValue*      m_trackedItem;
 
 public:
    /**
     * Constructor.
     */
    ChartScene();
-   virtual ~ChartScene();
+   ~ChartScene();
 
    /**
-    * Returns current scale of the chart.
+    * Translates the model coordinates to the scene coordinates.
     */
-   inline float getScale() const { return m_scale; }
-
-protected:
-   // -------------------------------------------------------------------------
-   // QGraphicsScene
-   // -------------------------------------------------------------------------
-   void drawBackground( QPainter* painter, const QRectF& rect );
-   void wheelEvent( QGraphicsSceneWheelEvent* wheelEvent );
-
-private:
-   int getAxisValues( const QRectF& rect, bool vertical, std::vector< float >& outPositions, std::vector< float >& outValues ) const;
+   void modelToScene( const QRectF& modelRect, QRectF& sceneRect ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

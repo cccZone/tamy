@@ -9,17 +9,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 ChartLine::ChartLine( ChartScene& scene, const QColor& color, float width, ChartLinePointsProvider* pointsProvider )
-   : QGraphicsItem( NULL )
-   , m_scene( scene )
+   : m_scene( scene )
    , m_color( color )
+   , m_penWidth( width )
    , m_pen( QBrush( color ), width, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin )
    , m_pointsProvider( pointsProvider )
    , m_points( NULL )
-   , m_scaledPoints( NULL )
    , m_pointsCount( 0 )
 {
    getLineData();
-   updateLine();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,9 +29,6 @@ ChartLine::~ChartLine()
 
    delete [] m_points;
    m_points = NULL;
-
-   delete [] m_scaledPoints;
-   m_scaledPoints = NULL;
    
    m_pointsCount = 0;
 }
@@ -45,9 +40,6 @@ void ChartLine::getLineData()
    // reset previous values
    delete [] m_points;
    m_points = NULL;
-
-   delete [] m_scaledPoints;
-   m_scaledPoints = NULL;
 
    m_pointsCount = 0;
    m_rect = QRectF();
@@ -65,53 +57,18 @@ void ChartLine::getLineData()
    {
       m_pointsProvider->getPoints( m_points, m_pointsCount );
    }
-
-   if ( m_pointsCount > 0 )
-   {
-      m_scaledPoints = new QPointF[ m_pointsCount ];
-   }
-
    // add the keys onto the point markers
    for ( unsigned int i = 0; i < m_pointsCount; ++i )
    {
       ChartLineKeyValue* keyVal = new ChartLineKeyValue( *this, m_color, i );
+      keyVal->setPos( m_points[i] );
       m_keys.push_back( keyVal );
-   }
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-void ChartLine::updateLine()
-{
-   float scale = m_scene.getScale();
-
-   // calculate the scaled points
-   for ( unsigned int i = 0; i < m_pointsCount; ++i )
-   {
-      m_scaledPoints[i] = m_points[i] / scale;
-   }
-
-   // calculate the bounding rect
-   float left, right, top, bottom;
-   left = top = FLT_MAX;
-   right = bottom = -FLT_MAX;
-   for ( unsigned int i = 0; i < m_pointsCount; ++i )
-   {
-      if ( m_scaledPoints[i].x() < left ) { left = m_scaledPoints[i].x(); }
-      if ( m_scaledPoints[i].x() > right ) { right = m_scaledPoints[i].x(); }
-      if ( m_scaledPoints[i].y() < top ) { top = m_scaledPoints[i].y(); }
-      if ( m_scaledPoints[i].y() > bottom ) { bottom = m_scaledPoints[i].y(); }
-   }
-
-   if ( m_pointsCount > 0 )
-   {
-      m_rect = QRectF( left, top, right - left, bottom - top );
-   }
-
-   // update the positions of the respective keys
-   for ( unsigned int i = 0; i < m_pointsCount; ++i )
-   {
-      m_keys[i]->setPos( m_scaledPoints[i] );
+      // calculate the bounding rect
+      if ( m_points[i].x() < m_rect.left() ) { m_rect.setLeft( m_points[i].x() ); }
+      if ( m_points[i].x() > m_rect.right() ) { m_rect.setRight( m_points[i].x() ); }
+      if ( m_points[i].y() < m_rect.top() ) { m_rect.setTop( m_points[i].y() ); }
+      if ( m_points[i].y() > m_rect.bottom() ) { m_rect.setBottom( m_points[i].y() ); }
    }
 }
 
@@ -127,25 +84,14 @@ void ChartLine::updateKey( unsigned int keyIdx )
    // get the new position of the key
    m_points[keyIdx] = m_pointsProvider->getPoint( keyIdx );
 
-   // update the bounding rectangle
-   float scale = m_scene.getScale();
-   m_scaledPoints[keyIdx] = m_points[keyIdx] / scale;
-
    // calculate the bounding rect
-   if ( m_scaledPoints[keyIdx].x() < m_rect.left() ) { m_rect.setLeft( m_scaledPoints[keyIdx].x() ); }
-   if ( m_scaledPoints[keyIdx].x() > m_rect.right() ) { m_rect.setRight( m_scaledPoints[keyIdx].x() ); }
-   if ( m_scaledPoints[keyIdx].y() < m_rect.top() ) { m_rect.setTop( m_scaledPoints[keyIdx].y() ); }
-   if ( m_scaledPoints[keyIdx].y() > m_rect.bottom() ) { m_rect.setBottom( m_scaledPoints[keyIdx].y() ); }
+   if ( m_points[keyIdx].x() < m_rect.left() ) { m_rect.setLeft( m_points[keyIdx].x() ); }
+   if ( m_points[keyIdx].x() > m_rect.right() ) { m_rect.setRight( m_points[keyIdx].x() ); }
+   if ( m_points[keyIdx].y() < m_rect.top() ) { m_rect.setTop( m_points[keyIdx].y() ); }
+   if ( m_points[keyIdx].y() > m_rect.bottom() ) { m_rect.setBottom( m_points[keyIdx].y() ); }
 
    // update the positions of the key widget
-   m_keys[keyIdx]->setPos( m_scaledPoints[keyIdx] );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ChartLine::onScaleChanged()
-{
-   updateLine();
+   m_keys[keyIdx]->setPos( m_points[keyIdx] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -158,10 +104,7 @@ void ChartLine::onKeyValueChanged( unsigned int keyIdx )
       return;
    }
 
-   float scale = m_scene.getScale();
    QPointF pos = m_keys[keyIdx]->pos();
-   pos *= scale;
-
    m_pointsProvider->setPointPos( keyIdx, pos );
    
    // update the key position
@@ -186,16 +129,21 @@ QRectF ChartLine::boundingRect() const
 
 void ChartLine::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
 {
-   if ( m_scaledPoints == NULL || m_pointsCount == 0 )
+   if ( m_points == NULL || m_pointsCount == 0 )
    {
       return;
    }
+
+   const QTransform& deviceTransform = painter->deviceTransform();
+   float horizScale = deviceTransform.m11();
+   float currPenWidth = m_penWidth / horizScale;
+   m_pen.setWidthF( currPenWidth );
 
    painter->save();
 
    painter->setPen( m_pen );
    painter->setRenderHint( QPainter::Antialiasing, true );
-   painter->drawPolyline( m_scaledPoints, m_pointsCount );
+   painter->drawPolyline( m_points, m_pointsCount );
 
    painter->restore();
 }
@@ -214,10 +162,10 @@ ChartLineKeyValue::ChartLineKeyValue( ChartLine& parent, const QColor& color, un
    , m_pointIdx( pointIdx )
    , m_focused( false )
 {
-   m_rect.setLeft( -3.0f );
-   m_rect.setTop( -3.0f );
-   m_rect.setWidth( 6.0f );
-   m_rect.setHeight( 6.0f );
+   m_rect.setLeft( -3 );
+   m_rect.setTop( -3 );
+   m_rect.setWidth( 6 );
+   m_rect.setHeight( 6 );
 
    setFlag( QGraphicsItem::ItemIsSelectable, true );
    setFlag( QGraphicsItem::ItemIsMovable, true );
@@ -237,6 +185,12 @@ ChartLineKeyValue::~ChartLineKeyValue()
 
 void ChartLineKeyValue::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
 {
+   const QTransform& deviceTransform = painter->deviceTransform();
+   float horizScale = deviceTransform.m11();
+   m_selectedPen.setWidthF( 1.f / horizScale );
+   m_regularPen.setWidthF( 1.f / horizScale );
+   m_rect.setCoords( -3.0f / horizScale, -3.0f / horizScale, 3.0f / horizScale, 3.0f / horizScale );
+
    painter->save();
 
    painter->setPen( isSelected() ? m_selectedPen : m_regularPen );
