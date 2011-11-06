@@ -1,8 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor\MimeDataEncoder.h
-/// @brief  Common interface describing a mime data encoder 
-///         used by the DropArea widget
+/// @brief  Common interface describing a mime data encoder used by the DropArea widget
+#pragma once
 
 
 ///////////////////////////////////////////////////////////////////////////////

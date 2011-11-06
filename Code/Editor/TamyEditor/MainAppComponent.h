@@ -22,11 +22,6 @@ class MainAppComponent : public QObject, public Component< TamyEditor >
 private:
    QApplication&        m_app;
 
-   TimeController*      m_timeController;
-   ResourcesManager*    m_resourceMgr;
-
-   TamyEditor*          m_mgr;
-
    // editor related stuff
    QIcon                m_runSceneIcon;
    QIcon                m_stopSceneIcon;

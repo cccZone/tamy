@@ -23,10 +23,7 @@ public:
     * @param fs         file system from which we can access entry files
     * @param itemsFactory
     */
-   FSLeafNode( FSTreeNode* parent, 
-               const std::string& nodeName, 
-               const Filesystem& fs, 
-               TypeDescFactory< Resource >& itemsFactory );
+   FSLeafNode( FSTreeNode* parent,  const std::string& nodeName, const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory );
 
    // -------------------------------------------------------------------------
    // FSTreeNode implementation

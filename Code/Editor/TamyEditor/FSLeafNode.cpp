@@ -6,11 +6,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FSLeafNode::FSLeafNode( FSTreeNode* parent, 
-                        const std::string& nodeName, 
-                        const Filesystem& fs, 
-                        TypeDescFactory< Resource >& itemsFactory )
-: FSTreeNode( parent, nodeName, fs )
+FSLeafNode::FSLeafNode( FSTreeNode* parent, const std::string& nodeName, const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory )
+   : FSTreeNode( parent, nodeName, fs )
 {
    // set icon
    setEntryIcon( fs, itemsFactory );
@@ -100,7 +97,7 @@ std::string FSLeafNode::getRelativePath() const
 void FSLeafNode::editResource( ResourcesBrowser& editorsFactory )
 {
    std::string pathToResource = getRelativePath();
-   editorsFactory.editResource( pathToResource );
+   editorsFactory.editResource( pathToResource, icon(0) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

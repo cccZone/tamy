@@ -20,20 +20,17 @@ class Renderer;
 /**
  * Material editor's main class.
  */
-class MaterialEditor : public QMainWindow, public ResourceEditor
+class MaterialEditor : public ResourceEditor
 {
    Q_OBJECT
 
 private:
    Ui::MaterialEditorWindow         m_ui;
 
-   TamyEditor*                      m_mgr;
-
    PixelShader&                     m_shader;
    MaterialSyntaxHighlighter*       m_highlighter;
 
    ResourcesManager*                m_resourceMgr;
-   Renderer*                        m_renderer;
    bool                             m_docModified;
 
 public:
@@ -48,10 +45,9 @@ public:
    // -------------------------------------------------------------------------
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
-   void initialize( TamyEditor& mgr );
+   void onInitialize();
 
 public slots:
-   void loadFromFile();
    void save();
    void compile();
    void onScriptModified();

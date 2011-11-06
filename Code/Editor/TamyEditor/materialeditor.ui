@@ -1,432 +1,406 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <class>MaterialEditorWindow</class>
- <widget class="QMainWindow" name="MaterialEditorWindow">
+ <widget class="QWidget" name="MaterialEditorWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>821</width>
-    <height>549</height>
+    <width>811</width>
+    <height>484</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Material editor</string>
+   <string>Form</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
-    <item>
-     <widget class="QTextEdit" name="scriptEditor"/>
-    </item>
-    <item>
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QFrame" name="toolbarFrame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>0</number>
       </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
+      <property name="margin">
+       <number>0</number>
       </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>199</width>
-         <height>476</height>
-        </rect>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <widget class="QGroupBox" name="groupBox">
-          <property name="title">
-           <string>Rendering</string>
-          </property>
-          <layout class="QFormLayout" name="formLayout">
-           <property name="sizeConstraint">
-            <enum>QLayout::SetDefaultConstraint</enum>
-           </property>
-           <property name="formAlignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Culling mode:</string>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QFrame" name="editorFrame">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="margin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>234</width>
+           <height>454</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <item>
+           <widget class="QGroupBox" name="groupBox">
+            <property name="title">
+             <string>Rendering</string>
+            </property>
+            <layout class="QFormLayout" name="formLayout">
+             <property name="sizeConstraint">
+              <enum>QLayout::SetDefaultConstraint</enum>
              </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Z Buffer:</string>
+             <property name="formAlignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
              </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Z Buffer writing:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="cullingMode">
-             <item>
-              <property name="text">
-               <string>None</string>
-              </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Culling mode:</string>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Clockwise</string>
-              </property>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Z Buffer:</string>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Counter clockwise</string>
-              </property>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Z Buffer writing:</string>
+               </property>
+              </widget>
              </item>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QCheckBox" name="zBufferWriteEnabled">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QCheckBox" name="zBufferEnabled">
-             <property name="text">
-              <string/>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_2">
-          <property name="title">
-           <string>Texture stage</string>
-          </property>
-          <layout class="QFormLayout" name="formLayout_2">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_4">
-             <property name="text">
-              <string>U address:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="uAddressMode">
-             <item>
-              <property name="text">
-               <string>Wrap</string>
-              </property>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="cullingMode">
+               <item>
+                <property name="text">
+                 <string>None</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Clockwise</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Counter clockwise</string>
+                </property>
+               </item>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Mirror</string>
-              </property>
+             <item row="3" column="1">
+              <widget class="QCheckBox" name="zBufferWriteEnabled">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Clamp</string>
-              </property>
+             <item row="2" column="1">
+              <widget class="QCheckBox" name="zBufferEnabled">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Border</string>
-              </property>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="groupBox_2">
+            <property name="title">
+             <string>Texture stage</string>
+            </property>
+            <layout class="QFormLayout" name="formLayout_2">
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_4">
+               <property name="text">
+                <string>U address:</string>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Mirror once</string>
-              </property>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="uAddressMode">
+               <item>
+                <property name="text">
+                 <string>Wrap</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Mirror</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Clamp</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Border</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Mirror once</string>
+                </property>
+               </item>
+              </widget>
              </item>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>V address:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QComboBox" name="vAddressMode">
-             <item>
-              <property name="text">
-               <string>Wrap</string>
-              </property>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>V address:</string>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Mirror</string>
-              </property>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="vAddressMode">
+               <item>
+                <property name="text">
+                 <string>Wrap</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Mirror</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Clamp</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Border</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Mirror once</string>
+                </property>
+               </item>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Clamp</string>
-              </property>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_6">
+               <property name="text">
+                <string>W address</string>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Border</string>
-              </property>
+             <item row="2" column="1">
+              <widget class="QComboBox" name="wAddressMode">
+               <item>
+                <property name="text">
+                 <string>Wrap</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Mirror</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Clamp</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Border</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Mirror once</string>
+                </property>
+               </item>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Mirror once</string>
-              </property>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_7">
+               <property name="text">
+                <string>Minification filter:</string>
+               </property>
+              </widget>
              </item>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="text">
-              <string>W address</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QComboBox" name="wAddressMode">
-             <item>
-              <property name="text">
-               <string>Wrap</string>
-              </property>
+             <item row="3" column="1">
+              <widget class="QComboBox" name="minFilter">
+               <item>
+                <property name="text">
+                 <string>None</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Point</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Linear</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Anisotropic</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Pyramidal quad</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Gaussian quad</string>
+                </property>
+               </item>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Mirror</string>
-              </property>
+             <item row="4" column="0">
+              <widget class="QLabel" name="label_8">
+               <property name="text">
+                <string>Magification filter:</string>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Clamp</string>
-              </property>
+             <item row="5" column="0">
+              <widget class="QLabel" name="label_9">
+               <property name="text">
+                <string>Mipmap filter:</string>
+               </property>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Border</string>
-              </property>
+             <item row="5" column="1">
+              <widget class="QComboBox" name="mipFilter">
+               <item>
+                <property name="text">
+                 <string>None</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Point</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Linear</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Anisotropic</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Pyramidal quad</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Gaussian quad</string>
+                </property>
+               </item>
+              </widget>
              </item>
-             <item>
-              <property name="text">
-               <string>Mirror once</string>
-              </property>
+             <item row="4" column="1">
+              <widget class="QComboBox" name="magFilter">
+               <item>
+                <property name="text">
+                 <string>None</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Point</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Linear</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Anisotropic</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Pyramidal quad</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Gaussian quad</string>
+                </property>
+               </item>
+              </widget>
              </item>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_7">
-             <property name="text">
-              <string>Minification filter:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QComboBox" name="minFilter">
-             <item>
-              <property name="text">
-               <string>None</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Point</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Linear</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Anisotropic</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Pyramidal quad</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Gaussian quad</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_8">
-             <property name="text">
-              <string>Magification filter:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="label_9">
-             <property name="text">
-              <string>Mipmap filter:</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QComboBox" name="mipFilter">
-             <item>
-              <property name="text">
-               <string>None</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Point</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Linear</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Anisotropic</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Pyramidal quad</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Gaussian quad</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QComboBox" name="magFilter">
-             <item>
-              <property name="text">
-               <string>None</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Point</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Linear</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Anisotropic</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Pyramidal quad</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Gaussian quad</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>821</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-  </widget>
-  <action name="actionLoadFromFile">
-   <property name="text">
-    <string>Load from file</string>
-   </property>
-  </action>
-  <action name="actionSave">
-   <property name="text">
-    <string>Save</string>
-   </property>
-  </action>
-  <action name="actionSaveAs">
-   <property name="text">
-    <string>Save As</string>
-   </property>
-  </action>
-  <action name="actionExit">
-   <property name="text">
-    <string>Exit</string>
-   </property>
-  </action>
-  <action name="actionCompile">
-   <property name="text">
-    <string>Compile</string>
-   </property>
-  </action>
-  <action name="actionNew">
-   <property name="text">
-    <string>New</string>
-   </property>
-  </action>
-  <action name="actionSdsd">
-   <property name="text">
-    <string>sdsd</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+S</string>
-   </property>
-  </action>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextEdit" name="scriptEditor"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>

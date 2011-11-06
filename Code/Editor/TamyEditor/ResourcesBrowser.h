@@ -3,10 +3,9 @@
 /// @file   TamyEditor\ResourcesBrowser.h
 /// @brief  viewer allowing to browse through resources
 
-#include "core\Component.h"
 #include "core\Filesystem.h"
 #include "core\GenericFactory.h"
-#include "tamyeditor.h"
+#include <QDockWidget>
 #include <QObject>
 #include <QTreeWidgetItem>
 #include <QPoint>
@@ -23,11 +22,11 @@ class MainAppComponent;
 class FSTreeNode;
 class FSDirNode;
 class FSRootNode;
+class EditorsDocker;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ResourcesBrowser : public QObject, 
-                         public Component< TamyEditor >,
+class ResourcesBrowser : public QDockWidget, 
                          public FilesystemListener,
                          public FilesystemScanner,
                          public GenericFactory< Resource, ResourceEditor >,
@@ -36,22 +35,25 @@ class ResourcesBrowser : public QObject,
    Q_OBJECT
 
 private:
-   TamyEditor*                   m_mgr;
+   EditorsDocker&                m_editorsDocker;
+
    TreeWidget*                   m_fsTree;
    FSTreeNode*                   m_rootDir;
-   QPushButton*                  m_toggleFileTypesViewBtn;
+   QAction*                      m_toggleFileTypesViewBtn;
    bool                          m_viewResourcesOnly;
 
    ResourcesManager*             m_rm;
-   MainAppComponent*             m_mainApp;
    QString                       m_iconsDir;
    TypeDescFactory< Resource >*  m_itemsFactory;
 
 public:
    /**
     * Constructor.
+    *
+    * @param parentWidget
+    * @param docker
     */
-   ResourcesBrowser();
+   ResourcesBrowser( QWidget* parentWidget, EditorsDocker& docker );
    ~ResourcesBrowser();
 
    /**
@@ -68,14 +70,10 @@ public:
    /**
     * Opens a resource for edition.
     *
-    * @param path    path to a resource
+    * @param path          path to a resource
+    * @param resourceIcon
     */
-   void editResource( const std::string& path );
-
-   // -------------------------------------------------------------------------
-   // Component initialization
-   // -------------------------------------------------------------------------
-   void initialize( TamyEditor& mgr );
+   void editResource( const std::string& path, const QIcon& resourceIcon );
 
    // -------------------------------------------------------------------------
    // FilesystemListener implementation
@@ -96,7 +94,7 @@ public:
 
 public slots:
    void onEditResource( QTreeWidgetItem* item, int column );
-   void onToggleFilesFiltering( bool = false );
+   void onToggleFilesFiltering();
    void onGetItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr );
    void onAddNode( QTreeWidgetItem* parent, unsigned int typeIdx );
    void onRemoveNode( QTreeWidgetItem* parent, QTreeWidgetItem* child );
@@ -105,7 +103,7 @@ public slots:
 
 private:
    void initializeEditors();
-   void initUI( TamyEditor& mgr );
+   void initUI();
    void refresh( const std::string& rootDir = "/" );
    FSTreeNode* find( const std::string& dir );
 

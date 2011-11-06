@@ -14,28 +14,19 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& renderingPipelineLayout )
-: QMainWindow( NULL, 0 )
-, m_mgr( NULL )
-, m_renderingPipelineLayout( renderingPipelineLayout )
-, m_blockPropertiesLayout( NULL )
-, m_blockPropertiesRootView( NULL )
-, m_nodePropertiesLayout( NULL )
-, m_nodePropertiesRootView( NULL )
-, m_renderTargetsList( NULL )
+   : m_renderingPipelineLayout( renderingPipelineLayout )
+   , m_blockPropertiesLayout( NULL )
+   , m_blockPropertiesRootView( NULL )
+   , m_nodePropertiesLayout( NULL )
+   , m_nodePropertiesRootView( NULL )
+   , m_renderTargetsList( NULL )
 {
-   setAttribute( Qt::WA_DeleteOnClose );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingPipelineEditor::~RenderingPipelineEditor()
 {
-   if ( m_mgr )
-   {
-      // unregister the sub editor
-      m_mgr->unregisterSubEditor( *this );
-   }
-
    if ( m_blockPropertiesLayout )
    {
       m_blockPropertiesLayout->removeWidget( m_blockPropertiesRootView );
@@ -59,14 +50,10 @@ RenderingPipelineEditor::~RenderingPipelineEditor()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineEditor::initialize( TamyEditor& mgr )
+void RenderingPipelineEditor::onInitialize()
 {
-   ResourcesManager& resourceMgr = mgr.requestService< ResourcesManager >();
+   ResourcesManager& resourceMgr = ResourcesManager::getInstance();
    QString iconsDir = resourceMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
-
-   // register the sub editor with the main editor
-   m_mgr = &mgr;
-   m_mgr->registerSubEditor( this );
 
    // setup the UI
    m_ui.setupUi( this );
@@ -106,24 +93,14 @@ void RenderingPipelineEditor::initialize( TamyEditor& mgr )
    }
    
 
-   // set the menu
-   QMenu* fileMenu = m_ui.menubar->addMenu( "File" );
+   // set the toolbar
+   QToolBar* toolbar = new QToolBar( m_ui.toolbarFrame );
+   m_ui.toolbarFrame->layout()->addWidget( toolbar );
    {
-      QAction* actionSave = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save" ), fileMenu );
+      QAction* actionSave = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save" ), toolbar );
       actionSave->setShortcut( QKeySequence( tr( "Ctrl+S" ) ) );
-      fileMenu->addAction( actionSave );
-      m_ui.toolBar->addAction( actionSave );
+      toolbar->addAction( actionSave );
       connect( actionSave, SIGNAL( triggered() ), this, SLOT( save() ) );
-
-      QAction* separator = new QAction( fileMenu );
-      separator->setSeparator( true );
-      fileMenu->addAction( separator );
-      m_ui.toolBar->addAction( separator );
-
-      QAction* actionExit = new QAction( QIcon( iconsDir + tr( "/quit.png" ) ), tr( "Exit" ), this );
-      actionExit->setShortcut( QKeySequence( tr( "Ctrl+Q" ) ) );
-      fileMenu->addAction( actionExit );
-      connect( actionExit, SIGNAL( triggered() ), this, SLOT( close() ) );
    }
 
    // show the resource

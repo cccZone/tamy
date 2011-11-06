@@ -12,43 +12,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialEditor::MaterialEditor( PixelShader& shader )
-: QMainWindow( NULL, 0 )
-, m_mgr( NULL )
-, m_shader( shader )
-, m_highlighter( NULL )
-, m_resourceMgr( NULL )
-, m_renderer( NULL )
+   : m_shader( shader )
+   , m_highlighter( NULL )
+   , m_resourceMgr( NULL )
 {
-   setAttribute( Qt::WA_DeleteOnClose );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialEditor::~MaterialEditor()
 {
-   if ( m_mgr )
-   {
-      // unregister the sub editor
-      m_mgr->unregisterSubEditor( *this );
-   }
-
    delete m_highlighter;
    m_highlighter = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::initialize( TamyEditor& mgr )
+void MaterialEditor::onInitialize()
 {
-   m_resourceMgr = &mgr.requestService< ResourcesManager >();
-   m_renderer = &mgr.requestService< Renderer >();
+   m_resourceMgr = &ResourcesManager::getInstance();
 
    ASSERT( m_resourceMgr != NULL );
-   ASSERT( m_renderer != NULL );
-
-   // register the sub editor with the main editor
-   m_mgr = &mgr;
-   m_mgr->registerSubEditor( this );
 
    // setup ui
    m_ui.setupUi( this );
@@ -60,7 +44,7 @@ void MaterialEditor::initialize( TamyEditor& mgr )
    connect( m_ui.scriptEditor, SIGNAL( textChanged() ), this, SLOT( onScriptModified() ) );
    m_docModified = false;
 
-   // set the propersties
+   // set the properties
    const PixelShaderParams& params = m_shader.getParams();
 
    m_ui.cullingMode->setCurrentIndex( params.m_cullingMode - 1 );
@@ -90,54 +74,42 @@ void MaterialEditor::initialize( TamyEditor& mgr )
    m_ui.mipFilter->setCurrentIndex( params.m_mipFilter );
    connect( m_ui.mipFilter, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
 
-   // set the menu
+   // set the toolbar
    QString iconsDir = m_resourceMgr->getFilesystem().getShortcut( "editorIcons" ).c_str();
+   
+   QToolBar* toolbar = new QToolBar( m_ui.toolbarFrame );
+   m_ui.toolbarFrame->layout()->addWidget( toolbar );
 
-   QMenu* fileMenu = m_ui.menubar->addMenu( "File" );
+   // file management
    {
-      QAction* actionLoadFromFile = new QAction( QIcon( iconsDir + tr( "/openFile.png" ) ), tr( "Load from file" ), fileMenu );
-      actionLoadFromFile->setShortcut( QKeySequence( tr( "Ctrl+O" ) ) );
-      fileMenu->addAction( actionLoadFromFile );
-      m_ui.toolBar->addAction( actionLoadFromFile );
-      connect( actionLoadFromFile, SIGNAL( triggered() ), this, SLOT( loadFromFile() ) );
-
-      QAction* actionSave = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save" ), fileMenu );
+      QAction* actionSave = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save" ), toolbar );
       actionSave->setShortcut( QKeySequence( tr( "Ctrl+S" ) ) );
-      fileMenu->addAction( actionSave );
-      m_ui.toolBar->addAction( actionSave );
+      toolbar->addAction( actionSave );
       connect( actionSave, SIGNAL( triggered() ), this, SLOT( save() ) );
 
-      QAction* separator = new QAction( fileMenu );
-      separator->setSeparator( true );
-      fileMenu->addAction( separator );
-      m_ui.toolBar->addAction( separator );
-
-      QAction* actionExit = new QAction( QIcon( iconsDir + tr( "/quit.png" ) ), tr( "Exit" ), this );
-      actionExit->setShortcut( QKeySequence( tr( "Ctrl+Q" ) ) );
-      fileMenu->addAction( actionExit );
-      connect( actionExit, SIGNAL( triggered() ), this, SLOT( close() ) );
+      toolbar->addSeparator();
    }
 
-   QMenu* editMenu = m_ui.menubar->addMenu( "Edit" );
+   // script edition commands
    {
-      QAction* actionUndo = new QAction( QIcon( iconsDir + tr( "/undo.png" ) ), tr( "Undo" ), editMenu );
+      QAction* actionUndo = new QAction( QIcon( iconsDir + tr( "/undo.png" ) ), tr( "Undo" ), toolbar );
       actionUndo->setShortcut( QKeySequence( tr( "Ctrl+Z" ) ) );
-      editMenu->addAction( actionUndo );
+      toolbar->addAction( actionUndo );
       connect( actionUndo, SIGNAL( triggered() ), m_ui.scriptEditor, SLOT( undo() ) );
 
-      QAction* actionRedo = new QAction( QIcon( iconsDir + tr( "/redo.png" ) ), tr( "Redo" ), editMenu );
+      QAction* actionRedo = new QAction( QIcon( iconsDir + tr( "/redo.png" ) ), tr( "Redo" ), toolbar );
       actionRedo->setShortcut( QKeySequence( tr( "Ctrl+Y" ) ) );
-      editMenu->addAction( actionRedo );
+      toolbar->addAction( actionRedo );
       connect( actionRedo, SIGNAL( triggered() ), m_ui.scriptEditor, SLOT( redo() ) );
+
+      toolbar->addSeparator();
    }
 
-   // connect the menu commands
-   QMenu* buildMenu = m_ui.menubar->addMenu( "Build" );
+   // building commands
    {
-      QAction* actionCompile = new QAction( QIcon( iconsDir + tr( "/play.png" ) ), tr( "Compile" ), buildMenu );
+      QAction* actionCompile = new QAction( QIcon( iconsDir + tr( "/play.png" ) ), tr( "Compile" ), toolbar );
       actionCompile->setShortcut( QKeySequence( tr( "F5" ) ) );
-      buildMenu->addAction( actionCompile );
-      m_ui.toolBar->addAction( actionCompile );
+      toolbar->addAction( actionCompile );
       connect( actionCompile, SIGNAL( triggered() ), this, SLOT( compile() ) );
    }
 
@@ -165,35 +137,6 @@ void MaterialEditor::closeEvent( QCloseEvent *event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::loadFromFile()
-{
-   if ( !m_resourceMgr )
-   {
-      QMessageBox::warning( this, tr("Editor error"), tr("Resources manager not available"), QMessageBox::Ok );
-      return;
-   }
-
-   const Filesystem& fs = m_resourceMgr->getFilesystem();
-   std::string rootDir = fs.getCurrRoot();
-   std::string filter( "Pixel shader files (*.psh; *.fx; *.txt)" );
-
-   QString fullFileName = QFileDialog::getOpenFileName( this, tr("Load pixel shader code"), rootDir.c_str(), filter.c_str() );
-
-   if ( fullFileName.isEmpty() == true ) 
-   {
-      // no file was selected or user pressed 'cancel'
-      return;
-   }
-
-   // once the file is open, extract the directory name
-   std::string fileName = fs.toRelativePath( fullFileName.toStdString() );
-   m_shader.loadFromFile( fs, fileName, "main" );
-
-   m_ui.scriptEditor->setPlainText( m_shader.getScript().c_str() );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void MaterialEditor::save()
 {
    synchronize();
@@ -205,12 +148,6 @@ void MaterialEditor::save()
 
 void MaterialEditor::compile()
 {
-   if ( !m_renderer )
-   {
-      QMessageBox::warning( this, tr("Editor error"), tr("Renderer not available"), QMessageBox::Ok );
-      return;
-   }
-
    try
    {
       synchronize();

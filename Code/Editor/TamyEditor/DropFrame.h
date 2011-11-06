@@ -1,8 +1,8 @@
-/// @file   TamyEditor\DropArea.h
-/// @brief  A widget that can accepts various types of drag&drops
+/// @file   TamyEditor\DropFrame.h
+/// @brief  A frame that can accepts various types of drag&drops
 #pragma once
 
-#include <QLabel>
+#include <QFrame>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,25 +13,21 @@ class MimeDataEncoder;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A widget that accepts drag&drops.
+ * A frame that accepts drag&drops.
  */
-class DropArea : public QLabel
+class DropFrame : public QFrame
 {
    Q_OBJECT
 
 private:
-   QLabel*           m_label;
    MimeDataEncoder*  m_dataEncoder;
 
 public:
    /**
     * Constructor.
     */
-   DropArea( QWidget* parent, MimeDataEncoder* dataEncoder );
-   ~DropArea();
-
-public slots:
-   void clear();
+   DropFrame( QWidget* parent, MimeDataEncoder* dataEncoder );
+   ~DropFrame();
 
 signals:
    void changed( const QMimeData *mimeData = 0 );
@@ -39,7 +35,6 @@ signals:
 protected:
    void dragEnterEvent( QDragEnterEvent *event );
    void dragMoveEvent( QDragMoveEvent *event );
-   void dragLeaveEvent( QDragLeaveEvent *event );
    void dropEvent( QDropEvent *event );
 };
 

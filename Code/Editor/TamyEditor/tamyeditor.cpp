@@ -8,22 +8,37 @@
 #include <QCloseEvent>
 #include <QDockWidget.h>
 #include <QTreeWidget.h>
-
-
-// components
-#include "MainAppComponent.h"
-#include "SelectionManager.h"
-#include "SceneRenderer.h"
-#include "SceneNavigator.h"
-#include "SceneQueries.h"
-#include "PropertiesEditor.h"
-#include "SceneTreeViewer.h"
+#include <QTabWidget>
+#include <QSplitter>
+#include <QFrame>
+#include <QVBoxLayout>
 #include "ResourcesBrowser.h"
+
+// importers
+#include "ml-IWF.h"
+#include "ml-Blender.h"
+#include "ml-BVH.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TamyEditor* GTamyEditor = NULL;
+TamyEditor* TamyEditor::s_theInstance = NULL;
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::createInstance( QApplication& app, const char* fsRoot, QWidget *parent, Qt::WFlags flags )
+{
+   delete s_theInstance;
+   s_theInstance = new TamyEditor( app, fsRoot, parent, flags );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::destroyInstance()
+{
+   delete s_theInstance;
+   s_theInstance = NULL;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,11 +46,26 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 : QMainWindow( parent, flags )
 , m_mainTime( new CTimer() )
 {
-   ui.setupUi(this);
+   ui.setupUi( this );
 
-   m_mainTimeSlot = new QTimer(this);
-   connect(m_mainTimeSlot, SIGNAL(timeout()), this, SLOT(updateMain()));
-   m_mainTimeSlot->start(1);
+   setupResourcesManager( fsRoot );
+
+   // add the resources browser
+   {
+      ResourcesBrowser* resourcesManagerFrame = new ResourcesBrowser( this, *this );
+      addDockWidget( Qt::LeftDockWidgetArea, resourcesManagerFrame );
+   }
+
+   // add the editors tabs
+   {
+      m_editorsTabs = new QTabWidget( ui.renderWindow );
+      ui.renderWindow->layout()->addWidget( m_editorsTabs );
+   }
+
+   // create the timer
+   m_mainTimeSlot = new QTimer( this );
+   connect( m_mainTimeSlot, SIGNAL( timeout() ), this, SLOT( updateMain() ) );
+   m_mainTimeSlot->start( 1 );
 
    // load the settings file
    m_editorSettings = new QSettings( ( std::string( fsRoot ) + "/Editor/Settings.ini" ).c_str(), QSettings::IniFormat );
@@ -43,21 +73,9 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
    // create the main subsystems
    m_timeController = new TimeController();
 
-   // add components
-   addComponent( new MainAppComponent( app, fsRoot ) );
-   addComponent( new SceneRenderer( ui.renderWindow ) );
-   addComponent( new SelectionManager() );
-   addComponent( new SceneNavigator() );
-   addComponent( new SceneQueries() );
-   addComponent( new PropertiesEditor() );
-   addComponent( new SceneTreeViewer() );
-   addComponent( new ResourcesBrowser() );
-
+   // create the UI settings manager
    m_uiSettings = new QSettings( "Coversion", "TamyEditor" );
    serializeUISettings( false );
-
-   // initialize the singleton instance
-   GTamyEditor = this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,6 +89,24 @@ TamyEditor::~TamyEditor()
    delete m_mainTimeSlot; m_mainTimeSlot = NULL;
    delete m_uiSettings; m_uiSettings = NULL;
    delete m_editorSettings; m_editorSettings = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::setupResourcesManager( const char* fsRoot )
+{
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
+
+   // setup the file system - it's paramount this works before anything in the application gets set up
+   Filesystem* fs = new Filesystem( fsRoot );
+   fs->setShortcut( "editorIcons", "/Editor/Icons/" );
+   resMgr.setFilesystem( fs );
+
+   // register external resources
+   resMgr.addLoader< BVHLoader >( "bvh" );
+   resMgr.addLoader< IWFScene >( "iwf" );
+   resMgr.addLoader< BlenderScene >( "dae" );
+   resMgr.setProgressObserver< ProgressDialog >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -122,14 +158,6 @@ void TamyEditor::updateMain()
 
 void TamyEditor::closeEvent( QCloseEvent *event )
 {
-   // close all active sub editors
-   std::vector< QMainWindow* > editorsToClose = m_subEditors;
-   m_subEditors.clear();
-   for ( std::vector< QMainWindow* >::iterator it = editorsToClose.begin(); it != editorsToClose.end(); ++it )
-   {
-      (*it)->close();
-   }
-
    // serialize the settings
    serializeUISettings( true );
 
@@ -250,24 +278,10 @@ void TamyEditor::serializeTreeWidgetSettings( QTreeWidget& widget, bool save )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::registerSubEditor( QMainWindow* editor )
+void TamyEditor::addEditor( ResourceEditor* editor )
 {
-   std::vector< QMainWindow* >::iterator it = std::find( m_subEditors.begin(), m_subEditors.end(), editor );
-   if ( it == m_subEditors.end() )
-   {
-      m_subEditors.push_back( editor );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamyEditor::unregisterSubEditor( QMainWindow& editor )
-{
-   std::vector< QMainWindow* >::iterator it = std::find( m_subEditors.begin(), m_subEditors.end(), &editor );
-   if ( it != m_subEditors.end() )
-   {
-      m_subEditors.erase( it );
-   }
+   int newTabIdx = m_editorsTabs->addTab( editor, editor->getIcon(), editor->getLabel() );
+   m_editorsTabs->setCurrentIndex( newTabIdx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
