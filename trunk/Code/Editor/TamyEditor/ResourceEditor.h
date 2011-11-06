@@ -1,8 +1,9 @@
-#pragma once
-
 /// @file   TamyEditor\ResourceEditor.h
 /// @brief  common interface for all abstract editors
+#pragma once
 
+#include <QFrame>
+#include <QIcon>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -12,22 +13,46 @@ class TamyEditor;
 
 /**
  * Common interface for all abstract editors.
- *
- * CAUTION: ResourceEditors are created by the ResourcesBrowser, however
- * it doesn't manage their lifetime - they need to do it themselves.
  */
-class ResourceEditor
+class ResourceEditor : public QFrame
 {
+private:
+   QString     m_label;
+   QIcon       m_icon;
+
 public:
+   /**
+    * Constructor.
+    */
+   ResourceEditor() : QFrame( NULL ) { setAttribute( Qt::WA_DeleteOnClose ); }
    virtual ~ResourceEditor() {}
 
    /**
     * This method will be called once the editor is created to initialize
     * and start it up.
-    *
-    * @param mgr     main editor and the main  services database.
     */
-   virtual void initialize( TamyEditor& mgr ) = 0;
+   void initialize( const QString& label, const QIcon& icon )
+   {
+      m_label = label;
+      m_icon = icon;
+      onInitialize();
+   }
+
+   /**
+    * Returns an icon assigned to the editor.
+    */
+   inline QIcon getIcon() const { return m_icon; }
+
+   /**
+    * Returns the editor's label.
+    */
+   inline QString getLabel() const { return m_label; }
+
+protected:
+   /**
+    * Editor specific initialization.
+    */
+   virtual void onInitialize() = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

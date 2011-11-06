@@ -1,15 +1,17 @@
 #include "ResourcesBrowser.h"
+#include "EditorsDocker.h"
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QDockWidget>
-#include <QPushButton>
 #include <QDrag>
 #include <QMimeData>
 #include <QInputDialog>
-#include "MainAppComponent.h"
+#include <QToolBar>
+#include <QMenu>
 #include "core.h"
 #include "progressdialog.h"
 #include "FSNodeMimeData.h"
+#include "EditorsDocker.h"
 #include "core-MVC.h"
 #include "core-Renderer.h"
 #include "core-AI.h"
@@ -32,15 +34,29 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourcesBrowser::ResourcesBrowser()
-: m_mgr( NULL )
-, m_fsTree( NULL )
-, m_rootDir( NULL )
-, m_rm( NULL )
-, m_mainApp( NULL )
-, m_toggleFileTypesViewBtn( NULL )
-, m_viewResourcesOnly( false )
+ResourcesBrowser::ResourcesBrowser( QWidget* parentWidget, EditorsDocker& docker )
+   : QDockWidget( "Resources Browser", parentWidget )
+   , m_editorsDocker( docker )
+   , m_fsTree( NULL )
+   , m_rootDir( NULL )
+   , m_rm( NULL )
+   , m_toggleFileTypesViewBtn( NULL )
+   , m_viewResourcesOnly( false )
 {
+   setObjectName("ResourcesBrowser/dockWidget");
+
+   m_rm = &ResourcesManager::getInstance();
+   Filesystem& fs = m_rm->getFilesystem();
+   fs.attach( *this );
+
+   m_iconsDir = fs.getShortcut( "editorIcons" ).c_str();
+
+   m_itemsFactory = new TypeDescFactory< Resource >( m_iconsDir, fs, "unknownResourceIcon.png" );
+
+   // initialize user interface
+   initUI();
+   onToggleFilesFiltering();
+   initializeEditors();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,38 +80,12 @@ void ResourcesBrowser::initializeEditors()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::initialize( TamyEditor& mgr )
-{
-   ASSERT_MSG( m_mgr == NULL, "ResourcesBrowser component is already initialized" );
-   m_mgr = &mgr;
-
-   m_mainApp = &mgr.requestService< MainAppComponent > ();
-   m_rm = &mgr.requestService< ResourcesManager >();
-   Filesystem& fs = m_rm->getFilesystem();
-   fs.attach( *this );
-
-   m_iconsDir = fs.getShortcut( "editorIcons" ).c_str();
-
-   m_itemsFactory = new TypeDescFactory< Resource >( m_iconsDir, fs, "unknownResourceIcon.png" );
-
-   // initialize user interface
-   initUI( mgr );
-   onToggleFilesFiltering();
-   initializeEditors();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::initUI( TamyEditor& mgr )
+void ResourcesBrowser::initUI()
 {
    // setup dockable properties view widget
-   QDockWidget* dockWidget = new QDockWidget( "Resources Browser", &mgr );
-   dockWidget->setObjectName("ResourcesBrowser/dockWidget");
-   mgr.addDockWidget( Qt::LeftDockWidgetArea, dockWidget );
-
-   QWidget* dockWidgetContents = new QWidget( &mgr );
+   QWidget* dockWidgetContents = new QWidget( this );
    dockWidgetContents->setObjectName("ResourcesBrowser/dockWidgetContents");
-   dockWidget->setWidget( dockWidgetContents );
+   setWidget( dockWidgetContents );
 
    QVBoxLayout* layout = new QVBoxLayout( dockWidgetContents );
    dockWidgetContents->setLayout( layout );
@@ -103,21 +93,13 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
    layout->setMargin(0);
 
    // toolbar
-   QWidget* toolbar = new QWidget( dockWidgetContents );
+   QToolBar* toolbar = new QToolBar( dockWidgetContents );
    dockWidgetContents->setObjectName("ResourcesBrowser/toolbar");
    layout->addWidget( toolbar );
 
-   QHBoxLayout* toolbarLayout = new QHBoxLayout( dockWidgetContents );
-   toolbar->setLayout( toolbarLayout );
-   toolbarLayout->setSpacing(0);
-   toolbarLayout->setMargin(0);
-
-   m_toggleFileTypesViewBtn = new QPushButton( toolbar );
-   m_toggleFileTypesViewBtn->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-   toolbarLayout->addWidget( m_toggleFileTypesViewBtn );
-   connect( m_toggleFileTypesViewBtn, SIGNAL( clicked( bool ) ), this, SLOT( onToggleFilesFiltering( bool ) ) );
-
-   toolbarLayout->addSpacerItem( new QSpacerItem(40, 1, QSizePolicy::Expanding, QSizePolicy::Fixed) );
+   m_toggleFileTypesViewBtn = new QAction( tr( "Run" ), toolbar );
+   toolbar->addAction( m_toggleFileTypesViewBtn );
+   connect( m_toggleFileTypesViewBtn, SIGNAL( triggered() ), this, SLOT( onToggleFilesFiltering() ) );
 
    // setup the scene tree container widget
    m_fsTree = new FSTreeWidget( dockWidgetContents, "ResourcesBrowser/m_fsTree", m_iconsDir );
@@ -139,12 +121,6 @@ void ResourcesBrowser::initUI( TamyEditor& mgr )
 
    m_rootDir = new FSRootNode( m_fsTree, m_rm->getFilesystem() );
    m_fsTree->addTopLevelItem( m_rootDir );
-   
-
-   // setup menu entries
-   QAction* actionProperties = dockWidget->toggleViewAction();
-   actionProperties->setText( QApplication::translate( "TamyEditorClass", "Resources Browser", 0, QApplication::UnicodeUTF8 ) );
-   mgr.getViewMenu().addAction( actionProperties );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -219,7 +195,7 @@ void ResourcesBrowser::createResource( const Class& type, const std::string& par
    std::string extension = newResource->getVirtualExtension();
 
    bool ok = false;
-   QString fullFileName = QInputDialog::getText( m_mgr, "New resource", "Resource name:", QLineEdit::Normal, "", &ok );
+   QString fullFileName = QInputDialog::getText( this, "New resource", "Resource name:", QLineEdit::Normal, "", &ok );
    if ( !ok ) 
    {
       // no file was selected or user pressed 'cancel'
@@ -237,20 +213,19 @@ void ResourcesBrowser::createResource( const Class& type, const std::string& par
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::editResource( const std::string& path )
+void ResourcesBrowser::editResource( const std::string& path, const QIcon& resourceIcon )
 {
    ProgressDialog progressDlg;
    progressDlg.initialize( "Loading a resource", 1 );
    Resource& resource = m_rm->create( path );
    progressDlg.advance();
 
-   ResourceEditor* editor = create( resource );
+   ResourceEditor* editor = GenericFactory< Resource, ResourceEditor >::create( resource );
    if ( editor )
    {
-      // CAUTION: we don't manage the editor's lifetime - it has to take care of itself
-      editor->initialize( *m_mgr );
+      editor->initialize( path.c_str(), resourceIcon );
+      m_editorsDocker.addEditor( editor );
    }
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -312,7 +287,7 @@ void ResourcesBrowser::onEditResource( QTreeWidgetItem* item, int column )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::onToggleFilesFiltering( bool )
+void ResourcesBrowser::onToggleFilesFiltering()
 {
    // change the view mode flag
    m_viewResourcesOnly = !m_viewResourcesOnly;
@@ -425,7 +400,7 @@ void ResourcesBrowser::addNode( unsigned int idx, const std::string& parentDir )
       // learn the new file's name
       const Filesystem& fs = m_rm->getFilesystem();
       bool ok = false;
-      QString newDirName = QInputDialog::getText( m_mgr, "New directory", "Dir name:", QLineEdit::Normal, "", &ok );
+      QString newDirName = QInputDialog::getText( this, "New directory", "Dir name:", QLineEdit::Normal, "", &ok );
       if ( ok )
       {
 
@@ -444,7 +419,7 @@ void ResourcesBrowser::addNode( unsigned int idx, const std::string& parentDir )
 ///////////////////////////////////////////////////////////////////////////////
 
 FSTreeWidget::FSTreeWidget( QWidget* parent, const QString& objName, const QString& iconsDir )
-: TreeWidget( parent, objName, iconsDir )
+   : TreeWidget( parent, objName, iconsDir )
 {
 }
 

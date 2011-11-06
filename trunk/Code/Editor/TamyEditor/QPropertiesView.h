@@ -1,11 +1,12 @@
+/// @file   TamyEditor\QPropertiecView.h
+/// @brief  properties browser widget
 #pragma once
 
-/// @file   TamyEditor\QPropertiecView.h
-/// @brief  properties browser view
 
 #include "core\Component.h"
 #include "core\PropertiesView.h"
 #include "QPropertyEditor.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,6 +16,9 @@ class QWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Properties browser widget.
+ */
 class QPropertiesView : public QPropertyEditor, 
                         public TPropertiesView<QPropertiesView>
 {
@@ -27,7 +31,6 @@ private:
 public:
    QPropertiesView();
    ~QPropertiesView();
-
 
 
    // -------------------------------------------------------------------------

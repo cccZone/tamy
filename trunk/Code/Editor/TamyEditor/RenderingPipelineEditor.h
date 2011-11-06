@@ -21,14 +21,13 @@ class Object;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderingPipelineEditor : public QMainWindow, public ResourceEditor
+class RenderingPipelineEditor : public ResourceEditor
 {
    Q_OBJECT
 
 private:
    Ui::RenderingPipelineEditorWindow         m_ui;
 
-   TamyEditor*                               m_mgr;
    RenderingPipelineLayout&                  m_renderingPipelineLayout;
 
    QVBoxLayout*                              m_blockPropertiesLayout;
@@ -51,7 +50,7 @@ public:
    // -------------------------------------------------------------------------
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
-   void initialize( TamyEditor& mgr );
+   void onInitialize();
 
 public slots:
    void save();

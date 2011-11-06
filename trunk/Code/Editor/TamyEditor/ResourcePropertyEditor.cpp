@@ -40,7 +40,7 @@ void ResourcePropertyEditor::onInitialize()
    layout->addWidget( m_resourceName );
 
    // a button for NULLing the resource
-   ResourcesManager& rm = GTamyEditor->requestService< ResourcesManager >();
+   ResourcesManager& rm = ResourcesManager::getInstance();
    std::string iconsDir = rm.getFilesystem().getShortcut( "editorIcons" );
 
    QPushButton* eraseButton = new QPushButton( frame );
@@ -77,7 +77,7 @@ void ResourcePropertyEditor::valChanged()
    Resource* newVal = NULL;
    if ( !m_paths.empty() )
    {
-      ResourcesManager& rm = GTamyEditor->requestService< ResourcesManager >();
+      ResourcesManager& rm = ResourcesManager::getInstance();
       newVal = &rm.create( m_paths[ 0 ] );
 
       // verify that the types match

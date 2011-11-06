@@ -22,12 +22,14 @@
 #include <QSlider>
 #include "AnimChartScales.h"
 #include "AnimationTimeValueGetter.h"
+#include "DropFrame.h"
+#include "FSNodeMimeData.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SkeletonAnimationEditor::SkeletonAnimationEditor( SkeletonAnimation& animation )
-   : m_mgr( NULL )
-   , m_animation( animation )
+   : m_animation( animation )
    , m_animationKeysChart( new SkeletonAnimationKeysChart( animation ) )
    , m_animationEventsChart( new SkeletonAnimationEventsChart( animation ) )
    , m_bonesList( NULL )
@@ -38,19 +40,12 @@ SkeletonAnimationEditor::SkeletonAnimationEditor( SkeletonAnimation& animation )
    , m_eventsTimeTrackingMarker( NULL )
    , m_playing( false )
 {
-   setAttribute( Qt::WA_DeleteOnClose );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SkeletonAnimationEditor::~SkeletonAnimationEditor()
 {
-   if ( m_mgr )
-   {
-      // unregister the sub editor
-      m_mgr->unregisterSubEditor( *this );
-   }
-
    m_timeTrack->remove( *m_animationKeysChartView );
    m_timeTrack->remove( *m_animationEventsChartView );
 
@@ -84,13 +79,11 @@ SkeletonAnimationEditor::~SkeletonAnimationEditor()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
+void SkeletonAnimationEditor::onInitialize()
 {
-   // register the sub editor with the main editor
-   m_mgr = &mgr;
-   m_mgr->registerSubEditor( this );
+   TamyEditor& mainEditor = TamyEditor::getInstance();
 
-   TimeController& controller = mgr.getTimeController();
+   TimeController& controller = mainEditor.getTimeController();
    m_timeTrack = &controller.add( "animationEditor" );
 
    ResourcesManager& resMgr = ResourcesManager::getInstance();
@@ -100,7 +93,7 @@ void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
    m_ui.setupUi( this );
 
    // attach the graph viewer
-   QSplitter* mainSplitter = new QSplitter( m_ui.chartsFrame );
+   QSplitter* mainSplitter = new QSplitter( this );
    m_ui.chartsFrameLayout->addWidget( mainSplitter );
    mainSplitter->setOrientation( Qt::Horizontal );
 
@@ -110,12 +103,8 @@ void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
       mainSplitter->addWidget( operationsSplitter );
       operationsSplitter->setOrientation( Qt::Vertical );
 
-      TimeController& timeController = mgr.requestService< TimeController >();
-      QSettings& settings = mgr.getSettings();
-      settings.beginGroup( "MainRenderer" );
-      std::string mainRendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
-      settings.endGroup();
-
+      TimeController& timeController = mainEditor.getTimeController();
+      
       // create the preview frame
       QFrame* animationPreviewFrame = new QFrame( operationsSplitter );
       operationsSplitter->addWidget( animationPreviewFrame );
@@ -125,7 +114,9 @@ void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
 
       {
          // create the scene renderer
-         QFrame* renderViewportFrame = new QFrame( animationPreviewFrame );
+         DropFrame* renderViewportFrame = new DropFrame( animationPreviewFrame, new FSNodeMimeData( m_animatedModelPaths ) );
+         connect( renderViewportFrame, SIGNAL( changed() ), this, SLOT( animatedModelLoaded() ) );
+
          previewFrameMasterLayout->addWidget( renderViewportFrame, 1 );
          QLayout* renderViewportLayout = new QHBoxLayout();
          renderViewportFrame->setLayout( renderViewportLayout );
@@ -134,7 +125,12 @@ void SkeletonAnimationEditor::initialize( TamyEditor& mgr )
          renderViewportFrame->setFrameStyle( QFrame::Panel | QFrame::Sunken );
          renderViewportFrame->setLineWidth( 2 );
 
-         m_sceneWidget = new TamySceneWidget( renderViewportFrame, 0, mainRendererPipelineName, timeController );
+         QSettings& settings = mainEditor.getSettings();
+         settings.beginGroup( "SkeletonAnimationEditorRenderer" );
+         std::string rendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
+         settings.endGroup();
+
+         m_sceneWidget = new TamySceneWidget( renderViewportFrame, 0, rendererPipelineName, timeController );
          renderViewportLayout->addWidget( m_sceneWidget );
 
          // add a control panel so that we can play the scene
@@ -325,7 +321,7 @@ void SkeletonAnimationEditor::onToggleOrientKeyRoll( int state )
 
 void SkeletonAnimationEditor::togglePlay()
 {
-   if ( m_scene == NULL && !visualizeAnimation() )
+   if ( m_scene == NULL )
    {
       // still no scene - break it
       return;
@@ -374,49 +370,47 @@ void SkeletonAnimationEditor::togglePlay()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool SkeletonAnimationEditor::visualizeAnimation()
+void SkeletonAnimationEditor::animatedModelLoaded()
 {
-   // destroy the previous scene
-   if ( m_scene )
+   if ( !m_animatedModelPaths.empty() )
    {
-      m_sceneWidget->clearScene();
-   }
-   delete m_scene;
-
-   // no scene with an animation - try creating one, but you're gonna need a skeleton first
-   const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   std::string rootDir = fs.getCurrRoot();
-   std::string filter( "Model files (*." );
-   filter += std::string( Model::getExtension() ) + ")";
-
-   QString fullFileName = QFileDialog::getOpenFileName( m_mgr, tr("Load model"), rootDir.c_str(), filter.c_str() );
-
-   if ( fullFileName.isEmpty() == true ) 
-   {
-      // no file was selected or user pressed 'cancel'
-      return false;
+      ResourcesManager& rm = ResourcesManager::getInstance();
+      loadAnimatedModel( m_animatedModelPaths[ 0 ] );
    }
 
-   // once the file is open, extract the directory name
-   std::string modelResourcePath = fs.toRelativePath( fullFileName.toStdString() );
+   m_animatedModelPaths.clear();
+}
 
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationEditor::loadAnimatedModel( const std::string& modelResourcePath )
+{
    // load the skeleton
    Model* modelForAnimation = DynamicCast< Model >( &ResourcesManager::getInstance().create( modelResourcePath ) );
    if ( !modelForAnimation )
    {
       // couldn't load the model resource
-      return false;
+      return;
    }
 
-   m_scene = new Model();
-   m_scene->add( new ModelEntity( *modelForAnimation, "animatedModel" ) );
+   Model* newScene = new Model();
+   newScene->add( new ModelEntity( *modelForAnimation, "animatedModel" ) );
 
-   Entity* skeletonRootEntity = m_scene->findFirstEntity( "Hips" );
+   Entity* skeletonRootEntity = newScene->findFirstEntity( "Hips" );
    if ( !skeletonRootEntity )
    {
       // no root bone
-      return false;
+      delete newScene;
+      return;
    }
+
+   // destroy the previous scene & replace it with the freshly created one
+   if ( m_scene )
+   {
+      m_sceneWidget->clearScene();
+   }
+   delete m_scene;
+   m_scene = newScene;
 
    // create a scene using the animation
    m_animationController = new SkeletonAnimationController( "animation" );
@@ -424,11 +418,8 @@ bool SkeletonAnimationEditor::visualizeAnimation()
    skeletonRootEntity->add( m_animationController );
 
    m_sceneWidget->setScene( *m_scene );
-
-   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODO: one of the bones is drawn invalidly - learn why
-// TODO: ability to drag and drop a model resource from the resources browser

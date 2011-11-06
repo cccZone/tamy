@@ -25,14 +25,13 @@ class VerticalChartMarker;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SkeletonAnimationEditor : public QMainWindow, public ResourceEditor
+class SkeletonAnimationEditor : public ResourceEditor
 {
    Q_OBJECT
 
 private:
    Ui::SkeletonAnimationEditorWindow         m_ui;
 
-   TamyEditor*                               m_mgr;
    SkeletonAnimation&                        m_animation;
    Model*                                    m_scene;
    SkeletonAnimationKeysChart*               m_animationKeysChart;
@@ -54,6 +53,8 @@ private:
    QAction*                                  m_actionPlay;
    bool                                      m_playing;
 
+   std::vector< std::string >                m_animatedModelPaths;
+
 public:
    /**
     * Constructor.
@@ -66,7 +67,7 @@ public:
    // -------------------------------------------------------------------------
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
-   void initialize( TamyEditor& mgr );
+   void onInitialize();
 
    // -------------------------------------------------------------------------
    // TimeDependent implementation
@@ -82,12 +83,13 @@ public slots:
    void onToggleOrientKeyPitch( int state );
    void onToggleOrientKeyRoll( int state );
    void togglePlay();
+   void animatedModelLoaded();
 
 protected:
    void closeEvent( QCloseEvent *event );
 
 private:
-   bool visualizeAnimation();
+   void loadAnimatedModel( const std::string& modelResourcePath );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

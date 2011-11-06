@@ -19,9 +19,6 @@
     <Filter Include="Components\PropertiesEditor">
       <UniqueIdentifier>{b6b1999b-4163-4295-94d3-6b1fc6e4b1b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\SceneRenderer">
-      <UniqueIdentifier>{14af7a61-986e-40b6-a23c-9f911c8aabac}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\MainApp">
       <UniqueIdentifier>{45b38212-52bb-48b5-814a-f4290be91c3a}</UniqueIdentifier>
     </Filter>
@@ -33,12 +30,6 @@
     </Filter>
     <Filter Include="Components\SelectionManager">
       <UniqueIdentifier>{a97472d8-947e-4b1f-9a28-dcb99956383b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\ResourcesBrowser">
-      <UniqueIdentifier>{e6f94e6b-b366-4a87-987b-4c261f72106e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\ResourcesBrowser\Nodes">
-      <UniqueIdentifier>{c700c38d-9216-4d62-9788-a5425978b4ba}</UniqueIdentifier>
     </Filter>
     <Filter Include="ResourceEditors">
       <UniqueIdentifier>{a1409a83-fe22-4e38-9884-c734131814ad}</UniqueIdentifier>
@@ -147,6 +138,12 @@
       <Extensions>cpp;moc</Extensions>
       <SourceControlFiles>False</SourceControlFiles>
     </Filter>
+    <Filter Include="Core\ResourcesBrowser">
+      <UniqueIdentifier>{e6f94e6b-b366-4a87-987b-4c261f72106e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ResourcesBrowser\Nodes">
+      <UniqueIdentifier>{c700c38d-9216-4d62-9788-a5425978b4ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -165,16 +162,13 @@
       <Filter>Components\SelectionManager</Filter>
     </ClInclude>
     <ClInclude Include="FSTreeNode.h">
-      <Filter>Components\ResourcesBrowser</Filter>
+      <Filter>Core\ResourcesBrowser</Filter>
     </ClInclude>
     <ClInclude Include="ResourceEditor.h">
-      <Filter>Components\ResourcesBrowser</Filter>
+      <Filter>Core\ResourcesBrowser</Filter>
     </ClInclude>
     <ClInclude Include="FSRootNode.h">
-      <Filter>Components\ResourcesBrowser\Nodes</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneEditor.h">
-      <Filter>ResourceEditors\SceneEditor</Filter>
+      <Filter>Core\ResourcesBrowser\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="MimeDataEncoder.h">
       <Filter>Widgets\DropArea</Filter>
@@ -261,7 +255,7 @@
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </ClInclude>
     <ClInclude Include="FSNodeMimeData.h">
-      <Filter>Components\ResourcesBrowser</Filter>
+      <Filter>Core\ResourcesBrowser</Filter>
     </ClInclude>
     <ClInclude Include="RenderingPipelineSocketRepresentation.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
@@ -293,9 +287,6 @@
     <ClInclude Include="SkeletonAnimationEventsChart.h">
       <Filter>ResourceEditors\SkeletonAnimationEditor\EventsChart</Filter>
     </ClInclude>
-    <ClInclude Include="SceneRenderer.h">
-      <Filter>Components\SceneRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="ChartScene.h">
       <Filter>Widgets\Chart</Filter>
     </ClInclude>
@@ -313,6 +304,9 @@
     </ClInclude>
     <ClInclude Include="AnimationTimeValueGetter.h">
       <Filter>ResourceEditors\SkeletonAnimationEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorsDocker.h">
+      <Filter>Core\ResourcesBrowser</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -361,9 +355,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_ResourcePropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ResourcesBrowser.cpp">
-      <Filter>QtImplementation\Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_SceneTreeViewer.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
     </ClCompile>
@@ -401,9 +392,6 @@
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_ResourcePropertyEditor.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ResourcesBrowser.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_SceneTreeViewer.cpp">
@@ -467,19 +455,16 @@
       <Filter>Components\SelectionManager</Filter>
     </ClCompile>
     <ClCompile Include="FSTreeNode.cpp">
-      <Filter>Components\ResourcesBrowser</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourcesBrowser.cpp">
-      <Filter>Components\ResourcesBrowser</Filter>
+      <Filter>Core\ResourcesBrowser</Filter>
     </ClCompile>
     <ClCompile Include="FSDirNode.cpp">
-      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+      <Filter>Core\ResourcesBrowser\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="FSLeafNode.cpp">
-      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+      <Filter>Core\ResourcesBrowser\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="FSRootNode.cpp">
-      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+      <Filter>Core\ResourcesBrowser\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="SceneEditor.cpp">
       <Filter>ResourceEditors\SceneEditor</Filter>
@@ -525,9 +510,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MaterialEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialSyntaxHighlighter.cpp">
-      <Filter>Components\MainApp</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MaterialSyntaxHighlighter.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
@@ -593,7 +575,7 @@
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="FSNodeMimeData.cpp">
-      <Filter>Components\ResourcesBrowser</Filter>
+      <Filter>Core\ResourcesBrowser</Filter>
     </ClCompile>
     <ClCompile Include="RenderTargetMimeData.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
@@ -638,9 +620,6 @@
     <ClCompile Include="SkeletonAnimationEventsChart.cpp">
       <Filter>ResourceEditors\SkeletonAnimationEditor\EventsChart</Filter>
     </ClCompile>
-    <ClCompile Include="SceneRenderer.cpp">
-      <Filter>Components\SceneRenderer</Filter>
-    </ClCompile>
     <ClCompile Include="TamySceneWidget.cpp">
       <Filter>Widgets\SceneRenderWidget</Filter>
     </ClCompile>
@@ -667,6 +646,42 @@
     </ClCompile>
     <ClCompile Include="VerticalChartMarker.cpp">
       <Filter>Widgets\Chart\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="DropFrame.cpp">
+      <Filter>Widgets\DropArea</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_DropFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_DropFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_DropFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesBrowser.cpp">
+      <Filter>Core\ResourcesBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ResourcesBrowser.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ResourcesBrowser.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ResourcesBrowser.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SceneEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SceneEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_SceneEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialSyntaxHighlighter.cpp">
+      <Filter>ResourceEditors\MaterialEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -738,14 +753,11 @@
     <CustomBuild Include="ModelEditor.h">
       <Filter>Components\SceneTreeViewer\Editors</Filter>
     </CustomBuild>
-    <CustomBuild Include="ResourcesBrowser.h">
-      <Filter>Components\ResourcesBrowser</Filter>
-    </CustomBuild>
     <CustomBuild Include="FSDirNode.h">
-      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+      <Filter>Core\ResourcesBrowser\Nodes</Filter>
     </CustomBuild>
     <CustomBuild Include="FSLeafNode.h">
-      <Filter>Components\ResourcesBrowser\Nodes</Filter>
+      <Filter>Core\ResourcesBrowser\Nodes</Filter>
     </CustomBuild>
     <CustomBuild Include="DropArea.h">
       <Filter>Widgets\DropArea</Filter>
@@ -764,9 +776,6 @@
     </CustomBuild>
     <CustomBuild Include="MaterialEditor.h">
       <Filter>ResourceEditors\MaterialEditor</Filter>
-    </CustomBuild>
-    <CustomBuild Include="MaterialSyntaxHighlighter.h">
-      <Filter>Components\MainApp</Filter>
     </CustomBuild>
     <CustomBuild Include="assertDialog.h">
       <Filter>Core</Filter>
@@ -809,6 +818,18 @@
     </CustomBuild>
     <CustomBuild Include="ChartView.h">
       <Filter>Widgets\Chart</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DropFrame.h">
+      <Filter>Widgets\DropArea</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ResourcesBrowser.h">
+      <Filter>Core\ResourcesBrowser</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SceneEditor.h">
+      <Filter>ResourceEditors\SceneEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MaterialSyntaxHighlighter.h">
+      <Filter>ResourceEditors\MaterialEditor</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

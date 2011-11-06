@@ -9,13 +9,28 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Model;
+class TimeControllerTrack;
+class QScrollArea;
+class QPropertiesView;
+class Entity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class SceneEditor : public ResourceEditor
 {
+   Q_OBJECT
+
 private:
-   Model&      m_scene;
+   Model&                     m_scene;
+
+   // editor related stuff
+   TimeControllerTrack*       m_sceneTrack;
+   QIcon                      m_runSceneIcon;
+   QIcon                      m_stopSceneIcon;
+   QAction*                   m_actionRun;
+   bool                       m_playing;
+   QScrollArea*               m_scrollableDockWidgetContents;
+   QPropertiesView*           m_selectedEntityView;
 
 public:
    /**
@@ -26,9 +41,30 @@ public:
    SceneEditor( Model& scene );
 
    // -------------------------------------------------------------------------
+   // Selection sink
+   // -------------------------------------------------------------------------
+   void onEntitySelected( Entity& entity );
+   void onEntityDeselected();
+
+protected:
+   // -------------------------------------------------------------------------
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
-   void initialize( TamyEditor& mgr );
+   void onInitialize();
+
+   // -------------------------------------------------------------------------
+   // QFrame events
+   // -------------------------------------------------------------------------
+   void closeEvent( QCloseEvent *event );
+
+private:
+   void runScene();
+   void stopScene();
+
+public slots:
+   void saveScene();
+   void toggleSceneExecution();
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

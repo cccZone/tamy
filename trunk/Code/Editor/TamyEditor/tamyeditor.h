@@ -7,6 +7,7 @@
 #include <QtGui/QMainWindow>
 #include "ui_tamyeditor.h"
 #include "core.h"
+#include "EditorsDocker.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,18 +17,22 @@ class QSettings;
 class QDockWidget;
 class QTreeWidget;
 class TimeController;
+class QTabWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
 * This is the editor's main window class.
 */
-class TamyEditor : public QMainWindow, public ComponentsManager< TamyEditor >
+class TamyEditor : public QMainWindow, public ComponentsManager< TamyEditor >, public EditorsDocker
 {
    Q_OBJECT
 
 private:
+   static TamyEditor*               s_theInstance;
+
    Ui::TamyEditorClass              ui;
+   QTabWidget*                      m_editorsTabs;
 
    // time tracking
    CTimer*                          m_mainTime;
@@ -38,19 +43,31 @@ private:
    QSettings*                       m_uiSettings;
    QSettings*                       m_editorSettings;
 
-   std::vector< QMainWindow* >      m_subEditors;
-
 public:
+   ~TamyEditor();
+
+   // -------------------------------------------------------------------------
+   // Singleton instance management
+   // -------------------------------------------------------------------------
    /**
-    * Constructor.
+    * Creates a new singleton instance, destroying the old one if necessary.
     *
     * @param app        qt application running the show
     * @param fsRoot     file system root
     * @param parent     parent widget
     * @param flags      widget creation flags
     */
-   TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent = 0, Qt::WFlags flags = 0 );
-   ~TamyEditor();
+   static void createInstance( QApplication& app, const char* fsRoot, QWidget *parent = 0, Qt::WFlags flags = 0 );
+
+   /**
+    * Destroys the singleton instance.
+    */
+   static void destroyInstance();
+   
+   /**
+    * Returns the singleton instance.
+    */
+   static TamyEditor& getInstance() { return *s_theInstance; }
 
    // -------------------------------------------------------------------------
    // window space management
@@ -101,21 +118,9 @@ public:
    inline TimeController& getTimeController() const { return *m_timeController; }
 
    // -------------------------------------------------------------------------
-   // Sub editor windows management
+   // EditorsDocker implementation
    // -------------------------------------------------------------------------
-   /**
-    * Puts a sub editor up for management.
-    *
-    * @param editor
-    */
-   void registerSubEditor( QMainWindow* editor );
-
-   /**
-    * Umanages a sub editor.
-    *
-    * @param editor
-    */
-   void unregisterSubEditor( QMainWindow& editor );
+   void addEditor( ResourceEditor* editor );
 
 public slots:
    void updateMain();
@@ -127,11 +132,20 @@ protected:
    void serializeWidgetSettings( QWidget& widget, bool save );
    void serializeDockWidgetSettings( QDockWidget& widget, bool save );
    void serializeTreeWidgetSettings( QTreeWidget& widget, bool save );
+
+private:
+   /**
+    * Constructor.
+    *
+    * @param app        qt application running the show
+    * @param fsRoot     file system root
+    * @param parent     parent widget
+    * @param flags      widget creation flags
+    */
+   TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent = 0, Qt::WFlags flags = 0 );
+
+   void setupResourcesManager( const char* fsRoot );
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-extern TamyEditor* GTamyEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 

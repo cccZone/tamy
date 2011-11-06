@@ -63,11 +63,15 @@ int main(int argc, char *argv[])
    Filesystem::leaveDir( assetsDir, 3, assetsDir ); 
    assetsDir += "/Assets/";
 
-   TamyEditor w( a, assetsDir.c_str() );
+   TamyEditor::createInstance( a, assetsDir.c_str() );
+   TamyEditor& w = TamyEditor::getInstance();
 
    // start the application
    w.show();
-   return a.exec();
+   bool result = a.exec();
+
+   TamyEditor::destroyInstance();
+   return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
