@@ -1,7 +1,7 @@
 #include "dx9-Renderer\DX9RenderTarget.h"
 #include "dx9-Renderer\DX9Renderer.h"
 #include "dx9-Renderer\DXErrorParser.h"
-#include <stdexcept>
+#include "core/Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,16 +63,19 @@ Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
 
    // create a surface in system memory to which we'll copy the snapshot of the render target's contents
    IDirect3DSurface9* offscreenSurface = NULL;
-   HRESULT res = d3Dev.CreateOffscreenPlainSurface( 
-      rtDesc.Width, rtDesc.Height, 
-      rtDesc.Format, 
-      D3DPOOL_SYSTEMMEM, 
-      &offscreenSurface, 
-      NULL );
+   HRESULT res = d3Dev.CreateOffscreenPlainSurface( rtDesc.Width, rtDesc.Height, rtDesc.Format, D3DPOOL_SYSTEMMEM, &offscreenSurface, NULL );
    if( FAILED( res ) )
    {
       std::string errMsg = translateDxError( "Can't create an off-screen plain surface", res );
-      throw std::runtime_error( errMsg );
+      ASSERT_MSG( false, errMsg.c_str() );
+      return Color();
+   }
+
+   // check the validity of the queried position
+   if ( pos.x >= rtDesc.Width || pos.y >= rtDesc.Height )
+   {
+      ASSERT_MSG( false, "Queried position is outside the screen boundaries." );
+      return Color();
    }
 
    // copy the data from the render target to the temporary surface
@@ -82,7 +85,8 @@ Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
    if( FAILED( res ) )
    {
       std::string errMsg = translateDxError( "Can't acquire data from a render target", res );
-      throw std::runtime_error( errMsg );
+      ASSERT_MSG( false, errMsg.c_str() );
+      return Color();
    }
 
 
@@ -99,7 +103,8 @@ Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
    if( FAILED( res ) )
    {
       std::string errMsg = translateDxError( "Can't lock an off-screen plain surface", res );
-      throw std::runtime_error( errMsg );
+      ASSERT_MSG( false, errMsg.c_str() );
+      return Color();
    }
 
    unsigned int x = ( unsigned int )( ( rtDesc.Width * ( pos.x + 1.f ) ) / 2.f );
@@ -158,8 +163,8 @@ void DX9RenderTarget::createTexture()
 
    if ( FAILED(res) || m_dxTexture == NULL )
    {
-      std::string errorMsg = translateDxError( "Can't create a render target", res );
-      throw std::runtime_error( errorMsg );
+      std::string errMsg = translateDxError( "Can't create a render target", res );
+      ASSERT_MSG( false, errMsg.c_str() );
    }
 }
 

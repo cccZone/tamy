@@ -13,6 +13,8 @@ CompositeRenderingMechanism::CompositeRenderingMechanism()
 
 CompositeRenderingMechanism::~CompositeRenderingMechanism() 
 {
+   reset(); 
+   m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,12 +29,9 @@ void CompositeRenderingMechanism::initialize( Renderer& renderer )
 
    // initialize all currently attached mechanisms
    unsigned int count = m_members.size();
-   for (unsigned int i = 0; i < count; ++i)
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      if ( m_members[i] )
-      {
-         m_members[i]->initialize( renderer );
-      }
+      m_members[i]->m_mechanism->initialize( renderer );
    }
 }
 
@@ -40,58 +39,40 @@ void CompositeRenderingMechanism::initialize( Renderer& renderer )
 
 void CompositeRenderingMechanism::deinitialize( Renderer& renderer )
 {
-   unsigned int count = m_members.size();
-   for (unsigned int i = 0; i < count; ++i)
-   {
-      if ( m_members[i] )
-      {
-         m_members[i]->deinitialize( renderer );
-         delete m_members[i];
-      }
-   }
-   m_members.clear();
-   m_mechanismsMap.clear();
-   m_freeSlots.clear();
+   reset();
 
    m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CompositeRenderingMechanism::add( const std::string& name, RenderingMechanism* mechanism )
+void CompositeRenderingMechanism::add( const std::string& name, RenderingMechanism* mechanism, bool manage )
 {
    if ( mechanism == NULL )
    {
       throw std::invalid_argument("NULL pointer instead a RenderingMechanism instance");
    }
 
-   MechanismsMap::iterator it = m_mechanismsMap.find( name );
-   if ( it != m_mechanismsMap.end() )
+   // check if the mechanism with this name already exists
+   unsigned int count = m_members.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      // such mechanism already exists - replace it
-      m_members[ it->second ]->deinitialize( *m_renderer );
-      delete m_members[ it->second ];
-      m_members[ it->second ] = mechanism;
-   }
-   else
-   {
-      int freeSpotIdx;
-      if ( !m_freeSlots.empty() )
+      if ( m_members[i]->m_name == name )
       {
-         freeSpotIdx = m_freeSlots.front();
-         m_freeSlots.pop_front();
+         // such mechanism already exists - replace it
+         m_members[ i ]->m_mechanism->deinitialize( *m_renderer );
+         if ( m_members[i]->m_release )
+         {
+            delete m_members[ i ];
+         }
+         m_members[ i ]->m_mechanism = mechanism;
+         m_members[i]->m_release = manage;
+         return;
       }
-      else
-      {
-         freeSpotIdx = m_members.size();
-         m_members.push_back( NULL );
-      }
-
-      // this is a brand new mechanism
-      m_mechanismsMap.insert( std::make_pair( name, freeSpotIdx ) );
-      m_members[freeSpotIdx] = mechanism;
    }
 
+   m_members.push_back( new MechDef( name, mechanism, manage ) );
+   
    if ( m_renderer )
    {
       mechanism->initialize( *m_renderer );
@@ -100,24 +81,38 @@ void CompositeRenderingMechanism::add( const std::string& name, RenderingMechani
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CompositeRenderingMechanism::remove( const std::string& name, bool release )
+void CompositeRenderingMechanism::remove( const std::string& name )
 {
-   MechanismsMap::iterator it = m_mechanismsMap.find( name );
-   if ( it != m_mechanismsMap.end() )
+   // check if the mechanism with this name already exists
+   unsigned int count = m_members.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      // such mechanism already exists - replace it
-      m_members[ it->second ]->deinitialize( *m_renderer );
-
-      if ( release )
+      if ( m_members[i]->m_name == name )
       {
-         delete m_members[ it->second ];
+         // deinitialize and release( if requested ) the mechanism
+         m_members[ i ]->m_mechanism->deinitialize( *m_renderer );
+         delete m_members[i];
+
+         m_members.erase( m_members.begin() + i );
+         break;
       }
-
-      m_members[ it->second ] = NULL;
-      m_freeSlots.push_back( it->second );
-
-      m_mechanismsMap.erase( it );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void CompositeRenderingMechanism::reset()
+{
+   unsigned int count = m_members.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      if ( m_renderer )
+      {
+         m_members[i]->m_mechanism->deinitialize( *m_renderer );
+      }
+      delete m_members[i];
+   }
+   m_members.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -125,12 +120,9 @@ void CompositeRenderingMechanism::remove( const std::string& name, bool release 
 void CompositeRenderingMechanism::render( Renderer& renderer )
 {
    unsigned int count = m_members.size();
-   for (unsigned int i = 0; i < count; ++i)
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      if ( m_members[i] )
-      {
-         m_members[i]->render( renderer );
-      }
+      m_members[i]->m_mechanism->render( renderer );
    }
 }
 

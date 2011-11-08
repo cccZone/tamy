@@ -200,14 +200,9 @@ void RenderingPipelineEditor::onShowContextMenu( const QPoint& pos )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineEditor::closeEvent( QCloseEvent *event )
+void RenderingPipelineEditor::onDeinitialize()
 {
    save();
-
-   // accept the event
-   event->accept();
-
-   delete this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

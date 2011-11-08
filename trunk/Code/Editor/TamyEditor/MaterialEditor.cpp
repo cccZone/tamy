@@ -118,7 +118,7 @@ void MaterialEditor::onInitialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::closeEvent( QCloseEvent *event )
+void MaterialEditor::onDeinitialize()
 {
    if ( m_docModified )
    {
@@ -128,11 +128,6 @@ void MaterialEditor::closeEvent( QCloseEvent *event )
          save();
       }
    }
-
-   // accept the event
-   event->accept();
-
-   delete this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

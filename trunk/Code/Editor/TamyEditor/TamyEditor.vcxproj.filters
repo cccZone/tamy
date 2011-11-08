@@ -4,12 +4,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{73f4ad88-8c16-47b1-a99b-f18a059ae772}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components">
-      <UniqueIdentifier>{9aa9a89d-8484-4b11-9d16-5284cbafb07f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SceneQueries">
-      <UniqueIdentifier>{65c05c11-b4fb-40af-9d34-79a22520830a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ResourceEditors">
       <UniqueIdentifier>{a1409a83-fe22-4e38-9884-c734131814ad}</UniqueIdentifier>
     </Filter>
@@ -27,12 +21,6 @@
     </Filter>
     <Filter Include="Widgets\TreeWidget">
       <UniqueIdentifier>{9173226e-dd2e-414a-a92a-dfda7c1cc74d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SceneQueries\Representations">
-      <UniqueIdentifier>{fef6c27d-a127-406a-ae08-31ce49f4e14d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SceneQueries\PixelPerfectQuery">
-      <UniqueIdentifier>{8099c230-c5c7-42ed-83be-12a346b63828}</UniqueIdentifier>
     </Filter>
     <Filter Include="ResourceEditors\MaterialEditor">
       <UniqueIdentifier>{01274f29-65ff-44c8-a660-7a2d3ecb06f3}</UniqueIdentifier>
@@ -132,6 +120,12 @@
     <Filter Include="ResourceEditors\SceneEditor\SceneObjectsManipulator">
       <UniqueIdentifier>{918d34f8-d97e-4468-8459-6791183489e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\SceneQueries">
+      <UniqueIdentifier>{65c05c11-b4fb-40af-9d34-79a22520830a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\SceneQueries\Representations">
+      <UniqueIdentifier>{fef6c27d-a127-406a-ae08-31ce49f4e14d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -139,9 +133,6 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_tamyeditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneQueries.h">
-      <Filter>Components\SceneQueries</Filter>
     </ClInclude>
     <ClInclude Include="SceneTreeEditor.h">
       <Filter>Widgets\SceneTreeViewer</Filter>
@@ -165,19 +156,13 @@
       <Filter>Widgets\TreeWidget</Filter>
     </ClInclude>
     <ClInclude Include="QueryableEntity.h">
-      <Filter>Components\SceneQueries</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneQuery.h">
-      <Filter>Components\SceneQueries</Filter>
+      <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
     </ClInclude>
     <ClInclude Include="SelectionRenderingPass.h">
       <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
     </ClInclude>
-    <ClInclude Include="QueryRenderingPass.h">
-      <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
-    </ClInclude>
     <ClInclude Include="QueryableGeometry.h">
-      <Filter>Components\SceneQueries\Representations</Filter>
+      <Filter>Widgets\SceneRenderWidget\SceneQueries\Representations</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_materialeditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
@@ -299,6 +284,12 @@
     <ClInclude Include="SceneObjectsManipulatorState.h">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClInclude>
+    <ClInclude Include="SceneQuery.h">
+      <Filter>Widgets\SceneRenderWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryRenderingPass.h">
+      <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -394,9 +385,6 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_Vec3PropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="SceneQueries.cpp">
-      <Filter>Components\SceneQueries</Filter>
-    </ClCompile>
     <ClCompile Include="ArrayPropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
@@ -454,11 +442,8 @@
     <ClCompile Include="SelectionRenderingPass.cpp">
       <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
     </ClCompile>
-    <ClCompile Include="QueryRenderingPass.cpp">
-      <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
-    </ClCompile>
     <ClCompile Include="QueryableGeometry.cpp">
-      <Filter>Components\SceneQueries\Representations</Filter>
+      <Filter>Widgets\SceneRenderWidget\SceneQueries\Representations</Filter>
     </ClCompile>
     <ClCompile Include="MaterialEditor.cpp">
       <Filter>ResourceEditors\MaterialEditor</Filter>
@@ -575,9 +560,6 @@
     <ClCompile Include="TamySceneWidget.cpp">
       <Filter>Widgets\SceneRenderWidget</Filter>
     </ClCompile>
-    <ClCompile Include="SceneQuery.cpp">
-      <Filter>Components\SceneQueries</Filter>
-    </ClCompile>
     <ClCompile Include="ChartView.cpp">
       <Filter>Widgets\Chart</Filter>
     </ClCompile>
@@ -671,6 +653,12 @@
     <ClCompile Include="NodeManipulationState.cpp">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClCompile>
+    <ClCompile Include="SceneQuery.cpp">
+      <Filter>Widgets\SceneRenderWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryRenderingPass.cpp">
+      <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -679,11 +667,11 @@
     <None Include="TypeDescFactory.inl">
       <Filter>Widgets\TreeWidget</Filter>
     </None>
-    <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.psh">
-      <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
-    </None>
     <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.psh">
       <Filter>Widgets\SceneRenderWidget\SelectionVisualisation\Representations</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.psh">
+      <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

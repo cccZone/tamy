@@ -28,6 +28,8 @@ class TimeController;
 class SelectionRenderingPass;
 class SceneRendererInputController;
 class TimeControllerTrack;
+class QueryRenderingPass;
+class SceneQuery;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,6 +59,7 @@ private:
    DebugScene*                                        m_debugScene;
    CompositeRenderingMechanism*                       m_renderingMech;
    SelectionRenderingPass*                            m_selectionRenderer;
+   QueryRenderingPass*                                m_queryRenderer;
 
 public:
    /**
@@ -90,11 +93,17 @@ public:
    void setInputController( SceneRendererInputController* controller );
 
    /**
-    * Selects an entity located in the specified point on the screen.
+    * Issues a scene entity selection query.
     *
-    * @param screenPt
+    * @param query
     */
-   void selectEntityAt( const Point& screenPt ) const;
+   void queryScene( SceneQuery& query ) const;
+
+   /**
+    * The method translates the screen space coordinates
+    * (i.e. ones your mouse moves in) to viewport space coordinates
+    */
+   void localToViewport( const Point& inScreenPt, D3DXVECTOR2& outViewportPt ) const;
 
    // -------------------------------------------------------------------------
    // Accessors

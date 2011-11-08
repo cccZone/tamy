@@ -15,15 +15,31 @@
  */
 class CompositeRenderingMechanism : public RenderingMechanism
 {
-private:
-   typedef std::map< std::string, int >         MechanismsMap;
+   struct MechDef
+   {
+      std::string                               m_name;
+      RenderingMechanism*                       m_mechanism;
+      bool                                      m_release;
 
-private:
-   Renderer*                           m_renderer;
+      MechDef( const std::string& name, RenderingMechanism* mechanism, bool release )
+         : m_name( name )
+         , m_mechanism( mechanism )
+         , m_release( release )
+      {
+      }
 
-   MechanismsMap                       m_mechanismsMap;      
-   std::vector< RenderingMechanism* >  m_members;
-   std::list< int >                    m_freeSlots;
+      ~MechDef()
+      {
+         if ( m_release )
+         {
+            delete m_mechanism;
+            m_mechanism = NULL;
+         }
+      }
+   };
+private:
+   Renderer*                                    m_renderer;
+   std::vector< MechDef* >                      m_members;
 
 public:
    /**
@@ -38,16 +54,21 @@ public:
     *
     * @param name          unique name for the mechanism
     * @param mechanism     rendering mechanism we want to run in the composite
+    * @param manage        should the composite manage the mechanism's lifetime
     */
-   void add( const std::string& name, RenderingMechanism* mechanism );
+   void add( const std::string& name, RenderingMechanism* mechanism, bool manage = true );
 
    /**
     * Removes a mechanism from the composite.
     *
     * @param name          unique name for the mechanism
-    * @param release       should the mechanism be released in the process?
     */
-   void remove( const std::string& name, bool release = true );
+   void remove( const std::string& name );
+
+   /**
+    * Removes all added mechanisms, effectively cleaning the composite.
+    */
+   void reset();
 
    // -------------------------------------------------------------------------
    // RenderingMechanism implementation

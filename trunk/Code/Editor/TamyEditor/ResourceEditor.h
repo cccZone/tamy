@@ -24,7 +24,7 @@ public:
    /**
     * Constructor.
     */
-   ResourceEditor() : QFrame( NULL ) { setAttribute( Qt::WA_DeleteOnClose ); }
+   ResourceEditor() : QFrame( NULL ) {}
    virtual ~ResourceEditor() {}
 
    /**
@@ -36,6 +36,15 @@ public:
       m_label = label;
       m_icon = icon;
       onInitialize();
+   }
+
+   /**
+    * Called when the editor is about to be destroyed, or when we generally
+    * want it to save its state, 'cause it may be killed.
+    */
+   void deinitialize() 
+   {
+      onDeinitialize();
    }
 
    /**
@@ -53,6 +62,11 @@ protected:
     * Editor specific initialization.
     */
    virtual void onInitialize() = 0;
+
+   /**
+    * Editor specific deinitialization.
+    */
+   virtual void onDeinitialize() = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

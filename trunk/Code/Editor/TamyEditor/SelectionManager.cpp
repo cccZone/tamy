@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 SelectionManager::SelectionManager()
+   : m_multipleSelectionEnabled( false )
 {
 }
 
@@ -29,6 +30,12 @@ void SelectionManager::selectEntity( Entity& entity )
          // yup - we have it
          return;
       }
+   }
+
+   if ( m_multipleSelectionEnabled == false && count > 0 )
+   {
+      // if we're not supporting multiple selection, deselect an entity that's currently selected
+      resetSelection();
    }
 
    m_selectedEntities.push_back( &entity );

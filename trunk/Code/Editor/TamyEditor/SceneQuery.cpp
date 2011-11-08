@@ -1,5 +1,5 @@
 #include "SceneQuery.h"
-#include "SceneQueries.h"
+#include "QueryRenderingPass.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,7 +14,7 @@ SceneQuery::SceneQuery()
 
 void SceneQuery::notifyResult()
 {
-   Entity* entity = reinterpret_cast< Entity* >( SceneQueries::vecToPtr( (D3DXVECTOR4)m_resultBuf ) );
+   Entity* entity = reinterpret_cast< Entity* >( QueryRenderingPass::vecToPtr( (D3DXVECTOR4)m_resultBuf ) );
    m_resultBuf = Color( 0, 0, 0, 0 );
    setResult( entity );
 }

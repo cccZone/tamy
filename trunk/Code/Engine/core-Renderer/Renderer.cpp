@@ -178,23 +178,6 @@ void Renderer::resizeViewport(unsigned int width, unsigned int height,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::screenToViewport(const Point& screenPt, 
-                                D3DXVECTOR2& viewportPt) const
-{
-   float x = (float)((screenPt.x < (int)m_rightClientArea) ? screenPt.x : m_rightClientArea);
-   float y = (float)((screenPt.y < (int)m_bottomClientArea) ? screenPt.y : m_bottomClientArea);
-
-   x -= m_leftClientArea;
-   y -= m_topClientArea;
-   if (x < 0) x = 0;
-   if (y < 0) y = 0;
-
-   viewportPt.x = (x / (m_viewportWidth * 0.5f)) - 1;
-   viewportPt.y = 1 - (y / (m_viewportHeight * 0.5f));
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void Renderer::setRenderTarget( RenderTarget* renderTarget )
 {
    static Color backBufferColor( 81, 176, 255 );

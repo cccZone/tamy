@@ -176,7 +176,7 @@ void SceneEditor::onInitialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneEditor::closeEvent( QCloseEvent *event )
+void SceneEditor::onDeinitialize()
 {
    // stop any scene that may be running
    stopScene();
@@ -285,4 +285,4 @@ void SceneEditor::setNodeRotateMode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: !!!!!!!!!!!! when an entity is clicked, enter the manipulation mode
+// TODO: !!!!! ability to select multiple entities at once

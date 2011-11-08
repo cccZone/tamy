@@ -29,12 +29,21 @@ private:
    Listeners                                             m_listeners;
    std::vector< Entity* >                                m_selectedEntities;
 
+   bool                                                  m_multipleSelectionEnabled;
+
 public:
    /**
     * Constructor.
     */
    SelectionManager();
    ~SelectionManager();
+
+   /**
+    * Toggles multiple selection.
+    *
+    * @param enable
+    */
+   inline void enableMultipleSelection( bool enable ) { m_multipleSelectionEnabled = enable; }
 
    // -------------------------------------------------------------------------
    // Selected entities management

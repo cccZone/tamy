@@ -68,6 +68,7 @@ public:
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
    void onInitialize();
+   void onDeinitialize();
 
    // -------------------------------------------------------------------------
    // TimeDependent implementation
@@ -84,9 +85,6 @@ public slots:
    void onToggleOrientKeyRoll( int state );
    void togglePlay();
    void animatedModelLoaded();
-
-protected:
-   void closeEvent( QCloseEvent *event );
 
 private:
    void loadAnimatedModel( const std::string& modelResourcePath );

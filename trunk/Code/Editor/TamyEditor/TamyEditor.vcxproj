@@ -342,7 +342,6 @@
     <ClInclude Include="SceneQuery.h" />
     <ClInclude Include="SelectedEntityRepresentation.h" />
     <ClInclude Include="SelectedGeometry.h" />
-    <ClInclude Include="SceneQueries.h" />
     <ClInclude Include="QueryableEntity.h" />
     <CustomBuild Include="QPropertiesView.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Filename)%(Extension)...</Message>
@@ -808,7 +807,6 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_Vec3PropertyEditor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="SceneQueries.cpp" />
     <ClCompile Include="QPropertiesView.cpp" />
     <ClCompile Include="QPropertyEditor.cpp" />
     <ClCompile Include="ArrayPropertyEditor.cpp" />
