@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ShaderParams">
+      <UniqueIdentifier>{f448cb20-8941-4d13-a82f-ad4582b0ff03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderCommands">
+      <UniqueIdentifier>{d84f4ba1-0252-49a2-9cc3-fdffcfee33b1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="NullShaderParamBool.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamFloat.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamFloatArray.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamInt.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamIntArray.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamMtx.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamMtxArray.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamRenderTarget.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamString.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamTexture.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamVec4.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderParamVec4Array.cpp">
+      <Filter>ShaderParams</Filter>
+    </ClCompile>
+    <ClCompile Include="NullDebugDrawCommands.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullEffectShader.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullFont.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullFullscreenQuad.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullLineSegments.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullPixelShader.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullSkeleton.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullTexture.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullTriangleMesh.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullVertexShader.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullRenderTarget.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullRenderingPipelineMechanism.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

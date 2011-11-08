@@ -5,12 +5,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-KeysStatusManager::KeysStatusManager(KeysStatusModel& model)
-: KEYS_COUNT(256)
-, m_model(model)
-, m_statuses(KEYS_COUNT, KeyStatus())
-, m_smashTimeLimit(0.1f)
-, m_time(0)
+KeysStatusManager::KeysStatusManager( KeysStatusModel& model )
+   : KEYS_COUNT( 256 )
+   , m_model( model )
+   , m_statuses( KEYS_COUNT, KeyStatus() )
+   , m_smashTimeLimit( 0.1f )
+   , m_time( 0 )
 {
 }
 
@@ -23,7 +23,7 @@ KeysStatusManager::~KeysStatusManager()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void KeysStatusManager::update(float timeElapsed) 
+void KeysStatusManager::update( float timeElapsed ) 
 {
    /*
     Call this method if you want to use the manager - it updates its
@@ -39,14 +39,14 @@ void KeysStatusManager::update(float timeElapsed)
 
    m_time += timeElapsed;
 
-   for (unsigned int keyCode = 0; keyCode < KEYS_COUNT; ++keyCode)
+   for ( unsigned int keyCode = 0; keyCode < KEYS_COUNT; ++keyCode )
    {
       KeyState oldState = m_statuses[keyCode].state;
       KeyState newState = oldState;
 
-      if (m_model.isKeyPressed(keyCode) == true)
+      if ( m_model.isKeyPressed( keyCode ) == true )
       {
-         switch (oldState)
+         switch( oldState )
          {
          case KEY_FREE:
          case KEY_RELEASED: 
@@ -57,7 +57,7 @@ void KeysStatusManager::update(float timeElapsed)
             }
          case KEY_PRESSED:    
             {
-               if ((m_time - m_statuses[keyCode].timePressed) >= m_smashTimeLimit)
+               if ( ( m_time - m_statuses[keyCode].timePressed ) >= m_smashTimeLimit )
                {
                   newState = KEY_HELD; 
                }
@@ -67,14 +67,14 @@ void KeysStatusManager::update(float timeElapsed)
       }
       else
       {
-         switch (oldState)
+         switch( oldState )
          {
          case KEY_PRESSED:    newState = KEY_RELEASED; break;
          case KEY_HELD:       newState = KEY_RELEASED; break;
          }
       }
 
-      executeAction(keyCode, oldState, newState);
+      executeAction( keyCode, oldState, newState );
 
       m_statuses[keyCode].state = newState;
    }
@@ -82,14 +82,14 @@ void KeysStatusManager::update(float timeElapsed)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void KeysStatusManager::addHandler(KeyStatusHandler* handler)
+void KeysStatusManager::addHandler( KeyStatusHandler* handler )
 {
-   if (handler == NULL)
+   if ( handler == NULL )
    {
-      throw std::invalid_argument("NULL pointer instead a KeyStatusHandler instance");
+      throw std::invalid_argument( "NULL pointer instead a KeyStatusHandler instance" );
    }
 
-   m_handlers.push_back(handler);
+   m_handlers.push_back( handler );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,7 +97,7 @@ void KeysStatusManager::addHandler(KeyStatusHandler* handler)
 void KeysStatusManager::removeAllHandlers()
 {
    unsigned int handlersCount = m_handlers.size();
-   for (unsigned int j = 0; j < handlersCount; ++j)
+   for ( unsigned int j = 0; j < handlersCount; ++j )
    {
       delete m_handlers[j];
    }
@@ -106,36 +106,34 @@ void KeysStatusManager::removeAllHandlers()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void KeysStatusManager::executeAction(unsigned char c, 
-                                      KeyState oldState, 
-                                      KeyState newState)
+void KeysStatusManager::executeAction( unsigned char c, KeyState oldState, KeyState newState )
 {
    unsigned int handlersCount = m_handlers.size();
 
-   for (unsigned int i = 0; i < handlersCount; ++i)
+   for ( unsigned int i = 0; i < handlersCount; ++i )
    {
-      if ((oldState == KEY_PRESSED) && (newState == KEY_RELEASED))
+      if ( oldState == KEY_PRESSED && newState == KEY_RELEASED )
       {
-         m_handlers[i]->keySmashed(c);
+         m_handlers[i]->keySmashed( c );
       }
-      else if ((oldState == KEY_PRESSED) && (newState == KEY_HELD))
+      else if ( oldState == KEY_PRESSED && newState == KEY_HELD )
       {
-         m_handlers[i]->keyHeld(c);
+         m_handlers[i]->keyHeld( c );
       }
-      else if ((oldState == KEY_HELD) && (newState == KEY_HELD))
+      else if ( oldState == KEY_HELD && newState == KEY_HELD )
       {
-         m_handlers[i]->keyHeld(c);
+         m_handlers[i]->keyHeld( c );
       }
-      else if ((oldState == KEY_HELD) && (newState == KEY_RELEASED))
+      else if ( oldState == KEY_HELD && newState == KEY_RELEASED )
       {
-         m_handlers[i]->keyReleased(c);
+         m_handlers[i]->keyReleased( c );
       }
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void KeysStatusManager::setSmashTimeLimit(float limit)
+void KeysStatusManager::setSmashTimeLimit( float limit )
 {
    m_smashTimeLimit = limit;
 }

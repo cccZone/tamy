@@ -5,11 +5,11 @@
 // representations
 #include "SelectedGeometry.h"
 
+
 ///////////////////////////////////////////////////////////////////////////////
 
-SelectionRenderingPass::SelectionRenderingPass( SelectionManager& host )
-   : m_host( host )
-   , m_selectedRepresentation( NULL )
+SelectionRenderingPass::SelectionRenderingPass()
+   : m_selectedRepresentation( NULL )
 {
    // define associations
    associateAbstract< Geometry, SelectedGeometry >();
@@ -25,7 +25,7 @@ SelectionRenderingPass::~SelectionRenderingPass()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SelectionRenderingPass::set( Entity* entity )
+void SelectionRenderingPass::add( Entity& entity )
 {
    // remove the previous representation
    if ( m_selectedRepresentation )
@@ -34,11 +34,18 @@ void SelectionRenderingPass::set( Entity* entity )
       m_selectedRepresentation = NULL;
    }
 
-   if ( entity )
-   {
-      m_selectedRepresentation = create( *entity );
-   }
+   m_selectedRepresentation = create( entity );
+}
 
+///////////////////////////////////////////////////////////////////////////////
+
+void SelectionRenderingPass::remove( Entity& entity )
+{
+   if ( m_selectedRepresentation )
+   {
+      delete m_selectedRepresentation;
+      m_selectedRepresentation = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

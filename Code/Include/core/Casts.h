@@ -5,18 +5,22 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class RTTIObject;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Casts an object from one type to another. The types need to share a common hierarchy.
  */
 template< typename T >
-T* DynamicCast( Object* obj ) 
+T* DynamicCast( RTTIObject* obj ) 
 {
    if ( !obj )
    {
       return NULL;
    }
 
-   if ( obj->getVirtualClass().isA( T::getRTTIClass() ) )
+   if ( obj->isA< T >() )
    {
       T* castObj = static_cast< T* >( obj );
       return castObj;

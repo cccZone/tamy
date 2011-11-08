@@ -7,29 +7,8 @@
     <Filter Include="Components">
       <UniqueIdentifier>{9aa9a89d-8484-4b11-9d16-5284cbafb07f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\SceneNavigator">
-      <UniqueIdentifier>{e8be9650-42c1-4713-a2e3-329371cc5d29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SceneNavigator\Commands">
-      <UniqueIdentifier>{233ee4ca-f6df-4b23-895a-4c5a16db3c43}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\SceneQueries">
       <UniqueIdentifier>{65c05c11-b4fb-40af-9d34-79a22520830a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\PropertiesEditor">
-      <UniqueIdentifier>{b6b1999b-4163-4295-94d3-6b1fc6e4b1b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\MainApp">
-      <UniqueIdentifier>{45b38212-52bb-48b5-814a-f4290be91c3a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SceneTreeViewer">
-      <UniqueIdentifier>{83a51f51-4786-42cf-91c5-4a6ef3c52b52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SceneTreeViewer\Editors">
-      <UniqueIdentifier>{06a1dfb4-deca-4972-9144-6563bc944319}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SelectionManager">
-      <UniqueIdentifier>{a97472d8-947e-4b1f-9a28-dcb99956383b}</UniqueIdentifier>
     </Filter>
     <Filter Include="ResourceEditors">
       <UniqueIdentifier>{a1409a83-fe22-4e38-9884-c734131814ad}</UniqueIdentifier>
@@ -49,23 +28,11 @@
     <Filter Include="Widgets\TreeWidget">
       <UniqueIdentifier>{9173226e-dd2e-414a-a92a-dfda7c1cc74d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\SelectionManager\Representations">
-      <UniqueIdentifier>{aee2c34d-2ea7-443b-925b-ca99eac39b5e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components\SceneQueries\Representations">
       <UniqueIdentifier>{fef6c27d-a127-406a-ae08-31ce49f4e14d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\SceneQueries\PixelPerfectQuery">
       <UniqueIdentifier>{8099c230-c5c7-42ed-83be-12a346b63828}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SceneNavigator\Editors">
-      <UniqueIdentifier>{ffc98458-0d71-4b8c-a205-517c5cde77b8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SceneNavigator\Visualization">
-      <UniqueIdentifier>{483a1900-36b4-4b75-8863-0ae897606b06}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Components\SelectionManager\Visualization">
-      <UniqueIdentifier>{73130267-9dcf-4fc3-b145-f001f12ce254}</UniqueIdentifier>
     </Filter>
     <Filter Include="ResourceEditors\MaterialEditor">
       <UniqueIdentifier>{01274f29-65ff-44c8-a660-7a2d3ecb06f3}</UniqueIdentifier>
@@ -144,6 +111,27 @@
     <Filter Include="Core\ResourcesBrowser\Nodes">
       <UniqueIdentifier>{c700c38d-9216-4d62-9788-a5425978b4ba}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\SceneTreeViewer">
+      <UniqueIdentifier>{83a51f51-4786-42cf-91c5-4a6ef3c52b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneTreeViewer\Editors">
+      <UniqueIdentifier>{06a1dfb4-deca-4972-9144-6563bc944319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SelectionManager">
+      <UniqueIdentifier>{1e96a4ee-a710-4693-a31c-0d2992d23ec5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\SelectionVisualisation">
+      <UniqueIdentifier>{73130267-9dcf-4fc3-b145-f001f12ce254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\SelectionVisualisation\Representations">
+      <UniqueIdentifier>{6fe4e01d-1429-4836-9539-287446e9a303}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\InputControl">
+      <UniqueIdentifier>{668a3d7e-80a9-4339-963e-589d599793ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\SceneEditor\SceneObjectsManipulator">
+      <UniqueIdentifier>{918d34f8-d97e-4468-8459-6791183489e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -156,10 +144,7 @@
       <Filter>Components\SceneQueries</Filter>
     </ClInclude>
     <ClInclude Include="SceneTreeEditor.h">
-      <Filter>Components\SceneTreeViewer</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectionManager.h">
-      <Filter>Components\SelectionManager</Filter>
+      <Filter>Widgets\SceneTreeViewer</Filter>
     </ClInclude>
     <ClInclude Include="FSTreeNode.h">
       <Filter>Core\ResourcesBrowser</Filter>
@@ -179,9 +164,6 @@
     <ClInclude Include="TypeDescFactory.h">
       <Filter>Widgets\TreeWidget</Filter>
     </ClInclude>
-    <ClInclude Include="SelectedEntityRepresentation.h">
-      <Filter>Components\SelectionManager</Filter>
-    </ClInclude>
     <ClInclude Include="QueryableEntity.h">
       <Filter>Components\SceneQueries</Filter>
     </ClInclude>
@@ -189,37 +171,13 @@
       <Filter>Components\SceneQueries</Filter>
     </ClInclude>
     <ClInclude Include="SelectionRenderingPass.h">
-      <Filter>Components\SelectionManager\Visualization</Filter>
+      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
     </ClInclude>
     <ClInclude Include="QueryRenderingPass.h">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
     </ClInclude>
-    <ClInclude Include="InputCommand.h">
-      <Filter>Components\SceneNavigator</Filter>
-    </ClInclude>
-    <ClInclude Include="InputInterpreter.h">
-      <Filter>Components\SceneNavigator</Filter>
-    </ClInclude>
-    <ClInclude Include="EditEntityCommand.h">
-      <Filter>Components\SceneNavigator\Commands</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityManualEditor.h">
-      <Filter>Components\SceneNavigator</Filter>
-    </ClInclude>
-    <ClInclude Include="NodeManualEditor.h">
-      <Filter>Components\SceneNavigator\Editors</Filter>
-    </ClInclude>
-    <ClInclude Include="ManualEditionModes.h">
-      <Filter>Components\SceneNavigator</Filter>
-    </ClInclude>
-    <ClInclude Include="Gizmo.h">
-      <Filter>Components\SceneNavigator\Visualization</Filter>
-    </ClInclude>
     <ClInclude Include="QueryableGeometry.h">
       <Filter>Components\SceneQueries\Representations</Filter>
-    </ClInclude>
-    <ClInclude Include="SelectedGeometry.h">
-      <Filter>Components\SelectionManager\Representations</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_materialeditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
@@ -272,9 +230,6 @@
     <ClInclude Include="RPBAdapter.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
-    <ClInclude Include="GeometryManualEditor.h">
-      <Filter>Components\SceneNavigator\Editors</Filter>
-    </ClInclude>
     <ClInclude Include="RPBDebugRender.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
@@ -307,6 +262,42 @@
     </ClInclude>
     <ClInclude Include="EditorsDocker.h">
       <Filter>Core\ResourcesBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectedEntityRepresentation.h">
+      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectedGeometry.h">
+      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation\Representations</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionManagerListener.h">
+      <Filter>Core\SelectionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SelectionManager.h">
+      <Filter>Core\SelectionManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraMovementController.h">
+      <Filter>Widgets\SceneRenderWidget\InputControl</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneRendererInputController.h">
+      <Filter>Widgets\SceneRenderWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeTransformController.h">
+      <Filter>Widgets\SceneRenderWidget\InputControl</Filter>
+    </ClInclude>
+    <ClInclude Include="Gizmo.h">
+      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectsManipulator.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeManipulationState.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationState.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectsManipulatorState.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -343,9 +334,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_DropArea.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_MainAppComponent.cpp">
-      <Filter>QtImplementation\Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_MaterialPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
     </ClCompile>
@@ -374,9 +362,6 @@
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_DropArea.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_MainAppComponent.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MaterialPropertyEditor.cpp">
@@ -409,14 +394,8 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_Vec3PropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="SceneNavigator.cpp">
-      <Filter>Components\SceneNavigator</Filter>
-    </ClCompile>
     <ClCompile Include="SceneQueries.cpp">
       <Filter>Components\SceneQueries</Filter>
-    </ClCompile>
-    <ClCompile Include="PropertiesEditor.cpp">
-      <Filter>Components\PropertiesEditor</Filter>
     </ClCompile>
     <ClCompile Include="ArrayPropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
@@ -439,20 +418,14 @@
     <ClCompile Include="Vec3PropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
-    <ClCompile Include="MainAppComponent.cpp">
-      <Filter>Components\MainApp</Filter>
-    </ClCompile>
     <ClCompile Include="SceneTreeViewer.cpp">
-      <Filter>Components\SceneTreeViewer</Filter>
+      <Filter>Widgets\SceneTreeViewer</Filter>
     </ClCompile>
     <ClCompile Include="EntityEditor.cpp">
-      <Filter>Components\SceneTreeViewer\Editors</Filter>
+      <Filter>Widgets\SceneTreeViewer\Editors</Filter>
     </ClCompile>
     <ClCompile Include="ModelEditor.cpp">
-      <Filter>Components\SceneTreeViewer\Editors</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectionManager.cpp">
-      <Filter>Components\SelectionManager</Filter>
+      <Filter>Widgets\SceneTreeViewer\Editors</Filter>
     </ClCompile>
     <ClCompile Include="FSTreeNode.cpp">
       <Filter>Core\ResourcesBrowser</Filter>
@@ -479,31 +452,13 @@
       <Filter>Widgets\TreeWidget</Filter>
     </ClCompile>
     <ClCompile Include="SelectionRenderingPass.cpp">
-      <Filter>Components\SelectionManager\Visualization</Filter>
+      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
     </ClCompile>
     <ClCompile Include="QueryRenderingPass.cpp">
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
     </ClCompile>
-    <ClCompile Include="InputInterpreter.cpp">
-      <Filter>Components\SceneNavigator</Filter>
-    </ClCompile>
-    <ClCompile Include="EditEntityCommand.cpp">
-      <Filter>Components\SceneNavigator\Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="NodeManualEditor.cpp">
-      <Filter>Components\SceneNavigator\Editors</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_SceneNavigator.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Gizmo.cpp">
-      <Filter>Components\SceneNavigator\Visualization</Filter>
-    </ClCompile>
     <ClCompile Include="QueryableGeometry.cpp">
       <Filter>Components\SceneQueries\Representations</Filter>
-    </ClCompile>
-    <ClCompile Include="SelectedGeometry.cpp">
-      <Filter>Components\SelectionManager\Representations</Filter>
     </ClCompile>
     <ClCompile Include="MaterialEditor.cpp">
       <Filter>ResourceEditors\MaterialEditor</Filter>
@@ -602,9 +557,6 @@
     <ClCompile Include="RPBAdapter.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
-    <ClCompile Include="GeometryManualEditor.cpp">
-      <Filter>Components\SceneNavigator\Editors</Filter>
-    </ClCompile>
     <ClCompile Include="RPBDebugRender.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
@@ -683,6 +635,42 @@
     <ClCompile Include="MaterialSyntaxHighlighter.cpp">
       <Filter>ResourceEditors\MaterialEditor</Filter>
     </ClCompile>
+    <ClCompile Include="SelectedGeometry.cpp">
+      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation\Representations</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectedEntityPropertiesViewer.cpp">
+      <Filter>ResourceEditors\SceneEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SelectedEntityPropertiesViewer.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SelectedEntityPropertiesViewer.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_SelectedEntityPropertiesViewer.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="SelectionManager.cpp">
+      <Filter>Core\SelectionManager</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraMovementController.cpp">
+      <Filter>Widgets\SceneRenderWidget\InputControl</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeTransformController.cpp">
+      <Filter>Widgets\SceneRenderWidget\InputControl</Filter>
+    </ClCompile>
+    <ClCompile Include="Gizmo.cpp">
+      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjectsManipulator.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationState.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeManipulationState.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -695,7 +683,7 @@
       <Filter>Components\SceneQueries\PixelPerfectQuery</Filter>
     </None>
     <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.psh">
-      <Filter>Components\SelectionManager\Representations</Filter>
+      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation\Representations</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -710,9 +698,6 @@
     </CustomBuild>
     <CustomBuild Include="tamyeditor.h">
       <Filter>Core</Filter>
-    </CustomBuild>
-    <CustomBuild Include="PropertiesEditor.h">
-      <Filter>Components\PropertiesEditor</Filter>
     </CustomBuild>
     <CustomBuild Include="ArrayPropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
@@ -741,17 +726,14 @@
     <CustomBuild Include="Vec3PropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
-    <CustomBuild Include="MainAppComponent.h">
-      <Filter>Components\MainApp</Filter>
-    </CustomBuild>
     <CustomBuild Include="SceneTreeViewer.h">
-      <Filter>Components\SceneTreeViewer</Filter>
+      <Filter>Widgets\SceneTreeViewer</Filter>
     </CustomBuild>
     <CustomBuild Include="EntityEditor.h">
-      <Filter>Components\SceneTreeViewer\Editors</Filter>
+      <Filter>Widgets\SceneTreeViewer\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="ModelEditor.h">
-      <Filter>Components\SceneTreeViewer\Editors</Filter>
+      <Filter>Widgets\SceneTreeViewer\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="FSDirNode.h">
       <Filter>Core\ResourcesBrowser\Nodes</Filter>
@@ -767,9 +749,6 @@
     </CustomBuild>
     <CustomBuild Include="TreeWidget.h">
       <Filter>Widgets\TreeWidget</Filter>
-    </CustomBuild>
-    <CustomBuild Include="SceneNavigator.h">
-      <Filter>Components\SceneNavigator</Filter>
     </CustomBuild>
     <CustomBuild Include="materialeditor.ui">
       <Filter>QtImplementation\Form Files</Filter>
@@ -830,6 +809,9 @@
     </CustomBuild>
     <CustomBuild Include="MaterialSyntaxHighlighter.h">
       <Filter>ResourceEditors\MaterialEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SelectedEntityPropertiesViewer.h">
+      <Filter>ResourceEditors\SceneEditor</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

@@ -11,7 +11,6 @@
 
 class Entity;
 class SelectedEntityRepresentation;
-class SelectionManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,25 +20,28 @@ class SelectionManager;
 class SelectionRenderingPass : public RenderingMechanism, public GenericFactory< Entity, SelectedEntityRepresentation >
 {
 private:
-   SelectionManager&                   m_host;
    SelectedEntityRepresentation*       m_selectedRepresentation;
 
 public:
    /**
     * Constructor.
-    *
-    * @param host          parent selection manager
     */
-   SelectionRenderingPass( SelectionManager& host );
+   SelectionRenderingPass();
    ~SelectionRenderingPass();
 
    /**
-    * Puts a new entity up for visualization ( or just erases the old one 
-    * if NULL is specified ).
+    * Puts a new entity up for visualization.
     *
     * @param entity
     */
-   void set( Entity* entity );
+   void add( Entity& entity );
+
+   /**
+    * Removes an entity from being visualized as selected.
+    *
+    * @param entity
+    */
+   void remove( Entity& entity );
 
    // -------------------------------------------------------------------------
    // RenderingMechanism implementation

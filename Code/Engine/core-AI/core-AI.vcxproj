@@ -91,8 +91,8 @@
     <ClInclude Include="..\..\Include\core-AI\BTSelectorNode.h" />
     <ClInclude Include="..\..\Include\core-AI\BTSequenceNode.h" />
     <ClInclude Include="..\..\Include\core-AI\PreconditionSelectionStrategy.h" />
-    <ClInclude Include="..\..\Include\core-AI\FsmLogicState.h" />
-    <ClInclude Include="..\..\Include\core-AI\FsmLogicStateController.h" />
+    <ClInclude Include="..\..\Include\core-AI\FSMState.h" />
+    <ClInclude Include="..\..\Include\core-AI\FSMController.h" />
     <ClInclude Include="..\..\Include\core-AI\CompositeSteeringBehavior.h" />
     <ClInclude Include="..\..\Include\core-AI\SkeletonAnimation.h" />
     <ClInclude Include="..\..\Include\core-AI\SteeringBehavior.h" />
@@ -114,7 +114,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-AI\AnimationTimeline.inl" />
-    <None Include="..\..\Include\core-AI\FsmLogicStateController.inl" />
+    <None Include="..\..\Include\core-AI\FSMController.inl" />
+    <None Include="..\..\Include\core-AI\FSMState.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

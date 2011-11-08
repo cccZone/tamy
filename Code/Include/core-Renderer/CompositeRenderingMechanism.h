@@ -42,11 +42,12 @@ public:
    void add( const std::string& name, RenderingMechanism* mechanism );
 
    /**
-    * REmoves a mechanism from the composite.
+    * Removes a mechanism from the composite.
     *
     * @param name          unique name for the mechanism
+    * @param release       should the mechanism be released in the process?
     */
-   void remove( const std::string& name );
+   void remove( const std::string& name, bool release = true );
 
    // -------------------------------------------------------------------------
    // RenderingMechanism implementation

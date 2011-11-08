@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core-AppFlow\KeyStatusHandler.h
 /// @brief  handler that will react to key state change
+#pragma once
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -16,6 +16,7 @@
 #include "core-AppFlow.h"
 #include "core-Renderer/Skeleton.h"
 #include "TamySceneWidget.h"
+#include "CameraMovementController.h"
 #include "ChartView.h"
 #include <QSettings>
 #include <QFileDialog>
@@ -132,6 +133,7 @@ void SkeletonAnimationEditor::onInitialize()
 
          m_sceneWidget = new TamySceneWidget( renderViewportFrame, 0, rendererPipelineName, timeController );
          renderViewportLayout->addWidget( m_sceneWidget );
+         m_sceneWidget->setInputController( new CameraMovementController() );
 
          // add a control panel so that we can play the scene
          QToolBar* playbackControlPanel = new QToolBar( animationPreviewFrame );

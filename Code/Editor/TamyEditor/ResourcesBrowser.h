@@ -18,7 +18,6 @@
 
 class TreeWidget;
 class QPushButton;
-class MainAppComponent;
 class FSTreeNode;
 class FSDirNode;
 class FSRootNode;

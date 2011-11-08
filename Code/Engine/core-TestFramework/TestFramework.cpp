@@ -7,6 +7,13 @@
 #include <cppunit/BriefTestProgressListener.h>
 #include "core\dostream.h"
 
+///////////////////////////////////////////////////////////////////////////////
+
+// type includes
+#include "core/TypesRegistry.cpp"
+#include "core-MVC/TypesRegistry.cpp"
+#include "core-AI/TypesRegistry.cpp"
+#include "core-Renderer/TypesRegistry.cpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -37,13 +44,6 @@ CppUnit::TestSuite& registerSuite(const char* name)
 		return *i->second;
 	}
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-// type includes
-#include "core/TypesRegistry.cpp"
-#include "core-MVC/TypesRegistry.cpp"
-#include "core-Renderer/TypesRegistry.cpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 
