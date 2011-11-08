@@ -7,6 +7,7 @@
 #include <list>
 #include <map>
 #include "core-Renderer/RenderingMechanism.h"
+#include "core-MVC/ModelView.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,16 +22,26 @@ class QueryableEntity;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A rendering pass dedicated to scene queries mechanism.
+ * Queries the rendered scene for an object visible at the specified location.
  */
-class QueryRenderingPass : public RenderingMechanism, public GenericFactory< Entity, QueryableEntity >
+class QueryRenderingPass : public RenderingMechanism, public GenericFactory< Entity, QueryableEntity >, public ModelView
 {
+private:
+   union PtrAsBytes
+   {
+      long ptr;
+      struct
+      {
+         unsigned char b[4];
+      };
+   };
+
 private:
    typedef std::map< Entity*, QueryableEntity* > Representations;
    typedef std::list< SceneQuery* >              QueriesList;
 
 private:
-   RenderTarget&           m_sceneSnapshot;
+   RenderTarget*           m_sceneSnapshot;
    Representations         m_representations;
    PixelShader*            m_shader;
    QueriesList             m_queriesList;
@@ -39,28 +50,9 @@ private:
 public:
    /**
     * Constructor.
-    *
-    * @param sceneSnapshot    render target
     */
-   QueryRenderingPass( RenderTarget& sceneSnapshot );
+   QueryRenderingPass();
    ~QueryRenderingPass();
-
-   /**
-    * Adds a new entity for rendering.
-    *
-    * @param entity
-    */
-   void addEntity( Entity& entity );
-
-   /**
-    * Removes an entity from rendering
-    */
-   void removeEntity( Entity& entity );
-
-   /**
-    * Resets the pass, removing all added entities.
-    */
-   void reset();
 
    /**
     * Registers a new scene query.
@@ -68,6 +60,34 @@ public:
     * @param query
     */
    void query( SceneQuery& query );
+
+   // -------------------------------------------------------------------------
+   // Helper methods
+   // -------------------------------------------------------------------------
+   /**
+    * Converts a regular pointer to a vector, which can be used as an argument
+    * of the SceneQueryEffect.
+    *
+    * @param ptr     pointer we want to convert
+    * @return        pointer in a vector form
+    */
+   static D3DXVECTOR4 ptrToVec( void* ptr );
+
+   /**
+    * Inverted conversion to the one introduced by method 'ptrToVec'
+    *
+    * @param vec     a vector representation of a pointer
+    * @return        a pointer
+    */
+   static void* vecToPtr( const D3DXVECTOR4& vec );
+
+   // -------------------------------------------------------------------------
+   // ModelView implementation
+   // -------------------------------------------------------------------------
+   void onEntityAdded( Entity& entity );
+   void onEntityRemoved( Entity& entity );
+   void onEntityChanged( Entity& entity );
+   void resetContents();
 
 protected:
    // -------------------------------------------------------------------------

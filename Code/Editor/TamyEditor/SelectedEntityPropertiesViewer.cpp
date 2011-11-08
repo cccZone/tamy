@@ -8,6 +8,7 @@
 SelectedEntityPropertiesViewer::SelectedEntityPropertiesViewer( QWidget* parent )
    : QScrollArea( parent )
    , m_selectedEntityProperties( NULL )
+   , m_displayedEntity( NULL )
 {
    setWidgetResizable( true );
 }
@@ -21,6 +22,7 @@ void SelectedEntityPropertiesViewer::onEntitySelected( Entity& entity )
       // same entity was selected as the one we already have in the view - don't do a thing
       return;
    }
+   m_displayedEntity = &entity;
 
    if ( m_selectedEntityProperties != NULL )
    {
@@ -42,6 +44,7 @@ void SelectedEntityPropertiesViewer::onEntityDeselected( Entity& entity )
       // a different entity from the one we are viewing was deselected - don't do a thing
       return;
    }
+   m_displayedEntity = NULL;
 
    if ( m_selectedEntityProperties != NULL )
    {

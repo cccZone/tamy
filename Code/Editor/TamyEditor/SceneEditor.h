@@ -54,16 +54,17 @@ public:
     */
    inline NodeTransformControlMode getObjectsManipulationMode() const { return m_objectsManipulationMode; }
 
+   /**
+    * Returns the SelectionManager instance used by the editor.
+    */
+   inline SelectionManager& getSelectionMgr() const { return *m_selectionManager; }
+
 protected:
    // -------------------------------------------------------------------------
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
    void onInitialize();
-
-   // -------------------------------------------------------------------------
-   // QFrame events
-   // -------------------------------------------------------------------------
-   void closeEvent( QCloseEvent *event );
+   void onDeinitialize();
 
 private:
    void runScene();

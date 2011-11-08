@@ -51,6 +51,7 @@ public:
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
    void onInitialize();
+   void onDeinitialize();
 
 public slots:
    void save();
@@ -60,8 +61,6 @@ public slots:
    void removeRenderTarget();
    void editRenderTarget( QListWidgetItem* rtItem );
 
-protected:
-   void closeEvent( QCloseEvent *event );
 
 private:
    void updateRenderTargetsList();

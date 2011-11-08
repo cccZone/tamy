@@ -124,6 +124,7 @@ public:
 
 public slots:
    void updateMain();
+   void closeResourceEditor( int );
 
 protected:
    void closeEvent( QCloseEvent *event );

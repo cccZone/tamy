@@ -2,6 +2,9 @@
 #include "NodeManipulationState.h"
 #include "CameraMovementController.h"
 #include "TamySceneWidget.h"
+#include "SceneEditor.h"
+#include "SelectionManager.h"
+#include "core-Renderer/Renderer.h"
 #include "core/Point.h"
 
 
@@ -34,6 +37,8 @@ void NavigationState::onSettingsChanged()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// TODO: !!! jak sie nacisnie prawy, pokreci kamera, to potem lewy smash nie dziala
+
 bool NavigationState::keySmashed( unsigned char keyCode )
 {
    if ( keyCode == VK_LBUTTON )
@@ -41,13 +46,30 @@ bool NavigationState::keySmashed( unsigned char keyCode )
       TamySceneWidget& sceneWidget = fsm().getSceneWidget();
 
       // issue an object selection command
-      const Point& screenPos = sceneWidget.getMousePos();
-      sceneWidget.selectEntityAt( screenPos );
+      sceneWidget.localToViewport( sceneWidget.getMousePos(), m_queryPos );
+      sceneWidget.queryScene( *this );
 
       return true;
    }
 
    return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void NavigationState::setResult( Entity* foundEntity )
+{
+   SelectionManager& selectionMgr = fsm().getSceneEditor().getSelectionMgr();
+   if ( foundEntity )
+   {
+      // we found something
+      selectionMgr.selectEntity( *foundEntity );
+   }
+   else
+   {
+      // we found nothing, so cancel the current selection
+      selectionMgr.resetSelection();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

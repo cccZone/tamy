@@ -5,6 +5,7 @@
 #include "core-AI/FSMState.h"
 #include "SceneObjectsManipulator.h"
 #include "SceneObjectsManipulatorState.h"
+#include "SceneQuery.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,12 +13,21 @@
 /**
  * SceneObjectsManipulator navigation state.
  */
-class NavigationState : public FSMState< SceneObjectsManipulator >, public SceneObjectsManipulatorState
+class NavigationState : public FSMState< SceneObjectsManipulator >, public SceneObjectsManipulatorState, public SceneQuery
 {
 public:
    DECLARE_RTTI_CLASS
 
+private:
+   D3DXVECTOR2          m_queryPos;
+
 public:
+   // ----------------------------------------------------------------------
+   // SceneQuery implementation
+   // ----------------------------------------------------------------------
+   const D3DXVECTOR2& getQueriedPosition() const { return m_queryPos; }
+   void setResult( Entity* foundEntity );
+
    // ----------------------------------------------------------------------
    // FSMState implementation
    // ----------------------------------------------------------------------

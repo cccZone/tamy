@@ -66,6 +66,8 @@ void SelectionRenderingPass::deinitialize( Renderer& renderer )
 
 void SelectionRenderingPass::render( Renderer& renderer )
 {
+   new ( renderer() ) RCActivateRenderTarget( NULL );
+
    if ( m_selectedRepresentation )
    {
       m_selectedRepresentation->render( renderer );

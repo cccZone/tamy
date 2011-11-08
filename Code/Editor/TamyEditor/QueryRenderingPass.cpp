@@ -3,7 +3,6 @@
 #include "core-Renderer.h"
 #include "QueryableEntity.h"
 #include "SceneQuery.h"
-#include "SceneQueries.h"
 
 // representations
 #include "QueryableGeometry.h"
@@ -11,8 +10,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QueryRenderingPass::QueryRenderingPass( RenderTarget& sceneSnapshot )
-   : m_sceneSnapshot( sceneSnapshot )
+QueryRenderingPass::QueryRenderingPass()
+   : m_sceneSnapshot( NULL )
    , m_shader( NULL )
 {
    // define associations
@@ -23,7 +22,7 @@ QueryRenderingPass::QueryRenderingPass( RenderTarget& sceneSnapshot )
 
 QueryRenderingPass::~QueryRenderingPass()
 {
-   reset();
+   resetContents();
 
    m_queriesList.clear();
    m_completedQueriesList.clear();
@@ -31,7 +30,7 @@ QueryRenderingPass::~QueryRenderingPass()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QueryRenderingPass::addEntity( Entity& entity )
+void QueryRenderingPass::onEntityAdded( Entity& entity )
 {
    Representations::iterator reprIt = m_representations.find( &entity );
    if ( reprIt != m_representations.end() )
@@ -49,7 +48,7 @@ void QueryRenderingPass::addEntity( Entity& entity )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QueryRenderingPass::removeEntity( Entity& entity )
+void QueryRenderingPass::onEntityRemoved( Entity& entity )
 {
    Representations::iterator it = m_representations.find( &entity );
    if ( it != m_representations.end() )
@@ -63,7 +62,14 @@ void QueryRenderingPass::removeEntity( Entity& entity )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QueryRenderingPass::reset()
+void QueryRenderingPass::onEntityChanged( Entity& entity )
+{
+   // nothing to do here
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void QueryRenderingPass::resetContents()
 {
    for ( Representations::iterator it = m_representations.begin(); it != m_representations.end(); ++it )
    {
@@ -93,6 +99,10 @@ void QueryRenderingPass::initialize( Renderer& renderer )
       m_shader->loadFromFile( rm.getFilesystem(), shaderName );
       rm.addResource( m_shader );
    }
+
+   // create the render target
+   delete m_sceneSnapshot;
+   m_sceneSnapshot = new RenderTarget( new RTSPDynamic( renderer ), TU_COLOR, true, Color( 0, 0, 0, 0 ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,6 +110,7 @@ void QueryRenderingPass::initialize( Renderer& renderer )
 void QueryRenderingPass::deinitialize( Renderer& renderer )
 {
    delete m_shader; m_shader = NULL;
+   delete m_sceneSnapshot; m_sceneSnapshot = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -121,7 +132,7 @@ void QueryRenderingPass::render( Renderer& renderer )
    }
 
    // set the rendering target
-   new ( renderer() ) RCActivateRenderTarget( &m_sceneSnapshot );
+   new ( renderer() ) RCActivateRenderTarget( m_sceneSnapshot );
 
    // draw the representations
    for ( Representations::iterator it = m_representations.begin(); it != m_representations.end(); ++it )
@@ -132,12 +143,46 @@ void QueryRenderingPass::render( Renderer& renderer )
    // create the commands that will get the queried results
    for ( QueriesList::iterator it = m_queriesList.begin(); it != m_queriesList.end(); ++it )
    {
-      new ( renderer() ) RCGetPixel( m_sceneSnapshot, (*it)->getQueriedPosition(), (*it)->getResultBuffer() );
+      new ( renderer() ) RCGetPixel( *m_sceneSnapshot, (*it)->getQueriedPosition(), (*it)->getResultBuffer() );
    }
 
    // remove all queries from the list - we have fulfilled them
    m_completedQueriesList = m_queriesList;
    m_queriesList.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+D3DXVECTOR4 QueryRenderingPass::ptrToVec( void* ptr )
+{
+   PtrAsBytes ptrRep;
+   ptrRep.ptr = (long)ptr;
+
+   D3DXVECTOR4 vec(
+      ( float )( ptrRep.b[0] / 255.f ),
+      ( float )( ptrRep.b[1] / 255.f ),
+      ( float )( ptrRep.b[2] / 255.f ),
+      ( float )( ptrRep.b[3] / 255.f )
+      );
+   return vec;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void* QueryRenderingPass::vecToPtr( const D3DXVECTOR4& vec )
+{
+   PtrAsBytes ptrRep;
+   unsigned int r = ( unsigned int )( vec.x * 255.f );
+   unsigned int g = ( unsigned int )( vec.y * 255.f );
+   unsigned int b = ( unsigned int )( vec.z * 255.f );
+   unsigned int a = ( unsigned int )( vec.w * 255.f );
+
+   ptrRep.b[0] = r;
+   ptrRep.b[1] = g;
+   ptrRep.b[2] = b;
+   ptrRep.b[3] = a;
+
+   return ( void* )( ptrRep.ptr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

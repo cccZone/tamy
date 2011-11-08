@@ -147,9 +147,6 @@ void SkeletonAnimationEditor::onInitialize()
          connect( m_actionPlay, SIGNAL( triggered() ), this, SLOT( togglePlay() ) );
       }
 
-
-      // TODO: camera controller
-
       m_bonesList = new QListWidget( operationsSplitter );
       operationsSplitter->addWidget( m_bonesList );
       connect( m_bonesList, SIGNAL( itemClicked( QListWidgetItem* ) ), this, SLOT( onBoneSelected( QListWidgetItem* ) ) );
@@ -253,12 +250,9 @@ void SkeletonAnimationEditor::onInitialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkeletonAnimationEditor::closeEvent( QCloseEvent *event )
+void SkeletonAnimationEditor::onDeinitialize()
 {
-   // accept the event
-   event->accept();
-
-   delete this;
+   // nothing to do here
 }
 
 ///////////////////////////////////////////////////////////////////////////////

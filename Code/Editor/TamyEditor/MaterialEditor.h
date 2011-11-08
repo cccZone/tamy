@@ -46,15 +46,13 @@ public:
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
    void onInitialize();
+   void onDeinitialize();
 
 public slots:
    void save();
    void compile();
    void onScriptModified();
    void onParamChange();
-
-protected:
-   void closeEvent( QCloseEvent *event );
 
 private:
    void synchronize();

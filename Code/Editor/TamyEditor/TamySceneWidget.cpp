@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <QEvent.h>
 #include "SceneRendererInputController.h"
+#include "QueryRenderingPass.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,6 +29,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std:
    , m_debugScene( NULL )
    , m_renderingMech( NULL )
    , m_selectionRenderer( new SelectionRenderingPass() )
+   , m_queryRenderer( new QueryRenderingPass() )
    , m_resMgr( NULL )
 {
    m_hWnd = static_cast< HWND >( winId() );
@@ -93,9 +95,13 @@ TamySceneWidget::~TamySceneWidget()
 
    m_camera = NULL;
 
-   // we're taking care of this one ourselves
+   // we're taking care of this rendering pass ourselves
    delete m_selectionRenderer;
    m_selectionRenderer = NULL;
+
+   // we're taking care of this rendering pass ourselves as well
+   delete m_queryRenderer;
+   m_queryRenderer = NULL;
 
    m_renderingMech = NULL;
    m_renderer->setMechanism( NULL );
@@ -131,12 +137,17 @@ void TamySceneWidget::clearScene()
 
 void TamySceneWidget::deinitialize()
 {
+   // detach the views
+   if ( m_scene )
+   {
+      m_scene->detach( *m_queryRenderer );
+   }
+
    // reset the rendering mechanism
    if ( m_renderingMech )
    {
       // don't release the selection renderer - we're managing that one on our own
-      m_renderingMech->remove( "selectionRenderer", false );
-      m_renderingMech->remove( "sceneRenderer" );
+      m_renderingMech->reset();
    }
 
    // remove the scenes
@@ -163,7 +174,8 @@ void TamySceneWidget::initialize()
          pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( m_rendererPipelineName ) );
          sceneRenderer = new RenderingPipelineMechanism( pipeline );
          m_renderingMech->add( "sceneRenderer", sceneRenderer );
-         m_renderingMech->add( "selectionRenderer", m_selectionRenderer );
+         m_renderingMech->add( "selectionRenderer", m_selectionRenderer, false );
+         m_renderingMech->add( "queryRenderer", m_queryRenderer, false );
       }
       catch ( std::exception& ex)
       {
@@ -179,6 +191,12 @@ void TamySceneWidget::initialize()
       {
          sceneRenderer->addScene( RPS_Main, *m_scene );
       }
+   }
+
+   // attach the views
+   if ( m_scene )
+   {
+      m_scene->attach( *m_queryRenderer );
    }
 }
 
@@ -315,6 +333,7 @@ void TamySceneWidget::checkUserInput( unsigned char* keyBuffer, Point& mousePos 
    memcpy_s( keyBuffer, sizeof(unsigned char) * 256, m_keyBuffer, sizeof(unsigned char) * 256 );
 
    QPoint cursorPos = this->cursor().pos();
+   cursorPos = mapFromGlobal( cursorPos );
    mousePos.x = cursorPos.x();
    mousePos.y = cursorPos.y();
 }
@@ -323,7 +342,25 @@ void TamySceneWidget::checkUserInput( unsigned char* keyBuffer, Point& mousePos 
 
 void TamySceneWidget::setMousePos( const Point& pos )
 {
-   this->cursor().setPos( QPoint( pos.x, pos.y ) );
+   QPoint cursorPos( pos.x, pos.y );
+   cursorPos = mapToGlobal( cursorPos );
+   this->cursor().setPos( cursorPos );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::localToViewport( const Point& screenPt, D3DXVECTOR2& viewportPt ) const
+{
+   float w = (float)width();
+   float h = (float)height();
+   float x = (float)( ( screenPt.x < (int)w ) ? screenPt.x : w );
+   float y = (float)( ( screenPt.y < (int)h ) ? screenPt.y : h );
+
+   if ( x < 0 ) x = 0;
+   if ( y < 0 ) y = 0;
+
+   viewportPt.x = ( x / ( w * 0.5f ) ) - 1;
+   viewportPt.y = 1 - ( y / ( h * 0.5f ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -463,9 +500,9 @@ void TamySceneWidget::onEntityDeselected( Entity& entity )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::selectEntityAt( const Point& screenPt ) const
+void TamySceneWidget::queryScene( SceneQuery& query ) const
 {
-   // TODO: scene queries
+   m_queryRenderer->query( query );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

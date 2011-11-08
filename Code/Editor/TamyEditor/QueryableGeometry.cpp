@@ -1,7 +1,7 @@
 #include "QueryableGeometry.h"
 #include "core-Renderer.h"
 #include "core.h"
-#include "SceneQueries.h"
+#include "QueryRenderingPass.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,7 +22,7 @@ void QueryableGeometry::render( Renderer& renderer, PixelShader& shader )
    }
 
    RCBindPixelShader* effectComm = new ( renderer() ) RCBindPixelShader( shader );
-   effectComm->setVec4( "g_ptr", SceneQueries::ptrToVec( &m_geometry ) );
+   effectComm->setVec4( "g_ptr", QueryRenderingPass::ptrToVec( &m_geometry ) );
 
    m_geometry.render( renderer );
 

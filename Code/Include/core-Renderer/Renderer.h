@@ -109,12 +109,6 @@ public:
                        unsigned int rightClientArea, unsigned int bottomClientArea);
 
    /**
-    * The method translates the screen space coordinates
-    * (i.e. ones your mouse moves in) to viewport space coordinates
-    */
-   void screenToViewport(const Point& inScreenPt, D3DXVECTOR2& outViewportPt) const;
-
-   /**
     * This method set a new rendering mechanism.
     *
     * @param mech    new mechanism that will be used for rendering.

@@ -61,6 +61,7 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
       m_editorsTabs = new QTabWidget( ui.renderWindow );
       m_editorsTabs->setTabsClosable( true );
       ui.renderWindow->layout()->addWidget( m_editorsTabs );
+      connect( m_editorsTabs, SIGNAL( tabCloseRequested ( int ) ), this, SLOT( closeResourceEditor( int ) ) );
    }
 
    // create the timer
@@ -283,6 +284,21 @@ void TamyEditor::addEditor( ResourceEditor* editor )
 {
    int newTabIdx = m_editorsTabs->addTab( editor, editor->getIcon(), editor->getLabel() );
    m_editorsTabs->setCurrentIndex( newTabIdx );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::closeResourceEditor( int editorTabIdx )
+{
+   QWidget* editorWidget = m_editorsTabs->widget( editorTabIdx );
+   ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
+   if ( editor )
+   {
+      editor->deinitialize();
+      delete editor;
+   }
+
+   m_editorsTabs->removeTab( editorTabIdx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
