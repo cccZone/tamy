@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor\EnumPropertyEditor.h
 /// @brief  enum property editor
+#pragma once
 
 #include "core\Property.h"
 #include "core\Enum.h"
@@ -10,7 +9,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class PropertiesEditor;
 class Enum;
 
 ///////////////////////////////////////////////////////////////////////////////

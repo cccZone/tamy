@@ -23,18 +23,32 @@ ModelView::~ModelView()
 
 void ModelView::onAttachedToModel( Model& model  )
 {
-   m_models.insert( &model );
+   // check if the model isn't already on our list
+   unsigned int count = m_models.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      if ( m_models[i] == &model )
+      {
+         // yup - we're already observing this one
+         return;
+      }
+   }
+   m_models.push_back( &model );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ModelView::onDetachedFromModel( Model& model )
 {
-   std::set< Model* >::iterator it = m_models.find( &model );
-   if ( it != m_models.end() )
+   unsigned int count = m_models.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      m_models.erase( it );
-      resetContents();
+      if ( m_models[i] == &model )
+      {
+         m_models.erase( m_models.begin() + i );
+         resetContents();
+         break;
+      }
    }
 }
 

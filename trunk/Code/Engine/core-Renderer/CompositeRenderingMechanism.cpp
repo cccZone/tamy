@@ -100,14 +100,19 @@ void CompositeRenderingMechanism::add( const std::string& name, RenderingMechani
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void CompositeRenderingMechanism::remove( const std::string& name )
+void CompositeRenderingMechanism::remove( const std::string& name, bool release )
 {
    MechanismsMap::iterator it = m_mechanismsMap.find( name );
    if ( it != m_mechanismsMap.end() )
    {
       // such mechanism already exists - replace it
       m_members[ it->second ]->deinitialize( *m_renderer );
-      delete m_members[ it->second ];
+
+      if ( release )
+      {
+         delete m_members[ it->second ];
+      }
+
       m_members[ it->second ] = NULL;
       m_freeSlots.push_back( it->second );
 

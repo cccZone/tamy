@@ -59,6 +59,7 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
    // add the editors tabs
    {
       m_editorsTabs = new QTabWidget( ui.renderWindow );
+      m_editorsTabs->setTabsClosable( true );
       ui.renderWindow->layout()->addWidget( m_editorsTabs );
    }
 

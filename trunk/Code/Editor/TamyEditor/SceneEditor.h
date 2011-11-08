@@ -13,24 +13,32 @@ class TimeControllerTrack;
 class QScrollArea;
 class QPropertiesView;
 class Entity;
+class SceneTreeViewer;
+class SelectionManager;
+class SceneObjectsManipulator;
+enum NodeTransformControlMode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class SceneEditor : public ResourceEditor
 {
-   Q_OBJECT
+   Q_OBJECT  
 
 private:
-   Model&                     m_scene;
+   Model&                                    m_scene;
 
    // editor related stuff
-   TimeControllerTrack*       m_sceneTrack;
-   QIcon                      m_runSceneIcon;
-   QIcon                      m_stopSceneIcon;
-   QAction*                   m_actionRun;
-   bool                       m_playing;
-   QScrollArea*               m_scrollableDockWidgetContents;
-   QPropertiesView*           m_selectedEntityView;
+   TimeControllerTrack*                      m_sceneTrack;
+   QIcon                                     m_runSceneIcon;
+   QIcon                                     m_stopSceneIcon;
+   QAction*                                  m_actionRun;
+   bool                                      m_playing;
+   SceneTreeViewer*                          m_sceneTreeViewer;
+   SelectionManager*                         m_selectionManager;
+
+   // objects manipulation
+   SceneObjectsManipulator*                  m_sceneObjectsManipulator;
+   NodeTransformControlMode                  m_objectsManipulationMode;
 
 public:
    /**
@@ -39,12 +47,12 @@ public:
     * @param scene      scene to be edited
     */
    SceneEditor( Model& scene );
+   ~SceneEditor();
 
-   // -------------------------------------------------------------------------
-   // Selection sink
-   // -------------------------------------------------------------------------
-   void onEntitySelected( Entity& entity );
-   void onEntityDeselected();
+   /**
+    * Returns the currently set objects manipulation mode.
+    */
+   inline NodeTransformControlMode getObjectsManipulationMode() const { return m_objectsManipulationMode; }
 
 protected:
    // -------------------------------------------------------------------------
@@ -64,7 +72,10 @@ private:
 public slots:
    void saveScene();
    void toggleSceneExecution();
-
+   void entitySelected( Entity& entity );
+   void selectionCleaned();
+   void setNodeTranslateMode();
+   void setNodeRotateMode();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

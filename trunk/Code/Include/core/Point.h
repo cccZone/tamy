@@ -1,16 +1,24 @@
+/// @file   core-Point.h
+/// @brief  a simple point representation
 #pragma once
 
 #include <iostream>
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * A simple point representation.
+ */
 struct Point
 {
    int x;
    int y;
-   Point(int _x, int _y) : x(_x), y(_y) {}
+
+   Point( int _x, int _y ) : x(_x), y(_y) {}
    Point() : x(0), y(0) {}
+   Point( const D3DXVECTOR2& vec ) : x( (int)vec.x ), y( (int)vec.y ) {}
 
    bool operator==(const Point& rhs) const
    {
@@ -32,6 +40,11 @@ struct Point
    {
       Point newPt(x + rhs.x, y + rhs.y);
       return newPt;
+   }
+
+   operator D3DXVECTOR2() const 
+   {
+      return D3DXVECTOR2( (float)x, (float)y );
    }
 
    friend std::ostream& operator<<(std::ostream& stream, const Point& rhs)

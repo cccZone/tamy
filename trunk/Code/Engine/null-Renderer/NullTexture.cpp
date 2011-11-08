@@ -1,15 +1,10 @@
-#pragma once
-
-/// @file   TamyEditor/ManualEditionModes.h
-/// @brief  a set of manual edition mode flags
+#include "core-Renderer\Texture.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-enum NodeEditionMode
+void RCCreateTexture::execute( Renderer& renderer )
 {
-   NEM_TRANSLATE,
-   NEM_ROTATE
-};
+}
 
 ///////////////////////////////////////////////////////////////////////////////

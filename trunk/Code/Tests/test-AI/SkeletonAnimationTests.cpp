@@ -1,8 +1,9 @@
-#include "core-TestFramework\TestFramework.h"
-#include "core-MVC\Entity.h"
-#include "core-MVC\SpatialEntity.h"
-#include "core-AI\SkeletonAnimationController.h"
+#include "core-TestFramework/TestFramework.h"
+#include "core-MVC/Entity.h"
+#include "core-MVC/SpatialEntity.h"
+#include "core-AI/SkeletonAnimationController.h"
 #include "core-AI/SkeletonAnimation.h"
+#include "core-AI/BoneSRTAnimation.h"
 #include <vector>
 
 
@@ -46,9 +47,21 @@ TEST( SkeletonAnimationController, architecture )
 
    // provide an animation source
    SkeletonAnimation animSource;
-   animSource.addKey( "root", 0.f, D3DXQUATERNION( 0, 0, 0, 1 ), D3DXVECTOR3( 1, 0, 0 ) );
-   animSource.addKey( "hip", 0.f, D3DXQUATERNION( 0, 0, 0, 1 ), D3DXVECTOR3( 1, 0, 0 ) );
-   animSource.addKey( "leg", 0.f, D3DXQUATERNION( 0, 0, 0, 1 ), D3DXVECTOR3( 1, 0, 0 ) );
+
+   BoneSRTAnimation* rootBoneKeys = new BoneSRTAnimation( "root" );
+   rootBoneKeys->addTranslationKey( 0.f, D3DXVECTOR3( 1, 0, 0 ) );
+   rootBoneKeys->addOrientationKey( 0.f, D3DXQUATERNION( 0, 0, 0, 1 ) );
+   animSource.addKeys( rootBoneKeys );
+
+   BoneSRTAnimation* hipBoneKeys = new BoneSRTAnimation( "hip" );
+   hipBoneKeys->addTranslationKey( 0.f, D3DXVECTOR3( 1, 0, 0 ) );
+   hipBoneKeys->addOrientationKey( 0.f, D3DXQUATERNION( 0, 0, 0, 1 ) );
+   animSource.addKeys( hipBoneKeys );
+
+   BoneSRTAnimation* legBoneKeys = new BoneSRTAnimation( "leg" );
+   legBoneKeys->addTranslationKey( 0.f, D3DXVECTOR3( 1, 0, 0 ) );
+   legBoneKeys->addOrientationKey( 0.f, D3DXQUATERNION( 0, 0, 0, 1 ) );
+   animSource.addKeys( legBoneKeys );
 
    // add an animation controller to the hierarchy
    SkeletonAnimationController* animController = new SkeletonAnimationController();
@@ -90,8 +103,12 @@ TEST( SkeletonAnimationController, trackTimeControl )
    SpatialEntity root( "root" );
    SkeletonAnimationController* animController = new SkeletonAnimationController();
    root.add( animController );
+
    SkeletonAnimation animSource;
-   animSource.addKey( "root", 3.f, D3DXQUATERNION( 0, 0, 0, 0 ), D3DXVECTOR3( 0, 0, 0 ) );
+
+   BoneSRTAnimation* rootBoneKeys = new BoneSRTAnimation( "root" );
+   rootBoneKeys->addTranslationKey( 3.f, D3DXVECTOR3( 0, 0, 0 ) );
+   animSource.addKeys( rootBoneKeys );
 
    animController->setAnimationSource( animSource );
 
@@ -112,4 +129,3 @@ TEST( SkeletonAnimationController, trackTimeControl )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-

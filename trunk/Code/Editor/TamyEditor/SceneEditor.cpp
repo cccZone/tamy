@@ -1,7 +1,6 @@
 #include "SceneEditor.h"
 #include "core-MVC.h"
 #include "tamyeditor.h"
-#include "MainAppComponent.h"
 #include "core-AppFlow.h"
 #include "core-MVC.h"
 #include <QProgressBar.h>
@@ -9,21 +8,47 @@
 #include <QSplitter.h>
 #include <QSettings.h>
 #include <QScrollArea.h>
-#include "QPropertiesView.h"
+#include "SelectedEntityPropertiesViewer.h"
 #include "progressDialog.h"
 #include "TamySceneWidget.h"
+#include "CameraMovementController.h"
+#include "SceneTreeViewer.h"
+#include "SelectionManager.h"
+#include "SceneObjectsManipulator.h"
+#include "NodeTransformController.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SceneEditor::SceneEditor( Model& scene )
-: m_scene( scene )
-, m_sceneTrack( NULL )
-, m_actionRun( NULL )
-, m_scrollableDockWidgetContents( NULL )
-, m_selectedEntityView( NULL )
-, m_playing( false )
+   : m_scene( scene )
+   , m_sceneTrack( NULL )
+   , m_actionRun( NULL )
+   , m_sceneTreeViewer( NULL )
+   , m_selectionManager( new SelectionManager() )
+   , m_playing( false )
+   , m_sceneObjectsManipulator( NULL )
+   , m_objectsManipulationMode( NTM_TRANSLATE )
 {
+   m_scene.attach( *m_selectionManager );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SceneEditor::~SceneEditor()
+{
+   // gonna get disposed of by the rendering widget
+   m_sceneObjectsManipulator = NULL;
+
+   if ( m_sceneTreeViewer )
+   {
+      m_scene.detach( *m_sceneTreeViewer );
+   }
+
+   // dispose of the selection manager
+   m_scene.detach( *m_selectionManager );
+   delete m_selectionManager;
+   m_selectionManager = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,7 +56,7 @@ SceneEditor::SceneEditor( Model& scene )
 void SceneEditor::onInitialize()
 {
    TamyEditor& mainEditor = TamyEditor::getInstance();
-
+   
    TimeController& timeController = TamyEditor::getInstance().getTimeController();
    m_sceneTrack = &timeController.add( "SceneEditor" );
 
@@ -49,44 +74,103 @@ void SceneEditor::onInitialize()
       mainLayout->addWidget( toolBar );
 
       // resource management actions
-      QAction* actionSaveScene = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save Scene" ), toolBar );
-      toolBar->addAction( actionSaveScene );
-      connect( actionSaveScene, SIGNAL( triggered() ), this, SLOT( saveScene() ) );
+      {
+         QAction* actionSaveScene = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save Scene" ), toolBar );
+         toolBar->addAction( actionSaveScene );
+         connect( actionSaveScene, SIGNAL( triggered() ), this, SLOT( saveScene() ) );
 
-      toolBar->addSeparator();
+         toolBar->addSeparator();
+      }
 
       // scene execution commands
-      m_runSceneIcon = QIcon( iconsDir + tr( "/play.png" ) );
-      m_stopSceneIcon = QIcon( iconsDir + tr( "/stop.png" ) );
+      {
+         m_runSceneIcon = QIcon( iconsDir + tr( "/play.png" ) );
+         m_stopSceneIcon = QIcon( iconsDir + tr( "/stop.png" ) );
 
-      m_actionRun = new QAction( m_runSceneIcon, tr( "Run" ), toolBar );
-      m_actionRun->setShortcut( QKeySequence( tr( "F5" ) ) );
-      toolBar->addAction( m_actionRun );
-      connect( m_actionRun, SIGNAL( triggered() ), this, SLOT( toggleSceneExecution() ) );
+         m_actionRun = new QAction( m_runSceneIcon, tr( "Run" ), toolBar );
+         m_actionRun->setShortcut( QKeySequence( tr( "F5" ) ) );
+         toolBar->addAction( m_actionRun );
+         connect( m_actionRun, SIGNAL( triggered() ), this, SLOT( toggleSceneExecution() ) );
+
+         toolBar->addSeparator();
+      }
+
+      // object manipulation mode change commands
+      {
+         QActionGroup* actionGroup = new QActionGroup( toolBar );
+
+         QAction* actionTranslate = new QAction( QIcon( iconsDir + tr( "/translate.png" ) ), tr( "Translate" ), toolBar );
+         actionTranslate->setCheckable( true );
+         toolBar->addAction( actionTranslate );
+         actionGroup->addAction( actionTranslate );
+         connect( actionTranslate, SIGNAL( triggered() ), this, SLOT( setNodeTranslateMode() ) );
+
+         QAction* actionRotate = new QAction( QIcon( iconsDir + tr( "/rotate.png" ) ), tr( "Rotate" ), toolBar );
+         actionRotate->setCheckable( true );
+         toolBar->addAction( actionRotate );
+         actionGroup->addAction( actionRotate );
+         connect( actionRotate, SIGNAL( triggered() ), this, SLOT( setNodeRotateMode() ) );
+         actionTranslate->setChecked( true );
+
+         toolBar->addSeparator();
+      }
+
    }
 
-   // add the splitter that will host the render window and the properties browser
+   // add the splitter that will host the render window and the browsers frames
    {
       QSplitter* sceneViewSplitter = new QSplitter( Qt::Horizontal, this );
       mainLayout->addWidget( sceneViewSplitter );
 
+      // extract the camera from the scene widget and set up the scene tree viewer
+      // so that each time we select a node, the camera focuses on it
+      Camera* camera = NULL;
+
       // add the scene preview
-      QSettings& settings = mainEditor.getSettings();
-      settings.beginGroup( "DefaultRenderer" );
-      std::string defaultRendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
-      settings.endGroup();
+      {
+         QSettings& settings = mainEditor.getSettings();
+         settings.beginGroup( "DefaultRenderer" );
+         std::string defaultRendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
+         settings.endGroup();
 
-      TamySceneWidget* sceneWidget = new TamySceneWidget( sceneViewSplitter, 0, defaultRendererPipelineName, mainEditor.getTimeController() );
-      sceneWidget->setScene( m_scene );
-      sceneViewSplitter->addWidget( sceneWidget );
-      sceneViewSplitter->setStretchFactor( 0, 1 );
+         TamySceneWidget* sceneWidget = new TamySceneWidget( sceneViewSplitter, 0, defaultRendererPipelineName, mainEditor.getTimeController() );
+         camera = &sceneWidget->getCamera();
+         sceneWidget->setScene( m_scene );
+         sceneViewSplitter->addWidget( sceneWidget );
+         sceneViewSplitter->setStretchFactor( 0, 1 );
+         m_selectionManager->attach( *sceneWidget );
+         
+         // setup the manipulator
+         m_sceneObjectsManipulator = new SceneObjectsManipulator( *this );
+         sceneWidget->setInputController( m_sceneObjectsManipulator );
+         m_selectionManager->attach( *m_sceneObjectsManipulator );
+      }
 
-      // add the properties browser
-      m_scrollableDockWidgetContents = new QScrollArea( sceneViewSplitter );
-      m_scrollableDockWidgetContents->setObjectName( ( m_scene.getFilePath() + "/PropertiesEditor/ScrollableDockWidgetContents" ).c_str() );
-      m_scrollableDockWidgetContents->setWidgetResizable( true );
-      sceneViewSplitter->addWidget( m_scrollableDockWidgetContents );
-      sceneViewSplitter->setStretchFactor( 1, 0 );
+      // add the browsers
+      {
+         QSplitter* browsersSplitter = new QSplitter( Qt::Vertical, sceneViewSplitter );
+         sceneViewSplitter->addWidget( browsersSplitter );
+         sceneViewSplitter->setStretchFactor( 1, 0 );
+
+         {
+            // add the properties browser
+            SelectedEntityPropertiesViewer* propertiesEditor = new SelectedEntityPropertiesViewer( browsersSplitter );
+            m_selectionManager->attach( *propertiesEditor );
+            propertiesEditor->setObjectName( ( m_scene.getFilePath() + "/PropertiesEditor" ).c_str() );
+            propertiesEditor->setWidgetResizable( true );
+            browsersSplitter->addWidget( propertiesEditor );
+
+            // add the scene tree browser
+            m_sceneTreeViewer = new SceneTreeViewer( browsersSplitter );
+            m_scene.attach( *m_sceneTreeViewer );
+            m_selectionManager->attach( *m_sceneTreeViewer );
+            m_sceneTreeViewer->setObjectName( ( m_scene.getFilePath() + "/SceneTreeViewer" ).c_str() );
+            browsersSplitter->addWidget( m_sceneTreeViewer );
+            m_sceneTreeViewer->setCamera( *camera );
+            connect( m_sceneTreeViewer, SIGNAL( onSceneTreeObjectSelected( Entity& ) ), this, SLOT( entitySelected( Entity& ) ) );
+            connect( m_sceneTreeViewer, SIGNAL( onSceneTreeSelectionCleaned() ), this, SLOT( selectionCleaned() ) );
+         }
+      }
    }
 }
 
@@ -171,29 +255,34 @@ void SceneEditor::saveScene()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneEditor::onEntitySelected( Entity& entity )
+void SceneEditor::entitySelected( Entity& entity )
 {
-   if ( m_selectedEntityView != NULL )
-   {
-      m_scrollableDockWidgetContents->setWidget( NULL );
-      delete m_selectedEntityView;
-   }
-
-   m_selectedEntityView = new QPropertiesView();
-   m_scrollableDockWidgetContents->setWidget( m_selectedEntityView );
-   entity.viewProperties( *m_selectedEntityView );
+   m_selectionManager->selectEntity( entity );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneEditor::onEntityDeselected()
+void SceneEditor::selectionCleaned()
 {
-   if ( m_selectedEntityView != NULL )
-   {
-      m_scrollableDockWidgetContents->setWidget( NULL );
-      delete m_selectedEntityView;
-      m_selectedEntityView = NULL;
-   }
+   m_selectionManager->resetSelection();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void SceneEditor::setNodeTranslateMode()
+{
+   m_objectsManipulationMode = NTM_TRANSLATE;
+   m_sceneObjectsManipulator->onSettingsChanged();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneEditor::setNodeRotateMode()
+{
+   m_objectsManipulationMode = NTM_ROTATE;
+   m_sceneObjectsManipulator->onSettingsChanged();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+// TODO: !!!!!!!!!!!! when an entity is clicked, enter the manipulation mode

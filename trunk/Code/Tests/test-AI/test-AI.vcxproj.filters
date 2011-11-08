@@ -13,12 +13,12 @@
     <Filter Include="SkeletonAnimation">
       <UniqueIdentifier>{679b19c2-0c9a-45e1-b56a-ae52811f29cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ControlStructures">
+      <UniqueIdentifier>{5e197271-37cc-433d-9108-5b67ba8f5dc1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BehaviorTreeTests.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="FiniteStateMachineTests.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="MessagingSystemTests.cpp">
@@ -32,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="SkeletonAnimationTests.cpp">
       <Filter>SkeletonAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="FiniteStateMachineTests.cpp">
+      <Filter>ControlStructures</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

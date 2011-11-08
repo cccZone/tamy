@@ -1,20 +1,12 @@
 #include "SelectionManager.h"
-#include "SelectedEntityRepresentation.h"
-#include "core-Renderer.h"
 #include "core-MVC\Model.h"
-#include "SelectionRenderingPass.h"
+#include "SelectionManagerListener.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SelectionManager::SelectionManager()
-: m_selectedEntity( NULL )
-, m_renderingPass( NULL )
-, m_observedScene( NULL )
-, m_servicesMgr( NULL )
 {
-   // create the rendering pass
-   m_renderingPass = new SelectionRenderingPass( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,62 +14,40 @@ SelectionManager::SelectionManager()
 SelectionManager::~SelectionManager()
 {
    resetContents();
-
-   m_renderingPass = NULL;
-   m_servicesMgr = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SelectionManager::initialize( TamyEditor& mgr )
+void SelectionManager::selectEntity( Entity& entity )
 {
-   m_servicesMgr = &mgr;
-
-   mgr.registerService< SelectionManager >( *this, *this );
-
-   // register a rendering pass
-   CompositeRenderingMechanism& compRenderingMech = mgr.requestService< CompositeRenderingMechanism >();
-   compRenderingMech.add( "SelectionManager", m_renderingPass );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SelectionManager::onServiceRegistered( TamyEditor& mgr )
-{
-   // scene
-   if ( mgr.needsUpdate< Model >( *m_observedScene ) )
+   // check if the entity's not already on our list
+   unsigned int count = m_selectedEntities.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      if ( m_observedScene )
+      if ( m_selectedEntities[i] == &entity )
       {
-         m_observedScene->detach( *this );
-      }
-
-      if ( mgr.hasService< Model >() )
-      {
-         m_observedScene = &mgr.requestService< Model >();
-         m_observedScene->attach( *this );
-      }
-      else
-      {
-         m_observedScene = NULL;
+         // yup - we have it
+         return;
       }
    }
+
+   m_selectedEntities.push_back( &entity );
+   notifyEntitySelected( entity );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SelectionManager::selectObject( Entity& entity )
+void SelectionManager::deselectEntity( Entity& entity )
 {
-   resetSelection();
-   m_selectedEntity = &entity;
-
-   // visualize the selection
-   m_renderingPass->set( &entity );
-
-   // notify about the selection
-   if ( m_selectedEntity )
+   unsigned int count = m_selectedEntities.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      notifyEntitySelected( *m_selectedEntity );
+      if ( m_selectedEntities[i] == &entity )
+      {
+         notifyEntityDeselected( entity );
+         m_selectedEntities.erase( m_selectedEntities.begin() + i );
+         break;
+      }
    }
 }
 
@@ -85,15 +55,12 @@ void SelectionManager::selectObject( Entity& entity )
 
 void SelectionManager::resetSelection()
 {
-   if ( m_selectedEntity )
+   unsigned int count = m_selectedEntities.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      notifyEntityDeselected( *m_selectedEntity );
+      notifyEntityDeselected( *m_selectedEntities[i] );
    }
-
-   m_selectedEntity = NULL;
-
-   // unvisualise the selection
-   m_renderingPass->set( NULL );
+   m_selectedEntities.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -135,7 +102,7 @@ void SelectionManager::notifyEntitySelected( Entity& entity )
    unsigned int count = m_listeners.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      m_listeners[i]->onObjectSelected( entity );
+      m_listeners[i]->onEntitySelected( entity );
    }
 }
 
@@ -146,7 +113,7 @@ void SelectionManager::notifyEntityDeselected( Entity& entity )
    unsigned int count = m_listeners.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      m_listeners[i]->onObjectDeselected( entity );
+      m_listeners[i]->onEntityDeselected( entity );
    }
 }
 
@@ -154,32 +121,28 @@ void SelectionManager::notifyEntityDeselected( Entity& entity )
 
 void SelectionManager::onEntityAdded( Entity& entity )
 {
+   // nothing to do here
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SelectionManager::onEntityRemoved( Entity& entity )
 {
-   // if the entity was selected, remove the selection
-   if ( m_selectedEntity == &entity )
-   {
-      m_selectedEntity = NULL;
-      m_renderingPass->set( NULL );
-   }
+   deselectEntity( entity );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SelectionManager::onEntityChanged( Entity& entity )
 {
+   // nothing to do here
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SelectionManager::resetContents()
 {
-   m_selectedEntity = NULL;
-   m_renderingPass->set( NULL );
+   m_selectedEntities.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

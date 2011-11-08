@@ -6,6 +6,7 @@
 
 #include "core\ClassesRegistry.h"
 #include "core\ClassTemplate.h"
+#include "core\Casts.h"
 #include <stdexcept>
 
 
@@ -21,6 +22,30 @@ public:
    virtual ~RTTIObject() {}
 
    virtual const Class& getVirtualClass() const = 0;
+
+   /**
+    * Checks if this class can be safely cast onto the specified reference type
+    * 
+    * @param T  type the compatibility with which we want to verify
+    */
+   template< typename T >
+   bool isA() const
+   {
+      const Class& vc = getVirtualClass();
+      return vc.isA( T::getRTTIClass() );
+   }
+
+   /**
+    * Checks if the specified class is of the exactly same type as this class.
+    * 
+    * @param T  class the type of which we want to check
+    */
+   template< typename T >
+   bool isExactlyA() const
+   {
+      const Class& vc = getVirtualClass();
+      return vc.isExactlyA( T::getRTTIClass() );
+   }
 };
 
 
@@ -57,17 +82,17 @@ public:
    /**
     * Constructor (name based).
     */
-   Class(const std::string& name);
+   Class( const std::string& name );
 
    /**
     * Constructor (handle based).
     */
-   Class(unsigned int handle);
+   Class( unsigned int handle );
 
    /**
     * Copy constructor.
     */
-   Class(const Class& rhs);
+   Class( const Class& rhs );
 
    /**
     * Tells whether the class instance describes an existing data type.

@@ -13,39 +13,21 @@
 
 class Entity;
 class Model;
-class SelectionRenderingPass;
-
-///////////////////////////////////////////////////////////////////////////////
-
-class SelectionManagerListener
-{
-public:
-   virtual ~SelectionManagerListener() {}
-
-   virtual void onObjectSelected( Entity& entity ) = 0;
-
-   virtual void onObjectDeselected( Entity& entity ) = 0;
-};
+class SelectionManagerListener;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Component that manages the scene entities selection.
  */
-class SelectionManager: public Component< TamyEditor >, 
-                        public ModelView
+class SelectionManager : public ModelView
 {
 private:
-   typedef std::vector< SelectionManagerListener* >                     Listeners;
+   typedef std::vector< SelectionManagerListener* >      Listeners;
 
 private:
-   TamyEditor*                         m_servicesMgr;
-   Listeners                           m_listeners;
-
-   Entity*                             m_selectedEntity;
-   SelectionRenderingPass*             m_renderingPass;
-
-   Model*                              m_observedScene;
+   Listeners                                             m_listeners;
+   std::vector< Entity* >                                m_selectedEntities;
 
 public:
    /**
@@ -54,35 +36,28 @@ public:
    SelectionManager();
    ~SelectionManager();
 
-   /**
-    * The method renders the selected objects on screen.
-    */
-   void render();
-
-   /**
-    * Returns an instance of the services manager.
-    */
-   inline TamyEditor& getServicesMgr() const { return *m_servicesMgr; }
-
    // -------------------------------------------------------------------------
    // Selected entities management
    // -------------------------------------------------------------------------
    /**
-    * This method allows to select an object for edition.
+    * This method allows to select an entity.
     *
-    * @param entity  entity properties of which we want to edit.
+    * @param entity
     */
-   void selectObject( Entity& entity );
+   void selectEntity( Entity& entity );
+
+   /**
+    * Deselects an entity.
+    *
+    * @param entity
+    */
+   void deselectEntity( Entity& entity );
 
    /**
     * Removes the selected object's properties from the view.
     */
    void resetSelection();
 
-   /**
-    * Returns a pointer to the currently selected entity.
-    */
-   inline const Entity* getSelectedEntity() const { return m_selectedEntity; }
 
    // -------------------------------------------------------------------------
    // Listeners management
@@ -100,12 +75,6 @@ public:
     * @param listener
     */
    void detach( SelectionManagerListener& listener );
-
-   // -------------------------------------------------------------------------
-   // Component initialization
-   // -------------------------------------------------------------------------
-   void initialize( TamyEditor& mgr );
-   void onServiceRegistered( TamyEditor& mgr );
 
    // -------------------------------------------------------------------------
    // ModelView implementation

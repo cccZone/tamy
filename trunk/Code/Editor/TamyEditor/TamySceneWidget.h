@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor\TamySceneWidget.h
-/// @brief  a widget for displaying tamy scenes
+/// @brief  a widget for displaying scenes
+#pragma once
 
 #include <QWidget>
 #include <windows.h>
@@ -10,6 +9,7 @@
 #include "core\Point.h"
 #include "core-Renderer\Camera.h"
 #include "core-MVC\ModelComponent.h"
+#include "SelectionManagerListener.h"
 #include <d3d9.h>
 #include <set>
 
@@ -25,10 +25,13 @@ class DebugScene;
 class ResourcesManager;
 class CompositeRenderingMechanism;
 class TimeController;
+class SelectionRenderingPass;
+class SceneRendererInputController;
+class TimeControllerTrack;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class TamySceneWidget : public QWidget, public UserInputController
+class TamySceneWidget : public QWidget, public UserInputController, public SelectionManagerListener
 {
    Q_OBJECT
 
@@ -43,6 +46,7 @@ private:
    // input tracking
    unsigned char                                      m_keyBuffer[256];
    KeysStatusManager*                                 m_keysStatusManager;
+   TimeControllerTrack*                               m_inputHandlerTrack;
 
    // required services
    ResourcesManager*                                  m_resMgr;
@@ -52,6 +56,7 @@ private:
    Model*                                             m_scene;
    DebugScene*                                        m_debugScene;
    CompositeRenderingMechanism*                       m_renderingMech;
+   SelectionRenderingPass*                            m_selectionRenderer;
 
 public:
    /**
@@ -77,6 +82,20 @@ public:
     */
    void clearScene();
 
+   /**
+    * Sets a new input controller.
+    *
+    * @param controller
+    */
+   void setInputController( SceneRendererInputController* controller );
+
+   /**
+    * Selects an entity located in the specified point on the screen.
+    *
+    * @param screenPt
+    */
+   void selectEntityAt( const Point& screenPt ) const;
+
    // -------------------------------------------------------------------------
    // Accessors
    // -------------------------------------------------------------------------
@@ -89,6 +108,12 @@ public:
    inline DebugScene& getDebugScene() const { return *m_debugScene; }
 
    inline CompositeRenderingMechanism& getRenderingMech() const { return *m_renderingMech; }
+
+   // -------------------------------------------------------------------------
+   // SelectionManagerListener implementation
+   // -------------------------------------------------------------------------
+   void onEntitySelected( Entity& entity );
+   void onEntityDeselected( Entity& entity );
 
 protected:
    // -------------------------------------------------------------------------

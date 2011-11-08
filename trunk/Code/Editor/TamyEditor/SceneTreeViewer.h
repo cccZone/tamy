@@ -1,20 +1,17 @@
+/// @file   TamyEditor\SceneTreeViewer.h
+/// @brief  widget visualizing the contents of a scene as a tree
 #pragma once
 
-/// @file   TamyEditor\SceneTreeViewer.h
-/// @brief  component visualizing the contents of a scene as a tree
-
-#include "core\Component.h"
 #include "core-MVC\ModelView.h"
 #include "TreeWidget.h"
 #include <QTreeWidgetItem>
-#include <QObject>
-#include "SelectionManager.h"
+#include <QFrame>
+#include "SelectionManagerListener.h"
 #include "TypeDescFactory.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class TamyEditor;
 class Entity;
 class SelectionManager;
 class Camera;
@@ -26,10 +23,7 @@ class TreeWidget;
 /**
  * Component visualizing the contents of a scene as a tree
  */
-class SceneTreeViewer : public QObject,
-                        public Component< TamyEditor >,
-                        public ModelView,
-                        public SelectionManagerListener
+class SceneTreeViewer : public QFrame, public ModelView, public SelectionManagerListener
 {
    Q_OBJECT
 
@@ -45,8 +39,10 @@ private:
    public:
       /**
        * Constructor for the topmost 'world' entry.
+       *
+       * @param parent
        */
-      EntityTreeItem( QTreeWidget* parent, TamyEditor& mgr );
+      EntityTreeItem( QTreeWidget* parent );
       
       /**
        * Constructor for the regular entity-related entires.
@@ -80,14 +76,9 @@ private:
    };
 
 private:
-   TamyEditor*                   m_mgr;
    TreeWidget*                   m_sceneTree;
    EntityTreeItem*               m_rootItem;
-
    QString                       m_iconsDir;
-
-   Model*                        m_observedScene;
-   SelectionManager*             m_selectionMgr;
    Camera*                       m_camera;
 
    TypeDescFactory< Entity >*    m_itemsFactory;
@@ -95,15 +86,19 @@ private:
 public:
    /**
     * Constructor.
+    *
+    * @param parentWidget
     */
-   SceneTreeViewer();
+   SceneTreeViewer( QWidget* parentWidget );
    ~SceneTreeViewer();
 
-   // -------------------------------------------------------------------------
-   // Component implementation
-   // -------------------------------------------------------------------------
-   void initialize( TamyEditor& mgr );
-   void onServiceRegistered( TamyEditor& mgr );
+   /**
+    * Once a camera is set, each time a node is selected,
+    * this camera will focus on it.
+    *
+    * @param camera
+    */
+   void setCamera( Camera& camera );
 
    // -------------------------------------------------------------------------
    // ModelView implementation
@@ -116,8 +111,21 @@ public:
    // -------------------------------------------------------------------------
    // SelectionManagerListener implementation
    // -------------------------------------------------------------------------
-   void onObjectSelected( Entity& entity );
-   void onObjectDeselected( Entity& entity );
+   void onEntitySelected( Entity& entity );
+   void onEntityDeselected( Entity& entity );
+
+signals:
+   /**
+    * Emitted when an entity in the tree is selected.
+    *
+    * @param entity
+    */
+   void onSceneTreeObjectSelected( Entity& entity );
+
+   /**
+    * Emitted when the selection changes so that no entity is selected any longer.
+    */
+   void onSceneTreeSelectionCleaned();
 
 public slots:
    void selectItem( QTreeWidgetItem* item, int column );
@@ -128,7 +136,7 @@ public slots:
    void clearNode( QTreeWidgetItem* node );
 
 private:
-   void initUI( TamyEditor& mgr );
+   void initUI();
    void buildEntitiesStack( Entity& entity, std::list< Entity* >& stack ) const;
    EntityTreeItem* find( Entity& entity );
    SceneTreeEditor* createEditor( EntityTreeItem* item );

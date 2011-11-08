@@ -3,7 +3,7 @@
 /// @file   core-MVC\ModelView.h
 /// @brief  view that observes changes of a model
 
-#include <set>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +19,7 @@ class Model;
 class ModelView 
 {
 private:
-   std::set< Model* >   m_models;
+   std::vector< Model* >   m_models;
 
 public:
    virtual ~ModelView();
@@ -82,6 +82,11 @@ public:
     * @return     'true' if it's attached to a model, 'false' otherwise
     */
    bool isAttachedToModel() const;
+
+   /**
+    * Returns an array of observed models.
+    */
+   inline const std::vector< Model* >& getObservedModels() const { return m_models; }
 
 protected:
    /**

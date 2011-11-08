@@ -4,39 +4,45 @@
 #include "core-MVC.h"
 #include "core-Renderer.h"
 #include "dx9-Renderer.h"
+#include "SelectedEntityRepresentation.h"
+#include "SelectionRenderingPass.h"
 #include <stdexcept>
 #include <QEvent.h>
+#include "SceneRendererInputController.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
 
 IDirect3D9* TamySceneWidget::s_d3d9 = NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std::string& rendererPipelineName, TimeController& timeController )
-: QWidget( parent, f )
-, m_rendererPipelineName( rendererPipelineName )
-, m_localTimeController( NULL )
-, m_keysStatusManager( NULL )
-, m_renderer( NULL )
-, m_camera( NULL )
-, m_scene( NULL )
-, m_debugScene( NULL )
-, m_renderingMech( NULL )
-, m_resMgr( NULL )
+   : QWidget( parent, f )
+   , m_rendererPipelineName( rendererPipelineName )
+   , m_localTimeController( NULL )
+   , m_keysStatusManager( NULL )
+   , m_renderer( NULL )
+   , m_camera( NULL )
+   , m_scene( NULL )
+   , m_debugScene( NULL )
+   , m_renderingMech( NULL )
+   , m_selectionRenderer( new SelectionRenderingPass() )
+   , m_resMgr( NULL )
 {
-   m_hWnd = static_cast<HWND> (winId());
-   memset(m_keyBuffer, 0, sizeof(unsigned char) * 256);
+   m_hWnd = static_cast< HWND >( winId() );
+   memset( m_keyBuffer, 0, sizeof( unsigned char ) * 256 );
 
-   setFocusPolicy(Qt::ClickFocus);
+   setFocusPolicy( Qt::ClickFocus );
 
    m_keysStatusManager = new KeysStatusManager( *this );
 
    if (s_d3d9 == NULL)
    {
-      s_d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
-      if (s_d3d9 == NULL)
+      s_d3d9 = Direct3DCreate9( D3D_SDK_VERSION );
+      if ( s_d3d9 == NULL )
       {
-         throw std::runtime_error("Cannot initialize DirectX library");
+         throw std::runtime_error( "Cannot initialize DirectX library" );
       }
    }
 
@@ -56,7 +62,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std:
 
    // create a camera
    m_camera = &m_renderer->getActiveCamera();
-   D3DXMatrixTranslation(&(m_camera->accessLocalMtx()), 0, 5, 0);
+   D3DXMatrixTranslation( &( m_camera->accessLocalMtx() ), 0, 5, 0 );
 
    // create and setup the time controller
    m_localTimeController = new TimeController( timeController );
@@ -65,6 +71,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std:
    m_localTimeController->add("input");
    m_localTimeController->get("input").add( *this );
    m_localTimeController->get("input").add( *m_keysStatusManager );
+   m_inputHandlerTrack = &m_localTimeController->add( "inputHandler" );
 
    // initialize the widget
    initialize();
@@ -76,13 +83,19 @@ TamySceneWidget::~TamySceneWidget()
 {
    deinitialize();
 
+   m_inputHandlerTrack = NULL;
    delete m_localTimeController;
    m_localTimeController = NULL;
 
+   m_keysStatusManager->removeAllHandlers();
    delete m_keysStatusManager; 
    m_keysStatusManager = NULL;
 
    m_camera = NULL;
+
+   // we're taking care of this one ourselves
+   delete m_selectionRenderer;
+   m_selectionRenderer = NULL;
 
    m_renderingMech = NULL;
    m_renderer->setMechanism( NULL );
@@ -121,6 +134,8 @@ void TamySceneWidget::deinitialize()
    // reset the rendering mechanism
    if ( m_renderingMech )
    {
+      // don't release the selection renderer - we're managing that one on our own
+      m_renderingMech->remove( "selectionRenderer", false );
       m_renderingMech->remove( "sceneRenderer" );
    }
 
@@ -148,6 +163,7 @@ void TamySceneWidget::initialize()
          pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( m_rendererPipelineName ) );
          sceneRenderer = new RenderingPipelineMechanism( pipeline );
          m_renderingMech->add( "sceneRenderer", sceneRenderer );
+         m_renderingMech->add( "selectionRenderer", m_selectionRenderer );
       }
       catch ( std::exception& ex)
       {
@@ -168,63 +184,77 @@ void TamySceneWidget::initialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::moveEvent(QMoveEvent* event)
+void TamySceneWidget::setInputController( SceneRendererInputController* controller )
+{
+   m_inputHandlerTrack->reset();
+
+   // create an input controller
+   m_keysStatusManager->removeAllHandlers();
+   controller->initialize( *this );
+   m_keysStatusManager->addHandler( controller );
+
+  m_inputHandlerTrack->add( *controller );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::moveEvent( QMoveEvent* event )
 {
    WINDOWINFO info;
-   GetWindowInfo(m_hWnd, &info);
+   GetWindowInfo( m_hWnd, &info );
 
-   m_renderer->resizeViewport(info.rcClient.right - info.rcClient.left, 
+   m_renderer->resizeViewport( info.rcClient.right - info.rcClient.left, 
       info.rcClient.bottom - info.rcClient.top, 
       info.rcClient.left, 
       info.rcClient.top,
       info.rcClient.right, 
-      info.rcClient.bottom);
+      info.rcClient.bottom );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::resizeEvent(QResizeEvent* event)
+void TamySceneWidget::resizeEvent( QResizeEvent* event )
 {
    WINDOWINFO info;
-   GetWindowInfo(m_hWnd, &info);
+   GetWindowInfo( m_hWnd, &info );
 
-   m_renderer->resizeViewport(info.rcClient.right - info.rcClient.left, 
+   m_renderer->resizeViewport( info.rcClient.right - info.rcClient.left, 
       info.rcClient.bottom - info.rcClient.top, 
       info.rcClient.left, 
       info.rcClient.top,
       info.rcClient.right, 
-      info.rcClient.bottom);
+      info.rcClient.bottom );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::keyPressEvent(QKeyEvent* event)
+void TamySceneWidget::keyPressEvent( QKeyEvent* event )
 {
-   setKey(m_keyBuffer, toDXKey(event->key()), true);
+   setKey( m_keyBuffer, toDXKey( event->key() ), true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::keyReleaseEvent(QKeyEvent* event)
+void TamySceneWidget::keyReleaseEvent(QKeyEvent* event )
 {
-   setKey(m_keyBuffer, toDXKey(event->key()), false);
+   setKey( m_keyBuffer, toDXKey( event->key() ), false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::mousePressEvent(QMouseEvent* event)
+void TamySceneWidget::mousePressEvent( QMouseEvent* event )
 {
-   switch(event->button())
+   switch( event->button() )
    {
    case Qt::LeftButton:
       {
-         setKey(m_keyBuffer, VK_LBUTTON, true);
+         setKey( m_keyBuffer, VK_LBUTTON, true );
          break;
       }
 
    case Qt::RightButton:
       {
-         setKey(m_keyBuffer, VK_RBUTTON, true);
+         setKey( m_keyBuffer, VK_RBUTTON, true );
          break;
       }
 
@@ -239,19 +269,19 @@ void TamySceneWidget::mousePressEvent(QMouseEvent* event)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::mouseReleaseEvent(QMouseEvent* event)
+void TamySceneWidget::mouseReleaseEvent( QMouseEvent* event )
 {
-   switch(event->button())
+   switch( event->button() )
    {
    case Qt::LeftButton:
       {
-         setKey(m_keyBuffer, VK_LBUTTON, false);
+         setKey( m_keyBuffer, VK_LBUTTON, false );
          break;
       }
 
    case Qt::RightButton:
       {
-         setKey(m_keyBuffer, VK_RBUTTON, false);
+         setKey( m_keyBuffer, VK_RBUTTON, false );
          break;
       }
 
@@ -268,22 +298,21 @@ void TamySceneWidget::mouseReleaseEvent(QMouseEvent* event)
 
 void TamySceneWidget::onRelativeMouseMovement()
 {
-   this->cursor().setShape(Qt::BlankCursor);
+   this->cursor().setShape( Qt::BlankCursor );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TamySceneWidget::onAbsoluteMouseMovement()
 {
-   this->cursor().setShape(Qt::ArrowCursor);
+   this->cursor().setShape( Qt::ArrowCursor );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::checkUserInput(unsigned char* keyBuffer, Point& mousePos)
+void TamySceneWidget::checkUserInput( unsigned char* keyBuffer, Point& mousePos )
 {
-   memcpy_s(keyBuffer, sizeof(unsigned char) * 256, 
-            m_keyBuffer, sizeof(unsigned char) * 256);
+   memcpy_s( keyBuffer, sizeof(unsigned char) * 256, m_keyBuffer, sizeof(unsigned char) * 256 );
 
    QPoint cursorPos = this->cursor().pos();
    mousePos.x = cursorPos.x();
@@ -292,16 +321,16 @@ void TamySceneWidget::checkUserInput(unsigned char* keyBuffer, Point& mousePos)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::setMousePos(const Point& pos)
+void TamySceneWidget::setMousePos( const Point& pos )
 {
-   this->cursor().setPos(QPoint(pos.x, pos.y));
+   this->cursor().setPos( QPoint( pos.x, pos.y ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-unsigned char TamySceneWidget::toDXKey(int qtKeyCode) const
+unsigned char TamySceneWidget::toDXKey( int qtKeyCode ) const
 {
-   switch (qtKeyCode)
+   switch( qtKeyCode )
    {
    case Qt::Key_Escape:    return VK_ESCAPE;
    case Qt::Key_Tab:       return VK_TAB;
@@ -416,6 +445,27 @@ unsigned char TamySceneWidget::toDXKey(int qtKeyCode) const
    case Qt::Key_AsciiTilde:   return '~';
    default:                return 0;
    };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::onEntitySelected( Entity& entity )
+{
+   m_selectionRenderer->add( entity );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::onEntityDeselected( Entity& entity )
+{
+   m_selectionRenderer->remove( entity );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::selectEntityAt( const Point& screenPt ) const
+{
+   // TODO: scene queries
 }
 
 ///////////////////////////////////////////////////////////////////////////////

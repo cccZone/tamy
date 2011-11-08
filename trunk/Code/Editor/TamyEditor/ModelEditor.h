@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor\ModelEditor.h
 /// @brief  scene tree editor operating on a scene itself
+#pragma once
 
 #include "SceneTreeEditor.h"
 #include <string>

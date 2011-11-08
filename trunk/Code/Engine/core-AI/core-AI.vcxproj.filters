@@ -57,12 +57,6 @@
     <ClInclude Include="..\..\Include\core-AI\PreconditionSelectionStrategy.h">
       <Filter>ControlStructures\BehaviorTrees\NodeSelectionStrategies</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-AI\FsmLogicState.h">
-      <Filter>ControlStructures\FSM</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-AI\FsmLogicStateController.h">
-      <Filter>ControlStructures\FSM</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-AI\CompositeSteeringBehavior.h">
       <Filter>SteeringBehaviors</Filter>
     </ClInclude>
@@ -84,6 +78,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-AI\BoneEntity.h">
       <Filter>SkeletonAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\FSMState.h">
+      <Filter>ControlStructures\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-AI\FSMController.h">
+      <Filter>ControlStructures\FSM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -123,11 +123,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Include\core-AI\FsmLogicStateController.inl">
-      <Filter>ControlStructures\FSM</Filter>
-    </None>
     <None Include="..\..\Include\core-AI\AnimationTimeline.inl">
       <Filter>SkeletonAnimation\Resources</Filter>
+    </None>
+    <None Include="..\..\Include\core-AI\FSMController.inl">
+      <Filter>ControlStructures\FSM</Filter>
+    </None>
+    <None Include="..\..\Include\core-AI\FSMState.inl">
+      <Filter>ControlStructures\FSM</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -17,6 +17,7 @@
 
 // ----------------------------------------------------------------------------
 // ControlStructures
+// ---> BehaviorTrees
 // ----------------------------------------------------------------------------
 #include "core-AI\BTNode.h"
 #include "core-AI\BTCompositeNode.h"
@@ -25,8 +26,11 @@
 #include "core-AI\BTNodeSelectionStrategy.h"
 #include "core-AI\BTPrecondition.h"
 #include "core-AI\PreconditionSelectionStrategy.h"
-#include "core-AI\FsmLogicState.h"
-#include "core-AI\FsmLogicStateController.h"
+// ----------------------------------------------------------------------------
+// ---> FSM
+// ----------------------------------------------------------------------------
+#include "core-AI\FSMState.h"
+#include "core-AI\FSMController.h"
 
 // ----------------------------------------------------------------------------
 // MessagingSystem

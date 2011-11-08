@@ -1,17 +1,11 @@
-#pragma once
-
 /// @file   TamyEditor\ArrayPropertyEditor.h
-/// @brief  array container property editor (featuring an std::vector 
-///         as the array ;)
+/// @brief  array container property editor ( featuring an std::vector as the array ;)
+#pragma once
 
 #include "core\Property.h"
 #include "QPropertyEditor.h"
 #include <d3dx9.h>
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class PropertiesEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
