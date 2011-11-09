@@ -4,7 +4,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 UserInputController::UserInputController()
-: m_relativePt(512, 512)
+: m_relativePt( 0, 0 )
 , m_mouseSpeed(0, 0)
 , m_relativeModeOn(0)
 {
@@ -13,21 +13,19 @@ UserInputController::UserInputController()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInputController::setRelativeMouseMovement(bool enable)
+void UserInputController::setRelativeMouseMovement( bool enable )
 {
-   m_relativeModeOn = enable;
-   /*(if ( enable )
+   if ( !m_relativeModeOn && enable )
    {
-      ++m_relativeModeOn;
+      // the relative mouse movement was just enabled - memorize the cursor position
+      m_relativePt = m_mousePos;
    }
-   else
-   {
-      --m_relativeModeOn;
-   }*/
 
-   if ( isRelativeMouseMovementOn() )
+   m_relativeModeOn = enable;
+
+   if ( m_relativeModeOn )
    {
-      setMousePos(m_relativePt);
+      setMousePos( m_relativePt );
       onRelativeMouseMovement();
    }
    else
@@ -38,27 +36,28 @@ void UserInputController::setRelativeMouseMovement(bool enable)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInputController::update(float timeElapsed)
+void UserInputController::update( float timeElapsed )
 {
    Point newMousePos;
-   checkUserInput(m_keyBuffer, newMousePos);
+   checkUserInput( m_keyBuffer, newMousePos );
 
    Point mousePosChange;
    if ( isRelativeMouseMovementOn() )
    {
-      setMousePos(m_relativePt);
+      setMousePos( m_relativePt );
       mousePosChange = newMousePos - m_relativePt;
    }
    else
    {
       mousePosChange = newMousePos - m_mousePos;
    }
+   
 
    // determine mouse speed
-   if (timeElapsed > 0)
+   if ( timeElapsed > 0 )
    {
-      m_mouseSpeed.x = (float)(mousePosChange.x) / timeElapsed;
-      m_mouseSpeed.y = (float)(mousePosChange.y) / timeElapsed;
+      m_mouseSpeed.x = ( (float)mousePosChange.x ) / timeElapsed;
+      m_mouseSpeed.y = ( (float)mousePosChange.y ) / timeElapsed;
    }
    else
    {
@@ -67,7 +66,7 @@ void UserInputController::update(float timeElapsed)
    }
 
    // set the mouse and cursor position
-   m_mousePos = m_mousePos + mousePosChange;
+   m_mousePos = newMousePos;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,11 +78,9 @@ bool UserInputController::isKeyPressed(unsigned char keyCode) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UserInputController::setKey(unsigned char* buf, 
-                                 unsigned char keyCode, 
-                                 bool pressed)
+void UserInputController::setKey( unsigned char* buf, unsigned char keyCode, bool pressed )
 {
-   if (pressed)
+   if ( pressed )
    {
       buf[keyCode] = 0xF0; 
    }

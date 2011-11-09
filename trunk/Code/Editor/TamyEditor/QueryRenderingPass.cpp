@@ -13,6 +13,7 @@
 QueryRenderingPass::QueryRenderingPass()
    : m_sceneSnapshot( NULL )
    , m_shader( NULL )
+   , m_debugMode( false )
 {
    // define associations
    associateAbstract< Geometry, QueryableGeometry > ();
@@ -123,6 +124,16 @@ void QueryRenderingPass::render( Renderer& renderer )
       (*it)->notifyResult();
    }
    m_completedQueriesList.clear();
+
+   if ( m_debugMode )
+   {
+      // if the debug mode is enabled, draw the debug version of the scene
+      new ( renderer() ) RCActivateRenderTarget( NULL );
+      for ( Representations::iterator it = m_representations.begin(); it != m_representations.end(); ++it )
+      {
+         it->second->render( renderer, *m_shader );
+      }
+   }
 
    // check if there are any new queries
    if ( m_queriesList.empty() )

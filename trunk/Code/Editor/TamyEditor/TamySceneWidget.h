@@ -105,6 +105,11 @@ public:
     */
    void localToViewport( const Point& inScreenPt, D3DXVECTOR2& outViewportPt ) const;
 
+   /**
+    * Toggles the widget debug mode.
+    */
+   void toggleDebugMode();
+
    // -------------------------------------------------------------------------
    // Accessors
    // -------------------------------------------------------------------------

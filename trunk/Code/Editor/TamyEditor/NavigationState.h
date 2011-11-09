@@ -12,6 +12,10 @@
 
 /**
  * SceneObjectsManipulator navigation state.
+ *
+ * Allows to select objects by pressing Left Mouse Button twice on
+ * the desired object or to switch to manipulation mode by pressing
+ * and holding the Left Mouse Button and moving the mouse around.
  */
 class NavigationState : public FSMState< SceneObjectsManipulator >, public SceneObjectsManipulatorState, public SceneQuery
 {
@@ -20,6 +24,7 @@ public:
 
 private:
    D3DXVECTOR2          m_queryPos;
+   SpatialEntity*       m_selectionCandidate;
 
 public:
    // ----------------------------------------------------------------------

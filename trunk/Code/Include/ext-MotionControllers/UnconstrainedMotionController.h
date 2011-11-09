@@ -1,3 +1,5 @@
+/// @file   ext-MotionControllers/UnconstrainedMotionController.h
+/// @brief  spaceship-like movement for the node
 #pragma once
 
 #include <d3dx9.h>
@@ -10,7 +12,7 @@ class Node;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This class is responsible for controlng the transformation
+ * This class is responsible for controlling the transformation
  * of a node.
  * All the methods operate in the GLOBAL COORDINATE SYSTEM,
  * (as opposed to the node's local coordinate system),
@@ -20,22 +22,36 @@ class Node;
 class UnconstrainedMotionController
 {
 private:
-   Node& m_controlledNode;
+   Node&    m_controlledNode;
 
 public:
-   UnconstrainedMotionController(Node& controlledNode);
+   /**
+    * Constructor.
+    *
+    * @param controlledNode
+    */
+   UnconstrainedMotionController( Node& controlledNode );
 
-   void move(const D3DXVECTOR3& transVec);
-   void rotate(float pitch, float yaw, float roll);
+   void move( const D3DXVECTOR3& transVec );
 
-   void setPosition(const D3DXVECTOR3& vec);
+   /**
+    * 3D rotation.
+    */
+   void rotate( float pitch, float yaw, float roll );
+
+   /**
+    * 2D rotation around global Y axis
+    */
+   void rotate( float pitch, float yaw );
+
+   void setPosition( const D3DXVECTOR3& vec );
    D3DXVECTOR3 getRightVec() const;
    D3DXVECTOR3 getUpVec() const;
    D3DXVECTOR3 getLookVec() const;
    D3DXVECTOR3 getPosition() const;
 
 private:
-   void regenerateVectors(D3DXVECTOR3& rightVec, D3DXVECTOR3& upVec, D3DXVECTOR3& lookVec) const;
+   void regenerateVectors( D3DXVECTOR3& rightVec, D3DXVECTOR3& upVec, D3DXVECTOR3& lookVec ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

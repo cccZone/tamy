@@ -312,25 +312,21 @@ void IWFScene::addStaticGeometry( Model& scene,
          }
          material->setTexture( *texture );
       }
-
-      // setup the renderable
-      SpatialEntity* renderable = new SpatialEntity( currMesh.name );
-      renderable->setLocalMtx( currMesh.localMtx );
-
+      
+      // setup the geometry node
       Geometry* geometry = new StaticGeometry( *geometryRes );
-      renderable->add( geometry );
-
+      geometry->setLocalMtx( currMesh.localMtx );
       geometry->add( material );
 
-      // add the renderable to the mesh
+      // add the geometry to the mesh
       if ( root )
       {
-         root->add( renderable );
+         root->add( geometry );
       }
       else
       {
          ASSERT_MSG( count == 1, "Only a single mesh can be dealt with this way" );
-         root = renderable;
+         root = geometry;
       }
    }
 

@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core-AppFlow\UserInputController.h
 /// @brief  user input handling mechanism
+#pragma once
 
 #include <d3dx9.h>
 #include "core\Point.h"
@@ -33,7 +32,7 @@ public:
    // ----------------------------------------------------------------------------
    // TimeDependent implementation
    // ----------------------------------------------------------------------------
-   void update(float timeElapsed);
+   void update( float timeElapsed );
 
    /**
     * In relative mouse movement mode the cursor stops moving
@@ -43,22 +42,33 @@ public:
     * In the limited mouse movement mode cursor moves and
     * it's area of movement is bounded by the screen dimensions.
     */
-   void setRelativeMouseMovement(bool enable);
+   void setRelativeMouseMovement( bool enable );
 
-   bool isKeyPressed(unsigned char keyCode) const;
-   const Point& getMousePos() const {return m_mousePos;}
-   const D3DXVECTOR2& getMouseSpeed() const {return m_mouseSpeed;}
+   /**
+    * Returns the present mouse position.
+    */
+   const Point& getMousePos() const { return m_mousePos; }
+
+   /**
+    * Returns the current mouse speed.
+    */
+   const D3DXVECTOR2& getMouseSpeed() const { return m_mouseSpeed; }
+
+   // -------------------------------------------------------------------------
+   // KeysStatusModel implementation
+   // -------------------------------------------------------------------------
+   bool isKeyPressed( unsigned char keyCode ) const;
 
 protected:
    /**
-    * Using this utility method, an implementation can inform about a key
+    * Using this utility method, an implementation should inform about a key
     * being pressed or released
     *
     * @param buf        buffer containing states of keys
     * @param keyCode    code of the changed key
     * @param pressed    'true' if  pressed, 'false' - if released
     */
-   void setKey(unsigned char* buf, unsigned char keyCode, bool pressed);
+   void setKey( unsigned char* buf, unsigned char keyCode, bool pressed );
 
    virtual void onRelativeMouseMovement() = 0;
    virtual void onAbsoluteMouseMovement() = 0;
@@ -72,12 +82,12 @@ protected:
     * @param mousePos - absolute position of the mouse
     * @param relMovement - relative position change since the last check
     */
-   virtual void checkUserInput(unsigned char* keyBuffer, Point& mousePos) = 0;
+   virtual void checkUserInput( unsigned char* keyBuffer, Point& mousePos ) = 0;
 
    /**
     * This method sets the mouse at the specified position
     */
-   virtual void setMousePos(const Point& pos) = 0;
+   virtual void setMousePos( const Point& pos ) = 0;
 
 private:
    inline bool isRelativeMouseMovementOn() const { return m_relativeModeOn; }

@@ -46,6 +46,7 @@ private:
    PixelShader*            m_shader;
    QueriesList             m_queriesList;
    QueriesList             m_completedQueriesList;
+   bool                    m_debugMode;
 
 public:
    /**
@@ -60,6 +61,11 @@ public:
     * @param query
     */
    void query( SceneQuery& query );
+
+   /**
+    * Toggles the widget debug mode.
+    */
+   inline void toggleDebugMode() { m_debugMode = !m_debugMode; }
 
    // -------------------------------------------------------------------------
    // Helper methods

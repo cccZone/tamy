@@ -28,13 +28,10 @@ class Geometry : public SpatialEntity
 
 protected:
    // runtime data
-   SpatialEntity*                   m_parentNode;
    RenderStatesVec                  m_states;
    BoundingVolume*                  m_globalBounds;
 
 private:
-   static D3DXMATRIX                s_identityMtx;
-
    // static data
    GeometryResource*                m_resource;
 

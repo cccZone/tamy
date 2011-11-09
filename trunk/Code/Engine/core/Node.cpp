@@ -2,7 +2,6 @@
 #include <stdexcept>
 #include <algorithm>
 #include "core\MatrixWriter.h"
-#include "core\dostream.h"
 #include "core\NodeObserver.h"
 #include "core\BoundingVolume.h"
 #include "core\BoundingSphere.h"

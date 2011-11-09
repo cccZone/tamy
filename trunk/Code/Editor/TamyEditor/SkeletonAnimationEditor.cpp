@@ -417,5 +417,3 @@ void SkeletonAnimationEditor::loadAnimatedModel( const std::string& modelResourc
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-// TODO: one of the bones is drawn invalidly - learn why

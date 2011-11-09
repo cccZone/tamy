@@ -1,8 +1,6 @@
-#pragma once
-
 /// @file   core-AppFlow\KeysStatusManager.h
-/// @brief  tool for handling 3 different key states (smashed, pressed
-///         and released)
+/// @brief  tool for handling 3 different key states (smashed, pressed and released)
+#pragma once
 
 #include <vector>
 #include <map>
@@ -17,7 +15,7 @@ class KeyStatusHandler;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Tool for handling 3 different key states (smashed, pressed and released).
+ * Tool for handling 3 different key states ( smashed, pressed and released ).
  */
 class KeysStatusManager : public TimeDependent
 {
@@ -59,7 +57,7 @@ public:
     *
     * @param model   model with key statuses
     */
-   KeysStatusManager(KeysStatusModel& model);
+   KeysStatusManager( KeysStatusModel& model );
 
    ~KeysStatusManager();
 
@@ -70,7 +68,7 @@ public:
     * @param handler    handler that should be called when the state
     *                   of the key changes
     */
-   void addHandler(KeyStatusHandler* handler);
+   void addHandler( KeyStatusHandler* handler );
 
    /**
     * Removes all attached handlers.
@@ -83,7 +81,7 @@ public:
     *
     * @param limit   time value (in seconds)
     */
-   void setSmashTimeLimit(float limit);
+   void setSmashTimeLimit( float limit );
 
    /**
     * Returns currently set smash time limit.
@@ -95,10 +93,10 @@ public:
    // ----------------------------------------------------------------------------
    // TimeDependent implementation
    // ----------------------------------------------------------------------------
-   void update(float timeElapsed);
+   void update( float timeElapsed );
 
 private:
-   void executeAction(unsigned char c, KeyState oldState, KeyState newState);
+   void executeAction( unsigned char c, KeyState oldState, KeyState newState );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

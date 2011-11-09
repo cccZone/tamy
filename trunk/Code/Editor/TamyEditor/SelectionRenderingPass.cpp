@@ -75,3 +75,6 @@ void SelectionRenderingPass::render( Renderer& renderer )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+// TODO: !!!!!!!!!! draw the gizmo
+// TODO: !!!!!!!!!! grid drawn in a single render command
