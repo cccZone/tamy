@@ -17,6 +17,7 @@ class SceneTreeViewer;
 class SelectionManager;
 class SceneObjectsManipulator;
 enum NodeTransformControlMode;
+class TamySceneWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +34,7 @@ private:
    QIcon                                     m_stopSceneIcon;
    QAction*                                  m_actionRun;
    bool                                      m_playing;
+   TamySceneWidget*                          m_sceneWidget;
    SceneTreeViewer*                          m_sceneTreeViewer;
    SelectionManager*                         m_selectionManager;
 
@@ -77,6 +79,7 @@ public slots:
    void selectionCleaned();
    void setNodeTranslateMode();
    void setNodeRotateMode();
+   void toggleDebugMode();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

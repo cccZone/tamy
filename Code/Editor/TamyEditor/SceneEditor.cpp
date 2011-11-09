@@ -24,6 +24,7 @@ SceneEditor::SceneEditor( Model& scene )
    : m_scene( scene )
    , m_sceneTrack( NULL )
    , m_actionRun( NULL )
+   , m_sceneWidget( NULL )
    , m_sceneTreeViewer( NULL )
    , m_selectionManager( new SelectionManager() )
    , m_playing( false )
@@ -115,6 +116,16 @@ void SceneEditor::onInitialize()
          toolBar->addSeparator();
       }
 
+      // debug stuff
+      {
+
+         QAction* actionDebug = new QAction( QIcon( iconsDir + tr( "/cog.png" ) ), tr( "Debug" ), toolBar );
+         toolBar->addAction( actionDebug );
+         connect( actionDebug, SIGNAL( triggered() ), this, SLOT( toggleDebugMode() ) );
+
+         toolBar->addSeparator();
+      }
+
    }
 
    // add the splitter that will host the render window and the browsers frames
@@ -133,16 +144,16 @@ void SceneEditor::onInitialize()
          std::string defaultRendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
          settings.endGroup();
 
-         TamySceneWidget* sceneWidget = new TamySceneWidget( sceneViewSplitter, 0, defaultRendererPipelineName, mainEditor.getTimeController() );
-         camera = &sceneWidget->getCamera();
-         sceneWidget->setScene( m_scene );
-         sceneViewSplitter->addWidget( sceneWidget );
+         m_sceneWidget = new TamySceneWidget( sceneViewSplitter, 0, defaultRendererPipelineName, mainEditor.getTimeController() );
+         camera = &m_sceneWidget->getCamera();
+         m_sceneWidget->setScene( m_scene );
+         sceneViewSplitter->addWidget( m_sceneWidget );
          sceneViewSplitter->setStretchFactor( 0, 1 );
-         m_selectionManager->attach( *sceneWidget );
+         m_selectionManager->attach( *m_sceneWidget );
          
          // setup the manipulator
          m_sceneObjectsManipulator = new SceneObjectsManipulator( *this );
-         sceneWidget->setInputController( m_sceneObjectsManipulator );
+         m_sceneWidget->setInputController( m_sceneObjectsManipulator );
          m_selectionManager->attach( *m_sceneObjectsManipulator );
       }
 
@@ -285,4 +296,9 @@ void SceneEditor::setNodeRotateMode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: !!!!! ability to select multiple entities at once
+void SceneEditor::toggleDebugMode()
+{
+   m_sceneWidget->toggleDebugMode();
+}
+
+///////////////////////////////////////////////////////////////////////////////

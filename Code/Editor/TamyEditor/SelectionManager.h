@@ -67,6 +67,15 @@ public:
     */
    void resetSelection();
 
+   /**
+    * Tells if any object is currently selected.
+    */
+   inline bool isSomethingSelected() const { return !m_selectedEntities.empty(); }
+
+   /**
+    * Returns the selected entities.
+    */
+   inline const std::vector< Entity* >& getSelectedEntities() const { return m_selectedEntities; }
 
    // -------------------------------------------------------------------------
    // Listeners management

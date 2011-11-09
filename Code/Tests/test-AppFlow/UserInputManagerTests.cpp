@@ -76,17 +76,17 @@ TEST(UserInputController, relativeMouseMovement)
    CPPUNIT_ASSERT_EQUAL(D3DXVECTOR2(50, 50), controller.getMouseSpeed());
    CPPUNIT_ASSERT_EQUAL(Point(50, 50), controller.getCursorPosition());
 
-   controller.setRelativeMouseMovement(true);
+   controller.setRelativeMouseMovement( true );
    controller.update(1);
    CPPUNIT_ASSERT_EQUAL(Point(50, 50), controller.getMousePos());
    CPPUNIT_ASSERT_EQUAL(D3DXVECTOR2(0, 0), controller.getMouseSpeed());
-   CPPUNIT_ASSERT_EQUAL(Point(512, 512), controller.getCursorPosition());
+   CPPUNIT_ASSERT_EQUAL(Point(50, 50), controller.getCursorPosition());
 
-   controller.mouseMove(Point(514, 516));
+   controller.mouseMove(Point(52, 54));
    controller.update(1);
    CPPUNIT_ASSERT_EQUAL(Point(52, 54), controller.getMousePos());
    CPPUNIT_ASSERT_EQUAL(D3DXVECTOR2(2, 4), controller.getMouseSpeed());
-   CPPUNIT_ASSERT_EQUAL(Point(512, 512), controller.getCursorPosition());
+   CPPUNIT_ASSERT_EQUAL(Point(50, 50), controller.getCursorPosition());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -46,7 +46,7 @@ void StaticGeometry::onPreRender( Renderer& renderer )
    Camera& camera = renderer.getActiveCamera();
 
    RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
-   D3DXMATRIX worldViewMtx = m_parentNode->getGlobalMtx() * camera.getViewMtx();
+   D3DXMATRIX worldViewMtx = getGlobalMtx() * camera.getViewMtx();
    comm->setMtx( "g_mWorldView", worldViewMtx );
    comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
 }

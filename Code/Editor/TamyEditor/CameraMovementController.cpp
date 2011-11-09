@@ -58,7 +58,7 @@ void CameraMovementController::update( float timeElapsed )
    if ( m_rotating )
    {
       D3DXVECTOR2 mouseSpeed = m_uic->getMouseSpeed() * rotationSpeed;
-      m_cameraController->rotate( mouseSpeed.y, mouseSpeed.x, 0 );
+      m_cameraController->rotate( mouseSpeed.y, mouseSpeed.x );
    }
 }
 

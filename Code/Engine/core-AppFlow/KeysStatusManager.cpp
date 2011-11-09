@@ -57,7 +57,8 @@ void KeysStatusManager::update( float timeElapsed )
             }
          case KEY_PRESSED:    
             {
-               if ( ( m_time - m_statuses[keyCode].timePressed ) >= m_smashTimeLimit )
+               float timeSincePressStart = m_time - m_statuses[keyCode].timePressed;
+               if ( timeSincePressStart >= m_smashTimeLimit )
                {
                   newState = KEY_HELD; 
                }
@@ -69,8 +70,12 @@ void KeysStatusManager::update( float timeElapsed )
       {
          switch( oldState )
          {
-         case KEY_PRESSED:    newState = KEY_RELEASED; break;
-         case KEY_HELD:       newState = KEY_RELEASED; break;
+         case KEY_PRESSED:   
+         case KEY_HELD:
+            { 
+               newState = KEY_RELEASED; 
+               break;
+            }
          }
       }
 
@@ -112,7 +117,7 @@ void KeysStatusManager::executeAction( unsigned char c, KeyState oldState, KeySt
 
    for ( unsigned int i = 0; i < handlersCount; ++i )
    {
-      if ( oldState == KEY_PRESSED && newState == KEY_RELEASED )
+      if ( oldState == KEY_RELEASED && newState == KEY_PRESSED )
       {
          m_handlers[i]->keySmashed( c );
       }
@@ -124,7 +129,7 @@ void KeysStatusManager::executeAction( unsigned char c, KeyState oldState, KeySt
       {
          m_handlers[i]->keyHeld( c );
       }
-      else if ( oldState == KEY_HELD && newState == KEY_RELEASED )
+      else if ( ( oldState == KEY_HELD || oldState == KEY_PRESSED ) && newState == KEY_RELEASED )
       {
          m_handlers[i]->keyReleased( c );
       }

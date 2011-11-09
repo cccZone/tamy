@@ -14,25 +14,19 @@ BEGIN_ABSTRACT_OBJECT( Geometry, SpatialEntity )
    PROPERTY_EDIT( "resource", GeometryResource*, m_resource )
 END_OBJECT()
 
-///////////////////////////////////////////////////////////////////////////////
-
-D3DXMATRIX Geometry::s_identityMtx;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Geometry::Geometry()
    : m_resource(NULL)
-   , m_parentNode( NULL )
    , m_globalBounds( new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) ) )
 {
-   D3DXMatrixIsIdentity( &s_identityMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Geometry::Geometry( const Geometry& rhs )
    : SpatialEntity( rhs )
-   , m_parentNode( NULL )
    , m_globalBounds( new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) ) )
 {
 }
@@ -41,10 +35,8 @@ Geometry::Geometry( const Geometry& rhs )
 
 Geometry::Geometry( GeometryResource& resource )
    : m_resource( &resource )
-   , m_parentNode( NULL )
    , m_globalBounds( resource.getBoundingVolume().clone() )
 {
-   D3DXMatrixIsIdentity( &s_identityMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,15 +96,8 @@ const BoundingVolume& Geometry::calculateBoundingVolume() const
    {
       const BoundingVolume& geomBoundingVol = m_resource->getBoundingVolume();
 
-      if ( m_parentNode )
-      {
-         const D3DXMATRIX& parentMtx = m_parentNode->getGlobalMtx();
-         geomBoundingVol.transform( parentMtx, *m_globalBounds );
-      }
-      else
-      {
-         geomBoundingVol.transform( s_identityMtx, *m_globalBounds );
-      }
+      const D3DXMATRIX& parentMtx = getGlobalMtx();
+      geomBoundingVol.transform( parentMtx, *m_globalBounds );
    }
 
    return *m_globalBounds;
@@ -136,14 +121,12 @@ std::string Geometry::getGeometryName() const
 
 void Geometry::onAttached( Entity& parent )
 {
-   m_parentNode = dynamic_cast< SpatialEntity* >( &parent );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Geometry::onDetached( Entity& parent )
 {
-   m_parentNode = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -152,20 +135,15 @@ void Geometry::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
-   if ( isAttached() )
+   // refresh the global bounds
+   delete m_globalBounds;
+   if ( m_resource != NULL )
    {
-      m_parentNode = dynamic_cast< SpatialEntity *>( &getParentNode() );
-
-      // refresh the global bounds
-      delete m_globalBounds;
-      if ( m_resource != NULL )
-      {
-         m_globalBounds = m_resource->getBoundingVolume().clone();
-      }
-      else
-      {
-         m_globalBounds = new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) );
-      }
+      m_globalBounds = m_resource->getBoundingVolume().clone();
+   }
+   else
+   {
+      m_globalBounds = new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) );
    }
 }
 

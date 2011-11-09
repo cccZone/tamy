@@ -67,7 +67,7 @@ namespace // anonymous
  
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(KeyStatusHandler, smashing)
+TEST( KeyStatusHandler, smashing )
 {
    KeysStatusModelMock keysModel;
    KeysStatusManager keysStatusMgr(keysModel);
@@ -86,7 +86,7 @@ TEST(KeyStatusHandler, smashing)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(KeyStatusHandler, holdingAndReleasing)
+TEST( KeyStatusHandler, holdingAndReleasing )
 {
    KeysStatusModelMock keysModel;
    KeysStatusManager keysStatusMgr(keysModel);
@@ -110,7 +110,7 @@ TEST(KeyStatusHandler, holdingAndReleasing)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(KeyStatusHandler, rapidSmashing)
+TEST( KeyStatusHandler, rapidSmashing )
 {
    KeysStatusModelMock keysModel;
    KeysStatusManager keysStatusMgr(keysModel);
@@ -136,7 +136,7 @@ TEST(KeyStatusHandler, rapidSmashing)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(KeyStatusHandler, smashingVsHolding)
+TEST( KeyStatusHandler, smashingVsHolding )
 {
    KeysStatusModelMock keysModel;
    KeysStatusManager keysStatusMgr(keysModel);
