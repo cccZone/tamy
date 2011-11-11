@@ -3,13 +3,13 @@
 #include "SelectedEntityRepresentation.h"
 
 // representations
+#include "Gizmo.h"
 #include "SelectedGeometry.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SelectionRenderingPass::SelectionRenderingPass()
-   : m_selectedRepresentation( NULL )
 {
    // define associations
    associateAbstract< Geometry, SelectedGeometry >();
@@ -19,33 +19,60 @@ SelectionRenderingPass::SelectionRenderingPass()
 
 SelectionRenderingPass::~SelectionRenderingPass()
 {
-   delete m_selectedRepresentation;
-   m_selectedRepresentation = NULL;
+   unsigned int count = m_representations.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      delete m_representations[i];
+   }
+   m_representations.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SelectionRenderingPass::add( Entity& entity )
 {
-   // remove the previous representation
-   if ( m_selectedRepresentation )
+   // remove the previous representations
+   unsigned int count = m_representations.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      delete m_selectedRepresentation;
-      m_selectedRepresentation = NULL;
+      delete m_representations[i];
    }
+   m_representations.clear();
 
-   m_selectedRepresentation = create( entity );
+   // create new representations
+   std::list< Entity* > m_bfsQueue;
+   m_bfsQueue.push_back( &entity );
+   while( !m_bfsQueue.empty() )
+   {
+      Entity* currEntity = m_bfsQueue.front();
+      m_bfsQueue.pop_front();
+
+      SelectedEntityRepresentation* representation = create( *currEntity );
+      if ( representation )
+      {
+         m_representations.push_back( representation );
+      }
+
+      // get the entity's children, if there are any
+      const Entity::Children& childEntities = currEntity->getEntityChildren();
+      unsigned int childrenCount = childEntities.size();
+      for ( unsigned int i = 0; i < childrenCount; ++i )
+      {
+         m_bfsQueue.push_back( childEntities[i] );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SelectionRenderingPass::remove( Entity& entity )
 {
-   if ( m_selectedRepresentation )
+   unsigned int count = m_representations.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      delete m_selectedRepresentation;
-      m_selectedRepresentation = NULL;
+      delete m_representations[i];
    }
+   m_representations.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,13 +95,13 @@ void SelectionRenderingPass::render( Renderer& renderer )
 {
    new ( renderer() ) RCActivateRenderTarget( NULL );
 
-   if ( m_selectedRepresentation )
+   unsigned int count = m_representations.size();
+   for ( unsigned int i = 0; i < count; ++i )
    {
-      m_selectedRepresentation->render( renderer );
+      m_representations[i]->render( renderer );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 // TODO: !!!!!!!!!! draw the gizmo
-// TODO: !!!!!!!!!! grid drawn in a single render command

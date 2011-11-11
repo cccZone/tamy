@@ -32,10 +32,11 @@ private:
    // runtime data
    SpatialEntity*                            m_parent;
    std::vector< Node* >                      m_skeleton;
-   float                                     m_trackTime;
    std::vector< BoneSRTAnimationPlayer* >    m_bonePlayers;
    std::vector< D3DXMATRIX >                 m_referenceMtcs;
-
+   float                                     m_trackTime;
+   bool                                      m_pause;
+ 
 public:
    /**
     * Constructor.
@@ -52,6 +53,18 @@ public:
     * Returns the current track time.
     */
    inline float getTrackTime() const { return m_trackTime; }
+
+   /**
+    * Sets the new track time.
+    *
+    * @param time
+    */
+   void setTrackTime( float time );
+
+   /**
+    * Toggles a pause.
+    */
+   void pause( bool enable ) { m_pause = enable; }
 
    /**
     * Sets a new animation source.

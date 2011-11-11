@@ -20,7 +20,7 @@ class SelectedEntityRepresentation;
 class SelectionRenderingPass : public RenderingMechanism, public GenericFactory< Entity, SelectedEntityRepresentation >
 {
 private:
-   SelectedEntityRepresentation*       m_selectedRepresentation;
+   std::vector< SelectedEntityRepresentation* >       m_representations;
 
 public:
    /**

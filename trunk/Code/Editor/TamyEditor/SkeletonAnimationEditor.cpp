@@ -30,7 +30,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 SkeletonAnimationEditor::SkeletonAnimationEditor( SkeletonAnimation& animation )
-   : m_animation( animation )
+   : TIME_SCALE( 1000.0f )
+   , m_animation( animation )
    , m_animationKeysChart( new SkeletonAnimationKeysChart( animation ) )
    , m_animationEventsChart( new SkeletonAnimationEventsChart( animation ) )
    , m_bonesList( NULL )
@@ -47,35 +48,6 @@ SkeletonAnimationEditor::SkeletonAnimationEditor( SkeletonAnimation& animation )
 
 SkeletonAnimationEditor::~SkeletonAnimationEditor()
 {
-   m_timeTrack->remove( *m_animationKeysChartView );
-   m_timeTrack->remove( *m_animationEventsChartView );
-
-   if ( m_keysTimeTrackingMarker )
-   {
-      m_timeTrack->remove( *m_keysTimeTrackingMarker );
-   }
-   if ( m_eventsTimeTrackingMarker )
-   {
-      m_timeTrack->remove( *m_eventsTimeTrackingMarker );
-   }
-   if ( m_scene )
-   {
-      m_timeTrack->remove( *m_scene );
-   }
-   m_timeTrack = NULL;
-
-   m_animationController = NULL;
-
-   delete m_scene;
-   m_scene = NULL;
-
-   delete m_animationKeysChart;
-   m_animationKeysChart = NULL;
-
-   delete m_animationEventsChart;
-   m_animationEventsChart = NULL;
-
-   m_bonesList = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,7 +57,9 @@ void SkeletonAnimationEditor::onInitialize()
    TamyEditor& mainEditor = TamyEditor::getInstance();
 
    TimeController& controller = mainEditor.getTimeController();
-   m_timeTrack = &controller.add( "animationEditor" );
+   char uniqueName[256];
+   sprintf_s( uniqueName, "animationEditor_%p", this );
+   m_timeTrack = &controller.add( uniqueName );
 
    ResourcesManager& resMgr = ResourcesManager::getInstance();
    QString iconsDir = resMgr.getFilesystem().getShortcut( "editorIcons" ).c_str();
@@ -219,21 +193,17 @@ void SkeletonAnimationEditor::onInitialize()
                animationChartsSplitter->addWidget( m_animationKeysChartView );
                m_animationKeysChartView->setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
             }
-
-            // events chart
-            {
-               m_animationEventsChartView = new ChartView( m_animationEventsChart, animationChartsSplitter );
-               animationChartsSplitter->addWidget( m_animationEventsChartView );
-               m_animationEventsChartView->setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
-            }
          }
          
          // time control slider
          {
             m_timeControlWidget = new QSlider( Qt::Horizontal, animationChartsFrame );
             animationChartsFrameLayout->addWidget( m_timeControlWidget );
+            m_timeControlWidget->setRange( 0, m_animation.getAnimationLength() * TIME_SCALE );
+            connect( m_timeControlWidget, SIGNAL( sliderMoved( int ) ), this, SLOT( onTimeValueChanged( int ) ) );
 
-            // connect( m_timeControlWidget, SIGNAL( valueChanged() ), this, SLOT( onTimeValueChanged() ) );
+            // disable the slider until an animated model is loaded
+            m_timeControlWidget->setEnabled( false );
          }
       }
    }
@@ -252,7 +222,25 @@ void SkeletonAnimationEditor::onInitialize()
 
 void SkeletonAnimationEditor::onDeinitialize()
 {
-   // nothing to do here
+   TamyEditor& mainEditor = TamyEditor::getInstance();
+   TimeController& controller = mainEditor.getTimeController();
+   m_timeTrack->reset();
+   controller.remove( m_timeTrack->getID() );
+   m_timeTrack = NULL;
+
+   m_animationController = NULL;
+
+   m_sceneWidget->clearScene();
+   delete m_scene;
+   m_scene = NULL;
+
+   delete m_animationKeysChart;
+   m_animationKeysChart = NULL;
+
+   delete m_animationEventsChart;
+   m_animationEventsChart = NULL;
+
+   m_bonesList = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -325,18 +313,13 @@ void SkeletonAnimationEditor::togglePlay()
 
    if ( m_playing )
    {
-      m_timeTrack->remove( *m_scene );
+      // remove the items from the time track
+      m_animationController->pause( false );
+      m_timeTrack->remove( *this );
       m_timeTrack->remove( *m_animationKeysChartView );
-      m_timeTrack->remove( *m_animationEventsChartView );
-      m_timeTrack->remove( *m_keysTimeTrackingMarker );
-      m_timeTrack->remove( *m_eventsTimeTrackingMarker );
 
-      // remove the time tracking widgets
-      m_animationKeysChart->removeItem( m_keysTimeTrackingMarker );
-      m_animationEventsChart->removeItem( m_eventsTimeTrackingMarker );
-
-      delete m_keysTimeTrackingMarker;
-      delete m_eventsTimeTrackingMarker;
+      // enable the control over the time slider 
+      m_timeControlWidget->setEnabled( true );
 
       // update the UI
       m_actionPlay->setIcon( m_runSceneIcon );
@@ -344,18 +327,12 @@ void SkeletonAnimationEditor::togglePlay()
    }
    else
    {
-      m_timeTrack->add( *m_scene );
+      m_animationController->pause( true );
+      m_timeTrack->add( *this );
       m_timeTrack->add( *m_animationKeysChartView );
-      m_timeTrack->add( *m_animationEventsChartView );
 
-      // add the time tracking widgets
-      m_keysTimeTrackingMarker = new VerticalChartMarker( new AnimationTimeValueGetter( *m_animationController, ANIMATION_TIME_SCALE ) );
-      m_eventsTimeTrackingMarker = new VerticalChartMarker( new AnimationTimeValueGetter( *m_animationController, ANIMATION_TIME_SCALE ) );
-      m_timeTrack->add( *m_keysTimeTrackingMarker );
-      m_timeTrack->add( *m_eventsTimeTrackingMarker );
-
-      m_animationKeysChart->addItem( m_keysTimeTrackingMarker );
-      m_animationEventsChart->addItem( m_eventsTimeTrackingMarker );
+      // disable the control over the time slider 
+      m_timeControlWidget->setEnabled( false );
 
       // update the UI
       m_actionPlay->setIcon( m_stopSceneIcon );
@@ -413,7 +390,47 @@ void SkeletonAnimationEditor::loadAnimatedModel( const std::string& modelResourc
    m_animationController->setAnimationSource( m_animation );
    skeletonRootEntity->add( m_animationController );
 
+   // start in pause
+   m_animationController->pause( true );
+
    m_sceneWidget->setScene( *m_scene );
+
+   // the scene should be updated all the time
+   m_timeTrack->add( *m_scene );
+
+   // enable the time control slider
+   m_timeControlWidget->setEnabled( true );
+
+   // add the time tracking widgets
+   m_keysTimeTrackingMarker = new VerticalChartMarker( new AnimationTimeValueGetter( *m_animationController, ANIMATION_TIME_SCALE ) );
+   m_eventsTimeTrackingMarker = new VerticalChartMarker( new AnimationTimeValueGetter( *m_animationController, ANIMATION_TIME_SCALE ) );
+   m_timeTrack->add( *m_keysTimeTrackingMarker );
+   m_timeTrack->add( *m_eventsTimeTrackingMarker );
+   m_animationKeysChart->addItem( m_keysTimeTrackingMarker );
+   m_animationEventsChart->addItem( m_eventsTimeTrackingMarker );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationEditor::update( float timeElapsed )
+{
+   if ( m_animationController )
+   {
+      m_timeControlWidget->setValue( m_animationController->getTrackTime() * TIME_SCALE );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationEditor::onTimeValueChanged( int newValue )
+{
+   if ( !m_animationController )
+   {
+      return;
+   }
+
+   float newTimeValue = newValue / TIME_SCALE;
+   m_animationController->setTrackTime( newTimeValue );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

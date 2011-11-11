@@ -3,13 +3,14 @@
 /// @file   TamyEditor\Gizmo.h
 /// @brief  A selected object manipulation gizmo.
 
-#include "core\IDebugDraw.h"
 #include "core\Color.h"
+#include "core\IDebugDraw.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class SpatialEntity;
+class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -51,7 +52,7 @@ public:
    void setMode( Mode mode );
 
    // -------------------------------------------------------------------------
-   // IDebugDrawable representation
+   // IDebugDrawable implementation
    // -------------------------------------------------------------------------
    void onDebugRender( Renderer& renderer ) const;
 

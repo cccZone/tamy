@@ -24,7 +24,7 @@ class QTabWidget;
 /**
 * This is the editor's main window class.
 */
-class TamyEditor : public QMainWindow, public ComponentsManager< TamyEditor >, public EditorsDocker
+class TamyEditor : public QMainWindow, public EditorsDocker
 {
    Q_OBJECT
 

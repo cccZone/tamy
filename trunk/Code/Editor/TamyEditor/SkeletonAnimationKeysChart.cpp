@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <math.h>
 #include "core/Algorithms.h"
+#include "core/EulerAngles.h"
 #include "AnimChartScales.h"
 
 
@@ -68,14 +69,13 @@ namespace // anonymous
                m_boneAnimation.getOrientationKey( i, orient, time );
                outPoints[i].setX( time * ANIMATION_TIME_SCALE );
 
-               float angle = 0.0f;
+               EulerAngles angle( orient );
                switch( m_keyIdx )
                {
-               case BAKEY_YAW: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 0, 1, 0 ), &angle ); break; }
-               case BAKEY_PITCH: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 1, 0, 0 ), &angle ); break; }
-               case BAKEY_ROLL: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 0, 0, 1 ), &angle ); break; }
+               case BAKEY_YAW: { outPoints[i].setY( angle.yaw ); break; }
+               case BAKEY_PITCH: { outPoints[i].setY( angle.pitch ); break; }
+               case BAKEY_ROLL: { outPoints[i].setY( angle.roll ); break; }
                }
-               outPoints[i].setY( angle );
             }
          }
       }
@@ -114,14 +114,13 @@ namespace // anonymous
                m_boneAnimation.getOrientationKey( pointIdx, orient, time );
                result.setX( time * ANIMATION_TIME_SCALE );
 
-               float angle = 0.0f;
+               EulerAngles angle( orient );
                switch( m_keyIdx )
                {
-               case BAKEY_YAW: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 0, 1, 0 ), &angle ); break; }
-               case BAKEY_PITCH: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 1, 0, 0 ), &angle ); break; }
-               case BAKEY_ROLL: { D3DXQuaternionToAxisAngle( &orient, &D3DXVECTOR3( 0, 0, 1 ), &angle ); break; }
+               case BAKEY_YAW: { result.setY( angle.yaw ); break; }
+               case BAKEY_PITCH: { result.setY( angle.pitch ); break; }
+               case BAKEY_ROLL: { result.setY( angle.roll ); break; }
                }
-               result.setY( angle );
             }
          }
 
@@ -166,21 +165,19 @@ namespace // anonymous
             m_boneAnimation.getOrientationKey( pointIdx, orientKey, time );
 
             // extract Euler angle values
-            float yaw, pitch, roll;
-            D3DXQuaternionToAxisAngle( &orientKey, &D3DXVECTOR3( 0, 1, 0 ), &yaw );
-            D3DXQuaternionToAxisAngle( &orientKey, &D3DXVECTOR3( 1, 0, 0 ), &pitch );
-            D3DXQuaternionToAxisAngle( &orientKey, &D3DXVECTOR3( 0, 0, 1 ), &roll );
-
+            EulerAngles angle( orientKey );
+            
             // update the edited key feature
             switch( m_keyIdx )
             {
-            case BAKEY_YAW: { yaw = pos.y(); break; }
-            case BAKEY_PITCH: { pitch = pos.y(); break; }
-            case BAKEY_ROLL: { roll = pos.y(); break; }
+            case BAKEY_YAW: { angle.yaw = pos.y(); break; }
+            case BAKEY_PITCH: { angle.pitch = pos.y(); break; }
+            case BAKEY_ROLL: { angle.roll = pos.y(); break; }
             }
+            angle.normalize();
 
             // put the Euler angle back together into a quaternion value
-            D3DXQuaternionRotationYawPitchRoll( &orientKey, yaw, pitch, roll );
+            orientKey = angle;
             m_boneAnimation.setOrientationKey( pointIdx, orientKey );
 
          }

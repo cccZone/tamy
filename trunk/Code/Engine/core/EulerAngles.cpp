@@ -63,6 +63,37 @@ EulerAngles::EulerAngles(const Vector& vec1, const Vector& vec2)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+EulerAngles::EulerAngles( const D3DXQUATERNION& quat )
+{
+   float poleFactor = quat.x * quat.y + quat.z * quat.w;
+   if ( poleFactor == 0.5f )
+   {
+      // north pole
+      yaw = 2 * atan2( quat.x, quat.w );
+      pitch = M_PI / 2.0f;
+      roll = 0;
+   }
+   else if ( poleFactor == -0.5f )
+   {
+      // south pole
+      yaw = -2 * atan2( quat.x, quat.w );
+      pitch = M_PI / 2.0f;
+      roll = 0;
+   }
+   else
+   {
+      yaw = atan2( 2 * quat.y * quat.w - 2 * quat.x * quat.z, 1 - 2 * quat.y * quat.y - 2 * quat.z * quat.z );
+      pitch = asin( 2 * poleFactor );
+      roll = atan2( 2 * quat.x * quat.w - 2 * quat.y * quat.z, 1 - 2 * quat.x * quat.x - 2 * quat.z * quat.z );
+   }
+
+   yaw = RAD2DEG( yaw );
+   pitch = RAD2DEG( pitch );
+   roll = RAD2DEG( roll );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool EulerAngles::operator==(const EulerAngles& rhs) const
 {
    return (yaw == rhs.yaw) && (pitch == rhs.pitch) && (roll == rhs.roll);

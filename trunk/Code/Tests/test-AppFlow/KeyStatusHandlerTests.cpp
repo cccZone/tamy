@@ -81,7 +81,7 @@ TEST( KeyStatusHandler, smashing )
 
    keysModel.setKey('A', false);
    keysStatusMgr.update(1);
-   CPPUNIT_ASSERT_EQUAL(KEY_SMASHED, handler->getLastOperation());
+   CPPUNIT_ASSERT_EQUAL(KEY_RELEASED, handler->getLastOperation());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -123,15 +123,15 @@ TEST( KeyStatusHandler, rapidSmashing )
 
    keysModel.setKey('A', false);
    keysStatusMgr.update(1);
-   CPPUNIT_ASSERT_EQUAL(KEY_SMASHED, handler->getLastOperation());
+   CPPUNIT_ASSERT_EQUAL(KEY_RELEASED, handler->getLastOperation());
 
    keysModel.setKey('A', true);
    keysStatusMgr.update(1);
-   CPPUNIT_ASSERT_EQUAL(KEY_UNTOUCHED, handler->getLastOperation());
+   CPPUNIT_ASSERT_EQUAL(KEY_SMASHED, handler->getLastOperation());
 
    keysModel.setKey('A', false);
    keysStatusMgr.update(1);
-   CPPUNIT_ASSERT_EQUAL(KEY_SMASHED, handler->getLastOperation());
+   CPPUNIT_ASSERT_EQUAL(KEY_RELEASED, handler->getLastOperation());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -165,12 +165,12 @@ TEST( KeyStatusHandler, smashingVsHolding )
    // key pressed again (the length of this period also doesn't matter)
    keysModel.setKey('A', true);
    keysStatusMgr.update(1.0f);
-   CPPUNIT_ASSERT_EQUAL(KEY_UNTOUCHED, handler->getLastOperation());
+   CPPUNIT_ASSERT_EQUAL(KEY_SMASHED, handler->getLastOperation());
 
    // but after 0.4s it's been released - meaning that this was a key smash
    keysModel.setKey('A', false);
    keysStatusMgr.update(0.4f);
-   CPPUNIT_ASSERT_EQUAL(KEY_SMASHED, handler->getLastOperation());
+   CPPUNIT_ASSERT_EQUAL(KEY_RELEASED, handler->getLastOperation());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

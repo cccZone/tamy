@@ -10,7 +10,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RCDrawLine::execute( Renderer& renderer )
+void RCDrawDebugLine::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
    dxRenderer.addDebugLine( m_start, m_end, m_color );
@@ -18,21 +18,21 @@ void RCDrawLine::execute( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RCDrawArc::execute( Renderer& renderer )
+void RCDrawDebugArc::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RCDrawArrow::execute( Renderer& renderer )
+void RCDrawDebugArrow::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RCDrawBox::execute( Renderer& renderer )
+void RCDrawDebugBox::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
 
@@ -80,16 +80,34 @@ void RCDrawBox::execute( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RCDrawSphere::execute( Renderer& renderer )
+void RCDrawDebugSphere::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RCDrawCylinder::execute( Renderer& renderer )
+void RCDrawDebugCylinder::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RCDrawDebugGrid::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
+
+   const float dim = m_gridLinesSpacing <= 0 ? 0 : ( m_gridSize / m_gridLinesSpacing );
+   float varPos;
+   static Color gridColor( 100, 100, 255 );
+
+   for ( float i = -dim; i <= dim; ++i )
+   {
+      varPos = i * m_gridLinesSpacing;
+      dxRenderer.addDebugLine( D3DXVECTOR3( -m_gridSize, 0, varPos ), D3DXVECTOR3( m_gridSize, 0, varPos ), gridColor );
+      dxRenderer.addDebugLine( D3DXVECTOR3( varPos, 0, -m_gridSize ), D3DXVECTOR3( varPos, 0, m_gridSize ), gridColor );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
