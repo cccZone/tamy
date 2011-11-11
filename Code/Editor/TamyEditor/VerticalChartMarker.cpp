@@ -30,10 +30,24 @@ void VerticalChartMarker::update( float timeElapsed )
       return;
    }
 
+   float prevPos = m_sceneRect.left();
+   
    // recalculate the bounding rectangle
    float value = m_valuePovider->getValue();
-   QRectF modelRect( value, -FLT_MAX, value, FLT_MAX );
+   QRectF modelRect( value, -100000, 4.0f, 200000 );
    chart->modelToScene( modelRect, m_sceneRect );
+
+   float XWIDTH = 50;
+   if ( prevPos < value )
+   {
+      float width = value - prevPos + XWIDTH;
+      chart->update( QRectF( prevPos - XWIDTH*0.5f, -100000, width, 200000 ) );
+   }
+   else
+   {
+      float width = prevPos - value + XWIDTH;
+      chart->update( QRectF( value - XWIDTH*0.5f, -100000, width, 200000 ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,13 +69,13 @@ void VerticalChartMarker::paint( QPainter* painter, const QStyleOptionGraphicsIt
 
    const QTransform& deviceTransform = painter->deviceTransform();
    float horizScale = deviceTransform.m11();
-   m_pen.setWidthF( 1.f / horizScale );
+   m_pen.setWidthF( 4.f / horizScale );
 
    // draw the item
    painter->save();
 
    painter->setPen( m_pen );
-   painter->drawLine( m_sceneRect.left(), -100000, m_sceneRect.left(), 100000 );
+   painter->drawLine( m_sceneRect.left(), m_sceneRect.top(), m_sceneRect.left(), m_sceneRect.height() );
 
    painter->restore();
 }

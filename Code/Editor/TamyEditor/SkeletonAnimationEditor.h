@@ -5,6 +5,7 @@
 #include <QtGui/QMainWindow>
 #include "ui_skeletonanimationeditor.h"
 #include "ResourceEditor.h"
+#include "core-AppFlow/TimeDependent.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,15 +23,18 @@ class QSplitter;
 class ChartView;
 class ChartScene;
 class VerticalChartMarker;
+class QSlider;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SkeletonAnimationEditor : public ResourceEditor
+class SkeletonAnimationEditor : public ResourceEditor, public TimeDependent
 {
    Q_OBJECT
 
 private:
    Ui::SkeletonAnimationEditorWindow         m_ui;
+
+   const float                               TIME_SCALE;
 
    SkeletonAnimation&                        m_animation;
    Model*                                    m_scene;
@@ -42,7 +46,6 @@ private:
 
    ChartView*                                m_animationKeysChartView;
    VerticalChartMarker*                      m_keysTimeTrackingMarker;
-   ChartView*                                m_animationEventsChartView;
    VerticalChartMarker*                      m_eventsTimeTrackingMarker;
    QSlider*                                  m_timeControlWidget;
    SkeletonAnimationController*              m_animationController;
@@ -85,6 +88,7 @@ public slots:
    void onToggleOrientKeyRoll( int state );
    void togglePlay();
    void animatedModelLoaded();
+   void onTimeValueChanged( int newValue );
 
 private:
    void loadAnimatedModel( const std::string& modelResourcePath );

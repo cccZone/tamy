@@ -357,7 +357,10 @@ void RenderingPipelineMechanism::renderDebugScene( RenderTarget* renderTarget )
    new ( (*m_renderer)() ) RCBeginDebugScene();
 
    // draw a reference grid
-   drawGrid(  );
+   static float gridLinesSpacing = 10;
+   static float gridSize = 1000;
+   static Color gridColor( 100, 100, 255 );
+   new ( (*m_renderer)() ) RCDrawDebugGrid( gridSize, gridLinesSpacing, gridColor );
 
    // draw the debug info
    if ( m_debugScene != NULL )
@@ -367,24 +370,6 @@ void RenderingPipelineMechanism::renderDebugScene( RenderTarget* renderTarget )
 
    // render the scene
    new ( (*m_renderer)() ) RCEndDebugScene();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineMechanism::drawGrid() const
-{
-   const float spacing = 10;
-   const float dim = 1000;
-   float varPos;
-   float boundPos = dim * spacing;
-   static Color gridColor( 100, 100, 255 );
-
-   for ( float i = -dim; i <= dim; ++i )
-   {
-      varPos = i * spacing;
-      new ( (*m_renderer)() ) RCDrawLine( D3DXVECTOR3( -boundPos, 0, varPos ), D3DXVECTOR3( boundPos, 0, varPos ), gridColor );
-      new ( (*m_renderer)() ) RCDrawLine( D3DXVECTOR3( varPos, 0, -boundPos ), D3DXVECTOR3( varPos, 0, boundPos ), gridColor );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

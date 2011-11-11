@@ -7,12 +7,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 TimeControllerTrack::TimeControllerTrack( const std::string& id )
-      : m_id(id),
-      m_speed(1),
-      m_updateFreq(0),
-      m_timeline(0),
-      m_lastUpdate(0),
-      m_nextUpdate(0)
+   : m_id(id),
+   m_speed(1),
+   m_updateFreq(0),
+   m_timeline(0),
+   m_lastUpdate(0),
+   m_nextUpdate(0)
 {
 }
 
@@ -52,49 +52,6 @@ void TimeControllerTrack::remove( TimeDependent& object )
       {
          m_objects.erase( m_objects.begin() + i );
          break;
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TimeControllerTrack::setEvent(float time, TimeEvent* e)
-{
-   m_events.push_back(new Event(e, m_timeline + time));
-   std::sort(m_events.begin(), m_events.end(), m_eventComparator);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TimeControllerTrack::removeFirstEvent(const std::string& id)
-{
-   for (std::vector<Event*>::iterator it = m_events.begin();
-        it != m_events.end(); ++it)
-   {
-      if ((*it)->action->getID() == id)
-      {
-         delete *it;
-         m_events.erase(it);
-         break;
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TimeControllerTrack::removeAllEvents(const std::string& id)
-{
-   for (std::vector<Event*>::iterator it = m_events.begin();
-        it != m_events.end();)
-   {
-      if ((*it)->action->getID() == id)
-      {
-         delete *it;
-         it = m_events.erase(it);
-      }
-      else
-      {
-          ++it;
       }
    }
 }
@@ -144,16 +101,6 @@ void TimeControllerTrack::update(float timeElapsed)
       return;
    }
 
-   // execute all events times for which has come
-   Event* currEvent = NULL;
-   std::vector<Event*>::iterator eventIt = m_events.begin();
-   while ((m_events.size() > 0) && ((currEvent = *eventIt)->time <= m_timeline))
-   {
-      eventIt = m_events.erase(eventIt);
-      currEvent->action->execute();
-      delete currEvent;
-   }
-
 
    // update the objects on the track
    float timeForObjects = timeElapsed * m_speed;
@@ -170,13 +117,6 @@ void TimeControllerTrack::reset()
 {
    m_speed = 1;
    m_objects.clear();
-
-   unsigned int count = m_events.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      delete m_events[i];
-   }
-   m_events.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

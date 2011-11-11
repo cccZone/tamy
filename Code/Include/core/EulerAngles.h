@@ -37,7 +37,7 @@ struct EulerAngles : public RTTIObject
     * @param pitch     rotation around OX axis
     * @param roll      rotation around OZ axis
     */
-   EulerAngles(float yaw, float pitch, float roll);
+   EulerAngles( float yaw, float pitch, float roll );
 
    /**
     * Constructor that calculates an angles between the two vectors.
@@ -45,7 +45,14 @@ struct EulerAngles : public RTTIObject
     * @param vec1
     * @param vec2
     */
-   EulerAngles(const Vector& vec1, const Vector& vec2);
+   EulerAngles( const Vector& vec1, const Vector& vec2 );
+
+   /**
+    * Constructor that converts a quaternion to Euler angles.
+    *
+    * @param quat
+    */
+   EulerAngles( const D3DXQUATERNION& quat );
 
    // -------------------------------------------------------------------------
    // Operators

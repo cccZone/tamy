@@ -84,7 +84,17 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 
 TamyEditor::~TamyEditor()
 {
-   removeAllComponents();
+   // remove all editors
+   int editorsCount = m_editorsTabs->children().size();
+   for ( unsigned int i = 0; i < editorsCount; ++i )
+   {
+      QWidget* editorWidget = m_editorsTabs->widget( i );
+      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
+      if ( editor )
+      {
+         editor->deinitialize();
+      }
+   }
 
    delete m_timeController; m_timeController = NULL;
    delete m_mainTime; m_mainTime = NULL;
@@ -290,6 +300,7 @@ void TamyEditor::addEditor( ResourceEditor* editor )
 
 void TamyEditor::closeResourceEditor( int editorTabIdx )
 {
+   // delete the selected tab's contents
    QWidget* editorWidget = m_editorsTabs->widget( editorTabIdx );
    ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
    if ( editor )
@@ -297,8 +308,6 @@ void TamyEditor::closeResourceEditor( int editorTabIdx )
       editor->deinitialize();
       delete editor;
    }
-
-   m_editorsTabs->removeTab( editorTabIdx );
-}
+ }
 
 ///////////////////////////////////////////////////////////////////////////////

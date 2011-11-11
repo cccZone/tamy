@@ -8,36 +8,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: remove the events-related functionality from here - move it to the animation controllers instead
-
 class TimeControllerTrack
 {
-private:
-   struct Event
-   {
-      TimeEvent* action;
-      float time;
-
-      Event(TimeEvent* _action, float _time)
-         : action(_action), time(_time)
-      {}
-
-      ~Event()
-      {
-         delete action;
-         action = NULL;
-      }
-   };
-
-   class EventComparator
-   {
-   public:
-      bool operator()(const Event* rhs, const Event* lhs)
-      {
-         return rhs->time < lhs->time;
-      }
-   };
-
 private:
    std::string                   m_id;
    float                         m_speed;
@@ -48,8 +20,6 @@ private:
    float                         m_nextUpdate;
 
    std::vector<TimeDependent*>   m_objects;
-   std::vector<Event*>           m_events;
-   EventComparator               m_eventComparator;
 
 public:
    /**
@@ -123,25 +93,6 @@ public:
     * Returns current track time.
     */
    inline float getTime() const { return m_timeline; }
-
-   /** 
-    * This method sets a new event to be executed somewhere in time
-    * @param time specifies the period of time from the current track
-    * time the event should take place
-    */
-   void setEvent( float time, TimeEvent* e );
-
-   /**
-    * This method removes the first occurance
-    * of this event instance (there can be many)
-    */
-   void removeFirstEvent( const std::string& id );
-
-   /**
-    * This method removes all occurances
-    * of this event instance (there can be many)
-    */
-   void removeAllEvents( const std::string& id );
 
    /**
     * Resets the track's contents ( events and objects )

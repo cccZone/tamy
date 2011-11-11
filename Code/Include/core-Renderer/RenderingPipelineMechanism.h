@@ -179,11 +179,6 @@ private:
     * Caches the nodes for quicker processing.
     */
    void cacheNodes();
-
-   /**
-    * Draws a debug grid.
-    */
-   void drawGrid() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

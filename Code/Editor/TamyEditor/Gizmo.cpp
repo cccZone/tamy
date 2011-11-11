@@ -69,9 +69,9 @@ void Gizmo::drawTranslationGizmo( Renderer& renderer ) const
    D3DXVec3TransformCoord( &oy, &D3DXVECTOR3( 0, SIZE, 0 ), &mtx );
    D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
 
-   new ( renderer() ) RCDrawLine( orig, ox, OX_COLOR ); // OX
-   new ( renderer() ) RCDrawLine( orig, oy, OY_COLOR ); // OY
-   new ( renderer() ) RCDrawLine( orig, oz, OZ_COLOR ); // OZ
+   new ( renderer() ) RCDrawDebugLine( orig, ox, OX_COLOR ); // OX
+   new ( renderer() ) RCDrawDebugLine( orig, oy, OY_COLOR ); // OY
+   new ( renderer() ) RCDrawDebugLine( orig, oz, OZ_COLOR ); // OZ
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,17 +87,17 @@ void Gizmo::drawRotationGizmo( Renderer& renderer ) const
    D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
 
    // OX
-   new ( renderer() ) RCDrawLine( orig, ox, OX_COLOR );
-   new ( renderer() ) RCDrawArc( ox, oz, OX_COLOR );
+   new ( renderer() ) RCDrawDebugLine( orig, ox, OX_COLOR );
+   new ( renderer() ) RCDrawDebugArc( ox, oz, OX_COLOR );
 
    // OY
-   new ( renderer() ) RCDrawLine( orig, oy, OY_COLOR );
-   new ( renderer() ) RCDrawArc( oy, oz, OX_COLOR );
+   new ( renderer() ) RCDrawDebugLine( orig, oy, OY_COLOR );
+   new ( renderer() ) RCDrawDebugArc( oy, oz, OX_COLOR );
 
 
    // OZ
-   new ( renderer() ) RCDrawLine( orig, oz, OZ_COLOR );
-   new ( renderer() ) RCDrawArc( oz, ox, OX_COLOR );
+   new ( renderer() ) RCDrawDebugLine( orig, oz, OZ_COLOR );
+   new ( renderer() ) RCDrawDebugArc( oz, ox, OX_COLOR );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,18 +117,18 @@ void Gizmo::drawScalingGizmo( Renderer& renderer ) const
    // OX
    D3DXMATRIX boxMtx = mtx;
    boxMtx._41 = ox.x; boxMtx._42 = ox.y; boxMtx._43 = ox.z;
-   new ( renderer() ) RCDrawLine( orig, ox, OX_COLOR );
-   new ( renderer() ) RCDrawBox( boxMtx, boxSize, OX_COLOR );
+   new ( renderer() ) RCDrawDebugLine( orig, ox, OX_COLOR );
+   new ( renderer() ) RCDrawDebugBox( boxMtx, boxSize, OX_COLOR );
 
    // OY
    boxMtx._41 = oy.x; boxMtx._42 = oy.y; boxMtx._43 = oy.z;
-   new ( renderer() ) RCDrawLine( orig, oy, OY_COLOR );
-   new ( renderer() ) RCDrawBox( boxMtx, boxSize, OY_COLOR );
+   new ( renderer() ) RCDrawDebugLine( orig, oy, OY_COLOR );
+   new ( renderer() ) RCDrawDebugBox( boxMtx, boxSize, OY_COLOR );
 
    // OZ
    boxMtx._41 = oz.x; boxMtx._42 = oz.y; boxMtx._43 = oz.z;
-   new ( renderer() ) RCDrawLine( orig, oz, OZ_COLOR );
-   new ( renderer() ) RCDrawBox( boxMtx, boxSize, OZ_COLOR );
+   new ( renderer() ) RCDrawDebugLine( orig, oz, OZ_COLOR );
+   new ( renderer() ) RCDrawDebugBox( boxMtx, boxSize, OZ_COLOR );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

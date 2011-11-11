@@ -39,7 +39,7 @@ void BoneEntity::onDebugRender( Renderer& renderer ) const
       getGlobalVectors( start[0], start[1], start[2], start[3] );
       parentNode->getGlobalVectors( end[0], end[1], end[2], end[3] );
 
-      new ( renderer() ) RCDrawLine( start[3], end[3], Color( 0, 0, 0 ) );
+      new ( renderer() ) RCDrawDebugLine( start[3], end[3], Color( 0, 0, 0 ) );
    }
 }
 

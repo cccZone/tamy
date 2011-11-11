@@ -17,7 +17,7 @@ class Renderer;
 /**
  * Rendering command for drawing a debug line.
  */
-class RCDrawLine : public RenderCommand
+class RCDrawDebugLine : public RenderCommand
 {
 private:
    D3DXVECTOR3       m_start;
@@ -32,7 +32,7 @@ public:
     * @param end
     * @param color
     */
-   RCDrawLine( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
+   RCDrawDebugLine( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
       : m_start( start )
       , m_end( end )
       , m_color( color )
@@ -49,7 +49,7 @@ public:
 /**
  * Rendering command for drawing an arced debug line.
  */
-class RCDrawArc : public RenderCommand
+class RCDrawDebugArc : public RenderCommand
 {
 private:
    D3DXVECTOR3       m_start;
@@ -64,7 +64,7 @@ public:
     * @param end
     * @param color
     */
-   RCDrawArc( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
+   RCDrawDebugArc( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
       : m_start( start )
       , m_end( end )
       , m_color( color )
@@ -81,7 +81,7 @@ public:
 /**
  * Rendering command for drawing a debug line with arrow head.
  */
-class RCDrawArrow : public RenderCommand
+class RCDrawDebugArrow : public RenderCommand
 {
 private:
    D3DXVECTOR3       m_start;
@@ -96,7 +96,7 @@ public:
     * @param end
     * @param color
     */
-   RCDrawArrow( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
+   RCDrawDebugArrow( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
       : m_start( start )
       , m_end( end )
       , m_color( color )
@@ -113,7 +113,7 @@ public:
 /**
  * Rendering command for drawing a debug box.
  */
-class RCDrawBox : public RenderCommand
+class RCDrawDebugBox : public RenderCommand
 {
 private:
    D3DXMATRIX        m_transform;
@@ -128,7 +128,7 @@ public:
     * @param size
     * @param color
     */
-   RCDrawBox( const D3DXMATRIX& transform, const D3DXVECTOR3& size, const Color& color )
+   RCDrawDebugBox( const D3DXMATRIX& transform, const D3DXVECTOR3& size, const Color& color )
       : m_transform( transform )
       , m_size( size )
       , m_color( color )
@@ -145,7 +145,7 @@ public:
 /**
  * Rendering command for drawing a debug sphere.
  */
-class RCDrawSphere : public RenderCommand
+class RCDrawDebugSphere : public RenderCommand
 {
 private:
    D3DXMATRIX        m_transform;
@@ -160,7 +160,7 @@ public:
     * @param radius
     * @param color
     */
-   RCDrawSphere( const D3DXMATRIX& transform, float radius, const Color& color )
+   RCDrawDebugSphere( const D3DXMATRIX& transform, float radius, const Color& color )
       : m_transform( transform )
       , m_radius( radius )
       , m_color( color )
@@ -179,7 +179,7 @@ public:
  * Rendering command for drawing a debug cylinder. The origin is located 
  * in the cylinder's bottom face's center.
  */
-class RCDrawCylinder : public RenderCommand
+class RCDrawDebugCylinder : public RenderCommand
 {
 private:
    D3DXMATRIX        m_transform;
@@ -196,12 +196,41 @@ public:
     * @param height
     * @param color
     */
-   RCDrawCylinder( const D3DXMATRIX& transform, float radius, float height, const Color& color )
+   RCDrawDebugCylinder( const D3DXMATRIX& transform, float radius, float height, const Color& color )
       : m_transform( transform )
       , m_radius( radius )
       , m_height( height )
       , m_color( color )
    {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Draws a debug grid.
+ */
+class RCDrawDebugGrid : public RenderCommand
+{
+private:
+   float       m_gridSize;
+   float       m_gridLinesSpacing;
+   Color       m_gridColor;
+
+public:
+   /**
+    * Constructor.
+    */
+   RCDrawDebugGrid( float gridSize, float gridLinesSpacing, const Color& gridColor )
+      : m_gridSize( gridSize )
+      , m_gridLinesSpacing( gridLinesSpacing )
+      , m_gridColor( gridColor )
+   {
+   }
 
    // -------------------------------------------------------------------------
    // RenderCommand implementation
@@ -222,6 +251,8 @@ public:
    // -------------------------------------------------------------------------
    void execute( Renderer& renderer );
 };
+
+///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Rendering command that ends the rendering process of a debug scene.

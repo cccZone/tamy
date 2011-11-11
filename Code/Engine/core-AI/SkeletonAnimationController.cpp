@@ -2,6 +2,7 @@
 #include "core-AI/SkeletonAnimation.h"
 #include "core-AI/BoneSRTAnimation.h"
 #include "core-MVC/SpatialEntity.h"
+#include "core/Algorithms.h"
 #include <list>
 #include <set>
 
@@ -19,6 +20,7 @@ SkeletonAnimationController::SkeletonAnimationController( const std::string& nam
    , m_source( NULL )
    , m_parent( NULL )
    , m_trackTime( 0.f )
+   , m_pause( false )
 {
 }
 
@@ -29,6 +31,7 @@ SkeletonAnimationController::SkeletonAnimationController( const SkeletonAnimatio
    , m_source( rhs.m_source )
    , m_parent( NULL )
    , m_trackTime( 0.f )
+   , m_pause( false )
 {
 
 }
@@ -102,12 +105,15 @@ void SkeletonAnimationController::onUpdate( float timeElapsed )
       return;
    }
 
-   // update the track time
-   m_trackTime += timeElapsed;
-   const float animLength = m_source->getAnimationLength();
-   while ( m_trackTime > animLength )
+   // update the track time ( only if the controller's not paused )
+   if ( !m_pause )
    {
-      m_trackTime -= animLength;
+      m_trackTime += timeElapsed;
+      const float animLength = m_source->getAnimationLength();
+      while ( m_trackTime > animLength )
+      {
+         m_trackTime -= animLength;
+      }
    }
 
    // Go through the nodes and query the update matrices for them,
@@ -143,6 +149,13 @@ void SkeletonAnimationController::onUpdate( float timeElapsed )
       D3DXMatrixMultiply( &tmpMtx, &updateMtx, &( m_referenceMtcs[i] ) );
       m_skeleton[i]->setLocalMtx( tmpMtx );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationController::setTrackTime( float time )
+{
+   m_trackTime = clamp( time, 0.0f, m_source->getAnimationLength() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

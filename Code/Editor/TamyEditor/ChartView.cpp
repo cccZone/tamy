@@ -2,6 +2,7 @@
 #include "ChartScene.h"
 #include <QWheelEvent>
 #include "core/Algorithms.h"
+#include <QImage>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,6 +17,10 @@ ChartView::ChartView( ChartScene* scene, QWidget* parentWidget )
    m_axisPen = QPen( QBrush( QColor( 100, 100, 100 ) ), 3.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
    m_gridPen = QPen( QBrush( QColor( 150, 150, 150 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
    m_textPen = QPen( QBrush( QColor( 0, 0, 0 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+
+   setAutoFillBackground(false);
+   setAttribute(Qt::WA_OpaquePaintEvent, true);
+   setAttribute(Qt::WA_NoSystemBackground, true);
 
    // scale the view
    this->scale( m_scale, m_scale );
@@ -45,9 +50,10 @@ void ChartView::wheelEvent( QWheelEvent* wheelEvent )
 
    // scale the view
    this->scale( m_scale, m_scale );
-   QRectF rect = m_scene->sceneRect();
-   setSceneRect( rect );
+   QRectF sRect = m_scene->sceneRect();
+   setSceneRect( sRect );
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +61,6 @@ void ChartView::drawBackground( QPainter* painter, const QRectF& rect )
 {
    painter->save();
 
-   QRectF rrr = m_scene->sceneRect();
 
    // scale the pen sizes
    float fontHeight = 10.0f / m_scale;
@@ -84,26 +89,26 @@ void ChartView::drawBackground( QPainter* painter, const QRectF& rect )
    float frameWidth = this->rect().width();
    float viewportWidth = rect.width();
    float scale = viewportWidth / frameWidth;
+   float scaleMag = mag( scale ) * 300.0f;
+
+   // calculate the number of zeros that should be displayed for the values
    char strValue[32];
    char format[16];
+   int dispScalePow;
+   if ( scale < 1.0f )
+   {
+      dispScalePow = std::max( 0, (int)log10( 1.0f / scaleMag ) ) + 1;
+   }
+   else
+   {
+      dispScalePow = 1;
+   }
+   sprintf_s( format, "%%.%d%s", std::max( 1, dispScalePow ), "f" );
 
    // vertical axes
    {
       float startVal = rect.left();
       float endVal = rect.right();
-      float scaleMag = mag( scale ) * 100.0f;
-
-      // calculate the number of zeros that should be displayed for the values
-      int dispScalePow;
-      if ( scale < 1.0f )
-      {
-         dispScalePow = std::max( 0, (int)log10( 1.0f / scaleMag ) ) + 1;
-      }
-      else
-      {
-         dispScalePow = 1;
-      }
-      sprintf_s( format, "%%.%d%s", std::max( 1, dispScalePow ), "f" );
 
       float displayedStartValue = roundEx( startVal, scaleMag ) - scaleMag; 
       float displayedEndValue = roundEx( endVal, scaleMag ) + scaleMag;
@@ -133,19 +138,6 @@ void ChartView::drawBackground( QPainter* painter, const QRectF& rect )
    {
       float startVal = rect.top();
       float endVal = rect.bottom();
-      float scaleMag = mag( scale ) * 100.0f;
-
-      // calculate the number of zeros that should be displayed for the values
-      int dispScalePow;
-      if ( scale < 1.0f )
-      {
-         dispScalePow = std::max( 0, (int)log10( 1.0f / scaleMag ) ) + 1;
-      }
-      else
-      {
-         dispScalePow = 1;
-      }
-      sprintf_s( format, "%%.%d%s", std::max( 1, dispScalePow ), "f" );
 
       float displayedStartValue = roundEx( startVal, scaleMag ) - scaleMag; 
       float displayedEndValue = roundEx( endVal, scaleMag ) + scaleMag;
