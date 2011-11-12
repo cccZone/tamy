@@ -6,6 +6,7 @@
 #include "RenderingPipelineSocketRepresentation.h"
 #include "RPBPostProcess.h"
 #include "RPBSceneRender.h"
+#include "RPBDepthNormals.h"
 #include "RPBStart.h"
 #include "RPBAdapter.h"
 #include "RPBDebugRender.h"
@@ -20,6 +21,7 @@ REGISTER_RTTI( GraphBlockSocket );
 REGISTER_RTTI( RenderingPipelineSocketRepresentation );
 REGISTER_RTTI( RPBPostProcess );
 REGISTER_RTTI( RPBSceneRender );
+REGISTER_RTTI( RPBDepthNormals );
 REGISTER_RTTI( RPBStart );
 REGISTER_RTTI( RPBAdapter );
 REGISTER_RTTI( RPBDebugRender );

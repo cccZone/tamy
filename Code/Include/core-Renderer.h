@@ -102,6 +102,7 @@
 #include "core-Renderer/RPStartNode.h"
 #include "core-Renderer/RPPostProcessNode.h"
 #include "core-Renderer/RPDebugRendererNode.h"
+#include "core-Renderer/RPDepthNormalsNode.h"
 // ----------------------------------------------------------------------------
 // ---->Nodes\PostProcess
 // ----------------------------------------------------------------------------

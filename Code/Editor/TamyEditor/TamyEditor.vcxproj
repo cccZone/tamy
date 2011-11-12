@@ -155,6 +155,7 @@
     <ClInclude Include="NavigationState.h" />
     <ClInclude Include="NodeManipulationState.h" />
     <ClInclude Include="NodeTransformController.h" />
+    <ClInclude Include="RPBDepthNormals.h" />
     <ClInclude Include="SceneObjectsManipulator.h" />
     <ClInclude Include="SceneObjectsManipulatorState.h" />
     <ClInclude Include="SceneRendererInputController.h" />
@@ -662,6 +663,7 @@
     <ClCompile Include="NodeManipulationState.cpp" />
     <ClCompile Include="NodeTransformController.cpp" />
     <ClCompile Include="ResourcesBrowser.cpp" />
+    <ClCompile Include="RPBDepthNormals.cpp" />
     <ClCompile Include="SceneObjectsManipulator.cpp" />
     <ClCompile Include="SceneQuery.cpp" />
     <ClCompile Include="SelectedEntityPropertiesViewer.cpp" />
@@ -671,7 +673,10 @@
     <ClCompile Include="EnumPropertyEditor.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_EnumPropertyEditor.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_FloatPropertyEditor.cpp" />
-    <ClCompile Include="GeneratedFiles\Debug\moc_GraphLayout.cpp" />
+    <ClCompile Include="GeneratedFiles\Debug\moc_GraphLayout.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_IntPropertyEditor.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_RenderingPipelineEditor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

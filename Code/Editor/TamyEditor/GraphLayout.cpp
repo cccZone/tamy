@@ -222,7 +222,16 @@ void GraphLayout::createContextMenu( QMenu* menu, const QPointF& scenePos )
    
    // if there are blocks selected, show additional options
    QList< QGraphicsItem* > items = selectedItems();
-   if ( items.isEmpty() == false )
+   QList< GraphBlock* > selectedBlocks;
+   foreach( QGraphicsItem* item, items )
+   {
+      GraphBlock* block = dynamic_cast< GraphBlock* >( item );
+      if ( block )
+      {
+         selectedBlocks.push_back( block );
+      }
+   }
+   if ( !selectedBlocks.isEmpty() )
    {
       // an option for removing existing nodes
       QAction* removeNodesAction = new GraphNodeRemoveAction( *this, items );
