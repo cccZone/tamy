@@ -290,6 +290,9 @@
     <ClInclude Include="QueryRenderingPass.h">
       <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
     </ClInclude>
+    <ClInclude Include="RPBDepthNormals.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -658,6 +661,9 @@
     </ClCompile>
     <ClCompile Include="QueryRenderingPass.cpp">
       <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBDepthNormals.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

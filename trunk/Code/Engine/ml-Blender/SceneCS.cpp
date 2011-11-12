@@ -130,6 +130,11 @@ SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene, const S
    std::string id = nodeElem->Attribute( "id" );
    SpatialEntity* entity = new SpatialEntity( id );
 
+   if ( id == "chair" )
+   {
+      printf("");
+   }
+
    // transformation
    float a, b, c, d;
    D3DXMATRIX& localMtx = entity->accessLocalMtx();
@@ -140,7 +145,8 @@ SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene, const S
 
       D3DXMATRIX axisRotMtx;
       D3DXMatrixIdentity( &axisRotMtx );
-      D3DXMatrixRotationAxis( &axisRotMtx, &D3DXVECTOR3( a, b, c ), DEG2RAD( d ) );
+      // switch the y & z components - and that yields the necessisity to invert the rotation angle
+      D3DXMatrixRotationAxis( &axisRotMtx, &D3DXVECTOR3( a, c, b ), DEG2RAD( -d ) );
       D3DXMatrixMultiply( &localMtx, &axisRotMtx, &localMtx );
    }
 
@@ -149,9 +155,10 @@ SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene, const S
       ASSERT( translateElem != NULL );
       sscanf_s( translateElem->GetText(), "%f %f %f", &a, &b, &c );
 
+      // switch the y & z components
       localMtx._41 = a;
-      localMtx._42 = b;
-      localMtx._43 = c;
+      localMtx._42 = c;
+      localMtx._43 = b;
    }
 
    // geometry

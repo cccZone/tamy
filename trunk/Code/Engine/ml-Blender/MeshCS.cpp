@@ -15,6 +15,12 @@
 
 namespace // anonymous
 {
+   void switchYZ( D3DXVECTOR3& vec )
+   {
+      float tmp = vec.z;
+      vec.z = vec.y;
+      vec.y = tmp;
+   }
 
    class DSVertices : public DSBindStructure
    {
@@ -29,6 +35,7 @@ namespace // anonymous
       {
          LitVertex& vtx = *( static_cast< LitVertex* >( data ) );
          getSource( "POSITION" ).readData( dataOffset, &vtx.m_coords );
+         switchYZ( vtx.m_coords );
       }
    };
 
@@ -72,6 +79,7 @@ namespace // anonymous
             unsigned int normalIdx = getIndex( dataOffset, "NORMAL", i );
 
             getSource( "NORMAL" ).readData( normalIdx, &vertices[vtxIdx].m_normal );
+            switchYZ( vertices[vtxIdx].m_normal );
          }
       }
    };

@@ -17,6 +17,7 @@ class Geometry;
 struct AABoundingBox;
 class Camera;
 class RenderState;
+class SceneRenderTreeBuilder;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,8 +44,10 @@ public:
 
    /**
     * Renders the view contents.
+    *
+    * @param treeBuilder      scene tree builder strategy
     */
-   void render();
+   void render( const SceneRenderTreeBuilder& treeBuilder );
 
    // ----------------------------------------------------------------------
    // ModelView implementation
@@ -55,39 +58,6 @@ public:
 
 protected:
    void resetContents();
-
-private:
-   // ----------------------------------------------------------------------
-   // State tree
-   // ----------------------------------------------------------------------
-   struct GeometryNode
-   {
-      GeometryNode*  m_next;
-      Geometry&      m_geometry;
-
-      GeometryNode( GeometryNode*& nextNode, Geometry& geometry );
-      ~GeometryNode();
-
-      void render( Renderer& renderer ) const;
-   };
-
-   struct StateTreeNode
-   {
-      StateTreeNode*    m_child;
-      StateTreeNode*    m_sibling;
-
-      RenderState*      m_state;
-      GeometryNode*     m_geometryNode;
-
-      StateTreeNode( RenderState* state );
-      ~StateTreeNode();
-
-      bool compareState( RenderState* state );
-      void render( Renderer& renderer ) const;
-   };
-
-   StateTreeNode* buildStateTree( const Array< SpatialRepresentation* >& visibleElems ) const;
-
 };
 
 ///////////////////////////////////////////////////////////////////////////////

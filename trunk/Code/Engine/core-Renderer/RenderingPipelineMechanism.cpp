@@ -91,7 +91,7 @@ void RenderingPipelineMechanism::addScene( RPMSceneId sceneId, Model& scene )
 
 void RenderingPipelineMechanism::removeScene( RPMSceneId sceneId )
 {
-   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to add a scene with an invalid sceneId" );
+   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to remove a scene with an invalid sceneId" );
    if ( ( unsigned int )sceneId < RPS_MaxScenes )
    {
       // remove the model
@@ -119,6 +119,14 @@ void RenderingPipelineMechanism::removeScene( Model& scene )
          (*it)->setModel( NULL );
       }
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+RenderingView& RenderingPipelineMechanism::getSceneRenderer( RPMSceneId sceneId ) const 
+{ 
+   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to query a scene with an invalid sceneId" );
+   return *m_scenes[sceneId]->m_renderingView; 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -326,23 +334,6 @@ void RenderingPipelineMechanism::cacheNodes()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineMechanism::renderScene( RPMSceneId sceneId, RenderTarget* renderTarget ) const
-{
-   if ( !m_renderer )
-   {
-      return;
-   }
-
-   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to add a scene with an invalid sceneId" );
-   if ( ( unsigned int )sceneId < RPS_MaxScenes )
-   {
-      new ( (*m_renderer)() ) RCActivateRenderTarget( renderTarget );
-      m_scenes[ sceneId ]->render();
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void RenderingPipelineMechanism::renderDebugScene( RenderTarget* renderTarget )
 {
    if ( !m_renderer )
@@ -467,16 +458,6 @@ void RenderingPipelineMechanism::RenderedScene::setDebugScene( DebugScene& scene
    if ( m_model )
    {
       m_model->attach( *m_debugSceneView );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineMechanism::RenderedScene::render()
-{
-   if ( m_renderingView )
-   {
-      m_renderingView->render();
    }
 }
 

@@ -4,6 +4,7 @@
 
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/RenderingPipelineNode.h"
+#include "core-Renderer/SceneRenderTreeBuilder.h"
 #include "core/RuntimeData.h"
 
 
@@ -16,7 +17,7 @@ class RenderTarget;
 /**
  * A rendering pipeline node responsible for rendering a scene.
  */
-class RPSceneRenderNode : public RenderingPipelineNode
+class RPSceneRenderNode : public RenderingPipelineNode, public SceneRenderTreeBuilder
 {
    DECLARE_CLASS( RPSceneRenderNode )
 
@@ -35,6 +36,11 @@ public:
    void onInitialize( RenderingPipelineMechanism& host ) const;
    void onDeinitialize( RenderingPipelineMechanism& host ) const;
    void onUpdate( RenderingPipelineMechanism& host ) const;
+
+   // -------------------------------------------------------------------------
+   // SceneRenderTreeBuilder implementation
+   // -------------------------------------------------------------------------
+   StateTreeNode* buildStateTree( const Array< SpatialRepresentation* >& visibleElems ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

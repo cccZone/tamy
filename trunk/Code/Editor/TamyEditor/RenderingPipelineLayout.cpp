@@ -5,6 +5,7 @@
 // blocks
 #include "RPBPostProcess.h"
 #include "RPBSceneRender.h"
+#include "RPBDepthNormals.h"
 #include "RPBDebugRender.h"
 #include "RPBStart.h"
 #include "RPBAdapter.h"
@@ -26,6 +27,7 @@ RenderingPipelineLayout::RenderingPipelineLayout( const std::string& path )
 {
    // create block-to-node associations
    associate< RPSceneRenderNode, RPBSceneRender >();
+   associate< RPDepthNormalsNode, RPBDepthNormals >();
    associate< RPDebugRendererNode, RPBDebugRender >();
    associate< RPStartNode, RPBStart >();
    associate< RPAdapterNode, RPBAdapter >();

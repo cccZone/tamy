@@ -247,6 +247,12 @@
     <ClCompile Include="RenderResource.cpp">
       <Filter>Core\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="RPDepthNormalsNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneRenderTreeBuilder.cpp">
+      <Filter>Core\Views</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -488,6 +494,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPDepthNormalsNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SceneRenderTreeBuilder.h">
+      <Filter>Core\Views</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

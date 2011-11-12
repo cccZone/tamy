@@ -53,8 +53,10 @@ private:
     */
    class RenderedScene
    {
-   private:
+   public:
       RenderingView*                               m_renderingView;
+
+   private:
       ModelDebugScene*                             m_debugSceneView;
 
       Model*                                       m_model;
@@ -70,8 +72,6 @@ private:
       void setModel( Model* model );
 
       void setDebugScene( DebugScene& scene );
-
-      void render();
    };
 
 private:
@@ -131,6 +131,20 @@ public:
    void removeScene( RPMSceneId sceneId );
 
    /**
+    * Checks if the scene with the specified id is registered.
+    *
+    * @param sceneId
+    */
+   inline bool isSceneActive( RPMSceneId sceneId ) const { return ( unsigned int )sceneId < RPS_MaxScenes; }
+
+   /**
+    * Returns the rendering view that can render the selected scene.
+    *
+    * @param sceneId
+    */
+   RenderingView& getSceneRenderer( RPMSceneId sceneId ) const;
+
+   /**
     * Sets a debug scene instance.
     *
     * @param debug scene
@@ -143,14 +157,6 @@ public:
     * @param id         render target id
     */
    RenderTarget& getRenderTarget( const std::string& id ) const;
-
-   /**
-    * Renders a scene with the specified id on the specified render target
-    *
-    * @param sceneId
-    * @param renderTarget
-    */
-   void renderScene( RPMSceneId sceneId, RenderTarget* renderTarget ) const;
 
    /**
     * Renders the debug scene on the specified render target.

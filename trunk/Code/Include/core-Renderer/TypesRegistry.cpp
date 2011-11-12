@@ -30,6 +30,7 @@ REGISTER_RTTI( Material );
 REGISTER_RTTI( RenderingPipeline );
 REGISTER_RTTI( RenderingPipelineNode );
 REGISTER_RTTI( RPSceneRenderNode );
+REGISTER_RTTI( RPDepthNormalsNode );
 REGISTER_RTTI( RPPostProcessNode );
 REGISTER_RTTI( RPStartNode );
 REGISTER_RTTI( RPDebugRendererNode );
