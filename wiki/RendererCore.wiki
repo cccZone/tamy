@@ -7,10 +7,24 @@
 
 ==Geometry==
 
+===Vertex shaders output structure===
+
+{{{
+struct VS_OUTPUT
+{
+    float4 Position     : POSITION;   // vertex position 
+    float4 Diffuse      : COLOR0;     // vertex diffuse color (note that COLOR0 is clamped from 0..1)
+    float2 TextureUV    : TEXCOORD0;  // vertex texture coords 
+    float3 Normal       : TEXCOORD1;  // vertex normal
+    float3 ViewPosition : TEXCOORD2;  // vertex view position
+};
+}}}
+
 ==Materials==
 
 ==Debug renderer==
 
 ==Rendering pipeline==
+
 
 ==Camera==
