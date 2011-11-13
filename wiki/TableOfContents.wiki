@@ -20,7 +20,7 @@
     * [Model Model and entities]
     * [SpatialEntity Spatial entity]
   * [ Renderer ]
-    * [RendererCore#Core functionality]
+    * [RendererCore#Core Core functionality]
     * [RendererCore#Geometry Geometry]
     * [RendererCore#Materials Materials]
     * [RendererCore#DebugRenderer Debug renderer]
