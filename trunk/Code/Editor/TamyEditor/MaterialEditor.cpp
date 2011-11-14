@@ -22,8 +22,6 @@ MaterialEditor::MaterialEditor( PixelShader& shader )
 
 MaterialEditor::~MaterialEditor()
 {
-   delete m_highlighter;
-   m_highlighter = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -118,9 +116,9 @@ void MaterialEditor::onInitialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::onDeinitialize()
+void MaterialEditor::onDeinitialize( bool saveProgress )
 {
-   if ( m_docModified )
+   if ( saveProgress && m_docModified )
    {
       int choice = QMessageBox::question( this, tr("Save"), tr("Would you like to save your changes?"), QMessageBox::Yes | QMessageBox::No );
       if ( choice == QMessageBox::Yes )
@@ -128,6 +126,9 @@ void MaterialEditor::onDeinitialize()
          save();
       }
    }
+
+   delete m_highlighter;
+   m_highlighter = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

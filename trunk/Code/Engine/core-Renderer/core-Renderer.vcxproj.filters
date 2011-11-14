@@ -253,6 +253,9 @@
     <ClCompile Include="SceneRenderTreeBuilder.cpp">
       <Filter>Core\Views</Filter>
     </ClCompile>
+    <ClCompile Include="RPSSAONode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -500,6 +503,10 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderTreeBuilder.h">
       <Filter>Core\Views</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPSSAONode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

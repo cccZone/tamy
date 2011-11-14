@@ -3,6 +3,7 @@
 #include "core-Renderer\PixelShader.h"
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\Renderer.h"
+#include "core-Renderer\Defines.h"
 #include "core-MVC.h"
 #include "core.h"
 #include <stdexcept>
@@ -95,7 +96,7 @@ void SingleTextureMaterial::onComponentAdded( Component< Model >& component )
    {
       // load the shader
       ResourcesManager& rm = comp->get();
-      static const char* shaderName = "Renderer/Shaders/MaterialShader.psh";
+      static const char* shaderName = SHADERS_DIR "MaterialShader.psh";
       m_shader = dynamic_cast< PixelShader* >( rm.findResource( "SingleTextureMaterial" ) );
       if ( !m_shader )
       {

@@ -19,6 +19,12 @@
     <Filter Include="RenderResources">
       <UniqueIdentifier>{59e02a1b-87bd-4992-9da3-741e56a57a42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\VertexShaders">
+      <UniqueIdentifier>{1293abeb-7e08-4fa3-84d4-b98febb6aa50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\PixelShaders">
+      <UniqueIdentifier>{5f395b3a-0958-416c-9413-fc990e1cec19}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DX9Renderer.cpp">
@@ -129,6 +135,9 @@
     <ClCompile Include="DX9ShaderParamRenderTarget.cpp">
       <Filter>ShaderParams</Filter>
     </ClCompile>
+    <ClCompile Include="DX9ShaderIncludeLoader.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">
@@ -183,28 +192,31 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderTargetResourcesStorage.h">
       <Filter>RenderResources</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderIncludeLoader.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh">
-      <Filter>Shaders</Filter>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
+      <Filter>Shaders\PixelShaders</Filter>
     </None>
     <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Luminance.psh">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\PixelShaders</Filter>
     </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
-      <Filter>Shaders</Filter>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh">
+      <Filter>Shaders\PixelShaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
+      <Filter>Shaders\PixelShaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
+      <Filter>Shaders\VertexShaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\VertexShaderOutput.vsh">
+      <Filter>Shaders\VertexShaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
+      <Filter>Shaders\VertexShaders</Filter>
     </None>
   </ItemGroup>
 </Project>

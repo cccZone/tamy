@@ -10,13 +10,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 Camera::Camera(const std::string& name, Renderer& renderer)
-      : Node(name),
-      m_renderer(renderer),
-      m_fov(D3DXToRadian(60)),
-      m_aspectRatio(1.3333f),
-      m_nearZPlane(1.01f),
-      m_farZPlane(5000.0f),
-      m_mtxProjectionDirty(true)
+      : Node(name)
+      , m_renderer(renderer)
+      , m_fov( D3DXToRadian( 60 ) )
+      , m_aspectRatio(1.3333f)
+      , m_nearPlaneWidth( 1 )
+      , m_nearPlaneHeight( 1 / 1.3333f )
+      , m_nearZPlane(1.01f)
+      , m_farZPlane(5000.0f)
+      , m_mtxProjectionDirty(true)
 {
    m_renderer.attachObserver(*this);
 
@@ -100,6 +102,9 @@ void Camera::setNearPlaneDimensions(float width, float height)
 {
    if (width < 0) width = 0;
    if (height < 1) height = 1;
+
+   m_nearPlaneWidth = width;
+   m_nearPlaneHeight = height;
 
    m_aspectRatio = width / height; 
    m_mtxProjectionDirty = true;

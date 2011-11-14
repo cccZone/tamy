@@ -4,6 +4,7 @@
 #include "core\File.h"
 #include "dx9-Renderer\DXErrorParser.h"
 #include <stdexcept>
+#include "dx9-Renderer/DX9ShaderIncludeLoader.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,11 +88,12 @@ void DX9VertexShader::initialize()
 
    ID3DXBuffer* shaderBuf = NULL;
    ID3DXBuffer* errorsBuf = NULL;
+   DX9ShaderIncludeLoader includesLoader;
    HRESULT res = D3DXCompileShader(
       shaderContents.c_str(), 
       shaderContents.length(),
       NULL,                            // defines
-      NULL,                            // includes
+      &includesLoader,
       "main",                          // entry function
       shaderProfile, 
       flags,

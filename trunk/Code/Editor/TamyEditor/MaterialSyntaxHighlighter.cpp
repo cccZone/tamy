@@ -16,7 +16,8 @@ MaterialSyntaxHighlighter::MaterialSyntaxHighlighter( QTextDocument* editedDoc )
       << "\\bfloat\\b" << "\\bfloat2\\b" << "\\bfloat3\\b" << "\\bfloat4\\b"
       << "\\bfloat3x3\\b" << "\\bfloat3x4\\b" << "\\bfloat4x3\\b" << "\\bfloat4x4\\b"
       << "\\bint\\b" << "\\bint2\\b" << "\\bint3\\b" << "\\bint4\\b"
-      << "\\btexture\\b" << "\\bvoid\\b" << "\\bsampler\\b" << "\\bsampler_state\\b";
+      << "\\btexture\\b" << "\\bvoid\\b" << "\\bsampler\\b" << "\\bsampler_state\\b" 
+      << "\\bhalf\\b" << "\\breturn\\b" << "\\bif\\b" << "\\belse\\b" << "\\bfor\\b";
    foreach ( const QString &pattern, keywordPatterns ) 
    {
       rule.pattern = QRegExp( pattern );

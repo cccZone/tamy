@@ -65,8 +65,6 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: create the node in a memory pool - will be much faster
-
 StateTreeNode* RPSceneRenderNode::buildStateTree( const Array< SpatialRepresentation* >& visibleElems ) const
 {
    StateTreeNode* root = new StateTreeNode( NULL );

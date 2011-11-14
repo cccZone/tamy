@@ -39,6 +39,12 @@ RenderingPipelineLayout::RenderingPipelineLayout( const std::string& path )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+RenderingPipelineLayout::~RenderingPipelineLayout()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void RenderingPipelineLayout::onResourceSave( ResourcesManager& mgr )
 {
 }

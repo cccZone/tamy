@@ -5,6 +5,7 @@
 #include "core\Assert.h"
 #include "dx9-Renderer\DXErrorParser.h"
 #include <stdexcept>
+#include "dx9-Renderer/DX9ShaderIncludeLoader.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,11 +63,12 @@ DX9PixelShader::DX9PixelShader( const DX9Renderer& renderer, const PixelShader& 
 
    ID3DXBuffer* shaderBuf = NULL;
    ID3DXBuffer* errorsBuf = NULL;
+   DX9ShaderIncludeLoader includesLoader;
    HRESULT res = D3DXCompileShader(
       shaderContents.c_str(), 
       shaderContents.length(),
       NULL,                            // defines
-      NULL,                            // includes
+      &includesLoader,
       m_shader.getEntryFunctionName().c_str(),
       shaderProfile, 
       flags,

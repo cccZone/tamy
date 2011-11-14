@@ -5,6 +5,7 @@
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\VertexShader.h"
 #include "core-Renderer\Renderer.h"
+#include "core-Renderer\Defines.h"
 #include "core-MVC.h"
 #include "core.h"
 
@@ -155,7 +156,7 @@ void SkinnedGeometry::onComponentAdded( Component< Model >& component )
    {
       // load the shader
       ResourcesManager& rm = comp->get();
-      static const char* shaderName = "Renderer/Shaders/SkinnedGeometry.vsh";
+      static const char* shaderName = SHADERS_DIR "SkinnedGeometry.vsh";
       m_vertexShader = dynamic_cast< VertexShader* >( rm.findResource( shaderName ) );
       if ( !m_vertexShader )
       {

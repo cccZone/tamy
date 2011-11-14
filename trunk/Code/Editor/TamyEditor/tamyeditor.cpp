@@ -38,6 +38,9 @@ void TamyEditor::destroyInstance()
 {
    delete s_theInstance;
    s_theInstance = NULL;
+
+   // delete all resources
+   ResourcesManager::getInstance().reset();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -85,17 +88,27 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 TamyEditor::~TamyEditor()
 {
    // remove all editors
-   int editorsCount = m_editorsTabs->children().size();
+   std::vector< ResourceEditor* > editorsToDelete;
+   unsigned int editorsCount = m_editorsTabs->count();
    for ( unsigned int i = 0; i < editorsCount; ++i )
    {
       QWidget* editorWidget = m_editorsTabs->widget( i );
       ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
       if ( editor )
       {
-         editor->deinitialize();
+         editor->deinitialize( true );
+         editorsToDelete.push_back( editor );
       }
    }
+   m_editorsTabs->clear();
 
+   editorsCount = editorsToDelete.size();
+   for ( unsigned int i = 0; i < editorsCount; ++i )
+   {
+      delete editorsToDelete[i];
+   }
+
+   // delete the subsystems
    delete m_timeController; m_timeController = NULL;
    delete m_mainTime; m_mainTime = NULL;
    delete m_mainTimeSlot; m_mainTimeSlot = NULL;
@@ -113,6 +126,7 @@ void TamyEditor::setupResourcesManager( const char* fsRoot )
    Filesystem* fs = new Filesystem( fsRoot );
    fs->setShortcut( "editorIcons", "/Editor/Icons/" );
    resMgr.setFilesystem( fs );
+   fs->attach( *this );
 
    // register external resources
    resMgr.addLoader< BVHLoader >( "bvh" );
@@ -305,9 +319,37 @@ void TamyEditor::closeResourceEditor( int editorTabIdx )
    ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
    if ( editor )
    {
-      editor->deinitialize();
+      editor->deinitialize( true );
       delete editor;
    }
  }
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::onDirChanged( const std::string& dir )
+{
+   const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+
+   // if any of the resource editors are editing a deleted resource, close them
+   // immediately
+   int editorsCount = m_editorsTabs->count();
+   for ( int i = 0; i < editorsCount; ++i )
+   {
+      QWidget* editorWidget = m_editorsTabs->widget( i );
+      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
+      if ( !editor )
+      {
+         continue;
+      }
+
+      QString resourcePath = editor->getLabel();
+
+      if ( editor && resourcePath.contains( dir.c_str() ) && !fs.doesExist( resourcePath.toStdString() ) )
+      {
+         editor->deinitialize( false );
+         m_editorsTabs->removeTab( i-- );
+      }
+   }
+}
 
 ///////////////////////////////////////////////////////////////////////////////

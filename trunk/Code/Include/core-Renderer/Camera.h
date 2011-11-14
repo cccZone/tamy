@@ -1,3 +1,5 @@
+/// @file   core-Renderer/Camera.h
+/// @brief  3D camera
 #pragma once
 
 #include "core\Node.h"
@@ -20,8 +22,7 @@ enum RendererOps;
  * A camera is a kind of Node that allows to set 
  * camera specific stuff and represents a camera that watches the scene
  */
-class Camera : public Node,
-               public Observer<Renderer, RendererOps>
+class Camera : public Node, public Observer<Renderer, RendererOps>
 {
 private:
    Renderer& m_renderer;
@@ -30,6 +31,8 @@ private:
    float m_aspectRatio;
    float m_nearZPlane;
    float m_farZPlane;
+   float m_nearPlaneWidth;
+   float m_nearPlaneHeight;
 
    D3DXMATRIX m_mtxIdentity;
    D3DXMATRIX m_mtxView;
@@ -46,21 +49,53 @@ public:
     * @param name       camera name
     * @param renderer   main renderer the application uses
     */
-   Camera(const std::string& name, Renderer& renderer);
+   Camera( const std::string& name, Renderer& renderer );
    ~Camera();
 
-   void setProjectionCalculator(ProjectionCalculator* projCalc);
+   /**
+    * Sets a new projection calculator ( with perspective, orthogonal etc. )
+    *
+    * @param projCalc
+    */
+   void setProjectionCalculator( ProjectionCalculator* projCalc );
 
+   /**
+    * Retrieves current view matrix.
+    */
    const D3DXMATRIX& getViewMtx();
 
+   /**
+    * Retrieves current projection matrix.
+    */
    const D3DXMATRIX& getProjectionMtx();
 
-   void setNearPlaneDimensions(float width, float height);
-   float getAspectRatio() const {return m_aspectRatio;}
+   /**
+    * Sets new near plane dimensions ( values in range (0,1) )
+    *
+    * @param width
+    * @param height
+    */
+   void setNearPlaneDimensions( float width, float height );
+
+   /**
+    * Retrieves the width of the near plane.
+    */
+   inline float getNearPlaneWidth() const { return m_nearPlaneWidth; }
+
+   /**
+    * Retrieves the height of the near plane.
+    */
+   inline float getNearPlaneHeight() const { return m_nearPlaneHeight; }
+
+   /**
+    * Retrieves near plane aspect ration.
+    */
+   inline float getAspectRatio() const {return m_aspectRatio;}
 
    void setClippingPlanes(float nearZPlane, float farZPlane);
-   float getNearClippingPlane() const {return m_nearZPlane;}
-   float getFarClippingPlane() const {return m_farZPlane;}
+   inline float getNearClippingPlane() const {return m_nearZPlane;}
+   inline float getFarClippingPlane() const {return m_farZPlane;}
+
 
    /**
     * Sets the camera so that it looks at the specified node from

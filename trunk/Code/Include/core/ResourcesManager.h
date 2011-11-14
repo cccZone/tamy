@@ -8,6 +8,7 @@
 #include <string>
 #include "core\Serializer.h"
 #include "core\ComponentsManager.h"
+#include "core\Filesystem.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,7 +29,7 @@ class FilesystemScanner;
  * Since there can only be a single instance of a resource manager ( there's no point
  * in having two instances managing resources ), this class is made into a singleton
  */
-class ResourcesManager : public ComponentsManager< ResourcesManager >
+class ResourcesManager : public ComponentsManager< ResourcesManager >, public FilesystemListener
 {
 private:
    template< typename T >
@@ -188,6 +189,11 @@ protected:
    // -------------------------------------------------------------------------
    void onComponentAdded( Component< ResourcesManager >& component );
    void onComponentRemoved( Component< ResourcesManager >& component );
+
+   // -------------------------------------------------------------------------
+   // FilesystemListener implementation
+   // -------------------------------------------------------------------------
+   void onDirChanged( const std::string& dir );
 
    /**
     * Releases the resource from the memory, leaving it untouched in the filesystem.

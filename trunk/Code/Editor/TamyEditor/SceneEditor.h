@@ -66,7 +66,7 @@ protected:
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
    void onInitialize();
-   void onDeinitialize();
+   void onDeinitialize( bool saveProgress );
 
 private:
    void runScene();

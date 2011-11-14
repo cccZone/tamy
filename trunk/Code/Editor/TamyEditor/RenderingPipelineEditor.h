@@ -51,7 +51,7 @@ public:
    // ResourceEditor implementation
    // -------------------------------------------------------------------------
    void onInitialize();
-   void onDeinitialize();
+   void onDeinitialize( bool saveProgress );
 
 public slots:
    void save();

@@ -6,6 +6,7 @@
 #include "core-Renderer\Geometry.h"
 #include "core-Renderer\Renderer.h"
 #include "core-MVC\SpatialEntity.h"
+#include "core-Renderer\Defines.h"
 #include "core-MVC.h"
 #include "core.h"
 
@@ -127,7 +128,7 @@ void SingleTextureEffect::onComponentAdded( Component< Model >& component )
    {
       // load the shader
       ResourcesManager& rm = comp->get();
-      static const char* shaderName = "/Renderer/Shaders/SingleTextureEffect.fx";
+      static const char* shaderName = SHADERS_DIR "SingleTextureEffect.fx";
       m_effect = dynamic_cast< EffectShader* >( rm.findResource( shaderName ) );
       if ( !m_effect )
       {

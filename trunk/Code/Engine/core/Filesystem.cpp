@@ -2,6 +2,7 @@
 #include "core\File.h"
 #include "core\StringUtils.h"
 #include <stdexcept>
+#include <algorithm>
 #include <list>
 
 
@@ -113,21 +114,21 @@ bool Filesystem::doesExist(const std::string& fileName) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-File* Filesystem::open(const std::string& fileName, 
-                       const std::ios_base::openmode mode) const
+File* Filesystem::open( const std::string& fileName, const std::ios_base::openmode mode ) const
 {
    std::string fullFileName = m_rootDir + fileName;
-   File* file = new File(fullFileName, mode);
-
-   // we're writing to a file - that changes the fs contents, therefore
-   // send out the notifications
-   if ( ( mode & std::ios_base::out ) == std::ios_base::out )
-   {
-      std::string dir = extractDir( fileName );
-      notifyDirChange( dir );
-   }
+   File* file = new File( *this, fullFileName, mode );
 
    return file;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::onFileEditionCompleted( const std::string& fileName ) const
+{
+   std::string dir = extractDir( fileName );
+   dir = toRelativePath( dir );
+   notifyDirChange( dir );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -411,14 +412,21 @@ std::string Filesystem::getShortcut( const std::string& shortcut ) const
 
 void Filesystem::attach( FilesystemListener& listener )
 {
-   m_listeners.insert( &listener );
+   // check for duplicates
+   if ( std::find( m_listeners.begin(), m_listeners.end(), &listener ) != m_listeners.end() )
+   {
+      // such a listener already exists
+      return;
+   }
+
+   m_listeners.push_back( &listener );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Filesystem::detach( FilesystemListener& listener )
 {
-   Listeners::iterator it = m_listeners.find( &listener );
+   Listeners::iterator it = std::find( m_listeners.begin(), m_listeners.end(), &listener );
    if ( it != m_listeners.end() )
    {
       m_listeners.erase( it );
@@ -429,8 +437,7 @@ void Filesystem::detach( FilesystemListener& listener )
 
 void Filesystem::notifyDirChange( const std::string& dir ) const
 {
-   for ( Listeners::const_iterator it = m_listeners.begin();
-         it != m_listeners.end(); ++it )
+   for ( Listeners::const_iterator it = m_listeners.begin(); it != m_listeners.end(); ++it )
    {
       ( *it )->onDirChanged( dir );
    }

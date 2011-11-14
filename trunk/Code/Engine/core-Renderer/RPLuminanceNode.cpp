@@ -5,6 +5,7 @@
 #include "core-Renderer/TextureSockets.h"
 #include "core-Renderer/FloatSockets.h"
 #include "core-Renderer/RenderTarget.h"
+#include "core-Renderer/Defines.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,13 +61,13 @@ void RPLuminanceNode::onInitialize( RenderingPipelineMechanism& host ) const
 
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   data[ m_greyscalePass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Luminance_GreyScaleDownSample.psh" );
-   data[ m_greyscalePass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Luminance.psh", "GreyScaleDownSample" );
+   data[ m_greyscalePass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Luminance_GreyScaleDownSample.psh" );
+   data[ m_greyscalePass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Luminance.psh", "GreyScaleDownSample" );
    data[ m_greyscalePass ]->getParams().m_writeToZBuffer = false;
    data[ m_greyscalePass ]->getParams().m_useZBuffer = false;
 
-   data[ m_downSamplePass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Luminance_DownSample3x3.psh" );
-   data[ m_downSamplePass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Luminance.psh", "DownSample3x3" );
+   data[ m_downSamplePass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Luminance_DownSample3x3.psh" );
+   data[ m_downSamplePass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Luminance.psh", "DownSample3x3" );
    data[ m_downSamplePass ]->getParams().m_writeToZBuffer = false;
    data[ m_downSamplePass ]->getParams().m_useZBuffer = false;
 

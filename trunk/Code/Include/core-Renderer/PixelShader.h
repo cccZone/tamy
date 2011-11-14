@@ -124,7 +124,6 @@ public:
    static ShaderParam< PixelShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
 };
 
-// TODO: !!!!!!!!!!!!!! Pixel Shader, as a resource, HAS TO BE constant - remove the non-const 'getParams' method - put it somewhere else, in the render command perhaps
 ///////////////////////////////////////////////////////////////////////////////
 
 /**

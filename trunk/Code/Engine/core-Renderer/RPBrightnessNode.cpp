@@ -5,6 +5,7 @@
 #include "core-Renderer/TextureSockets.h"
 #include "core-Renderer/ShaderTexture.h"
 #include "core-Renderer/RenderTarget.h"
+#include "core-Renderer/Defines.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,8 +57,8 @@ void RPBrightnessNode::onInitialize( RenderingPipelineMechanism& host ) const
 
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   data[ m_brightnessPass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Postprocess_BrightPassDownSample.psh" );
-   data[ m_brightnessPass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Postprocess.psh", "BrightPassDownSample" );
+   data[ m_brightnessPass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Postprocess_BrightPassDownSample.psh" );
+   data[ m_brightnessPass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Postprocess.psh", "BrightPassDownSample" );
    data[ m_brightnessPass ]->getParams().m_writeToZBuffer = false;
    data[ m_brightnessPass ]->getParams().m_useZBuffer = false;
 

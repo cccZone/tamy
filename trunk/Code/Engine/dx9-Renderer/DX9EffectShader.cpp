@@ -22,9 +22,6 @@ void RCBindEffect::execute( Renderer& renderer )
    // begin the rendering process
    unsigned int passesCount;
    dxEffect->Begin( &passesCount, 0 );
-
-   // TODO: implement the multi-pass support in the renderer
-   // dxEffect->BeginPass(passIdx); dxEffect->EndPass();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

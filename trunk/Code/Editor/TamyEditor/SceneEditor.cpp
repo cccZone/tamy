@@ -26,30 +26,18 @@ SceneEditor::SceneEditor( Model& scene )
    , m_actionRun( NULL )
    , m_sceneWidget( NULL )
    , m_sceneTreeViewer( NULL )
-   , m_selectionManager( new SelectionManager() )
+   , m_selectionManager( NULL )
    , m_playing( false )
    , m_sceneObjectsManipulator( NULL )
    , m_objectsManipulationMode( NTM_TRANSLATE )
 {
-   m_scene.attach( *m_selectionManager );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SceneEditor::~SceneEditor()
 {
-   // gonna get disposed of by the rendering widget
-   m_sceneObjectsManipulator = NULL;
 
-   if ( m_sceneTreeViewer )
-   {
-      m_scene.detach( *m_sceneTreeViewer );
-   }
-
-   // dispose of the selection manager
-   m_scene.detach( *m_selectionManager );
-   delete m_selectionManager;
-   m_selectionManager = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,6 +48,10 @@ void SceneEditor::onInitialize()
    
    TimeController& timeController = TamyEditor::getInstance().getTimeController();
    m_sceneTrack = &timeController.add( "SceneEditor" );
+
+   // create a selection manager
+   m_selectionManager = new SelectionManager();
+   m_scene.attach( *m_selectionManager );
 
    // initialize user interface
    ResourcesManager& resMgr = ResourcesManager::getInstance();
@@ -187,10 +179,25 @@ void SceneEditor::onInitialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneEditor::onDeinitialize()
+void SceneEditor::onDeinitialize( bool saveProgress )
 {
    // stop any scene that may be running
    stopScene();
+
+   // detach all active scene listeners
+   if ( m_sceneTreeViewer )
+   {
+      m_scene.detach( *m_sceneTreeViewer );
+   }
+   if ( m_selectionManager )
+   {
+      m_scene.detach( *m_selectionManager );
+      delete m_selectionManager;
+      m_selectionManager = NULL;
+   }
+
+   // gonna get disposed of by the rendering widget
+   m_sceneObjectsManipulator = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

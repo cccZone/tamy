@@ -97,6 +97,7 @@
     <ClCompile Include="DX9RenderTarget.cpp" />
     <ClCompile Include="DX9EffectShader.cpp" />
     <ClCompile Include="DX9RenderTargetResourcesStorage.cpp" />
+    <ClCompile Include="DX9ShaderIncludeLoader.cpp" />
     <ClCompile Include="DX9ShaderParamBool.cpp" />
     <ClCompile Include="DX9ShaderParamFloat.cpp" />
     <ClCompile Include="DX9ShaderParamFloatArray.cpp" />
@@ -141,6 +142,7 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShader.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DXErrorParser.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderIncludeLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core-Renderer\core-Renderer.vcxproj">
@@ -161,15 +163,13 @@
     <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh">
       <FileType>Document</FileType>
     </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\SingleTextureEffect.fx">
-      <FileType>Document</FileType>
-    </None>
     <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
       <FileType>Document</FileType>
     </None>
     <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
       <FileType>Document</FileType>
     </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\VertexShaderOutput.vsh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

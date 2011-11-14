@@ -31,6 +31,7 @@ public:
     * @param path
     */
    RenderingPipelineLayout( const std::string& path = "" );
+   ~RenderingPipelineLayout();
 
    /**
     * Returns a rendering pipeline the layout edits.
