@@ -64,7 +64,7 @@ class Filesystem
 {
 private:
    typedef std::map< std::string, std::string > Shortcuts;
-   typedef std::set< FilesystemListener* >   Listeners;
+   typedef std::vector< FilesystemListener* >   Listeners;
 
 private:
    std::string    m_rootDir;
@@ -249,6 +249,16 @@ public:
     * @param relativeFilePath
     */
    std::string toAbsolutePath( const std::string& relativeFilePath ) const;
+
+protected:
+   friend class File;
+
+   /**
+    * Called when a file that was opened for edition gets closed.
+    *
+    * @param fileName      name of the edited file
+    */
+   void onFileEditionCompleted( const std::string& fileName ) const;
 
 private:
    void notifyDirChange( const std::string& dir ) const;

@@ -54,8 +54,6 @@ public:
 template< typename T >
 class TRenderState : public RenderState
 {
-   // TODO: switch dynamic_casts to RTTI once the functionality is stable
-
 public:
    // -------------------------------------------------------------------------
    // RenderStat implementation

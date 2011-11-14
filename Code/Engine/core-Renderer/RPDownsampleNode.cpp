@@ -4,6 +4,7 @@
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/TextureSockets.h"
 #include "core-Renderer/RenderTarget.h"
+#include "core-Renderer/Defines.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,8 +54,8 @@ void RPDownsampleNode::onInitialize( RenderingPipelineMechanism& host ) const
 
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   data[ m_downsamplePass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/Postprocess_DownSample4x4.psh" );
-   data[ m_downsamplePass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/Postprocess.psh", "DownSample4x4" );
+   data[ m_downsamplePass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Postprocess_DownSample4x4.psh" );
+   data[ m_downsamplePass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Postprocess.psh", "DownSample4x4" );
    data[ m_downsamplePass ]->getParams().m_writeToZBuffer = false;
    data[ m_downsamplePass ]->getParams().m_useZBuffer = false;
 

@@ -3,6 +3,7 @@
 #include "core-Renderer\VertexShader.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Renderer.h"
+#include "core-Renderer\Defines.h"
 #include "core-MVC.h"
 #include "core.h"
 
@@ -74,7 +75,7 @@ void StaticGeometry::onComponentAdded( Component< Model >& component )
    {
       // load the shader
       ResourcesManager& rm = comp->get();
-      static const char* shaderName = "Renderer/Shaders/StaticGeometry.vsh";
+      static const char* shaderName = SHADERS_DIR "StaticGeometry.vsh";
       m_vertexShader = dynamic_cast< VertexShader* >( rm.findResource( shaderName ) );
       if ( !m_vertexShader )
       {

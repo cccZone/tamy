@@ -18,8 +18,6 @@ class ResourcesManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: setting the renderState in case based on the texture used etc.
-
 /**
 * This effect will render the geometry using a single texture
 * and a material definition.

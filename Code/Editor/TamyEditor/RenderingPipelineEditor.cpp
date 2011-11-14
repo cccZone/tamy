@@ -27,25 +27,6 @@ RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& rende
 
 RenderingPipelineEditor::~RenderingPipelineEditor()
 {
-   if ( m_blockPropertiesLayout )
-   {
-      m_blockPropertiesLayout->removeWidget( m_blockPropertiesRootView );
-      m_blockPropertiesLayout = NULL;
-   }
-
-   delete m_blockPropertiesRootView;
-   m_blockPropertiesRootView = NULL;
-
-   if ( m_nodePropertiesLayout )
-   {
-      m_nodePropertiesLayout->removeWidget( m_nodePropertiesRootView );
-      m_nodePropertiesLayout = NULL;
-   }
-
-   delete m_nodePropertiesRootView;
-   m_nodePropertiesRootView = NULL;
-
-   m_renderTargetsList = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -105,6 +86,38 @@ void RenderingPipelineEditor::onInitialize()
 
    // show the resource
    show();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::onDeinitialize( bool saveProgress )
+{
+   if ( saveProgress )
+   {
+      save();
+   }
+
+   m_ui.graphWidget->setScene( NULL );
+
+   if ( m_blockPropertiesLayout )
+   {
+      m_blockPropertiesLayout->removeWidget( m_blockPropertiesRootView );
+      m_blockPropertiesLayout = NULL;
+   }
+
+   delete m_blockPropertiesRootView;
+   m_blockPropertiesRootView = NULL;
+
+   if ( m_nodePropertiesLayout )
+   {
+      m_nodePropertiesLayout->removeWidget( m_nodePropertiesRootView );
+      m_nodePropertiesLayout = NULL;
+   }
+
+   delete m_nodePropertiesRootView;
+   m_nodePropertiesRootView = NULL;
+
+   m_renderTargetsList = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -196,13 +209,6 @@ void RenderingPipelineEditor::onShowContextMenu( const QPoint& pos )
    QMenu* contextMenu = new QMenu( m_ui.graphWidget );
    m_renderingPipelineLayout.createContextMenu( contextMenu, m_ui.graphWidget->mapToScene( pos ) );
    contextMenu->popup( m_ui.graphWidget->mapToGlobal( pos ) );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineEditor::onDeinitialize()
-{
-   save();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -15,7 +15,7 @@ ResourcesManager::ResourcesManager()
 : m_filesystem( new Filesystem() )
 , m_progressObserverCreator( NULL )
 {
-   
+   m_filesystem->attach( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,6 +31,7 @@ ResourcesManager::~ResourcesManager()
 
    delete m_progressObserverCreator; m_progressObserverCreator = NULL;
 
+   m_filesystem->detach( *this );
    delete m_filesystem; m_filesystem = NULL;
 
    reset();
@@ -71,8 +72,13 @@ void ResourcesManager::setFilesystem( Filesystem* filesystem )
    // we need to delete all resources along with changing the filesystem
    reset();
 
+   if ( m_filesystem )
+   {
+      m_filesystem->detach( *this );
+   }
    delete m_filesystem;
    m_filesystem = filesystem;
+   m_filesystem->attach( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -307,10 +313,41 @@ void ResourcesManager::onComponentAdded( Component< ResourcesManager >& componen
 
 void ResourcesManager::onComponentRemoved( Component< ResourcesManager >& component )
 {
-   for ( ResourcesMap::iterator it = m_resources.begin(); 
-      it != m_resources.end(); ++it )
+   for ( ResourcesMap::iterator it = m_resources.begin(); it != m_resources.end(); ++it )
    {
       it->second->onComponentRemoved( component );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesManager::onDirChanged( const std::string& dir )
+{
+   std::vector< std::string > entriesToRemove;
+
+   // go through the registered resources and see if any of those 
+   // still exist - if they don't remove them from the system
+   for ( ResourcesMap::iterator it = m_resources.begin(); it != m_resources.end(); ++it )
+   {
+      const std::string& path = it->first;
+      if ( path.find( dir ) != std::string::npos )
+      {
+         bool doesResourceExist = m_filesystem->doesExist( path );
+         if ( !doesResourceExist )
+         {
+            entriesToRemove.push_back( path );
+         }
+      }
+   }
+
+   // remove the removed resources entries from the map
+   unsigned int count = entriesToRemove.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      ResourcesMap::iterator it = m_resources.find( entriesToRemove[i] );
+      Resource* res = it->second;
+      m_resources.erase( it );
+      delete res;
    }
 }
 

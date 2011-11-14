@@ -7,6 +7,7 @@
 #include "core-Renderer/RenderingView.h"
 #include "core-Renderer/SpatialRepresentation.h"
 #include "core-Renderer/PixelShader.h"
+#include "core-Renderer/Defines.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,7 +71,8 @@ void RPDepthNormalsNode::onUpdate( RenderingPipelineMechanism& host ) const
    RenderingView& sceneRenderer = host.getSceneRenderer( m_renderedSceneId );
 
    new ( renderer() ) RCActivateRenderTarget( trg );
-   sceneRenderer.render( *rtData[ m_renderState ] );
+   DepthNormalsRenderState* builder = rtData[ m_renderState ];
+   sceneRenderer.render( *builder );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,15 +82,20 @@ void RPDepthNormalsNode::onUpdate( RenderingPipelineMechanism& host ) const
 RPDepthNormalsNode::DepthNormalsRenderState::DepthNormalsRenderState()
    : m_shader( NULL )
 {
-   // TODO: !!!!!!!!!!!!! load the pixel shader for the depth normals encoding 
-   // TODO: !!!!!!!!!!!!! add the normals & depth issuing to vertex shaders
+   ResourcesManager& mgr = ResourcesManager::getInstance();
+
+   Resource& psRes = mgr.create( SHADERS_DIR "RenderingPipeline/DepthNormals.tpsh" );
+   m_shader = DynamicCast< PixelShader >( &psRes );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void RPDepthNormalsNode::DepthNormalsRenderState::onPreRender( Renderer& renderer )
 {
-   new ( renderer() ) RCBindPixelShader( *m_shader );
+   RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
+   // we have a 2-byte precision at our disposal - so let's map the distance 
+   // as far as 1024 meters
+   comm->setFloat( "g_FarZ", 1024 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,8 +106,6 @@ void RPDepthNormalsNode::DepthNormalsRenderState::onPostRender( Renderer& render
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-// TODO: create the node in a memory pool - will be much faster
 
 StateTreeNode* RPDepthNormalsNode::DepthNormalsRenderState::buildStateTree( const Array< SpatialRepresentation* >& visibleElems ) const
 {

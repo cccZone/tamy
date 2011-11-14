@@ -41,10 +41,12 @@ public:
    /**
     * Called when the editor is about to be destroyed, or when we generally
     * want it to save its state, 'cause it may be killed.
+    *
+    * @param saveProgress     is it safe for the editor to save its contents?
     */
-   void deinitialize() 
+   void deinitialize( bool saveProgress ) 
    {
-      onDeinitialize();
+      onDeinitialize( saveProgress );
    }
 
    /**
@@ -66,7 +68,7 @@ protected:
    /**
     * Editor specific deinitialization.
     */
-   virtual void onDeinitialize() = 0;
+   virtual void onDeinitialize( bool saveProgress ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

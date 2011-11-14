@@ -35,7 +35,7 @@ public:
     *
     * @return  C-style memory buffer
     */
-   T* getBuffer();
+   const T* getBuffer();
 
    /**
     * Access operator to buffer elements.

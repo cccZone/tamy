@@ -1,13 +1,5 @@
-//--------------------------------------------------------------------------------------
-// Vertex shader output structure
-//--------------------------------------------------------------------------------------
-struct VS_OUTPUT
-{
-    float4 Position     : POSITION;   // vertex position 
-	float2 TextureUV    : TEXCOORD0;  // vertex texture coords 
-    float3 Normal       : TEXCOORD1;
-    float3 ViewPosition : TEXCOORD2;
-};
+// StaticGeometry.vsh
+#include "VertexShaderOutput.vsh"
 
 //--------------------------------------------------------------------------------------
 // Global constants
@@ -31,9 +23,9 @@ VS_OUTPUT main( float4 vPos : POSITION,
 
     // Transform normal to view space
     Output.Normal = mul(vNormal, (float3x3)g_mWorldView);
-    
+
     // Just copy the texture coordinate through
-    Output.TextureUV = vTexCoord0; 
+    Output.TextureUV = vTexCoord0;
     
     return Output;    
 }

@@ -179,6 +179,7 @@ void TamySceneWidget::initialize()
       }
       catch ( std::exception& ex)
       {
+         ASSERT_MSG( false, ( std::string( "RenderPipeline initialization error: ") + ex.what() ).c_str() );
       }
    }
 

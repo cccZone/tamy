@@ -103,6 +103,7 @@
     <ClCompile Include="RPAdapterNode.cpp" />
     <ClCompile Include="RPPostProcessNode.cpp" />
     <ClCompile Include="RPSceneRenderNode.cpp" />
+    <ClCompile Include="RPSSAONode.cpp" />
     <ClCompile Include="RPStartNode.cpp" />
     <ClCompile Include="SceneRenderTreeBuilder.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FloatSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPSSAONode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderTreeBuilder.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h" />

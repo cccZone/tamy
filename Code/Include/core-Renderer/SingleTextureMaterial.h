@@ -17,8 +17,6 @@ class Texture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: setting the renderState in case based on the texture used etc.
-
 /**
  * An atomic object that can be rendered Such an object consists of geometry
  * and effects that render the object in a particular way.

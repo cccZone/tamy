@@ -5,6 +5,7 @@
 #include "core-Renderer/TextureSockets.h"
 #include "core-Renderer/FloatSockets.h"
 #include "core-Renderer/ShaderTexture.h"
+#include "core-Renderer/Defines.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,8 +64,8 @@ void RPHDRNode::onInitialize( RenderingPipelineMechanism& host ) const
 
    // initialize the pixel shader
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-   data[ m_hdrPass ] = new PixelShader( "Renderer/Shaders/RenderingPipeline/HDR.psh" );
-   data[ m_hdrPass ]->loadFromFile( fs, "Renderer/Shaders/RenderingPipeline/HDR.psh", "main" );
+   data[ m_hdrPass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/HDR.psh" );
+   data[ m_hdrPass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/HDR.psh", "main" );
    data[ m_hdrPass ]->getParams().m_writeToZBuffer = false;
    data[ m_hdrPass ]->getParams().m_useZBuffer = false;
 

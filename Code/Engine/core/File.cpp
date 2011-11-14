@@ -1,13 +1,15 @@
 #include "core\File.h"
 #include "core\Assert.h"
+#include "core\Filesystem.h"
 #include <io.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-File::File(const std::string& name, 
-           const std::ios_base::open_mode openMode)
-: m_name(name)
+File::File( const Filesystem& hostFS, const std::string& name, const std::ios_base::open_mode openMode )
+   : m_hostFS( hostFS )
+   , m_name( name )
+   , m_openMode( openMode )
 {
    std::string openModeStr;
 
@@ -49,8 +51,14 @@ File::File(const std::string& name,
 
 File::~File()
 {
-   fclose(m_file);
+   fclose( m_file );
    m_file = NULL;
+
+   // notify the filesystem that the file edition has finished
+   if ( ( m_openMode & std::ios_base::out ) == std::ios_base::out )
+   {
+      m_hostFS.onFileEditionCompleted( m_name );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

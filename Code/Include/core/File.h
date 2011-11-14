@@ -1,12 +1,15 @@
+/// @file   core\File.h
+/// @brief  a single file in a filesystem
 #pragma once
-
-/// @file   core\Fileh.
-/// @brief  filesystem manager
 
 #include <string>
 #include <iostream>
 #include <windows.h>
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+class Filesystem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,18 +19,12 @@
 class File
 {
 private:
-   FILE* m_file;
-   std::string m_name;
+   const Filesystem&          m_hostFS;
+   FILE*                      m_file;
+   std::string                m_name;
+   std::ios_base::open_mode   m_openMode;
 
 public:
-   /**
-    * Constructor.
-    *
-    * @param name       file name
-    * @param openMode   file access privileges
-    */
-   File(const std::string& name, 
-        const std::ios_base::open_mode openMode = std::ios_base::in);
    ~File();
 
    /**
@@ -117,6 +114,19 @@ public:
     * @throws std::runtime_error    if the operation failed
     */
    void setSize(std::size_t newSize);
+
+protected:
+   friend class Filesystem;
+
+   /**
+    * Constructor.
+    *
+    * @param hostFS     host file system
+    * @param name       file name
+    * @param openMode   file access privileges
+    */
+   File( const Filesystem& hostFS, const std::string& name, const std::ios_base::open_mode openMode = std::ios_base::in );
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

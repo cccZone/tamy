@@ -1,13 +1,5 @@
-//--------------------------------------------------------------------------------------
-// Vertex shader output structure
-//--------------------------------------------------------------------------------------
-struct VS_OUTPUT
-{
-    float4 Position     : POSITION;							// vertex position 
-	float2 TextureUV    : TEXCOORD0;
-    float3 Normal       : TEXCOORD1;
-    float3 ViewPosition : TEXCOORD2;
-};
+// SkinnedGeometry.vsh
+#include "VertexShaderOutput.vsh"
 
 //--------------------------------------------------------------------------------------
 // Global constants
@@ -20,13 +12,13 @@ float4x4 g_mProjection;										// Projection matrix
 //--------------------------------------------------------------------------------------
 VS_OUTPUT main( float4 vPos : POSITION, 
                 float3 vNormal : NORMAL,
-				float2 vTexCoord0 : TEXCOORD0,
+				    float2 vTexCoord0 : TEXCOORD0,
                 float4 vBlendWeights : TEXCOORD1,
-				float4 vBlendIndices : BLENDINDICES )
+				    float4 vBlendIndices : BLENDINDICES )
 {
-    VS_OUTPUT Output = (VS_OUTPUT)0;
+   VS_OUTPUT Output = (VS_OUTPUT)0;
 
-    float3 tempPos = vBlendWeights.x * mul(vPos, g_mSkinningMatrices[vBlendIndices.x]);
+   float3 tempPos = vBlendWeights.x * mul(vPos, g_mSkinningMatrices[vBlendIndices.x]);
 	float3 tempNormal = vBlendWeights.x * mul(vNormal, (float3x3)g_mSkinningMatrices[vBlendIndices.x]);
 
 	if ( vBlendIndices.y >= 0 )
@@ -51,10 +43,10 @@ VS_OUTPUT main( float4 vPos : POSITION,
 	Output.Normal = tempNormal;
 
 	// Transform the position from object space to homogeneous projection space
-    Output.Position = mul( float4(Output.ViewPosition, 1.0f), g_mProjection);
+   Output.Position = mul( float4(Output.ViewPosition, 1.0f), g_mProjection);
     
 	// Just copy the texture coordinate through
-    Output.TextureUV = vTexCoord0;
+   Output.TextureUV = vTexCoord0;
 	
-    return Output;    
+   return Output;    
 }

@@ -43,7 +43,7 @@ StreamBuffer<T>::~StreamBuffer()
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename T>
-T* StreamBuffer<T>::getBuffer() 
+const T* StreamBuffer<T>::getBuffer() 
 {
    return m_buffer;
 }

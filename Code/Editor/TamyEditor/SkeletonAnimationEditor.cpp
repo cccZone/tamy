@@ -220,7 +220,7 @@ void SkeletonAnimationEditor::onInitialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkeletonAnimationEditor::onDeinitialize()
+void SkeletonAnimationEditor::onDeinitialize( bool saveProgress )
 {
    TamyEditor& mainEditor = TamyEditor::getInstance();
    TimeController& controller = mainEditor.getTimeController();

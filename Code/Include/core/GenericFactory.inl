@@ -8,15 +8,13 @@
 template<class ENTITY, class REPR_BASE>
 GenericFactory<ENTITY, REPR_BASE>::~GenericFactory()
 {
-   for (CreatorsVec::iterator it = m_solidCreators.begin();
-      it != m_solidCreators.end(); ++it)
+   for ( CreatorsVec::iterator it = m_solidCreators.begin(); it != m_solidCreators.end(); ++it )
    {
       delete *it;
    }
    m_solidCreators.clear();
 
-   for (CreatorsVec::iterator it = m_abstractCreators.begin();
-      it != m_abstractCreators.end(); ++it)
+   for ( CreatorsVec::iterator it = m_abstractCreators.begin(); it != m_abstractCreators.end(); ++it )
    {
       delete *it;
    }
@@ -48,13 +46,12 @@ REPR_BASE* GenericFactory<ENTITY, REPR_BASE>::createSolid(ENTITY& entity)
 {
    const Class& checkedClassType = entity.getVirtualClass();
 
-   for (CreatorsVec::iterator it = m_solidCreators.begin();  
-      it != m_solidCreators.end(); ++it)
+   for ( CreatorsVec::iterator it = m_solidCreators.begin(); it != m_solidCreators.end(); ++it )
    {
       Class& refClassType = (*it)->classType;
-      if (refClassType.isExactlyA(checkedClassType) == true)
+      if ( refClassType.isExactlyA( checkedClassType ) == true )
       {
-         REPR_BASE* rep = (*((*it)->creator))(&entity);
+         REPR_BASE* rep = ( *(*it)->creator )( &entity );
 
          return rep;
       }

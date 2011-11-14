@@ -24,7 +24,7 @@ class QTabWidget;
 /**
 * This is the editor's main window class.
 */
-class TamyEditor : public QMainWindow, public EditorsDocker
+class TamyEditor : public QMainWindow, public EditorsDocker, public FilesystemListener
 {
    Q_OBJECT
 
@@ -121,6 +121,11 @@ public:
    // EditorsDocker implementation
    // -------------------------------------------------------------------------
    void addEditor( ResourceEditor* editor );
+
+   // -------------------------------------------------------------------------
+   // FilesystemListener implementation
+   // -------------------------------------------------------------------------
+   void onDirChanged( const std::string& dir );
 
 public slots:
    void updateMain();

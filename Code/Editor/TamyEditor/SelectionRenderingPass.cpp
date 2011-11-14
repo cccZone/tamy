@@ -103,5 +103,3 @@ void SelectionRenderingPass::render( Renderer& renderer )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-// TODO: !!!!!!!!!! draw the gizmo

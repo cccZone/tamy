@@ -45,8 +45,6 @@ void PixelShader::loadFromFile( const Filesystem& fs, const std::string& fileNam
    {
       throw std::invalid_argument("HLSL vertex shader file doesn't exist");
    }
-   StreamBuffer<byte> buf(*file);
-
    StreamBuffer<char> shaderScript( *file );
    m_script = shaderScript.getBuffer();
    delete file;
