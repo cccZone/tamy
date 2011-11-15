@@ -180,6 +180,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPSSAONode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderTreeBuilder.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderRenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h" />

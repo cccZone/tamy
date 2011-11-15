@@ -28,9 +28,15 @@ public:
     */
    DX9Initializer( IDirect3D9& d3d9 );
 
-   DX9Renderer* createDisplay( DX9Settings& settings, 
-                               HWND hWnd,
-                               ULONG Flags = 0 );
+   /**
+    * Creates a DX9 testing device.
+    */
+   IDirect3DDevice9* createNullDevice();
+
+   /**
+    * Instantiates a DX9 renderer.
+    */ 
+   DX9Renderer* createDisplay( DX9Settings& settings, HWND hWnd, ULONG Flags = 0 );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

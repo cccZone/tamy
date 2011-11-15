@@ -16,6 +16,33 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\ShaderParam.h"
+// ----------------------------------------------------------------------------
+// --> Camera
+// ----------------------------------------------------------------------------
+#include "core-Renderer\Camera.h"
+#include "core-Renderer\ProjectionCalculator.h"
+// ----------------------------------------------------------------------------
+// ----> ProjectionCalculators
+// ----------------------------------------------------------------------------
+#include "core-Renderer\ProjCalc2D.h"
+#include "core-Renderer\ProjCalc3D.h"
+// ----------------------------------------------------------------------------
+// --> Tools
+// ----------------------------------------------------------------------------
+#include "core-Renderer\ShaderCompiler.h"
+// ----------------------------------------------------------------------------
+// --> Resources
+// ----------------------------------------------------------------------------
+#include "core-Renderer\RenderResource.h"
+#include "core-Renderer\RenderResourceStorage.h"
+// ----------------------------------------------------------------------------
+// --> Views
+// ----------------------------------------------------------------------------
+#include "core-Renderer\RenderingView.h"
+#include "core-Renderer\RenderState.h"
+#include "core-Renderer\SceneRenderTreeBuilder.h"
+#include "core-Renderer\SpatialRepresentation.h"
+
 
 // ----------------------------------------------------------------------------
 // Effects
@@ -72,6 +99,7 @@
 #include "core-Renderer\Material.h"
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\PixelShader.h"
+#include "core-Renderer\RenderTarget.h"
 
 // ----------------------------------------------------------------------------
 // Mechanisms
@@ -115,6 +143,7 @@
 #include "core-Renderer/RPDownsampleNode.h"
 #include "core-Renderer/RPHDRNode.h"
 #include "core-Renderer/RPLuminanceNode.h"
+#include "core-Renderer/RPSSAONode.h"
 // ----------------------------------------------------------------------------
 // ---->Sockets
 // ----------------------------------------------------------------------------
@@ -127,18 +156,7 @@
 #include "core-Renderer/DebugDrawCommands.h"
 
 // ----------------------------------------------------------------------------
-// Scene
+// Lighting
 // ----------------------------------------------------------------------------
-#include "core-Renderer\RenderTarget.h"
-
-// ----------------------------------------------------------------------------
-// Tools
-// ----------------------------------------------------------------------------
-#include "core-Renderer\Camera.h"
 #include "core-Renderer\Light.h"
-#include "core-Renderer\ProjectionCalculator.h"
-// ----------------------------------------------------------------------------
-// --> ProjectionCalculators
-// ----------------------------------------------------------------------------
-#include "core-Renderer\ProjCalc2D.h"
-#include "core-Renderer\ProjCalc3D.h"
+

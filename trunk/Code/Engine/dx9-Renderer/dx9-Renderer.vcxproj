@@ -97,6 +97,7 @@
     <ClCompile Include="DX9RenderTarget.cpp" />
     <ClCompile Include="DX9EffectShader.cpp" />
     <ClCompile Include="DX9RenderTargetResourcesStorage.cpp" />
+    <ClCompile Include="DX9ShaderCompiler.cpp" />
     <ClCompile Include="DX9ShaderIncludeLoader.cpp" />
     <ClCompile Include="DX9ShaderParamBool.cpp" />
     <ClCompile Include="DX9ShaderParamFloat.cpp" />

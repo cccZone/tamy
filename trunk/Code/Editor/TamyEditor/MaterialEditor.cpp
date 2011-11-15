@@ -5,8 +5,9 @@
 #include "core-Renderer.h"
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QTextBrowser>
 #include <QMessageBox.h>
-#include <QCloseEvent>
+#include <QTextCursor>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,6 +41,7 @@ void MaterialEditor::onInitialize()
    m_ui.scriptEditor->setPlainText( m_shader.getScript().c_str() );
    m_ui.scriptEditor->setTabStopWidth( 15 );
    connect( m_ui.scriptEditor, SIGNAL( textChanged() ), this, SLOT( onScriptModified() ) );
+   connect( m_ui.scriptEditor, SIGNAL( cursorPositionChanged() ), this, SLOT( onTextCursorMoved() ) );
    m_docModified = false;
 
    // set the properties
@@ -144,13 +146,25 @@ void MaterialEditor::save()
 
 void MaterialEditor::compile()
 {
-   try
+   m_ui.compilationOutput->clear();
+
+   std::string shaderContents = m_ui.scriptEditor->toPlainText().toStdString();
+   if ( shaderContents.empty() )
    {
-      synchronize();
+      m_ui.compilationOutput->setText( "No code to compile" );
+      return;
    }
-   catch ( std::exception& ex )
+
+   ShaderCompiler compiler;
+   bool status = compiler.compilePixelShader( shaderContents, m_shader.getEntryFunctionName().c_str() );
+
+   if ( status )
    {
-      QMessageBox::warning( this, tr("Compilation error"), ex.what(), QMessageBox::Ok );
+      m_ui.compilationOutput->setText( "Compilation successful" );
+   }
+   else
+   {
+      m_ui.compilationOutput->setText( compiler.getLastError().c_str() );
    }
 }
 
@@ -176,6 +190,17 @@ void MaterialEditor::onParamChange()
 void MaterialEditor::onScriptModified()
 {
    m_docModified = true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialEditor::onTextCursorMoved()
+{
+   QTextCursor cursor = m_ui.scriptEditor->textCursor();
+
+   char tmpStr[256];
+   sprintf( tmpStr, "Row: %d, Col: %d", cursor.blockNumber(), cursor.columnNumber() );
+   m_ui.statusBar->setText( tmpStr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

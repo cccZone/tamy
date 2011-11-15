@@ -67,6 +67,8 @@ private:
 
       void initialize( Renderer& renderer );
 
+      void deinitialize( Renderer& renderer );
+
       bool operator==( const Model& model ) const;
 
       void setModel( Model* model );
@@ -185,6 +187,9 @@ private:
     * Caches the nodes for quicker processing.
     */
    void cacheNodes();
+
+   void pipelineInitialization();
+   void pipelineDeinitialization();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

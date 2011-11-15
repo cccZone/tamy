@@ -17,11 +17,24 @@ MaterialSyntaxHighlighter::MaterialSyntaxHighlighter( QTextDocument* editedDoc )
       << "\\bfloat3x3\\b" << "\\bfloat3x4\\b" << "\\bfloat4x3\\b" << "\\bfloat4x4\\b"
       << "\\bint\\b" << "\\bint2\\b" << "\\bint3\\b" << "\\bint4\\b"
       << "\\btexture\\b" << "\\bvoid\\b" << "\\bsampler\\b" << "\\bsampler_state\\b" 
-      << "\\bhalf\\b" << "\\breturn\\b" << "\\bif\\b" << "\\belse\\b" << "\\bfor\\b";
+      << "\\bhalf\\b" << "\\breturn\\b" << "\\bif\\b" << "\\belse\\b" << "\\bfor\\b"
+      << "\\buniform\\b" << "\\bstatic\\b";
    foreach ( const QString &pattern, keywordPatterns ) 
    {
       rule.pattern = QRegExp( pattern );
       rule.format = m_keywordFormat;
+      m_highlightingRules.append( rule );
+   }
+
+   QBrush specialKeywordsBrush( QColor( 200, 64, 52 ) );
+   m_specialKeywordFormat.setForeground( specialKeywordsBrush );
+   m_specialKeywordFormat.setFontWeight( QFont::Bold );
+   QStringList specialKeywordPatterns;
+   specialKeywordPatterns << "\\b#define\\b" << "\\b#include\\b" << "\\bin\\b" << "\\bout\\b";
+   foreach ( const QString &pattern, specialKeywordPatterns ) 
+   {
+      rule.pattern = QRegExp( pattern );
+      rule.format = m_specialKeywordFormat;
       m_highlightingRules.append( rule );
    }
 
