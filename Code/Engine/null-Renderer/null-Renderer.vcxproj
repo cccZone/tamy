@@ -19,6 +19,7 @@
     <ClCompile Include="NullPixelShader.cpp" />
     <ClCompile Include="NullRenderingPipelineMechanism.cpp" />
     <ClCompile Include="NullRenderTarget.cpp" />
+    <ClCompile Include="NullShaderCompiler.cpp" />
     <ClCompile Include="NullShaderParamBool.cpp" />
     <ClCompile Include="NullShaderParamFloat.cpp" />
     <ClCompile Include="NullShaderParamFloatArray.cpp" />

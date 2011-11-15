@@ -7,12 +7,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{81a310df-1a84-43cb-ad7c-0164a55459ed}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tools">
-      <UniqueIdentifier>{ec716647-fce2-4f1a-a57b-7417ca64819e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Tools\ProjectionCalculators">
-      <UniqueIdentifier>{748a440c-5adb-4c1d-80b1-c3089a381123}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Initialization">
       <UniqueIdentifier>{de1812a5-f234-4156-80c9-4e01c393c2ad}</UniqueIdentifier>
     </Filter>
@@ -82,6 +76,18 @@
     <Filter Include="Core\Resources">
       <UniqueIdentifier>{334e02c4-4c10-4596-a912-36ec0b7ff55e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Camera">
+      <UniqueIdentifier>{35ccab52-69f9-4ecf-b59b-c4d5b5ad5a9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Camera\ProjectionCalculators">
+      <UniqueIdentifier>{748a440c-5adb-4c1d-80b1-c3089a381123}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting">
+      <UniqueIdentifier>{ec716647-fce2-4f1a-a57b-7417ca64819e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Tools">
+      <UniqueIdentifier>{a8533512-26b5-45b6-af11-e62b8e23d0c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -90,17 +96,14 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Tools</Filter>
-    </ClCompile>
     <ClCompile Include="Light.cpp">
-      <Filter>Tools</Filter>
+      <Filter>Lighting</Filter>
     </ClCompile>
     <ClCompile Include="ProjCalc2D.cpp">
-      <Filter>Tools\ProjectionCalculators</Filter>
+      <Filter>Core\Camera\ProjectionCalculators</Filter>
     </ClCompile>
     <ClCompile Include="ProjCalc3D.cpp">
-      <Filter>Tools\ProjectionCalculators</Filter>
+      <Filter>Core\Camera\ProjectionCalculators</Filter>
     </ClCompile>
     <ClCompile Include="DeviceFilter.cpp">
       <Filter>Initialization</Filter>
@@ -256,13 +259,16 @@
     <ClCompile Include="RPSSAONode.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Core\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
       <Filter>Core</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\Light.inl">
-      <Filter>Tools</Filter>
+      <Filter>Lighting</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\LineSegments.inl">
       <Filter>Geometry\Resources</Filter>
@@ -293,20 +299,14 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderingMechanism.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Camera.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Light.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ProjectionCalculator.h">
-      <Filter>Tools</Filter>
+      <Filter>Lighting</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ProjCalc2D.h">
-      <Filter>Tools\ProjectionCalculators</Filter>
+      <Filter>Core\Camera\ProjectionCalculators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ProjCalc3D.h">
-      <Filter>Tools\ProjectionCalculators</Filter>
+      <Filter>Core\Camera\ProjectionCalculators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DeviceFilter.h">
       <Filter>Initialization</Filter>
@@ -507,6 +507,15 @@
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSSAONode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Camera.h">
+      <Filter>Core\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ProjectionCalculator.h">
+      <Filter>Core\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h">
+      <Filter>Core\Tools</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

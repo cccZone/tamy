@@ -19,9 +19,26 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
+D3DXVECTOR4 RPSSAONode::s_sampleDirections[] = {
+   D3DXVECTOR4( -0.5f, -0.5f, -0.5f, 1 ),
+   D3DXVECTOR4(  0.5f, -0.5f, -0.5f, 1 ),
+   D3DXVECTOR4(  0.5f,  0.5f, -0.5f, 1 ),
+   D3DXVECTOR4( -0.5f,  0.5f, -0.5f, 1 ),
+   D3DXVECTOR4( -0.5f, -0.5f,  0.5f, 1 ),
+   D3DXVECTOR4(  0.5f, -0.5f,  0.5f, 1 ),
+   D3DXVECTOR4(  0.5f,  0.5f,  0.5f, 1 ),
+   D3DXVECTOR4( -0.5f,  0.5f,  0.5f, 1 ),
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 RPSSAONode::RPSSAONode()
+   : m_occlusionRadius( 1.0f )
+   , m_noOcclusionThreshold( 1.0f )
+   , m_fullOcclusionThreshold( 0.01f )
+   , m_occlusionPower( 2 )
 {
-   defineInput( new RPTextureInput( "InputTex" ) );
+   defineInput( new RPTextureInput( "Normals&Depth" ) );
    defineOutput( new RPTextureOutput( "Output" ) );
 }
 
@@ -62,11 +79,11 @@ void RPSSAONode::onInitialize( RenderingPipelineMechanism& host ) const
       return;
    }
 
-   Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+   ResourcesManager& rm = ResourcesManager::getInstance();
    Renderer& renderer = host.getRenderer();
    data[ m_renderer ] = &renderer;
 
-   data[ m_ssaoPass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/SSAO.tpsh" );
+   data[ m_ssaoPass ] = DynamicCast< PixelShader >( &rm.create( SHADERS_DIR "RenderingPipeline/SSAO.tpsh" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,7 +117,7 @@ void RPSSAONode::onUpdate( RenderingPipelineMechanism& host ) const
    }
 
    Camera& activeCamera = renderer.getActiveCamera();
-   D3DXVECTOR4 planeSizes( normalsAndDepthBuffer->getWidth(), normalsAndDepthBuffer->getHeight(), activeCamera.getNearPlaneWidth(), activeCamera.getNearPlaneHeight() );
+   D3DXVECTOR4 planeSizes( (float)normalsAndDepthBuffer->getWidth(), (float)normalsAndDepthBuffer->getHeight(), activeCamera.getNearPlaneWidth(), activeCamera.getNearPlaneHeight() );
 
    RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *ssaoPass );
    comm->setTexture( "g_NormalsAndDepthBuffer", *normalsAndDepthBuffer );
@@ -109,8 +126,7 @@ void RPSSAONode::onUpdate( RenderingPipelineMechanism& host ) const
    comm->setFloat( "g_NoOcclusionThreshold", m_noOcclusionThreshold );
    comm->setFloat( "g_FullOcclusionThreshold", m_fullOcclusionThreshold );
    comm->setFloat( "g_OcclusionPower", m_occlusionPower );
-
-   // TODO: set the sampling points 
+   comm->setVec4( "g_SampleDirections", s_sampleDirections, 8 );
 
    // render
    renderQuad( renderer, outputTarget );

@@ -39,6 +39,7 @@ REGISTER_RTTI( RPBrightnessNode );
 REGISTER_RTTI( RPDownsampleNode );
 REGISTER_RTTI( RPHDRNode );
 REGISTER_RTTI( RPLuminanceNode );
+REGISTER_RTTI( RPSSAONode );
 REGISTER_RTTI( RPAdapterNode );
 REGISTER_RTTI( RPNodeSocket );
 REGISTER_RTTI( RPNodeInput );

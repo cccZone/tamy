@@ -7,6 +7,9 @@
     <Filter Include="RenderCommands">
       <UniqueIdentifier>{d84f4ba1-0252-49a2-9cc3-fdffcfee33b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{41c583cf-9e4c-454d-852f-a450cf2ed097}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NullShaderParamBool.cpp">
@@ -80,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="NullRenderingPipelineMechanism.cpp">
       <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullShaderCompiler.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

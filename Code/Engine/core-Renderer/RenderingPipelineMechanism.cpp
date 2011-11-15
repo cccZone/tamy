@@ -173,8 +173,39 @@ void RenderingPipelineMechanism::initialize( Renderer& renderer )
    // initialize the scenes
    for( std::vector< RenderedScene* >::iterator it = m_scenes.begin(); it != m_scenes.end(); ++it )
    {
-      (*it)->initialize( renderer );
+      (*it)->initialize( *m_renderer );
    }
+
+   // initialize the pipeline
+   pipelineInitialization();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::deinitialize( Renderer& renderer )
+{
+   if ( m_renderer != &renderer )
+   {
+      return;
+   }
+
+   pipelineDeinitialization();
+
+   // deinitialize the scenes
+   for( std::vector< RenderedScene* >::iterator it = m_scenes.begin(); it != m_scenes.end(); ++it )
+   {
+      (*it)->deinitialize( *m_renderer );
+   }
+
+   // reset the memorized renderer instance
+   m_renderer = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::pipelineInitialization()
+{
+   ASSERT( m_renderer != NULL );
 
    if ( m_pipeline )
    {
@@ -199,7 +230,7 @@ void RenderingPipelineMechanism::initialize( Renderer& renderer )
       // 2.) initialize render targets and nodes
       for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
       {
-         (*it)->initialize( *m_runtimeDataBuffer, renderer );
+         (*it)->initialize( *m_runtimeDataBuffer, *m_renderer );
       }
       for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
       {
@@ -211,12 +242,9 @@ void RenderingPipelineMechanism::initialize( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineMechanism::deinitialize( Renderer& renderer )
+void RenderingPipelineMechanism::pipelineDeinitialization()
 {
-   if ( m_renderer != &renderer )
-   {
-      return;
-   }
+   ASSERT( m_renderer != NULL );
 
    // deinitialize nodes
    for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
@@ -240,9 +268,6 @@ void RenderingPipelineMechanism::deinitialize( Renderer& renderer )
    // remove the runtime data buffer
    delete m_runtimeDataBuffer;
    m_runtimeDataBuffer = NULL;
-
-   // reset the memorized renderer instance
-   m_renderer = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -277,13 +302,16 @@ void RenderingPipelineMechanism::update( RenderingPipeline& subject )
 
 void RenderingPipelineMechanism::update( RenderingPipeline& subject, const RenderingPipelineOperation& msg )
 {
-   if ( msg == RPO_PRE_CHANGE && m_renderer != NULL )
+   if ( m_renderer != NULL )
    {
-      deinitialize( *m_renderer );
-   }
-   else if ( msg == RPO_POST_CHANGE && m_renderer != NULL )
-   {
-      initialize( *m_renderer );
+      if ( msg == RPO_PRE_CHANGE )
+      {
+         pipelineDeinitialization();
+      }
+      else if ( msg == RPO_POST_CHANGE  )
+      {
+         pipelineInitialization();
+      }
    }
 }
 
@@ -298,14 +326,17 @@ void RenderingPipelineMechanism::update( RenderingPipelineNode& subject )
 
 void RenderingPipelineMechanism::update( RenderingPipelineNode& subject, const RenderingPipelineNodeOperation& msg )
 {
-   if ( msg == RPNO_CHANGED && m_renderer != NULL )
+   if ( m_renderer != NULL )
    {
-      deinitialize( *m_renderer );
-   }
+      if ( msg == RPNO_CHANGED )
+      {
+         pipelineDeinitialization();
+      }
 
-   if ( msg == RPNO_CHANGED && m_renderer != NULL )
-   {
-      initialize( *m_renderer );
+      if ( msg == RPNO_CHANGED )
+      {
+         pipelineInitialization();
+      }
    }
 }
 
@@ -378,9 +409,6 @@ RenderingPipelineMechanism::RenderedScene::RenderedScene()
 
 RenderingPipelineMechanism::RenderedScene::~RenderedScene()
 {
-   delete m_renderingView;
-   m_renderingView = NULL;
-
    delete m_debugSceneView;
    m_debugSceneView = NULL;
 }
@@ -392,6 +420,17 @@ void RenderingPipelineMechanism::RenderedScene::initialize( Renderer& renderer )
    // create the model views
    AABoundingBox sceneBB(D3DXVECTOR3( -10000, -10000, -10000 ), D3DXVECTOR3( 10000, 10000, 10000 ) );
    m_renderingView = new RenderingView( renderer, sceneBB );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::RenderedScene::deinitialize( Renderer& renderer )
+{
+   delete m_debugSceneView;
+   m_debugSceneView = NULL;
+
+   delete m_renderingView;
+   m_renderingView = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

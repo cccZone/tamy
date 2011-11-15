@@ -29,6 +29,8 @@ private:
    float                            m_fullOcclusionThreshold;
    float                            m_occlusionPower;
 
+   static D3DXVECTOR4               s_sampleDirections[];
+
    // runtime data
    TRuntimeVar< Renderer* >         m_renderer;
    TRuntimeVar< PixelShader* >      m_ssaoPass;

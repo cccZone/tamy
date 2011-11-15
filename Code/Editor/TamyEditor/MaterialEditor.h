@@ -52,6 +52,7 @@ public slots:
    void save();
    void compile();
    void onScriptModified();
+   void onTextCursorMoved();
    void onParamChange();
 
 private:
