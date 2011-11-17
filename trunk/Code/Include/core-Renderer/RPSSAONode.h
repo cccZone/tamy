@@ -12,6 +12,7 @@ class PixelShader;
 class ShaderTexture;
 class Renderer;
 class RenderTarget;
+class Texture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,11 +26,7 @@ class RPSSAONode : public RPPostProcessNode
 private:
    // static data
    float                            m_occlusionRadius;
-   float                            m_noOcclusionThreshold;
-   float                            m_fullOcclusionThreshold;
-   float                            m_occlusionPower;
-
-   static D3DXVECTOR4               s_sampleDirections[];
+   Texture*                         m_samplingPatternNoise;
 
    // runtime data
    TRuntimeVar< Renderer* >         m_renderer;

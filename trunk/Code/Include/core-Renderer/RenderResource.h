@@ -23,6 +23,7 @@ class RenderResource
 private:
    std::vector< IRenderResourceStorage* >    m_hostStorage;
    std::vector< int >                        m_resourceId;
+   std::vector< bool >                       m_dirtyFlag;
 
 public:
    virtual ~RenderResource();
@@ -47,6 +48,22 @@ public:
     * Called when the resource is being flushed out from the storage ( i.e. when the renderer is being deleted )
     */
    void onRenderResourceReleased( const Renderer& renderer );
+
+   // -------------------------------------------------------------------------
+   // Runtime change management
+   // -------------------------------------------------------------------------
+   /**
+    * Checks if the resource changed and its particular implementation needs to be refreshed.
+    *
+    * @param renderer
+    */
+   bool isDirty( const Renderer& renderer );
+
+protected:
+   /**
+    * Indicates that the resource changed and the implementations should be refreshed.
+    */
+   void setDirty();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -66,8 +66,8 @@ void RPHDRNode::onInitialize( RenderingPipelineMechanism& host ) const
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
    data[ m_hdrPass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/HDR.psh" );
    data[ m_hdrPass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/HDR.psh", "main" );
-   data[ m_hdrPass ]->getParams().m_writeToZBuffer = false;
-   data[ m_hdrPass ]->getParams().m_useZBuffer = false;
+   data[ m_hdrPass ]->changeParams().m_writeToZBuffer = false;
+   data[ m_hdrPass ]->changeParams().m_useZBuffer = false;
 
    Renderer& renderer = host.getRenderer();
 

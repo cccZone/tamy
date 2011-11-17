@@ -59,6 +59,7 @@ void SceneEditor::onInitialize()
    
    // setup the main layout
    QVBoxLayout* mainLayout = new QVBoxLayout( this );
+   mainLayout->setContentsMargins(0, 0, 0, 0);
    setLayout( mainLayout );
 
    // add the toolbar

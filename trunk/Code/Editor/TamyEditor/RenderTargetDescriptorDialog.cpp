@@ -24,6 +24,20 @@ RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, Ren
    connect( m_ui.heightValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticSizeChanged( int ) ) );
 
    m_ui.renderTargetIdEdit->setEnabled( canChangeName );
+   
+   // fill the usages list
+   {
+      m_ui.usageComboBox->clear();
+      TEnum< TextureUsage > textureUsagesEnum;
+      std::vector< std::string > textureUsagesNames;
+      textureUsagesEnum.getEnumerators( textureUsagesNames );
+
+      unsigned int count = textureUsagesNames.size();
+      for( unsigned int i = 0; i < count; ++i )
+      {
+         m_ui.usageComboBox->addItem( textureUsagesNames[i].c_str(), QVariant( i ) );
+      }
+   }
 
    // initialize the data fields
    m_ui.renderTargetIdEdit->setText( descriptor.getTargetID().c_str() );
@@ -65,22 +79,10 @@ void RenderTargetDescriptorDialog::changeReadability( int isReadable )
 
 void RenderTargetDescriptorDialog::usageChanged( const QString& usage )
 {
-   if ( usage == "Color" )
-   {
-      m_descriptor.setUsage( TU_COLOR );
-   }
-   else if ( usage == "Depth" )
-   {
-      m_descriptor.setUsage( TU_DEPTH );
-   }
-   else if ( usage == "Luminance" )
-   {
-      m_descriptor.setUsage( TU_LUMINANCE );
-   }
-   else if ( usage == "HDR" )
-   {
-      m_descriptor.setUsage( TU_HDR );
-   }
+   TEnum< TextureUsage > textureUsagesEnum;
+   TextureUsage usageVal = (TextureUsage)textureUsagesEnum.getValue( usage.toStdString() );
+   
+   m_descriptor.setUsage( usageVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

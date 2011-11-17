@@ -10,7 +10,7 @@ template<>
 IDirect3DTexture9* RenderResourceStorage< DX9Renderer, Texture, IDirect3DTexture9 >::createResource( const Texture& obj ) const
 {
    // create the texture
-   D3DFORMAT texFormat = m_renderer.getOptimalTextureFormat( TU_COLOR );
+   D3DFORMAT texFormat = m_renderer.getOptimalTextureFormat( obj.getUsage() );
    HRESULT res;
 
    byte* imageBuffer = NULL;

@@ -52,6 +52,7 @@ REGISTER_RTTI( RPVoidInput );
 REGISTER_RTTI( RPVoidOutput );
 REGISTER_RTTI( RenderTargetDescriptor );
 REGISTER_ENUM_RTTI( BlurOptions );
+REGISTER_ENUM_RTTI( TextureUsage );
 REGISTER_ENUM_RTTI( RPMSceneId );
 
 ///////////////////////////////////////////////////////////////////////////////

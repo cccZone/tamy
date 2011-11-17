@@ -4,6 +4,7 @@
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/TextureSockets.h"
 #include "core-Renderer/RenderTarget.h"
+#include "core-Renderer/Texture.h"
 #include "core-Renderer/Defines.h"
 #include "core-Renderer/Camera.h"
 
@@ -12,31 +13,15 @@
 
 BEGIN_OBJECT( RPSSAONode, RPPostProcessNode );
    PROPERTY_EDIT( "Radius", float, m_occlusionRadius );
-   PROPERTY_EDIT( "Min Dist", float, m_fullOcclusionThreshold );
-   PROPERTY_EDIT( "Max Dist", float, m_noOcclusionThreshold );
-   PROPERTY_EDIT( "Power", float, m_occlusionPower );
+   PROPERTY_EDIT( "Sampling noise", Texture*, m_samplingPatternNoise );
 END_OBJECT();
 
-///////////////////////////////////////////////////////////////////////////////
-
-D3DXVECTOR4 RPSSAONode::s_sampleDirections[] = {
-   D3DXVECTOR4( -0.5f, -0.5f, -0.5f, 1 ),
-   D3DXVECTOR4(  0.5f, -0.5f, -0.5f, 1 ),
-   D3DXVECTOR4(  0.5f,  0.5f, -0.5f, 1 ),
-   D3DXVECTOR4( -0.5f,  0.5f, -0.5f, 1 ),
-   D3DXVECTOR4( -0.5f, -0.5f,  0.5f, 1 ),
-   D3DXVECTOR4(  0.5f, -0.5f,  0.5f, 1 ),
-   D3DXVECTOR4(  0.5f,  0.5f,  0.5f, 1 ),
-   D3DXVECTOR4( -0.5f,  0.5f,  0.5f, 1 ),
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPSSAONode::RPSSAONode()
    : m_occlusionRadius( 1.0f )
-   , m_noOcclusionThreshold( 1.0f )
-   , m_fullOcclusionThreshold( 0.01f )
-   , m_occlusionPower( 2 )
+   , m_samplingPatternNoise( NULL )
 {
    defineInput( new RPTextureInput( "Normals&Depth" ) );
    defineOutput( new RPTextureOutput( "Output" ) );
@@ -111,22 +96,24 @@ void RPSSAONode::onUpdate( RenderingPipelineMechanism& host ) const
    ShaderTexture* normalsAndDepthBuffer = data[ m_normalsAndDepthBuffer ];
    RenderTarget* outputTarget = data[ m_outputTarget ];
 
-   if ( !normalsAndDepthBuffer )
+   if ( !normalsAndDepthBuffer || !m_samplingPatternNoise )
    {
       return;
    }
 
    Camera& activeCamera = renderer.getActiveCamera();
-   D3DXVECTOR4 planeSizes( (float)normalsAndDepthBuffer->getWidth(), (float)normalsAndDepthBuffer->getHeight(), activeCamera.getNearPlaneWidth(), activeCamera.getNearPlaneHeight() );
+   D3DXVECTOR4 params( (float)normalsAndDepthBuffer->getWidth(), (float)normalsAndDepthBuffer->getHeight(), activeCamera.getFarClippingPlane(), m_occlusionRadius );
+
+   D3DXMATRIX projMtx = activeCamera.getProjectionMtx();
+   D3DXMATRIX invProjMtx, transposedInvProjMtx;
+   D3DXMatrixInverse( &invProjMtx, NULL, &projMtx );
+   D3DXMatrixTranspose( &transposedInvProjMtx, &invProjMtx );
 
    RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *ssaoPass );
    comm->setTexture( "g_NormalsAndDepthBuffer", *normalsAndDepthBuffer );
-   comm->setVec4( "g_PlaneSizes", planeSizes );
-   comm->setFloat( "g_OcclusionRadius", m_occlusionRadius );
-   comm->setFloat( "g_NoOcclusionThreshold", m_noOcclusionThreshold );
-   comm->setFloat( "g_FullOcclusionThreshold", m_fullOcclusionThreshold );
-   comm->setFloat( "g_OcclusionPower", m_occlusionPower );
-   comm->setVec4( "g_SampleDirections", s_sampleDirections, 8 );
+   comm->setTexture( "g_SamplingPatternNoise", *m_samplingPatternNoise );
+   comm->setVec4( "g_Params", params );
+   comm->setMtx( "g_InvProj", transposedInvProjMtx );
 
    // render
    renderQuad( renderer, outputTarget );

@@ -1,5 +1,4 @@
 #include "ResourcesBrowser.h"
-#include "EditorsDocker.h"
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QDockWidget>
@@ -11,10 +10,7 @@
 #include "core.h"
 #include "progressdialog.h"
 #include "FSNodeMimeData.h"
-#include "EditorsDocker.h"
-#include "core-MVC.h"
-#include "core-Renderer.h"
-#include "core-AI.h"
+#include "tamyeditor.h"
 
 // nodes
 #include "FSTreeNode.h"
@@ -22,21 +18,12 @@
 #include "FSDirNode.h"
 #include "FSLeafNode.h"
 
-// editors
-#include "SceneEditor.h"
-#include "MaterialEditor.h"
-#include "RenderingPipelineEditor.h"
-#include "SkeletonAnimationEditor.h"
-
-// resources
-#include "RenderingPipelineLayout.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourcesBrowser::ResourcesBrowser( QWidget* parentWidget, EditorsDocker& docker )
+ResourcesBrowser::ResourcesBrowser( QWidget* parentWidget )
    : QDockWidget( "Resources Browser", parentWidget )
-   , m_editorsDocker( docker )
    , m_fsTree( NULL )
    , m_rootDir( NULL )
    , m_rm( NULL )
@@ -56,7 +43,6 @@ ResourcesBrowser::ResourcesBrowser( QWidget* parentWidget, EditorsDocker& docker
    // initialize user interface
    initUI();
    onToggleFilesFiltering();
-   initializeEditors();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,17 +51,6 @@ ResourcesBrowser::~ResourcesBrowser()
 {
    delete m_itemsFactory;
    m_itemsFactory = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::initializeEditors()
-{
-   // associate resources with their respective editors
-   associate< Model, SceneEditor >();
-   associate< PixelShader, MaterialEditor >();
-   associate< RenderingPipelineLayout, RenderingPipelineEditor >();
-   associate< SkeletonAnimation, SkeletonAnimationEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -217,14 +192,21 @@ void ResourcesBrowser::editResource( const std::string& path, const QIcon& resou
 {
    ProgressDialog progressDlg;
    progressDlg.initialize( "Loading a resource", 1 );
-   Resource& resource = m_rm->create( path );
+   Resource* resource = NULL;
+
+   try
+   {
+      resource = &m_rm->create( path );
+   }
+   catch( std::exception& ex )
+   {
+      ASSERT_MSG( false, ex.what() );
+   }
    progressDlg.advance();
 
-   ResourceEditor* editor = GenericFactory< Resource, ResourceEditor >::create( resource );
-   if ( editor )
+   if ( resource )
    {
-      editor->initialize( path.c_str(), resourceIcon );
-      m_editorsDocker.addEditor( editor );
+      TamyEditor::getInstance().editResource( *resource, resourceIcon );
    }
 }
 

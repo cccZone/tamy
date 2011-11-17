@@ -26,6 +26,7 @@ int RenderResource::getRenderResourceId( const Renderer& renderer )
    {
       m_resourceId.resize( rendererId + 1, -1 );
       m_hostStorage.resize( rendererId + 1, NULL );
+      m_dirtyFlag.resize( rendererId + 1, false );
    }
 
    return m_resourceId[ rendererId ];
@@ -40,10 +41,15 @@ void RenderResource::setRenderResourceId( const Renderer& renderer, IRenderResou
    {
       m_resourceId.resize( rendererId + 1, -1 );
       m_hostStorage.resize( rendererId + 1, NULL );
+
+      // we're not setting the dirty flag at the beginning - it's a user mechanism, not something mandatory,
+      // and besides, each newly created implementation should initialize itself at start
+      m_dirtyFlag.resize( rendererId + 1, false );
    }
 
    m_hostStorage[ rendererId ] = &hostStorage;
    m_resourceId[ rendererId ] = id;
+   m_dirtyFlag[ rendererId ] = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,6 +62,34 @@ void RenderResource::onRenderResourceReleased( const Renderer& renderer )
    {
       m_resourceId[rendererId] = -1;
       m_hostStorage[rendererId] = NULL;
+      m_dirtyFlag[rendererId] = false;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderResource::setDirty()
+{
+   unsigned int count = m_dirtyFlag.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      m_dirtyFlag[i] = true;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool RenderResource::isDirty( const Renderer& renderer )
+{
+   unsigned int rendererId = renderer.getIndex();
+
+   if ( rendererId < m_resourceId.size() )
+   {
+      return m_dirtyFlag[rendererId];
+   }
+   else
+   {
+      return false;
    }
 }
 

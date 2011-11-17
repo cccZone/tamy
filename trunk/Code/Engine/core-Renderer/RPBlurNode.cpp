@@ -85,8 +85,8 @@ void RPBlurNode::onInitialize( RenderingPipelineMechanism& host ) const
       {
          data[ m_horizBlurPass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Postprocess_HorizontalBlur.psh" );
          data[ m_horizBlurPass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Postprocess.psh", "HorizontalBlur" );
-         data[ m_horizBlurPass ]->getParams().m_writeToZBuffer = false;
-         data[ m_horizBlurPass ]->getParams().m_useZBuffer = false;
+         data[ m_horizBlurPass ]->changeParams().m_writeToZBuffer = false;
+         data[ m_horizBlurPass ]->changeParams().m_useZBuffer = false;
 
          break;
       }
@@ -95,8 +95,8 @@ void RPBlurNode::onInitialize( RenderingPipelineMechanism& host ) const
       {
          data[ m_vertBlurPass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Postprocess_VerticalBlur.psh" );
          data[ m_vertBlurPass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Postprocess.psh", "VerticalBlur" );
-         data[ m_vertBlurPass ]->getParams().m_writeToZBuffer = false;
-         data[ m_vertBlurPass ]->getParams().m_useZBuffer = false;
+         data[ m_vertBlurPass ]->changeParams().m_writeToZBuffer = false;
+         data[ m_vertBlurPass ]->changeParams().m_useZBuffer = false;
 
          break;
       }
@@ -105,13 +105,13 @@ void RPBlurNode::onInitialize( RenderingPipelineMechanism& host ) const
       {
          data[ m_horizBlurPass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Postprocess_HorizontalBlur.psh" );
          data[ m_horizBlurPass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Postprocess.psh", "HorizontalBlur" );
-         data[ m_horizBlurPass ]->getParams().m_writeToZBuffer = false;
-         data[ m_horizBlurPass ]->getParams().m_useZBuffer = false;
+         data[ m_horizBlurPass ]->changeParams().m_writeToZBuffer = false;
+         data[ m_horizBlurPass ]->changeParams().m_useZBuffer = false;
 
          data[ m_vertBlurPass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Postprocess_VerticalBlur.psh" );
          data[ m_vertBlurPass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Postprocess.psh", "VerticalBlur" );
-         data[ m_vertBlurPass ]->getParams().m_writeToZBuffer = false;
-         data[ m_vertBlurPass ]->getParams().m_useZBuffer = false;
+         data[ m_vertBlurPass ]->changeParams().m_writeToZBuffer = false;
+         data[ m_vertBlurPass ]->changeParams().m_useZBuffer = false;
 
          data[ m_tempBlurTarget ] = new RenderTarget( new RTSPTexture( *data[ m_renderer ], *data[ m_inputTex ] ) );
          break;

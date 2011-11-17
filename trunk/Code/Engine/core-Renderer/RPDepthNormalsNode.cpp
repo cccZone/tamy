@@ -7,6 +7,7 @@
 #include "core-Renderer/RenderingView.h"
 #include "core-Renderer/SpatialRepresentation.h"
 #include "core-Renderer/PixelShader.h"
+#include "core-Renderer/Camera.h"
 #include "core-Renderer/Defines.h"
 
 
@@ -93,9 +94,9 @@ RPDepthNormalsNode::DepthNormalsRenderState::DepthNormalsRenderState()
 void RPDepthNormalsNode::DepthNormalsRenderState::onPreRender( Renderer& renderer )
 {
    RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
-   // we have a 2-byte precision at our disposal - so let's map the distance 
-   // as far as 1024 meters
-   comm->setFloat( "g_FarZ", 1024 );
+
+   Camera& activeCam = renderer.getActiveCamera();
+   comm->setFloat( "g_FarZ", activeCam.getFarClippingPlane() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

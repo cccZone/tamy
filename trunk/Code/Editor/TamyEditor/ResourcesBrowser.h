@@ -1,15 +1,13 @@
-#pragma once
-
 /// @file   TamyEditor\ResourcesBrowser.h
 /// @brief  viewer allowing to browse through resources
+#pragma once
 
 #include "core\Filesystem.h"
-#include "core\GenericFactory.h"
+
 #include <QDockWidget>
 #include <QObject>
 #include <QTreeWidgetItem>
 #include <QPoint>
-#include "ResourceEditor.h"
 #include "TypeDescFactory.h"
 #include "TreeWidget.h"
 
@@ -21,21 +19,17 @@ class QPushButton;
 class FSTreeNode;
 class FSDirNode;
 class FSRootNode;
-class EditorsDocker;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class ResourcesBrowser : public QDockWidget, 
                          public FilesystemListener,
                          public FilesystemScanner,
-                         public GenericFactory< Resource, ResourceEditor >,
                          public TreeWidgetDescFactory
 {
    Q_OBJECT
 
 private:
-   EditorsDocker&                m_editorsDocker;
-
    TreeWidget*                   m_fsTree;
    FSTreeNode*                   m_rootDir;
    QAction*                      m_toggleFileTypesViewBtn;
@@ -50,9 +44,8 @@ public:
     * Constructor.
     *
     * @param parentWidget
-    * @param docker
     */
-   ResourcesBrowser( QWidget* parentWidget, EditorsDocker& docker );
+   ResourcesBrowser( QWidget* parentWidget );
    ~ResourcesBrowser();
 
    /**
@@ -101,7 +94,6 @@ public slots:
    void onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu );
 
 private:
-   void initializeEditors();
    void initUI();
    void refresh( const std::string& rootDir = "/" );
    FSTreeNode* find( const std::string& dir );

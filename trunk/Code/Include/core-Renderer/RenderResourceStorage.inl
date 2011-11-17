@@ -73,9 +73,10 @@ RENDER_RESOURCE* RenderResourceStorage< RENDERER, ENGINE_TYPE, RENDER_RESOURCE >
    }
 
    resource = m_resources[rrId];
-   if ( resource == NULL )
+   if ( resource == NULL || obj.isDirty( m_renderer ) )
    {
       // the resource is not initialized - create it
+      delete resource;
       resource = createResource( obj );
 
       if ( resource != NULL )

@@ -42,7 +42,7 @@ namespace // anonymous
    {     
    private:
       Model&                m_model;
-      RenderingView*       m_view;
+      RenderingView*        m_view;
 
    public:
       RenderingMechanismMock( Model& model ) : m_model( model ), m_view( NULL ) {}

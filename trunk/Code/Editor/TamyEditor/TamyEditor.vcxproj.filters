@@ -126,6 +126,9 @@
     <Filter Include="Widgets\SceneRenderWidget\SceneQueries\Representations">
       <UniqueIdentifier>{fef6c27d-a127-406a-ae08-31ce49f4e14d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\TextureEditor">
+      <UniqueIdentifier>{cf1e2221-3fb7-450e-a3e1-01f86059d0da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -138,9 +141,6 @@
       <Filter>Widgets\SceneTreeViewer</Filter>
     </ClInclude>
     <ClInclude Include="FSTreeNode.h">
-      <Filter>Core\ResourcesBrowser</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceEditor.h">
       <Filter>Core\ResourcesBrowser</Filter>
     </ClInclude>
     <ClInclude Include="FSRootNode.h">
@@ -245,9 +245,6 @@
     <ClInclude Include="AnimationTimeValueGetter.h">
       <Filter>ResourceEditors\SkeletonAnimationEditor</Filter>
     </ClInclude>
-    <ClInclude Include="EditorsDocker.h">
-      <Filter>Core\ResourcesBrowser</Filter>
-    </ClInclude>
     <ClInclude Include="SelectedEntityRepresentation.h">
       <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
     </ClInclude>
@@ -292,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="RPBDepthNormals.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceEditor.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -665,6 +665,18 @@
     <ClCompile Include="RPBDepthNormals.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="TextureEditor.cpp">
+      <Filter>ResourceEditors\TextureEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_TextureEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_TextureEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_TextureEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -806,6 +818,9 @@
     </CustomBuild>
     <CustomBuild Include="SelectedEntityPropertiesViewer.h">
       <Filter>ResourceEditors\SceneEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TextureEditor.h">
+      <Filter>ResourceEditors\TextureEditor</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

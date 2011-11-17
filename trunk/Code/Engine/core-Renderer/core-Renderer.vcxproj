@@ -106,6 +106,7 @@
     <ClCompile Include="RPSSAONode.cpp" />
     <ClCompile Include="RPStartNode.cpp" />
     <ClCompile Include="SceneRenderTreeBuilder.cpp" />
+    <ClCompile Include="ShaderTexture.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
     <ClCompile Include="Renderer.cpp" />
