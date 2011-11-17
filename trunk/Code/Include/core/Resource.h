@@ -80,11 +80,6 @@ public:
    inline bool isManaged() const { return m_host != NULL; }
 
    /**
-    * Informs the resource that from now on it's managed by a resources manager.
-    */
-   void setResourcesManager( ResourcesManager& mgr );
-
-   /**
     * Returns an extension of this resource instance.
     */
    virtual const char* getVirtualExtension() { return ""; }
@@ -136,6 +131,16 @@ public:
    ResourceObject& getObject( int objectId );
 
 protected:
+   /**
+    * Informs the resource that from now on it's managed by a resources manager.
+    */
+   void setResourcesManager( ResourcesManager& mgr );
+
+   /**
+    * Informs the resource that it's been removed from the resources manager.
+    */
+   void resetResourcesManager();
+
    // -------------------------------------------------------------------------
    // Notifications
    // -------------------------------------------------------------------------

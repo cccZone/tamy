@@ -27,7 +27,7 @@ class Entity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class BlenderScene : public ResourceLoader
+class BlenderScene : public TResourceImporter< Model >
 {
 private:
    TiXmlDocument*                                  m_document;
@@ -73,7 +73,7 @@ public:
    // -------------------------------------------------------------------------
    // ResourceLoader implementation
    // -------------------------------------------------------------------------
-   Resource* load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer );
+   Resource* load( ResourcesManager& rm, IProgressObserver& observer );
 
    // -------------------------------------------------------------------------
    // Slices management

@@ -56,5 +56,21 @@ void ResourcesManager::setProgressObserver()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template< typename RESOURCE_TYPE >
+RESOURCE_TYPE* ResourcesManager::findResource( const std::string& name )
+{
+   std::string nameWithCorrectExtension = Filesystem::changeFileExtension( name, RESOURCE_TYPE::getExtension() ) ;
+   Resource* res = findResource( nameWithCorrectExtension );
+   if ( res )
+   {
+      return DynamicCast< RESOURCE_TYPE >( res );
+   }
+   else
+   {
+      return NULL;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
 
 #endif // _RESOURCES_MANAGER_H

@@ -76,7 +76,7 @@ void StaticGeometry::onComponentAdded( Component< Model >& component )
       // load the shader
       ResourcesManager& rm = comp->get();
       static const char* shaderName = SHADERS_DIR "StaticGeometry.vsh";
-      m_vertexShader = dynamic_cast< VertexShader* >( rm.findResource( shaderName ) );
+      m_vertexShader = rm.findResource< VertexShader >( shaderName );
       if ( !m_vertexShader )
       {
          m_vertexShader = new VertexShader( shaderName );

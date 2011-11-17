@@ -97,7 +97,7 @@ void SingleTextureMaterial::onComponentAdded( Component< Model >& component )
       // load the shader
       ResourcesManager& rm = comp->get();
       static const char* shaderName = SHADERS_DIR "MaterialShader.psh";
-      m_shader = dynamic_cast< PixelShader* >( rm.findResource( "SingleTextureMaterial" ) );
+      m_shader = rm.findResource< PixelShader >( "SingleTextureMaterial" );
       if ( !m_shader )
       {
          m_shader = new PixelShader( "SingleTextureMaterial" );

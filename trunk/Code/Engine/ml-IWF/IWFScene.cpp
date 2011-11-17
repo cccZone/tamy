@@ -31,10 +31,10 @@ IWFScene::~IWFScene()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* IWFScene::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer )
+Resource* IWFScene::load( ResourcesManager& rm, IProgressObserver& observer )
 {
-   Model* scene = new Model( fileName );
-   load( fileName, rm, observer, *scene );
+   Model* scene = new Model( m_loadedFileName );
+   load( m_loadedFileName, rm, observer, *scene );
    return scene;
 }
 
@@ -291,9 +291,14 @@ void IWFScene::addStaticGeometry( Model& scene,
 
       // create the geometry
       char geomName[128];
-      sprintf_s(geomName, 128, "%s/%s.%s", m_sceneDir.c_str(), currMesh.name.c_str(), TriangleMesh::getExtension());
-      TriangleMesh* geometryRes = new TriangleMesh( geomName, currMesh.vertices, currMesh.faces );
-      rm.addResource( geometryRes );
+      sprintf_s( geomName, 128, "%s/%s.%s", m_sceneDir.c_str(), currMesh.name.c_str(), TriangleMesh::getExtension() );
+
+      TriangleMesh* geometryRes = NULL;
+      if ( ( geometryRes = rm.findResource< TriangleMesh >( geomName ) ) == NULL )
+      {
+         geometryRes = new TriangleMesh( geomName, currMesh.vertices, currMesh.faces );
+         rm.addResource( geometryRes );
+      }
 
       // create a rendering effect instance
       MaterialDefinition& mat = currMesh.material;
@@ -305,7 +310,7 @@ void IWFScene::addStaticGeometry( Model& scene,
          std::string texName = m_sceneDir + std::string( "/" ) + mat.texName;
          std::string texResourceName = Filesystem::changeFileExtension( texName, Texture::getExtension() );
          Texture* texture = NULL;
-         if ( ( texture = dynamic_cast< Texture* >( rm.findResource( texResourceName ) ) ) == NULL )
+         if ( ( texture = rm.findResource< Texture >( texResourceName ) ) == NULL )
          {
             texture = new Texture( texName );
             rm.addResource( texture );

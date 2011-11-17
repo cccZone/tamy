@@ -7,15 +7,15 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* DefaultResourceLoader::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer )
+Resource* DefaultResourceLoader::load( ResourcesManager& rm, IProgressObserver& observer )
 {
-   observer.initialize( "Loading engine resource " + fileName, 1 );
+   observer.initialize( "Loading engine resource " + m_loadedFileName, 1 );
 
-   std::string extension = Filesystem::extractExtension( fileName );
+   std::string extension = Filesystem::extractExtension( m_loadedFileName );
    std::ios_base::openmode fileAccessMode = Resource::getFileAccessMode( extension );
 
    Filesystem& fs = rm.getFilesystem();
-   File* file = fs.open( fileName, std::ios_base::in | fileAccessMode );
+   File* file = fs.open( m_loadedFileName, std::ios_base::in | fileAccessMode );
    Loader loader( new FileSerializer( file ) );
    Resource* res = &loader.load( rm );
 

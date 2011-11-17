@@ -93,7 +93,7 @@ void QueryRenderingPass::initialize( Renderer& renderer )
    // load the shader
    static const char* shaderName = "Editor/Shaders/SceneQueryEffect.psh";
    ResourcesManager& rm = ResourcesManager::getInstance();
-   m_shader = dynamic_cast< PixelShader* >( rm.findResource( "SceneQueryEffect" ) );
+   m_shader = rm.findResource< PixelShader >( "SceneQueryEffect" );
    if ( !m_shader )
    {
       m_shader = new PixelShader( "SceneQueryEffect" );
@@ -110,7 +110,7 @@ void QueryRenderingPass::initialize( Renderer& renderer )
 
 void QueryRenderingPass::deinitialize( Renderer& renderer )
 {
-   delete m_shader; m_shader = NULL;
+   m_shader = NULL;
    delete m_sceneSnapshot; m_sceneSnapshot = NULL;
 }
 

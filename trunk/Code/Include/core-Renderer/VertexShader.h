@@ -24,6 +24,9 @@ private:
    std::string                   m_script;
    VertexDescId                  m_vertexDescId;
 
+   // runtime data
+   std::string                   m_scriptPath;
+
 public:
    /**
     * Constructor.

@@ -5,11 +5,14 @@
 #include "FSNodeMimeData.h"
 #include "DropArea.h"
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QToolBar>
 #include <QAction>
 #include <QPixmap>
 #include <QImage>
 #include "QPropertiesView.h"
+#include <QFormLayout>
+#include <QGroupBox>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,11 +62,32 @@ void TextureEditor::onInitialize()
       editFrame->setLayout( editFrameLayout );
       mainLayout->addWidget( editFrame );
 
-      // properties viewer
+      // side panel for properties
       {
-         QPropertiesView* propertiesView = new QPropertiesView();
-         editFrameLayout->addWidget( propertiesView, 0 );
-         m_texture.viewProperties( *propertiesView );
+         QFrame* propertiesFrame = new QFrame( editFrame );
+         QVBoxLayout* propertiesLayout = new QVBoxLayout( propertiesFrame );
+         propertiesFrame->setLayout( propertiesLayout );
+         editFrameLayout->addWidget( propertiesFrame, 0 );
+
+         // properties viewer
+         {
+            QPropertiesView* propertiesView = new QPropertiesView();
+            propertiesLayout->addWidget( propertiesView, 1 );
+            m_texture.viewProperties( *propertiesView );
+         }
+
+         // image info box
+         {
+            QGroupBox* infoFrame = new QGroupBox( "Info", propertiesFrame );
+            QFormLayout* infoLayout = new QFormLayout( infoFrame );
+            infoFrame->setLayout( infoLayout );
+            propertiesLayout->addWidget( infoFrame, 1 );
+
+            infoLayout->addRow( new QLabel( "Width:", infoFrame ), m_imageWidthInfo = new QLabel( "0", infoFrame ) );
+            infoLayout->addRow( new QLabel( "Height:", infoFrame ), m_imageHeightInfo = new QLabel( "0", infoFrame ) );
+            infoLayout->addRow( new QLabel( "Depth:", infoFrame ), m_imageDepthInfo = new QLabel( "0 bits", infoFrame ) );
+         }
+
       }
 
       // add the image viewer widget
@@ -103,6 +127,15 @@ void TextureEditor::refreshImage()
 
    QImage image( absolutePath.c_str() );
    m_image->setPixmap( QPixmap::fromImage( image ) );
+
+   // set info about the image
+   char tmpStr[32];
+   sprintf( tmpStr, "%d", image.width() );
+   m_imageWidthInfo->setText( tmpStr );
+   sprintf( tmpStr, "%d", image.height() );
+   m_imageHeightInfo->setText( tmpStr );
+   sprintf( tmpStr, "%d bits", image.depth() );
+   m_imageDepthInfo->setText( tmpStr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

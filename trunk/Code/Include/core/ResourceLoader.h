@@ -18,18 +18,46 @@ class IProgressObserver;
  */
 class ResourceLoader
 {
+protected:
+   std::string          m_loadedFileName;
+
 public:
    virtual ~ResourceLoader() {}
 
    /**
+    * Sets the name of the loaded file.
+    *
+    * @param fileName
+    */
+   void setLoadedFileName( const std::string& fileName ) { m_loadedFileName = fileName; }
+
+   /**
     * Loads a resource.
     *
-    * @param fileName   path to the resource file
     * @param rm         host resources manager
     *
     * @param resource   return the main loaded resource
     */
-   virtual Resource* load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer ) = 0;
+   virtual Resource* load( ResourcesManager& rm, IProgressObserver& observer ) = 0;
+
+   /**
+    * Returns the extension of the resource this loader will create.
+    */
+   virtual std::string getOutputResourceExtension() const = 0;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename RESOURCE_TYPE >
+class TResourceImporter : public ResourceLoader
+{
+public:
+   virtual ~TResourceImporter() {}
+
+   // -------------------------------------------------------------------------
+   // ResourceLoader implementation
+   // -------------------------------------------------------------------------
+   std::string getOutputResourceExtension() const { return RESOURCE_TYPE::getExtension(); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,7 +71,8 @@ public:
    // -------------------------------------------------------------------------
    // ResourceLoader implementation
    // -------------------------------------------------------------------------
-   Resource* load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer );
+   Resource* load( ResourcesManager& rm, IProgressObserver& observer );
+   std::string getOutputResourceExtension() const { return ""; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
