@@ -7,7 +7,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_RESOURCE( Texture, Resource, tex, AM_BINARY )
-   PROPERTY_EDIT( "imageFile", std::string, m_texFileName )
+   PROPERTY( std::string, m_texFileName )
+   PROPERTY_EDIT( "Usage", TextureUsage, m_usage )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,6 +16,7 @@ END_RESOURCE()
 Texture::Texture( const std::string& fileName )
    : Resource( Filesystem::changeFileExtension( fileName, Texture::getExtension() ) )
    , m_texFileName( fileName )
+   , m_usage( TU_COLOR )
    , m_width( 0 )
    , m_height( 0 )
 {

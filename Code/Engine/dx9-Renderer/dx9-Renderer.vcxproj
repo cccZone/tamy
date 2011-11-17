@@ -155,6 +155,7 @@
     <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
       <FileType>Document</FileType>
     </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\DepthFunctions.shl" />
     <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
       <FileType>Document</FileType>
     </None>

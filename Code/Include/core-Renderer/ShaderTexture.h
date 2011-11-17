@@ -6,6 +6,7 @@
 
 #include "core\Subject.h"
 #include "core-Renderer\ShaderParam.h"
+#include "core/Enum.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,6 +37,7 @@ enum TextureUsage
    TU_DEPTH,
    TU_LUMINANCE,
    TU_HDR,
+   TU_DATA_TEXTURE,
 
    TU_MAX
 };

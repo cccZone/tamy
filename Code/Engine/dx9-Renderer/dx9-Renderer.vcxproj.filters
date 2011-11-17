@@ -25,6 +25,9 @@
     <Filter Include="Shaders\PixelShaders">
       <UniqueIdentifier>{5f395b3a-0958-416c-9413-fc990e1cec19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\Lib">
+      <UniqueIdentifier>{8e34f2c5-78ca-493f-bbbc-26ec8c9d5814}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DX9Renderer.cpp">
@@ -220,6 +223,9 @@
     </None>
     <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
       <Filter>Shaders\VertexShaders</Filter>
+    </None>
+    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\DepthFunctions.shl">
+      <Filter>Shaders\Lib</Filter>
     </None>
   </ItemGroup>
 </Project>

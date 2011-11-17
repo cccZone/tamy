@@ -33,6 +33,11 @@ public:
    DX9PixelShader( const DX9Renderer& renderer, const PixelShader& shader );
    ~DX9PixelShader();
 
+   /**
+    * Compiles the shader.
+    */
+   void compile();
+
    // -------------------------------------------------------------------------
    // param setters
    // -------------------------------------------------------------------------

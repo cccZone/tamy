@@ -11,6 +11,9 @@
     <Filter Include="Tools">
       <UniqueIdentifier>{d132f724-ac29-4668-a6ac-b90412c6e585}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{c66478e6-435f-4aaf-9359-4dac0b2aae27}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RendererTests.cpp">
@@ -30,6 +33,9 @@
     </ClCompile>
     <ClCompile Include="RenderingViewTests.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthEncodingTests.cpp">
+      <Filter>Shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

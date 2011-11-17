@@ -13,12 +13,24 @@
 #include <QFrame>
 #include <QVBoxLayout>
 #include "ResourcesBrowser.h"
+#include "core-MVC.h"
+#include "core-Renderer.h"
+#include "core-AI.h"
 
 // importers
 #include "ml-IWF.h"
 #include "ml-Blender.h"
 #include "ml-BVH.h"
 
+// editors
+#include "SceneEditor.h"
+#include "MaterialEditor.h"
+#include "RenderingPipelineEditor.h"
+#include "SkeletonAnimationEditor.h"
+#include "TextureEditor.h"
+
+// resources
+#include "RenderingPipelineLayout.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -55,7 +67,7 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 
    // add the resources browser
    {
-      ResourcesBrowser* resourcesManagerFrame = new ResourcesBrowser( this, *this );
+      ResourcesBrowser* resourcesManagerFrame = new ResourcesBrowser( this );
       addDockWidget( Qt::LeftDockWidgetArea, resourcesManagerFrame );
    }
 
@@ -81,6 +93,13 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
    // create the UI settings manager
    m_uiSettings = new QSettings( "Coversion", "TamyEditor" );
    serializeUISettings( false );
+
+   // associate resources with their respective editors
+   associate< Model, SceneEditor >();
+   associate< PixelShader, MaterialEditor >();
+   associate< RenderingPipelineLayout, RenderingPipelineEditor >();
+   associate< SkeletonAnimation, SkeletonAnimationEditor >();
+   associate< Texture, TextureEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -304,10 +323,31 @@ void TamyEditor::serializeTreeWidgetSettings( QTreeWidget& widget, bool save )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::addEditor( ResourceEditor* editor )
+void TamyEditor::editResource( Resource& resource, const QIcon& icon )
 {
-   int newTabIdx = m_editorsTabs->addTab( editor, editor->getIcon(), editor->getLabel() );
-   m_editorsTabs->setCurrentIndex( newTabIdx );
+   // first - look for a tab with the same path - if there is one, it means that we're
+   // already editing this resource
+   unsigned int count = m_editorsTabs->count();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( m_editorsTabs->widget( i ) );
+      if ( editor && editor->getLabel() == resource.getFilePath().c_str() )
+      {
+         // yep - we're already editing it. Focus on it and that's it
+         m_editorsTabs->setCurrentIndex( i );
+         return;
+      }
+   }
+
+   // if we got this far, it means that we need a new editor to edit this resource
+   ResourceEditor* editor = GenericFactory< Resource, ResourceEditor >::create( resource );
+   if ( editor )
+   {
+      editor->initialize( resource.getFilePath().c_str(), icon );
+
+      int newTabIdx = m_editorsTabs->addTab( editor, editor->getIcon(), editor->getLabel() );
+      m_editorsTabs->setCurrentIndex( newTabIdx );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

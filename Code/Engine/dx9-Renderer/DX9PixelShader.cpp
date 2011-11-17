@@ -46,6 +46,45 @@ DX9PixelShader::DX9PixelShader( const DX9Renderer& renderer, const PixelShader& 
    , m_dxPixelShader( NULL )
    , m_shaderConstants( NULL )
 {
+   compile();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+DX9PixelShader::~DX9PixelShader()
+{
+   m_d3Device = NULL;
+
+   if ( m_dxPixelShader != NULL )
+   {
+      m_dxPixelShader->Release();
+      m_dxPixelShader = NULL;
+   }
+
+   if ( m_shaderConstants )
+   {
+      m_shaderConstants->Release();
+      m_shaderConstants = NULL;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9PixelShader::compile()
+{
+   // release the old shader
+   if ( m_dxPixelShader != NULL )
+   {
+      m_dxPixelShader->Release();
+      m_dxPixelShader = NULL;
+   }
+
+   if ( m_shaderConstants )
+   {
+      m_shaderConstants->Release();
+      m_shaderConstants = NULL;
+   }
+
    // load the effect
    const std::string& shaderContents = m_shader.getScript();
 
@@ -101,25 +140,6 @@ DX9PixelShader::DX9PixelShader( const DX9Renderer& renderer, const PixelShader& 
       std::string errMsg = translateDxError( "Error while creating a shader", res );
       ASSERT_MSG( false, errMsg.c_str() );
       throw std::runtime_error( errMsg );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-DX9PixelShader::~DX9PixelShader()
-{
-   m_d3Device = NULL;
-
-   if ( m_dxPixelShader != NULL )
-   {
-      m_dxPixelShader->Release();
-      m_dxPixelShader = NULL;
-   }
-
-   if ( m_shaderConstants )
-   {
-      m_shaderConstants->Release();
-      m_shaderConstants = NULL;
    }
 }
 

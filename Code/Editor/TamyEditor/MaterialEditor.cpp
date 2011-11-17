@@ -40,6 +40,10 @@ void MaterialEditor::onInitialize()
    // set the editor up
    m_ui.scriptEditor->setPlainText( m_shader.getScript().c_str() );
    m_ui.scriptEditor->setTabStopWidth( 15 );
+   m_ui.scriptEditor->setFont( QFont( "Courier", 12 ) );
+   m_ui.scriptEditor->setCurrentFont( QFont( "Courier", 12 ) );
+   m_ui.scriptEditor->setAcceptRichText( false );
+   m_ui.scriptEditor->setLineWrapMode( QTextEdit::NoWrap );
    connect( m_ui.scriptEditor, SIGNAL( textChanged() ), this, SLOT( onScriptModified() ) );
    connect( m_ui.scriptEditor, SIGNAL( cursorPositionChanged() ), this, SLOT( onTextCursorMoved() ) );
    m_docModified = false;
@@ -137,14 +141,17 @@ void MaterialEditor::onDeinitialize( bool saveProgress )
 
 void MaterialEditor::save()
 {
-   synchronize();
-   m_shader.saveResource();
-   m_docModified = false;
+   if ( compile() )
+   {
+      synchronize();
+      m_shader.saveResource();
+      m_docModified = false;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::compile()
+bool MaterialEditor::compile()
 {
    m_ui.compilationOutput->clear();
 
@@ -152,7 +159,7 @@ void MaterialEditor::compile()
    if ( shaderContents.empty() )
    {
       m_ui.compilationOutput->setText( "No code to compile" );
-      return;
+      return true;
    }
 
    ShaderCompiler compiler;
@@ -161,10 +168,12 @@ void MaterialEditor::compile()
    if ( status )
    {
       m_ui.compilationOutput->setText( "Compilation successful" );
+      return true;
    }
    else
    {
       m_ui.compilationOutput->setText( compiler.getLastError().c_str() );
+      return false;
    }
 }
 
@@ -172,7 +181,7 @@ void MaterialEditor::compile()
 
 void MaterialEditor::onParamChange()
 {
-   PixelShaderParams& params = m_shader.getParams();
+   PixelShaderParams& params = m_shader.changeParams();
 
    params.m_cullingMode = (D3DCULL)( m_ui.cullingMode->currentIndex() + 1 );
    params.m_useZBuffer = m_ui.zBufferEnabled->isChecked();

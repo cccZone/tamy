@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor\SceneEditor.h
 /// @brief  Simple editor for opening a new scene in the editor
+#pragma once
 
 #include "ResourceEditor.h"
 
@@ -11,7 +10,6 @@
 class Model;
 class TimeControllerTrack;
 class QScrollArea;
-class QPropertiesView;
 class Entity;
 class SceneTreeViewer;
 class SelectionManager;

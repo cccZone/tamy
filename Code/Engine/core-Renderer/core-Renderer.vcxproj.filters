@@ -262,6 +262,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Core\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderTexture.cpp">
+      <Filter>Materials\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">

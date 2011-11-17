@@ -50,7 +50,7 @@ public:
 
 public slots:
    void save();
-   void compile();
+   bool compile();
    void onScriptModified();
    void onTextCursorMoved();
    void onParamChange();

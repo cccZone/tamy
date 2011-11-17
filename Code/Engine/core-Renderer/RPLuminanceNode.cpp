@@ -63,13 +63,13 @@ void RPLuminanceNode::onInitialize( RenderingPipelineMechanism& host ) const
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
    data[ m_greyscalePass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Luminance_GreyScaleDownSample.psh" );
    data[ m_greyscalePass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Luminance.psh", "GreyScaleDownSample" );
-   data[ m_greyscalePass ]->getParams().m_writeToZBuffer = false;
-   data[ m_greyscalePass ]->getParams().m_useZBuffer = false;
+   data[ m_greyscalePass ]->changeParams().m_writeToZBuffer = false;
+   data[ m_greyscalePass ]->changeParams().m_useZBuffer = false;
 
    data[ m_downSamplePass ] = new PixelShader( SHADERS_DIR "RenderingPipeline/Luminance_DownSample3x3.psh" );
    data[ m_downSamplePass ]->loadFromFile( fs, SHADERS_DIR "RenderingPipeline/Luminance.psh", "DownSample3x3" );
-   data[ m_downSamplePass ]->getParams().m_writeToZBuffer = false;
-   data[ m_downSamplePass ]->getParams().m_useZBuffer = false;
+   data[ m_downSamplePass ]->changeParams().m_writeToZBuffer = false;
+   data[ m_downSamplePass ]->changeParams().m_useZBuffer = false;
 
    // luminance render targets
    PRenderTarget* luminanceTargets = new PRenderTarget[ m_stepsCount ];

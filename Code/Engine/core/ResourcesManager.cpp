@@ -192,7 +192,17 @@ Resource* ResourcesManager::loadResource( const std::string& name )
 {
    ResourceLoader* loader = createResourceLoader( name );
    IProgressObserver* observer = createObserver();
-   Resource* res = loader->load( name, *this, *observer );
+
+   Resource* res = NULL;
+   try
+   {
+      res = loader->load( name, *this, *observer );
+   }
+   catch( std::exception& ex )
+   {
+      ASSERT_MSG( false, ex.what() );
+   }
+   
    delete loader;
    delete observer;
 
@@ -213,7 +223,10 @@ Resource& ResourcesManager::create( const std::string& name )
       }
    }
    
-   ASSERT_MSG( res != NULL, "Resource not found" );
+   if ( res == NULL )
+   {
+      throw std::runtime_error( "Resource not found" );
+   }
 
    return *res;
 }

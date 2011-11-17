@@ -1,13 +1,13 @@
-#ifndef _TAMY_EDITOR_H
-#define _TAMY_EDITOR_H
-
 /// @file   TamyEditor\tamyeditor.h
 /// @brief  editor's main window class
+#ifndef _TAMY_EDITOR_H
+#define _TAMY_EDITOR_H
 
 #include <QtGui/QMainWindow>
 #include "ui_tamyeditor.h"
 #include "core.h"
-#include "EditorsDocker.h"
+#include "core\GenericFactory.h"
+#include "ResourceEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,7 +24,7 @@ class QTabWidget;
 /**
 * This is the editor's main window class.
 */
-class TamyEditor : public QMainWindow, public EditorsDocker, public FilesystemListener
+class TamyEditor : public QMainWindow, public FilesystemListener, public GenericFactory< Resource, ResourceEditor >
 {
    Q_OBJECT
 
@@ -117,10 +117,13 @@ public:
     */
    inline TimeController& getTimeController() const { return *m_timeController; }
 
-   // -------------------------------------------------------------------------
-   // EditorsDocker implementation
-   // -------------------------------------------------------------------------
-   void addEditor( ResourceEditor* editor );
+   /**
+    * Edits the selected resource.
+    *
+    * @param resource
+    * @param icon
+    */
+   void editResource( Resource& resource, const QIcon& icon );
 
    // -------------------------------------------------------------------------
    // FilesystemListener implementation

@@ -29,6 +29,7 @@ class Texture : public Resource, public TRenderState< Texture >, public ShaderTe
 
 private:
    std::string       m_texFileName;
+   TextureUsage      m_usage;
    
    unsigned int      m_width;
    unsigned int      m_height;
@@ -41,9 +42,28 @@ public:
    ~Texture();
 
    /**
+    * Sets the texture path.
+    *
+    * @param texPath
+    */
+   inline void setTextureName( const std::string& texPath ) { setDirty(); m_texFileName = texPath; }
+
+   /**
     * Returns the name of the image file.
     */
    inline const std::string& getTextureName() const { return m_texFileName; }
+
+   /**
+    * Sets new texture usage.
+    *
+    * @param usage
+    */
+   inline void setUsage( TextureUsage usage ) { setDirty(); m_usage = usage; }
+
+   /**
+    * Returns texture usage.
+    */
+   inline TextureUsage getUsage() const { return m_usage; }
 
    /**
     * A texture is just an image. This method returns a pointer

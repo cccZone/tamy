@@ -13,6 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Filesystem;
+class RCBindPixelShader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -101,7 +102,7 @@ public:
     *
     * @param script
     */
-   inline void setScript( const std::string& script ) { m_script = script; }
+   inline void setScript( const std::string& script ) { m_script = script; setDirty(); }
 
    /**
     * Returns the params used for texture mapping.
@@ -109,9 +110,9 @@ public:
    inline const PixelShaderParams& getParams() const { return m_params; }
 
    /**
-    * Returns the params used for texture mapping (non-const version)
+    * Returns the params used for texture mapping (non-const version) so they can be changed.
     */
-   inline PixelShaderParams& getParams() { return m_params; }
+   inline PixelShaderParams& changeParams() { setDirty(); return m_params; }
 
    /**
     * Returns the name of the shader entry function
