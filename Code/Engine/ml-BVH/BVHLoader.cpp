@@ -317,7 +317,7 @@ namespace // anonymous
          // create an animation resource
          m_observer.initialize( "Initializing scene", 1 );
          std::string animationResName = Filesystem::changeFileExtension( scene.getFilePath(), SkeletonAnimation::getExtension() );
-         SkeletonAnimation* animation = dynamic_cast< SkeletonAnimation* >( m_rm.findResource( animationResName ) );
+         SkeletonAnimation* animation = m_rm.findResource< SkeletonAnimation >( animationResName );
          if ( !animation )
          {
             animation = new SkeletonAnimation( animationResName );
@@ -359,10 +359,10 @@ void BVHLoader::load( const std::string& fileName, ResourcesManager& rm, IProgre
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* BVHLoader::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer )
+Resource* BVHLoader::load( ResourcesManager& rm, IProgressObserver& observer )
 {
-   Model* model = new Model( fileName );
-   load( fileName, rm, observer, *model );
+   Model* model = new Model( m_loadedFileName );
+   load( m_loadedFileName, rm, observer, *model );
    return model;
 }
 

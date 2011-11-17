@@ -14,7 +14,7 @@ END_RESOURCE()
 ///////////////////////////////////////////////////////////////////////////////
 
 Texture::Texture( const std::string& fileName )
-   : Resource( Filesystem::changeFileExtension( fileName, Texture::getExtension() ) )
+   : Resource( fileName )
    , m_texFileName( fileName )
    , m_usage( TU_COLOR )
    , m_width( 0 )

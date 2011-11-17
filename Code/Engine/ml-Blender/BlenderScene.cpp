@@ -48,10 +48,10 @@ BlenderScene::~BlenderScene()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* BlenderScene::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer )
+Resource* BlenderScene::load( ResourcesManager& rm, IProgressObserver& observer )
 {
-   Model* scene = new Model( fileName );
-   load( fileName, rm, observer, *scene );
+   Model* scene = new Model( m_loadedFileName );
+   load( m_loadedFileName, rm, observer, *scene );
    return scene;
 }
 

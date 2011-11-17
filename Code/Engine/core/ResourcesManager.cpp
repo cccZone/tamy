@@ -43,9 +43,9 @@ void ResourcesManager::reset()
 {
    unsigned int componentsCount = getComponentsCount();
 
-   while( m_resources.empty() == false )
+   for ( ResourcesMap::iterator it = m_resources.begin(); it != m_resources.end(); ++it )
    {
-      Resource* resource = m_resources.begin()->second;
+      Resource* resource = it->second;
       if ( resource )
       {
          // inform the resource about the components being removed
@@ -55,6 +55,8 @@ void ResourcesManager::reset()
             resource->onComponentRemoved( *comp );
          }
       }
+
+      resource->resetResourcesManager();
       delete resource;
    }
    m_resources.clear();
@@ -83,24 +85,33 @@ void ResourcesManager::setFilesystem( Filesystem* filesystem )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::addResource( Resource* resource )
+bool ResourcesManager::addResource( Resource* resource )
 {
    if ( resource == NULL )
    {
-      throw std::invalid_argument("NULL pointer instead a Resource instance");
+      return false;
    }
 
    if ( resource->isManaged() )
    {
-      return;
+      return false;
    }
 
-   ResourcesMap::iterator it = m_resources.find( resource->getFilePath() );
-   if ( it == m_resources.end() )
+   // correct the resource's name
+   std::string correctResourcePath = Filesystem::changeFileExtension( resource->getFilePath(), resource->getVirtualExtension() );
+
+   ResourcesMap::iterator it = m_resources.find( correctResourcePath );
+   if ( it != m_resources.end() )
    {
-      m_resources.insert( std::make_pair( resource->getFilePath(), resource ) );
-      resource->setResourcesManager( *this );
+      // a resource by this name already exists - and we can't replace it, since
+      // pointers to it may exist all over the running application
+      delete resource;
+      return false;
    }
+
+   resource->setFilePath( correctResourcePath );
+   m_resources.insert( std::make_pair( correctResourcePath, resource ) );
+   resource->setResourcesManager( *this );
 
    // inform the resource about the registered components
    unsigned int count = getComponentsCount();
@@ -108,6 +119,8 @@ void ResourcesManager::addResource( Resource* resource )
    {
       resource->onComponentAdded( *getComponent( i ) );
    }
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -124,15 +137,18 @@ void ResourcesManager::moveResource( Resource* resource, const std::string& newP
       return;
    }
 
-   ResourcesMap::iterator it = m_resources.find( resource->getFilePath() );
+   // correct the resource's name
+   std::string correctResourcePath = Filesystem::changeFileExtension( newPath, resource->getVirtualExtension() );
+
+   ResourcesMap::iterator it = m_resources.find( correctResourcePath );
    if ( it == m_resources.end() )
    {
       return;
    }
 
-   resource->setFilePath( newPath );
+   resource->setFilePath( correctResourcePath );
    m_resources.erase( it );
-   m_resources.insert( std::make_pair( newPath, resource ) );
+   m_resources.insert( std::make_pair( correctResourcePath, resource ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -188,22 +204,20 @@ void ResourcesManager::scan( const std::string& rootDir, FilesystemScanner& scan
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* ResourcesManager::loadResource( const std::string& name )
+Resource* ResourcesManager::loadResource( ResourceLoader& loader )
 {
-   ResourceLoader* loader = createResourceLoader( name );
    IProgressObserver* observer = createObserver();
 
    Resource* res = NULL;
    try
    {
-      res = loader->load( name, *this, *observer );
+      res = loader.load( *this, *observer );
    }
    catch( std::exception& ex )
    {
       ASSERT_MSG( false, ex.what() );
    }
    
-   delete loader;
    delete observer;
 
    return res;
@@ -213,15 +227,20 @@ Resource* ResourcesManager::loadResource( const std::string& name )
 
 Resource& ResourcesManager::create( const std::string& name )
 {
-   Resource* res = findResource( name );
+   ResourceLoader* loader = createResourceLoader( name );
+   std::string correctResourcePath = Filesystem::changeFileExtension( name, loader->getOutputResourceExtension() );
+
+   Resource* res = findResource( correctResourcePath );
    if ( res == NULL )
    {
-      res = loadResource( name );
+      res = loadResource( *loader );
       if ( res )
       {
          addResource( res );
       }
    }
+
+   delete loader;
    
    if ( res == NULL )
    {
@@ -286,15 +305,18 @@ ResourceLoader* ResourcesManager::createResourceLoader( const std::string& name 
    std::string extension = Filesystem::extractExtension( name );
 
    ResourceLoadersMap::const_iterator it = m_loaders.find( extension );
+   ResourceLoader* loader = NULL;
    if ( it != m_loaders.end() )
    {
-      ResourceLoader* loader = it->second->create();
-      return loader;
+      loader = it->second->create();
    }
    else
    {
-      return new DefaultResourceLoader();
+      loader = new DefaultResourceLoader();
    }
+
+   loader->setLoadedFileName( name );
+   return loader;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -360,6 +382,8 @@ void ResourcesManager::onDirChanged( const std::string& dir )
       ResourcesMap::iterator it = m_resources.find( entriesToRemove[i] );
       Resource* res = it->second;
       m_resources.erase( it );
+
+      res->resetResourcesManager();
       delete res;
    }
 }

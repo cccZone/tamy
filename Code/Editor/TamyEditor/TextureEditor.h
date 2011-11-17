@@ -11,6 +11,7 @@
 
 class Texture;
 class DropArea;
+class QLabel;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,6 +24,10 @@ private:
 
    DropArea*                     m_image;
    std::vector< std::string >    m_imagePaths;
+
+   QLabel*                       m_imageWidthInfo;
+   QLabel*                       m_imageHeightInfo;
+   QLabel*                       m_imageDepthInfo;
 
 public:
    /**

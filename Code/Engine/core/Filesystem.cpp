@@ -314,6 +314,12 @@ std::string Filesystem::extractNodeName( const std::string& fileName )
 std::string Filesystem::changeFileExtension( const std::string& fileName, 
                                              const std::string& newExtension )
 {
+   if ( newExtension.empty() )
+   {
+      // nothing to change
+      return fileName;
+   }
+
    std::size_t pos = fileName.find_last_of( "." );
    if ( pos != std::string::npos )
    {

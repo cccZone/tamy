@@ -129,7 +129,7 @@ void SingleTextureEffect::onComponentAdded( Component< Model >& component )
       // load the shader
       ResourcesManager& rm = comp->get();
       static const char* shaderName = SHADERS_DIR "SingleTextureEffect.fx";
-      m_effect = dynamic_cast< EffectShader* >( rm.findResource( shaderName ) );
+      m_effect = rm.findResource< EffectShader >( shaderName );
       if ( !m_effect )
       {
          m_effect = new EffectShader( shaderName );

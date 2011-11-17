@@ -56,9 +56,9 @@ void RenderingPipelineLayout::onResourceLoaded( ResourcesManager& mgr )
    if ( m_model == NULL )
    {
       // the model was not set - create an instance
-      std::string resourcePath = Filesystem::changeFileExtension( getFilePath(), RenderingPipeline::getExtension() );
+      std::string resourcePath = getFilePath();
 
-      m_model = dynamic_cast< RenderingPipeline* >( mgr.findResource( resourcePath ) );
+      m_model = mgr.findResource< RenderingPipeline >( resourcePath );
       if ( m_model == NULL )
       {
       

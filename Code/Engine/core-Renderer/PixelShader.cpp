@@ -18,7 +18,7 @@ END_RESOURCE()
 ///////////////////////////////////////////////////////////////////////////////
 
 PixelShader::PixelShader( const std::string& fileName )
-   : Resource( Filesystem::changeFileExtension( fileName, PixelShader::getExtension() ) )
+   : Resource( fileName )
    , m_entryFunctionName( "main" )
 {
 }
@@ -27,7 +27,6 @@ PixelShader::PixelShader( const std::string& fileName )
 
 PixelShader::~PixelShader()
 {
-    ASSERT( true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

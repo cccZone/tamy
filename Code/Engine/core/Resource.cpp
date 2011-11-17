@@ -57,6 +57,7 @@ Resource::~Resource()
    // remove the resource from the resources manager
    if ( m_host )
    {
+      ASSERT_MSG( false, "You're deleting a resource that's managed by a ResourcesManager - ARE YOU SURE you want to proceed?" );
       m_host->free( this );
    }
 
@@ -103,6 +104,13 @@ void Resource::setResourcesManager( ResourcesManager& mgr )
    m_host = &mgr;
 
    onResourceLoaded( mgr );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Resource::resetResourcesManager()
+{
+   m_host = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

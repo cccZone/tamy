@@ -32,7 +32,7 @@ class IProgressObserver;
 /**
  * This class will load a scene form an IWF file.
  */
- class IWFScene : public ResourceLoader
+ class IWFScene : public TResourceImporter< Model >
 {
 private:
    std::string m_sceneDir;
@@ -58,7 +58,7 @@ public:
    // -------------------------------------------------------------------------
    // ResourceLoader implementation
    // -------------------------------------------------------------------------
-   Resource* load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer );
+   Resource* load( ResourcesManager& rm, IProgressObserver& observer );
 
 private:
    void processEntities(iwfEntity* fileEntity);

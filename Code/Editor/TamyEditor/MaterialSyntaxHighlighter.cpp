@@ -65,6 +65,7 @@ MaterialSyntaxHighlighter::MaterialSyntaxHighlighter( QTextDocument* editedDoc )
 
    m_commentStartExpression = QRegExp( "/\\*" );
    m_commentEndExpression = QRegExp( "\\*/" );
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,7 +85,10 @@ void MaterialSyntaxHighlighter::highlightBlock( const QString &text )
       }
    }
 
+
    // highlight multiline comments
+   setCurrentBlockState( 0 );
+
    int startIndex = 0;
    if ( previousBlockState() != 1 )
    {

@@ -13,7 +13,7 @@ SelectedGeometry::SelectedGeometry( Geometry& geometry )
    // create a selection marker effect
    static const char* shaderName = "Editor/Shaders/SelectionMarker.psh";
    ResourcesManager& resMgr = ResourcesManager::getInstance();
-   m_selectionMarker = dynamic_cast< PixelShader* >( resMgr.findResource( "SelectionMarker" ) );
+   m_selectionMarker = resMgr.findResource< PixelShader >( "SelectionMarker" );
    if ( !m_selectionMarker )
    {
       m_selectionMarker = new PixelShader( "SelectionMarker" );

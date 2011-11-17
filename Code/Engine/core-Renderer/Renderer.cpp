@@ -171,9 +171,9 @@ void Renderer::resizeViewport(unsigned int width, unsigned int height,
    m_rightClientArea = rightClientArea;
    m_bottomClientArea = bottomClientArea;
 
-   resetViewport(m_viewportWidth, m_viewportHeight);
-
    notify(RO_RESIZE_VIEWPORT);
+
+   resetViewport(m_viewportWidth, m_viewportHeight);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

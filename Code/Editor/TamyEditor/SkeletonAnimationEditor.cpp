@@ -119,6 +119,7 @@ void SkeletonAnimationEditor::onInitialize()
          m_actionPlay = new QAction( m_runSceneIcon, tr( "Run" ), playbackControlPanel );
          playbackControlPanel->addAction( m_actionPlay );
          connect( m_actionPlay, SIGNAL( triggered() ), this, SLOT( togglePlay() ) );
+         m_actionPlay->setEnabled( false );
       }
 
       m_bonesList = new QListWidget( operationsSplitter );
@@ -314,7 +315,7 @@ void SkeletonAnimationEditor::togglePlay()
    if ( m_playing )
    {
       // remove the items from the time track
-      m_animationController->pause( false );
+      m_animationController->pause( true );
       m_timeTrack->remove( *this );
       m_timeTrack->remove( *m_animationKeysChartView );
 
@@ -327,7 +328,7 @@ void SkeletonAnimationEditor::togglePlay()
    }
    else
    {
-      m_animationController->pause( true );
+      m_animationController->pause( false );
       m_timeTrack->add( *this );
       m_timeTrack->add( *m_animationKeysChartView );
 
@@ -408,6 +409,9 @@ void SkeletonAnimationEditor::loadAnimatedModel( const std::string& modelResourc
    m_timeTrack->add( *m_eventsTimeTrackingMarker );
    m_animationKeysChart->addItem( m_keysTimeTrackingMarker );
    m_animationEventsChart->addItem( m_eventsTimeTrackingMarker );
+
+   // activate the play action
+   m_actionPlay->setEnabled( true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

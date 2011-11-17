@@ -103,16 +103,18 @@ void CompositeRenderingMechanism::remove( const std::string& name )
 
 void CompositeRenderingMechanism::reset()
 {
-   unsigned int count = m_members.size();
+   std::vector< MechDef* > members = m_members;
+   m_members.clear();
+
+   unsigned int count = members.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
       if ( m_renderer )
       {
-         m_members[i]->m_mechanism->deinitialize( *m_renderer );
+         members[i]->m_mechanism->deinitialize( *m_renderer );
       }
-      delete m_members[i];
+      delete members[i];
    }
-   m_members.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

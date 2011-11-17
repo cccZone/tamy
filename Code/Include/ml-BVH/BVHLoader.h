@@ -17,7 +17,7 @@ class SpatialEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class BVHLoader : public ResourceLoader
+class BVHLoader : public TResourceImporter< Model >
 {
 public:
    /**
@@ -33,7 +33,7 @@ public:
    // -------------------------------------------------------------------------
    // ResourceLoader implementation
    // -------------------------------------------------------------------------
-   Resource* load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer );
+   Resource* load( ResourcesManager& rm, IProgressObserver& observer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

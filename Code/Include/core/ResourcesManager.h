@@ -127,14 +127,24 @@ public:
     * Registers a new resource instance with the resources manager.
     *
     * @param resource   new resource instance to register
+    * @return           'true' if the resource was added, 'false' otherwise ( in the latter case the passed resource
+    *                   will automatically get deleted
     */
-   void addResource( Resource* resource );
+   bool addResource( Resource* resource );
 
    /**
-    * Looks up a resource with the given name.
+    * Looks up a resource with the given name of the specified type.
     *
     * @param name       name of the resource
     * @return           pointer to the resource or NULL if the manager does not have one.
+    */
+   template< typename RESOURCE_TYPE >
+   RESOURCE_TYPE* findResource( const std::string& name );
+
+   /**
+    * Looks for a resource with the specified name ( utility method )
+    *
+    * @param name
     */
    Resource* findResource( const std::string& name );
 
@@ -196,7 +206,8 @@ protected:
    void onDirChanged( const std::string& dir );
 
    /**
-    * Releases the resource from the memory, leaving it untouched in the filesystem.
+    * Called by the resource when it gets deleted in order to remove
+    * its record from the manager.
     *
     * @param resource
     */
@@ -221,9 +232,9 @@ private:
    /**
     * Helper method for loading a resource from the filesystem.
     *
-    * @param name
+    * @param loader
     */
-   Resource* loadResource( const std::string& name );
+   Resource* loadResource( ResourceLoader& loader );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

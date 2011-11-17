@@ -118,10 +118,6 @@ void TamySceneWidget::setScene( Model& scene )
    deinitialize();
    
    m_scene = &scene;
-   if ( m_scene )
-   {
-      m_scene->addComponent( new ModelComponent< Camera >( *m_camera ) );
-   }
 
    initialize();
 }
