@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core.h
 /// @brief  aggregate include file for the 'core' project
+#pragma once
 
 
 // ----------------------------------------------------------------------------
@@ -27,6 +26,7 @@
 #include "core\Stack.h"
 #include "core\RuntimeData.h"
 #include "core\RoundBuffer.h"
+#include "core\MemoryPool.h"
 // ----------------------------------------------------------------------------
 // -->Graphs
 // ----------------------------------------------------------------------------

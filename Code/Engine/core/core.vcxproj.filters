@@ -209,6 +209,9 @@
     <ClCompile Include="RoundBuffer.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryPool.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -475,6 +478,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Casts.h">
       <Filter>RTTI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MemoryPool.h">
+      <Filter>DataStructures</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

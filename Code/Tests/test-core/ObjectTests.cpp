@@ -262,6 +262,8 @@ TEST( Object, resourcesTreatedAsSingletons )
 
    std::vector<byte> storage;
    ResourcesManager& mgr = ResourcesManager::getInstance();
+   mgr.reset();
+
    mgr.addResource( baseObj );
 
    Saver saver(new SerializerImplMock(storage));
@@ -280,6 +282,7 @@ TEST( Object, resourcesTreatedAsSingletons )
 TEST(Object, inheritance)
 {
    ResourcesManager& mgr = ResourcesManager::getInstance();
+   mgr.reset();
 
    ImplementingClass obj;
    obj.setBaseVal(1);

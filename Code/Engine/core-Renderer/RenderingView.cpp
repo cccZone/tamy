@@ -6,13 +6,15 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RenderState.h"
 #include "core-Renderer\SceneRenderTreeBuilder.h"
+#include "core\MemoryPool.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingView::RenderingView( Renderer& renderer, const AABoundingBox& sceneBB )
-: m_renderer( renderer )
-, m_storage( new RegularOctree< SpatialRepresentation >( sceneBB ) )
+   : m_renderer( renderer )
+   , m_treeMemPool( new MemoryPool( 1024 * 1024 ) )
+   , m_storage( new RegularOctree< SpatialRepresentation >( sceneBB ) )
 {
 }
 
@@ -27,6 +29,7 @@ RenderingView::~RenderingView()
    m_spatials.clear();
 
    delete m_storage; m_storage = NULL;
+   delete m_treeMemPool; m_treeMemPool;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,7 +43,8 @@ void RenderingView::render( const SceneRenderTreeBuilder& treeBuilder )
    m_storage->query( volume, visibleElems );
 
    // build a tree sorting the nodes by the attributes
-   StateTreeNode* root = treeBuilder.buildStateTree( visibleElems );
+   m_treeMemPool->reset();
+   StateTreeNode* root = treeBuilder.buildRenderTree( *m_treeMemPool, visibleElems );
    
    if ( root )
    {
@@ -48,7 +52,7 @@ void RenderingView::render( const SceneRenderTreeBuilder& treeBuilder )
       root->render( m_renderer );
 
       // get rid of the tree
-      delete root;
+      MEMPOOL_DELETE( root );
    }
 }
 
