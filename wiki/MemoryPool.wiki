@@ -1,0 +1,20 @@
+=Memory Pool=
+
+A memory pool is a continous, preallocated area in memory that can  be used for faster memory allocations for objects.
+
+This particular implementation is very similar to the concept used in the [RoundBuffer round buffer], but with an exception, that we don't deallocate the memory when an object from the pool gets deleted.
+This saves us the necessity to manage the defragmented memory chunks etc. and allows to quickly allocate memory for new objects.
+
+The user gets one method - *reset* - which resets the pool's allocation pointer and allows to start allocating from the beginning of the pool.
+*CAUTION*: Call it once you deleted all the objects allocated in the pool.
+
+This approach makes the pool a perfect candidate for situations, when we need to allocate a huge amount of objects and delete them afterwards.
+You can see this example in the [RenderingView#RenderTreeBuilder rendering view's render tree builder] implementation, where the entire render tree is built every frame, and we allocate a lot of tree objects during that time, just to delete them a milisec later.
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
