@@ -53,10 +53,16 @@ public:
     */
    static RoundBuffer* getBufferPtr( void* ptr );
 
-   // ----------------------------------------------------------------------
-   // MemoryPool implementation
-   // ----------------------------------------------------------------------
+   /**
+    * Allocates a chunk of memory of the specified size.
+    *
+    * @param size
+    */
    void* alloc( size_t size );
+
+   /**
+    * Deallocates the memory from the specified address.
+    */
    void dealloc( void* ptr );
 };
 
@@ -91,6 +97,10 @@ private:
     */
    void operator delete( void* ptr );
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+#define ROUNDBUF_DELETE( Obj ) if ( Obj ) { static_cast< RoundBufferObject* >(Obj)->~RoundBufferObject(); Obj = NULL; }
 
 ///////////////////////////////////////////////////////////////////////////////
 

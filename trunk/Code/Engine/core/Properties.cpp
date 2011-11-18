@@ -65,9 +65,7 @@ void Properties::save(Serializer& serializer)
    serializer << propertiesCount;
 
    std::string name;
-   for (PropsMap::iterator it = m_properties.begin(); 
-        it != m_properties.end();
-        ++it)
+   for (PropsMap::iterator it = m_properties.begin(); it != m_properties.end(); ++it)
    {
       name = it->first;
       serializer << name;

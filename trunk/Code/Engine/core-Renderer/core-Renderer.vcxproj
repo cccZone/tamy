@@ -102,6 +102,8 @@
     <ClCompile Include="RPLuminanceNode.cpp" />
     <ClCompile Include="RPAdapterNode.cpp" />
     <ClCompile Include="RPPostProcessNode.cpp" />
+    <ClCompile Include="RPSBComputed.cpp" />
+    <ClCompile Include="RPSceneBuilder.cpp" />
     <ClCompile Include="RPSceneRenderNode.cpp" />
     <ClCompile Include="RPSSAONode.cpp" />
     <ClCompile Include="RPStartNode.cpp" />
@@ -119,6 +121,7 @@
     <ClCompile Include="LitVertex.cpp" />
     <ClCompile Include="SkinnedGeometry.cpp" />
     <ClCompile Include="StaticGeometry.cpp" />
+    <ClCompile Include="RPSBTextured.cpp" />
     <ClCompile Include="TextureSockets.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="DeviceFilter.cpp" />
@@ -177,6 +180,8 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPLuminanceNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPSBComputed.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPSceneBuilder.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSSAONode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h" />
@@ -200,6 +205,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\LitVertex.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SkinnedGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPSBTextured.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TextureSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h" />

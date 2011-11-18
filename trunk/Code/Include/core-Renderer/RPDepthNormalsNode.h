@@ -5,7 +5,6 @@
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core-Renderer/SceneRenderTreeBuilder.h"
-#include "core-Renderer/RenderState.h"
 #include "core/RuntimeData.h"
 
 
@@ -13,6 +12,7 @@
 
 class RenderTarget;
 class PixelShader;
+class RPSceneBuilder;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,43 +24,14 @@ class RPDepthNormalsNode : public RenderingPipelineNode
    DECLARE_CLASS( RPDepthNormalsNode )
 
 private:
-   class DepthNormalsRenderState : public TRenderState< DepthNormalsRenderState >, public SceneRenderTreeBuilder
-   {
-   private:
-      PixelShader*         m_shader;
+   RPMSceneId                          m_renderedSceneId;
+   RPSceneBuilder*                     m_builder;
 
-   public:
-      /**
-       * Constructor.
-       *
-       * @param shader
-       */
-      DepthNormalsRenderState();
-
-      // -------------------------------------------------------------------------
-      // RenderState implementation
-      // -------------------------------------------------------------------------
-      void onPreRender( Renderer& renderer );
-      void onPostRender( Renderer& renderer );
-      bool onEquals( const DepthNormalsRenderState& rhs ) const { return &rhs == this; }
-      bool onLess( const DepthNormalsRenderState& rhs ) const { return &rhs < this; }
-
-      // -------------------------------------------------------------------------
-      // SceneRenderTreeBuilder implementation
-      // -------------------------------------------------------------------------
-      StateTreeNode* buildStateTree( const Array< SpatialRepresentation* >& visibleElems ) const;
-   };
-
-private:
-   // static data
-   RPMSceneId                                m_renderedSceneId;
-
-   // runtime data
-   TRuntimeVar< DepthNormalsRenderState* >   m_renderState;
-   TRuntimeVar< RenderTarget* >              m_renderTarget;
+   TRuntimeVar< RenderTarget* >        m_renderTarget;
 
 public:
    RPDepthNormalsNode();
+   ~RPDepthNormalsNode();
 
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation

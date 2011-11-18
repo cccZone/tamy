@@ -1,26 +1,25 @@
-#include "core/RoundBuffer.h"
-#include "core\Assert.h"
+#include "core/MemoryPool.h"
+#include "core/Assert.h"
 #include <stdio.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int RoundBuffer::BUFFER_INFO_CHUNK_SIZE = sizeof( size_t ) + sizeof( void* );
+int MemoryPool::POOL_INFO_CHUNK_SIZE = sizeof( size_t ) + sizeof( void* );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RoundBuffer::RoundBuffer( size_t size )
+MemoryPool::MemoryPool( size_t size )
 {
    m_bufSize = size;
    m_memory = new char[ m_bufSize ];
    m_allocStartOffset = 0;
-   m_allocEndOffset = 0;
    m_allocationsCount = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RoundBuffer::~RoundBuffer()
+MemoryPool::~MemoryPool()
 {
    delete [] m_memory;
    m_memory = NULL;
@@ -28,31 +27,41 @@ RoundBuffer::~RoundBuffer()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-size_t RoundBuffer::getMemoryUsed() const 
+size_t MemoryPool::getMemoryUsed() const 
 { 
-   return m_allocEndOffset - m_allocStartOffset; 
+   return m_bufSize - m_allocStartOffset; 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void* RoundBuffer::alloc( size_t size )
+void MemoryPool::reset()
 {
-   size_t sizeAtEnd = m_bufSize - m_allocEndOffset - BUFFER_INFO_CHUNK_SIZE;
+   ASSERT_MSG( m_allocationsCount == 0, "There are still some objects left in the pool" );
+
+   m_allocStartOffset = 0;
+   m_allocationsCount = 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void* MemoryPool::alloc( size_t size )
+{
+   size_t sizeAtEnd = m_bufSize - m_allocStartOffset - POOL_INFO_CHUNK_SIZE;
 
    if ( size < sizeAtEnd )
    {
       // get the pointer to the allocated memory chunk
-      char* ptr = m_memory + m_allocEndOffset;
+      char* ptr = m_memory + m_allocStartOffset;
 
       // memorize pointer to the buffer and the chunk size
-      size += BUFFER_INFO_CHUNK_SIZE;
+      size += POOL_INFO_CHUNK_SIZE;
       *(void**)ptr = this;
       ptr += sizeof( void* );
       *(size_t*)ptr = size;
       ptr += sizeof( size );
 
       // move the pointer to the free memory start
-      m_allocEndOffset += size;
+      m_allocStartOffset += size;
 
       ++m_allocationsCount;
 
@@ -62,78 +71,62 @@ void* RoundBuffer::alloc( size_t size )
    else
    {
       // there's not enough memory
-      ASSERT_MSG( false, "Not enough memory in the round buffer" );
+      ASSERT_MSG( false, "Not enough memory in the memory pool" );
       return NULL;
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RoundBuffer::dealloc( void* ptr )
+void MemoryPool::dealloc( void* ptr )
 {
-   if ( ptr != m_memory + m_allocStartOffset + BUFFER_INFO_CHUNK_SIZE )
-   {
-      ASSERT_MSG( false, "Trying to deallocate invalid address from the RoundBuffer." );
-      return;
-   }
-
-   // read the size of the allocated chunk
-   size_t deallocatedChunkSize = *(int*)( (char*)ptr - sizeof( size_t ) );
-
-   // move the start pointer, keeping in mind to add the size chunk info size to it as well ( it was also a part of the allocation )
-   m_allocStartOffset += deallocatedChunkSize;
-   if ( m_allocStartOffset == m_allocEndOffset )
-   {
-      // ok - we freed everything we allocated - let's start over
-      m_allocStartOffset = m_allocEndOffset = 0;
-   }
-
    --m_allocationsCount;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RoundBuffer* RoundBuffer::getBufferPtr( void* ptr )
+MemoryPool* MemoryPool::getPoolPtr( void* ptr )
 {
-   RoundBuffer* bufPtr = reinterpret_cast< RoundBuffer* >(*(void**)( (char*)ptr - BUFFER_INFO_CHUNK_SIZE ));
-   if ( !bufPtr )
+   MemoryPool* poolPtr = reinterpret_cast< MemoryPool* >( *(void**)( (char*)ptr - POOL_INFO_CHUNK_SIZE ) );
+   if ( !poolPtr )
    {
-      ASSERT_MSG( false, "Accessing an object that's not allocated in a round buffer" );
+      ASSERT_MSG( false, "Accessing an object that's not allocated in a memory pool" );
    }
-   return bufPtr;
+   return poolPtr;
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-RoundBufferObject::~RoundBufferObject()
+MemoryPoolObject::~MemoryPoolObject()
 {
    // get the memory
-   RoundBuffer* bufPtr = RoundBuffer::getBufferPtr( this );
-   if ( bufPtr )
+   MemoryPool* poolPtr = MemoryPool::getPoolPtr( this );
+   if ( poolPtr )
    {
-      bufPtr->dealloc( this );
+      poolPtr->dealloc( this );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void* RoundBufferObject::operator new( size_t size, RoundBuffer& buffer )
+void* MemoryPoolObject::operator new( size_t size, MemoryPool& pool )
 {
-   return buffer.alloc( size );
+   return pool.alloc( size );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RoundBufferObject::operator delete( void* ptr, RoundBuffer& buffer )
+void MemoryPoolObject::operator delete( void* ptr, MemoryPool& pool )
 {
-   buffer.dealloc( ptr );
+   pool.dealloc( ptr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void* RoundBufferObject::operator new( size_t size )
+void* MemoryPoolObject::operator new( size_t size )
 {
    ASSERT_MSG( false, "Round buffer object can only be allocated in a round buffer." );
    return NULL;
@@ -141,7 +134,7 @@ void* RoundBufferObject::operator new( size_t size )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RoundBufferObject::operator delete( void* ptr )
+void MemoryPoolObject::operator delete( void* ptr )
 {
    ASSERT_MSG( false, "Can't delete a round buffer object - you need to delete the buffer that holds it." );
 }

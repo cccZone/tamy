@@ -88,6 +88,9 @@
     <Filter Include="Core\Tools">
       <UniqueIdentifier>{a8533512-26b5-45b6-af11-e62b8e23d0c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders">
+      <UniqueIdentifier>{a95137c7-8213-4a7d-aa9f-9256f0fc932e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -264,6 +267,15 @@
     </ClCompile>
     <ClCompile Include="ShaderTexture.cpp">
       <Filter>Materials\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSceneBuilder.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSBTextured.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSBComputed.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -519,6 +531,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h">
       <Filter>Core\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPSceneBuilder.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPSBTextured.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPSBComputed.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-namespace // anonymouos
+namespace // anonymous
 {
    class RoundBufferObjectMock : public RoundBufferObject
    {
@@ -25,7 +25,7 @@ TEST( RoundBuffer, oneObject )
    CPPUNIT_ASSERT_EQUAL( (unsigned int)1, buffer.getAllocationsCount() );
    CPPUNIT_ASSERT_EQUAL( obj, buffer.front< RoundBufferObject >() );
 
-   obj->~RoundBufferObject();
+   ROUNDBUF_DELETE( obj );
    CPPUNIT_ASSERT_EQUAL( (unsigned int)0, buffer.getAllocationsCount() );
    CPPUNIT_ASSERT_EQUAL( (RoundBufferObject*)NULL, buffer.front< RoundBufferObject >() );
 }
@@ -43,11 +43,11 @@ TEST( RoundBuffer, twoObjects )
    CPPUNIT_ASSERT_EQUAL( (unsigned int)2, buffer.getAllocationsCount() );
    CPPUNIT_ASSERT_EQUAL( obj1, buffer.front< RoundBufferObject >() );
 
-   obj1->~RoundBufferObject();
+   ROUNDBUF_DELETE( obj1 );
    CPPUNIT_ASSERT_EQUAL( (unsigned int)1, buffer.getAllocationsCount() );
    CPPUNIT_ASSERT_EQUAL( obj2, buffer.front< RoundBufferObject >() );
 
-   obj2->~RoundBufferObject();
+   ROUNDBUF_DELETE( obj2 );
    CPPUNIT_ASSERT_EQUAL( (unsigned int)0, buffer.getAllocationsCount() );
    CPPUNIT_ASSERT_EQUAL( (size_t)0, buffer.getMemoryUsed() );
    CPPUNIT_ASSERT_EQUAL( (RoundBufferObject*)NULL, buffer.front< RoundBufferObject >() );
@@ -72,7 +72,7 @@ TEST( RoundBuffer, manyAllocations )
    // deallocate
    for ( int j = 0; j < OBJECTS_COUNT; ++j )
    {
-      arr[j]->~RoundBufferObject();
+      ROUNDBUF_DELETE( arr[j] );
       if ( j < OBJECTS_COUNT - 1 )
       {
          CPPUNIT_ASSERT_EQUAL( arr[ j + 1 ], buffer.front< RoundBufferObject >() );
@@ -111,7 +111,7 @@ TEST( RoundBuffer, performance )
       // deallocate
       for ( int j = 0; j < OBJECTS_COUNT; ++j )
       {
-         arr[j]->~RoundBufferObject();
+         ROUNDBUF_DELETE( arr[j] );
       }
    }
    timer.tick();

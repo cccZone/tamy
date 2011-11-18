@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClCompile Include="AlgorithmTests.cpp" />
     <ClCompile Include="GraphTopologicalSortTests.cpp" />
+    <ClCompile Include="MemoryPoolTests.cpp" />
     <ClCompile Include="NodesHierarchyTests.cpp" />
     <ClCompile Include="EnumsTests.cpp" />
     <ClCompile Include="RoundBufferTest.cpp" />

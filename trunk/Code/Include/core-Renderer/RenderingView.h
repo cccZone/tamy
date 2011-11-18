@@ -18,6 +18,7 @@ struct AABoundingBox;
 class Camera;
 class RenderState;
 class SceneRenderTreeBuilder;
+class MemoryPool;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -32,6 +33,7 @@ private:
 private:
    Renderer&                                                m_renderer;
 
+   MemoryPool*                                              m_treeMemPool;
    SpatialsMap                                              m_spatials;
    RegularOctree< SpatialRepresentation >*                  m_storage;
 

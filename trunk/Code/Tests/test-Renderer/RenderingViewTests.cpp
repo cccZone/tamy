@@ -6,6 +6,7 @@
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\RenderState.h"
+#include "core-Renderer\RPSBTextured.h"
 #include "core\AABoundingBox.h"
 #include <vector>
 #include <string>
@@ -43,12 +44,19 @@ namespace // anonymous
    private:
       Model&                m_model;
       RenderingView*        m_view;
+      RPSBTextured*         m_builder;
 
    public:
-      RenderingMechanismMock( Model& model ) : m_model( model ), m_view( NULL ) {}
+      RenderingMechanismMock( Model& model ) 
+         : m_model( model )
+         , m_view( NULL ) 
+         , m_builder( new RPSBTextured() )
+      {
+      }
 
       ~RenderingMechanismMock()
       {
+         delete m_builder; m_builder = NULL;
       }
 
       void initialize( Renderer& renderer ) 
@@ -65,7 +73,7 @@ namespace // anonymous
 
       void render( Renderer& renderer )
       {
-         m_view->render();
+         m_view->render( *m_builder );
       }
    };
 

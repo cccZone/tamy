@@ -81,6 +81,7 @@
     <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="Assert.cpp" />
     <ClCompile Include="IDebugDraw.cpp" />
+    <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NodeActionsExecutor.cpp" />
     <ClCompile Include="ResourceHandle.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="..\..\Include\core\Casts.h" />
     <ClInclude Include="..\..\Include\core\IDebugDraw.h" />
     <ClInclude Include="..\..\Include\core\IProgressObserver.h" />
+    <ClInclude Include="..\..\Include\core\MemoryPool.h" />
     <ClInclude Include="..\..\Include\core\Node.h" />
     <ClInclude Include="..\..\Include\core\NodeObserver.h" />
     <ClInclude Include="..\..\Include\core\NodeVisitor.h" />

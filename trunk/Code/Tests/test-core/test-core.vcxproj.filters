@@ -149,6 +149,9 @@
     <ClCompile Include="RoundBufferTest.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryPoolTests.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">

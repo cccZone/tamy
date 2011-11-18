@@ -16,7 +16,7 @@ GeometryNode::GeometryNode( GeometryNode*& nextNode, Geometry& geometry )
 
 GeometryNode::~GeometryNode()
 {
-   delete m_next; m_next = NULL;
+   MEMPOOL_DELETE( m_next );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -49,9 +49,9 @@ StateTreeNode::StateTreeNode( RenderState* state )
 
 StateTreeNode::~StateTreeNode()
 {
-   delete m_geometryNode; m_geometryNode = NULL;
-   delete m_child; m_child = NULL;
-   delete m_sibling; m_sibling = NULL;
+   MEMPOOL_DELETE( m_geometryNode );
+   MEMPOOL_DELETE( m_child );
+   MEMPOOL_DELETE( m_sibling );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

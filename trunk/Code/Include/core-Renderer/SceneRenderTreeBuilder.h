@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core/Array.h"
+#include "core/MemoryPool.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,7 +18,7 @@ class Renderer;
 /**
  * A geometry node in the scene render tree - this is the tree's leaf.
  */
-struct GeometryNode
+struct GeometryNode : public MemoryPoolObject
 {
    GeometryNode*  m_next;
    Geometry&      m_geometry;
@@ -44,7 +45,7 @@ struct GeometryNode
 /**
  * A state node in the scene render tree - this is the tree's composite node.
  */
-struct StateTreeNode
+struct StateTreeNode : public MemoryPoolObject
 {
    StateTreeNode*    m_child;
    StateTreeNode*    m_sibling;
@@ -87,11 +88,12 @@ public:
    virtual ~SceneRenderTreeBuilder() {}
 
    /**
-    * Builds the render tree.
+    * Build the tree here.
     *
+    * @param pool             memory pool in which we can allocate the tree nodes
     * @param visibleElems     array of visible elements we want to render.
     */
-   virtual StateTreeNode* buildStateTree( const Array< SpatialRepresentation* >& visibleElems ) const = 0;
+   virtual StateTreeNode* buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

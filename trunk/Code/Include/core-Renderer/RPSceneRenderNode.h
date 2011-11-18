@@ -4,30 +4,36 @@
 
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/RenderingPipelineNode.h"
-#include "core-Renderer/SceneRenderTreeBuilder.h"
+
 #include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class RenderTarget;
+class RPSceneBuilder;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * A rendering pipeline node responsible for rendering a scene.
  */
-class RPSceneRenderNode : public RenderingPipelineNode, public SceneRenderTreeBuilder
+class RPSceneRenderNode : public RenderingPipelineNode
 {
    DECLARE_CLASS( RPSceneRenderNode )
 
 private:
    RPMSceneId                          m_renderedSceneId;
+   RPSceneBuilder*                     m_builder;
 
    TRuntimeVar< RenderTarget* >        m_renderTarget;
 
 public:
+   /**
+    * Constructor.
+    */
    RPSceneRenderNode();
+   ~RPSceneRenderNode();
 
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
@@ -36,11 +42,6 @@ public:
    void onInitialize( RenderingPipelineMechanism& host ) const;
    void onDeinitialize( RenderingPipelineMechanism& host ) const;
    void onUpdate( RenderingPipelineMechanism& host ) const;
-
-   // -------------------------------------------------------------------------
-   // SceneRenderTreeBuilder implementation
-   // -------------------------------------------------------------------------
-   StateTreeNode* buildStateTree( const Array< SpatialRepresentation* >& visibleElems ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

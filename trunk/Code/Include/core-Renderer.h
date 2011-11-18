@@ -135,6 +135,12 @@
 #include "core-Renderer/RPPostProcessNode.h"
 #include "core-Renderer/RPDebugRendererNode.h"
 #include "core-Renderer/RPDepthNormalsNode.h"
+#include "core-Renderer/RPSceneBuilder.h"
+// ----------------------------------------------------------------------------
+// ---->Nodes\Misc\SceneTreeBuilders
+// ----------------------------------------------------------------------------
+#include "core-Renderer/RPSBTextured.h"
+#include "core-Renderer/RPSBComputed.h"
 // ----------------------------------------------------------------------------
 // ---->Nodes\PostProcess
 // ----------------------------------------------------------------------------
