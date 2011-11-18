@@ -25,7 +25,7 @@ MyPoolObject* obj = NULL;
 while ( c = m_renderCommands.front< MyPoolObject>() )
 {
    // we're done - delete the object
-   c->~MyPoolObject();
+   ROUNDBUF_DELETE( c );
 }
 
 }}}
@@ -38,11 +38,7 @@ Mind that you need to calculate this size based on the size and max amount of ob
 
 Reading them back is also simple - just keep calling the `front` method until it returns NULL.
 
-*CAUTION* once you're done with the retrieved object, be sure to release its resources ( the memory will be managed by the buffer, so don't worry ) - you do that by explicitly calling its destructor:
-
-{{{
-c->~MyPoolObject();
-}}}
+Once you're done with the retrieved object, be sure to release its resources ( the memory will be managed by the buffer, so don't worry ), by calling the handy `ROUNDBUF_DELETE` macro.
 
 
 ==Objects==
