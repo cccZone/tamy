@@ -126,9 +126,8 @@ File* Filesystem::open( const std::string& fileName, const std::ios_base::openmo
 
 void Filesystem::onFileEditionCompleted( const std::string& fileName ) const
 {
-   std::string dir = extractDir( fileName );
-   dir = toRelativePath( dir );
-   notifyDirChange( dir );
+   std::string relPath = toRelativePath( fileName );
+   notifyFileEditedChange( relPath );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -168,8 +167,7 @@ void Filesystem::remove( const std::string path ) const
    delete [] absPath;
 
    // send notifications
-   std::string parentDir = extractDir( path );
-   notifyDirChange( parentDir );
+   notifyFileRemovedChange( path );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -436,6 +434,26 @@ void Filesystem::detach( FilesystemListener& listener )
    if ( it != m_listeners.end() )
    {
       m_listeners.erase( it );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::notifyFileEditedChange( const std::string& path ) const
+{
+   for ( Listeners::const_iterator it = m_listeners.begin(); it != m_listeners.end(); ++it )
+   {
+      ( *it )->onFileEdited( path );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::notifyFileRemovedChange( const std::string& path ) const
+{
+   for ( Listeners::const_iterator it = m_listeners.begin(); it != m_listeners.end(); ++it )
+   {
+      ( *it )->onFileRemoved( path );
    }
 }
 

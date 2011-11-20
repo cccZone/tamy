@@ -28,11 +28,21 @@ PropertyObserver& Property::getObserver()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Property::notifyAboutChange()
+void Property::notifyBeforeChange()
 {
    if ( m_observer )
    {
-      m_observer->onPropertyChanged(*this);
+      m_observer->onPrePropertyChanged( *this );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Property::notifyAfterChange()
+{
+   if ( m_observer )
+   {
+      m_observer->onPropertyChanged( *this );
    }
 }
 

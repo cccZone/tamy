@@ -6,14 +6,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RCCreateRenderTarget::execute( Renderer& renderer )
-{
-   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
-   dxRenderer.getRenderTarget( m_rt );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void RCGetPixel::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );

@@ -204,6 +204,8 @@ protected:
    // FilesystemListener implementation
    // -------------------------------------------------------------------------
    void onDirChanged( const std::string& dir );
+   void onFileEdited( const std::string& path );
+   void onFileRemoved( const std::string& path );
 
    /**
     * Called by the resource when it gets deleted in order to remove

@@ -15,19 +15,15 @@ class RPSceneRenderNode;
 /**
  * Rendering pipeline block representing a node that renders scenes.
  */
-class RPBSceneRender : public RenderingPipelineBlock
+class RPBSceneRender : public TRenderingPipelineBlock< RPSceneRenderNode >
 {
    DECLARE_CLASS( RPBSceneRender )
-
-private:
-   RPSceneRenderNode*                                 m_nodePtr;
-   TResourceHandle< RPSceneRenderNode >*              m_node;
 
 public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBSceneRender() : m_nodePtr( NULL ), m_node( NULL ) {}
+   RPBSceneRender() : TRenderingPipelineBlock< RPSceneRenderNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.
@@ -35,15 +31,11 @@ public:
     * @param node    represented node
     */
    RPBSceneRender( RPSceneRenderNode& node );
-   ~RPBSceneRender();
 
+protected:
    // -------------------------------------------------------------------------
    // GraphBlock implementation
    // -------------------------------------------------------------------------
-   Object& getNode();
-   void initialize( RenderingPipeline& parentResource );
-
-protected:
    /**
     * Returns the shape of the block.
     */

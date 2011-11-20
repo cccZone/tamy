@@ -13,16 +13,6 @@ RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, Ren
    m_ui.isDynamicCheckBox->setChecked( false );
    updateTargetType();
 
-   // connect the widgets
-   connect( m_ui.renderTargetIdEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( changeTargetID(const QString& ) ) );
-   connect( m_ui.isReadableBox, SIGNAL( stateChanged( int ) ), this, SLOT( changeReadability( int ) ) );
-   connect( m_ui.usageComboBox, SIGNAL( currentIndexChanged( const QString& ) ), this, SLOT( usageChanged( const QString& ) ) );
-   connect( m_ui.isDynamicCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( changeTargetType( int ) ) );
-   connect( m_ui.widthScaleValueBox, SIGNAL( valueChanged( double ) ), this, SLOT( dynamicSizeChanged( double ) ) );
-   connect( m_ui.heightScaleValueBox, SIGNAL( valueChanged( double ) ), this, SLOT( dynamicSizeChanged( double ) ) );
-   connect( m_ui.widthValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticSizeChanged( int ) ) );
-   connect( m_ui.heightValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticSizeChanged( int ) ) );
-
    m_ui.renderTargetIdEdit->setEnabled( canChangeName );
    
    // fill the usages list
@@ -38,6 +28,16 @@ RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, Ren
          m_ui.usageComboBox->addItem( textureUsagesNames[i].c_str(), QVariant( i ) );
       }
    }
+
+   // connect the widgets
+   connect( m_ui.renderTargetIdEdit, SIGNAL( textChanged( const QString& ) ), this, SLOT( changeTargetID(const QString& ) ) );
+   connect( m_ui.isReadableBox, SIGNAL( stateChanged( int ) ), this, SLOT( changeReadability( int ) ) );
+   connect( m_ui.usageComboBox, SIGNAL( currentIndexChanged( const QString& ) ), this, SLOT( usageChanged( const QString& ) ) );
+   connect( m_ui.isDynamicCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( changeTargetType( int ) ) );
+   connect( m_ui.widthScaleValueBox, SIGNAL( valueChanged( double ) ), this, SLOT( dynamicSizeChanged( double ) ) );
+   connect( m_ui.heightScaleValueBox, SIGNAL( valueChanged( double ) ), this, SLOT( dynamicSizeChanged( double ) ) );
+   connect( m_ui.widthValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticSizeChanged( int ) ) );
+   connect( m_ui.heightValueBox, SIGNAL( valueChanged( int ) ), this, SLOT( staticSizeChanged( int ) ) );
 
    // initialize the data fields
    m_ui.renderTargetIdEdit->setText( descriptor.getTargetID().c_str() );

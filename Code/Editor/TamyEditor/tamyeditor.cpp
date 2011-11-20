@@ -370,7 +370,7 @@ void TamyEditor::onDirChanged( const std::string& dir )
 {
    const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
 
-   // if any of the resource editors are editing a deleted resource, close them
+   // if any of the resource editors are editing a resource from the deleted directory, close them
    // immediately
    int editorsCount = m_editorsTabs->count();
    for ( int i = 0; i < editorsCount; ++i )
@@ -385,6 +385,40 @@ void TamyEditor::onDirChanged( const std::string& dir )
       QString resourcePath = editor->getLabel();
 
       if ( editor && resourcePath.contains( dir.c_str() ) && !fs.doesExist( resourcePath.toStdString() ) )
+      {
+         editor->deinitialize( false );
+         m_editorsTabs->removeTab( i-- );
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::onFileEdited( const std::string& path )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::onFileRemoved( const std::string& path )
+{
+   const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+
+   // if any of the resource editors are editing a deleted resource, close them
+   // immediately
+   int editorsCount = m_editorsTabs->count();
+   for ( int i = 0; i < editorsCount; ++i )
+   {
+      QWidget* editorWidget = m_editorsTabs->widget( i );
+      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
+      if ( !editor )
+      {
+         continue;
+      }
+
+      QString resourcePath = editor->getLabel();
+
+      if ( editor && resourcePath == path.c_str() )
       {
          editor->deinitialize( false );
          m_editorsTabs->removeTab( i-- );

@@ -9,6 +9,7 @@
 #include <QFont>
 #include <QGraphicsLineItem>
 #include "core/Object.h"
+#include <set>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -94,6 +95,22 @@ public:
     */
    void getConnections( std::vector< GraphBlockConnection* >& outConnections ) const;
 
+   /**
+    * Looks for a socket with the specified name and position.
+    *
+    * @param position
+    * @param name
+    */
+   GraphBlockSocket* getSocket( GraphBlockSocketPosition position, const std::string& name ) const;
+
+   /**
+    * Extracts a list of all socket names located on the specified position.
+    *
+    * @param position
+    * @param outSocketNames
+    */
+   void getAllSockets( GraphBlockSocketPosition position, std::set< std::string >& outSocketNames ) const;
+
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
@@ -145,6 +162,14 @@ protected:
     * @param socket
     */
    void addSocket( GraphBlockSocket* socket );
+
+   /**
+    * Removes a socket on the specified position with the specified name, deleting its instance.
+    *
+    * @param position
+    * @param socketNames
+    */
+   void removeSockets( GraphBlockSocketPosition position, const std::set< std::string >& socketNames );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -202,6 +227,11 @@ public:
     * Returns the parent graph block.
     */
    inline GraphBlock& getParentBlock() const { return *m_parent; }
+
+   /**
+    * Returns the socket's name.
+    */
+   inline const std::string& getName() const { return m_name; }
 
    /**
     * Returns the current socket position.

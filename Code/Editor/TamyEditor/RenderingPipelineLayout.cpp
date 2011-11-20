@@ -5,11 +5,14 @@
 // blocks
 #include "RPBPostProcess.h"
 #include "RPBSceneRender.h"
-#include "RPBDepthNormals.h"
 #include "RPBDebugRender.h"
 #include "RPBStart.h"
 #include "RPBAdapter.h"
-
+#include "RPBFloats2Vec4.h"
+#include "RPBCamera.h"
+#include "RPBTexture.h"
+#include "RPBFloat.h"
+#include "RPBVec4.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -27,11 +30,15 @@ RenderingPipelineLayout::RenderingPipelineLayout( const std::string& path )
 {
    // create block-to-node associations
    associate< RPSceneRenderNode, RPBSceneRender >();
-   associate< RPDepthNormalsNode, RPBDepthNormals >();
    associate< RPDebugRendererNode, RPBDebugRender >();
    associate< RPStartNode, RPBStart >();
    associate< RPAdapterNode, RPBAdapter >();
-   associateAbstract< RPPostProcessNode, RPBPostProcess >();
+   associate< RPPostProcessNode, RPBPostProcess >();
+   associate< RPFloats2Vec4Node, RPBFloats2Vec4 >();
+   associate< RPCameraNode, RPBCamera >();
+   associate< RPTextureNode, RPBTexture >();
+   associate< RPFloatNode, RPBFloat >();
+   associate< RPVec4Node, RPBVec4 >();
 
    // customize the looks
    setBackgroundBrush( QColor( 209, 226, 165 ) );
@@ -57,7 +64,6 @@ void RenderingPipelineLayout::onResourceLoaded( ResourcesManager& mgr )
    {
       // the model was not set - create an instance
       std::string resourcePath = getFilePath();
-
       m_model = mgr.findResource< RenderingPipeline >( resourcePath );
       if ( m_model == NULL )
       {

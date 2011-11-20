@@ -191,6 +191,28 @@ void GraphBlock::addSocket( GraphBlockSocket* socket )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void GraphBlock::removeSockets( GraphBlockSocketPosition position, const std::set< std::string >& socketNames )
+{
+   for ( std::set< std::string >::const_iterator it = socketNames.begin(); it != socketNames.end(); ++it )
+   {
+      unsigned int count = m_sockets.size();
+      for ( unsigned int i = 0; i < count; ++i )
+      {
+         GraphBlockSocket* socket = m_sockets[i];
+         if ( socket->getPosition() == position && socket->getName() == *it )
+         {
+            delete socket;
+            m_sockets.erase( m_sockets.begin() + i );
+            break;
+         }
+      }
+   }
+
+   calculateBounds();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void GraphBlock::calculateBounds()
 {
    QFontMetrics metrics( m_font );
@@ -286,6 +308,40 @@ void GraphBlock::getConnections( std::vector< GraphBlockConnection* >& outConnec
    {
       GraphBlockSocket* socket = *it;
       outConnections.insert( outConnections.end(), socket->getConnections().begin(), socket->getConnections().end() );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+GraphBlockSocket* GraphBlock::getSocket( GraphBlockSocketPosition position, const std::string& name ) const
+{
+   unsigned int count = m_sockets.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      GraphBlockSocket* socket = m_sockets[i];
+      if ( socket->getPosition() == position && socket->getName() == name )
+      {
+         // found it
+         return socket;
+      }
+   }
+
+   // socket with such name doesn't exist
+   return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlock::getAllSockets( GraphBlockSocketPosition position, std::set< std::string >& outSocketNames ) const
+{
+   unsigned int count = m_sockets.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      GraphBlockSocket* socket = m_sockets[i];
+      if ( socket->getPosition() == position  )
+      {
+         outSocketNames.insert( socket->getName() );
+      }
    }
 }
 

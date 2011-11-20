@@ -33,9 +33,6 @@
     <ClCompile Include="DX9Renderer.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="DX9Texture.cpp">
-      <Filter>RenderCommands</Filter>
-    </ClCompile>
     <ClCompile Include="DX9Initializer.cpp">
       <Filter>Initializer</Filter>
     </ClCompile>

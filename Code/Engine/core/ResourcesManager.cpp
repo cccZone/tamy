@@ -389,3 +389,26 @@ void ResourcesManager::onDirChanged( const std::string& dir )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesManager::onFileEdited( const std::string& path )
+{
+   // nothing to do here
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesManager::onFileRemoved( const std::string& path )
+{
+   // check if the removed file was a resource, and if it was - remove it
+   ResourcesMap::iterator it = m_resources.find( path );
+   if ( it != m_resources.end() )
+   {
+      Resource* res = it->second;
+      m_resources.erase( it );
+
+      res->resetResourcesManager();
+      delete res;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

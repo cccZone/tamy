@@ -15,7 +15,7 @@ END_OBJECT()
 RPDebugRendererNode::RPDebugRendererNode()
 {
    defineInput( new RPVoidInput( "Input" ) );
-   defineOutput( new RPTextureOutput( "Output" ) );
+   defineOutput( new RPRenderTargetOutput( "Output" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,7 +33,7 @@ void RPDebugRendererNode::onInitialize( RenderingPipelineMechanism& host ) const
 {
    RuntimeDataBuffer& data = host.data();
 
-   data[ m_renderTarget ] = getOutput< RPTextureOutput >( "Output" ).getRenderTarget( data );
+   data[ m_renderTarget ] = getOutput< RPRenderTargetOutput >( "Output" ).getRenderTarget( data );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

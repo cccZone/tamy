@@ -107,6 +107,22 @@ void ResourcesBrowser::onDirChanged( const std::string& dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void ResourcesBrowser::onFileEdited( const std::string& path )
+{
+   std::string dir = ResourcesManager::getInstance().getFilesystem().extractDir( path );
+   refresh( dir );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::onFileRemoved( const std::string& path )
+{
+   std::string dir = ResourcesManager::getInstance().getFilesystem().extractDir( path );
+   refresh( dir );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void ResourcesBrowser::refresh( const std::string& rootDir )
 {
    // find the entry corresponding to the specified root directory

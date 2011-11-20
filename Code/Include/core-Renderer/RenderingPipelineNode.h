@@ -20,7 +20,9 @@ enum RPNodeSocketOperation;
 
 enum RenderingPipelineNodeOperation
 {
-   RPNO_CHANGED
+   RPNO_CHANGED,
+   RPNO_INPUTS_CHANGED,
+   RPNO_OUTPUTS_CHANGED,
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -174,7 +176,6 @@ public:
    void update( RPNodeSocket& subject );
    void update( RPNodeSocket& subject, const RPNodeSocketOperation& msg );
 
-protected:
    // -------------------------------------------------------------------------
    // Sockets management
    // -------------------------------------------------------------------------
@@ -184,6 +185,13 @@ protected:
     * @param input
     */
    void defineInput( RPNodeInput* input );
+
+   /**
+    * Removes an input with the specified name
+    *
+    * @param name
+    */
+   void removeInput( const std::string& name );
 
    /**
     * Defines a new node output.
@@ -210,6 +218,7 @@ protected:
    template< typename T >
    const T& getOutput( const std::string& outputName ) const;
 
+protected:
    /**
     * Called when the rendering mechanism creates a data layout for the runtime data.
     *

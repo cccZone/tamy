@@ -15,19 +15,15 @@ class RPAdapterNode;
 /**
  * Rendering pipeline block representing a rendering process start node.
  */
-class RPBAdapter : public RenderingPipelineBlock
+class RPBAdapter : public TRenderingPipelineBlock< RPAdapterNode >
 {
    DECLARE_CLASS( RPBAdapter )
-
-private:
-   RPAdapterNode*                               m_nodePtr;
-   TResourceHandle< RPAdapterNode >*            m_node;
 
 public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBAdapter() : RenderingPipelineBlock(), m_nodePtr( NULL ), m_node( NULL ) {}
+   RPBAdapter() : TRenderingPipelineBlock< RPAdapterNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.
@@ -35,15 +31,11 @@ public:
     * @param node    represented node
     */
    RPBAdapter( RPAdapterNode& node );
-   ~RPBAdapter();
 
+protected:
    // -------------------------------------------------------------------------
    // GraphBlock implementation
    // -------------------------------------------------------------------------
-   Object& getNode();
-   void initialize( RenderingPipeline& parentResource );
-
-protected:
    /**
     * Returns the shape of the block.
     */

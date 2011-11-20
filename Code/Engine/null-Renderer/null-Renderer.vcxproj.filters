@@ -69,9 +69,6 @@
     <ClCompile Include="NullSkeleton.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>
-    <ClCompile Include="NullTexture.cpp">
-      <Filter>RenderCommands</Filter>
-    </ClCompile>
     <ClCompile Include="NullTriangleMesh.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>

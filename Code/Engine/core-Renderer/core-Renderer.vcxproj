@@ -84,7 +84,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
+    <ClCompile Include="BoolSockets.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
+    <ClCompile Include="IntSockets.cpp" />
+    <ClCompile Include="MatrixSockets.cpp" />
+    <ClCompile Include="PixelShaderConstant.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="RenderingPipelineNode.cpp" />
     <ClCompile Include="RenderingPipelineMechanism.cpp" />
@@ -92,22 +96,21 @@
     <ClCompile Include="RenderResource.cpp" />
     <ClCompile Include="RenderTargetDescriptor.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
-    <ClCompile Include="RPBlurNode.cpp" />
-    <ClCompile Include="RPBrightnessNode.cpp" />
+    <ClCompile Include="RPCameraNode.cpp" />
     <ClCompile Include="RPDebugRendererNode.cpp" />
-    <ClCompile Include="RPDepthNormalsNode.cpp" />
-    <ClCompile Include="RPDownsampleNode.cpp" />
     <ClCompile Include="FloatSockets.cpp" />
-    <ClCompile Include="RPHDRNode.cpp" />
-    <ClCompile Include="RPLuminanceNode.cpp" />
     <ClCompile Include="RPAdapterNode.cpp" />
+    <ClCompile Include="RPFloatNode.cpp" />
+    <ClCompile Include="RPFloats2Vec4Node.cpp" />
     <ClCompile Include="RPPostProcessNode.cpp" />
     <ClCompile Include="RPSBComputed.cpp" />
     <ClCompile Include="RPSceneBuilder.cpp" />
     <ClCompile Include="RPSceneRenderNode.cpp" />
-    <ClCompile Include="RPSSAONode.cpp" />
     <ClCompile Include="RPStartNode.cpp" />
+    <ClCompile Include="RPTextureNode.cpp" />
+    <ClCompile Include="RPVec4Node.cpp" />
     <ClCompile Include="SceneRenderTreeBuilder.cpp" />
+    <ClCompile Include="ShaderNodeOperator.cpp" />
     <ClCompile Include="ShaderTexture.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
@@ -122,6 +125,7 @@
     <ClCompile Include="SkinnedGeometry.cpp" />
     <ClCompile Include="StaticGeometry.cpp" />
     <ClCompile Include="RPSBTextured.cpp" />
+    <ClCompile Include="StringSockets.cpp" />
     <ClCompile Include="TextureSockets.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="DeviceFilter.cpp" />
@@ -141,6 +145,7 @@
     <ClCompile Include="SingleTextureMaterial.cpp" />
     <ClCompile Include="RenderingView.cpp" />
     <ClCompile Include="SpatialRepresentation.cpp" />
+    <ClCompile Include="Vec4Sockets.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="VertexDescriptions.cpp" />
     <ClCompile Include="PixelShader.cpp" />
@@ -157,10 +162,14 @@
     <None Include="..\..\Include\core-Renderer\TriangleMesh.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\BoolSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FloatSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\IntSockets.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\MatrixSockets.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h" />
@@ -171,22 +180,20 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderState.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPBlurNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPBrightnessNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPCameraNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPDebugRendererNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPDepthNormalsNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPDownsampleNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPHDRNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPLuminanceNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPFloatNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSBComputed.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneBuilder.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPSSAONode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPTextureNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPVec4Node.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderTreeBuilder.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderNodeOperator.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderRenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h" />
@@ -206,8 +213,10 @@
     <ClInclude Include="..\..\Include\core-Renderer\SkinnedGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSBTextured.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\StringSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TextureSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Vec4Sockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DeviceFilter.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DeviceFilterElem.h" />

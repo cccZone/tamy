@@ -16,6 +16,7 @@ public:
     * Constructor.
     */
    RPVoidInput( const std::string& name = "" );
+   ~RPVoidInput();
 
 protected:
    bool canConnect( RPNodeOutput& output ) const;

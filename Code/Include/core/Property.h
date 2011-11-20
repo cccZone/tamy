@@ -25,9 +25,18 @@ public:
    virtual ~PropertyObserver() {}
 
    /**
-    * Called when a property value gets changed.
+    * Called when a property value is about to change.
+    *
+    * @param property
     */
-   virtual void onPropertyChanged(Property& property) = 0;
+   virtual void onPrePropertyChanged( Property& property ) = 0;
+
+   /**
+    * Called when a property value gets changed.
+    *
+    * @param property
+    */
+   virtual void onPropertyChanged( Property& property ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -138,9 +147,15 @@ public:
    void setObserver(PropertyObserver& observer);
 
    /**
+    * Call this method when the value of the property is about to change ( a great moment
+    * to clean up after the old value ).
+    */
+   void notifyBeforeChange();
+
+   /**
     * Call this method when the value of the property changes.
     */
-   void notifyAboutChange();
+   void notifyAfterChange();
 
 protected:
    /**

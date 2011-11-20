@@ -14,6 +14,7 @@
 
 class Filesystem;
 class RCBindPixelShader;
+class PixelShaderConstant;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -68,9 +69,13 @@ class PixelShader : public Resource, public UniqueObject< PixelShader >, public 
    DECLARE_RESOURCE( PixelShader )
 
 private:
-   std::string                   m_script;
-   std::string                   m_entryFunctionName;
-   PixelShaderParams             m_params;
+   // static data
+   std::string                               m_script;
+   std::string                               m_entryFunctionName;
+   PixelShaderParams                         m_params;
+
+   // runtime data
+   std::vector< PixelShaderConstant* >       m_constants;
 
 public:
    /**
@@ -102,7 +107,7 @@ public:
     *
     * @param script
     */
-   inline void setScript( const std::string& script ) { m_script = script; setDirty(); }
+   void setScript( const std::string& script );
 
    /**
     * Returns the params used for texture mapping.
@@ -120,9 +125,22 @@ public:
    inline const std::string& getEntryFunctionName() const { return m_entryFunctionName; }
 
    /**
+    * Returns shader constants.
+    */
+   inline const std::vector< PixelShaderConstant* >& getConstants() const { return m_constants; }
+
+   /**
     * Creates a texture setting shader parameter for the effect shader.
     */
    static ShaderParam< PixelShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
+
+   // -------------------------------------------------------------------------
+   // Resource implementation
+   // -------------------------------------------------------------------------
+   void onResourceLoaded( ResourcesManager& mgr );
+
+private:
+   void parseShaderConstants();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

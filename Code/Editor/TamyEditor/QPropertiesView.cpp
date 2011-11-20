@@ -23,6 +23,7 @@
 #include "ResourcePropertyEditor.h"
 #include "ArrayPropertyEditor.h"
 #include "EnumPropertyEditor.h"
+#include "ObjectPropertyEditor.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -72,6 +73,7 @@ void QPropertiesView::initFactory()
    associate< long,                LongPropertyEditor >();
    associate< unsigned long,       ULongPropertyEditor >();
    associatePtr< Resource*,        ResourcePropertyEditor >();
+   associatePtr< Object*,           ObjectPropertyEditor >();
    associatePtr< Enum,             EnumPropertyEditor >();
 }
 

@@ -15,19 +15,15 @@ class RPStartNode;
 /**
  * Rendering pipeline block representing a rendering process start node.
  */
-class RPBStart : public RenderingPipelineBlock
+class RPBStart : public TRenderingPipelineBlock< RPStartNode >
 {
    DECLARE_CLASS( RPBStart )
-
-private:
-   RPStartNode*                                 m_nodePtr;
-   TResourceHandle< RPStartNode >*              m_node;
 
 public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBStart() : RenderingPipelineBlock(), m_nodePtr( NULL ), m_node( NULL ) {}
+   RPBStart() : TRenderingPipelineBlock< RPStartNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.
@@ -35,15 +31,12 @@ public:
     * @param node    represented node
     */
    RPBStart( RPStartNode& node );
-   ~RPBStart();
 
+protected:
    // -------------------------------------------------------------------------
    // GraphBlock implementation
    // -------------------------------------------------------------------------
-   Object& getNode();
-   void initialize( RenderingPipeline& parentResource );
 
-protected:
    /**
     * Returns the shape of the block.
     */

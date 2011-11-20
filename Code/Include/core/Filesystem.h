@@ -24,6 +24,20 @@ public:
    virtual ~FilesystemListener() {}
 
    /**
+    * Called when a file in the file system changes ( is either created, or its contents changes ).
+    *
+    * @param path    file path
+    */
+   virtual void onFileEdited( const std::string& path ) = 0;
+
+   /**
+    * Called when a file in the file system is removed.
+    *
+    * @param path    file path
+    */
+   virtual void onFileRemoved( const std::string& path ) = 0;
+
+   /**
     * Called when the contents of a directory changes.
     *
     * @param dir     directory the contents of which were changed
@@ -261,6 +275,8 @@ protected:
    void onFileEditionCompleted( const std::string& fileName ) const;
 
 private:
+   void notifyFileEditedChange( const std::string& path ) const;
+   void notifyFileRemovedChange( const std::string& path ) const;
    void notifyDirChange( const std::string& dir ) const;
 };
 

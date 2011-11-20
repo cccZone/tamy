@@ -12,6 +12,7 @@ class SpatialRepresentation;
 class Geometry;
 class RenderState;
 class Renderer;
+class RuntimeDataBuffer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -55,10 +56,15 @@ struct StateTreeNode : public MemoryPoolObject
 
    /**
     * Constructor.
+    */
+   StateTreeNode();
+
+   /**
+    * Constructor.
     *
     * @param state         described render state
     */
-   StateTreeNode( RenderState* state );
+   StateTreeNode( RenderState& state );
    ~StateTreeNode();
 
    /**
@@ -72,8 +78,9 @@ struct StateTreeNode : public MemoryPoolObject
     * Sets the render state for rendering.
     *
     * @param renderer
+    * @param runtime data buffer
     */
-   void render( Renderer& renderer ) const;
+   void render( Renderer& renderer, RuntimeDataBuffer& data ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

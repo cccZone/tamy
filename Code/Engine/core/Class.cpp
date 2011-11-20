@@ -164,13 +164,19 @@ bool Class::operator<(const Class& rhs) const
 void Class::getParents(std::vector< Class >& outParentHandles) const
 {
    const std::vector< std::string >& parents = m_template->getParents();
-   ClassesRegistry& reg = getClassesRegistry();
-
    unsigned int count = parents.size();
    for (unsigned int i = 0; i < count; ++i)
    {
       outParentHandles.push_back( Class( parents[i] ) );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Class::getImplementations( std::vector< Class >& outImplementationHandles ) const
+{
+   ClassesRegistry& reg = getClassesRegistry();
+   reg.getClassesMatchingType( *this, outImplementationHandles, false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

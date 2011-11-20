@@ -1,11 +1,9 @@
-#pragma once
-
 /// @file   core-Renderer\RenderTarget.h
 /// @brief  a special kind of texture which a renderer uses as an output
+#pragma once
 
 #include "core\Observer.h"
 #include "core-Renderer\ShaderTexture.h"
-#include "core-Renderer\RenderState.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\ShaderParam.h"
 #include "core-Renderer\RenderResource.h"
@@ -27,7 +25,7 @@ enum TextureFormat;
 /**
  * A special kind of texture which a renderer uses as an output.
  */
-class RenderTarget : public TRenderState< RenderTarget >, public ShaderTexture, public UniqueObject< RenderTarget >, public RenderResource
+class RenderTarget : public ShaderTexture, public UniqueObject< RenderTarget >, public RenderResource
 {
    DECLARE_RTTI_CLASS
 
@@ -82,13 +80,6 @@ public:
     */
    Color getPixel( const D3DXVECTOR2& pos ) const;
 
-   // -------------------------------------------------------------------------
-   // RenderState implementation
-   // -------------------------------------------------------------------------
-   void onPreRender( Renderer& renderer );
-   void onPostRender( Renderer& renderer );
-   bool onEquals( const RenderTarget& rhs ) const;
-   bool onLess( const RenderTarget& rhs ) const;
 
    // -------------------------------------------------------------------------
    // ShaderTexture implementation
@@ -201,25 +192,6 @@ public:
    // -------------------------------------------------------------------------
    void update( ShaderTexture& texture );
    void update( ShaderTexture& texture, const ShaderTextureOps& operation );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Command that ensures a render target existence.
- */
-class RCCreateRenderTarget : public RenderCommand
-{
-private:
-   RenderTarget&    m_rt;
-
-public:
-   RCCreateRenderTarget( RenderTarget& rt ) : m_rt( rt ) {}
-
-   // -------------------------------------------------------------------------
-   // RenderCommand implementation
-   // -------------------------------------------------------------------------
-   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

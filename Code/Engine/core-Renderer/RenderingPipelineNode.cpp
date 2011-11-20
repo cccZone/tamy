@@ -197,6 +197,8 @@ void RenderingPipelineNode::defineInput( RPNodeInput* input )
    {
       input->attachObserver( *this );
       m_inputs.push_back( input );
+
+      notify( RPNO_INPUTS_CHANGED );
    }
    else
    {
@@ -204,8 +206,27 @@ void RenderingPipelineNode::defineInput( RPNodeInput* input )
       sprintf_s( tmp, "Trying to override the definition of input '%s'", existingInput->getName().c_str() );
 
       delete input;
+      ASSERT_MSG( false, tmp );
+   }
+}
 
-      throw std::runtime_error( tmp );
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineNode::removeInput( const std::string& name )
+{
+   for ( InputsMap::const_iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
+   {
+      if ( (*it)->getName() == name )
+      {
+         (*it)->detachObserver( *this );
+
+         delete *it;
+         m_inputs.erase( it );
+
+         notify( RPNO_INPUTS_CHANGED );
+
+         break;
+      }
    }
 }
 
@@ -218,6 +239,8 @@ void RenderingPipelineNode::defineOutput( RPNodeOutput* output )
    {
       output->attachObserver( *this );
       m_outputs.push_back( output );
+
+      notify( RPNO_OUTPUTS_CHANGED );
    }
    else
    {
@@ -225,8 +248,7 @@ void RenderingPipelineNode::defineOutput( RPNodeOutput* output )
       sprintf_s( tmp, "Trying to override the definition of output '%s'", existingOutput->getName().c_str() );
 
       delete output;
-
-      throw std::runtime_error( tmp );
+      ASSERT_MSG( false, tmp );
    }
 }
 
@@ -234,6 +256,8 @@ void RenderingPipelineNode::defineOutput( RPNodeOutput* output )
 
 void RenderingPipelineNode::onObjectLoaded()
 {
+   __super::onObjectLoaded();
+
    // attach self as an observer of the sockets
    for( InputsMap::iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
    {
@@ -249,7 +273,17 @@ void RenderingPipelineNode::onObjectLoaded()
 
 void RenderingPipelineNode::onPropertyChanged( Property& property )
 {
-   if ( property.getName() != "m_inputs" && property.getName() != "m_outputs" )
+   __super::onPropertyChanged( property );
+
+   if ( property.getName() == "m_inputs" )
+   {
+      notify( RPNO_INPUTS_CHANGED );
+   }
+   else if ( property.getName() == "m_outputs" )
+   {
+      notify( RPNO_OUTPUTS_CHANGED );
+   }
+   else
    {
       notify( RPNO_CHANGED );
    }

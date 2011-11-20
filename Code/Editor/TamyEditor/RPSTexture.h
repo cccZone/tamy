@@ -9,7 +9,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class QGraphicsSceneDragDropEvent;
-class RPTextureOutput;
+class RPRenderTargetOutput;
+class RPImageOutput;
 class RPTextureInput;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,9 +41,9 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPSTextureOutput : public RenderingPipelineSocketRepresentation
+class RPSRenderTargetOutput : public RenderingPipelineSocketRepresentation
 {
-   DECLARE_CLASS( RPSTextureOutput )
+   DECLARE_CLASS( RPSRenderTargetOutput )
 
 private:
    static QPen    s_dragPen;
@@ -53,14 +54,14 @@ public:
    /**
     * Default constructor.
     */
-   RPSTextureOutput();
+   RPSRenderTargetOutput();
 
    /**
     * Constructor.
     *
     * @param socket        socket the node represents.
     */
-   RPSTextureOutput( RPTextureOutput& socket );
+   RPSRenderTargetOutput( RPRenderTargetOutput& socket );
 
 protected:
    // -------------------------------------------------------------------------
@@ -72,6 +73,32 @@ protected:
    void dragMoveEvent( QGraphicsSceneDragDropEvent *event );
    void dragLeaveEvent( QGraphicsSceneDragDropEvent *event );
    void dropEvent( QGraphicsSceneDragDropEvent *event );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class RPSImageOutput : public RenderingPipelineSocketRepresentation
+{
+   DECLARE_CLASS( RPSImageOutput )
+
+public:
+   /**
+    * Default constructor.
+    */
+   RPSImageOutput() : RenderingPipelineSocketRepresentation() {}
+
+   /**
+    * Constructor.
+    *
+    * @param socket        socket the node represents.
+    */
+   RPSImageOutput( RPImageOutput& socket ) : RenderingPipelineSocketRepresentation( socket ) {}
+
+protected:
+   // -------------------------------------------------------------------------
+   // GraphBlockSocket implementation
+   // -------------------------------------------------------------------------
+   QColor getBgColor() const { return QColor( 186, 166, 221 ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
