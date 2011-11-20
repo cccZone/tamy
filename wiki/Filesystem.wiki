@@ -1,0 +1,33 @@
+#labels StreamBuffer,File,Filesystem
+=Filesystem=
+
+Access layer to the filesystem.
+
+Using it, you can create, open and delete files and directories.
+
+A file is represented by the `File` class.
+
+
+==Reading file contents==
+
+You can of course use `File.read` method, but it's not very convenient.
+For simplicity's sake, we provide a neat tool for doing just that - `StreamBuffer`.
+
+It's a template class, meaning you can specify how the data in the file should be interpreted.
+
+For instance, if you know your file's a text file and you want to initialize a string with it, this is how you can do it:
+
+{{{
+File* file;
+
+// ... file initialization etc....
+
+StringBuffer< char > buf( *file );
+std::string textFileContents = buf.getBuffer();
+
+// cleanup
+delete file;
+
+}}}
+
+As easy as that.
