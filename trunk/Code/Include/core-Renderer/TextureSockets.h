@@ -40,6 +40,63 @@ class RPTextureOutput : public RPNodeOutput
 {
    DECLARE_CLASS( RPTextureOutput )
 
+public:
+   /**
+    * Constructor.
+    */
+   RPTextureOutput( const std::string& name = "" ) : RPNodeOutput( name ) {}
+   virtual ~RPTextureOutput() {}
+
+   /**
+    * Returns a texture the output is using.
+    *
+    * @param data       runtime data buffer
+    */
+   virtual ShaderTexture* getTexture( RuntimeDataBuffer& data ) const { return NULL; }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class RPImageOutput : public RPTextureOutput
+{
+   DECLARE_CLASS( RPTextureOutput )
+
+private:
+   TRuntimeVar< ShaderTexture* >           m_texture;
+
+public:
+   /**
+    * Constructor.
+    */
+   RPImageOutput( const std::string& name = "" );
+
+   /**
+    * Sets a texture the output should emit.
+    *
+    * @param data          runtime data buffer
+    * @param texture
+    */
+   void setTexture( RuntimeDataBuffer& data, ShaderTexture* texture ) const;
+
+   // -------------------------------------------------------------------------
+   // RPTextureOutput implementation
+   // -------------------------------------------------------------------------
+   ShaderTexture* getTexture( RuntimeDataBuffer& data ) const;
+
+   // -------------------------------------------------------------------------
+   // RPNodeOutput implementation
+   // -------------------------------------------------------------------------
+   void createLayout( RenderingPipelineMechanism& host ) const;
+   void initialize( RenderingPipelineMechanism& host ) const;
+   void deinitialize( RenderingPipelineMechanism& host ) const;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class RPRenderTargetOutput : public RPTextureOutput
+{
+   DECLARE_CLASS( RPRenderTargetOutput )
+
 private:
    bool                                m_useBackBuffer;
    std::string                         m_renderTargetId;
@@ -50,14 +107,14 @@ public:
    /**
     * Constructor.
     */
-   RPTextureOutput( const std::string& name = "" );
+   RPRenderTargetOutput( const std::string& name = "" );
 
    /**
     * Sets a new render target id.
     *
     * @param renderTargetId
     */
-   void setRenderTargetID( const std::string renderTargetId );
+   void setRenderTargetID( const std::string& renderTargetId );
 
    /**
     * Returns the render target set.
@@ -66,11 +123,9 @@ public:
     */
    RenderTarget* getRenderTarget( RuntimeDataBuffer& data ) const;
 
-   /**
-    * Returns a texture the output is using.
-    *
-    * @param data       runtime data buffer
-    */
+   // -------------------------------------------------------------------------
+   // RPTextureOutput implementation
+   // -------------------------------------------------------------------------
    ShaderTexture* getTexture( RuntimeDataBuffer& data ) const;
 
    // -------------------------------------------------------------------------

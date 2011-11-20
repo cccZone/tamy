@@ -7,3 +7,31 @@ BEGIN_ABSTRACT_OBJECT( RPSceneBuilder, Object );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
+
+RPSceneBuilder::RPSceneBuilder()
+   : m_hostNode( NULL )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+RPSceneBuilder::~RPSceneBuilder()
+{
+   m_hostNode = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPSceneBuilder::defineSockets( RPSceneRenderNode& hostNode )
+{
+   if ( m_hostNode != NULL )
+   {
+      ASSERT_MSG( false, "You're trying to initialize an initialized builder" );
+      return;
+   }
+
+   m_hostNode = &hostNode;
+   onDefineSockets( hostNode );
+}
+
+///////////////////////////////////////////////////////////////////////////////

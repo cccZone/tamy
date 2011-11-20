@@ -12,19 +12,15 @@ class RPPostProcessNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPBPostProcess : public RenderingPipelineBlock
+class RPBPostProcess : public TRenderingPipelineBlock< RPPostProcessNode >
 {
    DECLARE_CLASS( RPBPostProcess )
-
-private:
-   RPPostProcessNode*                           m_nodePtr;
-   TResourceHandle< RPPostProcessNode >*        m_node;
 
 public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBPostProcess() : m_nodePtr( NULL ), m_node( NULL ) {}
+   RPBPostProcess() : TRenderingPipelineBlock< RPPostProcessNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.
@@ -32,15 +28,11 @@ public:
     * @param node    represented node
     */
    RPBPostProcess( RPPostProcessNode& node );
-   ~RPBPostProcess();
 
+protected:
    // -------------------------------------------------------------------------
    // GraphBlock implementation
    // -------------------------------------------------------------------------
-   Object& getNode();
-   void initialize( RenderingPipeline& parentResource );
-
-protected:
    /**
     * Returns the shape of the block.
     */

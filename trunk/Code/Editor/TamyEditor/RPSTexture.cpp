@@ -14,16 +14,16 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPSTextureOutput, RenderingPipelineSocketRepresentation );
+BEGIN_OBJECT( RPSRenderTargetOutput, RenderingPipelineSocketRepresentation );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QPen RPSTextureOutput::s_dragPen( QBrush( QColor( 100, 100, 255 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+QPen RPSRenderTargetOutput::s_dragPen( QBrush( QColor( 100, 100, 255 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RPSTextureOutput::RPSTextureOutput() 
+RPSRenderTargetOutput::RPSRenderTargetOutput() 
    : RenderingPipelineSocketRepresentation()
    , m_renderTargetDraggedIn( false )
 {
@@ -33,7 +33,7 @@ RPSTextureOutput::RPSTextureOutput()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RPSTextureOutput::RPSTextureOutput( RPTextureOutput& socket ) 
+RPSRenderTargetOutput::RPSRenderTargetOutput( RPRenderTargetOutput& socket ) 
    : RenderingPipelineSocketRepresentation( socket ) 
    , m_renderTargetDraggedIn( false )
 {
@@ -43,7 +43,7 @@ RPSTextureOutput::RPSTextureOutput( RPTextureOutput& socket )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSTextureOutput::dragEnterEvent( QGraphicsSceneDragDropEvent *event )
+void RPSRenderTargetOutput::dragEnterEvent( QGraphicsSceneDragDropEvent *event )
 {
    m_renderTargetDraggedIn = true;
    event->acceptProposedAction();
@@ -53,14 +53,14 @@ void RPSTextureOutput::dragEnterEvent( QGraphicsSceneDragDropEvent *event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSTextureOutput::dragMoveEvent( QGraphicsSceneDragDropEvent *event )
+void RPSRenderTargetOutput::dragMoveEvent( QGraphicsSceneDragDropEvent *event )
 {
    event->acceptProposedAction();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSTextureOutput::dragLeaveEvent( QGraphicsSceneDragDropEvent *event )
+void RPSRenderTargetOutput::dragLeaveEvent( QGraphicsSceneDragDropEvent *event )
 {
    m_renderTargetDraggedIn = false;
    event->acceptProposedAction();
@@ -69,7 +69,7 @@ void RPSTextureOutput::dragLeaveEvent( QGraphicsSceneDragDropEvent *event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSTextureOutput::dropEvent( QGraphicsSceneDragDropEvent *event )
+void RPSRenderTargetOutput::dropEvent( QGraphicsSceneDragDropEvent *event )
 {
    // decode the dragged data
    const QMimeData* mimeData = event->mimeData();
@@ -81,7 +81,7 @@ void RPSTextureOutput::dropEvent( QGraphicsSceneDragDropEvent *event )
    if ( selectedTargetID.empty() == false )
    {
       RenderingPipelineNode& parentNode = dynamic_cast< RenderingPipelineNode& >( getParentBlock().getNode() );
-      RPTextureOutput* socket = dynamic_cast< RPTextureOutput* >( parentNode.findOutput( getSocketName() ) );
+      RPRenderTargetOutput* socket = dynamic_cast< RPRenderTargetOutput* >( parentNode.findOutput( getSocketName() ) );
 
       if ( socket )
       {
@@ -97,9 +97,16 @@ void RPSTextureOutput::dropEvent( QGraphicsSceneDragDropEvent *event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QPen RPSTextureOutput::getBorderPen() const
+QPen RPSRenderTargetOutput::getBorderPen() const
 {
    return m_renderTargetDraggedIn ? s_dragPen : __super::getBorderPen();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( RPSImageOutput, RenderingPipelineSocketRepresentation );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

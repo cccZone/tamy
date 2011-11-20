@@ -33,7 +33,6 @@
     <ClCompile Include="NullShaderParamVec4.cpp" />
     <ClCompile Include="NullShaderParamVec4Array.cpp" />
     <ClCompile Include="NullSkeleton.cpp" />
-    <ClCompile Include="NullTexture.cpp" />
     <ClCompile Include="NullTriangleMesh.cpp" />
     <ClCompile Include="NullVertexShader.cpp" />
   </ItemGroup>

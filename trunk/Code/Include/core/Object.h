@@ -87,7 +87,8 @@ protected:
    // -------------------------------------------------------------------------
    // PropertyObserver implementation
    // -------------------------------------------------------------------------
-   void onPropertyChanged(Property& property);
+   void onPrePropertyChanged( Property& property ) {}
+   void onPropertyChanged( Property& property ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

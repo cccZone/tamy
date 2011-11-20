@@ -19,6 +19,7 @@ class Camera;
 class RenderState;
 class SceneRenderTreeBuilder;
 class MemoryPool;
+class RuntimeDataBuffer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -45,11 +46,11 @@ public:
    ~RenderingView();
 
    /**
-    * Renders the view contents.
+    * Collects renderables that should be rendered this frame.
     *
-    * @param treeBuilder      scene tree builder strategy
+    * @param outVisibleElems
     */
-   void render( const SceneRenderTreeBuilder& treeBuilder );
+   void collectRenderables( Array< SpatialRepresentation* >& outVisibleElems );
 
    // ----------------------------------------------------------------------
    // ModelView implementation

@@ -161,12 +161,18 @@ public:
     *
     * @throw std::out_of_range   if the class hasn't been registered
     *
-    * @param handle              handle to the class parents of whose 
-    *                            we want to check
     * @param outParentHandles    collection that will be filled with
     *                            the parents' handles
     */
    void getParents( std::vector<Class>& outParentHandles ) const;
+
+   /**
+    * The opposite of the `getParents` method - returns the classes to which
+    * this class is a parent.
+    *
+    * @param outImplementationHandles
+    */
+   void getImplementations( std::vector< Class >& outImplementationHandles ) const;
 
    /**
     * Creates a new instance of the class.

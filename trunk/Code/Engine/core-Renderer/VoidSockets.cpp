@@ -15,6 +15,12 @@ RPVoidInput::RPVoidInput( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+RPVoidInput::~RPVoidInput()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool RPVoidInput::canConnect( RPNodeOutput& output ) const
 {
    RPVoidOutput* typedOutput = dynamic_cast< RPVoidOutput* >( &output );

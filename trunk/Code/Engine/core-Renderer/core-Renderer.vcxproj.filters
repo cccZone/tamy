@@ -43,20 +43,11 @@
     <Filter Include="Mechanisms">
       <UniqueIdentifier>{276eb3c8-13a8-40f4-bd45-12038506cd29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Views">
-      <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Mechanisms\RenderingPipeline">
       <UniqueIdentifier>{c91f1825-625c-42f0-8469-826c27be0b92}</UniqueIdentifier>
     </Filter>
     <Filter Include="Mechanisms\RenderingPipeline\Nodes">
       <UniqueIdentifier>{b7de2671-afb7-471e-9881-7dd4812c6bc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline\Nodes\Misc">
-      <UniqueIdentifier>{98884766-dadd-4e55-bb64-638fae7eea59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline\Nodes\PostProcess">
-      <UniqueIdentifier>{eb27d960-9aba-49ce-a6a5-9271ab2f0bb9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Mechanisms\RenderingPipeline\Sockets">
       <UniqueIdentifier>{a13cfdb3-3552-48ee-a50d-dc079e4927c3}</UniqueIdentifier>
@@ -88,7 +79,13 @@
     <Filter Include="Core\Tools">
       <UniqueIdentifier>{a8533512-26b5-45b6-af11-e62b8e23d0c3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders">
+    <Filter Include="Mechanisms\RenderingPipeline\Views">
+      <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\RenderingPipeline\Tools">
+      <UniqueIdentifier>{5a93e70c-6c1d-4bda-9166-812a8da9be22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders">
       <UniqueIdentifier>{a95137c7-8213-4a7d-aa9f-9256f0fc932e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -195,33 +192,6 @@
     <ClCompile Include="RenderingPipelineMechanism.cpp">
       <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTargetDescriptor.cpp">
-      <Filter>Mechanisms\RenderingPipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSceneRenderNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="RPStartNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="RPPostProcessNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="RPLuminanceNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBrightnessNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBlurNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="RPDownsampleNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="RPHDRNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClCompile>
     <ClCompile Include="RenderingPipelineSockets.cpp">
       <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
@@ -238,29 +208,17 @@
       <Filter>Materials\Resources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
-    <ClCompile Include="RPAdapterNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="RPDebugRendererNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="RenderingView.cpp">
-      <Filter>Core\Views</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClCompile>
     <ClCompile Include="SpatialRepresentation.cpp">
-      <Filter>Core\Views</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClCompile>
     <ClCompile Include="RenderResource.cpp">
       <Filter>Core\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="RPDepthNormalsNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="SceneRenderTreeBuilder.cpp">
-      <Filter>Core\Views</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSSAONode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Core\Camera</Filter>
@@ -268,14 +226,68 @@
     <ClCompile Include="ShaderTexture.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="RPSceneBuilder.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClCompile>
     <ClCompile Include="RPSBTextured.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
     </ClCompile>
     <ClCompile Include="RPSBComputed.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
+    </ClCompile>
+    <ClCompile Include="BoolSockets.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="IntSockets.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="StringSockets.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec4Sockets.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTargetDescriptor.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShaderConstant.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixSockets.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderNodeOperator.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="RPAdapterNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPDebugRendererNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPPostProcessNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSceneRenderNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPStartNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPCameraNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSceneBuilder.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPFloats2Vec4Node.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPTextureNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPFloatNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RPVec4Node.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -438,33 +450,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineMechanism.h">
       <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h">
-      <Filter>Mechanisms\RenderingPipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPLuminanceNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPBrightnessNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPBlurNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPDownsampleNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPHDRNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h">
       <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
@@ -480,20 +465,14 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h">
       <Filter>Materials\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPDebugRendererNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\SpatialRepresentation.h">
-      <Filter>Core\Views</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h">
-      <Filter>Core\Views</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderState.h">
-      <Filter>Core\Views</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h">
       <Filter>Mechanisms\DebugDraw</Filter>
@@ -513,16 +492,10 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPDepthNormalsNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderTreeBuilder.h">
-      <Filter>Core\Views</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPSSAONode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\PostProcess</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Camera.h">
       <Filter>Core\Camera</Filter>
     </ClInclude>
@@ -532,14 +505,65 @@
     <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h">
       <Filter>Core\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPSceneBuilder.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPSBTextured.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPSBComputed.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc\SceneTreeBuilders</Filter>
+      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\BoolSockets.h">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\IntSockets.h">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\StringSockets.h">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Vec4Sockets.h">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h">
+      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h">
+      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MatrixSockets.h">
+      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderNodeOperator.h">
+      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPDebugRendererNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPCameraNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPSceneBuilder.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPTextureNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPFloatNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPVec4Node.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

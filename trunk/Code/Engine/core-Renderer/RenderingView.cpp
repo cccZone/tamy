@@ -34,26 +34,12 @@ RenderingView::~RenderingView()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingView::render( const SceneRenderTreeBuilder& treeBuilder )
+void RenderingView::collectRenderables( Array< SpatialRepresentation* >& outVisibleElems )
 {
    // tag visible objects
    const BoundingVolume& volume = m_renderer.getActiveCamera().getFrustum();
 
-   Array< SpatialRepresentation* > visibleElems;
-   m_storage->query( volume, visibleElems );
-
-   // build a tree sorting the nodes by the attributes
-   m_treeMemPool->reset();
-   StateTreeNode* root = treeBuilder.buildRenderTree( *m_treeMemPool, visibleElems );
-   
-   if ( root )
-   {
-      // render the tree contents
-      root->render( m_renderer );
-
-      // get rid of the tree
-      MEMPOOL_DELETE( root );
-   }
+   m_storage->query( volume, outVisibleElems );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

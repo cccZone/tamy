@@ -3,23 +3,107 @@
 #include "core-Renderer/FullscreenQuad.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/RenderTarget.h"
+#include "core-Renderer/TextureSockets.h"
+#include "core-Renderer/PixelShader.h"
+#include "core-Renderer/ShaderNodeOperator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( RPPostProcessNode, RenderingPipelineNode );
+BEGIN_OBJECT( RPPostProcessNode, RenderingPipelineNode );
+   PROPERTY_EDIT( "Pixel shader", PixelShader*, m_shader );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPPostProcessNode::RPPostProcessNode()
+   : m_shader( NULL )
+   , m_shaderNode( NULL )
 {
+   defineOutput( new RPRenderTargetOutput( "Output" ) );
+
+   m_shaderNode = new ShaderNodeOperator( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPPostProcessNode::~RPPostProcessNode()
 {
+   delete m_shaderNode; m_shaderNode = NULL;
+   m_shader = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPPostProcessNode::onPrePropertyChanged( Property& property )
+{
+   __super::onPropertyChanged( property );
+
+   if ( property.getName() == "m_shader" && m_shaderNode )
+   {
+      m_shaderNode->resetShader();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPPostProcessNode::onPropertyChanged( Property& property )
+{
+   __super::onPropertyChanged( property );
+
+   if ( property.getName() == "m_shader" && m_shader )
+   {
+      m_shaderNode->setShader( *m_shader );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPPostProcessNode::onObjectLoaded()
+{
+   __super::onObjectLoaded();
+
+   if ( m_shader )
+   {
+      m_shaderNode->setShader( *m_shader );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPPostProcessNode::onCreateLayout( RenderingPipelineMechanism& host ) const
+{
+   host.data().registerVar( m_renderTarget );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPPostProcessNode::onInitialize( RenderingPipelineMechanism& host ) const
+{
+   host.data()[ m_renderTarget ] = getOutput< RPRenderTargetOutput >( "Output" ).getRenderTarget( host.data() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPPostProcessNode::onDeinitialize( RenderingPipelineMechanism& host ) const
+{
+   host.data()[ m_renderTarget ] = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPPostProcessNode::onUpdate( RenderingPipelineMechanism& host ) const
+{
+   RuntimeDataBuffer& data = host.data();
+   RenderTarget* trg = data[ m_renderTarget ];
+   Renderer& renderer = host.getRenderer();
+
+   if ( m_shaderNode )
+   {
+      m_shaderNode->onPreRender( renderer, data );
+      renderQuad( renderer, trg );
+      m_shaderNode->onPreRender( renderer, data );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -65,8 +65,9 @@ void TProperty< T >::serialize(Serializer& serializer)
 template< typename T >
 void TProperty< T >::set( void* val )
 {
+   notifyBeforeChange();
    *m_val = *( reinterpret_cast< T* >( val ) );
-   notifyAboutChange();
+   notifyAfterChange();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -142,8 +143,9 @@ void TProperty< T* >::serialize(Serializer& serializer)
 template< typename T >
 void TProperty< T* >::set( void* val )
 {
+   notifyBeforeChange();
    *m_val = *( reinterpret_cast< T** >( val ) );
-   notifyAboutChange();
+   notifyAfterChange();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -208,7 +210,8 @@ void TProperty< std::vector< T* > >::serialize(Serializer& serializer)
 template< typename T >
 void TProperty< std::vector< T* > >::set( void* val )
 {
-   notifyAboutChange();
+   notifyBeforeChange();
+   notifyAfterChange();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

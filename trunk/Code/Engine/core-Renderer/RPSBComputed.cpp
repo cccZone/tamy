@@ -4,46 +4,104 @@
 #include "core-Renderer/Defines.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/Camera.h"
+#include "core-Renderer/RPSceneRenderNode.h"
+#include "core-Renderer/ShaderNodeOperator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RPSBComputed, RPSceneBuilder );
+   PROPERTY( RPSceneRenderNode*, m_hostNode );
+   PROPERTY_EDIT( "Compute pixel shader", PixelShader*, m_shader );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPSBComputed::RPSBComputed()
    : m_shader( NULL )
+   , m_shaderNode( NULL )
 {
-   ResourcesManager& mgr = ResourcesManager::getInstance();
-
-   Resource& psRes = mgr.create( SHADERS_DIR "RenderingPipeline/DepthNormals.tpsh" );
-   m_shader = DynamicCast< PixelShader >( &psRes );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPSBComputed::~RPSBComputed()
 {
+   delete m_shaderNode; m_shaderNode = NULL;
    m_shader = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSBComputed::onPreRender( Renderer& renderer )
+void RPSBComputed::onDefineSockets( RPSceneRenderNode& hostNode )
 {
-   RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
+   m_hostNode = &hostNode;
 
-   Camera& activeCam = renderer.getActiveCamera();
-   comm->setFloat( "g_FarZ", activeCam.getFarClippingPlane() );
+   delete m_shaderNode;
+   m_shaderNode = new ShaderNodeOperator( hostNode );
+   if ( m_shader )
+   {
+      m_shaderNode->setShader( *m_shader );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSBComputed::onPostRender( Renderer& renderer )
+void RPSBComputed::onObjectLoaded()
 {
-   new ( renderer() ) RCUnbindPixelShader( *m_shader );
+   __super::onObjectLoaded();
+
+   ASSERT( m_hostNode != NULL );
+   ASSERT( m_shaderNode == NULL );
+   m_shaderNode = new ShaderNodeOperator( *m_hostNode );
+   if ( m_shader )
+   {
+      m_shaderNode->setShader( *m_shader );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPSBComputed::onPrePropertyChanged( Property& property )
+{
+   __super::onPropertyChanged( property );
+
+   if ( property.getName() == "m_shader" && m_shaderNode )
+   {
+      m_shaderNode->resetShader();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPSBComputed::onPropertyChanged( Property& property )
+{
+   __super::onPropertyChanged( property );
+
+   if ( property.getName() == "m_shader" && m_shaderNode && m_shader )
+   {
+      m_shaderNode->setShader( *m_shader );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPSBComputed::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+{
+   if ( m_shaderNode )
+   {
+      m_shaderNode->onPreRender( renderer, data );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPSBComputed::onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+{
+   if ( m_shaderNode )
+   {
+      m_shaderNode->onPostRender( renderer, data );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,7 +111,7 @@ StateTreeNode* RPSBComputed::buildRenderTree( MemoryPool& pool, const Array< Spa
    // ignore all render states - just gather the geometry under one state node that will
    // set our pixel shader that will render the depth and normals
 
-   StateTreeNode* root = new ( pool ) StateTreeNode( const_cast< RPSBComputed* >( this ) );
+   StateTreeNode* root = new ( pool ) StateTreeNode( const_cast< RPSBComputed& >( *this ) );
    GeometryNode** currGeometryNode = &(root->m_geometryNode);
 
    unsigned int elemsCount = visibleElems.size();

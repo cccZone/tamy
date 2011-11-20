@@ -48,29 +48,85 @@ bool RPTextureInput::canConnect( RPNodeOutput& output ) const
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPTextureOutput, RPNodeOutput );
+BEGIN_ABSTRACT_OBJECT( RPTextureOutput, RPNodeOutput );
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( RPImageOutput, RPTextureOutput );
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////////////
+
+RPImageOutput::RPImageOutput( const std::string& name )
+   : RPTextureOutput( name )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPImageOutput::createLayout( RenderingPipelineMechanism& host ) const
+{
+   host.data().registerVar( m_texture );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPImageOutput::initialize( RenderingPipelineMechanism& host ) const
+{
+   host.data()[ m_texture ] = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPImageOutput::deinitialize( RenderingPipelineMechanism& host ) const
+{
+   host.data()[ m_texture ] = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPImageOutput::setTexture( RuntimeDataBuffer& data, ShaderTexture* texture ) const
+{ 
+   data[ m_texture ] = texture;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ShaderTexture* RPImageOutput::getTexture( RuntimeDataBuffer& data ) const
+{
+   return data[ m_texture ];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( RPRenderTargetOutput, RPTextureOutput );
    PROPERTY_EDIT( "Use back buffer", bool, m_useBackBuffer );
    PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RPTextureOutput::RPTextureOutput( const std::string& name )
-   : RPNodeOutput( name )
+RPRenderTargetOutput::RPRenderTargetOutput( const std::string& name )
+   : RPTextureOutput( name )
    , m_useBackBuffer( true )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPTextureOutput::createLayout( RenderingPipelineMechanism& host ) const
+void RPRenderTargetOutput::createLayout( RenderingPipelineMechanism& host ) const
 {
    host.data().registerVar( m_renderTarget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPTextureOutput::initialize( RenderingPipelineMechanism& host ) const
+void RPRenderTargetOutput::initialize( RenderingPipelineMechanism& host ) const
 {
    if ( m_useBackBuffer )
    {
@@ -84,21 +140,14 @@ void RPTextureOutput::initialize( RenderingPipelineMechanism& host ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPTextureOutput::deinitialize( RenderingPipelineMechanism& host ) const
+void RPRenderTargetOutput::deinitialize( RenderingPipelineMechanism& host ) const
 {
    host.data()[ m_renderTarget ] = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderTarget* RPTextureOutput::getRenderTarget( RuntimeDataBuffer& data ) const 
-{ 
-   return data[ m_renderTarget ]; 
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPTextureOutput::setRenderTargetID( const std::string renderTargetId ) 
+void RPRenderTargetOutput::setRenderTargetID( const std::string& renderTargetId ) 
 { 
    m_renderTargetId = renderTargetId; 
    m_useBackBuffer = m_renderTargetId.empty();
@@ -107,7 +156,14 @@ void RPTextureOutput::setRenderTargetID( const std::string renderTargetId )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderTexture* RPTextureOutput::getTexture( RuntimeDataBuffer& data ) const
+RenderTarget* RPRenderTargetOutput::getRenderTarget( RuntimeDataBuffer& data ) const
+{
+   return data[ m_renderTarget ];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ShaderTexture* RPRenderTargetOutput::getTexture( RuntimeDataBuffer& data ) const
 {
    if ( m_useBackBuffer )
    {

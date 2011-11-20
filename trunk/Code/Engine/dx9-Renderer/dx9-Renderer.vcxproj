@@ -112,7 +112,6 @@
     <ClCompile Include="DX9ShaderParamVec4Array.cpp" />
     <ClCompile Include="DX9Skeleton.cpp" />
     <ClCompile Include="DX9SkeletonResourcesStorage.cpp" />
-    <ClCompile Include="DX9Texture.cpp" />
     <ClCompile Include="DX9LineSegments.cpp" />
     <ClCompile Include="DX9TextureResourcesStorage.cpp" />
     <ClCompile Include="DX9TriangleMesh.cpp" />

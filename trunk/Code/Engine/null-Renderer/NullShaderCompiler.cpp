@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool ShaderCompiler::compilePixelShader( const std::string& shaderCode, const char* entryFunction )
+bool ShaderCompiler::compilePixelShader( const std::string& shaderCode, const char* entryFunction, std::vector< PixelShaderConstant* >* outConstants )
 {
    return true;
 }

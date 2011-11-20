@@ -1,7 +1,7 @@
-#pragma once
-
 /// @file   TamyEditor\ResourcePropertyEditor.h
 /// @brief  resource property editor
+#pragma once
+
 
 #include "core\Property.h"
 #include "QPropertyEditor.h"

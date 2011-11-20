@@ -15,19 +15,15 @@ class RPDebugRendererNode;
 /**
  * Rendering pipeline block representing a node that renders scenes.
  */
-class RPBDebugRender : public RenderingPipelineBlock
+class RPBDebugRender : public TRenderingPipelineBlock< RPDebugRendererNode >
 {
    DECLARE_CLASS( RPBDebugRender )
-
-private:
-   RPDebugRendererNode*                               m_nodePtr;
-   TResourceHandle< RPDebugRendererNode >*            m_node;
 
 public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBDebugRender() : m_nodePtr( NULL ), m_node( NULL ) {}
+   RPBDebugRender() : TRenderingPipelineBlock< RPDebugRendererNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.
@@ -35,15 +31,11 @@ public:
     * @param node    represented node
     */
    RPBDebugRender( RPDebugRendererNode& node );
-   ~RPBDebugRender();
 
+protected:
    // -------------------------------------------------------------------------
    // GraphBlock implementation
    // -------------------------------------------------------------------------
-   Object& getNode();
-   void initialize( RenderingPipeline& parentResource );
-
-protected:
    /**
     * Returns the shape of the block.
     */

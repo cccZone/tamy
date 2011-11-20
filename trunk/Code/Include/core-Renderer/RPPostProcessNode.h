@@ -10,6 +10,8 @@
 
 class RenderTarget;
 class Renderer;
+class PixelShader;
+class ShaderNodeOperator;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,9 +22,32 @@ class RPPostProcessNode : public RenderingPipelineNode
 {
    DECLARE_CLASS( RPPostProcessNode )
 
+private:
+   // static data
+   PixelShader*                        m_shader;
+
+   // runtime data
+   ShaderNodeOperator*                 m_shaderNode;
+   TRuntimeVar< RenderTarget* >        m_renderTarget;
+
 public:
    RPPostProcessNode();
    virtual ~RPPostProcessNode();
+
+   // -------------------------------------------------------------------------
+   // RenderingPipelineNode implementation
+   // -------------------------------------------------------------------------
+   void onCreateLayout( RenderingPipelineMechanism& host ) const;
+   void onInitialize( RenderingPipelineMechanism& host ) const;
+   void onDeinitialize( RenderingPipelineMechanism& host ) const;
+   void onUpdate( RenderingPipelineMechanism& host ) const;
+
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onPrePropertyChanged( Property& property );
+   void onPropertyChanged( Property& property );
+   void onObjectLoaded();
 
 protected:
    /**

@@ -287,11 +287,38 @@
     <ClInclude Include="QueryRenderingPass.h">
       <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
     </ClInclude>
-    <ClInclude Include="RPBDepthNormals.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceEditor.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="RPSBool.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="RPSInt.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="RPSString.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="RPSVec4.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="RPSMatrix.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBFloats2Vec4.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBCamera.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBTexture.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBFloat.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBVec4.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -662,9 +689,6 @@
     <ClCompile Include="QueryRenderingPass.cpp">
       <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
     </ClCompile>
-    <ClCompile Include="RPBDepthNormals.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
     <ClCompile Include="TextureEditor.cpp">
       <Filter>ResourceEditors\TextureEditor</Filter>
     </ClCompile>
@@ -676,6 +700,48 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Template\moc_TextureEditor.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectPropertyEditor.cpp">
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ObjectPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ObjectPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ObjectPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSBool.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSInt.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSString.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSVec4.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSMatrix.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBFloats2Vec4.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBCamera.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBTexture.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBFloat.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBVec4.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -690,6 +756,9 @@
     </None>
     <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.psh">
       <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
+    </None>
+    <None Include="RenderingPipelineBlock.inl">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -821,6 +890,9 @@
     </CustomBuild>
     <CustomBuild Include="TextureEditor.h">
       <Filter>ResourceEditors\TextureEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ObjectPropertyEditor.h">
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

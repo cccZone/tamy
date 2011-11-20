@@ -9,6 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class PixelShader;
+class ShaderNodeOperator;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +22,11 @@ class RPSBComputed : public RPSceneBuilder, public TRenderState< RPSBComputed >
    DECLARE_CLASS( RPSBComputed )
 
 private:
-   PixelShader*      m_shader;
+   // static data
+   PixelShader*                  m_shader;
+
+   // runtime data
+   ShaderNodeOperator*           m_shaderNode;
 
 public:
    /**
@@ -38,10 +43,23 @@ public:
    // -------------------------------------------------------------------------
    // RenderState implementation
    // -------------------------------------------------------------------------
-   void onPreRender( Renderer& renderer );
-   void onPostRender( Renderer& renderer );
+   void onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
+   void onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
    bool onEquals( const RPSBComputed& rhs ) const { return &rhs == this; }
    bool onLess( const RPSBComputed& rhs ) const { return &rhs < this; }
+
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onObjectLoaded();
+   void onPrePropertyChanged( Property& property );
+   void onPropertyChanged( Property& property );
+
+protected:
+   // -------------------------------------------------------------------------
+   // RPSceneBuilder implementation
+   // -------------------------------------------------------------------------
+   void onDefineSockets( RPSceneRenderNode& hostNode );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

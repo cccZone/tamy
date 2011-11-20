@@ -11,7 +11,7 @@ END_OBJECT();
 
 StateTreeNode* RPSBTextured::buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems ) const
 {
-   StateTreeNode* root = new ( pool ) StateTreeNode( NULL );
+   StateTreeNode* root = new ( pool ) StateTreeNode();
 
    unsigned int elemsCount = visibleElems.size();
    for ( unsigned int i = 0; i < elemsCount; ++i )
@@ -34,7 +34,7 @@ StateTreeNode* RPSBTextured::buildRenderTree( MemoryPool& pool, const Array< Spa
          // get the child of the current node, and if there's none - create one
          if ( currNode->m_child == NULL )
          {
-            currNode->m_child = new ( pool ) StateTreeNode( NULL );
+            currNode->m_child = new ( pool ) StateTreeNode();
          }
          currNode = currNode->m_child;
 
@@ -50,7 +50,7 @@ StateTreeNode* RPSBTextured::buildRenderTree( MemoryPool& pool, const Array< Spa
          if ( currNode == NULL )
          {
             // there is no node with a matching state - create a new one
-            prevNode->m_sibling = new ( pool ) StateTreeNode( checkedState );
+            prevNode->m_sibling = new ( pool ) StateTreeNode( *checkedState );
             currNode = prevNode->m_sibling;
          }
       }
