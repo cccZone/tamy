@@ -316,7 +316,8 @@ namespace // anonymous
 
          // create an animation resource
          m_observer.initialize( "Initializing scene", 1 );
-         std::string animationResName = Filesystem::changeFileExtension( scene.getFilePath(), SkeletonAnimation::getExtension() );
+         FilePath animationResName( scene.getFilePath() );
+         animationResName.changeFileExtension( SkeletonAnimation::getExtension(), animationResName );
          SkeletonAnimation* animation = m_rm.findResource< SkeletonAnimation >( animationResName );
          if ( !animation )
          {

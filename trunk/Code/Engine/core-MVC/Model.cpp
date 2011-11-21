@@ -66,9 +66,9 @@ END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Model::Model( const std::string& name )
-: Resource( name )
-, m_viewsToRemoveCount(0)
+Model::Model( const FilePath& resourceName )
+   : Resource( resourceName )
+   , m_viewsToRemoveCount(0)
 {
 }
 

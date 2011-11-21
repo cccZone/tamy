@@ -9,3 +9,10 @@ bool ShaderCompiler::compilePixelShader( const std::string& shaderCode, const ch
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+bool ShaderCompiler::compileVertexShader( const std::string& shaderCode, const char* entryFunction )
+{
+   return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
-#include "MaterialEditor.h"
-#include "MaterialSyntaxHighlighter.h"
+#include "VertexShaderEditor.h"
+#include "ShaderSyntaxHighlighter.h"
 #include "tamyeditor.h"
 #include "core.h"
 #include "core-Renderer.h"
@@ -12,7 +12,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MaterialEditor::MaterialEditor( PixelShader& shader )
+VertexShaderEditor::VertexShaderEditor( VertexShader& shader )
    : m_shader( shader )
    , m_highlighter( NULL )
    , m_resourceMgr( NULL )
@@ -21,13 +21,13 @@ MaterialEditor::MaterialEditor( PixelShader& shader )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MaterialEditor::~MaterialEditor()
+VertexShaderEditor::~VertexShaderEditor()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::onInitialize()
+void VertexShaderEditor::onInitialize()
 {
    m_resourceMgr = &ResourcesManager::getInstance();
 
@@ -35,7 +35,7 @@ void MaterialEditor::onInitialize()
 
    // setup ui
    m_ui.setupUi( this );
-   m_highlighter = new MaterialSyntaxHighlighter( m_ui.scriptEditor->document() );
+   m_highlighter = new ShaderSyntaxHighlighter( m_ui.scriptEditor->document() );
 
    // set the editor up
    m_ui.scriptEditor->setPlainText( m_shader.getScript().c_str() );
@@ -49,38 +49,24 @@ void MaterialEditor::onInitialize()
    m_docModified = false;
 
    // set the properties
-   const PixelShaderParams& params = m_shader.getParams();
+   {
+      m_ui.vertexDescIdComboBox->clear();
+      TEnum< VertexDescId > vertexDescIdEnum;
+      std::vector< std::string > vertexDescIds;
+      vertexDescIdEnum.getEnumerators( vertexDescIds );
 
-   m_ui.cullingMode->setCurrentIndex( params.m_cullingMode - 1 );
-   connect( m_ui.cullingMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+      unsigned int count = vertexDescIds.size();
+      for( unsigned int i = 0; i < count; ++i )
+      {
+         m_ui.vertexDescIdComboBox->addItem( vertexDescIds[i].c_str() );
+      }
+   }
+   connect( m_ui.vertexDescIdComboBox, SIGNAL( currentIndexChanged( const QString& ) ), this, SLOT( onVertexIdChange( const QString& ) ) );
 
-   m_ui.zBufferEnabled->setChecked( params.m_useZBuffer );
-   connect( m_ui.zBufferEnabled, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
-
-   m_ui.zBufferWriteEnabled->setChecked( params.m_writeToZBuffer );
-   connect( m_ui.zBufferWriteEnabled, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
-
-   m_ui.uAddressMode->setCurrentIndex( params.m_addressU - 1 );
-   connect( m_ui.uAddressMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
-
-   m_ui.vAddressMode->setCurrentIndex( params.m_addressV - 1 );
-   connect( m_ui.vAddressMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
-
-   m_ui.wAddressMode->setCurrentIndex( params.m_addressW - 1 );
-   connect( m_ui.wAddressMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
-
-   m_ui.minFilter->setCurrentIndex( params.m_minFilter );
-   connect( m_ui.minFilter, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
-
-   m_ui.magFilter->setCurrentIndex( params.m_magFilter );
-   connect( m_ui.magFilter, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
-
-   m_ui.mipFilter->setCurrentIndex( params.m_mipFilter );
-   connect( m_ui.mipFilter, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
 
    // set the toolbar
    QString iconsDir = m_resourceMgr->getFilesystem().getShortcut( "editorIcons" ).c_str();
-   
+
    QToolBar* toolbar = new QToolBar( m_ui.toolbarFrame );
    m_ui.toolbarFrame->layout()->addWidget( toolbar );
 
@@ -90,6 +76,14 @@ void MaterialEditor::onInitialize()
       actionSave->setShortcut( QKeySequence( tr( "Ctrl+S" ) ) );
       toolbar->addAction( actionSave );
       connect( actionSave, SIGNAL( triggered() ), this, SLOT( save() ) );
+
+      QAction* actionImportFrom = new QAction( QIcon( iconsDir + tr( "/import.png" ) ), tr( "Import" ), toolbar );
+      toolbar->addAction( actionImportFrom );
+      connect( actionImportFrom, SIGNAL( triggered() ), this, SLOT( importFrom() ) );
+
+      QAction* actionExportTo = new QAction( QIcon( iconsDir + tr( "/export.png" ) ), tr( "Export" ), toolbar );
+      toolbar->addAction( actionExportTo );
+      connect( actionExportTo, SIGNAL( triggered() ), this, SLOT( exportTo() ) );
 
       toolbar->addSeparator();
    }
@@ -122,7 +116,7 @@ void MaterialEditor::onInitialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::onDeinitialize( bool saveProgress )
+void VertexShaderEditor::onDeinitialize( bool saveProgress )
 {
    if ( saveProgress && m_docModified )
    {
@@ -139,7 +133,7 @@ void MaterialEditor::onDeinitialize( bool saveProgress )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::save()
+void VertexShaderEditor::save()
 {
    if ( compile() )
    {
@@ -151,7 +145,7 @@ void MaterialEditor::save()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool MaterialEditor::compile()
+bool VertexShaderEditor::compile()
 {
    m_ui.compilationOutput->clear();
 
@@ -163,7 +157,7 @@ bool MaterialEditor::compile()
    }
 
    ShaderCompiler compiler;
-   bool status = compiler.compilePixelShader( shaderContents, m_shader.getEntryFunctionName().c_str() );
+   bool status = compiler.compileVertexShader( shaderContents, m_shader.getEntryFunctionName().c_str() );
 
    if ( status )
    {
@@ -179,31 +173,24 @@ bool MaterialEditor::compile()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::onParamChange()
+void VertexShaderEditor::onVertexIdChange( const QString& newId )
 {
-   PixelShaderParams& params = m_shader.changeParams();
+   TEnum< VertexDescId > vertexDescIdEnum;
+   VertexDescId idVal = (VertexDescId)vertexDescIdEnum.getValue( newId.toStdString() );
 
-   params.m_cullingMode = (D3DCULL)( m_ui.cullingMode->currentIndex() + 1 );
-   params.m_useZBuffer = m_ui.zBufferEnabled->isChecked();
-   params.m_writeToZBuffer = m_ui.zBufferWriteEnabled->isChecked();
-   params.m_addressU = (D3DTEXTUREADDRESS)( m_ui.uAddressMode->currentIndex() + 1 );
-   params.m_addressV = (D3DTEXTUREADDRESS)( m_ui.vAddressMode->currentIndex() + 1 );
-   params.m_addressW = (D3DTEXTUREADDRESS)( m_ui.wAddressMode->currentIndex() + 1 );
-   params.m_minFilter = (D3DTEXTUREFILTERTYPE)( m_ui.minFilter->currentIndex() );
-   params.m_magFilter = (D3DTEXTUREFILTERTYPE)( m_ui.magFilter->currentIndex() );
-   params.m_mipFilter = (D3DTEXTUREFILTERTYPE)( m_ui.mipFilter->currentIndex() );
+   m_shader.setVertexDescription( idVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::onScriptModified()
+void VertexShaderEditor::onScriptModified()
 {
    m_docModified = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::onTextCursorMoved()
+void VertexShaderEditor::onTextCursorMoved()
 {
    QTextCursor cursor = m_ui.scriptEditor->textCursor();
 
@@ -214,9 +201,52 @@ void MaterialEditor::onTextCursorMoved()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEditor::synchronize()
+void VertexShaderEditor::synchronize()
 {
    m_shader.setScript( m_ui.scriptEditor->toPlainText().toStdString() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void VertexShaderEditor::importFrom()
+{
+   Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+   std::string fsRootDir = fs.getCurrRoot();
+   QString fileName = QFileDialog::getOpenFileName( this, "Import fragment shader from", fsRootDir.c_str() );
+   if ( fileName.isEmpty() )
+   {
+      // no file selected
+      return;
+   }
+
+   std::string relPath = fs.toRelativePath( fileName.toStdString() );
+   File* file = fs.open( relPath, std::ios_base::in );
+   StreamBuffer<char> shaderScript( *file );
+   m_shader.setScript( shaderScript.getBuffer() );
+   delete file;
+
+   // set the new contents in the editor
+   m_ui.scriptEditor->setPlainText( m_shader.getScript().c_str() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void VertexShaderEditor::exportTo()
+{
+   Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+   std::string fsRootDir = fs.getCurrRoot();
+   QString fileName = QFileDialog::getSaveFileName( this, "Export fragment shader from", fsRootDir.c_str() );
+   if ( fileName.isEmpty() )
+   {
+      // no file selected
+      return;
+   }
+
+   std::string relPath = fs.toRelativePath( fileName.toStdString() );
+   File* file = fs.open( relPath, std::ios_base::out );
+   file->writeString( m_shader.getScript().c_str() );
+   file->flush();
+   delete file;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -53,6 +53,11 @@ public:
     */
    virtual void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data ) = 0;
 
+   /**
+    * Returns the index of the required texture stage.
+    */
+   virtual int getRequiredTextureStageIdx() const { return -1; }
+
 protected:
    /**
     * Constructor.
@@ -173,13 +178,17 @@ public:
  */
 class PSCTexture : public PixelShaderConstant
 {
+private:
+   int      m_textureStageIdx;
+
 public:
    /**
     * Constructor.
     *
     * @param name
+    * @param textureStageIdx
     */
-   PSCTexture( const char* name );
+   PSCTexture( const char* name, int textureStageIdx );
 
    // -------------------------------------------------------------------------
    // PixelShaderConstant implementation
@@ -187,6 +196,7 @@ public:
    RPNodeInput* createRPNInput();
    bool doesTypeMatch( const RPNodeInput& input ) const;
    void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data );
+   int getRequiredTextureStageIdx() const { return m_textureStageIdx; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

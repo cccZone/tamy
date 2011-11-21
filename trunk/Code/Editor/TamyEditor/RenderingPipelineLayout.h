@@ -28,9 +28,9 @@ public:
    /**
     * Constructor.
     *
-    * @param path
+    * @param resourceName
     */
-   RenderingPipelineLayout( const std::string& path = "" );
+   RenderingPipelineLayout( const FilePath& resourceName = FilePath() );
    ~RenderingPipelineLayout();
 
    /**

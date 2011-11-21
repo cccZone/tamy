@@ -12,6 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class File;
+class FilePath;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,21 +29,21 @@ public:
     *
     * @param path    file path
     */
-   virtual void onFileEdited( const std::string& path ) = 0;
+   virtual void onFileEdited( const FilePath& path ) = 0;
 
    /**
     * Called when a file in the file system is removed.
     *
     * @param path    file path
     */
-   virtual void onFileRemoved( const std::string& path ) = 0;
+   virtual void onFileRemoved( const FilePath& path ) = 0;
 
    /**
     * Called when the contents of a directory changes.
     *
     * @param dir     directory the contents of which were changed
     */
-   virtual void onDirChanged( const std::string& dir ) = 0;
+   virtual void onDirChanged( const FilePath& dir ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,14 +59,14 @@ public:
     *
     * @param name    relative path to the directory (along with that directory name)
     */
-   virtual void onDirectory( const std::string& name ) = 0;
+   virtual void onDirectory( const FilePath& name ) = 0;
 
    /**
     * Called when a file is encountered during the scanning process.
     *
     * @param name    relative path to the file (along with that file name)
     */
-   virtual void onFile( const std::string& name ) = 0;
+   virtual void onFile( const FilePath& name ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,7 +92,7 @@ public:
     *
     * @param rootDir    the initial root directory
     */
-   Filesystem(const std::string& rootDir = "");
+   Filesystem( const std::string& rootDir = "" );
 
    /**
     * This manager maps the file system to a specific directory's contents.
@@ -100,7 +101,7 @@ public:
     *
     * @param rootDir    name of the file system root directory
     */
-   void changeRootDir(const std::string& rootDir);
+   void changeRootDir( const std::string& rootDir );
 
    /**
     * Returns the current filesystem root directory.
@@ -116,7 +117,7 @@ public:
     * @return           'true' if the file exists in the file system,
     *                   'false' otherwise
     */
-   bool doesExist(const std::string& fileName) const;
+   bool doesExist( const FilePath& fileName ) const;
 
    /**
     * The method opens a file with specific access privileges.
@@ -124,8 +125,7 @@ public:
     * @param fileName   name of the file we want to open
     * @param mode       access mode
     */
-   File* open(const std::string& fileName, 
-              const std::ios_base::openmode mode = std::ios_base::in) const;
+   File* open( const FilePath& fileName, const std::ios_base::openmode mode = std::ios_base::in ) const;
 
    /**
     * The method scans the file system, starting from the specified root
@@ -135,21 +135,21 @@ public:
     * @param scanner
     * @param recursive  use recursive search through the directories tree
     */
-   void scan( const std::string& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
+   void scan( const FilePath& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
 
    /**
     * Creates a new directory.
     *
     * @param dirName    relative path to the directory we want to create.
     */
-   void mkdir( const std::string dirName ) const;
+   void mkdir( const FilePath& dirName ) const;
 
    /**
     * Removes an fs element specified by the path from the file system.
     *
     * @param path       path to an element we want to remove
     */
-   void remove( const std::string path ) const;
+   void remove( const FilePath& path ) const;
 
    // -------------------------------------------------------------------------
    // Listeners management
@@ -194,62 +194,8 @@ public:
    std::string getShortcut( const std::string& shortcut ) const;
 
    // -------------------------------------------------------------------------
-   // Utility methods
+   // Utils
    // -------------------------------------------------------------------------
-   /**
-    * Normalizes the file path - setting proper directories separators etc.
-    *
-    * @param fileName
-    * @param outFileName
-    */
-   static void normalize( const std::string& fileName, std::string& outFileName );
-
-   /**
-    * Extracts an extension of the specified filename.
-    *
-    * @param fileName
-    */
-   static std::string extractExtension( const std::string& fileName );
-
-   /**
-    * Extracts the name of a directory in which the specified file is located.
-    *
-    * @param fileName   path to a file along with that file name.
-    */
-   static std::string extractDir( const std::string& fileName );
-
-   /**
-    * The method allows to move up in the directories hierarchy by the specified
-    * amount of levels.
-    *
-    * i.e.: A call like:
-    *    leaveDir( "d:/dirA/dirB/dirC/dirD", 2, outDir );
-    * initializes outDir with:
-    *    "d:/dirA/dirB"
-    *
-    * @param directory
-    * @param levels
-    * @param outDirectory
-    */
-   static void leaveDir( const std::string& directory, unsigned int levels, std::string& outDirectory );
-
-   /**
-    * Just as the 'extractDir' method extracts a name of a directory
-    * in which the specified file is located, this method extracts
-    * the sole name of the file.
-    *
-    * @param fileName   path to a file along with that file name.
-    */
-   static std::string extractNodeName( const std::string& fileName );
-
-   /**
-    * Changes the extension on a filename, and returns it in a brand new string.
-    *
-    * @param fileName
-    * @param newExtension
-    */
-   static std::string changeFileExtension( const std::string& fileName, const std::string& newExtension );
-
    /**
     * Converts the specified absolute path to the file system relative path.
     *
@@ -264,6 +210,52 @@ public:
     */
    std::string toAbsolutePath( const std::string& relativeFilePath ) const;
 
+   /**
+    * Normalizes the file path - setting proper directories separators etc.
+    *
+    * @param fileName
+    * @param outFileName
+    */
+   static void normalize( const std::string& fileName, std::string& outFileName );
+
+   /**
+    * Extracts the name of a directory in which the specified file is located.
+    *
+    * @param fileName
+    */
+   static std::string extractDir( const std::string& fileName );
+
+   /**
+    * The method allows to move up in the directories hierarchy by the specified
+    * amount of levels.
+    *
+    * i.e.: A call like:
+    *    leaveDir( "d:/dirA/dirB/dirC/dirD", 2, outDir );
+    * initializes outDir with:
+    *    "d:/dirA/dirB"
+    *
+    * @param dir
+    * @param levels
+    * @param outDirectory
+    */
+   static void leaveDir( const std::string& dir, unsigned int levels, std::string& outDirectory );
+
+   /**
+    * Just as the 'extractDir' method extracts a name of a directory
+    * in which the specified file is located, this method extracts
+    * the sole name of the file.
+    *
+    * @param fileName   path to a file along with that file name.
+    */
+   static std::string extractNodeName( const std::string& fileName );
+
+   /**
+    * Extracts an extension of the specified filename.
+    *
+    * @param fileName
+    */
+   static std::string extractExtension( const std::string& fileNam );
+
 protected:
    friend class File;
 
@@ -272,12 +264,12 @@ protected:
     *
     * @param fileName      name of the edited file
     */
-   void onFileEditionCompleted( const std::string& fileName ) const;
+   void onFileEditionCompleted( const FilePath& fileName ) const;
 
 private:
-   void notifyFileEditedChange( const std::string& path ) const;
-   void notifyFileRemovedChange( const std::string& path ) const;
-   void notifyDirChange( const std::string& dir ) const;
+   void notifyFileEditedChange( const FilePath& path ) const;
+   void notifyFileRemovedChange( const FilePath& path ) const;
+   void notifyDirChange( const FilePath& dir ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -91,13 +91,19 @@ void QueryRenderingPass::query( SceneQuery& query )
 void QueryRenderingPass::initialize( Renderer& renderer )
 {
    // load the shader
-   static const char* shaderName = "Editor/Shaders/SceneQueryEffect.psh";
+   static FilePath shaderName( "Editor/Shaders/SceneQueryEffect.psh" );
    ResourcesManager& rm = ResourcesManager::getInstance();
-   m_shader = rm.findResource< PixelShader >( "SceneQueryEffect" );
+   m_shader = rm.findResource< PixelShader >( shaderName );
    if ( !m_shader )
    {
-      m_shader = new PixelShader( "SceneQueryEffect" );
-      m_shader->loadFromFile( rm.getFilesystem(), shaderName );
+      m_shader = new PixelShader( shaderName );
+      
+      // load the shader code
+      File* shaderFile = rm.getFilesystem().open( shaderName, std::ios_base::in );
+      StreamBuffer< char > shaderCodeBuf( *shaderFile );
+      m_shader->setScript( shaderCodeBuf.getBuffer() );
+      delete shaderFile;
+
       rm.addResource( m_shader );
    }
 

@@ -31,6 +31,17 @@ public:
    bool compilePixelShader( const std::string& shaderCode, const char* entryFunction, std::vector< PixelShaderConstant* >* outConstants = NULL );
 
    /**
+    * Compiles a vertex shader.
+    *
+    * @param shaderCode
+    * @param entryFunction
+    *
+    * @return  'true' if the shader compiles OK, 'false' if any errors were encountered.
+    *          In the latter case, check the `getLastError` method for the exact error message.
+    */
+   bool compileVertexShader( const std::string& shaderCode, const char* entryFunction );
+
+   /**
     * Returns the last error message.
     */
    inline const std::string& getLastError() const { return m_errorMsg; }

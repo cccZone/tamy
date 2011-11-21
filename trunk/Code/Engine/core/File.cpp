@@ -1,12 +1,13 @@
 #include "core\File.h"
 #include "core\Assert.h"
 #include "core\Filesystem.h"
+#include "core\FilePath.h"
 #include <io.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-File::File( const Filesystem& hostFS, const std::string& name, const std::ios_base::open_mode openMode )
+File::File( const Filesystem& hostFS, const FilePath& name, const std::ios_base::open_mode openMode )
    : m_hostFS( hostFS )
    , m_name( name )
    , m_openMode( openMode )
@@ -39,10 +40,12 @@ File::File( const Filesystem& hostFS, const std::string& name, const std::ios_ba
       openModeStr += "b";
    }
 
-   fopen_s( &m_file, name.c_str(), openModeStr.c_str() );
+   std::string absoluteName = m_name.toAbsolutePath( m_hostFS );
+
+   fopen_s( &m_file, absoluteName.c_str(), openModeStr.c_str() );
    if (m_file == NULL)
    {
-      std::string errorMsg = std::string( "Can't open file " ) + name;
+      std::string errorMsg = std::string( "Can't open file " ) + absoluteName;
       throw std::runtime_error( errorMsg );
    }
 }
@@ -59,13 +62,6 @@ File::~File()
    {
       m_hostFS.onFileEditionCompleted( m_name );
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const std::string& File::getName() const
-{
-   return m_name;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

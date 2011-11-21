@@ -22,9 +22,6 @@
     <Filter Include="Widgets\TreeWidget">
       <UniqueIdentifier>{9173226e-dd2e-414a-a92a-dfda7c1cc74d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ResourceEditors\MaterialEditor">
-      <UniqueIdentifier>{01274f29-65ff-44c8-a660-7a2d3ecb06f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ResourceEditors\RenderingPipelineEditor">
       <UniqueIdentifier>{26961b85-6645-4ae9-aea3-210da473364f}</UniqueIdentifier>
     </Filter>
@@ -129,6 +126,9 @@
     <Filter Include="ResourceEditors\TextureEditor">
       <UniqueIdentifier>{cf1e2221-3fb7-450e-a3e1-01f86059d0da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\ShaderEditors">
+      <UniqueIdentifier>{01274f29-65ff-44c8-a660-7a2d3ecb06f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -163,9 +163,6 @@
     </ClInclude>
     <ClInclude Include="QueryableGeometry.h">
       <Filter>Widgets\SceneRenderWidget\SceneQueries\Representations</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_materialeditor.h">
-      <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_assertdialog.h">
       <Filter>QtImplementation\Generated Files</Filter>
@@ -319,6 +316,15 @@
     </ClInclude>
     <ClInclude Include="RPBVec4.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_fragmentshadereditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_vertexshadereditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_pixelshadereditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -474,15 +480,6 @@
     </ClCompile>
     <ClCompile Include="QueryableGeometry.cpp">
       <Filter>Widgets\SceneRenderWidget\SceneQueries\Representations</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialEditor.cpp">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_MaterialEditor.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_MaterialSyntaxHighlighter.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="assertDialog.cpp">
       <Filter>Core</Filter>
@@ -644,9 +641,6 @@
     <ClCompile Include="GeneratedFiles\Template\moc_SceneEditor.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
-    <ClCompile Include="MaterialSyntaxHighlighter.cpp">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
-    </ClCompile>
     <ClCompile Include="SelectedGeometry.cpp">
       <Filter>Widgets\SceneRenderWidget\SelectionVisualisation\Representations</Filter>
     </ClCompile>
@@ -743,6 +737,54 @@
     <ClCompile Include="RPBVec4.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="FragmentShaderEditor.cpp">
+      <Filter>ResourceEditors\ShaderEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_FragmentShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_FragmentShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_FragmentShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ShaderSyntaxHighlighter.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ShaderSyntaxHighlighter.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ShaderSyntaxHighlighter.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderSyntaxHighlighter.cpp">
+      <Filter>ResourceEditors\ShaderEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexShaderEditor.cpp">
+      <Filter>ResourceEditors\ShaderEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_VertexShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_VertexShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_VertexShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_PixelShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_PixelShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_PixelShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="PixelShaderEditor.cpp">
+      <Filter>ResourceEditors\ShaderEditors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -825,12 +867,6 @@
     <CustomBuild Include="TreeWidget.h">
       <Filter>Widgets\TreeWidget</Filter>
     </CustomBuild>
-    <CustomBuild Include="materialeditor.ui">
-      <Filter>QtImplementation\Form Files</Filter>
-    </CustomBuild>
-    <CustomBuild Include="MaterialEditor.h">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
-    </CustomBuild>
     <CustomBuild Include="assertDialog.h">
       <Filter>Core</Filter>
     </CustomBuild>
@@ -882,9 +918,6 @@
     <CustomBuild Include="SceneEditor.h">
       <Filter>ResourceEditors\SceneEditor</Filter>
     </CustomBuild>
-    <CustomBuild Include="MaterialSyntaxHighlighter.h">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
-    </CustomBuild>
     <CustomBuild Include="SelectedEntityPropertiesViewer.h">
       <Filter>ResourceEditors\SceneEditor</Filter>
     </CustomBuild>
@@ -893,6 +926,27 @@
     </CustomBuild>
     <CustomBuild Include="ObjectPropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FragmentShaderEditor.h">
+      <Filter>ResourceEditors\ShaderEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ShaderSyntaxHighlighter.h">
+      <Filter>ResourceEditors\ShaderEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="fragmentshadereditor.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="VertexShaderEditor.h">
+      <Filter>ResourceEditors\ShaderEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PixelShaderEditor.h">
+      <Filter>ResourceEditors\ShaderEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="vertexshadereditor.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="pixelshadereditor.ui">
+      <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

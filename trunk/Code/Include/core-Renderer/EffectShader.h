@@ -30,17 +30,9 @@ public:
    /**
     * Constructor loading a shader from an .fx file
     *
-    * @param fileName   name of a file with an HLSL shader
+    * @param resourceName   name of a file with an HLSL shader
     */
-   EffectShader( const std::string& fileName = "" );
-
-   /**
-    * Constructor.
-    *
-    * @param name    name for the resource
-    * @param script  HLSL script
-    */
-   EffectShader( const std::string& name, const std::string& script );
+   EffectShader( const FilePath& resourceName = FilePath()  );
    virtual ~EffectShader();
 
    /**
@@ -48,17 +40,19 @@ public:
     *
     * @return  HLSL shader script
     */
-   const std::string& getScript() const;
+   inline const std::string& getScript() const { return m_script; }
+
+   /**
+    * Sets the new shader script.
+    *
+    * @param script
+    */
+   void setScript( const std::string& script );
 
    /**
     * Creates a texture setting shader parameter for the effect shader.
     */
    static ShaderParam< EffectShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
-
-   // -------------------------------------------------------------------------
-   // Resource implementation
-   // -------------------------------------------------------------------------
-   void onResourceLoaded(ResourcesManager& mgr);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -37,8 +37,10 @@ private:
 public:  
    /**
     * Constructor.
+    *
+    * @param resourceName
     */
-   Skeleton( const std::string& path = "" );
+   Skeleton( const FilePath& resourceName = FilePath() );
    ~Skeleton();
 
    /**

@@ -109,7 +109,7 @@ std::string Geometry::getGeometryName() const
 {
    if ( m_resource )
    {
-      return m_resource->getResourceName();
+      return m_resource->getFilePath();
    }
    else
    {

@@ -1,34 +1,34 @@
-/// @file   TamyEditor/MaterialEditor.h
-/// @brief  material editor's main class
+/// @file   TamyEditor/VertexShaderEditor.h
+/// @brief  vertex shader editor's main class
 
 #pragma once
 
 #include <QtGui/QMainWindow>
-#include "ui_materialeditor.h"
+#include "ui_vertexshadereditor.h"
 #include "ResourceEditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MaterialSyntaxHighlighter;
-class PixelShader;
+class ShaderSyntaxHighlighter;
+class VertexShader;
 class ResourcesManager;
 class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Material editor's main class.
+ * Vertex shader editor's main class.
  */
-class MaterialEditor : public ResourceEditor
+class VertexShaderEditor : public ResourceEditor
 {
    Q_OBJECT
 
 private:
-   Ui::MaterialEditorWindow         m_ui;
+   Ui::VertexShaderEditorWindow     m_ui;
 
-   PixelShader&                     m_shader;
-   MaterialSyntaxHighlighter*       m_highlighter;
+   VertexShader&                    m_shader;
+   ShaderSyntaxHighlighter*         m_highlighter;
 
    ResourcesManager*                m_resourceMgr;
    bool                             m_docModified;
@@ -39,8 +39,8 @@ public:
     *
     * @param shader     edited shader
     */
-   MaterialEditor( PixelShader& shader );
-   ~MaterialEditor();
+   VertexShaderEditor( VertexShader& shader );
+   ~VertexShaderEditor();
 
    // -------------------------------------------------------------------------
    // ResourceEditor implementation
@@ -53,7 +53,9 @@ public slots:
    bool compile();
    void onScriptModified();
    void onTextCursorMoved();
-   void onParamChange();
+   void onVertexIdChange( const QString& newId );
+   void importFrom();
+   void exportTo();
 
 private:
    void synchronize();

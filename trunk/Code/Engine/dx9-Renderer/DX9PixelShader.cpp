@@ -255,7 +255,7 @@ void DX9PixelShader::setTexture( const char* paramName, IDirect3DTexture9* textu
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
       UINT samplerIdx = m_shaderConstants->GetSamplerIndex( hConstant );
 
-      const PixelShaderParams& params = m_shader.getParams();
+      const TextureStageParams& params = m_shader.getTextureStage( samplerIdx );
       m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_ADDRESSU, params.m_addressU );
       m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_ADDRESSV, params.m_addressV );
       m_d3Device->SetSamplerState( samplerIdx, D3DSAMP_ADDRESSW, params.m_addressW );

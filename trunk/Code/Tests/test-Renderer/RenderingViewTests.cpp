@@ -8,6 +8,8 @@
 #include "core-Renderer\RenderState.h"
 #include "core-Renderer\RPSBTextured.h"
 #include "core\AABoundingBox.h"
+#include "core\MemoryPool.h"
+#include "core\RuntimeData.h"
 #include <vector>
 #include <string>
 
@@ -42,20 +44,24 @@ namespace // anonymous
    class RenderingMechanismMock : public RenderingMechanism
    {     
    private:
-      Model&                m_model;
-      RenderingView*        m_view;
-      RPSBTextured*         m_builder;
+      Model&               m_model;
+      RenderingView*       m_view;
+      RPSBTextured*        m_builder;
+      MemoryPool*          m_treeMemPool;
+      RuntimeDataBuffer    m_data;
 
    public:
       RenderingMechanismMock( Model& model ) 
          : m_model( model )
          , m_view( NULL ) 
          , m_builder( new RPSBTextured() )
+         , m_treeMemPool( new MemoryPool( 1024 * 1024 ) )
       {
       }
 
       ~RenderingMechanismMock()
       {
+         delete m_treeMemPool; m_treeMemPool = NULL;
          delete m_builder; m_builder = NULL;
       }
 
@@ -73,7 +79,21 @@ namespace // anonymous
 
       void render( Renderer& renderer )
       {
-         m_view->render( *m_builder );
+         Array< SpatialRepresentation* > renderables;
+         m_view->collectRenderables( renderables );
+
+         // build a tree sorting the nodes by the attributes
+         m_treeMemPool->reset();
+         StateTreeNode* root = m_builder->buildRenderTree( *m_treeMemPool, renderables );
+
+         if ( root )
+         {
+            // render the tree contents
+            root->render( renderer, m_data );
+
+            // get rid of the tree
+            MEMPOOL_DELETE( root );
+         }
       }
    };
 

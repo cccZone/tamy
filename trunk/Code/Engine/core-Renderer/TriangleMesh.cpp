@@ -19,12 +19,10 @@ TriangleMesh::TriangleMesh()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TriangleMesh::TriangleMesh( const std::string& name,
-                            const std::vector<LitVertex>& vertices,
-                            const std::vector<Face>& faces )
-: GeometryResource( name )
-, m_vertices(vertices)
-, m_faces(faces)
+TriangleMesh::TriangleMesh( const FilePath& resourceName, const std::vector<LitVertex>& vertices, const std::vector<Face>& faces )
+   : GeometryResource( resourceName )
+   , m_vertices(vertices)
+   , m_faces(faces)
 {
    D3DXMatrixIdentity(&m_identityMtx);
 }

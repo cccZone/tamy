@@ -37,14 +37,13 @@ namespace
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_ABSTRACT_OBJECT( Resource, Object )
-   PROPERTY( std::string, m_filePath )
    PROPERTY( std::vector< ResourceObject* >, m_managedObjects )
    PROPERTY( std::vector< int >, m_freeIds )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource::Resource( const std::string& filePath )
+Resource::Resource( const FilePath& filePath )
 : m_filePath( filePath )
 , m_host( NULL )
 {
@@ -73,7 +72,7 @@ Resource::~Resource()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Resource::setFilePath( const std::string& path, ResourcesManager* host )
+void Resource::setFilePath( const FilePath& path, ResourcesManager* host )
 {
    if ( m_host != host )
    {

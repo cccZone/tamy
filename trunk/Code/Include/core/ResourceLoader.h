@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+#include "core/FilePath.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,7 +20,7 @@ class IProgressObserver;
 class ResourceLoader
 {
 protected:
-   std::string          m_loadedFileName;
+   FilePath          m_loadedFileName;
 
 public:
    virtual ~ResourceLoader() {}
@@ -29,7 +30,7 @@ public:
     *
     * @param fileName
     */
-   void setLoadedFileName( const std::string& fileName ) { m_loadedFileName = fileName; }
+   void setLoadedFileName( const FilePath& fileName ) { m_loadedFileName = fileName; }
 
    /**
     * Loads a resource.

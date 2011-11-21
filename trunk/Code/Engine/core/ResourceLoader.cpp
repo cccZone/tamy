@@ -11,7 +11,7 @@ Resource* DefaultResourceLoader::load( ResourcesManager& rm, IProgressObserver& 
 {
    observer.initialize( "Loading engine resource " + m_loadedFileName, 1 );
 
-   std::string extension = Filesystem::extractExtension( m_loadedFileName );
+   std::string extension = m_loadedFileName.extractExtension();
    std::ios_base::openmode fileAccessMode = Resource::getFileAccessMode( extension );
 
    Filesystem& fs = rm.getFilesystem();

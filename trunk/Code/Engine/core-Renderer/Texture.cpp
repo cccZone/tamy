@@ -7,15 +7,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_RESOURCE( Texture, Resource, tex, AM_BINARY )
-   PROPERTY( std::string, m_texFileName )
+   PROPERTY( FilePath, m_texFileName )
    PROPERTY_EDIT( "Usage", TextureUsage, m_usage )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Texture::Texture( const std::string& fileName )
-   : Resource( fileName )
-   , m_texFileName( fileName )
+Texture::Texture( const FilePath& resourceName )
+   : Resource( resourceName )
    , m_usage( TU_COLOR )
    , m_width( 0 )
    , m_height( 0 )

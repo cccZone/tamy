@@ -1,4 +1,4 @@
-/// @file   TamyEditor/MaterialSyntaxHighlighter.h
+/// @file   TamyEditor/ShaderSyntaxHighlighter.h
 /// @brief  material syntax highlighter
 
 #pragma once
@@ -11,7 +11,7 @@
 /**
  * Material syntax highlighter.
  */
-class MaterialSyntaxHighlighter : public QSyntaxHighlighter
+class ShaderSyntaxHighlighter : public QSyntaxHighlighter
 {
    Q_OBJECT
 
@@ -40,7 +40,7 @@ public:
     *
     * @param editedDoc
     */
-   MaterialSyntaxHighlighter( QTextDocument* editedDoc = 0 );
+   ShaderSyntaxHighlighter( QTextDocument* editedDoc = 0 );
 
 protected:
    void highlightBlock( const QString &text );

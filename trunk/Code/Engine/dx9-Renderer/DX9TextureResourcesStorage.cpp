@@ -29,7 +29,7 @@ IDirect3DTexture9* RenderResourceStorage< DX9Renderer, Texture, IDirect3DTexture
 
    if ( FAILED( res ) )
    {
-      std::string errorMsg = translateDxError( std::string( "Can't load texture ") + obj.getTextureName(), res );
+      std::string errorMsg = translateDxError( "Can't load texture " + obj.getTextureName(), res );
       throw std::runtime_error( errorMsg );
    }
 

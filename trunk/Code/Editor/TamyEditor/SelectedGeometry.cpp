@@ -11,13 +11,19 @@ SelectedGeometry::SelectedGeometry( Geometry& geometry )
 , m_selectionMarker( NULL )
 {
    // create a selection marker effect
-   static const char* shaderName = "Editor/Shaders/SelectionMarker.psh";
+   static FilePath shaderName( "Editor/Shaders/SelectionMarker.psh" );
    ResourcesManager& resMgr = ResourcesManager::getInstance();
-   m_selectionMarker = resMgr.findResource< PixelShader >( "SelectionMarker" );
+   m_selectionMarker = resMgr.findResource< PixelShader >( shaderName );
    if ( !m_selectionMarker )
    {
-      m_selectionMarker = new PixelShader( "SelectionMarker" );
-      m_selectionMarker->loadFromFile( resMgr.getFilesystem(), shaderName );
+      m_selectionMarker = new PixelShader( shaderName );
+
+      // load the shader code
+      File* shaderFile = resMgr.getFilesystem().open( shaderName, std::ios_base::in );
+      StreamBuffer< char > shaderCodeBuf( *shaderFile );
+      m_selectionMarker->setScript( shaderCodeBuf.getBuffer() );
+      delete shaderFile;
+
       resMgr.addResource( m_selectionMarker );
    }
 }

@@ -23,8 +23,10 @@ class GeometryResource : public Resource
 public:
    /**
     * Constructor.
+    *
+    * @param resourceName
     */
-   GeometryResource( const std::string& name = "" ) : Resource( name ) {}
+   GeometryResource( const FilePath& resourceName = FilePath() ) : Resource( resourceName ) {}
    virtual ~GeometryResource() {}
 
    /**

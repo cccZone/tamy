@@ -24,7 +24,9 @@
 
 // editors
 #include "SceneEditor.h"
-#include "MaterialEditor.h"
+#include "PixelShaderEditor.h"
+#include "VertexShaderEditor.h"
+#include "FragmentShaderEditor.h"
 #include "RenderingPipelineEditor.h"
 #include "SkeletonAnimationEditor.h"
 #include "TextureEditor.h"
@@ -96,7 +98,9 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 
    // associate resources with their respective editors
    associate< Model, SceneEditor >();
-   associate< PixelShader, MaterialEditor >();
+   associate< PixelShader, PixelShaderEditor >();
+   associate< VertexShader, VertexShaderEditor >();
+   associate< FragmentShader, FragmentShaderEditor >();
    associate< RenderingPipelineLayout, RenderingPipelineEditor >();
    associate< SkeletonAnimation, SkeletonAnimationEditor >();
    associate< Texture, TextureEditor >();
@@ -366,7 +370,7 @@ void TamyEditor::closeResourceEditor( int editorTabIdx )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::onDirChanged( const std::string& dir )
+void TamyEditor::onDirChanged( const FilePath& dir )
 {
    const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
 
@@ -382,9 +386,9 @@ void TamyEditor::onDirChanged( const std::string& dir )
          continue;
       }
 
-      QString resourcePath = editor->getLabel();
+      FilePath resourcePath( editor->getLabel().toStdString() );
 
-      if ( editor && resourcePath.contains( dir.c_str() ) && !fs.doesExist( resourcePath.toStdString() ) )
+      if ( editor && resourcePath.isSubPath( dir ) && !fs.doesExist( resourcePath ) )
       {
          editor->deinitialize( false );
          m_editorsTabs->removeTab( i-- );
@@ -394,13 +398,13 @@ void TamyEditor::onDirChanged( const std::string& dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::onFileEdited( const std::string& path )
+void TamyEditor::onFileEdited( const FilePath& path )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::onFileRemoved( const std::string& path )
+void TamyEditor::onFileRemoved( const FilePath& path )
 {
    const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
 
@@ -418,7 +422,7 @@ void TamyEditor::onFileRemoved( const std::string& path )
 
       QString resourcePath = editor->getLabel();
 
-      if ( editor && resourcePath == path.c_str() )
+      if ( editor && path == FilePath( resourcePath.toStdString() ) )
       {
          editor->deinitialize( false );
          m_editorsTabs->removeTab( i-- );

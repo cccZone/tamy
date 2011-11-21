@@ -5,11 +5,13 @@
 #include <string>
 #include <iostream>
 #include <windows.h>
+#include "core/FilePath.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Filesystem;
+class FilePath;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +23,7 @@ class File
 private:
    const Filesystem&          m_hostFS;
    FILE*                      m_file;
-   std::string                m_name;
+   FilePath                   m_name;
    std::ios_base::open_mode   m_openMode;
 
 public:
@@ -32,7 +34,7 @@ public:
     *
     * @return     name of the file
     */
-   const std::string& getName() const;
+   inline const FilePath& getName() const { return m_name; }
 
    /**
     * The method sets new offset from which file operation will be performed.
@@ -40,7 +42,7 @@ public:
     * @param offset  position in a file
     * @param dir     position with respect to which the offset should be set
     */
-   void seek(DWORD offset, std::ios_base::seekdir dir = std::ios_base::beg);
+   void seek( DWORD offset, std::ios_base::seekdir dir = std::ios_base::beg );
 
    /**
     * The method returns current offset in the file.
@@ -56,7 +58,7 @@ public:
     * @param size    amount of data (in bytes) that should be read
     * @param return  amount of bytes read
     */
-   std::size_t read(byte* buffer, std::size_t size);
+   std::size_t read( byte* buffer, std::size_t size );
 
    /**
     * The method writes a block of data to the file.
@@ -66,7 +68,7 @@ public:
     *                from the buffer
     * @param return  amount of bytes stored in the file
     */
-   std::size_t write(byte* buffer, std::size_t size);
+   std::size_t write( byte* buffer, std::size_t size );
 
    /**
     * Reads a null-terminated string from the file.
@@ -78,7 +80,7 @@ public:
     *                      (including the final null-character). Usually,
     *                      the length of the array passed as str is used.
     */
-   void readString(char*  outStrData, std::size_t size);
+   void readString( char*  outStrData, std::size_t size );
 
    /**
     * Writes a null-terminated string to a file.
@@ -86,7 +88,7 @@ public:
     * @param strData                string we want to store in a file
     * @throws std::runtime_error    if the operation failed
     */
-   void writeString(const char* strData);
+   void writeString( const char* strData );
 
    /**
     * The method flushes all buffered data to the underlying disc file.
@@ -113,7 +115,7 @@ public:
     * @param newSize    requested file size
     * @throws std::runtime_error    if the operation failed
     */
-   void setSize(std::size_t newSize);
+   void setSize( std::size_t newSize );
 
 protected:
    friend class Filesystem;
@@ -125,7 +127,7 @@ protected:
     * @param name       file name
     * @param openMode   file access privileges
     */
-   File( const Filesystem& hostFS, const std::string& name, const std::ios_base::open_mode openMode = std::ios_base::in );
+   File( const Filesystem& hostFS, const FilePath& name, const std::ios_base::open_mode openMode = std::ios_base::in );
 
 };
 

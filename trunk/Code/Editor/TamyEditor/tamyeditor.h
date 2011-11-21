@@ -128,9 +128,9 @@ public:
    // -------------------------------------------------------------------------
    // FilesystemListener implementation
    // -------------------------------------------------------------------------
-   void onDirChanged( const std::string& dir );
-   void onFileEdited( const std::string& path );
-   void onFileRemoved( const std::string& path );
+   void onDirChanged( const FilePath& dir );
+   void onFileEdited( const FilePath& path );
+   void onFileRemoved( const FilePath& path );
 
 public slots:
    void updateMain();

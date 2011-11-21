@@ -1,5 +1,5 @@
 // StaticGeometry.vsh
-#include "VertexShaderOutput.vsh"
+#include "Renderer/Shaders/Lib/VertexShaderOutput.tfsh"
 
 //--------------------------------------------------------------------------------------
 // Global constants

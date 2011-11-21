@@ -45,14 +45,11 @@ public:
    /**
     * Constructor.
     *
-    * @param name       resource name
+    * @param resourceName
     * @param vertices   mesh vertices
     * @param faces      mesh faces
     */
-   TriangleMesh( const std::string& name,
-                 const std::vector<LitVertex>& vertices,
-                 const std::vector<Face>& faces );
-
+   TriangleMesh( const FilePath& resourceName, const std::vector<LitVertex>& vertices, const std::vector<Face>& faces );
    ~TriangleMesh();
 
    /**

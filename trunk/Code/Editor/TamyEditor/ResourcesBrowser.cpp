@@ -100,25 +100,27 @@ void ResourcesBrowser::initUI()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::onDirChanged( const std::string& dir )
+void ResourcesBrowser::onDirChanged( const FilePath& dir )
 {
-   refresh( dir );
+   refresh( dir.getRelativePath() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::onFileEdited( const std::string& path )
+void ResourcesBrowser::onFileEdited( const FilePath& path )
 {
-   std::string dir = ResourcesManager::getInstance().getFilesystem().extractDir( path );
-   refresh( dir );
+   FilePath dir;
+   path.extractDir( dir );
+   refresh( dir.getRelativePath() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::onFileRemoved( const std::string& path )
+void ResourcesBrowser::onFileRemoved( const FilePath& path )
 {
-   std::string dir = ResourcesManager::getInstance().getFilesystem().extractDir( path );
-   refresh( dir );
+   FilePath dir;
+   path.extractDir( dir );
+   refresh( dir.getRelativePath() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -228,7 +230,7 @@ void ResourcesBrowser::editResource( const std::string& path, const QIcon& resou
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::onDirectory( const std::string& name )
+void ResourcesBrowser::onDirectory( const FilePath& name )
 {
    ASSERT_MSG( m_rm != NULL, "This method can only be called when ResourcesManager instance is available" );
 
@@ -248,7 +250,7 @@ void ResourcesBrowser::onDirectory( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::onFile( const std::string& name )
+void ResourcesBrowser::onFile( const FilePath& name )
 {
    ASSERT_MSG( m_rm != NULL, "This method can only be called when ResourcesManager instance is available" );
 
@@ -256,17 +258,18 @@ void ResourcesBrowser::onFile( const std::string& name )
 
    if ( m_viewResourcesOnly )
    {
-      std::string extension = fs.extractExtension( name );
+      std::string extension = name.extractExtension();
       if ( !Resource::isResource( extension ) )
       {
          return;
       }
    }
 
-   std::string parentDirName = fs.extractDir( name );
-   std::string newNodeName = fs.extractNodeName( name );
+   FilePath parentDirName;
+   name.extractDir( parentDirName );
+   std::string newNodeName = name.extractNodeName();
 
-   FSTreeNode* parent = find( parentDirName );
+   FSTreeNode* parent = find( parentDirName.getRelativePath() );
    ASSERT_MSG( parent != NULL, "Parent directory not found" );
    if ( parent && parent->find( newNodeName ) == NULL )
    {

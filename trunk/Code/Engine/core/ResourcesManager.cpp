@@ -98,7 +98,8 @@ bool ResourcesManager::addResource( Resource* resource )
    }
 
    // correct the resource's name
-   std::string correctResourcePath = Filesystem::changeFileExtension( resource->getFilePath(), resource->getVirtualExtension() );
+   FilePath correctResourcePath;
+   resource->getFilePath().changeFileExtension( resource->getVirtualExtension(), correctResourcePath );
 
    ResourcesMap::iterator it = m_resources.find( correctResourcePath );
    if ( it != m_resources.end() )
@@ -125,7 +126,7 @@ bool ResourcesManager::addResource( Resource* resource )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::moveResource( Resource* resource, const std::string& newPath )
+void ResourcesManager::moveResource( Resource* resource, const FilePath& newPath )
 {
    if ( resource == NULL )
    {
@@ -138,7 +139,8 @@ void ResourcesManager::moveResource( Resource* resource, const std::string& newP
    }
 
    // correct the resource's name
-   std::string correctResourcePath = Filesystem::changeFileExtension( newPath, resource->getVirtualExtension() );
+   FilePath correctResourcePath;
+   newPath.changeFileExtension( resource->getVirtualExtension(), correctResourcePath );
 
    ResourcesMap::iterator it = m_resources.find( correctResourcePath );
    if ( it == m_resources.end() )
@@ -153,7 +155,7 @@ void ResourcesManager::moveResource( Resource* resource, const std::string& newP
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* ResourcesManager::findResource( const std::string& name )
+Resource* ResourcesManager::findResource( const FilePath& name )
 {
    ResourcesMap::iterator it = m_resources.find( name );
    if ( it != m_resources.end() )
@@ -168,16 +170,16 @@ Resource* ResourcesManager::findResource( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::scan( const std::string& rootDir, FilesystemScanner& scanner, bool recursive ) const
+void ResourcesManager::scan( const FilePath& rootDir, FilesystemScanner& scanner, bool recursive ) const
 {
    // scan the contents of the filesystem
    m_filesystem->scan( rootDir, scanner, recursive );
 
    // scan the registered resources
-   const std::size_t rootDirNameLen = rootDir.length();
+   const std::size_t rootDirNameLen = rootDir.getRelativePath().length();
    for ( ResourcesMap::const_iterator it = m_resources.begin(); it != m_resources.end(); ++it )
    {
-      std::size_t rootDirPos = it->first.find( rootDir );
+      std::size_t rootDirPos = it->first.getRelativePath().find( rootDir );
       if ( rootDirPos != 0 )
       {
          // we only want to consider files located in the root directory
@@ -192,7 +194,7 @@ void ResourcesManager::scan( const std::string& rootDir, FilesystemScanner& scan
       else
       {
          // it's not a recursive search - add only the files in this directory
-         std::size_t subDirCharPos = it->first.find_first_of( "/\\", rootDirNameLen );
+         std::size_t subDirCharPos = it->first.getRelativePath().find_first_of( "/\\", rootDirNameLen );
          if ( subDirCharPos == std::string::npos )
          {
             scanner.onFile( it->first );
@@ -225,10 +227,11 @@ Resource* ResourcesManager::loadResource( ResourceLoader& loader )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource& ResourcesManager::create( const std::string& name )
+Resource& ResourcesManager::create( const FilePath& name )
 {
    ResourceLoader* loader = createResourceLoader( name );
-   std::string correctResourcePath = Filesystem::changeFileExtension( name, loader->getOutputResourceExtension() );
+   FilePath correctResourcePath;
+   name.changeFileExtension( loader->getOutputResourceExtension(), correctResourcePath );
 
    Resource* res = findResource( correctResourcePath );
    if ( res == NULL )
@@ -236,6 +239,7 @@ Resource& ResourcesManager::create( const std::string& name )
       res = loadResource( *loader );
       if ( res )
       {
+         res->setFilePath( correctResourcePath );
          addResource( res );
       }
    }
@@ -259,11 +263,11 @@ void ResourcesManager::free( Resource* resource )
       return;
    }
 
-   ResourcesMap::iterator it = m_resources.find( resource->getResourceName() );
+   ResourcesMap::iterator it = m_resources.find( resource->getFilePath() );
    if ( it != m_resources.end() && it->second != resource )
    {
       char errMsg[512];
-      sprintf_s( errMsg, "Resources discrepancy - two resources share the same name '%s'", resource->getResourceName().c_str() );
+      sprintf_s( errMsg, "Resources discrepancy - two resources share the same name '%s'", resource->getFilePath().getRelativePath().c_str() );
       ASSERT_MSG( false, errMsg );
 
       // find a matching resource the hard way
@@ -284,12 +288,12 @@ void ResourcesManager::free( Resource* resource )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::save( const std::string& name, ExternalDependenciesSet& outExternalDependencies )
+void ResourcesManager::save( const FilePath& name, ExternalDependenciesSet& outExternalDependencies )
 {
    Resource* res = findResource( name );
    if ( res != NULL )
    {
-      std::string extension = Filesystem::extractExtension( name );
+      std::string extension = name.extractExtension();
       std::ios_base::openmode fileAccessMode = Resource::getFileAccessMode( extension );
 
       File* file = m_filesystem->open( name, std::ios_base::out | fileAccessMode );
@@ -300,9 +304,9 @@ void ResourcesManager::save( const std::string& name, ExternalDependenciesSet& o
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourceLoader* ResourcesManager::createResourceLoader( const std::string& name ) const
+ResourceLoader* ResourcesManager::createResourceLoader( const FilePath& name ) const
 {
-   std::string extension = Filesystem::extractExtension( name );
+   std::string extension = name.extractExtension();
 
    ResourceLoadersMap::const_iterator it = m_loaders.find( extension );
    ResourceLoader* loader = NULL;
@@ -356,16 +360,16 @@ void ResourcesManager::onComponentRemoved( Component< ResourcesManager >& compon
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::onDirChanged( const std::string& dir )
+void ResourcesManager::onDirChanged( const FilePath& dir )
 {
-   std::vector< std::string > entriesToRemove;
+   std::vector< FilePath > entriesToRemove;
 
    // go through the registered resources and see if any of those 
    // still exist - if they don't remove them from the system
    for ( ResourcesMap::iterator it = m_resources.begin(); it != m_resources.end(); ++it )
    {
-      const std::string& path = it->first;
-      if ( path.find( dir ) != std::string::npos )
+      const FilePath& path = it->first;
+      if ( path.isSubPath( dir ) )
       {
          bool doesResourceExist = m_filesystem->doesExist( path );
          if ( !doesResourceExist )
@@ -390,14 +394,14 @@ void ResourcesManager::onDirChanged( const std::string& dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::onFileEdited( const std::string& path )
+void ResourcesManager::onFileEdited( const FilePath& path )
 {
    // nothing to do here
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::onFileRemoved( const std::string& path )
+void ResourcesManager::onFileRemoved( const FilePath& path )
 {
    // check if the removed file was a resource, and if it was - remove it
    ResourcesMap::iterator it = m_resources.find( path );

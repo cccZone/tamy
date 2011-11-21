@@ -21,9 +21,11 @@ REGISTER_RTTI( TriangleMesh );
 REGISTER_RTTI( SingleTextureMaterial );
 REGISTER_RTTI( VertexShader );
 REGISTER_RTTI( PixelShader );
+REGISTER_RTTI( FragmentShader );
 REGISTER_RTTI( Texture );
 REGISTER_RTTI( RenderTarget );
 REGISTER_RTTI( Material );
+REGISTER_ENUM_RTTI( VertexDescId );
 
 ///////////////////////////////////////////////////////////////////////////////
 

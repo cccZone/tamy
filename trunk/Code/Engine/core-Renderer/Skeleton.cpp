@@ -14,8 +14,8 @@ END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Skeleton::Skeleton( const std::string& path )
-   : Resource( path )
+Skeleton::Skeleton( const FilePath& resourceName )
+   : Resource( resourceName )
 {
    D3DXMatrixIdentity( &m_identityMtx );
    D3DXMatrixIdentity( &m_bindShapeMtx );

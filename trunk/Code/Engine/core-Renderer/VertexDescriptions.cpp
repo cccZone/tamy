@@ -3,6 +3,14 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+BEGIN_ENUM( VertexDescId );
+   ENUM_VAL( VDI_SIMPLE );
+   ENUM_VAL( VDI_SIMPLE_SKINNING );
+   ENUM_VAL( VDI_SIMPLE_SCREENSPACE );
+END_ENUM( VertexDescId );
+
+///////////////////////////////////////////////////////////////////////////////
+
 D3DVERTEXELEMENT9 SimpleDesc[] = 
 {
    {0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0}, // stream 0, position

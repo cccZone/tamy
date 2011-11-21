@@ -293,10 +293,11 @@ void IWFScene::addStaticGeometry( Model& scene,
       char geomName[128];
       sprintf_s( geomName, 128, "%s/%s.%s", m_sceneDir.c_str(), currMesh.name.c_str(), TriangleMesh::getExtension() );
 
+      FilePath geomResPath( geomName );
       TriangleMesh* geometryRes = NULL;
-      if ( ( geometryRes = rm.findResource< TriangleMesh >( geomName ) ) == NULL )
+      if ( ( geometryRes = rm.findResource< TriangleMesh >( geomResPath ) ) == NULL )
       {
-         geometryRes = new TriangleMesh( geomName, currMesh.vertices, currMesh.faces );
+         geometryRes = new TriangleMesh( geomResPath, currMesh.vertices, currMesh.faces );
          rm.addResource( geometryRes );
       }
 
@@ -307,12 +308,14 @@ void IWFScene::addStaticGeometry( Model& scene,
       
       if (mat.texName.length() > 0)
       {
-         std::string texName = m_sceneDir + std::string( "/" ) + mat.texName;
-         std::string texResourceName = Filesystem::changeFileExtension( texName, Texture::getExtension() );
+         FilePath texName( m_sceneDir + std::string( "/" ) + mat.texName );
+         FilePath texResourceName;
+         texName.changeFileExtension( Texture::getExtension(), texResourceName );
          Texture* texture = NULL;
          if ( ( texture = rm.findResource< Texture >( texResourceName ) ) == NULL )
          {
-            texture = new Texture( texName );
+            texture = new Texture( texResourceName );
+            texture->setTextureName( texName );
             rm.addResource( texture );
          }
          material->setTexture( *texture );

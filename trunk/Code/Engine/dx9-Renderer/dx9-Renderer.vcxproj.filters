@@ -215,9 +215,6 @@
     <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
       <Filter>Shaders\VertexShaders</Filter>
     </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\VertexShaderOutput.vsh">
-      <Filter>Shaders\VertexShaders</Filter>
-    </None>
     <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
       <Filter>Shaders\VertexShaders</Filter>
     </None>

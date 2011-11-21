@@ -289,6 +289,9 @@
     <ClCompile Include="RPVec4Node.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="FragmentShader.cpp">
+      <Filter>Geometry\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -564,6 +567,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPVec4Node.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h">
+      <Filter>Geometry\Resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
