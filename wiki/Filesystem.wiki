@@ -7,6 +7,27 @@ Using it, you can create, open and delete files and directories.
 
 A file is represented by the `File` class.
 
+==FilePath==
+The filesystem contents are identified by a construct called `FilePath`.
+It's a path relative to the filesystem root directory.
+
+What it means for the application - it means, that you write your file paths and then keep moving the your assets dir wherever you like, and they still will be valid.
+
+So how do you use it - simply create a FilePath object, passing it a relative path to the file you have in mind, like so:
+
+{{{
+FilePath path( "/Renderer/Shaders/myShader.tvsh" );
+}}}
+
+And voila.
+
+The path will get normalized, meaning that the following two paths will point at the same file:
+
+{{{
+FilePath path( "/Renderer/Shaders/myShader.tvsh" );
+FilePath samePath( "Renderer\Shaders/myShader.tvsh" );
+}}}
+
 
 ==Reading file contents==
 
