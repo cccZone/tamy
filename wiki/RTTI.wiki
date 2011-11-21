@@ -15,7 +15,7 @@ But let's start slow :)
 
 ==Properties==
 
-You can make anything a property - all it needs to have is a defined `serialize` method.
+You can make anything a property - all it needs to have is a defined `operator<<` method.
 Here's an example:
 
 {{{
