@@ -12,7 +12,7 @@ END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkeletonAnimation::SkeletonAnimation( const std::string& resourceName )
+SkeletonAnimation::SkeletonAnimation( const FilePath& resourceName )
    : Resource( resourceName )
    , m_animationLength( 0.f )
 {

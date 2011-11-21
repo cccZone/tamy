@@ -27,8 +27,8 @@ namespace // anonymous
       int m_val;
 
    public:
-      ResourceMock( const std::string& fileName = "", int val = -1 ) 
-         : Resource( fileName )
+      ResourceMock( const FilePath& resourceName = FilePath(), int val = -1 ) 
+         : Resource( resourceName )
          , m_val( val ) 
       {}
 
@@ -90,19 +90,19 @@ TEST(ResourcesManager, basic)
    InitializerMock* initializer = new InitializerMock();
    manager.addComponent( initializer );
 
-   ResourceMock* resourceMock = new ResourceMock( "resourceMock.txt", 5 );
+   ResourceMock* resourceMock = new ResourceMock( FilePath( "resourceMock.txt" ), 5 );
    manager.addResource( resourceMock );
    resourceMock->saveResource();
 
    manager.reset();
    initializer->objsCount = 0;
 
-   ResourceMock& res1 = dynamic_cast< ResourceMock& >( manager.create("resourceMock.txt") );
+   ResourceMock& res1 = dynamic_cast< ResourceMock& >( manager.create( FilePath( "resourceMock.txt" ) ) );
    CPPUNIT_ASSERT_EQUAL(5, res1.getValue());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
    CPPUNIT_ASSERT_EQUAL(1, initializer->objsCount);
 
-   ResourceMock& res2 = dynamic_cast< ResourceMock& >( manager.create("resourceMock.txt") );
+   ResourceMock& res2 = dynamic_cast< ResourceMock& >( manager.create( FilePath( "resourceMock.txt" ) ) );
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
    CPPUNIT_ASSERT_EQUAL(1, initializer->objsCount);
    CPPUNIT_ASSERT(&res1 == &res2);
@@ -115,7 +115,7 @@ TEST( Resource, resourceHandles )
    ResourcesManager& mgr = ResourcesManager::getInstance();
    mgr.reset();
 
-   const char* resourceName = "namedResourceMock";
+   FilePath resourceName( "namedResourceMock" );
    ResourceMock* resource = new ResourceMock( resourceName );
    mgr.addResource( resource );
    

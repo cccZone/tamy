@@ -62,7 +62,7 @@ void ResourcePropertyEditor::refreshPropertyName()
    Resource* res = m_property->get();
    if ( res )
    {
-      m_resourceName->setText( res->getResourceName().c_str() );
+      m_resourceName->setText( res->getFilePath().c_str() );
    }
    else
    {

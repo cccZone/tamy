@@ -67,7 +67,7 @@
 #include "core-Renderer\LineSegments.h"
 #include "core-Renderer\Skeleton.h"
 #include "core-Renderer\VertexShader.h"
-
+#include "core-Renderer\FragmentShader.h"
 // ----------------------------------------------------------------------------
 // Initialization
 // ----------------------------------------------------------------------------

@@ -22,23 +22,16 @@ class VertexShader : public Resource, public UniqueObject< VertexShader >, publi
 
 private:
    std::string                   m_script;
+   std::string                   m_entryFunctionName;
    VertexDescId                  m_vertexDescId;
-
-   // runtime data
-   std::string                   m_scriptPath;
 
 public:
    /**
     * Constructor.
-    */
-   VertexShader();
-
-   /**
-    * Constructor.
     *
-    * @param scriptPath    path to the .vsh file containing the shader's HLSL code
+    * @param resourceName
     */
-   VertexShader( const std::string& scriptPath );
+   VertexShader( const FilePath& resourceName = FilePath() );
 
    /**
     * Sets a new vertex description. Supported only for vertex shaders.
@@ -58,14 +51,21 @@ public:
    inline const std::string& getScript() const { return m_script; }
 
    /**
+    * Sets a new HLSL script.
+    *
+    * @param script
+    */
+   inline void setScript( const std::string& script ) { m_script = script; setDirty(); }
+
+   /**
+    * Returns the name of the shader entry function
+    */
+   inline const std::string& getEntryFunctionName() const { return m_entryFunctionName; }
+
+   /**
     * Creates a texture setting shader parameter for the effect shader.
     */
    static ShaderParam< VertexShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
-
-   // -------------------------------------------------------------------------
-   // Resource implementation
-   // -------------------------------------------------------------------------
-   void onResourceLoaded(ResourcesManager& mgr);
 };
 
 ///////////////////////////////////////////////////////////////////////////////

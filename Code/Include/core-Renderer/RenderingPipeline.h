@@ -46,9 +46,9 @@ public:
    /**
     * Constructor.
     *
-    * @param fileName   name of the resource file
+    * @param resourceName   name of the resource file
     */
-   RenderingPipeline( const std::string& fileName = "" );
+   RenderingPipeline( const FilePath& resourceName = FilePath() );
    ~RenderingPipeline();
 
    // -------------------------------------------------------------------------

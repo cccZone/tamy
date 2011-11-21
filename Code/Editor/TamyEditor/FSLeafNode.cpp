@@ -22,7 +22,7 @@ FSLeafNode::FSLeafNode( FSTreeNode* parent, const std::string& nodeName, const F
 void FSLeafNode::setEntryIcon( const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory )
 {
    std::string iconsDir = fs.getShortcut( "editorIcons" );
-   std::string extension = fs.extractExtension( m_fsNodeName );
+   std::string extension = Filesystem::extractExtension( m_fsNodeName );
 
    QIcon icon;
 

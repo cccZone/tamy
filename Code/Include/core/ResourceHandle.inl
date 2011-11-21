@@ -11,7 +11,7 @@
 template< typename T >
 TResourceHandle< T >::TResourceHandle( ResourceObject& object )
    : ResourceHandle( 
-   object.hasHostResource() ? object.getHostResource().getFilePath() : NULL, 
+   object.hasHostResource() ? object.getHostResource().getFilePath().getRelativePath() : NULL, 
    object.getObjectId() )
 {
 

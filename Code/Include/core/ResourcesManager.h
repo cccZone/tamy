@@ -18,6 +18,7 @@ class Resource;
 class ResourceLoader;
 class IProgressObserver;
 class FilesystemScanner;
+class FilePath;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -67,7 +68,7 @@ private:
    };
 
 private:
-   typedef std::map< std::string, Resource* >               ResourcesMap;
+   typedef std::map< FilePath, Resource* >                  ResourcesMap;
    typedef std::map< std::string, ResourceLoaderCreator* >  ResourceLoadersMap;
 
 private:
@@ -93,7 +94,7 @@ public:
     *
     * @param filesystem
     */
-   void setFilesystem(Filesystem* filesystem);
+   void setFilesystem( Filesystem* filesystem );
 
    /**
     * Returns the currently set filesystem.
@@ -121,7 +122,17 @@ public:
     * @param name       name of the resource file (should exist in the
     *                   currently set filesystem)
     */
-   Resource& create( const std::string& name );
+   template< typename RESOURCE_TYPE >
+   RESOURCE_TYPE& create( const FilePath& name );
+
+   /**
+    * Creates a resource based on a file with the specified name and registers it
+    * with the manager, if it hasn't been registered before.
+    *
+    * @param name       name of the resource file (should exist in the
+    *                   currently set filesystem)
+    */
+   Resource& create( const FilePath& name );
 
    /**
     * Registers a new resource instance with the resources manager.
@@ -139,14 +150,14 @@ public:
     * @return           pointer to the resource or NULL if the manager does not have one.
     */
    template< typename RESOURCE_TYPE >
-   RESOURCE_TYPE* findResource( const std::string& name );
+   RESOURCE_TYPE* findResource( const FilePath& name );
 
    /**
     * Looks for a resource with the specified name ( utility method )
     *
     * @param name
     */
-   Resource* findResource( const std::string& name );
+   Resource* findResource( const FilePath& name );
 
    /**
     * Moves an existing resource to a different path.
@@ -154,7 +165,7 @@ public:
     * @param resource
     * @param newPath
     */
-   void moveResource( Resource* resource, const std::string& newPath );
+   void moveResource( Resource* resource, const FilePath& newPath );
 
    /**
     * Saves a resource associated with the specified file onto the filesystem.
@@ -163,7 +174,7 @@ public:
     *                   currently set filesystem)
     * @param outExternalDependencies   other resources used by this resource
     */
-   void save( const std::string& name, ExternalDependenciesSet& outExternalDependencies = ExternalDependenciesSet() );
+   void save( const FilePath& name, ExternalDependenciesSet& outExternalDependencies = ExternalDependenciesSet() );
 
    /**
     * The method scans the resource manager memory in search for loaded resources, 
@@ -174,7 +185,7 @@ public:
     * @param scanner
     * @param recursive  use recursive search through the directories tree
     */
-   void scan( const std::string& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
+   void scan( const FilePath& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
 
    /**
     * Registers a loader of the specified type.
@@ -203,9 +214,9 @@ protected:
    // -------------------------------------------------------------------------
    // FilesystemListener implementation
    // -------------------------------------------------------------------------
-   void onDirChanged( const std::string& dir );
-   void onFileEdited( const std::string& path );
-   void onFileRemoved( const std::string& path );
+   void onDirChanged( const FilePath& dir );
+   void onFileEdited( const FilePath& path );
+   void onFileRemoved( const FilePath& path );
 
    /**
     * Called by the resource when it gets deleted in order to remove
@@ -222,9 +233,9 @@ private:
    ResourcesManager();
 
    /**
-    * Creates a resource loader for the specified extension
+    * Creates a resource loader for the specified file.
     */
-   ResourceLoader* createResourceLoader( const std::string& extension ) const;
+   ResourceLoader* createResourceLoader( const FilePath& name ) const;
 
    /**
     * Creates a progress observer.

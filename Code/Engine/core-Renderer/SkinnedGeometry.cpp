@@ -156,12 +156,19 @@ void SkinnedGeometry::onComponentAdded( Component< Model >& component )
    {
       // load the shader
       ResourcesManager& rm = comp->get();
-      static const char* shaderName = SHADERS_DIR "SkinnedGeometry.vsh";
+      static FilePath shaderName( SHADERS_DIR "SkinnedGeometry.vsh" );
       m_vertexShader = rm.findResource< VertexShader >( shaderName );
       if ( !m_vertexShader )
       {
          m_vertexShader = new VertexShader( shaderName );
          m_vertexShader->setVertexDescription( VDI_SIMPLE_SKINNING );
+
+         // load the shader code
+         File* shaderFile = rm.getFilesystem().open( shaderName, std::ios_base::in );
+         StreamBuffer< char > shaderCodeBuf( *shaderFile );
+         m_vertexShader->setScript( shaderCodeBuf.getBuffer() );
+         delete shaderFile;
+
          rm.addResource( m_vertexShader );
       }
    }

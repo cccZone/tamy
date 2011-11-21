@@ -60,8 +60,10 @@ private:
 public:
    /**
     * Constructor.
+    *
+    * @param resourceName
     */
-   LineSegments( const std::string& name = "" );
+   LineSegments( const FilePath& resourceName = FilePath() );
 
    /**
     * Adds a new line segment to the geometry.

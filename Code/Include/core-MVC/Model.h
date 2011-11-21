@@ -47,9 +47,9 @@ public:
    /**
     * Constructor.
     *
-    * @param name    scene name
+    * @param resourceName    scene name
     */
-   Model( const std::string& name = "" );
+   Model( const FilePath& resourceName = FilePath() );
    ~Model();
 
    // -------------------------------------------------------------------------

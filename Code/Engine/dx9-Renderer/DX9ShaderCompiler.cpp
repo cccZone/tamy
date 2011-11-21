@@ -55,9 +55,7 @@ static PixelShaderConstant* createObjectConstant( const D3DXCONSTANT_DESC& desc 
    case D3DXPT_SAMPLER3D:        // fallthrough
    case D3DXPT_SAMPLERCUBE:
       {
-         return new PSCTexture( desc.Name );
-
-         // TODO: parse the sampler settings and set the shader params structure accordingly
+         return new PSCTexture( desc.Name, desc.RegisterIndex );
       }
    }
 
@@ -216,6 +214,49 @@ bool ShaderCompiler::compilePixelShader( const std::string& shaderCode, const ch
    {
       shaderConstants->Release();
    }
+   compileDevice->Release();
+   d3d9->Release();
+
+   return result;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool ShaderCompiler::compileVertexShader( const std::string& shaderCode, const char* entryFunction )
+{
+   // create a renderer
+   IDirect3D9* d3d9 = Direct3DCreate9( D3D_SDK_VERSION );
+   DX9Initializer initializer( *d3d9 );
+
+   IDirect3DDevice9* compileDevice = initializer.createNullDevice();
+   const char* shaderProfile = D3DXGetVertexShaderProfile( compileDevice );
+
+   DWORD flags = D3DXSHADER_DEBUG;
+
+   ID3DXBuffer* shaderBuf = NULL;
+   ID3DXBuffer* errorsBuf = NULL;
+   DX9ShaderIncludeLoader includesLoader;
+   HRESULT res = D3DXCompileShader( shaderCode.c_str(), shaderCode.length(), NULL, &includesLoader, entryFunction, shaderProfile, flags, &shaderBuf, &errorsBuf, NULL );
+
+   // interpret the results
+   bool result = true;
+   if ( FAILED(res) || shaderBuf == NULL )
+   {
+      if ( errorsBuf != NULL )
+      {
+         std::string compilationErrors = ( const char* )errorsBuf->GetBufferPointer();
+         errorsBuf->Release();
+         m_errorMsg = std::string( "Shader compilation error: " ) + compilationErrors;
+      }
+      else
+      {
+         m_errorMsg = translateDxError( "Error while compiling a shader", res );
+      }
+
+      result = false;
+   }
+
+   // cleanup
    compileDevice->Release();
    d3d9->Release();
 

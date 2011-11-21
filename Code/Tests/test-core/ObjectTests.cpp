@@ -19,7 +19,7 @@ namespace // anonymous
 
       int   m_val;
 
-      BaseObject(int val = -1) : Resource( "BaseObject" ), m_val(val) {}
+      BaseObject(int val = -1) : Resource( FilePath( "BaseObject" ) ), m_val(val) {}
       virtual ~BaseObject() {}
    };
    BEGIN_OBJECT(BaseObject, Resource)
@@ -48,7 +48,7 @@ namespace // anonymous
 
       BaseObject* m_obj;
 
-      DependentObject(BaseObject* obj = NULL) : Resource( "DependentObject" ), m_obj(obj) {}
+      DependentObject(BaseObject* obj = NULL) : Resource( FilePath( "DependentObject" ) ), m_obj(obj) {}
    };
    BEGIN_OBJECT(DependentObject, Resource)
       PROPERTY_EDIT("some label", BaseObject*, m_obj)
@@ -64,7 +64,7 @@ namespace // anonymous
       int m_baseVal;
 
    public:
-            AbstractClass( const std::string& resName = "AbstractClass" ) : Resource( resName ),  m_baseVal(-1) {}
+      AbstractClass( const FilePath& resName = FilePath( "AbstractClass" ) ) : Resource( resName ),  m_baseVal(-1) {}
       virtual ~AbstractClass() {}
 
       void setBaseVal(int val) { m_baseVal = val; }
@@ -87,7 +87,7 @@ namespace // anonymous
       int m_val;
 
    public:
-      ImplementingClass() : AbstractClass( "ImplementingClass" ), m_val(-1) {}
+      ImplementingClass() : AbstractClass( FilePath( "ImplementingClass" ) ), m_val(-1) {}
 
       void setVal(int val) { m_val = val; }
       int getVal() const { return m_val; }

@@ -1,5 +1,6 @@
 #include "FSTreeNode.h"
 #include "core\Filesystem.h"
+#include "core\FilePath.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,7 +42,7 @@ FSTreeNode* FSTreeNode::find( const std::string& nodeName )
 
 void FSTreeNode::removeNode( FSTreeNode* child )
 {
-   std::string path = child->getRelativePath();
+   FilePath path( child->getRelativePath() );
 
    m_fs.remove( path );
    removeChild( child );

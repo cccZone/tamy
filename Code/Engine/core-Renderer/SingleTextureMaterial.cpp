@@ -96,12 +96,18 @@ void SingleTextureMaterial::onComponentAdded( Component< Model >& component )
    {
       // load the shader
       ResourcesManager& rm = comp->get();
-      static const char* shaderName = SHADERS_DIR "MaterialShader.psh";
-      m_shader = rm.findResource< PixelShader >( "SingleTextureMaterial" );
+      static FilePath shaderName( SHADERS_DIR "MaterialShader.psh" );
+      m_shader = rm.findResource< PixelShader >( shaderName );
       if ( !m_shader )
       {
-         m_shader = new PixelShader( "SingleTextureMaterial" );
-         m_shader->loadFromFile( rm.getFilesystem(), shaderName );
+         m_shader = new PixelShader( shaderName );
+         
+         // load the shader code
+         File* shaderFile = rm.getFilesystem().open( shaderName, std::ios_base::in );
+         StreamBuffer< char > shaderCodeBuf( *shaderFile );
+         m_shader->setScript( shaderCodeBuf.getBuffer() );
+         delete shaderFile;
+
          rm.addResource( m_shader );
       }
    }

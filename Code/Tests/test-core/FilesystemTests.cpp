@@ -10,19 +10,19 @@ TEST(Filesystem, loadingFilesUnderSpecificRoot)
    Filesystem filesystem;
 
    filesystem.changeRootDir("../Data/");
-   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist("ala.txt"));
-   CPPUNIT_ASSERT_EQUAL(false, filesystem.doesExist("ola.txt"));
-   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist("family\\ola.txt"));
-   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist("family/ola.txt"));
-   CPPUNIT_ASSERT_EQUAL(false, filesystem.doesExist("family/ala.txt"));
+   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist( FilePath( "ala.txt" ) ) );
+   CPPUNIT_ASSERT_EQUAL(false, filesystem.doesExist( FilePath( "ola.txt" ) ) );
+   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist( FilePath( "family\\ola.txt" ) ) );
+   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist( FilePath( "family/ola.txt" ) ) );
+   CPPUNIT_ASSERT_EQUAL(false, filesystem.doesExist( FilePath( "family/ala.txt" ) ) );
 
    // same thing will work if we don't specify the closing backslash
    filesystem.changeRootDir("../Data");
-   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist("ala.txt"));
-   CPPUNIT_ASSERT_EQUAL(false, filesystem.doesExist("ola.txt"));
-   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist("family\\ola.txt"));
-   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist("family/ola.txt"));
-   CPPUNIT_ASSERT_EQUAL(false, filesystem.doesExist("family/ala.txt"));
+   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist( FilePath( "ala.txt" ) ) );
+   CPPUNIT_ASSERT_EQUAL(false, filesystem.doesExist( FilePath( "ola.txt" ) ) );
+   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist( FilePath( "family\\ola.txt" ) ) );
+   CPPUNIT_ASSERT_EQUAL(true, filesystem.doesExist( FilePath( "family/ola.txt" ) ) );
+   CPPUNIT_ASSERT_EQUAL(false, filesystem.doesExist( FilePath( "family/ala.txt" ) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,9 +30,9 @@ TEST(Filesystem, loadingFilesUnderSpecificRoot)
 TEST(Filesystem, accessingFileLikeAMemoryBuffer)
 {
    Filesystem filesystem;
-   filesystem.changeRootDir("../Data/");
+   filesystem.changeRootDir( "../Data/" );
 
-   File* ala = filesystem.open("ala.txt");
+   File* ala = filesystem.open( FilePath( "ala.txt" ) );
    StreamBuffer<char> charBuf(*ala);
    CPPUNIT_ASSERT_EQUAL((std::size_t)5, charBuf.size());
    CPPUNIT_ASSERT_EQUAL('1', charBuf[0]);

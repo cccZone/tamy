@@ -21,11 +21,8 @@ class PixelShaderConstant;
 /**
  * Texture mapping params
  */
-struct PixelShaderParams
+struct TextureStageParams
 {
-   D3DCULL                       m_cullingMode;
-   bool                          m_useZBuffer;
-   bool                          m_writeToZBuffer;
    D3DTEXTUREADDRESS             m_addressU;
    D3DTEXTUREADDRESS             m_addressV;
    D3DTEXTUREADDRESS             m_addressW;
@@ -33,11 +30,8 @@ struct PixelShaderParams
    D3DTEXTUREFILTERTYPE          m_magFilter;
    D3DTEXTUREFILTERTYPE          m_mipFilter;
 
-   PixelShaderParams()
-      : m_cullingMode( D3DCULL_CCW )
-      , m_useZBuffer( true )
-      , m_writeToZBuffer( true )
-      , m_addressU( D3DTADDRESS_WRAP )
+   TextureStageParams()
+      : m_addressU( D3DTADDRESS_WRAP )
       , m_addressV( D3DTADDRESS_WRAP )
       , m_addressW( D3DTADDRESS_WRAP )
       , m_minFilter( D3DTEXF_LINEAR )
@@ -47,15 +41,37 @@ struct PixelShaderParams
 
    void serialize( Serializer& serializer )
    {
-      serializer << m_cullingMode;
-      serializer << m_useZBuffer;
-      serializer << m_writeToZBuffer;
       serializer << m_addressU;
       serializer << m_addressV;
       serializer << m_addressW;
       serializer << m_minFilter;
       serializer << m_magFilter;
       serializer << m_mipFilter;
+   }
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Drawing params
+ */
+struct PixelShaderParams
+{
+   D3DCULL                       m_cullingMode;
+   bool                          m_useZBuffer;
+   bool                          m_writeToZBuffer;
+
+   PixelShaderParams()
+      : m_cullingMode( D3DCULL_CCW )
+      , m_useZBuffer( true )
+      , m_writeToZBuffer( true )
+   {}
+
+   void serialize( Serializer& serializer )
+   {
+      serializer << m_cullingMode;
+      serializer << m_useZBuffer;
+      serializer << m_writeToZBuffer;
    }
 };
 
@@ -73,27 +89,20 @@ private:
    std::string                               m_script;
    std::string                               m_entryFunctionName;
    PixelShaderParams                         m_params;
+   std::vector< TextureStageParams >         m_textureStages;
 
    // runtime data
+   std::vector< std::string >                m_textureStageName;
    std::vector< PixelShaderConstant* >       m_constants;
 
 public:
    /**
     * Constructor.
     *
-    * @param scriptPath             shader resource name
+    * @param resourceName             shader resource name
     */
-   PixelShader( const std::string& fileName = "" );
+   PixelShader( const FilePath& resourceName = FilePath() );
    ~PixelShader();
-
-   /**
-    * Loads a script from a file.
-    *
-    * @param fs                  file system that contains the file
-    * @param fileName            name of the file with the shader's code
-    * @param entryFunctionName   name of a function in the file that's to be used as the shader's entry function
-    */
-   void loadFromFile( const Filesystem& fs, const std::string& fileName, const std::string& entryFunctionName = "main" );
 
    /**
     * Returns the HLSL script of this shader.
@@ -110,12 +119,38 @@ public:
    void setScript( const std::string& script );
 
    /**
+    * Returns the number of texture stages count.
+    */
+   inline unsigned int getTextureStagesCount() const { return m_textureStages.size(); }
+
+   /**
     * Returns the params used for texture mapping.
+    *
+    * @param stageIdx
+    */
+   inline const TextureStageParams& getTextureStage( unsigned int stageIdx ) const { return m_textureStages[stageIdx]; }
+
+   /**
+    * Returns the params used for texture mapping (non-const version) so they can be changed.
+    *
+    * @param stageIdx
+    */
+   inline TextureStageParams& changeTextureStage( unsigned int stageIdx ) { setDirty(); return m_textureStages[stageIdx]; }
+
+   /**
+    * Returns the name of a texture stage.
+    *
+    * @param stageIdx
+    */
+   inline const std::string getTextureStageName( unsigned int stageIdx ) const { return m_textureStageName[stageIdx]; }
+
+   /**
+    * Returns the drawing params.
     */
    inline const PixelShaderParams& getParams() const { return m_params; }
 
    /**
-    * Returns the params used for texture mapping (non-const version) so they can be changed.
+    * Returns the drawing params (non-const version) so they can be changed.
     */
    inline PixelShaderParams& changeParams() { setDirty(); return m_params; }
 

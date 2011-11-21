@@ -28,7 +28,7 @@ public:
     *
     * @param resourceName
     */
-   SkeletonAnimation( const std::string& resourceName = "" );
+   SkeletonAnimation( const FilePath& resourceName = FilePath() );
    ~SkeletonAnimation();
 
    /**

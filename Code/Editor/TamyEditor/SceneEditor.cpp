@@ -159,7 +159,7 @@ void SceneEditor::onInitialize()
             // add the properties browser
             SelectedEntityPropertiesViewer* propertiesEditor = new SelectedEntityPropertiesViewer( browsersSplitter );
             m_selectionManager->attach( *propertiesEditor );
-            propertiesEditor->setObjectName( ( m_scene.getFilePath() + "/PropertiesEditor" ).c_str() );
+            propertiesEditor->setObjectName( ( m_scene.getFilePath().getRelativePath() + "/PropertiesEditor" ).c_str() );
             propertiesEditor->setWidgetResizable( true );
             browsersSplitter->addWidget( propertiesEditor );
 
@@ -167,7 +167,7 @@ void SceneEditor::onInitialize()
             m_sceneTreeViewer = new SceneTreeViewer( browsersSplitter );
             m_scene.attach( *m_sceneTreeViewer );
             m_selectionManager->attach( *m_sceneTreeViewer );
-            m_sceneTreeViewer->setObjectName( ( m_scene.getFilePath() + "/SceneTreeViewer" ).c_str() );
+            m_sceneTreeViewer->setObjectName( ( m_scene.getFilePath().getRelativePath() + "/SceneTreeViewer" ).c_str() );
             browsersSplitter->addWidget( m_sceneTreeViewer );
             m_sceneTreeViewer->setCamera( *camera );
             connect( m_sceneTreeViewer, SIGNAL( onSceneTreeObjectSelected( Entity& ) ), this, SLOT( entitySelected( Entity& ) ) );

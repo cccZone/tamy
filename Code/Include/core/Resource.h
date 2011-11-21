@@ -7,6 +7,7 @@
 #include "core\Serializer.h"
 #include "core\Component.h"
 #include "core\ResourceHandle.h"
+#include "core\FilePath.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,7 +35,7 @@ public:
    friend class Object;
 
 private:
-   std::string                      m_filePath;
+   FilePath                         m_filePath;
    ResourcesManager*                m_host;
 
    std::vector< ResourceObject* >   m_managedObjects;
@@ -46,13 +47,13 @@ public:
     *
     * @param filePath   path to the file where we want to save the resource.
     */
-   Resource( const std::string& filePath = std::string() );
+   Resource( const FilePath& filePath = FilePath() );
    virtual ~Resource();
 
    /**
-    * Returns the name of the resource.
+    * Returns the path to the file holding this resource.
     */
-   inline const std::string& getResourceName() const{ return m_filePath; }
+   inline const FilePath& getFilePath() const { return m_filePath; }
 
    /**
     * Sets a new path to the resource.
@@ -60,12 +61,7 @@ public:
     * @param path
     * @param host    host manager performing the operation
     */
-   void setFilePath( const std::string& path, ResourcesManager* host = NULL );
-
-   /**
-    * Returns the path to the file holding this resource.
-    */
-   inline const std::string& getFilePath() const { return m_filePath; }
+   void setFilePath( const FilePath& path, ResourcesManager* host = NULL );
 
    /**
     * A helper method allowing to saves the resource to an associated file.

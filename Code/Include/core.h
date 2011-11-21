@@ -44,6 +44,7 @@
 #include "core\File.h"
 #include "core\Filesystem.h"
 #include "core\StreamBuffer.h"
+#include "core\FilePath.h"
 
 // ----------------------------------------------------------------------------
 // HierarchicalNodes

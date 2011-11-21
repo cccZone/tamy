@@ -1,10 +1,10 @@
-#include "MaterialSyntaxHighlighter.h"
+#include "ShaderSyntaxHighlighter.h"
 #include <QTextDocument>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MaterialSyntaxHighlighter::MaterialSyntaxHighlighter( QTextDocument* editedDoc )
+ShaderSyntaxHighlighter::ShaderSyntaxHighlighter( QTextDocument* editedDoc )
    : QSyntaxHighlighter( editedDoc )
 {
    HighlightingRule rule;
@@ -70,7 +70,7 @@ MaterialSyntaxHighlighter::MaterialSyntaxHighlighter( QTextDocument* editedDoc )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialSyntaxHighlighter::highlightBlock( const QString &text )
+void ShaderSyntaxHighlighter::highlightBlock( const QString &text )
 {
    // highlight keywords
    foreach ( const HighlightingRule &rule, m_highlightingRules ) 

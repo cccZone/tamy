@@ -16,8 +16,8 @@ END_RESOURCE();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingPipeline::RenderingPipeline( const std::string& fileName )
-   : Resource( fileName )
+RenderingPipeline::RenderingPipeline( const FilePath& resourceName )
+   : Resource( resourceName )
 {
 }
 

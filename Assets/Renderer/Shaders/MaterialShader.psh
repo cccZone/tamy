@@ -1,4 +1,4 @@
-#include "VertexShaderOutput.vsh"
+#include "Renderer/Shaders/Lib/vertexShaderOutput.tfsh"
 
 
 //--------------------------------------------------------------------------------------

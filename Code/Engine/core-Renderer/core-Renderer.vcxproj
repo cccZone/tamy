@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="BoolSockets.cpp" />
+    <ClCompile Include="FragmentShader.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
     <ClCompile Include="IntSockets.cpp" />
     <ClCompile Include="MatrixSockets.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FloatSockets.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
     <ClInclude Include="..\..\Include\core-Renderer\IntSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MatrixSockets.h" />

@@ -24,8 +24,8 @@ END_RESOURCE();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingPipelineLayout::RenderingPipelineLayout( const std::string& path )
-   : Resource( path )
+RenderingPipelineLayout::RenderingPipelineLayout( const FilePath& resourceName )
+   : Resource( resourceName )
    , m_model( NULL )
 {
    // create block-to-node associations

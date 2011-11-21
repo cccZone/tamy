@@ -33,12 +33,7 @@ struct LitVertex
    {
    }
 
-   void serialize( Serializer& serializer )
-   {
-      serializer << m_coords;
-      serializer << m_normal;
-      serializer << m_textureCoords;
-   }
+   friend Serializer& operator<<( Serializer& serializer, LitVertex& vtx );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,11 +51,7 @@ struct VertexWeight
    {
    }
    
-   void serialize( Serializer& serializer )
-   {
-      serializer << m_weights;
-      serializer << m_indices;
-   }
+   friend Serializer& operator<<( Serializer& serializer, VertexWeight& weight );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

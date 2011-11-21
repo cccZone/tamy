@@ -94,7 +94,7 @@ void DX9VertexShader::initialize()
       shaderContents.length(),
       NULL,                            // defines
       &includesLoader,
-      "main",                          // entry function
+      m_shader.getEntryFunctionName().c_str(),
       shaderProfile, 
       flags,
       &shaderBuf, 

@@ -14,13 +14,14 @@
 BEGIN_RESOURCE( PixelShader, Resource, tpsh, AM_BINARY )
    PROPERTY( std::string, m_script )
    PROPERTY( std::string, m_entryFunctionName )
-   PROPERTY(PixelShaderParams, m_params )
+   PROPERTY( PixelShaderParams, m_params )
+   PROPERTY( std::vector< TextureStageParams >, m_textureStages )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PixelShader::PixelShader( const std::string& fileName )
-   : Resource( fileName )
+PixelShader::PixelShader( const FilePath& resourceName )
+   : Resource( resourceName )
    , m_entryFunctionName( "main" )
 {
 }
@@ -35,31 +36,6 @@ PixelShader::~PixelShader()
       delete m_constants[i];
    }
    m_constants.clear();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PixelShader::loadFromFile( const Filesystem& fs, const std::string& fileName, const std::string& entryFunctionName )
-{
-   ASSERT_MSG( !fileName.empty(), "Neither .psh file nor a shader script specified" );
-   if ( fileName.empty() )
-   {
-      return;
-   }
-
-   File* file = fs.open( fileName, std::ios_base::in | std::ios_base::binary );
-   if (file == NULL)
-   {
-      throw std::invalid_argument("HLSL vertex shader file doesn't exist");
-   }
-   StreamBuffer<char> shaderScript( *file );
-   m_script = shaderScript.getBuffer();
-   delete file;
-
-   m_entryFunctionName = entryFunctionName;
-   
-   // parse it
-   parseShaderConstants();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,6 +79,40 @@ void PixelShader::parseShaderConstants()
    // parse constants
    ShaderCompiler compiler;
    compiler.compilePixelShader( m_script, m_entryFunctionName.c_str(), &m_constants );
+
+   // resize the number of supported texture
+   int maxTexStageIdx = -1;
+   count = m_constants.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      int idx = m_constants[i]->getRequiredTextureStageIdx();
+      if ( idx < 0 )
+      {
+         continue;
+      }
+
+      if ( maxTexStageIdx < idx )
+      {
+         maxTexStageIdx = idx;
+      }
+      if ( idx >= (int)m_textureStages.size() )
+      {
+         m_textureStages.resize( idx + 1 );
+      }
+      if ( idx >= (int)m_textureStageName.size() )
+      {
+         m_textureStageName.resize( idx + 1 );
+      }
+
+      m_textureStageName[idx] = m_constants[i]->getName();
+   }
+
+   // remove the unnecessary texture stages
+   ++maxTexStageIdx;
+   while ( maxTexStageIdx < (int)m_textureStages.size() )
+   {
+      m_textureStages.pop_back();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

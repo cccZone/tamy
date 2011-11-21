@@ -142,8 +142,9 @@ void PSCString::setValue( RCBindPixelShader& comm, const RPNodeInput& input, Run
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-PSCTexture::PSCTexture( const char* name)
+PSCTexture::PSCTexture( const char* name, int textureStageIdx )
    : PixelShaderConstant( name )
+   , m_textureStageIdx( textureStageIdx )
 {
 }
 

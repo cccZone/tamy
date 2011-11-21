@@ -4,6 +4,7 @@
 #include "core\Object.h"
 #include "core\Resource.h"
 #include "core\ResourcesManager.h"
+#include "core\FilePath.h"
 #include "core\Assert.h"
 
 
@@ -185,7 +186,7 @@ void Saver::operator<<( Serializable** ptr )
 
       // store a link to the external dependency - it's file name
       m_impl->write( ( byte* )&checkedDepType, sizeof( byte ) );
-      std::string filePath = resource->getFilePath();
+      std::string filePath = resource->getFilePath().getRelativePath();
       *this << filePath;
      
       return;

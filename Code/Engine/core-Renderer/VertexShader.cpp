@@ -11,22 +11,16 @@
 
 BEGIN_RESOURCE( VertexShader, Resource, tvsh, AM_BINARY )
    PROPERTY( std::string, m_script )
+   PROPERTY( std::string, m_entryFunctionName )
    PROPERTY( VertexDescId, m_vertexDescId )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-VertexShader::VertexShader()
-   : m_vertexDescId( VDI_SIMPLE )
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-VertexShader::VertexShader( const std::string& scriptPath )
-   : Resource( scriptPath )
-   , m_scriptPath( scriptPath )
-   , m_vertexDescId( VDI_SIMPLE ) 
+VertexShader::VertexShader( const FilePath& resourceName )
+   : Resource( resourceName )
+   , m_entryFunctionName( "main" )
+   , m_vertexDescId( VDI_SIMPLE )
 {
 }
 
@@ -35,34 +29,6 @@ VertexShader::VertexShader( const std::string& scriptPath )
 void VertexShader::setVertexDescription( VertexDescId vertexDescId )
 {
    m_vertexDescId = vertexDescId;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void VertexShader::onResourceLoaded( ResourcesManager& mgr )
-{
-   if ( m_script.empty() )
-   {
-      ASSERT_MSG( !m_scriptPath.empty(), "Neither .vsh file nor a shader script specified" );
-      if ( m_scriptPath.empty() )
-      {
-         return;
-      }
-
-      const Filesystem& fs = mgr.getFilesystem();
-      File* file = fs.open( m_scriptPath, std::ios_base::in | std::ios_base::binary );
-      if (file == NULL)
-      {
-         std::string errorMsg = std::string( "HLSL vertex shader file " ) + m_scriptPath + " doesn't exist";
-         ASSERT_MSG( false, errorMsg.c_str() );
-         return;
-      }
-      StreamBuffer<byte> buf(*file);
-
-      StreamBuffer<char> shaderScript( *file );
-      m_script = shaderScript.getBuffer();
-      delete file;
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -26,7 +26,7 @@ class Texture : public Resource, public ShaderTexture, public UniqueObject< Text
    DECLARE_RESOURCE( Texture )
 
 private:
-   std::string       m_texFileName;
+   FilePath          m_texFileName;
    TextureUsage      m_usage;
    
    unsigned int      m_width;
@@ -36,7 +36,7 @@ public:
    /**
     * Constructor.
     */
-   Texture( const std::string& fileName = "" );
+   Texture( const FilePath& resourceName = FilePath() );
    ~Texture();
 
    /**
@@ -44,12 +44,12 @@ public:
     *
     * @param texPath
     */
-   inline void setTextureName( const std::string& texPath ) { setDirty(); m_texFileName = texPath; }
+   inline void setTextureName( const FilePath& texPath ) { setDirty(); m_texFileName = texPath; }
 
    /**
     * Returns the name of the image file.
     */
-   inline const std::string& getTextureName() const { return m_texFileName; }
+   inline const FilePath& getTextureName() const { return m_texFileName; }
 
    /**
     * Sets new texture usage.

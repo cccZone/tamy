@@ -128,11 +128,18 @@ void SingleTextureEffect::onComponentAdded( Component< Model >& component )
    {
       // load the shader
       ResourcesManager& rm = comp->get();
-      static const char* shaderName = SHADERS_DIR "SingleTextureEffect.fx";
+      static FilePath shaderName( SHADERS_DIR "SingleTextureEffect.fx" );
       m_effect = rm.findResource< EffectShader >( shaderName );
       if ( !m_effect )
       {
          m_effect = new EffectShader( shaderName );
+         
+         // load the shader code
+         File* shaderFile = rm.getFilesystem().open( shaderName, std::ios_base::in );
+         StreamBuffer< char > shaderCodeBuf( *shaderFile );
+         m_effect->setScript( shaderCodeBuf.getBuffer() );
+         delete shaderFile;
+
          rm.addResource( m_effect );
       }
    }

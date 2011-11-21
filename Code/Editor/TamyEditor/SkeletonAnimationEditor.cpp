@@ -19,7 +19,6 @@
 #include "CameraMovementController.h"
 #include "ChartView.h"
 #include <QSettings>
-#include <QFileDialog>
 #include <QSlider>
 #include "AnimChartScales.h"
 #include "AnimationTimeValueGetter.h"
