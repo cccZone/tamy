@@ -1,4 +1,4 @@
-#labels StreamBuffer,File,Filesystem
+#labels StreamBuffer,File,Filesystem,FilePath
 =Filesystem=
 
 Access layer to the filesystem.
