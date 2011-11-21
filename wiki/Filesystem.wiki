@@ -7,7 +7,7 @@ Using it, you can create, open and delete files and directories.
 
 A file is represented by the `File` class.
 
-==FilePath==
+==File path==
 The filesystem contents are identified by a construct called `FilePath`.
 It's a path relative to the filesystem root directory.
 
@@ -27,6 +27,8 @@ The path will get normalized, meaning that the following two paths will point at
 FilePath path( "/Renderer/Shaders/myShader.tvsh" );
 FilePath samePath( "Renderer\Shaders/myShader.tvsh" );
 }}}
+
+If you want to retrieve the global path, you can use the `FilePath.toAbsolutePath` method, which accepts a reference to the `Filesystem` instance with respect to which you want to translate the path.
 
 
 ==Reading file contents==
