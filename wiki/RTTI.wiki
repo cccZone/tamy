@@ -23,9 +23,10 @@ struct MyStruct
 {
    int m_data;
 
-   void serialize( Serializer& serializer )
+   friend Serializer& operator<<( Serializer& serializer, MyStruct& rhs )
    {
-      serializer << m_data;
+      serializer << rhs .m_data;
+      return serializer;
    }
 };
 }}}
