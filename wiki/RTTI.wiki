@@ -3,7 +3,7 @@
 
 Engine's runtime type identification system. 
 
-It's acutally a little bit more than that - it supports serialization, objects with properties etc.
+It's acutally a little bit more than that - it supports objects with properties etc.
 
 But let's start slow :)
 
@@ -15,7 +15,7 @@ But let's start slow :)
 
 ==Properties==
 
-You can make anything a property - all it needs to have is a defined `operator<<` method.
+You can make anything a property - all it needs to have is a defined `operator<<` method, so that its value can be serialized.
 Here's an example:
 
 {{{
