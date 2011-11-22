@@ -1,0 +1,21 @@
+#labels Graph,GraphBuilder
+=Graphs=
+
+Graphs are a building block of many engine systems, thus we provide a wide range of tools to operate on them.
+
+==Graph==
+
+==Graph builder==
+
+===Rationale===
+A `GraphBuilder` is a resource that allows to define a graph in an easy way, and serializing such a construct. Whenever needed, we can instantiate a `Graph` structure from such a builder.
+
+Why can't we serialize the `Graph` itself? - simple. In order to be able to serialize pointers to objects, we need to make them `Objects` - and that costs memory and performance.
+
+And since graphs tend to be used in tender code areas, we need the leanest structure possible. Thus we decided to split a graph instance from its definition.
+
+===How to use it===
+
+
+
+==Algorithms==
