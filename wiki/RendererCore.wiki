@@ -11,6 +11,78 @@ At this moment, the only imlementation that exists uses DirectX9, but there will
 
 ==Core functionality==
 
+As mentioned, the nuts and bolts lie in the `RenderingMechanism` and in a `RenderCommand`.
+
+A renderer instance can use only one `RenderingMechanism` at a time and it manages its lifetime.
+You can set it using `Renderer.setMechanism` method:
+
+{{{
+renderer.setMechanism( new MyRenderMechanism() );
+}}}
+
+The mechanism has a 3 methods in its interface:
+{{{
+class RenderingMechanism
+{
+public:
+   virtual ~RenderingMechanism() {}
+
+   /**
+    * Initializes the mechanism with the renderer that will be using it.
+    *
+    * @param renderer
+    */
+   virtual void initialize( Renderer& renderer ) = 0;
+
+   /**
+    * Deinitializes the mechanism with the renderer that was using it.
+    *
+    * @param renderer
+    */
+   virtual void deinitialize( Renderer& renderer ) = 0;
+
+   /**
+    * Performs the rendering operation defined by the mechanism.
+    *
+    * @param renderer
+    */
+   virtual void render( Renderer& renderer ) = 0;
+};
+}}}
+
+Each time the mechanism is set for the first time, `initialize` method will be called. And whenever it's about to be destroyed, the renderer will call the `deinitialize` method.
+
+Each time the renderer wants the mechanism to render something, it will call its `render` command.
+
+The parameter passed to the mechanism is the instance of the renderer.
+The renderer instance, among other methods, exposes a very important one - `operator()`, which gives you access to the `RenderCommand` buffer and allows you to queue render commands:
+
+{{{
+
+void MyRenderMechanism::render( Renderer& renderer )
+{
+   // ...
+
+   new ( renderer() ) new RCBindPixelShader( *m_shader );
+   new ( renderer() ) new RCUnbindPixelShader( *m_shader );
+
+   // ...
+}
+
+}}}
+
+==Render commands==
+
+Render commands are a way of telling the underlying library what to do.
+They are responsible for:
+ * setting up shaders
+ * drawing geoemtry
+ * setting up render targets
+ * retriving colors from a render surface
+and many many more.
+
+Basically, you can write your own commands you require, write their implementations in the renderer implementation library and you can start using them in your own mechanisms.
+
 ==Geometry==
 
 ===Vertex shaders output structure===
