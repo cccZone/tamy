@@ -9,6 +9,8 @@
     * [Graphs Graphs]
       * [Graphs#Graph Graph]
       * [Graphs#Graph_builder Graph builder]
+        * [Graphs#Rationale Rationale]
+        * [Graphs#How_to_use_it How to use it]
       * [Graphs#Algorithms Algorithms]
     * [Math Math]
     * [ Memory ]
