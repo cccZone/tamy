@@ -83,7 +83,46 @@ and many many more.
 
 Basically, you can write your own commands you require, write their implementations in the renderer implementation library and you can start using them in your own mechanisms.
 
+==Scene tree==
+
+
 ==Geometry==
+
+`Geometry` is yet another entity that can be placed on a [Renderer#Scene_tree scene tree]. It allows to embed a resource responsible for defining the geometry along with the shaders that transform it ( [Renderer#Geometry_resource geometry resource] )
+
+Geometry on its own is just a piece of vertices connected somehow together. It can't be drawn!
+You need something to paint it with - a color, a texture etc.
+
+This is where a`RenderState` comes in. `Geometry` can manage multiple render states. Those specify how do we want to draw it.
+
+An example of a render state is a [Renderer#Material material entity] - a resource that uses [Renderer#Pixel_shader pixel shaders] to define how geometry should be drawn.
+
+`Geometry` contains two methods that allow you to define its render states:
+
+{{{
+/**
+ * Adds a new render state.
+ *
+ * @param state
+ */
+void addState( RenderState& state );
+
+/**
+ * Removes a render state.
+ *
+ * @param state
+ */
+void removeState( RenderState& state );
+}}}
+
+So if you have access to a `Geometry` entity, you can just call them and set the render state of your own.
+However - you can also rely on the `Geometry` to self-configure itself with a render state - whenever a child entity is added to the `Geometry` entity, and it implements the `RenderState` interface, it will automatically be added to the render states vector of that `Geometry` entity - neat :)
+
+So you can place your `MaterialEntity` entities directly under the `Geometry` node ( just as you would aggregate your member fields in a class in your C++ code ), and the nodes will self-configure themselves.
+
+*CAUTION*: Render state is a runtime thing, so it won't get serialized when the scene tree gets serialized.
+
+==Geometry resource==
 
 ===Vertex shaders output structure===
 
@@ -99,6 +138,8 @@ struct VS_OUTPUT
 }}}
 
 ==Materials==
+
+===Pixel shader===
 
 ==Debug renderer==
 
