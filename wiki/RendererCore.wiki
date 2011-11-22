@@ -1,7 +1,13 @@
 #labels renderer
 =Renderer=
 
-==Introduction==
+A renderer allows to render 3D graphics on screen. It takes care of managing the device's state, finding out about best texture formats etc.
+
+To get it to work, you only need to instantiate a renderer and set a `RenderingMechanism`, that will start feeding the renderer some `RenderCommands` and that's it.
+
+A renderer can't work on its own however - it requres an underlying library it will execute the commands on and bring images to life.
+
+At this moment, the only imlementation that exists uses DirectX9, but there will be more.
 
 ==Core functionality==
 
