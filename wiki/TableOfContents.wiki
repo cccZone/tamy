@@ -25,6 +25,7 @@
   * [ Renderer ]
     * [RendererCore#Core Core functionality]
     * [RendererCore#Render_commands Render commands]
+    * [RendererCore#Scene_tree Scene tree]
     * [RendererCore#Geometry Geometry]
     * [RendererCore#Materials Materials]
     * [RendererCore#DebugRenderer Debug renderer]
