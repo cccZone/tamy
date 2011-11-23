@@ -82,11 +82,14 @@
     <Filter Include="Mechanisms\RenderingPipeline\Views">
       <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline\Tools">
-      <UniqueIdentifier>{5a93e70c-6c1d-4bda-9166-812a8da9be22}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders">
       <UniqueIdentifier>{a95137c7-8213-4a7d-aa9f-9256f0fc932e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\Tools">
+      <UniqueIdentifier>{5a93e70c-6c1d-4bda-9166-812a8da9be22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphs">
+      <UniqueIdentifier>{40ed0d27-7939-425a-a378-8bee3a62c426}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -241,17 +244,11 @@
     <ClCompile Include="Vec4Sockets.cpp">
       <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTargetDescriptor.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
-    </ClCompile>
     <ClCompile Include="PixelShaderConstant.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
+      <Filter>Mechanisms\Tools</Filter>
     </ClCompile>
     <ClCompile Include="MatrixSockets.cpp">
       <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderNodeOperator.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
     </ClCompile>
     <ClCompile Include="RPAdapterNode.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
@@ -298,6 +295,9 @@
     <ClCompile Include="MaterialEntity.cpp">
       <Filter>Materials\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="RenderTargetDescriptor.cpp">
+      <Filter>Mechanisms\RenderingPipeline</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -320,6 +320,9 @@
     </None>
     <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl">
       <Filter>Core\Resources</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\ShaderNodeOperator.inl">
+      <Filter>Mechanisms\Tools</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -526,17 +529,14 @@
     <ClInclude Include="..\..\Include\core-Renderer\Vec4Sockets.h">
       <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h">
-      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h">
-      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
+      <Filter>Mechanisms\Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MatrixSockets.h">
       <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ShaderNodeOperator.h">
-      <Filter>Mechanisms\RenderingPipeline\Tools</Filter>
+      <Filter>Mechanisms\Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
@@ -579,6 +579,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MaterialEntity.h">
       <Filter>Materials\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h">
+      <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

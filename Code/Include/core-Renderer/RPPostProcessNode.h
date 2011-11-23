@@ -4,6 +4,7 @@
 
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core/RuntimeData.h"
+#include "core-Renderer/ShaderNodeOperator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,7 +12,6 @@
 class RenderTarget;
 class Renderer;
 class PixelShader;
-class ShaderNodeOperator;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,11 +24,11 @@ class RPPostProcessNode : public RenderingPipelineNode
 
 private:
    // static data
-   PixelShader*                        m_shader;
+   PixelShader*                                    m_shader;
 
    // runtime data
-   ShaderNodeOperator*                 m_shaderNode;
-   TRuntimeVar< RenderTarget* >        m_renderTarget;
+   ShaderNodeOperator< RenderingPipelineNode >*    m_shaderNode;
+   TRuntimeVar< RenderTarget* >                    m_renderTarget;
 
 public:
    RPPostProcessNode();

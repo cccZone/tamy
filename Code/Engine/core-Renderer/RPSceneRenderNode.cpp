@@ -82,14 +82,10 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
    RenderTarget* trg = data[ m_renderTarget ];
    Renderer& renderer = host.getRenderer();
   
-   RenderingView& sceneRenderer = host.getSceneRenderer( m_renderedSceneId );
-
    // activate the render target we want to render to
    new ( renderer() ) RCActivateRenderTarget( trg );
-
    // collect the renderables
-   Array< SpatialRepresentation* > visibleElems;
-   sceneRenderer.collectRenderables( visibleElems );
+   const Array< SpatialRepresentation* >& visibleElems = host.getSceneElements( m_renderedSceneId );
 
    // build a tree sorting the nodes by the attributes
    m_treeMemPool->reset();

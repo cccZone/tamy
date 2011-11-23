@@ -5,7 +5,7 @@
 #include "core-Renderer/RenderTarget.h"
 #include "core-Renderer/TextureSockets.h"
 #include "core-Renderer/PixelShader.h"
-#include "core-Renderer/ShaderNodeOperator.h"
+#include "core-Renderer/PixelShaderConstant.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,7 +22,7 @@ RPPostProcessNode::RPPostProcessNode()
 {
    defineOutput( new RPRenderTargetOutput( "Output" ) );
 
-   m_shaderNode = new ShaderNodeOperator( *this );
+   m_shaderNode = new ShaderNodeOperator< RenderingPipelineNode >( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -94,16 +94,23 @@ void RPPostProcessNode::onDeinitialize( RenderingPipelineMechanism& host ) const
 
 void RPPostProcessNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
+   if ( !m_shader || !m_shaderNode )
+   {
+      return;
+   }
+
    RuntimeDataBuffer& data = host.data();
    RenderTarget* trg = data[ m_renderTarget ];
    Renderer& renderer = host.getRenderer();
 
-   if ( m_shaderNode )
-   {
-      m_shaderNode->onPreRender( renderer, data );
-      renderQuad( renderer, trg );
-      m_shaderNode->onPreRender( renderer, data );
-   }
+   // bind the shader
+   m_shaderNode->bindShader( renderer, data );
+
+   // render the quad
+   renderQuad( renderer, trg );
+
+   // cleanup
+   new ( renderer() ) RCUnbindPixelShader( *m_shader );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

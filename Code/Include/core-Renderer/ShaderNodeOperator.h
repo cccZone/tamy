@@ -1,8 +1,10 @@
 /// @file   core-Renderer/ShaderNodeOperator.h
 /// @brief  Operator for nodes that should be parametrized according to the pixel shader they are using.
-#pragma once
+#ifndef _SHADER_NODE_OPERATOR_H
+#define _SHADER_NODE_OPERATOR_H
 
 #include <vector>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -12,6 +14,7 @@ class RenderingPipelineNode;
 class Renderer;
 class RuntimeDataBuffer;
 class RPNodeInput;
+class RCBindPixelShader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,6 +22,7 @@ class RPNodeInput;
  * This class provides a pixel shader with a set of node connections
  * necessary for it to have its global constants set.
  */
+template< typename TNode >
 class ShaderNodeOperator
 {
 private:
@@ -26,16 +30,16 @@ private:
    {
       PixelShaderConstant&             m_constant;
       RPNodeInput*                     m_input;
-      RenderingPipelineNode*           m_hostNode;
+      TNode*                           m_hostNode;
 
       ConstantDef( PixelShaderConstant& constant );
-      void setHostNode( RenderingPipelineNode* hostNode );
+      void setHostNode( TNode* hostNode );
    };
 
 private:
-   RenderingPipelineNode&        m_hostNode;
-   PixelShader*                  m_shader;
-   std::vector< ConstantDef* >   m_constants;
+   TNode&                              m_hostNode;
+   PixelShader*                        m_shader;
+   std::vector< ConstantDef* >         m_constants;
 
 public:
    /**
@@ -43,7 +47,7 @@ public:
     *
     * @param hostNode
     */
-   ShaderNodeOperator( RenderingPipelineNode& hostNode );
+   ShaderNodeOperator( TNode& hostNode );
    ~ShaderNodeOperator();
 
    /**
@@ -59,21 +63,20 @@ public:
    void resetShader();
 
    /**
-    * Binds the shader and sets its global constants.
+    * Propagates the data from the input to the assigned shader constant
     *
     * @param renderer
-    * @param data
-    */
-   void onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
-
-   /**
-    * Unbinds the shader.
+    * @param data       runtime data buffer the inputs are using
     *
-    * @param renderer
-    * @param data
+    * @return           rendering command that binds the pixel shader
     */
-   void onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
-
+   RCBindPixelShader& bindShader( Renderer& renderer, RuntimeDataBuffer& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "core-Renderer/ShaderNodeOperator.inl"
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _SHADER_NODE_OPERATOR_H

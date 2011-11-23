@@ -4,12 +4,12 @@
 
 #include "core-Renderer/RPSceneBuilder.h"
 #include "core-Renderer/RenderState.h"
+#include "core-Renderer/ShaderNodeOperator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class PixelShader;
-class ShaderNodeOperator;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,10 +23,10 @@ class RPSBComputed : public RPSceneBuilder, public TRenderState< RPSBComputed >
 
 private:
    // static data
-   PixelShader*                  m_shader;
+   PixelShader*                                          m_shader;
 
    // runtime data
-   ShaderNodeOperator*           m_shaderNode;
+   ShaderNodeOperator< RenderingPipelineNode >*          m_shaderNode;
 
 public:
    /**

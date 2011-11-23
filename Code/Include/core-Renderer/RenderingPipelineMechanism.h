@@ -6,6 +6,7 @@
 #include "core-Renderer\RenderCommand.h"
 #include "core\IDebugDraw.h"
 #include "core\Observer.h"
+#include "core\Array.h"
 #include <vector>
 
 
@@ -24,6 +25,7 @@ enum GraphBuilderNodeOperation;
 class RuntimeDataBuffer;
 class ModelDebugScene;
 class ModelView;
+class SpatialRepresentation;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -54,11 +56,11 @@ private:
    class RenderedScene
    {
    public:
-      RenderingView*                               m_renderingView;
+      Array< SpatialRepresentation* >              m_visibleElems;
 
    private:
+      RenderingView*                               m_renderingView;
       ModelDebugScene*                             m_debugSceneView;
-
       Model*                                       m_model;
 
    public:
@@ -74,6 +76,9 @@ private:
       void setModel( Model* model );
 
       void setDebugScene( DebugScene& scene );
+
+      void queryVisibleElements();
+
    };
 
 private:
@@ -140,11 +145,11 @@ public:
    inline bool isSceneActive( RPMSceneId sceneId ) const { return ( unsigned int )sceneId < RPS_MaxScenes; }
 
    /**
-    * Returns the rendering view that can render the selected scene.
+    * Returns the visible elements from the scene
     *
     * @param sceneId
     */
-   RenderingView& getSceneRenderer( RPMSceneId sceneId ) const;
+   const Array< SpatialRepresentation*> & getSceneElements( RPMSceneId sceneId ) const;
 
    /**
     * Sets a debug scene instance.
