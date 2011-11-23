@@ -27,7 +27,7 @@ The pipeline should be compiled to a simple `Graph`, as its a structure we can e
 All classes are template classes, meaning that you can define what custom implementations they'll be representing, and not worry about casting.
 
 
-===Data propagation===
+==Data propagation==
 
 About the sockets - it's a powerfull mechanism that allows to exchange data between the nodes.
 So the graph can now not only be used to represent some static data, but can actually *propagate* data.
