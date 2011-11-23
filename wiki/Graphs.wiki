@@ -433,3 +433,5 @@ REGISTER_RTTI( MyNodeInput );
 REGISTER_RTTI( MyNodeOutput);
 
 }}}
+
+===Creating simple graph in the builder===
