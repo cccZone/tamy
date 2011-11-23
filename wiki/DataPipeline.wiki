@@ -1,9 +1,9 @@
-#labels DataPipeline
+#labels DataPipeline,GraphBuilder
 =Data pipeline=
 
 It allows you to define pipelines that propagate data from one point to another, shaping and changing it.
 
-===Rationale===
+==Rationale==
 
 Here are use cases according to which the pipeline should operate:
   * it should operate on arbitrary nodes and edges ( which could be RTTI `Objects` )
@@ -14,7 +14,7 @@ Here are use cases according to which the pipeline should operate:
 
 The pipeline should be compiled to a simple `Graph`, as its a structure we can easily bend to our will and process using the existing algorithms.
 
-===Components===
+==Components==
 
   * `GraphBuilder` - represents the pipeline. It contains a method `buildGraph` that allows you to instantiate a `Graph` instance.
 
@@ -40,7 +40,7 @@ How can you achieve that? Well - basic definitions don't provide that functional
 [RendererCore#Rendering_pipeline Rendering pipeline] and a few other implementations use that data propagation mechanism - check it out.
 
 
-===How to use it===
+==How to use it==
 
 As I mentioned, the base classes are templates, and are not `RTTI` oriented ( except for the sockets - but those are not registered and are objects just to provide future RTTI capabilites from the base class ).
 
@@ -292,7 +292,7 @@ REGISTER_RTTI( MyNodeOutput);
 
 }}}
 
-===Creating a simple pipeline===
+==Creating a simple pipeline==
 
 
 First of all, we'll assume that we have our classes definitions created:
