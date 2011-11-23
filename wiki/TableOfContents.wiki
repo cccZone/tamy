@@ -38,7 +38,7 @@
     * [RendererCore#Materials Materials]
       * [RendererCore#Pixel_shader Pixel shader]
     * [RendererCore#DebugRenderer Debug renderer]
-    * [RendererCore#RenderingPipeline Rendering pipeline]
+    * [RendererCore#Rendering_pipeline Rendering pipeline]
     * [RendererCore#Camera Camera]
   * [ Importers ]
     * [BlenderImporter From Blender]
