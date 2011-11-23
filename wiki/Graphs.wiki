@@ -179,7 +179,7 @@ How can you achieve that? Well - basic definitions don't provide that functional
   * have a counterpart input node that can connect only with the proper output ( you can define what output can be connected to an input by overriding the `GBNodeInput::canConnect` method ).
   * have a getter method on the custom input the parent block can query, and which in turn queries the data from the input.
 
-[Renderer#Rendering_pipeline Rendering pipeline] and a few other implementations use that data propagation mechanism - check it out.
+[RendererCore#Rendering_pipeline Rendering pipeline] and a few other implementations use that data propagation mechanism - check it out.
 
 
 ===How to use it===
