@@ -5,7 +5,7 @@
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/Camera.h"
 #include "core-Renderer/RPSceneRenderNode.h"
-#include "core-Renderer/ShaderNodeOperator.h"
+#include "core-Renderer/PixelShaderConstant.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,7 +38,7 @@ void RPSBComputed::onDefineSockets( RPSceneRenderNode& hostNode )
    m_hostNode = &hostNode;
 
    delete m_shaderNode;
-   m_shaderNode = new ShaderNodeOperator( hostNode );
+   m_shaderNode = new ShaderNodeOperator< RenderingPipelineNode >( hostNode );
    if ( m_shader )
    {
       m_shaderNode->setShader( *m_shader );
@@ -53,7 +53,7 @@ void RPSBComputed::onObjectLoaded()
 
    ASSERT( m_hostNode != NULL );
    ASSERT( m_shaderNode == NULL );
-   m_shaderNode = new ShaderNodeOperator( *m_hostNode );
+   m_shaderNode = new ShaderNodeOperator< RenderingPipelineNode >( *m_hostNode );
    if ( m_shader )
    {
       m_shaderNode->setShader( *m_shader );
@@ -90,7 +90,7 @@ void RPSBComputed::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) co
 {
    if ( m_shaderNode )
    {
-      m_shaderNode->onPreRender( renderer, data );
+      m_shaderNode->bindShader( renderer, data );
    }
 }
 
@@ -98,9 +98,9 @@ void RPSBComputed::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) co
 
 void RPSBComputed::onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const
 {
-   if ( m_shaderNode )
+   if ( m_shader )
    {
-      m_shaderNode->onPostRender( renderer, data );
+      new ( renderer() ) RCUnbindPixelShader( *m_shader );
    }
 }
 

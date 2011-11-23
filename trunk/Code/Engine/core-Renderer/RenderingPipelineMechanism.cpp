@@ -124,10 +124,10 @@ void RenderingPipelineMechanism::removeScene( Model& scene )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingView& RenderingPipelineMechanism::getSceneRenderer( RPMSceneId sceneId ) const 
+const Array< SpatialRepresentation*> & RenderingPipelineMechanism::getSceneElements( RPMSceneId sceneId ) const 
 { 
    ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to query a scene with an invalid sceneId" );
-   return *m_scenes[sceneId]->m_renderingView; 
+   return m_scenes[sceneId]->m_visibleElems; 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -280,10 +280,17 @@ void RenderingPipelineMechanism::render( Renderer& renderer )
       return;
    }
 
+   // get visible geometry for all scenes
+   unsigned int count = m_scenes.size();
+   for( unsigned int i = 0; i < count; ++i )
+   {
+      m_scenes[i]->queryVisibleElements();
+   }
+
    // render the pipeline
    new ( renderer() ) RCBeginScene();
 
-   unsigned int count = m_nodesQueue.size();
+   count = m_nodesQueue.size();
    for( unsigned int i = 0; i < count; ++i )
    {
       m_nodesQueue[i]->update( *this );
@@ -499,6 +506,14 @@ void RenderingPipelineMechanism::RenderedScene::setDebugScene( DebugScene& scene
    {
       m_model->attach( *m_debugSceneView );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineMechanism::RenderedScene::queryVisibleElements()
+{
+   m_visibleElems.clear();
+   m_renderingView->collectRenderables( m_visibleElems );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -113,7 +113,6 @@
     <ClCompile Include="RPTextureNode.cpp" />
     <ClCompile Include="RPVec4Node.cpp" />
     <ClCompile Include="SceneRenderTreeBuilder.cpp" />
-    <ClCompile Include="ShaderNodeOperator.cpp" />
     <ClCompile Include="ShaderTexture.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
@@ -159,6 +158,7 @@
     <None Include="..\..\Include\core-Renderer\Light.inl" />
     <None Include="..\..\Include\core-Renderer\LineSegments.inl" />
     <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl" />
+    <None Include="..\..\Include\core-Renderer\ShaderNodeOperator.inl" />
     <None Include="..\..\Include\core-Renderer\ShaderParam.inl" />
     <None Include="..\..\Include\core-Renderer\ShaderRenderCommand.inl" />
     <None Include="..\..\Include\core-Renderer\TriangleMesh.inl" />

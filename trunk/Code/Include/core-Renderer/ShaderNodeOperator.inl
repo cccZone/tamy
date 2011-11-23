@@ -1,3 +1,8 @@
+#ifndef _SHADER_NODE_OPERATOR_H
+#error "This file can only be included from ShaderNodeOperation.h"
+#else
+
+
 #include "core-Renderer/ShaderNodeOperator.h"
 #include "core-Renderer/PixelShaderConstant.h"
 #include "core-Renderer/PixelShader.h"
@@ -8,7 +13,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderNodeOperator::ShaderNodeOperator( RenderingPipelineNode& hostNode )
+template< typename TNode >
+ShaderNodeOperator< TNode >::ShaderNodeOperator( TNode& hostNode )
    : m_hostNode( hostNode )
    , m_shader( NULL )
 {
@@ -16,14 +22,16 @@ ShaderNodeOperator::ShaderNodeOperator( RenderingPipelineNode& hostNode )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderNodeOperator::~ShaderNodeOperator()
+template< typename TNode >
+ShaderNodeOperator< TNode >::~ShaderNodeOperator()
 {
    resetShader();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ShaderNodeOperator::setShader( PixelShader& shader )
+template< typename TNode >
+void ShaderNodeOperator< TNode >::setShader( PixelShader& shader )
 {
    resetShader();
 
@@ -40,7 +48,8 @@ void ShaderNodeOperator::setShader( PixelShader& shader )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ShaderNodeOperator::resetShader()
+template< typename TNode >
+void ShaderNodeOperator< TNode >::resetShader()
 {
    unsigned int count = m_constants.size();
    for ( unsigned int i = 0; i < count; ++i )
@@ -55,40 +64,29 @@ void ShaderNodeOperator::resetShader()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: przekazywanie RuntimeDataBuffer z RenderingPipeline'u do REnderState'u jest TYLKO po to, zeby shaderNodeOperation
-// moglo wyciagnac info z inputu - do zmiany, bo to jest niepotrzebne gdziekolwiek indziej i wprowadza zamotke
-void ShaderNodeOperator::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+template< typename TNode >
+ RCBindPixelShader& ShaderNodeOperator< TNode >::bindShader( Renderer& renderer, RuntimeDataBuffer& data )
 {
-   if ( m_shader )
-   {
-      RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
+   RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
 
-      // set the shader constants
-      unsigned int count = m_constants.size();
-      for ( unsigned int i = 0; i < count; ++i )
-      {
-         ConstantDef* def = m_constants[i];
-         def->m_constant.setValue( *comm, *def->m_input, data );
-      }
+   // set the shader constants
+   unsigned int count = m_constants.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      PixelShaderConstant& constant = m_constants[i]->m_constant;
+      RPNodeInput* input = m_constants[i]->m_input;
+      constant.setValue( *comm, *input, data );
    }
+
+   return *comm;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-void ShaderNodeOperator::onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const
-{
-   if ( m_shader )
-   {
-      new ( renderer() ) RCUnbindPixelShader( *m_shader );
-   }
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderNodeOperator::ConstantDef::ConstantDef( PixelShaderConstant& constant ) 
+template< typename TNode >
+ShaderNodeOperator< TNode >::ConstantDef::ConstantDef( PixelShaderConstant& constant ) 
    : m_constant( constant )
    , m_input( NULL )
    , m_hostNode( NULL )
@@ -96,7 +94,8 @@ ShaderNodeOperator::ConstantDef::ConstantDef( PixelShaderConstant& constant )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ShaderNodeOperator::ConstantDef::setHostNode( RenderingPipelineNode* hostNode )
+template< typename TNode >
+void ShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode )
 {
    const std::string& inputName = m_constant.getName();
 
@@ -129,3 +128,5 @@ void ShaderNodeOperator::ConstantDef::setHostNode( RenderingPipelineNode* hostNo
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#endif // _SHADER_NODE_OPERATOR_H
