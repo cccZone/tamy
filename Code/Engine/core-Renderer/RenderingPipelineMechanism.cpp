@@ -7,6 +7,7 @@
 #include "core-Renderer/RenderingView.h"
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core-Renderer/DebugDrawCommands.h"
+#include "core-Renderer/RPStartNode.h"
 #include "core/AABoundingBox.h"
 #include "core-MVC/Model.h"
 #include "core-MVC/ModelDebugScene.h"
@@ -300,15 +301,15 @@ void RenderingPipelineMechanism::update( RenderingPipeline& subject )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineMechanism::update( RenderingPipeline& subject, const RenderingPipelineOperation& msg )
+void RenderingPipelineMechanism::update( RenderingPipeline& subject, const GraphBuilderOperation& msg )
 {
    if ( m_renderer != NULL )
    {
-      if ( msg == RPO_PRE_CHANGE )
+      if ( msg == GBO_PRE_CHANGE )
       {
          pipelineDeinitialization();
       }
-      else if ( msg == RPO_POST_CHANGE  )
+      else if ( msg == GBO_POST_CHANGE  )
       {
          pipelineInitialization();
       }
@@ -324,16 +325,16 @@ void RenderingPipelineMechanism::update( RenderingPipelineNode& subject )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineMechanism::update( RenderingPipelineNode& subject, const RenderingPipelineNodeOperation& msg )
+void RenderingPipelineMechanism::update( RenderingPipelineNode& subject, const GraphBuilderNodeOperation& msg )
 {
    if ( m_renderer != NULL )
    {
-      if ( msg == RPNO_CHANGED )
+      if ( msg == GBNO_CHANGED )
       {
          pipelineDeinitialization();
       }
 
-      if ( msg == RPNO_CHANGED )
+      if ( msg == GBNO_CHANGED )
       {
          pipelineInitialization();
       }
@@ -351,13 +352,13 @@ void RenderingPipelineMechanism::cacheNodes()
       return;
    }
   
-   RPGraph graph;
-   m_pipeline->buildGraph( graph );
+   Graph< RenderingPipelineNode* > graph;
+   m_pipeline->buildGraph< RPStartNode >( graph );
 
-   std::vector< RPGraph::Index > sortedNodes;
+   std::vector< Graph< RenderingPipelineNode* >::Index > sortedNodes;
    GraphTopologicalSort( sortedNodes, graph );
 
-   for ( std::vector< RPGraph::Index >::const_iterator it = sortedNodes.begin(); it != sortedNodes.end(); ++it )
+   for ( std::vector< Graph< RenderingPipelineNode* >::Index >::const_iterator it = sortedNodes.begin(); it != sortedNodes.end(); ++it )
    {
       m_nodesQueue.push_back( graph.getNode( *it ) );
    }

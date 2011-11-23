@@ -13,7 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( SingleTextureMaterial, Entity )
-   PROPERTY_EDIT( "material", Material, m_material )
+   PROPERTY_EDIT( "material", SurfaceProperties, m_surfaceProperties )
    PROPERTY_EDIT( "texture", Texture*, m_texture )
 END_OBJECT()
 
@@ -44,8 +44,8 @@ void SingleTextureMaterial::onPreRender( Renderer& renderer, RuntimeDataBuffer& 
    
    RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
 
-   comm->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_material.getAmbientColor() );
-   comm->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_material.getDiffuseColor() );
+   comm->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_surfaceProperties.getAmbientColor() );
+   comm->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_surfaceProperties.getDiffuseColor() );
    comm->setBool( "g_UseTexture", m_texture != NULL );
    if ( m_texture != NULL )
    {
@@ -63,28 +63,6 @@ void SingleTextureMaterial::onPostRender( Renderer& renderer, RuntimeDataBuffer&
    }
 
    new ( renderer() ) RCUnbindPixelShader( *m_shader );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SingleTextureMaterial::onAttached( Entity& parent )
-{
-   Geometry* geometry = dynamic_cast< Geometry* >( &parent );
-   if ( geometry )
-   {
-      geometry->addState( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SingleTextureMaterial::onDetached( Entity& parent )
-{
-   Geometry* geometry = dynamic_cast< Geometry* >( &parent );
-   if ( geometry )
-   {
-      geometry->removeState( *this );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -125,14 +103,14 @@ Entity* SingleTextureMaterial::cloneSelf() const
 
 bool SingleTextureMaterial::onEquals( const SingleTextureMaterial& rhs ) const
 {
-   return ( m_texture == rhs.m_texture ) && ( m_material == rhs.m_material );
+   return ( m_texture == rhs.m_texture ) && ( m_surfaceProperties == rhs.m_surfaceProperties );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool SingleTextureMaterial::onLess( const SingleTextureMaterial& rhs ) const
 {
-   return( m_texture < rhs.m_texture ) && ( &m_material < &rhs.m_material );
+   return( m_texture < rhs.m_texture ) && ( &m_surfaceProperties < &rhs.m_surfaceProperties );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

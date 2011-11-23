@@ -17,7 +17,7 @@ RenderingPipelineSocketRepresentation::RenderingPipelineSocketRepresentation()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingPipelineSocketRepresentation::RenderingPipelineSocketRepresentation( RPNodeSocket& socket )
+RenderingPipelineSocketRepresentation::RenderingPipelineSocketRepresentation( GBNodeSocket& socket )
 {
    m_socketName = socket.getName();
 }
@@ -27,7 +27,7 @@ RenderingPipelineSocketRepresentation::RenderingPipelineSocketRepresentation( RP
 Object& RenderingPipelineSocketRepresentation::getSocket()
 {
    RenderingPipelineNode& parentNode = dynamic_cast< RenderingPipelineNode& >( getParentBlock().getNode() );
-   RPNodeSocket* socket = parentNode.findInput( m_socketName );
+   GBNodeSocket* socket = parentNode.findInput( m_socketName );
    if ( !socket )
    {
       socket = parentNode.findOutput( m_socketName );

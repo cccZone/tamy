@@ -23,7 +23,7 @@ public:
     *
     * @param socket        socket the node represents.
     */
-   RPSInt( RPNodeSocket& socket ) : RenderingPipelineSocketRepresentation( socket ) {}
+   RPSInt( GBNodeSocket& socket ) : RenderingPipelineSocketRepresentation( socket ) {}
 
 protected:
    // -------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 /// @file   ml-Blender/IColladaSlice.h
-/// @brief  a slice representing a material
+/// @brief  a slice representing surface properties
 
 #pragma once
 
@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Material;
+class SurfaceProperties;
 class Texture;
 class Shader;
 class ResourcesManager;
@@ -20,20 +20,20 @@ class TiXmlNode;
 /**
  * An instantiator of triangle mesh resource.
  */
-class MaterialCS : public IColladaSlice, public TResourceSlice< Material >
+class SurfacePropertiesCS : public IColladaSlice, public TResourceSlice< SurfaceProperties >
 {
 private:
-   Material*      m_material;
+   SurfaceProperties*      m_surfaceProperties;
 
 public:
-   MaterialCS( TiXmlNode* effectNode, ResourcesManager& rm );
-   ~MaterialCS();
+   SurfacePropertiesCS( TiXmlNode* effectNode, ResourcesManager& rm );
+   ~SurfacePropertiesCS();
 
 protected:
    // -------------------------------------------------------------------------
-   //  TResourceSlice< Material > implementation
+   //  TResourceSlice< SurfaceProperties > implementation
    // -------------------------------------------------------------------------
-   void* getResourcePtr() const { return m_material; }
+   void* getResourcePtr() const { return m_surfaceProperties; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

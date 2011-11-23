@@ -4,7 +4,7 @@
 /// @brief  a material that can include up to one texture
 
 #include "core-MVC\Entity.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\SurfaceProperties.h"
 #include "core-Renderer\RenderState.h"
 #include <d3dx9.h>
 #include <vector>
@@ -27,7 +27,7 @@ class SingleTextureMaterial : public Entity, public TRenderState< SingleTextureM
 
 private:
    PixelShader*         m_shader;
-   Material             m_material;
+   SurfaceProperties    m_surfaceProperties;
    Texture*             m_texture;
 
 public:
@@ -38,11 +38,11 @@ public:
    ~SingleTextureMaterial();
 
    /**
-    * This method allows to set an arbitrary material for the effect to use.
+    * This method allows to set arbitrary surface properties for the effect to use.
     * 
     * @param material
     */
-   inline void setMaterial( const Material& material ) { m_material = material; }
+   inline void setSurfaceProperties( const SurfaceProperties& properties ) { m_surfaceProperties = properties; }
 
    /**
     * This method allows to set an arbitrary texture for the effect to use.
@@ -63,8 +63,6 @@ protected:
    // -------------------------------------------------------------------------
    // Entity implementation
    // -------------------------------------------------------------------------
-   void onAttached( Entity& parent );
-   void onDetached( Entity& parent );
    void onComponentAdded( Component< Model >& component );
    Entity* cloneSelf() const;
 };

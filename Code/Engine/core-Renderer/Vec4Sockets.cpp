@@ -42,7 +42,7 @@ const D3DXVECTOR4& RPVec4Input::getValue( RuntimeDataBuffer& data ) const
 
 bool RPVec4Input::canConnect( RPNodeOutput& output ) const
 {
-   RPVec4Output* typedOutput = dynamic_cast< RPVec4Output* >( &output );
+   RPVec4Output* typedOutput = DynamicCast< RPVec4Output >( &output );
    return typedOutput != NULL; 
 }
 

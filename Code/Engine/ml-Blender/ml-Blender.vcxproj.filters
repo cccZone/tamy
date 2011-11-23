@@ -8,9 +8,6 @@
     <ClCompile Include="MeshCS.cpp">
       <Filter>Slices</Filter>
     </ClCompile>
-    <ClCompile Include="MaterialCS.cpp">
-      <Filter>Slices</Filter>
-    </ClCompile>
     <ClCompile Include="SceneCS.cpp">
       <Filter>Slices</Filter>
     </ClCompile>
@@ -32,6 +29,9 @@
     <ClCompile Include="DSIndexed.cpp">
       <Filter>Data</Filter>
     </ClCompile>
+    <ClCompile Include="SurfacePropertiesCS.cpp">
+      <Filter>Slices</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ml-Blender\BlenderScene.h" />
@@ -41,9 +41,6 @@
       <Filter>Slices</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\ml-Blender\MeshCS.h">
-      <Filter>Slices</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\MaterialCS.h">
       <Filter>Slices</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\ml-Blender\SceneCS.h">
@@ -66,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\ml-Blender\DSIndexed.h">
       <Filter>Data</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-Blender\SurfacePropertiesCS.h">
+      <Filter>Slices</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

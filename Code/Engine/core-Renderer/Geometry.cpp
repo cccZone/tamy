@@ -119,14 +119,24 @@ std::string Geometry::getGeometryName() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Geometry::onAttached( Entity& parent )
+void Geometry::onChildAttached( Entity& child )
 {
+   RenderState* renderState = dynamic_cast< RenderState* >( &child );
+   if ( renderState )
+   {
+      addState( *renderState );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Geometry::onDetached( Entity& parent )
+void Geometry::onChildDetached( Entity& child )
 {
+   RenderState* renderState = dynamic_cast< RenderState* >( &child );
+   if ( renderState )
+   {
+      addState( *renderState );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -32,6 +32,9 @@
 // ----------------------------------------------------------------------------
 #include "core\Graph.h"
 #include "core\GraphAlgorithms.h"
+#include "core\GraphBuilder.h"
+#include "core\GraphBuilderNode.h"
+#include "core\GraphBuilderSockets.h"
 
 // ----------------------------------------------------------------------------
 // Delegates

@@ -86,10 +86,12 @@
 // --> Entities
 // ----------------------------------------------------------------------------
 #include "core-Renderer\SingleTextureMaterial.h"
+#include "core-Renderer\MaterialEntity.h"
 // ----------------------------------------------------------------------------
 // --> Resources
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Material.h"
+#include "core-Renderer\SurfaceProperties.h"
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\PixelShader.h"
 #include "core-Renderer\RenderTarget.h"

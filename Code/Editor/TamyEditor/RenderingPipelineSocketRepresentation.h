@@ -30,7 +30,7 @@ public:
     *
     * @param socket        socket the node represents.
     */
-   RenderingPipelineSocketRepresentation( RPNodeSocket& socket );
+   RenderingPipelineSocketRepresentation( GBNodeSocket& socket );
 
    /**
     * Returns the name of the represented socket.

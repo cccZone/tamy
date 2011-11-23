@@ -6,7 +6,7 @@
 
 // resources instantiators
 #include "ml-Blender/EffectCS.h"
-#include "ml-Blender/MaterialCS.h"
+#include "ml-Blender/SurfacePropertiesCS.h"
 #include "ml-Blender/MeshCS.h"
 #include "ml-Blender/ControllerCS.h"
 #include "ml-Blender/SceneCS.h"
@@ -19,8 +19,11 @@ BlenderScene::BlenderScene()
    , m_observer( NULL )
 {
    // define the slices
-   m_definitions.push_back( new TSliceDefinition< MaterialCS >( "library_effects", "effect" ) );
+
+   // TODO: shouldn't these two be defined the other way around?
+   m_definitions.push_back( new TSliceDefinition< SurfacePropertiesCS >( "library_effects", "effect" ) );
    m_definitions.push_back( new TSliceDefinition< EffectCS >( "library_materials", "material" ) );
+
    m_definitions.push_back( new TSliceDefinition< MeshCS >( "library_geometries", "geometry" ) );
    m_definitions.push_back( new TSliceDefinition< ControllerCS >( "library_controllers", "controller" ) );
    m_definitions.push_back( new TSliceDefinition< SceneCS >( "library_visual_scenes", "visual_scene" ) );

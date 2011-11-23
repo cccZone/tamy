@@ -1,4 +1,4 @@
-#include "MaterialPropertyEditor.h"
+#include "SurfacePropertiesPropertyEditor.h"
 #include "core\Color.h"
 #include <QBoxLayout.h>
 #include <QLabel.h>
@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MaterialPropertyEditor::MaterialPropertyEditor( TEditableProperty< Material >* property )
+SurfacePropertiesPropertyEditor::SurfacePropertiesPropertyEditor( TEditableProperty< SurfaceProperties >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {
@@ -17,7 +17,7 @@ MaterialPropertyEditor::MaterialPropertyEditor( TEditableProperty< Material >* p
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MaterialPropertyEditor::~MaterialPropertyEditor()
+SurfacePropertiesPropertyEditor::~SurfacePropertiesPropertyEditor()
 {
    delete m_property;
    m_property = NULL;
@@ -25,14 +25,14 @@ MaterialPropertyEditor::~MaterialPropertyEditor()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialPropertyEditor::setupUi()
+void SurfacePropertiesPropertyEditor::setupUi()
 {
    QFrame* frame = new QFrame( this ); addWidget( frame );
    QVBoxLayout* layout = new QVBoxLayout( frame );
    layout->setSpacing( 0 );
    layout->setMargin( 0 );
 
-   const Material& val = m_property->get();
+   const SurfaceProperties& val = m_property->get();
    {
       QFrame* ambientFrame = new QFrame( this ); layout->addWidget( ambientFrame );
       QHBoxLayout* ambientLayout = new QHBoxLayout( ambientFrame );
@@ -96,45 +96,45 @@ void MaterialPropertyEditor::setupUi()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialPropertyEditor::powerChanged( double val )
+void SurfacePropertiesPropertyEditor::powerChanged( double val )
 {
-   Material mat = m_property->get();
+   SurfaceProperties mat = m_property->get();
    mat.setPower( val );
    m_property->set( mat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialPropertyEditor::ambientChanged( const QColor& color )
+void SurfacePropertiesPropertyEditor::ambientChanged( const QColor& color )
 {
-   Material mat = m_property->get();
+   SurfaceProperties mat = m_property->get();
    mat.setAmbientColor( Color( color.redF(), color.greenF(), color.blueF(), color.alphaF() ) );
    m_property->set( mat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialPropertyEditor::diffuseChanged( const QColor& color )
+void SurfacePropertiesPropertyEditor::diffuseChanged( const QColor& color )
 {
-   Material mat = m_property->get();
+   SurfaceProperties mat = m_property->get();
    mat.setDiffuseColor( Color( color.redF(), color.greenF(), color.blueF(), color.alphaF() ) );
    m_property->set( mat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialPropertyEditor::specularChanged( const QColor& color )
+void SurfacePropertiesPropertyEditor::specularChanged( const QColor& color )
 {
-   Material mat = m_property->get();
+   SurfaceProperties mat = m_property->get();
    mat.setSpecularColor( Color( color.redF(), color.greenF(), color.blueF(), color.alphaF() ) );
    m_property->set( mat );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialPropertyEditor::emissiveChanged( const QColor& color )
+void SurfacePropertiesPropertyEditor::emissiveChanged( const QColor& color )
 {
-   Material mat = m_property->get();
+   SurfaceProperties mat = m_property->get();
    mat.setEmissiveColor( Color( color.redF(), color.greenF(), color.blueF(), color.alphaF() ) );
    m_property->set( mat );
 }

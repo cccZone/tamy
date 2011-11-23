@@ -126,8 +126,8 @@ protected:
    // -------------------------------------------------------------------------
    // Entity implementation
    // -------------------------------------------------------------------------
-   void onAttached( Entity& parent );
-   void onDetached( Entity& parent );
+   void onChildAttached( Entity& child );
+   void onChildDetached( Entity& child );
    Entity* cloneSelf() const; 
 };
 

@@ -150,9 +150,6 @@
     <ClCompile Include="SingleTextureEffect.cpp">
       <Filter>Effects\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Materials\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Texture.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
@@ -292,6 +289,15 @@
     <ClCompile Include="FragmentShader.cpp">
       <Filter>Geometry\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="SurfaceProperties.cpp">
+      <Filter>Materials\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Materials\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialEntity.cpp">
+      <Filter>Materials\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -305,9 +311,6 @@
     </None>
     <None Include="..\..\Include\core-Renderer\TriangleMesh.inl">
       <Filter>Geometry\Resources</Filter>
-    </None>
-    <None Include="..\..\Include\core-Renderer\RenderingPipelineNode.inl">
-      <Filter>Mechanisms\RenderingPipeline</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\ShaderRenderCommand.inl">
       <Filter>Core</Filter>
@@ -403,9 +406,6 @@
       <Filter>Effects\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Texture.h">
-      <Filter>Materials\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Material.h">
       <Filter>Materials\Resources</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Geometry.h">
@@ -570,6 +570,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h">
       <Filter>Geometry\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\SurfaceProperties.h">
+      <Filter>Materials\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Material.h">
+      <Filter>Materials\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MaterialEntity.h">
+      <Filter>Materials\Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
