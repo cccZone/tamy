@@ -19,7 +19,7 @@
     <ClCompile Include="DSIndexed.cpp" />
     <ClCompile Include="DSIndexedBindStructure.cpp" />
     <ClCompile Include="EffectCS.cpp" />
-    <ClCompile Include="MaterialCS.cpp" />
+    <ClCompile Include="SurfacePropertiesCS.cpp" />
     <ClCompile Include="MeshCS.cpp" />
     <ClCompile Include="SceneCS.cpp" />
   </ItemGroup>
@@ -34,7 +34,7 @@
     <ClInclude Include="..\..\Include\ml-Blender\DSIndexedBindStructure.h" />
     <ClInclude Include="..\..\Include\ml-Blender\IColladaSlice.h" />
     <ClInclude Include="..\..\Include\ml-Blender\EffectCS.h" />
-    <ClInclude Include="..\..\Include\ml-Blender\MaterialCS.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\SurfacePropertiesCS.h" />
     <ClInclude Include="..\..\Include\ml-Blender\MeshCS.h" />
     <ClInclude Include="..\..\Include\ml-Blender\SceneCS.h" />
   </ItemGroup>

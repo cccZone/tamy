@@ -2,6 +2,7 @@
 #include "core-Renderer/PixelShaderConstant.h"
 #include "core-Renderer/PixelShader.h"
 #include "core-Renderer/RenderingPipelineNode.h"
+#include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/Renderer.h"
 
 
@@ -54,6 +55,8 @@ void ShaderNodeOperator::resetShader()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// TODO: przekazywanie RuntimeDataBuffer z RenderingPipeline'u do REnderState'u jest TYLKO po to, zeby shaderNodeOperation
+// moglo wyciagnac info z inputu - do zmiany, bo to jest niepotrzebne gdziekolwiek indziej i wprowadza zamotke
 void ShaderNodeOperator::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const
 {
    if ( m_shader )

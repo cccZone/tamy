@@ -88,6 +88,8 @@
     <ClCompile Include="FragmentShader.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
     <ClCompile Include="IntSockets.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MaterialEntity.cpp" />
     <ClCompile Include="MatrixSockets.cpp" />
     <ClCompile Include="PixelShaderConstant.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
@@ -135,7 +137,7 @@
     <ClCompile Include="BestFullScreenDevice.cpp" />
     <ClCompile Include="BestWindowedDevice.cpp" />
     <ClCompile Include="SimpleTamyConfigurator.cpp" />
-    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="SurfaceProperties.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="OverlayRenderingMechanism.cpp" />
     <ClCompile Include="Font.cpp" />
@@ -156,7 +158,6 @@
     <None Include="..\..\Include\core-Renderer\Renderer.inl" />
     <None Include="..\..\Include\core-Renderer\Light.inl" />
     <None Include="..\..\Include\core-Renderer\LineSegments.inl" />
-    <None Include="..\..\Include\core-Renderer\RenderingPipelineNode.inl" />
     <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl" />
     <None Include="..\..\Include\core-Renderer\ShaderParam.inl" />
     <None Include="..\..\Include\core-Renderer\ShaderRenderCommand.inl" />
@@ -170,6 +171,8 @@
     <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
     <ClInclude Include="..\..\Include\core-Renderer\IntSockets.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Material.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\MaterialEntity.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MatrixSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h" />
@@ -231,7 +234,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\FullScreenModeFilter.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ResolutionFilter.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SimpleTamyConfigurator.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\Material.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\SurfaceProperties.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Texture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Overlay.h" />
     <ClInclude Include="..\..\Include\core-Renderer\OverlayRenderingMechanism.h" />

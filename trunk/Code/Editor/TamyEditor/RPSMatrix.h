@@ -23,7 +23,7 @@ public:
     *
     * @param socket        socket the node represents.
     */
-   RPSMatrix( RPNodeSocket& socket ) : RenderingPipelineSocketRepresentation( socket ) {}
+   RPSMatrix( GBNodeSocket& socket ) : RenderingPipelineSocketRepresentation( socket ) {}
 
 protected:
    // -------------------------------------------------------------------------

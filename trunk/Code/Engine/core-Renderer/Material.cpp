@@ -1,51 +1,49 @@
-#include "core-Renderer\Material.h"
+#include "core-Renderer/Material.h"
+#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/Renderer.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RTTI( Material )
-END_RTTI
+BEGIN_RESOURCE( Material, Resource, tmat, AM_BINARY )
+END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material::Material()
-: m_power(1)
+Material::Material( const FilePath& resourceName )
+   : Resource( resourceName )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material::Material(const Color& ambient,
-                   const Color& diffuse,
-                   const Color& specular,
-                   const Color& emissive,
-                   float power)
-: m_ambient(ambient)
-, m_diffuse(diffuse)
-, m_specular(specular)
-, m_emissive(emissive)
-, m_power(power)
+Material::~Material()
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Material::Material(const Material& rhs)
-: m_ambient(rhs.m_ambient)
-, m_diffuse(rhs.m_diffuse)
-, m_specular(rhs.m_specular)
-, m_emissive(rhs.m_emissive)
-, m_power(rhs.m_power)
+void Material::initialize( MaterialEntity& hostEntity, RuntimeDataBuffer& data ) const
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Material::operator==(const Material& rhs) const
+void Material::deinitialize( MaterialEntity& hostEntity, RuntimeDataBuffer& data ) const
 {
-   return (m_ambient == rhs.m_ambient) && (m_diffuse == rhs.m_diffuse) &&
-      (m_specular == rhs.m_specular) && (m_emissive == rhs.m_emissive) &&
-      (m_power == rhs.m_power);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Material::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Material::onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////

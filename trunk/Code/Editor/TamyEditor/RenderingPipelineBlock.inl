@@ -63,13 +63,13 @@ void TRenderingPipelineBlock< T >::update( RenderingPipelineNode& node )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TRenderingPipelineBlock< T >::update( RenderingPipelineNode& node, const RenderingPipelineNodeOperation& msg )
+void TRenderingPipelineBlock< T >::update( RenderingPipelineNode& node, const GraphBuilderNodeOperation& msg )
 {
-   if ( msg == RPNO_INPUTS_CHANGED )
+   if ( msg == GBNO_INPUTS_CHANGED )
    {
       refreshInputs( node );
    }
-   else if ( msg == RPNO_OUTPUTS_CHANGED )
+   else if ( msg == GBNO_OUTPUTS_CHANGED )
    {
       refreshOutputs( node );
    }

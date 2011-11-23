@@ -151,7 +151,7 @@ void RPRenderTargetOutput::setRenderTargetID( const std::string& renderTargetId 
 { 
    m_renderTargetId = renderTargetId; 
    m_useBackBuffer = m_renderTargetId.empty();
-   notify( RPNSO_CHANGED );
+   notify( GBNSO_CHANGED );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

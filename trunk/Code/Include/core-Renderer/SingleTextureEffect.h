@@ -4,7 +4,7 @@
 /// @brief  simple rendering effect
 
 #include "core-MVC\Entity.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\SurfaceProperties.h"
 #include "core-Renderer\RenderState.h"
 
 
@@ -12,7 +12,6 @@
 
 class SpatialEntity;
 class EffectShader;
-class Material;
 class Texture;
 class ResourcesManager;
 
@@ -27,7 +26,7 @@ class SingleTextureEffect : public Entity, public TRenderState< SingleTextureEff
    DECLARE_CLASS( SingleTextureEffect )
 
 private:
-   Material             m_material;
+   SurfaceProperties    m_surfaceProperties;
    Texture*             m_texture;
 
    // runtime data
@@ -41,11 +40,11 @@ public:
    SingleTextureEffect();
 
    /**
-    * This method allows to set an arbitrary material for the effect to use.
+    * This method allows to set an arbitrary surface properties for the effect to use.
     * 
-    * @param material
+    * @param properties
     */
-   void setMaterial(const Material& material);
+   void setSurfaceProperties( const SurfaceProperties& properties );
 
    /**
     * This method allows to set an arbitrary texture for the effect to use.

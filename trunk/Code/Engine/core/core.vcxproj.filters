@@ -215,6 +215,15 @@
     <ClCompile Include="FilePath.cpp">
       <Filter>Filesystem</Filter>
     </ClCompile>
+    <ClCompile Include="GraphBuilder.cpp">
+      <Filter>DataStructures\Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphBuilderNode.cpp">
+      <Filter>DataStructures\Graphs</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphBuilderSockets.cpp">
+      <Filter>DataStructures\Graphs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -488,6 +497,15 @@
     <ClInclude Include="..\..\Include\core\FilePath.h">
       <Filter>Filesystem</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\GraphBuilder.h">
+      <Filter>DataStructures\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\GraphBuilderNode.h">
+      <Filter>DataStructures\Graphs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\GraphBuilderSockets.h">
+      <Filter>DataStructures\Graphs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">
@@ -600,6 +618,15 @@
     </None>
     <None Include="..\..\Include\core\RuntimeData.inl">
       <Filter>DataStructures</Filter>
+    </None>
+    <None Include="..\..\Include\core\GraphBuilderNode.inl">
+      <Filter>DataStructures\Graphs</Filter>
+    </None>
+    <None Include="..\..\Include\core\GraphBuilder.inl">
+      <Filter>DataStructures\Graphs</Filter>
+    </None>
+    <None Include="..\..\Include\core\GraphBuilderSockets.inl">
+      <Filter>DataStructures\Graphs</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -19,7 +19,7 @@ class RenderingPipelineBlock : public GraphBlock
    DECLARE_CLASS( RenderingPipelineBlock )
 
 private:
-   GenericFactory< RPNodeSocket, GraphBlockSocket >*      m_socketsFactory;
+   GenericFactory< GBNodeSocket, GraphBlockSocket >*      m_socketsFactory;
 
 public:
    /**
@@ -60,7 +60,7 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-class TRenderingPipelineBlock : public RenderingPipelineBlock, public Observer< RenderingPipelineNode, RenderingPipelineNodeOperation >
+class TRenderingPipelineBlock : public RenderingPipelineBlock, public Observer< RenderingPipelineNode, GraphBuilderNodeOperation >
 {
 protected:
    T*                                 m_nodePtr;
@@ -95,7 +95,7 @@ public:
    // Observer implementation
    // -------------------------------------------------------------------------
    void update( RenderingPipelineNode& subject );
-   void update( RenderingPipelineNode& subject, const RenderingPipelineNodeOperation& msg );
+   void update( RenderingPipelineNode& subject, const GraphBuilderNodeOperation& msg );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

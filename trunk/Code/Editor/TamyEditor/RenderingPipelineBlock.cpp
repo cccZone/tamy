@@ -44,7 +44,7 @@ RenderingPipelineBlock::~RenderingPipelineBlock()
 void RenderingPipelineBlock::initSocketsFactory()
 {
    // define associations
-   m_socketsFactory = new GenericFactory< RPNodeSocket, GraphBlockSocket >();
+   m_socketsFactory = new GenericFactory< GBNodeSocket, GraphBlockSocket >();
    m_socketsFactory->associate< RPVoidInput, RPSVoid >();
    m_socketsFactory->associate< RPVoidOutput, RPSVoid >();
    m_socketsFactory->associate< RPTextureInput, RPSTextureInput >();

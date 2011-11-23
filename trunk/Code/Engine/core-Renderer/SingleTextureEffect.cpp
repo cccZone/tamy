@@ -1,5 +1,4 @@
 #include "core-Renderer\SingleTextureEffect.h"
-#include "core-Renderer\Material.h"
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\EffectShader.h"
@@ -14,7 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( SingleTextureEffect, Entity )
-   PROPERTY_EDIT( "material", Material, m_material )
+   PROPERTY_EDIT( "material", SurfaceProperties, m_surfaceProperties )
    PROPERTY_EDIT( "texture", Texture*, m_texture )
 END_OBJECT()
 
@@ -29,9 +28,9 @@ SingleTextureEffect::SingleTextureEffect()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureEffect::setMaterial( const Material& material )
+void SingleTextureEffect::setSurfaceProperties( const SurfaceProperties& properties )
 {
-   m_material = material;
+   m_surfaceProperties = properties;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,8 +56,8 @@ void SingleTextureEffect::onPreRender( Renderer& renderer, RuntimeDataBuffer& da
    comm->setMtx( "g_mWorldView", worldViewMtx );
    comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
 
-   comm->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_material.getAmbientColor() );
-   comm->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_material.getDiffuseColor() );
+   comm->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_surfaceProperties.getAmbientColor() );
+   comm->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_surfaceProperties.getDiffuseColor() );
 
    comm->setBool( "g_UseTexture", m_texture != NULL );
    if ( m_texture != NULL )
@@ -85,14 +84,14 @@ void SingleTextureEffect::onPostRender( Renderer& renderer, RuntimeDataBuffer& d
 
 bool SingleTextureEffect::onEquals( const SingleTextureEffect& rhs ) const
 {
-   return ( m_texture == rhs.m_texture ) && ( m_material == rhs.m_material );
+   return ( m_texture == rhs.m_texture ) && ( m_surfaceProperties == rhs.m_surfaceProperties );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool SingleTextureEffect::onLess( const SingleTextureEffect& rhs ) const
 {
-   return ( m_texture < rhs.m_texture ) && ( &m_material < &rhs.m_material );
+   return ( m_texture < rhs.m_texture ) && ( &m_surfaceProperties < &rhs.m_surfaceProperties );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,7 +102,6 @@ void SingleTextureEffect::onAttached( Entity& parent )
    if ( geometry )
    {
       m_parentNode = geometry;
-      geometry->addState( *this );
    }
 }
 
@@ -115,7 +113,6 @@ void SingleTextureEffect::onDetached( Entity& parent )
    if ( geometry )
    {
       m_parentNode = NULL;
-      geometry->removeState( *this );
    }
 }
 

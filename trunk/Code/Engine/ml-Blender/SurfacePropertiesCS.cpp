@@ -1,4 +1,4 @@
-#include "ml-Blender/MaterialCS.h"
+#include "ml-Blender/SurfacePropertiesCS.h"
 #include "core.h"
 #include "core-Renderer.h"
 #include "tinyxml/tinyxml.h"
@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MaterialCS::MaterialCS( TiXmlNode* materialNode, ResourcesManager& rm )
+SurfacePropertiesCS::SurfacePropertiesCS( TiXmlNode* materialNode, ResourcesManager& rm )
 {
    if ( !materialNode )
    {
@@ -61,15 +61,15 @@ MaterialCS::MaterialCS( TiXmlNode* materialNode, ResourcesManager& rm )
       sscanf_s( valStr, "%f %f %f %f", &emissive.r, &emissive.g, &emissive.b, &emissive.a );
    }
 
-   m_material = new Material( ambient, diffuse, specular, emissive, power );
+   m_surfaceProperties = new SurfaceProperties( ambient, diffuse, specular, emissive, power );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MaterialCS::~MaterialCS()
+SurfacePropertiesCS::~SurfacePropertiesCS()
 {
-   delete m_material;
-   m_material = NULL;
+   delete m_surfaceProperties;
+   m_surfaceProperties = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

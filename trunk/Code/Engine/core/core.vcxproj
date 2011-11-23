@@ -81,6 +81,9 @@
     <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="Assert.cpp" />
     <ClCompile Include="FilePath.cpp" />
+    <ClCompile Include="GraphBuilder.cpp" />
+    <ClCompile Include="GraphBuilderNode.cpp" />
+    <ClCompile Include="GraphBuilderSockets.cpp" />
     <ClCompile Include="IDebugDraw.cpp" />
     <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="Node.cpp" />
@@ -125,6 +128,9 @@
     <ClInclude Include="..\..\Include\core\Algorithms.h" />
     <ClInclude Include="..\..\Include\core\Casts.h" />
     <ClInclude Include="..\..\Include\core\FilePath.h" />
+    <ClInclude Include="..\..\Include\core\GraphBuilder.h" />
+    <ClInclude Include="..\..\Include\core\GraphBuilderNode.h" />
+    <ClInclude Include="..\..\Include\core\GraphBuilderSockets.h" />
     <ClInclude Include="..\..\Include\core\IDebugDraw.h" />
     <ClInclude Include="..\..\Include\core\IProgressObserver.h" />
     <ClInclude Include="..\..\Include\core\MemoryPool.h" />
@@ -223,6 +229,9 @@
     <None Include="..\..\Include\core\GenericFactory.inl" />
     <None Include="..\..\Include\core\AdaptingSpatialStorage.inl" />
     <None Include="..\..\Include\core\CompositeSpatialStorage.inl" />
+    <None Include="..\..\Include\core\GraphBuilder.inl" />
+    <None Include="..\..\Include\core\GraphBuilderNode.inl" />
+    <None Include="..\..\Include\core\GraphBuilderSockets.inl" />
     <None Include="..\..\Include\core\NarrowPhaseStorageFilter.inl" />
     <None Include="..\..\Include\core\ResourceHandle.inl" />
     <None Include="..\..\Include\core\RoundBuffer.inl" />

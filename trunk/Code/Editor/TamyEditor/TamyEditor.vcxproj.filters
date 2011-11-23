@@ -361,9 +361,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_DropArea.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_MaterialPropertyEditor.cpp">
-      <Filter>QtImplementation\Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_QPropertiesView.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
     </ClCompile>
@@ -389,9 +386,6 @@
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_DropArea.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_MaterialPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MtxPropertyEditor.cpp">
@@ -425,9 +419,6 @@
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
     <ClCompile Include="BoolPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialPropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
     <ClCompile Include="MtxPropertyEditor.cpp">
@@ -785,6 +776,18 @@
     <ClCompile Include="PixelShaderEditor.cpp">
       <Filter>ResourceEditors\ShaderEditors</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SurfacePropertiesPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SurfacePropertiesPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_SurfacePropertiesPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="SurfacePropertiesPropertyEditor.cpp">
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -826,9 +829,6 @@
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="IntPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
-    </CustomBuild>
-    <CustomBuild Include="MaterialPropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="MtxPropertyEditor.h">
@@ -947,6 +947,9 @@
     </CustomBuild>
     <CustomBuild Include="pixelshadereditor.ui">
       <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SurfacePropertiesPropertyEditor.h">
+      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

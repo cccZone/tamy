@@ -304,7 +304,7 @@ void IWFScene::addStaticGeometry( Model& scene,
       // create a rendering effect instance
       MaterialDefinition& mat = currMesh.material;
       SingleTextureMaterial* material = new SingleTextureMaterial( mat.matName );
-      material->setMaterial(Material(mat.ambient, mat.diffuse, mat.specular, mat.emissive, mat.power));
+      material->setSurfaceProperties( SurfaceProperties( mat.ambient, mat.diffuse, mat.specular, mat.emissive, mat.power ) );
       
       if (mat.texName.length() > 0)
       {

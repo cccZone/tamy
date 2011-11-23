@@ -1,12 +1,11 @@
 /// @file   core-Renderer/RenderingPipeline.h
 /// @brief  rendering pipeline resource
-
 #pragma once
 
 #include "core/Resource.h"
+#include "core/GraphBuilder.h"
 #include <vector>
-#include "core/Subject.h"
-#include "core/Graph.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,15 +14,6 @@ class RenderingPipelineMechanism;
 class RenderTargetDescriptor;
 class RenderTarget;
 class RuntimeDataBuffer;
-typedef Graph< RenderingPipelineNode* > RPGraph;
-
-///////////////////////////////////////////////////////////////////////////////
-
-enum RenderingPipelineOperation
-{
-   RPO_PRE_CHANGE,
-   RPO_POST_CHANGE
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,12 +21,11 @@ enum RenderingPipelineOperation
  * Rendering pipeline represents a structure that performs all rendering related
  * image processing and presents the final image in the back buffer.
  */
-class RenderingPipeline : public Resource, public Subject< RenderingPipeline, RenderingPipelineOperation >
+class RenderingPipeline : public Resource, public GraphBuilder< RenderingPipeline, RenderingPipelineNode >
 {
    DECLARE_RESOURCE( RenderingPipeline );
 
 private:
-   std::vector< RenderingPipelineNode* >        m_nodes;
    std::vector< RenderTargetDescriptor* >       m_renderTargets;
 
    // runtime data
@@ -50,35 +39,6 @@ public:
     */
    RenderingPipeline( const FilePath& resourceName = FilePath() );
    ~RenderingPipeline();
-
-   // -------------------------------------------------------------------------
-   // Nodes management
-   // -------------------------------------------------------------------------
-   /**
-    * Adds a new node to the pipeline.
-    *
-    * @param node       node to add
-    */
-   void addNode( RenderingPipelineNode* node );
-
-   /**
-    * Removes a node from the pipeline
-    *
-    * @param node       node to remove
-    */
-   void removeNode( RenderingPipelineNode& node );
-
-   /**
-    * Returns a list of all defined nodes.
-    */
-   inline const std::vector< RenderingPipelineNode* >& getNodes() const { return m_nodes; }
-
-   /**
-    * Constructs a graph based on the pipeline.
-    *
-    * @param outGraph      resulting graph
-    */
-   void buildGraph( RPGraph& outGraph ) const;
 
    // -------------------------------------------------------------------------
    // Render targets management
@@ -122,6 +82,13 @@ public:
     * Unlocks the specified render target.
     */
    void unlockRenderTarget( const std::string& id );
+
+protected:
+   // -------------------------------------------------------------------------
+   // GraphBuilder implementation
+   // -------------------------------------------------------------------------
+   void onNodeAdded( RenderingPipelineNode* node );
+   void onNodeRemoved( RenderingPipelineNode& node );
 
 private:
    /**

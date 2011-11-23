@@ -25,94 +25,20 @@ RenderingPipeline::RenderingPipeline( const FilePath& resourceName )
 
 RenderingPipeline::~RenderingPipeline()
 {
-   m_nodes.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipeline::addNode( RenderingPipelineNode* node )
+void RenderingPipeline::onNodeAdded( RenderingPipelineNode* node )
 {
-   notify( RPO_PRE_CHANGE );
-
    addObject( node );
-   m_nodes.push_back( node );
-   
-   notify( RPO_POST_CHANGE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipeline::removeNode( RenderingPipelineNode& node )
+void RenderingPipeline::onNodeRemoved( RenderingPipelineNode& node )
 {
-   std::vector< RenderingPipelineNode* >::iterator it = std::find( m_nodes.begin(), m_nodes.end(), &node );
-   if ( it != m_nodes.end() )
-   {
-      notify( RPO_PRE_CHANGE );
-
-      m_nodes.erase( it );
-      removeObject( node.getObjectId() );
-
-      notify( RPO_POST_CHANGE );
-   }
-   else
-   {
-      ASSERT_MSG( false, "Trying to remove a non-existent rendering pipeline node" );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipeline::buildGraph( RPGraph& outGraph ) const
-{
-   // add all nodes to the graph, and find the start node while you're at it
-   RenderingPipelineNode* startNode = NULL;
-   for ( std::vector< RenderingPipelineNode* >::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
-   {
-      if ( startNode == NULL )
-      {
-         startNode = dynamic_cast< RPStartNode* >( *it );
-      }
-
-      outGraph.addNode( *it );
-   }
-   if ( startNode == NULL )
-   {
-      return;
-   }
-
-   // go through the nodes and add them to the graph
-   std::set< RenderingPipelineNode* > analyzedNodes;
-   std::list< RenderingPipelineNode* > nodesToAnalyze;
-   nodesToAnalyze.push_back( startNode );
-
-   while( !nodesToAnalyze.empty() )
-   {
-      RenderingPipelineNode* checkedNode = nodesToAnalyze.front();
-      nodesToAnalyze.pop_front();
-
-      // make sure the node's not already in the cache - we don't allow the same node to be updated twice
-      // with this algorithm
-      std::set< RenderingPipelineNode* >::const_iterator analyzedNodeIt = analyzedNodes.find( checkedNode );
-      if ( analyzedNodeIt != analyzedNodes.end() )
-      {
-         continue;
-      }
-
-      RPGraph::Index nodeIdx = outGraph.getNodeIdx( checkedNode );
-
-      std::vector< RenderingPipelineNode* > neighbors;
-      checkedNode->getSubsequentNodes( neighbors );
-      for ( std::vector< RenderingPipelineNode* >::const_iterator it = neighbors.begin(); it != neighbors.end(); ++it )
-      {
-         RPGraph::Index neighboringNodeIdx = outGraph.getNodeIdx( *it );
-
-         // create a connection in the graph
-         outGraph.connect( nodeIdx, neighboringNodeIdx );
-
-         // put he neighbor up for analysis
-         nodesToAnalyze.push_back( *it );
-      }
-   }
+   removeObject( node.getObjectId() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,12 +73,12 @@ void RenderingPipeline::removeRenderTarget( const std::string& id )
    {
       if ( m_renderTargets[i]->getTargetID() == id )
       {
-         notify( RPO_PRE_CHANGE );
+         notify( GBO_PRE_CHANGE );
 
          delete m_renderTargets[i];
          m_renderTargets.erase( m_renderTargets.begin() + i );
 
-         notify( RPO_POST_CHANGE );
+         notify( GBO_POST_CHANGE );
          break;
       }
    }
@@ -209,7 +135,7 @@ RenderTargetDescriptor& RenderingPipeline::lockRenderTarget( const std::string& 
    }
 
    m_lockedRT = id;
-   notify( RPO_PRE_CHANGE );
+   notify( GBO_PRE_CHANGE );
    return *desc;
 }
 
@@ -222,7 +148,7 @@ void RenderingPipeline::unlockRenderTarget( const std::string& id )
       throw std::runtime_error( "Trying to unlock a render target that hasn't been locked" );
    }
    m_lockedRT = "";
-   notify( RPO_POST_CHANGE );
+   notify( GBO_POST_CHANGE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

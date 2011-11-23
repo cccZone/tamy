@@ -19,8 +19,8 @@ class RenderTarget;
 class RenderTargetDescriptor;
 class RenderingView;
 class RenderingPipelineNode;
-enum RenderingPipelineOperation;
-enum RenderingPipelineNodeOperation;
+enum GraphBuilderOperation;
+enum GraphBuilderNodeOperation;
 class RuntimeDataBuffer;
 class ModelDebugScene;
 class ModelView;
@@ -44,8 +44,8 @@ enum RPMSceneId
  * A pass responsible for rendering using a rendering pipeline.
  */
 class RenderingPipelineMechanism : public RenderingMechanism,
-                                   public Observer< RenderingPipeline, RenderingPipelineOperation >,
-                                   public Observer< RenderingPipelineNode, RenderingPipelineNodeOperation >
+                                   public Observer< RenderingPipeline, GraphBuilderOperation >,
+                                   public Observer< RenderingPipelineNode, GraphBuilderNodeOperation >
 {
 private:
    /**
@@ -178,9 +178,9 @@ public:
    // Observer implementation
    // -------------------------------------------------------------------------
    void update( RenderingPipeline& subject );
-   void update( RenderingPipeline& subject, const RenderingPipelineOperation& msg );
+   void update( RenderingPipeline& subject, const GraphBuilderOperation& msg );
    void update( RenderingPipelineNode& subject );
-   void update( RenderingPipelineNode& subject, const RenderingPipelineNodeOperation& msg );
+   void update( RenderingPipelineNode& subject, const GraphBuilderNodeOperation& msg );
 
 private:
    /**

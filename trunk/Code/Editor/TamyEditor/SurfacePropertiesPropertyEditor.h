@@ -1,10 +1,10 @@
+/// @file   TamyEditor\SurfacePropertiesPropertyEditor.h
+/// @brief  material property editor
 #pragma once
 
-/// @file   TamyEditor\MaterialPropertyEditor.h
-/// @brief  material property editor
 
 #include "core\Property.h"
-#include "core-Renderer\Material.h"
+#include "core-Renderer\SurfaceProperties.h"
 #include "QPropertyEditor.h"
 
 
@@ -13,12 +13,12 @@
 /**
  * Editor widget that will edit color properties.
  */
-class MaterialPropertyEditor : public QPropertyEditor
+class SurfacePropertiesPropertyEditor : public QPropertyEditor
 {
    Q_OBJECT
 
 private:
-   TEditableProperty< Material >*   m_property;
+   TEditableProperty< SurfaceProperties >*   m_property;
 
 public:
    /**
@@ -26,8 +26,8 @@ public:
     *
     * @param property   property this editor edits
     */
-   MaterialPropertyEditor( TEditableProperty< Material >* property );
-   ~MaterialPropertyEditor();
+   SurfacePropertiesPropertyEditor( TEditableProperty< SurfaceProperties >* property );
+   ~SurfacePropertiesPropertyEditor();
 
 public slots:
    void ambientChanged( const QColor& color );

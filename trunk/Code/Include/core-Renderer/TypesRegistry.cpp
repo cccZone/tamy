@@ -19,12 +19,14 @@ REGISTER_RTTI( TriangleMesh );
 ///////////////////////////////////////////////////////////////////////////////
 
 REGISTER_RTTI( SingleTextureMaterial );
+REGISTER_RTTI( MaterialEntity );
+REGISTER_RTTI( Material );
 REGISTER_RTTI( VertexShader );
 REGISTER_RTTI( PixelShader );
 REGISTER_RTTI( FragmentShader );
 REGISTER_RTTI( Texture );
 REGISTER_RTTI( RenderTarget );
-REGISTER_RTTI( Material );
+REGISTER_RTTI( SurfaceProperties );
 REGISTER_ENUM_RTTI( VertexDescId );
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,7 +43,6 @@ REGISTER_RTTI( RPFloats2Vec4Node );
 REGISTER_RTTI( RPTextureNode );
 REGISTER_RTTI( RPFloatNode );
 REGISTER_RTTI( RPVec4Node );
-REGISTER_RTTI( RPNodeSocket );
 REGISTER_RTTI( RPNodeInput );
 REGISTER_RTTI( RPNodeOutput );
 REGISTER_RTTI( RPFloatInput );
