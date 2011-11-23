@@ -1,4 +1,4 @@
-#labels ,GraphBuilder
+#labels GraphBuilder
 =Graphs=
 
 Graphs are a building block of many engine systems, thus we provide a wide range of tools to operate on them.
@@ -140,11 +140,46 @@ TEST(GraphDijkstra, simpleGraph)
 
 ==Graph builder==
 
+It allows you to create simple graph definitions and is a proxy between a `Graph` and how the rest of the `RTTI` aware system can access it.
+
 ===Rationale===
-A `GraphBuilder` is a resource that allows to define a graph in an easy way, and serializing such a construct. Whenever needed, we can instantiate a `Graph` structure from such a builder.
 
-Why can't we serialize the `Graph` itself? - simple. In order to be able to serialize pointers to objects, we need to make them `Objects` - and that costs memory and performance.
+`Graph` on its own is a handy programming tool, but it blend well if we were to serialize it or provide it with RTTI etc.
+The reason is that it's a templated class, deprived of all unnecessary things and made that way just so that we can quickly run some algorithms on it.
 
-And since graphs tend to be used in tender code areas, we need the leanest structure possible. Thus we decided to split a graph instance from its definition.
+If we actually want to create graphs we'll be able to serialize, expose to the editor etc, we require a different tool:
+  * it should operate on arbitrary nodes and edges ( which could be RTTI `Objects` )
+  * it should be able to serialize them
+  * we should be able to put it in a `Resource` 
+  * other `Resources` should be able to store pointers to its nodes and edges
+  * we should be able to pass data between the nodes via the edges.
+
+And altough the first point is fulfilled by the `Graph` class, the rest are not, or can't be done in an easy way.
+
+===Components===
+
+  * `GraphBuilder` - represents a graph. It contains a method `buildGraph` that allows you to instantiate a `Graph` instance.
+
+  * `GraphBuilderNode` - represents a graph node. It can contain a number of named input and output sockets that define how many incoming and outgoing edges a node can have.
+
+  * `GBNodeOutput` - a socket from which a graph edge starts. It can have some data associated with it. The real strength lies in the fact that the parent node *knows* about this socket and it can access it.
+
+  * `GBNodeInput` - a socket where a graph edge ends. It *knows* what input socket it is connected to and can access it, and the parent node knows about this socket.
+
+All classes are template classes, meaning that you can define what custom implementations they'll be representing, and not worry about casting.
+
+
+===Data propagation===
+
+About the sockets - it's a powerfull mechanism that allows to exchange data between the nodes.
+So the graph can now not only be used to represent some static data, but can actually *propagate* data.
+
+How can you achieve that? Well - basic definitions don't provide that functionality, however if you chose to have it, you can create implementations that:
+  * have a data setter and getter on the output node - and the parent node can set the data.
+  * have a counterpart input node that can connect only with the proper output ( you can define what output can be connected to an input by overriding the `GBNodeInput::canConnect` method ).
+  * have a getter method on the custom input the parent block can query, and which in turn queries the data from the input.
+
+[Renderer#Rendering_pipeline Rendering pipeline] and a few other implementations use that data propagation mechanism - check it out.
+
 
 ===How to use it===
