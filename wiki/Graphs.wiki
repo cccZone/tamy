@@ -259,7 +259,7 @@ void MyGraphBuilder::onNodeRemoved( MyGraphNode& node )
 
 // ------------------- Type registration file ------------------------
 
-REGISTER_RTTI( MyGraphBuilder);
+REGISTER_RTTI( MyGraphBuilder );
 }}}
 
 
@@ -281,6 +281,8 @@ class MyGraphNode: public ResourceObject, public GraphBuilderNode< MyGraphNode, 
    DECLARE_CLASS( MyGraphNode)
 
 public:
+   virtual ~MyGraphNode() {}
+
    // -----------------------------------------------------------------
    // Object implementation
    // -----------------------------------------------------------------
@@ -333,11 +335,101 @@ void MyGraphNode::onPropertyChanged( Property& property )
 
 // ------------------- Type registration file ------------------------
 
-REGISTER_RTTI( MyGraphNode);
+REGISTER_RTTI( MyGraphNode );
 
 }}}
 
 And finally the sockets:
 
 {{{
+// ------------------------- .h file ------------------------------
+#pragma once
+
+#include "core/GraphBuilderSockets.h"
+#include "core/Object.h"
+
+
+///////////////////////////////////////////////////////////////////////
+
+class MyGraphNode;
+
+///////////////////////////////////////////////////////////////////////
+
+/**
+ * Output socket of a node.
+ */
+class MyNodeOutput : public GBNodeOutput< MyGraphNode>
+{
+   DECLARE_CLASS( MyNodeOutput )
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
+   MyNodeOutput ( const std::string& name = "" );
+   virtual ~MyNodeOutput() {}
+};
+
+///////////////////////////////////////////////////////////////////////
+
+/**
+ * Input socket of a node.
+ */
+class MyNodeInput : public GBNodeInput< MyNodeOutput >
+{
+   DECLARE_CLASS( MyNodeInput )
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
+   MyNodeInput( const std::string& name = "" );
+   virtual ~MyNodeInput() {}
+};
+
+///////////////////////////////////////////////////////////////////////
+
+// ------------------------- .cpp file ------------------------------
+
+///////////////////////////////////////////////////////////////////////
+
+BEGIN_ABSTRACT_OBJECT( MyNodeInput, Object );
+   PROPERTY( std::string, m_name );
+   PROPERTY( MyNodeOutput*, m_connectedOutput );
+   // custom properties go here
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////
+
+MyNodeInput::MyNodeInput( const std::string& name )
+   : GBNodeInput< MyNodeOutput >( name )
+{
+}
+
+//////////////////////////////////////////////////////////////////////
+
+BEGIN_ABSTRACT_OBJECT( MyNodeOutput, Object );
+   PROPERTY( std::string, m_name );
+   PROPERTY( std::vector< MyGraphNode* >, m_connectedNodes );
+   // custom properties go here
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////
+
+MyNodeOutput::MyNodeOutput( const std::string& name )
+   : GBNodeOutput< MyGraphNode >( name )
+{
+}
+
+///////////////////////////////////////////////////////////////////////
+
+// ------------------- Type registration file ------------------------
+
+REGISTER_RTTI( MyNodeInput );
+REGISTER_RTTI( MyNodeOutput);
+
 }}}
