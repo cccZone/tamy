@@ -183,3 +183,161 @@ How can you achieve that? Well - basic definitions don't provide that functional
 
 
 ===How to use it===
+
+As I mentioned, the base classes are templates, and are not `RTTI` oriented ( except for the sockets - but those are not registered and are objects just to provide future RTTI capabilites from the base class ).
+
+*COMMENT*: For simplicity sake, I'll skip all additional functionalities and describe the skeleton you have to define in order to get your graph resources up and running.
+
+First of all you need to define your own `GraphBuilder` class, like so:
+
+{{{
+// ------------------------- .h file ------------------------------
+#pragma once
+
+#include "core/Resource.h"
+#include "core/GraphBuilder.h"
+#include <vector>
+
+
+///////////////////////////////////////////////////////////////////////
+
+class MyGraphNode;
+
+///////////////////////////////////////////////////////////////////////
+
+class MyGraphBuilder: public Resource, public GraphBuilder< MyGraphBuilder, MyGraphNode>
+{
+   DECLARE_RESOURCE( MyGraphBuilder);
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param resourceName   name of the resource file
+    */
+   MyGraphBuilder( const FilePath& resourceName = FilePath() );
+
+protected:
+   // -----------------------------------------------------------------
+   // GraphBuilder implementation
+   // -----------------------------------------------------------------
+   void onNodeAdded( MyGraphNode* node );
+   void onNodeRemoved( MyGraphNode& node );
+};
+
+// ------------------------- .cpp file ------------------------------
+
+///////////////////////////////////////////////////////////////////////
+
+BEGIN_RESOURCE( MyGraphBuilder, Resource, myres, AM_BINARY );
+   PROPERTY( std::vector< MyGraphNode* >, m_nodes );
+   // ... your own additional properties go here
+END_RESOURCE();
+
+///////////////////////////////////////////////////////////////////////
+
+MyGraphBuilder::MyGraphBuilder( const FilePath& resourceName )
+   : Resource( resourceName )
+{
+}
+
+///////////////////////////////////////////////////////////////////////
+
+void MyGraphBuilder::onNodeAdded( MyGraphNode* node )
+{
+   addObject( node );
+}
+
+///////////////////////////////////////////////////////////////////////
+
+void MyGraphBuilder::onNodeRemoved( MyGraphNode& node )
+{
+   removeObject( node.getObjectId() );
+}
+
+///////////////////////////////////////////////////////////////////////
+
+// ------------------- Type registration file ------------------------
+
+REGISTER_RTTI( MyGraphBuilder);
+}}}
+
+
+Next - you have to define your node:
+
+{{{
+// ------------------------- .h file ------------------------------
+#pragma once
+
+#include "core/Resource.h"
+#include "core/GraphBuilderNode.h"
+#include "MySockets.h"
+
+
+///////////////////////////////////////////////////////////////////////
+
+class MyGraphNode: public ResourceObject, public GraphBuilderNode< MyGraphNode, MyNodeInput, MyNodeOutput >
+{
+   DECLARE_CLASS( MyGraphNode)
+
+public:
+   // -----------------------------------------------------------------
+   // Object implementation
+   // -----------------------------------------------------------------
+   void onObjectLoaded();
+   void onPropertyChanged( Property& property );
+};
+
+///////////////////////////////////////////////////////////////////////
+
+// ------------------------- .cpp file ------------------------------
+
+///////////////////////////////////////////////////////////////////////
+
+BEGIN_ABSTRACT_OBJECT( MyGraphNode, ResourceObject );
+   PROPERTY( InputsMap, m_inputs );
+   PROPERTY( OutputsMap, m_outputs );
+   // custom node properties go here
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////
+
+void MyGraphNode::onObjectLoaded()
+{
+   __super::onObjectLoaded();
+
+   onBulkSocketsInitialization();
+}
+
+///////////////////////////////////////////////////////////////////////
+
+void MyGraphNode::onPropertyChanged( Property& property )
+{
+   __super::onPropertyChanged( property );
+
+   if ( property.getName() == "m_inputs" )
+   {
+      notify( GBNO_INPUTS_CHANGED );
+   }
+   else if ( property.getName() == "m_outputs" )
+   {
+      notify( GBNO_OUTPUTS_CHANGED );
+   }
+   else
+   {
+      notify( GBNO_CHANGED );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////
+
+// ------------------- Type registration file ------------------------
+
+REGISTER_RTTI( MyGraphNode);
+
+}}}
+
+And finally the sockets:
+
+{{{
+}}}
