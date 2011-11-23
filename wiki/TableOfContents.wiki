@@ -11,6 +11,8 @@
       * [Graphs#Algorithms Algorithms]
       * [Graphs#Graph_builder Graph builder]
         * [Graphs#Rationale Rationale]
+        * [Graphs#Components Components]
+        * [Graphs#Data_propagation Data propagation]
         * [Graphs#How_to_use_it How to use it]
     * [Math Math]
     * [ Memory ]
