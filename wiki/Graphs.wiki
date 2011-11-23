@@ -543,3 +543,14 @@ node[1]->connect( "Output", node[2], "Input" );
 
 Method `GraphBuilderNode::connect` facilitates creating connection between two nodes. Simply specify the output of the original node, the target node and its input we want to connect to, and the connection will be established.
 
+
+Whenever you want to disconnect two nodes, you can use the `GraphBuilderNode::disconnect` method:
+{{{
+/**
+ * Disconnects this node from the specified node's input.
+ *
+ * @param destNode
+ * @param inputName
+ */
+void disconnect( Impl& destNode, const std::string& inputName );
+}}}
