@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>724</width>
-    <height>491</height>
+    <width>880</width>
+    <height>531</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,8 +70,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>184</width>
-               <height>378</height>
+               <width>220</width>
+               <height>418</height>
               </rect>
              </property>
              <attribute name="label">
@@ -94,8 +94,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>182</width>
-                   <height>376</height>
+                   <width>218</width>
+                   <height>416</height>
                   </rect>
                  </property>
                 </widget>
@@ -108,8 +108,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>184</width>
-               <height>378</height>
+               <width>220</width>
+               <height>418</height>
               </rect>
              </property>
              <attribute name="label">
@@ -132,8 +132,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>182</width>
-                   <height>376</height>
+                   <width>218</width>
+                   <height>416</height>
                   </rect>
                  </property>
                 </widget>
@@ -146,8 +146,8 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>181</width>
-               <height>378</height>
+               <width>220</width>
+               <height>418</height>
               </rect>
              </property>
              <attribute name="label">
@@ -228,8 +228,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>539</width>
-           <height>479</height>
+           <width>656</width>
+           <height>519</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">

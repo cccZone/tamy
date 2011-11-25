@@ -6,9 +6,8 @@
 #include "core-Renderer/ShaderNodeOperator.h"
 #include "core-Renderer/PixelShaderConstant.h"
 #include "core-Renderer/PixelShader.h"
-#include "core-Renderer/RenderingPipelineNode.h"
-#include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/Renderer.h"
+#include "core-Renderer/ShaderCompiler.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,11 +36,14 @@ void ShaderNodeOperator< TNode >::setShader( PixelShader& shader )
 
    m_shader = &shader;
 
-   const std::vector< PixelShaderConstant* >& constants = m_shader->getConstants();
+   ShaderCompiler compiler;
+   std::vector< PixelShaderConstant< TNode >* > constants;
+   compiler.compilePixelShaderConstants( m_shader->getScript(), m_shader->getEntryFunctionName().c_str(), constants );
+
    unsigned int count = constants.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      m_constants.push_back( new ConstantDef( *constants[i] ) );
+      m_constants.push_back( new ConstantDef( constants[i] ) );
       m_constants.back()->setHostNode( &m_hostNode );
    }
 }
@@ -73,9 +75,9 @@ template< typename TNode >
    unsigned int count = m_constants.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      PixelShaderConstant& constant = m_constants[i]->m_constant;
-      RPNodeInput* input = m_constants[i]->m_input;
-      constant.setValue( *comm, *input, data );
+      PixelShaderConstant< TNode >* constant = m_constants[i]->m_constant;
+      GBNodeInput< TNode >* input = m_constants[i]->m_input;
+      constant->setValue( *comm, *input, data );
    }
 
    return *comm;
@@ -86,7 +88,7 @@ template< typename TNode >
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-ShaderNodeOperator< TNode >::ConstantDef::ConstantDef( PixelShaderConstant& constant ) 
+ShaderNodeOperator< TNode >::ConstantDef::ConstantDef( PixelShaderConstant< TNode >* constant ) 
    : m_constant( constant )
    , m_input( NULL )
    , m_hostNode( NULL )
@@ -95,9 +97,18 @@ ShaderNodeOperator< TNode >::ConstantDef::ConstantDef( PixelShaderConstant& cons
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
+ShaderNodeOperator< TNode >::ConstantDef::~ConstantDef()
+{
+   delete m_constant;
+   m_constant = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename TNode >
 void ShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode )
 {
-   const std::string& inputName = m_constant.getName();
+   const std::string& inputName = m_constant->getName();
 
    if ( m_hostNode )
    {
@@ -110,8 +121,9 @@ void ShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode )
    if ( m_hostNode )
    {
       // add it to the new node
-      RPNodeInput* input = m_hostNode->findInput( inputName );
-      if ( input && !m_constant.doesTypeMatch( *input ) )
+      GBNodeInput< TNode >* input = m_hostNode->findInput( inputName );
+      Class constantDataType = m_constant->getDataType();
+      if ( input && !constantDataType.isExactlyA( input->getDataType() ) )
       {
          m_hostNode->removeInput( inputName );
          input = NULL;
@@ -119,8 +131,9 @@ void ShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode )
 
       if ( !input )
       {
-         input = m_constant.createRPNInput();
-         m_hostNode->defineInput( input );
+         input = hostNode->createInput( constantDataType, inputName );
+         hostNode->defineInput( input );
+         ASSERT_MSG( input != NULL, "No input available that's able to marshal the specified data type" );
       }
 
       m_input = input;

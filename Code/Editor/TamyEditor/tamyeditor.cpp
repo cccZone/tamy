@@ -30,9 +30,11 @@
 #include "RenderingPipelineEditor.h"
 #include "SkeletonAnimationEditor.h"
 #include "TextureEditor.h"
+#include "MaterialEditor.h"
 
 // resources
 #include "RenderingPipelineLayout.h"
+#include "MaterialLayout.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -102,6 +104,7 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
    associate< VertexShader, VertexShaderEditor >();
    associate< FragmentShader, FragmentShaderEditor >();
    associate< RenderingPipelineLayout, RenderingPipelineEditor >();
+   associate< MaterialLayout, MaterialEditor >();
    associate< SkeletonAnimation, SkeletonAnimationEditor >();
    associate< Texture, TextureEditor >();
 }

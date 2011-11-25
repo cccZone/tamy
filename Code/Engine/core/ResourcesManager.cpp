@@ -229,17 +229,24 @@ Resource* ResourcesManager::loadResource( ResourceLoader& loader )
 
 Resource& ResourcesManager::create( const FilePath& name )
 {
+   FilePath rmName;
    ResourceLoader* loader = createResourceLoader( name );
-   FilePath correctResourcePath;
-   name.changeFileExtension( loader->getOutputResourceExtension(), correctResourcePath );
+   name.changeFileExtension( loader->getOutputResourceExtension(), rmName );
 
-   Resource* res = findResource( correctResourcePath );
+   // we'll be loading a resource with the specified name ( because we may be importing
+   // something ), but then we want to create a resource with an extension
+   // assigned to the resource type.
+   // Thus this little mish-mash - when referring to the resources in the filesystem,
+   // we'll be using `name` param, and when referring to the resources
+   // kept by the ResourcesManager, we'll use the `rmName` param
+
+   Resource* res = findResource( rmName );
    if ( res == NULL )
    {
       res = loadResource( *loader );
       if ( res )
       {
-         res->setFilePath( correctResourcePath );
+         res->setFilePath( rmName );
          addResource( res );
       }
    }

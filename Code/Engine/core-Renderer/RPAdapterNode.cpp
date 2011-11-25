@@ -1,6 +1,5 @@
 #include "core-Renderer/RPAdapterNode.h"
-#include "core-Renderer/TextureSockets.h"
-#include "core-Renderer/VoidSockets.h"
+#include "core-Renderer/RenderingPipelineSockets.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

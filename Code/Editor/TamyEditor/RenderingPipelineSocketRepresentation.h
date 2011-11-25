@@ -2,49 +2,19 @@
 /// @brief  rendering pipeline's socket representation
 #pragma once
 
-#include "GraphBlock.h"
-#include "core-Renderer/RenderingPipelineSockets.h"
+#include "core-Renderer/RenderingPipelineNode.h"
+#include "PipelineSocket.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RenderingPipelineBlock;
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RenderingPipelineSocketRepresentation : public GraphBlockSocket
-{
-   DECLARE_CLASS( RenderingPipelineSocketRepresentation )
-
-private:
-   std::string          m_socketName;
-
-public:
-   /**
-    * Constructor called when the block is being deserialized.
-    */
-   RenderingPipelineSocketRepresentation();
-
-   /**
-    * Constructor called when the socket is created by a factory.
-    *
-    * @param socket        socket the node represents.
-    */
-   RenderingPipelineSocketRepresentation( GBNodeSocket& socket );
-
-   /**
-    * Returns the name of the represented socket.
-    */
-   inline const std::string& getSocketName() const { return m_socketName; }
-
-   // -------------------------------------------------------------------------
-   // GraphBlockSocket implementation
-   // -------------------------------------------------------------------------
-   Object& getSocket();
-
-protected:
-   bool onConnectionAdded( GraphBlockConnection& connection );
-   void onConnectionRemoved( GraphBlockConnection& connection );
-};
+DECLARE_PIPELINE_SOCKET( RPSVoid, RenderingPipelineNode, 224, 224, 166 );
+DECLARE_PIPELINE_SOCKET( RPSVec4, RenderingPipelineNode, 219, 255, 175 );
+DECLARE_PIPELINE_SOCKET( RPSTexture, RenderingPipelineNode, 186, 166, 221 );
+DECLARE_PIPELINE_SOCKET( RPSString, RenderingPipelineNode, 255, 209, 132 );
+DECLARE_PIPELINE_SOCKET( RPSMatrix, RenderingPipelineNode, 159, 211, 55 );
+DECLARE_PIPELINE_SOCKET( RPSInt, RenderingPipelineNode, 255, 198, 237 );
+DECLARE_PIPELINE_SOCKET( RPSFloat, RenderingPipelineNode, 163, 255, 247 );
+DECLARE_PIPELINE_SOCKET( RPSBool, RenderingPipelineNode, 186, 211, 255 );
 
 ///////////////////////////////////////////////////////////////////////////////

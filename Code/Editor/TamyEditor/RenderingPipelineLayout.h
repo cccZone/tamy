@@ -3,26 +3,23 @@
 #pragma once
 
 #include "GraphLayout.h"
-#include "core.h"
+#include "PipelineLayout.h"
+#include "core-Renderer/RenderingPipeline.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class RenderingPipelineNode;
-class RenderingPipelineBlock;
-class RenderingPipeline;
+class PipelineBlock;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Layout for a rendering pipeline
  */
-class RenderingPipelineLayout : public Resource, public GraphLayout, public GenericFactory< RenderingPipelineNode, RenderingPipelineBlock >
+class RenderingPipelineLayout : public PipelineLayout< RenderingPipeline, RenderingPipelineNode >
 {
    DECLARE_RESOURCE( RenderingPipelineLayout )
-
-private:
-   RenderingPipeline*                  m_model;
 
 public:
    /**
@@ -31,26 +28,13 @@ public:
     * @param resourceName
     */
    RenderingPipelineLayout( const FilePath& resourceName = FilePath() );
-   ~RenderingPipelineLayout();
-
-   /**
-    * Returns a rendering pipeline the layout edits.
-    */
-   RenderingPipeline& getModel() { return *m_model; }
-
-   // -------------------------------------------------------------------------
-   // GraphLayout implementation
-   // -------------------------------------------------------------------------
-   GraphBlock* createNode( const Class& type );
-   void removeNode( Object& node );
-   void getNodesClasses( std::vector< Class >& classes );
 
 protected:
    // -------------------------------------------------------------------------
-   // Resource implementation
+   // PipelineLayout implementation
    // -------------------------------------------------------------------------
-   void onResourceSave( ResourcesManager& mgr );
-   void onResourceLoaded( ResourcesManager& mgr );
+   void initBlocksFactory();
+   void initSocketsFactory( PipelineBlock& block );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,17 +1,16 @@
 #include "RPBDebugRender.h"
-#include "core-Renderer/RPDebugRendererNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBDebugRender, RenderingPipelineBlock );
+BEGIN_OBJECT( RPBDebugRender, GraphBlock );
    PROPERTY( TResourceHandle< RPDebugRendererNode >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBDebugRender::RPBDebugRender( RPDebugRendererNode& node )
-   : TRenderingPipelineBlock< RPDebugRendererNode >( node )
+   : TPipelineBlock< RPDebugRendererNode, RenderingPipelineNode >( node )
 {
    setCaption( "Debug scene" );
 }

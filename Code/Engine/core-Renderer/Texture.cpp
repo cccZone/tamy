@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( Texture, Resource, tex, AM_BINARY )
+BEGIN_RESOURCE_TWO_PARENTS( Texture, Resource, ShaderTexture, tex, AM_BINARY )
    PROPERTY( FilePath, m_texFileName )
    PROPERTY_EDIT( "Usage", TextureUsage, m_usage )
 END_RESOURCE()

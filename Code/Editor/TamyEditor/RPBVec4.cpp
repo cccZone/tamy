@@ -1,17 +1,16 @@
 #include "RPBVec4.h"
-#include "core-Renderer/RPVec4Node.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBVec4, RenderingPipelineBlock );
+BEGIN_OBJECT( RPBVec4, GraphBlock );
 PROPERTY( TResourceHandle< RPVec4Node >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBVec4::RPBVec4( RPVec4Node& node )
-   : TRenderingPipelineBlock< RPVec4Node >( node )
+   : TPipelineBlock< RPVec4Node, RenderingPipelineNode >( node )
 {
    setCaption( "Vec4" );
 }

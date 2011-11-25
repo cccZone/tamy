@@ -16,7 +16,7 @@ class RenderingPipelineMechanism;
 /**
  * A rendering pipeline node.
  */
-class RenderingPipelineNode : public ResourceObject, public GraphBuilderNode< RenderingPipelineNode, RPNodeInput, RPNodeOutput >
+class RenderingPipelineNode : public ResourceObject, public GraphBuilderNode< RenderingPipelineNode >
 {
    DECLARE_CLASS( RenderingPipelineNode )
 
@@ -29,22 +29,6 @@ public:
     * @param host    pass from the context of which the rendering takes place
     */
    void createLayout( RenderingPipelineMechanism& host ) const;
-
-   /**
-    * Called in order to initialize the node. This takes place before the pipeline
-    * is first use in the rendering process.
-    *
-    * @param host    pass from the context of which the rendering takes place
-    */
-   void initialize( RenderingPipelineMechanism& host ) const;
-
-   /**
-    * Called in order to initialize the node. This takes place once
-    * the entire pipeline stops being used for rendering and gets deinitialized.
-    *
-    * @param host    pass from the context of which the rendering takes place
-    */
-   void deinitialize( RenderingPipelineMechanism& host ) const;
    
    /**
     * Called in order to perform all rendering-related things.
@@ -52,6 +36,14 @@ public:
     * @param host    pass from the context of which the rendering takes place
     */
    void update( RenderingPipelineMechanism& host ) const;
+
+   /**
+    * Creates an input with the specified name of the specified type.
+    *
+    * @param dataType      what type of data should the input marshal
+    * @param name          input name
+    */
+   GBNodeInput< RenderingPipelineNode >* createInput( const Class& dataType, const std::string& name ) const;
 
    // -------------------------------------------------------------------------
    // Object implementation
@@ -66,22 +58,6 @@ protected:
     * @param host    pass from the context of which the rendering takes place
     */
    virtual void onCreateLayout( RenderingPipelineMechanism& host ) const {}
-
-   /**
-    * Called in order to initialize the node implementation. This takes place before the pipeline
-    * is first use in the rendering process.
-    *
-    * @param host    pass from the context of which the rendering takes place
-    */
-   virtual void onInitialize( RenderingPipelineMechanism& host ) const {}
-
-   /**
-    * Called in order to initialize the node implementation. This takes place once
-    * the entire pipeline stops being used for rendering and gets deinitialized.
-    *
-    * @param host    pass from the context of which the rendering takes place
-    */
-   virtual void onDeinitialize( RenderingPipelineMechanism& host ) const {}
    
    /**
     * Called in order to perform all rendering-related things the implementation is responsible for.

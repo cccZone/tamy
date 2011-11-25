@@ -1,13 +1,16 @@
 /// @file   core-Renderer/PixelShaderConstant.h
 /// @brief  pixel shader constant definition
-#pragma once
+#ifndef _PIXEL_SHADER_CONSTANT_H
+#define _PIXEL_SHADER_CONSTANT_H
 
 #include <string>
+#include "core/Class.h"
+#include "core/GraphBuilderSockets.h"
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPNodeInput;
 class RCBindPixelShader;
 class RuntimeDataBuffer;
 
@@ -17,6 +20,7 @@ class RuntimeDataBuffer;
  * Pixel shader constant definition, required by the RenderingPipeline
  * in order to parametrize its nodes.
  */
+template< typename TNode >
 class PixelShaderConstant
 {
 private:
@@ -31,17 +35,11 @@ public:
    const std::string& getName() const { return m_name; }
 
    /**
-    * Creates an input that should be set in the RenderingPipelineNode, so this
-    * constant can be fed proper data.
-    */
-   virtual RPNodeInput* createRPNInput() = 0;
-
-   /**
     * Checks if the existing input node has a compliant type with the one the constant required.
     *
     * @param input
     */
-   virtual bool doesTypeMatch( const RPNodeInput& input ) const = 0;
+   virtual Class getDataType() const = 0;
 
    /**
     * Sets the constant value on the specified render command. The value
@@ -51,12 +49,7 @@ public:
     * @param input
     * @param data
     */
-   virtual void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data ) = 0;
-
-   /**
-    * Returns the index of the required texture stage.
-    */
-   virtual int getRequiredTextureStageIdx() const { return -1; }
+   virtual void setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data ) = 0;
 
 protected:
    /**
@@ -72,7 +65,8 @@ protected:
 /**
  * Scalar bool constant.
  */
-class PSCBool : public PixelShaderConstant
+template< typename TNode >
+class PSCBool : public PixelShaderConstant< TNode >
 {
 private:
    bool           m_defaultVal;
@@ -89,9 +83,8 @@ public:
    // -------------------------------------------------------------------------
    // PixelShaderConstant implementation
    // -------------------------------------------------------------------------
-   RPNodeInput* createRPNInput();
-   bool doesTypeMatch( const RPNodeInput& input ) const;
-   void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data );
+   Class getDataType() const { return Class::createClass< bool >(); }
+   void setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,7 +92,8 @@ public:
 /**
  * Scalar int constant.
  */
-class PSCInt : public PixelShaderConstant
+template< typename TNode >
+class PSCInt : public PixelShaderConstant< TNode >
 {
 private:
    int           m_defaultVal;
@@ -116,9 +110,8 @@ public:
    // -------------------------------------------------------------------------
    // PixelShaderConstant implementation
    // -------------------------------------------------------------------------
-   RPNodeInput* createRPNInput();
-  bool doesTypeMatch( const RPNodeInput& input ) const;
-   void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data );
+   Class getDataType() const { return Class::createClass< int >(); }
+   void setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -126,7 +119,8 @@ public:
 /**
  * Scalar float constant.
  */
-class PSCFloat : public PixelShaderConstant
+template< typename TNode >
+class PSCFloat : public PixelShaderConstant< TNode >
 {
 private:
    float           m_defaultVal;
@@ -143,9 +137,8 @@ public:
    // -------------------------------------------------------------------------
    // PixelShaderConstant implementation
    // -------------------------------------------------------------------------
-   RPNodeInput* createRPNInput();
-   bool doesTypeMatch( const RPNodeInput& input ) const;
-   void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data );
+   Class getDataType() const { return Class::createClass< float >(); }
+   void setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -153,7 +146,8 @@ public:
 /**
  * Scalar string constant.
  */
-class PSCString : public PixelShaderConstant
+template< typename TNode >
+class PSCString : public PixelShaderConstant< TNode >
 {
 public:
    /**
@@ -166,9 +160,8 @@ public:
    // -------------------------------------------------------------------------
    // PixelShaderConstant implementation
    // -------------------------------------------------------------------------
-   RPNodeInput* createRPNInput();
-   bool doesTypeMatch( const RPNodeInput& input ) const;
-   void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data );
+   Class getDataType() const { return Class::createClass< std::string >(); }
+   void setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -176,27 +169,22 @@ public:
 /**
  * Scalar texture constant.
  */
-class PSCTexture : public PixelShaderConstant
+template< typename TNode >
+class PSCTexture : public PixelShaderConstant< TNode >
 {
-private:
-   int      m_textureStageIdx;
-
 public:
    /**
     * Constructor.
     *
     * @param name
-    * @param textureStageIdx
     */
-   PSCTexture( const char* name, int textureStageIdx );
+   PSCTexture( const char* name );
 
    // -------------------------------------------------------------------------
    // PixelShaderConstant implementation
    // -------------------------------------------------------------------------
-   RPNodeInput* createRPNInput();
-   bool doesTypeMatch( const RPNodeInput& input ) const;
-   void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data );
-   int getRequiredTextureStageIdx() const { return m_textureStageIdx; }
+   Class getDataType() const { return Class::createClass< ShaderTexture >(); }
+   void setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -204,7 +192,8 @@ public:
 /**
  * Scalar vector constant.
  */
-class PSCVec4 : public PixelShaderConstant
+template< typename TNode >
+class PSCVec4 : public PixelShaderConstant< TNode >
 {
 public:
    /**
@@ -217,9 +206,8 @@ public:
    // -------------------------------------------------------------------------
    // PixelShaderConstant implementation
    // -------------------------------------------------------------------------
-   RPNodeInput* createRPNInput();
-   bool doesTypeMatch( const RPNodeInput& input ) const;
-   void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data );
+   Class getDataType() const { return Class::createClass< D3DXVECTOR4 >(); }
+   void setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -227,7 +215,8 @@ public:
 /**
  * Matrix4x4 constant.
  */
-class PSCMatrix : public PixelShaderConstant
+template< typename TNode >
+class PSCMatrix : public PixelShaderConstant< TNode >
 {
 public:
    /**
@@ -240,9 +229,14 @@ public:
    // -------------------------------------------------------------------------
    // PixelShaderConstant implementation
    // -------------------------------------------------------------------------
-   RPNodeInput* createRPNInput();
-   bool doesTypeMatch( const RPNodeInput& input ) const;
-   void setValue( RCBindPixelShader& comm, const RPNodeInput& input, RuntimeDataBuffer& data );
+   Class getDataType() const { return Class::createClass< D3DXMATRIX >(); }
+   void setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "core-Renderer/PixelShaderConstant.inl"
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _PIXEL_SHADER_CONSTANT_H

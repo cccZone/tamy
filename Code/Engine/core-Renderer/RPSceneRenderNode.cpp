@@ -1,8 +1,7 @@
 #include "core-Renderer/RPSceneRenderNode.h"
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/Renderer.h"
-#include "core-Renderer/VoidSockets.h"
-#include "core-Renderer/TextureSockets.h"
+#include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/RenderTarget.h"
 #include "core-Renderer/RenderingView.h"
 #include "core-Renderer/SpatialRepresentation.h"
@@ -15,6 +14,7 @@
 BEGIN_OBJECT( RPSceneRenderNode, RenderingPipelineNode )
    PROPERTY_EDIT( "Rendered scene id", RPMSceneId, m_renderedSceneId );
    PROPERTY_EDIT( "Scene contents builder", RPSceneBuilder*, m_builder );
+   PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,7 @@ RPSceneRenderNode::RPSceneRenderNode()
    , m_treeMemPool( new MemoryPool( 1024 * 1024 ) )
 {
    defineInput( new RPVoidInput( "Input" ) );
-   defineOutput( new RPRenderTargetOutput( "Output" ) );
+   defineOutput( new RPTextureOutput( "Output" ) );
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -52,20 +52,7 @@ void RPSceneRenderNode::onPropertyChanged( Property& property )
 void RPSceneRenderNode::onCreateLayout( RenderingPipelineMechanism& host ) const
 {
    host.data().registerVar( m_renderTarget );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPSceneRenderNode::onInitialize( RenderingPipelineMechanism& host ) const
-{
-   host.data()[ m_renderTarget ] = getOutput< RPRenderTargetOutput >( "Output" ).getRenderTarget( host.data() );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPSceneRenderNode::onDeinitialize( RenderingPipelineMechanism& host ) const
-{
-   host.data()[ m_renderTarget ] = NULL;
+   host.data()[ m_renderTarget ] = &host.getRenderTarget( m_renderTargetId );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

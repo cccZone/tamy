@@ -49,9 +49,6 @@
     <Filter Include="Mechanisms\RenderingPipeline\Nodes">
       <UniqueIdentifier>{b7de2671-afb7-471e-9881-7dd4812c6bc1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline\Sockets">
-      <UniqueIdentifier>{a13cfdb3-3552-48ee-a50d-dc079e4927c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Mechanisms\OverlayRenderer">
       <UniqueIdentifier>{b356757b-adc7-4be2-a1ed-247c79d751d8}</UniqueIdentifier>
     </Filter>
@@ -85,11 +82,14 @@
     <Filter Include="Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders">
       <UniqueIdentifier>{a95137c7-8213-4a7d-aa9f-9256f0fc932e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mechanisms\Tools">
+    <Filter Include="Tools">
       <UniqueIdentifier>{5a93e70c-6c1d-4bda-9166-812a8da9be22}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphs">
-      <UniqueIdentifier>{40ed0d27-7939-425a-a378-8bee3a62c426}</UniqueIdentifier>
+    <Filter Include="Materials\MaterialGraph">
+      <UniqueIdentifier>{bfbc0eb3-edbe-4ae2-8c6d-4b404b3548e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials\MaterialGraph\Nodes">
+      <UniqueIdentifier>{01a3a4f1-9e01-4da8-85f4-d33414f68935}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -195,15 +195,6 @@
     <ClCompile Include="RenderingPipelineSockets.cpp">
       <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
-    <ClCompile Include="TextureSockets.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="FloatSockets.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="VoidSockets.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
@@ -231,24 +222,6 @@
     </ClCompile>
     <ClCompile Include="RPSBComputed.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
-    </ClCompile>
-    <ClCompile Include="BoolSockets.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="IntSockets.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="StringSockets.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="Vec4Sockets.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="PixelShaderConstant.cpp">
-      <Filter>Mechanisms\Tools</Filter>
-    </ClCompile>
-    <ClCompile Include="MatrixSockets.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
     </ClCompile>
     <ClCompile Include="RPAdapterNode.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
@@ -289,14 +262,38 @@
     <ClCompile Include="SurfaceProperties.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Materials\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="MaterialEntity.cpp">
       <Filter>Materials\Entities</Filter>
     </ClCompile>
     <ClCompile Include="RenderTargetDescriptor.cpp">
       <Filter>Mechanisms\RenderingPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="MNPixelShader.cpp">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="MNTexture.cpp">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="MNFloat.cpp">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="MNVec4.cpp">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="MNCamera.cpp">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="MNSpatialEntity.cpp">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Materials\MaterialGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialNode.cpp">
+      <Filter>Materials\MaterialGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialSockets.cpp">
+      <Filter>Materials\MaterialGraph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -322,7 +319,10 @@
       <Filter>Core\Resources</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\ShaderNodeOperator.inl">
-      <Filter>Mechanisms\Tools</Filter>
+      <Filter>Tools</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\PixelShaderConstant.inl">
+      <Filter>Tools</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -459,15 +459,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h">
       <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\TextureSockets.h">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\FloatSockets.h">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\VoidSockets.h">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h">
       <Filter>Materials\Resources</Filter>
     </ClInclude>
@@ -517,26 +508,11 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPSBComputed.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\BoolSockets.h">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\IntSockets.h">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\StringSockets.h">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Vec4Sockets.h">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h">
-      <Filter>Mechanisms\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\MatrixSockets.h">
-      <Filter>Mechanisms\RenderingPipeline\Sockets</Filter>
+      <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ShaderNodeOperator.h">
-      <Filter>Mechanisms\Tools</Filter>
+      <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
@@ -574,14 +550,41 @@
     <ClInclude Include="..\..\Include\core-Renderer\SurfaceProperties.h">
       <Filter>Materials\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\Material.h">
-      <Filter>Materials\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MaterialEntity.h">
       <Filter>Materials\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h">
       <Filter>Mechanisms\RenderingPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MNPixelShader.h">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MNTexture.h">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MNCamera.h">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MNFloat.h">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MNSpatialEntity.h">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MNVec4.h">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Material.h">
+      <Filter>Materials\MaterialGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MaterialNode.h">
+      <Filter>Materials\MaterialGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MaterialSockets.h">
+      <Filter>Materials\MaterialGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPFloats2Vec4Node.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -37,9 +37,6 @@
     <Filter Include="ResourceEditors\RenderingPipelineEditor\Blocks">
       <UniqueIdentifier>{684af1ca-eef5-4500-a6a7-ed0877e768ec}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ResourceEditors\RenderingPipelineEditor\Sockets">
-      <UniqueIdentifier>{6bd35b41-b88a-4898-b6da-78786d103805}</UniqueIdentifier>
-    </Filter>
     <Filter Include="QtImplementation">
       <UniqueIdentifier>{7548806f-c12e-446e-9b66-1298751745ab}</UniqueIdentifier>
     </Filter>
@@ -129,6 +126,15 @@
     <Filter Include="ResourceEditors\ShaderEditors">
       <UniqueIdentifier>{01274f29-65ff-44c8-a660-7a2d3ecb06f3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\MaterialEditor">
+      <UniqueIdentifier>{83042337-b409-4974-ba49-8528b1653b4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\MaterialEditor\Blocks">
+      <UniqueIdentifier>{c45dca51-9a6c-439e-84cf-1d63e145a83d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\PipelineWidget">
+      <UniqueIdentifier>{916cf57c-05c0-4f4b-9ce2-2c0bfce877e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -179,9 +185,6 @@
     <ClInclude Include="RPBPostProcess.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
-    <ClInclude Include="RenderingPipelineBlock.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
-    </ClInclude>
     <ClInclude Include="RPBStart.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
@@ -199,15 +202,6 @@
     </ClInclude>
     <ClInclude Include="RenderingPipelineSocketRepresentation.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="RPSFloat.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="RPSTexture.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="RPSVoid.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
     </ClInclude>
     <ClInclude Include="RPBAdapter.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
@@ -287,21 +281,6 @@
     <ClInclude Include="ResourceEditor.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="RPSBool.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="RPSInt.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="RPSString.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="RPSVec4.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClInclude>
-    <ClInclude Include="RPSMatrix.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClInclude>
     <ClInclude Include="RPBFloats2Vec4.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
@@ -325,6 +304,45 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_pixelshadereditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_materialeditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialLayout.h">
+      <Filter>ResourceEditors\MaterialEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialSocketRepresentation.h">
+      <Filter>ResourceEditors\MaterialEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="MBPixelShader.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MBSpatialEntity.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MBCamera.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MBTexture.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MBFloat.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MBVec4.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineSocket.h">
+      <Filter>Widgets\PipelineWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineSocket.inl">
+      <Filter>Widgets\PipelineWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineBlock.h">
+      <Filter>Widgets\PipelineWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineLayout.h">
+      <Filter>Widgets\PipelineWidget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -505,9 +523,6 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_GraphLayout.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="RenderingPipelineBlock.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
-    </ClCompile>
     <ClCompile Include="IntPropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
@@ -540,15 +555,6 @@
     </ClCompile>
     <ClCompile Include="RenderingPipelineSocketRepresentation.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSFloat.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSTexture.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSVoid.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
     </ClCompile>
     <ClCompile Include="TypesRegistry.cpp" />
     <ClCompile Include="EnumPropertyEditor.cpp">
@@ -698,21 +704,6 @@
     <ClCompile Include="GeneratedFiles\Template\moc_ObjectPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
-    <ClCompile Include="RPSBool.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSInt.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSString.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSVec4.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSMatrix.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Sockets</Filter>
-    </ClCompile>
     <ClCompile Include="RPBFloats2Vec4.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
@@ -788,6 +779,45 @@
     <ClCompile Include="SurfacePropertiesPropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
     </ClCompile>
+    <ClCompile Include="MaterialEditor.cpp">
+      <Filter>ResourceEditors\MaterialEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MaterialEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_MaterialEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_MaterialEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialLayout.cpp">
+      <Filter>ResourceEditors\MaterialEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialSocketRepresentation.cpp">
+      <Filter>ResourceEditors\MaterialEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="MBPixelShader.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="MBSpatialEntity.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="MBCamera.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="MBTexture.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="MBFloat.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="MBVec4.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineBlock.cpp">
+      <Filter>Widgets\PipelineWidget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -802,8 +832,11 @@
     <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.psh">
       <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
     </None>
-    <None Include="RenderingPipelineBlock.inl">
-      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    <None Include="PipelineBlock.inl">
+      <Filter>Widgets\PipelineWidget</Filter>
+    </None>
+    <None Include="PipelineLayout.inl">
+      <Filter>Widgets\PipelineWidget</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -950,6 +983,12 @@
     </CustomBuild>
     <CustomBuild Include="SurfacePropertiesPropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MaterialEditor.h">
+      <Filter>ResourceEditors\MaterialEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="materialeditor.ui">
+      <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

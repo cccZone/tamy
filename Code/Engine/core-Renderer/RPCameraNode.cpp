@@ -1,8 +1,7 @@
 #include "core-Renderer/RPCameraNode.h"
 #include "core-Renderer/Camera.h"
 #include "core-Renderer/Renderer.h"
-#include "core-Renderer/FloatSockets.h"
-#include "core-Renderer/MatrixSockets.h"
+#include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/RenderingPipelineMechanism.h"
 
 

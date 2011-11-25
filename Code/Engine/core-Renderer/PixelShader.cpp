@@ -30,12 +30,6 @@ PixelShader::PixelShader( const FilePath& resourceName )
 
 PixelShader::~PixelShader()
 {
-   unsigned int count = m_constants.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      delete m_constants[i];
-   }
-   m_constants.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,7 +38,7 @@ void PixelShader::onResourceLoaded( ResourcesManager& mgr )
 {
    __super::onResourceLoaded( mgr );
 
-   parseShaderConstants();
+   parseTextureStages();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,7 +47,7 @@ void PixelShader::setScript( const std::string& script )
 { 
    m_script = script;
 
-   parseShaderConstants();
+   parseTextureStages();
    setDirty(); 
 }
 
@@ -66,52 +60,26 @@ ShaderParam< PixelShader >* PixelShader::createTextureSetter( const std::string&
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PixelShader::parseShaderConstants()
+void PixelShader::parseTextureStages()
 {
-   // delete old constants
-   unsigned int count = m_constants.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      delete m_constants[i];
-   }
-   m_constants.clear();
-
    // parse constants
    ShaderCompiler compiler;
-   compiler.compilePixelShader( m_script, m_entryFunctionName.c_str(), &m_constants );
+   m_textureStageName.clear();
+   compiler.compilePixelShaderTextureStages( m_script, m_entryFunctionName.c_str(), m_textureStageName );
 
    // resize the number of supported texture
-   int maxTexStageIdx = -1;
-   count = m_constants.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   unsigned int count = m_textureStageName.size();
+   if ( count > m_textureStages.size() )
    {
-      int idx = m_constants[i]->getRequiredTextureStageIdx();
-      if ( idx < 0 )
-      {
-         continue;
-      }
-
-      if ( maxTexStageIdx < idx )
-      {
-         maxTexStageIdx = idx;
-      }
-      if ( idx >= (int)m_textureStages.size() )
-      {
-         m_textureStages.resize( idx + 1 );
-      }
-      if ( idx >= (int)m_textureStageName.size() )
-      {
-         m_textureStageName.resize( idx + 1 );
-      }
-
-      m_textureStageName[idx] = m_constants[i]->getName();
+      m_textureStages.resize( count );
    }
-
-   // remove the unnecessary texture stages
-   ++maxTexStageIdx;
-   while ( maxTexStageIdx < (int)m_textureStages.size() )
+   else
    {
-      m_textureStages.pop_back();
+      // remove the unnecessary texture stages
+      while ( count < (int)m_textureStages.size() )
+      {
+         m_textureStages.pop_back();
+      }
    }
 }
 

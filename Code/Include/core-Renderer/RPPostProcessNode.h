@@ -24,11 +24,12 @@ class RPPostProcessNode : public RenderingPipelineNode
 
 private:
    // static data
-   PixelShader*                                    m_shader;
+   PixelShader*                                                   m_shader;
+   std::string                                                    m_renderTargetId;
 
    // runtime data
-   ShaderNodeOperator< RenderingPipelineNode >*    m_shaderNode;
-   TRuntimeVar< RenderTarget* >                    m_renderTarget;
+   ShaderNodeOperator< RenderingPipelineNode >*                   m_shaderNode;
+   TRuntimeVar< RenderTarget* >                                   m_renderTarget;
 
 public:
    RPPostProcessNode();
@@ -38,8 +39,6 @@ public:
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
    void onCreateLayout( RenderingPipelineMechanism& host ) const;
-   void onInitialize( RenderingPipelineMechanism& host ) const;
-   void onDeinitialize( RenderingPipelineMechanism& host ) const;
    void onUpdate( RenderingPipelineMechanism& host ) const;
 
    // -------------------------------------------------------------------------

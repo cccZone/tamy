@@ -1,17 +1,16 @@
 #include "RPBStart.h"
-#include "core-Renderer/RPStartNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBStart, RenderingPipelineBlock );
+BEGIN_OBJECT( RPBStart, GraphBlock );
    PROPERTY( TResourceHandle< RPStartNode >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBStart::RPBStart( RPStartNode& node )
-   : TRenderingPipelineBlock< RPStartNode >( node )
+   : TPipelineBlock< RPStartNode, RenderingPipelineNode >( node )
 {
    setCaption( "Start" );
 }

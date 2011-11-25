@@ -2,20 +2,17 @@
 /// @brief  rendering pipeline block representing a rendering process adapter node
 #pragma once
 
-#include "RenderingPipelineBlock.h"
+#include "core-Renderer/RPAdapterNode.h"
+#include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RPAdapterNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Rendering pipeline block representing a rendering process start node.
  */
-class RPBAdapter : public TRenderingPipelineBlock< RPAdapterNode >
+class RPBAdapter : public TPipelineBlock< RPAdapterNode, RenderingPipelineNode >
 {
    DECLARE_CLASS( RPBAdapter )
 
@@ -23,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBAdapter() : TRenderingPipelineBlock< RPAdapterNode >() {}
+   RPBAdapter() : TPipelineBlock< RPAdapterNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

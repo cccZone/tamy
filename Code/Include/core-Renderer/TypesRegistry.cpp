@@ -18,9 +18,9 @@ REGISTER_RTTI( TriangleMesh );
 
 ///////////////////////////////////////////////////////////////////////////////
 
+REGISTER_RTTI( ShaderTexture );
 REGISTER_RTTI( SingleTextureMaterial );
 REGISTER_RTTI( MaterialEntity );
-REGISTER_RTTI( Material );
 REGISTER_RTTI( VertexShader );
 REGISTER_RTTI( PixelShader );
 REGISTER_RTTI( FragmentShader );
@@ -28,6 +28,25 @@ REGISTER_RTTI( Texture );
 REGISTER_RTTI( RenderTarget );
 REGISTER_RTTI( SurfaceProperties );
 REGISTER_ENUM_RTTI( VertexDescId );
+
+///////////////////////////////////////////////////////////////////////////////
+
+REGISTER_RTTI( Material );
+REGISTER_RTTI( MaterialNode );
+REGISTER_RTTI( MNCamera );
+REGISTER_RTTI( MNFloat );
+REGISTER_RTTI( MNPixelShader );
+REGISTER_RTTI( MNSpatialEntity );
+REGISTER_RTTI( MNTexture );
+REGISTER_RTTI( MNVec4 );
+REGISTER_RTTI( MSFloatInput );
+REGISTER_RTTI( MSFloatOutput );
+REGISTER_RTTI( MSMatrixInput );
+REGISTER_RTTI( MSMatrixOutput );
+REGISTER_RTTI( MSTextureInput );
+REGISTER_RTTI( MSTextureOutput );
+REGISTER_RTTI( MSVec4Input );
+REGISTER_RTTI( MSVec4Output );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,14 +62,10 @@ REGISTER_RTTI( RPFloats2Vec4Node );
 REGISTER_RTTI( RPTextureNode );
 REGISTER_RTTI( RPFloatNode );
 REGISTER_RTTI( RPVec4Node );
-REGISTER_RTTI( RPNodeInput );
-REGISTER_RTTI( RPNodeOutput );
 REGISTER_RTTI( RPFloatInput );
 REGISTER_RTTI( RPFloatOutput );
 REGISTER_RTTI( RPTextureInput );
 REGISTER_RTTI( RPTextureOutput );
-REGISTER_RTTI( RPImageOutput );
-REGISTER_RTTI( RPRenderTargetOutput );
 REGISTER_RTTI( RPVoidInput );
 REGISTER_RTTI( RPVoidOutput );
 REGISTER_RTTI( RPBoolInput );

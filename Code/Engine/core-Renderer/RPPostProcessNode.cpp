@@ -3,7 +3,7 @@
 #include "core-Renderer/FullscreenQuad.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/RenderTarget.h"
-#include "core-Renderer/TextureSockets.h"
+#include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/PixelShader.h"
 #include "core-Renderer/PixelShaderConstant.h"
 
@@ -12,6 +12,7 @@
 
 BEGIN_OBJECT( RPPostProcessNode, RenderingPipelineNode );
    PROPERTY_EDIT( "Pixel shader", PixelShader*, m_shader );
+   PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,7 +21,7 @@ RPPostProcessNode::RPPostProcessNode()
    : m_shader( NULL )
    , m_shaderNode( NULL )
 {
-   defineOutput( new RPRenderTargetOutput( "Output" ) );
+   defineOutput( new RPTextureOutput( "Output" ) );
 
    m_shaderNode = new ShaderNodeOperator< RenderingPipelineNode >( *this );
 }
@@ -74,20 +75,8 @@ void RPPostProcessNode::onObjectLoaded()
 void RPPostProcessNode::onCreateLayout( RenderingPipelineMechanism& host ) const
 {
    host.data().registerVar( m_renderTarget );
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-void RPPostProcessNode::onInitialize( RenderingPipelineMechanism& host ) const
-{
-   host.data()[ m_renderTarget ] = getOutput< RPRenderTargetOutput >( "Output" ).getRenderTarget( host.data() );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPPostProcessNode::onDeinitialize( RenderingPipelineMechanism& host ) const
-{
-   host.data()[ m_renderTarget ] = NULL;
+   host.data()[ m_renderTarget ] = &host.getRenderTarget( m_renderTargetId );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

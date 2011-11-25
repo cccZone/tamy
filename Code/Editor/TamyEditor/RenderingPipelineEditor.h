@@ -1,9 +1,7 @@
+/// @file   TamyEditor\RenderingPipelineEditor.h
+/// @brief  Editor allowing to edit rendering pipeline resources
 #pragma once
 
-/// @file   TamyEditor\RenderingPipelineEditor.h
-/// @brief  Editor allowing to edit a rendering pipeline resource
-
-#include <QtGui/QMainWindow>
 #include "ui_renderingpipelineeditor.h"
 #include "ResourceEditor.h"
 #include <QListWidget>

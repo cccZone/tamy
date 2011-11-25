@@ -2,20 +2,17 @@
 /// @brief  rendering pipeline block representing a texture provider node
 #pragma once
 
-#include "RenderingPipelineBlock.h"
+#include "core-Renderer/RPTextureNode.h"
+#include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RPTextureNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Rendering pipeline block representing a texture provider node.
  */
-class RPBTexture : public TRenderingPipelineBlock< RPTextureNode >
+class RPBTexture : public TPipelineBlock< RPTextureNode, RenderingPipelineNode >
 {
    DECLARE_CLASS( RPBTexture )
 
@@ -23,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBTexture() : TRenderingPipelineBlock< RPTextureNode >() {}
+   RPBTexture() : TPipelineBlock< RPTextureNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

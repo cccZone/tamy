@@ -214,6 +214,29 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// Declares a specific resource
+#define BEGIN_RESOURCE_TWO_PARENTS( ClassName, Parent1ClassName, Parent2ClassName, Extension, AccessMode )   \
+class RegisterResource##Extension                                             \
+   {                                                                          \
+   public:                                                                    \
+   RegisterResource##Extension()                                              \
+      {                                                                       \
+      TypeID< ClassName > type;                                               \
+      Resource::registerResource( #Extension, Resource::AccessMode, type.name() ); \
+}                                                                             \
+};                                                                            \
+   RegisterResource##Extension resourceTypeRegistryFor_##Extension;           \
+   const char* ClassName::getExtension() { return #Extension; }               \
+   const char* ClassName::getVirtualExtension() { return ClassName::getExtension(); } \
+   BEGIN_RTTI(ClassName)                                                      \
+      PARENT(Parent1ClassName)                                                \
+      PARENT(Parent2ClassName)                                                \
+   END_RTTI                                                                   \
+   IMPLEMENT_OBJECT(ClassName)
+
+
+///////////////////////////////////////////////////////////////////////////////
+
 #define END_RESOURCE() END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////

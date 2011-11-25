@@ -1,6 +1,7 @@
 #include "core-Renderer/MaterialEntity.h"
 #include "core-Renderer/Material.h"
 #include "core/RuntimeData.h"
+#include "core-Renderer/MNPixelShader.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,14 +64,27 @@ void MaterialEntity::onPropertyChanged( Property& property )
 
 void MaterialEntity::initializeMaterial()
 {
-   ASSERT( m_dataBuf == NULL );
+   if ( !m_material )
+   {
+      return;
+   }
+   /*
+   // create the material graph
+   Graph< MaterialNode* > materialGraph;
+   m_material->buildGraph< MNPixelShader >( materialGraph );
+
+   std::vector< Graph< MaterialNode* >::Index > sortedNodes;
+   GraphTopologicalSort( sortedNodes, graph );
+
+   for ( std::vector< Graph< MaterialNode* >::Index >::const_iterator it = sortedNodes.begin(); it != sortedNodes.end(); ++it )
+   {
+      m_nodesQueue.push_back( graph.getNode( *it ) );
+   }
 
    m_dataBuf = new RuntimeDataBuffer();
 
-   if ( m_material )
-   {
-      m_material->initialize( *this, *m_dataBuf );
-   }
+   // initialize the nodes
+   */
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,11 +93,6 @@ void MaterialEntity::deinitializeMaterial()
 {
    ASSERT( m_dataBuf != NULL );
 
-   if ( m_material )
-   {
-      m_material->deinitialize( *this, *m_dataBuf );
-   }
-
    delete m_dataBuf; m_dataBuf = NULL;
 }
 
@@ -91,20 +100,12 @@ void MaterialEntity::deinitializeMaterial()
 
 void MaterialEntity::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const
 {
-   if ( m_material )
-   {
-      m_material->onPreRender( renderer, *m_dataBuf );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MaterialEntity::onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const
 {
-   if ( m_material )
-   {
-      m_material->onPreRender( renderer, *m_dataBuf );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

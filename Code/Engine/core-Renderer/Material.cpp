@@ -1,5 +1,6 @@
 #include "core-Renderer/Material.h"
 #include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/MaterialNode.h"
 #include "core-Renderer/Renderer.h"
 #include "core/RuntimeData.h"
 
@@ -7,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_RESOURCE( Material, Resource, tmat, AM_BINARY )
+   PROPERTY( std::vector< MaterialNode* >, m_nodes );
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,26 +26,16 @@ Material::~Material()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Material::initialize( MaterialEntity& hostEntity, RuntimeDataBuffer& data ) const
+void Material::onNodeAdded( MaterialNode* node )
 {
+   addObject( node );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Material::deinitialize( MaterialEntity& hostEntity, RuntimeDataBuffer& data ) const
+void Material::onNodeRemoved( MaterialNode& node )
 {
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Material::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Material::onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const
-{
+   removeObject( node.getObjectId() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

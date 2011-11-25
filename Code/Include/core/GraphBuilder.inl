@@ -52,7 +52,7 @@ void GraphBuilder< Impl, NodeType >::removeNode( NodeType& node )
    }
    else
    {
-      ASSERT_MSG( false, "Trying to remove a non-existent rendering pipeline node" );
+      ASSERT_MSG( false, "Trying to remove a non-existing graph node" );
    }
 }
 
@@ -67,10 +67,10 @@ void GraphBuilder< Impl, NodeType >::buildGraph( Graph< NodeType* >& outGraph ) 
    {
       if ( startNode == NULL )
       {
-         startNode = DynamicCast< StartNodeType >( *it );
+         startNode = dynamic_cast< StartNodeType* >( *it );
       }
 
-      outGraph.addNode( DynamicCast< NodeType >( *it ) );
+      outGraph.addNode( dynamic_cast< NodeType* >( *it ) );
    }
    if ( startNode == NULL )
    {

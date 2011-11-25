@@ -1,4 +1,7 @@
-#pragma once
+/// @file   dx9-Renderer/DX9Renderer.h
+/// @brief  DirectX9 renderer implementation
+#ifndef _DX9_RENDERER_H
+#define _DX9_RENDERER_H
 
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\ShaderTexture.h"
@@ -274,3 +277,5 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#endif // _DX9_RENDERER_H

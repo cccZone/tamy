@@ -2,20 +2,17 @@
 /// @brief  rendering pipeline block representing a node that packs 4 floats into a vector
 #pragma once
 
-#include "RenderingPipelineBlock.h"
+#include "core-Renderer/RPFloats2Vec4Node.h"
+#include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RPFloats2Vec4Node;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Rendering pipeline block representing a node that packs 4 floats into a vector.
  */
-class RPBFloats2Vec4 : public TRenderingPipelineBlock< RPFloats2Vec4Node >
+class RPBFloats2Vec4 : public TPipelineBlock< RPFloats2Vec4Node, RenderingPipelineNode >
 {
    DECLARE_CLASS( RPBFloats2Vec4 )
 
@@ -23,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBFloats2Vec4() : TRenderingPipelineBlock< RPFloats2Vec4Node >() {}
+   RPBFloats2Vec4() : TPipelineBlock< RPFloats2Vec4Node, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

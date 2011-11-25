@@ -2,20 +2,17 @@
 /// @brief  rendering pipeline block representing a node that renders scenes
 #pragma once
 
-#include "RenderingPipelineBlock.h"
+#include "core-Renderer/RPSceneRenderNode.h"
+#include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RPSceneRenderNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Rendering pipeline block representing a node that renders scenes.
  */
-class RPBSceneRender : public TRenderingPipelineBlock< RPSceneRenderNode >
+class RPBSceneRender : public TPipelineBlock< RPSceneRenderNode, RenderingPipelineNode >
 {
    DECLARE_CLASS( RPBSceneRender )
 
@@ -23,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBSceneRender() : TRenderingPipelineBlock< RPSceneRenderNode >() {}
+   RPBSceneRender() : TPipelineBlock< RPSceneRenderNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

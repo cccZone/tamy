@@ -152,6 +152,9 @@
     <ClCompile Include="MemoryPoolTests.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
+    <ClCompile Include="GraphBuilderTests.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">

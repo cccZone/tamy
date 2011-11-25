@@ -2,20 +2,17 @@
 /// @brief  rendering pipeline block representing a vector provider node
 #pragma once
 
-#include "RenderingPipelineBlock.h"
+#include "core-Renderer/RPVec4Node.h"
+#include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RPVec4Node;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Rendering pipeline block representing a vector provider node.
  */
-class RPBVec4 : public TRenderingPipelineBlock< RPVec4Node >
+class RPBVec4 : public TPipelineBlock< RPVec4Node, RenderingPipelineNode >
 {
    DECLARE_CLASS( RPBVec4 )
 
@@ -23,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBVec4() : TRenderingPipelineBlock< RPVec4Node >() {}
+   RPBVec4() : TPipelineBlock< RPVec4Node, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

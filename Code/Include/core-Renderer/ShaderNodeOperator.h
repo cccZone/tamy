@@ -4,16 +4,13 @@
 #define _SHADER_NODE_OPERATOR_H
 
 #include <vector>
-
+#include "core-Renderer/PixelShaderConstant.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class PixelShader;
-class PixelShaderConstant;
-class RenderingPipelineNode;
 class Renderer;
 class RuntimeDataBuffer;
-class RPNodeInput;
 class RCBindPixelShader;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,11 +25,12 @@ class ShaderNodeOperator
 private:
    struct ConstantDef
    {
-      PixelShaderConstant&             m_constant;
-      RPNodeInput*                     m_input;
+      PixelShaderConstant< TNode >*    m_constant;
+      GBNodeInput< TNode >*            m_input;
       TNode*                           m_hostNode;
 
-      ConstantDef( PixelShaderConstant& constant );
+      ConstantDef( PixelShaderConstant< TNode >* constant );
+      ~ConstantDef();
       void setHostNode( TNode* hostNode );
    };
 

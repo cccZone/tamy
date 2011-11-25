@@ -1,17 +1,16 @@
 #include "RPBAdapter.h"
-#include "core-Renderer/RPAdapterNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBAdapter, RenderingPipelineBlock );
-PROPERTY( TResourceHandle< RPAdapterNode >*, m_node );
+BEGIN_OBJECT( RPBAdapter, GraphBlock );
+   PROPERTY( TResourceHandle< RPAdapterNode >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBAdapter::RPBAdapter( RPAdapterNode& node )
-   : TRenderingPipelineBlock< RPAdapterNode >( node )
+   : TPipelineBlock< RPAdapterNode, RenderingPipelineNode >( node )
 {
    setCaption( "Adapter" );
 }

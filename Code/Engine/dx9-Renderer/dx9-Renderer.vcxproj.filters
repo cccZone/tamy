@@ -198,6 +198,9 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderIncludeLoader.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderConstantsCompiler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
@@ -220,6 +223,9 @@
     </None>
     <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\DepthFunctions.shl">
       <Filter>Shaders\Lib</Filter>
+    </None>
+    <None Include="..\..\Include\dx9-Renderer\DX9ShaderConstantsCompiler.inl">
+      <Filter>Core</Filter>
     </None>
   </ItemGroup>
 </Project>

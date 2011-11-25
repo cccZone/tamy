@@ -22,6 +22,7 @@ ClassesRegistry::ClassesRegistry()
    defineClass< double >();
    defineClass< std::string >();
    defineClass< D3DXVECTOR3 >();
+   defineClass< D3DXVECTOR4 >();
    defineClass< D3DXMATRIX >();
    defineClass< D3DXQUATERNION >();
 }
