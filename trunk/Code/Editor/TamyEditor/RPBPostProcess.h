@@ -2,17 +2,14 @@
 /// @brief  rendering pipeline block representing a single post process stage
 #pragma once
 
-#include "RenderingPipelineBlock.h"
+#include "core-Renderer/RPPostProcessNode.h"
+#include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPPostProcessNode;
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RPBPostProcess : public TRenderingPipelineBlock< RPPostProcessNode >
+class RPBPostProcess : public TPipelineBlock< RPPostProcessNode, RenderingPipelineNode >
 {
    DECLARE_CLASS( RPBPostProcess )
 
@@ -20,7 +17,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBPostProcess() : TRenderingPipelineBlock< RPPostProcessNode >() {}
+   RPBPostProcess() : TPipelineBlock< RPPostProcessNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

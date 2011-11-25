@@ -1,5 +1,5 @@
 #include "core-Renderer/RPFloatNode.h"
-#include "core-Renderer/FloatSockets.h"
+#include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/RenderingPipelineMechanism.h"
 
 

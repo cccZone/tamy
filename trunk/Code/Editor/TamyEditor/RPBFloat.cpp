@@ -1,17 +1,16 @@
 #include "RPBFloat.h"
-#include "core-Renderer/RPFloatNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBFloat, RenderingPipelineBlock );
+BEGIN_OBJECT( RPBFloat, GraphBlock );
 PROPERTY( TResourceHandle< RPFloatNode >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBFloat::RPBFloat( RPFloatNode& node )
-   : TRenderingPipelineBlock< RPFloatNode >( node )
+   : TPipelineBlock< RPFloatNode, RenderingPipelineNode >( node )
 {
    setCaption( "Float" );
 }

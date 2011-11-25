@@ -2,20 +2,17 @@
 /// @brief  rendering pipeline block representing a float value provider node
 #pragma once
 
-#include "RenderingPipelineBlock.h"
+#include "core-Renderer/RPFloatNode.h"
+#include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RPFloatNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Rendering pipeline block representing a float value provider node.
  */
-class RPBFloat : public TRenderingPipelineBlock< RPFloatNode >
+class RPBFloat : public TPipelineBlock< RPFloatNode, RenderingPipelineNode >
 {
    DECLARE_CLASS( RPBFloat )
 
@@ -23,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBFloat() : TRenderingPipelineBlock< RPFloatNode >() {}
+   RPBFloat() : TPipelineBlock< RPFloatNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

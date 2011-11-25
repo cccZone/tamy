@@ -88,9 +88,23 @@
 #include "core-Renderer\SingleTextureMaterial.h"
 #include "core-Renderer\MaterialEntity.h"
 // ----------------------------------------------------------------------------
-// --> Resources
+// --> MaterialGraph
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Material.h"
+#include "core-Renderer\MaterialNode.h"
+#include "core-Renderer\MaterialSockets.h"
+// ----------------------------------------------------------------------------
+// ----> Nodes
+// ----------------------------------------------------------------------------
+#include "core-Renderer\MNCamera.h"
+#include "core-Renderer\MNFloat.h"
+#include "core-Renderer\MNPixelShader.h"
+#include "core-Renderer\MNSpatialEntity.h"
+#include "core-Renderer\MNTexture.h"
+#include "core-Renderer\MNVec4.h"
+// ----------------------------------------------------------------------------
+// --> Resources
+// ----------------------------------------------------------------------------
 #include "core-Renderer\SurfaceProperties.h"
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\PixelShader.h"
@@ -139,17 +153,6 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer/RPSBTextured.h"
 #include "core-Renderer/RPSBComputed.h"
-// ----------------------------------------------------------------------------
-// ---->Sockets
-// ----------------------------------------------------------------------------
-#include "core-Renderer/BoolSockets.h"
-#include "core-Renderer/IntSockets.h"
-#include "core-Renderer/StringSockets.h"
-#include "core-Renderer/Vec4Sockets.h"
-#include "core-Renderer/TextureSockets.h"
-#include "core-Renderer/FloatSockets.h"
-#include "core-Renderer/VoidSockets.h"
-#include "core-Renderer/MatrixSockets.h"
 // ----------------------------------------------------------------------------
 // ---->Tools
 // ----------------------------------------------------------------------------

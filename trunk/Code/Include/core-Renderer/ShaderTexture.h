@@ -46,6 +46,8 @@ enum TextureUsage
 
 class ShaderTexture : public Subject< ShaderTexture, ShaderTextureOps >
 {
+   DECLARE_RTTI_CLASS
+
 public:
    virtual ~ShaderTexture() {}
 

@@ -86,6 +86,9 @@
     <Filter Include="Misc\Singleton">
       <UniqueIdentifier>{ea704aa1-924f-4d1a-baa3-bbe73a7797cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataStructures\DataPipeline">
+      <UniqueIdentifier>{0e3baadd-c362-43f6-9d63-4a4be0cf7ef5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -216,13 +219,13 @@
       <Filter>Filesystem</Filter>
     </ClCompile>
     <ClCompile Include="GraphBuilder.cpp">
-      <Filter>DataStructures\Graphs</Filter>
+      <Filter>DataStructures\DataPipeline</Filter>
     </ClCompile>
     <ClCompile Include="GraphBuilderNode.cpp">
-      <Filter>DataStructures\Graphs</Filter>
+      <Filter>DataStructures\DataPipeline</Filter>
     </ClCompile>
     <ClCompile Include="GraphBuilderSockets.cpp">
-      <Filter>DataStructures\Graphs</Filter>
+      <Filter>DataStructures\DataPipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -498,13 +501,13 @@
       <Filter>Filesystem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\GraphBuilder.h">
-      <Filter>DataStructures\Graphs</Filter>
+      <Filter>DataStructures\DataPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\GraphBuilderNode.h">
-      <Filter>DataStructures\Graphs</Filter>
+      <Filter>DataStructures\DataPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\GraphBuilderSockets.h">
-      <Filter>DataStructures\Graphs</Filter>
+      <Filter>DataStructures\DataPipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -619,14 +622,14 @@
     <None Include="..\..\Include\core\RuntimeData.inl">
       <Filter>DataStructures</Filter>
     </None>
-    <None Include="..\..\Include\core\GraphBuilderNode.inl">
-      <Filter>DataStructures\Graphs</Filter>
+    <None Include="..\..\Include\core\GraphBuilderSockets.inl">
+      <Filter>DataStructures\DataPipeline</Filter>
     </None>
     <None Include="..\..\Include\core\GraphBuilder.inl">
-      <Filter>DataStructures\Graphs</Filter>
+      <Filter>DataStructures\DataPipeline</Filter>
     </None>
-    <None Include="..\..\Include\core\GraphBuilderSockets.inl">
-      <Filter>DataStructures\Graphs</Filter>
+    <None Include="..\..\Include\core\GraphBuilderNode.inl">
+      <Filter>DataStructures\DataPipeline</Filter>
     </None>
   </ItemGroup>
 </Project>

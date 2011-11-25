@@ -21,6 +21,10 @@ class RPDebugRendererNode : public RenderingPipelineNode
    DECLARE_CLASS( RPDebugRendererNode )
 
 private:
+   // static data
+   std::string                                     m_renderTargetId;
+
+   // runtime data
    TRuntimeVar< RenderTarget* >                    m_renderTarget;
 
 public:
@@ -30,8 +34,6 @@ public:
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
    void onCreateLayout( RenderingPipelineMechanism& host ) const;
-   void onInitialize( RenderingPipelineMechanism& host ) const;
-   void onDeinitialize( RenderingPipelineMechanism& host ) const;
    void onUpdate( RenderingPipelineMechanism& host ) const;
 };
 

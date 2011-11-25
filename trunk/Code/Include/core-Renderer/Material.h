@@ -3,17 +3,19 @@
 #pragma once
 
 #include "core/Resource.h"
+#include "core/GraphBuilder.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class MaterialEntity;
+class MaterialNode;
 class Renderer;
 class RuntimeDataBuffer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Material : public Resource
+class Material : public Resource, public GraphBuilder< Material, MaterialNode >
 {
    DECLARE_RESOURCE( Material )
 
@@ -26,42 +28,12 @@ public:
    Material( const FilePath& resourceName = FilePath() );
    ~Material();
 
+protected:
    // -------------------------------------------------------------------------
-   // Runtime functionality
+   // GraphBuilder implementation
    // -------------------------------------------------------------------------
-   /**
-    * Called by a MaterialEntity when it first starts using the Material.
-    * Here's where the Material should initialize its runtime data structures.
-    *
-    * @param hostEntity
-    * @param data
-    */
-   void initialize( MaterialEntity& hostEntity, RuntimeDataBuffer& data ) const;
-
-   /**
-    * Called by a MaterialEntity when it's about to stop using the Material.
-    * Here's where the Material should deinitialize its runtime data structures.
-    *
-    * @param hostEntity
-    * @param data
-    */
-   void deinitialize( MaterialEntity& hostEntity, RuntimeDataBuffer& data ) const;
-
-   /**
-    * Called in order to set material up before rendering.
-    *
-    * @param renderer
-    * @param data
-    */
-   void onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
-   
-   /**
-    * Called in order to clean up after the material after the rendering.
-    *
-    * @param renderer
-    * @param data
-    */
-   void onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
+   void onNodeAdded( MaterialNode* node );
+   void onNodeRemoved( MaterialNode& node );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

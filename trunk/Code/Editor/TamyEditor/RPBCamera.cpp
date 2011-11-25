@@ -1,17 +1,16 @@
 #include "RPBCamera.h"
-#include "core-Renderer/RPCameraNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBCamera, RenderingPipelineBlock );
+BEGIN_OBJECT( RPBCamera, GraphBlock );
    PROPERTY( TResourceHandle< RPCameraNode >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBCamera::RPBCamera( RPCameraNode& node )
-   : TRenderingPipelineBlock< RPCameraNode >( node )
+   : TPipelineBlock< RPCameraNode, RenderingPipelineNode >( node )
 {
    setCaption( "Camera" );
 }

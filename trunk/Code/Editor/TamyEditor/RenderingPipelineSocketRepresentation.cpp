@@ -1,88 +1,44 @@
 #include "RenderingPipelineSocketRepresentation.h"
-#include "RenderingPipelineBlock.h"
-#include "core-Renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( RenderingPipelineSocketRepresentation, GraphBlockSocket );
-   PROPERTY( std::string, m_socketName );
+BEGIN_OBJECT( RPSVoid, GraphBlockSocket );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingPipelineSocketRepresentation::RenderingPipelineSocketRepresentation()
-{
-}
+BEGIN_OBJECT( RPSVec4, GraphBlockSocket );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingPipelineSocketRepresentation::RenderingPipelineSocketRepresentation( GBNodeSocket& socket )
-{
-   m_socketName = socket.getName();
-}
+BEGIN_OBJECT( RPSTexture, GraphBlockSocket );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Object& RenderingPipelineSocketRepresentation::getSocket()
-{
-   RenderingPipelineNode& parentNode = dynamic_cast< RenderingPipelineNode& >( getParentBlock().getNode() );
-   GBNodeSocket* socket = parentNode.findInput( m_socketName );
-   if ( !socket )
-   {
-      socket = parentNode.findOutput( m_socketName );
-   }
-
-   ASSERT_MSG( socket != NULL, "Socket not found" );
-   return *socket;
-}
+BEGIN_OBJECT( RPSString, GraphBlockSocket );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool RenderingPipelineSocketRepresentation::onConnectionAdded( GraphBlockConnection& connection )
-{
-   RenderingPipelineNode& parentNode = dynamic_cast< RenderingPipelineNode& >( getParentBlock().getNode() );
-   
-   // handle disconnecting depending on the underlying socket type
-   if ( &connection.getSource() == this )
-   {
-      RenderingPipelineNode& nextNode = dynamic_cast< RenderingPipelineNode& >( connection.getDestination().getParentBlock().getNode() );
-      parentNode.connectToOutput( nextNode, m_socketName );
-      return true;
-   }
-   else if ( &connection.getDestination() == this )
-   {
-      RPNodeOutput& otherOutput = dynamic_cast< RPNodeOutput& >( connection.getSource().getSocket() );
-      return parentNode.connectToInput( otherOutput, m_socketName );
-   }
-   else
-   {
-      ASSERT_MSG( false, "Invalid socket encountered" );
-      return false;
-   }
-}
+BEGIN_OBJECT( RPSMatrix, GraphBlockSocket );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineSocketRepresentation::onConnectionRemoved( GraphBlockConnection& connection )
-{
-   RenderingPipelineNode& parentNode = dynamic_cast< RenderingPipelineNode& >( getParentBlock().getNode() );
+BEGIN_OBJECT( RPSInt, GraphBlockSocket );
+END_OBJECT();
 
-   // handle connecting depending on the underlying socket type
-   if ( &connection.getSource() == this )
-   {
-      // this is an output
-      RenderingPipelineNode& nextNode = dynamic_cast< RenderingPipelineNode& >( connection.getDestination().getParentBlock().getNode() );
-      parentNode.disconnectFromOutput( nextNode, m_socketName );
-   }
-   else if ( &connection.getDestination() == this )
-   {
-      parentNode.disconnectFromInput( m_socketName );
-   }
-   else
-   {
-      ASSERT_MSG( false, "Invalid socket encountered" );
-   }
-}
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( RPSFloat, GraphBlockSocket );
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( RPSBool, GraphBlockSocket );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

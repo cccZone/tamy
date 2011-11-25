@@ -236,7 +236,6 @@ void RenderingPipelineMechanism::pipelineInitialization()
       for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
       {
          (*it)->attachObserver( *this );
-         (*it)->initialize( *this );
       }
    }
 }
@@ -252,7 +251,6 @@ void RenderingPipelineMechanism::pipelineDeinitialization()
    {
       // some of the nodes might not be there - verify that
       (*it)->detachObserver( *this );
-      (*it)->deinitialize( *this );
    }
    m_nodesQueue.clear();
 

@@ -1,17 +1,16 @@
 #include "RPBSceneRender.h"
-#include "core-Renderer/RPSceneRenderNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBSceneRender, RenderingPipelineBlock );
+BEGIN_OBJECT( RPBSceneRender, GraphBlock );
    PROPERTY( TResourceHandle< RPSceneRenderNode >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBSceneRender::RPBSceneRender( RPSceneRenderNode& node )
-   : TRenderingPipelineBlock< RPSceneRenderNode >( node )
+   : TPipelineBlock< RPSceneRenderNode, RenderingPipelineNode >( node )
 {
    setCaption( "Scene" );
 }

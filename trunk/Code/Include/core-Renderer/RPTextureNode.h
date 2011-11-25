@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPImageOutput;
+class RPTextureOutput;
 class Texture;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,10 +18,10 @@ class RPTextureNode : public RenderingPipelineNode
 
 private:
    // static data
-   Texture*          m_texture;
+   Texture*             m_texture;
 
    // runtime data
-   RPImageOutput*    m_output;
+   RPTextureOutput*     m_output;
  
 public:
    /**

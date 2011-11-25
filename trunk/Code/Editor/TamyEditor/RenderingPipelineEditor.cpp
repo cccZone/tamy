@@ -6,7 +6,6 @@
 #include "QPropertiesView.h"
 #include "tamyeditor.h"
 #include "RenderTargetMimeData.h"
-#include <QCloseEvent>
 #include <QMessageBox.h>
 #include <QListWidget>
 
@@ -217,7 +216,7 @@ void RenderingPipelineEditor::updateRenderTargetsList()
 {
    m_renderTargetsList->clear();
 
-   const std::vector< RenderTargetDescriptor* >& descriptors = m_renderingPipelineLayout.getModel().getRenderTargets();
+   const std::vector< RenderTargetDescriptor* >& descriptors = m_renderingPipelineLayout.getPipeline().getRenderTargets();
    unsigned int count = descriptors.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
@@ -243,7 +242,7 @@ void RenderingPipelineEditor::addRenderTarget()
       return;
    }
 
-   RenderingPipeline& pipeline = m_renderingPipelineLayout.getModel();
+   RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
    if ( pipeline.addRenderTarget( desc ) )
    {
       m_renderTargetsList->addItem( desc->getTargetID().c_str() );
@@ -254,7 +253,7 @@ void RenderingPipelineEditor::addRenderTarget()
 
 void RenderingPipelineEditor::removeRenderTarget()
 {
-   RenderingPipeline& pipeline = m_renderingPipelineLayout.getModel();
+   RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
 
    QList< QListWidgetItem* > itemsToRemove = m_renderTargetsList->selectedItems();
    foreach( QListWidgetItem* item, itemsToRemove )
@@ -270,7 +269,7 @@ void RenderingPipelineEditor::removeRenderTarget()
 
 void RenderingPipelineEditor::editRenderTarget( QListWidgetItem* rtItem )
 {
-   RenderingPipeline& pipeline = m_renderingPipelineLayout.getModel();
+   RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
    RenderTargetDescriptor& desc = pipeline.lockRenderTarget( rtItem->text().toStdString() );
 
    RenderTargetDescriptorDialog dialog( this, desc, false );

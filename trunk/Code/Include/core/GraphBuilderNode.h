@@ -6,6 +6,7 @@
 #include "core/Resource.h"
 #include "core/Subject.h"
 #include "core/Observer.h"
+#include "core/GraphBuilderSockets.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,10 +43,12 @@ enum GraphBuilderNodeOperation
  * 5.) After an implementation-specific update takes place, the node
  *     schedules all outgoing connections for further processing with the host mechanism.
  */
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
+template< typename Impl >
 class GraphBuilderNode : public Subject< Impl, GraphBuilderNodeOperation >, public Observer< GBNodeSocket, GBNodeSocketOperation >
 {
 protected:
+   typedef GBNodeInput< Impl > TInputSocket;
+   typedef GBNodeOutput< Impl > TOutputSocket;
    typedef std::vector< TInputSocket* >         InputsMap;
    typedef std::vector< TOutputSocket* >        OutputsMap;
 
@@ -66,38 +69,24 @@ public:
    // -------------------------------------------------------------------------
    // Connections management
    // -------------------------------------------------------------------------
-   /**
-    * Connects another node to this node's input.
-    *
-    * @param output           output we're connecting this input with
-    * @param inputName
-    *
-    * @return                 'true' if the connection was established successfully, 'false' otherwise
-    */
-   bool connectToInput( TOutputSocket& output, const std::string& inputName );
 
    /**
-    * Disconnects the specified input.
+    * Establishes a connection between this node's output `outputName`,
+    * and the `destNode's` input `inputName`
     *
+    * @param outputName
+    * @param destNode
     * @param inputName
     */
-   void disconnectFromInput( const std::string& inputName );
+   bool connect( const std::string& outputName, Impl& destNode, const std::string& inputName );
 
    /**
-    * Connects another node to this node's output.
+    * Disconnects this node from the specified node's input.
     *
-    * @param node             connected node
-    * @param outputName
+    * @param destNode
+    * @param inputName
     */
-   void connectToOutput( Impl& node, const std::string& outputName );
-
-   /**
-    * Disconnects a node from the specified output.
-    *
-    * @param node             connected node
-    * @param outputName
-    */
-   void disconnectFromOutput( Impl& node, const std::string& outputName );
+   void disconnect( Impl& destNode, const std::string& inputName );
    
    /**
     * Returns an array of all defined input sockets.

@@ -10,6 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class PixelShader;
+class RenderingPipelineNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,10 +24,10 @@ class RPSBComputed : public RPSceneBuilder, public TRenderState< RPSBComputed >
 
 private:
    // static data
-   PixelShader*                                          m_shader;
+   PixelShader*                                                   m_shader;
 
    // runtime data
-   ShaderNodeOperator< RenderingPipelineNode >*          m_shaderNode;
+   ShaderNodeOperator< RenderingPipelineNode >*                   m_shaderNode;
 
 public:
    /**

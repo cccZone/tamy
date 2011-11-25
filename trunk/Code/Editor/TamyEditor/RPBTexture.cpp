@@ -1,17 +1,16 @@
 #include "RPBTexture.h"
-#include "core-Renderer/RPTextureNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBTexture, RenderingPipelineBlock );
+BEGIN_OBJECT( RPBTexture, GraphBlock );
 PROPERTY( TResourceHandle< RPTextureNode >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBTexture::RPBTexture( RPTextureNode& node )
-   : TRenderingPipelineBlock< RPTextureNode >( node )
+   : TPipelineBlock< RPTextureNode, RenderingPipelineNode >( node )
 {
    setCaption( "Texture" );
 }

@@ -14,7 +14,6 @@
 
 class Filesystem;
 class RCBindPixelShader;
-class PixelShaderConstant;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -93,7 +92,6 @@ private:
 
    // runtime data
    std::vector< std::string >                m_textureStageName;
-   std::vector< PixelShaderConstant* >       m_constants;
 
 public:
    /**
@@ -160,11 +158,6 @@ public:
    inline const std::string& getEntryFunctionName() const { return m_entryFunctionName; }
 
    /**
-    * Returns shader constants.
-    */
-   inline const std::vector< PixelShaderConstant* >& getConstants() const { return m_constants; }
-
-   /**
     * Creates a texture setting shader parameter for the effect shader.
     */
    static ShaderParam< PixelShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
@@ -175,7 +168,7 @@ public:
    void onResourceLoaded( ResourcesManager& mgr );
 
 private:
-   void parseShaderConstants();
+   void parseTextureStages();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

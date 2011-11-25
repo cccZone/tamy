@@ -2,20 +2,17 @@
 /// @brief  rendering pipeline block representing a rendering process start node
 #pragma once
 
-#include "RenderingPipelineBlock.h"
+#include "core-Renderer/RPStartNode.h"
+#include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RPStartNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Rendering pipeline block representing a rendering process start node.
  */
-class RPBStart : public TRenderingPipelineBlock< RPStartNode >
+class RPBStart : public TPipelineBlock< RPStartNode, RenderingPipelineNode >
 {
    DECLARE_CLASS( RPBStart )
 
@@ -23,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBStart() : TRenderingPipelineBlock< RPStartNode >() {}
+   RPBStart() : TPipelineBlock< RPStartNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

@@ -142,7 +142,7 @@ public:
  */
 #define PROPERTY(type, variable)                                              \
    {                                                                          \
-      Property& p = m_properties->add< type >( variable, #variable );         \
+      Property& p = m_properties->add< type >( variable, #variable );          \
       p.setParams( #variable, "", false, true );                              \
       p.setObserver(*this);                                                   \
    }

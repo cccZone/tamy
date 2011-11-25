@@ -1,6 +1,5 @@
 #include "core-Renderer/RPFloats2Vec4Node.h"
-#include "core-Renderer/FloatSockets.h"
-#include "core-Renderer/Vec4Sockets.h"
+#include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/RenderingPipelineMechanism.h"
 
 

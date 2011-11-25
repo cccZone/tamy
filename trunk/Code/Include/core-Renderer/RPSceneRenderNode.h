@@ -13,7 +13,6 @@
 class RenderTarget;
 class RPSceneBuilder;
 class MemoryPool;
-class PixelShaderConstant;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +27,7 @@ private:
    // static data
    RPMSceneId                          m_renderedSceneId;
    RPSceneBuilder*                     m_builder;
+   std::string                         m_renderTargetId;
 
    // runtime data
    MemoryPool*                         m_treeMemPool;
@@ -44,8 +44,6 @@ public:
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
    void onCreateLayout( RenderingPipelineMechanism& host ) const;
-   void onInitialize( RenderingPipelineMechanism& host ) const;
-   void onDeinitialize( RenderingPipelineMechanism& host ) const;
    void onUpdate( RenderingPipelineMechanism& host ) const;
 
    // -------------------------------------------------------------------------

@@ -1,4 +1,5 @@
 #include "core-Renderer/RenderingPipelineNode.h"
+#include "core-Renderer/RenderingPipelineMechanism.h"
 #include <algorithm>
 
 
@@ -50,7 +51,7 @@ void RenderingPipelineNode::createLayout( RenderingPipelineMechanism& host ) con
 {
    for( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
    {
-      (*it)->createLayout( host );
+      (*it)->createLayout( host.data() );
    }
 
    onCreateLayout( host );
@@ -58,33 +59,48 @@ void RenderingPipelineNode::createLayout( RenderingPipelineMechanism& host ) con
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineNode::initialize( RenderingPipelineMechanism& host ) const
-{
-   for( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
-   {
-      (*it)->initialize( host );
-   }
-
-   onInitialize( host );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineNode::deinitialize( RenderingPipelineMechanism& host ) const
-{
-   onDeinitialize( host );
-
-   for( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
-   {
-      (*it)->deinitialize( host );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void RenderingPipelineNode::update( RenderingPipelineMechanism& host ) const
 {
    onUpdate( host );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+GBNodeInput< RenderingPipelineNode >* RenderingPipelineNode::createInput( const Class& dataType, const std::string& name ) const
+{
+   const std::string& dataTypeName = dataType.getShortName(); 
+
+   if ( dataTypeName == "bool" )
+   {
+      return new RPBoolInput( name );
+   } 
+   else if ( dataTypeName == "float" )
+   {
+      return new RPFloatInput( name );
+   } 
+   else if ( dataTypeName == "int" )
+   {
+      return new RPIntInput( name );
+   } 
+   else if ( dataTypeName == "D3DXMATRIX" )
+   {
+      return new RPMatrixInput( name );
+   } 
+   else if ( dataTypeName == "std::string" )
+   {
+      // TODO : check this type name
+      return new RPStringInput( name );
+   } 
+   else if ( dataTypeName == "ShaderTexture" )
+   {
+      return new RPTextureInput( name );
+   } 
+   else if ( dataTypeName == "D3DXVECTOR4" )
+   {
+      return new RPVec4Input( name );
+   } 
+
+   return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

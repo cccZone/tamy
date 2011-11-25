@@ -9,8 +9,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::~GraphBuilderNode()
+template< typename Impl >
+GraphBuilderNode< Impl >::~GraphBuilderNode()
 {
    // remove inputs and outputs
    for( InputsMap::iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
@@ -30,8 +30,8 @@ GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::~GraphBuilderNode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::getSubsequentNodes( std::vector< Impl* >& outNodesToRun ) const
+template< typename Impl >
+void GraphBuilderNode< Impl >::getSubsequentNodes( std::vector< Impl* >& outNodesToRun ) const
 {
    for( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
    {
@@ -42,49 +42,8 @@ void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::getSubsequentNodes( 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-bool GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::connectToInput( TOutputSocket& output, const std::string& inputName )
-{
-   // looking at a connection from input's perspective, a node is interested in an output 
-   // it originates at - it's from where we're gonna get our data
-   TInputSocket* input = findInput( inputName );
-   if ( !input )
-   {
-      char tmp[128];
-      sprintf_s( tmp, "Input '%s' not found", inputName.c_str() );
-      throw std::runtime_error( tmp );
-   }
-
-   bool result = input->connect( output );
-   if ( result )
-   {
-      notify( GBNO_CHANGED );
-   }
-
-   return result;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::disconnectFromInput( const std::string& inputName )
-{
-   TInputSocket* input = findInput( inputName );
-   if ( !input )
-   {
-      char tmp[128];
-      sprintf_s( tmp, "Input '%s' not found", inputName.c_str() );
-      throw std::runtime_error( tmp );
-   }
-
-   input->disconnect();
-   notify( GBNO_CHANGED );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::connectToOutput( Impl& node, const std::string& outputName )
+template< typename Impl >
+bool GraphBuilderNode< Impl >::connect( const std::string& outputName, Impl& destNode, const std::string& inputName )
 {
    // looking at a connection from input's perspective, a node is interested in a node 
    // the connection connects this node to - it's a node that's gonna get 
@@ -97,31 +56,59 @@ void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::connectToOutput( Imp
       throw std::runtime_error( tmp );
    }
 
-   output->connect( node );
+   output->connect( destNode );
    notify( GBNO_CHANGED );
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::disconnectFromOutput( Impl& node, const std::string& outputName )
-{
-   TOutputSocket* output = findOutput( outputName );
-   if ( !output )
+   // looking at a connection from input's perspective, a node is interested in an output 
+   // it originates at - it's from where we're gonna get our data
+   TInputSocket* input = destNode.findInput( inputName );
+   if ( !input )
    {
       char tmp[128];
-      sprintf_s( tmp, "Output '%s' not found", outputName.c_str() );
+      sprintf_s( tmp, "Input '%s' not found", inputName.c_str() );
       throw std::runtime_error( tmp );
    }
 
-   output->disconnect( node );
-   notify( GBNO_CHANGED );
+   bool result = input->connect( *output );
+   if ( result )
+   {
+      destNode.notify( GBNO_CHANGED );
+   }
+
+   return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-TInputSocket* GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::findInput( const std::string& inputName ) const
+template< typename Impl >
+void GraphBuilderNode< Impl >::disconnect( Impl& destNode, const std::string& inputName )
+{
+   // disconnect the other node's input
+   TInputSocket* input = destNode.findInput( inputName );
+   TOutputSocket* output = input->getOutput();
+
+   if ( !input )
+   {
+      char tmp[128];
+      sprintf_s( tmp, "Input '%s' not found", inputName.c_str() );
+      throw std::runtime_error( tmp );
+   }
+
+   input->disconnect();
+   destNode.notify( GBNO_CHANGED );
+
+   // disconnect the output
+   if ( output )
+   {
+      output->disconnect( destNode );
+      notify( GBNO_CHANGED );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
+GBNodeInput< Impl >* GraphBuilderNode< Impl >::findInput( const std::string& inputName ) const
 {
    for ( InputsMap::const_iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
    {
@@ -136,8 +123,8 @@ TInputSocket* GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::findInput( 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-TOutputSocket* GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::findOutput( const std::string& outputName ) const
+template< typename Impl >
+GBNodeOutput< Impl >* GraphBuilderNode< Impl >::findOutput( const std::string& outputName ) const
 {
    for ( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
    {
@@ -152,8 +139,8 @@ TOutputSocket* GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::findOutput
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::defineInput( TInputSocket* input )
+template< typename Impl >
+void GraphBuilderNode< Impl >::defineInput( TInputSocket* input )
 {
    TInputSocket* existingInput = findInput( input->getName() );
    if ( existingInput == NULL )
@@ -175,8 +162,8 @@ void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::defineInput( TInputS
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::removeInput( const std::string& name )
+template< typename Impl >
+void GraphBuilderNode< Impl >::removeInput( const std::string& name )
 {
    for ( InputsMap::const_iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
    {
@@ -196,8 +183,8 @@ void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::removeInput( const s
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::defineOutput( TOutputSocket* output )
+template< typename Impl >
+void GraphBuilderNode< Impl >::defineOutput( TOutputSocket* output )
 {
    TOutputSocket* existingOutput = findOutput( output->getName() );
    if ( existingOutput == NULL )
@@ -219,8 +206,8 @@ void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::defineOutput( TOutpu
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::onBulkSocketsInitialization()
+template< typename Impl >
+void GraphBuilderNode< Impl >::onBulkSocketsInitialization()
 {
    // attach self as an observer of the sockets
    for( InputsMap::iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
@@ -235,16 +222,16 @@ void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::onBulkSocketsInitial
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::update( GBNodeSocket& subject )
+template< typename Impl >
+void GraphBuilderNode< Impl >::update( GBNodeSocket& subject )
 {
    // do nothing - this is an initial update
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket >
-void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::update( GBNodeSocket& subject, const GBNodeSocketOperation& msg )
+template< typename Impl >
+void GraphBuilderNode< Impl >::update( GBNodeSocket& subject, const GBNodeSocketOperation& msg )
 {
    if ( msg == GBNSO_CHANGED )
    {
@@ -254,8 +241,8 @@ void GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::update( GBNodeSocket
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket > template< typename T >
-const T& GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::getInput( const std::string& inputName ) const
+template< typename Impl > template< typename T >
+const T& GraphBuilderNode< Impl >::getInput( const std::string& inputName ) const
 {
    TInputSocket* input = findInput( inputName );
    if ( input == NULL)
@@ -278,8 +265,8 @@ const T& GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::getInput( const 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename Impl, typename TInputSocket, typename TOutputSocket > template< typename T >
-const T& GraphBuilderNode< Impl, TInputSocket, TOutputSocket >::getOutput( const std::string& outputName ) const
+template< typename Impl > template< typename T >
+const T& GraphBuilderNode< Impl >::getOutput( const std::string& outputName ) const
 {
    TOutputSocket* output = findOutput( outputName );
    if ( output == NULL )

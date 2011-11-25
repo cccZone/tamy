@@ -1,13 +1,13 @@
 #include "core-Renderer/RPDebugRendererNode.h"
 #include "core-Renderer/RenderingPipelineMechanism.h"
-#include "core-Renderer/VoidSockets.h"
-#include "core-Renderer/TextureSockets.h"
+#include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/Renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RPDebugRendererNode, RenderingPipelineNode )
+   PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,7 +15,7 @@ END_OBJECT()
 RPDebugRendererNode::RPDebugRendererNode()
 {
    defineInput( new RPVoidInput( "Input" ) );
-   defineOutput( new RPRenderTargetOutput( "Output" ) );
+   defineOutput( new RPTextureOutput( "Output" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,22 +25,7 @@ void RPDebugRendererNode::onCreateLayout( RenderingPipelineMechanism& host ) con
    RuntimeDataBuffer& data = host.data();
 
    data.registerVar( m_renderTarget );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPDebugRendererNode::onInitialize( RenderingPipelineMechanism& host ) const
-{
-   RuntimeDataBuffer& data = host.data();
-
-   data[ m_renderTarget ] = getOutput< RPRenderTargetOutput >( "Output" ).getRenderTarget( data );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPDebugRendererNode::onDeinitialize( RenderingPipelineMechanism& host ) const
-{
-   host.data()[ m_renderTarget ] = NULL;
+   data[ m_renderTarget ] = &host.getRenderTarget( m_renderTargetId );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

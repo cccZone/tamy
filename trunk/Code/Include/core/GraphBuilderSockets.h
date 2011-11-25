@@ -3,9 +3,9 @@
 #ifndef _GRAPH_BUILDER_SOCKETS_H
 #define _GRAPH_BUILDER_SOCKETS_H
 
-
 #include "core/Object.h"
 #include "core/Subject.h"
+#include "core/RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,13 +48,13 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Output socket of a node.
+ * Base class for an output socket for a specific type of node.
  */
-template< typename NodeType >
+template< typename TNode >
 class GBNodeOutput : public GBNodeSocket
 {
 protected:
-   std::vector< NodeType* >     m_connectedNodes;
+   std::vector< TNode* >     m_connectedNodes;
 
 public:
    /**
@@ -68,21 +68,33 @@ public:
    /**
     * Returns an array of nodes connected to this socket.
     */
-   const std::vector< NodeType* >& getConnectedNodes() const { return m_connectedNodes; }
+   const std::vector< TNode* >& getConnectedNodes() const { return m_connectedNodes; }
 
    /**
     * Connects the socket to the specified node.
     *
     * @param node
     */
-   void connect( NodeType& node );
+   void connect( TNode& node );
 
    /**
     * Disconnects the socket from the specified node.
     *
     * @param node
     */
-   void disconnect( NodeType& node );
+   void disconnect( TNode& node );
+
+   /**
+    * Called in order to initialize runtime data.
+    *
+    * @param data    runtime data buffer
+    */
+   virtual void createLayout( RuntimeDataBuffer& data ) {}
+
+   /**
+    * Returns the type of data this output propagates.
+    */
+   virtual Class getDataType() const { return Class(); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,11 +102,11 @@ public:
 /**
  * Input socket of a node.
  */
-template< typename TOutputSocket >
+template< typename TNode >
 class GBNodeInput : public GBNodeSocket
 {
 protected:
-   TOutputSocket*             m_connectedOutput;
+   GBNodeOutput< TNode >*             m_connectedOutput;
 
 public:
    /**
@@ -112,26 +124,171 @@ public:
     *
     * @return     'true', if the connection was established successfully, 'false' otherwise
     */
-   bool connect( TOutputSocket& output );
+   bool connect( GBNodeOutput< TNode >& output );
 
    /**
     * Disconnects the socket.
     */
    void disconnect();
 
-protected:
    /**
     * Returns the output socket this socket is connected to, or NULL if the socket
     * isn't connected to anything.
     */
-   inline const TOutputSocket* getOutput() const { return m_connectedOutput; }
+   inline GBNodeOutput< TNode >* getOutput() const { return m_connectedOutput; }
 
+   /**
+    * Returns the type of data this output propagates.
+    */
+   virtual Class getDataType() const { return Class(); }
+
+protected:
    /**
     * Checks if the two sockets can be connected.
     *
     * @param output
     */
-   virtual bool canConnect( TOutputSocket& output ) const { return false; }
+   virtual bool canConnect( GBNodeOutput< TNode >& output ) const;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Data type sensitive output - this type of output is responsible for the data exchange.
+ */
+template< typename TNode, typename TData >
+class TGBNodeOutput : public GBNodeOutput< TNode >
+{
+private:
+   TRuntimeVar< TData >          m_value;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
+   TGBNodeOutput( const std::string& name = "" );
+   virtual ~TGBNodeOutput();
+
+   /**
+    * Sets the new value in the socket.
+    *
+    * @param val
+    */
+   void setValue( RuntimeDataBuffer& data, const TData& val ) const;
+
+   /**
+    * Returns the socket's value.
+    */
+   virtual const TData& getValue( RuntimeDataBuffer& data ) const;
+
+   // -------------------------------------------------------------------------
+   // GBNodeOutput implementation
+   // -------------------------------------------------------------------------
+   void createLayout( RuntimeDataBuffer& data );
+   Class getDataType() const;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Data type sensitive input - this type of output is responsible for the data exchange.
+ */
+template< typename TNode, typename TData >
+class TGBNodeInput : public GBNodeInput< TNode >
+{
+public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
+   TGBNodeInput( const std::string& name = "" );
+   virtual ~TGBNodeInput();
+
+   /**
+    * Returns the socket's value.
+    */
+   const TData& getValue( RuntimeDataBuffer& data ) const;
+
+   // -------------------------------------------------------------------------
+   // GBNodeInput implementation
+   // -------------------------------------------------------------------------
+   Class getDataType() const;
+
+protected:
+   bool canConnect( GBNodeOutput< TNode >& output ) const;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Data type sensitive output - this type of output is responsible for the objects exchange.
+ */
+template< typename TNode, typename TData >
+class TGBNodePtrOutput : public GBNodeOutput< TNode >
+{
+private:
+   TRuntimeVar< TData* >         m_value;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
+   TGBNodePtrOutput( const std::string& name = "" );
+   virtual ~TGBNodePtrOutput();
+
+   /**
+    * Sets the new value in the socket.
+    *
+    * @param val
+    */
+   void setValue( RuntimeDataBuffer& data, TData* val ) const;
+
+   /**
+    * Returns the socket's value.
+    */
+   virtual TData* getValue( RuntimeDataBuffer& data ) const;
+
+   // -------------------------------------------------------------------------
+   // GBNodeOutput implementation
+   // -------------------------------------------------------------------------
+   void createLayout( RuntimeDataBuffer& data );
+   Class getDataType() const;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Data type sensitive input - this type of output is responsible for the objects exchange.
+ */
+template< typename TNode, typename TData >
+class TGBNodePtrInput : public GBNodeInput< TNode >
+{
+public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
+   TGBNodePtrInput( const std::string& name = "" );
+   virtual ~TGBNodePtrInput();
+
+   /**
+    * Returns the socket's value.
+    */
+   TData* getValue( RuntimeDataBuffer& data ) const;
+
+   // -------------------------------------------------------------------------
+   // GBNodeInput implementation
+   // -------------------------------------------------------------------------
+   Class getDataType() const;
+
+protected:
+   bool canConnect( GBNodeOutput< TNode >& output ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
