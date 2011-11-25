@@ -134,7 +134,7 @@ Next - you have to define your node:
 
 ///////////////////////////////////////////////////////////////////////
 
-class MyGraphNode: public ResourceObject, public GraphBuilderNode< MyGraphNode, MyNodeInput, MyNodeOutput >
+class MyGraphNode: public ResourceObject, public GraphBuilderNode< MyGraphNode >
 {
    DECLARE_CLASS( MyGraphNode)
 
@@ -197,7 +197,7 @@ REGISTER_RTTI( MyGraphNode );
 
 }}}
 
-And finally the sockets:
+And finally the sockets ( I'm gonna show a sample socket that marshals floats ):
 
 {{{
 // ------------------------- .h file ------------------------------
@@ -213,40 +213,35 @@ class MyGraphNode;
 
 ///////////////////////////////////////////////////////////////////////
 
-/**
- * Output socket of a node.
- */
-class MyNodeOutput : public GBNodeOutput< MyGraphNode>
-{
-   DECLARE_CLASS( MyNodeOutput )
+///////////////////////////////////////////////////////////////////////////////
 
-public:
-   /**
-    * Constructor.
-    *
-    * @param name
-    */
-   MyNodeOutput ( const std::string& name = "" );
-   virtual ~MyNodeOutput() {}
-};
+class MyGraphNode;
+typedef GBNodeOutput< MyGraphNode > MyOutput;
 
 ///////////////////////////////////////////////////////////////////////
 
-/**
- * Input socket of a node.
- */
-class MyNodeInput : public GBNodeInput< MyNodeOutput >
+class MyFloatInput : public TGBNodeInput< MyGraphNode, float >
 {
-   DECLARE_CLASS( MyNodeInput )
+   DECLARE_CLASS( MyFloatInput )
 
 public:
    /**
     * Constructor.
-    *
-    * @param name
     */
-   MyNodeInput( const std::string& name = "" );
-   virtual ~MyNodeInput() {}
+   MyFloatInput ( const std::string& name = "" ) : TGBNodeInput< MyGraphNode, float >( name ) {}
+};
+
+// -------------------------------------------------------------------
+
+class MyFloatOutput : public TGBNodeOutput< MyGraphNode, float >
+{
+   DECLARE_CLASS( MyFloatOutput )
+
+public:
+   /**
+    * Constructor.
+    */
+   MyFloatOutput ( const std::string& name = "" ) : TGBNodeOutput< MyGraphNode, float >( name ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////
@@ -255,40 +250,22 @@ public:
 
 ///////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( MyNodeInput, Object );
+BEGIN_OBJECT( MyFloatInput, Object );
    PROPERTY( std::string, m_name );
-   PROPERTY( MyNodeOutput*, m_connectedOutput );
-   // custom properties go here
+   PROPERTY( MyOutput*, m_connectedOutput );
 END_OBJECT();
 
-///////////////////////////////////////////////////////////////////////
-
-MyNodeInput::MyNodeInput( const std::string& name )
-   : GBNodeInput< MyNodeOutput >( name )
-{
-}
-
-//////////////////////////////////////////////////////////////////////
-
-BEGIN_ABSTRACT_OBJECT( MyNodeOutput, Object );
+BEGIN_OBJECT( MyFloatOutput, Object );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< MyGraphNode* >, m_connectedNodes );
-   // custom properties go here
 END_OBJECT();
-
-///////////////////////////////////////////////////////////////////////
-
-MyNodeOutput::MyNodeOutput( const std::string& name )
-   : GBNodeOutput< MyGraphNode >( name )
-{
-}
 
 ///////////////////////////////////////////////////////////////////////
 
 // ------------------- Type registration file ------------------------
 
-REGISTER_RTTI( MyNodeInput );
-REGISTER_RTTI( MyNodeOutput);
+REGISTER_RTTI( MyFloatInput );
+REGISTER_RTTI( MyFloatOutput);
 
 }}}
 
