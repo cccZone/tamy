@@ -136,13 +136,6 @@ public:
    inline void setDynamicSize( float widthScale, float heightScale ) { m_widthScale = widthScale; m_heightScale = heightScale; }
 
    /**
-    * Initializes runtime data layout.
-    *
-    * @param renderer         renderer that will be using this render target
-    */
-   void createLayout( RuntimeDataBuffer& runtimeData ) const;
-
-   /**
     * Initializes the render target descriptor.
     *
     * @param runtimeData      runtimeDataBuffer
@@ -162,7 +155,7 @@ public:
     *
     * @param runtimeData      runtimeDataBuffer
     */
-   inline RenderTarget& getTarget( RuntimeDataBuffer& runtimeData ) { return *runtimeData[m_renderTarget]; }
+   inline RenderTarget* getTarget( RuntimeDataBuffer& runtimeData ) { return runtimeData[m_renderTarget]; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

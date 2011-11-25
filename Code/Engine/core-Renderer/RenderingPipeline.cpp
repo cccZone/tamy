@@ -86,18 +86,18 @@ void RenderingPipeline::removeRenderTarget( const std::string& id )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderTarget& RenderingPipeline::getRenderTarget( const std::string& id, RuntimeDataBuffer& runtimeData ) const
+RenderTarget* RenderingPipeline::getRenderTarget( const std::string& id, RuntimeDataBuffer& runtimeData ) const
 {
    RenderTargetDescriptor* desc = findRenderTarget( id );
    if ( desc == NULL )
    {
-      char errorMsg[512];
-      sprintf_s( errorMsg, "Render target '%s' not found", id.c_str() );
-      ASSERT_MSG( desc != NULL, errorMsg );
-      throw std::runtime_error( errorMsg );
+      // we want to render directly to the back buffer
+      return NULL;
    }
-   
-   return desc->getTarget( runtimeData );
+   else
+   {
+      return desc->getTarget( runtimeData );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

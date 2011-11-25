@@ -163,7 +163,7 @@ public:
     *
     * @param id         render target id
     */
-   RenderTarget& getRenderTarget( const std::string& id ) const;
+   RenderTarget* getRenderTarget( const std::string& id ) const;
 
    /**
     * Renders the debug scene on the specified render target.

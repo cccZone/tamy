@@ -39,15 +39,9 @@ RenderTargetDescriptor::~RenderTargetDescriptor()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderTargetDescriptor::createLayout( RuntimeDataBuffer& runtimeData ) const
-{
-   runtimeData.registerVar< RenderTarget* >( m_renderTarget );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void RenderTargetDescriptor::initialize( RuntimeDataBuffer& runtimeData, Renderer& renderer ) const
 {
+   runtimeData.registerVar< RenderTarget* >( m_renderTarget );
    if ( m_isDynamic )
    {
       runtimeData[m_renderTarget] = new RenderTarget( new RTSPDynamic( renderer, m_widthScale, m_heightScale ), m_usage, m_isReadable, m_bgColor );

@@ -74,9 +74,16 @@ void RPPostProcessNode::onObjectLoaded()
 
 void RPPostProcessNode::onCreateLayout( RenderingPipelineMechanism& host ) const
 {
-   host.data().registerVar( m_renderTarget );
+   RuntimeDataBuffer& data = host.data();
 
-   host.data()[ m_renderTarget ] = &host.getRenderTarget( m_renderTargetId );
+   data.registerVar( m_renderTarget );
+
+   RenderTarget* trg = host.getRenderTarget( m_renderTargetId );
+   data[ m_renderTarget ] = trg;
+
+   // find the existing outputs and set the data on them
+   RPTextureOutput* output = DynamicCast< RPTextureOutput >( findOutput( "Output" ) );
+   output->setValue( data, trg );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,6 +98,9 @@ void RPPostProcessNode::onUpdate( RenderingPipelineMechanism& host ) const
    RuntimeDataBuffer& data = host.data();
    RenderTarget* trg = data[ m_renderTarget ];
    Renderer& renderer = host.getRenderer();
+
+   // activate the render target we want to render to
+   new ( renderer() ) RCActivateRenderTarget( trg );
 
    // bind the shader
    m_shaderNode->bindShader( renderer, data );

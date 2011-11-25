@@ -51,8 +51,16 @@ void RPSceneRenderNode::onPropertyChanged( Property& property )
 
 void RPSceneRenderNode::onCreateLayout( RenderingPipelineMechanism& host ) const
 {
-   host.data().registerVar( m_renderTarget );
-   host.data()[ m_renderTarget ] = &host.getRenderTarget( m_renderTargetId );
+   RuntimeDataBuffer& data = host.data();
+
+   data.registerVar( m_renderTarget );
+
+   RenderTarget* trg = host.getRenderTarget( m_renderTargetId );
+   data[ m_renderTarget ] = trg;
+
+   // find the existing outputs and set the data on them
+   RPTextureOutput* output = DynamicCast< RPTextureOutput >( findOutput( "Output" ) );
+   output->setValue( data, trg );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,6 +79,7 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
   
    // activate the render target we want to render to
    new ( renderer() ) RCActivateRenderTarget( trg );
+
    // collect the renderables
    const Array< SpatialRepresentation* >& visibleElems = host.getSceneElements( m_renderedSceneId );
 
