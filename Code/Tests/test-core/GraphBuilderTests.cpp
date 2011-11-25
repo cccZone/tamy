@@ -17,18 +17,15 @@ namespace // anonymous
 
    // -------------------------------------------------------------------------
 
-   class MockInput : public GBNodeInput< MockOutput >
+   class MockInput : public GBNodeInput< GBMockNode >
    {
    public:
-      MockInput() : GBNodeInput< MockOutput >( "Input" ) {}
-
-   protected:
-      bool canConnect( MockOutput& output ) const { return true; }
+      MockInput() : GBNodeInput< GBMockNode >( "Input" ) {}
    };
 
    // -------------------------------------------------------------------------
 
-   class GBMockNode : public GraphBuilderNode< GBMockNode, MockInput, MockOutput >
+   class GBMockNode : public GraphBuilderNode< GBMockNode >
    {
    public:
       int         m_idx;
