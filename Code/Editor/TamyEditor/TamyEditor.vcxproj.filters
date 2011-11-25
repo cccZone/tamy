@@ -347,6 +347,12 @@
     <ClInclude Include="MBBool.h">
       <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
     </ClInclude>
+    <ClInclude Include="MBSurfaceProperties.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="MBInstanceTexture.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -822,6 +828,12 @@
       <Filter>Widgets\PipelineWidget</Filter>
     </ClCompile>
     <ClCompile Include="MBBool.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="MBSurfaceProperties.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="MBInstanceTexture.cpp">
       <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
     </ClCompile>
   </ItemGroup>

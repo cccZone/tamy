@@ -40,17 +40,17 @@ public:
     * Called by the entity that uses the material in order to set it up.
     *
     * @param renderer
-    * @param data
+    * @param entity
     */
-   virtual void preRender( Renderer& renderer, RuntimeDataBuffer& data ) const {}
+   virtual void preRender( Renderer& renderer, const MaterialEntity& entity ) const {}
 
    /**
     * Called by the entity that uses the material in order to clean up after using it.
     *
     * @param renderer
-    * @param data
+    * @param entity
     */
-   virtual void postRender( Renderer& renderer, RuntimeDataBuffer& data ) const {}
+   virtual void postRender( Renderer& renderer, const MaterialEntity& entity ) const {}
 
    // -----------------------------------------------------------------
    // Object implementation

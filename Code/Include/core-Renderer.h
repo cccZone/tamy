@@ -103,6 +103,8 @@
 #include "core-Renderer\MNTexture.h"
 #include "core-Renderer\MNVec4.h"
 #include "core-Renderer\MNBool.h"
+#include "core-Renderer\MNInstanceTexture.h"
+#include "core-Renderer\MNSurfaceProperties.h"
 // ----------------------------------------------------------------------------
 // --> Resources
 // ----------------------------------------------------------------------------

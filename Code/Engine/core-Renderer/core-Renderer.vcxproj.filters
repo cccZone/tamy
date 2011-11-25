@@ -298,6 +298,12 @@
     <ClCompile Include="MNBool.cpp">
       <Filter>Materials\MaterialGraph\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="MNInstanceTexture.cpp">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="MNSurfaceProperties.cpp">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -590,6 +596,12 @@
       <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MNBool.h">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MNInstanceTexture.h">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MNSurfaceProperties.h">
       <Filter>Materials\MaterialGraph\Nodes</Filter>
     </ClInclude>
   </ItemGroup>

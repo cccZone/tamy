@@ -4,6 +4,8 @@
 
 #include "core-MVC/Entity.h"
 #include "core-Renderer/RenderState.h"
+#include "core-Renderer/SurfaceProperties.h"
+#include "core/Enum.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,6 +13,18 @@
 class Material;
 class RuntimeData;
 class MaterialNode;
+class Texture;
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum MaterialTextures
+{
+   MT_DIFFUSE_1,
+   MT_DIFFUSE_2,
+   MT_NORMALS,
+
+   MT_MAX
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,6 +37,8 @@ class MaterialEntity : public Entity, public TRenderState< MaterialEntity >
 
 private:
    // static data
+   SurfaceProperties                m_surfaceProperties;
+   Texture*                         m_texture[ MT_MAX ];
    Material*                        m_material;
 
    // runtime data
@@ -42,6 +58,38 @@ public:
     * Returns the runtime data buffer.
     */
    inline RuntimeDataBuffer& data() const { return *m_dataBuf; }
+
+   /**
+    * Gives access to material instance's surface properties.
+    */
+   inline SurfaceProperties& accessSurfaceProperties() { return m_surfaceProperties; }
+
+   /**
+    * Returns material instance's surface properties.
+    */
+   inline const SurfaceProperties& getSurfaceProperties() const { return m_surfaceProperties; }
+
+   /**
+    * Gives access to the specified texture associated with this material instance.
+    *
+    * @param textureUsage
+    */
+   inline Texture* getTexture( MaterialTextures textureUsage ) const { return m_texture[textureUsage]; }
+
+   /**
+    * Sets a new texture of the specified usage on the material instance.
+    *
+    * @param textureUsage
+    * @param texture
+    */
+   inline void setTexture( MaterialTextures textureUsage, Texture* texture ) { m_texture[textureUsage] = texture; }
+
+   /**
+    * Sets a new material resource this instance should use to render stuff.
+    *
+    * @param material
+    */
+   inline void setMaterial( Material* material ) { m_material = material; }
 
    // -------------------------------------------------------------------------
    // RenderState implementation

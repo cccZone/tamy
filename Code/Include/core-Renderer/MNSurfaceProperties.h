@@ -1,35 +1,36 @@
-/// @file   core-Renderer/MNCamera.h
-/// @brief  a node that provides information about the active camera
+/// @file   core-Renderer/MNSurfaceProperties.h
+/// @brief  a node that provides surface properties set for the host material entity instance
 #pragma once
 
 #include "core-Renderer/MaterialNode.h"
+#include "core-Renderer/MaterialEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MSFloatOutput;
-class MSMatrixOutput;
+class MSTextureOutput;
+class Texture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MNCamera : public MaterialNode
+class MNSurfaceProperties : public MaterialNode
 {
-   DECLARE_CLASS( MNCamera )
+   DECLARE_CLASS( MNSurfaceProperties )
 
 private:
-   MSFloatOutput*    m_nearZ;
-   MSFloatOutput*    m_farZ;
-   MSFloatOutput*    m_viewportWidth;
-   MSFloatOutput*    m_viewportHeight;
-   MSMatrixOutput*   m_invView;
-   MSMatrixOutput*   m_invProj;
-
+   // runtime data
+   MSVec4Output*     m_ambient;
+   MSVec4Output*     m_diffuse;
+   MSVec4Output*     m_specular;
+   MSFloatOutput*    m_specularPower;
+   MSVec4Output*     m_emissive;
+ 
 public:
    /**
     * Constructor.
     */
-   MNCamera();
-   ~MNCamera();
+   MNSurfaceProperties();
+   ~MNSurfaceProperties();
 
    // -------------------------------------------------------------------------
    // Object implementation

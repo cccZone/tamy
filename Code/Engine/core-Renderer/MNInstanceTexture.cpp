@@ -1,51 +1,45 @@
-#include "core-Renderer/MNVec4.h"
+#include "core-Renderer/MNInstanceTexture.h"
 #include "core-Renderer/MaterialSockets.h"
-#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/Texture.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MNVec4, MaterialNode )
-   PROPERTY_EDIT( "x", float, m_x )
-   PROPERTY_EDIT( "y", float, m_y )
-   PROPERTY_EDIT( "z", float, m_z )
-   PROPERTY_EDIT( "w", float, m_w )
+BEGIN_OBJECT( MNInstanceTexture, MaterialNode )
+   PROPERTY_EDIT( "Texture usage", MaterialTextures, m_usage )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MNVec4::MNVec4()
-   : m_x( 0.0f )
-   , m_y( 0.0f )
-   , m_z( 0.0f )
-   , m_w( 0.0f )
-   , m_output( new MSVec4Output( "Vec" ) )
+MNInstanceTexture::MNInstanceTexture()
+   : m_usage( MT_DIFFUSE_1 )
+   , m_output( new MSTextureOutput( "Texture" ) )
 {
    defineOutput( m_output );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MNVec4::~MNVec4()
+MNInstanceTexture::~MNInstanceTexture()
 {
    m_output = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNVec4::onObjectLoaded()
+void MNInstanceTexture::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
    // find the existing inputs
-   m_output = DynamicCast< MSVec4Output >( findOutput( "Vec" ) );
+   m_output = DynamicCast< MSTextureOutput >( findOutput( "Texture" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNVec4::preRender( Renderer& renderer, const MaterialEntity& entity ) const
+void MNInstanceTexture::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
-   m_output->setValue( entity.data(), D3DXVECTOR4( m_x, m_y, m_z, m_w ) );
+   m_output->setValue( entity.data(), entity.getTexture( m_usage ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

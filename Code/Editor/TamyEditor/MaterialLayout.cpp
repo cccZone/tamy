@@ -11,7 +11,8 @@
 #include "MBFloat.h"
 #include "MBVec4.h"
 #include "MBBool.h"
-
+#include "MBInstanceTexture.h"
+#include "MBSurfaceProperties.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -44,6 +45,8 @@ void MaterialLayout::initBlocksFactory()
    associate< MNFloat, MBFloat >();
    associate< MNVec4, MBVec4 >();
    associate< MNBool, MBBool >();
+   associate< MNInstanceTexture, MBInstanceTexture >();
+   associate< MNSurfaceProperties, MBSurfaceProperties >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

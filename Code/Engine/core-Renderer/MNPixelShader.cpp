@@ -64,7 +64,7 @@ void MNPixelShader::onPropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNPixelShader::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void MNPixelShader::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
    if ( !m_shader || !m_shaderNode )
    {
@@ -72,12 +72,12 @@ void MNPixelShader::preRender( Renderer& renderer, RuntimeDataBuffer& data ) con
    }
 
    // bind the shader
-   m_shaderNode->bindShader( renderer, data );
+   m_shaderNode->bindShader( renderer, entity.data() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNPixelShader::postRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void MNPixelShader::postRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
    if ( m_shader )
    {

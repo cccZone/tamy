@@ -1,6 +1,7 @@
 #include "core-Renderer/MaterialEntity.h"
 #include "core-Renderer/Material.h"
 #include "core-Renderer/MaterialNode.h"
+#include "core-Renderer/Texture.h"
 #include "core/RuntimeData.h"
 #include "core-Renderer/MNPixelShader.h"
 #include "core/Graph.h"
@@ -9,9 +10,21 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MaterialEntity, Entity )
-   PROPERTY_EDIT( "material", Material*, m_material )
-END_OBJECT()
+BEGIN_ENUM( MaterialTextures );
+   ENUM_VAL( MT_DIFFUSE_1 );
+   ENUM_VAL( MT_DIFFUSE_2 );
+   ENUM_VAL( MT_NORMALS );
+END_ENUM( MaterialTextures );
+
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( MaterialEntity, Entity );
+   PROPERTY_EDIT( "material", Material*, m_material );
+   PROPERTY_EDIT( "diffuse tex 1", Texture*, m_texture[ MT_DIFFUSE_1 ] );
+   PROPERTY_EDIT( "diffuse tex 2", Texture*, m_texture[ MT_DIFFUSE_2 ] );
+   PROPERTY_EDIT( "normals tex", Texture*, m_texture[ MT_NORMALS ] );
+   PROPERTY_EDIT( "surface properties", SurfaceProperties, m_surfaceProperties );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,6 +33,10 @@ MaterialEntity::MaterialEntity( const std::string& name )
    , m_material( NULL )
    , m_dataBuf( NULL )
 {
+   for ( unsigned int i = 0; i < MT_MAX; ++i )
+   {
+      m_texture[i] = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,7 +127,7 @@ void MaterialEntity::onPreRender( Renderer& renderer ) const
    unsigned int count = m_nodesQueue.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      m_nodesQueue[i]->preRender( renderer, *m_dataBuf );
+      m_nodesQueue[i]->preRender( renderer, *this );
    }
 }
 
@@ -121,7 +138,7 @@ void MaterialEntity::onPostRender( Renderer& renderer ) const
    unsigned int count = m_nodesQueue.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      m_nodesQueue[i]->postRender( renderer, *m_dataBuf );
+      m_nodesQueue[i]->postRender( renderer, *this );
    }
 }
 
@@ -129,14 +146,40 @@ void MaterialEntity::onPostRender( Renderer& renderer ) const
 
 bool MaterialEntity::onEquals( const MaterialEntity& rhs ) const
 {
-   return m_material == rhs.m_material;
+   if ( m_material != rhs.m_material )
+   {
+      return false;
+   }
+
+   for ( unsigned int i = 0; i < MT_MAX; ++i )
+   {
+      if ( m_texture[i] != rhs.m_texture[i] )
+      {
+         return false;
+      }
+   }
+
+   return m_surfaceProperties == rhs.m_surfaceProperties;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool MaterialEntity::onLess( const MaterialEntity& rhs ) const
 {
-   return m_material < rhs.m_material;
+   if ( m_material < rhs.m_material )
+   {
+      return true;
+   }
+
+   for ( unsigned int i = 0; i < MT_MAX; ++i )
+   {
+      if ( m_texture[i] < rhs.m_texture[i] )
+      {
+         return true;
+      }
+   }
+
+   return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
