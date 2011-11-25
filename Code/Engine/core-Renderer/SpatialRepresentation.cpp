@@ -11,9 +11,6 @@
 SpatialRepresentation::SpatialRepresentation( Geometry& geometry )
    : m_geometry( geometry )
 {
-   // sort the states vector
-   m_renderStates = geometry.getRenderStates();
-   std::sort( m_renderStates.begin(), m_renderStates.end(), StateComparator() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

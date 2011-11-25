@@ -9,7 +9,7 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-StateTreeNode* RPSBTextured::buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems ) const
+StateTreeNode* RPSBTextured::buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems, RuntimeDataBuffer& data ) const
 {
    StateTreeNode* root = new ( pool ) StateTreeNode();
 

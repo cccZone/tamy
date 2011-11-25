@@ -51,3 +51,15 @@ BEGIN_OBJECT( MSVec4Output, Object );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( MSBoolInput, Object );
+PROPERTY( std::string, m_name );
+PROPERTY( MSOutput*, m_connectedOutput );
+END_OBJECT();
+
+BEGIN_OBJECT( MSBoolOutput, Object );
+PROPERTY( std::string, m_name );
+PROPERTY( std::vector< MaterialNode* >, m_connectedNodes );
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////////////

@@ -344,6 +344,9 @@
     <ClInclude Include="PipelineLayout.h">
       <Filter>Widgets\PipelineWidget</Filter>
     </ClInclude>
+    <ClInclude Include="MBBool.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -817,6 +820,9 @@
     </ClCompile>
     <ClCompile Include="PipelineBlock.cpp">
       <Filter>Widgets\PipelineWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="MBBool.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

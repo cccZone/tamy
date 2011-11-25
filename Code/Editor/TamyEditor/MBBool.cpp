@@ -1,18 +1,18 @@
-#include "MBVec4.h"
+#include "MBBool.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MBVec4, GraphBlock );
-   PROPERTY( TResourceHandle< MNVec4 >*, m_node );
+BEGIN_OBJECT( MBBool, GraphBlock );
+PROPERTY( TResourceHandle< MNBool >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MBVec4::MBVec4( MNVec4& node )
-   : TPipelineBlock< MNVec4, MaterialNode >( node )
+MBBool::MBBool( MNBool& node )
+   : TPipelineBlock< MNBool, MaterialNode >( node )
 {
-   setCaption( "Vec4" );
+   setCaption( "Bool" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

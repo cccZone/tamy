@@ -56,8 +56,8 @@ public:
    // -------------------------------------------------------------------------
    // RenderState implementation
    // -------------------------------------------------------------------------
-   void onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
-   void onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
+   void onPreRender( Renderer& renderer ) const;
+   void onPostRender( Renderer& renderer ) const;
    bool onEquals( const SingleTextureEffect& rhs ) const;
    bool onLess( const SingleTextureEffect& rhs ) const;
 

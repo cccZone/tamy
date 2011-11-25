@@ -52,17 +52,20 @@ REGISTER_RTTI( RenderingPipelineLayout );
 #include "MBTexture.h"
 #include "MBFloat.h"
 #include "MBVec4.h"
+#include "MBBool.h"
 
 REGISTER_RTTI( MaterialLayout );
 REGISTER_RTTI( MSSFloat );
 REGISTER_RTTI( MSSMatrix );
 REGISTER_RTTI( MSSTexture );
 REGISTER_RTTI( MSSVec4 );
+REGISTER_RTTI( MSSBool );
 REGISTER_RTTI( MBPixelShader );
 REGISTER_RTTI( MBSpatialEntity );
 REGISTER_RTTI( MBCamera );
 REGISTER_RTTI( MBTexture );
 REGISTER_RTTI( MBFloat );
 REGISTER_RTTI( MBVec4 );
+REGISTER_RTTI( MBBool );
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -42,7 +42,7 @@ void SingleTextureEffect::setTexture( Texture& texture )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureEffect::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void SingleTextureEffect::onPreRender( Renderer& renderer ) const
 {
    if ( !m_parentNode || !m_effect )
    {
@@ -70,7 +70,7 @@ void SingleTextureEffect::onPreRender( Renderer& renderer, RuntimeDataBuffer& da
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureEffect::onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void SingleTextureEffect::onPostRender( Renderer& renderer ) const
 {
    if ( !m_parentNode || !m_effect )
    {

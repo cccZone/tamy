@@ -295,6 +295,9 @@
     <ClCompile Include="MaterialSockets.cpp">
       <Filter>Materials\MaterialGraph</Filter>
     </ClCompile>
+    <ClCompile Include="MNBool.cpp">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -585,6 +588,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPFloats2Vec4Node.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MNBool.h">
+      <Filter>Materials\MaterialGraph\Nodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

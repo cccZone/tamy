@@ -10,6 +10,7 @@
 #include "MBTexture.h"
 #include "MBFloat.h"
 #include "MBVec4.h"
+#include "MBBool.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -42,6 +43,7 @@ void MaterialLayout::initBlocksFactory()
    associate< MNTexture, MBTexture >();
    associate< MNFloat, MBFloat >();
    associate< MNVec4, MBVec4 >();
+   associate< MNBool, MBBool >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,6 +59,8 @@ void MaterialLayout::initSocketsFactory( PipelineBlock& block )
    factory.associate< MSVec4Output, MSSVec4 >();
    factory.associate< MSMatrixInput, MSSMatrix >();
    factory.associate< MSMatrixOutput, MSSMatrix >();
+   factory.associate< MSBoolInput, MSSBool >();
+   factory.associate< MSBoolOutput, MSSBool >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

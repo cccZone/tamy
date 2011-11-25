@@ -36,6 +36,13 @@ public:
    void onObjectLoaded();
    void onPrePropertyChanged( Property& property );
    void onPropertyChanged( Property& property );
+
+   // -------------------------------------------------------------------------
+   // MaterialNode implementation
+   // -------------------------------------------------------------------------
+   void preRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
+   void postRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

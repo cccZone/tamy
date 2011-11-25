@@ -42,11 +42,10 @@ void MNVec4::onObjectLoaded()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/*
-void RPVec4Node::onUpdate( RenderingPipelineMechanism& host ) const
+
+void MNVec4::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
 {
-   m_output->setValue( host.data(), D3DXVECTOR4( m_x, m_y, m_z, m_w ) );
+   m_output->setValue( data, D3DXVECTOR4( m_x, m_y, m_z, m_w ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-*/

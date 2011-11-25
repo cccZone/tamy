@@ -21,7 +21,6 @@ class SpatialRepresentation
 {
 private:
    Geometry&            m_geometry;
-   RenderStatesVec      m_renderStates;
 
 public:
    /**
@@ -45,7 +44,7 @@ public:
    /**
     * Returns the sorted array of the geometry's render states.
     */
-   inline const RenderStatesVec& getRenderStates() { return m_renderStates; }
+   inline const RenderStatesVec& getRenderStates() { return m_geometry.getRenderStates(); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

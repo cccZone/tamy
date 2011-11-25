@@ -73,6 +73,8 @@ void Geometry::addState( RenderState& state )
       // add the state
       m_states.push_back( &state );
    }
+
+   std::sort( m_states.begin(), m_states.end(), StateComparator() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -135,7 +137,7 @@ void Geometry::onChildDetached( Entity& child )
    RenderState* renderState = dynamic_cast< RenderState* >( &child );
    if ( renderState )
    {
-      addState( *renderState );
+      removeState( *renderState );
    }
 }
 

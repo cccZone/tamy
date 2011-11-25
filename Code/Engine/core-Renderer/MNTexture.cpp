@@ -38,11 +38,10 @@ void MNTexture::onObjectLoaded()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/*
-void MNTexture::onUpdate( RenderingPipelineMechanism& host ) const
+
+void MNTexture::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
 {
-   m_output->setTexture( host.data(), m_texture );
+   m_output->setValue( data, m_texture );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-*/
