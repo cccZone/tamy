@@ -37,9 +37,9 @@ void MNBool::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNBool::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void MNBool::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
-   m_output->setValue( data, m_value );
+   m_output->setValue( entity.data(), m_value );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

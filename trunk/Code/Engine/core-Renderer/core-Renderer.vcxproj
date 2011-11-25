@@ -93,8 +93,10 @@
     <ClCompile Include="MNBool.cpp" />
     <ClCompile Include="MNCamera.cpp" />
     <ClCompile Include="MNFloat.cpp" />
+    <ClCompile Include="MNInstanceTexture.cpp" />
     <ClCompile Include="MNPixelShader.cpp" />
     <ClCompile Include="MNSpatialEntity.cpp" />
+    <ClCompile Include="MNSurfaceProperties.cpp" />
     <ClCompile Include="MNTexture.cpp" />
     <ClCompile Include="MNVec4.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
@@ -176,8 +178,10 @@
     <ClInclude Include="..\..\Include\core-Renderer\MNBool.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNCamera.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNFloat.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\MNInstanceTexture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNPixelShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNSpatialEntity.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\MNSurfaceProperties.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNTexture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNVec4.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h" />

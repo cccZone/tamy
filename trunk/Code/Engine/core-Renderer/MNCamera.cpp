@@ -57,10 +57,11 @@ void MNCamera::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNCamera::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void MNCamera::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
    Camera& camera = renderer.getActiveCamera();
 
+   RuntimeDataBuffer& data = entity.data();
    m_nearZ->setValue( data, camera.getNearClippingPlane() );
    m_farZ->setValue( data, camera.getFarClippingPlane() );
    m_viewportWidth->setValue( data, renderer.getViewportWidth() );

@@ -39,9 +39,9 @@ void MNTexture::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNTexture::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void MNTexture::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
-   m_output->setValue( data, m_texture );
+   m_output->setValue( entity.data(), m_texture );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

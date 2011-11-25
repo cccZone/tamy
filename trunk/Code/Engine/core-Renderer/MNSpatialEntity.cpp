@@ -51,8 +51,9 @@ void MNSpatialEntity::onCreateLayout( const MaterialEntity& host ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNSpatialEntity::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void MNSpatialEntity::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
+   RuntimeDataBuffer& data = entity.data();
    SpatialEntity* node = data[ m_parentNode ];
 
    if ( node )

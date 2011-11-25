@@ -303,8 +303,17 @@ void IWFScene::addStaticGeometry( Model& scene,
 
       // create a rendering effect instance
       MaterialDefinition& mat = currMesh.material;
-      SingleTextureMaterial* material = new SingleTextureMaterial( mat.matName );
-      material->setSurfaceProperties( SurfaceProperties( mat.ambient, mat.diffuse, mat.specular, mat.emissive, mat.power ) );
+      MaterialEntity* material = new MaterialEntity( mat.matName );
+
+      // TODO: !!!!! crash when we edit a material and a scene is being displayed
+      std::string matResourceName = "";// TODO !!!!!!!!!!!!!  settings.findIWFMaterial( mat.matName );
+      if ( !matResourceName.empty() )
+      {
+         Material* materialRes = &rm.create< Material >( matResourceName );
+         material->setMaterial( materialRes );
+      }
+
+      material->accessSurfaceProperties() = SurfaceProperties( mat.ambient, mat.diffuse, mat.specular, mat.emissive, mat.power );
       
       if (mat.texName.length() > 0)
       {
@@ -318,7 +327,7 @@ void IWFScene::addStaticGeometry( Model& scene,
             texture->setTextureName( texName );
             rm.addResource( texture );
          }
-         material->setTexture( *texture );
+         material->setTexture( MT_DIFFUSE_1, texture );
       }
       
       // setup the geometry node

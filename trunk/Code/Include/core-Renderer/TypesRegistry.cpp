@@ -40,6 +40,8 @@ REGISTER_RTTI( MNSpatialEntity );
 REGISTER_RTTI( MNTexture );
 REGISTER_RTTI( MNVec4 );
 REGISTER_RTTI( MNBool );
+REGISTER_RTTI( MNInstanceTexture );
+REGISTER_RTTI( MNSurfaceProperties );
 REGISTER_RTTI( MSFloatInput );
 REGISTER_RTTI( MSFloatOutput );
 REGISTER_RTTI( MSMatrixInput );
@@ -50,6 +52,7 @@ REGISTER_RTTI( MSVec4Input );
 REGISTER_RTTI( MSVec4Output );
 REGISTER_RTTI( MSBoolInput );
 REGISTER_RTTI( MSBoolOutput );
+REGISTER_ENUM_RTTI( MaterialTextures );
 
 ///////////////////////////////////////////////////////////////////////////////
 

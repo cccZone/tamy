@@ -40,8 +40,8 @@ public:
    // -------------------------------------------------------------------------
    // MaterialNode implementation
    // -------------------------------------------------------------------------
-   void preRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
-   void postRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
+   void preRender( Renderer& renderer, const MaterialEntity& entity ) const;
+   void postRender( Renderer& renderer, const MaterialEntity& entity ) const;
 
 };
 

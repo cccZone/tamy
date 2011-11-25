@@ -38,7 +38,7 @@ public:
    // MaterialNode implementation
    // -------------------------------------------------------------------------
    void onCreateLayout( const MaterialEntity& host ) const;
-   void preRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
+   void preRender( Renderer& renderer, const MaterialEntity& entity ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

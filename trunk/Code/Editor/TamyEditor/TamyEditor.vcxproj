@@ -189,8 +189,10 @@
     <ClInclude Include="MBBool.h" />
     <ClInclude Include="MBCamera.h" />
     <ClInclude Include="MBFloat.h" />
+    <ClInclude Include="MBInstanceTexture.h" />
     <ClInclude Include="MBPixelShader.h" />
     <ClInclude Include="MBSpatialEntity.h" />
+    <ClInclude Include="MBSurfaceProperties.h" />
     <ClInclude Include="MBTexture.h" />
     <ClInclude Include="MBVec4.h" />
     <ClInclude Include="NavigationState.h" />
@@ -859,8 +861,10 @@
     <ClCompile Include="MBBool.cpp" />
     <ClCompile Include="MBCamera.cpp" />
     <ClCompile Include="MBFloat.cpp" />
+    <ClCompile Include="MBInstanceTexture.cpp" />
     <ClCompile Include="MBPixelShader.cpp" />
     <ClCompile Include="MBSpatialEntity.cpp" />
+    <ClCompile Include="MBSurfaceProperties.cpp" />
     <ClCompile Include="MBTexture.cpp" />
     <ClCompile Include="MBVec4.cpp" />
     <ClCompile Include="NavigationState.cpp" />
