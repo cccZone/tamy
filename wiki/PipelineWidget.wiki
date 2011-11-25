@@ -1,0 +1,13 @@
+#labels PipelineLayout
+=Pipeline widget=
+
+It's not as much a widget, as it is a set of skeleton classes that facilitate the creation of pipeline layouts.
+
+
+I'll give a quick example of what do you have to create in order to quickly create a layout for your pipeline resource.
+
+
+*First*, you need a layout definition:
+
+{{{
+}}}
