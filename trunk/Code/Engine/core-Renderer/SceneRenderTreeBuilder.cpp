@@ -41,6 +41,7 @@ StateTreeNode::StateTreeNode()
    : m_child( NULL )
    , m_sibling( NULL )
    , m_state( NULL ) 
+   , m_managedObj( NULL )
    , m_geometryNode( NULL )
 {
 }
@@ -51,6 +52,18 @@ StateTreeNode::StateTreeNode( RenderState& state )
    : m_child( NULL )
    , m_sibling( NULL )
    , m_state( &state ) 
+   , m_managedObj( NULL )
+   , m_geometryNode( NULL )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+StateTreeNode::StateTreeNode( RenderState* state, MemoryPoolObject* managedObj )
+   : m_child( NULL )
+   , m_sibling( NULL )
+   , m_state( state ) 
+   , m_managedObj( managedObj )
    , m_geometryNode( NULL )
 {
 }
@@ -59,6 +72,7 @@ StateTreeNode::StateTreeNode( RenderState& state )
 
 StateTreeNode::~StateTreeNode()
 {
+   MEMPOOL_DELETE( m_managedObj );
    MEMPOOL_DELETE( m_geometryNode );
    MEMPOOL_DELETE( m_child );
    MEMPOOL_DELETE( m_sibling );
@@ -83,18 +97,18 @@ bool StateTreeNode::compareState( RenderState* state )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void StateTreeNode::render( Renderer& renderer, RuntimeDataBuffer& data ) const
+void StateTreeNode::render( Renderer& renderer ) const
 {
    // first set the state
    if ( m_state )
    {
-      m_state->onPreRender( renderer, data );
+      m_state->onPreRender( renderer );
    }
 
    // then, if the node has children - render them - we want to go in depth
    if ( m_child )
    {
-      m_child->render( renderer, data );
+      m_child->render( renderer );
    }
 
    // now the entire state is set - render the geometry if there's any
@@ -106,13 +120,13 @@ void StateTreeNode::render( Renderer& renderer, RuntimeDataBuffer& data ) const
    // clear the state
    if ( m_state )
    {
-      m_state->onPostRender( renderer, data );
+      m_state->onPostRender( renderer );
    }
 
    // traverse the sibling node
    if ( m_sibling )
    {
-      m_sibling->render( renderer, data );
+      m_sibling->render( renderer );
    }
 
 }

@@ -85,12 +85,12 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    // build a tree sorting the nodes by the attributes
    m_treeMemPool->reset();
-   StateTreeNode* root = m_builder->buildRenderTree( *m_treeMemPool, visibleElems );
+   StateTreeNode* root = m_builder->buildRenderTree( *m_treeMemPool, visibleElems, data );
 
    if ( root )
    {
       // render the tree contents
-      root->render( renderer, data );
+      root->render( renderer );
 
       // get rid of the tree
       MEMPOOL_DELETE( root );

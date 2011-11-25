@@ -9,6 +9,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class MaterialEntity;
+class Renderer;
+
+///////////////////////////////////////////////////////////////////////////////
+
 class MaterialNode : public ResourceObject, public GraphBuilderNode< MaterialNode >
 {
    DECLARE_CLASS( MaterialNode)
@@ -24,11 +29,42 @@ public:
     */
    GBNodeInput< MaterialNode >* createInput( const Class& dataType, const std::string& name ) const;
 
+   /**
+    * Called in order to initialize node's runtime data layout.
+    *
+    * @param host
+    */
+   void createLayout( const MaterialEntity& host ) const;
+
+   /**
+    * Called by the entity that uses the material in order to set it up.
+    *
+    * @param renderer
+    * @param data
+    */
+   virtual void preRender( Renderer& renderer, RuntimeDataBuffer& data ) const {}
+
+   /**
+    * Called by the entity that uses the material in order to clean up after using it.
+    *
+    * @param renderer
+    * @param data
+    */
+   virtual void postRender( Renderer& renderer, RuntimeDataBuffer& data ) const {}
+
    // -----------------------------------------------------------------
    // Object implementation
    // -----------------------------------------------------------------
    void onObjectLoaded();
    void onPropertyChanged( Property& property );
+
+protected:
+   /**
+    * Called in order to initialize node implementation's specific runtime data layout.
+    *
+    * @param host
+    */
+   virtual void onCreateLayout( const MaterialEntity& host ) const {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

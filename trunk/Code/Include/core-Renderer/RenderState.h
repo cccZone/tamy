@@ -36,17 +36,15 @@ public:
     * Called before the geometry rendering - sets the render state on the device.
     *
     * @param renderer
-    * @param data       runtime data buffer
     */
-   virtual void onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const = 0;
+   virtual void onPreRender( Renderer& renderer ) const = 0;
 
    /**
     * Called after the geometry rendering- resets the render state.
     *
     * @param renderer
-    * @param data       runtime data buffer
     */
-   virtual void onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const = 0;
+   virtual void onPostRender( Renderer& renderer ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

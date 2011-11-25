@@ -1,43 +1,43 @@
-#include "core-Renderer/MNFloat.h"
+#include "core-Renderer/MNBool.h"
 #include "core-Renderer/MaterialSockets.h"
 #include "core-Renderer/MaterialEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MNFloat, MaterialNode )
-   PROPERTY_EDIT( "Value", float, m_value )
+BEGIN_OBJECT( MNBool, MaterialNode )
+   PROPERTY_EDIT( "Value", bool, m_value )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MNFloat::MNFloat()
-   : m_value( 0.0f )
-   , m_output( new MSFloatOutput( "Value" ) )
+MNBool::MNBool()
+   : m_value( true )
+   , m_output( new MSBoolOutput( "Value" ) )
 {
    defineOutput( m_output );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MNFloat::~MNFloat()
+MNBool::~MNBool()
 {
    m_output = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNFloat::onObjectLoaded()
+void MNBool::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
    // find the existing inputs
-   m_output = DynamicCast< MSFloatOutput >( findOutput( "Value" ) );
+   m_output = DynamicCast< MSBoolOutput >( findOutput( "Value" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNFloat::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void MNBool::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
 {
    m_output->setValue( data, m_value );
 }

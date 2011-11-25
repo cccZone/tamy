@@ -48,11 +48,12 @@ struct GeometryNode : public MemoryPoolObject
  */
 struct StateTreeNode : public MemoryPoolObject
 {
-   StateTreeNode*    m_child;
-   StateTreeNode*    m_sibling;
+   StateTreeNode*          m_child;
+   StateTreeNode*          m_sibling;
 
-   RenderState*      m_state;
-   GeometryNode*     m_geometryNode;
+   RenderState*            m_state;
+   MemoryPoolObject*       m_managedObj;
+   GeometryNode*           m_geometryNode;
 
    /**
     * Constructor.
@@ -65,6 +66,14 @@ struct StateTreeNode : public MemoryPoolObject
     * @param state         described render state
     */
    StateTreeNode( RenderState& state );
+
+   /**
+    * Constructor ( that will delete the state once it gets deleted ).
+    *
+    * @param state
+    * @param managedObj    additional obj to destroy
+    */
+   StateTreeNode( RenderState* state, MemoryPoolObject* managedObj );
    ~StateTreeNode();
 
    /**
@@ -80,7 +89,7 @@ struct StateTreeNode : public MemoryPoolObject
     * @param renderer
     * @param runtime data buffer
     */
-   void render( Renderer& renderer, RuntimeDataBuffer& data ) const;
+   void render( Renderer& renderer ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,8 +108,9 @@ public:
     *
     * @param pool             memory pool in which we can allocate the tree nodes
     * @param visibleElems     array of visible elements we want to render.
+    * @param data             runtime data buffer
     */
-   virtual StateTreeNode* buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems ) const = 0;
+   virtual StateTreeNode* buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems, RuntimeDataBuffer& data ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

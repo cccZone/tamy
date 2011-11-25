@@ -1,8 +1,8 @@
-/// @file   TamyEditor/MBFloat.h
-/// @brief  material pipeline block representing a float value provider node
+/// @file   TamyEditor/MBBool.h
+/// @brief  material pipeline block representing a bool value provider node
 #pragma once
 
-#include "core-Renderer/MNFloat.h"
+#include "core-Renderer/MNBool.h"
 #include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
@@ -12,22 +12,22 @@
 /**
  * Material pipeline block representing a float value provider node.
  */
-class MBFloat : public TPipelineBlock< MNFloat, MaterialNode >
+class MBBool : public TPipelineBlock< MNBool, MaterialNode >
 {
-   DECLARE_CLASS( MBFloat )
+   DECLARE_CLASS( MBBool )
 
 public:
    /**
     * Default constructor required by the RTTI system.
     */
-   MBFloat() : TPipelineBlock< MNFloat, MaterialNode >() {}
+   MBBool() : TPipelineBlock< MNBool, MaterialNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.
     *
     * @param node    represented node
     */
-   MBFloat( MNFloat& node );
+   MBBool( MNBool& node );
 
 protected:
    // -------------------------------------------------------------------------

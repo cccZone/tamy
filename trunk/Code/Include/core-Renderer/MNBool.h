@@ -1,5 +1,5 @@
-/// @file   core-Renderer/MNCamera.h
-/// @brief  a node that provides information about the active camera
+/// @file   core-Renderer/MNBool.h
+/// @brief  a node that provides a bool value
 #pragma once
 
 #include "core-Renderer/MaterialNode.h"
@@ -7,29 +7,27 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MSFloatOutput;
-class MSMatrixOutput;
+class MSBoolOutput;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MNCamera : public MaterialNode
+class MNBool : public MaterialNode
 {
-   DECLARE_CLASS( MNCamera )
+   DECLARE_CLASS( MNBool )
 
 private:
-   MSFloatOutput*    m_nearZ;
-   MSFloatOutput*    m_farZ;
-   MSFloatOutput*    m_viewportWidth;
-   MSFloatOutput*    m_viewportHeight;
-   MSMatrixOutput*   m_invView;
-   MSMatrixOutput*   m_invProj;
+   // static data
+   bool             m_value;
 
+   // runtime data
+   MSBoolOutput*    m_output;
+ 
 public:
    /**
     * Constructor.
     */
-   MNCamera();
-   ~MNCamera();
+   MNBool();
+   ~MNBool();
 
    // -------------------------------------------------------------------------
    // Object implementation

@@ -18,7 +18,7 @@ public:
    // -------------------------------------------------------------------------
    // SceneRenderTreeBuilder implementation
    // -------------------------------------------------------------------------
-   StateTreeNode* buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems ) const;
+   StateTreeNode* buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems, RuntimeDataBuffer& data ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

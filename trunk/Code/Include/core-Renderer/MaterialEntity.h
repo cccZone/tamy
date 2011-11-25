@@ -10,6 +10,7 @@
 
 class Material;
 class RuntimeData;
+class MaterialNode;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,10 +23,11 @@ class MaterialEntity : public Entity, public TRenderState< MaterialEntity >
 
 private:
    // static data
-   Material*            m_material;
+   Material*                        m_material;
 
    // runtime data
-   RuntimeDataBuffer*   m_dataBuf;
+   RuntimeDataBuffer*               m_dataBuf;
+   std::vector< MaterialNode* >     m_nodesQueue;
 
 public:
    /**
@@ -36,11 +38,16 @@ public:
    MaterialEntity( const std::string& name = "" );
    ~MaterialEntity();
 
+   /**
+    * Returns the runtime data buffer.
+    */
+   inline RuntimeDataBuffer& data() const { return *m_dataBuf; }
+
    // -------------------------------------------------------------------------
    // RenderState implementation
    // -------------------------------------------------------------------------
-   void onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
-   void onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
+   void onPreRender( Renderer& renderer ) const;
+   void onPostRender( Renderer& renderer ) const;
    bool onEquals( const MaterialEntity& rhs ) const;
    bool onLess( const MaterialEntity& rhs ) const;
 

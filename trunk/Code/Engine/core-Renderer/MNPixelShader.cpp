@@ -1,5 +1,6 @@
 #include "core-Renderer/MNPixelShader.h"
 #include "core-Renderer/PixelShader.h"
+#include "core-Renderer/MaterialEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,6 +59,29 @@ void MNPixelShader::onPropertyChanged( Property& property )
    if ( property.getName() == "m_shader" && m_shader )
    {
       m_shaderNode->setShader( *m_shader );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MNPixelShader::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+{
+   if ( !m_shader || !m_shaderNode )
+   {
+      return;
+   }
+
+   // bind the shader
+   m_shaderNode->bindShader( renderer, data );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MNPixelShader::postRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+{
+   if ( m_shader )
+   {
+      new ( renderer() ) RCUnbindPixelShader( *m_shader );
    }
 }
 

@@ -2,6 +2,7 @@
 #include "core-Renderer/Camera.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/MaterialSockets.h"
+#include "core-Renderer/MaterialEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,12 +56,10 @@ void MNCamera::onObjectLoaded()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/*
-void RPCameraNode::onUpdate( RenderingPipelineMechanism& host ) const
+
+void MNCamera::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
 {
-   Renderer& renderer = host.getRenderer();
    Camera& camera = renderer.getActiveCamera();
-   RuntimeDataBuffer& data = host.data();
 
    m_nearZ->setValue( data, camera.getNearClippingPlane() );
    m_farZ->setValue( data, camera.getFarClippingPlane() );
@@ -81,4 +80,3 @@ void RPCameraNode::onUpdate( RenderingPipelineMechanism& host ) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-*/

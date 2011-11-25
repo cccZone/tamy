@@ -90,6 +90,7 @@
     <ClCompile Include="MaterialEntity.cpp" />
     <ClCompile Include="MaterialNode.cpp" />
     <ClCompile Include="MaterialSockets.cpp" />
+    <ClCompile Include="MNBool.cpp" />
     <ClCompile Include="MNCamera.cpp" />
     <ClCompile Include="MNFloat.cpp" />
     <ClCompile Include="MNPixelShader.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\MaterialEntity.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MaterialNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MaterialSockets.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\MNBool.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNCamera.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNFloat.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNPixelShader.h" />

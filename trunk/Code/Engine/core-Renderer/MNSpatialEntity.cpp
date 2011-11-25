@@ -2,6 +2,8 @@
 #include "core-MVC/SpatialEntity.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/MaterialSockets.h"
+#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/Camera.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,23 +41,30 @@ void MNSpatialEntity::onObjectLoaded()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/*
-void MNSpatialEntity::onUpdate( RenderingPipelineMechanism& host ) const
+
+void MNSpatialEntity::onCreateLayout( const MaterialEntity& host ) const
 {
-   if ( !m_parentNode )
-   {
-      return;
-   }
-   Renderer& renderer = host.getRenderer();
-   Camera& camera = renderer.getActiveCamera();
    RuntimeDataBuffer& data = host.data();
-
-   const D3DXMATRIX& worldMtx = m_parentNode->getGlobalMtx();
-   m_worldMtx->setValue( data, worldMtx );
-
-   D3DXMATRIX worldView = worldMtx * camera.getViewMtx();
-   m_worldViewMtx->setValue( data, worldView );
+   data.registerVar( m_parentNode );
+   data[ m_parentNode ] = DynamicCast< SpatialEntity >( &host.getParent() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-*/
+
+void MNSpatialEntity::preRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+{
+   SpatialEntity* node = data[ m_parentNode ];
+
+   if ( node )
+   {
+      Camera& camera = renderer.getActiveCamera();
+
+      const D3DXMATRIX& worldMtx = node->getGlobalMtx();
+      m_worldMtx->setValue( data, worldMtx );
+
+      D3DXMATRIX worldView = worldMtx * camera.getViewMtx();
+      m_worldViewMtx->setValue( data, worldView );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

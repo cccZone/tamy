@@ -35,7 +35,7 @@ SingleTextureMaterial::~SingleTextureMaterial()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureMaterial::onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void SingleTextureMaterial::onPreRender( Renderer& renderer ) const
 {
    if ( !m_shader )
    {
@@ -55,7 +55,7 @@ void SingleTextureMaterial::onPreRender( Renderer& renderer, RuntimeDataBuffer& 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SingleTextureMaterial::onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+void SingleTextureMaterial::onPostRender( Renderer& renderer ) const
 {
    if ( !m_shader )
    {

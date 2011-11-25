@@ -186,6 +186,7 @@
     </CustomBuild>
     <ClInclude Include="MaterialLayout.h" />
     <ClInclude Include="MaterialSocketRepresentation.h" />
+    <ClInclude Include="MBBool.h" />
     <ClInclude Include="MBCamera.h" />
     <ClInclude Include="MBFloat.h" />
     <ClInclude Include="MBPixelShader.h" />
@@ -855,6 +856,7 @@
     <ClCompile Include="MaterialEditor.cpp" />
     <ClCompile Include="MaterialLayout.cpp" />
     <ClCompile Include="MaterialSocketRepresentation.cpp" />
+    <ClCompile Include="MBBool.cpp" />
     <ClCompile Include="MBCamera.cpp" />
     <ClCompile Include="MBFloat.cpp" />
     <ClCompile Include="MBPixelShader.cpp" />

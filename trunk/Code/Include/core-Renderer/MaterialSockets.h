@@ -110,3 +110,27 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+class MSBoolInput : public TGBNodeInput< MaterialNode, bool >
+{
+   DECLARE_CLASS( MSBoolInput )
+
+public:
+   /**
+    * Constructor.
+    */
+   MSBoolInput( const std::string& name = "" ) : TGBNodeInput< MaterialNode, bool >( name ) {}
+};
+
+class MSBoolOutput : public TGBNodeOutput< MaterialNode, bool >
+{
+   DECLARE_CLASS( MSBoolOutput )
+
+public:
+   /**
+    * Constructor.
+    */
+   MSBoolOutput( const std::string& name = "" ) : TGBNodeOutput< MaterialNode, bool >( name ) {}
+};
+
+///////////////////////////////////////////////////////////////////////////////

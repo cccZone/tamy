@@ -8,16 +8,19 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class MSMatrixOutput;
+class SpatialEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class MNSpatialEntity : public MaterialNode
 {
-   DECLARE_CLASS( MNCamera )
+   DECLARE_CLASS( MNSpatialEntity )
 
 private:
-   MSMatrixOutput*   m_worldMtx;
-   MSMatrixOutput*   m_worldViewMtx;
+   MSMatrixOutput*                     m_worldMtx;
+   MSMatrixOutput*                     m_worldViewMtx;
+
+   TRuntimeVar< SpatialEntity* >       m_parentNode;
 
 public:
    /**
@@ -30,6 +33,12 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
+
+   // -------------------------------------------------------------------------
+   // MaterialNode implementation
+   // -------------------------------------------------------------------------
+   void onCreateLayout( const MaterialEntity& host ) const;
+   void preRender( Renderer& renderer, RuntimeDataBuffer& data ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,5 @@
 #include "core-Renderer/MaterialNode.h"
+#include "core-Renderer/MaterialEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,18 @@ void MaterialNode::onPropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void MaterialNode::createLayout( const MaterialEntity& host ) const
+{
+   for( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
+   {
+      (*it)->createLayout( host.data() );
+   }
+
+   onCreateLayout( host );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 GBNodeInput< MaterialNode >* MaterialNode::createInput( const Class& dataType, const std::string& name ) const
 {
    const std::string& dataTypeName = dataType.getShortName(); 
@@ -64,6 +77,10 @@ GBNodeInput< MaterialNode >* MaterialNode::createInput( const Class& dataType, c
    else if ( dataTypeName == "D3DXVECTOR4" )
    {
       return new MSVec4Input( name );
+   }
+   else if ( dataTypeName == "bool" )
+   {
+      return new MSBoolInput( name );
    } 
 
    return NULL;

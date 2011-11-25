@@ -155,12 +155,12 @@ namespace // anonymous
          m_rsId = atoi( id.c_str() );
       }
 
-      void onPreRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+      void onPreRender( Renderer& renderer ) const
       {
          new ( renderer() ) RenderingCommandMock( m_preId );
       }
 
-      void onPostRender( Renderer& renderer, RuntimeDataBuffer& data ) const
+      void onPostRender( Renderer& renderer ) const
       {
          new ( renderer() ) RenderingCommandMock( m_postId );
       }
