@@ -2,6 +2,7 @@
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/Renderer.h"
+#include "core-Renderer/RenderTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,13 @@ void RPDebugRendererNode::onCreateLayout( RenderingPipelineMechanism& host ) con
    RuntimeDataBuffer& data = host.data();
 
    data.registerVar( m_renderTarget );
-   data[ m_renderTarget ] = &host.getRenderTarget( m_renderTargetId );
+
+   RenderTarget* trg = host.getRenderTarget( m_renderTargetId );
+   data[ m_renderTarget ] = trg;
+
+   // find the existing outputs and set the data on them
+   RPTextureOutput* output = DynamicCast< RPTextureOutput >( findOutput( "Output" ) );
+   output->setValue( data, trg );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -146,7 +146,7 @@ void RenderingPipelineMechanism::setDebugScene( DebugScene& debugScene )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderTarget& RenderingPipelineMechanism::getRenderTarget( const std::string& id ) const
+RenderTarget* RenderingPipelineMechanism::getRenderTarget( const std::string& id ) const
 {
    if ( m_pipeline )
    {
@@ -218,21 +218,19 @@ void RenderingPipelineMechanism::pipelineInitialization()
       // initialize nodes
       cacheNodes();
 
-      // 1.) create data layout
+      // 1.) initialize data the nodes may be precaching ( i.e. render targets )
       for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
       {
-         (*it)->createLayout( *m_runtimeDataBuffer );
+         (*it)->initialize( *m_runtimeDataBuffer, *m_renderer );
       }
+
+      // 2.) initialize the nodes
       for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
       {
          (*it)->createLayout( *this );
       }
 
-      // 2.) initialize render targets and nodes
-      for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
-      {
-         (*it)->initialize( *m_runtimeDataBuffer, *m_renderer );
-      }
+      // 3.) attach observers
       for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
       {
          (*it)->attachObserver( *this );

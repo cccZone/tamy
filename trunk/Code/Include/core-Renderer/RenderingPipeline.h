@@ -64,7 +64,7 @@ public:
     * @param id            render target id
     * @param runtimeData   runtime data buffer the target is stored in
     */
-   RenderTarget& getRenderTarget( const std::string& id, RuntimeDataBuffer& runtimeData ) const;
+   RenderTarget* getRenderTarget( const std::string& id, RuntimeDataBuffer& runtimeData ) const;
 
    /**
     * Returns a list of all defined render targets.
