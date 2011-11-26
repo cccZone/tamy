@@ -8,7 +8,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SpatialRepresentation;
 class Geometry;
 class RenderState;
 class Renderer;
@@ -110,7 +109,7 @@ public:
     * @param visibleElems     array of visible elements we want to render.
     * @param data             runtime data buffer
     */
-   virtual StateTreeNode* buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems, RuntimeDataBuffer& data ) const = 0;
+   virtual StateTreeNode* buildRenderTree( MemoryPool& pool, const Array< Geometry* >& visibleElems, RuntimeDataBuffer& data ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

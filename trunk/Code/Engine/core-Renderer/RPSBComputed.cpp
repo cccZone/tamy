@@ -1,5 +1,4 @@
 #include "core-Renderer/RPSBComputed.h"
-#include "core-Renderer/SpatialRepresentation.h"
 #include "core-Renderer/PixelShader.h"
 #include "core-Renderer/Defines.h"
 #include "core-Renderer/Renderer.h"
@@ -7,6 +6,8 @@
 #include "core-Renderer/RPSceneRenderNode.h"
 #include "core-Renderer/PixelShaderConstant.h"
 #include "core-Renderer/RenderState.h"
+#include "core-Renderer/Geometry.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -123,7 +124,7 @@ void RPSBComputed::onPropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-StateTreeNode* RPSBComputed::buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems, RuntimeDataBuffer& data ) const
+StateTreeNode* RPSBComputed::buildRenderTree( MemoryPool& pool, const Array< Geometry* >& visibleElems, RuntimeDataBuffer& data ) const
 {
    if ( !m_shader || !m_shaderNode )
    {
@@ -140,8 +141,8 @@ StateTreeNode* RPSBComputed::buildRenderTree( MemoryPool& pool, const Array< Spa
    unsigned int elemsCount = visibleElems.size();
    for ( unsigned int i = 0; i < elemsCount; ++i )
    {     
-      Geometry& geometry = visibleElems[i]->getGeometry();
-      *currGeometryNode = new ( pool ) GeometryNode( *currGeometryNode, geometry );
+      Geometry* geometry = visibleElems[i];
+      *currGeometryNode = new ( pool ) GeometryNode( *currGeometryNode, *geometry );
    }
 
    return root;

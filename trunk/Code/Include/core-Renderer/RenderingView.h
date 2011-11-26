@@ -11,7 +11,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SpatialRepresentation;
 class Renderer;
 class Geometry;
 struct AABoundingBox;
@@ -29,14 +28,10 @@ class RuntimeDataBuffer;
 class RenderingView : public ModelView
 {
 private:
-   typedef std::map< Geometry*, SpatialRepresentation* >    SpatialsMap;
-
-private:
    Renderer&                                                m_renderer;
 
    MemoryPool*                                              m_treeMemPool;
-   SpatialsMap                                              m_spatials;
-   RegularOctree< SpatialRepresentation >*                  m_storage;
+   RegularOctree< Geometry >*                               m_storage;
 
 public:
    /**
@@ -50,7 +45,7 @@ public:
     *
     * @param outVisibleElems
     */
-   void collectRenderables( Array< SpatialRepresentation* >& outVisibleElems );
+   void collectRenderables( Array< Geometry* >& outVisibleElems );
 
    // ----------------------------------------------------------------------
    // ModelView implementation

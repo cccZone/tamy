@@ -6,6 +6,7 @@
 #include "core-Renderer/RenderState.h"
 #include "core-Renderer/SurfaceProperties.h"
 #include "core/Enum.h"
+#include "core/Observer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,6 +15,8 @@ class Material;
 class RuntimeData;
 class MaterialNode;
 class Texture;
+enum GraphBuilderOperation;
+enum GraphBuilderNodeOperation;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,7 +34,9 @@ enum MaterialTextures
 /**
  * Entity that allows to embed a material in a scene graph.
  */
-class MaterialEntity : public Entity, public TRenderState< MaterialEntity >
+class MaterialEntity :  public Entity, public TRenderState< MaterialEntity >, 
+                        public Observer< Material, GraphBuilderOperation >,
+                        public Observer< MaterialNode, GraphBuilderNodeOperation >
 {
    DECLARE_CLASS( MaterialEntity )
 
@@ -99,6 +104,14 @@ public:
    bool onEquals( const MaterialEntity& rhs ) const;
    bool onLess( const MaterialEntity& rhs ) const;
 
+   // -------------------------------------------------------------------------
+   // Observer implementation
+   // -------------------------------------------------------------------------
+   void update( Material& subject );
+   void update( Material& subject, const GraphBuilderOperation& msg );
+   void update( MaterialNode& subject );
+   void update( MaterialNode& subject, const GraphBuilderNodeOperation& msg );
+
 protected:
    // -------------------------------------------------------------------------
    // Object implementation
@@ -115,6 +128,8 @@ protected:
 private:
    void initializeMaterial();
    void deinitializeMaterial();
+   void attachListeners();
+   void detachListeners();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

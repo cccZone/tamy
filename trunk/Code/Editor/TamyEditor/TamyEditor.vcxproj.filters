@@ -353,6 +353,9 @@
     <ClInclude Include="MBInstanceTexture.h">
       <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
     </ClInclude>
+    <ClInclude Include="MBTimer.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -834,6 +837,9 @@
       <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="MBInstanceTexture.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="MBTimer.cpp">
       <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
     </ClCompile>
   </ItemGroup>

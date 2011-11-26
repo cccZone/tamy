@@ -25,7 +25,7 @@ enum GraphBuilderNodeOperation;
 class RuntimeDataBuffer;
 class ModelDebugScene;
 class ModelView;
-class SpatialRepresentation;
+class Geometry;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -56,7 +56,7 @@ private:
    class RenderedScene
    {
    public:
-      Array< SpatialRepresentation* >              m_visibleElems;
+      Array< Geometry* >                           m_visibleElems;
 
    private:
       RenderingView*                               m_renderingView;
@@ -149,7 +149,7 @@ public:
     *
     * @param sceneId
     */
-   const Array< SpatialRepresentation*> & getSceneElements( RPMSceneId sceneId ) const;
+   const Array< Geometry*> & getSceneElements( RPMSceneId sceneId ) const;
 
    /**
     * Sets a debug scene instance.

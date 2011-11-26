@@ -4,7 +4,6 @@
 #include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/RenderTarget.h"
 #include "core-Renderer/RenderingView.h"
-#include "core-Renderer/SpatialRepresentation.h"
 #include "core-Renderer/RPSBTextured.h"
 #include "core/MemoryPool.h"
 
@@ -81,7 +80,7 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
    new ( renderer() ) RCActivateRenderTarget( trg );
 
    // collect the renderables
-   const Array< SpatialRepresentation* >& visibleElems = host.getSceneElements( m_renderedSceneId );
+   const Array< Geometry* >& visibleElems = host.getSceneElements( m_renderedSceneId );
 
    // build a tree sorting the nodes by the attributes
    m_treeMemPool->reset();

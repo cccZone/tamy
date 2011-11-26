@@ -79,17 +79,17 @@ namespace // anonymous
 
       void render( Renderer& renderer )
       {
-         Array< SpatialRepresentation* > renderables;
+         Array< Geometry* > renderables;
          m_view->collectRenderables( renderables );
 
          // build a tree sorting the nodes by the attributes
          m_treeMemPool->reset();
-         StateTreeNode* root = m_builder->buildRenderTree( *m_treeMemPool, renderables );
+         StateTreeNode* root = m_builder->buildRenderTree( *m_treeMemPool, renderables, m_data );
 
          if ( root )
          {
             // render the tree contents
-            root->render( renderer, m_data );
+            root->render( renderer );
 
             // get rid of the tree
             MEMPOOL_DELETE( root );
@@ -132,7 +132,7 @@ namespace // anonymous
          new ( renderer() ) RenderingCommandMock( m_id );
       }
 
-      const BoundingVolume& calculateBoundingVolume() const
+      const BoundingVolume& getBoundingVolume() const
       {
          return m_bounds;
       }

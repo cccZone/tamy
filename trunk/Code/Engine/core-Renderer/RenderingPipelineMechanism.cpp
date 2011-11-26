@@ -124,7 +124,7 @@ void RenderingPipelineMechanism::removeScene( Model& scene )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const Array< SpatialRepresentation*> & RenderingPipelineMechanism::getSceneElements( RPMSceneId sceneId ) const 
+const Array< Geometry*> & RenderingPipelineMechanism::getSceneElements( RPMSceneId sceneId ) const 
 { 
    ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to query a scene with an invalid sceneId" );
    return m_scenes[sceneId]->m_visibleElems; 
