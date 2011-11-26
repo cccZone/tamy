@@ -45,11 +45,11 @@ void MNTimer::onObjectLoaded()
 
 void MNTimer::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
-   float currTime;
+   float currTime = m_timer.getCurrentTime();
    float sinTime = sin( currTime * m_period ) * m_amplitude;
 
    m_time->setValue( entity.data(), currTime );
-   m_sinTime->setValue( entity.data(), currTime );
+   m_sinTime->setValue( entity.data(), sinTime );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
