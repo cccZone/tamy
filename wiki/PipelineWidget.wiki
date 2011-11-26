@@ -9,5 +9,105 @@ I'll give a quick example of what do you have to create in order to quickly crea
 
 *First*, you need a layout definition:
 
+  * .h file
 {{{
+/// @file   TamyEditor/MyPipelineLayout.h
+/// @brief  my pipeline layout
+#pragma once
+
+#include "GraphLayout.h"
+#include "PipelineLayout.h"
+
+
+////////////////////////////////////////////////////////////////////////
+
+class MaterialNode;
+class PipelineBlock;
+
+////////////////////////////////////////////////////////////////////////
+
+/**
+ * Layout for your pipeline.
+ */
+class MyPipelineLayout : public PipelineLayout< MyPipeline, MyPipelineNode >
+{
+   DECLARE_RESOURCE( MyPipelineLayout )
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param resourceName
+    */
+   MyPipelineLayout( const FilePath& resourceName = FilePath() );
+
+protected:
+   // ------------------------------------------------------------------
+   // Resource implementation
+   // ------------------------------------------------------------------
+   void initBlocksFactory();
+   void initSocketsFactory( PipelineBlock& block );
+};
+
+////////////////////////////////////////////////////////////////////////
+
+}}}
+
+  * .cpp file
+
+{{{
+#include "MyPipelineLayout.h"
+
+
+// blocks & sockets
+// add your node and socket header files includes here
+
+
+////////////////////////////////////////////////////////////////////////
+
+BEGIN_RESOURCE( MyPipelineLayout, Resource, rmpl, AM_BINARY );
+   PROPERTY( MyPipeline*, m_pipeline );
+   PROPERTY( std::vector< GraphBlock* >, m_blocks );
+   PROPERTY( std::vector< GraphBlockConnection* >, m_connections );
+   // custom properties definitions go here
+END_RESOURCE();
+
+////////////////////////////////////////////////////////////////////////
+
+MyPipelineLayout::MyPipelineLayout( const FilePath& resourceName )
+   : PipelineLayout< MyPipeline, MyPipelineNode >( resourceName )
+{
+   // create block-to-node associations
+   initBlocksFactory();
+
+   // customize the looks
+   setBackgroundBrush( QColor( 209, 226, 165 ) );
+}
+
+////////////////////////////////////////////////////////////////////////
+
+void MaterialLayout::initBlocksFactory()
+{
+   // add your node-to-block associations here
+   associate< MyNode, MyNodeBlock >();
+}
+
+////////////////////////////////////////////////////////////////////////
+
+void MaterialLayout::initSocketsFactory( PipelineBlock& block )
+{
+   GenericFactory< GBNodeSocket, GraphBlockSocket >& factory = block.getSocketsFactory();
+
+   // add sockets definitions here
+   factory.associate< MyInput, MyInputSocket >();
+   factory.associate< MyOutput, MyOutputSocket >();
+}
+
+////////////////////////////////////////////////////////////////////////
+}}}
+
+  * type definitions
+
+{{{
+REGISTER_RTTI( MyPipelineLayout );
 }}}
