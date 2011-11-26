@@ -17,10 +17,10 @@
 BlenderScene::BlenderScene()
    : m_rm( NULL )
    , m_observer( NULL )
+   , m_document( NULL )
 {
    // define the slices
 
-   // TODO: shouldn't these two be defined the other way around?
    m_definitions.push_back( new TSliceDefinition< SurfacePropertiesCS >( "library_effects", "effect" ) );
    m_definitions.push_back( new TSliceDefinition< EffectCS >( "library_materials", "material" ) );
 

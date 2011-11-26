@@ -194,6 +194,7 @@
     <ClInclude Include="MBSpatialEntity.h" />
     <ClInclude Include="MBSurfaceProperties.h" />
     <ClInclude Include="MBTexture.h" />
+    <ClInclude Include="MBTimer.h" />
     <ClInclude Include="MBVec4.h" />
     <ClInclude Include="NavigationState.h" />
     <ClInclude Include="NodeManipulationState.h" />
@@ -866,6 +867,7 @@
     <ClCompile Include="MBSpatialEntity.cpp" />
     <ClCompile Include="MBSurfaceProperties.cpp" />
     <ClCompile Include="MBTexture.cpp" />
+    <ClCompile Include="MBTimer.cpp" />
     <ClCompile Include="MBVec4.cpp" />
     <ClCompile Include="NavigationState.cpp" />
     <ClCompile Include="NodeManipulationState.cpp" />

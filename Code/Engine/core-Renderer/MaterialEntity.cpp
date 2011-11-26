@@ -44,6 +44,7 @@ MaterialEntity::MaterialEntity( const std::string& name )
 MaterialEntity::~MaterialEntity()
 {
    deinitializeMaterial();
+   detachListeners();
    m_material = NULL;
 }
 
@@ -53,6 +54,7 @@ void MaterialEntity::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
+   attachListeners();
    initializeMaterial();
 }
 
@@ -65,6 +67,7 @@ void MaterialEntity::onPrePropertyChanged( Property& property )
    if ( property.getName() == "m_material" )
    {
       deinitializeMaterial();
+      detachListeners();
    }
 }
 
@@ -77,7 +80,44 @@ void MaterialEntity::onPropertyChanged( Property& property )
    if ( property.getName() == "m_material" )
    {
       initializeMaterial();
+      attachListeners();
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialEntity::update( Material& subject )
+{
+   // do nothing - this is an initial update
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialEntity::update( Material& subject, const GraphBuilderOperation& msg )
+{
+   if ( msg == GBO_PRE_CHANGE )
+   {
+      deinitializeMaterial();
+   }
+   else if ( msg == GBO_POST_CHANGE  )
+   {
+      initializeMaterial();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialEntity::update( MaterialNode& subject )
+{
+   // do nothing - this is an initial update
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialEntity::update( MaterialNode& subject, const GraphBuilderNodeOperation& msg )
+{
+   deinitializeMaterial();
+   initializeMaterial();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -111,13 +151,47 @@ void MaterialEntity::initializeMaterial()
    {
       m_nodesQueue[i]->createLayout( *this );
    }
+
+   // start observing nodes
+   for ( std::vector< MaterialNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
+   {
+      (*it)->attachObserver( *this );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MaterialEntity::deinitializeMaterial()
 {
+   // stop observing nodes
+   for ( std::vector< MaterialNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
+   {
+      (*it)->detachObserver( *this );
+   }
+
+   m_nodesQueue.clear();
+
    delete m_dataBuf; m_dataBuf = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialEntity::attachListeners()
+{
+   if ( m_material )
+   {
+       m_material->attachObserver( *this );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialEntity::detachListeners()
+{
+   if ( m_material )
+   {
+      m_material->detachObserver( *this );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -179,7 +253,7 @@ bool MaterialEntity::onLess( const MaterialEntity& rhs ) const
       }
    }
 
-   return false;
+   return ( &m_surfaceProperties < &rhs.m_surfaceProperties );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

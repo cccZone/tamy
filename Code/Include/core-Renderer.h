@@ -105,6 +105,7 @@
 #include "core-Renderer\MNBool.h"
 #include "core-Renderer\MNInstanceTexture.h"
 #include "core-Renderer\MNSurfaceProperties.h"
+#include "core-Renderer\MNTimer.h"
 // ----------------------------------------------------------------------------
 // --> Resources
 // ----------------------------------------------------------------------------
@@ -168,7 +169,6 @@
 #include "core-Renderer\RenderingView.h"
 #include "core-Renderer\RenderState.h"
 #include "core-Renderer\SceneRenderTreeBuilder.h"
-#include "core-Renderer\SpatialRepresentation.h"
 
 // ----------------------------------------------------------------------------
 // Lighting

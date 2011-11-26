@@ -98,6 +98,7 @@
     <ClCompile Include="MNSpatialEntity.cpp" />
     <ClCompile Include="MNSurfaceProperties.cpp" />
     <ClCompile Include="MNTexture.cpp" />
+    <ClCompile Include="MNTimer.cpp" />
     <ClCompile Include="MNVec4.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="RenderingPipelineNode.cpp" />
@@ -150,7 +151,6 @@
     <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="SingleTextureMaterial.cpp" />
     <ClCompile Include="RenderingView.cpp" />
-    <ClCompile Include="SpatialRepresentation.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="VertexDescriptions.cpp" />
     <ClCompile Include="PixelShader.cpp" />
@@ -183,6 +183,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\MNSpatialEntity.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNSurfaceProperties.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNTexture.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\MNTimer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNVec4.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h" />
@@ -253,7 +254,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\Geometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureMaterial.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\SpatialRepresentation.h" />
     <ClInclude Include="..\..\Include\core-Renderer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h" />

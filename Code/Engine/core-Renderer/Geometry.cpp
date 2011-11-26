@@ -92,7 +92,7 @@ void Geometry::removeState( RenderState& state )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const BoundingVolume& Geometry::calculateBoundingVolume() const
+const BoundingVolume& Geometry::getBoundingVolume() const
 {
    if ( m_resource )
    {

@@ -84,13 +84,14 @@ public:
    // -------------------------------------------------------------------------
    // Geometry resource management
    // -------------------------------------------------------------------------
+
    /**
     * Calculates a bounding volume around the geometry ( in the parent's space,
     * if the entity is attached to one ).
     *
     * @param   bounding volume instance
     */
-   virtual const BoundingVolume& calculateBoundingVolume() const;
+   virtual const BoundingVolume& getBoundingVolume() const;
 
    /**
     * Returns the name of the geometry resource used by this geometry entity.

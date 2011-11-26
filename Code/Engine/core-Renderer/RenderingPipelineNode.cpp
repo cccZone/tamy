@@ -86,9 +86,8 @@ GBNodeInput< RenderingPipelineNode >* RenderingPipelineNode::createInput( const 
    {
       return new RPMatrixInput( name );
    } 
-   else if ( dataTypeName == "std::string" )
+   else if ( dataTypeName == "std::basic_string< std::char_traits< char< std::allocator< char<   > > > > >" )
    {
-      // TODO : check this type name
       return new RPStringInput( name );
    } 
    else if ( dataTypeName == "ShaderTexture" )

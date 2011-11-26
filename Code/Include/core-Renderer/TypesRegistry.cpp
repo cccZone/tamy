@@ -42,6 +42,7 @@ REGISTER_RTTI( MNVec4 );
 REGISTER_RTTI( MNBool );
 REGISTER_RTTI( MNInstanceTexture );
 REGISTER_RTTI( MNSurfaceProperties );
+REGISTER_RTTI( MNTimer );
 REGISTER_RTTI( MSFloatInput );
 REGISTER_RTTI( MSFloatOutput );
 REGISTER_RTTI( MSMatrixInput );

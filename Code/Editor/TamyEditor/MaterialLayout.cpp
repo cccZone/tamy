@@ -13,6 +13,8 @@
 #include "MBBool.h"
 #include "MBInstanceTexture.h"
 #include "MBSurfaceProperties.h"
+#include "MBTimer.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -47,6 +49,7 @@ void MaterialLayout::initBlocksFactory()
    associate< MNBool, MBBool >();
    associate< MNInstanceTexture, MBInstanceTexture >();
    associate< MNSurfaceProperties, MBSurfaceProperties >();
+   associate< MNTimer, MBTimer >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 #include "core-Renderer/RPSBTextured.h"
-#include "core-Renderer/SpatialRepresentation.h"
+#include "core-Renderer/Geometry.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -9,15 +9,15 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-StateTreeNode* RPSBTextured::buildRenderTree( MemoryPool& pool, const Array< SpatialRepresentation* >& visibleElems, RuntimeDataBuffer& data ) const
+StateTreeNode* RPSBTextured::buildRenderTree( MemoryPool& pool, const Array< Geometry* >& visibleElems, RuntimeDataBuffer& data ) const
 {
    StateTreeNode* root = new ( pool ) StateTreeNode();
 
    unsigned int elemsCount = visibleElems.size();
    for ( unsigned int i = 0; i < elemsCount; ++i )
    {     
-      Geometry& geometry = visibleElems[i]->getGeometry();
-      const RenderStatesVec& states = visibleElems[i]->getRenderStates();
+      Geometry* geometry = visibleElems[i];
+      const RenderStatesVec& states = geometry->getRenderStates();
       // at this point the states are already sorted
 
       // states span into the tree depth - so each branch is a unique state,
@@ -56,7 +56,11 @@ StateTreeNode* RPSBTextured::buildRenderTree( MemoryPool& pool, const Array< Spa
       }
 
       // there are no more states to check - add the geometry
-      new ( pool ) GeometryNode( currNode->m_geometryNode, geometry );
+      if ( statesCount > 0 )
+      {
+         // but don't render the geometry using some random state, if it doesn't have one of its own
+         new ( pool ) GeometryNode( currNode->m_geometryNode, *geometry );
+      }
    }
 
    return root;

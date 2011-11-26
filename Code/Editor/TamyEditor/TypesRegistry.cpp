@@ -55,6 +55,7 @@ REGISTER_RTTI( RenderingPipelineLayout );
 #include "MBBool.h"
 #include "MBInstanceTexture.h"
 #include "MBSurfaceProperties.h"
+#include "MBTimer.h"
 
 REGISTER_RTTI( MaterialLayout );
 REGISTER_RTTI( MSSFloat );
@@ -71,5 +72,6 @@ REGISTER_RTTI( MBVec4 );
 REGISTER_RTTI( MBBool );
 REGISTER_RTTI( MBInstanceTexture );
 REGISTER_RTTI( MBSurfaceProperties );
+REGISTER_RTTI( MBTimer );
 
 ///////////////////////////////////////////////////////////////////////////////

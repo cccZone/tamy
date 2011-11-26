@@ -39,9 +39,8 @@ Entity* EffectCS::instantiate( const BlenderScene& host ) const
 {
    SingleTextureMaterial* material = new SingleTextureMaterial( m_materialName );
 
-   // TODO: SurfaceProperties ARE NOT a resource - do something with it
-  /* SurfaceProperties& surfPropertiesRes = host.getResource< SurfaceProperties >( m_materialId );
-   material->setMaterial( surfPropertiesRes );*/
+   SurfaceProperties& surfPropertiesRes = host.getResource< SurfaceProperties >( m_materialId );
+   material->setSurfaceProperties( surfPropertiesRes );
 
    return material;
 }
