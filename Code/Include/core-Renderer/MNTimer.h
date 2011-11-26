@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/MaterialNode.h"
+#include "core/Timer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,6 +24,7 @@ private:
    // runtime data
    MSFloatOutput*    m_time;
    MSFloatOutput*    m_sinTime;
+   CTimer            m_timer;
  
 public:
    /**
