@@ -103,6 +103,10 @@ void TPipelineBlock< TNode, TBaseNode >::refreshInputs( TBaseNode& node )
       if ( inputNames.find( inputName ) == inputNames.end() )
       {
          GraphBlockSocket* socket = m_socketsFactory->create( **it );
+         if ( !socket )
+         {
+            continue;
+         }
          socket->initialize( this, GBSP_INPUT, inputName.c_str() );
          addSocket( socket );
       }
@@ -132,6 +136,10 @@ void TPipelineBlock< TNode, TBaseNode >::refreshOutputs( TBaseNode& node )
       if ( outputNames.find( outputName ) == outputNames.end() )
       {
          GraphBlockSocket* socket = m_socketsFactory->create( **it );
+         if ( !socket )
+         {
+            continue;
+         }
          socket->initialize( this, GBSP_OUTPUT, outputName.c_str() );
          addSocket( socket );
       }
