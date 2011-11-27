@@ -86,6 +86,18 @@
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="FragmentShader.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
+    <ClCompile Include="GeometryEntity.cpp" />
+    <ClCompile Include="GeometryShaderNode.cpp" />
+    <ClCompile Include="GeometryShader.cpp" />
+    <ClCompile Include="GeometrySockets.cpp" />
+    <ClCompile Include="GNBool.cpp" />
+    <ClCompile Include="GNCamera.cpp" />
+    <ClCompile Include="GNFloat.cpp" />
+    <ClCompile Include="GNSpatialEntity.cpp" />
+    <ClCompile Include="GNTexture.cpp" />
+    <ClCompile Include="GNTimer.cpp" />
+    <ClCompile Include="GNVec4.cpp" />
+    <ClCompile Include="GNVertexShader.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialEntity.cpp" />
     <ClCompile Include="MaterialNode.cpp" />
@@ -161,16 +173,30 @@
     <None Include="..\..\Include\core-Renderer\Light.inl" />
     <None Include="..\..\Include\core-Renderer\LineSegments.inl" />
     <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl" />
-    <None Include="..\..\Include\core-Renderer\ShaderNodeOperator.inl" />
+    <None Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.inl" />
     <None Include="..\..\Include\core-Renderer\ShaderParam.inl" />
     <None Include="..\..\Include\core-Renderer\ShaderRenderCommand.inl" />
     <None Include="..\..\Include\core-Renderer\TriangleMesh.inl" />
+    <None Include="..\..\Include\core-Renderer\VertexShaderConstant.inl" />
+    <None Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GeometryEntity.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GeometryShaderNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GeometryShader.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GeometrySockets.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GNBool.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GNCamera.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GNFloat.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GNSpatialEntity.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GNTexture.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GNTimer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GNVec4.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\GNVertexShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Material.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MaterialEntity.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MaterialNode.h" />
@@ -210,7 +236,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPVec4Node.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderTreeBuilder.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\ShaderNodeOperator.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderRenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h" />
@@ -258,6 +284,8 @@
     <ClInclude Include="..\..\Include\core-Renderer\VertexShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShader.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConstant.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core-MVC\core-MVC.vcxproj">

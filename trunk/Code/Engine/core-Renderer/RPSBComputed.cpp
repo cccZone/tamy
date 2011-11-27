@@ -17,11 +17,11 @@ namespace // anonymous
    {
    private:
       PixelShader&                                       m_shader;
-      ShaderNodeOperator< RenderingPipelineNode >&       m_shaderNode;
+      PixelShaderNodeOperator< RenderingPipelineNode >&       m_shaderNode;
       RuntimeDataBuffer&                                 m_data;
 
    public:
-      ComputedRenderState( PixelShader& shader, ShaderNodeOperator< RenderingPipelineNode >& shaderNode, RuntimeDataBuffer& data )
+      ComputedRenderState( PixelShader& shader, PixelShaderNodeOperator< RenderingPipelineNode >& shaderNode, RuntimeDataBuffer& data )
          : m_shader( shader )
          , m_shaderNode( shaderNode )
          , m_data( data )
@@ -76,7 +76,7 @@ void RPSBComputed::onDefineSockets( RPSceneRenderNode& hostNode )
    m_hostNode = &hostNode;
 
    delete m_shaderNode;
-   m_shaderNode = new ShaderNodeOperator< RenderingPipelineNode >( hostNode );
+   m_shaderNode = new PixelShaderNodeOperator< RenderingPipelineNode >( hostNode );
    if ( m_shader )
    {
       m_shaderNode->setShader( *m_shader );
@@ -91,7 +91,7 @@ void RPSBComputed::onObjectLoaded()
 
    ASSERT( m_hostNode != NULL );
    ASSERT( m_shaderNode == NULL );
-   m_shaderNode = new ShaderNodeOperator< RenderingPipelineNode >( *m_hostNode );
+   m_shaderNode = new PixelShaderNodeOperator< RenderingPipelineNode >( *m_hostNode );
    if ( m_shader )
    {
       m_shaderNode->setShader( *m_shader );

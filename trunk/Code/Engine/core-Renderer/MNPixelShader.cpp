@@ -15,7 +15,7 @@ MNPixelShader::MNPixelShader()
    : m_shader( NULL )
    , m_shaderNode( NULL )
 {
-   m_shaderNode = new ShaderNodeOperator< MaterialNode >( *this );
+   m_shaderNode = new PixelShaderNodeOperator< MaterialNode >( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

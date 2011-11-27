@@ -1,11 +1,10 @@
-#ifndef _SHADER_NODE_OPERATOR_H
-#error "This file can only be included from ShaderNodeOperation.h"
+#ifndef _VERTEX_SHADER_NODE_OPERATOR_H
+#error "This file can only be included from VertexShaderNodeOperation.h"
 #else
 
-
-#include "core-Renderer/ShaderNodeOperator.h"
-#include "core-Renderer/PixelShaderConstant.h"
-#include "core-Renderer/PixelShader.h"
+#include "core-Renderer/VertexShaderNodeOperator.h"
+#include "core-Renderer/VertexShaderConstant.h"
+#include "core-Renderer/VertexShader.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/ShaderCompiler.h"
 
@@ -13,7 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-ShaderNodeOperator< TNode >::ShaderNodeOperator( TNode& hostNode )
+VertexShaderNodeOperator< TNode >::VertexShaderNodeOperator( TNode& hostNode )
    : m_hostNode( hostNode )
    , m_shader( NULL )
 {
@@ -22,7 +21,7 @@ ShaderNodeOperator< TNode >::ShaderNodeOperator( TNode& hostNode )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-ShaderNodeOperator< TNode >::~ShaderNodeOperator()
+VertexShaderNodeOperator< TNode >::~VertexShaderNodeOperator()
 {
    resetShader();
 }
@@ -30,15 +29,15 @@ ShaderNodeOperator< TNode >::~ShaderNodeOperator()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-void ShaderNodeOperator< TNode >::setShader( PixelShader& shader )
+void VertexShaderNodeOperator< TNode >::setShader( VertexShader& shader )
 {
    resetShader();
 
    m_shader = &shader;
 
    ShaderCompiler compiler;
-   std::vector< PixelShaderConstant< TNode >* > constants;
-   compiler.compilePixelShaderConstants( m_shader->getScript(), m_shader->getEntryFunctionName().c_str(), constants );
+   std::vector< VertexShaderConstant< TNode >* > constants;
+   compiler.compileVertexShaderConstants( m_shader->getScript(), m_shader->getEntryFunctionName().c_str(), constants );
 
    unsigned int count = constants.size();
    for ( unsigned int i = 0; i < count; ++i )
@@ -51,7 +50,7 @@ void ShaderNodeOperator< TNode >::setShader( PixelShader& shader )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-void ShaderNodeOperator< TNode >::resetShader()
+void VertexShaderNodeOperator< TNode >::resetShader()
 {
    unsigned int count = m_constants.size();
    for ( unsigned int i = 0; i < count; ++i )
@@ -67,15 +66,15 @@ void ShaderNodeOperator< TNode >::resetShader()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
- RCBindPixelShader& ShaderNodeOperator< TNode >::bindShader( Renderer& renderer, RuntimeDataBuffer& data )
+RCBindVertexShader& VertexShaderNodeOperator< TNode >::bindShader( Renderer& renderer, RuntimeDataBuffer& data )
 {
-   RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_shader );
 
    // set the shader constants
    unsigned int count = m_constants.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      PixelShaderConstant< TNode >* constant = m_constants[i]->m_constant;
+      VertexShaderConstant< TNode >* constant = m_constants[i]->m_constant;
       GBNodeInput< TNode >* input = m_constants[i]->m_input;
       constant->setValue( *comm, *input, data );
    }
@@ -88,7 +87,7 @@ template< typename TNode >
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-ShaderNodeOperator< TNode >::ConstantDef::ConstantDef( PixelShaderConstant< TNode >* constant ) 
+VertexShaderNodeOperator< TNode >::ConstantDef::ConstantDef( VertexShaderConstant< TNode >* constant ) 
    : m_constant( constant )
    , m_input( NULL )
    , m_hostNode( NULL )
@@ -97,7 +96,7 @@ ShaderNodeOperator< TNode >::ConstantDef::ConstantDef( PixelShaderConstant< TNod
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-ShaderNodeOperator< TNode >::ConstantDef::~ConstantDef()
+VertexShaderNodeOperator< TNode >::ConstantDef::~ConstantDef()
 {
    delete m_constant;
    m_constant = NULL;
@@ -106,7 +105,7 @@ ShaderNodeOperator< TNode >::ConstantDef::~ConstantDef()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-void ShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode )
+void VertexShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode )
 {
    const std::string& inputName = m_constant->getName();
 
@@ -142,4 +141,4 @@ void ShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // _SHADER_NODE_OPERATOR_H
+#endif // _VERTEX_SHADER_NODE_OPERATOR_H

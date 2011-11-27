@@ -12,6 +12,7 @@ REGISTER_RTTI( Geometry );
 REGISTER_RTTI( GeometryResource );
 REGISTER_RTTI( StaticGeometry );
 REGISTER_RTTI( SkinnedGeometry );
+REGISTER_RTTI( GeometryEntity );
 REGISTER_RTTI( LineSegments );
 REGISTER_RTTI( Skeleton );
 REGISTER_RTTI( TriangleMesh );
@@ -54,6 +55,29 @@ REGISTER_RTTI( MSVec4Output );
 REGISTER_RTTI( MSBoolInput );
 REGISTER_RTTI( MSBoolOutput );
 REGISTER_ENUM_RTTI( MaterialTextures );
+
+///////////////////////////////////////////////////////////////////////////////
+
+REGISTER_RTTI( GeometryShader );
+REGISTER_RTTI( GeometryShaderNode );
+REGISTER_RTTI( GNCamera );
+REGISTER_RTTI( GNFloat );
+REGISTER_RTTI( GNVertexShader );
+REGISTER_RTTI( GNSpatialEntity );
+REGISTER_RTTI( GNTexture );
+REGISTER_RTTI( GNVec4 );
+REGISTER_RTTI( GNBool );
+REGISTER_RTTI( GNTimer );
+REGISTER_RTTI( GSFloatInput );
+REGISTER_RTTI( GSFloatOutput );
+REGISTER_RTTI( GSMatrixInput );
+REGISTER_RTTI( GSMatrixOutput );
+REGISTER_RTTI( GSTextureInput );
+REGISTER_RTTI( GSTextureOutput );
+REGISTER_RTTI( GSVec4Input );
+REGISTER_RTTI( GSVec4Output );
+REGISTER_RTTI( GSBoolInput );
+REGISTER_RTTI( GSBoolOutput );
 
 ///////////////////////////////////////////////////////////////////////////////
 

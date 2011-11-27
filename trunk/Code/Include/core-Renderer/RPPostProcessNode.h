@@ -4,7 +4,7 @@
 
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core/RuntimeData.h"
-#include "core-Renderer/ShaderNodeOperator.h"
+#include "core-Renderer/PixelShaderNodeOperator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ private:
    std::string                                                    m_renderTargetId;
 
    // runtime data
-   ShaderNodeOperator< RenderingPipelineNode >*                   m_shaderNode;
+   PixelShaderNodeOperator< RenderingPipelineNode >*              m_shaderNode;
    TRuntimeVar< RenderTarget* >                                   m_renderTarget;
 
 public:

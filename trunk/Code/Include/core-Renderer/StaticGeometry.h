@@ -22,7 +22,6 @@ class StaticGeometry : public Geometry
 
 private:
    VertexShader*              m_vertexShader;
-   GeometryResource*                m_resource;
 
 public:
    /**
@@ -43,11 +42,12 @@ protected:
    // Entity implementation
    // -------------------------------------------------------------------------
    void onComponentAdded( Component< Model >& component );
+   Entity* cloneSelf() const;
 
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
-   void onPreRender( Renderer& renderer );
+   bool onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
 };
 

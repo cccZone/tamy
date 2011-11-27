@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/MaterialNode.h"
-#include "core-Renderer/ShaderNodeOperator.h"
+#include "core-Renderer/PixelShaderNodeOperator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ private:
    PixelShader*                           m_shader;
 
    // runtime data
-   ShaderNodeOperator< MaterialNode >*    m_shaderNode;
+   PixelShaderNodeOperator< MaterialNode >*    m_shaderNode;
 
 public:
    /**

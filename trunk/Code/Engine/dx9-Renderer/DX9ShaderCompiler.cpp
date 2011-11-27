@@ -3,10 +3,12 @@
 #include "dx9-Renderer/DX9ShaderIncludeLoader.h"
 #include "dx9-Renderer/DXErrorParser.h"
 #include "dx9-Renderer/DX9Initializer.h"
-#include "dx9-Renderer/DX9ShaderConstantsCompiler.h"
+#include "dx9-Renderer/DX9PixelShaderConstantsCompiler.h"
+#include "dx9-Renderer/DX9VertexShaderConstantsCompiler.h"
 #include "core-Renderer/PixelShaderConstant.h"
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core-Renderer/MaterialNode.h"
+#include "core-Renderer/GeometryShaderNode.h"
 #include <d3dx9.h>
 #include <d3d9.h>
 
@@ -193,7 +195,7 @@ bool ShaderCompiler::compilePixelShaderTextureStages( const std::string& shaderC
 template<>
 bool ShaderCompiler::compilePixelShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename PixelShaderConstant< RenderingPipelineNode >* >& outConstants )
 {
-   DX9ShaderConstantsCompiler< RenderingPipelineNode > constantsCompiler;
+   DX9PixelShaderConstantsCompiler< RenderingPipelineNode > constantsCompiler;
    bool result = constantsCompiler.compile( shaderCode, entryFunction, outConstants );
 
    m_errorMsg = constantsCompiler.m_errorMsg;
@@ -205,7 +207,7 @@ bool ShaderCompiler::compilePixelShaderConstants( const std::string& shaderCode,
 template<>
 bool ShaderCompiler::compilePixelShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename PixelShaderConstant< MaterialNode >* >& outConstants )
 {
-   DX9ShaderConstantsCompiler< MaterialNode > constantsCompiler;
+   DX9PixelShaderConstantsCompiler< MaterialNode > constantsCompiler;
    bool result = constantsCompiler.compile( shaderCode, entryFunction, outConstants );
 
    m_errorMsg = constantsCompiler.m_errorMsg;
@@ -257,3 +259,14 @@ bool ShaderCompiler::compileVertexShader( const std::string& shaderCode, const c
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template<>
+bool ShaderCompiler::compileVertexShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename VertexShaderConstant< GeometryShaderNode >* >& outConstants )
+{
+   DX9VertexShaderConstantsCompiler< GeometryShaderNode > constantsCompiler;
+   bool result = constantsCompiler.compile( shaderCode, entryFunction, outConstants );
+
+   m_errorMsg = constantsCompiler.m_errorMsg;
+   return result;
+}
+
+///////////////////////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
-/// @file   core-Renderer/ShaderNodeOperator.h
+/// @file   core-Renderer/PixelShaderNodeOperator.h
 /// @brief  Operator for nodes that should be parametrized according to the pixel shader they are using.
-#ifndef _SHADER_NODE_OPERATOR_H
-#define _SHADER_NODE_OPERATOR_H
+#ifndef _PIXEL_SHADER_NODE_OPERATOR_H
+#define _PIXEL_SHADER_NODE_OPERATOR_H
 
 #include <vector>
 #include "core-Renderer/PixelShaderConstant.h"
@@ -20,7 +20,7 @@ class RCBindPixelShader;
  * necessary for it to have its global constants set.
  */
 template< typename TNode >
-class ShaderNodeOperator
+class PixelShaderNodeOperator
 {
 private:
    struct ConstantDef
@@ -45,8 +45,8 @@ public:
     *
     * @param hostNode
     */
-   ShaderNodeOperator( TNode& hostNode );
-   ~ShaderNodeOperator();
+   PixelShaderNodeOperator( TNode& hostNode );
+   ~PixelShaderNodeOperator();
 
    /**
     * Sets a new shader for the node to use.
@@ -73,8 +73,8 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "core-Renderer/ShaderNodeOperator.inl"
+#include "core-Renderer/PixelShaderNodeOperator.inl"
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // _SHADER_NODE_OPERATOR_H
+#endif // _PIXEL_SHADER_NODE_OPERATOR_H

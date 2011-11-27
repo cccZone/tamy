@@ -14,6 +14,7 @@ BEGIN_OBJECT( RPSceneRenderNode, RenderingPipelineNode )
    PROPERTY_EDIT( "Rendered scene id", RPMSceneId, m_renderedSceneId );
    PROPERTY_EDIT( "Scene contents builder", RPSceneBuilder*, m_builder );
    PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
+   PROPERTY_EDIT( "Clear depth buffer", bool, m_clearDepthBuffer );
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,6 +23,7 @@ RPSceneRenderNode::RPSceneRenderNode()
    : m_renderedSceneId( RPS_Main )
    , m_builder( NULL )
    , m_treeMemPool( new MemoryPool( 1024 * 1024 ) )
+   , m_clearDepthBuffer( true )
 {
    defineInput( new RPVoidInput( "Input" ) );
    defineOutput( new RPTextureOutput( "Output" ) );
@@ -88,6 +90,11 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    if ( root )
    {
+      if ( m_clearDepthBuffer )
+      {
+         new ( renderer() ) RCClearDepthBuffer();
+      }
+
       // render the tree contents
       root->render( renderer );
 

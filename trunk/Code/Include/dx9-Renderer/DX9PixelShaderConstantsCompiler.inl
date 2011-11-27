@@ -1,5 +1,5 @@
-#ifndef _DX9_SHADER_CONSTANTS_COMPILER_H
-#error "This file can only be included from DX9ShaderConstantsCompiler.h"
+#ifndef _DX9_PIXEL_SHADER_CONSTANTS_COMPILER_H
+#error "This file can only be included from DX9PixelShaderConstantsCompiler.h"
 #else
 
 #include "core-Renderer/PixelShaderConstant.h"
@@ -11,7 +11,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-PixelShaderConstant< TNode >* DX9ShaderConstantsCompiler< TNode >::createScalarConstant( const D3DXCONSTANT_DESC& desc ) const
+PixelShaderConstant< TNode >* DX9PixelShaderConstantsCompiler< TNode >::createScalarConstant( const D3DXCONSTANT_DESC& desc ) const
 {
    switch( desc.Type )
    {
@@ -42,7 +42,7 @@ PixelShaderConstant< TNode >* DX9ShaderConstantsCompiler< TNode >::createScalarC
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-PixelShaderConstant< TNode >* DX9ShaderConstantsCompiler< TNode >::createObjectConstant( const D3DXCONSTANT_DESC& desc ) const
+PixelShaderConstant< TNode >* DX9PixelShaderConstantsCompiler< TNode >::createObjectConstant( const D3DXCONSTANT_DESC& desc ) const
 {
    switch( desc.Type )
    {
@@ -67,7 +67,7 @@ PixelShaderConstant< TNode >* DX9ShaderConstantsCompiler< TNode >::createObjectC
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-PixelShaderConstant< TNode >* DX9ShaderConstantsCompiler< TNode >::createMatrixConstant( const D3DXCONSTANT_DESC& desc ) const
+PixelShaderConstant< TNode >* DX9PixelShaderConstantsCompiler< TNode >::createMatrixConstant( const D3DXCONSTANT_DESC& desc ) const
 {
    if ( desc.Type == D3DXPT_FLOAT )
    {
@@ -80,7 +80,7 @@ PixelShaderConstant< TNode >* DX9ShaderConstantsCompiler< TNode >::createMatrixC
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-PixelShaderConstant< TNode >* DX9ShaderConstantsCompiler< TNode >::createConstant( const D3DXCONSTANT_DESC& desc ) const
+PixelShaderConstant< TNode >* DX9PixelShaderConstantsCompiler< TNode >::createConstant( const D3DXCONSTANT_DESC& desc ) const
 {
    switch( desc.Class )
    {
@@ -116,7 +116,7 @@ PixelShaderConstant< TNode >* DX9ShaderConstantsCompiler< TNode >::createConstan
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-bool DX9ShaderConstantsCompiler< TNode >::compile( const std::string& shaderCode, const char* entryFunction, std::vector< typename PixelShaderConstant< TNode >* >& outConstants )
+bool DX9PixelShaderConstantsCompiler< TNode >::compile( const std::string& shaderCode, const char* entryFunction, std::vector< typename PixelShaderConstant< TNode >* >& outConstants )
 {
    // create a renderer
    IDirect3D9* d3d9 = Direct3DCreate9( D3D_SDK_VERSION );
@@ -181,4 +181,4 @@ bool DX9ShaderConstantsCompiler< TNode >::compile( const std::string& shaderCode
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // _DX9_SHADER_CONSTANTS_COMPILER_H
+#endif // _DX9_PIXEL_SHADER_CONSTANTS_COMPILER_H

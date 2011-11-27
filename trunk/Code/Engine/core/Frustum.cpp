@@ -36,7 +36,7 @@ float Frustum::distanceToPlane(const D3DXPLANE& plane) const
 
 bool Frustum::testCollision(const PointVolume& point) const
 {
-   ASSERT_MSG(false, "Frustum::testCollision(const PointVolume&) - Method not implemented");
+   // TODO: implement me
    return false;
 }
 

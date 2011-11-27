@@ -38,8 +38,10 @@ private:
 public:
    /**
     * Default constructor.
+    *
+    * @param name
     */
-   Geometry();
+   Geometry( const std::string& name = "" );
 
    /**
     * Copy constructor.
@@ -50,8 +52,9 @@ public:
     * Constructor.
     *
     * @param resource   shared geometry resource
+    * @param name
     */
-   Geometry( GeometryResource& resource );
+   Geometry( GeometryResource& resource, const std::string& name = "" );
    ~Geometry();
 
    /**
@@ -112,7 +115,7 @@ protected:
    /**
     * Called before the geometry rendering command is issued.
     */
-   virtual void onPreRender( Renderer& renderer ) {}
+   virtual bool onPreRender( Renderer& renderer ) { return false; }
 
    /**
     * Called after the geometry rendering command is issued.
@@ -123,6 +126,7 @@ protected:
    // Object implementation 
    // -------------------------------------------------------------------------
    void onObjectLoaded();
+   void onPropertyChanged( Property& property );
 
    // -------------------------------------------------------------------------
    // Entity implementation

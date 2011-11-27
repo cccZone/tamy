@@ -57,7 +57,7 @@ protected:
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
-   void onPreRender( Renderer& renderer );
+   bool onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
 
    // -------------------------------------------------------------------------
@@ -66,6 +66,7 @@ protected:
    void onAttached(Entity& parent);
    void onDetached(Entity& parent);
    void onComponentAdded( Component< Model >& component );
+   Entity* cloneSelf() const;
 
 private:
    void instantiateSkeleton( Entity& parent );

@@ -226,3 +226,17 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Render command that clears the contents of a depth buffer.
+ */
+class RCClearDepthBuffer : public RenderCommand
+{
+public:
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////

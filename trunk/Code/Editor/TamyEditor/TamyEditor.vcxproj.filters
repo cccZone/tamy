@@ -135,6 +135,12 @@
     <Filter Include="Widgets\PipelineWidget">
       <UniqueIdentifier>{916cf57c-05c0-4f4b-9ce2-2c0bfce877e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\GeometryShaderEditor">
+      <UniqueIdentifier>{28140cc2-2a88-4968-9ad8-063fdfbaf60e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\GeometryShaderEditor\Blocks">
+      <UniqueIdentifier>{8ce575a6-c7f5-4b87-bd6d-feed0c213feb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -355,6 +361,39 @@
     </ClInclude>
     <ClInclude Include="MBTimer.h">
       <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShaderLayout.h">
+      <Filter>ResourceEditors\GeometryShaderEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryShaderSocketRepresentation.h">
+      <Filter>ResourceEditors\GeometryShaderEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="GBBool.h">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GBCamera.h">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GBFloat.h">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GBVertexShader.h">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GBSpatialEntity.h">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GBTexture.h">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GBTimer.h">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GBVec4.h">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_geometryshadereditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -842,6 +881,48 @@
     <ClCompile Include="MBTimer.cpp">
       <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="GeometryShaderEditor.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_GeometryShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_GeometryShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_GeometryShaderEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryShaderLayout.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryShaderSocketRepresentation.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GBBool.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GBCamera.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GBFloat.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GBVertexShader.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GBSpatialEntity.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GBTexture.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GBTimer.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GBVec4.cpp">
+      <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1012,6 +1093,12 @@
       <Filter>ResourceEditors\MaterialEditor</Filter>
     </CustomBuild>
     <CustomBuild Include="materialeditor.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GeometryShaderEditor.h">
+      <Filter>ResourceEditors\GeometryShaderEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="geometryshadereditor.ui">
       <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
   </ItemGroup>

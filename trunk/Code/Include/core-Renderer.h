@@ -54,11 +54,29 @@
 #include "core-Renderer\StaticGeometry.h"
 #include "core-Renderer\SkinnedGeometry.h"
 #include "core-Renderer\FullscreenQuad.h"
+#include "core-Renderer\GeometryEntity.h"
 // ----------------------------------------------------------------------------
-// -->Primitives
+// -->Core
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Face.h"
 #include "core-Renderer\LitVertex.h"
+// ----------------------------------------------------------------------------
+// -->GeometryShader
+// ----------------------------------------------------------------------------
+#include "core-Renderer\GeometryShaderNode.h"
+#include "core-Renderer\GeometryShader.h"
+#include "core-Renderer\GeometrySockets.h"
+// ----------------------------------------------------------------------------
+// ----> Nodes
+// ----------------------------------------------------------------------------
+#include "core-Renderer\GNCamera.h"
+#include "core-Renderer\GNFloat.h"
+#include "core-Renderer\GNVertexShader.h"
+#include "core-Renderer\GNSpatialEntity.h"
+#include "core-Renderer\GNTexture.h"
+#include "core-Renderer\GNVec4.h"
+#include "core-Renderer\GNBool.h"
+#include "core-Renderer\GNTimer.h"
 // ----------------------------------------------------------------------------
 // -->Resources
 // ----------------------------------------------------------------------------
@@ -68,6 +86,7 @@
 #include "core-Renderer\Skeleton.h"
 #include "core-Renderer\VertexShader.h"
 #include "core-Renderer\FragmentShader.h"
+
 // ----------------------------------------------------------------------------
 // Initialization
 // ----------------------------------------------------------------------------
@@ -160,7 +179,7 @@
 // ----------------------------------------------------------------------------
 // ---->Tools
 // ----------------------------------------------------------------------------
-#include "core-Renderer\ShaderNodeOperator.h"
+#include "core-Renderer\PixelShaderNodeOperator.h"
 #include "core-Renderer\PixelShaderConstant.h"
 #include "core-Renderer\RenderTargetDescriptor.h"
 // ----------------------------------------------------------------------------

@@ -10,7 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Material pipeline block representing a float value provider node.
+ * Material pipeline block representing a bool value provider node.
  */
 class MBBool : public TPipelineBlock< MNBool, MaterialNode >
 {

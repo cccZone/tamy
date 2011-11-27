@@ -9,9 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * Rendering pipeline block representing a node that renders scenes.
- */
+
 class MBSpatialEntity : public TPipelineBlock< MNSpatialEntity, MaterialNode >
 {
    DECLARE_CLASS( MBSpatialEntity )

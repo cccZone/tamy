@@ -37,11 +37,11 @@ StaticGeometry::~StaticGeometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void StaticGeometry::onPreRender( Renderer& renderer )
+bool StaticGeometry::onPreRender( Renderer& renderer )
 {
    if ( !m_vertexShader )
    {
-      return;
+      return false;
    }
 
    Camera& camera = renderer.getActiveCamera();
@@ -50,6 +50,8 @@ void StaticGeometry::onPreRender( Renderer& renderer )
    D3DXMATRIX worldViewMtx = getGlobalMtx() * camera.getViewMtx();
    comm->setMtx( "g_mWorldView", worldViewMtx );
    comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,6 +93,14 @@ void StaticGeometry::onComponentAdded( Component< Model >& component )
          rm.addResource( m_vertexShader );
       }
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Entity* StaticGeometry::cloneSelf() const
+{
+   StaticGeometry* entity = new StaticGeometry( *this );
+   return entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

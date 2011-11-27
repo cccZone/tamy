@@ -17,9 +17,10 @@ END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Geometry::Geometry()
-   : m_resource(NULL)
-   , m_globalBounds( new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) ) )
+Geometry::Geometry( const std::string& name )
+   : SpatialEntity( name )
+   , m_resource(NULL)
+   , m_globalBounds( new PointVolume( D3DXVECTOR3( 0, 0, 0 ) ) )
 {
 }
 
@@ -27,14 +28,15 @@ Geometry::Geometry()
 
 Geometry::Geometry( const Geometry& rhs )
    : SpatialEntity( rhs )
-   , m_globalBounds( new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) ) )
+   , m_globalBounds( new PointVolume( D3DXVECTOR3( 0, 0, 0 ) ) )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Geometry::Geometry( GeometryResource& resource )
-   : m_resource( &resource )
+Geometry::Geometry( GeometryResource& resource, const std::string& name )
+   : SpatialEntity( name )
+   , m_resource( &resource )
    , m_globalBounds( resource.getBoundingVolume().clone() )
 {
 }
@@ -56,9 +58,11 @@ void Geometry::render( Renderer& renderer )
 {
    if ( m_resource )
    {
-      onPreRender( renderer );
-      m_resource->render( renderer );
-      onPostRender( renderer );
+      if ( onPreRender( renderer ) )
+      {
+         m_resource->render( renderer );
+         onPostRender( renderer );
+      }
    }
 }
 
@@ -155,7 +159,28 @@ void Geometry::onObjectLoaded()
    }
    else
    {
-      m_globalBounds = new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) );
+      m_globalBounds = new PointVolume( D3DXVECTOR3( 0, 0, 0 ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Geometry::onPropertyChanged( Property& property )
+{
+   __super::onPropertyChanged( property );
+
+   if ( property.getName() == "m_resource" )
+   {
+      delete m_globalBounds;
+
+      if ( m_resource )
+      {
+         m_globalBounds = m_resource->getBoundingVolume().clone();
+      }
+      else
+      {
+         m_globalBounds = new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) );
+      }
    }
 }
 

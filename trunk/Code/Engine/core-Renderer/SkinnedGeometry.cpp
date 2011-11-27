@@ -45,11 +45,11 @@ SkinnedGeometry::~SkinnedGeometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinnedGeometry::onPreRender( Renderer& renderer )
+bool SkinnedGeometry::onPreRender( Renderer& renderer )
 {
    if ( !m_skeleton || !m_vertexShader || m_bones.empty() )
    {
-      return;
+      return false;
    }
 
    Camera& camera = renderer.getActiveCamera();
@@ -69,6 +69,8 @@ void SkinnedGeometry::onPreRender( Renderer& renderer )
    }
    comm->setMtx( "g_mSkinningMatrices", m_boneMatrices, m_boneMatrices.size() );
    comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -172,6 +174,14 @@ void SkinnedGeometry::onComponentAdded( Component< Model >& component )
          rm.addResource( m_vertexShader );
       }
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Entity* SkinnedGeometry::cloneSelf() const
+{
+   SkinnedGeometry* entity = new SkinnedGeometry( *this );
+   return entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
