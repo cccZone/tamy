@@ -132,7 +132,7 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderTarget.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9RenderTargetResourcesStorage.h" />
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderConstantsCompiler.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShaderConstantsCompiler.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9SkeletonResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegments.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9TextureResourcesStorage.h" />
@@ -141,6 +141,7 @@
     <ClInclude Include="..\..\Include\dx9-Renderer.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9TriangleMeshResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShader.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderConstantsCompiler.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DXErrorParser.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderIncludeLoader.h" />
@@ -171,7 +172,8 @@
     <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
       <FileType>Document</FileType>
     </None>
-    <None Include="..\..\Include\dx9-Renderer\DX9ShaderConstantsCompiler.inl" />
+    <None Include="..\..\Include\dx9-Renderer\DX9PixelShaderConstantsCompiler.inl" />
+    <None Include="..\..\Include\dx9-Renderer\DX9VertexShaderConstantsCompiler.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

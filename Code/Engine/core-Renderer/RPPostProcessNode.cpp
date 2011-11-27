@@ -23,7 +23,7 @@ RPPostProcessNode::RPPostProcessNode()
 {
    defineOutput( new RPTextureOutput( "Output" ) );
 
-   m_shaderNode = new ShaderNodeOperator< RenderingPipelineNode >( *this );
+   m_shaderNode = new PixelShaderNodeOperator< RenderingPipelineNode >( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

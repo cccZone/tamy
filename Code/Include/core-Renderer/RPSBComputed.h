@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPSceneBuilder.h"
-#include "core-Renderer/ShaderNodeOperator.h"
+#include "core-Renderer/PixelShaderNodeOperator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@ private:
    PixelShader*                                                   m_shader;
 
    // runtime data
-   ShaderNodeOperator< RenderingPipelineNode >*                   m_shaderNode;
+   PixelShaderNodeOperator< RenderingPipelineNode >*                   m_shaderNode;
 
 public:
    /**

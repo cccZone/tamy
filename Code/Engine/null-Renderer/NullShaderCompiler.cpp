@@ -2,6 +2,7 @@
 #include "core-Renderer/PixelShaderConstant.h"
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core-Renderer/MaterialNode.h"
+#include "core-Renderer/GeometryShaderNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,6 +38,14 @@ bool ShaderCompiler::compilePixelShaderConstants( const std::string& shaderCode,
 ///////////////////////////////////////////////////////////////////////////////
 
 bool ShaderCompiler::compileVertexShader( const std::string& shaderCode, const char* entryFunction )
+{
+   return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+bool ShaderCompiler::compileVertexShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename VertexShaderConstant< GeometryShaderNode >* >& outConstants )
 {
    return true;
 }

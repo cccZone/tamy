@@ -75,3 +75,31 @@ REGISTER_RTTI( MBSurfaceProperties );
 REGISTER_RTTI( MBTimer );
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "GeometryShaderLayout.h"
+#include "GeometryShaderSocketRepresentation.h"
+#include "GBVertexShader.h"
+#include "GBSpatialEntity.h"
+#include "GBCamera.h"
+#include "GBTexture.h"
+#include "GBFloat.h"
+#include "GBVec4.h"
+#include "GBBool.h"
+#include "GBTimer.h"
+
+REGISTER_RTTI( GeometryShaderLayout );
+REGISTER_RTTI( GSSFloat );
+REGISTER_RTTI( GSSMatrix );
+REGISTER_RTTI( GSSTexture );
+REGISTER_RTTI( GSSVec4 );
+REGISTER_RTTI( GSSBool );
+REGISTER_RTTI( GBVertexShader );
+REGISTER_RTTI( GBSpatialEntity );
+REGISTER_RTTI( GBCamera );
+REGISTER_RTTI( GBTexture );
+REGISTER_RTTI( GBFloat );
+REGISTER_RTTI( GBVec4 );
+REGISTER_RTTI( GBBool );
+REGISTER_RTTI( GBTimer );
+
+///////////////////////////////////////////////////////////////////////////////

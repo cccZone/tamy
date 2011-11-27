@@ -91,6 +91,12 @@
     <Filter Include="Materials\MaterialGraph\Nodes">
       <UniqueIdentifier>{01a3a4f1-9e01-4da8-85f4-d33414f68935}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry\GeometryShader">
+      <UniqueIdentifier>{829ac49d-8b86-4edb-8c0e-7fcacfc32a44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\GeometryShader\Nodes">
+      <UniqueIdentifier>{13811136-7bb4-4d68-9f57-9273ee471fc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -304,6 +310,42 @@
     <ClCompile Include="MNTimer.cpp">
       <Filter>Materials\MaterialGraph\Nodes</Filter>
     </ClCompile>
+    <ClCompile Include="GeometryShader.cpp">
+      <Filter>Geometry\GeometryShader</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometrySockets.cpp">
+      <Filter>Geometry\GeometryShader</Filter>
+    </ClCompile>
+    <ClCompile Include="GNVec4.cpp">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GNVertexShader.cpp">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GNTimer.cpp">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GNTexture.cpp">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GNSpatialEntity.cpp">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GNFloat.cpp">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GNCamera.cpp">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GNBool.cpp">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryEntity.cpp">
+      <Filter>Geometry\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryShaderNode.cpp">
+      <Filter>Geometry\GeometryShader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -327,10 +369,16 @@
     <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl">
       <Filter>Core\Resources</Filter>
     </None>
-    <None Include="..\..\Include\core-Renderer\ShaderNodeOperator.inl">
+    <None Include="..\..\Include\core-Renderer\PixelShaderConstant.inl">
       <Filter>Tools</Filter>
     </None>
-    <None Include="..\..\Include\core-Renderer\PixelShaderConstant.inl">
+    <None Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.inl">
+      <Filter>Tools</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.inl">
+      <Filter>Tools</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\VertexShaderConstant.inl">
       <Filter>Tools</Filter>
     </None>
   </ItemGroup>
@@ -517,9 +565,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h">
       <Filter>Tools</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ShaderNodeOperator.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes</Filter>
     </ClInclude>
@@ -603,6 +648,51 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MNTimer.h">
       <Filter>Materials\MaterialGraph\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GeometryShader.h">
+      <Filter>Geometry\GeometryShader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GeometrySockets.h">
+      <Filter>Geometry\GeometryShader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GNBool.h">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GNCamera.h">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GNFloat.h">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GNVertexShader.h">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GNSpatialEntity.h">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GNTexture.h">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GNTimer.h">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GNVec4.h">
+      <Filter>Geometry\GeometryShader\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GeometryEntity.h">
+      <Filter>Geometry\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\GeometryShaderNode.h">
+      <Filter>Geometry\GeometryShader</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConstant.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

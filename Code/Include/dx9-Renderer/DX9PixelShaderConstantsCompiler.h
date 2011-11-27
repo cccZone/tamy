@@ -1,7 +1,7 @@
-/// @file   dx9-Renderer/DX9ShaderConstantsCompiler.h
-/// @brief  shader constants compiler tool
-#ifndef _DX9_SHADER_CONSTANTS_COMPILER_H
-#define _DX9_SHADER_CONSTANTS_COMPILER_H
+/// @file   dx9-Renderer/DX9PixelShaderConstantsCompiler.h
+/// @brief  pixel shader constants compiler tool
+#ifndef _DX9_PIXEL_SHADER_CONSTANTS_COMPILER_H
+#define _DX9_PIXEL_SHADER_CONSTANTS_COMPILER_H
 
 #include "core-Renderer/PixelShaderConstant.h"
 #include <string>
@@ -12,7 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-class DX9ShaderConstantsCompiler
+class DX9PixelShaderConstantsCompiler
 {
 public:
    std::string m_errorMsg;
@@ -29,8 +29,8 @@ private:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "dx9-Renderer/DX9ShaderConstantsCompiler.inl"
+#include "dx9-Renderer/DX9PixelShaderConstantsCompiler.inl"
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // _DX9_SHADER_CONSTANTS_COMPILER_H
+#endif // _DX9_PIXEL_SHADER_CONSTANTS_COMPILER_H

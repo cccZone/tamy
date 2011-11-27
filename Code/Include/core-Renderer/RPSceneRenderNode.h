@@ -28,6 +28,7 @@ private:
    RPMSceneId                          m_renderedSceneId;
    RPSceneBuilder*                     m_builder;
    std::string                         m_renderTargetId;
+   bool                                m_clearDepthBuffer;
 
    // runtime data
    MemoryPool*                         m_treeMemPool;

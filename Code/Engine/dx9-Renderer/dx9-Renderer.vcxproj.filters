@@ -198,7 +198,10 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderIncludeLoader.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderConstantsCompiler.h">
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShaderConstantsCompiler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderConstantsCompiler.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -224,7 +227,10 @@
     <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\DepthFunctions.shl">
       <Filter>Shaders\Lib</Filter>
     </None>
-    <None Include="..\..\Include\dx9-Renderer\DX9ShaderConstantsCompiler.inl">
+    <None Include="..\..\Include\dx9-Renderer\DX9PixelShaderConstantsCompiler.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="..\..\Include\dx9-Renderer\DX9VertexShaderConstantsCompiler.inl">
       <Filter>Core</Filter>
     </None>
   </ItemGroup>

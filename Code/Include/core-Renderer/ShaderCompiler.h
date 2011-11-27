@@ -1,10 +1,11 @@
 /// @file   core-Renderer/ShaderCompiler.h
-/// @brief  a tool for compiling shader code fro verification purposes
+/// @brief  a tool for compiling shader code for verification purposes
 #pragma once
 
 #include <string>
 #include <vector>
 #include "core-Renderer/PixelShaderConstant.h"
+#include "core-Renderer/VertexShaderConstant.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,6 +62,19 @@ public:
     *          In the latter case, check the `getLastError` method for the exact error message.
     */
    bool compileVertexShader( const std::string& shaderCode, const char* entryFunction );
+
+   /**
+    * Compiles shader constants for the specific type of node.
+    *
+    * @param shaderCode
+    * @param entryFunction
+    * @param outConstants        shader constants - pass NULL if you're not interested in them
+    *
+    * @return  'true' if the shader compiles OK, 'false' if any errors were encountered.
+    *          In the latter case, check the `getLastError` method for the exact error message.
+    */
+   template< typename TNode >
+   bool compileVertexShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename VertexShaderConstant< TNode >* >& outConstants );
 
    /**
     * Returns the last error message.
