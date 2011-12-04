@@ -42,7 +42,7 @@ private:
 
    // window definition
    HWND                                               m_hWnd;
-   std::string                                        m_rendererPipelineName;
+   FilePath                                           m_rendererPipelineName;
    TimeController*                                    m_localTimeController;
 
    // input tracking
@@ -70,7 +70,7 @@ public:
     * @param rendererPipelineName         path to the rendering pipeline resource
     * @param timeController               time controller that should update the widget
     */
-   TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std::string& rendererPipelineName, TimeController& timeController );
+   TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const FilePath& rendererPipelineName, TimeController& timeController );
    ~TamySceneWidget();
 
    /**
@@ -109,6 +109,13 @@ public:
     * Toggles the widget debug mode.
     */
    void toggleDebugMode();
+
+   /**
+    * Changes the pipeline the widget uses to render stuff.
+    *
+    * @param pipeline
+    */
+   void setRenderingPipeline( const FilePath& pipeline );
 
    // -------------------------------------------------------------------------
    // Accessors

@@ -19,7 +19,8 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-IWFScene::IWFScene()
+IWFScene::IWFScene( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer )
+   : TResourceImporter< Model >( path, rm, observer )
 {
 }
 
@@ -31,59 +32,37 @@ IWFScene::~IWFScene()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* IWFScene::load( ResourcesManager& rm, IProgressObserver& observer )
+void IWFScene::import( Model& scene )
 {
-   Model* scene = new Model( m_loadedFileName );
-   load( m_loadedFileName, rm, observer, *scene );
-   return scene;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void IWFScene::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer, Model& scene )
-{
-   // extract the scene directory
-   std::size_t lastPos = fileName.find_last_of( "/\\" );
-   if ( lastPos != std::string::npos )
-   {
-      m_sceneDir = fileName.substr( 0, lastPos );
-      m_fileName = fileName.substr( lastPos + 1 );
-   }
-   else
-   {
-      m_fileName = fileName;
-   }
-   const Filesystem& fs = rm.getFilesystem();
+   const Filesystem& fs = m_rm.getFilesystem();
 
    // load the IWF file
    CFileIWF sceneFile;
-   sceneFile.Load( fs, m_sceneDir + std::string("/") + m_fileName );
+   sceneFile.Load( fs, m_loadedFileName );
 
    // parse entities
-   observer.initialize( "Importing entities", sceneFile.m_vpEntityList.size() );
+   m_observer->initialize( "Importing entities", sceneFile.m_vpEntityList.size() );
    for ( ULONG i = 0; i < sceneFile.m_vpEntityList.size(); ++i )
    {
       processEntities(sceneFile.m_vpEntityList[i]);
-      observer.advance();
+      m_observer->advance();
    }
 
    // parse internal meshes
-   observer.initialize( "Importing meshes", sceneFile.m_vpMeshList.size() );
+   m_observer->initialize( "Importing meshes", sceneFile.m_vpMeshList.size() );
    for ( UINT i = 0; i < sceneFile.m_vpMeshList.size(); ++i )
    {
-      std::string meshName = getUniqueNameForMesh(sceneFile.m_vpMeshList[i]->Name);
+      std::string meshName = getUniqueNameForMesh( sceneFile.m_vpMeshList[i]->Name );
 
-      IWFMeshLoader meshLoader(sceneFile.m_vpMeshList[i], 
-         sceneFile.m_vpTextureList, 
-         sceneFile.m_vpMaterialList);
+      IWFMeshLoader meshLoader( sceneFile.m_vpMeshList[i], sceneFile.m_vpTextureList, sceneFile.m_vpMaterialList );
 
       std::vector<MeshDefinition> meshes;
       meshLoader.parseMesh(meshes, meshName);
 
-      D3DXMATRIX objMtx = reinterpret_cast<D3DXMATRIX&> (sceneFile.m_vpMeshList[i]->ObjectMatrix);
-      addStaticGeometry( scene, rm, meshes, objMtx, meshName );
+      D3DXMATRIX objMtx = reinterpret_cast< D3DXMATRIX& >( sceneFile.m_vpMeshList[i]->ObjectMatrix );
+      addStaticGeometry( scene, m_rm, meshes, objMtx, meshName );
 
-      observer.advance();
+      m_observer->advance();
    }
 
    // cleanup
@@ -285,13 +264,16 @@ void IWFScene::addStaticGeometry( Model& scene,
       root->setLocalMtx(situation);
    }
 
+   FilePath sceneDir;
+   m_loadedFileName.extractDir( sceneDir );
+
    for (unsigned int i = 0; i < count; ++i)
    {
       MeshDefinition& currMesh = meshes[i];
 
       // create the geometry
       char geomName[128];
-      sprintf_s( geomName, 128, "%s/%s.%s", m_sceneDir.c_str(), currMesh.name.c_str(), TriangleMesh::getExtension() );
+      sprintf_s( geomName, 128, "%s/%s.%s", sceneDir.c_str(), currMesh.name.c_str(), TriangleMesh::getExtension() );
 
       FilePath geomResPath( geomName );
       TriangleMesh* geometryRes = NULL;
@@ -308,7 +290,7 @@ void IWFScene::addStaticGeometry( Model& scene,
       
       if (mat.texName.length() > 0)
       {
-         FilePath texName( m_sceneDir + std::string( "/" ) + mat.texName );
+         FilePath texName( sceneDir.getRelativePath() + std::string( "/" ) + mat.texName );
          FilePath texResourceName;
          texName.changeFileExtension( Texture::getExtension(), texResourceName );
          Texture* texture = NULL;

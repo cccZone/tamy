@@ -40,6 +40,8 @@ private:
    SceneObjectsManipulator*                  m_sceneObjectsManipulator;
    NodeTransformControlMode                  m_objectsManipulationMode;
 
+   std::vector< std::string >                m_droppedPaths;
+
 public:
    /**
     * Constructor.
@@ -72,6 +74,7 @@ private:
 
 public slots:
    void saveScene();
+   void pathsDropped();
    void toggleSceneExecution();
    void entitySelected( Entity& entity );
    void selectionCleaned();

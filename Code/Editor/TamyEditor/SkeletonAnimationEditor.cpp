@@ -31,8 +31,8 @@
 SkeletonAnimationEditor::SkeletonAnimationEditor( SkeletonAnimation& animation )
    : TIME_SCALE( 1000.0f )
    , m_animation( animation )
-   , m_animationKeysChart( new SkeletonAnimationKeysChart( animation ) )
-   , m_animationEventsChart( new SkeletonAnimationEventsChart( animation ) )
+   , m_animationKeysChart( new SkeletonAnimationKeysChart() )
+   , m_animationEventsChart( new SkeletonAnimationEventsChart() )
    , m_bonesList( NULL )
    , m_scene( NULL )
    , m_timeTrack( NULL )
@@ -124,18 +124,13 @@ void SkeletonAnimationEditor::onInitialize()
       m_bonesList = new QListWidget( operationsSplitter );
       operationsSplitter->addWidget( m_bonesList );
       connect( m_bonesList, SIGNAL( itemClicked( QListWidgetItem* ) ), this, SLOT( onBoneSelected( QListWidgetItem* ) ) );
-
-      std::vector< std::string > bonesNames;
-      m_animation.collectBonesNames( bonesNames );
-      for ( std::vector< std::string >::const_iterator it = bonesNames.begin(); it != bonesNames.end(); ++it )
-      {
-         m_bonesList->addItem( it->c_str() );
-      }
    }
 
    // right side frames
    {
-      QFrame* mainChartsFrame = new QFrame( mainSplitter );
+      DropFrame* mainChartsFrame = new DropFrame( mainSplitter, new FSNodeMimeData( m_animationsPaths )  );
+      connect( mainChartsFrame, SIGNAL( changed() ), this, SLOT( animationImported() ) );
+
       mainSplitter->addWidget( mainChartsFrame );
 
       QHBoxLayout* mainChartsFrameLayout = new QHBoxLayout( mainChartsFrame );
@@ -149,29 +144,29 @@ void SkeletonAnimationEditor::onInitialize()
          QVBoxLayout* keysSelectionLayout = new QVBoxLayout( keysSelectionFrame );
          keysSelectionFrame->setLayout( keysSelectionLayout );
 
-         QCheckBox* posKeyXCheckBox = new QCheckBox( "X", keysSelectionFrame );
-         keysSelectionLayout->addWidget( posKeyXCheckBox );
-         connect( posKeyXCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyX( int ) ) );
+         m_posKeyXCheckBox = new QCheckBox( "X", keysSelectionFrame );
+         keysSelectionLayout->addWidget( m_posKeyXCheckBox );
+         connect( m_posKeyXCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyX( int ) ) );
 
-         QCheckBox* posKeyYCheckBox = new QCheckBox( "Y", keysSelectionFrame );
-         keysSelectionLayout->addWidget( posKeyYCheckBox );
-         connect( posKeyYCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyY( int ) ) );
+         m_posKeyYCheckBox = new QCheckBox( "Y", keysSelectionFrame );
+         keysSelectionLayout->addWidget( m_posKeyYCheckBox );
+         connect( m_posKeyYCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyY( int ) ) );
 
-         QCheckBox* posKeyZCheckBox = new QCheckBox( "Z", keysSelectionFrame );
-         keysSelectionLayout->addWidget( posKeyZCheckBox );
-         connect( posKeyZCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyZ( int ) ) );
+         m_posKeyZCheckBox = new QCheckBox( "Z", keysSelectionFrame );
+         keysSelectionLayout->addWidget( m_posKeyZCheckBox );
+         connect( m_posKeyZCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onTogglePosKeyZ( int ) ) );
 
-         QCheckBox* orientKeyYawCheckBox = new QCheckBox( "Yaw", keysSelectionFrame );
-         keysSelectionLayout->addWidget( orientKeyYawCheckBox );
-         connect( orientKeyYawCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyYaw( int ) ) );
+         m_orientKeyYawCheckBox = new QCheckBox( "Yaw", keysSelectionFrame );
+         keysSelectionLayout->addWidget( m_orientKeyYawCheckBox );
+         connect( m_orientKeyYawCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyYaw( int ) ) );
 
-         QCheckBox* orientKeyPitchCheckBox = new QCheckBox( "Pitch", keysSelectionFrame );
-         keysSelectionLayout->addWidget( orientKeyPitchCheckBox );
-         connect( orientKeyPitchCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyPitch( int ) ) );
+         m_orientKeyPitchCheckBox = new QCheckBox( "Pitch", keysSelectionFrame );
+         keysSelectionLayout->addWidget( m_orientKeyPitchCheckBox );
+         connect( m_orientKeyPitchCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyPitch( int ) ) );
 
-         QCheckBox* orientKeyRollCheckBox = new QCheckBox( "Roll", keysSelectionFrame );
-         keysSelectionLayout->addWidget( orientKeyRollCheckBox );
-         connect( orientKeyRollCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyRoll( int ) ) );
+         m_orientKeyRollCheckBox = new QCheckBox( "Roll", keysSelectionFrame );
+         keysSelectionLayout->addWidget( m_orientKeyRollCheckBox );
+         connect( m_orientKeyRollCheckBox, SIGNAL( stateChanged( int ) ), this, SLOT( onToggleOrientKeyRoll( int ) ) );
       }
 
       // charts section
@@ -215,6 +210,7 @@ void SkeletonAnimationEditor::onInitialize()
    mainSplitter->setSizes( sizes );
 
    // show the editor
+   refresh();
    show();
 }
 
@@ -241,6 +237,33 @@ void SkeletonAnimationEditor::onDeinitialize( bool saveProgress )
    m_animationEventsChart = NULL;
 
    m_bonesList = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationEditor::refresh()
+{
+   // reset the bones list
+   m_bonesList->clear();
+
+   std::vector< std::string > bonesNames;
+   m_animation.collectBonesNames( bonesNames );
+   for ( std::vector< std::string >::const_iterator it = bonesNames.begin(); it != bonesNames.end(); ++it )
+   {
+      m_bonesList->addItem( it->c_str() );
+   }
+
+   // reset the selected bones
+   m_posKeyXCheckBox->setChecked( false );
+   m_posKeyYCheckBox->setChecked( false );
+   m_posKeyZCheckBox->setChecked( false );
+   m_orientKeyYawCheckBox->setChecked( false );
+   m_orientKeyPitchCheckBox->setChecked( false );
+   m_orientKeyRollCheckBox->setChecked( false );
+
+   // reset the charts
+   m_animationKeysChart->setAnimation( m_animation );
+   m_animationEventsChart->setAnimation( m_animation );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -434,6 +457,33 @@ void SkeletonAnimationEditor::onTimeValueChanged( int newValue )
 
    float newTimeValue = newValue / TIME_SCALE;
    m_animationController->setTrackTime( newTimeValue );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationEditor::animationImported()
+{
+   ResourcesManager& rm = ResourcesManager::getInstance();
+
+   unsigned int count = m_animationsPaths.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      FilePath path = m_animationsPaths[i];
+
+      TResourceImporter< SkeletonAnimation >* importer = rm.createImporter< SkeletonAnimation >( path );
+      if ( importer )
+      {
+         importer->import( m_animation );
+         delete importer;
+
+         // ok - animation imported, no need to go through the remaining paths
+         break;
+      }
+   }
+
+   m_animationsPaths.clear();
+
+   refresh();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,8 +1,9 @@
 #include "SceneEditor.h"
-#include "core-MVC.h"
+#include "core.h"
 #include "tamyeditor.h"
 #include "core-AppFlow.h"
 #include "core-MVC.h"
+#include "core-Renderer.h"
 #include <QProgressBar.h>
 #include <QMessageBox.h>
 #include <QSplitter.h>
@@ -16,6 +17,8 @@
 #include "SelectionManager.h"
 #include "SceneObjectsManipulator.h"
 #include "NodeTransformController.h"
+#include "DropFrame.h"
+#include "FSNodeMimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -136,11 +139,18 @@ void SceneEditor::onInitialize()
          std::string defaultRendererPipelineName = settings.value( "pipeline", "" ).toString().toStdString();
          settings.endGroup();
 
-         m_sceneWidget = new TamySceneWidget( sceneViewSplitter, 0, defaultRendererPipelineName, mainEditor.getTimeController() );
+         DropFrame* sceneDropsFrame = new DropFrame( sceneViewSplitter, new FSNodeMimeData( m_droppedPaths ) );
+         connect( sceneDropsFrame, SIGNAL( changed() ), this, SLOT( pathsDropped() ) );
+         sceneViewSplitter->addWidget( sceneDropsFrame );
+         sceneViewSplitter->setStretchFactor( 0, 1 );
+
+         QHBoxLayout* sceneDropsFrameLayout = new QHBoxLayout();
+         sceneDropsFrame->setLayout( sceneDropsFrameLayout );
+
+         m_sceneWidget = new TamySceneWidget( sceneDropsFrame, 0, defaultRendererPipelineName, mainEditor.getTimeController() );
          camera = &m_sceneWidget->getCamera();
          m_sceneWidget->setScene( m_scene );
-         sceneViewSplitter->addWidget( m_sceneWidget );
-         sceneViewSplitter->setStretchFactor( 0, 1 );
+         sceneDropsFrameLayout->addWidget( m_sceneWidget );
          m_selectionManager->attach( *m_sceneWidget );
          
          // setup the manipulator
@@ -239,6 +249,36 @@ void SceneEditor::runScene()
    m_actionRun->setText( "Stop" );
 
    m_playing = true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneEditor::pathsDropped()
+{
+   ResourcesManager& rm = ResourcesManager::getInstance();
+
+   unsigned int count = m_droppedPaths.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      FilePath path = m_droppedPaths[i];
+
+      if ( path.extractExtension() == RenderingPipeline::getExtension() )
+      {
+         // if this is a rendering pipeline, switch it in the rendering widget
+         m_sceneWidget->setRenderingPipeline( path );
+      }
+      else
+      {
+         TResourceImporter< Model >* importer = rm.createImporter< Model >( path );
+         if ( importer )
+         {
+            importer->import( m_scene );
+            delete importer;
+         }
+      }
+   }
+
+   m_droppedPaths.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

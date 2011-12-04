@@ -17,15 +17,20 @@ class SkeletonAnimation;
 class SkeletonAnimationEventsChart : public ChartScene
 {
 private:
-   SkeletonAnimation&      m_animation;
+   SkeletonAnimation*      m_animation;
 
 public:
    /**
     * Constructor.
-    *
-    * @param animation        displayed animation
     */
-   SkeletonAnimationEventsChart( SkeletonAnimation& animation );
+   SkeletonAnimationEventsChart();
+
+   /**
+    * Sets a new animation for the chart to use.
+    *
+    * @param animation
+    */
+   void setAnimation( SkeletonAnimation& animation );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

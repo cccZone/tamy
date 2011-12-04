@@ -38,7 +38,7 @@ private:
    typedef std::map< std::string, BoneSRTAnimationChart* >  ChartsMap;
 
 private:
-   SkeletonAnimation&      m_animation;
+   SkeletonAnimation*      m_animation;
    ChartsMap               m_charts;
 
    bool                    m_keysVisibility[BAKEY_MAX];
@@ -47,10 +47,8 @@ private:
 public:
    /**
     * Constructor.
-    *
-    * @param animation        displayed animation
     */
-   SkeletonAnimationKeysChart( SkeletonAnimation& animation );
+   SkeletonAnimationKeysChart();
    ~SkeletonAnimationKeysChart();
 
    /**
@@ -87,6 +85,13 @@ public:
     * @param keyIdx           bone animation key idx
     */
    inline const QColor& getColor( EBoneKeyId keyIdx ) const { return m_colors[keyIdx]; }
+
+   /**
+    * Sets a new animation for the chart to use.
+    *
+    * @param animation
+    */
+   void setAnimation( SkeletonAnimation& animation );
 
 };
 

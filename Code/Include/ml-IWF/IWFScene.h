@@ -1,10 +1,9 @@
+/// @file      ml-IWF\IWFScene.h
+/// @brief     IWF files loader
 #ifndef _IWF_SCENE_H
 #define _IWF_SCENE_H
 
-/// @file      ml-IWF\IWFScene.h
-/// @brief     IWF files loader
-
-#include "core/ResourceLoader.h"
+#include "core/ResourceImporter.h"
 #include "core-MVC.h"
 #include <string>
 #include <list>
@@ -34,31 +33,17 @@ class IProgressObserver;
  */
  class IWFScene : public TResourceImporter< Model >
 {
-private:
-   std::string m_sceneDir;
-   std::string m_fileName;
-
 public:
    /** 
     * Constructor.
     */
-   IWFScene();
+   IWFScene( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer );
    ~IWFScene();
 
-   /**
-    * The method will load a scene from an IWF file.
-    *
-    * @param fileName
-    * @param rm            resources manager that manages the scene resources
-    * @param observer      loading progress observer
-    * @param scene         a model to which the scene should be uploaded
-    */
-   void load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer, Model& scene );
-
    // -------------------------------------------------------------------------
-   // ResourceLoader implementation
+   // ResourceImporter implementation
    // -------------------------------------------------------------------------
-   Resource* load( ResourcesManager& rm, IProgressObserver& observer );
+   void import( Model& scene );
 
 private:
    void processEntities(iwfEntity* fileEntity);

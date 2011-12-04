@@ -1,8 +1,8 @@
 #include "core\ResourcesManager.h"
-#include "core\ResourceLoader.h"
 #include "core\Serializer.h"
 #include "core\FileSerializer.h"
 #include "core\IProgressObserver.h"
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,11 +23,16 @@ ResourcesManager::ResourcesManager()
 ResourcesManager::~ResourcesManager()
 {
    // delete the loaders
-   for ( ResourceLoadersMap::iterator it = m_loaders.begin(); it != m_loaders.end(); ++it )
+   for ( ResourceImportersMap::iterator itArr = m_importers.begin(); itArr != m_importers.end(); ++itArr )
    {
-      delete it->second;
+      ImportersArr* arr = itArr->second;
+      for ( ImportersArr::iterator it = arr->begin(); it != arr->end(); ++it )
+      {
+         delete *it;
+      }
+      delete arr;
    }
-   m_loaders.clear();
+   m_importers.clear();
 
    delete m_progressObserverCreator; m_progressObserverCreator = NULL;
 
@@ -206,20 +211,29 @@ void ResourcesManager::scan( const FilePath& rootDir, FilesystemScanner& scanner
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* ResourcesManager::loadResource( ResourceLoader& loader )
+Resource* ResourcesManager::loadResource( const FilePath& filePath )
 {
    IProgressObserver* observer = createObserver();
 
    Resource* res = NULL;
    try
    {
-      res = loader.load( *this, *observer );
+      observer->initialize( "Loading engine resource " + filePath, 1 );
+
+      std::string extension = filePath.extractExtension();
+      std::ios_base::openmode fileAccessMode = Resource::getFileAccessMode( extension );
+
+      File* file = m_filesystem->open( filePath, std::ios_base::in | fileAccessMode );
+      Loader loader( new FileSerializer( file ) );
+      res = &loader.load( *this );
+
+      observer->advance();
    }
    catch( std::exception& ex )
    {
       ASSERT_MSG( false, ex.what() );
    }
-   
+
    delete observer;
 
    return res;
@@ -227,31 +241,31 @@ Resource* ResourcesManager::loadResource( ResourceLoader& loader )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource& ResourcesManager::create( const FilePath& name )
+Resource& ResourcesManager::create( const FilePath& filePath )
 {
-   FilePath rmName;
-   ResourceLoader* loader = createResourceLoader( name );
-   name.changeFileExtension( loader->getOutputResourceExtension(), rmName );
-
-   // we'll be loading a resource with the specified name ( because we may be importing
-   // something ), but then we want to create a resource with an extension
-   // assigned to the resource type.
-   // Thus this little mish-mash - when referring to the resources in the filesystem,
-   // we'll be using `name` param, and when referring to the resources
-   // kept by the ResourcesManager, we'll use the `rmName` param
-
-   Resource* res = findResource( rmName );
+   Resource* res = findResource( filePath );
    if ( res == NULL )
    {
-      res = loadResource( *loader );
+      // the resource doesn't exist yet - try loading it
+      res = loadResource( filePath );
+
+      if ( !res )
+      {
+         // the resource doesn't exist at all - create a new one
+         Class resourceClass = Resource::findResourceClass( filePath.extractExtension() );
+         if ( resourceClass.isValid() )
+         {
+            res = resourceClass.instantiate< Resource >();
+         }
+      }
+
+      // set the path of the resource and register it with the manager
       if ( res )
       {
-         res->setFilePath( rmName );
+         res->setFilePath( filePath );
          addResource( res );
       }
    }
-
-   delete loader;
    
    if ( res == NULL )
    {
@@ -307,27 +321,6 @@ void ResourcesManager::save( const FilePath& name, ExternalDependenciesSet& outE
       Saver saver( new FileSerializer( file ) );
       saver.save( *res, outExternalDependencies );
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-ResourceLoader* ResourcesManager::createResourceLoader( const FilePath& name ) const
-{
-   std::string extension = name.extractExtension();
-
-   ResourceLoadersMap::const_iterator it = m_loaders.find( extension );
-   ResourceLoader* loader = NULL;
-   if ( it != m_loaders.end() )
-   {
-      loader = it->second->create();
-   }
-   else
-   {
-      loader = new DefaultResourceLoader();
-   }
-
-   loader->setLoadedFileName( name );
-   return loader;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

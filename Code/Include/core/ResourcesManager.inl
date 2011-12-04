@@ -30,19 +30,53 @@ const Filesystem& ResourcesManager::getFilesystem() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename T >
-void ResourcesManager::addLoader( const std::string& extension )
+template< typename Importer, typename ResourceType >
+void ResourcesManager::addImporter( const std::string& extension )
 {
-   ResourceLoadersMap::iterator it = m_loaders.find( extension );
-   if ( it != m_loaders.end() )
+   ResourceImportersMap::iterator it = m_importers.find( extension );
+   if ( it == m_importers.end() )
    {
-      delete it->second;
-      it->second = new TResourceLoaderCreator< T >();
+      it = m_importers.insert( std::make_pair( extension, new ImportersArr() ) ).first;
    }
-   else
+
+   it->second->push_back( new TResourceImporterCreator< Importer >() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename ResourceType >
+TResourceImporter< ResourceType >* ResourcesManager::createImporter( const FilePath& name )
+{
+   std::string extension = name.extractExtension();
+
+   ResourceImportersMap::const_iterator itArr = m_importers.find( extension );
+
+   ResourceImporter* importer = NULL;
+   if ( itArr != m_importers.end() )
    {
-      m_loaders.insert( std::make_pair( extension, new TResourceLoaderCreator< T >() ) );
+      // go through all importers and check which one can import the desired resource type
+      ImportersArr* importersArr = itArr->second;
+      for ( ImportersArr::const_iterator it = importersArr->begin(); it != importersArr->end(); ++it )
+      {
+         IProgressObserver* observer = createObserver();
+         ResourceImporter* tmpImporter = (*it)->create( name, *this, observer );   
+
+         if ( tmpImporter && tmpImporter->canImport( ResourceType::getRTTIClass() ) )
+         {
+            // found it
+            importer = tmpImporter;
+            break;
+         }
+         else
+         {
+            // that's not it
+            delete tmpImporter;
+         }
+      }
+
    }
+
+   return static_cast< TResourceImporter< ResourceType >* >( importer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -360,19 +360,31 @@ void Filesystem::normalize( const std::string& fileName, std::string& outFileNam
 {
    outFileName = "";
 
-   int lastSlash = 0;
-   int nextSlash = fileName.find_first_of( "\\" );
-
-   while( (std::size_t)nextSlash != std::string::npos )
    {
-      outFileName += fileName.substr( lastSlash, nextSlash - lastSlash );
-      outFileName += "/";
+      int lastSlash = 0;
+      int nextSlash = fileName.find_first_of( "\\" );
 
-      lastSlash = nextSlash + 1;
-      nextSlash = fileName.find_first_of( "\\", lastSlash );
+      while( (std::size_t)nextSlash != std::string::npos )
+      {
+         outFileName += fileName.substr( lastSlash, nextSlash - lastSlash );
+         outFileName += "/";
+
+         lastSlash = nextSlash + 1;
+         nextSlash = fileName.find_first_of( "\\", lastSlash );
+      }
+
+      outFileName += fileName.substr( lastSlash, fileName.length() );
    }
 
-   outFileName += fileName.substr( lastSlash, fileName.length() );
+   // look for subsequent slashes and eliminate them as well
+   {
+      int nextDoubleSlash = outFileName.find( "//" );
+      while( (std::size_t)nextDoubleSlash != std::string::npos )
+      {
+         outFileName.replace( nextDoubleSlash, 1, "", 0 );
+         nextDoubleSlash = outFileName.find( "//" );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

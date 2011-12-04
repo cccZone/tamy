@@ -3,37 +3,44 @@
 #pragma once
 
 #include <string>
-#include "core/ResourceLoader.h"
+#include "core/ResourceImporter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Filesystem;
-class ResourcesManager;
-class IProgressObserver;
 class Model;
-class SimpleFileParser;
-class SpatialEntity;
+class SkeletonAnimation;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class BVHLoader : public TResourceImporter< Model >
+class BVHModelLoader : public TResourceImporter< Model >
 {
 public:
    /**
-    * The method will load a scene from a BVH file.
-    *
-    * @param fileName
-    * @param rm
-    * @param observer
-    * @param scene         a model to which the scene should be uploaded
+    * Constructor.
     */
-   void load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer, Model& scene );
+   BVHModelLoader( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer );
 
    // -------------------------------------------------------------------------
-   // ResourceLoader implementation
+   // ResourceImporter implementation
    // -------------------------------------------------------------------------
-   Resource* load( ResourcesManager& rm, IProgressObserver& observer );
+  void import( Model& scene );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class BVHSkeletonAnimationLoader : public TResourceImporter< SkeletonAnimation >
+{
+public:
+   /**
+    * Constructor.
+    */
+   BVHSkeletonAnimationLoader( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer );
+
+   // -------------------------------------------------------------------------
+   // ResourceImporter implementation
+   // -------------------------------------------------------------------------
+  void import( SkeletonAnimation& animation );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
