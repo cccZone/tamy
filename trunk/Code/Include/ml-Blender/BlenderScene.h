@@ -4,7 +4,7 @@
 #ifndef _BLENDER_SCENE_H
 #define _BLENDER_SCENE_H
 
-#include "core/ResourceLoader.h"
+#include "core/ResourceImporter.h"
 #include <string>
 #include <d3dx9.h>
 #include <vector>
@@ -31,8 +31,6 @@ class BlenderScene : public TResourceImporter< Model >
 {
 private:
    TiXmlDocument*                                  m_document;
-   ResourcesManager*                               m_rm;
-   IProgressObserver*                              m_observer;
 
    typedef std::vector< SliceDefinition* >         SlicesDefinitions;
    SlicesDefinitions                               m_definitions;
@@ -47,18 +45,8 @@ public:
    /**
     * Constructor.
     */
-   BlenderScene();
+   BlenderScene( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer );
    ~BlenderScene();
-
-   /**
-    * The method will load a scene from a Blender export file.
-    *
-    * @param fileName
-    * @param rm
-    * @param observer
-    * @param scene         a model to which the scene should be uploaded
-    */
-   void load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer, Model& scene );
 
    /**
     * Returns the used instance of progress observer.
@@ -68,12 +56,12 @@ public:
    /**
     * Returns the used instance of resources manager.
     */
-   inline ResourcesManager& getResourcesManager() { return *m_rm; }
+   inline ResourcesManager& getResourcesManager() { return m_rm; }
 
    // -------------------------------------------------------------------------
-   // ResourceLoader implementation
+   // ResourceImporter implementation
    // -------------------------------------------------------------------------
-   Resource* load( ResourcesManager& rm, IProgressObserver& observer );
+   void import( Model& scene );
 
    // -------------------------------------------------------------------------
    // Slices management

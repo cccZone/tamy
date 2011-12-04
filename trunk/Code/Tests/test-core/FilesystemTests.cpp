@@ -144,6 +144,9 @@ TEST( Filesystem, normalize )
 
    Filesystem::normalize( "\\ala\\ula\\ala.txt", outDir );
    CPPUNIT_ASSERT_EQUAL( std::string( "/ala/ula/ala.txt" ), outDir );
+
+   Filesystem::normalize( "/ala//ula/ala.txt", outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ala/ula/ala.txt" ), outDir );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

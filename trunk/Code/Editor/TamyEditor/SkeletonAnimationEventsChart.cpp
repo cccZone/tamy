@@ -4,9 +4,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SkeletonAnimationEventsChart::SkeletonAnimationEventsChart( SkeletonAnimation& animation )
-   : m_animation( animation )
+SkeletonAnimationEventsChart::SkeletonAnimationEventsChart()
+   : m_animation( NULL )
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SkeletonAnimationEventsChart::setAnimation( SkeletonAnimation& animation )
+{
+   m_animation = &animation;
+
    // go through the animation keys and draw proper lines showing them
 
 }

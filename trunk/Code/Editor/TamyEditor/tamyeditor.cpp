@@ -159,9 +159,10 @@ void TamyEditor::setupResourcesManager( const char* fsRoot )
    fs->attach( *this );
 
    // register external resources
-   resMgr.addLoader< BVHLoader >( "bvh" );
-   resMgr.addLoader< IWFScene >( "iwf" );
-   resMgr.addLoader< BlenderScene >( "dae" );
+   resMgr.addImporter< BVHModelLoader, Model >( "bvh" );
+   resMgr.addImporter< BVHSkeletonAnimationLoader, SkeletonAnimation >( "bvh" );
+   resMgr.addImporter< IWFScene, Model >( "iwf" );
+   resMgr.addImporter< BlenderScene, Model >( "dae" );
    resMgr.setProgressObserver< ProgressDialog >();
 }
 

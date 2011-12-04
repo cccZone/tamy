@@ -24,6 +24,7 @@ class ChartView;
 class ChartScene;
 class VerticalChartMarker;
 class QSlider;
+class QCheckBox;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -50,6 +51,13 @@ private:
    QSlider*                                  m_timeControlWidget;
    SkeletonAnimationController*              m_animationController;
 
+   QCheckBox*                                m_posKeyXCheckBox;
+   QCheckBox*                                m_posKeyYCheckBox;
+   QCheckBox*                                m_posKeyZCheckBox;
+   QCheckBox*                                m_orientKeyYawCheckBox;
+   QCheckBox*                                m_orientKeyPitchCheckBox;
+   QCheckBox*                                m_orientKeyRollCheckBox;
+
    // animation playback control panel
    QIcon                                     m_runSceneIcon;
    QIcon                                     m_stopSceneIcon;
@@ -57,6 +65,7 @@ private:
    bool                                      m_playing;
 
    std::vector< std::string >                m_animatedModelPaths;
+   std::vector< std::string >                m_animationsPaths;
 
 public:
    /**
@@ -88,10 +97,12 @@ public slots:
    void onToggleOrientKeyRoll( int state );
    void togglePlay();
    void animatedModelLoaded();
+   void animationImported();
    void onTimeValueChanged( int newValue );
 
 private:
    void loadAnimatedModel( const std::string& modelResourcePath );
+   void refresh();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

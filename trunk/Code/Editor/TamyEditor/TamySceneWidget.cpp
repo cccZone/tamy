@@ -18,7 +18,7 @@ IDirect3D9* TamySceneWidget::s_d3d9 = NULL;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std::string& rendererPipelineName, TimeController& timeController )
+TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const FilePath& rendererPipelineName, TimeController& timeController )
    : QWidget( parent, f )
    , m_rendererPipelineName( rendererPipelineName )
    , m_localTimeController( NULL )
@@ -84,6 +84,8 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const std:
 TamySceneWidget::~TamySceneWidget()
 {
    deinitialize();
+   
+   m_scene = NULL;
 
    m_inputHandlerTrack = NULL;
    delete m_localTimeController;
@@ -127,6 +129,16 @@ void TamySceneWidget::setScene( Model& scene )
 void TamySceneWidget::clearScene()
 {
    deinitialize();
+   m_scene = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::setRenderingPipeline( const FilePath& pipeline )
+{
+   deinitialize();
+   m_rendererPipelineName = pipeline;
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,7 +160,6 @@ void TamySceneWidget::deinitialize()
 
    // remove the scenes
    delete m_debugScene; m_debugScene = NULL;
-   m_scene = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -163,20 +174,17 @@ void TamySceneWidget::initialize()
    RenderingPipeline* pipeline = NULL;
    RenderingPipelineMechanism* sceneRenderer = NULL;
 
-   if ( !m_rendererPipelineName.empty() )
+   try
    {
-      try
-      {
-         pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( m_rendererPipelineName ) );
-         sceneRenderer = new RenderingPipelineMechanism( pipeline );
-         m_renderingMech->add( "sceneRenderer", sceneRenderer );
-         m_renderingMech->add( "selectionRenderer", m_selectionRenderer, false );
-         m_renderingMech->add( "queryRenderer", m_queryRenderer, false );
-      }
-      catch ( std::exception& ex)
-      {
-         ASSERT_MSG( false, ( std::string( "RenderPipeline initialization error: ") + ex.what() ).c_str() );
-      }
+      pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( m_rendererPipelineName ) );
+      sceneRenderer = new RenderingPipelineMechanism( pipeline );
+      m_renderingMech->add( "sceneRenderer", sceneRenderer );
+      m_renderingMech->add( "selectionRenderer", m_selectionRenderer, false );
+      m_renderingMech->add( "queryRenderer", m_queryRenderer, false );
+   }
+   catch ( std::exception& ex)
+   {
+      ASSERT_MSG( false, ( std::string( "RenderPipeline initialization error: ") + ex.what() ).c_str() );
    }
 
    // setup the debug scene

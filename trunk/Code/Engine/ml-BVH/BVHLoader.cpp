@@ -271,7 +271,7 @@ namespace // anonymous
          m_skeletonRoot = NULL;
       }
 
-      void parse( const char* animationName, std::stringstream& inStream, Model& scene )
+      void parse( const char* animationName, std::stringstream& inStream, SkeletonAnimation& animation, Model& scene )
       {
          // parse the skeleton
          m_observer.initialize( "Parsing the skeleton structure", 1 );
@@ -316,22 +316,8 @@ namespace // anonymous
 
          // create an animation resource
          m_observer.initialize( "Initializing scene", 1 );
-         FilePath animationResName( scene.getFilePath() );
-         animationResName.changeFileExtension( SkeletonAnimation::getExtension(), animationResName );
-         SkeletonAnimation* animation = m_rm.findResource< SkeletonAnimation >( animationResName );
-         if ( !animation )
-         {
-            animation = new SkeletonAnimation( animationResName );
-            m_rm.addResource( animation );
-         }
-         else
-         {
-            // this resource already exists - reset it
-            animation->clear();
-         }
-
-         // finally - instantiate the animation controller and add it to the scene
-         SpatialEntity* skeletonRootEntity = skeletonRoot->instantiate( *animation );
+         
+         SpatialEntity* skeletonRootEntity = skeletonRoot->instantiate( animation );
          scene.add( skeletonRootEntity );
 
          m_observer.advance();
@@ -342,29 +328,62 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BVHLoader::load( const std::string& fileName, ResourcesManager& rm, IProgressObserver& observer, Model& scene )
+BVHModelLoader::BVHModelLoader( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer )
+   : TResourceImporter< Model >( path, rm, observer )
 {
-   const Filesystem& fs = rm.getFilesystem();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BVHModelLoader::import( Model& scene )
+{
+   const Filesystem& fs = m_rm.getFilesystem();
 
    // load the file contents into a string
-   File* bvhFile = fs.open( fileName );
+   File* bvhFile = fs.open( m_loadedFileName );
    StreamBuffer< char > fileReader( *bvhFile );
    std::string fileContents = fileReader.getBuffer();
    delete bvhFile;
 
    // parse the bone structure
    std::stringstream inStream( fileContents );
-   BVHHierarchy hierarchy( rm, observer );
-   hierarchy.parse( fileName.c_str(), inStream, scene );
+   BVHHierarchy hierarchy( m_rm, *m_observer );
+
+   SkeletonAnimation* animation = new SkeletonAnimation();
+   hierarchy.parse( m_loadedFileName.c_str(), inStream, *animation, scene );
+
+   delete animation;
+   animation = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+BVHSkeletonAnimationLoader::BVHSkeletonAnimationLoader( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer )
+   : TResourceImporter< SkeletonAnimation >( path, rm, observer )
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* BVHLoader::load( ResourcesManager& rm, IProgressObserver& observer )
+void BVHSkeletonAnimationLoader::import( SkeletonAnimation& animation )
 {
-   Model* model = new Model( m_loadedFileName );
-   load( m_loadedFileName, rm, observer, *model );
-   return model;
+   const Filesystem& fs = m_rm.getFilesystem();
+
+   // load the file contents into a string
+   File* bvhFile = fs.open( m_loadedFileName );
+   StreamBuffer< char > fileReader( *bvhFile );
+   std::string fileContents = fileReader.getBuffer();
+   delete bvhFile;
+
+   // parse the bone structure
+   std::stringstream inStream( fileContents );
+   BVHHierarchy hierarchy( m_rm, *m_observer );
+
+   Model* scene = new Model();
+   hierarchy.parse( m_loadedFileName.c_str(), inStream, animation, *scene );
+   delete scene;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

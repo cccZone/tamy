@@ -197,9 +197,6 @@
     <ClCompile Include="Enum.cpp">
       <Filter>RTTI\Classes</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceLoader.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Algorithms.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -226,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="GraphBuilderSockets.cpp">
       <Filter>DataStructures\DataPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceImporter.cpp">
+      <Filter>Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -479,9 +479,6 @@
     <ClInclude Include="..\..\Include\core\Enum.h">
       <Filter>RTTI\Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\ResourceLoader.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\IDebugDraw.h">
       <Filter>Misc</Filter>
     </ClInclude>
@@ -508,6 +505,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\GraphBuilderSockets.h">
       <Filter>DataStructures\DataPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ResourceImporter.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

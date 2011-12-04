@@ -189,8 +189,8 @@ namespace // anonymous
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-SkeletonAnimationKeysChart::SkeletonAnimationKeysChart( SkeletonAnimation& animation )
-   : m_animation( animation )
+SkeletonAnimationKeysChart::SkeletonAnimationKeysChart()
+   : m_animation( NULL )
 {
    for ( unsigned int i = BAKEY_MIN; i < BAKEY_MAX; ++i )
    {
@@ -203,10 +203,6 @@ SkeletonAnimationKeysChart::SkeletonAnimationKeysChart( SkeletonAnimation& anima
    m_colors[BAKEY_YAW] = QColor( 163, 206, 76 );
    m_colors[BAKEY_PITCH] = QColor( 65, 193, 136 );
    m_colors[BAKEY_ROLL] = QColor( 84, 206, 255 );
-
-   float animLength = animation.getAnimationLength();
-   float maxVal = 100.0f * ANIMATION_VALUE_SCALE; // we can edit an animation up to 100 meters - should be more than enough
-   setSceneRect( 0, -maxVal, animLength * ANIMATION_TIME_SCALE, 2.0f * maxVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -222,8 +218,33 @@ SkeletonAnimationKeysChart::~SkeletonAnimationKeysChart()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void SkeletonAnimationKeysChart::setAnimation( SkeletonAnimation& animation )
+{
+   // clear the charts
+   for ( ChartsMap::iterator it = m_charts.begin(); it != m_charts.end(); ++it )
+   {
+      delete it->second;
+   }
+   m_charts.clear();
+
+   // set the new animation
+   m_animation = &animation;
+
+   // set the time range
+   float animLength = animation.getAnimationLength();
+   float maxVal = 100.0f * ANIMATION_VALUE_SCALE; // we can edit an animation up to 100 meters - should be more than enough
+   setSceneRect( 0, -maxVal, animLength * ANIMATION_TIME_SCALE, 2.0f * maxVal );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void SkeletonAnimationKeysChart::toggleBone( const std::string& boneName )
 {
+   if ( !m_animation )
+   {
+      return;
+   }
+
    ChartsMap::iterator it = m_charts.find( boneName );
    if ( it != m_charts.end() )
    {
@@ -234,7 +255,7 @@ void SkeletonAnimationKeysChart::toggleBone( const std::string& boneName )
    else
    {
       // the bone's not displayed - show it
-      BoneSRTAnimation* boneAnimation = m_animation.getBoneDef( boneName );
+      BoneSRTAnimation* boneAnimation = m_animation->getBoneDef( boneName );
       if ( boneAnimation != NULL )
       {
          BoneSRTAnimationChart* chart = new BoneSRTAnimationChart( *this, *boneAnimation );

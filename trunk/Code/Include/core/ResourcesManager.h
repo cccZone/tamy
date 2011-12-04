@@ -9,13 +9,13 @@
 #include "core\Serializer.h"
 #include "core\ComponentsManager.h"
 #include "core\Filesystem.h"
+#include "core\ResourceImporter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Filesystem;
 class Resource;
-class ResourceLoader;
 class IProgressObserver;
 class FilesystemScanner;
 class FilePath;
@@ -33,30 +33,43 @@ class FilePath;
 class ResourcesManager : public ComponentsManager< ResourcesManager >, public FilesystemListener
 {
 private:
-   template< typename T >
-   class InstanceCreator
+
+   // -------------------------------------------------------------------------
+
+   class ResourceImporterCreator
    {
    public:
-      virtual ~InstanceCreator() {}
+      virtual ~ResourceImporterCreator() {}
       
       /**
-       * Instantiates a class.
+       * Instantiates an importer class.
        */
-      virtual T* create() const = 0;
+      virtual ResourceImporter* create( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer ) const = 0;
    };
 
-   typedef InstanceCreator< ResourceLoader >       ResourceLoaderCreator;
    template< typename T >
-   class TResourceLoaderCreator : public ResourceLoaderCreator
+   class TResourceImporterCreator : public ResourceImporterCreator
    {
    public:
-      ResourceLoader* create() const
+      ResourceImporter* create( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer ) const
       {
-         return new T();
+         return new T( path, rm, observer );
       }
    };
 
-   typedef InstanceCreator< IProgressObserver >    ProgressObserverCreator;
+   // -------------------------------------------------------------------------
+
+   class ProgressObserverCreator
+   {
+   public:
+      virtual ~ProgressObserverCreator() {}
+      
+      /**
+       * Instantiates a progress observer class.
+       */
+      virtual IProgressObserver* create() const = 0;
+   };
+
    template< typename T >
    class TProgressObserverCreator : public ProgressObserverCreator
    {
@@ -67,16 +80,21 @@ private:
       }
    };
 
+   // -------------------------------------------------------------------------
+
+
 private:
-   typedef std::map< FilePath, Resource* >                  ResourcesMap;
-   typedef std::map< std::string, ResourceLoaderCreator* >  ResourceLoadersMap;
+   typedef std::map< FilePath, Resource* >                     ResourcesMap;
+
+   typedef std::vector< ResourceImporterCreator* >             ImportersArr;
+   typedef std::map< std::string, ImportersArr* >   ResourceImportersMap;
 
 private:
    static ResourcesManager    s_theInstance;
 
    Filesystem*                m_filesystem;
    ResourcesMap               m_resources;
-   ResourceLoadersMap         m_loaders;
+   ResourceImportersMap       m_importers;
    ProgressObserverCreator*   m_progressObserverCreator;
 
    friend class Resource;
@@ -187,12 +205,28 @@ public:
     */
    void scan( const FilePath& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
 
+   // -------------------------------------------------------------------------
+   // Importers management
+   // -------------------------------------------------------------------------
    /**
     * Registers a loader of the specified type.
     */
-   template< typename T >
-   void addLoader( const std::string& extension );
+   template< typename Importer, typename ResourceType >
+   void addImporter( const std::string& extension );
 
+   /**
+    * Creates an importer that can import the specified resource from the specified
+    * file.
+    *
+    * @param ResourceType
+    * @param path          file path
+    */
+   template< typename ResourceType >
+   TResourceImporter< ResourceType >* createImporter( const FilePath& path );
+
+   // -------------------------------------------------------------------------
+   // Instance management
+   // -------------------------------------------------------------------------
    /**
     * Registers a class that will be used as a progress observer
     */
@@ -233,11 +267,6 @@ private:
    ResourcesManager();
 
    /**
-    * Creates a resource loader for the specified file.
-    */
-   ResourceLoader* createResourceLoader( const FilePath& name ) const;
-
-   /**
     * Creates a progress observer.
     */
    IProgressObserver* createObserver() const;
@@ -245,9 +274,9 @@ private:
    /**
     * Helper method for loading a resource from the filesystem.
     *
-    * @param loader
+    * @param filePath
     */
-   Resource* loadResource( ResourceLoader& loader );
+   Resource* loadResource( const FilePath& filePath );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
