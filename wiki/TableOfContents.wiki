@@ -21,7 +21,6 @@
       * [RoundBuffer Round Buffer]
     * [ResourcesManager Resources management]
     * [RTTI RTTI]
-    * [Serialization Serialization]
     * [SpatialStorage Spatial storages]
   * [ AI ]
     * [AnimationSystem Animation system]
