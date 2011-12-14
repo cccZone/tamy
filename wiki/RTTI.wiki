@@ -3,11 +3,20 @@
 
 Engine's runtime type identification system. 
 
-It's acutally a little bit more than that - it supports objects with properties etc.
+It's acutally a little bit more than that - it supports objects with properties, their serialization etc.
 
 But let's start slow :)
 
-==Class==
+==Runtime object==
+
+Only `ReflectionObjects` are run-time recognizable and serializable.
+
+Why? Because only those objects feature RTTI data required to perform those operations. You are of course free to add RTTI definitions to any classes you like, but the serialization mechanism for instance works *exclusively* with `ReflectionObjects`.
+
+So what is this `ReflectionObject` - it's a marker interface, that's all. You just need to derive from it and use one of our handy macros to add a type definitions to it:
+
+{{{
+}}}
 
 ==Classes registry==
 
