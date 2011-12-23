@@ -92,3 +92,22 @@ SerializableReflectionType* findSerializable( unsigned int id ) const;
 ==Properties==
 
 Properties are a runtime version of the member fields. The latter are used as a a part of the serializable definition in the serialization process, and the latter are their runtime version that allows to access the data, edit it using externally created editors etc.
+
+==Runtime type identification features==
+
+Given an object or its name, you can perform various operations:
+
+  * check if it exactly matches the specified type
+
+{{{
+}}}
+  
+  * check if the specified reference type is one of the types from the inheritance hierarchy tree of the checked type
+
+{{{
+}}}
+
+  * down/up-cast an obejct to the specified type
+
+{{{
+}}}
