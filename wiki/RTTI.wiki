@@ -11,9 +11,9 @@ But let's start slow :)
 
 There are two types of RTTI object:
 
-* `ReflectionType` contains a runtime type information ( and represents primitive or external types )
+  * `ReflectionType` contains a runtime type information ( and represents primitive or external types )
 
-* `SerializableReflectionType` is a subclass of the former and extends it with the serialization capabilities. Keep in mind that you can define this kind of type ONLY for the classes that inherit after `ReflectionObject`.
+  * `SerializableReflectionType` is a subclass of the former and extends it with the serialization capabilities. Keep in mind that you can define this kind of type ONLY for the classes that inherit after `ReflectionObject`.
 
 This dualism is required, because we want to be able to reflect upon external and primitive types ( such as `int` or `D3DXMATRIX` ), which we simply cannot extend with the required type info data.
 
