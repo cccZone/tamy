@@ -7,9 +7,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPDebugRendererNode, RenderingPipelineNode )
+BEGIN_OBJECT( RPDebugRendererNode );
+   PARENT( RenderingPipelineNode );
    PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
-END_OBJECT()
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -2,7 +2,7 @@
 /// @brief  array container property editor ( featuring an std::vector as the array ;)
 #pragma once
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
 #include <d3dx9.h>
 
@@ -17,7 +17,7 @@ class ArrayPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< VectorProperty >*   m_property;
+   TEditableReflectionProperty< VectorReflectionProperty >*   m_property;
 
 public:
    /**
@@ -25,7 +25,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   ArrayPropertyEditor( TEditableProperty< VectorProperty >* property );
+   ArrayPropertyEditor( TEditableReflectionProperty< VectorReflectionProperty >* property );
    ~ArrayPropertyEditor();
 
 public slots:

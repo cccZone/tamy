@@ -10,9 +10,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( Geometry, SpatialEntity )
-   PROPERTY_EDIT( "resource", GeometryResource*, m_resource )
-END_OBJECT()
+BEGIN_OBJECT( Geometry );
+   PARENT( SpatialEntity );
+   PROPERTY_EDIT( "resource", GeometryResource*, m_resource );
+END_OBJECT();
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -165,7 +166,7 @@ void Geometry::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Geometry::onPropertyChanged( Property& property )
+void Geometry::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

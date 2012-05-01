@@ -14,7 +14,7 @@
  */
 class MBVec4 : public TPipelineBlock< MNVec4, MaterialNode >
 {
-   DECLARE_CLASS( MBVec4 )
+   DECLARE_CLASS()
 
 public:
    /**

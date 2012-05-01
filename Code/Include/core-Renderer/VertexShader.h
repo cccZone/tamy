@@ -18,7 +18,7 @@
  */
 class VertexShader : public Resource, public UniqueObject< VertexShader >, public RenderResource
 {
-   DECLARE_RESOURCE( VertexShader )
+   DECLARE_RESOURCE()
 
 private:
    std::string                   m_script;

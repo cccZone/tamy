@@ -10,7 +10,7 @@
 
 class FragmentShader : public Resource
 {
-   DECLARE_RESOURCE( VertexShader )
+   DECLARE_RESOURCE()
 
 private:
    std::string                   m_script;

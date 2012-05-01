@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBFloats2Vec4, GraphBlock );
-PROPERTY( TResourceHandle< RPFloats2Vec4Node >*, m_node );
+BEGIN_OBJECT( RPBFloats2Vec4 );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< RPFloats2Vec4Node >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-IntPropertyEditor::IntPropertyEditor( TEditableProperty< int >* property )
+IntPropertyEditor::IntPropertyEditor( TEditableReflectionProperty< int >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {
@@ -41,7 +41,7 @@ void IntPropertyEditor::valChanged(int val)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-UIntPropertyEditor::UIntPropertyEditor( TEditableProperty< unsigned int >* property )
+UIntPropertyEditor::UIntPropertyEditor( TEditableReflectionProperty< unsigned int >* property )
    : QPropertyEditor( property->getLabel().c_str() )
    , m_property( property )
 {
@@ -78,7 +78,7 @@ void UIntPropertyEditor::valChanged(int val)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-LongPropertyEditor::LongPropertyEditor( TEditableProperty< long >* property )
+LongPropertyEditor::LongPropertyEditor( TEditableReflectionProperty< long >* property )
    : QPropertyEditor( property->getLabel().c_str() )
    , m_property( property )
 {
@@ -115,7 +115,7 @@ void LongPropertyEditor::valChanged(int val)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-ULongPropertyEditor::ULongPropertyEditor( TEditableProperty< unsigned long >* property )
+ULongPropertyEditor::ULongPropertyEditor( TEditableReflectionProperty< unsigned long >* property )
    : QPropertyEditor( property->getLabel().c_str() )
    , m_property( property )
 {

@@ -25,7 +25,7 @@
  * will transparently connect to the other one.
  */
 
-#include "core\Object.h"
+#include "core\ReflectionObject.h"
 #include "core-MVC\Model.h"
 #include "core\Component.h"
 #include <vector>
@@ -40,9 +40,9 @@
  * An entity has various properties. You can put the properties definitions
  * inside a 'registerProperties' method implementation. 
  */
-class Entity : public Object
+class Entity : public ReflectionObject
 {
-   DECLARE_CLASS(Entity)
+   DECLARE_CLASS()
 
 public:
    typedef std::vector< Entity* >      Children;
@@ -125,7 +125,7 @@ public:
    // Serializable implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPropertyChanged( Property& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
 protected:
    // -------------------------------------------------------------------------

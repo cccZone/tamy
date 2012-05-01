@@ -2,7 +2,7 @@
 /// @brief  integer value property editor
 #pragma once
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
 
 
@@ -16,7 +16,7 @@ class IntPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< int >*   m_property;
+   TEditableReflectionProperty< int >*   m_property;
 
 public:
    /**
@@ -24,7 +24,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   IntPropertyEditor( TEditableProperty< int >* property );
+   IntPropertyEditor( TEditableReflectionProperty< int >* property );
    ~IntPropertyEditor();
 
 public slots:
@@ -44,7 +44,7 @@ class UIntPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< unsigned int >*   m_property;
+   TEditableReflectionProperty< unsigned int >*   m_property;
 
 public:
    /**
@@ -52,7 +52,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   UIntPropertyEditor( TEditableProperty< unsigned int >* property );
+   UIntPropertyEditor( TEditableReflectionProperty< unsigned int >* property );
    ~UIntPropertyEditor();
 
 public slots:
@@ -72,7 +72,7 @@ class LongPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< long >*   m_property;
+   TEditableReflectionProperty< long >*   m_property;
 
 public:
    /**
@@ -80,7 +80,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   LongPropertyEditor( TEditableProperty< long >* property );
+   LongPropertyEditor( TEditableReflectionProperty< long >* property );
    ~LongPropertyEditor();
 
 public slots:
@@ -100,7 +100,7 @@ class ULongPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< unsigned long >*   m_property;
+   TEditableReflectionProperty< unsigned long >*   m_property;
 
 public:
    /**
@@ -108,7 +108,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   ULongPropertyEditor( TEditableProperty< unsigned long >* property );
+   ULongPropertyEditor( TEditableReflectionProperty< unsigned long >* property );
    ~ULongPropertyEditor();
 
 public slots:

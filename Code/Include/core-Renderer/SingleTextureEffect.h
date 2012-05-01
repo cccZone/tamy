@@ -14,6 +14,7 @@ class SpatialEntity;
 class EffectShader;
 class Texture;
 class ResourcesManager;
+class RenderableTexture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +24,7 @@ class ResourcesManager;
 */
 class SingleTextureEffect : public Entity, public TRenderState< SingleTextureEffect >
 {
-   DECLARE_CLASS( SingleTextureEffect )
+   DECLARE_CLASS()
 
 private:
    SurfaceProperties    m_surfaceProperties;
@@ -32,12 +33,14 @@ private:
    // runtime data
    EffectShader*        m_effect;
    SpatialEntity*       m_parentNode;
+   RenderableTexture*   m_renderableTexture;
 
 public:
    /**
     * Constructor.
     */
    SingleTextureEffect();
+   ~SingleTextureEffect();
 
    /**
     * This method allows to set an arbitrary surface properties for the effect to use.

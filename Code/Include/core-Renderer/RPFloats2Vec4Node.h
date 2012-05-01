@@ -14,7 +14,7 @@ class RPVec4Output;
 
 class RPFloats2Vec4Node : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPFloats2Vec4Node )
+   DECLARE_CLASS()
 
 private:
    RPFloatInput*     m_dataInput[4];

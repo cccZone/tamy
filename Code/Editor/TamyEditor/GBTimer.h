@@ -14,7 +14,7 @@
  */
 class GBTimer : public TPipelineBlock< GNTimer, GeometryShaderNode >
 {
-   DECLARE_CLASS( GBTimer )
+   DECLARE_CLASS()
 
 public:
    /**

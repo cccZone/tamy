@@ -12,7 +12,7 @@
  */
 class RPSBTextured : public RPSceneBuilder
 {
-   DECLARE_CLASS( RPSBTextured )
+   DECLARE_CLASS()
 
 public:
    // -------------------------------------------------------------------------

@@ -1,11 +1,12 @@
+#include "core/TypeRegistrationMacros.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "GraphBlock.h"
 
-REGISTER_RTTI( GraphBlock );
-REGISTER_RTTI( GraphBlockSocket );
-REGISTER_RTTI( GraphBlockConnection );
+REGISTER_TYPE( GraphBlock );
+REGISTER_TYPE( GraphBlockSocket );
+REGISTER_TYPE( GraphBlockConnection );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,25 +23,25 @@ REGISTER_RTTI( GraphBlockConnection );
 #include "RPBVec4.h"
 #include "RenderingPipelineLayout.h"
 
-REGISTER_RTTI( RPBPostProcess );
-REGISTER_RTTI( RPBSceneRender );
-REGISTER_RTTI( RPBStart );
-REGISTER_RTTI( RPBAdapter );
-REGISTER_RTTI( RPBDebugRender );
-REGISTER_RTTI( RPSFloat );
-REGISTER_RTTI( RPSTexture );
-REGISTER_RTTI( RPSVoid );
-REGISTER_RTTI( RPSVec4 );
-REGISTER_RTTI( RPSBool );
-REGISTER_RTTI( RPSInt );
-REGISTER_RTTI( RPSString );
-REGISTER_RTTI( RPSMatrix );
-REGISTER_RTTI( RPBFloats2Vec4 );
-REGISTER_RTTI( RPBCamera );
-REGISTER_RTTI( RPBTexture );
-REGISTER_RTTI( RPBFloat );
-REGISTER_RTTI( RPBVec4 );
-REGISTER_RTTI( RenderingPipelineLayout );
+REGISTER_TYPE( RPBPostProcess );
+REGISTER_TYPE( RPBSceneRender );
+REGISTER_TYPE( RPBStart );
+REGISTER_TYPE( RPBAdapter );
+REGISTER_TYPE( RPBDebugRender );
+REGISTER_TYPE( RPSFloat );
+REGISTER_TYPE( RPSTexture );
+REGISTER_TYPE( RPSVoid );
+REGISTER_TYPE( RPSVec4 );
+REGISTER_TYPE( RPSBool );
+REGISTER_TYPE( RPSInt );
+REGISTER_TYPE( RPSString );
+REGISTER_TYPE( RPSMatrix );
+REGISTER_TYPE( RPBFloats2Vec4 );
+REGISTER_TYPE( RPBCamera );
+REGISTER_TYPE( RPBTexture );
+REGISTER_TYPE( RPBFloat );
+REGISTER_TYPE( RPBVec4 );
+REGISTER_TYPE( RenderingPipelineLayout );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,22 +58,22 @@ REGISTER_RTTI( RenderingPipelineLayout );
 #include "MBSurfaceProperties.h"
 #include "MBTimer.h"
 
-REGISTER_RTTI( MaterialLayout );
-REGISTER_RTTI( MSSFloat );
-REGISTER_RTTI( MSSMatrix );
-REGISTER_RTTI( MSSTexture );
-REGISTER_RTTI( MSSVec4 );
-REGISTER_RTTI( MSSBool );
-REGISTER_RTTI( MBPixelShader );
-REGISTER_RTTI( MBSpatialEntity );
-REGISTER_RTTI( MBCamera );
-REGISTER_RTTI( MBTexture );
-REGISTER_RTTI( MBFloat );
-REGISTER_RTTI( MBVec4 );
-REGISTER_RTTI( MBBool );
-REGISTER_RTTI( MBInstanceTexture );
-REGISTER_RTTI( MBSurfaceProperties );
-REGISTER_RTTI( MBTimer );
+REGISTER_TYPE( MaterialLayout );
+REGISTER_TYPE( MSSFloat );
+REGISTER_TYPE( MSSMatrix );
+REGISTER_TYPE( MSSTexture );
+REGISTER_TYPE( MSSVec4 );
+REGISTER_TYPE( MSSBool );
+REGISTER_TYPE( MBPixelShader );
+REGISTER_TYPE( MBSpatialEntity );
+REGISTER_TYPE( MBCamera );
+REGISTER_TYPE( MBTexture );
+REGISTER_TYPE( MBFloat );
+REGISTER_TYPE( MBVec4 );
+REGISTER_TYPE( MBBool );
+REGISTER_TYPE( MBInstanceTexture );
+REGISTER_TYPE( MBSurfaceProperties );
+REGISTER_TYPE( MBTimer );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -87,19 +88,31 @@ REGISTER_RTTI( MBTimer );
 #include "GBBool.h"
 #include "GBTimer.h"
 
-REGISTER_RTTI( GeometryShaderLayout );
-REGISTER_RTTI( GSSFloat );
-REGISTER_RTTI( GSSMatrix );
-REGISTER_RTTI( GSSTexture );
-REGISTER_RTTI( GSSVec4 );
-REGISTER_RTTI( GSSBool );
-REGISTER_RTTI( GBVertexShader );
-REGISTER_RTTI( GBSpatialEntity );
-REGISTER_RTTI( GBCamera );
-REGISTER_RTTI( GBTexture );
-REGISTER_RTTI( GBFloat );
-REGISTER_RTTI( GBVec4 );
-REGISTER_RTTI( GBBool );
-REGISTER_RTTI( GBTimer );
+REGISTER_TYPE( GeometryShaderLayout );
+REGISTER_TYPE( GSSFloat );
+REGISTER_TYPE( GSSMatrix );
+REGISTER_TYPE( GSSTexture );
+REGISTER_TYPE( GSSVec4 );
+REGISTER_TYPE( GSSBool );
+REGISTER_TYPE( GBVertexShader );
+REGISTER_TYPE( GBSpatialEntity );
+REGISTER_TYPE( GBCamera );
+REGISTER_TYPE( GBTexture );
+REGISTER_TYPE( GBFloat );
+REGISTER_TYPE( GBVec4 );
+REGISTER_TYPE( GBBool );
+REGISTER_TYPE( GBTimer );
+
+///////////////////////////////////////////////////////////////////////////////
+
+#include "NavigationState.h"
+#include "NodeManipulationState.h"
+
+REGISTER_TYPE( NavigationState );
+REGISTER_TYPE( NodeManipulationState );
+
+///////////////////////////////////////////////////////////////////////////////
+
+REGISTER_EXTERNAL_TYPE( QPointF );
 
 ///////////////////////////////////////////////////////////////////////////////

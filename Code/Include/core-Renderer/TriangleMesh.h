@@ -27,7 +27,7 @@
  */
 class TriangleMesh : public GeometryResource, public RenderResource
 {
-   DECLARE_RESOURCE( TriangleMesh )
+   DECLARE_RESOURCE()
 
 private:
    std::vector< LitVertex >      m_vertices;

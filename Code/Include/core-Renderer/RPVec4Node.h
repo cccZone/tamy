@@ -13,7 +13,7 @@ class RPVec4Output;
 
 class RPVec4Node : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPVec4Node )
+   DECLARE_CLASS()
 
 private:
    // static data

@@ -58,7 +58,7 @@ public:
    // GraphBlock implementation
    // -------------------------------------------------------------------------
    void initialize();
-   Object& getNode();
+   ReflectionObject& getNode();
 
    // -------------------------------------------------------------------------
    // Object implementation

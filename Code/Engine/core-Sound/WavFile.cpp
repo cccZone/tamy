@@ -105,7 +105,7 @@ void WavFile::parseFile()
 	if ((_strnicmp(waveFileHeader.szRIFF, "RIFF", 4) != 0) || 
        (_strnicmp(waveFileHeader.szWAVE, "WAVE", 4) != 0))
 	{
-      throw std::runtime_error(std::string("File ") + m_file->getName() + 
+      throw std::runtime_error(std::string("File ") + m_file->getName().getRelativePath() + 
                                std::string(" is not a valid *.wav file"));
    }
 

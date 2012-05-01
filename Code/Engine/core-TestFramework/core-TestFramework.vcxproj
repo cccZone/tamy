@@ -63,7 +63,7 @@
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)\Libs\$(Configuration);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>core.lib;core-MVC.lib;core-AI.lib;core-Renderer.lib;null-Renderer.lib;</AdditionalDependencies>
+      <AdditionalDependencies>core.lib;core-MVC.lib;core-Renderer.lib;null-Renderer.lib;core-AI.lib;</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

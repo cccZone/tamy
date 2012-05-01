@@ -26,7 +26,7 @@ class RenderTargetSizePolicy;
  */
 class RenderTarget : public ShaderTexture, public UniqueObject< RenderTarget >, public RenderResource
 {
-   DECLARE_RTTI_CLASS
+   DECLARE_CLASS()
 
 private:
    RenderTargetSizePolicy*       m_sizePolicy;

@@ -23,7 +23,7 @@ class GeometryEntity :  public Geometry,
                         public Observer< GeometryShader, GraphBuilderOperation >,
                         public Observer< GeometryShaderNode, GraphBuilderNodeOperation >
 {
-   DECLARE_CLASS( GeometryEntity )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -73,8 +73,8 @@ protected:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPrePropertyChanged( Property& property );
-   void onPropertyChanged( Property& property );
+   void onPrePropertyChanged( ReflectionProperty& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
    // -------------------------------------------------------------------------
    // Entity implementation

@@ -1,5 +1,6 @@
 #include "core-Renderer\SingleTextureEffect.h"
 #include "core-Renderer\Texture.h"
+#include "core-Renderer\RenderableTexture.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\EffectShader.h"
 #include "core-Renderer\Geometry.h"
@@ -12,10 +13,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( SingleTextureEffect, Entity )
-   PROPERTY_EDIT( "material", SurfaceProperties, m_surfaceProperties )
-   PROPERTY_EDIT( "texture", Texture*, m_texture )
-END_OBJECT()
+BEGIN_OBJECT( SingleTextureEffect );
+   PARENT( Entity );
+   PROPERTY_EDIT( "material", SurfaceProperties, m_surfaceProperties );
+   PROPERTY_EDIT( "texture", Texture*, m_texture );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +25,16 @@ SingleTextureEffect::SingleTextureEffect()
    : m_parentNode( NULL )
    , m_effect( NULL )
    , m_texture( NULL )
+   , m_renderableTexture( new RenderableTexture() )
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SingleTextureEffect::~SingleTextureEffect()
+{
+   delete m_renderableTexture;
+   m_renderableTexture = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,7 +73,8 @@ void SingleTextureEffect::onPreRender( Renderer& renderer ) const
    comm->setBool( "g_UseTexture", m_texture != NULL );
    if ( m_texture != NULL )
    {
-      comm->setTexture( "g_MeshTexture", *m_texture );
+      m_renderableTexture->setTexture( m_texture );
+      comm->setTexture( "g_MeshTexture", *m_renderableTexture );
    }
 
    comm->setTechnique( "singleTextureRenderer" );

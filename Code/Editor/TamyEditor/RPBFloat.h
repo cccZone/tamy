@@ -14,7 +14,7 @@
  */
 class RPBFloat : public TPipelineBlock< RPFloatNode, RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPBFloat )
+   DECLARE_CLASS()
 
 public:
    /**

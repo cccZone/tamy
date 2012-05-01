@@ -2,8 +2,8 @@
 /// @brief  enum property editor
 #pragma once
 
-#include "core\Property.h"
-#include "core\Enum.h"
+#include "core\ReflectionProperty.h"
+#include "core\ReflectionEnum.h"
 #include "QPropertyEditor.h"
 
 
@@ -21,8 +21,7 @@ class EnumPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< Enum >*    m_property;
-   Enum*                         m_enumeration;
+   TEditableReflectionProperty< ReflectionEnum >*    m_property;
 
 public:
    /**
@@ -30,7 +29,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   EnumPropertyEditor( TEditableProperty< Enum >* property );
+   EnumPropertyEditor( TEditableReflectionProperty< ReflectionEnum >* property );
    ~EnumPropertyEditor();
 
 public slots:

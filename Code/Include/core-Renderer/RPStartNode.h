@@ -12,7 +12,7 @@
  */
 class RPStartNode : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPStartNode )
+   DECLARE_CLASS()
 
 public:
    RPStartNode();

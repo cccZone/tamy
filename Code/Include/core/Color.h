@@ -3,22 +3,23 @@
 /// @file   core\Color.h
 /// @brief  color representation
 
-#include "core\Class.h"
+#include "core\ReflectionObject.h"
 #include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Serializer;
+class OutStream;
+class InStream;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * A support structure describing an RGBA color.
  */
-struct Color : public RTTIObject
+struct Color : public ReflectionObject
 {
-   DECLARE_RTTI_STRUCT
+   DECLARE_STRUCT()
 
    union
    {
@@ -64,7 +65,11 @@ struct Color : public RTTIObject
     */
    operator unsigned long() const;
 
-   friend Serializer& operator<<(Serializer& serializer, Color& color);
+   // -------------------------------------------------------------------------
+   // Serialization support
+   // -------------------------------------------------------------------------
+   friend OutStream& operator<<( OutStream& serializer, Color& color );
+   friend InStream& operator>>( InStream& serializer, Color& color );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

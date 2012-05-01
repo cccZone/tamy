@@ -14,7 +14,7 @@ class MSMatrixOutput;
 
 class MNCamera : public MaterialNode
 {
-   DECLARE_CLASS( MNCamera )
+   DECLARE_CLASS()
 
 private:
    MSFloatOutput*    m_nearZ;

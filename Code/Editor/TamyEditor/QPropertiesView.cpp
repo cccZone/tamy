@@ -1,5 +1,5 @@
 #include "QPropertiesView.h"
-#include "core\Object.h"
+#include "core\ReflectionObject.h"
 #include "core\Color.h"
 #include <QWidget.h>
 #include <QScrollArea.h>
@@ -61,20 +61,20 @@ QPropertiesView::~QPropertiesView()
 
 void QPropertiesView::initFactory()
 {
-   associate< D3DXVECTOR3,         Vec3PropertyEditor >();
-   associate< D3DXMATRIX,          MtxPropertyEditor >();
-   associate< std::string,         StringPropertyEditor >();
-   associate< SurfaceProperties,   SurfacePropertiesPropertyEditor >();
-   associate< bool,                BoolPropertyEditor >();
-   associate< float,               FloatPropertyEditor >();
-   associate< double,              DoublePropertyEditor >();
-   associate< int,                 IntPropertyEditor >();
-   associate< unsigned int,        UIntPropertyEditor >();
-   associate< long,                LongPropertyEditor >();
-   associate< unsigned long,       ULongPropertyEditor >();
-   associatePtr< Resource*,        ResourcePropertyEditor >();
-   associatePtr< Object*,           ObjectPropertyEditor >();
-   associatePtr< Enum,             EnumPropertyEditor >();
+   associate< D3DXVECTOR3,          Vec3PropertyEditor >();
+   associate< D3DXMATRIX,           MtxPropertyEditor >();
+   associate< std::string,          StringPropertyEditor >();
+   associate< SurfaceProperties,    SurfacePropertiesPropertyEditor >();
+   associate< bool,                 BoolPropertyEditor >();
+   associate< float,                FloatPropertyEditor >();
+   associate< double,               DoublePropertyEditor >();
+   associate< int,                  IntPropertyEditor >();
+   associate< unsigned int,         UIntPropertyEditor >();
+   associate< long,                 LongPropertyEditor >();
+   associate< unsigned long,        ULongPropertyEditor >();
+   associateAbstract< Resource*,         ResourcePropertyEditor >();
+   associateAbstract< ReflectionObject*, ObjectPropertyEditor >();
+   associateEnums< EnumPropertyEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -96,7 +96,7 @@ void QPropertiesView::removePropertyEditor( QWidget& editorWidget )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void QPropertiesView::onSet( Properties& properties )
+void QPropertiesView::onSet( ReflectionProperties& properties )
 {
    QFrame* frame = new QFrame( this );
    frame->setLayout( m_currWidget = new QVBoxLayout( frame ) );

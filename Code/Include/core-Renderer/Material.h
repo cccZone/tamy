@@ -17,7 +17,7 @@ class RuntimeDataBuffer;
 
 class Material : public Resource, public GraphBuilder< Material, MaterialNode >
 {
-   DECLARE_RESOURCE( Material )
+   DECLARE_RESOURCE()
 
 public:
    /**

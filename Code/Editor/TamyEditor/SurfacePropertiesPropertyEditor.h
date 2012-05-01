@@ -3,7 +3,7 @@
 #pragma once
 
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "core-Renderer\SurfaceProperties.h"
 #include "QPropertyEditor.h"
 
@@ -18,7 +18,7 @@ class SurfacePropertiesPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< SurfaceProperties >*   m_property;
+   TEditableReflectionProperty< SurfaceProperties >*   m_property;
 
 public:
    /**
@@ -26,7 +26,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   SurfacePropertiesPropertyEditor( TEditableProperty< SurfaceProperties >* property );
+   SurfacePropertiesPropertyEditor( TEditableReflectionProperty< SurfaceProperties >* property );
    ~SurfacePropertiesPropertyEditor();
 
 public slots:

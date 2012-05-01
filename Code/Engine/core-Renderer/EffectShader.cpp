@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( EffectShader, Resource, tfx, AM_BINARY )
+BEGIN_RESOURCE( EffectShader, tfx, AM_BINARY )
    PROPERTY( std::string, m_script )
 END_RESOURCE()
 

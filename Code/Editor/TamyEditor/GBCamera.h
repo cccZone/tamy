@@ -14,7 +14,7 @@
  */
 class GBCamera : public TPipelineBlock< GNCamera, GeometryShaderNode >
 {
-   DECLARE_CLASS( GBCamera )
+   DECLARE_CLASS()
 
 public:
    /**

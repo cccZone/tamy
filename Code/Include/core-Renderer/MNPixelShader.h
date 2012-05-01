@@ -14,7 +14,7 @@ class PixelShader;
 
 class MNPixelShader : public MaterialNode
 {
-DECLARE_CLASS( MNPixelShader )
+DECLARE_CLASS()
 
 private:
    // static data
@@ -34,8 +34,8 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPrePropertyChanged( Property& property );
-   void onPropertyChanged( Property& property );
+   void onPrePropertyChanged( ReflectionProperty& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
    // -------------------------------------------------------------------------
    // MaterialNode implementation

@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FloatPropertyEditor::FloatPropertyEditor( TEditableProperty< float >* property )
+FloatPropertyEditor::FloatPropertyEditor( TEditableReflectionProperty< float >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {
@@ -42,7 +42,7 @@ void FloatPropertyEditor::valChanged(double val)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-DoublePropertyEditor::DoublePropertyEditor( TEditableProperty< double >* property )
+DoublePropertyEditor::DoublePropertyEditor( TEditableReflectionProperty< double >* property )
    : QPropertyEditor( property->getLabel().c_str() )
    , m_property( property )
 {

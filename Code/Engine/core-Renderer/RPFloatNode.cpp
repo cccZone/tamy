@@ -5,9 +5,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPFloatNode, RenderingPipelineNode )
-   PROPERTY_EDIT( "Value", float, m_value )
-END_OBJECT()
+BEGIN_OBJECT( RPFloatNode );
+   PARENT( RenderingPipelineNode );
+   PROPERTY_EDIT( "Value", float, m_value );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 

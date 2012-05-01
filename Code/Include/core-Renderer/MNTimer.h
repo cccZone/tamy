@@ -14,7 +14,7 @@ class MSFloatOutput;
 
 class MNTimer : public MaterialNode
 {
-   DECLARE_CLASS( MNTimer )
+   DECLARE_CLASS()
 
 private:
    // static data

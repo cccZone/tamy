@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MBPixelShader, GraphBlock );
-PROPERTY( TResourceHandle< MNPixelShader >*, m_node );
+BEGIN_OBJECT( MBPixelShader );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< MNPixelShader >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

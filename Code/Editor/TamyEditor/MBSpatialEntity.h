@@ -12,7 +12,7 @@
 
 class MBSpatialEntity : public TPipelineBlock< MNSpatialEntity, MaterialNode >
 {
-   DECLARE_CLASS( MBSpatialEntity )
+   DECLARE_CLASS()
 
 public:
    /**

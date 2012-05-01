@@ -5,7 +5,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MNBool, MaterialNode )
+BEGIN_OBJECT( MNBool );
+   PARENT( MaterialNode );
    PROPERTY_EDIT( "Value", bool, m_value )
 END_OBJECT()
 

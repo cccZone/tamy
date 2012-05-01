@@ -4,7 +4,7 @@
 
 
 #include "core\Component.h"
-#include "core\PropertiesView.h"
+#include "core\ReflectionPropertiesView.h"
 #include "QPropertyEditor.h"
 
 
@@ -20,7 +20,7 @@ class QWidget;
  * Properties browser widget.
  */
 class QPropertiesView : public QPropertyEditor, 
-                        public TPropertiesView<QPropertiesView>
+                        public TReflectionPropertiesView<QPropertiesView>
 {
    Q_OBJECT
 
@@ -42,7 +42,7 @@ public:
     *
     * @param editorWidget  widget of the editor we want to add
     */
-   void addPropertyEditor(QWidget* editorWidget);
+   void addPropertyEditor( QWidget* editorWidget );
 
    /**
     * This method removes a single-property editor widget from the properties
@@ -50,10 +50,10 @@ public:
     *
     * @param editorWidget  widget of the editor we want to remove
     */
-   void removePropertyEditor(QWidget& editorWidget);
+   void removePropertyEditor( QWidget& editorWidget );
 
 protected:
-   void onSet(Properties& properties);
+   void onSet( ReflectionProperties& properties );
 
 private:
    void initFactory();

@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GBTimer, GraphBlock );
-PROPERTY( TResourceHandle< GNTimer >*, m_node );
+BEGIN_OBJECT( GBTimer );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< GNTimer >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

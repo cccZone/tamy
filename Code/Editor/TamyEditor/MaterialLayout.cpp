@@ -18,7 +18,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( MaterialLayout, Resource, rml, AM_BINARY );
+BEGIN_RESOURCE( MaterialLayout, rml, AM_BINARY );
    PROPERTY( Material*, m_pipeline );
    PROPERTY( std::vector< GraphBlock* >, m_blocks );
    PROPERTY( std::vector< GraphBlockConnection* >, m_connections );

@@ -1,11 +1,12 @@
 #include "core\Color.h"
-#include "core\Serializer.h"
+#include "core\OutStream.h"
+#include "core\InStream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RTTI(Color)
-END_RTTI
+BEGIN_OBJECT(Color)
+END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -62,12 +63,23 @@ Color Color::operator+(const Color& lhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Serializer& operator<<(Serializer& serializer, Color& color)
+OutStream& operator<<( OutStream& serializer, Color& color )
 {
    serializer << color.r;
    serializer << color.g;
    serializer << color.b;
-   serializer<< color.a;
+   serializer << color.a;
+   return serializer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+InStream& operator>>( InStream& serializer, Color& color )
+{
+   serializer >> color.r;
+   serializer >> color.g;
+   serializer >> color.b;
+   serializer >> color.a;
    return serializer;
 }
 

@@ -14,7 +14,7 @@
  */
 class MBInstanceTexture : public TPipelineBlock< MNInstanceTexture, MaterialNode >
 {
-   DECLARE_CLASS( MBInstanceTexture )
+   DECLARE_CLASS()
 
 public:
    /**

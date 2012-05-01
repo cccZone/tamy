@@ -13,7 +13,7 @@ class MSFloatOutput;
 
 class MNFloat : public MaterialNode
 {
-   DECLARE_CLASS( MNFloat )
+   DECLARE_CLASS()
 
 private:
    // static data

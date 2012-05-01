@@ -14,7 +14,7 @@
  */
 class RPBAdapter : public TPipelineBlock< RPAdapterNode, RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPBAdapter )
+   DECLARE_CLASS()
 
 public:
    /**

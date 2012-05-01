@@ -9,44 +9,44 @@
 
 namespace // anonymous
 {
-   class TemplateObject : public RTTIObject
+   class TemplateObject : public ReflectionObject
    {
-      DECLARE_RTTI_CLASS
+      DECLARE_CLASS()
 
    public:
       virtual ~TemplateObject() {}
 
       virtual void f() {}
    };
-   BEGIN_RTTI(TemplateObject)
-   END_RTTI
-   REGISTER_RTTI( TemplateObject )
+   BEGIN_OBJECT(TemplateObject);
+   END_OBJECT();
+
    // -------------------------------------------------------------------------
 
    class TemplateObjectA : public TemplateObject
    {
-      DECLARE_RTTI_CLASS
+      DECLARE_CLASS()
 
    public:
       void f() {}
    };
-   BEGIN_RTTI(TemplateObjectA)
-      PARENT(TemplateObject)
-   END_RTTI
-   REGISTER_RTTI( TemplateObjectA )
+   BEGIN_OBJECT(TemplateObjectA);
+      PARENT(TemplateObject);
+   END_OBJECT();
+
    // -------------------------------------------------------------------------
 
    class TemplateObjectB : public TemplateObject
    {
-      DECLARE_RTTI_CLASS
+      DECLARE_CLASS()
 
    public:
       void f() {}
    };
-   BEGIN_RTTI(TemplateObjectB)
-      PARENT(TemplateObject)
-   END_RTTI
-   REGISTER_RTTI( TemplateObjectB )
+   BEGIN_OBJECT(TemplateObjectB);
+      PARENT(TemplateObject);
+   END_OBJECT();
+
    // -------------------------------------------------------------------------
 
    class IRepresentation
@@ -91,8 +91,20 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
+DEFINE_TYPE_ID( TemplateObject );
+DEFINE_TYPE_ID( TemplateObjectA );
+DEFINE_TYPE_ID( TemplateObjectB );
+
+///////////////////////////////////////////////////////////////////////////////
+
 TEST(GenericFactory, creatingObjects)
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< TemplateObject >( "TemplateObject", NULL );
+   typesRegistry.addSerializableType< TemplateObjectA >( "TemplateObjectA", new TSerializableTypeInstantiator< TemplateObjectA >() );
+   typesRegistry.addSerializableType< TemplateObjectB >( "TemplateObjectB", new TSerializableTypeInstantiator< TemplateObjectB >() );
+
    GenericFactory<TemplateObject, IRepresentation> factory;
    factory.associate<TemplateObjectA, RepresentationA>()
           .associate<TemplateObjectB, RepresentationB>();
@@ -114,12 +126,21 @@ TEST(GenericFactory, creatingObjects)
 
    delete obA;
    delete obB;
+
+   // clear the types registry
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(GenericFactory, creatingObjectsForAbstractClasses)
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< TemplateObject >( "TemplateObject", NULL );
+   typesRegistry.addSerializableType< TemplateObjectA >( "TemplateObjectA", new TSerializableTypeInstantiator< TemplateObjectA >() );
+   typesRegistry.addSerializableType< TemplateObjectB >( "TemplateObjectB", new TSerializableTypeInstantiator< TemplateObjectB >() );
+
    GenericFactory<TemplateObject, IRepresentation> factory;
    factory.associate<TemplateObjectA, RepresentationA>()
       .associateAbstract<TemplateObject, CommonRepresentation>();
@@ -141,6 +162,9 @@ TEST(GenericFactory, creatingObjectsForAbstractClasses)
 
    delete obA;
    delete obB;
+
+   // clear the types registry
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

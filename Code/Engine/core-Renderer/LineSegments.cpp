@@ -6,7 +6,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( LineSegments, GeometryResource, tls, AM_BINARY )
+BEGIN_RESOURCE_NO_PARENT( LineSegments, tls, AM_BINARY )
+   PARENT( GeometryResource )
    PROPERTY( std::vector<LineSegment>, m_segments )
 END_RESOURCE()
 

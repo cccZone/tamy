@@ -84,6 +84,34 @@
 #include "core\IDebugDraw.h"
 
 // ----------------------------------------------------------------------------
+// RTTI
+// -->Core
+// ----------------------------------------------------------------------------
+#include "core/ReflectionObject.h"
+#include "core/ReflectionType.h"
+#include "core/ReflectionTypeComponent.h"
+#include "core/ReflectionTypeID.h"
+#include "core/ReflectionTypesRegistry.h"
+#include "core/types.h"
+// ----------------------------------------------------------------------------
+// -->Enum
+// ----------------------------------------------------------------------------
+#include "core/ReflectionEnum.h"
+// ----------------------------------------------------------------------------
+// -->Properties
+// ----------------------------------------------------------------------------
+#include "core/ReflectionProperties.h"
+#include "core/ReflectionPropertiesView.h"
+#include "core/ReflectionProperty.h"
+#include "core/ReflectionPropertyEditor.h"
+// ----------------------------------------------------------------------------
+// -->Serialization
+// ----------------------------------------------------------------------------
+#include "core/ReflectionSaver.h"
+#include "core/ReflectionLoader.h"
+#include "core/ReflectionObjectsTracker.h"
+
+// ----------------------------------------------------------------------------
 // Resources
 // ----------------------------------------------------------------------------
 #include "core\Resource.h"
@@ -92,31 +120,6 @@
 #include "core\ResourceStorage.h"
 #include "core\ResourceHandle.h"
 #include "core\ResourceImporter.h"
-
-// ----------------------------------------------------------------------------
-// RTTI
-// ----------------------------------------------------------------------------
-#include "core\Object.h"
-#include "core\Casts.h"
-// ----------------------------------------------------------------------------
-// -->Properties
-// ----------------------------------------------------------------------------
-#include "core\Property.h"
-#include "core\Properties.h"
-#include "core\PropertyEditor.h"
-#include "core\PropertiesView.h"
-// ----------------------------------------------------------------------------
-// -->Classes
-// ----------------------------------------------------------------------------
-#include "core\ClassesRegistry.h"
-#include "core\Class.h"
-#include "core\Enum.h"
-// ----------------------------------------------------------------------------
-// -->Serialization
-// ----------------------------------------------------------------------------
-#include "core\Serializer.h"
-#include "core\Serializable.h"
-#include "core\FileSerializer.h"
 
 // ----------------------------------------------------------------------------
 // SpatialStorage
@@ -138,6 +141,15 @@
 // Streams
 // ----------------------------------------------------------------------------
 #include "core\dostream.h"
+#include "core\InStream.h"
+#include "core\OutStream.h"
+// ----------------------------------------------------------------------------
+// -->Implementations
+// ----------------------------------------------------------------------------
+#include "core/InArrayStream.h"
+#include "core/OutArrayStream.h"
+#include "core/InFileStream.h"
+#include "core/OutFileStream.h"
 
 // ----------------------------------------------------------------------------
 // Timer
@@ -153,3 +165,5 @@
 // -->SingletonsManager
 // ----------------------------------------------------------------------------
 #include "core\SingletonsManager.h"
+
+

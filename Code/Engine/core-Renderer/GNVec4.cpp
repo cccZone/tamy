@@ -5,12 +5,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GNVec4, GeometryShaderNode )
-   PROPERTY_EDIT( "x", float, m_x )
-   PROPERTY_EDIT( "y", float, m_y )
-   PROPERTY_EDIT( "z", float, m_z )
-   PROPERTY_EDIT( "w", float, m_w )
-END_OBJECT()
+BEGIN_OBJECT( GNVec4 );
+   PARENT( GeometryShaderNode );
+   PROPERTY_EDIT( "x", float, m_x );
+   PROPERTY_EDIT( "y", float, m_y );
+   PROPERTY_EDIT( "z", float, m_z );
+   PROPERTY_EDIT( "w", float, m_w );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 

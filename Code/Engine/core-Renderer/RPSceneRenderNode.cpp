@@ -10,12 +10,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPSceneRenderNode, RenderingPipelineNode )
+BEGIN_OBJECT( RPSceneRenderNode );
+   PARENT( RenderingPipelineNode );
    PROPERTY_EDIT( "Rendered scene id", RPMSceneId, m_renderedSceneId );
    PROPERTY_EDIT( "Scene contents builder", RPSceneBuilder*, m_builder );
    PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
    PROPERTY_EDIT( "Clear depth buffer", bool, m_clearDepthBuffer );
-END_OBJECT()
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,7 +39,7 @@ RPSceneRenderNode::~RPSceneRenderNode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSceneRenderNode::onPropertyChanged( Property& property )
+void RPSceneRenderNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

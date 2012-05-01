@@ -11,17 +11,25 @@ namespace // anonymous
    class GBMockNode;
    class MockOutput : public GBNodeOutput< GBMockNode >
    {
+      DECLARE_CLASS()
+
    public:
       MockOutput() : GBNodeOutput< GBMockNode >( "Output" ) {}
    };
+   BEGIN_OBJECT( MockOutput );
+   END_OBJECT();
 
    // -------------------------------------------------------------------------
 
    class MockInput : public GBNodeInput< GBMockNode >
    {
+      DECLARE_CLASS()
+
    public:
       MockInput() : GBNodeInput< GBMockNode >( "Input" ) {}
    };
+   BEGIN_OBJECT( MockInput );
+   END_OBJECT();
 
    // -------------------------------------------------------------------------
 
@@ -87,8 +95,18 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
+DEFINE_TYPE_ID( MockOutput );
+DEFINE_TYPE_ID( MockInput );
+
+///////////////////////////////////////////////////////////////////////////////
+
 TEST( GraphBuilderInstantiation, simpleGraph )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< MockOutput >( "MockOutput", new TSerializableTypeInstantiator< MockOutput >() );
+   typesRegistry.addSerializableType< MockInput >( "MockInput", new TSerializableTypeInstantiator< MockInput >() );
+
    GraphBuilderMock builder;
 
    GBMockNode* node[] = { new GBMStartNode( 0 ), new GBMUtilNode( 1 ), new GBMEndNode( 2 ) };
@@ -110,6 +128,9 @@ TEST( GraphBuilderInstantiation, simpleGraph )
    CPPUNIT_ASSERT_EQUAL( node[0], graph.getNode( result[0] ) );
    CPPUNIT_ASSERT_EQUAL( node[1], graph.getNode( result[1] ) );
    CPPUNIT_ASSERT_EQUAL( node[2], graph.getNode( result[2] ) );
+
+   // clear the types registry
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

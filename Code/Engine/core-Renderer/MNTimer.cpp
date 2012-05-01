@@ -5,7 +5,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MNTimer, MaterialNode );
+BEGIN_OBJECT( MNTimer );
+   PARENT( MaterialNode );
    PROPERTY_EDIT( "period", float, m_period );
    PROPERTY_EDIT( "amplitude", float, m_amplitude );
 END_OBJECT();
@@ -45,7 +46,7 @@ void MNTimer::onObjectLoaded()
 
 void MNTimer::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
-   float currTime = m_timer.getCurrentTime();
+   float currTime = (float)m_timer.getCurrentTime();
    float sinTime = sin( currTime * m_period ) * m_amplitude;
 
    m_time->setValue( entity.data(), currTime );

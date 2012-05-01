@@ -2,7 +2,7 @@
 /// @brief  floating point value property editor
 #pragma once
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
 
 
@@ -16,7 +16,7 @@ class FloatPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< float >*    m_property;
+   TEditableReflectionProperty< float >*    m_property;
 
 public:
    /**
@@ -24,7 +24,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   FloatPropertyEditor( TEditableProperty< float >* property );
+   FloatPropertyEditor( TEditableReflectionProperty< float >* property );
    ~FloatPropertyEditor();
 
 public slots:
@@ -44,7 +44,7 @@ class DoublePropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< double >*    m_property;
+   TEditableReflectionProperty< double >*    m_property;
 
 public:
    /**
@@ -52,7 +52,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   DoublePropertyEditor( TEditableProperty< double >* property );
+   DoublePropertyEditor( TEditableReflectionProperty< double >* property );
    ~DoublePropertyEditor();
 
 public slots:

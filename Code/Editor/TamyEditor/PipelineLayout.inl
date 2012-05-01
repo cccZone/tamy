@@ -52,7 +52,7 @@ void PipelineLayout< TPipeline, TNode >::onResourceLoaded( ResourcesManager& mgr
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TPipeline, typename TNode >
-GraphBlock* PipelineLayout< TPipeline, TNode >::createNode( const Class& type )
+GraphBlock* PipelineLayout< TPipeline, TNode >::createNode( const SerializableReflectionType& type )
 {
    TNode* node = type.instantiate< TNode >();
    PipelineBlock* block = create( *node );
@@ -66,7 +66,7 @@ GraphBlock* PipelineLayout< TPipeline, TNode >::createNode( const Class& type )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TPipeline, typename TNode >
-void PipelineLayout< TPipeline, TNode >::removeNode( Object& node )
+void PipelineLayout< TPipeline, TNode >::removeNode( ReflectionObject& node )
 {
    TNode* rpNode = dynamic_cast< TNode* >( &node );
    ASSERT_MSG( rpNode != NULL, "Attempting to remove a node that's not a GraphBuilderNode" );
@@ -77,10 +77,10 @@ void PipelineLayout< TPipeline, TNode >::removeNode( Object& node )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TPipeline, typename TNode >
-void PipelineLayout< TPipeline, TNode >::getNodesClasses( std::vector< Class >& classes )
+void PipelineLayout< TPipeline, TNode >::getNodesClasses( std::vector< const SerializableReflectionType* >& classes )
 {
-   ClassesRegistry& classesReg = getClassesRegistry();
-   classesReg.getClassesMatchingType< TNode >( classes );
+   ReflectionTypesRegistry& classesReg = ReflectionTypesRegistry::getInstance();
+   classesReg.getMatchingSerializableTypes< TNode >( classes );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

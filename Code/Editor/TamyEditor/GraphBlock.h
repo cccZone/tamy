@@ -8,7 +8,7 @@
 #include <QPen>
 #include <QFont>
 #include <QGraphicsLineItem>
-#include "core/Object.h"
+#include "core/ReflectionObject.h"
 #include <set>
 
 
@@ -32,9 +32,9 @@ enum GraphBlockSocketPosition
 /**
  * A graphical representation of a graph node.
  */
-class GraphBlock : public Object, public QGraphicsItem
+class GraphBlock : public ReflectionObject, public QGraphicsItem
 {
-   DECLARE_CLASS( GraphBlock )
+   DECLARE_CLASS() 
 
 public:
    enum Shape
@@ -86,7 +86,7 @@ public:
    /**
     * Returns the represented node instance.
     */
-   virtual Object& getNode() { return *( reinterpret_cast< Object* >( NULL ) ); }
+   virtual ReflectionObject& getNode() { return *( reinterpret_cast< ReflectionObject* >( NULL ) ); }
 
    /**
     * Returns a list of connections the block's involved in.
@@ -119,9 +119,9 @@ public:
    void mouseMoveEvent( QGraphicsSceneMouseEvent* event );
 
    // -------------------------------------------------------------------------
-   // Object implementation
+   // ReflectionObject implementation
    // -------------------------------------------------------------------------
-   void onPropertyChanged( Property& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
    // -------------------------------------------------------------------------
    // Block layout operation
@@ -133,7 +133,7 @@ public:
 
 protected:
    // -------------------------------------------------------------------------
-   // Object implementation
+   // ReflectionObject implementation
    // -------------------------------------------------------------------------
    void onObjectPreSave();
    void onObjectLoaded();
@@ -186,9 +186,9 @@ protected:
  * The responsibility of a destination socket is just to inform the connection
  * about the changes in its whereabouts.
  */
-class GraphBlockSocket : public Object, public QGraphicsItem
+class GraphBlockSocket : public ReflectionObject, public QGraphicsItem
 {
-   DECLARE_CLASS( GraphBlockSocket )
+   DECLARE_CLASS()
 
 
    friend class GraphBlockConnection;
@@ -246,7 +246,7 @@ public:
    /**
     * Returns the represented socket instance.
     */
-   virtual Object& getSocket() { return *( reinterpret_cast< Object* >( NULL ) ); }
+   virtual ReflectionObject& getSocket() { return *( reinterpret_cast< ReflectionObject* >( NULL ) ); }
 
    /**
     * Recalculates the bounds of the connections this socket is involved in.
@@ -339,9 +339,9 @@ private:
  * The connection manages the information kept in the participating socket
  * (it's sort of a mediator in this context).
  */
-class GraphBlockConnection : public Object, public QGraphicsLineItem
+class GraphBlockConnection : public ReflectionObject, public QGraphicsLineItem
 {
-   DECLARE_CLASS( GraphBlockConnection )
+   DECLARE_CLASS()
 
 private:
    GraphBlockSocket*       m_source;

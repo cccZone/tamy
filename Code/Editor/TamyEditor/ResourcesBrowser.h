@@ -57,7 +57,7 @@ public:
     * @param type
     * @param parentDir
     */
-   void createResource( const Class& type, const std::string& parentDir );
+   void createResource( const SerializableReflectionType& type, const std::string& parentDir );
 
    /**
     * Opens a resource for edition.

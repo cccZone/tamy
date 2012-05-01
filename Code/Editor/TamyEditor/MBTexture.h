@@ -14,7 +14,7 @@
  */
 class MBTexture : public TPipelineBlock< MNTexture, MaterialNode >
 {
-   DECLARE_CLASS( MBTexture )
+   DECLARE_CLASS()
 
 public:
    /**

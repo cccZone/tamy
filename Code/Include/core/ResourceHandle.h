@@ -5,7 +5,7 @@
 #define _RESOURCE_HANDLE_H
 
 #include <string>
-#include "core/Object.h"
+#include "core/ReflectionObject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,9 +17,9 @@ class Resource;
 /**
  * An object managed by a resource.
  */
-class ResourceObject : public Object
+class ResourceObject : public ReflectionObject
 {
-   DECLARE_CLASS( ResourceObject )
+   DECLARE_CLASS()
 
 private:
    // resource object management system related data
@@ -71,9 +71,9 @@ protected:
 /**
  * Handle to an object aggregated in a resource.
  */
-class ResourceHandle : public Object
+class ResourceHandle : public ReflectionObject
 {
-   DECLARE_CLASS( ResourceHandle )
+   DECLARE_CLASS()
 
 protected:
    std::string          m_resourcePath;

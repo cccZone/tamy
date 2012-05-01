@@ -14,7 +14,7 @@
 #include "core/Graph.h"
 #include "core/GraphAlgorithms.h"
 #include "core/RuntimeData.h"
-#include "core/Enum.h"
+#include "core/ReflectionEnum.h"
 #include "core/IDebugDraw.h"
 #include <algorithm>
 
@@ -24,7 +24,7 @@
 BEGIN_ENUM( RPMSceneId );
    ENUM_VAL( RPS_Main );
    ENUM_VAL( RPS_Debug );
-END_ENUM( RPMSceneId );
+END_ENUM();
 
 ///////////////////////////////////////////////////////////////////////////////
 

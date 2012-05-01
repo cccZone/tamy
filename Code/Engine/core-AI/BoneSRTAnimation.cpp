@@ -4,13 +4,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( BoneSRTAnimation, Object )
-   PROPERTY( std::string, m_boneName )
-   PROPERTY( std::vector< float >, m_orientation.m_time )
-   PROPERTY( std::vector< D3DXQUATERNION >, m_orientation.m_keys )
-   PROPERTY( std::vector< float >, m_translation.m_time )
-   PROPERTY( std::vector< D3DXVECTOR3 >, m_translation.m_keys )
-END_OBJECT()
+BEGIN_OBJECT( BoneSRTAnimation );
+   PROPERTY( std::string, m_boneName );
+   PROPERTY( std::vector< float >, m_orientation.m_time );
+   PROPERTY( std::vector< D3DXQUATERNION >, m_orientation.m_keys );
+   PROPERTY( std::vector< float >, m_translation.m_time );
+   PROPERTY( std::vector< D3DXVECTOR3 >, m_translation.m_keys );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 

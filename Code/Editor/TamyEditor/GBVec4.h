@@ -14,7 +14,7 @@
  */
 class GBVec4 : public TPipelineBlock< GNVec4, GeometryShaderNode >
 {
-   DECLARE_CLASS( GBVec4 )
+   DECLARE_CLASS()
 
 public:
    /**

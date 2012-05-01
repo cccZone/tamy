@@ -14,7 +14,7 @@
  */
 class BoneEntity : public SpatialEntity, public IDebugDrawable
 {
-   DECLARE_CLASS( BoneEntity );
+   DECLARE_CLASS();
 
 public:
    /**

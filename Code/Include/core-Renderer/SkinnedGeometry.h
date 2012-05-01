@@ -27,7 +27,7 @@ class Node;
  */
 class SkinnedGeometry : public Geometry
 {
-   DECLARE_CLASS( SkinnedGeometry )
+   DECLARE_CLASS()
 
 private:
    Skeleton*                           m_skeleton;

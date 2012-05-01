@@ -18,7 +18,7 @@ class Renderer;
  */
 class GeometryResource : public Resource
 {
-   DECLARE_CLASS( GeometryResource )
+   DECLARE_CLASS()
 
 public:
    /**

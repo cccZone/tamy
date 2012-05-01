@@ -4,7 +4,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( ModelEntity, SpatialEntity )
+BEGIN_OBJECT( ModelEntity )
+   PARENT( SpatialEntity )
    PROPERTY_EDIT( "EmbeddedModel", Model*, m_model )
 END_OBJECT()
 
@@ -47,7 +48,7 @@ void ModelEntity::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ModelEntity::onPropertyChanged( Property& property )
+void ModelEntity::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

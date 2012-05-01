@@ -3,8 +3,12 @@
 #include <d3dx9.h>
 #include <iostream>
 #include <string.h>
-#include "core\Serializer.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+class InStream;
+class OutStream;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +37,8 @@ struct LitVertex
    {
    }
 
-   friend Serializer& operator<<( Serializer& serializer, LitVertex& vtx );
+   friend OutStream& operator<<( OutStream& stream, const LitVertex& vtx );
+   friend InStream& operator>>( InStream& stream, LitVertex& vtx );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,7 +56,8 @@ struct VertexWeight
    {
    }
    
-   friend Serializer& operator<<( Serializer& serializer, VertexWeight& weight );
+   friend OutStream& operator<<( OutStream& stream, const VertexWeight& weight );
+   friend InStream& operator>>( InStream& stream, VertexWeight& weight );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

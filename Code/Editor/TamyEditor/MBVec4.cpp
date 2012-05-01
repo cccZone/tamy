@@ -3,7 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MBVec4, GraphBlock );
+BEGIN_OBJECT( MBVec4 );
+   PARENT( GraphBlock );
    PROPERTY( TResourceHandle< MNVec4 >*, m_node );
 END_OBJECT();
 

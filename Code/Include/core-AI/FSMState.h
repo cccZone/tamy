@@ -3,7 +3,7 @@
 #ifndef _FSM_STATE_H
 #define _FSM_STATE_H
 
-#include "core/Class.h"
+#include "core/ReflectionObject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,7 +15,7 @@
  * together.
  */
 template< typename Controller >
-class FSMState : public RTTIObject
+class FSMState : public ReflectionObject
 {
 protected:
    Controller*             m_fsm;

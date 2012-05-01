@@ -38,7 +38,7 @@ public:
     *
     * @param block
     */
-   GraphBlock& add( const Class& type, const QPointF& pos );
+   GraphBlock& add( const SerializableReflectionType& type, const QPointF& pos );
 
    /**
     * Removes a block from the layout.
@@ -102,21 +102,21 @@ protected:
     *
     * @param type    node type
     */
-   virtual GraphBlock* createNode( const Class& type ) = 0;
+   virtual GraphBlock* createNode( const SerializableReflectionType& type ) = 0;
 
    /**
     * Called when the widget removes a node.
     *
     * @param node
     */
-   virtual void removeNode( Object& node ) = 0;
+   virtual void removeNode( ReflectionObject& node ) = 0;
 
    /**
     * Returns a list of types we can select from when creating a new node.
     *
     * @param classes          fill this list with available node types
     */
-   virtual void getNodesClasses( std::vector< Class >& classes ) = 0;
+   virtual void getNodesClasses( std::vector< const SerializableReflectionType* >& classes ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -126,9 +126,9 @@ class GraphNodeCreationAction : public QAction
    Q_OBJECT
 
 private:
-   GraphLayout&   m_parent;
-   Class          m_type;
-   QPointF        m_pos;
+   GraphLayout&                        m_parent;
+   const SerializableReflectionType&   m_type;
+   QPointF                             m_pos;
 
 public:
    /**
@@ -138,7 +138,7 @@ public:
     * @param type        type of the node added
     * @param pos         position in graph onto which the node should be added
     */
-   GraphNodeCreationAction( GraphLayout& parent, const Class& type, const QPointF& pos );
+   GraphNodeCreationAction( GraphLayout& parent, const SerializableReflectionType& type, const QPointF& pos );
 
 public slots:
    void onTriggered();

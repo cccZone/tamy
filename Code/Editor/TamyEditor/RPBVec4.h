@@ -14,7 +14,7 @@
  */
 class RPBVec4 : public TPipelineBlock< RPVec4Node, RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPBVec4 )
+   DECLARE_CLASS()
 
 public:
    /**

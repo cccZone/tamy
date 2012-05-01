@@ -29,7 +29,7 @@ GraphLayout::~GraphLayout()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphBlock& GraphLayout::add( const Class& type, const QPointF& pos )
+GraphBlock& GraphLayout::add( const SerializableReflectionType& type, const QPointF& pos )
 {
    GraphBlock* block = createNode( type );
    ASSERT_MSG( block != NULL, "No representation ready for this type of node" );
@@ -199,11 +199,11 @@ void GraphLayout::createContextMenu( QMenu* menu, const QPointF& scenePos )
       // we clicked an empty spot - show a menu for adding new nodes
       QMenu* addMenu = menu->addMenu( "Add nodes" );
 
-      std::vector< Class > classes;
+      std::vector< const SerializableReflectionType* > classes;
       getNodesClasses( classes );
-      for( std::vector< Class >::const_iterator it = classes.begin(); it != classes.end(); ++it )
+      for( std::vector< const SerializableReflectionType* >::const_iterator it = classes.begin(); it != classes.end(); ++it )
       {
-         const Class& nodeClass = *it;
+         const SerializableReflectionType& nodeClass = **it;
 
          QAction* addNodeAction = new GraphNodeCreationAction( *this, nodeClass, scenePos );
          addMenu->addAction( addNodeAction );
@@ -243,8 +243,8 @@ void GraphLayout::createContextMenu( QMenu* menu, const QPointF& scenePos )
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphNodeCreationAction::GraphNodeCreationAction( GraphLayout& parent, const Class& type, const QPointF& pos )
-   : QAction( type.getShortName().c_str(), &parent )
+GraphNodeCreationAction::GraphNodeCreationAction( GraphLayout& parent, const SerializableReflectionType& type, const QPointF& pos )
+   : QAction( type.m_name.c_str(), &parent )
    , m_parent( parent )
    , m_type( type )
    , m_pos( pos )

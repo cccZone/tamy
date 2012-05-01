@@ -8,7 +8,7 @@
 
 class QMenu;
 class QAction;
-class Class;
+class SerializableReflectionType;
 class Entity;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,7 @@ public:
     *
     * @param entityClass   class of the entity we want to create
     */
-   virtual void addEntity( const Class& entityClass ) = 0;
+   virtual void addEntity( const SerializableReflectionType& entityClass ) = 0;
 
    /**
     * Removes an entity from the selected object

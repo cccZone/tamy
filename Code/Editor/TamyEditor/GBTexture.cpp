@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GBTexture, GraphBlock );
-PROPERTY( TResourceHandle< GNTexture >*, m_node );
+BEGIN_OBJECT( GBTexture );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< GNTexture >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

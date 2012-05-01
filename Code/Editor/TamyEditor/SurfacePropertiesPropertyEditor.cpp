@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SurfacePropertiesPropertyEditor::SurfacePropertiesPropertyEditor( TEditableProperty< SurfaceProperties >* property )
+SurfacePropertiesPropertyEditor::SurfacePropertiesPropertyEditor( TEditableReflectionProperty< SurfaceProperties >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {

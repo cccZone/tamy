@@ -14,7 +14,7 @@
  */
 class RPBStart : public TPipelineBlock< RPStartNode, RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPBStart )
+   DECLARE_CLASS()
 
 public:
    /**

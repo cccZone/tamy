@@ -5,8 +5,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class ENTITY, class REPR_BASE>
-GenericFactory<ENTITY, REPR_BASE>::~GenericFactory()
+template< class ENTITY, class REPR_BASE >
+GenericFactory< ENTITY, REPR_BASE  >::~GenericFactory()
 {
    for ( CreatorsVec::iterator it = m_solidCreators.begin(); it != m_solidCreators.end(); ++it )
    {
@@ -23,8 +23,8 @@ GenericFactory<ENTITY, REPR_BASE>::~GenericFactory()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<class ENTITY, class REPR_BASE>
-REPR_BASE* GenericFactory<ENTITY, REPR_BASE>::create(ENTITY& entity)
+template< class ENTITY, class REPR_BASE>
+REPR_BASE* GenericFactory< ENTITY, REPR_BASE >::create(ENTITY& entity)
 {
    // first try to find a solid class creator for it...
    REPR_BASE* instance = createSolid(entity);
@@ -44,11 +44,11 @@ REPR_BASE* GenericFactory<ENTITY, REPR_BASE>::create(ENTITY& entity)
 template<class ENTITY, class REPR_BASE>
 REPR_BASE* GenericFactory<ENTITY, REPR_BASE>::createSolid(ENTITY& entity)
 {
-   const Class& checkedClassType = entity.getVirtualClass();
+   const ReflectionType& checkedClassType = entity.getVirtualRTTI();
 
    for ( CreatorsVec::iterator it = m_solidCreators.begin(); it != m_solidCreators.end(); ++it )
    {
-      Class& refClassType = (*it)->classType;
+      const ReflectionType& refClassType = (*it)->classType;
       if ( refClassType.isExactlyA( checkedClassType ) == true )
       {
          REPR_BASE* rep = ( *(*it)->creator )( &entity );
@@ -64,11 +64,11 @@ REPR_BASE* GenericFactory<ENTITY, REPR_BASE>::createSolid(ENTITY& entity)
 template< class ENTITY, class REPR_BASE >
 REPR_BASE* GenericFactory< ENTITY, REPR_BASE >::createAbstract( ENTITY& entity )
 {
-   const Class& checkedClassType = entity.getVirtualClass();
+   const ReflectionType& checkedClassType = entity.getVirtualRTTI();
 
    for ( CreatorsVec::iterator it = m_abstractCreators.begin(); it != m_abstractCreators.end(); ++it )
    {
-      Class& refClassType = (*it)->classType;
+      const ReflectionType& refClassType = (*it)->classType;
       if ( checkedClassType.isA( refClassType ) == true )
       {
          REPR_BASE* rep = ( *( ( *it )->creator ) )( &entity );

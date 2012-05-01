@@ -9,7 +9,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( GraphBlock, Object );
+BEGIN_ABSTRACT_OBJECT( GraphBlock );
+   PARENT( ReflectionObject );
    PROPERTY_EDIT( "caption", std::string, m_caption );
    PROPERTY( QPointF, m_position );
    PROPERTY( std::vector< GraphBlockSocket* >, m_sockets );
@@ -157,7 +158,7 @@ void GraphBlock::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphBlock::onPropertyChanged( Property& property )
+void GraphBlock::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 
@@ -234,25 +235,25 @@ void GraphBlock::calculateBounds()
       {
       case GBSP_INPUT:
          {
-            longestLeftSocketName = max( longestLeftSocketName, socket->getNameWidth() );
+            longestLeftSocketName = std::max( longestLeftSocketName, socket->getNameWidth() );
             ++leftSocketsCount;
             break;
          }
       
       case GBSP_OUTPUT:
          {
-            longestRightSocketName = max( longestRightSocketName, socket->getNameWidth() );
+            longestRightSocketName = std::max( longestRightSocketName, socket->getNameWidth() );
             ++rightSocketsCount;
             break;
          }
       }
    }
    float socketSize = metrics.height() + 6;
-   float socketsHeight = max( leftSocketsCount, rightSocketsCount ) * socketSize;
+   float socketsHeight = std::max( leftSocketsCount, rightSocketsCount ) * socketSize;
 
    // calculate the bounds
-   float blockWidth = max( captionWidth, longestLeftSocketName + longestRightSocketName );
-   blockWidth = max( blockWidth, 100.0f ); // make sure the block isn't too narrow
+   float blockWidth = std::max( captionWidth, longestLeftSocketName + longestRightSocketName );
+   blockWidth = std::max( blockWidth, 100.0f ); // make sure the block isn't too narrow
 
    float blockHeight = captionHeight + socketsHeight;
 
@@ -349,10 +350,11 @@ void GraphBlock::getAllSockets( GraphBlockSocketPosition position, std::set< std
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GraphBlockSocket, Object );
+BEGIN_OBJECT( GraphBlockSocket );
+   PARENT( ReflectionObject );
    PROPERTY( GraphBlock*, m_parent );
    PROPERTY( QPointF, m_position );
-   PROPERTY( GraphBlockSocketPosition, m_blockSide );
+   PROPERTY( int, m_blockSide );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< GraphBlockConnection* >, m_connections );
 END_OBJECT();
@@ -566,7 +568,8 @@ void GraphBlockSocket::removeConnection( GraphBlockConnection& connection )
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GraphBlockConnection, Object );
+BEGIN_OBJECT( GraphBlockConnection );
+   PARENT( ReflectionObject );
    PROPERTY( GraphBlockSocket*, m_source );
    PROPERTY( GraphBlockSocket*, m_destination );
 END_OBJECT();

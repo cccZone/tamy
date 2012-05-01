@@ -14,7 +14,7 @@
  */
 class GBTexture : public TPipelineBlock< GNTexture, GeometryShaderNode >
 {
-   DECLARE_CLASS( GBTexture )
+   DECLARE_CLASS()
 
 public:
    /**

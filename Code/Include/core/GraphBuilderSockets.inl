@@ -91,7 +91,7 @@ void GBNodeInput< TNode >::disconnect()
 template< typename TNode >
 bool GBNodeInput< TNode >::canConnect( GBNodeOutput< TNode >& output ) const
 {
-   return output.getDataType().isValid() == false;
+   return output.getDataType() != NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -114,9 +114,10 @@ TGBNodeOutput< TNode, TData >::~TGBNodeOutput()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TData >
-Class TGBNodeOutput< TNode, TData >::getDataType() const
+const ReflectionType* TGBNodeOutput< TNode, TData >::getDataType() const
 {
-   return Class::createClass< TData >();
+   ReflectionTypesRegistry& registry = ReflectionTypesRegistry::getInstance();
+   return registry.find< TData >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -190,9 +191,10 @@ const TData& TGBNodeInput< TNode, TData >::getValue( RuntimeDataBuffer& data ) c
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TData >
-Class TGBNodeInput< TNode, TData >::getDataType() const
+const ReflectionType* TGBNodeInput< TNode, TData >::getDataType() const
 {
-   return Class::createClass< TData >();
+   ReflectionTypesRegistry& registry = ReflectionTypesRegistry::getInstance();
+   return registry.find< TData >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -200,10 +202,12 @@ Class TGBNodeInput< TNode, TData >::getDataType() const
 template< typename TNode, typename TData >
 bool TGBNodeInput< TNode, TData >::canConnect( GBNodeOutput< TNode >& output ) const
 {
-   Class inputDataType = Class::createClass< TData >();
-   Class outputDataType = output.getDataType();
+   ReflectionTypesRegistry& registry = ReflectionTypesRegistry::getInstance();
+   const ReflectionType* inputDataType = registry.find< TData >();
+   const ReflectionType* outputDataType = output.getDataType();
+   ASSERT_MSG( inputDataType && outputDataType, "One of the socket data types isn't registered with the reflection system" );
 
-   return inputDataType.isExactlyA( outputDataType );
+   return inputDataType->isExactlyA( *outputDataType );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -226,9 +230,10 @@ TGBNodePtrOutput< TNode, TData >::~TGBNodePtrOutput()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TData >
-Class TGBNodePtrOutput< TNode, TData >::getDataType() const
+const ReflectionType* TGBNodePtrOutput< TNode, TData >::getDataType() const
 {
-   return Class::createClass< TData >();
+   ReflectionTypesRegistry& registry = ReflectionTypesRegistry::getInstance();
+   return registry.find< TData >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -300,9 +305,10 @@ TData* TGBNodePtrInput< TNode, TData >::getValue( RuntimeDataBuffer& data ) cons
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TData >
-Class TGBNodePtrInput< TNode, TData >::getDataType() const
+const ReflectionType* TGBNodePtrInput< TNode, TData >::getDataType() const
 {
-   return Class::createClass< TData >();
+   ReflectionTypesRegistry& registry = ReflectionTypesRegistry::getInstance();
+   return registry.find< TData >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -310,10 +316,12 @@ Class TGBNodePtrInput< TNode, TData >::getDataType() const
 template< typename TNode, typename TData >
 bool TGBNodePtrInput< TNode, TData >::canConnect( GBNodeOutput< TNode >& output ) const
 {
-   Class inputDataType = Class::createClass< TData >();
-   Class outputDataType = output.getDataType();
+   ReflectionTypesRegistry& registry = ReflectionTypesRegistry::getInstance();
+   const ReflectionType* inputDataType = registry.find< TData >();
+   const ReflectionType* outputDataType = output.getDataType();
+   ASSERT_MSG( inputDataType && outputDataType, "One of the socket data types isn't registered with the reflection system" );
 
-   return inputDataType.isExactlyA( outputDataType );
+   return inputDataType->isExactlyA( *outputDataType );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

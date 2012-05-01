@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourcePropertyEditor::ResourcePropertyEditor( TEditableProperty< Resource* >* property )
+ResourcePropertyEditor::ResourcePropertyEditor( TEditableReflectionProperty< Resource* >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 , m_resourceName( NULL )
@@ -81,8 +81,8 @@ void ResourcePropertyEditor::valChanged()
       newVal = &rm.create( m_paths[ 0 ] );
 
       // verify that the types match
-      Class newTypeClass = newVal->getVirtualClass();
-      Class acceptableType = m_property->getType();
+      const ReflectionType& newTypeClass = newVal->getVirtualRTTI();
+      const ReflectionType& acceptableType = m_property->getType();
       if ( !newTypeClass.isA( acceptableType ) )
       {
          newVal = NULL;

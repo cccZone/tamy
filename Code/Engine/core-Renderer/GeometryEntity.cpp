@@ -9,7 +9,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GeometryEntity, Geometry );
+BEGIN_OBJECT( GeometryEntity );
+   PARENT( Geometry );
    PROPERTY_EDIT( "geometry shader", GeometryShader*, m_geometryShader );
 END_OBJECT();
 
@@ -43,7 +44,7 @@ void GeometryEntity::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GeometryEntity::onPrePropertyChanged( Property& property )
+void GeometryEntity::onPrePropertyChanged( ReflectionProperty& property )
 {
    __super::onPrePropertyChanged( property );
 
@@ -56,7 +57,7 @@ void GeometryEntity::onPrePropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GeometryEntity::onPropertyChanged( Property& property )
+void GeometryEntity::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

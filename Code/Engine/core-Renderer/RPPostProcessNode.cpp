@@ -10,7 +10,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPPostProcessNode, RenderingPipelineNode );
+BEGIN_OBJECT( RPPostProcessNode );
+   PARENT( RenderingPipelineNode );
    PROPERTY_EDIT( "Pixel shader", PixelShader*, m_shader );
    PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
 END_OBJECT();
@@ -36,7 +37,7 @@ RPPostProcessNode::~RPPostProcessNode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPPostProcessNode::onPrePropertyChanged( Property& property )
+void RPPostProcessNode::onPrePropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 
@@ -48,7 +49,7 @@ void RPPostProcessNode::onPrePropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPPostProcessNode::onPropertyChanged( Property& property )
+void RPPostProcessNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

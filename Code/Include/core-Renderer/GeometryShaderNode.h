@@ -16,7 +16,7 @@ class Renderer;
 
 class GeometryShaderNode : public ResourceObject, public GraphBuilderNode< GeometryShaderNode >
 {
-   DECLARE_CLASS( GeometryShaderNode )
+   DECLARE_CLASS()
 
 public:
    virtual ~GeometryShaderNode();
@@ -27,7 +27,7 @@ public:
     * @param dataType      what type of data should the input marshal
     * @param name          input name
     */
-   GBNodeInput< GeometryShaderNode >* createInput( const Class& dataType, const std::string& name ) const;
+   GBNodeInput< GeometryShaderNode >* createInput( const ReflectionType& dataType, const std::string& name ) const;
 
    /**
     * Called in order to initialize node's runtime data layout.
@@ -56,7 +56,7 @@ public:
    // Object implementation
    // -----------------------------------------------------------------
    void onObjectLoaded();
-   void onPropertyChanged( Property& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
 protected:
    /**

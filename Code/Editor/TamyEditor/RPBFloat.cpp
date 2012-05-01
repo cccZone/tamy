@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBFloat, GraphBlock );
-PROPERTY( TResourceHandle< RPFloatNode >*, m_node );
+BEGIN_OBJECT( RPBFloat );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< RPFloatNode >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

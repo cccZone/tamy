@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( ResourceHandle, Object );
+BEGIN_OBJECT( ResourceHandle );
    PROPERTY( std::string, m_resourcePath );
    PROPERTY( int, m_objectId )
 END_OBJECT();
@@ -29,7 +29,7 @@ void ResourceHandle::onObjectPreSave()
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( ResourceObject, Object );
+BEGIN_OBJECT( ResourceObject );
    PROPERTY( Resource*, m_hostResource );
    PROPERTY( int, m_objectId );
 END_OBJECT();

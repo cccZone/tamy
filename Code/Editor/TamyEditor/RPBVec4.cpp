@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBVec4, GraphBlock );
-PROPERTY( TResourceHandle< RPVec4Node >*, m_node );
+BEGIN_OBJECT( RPBVec4 );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< RPVec4Node >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

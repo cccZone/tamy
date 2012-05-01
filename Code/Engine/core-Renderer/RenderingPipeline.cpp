@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( RenderingPipeline, Resource, trp, AM_BINARY );
+BEGIN_RESOURCE( RenderingPipeline, trp, AM_BINARY );
    PROPERTY( std::vector< RenderingPipelineNode* >, m_nodes );
    PROPERTY( std::vector< RenderTargetDescriptor* >, m_renderTargets );
 END_RESOURCE();

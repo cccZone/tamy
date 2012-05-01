@@ -9,12 +9,13 @@
 
 class RPTextureOutput;
 class Texture;
+class RenderableTexture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class RPTextureNode : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPTextureNode )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -22,7 +23,8 @@ private:
 
    // runtime data
    RPTextureOutput*     m_output;
- 
+   RenderableTexture*   m_renderableTexture;
+
 public:
    /**
     * Constructor.

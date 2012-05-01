@@ -14,7 +14,7 @@
  */
 class RPBTexture : public TPipelineBlock< RPTextureNode, RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPBTexture )
+   DECLARE_CLASS()
 
 public:
    /**

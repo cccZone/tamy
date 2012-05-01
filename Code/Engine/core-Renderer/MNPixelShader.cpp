@@ -5,9 +5,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MNPixelShader, MaterialNode )
-   PROPERTY_EDIT( "Shader", PixelShader*, m_shader )
-END_OBJECT()
+BEGIN_OBJECT( MNPixelShader );
+   PARENT( MaterialNode );
+   PROPERTY_EDIT( "Shader", PixelShader*, m_shader );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +41,7 @@ void MNPixelShader::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNPixelShader::onPrePropertyChanged( Property& property )
+void MNPixelShader::onPrePropertyChanged( ReflectionProperty& property )
 {
    __super::onPrePropertyChanged( property );
 
@@ -52,7 +53,7 @@ void MNPixelShader::onPrePropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNPixelShader::onPropertyChanged( Property& property )
+void MNPixelShader::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

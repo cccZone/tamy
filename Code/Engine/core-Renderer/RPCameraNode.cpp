@@ -7,8 +7,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPCameraNode, RenderingPipelineNode )
-END_OBJECT()
+BEGIN_OBJECT( RPCameraNode );
+   PARENT( RenderingPipelineNode );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -65,8 +66,8 @@ void RPCameraNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    m_nearZ->setValue( data, camera.getNearClippingPlane() );
    m_farZ->setValue( data, camera.getFarClippingPlane() );
-   m_viewportWidth->setValue( data, renderer.getViewportWidth() );
-   m_viewportHeight->setValue( data, renderer.getViewportHeight() );
+   m_viewportWidth->setValue( data, (float)renderer.getViewportWidth() );
+   m_viewportHeight->setValue( data, (float)renderer.getViewportHeight() );
 
    D3DXMATRIX invMtx, transInvMtx;
 

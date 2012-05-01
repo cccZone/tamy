@@ -162,9 +162,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Geometry.cpp">
-      <Filter>Geometry\Core</Filter>
-    </ClCompile>
     <ClCompile Include="LitVertex.cpp">
       <Filter>Geometry\Core</Filter>
     </ClCompile>
@@ -345,6 +342,12 @@
     </ClCompile>
     <ClCompile Include="GeometryShaderNode.cpp">
       <Filter>Geometry\GeometryShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Geometry.cpp">
+      <Filter>Geometry\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableTexture.cpp">
+      <Filter>Materials\Resources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -693,6 +696,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConstant.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderableTexture.h">
+      <Filter>Materials\Resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

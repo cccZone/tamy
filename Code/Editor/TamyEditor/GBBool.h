@@ -14,7 +14,7 @@
  */
 class GBBool : public TPipelineBlock< GNBool, GeometryShaderNode >
 {
-   DECLARE_CLASS( GBBool )
+   DECLARE_CLASS()
 
 public:
    /**

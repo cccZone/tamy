@@ -18,7 +18,7 @@ class RenderTarget;
  */
 class RPDebugRendererNode : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPDebugRendererNode )
+   DECLARE_CLASS()
 
 private:
    // static data

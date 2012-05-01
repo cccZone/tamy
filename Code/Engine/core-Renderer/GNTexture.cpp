@@ -1,20 +1,23 @@
 #include "core-Renderer/GNTexture.h"
 #include "core-Renderer/GeometrySockets.h"
 #include "core-Renderer/Texture.h"
+#include "core-Renderer/RenderableTexture.h"
 #include "core-Renderer/GeometryEntity.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GNTexture, GeometryShaderNode )
-   PROPERTY_EDIT( "Texture", Texture*, m_texture )
-END_OBJECT()
+BEGIN_OBJECT( GNTexture );
+   PARENT( GeometryShaderNode );
+   PROPERTY_EDIT( "Texture", Texture*, m_texture );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 GNTexture::GNTexture()
    : m_texture( NULL )
    , m_output( new GSTextureOutput( "Texture" ) )
+   , m_renderableTexture( new RenderableTexture() )
 {
    defineOutput( m_output );
 }
@@ -23,6 +26,9 @@ GNTexture::GNTexture()
 
 GNTexture::~GNTexture()
 {
+   delete m_renderableTexture;
+   m_renderableTexture = NULL;
+
    m_texture = NULL;
    m_output = NULL;
 }
@@ -41,7 +47,8 @@ void GNTexture::onObjectLoaded()
 
 void GNTexture::preRender( Renderer& renderer, const GeometryEntity& entity ) const
 {
-   m_output->setValue( entity.data(), m_texture );
+   m_renderableTexture->setTexture( m_texture );
+   m_output->setValue( entity.data(), m_renderableTexture );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

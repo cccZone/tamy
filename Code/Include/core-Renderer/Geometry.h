@@ -24,7 +24,7 @@ typedef std::vector< RenderState* >    RenderStatesVec;
  */
 class Geometry : public SpatialEntity
 {
-   DECLARE_CLASS( Geometry )
+   DECLARE_CLASS()
 
 protected:
    // runtime data
@@ -126,7 +126,7 @@ protected:
    // Object implementation 
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPropertyChanged( Property& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
    // -------------------------------------------------------------------------
    // Entity implementation

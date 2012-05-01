@@ -18,7 +18,7 @@ RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, Ren
    // fill the usages list
    {
       m_ui.usageComboBox->clear();
-      TEnum< TextureUsage > textureUsagesEnum;
+      TReflectionEnum< TextureUsage > textureUsagesEnum;
       std::vector< std::string > textureUsagesNames;
       textureUsagesEnum.getEnumerators( textureUsagesNames );
 
@@ -79,7 +79,7 @@ void RenderTargetDescriptorDialog::changeReadability( int isReadable )
 
 void RenderTargetDescriptorDialog::usageChanged( const QString& usage )
 {
-   TEnum< TextureUsage > textureUsagesEnum;
+   TReflectionEnum< TextureUsage > textureUsagesEnum;
    TextureUsage usageVal = (TextureUsage)textureUsagesEnum.getValue( usage.toStdString() );
    
    m_descriptor.setUsage( usageVal );

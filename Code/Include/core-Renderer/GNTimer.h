@@ -14,7 +14,7 @@ class GSFloatOutput;
 
 class GNTimer : public GeometryShaderNode
 {
-   DECLARE_CLASS( GNTimer )
+   DECLARE_CLASS()
 
 private:
    // static data

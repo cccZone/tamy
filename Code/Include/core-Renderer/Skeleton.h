@@ -24,7 +24,7 @@ class SpatialEntity;
  */
 class Skeleton : public Resource, public RenderResource
 {
-   DECLARE_RESOURCE( Skeleton )
+   DECLARE_RESOURCE()
 
 private:
    D3DXMATRIX                    m_bindShapeMtx;

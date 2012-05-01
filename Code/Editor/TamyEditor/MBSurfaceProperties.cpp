@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MBSurfaceProperties, GraphBlock );
-PROPERTY( TResourceHandle< MNSurfaceProperties >*, m_node );
+BEGIN_OBJECT( MBSurfaceProperties );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< MNSurfaceProperties >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

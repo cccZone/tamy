@@ -1,7 +1,9 @@
 /// @file   core-AI/FSMController.h
+/// @brief  FSM controller
 #ifndef _FSM_CONTROLLER_H
 #define _FSM_CONTROLLER_H
 
+#include "core/ReflectionObject.h"
 #include "core-AI/FSMState.h"
 #include "core-AppFlow/TimeDependent.h"
 #include <vector>
@@ -16,7 +18,7 @@
  * that operate with such controller implementation.
  */
 template< typename Impl >
-class FSMController : public TimeDependent
+class FSMController : public ReflectionObject, public TimeDependent
 {
 private:
    FSMState< Impl >*                   m_currentState;

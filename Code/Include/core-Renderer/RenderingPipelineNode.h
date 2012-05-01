@@ -18,7 +18,7 @@ class RenderingPipelineMechanism;
  */
 class RenderingPipelineNode : public ResourceObject, public GraphBuilderNode< RenderingPipelineNode >
 {
-   DECLARE_CLASS( RenderingPipelineNode )
+   DECLARE_CLASS()
 
 public:
    virtual ~RenderingPipelineNode();
@@ -43,13 +43,13 @@ public:
     * @param dataType      what type of data should the input marshal
     * @param name          input name
     */
-   GBNodeInput< RenderingPipelineNode >* createInput( const Class& dataType, const std::string& name ) const;
+   GBNodeInput< RenderingPipelineNode >* createInput( const ReflectionType& dataType, const std::string& name ) const;
 
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPropertyChanged( Property& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
 protected:
    /**

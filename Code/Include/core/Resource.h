@@ -3,8 +3,7 @@
 #ifndef _RESOURCE_H
 #define _RESOURCE_H
 
-#include "core\Object.h"
-#include "core\Serializer.h"
+#include "core\ReflectionObject.h"
 #include "core\Component.h"
 #include "core\ResourceHandle.h"
 #include "core\FilePath.h"
@@ -13,6 +12,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class ResourcesManager;
+class ReflectionType;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,9 +20,9 @@ class ResourcesManager;
  * This interface marks all resources that can be loaded using 
  * the resources manager.
  */
-class Resource : public Object
+class Resource : public ReflectionObject
 {
-   DECLARE_CLASS( Resource )
+   DECLARE_CLASS()
 
 public:
    enum AccessMode
@@ -32,7 +32,6 @@ public:
    };
 
    friend class ResourcesManager;
-   friend class Object;
 
 private:
    FilePath                         m_filePath;
@@ -65,10 +64,8 @@ public:
 
    /**
     * A helper method allowing to saves the resource to an associated file.
-    *
-    * @param outExternalDependencies   other resources used by this resource
     */
-   void saveResource( ExternalDependenciesSet& outExternalDependencies = ExternalDependenciesSet() );
+   void saveResource();
 
    /**
     * Tells whether the resource is managed by a resources manager.
@@ -105,7 +102,7 @@ public:
     *
     * @param extension
     */
-   static Class findResourceClass( const std::string& extension );
+   static const SerializableReflectionType* findResourceClass( const std::string& extension );
 
    /**
     * Registers a new resource type.
@@ -114,9 +111,7 @@ public:
     * @param accessMode    resource file access mode
     * @param typeName      resource type name
     */
-   static void registerResource( const std::string& extension, 
-                                 AccessMode accessMode, 
-                                 const std::string& typeName );
+   static void registerResource( const std::string& extension, AccessMode accessMode, const std::string& typeName );
 
    // -------------------------------------------------------------------------
    // Managed objects
@@ -187,8 +182,8 @@ protected:
 ///////////////////////////////////////////////////////////////////////////////
 
 // Resource declaration
-#define DECLARE_RESOURCE( ClassName )                                         \
-   DECLARE_CLASS( ClassName )                                                 \
+#define DECLARE_RESOURCE()                                                    \
+   DECLARE_CLASS()                                                            \
    public:                                                                    \
       static const char* getExtension();                                      \
       virtual const char* getVirtualExtension();                              \
@@ -196,44 +191,28 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// Declares a specific resource
-#define BEGIN_RESOURCE( ClassName, ParentClassName, Extension, AccessMode )   \
+// Declares a specific resourceBEGIN_RESOURCE_NO_PARENT
+#define BEGIN_RESOURCE_NO_PARENT( ClassName, Extension, AccessMode )          \
    class RegisterResource##Extension                                          \
    {                                                                          \
    public:                                                                    \
       RegisterResource##Extension()                                           \
       {                                                                       \
-         TypeID< ClassName > type;                                            \
-         Resource::registerResource( #Extension, Resource::AccessMode, type.name() ); \
+         ReflectionTypeID< ClassName > type;                                  \
+         Resource::registerResource( #Extension, Resource::AccessMode, type.m_name ); \
       }                                                                       \
    };                                                                         \
    RegisterResource##Extension resourceTypeRegistryFor_##Extension;           \
    const char* ClassName::getExtension() { return #Extension; }               \
    const char* ClassName::getVirtualExtension() { return ClassName::getExtension(); } \
-   BEGIN_OBJECT( ClassName, ParentClassName )
+   BEGIN_OBJECT( ClassName );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// Declares a specific resource
-#define BEGIN_RESOURCE_TWO_PARENTS( ClassName, Parent1ClassName, Parent2ClassName, Extension, AccessMode )   \
-class RegisterResource##Extension                                             \
-   {                                                                          \
-   public:                                                                    \
-   RegisterResource##Extension()                                              \
-      {                                                                       \
-      TypeID< ClassName > type;                                               \
-      Resource::registerResource( #Extension, Resource::AccessMode, type.name() ); \
-}                                                                             \
-};                                                                            \
-   RegisterResource##Extension resourceTypeRegistryFor_##Extension;           \
-   const char* ClassName::getExtension() { return #Extension; }               \
-   const char* ClassName::getVirtualExtension() { return ClassName::getExtension(); } \
-   BEGIN_RTTI(ClassName)                                                      \
-      PARENT(Parent1ClassName)                                                \
-      PARENT(Parent2ClassName)                                                \
-   END_RTTI                                                                   \
-   IMPLEMENT_OBJECT(ClassName)
-
+// Declares a specific resourceBEGIN_RESOURCE_NO_PARENT
+#define BEGIN_RESOURCE( ClassName, Extension, AccessMode )                    \
+      BEGIN_RESOURCE_NO_PARENT( ClassName, Extension, AccessMode );           \
+      PARENT( Resource );
 
 ///////////////////////////////////////////////////////////////////////////////
 

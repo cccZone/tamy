@@ -3,7 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBAdapter, GraphBlock );
+BEGIN_OBJECT( RPBAdapter );
+   PARENT( GraphBlock );
    PROPERTY( TResourceHandle< RPAdapterNode >*, m_node );
 END_OBJECT();
 

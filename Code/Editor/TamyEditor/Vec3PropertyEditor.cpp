@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vec3PropertyEditor::Vec3PropertyEditor( TEditableProperty< D3DXVECTOR3 >* property )
+Vec3PropertyEditor::Vec3PropertyEditor( TEditableReflectionProperty< D3DXVECTOR3 >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {

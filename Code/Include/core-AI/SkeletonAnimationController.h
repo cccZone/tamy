@@ -23,7 +23,7 @@ class SpatialEntity;
  */
 class SkeletonAnimationController : public Entity
 {
-   DECLARE_CLASS( SkeletonAnimationController )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -77,7 +77,7 @@ protected:
    // ----------------------------------------------------------------------
    // Object implementation
    // ----------------------------------------------------------------------
-   void onPropertyChanged( Property& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
    // ----------------------------------------------------------------------
    // Entity implementation

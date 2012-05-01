@@ -5,10 +5,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( TriangleMesh, GeometryResource, ttm, AM_BINARY )
-   PROPERTY( std::vector<LitVertex>, m_vertices )
-   PROPERTY( std::vector<Face>, m_faces )
-END_RESOURCE()
+BEGIN_RESOURCE_NO_PARENT( TriangleMesh, ttm, AM_BINARY );
+   PARENT( GeometryResource );
+   PROPERTY( std::vector<LitVertex>, m_vertices );
+   PROPERTY( std::vector<Face>, m_faces );
+END_RESOURCE();
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -12,7 +12,7 @@ EntityEditor::EntityEditor( Entity& editedEntity )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void EntityEditor::addEntity( const Class& entityClass )
+void EntityEditor::addEntity( const SerializableReflectionType& entityClass )
 {
    Entity* newEntity = entityClass.instantiate< Entity >();
    m_editedEntity.add( newEntity );

@@ -3,7 +3,7 @@
 #pragma once
 
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
 #include "core\Resource.h"
 #include <vector>
@@ -24,7 +24,7 @@ class ResourcePropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< Resource* >*  m_property;
+   TEditableReflectionProperty< Resource* >*  m_property;
 
    DropArea*                        m_resourceName;
    std::vector< std::string >       m_paths;
@@ -35,7 +35,7 @@ public:
     *
     * @param property         property this editor edits
     */
-   ResourcePropertyEditor( TEditableProperty< Resource* >* property );
+   ResourcePropertyEditor( TEditableReflectionProperty< Resource* >* property );
    ~ResourcePropertyEditor();
 
 public slots:

@@ -15,7 +15,7 @@ class Texture;
 
 class MNSurfaceProperties : public MaterialNode
 {
-   DECLARE_CLASS( MNSurfaceProperties )
+   DECLARE_CLASS()
 
 private:
    // runtime data

@@ -3,96 +3,96 @@
 
 
 ///////////////////////////////////////////////////////////////////////////////
-BEGIN_OBJECT( RPBoolInput, Object );
+BEGIN_OBJECT( RPBoolInput );
    PROPERTY( std::string, m_name );
    PROPERTY( RPOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( RPBoolOutput, Object );
+BEGIN_OBJECT( RPBoolOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< RenderingPipelineNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPFloatInput, Object );
+BEGIN_OBJECT( RPFloatInput );
    PROPERTY( std::string, m_name );
    PROPERTY( RPOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( RPFloatOutput, Object );
+BEGIN_OBJECT( RPFloatOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< RenderingPipelineNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPIntInput, Object );
+BEGIN_OBJECT( RPIntInput );
    PROPERTY( std::string, m_name );
    PROPERTY( RPOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( RPIntOutput, Object );
+BEGIN_OBJECT( RPIntOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< RenderingPipelineNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPMatrixInput, Object );
+BEGIN_OBJECT( RPMatrixInput );
    PROPERTY( std::string, m_name );
    PROPERTY( RPOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( RPMatrixOutput, Object );
+BEGIN_OBJECT( RPMatrixOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< RenderingPipelineNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPStringInput, Object );
+BEGIN_OBJECT( RPStringInput );
    PROPERTY( std::string, m_name );
    PROPERTY( RPOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( RPStringOutput, Object );
+BEGIN_OBJECT( RPStringOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< RenderingPipelineNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPTextureInput, Object );
+BEGIN_OBJECT( RPTextureInput );
    PROPERTY( std::string, m_name );
    PROPERTY( RPOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( RPTextureOutput, Object );
+BEGIN_OBJECT( RPTextureOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< RenderingPipelineNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPVec4Input, Object );
+BEGIN_OBJECT( RPVec4Input );
    PROPERTY( std::string, m_name );
    PROPERTY( RPOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( RPVec4Output, Object );
+BEGIN_OBJECT( RPVec4Output );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< RenderingPipelineNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPVoidInput, Object );
+BEGIN_OBJECT( RPVoidInput );
    PROPERTY( std::string, m_name );
    PROPERTY( RPOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( RPVoidOutput, Object );
+BEGIN_OBJECT( RPVoidOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< RenderingPipelineNode* >, m_connectedNodes );
 END_OBJECT();

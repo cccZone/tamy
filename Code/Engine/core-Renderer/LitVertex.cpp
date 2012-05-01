@@ -1,5 +1,7 @@
 #include "core-Renderer\LitVertex.h"
 #include "core\MatrixWriter.h"
+#include "core\InStream.h"
+#include "core\OutStream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,21 +14,40 @@ DWORD VertexWeight::FVF = D3DFVF_DIFFUSE | D3DFVF_SPECULAR;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Serializer& operator<<( Serializer& serializer, LitVertex& vtx )
+OutStream& operator<<( OutStream& stream, const LitVertex& vtx )
 {
-   serializer << vtx.m_coords;
-   serializer << vtx.m_normal;
-   serializer << vtx.m_textureCoords;
-   return serializer;
+   stream << vtx.m_coords;
+   stream << vtx.m_normal;
+   stream << vtx.m_textureCoords;
+   return stream;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Serializer& operator<<( Serializer& serializer, VertexWeight& weight )
+InStream& operator>>( InStream& stream, LitVertex& vtx )
 {
-   serializer << weight.m_weights;
-   serializer << weight.m_indices;
-   return serializer;
+   stream >> vtx.m_coords;
+   stream >> vtx.m_normal;
+   stream >> vtx.m_textureCoords;
+   return stream;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+OutStream& operator<<( OutStream& stream, const VertexWeight& weight )
+{
+   stream << weight.m_weights;
+   stream << weight.m_indices;
+   return stream;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+InStream& operator>>( InStream& stream, VertexWeight& weight )
+{
+   stream >> weight.m_weights;
+   stream >> weight.m_indices;
+   return stream;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

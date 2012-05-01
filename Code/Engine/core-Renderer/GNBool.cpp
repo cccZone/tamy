@@ -5,9 +5,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GNBool, GeometryShaderNode )
-   PROPERTY_EDIT( "Value", bool, m_value )
-END_OBJECT()
+BEGIN_OBJECT( GNBool );
+   PARENT( GeometryShaderNode );
+   PROPERTY_EDIT( "Value", bool, m_value );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 

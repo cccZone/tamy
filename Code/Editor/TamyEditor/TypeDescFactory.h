@@ -24,10 +24,10 @@ template< typename T >
 class TypeDescFactory : public TreeWidgetDescFactory
 {
 private:
-   QString                 m_iconsDir;
-   const Filesystem&       m_fs;
-   QString                 m_defaultIcon;
-   std::vector< Class >    m_classes;
+   QString                                               m_iconsDir;
+   const Filesystem&                                     m_fs;
+   QString                                               m_defaultIcon;
+   std::vector< const SerializableReflectionType* >      m_classes;
 
 public:
    /**
@@ -44,7 +44,7 @@ public:
     *
     * @param idx     type index.
     */
-   const Class& getClass( unsigned int idx ) const;
+   const SerializableReflectionType& getClass( unsigned int idx ) const;
 
    /**
     * Returns the description for the specified type.
@@ -53,7 +53,7 @@ public:
     * @param outDesc    textual description
     * @param outIcon    visual description
     */
-   void getDesc( const Class& type, QString& outDesc, QIcon& outIcon ) const;
+   void getDesc( const SerializableReflectionType& type, QString& outDesc, QIcon& outIcon ) const;
 
    // -------------------------------------------------------------------------
    // TreeWidgetDescFactory implementation
@@ -62,7 +62,7 @@ public:
    void getDesc( unsigned int idx, QString& outDesc, QIcon& outIcon ) const;
 
 private:
-   QString getIconName( const Class& type ) const;
+   QString getIconName( const SerializableReflectionType& type ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

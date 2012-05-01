@@ -3,7 +3,7 @@
 #ifndef _GRAPH_BUILDER_SOCKETS_H
 #define _GRAPH_BUILDER_SOCKETS_H
 
-#include "core/Object.h"
+#include "core/ReflectionObject.h"
 #include "core/Subject.h"
 #include "core/RuntimeData.h"
 
@@ -21,7 +21,7 @@ enum GBNodeSocketOperation
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class GBNodeSocket : public Object, public Subject< GBNodeSocket, GBNodeSocketOperation >
+class GBNodeSocket : public ReflectionObject, public Subject< GBNodeSocket, GBNodeSocketOperation >
 {
 protected:
    std::string                               m_name;
@@ -42,7 +42,7 @@ public:
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------
-   void onPropertyChanged( Property& property );
+   void onPropertyChanged( ReflectionProperty& property );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ public:
    /**
     * Returns the type of data this output propagates.
     */
-   virtual Class getDataType() const { return Class(); }
+   virtual const ReflectionType* getDataType() const { return NULL; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -140,7 +140,7 @@ public:
    /**
     * Returns the type of data this output propagates.
     */
-   virtual Class getDataType() const { return Class(); }
+   virtual const ReflectionType* getDataType() const { return NULL; }
 
 protected:
    /**
@@ -187,7 +187,7 @@ public:
    // GBNodeOutput implementation
    // -------------------------------------------------------------------------
    void createLayout( RuntimeDataBuffer& data );
-   Class getDataType() const;
+   const ReflectionType* getDataType() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -215,7 +215,7 @@ public:
    // -------------------------------------------------------------------------
    // GBNodeInput implementation
    // -------------------------------------------------------------------------
-   Class getDataType() const;
+   const ReflectionType* getDataType() const;
 
 protected:
    bool canConnect( GBNodeOutput< TNode >& output ) const;
@@ -257,7 +257,7 @@ public:
    // GBNodeOutput implementation
    // -------------------------------------------------------------------------
    void createLayout( RuntimeDataBuffer& data );
-   Class getDataType() const;
+   const ReflectionType* getDataType() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -285,7 +285,7 @@ public:
    // -------------------------------------------------------------------------
    // GBNodeInput implementation
    // -------------------------------------------------------------------------
-   Class getDataType() const;
+   const ReflectionType* getDataType() const;
 
 protected:
    bool canConnect( GBNodeOutput< TNode >& output ) const;

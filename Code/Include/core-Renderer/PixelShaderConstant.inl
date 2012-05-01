@@ -11,9 +11,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template< typename TNode, typename DataType >
+const ReflectionType* TPixelShaderConstant< TNode, DataType >::getDataType() const
+{
+   ReflectionTypesRegistry& registry = ReflectionTypesRegistry::getInstance();
+   return registry.find< DataType >();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 template< typename TNode >
 PSCBool< TNode >::PSCBool( const char* name, bool defaultVal )
-   : PixelShaderConstant< TNode >( name )
+   : TPixelShaderConstant< TNode, bool >( name )
    , m_defaultVal( defaultVal )
 {
 }
@@ -34,7 +45,7 @@ void PSCBool< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< TNo
 
 template< typename TNode >
 PSCInt< TNode >::PSCInt( const char* name, int defaultVal )
-   : PixelShaderConstant< TNode >( name )
+   : TPixelShaderConstant< TNode, int >( name )
    , m_defaultVal( defaultVal )
 {
 }
@@ -55,7 +66,7 @@ void PSCInt< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< TNod
 
 template< typename TNode >
 PSCFloat< TNode >::PSCFloat( const char* name, float defaultVal )
-   : PixelShaderConstant< TNode >( name )
+   : TPixelShaderConstant< TNode, float >( name )
    , m_defaultVal( defaultVal )
 {
 }
@@ -76,7 +87,7 @@ void PSCFloat< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< TN
 
 template< typename TNode >
 PSCString< TNode >::PSCString( const char* name)
-   : PixelShaderConstant< TNode >( name )
+   : TPixelShaderConstant< TNode, std::string >( name )
 {
 }
 
@@ -96,7 +107,7 @@ void PSCString< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< T
 
 template< typename TNode >
 PSCTexture< TNode >::PSCTexture( const char* name )
-   : PixelShaderConstant< TNode >( name )
+   : TPixelShaderConstant< TNode, ShaderTexture >( name )
 {
 }
 
@@ -118,8 +129,8 @@ void PSCTexture< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-PSCVec4< TNode >::PSCVec4( const char* name)
-   : PixelShaderConstant< TNode >( name )
+PSCVec4< TNode >::PSCVec4( const char* name )
+   : TPixelShaderConstant< TNode, D3DXVECTOR4 >( name )
 {
 }
 
@@ -139,7 +150,7 @@ void PSCVec4< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< TNo
 
 template< typename TNode >
 PSCMatrix< TNode >::PSCMatrix( const char* name)
-   : PixelShaderConstant< TNode >( name )
+   : TPixelShaderConstant< TNode, D3DXMATRIX >( name )
 {
 }
 

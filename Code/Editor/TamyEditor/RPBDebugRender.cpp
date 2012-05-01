@@ -3,7 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBDebugRender, GraphBlock );
+BEGIN_OBJECT( RPBDebugRender );
+   PARENT( GraphBlock );
    PROPERTY( TResourceHandle< RPDebugRendererNode >*, m_node );
 END_OBJECT();
 

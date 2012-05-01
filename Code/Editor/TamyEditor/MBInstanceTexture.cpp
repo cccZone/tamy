@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MBInstanceTexture, GraphBlock );
-PROPERTY( TResourceHandle< MNInstanceTexture >*, m_node );
+BEGIN_OBJECT( MBInstanceTexture );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< MNInstanceTexture >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

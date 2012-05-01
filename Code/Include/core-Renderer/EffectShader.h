@@ -20,7 +20,7 @@
  */
 class EffectShader : public Resource, public RenderResource
 {
-   DECLARE_RESOURCE( EffectShader )
+   DECLARE_RESOURCE()
 
 private:
    std::string m_fileName;

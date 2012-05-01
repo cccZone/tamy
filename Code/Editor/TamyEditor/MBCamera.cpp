@@ -3,7 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MBCamera, GraphBlock );
+BEGIN_OBJECT( MBCamera );
+   PARENT( GraphBlock );
    PROPERTY( TResourceHandle< MNCamera >*, m_node );
 END_OBJECT();
 

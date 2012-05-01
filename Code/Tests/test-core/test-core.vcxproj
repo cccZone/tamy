@@ -100,9 +100,11 @@
     <ClCompile Include="GraphTopologicalSortTests.cpp" />
     <ClCompile Include="MemoryPoolTests.cpp" />
     <ClCompile Include="NodesHierarchyTests.cpp" />
-    <ClCompile Include="EnumsTests.cpp" />
+    <ClCompile Include="ReflectionEnumTests.cpp" />
+    <ClCompile Include="ReflectionPropertiesTests.cpp" />
     <ClCompile Include="RoundBufferTest.cpp" />
     <ClCompile Include="RuntimeDataTests.cpp" />
+    <ClCompile Include="SerializationTests.cpp" />
     <ClCompile Include="UpdatingGlobalMatricesTests.cpp" />
     <ClCompile Include="VisitorTests.cpp" />
     <ClCompile Include="DelegatesTests.cpp" />
@@ -126,11 +128,7 @@
     <ClCompile Include="TNodesSpatialStorageTests.cpp" />
     <ClCompile Include="FilesystemTests.cpp" />
     <ClCompile Include="ComponentsSystemTests.cpp" />
-    <ClCompile Include="ObjectTests.cpp" />
-    <ClCompile Include="PropertiesTests.cpp" />
-    <ClCompile Include="ReflectionTests.cpp" />
     <ClCompile Include="ResourcesManagerTests.cpp" />
-    <ClCompile Include="TypeIDTests.cpp" />
     <ClCompile Include="MathTests.cpp" />
   </ItemGroup>
   <ItemGroup>

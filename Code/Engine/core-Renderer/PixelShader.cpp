@@ -11,7 +11,59 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( PixelShader, Resource, tpsh, AM_BINARY )
+OutStream& operator<<( OutStream& stream, const TextureStageParams& params )
+{
+   stream << params.m_addressU;
+   stream << params.m_addressV;
+   stream << params.m_addressW;
+   stream << params.m_minFilter;
+   stream << params.m_magFilter;
+   stream << params.m_mipFilter;
+   return stream;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+InStream& operator>>( InStream& stream, TextureStageParams& params )
+{
+   stream >> params.m_addressU;
+   stream >> params.m_addressV;
+   stream >> params.m_addressW;
+   stream >> params.m_minFilter;
+   stream >> params.m_magFilter;
+   stream >> params.m_mipFilter;
+   return stream;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+OutStream& operator<<( OutStream& stream, const PixelShaderParams& params )
+{
+   stream << params.m_cullingMode;
+   stream << params.m_useZBuffer;
+   stream << params.m_writeToZBuffer;
+
+   return stream;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+InStream& operator>>( InStream& stream, PixelShaderParams& params )
+{
+   stream >> params.m_cullingMode;
+   stream >> params.m_useZBuffer;
+   stream >> params.m_writeToZBuffer;
+
+   return stream;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_RESOURCE( PixelShader, tpsh, AM_BINARY )
    PROPERTY( std::string, m_script )
    PROPERTY( std::string, m_entryFunctionName )
    PROPERTY( PixelShaderParams, m_params )

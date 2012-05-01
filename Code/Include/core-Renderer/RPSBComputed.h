@@ -19,7 +19,7 @@ class RenderingPipelineNode;
  */
 class RPSBComputed : public RPSceneBuilder
 {
-   DECLARE_CLASS( RPSBComputed )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -44,8 +44,8 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPrePropertyChanged( Property& property );
-   void onPropertyChanged( Property& property );
+   void onPrePropertyChanged( ReflectionProperty& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
 protected:
    // -------------------------------------------------------------------------

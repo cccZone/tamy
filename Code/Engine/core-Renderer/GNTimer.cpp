@@ -5,7 +5,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GNTimer, GeometryShaderNode );
+BEGIN_OBJECT( GNTimer );
+   PARENT( GeometryShaderNode );
    PROPERTY_EDIT( "period", float, m_period );
    PROPERTY_EDIT( "amplitude", float, m_amplitude );
 END_OBJECT();

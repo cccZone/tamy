@@ -7,8 +7,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MNCamera, MaterialNode )
-END_OBJECT()
+BEGIN_OBJECT( MNCamera );
+   PARENT( MaterialNode );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -64,8 +65,8 @@ void MNCamera::preRender( Renderer& renderer, const MaterialEntity& entity ) con
    RuntimeDataBuffer& data = entity.data();
    m_nearZ->setValue( data, camera.getNearClippingPlane() );
    m_farZ->setValue( data, camera.getFarClippingPlane() );
-   m_viewportWidth->setValue( data, renderer.getViewportWidth() );
-   m_viewportHeight->setValue( data, renderer.getViewportHeight() );
+   m_viewportWidth->setValue( data, (float)renderer.getViewportWidth() );
+   m_viewportHeight->setValue( data, (float)renderer.getViewportHeight() );
 
    D3DXMATRIX invMtx, transInvMtx;
 

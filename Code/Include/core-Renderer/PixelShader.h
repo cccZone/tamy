@@ -1,12 +1,12 @@
 /// @file   core-Renderer/PixelShader.h
 /// @brief  a pixel shader resource
-
-#pragma once
+#ifndef _PIXEL_SHADER_H
+#define _PIXEL_SHADER_H
 
 #include "core/Resource.h"
 #include "core-Renderer/ShaderRenderCommand.h"
 #include "core/UniqueObject.h"
-#include "core-Renderer\RenderResource.h"
+#include "core-Renderer/RenderResource.h"
 #include <d3dx9.h>
 
 
@@ -14,6 +14,8 @@
 
 class Filesystem;
 class RCBindPixelShader;
+class InStream;
+class OutStream;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,15 +40,11 @@ struct TextureStageParams
       , m_mipFilter( D3DTEXF_LINEAR )
    {}
 
-   void serialize( Serializer& serializer )
-   {
-      serializer << m_addressU;
-      serializer << m_addressV;
-      serializer << m_addressW;
-      serializer << m_minFilter;
-      serializer << m_magFilter;
-      serializer << m_mipFilter;
-   }
+   // -------------------------------------------------------------------------
+   // Serialization support
+   // -------------------------------------------------------------------------
+   friend OutStream& operator<<( OutStream& stream, const TextureStageParams& params );
+   friend InStream& operator>>( InStream& stream, TextureStageParams& params );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,12 +64,11 @@ struct PixelShaderParams
       , m_writeToZBuffer( true )
    {}
 
-   void serialize( Serializer& serializer )
-   {
-      serializer << m_cullingMode;
-      serializer << m_useZBuffer;
-      serializer << m_writeToZBuffer;
-   }
+   // -------------------------------------------------------------------------
+   // Serialization support
+   // -------------------------------------------------------------------------
+   friend OutStream& operator<<( OutStream& stream, const PixelShaderParams& params );
+   friend InStream& operator>>( InStream& stream, PixelShaderParams& params );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -81,7 +78,7 @@ struct PixelShaderParams
  */
 class PixelShader : public Resource, public UniqueObject< PixelShader >, public RenderResource
 {
-   DECLARE_RESOURCE( PixelShader )
+   DECLARE_RESOURCE()
 
 private:
    // static data
@@ -216,3 +213,5 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#endif // _PIXEL_SHADER_H

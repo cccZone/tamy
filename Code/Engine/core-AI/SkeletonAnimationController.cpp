@@ -9,7 +9,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( SkeletonAnimationController, Entity );
+BEGIN_OBJECT( SkeletonAnimationController );
+   PARENT( Entity );
    PROPERTY_EDIT( "Animation", SkeletonAnimation*, m_source );
 END_OBJECT();
 
@@ -67,7 +68,7 @@ void SkeletonAnimationController::setAnimationSource( SkeletonAnimation& source 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkeletonAnimationController::onPropertyChanged( Property& property )
+void SkeletonAnimationController::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

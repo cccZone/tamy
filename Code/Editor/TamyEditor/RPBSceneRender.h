@@ -14,7 +14,7 @@
  */
 class RPBSceneRender : public TPipelineBlock< RPSceneRenderNode, RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPBSceneRender )
+   DECLARE_CLASS()
 
 public:
    /**

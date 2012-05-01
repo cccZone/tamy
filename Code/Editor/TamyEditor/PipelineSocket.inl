@@ -22,7 +22,7 @@ PipelineSocket< TNode >::PipelineSocket( GBNodeSocket& socket )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-Object& PipelineSocket< TNode >::getSocket()
+ReflectionObject& PipelineSocket< TNode >::getSocket()
 {
    TNode& parentNode = dynamic_cast< TNode& >( getParentBlock().getNode() );
    GBNodeSocket* socket = parentNode.findInput( getName() );

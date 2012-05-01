@@ -11,11 +11,9 @@
 
 class MaterialLayout;
 class GraphWidget;
-class Class;
 class GraphBlock;
 class GraphBlockSocket;
 class QPropertiesView;
-class Object;
 
 ///////////////////////////////////////////////////////////////////////////////
 

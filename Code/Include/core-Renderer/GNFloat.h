@@ -13,7 +13,7 @@ class GSFloatOutput;
 
 class GNFloat : public GeometryShaderNode
 {
-   DECLARE_CLASS( GNFloat )
+   DECLARE_CLASS()
 
 private:
    // static data

@@ -1,5 +1,6 @@
 #include "core/FilePath.h"
-#include "core/Serializer.h"
+#include "core/InStream.h"
+#include "core/OutStream.h"
 #include "core/Filesystem.h"
 
 
@@ -102,9 +103,17 @@ std::string FilePath::toAbsolutePath( const Filesystem& fs ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Serializer& operator<<( Serializer& serializer, FilePath& path )
+OutStream& operator<<( OutStream& serializer, FilePath& path )
 {
    serializer << path.m_relativePath;
+   return serializer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+InStream& operator>>( InStream& serializer, FilePath& path )
+{
+   serializer >> path.m_relativePath;
    return serializer;
 }
 

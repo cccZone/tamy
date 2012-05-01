@@ -14,7 +14,7 @@
  */
 class GBFloat : public TPipelineBlock< GNFloat, GeometryShaderNode >
 {
-   DECLARE_CLASS( GBFloat )
+   DECLARE_CLASS()
 
 public:
    /**

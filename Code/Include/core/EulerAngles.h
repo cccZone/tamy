@@ -3,7 +3,7 @@
 /// @file   core\EulerAngles.h
 /// @brief  euler angles representation
 
-#include "core\Class.h"
+#include "core\ReflectionObject.h"
 #include <d3dx9.h>
 #include <iostream>
 
@@ -18,9 +18,9 @@ struct Vector;
  * Mathematical orientation - expressed by three angles to the respective axis
  * of the Cartesian system. The angular value is expressed in radians.
  */
-struct EulerAngles : public RTTIObject
+struct EulerAngles : public ReflectionObject
 {
-   DECLARE_RTTI_STRUCT
+   DECLARE_STRUCT()
 
    /// these values are stored in degrees
    float yaw, pitch, roll;

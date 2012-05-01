@@ -27,7 +27,7 @@ class Loader;
  */
 class Model : public Resource, public ComponentsManager< Model >, public TimeDependent
 {
-   DECLARE_RESOURCE( Model )
+   DECLARE_RESOURCE()
 
 private:
    typedef Delegate< void ( Entity& ) >   Functor;
