@@ -11,9 +11,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template< typename TNode, typename DataType >
+const ReflectionType* TVertexShaderConstant< TNode, DataType >::getDataType() const
+{
+   ReflectionTypesRegistry& registry = ReflectionTypesRegistry::getInstance();
+   return registry.find< DataType >();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
 template< typename TNode >
 VSCBool< TNode >::VSCBool( const char* name, bool defaultVal )
-   : VertexShaderConstant< TNode >( name )
+   : TVertexShaderConstant< TNode, bool >( name )
    , m_defaultVal( defaultVal )
 {
 }
@@ -34,7 +45,7 @@ void VSCBool< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput< TN
 
 template< typename TNode >
 VSCInt< TNode >::VSCInt( const char* name, int defaultVal )
-   : VertexShaderConstant< TNode >( name )
+   : TVertexShaderConstant< TNode, int >( name )
    , m_defaultVal( defaultVal )
 {
 }
@@ -55,7 +66,7 @@ void VSCInt< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput< TNo
 
 template< typename TNode >
 VSCFloat< TNode >::VSCFloat( const char* name, float defaultVal )
-   : VertexShaderConstant< TNode >( name )
+   : TVertexShaderConstant< TNode, float >( name )
    , m_defaultVal( defaultVal )
 {
 }
@@ -76,7 +87,7 @@ void VSCFloat< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput< T
 
 template< typename TNode >
 VSCString< TNode >::VSCString( const char* name)
-   : VertexShaderConstant< TNode >( name )
+   : TVertexShaderConstant< TNode, std::string >( name )
 {
 }
 
@@ -96,7 +107,7 @@ void VSCString< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput< 
 
 template< typename TNode >
 VSCTexture< TNode >::VSCTexture( const char* name )
-   : VertexShaderConstant< TNode >( name )
+   : TVertexShaderConstant< TNode, ShaderTexture >( name )
 {
 }
 
@@ -119,7 +130,7 @@ void VSCTexture< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput<
 
 template< typename TNode >
 VSCVec4< TNode >::VSCVec4( const char* name)
-   : VertexShaderConstant< TNode >( name )
+   : TVertexShaderConstant< TNode, D3DXVECTOR4 >( name )
 {
 }
 
@@ -139,7 +150,7 @@ void VSCVec4< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput< TN
 
 template< typename TNode >
 VSCMatrix< TNode >::VSCMatrix( const char* name)
-   : VertexShaderConstant< TNode >( name )
+   : TVertexShaderConstant< TNode, D3DXMATRIX >( name )
 {
 }
 

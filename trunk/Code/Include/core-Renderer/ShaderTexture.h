@@ -6,7 +6,8 @@
 
 #include "core\Subject.h"
 #include "core-Renderer\ShaderParam.h"
-#include "core/Enum.h"
+#include "core\ReflectionEnum.h"
+#include "core\ReflectionObject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,9 +45,9 @@ enum TextureUsage
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ShaderTexture : public Subject< ShaderTexture, ShaderTextureOps >
+class ShaderTexture : public ReflectionObject, public Subject< ShaderTexture, ShaderTextureOps >
 {
-   DECLARE_RTTI_CLASS
+   DECLARE_CLASS()
 
 public:
    virtual ~ShaderTexture() {}

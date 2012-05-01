@@ -14,7 +14,7 @@
  */
 class MBFloat : public TPipelineBlock< MNFloat, MaterialNode >
 {
-   DECLARE_CLASS( MBFloat )
+   DECLARE_CLASS()
 
 public:
    /**

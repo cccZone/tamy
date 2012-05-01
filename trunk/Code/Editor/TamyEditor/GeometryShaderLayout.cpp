@@ -16,7 +16,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( GeometryShaderLayout, Resource, rgsl, AM_BINARY );
+BEGIN_RESOURCE( GeometryShaderLayout, rgsl, AM_BINARY );
    PROPERTY( GeometryShader*, m_pipeline );
    PROPERTY( std::vector< GraphBlock* >, m_blocks );
    PROPERTY( std::vector< GraphBlockConnection* >, m_connections );

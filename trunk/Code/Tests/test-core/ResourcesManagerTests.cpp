@@ -21,7 +21,7 @@ namespace // anonymous
 
    class ResourceMock : public Resource
    {
-      DECLARE_RESOURCE(ResourceMock)
+      DECLARE_RESOURCE()
 
    private:
       int m_val;
@@ -53,15 +53,14 @@ namespace // anonymous
          addObject( object );
       }
    };
-   BEGIN_RESOURCE(ResourceMock, Resource, txt, AM_BINARY)
-      PROPERTY_EDIT("val", int, m_val)
-   END_OBJECT()
-   REGISTER_RTTI( ResourceMock )
+   BEGIN_RESOURCE(ResourceMock, txt, AM_BINARY);
+      PROPERTY_EDIT("val", int, m_val);
+   END_OBJECT();
    // -------------------------------------------------------------------------
 
    class ObjMock : public ResourceObject
    {
-      DECLARE_CLASS( ObjMock )
+      DECLARE_CLASS()
 
    private:
       int m_val;
@@ -75,15 +74,28 @@ namespace // anonymous
 
       int getValue() const { return m_val; }      
    };
-   BEGIN_OBJECT( ObjMock, ResourceObject )
-   END_OBJECT()
-   REGISTER_RTTI( ObjMock )
+   BEGIN_OBJECT( ObjMock );
+      PARENT( ResourceObject );
+   END_OBJECT();
 } // anonymous
+
+///////////////////////////////////////////////////////////////////////////////
+
+DEFINE_TYPE_ID( ResourceMock )
+DEFINE_TYPE_ID( ObjMock )
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(ResourcesManager, basic)
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
+   typesRegistry.addSerializableType< ObjMock >( "ObjMock", new TSerializableTypeInstantiator< ObjMock >() );
+   typesRegistry.addSerializableType< ResourceObject >( "ResourceObject", NULL );
+   typesRegistry.addSerializableType< ResourceMock >( "ResourceMock", new TSerializableTypeInstantiator< ResourceMock >() );
+   typesRegistry.addSerializableType< ResourceHandle >( "ResourceHandle", NULL  );
+
    ResourcesManager& manager = ResourcesManager::getInstance();
    manager.setFilesystem(new Filesystem("..\\Data"));
 
@@ -106,12 +118,23 @@ TEST(ResourcesManager, basic)
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
    CPPUNIT_ASSERT_EQUAL(1, initializer->objsCount);
    CPPUNIT_ASSERT(&res1 == &res2);
+
+   // clear the types registry
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST( Resource, resourceHandles )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
+   typesRegistry.addSerializableType< ObjMock >( "ObjMock", new TSerializableTypeInstantiator< ObjMock >() );
+   typesRegistry.addSerializableType< ResourceObject >( "ResourceObject", NULL );
+   typesRegistry.addSerializableType< ResourceMock >( "ResourceMock", new TSerializableTypeInstantiator< ResourceMock >() );
+   typesRegistry.addSerializableType< ResourceHandle >( "ResourceHandle", NULL  );
+
    ResourcesManager& mgr = ResourcesManager::getInstance();
    mgr.reset();
 
@@ -131,6 +154,9 @@ TEST( Resource, resourceHandles )
    CPPUNIT_ASSERT_EQUAL( 1, hObj2.get().getValue() );
 
    mgr.reset();
+
+   // clear the types registry
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

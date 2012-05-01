@@ -101,13 +101,7 @@ void GeometryShaderEditor::onDeinitialize( bool saveProgress )
 
 void GeometryShaderEditor::save()
 {
-   ExternalDependenciesSet externalDependencies;
-   m_geometryShaderLayout.saveResource( externalDependencies );
-
-   for ( unsigned int i = 0; i < externalDependencies.size(); ++i )
-   {
-      externalDependencies[ i ]->saveResource( externalDependencies );
-   }
+   m_geometryShaderLayout.saveResource();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -157,7 +151,7 @@ void GeometryShaderEditor::handleBlockSelection( GraphBlock* selectedBlock )
    selectedBlock->viewProperties( *m_blockPropertiesRootView );
 
    // node properties
-   Object& node = selectedBlock->getNode();
+   ReflectionObject& node = selectedBlock->getNode();
    m_nodePropertiesRootView = new QPropertiesView();
    m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
    node.viewProperties( *m_nodePropertiesRootView );
@@ -173,7 +167,7 @@ void GeometryShaderEditor::handleSocketSelection( GraphBlockSocket* selectedSock
    }
 
    // node properties
-   Object& node = selectedSocket->getSocket();
+   ReflectionObject& node = selectedSocket->getSocket();
    m_nodePropertiesRootView = new QPropertiesView();
    m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
    node.viewProperties( *m_nodePropertiesRootView );

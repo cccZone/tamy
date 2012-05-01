@@ -3,7 +3,7 @@
 /// @file   TamyEditor\QPropertyEditor.h
 /// @brief  base class for all qt property editors
 
-#include "core\PropertyEditor.h"
+#include "core\ReflectionPropertyEditor.h"
 #include <QFrame>
 #include <Qstring>
 
@@ -21,7 +21,7 @@ class TamyEditor;
  * This base class will provide all editors with a uniform look & feel.
  */
 class QPropertyEditor : public QFrame,
-                        public TPropertyEditor<QPropertiesView>
+                        public TReflectionPropertyEditor<QPropertiesView>
 {
    Q_OBJECT
 
@@ -33,7 +33,7 @@ public:
    virtual ~QPropertyEditor();
 
    // -------------------------------------------------------------------------
-   // TPropertyEditor implementation
+   // TReflectionPropertyEditor implementation
    // -------------------------------------------------------------------------
    void initialize( QPropertiesView& view );
    void deinitialize( QPropertiesView& view );

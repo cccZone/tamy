@@ -45,7 +45,7 @@ void TPipelineBlock< TNode, TBaseNode >::initialize()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-Object& TPipelineBlock< TNode, TBaseNode >::getNode() 
+ReflectionObject& TPipelineBlock< TNode, TBaseNode >::getNode() 
 { 
    return m_node->get();
 }

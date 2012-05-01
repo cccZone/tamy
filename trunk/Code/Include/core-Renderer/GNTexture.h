@@ -9,12 +9,13 @@
 
 class GSTextureOutput;
 class Texture;
+class RenderableTexture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class GNTexture : public GeometryShaderNode
 {
-   DECLARE_CLASS( GNTexture )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -22,7 +23,8 @@ private:
 
    // runtime data
    GSTextureOutput*     m_output;
- 
+   RenderableTexture*   m_renderableTexture;
+
 public:
    /**
     * Constructor.

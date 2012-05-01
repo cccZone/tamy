@@ -7,7 +7,7 @@ BEGIN_ENUM( VertexDescId );
    ENUM_VAL( VDI_SIMPLE );
    ENUM_VAL( VDI_SIMPLE_SKINNING );
    ENUM_VAL( VDI_SIMPLE_SCREENSPACE );
-END_ENUM( VertexDescId );
+END_ENUM();
 
 ///////////////////////////////////////////////////////////////////////////////
 

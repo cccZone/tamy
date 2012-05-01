@@ -12,7 +12,7 @@ ModelEditor::ModelEditor( Model& scene )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ModelEditor::addEntity( const Class& entityClass )
+void ModelEditor::addEntity( const SerializableReflectionType& entityClass )
 {
    Entity* newEntity = entityClass.instantiate< Entity >();
    m_scene.add( newEntity );

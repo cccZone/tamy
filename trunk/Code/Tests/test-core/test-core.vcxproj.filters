@@ -36,11 +36,11 @@
     <Filter Include="ComponentsSystem">
       <UniqueIdentifier>{3bc15d3e-bae4-4393-b97f-44fab8805b26}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RTTI">
-      <UniqueIdentifier>{2ef540e8-9e80-4f61-b734-bd3a129ce4a5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{543eeab2-a737-4bbe-a03a-4d36b3bf4ddf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI">
+      <UniqueIdentifier>{a308b446-82c1-4c48-b089-998814d6d34f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -113,21 +113,6 @@
     <ClCompile Include="ComponentsSystemTests.cpp">
       <Filter>ComponentsSystem</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectTests.cpp">
-      <Filter>RTTI</Filter>
-    </ClCompile>
-    <ClCompile Include="PropertiesTests.cpp">
-      <Filter>RTTI</Filter>
-    </ClCompile>
-    <ClCompile Include="ReflectionTests.cpp">
-      <Filter>RTTI</Filter>
-    </ClCompile>
-    <ClCompile Include="ResourcesManagerTests.cpp">
-      <Filter>RTTI</Filter>
-    </ClCompile>
-    <ClCompile Include="TypeIDTests.cpp">
-      <Filter>RTTI</Filter>
-    </ClCompile>
     <ClCompile Include="MathTests.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -136,9 +121,6 @@
     </ClCompile>
     <ClCompile Include="GraphTopologicalSortTests.cpp">
       <Filter>DataStructures</Filter>
-    </ClCompile>
-    <ClCompile Include="EnumsTests.cpp">
-      <Filter>RTTI</Filter>
     </ClCompile>
     <ClCompile Include="AlgorithmTests.cpp">
       <Filter>Math</Filter>
@@ -154,6 +136,18 @@
     </ClCompile>
     <ClCompile Include="GraphBuilderTests.cpp">
       <Filter>DataStructures</Filter>
+    </ClCompile>
+    <ClCompile Include="SerializationTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionPropertiesTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionEnumTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourcesManagerTests.cpp">
+      <Filter>RTTI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

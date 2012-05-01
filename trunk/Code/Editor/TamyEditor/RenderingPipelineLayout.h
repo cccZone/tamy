@@ -19,7 +19,7 @@ class PipelineBlock;
  */
 class RenderingPipelineLayout : public PipelineLayout< RenderingPipeline, RenderingPipelineNode >
 {
-   DECLARE_RESOURCE( RenderingPipelineLayout )
+   DECLARE_RESOURCE()
 
 public:
    /**

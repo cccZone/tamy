@@ -14,7 +14,7 @@
  */
 class MBCamera : public TPipelineBlock< MNCamera, MaterialNode >
 {
-   DECLARE_CLASS( MBCamera )
+   DECLARE_CLASS()
 
 public:
    /**

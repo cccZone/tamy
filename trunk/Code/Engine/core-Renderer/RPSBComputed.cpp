@@ -48,7 +48,8 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPSBComputed, RPSceneBuilder );
+BEGIN_OBJECT( RPSBComputed );
+   PARENT( RPSceneBuilder );
    PROPERTY( RPSceneRenderNode*, m_hostNode );
    PROPERTY_EDIT( "Compute pixel shader", PixelShader*, m_shader );
 END_OBJECT();
@@ -100,7 +101,7 @@ void RPSBComputed::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSBComputed::onPrePropertyChanged( Property& property )
+void RPSBComputed::onPrePropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 
@@ -112,7 +113,7 @@ void RPSBComputed::onPrePropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPSBComputed::onPropertyChanged( Property& property )
+void RPSBComputed::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

@@ -8,7 +8,7 @@
 #include <map>
 #include <vector>
 #include <algorithm>
-#include "core\Class.h"
+#include "core\ReflectionObject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,13 +20,13 @@
  * We need this interface so that we can store many creators in a single
  * map and look them up.
  */
-template<class ENTITY, class REPR_BASE>
+template< class ENTITY, class REPR_BASE >
 class Creator
 {
 public:
    virtual ~Creator() {}
 
-   virtual REPR_BASE* operator()(ENTITY* obj) = 0;
+   virtual REPR_BASE* operator()( ENTITY* obj ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,13 +35,13 @@ public:
  * Specialized creator that creates an implementation REPR_IMPL of the REPR_BASE
  * class.
  */
-template<class REPR_BASE, class REPR_IMPL, class ENTITY_BASE, class ENTITY_IMPL>
-class TCreator : public Creator<ENTITY_BASE, REPR_BASE>
+template< class REPR_BASE, class REPR_IMPL, class ENTITY_BASE, class ENTITY_IMPL >
+class TCreator : public Creator< ENTITY_BASE, REPR_BASE >
 {
 public:
-   REPR_BASE* operator()(ENTITY_BASE* obj)
+   REPR_BASE* operator()( ENTITY_BASE* obj )
    {
-      return new REPR_IMPL(*(dynamic_cast<ENTITY_IMPL*> (obj)));
+      return new REPR_IMPL( *( dynamic_cast< ENTITY_IMPL* >( obj ) ) );
    }
 };
 
@@ -51,7 +51,7 @@ public:
  * This factory will create custom objects from one class family 
  * as a representation of custom classes from another class family.
  */
-template<class ENTITY, class REPR_BASE>
+template< class ENTITY, class REPR_BASE >
 class GenericFactory
 {
 private:
@@ -60,11 +60,10 @@ private:
    // -------------------------------------------------------------------------
    struct TypeDef
    {
-      Class                         classType;
-      Creator<ENTITY, REPR_BASE>*   creator;
+      const ReflectionType&               classType;
+      Creator<ENTITY, REPR_BASE>*         creator;
 
-      TypeDef(Class _classType, 
-         Creator<ENTITY, REPR_BASE>* _creator)
+      TypeDef( const ReflectionType& _classType, Creator<ENTITY, REPR_BASE>* _creator )
          : classType(_classType)
          , creator(_creator)
       {}
@@ -100,15 +99,13 @@ public:
     * @return              instance of the factory - this allows to chain
     *                      the calls
     */
-   template<class ENTITY_IMPL, class REPR_IMPL>
+   template< class ENTITY_IMPL, class REPR_IMPL >
    GenericFactory& associate()
    {
       // make a dummy instantiation so that if the entity is a template class,
       // we make sure it gets its rtti type registered
-      ENTITY_IMPL();
-      const Class& entityClass = ENTITY_IMPL::getRTTIClass();
-      m_solidCreators.push_back(new TypeDef(entityClass,
-         new TCreator<REPR_BASE, REPR_IMPL, ENTITY, ENTITY_IMPL>()));
+      const ReflectionType& entityClass = ENTITY_IMPL::getStaticRTTI();
+      m_solidCreators.push_back( new TypeDef( entityClass, new TCreator< REPR_BASE, REPR_IMPL, ENTITY, ENTITY_IMPL >() ) );
 
       return *this;
    }
@@ -128,12 +125,11 @@ public:
     * @return                       instance of the factory - this allows to chain
     *                               the calls
     */
-   template<class ABSTRACT_ENTITY_IMPL, class REPR_IMPL>
+   template< class ABSTRACT_ENTITY_IMPL, class REPR_IMPL >
    GenericFactory& associateAbstract()
    {
-      const Class& entityClass = ABSTRACT_ENTITY_IMPL::getRTTIClass();
-      m_abstractCreators.push_back(new TypeDef(entityClass,
-         new TCreator<REPR_BASE, REPR_IMPL, ENTITY, ABSTRACT_ENTITY_IMPL>()));
+      const ReflectionType& entityClass = ABSTRACT_ENTITY_IMPL::getStaticRTTI();
+      m_abstractCreators.push_back( new TypeDef( entityClass, new TCreator< REPR_BASE, REPR_IMPL, ENTITY, ABSTRACT_ENTITY_IMPL >() ) );
 
       return *this;
    }
@@ -146,12 +142,11 @@ public:
     * @param entity     entity for which we want to create a representation
     * @return           representation
     */ 
-   REPR_BASE* create(ENTITY& entity);
+   REPR_BASE* create( ENTITY& entity );
 
 private:
-   REPR_BASE* createSolid(ENTITY& entity);
-
-   REPR_BASE* createAbstract(ENTITY& entity);
+   REPR_BASE* createSolid( ENTITY& entity );
+   REPR_BASE* createAbstract( ENTITY& entity );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

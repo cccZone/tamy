@@ -10,7 +10,7 @@
 
 class MBPixelShader : public TPipelineBlock< MNPixelShader, MaterialNode >
 {
-   DECLARE_CLASS( MBPixelShader )
+   DECLARE_CLASS()
 
 public:
    /**

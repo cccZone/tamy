@@ -2,7 +2,7 @@
 /// @brief  a descriptor of a rendering target used by the rendering pipeline
 #pragma once
 
-#include "core/Object.h"
+#include "core/ReflectionObject.h"
 #include "core/Color.h"
 #include "core-Renderer/ShaderTexture.h"
 #include "core/RuntimeData.h"
@@ -18,9 +18,9 @@ class Renderer;
 /**
  * A descriptor of a rendering target used by the rendering pipeline.
  */
-class RenderTargetDescriptor : public Object
+class RenderTargetDescriptor : public ReflectionObject
 {
-   DECLARE_CLASS( RenderTargetDescriptor )
+   DECLARE_CLASS()
 
 private:
    std::string                   m_id;

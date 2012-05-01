@@ -3,7 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBPostProcess, GraphBlock );
+BEGIN_OBJECT( RPBPostProcess );
+   PARENT( GraphBlock );
    PROPERTY( TResourceHandle< RPPostProcessNode >*, m_node );
 END_OBJECT();
 

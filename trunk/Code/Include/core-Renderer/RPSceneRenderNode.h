@@ -21,7 +21,7 @@ class MemoryPool;
  */
 class RPSceneRenderNode : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPSceneRenderNode )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -50,7 +50,7 @@ public:
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------
-   void onPropertyChanged( Property& property );
+   void onPropertyChanged( ReflectionProperty& property );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

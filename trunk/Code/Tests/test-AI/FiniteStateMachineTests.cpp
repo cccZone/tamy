@@ -10,78 +10,92 @@ namespace // anonymous
 {
    class StringController : public FSMController< StringController >
    {
-   public:
-      std::string& m_log;
+      DECLARE_CLASS()
 
    public:
-      StringController( std::string& log )
+      std::string* m_log;
+
+   public:
+      StringController( std::string* log = NULL )
          : m_log(log)
       {
       }
    };
+   BEGIN_OBJECT( StringController );
+   END_OBJECT();
 
    // -------------------------------------------------------------------------
 
    class IdleState : public FSMState< StringController >
    {
-      DECLARE_RTTI_CLASS
+      DECLARE_CLASS()
 
    public:
       void activate()
       {
-         fsm().m_log += "idle-Entered; ";
+         *fsm().m_log += "idle-Entered; ";
       }
 
       void deactivate()
       {
-         fsm().m_log += "idle-Exited; ";
+         *fsm().m_log += "idle-Exited; ";
       }
 
       void execute( float timeElapsed )
       {
-         fsm().m_log += "idle-Updated; ";
+         *fsm().m_log += "idle-Updated; ";
       }
    };
-   BEGIN_RTTI( IdleState )
-   END_RTTI
-   REGISTER_RTTI( IdleState )
+   BEGIN_OBJECT( IdleState );
+   END_OBJECT();
 
    // -------------------------------------------------------------------------
 
    class WalkState : public FSMState< StringController >
    {
-      DECLARE_RTTI_CLASS
+      DECLARE_CLASS()
 
    public:
       void activate()
       {
-         fsm().m_log += "walk-Entered; ";
+         *fsm().m_log += "walk-Entered; ";
       }
 
       void deactivate()
       {
-         fsm().m_log += "walk-Exited; ";
+         *fsm().m_log += "walk-Exited; ";
       }
 
       void execute( float timeElapsed )
       {
-         fsm().m_log += "walk-Updated; ";
+         *fsm().m_log += "walk-Updated; ";
          transitionTo< IdleState >();
       }
    };
-   BEGIN_RTTI( WalkState )
-   END_RTTI
-   REGISTER_RTTI( WalkState )
+   BEGIN_OBJECT( WalkState );
+   END_OBJECT();
 
 } // namespace anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
+DEFINE_TYPE_ID( StringController );
+DEFINE_TYPE_ID( IdleState );
+DEFINE_TYPE_ID( WalkState );
+
+///////////////////////////////////////////////////////////////////////////////
+
 TEST( StateMachine, basicSetupAndUpdates )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< StringController >( "StringController", new TSerializableTypeInstantiator< StringController >() ); 
+   typesRegistry.addSerializableType< IdleState >( "IdleState", new TSerializableTypeInstantiator< IdleState >() ); 
+   typesRegistry.addSerializableType< WalkState >( "WalkState", new TSerializableTypeInstantiator< WalkState >() ); 
+
    std::string log;
 
-   StringController fsm( log );
+   StringController fsm( &log );
    fsm.registerState< IdleState >();
    fsm.begin< IdleState >();
 
@@ -93,15 +107,24 @@ TEST( StateMachine, basicSetupAndUpdates )
 
    fsm.update(0);
    CPPUNIT_ASSERT_EQUAL( std::string( "idle-Updated; " ), log );
+
+   // cleanup
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST( StateMachine, transitingBetweenStates )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< StringController >( "StringController", new TSerializableTypeInstantiator< StringController >() ); 
+   typesRegistry.addSerializableType< IdleState >( "IdleState", new TSerializableTypeInstantiator< IdleState >() ); 
+   typesRegistry.addSerializableType< WalkState >( "WalkState", new TSerializableTypeInstantiator< WalkState >() ); 
+
    std::string log;
 
-   StringController fsm( log );
+   StringController fsm( &log );
    fsm.registerState< IdleState >();
    fsm.registerState< WalkState >();
    fsm.begin< WalkState >();
@@ -119,6 +142,9 @@ TEST( StateMachine, transitingBetweenStates )
    fsm.transitionTo< WalkState >();
    fsm.update(0);
    CPPUNIT_ASSERT_EQUAL( std::string( "idle-Exited; walk-Entered; walk-Updated; " ), log );
+
+   // cleanup
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GBFloat, GraphBlock );
-PROPERTY( TResourceHandle< GNFloat >*, m_node );
+BEGIN_OBJECT( GBFloat );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< GNFloat >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

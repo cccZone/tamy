@@ -5,7 +5,7 @@
 #include "core-MVC/Entity.h"
 #include "core-Renderer/RenderState.h"
 #include "core-Renderer/SurfaceProperties.h"
-#include "core/Enum.h"
+#include "core/ReflectionEnum.h"
 #include "core/Observer.h"
 
 
@@ -38,7 +38,7 @@ class MaterialEntity :  public Entity, public TRenderState< MaterialEntity >,
                         public Observer< Material, GraphBuilderOperation >,
                         public Observer< MaterialNode, GraphBuilderNodeOperation >
 {
-   DECLARE_CLASS( MaterialEntity )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -117,8 +117,8 @@ protected:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPrePropertyChanged( Property& property );
-   void onPropertyChanged( Property& property );
+   void onPrePropertyChanged( ReflectionProperty& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
    // -------------------------------------------------------------------------
    // Entity implementation

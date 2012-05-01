@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-StringPropertyEditor::StringPropertyEditor( TEditableProperty< std::string >* property )
+StringPropertyEditor::StringPropertyEditor( TEditableReflectionProperty< std::string >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {

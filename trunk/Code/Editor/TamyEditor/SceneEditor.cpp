@@ -288,20 +288,9 @@ void SceneEditor::saveScene()
    try
    {
       ProgressDialog progressObserver( this );
-      progressObserver.initialize( "Mapping the dependencies", 1 );
-      ExternalDependenciesSet externalDependencies;
-      m_scene.saveResource( externalDependencies );
-
+      progressObserver.initialize( "Saving...", 1 );
+      m_scene.saveResource();
       progressObserver.advance();
-      progressObserver.initialize( "Saving the dependencies", externalDependencies.size() );
-
-      for ( unsigned int i = 0; i < externalDependencies.size(); ++i )
-      {
-         externalDependencies[ i ]->saveResource( externalDependencies );
-         float progress = (float)i / (float)externalDependencies.size();
-         progressObserver.advance();
-      }
-
    }
    catch (std::exception& ex)
    {

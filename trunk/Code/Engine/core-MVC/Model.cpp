@@ -2,7 +2,6 @@
 #include "core-MVC\Entity.h"
 #include "core-MVC\ModelView.h"
 #include "core-MVC\ModelComponent.h"
-#include "core\Serializer.h"
 #include "core\Stack.h"
 #include <stdexcept>
 #include <algorithm>
@@ -60,9 +59,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( Model, Resource, tsc, AM_BINARY )
-   PROPERTY( Entities, m_managedEntities )
-END_RESOURCE()
+BEGIN_RESOURCE( Model, tsc, AM_BINARY );
+   PROPERTY( Entities, m_managedEntities );
+END_RESOURCE();
 
 ///////////////////////////////////////////////////////////////////////////////
 

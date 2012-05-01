@@ -17,7 +17,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( RenderingPipelineLayout, Resource, rpl, AM_BINARY );
+BEGIN_RESOURCE( RenderingPipelineLayout, rpl, AM_BINARY );
    PROPERTY( RenderingPipeline*, m_pipeline );
    PROPERTY( std::vector< GraphBlock* >, m_blocks );
    PROPERTY( std::vector< GraphBlockConnection* >, m_connections );

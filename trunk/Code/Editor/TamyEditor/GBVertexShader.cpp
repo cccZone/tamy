@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GBVertexShader, GraphBlock );
-PROPERTY( TResourceHandle< GNVertexShader >*, m_node );
+BEGIN_OBJECT( GBVertexShader );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< GNVertexShader >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

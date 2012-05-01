@@ -5,9 +5,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GNFloat, GeometryShaderNode )
-   PROPERTY_EDIT( "Value", float, m_value )
-END_OBJECT()
+BEGIN_OBJECT( GNFloat );
+   PARENT( GeometryShaderNode );
+   PROPERTY_EDIT( "Value", float, m_value );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -14,7 +14,7 @@ class SpatialEntity;
 
 class GNSpatialEntity : public GeometryShaderNode
 {
-   DECLARE_CLASS( GNSpatialEntity )
+   DECLARE_CLASS()
 
 private:
    GSMatrixOutput*                     m_worldMtx;

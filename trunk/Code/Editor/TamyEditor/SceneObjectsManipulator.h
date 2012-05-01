@@ -19,6 +19,8 @@ class SceneEditor;
 
 class SceneObjectsManipulator : public SceneRendererInputController, public FSMController< SceneObjectsManipulator >, public SelectionManagerListener
 {
+   DECLARE_CLASS()
+
 private:
    SceneEditor&                        m_sceneEditor;
    TamySceneWidget*                    m_widget;

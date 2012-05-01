@@ -10,7 +10,7 @@
 
 class ModelEntity : public SpatialEntity
 {
-   DECLARE_CLASS( ModelEntity )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -41,7 +41,7 @@ protected:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPropertyChanged( Property& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
    // -------------------------------------------------------------------------
    // Entity implementation

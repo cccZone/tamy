@@ -6,7 +6,6 @@
 
 #include <map>
 #include <string>
-#include "core\Serializer.h"
 #include "core\ComponentsManager.h"
 #include "core\Filesystem.h"
 #include "core\ResourceImporter.h"
@@ -192,7 +191,7 @@ public:
     *                   currently set filesystem)
     * @param outExternalDependencies   other resources used by this resource
     */
-   void save( const FilePath& name, ExternalDependenciesSet& outExternalDependencies = ExternalDependenciesSet() );
+   void save( const FilePath& name );
 
    /**
     * The method scans the resource manager memory in search for loaded resources, 

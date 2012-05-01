@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( VertexShader, Resource, tvsh, AM_BINARY )
+BEGIN_RESOURCE( VertexShader, tvsh, AM_BINARY )
    PROPERTY( std::string, m_script )
    PROPERTY( std::string, m_entryFunctionName )
    PROPERTY( VertexDescId, m_vertexDescId )

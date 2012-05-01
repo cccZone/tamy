@@ -10,12 +10,13 @@
 
 class MSTextureOutput;
 class Texture;
+class RenderableTexture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class MNInstanceTexture : public MaterialNode
 {
-   DECLARE_CLASS( MNInstanceTexture )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -23,7 +24,8 @@ private:
 
    // runtime data
    MSTextureOutput*     m_output;
- 
+   RenderableTexture*   m_renderableTexture;
+
 public:
    /**
     * Constructor.

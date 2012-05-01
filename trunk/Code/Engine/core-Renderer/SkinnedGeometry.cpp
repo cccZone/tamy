@@ -12,9 +12,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( SkinnedGeometry, Geometry )
-   PROPERTY_EDIT( "skeleton", Skeleton*, m_skeleton )
-END_OBJECT()
+BEGIN_OBJECT( SkinnedGeometry );
+   PARENT( Geometry );
+   PROPERTY_EDIT( "skeleton", Skeleton*, m_skeleton );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 

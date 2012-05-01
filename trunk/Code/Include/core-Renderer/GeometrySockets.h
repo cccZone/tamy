@@ -3,7 +3,8 @@
 #pragma once
 
 #include "core/GraphBuilderSockets.h"
-#include "core/Object.h"
+#include "core/ReflectionObject.h"
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,7 +17,7 @@ typedef GBNodeOutput< GeometryShaderNode > GSOutput;
 
 class GSFloatInput : public TGBNodeInput< GeometryShaderNode, float >
 {
-   DECLARE_CLASS( GSFloatInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -27,7 +28,7 @@ public:
 
 class GSFloatOutput : public TGBNodeOutput< GeometryShaderNode, float >
 {
-   DECLARE_CLASS( GSFloatOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -40,7 +41,7 @@ public:
 
 class GSMatrixInput : public TGBNodeInput< GeometryShaderNode, D3DXMATRIX >
 {
-   DECLARE_CLASS( GSMatrixInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -51,7 +52,7 @@ public:
 
 class GSMatrixOutput : public TGBNodeOutput< GeometryShaderNode, D3DXMATRIX >
 {
-   DECLARE_CLASS( GSMatrixOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -64,7 +65,7 @@ public:
 
 class GSTextureInput : public TGBNodePtrInput< GeometryShaderNode, ShaderTexture >
 {
-   DECLARE_CLASS( GSTextureInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -75,7 +76,7 @@ public:
 
 class GSTextureOutput : public TGBNodePtrOutput< GeometryShaderNode, ShaderTexture >
 {
-   DECLARE_CLASS( GSTextureOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -89,7 +90,7 @@ public:
 
 class GSVec4Input : public TGBNodeInput< GeometryShaderNode, D3DXVECTOR4 >
 {
-   DECLARE_CLASS( GSVec4Input )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -100,7 +101,7 @@ public:
 
 class GSVec4Output : public TGBNodeOutput< GeometryShaderNode, D3DXVECTOR4 >
 {
-   DECLARE_CLASS( GSVec4Output )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -113,7 +114,7 @@ public:
 
 class GSBoolInput : public TGBNodeInput< GeometryShaderNode, bool >
 {
-   DECLARE_CLASS( GSBoolInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -124,7 +125,7 @@ public:
 
 class GSBoolOutput : public TGBNodeOutput< GeometryShaderNode, bool >
 {
-   DECLARE_CLASS( GSBoolOutput )
+   DECLARE_CLASS()
 
 public:
    /**

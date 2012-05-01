@@ -31,7 +31,7 @@ public:
    // -------------------------------------------------------------------------
    // GraphBlockSocket implementation
    // -------------------------------------------------------------------------
-   Object& getSocket();
+   ReflectionObject& getSocket();
 
 protected:
    bool onConnectionAdded( GraphBlockConnection& connection );
@@ -47,7 +47,7 @@ protected:
 #define DECLARE_PIPELINE_SOCKET( Class, NodeType, r, g, b )                   \
 class Class : public PipelineSocket< NodeType >                               \
 {                                                                             \
-   DECLARE_CLASS( Class )                                                     \
+   DECLARE_CLASS()                                                            \
                                                                               \
 public:                                                                       \
    Class() : PipelineSocket< NodeType >() {}                                  \

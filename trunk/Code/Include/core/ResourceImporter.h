@@ -11,6 +11,7 @@
 class Resource;
 class ResourcesManager;
 class IProgressObserver;
+class ReflectionType;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +33,7 @@ public:
     *
     * @param resourceType
     */
-   virtual bool canImport( const Class& resourceType ) const = 0;
+   virtual bool canImport( const ReflectionType& resourceType ) const = 0;
 
 protected:
    /**
@@ -71,7 +72,7 @@ public:
    // -------------------------------------------------------------------------
    // ResourceImporter implementation
    // -------------------------------------------------------------------------
-   inline bool canImport( const Class& resourceType ) const { return resourceType.isExactlyA( ResourceType::getRTTIClass() ); }
+   inline bool canImport( const ReflectionType& resourceType ) const { return resourceType.isExactlyA( ResourceType::getStaticRTTI() ); }
 
 };
 

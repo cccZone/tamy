@@ -15,7 +15,7 @@
  */
 class SpatialEntity : public Entity, public Node
 {
-   DECLARE_CLASS(SpatialEntity)
+   DECLARE_CLASS()
 
 public:
    /**

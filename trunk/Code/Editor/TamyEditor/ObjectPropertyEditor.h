@@ -2,9 +2,9 @@
 /// @brief  object property editor
 #pragma once
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
-#include "core\Object.h"
+#include "core\ReflectionObject.h"
 #include <vector>
 #include <string>
 
@@ -26,10 +26,10 @@ class ObjectPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< Object* >*    m_property;
-   QComboBox*                       m_typeSelectionBox;
-   QVBoxLayout*                     m_layout;
-   QPropertiesView*                 m_propertiesView;
+   TEditableReflectionProperty< ReflectionObject* >*     m_property;
+   QComboBox*                                            m_typeSelectionBox;
+   QVBoxLayout*                                          m_layout;
+   QPropertiesView*                                      m_propertiesView;
 
 public:
    /**
@@ -37,7 +37,7 @@ public:
     *
     * @param property         property this editor edits
     */
-   ObjectPropertyEditor( TEditableProperty< Object* >* property );
+   ObjectPropertyEditor( TEditableReflectionProperty< ReflectionObject* >* property );
    ~ObjectPropertyEditor();
 
 public slots:

@@ -11,7 +11,7 @@
 
 class GBSpatialEntity : public TPipelineBlock< GNSpatialEntity, GeometryShaderNode >
 {
-   DECLARE_CLASS( GBSpatialEntity )
+   DECLARE_CLASS()
 
 public:
    /**

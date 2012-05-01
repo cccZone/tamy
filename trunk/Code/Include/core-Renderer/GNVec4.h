@@ -13,7 +13,7 @@ class GSVec4Output;
 
 class GNVec4 : public GeometryShaderNode
 {
-   DECLARE_CLASS( GNVec4 )
+   DECLARE_CLASS()
 
 private:
    // static data

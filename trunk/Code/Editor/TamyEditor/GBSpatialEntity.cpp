@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GBSpatialEntity, GraphBlock );
-PROPERTY( TResourceHandle< GNSpatialEntity >*, m_node );
+BEGIN_OBJECT( GBSpatialEntity );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< GNSpatialEntity >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

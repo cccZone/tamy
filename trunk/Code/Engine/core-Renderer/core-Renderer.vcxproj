@@ -86,6 +86,7 @@
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="FragmentShader.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
+    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="GeometryEntity.cpp" />
     <ClCompile Include="GeometryShaderNode.cpp" />
     <ClCompile Include="GeometryShader.cpp" />
@@ -119,6 +120,7 @@
     <ClCompile Include="RenderResource.cpp" />
     <ClCompile Include="RenderTargetDescriptor.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
+    <ClCompile Include="RenderableTexture.cpp" />
     <ClCompile Include="RPCameraNode.cpp" />
     <ClCompile Include="RPDebugRendererNode.cpp" />
     <ClCompile Include="RPAdapterNode.cpp" />
@@ -160,7 +162,6 @@
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="GeometryResource.cpp" />
     <ClCompile Include="EffectShader.cpp" />
-    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="SingleTextureMaterial.cpp" />
     <ClCompile Include="RenderingView.cpp" />
     <ClCompile Include="VertexShader.cpp" />
@@ -222,6 +223,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderState.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderableTexture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPCameraNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPDebugRendererNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h" />

@@ -14,33 +14,46 @@ namespace // anonymous
 
    class MockNonAnimatedEntity : public Entity
    {
-      DECLARE_CLASS( MockNonAnimatedEntity )
+      DECLARE_CLASS()
    public:
       MockNonAnimatedEntity( const std::string& id = "" ) : Entity( id ) {}
 
    protected:
       Entity* cloneSelf() const { return new MockNonAnimatedEntity(); }
    };
-   BEGIN_OBJECT( MockNonAnimatedEntity, Entity );
+   BEGIN_OBJECT( MockNonAnimatedEntity );
+      PARENT( Entity );
    END_OBJECT();
-   REGISTER_RTTI( MockNonAnimatedEntity );
 
 } // namespace anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
+DEFINE_TYPE_ID( MockNonAnimatedEntity );
+
+///////////////////////////////////////////////////////////////////////////////
+
 TEST( SkeletonAnimationController, architecture )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< SpatialEntity >( "SpatialEntity", new TSerializableTypeInstantiator< SpatialEntity >() ); 
+   typesRegistry.addSerializableType< Entity >( "Entity", new TSerializableTypeInstantiator< Entity >() ); 
+   typesRegistry.addSerializableType< MockNonAnimatedEntity >( "MockNonAnimatedEntity", new TSerializableTypeInstantiator< MockNonAnimatedEntity >() ); 
+   typesRegistry.addSerializableType< SkeletonAnimation >( "SkeletonAnimation", new TSerializableTypeInstantiator< SkeletonAnimation >() ); 
+   typesRegistry.addSerializableType< BoneSRTAnimation >( "BoneSRTAnimation", new TSerializableTypeInstantiator< BoneSRTAnimation >() ); 
+   typesRegistry.addSerializableType< SkeletonAnimationController >( "SkeletonAnimationController", new TSerializableTypeInstantiator< SkeletonAnimationController >() ); 
+
    // create a hierarchy of nodes
-   SpatialEntity root( "root" );
+   SpatialEntity* root = new SpatialEntity( "root" );
    SpatialEntity* hip = new SpatialEntity( "hip" );
    SpatialEntity* leg = new SpatialEntity( "leg" );
    SpatialEntity* anotherLeg = new SpatialEntity( "leg" ); // this one won't get updated due to a duplicated name
    MockNonAnimatedEntity* notANode = new MockNonAnimatedEntity( "notANode" );
    SpatialEntity* gun = new SpatialEntity( "gun" ); // this one won't get updated, because as you'll see in a few lines - it's connected
                                                     // via a non-spatial entity
-   root.add( hip );
-   root.add( notANode );
+   root->add( hip );
+   root->add( notANode );
    hip->add( leg );
    hip->add( anotherLeg );
    notANode->add( gun );
@@ -66,7 +79,7 @@ TEST( SkeletonAnimationController, architecture )
    // add an animation controller to the hierarchy
    SkeletonAnimationController* animController = new SkeletonAnimationController();
    animController->setAnimationSource( animSource );
-   root.add( animController );
+   root->add( animController );
 
    // run the controller and verify the controller requests the animations for all the connected
    // spatial entities - but not the ones that are connected via non-spatial entities
@@ -74,7 +87,7 @@ TEST( SkeletonAnimationController, architecture )
    D3DXMATRIX result, expected;
 
    D3DXMatrixTranslation( &expected, 1, 0, 0 );
-   result = root.getGlobalMtx();
+   result = root->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
    D3DXMatrixTranslation( &expected, 2, 0, 0 );
@@ -93,16 +106,29 @@ TEST( SkeletonAnimationController, architecture )
    D3DXMatrixTranslation( &expected, 0, 0, 0 );
    result = gun->getGlobalMtx();
    COMPARE_MTX( expected, result );
+
+   // cleanup
+   delete root;
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST( SkeletonAnimationController, trackTimeControl )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< SpatialEntity >( "SpatialEntity", new TSerializableTypeInstantiator< SpatialEntity >() ); 
+   typesRegistry.addSerializableType< Entity >( "Entity", new TSerializableTypeInstantiator< Entity >() ); 
+   typesRegistry.addSerializableType< MockNonAnimatedEntity >( "MockNonAnimatedEntity", new TSerializableTypeInstantiator< MockNonAnimatedEntity >() ); 
+   typesRegistry.addSerializableType< SkeletonAnimation >( "SkeletonAnimation", new TSerializableTypeInstantiator< SkeletonAnimation >() ); 
+   typesRegistry.addSerializableType< BoneSRTAnimation >( "BoneSRTAnimation", new TSerializableTypeInstantiator< BoneSRTAnimation >() ); 
+   typesRegistry.addSerializableType< SkeletonAnimationController >( "SkeletonAnimationController", new TSerializableTypeInstantiator< SkeletonAnimationController >() ); 
+
    // create the rig
-   SpatialEntity root( "root" );
+   SpatialEntity* root = new SpatialEntity( "root" );
    SkeletonAnimationController* animController = new SkeletonAnimationController();
-   root.add( animController );
+   root->add( animController );
 
    SkeletonAnimation animSource;
 
@@ -126,6 +152,10 @@ TEST( SkeletonAnimationController, trackTimeControl )
    // .. the same applied for updates that last longer then the animation time
    animController->update( 7.0f );
    CPPUNIT_ASSERT_EQUAL( 1.5f, animController->getTrackTime() );
+
+   // cleanup
+   delete root;
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

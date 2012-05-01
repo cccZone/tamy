@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( Entity, Object )
+BEGIN_OBJECT( Entity )
    PROPERTY_EDIT( "name", std::string, m_name )
    PROPERTY( Entity*, m_parent )
    PROPERTY( Entity::Children, m_managedChildren )
@@ -18,7 +18,6 @@ END_OBJECT()
 Entity::Entity( const std::string& name )
    : m_name( name )
    , m_parent( NULL )
-   , m_properties( NULL )
    , m_hostModel( NULL )
 {
 }
@@ -28,7 +27,6 @@ Entity::Entity( const std::string& name )
 Entity::Entity( const Entity& rhs )
    : m_name( rhs.m_name )
    , m_parent( NULL )
-   , m_properties( new Properties( *rhs.m_properties ) )
    , m_hostModel( NULL )
 {
 
@@ -217,7 +215,7 @@ void Entity::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Entity::onPropertyChanged( Property& property )
+void Entity::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

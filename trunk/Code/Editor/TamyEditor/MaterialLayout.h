@@ -19,7 +19,7 @@ class PipelineBlock;
  */
 class MaterialLayout : public PipelineLayout< Material, MaterialNode >
 {
-   DECLARE_RESOURCE( MaterialLayout )
+   DECLARE_RESOURCE()
 
 public:
    /**

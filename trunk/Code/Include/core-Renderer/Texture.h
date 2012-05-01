@@ -21,9 +21,9 @@ class SingletonsManager;
 /**
  * An image that can be drawn on a rendered surface.
  */
-class Texture : public Resource, public ShaderTexture, public UniqueObject< Texture >, public RenderResource
+class Texture : public Resource, public RenderResource, public UniqueObject< Texture >
 {
-   DECLARE_RESOURCE( Texture )
+   DECLARE_RESOURCE()
 
 private:
    FilePath          m_texFileName;
@@ -74,14 +74,15 @@ public:
     */
    void getBuffer(  byte*& imgBuffer, unsigned int& bufSize ) const;
 
-   // -------------------------------------------------------------------------
-   // ShaderTexture implementation
-   // -------------------------------------------------------------------------
+   /**
+    * Returns the width of the texture.
+    */
    inline unsigned int getWidth() const { return m_width; }
+
+   /**
+    * Returns the height of the texture.
+    */
    inline unsigned int getHeight() const { return m_height; }
-   inline ShaderParam< EffectShader >* createEffectShaderTextureSetter( const std::string& paramName ) { return new ShaderParamTexture< EffectShader >( paramName, *this ); }
-   inline ShaderParam< PixelShader >* createPixelShaderTextureSetter( const std::string& paramName ) { return new ShaderParamTexture< PixelShader >( paramName, *this ); }
-   inline ShaderParam< VertexShader >* createVertexShaderTextureSetter( const std::string& paramName ){ return new ShaderParamTexture< VertexShader >( paramName, *this ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

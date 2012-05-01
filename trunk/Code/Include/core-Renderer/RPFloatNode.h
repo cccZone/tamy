@@ -13,7 +13,7 @@ class RPFloatOutput;
 
 class RPFloatNode : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPFloatNode )
+   DECLARE_CLASS()
 
 private:
    // static data

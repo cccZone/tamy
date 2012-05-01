@@ -5,17 +5,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RenderTargetDescriptor, Object )
-   PROPERTY( std::string, m_id )
-   PROPERTY( bool, m_isDynamic )
-   PROPERTY( unsigned int, m_initialWidth )
-   PROPERTY( unsigned int, m_initialHeight )
-   PROPERTY( float, m_widthScale )
-   PROPERTY( float, m_heightScale )
-   PROPERTY( TextureUsage, m_usage )
-   PROPERTY( bool, m_isReadable )
-   PROPERTY( Color, m_bgColor )
-END_OBJECT()
+BEGIN_OBJECT( RenderTargetDescriptor );
+   PROPERTY( std::string, m_id );
+   PROPERTY( bool, m_isDynamic );
+   PROPERTY( unsigned int, m_initialWidth );
+   PROPERTY( unsigned int, m_initialHeight );
+   PROPERTY( float, m_widthScale );
+   PROPERTY( float, m_heightScale );
+   PROPERTY( TextureUsage, m_usage );
+   PROPERTY( bool, m_isReadable );
+   PROPERTY( Color, m_bgColor );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 

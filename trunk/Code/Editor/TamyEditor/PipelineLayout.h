@@ -36,9 +36,9 @@ public:
    // -------------------------------------------------------------------------
    // GraphLayout implementation
    // -------------------------------------------------------------------------
-   GraphBlock* createNode( const Class& type );
-   void removeNode( Object& node );
-   void getNodesClasses( std::vector< Class >& classes );
+   GraphBlock* createNode( const SerializableReflectionType& type );
+   void removeNode( ReflectionObject& node );
+   void getNodesClasses( std::vector< const SerializableReflectionType* >& classes );
 
 protected:
    // -------------------------------------------------------------------------

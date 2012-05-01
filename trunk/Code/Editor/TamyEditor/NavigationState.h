@@ -20,7 +20,7 @@
 class NavigationState : public FSMState< SceneObjectsManipulator >, public SceneObjectsManipulatorState, public SceneQuery
 {
 public:
-   DECLARE_RTTI_CLASS
+   DECLARE_CLASS()
 
 private:
    D3DXVECTOR2          m_queryPos;

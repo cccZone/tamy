@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBTexture, GraphBlock );
-PROPERTY( TResourceHandle< RPTextureNode >*, m_node );
+BEGIN_OBJECT( RPBTexture );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< RPTextureNode >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

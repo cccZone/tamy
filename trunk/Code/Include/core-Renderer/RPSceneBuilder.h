@@ -2,7 +2,7 @@
 /// @brief  base class for the rendering pipeline scene builders.
 #pragma once
 
-#include "core/Object.h"
+#include "core/ReflectionObject.h"
 #include "core-Renderer/SceneRenderTreeBuilder.h"
 
 
@@ -15,9 +15,9 @@ class RPSceneRenderNode;
 /**
  * Base class for the scene builders that can be embedded in the scene rendering block.
  */
-class RPSceneBuilder : public Object, public SceneRenderTreeBuilder
+class RPSceneBuilder : public ReflectionObject, public SceneRenderTreeBuilder
 {
-   DECLARE_CLASS( RPSceneBuilder )
+   DECLARE_CLASS()
 
 protected:
    // runtime data
@@ -37,7 +37,7 @@ public:
 
 protected:
    /**
-    * Override to add implementation-specific scokets to the host node.
+    * Override to add implementation-specific sockets to the host node.
     *
     * @param hostNode
     */

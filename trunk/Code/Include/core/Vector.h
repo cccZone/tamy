@@ -3,7 +3,7 @@
 /// @file   core\Vector.h
 /// @brief  math vector
 
-#include "core\Class.h"
+#include "core\ReflectionObject.h"
 #include <d3dx9.h>
 #include <iostream>
 
@@ -13,9 +13,9 @@
 /**
  * Mathematical 3d vector.
  */
-struct Vector : public RTTIObject
+struct Vector : public ReflectionObject
 {
-   DECLARE_RTTI_STRUCT
+   DECLARE_STRUCT()
 
    union
    {

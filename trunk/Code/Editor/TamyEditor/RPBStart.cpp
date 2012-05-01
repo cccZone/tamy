@@ -3,7 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBStart, GraphBlock );
+BEGIN_OBJECT( RPBStart );
+   PARENT( GraphBlock );
    PROPERTY( TResourceHandle< RPStartNode >*, m_node );
 END_OBJECT();
 

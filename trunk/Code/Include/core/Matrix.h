@@ -3,7 +3,7 @@
 /// @file   core\Matrix.h
 /// @brief  matrix representation
 
-#include "core\Class.h"
+#include "core\ReflectionObject.h"
 #include <d3dx9.h>
 #include <iostream>
 
@@ -19,9 +19,9 @@ struct EulerAngles;
  * Mathematical matrix - expressed in row major order expressed in left-handed 
  * Cartesian coordinate system.
  */
-struct Matrix : public RTTIObject
+struct Matrix : public ReflectionObject
 {
-   DECLARE_RTTI_STRUCT
+   DECLARE_STRUCT()
 
    union
    {

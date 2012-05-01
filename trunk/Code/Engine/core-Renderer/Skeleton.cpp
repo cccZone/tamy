@@ -5,7 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( Skeleton, Resource, tsk, AM_BINARY )
+BEGIN_RESOURCE( Skeleton, tsk, AM_BINARY )
    PROPERTY( D3DXMATRIX, m_bindShapeMtx )
    PROPERTY( std::vector< std::string >, m_boneNames )
    PROPERTY( std::vector< D3DXMATRIX >, m_invBoneMatrices )

@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MBTimer, GraphBlock );
-PROPERTY( TResourceHandle< MNTimer >*, m_node );
+BEGIN_OBJECT( MBTimer );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< MNTimer >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

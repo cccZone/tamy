@@ -10,7 +10,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MtxPropertyEditor::MtxPropertyEditor( TEditableProperty< D3DXMATRIX >* property )
+MtxPropertyEditor::MtxPropertyEditor( TEditableReflectionProperty< D3DXMATRIX >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {

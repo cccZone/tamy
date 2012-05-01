@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ObjectPropertyEditor::ObjectPropertyEditor( TEditableProperty< Object* >* property )
+ObjectPropertyEditor::ObjectPropertyEditor( TEditableReflectionProperty< ReflectionObject* >* property )
    : QPropertyEditor( property->getLabel().c_str() )
    , m_property( property )
    , m_typeSelectionBox( NULL )
@@ -47,22 +47,22 @@ void ObjectPropertyEditor::onInitialize()
          m_typeSelectionBox->addItem( "" );
 
          // add the selected class, if it's not abstract of course
-         Class propertyClass = m_property->getType();
+         const SerializableReflectionType& propertyClass = static_cast< const SerializableReflectionType& >( m_property->getType() );
          if ( !propertyClass.isAbstract() )
          {
-            m_typeSelectionBox->addItem( propertyClass.getShortName().c_str() );
+            m_typeSelectionBox->addItem( propertyClass.m_name.c_str() );
          }
 
          // and finally add the names of the non-abstract implementations of the property type
-         std::vector< Class > implementations;
-         propertyClass.getImplementations( implementations );
+         std::vector< const SerializableReflectionType* > implementations;
+         propertyClass.collectImplementations( implementations );
 
          unsigned int count = implementations.size();
          for ( unsigned int i = 0; i < count; ++i )
          {
-            if ( !implementations[i].isAbstract() )
+            if ( !implementations[i]->isAbstract() )
             {
-               m_typeSelectionBox->addItem( implementations[i].getShortName().c_str() );
+               m_typeSelectionBox->addItem( implementations[i]->m_name.c_str() );
             }
          }
       }
@@ -70,11 +70,11 @@ void ObjectPropertyEditor::onInitialize()
       connect( m_typeSelectionBox, SIGNAL( currentIndexChanged( const QString& ) ), this, SLOT( valChanged( const QString& ) ) );
 
       // set the proper name of the object's class
-      Object* currObj = m_property->get();
+      ReflectionObject* currObj = m_property->get();
       if ( currObj )
       {
-         Class currClass = currObj->getVirtualClass();
-         int itemIdx = m_typeSelectionBox->findText( currClass.getShortName().c_str() );
+         const SerializableReflectionType& currClass = currObj->getVirtualRTTI();
+         int itemIdx = m_typeSelectionBox->findText( currClass.m_name.c_str() );
          m_typeSelectionBox->setCurrentIndex( itemIdx );
       }
    }
@@ -86,8 +86,8 @@ void ObjectPropertyEditor::refresh()
 {
    // get the selected class name
    QString newClassName = m_typeSelectionBox->currentText();
-   Object* currObj = m_property->get();
-   QString currClassName = currObj ? currObj->getVirtualClass().getShortName().c_str() : "";
+   ReflectionObject* currObj = m_property->get();
+   QString currClassName = currObj ? currObj->getVirtualRTTI().m_name.c_str() : "";
 
    if ( currClassName != newClassName )
    { 
@@ -102,11 +102,11 @@ void ObjectPropertyEditor::refresh()
       else
       {
          // create an instance of the newly selected class
-         Class newClass( newClassName.toStdString() );
-         ASSERT_MSG( newClass.isValid(), "The selected type is invalid" );
-         if ( newClass.isValid() )
+         SerializableReflectionType* newClass = ReflectionTypesRegistry::getInstance().findSerializable( newClassName.toStdString() );
+         ASSERT_MSG( newClass != NULL, "The selected type is invalid" );
+         if ( newClass != NULL )
          {
-            Object* newInstance = newClass.instantiate< Object >();
+            ReflectionObject* newInstance = newClass->instantiate< ReflectionObject >();
             m_property->set( newInstance );
          }
       }

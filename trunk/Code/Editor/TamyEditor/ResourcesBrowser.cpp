@@ -179,7 +179,7 @@ FSTreeNode* ResourcesBrowser::find( const std::string& dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::createResource( const Class& type, const std::string& parentDir )
+void ResourcesBrowser::createResource( const SerializableReflectionType& type, const std::string& parentDir )
 {
    Resource* newResource = type.instantiate< Resource >();
 
@@ -410,7 +410,7 @@ void ResourcesBrowser::addNode( unsigned int idx, const std::string& parentDir )
    }
    else
    {
-      Class type = m_itemsFactory->getClass( idx - 1 );
+      const SerializableReflectionType& type = m_itemsFactory->getClass( idx - 1 );
       createResource( type, parentDir );
    }
 }
@@ -463,16 +463,7 @@ SaveResourceAction::SaveResourceAction( const QIcon& icon, const char* name, QOb
 
 void SaveResourceAction::onTriggered()
 {
-   ExternalDependenciesSet externalDependencies;
-   m_resource.saveResource( externalDependencies );
-
-   if ( m_recursive )
-   {
-      for ( unsigned int i = 0; i < externalDependencies.size(); ++i )
-      {
-         externalDependencies[ i ]->saveResource( externalDependencies );
-      }
-   }
+   m_resource.saveResource();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

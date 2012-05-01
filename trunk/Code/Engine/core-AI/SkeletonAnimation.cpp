@@ -5,10 +5,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( SkeletonAnimation, Resource, tan, AM_BINARY )
-   PROPERTY( float, m_animationLength )
-   PROPERTY( std::vector< BoneSRTAnimation* >, m_boneAnimations )
-END_RESOURCE()
+BEGIN_RESOURCE( SkeletonAnimation, tan, AM_BINARY );
+   PROPERTY( float, m_animationLength );
+   PROPERTY( std::vector< BoneSRTAnimation* >, m_boneAnimations );
+END_RESOURCE();
 
 ///////////////////////////////////////////////////////////////////////////////
 

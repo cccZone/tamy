@@ -24,6 +24,7 @@ namespace // anonymous
 
 } // anonymous namespace
 
+///////////////////////////////////////////////////////////////////////////////
 
 CppUnit::TestSuite& registerSuite(const char* name)
 {

@@ -26,12 +26,12 @@ void FSLeafNode::setEntryIcon( const Filesystem& fs, TypeDescFactory< Resource >
 
    QIcon icon;
 
-   Class resourceType = Resource::findResourceClass( extension.c_str() );
-   if ( resourceType.isValid() )
+   const SerializableReflectionType* resourceType = Resource::findResourceClass( extension.c_str() );
+   if ( resourceType )
    {
       // as the first shot, try creating an icon corresponding to the type of the resource
       QString typeName;
-      itemsFactory.getDesc( resourceType, typeName, icon );
+      itemsFactory.getDesc( *resourceType, typeName, icon );
    }
    
    if ( icon.isNull() )

@@ -1,8 +1,6 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core-MVC\Model.h"
 #include "core-MVC\Entity.h"
-#include "core\Serializer.h"
-#include "core\SerializerImpl.h"
 #include "core\Component.h"
 #include "core-MVC\ModelView.h"
 #include <d3dx9.h>
@@ -16,7 +14,7 @@ namespace // anonymous
 
    class EntityAMock : public Entity
    {
-      DECLARE_CLASS(EntityAMock)
+      DECLARE_CLASS()
 
    private:
       int m_index;
@@ -33,16 +31,16 @@ namespace // anonymous
          return new EntityAMock( m_index );
       }
    };
-   BEGIN_OBJECT(EntityAMock, Entity)
-      PROPERTY_EDIT("index", int, m_index)
-   END_OBJECT()
-   REGISTER_RTTI( EntityAMock );
+   BEGIN_OBJECT(EntityAMock);
+      PARENT(Entity);
+      PROPERTY_EDIT("index", int, m_index);
+   END_OBJECT();
 
    // -------------------------------------------------------------------------
 
    class EntityBMock : public Entity
    {
-      DECLARE_CLASS(EntityBMock)
+      DECLARE_CLASS()
 
    private:
       int m_index;
@@ -59,10 +57,10 @@ namespace // anonymous
          return new EntityBMock( m_index );
       }
    };
-   BEGIN_OBJECT(EntityBMock, Entity)
-      PROPERTY_EDIT("index", int, m_index)
-   END_OBJECT()
-   REGISTER_RTTI( EntityBMock );
+   BEGIN_OBJECT(EntityBMock);
+      PARENT(Entity);
+      PROPERTY_EDIT("index", int, m_index);
+   END_OBJECT();
 
    // -------------------------------------------------------------------------
 
@@ -100,41 +98,6 @@ namespace // anonymous
    {
    public:
       void initialize(Model& mgr) {}
-   };
-
-   // -------------------------------------------------------------------------
-
-   class SerializerImplMock : public SerializerImpl
-   {
-   private:
-      std::vector<byte>& m_storage;
-
-   public:
-      SerializerImplMock(std::vector<byte>& storage)
-         : m_storage(storage)
-      {}
-
-      void write(byte* buf, unsigned int bytesCount)
-      {
-         for (unsigned int i = 0; i < bytesCount; ++i)
-         {
-            m_storage.push_back(buf[i]);
-         }
-      }
-
-      std::size_t read(byte* buf, unsigned int bytesCount) 
-      {
-         unsigned int bytesLeft = m_storage.size();
-         unsigned int bytesToRead = (bytesLeft < bytesCount) ? bytesLeft : bytesCount;
-
-         for (unsigned int i = 0; i < bytesToRead; ++i)
-         {
-            buf[i] = m_storage[0];
-            m_storage.erase(m_storage.begin());
-         }
-
-         return bytesToRead;
-      }
    };
 
    // -------------------------------------------------------------------------
@@ -229,6 +192,11 @@ namespace // anonymous
    };
 
 } // anonymous
+
+///////////////////////////////////////////////////////////////////////////////
+
+DEFINE_TYPE_ID( EntityAMock );
+DEFINE_TYPE_ID( EntityBMock );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -351,20 +319,6 @@ TEST(Model, nestedViews)
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, model->getViewsCount());
    
    delete model;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST(Entity, entitiesReflection)
-{
-   Class c( "::EntityAMock" );
-   Entity* entity = c.instantiate< EntityAMock >();
-   CPPUNIT_ASSERT(NULL != entity);
-
-   EntityAMock* solidTypeEntity = dynamic_cast<EntityAMock*> (entity);
-   CPPUNIT_ASSERT(NULL != solidTypeEntity);
-
-   delete entity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

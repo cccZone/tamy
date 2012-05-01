@@ -14,7 +14,7 @@
  */
 class MBTimer : public TPipelineBlock< MNTimer, MaterialNode >
 {
-   DECLARE_CLASS( MBTimer )
+   DECLARE_CLASS()
 
 public:
    /**

@@ -1,5 +1,6 @@
 #include "core\Resource.h"
 #include "core\ResourcesManager.h"
+#include "core\ReflectionTypesRegistry.h"
 #include "core\Assert.h"
 
 
@@ -36,7 +37,7 @@ namespace
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( Resource, Object )
+BEGIN_ABSTRACT_OBJECT( Resource )
    PROPERTY( std::vector< ResourceObject* >, m_managedObjects )
    PROPERTY( std::vector< int >, m_freeIds )
 END_OBJECT()
@@ -83,7 +84,7 @@ void Resource::setFilePath( const FilePath& path, ResourcesManager* host )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Resource::saveResource( ExternalDependenciesSet& outExternalDependencies )
+void Resource::saveResource()
 {
    if ( m_host == NULL )
    {
@@ -92,7 +93,7 @@ void Resource::saveResource( ExternalDependenciesSet& outExternalDependencies )
 
    onResourceSave( *m_host );
 
-   m_host->save( m_filePath, outExternalDependencies );
+   m_host->save( m_filePath );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -140,17 +141,18 @@ std::ios_base::openmode Resource::getFileAccessMode( const std::string& extensio
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Class Resource::findResourceClass( const std::string& extension )
+const SerializableReflectionType* Resource::findResourceClass( const std::string& extension )
 {
    ResourceAccessModes& accessModesMap = getResourceAccesModesMap();
    ResourceAccessModes::const_iterator it = accessModesMap.find( extension );
    if ( it != accessModesMap.end() )
    {
-      return Class( it->second.typeName );
+      ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+      return typesRegistry.findSerializable( ReflectionType::generateId( it->second.typeName ) );
    }
    else
    {
-      return Class();
+      return NULL;
    }
 }
 

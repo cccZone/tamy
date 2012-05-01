@@ -5,6 +5,7 @@
 /// @brief  base for all component oriented classes
 
 #include "core\Component.h"
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////

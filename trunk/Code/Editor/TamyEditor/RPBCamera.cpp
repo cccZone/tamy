@@ -3,7 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBCamera, GraphBlock );
+BEGIN_OBJECT( RPBCamera );
+   PARENT( GraphBlock );
    PROPERTY( TResourceHandle< RPCameraNode >*, m_node );
 END_OBJECT();
 

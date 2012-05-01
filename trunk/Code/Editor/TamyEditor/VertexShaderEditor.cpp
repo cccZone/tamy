@@ -51,7 +51,7 @@ void VertexShaderEditor::onInitialize()
    // set the properties
    {
       m_ui.vertexDescIdComboBox->clear();
-      TEnum< VertexDescId > vertexDescIdEnum;
+      TReflectionEnum< VertexDescId > vertexDescIdEnum;
       std::vector< std::string > vertexDescIds;
       vertexDescIdEnum.getEnumerators( vertexDescIds );
 
@@ -175,7 +175,7 @@ bool VertexShaderEditor::compile()
 
 void VertexShaderEditor::onVertexIdChange( const QString& newId )
 {
-   TEnum< VertexDescId > vertexDescIdEnum;
+   TReflectionEnum< VertexDescId > vertexDescIdEnum;
    VertexDescId idVal = (VertexDescId)vertexDescIdEnum.getValue( newId.toStdString() );
 
    m_shader.setVertexDescription( idVal );

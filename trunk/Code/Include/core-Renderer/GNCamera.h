@@ -14,7 +14,7 @@ class GSMatrixOutput;
 
 class GNCamera : public GeometryShaderNode
 {
-   DECLARE_CLASS( GNCamera )
+   DECLARE_CLASS()
 
 private:
    GSFloatOutput*    m_nearZ;

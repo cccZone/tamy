@@ -14,7 +14,7 @@
  */
 class RPBCamera : public TPipelineBlock< RPCameraNode, RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPBCamera )
+   DECLARE_CLASS()
 
 public:
    /**

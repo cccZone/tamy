@@ -13,7 +13,7 @@ class MSBoolOutput;
 
 class MNBool : public MaterialNode
 {
-   DECLARE_CLASS( MNBool )
+   DECLARE_CLASS()
 
 private:
    // static data

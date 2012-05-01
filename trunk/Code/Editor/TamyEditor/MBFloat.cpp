@@ -3,7 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MBFloat, GraphBlock );
+BEGIN_OBJECT( MBFloat );
+   PARENT( GraphBlock );
    PROPERTY( TResourceHandle< MNFloat >*, m_node );
 END_OBJECT();
 

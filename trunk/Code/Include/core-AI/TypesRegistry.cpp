@@ -1,11 +1,12 @@
+#include "core/TypeRegistrationMacros.h"
 #include "core-AI.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-REGISTER_RTTI( SkeletonAnimationController );
-REGISTER_RTTI( BoneEntity );
-REGISTER_RTTI( SkeletonAnimation );
-REGISTER_RTTI( BoneSRTAnimation );
+REGISTER_TYPE( SkeletonAnimationController );
+REGISTER_TYPE( BoneEntity );
+REGISTER_TYPE( SkeletonAnimation );
+REGISTER_TYPE( BoneSRTAnimation );
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -5,7 +5,7 @@
 
 #include "SceneTreeEditor.h"
 #include <string>
-#include "core\Class.h"
+#include "core\ReflectionType.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ public:
    // -------------------------------------------------------------------------
    // SceneTreeEditor implementation
    // -------------------------------------------------------------------------
-   void addEntity( const Class& entityClass );
+   void addEntity( const SerializableReflectionType& entityClass );
 
    void removeEntity( Entity* entity );
 

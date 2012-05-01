@@ -14,11 +14,12 @@ BEGIN_ENUM( MaterialTextures );
    ENUM_VAL( MT_DIFFUSE_1 );
    ENUM_VAL( MT_DIFFUSE_2 );
    ENUM_VAL( MT_NORMALS );
-END_ENUM( MaterialTextures );
+END_ENUM();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MaterialEntity, Entity );
+BEGIN_OBJECT( MaterialEntity );
+   PARENT( Entity );
    PROPERTY_EDIT( "material", Material*, m_material );
    PROPERTY_EDIT( "diffuse tex 1", Texture*, m_texture[ MT_DIFFUSE_1 ] );
    PROPERTY_EDIT( "diffuse tex 2", Texture*, m_texture[ MT_DIFFUSE_2 ] );
@@ -60,7 +61,7 @@ void MaterialEntity::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEntity::onPrePropertyChanged( Property& property )
+void MaterialEntity::onPrePropertyChanged( ReflectionProperty& property )
 {
    __super::onPrePropertyChanged( property );
 
@@ -73,7 +74,7 @@ void MaterialEntity::onPrePropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEntity::onPropertyChanged( Property& property )
+void MaterialEntity::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

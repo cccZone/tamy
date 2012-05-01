@@ -3,7 +3,7 @@
 /// @file   TamyEditor\MtxPropertyEditor.h
 /// @brief  matrix property editor
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
 #include <d3dx9.h>
 
@@ -18,7 +18,7 @@ class MtxPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< D3DXMATRIX >*    m_property;
+   TEditableReflectionProperty< D3DXMATRIX >*    m_property;
 
 public:
    /**
@@ -26,7 +26,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   MtxPropertyEditor( TEditableProperty< D3DXMATRIX >* property );
+   MtxPropertyEditor( TEditableReflectionProperty< D3DXMATRIX >* property );
    ~MtxPropertyEditor();
 
 public slots:

@@ -372,7 +372,7 @@ SceneTreeViewer::EntityTreeItem::EntityTreeItem( Entity* entity,
 
    QString typeDesc;
    QIcon icon;
-   Class virtType = entity->getVirtualClass();
+   const SerializableReflectionType& virtType = entity->getVirtualRTTI();
    itemsFactory.getDesc( virtType, typeDesc, icon );
 
    setText( 0, getEntityName( entity ) );

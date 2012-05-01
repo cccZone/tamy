@@ -3,7 +3,7 @@
 #pragma once
 
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
 
 
@@ -17,7 +17,7 @@ class BoolPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< bool >*    m_val;
+   TEditableReflectionProperty< bool >*    m_val;
 
 public:
    /**
@@ -25,7 +25,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   BoolPropertyEditor( TEditableProperty< bool >* property );
+   BoolPropertyEditor( TEditableReflectionProperty< bool >* property );
    ~BoolPropertyEditor();
 
 public slots:

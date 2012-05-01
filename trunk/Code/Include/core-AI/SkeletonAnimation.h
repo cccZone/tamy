@@ -16,7 +16,7 @@ class Node;
 
 class SkeletonAnimation : public Resource
 {
-   DECLARE_RESOURCE( SkeletonAnimation );
+   DECLARE_RESOURCE();
 
 private:
    float                                  m_animationLength;

@@ -11,7 +11,7 @@
 
 class GBVertexShader : public TPipelineBlock< GNVertexShader, GeometryShaderNode >
 {
-   DECLARE_CLASS( GBVertexShader )
+   DECLARE_CLASS()
 
 public:
    /**

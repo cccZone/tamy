@@ -3,7 +3,7 @@
 /// @file   TamyEditor\StringPropertyEditor.h
 /// @brief  string property editor
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
 #include <string>
 
@@ -18,7 +18,7 @@ class StringPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< std::string >* m_property;
+   TEditableReflectionProperty< std::string >* m_property;
 
 public:
    /**
@@ -26,7 +26,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   StringPropertyEditor( TEditableProperty< std::string >* property );
+   StringPropertyEditor( TEditableReflectionProperty< std::string >* property );
    ~StringPropertyEditor();
 
 public slots:

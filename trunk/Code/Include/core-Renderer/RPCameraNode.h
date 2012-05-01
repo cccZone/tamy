@@ -14,7 +14,7 @@ class RPMatrixOutput;
 
 class RPCameraNode : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPCameraNode )
+   DECLARE_CLASS()
 
 private:
    RPFloatOutput*    m_nearZ;

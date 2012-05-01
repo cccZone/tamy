@@ -3,13 +3,13 @@
 #pragma once
 
 #include <string>
-#include "core\Class.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Filesystem;
-class Serializer;
+class OutStream;
+class InStream;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -91,7 +91,8 @@ public:
    // -------------------------------------------------------------------------
    // Serialization support
    // -------------------------------------------------------------------------
-   friend Serializer& operator<<( Serializer& serializer, FilePath& path );
+   friend OutStream& operator<<( OutStream& serializer, FilePath& path );
+   friend InStream& operator>>( InStream& serializer, FilePath& path );
 
    // -------------------------------------------------------------------------
    // Utility methods

@@ -1,8 +1,7 @@
 #include "core\ResourcesManager.h"
-#include "core\Serializer.h"
-#include "core\FileSerializer.h"
 #include "core\IProgressObserver.h"
-
+#include "core\InFileStream.h"
+#include "core\OutFileStream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -224,8 +223,9 @@ Resource* ResourcesManager::loadResource( const FilePath& filePath )
       std::ios_base::openmode fileAccessMode = Resource::getFileAccessMode( extension );
 
       File* file = m_filesystem->open( filePath, std::ios_base::in | fileAccessMode );
-      Loader loader( new FileSerializer( file ) );
-      res = &loader.load( *this );
+      InFileStream fileStream( file );
+      ReflectionLoader loader( fileStream );
+      res = loader.load< Resource >();
 
       observer->advance();
    }
@@ -252,10 +252,10 @@ Resource& ResourcesManager::create( const FilePath& filePath )
       if ( !res )
       {
          // the resource doesn't exist at all - create a new one
-         Class resourceClass = Resource::findResourceClass( filePath.extractExtension() );
-         if ( resourceClass.isValid() )
+         const SerializableReflectionType* resourceClass = static_cast< const SerializableReflectionType* >( Resource::findResourceClass( filePath.extractExtension() ) );
+         if ( resourceClass )
          {
-            res = resourceClass.instantiate< Resource >();
+            res = resourceClass->instantiate< Resource >();
          }
       }
 
@@ -309,7 +309,7 @@ void ResourcesManager::free( Resource* resource )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::save( const FilePath& name, ExternalDependenciesSet& outExternalDependencies )
+void ResourcesManager::save( const FilePath& name )
 {
    Resource* res = findResource( name );
    if ( res != NULL )
@@ -318,8 +318,9 @@ void ResourcesManager::save( const FilePath& name, ExternalDependenciesSet& outE
       std::ios_base::openmode fileAccessMode = Resource::getFileAccessMode( extension );
 
       File* file = m_filesystem->open( name, std::ios_base::out | fileAccessMode );
-      Saver saver( new FileSerializer( file ) );
-      saver.save( *res, outExternalDependencies );
+      OutFileStream fileStream( file );
+      ReflectionSaver saver( fileStream );
+      saver.save( *res );
    }
 }
 

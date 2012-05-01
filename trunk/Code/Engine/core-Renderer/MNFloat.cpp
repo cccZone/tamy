@@ -5,9 +5,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MNFloat, MaterialNode )
-   PROPERTY_EDIT( "Value", float, m_value )
-END_OBJECT()
+BEGIN_OBJECT( MNFloat );
+   PARENT( MaterialNode );
+   PROPERTY_EDIT( "Value", float, m_value );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 

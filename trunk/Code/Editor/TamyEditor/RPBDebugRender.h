@@ -14,7 +14,7 @@
  */
 class RPBDebugRender : public TPipelineBlock< RPDebugRendererNode, RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPBDebugRender )
+   DECLARE_CLASS()
 
 public:
    /**

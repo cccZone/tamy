@@ -3,7 +3,7 @@
 #pragma once
 
 #include <d3dx9.h>
-#include "core/Enum.h"
+#include "core/ReflectionEnum.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

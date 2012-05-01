@@ -19,7 +19,7 @@ class PipelineBlock;
  */
 class GeometryShaderLayout : public PipelineLayout< GeometryShader, GeometryShaderNode >
 {
-   DECLARE_RESOURCE( GeometryShaderLayout )
+   DECLARE_RESOURCE()
 
 public:
    /**

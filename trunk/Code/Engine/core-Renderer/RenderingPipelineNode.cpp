@@ -5,7 +5,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( RenderingPipelineNode, ResourceObject );
+BEGIN_OBJECT( RenderingPipelineNode );
+   PARENT( ResourceObject );
    PROPERTY( InputsMap, m_inputs );
    PROPERTY( OutputsMap, m_outputs );
 END_OBJECT();
@@ -27,7 +28,7 @@ void RenderingPipelineNode::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineNode::onPropertyChanged( Property& property )
+void RenderingPipelineNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 
@@ -66,35 +67,33 @@ void RenderingPipelineNode::update( RenderingPipelineMechanism& host ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GBNodeInput< RenderingPipelineNode >* RenderingPipelineNode::createInput( const Class& dataType, const std::string& name ) const
+GBNodeInput< RenderingPipelineNode >* RenderingPipelineNode::createInput( const ReflectionType& dataType, const std::string& name ) const
 {
-   const std::string& dataTypeName = dataType.getShortName(); 
-
-   if ( dataTypeName == "bool" )
+   if ( dataType.m_name == "bool" )
    {
       return new RPBoolInput( name );
    } 
-   else if ( dataTypeName == "float" )
+   else if ( dataType.m_name == "float" )
    {
       return new RPFloatInput( name );
    } 
-   else if ( dataTypeName == "int" )
+   else if ( dataType.m_name == "int" )
    {
       return new RPIntInput( name );
    } 
-   else if ( dataTypeName == "D3DXMATRIX" )
+   else if ( dataType.m_name == "D3DXMATRIX" )
    {
       return new RPMatrixInput( name );
    } 
-   else if ( dataTypeName == "std::basic_string< std::char_traits< char< std::allocator< char<   > > > > >" )
+   else if ( dataType.m_name == "std::string" )
    {
       return new RPStringInput( name );
    } 
-   else if ( dataTypeName == "ShaderTexture" )
+   else if ( dataType.m_name == "ShaderTexture" )
    {
       return new RPTextureInput( name );
    } 
-   else if ( dataTypeName == "D3DXVECTOR4" )
+   else if ( dataType.m_name == "D3DXVECTOR4" )
    {
       return new RPVec4Input( name );
    } 

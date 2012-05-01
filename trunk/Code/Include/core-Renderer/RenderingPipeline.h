@@ -23,7 +23,7 @@ class RuntimeDataBuffer;
  */
 class RenderingPipeline : public Resource, public GraphBuilder< RenderingPipeline, RenderingPipelineNode >
 {
-   DECLARE_RESOURCE( RenderingPipeline );
+   DECLARE_RESOURCE();
 
 private:
    std::vector< RenderTargetDescriptor* >       m_renderTargets;

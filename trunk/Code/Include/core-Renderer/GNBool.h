@@ -13,7 +13,7 @@ class GSBoolOutput;
 
 class GNBool : public GeometryShaderNode
 {
-   DECLARE_CLASS( GNBool )
+   DECLARE_CLASS()
 
 private:
    // static data

@@ -3,8 +3,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GBCamera, GraphBlock );
-PROPERTY( TResourceHandle< GNCamera >*, m_node );
+BEGIN_OBJECT( GBCamera );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< GNCamera >*, m_node );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

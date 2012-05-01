@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( Material, Resource, tmat, AM_BINARY )
+BEGIN_RESOURCE( Material, tmat, AM_BINARY )
    PROPERTY( std::vector< MaterialNode* >, m_nodes );
 END_RESOURCE()
 

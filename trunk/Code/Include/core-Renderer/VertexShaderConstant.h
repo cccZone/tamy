@@ -4,7 +4,7 @@
 #define _VERTEX_SHADER_CONSTANT_H
 
 #include <string>
-#include "core/Class.h"
+#include "core/ReflectionType.h"
 #include "core/GraphBuilderSockets.h"
 #include <d3dx9.h>
 
@@ -39,7 +39,7 @@ public:
     *
     * @param input
     */
-   virtual Class getDataType() const = 0;
+   virtual const ReflectionType* getDataType() const = 0;
 
    /**
     * Sets the constant value on the specified render command. The value
@@ -63,10 +63,35 @@ protected:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Type-specific vertex shader constant.
+ */
+template< typename TNode, typename DataType >
+class TVertexShaderConstant : public VertexShaderConstant< TNode >
+{
+public:
+   virtual ~TVertexShaderConstant() {}
+
+   // -------------------------------------------------------------------------
+   // VertexShaderConstant implementation
+   // -------------------------------------------------------------------------
+   const ReflectionType* getDataType() const;
+
+protected:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
+   TVertexShaderConstant( const char* name ) : VertexShaderConstant( name ) {}
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
  * Scalar bool constant.
  */
 template< typename TNode >
-class VSCBool : public VertexShaderConstant< TNode >
+class VSCBool : public TVertexShaderConstant< TNode, bool >
 {
 private:
    bool           m_defaultVal;
@@ -83,7 +108,6 @@ public:
    // -------------------------------------------------------------------------
    // VertexShaderConstant implementation
    // -------------------------------------------------------------------------
-   Class getDataType() const { return Class::createClass< bool >(); }
    void setValue( RCBindVertexShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
@@ -93,7 +117,7 @@ public:
  * Scalar int constant.
  */
 template< typename TNode >
-class VSCInt : public VertexShaderConstant< TNode >
+class VSCInt : public TVertexShaderConstant< TNode, int >
 {
 private:
    int           m_defaultVal;
@@ -110,7 +134,6 @@ public:
    // -------------------------------------------------------------------------
    // VertexShaderConstant implementation
    // -------------------------------------------------------------------------
-   Class getDataType() const { return Class::createClass< int >(); }
    void setValue( RCBindVertexShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
@@ -120,7 +143,7 @@ public:
  * Scalar float constant.
  */
 template< typename TNode >
-class VSCFloat : public VertexShaderConstant< TNode >
+class VSCFloat : public TVertexShaderConstant< TNode, float >
 {
 private:
    float           m_defaultVal;
@@ -137,7 +160,6 @@ public:
    // -------------------------------------------------------------------------
    // VertexShaderConstant implementation
    // -------------------------------------------------------------------------
-   Class getDataType() const { return Class::createClass< float >(); }
    void setValue( RCBindVertexShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
@@ -147,7 +169,7 @@ public:
  * Scalar string constant.
  */
 template< typename TNode >
-class VSCString : public VertexShaderConstant< TNode >
+class VSCString : public TVertexShaderConstant< TNode, std::string >
 {
 public:
    /**
@@ -160,7 +182,6 @@ public:
    // -------------------------------------------------------------------------
    // VertexShaderConstant implementation
    // -------------------------------------------------------------------------
-   Class getDataType() const { return Class::createClass< std::string >(); }
    void setValue( RCBindVertexShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
@@ -170,7 +191,7 @@ public:
  * Scalar texture constant.
  */
 template< typename TNode >
-class VSCTexture : public VertexShaderConstant< TNode >
+class VSCTexture : public TVertexShaderConstant< TNode, ShaderTexture >
 {
 public:
    /**
@@ -183,7 +204,6 @@ public:
    // -------------------------------------------------------------------------
    // VertexShaderConstant implementation
    // -------------------------------------------------------------------------
-   Class getDataType() const { return Class::createClass< ShaderTexture >(); }
    void setValue( RCBindVertexShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
@@ -193,7 +213,7 @@ public:
  * Scalar vector constant.
  */
 template< typename TNode >
-class VSCVec4 : public VertexShaderConstant< TNode >
+class VSCVec4 : public TVertexShaderConstant< TNode, D3DXVECTOR4 >
 {
 public:
    /**
@@ -206,7 +226,6 @@ public:
    // -------------------------------------------------------------------------
    // VertexShaderConstant implementation
    // -------------------------------------------------------------------------
-   Class getDataType() const { return Class::createClass< D3DXVECTOR4 >(); }
    void setValue( RCBindVertexShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 
@@ -216,7 +235,7 @@ public:
  * Matrix4x4 constant.
  */
 template< typename TNode >
-class VSCMatrix : public VertexShaderConstant< TNode >
+class VSCMatrix : public TVertexShaderConstant< TNode, D3DXMATRIX >
 {
 public:
    /**
@@ -229,7 +248,6 @@ public:
    // -------------------------------------------------------------------------
    // VertexShaderConstant implementation
    // -------------------------------------------------------------------------
-   Class getDataType() const { return Class::createClass< D3DXMATRIX >(); }
    void setValue( RCBindVertexShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data );
 };
 

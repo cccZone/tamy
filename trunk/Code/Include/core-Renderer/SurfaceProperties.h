@@ -13,7 +13,7 @@
  */
 class SurfaceProperties
 {
-   DECLARE_RTTI_CLASS
+   DECLARE_CLASS()
 
 private:
    Color m_ambient;

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core/GraphBuilderSockets.h"
-#include "core/Object.h"
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@ typedef GBNodeOutput< MaterialNode > MSOutput;
 
 class MSFloatInput : public TGBNodeInput< MaterialNode, float >
 {
-   DECLARE_CLASS( MSFloatInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -27,7 +27,7 @@ public:
 
 class MSFloatOutput : public TGBNodeOutput< MaterialNode, float >
 {
-   DECLARE_CLASS( MSFloatOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -40,7 +40,7 @@ public:
 
 class MSMatrixInput : public TGBNodeInput< MaterialNode, D3DXMATRIX >
 {
-   DECLARE_CLASS( MSMatrixInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -51,7 +51,7 @@ public:
 
 class MSMatrixOutput : public TGBNodeOutput< MaterialNode, D3DXMATRIX >
 {
-   DECLARE_CLASS( MSMatrixOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -64,7 +64,7 @@ public:
 
 class MSTextureInput : public TGBNodePtrInput< MaterialNode, ShaderTexture >
 {
-   DECLARE_CLASS( MSTextureInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -75,7 +75,7 @@ public:
 
 class MSTextureOutput : public TGBNodePtrOutput< MaterialNode, ShaderTexture >
 {
-   DECLARE_CLASS( MSTextureOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -89,7 +89,7 @@ public:
 
 class MSVec4Input : public TGBNodeInput< MaterialNode, D3DXVECTOR4 >
 {
-   DECLARE_CLASS( MSVec4Input )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -100,7 +100,7 @@ public:
 
 class MSVec4Output : public TGBNodeOutput< MaterialNode, D3DXVECTOR4 >
 {
-   DECLARE_CLASS( MSVec4Output )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -113,7 +113,7 @@ public:
 
 class MSBoolInput : public TGBNodeInput< MaterialNode, bool >
 {
-   DECLARE_CLASS( MSBoolInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -124,7 +124,7 @@ public:
 
 class MSBoolOutput : public TGBNodeOutput< MaterialNode, bool >
 {
-   DECLARE_CLASS( MSBoolOutput )
+   DECLARE_CLASS()
 
 public:
    /**

@@ -14,6 +14,7 @@
 
 class PixelShader;
 class Texture;
+class RenderableTexture;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,12 +24,14 @@ class Texture;
  */
 class SingleTextureMaterial : public Entity, public TRenderState< SingleTextureMaterial >
 {
-   DECLARE_CLASS( SingleTextureMaterial )
+   DECLARE_CLASS()
 
 private:
    PixelShader*         m_shader;
    SurfaceProperties    m_surfaceProperties;
    Texture*             m_texture;
+
+   RenderableTexture*   m_renderableTexture;
 
 public:
    /**

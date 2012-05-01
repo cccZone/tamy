@@ -2,7 +2,7 @@
 /// @brief  animation data stream for a single bone
 #pragma once
 
-#include "core/Object.h"
+#include "core/ReflectionObject.h"
 #include "core-AI/AnimationTimeline.h"
 #include <string>
 #include <vector>
@@ -18,9 +18,9 @@ class BoneSRTAnimationPlayer;
 /**
  * Animation data stream for a single bone.
  */
-class BoneSRTAnimation : public Object
+class BoneSRTAnimation : public ReflectionObject
 {
-   DECLARE_CLASS( BoneSRTAnimation );
+   DECLARE_CLASS();
 
 private:
    struct VecLerp

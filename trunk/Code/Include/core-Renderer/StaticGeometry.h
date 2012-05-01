@@ -18,7 +18,7 @@ class SpatialEntity;
  */
 class StaticGeometry : public Geometry
 {
-   DECLARE_CLASS( StaticGeometry )
+   DECLARE_CLASS()
 
 private:
    VertexShader*              m_vertexShader;

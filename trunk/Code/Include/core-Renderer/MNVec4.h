@@ -13,7 +13,7 @@ class MSVec4Output;
 
 class MNVec4 : public MaterialNode
 {
-   DECLARE_CLASS( MNVec4 )
+   DECLARE_CLASS()
 
 private:
    // static data

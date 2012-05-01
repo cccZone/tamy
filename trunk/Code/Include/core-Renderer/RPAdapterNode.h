@@ -12,7 +12,7 @@
  */
 class RPAdapterNode : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPAdapterNode )
+   DECLARE_CLASS()
 
 public:
    RPAdapterNode();

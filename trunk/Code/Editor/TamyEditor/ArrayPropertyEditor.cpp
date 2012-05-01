@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ArrayPropertyEditor::ArrayPropertyEditor( TEditableProperty< VectorProperty >* property )
+ArrayPropertyEditor::ArrayPropertyEditor( TEditableReflectionProperty< VectorReflectionProperty >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {
@@ -22,7 +22,7 @@ ArrayPropertyEditor::~ArrayPropertyEditor()
 
 void ArrayPropertyEditor::onInitialize()
 {
-   VectorProperty& array = m_property->get();
+   VectorReflectionProperty& array = m_property->get();
    unsigned int count = array.size();
    for ( unsigned int i = 0; i < count; ++i )
    {

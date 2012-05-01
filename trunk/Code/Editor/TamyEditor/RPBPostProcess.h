@@ -11,7 +11,7 @@
 
 class RPBPostProcess : public TPipelineBlock< RPPostProcessNode, RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPBPostProcess )
+   DECLARE_CLASS()
 
 public:
    /**

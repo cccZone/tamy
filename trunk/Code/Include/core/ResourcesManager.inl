@@ -61,7 +61,7 @@ TResourceImporter< ResourceType >* ResourcesManager::createImporter( const FileP
          IProgressObserver* observer = createObserver();
          ResourceImporter* tmpImporter = (*it)->create( name, *this, observer );   
 
-         if ( tmpImporter && tmpImporter->canImport( ResourceType::getRTTIClass() ) )
+         if ( tmpImporter && tmpImporter->canImport( ResourceType::getStaticRTTI() ) )
          {
             // found it
             importer = tmpImporter;

@@ -121,8 +121,11 @@ void VertexShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNod
    {
       // add it to the new node
       GBNodeInput< TNode >* input = m_hostNode->findInput( inputName );
-      Class constantDataType = m_constant->getDataType();
-      if ( input && !constantDataType.isExactlyA( input->getDataType() ) )
+      const ReflectionType* constantDataType = m_constant->getDataType();
+      const ReflectionType* inputDataType = input->getDataType();
+      ASSERT_MSG( constantDataType && inputDataType, "Vertex shader constant or input type not registered with the reflection system" );
+
+      if ( input && !constantDataType->isExactlyA( *inputDataType ) )
       {
          m_hostNode->removeInput( inputName );
          input = NULL;
@@ -130,7 +133,7 @@ void VertexShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNod
 
       if ( !input )
       {
-         input = hostNode->createInput( constantDataType, inputName );
+         input = hostNode->createInput( *constantDataType, inputName );
          hostNode->defineInput( input );
          ASSERT_MSG( input != NULL, "No input available that's able to marshal the specified data type" );
       }

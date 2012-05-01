@@ -14,7 +14,7 @@
  */
 class MBSurfaceProperties : public TPipelineBlock< MNSurfaceProperties, MaterialNode >
 {
-   DECLARE_CLASS( MBSurfaceProperties )
+   DECLARE_CLASS()
 
 public:
    /**

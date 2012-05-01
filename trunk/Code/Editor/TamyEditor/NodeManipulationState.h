@@ -18,7 +18,7 @@ enum NodeTransformControlMode;
  */
 class NodeManipulationState : public FSMState< SceneObjectsManipulator >, public SceneObjectsManipulatorState
 {
-   DECLARE_RTTI_CLASS
+   DECLARE_CLASS()
 
 public:
    // ----------------------------------------------------------------------

@@ -12,7 +12,7 @@ GBNodeSocket::GBNodeSocket( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GBNodeSocket::onPropertyChanged( Property& property )
+void GBNodeSocket::onPropertyChanged( ReflectionProperty& property )
 {
    notify( GBNSO_CHANGED );
 }

@@ -59,21 +59,6 @@
     <Filter Include="ComponentsSystem\SingletonsManager">
       <UniqueIdentifier>{f1726c59-336f-412a-90e2-a2fea7248789}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RTTI">
-      <UniqueIdentifier>{3f912abe-f9cc-47f7-aeb8-c293a3e4f92c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RTTI\Serialization">
-      <UniqueIdentifier>{ac0259ad-2b2a-47af-9806-b1d391c4c063}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RTTI\Serialization\SerializerImplementations">
-      <UniqueIdentifier>{d2be9b57-cdb2-466f-831a-8634fc0d7ee6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RTTI\Classes">
-      <UniqueIdentifier>{56b8ebb9-6ac6-4956-8eab-ac6e7e0e73f9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RTTI\Properties">
-      <UniqueIdentifier>{0a7610fb-7c0b-42bf-9439-0f8da95a2aa7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{02e931f0-fe38-444e-9402-41963299770c}</UniqueIdentifier>
     </Filter>
@@ -88,6 +73,24 @@
     </Filter>
     <Filter Include="DataStructures\DataPipeline">
       <UniqueIdentifier>{0e3baadd-c362-43f6-9d63-4a4be0cf7ef5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Streams\Implementations">
+      <UniqueIdentifier>{247dd045-277e-4e66-9183-d8a8f4d7ed0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI">
+      <UniqueIdentifier>{aaa9972a-789b-44d9-aa74-17dabd4b8dca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI\Serialization">
+      <UniqueIdentifier>{200bec9a-c891-4201-9175-996f5a2b967f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI\Core">
+      <UniqueIdentifier>{9a38afcd-5017-4ce0-88e8-38408222e14a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI\Enum">
+      <UniqueIdentifier>{917a03b6-d0cc-4b0e-8b4d-883e567a8214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RTTI\Properties">
+      <UniqueIdentifier>{24a98faf-4c75-4b49-9e33-7cce72bc1a49}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -145,30 +148,6 @@
     <ClCompile Include="SingletonsManager.cpp">
       <Filter>ComponentsSystem\SingletonsManager</Filter>
     </ClCompile>
-    <ClCompile Include="Object.cpp">
-      <Filter>RTTI</Filter>
-    </ClCompile>
-    <ClCompile Include="Serializer.cpp">
-      <Filter>RTTI\Serialization</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSerializer.cpp">
-      <Filter>RTTI\Serialization\SerializerImplementations</Filter>
-    </ClCompile>
-    <ClCompile Include="Class.cpp">
-      <Filter>RTTI\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="ClassesRegistry.cpp">
-      <Filter>RTTI\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="ClassTemplate.cpp">
-      <Filter>RTTI\Classes</Filter>
-    </ClCompile>
-    <ClCompile Include="Properties.cpp">
-      <Filter>RTTI\Properties</Filter>
-    </ClCompile>
-    <ClCompile Include="Property.cpp">
-      <Filter>RTTI\Properties</Filter>
-    </ClCompile>
     <ClCompile Include="Resource.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
@@ -194,9 +173,6 @@
       <Filter>Resources</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Include\core\TypesRegistry.cpp" />
-    <ClCompile Include="Enum.cpp">
-      <Filter>RTTI\Classes</Filter>
-    </ClCompile>
     <ClCompile Include="Algorithms.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -226,6 +202,54 @@
     </ClCompile>
     <ClCompile Include="ResourceImporter.cpp">
       <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="InArrayStream.cpp">
+      <Filter>Streams\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="OutArrayStream.cpp">
+      <Filter>Streams\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionSaver.cpp">
+      <Filter>RTTI\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionLoader.cpp">
+      <Filter>RTTI\Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="InStream.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="OutStream.cpp">
+      <Filter>Streams</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionObject.cpp">
+      <Filter>RTTI\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionType.cpp">
+      <Filter>RTTI\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionTypeComponent.cpp">
+      <Filter>RTTI\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionTypesRegistry.cpp">
+      <Filter>RTTI\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionTypeID.cpp">
+      <Filter>RTTI\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionProperties.cpp">
+      <Filter>RTTI\Properties</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionProperty.cpp">
+      <Filter>RTTI\Properties</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionEnum.cpp">
+      <Filter>RTTI\Enum</Filter>
+    </ClCompile>
+    <ClCompile Include="InFileStream.cpp">
+      <Filter>Streams\Implementations</Filter>
+    </ClCompile>
+    <ClCompile Include="OutFileStream.cpp">
+      <Filter>Streams\Implementations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,45 +421,6 @@
     <ClInclude Include="..\..\Include\core\SingletonsManager.h">
       <Filter>ComponentsSystem\SingletonsManager</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\Object.h">
-      <Filter>RTTI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Serializable.h">
-      <Filter>RTTI\Serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Serializer.h">
-      <Filter>RTTI\Serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\SerializerImpl.h">
-      <Filter>RTTI\Serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\FileSerializer.h">
-      <Filter>RTTI\Serialization\SerializerImplementations</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Class.h">
-      <Filter>RTTI\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\ClassesRegistry.h">
-      <Filter>RTTI\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\ClassTemplate.h">
-      <Filter>RTTI\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\TypeID.h">
-      <Filter>RTTI\Classes</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Properties.h">
-      <Filter>RTTI\Properties</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\PropertiesView.h">
-      <Filter>RTTI\Properties</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Property.h">
-      <Filter>RTTI\Properties</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\PropertyEditor.h">
-      <Filter>RTTI\Properties</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\Resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
@@ -476,9 +461,6 @@
     <ClInclude Include="..\..\Include\core\GraphAlgorithms.h">
       <Filter>DataStructures\Graphs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\Enum.h">
-      <Filter>RTTI\Classes</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\IDebugDraw.h">
       <Filter>Misc</Filter>
     </ClInclude>
@@ -487,9 +469,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\RuntimeData.h">
       <Filter>DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Casts.h">
-      <Filter>RTTI</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\MemoryPool.h">
       <Filter>DataStructures</Filter>
@@ -508,6 +487,69 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\ResourceImporter.h">
       <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\InStream.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\OutStream.h">
+      <Filter>Streams</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\InArrayStream.h">
+      <Filter>Streams\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\OutArrayStream.h">
+      <Filter>Streams\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionSaver.h">
+      <Filter>RTTI\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionLoader.h">
+      <Filter>RTTI\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionObjectsTracker.h">
+      <Filter>RTTI\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\types.h">
+      <Filter>RTTI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionObject.h">
+      <Filter>RTTI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionType.h">
+      <Filter>RTTI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionTypeComponent.h">
+      <Filter>RTTI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionTypesRegistry.h">
+      <Filter>RTTI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionTypeID.h">
+      <Filter>RTTI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionProperties.h">
+      <Filter>RTTI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionPropertiesView.h">
+      <Filter>RTTI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionProperty.h">
+      <Filter>RTTI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionPropertyEditor.h">
+      <Filter>RTTI\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionEnum.h">
+      <Filter>RTTI\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\InFileStream.h">
+      <Filter>Streams\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\OutFileStream.h">
+      <Filter>Streams\Implementations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\TypeRegistrationMacros.h">
+      <Filter>RTTI\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -571,27 +613,6 @@
     <None Include="..\..\Include\core\SingletonsManager.inl">
       <Filter>ComponentsSystem\SingletonsManager</Filter>
     </None>
-    <None Include="..\..\Include\core\Serializable.inl">
-      <Filter>RTTI\Serialization</Filter>
-    </None>
-    <None Include="..\..\Include\core\Serializer.inl">
-      <Filter>RTTI\Serialization</Filter>
-    </None>
-    <None Include="..\..\Include\core\ClassesRegistry.inl">
-      <Filter>RTTI\Classes</Filter>
-    </None>
-    <None Include="..\..\Include\core\TypeID.inl">
-      <Filter>RTTI\Classes</Filter>
-    </None>
-    <None Include="..\..\Include\core\Properties.inl">
-      <Filter>RTTI\Properties</Filter>
-    </None>
-    <None Include="..\..\Include\core\PropertiesView.inl">
-      <Filter>RTTI\Properties</Filter>
-    </None>
-    <None Include="..\..\Include\core\Property.inl">
-      <Filter>RTTI\Properties</Filter>
-    </None>
     <None Include="..\..\Include\core\ResourcesManager.inl">
       <Filter>Resources</Filter>
     </None>
@@ -610,9 +631,6 @@
     <None Include="..\..\Include\core\GraphAlgorithms.inl">
       <Filter>DataStructures\Graphs</Filter>
     </None>
-    <None Include="..\..\Include\core\Enum.inl">
-      <Filter>RTTI\Classes</Filter>
-    </None>
     <None Include="..\..\Include\core\UniqueObject.inl">
       <Filter>Misc</Filter>
     </None>
@@ -630,6 +648,45 @@
     </None>
     <None Include="..\..\Include\core\GraphBuilderNode.inl">
       <Filter>DataStructures\DataPipeline</Filter>
+    </None>
+    <None Include="..\..\Include\core\InStream.inl">
+      <Filter>Streams</Filter>
+    </None>
+    <None Include="..\..\Include\core\OutStream.inl">
+      <Filter>Streams</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionSaver.inl">
+      <Filter>RTTI\Serialization</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionLoader.inl">
+      <Filter>RTTI\Serialization</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionObject.inl">
+      <Filter>RTTI\Core</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionType.inl">
+      <Filter>RTTI\Core</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionTypeComponent.inl">
+      <Filter>RTTI\Core</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionTypesRegistry.inl">
+      <Filter>RTTI\Core</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionTypeID.inl">
+      <Filter>RTTI\Core</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionProperties.inl">
+      <Filter>RTTI\Properties</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionPropertiesView.inl">
+      <Filter>RTTI\Properties</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionProperty.inl">
+      <Filter>RTTI\Properties</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionEnum.inl">
+      <Filter>RTTI\Enum</Filter>
     </None>
   </ItemGroup>
 </Project>

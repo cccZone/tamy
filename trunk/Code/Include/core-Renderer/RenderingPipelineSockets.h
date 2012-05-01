@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core/GraphBuilderSockets.h"
-#include "core/Object.h"
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,7 +17,7 @@ typedef GBNodeOutput< RenderingPipelineNode > RPOutput;
 
 class RPBoolInput : public TGBNodeInput< RenderingPipelineNode, bool >
 {
-   DECLARE_CLASS( RPBoolInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -28,7 +28,7 @@ public:
 
 class RPBoolOutput : public TGBNodeOutput< RenderingPipelineNode, bool >
 {
-   DECLARE_CLASS( RPBoolOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -41,7 +41,7 @@ public:
 
 class RPFloatInput : public TGBNodeInput< RenderingPipelineNode, float >
 {
-   DECLARE_CLASS( RPFloatInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -52,7 +52,7 @@ public:
 
 class RPFloatOutput : public TGBNodeOutput< RenderingPipelineNode, float >
 {
-   DECLARE_CLASS( RPFloatOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -65,7 +65,7 @@ public:
 
 class RPIntInput : public TGBNodeInput< RenderingPipelineNode, int >
 {
-   DECLARE_CLASS( RPIntInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -76,7 +76,7 @@ public:
 
 class RPIntOutput : public TGBNodeOutput< RenderingPipelineNode, int >
 {
-   DECLARE_CLASS( RPIntOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -89,7 +89,7 @@ public:
 
 class RPMatrixInput : public TGBNodeInput< RenderingPipelineNode, D3DXMATRIX >
 {
-   DECLARE_CLASS( RPMatrixInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -100,7 +100,7 @@ public:
 
 class RPMatrixOutput : public TGBNodeOutput< RenderingPipelineNode, D3DXMATRIX >
 {
-   DECLARE_CLASS( RPMatrixOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -113,7 +113,7 @@ public:
 
 class RPStringInput : public TGBNodeInput< RenderingPipelineNode, std::string >
 {
-   DECLARE_CLASS( RPStringInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -124,7 +124,7 @@ public:
 
 class RPStringOutput : public TGBNodeOutput< RenderingPipelineNode, std::string >
 {
-   DECLARE_CLASS( RPStringOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -137,7 +137,7 @@ public:
 
 class RPTextureInput : public TGBNodePtrInput< RenderingPipelineNode, ShaderTexture >
 {
-   DECLARE_CLASS( RPTextureInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -148,7 +148,7 @@ public:
 
 class RPTextureOutput : public TGBNodePtrOutput< RenderingPipelineNode, ShaderTexture >
 {
-   DECLARE_CLASS( RPTextureOutput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -161,7 +161,7 @@ public:
 
 class RPVec4Input : public TGBNodeInput< RenderingPipelineNode, D3DXVECTOR4 >
 {
-   DECLARE_CLASS( RPVec4Input )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -172,7 +172,7 @@ public:
 
 class RPVec4Output : public TGBNodeOutput< RenderingPipelineNode, D3DXVECTOR4 >
 {
-   DECLARE_CLASS( RPVec4Output )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -185,7 +185,7 @@ public:
 
 class RPVoidInput : public GBNodeInput< RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPVoidInput )
+   DECLARE_CLASS()
 
 public:
    /**
@@ -196,7 +196,7 @@ public:
 
 class RPVoidOutput : public GBNodeOutput< RenderingPipelineNode >
 {
-   DECLARE_CLASS( RPVoidOutput )
+   DECLARE_CLASS()
 
 public:
    /**

@@ -5,9 +5,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( GNVertexShader, GeometryShaderNode )
-   PROPERTY_EDIT( "Shader", VertexShader*, m_shader )
-END_OBJECT()
+BEGIN_OBJECT( GNVertexShader );
+   PARENT( GeometryShaderNode );
+   PROPERTY_EDIT( "Shader", VertexShader*, m_shader );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +41,7 @@ void GNVertexShader::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GNVertexShader::onPrePropertyChanged( Property& property )
+void GNVertexShader::onPrePropertyChanged( ReflectionProperty& property )
 {
    __super::onPrePropertyChanged( property );
 
@@ -52,7 +53,7 @@ void GNVertexShader::onPrePropertyChanged( Property& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GNVertexShader::onPropertyChanged( Property& property )
+void GNVertexShader::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 

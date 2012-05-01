@@ -4,60 +4,60 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MSFloatInput, Object );
+BEGIN_OBJECT( MSFloatInput );
    PROPERTY( std::string, m_name );
    PROPERTY( MSOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( MSFloatOutput, Object );
+BEGIN_OBJECT( MSFloatOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< MaterialNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MSMatrixInput, Object );
+BEGIN_OBJECT( MSMatrixInput );
    PROPERTY( std::string, m_name );
    PROPERTY( MSOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( MSMatrixOutput, Object );
+BEGIN_OBJECT( MSMatrixOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< MaterialNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MSTextureInput, Object );
+BEGIN_OBJECT( MSTextureInput );
    PROPERTY( std::string, m_name );
    PROPERTY( MSOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( MSTextureOutput, Object );
+BEGIN_OBJECT( MSTextureOutput );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< MaterialNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MSVec4Input, Object );
+BEGIN_OBJECT( MSVec4Input );
    PROPERTY( std::string, m_name );
    PROPERTY( MSOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( MSVec4Output, Object );
+BEGIN_OBJECT( MSVec4Output );
    PROPERTY( std::string, m_name );
    PROPERTY( std::vector< MaterialNode* >, m_connectedNodes );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( MSBoolInput, Object );
+BEGIN_OBJECT( MSBoolInput );
 PROPERTY( std::string, m_name );
 PROPERTY( MSOutput*, m_connectedOutput );
 END_OBJECT();
 
-BEGIN_OBJECT( MSBoolOutput, Object );
+BEGIN_OBJECT( MSBoolOutput );
 PROPERTY( std::string, m_name );
 PROPERTY( std::vector< MaterialNode* >, m_connectedNodes );
 END_OBJECT();

@@ -3,7 +3,7 @@
 /// @file   TamyEditor\Vec3PropertyEditor.h
 /// @brief  3D vector property editor
 
-#include "core\Property.h"
+#include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
 #include <d3dx9.h>
 
@@ -18,7 +18,7 @@ class Vec3PropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableProperty< D3DXVECTOR3 >* m_property;
+   TEditableReflectionProperty< D3DXVECTOR3 >* m_property;
 
 public:
    /**
@@ -26,7 +26,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   Vec3PropertyEditor( TEditableProperty< D3DXVECTOR3 >* property );
+   Vec3PropertyEditor( TEditableReflectionProperty< D3DXVECTOR3 >* property );
    ~Vec3PropertyEditor();
 
 public slots:

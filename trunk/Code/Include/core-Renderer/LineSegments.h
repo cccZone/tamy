@@ -49,7 +49,7 @@ struct LineSegment
  */
 class LineSegments : public GeometryResource, public RenderResource
 {
-   DECLARE_RESOURCE( LineSegments )
+   DECLARE_RESOURCE()
 
 private:
    std::vector<LineSegment>   m_segments;

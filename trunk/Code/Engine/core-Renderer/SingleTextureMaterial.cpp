@@ -2,6 +2,7 @@
 #include "core-Renderer\Geometry.h"
 #include "core-Renderer\PixelShader.h"
 #include "core-Renderer\Texture.h"
+#include "core-Renderer\RenderableTexture.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\Defines.h"
 #include "core-MVC.h"
@@ -12,10 +13,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( SingleTextureMaterial, Entity )
-   PROPERTY_EDIT( "material", SurfaceProperties, m_surfaceProperties )
-   PROPERTY_EDIT( "texture", Texture*, m_texture )
-END_OBJECT()
+BEGIN_OBJECT( SingleTextureMaterial );
+   PARENT( Entity );
+   PROPERTY_EDIT( "material", SurfaceProperties, m_surfaceProperties );
+   PROPERTY_EDIT( "texture", Texture*, m_texture );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,12 +25,16 @@ SingleTextureMaterial::SingleTextureMaterial( const std::string& name )
    : Entity( name )
    , m_shader( NULL )
    , m_texture( NULL )
+   , m_renderableTexture( new RenderableTexture() )
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 SingleTextureMaterial::~SingleTextureMaterial()
 {
+   delete m_renderableTexture;
+   m_renderableTexture = NULL;
+
    m_shader = NULL;
    m_texture = NULL;
 }
@@ -49,7 +55,8 @@ void SingleTextureMaterial::onPreRender( Renderer& renderer ) const
    comm->setBool( "g_UseTexture", m_texture != NULL );
    if ( m_texture != NULL )
    {
-      comm->setTexture( "g_MeshTexture", *m_texture );
+      m_renderableTexture->setTexture( m_texture );
+      comm->setTexture( "g_MeshTexture", *m_renderableTexture );
    }
 }
 

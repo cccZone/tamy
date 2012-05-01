@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( FragmentShader, Resource, tfsh, AM_BINARY )
+BEGIN_RESOURCE( FragmentShader, tfsh, AM_BINARY )
    PROPERTY( std::string, m_script )
 END_RESOURCE()
 

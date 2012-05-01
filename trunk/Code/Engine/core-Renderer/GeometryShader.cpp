@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( GeometryShader, Resource, tgsh, AM_BINARY )
+BEGIN_RESOURCE( GeometryShader, tgsh, AM_BINARY )
    PROPERTY( std::vector< GeometryShaderNode* >, m_nodes );
 END_RESOURCE()
 

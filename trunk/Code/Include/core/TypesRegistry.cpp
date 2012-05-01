@@ -1,22 +1,22 @@
+#include "core/TypeRegistrationMacros.h"
 #include "core.h"
 
+///////////////////////////////////////////////////////////////////////////////
+
+REGISTER_CORE_TYPES();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-REGISTER_RTTI( EulerAngles );
-REGISTER_RTTI( Matrix );
-REGISTER_RTTI( Vector );
-REGISTER_RTTI( Color );
+REGISTER_TYPE( EulerAngles );
+REGISTER_TYPE( Matrix );
+REGISTER_TYPE( Vector );
+REGISTER_TYPE( Color );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-REGISTER_RTTI( Object );
-REGISTER_RTTI( Enum );
-
-///////////////////////////////////////////////////////////////////////////////
-
-REGISTER_RTTI( Resource );
-REGISTER_RTTI( ResourceHandle );
-REGISTER_RTTI( ResourceObject );
+REGISTER_EXTERNAL_TYPE( FilePath );
+REGISTER_TYPE( Resource );
+REGISTER_TYPE( ResourceHandle );
+REGISTER_TYPE( ResourceObject );
 
 ///////////////////////////////////////////////////////////////////////////////

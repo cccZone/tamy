@@ -123,13 +123,7 @@ void RenderingPipelineEditor::onDeinitialize( bool saveProgress )
 
 void RenderingPipelineEditor::save()
 {
-   ExternalDependenciesSet externalDependencies;
-   m_renderingPipelineLayout.saveResource( externalDependencies );
-
-   for ( unsigned int i = 0; i < externalDependencies.size(); ++i )
-   {
-      externalDependencies[ i ]->saveResource( externalDependencies );
-   }
+   m_renderingPipelineLayout.saveResource();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -179,7 +173,7 @@ void RenderingPipelineEditor::handleBlockSelection( GraphBlock* selectedBlock )
    selectedBlock->viewProperties( *m_blockPropertiesRootView );
 
    // node properties
-   Object& node = selectedBlock->getNode();
+   ReflectionObject& node = selectedBlock->getNode();
    m_nodePropertiesRootView = new QPropertiesView();
    m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
    node.viewProperties( *m_nodePropertiesRootView );
@@ -195,7 +189,7 @@ void RenderingPipelineEditor::handleSocketSelection( GraphBlockSocket* selectedS
    }
 
    // node properties
-   Object& node = selectedSocket->getSocket();
+   ReflectionObject& node = selectedSocket->getSocket();
    m_nodePropertiesRootView = new QPropertiesView();
    m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
    node.viewProperties( *m_nodePropertiesRootView );

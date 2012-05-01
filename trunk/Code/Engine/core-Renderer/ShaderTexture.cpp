@@ -8,11 +8,11 @@ BEGIN_ENUM( TextureUsage );
    ENUM_VAL( TU_LUMINANCE );
    ENUM_VAL( TU_HDR );
    ENUM_VAL( TU_DATA_TEXTURE );
-END_ENUM( TextureUsage );
+END_ENUM();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_RTTI( ShaderTexture )
-END_RTTI
+BEGIN_OBJECT( ShaderTexture );
+END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

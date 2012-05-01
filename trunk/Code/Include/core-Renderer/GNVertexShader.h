@@ -14,7 +14,7 @@ class VertexShader;
 
 class GNVertexShader : public GeometryShaderNode
 {
-DECLARE_CLASS( GNVertexShader )
+DECLARE_CLASS()
 
 private:
    // static data
@@ -34,8 +34,8 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPrePropertyChanged( Property& property );
-   void onPropertyChanged( Property& property );
+   void onPrePropertyChanged( ReflectionProperty& property );
+   void onPropertyChanged( ReflectionProperty& property );
 
    // -------------------------------------------------------------------------
    // GeometryShaderNode implementation

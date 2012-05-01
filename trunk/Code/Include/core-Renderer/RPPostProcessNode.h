@@ -20,7 +20,7 @@ class PixelShader;
  */
 class RPPostProcessNode : public RenderingPipelineNode
 {
-   DECLARE_CLASS( RPPostProcessNode )
+   DECLARE_CLASS()
 
 private:
    // static data
@@ -44,8 +44,8 @@ public:
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------
-   void onPrePropertyChanged( Property& property );
-   void onPropertyChanged( Property& property );
+   void onPrePropertyChanged( ReflectionProperty& property );
+   void onPropertyChanged( ReflectionProperty& property );
    void onObjectLoaded();
 
 protected:

@@ -3,7 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( RPBSceneRender, GraphBlock );
+BEGIN_OBJECT( RPBSceneRender );
+   PARENT( GraphBlock );
    PROPERTY( TResourceHandle< RPSceneRenderNode >*, m_node );
 END_OBJECT();
 

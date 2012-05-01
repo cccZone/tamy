@@ -1,9 +1,11 @@
+/// @file   core-Renderer/Face.h
+/// @brief  triangle face definition
 #pragma once
 
 #include <windows.h>
 #include <iostream>
-#include "core\Serializable.h"
-#include "core\Serializer.h"
+#include "core\InStream.h"
+#include "core\OutStream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,12 +24,20 @@ struct Face
       this->idx[0] = i0; this->idx[1] = i1; this->idx[2] = i2;
    }
 
-   friend Serializer& operator<<(Serializer& serializer, Face& face)
+   friend OutStream& operator<<( OutStream& stream, const Face& face )
    {
-      serializer << face.idx[0];
-      serializer << face.idx[1];
-      serializer << face.idx[2];
-      return serializer;
+      stream << face.idx[0];
+      stream << face.idx[1];
+      stream << face.idx[2];
+      return stream;
+   }
+
+   friend InStream& operator>>( InStream& stream, Face& face )
+   {
+      stream >> face.idx[0];
+      stream >> face.idx[1];
+      stream >> face.idx[2];
+      return stream;
    }
 };
 

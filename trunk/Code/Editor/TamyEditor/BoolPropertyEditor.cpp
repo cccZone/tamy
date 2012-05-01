@@ -4,7 +4,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoolPropertyEditor::BoolPropertyEditor( TEditableProperty< bool >* val )
+BoolPropertyEditor::BoolPropertyEditor( TEditableReflectionProperty< bool >* val )
 : QPropertyEditor( val->getLabel().c_str())
 , m_val( val )
 {

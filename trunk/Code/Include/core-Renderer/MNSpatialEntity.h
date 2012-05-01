@@ -14,7 +14,7 @@ class SpatialEntity;
 
 class MNSpatialEntity : public MaterialNode
 {
-   DECLARE_CLASS( MNSpatialEntity )
+   DECLARE_CLASS()
 
 private:
    MSMatrixOutput*                     m_worldMtx;

@@ -4,7 +4,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( GeometryShaderNode, ResourceObject );
+BEGIN_OBJECT( GeometryShaderNode );
+   PARENT( ResourceObject );
    PROPERTY( InputsMap, m_inputs );
    PROPERTY( OutputsMap, m_outputs );
 END_OBJECT();
@@ -26,7 +27,7 @@ void GeometryShaderNode::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GeometryShaderNode::onPropertyChanged( Property& property )
+void GeometryShaderNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 
@@ -58,27 +59,25 @@ void GeometryShaderNode::createLayout( const GeometryEntity& host ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GBNodeInput< GeometryShaderNode >* GeometryShaderNode::createInput( const Class& dataType, const std::string& name ) const
+GBNodeInput< GeometryShaderNode >* GeometryShaderNode::createInput( const ReflectionType& dataType, const std::string& name ) const
 {
-   const std::string& dataTypeName = dataType.getShortName(); 
-
-   if ( dataTypeName == "float" )
+   if ( dataType.m_name == "float" )
    {
       return new GSFloatInput( name );
    } 
-   else if ( dataTypeName == "D3DXMATRIX" )
+   else if ( dataType.m_name == "D3DXMATRIX" )
    {
       return new GSMatrixInput( name );
    } 
-   else if ( dataTypeName == "ShaderTexture" )
+   else if ( dataType.m_name == "ShaderTexture" )
    {
       return new GSTextureInput( name );
    } 
-   else if ( dataTypeName == "D3DXVECTOR4" )
+   else if ( dataType.m_name == "D3DXVECTOR4" )
    {
       return new GSVec4Input( name );
    }
-   else if ( dataTypeName == "bool" )
+   else if ( dataType.m_name == "bool" )
    {
       return new GSBoolInput( name );
    } 
