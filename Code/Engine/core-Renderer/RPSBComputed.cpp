@@ -5,46 +5,10 @@
 #include "core-Renderer/Camera.h"
 #include "core-Renderer/RPSceneRenderNode.h"
 #include "core-Renderer/PixelShaderConstant.h"
-#include "core-Renderer/RenderState.h"
+#include "core-Renderer/ComputedRenderState.h"
 #include "core-Renderer/Geometry.h"
 
 
-///////////////////////////////////////////////////////////////////////////////
-
-namespace // anonymous
-{
-   class ComputedRenderState : public MemoryPoolObject, public TRenderState< ComputedRenderState >
-   {
-   private:
-      PixelShader&                                       m_shader;
-      PixelShaderNodeOperator< RenderingPipelineNode >&       m_shaderNode;
-      RuntimeDataBuffer&                                 m_data;
-
-   public:
-      ComputedRenderState( PixelShader& shader, PixelShaderNodeOperator< RenderingPipelineNode >& shaderNode, RuntimeDataBuffer& data )
-         : m_shader( shader )
-         , m_shaderNode( shaderNode )
-         , m_data( data )
-      {
-      }
-
-      // -------------------------------------------------------------------------
-      // RenderState implementation
-      // -------------------------------------------------------------------------
-      void onPreRender( Renderer& renderer ) const
-      {
-         m_shaderNode.bindShader( renderer, m_data );
-      }
-
-      void onPostRender( Renderer& renderer ) const
-      {
-          new ( renderer() ) RCUnbindPixelShader( m_shader );
-      }
-
-      inline bool onEquals( const ComputedRenderState& rhs ) const { return &rhs == this; }
-      inline bool onLess( const ComputedRenderState& rhs ) const { return &rhs < this; }
-   };
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 

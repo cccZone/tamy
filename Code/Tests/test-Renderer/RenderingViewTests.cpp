@@ -10,6 +10,7 @@
 #include "core\AABoundingBox.h"
 #include "core\MemoryPool.h"
 #include "core\RuntimeData.h"
+#include "core\ReflectionObject.h"
 #include <vector>
 #include <string>
 
@@ -142,6 +143,8 @@ namespace // anonymous
 
    class RenderStateMock : public TRenderState< RenderStateMock >
    {
+      DECLARE_CLASS();
+
    private:
       std::string    m_preId;
       std::string    m_postId;
@@ -175,12 +178,22 @@ namespace // anonymous
          return m_rsId < rhs.m_rsId;
       }
    };
+   BEGIN_OBJECT( RenderStateMock );
+   END_OBJECT();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+DEFINE_TYPE_ID( RenderStateMock );
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST( RenderingView, basics )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< RenderStateMock >( "RenderStateMock", NULL );
+
    RenderStateMock effect1( "1" );
    RenderStateMock effect2( "2" );
 
@@ -204,12 +217,19 @@ TEST( RenderingView, basics )
    // render the scene
    renderer.render();
    CPPUNIT_ASSERT_EQUAL( std::string( "set RS 1;RenderGeometry_1;reset RS 1;set RS 2;RenderGeometry_2;reset RS 2;" ), renderer.m_seqLog );
+
+   // cleanup
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST( RenderingView, statesBatching )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< RenderStateMock >( "RenderStateMock", NULL );
+
    RenderStateMock effect1( "1" );
    RenderStateMock effect2( "2" );
 
@@ -236,12 +256,19 @@ TEST( RenderingView, statesBatching )
    // render the scene
    renderer.render();
    CPPUNIT_ASSERT_EQUAL( std::string( "set RS 1;RenderGeometry_3;RenderGeometry_1;reset RS 1;set RS 2;RenderGeometry_2;reset RS 2;" ), renderer.m_seqLog );
+
+   // cleanup
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST( RenderingView, manySingleStatesBatching )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< RenderStateMock >( "RenderStateMock", NULL );
+
    RenderStateMock state1( "1" );
    RenderStateMock state2( "2" );
    RenderStateMock state3( "3" );
@@ -273,13 +300,19 @@ TEST( RenderingView, manySingleStatesBatching )
    // render the scene
    renderer.render();
    CPPUNIT_ASSERT_EQUAL( std::string( "set RS 1;RenderGeometry_1;reset RS 1;set RS 2;RenderGeometry_2;reset RS 2;set RS 3;RenderGeometry_4;RenderGeometry_3;reset RS 3;" ), renderer.m_seqLog );
+
+   // cleanup
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-
 TEST( RenderingView, simpleMultipleStatesBatching )
 {
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< RenderStateMock >( "RenderStateMock", NULL );
+
    RenderStateMock state1( "1" );
    RenderStateMock state2( "2" );
 
@@ -305,6 +338,9 @@ TEST( RenderingView, simpleMultipleStatesBatching )
    // render the scene
    renderer.render();
    CPPUNIT_ASSERT_EQUAL( std::string( "set RS 1;set RS 2;RenderGeometry_2;RenderGeometry_1;reset RS 2;reset RS 1;" ), renderer.m_seqLog );
+
+   // cleanup
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -2,6 +2,8 @@
 /// @brief  render state interface
 #pragma once
 
+#include "core/ReflectionType.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -45,6 +47,11 @@ public:
     * @param renderer
     */
    virtual void onPostRender( Renderer& renderer ) const = 0;
+
+   /**
+    * Returns the reflection type of the encapsulated render state.
+    */
+   virtual const ReflectionType& getType() const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,8 +68,9 @@ public:
    // -------------------------------------------------------------------------
    inline bool equals( const RenderState& rhs ) const
    {
-      const T* typedRhs = dynamic_cast< const T* >( &rhs );
-      if ( typedRhs == NULL )
+      const ReflectionType& thisType = T::getStaticRTTI();
+      const ReflectionType& rhsType = rhs.getType();
+      if ( !rhsType.isA( thisType ) )
       {
          return false;
       }
@@ -72,15 +80,22 @@ public:
 
    inline bool less( const RenderState& rhs ) const
    {
-      const T* typedRhs = dynamic_cast< const T* >( &rhs );
-      if ( typedRhs == NULL )
+      const ReflectionType& thisType = T::getStaticRTTI();
+      const ReflectionType& rhsType = rhs.getType();
+      if ( !rhsType.isA( thisType ) )
       {
          return this < &rhs;
       }
 
       return onLess( static_cast< const T& >( rhs ) );
    }
+
 protected:
+   const ReflectionType& getType() const
+   {
+      return T::getStaticRTTI();
+   }
+
    virtual bool onEquals( const T& rhs ) const = 0;
    virtual bool onLess( const T& rhs ) const = 0;
 };
