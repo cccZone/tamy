@@ -26,7 +26,7 @@ private:
    PixelShader*                                                   m_shader;
 
    // runtime data
-   PixelShaderNodeOperator< RenderingPipelineNode >*                   m_shaderNode;
+   PixelShaderNodeOperator< RenderingPipelineNode >*              m_shaderNode;
 
 public:
    /**

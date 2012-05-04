@@ -83,7 +83,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
+    <ClCompile Include="ComputedRenderState.cpp" />
     <ClCompile Include="FragmentShader.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
     <ClCompile Include="Geometry.cpp" />
@@ -164,6 +164,7 @@
     <ClCompile Include="EffectShader.cpp" />
     <ClCompile Include="SingleTextureMaterial.cpp" />
     <ClCompile Include="RenderingView.cpp" />
+    <ClCompile Include="TypesRegistry.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="VertexDescriptions.cpp" />
     <ClCompile Include="PixelShader.cpp" />
@@ -182,6 +183,7 @@
     <None Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\ComputedRenderState.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h" />

@@ -201,7 +201,6 @@
     <ClCompile Include="RenderTarget.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="RenderingView.cpp">
       <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClCompile>
@@ -349,6 +348,10 @@
     <ClCompile Include="RenderableTexture.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="ComputedRenderState.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
+    </ClCompile>
+    <ClCompile Include="TypesRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -699,6 +702,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderableTexture.h">
       <Filter>Materials\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ComputedRenderState.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
