@@ -8,9 +8,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template <class Polygon>
-BSPNodeTree<Polygon>::BSPNodeTree(const Array<Polygon*>& geometry)
+BSPNodeTree<Polygon>::BSPNodeTree( const Array<Polygon*>& geometry )
 {
-   if (geometry.size() == 0) {return;}
+   if ( geometry.size() == 0 ) 
+   {
+      return;
+   }
 
    m_root = new Node();
    createSubtree(m_root, geometry);
@@ -27,19 +30,20 @@ BSPNodeTree<Polygon>::~BSPNodeTree()
 ///////////////////////////////////////////////////////////////////////////////
 
 template <class Polygon>
-void BSPNodeTree<Polygon>::query(const D3DXVECTOR3& pos, 
-                                 Array<Polygon*>& results, 
-                                 Node* checkedNode = NULL)
+void BSPNodeTree<Polygon>::query(const Vector& pos, Array<Polygon*>& results, Node* checkedNode )
 {
-   PointVolume queriedPos(pos);
-   if (checkedNode == NULL) {checkedNode = m_root;}
+   PointVolume queriedPos( pos );
+   if ( checkedNode == NULL ) 
+   {
+      checkedNode = m_root;
+   }
 
-   float planeDist = queriedPos.distanceToPlane(checkedNode->splitPlane);
+   float planeDist = queriedPos.distanceToPlane( checkedNode->splitPlane );
 
    // determine the order in which we're gonna traverse the subtree
    Node* nodeToCheckFirst;
    Node* nodeToCheckSecond;
-   if (planeDist < 0) // behind the plane
+   if ( planeDist < 0 ) // behind the plane
    {
       nodeToCheckFirst = checkedNode->front;
       nodeToCheckSecond = checkedNode->back;
@@ -51,29 +55,28 @@ void BSPNodeTree<Polygon>::query(const D3DXVECTOR3& pos,
    }
 
    // query the subtree
-   if (nodeToCheckFirst != NULL)
+   if ( nodeToCheckFirst != NULL )
    {
-      query(pos, results, nodeToCheckFirst);
+      query( pos, results, nodeToCheckFirst );
    }
 
-   results.copyFrom(checkedNode->geometry);
+   results.copyFrom( checkedNode->geometry );
 
-   if (nodeToCheckSecond != NULL)
+   if ( nodeToCheckSecond != NULL )
    {
-      query(pos, results, nodeToCheckSecond);
+      query( pos, results, nodeToCheckSecond );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template <class Polygon>
-void BSPNodeTree<Polygon>::createSubtree(Node* currNode, 
-                                         const Array<Polygon*>& geometry)
+void BSPNodeTree<Polygon>::createSubtree( Node* currNode, const Array<Polygon*>& geometry )
 {
    unsigned int selectedSplitPolyIdx = 0;
    Polygon* splittingPolygon = geometry[selectedSplitPolyIdx];
 
-   D3DXPLANE splittingPlane = splittingPolygon->getPlane();
+   Plane splittingPlane = splittingPolygon->getPlane();
    currNode->splitPlane = splittingPlane;
 
    currNode->geometry.push_back(splittingPolygon);
@@ -103,11 +106,7 @@ void BSPNodeTree<Polygon>::createSubtree(Node* currNode,
 ///////////////////////////////////////////////////////////////////////////////
 
 template <class Polygon>
-void BSPNodeTree<Polygon>::classifyPolygonAgainstPlane(const D3DXPLANE& splittingPlane, 
-                                                       Polygon* classifiedPoly,
-                                                       Node* currNode, 
-                                                       Array<Polygon*>& outBackPolys,
-                                                       Array<Polygon*>& outFrontPolys)
+void BSPNodeTree<Polygon>::classifyPolygonAgainstPlane(const Plane& splittingPlane, Polygon* classifiedPoly, Node* currNode, Array<Polygon*>& outBackPolys, Array<Polygon*>& outFrontPolys)
 {
    PlaneClassification classification = classifiedPoly->classifyAgainst(splittingPlane);
    switch (classification)
@@ -148,8 +147,8 @@ void BSPNodeTree<Polygon>::classifyPolygonAgainstPlane(const D3DXPLANE& splittin
 
 template <class Polygon>
 BSPNodeTree<Polygon>::Node::Node() 
-: back(NULL)
-, front(NULL) 
+   : back(NULL)
+   , front(NULL) 
 {}
 
 ///////////////////////////////////////////////////////////////////////////////

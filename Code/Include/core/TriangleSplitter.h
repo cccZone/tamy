@@ -1,12 +1,15 @@
+/// @file   core\TriangleSplitter.h
+/// @brief  utility for splitting triangles with a plane
 #ifndef _TRIANGLE_SPLITTER_H
 #define _TRIANGLE_SPLITTER_H
 
-/// @file   core\TriangleSplitter.h
-/// @brief  utility for splitting triangles with a plane
-
 #include "core\Array.h"
-#include <d3dx9.h>
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct Vector;
+struct Plane;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,7 +18,7 @@
  * It specifies an interface the splitter class will require
  * from a triangle in order to split it.
  */
-template<typename VERTEX>
+template< typename VERTEX >
 class SplittableTriangle
 {
 public:
@@ -27,7 +30,7 @@ public:
     * @param vtxIdx  index of the vertex <0, 2>
     * @return        the vertex itself
     */
-   virtual const VERTEX& vertex(unsigned int vtxIdx) const = 0;
+   virtual const VERTEX& vertex( unsigned int vtxIdx ) const = 0;
 
    /**
     * This method returns position of the specified vertex.
@@ -35,7 +38,7 @@ public:
     * @param vtxIdx  index of the vertex <0, 2>
     * @return        position of the vertex
     */
-   virtual const D3DXVECTOR3& vertexPos(unsigned int vtxIdx) const = 0;
+   virtual const Vector& vertexPos( unsigned int vtxIdx ) const = 0;
 
    /**
     * The method creates a new vertex somewhere on the specified edge.
@@ -45,9 +48,7 @@ public:
     * @param startVtxIdx   the beginning of the edge
     * @param endVtxIdx     the end of the edge
     */
-   virtual VERTEX splitEdge(float percentage, 
-                            unsigned int startVtxIdx, 
-                            unsigned int endVtxIdx) const = 0;
+   virtual void splitEdge( float percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, typename VERTEX& outVertex ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,7 +64,7 @@ public:
  * accepting 3 vertices:
  *    TRIANGLE(const VERTEX& v1, const VERTEX& v2, const VERTEX& v3);
  */
-template <typename VERTEX, typename TRIANGLE>
+template < typename VERTEX, typename TRIANGLE >
 class TriangleSplitter
 {
 public:
@@ -87,17 +88,11 @@ public:
     *                   will store new triangles that are behind the split
     *                   plane
     */
-   void split(const SplittableTriangle<VERTEX>& triangle,
-              const D3DXPLANE& plane,
-              Array<TRIANGLE*>& front,
-              Array<TRIANGLE*>& back) const;
+   void split( const SplittableTriangle<VERTEX>& triangle, const Plane& plane, Array<TRIANGLE*>& front, Array<TRIANGLE*>& back) const;
 
 private: 
-   VERTEX splitEdge(float percentage,
-                    const VERTEX& v1, 
-                    const VERTEX& v2) const;
-   void triangulatePoly(const Array<VERTEX>& poly, 
-                        typename Array<TRIANGLE*>& output) const;
+   VERTEX splitEdge(float percentage, const VERTEX& v1, const VERTEX& v2) const;
+   void triangulatePoly(const Array<VERTEX>& poly, typename Array<TRIANGLE*>& output) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

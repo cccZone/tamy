@@ -5,7 +5,7 @@
 
 #include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
-#include <d3dx9.h>
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,7 +18,7 @@ class Vec3PropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableReflectionProperty< D3DXVECTOR3 >* m_property;
+   TEditableReflectionProperty< Vector >* m_property;
 
 public:
    /**
@@ -26,7 +26,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   Vec3PropertyEditor( TEditableReflectionProperty< D3DXVECTOR3 >* property );
+   Vec3PropertyEditor( TEditableReflectionProperty< Vector >* property );
    ~Vec3PropertyEditor();
 
 public slots:

@@ -1,6 +1,6 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core\Node.h"
-#include "core\MatrixWriter.h"
+#include "core-TestFramework\MatrixWriter.h"
 #include "core-Sound\SoundRenderer.h"
 #include "core-Sound\Sound.h"
 #include "SoundDeviceMock.h"
@@ -8,7 +8,8 @@
 #include "Sound3DMock.h"
 #include "SoundListenerMock.h"
 #include "core-Sound\SoundSceneManager.h"
-#include <d3dx9.h>
+#include "core\Vector.h"
+#include "core\Matrix.h"
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -76,8 +77,8 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
    SoundMock step("step");
    Sound3DMock barkingSound("barkingSound", bark, 1);
    Sound3DMock walkingSound("walkingSound", step, 1);
-   D3DXMatrixTranslation(&(barkingSound.accessLocalMtx()), -10, 0, 0);
-   D3DXMatrixTranslation(&(walkingSound.accessLocalMtx()), 10, 0, 0);
+   barkingSound.accessLocalMtx().setTranslation( Vector( -10, 0, 0 ) );
+   walkingSound.accessLocalMtx().setTranslation( Vector( 10, 0, 0 ) );
 
    SoundListenerMock* listener = new SoundListenerMock();
    soundScene.setListener(listener);
@@ -89,14 +90,14 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
 
    // first - the listener is near the man - he can hear his walking,
    // but he can't hear the dog barking
-   D3DXMatrixTranslation(&(listener->accessLocalMtx()), 10, 0, 0);
+   listener->accessLocalMtx().setTranslation( Vector( 10, 0, 0 ) );
    soundRenderer.update(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    CPPUNIT_ASSERT_EQUAL(std::string("step"), soundDevice.getChannel(0).getSound().getName());
 
    // next moment - the listener moves close to the dog - he can hear it barking,
    // but he can't hear the man walking
-   D3DXMatrixTranslation(&(listener->accessLocalMtx()), -10, 0, 0);
+   listener->accessLocalMtx().setTranslation( Vector( -10, 0, 0 ) );
    soundRenderer.update(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    CPPUNIT_ASSERT_EQUAL(std::string("bark"), soundDevice.getChannel(0).getSound().getName());

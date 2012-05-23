@@ -7,7 +7,7 @@
 #include "core/ReflectionType.h"
 #include "core/GraphBuilderSockets.h"
 #include "core-Renderer/ShaderTexture.h"
-#include <d3dx9.h>
+#include "core/Math.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -214,7 +214,7 @@ public:
  * Scalar vector constant.
  */
 template< typename TNode >
-class PSCVec4 : public TPixelShaderConstant< TNode, D3DXVECTOR4 >
+class PSCVec4 : public TPixelShaderConstant< TNode, Vector >
 {
 public:
    /**
@@ -236,7 +236,7 @@ public:
  * Matrix4x4 constant.
  */
 template< typename TNode >
-class PSCMatrix : public TPixelShaderConstant< TNode, D3DXMATRIX >
+class PSCMatrix : public TPixelShaderConstant< TNode, Matrix >
 {
 public:
    /**

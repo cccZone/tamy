@@ -137,17 +137,20 @@ SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene, const S
 
    // transformation
    float a, b, c, d;
-   D3DXMATRIX& localMtx = entity->accessLocalMtx();
-   D3DXMatrixIdentity( &localMtx );
+   Matrix& localMtx = entity->accessLocalMtx();
+   localMtx = Matrix::IDENTITY;
    for ( TiXmlElement* rotateElem = nodeElem->FirstChildElement( "rotate" ); rotateElem != NULL; rotateElem = rotateElem->NextSiblingElement( "rotate" ) )
    {
       sscanf_s( rotateElem->GetText(), "%f %f %f %f", &a, &b, &c, &d );
 
-      D3DXMATRIX axisRotMtx;
-      D3DXMatrixIdentity( &axisRotMtx );
-      // switch the y & z components - and that yields the necessisity to invert the rotation angle
-      D3DXMatrixRotationAxis( &axisRotMtx, &D3DXVECTOR3( a, c, b ), DEG2RAD( -d ) );
-      D3DXMatrixMultiply( &localMtx, &axisRotMtx, &localMtx );
+      Matrix axisRotMtx = Matrix::IDENTITY;
+
+      // switch the y & z components - and that yields the necessity to invert the rotation angle
+      Quaternion rotQuat;
+      rotQuat.setAxisAngle( Vector( a, b, c ), DEG2RAD( -d ) );
+      Matrix rotMtx; rotMtx.setRotation( rotQuat );
+      Matrix newLocalMtx;
+      localMtx.setMul( axisRotMtx, localMtx );
    }
 
    {
@@ -156,9 +159,9 @@ SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene, const S
       sscanf_s( translateElem->GetText(), "%f %f %f", &a, &b, &c );
 
       // switch the y & z components
-      localMtx._41 = a;
-      localMtx._42 = c;
-      localMtx._43 = b;
+      localMtx.m[3][0] = a;
+      localMtx.m[3][1] = c;
+      localMtx.m[3][2] = b;
    }
 
    // geometry

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "SceneRendererInputController.h"
+#include "core\Vector.h"
 #include <vector>
 
 
@@ -42,7 +43,7 @@ private:
    std::vector< SpatialEntity* >          m_nodes;
 
    bool                                   m_movementDir[4];
-   D3DXVECTOR3                            m_rotationAxis;
+   Vector                                 m_rotationAxis;
 
    NodeTransformControlMode               m_controlMode;
 
@@ -74,8 +75,8 @@ public:
    void keyReleased( unsigned char keyCode );
 
 private:
-   void transformNode( Node& node, const D3DXVECTOR2& valChange ) const;
-   D3DXVECTOR3 selectGlobalRotationAxis() const;
+   void transformNode( Node& node, const Vector& valChange ) const;
+   void selectGlobalRotationAxis( Vector& outRotationAxis ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -96,7 +96,6 @@ private:
    // -------------------------------------------------------------------------
    // some limit definitions
    const unsigned int                              DEBUG_LINES_MAX_COUNT;
-   D3DXMATRIX                                      m_identityMtx;
    IDirect3DVertexBuffer9*                         m_linesBuffer;
    DebugVertex*                                    m_pVertex;
    unsigned int                                    m_linesCount;
@@ -260,7 +259,7 @@ public:
     * @param end
     * @param color
     */
-   void addDebugLine( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color );
+   void addDebugLine( const Vector& start, const Vector& end, const Color& color );
 
 protected:
    void resetViewport(unsigned int width, unsigned int height);

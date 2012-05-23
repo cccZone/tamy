@@ -108,14 +108,14 @@ void DX9LineSegments::create()
    D3DXVECTOR4 tmpColor;
    for (unsigned int i = 0; i < m_segsCount; ++i)
    {
-      tmpColor = ( D3DXVECTOR4 )( segments[i].color );
+      tmpColor = ( const D3DXVECTOR4& )( segments[i].color );
 
-      pVertex->pos = segments[i].start;
-      pVertex->color = tmpColor;
+      pVertex->pos = ( const D3DXVECTOR3& )segments[i].start;
+      pVertex->color = ( const D3DXVECTOR4& )tmpColor;
       pVertex++;
 
-      pVertex->pos = segments[i].end;
-      pVertex->color = tmpColor;
+      pVertex->pos = ( const D3DXVECTOR3& )segments[i].end;
+      pVertex->color = ( const D3DXVECTOR4& )tmpColor;
       pVertex++;
    }
 

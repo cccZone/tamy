@@ -21,7 +21,6 @@
     <ClCompile Include="ModelView.cpp">
       <Filter>MVC</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Include\core-MVC\TypesRegistry.cpp" />
     <ClCompile Include="SpatialEntity.cpp">
       <Filter>Hierarchy</Filter>
     </ClCompile>
@@ -31,6 +30,7 @@
     <ClCompile Include="ModelEntity.cpp">
       <Filter>Hierarchy</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Include\core-MVC\TypesRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-MVC\Entity.h">

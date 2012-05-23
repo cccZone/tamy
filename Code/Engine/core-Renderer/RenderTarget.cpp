@@ -197,7 +197,7 @@ void RCActivateRenderTarget::execute( Renderer& renderer )
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-RCGetPixel::RCGetPixel( RenderTarget& renderTarget, const D3DXVECTOR2& queryPos, Color& outColorVal )
+RCGetPixel::RCGetPixel( RenderTarget& renderTarget, const Vector& queryPos, Color& outColorVal )
    : m_renderTarget( renderTarget )
    , m_queryPos( queryPos )
    , m_outColorVal( outColorVal )

@@ -743,5 +743,3 @@ TEST( Reflection, casts )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-// TODO: two parents, both inherit from a ReflecitionObject - how does that get serialized and deserialized

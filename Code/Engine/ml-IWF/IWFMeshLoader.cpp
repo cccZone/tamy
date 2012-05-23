@@ -19,8 +19,8 @@ IWFMeshLoader::IWFMeshLoader(iwfMesh* fileMesh,
 void IWFMeshLoader::parseMesh(std::vector<MeshDefinition>& meshes, 
                               const std::string& name)
 {
-   D3DXVECTOR3 minPos(10000000, 10000000, 10000000);
-   D3DXVECTOR3 maxPos(-10000000, -10000000, -10000000);
+   Vector minPos(10000000, 10000000, 10000000);
+   Vector maxPos(-10000000, -10000000, -10000000);
 
    std::vector<MaterialDefinition> tmpMaterials;
    MeshDefinition* mesh = NULL;
@@ -53,7 +53,7 @@ void IWFMeshLoader::parseMesh(std::vector<MeshDefinition>& meshes,
       // geometry creation step 2: create vertices
       for (UINT i = 0; i < surface->VertexCount; i++)
       {
-         D3DXVECTOR3 vertexPos(surface->Vertices[i].x,
+         Vector vertexPos(surface->Vertices[i].x,
                                surface->Vertices[i].y,
                                surface->Vertices[i].z);
 
@@ -78,7 +78,7 @@ void IWFMeshLoader::parseMesh(std::vector<MeshDefinition>& meshes,
    }
 
    // translate all vertices so that the mesh is centered around the global origin
-   D3DXVECTOR3 meshTranslation(minPos.x + (maxPos.x - minPos.x) / 2.f,
+   Vector meshTranslation(minPos.x + (maxPos.x - minPos.x) / 2.f,
                                minPos.y + (maxPos.y - minPos.y) / 2.f,
                                minPos.z + (maxPos.z - minPos.z) / 2.f);
 
@@ -89,10 +89,12 @@ void IWFMeshLoader::parseMesh(std::vector<MeshDefinition>& meshes,
       for (std::vector<LitVertex>::iterator vertexIt = mesh->vertices.begin();
            vertexIt != mesh->vertices.end(); ++vertexIt)
       {
-         vertexIt->m_coords -= meshTranslation; 
+         vertexIt->m_coords.v[0] -= meshTranslation.x; 
+         vertexIt->m_coords.v[1] -= meshTranslation.y; 
+         vertexIt->m_coords.v[2] -= meshTranslation.z; 
       }
 
-      D3DXMatrixTranslation(&(mesh->localMtx), meshTranslation.x, meshTranslation.y, meshTranslation.z);
+      mesh->localMtx.setTranslation( Vector( meshTranslation.x, meshTranslation.y, meshTranslation.z ) );
    }
 
 

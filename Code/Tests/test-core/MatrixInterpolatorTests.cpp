@@ -1,70 +1,79 @@
 #include "core-TestFramework\TestFramework.h"
-#include "core\MatrixWriter.h"
-#include <d3dx9.h>
-#include "core\MatrixInterpolator.h"
+#include "core\MatrixUtils.h"
+#include "core\Vector.h"
+#include "core\Matrix.h"
+#include "core\EulerAngles.h"
+#include "core\MathDefs.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(MatrixInterpolator, translation)
+TEST( MatrixInterpolator, translation )
 {
-   D3DXMATRIX start;
-   D3DXMATRIX end;
-   D3DXMATRIX expectedResult;
+   Matrix start;
+   Matrix end;
+   Matrix expectedResult;
 
-   D3DXMatrixTranslation(&start, 0, 0, 10);
-   D3DXMatrixTranslation(&end, 0, 0, 20);
+   start.setTranslation( Vector( 0, 0, 10 ) );
+   end.setTranslation( Vector( 0, 0, 20 ) );
 
-   MatrixInterpolator interpolator;
+   Matrix result;
 
-   D3DXMatrixTranslation(&expectedResult, 0, 0, 10);
-   COMPARE_MTX(expectedResult, interpolator(start, end, 0));
+   expectedResult.setTranslation( Vector( 0, 0, 10 ) );
+   MatrixUtils::lerp( start, end, 0, result );
+   COMPARE_MTX( expectedResult, result );
 
-   D3DXMatrixTranslation(&expectedResult, 0, 0, 20);
-   COMPARE_MTX(expectedResult, interpolator(start, end, 1));
+   expectedResult.setTranslation( Vector( 0, 0, 20 ) );
+   MatrixUtils::lerp( start, end, 1, result );
+   COMPARE_MTX( expectedResult, result );
 
-   D3DXMatrixTranslation(&expectedResult, 0, 0, 15);
-   COMPARE_MTX(expectedResult, interpolator(start, end, 0.5f));
+   expectedResult.setTranslation( Vector( 0, 0, 15 ) );
+   MatrixUtils::lerp( start, end, 0.5f, result );
+   COMPARE_MTX( expectedResult, result );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(MatrixInterpolator, rotation)
+TEST( MatrixInterpolator, rotation )
 {
-   D3DXMATRIX start;
-   D3DXMATRIX end;
+   Matrix start;
+   Matrix end;
 
-   D3DXMatrixRotationYawPitchRoll(&start, 0, 0, 0);
-   D3DXMatrixRotationYawPitchRoll(&end, D3DXToRadian(90), 0, 0);
+   start = Matrix::IDENTITY;
+   end.setRotation( EulerAngles( 90, 0, 0 ) );
 
-   MatrixInterpolator interpolator;
+   Matrix result;
 
-   COMPARE_MTX(start, interpolator(start, end, 0));
-   COMPARE_MTX(end, interpolator(start, end, 1));
+   MatrixUtils::lerp( start, end, 0, result );
+   COMPARE_MTX( start, result );
 
-   D3DXMATRIX expectedResult;
-   D3DXMatrixRotationYawPitchRoll(&expectedResult, D3DXToRadian(45), 0, 0);
-   COMPARE_MTX(expectedResult, interpolator(start, end, 0.5f));
+   MatrixUtils::lerp( start, end, 1, result );
+   COMPARE_MTX( end, result );
+
+   Matrix expectedResult;
+   expectedResult.setRotation( EulerAngles( 45, 0, 0 ) );
+   MatrixUtils::lerp( start, end, 0.5f, result );
+   COMPARE_MTX(expectedResult, result );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(WaypointCameraController, complexMovementx)
 {
-   D3DXMATRIX start;
-   D3DXMATRIX end;
+   Matrix start;
+   start.setRotation( EulerAngles( 0, RAD2DEG( 10.0f ), RAD2DEG( -30.0f ) ) );
 
-   D3DXMatrixRotationYawPitchRoll(&start, 0, 10, -30);
-   end = D3DXMATRIX(0.5f,      0,        -0.866025f,  0,
-                    0,         1,         0,          0,
-                    0.866025f, 0,         0.5f,       0,
-                    -5.980762f, 14.99999f, 24.999998f, 1);
+   Matrix end(  0.5f,      0,        -0.866025f,  0,
+                0,         1,         0,          0,
+                0.866025f, 0,         0.5f,       0,
+               -5.980762f, 14.99999f, 24.999998f, 1 );
 
-   MatrixInterpolator interpolator;
-   COMPARE_MTX(start, interpolator(start, end, 0));
+   Matrix result;
+   MatrixUtils::lerp( start, end, 0, result );
+   COMPARE_MTX( start, result );
 
-   D3DXMATRIX result = interpolator(start, end, 1);
-   COMPARE_MTX(end, result);
+   MatrixUtils::lerp( start, end, 1, result );
+   COMPARE_MTX( end, result );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

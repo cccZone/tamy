@@ -5,12 +5,11 @@
 #include <QSpinBox.h>
 #include "core\Vector.h"
 #include "core\EulerAngles.h"
-#include "core\Matrix.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MtxPropertyEditor::MtxPropertyEditor( TEditableReflectionProperty< D3DXMATRIX >* property )
+MtxPropertyEditor::MtxPropertyEditor( TEditableReflectionProperty< Matrix >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {
@@ -69,7 +68,8 @@ void MtxPropertyEditor::setupUi()
    // set the start value
    Matrix currVal = m_property->get();
 
-   EulerAngles orientation = currVal;
+   EulerAngles orientation;
+   currVal.getRotation( orientation );
    yawVal->setValue(orientation.yaw);
    pitchVal->setValue(orientation.pitch);
    rollVal->setValue(orientation.roll);
@@ -95,13 +95,16 @@ void MtxPropertyEditor::yawValChanged(double val)
 {
    Matrix currVal = m_property->get();
 
-   EulerAngles orientation = currVal;
+   EulerAngles orientation;
+   currVal.getRotation( orientation );
    orientation.yaw = (float)val;
    
-   Matrix rotMtx( orientation );
-   Matrix transMtx( currVal.position() );
+   Matrix rotMtx, transMtx, finalMtx;
+   rotMtx.setRotation( orientation );
+   transMtx.setTranslation( currVal.position() );
+   finalMtx.setMul( transMtx, rotMtx );
 
-   m_property->set( transMtx * rotMtx );
+   m_property->set( finalMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,13 +113,16 @@ void MtxPropertyEditor::pitchValChanged(double val)
 {
    Matrix currVal = m_property->get();
 
-   EulerAngles orientation = currVal;
+   EulerAngles orientation;
+   currVal.getRotation( orientation );
    orientation.pitch = (float)val;
 
-   Matrix rotMtx( orientation );
-   Matrix transMtx( currVal.position() );
+   Matrix rotMtx, transMtx, finalMtx;
+   rotMtx.setRotation( orientation );
+   transMtx.setTranslation( currVal.position() );
+   finalMtx.setMul( transMtx, rotMtx );
 
-   m_property->set( transMtx * rotMtx );
+   m_property->set( finalMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -125,13 +131,16 @@ void MtxPropertyEditor::rollValChanged(double val)
 {
    Matrix currVal = m_property->get();
 
-   EulerAngles orientation = currVal;
+   EulerAngles orientation;
+   currVal.getRotation( orientation );
    orientation.roll = (float)val;
 
-   Matrix rotMtx( orientation );
-   Matrix transMtx( currVal.position() );
+   Matrix rotMtx, transMtx, finalMtx;
+   rotMtx.setRotation( orientation );
+   transMtx.setTranslation( currVal.position() );
+   finalMtx.setMul( transMtx, rotMtx );
 
-   m_property->set( transMtx * rotMtx );
+   m_property->set( finalMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -143,10 +152,9 @@ void MtxPropertyEditor::xValChanged(double val)
    Vector pos = currVal.position();
    pos.x = (float)val;
 
-   Matrix rotMtx( (EulerAngles)currVal );
-   Matrix transMtx( pos );
-
-   m_property->set( transMtx * rotMtx );
+   currVal.setPosition( pos );
+   
+   m_property->set( currVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -158,10 +166,9 @@ void MtxPropertyEditor::yValChanged(double val)
    Vector pos = currVal.position();
    pos.y = (float)val;
 
-   Matrix rotMtx( (EulerAngles)currVal );
-   Matrix transMtx( pos );
+   currVal.setPosition( pos );
 
-   m_property->set( transMtx * rotMtx );
+   m_property->set( currVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -173,10 +180,9 @@ void MtxPropertyEditor::zValChanged(double val)
    Vector pos = currVal.position();
    pos.z = (float)val;
 
-   Matrix rotMtx( (EulerAngles)currVal );
-   Matrix transMtx( pos );
+   currVal.setPosition( pos );
 
-   m_property->set( transMtx * rotMtx );
+   m_property->set( currVal );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

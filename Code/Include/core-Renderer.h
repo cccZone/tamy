@@ -16,16 +16,11 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\ShaderParam.h"
+#include "core-Renderer\RenderingParams.h"
 // ----------------------------------------------------------------------------
 // --> Camera
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Camera.h"
-#include "core-Renderer\ProjectionCalculator.h"
-// ----------------------------------------------------------------------------
-// ----> ProjectionCalculators
-// ----------------------------------------------------------------------------
-#include "core-Renderer\ProjCalc2D.h"
-#include "core-Renderer\ProjCalc3D.h"
 // ----------------------------------------------------------------------------
 // --> Tools
 // ----------------------------------------------------------------------------
@@ -60,6 +55,7 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Face.h"
 #include "core-Renderer\LitVertex.h"
+#include "core-Renderer\VertexDescriptors.h"
 // ----------------------------------------------------------------------------
 // -->GeometryShader
 // ----------------------------------------------------------------------------
@@ -176,6 +172,7 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer/RPSBTextured.h"
 #include "core-Renderer/RPSBComputed.h"
+#include "core-Renderer/ComputedRenderState.h"
 // ----------------------------------------------------------------------------
 // ---->Tools
 // ----------------------------------------------------------------------------

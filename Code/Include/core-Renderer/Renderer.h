@@ -1,12 +1,11 @@
 #ifndef _RENDERER_H
 #define _RENDERER_H
 
-#include <d3dx9.h>
 #include <list>
 #include "core\Array.h"
 #include "core\Subject.h"
-#include "core\Color.h"
 #include "core\UniqueObject.h"
+#include "core\Color.h"
 #include "core/RoundBuffer.h"
 #include "core-AppFlow/TimeDependent.h"
 #include <vector>

@@ -4,7 +4,8 @@
 
 #include "core/GraphBuilderSockets.h"
 #include "core/ReflectionObject.h"
-#include <d3dx9.h>
+#include "core/Matrix.h"
+#include "core/Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,7 +40,7 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class GSMatrixInput : public TGBNodeInput< GeometryShaderNode, D3DXMATRIX >
+class GSMatrixInput : public TGBNodeInput< GeometryShaderNode, Matrix >
 {
    DECLARE_CLASS()
 
@@ -47,10 +48,10 @@ public:
    /**
     * Constructor.
     */
-   GSMatrixInput( const std::string& name = "" ) : TGBNodeInput< GeometryShaderNode, D3DXMATRIX >( name ) {}
+   GSMatrixInput( const std::string& name = "" ) : TGBNodeInput< GeometryShaderNode, Matrix >( name ) {}
 };
 
-class GSMatrixOutput : public TGBNodeOutput< GeometryShaderNode, D3DXMATRIX >
+class GSMatrixOutput : public TGBNodeOutput< GeometryShaderNode, Matrix >
 {
    DECLARE_CLASS()
 
@@ -58,7 +59,7 @@ public:
    /**
     * Constructor.
     */
-   GSMatrixOutput( const std::string& name = "" ) : TGBNodeOutput< GeometryShaderNode, D3DXMATRIX >( name ) {}
+   GSMatrixOutput( const std::string& name = "" ) : TGBNodeOutput< GeometryShaderNode, Matrix >( name ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,7 +89,7 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class GSVec4Input : public TGBNodeInput< GeometryShaderNode, D3DXVECTOR4 >
+class GSVec4Input : public TGBNodeInput< GeometryShaderNode, Vector >
 {
    DECLARE_CLASS()
 
@@ -96,10 +97,10 @@ public:
    /**
     * Constructor.
     */
-   GSVec4Input( const std::string& name = "" ) : TGBNodeInput< GeometryShaderNode, D3DXVECTOR4 >( name ) {}
+   GSVec4Input( const std::string& name = "" ) : TGBNodeInput< GeometryShaderNode, Vector >( name ) {}
 };
 
-class GSVec4Output : public TGBNodeOutput< GeometryShaderNode, D3DXVECTOR4 >
+class GSVec4Output : public TGBNodeOutput< GeometryShaderNode, Vector >
 {
    DECLARE_CLASS()
 
@@ -107,7 +108,7 @@ public:
    /**
     * Constructor.
     */
-   GSVec4Output( const std::string& name = "" ) : TGBNodeOutput< GeometryShaderNode, D3DXVECTOR4 >( name ) {}
+   GSVec4Output( const std::string& name = "" ) : TGBNodeOutput< GeometryShaderNode, Vector >( name ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

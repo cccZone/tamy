@@ -1,7 +1,7 @@
-#pragma once
-
 /// @file   core\BoundingVolume.h
 /// @brief  common interface for inter-bounding volume collision tests
+#pragma once
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -11,9 +11,9 @@ struct Frustum;
 struct Ray;
 struct Triangle;
 struct BoundingSpace;
-struct D3DXMATRIX;
+struct Matrix;
 struct PointVolume;
-struct D3DXPLANE;
+struct Plane;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -47,7 +47,7 @@ public:
     * @param plane   plane against which we want to perform a check
     * @return        position of the volume in relation to the plane
     */
-   virtual PlaneClassification classifyAgainsPlane(const D3DXPLANE& plane) const;
+   virtual PlaneClassification classifyAgainsPlane(const Plane& plane) const;
 
    /**
     * Transforms the volume by a matrix. A volume can only be transformed into the volume
@@ -56,7 +56,7 @@ public:
     * @param mtx
     * @param transformedVolume
     */
-   virtual void transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const = 0;
+   virtual void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const = 0;
 
    /**
     * This method checks on which side of the specified plane
@@ -67,7 +67,7 @@ public:
     *                =0 - the volume intersects the plane
     *                >0 - the volume is in front of the plane
     */
-   virtual float distanceToPlane(const D3DXPLANE& plane) const = 0;
+   virtual float distanceToPlane(const Plane& plane) const = 0;
 
    virtual bool testCollision(const PointVolume& point) const = 0;
 

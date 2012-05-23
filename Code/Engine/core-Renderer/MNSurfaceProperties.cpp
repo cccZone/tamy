@@ -55,10 +55,10 @@ void MNSurfaceProperties::onObjectLoaded()
 void MNSurfaceProperties::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
    const SurfaceProperties& props = entity.getSurfaceProperties();
-   m_ambient->setValue( entity.data(), props.getAmbientColor() );
-   m_diffuse->setValue( entity.data(), props.getDiffuseColor() );
-   m_specular->setValue( entity.data(), props.getSpecularColor() );
-   m_emissive->setValue( entity.data(), props.getEmissiveColor() );
+   m_ambient->setValue( entity.data(), ( const Vector& )props.getAmbientColor() );
+   m_diffuse->setValue( entity.data(), ( const Vector& )props.getDiffuseColor() );
+   m_specular->setValue( entity.data(), ( const Vector& )props.getSpecularColor() );
+   m_emissive->setValue( entity.data(), ( const Vector& )props.getEmissiveColor() );
    m_specularPower->setValue( entity.data(), props.getPower() );
 }
 

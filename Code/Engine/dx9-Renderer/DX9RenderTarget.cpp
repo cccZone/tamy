@@ -1,7 +1,9 @@
 #include "dx9-Renderer\DX9RenderTarget.h"
 #include "dx9-Renderer\DX9Renderer.h"
 #include "dx9-Renderer\DXErrorParser.h"
-#include "core/Assert.h"
+#include "core\Vector.h"
+#include "core\Color.h"
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,7 +15,7 @@ void RCGetPixel::execute( Renderer& renderer )
    DX9RenderTarget* dxRenderTarget = dxRenderer.getRenderTarget( m_renderTarget );
    if ( dxRenderTarget )
    {
-      m_outColorVal = dxRenderTarget->getPixel( m_queryPos );
+      dxRenderTarget->getPixel( m_queryPos, m_outColorVal );
    }
 }
 
@@ -42,11 +44,11 @@ DX9RenderTarget::~DX9RenderTarget()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
+void DX9RenderTarget::getPixel( const Point& pos, Color& outColor ) const
 {
    if ( !m_dxTexture )
    {
-      return Color();
+      return;
    }
 
    IDirect3DDevice9& d3Dev = m_renderer.getD3Device();
@@ -60,14 +62,14 @@ Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
    {
       std::string errMsg = translateDxError( "Can't create an off-screen plain surface", res );
       ASSERT_MSG( false, errMsg.c_str() );
-      return Color();
+      return;
    }
 
    // check the validity of the queried position
    if ( pos.x >= rtDesc.Width || pos.y >= rtDesc.Height )
    {
       ASSERT_MSG( false, "Queried position is outside the screen boundaries." );
-      return Color();
+      return;
    }
 
    // copy the data from the render target to the temporary surface
@@ -78,12 +80,11 @@ Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
    {
       std::string errMsg = translateDxError( "Can't acquire data from a render target", res );
       ASSERT_MSG( false, errMsg.c_str() );
-      return Color();
+      return;
    }
 
 
    // lookup the specified pixel and return its color
-   Color color;
    D3DLOCKED_RECT lockedRect;
    RECT rect;
    rect.left = 0;
@@ -96,7 +97,7 @@ Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
    {
       std::string errMsg = translateDxError( "Can't lock an off-screen plain surface", res );
       ASSERT_MSG( false, errMsg.c_str() );
-      return Color();
+      return;
    }
 
    unsigned int x = ( unsigned int )( ( rtDesc.Width * ( pos.x + 1.f ) ) / 2.f );
@@ -104,18 +105,16 @@ Color DX9RenderTarget::getPixel( const D3DXVECTOR2& pos ) const
 
    unsigned int addr = y * lockedRect.Pitch + x * 4;
    unsigned char* ptr = ( unsigned char* )( lockedRect.pBits ) + addr;
-   color.b = ptr[0] / 255.f;
-   color.g = ptr[1] / 255.f;
-   color.r = ptr[2] / 255.f;
-   color.a = ptr[3] / 255.f;
+   outColor.b = ptr[0] / 255.f;
+   outColor.g = ptr[1] / 255.f;
+   outColor.r = ptr[2] / 255.f;
+   outColor.a = ptr[3] / 255.f;
 
    offscreenSurface->UnlockRect();
 
    // cleanup
    rtSurface->Release();
    offscreenSurface->Release();
-
-   return color;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

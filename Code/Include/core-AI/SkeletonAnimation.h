@@ -2,7 +2,6 @@
 /// @brief  scale-rotation-translation animation resource
 
 #include "core/Resource.h"
-#include <d3dx9.h>
 #include <vector>
 
 
@@ -11,6 +10,8 @@
 class BoneSRTAnimation;
 class BoneSRTAnimationPlayer;
 class Node;
+struct Vector;
+struct Quaternion;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -46,7 +47,7 @@ public:
     * @param orientation
     * @param translation
     */
-   void addOrientationKey( const std::string& boneName, float frameTime, const D3DXQUATERNION& orientation );
+   void addOrientationKey( const std::string& boneName, float frameTime, const Quaternion& orientation );
 
    /**
     * Adds a translation key definition for the specified bone at the specified time.
@@ -56,7 +57,7 @@ public:
     * @param orientation
     * @param translation
     */
-   void addTranslationKey( const std::string& boneName, float frameTime, const D3DXVECTOR3& translation );
+   void addTranslationKey( const std::string& boneName, float frameTime, const Vector& translation );
 
    /**
     * Resets the animation contents.

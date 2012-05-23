@@ -6,6 +6,7 @@
 #include "SceneObjectsManipulator.h"
 #include "SceneObjectsManipulatorState.h"
 #include "SceneQuery.h"
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,14 +24,14 @@ public:
    DECLARE_CLASS()
 
 private:
-   D3DXVECTOR2          m_queryPos;
+   Vector               m_queryPos;
    SpatialEntity*       m_selectionCandidate;
 
 public:
    // ----------------------------------------------------------------------
    // SceneQuery implementation
    // ----------------------------------------------------------------------
-   const D3DXVECTOR2& getQueriedPosition() const { return m_queryPos; }
+   const Vector& getQueriedPosition() const { return m_queryPos; }
    void setResult( Entity* foundEntity );
 
    // ----------------------------------------------------------------------

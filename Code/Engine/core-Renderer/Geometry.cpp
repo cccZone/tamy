@@ -21,7 +21,7 @@ END_OBJECT();
 Geometry::Geometry( const std::string& name )
    : SpatialEntity( name )
    , m_resource(NULL)
-   , m_globalBounds( new PointVolume( D3DXVECTOR3( 0, 0, 0 ) ) )
+   , m_globalBounds( new PointVolume( Vector( 0, 0, 0 ) ) )
 {
 }
 
@@ -29,7 +29,7 @@ Geometry::Geometry( const std::string& name )
 
 Geometry::Geometry( const Geometry& rhs )
    : SpatialEntity( rhs )
-   , m_globalBounds( new PointVolume( D3DXVECTOR3( 0, 0, 0 ) ) )
+   , m_globalBounds( new PointVolume( Vector( 0, 0, 0 ) ) )
 {
 }
 
@@ -103,7 +103,7 @@ const BoundingVolume& Geometry::getBoundingVolume() const
    {
       const BoundingVolume& geomBoundingVol = m_resource->getBoundingVolume();
 
-      const D3DXMATRIX& parentMtx = getGlobalMtx();
+      const Matrix& parentMtx = getGlobalMtx();
       geomBoundingVol.transform( parentMtx, *m_globalBounds );
    }
 
@@ -160,7 +160,7 @@ void Geometry::onObjectLoaded()
    }
    else
    {
-      m_globalBounds = new PointVolume( D3DXVECTOR3( 0, 0, 0 ) );
+      m_globalBounds = new PointVolume( Vector( 0, 0, 0 ) );
    }
 }
 
@@ -180,7 +180,7 @@ void Geometry::onPropertyChanged( ReflectionProperty& property )
       }
       else
       {
-         m_globalBounds = new PointVolume( D3DXVECTOR3( FLT_MAX, FLT_MAX, FLT_MAX ) );
+         m_globalBounds = new PointVolume( Vector( FLT_MAX, FLT_MAX, FLT_MAX ) );
       }
    }
 }

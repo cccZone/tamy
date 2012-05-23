@@ -50,15 +50,36 @@ void CameraMovementController::update( float timeElapsed )
    float rotationSpeed = 0.1f * timeElapsed;
 
    // process the keys
-   if ( m_movementDir[MD_FRONT] )  { m_cameraController->move( m_cameraController->getLookVec()   * movementSpeed ); }
-   if ( m_movementDir[MD_BACK] )   { m_cameraController->move( -m_cameraController->getLookVec()  * movementSpeed ); }
-   if ( m_movementDir[MD_LEFT] )   { m_cameraController->move( -m_cameraController->getRightVec() * movementSpeed ); }
-   if ( m_movementDir[MD_RIGHT] )  { m_cameraController->move( m_cameraController->getRightVec()  * movementSpeed ); }
+   Vector moveVec;
+   if ( m_movementDir[MD_FRONT] )  
+   { 
+      moveVec.setMul( m_cameraController->getLookVec(), movementSpeed );
+      m_cameraController->move( moveVec ); 
+   }
+
+   if ( m_movementDir[MD_BACK] )
+   { 
+      moveVec.setMul( m_cameraController->getLookVec(), -movementSpeed );
+      m_cameraController->move( moveVec ); 
+   }
+
+   if ( m_movementDir[MD_LEFT] )   
+   { 
+      moveVec.setMul( m_cameraController->getRightVec(), -movementSpeed );
+      m_cameraController->move( moveVec ); 
+   }
+
+   if ( m_movementDir[MD_RIGHT] )
+   { 
+      moveVec.setMul( m_cameraController->getRightVec(), movementSpeed );
+      m_cameraController->move( moveVec ); 
+   }
 
    if ( m_rotating )
    {
-      D3DXVECTOR2 mouseSpeed = m_uic->getMouseSpeed() * rotationSpeed;
-      m_cameraController->rotate( mouseSpeed.y, mouseSpeed.x );
+      float mouseSpeedX = m_uic->getMouseSpeed().v[0] * rotationSpeed;
+      float mouseSpeedY = m_uic->getMouseSpeed().v[1] * rotationSpeed;
+      m_cameraController->rotate( mouseSpeedY, mouseSpeedX );
    }
 }
 

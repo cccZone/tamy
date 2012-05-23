@@ -2,32 +2,35 @@
 #error "This file can only be included from LineSegments.h"
 #else
 
-#include <d3dx9.h>
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
 LineSegment::LineSegment()
-: start( 0, 0, 0 )
-, end( 0, 0, 0 )
+   : start( 0, 0, 0 )
+   , end( 0, 0, 0 )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-LineSegment::LineSegment( const D3DXVECTOR3& _start, const D3DXVECTOR3& _end, const Color& _color )
-: start( _start )
-, end( _end )
-, color( _color )
+LineSegment::LineSegment( const Vector& _start, const Vector& _end, const Color& _color )
+   : start( _start )
+   , end( _end )
+   , color( _color )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool LineSegment::operator==(const LineSegment& rhs) const
+bool LineSegment::operator==( const LineSegment& rhs ) const
 {
-   return ((D3DXVec3LengthSq(&(start - rhs.start)) < 0.001f) && 
-      (D3DXVec3LengthSq(&(end - rhs.end)) < 0.001f));
+   Vector startDiff;
+   startDiff.setSub( start, rhs.start );
+   Vector endDiff;
+   endDiff.setSub( end, rhs.end );
+
+
+   return ( ( startDiff.lengthSq() < 0.001f ) && (endDiff.lengthSq() < 0.001f ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -72,7 +72,7 @@ void ShaderRenderCommand< T >::setFloat( const std::string& paramName, const flo
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void ShaderRenderCommand< T >::setMtx( const std::string& paramName, const D3DXMATRIX& val )
+void ShaderRenderCommand< T >::setMtx( const std::string& paramName, const Matrix& val )
 {
    m_shaderParams.push_back( new ShaderParamMtx< T >( paramName, val ) );
 }
@@ -80,7 +80,7 @@ void ShaderRenderCommand< T >::setMtx( const std::string& paramName, const D3DXM
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void ShaderRenderCommand< T >::setMtx( const std::string& paramName, const D3DXMATRIX* arr, unsigned int size )
+void ShaderRenderCommand< T >::setMtx( const std::string& paramName, const Matrix* arr, unsigned int size )
 {
    m_shaderParams.push_back( new ShaderParamMtxArray< T >( paramName, arr, size ) );
 }
@@ -101,7 +101,7 @@ void ShaderRenderCommand< T >::setTexture( const std::string& paramName, ShaderT
    // we're using the good old Visitor pattern here to get around that we can't 
    // have template virtual methods - so we'll make our resources introduce
    // themselves to the ShaderTexture by calling a proper method on it,
-   // and it will be the shader texture's responsiblity to instantiate
+   // and it will be the shader texture's responsiiblity to instantiate
    // a proper param setter.
    m_shaderParams.push_back( T::createTextureSetter( paramName, val ) );
 }
@@ -109,7 +109,7 @@ void ShaderRenderCommand< T >::setTexture( const std::string& paramName, ShaderT
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void ShaderRenderCommand< T >::setVec4( const std::string& paramName, const D3DXVECTOR4& val )
+void ShaderRenderCommand< T >::setVec4( const std::string& paramName, const Vector& val )
 {
    m_shaderParams.push_back( new ShaderParamVec4< T >( paramName, val ) );
 }
@@ -117,7 +117,7 @@ void ShaderRenderCommand< T >::setVec4( const std::string& paramName, const D3DX
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void ShaderRenderCommand< T >::setVec4( const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size )
+void ShaderRenderCommand< T >::setVec4( const std::string& paramName, const Vector* arr, unsigned int size )
 {
    m_shaderParams.push_back( new ShaderParamVec4Array< T >( paramName, arr, size ) );
 }

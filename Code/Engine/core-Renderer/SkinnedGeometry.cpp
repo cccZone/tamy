@@ -63,10 +63,10 @@ bool SkinnedGeometry::onPreRender( Renderer& renderer )
    for ( unsigned int i = 0; i < bonesCount; ++i )
    {
       Node* bone = m_bones[i];
-      D3DXMATRIX& boneMatrix = m_boneMatrices[i];
-      const D3DXMATRIX& invBindPoseMtx = m_skeleton->getInvBindPoseMtx( bone->getName() );
+      Matrix& boneMatrix = m_boneMatrices[i];
+      const Matrix& invBindPoseMtx = m_skeleton->getInvBindPoseMtx( bone->getName() );
 
-      boneMatrix = invBindPoseMtx * bone->getGlobalMtx() * camera.getViewMtx();
+      boneMatrix.setMul( invBindPoseMtx, bone->getGlobalMtx() ).mul( camera.getViewMtx() );
    }
    comm->setMtx( "g_mSkinningMatrices", m_boneMatrices, m_boneMatrices.size() );
    comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
@@ -102,14 +102,11 @@ void SkinnedGeometry::instantiateSkeleton( Entity& parent )
 
    unsigned int bonesCount = m_skeleton->getBonesCount();
 
-   D3DXMATRIX identityMtx;
-   D3DXMatrixIdentity( &identityMtx );
-
    m_bones.resize( bonesCount );
    m_boneMatrices.allocate( bonesCount );
    for ( unsigned int boneIdx = 0; boneIdx < bonesCount; ++boneIdx )
    {
-      m_boneMatrices.push_back( identityMtx );
+      m_boneMatrices.push_back( Matrix::IDENTITY );
    }
 
    for ( unsigned int boneIdx = 0; boneIdx < bonesCount; ++boneIdx )

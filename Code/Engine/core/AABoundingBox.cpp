@@ -2,19 +2,21 @@
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
 #include "core\PointVolume.h"
+#include "core\Matrix.h"
+#include "core\Plane.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 AABoundingBox::AABoundingBox()
 {
-   min = D3DXVECTOR3(0, 0, 0);
-   max = D3DXVECTOR3(0, 0, 0);
+   min = Vector(0, 0, 0);
+   max = Vector(0, 0, 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-AABoundingBox::AABoundingBox( const D3DXVECTOR3& _min, const D3DXVECTOR3& _max )
+AABoundingBox::AABoundingBox( const Vector& _min, const Vector& _max )
 {
    min = _min;
    max = _max;
@@ -42,14 +44,14 @@ BoundingVolume* AABoundingBox::clone() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AABoundingBox::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
+void AABoundingBox::transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const
 {
    // verify that the volume is an AABoundingBox
    ASSERT( dynamic_cast< AABoundingBox* >( &transformedVolume ) != NULL );
    AABoundingBox& transformedBox = static_cast< AABoundingBox& >( transformedVolume );
 
    float av, bv;
-   transformedBox.min = transformedBox.max = D3DXVECTOR3( mtx.m[3][0], mtx.m[3][1], mtx.m[3][2] );
+   transformedBox.min = transformedBox.max = Vector( mtx.m[3][0], mtx.m[3][1], mtx.m[3][2] );
 
    for ( int i = 0; i < 3; ++i)
    {
@@ -73,11 +75,11 @@ void AABoundingBox::transform( const D3DXMATRIX& mtx, BoundingVolume& transforme
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float AABoundingBox::distanceToPlane(const D3DXPLANE& plane) const
+float AABoundingBox::distanceToPlane(const Plane& plane) const
 {
-   D3DXVECTOR3 planeNormal(plane.a, plane.b, plane.c);
+   Vector planeNormal(plane.a, plane.b, plane.c);
 
-   D3DXVECTOR3 nearPoint, farPoint;
+   Vector nearPoint, farPoint;
 
    if (planeNormal.x > 0.0f) {farPoint.x = max.x; nearPoint.x = min.x;}
    else {farPoint.x = min.x; nearPoint.x = max.x;}
@@ -86,12 +88,12 @@ float AABoundingBox::distanceToPlane(const D3DXPLANE& plane) const
    if (planeNormal.z > 0.0f) {farPoint.z = max.z; nearPoint.z = min.z;}
    else {farPoint.z = min.z; nearPoint.z = max.z;}
 
-   if ((D3DXPlaneDotCoord(&plane, &nearPoint)) > 0.0f)
+   if ( plane.dotCoord( nearPoint ) > 0.0f)
    {
       // the box is in front
       return 1;
    }
-   if ((D3DXPlaneDotCoord(&plane, &farPoint)) >= 0.0f)
+   if ( plane.dotCoord( farPoint ) >= 0.0f)
    {
       return 0;
    }
@@ -154,12 +156,18 @@ bool AABoundingBox::hasVolume() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AABoundingBox::include(const D3DXVECTOR3& pt)
+void AABoundingBox::include(const Vector& pt)
 {
    for (char i = 0; i < 3; ++i)
    {
-      if      (pt[i] < min[i]) {min[i] = pt[i];}
-      if      (pt[i] > max[i]) {max[i] = pt[i];}
+      if ( pt[i] < min[i] ) 
+      {
+         min[i] = pt[i];
+      }
+      if ( pt[i] > max[i] ) 
+      {
+         max[i] = pt[i];
+      }
    }
 }
 

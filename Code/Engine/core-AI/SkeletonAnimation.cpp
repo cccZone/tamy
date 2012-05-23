@@ -58,7 +58,7 @@ void SkeletonAnimation::addKeys( BoneSRTAnimation* animationKeys )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkeletonAnimation::addOrientationKey( const std::string& boneName, float frameTime, const D3DXQUATERNION& orientation )
+void SkeletonAnimation::addOrientationKey( const std::string& boneName, float frameTime, const Quaternion& orientation )
 {
    BoneSRTAnimation* animDef = getBoneDef( boneName );
    if ( animDef == NULL )
@@ -79,7 +79,7 @@ void SkeletonAnimation::addOrientationKey( const std::string& boneName, float fr
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkeletonAnimation::addTranslationKey( const std::string& boneName, float frameTime, const D3DXVECTOR3& translation )
+void SkeletonAnimation::addTranslationKey( const std::string& boneName, float frameTime, const Vector& translation )
 {
    BoneSRTAnimation* animDef = getBoneDef( boneName );
    if ( animDef == NULL )

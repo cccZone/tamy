@@ -31,12 +31,12 @@ public:
    void setInt( const std::string& paramName, const int* arr, unsigned int size );
    void setFloat( const std::string& paramName, float val );
    void setFloat( const std::string& paramName, const float* arr, unsigned int size );
-   void setMtx( const std::string& paramName, const D3DXMATRIX& val );
-   void setMtx( const std::string& paramName, const D3DXMATRIX* arr, unsigned int size );
+   void setMtx( const std::string& paramName, const Matrix& val );
+   void setMtx( const std::string& paramName, const Matrix* arr, unsigned int size );
    void setString( const std::string& paramName, const std::string& val );
    void setTexture( const std::string& paramName, ShaderTexture& val );
-   void setVec4( const std::string& paramName, const D3DXVECTOR4& val );
-   void setVec4( const std::string& paramName, const D3DXVECTOR4* arr, unsigned int size );
+   void setVec4( const std::string& paramName, const Vector& val );
+   void setVec4( const std::string& paramName, const Vector* arr, unsigned int size );
 
 protected:
    /**

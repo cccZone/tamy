@@ -46,7 +46,7 @@ void GNTimer::onObjectLoaded()
 
 void GNTimer::preRender( Renderer& renderer, const GeometryEntity& entity ) const
 {
-   float currTime = m_timer.getCurrentTime();
+   float currTime = (float)m_timer.getCurrentTime();
    float sinTime = sin( currTime * m_period ) * m_amplitude;
 
    m_time->setValue( entity.data(), currTime );

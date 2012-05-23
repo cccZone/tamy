@@ -13,8 +13,6 @@
  */
 class SurfaceProperties
 {
-   DECLARE_CLASS()
-
 private:
    Color m_ambient;
    Color m_diffuse;

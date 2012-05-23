@@ -185,7 +185,7 @@ void PixelShaderEditor::onParamChange()
 {
    PixelShaderParams& params = m_shader.changeParams();
 
-   params.m_cullingMode = (D3DCULL)( m_ui.cullingMode->currentIndex() + 1 );
+   params.m_cullingMode = (CullingMode)( m_ui.cullingMode->currentIndex() + 1 );
    params.m_useZBuffer = m_ui.zBufferEnabled->isChecked();
    params.m_writeToZBuffer = m_ui.zBufferWriteEnabled->isChecked();
 }
@@ -278,12 +278,12 @@ void PixelShaderEditor::onTextureStageChange()
       TextureStageTabDef& tabDef = m_textureStagesTabWidgets[i];
       TextureStageParams& stageSettings = m_shader.changeTextureStage( i );
 
-      stageSettings.m_addressU = (D3DTEXTUREADDRESS)( tabDef.m_uAddressMode->currentIndex() + 1 );
-      stageSettings.m_addressV = (D3DTEXTUREADDRESS)( tabDef.m_vAddressMode->currentIndex() + 1 );
-      stageSettings.m_addressW = (D3DTEXTUREADDRESS)( tabDef.m_wAddressMode->currentIndex() + 1 );
-      stageSettings.m_minFilter = (D3DTEXTUREFILTERTYPE)( tabDef.m_minFilter->currentIndex() );
-      stageSettings.m_magFilter = (D3DTEXTUREFILTERTYPE)( tabDef.m_magFilter->currentIndex() );
-      stageSettings.m_mipFilter = (D3DTEXTUREFILTERTYPE)( tabDef.m_mipFilter->currentIndex() );
+      stageSettings.m_addressU = (TextureAddressingMode)( tabDef.m_uAddressMode->currentIndex() + 1 );
+      stageSettings.m_addressV = (TextureAddressingMode)( tabDef.m_vAddressMode->currentIndex() + 1 );
+      stageSettings.m_addressW = (TextureAddressingMode)( tabDef.m_wAddressMode->currentIndex() + 1 );
+      stageSettings.m_minFilter = (TextureFilteringMode)( tabDef.m_minFilter->currentIndex() );
+      stageSettings.m_magFilter = (TextureFilteringMode)( tabDef.m_magFilter->currentIndex() );
+      stageSettings.m_mipFilter = (TextureFilteringMode)( tabDef.m_mipFilter->currentIndex() );
    }
 }
 

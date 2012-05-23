@@ -83,7 +83,7 @@ private:
                          float range,
                          float constAtt, float linearAtt, float quadAtt,
                          float fallOff, float theta, float phi,
-                         const D3DXMATRIX& situation);
+                         const Matrix& situation);
 
    /** 
     * Adds a new sky box to the scene.
@@ -110,7 +110,7 @@ private:
     *                         of the object
     */
    virtual void addDynamicMesh(const std::string& meshFileName, 
-                               const D3DXMATRIX& situation);
+                               const Matrix& situation);
 
    /**
     * Adds a new static mesh to the scene.
@@ -125,7 +125,7 @@ private:
    virtual void addStaticGeometry( Model& scene,
                                    ResourcesManager& rm,
                                    std::vector<MeshDefinition> meshes,
-                                   const D3DXMATRIX& situation,
+                                   const Matrix& situation,
                                    const std::string& objName );
 };
 

@@ -6,6 +6,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct Vector;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * A composite that allows to combine multiple steering behaviors into one.
  */
@@ -17,8 +21,7 @@ private:
       SteeringBehavior* behavior;
       float weight;
 
-      BehaviorDesc(SteeringBehavior* _behavior,
-                   float _weight)
+      BehaviorDesc(SteeringBehavior* _behavior, float _weight)
          : behavior(_behavior)
          , weight(_weight)
       {}
@@ -39,7 +42,10 @@ public:
     */
    void add(SteeringBehavior* behavior, float weight);
 
-   D3DXVECTOR3 calculateVelocity(float timeElapsed);
+   // -------------------------------------------------------------------------
+   // SteeringBehavior implementation
+   // -------------------------------------------------------------------------
+   void calculateVelocity( float timeElapsed, Vector& outVelocity );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

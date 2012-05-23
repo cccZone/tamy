@@ -2,12 +2,12 @@
 /// @brief  spaceship-like movement for the node
 #pragma once
 
-#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Node;
+struct Vector;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,7 @@ public:
     */
    UnconstrainedMotionController( Node& controlledNode );
 
-   void move( const D3DXVECTOR3& transVec );
+   void move( const Vector& transVec );
 
    /**
     * 3D rotation.
@@ -44,14 +44,14 @@ public:
     */
    void rotate( float pitch, float yaw );
 
-   void setPosition( const D3DXVECTOR3& vec );
-   D3DXVECTOR3 getRightVec() const;
-   D3DXVECTOR3 getUpVec() const;
-   D3DXVECTOR3 getLookVec() const;
-   D3DXVECTOR3 getPosition() const;
+   void setPosition( const Vector& vec );
+   const Vector& getRightVec() const;
+   const Vector& getUpVec() const;
+   const Vector& getLookVec() const;
+   const Vector& getPosition() const;
 
 private:
-   void regenerateVectors( D3DXVECTOR3& rightVec, D3DXVECTOR3& upVec, D3DXVECTOR3& lookVec ) const;
+   void regenerateVectors( Vector& rightVec, Vector& upVec, Vector& lookVec ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

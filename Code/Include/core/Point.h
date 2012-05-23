@@ -3,7 +3,7 @@
 #pragma once
 
 #include <iostream>
-#include <d3dx9.h>
+#include "core/Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,7 +18,7 @@ struct Point
 
    Point( int _x, int _y ) : x(_x), y(_y) {}
    Point() : x(0), y(0) {}
-   Point( const D3DXVECTOR2& vec ) : x( (int)vec.x ), y( (int)vec.y ) {}
+   Point( const Vector& vec ) : x( (int)vec.x ), y( (int)vec.y ) {}
 
    bool operator==(const Point& rhs) const
    {
@@ -42,12 +42,7 @@ struct Point
       return newPt;
    }
 
-   operator D3DXVECTOR2() const 
-   {
-      return D3DXVECTOR2( (float)x, (float)y );
-   }
-
-   friend std::ostream& operator<<(std::ostream& stream, const Point& rhs)
+   friend std::ostream& operator<<( std::ostream& stream, const Point& rhs )
    {
       stream << "[" << rhs.x << ", " << rhs.y << "]";
       return stream;

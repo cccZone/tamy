@@ -39,7 +39,7 @@ namespace // anonymous
    class BVHEndSite : public BVHNode
    {
    private:
-      D3DXVECTOR3                m_offset;
+      Vector                m_offset;
 
    public:
       void parse( std::stringstream& inStream )
@@ -74,7 +74,7 @@ namespace // anonymous
    {
    private:
       std::string                         m_boneName;
-      D3DXVECTOR3                         m_offset;
+      Vector										m_offset;
 
       std::vector< std::string >          m_channels;
 
@@ -158,12 +158,12 @@ namespace // anonymous
       void parseAnimationFrames( std::stringstream& inStream, float frameTime )
       {
          // add a keyframe
-         D3DXVECTOR3 trans( 0, 0, 0 );
+         Vector trans( 0, 0, 0 );
          bool hasTranslation = false;
 
          float rotAngle;
-         D3DXQUATERNION orientation( 0, 0, 0, 1 );
-         D3DXQUATERNION tmpOrientation( 0, 0, 0, 1 );
+         Quaternion orientation( 0, 0, 0, 1 );
+         Quaternion tmpOrientation( 0, 0, 0, 1 );
          bool hasOrientation = false;
 
          for ( std::vector< std::string >::const_iterator it = m_channels.begin(); it != m_channels.end(); ++it )
@@ -187,22 +187,25 @@ namespace // anonymous
             else if ( channelId == "Xrotation" )
             {
                inStream >> rotAngle;
-               D3DXQuaternionRotationAxis( &tmpOrientation, &D3DXVECTOR3( 1, 0, 0 ), EulerAngles::toRadians( rotAngle ) );
-               D3DXQuaternionMultiply( &orientation, &tmpOrientation, &orientation );
+               tmpOrientation.setAxisAngle( Vector::OX, DEG2RAD( rotAngle ) );
+               tmpOrientation.mul( orientation );
+               orientation = tmpOrientation;
                hasOrientation = true;
             }
             else if ( channelId == "Yrotation" )
             {
                inStream >> rotAngle;
-               D3DXQuaternionRotationAxis( &tmpOrientation, &D3DXVECTOR3( 0, 1, 0 ), EulerAngles::toRadians( rotAngle ) );
-               D3DXQuaternionMultiply( &orientation, &tmpOrientation, &orientation );
+               tmpOrientation.setAxisAngle( Vector::OY, DEG2RAD( rotAngle ) );
+               tmpOrientation.mul( orientation );
+               orientation = tmpOrientation;
                hasOrientation = true;
             }
             else if ( channelId == "Zrotation" )
             {
                inStream >> rotAngle;
-               D3DXQuaternionRotationAxis( &tmpOrientation, &D3DXVECTOR3( 0, 0, 1 ), EulerAngles::toRadians( rotAngle ) );
-               D3DXQuaternionMultiply( &orientation, &tmpOrientation, &orientation );
+               tmpOrientation.setAxisAngle( Vector::OZ, DEG2RAD( rotAngle ) );
+               tmpOrientation.mul( orientation );
+               orientation = tmpOrientation;
                hasOrientation = true;
             }
          }
@@ -228,7 +231,7 @@ namespace // anonymous
       SpatialEntity* instantiate( SkeletonAnimation& animation )
       {
          BoneEntity* entity = new BoneEntity( m_boneName );
-         D3DXMatrixTranslation( &( entity->accessLocalMtx() ), m_offset.x, m_offset.y, m_offset.z );
+         entity->accessLocalMtx().setTranslation( Vector( m_offset.x, m_offset.y, m_offset.z ) );
 
          unsigned int count = m_children.size();
          for ( unsigned int i = 0; i < count; ++i )

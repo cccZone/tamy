@@ -1,8 +1,8 @@
 #include "core-TestFramework\TestFramework.h"
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core\Node.h"
-#include "core\MatrixWriter.h"
-#include <d3dx9.h>
+#include "core\Vector.h"
+#include "core\Matrix.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,12 +15,11 @@ TEST(UnconstrainedMotionController, settingPosition)
    
    // let's translate the parent node, so that we can check the differences
    // between the node's local and global matrix
-   D3DXMATRIX rootLocalMtx = root.getLocalMtx();
-   rootLocalMtx._41 = 10;
+   Matrix rootLocalMtx = root.getLocalMtx();
+   rootLocalMtx.m41 = 10;
    root.setLocalMtx(rootLocalMtx);
 
-   D3DXMATRIX identityMtx;
-   D3DXMatrixIdentity(&identityMtx);
+   Matrix identityMtx = Matrix::IDENTITY;
 
    // at it's original position, since the node's local matrix is an identity matrix,
    // it's at the origin of it's parent local coordinate system
@@ -29,23 +28,21 @@ TEST(UnconstrainedMotionController, settingPosition)
 
    // let's put the controller into play...
    UnconstrainedMotionController controller(*node);
-   D3DXVECTOR3 newGlobalPos(10, 20, 30);
+   Vector newGlobalPos(10, 20, 30);
    controller.setPosition(newGlobalPos);
 
    // parent's matrix shouldn't change
    CPPUNIT_ASSERT_EQUAL(rootLocalMtx, root.getLocalMtx());
 
    // the node's global matrix should now point to the position we just set
-   D3DXMATRIX globalPosMtx;
-   D3DXMatrixIdentity(&globalPosMtx);
-   globalPosMtx._41 = newGlobalPos.x; globalPosMtx._42 = newGlobalPos.y; globalPosMtx._43 = newGlobalPos.z;
+   Matrix globalPosMtx = Matrix::IDENTITY;
+   globalPosMtx.m41 = newGlobalPos.x; globalPosMtx.m42 = newGlobalPos.y; globalPosMtx.m43 = newGlobalPos.z;
    CPPUNIT_ASSERT_EQUAL(globalPosMtx, node->getGlobalMtx());
 
    // and the node's local matrix should be a a transformation
    // between the parent's local mtx and the child's global mtx
-   D3DXMATRIX localPosMtx;
-   D3DXMatrixIdentity(&localPosMtx);
-   localPosMtx._41 = 0; localPosMtx._42 = 20; localPosMtx._43 = 30;
+   Matrix localPosMtx = Matrix::IDENTITY;
+   localPosMtx.m41 = 0; localPosMtx.m42 = 20; localPosMtx.m43 = 30;
    CPPUNIT_ASSERT_EQUAL(localPosMtx, node->getLocalMtx());
 }
 
@@ -59,12 +56,11 @@ TEST(UnconstrainedMotionController, moving)
    
    // let's translate the parent node, so that we can check the differences
    // between the node's local and global matrix
-   D3DXMATRIX rootLocalMtx = root.getLocalMtx();
-   rootLocalMtx._41 = 10;
+   Matrix rootLocalMtx = root.getLocalMtx();
+   rootLocalMtx.m41 = 10;
    root.setLocalMtx(rootLocalMtx);
 
-   D3DXMATRIX identityMtx;
-   D3DXMatrixIdentity(&identityMtx);
+   Matrix identityMtx = Matrix::IDENTITY;
 
    // at it's original position, since the node's local matrix is an identity matrix,
    // it's at the origin of it's parent local coordinate system
@@ -73,12 +69,12 @@ TEST(UnconstrainedMotionController, moving)
 
    // let's put the controller into play...
    UnconstrainedMotionController controller(*node);
-   D3DXVECTOR3 translationVec(10, 20, 30);
+   Vector translationVec(10, 20, 30);
    controller.move(translationVec);
 
    // the node's global matrix should now point to the position we just set
-   D3DXMATRIX globalMtx = rootLocalMtx;
-   globalMtx._41 += translationVec.x; globalMtx._42 = translationVec.y; globalMtx._43 = translationVec.z;
+   Matrix globalMtx = rootLocalMtx;
+   globalMtx.m41 += translationVec.x; globalMtx.m42 = translationVec.y; globalMtx.m43 = translationVec.z;
    CPPUNIT_ASSERT_EQUAL(globalMtx, node->getGlobalMtx());
 }
 
@@ -93,12 +89,11 @@ TEST(UnconstrainedMotionController, changingPitch)
    controller.rotate(-90, 0, 0); // let's change the pitch by 90 degrees
 
    // the node's global matrix should now point to the position we just set
-   D3DXMATRIX expectedGlobalMtx;
-   D3DXMatrixIdentity(&expectedGlobalMtx);
-   expectedGlobalMtx._21 = 0; expectedGlobalMtx._22 = 0; expectedGlobalMtx._23 = -1;
-   expectedGlobalMtx._31 = 0; expectedGlobalMtx._32 = 1; expectedGlobalMtx._33 = 0;
+   Matrix expectedGlobalMtx = Matrix::IDENTITY;
+   expectedGlobalMtx.m21 = 0; expectedGlobalMtx.m22 = 0; expectedGlobalMtx.m23 = -1;
+   expectedGlobalMtx.m31 = 0; expectedGlobalMtx.m32 = 1; expectedGlobalMtx.m33 = 0;
 
-   D3DXMATRIX actualGlobalMtx = node.getGlobalMtx();
+   Matrix actualGlobalMtx = node.getGlobalMtx();
    for (int col = 0; col < 4; col++)
    {
       for (int row = 0; row < 4; row++)
@@ -119,12 +114,11 @@ TEST(UnconstrainedMotionController, changingYaw)
    controller.rotate(0, 90, 0); // let's change the yaw by 90 degrees
 
    // the node's global matrix should now point to the position we just set
-   D3DXMATRIX expectedGlobalMtx;
-   D3DXMatrixIdentity(&expectedGlobalMtx);
-   expectedGlobalMtx._11 = 0; expectedGlobalMtx._12 = 0; expectedGlobalMtx._13 = -1;
-   expectedGlobalMtx._31 = 1; expectedGlobalMtx._32 = 0; expectedGlobalMtx._33 = 0;
+   Matrix expectedGlobalMtx = Matrix::IDENTITY;
+   expectedGlobalMtx.m11 = 0; expectedGlobalMtx.m12 = 0; expectedGlobalMtx.m13 = -1;
+   expectedGlobalMtx.m31 = 1; expectedGlobalMtx.m32 = 0; expectedGlobalMtx.m33 = 0;
 
-   D3DXMATRIX actualGlobalMtx = node.getGlobalMtx();
+   Matrix actualGlobalMtx = node.getGlobalMtx();
    for (int col = 0; col < 4; col++)
    {
       for (int row = 0; row < 4; row++)
@@ -145,12 +139,11 @@ TEST(UnconstrainedMotionController, changingRoll)
    controller.rotate(0, 0, 90); // let's change the roll by 90 degrees
 
    // the node's global matrix should now point to the position we just set
-   D3DXMATRIX expectedGlobalMtx;
-   D3DXMatrixIdentity(&expectedGlobalMtx);
-   expectedGlobalMtx._11 = 0; expectedGlobalMtx._12 = 1; expectedGlobalMtx._13 = 0;
-   expectedGlobalMtx._21 = -1; expectedGlobalMtx._22 = 0; expectedGlobalMtx._23 = 0;
+   Matrix expectedGlobalMtx = Matrix::IDENTITY;
+   expectedGlobalMtx.m11 = 0; expectedGlobalMtx.m12 = 1; expectedGlobalMtx.m13 = 0;
+   expectedGlobalMtx.m21 = -1; expectedGlobalMtx.m22 = 0; expectedGlobalMtx.m23 = 0;
 
-   D3DXMATRIX actualGlobalMtx = node.getGlobalMtx();
+   Matrix actualGlobalMtx = node.getGlobalMtx();
    for (int col = 0; col < 4; col++)
    {
       for (int row = 0; row < 4; row++)

@@ -37,7 +37,7 @@ namespace // anonymous
             }
 
             outPoints = new QPointF[ outCount ];
-            D3DXVECTOR3 pos;
+            Vector pos;
             float time;
             for ( unsigned int i = 0; i < outCount; ++i )
             {
@@ -62,14 +62,15 @@ namespace // anonymous
             }
 
             outPoints = new QPointF[ outCount ];
-            D3DXQUATERNION orient;
+            Quaternion orient;
             float time;
             for ( unsigned int i = 0; i < outCount; ++i )
             {
                m_boneAnimation.getOrientationKey( i, orient, time );
                outPoints[i].setX( time * ANIMATION_TIME_SCALE );
 
-               EulerAngles angle( orient );
+               EulerAngles angle;
+               angle.setFromQuaternion( orient );
                switch( m_keyIdx )
                {
                case BAKEY_YAW: { outPoints[i].setY( angle.yaw ); break; }
@@ -90,7 +91,7 @@ namespace // anonymous
             unsigned int count = m_boneAnimation.getTranslationKeysCount();
             if ( pointIdx < count )
             {
-               D3DXVECTOR3 pos;
+               Vector pos;
                float time;
                m_boneAnimation.getTranslationKey( pointIdx, pos, time );
                result.setX( time * ANIMATION_TIME_SCALE );
@@ -109,12 +110,13 @@ namespace // anonymous
             unsigned int count = m_boneAnimation.getOrientationKeysCount();
             if ( pointIdx < count )
             {
-               D3DXQUATERNION orient;
+               Quaternion orient;
                float time;
                m_boneAnimation.getOrientationKey( pointIdx, orient, time );
                result.setX( time * ANIMATION_TIME_SCALE );
 
-               EulerAngles angle( orient );
+               EulerAngles angle;
+               angle.setFromQuaternion( orient );
                switch( m_keyIdx )
                {
                case BAKEY_YAW: { result.setY( angle.yaw ); break; }
@@ -138,7 +140,7 @@ namespace // anonymous
                return;
             }
 
-            D3DXVECTOR3 posKey;
+            Vector posKey;
             float time;
             m_boneAnimation.getTranslationKey( pointIdx, posKey, time );
 
@@ -160,12 +162,13 @@ namespace // anonymous
                return;
             }
 
-            D3DXQUATERNION orientKey;
+            Quaternion orientKey;
             float time;
             m_boneAnimation.getOrientationKey( pointIdx, orientKey, time );
 
             // extract Euler angle values
-            EulerAngles angle( orientKey );
+            EulerAngles angle;
+            angle.setFromQuaternion( orientKey );
             
             // update the edited key feature
             switch( m_keyIdx )
@@ -177,7 +180,7 @@ namespace // anonymous
             angle.normalize();
 
             // put the Euler angle back together into a quaternion value
-            orientKey = angle;
+            orientKey.setFromEulerAngles( angle );
             m_boneAnimation.setOrientationKey( pointIdx, orientKey );
 
          }

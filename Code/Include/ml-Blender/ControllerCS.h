@@ -5,7 +5,6 @@
 
 #include "ml-Blender/IColladaSlice.h"
 #include <vector>
-#include <d3dx9.h>
 #include "core-Renderer/LitVertex.h"
 #include "core-Renderer/SkinnedGeometry.h"
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core\BoundingVolume.h"
-#include <d3dx9.h>
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,8 +11,8 @@
  */
 struct BoundingSphere : public BoundingVolume
 {
-   D3DXVECTOR3 origin;
-   float radius;
+   Vector      origin;
+   float       radius;
 
    /**
     * Default constructor.
@@ -25,14 +25,14 @@ struct BoundingSphere : public BoundingVolume
     * @param origin
     * @param radius
     */
-   BoundingSphere(const D3DXVECTOR3& origin, float radius);
+   BoundingSphere(const Vector& origin, float radius);
 
    // -------------------------------------------------------------------------
    // BoundingVolume implementation
    // -------------------------------------------------------------------------
    BoundingVolume* clone() const;
-   void transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const;
-   float distanceToPlane(const D3DXPLANE& plane) const;
+   void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
+   float distanceToPlane(const Plane& plane) const;
    bool testCollision(const PointVolume& point) const;
    bool testCollision(const AABoundingBox& rhs) const;
    bool testCollision(const BoundingSphere& rhs) const;

@@ -113,9 +113,6 @@
     <ClCompile Include="ComponentsSystemTests.cpp">
       <Filter>ComponentsSystem</Filter>
     </ClCompile>
-    <ClCompile Include="MathTests.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="GraphDijkstraTests.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
@@ -148,6 +145,27 @@
     </ClCompile>
     <ClCompile Include="ResourcesManagerTests.cpp">
       <Filter>RTTI</Filter>
+    </ClCompile>
+    <ClCompile Include="DataExchangeTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="QuaternionTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="EulerAnglesTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixUtilsTests.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <d3dx9.h>
 #include <windows.h>
 #include <string>
 #include "core-Renderer\RenderCommand.h"
@@ -24,37 +23,7 @@ enum TextJustification
  */
 class Font : public RenderResource
 {
-private:
-   std::string          m_name;
-   D3DXFONT_DESC        m_desc;
-
-public:
-   /**
-    * Default constructor.
-    */
-   Font();
-
-   /**
-    * Constructor.
-    *
-    * @param desc    font description
-    */
-   Font( const D3DXFONT_DESC& desc );
-
-   /**
-    * Returns the name of the font. This method allows
-    * to store fonts in ResourceStorages.
-    *
-    * @return                 font name
-    */
-   const std::string& getName() const;
-
-   /**
-    * Returns the font description.
-    *
-    * @return  font description
-    */
-   const D3DXFONT_DESC& getDescription() const;
+   // <renderer.todo> implement me
 };
 
 ///////////////////////////////////////////////////////////////////////////////

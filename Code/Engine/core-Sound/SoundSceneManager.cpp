@@ -2,6 +2,7 @@
 #include "core\Node.h"
 #include "core-Sound\SoundListener.h"
 #include "core-Sound\Sound3D.h"
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,42 +66,44 @@ void SoundSceneManager::removeEmitter(Sound3D& sound)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Array<Sound3D*>& SoundSceneManager::update(Array<Sound3D*>& soundsToDisable, 
-                                           Array<Sound3D*>& soundsToEnable)
+Array< Sound3D* >& SoundSceneManager::update( Array< Sound3D* >& soundsToDisable, Array< Sound3D* >& soundsToEnable )
 {
-   if (m_activeListener == NULL) {return m_soundsArr;}
+   if ( m_activeListener == NULL ) 
+   {
+      return m_soundsArr;
+   }
 
    m_activeSoundsArr.clear();
 
-   D3DXMATRIX listenerMtx = m_activeListener->getGlobalMtx();
-   D3DXVECTOR3 listenerPos(listenerMtx._41, listenerMtx._42, listenerMtx._43);
-   D3DXMATRIX soundMtx;
-   D3DXVECTOR3 distVec;
+   const Matrix& listenerMtx = m_activeListener->getGlobalMtx();
+   Vector listenerPos( listenerMtx.m[3][0], listenerMtx.m[3][1], listenerMtx.m[3][2] );
+   Matrix soundMtx;
+   Vector distVec;
 
    Sound3D* sound = NULL;
    DWORD soundsCount = m_soundsArr.size();
    for (DWORD i = 0; i < soundsCount; ++i)
    {
       soundMtx = m_soundsArr[i]->getGlobalMtx();
-      distVec = listenerPos - D3DXVECTOR3(soundMtx._41, soundMtx._42, soundMtx._43);
+      distVec.setSub( listenerPos, Vector(soundMtx.m[3][0], soundMtx.m[3][1], soundMtx.m[3][2] ) );
 
       sound = m_soundsArr[i];
 
-      bool hearable = (D3DXVec3LengthSq(&distVec) <= m_soundsArr[i]->getHearingRadiusSq());
+      bool hearable = ( distVec.lengthSq() <= m_soundsArr[i]->getHearingRadiusSq() );
       bool active = sound->hasChannelAssigned();
 
-      if ((hearable == true) && (active == false))
+      if ( ( hearable == true ) && ( active == false ) )
       {
          soundsToEnable.push_back(sound);
       }
-      else if ((hearable == false) && (active == true))
+      else if ( ( hearable == false ) && ( active == true ) )
       {
-         soundsToDisable.push_back(sound);
+         soundsToDisable.push_back( sound );
       }
 
-      if (hearable)
+      if ( hearable )
       {
-         m_activeSoundsArr.push_back(sound);
+         m_activeSoundsArr.push_back( sound );
       }
    }
 

@@ -68,7 +68,7 @@ namespace // anonymous
 
       void initialize( Renderer& renderer ) 
       {
-         m_view = new RenderingView( renderer, AABoundingBox( D3DXVECTOR3( -100, -100, -100 ), D3DXVECTOR3( 100, 100, 100 ) ) );
+         m_view = new RenderingView( renderer, AABoundingBox( Vector( -100, -100, -100 ), Vector( 100, 100, 100 ) ) );
          m_model.attach( *m_view );
       }
 
@@ -125,7 +125,7 @@ namespace // anonymous
    public:
       GeometryMock( const std::string& id ) 
          : m_id( std::string( "RenderGeometry_" ) + id )
-         , m_bounds( D3DXVECTOR3( -1, -1, -1 ), D3DXVECTOR3( 1, 1, 1 ) )
+         , m_bounds( Vector( -1, -1, -1 ), Vector( 1, 1, 1 ) )
       {}
 
       void render( Renderer& renderer )
@@ -212,7 +212,7 @@ TEST( RenderingView, basics )
    renderer.setMechanism( new RenderingMechanismMock( model ) );
 
    // move the camera so that the entire scene is visible
-   D3DXMatrixTranslation( &renderer.getActiveCamera().accessLocalMtx(), 0, 0, -10 );
+   renderer.getActiveCamera().accessLocalMtx().setTranslation( Vector( 0, 0, -10 ) );
 
    // render the scene
    renderer.render();
@@ -251,7 +251,7 @@ TEST( RenderingView, statesBatching )
    renderer.setMechanism( new RenderingMechanismMock( model ) );
 
    // move the camera so that the entire scene is visible
-   D3DXMatrixTranslation( &renderer.getActiveCamera().accessLocalMtx(), 0, 0, -10 );
+   renderer.getActiveCamera().accessLocalMtx().setTranslation( Vector( 0, 0, -10 ) );
 
    // render the scene
    renderer.render();
@@ -295,7 +295,7 @@ TEST( RenderingView, manySingleStatesBatching )
    renderer.setMechanism( new RenderingMechanismMock( model ) );
 
    // move the camera so that the entire scene is visible
-   D3DXMatrixTranslation( &renderer.getActiveCamera().accessLocalMtx(), 0, 0, -10 );
+   renderer.getActiveCamera().accessLocalMtx().setTranslation( Vector( 0, 0, -10 ) );
 
    // render the scene
    renderer.render();
@@ -333,7 +333,7 @@ TEST( RenderingView, simpleMultipleStatesBatching )
    renderer.setMechanism( new RenderingMechanismMock( model ) );
 
    // move the camera so that the entire scene is visible
-   D3DXMatrixTranslation( &renderer.getActiveCamera().accessLocalMtx(), 0, 0, -10 );
+   renderer.getActiveCamera().accessLocalMtx().setTranslation( Vector( 0, 0, -10 ) );
 
    // render the scene
    renderer.render();

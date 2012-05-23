@@ -15,7 +15,7 @@ END_RESOURCE();
 
 TriangleMesh::TriangleMesh()
 {
-   D3DXMatrixIdentity(&m_identityMtx);
+   m_identityMtx = Matrix::IDENTITY;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,7 @@ TriangleMesh::TriangleMesh( const FilePath& resourceName, const std::vector<LitV
    , m_vertices(vertices)
    , m_faces(faces)
 {
-   D3DXMatrixIdentity(&m_identityMtx);
+   m_identityMtx = Matrix::IDENTITY;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,12 +37,12 @@ TriangleMesh::~TriangleMesh()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TriangleMesh::onResourceLoaded(ResourcesManager& mgr)
+void TriangleMesh::onResourceLoaded( ResourcesManager& mgr )
 {
    unsigned int verticesCount = m_vertices.size();
    for (unsigned int i = 0; i < verticesCount; ++i)
    {
-      m_boundingVol.include(m_vertices[i].m_coords);
+      m_boundingVol.include( ( const Vector& )( m_vertices[i].m_coords ) );
    }
 }
 
@@ -55,7 +55,7 @@ VertexArray* TriangleMesh::getGenericVertexArray() const
    unsigned int vtxCount = m_vertices.size();
    for (unsigned int i = 0; i < vtxCount; ++i)
    {
-      array->add(m_vertices[i]);
+      array->add( m_vertices[i] );
    }
 
    return array;

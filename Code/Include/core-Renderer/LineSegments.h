@@ -1,8 +1,7 @@
-#ifndef _LINE_SEGMENTS_H
-#define _LINE_SEGMENTS_H
-
 /// @file   core-Renderer\LineSegments.h
 /// @brief  geometry of a mesh composed of line segments
+#ifndef _LINE_SEGMENTS_H
+#define _LINE_SEGMENTS_H
 
 #include <vector>
 #include "core-Renderer\GeometryResource.h"
@@ -10,6 +9,7 @@
 #include "core-Renderer\RenderResource.h"
 #include "core\AABoundingBox.h"
 #include "core\Color.h"
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,8 +20,8 @@
  */
 struct LineSegment
 {
-   D3DXVECTOR3 start;
-   D3DXVECTOR3 end;
+   Vector      start;
+   Vector      end;
    Color       color;
 
    /**
@@ -35,7 +35,7 @@ struct LineSegment
     * @param end     segment end pos
     * @param color   segment color
     */
-   inline LineSegment( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color = Color() );
+   inline LineSegment( const Vector& start, const Vector& end, const Color& color = Color() );
 
    inline bool operator==( const LineSegment& rhs ) const;
    inline bool operator!=( const LineSegment& rhs ) const;
@@ -54,7 +54,6 @@ class LineSegments : public GeometryResource, public RenderResource
 private:
    std::vector<LineSegment>   m_segments;
 
-   D3DXMATRIX                 m_identityMtx;
    AABoundingBox              m_bb;
 
 public:

@@ -4,11 +4,12 @@
 #define _SHADER_PARAM_H
 
 #include <string>
-#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct Matrix;
+struct Vector;
 class EffectShader;
 class VertexShader;
 class PixelShader;
@@ -155,10 +156,10 @@ class ShaderParamMtx : public ShaderParam< T >
 {
 private:
    std::string          m_name;
-   D3DXMATRIX           m_val;
+   Matrix               m_val;
 
 public:
-   ShaderParamMtx( const std::string& name, const D3DXMATRIX& val );
+   ShaderParamMtx( const std::string& name, const Matrix& val );
 
    // -------------------------------------------------------------------------
    // ShaderParam implementation
@@ -176,11 +177,11 @@ class ShaderParamMtxArray : public ShaderParam< T >
 {
 private:
    std::string          m_name;
-   D3DXMATRIX*          m_val;
+   Matrix*              m_val;
    unsigned int         m_size;
 
 public:
-   ShaderParamMtxArray( const std::string& name, const D3DXMATRIX* arr, unsigned int size );
+   ShaderParamMtxArray( const std::string& name, const Matrix* arr, unsigned int size );
    ~ShaderParamMtxArray();
 
    // -------------------------------------------------------------------------
@@ -199,10 +200,10 @@ class ShaderParamVec4 : public ShaderParam< T >
 {
 private:
    std::string          m_name;
-   D3DXVECTOR4          m_val;
+   Vector               m_val;
 
 public:
-   ShaderParamVec4( const std::string& name, const D3DXVECTOR4& val );
+   ShaderParamVec4( const std::string& name, const Vector& val );
 
    // -------------------------------------------------------------------------
    // ShaderParam implementation
@@ -220,11 +221,11 @@ class ShaderParamVec4Array : public ShaderParam< T >
 {
 private:
    std::string          m_name;
-   D3DXVECTOR4*         m_val;
+   Vector*              m_val;
    unsigned int         m_size;
 
 public:
-   ShaderParamVec4Array( const std::string& name, const D3DXVECTOR4* arr, unsigned int size );
+   ShaderParamVec4Array( const std::string& name, const Vector* arr, unsigned int size );
    ~ShaderParamVec4Array();
 
    // -------------------------------------------------------------------------

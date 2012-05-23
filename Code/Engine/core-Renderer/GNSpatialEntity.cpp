@@ -61,10 +61,11 @@ void GNSpatialEntity::preRender( Renderer& renderer, const GeometryEntity& entit
    {
       Camera& camera = renderer.getActiveCamera();
 
-      const D3DXMATRIX& worldMtx = node->getGlobalMtx();
+      const Matrix& worldMtx = node->getGlobalMtx();
       m_worldMtx->setValue( data, worldMtx );
 
-      D3DXMATRIX worldView = worldMtx * camera.getViewMtx();
+      Matrix worldView;
+      worldView.setMul( worldMtx, camera.getViewMtx() );
       m_worldViewMtx->setValue( data, worldView );
    }
 }

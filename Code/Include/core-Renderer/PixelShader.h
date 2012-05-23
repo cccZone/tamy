@@ -7,7 +7,7 @@
 #include "core-Renderer/ShaderRenderCommand.h"
 #include "core/UniqueObject.h"
 #include "core-Renderer/RenderResource.h"
-#include <d3dx9.h>
+#include "core-Renderer/RenderingParams.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,20 +24,20 @@ class OutStream;
  */
 struct TextureStageParams
 {
-   D3DTEXTUREADDRESS             m_addressU;
-   D3DTEXTUREADDRESS             m_addressV;
-   D3DTEXTUREADDRESS             m_addressW;
-   D3DTEXTUREFILTERTYPE          m_minFilter;
-   D3DTEXTUREFILTERTYPE          m_magFilter;
-   D3DTEXTUREFILTERTYPE          m_mipFilter;
+   TextureAddressingMode         m_addressU;
+   TextureAddressingMode         m_addressV;
+   TextureAddressingMode         m_addressW;
+   TextureFilteringMode          m_minFilter;
+   TextureFilteringMode          m_magFilter;
+   TextureFilteringMode          m_mipFilter;
 
    TextureStageParams()
-      : m_addressU( D3DTADDRESS_WRAP )
-      , m_addressV( D3DTADDRESS_WRAP )
-      , m_addressW( D3DTADDRESS_WRAP )
-      , m_minFilter( D3DTEXF_LINEAR )
-      , m_magFilter( D3DTEXF_LINEAR )
-      , m_mipFilter( D3DTEXF_LINEAR )
+      : m_addressU( TAM_WRAP )
+      , m_addressV( TAM_WRAP )
+      , m_addressW( TAM_WRAP )
+      , m_minFilter( TFM_LINEAR )
+      , m_magFilter( TFM_LINEAR )
+      , m_mipFilter( TFM_LINEAR )
    {}
 
    // -------------------------------------------------------------------------
@@ -54,12 +54,12 @@ struct TextureStageParams
  */
 struct PixelShaderParams
 {
-   D3DCULL                       m_cullingMode;
+   CullingMode                   m_cullingMode;
    bool                          m_useZBuffer;
    bool                          m_writeToZBuffer;
 
    PixelShaderParams()
-      : m_cullingMode( D3DCULL_CCW )
+      : m_cullingMode( CULL_CCW )
       , m_useZBuffer( true )
       , m_writeToZBuffer( true )
    {}

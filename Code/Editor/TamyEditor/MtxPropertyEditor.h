@@ -5,7 +5,7 @@
 
 #include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"
-#include <d3dx9.h>
+#include "core\Matrix.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,7 +18,7 @@ class MtxPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableReflectionProperty< D3DXMATRIX >*    m_property;
+   TEditableReflectionProperty< Matrix >*    m_property;
 
 public:
    /**
@@ -26,7 +26,7 @@ public:
     *
     * @param property   property this editor edits
     */
-   MtxPropertyEditor( TEditableReflectionProperty< D3DXMATRIX >* property );
+   MtxPropertyEditor( TEditableReflectionProperty< Matrix >* property );
    ~MtxPropertyEditor();
 
 public slots:

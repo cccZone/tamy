@@ -3,7 +3,8 @@
 #pragma once
 
 #include "core/GraphBuilderSockets.h"
-#include <d3dx9.h>
+#include "core/Matrix.h"
+#include "core/Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,7 +88,7 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPMatrixInput : public TGBNodeInput< RenderingPipelineNode, D3DXMATRIX >
+class RPMatrixInput : public TGBNodeInput< RenderingPipelineNode, Matrix >
 {
    DECLARE_CLASS()
 
@@ -95,10 +96,10 @@ public:
    /**
     * Constructor.
     */
-   RPMatrixInput( const std::string& name = "" ) : TGBNodeInput< RenderingPipelineNode, D3DXMATRIX >( name ) {}
+   RPMatrixInput( const std::string& name = "" ) : TGBNodeInput< RenderingPipelineNode, Matrix >( name ) {}
 };
 
-class RPMatrixOutput : public TGBNodeOutput< RenderingPipelineNode, D3DXMATRIX >
+class RPMatrixOutput : public TGBNodeOutput< RenderingPipelineNode, Matrix >
 {
    DECLARE_CLASS()
 
@@ -106,7 +107,7 @@ public:
    /**
     * Constructor.
     */
-   RPMatrixOutput( const std::string& name = "" ) : TGBNodeOutput< RenderingPipelineNode, D3DXMATRIX >( name ) {}
+   RPMatrixOutput( const std::string& name = "" ) : TGBNodeOutput< RenderingPipelineNode, Matrix >( name ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -159,7 +160,7 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPVec4Input : public TGBNodeInput< RenderingPipelineNode, D3DXVECTOR4 >
+class RPVec4Input : public TGBNodeInput< RenderingPipelineNode, Vector >
 {
    DECLARE_CLASS()
 
@@ -167,10 +168,10 @@ public:
    /**
     * Constructor.
     */
-   RPVec4Input( const std::string& name = "" ) : TGBNodeInput< RenderingPipelineNode, D3DXVECTOR4 >( name ) {}
+   RPVec4Input( const std::string& name = "" ) : TGBNodeInput< RenderingPipelineNode, Vector >( name ) {}
 };
 
-class RPVec4Output : public TGBNodeOutput< RenderingPipelineNode, D3DXVECTOR4 >
+class RPVec4Output : public TGBNodeOutput< RenderingPipelineNode, Vector >
 {
    DECLARE_CLASS()
 
@@ -178,7 +179,7 @@ public:
    /**
     * Constructor.
     */
-   RPVec4Output( const std::string& name = "" ) : TGBNodeOutput< RenderingPipelineNode, D3DXVECTOR4 >( name ) {}
+   RPVec4Output( const std::string& name = "" ) : TGBNodeOutput< RenderingPipelineNode, Vector >( name ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

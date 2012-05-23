@@ -4,9 +4,9 @@
 #include "core\ReflectionProperties.h"
 #include "core\ReflectionPropertyEditor.h"
 #include "core\ReflectionPropertiesView.h"
-#include "core\MatrixWriter.h"
+#include "core-TestFramework\MatrixWriter.h"
 #include "core\ReflectionObject.h"
-#include <d3dx9.h>
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -94,13 +94,13 @@ DEFINE_TYPE_ID( ReflectionObjectMock )
 
 TEST( ReflectionProperties, settingProperties )
 {
-   D3DXVECTOR3 position(0, 0, 0);
-   D3DXVECTOR3 speed(0, 0, 0);
+   Vector position(0, 0, 0);
+   Vector speed(0, 0, 0);
 
    ReflectionObjectMock object;
    ReflectionProperties properties( object, "");
-   properties.add<D3DXVECTOR3>( position, "Pos" );
-   properties.add<D3DXVECTOR3>( speed, "Speed" );
+   properties.add<Vector>( position, "Pos" );
+   properties.add<Vector>( speed, "Speed" );
 
    CPPUNIT_ASSERT_EQUAL(true, properties.has("Pos"));
    CPPUNIT_ASSERT_EQUAL(true, properties.has("Speed"));
@@ -113,18 +113,18 @@ TEST(TReflectionPropertiesView, editors)
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addExternalType< D3DXVECTOR3 >( "D3DXVECTOR3" );
+   typesRegistry.addExternalType< Vector >( "Vector" );
 
-   D3DXVECTOR3 position(0, 0, 0);
-   D3DXVECTOR3 speed(0, 0, 0);
+   Vector position(0, 0, 0);
+   Vector speed(0, 0, 0);
 
    ReflectionObjectMock object;
    ReflectionProperties* properties = new ReflectionProperties( object, "" );
-   properties->add<D3DXVECTOR3>( position, "position" ).setParams( "position", "", true, true );
-   properties->add<D3DXVECTOR3>( speed, "speed" ).setParams( "speed", "", true, true );
+   properties->add<Vector>( position, "position" ).setParams( "position", "", true, true );
+   properties->add<Vector>( speed, "speed" ).setParams( "speed", "", true, true );
 
    PropertiesViewMock view;
-   view.associate< D3DXVECTOR3, EditorMock< D3DXVECTOR3 > >();
+   view.associate< Vector, EditorMock< Vector > >();
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, view.getEditorsCount());
 
    view.set( properties );

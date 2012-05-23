@@ -1,12 +1,15 @@
+/// @file   core\BSPNodeTree.h
+/// @brief  a BSP tree that stores polygons in its nodes
 #ifndef _BSP_NODE_TREE_H
 #define _BSP_NODE_TREE_H
 
-/// @file   core\BSPNodeTree.h
-/// @brief  a BSP tree that stores polygons in its nodes
-
 #include "core\Array.h"
-#include <d3dx9.h>
+#include "core\Plane.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct Vector;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +26,7 @@ private:
    {
       Node* back;
       Node* front;
-      D3DXPLANE splitPlane;
+      Plane splitPlane;
       Array<Polygon*> geometry;
 
       Node();
@@ -53,18 +56,12 @@ public:
     *                      should the query start. Better left unspecified
     *                      if you want to get polygons from the whole tree.
     */
-   void query(const D3DXVECTOR3& pos, 
-              Array<Polygon*>& results, 
-              Node* checkedNode = NULL);
+   void query( const Vector& pos, Array<Polygon*>& results, Node* checkedNode = NULL );
 
 private:
    void createSubtree(Node* currNode, const Array<Polygon*>& geometry);
 
-   void classifyPolygonAgainstPlane(const D3DXPLANE& splittingPlane, 
-                                    Polygon* classifiedPoly,
-                                    Node* currNode, 
-                                    Array<Polygon*>& outBackPolys,
-                                    Array<Polygon*>& outFrontPolys);
+   void classifyPolygonAgainstPlane( const Plane& splittingPlane, Polygon* classifiedPoly, Node* currNode, Array<Polygon*>& outBackPolys, Array<Polygon*>& outFrontPolys );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

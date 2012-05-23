@@ -15,11 +15,11 @@
 
 namespace // anonymous
 {
-   void switchYZ( D3DXVECTOR3& vec )
+   void switchYZ( TVector< 3 >& vec )
    {
-      float tmp = vec.z;
-      vec.z = vec.y;
-      vec.y = tmp;
+      float tmp = vec.v[2];
+      vec.v[2] = vec.v[1];
+      vec.v[1] = tmp;
    }
 
    class DSVertices : public DSBindStructure

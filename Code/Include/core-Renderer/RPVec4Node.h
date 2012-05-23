@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RenderingPipelineNode.h"
+#include "core/Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,10 +18,7 @@ class RPVec4Node : public RenderingPipelineNode
 
 private:
    // static data
-   float             m_x;
-   float             m_y;
-   float             m_z;
-   float             m_w;
+   Vector            m_vector;
 
    // runtime data
    RPVec4Output*    m_output;

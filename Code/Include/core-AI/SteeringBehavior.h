@@ -1,9 +1,11 @@
+/// @file   core-AI/SteeringBehavior.h
+/// @brief  steering behavior interface.
 #pragma once
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct D3DXVECTOR3;
+struct Vector;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,7 +28,7 @@ public:
     * @return              velocity that should be applied 
     *                      to the controlled body
     */
-   virtual D3DXVECTOR3 calculateVelocity(float timeElapsed) = 0;
+   virtual void calculateVelocity( float timeElapsed, Vector& outVelocity ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

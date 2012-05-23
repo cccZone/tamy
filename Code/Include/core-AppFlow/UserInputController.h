@@ -2,11 +2,14 @@
 /// @brief  user input handling mechanism
 #pragma once
 
-#include <d3dx9.h>
 #include "core\Point.h"
 #include "core-AppFlow\KeysStatusModel.h"
 #include "core-AppFlow\TimeDependent.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+typedef TVector<2> MouseSpeedVec;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +24,7 @@ private:
 
    unsigned char     m_keyBuffer[256];
    Point             m_mousePos;
-   D3DXVECTOR2       m_mouseSpeed;
+   MouseSpeedVec		m_mouseSpeed;
 
    bool              m_relativeModeOn;
 
@@ -52,7 +55,7 @@ public:
    /**
     * Returns the current mouse speed.
     */
-   const D3DXVECTOR2& getMouseSpeed() const { return m_mouseSpeed; }
+   const MouseSpeedVec& getMouseSpeed() const { return m_mouseSpeed; }
 
    // -------------------------------------------------------------------------
    // KeysStatusModel implementation

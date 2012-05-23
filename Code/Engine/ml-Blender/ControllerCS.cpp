@@ -18,24 +18,24 @@ namespace // anonymous
 {
    class BindShapeMatrix : public DataSource
    {
-      D3DXMATRIX     m_mtx;
+      Matrix     m_mtx;
 
    public:
       BindShapeMatrix( TiXmlElement& elem, const ColladaParser& sourcesDB )
       {
          std::string val = elem.GetText();
          std::stringstream valStr( val );
-         valStr   >> m_mtx._11 >> m_mtx._12 >> m_mtx._13 >> m_mtx._14
-                  >> m_mtx._21 >> m_mtx._22 >> m_mtx._23 >> m_mtx._24
-                  >> m_mtx._31 >> m_mtx._32 >> m_mtx._33 >> m_mtx._34
-                  >> m_mtx._41 >> m_mtx._42 >> m_mtx._43 >> m_mtx._44;
+         valStr   >> m_mtx.m11 >> m_mtx.m12 >> m_mtx.m13 >> m_mtx.m14
+                  >> m_mtx.m21 >> m_mtx.m22 >> m_mtx.m23 >> m_mtx.m24
+                  >> m_mtx.m31 >> m_mtx.m32 >> m_mtx.m33 >> m_mtx.m34
+                  >> m_mtx.m41 >> m_mtx.m42 >> m_mtx.m43 >> m_mtx.m44;
       }
 
       unsigned int size() const { return 1; }
 
       void readData( int dataOffset, void* data )
       {
-         D3DXMATRIX& mtx = *( reinterpret_cast< D3DXMATRIX* >( data ) );
+         Matrix& mtx = *( reinterpret_cast< Matrix* >( data ) );
          mtx = m_mtx;
       }
    };
@@ -56,10 +56,10 @@ namespace // anonymous
          Skeleton* skeleton = reinterpret_cast< Skeleton* >( data );
 
          std::string boneName;
-         D3DXMATRIX invBindMtx;
+         Matrix invBindMtx;
          getSource( "JOINT" ).readData( dataOffset, &boneName );
          getSource( "INV_BIND_MATRIX" ).readData( dataOffset, &invBindMtx );
-         D3DXMatrixTranspose( &invBindMtx, &invBindMtx );
+         invBindMtx.transpose();
 
          skeleton->setTransformation( boneName, invBindMtx );
       }
@@ -143,10 +143,10 @@ ControllerCS::ControllerCS( TiXmlNode* controllerNode, ResourcesManager& rm )
    }
 
    // store the vertex transformation data
-   D3DXMATRIX bindShapeMtx;
+   Matrix bindShapeMtx;
    DataSource* bindShapeMtxData = parser.getSource( "bind_shape_matrix" );
    bindShapeMtxData->readData( 0, &bindShapeMtx );
-   D3DXMatrixTranspose( &bindShapeMtx, &bindShapeMtx );
+   bindShapeMtx.transpose();
    m_skeleton->setShapeBindMatrix( bindShapeMtx );
 
    // add the skeleton resource to the resources manager

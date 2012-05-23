@@ -96,16 +96,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AlgorithmTests.cpp" />
+    <ClCompile Include="DataExchangeTests.cpp" />
+    <ClCompile Include="EulerAnglesTests.cpp" />
     <ClCompile Include="GraphBuilderTests.cpp" />
     <ClCompile Include="GraphTopologicalSortTests.cpp" />
+    <ClCompile Include="MatrixUtilsTests.cpp" />
     <ClCompile Include="MemoryPoolTests.cpp" />
     <ClCompile Include="NodesHierarchyTests.cpp" />
+    <ClCompile Include="PlaneTests.cpp" />
+    <ClCompile Include="QuaternionTests.cpp" />
     <ClCompile Include="ReflectionEnumTests.cpp" />
     <ClCompile Include="ReflectionPropertiesTests.cpp" />
     <ClCompile Include="RoundBufferTest.cpp" />
     <ClCompile Include="RuntimeDataTests.cpp" />
     <ClCompile Include="SerializationTests.cpp" />
     <ClCompile Include="UpdatingGlobalMatricesTests.cpp" />
+    <ClCompile Include="VectorTests.cpp" />
     <ClCompile Include="VisitorTests.cpp" />
     <ClCompile Include="DelegatesTests.cpp" />
     <ClCompile Include="BoundingVolumesTests.cpp" />
@@ -129,7 +135,7 @@
     <ClCompile Include="FilesystemTests.cpp" />
     <ClCompile Include="ComponentsSystemTests.cpp" />
     <ClCompile Include="ResourcesManagerTests.cpp" />
-    <ClCompile Include="MathTests.cpp" />
+    <ClCompile Include="MatrixTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h" />

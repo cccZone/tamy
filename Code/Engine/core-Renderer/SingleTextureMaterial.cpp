@@ -50,8 +50,8 @@ void SingleTextureMaterial::onPreRender( Renderer& renderer ) const
    
    RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
 
-   comm->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_surfaceProperties.getAmbientColor() );
-   comm->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_surfaceProperties.getDiffuseColor() );
+   comm->setVec4( "g_MaterialAmbientColor", ( const Vector& )m_surfaceProperties.getAmbientColor() );
+   comm->setVec4( "g_MaterialDiffuseColor", ( const Vector& )m_surfaceProperties.getDiffuseColor() );
    comm->setBool( "g_UseTexture", m_texture != NULL );
    if ( m_texture != NULL )
    {

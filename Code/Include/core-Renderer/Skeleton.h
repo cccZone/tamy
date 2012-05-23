@@ -1,14 +1,13 @@
-#pragma once
-
 /// @file   core-Renderer\Skeleton.h
 /// @brief  a resource with a skeletal structure of a model
+#pragma once
 
 #include <string>
 #include "core\Resource.h"
 #include "core-Renderer\LitVertex.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\RenderResource.h"
-#include <d3dx9.h>
+#include "core\Matrix.h"
 #include <vector>
 
 
@@ -27,12 +26,10 @@ class Skeleton : public Resource, public RenderResource
    DECLARE_RESOURCE()
 
 private:
-   D3DXMATRIX                    m_bindShapeMtx;
+   Matrix                        m_bindShapeMtx;
    std::vector< std::string >    m_boneNames;
-   std::vector< D3DXMATRIX >     m_invBoneMatrices;
+   std::vector< Matrix >         m_invBoneMatrices;
    std::vector< VertexWeight >   m_weights;
-
-   D3DXMATRIX                    m_identityMtx;
 
 public:  
    /**
@@ -48,7 +45,7 @@ public:
     *
     * @param bindShapeMtx
     */
-   void setShapeBindMatrix( const D3DXMATRIX& bindShapeMtx );
+   void setShapeBindMatrix( const Matrix& bindShapeMtx );
 
    /**
     * Sets a transformation definition for the specified bone.
@@ -56,7 +53,7 @@ public:
     * @param boneName      name of the bone
     * @param invBoneMtx    inverted transformation matrix of the bone
     */
-   void setTransformation( const std::string& boneName, const D3DXMATRIX& invBoneMtx );
+   void setTransformation( const std::string& boneName, const Matrix& invBoneMtx );
 
    /**
     * Adds a new vertex bone weight definition.
@@ -91,7 +88,7 @@ public:
     *
     * @param boneName      name of the bone
     */
-   const D3DXMATRIX& getInvBindPoseMtx( const std::string& boneName ) const;
+   const Matrix& getInvBindPoseMtx( const std::string& boneName ) const;
 
    /**
     * Returns the weights assigned to a mesh vertices.

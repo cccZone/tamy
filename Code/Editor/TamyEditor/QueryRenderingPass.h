@@ -74,10 +74,10 @@ public:
     * Converts a regular pointer to a vector, which can be used as an argument
     * of the SceneQueryEffect.
     *
-    * @param ptr     pointer we want to convert
-    * @return        pointer in a vector form
+    * @param ptr           pointer we want to convert
+    * @@pram outVec        pointer in a vector form
     */
-   static D3DXVECTOR4 ptrToVec( void* ptr );
+   static void ptrToVec( void* ptr, Vector& outVec );
 
    /**
     * Inverted conversion to the one introduced by method 'ptrToVec'
@@ -85,7 +85,7 @@ public:
     * @param vec     a vector representation of a pointer
     * @return        a pointer
     */
-   static void* vecToPtr( const D3DXVECTOR4& vec );
+   static void* vecToPtr( const Vector& vec );
 
    // -------------------------------------------------------------------------
    // ModelView implementation

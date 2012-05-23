@@ -1,7 +1,7 @@
 #include "core-TestFramework\TestFramework.h"
 #include <d3dx9.h>
 #include "core\Node.h"
-#include "core\MatrixWriter.h"
+#include "core-TestFramework\MatrixWriter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

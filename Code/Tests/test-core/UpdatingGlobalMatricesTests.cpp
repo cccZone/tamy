@@ -1,7 +1,7 @@
 #include "core-TestFramework\TestFramework.h"
-#include <d3dx9.h>
 #include "core\Node.h"
-#include "core\MatrixWriter.h"
+#include "core-TestFramework\MatrixWriter.h"
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -10,9 +10,8 @@ TEST(UpdatingGlobalMatrices, singleNode)
 {
    Node root("root");
    
-   D3DXMATRIX matrix;
-   D3DXMatrixIdentity(&matrix);
-   D3DXMatrixTranslation(&matrix, 5, 0, 0);
+   Matrix matrix;
+   matrix.setTranslation( Vector( 5, 0, 0 ) );
 
    root.setLocalMtx(matrix);
    CPPUNIT_ASSERT_EQUAL(matrix, root.getLocalMtx());
@@ -27,10 +26,9 @@ TEST(UpdatingGlobalMatrices, simpleHierarchy)
    Node* child = new Node("child");
    root.addChild(child);
    
-   D3DXMATRIX childLocalMatrix = child->getLocalMtx();
-   D3DXMATRIX matrix;
-   D3DXMatrixIdentity(&matrix);
-   D3DXMatrixTranslation(&matrix, 5, 0, 0);
+   Matrix childLocalMatrix = child->getLocalMtx();
+   Matrix matrix;
+   matrix.setTranslation( Vector( 5, 0, 0 ) );
 
    root.setLocalMtx(matrix);
    CPPUNIT_ASSERT_EQUAL(childLocalMatrix, child->getLocalMtx());
@@ -47,9 +45,8 @@ TEST(UpdatingGlobalMatrices, parentMatrixChangesTwoLevelsAboveTheCheckedNode)
    root.addChild(childLevel1);
    childLevel1->addChild(childLevel2);
    
-   D3DXMATRIX matrix;
-   D3DXMatrixIdentity(&matrix);
-   D3DXMatrixTranslation(&matrix, 5, 0, 0);
+   Matrix matrix;
+   matrix.setTranslation( Vector( 5, 0, 0 ) );
 
    root.setLocalMtx(matrix);
    CPPUNIT_ASSERT_EQUAL(matrix, childLevel2->getGlobalMtx());
@@ -64,12 +61,12 @@ TEST(UpdatingGlobalMatrices, sequenceOfUpdatesInfluencingChild)
    root.addChild(child);
 
    // 1st update
-   D3DXMATRIX rootLocalMatrix; D3DXMatrixTranslation(&rootLocalMatrix, 5, 0, 0);
+   Matrix rootLocalMatrix; rootLocalMatrix.setTranslation( Vector( 5, 0, 0 ) );
    root.setLocalMtx(rootLocalMatrix);
    CPPUNIT_ASSERT_EQUAL(rootLocalMatrix, child->getGlobalMtx());
 
    // 2nd update
-   D3DXMatrixTranslation(&rootLocalMatrix, 10, 0, 0);
+   rootLocalMatrix.setTranslation( Vector( 10, 0, 0 ) );
    root.setLocalMtx(rootLocalMatrix);
    CPPUNIT_ASSERT_EQUAL(rootLocalMatrix, child->getGlobalMtx());
 };

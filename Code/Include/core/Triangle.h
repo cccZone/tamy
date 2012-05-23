@@ -1,13 +1,16 @@
-#pragma once
-
 /// @file   core\Triangle.h
 /// @brief  a triangle representation
+#pragma once
 
 #include "core\BoundingVolume.h"
-#include <d3dx9.h>
+#include "core\Vector.h"
 #include "core\Assert.h"
 #include "core\TriangleSplitter.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct Plane;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,76 +18,74 @@
  * This structure represents a triangle with some basic operations
  * we can perform on it.
  */
-struct Triangle : public BoundingVolume,
-                  public SplittableTriangle<D3DXVECTOR3>
+struct Triangle : public BoundingVolume, public SplittableTriangle< Vector >
 {
 private:
-   D3DXVECTOR3 v[3];
-   D3DXVECTOR3 e[3];
-   D3DXVECTOR3 en[3];
+   Vector v[3];
+   Vector e[3];
+   Vector en[3];
 
-   TriangleSplitter<D3DXVECTOR3, Triangle> m_splitter;
+   TriangleSplitter< Vector, Triangle > m_splitter;
 
 public:
-   Triangle(const Triangle& rhs);
+   Triangle( const Triangle& rhs );
 
    /**
     * Make sure to specify the edges in the CLOCKWISE order,
     * otherwise the collision tests will fail
     */
-   Triangle(const D3DXVECTOR3& pt1,
-            const D3DXVECTOR3& pt2,
-            const D3DXVECTOR3& pt3);
+   Triangle( const Vector& pt1, const Vector& pt2, const Vector& pt3 );
 
-   const D3DXVECTOR3& vertex(unsigned int idx) const
+   const Vector& vertex( unsigned int idx ) const
    {
       ASSERT_MSG(idx <= 2, "Vertex index should be <= 2");
       return v[idx];
    }
 
-   const D3DXVECTOR3& vertexPos(unsigned int idx) const
+   const Vector& vertexPos( unsigned int idx ) const
    {
       ASSERT_MSG(idx <= 2, "Vertex index should be <= 2");
       return v[idx];
    }
 
-   const D3DXVECTOR3& edge(unsigned int idx) const
+   const Vector& edge( unsigned int idx ) const
    {
       ASSERT_MSG(idx <= 2, "Edge index should be <= 2");
 
       return e[idx];
    }
 
-   const D3DXVECTOR3& edgeNormal(unsigned int idx) const
+   const Vector& edgeNormal( unsigned int idx ) const
    {
       ASSERT_MSG(idx <= 2, "Edge normal index should be <= 2");
 
       return en[idx];
    }
 
-   D3DXVECTOR3 splitEdge(float percentage,
-                         unsigned int startVtxIdx, 
-                         unsigned int endVtxIdx) const;
+   // -------------------------------------------------------------------------
+   // SplittableTriangle implementation
+   // -------------------------------------------------------------------------
+   void splitEdge( float percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, Vector& outEdge ) const;
 
-   void split(const D3DXPLANE& splitPlane, Array<Triangle*>& frontSplit, Array<Triangle*>& backSplit);
+   void split( const Plane& splitPlane, Array< Triangle* >& frontSplit, Array< Triangle* >& backSplit );
 
    // -------------------------------------------------------------------------
    // BoundingVolume implementation
    // -------------------------------------------------------------------------
    BoundingVolume* clone() const;
-   void transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const;
-   float distanceToPlane(const D3DXPLANE& plane) const;
-   PlaneClassification classifyAgainsPlane(const D3DXPLANE& plane) const;
-   bool testCollision(const PointVolume& point) const;
-   bool testCollision(const AABoundingBox& rhs) const;
-   bool testCollision(const BoundingSphere& rhs) const;
-   bool testCollision(const Frustum& rhs) const;
-   bool testCollision(const Ray& rhs) const;
-   bool testCollision(const Triangle& rhs) const;
-   bool testCollision(const BoundingVolume& rhs) const { return rhs.testCollision(*this); }
+   void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
+   float distanceToPlane( const Plane& plane ) const;
+   PlaneClassification classifyAgainsPlane( const Plane& plane ) const;
+   bool testCollision( const PointVolume& point ) const;
+   bool testCollision( const AABoundingBox& rhs ) const;
+   bool testCollision( const BoundingSphere& rhs ) const;
+   bool testCollision( const Frustum& rhs ) const;
+   bool testCollision( const Ray& rhs ) const;
+   bool testCollision( const Triangle& rhs ) const;
+   bool testCollision( const BoundingVolume& rhs ) const { return rhs.testCollision( *this ); }
 
 protected:
-   void initFromCoplanarPoints( const D3DXVECTOR3& pt1, const D3DXVECTOR3& pt2, const D3DXVECTOR3& pt3 );
+   void initFromCoplanarPoints( const Vector& pt1, const Vector& pt2, const Vector& pt3 );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

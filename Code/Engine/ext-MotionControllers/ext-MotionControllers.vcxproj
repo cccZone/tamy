@@ -78,12 +78,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="UnconstrainedMotionController.cpp" />
-    <ClCompile Include="WaypointCameraController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ext-MotionControllers\UnconstrainedMotionController.h" />
-    <ClInclude Include="..\..\Include\ext-MotionControllers\TimeFunction.h" />
-    <ClInclude Include="..\..\Include\ext-MotionControllers\WaypointCameraController.h" />
     <ClInclude Include="..\..\Include\ext-MotionControllers.h" />
   </ItemGroup>
   <ItemGroup>

@@ -62,18 +62,18 @@ TEST( SkeletonAnimationController, architecture )
    SkeletonAnimation animSource;
 
    BoneSRTAnimation* rootBoneKeys = new BoneSRTAnimation( "root" );
-   rootBoneKeys->addTranslationKey( 0.f, D3DXVECTOR3( 1, 0, 0 ) );
-   rootBoneKeys->addOrientationKey( 0.f, D3DXQUATERNION( 0, 0, 0, 1 ) );
+   rootBoneKeys->addTranslationKey( 0.f, Vector::OX );
+   rootBoneKeys->addOrientationKey( 0.f, Quaternion::IDENTITY );
    animSource.addKeys( rootBoneKeys );
 
    BoneSRTAnimation* hipBoneKeys = new BoneSRTAnimation( "hip" );
-   hipBoneKeys->addTranslationKey( 0.f, D3DXVECTOR3( 1, 0, 0 ) );
-   hipBoneKeys->addOrientationKey( 0.f, D3DXQUATERNION( 0, 0, 0, 1 ) );
+   hipBoneKeys->addTranslationKey( 0.f, Vector::OX );
+   hipBoneKeys->addOrientationKey( 0.f, Quaternion::IDENTITY );
    animSource.addKeys( hipBoneKeys );
 
    BoneSRTAnimation* legBoneKeys = new BoneSRTAnimation( "leg" );
-   legBoneKeys->addTranslationKey( 0.f, D3DXVECTOR3( 1, 0, 0 ) );
-   legBoneKeys->addOrientationKey( 0.f, D3DXQUATERNION( 0, 0, 0, 1 ) );
+   legBoneKeys->addTranslationKey( 0.f, Vector::OX );
+   legBoneKeys->addOrientationKey( 0.f, Quaternion::IDENTITY );
    animSource.addKeys( legBoneKeys );
 
    // add an animation controller to the hierarchy
@@ -84,26 +84,25 @@ TEST( SkeletonAnimationController, architecture )
    // run the controller and verify the controller requests the animations for all the connected
    // spatial entities - but not the ones that are connected via non-spatial entities
    animController->update( 0.f );
-   D3DXMATRIX result, expected;
-
-   D3DXMatrixTranslation( &expected, 1, 0, 0 );
+   Matrix result, expected;
+   expected.setTranslation( Vector( 1, 0, 0 ) );
    result = root->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
-   D3DXMatrixTranslation( &expected, 2, 0, 0 );
+   expected.setTranslation( Vector( 2, 0, 0 ) );
    result = hip->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
-   D3DXMatrixTranslation( &expected, 3, 0, 0 );
+   expected.setTranslation( Vector( 3, 0, 0 ) );
    result = leg->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
-   D3DXMatrixTranslation( &expected, 2, 0, 0 );
+   expected.setTranslation( Vector( 2, 0, 0 ) );
    result = anotherLeg->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
    // this one is connected via a non-node entity - so it's considered to be detached from the skeleton
-   D3DXMatrixTranslation( &expected, 0, 0, 0 );
+   expected.setTranslation( Vector( 0, 0, 0 ) );
    result = gun->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
@@ -133,7 +132,7 @@ TEST( SkeletonAnimationController, trackTimeControl )
    SkeletonAnimation animSource;
 
    BoneSRTAnimation* rootBoneKeys = new BoneSRTAnimation( "root" );
-   rootBoneKeys->addTranslationKey( 3.f, D3DXVECTOR3( 0, 0, 0 ) );
+   rootBoneKeys->addTranslationKey( 3.f, Vector::ZERO );
    animSource.addKeys( rootBoneKeys );
 
    animController->setAnimationSource( animSource );

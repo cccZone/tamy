@@ -103,7 +103,7 @@ public:
     * The method translates the screen space coordinates
     * (i.e. ones your mouse moves in) to viewport space coordinates
     */
-   void localToViewport( const Point& inScreenPt, D3DXVECTOR2& outViewportPt ) const;
+   void localToViewport( const Point& inScreenPt, Vector& outViewportPt ) const;
 
    /**
     * Toggles the widget debug mode.

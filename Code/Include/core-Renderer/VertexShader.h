@@ -8,7 +8,6 @@
 #include "core/Resource.h"
 #include "core/UniqueObject.h"
 #include "core-Renderer\RenderResource.h"
-#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,7 +40,7 @@ public:
    /**
     * Returns the description of the vertex the shader supports( providing it's vertex shader )
     */
-   inline const D3DVERTEXELEMENT9* getVerexDescription() const { return g_vertexDescriptions[ m_vertexDescId ]; }
+   inline const VertexDescriptor* getVerexDescription() const { return g_vertexDescriptions[ m_vertexDescId ]; }
 
    /**
     * Returns the HLSL script of this shader.

@@ -1,8 +1,8 @@
+/// @file   core-Renderer\TriangleMesh.h
+/// @brief  geometry of a mesh composed of triangles
 #ifndef _TRIANGLE_MESH_H
 #define _TRIANGLE_MESH_H
 
-/// @file   core-Renderer\TriangleMesh.h
-/// @brief  geometry of a mesh composed of triangles
 
 #include <vector>
 #include "core\Resource.h"
@@ -13,6 +13,7 @@
 #include "core-Renderer\LitVertex.h"
 #include "core-Renderer\RenderResource.h"
 #include "core\AABoundingBox.h"
+#include "core\Matrix.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,7 +34,7 @@ private:
    std::vector< LitVertex >      m_vertices;
    std::vector< Face >           m_faces;
 
-   D3DXMATRIX                    m_identityMtx;
+   Matrix                        m_identityMtx;
    AABoundingBox                 m_boundingVol;
 
 public:

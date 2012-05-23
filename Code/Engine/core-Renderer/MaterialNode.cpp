@@ -65,7 +65,7 @@ GBNodeInput< MaterialNode >* MaterialNode::createInput( const ReflectionType& da
    {
       return new MSFloatInput( name );
    } 
-   else if ( dataType.m_name == "D3DXMATRIX" )
+   else if ( dataType.m_name == "Matrix" )
    {
       return new MSMatrixInput( name );
    } 
@@ -73,7 +73,7 @@ GBNodeInput< MaterialNode >* MaterialNode::createInput( const ReflectionType& da
    {
       return new MSTextureInput( name );
    } 
-   else if ( dataType.m_name == "D3DXVECTOR4" )
+   else if ( dataType.m_name == "Vector" )
    {
       return new MSVec4Input( name );
    }

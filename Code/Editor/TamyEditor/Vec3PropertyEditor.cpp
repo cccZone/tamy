@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vec3PropertyEditor::Vec3PropertyEditor( TEditableReflectionProperty< D3DXVECTOR3 >* property )
+Vec3PropertyEditor::Vec3PropertyEditor( TEditableReflectionProperty< Vector >* property )
 : QPropertyEditor( property->getLabel().c_str() )
 , m_property( property )
 {
@@ -42,7 +42,7 @@ void Vec3PropertyEditor::setupUi()
    QDoubleSpinBox* zVal = new QDoubleSpinBox(this); layout->addWidget(zVal);
    zVal->setRange( -FLT_MAX, FLT_MAX );
 
-   const D3DXVECTOR3& currVal = m_property->get();
+   const Vector& currVal = m_property->get();
    xVal->setValue(currVal.x);
    yVal->setValue(currVal.y);
    zVal->setValue(currVal.z);
@@ -56,7 +56,7 @@ void Vec3PropertyEditor::setupUi()
 
 void Vec3PropertyEditor::xValChanged(double val)
 {
-   D3DXVECTOR3 currVal = m_property->get();
+   Vector currVal = m_property->get();
    currVal.x = val;
    m_property->set( currVal );
 }
@@ -65,7 +65,7 @@ void Vec3PropertyEditor::xValChanged(double val)
 
 void Vec3PropertyEditor::yValChanged(double val)
 {
-   D3DXVECTOR3 currVal = m_property->get();
+   Vector currVal = m_property->get();
    currVal.y = val;
    m_property->set( currVal );
 }
@@ -74,7 +74,7 @@ void Vec3PropertyEditor::yValChanged(double val)
 
 void Vec3PropertyEditor::zValChanged(double val)
 {
-   D3DXVECTOR3 currVal = m_property->get();
+   Vector currVal = m_property->get();
    currVal.z = val;
    m_property->set( currVal );
 }

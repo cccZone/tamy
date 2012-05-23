@@ -1,6 +1,7 @@
 #include "core\Frustum.h"
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
+#include "core\Matrix.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,7 +13,7 @@ BoundingVolume* Frustum::clone() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Frustum::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
+void Frustum::transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const
 {
    // verify that the volume is a Frustum
    ASSERT( dynamic_cast< Frustum* >( &transformedVolume ) != NULL );
@@ -20,15 +21,15 @@ void Frustum::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolum
 
    for (char i = 0; i < 6; ++i)
    {
-      D3DXPlaneTransform( &transformedFrustum.planes[i], &planes[i], &mtx );
+      mtx.transform( planes[i], transformedFrustum.planes[i] );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Frustum::distanceToPlane(const D3DXPLANE& plane) const
+float Frustum::distanceToPlane( const Plane& plane ) const
 {
-   ASSERT_MSG(false, "Frustum::distanceToPlane(const D3DXPLANE&) - Method not implemented");
+   ASSERT_MSG(false, "Frustum::distanceToPlane(const Plane&) - Method not implemented");
    return 0;
 }
 

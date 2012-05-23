@@ -3,16 +3,17 @@
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/Camera.h"
 #include "core-MVC/SpatialEntity.h"
+#include "core/Matrix.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace // anonymous
 {
-   D3DXVECTOR3 GLOBAL_AXES[] = {
-      D3DXVECTOR3( 1, 0, 0 ),
-      D3DXVECTOR3( 0, 1, 0 ),
-      D3DXVECTOR3( 0, 0, 1 )
+   Vector GLOBAL_AXES[] = {
+      Vector::OX,
+      Vector::OY,
+      Vector::OZ
    };
 }
 
@@ -47,7 +48,7 @@ void NodeTransformController::initialize( TamySceneWidget& widget )
    m_uic->setRelativeMouseMovement( false );
 
    memset( m_movementDir, false, sizeof( bool ) * 4 );
-   m_rotationAxis = selectGlobalRotationAxis();
+   selectGlobalRotationAxis( m_rotationAxis );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,7 +57,7 @@ void NodeTransformController::update( float timeElapsed )
 {
    // calculate the parameter change factor ( relative to the camera orientation )
    float movementSpeed = 0.1f * timeElapsed;
-   D3DXVECTOR2 valChange( 0, 0 );
+   Vector valChange( 0, 0, 0 );
    bool anyKeyHeld = m_movementDir[MD_FRONT] || m_movementDir[MD_BACK] || m_movementDir[MD_LEFT] || m_movementDir[MD_RIGHT];
    if ( anyKeyHeld )
    {
@@ -67,7 +68,8 @@ void NodeTransformController::update( float timeElapsed )
    }
    else
    {
-      valChange = m_uic->getMouseSpeed() * movementSpeed;
+      valChange.x = m_uic->getMouseSpeed().v[0] * movementSpeed;
+      valChange.y = m_uic->getMouseSpeed().v[1] * movementSpeed;
    }
 
    // transform the manipulated nodes
@@ -80,35 +82,40 @@ void NodeTransformController::update( float timeElapsed )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NodeTransformController::transformNode( Node& node, const D3DXVECTOR2& valChange ) const
+void NodeTransformController::transformNode( Node& node, const Vector& valChange ) const
 {
-   D3DXMATRIX& localMtx = node.accessLocalMtx();
+   Matrix& localMtx = node.accessLocalMtx();
    switch( m_controlMode )
    {
    case NTM_TRANSLATE:
       {
          // calculate the camera relative translation
-         D3DXVECTOR3 vecX, vecY, vecZ, camPos;
+         Vector vecX, vecY, vecZ, camPos;
          m_camera->getGlobalVectors( vecX, vecY, vecZ, camPos );
 
-         D3DXVec3Normalize( &vecX, &vecX );
-         D3DXVec3Normalize( &vecY, &vecY );
+         vecX.normalize();
+         vecY.normalize();
 
-         D3DXVECTOR3 camRelVals = vecX * valChange.x - vecY * valChange.y;
+         Vector camRelValsX, camRelValsY, camRelVals;
+         camRelValsX.setMul( vecX, valChange.x );
+         camRelValsY.setMul( vecY, valChange.y );
+         camRelVals.setSub( camRelValsX, camRelValsY );
 
          // manipulate the node
-         D3DXMATRIX changeMtx;
-         D3DXMatrixTranslation( &changeMtx, camRelVals.x, camRelVals.y, camRelVals.z );
-         D3DXMatrixMultiply( &localMtx, &changeMtx, &localMtx );
+         Matrix changeMtx;
+         changeMtx.setTranslation( camRelVals );
+         localMtx.preMul( changeMtx );
          break;
       }
 
    case NTM_ROTATE:
       {
          // manipulate the node
-         D3DXMATRIX changeMtx;
-         D3DXMatrixRotationAxis( &changeMtx, &m_rotationAxis, valChange.x + valChange.y );
-         D3DXMatrixMultiply( &localMtx, &changeMtx, &localMtx );
+         Quaternion rotQ;
+         rotQ.setAxisAngle( m_rotationAxis, valChange.x + valChange.y );
+         Matrix changeMtx;
+         changeMtx.setRotation( rotQ );
+         localMtx.preMul( changeMtx );
          break;
       }
 
@@ -119,15 +126,16 @@ void NodeTransformController::transformNode( Node& node, const D3DXVECTOR2& valC
    }
 
    // regenerate node's transformation matrix' vectors to ensure their orthogonality
-   D3DXVECTOR3 rightVec = node.getRightVec();
-   D3DXVECTOR3 upVec = node.getUpVec();
-   D3DXVECTOR3 lookVec = node.getLookVec();
+   Vector rightVec, upVec, lookVec;
+   node.getRightVec( rightVec );
+   node.getUpVec( upVec );
+   node.getLookVec( lookVec );
 
-   D3DXVec3Normalize( &lookVec, &lookVec );
-   D3DXVec3Cross( &rightVec, &upVec, &lookVec );
-   D3DXVec3Normalize( &rightVec, &rightVec );
-   D3DXVec3Cross( &upVec, &lookVec, &rightVec );
-   D3DXVec3Normalize( &upVec, &upVec );
+   lookVec.normalize();
+   rightVec.setCross( upVec, lookVec );
+   rightVec.normalize();
+   upVec.setCross( lookVec, rightVec );
+   upVec.normalize();
 
    node.setRightVec( rightVec );
    node.setUpVec( upVec );
@@ -136,7 +144,7 @@ void NodeTransformController::transformNode( Node& node, const D3DXVECTOR2& valC
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 NodeTransformController::selectGlobalRotationAxis() const
+void NodeTransformController::selectGlobalRotationAxis( Vector& outRotationAxis ) const
 {
    /*
    int axisIdx = 0;
@@ -165,10 +173,10 @@ D3DXVECTOR3 NodeTransformController::selectGlobalRotationAxis() const
       ASSERT_MSG( axisIdx >= 0, "Rotation axis not found" );
    }
 
-   return GLOBAL_AXES[ axisIdx ];*/
+   outRotationAxis = GLOBAL_AXES[ axisIdx ];*/
 
    // always rotate around OY axis
-   return GLOBAL_AXES[ 1 ];
+   outRotationAxis = GLOBAL_AXES[ 1 ];
 }
 
 ///////////////////////////////////////////////////////////////////////////////

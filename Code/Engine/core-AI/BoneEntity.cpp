@@ -2,6 +2,7 @@
 #include "core/Color.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/DebugDrawCommands.h"
+#include "core/Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,8 +36,8 @@ void BoneEntity::onDebugRender( Renderer& renderer ) const
 
    if ( parentNode )
    {
-      D3DXVECTOR3 start[4];
-      D3DXVECTOR3 end[4];
+      Vector start[4];
+      Vector end[4];
       getGlobalVectors( start[0], start[1], start[2], start[3] );
       parentNode->getGlobalVectors( end[0], end[1], end[2], end[3] );
 

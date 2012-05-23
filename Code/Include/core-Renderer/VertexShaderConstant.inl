@@ -6,7 +6,6 @@
 #include "core-Renderer/VertexShader.h"
 #include "core/GraphBuilderSockets.h"
 #include "core-Renderer/ShaderTexture.h"
-#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,7 +129,7 @@ void VSCTexture< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput<
 
 template< typename TNode >
 VSCVec4< TNode >::VSCVec4( const char* name)
-   : TVertexShaderConstant< TNode, D3DXVECTOR4 >( name )
+   : TVertexShaderConstant< TNode, Vector >( name )
 {
 }
 
@@ -139,8 +138,8 @@ VSCVec4< TNode >::VSCVec4( const char* name)
 template< typename TNode >
 void VSCVec4< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data )
 {
-   const TGBNodeInput< TNode, D3DXVECTOR4 >& castInput = static_cast< const TGBNodeInput< TNode, D3DXVECTOR4 >& >( input );
-   const D3DXVECTOR4& val = castInput.getValue( data );
+   const TGBNodeInput< TNode, Vector >& castInput = static_cast< const TGBNodeInput< TNode, Vector >& >( input );
+   const Vector& val = castInput.getValue( data );
    comm.setVec4( getName(), val );
 }
 
@@ -150,7 +149,7 @@ void VSCVec4< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput< TN
 
 template< typename TNode >
 VSCMatrix< TNode >::VSCMatrix( const char* name)
-   : TVertexShaderConstant< TNode, D3DXMATRIX >( name )
+   : TVertexShaderConstant< TNode, Matrix >( name )
 {
 }
 
@@ -159,8 +158,8 @@ VSCMatrix< TNode >::VSCMatrix( const char* name)
 template< typename TNode >
 void VSCMatrix< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data )
 {
-   const TGBNodeInput< TNode, D3DXMATRIX >& castInput = static_cast< const TGBNodeInput< TNode, D3DXMATRIX >& >( input );
-   const D3DXMATRIX& val = castInput.getValue( data );
+   const TGBNodeInput< TNode, Matrix >& castInput = static_cast< const TGBNodeInput< TNode, Matrix >& >( input );
+   const Matrix& val = castInput.getValue( data );
    comm.setMtx( getName(), val );
 }
 

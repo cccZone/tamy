@@ -6,81 +6,84 @@
 #include "core\Triangle.h"
 #include "core\PointVolume.h"
 #include "core\QuadraticEquations.h"
+#include "core\Vector.h"
+#include "core\Plane.h"
+#include "core\types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-static bool areRangesOverlapping(float min1, float max1, float min2, float max2)
+static bool areRangesOverlapping( float min1, float max1, float min2, float max2 )
 {
-   return !((max1 < min2) || (max2 < min1));
+   return !( ( max1 < min2 ) || ( max2 < min1 ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb, const D3DXVECTOR3& point)
+bool testCollision( const AABoundingBox& aabb, const Vector& point )
 {
-   return areRangesOverlapping(aabb.min.x, aabb.max.x, point.x, point.x) && 
-      areRangesOverlapping(aabb.min.y, aabb.max.y, point.y, point.y) && 
-      areRangesOverlapping(aabb.min.z, aabb.max.z, point.z, point.z);
+   return areRangesOverlapping( aabb.min.x, aabb.max.x, point.x, point.x ) && 
+      areRangesOverlapping( aabb.min.y, aabb.max.y, point.y, point.y ) && 
+      areRangesOverlapping( aabb.min.z, aabb.max.z, point.z, point.z );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb1, const AABoundingBox& aabb2)
+bool testCollision( const AABoundingBox& aabb1, const AABoundingBox& aabb2 )
 {
-   UINT collidingPlanes = 0;
-   if (areRangesOverlapping(aabb1.min.x, aabb1.max.x, aabb2.min.x, aabb2.max.x))
+   uint collidingPlanes = 0;
+   if ( areRangesOverlapping( aabb1.min.x, aabb1.max.x, aabb2.min.x, aabb2.max.x ) )
    {
       collidingPlanes++;
    }
 
-   if (areRangesOverlapping(aabb1.min.y, aabb1.max.y, aabb2.min.y, aabb2.max.y))
+   if (areRangesOverlapping( aabb1.min.y, aabb1.max.y, aabb2.min.y, aabb2.max.y ) )
    {
       collidingPlanes++;
    }
 
-   if (areRangesOverlapping(aabb1.min.z, aabb1.max.z, aabb2.min.z, aabb2.max.z))
+   if (areRangesOverlapping( aabb1.min.z, aabb1.max.z, aabb2.min.z, aabb2.max.z ) )
    {
       collidingPlanes++;
    }
 
-   return (collidingPlanes == 3);
+   return ( collidingPlanes == 3 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb, const BoundingSphere& sphere)
+bool testCollision( const AABoundingBox& aabb, const BoundingSphere& sphere )
 {
-   D3DXPLANE plane(0, 0, -1, aabb.min.z);
-   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
+   Plane plane(0, 0, -1, aabb.min.z);
+   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
 
-   plane = D3DXPLANE(0, 0,  1, -aabb.max.z);
-   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
+   plane = Plane(0, 0,  1, -aabb.max.z);
+   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
 
-   plane = D3DXPLANE(0, -1, 0, aabb.min.y);
-   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
+   plane = Plane(0, -1, 0, aabb.min.y);
+   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
 
-   plane = D3DXPLANE(0,  1, 0, -aabb.max.y);
-   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
+   plane = Plane(0,  1, 0, -aabb.max.y);
+   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
 
-   plane = D3DXPLANE(-1, 0, 0, aabb.min.x);
-   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
+   plane = Plane(-1, 0, 0, aabb.min.x);
+   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
 
-   plane = D3DXPLANE( 1, 0, 0, -aabb.max.x);
-   if (D3DXPlaneDotCoord(&plane, &sphere.origin) > sphere.radius) {return false;}
+   plane = Plane( 1, 0, 0, -aabb.max.x);
+   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
 
    return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb, const Frustum& frustum)
+bool testCollision( const AABoundingBox& aabb, const Frustum& frustum )
 {
-   D3DXVECTOR3 nearPoint;
+   Vector nearPoint;
 
-   for (int i =0; i < 6; ++i)
+   for ( int i =0; i < 6; ++i )
    {
-      D3DXVECTOR3 planeNormal(frustum.planes[i].a, frustum.planes[i].b, frustum.planes[i].c);
+      Vector planeNormal( frustum.planes[i].a, frustum.planes[i].b, frustum.planes[i].c );
 
       if (planeNormal.x > 0.0f)
       {
@@ -133,7 +136,7 @@ bool testCollision(const AABoundingBox& aabb, const Frustum& frustum)
          }
       }
 
-      float dist = D3DXVec3Dot( &planeNormal, &nearPoint );
+      float dist = nearPoint.dot( planeNormal );
       dist = dist + frustum.planes[i].d;
       if ( dist > 0 )
       {
@@ -146,11 +149,14 @@ bool testCollision(const AABoundingBox& aabb, const Frustum& frustum)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const Frustum& frustum, const BoundingSphere& sphere)
+bool testCollision( const Frustum& frustum, const BoundingSphere& sphere )
 {
    for (int i = 0; i < 6; ++i)
    {
-      if (D3DXPlaneDotCoord(&(frustum.planes[i]),  &(sphere.origin)) > sphere.radius) {return false;}
+      if ( frustum.planes[i].dotCoord( sphere.origin ) > sphere.radius ) 
+      {
+         return false;
+      }
    }
 
    return true;
@@ -158,114 +164,143 @@ bool testCollision(const Frustum& frustum, const BoundingSphere& sphere)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb, const Ray& ray)
+bool testCollision( const AABoundingBox& aabb, const Ray& ray )
 {
-   return (rayToAABBDistance(ray, aabb) < FLT_MAX);
+   return ( rayToAABBDistance( ray, aabb ) < FLT_MAX );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const Ray& ray, const D3DXPLANE& plane, D3DXVECTOR3& intersectionPt)
+bool testCollision( const Ray& ray, const Plane& plane, Vector& intersectionPt )
 {
-   float t = rayToPlaneDistance(ray, plane);
+   float t = rayToPlaneDistance( ray, plane );
 
-   if (t >= FLT_MAX) {return false;}
+   if ( t >= FLT_MAX ) { return false; }
 
-   intersectionPt = ray.origin + (ray.direction * t);
+   intersectionPt.setMulAdd( ray.direction, t, ray.origin );
 
    return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const BoundingSphere& sphere, const D3DXVECTOR3& point)
+bool testCollision( const BoundingSphere& sphere, const Vector& point )
 {
-   D3DXVECTOR3 to = sphere.origin - point;
-   return (D3DXVec3LengthSq(&to) < sphere.radius * sphere.radius);
+   Vector to;
+   to.setSub( sphere.origin, point );
+   return ( to.lengthSq() < sphere.radius * sphere.radius);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool testCollision(const BoundingSphere& sphere, const BoundingSphere& rhs)
 {
-   D3DXVECTOR3 to = sphere.origin - rhs.origin;
+   Vector to;
+   to.setSub(sphere.origin, rhs.origin );
    float totalRadius  = sphere.radius + rhs.radius;
 
-   return ((&sphere != &rhs) && (D3DXVec3LengthSq(&to) < totalRadius * totalRadius));
+   return ( ( &sphere != &rhs ) && ( to.lengthSq() < totalRadius * totalRadius ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 findIntersectionRemovalVector(const BoundingSphere& sphere, const BoundingSphere& colidor)
+void findIntersectionRemovalVector( const BoundingSphere& sphere, const BoundingSphere& colidor, Vector& outRemovalVec )
 {
-   D3DXVECTOR3 toColidor = colidor.origin - sphere.origin;
-   float distFromEachOther = D3DXVec3Length(&toColidor);
+   Vector toColidor;
+   toColidor.setSub( colidor.origin, sphere.origin );
+   float distFromEachOther = toColidor.length();
 
    float amountOfOverLap = colidor.radius + sphere.radius - distFromEachOther;
-   if (amountOfOverLap >= 0)
+   if ( amountOfOverLap >= 0 )
    {
-      return ((toColidor / distFromEachOther) * amountOfOverLap);
+      outRemovalVec.setMul( toColidor, amountOfOverLap / distFromEachOther );
    }
    else
    {
-      return D3DXVECTOR3(0, 0, 0);
+      outRemovalVec = Vector::ZERO;
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-
-D3DXVECTOR3 findIntersectionRemovalVector(const AABoundingBox& aabb, const AABoundingBox& colidor)
+void findIntersectionRemovalVector( const AABoundingBox& aabb, const AABoundingBox& colidor, Vector& outRemovalVec )
 {
-   D3DXVECTOR3 vec(0, 0, 0);
+   outRemovalVec = Vector::ZERO;
 
    if (areRangesOverlapping(aabb.min.x, aabb.max.x, colidor.max.x, colidor.max.x))
    {
-      vec.x = aabb.min.x - colidor.max.x;
+      outRemovalVec.x = aabb.min.x - colidor.max.x;
    }
    else if (areRangesOverlapping(aabb.min.x, aabb.max.x, colidor.min.x, colidor.min.x))
    {
-      vec.x = aabb.max.x - colidor.min.x;
+      outRemovalVec.x = aabb.max.x - colidor.min.x;
    }
 
    if (areRangesOverlapping(aabb.min.z, aabb.max.z, colidor.max.z, colidor.max.z))
    {
-      vec.z = aabb.min.z - colidor.max.z;
+      outRemovalVec.z = aabb.min.z - colidor.max.z;
    }
    else if (areRangesOverlapping(aabb.min.z, aabb.max.z, colidor.min.z, colidor.min.z))
    {
-      vec.z = aabb.max.z - colidor.min.z;
+      outRemovalVec.z = aabb.max.z - colidor.min.z;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool testCollision( const BoundingSphere& sphere, const Ray& ray )
+{
+   return ( rayToBSDistance( ray, sphere ) < FLT_MAX );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool testCollision( const Ray& ray, const Triangle& triangle )
+{
+   // first check if the ray intersects the plane the triangle is on.
+   Plane trianglePlane;
+   trianglePlane.setFromPoints( triangle.vertexPos( 0 ), triangle.vertexPos( 1 ), triangle.vertexPos( 2 ) );
+
+   Vector intersectionPt;
+   if ( testCollision( ray, trianglePlane, intersectionPt ) == false )
+   {
+      return false;
    }
 
-   return vec;
+   // now test to see if the intersection point is located inside of the triangle
+   Vector tmpDirToIntersectionPt;
+   Vector tmpCrossProducts[3];
+   for ( int i = 0; i < 3; ++i )
+   {
+      tmpDirToIntersectionPt.setSub( intersectionPt, triangle.vertexPos( i ) );
+      tmpCrossProducts[i].setCross( tmpDirToIntersectionPt, triangle.edge( i ) );
+   }
+
+   for ( int i = 0; i < 3; ++i )
+   {
+      int nextIdx = ( i + 1 ) % 3;
+      float dot = tmpCrossProducts[i].dot( tmpCrossProducts[nextIdx] );
+      if ( dot < 0 )
+      {
+         // the point lies outside the triangle
+         return false;
+      }
+   }
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const BoundingSphere& sphere, const Ray& ray)
+float rayToPlaneDistance( const Ray& ray, const Plane& plane )
 {
-   return (rayToBSDistance(ray, sphere) < FLT_MAX);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool testCollision(const Ray& ray, const Triangle& triangle)
-{
-   return (bool)D3DXIntersectTri(&triangle.vertex(0), &triangle.vertex(1), &triangle.vertex(2),
-      &ray.origin, &ray.direction, NULL, NULL, NULL);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float rayToPlaneDistance(const Ray& ray, const D3DXPLANE& plane)
-{
-   float planeDistance = D3DXPlaneDotCoord(&plane, &ray.origin);
-   float projRayLength = D3DXPlaneDotNormal(&plane, &ray.direction);
+   float planeDistance = plane.dotCoord( ray.origin );
+   float projRayLength = plane.dotNormal( ray.direction );
 
    float t;
-   if (projRayLength == 0)
+   if ( projRayLength == 0 )
    {
-      if (planeDistance == 0)
+      if ( planeDistance == 0 )
       {
          t = 0;
       }
@@ -276,10 +311,10 @@ float rayToPlaneDistance(const Ray& ray, const D3DXPLANE& plane)
    }
    else
    {
-      t = - (planeDistance / projRayLength);
+      t = - ( planeDistance / projRayLength );
    }
 
-   if (t < 0) 
+   if ( t < 0 ) 
    {
       return FLT_MAX;
    }
@@ -291,11 +326,12 @@ float rayToPlaneDistance(const Ray& ray, const D3DXPLANE& plane)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToPointDistance(const Ray& ray, const D3DXVECTOR3& point)
+float rayToPointDistance( const Ray& ray, const Vector& point )
 {
-   D3DXVECTOR3 vecToPt = point - ray.origin;
+   Vector vecToPt;
+   vecToPt.setSub( point, ray.origin );
 
-   float t = D3DXVec3Dot(&vecToPt, &ray.direction);
+   float t = vecToPt.dot( ray.direction );
    if (t < 0)
    {
       // if the point lies behind the ray's origin, the distance is infinite
@@ -303,9 +339,9 @@ float rayToPointDistance(const Ray& ray, const D3DXVECTOR3& point)
    }
 
    // check if the projected point lies on the ray
-   D3DXVECTOR3 resultPt = t * ray.direction + ray.origin;
-   resultPt -= vecToPt;
-   if (D3DXVec3LengthSq(&resultPt) < 1e-3)
+   Vector resultPt;
+   resultPt.setMulAdd( ray.direction, t, ray.origin ).sub( vecToPt );
+   if ( resultPt.lengthSq() < 1e-3 )
    {
       // if it does - return the calculated distance
       return t;
@@ -326,57 +362,75 @@ float rayToAABBDistance(const Ray& ray, const AABoundingBox& aabb)
    float tMax = FLT_MAX;
    float t1, t2, fTemp;
 
-   D3DXVECTOR3 extentsMin = aabb.min - ray.origin;
-   D3DXVECTOR3 extentsMax = aabb.max - ray.origin;
+   Vector extentsMin;
+   extentsMin.setSub( aabb.min, ray.origin );
+   Vector extentsMax;
+   extentsMax.setSub( aabb.max, ray.origin );
 
    for (int i = 0; i < 3; ++i)
    {
-      if (fabsf(ray.direction[i]) > 1e-3f)
+      if ( fabsf( ray.direction[i] ) > 1e-3f )
       {
          fTemp = 1.0f / ray.direction[i];
          t1 = extentsMax[i] * fTemp;
          t2 = extentsMin[i] * fTemp;
          if (t1 > t2) {fTemp = t1; t1 = t2; t2 = fTemp; }
 
-         if (t1 > tMin) tMin = t1;
-         if (t2 < tMax) tMax = t2;
+         if ( t1 > tMin ) 
+         {
+            tMin = t1;
+         }
+         if ( t2 < tMax )
+         {
+            tMax = t2;
+         }
 
-         if (tMin > tMax) return FLT_MAX;
-         if (tMax < 0) return FLT_MAX;
+         if ( tMin > tMax )
+         {
+            return FLT_MAX;
+         }
+         if ( tMax < 0 )
+         {
+            return FLT_MAX;
+         }
       }
       else
       {
-         if ((ray.origin[i] < aabb.min[i]) || (ray.origin[i] > aabb.max[i]))
+         if ( ( ray.origin[i] < aabb.min[i] ) || ( ray.origin[i] > aabb.max[i] ) )
          {
             return FLT_MAX;
          }
       }
    }
 
-   if (tMin < 0) tMin = 0;
+   if ( tMin < 0 )
+   {
+      tMin = 0;
+   }
    return tMin;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToBSDistance(const Ray& ray, const BoundingSphere& bs)
+float rayToBSDistance( const Ray& ray, const BoundingSphere& bs )
 {
    float a, b, c, l2, t;
 
-   D3DXVECTOR3 L = ray.origin - bs.origin;
-   l2 = D3DXVec3LengthSq(&L);
+   Vector L;
+   L.setSub( ray.origin, bs.origin );
+   l2 = L.lengthSq();
 
-   a = D3DXVec3LengthSq(&ray.direction);
-   b = 2.0f * D3DXVec3Dot(&ray.direction, &L);
-   c = l2 - (bs.radius * bs.radius);
+   a = ray.direction.lengthSq();
+   b = 2.0f * ray.direction.dot( L );
+   c = l2 - ( bs.radius * bs.radius );
 
-   if (c < 0.0f) 
+   if ( c < 0.0f ) 
    {
       // the ray starts inside the sphere
       return 0;
    }
 
-   if (!solveQuadratic(a, b, c, t)) 
+   if ( !solveQuadratic( a, b, c, t ) ) 
    {
       // the sphere doesn't intersect the plane
       return FLT_MAX;

@@ -1,7 +1,6 @@
 #include "core\Node.h"
 #include <stdexcept>
 #include <algorithm>
-#include "core\MatrixWriter.h"
 #include "core\NodeObserver.h"
 #include "core\BoundingVolume.h"
 #include "core\BoundingSphere.h"
@@ -10,27 +9,27 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 Node::Node(const std::string& name)
-: m_name(name)
-, m_parent(NULL)
-, m_volume( new BoundingSphere( D3DXVECTOR3( 0, 0, 0 ), 0) )
-, m_globalVolume( new BoundingSphere( D3DXVECTOR3( 0, 0, 0 ), 0) )
+   : m_name(name)
+   , m_parent(NULL)
+   , m_volume( new BoundingSphere( Vector( 0, 0, 0 ), 0) )
+   , m_globalVolume( new BoundingSphere( Vector( 0, 0, 0 ), 0 ) )
 {
-   D3DXMatrixIdentity(&m_localMtx);
-   D3DXMatrixIdentity(&m_globalMtx);
+   m_localMtx = Matrix::IDENTITY;
+   m_globalMtx = Matrix::IDENTITY;
 
    // initialize our cache with some stupid data to force the initial update
    // of the global matrix for all the objects
-   D3DXMatrixIdentity(&m_localMtxCache);
-   m_localMtxCache._11 = -1;
-   m_localMtxCache._22 = -1;
-   m_localMtxCache._33 = -1;
-   m_localMtxCache._44 = -1;
+   m_localMtxCache = Matrix::IDENTITY;
+   m_localMtxCache.m[0][0] = -1;
+   m_localMtxCache.m[1][1] = -1;
+   m_localMtxCache.m[2][2] = -1;
+   m_localMtxCache.m[3][3] = -1;
 
-   D3DXMatrixIdentity(&m_parentGlobalMtxCache);
-   m_parentGlobalMtxCache._11 = -1;
-   m_parentGlobalMtxCache._22 = -1;
-   m_parentGlobalMtxCache._33 = -1;
-   m_parentGlobalMtxCache._44 = -1;
+   m_parentGlobalMtxCache = Matrix::IDENTITY;
+   m_parentGlobalMtxCache.m[0][0] = -1;
+   m_parentGlobalMtxCache.m[1][1] = -1;
+   m_parentGlobalMtxCache.m[2][2] = -1;
+   m_parentGlobalMtxCache.m[3][3] = -1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,102 +54,113 @@ Node::~Node()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Node::setLocalMtx(const D3DXMATRIX& localMtx) 
+void Node::setLocalMtx( const Matrix& localMtx ) 
 {
    m_localMtx = localMtx;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Node::setRightVec(const D3DXVECTOR3& vec)
+void Node::setRightVec( const Vector& vec )
 {
-   m_localMtx._11 = vec.x;
-   m_localMtx._12 = vec.y;
-   m_localMtx._13 = vec.z;
+   m_localMtx.m[0][0] = vec.x;
+   m_localMtx.m[0][1] = vec.y;
+   m_localMtx.m[0][2] = vec.z;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Node::setUpVec(const D3DXVECTOR3& vec)
+void Node::setUpVec( const Vector& vec )
 {
-   m_localMtx._21 = vec.x;
-   m_localMtx._22 = vec.y;
-   m_localMtx._23 = vec.z;
+   m_localMtx.m[1][0] = vec.x;
+   m_localMtx.m[1][1] = vec.y;
+   m_localMtx.m[1][2] = vec.z;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Node::setLookVec(const D3DXVECTOR3& vec)
+void Node::setLookVec( const Vector& vec )
 {
-   m_localMtx._31 = vec.x;
-   m_localMtx._32 = vec.y;
-   m_localMtx._33 = vec.z;
+   m_localMtx.m[2][0] = vec.x;
+   m_localMtx.m[2][1] = vec.y;
+   m_localMtx.m[2][2] = vec.z;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Node::setPosition(const D3DXVECTOR3& vec)
+void Node::setPosition( const Vector& vec )
 {
-   m_localMtx._41 = vec.x;
-   m_localMtx._42 = vec.y;
-   m_localMtx._43 = vec.z;
+   m_localMtx.m[3][0] = vec.x;
+   m_localMtx.m[3][1] = vec.y;
+   m_localMtx.m[3][2] = vec.z;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 Node::getRightVec() const
+void Node::getRightVec( Vector& outRightVec ) const
 {
-   return D3DXVECTOR3(m_localMtx._11, m_localMtx._12, m_localMtx._13);
+   outRightVec.x = m_localMtx.m[0][0];
+   outRightVec.y = m_localMtx.m[0][1];
+   outRightVec.z = m_localMtx.m[0][2];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 Node::getUpVec() const
+void Node::getUpVec( Vector& outUpVec ) const
 {
-   return D3DXVECTOR3(m_localMtx._21, m_localMtx._22, m_localMtx._23);
+   outUpVec.x = m_localMtx.m[1][0];
+   outUpVec.y = m_localMtx.m[1][1];
+   outUpVec.z = m_localMtx.m[1][2];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 Node::getLookVec() const
+void Node::getLookVec( Vector& outLookVec ) const
 {
-   return D3DXVECTOR3(m_localMtx._31, m_localMtx._32, m_localMtx._33);
+   outLookVec.x = m_localMtx.m[2][0];
+   outLookVec.y = m_localMtx.m[2][1];
+   outLookVec.z = m_localMtx.m[2][2];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 Node::getPosition() const
+void Node::getPosition( Vector& outPos ) const
 {
-   return D3DXVECTOR3(m_localMtx._41, m_localMtx._42, m_localMtx._43);
+   outPos.x = m_localMtx.m[3][0];
+   outPos.y = m_localMtx.m[3][1];
+   outPos.z = m_localMtx.m[3][2];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const D3DXMATRIX& Node::getGlobalMtx() const
+const Matrix& Node::getGlobalMtx() const
 {
-   if (hasParentNode() == false) {return m_localMtx;}
+   if ( hasParentNode() == false ) 
+   {
+      return m_localMtx;
+   }
 
    // this node's global matrix can be influenced by the change
    // in this node's local matrix, or any of it's parents' global matrices.
    // we need to check for both events.
    bool localMatrixChanged = false;
 
-   // The case with the parent's matrices will be dealt with using recurency,
+   // The case with the parent's matrices will be dealt with using recurrence,
    // so we basically need to check only the immediate parent to spot the difference
    // in the global matrix
 
-   if (m_localMtxCache != m_localMtx)
+   if ( m_localMtxCache != m_localMtx )
    {
       m_localMtxCache = m_localMtx;
       m_globalMtx = m_localMtx;
       localMatrixChanged = true;
    }
 
-   const D3DXMATRIX& parentGlobalMtx = m_parent->getGlobalMtx();
-   if (localMatrixChanged || (m_parentGlobalMtxCache != parentGlobalMtx))
+   const Matrix& parentGlobalMtx = m_parent->getGlobalMtx();
+   if ( localMatrixChanged || ( m_parentGlobalMtxCache != parentGlobalMtx ) )
    {
       m_parentGlobalMtxCache = parentGlobalMtx;
-      D3DXMatrixMultiply(&m_globalMtx, &m_localMtx, &m_parentGlobalMtxCache);
+      m_globalMtx.setMul( m_localMtx, m_parentGlobalMtxCache );
    }
 
    return m_globalMtx;
@@ -158,20 +168,17 @@ const D3DXMATRIX& Node::getGlobalMtx() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Node::getGlobalVectors( D3DXVECTOR3& right, D3DXVECTOR3& up, D3DXVECTOR3& look, D3DXVECTOR3& pos ) const
+void Node::getGlobalVectors( Vector& outRightVec, Vector& outUpVec, Vector& outLookVec, Vector& outPos ) const
 {
-   D3DXMATRIX globalMtx = getGlobalMtx();
-   right = D3DXVECTOR3(globalMtx._11, globalMtx._12, globalMtx._13);
-   up = D3DXVECTOR3(globalMtx._21, globalMtx._22, globalMtx._23);
-   look = D3DXVECTOR3(globalMtx._31, globalMtx._32, globalMtx._33);
-   pos = D3DXVECTOR3(globalMtx._41, globalMtx._42, globalMtx._43);
+   const Matrix& globalMtx = getGlobalMtx();
+   globalMtx.getVectors( outRightVec, outUpVec, outLookVec, outPos );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 const BoundingVolume& Node::getBoundingVolume()
 {
-   const D3DXMATRIX& globalMtx = getGlobalMtx();
+   const Matrix& globalMtx = getGlobalMtx();
    m_volume->transform( globalMtx, *m_globalVolume );
    return *m_globalVolume;
 }

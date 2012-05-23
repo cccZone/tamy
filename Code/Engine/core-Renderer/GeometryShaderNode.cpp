@@ -65,7 +65,7 @@ GBNodeInput< GeometryShaderNode >* GeometryShaderNode::createInput( const Reflec
    {
       return new GSFloatInput( name );
    } 
-   else if ( dataType.m_name == "D3DXMATRIX" )
+   else if ( dataType.m_name == "Matrix" )
    {
       return new GSMatrixInput( name );
    } 
@@ -73,7 +73,7 @@ GBNodeInput< GeometryShaderNode >* GeometryShaderNode::createInput( const Reflec
    {
       return new GSTextureInput( name );
    } 
-   else if ( dataType.m_name == "D3DXVECTOR4" )
+   else if ( dataType.m_name == "Vector" )
    {
       return new GSVec4Input( name );
    }
