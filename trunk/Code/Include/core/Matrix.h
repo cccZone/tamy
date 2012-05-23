@@ -1,10 +1,7 @@
-#pragma once
-
 /// @file   core\Matrix.h
 /// @brief  matrix representation
+#pragma once
 
-#include "core\ReflectionObject.h"
-#include <d3dx9.h>
 #include <iostream>
 
 
@@ -12,6 +9,10 @@
 
 struct Vector;
 struct EulerAngles;
+struct Plane;
+struct Quaternion;
+class OutStream;
+class InStream;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,10 +20,8 @@ struct EulerAngles;
  * Mathematical matrix - expressed in row major order expressed in left-handed 
  * Cartesian coordinate system.
  */
-struct Matrix : public ReflectionObject
+struct Matrix
 {
-   DECLARE_STRUCT()
-
    union
    {
       float m[4][4];
@@ -60,107 +59,236 @@ struct Matrix : public ReflectionObject
     *
     * @param values  an array of 16 values
     */
-   Matrix(const float* values);
+   Matrix( const float* values );
 
    /**
     * Constructor.
     *
-    * @param mtx    DirectX matrix this matrix will be based on.
+    * @param 16 float values
     */
-   Matrix(const D3DXMATRIX& mtx);
+   Matrix( float _11, float _12, float _13, float _14, 
+           float _21, float _22, float _23, float _24, 
+           float _31, float _32, float _33, float _34,
+           float _41, float _42, float _43, float _44 );
 
-   /**
-    * Constructor.
-    *
-    * @param angles  Euler angles that will construct a rotation matrix
-    */
-   Matrix(const EulerAngles& angles);
-
-   /**
-    * Constructor that creates a rotation matrix based on
-    * an axis and a rotation around it.
-    *
-    * @param axis
-    * @param angle
-    */
-   Matrix( const Vector& axis, float angle );
-
-   /**
-    * Constructor that creates a translation matrix based on
-    * the specified vector
-    *
-    * @param translation
-    */
-   Matrix( const Vector& translation );
 
    // -------------------------------------------------------------------------
    // Operators
    // -------------------------------------------------------------------------
+   Matrix& operator=(const Matrix& rhs);
    bool operator==(const Matrix& rhs) const;
    bool operator!=(const Matrix& rhs) const;
-   Matrix& operator=(const Matrix& rhs);
-   Matrix operator+(const Matrix& rhs) const;
-   Matrix& operator+=(const Matrix& rhs);
-   Matrix operator-(const Matrix& rhs) const;
-   Matrix& operator-=(const Matrix& rhs);
-   Matrix operator*(const Matrix& rhs) const;
-   Matrix& operator*=(const Matrix& rhs);
-   
-
-   Matrix operator+(float val) const;
-   Matrix& operator+=(float val);
-   Matrix operator-(float val) const;
-   Matrix& operator-=(float val);
-   Matrix operator*(float val) const;
-   Matrix& operator*=(float val);
-   Matrix operator/(float val) const;
-   Matrix& operator/=(float val);
-
-   operator D3DXMATRIX() const;
-   operator EulerAngles() const;
 
    // -------------------------------------------------------------------------
    // Operations
    // -------------------------------------------------------------------------
 
    /**
-    * Returns the matrix right vector.
+    * Creates a translation matrix with translation equal to the specified vector.
+    *
+    * @param translationVec
     */
-   Vector rightVec() const;
+   Matrix& setTranslation( const Vector& translationVec );
+
+   /**
+    * Creates a rotation matrix with rotation equal to the specified quaternion.
+    *
+    * @param rotationQuat
+    */
+   Matrix& setRotation( const Quaternion& rotationQuat );
+
+   /**
+    * Creates a rotation matrix with rotation corresponding to the specified Euler angle value
+    *
+    * @param angles
+    */
+   Matrix& setRotation( const EulerAngles& angles );
+
+   /**
+    * Returns the rotation this matrix describes in the form of a quaternion.
+    *
+    * @param outRotationQuat
+    */
+   void getRotation( Quaternion& outRotationQuat ) const;
+
+   /**
+    * Returns the rotation this matrix describes in the form of Euler angles.
+    *
+    * @param outAngles
+    */
+   void getRotation( EulerAngles& outAngles ) const;
+
+   /**
+    * this = a * b
+    *
+    * @param a
+    * @param b
+    */
+   Matrix& setMul( const Matrix& a, const Matrix& b );
+
+   /**
+    * this = this * a
+    *
+    * CAUTION - it allocates temporary data on stack, thus it's slower than setMul.
+    *
+    * @param a
+    */
+   Matrix& mul( const Matrix& a );
+
+   /**
+    * this = a * this
+    *
+    * CAUTION - it allocates temporary data on stack, thus it's slower than setMul.
+    *
+    * @param a
+    */
+   Matrix& preMul( const Matrix& a );
+
+   /**
+    * this = a * t
+    *
+    * @param a
+    * @param t
+    */
+   Matrix& setMul( const Matrix& a, float t );
+
+   /**
+    * this *= t
+    *
+    * @param t
+    */
+   Matrix& mul( float t );
+
+   /**
+    * Sets an inverse of the specified matrix.
+    *
+    * @param rhs
+    */
+   Matrix& setInverse( const Matrix& rhs );
+
+   /**
+    * Inverts the matrix.
+    */
+   Matrix& invert();
+
+   /**
+    * Sets a transposed version of the specified matrix.
+    *
+    * @param rhs
+    */
+   Matrix& setTransposed( const Matrix& rhs );
+
+   /**
+    * Transposes the matrix.
+    */
+   Matrix& transpose();
+
+   /**
+    * Sets an inverse transpose of the specified matrix.
+    *
+    *  this = ( rhs^-1 )^t
+    *
+    * @param rhs
+    */
+   Matrix& setInverseTranspose( const Matrix& rhs );
+
+   /**
+    * Returns the matrix side vector.
+    */
+   const Vector& sideVec() const;
 
    /**
     * Returns the matrix up vector.
     */
-   Vector upVec() const;
+   const Vector& upVec() const;
 
    /**
-    * Returns the matrix look vector.
+    * Returns the matrix forward vector.
     */
-   Vector lookVec() const;
+   const Vector& forwardVec() const;
 
    /**
-    * Returns the matrix look vector.
+    * Returns the matrix position.
     */
-   Vector position() const;
+   const Vector& position() const;
+
+   /**
+    * Sets the new value for the row that represents the side axis.
+    *
+    * @param vec
+    */
+   void setSideVec( const Vector& vec ) const;
+
+   /**
+    * Sets the new value for the row that represents the up axis.
+    *
+    * @param vec
+    */
+   void setUpVec( const Vector& vec ) const;
+
+   /**
+    * Sets the new value for the row that represents the forward axis.
+    *
+    * @param vec
+    */
+   void setForwardVec( const Vector& vec ) const;
+
+   /**
+    * Sets the new value for the row that represents the position.
+    *
+    * @param pos
+    */
+   void setPosition( const Vector& pos ) const;
 
    /**
     * Returns the scale the matrix describes.
+    *
+    * @param outScaleVec
     */
-   Vector scale() const;
+   void scale( Vector& outScaleVec ) const;
 
    /**
-    * Rotates the specified vector.
+    * Returns the coordinate system axes and the position vector.
     *
-    * @param rhs     vector to be rotated.
+    * @param outSideVec
+    * @param outUpVec
+    * @param outForwardVec
+    * @param outPos
     */
-   Vector transform(const Vector& rhs) const;
+   void getVectors( Vector& outSideVec, Vector& outUpVec, Vector& outForwardVec, Vector& outPos ) const;
 
    /**
-    * Rotates the specified vector, but returns its normalized version
+    * Transforms the specified vector.
     *
-    * @param rhs     vector to be rotated.
+    * @param inVec     vector to be transformed.
+    * @param outVec  transformed vector
     */
-   Vector transformNorm(const Vector& rhs) const;
+   void transform( const Vector& inVec, Vector& outVec ) const;
+
+   /**
+    * Transforms the specified normal vector
+    *
+    * @param inNorm        normal vector to be transformed.
+    * @param outNorm    transformed normal
+    */
+   void transformNorm( const Vector& inNorm, Vector& outNorm ) const;
+
+   /**
+    * Transforms the specified plane.
+    *
+    * @param inPlane     plane to be transformed.
+    * @param outPlane  transformed plane
+    */
+   void transform( const Plane& inPlane, Plane& outPlane ) const;
+
+   /**
+    * Transforms a vector taking its four elements into account, 
+    * not homogenizing it back to 3 dimensions afterwards.
+    *
+    * @param rhs
+    * @param outVec
+    */
+   void transform4( const Vector& rhs, Vector& outVec ) const;
 
    /**
     * This method writes the contents of the orientation to the specified 
@@ -170,6 +298,13 @@ struct Matrix : public ReflectionObject
     * @param rhs        orientation description of which we want to output
     */
    friend std::ostream& operator<<(std::ostream& stream, const Matrix& rhs);
+
+   // -------------------------------------------------------------------------
+   // Serialization support
+   // -------------------------------------------------------------------------
+   friend OutStream& operator<<( OutStream& serializer, const Matrix& rhs );
+   friend InStream& operator>>( InStream& serializer, Matrix& rhs );
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

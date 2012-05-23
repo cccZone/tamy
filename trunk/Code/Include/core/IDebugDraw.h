@@ -2,7 +2,6 @@
 /// @brief  a common debug draw interface of the engine
 #pragma once
 
-#include <d3dx9.h>
 #include <vector>
 
 

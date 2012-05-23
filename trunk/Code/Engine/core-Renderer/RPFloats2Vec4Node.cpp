@@ -57,7 +57,7 @@ void RPFloats2Vec4Node::onUpdate( RenderingPipelineMechanism& host ) const
 {
    RuntimeDataBuffer& data = host.data();
 
-   D3DXVECTOR4 vec;
+   Vector vec;
    vec.x = m_dataInput[0]->getValue( data );
    vec.y = m_dataInput[1]->getValue( data );
    vec.z = m_dataInput[2]->getValue( data );

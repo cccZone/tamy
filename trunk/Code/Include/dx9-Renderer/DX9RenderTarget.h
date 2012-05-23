@@ -1,15 +1,18 @@
-#pragma once
-
 /// @file   dx9-Renderer\DX9RenderTarget.h
 /// @brief  directX9 implementation of a render target
+#pragma once
+
 
 #include "core-Renderer\RenderTarget.h"
+#include "core\Color.h"
 #include <d3d9.h>
+#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class DX9Renderer;
+struct Point;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,7 +32,7 @@ public:
     *
     * @param pos     pixel position
     */
-   Color getPixel( const D3DXVECTOR2& pos ) const;
+   void getPixel( const Point& pos, Color& outColor ) const;
 
    /**
     * Returns the DirectX texture instance.

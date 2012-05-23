@@ -34,7 +34,7 @@ REGISTER_EXTERNAL_TYPE( TextureStageParams );
 REGISTER_TYPE( FragmentShader );
 REGISTER_TYPE( Texture );
 REGISTER_TYPE( RenderTarget );
-REGISTER_TYPE( SurfaceProperties );
+REGISTER_EXTERNAL_TYPE( SurfaceProperties );
 REGISTER_ENUM_TYPE( VertexDescId );
 
 ///////////////////////////////////////////////////////////////////////////////

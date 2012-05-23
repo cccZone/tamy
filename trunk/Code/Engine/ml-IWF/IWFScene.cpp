@@ -59,7 +59,7 @@ void IWFScene::import( Model& scene )
       std::vector<MeshDefinition> meshes;
       meshLoader.parseMesh(meshes, meshName);
 
-      D3DXMATRIX objMtx = reinterpret_cast< D3DXMATRIX& >( sceneFile.m_vpMeshList[i]->ObjectMatrix );
+      Matrix objMtx = reinterpret_cast< Matrix& >( sceneFile.m_vpMeshList[i]->ObjectMatrix );
       addStaticGeometry( scene, m_rm, meshes, objMtx, meshName );
 
       m_observer->advance();
@@ -103,7 +103,7 @@ void IWFScene::processEntities(iwfEntity* fileEntity)
          lightEntity.Range,
          lightEntity.Attenuation0, lightEntity.Attenuation1, lightEntity.Attenuation2,
          lightEntity.FallOff, lightEntity.Theta, lightEntity.Phi,
-         reinterpret_cast<const D3DXMATRIX&> (fileEntity->ObjectMatrix));                
+         reinterpret_cast<const Matrix&> (fileEntity->ObjectMatrix));                
    }
 
    // sky boxes
@@ -125,7 +125,7 @@ void IWFScene::processEntities(iwfEntity* fileEntity)
       if (reference.referenceType == EXTERNAL_REFERENCE)
       {
          std::string meshName = reference.referenceName;
-         D3DXMATRIX objMtx = reinterpret_cast<D3DXMATRIX&> (fileEntity->ObjectMatrix);
+         Matrix objMtx = reinterpret_cast<Matrix&> (fileEntity->ObjectMatrix);
          addDynamicMesh(meshName, objMtx);
       }
    }
@@ -218,7 +218,7 @@ void IWFScene::addLight(const std::string& name,
                         float range,
                         float constAtt, float linearAtt, float quadAtt,
                         float fallOff, float theta, float phi,
-                        const D3DXMATRIX& situation)
+                        const Matrix& situation)
 {
    switch(lightType)
    {
@@ -243,7 +243,7 @@ void IWFScene::addSkyBox(const std::string& frontTex,
 ///////////////////////////////////////////////////////////////////////////////
 
 void IWFScene::addDynamicMesh(const std::string& meshFileName, 
-                              const D3DXMATRIX& situation)
+                              const Matrix& situation)
 {
 }
 
@@ -252,7 +252,7 @@ void IWFScene::addDynamicMesh(const std::string& meshFileName,
 void IWFScene::addStaticGeometry( Model& scene,
                                   ResourcesManager& rm,
                                   std::vector<MeshDefinition> meshes,
-                                  const D3DXMATRIX& situation,
+                                  const Matrix& situation,
                                   const std::string& objName )
 {
    // create main mesh

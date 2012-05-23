@@ -14,8 +14,8 @@ SceneQuery::SceneQuery()
 
 void SceneQuery::notifyResult()
 {
-   Entity* entity = reinterpret_cast< Entity* >( QueryRenderingPass::vecToPtr( (D3DXVECTOR4)m_resultBuf ) );
-   m_resultBuf = Color( 0, 0, 0, 0 );
+   Entity* entity = reinterpret_cast< Entity* >( QueryRenderingPass::vecToPtr( m_resultBuf ) );
+   m_resultBuf = Vector::ZERO;
    setResult( entity );
 }
 

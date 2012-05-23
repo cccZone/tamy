@@ -1,82 +1,82 @@
 #pragma once
 
-#include <d3dx9.h>
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct Vector;
 struct AABoundingBox;
 struct Ray;
 struct BoundingSphere;
 struct Frustum;
 struct Triangle;
+struct Plane;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb, const D3DXVECTOR3& point);
+bool testCollision(const AABoundingBox& aabb, const Vector& point);
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb1, const AABoundingBox& aabb2);
+bool testCollision( const AABoundingBox& aabb1, const AABoundingBox& aabb2 );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb, const Ray& ray);
+bool testCollision( const AABoundingBox& aabb, const Ray& ray );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb, const BoundingSphere& sphere);
+bool testCollision( const AABoundingBox& aabb, const BoundingSphere& sphere );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const AABoundingBox& aabb, const Frustum& frustum);
+bool testCollision( const AABoundingBox& aabb, const Frustum& frustum );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const Frustum& frustum, const BoundingSphere& sphere);
+bool testCollision( const Frustum& frustum, const BoundingSphere& sphere );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const Ray& ray, const D3DXPLANE& plane, D3DXVECTOR3& intersectionPt);
+bool testCollision( const Ray& ray, const Plane& plane, Vector& intersectionPt );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const BoundingSphere& sphere, const D3DXVECTOR3& point);
+bool testCollision( const BoundingSphere& sphere, const Vector& point );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const BoundingSphere& sphere, const Ray& ray);
+bool testCollision( const BoundingSphere& sphere, const Ray& ray );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const BoundingSphere& sphere, const BoundingSphere& rhs);
+bool testCollision( const BoundingSphere& sphere, const BoundingSphere& rhs );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool testCollision(const Ray& ray, const Triangle& triangle);
+bool testCollision( const Ray& ray, const Triangle& triangle );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 findIntersectionRemovalVector(const BoundingSphere& sphere, const BoundingSphere& colidor);
+Vector findIntersectionRemovalVector( const BoundingSphere& sphere, const BoundingSphere& colidor );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 findIntersectionRemovalVector(const AABoundingBox& aabb, const AABoundingBox& colidor);
+Vector findIntersectionRemovalVector( const AABoundingBox& aabb, const AABoundingBox& colidor );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToPlaneDistance(const Ray& ray, const D3DXPLANE& plane);
+float rayToPlaneDistance( const Ray& ray, const Plane& plane );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToPointDistance(const Ray& ray, const D3DXVECTOR3& point);
+float rayToPointDistance( const Ray& ray, const Vector& point );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToAABBDistance(const Ray& ray, const AABoundingBox& aabb);
+float rayToAABBDistance( const Ray& ray, const AABoundingBox& aabb );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToBSDistance(const Ray& ray, const BoundingSphere& bs);
+float rayToBSDistance( const Ray& ray, const BoundingSphere& bs );
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,16 +1,16 @@
+/// @file   core\EulerAngles.h
+/// @brief  Euler angles representation
 #pragma once
 
-/// @file   core\EulerAngles.h
-/// @brief  euler angles representation
-
-#include "core\ReflectionObject.h"
-#include <d3dx9.h>
 #include <iostream>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 struct Vector;
+struct Quaternion;
+class OutStream;
+class InStream;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,10 +18,8 @@ struct Vector;
  * Mathematical orientation - expressed by three angles to the respective axis
  * of the Cartesian system. The angular value is expressed in radians.
  */
-struct EulerAngles : public ReflectionObject
+struct EulerAngles
 {
-   DECLARE_STRUCT()
-
    /// these values are stored in degrees
    float yaw, pitch, roll;
 
@@ -33,26 +31,11 @@ struct EulerAngles : public ReflectionObject
    /**
     * Constructor.
     *
-    * @param yaw       rotation around OY axis
-    * @param pitch     rotation around OX axis
-    * @param roll      rotation around OZ axis
+    * @param yaw       rotation around OY axis ( degrees )
+    * @param pitch     rotation around OX axis ( degrees )
+    * @param roll      rotation around OZ axis ( degrees )
     */
    EulerAngles( float yaw, float pitch, float roll );
-
-   /**
-    * Constructor that calculates an angles between the two vectors.
-    *
-    * @param vec1
-    * @param vec2
-    */
-   EulerAngles( const Vector& vec1, const Vector& vec2 );
-
-   /**
-    * Constructor that converts a quaternion to Euler angles.
-    *
-    * @param quat
-    */
-   EulerAngles( const D3DXQUATERNION& quat );
 
    // -------------------------------------------------------------------------
    // Operators
@@ -60,6 +43,8 @@ struct EulerAngles : public ReflectionObject
    bool operator==(const EulerAngles& rhs) const;
    bool operator!=(const EulerAngles& rhs) const;
    EulerAngles& operator=(const EulerAngles& rhs);
+
+   // <math.todo> replace those operators with methods
    EulerAngles operator+(const EulerAngles& rhs) const;
    EulerAngles& operator+=(const EulerAngles& rhs);
    EulerAngles operator-(const EulerAngles& rhs) const;
@@ -77,12 +62,35 @@ struct EulerAngles : public ReflectionObject
    EulerAngles& operator*=(float val);
    EulerAngles operator/(float val) const;
    EulerAngles& operator/=(float val);
-
-   operator D3DXQUATERNION() const;
-
+   
+  
    // -------------------------------------------------------------------------
    // Operations
    // -------------------------------------------------------------------------
+
+   /**
+    * Constructor that calculates the shortest rotation angle that transforms vec1 into vec2.
+    *
+    * @param vec1
+    * @param vec2
+    */
+   EulerAngles& setFromShortestRotation( const Vector& vec1, const Vector& vec2 );
+
+   /**
+    * Constructor that converts a quaternion to Euler angles.
+    *
+    * CAUTION: This method is HIGHLY unstable in terms of produced results.
+    * and as a matter of fact it should not be used for any computations
+    * that require stability.
+    *
+    * As EulerAngles will mostly be used in the editor, to display 
+    * the angles in a human readable form, and Quaternions will be used anywhere else,
+    * I suggest that all applicable editor data be stored as EulerAngles and then
+    * converted to Quaternion, as that method is highly stable in terms of produced results.
+    *
+    * @param quat
+    */
+   EulerAngles& setFromQuaternion( const Quaternion& quat );
 
    /**
     * Returns a normalized version of the orientation.
@@ -105,26 +113,11 @@ struct EulerAngles : public ReflectionObject
     */
    friend std::ostream& operator<<(std::ostream& stream, const EulerAngles& rhs);
 
-   /**
-    * Static method converting radians to degrees.
-    *
-    * @param radians    radian angular value
-    * @return           degree angular value
-    */
-   static float toDegrees(float radians);
-
-   /**
-    * Static method converting radians to degrees.
-    *
-    * @param degrees    degree angular value
-    * @return           radian angular value
-    */
-   static float toRadians(float degrees);
+   // -------------------------------------------------------------------------
+   // Serialization support
+   // -------------------------------------------------------------------------
+   friend OutStream& operator<<( OutStream& serializer, const EulerAngles& rhs );
+   friend InStream& operator>>( InStream& serializer, EulerAngles& rhs );
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-#define RAD2DEG(radians) EulerAngles::toDegrees(radians)
-#define DEG2RAD(degrees) EulerAngles::toRadians(degrees)
 
 ///////////////////////////////////////////////////////////////////////////////

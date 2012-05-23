@@ -17,10 +17,7 @@ class MNVec4 : public MaterialNode
 
 private:
    // static data
-   float             m_x;
-   float             m_y;
-   float             m_z;
-   float             m_w;
+   Vector            m_vector;
 
    // runtime data
    MSVec4Output*    m_output;

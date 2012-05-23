@@ -17,13 +17,10 @@ class GNVec4 : public GeometryShaderNode
 
 private:
    // static data
-   float             m_x;
-   float             m_y;
-   float             m_z;
-   float             m_w;
+   Vector            m_vector;
 
    // runtime data
-   GSVec4Output*    m_output;
+   GSVec4Output*     m_output;
  
 public:
    /**

@@ -1,10 +1,6 @@
-#pragma once
-
 /// @file   core\Color.h
 /// @brief  color representation
-
-#include "core\ReflectionObject.h"
-#include <d3dx9.h>
+#pragma once
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,10 +13,8 @@ class InStream;
 /**
  * A support structure describing an RGBA color.
  */
-struct Color : public ReflectionObject
+struct Color
 {
-   DECLARE_STRUCT()
-
    union
    {
       struct
@@ -56,11 +50,6 @@ struct Color : public ReflectionObject
    Color operator+(const Color& lhs) const;
 
    /**
-    * Conversion operator to a dx-native type.
-    */
-   operator D3DXVECTOR4() const { return D3DXVECTOR4( c ); }
-
-   /**
     * Conversion operator to a DWORD representation.
     */
    operator unsigned long() const;
@@ -68,7 +57,7 @@ struct Color : public ReflectionObject
    // -------------------------------------------------------------------------
    // Serialization support
    // -------------------------------------------------------------------------
-   friend OutStream& operator<<( OutStream& serializer, Color& color );
+   friend OutStream& operator<<( OutStream& serializer, const Color& color );
    friend InStream& operator>>( InStream& serializer, Color& color );
 };
 

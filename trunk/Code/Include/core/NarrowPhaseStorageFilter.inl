@@ -48,7 +48,7 @@ void NarrowPhaseStorageFilter< Elem >::query( const BoundingVolume& boundingVol,
 
    Elem* node = NULL;
    bool visible = false;
-   D3DXMATRIX volumeTransformMtx;
+   Matrix volumeTransformMtx;
    for ( unsigned int i = 0; i < nodesCount; ++i )
    {
       visible = false;
@@ -62,7 +62,7 @@ void NarrowPhaseStorageFilter< Elem >::query( const BoundingVolume& boundingVol,
       }
       else
       {
-         D3DXMatrixInverse( &volumeTransformMtx, NULL, &node->getGlobalMtx() );
+         volumeTransformMtx.setInverse( node->getGlobalMtx() );
          for (unsigned int j = 0; j < trisCount; ++j)
          {
             boundingVol.transform( volumeTransformMtx, *transformedVolume );

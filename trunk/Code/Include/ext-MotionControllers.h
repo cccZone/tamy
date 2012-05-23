@@ -1,14 +1,7 @@
-#pragma once
-
 /// @file  ext-MotionControllers.h
 /// @brief  aggregate include file for the 'ext-MotionControllers' project
+#pragma once
 
-
-// ----------------------------------------------------------------------------
-// Automatic
-// ----------------------------------------------------------------------------
-#include "ext-MotionControllers\WaypointCameraController.h"
-#include "ext-MotionControllers\TimeFunction.h"
 
 // ----------------------------------------------------------------------------
 // Manual

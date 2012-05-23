@@ -39,8 +39,6 @@ DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
    m_viewport.MinZ = 0.0f;
    m_viewport.MaxZ = 1.0f;
 
-   D3DXMatrixIdentity( &m_identityMtx );
-
    // sample texture formats
    sampleOptimalTextureFormats();
 
@@ -434,12 +432,12 @@ void DX9Renderer::flushDebugScene()
 {
    // set transformations
    Camera& camera = getActiveCamera();
-   const D3DXMATRIX& projectionMtx = camera.getProjectionMtx();
-   const D3DXMATRIX& viewMtx = camera.getViewMtx();
+   const Matrix& projectionMtx = camera.getProjectionMtx();
+   const Matrix& viewMtx = camera.getViewMtx();
 
-   m_d3Device->SetTransform( D3DTS_WORLD, &m_identityMtx );
-   m_d3Device->SetTransform( D3DTS_PROJECTION, &projectionMtx );
-   m_d3Device->SetTransform( D3DTS_VIEW, &viewMtx );
+   m_d3Device->SetTransform( D3DTS_WORLD, ( const D3DXMATRIX* )&Matrix::IDENTITY );
+   m_d3Device->SetTransform( D3DTS_PROJECTION, ( const D3DXMATRIX* )&projectionMtx );
+   m_d3Device->SetTransform( D3DTS_VIEW, ( const D3DXMATRIX* )&viewMtx );
 
    // unlock the lines buffer
    m_linesBuffer->Unlock();
@@ -462,18 +460,18 @@ void DX9Renderer::flushDebugScene()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DX9Renderer::addDebugLine( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
+void DX9Renderer::addDebugLine( const Vector& start, const Vector& end, const Color& color )
 {
    if ( !m_pVertex )
    {
       return;
    }
 
-   m_pVertex->m_vtx = start;
+   m_pVertex->m_vtx = ( const D3DXVECTOR3& )start;
    m_pVertex->m_color = D3DCOLOR_COLORVALUE( color.r, color.g, color.b, color.a );
    ++m_pVertex;
 
-   m_pVertex->m_vtx = end;
+   m_pVertex->m_vtx = ( const D3DXVECTOR3& )end;
    m_pVertex->m_color = D3DCOLOR_COLORVALUE( color.r, color.g, color.b, color.a );
    ++m_pVertex;
 

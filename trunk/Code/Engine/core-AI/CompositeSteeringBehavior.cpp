@@ -1,6 +1,6 @@
 #include "core-AI\CompositeSteeringBehavior.h"
-#include <d3dx9.h>
-#include <stdexcept>
+#include "core/Vector.h"
+#include "core/Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,8 @@ void CompositeSteeringBehavior::add(SteeringBehavior* behavior,
 {
    if (behavior == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a SteeringBehavior instance");
+      ASSERT_MSG( false, "NULL pointer instead a SteeringBehavior instance" );
+      return;
    }
 
    m_behaviors.push_back(new BehaviorDesc(behavior, weight));
@@ -31,17 +32,18 @@ void CompositeSteeringBehavior::add(SteeringBehavior* behavior,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 CompositeSteeringBehavior::calculateVelocity(float timeElapsed)
+void CompositeSteeringBehavior::calculateVelocity( float timeElapsed, Vector& outVelocity )
 {
-   D3DXVECTOR3 velocity(0, 0, 0);
+   outVelocity = Vector::ZERO;
 
    unsigned int count = m_behaviors.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      velocity += m_behaviors[i]->behavior->calculateVelocity(timeElapsed) * m_behaviors[i]->weight;
+      Vector vel = Vector::ZERO;
+      m_behaviors[i]->behavior->calculateVelocity( timeElapsed, vel );
+      vel.mul( m_behaviors[i]->weight );
+      outVelocity.add( vel );
    }
-
-   return velocity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

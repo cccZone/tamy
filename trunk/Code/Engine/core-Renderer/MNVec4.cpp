@@ -7,20 +7,13 @@
 
 BEGIN_OBJECT( MNVec4 );
    PARENT( MaterialNode );
-   PROPERTY_EDIT( "x", float, m_x );
-   PROPERTY_EDIT( "y", float, m_y );
-   PROPERTY_EDIT( "z", float, m_z );
-   PROPERTY_EDIT( "w", float, m_w );
+   PROPERTY_EDIT( "vector", Vector, m_vector );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MNVec4::MNVec4()
-   : m_x( 0.0f )
-   , m_y( 0.0f )
-   , m_z( 0.0f )
-   , m_w( 0.0f )
-   , m_output( new MSVec4Output( "Vec" ) )
+   : m_output( new MSVec4Output( "Vec" ) )
 {
    defineOutput( m_output );
 }
@@ -46,7 +39,7 @@ void MNVec4::onObjectLoaded()
 
 void MNVec4::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
-   m_output->setValue( entity.data(), D3DXVECTOR4( m_x, m_y, m_z, m_w ) );
+   m_output->setValue( entity.data(), m_vector );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

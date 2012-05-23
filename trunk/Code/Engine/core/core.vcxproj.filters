@@ -41,15 +41,6 @@
     <Filter Include="SpatialStorage\Nodes">
       <UniqueIdentifier>{9b474f79-f4b3-43b8-a901-c97870a5e378}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BoundingVolumes">
-      <UniqueIdentifier>{a35d6303-a2ad-4f10-b862-ed3fd5ef8b93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BoundingVolumes\Volumes">
-      <UniqueIdentifier>{60851c2c-be56-4ece-98e2-ef2c7c8b6bec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="BoundingVolumes\Algorithms">
-      <UniqueIdentifier>{cb7efd48-d1b9-44ec-90c4-4a6196041857}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Filesystem">
       <UniqueIdentifier>{8ef7176a-a012-4a0d-8d42-18deef2f0baa}</UniqueIdentifier>
     </Filter>
@@ -92,6 +83,15 @@
     <Filter Include="RTTI\Properties">
       <UniqueIdentifier>{24a98faf-4c75-4b49-9e33-7cce72bc1a49}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math\BoundingVolumes">
+      <UniqueIdentifier>{a35d6303-a2ad-4f10-b862-ed3fd5ef8b93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\BoundingVolumes\Volumes">
+      <UniqueIdentifier>{60851c2c-be56-4ece-98e2-ef2c7c8b6bec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\BoundingVolumes\Algorithms">
+      <UniqueIdentifier>{cb7efd48-d1b9-44ec-90c4-4a6196041857}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -103,41 +103,35 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Timer</Filter>
     </ClCompile>
-    <ClCompile Include="Color.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
-    <ClCompile Include="MatrixWriter.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
     <ClCompile Include="StringUtils.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
     <ClCompile Include="BoundingVolume.cpp">
-      <Filter>BoundingVolumes</Filter>
+      <Filter>Math\BoundingVolumes</Filter>
     </ClCompile>
     <ClCompile Include="AABoundingBox.cpp">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClCompile>
     <ClCompile Include="BoundingSphere.cpp">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClCompile>
     <ClCompile Include="PointVolume.cpp">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClCompile>
     <ClCompile Include="Ray.cpp">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClCompile>
     <ClCompile Include="Triangle.cpp">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClCompile>
     <ClCompile Include="CollisionTests.cpp">
-      <Filter>BoundingVolumes\Algorithms</Filter>
+      <Filter>Math\BoundingVolumes\Algorithms</Filter>
     </ClCompile>
     <ClCompile Include="QuadraticEquations.cpp">
-      <Filter>BoundingVolumes\Algorithms</Filter>
+      <Filter>Math\BoundingVolumes\Algorithms</Filter>
     </ClCompile>
     <ClCompile Include="File.cpp">
       <Filter>Filesystem</Filter>
@@ -172,7 +166,6 @@
     <ClCompile Include="ResourceHandle.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Include\core\TypesRegistry.cpp" />
     <ClCompile Include="Algorithms.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -251,6 +244,22 @@
     <ClCompile Include="OutFileStream.cpp">
       <Filter>Streams\Implementations</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Include\core\TypesRegistry.cpp" />
+    <ClCompile Include="Color.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixUtils.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorUtil.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -298,19 +307,10 @@
     <ClInclude Include="..\..\Include\core\Assert.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\Color.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\HierarchyWriter.h">
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\IntervalOperation.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\MatrixInterpolator.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\MatrixWriter.h">
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\StringUtils.h">
@@ -368,37 +368,37 @@
       <Filter>SpatialStorage\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\BoundingVolume.h">
-      <Filter>BoundingVolumes</Filter>
+      <Filter>Math\BoundingVolumes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\AABoundingBox.h">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\BoundingSpace.h">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\BoundingSphere.h">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Frustum.h">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\PointVolume.h">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Ray.h">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Triangle.h">
-      <Filter>BoundingVolumes\Volumes</Filter>
+      <Filter>Math\BoundingVolumes\Volumes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\CollisionTests.h">
-      <Filter>BoundingVolumes\Algorithms</Filter>
+      <Filter>Math\BoundingVolumes\Algorithms</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\QuadraticEquations.h">
-      <Filter>BoundingVolumes\Algorithms</Filter>
+      <Filter>Math\BoundingVolumes\Algorithms</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\TriangleSplitter.h">
-      <Filter>BoundingVolumes\Algorithms</Filter>
+      <Filter>Math\BoundingVolumes\Algorithms</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\File.h">
       <Filter>Filesystem</Filter>
@@ -551,6 +551,25 @@
     <ClInclude Include="..\..\Include\core\TypeRegistrationMacros.h">
       <Filter>RTTI\Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\Color.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Plane.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Quaternion.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MatrixUtils.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MathDefs.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\VectorUtil.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\math.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">
@@ -599,7 +618,7 @@
       <Filter>SpatialStorage\Nodes</Filter>
     </None>
     <None Include="..\..\Include\core\TriangleSplitter.inl">
-      <Filter>BoundingVolumes\Algorithms</Filter>
+      <Filter>Math\BoundingVolumes\Algorithms</Filter>
     </None>
     <None Include="..\..\Include\core\StreamBuffer.inl">
       <Filter>Filesystem</Filter>
@@ -687,6 +706,12 @@
     </None>
     <None Include="..\..\Include\core\ReflectionEnum.inl">
       <Filter>RTTI\Enum</Filter>
+    </None>
+    <None Include="..\..\Include\core\CellSpacePartition.inl">
+      <Filter>DataStructures</Filter>
+    </None>
+    <None Include="..\..\Include\core\Vector.inl">
+      <Filter>Math</Filter>
     </None>
   </ItemGroup>
 </Project>

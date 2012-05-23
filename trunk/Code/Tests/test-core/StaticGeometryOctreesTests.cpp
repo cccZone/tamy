@@ -1,8 +1,8 @@
 #include "core-TestFramework\TestFramework.h"
-#include <d3dx9.h>
 #include "core\StaticGeometryOctree.h"
 #include "core\BoundingSphere.h"
 #include "core\Triangle.h"
+#include "core\Vector.h"
 #include <vector>
 #include <map>
 #include <stdexcept>
@@ -20,7 +20,7 @@ namespace // anonymous
 
    public:
       GeometricalObjectMock()
-         : m_boundingSphere(D3DXVECTOR3(0, 0, 0), 0)
+         : m_boundingSphere(Vector(0, 0, 0), 0)
       {}
 
       const BoundingSphere& getBoundingVolume() const {return m_boundingSphere;}
@@ -41,7 +41,7 @@ namespace // anonymous
          return m_geometry.at(idx);
       }
 
-      void split(const D3DXPLANE& splitPlane,
+      void split(const Plane& splitPlane,
                  GeometricalObjectMock** frontSplit,
                  GeometricalObjectMock** backSplit)
       {
@@ -80,28 +80,29 @@ namespace // anonymous
    private:
       void calculateBoundingVolume()
       {
-         D3DXVECTOR3 max = D3DXVECTOR3(-FLT_MAX, -FLT_MAX, -FLT_MAX);
-         D3DXVECTOR3 min = D3DXVECTOR3(FLT_MAX, FLT_MAX, FLT_MAX);
+         Vector maxV(-FLT_MAX, -FLT_MAX, -FLT_MAX);
+         Vector minV(FLT_MAX, FLT_MAX, FLT_MAX);
 
          unsigned int count = m_geometry.size();
          for (unsigned int i = 0; i < count; ++i)
          {
             for (unsigned int vtxIdx = 0; vtxIdx < 3; ++vtxIdx)
             {
-               const D3DXVECTOR3& vtx = m_geometry[i].vertex(vtxIdx);
-               if (vtx.x > max.x) {max.x = vtx.x;}
-               if (vtx.y > max.y) {max.y = vtx.y;}
-               if (vtx.z > max.z) {max.z = vtx.z;}
+               const Vector& vtx = m_geometry[i].vertex(vtxIdx);
+               if (vtx.x > maxV.x) {maxV.x = vtx.x;}
+               if (vtx.y > maxV.y) {maxV.y = vtx.y;}
+               if (vtx.z > maxV.z) {maxV.z = vtx.z;}
 
-               if (vtx.x < min.x) {min.x = vtx.x;}
-               if (vtx.y < min.y) {min.y = vtx.y;}
-               if (vtx.z < min.z) {min.z = vtx.z;}
+               if (vtx.x < minV.x) {minV.x = vtx.x;}
+               if (vtx.y < minV.y) {minV.y = vtx.y;}
+               if (vtx.z < minV.z) {minV.z = vtx.z;}
             }
          }
 
-         D3DXVECTOR3 dist = max - min;
-         m_boundingSphere.origin = min + (dist / 2.f);
-         m_boundingSphere.radius = D3DXVec3Length(&dist) / 2.f;
+         Vector dist;
+         dist.setSub( maxV, minV );
+         m_boundingSphere.origin.setMulAdd( dist, 0.5f, minV );
+         m_boundingSphere.radius = dist.length() / 2.f;
       }
    };
 
@@ -109,9 +110,9 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(StaticGeometryOctree, geometryCrossingSectorsBoundaryIsSplit)
+TEST( StaticGeometryOctree, geometryCrossingSectorsBoundaryIsSplit )
 {
-   AABoundingBox treeBB(D3DXVECTOR3(-10, -10, -10), D3DXVECTOR3(10, 10, 10));
+   AABoundingBox treeBB(Vector(-10, -10, -10), Vector(10, 10, 10));
    int maxObjects = 1;
    int initDepth = 1;
    int maxDepth = 2;
@@ -122,9 +123,9 @@ TEST(StaticGeometryOctree, geometryCrossingSectorsBoundaryIsSplit)
                                                     initDepth);
 
    GeometricalObjectMock* object = new GeometricalObjectMock();
-   object->addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
-                                D3DXVECTOR3( 1, 11, 10),
-                                D3DXVECTOR3(-1,  9, 10)));
+   object->addTriangle(Triangle(Vector(-1, 11, 10),
+                                Vector( 1, 11, 10),
+                                Vector(-1,  9, 10)));
    tree.insert(object);
 /*
    // after the object's been added to the tree, we should receive
@@ -137,40 +138,40 @@ TEST(StaticGeometryOctree, geometryCrossingSectorsBoundaryIsSplit)
    // their bounding volumes should be clipped accordingly
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.707f, clippedObj1.getBoundingVolume().radius, 0.001f);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.118f, clippedObj2.getBoundingVolume().radius, 0.001f);
-   COMPARE_VEC(D3DXVECTOR3( 0.5f, 10.5f, 10), clippedObj1.getBoundingVolume().origin);
-   COMPARE_VEC(D3DXVECTOR3(-0.5f, 10, 10), clippedObj2.getBoundingVolume().origin);
+   COMPARE_VEC(Vector( 0.5f, 10.5f, 10), clippedObj1.getBoundingVolume().origin);
+   COMPARE_VEC(Vector(-0.5f, 10, 10), clippedObj2.getBoundingVolume().origin);
 
    // as well as the underlying properties
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, clippedObj1.getTrianglesCount());
    const Triangle& obj1Tri = clippedObj1.getTriangle(0);
-   COMPARE_VEC(D3DXVECTOR3( 0, 11, 10), obj1Tri.vertex(0));
-   COMPARE_VEC(D3DXVECTOR3( 1, 11, 10), obj1Tri.vertex(1));
-   COMPARE_VEC(D3DXVECTOR3( 0, 10, 10), obj1Tri.vertex(2));
+   COMPARE_VEC(Vector( 0, 11, 10), obj1Tri.vertex(0));
+   COMPARE_VEC(Vector( 1, 11, 10), obj1Tri.vertex(1));
+   COMPARE_VEC(Vector( 0, 10, 10), obj1Tri.vertex(2));
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, clippedObj2.getTrianglesCount());
    const Triangle& obj2Tri1 = clippedObj2.getTriangle(0);
-   COMPARE_VEC(D3DXVECTOR3(-1, 11, 10), obj2Tri1.vertex(0));
-   COMPARE_VEC(D3DXVECTOR3( 0, 11, 10), obj2Tri1.vertex(1));
-   COMPARE_VEC(D3DXVECTOR3( 0, 10, 10), obj2Tri1.vertex(2));
+   COMPARE_VEC(Vector(-1, 11, 10), obj2Tri1.vertex(0));
+   COMPARE_VEC(Vector( 0, 11, 10), obj2Tri1.vertex(1));
+   COMPARE_VEC(Vector( 0, 10, 10), obj2Tri1.vertex(2));
 
    const Triangle& obj2Tri2 = clippedObj2.getTriangle(1);
-   COMPARE_VEC(D3DXVECTOR3(-1, 11, 10), obj2Tri2.vertex(0));
-   COMPARE_VEC(D3DXVECTOR3( 0, 10, 10), obj2Tri2.vertex(1));
-   COMPARE_VEC(D3DXVECTOR3(-1,  9, 10), obj2Tri2.vertex(2));
+   COMPARE_VEC(Vector(-1, 11, 10), obj2Tri2.vertex(0));
+   COMPARE_VEC(Vector( 0, 10, 10), obj2Tri2.vertex(1));
+   COMPARE_VEC(Vector(-1,  9, 10), obj2Tri2.vertex(2));
 */
    // let's query them
    Array<GeometricalObjectMock*> result;
-   tree.query(BoundingSphere(D3DXVECTOR3(2, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(2, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
-   COMPARE_VEC(D3DXVECTOR3(0.5f, 10.5f, 10), result[0]->getBoundingVolume().origin);
+   COMPARE_VEC(Vector(0.5f, 10.5f, 10), result[0]->getBoundingVolume().origin);
 
    result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(-2, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(-2, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
-   COMPARE_VEC(D3DXVECTOR3(-0.5f, 10, 10), result[0]->getBoundingVolume().origin);
+   COMPARE_VEC(Vector(-0.5f, 10, 10), result[0]->getBoundingVolume().origin);
 
    result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(0, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(0, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, result.size());
 }
 
@@ -178,7 +179,7 @@ TEST(StaticGeometryOctree, geometryCrossingSectorsBoundaryIsSplit)
 
 TEST(StaticGeometryOctree, subdivisionOfAddedObjectsWhenNewViolatePartitioningLimits)
 {
-   AABoundingBox treeBB(D3DXVECTOR3(-10, -10, -10), D3DXVECTOR3(10, 10, 10));
+   AABoundingBox treeBB(Vector(-10, -10, -10), Vector(10, 10, 10));
    int maxObjects = 1;
    int maxDepth = 2;
 
@@ -187,13 +188,13 @@ TEST(StaticGeometryOctree, subdivisionOfAddedObjectsWhenNewViolatePartitioningLi
                                                     maxDepth);
 
    GeometricalObjectMock* object1 = new GeometricalObjectMock();
-   object1->addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
-                                 D3DXVECTOR3( 1, 11, 10),
-                                 D3DXVECTOR3(-1,  9, 10)));
+   object1->addTriangle(Triangle(Vector(-1, 11, 10),
+                                 Vector( 1, 11, 10),
+                                 Vector(-1,  9, 10)));
    GeometricalObjectMock* object2 = new GeometricalObjectMock();
-   object2->addTriangle(Triangle(D3DXVECTOR3( 8, 9, 10),
-                                 D3DXVECTOR3(10, 9, 10),
-                                 D3DXVECTOR3( 9, 9, 8)));
+   object2->addTriangle(Triangle(Vector( 8, 9, 10),
+                                 Vector(10, 9, 10),
+                                 Vector( 9, 9, 8)));
 
 
    // first object doesn't change anything - the limit is not violated,
@@ -213,40 +214,40 @@ TEST(StaticGeometryOctree, subdivisionOfAddedObjectsWhenNewViolatePartitioningLi
    // their bounding volumes should be clipped accordingly
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.707f, clippedObj1.getBoundingVolume().radius, 0.001f);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.118f, clippedObj2.getBoundingVolume().radius, 0.001f);
-   COMPARE_VEC(D3DXVECTOR3( 0.5f, 10.5f, 10), clippedObj1.getBoundingVolume().origin);
-   COMPARE_VEC(D3DXVECTOR3(-0.5f, 10, 10), clippedObj2.getBoundingVolume().origin);
+   COMPARE_VEC(Vector( 0.5f, 10.5f, 10), clippedObj1.getBoundingVolume().origin);
+   COMPARE_VEC(Vector(-0.5f, 10, 10), clippedObj2.getBoundingVolume().origin);
 
    // as well as the underlying properties
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, clippedObj1.getTrianglesCount());
    const Triangle& obj1Tri = clippedObj1.getTriangle(0);
-   COMPARE_VEC(D3DXVECTOR3( 0, 11, 10), obj1Tri.vertex(0));
-   COMPARE_VEC(D3DXVECTOR3( 1, 11, 10), obj1Tri.vertex(1));
-   COMPARE_VEC(D3DXVECTOR3( 0, 10, 10), obj1Tri.vertex(2));
+   COMPARE_VEC(Vector( 0, 11, 10), obj1Tri.vertex(0));
+   COMPARE_VEC(Vector( 1, 11, 10), obj1Tri.vertex(1));
+   COMPARE_VEC(Vector( 0, 10, 10), obj1Tri.vertex(2));
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, clippedObj2.getTrianglesCount());
    const Triangle& obj2Tri1 = clippedObj2.getTriangle(0);
-   COMPARE_VEC(D3DXVECTOR3(-1, 11, 10), obj2Tri1.vertex(0));
-   COMPARE_VEC(D3DXVECTOR3( 0, 11, 10), obj2Tri1.vertex(1));
-   COMPARE_VEC(D3DXVECTOR3( 0, 10, 10), obj2Tri1.vertex(2));
+   COMPARE_VEC(Vector(-1, 11, 10), obj2Tri1.vertex(0));
+   COMPARE_VEC(Vector( 0, 11, 10), obj2Tri1.vertex(1));
+   COMPARE_VEC(Vector( 0, 10, 10), obj2Tri1.vertex(2));
 
    const Triangle& obj2Tri2 = clippedObj2.getTriangle(1);
-   COMPARE_VEC(D3DXVECTOR3(-1, 11, 10), obj2Tri2.vertex(0));
-   COMPARE_VEC(D3DXVECTOR3( 0, 10, 10), obj2Tri2.vertex(1));
-   COMPARE_VEC(D3DXVECTOR3(-1,  9, 10), obj2Tri2.vertex(2));
+   COMPARE_VEC(Vector(-1, 11, 10), obj2Tri2.vertex(0));
+   COMPARE_VEC(Vector( 0, 10, 10), obj2Tri2.vertex(1));
+   COMPARE_VEC(Vector(-1,  9, 10), obj2Tri2.vertex(2));
 */
    // and finally let's do some querying just to be sure everything works
    Array<GeometricalObjectMock*> result;
-   tree.query(BoundingSphere(D3DXVECTOR3(2, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(2, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
-   COMPARE_VEC(D3DXVECTOR3(0.5f, 10.5f, 10), result[0]->getBoundingVolume().origin);
+   COMPARE_VEC(Vector(0.5f, 10.5f, 10), result[0]->getBoundingVolume().origin);
 
    result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(-2, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(-2, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
-   COMPARE_VEC(D3DXVECTOR3(-0.5f, 10, 10), result[0]->getBoundingVolume().origin);
+   COMPARE_VEC(Vector(-0.5f, 10, 10), result[0]->getBoundingVolume().origin);
 
    result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(0, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(0, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, result.size());
 }
 
@@ -254,7 +255,7 @@ TEST(StaticGeometryOctree, subdivisionOfAddedObjectsWhenNewViolatePartitioningLi
 
 TEST(StaticGeometryOctree, partitioningLimits)
 {
-   AABoundingBox treeBB(D3DXVECTOR3(-10, -10, -10), D3DXVECTOR3(10, 10, 10));
+   AABoundingBox treeBB(Vector(-10, -10, -10), Vector(10, 10, 10));
    int maxElementsPerSector = 1;
    int maxDepth = 0;
 
@@ -263,13 +264,13 @@ TEST(StaticGeometryOctree, partitioningLimits)
                                                     maxDepth);
 
    GeometricalObjectMock* object1 = new GeometricalObjectMock();
-   object1->addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
-                                 D3DXVECTOR3( 1, 11, 10),
-                                 D3DXVECTOR3(-1,  9, 10)));
+   object1->addTriangle(Triangle(Vector(-1, 11, 10),
+                                 Vector( 1, 11, 10),
+                                 Vector(-1,  9, 10)));
    GeometricalObjectMock* object2 = new GeometricalObjectMock();
-   object2->addTriangle(Triangle(D3DXVECTOR3( 8, 9, 10),
-                                 D3DXVECTOR3(10, 9, 10),
-                                 D3DXVECTOR3( 9, 9, 8)));
+   object2->addTriangle(Triangle(Vector( 8, 9, 10),
+                                 Vector(10, 9, 10),
+                                 Vector( 9, 9, 8)));
 
 
    // first object doesn't change anything - the limit is not violated,
@@ -286,17 +287,17 @@ TEST(StaticGeometryOctree, partitioningLimits)
 
    // let's do some querying just to be sure everything works
    Array<GeometricalObjectMock*> result;
-   tree.query(BoundingSphere(D3DXVECTOR3(2, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(2, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
-   COMPARE_VEC(D3DXVECTOR3(0, 10, 10), result[0]->getBoundingVolume().origin);
+   COMPARE_VEC(Vector(0, 10, 10), result[0]->getBoundingVolume().origin);
 
    result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(-2, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(-2, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
-   COMPARE_VEC(D3DXVECTOR3(0, 10, 10), result[0]->getBoundingVolume().origin);
+   COMPARE_VEC(Vector(0, 10, 10), result[0]->getBoundingVolume().origin);
 
    result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(0, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(0, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
 }
 
@@ -304,7 +305,7 @@ TEST(StaticGeometryOctree, partitioningLimits)
 
 TEST(StaticGeometryOctree, removingObjects)
 {
-   AABoundingBox treeBB(D3DXVECTOR3(-10, -10, -10), D3DXVECTOR3(10, 10, 10));
+   AABoundingBox treeBB(Vector(-10, -10, -10), Vector(10, 10, 10));
    int maxElementsPerSector = 1;
    int maxDepth = 0;
 
@@ -313,19 +314,19 @@ TEST(StaticGeometryOctree, removingObjects)
                                                     maxDepth);
 
    GeometricalObjectMock* object = new GeometricalObjectMock();
-   object->addTriangle(Triangle(D3DXVECTOR3(-1, 11, 10),
-                                D3DXVECTOR3( 1, 11, 10),
-                                D3DXVECTOR3(-1,  9, 10)));
+   object->addTriangle(Triangle(Vector(-1, 11, 10),
+                                Vector( 1, 11, 10),
+                                Vector(-1,  9, 10)));
 
    SGHandle objectHandle = tree.insert(object);
 
    Array<GeometricalObjectMock*> result;
-   tree.query(BoundingSphere(D3DXVECTOR3(0, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(0, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
 
    tree.remove(objectHandle);
    result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(0, 10, 10), 1.5f), result);
+   tree.query(BoundingSphere(Vector(0, 10, 10), 1.5f), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, result.size());
 }
 
@@ -333,7 +334,7 @@ TEST(StaticGeometryOctree, removingObjects)
 
 TEST(StaticGeometryOctree, addingObjectWithBoundingBoxOverTwoSectorsAndGeometryOnlyInOne)
 {
-   AABoundingBox treeBB(D3DXVECTOR3(-10, -10, -10), D3DXVECTOR3(10, 10, 10));
+   AABoundingBox treeBB(Vector(-10, -10, -10), Vector(10, 10, 10));
    int maxElementsPerSector = 1;
    int maxDepth = 1;
    int initialDepth = 1;
@@ -344,18 +345,18 @@ TEST(StaticGeometryOctree, addingObjectWithBoundingBoxOverTwoSectorsAndGeometryO
                                                     initialDepth);
 
    GeometricalObjectMock* object = new GeometricalObjectMock();
-   object->addTriangle(Triangle(D3DXVECTOR3(-1, 11,  9),
-                                D3DXVECTOR3(-1, 11, 11),
-                                D3DXVECTOR3(-1,  3,  9)));
+   object->addTriangle(Triangle(Vector(-1, 11,  9),
+                                Vector(-1, 11, 11),
+                                Vector(-1,  3,  9)));
 
    tree.insert(object);
 
    Array<GeometricalObjectMock*> result;
-   tree.query(BoundingSphere(D3DXVECTOR3(-2, 10, 10), 1), result);
+   tree.query(BoundingSphere(Vector(-2, 10, 10), 1), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, result.size());
 
    result.clear();
-   tree.query(BoundingSphere(D3DXVECTOR3(2, 10, 10), 1), result);
+   tree.query(BoundingSphere(Vector(2, 10, 10), 1), result);
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, result.size());
 }
 

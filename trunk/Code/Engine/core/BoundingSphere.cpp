@@ -2,22 +2,24 @@
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
 #include "core\PointVolume.h"
-
+#include "core\Plane.h"
+#include "core\Matrix.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BoundingSphere::BoundingSphere()
-: origin(0, 0, 0)
-, radius(0)
+   : origin(0, 0, 0, 1)
+   , radius(0)
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingSphere::BoundingSphere(const D3DXVECTOR3& _origin, float _radius)
-: origin(_origin)
-, radius(_radius)
+BoundingSphere::BoundingSphere(const Vector& _origin, float _radius)
+   : origin( _origin )
+   , radius( _radius )
 {
+   origin.w = 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,25 +31,30 @@ BoundingVolume* BoundingSphere::clone() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoundingSphere::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
+void BoundingSphere::transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const
 {
    // verify that the volume is a BoundingSphere
    ASSERT( dynamic_cast< BoundingSphere* >( &transformedVolume ) != NULL );
    BoundingSphere& transformedSphere = static_cast< BoundingSphere& >( transformedVolume );
 
-   D3DXVec3TransformCoord( &transformedSphere.origin, &origin, &mtx );
+   mtx.transform( origin, transformedSphere.origin );
    transformedSphere.radius = radius;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float BoundingSphere::distanceToPlane(const D3DXPLANE& plane) const
+float BoundingSphere::distanceToPlane( const Plane& plane ) const
 {
-   D3DXVECTOR3 planeNormal(plane.a, plane.b, plane.c);
-   float distance = D3DXVec3Dot(&origin, &planeNormal) + plane.d;
+   float distance = plane.dotCoord( origin );
    
-   if (fabs(distance) <= radius) {return 0;}
-   else                          {return distance;}
+   if ( fabs(distance) <= radius ) 
+   { 
+      return 0; 
+   }
+   else
+   { 
+      return distance; 
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

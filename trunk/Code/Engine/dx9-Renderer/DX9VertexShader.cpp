@@ -129,7 +129,9 @@ void DX9VertexShader::initialize()
    }
 
    // create the vertex declaration
-   res = m_d3Device->CreateVertexDeclaration( m_shader.getVerexDescription(), &m_vertexDecl );
+   // <renderer.todo> right now VertexDescriptor is an exact replica of D3DVERTEXELEMENT9 - but this needs
+   // to change in  order to support OpenGL, DX11 etc.
+   res = m_d3Device->CreateVertexDeclaration( (const D3DVERTEXELEMENT9 *)m_shader.getVerexDescription(), &m_vertexDecl );
    if ( FAILED( res ) )
    {
       ASSERT_MSG( false, "Can't create a vertex declaration" );

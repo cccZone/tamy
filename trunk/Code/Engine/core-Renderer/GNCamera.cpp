@@ -73,21 +73,23 @@ void GNCamera::preRender( Renderer& renderer, const GeometryEntity& entity ) con
    RuntimeDataBuffer& data = entity.data();
    m_nearZ->setValue( data, camera.getNearClippingPlane() );
    m_farZ->setValue( data, camera.getFarClippingPlane() );
-   m_viewportWidth->setValue( data, renderer.getViewportWidth() );
-   m_viewportHeight->setValue( data, renderer.getViewportHeight() );
+   m_viewportWidth->setValue( data, (float)renderer.getViewportWidth() );
+   m_viewportHeight->setValue( data, (float)renderer.getViewportHeight() );
 
-   const D3DXMATRIX& viewMtx = camera.getViewMtx();
+   const Matrix& viewMtx = camera.getViewMtx();
    m_view->setValue( data, viewMtx );
 
-   const D3DXMATRIX& projMtx = camera.getProjectionMtx();
+   const Matrix& projMtx = camera.getProjectionMtx();
    m_proj->setValue( data, projMtx );
 
-   const D3DXMATRIX& worldMtx = entity.getGlobalMtx();
+   const Matrix& worldMtx = entity.getGlobalMtx();
 
-   D3DXMATRIX worldViewMtx = worldMtx * viewMtx;
+   Matrix worldViewMtx;
+   worldViewMtx.setMul( worldMtx, viewMtx );
    m_worldView->setValue( data, worldViewMtx );
 
-   D3DXMATRIX worldViewProjMtx = worldViewMtx * projMtx;
+   Matrix worldViewProjMtx;
+   worldViewProjMtx.setMul( worldViewMtx, projMtx );
    m_worldViewProj->setValue( data, worldViewProjMtx );
 }
 

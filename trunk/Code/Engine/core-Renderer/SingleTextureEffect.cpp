@@ -63,12 +63,13 @@ void SingleTextureEffect::onPreRender( Renderer& renderer ) const
    Camera& camera = renderer.getActiveCamera();
    RCBindEffect* comm = new ( renderer() ) RCBindEffect( *m_effect );
 
-   D3DXMATRIX worldViewMtx = m_parentNode->getGlobalMtx() * camera.getViewMtx();
+   Matrix worldViewMtx;
+   worldViewMtx.setMul( m_parentNode->getGlobalMtx(), camera.getViewMtx() );
    comm->setMtx( "g_mWorldView", worldViewMtx );
    comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
 
-   comm->setVec4( "g_MaterialAmbientColor", ( D3DXVECTOR4 )m_surfaceProperties.getAmbientColor() );
-   comm->setVec4( "g_MaterialDiffuseColor", ( D3DXVECTOR4 )m_surfaceProperties.getDiffuseColor() );
+   comm->setVec4( "g_MaterialAmbientColor", ( const Vector& )m_surfaceProperties.getAmbientColor() );
+   comm->setVec4( "g_MaterialDiffuseColor", ( const Vector& )m_surfaceProperties.getDiffuseColor() );
 
    comm->setBool( "g_UseTexture", m_texture != NULL );
    if ( m_texture != NULL )

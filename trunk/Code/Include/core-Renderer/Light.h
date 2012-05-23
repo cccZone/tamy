@@ -1,8 +1,7 @@
-#ifndef _LIGHT_H
-#define _LIGHT_H
-
 /// @file   core-Renderer\Light.h
 /// @brief  representation of a light
+#ifndef _LIGHT_H
+#define _LIGHT_H
 
 #include "core\Node.h"
 #include "core\Color.h"

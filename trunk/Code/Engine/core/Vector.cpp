@@ -1,150 +1,244 @@
 #include "core\Vector.h"
+#include "core\OutStream.h"
+#include "core\InStream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT(Vector)
-END_OBJECT()
+Vector Vector::ZERO( 0.0f, 0.0f, 0.0f, 0.0f );
+Vector Vector::ONE( 1.0f, 1.0f, 1.0f, 1.0f );
+Vector Vector::OX( 1.0f, 0.0f, 0.0f, 0.0f );
+Vector Vector::OY( 0.0f, 1.0f, 0.0f, 0.0f );
+Vector Vector::OZ( 0.0f, 0.0f, 1.0f, 0.0f );
+Vector Vector::OW( 0.0f, 0.0f, 0.0f, 1.0f );
+Vector Vector::OX_NEG( -1.0f, 0.0f, 0.0f, 0.0f );
+Vector Vector::OY_NEG( 0.0f, -1.0f, 0.0f, 0.0f );
+Vector Vector::OZ_NEG( 0.0f, 0.0f, -1.0f, 0.0f );
+Vector Vector::OW_NEG( 0.0f, 0.0f, 0.0f, -1.0f );
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Vector::Vector() 
-: x(0)
-, y(0)
-, z(0) 
+   : x(0)
+   , y(0)
+   , z(0) 
+   , w(0)
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector::Vector(float _x, float _y, float _z) 
-: x(_x)
-, y(_y)
-, z(_z) 
+Vector::Vector( float _x, float _y, float _z, float _w ) 
+   : x(_x)
+   , y(_y)
+   , z(_z) 
+   , w(_w)
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector::Vector(const D3DXVECTOR3& dxVec) 
-: x(dxVec.x)
-, y(dxVec.y)
-, z(dxVec.z) 
-{}
+bool Vector::equals4( const Vector& rhs ) const
+{
+   return x == rhs.x && y == rhs.y && z == rhs.z && w == rhs.w;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Vector::operator==(const Vector& rhs) const
+bool Vector::operator==( const Vector& rhs ) const
 {
    return x == rhs.x && y == rhs.y && z == rhs.z;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Vector::operator!=(const Vector& rhs) const
+bool Vector::operator!=( const Vector& rhs ) const
 {
-   return !(*this == rhs);
+   return !( *this == rhs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector& Vector::operator=(const Vector& rhs)
+Vector& Vector::operator=( const Vector& rhs )
 {
    x = rhs.x;
    y = rhs.y;
    z = rhs.z;
+   w = rhs.w;
 
    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector Vector::operator-() const
+Vector& Vector::setMul( const Vector& vec, float t )
 {
-   return Vector(-x, -y, -z);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector Vector::operator+(const Vector& rhs) const
-{
-   return Vector(x + rhs.x, y + rhs.y, z + rhs.z);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::operator+=(const Vector& rhs)
-{
-   x += rhs.x;
-   y += rhs.y;
-   z += rhs.z;
-
+   x = vec.x * t;
+   y = vec.y * t;
+   z = vec.z * t;
+   w = vec.w * t;
    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector Vector::operator-(const Vector& rhs) const
+Vector& Vector::setMulAdd( const Vector& vec1, float t, const Vector& vec2 )
 {
-   return Vector(x - rhs.x, y - rhs.y, z - rhs.z);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::operator-=(const Vector& rhs)
-{
-   x -= rhs.x;
-   y -= rhs.y;
-   z -= rhs.z;
-
+   x = vec1.x * t + vec2.x;
+   y = vec1.y * t + vec2.y;
+   z = vec1.z * t + vec2.z;
+   w = vec1.w * t + vec2.w;
    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector Vector::operator*(float val) const
+Vector& Vector::setAdd( const Vector& vec1, const Vector& vec2 )
 {
-   return Vector(x * val, y * val, z * val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::operator*=(float val)
-{
-   x *= val;
-   y *= val;
-   z *= val;
-
+   x = vec1.x + vec2.x;
+   y = vec1.y + vec2.y;
+   z = vec1.z + vec2.z;
+   w = vec1.w + vec2.w;
    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Vector::dot(const Vector& rhs) const
+Vector& Vector::setSub( const Vector& vec1, const Vector& vec2 )
+{
+   x = vec1.x - vec2.x;
+   y = vec1.y - vec2.y;
+   z = vec1.z - vec2.z;
+   w = vec1.w - vec2.w;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::mul( float t )
+{
+   x *= t;
+   y *= t;
+   z *= t;
+   w *= t;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::add( const Vector& vec )
+{
+   x += vec.x;
+   y += vec.y;
+   z += vec.z;
+   w += vec.w;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::sub( const Vector& vec )
+{
+   x -= vec.x;
+   y -= vec.y;
+   z -= vec.z;
+   w -= vec.w;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::neg()
+{
+   x = -x;
+   x = -y;
+   y = -z;
+   w = -w;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Vector::dot( const Vector& rhs ) const
 {
    return x * rhs.x + y * rhs.y + z * rhs.z;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector Vector::cross(const Vector& rhs) const
+float Vector::dot4( const Vector& rhs ) const
 {
-   return Vector(y * rhs.z - z * rhs.y,
-                 z * rhs.x - x * rhs.z,
-                 x * rhs.y - y * rhs.x);
+   return x * rhs.x + y * rhs.y + z * rhs.z + w * rhs.w;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector Vector::normalized() const
+Vector& Vector::setCross( const Vector& v1, const Vector& v2 )
 {
-   float len = sqrt(x * x + y * y + z * z);
+   x = v1.y * v2.z - v1.z * v2.y;
+   y = v1.z * v2.x - v1.x * v2.z;
+   z = v1.x * v2.y - v1.y * v2.x;
+   w = 1.0f;
+   
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::preCross( const Vector& rhs )
+{
+   Vector tmpVec;
+   tmpVec.setCross( *this, rhs );
+
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::postCross( const Vector& rhs )
+{
+   Vector tmpVec;
+   tmpVec.setCross( rhs, *this );
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::set( float _x, float _y, float _z, float _w )
+{
+   x = _x;
+   y = _y;
+   z = _z;
+   w = _w;
+
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::setNormalized( const Vector& rhs )
+{
+   setNormalized( rhs.x, rhs.y, rhs.z );
+
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::setNormalized( float _x, float _y, float _z )
+{
+   float len = sqrt( _x * _x + _y * _y + _z * _z );
    if (len == 0)
    {
-      return Vector(0, 0, 0);
+      x = y = z = w = 0;
    }
    else
    {
-      return Vector(x / len, y / len, z / len);
+      x = _x / len;
+      y = _y / len;
+      z = _z / len;
    }
+
+   return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -168,6 +262,17 @@ Vector& Vector::normalize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Vector& Vector::setLerp( const Vector& a, const Vector& b, float t )
+{
+   x = a.x + ( b.x - a.x ) * t;
+   y = a.y + ( b.y - a.y ) * t;
+   z = a.z + ( b.z - a.z ) * t;
+
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 float Vector::length() const
 {
    return sqrt(x * x + y * y + z * z);
@@ -182,10 +287,33 @@ float Vector::lengthSq() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::ostream& operator<<(std::ostream& stream, const Vector& rhs)
+bool Vector::isNormalized() const
 {
-   stream << "[" << rhs.x << ", " << rhs.y << ", " << rhs.z << "]";
+   return abs( lengthSq() - 1.0f ) < 1e-6;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::ostream& operator<<( std::ostream& stream, const Vector& rhs )
+{
+   stream << rhs.v;
    return stream;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+OutStream& operator<<( OutStream& serializer, const Vector& rhs )
+{
+   serializer << rhs.v;
+   return serializer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+InStream& operator>>( InStream& serializer, Vector& rhs )
+{
+   serializer >> rhs.v;
+   return serializer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

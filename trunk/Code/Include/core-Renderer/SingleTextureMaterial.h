@@ -6,7 +6,6 @@
 #include "core-MVC\Entity.h"
 #include "core-Renderer\SurfaceProperties.h"
 #include "core-Renderer\RenderState.h"
-#include <d3dx9.h>
 #include <vector>
 
 

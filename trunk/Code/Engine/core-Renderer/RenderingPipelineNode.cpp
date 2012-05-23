@@ -81,7 +81,7 @@ GBNodeInput< RenderingPipelineNode >* RenderingPipelineNode::createInput( const 
    {
       return new RPIntInput( name );
    } 
-   else if ( dataType.m_name == "D3DXMATRIX" )
+   else if ( dataType.m_name == "Matrix" )
    {
       return new RPMatrixInput( name );
    } 
@@ -93,7 +93,7 @@ GBNodeInput< RenderingPipelineNode >* RenderingPipelineNode::createInput( const 
    {
       return new RPTextureInput( name );
    } 
-   else if ( dataType.m_name == "D3DXVECTOR4" )
+   else if ( dataType.m_name == "Vector" )
    {
       return new RPVec4Input( name );
    } 

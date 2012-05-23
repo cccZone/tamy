@@ -4,9 +4,10 @@
 
 #include "core/ReflectionObject.h"
 #include "core-AI/AnimationTimeline.h"
+#include "core/Vector.h"
+#include "core/Quaternion.h"
 #include <string>
 #include <vector>
-#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,18 +27,18 @@ private:
    struct VecLerp
    {
    public:
-      void operator()( D3DXVECTOR3& outVec, const D3DXVECTOR3& start, const D3DXVECTOR3& end, float percentage ) const
+      void operator()( Vector& outVec, const Vector& start, const Vector& end, float percentage ) const
       {
-         D3DXVec3Lerp( &outVec, &start, &end, percentage );
+         outVec.setLerp( start, end, percentage );
       }
    };
 
    struct QuatLerp
    {
    public:
-      void operator()( D3DXQUATERNION& outQuat, const D3DXQUATERNION& start, const D3DXQUATERNION& end, float percentage ) const
+      void operator()( Quaternion& outQuat, const Quaternion& start, const Quaternion& end, float percentage ) const
       {
-         D3DXQuaternionSlerp( &outQuat, &start, &end, percentage );
+         outQuat.setSlerp( start, end, percentage );
       }
    };
 
@@ -45,8 +46,8 @@ private:
    std::string                                        m_boneName;
    float                                              m_duration;
 
-   AnimationTimeline< D3DXQUATERNION, QuatLerp >      m_orientation;
-   AnimationTimeline< D3DXVECTOR3, VecLerp >          m_translation;
+   AnimationTimeline< Quaternion, QuatLerp >          m_orientation;
+   AnimationTimeline< Vector, VecLerp >               m_translation;
 
 public:
    /**
@@ -62,7 +63,7 @@ public:
     * @param frameTime
     * @param orientation
     */
-   void addOrientationKey( float time, const D3DXQUATERNION& orientation );
+   void addOrientationKey( float time, const Quaternion& orientation );
 
    /**
     * Adds an animation translation key definition at the specified time.
@@ -70,7 +71,7 @@ public:
     * @param frameTime
     * @param translation
     */
-   void addTranslationKey( float time, const D3DXVECTOR3& translation );
+   void addTranslationKey( float time, const Vector& translation );
 
    /**
     * Returns the stream duration expressed in seconds.
@@ -97,7 +98,7 @@ public:
     * @param outValue
     * @param outTime
     */
-   void getTranslationKey( unsigned int keyIdx, D3DXVECTOR3& outValue, float& outTime ) const;
+   void getTranslationKey( unsigned int keyIdx, Vector& outValue, float& outTime ) const;
 
    /**
     * Sets a value of a translation key.
@@ -105,7 +106,7 @@ public:
     * @param keyIdx     requested key index
     * @param value
     */
-   void setTranslationKey( unsigned int keyIdx, const D3DXVECTOR3& value );
+   void setTranslationKey( unsigned int keyIdx, const Vector& value );
 
    /**
     * Returns the number of orientation keys.
@@ -119,7 +120,7 @@ public:
     * @param outValue
     * @param outTime
     */
-   void getOrientationKey( unsigned int keyIdx, D3DXQUATERNION& outValue, float& outTime ) const;
+   void getOrientationKey( unsigned int keyIdx, Quaternion& outValue, float& outTime ) const;
 
    /**
     * Sets a value of an orientation key.
@@ -127,7 +128,7 @@ public:
     * @param keyIdx     requested key index
     * @param value
     */
-   void setOrientationKey( unsigned int keyIdx, const D3DXQUATERNION& value );
+   void setOrientationKey( unsigned int keyIdx, const Quaternion& value );
 
    // -------------------------------------------------------------------------
    // Serializable implementation
@@ -149,7 +150,7 @@ private:
     *
     * @return  'true' if a value was found, 'false' otherwise
     */
-   bool getTranslation( unsigned int& lastCheckedKeyIdx, float time, D3DXVECTOR3& outTranslation ) const;
+   bool getTranslation( unsigned int& lastCheckedKeyIdx, float time, Vector& outTranslation ) const;
 
    /**
     * Returns the orientation value at the specified time.
@@ -160,7 +161,7 @@ private:
     *
     * @return  'true' if a value was found, 'false' otherwise
     */
-   bool getOrientation( unsigned int& lastCheckedKeyIdx, float time, D3DXQUATERNION& outOrientation ) const;
+   bool getOrientation( unsigned int& lastCheckedKeyIdx, float time, Quaternion& outOrientation ) const;
 
 private:
    void updateDuration();
@@ -196,7 +197,7 @@ public:
     *
     * @return  'true' if a value was found, 'false' otherwise
     */
-   bool getTranslation( float time, D3DXVECTOR3& outTranslation );
+   bool getTranslation( float time, Vector& outTranslation );
 
    /**
     * Returns the orientation value at the specified time.
@@ -206,7 +207,7 @@ public:
     *
     * @return  'true' if a value was found, 'false' otherwise
     */
-   bool getOrientation( float time, D3DXQUATERNION& outOrientation );
+   bool getOrientation( float time, Quaternion& outOrientation );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

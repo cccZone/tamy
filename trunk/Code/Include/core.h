@@ -2,20 +2,6 @@
 /// @brief  aggregate include file for the 'core' project
 #pragma once
 
-
-// ----------------------------------------------------------------------------
-// BoundingVolumes
-// ----------------------------------------------------------------------------
-#include "core\BoundingVolume.h"
-#include "core\AABoundingBox.h"
-#include "core\BoundingSpace.h"
-#include "core\BoundingSphere.h"
-#include "core\Frustum.h"
-#include "core\PointVolume.h"
-#include "core\Ray.h"
-#include "core\Triangle.h"
-#include "core\TriangleSplitter.h"
-
 // ----------------------------------------------------------------------------
 // DataStructures
 // ----------------------------------------------------------------------------
@@ -62,24 +48,20 @@
 // ----------------------------------------------------------------------------
 // Math
 // ----------------------------------------------------------------------------
-#include "core\Vector.h"
-#include "core\EulerAngles.h"
-#include "core\Matrix.h"
+#include "core\Math.h"
 
 // ----------------------------------------------------------------------------
 // Misc
 // ----------------------------------------------------------------------------
+#include "core\Color.h"
 #include "core\GenericFactory.h"
 #include "core\Observer.h"
 #include "core\Subject.h"
 #include "core\Assert.h"
-#include "core\Color.h"
 #include "core\IntervalOperation.h"
-#include "core\MatrixInterpolator.h"
 #include "core\UniqueObject.h"
 #include "core\StringUtils.h"
 #include "core\IProgressObserver.h"
-#include "core\Algorithms.h"
 #include "core\Singleton.h"
 #include "core\IDebugDraw.h"
 

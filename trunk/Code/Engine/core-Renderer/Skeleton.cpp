@@ -6,9 +6,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_RESOURCE( Skeleton, tsk, AM_BINARY )
-   PROPERTY( D3DXMATRIX, m_bindShapeMtx )
+   PROPERTY( Matrix, m_bindShapeMtx )
    PROPERTY( std::vector< std::string >, m_boneNames )
-   PROPERTY( std::vector< D3DXMATRIX >, m_invBoneMatrices )
+   PROPERTY( std::vector< Matrix >, m_invBoneMatrices )
    PROPERTY( std::vector< VertexWeight >, m_weights )
 END_RESOURCE()
 
@@ -17,8 +17,7 @@ END_RESOURCE()
 Skeleton::Skeleton( const FilePath& resourceName )
    : Resource( resourceName )
 {
-   D3DXMatrixIdentity( &m_identityMtx );
-   D3DXMatrixIdentity( &m_bindShapeMtx );
+   m_bindShapeMtx = Matrix::IDENTITY;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,24 +28,26 @@ Skeleton::~Skeleton()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Skeleton::setShapeBindMatrix( const D3DXMATRIX& bindShapeMtx )
+void Skeleton::setShapeBindMatrix( const Matrix& bindShapeMtx )
 {
-   D3DXMATRIX prevInvMtx;
-   D3DXMatrixInverse( &prevInvMtx, NULL, &m_bindShapeMtx );
+   Matrix prevInvMtx;
+   prevInvMtx.setInverse( m_bindShapeMtx );
 
    m_bindShapeMtx = bindShapeMtx;
 
    // transform the matrices to the new bind shape mtx
    unsigned int count = m_invBoneMatrices.size();
+   Matrix tmpMtx;
    for( unsigned int i = 0; i < count; ++i )
    {
-      m_invBoneMatrices[i] = m_bindShapeMtx * m_invBoneMatrices[i] * prevInvMtx;
+      tmpMtx.setMul( m_bindShapeMtx, m_invBoneMatrices[i] );
+      m_invBoneMatrices[i].setMul( tmpMtx, prevInvMtx );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Skeleton::setTransformation( const std::string& boneName, const D3DXMATRIX& invBoneMtx )
+void Skeleton::setTransformation( const std::string& boneName, const Matrix& invBoneMtx )
 {
    // first check if we're not trying to replace an existing definition
    unsigned int count = m_boneNames.size();
@@ -63,12 +64,13 @@ void Skeleton::setTransformation( const std::string& boneName, const D3DXMATRIX&
    {
       // this is a new bone
       m_boneNames.push_back( boneName );
-      m_invBoneMatrices.push_back( m_bindShapeMtx * invBoneMtx );
+      m_invBoneMatrices.push_back( Matrix::IDENTITY );
+      m_invBoneMatrices.back().setMul( m_bindShapeMtx, invBoneMtx );
    }
    else
    {
       // we're replacing an existing bone definition
-      m_invBoneMatrices[i] = m_bindShapeMtx * invBoneMtx;
+      m_invBoneMatrices[i].setMul( m_bindShapeMtx, invBoneMtx );
    }
 }
 
@@ -106,12 +108,12 @@ void Skeleton::addWeight( unsigned int vertexIdx, const std::string& boneId, flo
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const D3DXMATRIX& Skeleton::getInvBindPoseMtx( const std::string& boneName ) const
+const Matrix& Skeleton::getInvBindPoseMtx( const std::string& boneName ) const
 {
    int idx = getBoneIndex( boneName );
    if ( idx < 0 )
    {
-      return m_identityMtx;
+      return Matrix::IDENTITY;
    }
    else
    {

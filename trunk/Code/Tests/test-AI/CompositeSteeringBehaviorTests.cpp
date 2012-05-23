@@ -1,6 +1,7 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core-AI\CompositeSteeringBehavior.h"
 #include "core-AI\SteeringBehavior.h"
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,14 +12,14 @@ namespace // anonymous
    class SteeringBehaviorMock : public SteeringBehavior
    {
    private:
-      D3DXVECTOR3 m_vel;
+      Vector m_vel;
 
    public:
-      SteeringBehaviorMock(const D3DXVECTOR3& vel) : m_vel(vel) {}
+      SteeringBehaviorMock(const Vector& vel) : m_vel(vel) {}
 
-      D3DXVECTOR3 calculateVelocity(float timeElapsed)
+      void calculateVelocity( float timeElapsed, Vector& outVelocity )
       {
-         return m_vel;
+         outVelocity = m_vel;
       }
    };
 
@@ -30,10 +31,12 @@ namespace // anonymous
 TEST(CompositeSteeringBehavior, multipleBehaviors)
 {
    CompositeSteeringBehavior composite;
-   composite.add(new SteeringBehaviorMock(D3DXVECTOR3(10, 0, 0)), 1);
-   composite.add(new SteeringBehaviorMock(D3DXVECTOR3(0, 10, 0)), 1);
+   composite.add(new SteeringBehaviorMock(Vector(10, 0, 0)), 1);
+   composite.add(new SteeringBehaviorMock(Vector(0, 10, 0)), 1);
 
-   COMPARE_VEC(D3DXVECTOR3(10, 10, 0), composite.calculateVelocity(1));
+   Vector outVel;
+   composite.calculateVelocity( 1, outVel );
+   COMPARE_VEC( Vector(10, 10, 0), outVel );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -41,10 +44,12 @@ TEST(CompositeSteeringBehavior, multipleBehaviors)
 TEST(CompositeSteeringBehavior, mixingBehaviors)
 {
    CompositeSteeringBehavior composite;
-   composite.add(new SteeringBehaviorMock(D3DXVECTOR3(10, 0, 0)), 0.5);
-   composite.add(new SteeringBehaviorMock(D3DXVECTOR3(0, 10, 0)), 1);
+   composite.add(new SteeringBehaviorMock(Vector(10, 0, 0)), 0.5);
+   composite.add(new SteeringBehaviorMock(Vector(0, 10, 0)), 1);
 
-   COMPARE_VEC(D3DXVECTOR3(5, 10, 0), composite.calculateVelocity(1));
+   Vector outVel;
+   composite.calculateVelocity( 1, outVel );
+   COMPARE_VEC( Vector(5, 10, 0), outVel );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

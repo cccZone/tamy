@@ -22,7 +22,10 @@ void QueryableGeometry::render( Renderer& renderer, PixelShader& shader )
    }
 
    RCBindPixelShader* effectComm = new ( renderer() ) RCBindPixelShader( shader );
-   effectComm->setVec4( "g_ptr", QueryRenderingPass::ptrToVec( &m_geometry ) );
+
+   Vector ptrVal;
+   QueryRenderingPass::ptrToVec( &m_geometry, ptrVal );
+   effectComm->setVec4( "g_ptr", ptrVal );
 
    m_geometry.render( renderer );
 

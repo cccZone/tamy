@@ -10,8 +10,5 @@
     <ClCompile Include="UnconstrainedMotionControllerTests.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="WaypointCameraControllerTests.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

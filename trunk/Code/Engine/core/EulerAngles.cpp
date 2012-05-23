@@ -1,114 +1,131 @@
 #include "core\EulerAngles.h"
 #include "core\Vector.h"
 #include "core\Matrix.h"
+#include "core\Quaternion.h"
+#include "core\OutStream.h"
+#include "core\InStream.h"
+#include "core\MathDefs.h"
+#include "core\Assert.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-#define M2_PI  (float)(2.f * M_PI)
-
-///////////////////////////////////////////////////////////////////////////////
-
-BEGIN_OBJECT(EulerAngles)
-END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
 EulerAngles::EulerAngles()
-: yaw(0)
-, pitch(0)
-, roll(0)
+   : yaw(0)
+   , pitch(0)
+   , roll(0)
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles::EulerAngles(float _yaw, float _pitch, float _roll)
-: yaw(_yaw)
-, pitch(_pitch)
-, roll(_roll)
+EulerAngles::EulerAngles( float _yaw, float _pitch, float _roll )
+   : yaw(_yaw)
+   , pitch(_pitch)
+   , roll(_roll)
 {
    normalize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles::EulerAngles(const Vector& vec1, const Vector& vec2)
+EulerAngles& EulerAngles::setFromShortestRotation( const Vector& vec1, const Vector& vec2 )
 {
-   Vector nVec1 = vec1.normalized();
-   Vector nVec2 = vec2.normalized();
-   float angle = acos( nVec1.dot( nVec2 ) );
+   ASSERT_MSG( vec1.isNormalized(), "vec1 needs to be normalized in order for setFromShortestRotation to work" );
+   ASSERT_MSG( vec2.isNormalized(), "vec2 needs to be normalized in order for setFromShortestRotation to work" );
+
+   float angle = acos( vec1.dot( vec2 ) );
    Vector axis;
 
    if( fabs( angle ) < 1e-4 )
    {
       angle = 0;
-      axis = Vector( 0, 0, 1 );
+      axis = Vector::OZ;
    }
    else if ( fabs( angle - M_PI ) < 1e-3 )
    { 
-      axis = nVec1.cross(nVec2);
+      axis.setCross( vec1, vec2 );
+      axis.normalize();
    }
    else
    {
-      axis = nVec1.cross(nVec2);
+      axis.setCross( vec1, vec2 );
+      axis.normalize();
    }
 
-   Matrix mtx( axis, angle );
-   *this = (EulerAngles)mtx;
+   Quaternion quat;
+   quat.setAxisAngle( axis, angle );
+   setFromQuaternion( quat );
+
+   return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles::EulerAngles( const D3DXQUATERNION& quat )
+EulerAngles& EulerAngles::setFromQuaternion( const Quaternion& q )
 {
-   float poleFactor = quat.x * quat.y + quat.z * quat.w;
-   if ( poleFactor == 0.5f )
+   float ww = q.w*q.w;
+   float xx = q.x*q.x;
+   float yy = q.y*q.y;
+   float zz = q.z*q.z;
+   float xy = q.x*q.y;
+   float zw = q.z*q.w;
+   float yw = q.y*q.w;
+   float yz = q.y*q.z;
+   float xw = q.x*q.w;
+   float xz = q.x*q.z;
+
+   const float polarityTolerance = 1e-5f;
+
+   float polarityFactor = yw - xz;
+   if ( 0.5f - polarityFactor <= polarityTolerance )
    {
-      // north pole
-      yaw = 2 * atan2( quat.x, quat.w );
-      pitch = M_PI / 2.0f;
-      roll = 0;
+      // singularity at south pole
+      roll = atan2( q.x , q.w );
+      yaw = (float)M_PI / 2.0f;
+      pitch = 0.0f;
    }
-   else if ( poleFactor == -0.5f )
+   else if ( polarityFactor + 0.5f <= polarityTolerance )
    {
-      // south pole
-      yaw = -2 * atan2( quat.x, quat.w );
-      pitch = M_PI / 2.0f;
-      roll = 0;
+      // singularity at north pole
+      roll = atan2( q.x , q.w );
+      yaw = (float)-M_PI / 2.0f;
+      pitch = 0.0f;
+      pitch = 0;
    }
    else
    {
-      yaw = atan2( 2 * quat.y * quat.w - 2 * quat.x * quat.z, 1 - 2 * quat.y * quat.y - 2 * quat.z * quat.z );
-      pitch = asin( 2 * poleFactor );
-      roll = atan2( 2 * quat.x * quat.w - 2 * quat.y * quat.z, 1 - 2 * quat.x * quat.x - 2 * quat.z * quat.z );
+
+      // pitch works fine in range <-180, 180 >, but yaw and roll don't
+      pitch = atan2( 2.0f * ( xw + yz ), 1.0f - 2.0f * ( xx + yy ) );  // theta1
+      yaw = asin( 2.0f * polarityFactor ); // theta2
+      roll = atan2( 2.0f * ( zw + xy ), 1.0f - 2.0f * ( yy + zz ) ); // theta3
    }
 
    yaw = RAD2DEG( yaw );
    pitch = RAD2DEG( pitch );
    roll = RAD2DEG( roll );
+
+   return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool EulerAngles::operator==(const EulerAngles& rhs) const
+bool EulerAngles::operator==( const EulerAngles& rhs ) const
 {
    return (yaw == rhs.yaw) && (pitch == rhs.pitch) && (roll == rhs.roll);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool EulerAngles::operator!=(const EulerAngles& rhs) const
+bool EulerAngles::operator!=( const EulerAngles& rhs ) const
 {
    return !(*this == rhs);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles& EulerAngles::operator=(const EulerAngles& rhs)
+EulerAngles& EulerAngles::operator=( const EulerAngles& rhs )
 {
    yaw = rhs.yaw;
    pitch = rhs.pitch;
@@ -118,14 +135,14 @@ EulerAngles& EulerAngles::operator=(const EulerAngles& rhs)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles EulerAngles::operator+(const EulerAngles& rhs) const
+EulerAngles EulerAngles::operator+( const EulerAngles& rhs ) const
 {
    return EulerAngles(yaw + rhs.yaw, pitch + rhs.pitch, roll + rhs.roll);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles& EulerAngles::operator+=(const EulerAngles& rhs)
+EulerAngles& EulerAngles::operator+=( const EulerAngles& rhs )
 {
    yaw += rhs.yaw;
    pitch += rhs.pitch;
@@ -135,14 +152,14 @@ EulerAngles& EulerAngles::operator+=(const EulerAngles& rhs)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles EulerAngles::operator-(const EulerAngles& rhs) const
+EulerAngles EulerAngles::operator-( const EulerAngles& rhs ) const
 {
    return EulerAngles(yaw - rhs.yaw, pitch - rhs.pitch, roll - rhs.roll);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles& EulerAngles::operator-=(const EulerAngles& rhs)
+EulerAngles& EulerAngles::operator-=( const EulerAngles& rhs )
 {
    yaw -= rhs.yaw;
    pitch -= rhs.pitch;
@@ -152,14 +169,14 @@ EulerAngles& EulerAngles::operator-=(const EulerAngles& rhs)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles EulerAngles::operator*(const EulerAngles& rhs) const
+EulerAngles EulerAngles::operator*( const EulerAngles& rhs ) const
 {
    return EulerAngles(yaw * rhs.yaw, pitch * rhs.pitch, roll * rhs.roll);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles& EulerAngles::operator*=(const EulerAngles& rhs)
+EulerAngles& EulerAngles::operator*=( const EulerAngles& rhs )
 {
    yaw *= rhs.yaw;
    pitch *= rhs.pitch;
@@ -169,14 +186,14 @@ EulerAngles& EulerAngles::operator*=(const EulerAngles& rhs)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles EulerAngles::operator/(const EulerAngles& rhs) const
+EulerAngles EulerAngles::operator/( const EulerAngles& rhs ) const
 {
    return EulerAngles(yaw / rhs.yaw, pitch / rhs.pitch, roll / rhs.roll);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles& EulerAngles::operator/=(const EulerAngles& rhs)
+EulerAngles& EulerAngles::operator/=( const EulerAngles& rhs )
 {
    yaw /= rhs.yaw;
    pitch /= rhs.pitch;
@@ -186,7 +203,7 @@ EulerAngles& EulerAngles::operator/=(const EulerAngles& rhs)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles EulerAngles::operator+(float val) const
+EulerAngles EulerAngles::operator+( float val ) const
 {
    return EulerAngles(yaw + val, pitch + val, roll + val);
 }
@@ -252,30 +269,6 @@ EulerAngles& EulerAngles::operator/=(float val)
    return *this;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles::operator D3DXQUATERNION() const
-{
-   const double radYaw = toRadians( yaw );
-   const double radPitch = toRadians( pitch );
-   const double radRoll = toRadians( roll );
-
-   double c1 = cos( radYaw * 0.5f );
-   double s1 = sin( radYaw * 0.5f );
-   double c2 = cos( radPitch * 0.5f );
-   double s2 = sin( radPitch * 0.5f );
-   double c3 = cos( radRoll * 0.5f );
-   double s3 = sin( radRoll * 0.5f );
-   double c1c2 = c1*c2;
-   double s1s2 = s1*s2;
-
-   D3DXQUATERNION result;
-   result.w = (float)( c1c2*c3 - s1s2*s3 );
-   result.x = (float)( c1c2*s3 + s1s2*c3 );
-   result.y = (float)( s1*c2*c3 + c1*s2*s3 );
-   result.z = (float)( c1*s2*c3 - s1*c2*s3 );
-   return result;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -310,16 +303,22 @@ std::ostream& operator<<(std::ostream& stream, const EulerAngles& rhs)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float EulerAngles::toDegrees(float radians)
+OutStream& operator<<( OutStream& serializer, const EulerAngles& rhs )
 {
-   return (float)((radians * 180.f) / M_PI);
+   serializer << rhs.yaw;
+   serializer << rhs.pitch;
+   serializer << rhs.roll;
+   return serializer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float EulerAngles::toRadians(float degrees)
+InStream& operator>>( InStream& serializer, EulerAngles& rhs )
 {
-   return (float)((degrees * M_PI) / 180.f);
+   serializer >> rhs.yaw;
+   serializer >> rhs.pitch;
+   serializer >> rhs.roll;
+   return serializer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,14 +3,13 @@
 #pragma once
 
 #include "core\Node.h"
-#include <d3dx9.h>
 #include "core\Observer.h"
 #include "core\Frustum.h"
+#include "core\Matrix.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ProjectionCalculator;
 struct Frustum;
 struct Ray;
 class Renderer;
@@ -24,23 +23,29 @@ enum RendererOps;
  */
 class Camera : public Node, public Observer<Renderer, RendererOps>
 {
+public:
+   enum ProjectionType
+   {
+      PT_PERSPECTIVE,
+      PT_ORTHO
+   };
+
 private:
-   Renderer& m_renderer;
+   Renderer&            m_renderer;
+   ProjectionType       m_projectionType;
 
-   float m_fov;
-   float m_aspectRatio;
-   float m_nearZPlane;
-   float m_farZPlane;
-   float m_nearPlaneWidth;
-   float m_nearPlaneHeight;
+   float                m_fov;
+   float                m_aspectRatio;
+   float                m_nearZPlane;
+   float                m_farZPlane;
+   float                m_nearPlaneWidth;
+   float                m_nearPlaneHeight;
 
-   D3DXMATRIX m_mtxIdentity;
-   D3DXMATRIX m_mtxView;
-   D3DXMATRIX m_mtx3DProjection;
+   Matrix               m_mtxIdentity;
+   Matrix               m_mtxView;
+   Matrix               m_mtx3DProjection;
 
-   bool m_mtxProjectionDirty;
-
-   ProjectionCalculator* m_projCalc;
+   bool                 m_mtxProjectionDirty;
 
 public:
    /**
@@ -49,25 +54,25 @@ public:
     * @param name       camera name
     * @param renderer   main renderer the application uses
     */
-   Camera( const std::string& name, Renderer& renderer );
+   Camera( const std::string& name, Renderer& renderer, ProjectionType projectionType );
    ~Camera();
 
    /**
-    * Sets a new projection calculator ( with perspective, orthogonal etc. )
+    * Sets a new projection type ( with perspective, orthogonal etc. )
     *
-    * @param projCalc
+    * @param projectionType
     */
-   void setProjectionCalculator( ProjectionCalculator* projCalc );
+   void setProjection( ProjectionType projectionType );
 
    /**
     * Retrieves current view matrix.
     */
-   const D3DXMATRIX& getViewMtx();
+   const Matrix& getViewMtx();
 
    /**
     * Retrieves current projection matrix.
     */
-   const D3DXMATRIX& getProjectionMtx();
+   const Matrix& getProjectionMtx();
 
    /**
     * Sets new near plane dimensions ( values in range (0,1) )
@@ -127,8 +132,12 @@ public:
     * through the position on the viewport specified by the method params.
     *
     * The method params should be specified in the viewport coordinates (range <-1, 1>)
+    *
+    * @param viewportX
+    * @param viewportY
+    * @param outRay
     */
-   Ray createRay(float viewportX, float viewportY);
+   void createRay( float viewportX, float viewportY, Ray& outRay );
 
    /**
     * This two method will be called whenever the renderer wishes to update 

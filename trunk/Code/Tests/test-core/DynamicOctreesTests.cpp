@@ -15,7 +15,7 @@ namespace // anonymous
 
    public:
       BoundedObjectMock(float ox, float oy, float oz, float rad)
-         : m_boundingSphere(D3DXVECTOR3(ox, oy, oz), rad)
+         : m_boundingSphere(Vector(ox, oy, oz), rad)
       {}
 
       const BoundingSphere& getBoundingVolume() const {return m_boundingSphere;}
@@ -34,7 +34,7 @@ namespace // anonymous
 
 TEST(DynamicOctree, addingObjects)
 {
-   AABoundingBox treeBB(D3DXVECTOR3(-10, -10, -10), D3DXVECTOR3(10, 10, 10));
+   AABoundingBox treeBB(Vector(-10, -10, -10), Vector(10, 10, 10));
    int depth = 1;
    DynamicOctree<BoundedObjectMock> tree(treeBB, depth);
    Array<BoundedObjectMock*> result;
@@ -42,7 +42,7 @@ TEST(DynamicOctree, addingObjects)
    BoundedObjectMock ob1(5, 5, 5, 1);
    tree.insert(ob1);
 
-   D3DXVECTOR3 searchLocation(5, 5, 5);
+   Vector searchLocation(5, 5, 5);
 
    // query finally finds the object
    tree.query(BoundingSphere(searchLocation, 3), result);
@@ -54,7 +54,7 @@ TEST(DynamicOctree, addingObjects)
 
 TEST(DynamicOctree, queryingElements)
 {
-   AABoundingBox treeBB(D3DXVECTOR3(-10, -10, -10), D3DXVECTOR3(10, 10, 10));
+   AABoundingBox treeBB(Vector(-10, -10, -10), Vector(10, 10, 10));
    int depth = 1;
    DynamicOctree<BoundedObjectMock> tree(treeBB, depth);
    Array<BoundedObjectMock*> result;
@@ -62,8 +62,8 @@ TEST(DynamicOctree, queryingElements)
    BoundedObjectMock ob1(5, 5, 5, 1);
    tree.insert(ob1);
 
-   D3DXVECTOR3 location1(4, 4, 4);
-   D3DXVECTOR3 location2(-4, -4, -4);
+   Vector location1(4, 4, 4);
+   Vector location2(-4, -4, -4);
 
    // let's check where the object is before we move it
    // to verify the queries work correctly
@@ -93,7 +93,7 @@ TEST(DynamicOctree, queryingElements)
 
 TEST(DynamicOctree, removingElementsBetweenUpdates)
 {
-   AABoundingBox treeBB(D3DXVECTOR3(-10, -10, -10), D3DXVECTOR3(10, 10, 10));
+   AABoundingBox treeBB(Vector(-10, -10, -10), Vector(10, 10, 10));
    int depth = 1;
    DynamicOctree<BoundedObjectMock> tree(treeBB, depth);
    Array<BoundedObjectMock*> result;
@@ -101,7 +101,7 @@ TEST(DynamicOctree, removingElementsBetweenUpdates)
    BoundedObjectMock ob1(5, 5, 5, 1);
    tree.insert(ob1);
 
-   D3DXVECTOR3 searchLocation(5, 5, 5);
+   Vector searchLocation(5, 5, 5);
 
    // let's check where the object is before we move it
    // to verify the queries work correctly

@@ -81,9 +81,11 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="MatrixWriter.cpp" />
     <ClCompile Include="TestFramework.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-TestFramework\MatrixWriter.h" />
     <ClInclude Include="..\..\Include\core-TestFramework\TestFramework.h" />
     <ClInclude Include="..\..\Include\core-TestFramework\TestMacros.h" />
   </ItemGroup>

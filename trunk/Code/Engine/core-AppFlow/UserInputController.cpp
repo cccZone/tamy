@@ -5,10 +5,11 @@
 
 UserInputController::UserInputController()
 : m_relativePt( 0, 0 )
-, m_mouseSpeed(0, 0)
 , m_relativeModeOn(0)
 {
-   ZeroMemory(m_keyBuffer, 256 * sizeof(unsigned char));
+   memset(m_keyBuffer, 256 * sizeof(unsigned char), 0);
+
+   m_mouseSpeed.setUniform( 0 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,13 +57,13 @@ void UserInputController::update( float timeElapsed )
    // determine mouse speed
    if ( timeElapsed > 0 )
    {
-      m_mouseSpeed.x = ( (float)mousePosChange.x ) / timeElapsed;
-      m_mouseSpeed.y = ( (float)mousePosChange.y ) / timeElapsed;
+      m_mouseSpeed.v[0] = ( (float)mousePosChange.x ) / timeElapsed;
+      m_mouseSpeed.v[1] = ( (float)mousePosChange.y ) / timeElapsed;
    }
    else
    {
-      m_mouseSpeed.x = 0;
-      m_mouseSpeed.y = 0;
+      m_mouseSpeed.v[0] = 0;
+      m_mouseSpeed.v[1] = 0;
    }
 
    // set the mouse and cursor position

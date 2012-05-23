@@ -2,7 +2,7 @@
 #include "ApplicationManagerMock.h"
 #include "ApplicationMock.h"
 #include "core-AppFlow\Application.h"
-#include "core\MatrixWriter.h"
+#include "core-TestFramework\MatrixWriter.h"
 #include <windows.h>
 
 

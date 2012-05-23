@@ -160,7 +160,7 @@ void QueryRenderingPass::render( Renderer& renderer )
    // create the commands that will get the queried results
    for ( QueriesList::iterator it = m_queriesList.begin(); it != m_queriesList.end(); ++it )
    {
-      new ( renderer() ) RCGetPixel( *m_sceneSnapshot, (*it)->getQueriedPosition(), (*it)->getResultBuffer() );
+      new ( renderer() ) RCGetPixel( *m_sceneSnapshot, (*it)->getQueriedPosition(), (Color&)(*it)->getResultBuffer() );
    }
 
    // remove all queries from the list - we have fulfilled them
@@ -170,23 +170,20 @@ void QueryRenderingPass::render( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR4 QueryRenderingPass::ptrToVec( void* ptr )
+void QueryRenderingPass::ptrToVec( void* ptr, Vector& outVec  )
 {
    PtrAsBytes ptrRep;
    ptrRep.ptr = (long)ptr;
 
-   D3DXVECTOR4 vec(
-      ( float )( ptrRep.b[0] / 255.f ),
-      ( float )( ptrRep.b[1] / 255.f ),
-      ( float )( ptrRep.b[2] / 255.f ),
-      ( float )( ptrRep.b[3] / 255.f )
-      );
-   return vec;
+   outVec.x = ( float )( ptrRep.b[0] / 255.f );
+   outVec.y = ( float )( ptrRep.b[1] / 255.f );
+   outVec.z = ( float )( ptrRep.b[2] / 255.f );
+   outVec.w = ( float )( ptrRep.b[3] / 255.f );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void* QueryRenderingPass::vecToPtr( const D3DXVECTOR4& vec )
+void* QueryRenderingPass::vecToPtr( const Vector& vec )
 {
    PtrAsBytes ptrRep;
    unsigned int r = ( unsigned int )( vec.x * 255.f );

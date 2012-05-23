@@ -111,11 +111,6 @@
          typesRegistry.addExternalType< float >( "float" );                   \
          typesRegistry.addExternalType< double >( "double" );                 \
          typesRegistry.addExternalType< std::string >( "std::string" );       \
-         typesRegistry.addExternalType< D3DXMATRIX >( "D3DXMATRIX" );         \
-         typesRegistry.addExternalType< D3DXQUATERNION >( "D3DXQUATERNION" ); \
-         typesRegistry.addExternalType< D3DXVECTOR2 >( "D3DXVECTOR2" );       \
-         typesRegistry.addExternalType< D3DXVECTOR3 >( "D3DXVECTOR3" );       \
-         typesRegistry.addExternalType< D3DXVECTOR4 >( "D3DXVECTOR4" );       \
       }                                                                       \
    } registerClass##EnumType;                                                 \
    DEFINE_TYPE_ID( int )                                                      \
@@ -130,11 +125,6 @@
    DEFINE_TYPE_ID( float )                                                    \
    DEFINE_TYPE_ID( double )                                                   \
    DEFINE_TYPE_ID( std::string )                                              \
-   DEFINE_TYPE_ID( D3DXMATRIX )                                               \
-   DEFINE_TYPE_ID( D3DXQUATERNION )                                           \
-   DEFINE_TYPE_ID( D3DXVECTOR2 )                                              \
-   DEFINE_TYPE_ID( D3DXVECTOR3 )                                              \
-   DEFINE_TYPE_ID( D3DXVECTOR4 )                                              \
    DEFINE_TYPE_ID( ReflectionEnum )                                           \
    DEFINE_TYPE_ID( ReflectionObject )
 

@@ -1,5 +1,7 @@
 #include "core\Triangle.h"
 #include "core\CollisionTests.h"
+#include "core\Matrix.h"
+#include "core\Plane.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,37 +23,34 @@ Triangle::Triangle( const Triangle& rhs )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Triangle::Triangle( const D3DXVECTOR3& pt1, const D3DXVECTOR3& pt2, const D3DXVECTOR3& pt3 )
+Triangle::Triangle( const Vector& pt1, const Vector& pt2, const Vector& pt3 )
 {
    initFromCoplanarPoints( pt1, pt2, pt3 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Triangle::initFromCoplanarPoints( const D3DXVECTOR3& pt1, const D3DXVECTOR3& pt2, const D3DXVECTOR3& pt3 )
+void Triangle::initFromCoplanarPoints( const Vector& pt1, const Vector& pt2, const Vector& pt3 )
 {
    v[0] = pt1;
    v[1] = pt2;
    v[2] = pt3;
  
    // calculate the edges
-   e[0] = v[1] - v[0];
-   e[1] = v[2] - v[1];
-   e[2] = v[0] - v[2];
+   e[0].setSub( v[1], v[0] );
+   e[1].setSub( v[2], v[1] );
+   e[2].setSub( v[0], v[2] );
 
    // calculate the edge normals
-   D3DXVECTOR3 tmpPerpVec;
-   D3DXVec3Cross(&tmpPerpVec, &e[1], &e[0]);
-   D3DXVec3Cross(&en[0], &tmpPerpVec, &e[0]);
-   D3DXVec3Normalize(&en[0], &en[0]);
+   Vector tmpPerpVec;
+   tmpPerpVec.setCross( e[1], e[0] ).preCross( e[0] );
+   en[0].setNormalized( tmpPerpVec );
 
-   D3DXVec3Cross(&tmpPerpVec, &e[2], &e[1]);
-   D3DXVec3Cross(&en[1], &tmpPerpVec, &e[1]);
-   D3DXVec3Normalize(&en[1], &en[1]);
+   tmpPerpVec.setCross( e[2], e[1] ).preCross( e[1] );
+   en[1].setNormalized( tmpPerpVec );
 
-   D3DXVec3Cross(&tmpPerpVec, &e[0], &e[2]);
-   D3DXVec3Cross(&en[2], &tmpPerpVec, &e[2]);
-   D3DXVec3Normalize(&en[2], &en[2]);
+   tmpPerpVec.setCross( e[0], e[2] ).preCross( e[2] );
+   en[2].setNormalized( tmpPerpVec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,48 +62,48 @@ BoundingVolume* Triangle::clone() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Triangle::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
+void Triangle::transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const
 {
    // verify that the volume is a Triangle
    ASSERT( dynamic_cast< Triangle* >( &transformedVolume ) != NULL );
    Triangle& transformedTriangle = static_cast< Triangle& >( transformedVolume );
 
-   D3DXVECTOR3 newV[3];
-   D3DXVec3TransformCoord(&newV[0], &v[0], &mtx);
-   D3DXVec3TransformCoord(&newV[1], &v[1], &mtx);
-   D3DXVec3TransformCoord(&newV[2], &v[2], &mtx);
+   Vector newV[3];
+   mtx.transform( v[0], newV[0] );
+   mtx.transform( v[1], newV[1] );
+   mtx.transform( v[2], newV[2] );
 
    transformedTriangle.initFromCoplanarPoints( newV[0], newV[1], newV[2] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DXVECTOR3 Triangle::splitEdge(float percentage,
-                                unsigned int startVtxIdx, 
-                                unsigned int endVtxIdx) const
+void Triangle::splitEdge( float percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, Vector& outEdge ) const
 {
-   D3DXVECTOR3 v1 = v[startVtxIdx];
-   D3DXVECTOR3 edge = v[endVtxIdx] - v1;
-   return v1 + (edge * percentage);
+   const Vector& v1 = v[startVtxIdx];
+   Vector edge;
+   edge.setSub( v[endVtxIdx], v1 );
+
+   outEdge.setMulAdd( edge, percentage, v1 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PlaneClassification Triangle::classifyAgainsPlane(const D3DXPLANE& plane) const
+PlaneClassification Triangle::classifyAgainsPlane( const Plane& plane ) const
 {
-    float dist1 = D3DXPlaneDotCoord(&plane, &v[0]);
-    float dist2 = D3DXPlaneDotCoord(&plane, &v[1]);
-    float dist3 = D3DXPlaneDotCoord(&plane, &v[2]);
+    float dist1 = plane.dotCoord( v[0] );
+    float dist2 = plane.dotCoord( v[1] );
+    float dist3 = plane.dotCoord( v[2] );
 
-    if ((dist1 < 0) && (dist2 < 0) && (dist3 < 0))
+    if ( ( dist1 < 0 ) && ( dist2 < 0 ) && ( dist3 < 0 ) )
     {
         return PPC_BACK;
     }
-    else if ((dist1 > 0) && (dist2 > 0) && (dist3 > 0))
+    else if ( ( dist1 > 0 ) && ( dist2 > 0 ) && ( dist3 > 0 ) )
     {
         return PPC_FRONT;
     }
-    else if ((dist1 == 0) && (dist2 == 0) && (dist3 == 0))
+    else if ( ( dist1 == 0 ) && ( dist2 == 0 ) && ( dist3 == 0 ) )
     {
         return PPC_COPLANAR;
     }
@@ -116,14 +115,16 @@ PlaneClassification Triangle::classifyAgainsPlane(const D3DXPLANE& plane) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Triangle::distanceToPlane(const D3DXPLANE& plane) const
+float Triangle::distanceToPlane( const Plane& plane ) const
 {
    int frontCount = 0;
    int backCount = 0;
    for (unsigned int i = 0; i < 3; ++i)
    {
-      D3DXVECTOR3 planeNormal(plane.a, plane.b, plane.c);
-      float dist = D3DXVec3Dot(&v[i], &planeNormal) + plane.d;
+      Vector vtx = v[i];
+      vtx.w = 1;
+
+      float dist = plane.dotCoord( vtx );
 
       if (dist > 0.0001f)
       {
@@ -135,23 +136,30 @@ float Triangle::distanceToPlane(const D3DXPLANE& plane) const
       }
    }
 
-   if (frontCount == 3) {return 1;}
-   else if (backCount == 3) {return -1;}
-   else {return 0;}
+   if ( frontCount == 3 ) 
+   {
+      return 1;
+   }
+   else if ( backCount == 3 ) 
+   {
+      return -1;
+   }
+   else 
+   {
+      return 0;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Triangle::split(const D3DXPLANE& splitPlane, 
-                     Array<Triangle*>& frontSplit, 
-                     Array<Triangle*>& backSplit)
+void Triangle::split(const Plane& splitPlane, Array< Triangle* >& frontSplit, Array< Triangle* >& backSplit)
 {
-   m_splitter.split(*this, splitPlane, frontSplit, backSplit);
+   m_splitter.split( *this, splitPlane, frontSplit, backSplit );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Triangle::testCollision(const PointVolume& point) const
+bool Triangle::testCollision( const PointVolume& point ) const
 {
    ASSERT_MSG(false, "Triangle::testCollision(const PointVolume&) - Method not implemented");
    return false;
@@ -159,7 +167,7 @@ bool Triangle::testCollision(const PointVolume& point) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Triangle::testCollision(const AABoundingBox& rhs) const
+bool Triangle::testCollision( const AABoundingBox& rhs ) const
 {
    ASSERT_MSG(false, "Triangle::testCollision(const AABoundingBox&) - Method not implemented");
    return false;
@@ -167,7 +175,7 @@ bool Triangle::testCollision(const AABoundingBox& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Triangle::testCollision(const BoundingSphere& rhs) const
+bool Triangle::testCollision( const BoundingSphere& rhs ) const
 {
    ASSERT_MSG(false, "Triangle::testCollision(const BoundingSphere&) - Method not implemented");
    return false;
@@ -175,7 +183,7 @@ bool Triangle::testCollision(const BoundingSphere& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Triangle::testCollision(const Frustum& rhs) const
+bool Triangle::testCollision( const Frustum& rhs ) const
 {
    ASSERT_MSG(false, "Triangle::testCollision(const Frustum&) - Method not implemented");
    return false;
@@ -183,14 +191,14 @@ bool Triangle::testCollision(const Frustum& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Triangle::testCollision(const Ray& rhs) const
+bool Triangle::testCollision( const Ray& rhs ) const
 {
    return ::testCollision(rhs, *this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Triangle::testCollision(const Triangle& rhs) const
+bool Triangle::testCollision( const Triangle& rhs ) const
 {
    ASSERT_MSG(false, "Triangle::testCollision(const Triangle&) - Method not implemented");
    return false;

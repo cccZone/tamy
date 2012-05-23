@@ -61,8 +61,8 @@ QPropertiesView::~QPropertiesView()
 
 void QPropertiesView::initFactory()
 {
-   associate< D3DXVECTOR3,          Vec3PropertyEditor >();
-   associate< D3DXMATRIX,           MtxPropertyEditor >();
+   associate< Vector,               Vec3PropertyEditor >();
+   associate< Matrix,               MtxPropertyEditor >();
    associate< std::string,          StringPropertyEditor >();
    associate< SurfaceProperties,    SurfacePropertiesPropertyEditor >();
    associate< bool,                 BoolPropertyEditor >();

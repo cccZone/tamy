@@ -69,16 +69,16 @@ void RPCameraNode::onUpdate( RenderingPipelineMechanism& host ) const
    m_viewportWidth->setValue( data, (float)renderer.getViewportWidth() );
    m_viewportHeight->setValue( data, (float)renderer.getViewportHeight() );
 
-   D3DXMATRIX invMtx, transInvMtx;
+   Matrix invMtx, transInvMtx;
 
-   const D3DXMATRIX& viewMtx = camera.getViewMtx();
-   D3DXMatrixInverse( &invMtx, NULL, &viewMtx );
-   D3DXMatrixTranspose( &transInvMtx, &invMtx );
+   const Matrix& viewMtx = camera.getViewMtx();
+   invMtx.setInverse( viewMtx );
+   transInvMtx.setTransposed( invMtx );
    m_invView->setValue( data, transInvMtx );
 
-   const D3DXMATRIX& projMtx = camera.getProjectionMtx();
-   D3DXMatrixInverse( &invMtx, NULL, &projMtx );
-   D3DXMatrixTranspose( &transInvMtx, &invMtx );
+   const Matrix& projMtx = camera.getProjectionMtx();
+   invMtx.setInverse( projMtx );
+   transInvMtx.setTransposed( invMtx );
    m_invProj->setValue( data, transInvMtx );
 }
 

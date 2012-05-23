@@ -2,6 +2,9 @@
 #error "This file can only be included from ShaderParam.h"
 #else
 
+#include "core/Matrix.h"
+#include "core/Vector.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,7 +83,7 @@ ShaderParamFloatArray< T >::~ShaderParamFloatArray()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamMtx< T >::ShaderParamMtx( const std::string& name, const D3DXMATRIX& val ) 
+ShaderParamMtx< T >::ShaderParamMtx( const std::string& name, const Matrix& val ) 
    : m_name( name )
    , m_val( val ) 
 {}
@@ -90,12 +93,12 @@ ShaderParamMtx< T >::ShaderParamMtx( const std::string& name, const D3DXMATRIX& 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamMtxArray< T >::ShaderParamMtxArray( const std::string& name, const D3DXMATRIX* arr, unsigned int size ) 
+ShaderParamMtxArray< T >::ShaderParamMtxArray( const std::string& name, const Matrix* arr, unsigned int size ) 
    : m_name( name )
    , m_size( size )
 {
-   m_val = new D3DXMATRIX[size];
-   memcpy( m_val, arr, size * sizeof( D3DXMATRIX ) );
+   m_val = new Matrix[size];
+   memcpy( m_val, arr, size * sizeof( Matrix ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -111,7 +114,7 @@ ShaderParamMtxArray< T >::~ShaderParamMtxArray()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamVec4< T >::ShaderParamVec4( const std::string& name, const D3DXVECTOR4& val ) 
+ShaderParamVec4< T >::ShaderParamVec4( const std::string& name, const Vector& val ) 
    : m_name( name )
    , m_val( val ) 
 {}
@@ -121,12 +124,12 @@ ShaderParamVec4< T >::ShaderParamVec4( const std::string& name, const D3DXVECTOR
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamVec4Array< T >::ShaderParamVec4Array( const std::string& name, const D3DXVECTOR4* arr, unsigned int size ) 
+ShaderParamVec4Array< T >::ShaderParamVec4Array( const std::string& name, const Vector* arr, unsigned int size ) 
    : m_name( name )
    , m_size( size )
 {
-   m_val = new D3DXVECTOR4[size];
-   memcpy( m_val, arr, size * sizeof( D3DXVECTOR4 ) );
+   m_val = new Vector[size];
+   memcpy( m_val, arr, size * sizeof( Vector ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

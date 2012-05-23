@@ -1,14 +1,14 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core\Node.h"
-#include "core\MatrixWriter.h"
+#include "core-TestFramework\MatrixWriter.h"
 #include "core-Sound\SoundSceneManager.h"
 #include "Sound3DMock.h"
 #include "SoundMock.h"
 #include "SoundListenerMock.h"
 #include "SoundDeviceMock.h"
 #include "core\Array.h"
-#include <d3dx9.h>
-
+#include "core\Matrix.h"
+#include "core\Vector.h"
 
 
 //////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ TEST(SoundSceneManager, soundsAreHeardOnlyToCertainDistance)
    // we're completely outside the sound hearing are - no sound is heard
    soundsToEnable.clear();
    soundsToDisable.clear();
-   D3DXMatrixTranslation(&(listener->accessLocalMtx()), dogSoundHearingRadius + 1, 0, 0);
+   listener->accessLocalMtx().setTranslation( Vector( dogSoundHearingRadius + 1, 0, 0 ) );
    activeSounds = &(soundScene.update(soundsToDisable, soundsToEnable));
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToEnable.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundsToDisable.size());
@@ -59,7 +59,7 @@ TEST(SoundSceneManager, soundsAreHeardOnlyToCertainDistance)
 
    soundsToEnable.clear();
    soundsToDisable.clear();
-   D3DXMatrixTranslation(&(listener->accessLocalMtx()), dogSoundHearingRadius - 1, 0, 0);
+   listener->accessLocalMtx().setTranslation( Vector( dogSoundHearingRadius - 1, 0, 0 ) );
    activeSounds = &(soundScene.update(soundsToDisable, soundsToEnable));
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundsToEnable.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToDisable.size());

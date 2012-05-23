@@ -7,10 +7,12 @@ REGISTER_CORE_TYPES();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-REGISTER_TYPE( EulerAngles );
-REGISTER_TYPE( Matrix );
-REGISTER_TYPE( Vector );
-REGISTER_TYPE( Color );
+REGISTER_EXTERNAL_TYPE( EulerAngles );
+REGISTER_EXTERNAL_TYPE( Matrix );
+REGISTER_EXTERNAL_TYPE( Vector );
+REGISTER_EXTERNAL_TYPE( Plane );
+REGISTER_EXTERNAL_TYPE( Quaternion );
+REGISTER_EXTERNAL_TYPE( Color );
 
 ///////////////////////////////////////////////////////////////////////////////
 

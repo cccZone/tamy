@@ -1,8 +1,10 @@
+/// @file   core-Renderer\LitVertex.h
+/// @brief  geometry vertex definition
 #pragma once
 
-#include <d3dx9.h>
+#include "core\Vector.h"
+#include "core\types.h"
 #include <iostream>
-#include <string.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,29 +14,32 @@ class OutStream;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Geometry vertex definition.
+ */
 struct LitVertex
 {
-   D3DXVECTOR3 m_coords;
-   D3DXVECTOR3 m_normal;
-   D3DXVECTOR2 m_textureCoords;
+   TVector<3>   m_coords;
+   TVector<3>   m_normal;
+   TVector<2>   m_textureCoords;
 
-   static DWORD FVF;
+   static ulong FVF;
 
    /**
     * Constructor for a simple mesh vertex.
     */
    LitVertex( float x, float y, float z, float nx, float ny, float nz, float u, float v )
-      : m_coords( x, y, z )
-      , m_normal( nx, ny, nz )
-      , m_textureCoords( u, v )
    {
+      m_coords.v[0] = x; m_coords.v[1] = y; m_coords.v[2] = z;
+      m_normal.v[0] = nx; m_normal.v[1] = ny; m_normal.v[2] = nz;
+      m_textureCoords.v[0] = u; m_textureCoords.v[1] = v;
    }
 
    LitVertex()
-      : m_coords( 0, 0, 0 )
-      , m_normal( 0, 0, 0 )
-      , m_textureCoords( 0, 0 )
    {
+      m_coords.setUniform( 0.0f );
+      m_normal.setUniform( 0.0f );
+      m_textureCoords.setUniform( 0.0f );
    }
 
    friend OutStream& operator<<( OutStream& stream, const LitVertex& vtx );
@@ -45,15 +50,15 @@ struct LitVertex
 
 struct VertexWeight
 {
-   D3DXVECTOR4          m_weights;
-   D3DXVECTOR4          m_indices;
+   TVector<4>          m_weights;
+   TVector<4>          m_indices;
 
-   static DWORD FVF;
+   static ulong FVF;
 
    VertexWeight()
-      : m_weights( 0, 0, 0, 0 )
-      , m_indices( -1, -1, -1, -1 )
    {
+      m_weights.setUniform( 0.0f );
+      m_weights.setUniform( -1.0f );
    }
    
    friend OutStream& operator<<( OutStream& stream, const VertexWeight& weight );

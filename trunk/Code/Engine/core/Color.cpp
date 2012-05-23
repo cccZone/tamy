@@ -5,11 +5,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT(Color)
-END_OBJECT()
-
-///////////////////////////////////////////////////////////////////////////////
-
 Color::Color() 
 : r( 1 )
 , g( 1 )
@@ -63,7 +58,7 @@ Color Color::operator+(const Color& lhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-OutStream& operator<<( OutStream& serializer, Color& color )
+OutStream& operator<<( OutStream& serializer, const Color& color )
 {
    serializer << color.r;
    serializer << color.g;

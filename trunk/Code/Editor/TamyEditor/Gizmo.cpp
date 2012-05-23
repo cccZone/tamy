@@ -61,13 +61,13 @@ void Gizmo::onDebugRender( Renderer& renderer ) const
 
 void Gizmo::drawTranslationGizmo( Renderer& renderer ) const
 {
-   const D3DXMATRIX& mtx = m_node.getGlobalMtx();
+   const Matrix& mtx = m_node.getGlobalMtx();
 
-   D3DXVECTOR3 orig, ox, oy, oz;
-   D3DXVec3TransformCoord( &orig, &D3DXVECTOR3( 0, 0, 0 ), &mtx );
-   D3DXVec3TransformCoord( &ox, &D3DXVECTOR3( SIZE, 0, 0 ), &mtx );
-   D3DXVec3TransformCoord( &oy, &D3DXVECTOR3( 0, SIZE, 0 ), &mtx );
-   D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
+   Vector orig, ox, oy, oz;
+   mtx.transform( Vector::ZERO, orig );
+   mtx.transform( Vector( SIZE, 0, 0 ), ox );
+   mtx.transform( Vector( 0, SIZE, 0 ), oy );
+   mtx.transform( Vector( 0, 0, SIZE ), oz );
 
    new ( renderer() ) RCDrawDebugLine( orig, ox, OX_COLOR ); // OX
    new ( renderer() ) RCDrawDebugLine( orig, oy, OY_COLOR ); // OY
@@ -78,13 +78,13 @@ void Gizmo::drawTranslationGizmo( Renderer& renderer ) const
 
 void Gizmo::drawRotationGizmo( Renderer& renderer ) const
 {
-   const D3DXMATRIX& mtx = m_node.getGlobalMtx();
+   const Matrix& mtx = m_node.getGlobalMtx();
 
-   D3DXVECTOR3 orig, ox, oy, oz;
-   D3DXVec3TransformCoord( &orig, &D3DXVECTOR3( 0, 0, 0 ), &mtx );
-   D3DXVec3TransformCoord( &ox, &D3DXVECTOR3( SIZE, 0, 0 ), &mtx );
-   D3DXVec3TransformCoord( &oy, &D3DXVECTOR3( 0, SIZE, 0 ), &mtx );
-   D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
+   Vector orig, ox, oy, oz;
+   mtx.transform( Vector::ZERO, orig );
+   mtx.transform( Vector( SIZE, 0, 0 ), ox );
+   mtx.transform( Vector( 0, SIZE, 0 ), oy );
+   mtx.transform( Vector( 0, 0, SIZE ), oz );
 
    // OX
    new ( renderer() ) RCDrawDebugLine( orig, ox, OX_COLOR );
@@ -104,29 +104,30 @@ void Gizmo::drawRotationGizmo( Renderer& renderer ) const
 
 void Gizmo::drawScalingGizmo( Renderer& renderer ) const
 {
-   const D3DXMATRIX& mtx = m_node.getGlobalMtx();
+   const Matrix& mtx = m_node.getGlobalMtx();
 
-   D3DXVECTOR3 orig, ox, oy, oz;
-   D3DXVec3TransformCoord( &orig, &D3DXVECTOR3( 0, 0, 0 ), &mtx );
-   D3DXVec3TransformCoord( &ox, &D3DXVECTOR3( SIZE, 0, 0 ), &mtx );
-   D3DXVec3TransformCoord( &oy, &D3DXVECTOR3( 0, SIZE, 0 ), &mtx );
-   D3DXVec3TransformCoord( &oz, &D3DXVECTOR3( 0, 0, SIZE ), &mtx );
+   Vector orig, ox, oy, oz;
+   mtx.transform( Vector::ZERO, orig );
+   mtx.transform( Vector( SIZE, 0, 0 ), ox );
+   mtx.transform( Vector( 0, SIZE, 0 ), oy );
+   mtx.transform( Vector( 0, 0, SIZE ), oz );
 
-   const D3DXVECTOR3 boxSize( 0.2f, 0.2f, 0.2f );
+
+   const Vector boxSize( 0.2f, 0.2f, 0.2f );
 
    // OX
-   D3DXMATRIX boxMtx = mtx;
-   boxMtx._41 = ox.x; boxMtx._42 = ox.y; boxMtx._43 = ox.z;
+   Matrix boxMtx = mtx;
+   boxMtx.m41 = ox.x; boxMtx.m42 = ox.y; boxMtx.m43 = ox.z;
    new ( renderer() ) RCDrawDebugLine( orig, ox, OX_COLOR );
    new ( renderer() ) RCDrawDebugBox( boxMtx, boxSize, OX_COLOR );
 
    // OY
-   boxMtx._41 = oy.x; boxMtx._42 = oy.y; boxMtx._43 = oy.z;
+   boxMtx.m41 = oy.x; boxMtx.m42 = oy.y; boxMtx.m43 = oy.z;
    new ( renderer() ) RCDrawDebugLine( orig, oy, OY_COLOR );
    new ( renderer() ) RCDrawDebugBox( boxMtx, boxSize, OY_COLOR );
 
    // OZ
-   boxMtx._41 = oz.x; boxMtx._42 = oz.y; boxMtx._43 = oz.z;
+   boxMtx.m41 = oz.x; boxMtx.m42 = oz.y; boxMtx.m43 = oz.z;
    new ( renderer() ) RCDrawDebugLine( orig, oz, OZ_COLOR );
    new ( renderer() ) RCDrawDebugBox( boxMtx, boxSize, OZ_COLOR );
 }

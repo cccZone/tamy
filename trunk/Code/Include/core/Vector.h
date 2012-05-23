@@ -1,31 +1,89 @@
-#pragma once
-
 /// @file   core\Vector.h
 /// @brief  math vector
+#ifndef _VECTOR_H
+#define _VECTOR_H
 
-#include "core\ReflectionObject.h"
-#include <d3dx9.h>
 #include <iostream>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * Mathematical 3d vector.
- */
-struct Vector : public ReflectionObject
-{
-   DECLARE_STRUCT()
+class OutStream;
+class InStream;
 
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A vector that can have an arbitrary, but fixed number of coordinates.
+ *
+ * It's not a mathematical vector though - it's just a data structure.
+ * That's why it should not have any mathematical operations defined!!!
+ * Instead, create a class that contains it and contains relevant math functions
+ */
+template< int Dim >
+struct TVector
+{
+private:
+   enum { ARR_SIZE = Dim };
+
+public:
+
+   float v[ARR_SIZE];
+
+   // -------------------------------------------------------------------------
+   // Operators
+   // -------------------------------------------------------------------------
+   float& operator[]( int idx );
+   float operator[]( int idx ) const;
+
+   // -------------------------------------------------------------------------
+   // Operations
+   // -------------------------------------------------------------------------
+
+   /**
+    * Sets a single value for all coordinates.
+    */
+   void setUniform( float val );
+
+   // -------------------------------------------------------------------------
+   // Serialization support
+   // -------------------------------------------------------------------------
+   template< int VDim > friend std::ostream& operator<<( std::ostream& stream, const TVector< VDim >& rhs );
+   template< int VDim > friend OutStream& operator<<( OutStream& serializer, const TVector< VDim >& rhs );
+   template< int VDim > friend InStream& operator>>( InStream& serializer, TVector< VDim >& rhs );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Mathematical vector (4d).
+ */
+struct Vector
+{
    union
    {
-      float v[3];
+      TVector< 4 > v;
 
       struct 
       {
-         float x, y, z;
+         float x, y, z, w;
       };
    };
+
+   // -------------------------------------------------------------------------
+   // Static values
+   // -------------------------------------------------------------------------
+   static Vector     ZERO;
+   static Vector     ONE;
+   static Vector     OX;
+   static Vector     OY;
+   static Vector     OZ;
+   static Vector     OW;
+   static Vector     OX_NEG;
+   static Vector     OY_NEG;
+   static Vector     OZ_NEG;
+   static Vector     OW_NEG;
+
 
    /**
     * Default constructor.
@@ -35,59 +93,164 @@ struct Vector : public ReflectionObject
    /**
     * Constructor.
     *
-    * @param _x, _y, _z    coordinates
+    * @param x, y, z, w    coordinates
     */
-   Vector(float _x, float _y, float _z);
-
-   /**
-    * Constructor.
-    *
-    * @param dxVec         DirectX vector
-    */
-   Vector(const D3DXVECTOR3& dxVec);
+   Vector( float x, float y, float z, float w = 0.0f );
 
    // -------------------------------------------------------------------------
    // Operators
    // -------------------------------------------------------------------------
-   inline operator D3DXVECTOR3 () const { return D3DXVECTOR3(x, y, z); }
-   Vector operator-() const;
+   /**
+    * Compares four coordinates of the two vectors.
+    */
+   bool equals4( const Vector& rhs ) const;
+
+   /**
+    * Compares three coordinates of the two vectors.
+    */
    bool operator==(const Vector& rhs) const;
    bool operator!=(const Vector& rhs) const;
+   inline float& operator[]( int idx );
+   inline float operator[]( int idx ) const;
+
    Vector& operator=(const Vector& rhs);
-   Vector operator+(const Vector& rhs) const;
-   Vector& operator+=(const Vector& rhs);
-   Vector operator-(const Vector& rhs) const;
-   Vector& operator-=(const Vector& rhs);
-   Vector operator*(float val) const;
-   Vector& operator*=(float val);
 
    // -------------------------------------------------------------------------
    // Operations
    // -------------------------------------------------------------------------
 
    /**
-    * Calculate a dot product with another vector.
-    *
-    * @param rhs     other vector we want to use in the calculations
+    * Sets new coordinates on the vector.
     */
-   float dot(const Vector& rhs) const;
+   Vector& set( float x, float y, float z, float w = 0.0f );
 
    /**
-    * Calculate a cross product with another vector.
-    *
-    * @param rhs     other vector we want to use in the calculations
+    * Sets the normalized value of the other vector.
     */
-   Vector cross(const Vector& rhs) const;
+   Vector& setNormalized( const Vector& vec );
+   Vector& setNormalized( float x, float y, float z );
 
    /**
-    * Returns a normalized version of this vector.
+    * this = vec * t
+    * 
+    * @param vec
+    * @param t
     */
-   Vector normalized() const;
+   Vector& setMul( const Vector& vec, float t );
+
+   /**
+    * this = vec1 * t + vec2
+    * 
+    * @param vec1
+    * @param t
+    * @param vec2
+    */
+   Vector& setMulAdd( const Vector& vec1, float t, const Vector& vec2 );
+
+   /**
+    * this = vec1 + vec2
+    * 
+    * @param vec1
+    * @param vec2
+    */
+   Vector& setAdd( const Vector& vec1, const Vector& vec2 );
+
+   /**
+    * this = vec1 - vec2
+    * 
+    * @param vec1
+    * @param vec2
+    */
+   Vector& setSub( const Vector& vec1, const Vector& vec2 );
+
+   /**
+    * this = this * t
+    * 
+    * @param t
+    */
+   Vector& mul( float t );
+
+   /**
+    * this = this  + vec
+    * 
+    * @param vec
+    */
+   Vector& add( const Vector& vec );
+
+   /**
+    * this = this - vec
+    * 
+    * @param vec
+    */
+   Vector& sub( const Vector& vec );
+
+   /**
+    * this = this * -1
+    */
+   Vector& neg();
 
    /**
     * Normalizes this vector (in place).
     */
    Vector& normalize();
+
+   /**
+    * Linearly interpolates a vector between values a and b ( from a to b )
+    * at the distance t.
+    *
+    * this = a*(1-t) + b*t
+    *
+    * @param a
+    * @param b
+    * @param t
+    */
+   Vector& setLerp( const Vector& a, const Vector& b, float t );
+
+   /**
+    * Calculate a dot product with another vector ( taking only 3 coordinates into account ).
+    *
+    * @param rhs     other vector we want to use in the calculations
+    */
+   float dot( const Vector& rhs ) const;
+
+   /**
+    * Calculate a dot product with another vector ( taking all 4 coordinates into account ).
+    *
+    * @param rhs     other vector we want to use in the calculations
+    */
+   float dot4( const Vector& rhs ) const;
+
+   /**
+    * Creates a vector that's a result of a cross product between the specified vectors.
+    *
+    * @param v1
+    * @param v2
+    */
+   Vector& setCross( const Vector& v1, const Vector& v2 );
+
+   /**
+    * Calculates a cross product between this and the specified vector and stores
+    * the results in this vector. 
+    * WARNING: It creates a temporary vector, so might be slower than setCross method.
+    *
+    * this = this x rhs
+    *
+    * @param rhs
+    */
+   Vector& preCross( const Vector& rhs );
+
+   /**
+    * Calculates a cross product between this and the specified vector and stores
+    * the results in this vector. 
+    * As opposed to the 'preCross' method, this calculates the final vector by crossing
+    * the components in a different order.
+    * WARNING: It creates a temporary vector, so might be slower than setCross method.
+    *
+    * this = rhs x this
+    *
+    * @param rhs
+    */
+   Vector& postCross( const Vector& rhs );
 
    /**
     * Returns the length of this vector.
@@ -100,13 +263,22 @@ struct Vector : public ReflectionObject
    float lengthSq() const;
 
    /**
-    * This method writes the contents of the vector to the specified 
-    * output stream.
-    *
-    * @param stream     output stream
-    * @param rhs        vector description of which we want to output
+    * Checks if the vector is unit-length.
     */
+   bool isNormalized() const;
+
+   // -------------------------------------------------------------------------
+   // Serialization support
+   // -------------------------------------------------------------------------
    friend std::ostream& operator<<(std::ostream& stream, const Vector& rhs);
+   friend OutStream& operator<<( OutStream& serializer, const Vector& rhs );
+   friend InStream& operator>>( InStream& serializer, Vector& rhs );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "core/Vector.inl"
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _VECTOR_H

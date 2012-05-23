@@ -5,9 +5,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT(SpatialEntity)
-   PARENT(Entity)
-   PROPERTY_EDIT("Local transformation", D3DXMATRIX, m_localMtx)
+BEGIN_OBJECT( SpatialEntity )
+   PARENT( Entity )
+   PROPERTY_EDIT( "Local transformation", Matrix, m_localMtx )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////

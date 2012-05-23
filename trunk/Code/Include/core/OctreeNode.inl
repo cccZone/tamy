@@ -7,14 +7,15 @@
 
 template<typename Elem>
 OctreeNode<Elem>::OctreeNode(const AABoundingBox& bb, unsigned int depth)
-: m_children(NULL)
-, m_bb(bb)
-, m_depth(depth)
+   : m_children(NULL)
+   , m_bb(bb)
+   , m_depth(depth)
 {
-   D3DXVECTOR3 bbMidPoint = (m_bb.min + m_bb.max) / 2.0f;
-   D3DXPlaneFromPointNormal(&m_splitPlanes[0], &bbMidPoint, &D3DXVECTOR3(0.0f, 0.0f, 1.0f));
-   D3DXPlaneFromPointNormal(&m_splitPlanes[1], &bbMidPoint, &D3DXVECTOR3(1.0f, 0.0f, 0.0f));
-   D3DXPlaneFromPointNormal(&m_splitPlanes[2], &bbMidPoint, &D3DXVECTOR3(0.0f, 1.0f, 0.0f));
+   Vector bbMidPoint;
+   bbMidPoint.setAdd( m_bb.min, m_bb.max ).mul( 0.5f );
+   m_splitPlanes[0].setFromPointNormal( bbMidPoint, Vector::OZ );
+   m_splitPlanes[1].setFromPointNormal( bbMidPoint, Vector::OX );
+   m_splitPlanes[2].setFromPointNormal( bbMidPoint, Vector::OY );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,7 +57,8 @@ void OctreeNode<Elem>::subdivide()
    m_children = new OctreeNodeP[8];
 
    AABoundingBox bb;
-   D3DXVECTOR3 midPoint = (m_bb.max + m_bb.min) / 2.f;
+   Vector midPoint;
+   midPoint.setAdd( m_bb.max, m_bb.min ).mul( 0.5f );
 
    unsigned int newDepth = m_depth + 1;
    
@@ -149,7 +151,7 @@ const OctreeNode<Elem>& OctreeNode<Elem>::getChild(unsigned int idx) const
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-const D3DXPLANE& OctreeNode<Elem>::getSplitPlane(unsigned int idx) const
+const Plane& OctreeNode<Elem>::getSplitPlane(unsigned int idx) const
 {
    ASSERT_MSG (idx < 3, "Split plane index out of range");
    return m_splitPlanes[idx];

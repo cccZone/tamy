@@ -1,8 +1,12 @@
+/// @file   core/Frustum.h
+/// @brief  Frustum representation
 #pragma once
 
 #include "core\BoundingVolume.h"
-#include <d3dx9.h>
+#include "core\Plane.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
 
 enum PlanesEnum
 {
@@ -13,25 +17,29 @@ enum PlanesEnum
    FP_FAR,
    FP_NEAR,
 };
+
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Frustum representation.
+ */
 struct Frustum : public BoundingVolume
 {
-   D3DXPLANE planes[6];
+   Plane planes[6];
 
    // -------------------------------------------------------------------------
    // Bounding volume implementation
    // -------------------------------------------------------------------------
    BoundingVolume* clone() const;
-   void transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const;
-   float distanceToPlane(const D3DXPLANE& plane) const;
-   bool testCollision(const PointVolume& point) const;
-   bool testCollision(const AABoundingBox& rhs) const;
-   bool testCollision(const BoundingSphere& rhs) const;
-   bool testCollision(const Frustum& rhs) const;
-   bool testCollision(const Ray& rhs) const;
-   bool testCollision(const Triangle& rhs) const;
-   bool testCollision(const BoundingVolume& rhs) const {return rhs.testCollision(*this);}
+   void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
+   float distanceToPlane( const Plane& plane ) const;
+   bool testCollision( const PointVolume& point ) const;
+   bool testCollision( const AABoundingBox& rhs ) const;
+   bool testCollision( const BoundingSphere& rhs ) const;
+   bool testCollision( const Frustum& rhs ) const;
+   bool testCollision( const Ray& rhs ) const;
+   bool testCollision( const Triangle& rhs ) const;
+   bool testCollision( const BoundingVolume& rhs ) const { return rhs.testCollision( *this ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

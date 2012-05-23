@@ -3,6 +3,8 @@
 #include "core-AI/BoneSRTAnimation.h"
 #include "core-MVC/SpatialEntity.h"
 #include "core/Algorithms.h"
+#include "core/Quaternion.h"
+#include "core/Vector.h"
 #include <list>
 #include <set>
 
@@ -119,9 +121,9 @@ void SkeletonAnimationController::onUpdate( float timeElapsed )
 
    // Go through the nodes and query the update matrices for them,
    // updating their local matrices with those
-   D3DXMATRIX updateMtx, tmpMtx;
-   D3DXQUATERNION orientation;
-   D3DXVECTOR3 translation;
+   Matrix updateMtx, tmpMtx;
+   Quaternion orientation;
+   Vector translation;
    for ( unsigned int i = 0; i < count; ++i )
    {
       BoneSRTAnimationPlayer* player = m_bonePlayers[i];
@@ -134,22 +136,26 @@ void SkeletonAnimationController::onUpdate( float timeElapsed )
 
       if ( player->getOrientation( m_trackTime, orientation ) )
       {
-         D3DXMatrixRotationQuaternion( &updateMtx, &orientation );
+         updateMtx.setRotation( orientation );
       }
       else
       {
-         D3DXMatrixIdentity( &updateMtx );
+         updateMtx = Matrix::IDENTITY;
       }
 
       if ( player->getTranslation( m_trackTime, translation ) )
       {
-         D3DXMatrixTranslation( &tmpMtx, translation.x, translation.y, translation.z );
-         D3DXMatrixMultiply( &updateMtx, &updateMtx, &tmpMtx );
+         tmpMtx.setTranslation( translation );
+         updateMtx.mul( tmpMtx );
       }
       
-      D3DXMatrixMultiply( &tmpMtx, &updateMtx, &( m_referenceMtcs[i] ) );
-      m_skeleton[i]->setLocalMtx( tmpMtx );
+      updateMtx.mul( m_referenceMtcs[i] );
+      m_skeleton[i]->setLocalMtx( updateMtx );
    }
+
+   // <animation.todo> creating a Transform class that contains only the rotation Quaternion and a position Vector
+   // will remove the need to multiply the matrices so many times, thus speeding this code 200%, and
+   // will reduce the memory footprint
 }
 
 ///////////////////////////////////////////////////////////////////////////////

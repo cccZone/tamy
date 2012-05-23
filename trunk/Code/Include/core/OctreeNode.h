@@ -1,10 +1,11 @@
+/// @file   core\OctreeNode.h
+/// @brief  an octree node
 #ifndef _OCTREE_NODE_H
 #define _OCTREE_NODE_H
 
-/// @file   core\OctreeNode.h
-/// @brief  an octree node
 #include "core\Array.h"
 #include "core\AABoundingBox.h"
+#include "core\Plane.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,10 +33,10 @@ public:
    Array<Elem> m_elems;
 
 private:
-   OctreeNode** m_children;
-   AABoundingBox m_bb;
-   D3DXPLANE m_splitPlanes[3];
-   unsigned int m_depth;
+   OctreeNode**   m_children;
+   AABoundingBox  m_bb;
+   Plane          m_splitPlanes[3];
+   unsigned int   m_depth;
 
 public:
    OctreeNode(const AABoundingBox& bb, unsigned int depth = 0);
@@ -84,7 +85,7 @@ public:
     *
     * @param idx  split plane idx
     */
-   const D3DXPLANE& getSplitPlane(unsigned int idx) const;
+   const Plane& getSplitPlane(unsigned int idx) const;
 
    /**
     * Returns the tree depth this node is at.

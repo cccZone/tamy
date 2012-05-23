@@ -1,16 +1,16 @@
 #include "core-Renderer\LitVertex.h"
-#include "core\MatrixWriter.h"
 #include "core\InStream.h"
 #include "core\OutStream.h"
+#include "core-Renderer\VertexDescriptors.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DWORD LitVertex::FVF = D3DFVF_XYZ | D3DFVF_NORMAL | D3DFVF_TEX1;
+ulong LitVertex::FVF = FVF_XYZ | FVF_NORMAL | FVF_TEX1;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DWORD VertexWeight::FVF = D3DFVF_DIFFUSE | D3DFVF_SPECULAR;
+ulong VertexWeight::FVF = FVF_DIFFUSE | FVF_SPECULAR;
 
 ///////////////////////////////////////////////////////////////////////////////
 

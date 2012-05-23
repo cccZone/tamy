@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Space is infinte - thus is this volume. It should be used
+ * Space is infinite - thus is this volume. It should be used
  * to bound things that should be considered ubiquitous,
  * like directional and ambient lighting
  */
@@ -16,8 +16,8 @@ struct BoundingSpace : public BoundingVolume
    // BoundingVolume implementation
    // -------------------------------------------------------------------------
    BoundingVolume* clone() const { return new BoundingSpace(); }
-   void transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const {}
-   float distanceToPlane( const D3DXPLANE& plane ) const { return 0; }
+   void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const {}
+   float distanceToPlane( const Plane& plane ) const { return 0; }
    bool testCollision( const PointVolume& point ) const { return true; }
    bool testCollision( const AABoundingBox& rhs ) const { return true; }
    bool testCollision( const BoundingSphere& rhs ) const { return true; }

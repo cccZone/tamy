@@ -6,7 +6,6 @@
 
 #include "core/ResourceImporter.h"
 #include <string>
-#include <d3dx9.h>
 #include <vector>
 #include <map>
 

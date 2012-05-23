@@ -422,7 +422,7 @@ RenderingPipelineMechanism::RenderedScene::~RenderedScene()
 void RenderingPipelineMechanism::RenderedScene::initialize( Renderer& renderer )
 {
    // create the model views
-   AABoundingBox sceneBB(D3DXVECTOR3( -10000, -10000, -10000 ), D3DXVECTOR3( 10000, 10000, 10000 ) );
+   AABoundingBox sceneBB( Vector( -10000, -10000, -10000 ), Vector( 10000, 10000, 10000 ) );
    m_renderingView = new RenderingView( renderer, sceneBB );
 }
 

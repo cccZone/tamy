@@ -6,7 +6,7 @@
 #include <string>
 #include "core/ReflectionType.h"
 #include "core/GraphBuilderSockets.h"
-#include <d3dx9.h>
+#include "core/Math.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -213,7 +213,7 @@ public:
  * Scalar vector constant.
  */
 template< typename TNode >
-class VSCVec4 : public TVertexShaderConstant< TNode, D3DXVECTOR4 >
+class VSCVec4 : public TVertexShaderConstant< TNode, Vector >
 {
 public:
    /**
@@ -235,7 +235,7 @@ public:
  * Matrix4x4 constant.
  */
 template< typename TNode >
-class VSCMatrix : public TVertexShaderConstant< TNode, D3DXMATRIX >
+class VSCMatrix : public TVertexShaderConstant< TNode, Matrix >
 {
 public:
    /**

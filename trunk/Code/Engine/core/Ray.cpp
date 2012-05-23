@@ -5,6 +5,8 @@
 #include "core\AABoundingBox.h"
 #include "core\BoundingSphere.h"
 #include "core\QuadraticEquations.h"
+#include "core\Matrix.h"
+#include "core\Plane.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,11 +17,10 @@ Ray::Ray()
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
-Ray::Ray( const D3DXVECTOR3& _origin, const D3DXVECTOR3& _direction )
+Ray::Ray( const Vector& _origin, const Vector& _direction )
    : origin( _origin )
-   , direction( _direction )
 {
-   D3DXVec3Normalize( &direction, &direction );
+   direction.setNormalized( _direction );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,27 +32,27 @@ BoundingVolume* Ray::clone() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Ray::transform( const D3DXMATRIX& mtx, BoundingVolume& transformedVolume ) const
+void Ray::transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const
 {
    // verify that the volume is a Ray
    ASSERT( dynamic_cast< Ray* >( &transformedVolume ) != NULL );
    Ray& transformedRay = static_cast< Ray& >( transformedVolume );
 
-   D3DXVec3TransformCoord( &transformedRay.origin, &origin, &mtx );
-   D3DXVec3TransformNormal( &transformedRay.direction, &direction, &mtx );
+   mtx.transform( origin, transformedRay.origin );
+   mtx.transformNorm( direction, transformedRay.direction );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PlaneClassification Ray::classifyAgainsPlane(const D3DXPLANE& plane) const
+PlaneClassification Ray::classifyAgainsPlane( const Plane& plane ) const
 {
-   ASSERT_MSG(false, "Ray::classifyAgainsPlane(const D3DXPLANE&) - Method not implemented");
+   ASSERT_MSG(false, "Ray::classifyAgainsPlane(const Plane&) - Method not implemented");
    return PPC_SPANNING;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Ray::testCollision(const PointVolume& point) const
+bool Ray::testCollision( const PointVolume& point ) const
 {
    ASSERT_MSG(false, "Ray::testCollision(const PointVolume&) - Method not implemented");
    return false;
@@ -59,21 +60,21 @@ bool Ray::testCollision(const PointVolume& point) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Ray::testCollision(const AABoundingBox& rhs) const
+bool Ray::testCollision( const AABoundingBox& rhs ) const
 {
    return ::testCollision(rhs, *this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Ray::testCollision(const BoundingSphere& rhs) const
+bool Ray::testCollision( const BoundingSphere& rhs ) const
 {
    return ::testCollision(rhs, *this);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Ray::testCollision(const Frustum& rhs) const
+bool Ray::testCollision( const Frustum& rhs ) const
 {
    ASSERT_MSG(false, "Ray::testCollision(const Frustum&) - Method not implemented");
    return false;
@@ -81,7 +82,7 @@ bool Ray::testCollision(const Frustum& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Ray::testCollision(const Ray& rhs) const
+bool Ray::testCollision( const Ray& rhs ) const
 {
    ASSERT_MSG(false, "Ray::testCollision(const Frustum&) - Method not implemented");
    return false;
@@ -89,14 +90,14 @@ bool Ray::testCollision(const Ray& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Ray::testCollision(const Triangle& rhs) const
+bool Ray::testCollision( const Triangle& rhs ) const
 {
    return ::testCollision(*this, rhs);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Ray::getDistanceTo(const BoundingVolume& rhs) const
+float Ray::getDistanceTo( const BoundingVolume& rhs ) const
 {
    if (dynamic_cast<const PointVolume*> (&rhs) != NULL)
    {
@@ -119,9 +120,9 @@ float Ray::getDistanceTo(const BoundingVolume& rhs) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Ray::distanceToPlane(const D3DXPLANE& plane) const
+float Ray::distanceToPlane( const Plane& plane ) const
 {
-   return rayToPlaneDistance(*this, plane);
+   return rayToPlaneDistance( *this, plane );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

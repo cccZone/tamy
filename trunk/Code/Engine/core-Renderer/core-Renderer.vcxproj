@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(DXSDK_DIR)\Include;$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -83,6 +83,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="ComputedRenderState.cpp" />
     <ClCompile Include="FragmentShader.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
@@ -141,8 +142,6 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Skeleton.cpp" />
-    <ClCompile Include="ProjCalc2D.cpp" />
-    <ClCompile Include="ProjCalc3D.cpp" />
     <ClCompile Include="LineSegments.cpp" />
     <ClCompile Include="LitVertex.cpp" />
     <ClCompile Include="SkinnedGeometry.cpp" />
@@ -164,7 +163,6 @@
     <ClCompile Include="EffectShader.cpp" />
     <ClCompile Include="SingleTextureMaterial.cpp" />
     <ClCompile Include="RenderingView.cpp" />
-    <ClCompile Include="TypesRegistry.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="VertexDescriptions.cpp" />
     <ClCompile Include="PixelShader.cpp" />
@@ -250,16 +248,14 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderingMechanism.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Camera.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Light.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\ProjectionCalculator.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Skeleton.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\ProjCalc2D.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\ProjCalc3D.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Face.h" />
     <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h" />
     <ClInclude Include="..\..\Include\core-Renderer\LitVertex.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SkinnedGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSBTextured.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingParams.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DeviceFilter.h" />
@@ -285,6 +281,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureMaterial.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h" />
     <ClInclude Include="..\..\Include\core-Renderer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptors.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShader.h" />

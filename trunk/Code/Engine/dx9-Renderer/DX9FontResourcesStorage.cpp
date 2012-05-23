@@ -8,7 +8,7 @@
 template<>
 ID3DXFont* RenderResourceStorage< DX9Renderer, Font, ID3DXFont >::createResource( const Font& obj ) const
 {
-   // create the font
+   /*// create the font
    ID3DXFont* dxFont = NULL;
    IDirect3DDevice9* d3Device = &m_renderer.getD3Device();
    HRESULT res = D3DXCreateFontIndirect( d3Device,  &obj.getDescription(), &dxFont );
@@ -17,8 +17,10 @@ ID3DXFont* RenderResourceStorage< DX9Renderer, Font, ID3DXFont >::createResource
    {
       throw std::runtime_error( std::string( "Font " ) + obj.getName() + " could not be created" );
    }
+   */
+   // <renderer.todo> implement fonts
 
-   return dxFont;
+   return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
 
 #include "core-MVC/Entity.h"
 #include "core/Node.h"
+#include "core/Matrix.h"
 #include <vector>
 
 
@@ -33,7 +34,7 @@ private:
    SpatialEntity*                            m_parent;
    std::vector< Node* >                      m_skeleton;
    std::vector< BoneSRTAnimationPlayer* >    m_bonePlayers;
-   std::vector< D3DXMATRIX >                 m_referenceMtcs;
+   std::vector< Matrix >                     m_referenceMtcs;
    float                                     m_trackTime;
    bool                                      m_pause;
  

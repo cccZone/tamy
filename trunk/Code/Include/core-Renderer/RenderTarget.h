@@ -9,6 +9,7 @@
 #include "core-Renderer\RenderResource.h"
 #include "core\UniqueObject.h"
 #include "core\Color.h"
+#include "core\Point.h"
 #include <string>
 #include <windows.h>
 
@@ -69,16 +70,6 @@ public:
     * when it's being cleaned.
     */
    inline const Color& getBackgroundColor() const { return m_bgColor; }
-
-   /**
-    * Returns the color of the specified pixel.
-    *
-    * @throw std::logic_error    if the texture doesn't support reading operation
-    *
-    * @param pos     pixel position
-    */
-   Color getPixel( const D3DXVECTOR2& pos ) const;
-
 
    // -------------------------------------------------------------------------
    // ShaderTexture implementation
@@ -226,8 +217,8 @@ class RCGetPixel : public RenderCommand
 {
 private:
    RenderTarget&        m_renderTarget;
-   D3DXVECTOR2          m_queryPos;
-   Color&               m_outColorVal;
+   Vector               m_queryPos;
+   Color&              m_outColorVal;
 
 public:
    /**
@@ -237,7 +228,7 @@ public:
     * @param queryPos            pixel position
     * @param outColorVal         this is where the queried color value will be stored
     */
-   RCGetPixel( RenderTarget& renderTarget, const D3DXVECTOR2& queryPos, Color& outColorVal );
+   RCGetPixel( RenderTarget& renderTarget, const Vector& queryPos, Color& outColorVal );
 
    // -------------------------------------------------------------------------
    // RenderCommand implementation

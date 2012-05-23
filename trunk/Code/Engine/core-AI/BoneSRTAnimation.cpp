@@ -1,5 +1,7 @@
 #include "core-AI/BoneSRTAnimation.h"
 #include "core/Assert.h"
+#include "core/Quaternion.h"
+#include "core/Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -7,9 +9,9 @@
 BEGIN_OBJECT( BoneSRTAnimation );
    PROPERTY( std::string, m_boneName );
    PROPERTY( std::vector< float >, m_orientation.m_time );
-   PROPERTY( std::vector< D3DXQUATERNION >, m_orientation.m_keys );
+   PROPERTY( std::vector< Quaternion >, m_orientation.m_keys );
    PROPERTY( std::vector< float >, m_translation.m_time );
-   PROPERTY( std::vector< D3DXVECTOR3 >, m_translation.m_keys );
+   PROPERTY( std::vector< Vector >, m_translation.m_keys );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,7 +35,7 @@ void BoneSRTAnimation::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoneSRTAnimation::addOrientationKey( float time, const D3DXQUATERNION& orientation )
+void BoneSRTAnimation::addOrientationKey( float time, const Quaternion& orientation )
 {
    m_orientation.addKey( time, orientation );
 
@@ -43,7 +45,7 @@ void BoneSRTAnimation::addOrientationKey( float time, const D3DXQUATERNION& orie
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoneSRTAnimation::addTranslationKey( float time, const D3DXVECTOR3& translation )
+void BoneSRTAnimation::addTranslationKey( float time, const Vector& translation )
 {
    m_translation.addKey( time, translation );
 
@@ -70,21 +72,21 @@ void BoneSRTAnimation::updateDuration()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool BoneSRTAnimation::getTranslation( unsigned int& lastCheckedKeyIdx, float time, D3DXVECTOR3& outTranslation ) const
+bool BoneSRTAnimation::getTranslation( unsigned int& lastCheckedKeyIdx, float time, Vector& outTranslation ) const
 {
    return m_translation.getKey( lastCheckedKeyIdx, time, outTranslation );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool BoneSRTAnimation::getOrientation( unsigned int& lastCheckedKeyIdx, float time, D3DXQUATERNION& outOrientation ) const
+bool BoneSRTAnimation::getOrientation( unsigned int& lastCheckedKeyIdx, float time, Quaternion& outOrientation ) const
 {
    return m_orientation.getKey( lastCheckedKeyIdx, time, outOrientation );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoneSRTAnimation::getTranslationKey( unsigned int keyIdx, D3DXVECTOR3& outValue, float& outTime ) const 
+void BoneSRTAnimation::getTranslationKey( unsigned int keyIdx, Vector& outValue, float& outTime ) const 
 { 
    outValue = m_translation.m_keys[keyIdx]; 
    outTime = m_translation.m_time[keyIdx]; 
@@ -92,14 +94,14 @@ void BoneSRTAnimation::getTranslationKey( unsigned int keyIdx, D3DXVECTOR3& outV
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoneSRTAnimation::setTranslationKey( unsigned int keyIdx, const D3DXVECTOR3& value )
+void BoneSRTAnimation::setTranslationKey( unsigned int keyIdx, const Vector& value )
 {
    m_translation.m_keys[keyIdx] = value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoneSRTAnimation::getOrientationKey( unsigned int keyIdx, D3DXQUATERNION& outValue, float& outTime ) const
+void BoneSRTAnimation::getOrientationKey( unsigned int keyIdx, Quaternion& outValue, float& outTime ) const
 {
    outValue = m_orientation.m_keys[keyIdx]; 
    outTime = m_orientation.m_time[keyIdx]; 
@@ -107,7 +109,7 @@ void BoneSRTAnimation::getOrientationKey( unsigned int keyIdx, D3DXQUATERNION& o
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoneSRTAnimation::setOrientationKey( unsigned int keyIdx, const D3DXQUATERNION& value )
+void BoneSRTAnimation::setOrientationKey( unsigned int keyIdx, const Quaternion& value )
 {
    m_orientation.m_keys[keyIdx] = value;
 }
@@ -126,14 +128,14 @@ BoneSRTAnimationPlayer::BoneSRTAnimationPlayer( const BoneSRTAnimation& animatio
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool BoneSRTAnimationPlayer::getTranslation( float time, D3DXVECTOR3& outTranslation )
+bool BoneSRTAnimationPlayer::getTranslation( float time, Vector& outTranslation )
 {
    return m_animation.getTranslation( m_translationKeyIdx, time, outTranslation );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool BoneSRTAnimationPlayer::getOrientation( float time, D3DXQUATERNION& outOrientation )
+bool BoneSRTAnimationPlayer::getOrientation( float time, Quaternion& outOrientation )
 {
    return m_animation.getOrientation( m_orientationKeyIdx, time, outOrientation );
 }

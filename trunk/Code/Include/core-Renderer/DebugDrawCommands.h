@@ -4,12 +4,12 @@
 
 #include "core-Renderer/RenderCommand.h"
 #include "core/Color.h"
-#include <d3dx9.h>
+#include "core/Matrix.h"
+#include "core/Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-struct Color;
 class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,8 +20,8 @@ class Renderer;
 class RCDrawDebugLine : public RenderCommand
 {
 private:
-   D3DXVECTOR3       m_start;
-   D3DXVECTOR3       m_end;
+   Vector            m_start;
+   Vector            m_end;
    Color             m_color;
 
 public:
@@ -32,7 +32,7 @@ public:
     * @param end
     * @param color
     */
-   RCDrawDebugLine( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
+   RCDrawDebugLine( const Vector& start, const Vector& end, const Color& color )
       : m_start( start )
       , m_end( end )
       , m_color( color )
@@ -52,8 +52,8 @@ public:
 class RCDrawDebugArc : public RenderCommand
 {
 private:
-   D3DXVECTOR3       m_start;
-   D3DXVECTOR3       m_end;
+   Vector            m_start;
+   Vector            m_end;
    Color             m_color;
 
 public:
@@ -64,7 +64,7 @@ public:
     * @param end
     * @param color
     */
-   RCDrawDebugArc( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
+   RCDrawDebugArc( const Vector& start, const Vector& end, const Color& color )
       : m_start( start )
       , m_end( end )
       , m_color( color )
@@ -84,8 +84,8 @@ public:
 class RCDrawDebugArrow : public RenderCommand
 {
 private:
-   D3DXVECTOR3       m_start;
-   D3DXVECTOR3       m_end;
+   Vector            m_start;
+   Vector            m_end;
    Color             m_color;
 
 public:
@@ -96,7 +96,7 @@ public:
     * @param end
     * @param color
     */
-   RCDrawDebugArrow( const D3DXVECTOR3& start, const D3DXVECTOR3& end, const Color& color )
+   RCDrawDebugArrow( const Vector& start, const Vector& end, const Color& color )
       : m_start( start )
       , m_end( end )
       , m_color( color )
@@ -116,8 +116,8 @@ public:
 class RCDrawDebugBox : public RenderCommand
 {
 private:
-   D3DXMATRIX        m_transform;
-   D3DXVECTOR3       m_size;
+   Matrix            m_transform;
+   Vector            m_size;
    Color             m_color;
 
 public:
@@ -128,7 +128,7 @@ public:
     * @param size
     * @param color
     */
-   RCDrawDebugBox( const D3DXMATRIX& transform, const D3DXVECTOR3& size, const Color& color )
+   RCDrawDebugBox( const Matrix& transform, const Vector& size, const Color& color )
       : m_transform( transform )
       , m_size( size )
       , m_color( color )
@@ -148,7 +148,7 @@ public:
 class RCDrawDebugSphere : public RenderCommand
 {
 private:
-   D3DXMATRIX        m_transform;
+   Matrix            m_transform;
    float             m_radius;
    Color             m_color;
 
@@ -160,7 +160,7 @@ public:
     * @param radius
     * @param color
     */
-   RCDrawDebugSphere( const D3DXMATRIX& transform, float radius, const Color& color )
+   RCDrawDebugSphere( const Matrix& transform, float radius, const Color& color )
       : m_transform( transform )
       , m_radius( radius )
       , m_color( color )
@@ -182,7 +182,7 @@ public:
 class RCDrawDebugCylinder : public RenderCommand
 {
 private:
-   D3DXMATRIX        m_transform;
+   Matrix            m_transform;
    float             m_radius;
    float             m_height;
    Color             m_color;
@@ -196,7 +196,7 @@ public:
     * @param height
     * @param color
     */
-   RCDrawDebugCylinder( const D3DXMATRIX& transform, float radius, float height, const Color& color )
+   RCDrawDebugCylinder( const Matrix& transform, float radius, float height, const Color& color )
       : m_transform( transform )
       , m_radius( radius )
       , m_height( height )

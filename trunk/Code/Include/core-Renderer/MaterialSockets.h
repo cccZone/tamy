@@ -3,7 +3,8 @@
 #pragma once
 
 #include "core/GraphBuilderSockets.h"
-#include <d3dx9.h>
+#include "core/Matrix.h"
+#include "core/Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,7 +39,7 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MSMatrixInput : public TGBNodeInput< MaterialNode, D3DXMATRIX >
+class MSMatrixInput : public TGBNodeInput< MaterialNode, Matrix >
 {
    DECLARE_CLASS()
 
@@ -46,10 +47,10 @@ public:
    /**
     * Constructor.
     */
-   MSMatrixInput( const std::string& name = "" ) : TGBNodeInput< MaterialNode, D3DXMATRIX >( name ) {}
+   MSMatrixInput( const std::string& name = "" ) : TGBNodeInput< MaterialNode, Matrix >( name ) {}
 };
 
-class MSMatrixOutput : public TGBNodeOutput< MaterialNode, D3DXMATRIX >
+class MSMatrixOutput : public TGBNodeOutput< MaterialNode, Matrix >
 {
    DECLARE_CLASS()
 
@@ -57,7 +58,7 @@ public:
    /**
     * Constructor.
     */
-   MSMatrixOutput( const std::string& name = "" ) : TGBNodeOutput< MaterialNode, D3DXMATRIX >( name ) {}
+   MSMatrixOutput( const std::string& name = "" ) : TGBNodeOutput< MaterialNode, Matrix >( name ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,7 +88,7 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MSVec4Input : public TGBNodeInput< MaterialNode, D3DXVECTOR4 >
+class MSVec4Input : public TGBNodeInput< MaterialNode, Vector >
 {
    DECLARE_CLASS()
 
@@ -95,10 +96,10 @@ public:
    /**
     * Constructor.
     */
-   MSVec4Input( const std::string& name = "" ) : TGBNodeInput< MaterialNode, D3DXVECTOR4 >( name ) {}
+   MSVec4Input( const std::string& name = "" ) : TGBNodeInput< MaterialNode, Vector >( name ) {}
 };
 
-class MSVec4Output : public TGBNodeOutput< MaterialNode, D3DXVECTOR4 >
+class MSVec4Output : public TGBNodeOutput< MaterialNode, Vector >
 {
    DECLARE_CLASS()
 
@@ -106,7 +107,7 @@ public:
    /**
     * Constructor.
     */
-   MSVec4Output( const std::string& name = "" ) : TGBNodeOutput< MaterialNode, D3DXVECTOR4 >( name ) {}
+   MSVec4Output( const std::string& name = "" ) : TGBNodeOutput< MaterialNode, Vector >( name ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -64,7 +64,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
 
    // create a camera
    m_camera = &m_renderer->getActiveCamera();
-   D3DXMatrixTranslation( &( m_camera->accessLocalMtx() ), 0, 5, 0 );
+   m_camera->accessLocalMtx().setTranslation( Vector( 0, 5, 0 ) );
 
    // create and setup the time controller
    m_localTimeController = new TimeController( timeController );
@@ -354,7 +354,7 @@ void TamySceneWidget::setMousePos( const Point& pos )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::localToViewport( const Point& screenPt, D3DXVECTOR2& viewportPt ) const
+void TamySceneWidget::localToViewport( const Point& screenPt, Vector& viewportPt ) const
 {
    float w = (float)width();
    float h = (float)height();
@@ -366,6 +366,8 @@ void TamySceneWidget::localToViewport( const Point& screenPt, D3DXVECTOR2& viewp
 
    viewportPt.x = ( x / ( w * 0.5f ) ) - 1;
    viewportPt.y = 1 - ( y / ( h * 0.5f ) );
+   viewportPt.z = 0.0f;
+   viewportPt.w = 0.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -11,7 +11,7 @@ template<>
 void ShaderParamVec4Array< EffectShader >::setParam( Renderer& renderer, void* shaderPtr )
 {
    ID3DXEffect* dxEffect = reinterpret_cast< ID3DXEffect* >( shaderPtr );
-   dxEffect->SetVectorArray( m_name.c_str(), m_val, m_size );
+   dxEffect->SetVectorArray( m_name.c_str(), ( const D3DXVECTOR4* )m_val, m_size );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ template<>
 void ShaderParamVec4Array< PixelShader >::setParam( Renderer& renderer, void* shaderPtr )
 {
    DX9PixelShader* dxPixelShader = reinterpret_cast< DX9PixelShader* >( shaderPtr );
-   dxPixelShader->setVec4Array( m_name.c_str(), m_val, m_size );
+   dxPixelShader->setVec4Array( m_name.c_str(), ( const D3DXVECTOR4* )m_val, m_size );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ template<>
 void ShaderParamVec4Array< VertexShader >::setParam( Renderer& renderer, void* shaderPtr )
 {
    DX9VertexShader* dxVertexShader = reinterpret_cast< DX9VertexShader* >( shaderPtr );
-   dxVertexShader->setVec4Array( m_name.c_str(), m_val, m_size );
+   dxVertexShader->setVec4Array( m_name.c_str(), ( const D3DXVECTOR4* )m_val, m_size );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

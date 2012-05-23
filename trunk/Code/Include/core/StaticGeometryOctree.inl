@@ -3,6 +3,7 @@
 #else
 
 #include <algorithm>
+#include "core\Plane.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -124,7 +125,7 @@ void StaticGeometryOctree<Elem>::addElemToTree(SGElement* element,
       unsigned int splitPlanesCount = subTreeRoot.getSplitPlanesCount();
       ASSERT_MSG(splitPlanesCount > 0, "invalid number of split planes");
       ASSERT_MSG(splitPlanesCount <= 3, "invalid number of split planes");
-      D3DXPLANE* planes = new D3DXPLANE[splitPlanesCount];
+      Plane* planes = new Plane[splitPlanesCount];
       for (unsigned int i = 0; i < splitPlanesCount; ++i)
       {
          planes[i] = subTreeRoot.getSplitPlane(i);

@@ -4,11 +4,12 @@
 /// @brief  an interface describing a single scene query
 
 #include <d3dx9.h>
-#include "core/Color.h"
+#include "core/Vector.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class Entity;
+struct Vector;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +23,7 @@ class Entity;
 class SceneQuery
 {
 private:
-   Color          m_resultBuf;
+   Vector          m_resultBuf;
 
 public:
    virtual ~SceneQuery() {}
@@ -30,7 +31,7 @@ public:
    /**
     * Returns the queried position
     */
-   virtual const D3DXVECTOR2& getQueriedPosition() const = 0;
+   virtual const Vector& getQueriedPosition() const = 0;
 
    /**
     * Notifies about the query completion.
@@ -40,7 +41,7 @@ public:
    /**
     * Returns the result buffer.
     */
-   inline Color& getResultBuffer() { return m_resultBuf; }
+   inline Vector& getResultBuffer() { return m_resultBuf; }
 
 protected:
    SceneQuery();

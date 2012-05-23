@@ -6,7 +6,7 @@
 #include "core-Renderer\Geometry.h"
 #include "core-Renderer\LitVertex.h"
 #include "core\Array.h"
-#include <d3dx9.h>
+#include "core\Matrix.h"
 #include <vector>
 
 
@@ -36,7 +36,7 @@ private:
    // runtime data
    BoundingVolume*                     m_vol;
    std::vector< Node* >                m_bones;
-   Array< D3DXMATRIX >                 m_boneMatrices;
+   Array< Matrix >                 m_boneMatrices;
 
 public:
    /**

@@ -67,9 +67,6 @@
     <Filter Include="Core\Camera">
       <UniqueIdentifier>{35ccab52-69f9-4ecf-b59b-c4d5b5ad5a9f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Camera\ProjectionCalculators">
-      <UniqueIdentifier>{748a440c-5adb-4c1d-80b1-c3089a381123}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Lighting">
       <UniqueIdentifier>{ec716647-fce2-4f1a-a57b-7417ca64819e}</UniqueIdentifier>
     </Filter>
@@ -107,12 +104,6 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Lighting</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjCalc2D.cpp">
-      <Filter>Core\Camera\ProjectionCalculators</Filter>
-    </ClCompile>
-    <ClCompile Include="ProjCalc3D.cpp">
-      <Filter>Core\Camera\ProjectionCalculators</Filter>
     </ClCompile>
     <ClCompile Include="DeviceFilter.cpp">
       <Filter>Initialization</Filter>
@@ -351,7 +342,7 @@
     <ClCompile Include="ComputedRenderState.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
     </ClCompile>
-    <ClCompile Include="TypesRegistry.cpp" />
+    <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -400,12 +391,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Light.h">
       <Filter>Lighting</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ProjCalc2D.h">
-      <Filter>Core\Camera\ProjectionCalculators</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ProjCalc3D.h">
-      <Filter>Core\Camera\ProjectionCalculators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DeviceFilter.h">
       <Filter>Initialization</Filter>
@@ -556,9 +541,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\Camera.h">
       <Filter>Core\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ProjectionCalculator.h">
-      <Filter>Core\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h">
       <Filter>Core\Tools</Filter>
     </ClInclude>
@@ -705,6 +687,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ComputedRenderState.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingParams.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptors.h">
+      <Filter>Geometry\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

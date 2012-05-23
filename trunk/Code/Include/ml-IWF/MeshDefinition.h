@@ -1,8 +1,7 @@
-#pragma once
-
 /// @file   ml-IWF\MeshDefinition.h
 /// @brief  definitions of mesh-related entities loaded by resource 
 ///         management system
+#pragma once
 
 #include <list>
 #include <vector>
@@ -10,8 +9,7 @@
 #include "core-Renderer\Face.h"
 #include <string>
 #include "core\Color.h"
-#include <d3dx9.h>
-
+#include "core\Math.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -44,13 +42,13 @@ struct MeshDefinition
    std::vector<LitVertex> vertices;
    std::vector<Face > faces;
 
-   D3DXMATRIX localMtx;
+   Matrix localMtx;
 
    // -------------------------------------------------------------------------
 
    MeshDefinition()
    {
-      D3DXMatrixIdentity(&localMtx);
+      localMtx = Matrix::IDENTITY;
    }
 
    MeshDefinition(const MeshDefinition& rhs)

@@ -6,7 +6,6 @@
 #include "core-Renderer/PixelShader.h"
 #include "core/GraphBuilderSockets.h"
 #include "core-Renderer/ShaderTexture.h"
-#include <d3dx9.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,7 +129,7 @@ void PSCTexture< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< 
 
 template< typename TNode >
 PSCVec4< TNode >::PSCVec4( const char* name )
-   : TPixelShaderConstant< TNode, D3DXVECTOR4 >( name )
+   : TPixelShaderConstant< TNode, Vector >( name )
 {
 }
 
@@ -139,8 +138,8 @@ PSCVec4< TNode >::PSCVec4( const char* name )
 template< typename TNode >
 void PSCVec4< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data )
 {
-   const TGBNodeInput< TNode, D3DXVECTOR4 >& castInput = static_cast< const TGBNodeInput< TNode, D3DXVECTOR4 >& >( input );
-   const D3DXVECTOR4& val = castInput.getValue( data );
+   const TGBNodeInput< TNode, Vector >& castInput = static_cast< const TGBNodeInput< TNode, Vector >& >( input );
+   const Vector& val = castInput.getValue( data );
    comm.setVec4( getName(), val );
 }
 
@@ -150,7 +149,7 @@ void PSCVec4< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< TNo
 
 template< typename TNode >
 PSCMatrix< TNode >::PSCMatrix( const char* name)
-   : TPixelShaderConstant< TNode, D3DXMATRIX >( name )
+   : TPixelShaderConstant< TNode, Matrix >( name )
 {
 }
 
@@ -159,8 +158,8 @@ PSCMatrix< TNode >::PSCMatrix( const char* name)
 template< typename TNode >
 void PSCMatrix< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< TNode >& input, RuntimeDataBuffer& data )
 {
-   const TGBNodeInput< TNode, D3DXMATRIX >& castInput = static_cast< const TGBNodeInput< TNode, D3DXMATRIX >& >( input );
-   const D3DXMATRIX& val = castInput.getValue( data );
+   const TGBNodeInput< TNode, Matrix >& castInput = static_cast< const TGBNodeInput< TNode, Matrix >& >( input );
+   const Matrix& val = castInput.getValue( data );
    comm.setMtx( getName(), val );
 }
 

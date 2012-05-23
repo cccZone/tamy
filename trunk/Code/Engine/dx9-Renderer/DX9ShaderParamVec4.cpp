@@ -11,7 +11,7 @@ template<>
 void ShaderParamVec4< EffectShader >::setParam( Renderer& renderer, void* shaderPtr )
 {
    ID3DXEffect* dxEffect = reinterpret_cast< ID3DXEffect* >( shaderPtr );
-   dxEffect->SetVector( m_name.c_str(), &m_val );
+   dxEffect->SetVector( m_name.c_str(), ( const D3DXVECTOR4* )&m_val );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,7 +20,7 @@ template<>
 void ShaderParamVec4< PixelShader >::setParam( Renderer& renderer, void* shaderPtr )
 {
    DX9PixelShader* dxPixelShader = reinterpret_cast< DX9PixelShader* >( shaderPtr );
-   dxPixelShader->setVec4( m_name.c_str(), m_val );
+   dxPixelShader->setVec4( m_name.c_str(), ( const D3DXVECTOR4& )m_val );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ template<>
 void ShaderParamVec4< VertexShader >::setParam( Renderer& renderer, void* shaderPtr )
 {
    DX9VertexShader* dxVertexShader = reinterpret_cast< DX9VertexShader* >( shaderPtr );
-   dxVertexShader->setVec4( m_name.c_str(), m_val );
+   dxVertexShader->setVec4( m_name.c_str(), ( const D3DXVECTOR4& )m_val );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

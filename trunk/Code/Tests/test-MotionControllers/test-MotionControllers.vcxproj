@@ -96,7 +96,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="UnconstrainedMotionControllerTests.cpp" />
-    <ClCompile Include="WaypointCameraControllerTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\core-TestFramework\core-TestFramework.vcxproj">

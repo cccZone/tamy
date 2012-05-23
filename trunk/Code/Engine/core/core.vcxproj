@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(DXSDK_DIR)\Include;$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -80,6 +80,7 @@
     <ClCompile Include="..\..\Include\core\TypesRegistry.cpp" />
     <ClCompile Include="Algorithms.cpp" />
     <ClCompile Include="Assert.cpp" />
+    <ClCompile Include="Color.cpp" />
     <ClCompile Include="FilePath.cpp" />
     <ClCompile Include="GraphBuilder.cpp" />
     <ClCompile Include="GraphBuilderNode.cpp" />
@@ -87,12 +88,15 @@
     <ClCompile Include="IDebugDraw.cpp" />
     <ClCompile Include="InArrayStream.cpp" />
     <ClCompile Include="InStream.cpp" />
+    <ClCompile Include="MatrixUtils.cpp" />
     <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NodeActionsExecutor.cpp" />
     <ClCompile Include="OutArrayStream.cpp" />
     <ClCompile Include="OutFileStream.cpp" />
     <ClCompile Include="OutStream.cpp" />
+    <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="ReflectionEnum.cpp" />
     <ClCompile Include="ReflectionLoader.cpp" />
     <ClCompile Include="ReflectionObject.cpp" />
@@ -109,8 +113,6 @@
     <ClCompile Include="RuntimeData.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="Timer.cpp" />
-    <ClCompile Include="Color.cpp" />
-    <ClCompile Include="MatrixWriter.cpp" />
     <ClCompile Include="StringUtils.cpp" />
     <ClCompile Include="BoundingVolume.cpp" />
     <ClCompile Include="AABoundingBox.cpp" />
@@ -130,9 +132,11 @@
     <ClCompile Include="EulerAngles.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Vector.cpp" />
+    <ClCompile Include="VectorUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Algorithms.h" />
+    <ClInclude Include="..\..\Include\core\Color.h" />
     <ClInclude Include="..\..\Include\core\FilePath.h" />
     <ClInclude Include="..\..\Include\core\GraphBuilder.h" />
     <ClInclude Include="..\..\Include\core\GraphBuilderNode.h" />
@@ -141,6 +145,8 @@
     <ClInclude Include="..\..\Include\core\InArrayStream.h" />
     <ClInclude Include="..\..\Include\core\InStream.h" />
     <ClInclude Include="..\..\Include\core\IProgressObserver.h" />
+    <ClInclude Include="..\..\Include\core\math.h" />
+    <ClInclude Include="..\..\Include\core\MathDefs.h" />
     <ClInclude Include="..\..\Include\core\MemoryPool.h" />
     <ClInclude Include="..\..\Include\core\Node.h" />
     <ClInclude Include="..\..\Include\core\NodeObserver.h" />
@@ -148,6 +154,8 @@
     <ClInclude Include="..\..\Include\core\OutArrayStream.h" />
     <ClInclude Include="..\..\Include\core\OutFileStream.h" />
     <ClInclude Include="..\..\Include\core\OutStream.h" />
+    <ClInclude Include="..\..\Include\core\Plane.h" />
+    <ClInclude Include="..\..\Include\core\Quaternion.h" />
     <ClInclude Include="..\..\Include\core\ReflectionEnum.h" />
     <ClInclude Include="..\..\Include\core\ReflectionLoader.h" />
     <ClInclude Include="..\..\Include\core\ReflectionObject.h" />
@@ -180,11 +188,9 @@
     <ClInclude Include="..\..\Include\core\Delegate.h" />
     <ClInclude Include="..\..\Include\core\dostream.h" />
     <ClInclude Include="..\..\Include\core\Assert.h" />
-    <ClInclude Include="..\..\Include\core\Color.h" />
     <ClInclude Include="..\..\Include\core\HierarchyWriter.h" />
     <ClInclude Include="..\..\Include\core\IntervalOperation.h" />
-    <ClInclude Include="..\..\Include\core\MatrixInterpolator.h" />
-    <ClInclude Include="..\..\Include\core\MatrixWriter.h" />
+    <ClInclude Include="..\..\Include\core\MatrixUtils.h" />
     <ClInclude Include="..\..\Include\core\StringUtils.h" />
     <ClInclude Include="..\..\Include\core\TypeRegistrationMacros.h" />
     <ClInclude Include="..\..\Include\core\types.h" />
@@ -232,10 +238,12 @@
     <ClInclude Include="..\..\Include\core\Matrix.h" />
     <ClInclude Include="..\..\Include\core\Vector.h" />
     <ClInclude Include="..\..\Include\core.h" />
+    <ClInclude Include="..\..\Include\core\VectorUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Algorithms.inl" />
     <None Include="..\..\Include\core\Array.inl" />
+    <None Include="..\..\Include\core\CellSpacePartition.inl" />
     <None Include="..\..\Include\core\ConstSizeArray.inl" />
     <None Include="..\..\Include\core\Graph.inl" />
     <None Include="..\..\Include\core\GraphAlgorithms.inl" />
@@ -279,6 +287,7 @@
     <None Include="..\..\Include\core\ResourcesManager.inl" />
     <None Include="..\..\Include\core\ResourceStorage.inl" />
     <None Include="..\..\Include\core\UniqueObject.inl" />
+    <None Include="..\..\Include\core\Vector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
