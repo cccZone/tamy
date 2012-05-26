@@ -82,7 +82,6 @@
 // ----------------------------------------------------------------------------
 // -->Properties
 // ----------------------------------------------------------------------------
-#include "core/ReflectionProperties.h"
 #include "core/ReflectionPropertiesView.h"
 #include "core/ReflectionProperty.h"
 #include "core/ReflectionPropertyEditor.h"

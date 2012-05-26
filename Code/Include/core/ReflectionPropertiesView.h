@@ -6,38 +6,13 @@
 
 #include <vector>
 #include "core\GenericFactory.h"
+#include "core\ReflectionPropertyEditor.h"
 #include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class ReflectionProperty;
-class ReflectionPropertyEditor;
-class ReflectionProperties;
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Interface for all properties views.
- */
-class ReflectionPropertiesView
-{
-public:
-   virtual ~ReflectionPropertiesView() {}
-
-   /**
-    * This method allows to set a new properties set with this view,
-    * allowing to create new editors for it.
-    *
-    * @param properties    properties set we want to view
-    */
-   virtual void set( ReflectionProperties* properties ) = 0;
-
-   /**
-    * This method removes all editors from the view.
-    */
-   virtual void reset() = 0;
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,8 +32,7 @@ public:
  * all the applicable implementation data (window details etc), and expose
  * them to the editors that are meant to operate with that view.
  */
-template <typename Derived>
-class TReflectionPropertiesView : public ReflectionPropertiesView
+class ReflectionPropertiesView
 {
 private:
    // -------------------------------------------------------------------------
@@ -91,7 +65,7 @@ private:
 
       ReflectionPropertyEditor* operator()( ReflectionProperty* property )
       {
-         TEditableReflectionProperty< ENTITY_IMPL >* editableProperty = new TEditableReflectionProperty< ENTITY_IMPL >( *property );
+         TEditableReflectionProperty< ENTITY_IMPL >* editableProperty = new TEditableReflectionProperty< ENTITY_IMPL >( property );
          return new REPR_IMPL( editableProperty );
       }
 
@@ -117,7 +91,7 @@ private:
 
       ReflectionPropertyEditor* operator()( ReflectionProperty* property )
       {
-         TEditableReflectionProperty< ENTITY_IMPL >* editableProperty = new TEditableReflectionProperty< ENTITY_IMPL >( *property );
+         TEditableReflectionProperty< ENTITY_IMPL >* editableProperty = new TEditableReflectionProperty< ENTITY_IMPL >( property );
          return new REPR_IMPL( editableProperty );
       }
 
@@ -143,7 +117,7 @@ private:
 
       ReflectionPropertyEditor* operator()( ReflectionProperty* property )
       {
-         TEditableReflectionProperty< ReflectionEnum >* editableProperty = new TEditableReflectionProperty< ReflectionEnum >( *property );
+         TEditableReflectionProperty< ReflectionEnum >* editableProperty = new TEditableReflectionProperty< ReflectionEnum >( property );
          return new REPR_IMPL( editableProperty );
       }
 
@@ -154,39 +128,82 @@ private:
    };
 
    // -------------------------------------------------------------------------
+   // -------------------------------------------------------------------------
+   // -------------------------------------------------------------------------
+
+   template< typename NodeType, typename ParamType >
+   class EditorNodeCreator
+   {
+   public:
+      virtual ~EditorNodeCreator() {}
+
+      virtual NodeType* create( ParamType* obj ) 
+      {
+         return new NodeType( obj );
+      }
+   };
+
+   // -------------------------------------------------------------------------
+
+   typedef EditorNodeCreator< ReflectionPropertyEditorComposite, ReflectionPropertyArray > ArrayNodeCreator;
+   typedef EditorNodeCreator< ReflectionObjectEditor, ReflectionObject > ObjectNodeCreator;
+
+   // -------------------------------------------------------------------------
+
+   template< class REPR_IMPL >
+   class TArrayNodeCreator : public ArrayNodeCreator
+   {
+   public:
+      ReflectionPropertyEditorComposite* create( ReflectionPropertyArray* property )
+      {
+         return new REPR_IMPL( property );
+      }
+   };
+
+   // -------------------------------------------------------------------------
+
+   template< class REPR_IMPL >
+   class TObjectNodeCreator : public ObjectNodeCreator
+   {
+   public:
+      ReflectionObjectEditor* create( ReflectionObject* property )
+      {
+         return new REPR_IMPL( property );
+      }
+   };
+
+   // -------------------------------------------------------------------------
 
    typedef std::vector< Creator* > CreatorsVec;
 
 private:
-   ReflectionProperties*                        m_properties;
-   std::vector< ReflectionPropertyEditor* >     m_editors;
-
-   CreatorsVec                                  m_creators;
+   ReflectionObjectEditor*				                        m_rootEditor;
+   CreatorsVec                                              m_creators;
+   ArrayNodeCreator*                                        m_arrayNodeCreator;
+   ObjectNodeCreator*                                       m_objectNodeCreator;
 
 public:
    /**
     * Constructor.
     */
-   TReflectionPropertiesView();
-   virtual ~TReflectionPropertiesView();
-
-   /**
-    * This method tells the number of currently active editors.
-    *
-    * @return  number of editors working in the view.
-    */
-   inline uint getEditorsCount() const;
+   ReflectionPropertiesView();
+   virtual ~ReflectionPropertiesView();
 
    /**
     * Returns the specified editor
     */
-   inline ReflectionPropertyEditor& getEditor( uint idx ) const;
+   inline ReflectionObjectEditor* getRootEditor() const { return m_rootEditor; }
 
-   // -------------------------------------------------------------------------
-   // ReflectionPropertiesView implementation
-   // -------------------------------------------------------------------------
-   void set( ReflectionProperties* properties );
+   /**
+    * Sets the new view contents.
+    *
+    * @param parentObject  
+    */
+   void set( ReflectionObject& parentObject );
 
+   /**
+    * Resets the view contents.
+    */
    void reset();
 
    // -------------------------------------------------------------------------
@@ -233,6 +250,30 @@ public:
    }
 
    /**
+    * This method associates the array properties with an editor.
+    *
+    * @param EDITOR_IMPL               array property editor class
+    */
+   template< class EDITOR_IMPL >
+   void associateArray()
+   {
+      delete m_arrayNodeCreator;
+      m_arrayNodeCreator = new TArrayNodeCreator< EDITOR_IMPL >();
+   }
+
+   /**
+    * This method associates an object node with a concrete editor.
+    *
+    * @param EDITOR_IMPL               object node editor class
+    */
+   template< class EDITOR_IMPL >
+   void associateObjectNode()
+   {
+      delete m_objectNodeCreator;
+      m_objectNodeCreator = new TObjectNodeCreator< EDITOR_IMPL >();
+   }
+
+   /**
     * The method creates a representation for an entity class.
     * Such an entity class needs to be registered with the factory
     * prior to this call.
@@ -240,7 +281,7 @@ public:
     * @param property   property for which we want to create a representation
     * @return           representation
     */ 
-   ReflectionPropertyEditor* create( ReflectionProperty& property );
+   ReflectionPropertyEditor* create( ReflectionProperty* property );
 
 protected:
    // -------------------------------------------------------------------------
@@ -250,9 +291,12 @@ protected:
    /**
     * Called when new properties are being set in the editor.
     *
-    * @param ownerNpropertiesame  properties that are being set
+    * @param typeName   type of the class which properties are about to be edited
     */
-   virtual void onSet( ReflectionProperties& properties ) {}
+   virtual void onSet( ReflectionObjectEditor* rootEditor ) {}
+
+private:
+   void analyzeSingleProperty( ReflectionProperty* analyzedProperty, ReflectionObjectEditor* populatedObjectEditor, std::vector< ReflectionObjectEditor* >& outObjectNodes );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

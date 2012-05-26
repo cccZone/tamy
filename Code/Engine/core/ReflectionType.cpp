@@ -199,7 +199,7 @@ void SerializableReflectionType::mapTypesHierarchy( std::list< const Serializabl
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SerializableReflectionType::collectProperties( void* hostObj, ReflectionProperties& outProperties ) const
+void SerializableReflectionType::collectProperties( void* hostObj, std::vector< ReflectionProperty* >& outProperties ) const
 {
    // get all types in the hierarchy
    std::list< const SerializableReflectionType* > reflectionTypesList;
@@ -216,10 +216,14 @@ void SerializableReflectionType::collectProperties( void* hostObj, ReflectionPro
       {
          const ReflectionTypeComponent& field = *( nextType->m_memberFields[i] );
 
-         ReflectionProperty& property = field.createProperty( hostObj, outProperties );
+         ReflectionProperty* property = field.createProperty( hostObj );
 
          // copy the field flags
-         property.setParams( field.m_memberName, field.m_label, field.m_isEditable, field.m_canBeSaved );
+         if ( property != NULL )
+         {
+            property->setParams( field.m_memberName, field.m_label, field.m_isEditable, field.m_canBeSaved );
+            outProperties.push_back( property );
+         }
       }
    }
 }

@@ -61,13 +61,13 @@ namespace // anonymous
 
    // -------------------------------------------------------------------------
 
-   class PropertiesViewMock : public TReflectionPropertiesView< PropertiesViewMock >
+   class PropertiesViewMock : public ReflectionPropertiesView
    {
    };
 
    // -------------------------------------------------------------------------
 
-   class EditorMock : public TReflectionPropertyEditor< PropertiesViewMock >
+   class EditorMock : public ReflectionPropertyEditor
    {
    private:
       TEditableReflectionProperty< ReflectionEnum >*         m_property;
@@ -83,9 +83,9 @@ namespace // anonymous
          delete m_property;
       }
 
-      void initialize( PropertiesViewMock& view ) {}
+      void initialize( ReflectionObjectEditor* parentEditor ) {}
 
-      void deinitialize( PropertiesViewMock& view ) {}
+      void deinitialize( ReflectionObjectEditor* parentEditor ) {}
 
       void setValue( ReflectionEnum val )
       {
@@ -208,11 +208,11 @@ TEST( ReflectionEnum, enumProperties )
    // create an object and view its properties
    TestEnumClass obj;
 
-   CPPUNIT_ASSERT_EQUAL( (uint)0, propertiesView.getEditorsCount() );
+   CPPUNIT_ASSERT( NULL == propertiesView.getRootEditor() );
 
    obj.viewProperties( propertiesView );
-
-   CPPUNIT_ASSERT_EQUAL( (uint)1, propertiesView.getEditorsCount() );
+   CPPUNIT_ASSERT( NULL != propertiesView.getRootEditor() );
+   CPPUNIT_ASSERT_EQUAL( (uint)1, propertiesView.getRootEditor()->getPropertiesCount() );
 
    // cleanup
    typesRegistry.clear();

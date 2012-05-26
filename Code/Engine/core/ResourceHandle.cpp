@@ -5,6 +5,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( ResourceHandle );
+   PARENT( ReflectionObject);
    PROPERTY( std::string, m_resourcePath );
    PROPERTY( int, m_objectId )
 END_OBJECT();
@@ -30,6 +31,7 @@ void ResourceHandle::onObjectPreSave()
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( ResourceObject );
+   PARENT( ReflectionObject);
    PROPERTY( Resource*, m_hostResource );
    PROPERTY( int, m_objectId );
 END_OBJECT();

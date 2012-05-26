@@ -100,8 +100,9 @@
     <ClCompile Include="ReflectionEnum.cpp" />
     <ClCompile Include="ReflectionLoader.cpp" />
     <ClCompile Include="ReflectionObject.cpp" />
-    <ClCompile Include="ReflectionProperties.cpp" />
+    <ClCompile Include="ReflectionPropertiesView.cpp" />
     <ClCompile Include="ReflectionProperty.cpp" />
+    <ClCompile Include="ReflectionPropertyEditor.cpp" />
     <ClCompile Include="ReflectionSaver.cpp" />
     <ClCompile Include="ReflectionType.cpp" />
     <ClCompile Include="ReflectionTypeComponent.cpp" />
@@ -158,9 +159,9 @@
     <ClInclude Include="..\..\Include\core\Quaternion.h" />
     <ClInclude Include="..\..\Include\core\ReflectionEnum.h" />
     <ClInclude Include="..\..\Include\core\ReflectionLoader.h" />
+    <ClInclude Include="..\..\Include\core\ReflectionMacros.h" />
     <ClInclude Include="..\..\Include\core\ReflectionObject.h" />
     <ClInclude Include="..\..\Include\core\ReflectionObjectsTracker.h" />
-    <ClInclude Include="..\..\Include\core\ReflectionProperties.h" />
     <ClInclude Include="..\..\Include\core\ReflectionPropertiesView.h" />
     <ClInclude Include="..\..\Include\core\ReflectionProperty.h" />
     <ClInclude Include="..\..\Include\core\ReflectionPropertyEditor.h" />
@@ -259,9 +260,9 @@
     <None Include="..\..\Include\core\ReflectionEnum.inl" />
     <None Include="..\..\Include\core\ReflectionLoader.inl" />
     <None Include="..\..\Include\core\ReflectionObject.inl" />
-    <None Include="..\..\Include\core\ReflectionProperties.inl" />
     <None Include="..\..\Include\core\ReflectionPropertiesView.inl" />
     <None Include="..\..\Include\core\ReflectionProperty.inl" />
+    <None Include="..\..\Include\core\ReflectionPropertyEditor.inl" />
     <None Include="..\..\Include\core\ReflectionSaver.inl" />
     <None Include="..\..\Include\core\ReflectionType.inl" />
     <None Include="..\..\Include\core\ReflectionTypeComponent.inl" />

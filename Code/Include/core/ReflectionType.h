@@ -15,7 +15,7 @@
 class ReflectionSaver;
 class ReflectionLoader;
 class ReflectionTypeComponent;
-class ReflectionProperties;
+class ReflectionProperty;
 class OutStream;
 class InStream;
 
@@ -160,7 +160,7 @@ public:
     * @param hostObj
     * @param outProperties
     */
-   void collectProperties( void* hostObj, ReflectionProperties& outProperties ) const;
+   void collectProperties( void* hostObj, std::vector< ReflectionProperty* >& outProperties ) const;
 
    /**
     * Tells if the type is abstract or not ( can it be instantiated or not ).

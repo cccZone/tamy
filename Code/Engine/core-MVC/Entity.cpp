@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( Entity )
+   PARENT( ReflectionObject );
    PROPERTY_EDIT( "name", std::string, m_name )
    PROPERTY( Entity*, m_parent )
    PROPERTY( Entity::Children, m_managedChildren )

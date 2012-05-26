@@ -5,7 +5,7 @@
 #include "core/StringUtils.h"
 #include "core/ReflectionLoader.h"
 #include "core/ReflectionSaver.h"
-#include "core/ReflectionProperties.h"
+#include "core/ReflectionProperty.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,12 +101,12 @@ void TMemberField< T >::restoreDependencies( void* object, const ReflectionLoade
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ReflectionProperty& TMemberField< T >::createProperty( void* object, ReflectionProperties& outProperties ) const
+ReflectionProperty* TMemberField< T >::createProperty( void* object ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
    T* dataPtr = reinterpret_cast< T* >( memberPtr );
 
-   return outProperties.add< T >( *dataPtr, m_memberName );
+   return new TReflectionProperty< T >( (ReflectionObject*)object, dataPtr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -166,12 +166,12 @@ void TMemberField< T* >::restoreDependencies( void* object, const ReflectionLoad
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ReflectionProperty& TMemberField< T* >::createProperty( void* object, ReflectionProperties& outProperties ) const
+ReflectionProperty* TMemberField< T* >::createProperty( void* object ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
    T** dataPtr = reinterpret_cast< T** >( memberPtr );
 
-   return outProperties.add< T* >( *dataPtr, m_memberName );
+   return new TReflectionProperty< T* >( (ReflectionObject*)object, dataPtr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -262,10 +262,12 @@ void TMemberField< std::vector< T* > >::restoreDependencies( void* object, const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ReflectionProperty& TMemberField< std::vector< T* > >::createProperty( void* object, ReflectionProperties& outProperties ) const
+ReflectionProperty* TMemberField< std::vector< T* > >::createProperty( void* object ) const
 {
-   // TODO: vectorsOfObjects
-   return *( ( ReflectionProperty* )NULL );
+   char* memberPtr = (char*)object + m_dataOffset;
+   std::vector< T* >* dataPtr = reinterpret_cast< std::vector< T* >* >( memberPtr );
+
+   return new TReflectionProperty< std::vector< T* > >( (ReflectionObject*)object, dataPtr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

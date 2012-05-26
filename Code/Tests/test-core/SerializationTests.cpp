@@ -18,106 +18,106 @@ namespace // anonymous
 
    // -------------------------------------------------------------------------
 
-   struct TestClass : public ReflectionObject
+   struct SerializationTestClass : public ReflectionObject
    {
       DECLARE_STRUCT()
 
       int      m_val1;
       int      m_val2;
 
-      TestClass( int val1 = 0, int val2 = 0, const char* id = NULL ) : ReflectionObject( id ), m_val1( val1 ), m_val2( val2 ) {}
-      virtual ~TestClass() {}
+      SerializationTestClass( int val1 = 0, int val2 = 0, const char* id = NULL ) : ReflectionObject( id ), m_val1( val1 ), m_val2( val2 ) {}
+      virtual ~SerializationTestClass() {}
    };
-   BEGIN_OBJECT( TestClass );
+   BEGIN_OBJECT( SerializationTestClass );
       PROPERTY( int, m_val1 );
       PROPERTY( int, m_val2 );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
 
-   struct PatchedTestClass : public ReflectionObject
+   struct PatchedSerializationTestClass : public ReflectionObject
    {
       DECLARE_STRUCT()
 
       int      m_val;
 
-      PatchedTestClass( int val = 0 ) : m_val( val ) {}
-      virtual ~PatchedTestClass() {}
+      PatchedSerializationTestClass( int val = 0 ) : m_val( val ) {}
+      virtual ~PatchedSerializationTestClass() {}
    };
-   BEGIN_OBJECT( PatchedTestClass );
+   BEGIN_OBJECT( PatchedSerializationTestClass );
       PATCH_MEMBER( m_val2, m_val );
       PROPERTY( int, m_val );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
 
-   struct DerivedTestClass : public TestClass
+   struct DerivedSerializationTestClass : public SerializationTestClass
    {
       DECLARE_STRUCT()
 
       int      m_val3;
 
-      DerivedTestClass( int val1 = 0, int val2 = 0, int val3 = 0 ) : TestClass( val1, val2 ), m_val3( val3 ) {}
+      DerivedSerializationTestClass( int val1 = 0, int val2 = 0, int val3 = 0 ) : SerializationTestClass( val1, val2 ), m_val3( val3 ) {}
    };
-   BEGIN_OBJECT( DerivedTestClass );
-      PARENT( TestClass );
+   BEGIN_OBJECT( DerivedSerializationTestClass );
+      PARENT( SerializationTestClass );
       PROPERTY( int, m_val3 );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
 
-   struct PatchedDerivedTestClass : public PatchedTestClass
+   struct PatchedDerivedSerializationTestClass : public PatchedSerializationTestClass
    {
       DECLARE_STRUCT()
 
       int      m_val2;
 
-      PatchedDerivedTestClass( int val1 = 0, int val2 = 0 ) : PatchedTestClass( val1 ), m_val2( val2 ) {}
+      PatchedDerivedSerializationTestClass( int val1 = 0, int val2 = 0 ) : PatchedSerializationTestClass( val1 ), m_val2( val2 ) {}
    };
-   BEGIN_OBJECT( PatchedDerivedTestClass );
-      PARENT( PatchedTestClass );
+   BEGIN_OBJECT( PatchedDerivedSerializationTestClass );
+      PARENT( PatchedSerializationTestClass );
       PATCH_MEMBER( m_val3, m_val2 );
       PROPERTY( int, m_val2 );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
 
-   struct TestClassWithPointers : public ReflectionObject
+   struct SerializationTestClassWithPointers : public ReflectionObject
    {
       DECLARE_STRUCT()
 
       int                           m_val;
-      TestClassWithPointers*        m_ptr;
+      SerializationTestClassWithPointers*        m_ptr;
 
-      TestClassWithPointers( int val = 0, TestClassWithPointers* ptr = NULL ) : m_val( val ), m_ptr( ptr ) {}
-      ~TestClassWithPointers() { delete m_ptr; m_ptr = NULL; }
+      SerializationTestClassWithPointers( int val = 0, SerializationTestClassWithPointers* ptr = NULL ) : m_val( val ), m_ptr( ptr ) {}
+      ~SerializationTestClassWithPointers() { delete m_ptr; m_ptr = NULL; }
    };
-   BEGIN_OBJECT( TestClassWithPointers );
+   BEGIN_OBJECT( SerializationTestClassWithPointers );
       PROPERTY( int, m_val );
-      PROPERTY( TestClassWithPointers*, m_ptr );
+      PROPERTY( SerializationTestClassWithPointers*, m_ptr );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
 
-   struct TestClassWithPODArray : public ReflectionObject
+   struct SerializationTestClassWithPODArray : public ReflectionObject
    {
       DECLARE_STRUCT()
 
       std::vector< int >                  m_arr;
    };
-   BEGIN_OBJECT( TestClassWithPODArray );
+   BEGIN_OBJECT( SerializationTestClassWithPODArray );
       PROPERTY( std::vector< int >, m_arr );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
 
-   struct TestClassWithPtrArray : public ReflectionObject
+   struct SerializationTestClassWithPtrArray : public ReflectionObject
    {
       DECLARE_STRUCT()
 
-      std::vector< TestClass* >           m_arr;
+      std::vector< SerializationTestClass* >           m_arr;
 
-      ~TestClassWithPtrArray()
+      ~SerializationTestClassWithPtrArray()
       {
          uint count = m_arr.size();
          for ( uint i = 0; i < count; ++i )
@@ -127,28 +127,28 @@ namespace // anonymous
          m_arr.clear();
       }
    };
-   BEGIN_OBJECT( TestClassWithPtrArray );
-      PROPERTY( std::vector< TestClass* >, m_arr );
+   BEGIN_OBJECT( SerializationTestClassWithPtrArray );
+      PROPERTY( std::vector< SerializationTestClass* >, m_arr );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
 
-   struct TestClassWithSharedPointers : public ReflectionObject
+   struct SerializationTestClassWithSharedPointers : public ReflectionObject
    {
       DECLARE_STRUCT()
 
-      TestClass*        m_ptr;
+      SerializationTestClass*        m_ptr;
 
-      TestClassWithSharedPointers( const char* id = NULL, TestClass* ptr = NULL ) : ReflectionObject( id ), m_ptr( ptr ) {}
-      ~TestClassWithSharedPointers() { m_ptr = NULL; }
+      SerializationTestClassWithSharedPointers( const char* id = NULL, SerializationTestClass* ptr = NULL ) : ReflectionObject( id ), m_ptr( ptr ) {}
+      ~SerializationTestClassWithSharedPointers() { m_ptr = NULL; }
    };
-   BEGIN_OBJECT( TestClassWithSharedPointers );
-      PROPERTY( TestClassWithSharedPointers*, m_ptr );
+   BEGIN_OBJECT( SerializationTestClassWithSharedPointers );
+      PROPERTY( SerializationTestClassWithSharedPointers*, m_ptr );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
 
-   struct TestClassNotifiable : public ReflectionObject
+   struct SerializationTestClassNotifiable : public ReflectionObject
    {
       DECLARE_STRUCT()
 
@@ -156,8 +156,8 @@ namespace // anonymous
       int      m_valPreSave;
       int      m_valPostLoad;
 
-      TestClassNotifiable( int val = 0 ) : m_valOrig( val ), m_valPreSave( 0 ), m_valPostLoad( 0 ) {}
-      virtual ~TestClassNotifiable() {}
+      SerializationTestClassNotifiable( int val = 0 ) : m_valOrig( val ), m_valPreSave( 0 ), m_valPostLoad( 0 ) {}
+      virtual ~SerializationTestClassNotifiable() {}
 
       // ----------------------------------------------------------------------
       // ReflectionObject implementation
@@ -165,7 +165,7 @@ namespace // anonymous
       void onObjectPreSave() { m_valPreSave = 1; }
       void onObjectLoaded() { m_valPostLoad = 1; }
    };
-   BEGIN_OBJECT( TestClassNotifiable );
+   BEGIN_OBJECT( SerializationTestClassNotifiable );
       PROPERTY( int, m_valOrig );
       PROPERTY( int, m_valPreSave );
       PROPERTY( int, m_valPostLoad );
@@ -215,15 +215,15 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DEFINE_TYPE_ID( TestClass )
-DEFINE_TYPE_ID( PatchedTestClass )
-DEFINE_TYPE_ID( TestClassNotifiable )
-DEFINE_TYPE_ID( TestClassWithSharedPointers )
-DEFINE_TYPE_ID( TestClassWithPtrArray )
-DEFINE_TYPE_ID( TestClassWithPODArray )
-DEFINE_TYPE_ID( TestClassWithPointers )
-DEFINE_TYPE_ID( DerivedTestClass )
-DEFINE_TYPE_ID( PatchedDerivedTestClass )
+DEFINE_TYPE_ID( SerializationTestClass )
+DEFINE_TYPE_ID( PatchedSerializationTestClass )
+DEFINE_TYPE_ID( SerializationTestClassNotifiable )
+DEFINE_TYPE_ID( SerializationTestClassWithSharedPointers )
+DEFINE_TYPE_ID( SerializationTestClassWithPtrArray )
+DEFINE_TYPE_ID( SerializationTestClassWithPODArray )
+DEFINE_TYPE_ID( SerializationTestClassWithPointers )
+DEFINE_TYPE_ID( DerivedSerializationTestClass )
+DEFINE_TYPE_ID( PatchedDerivedSerializationTestClass )
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -231,7 +231,7 @@ TEST( Serialization, simpleTypes )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() ); 
+   typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() ); 
    
    // prepare the serializers
    Array< byte > buffer;
@@ -241,12 +241,12 @@ TEST( Serialization, simpleTypes )
    ReflectionLoader loader( inStream );
 
    // serialize the object
-   TestClass obj( 5, 10 ); 
+   SerializationTestClass obj( 5, 10 ); 
    saver.save( obj );
    saver.flush();
 
    // restore the object
-   TestClass* restoredObject = loader.load< TestClass >();
+   SerializationTestClass* restoredObject = loader.load< SerializationTestClass >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( 5, restoredObject->m_val1 );
    CPPUNIT_ASSERT_EQUAL( 10, restoredObject->m_val2 );
@@ -262,7 +262,7 @@ TEST( Serialization, patching )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
+   typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
 
    // prepare the serializers
    Array< byte > buffer;
@@ -272,7 +272,7 @@ TEST( Serialization, patching )
    ReflectionLoader loader( inStream );
 
    // serialize the original object
-   TestClass obj( 6, 11 ); 
+   SerializationTestClass obj( 6, 11 ); 
    saver.save( obj );
    saver.flush();
 
@@ -280,10 +280,10 @@ TEST( Serialization, patching )
    typesRegistry.clear();
 
    // register the changed, "patched" type
-   typesRegistry.addSerializableType< PatchedTestClass >( "PatchedTestClass", new TSerializableTypeInstantiator< PatchedTestClass >(), "TestClass" );
+   typesRegistry.addSerializableType< PatchedSerializationTestClass >( "PatchedSerializationTestClass", new TSerializableTypeInstantiator< PatchedSerializationTestClass >(), "SerializationTestClass" );
 
    // restore the object
-   PatchedTestClass* restoredObject = loader.load< PatchedTestClass >();
+   PatchedSerializationTestClass* restoredObject = loader.load< PatchedSerializationTestClass >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( 11, restoredObject->m_val );
 
@@ -298,8 +298,8 @@ TEST( Serialization, inheritance )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
-   typesRegistry.addSerializableType< DerivedTestClass >( "DerivedTestClass", new TSerializableTypeInstantiator< DerivedTestClass >() );
+   typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
+   typesRegistry.addSerializableType< DerivedSerializationTestClass >( "DerivedSerializationTestClass", new TSerializableTypeInstantiator< DerivedSerializationTestClass >() );
 
    // prepare the serializers
    Array< byte > buffer;
@@ -309,17 +309,17 @@ TEST( Serialization, inheritance )
    ReflectionLoader loader( inStream );
 
    // serialize the object
-   DerivedTestClass obj( 1, 4, 7 ); 
+   DerivedSerializationTestClass obj( 1, 4, 7 ); 
    saver.save( obj );
    saver.flush();
 
    // restore the object
-   TestClass* restoredObjectBase = loader.load< TestClass >();
+   SerializationTestClass* restoredObjectBase = loader.load< SerializationTestClass >();
    CPPUNIT_ASSERT( restoredObjectBase != NULL );
    CPPUNIT_ASSERT_EQUAL( 1, restoredObjectBase->m_val1 );
    CPPUNIT_ASSERT_EQUAL( 4, restoredObjectBase->m_val2 );
 
-   DerivedTestClass* restoredObjectProper = static_cast< DerivedTestClass* >( restoredObjectBase );
+   DerivedSerializationTestClass* restoredObjectProper = static_cast< DerivedSerializationTestClass* >( restoredObjectBase );
    CPPUNIT_ASSERT_EQUAL( 7, restoredObjectProper->m_val3 );
 
    // cleanup
@@ -333,8 +333,8 @@ TEST( Serialization, patching_inheritanceMissingOneType )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
-   typesRegistry.addSerializableType< DerivedTestClass >( "DerivedTestClass", new TSerializableTypeInstantiator< DerivedTestClass >() );
+   typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
+   typesRegistry.addSerializableType< DerivedSerializationTestClass >( "DerivedSerializationTestClass", new TSerializableTypeInstantiator< DerivedSerializationTestClass >() );
 
    // prepare the serializers
    Array< byte > buffer;
@@ -344,21 +344,21 @@ TEST( Serialization, patching_inheritanceMissingOneType )
    ReflectionLoader loader( inStream );
 
    // serialize the original object
-   DerivedTestClass obj( 3, 2, 8 ); 
+   DerivedSerializationTestClass obj( 3, 2, 8 ); 
    saver.save( obj );
    saver.flush();
 
    // clear the type definitions and define a new type that has an inheritance definition removed
    typesRegistry.clear();
-   typesRegistry.addSerializableType< PatchedTestClass >( "PatchedTestClass", new TSerializableTypeInstantiator< PatchedTestClass >(), "TestClass" );
-   typesRegistry.addSerializableType< PatchedDerivedTestClass >( "PatchedDerivedTestClass", new TSerializableTypeInstantiator< PatchedDerivedTestClass >(), "DerivedTestClass" );
+   typesRegistry.addSerializableType< PatchedSerializationTestClass >( "PatchedSerializationTestClass", new TSerializableTypeInstantiator< PatchedSerializationTestClass >(), "SerializationTestClass" );
+   typesRegistry.addSerializableType< PatchedDerivedSerializationTestClass >( "PatchedDerivedSerializationTestClass", new TSerializableTypeInstantiator< PatchedDerivedSerializationTestClass >(), "DerivedSerializationTestClass" );
 
    // restore the object
-   PatchedTestClass* restoredObjectBase = loader.load< PatchedTestClass >();
+   PatchedSerializationTestClass* restoredObjectBase = loader.load< PatchedSerializationTestClass >();
    CPPUNIT_ASSERT( restoredObjectBase != NULL );
    CPPUNIT_ASSERT_EQUAL( 2, restoredObjectBase->m_val );
 
-   PatchedDerivedTestClass* restoredObjectProper = static_cast< PatchedDerivedTestClass* >( restoredObjectBase );
+   PatchedDerivedSerializationTestClass* restoredObjectProper = static_cast< PatchedDerivedSerializationTestClass* >( restoredObjectBase );
    CPPUNIT_ASSERT_EQUAL( 8, restoredObjectProper->m_val2 );
 
    // cleanup
@@ -372,7 +372,7 @@ TEST( Serialization, pointers )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClassWithPointers >( "TestClassWithPointers", new TSerializableTypeInstantiator< TestClassWithPointers >() );
+   typesRegistry.addSerializableType< SerializationTestClassWithPointers >( "SerializationTestClassWithPointers", new TSerializableTypeInstantiator< SerializationTestClassWithPointers >() );
 
    // prepare the serializers
    Array< byte > buffer;
@@ -382,13 +382,13 @@ TEST( Serialization, pointers )
    ReflectionLoader loader( inStream );
 
    // serialize the original object
-   TestClassWithPointers* obj1 = new TestClassWithPointers( 1 );
-   TestClassWithPointers obj2( 2, obj1 );
+   SerializationTestClassWithPointers* obj1 = new SerializationTestClassWithPointers( 1 );
+   SerializationTestClassWithPointers obj2( 2, obj1 );
    saver.save( obj2 );
    saver.flush();
 
    // restore the object
-   TestClassWithPointers* restoredObject = loader.load< TestClassWithPointers >();
+   SerializationTestClassWithPointers* restoredObject = loader.load< SerializationTestClassWithPointers >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( 2, restoredObject->m_val );
 
@@ -406,7 +406,7 @@ TEST( Serialization, podsArrays )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClassWithPODArray >( "TestClassWithPODArray", new TSerializableTypeInstantiator< TestClassWithPODArray >() );
+   typesRegistry.addSerializableType< SerializationTestClassWithPODArray >( "SerializationTestClassWithPODArray", new TSerializableTypeInstantiator< SerializationTestClassWithPODArray >() );
 
    // prepare the serializers
    Array< byte > buffer;
@@ -416,7 +416,7 @@ TEST( Serialization, podsArrays )
    ReflectionLoader loader( inStream );
 
    // serialize the original object
-   TestClassWithPODArray obj;
+   SerializationTestClassWithPODArray obj;
    obj.m_arr.push_back( 1 );
    obj.m_arr.push_back( 2 );
    obj.m_arr.push_back( 3 );
@@ -424,7 +424,7 @@ TEST( Serialization, podsArrays )
    saver.flush();
 
    // restore the object
-   TestClassWithPODArray* restoredObject = loader.load< TestClassWithPODArray >();
+   SerializationTestClassWithPODArray* restoredObject = loader.load< SerializationTestClassWithPODArray >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( (uint)3, restoredObject->m_arr.size() );
    CPPUNIT_ASSERT_EQUAL( 1, restoredObject->m_arr[0] );
@@ -442,8 +442,8 @@ TEST( Serialization, pointersArrays )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
-   typesRegistry.addSerializableType< TestClassWithPtrArray >( "TestClassWithPtrArray", new TSerializableTypeInstantiator< TestClassWithPtrArray >() );
+   typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
+   typesRegistry.addSerializableType< SerializationTestClassWithPtrArray >( "SerializationTestClassWithPtrArray", new TSerializableTypeInstantiator< SerializationTestClassWithPtrArray >() );
 
    // prepare the serializers
    Array< byte > buffer;
@@ -453,15 +453,15 @@ TEST( Serialization, pointersArrays )
    ReflectionLoader loader( inStream );
 
    // serialize the original object
-   TestClassWithPtrArray obj;
-   obj.m_arr.push_back( new TestClass( 1, 2 ) );
-   obj.m_arr.push_back( new TestClass( 3, 4 ) );
-   obj.m_arr.push_back( new TestClass( 5, 6 ) );
+   SerializationTestClassWithPtrArray obj;
+   obj.m_arr.push_back( new SerializationTestClass( 1, 2 ) );
+   obj.m_arr.push_back( new SerializationTestClass( 3, 4 ) );
+   obj.m_arr.push_back( new SerializationTestClass( 5, 6 ) );
    saver.save( obj );
    saver.flush();
 
    // restore the object
-   TestClassWithPtrArray* restoredObject = loader.load< TestClassWithPtrArray >();
+   SerializationTestClassWithPtrArray* restoredObject = loader.load< SerializationTestClassWithPtrArray >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( (uint)3, restoredObject->m_arr.size() );
    CPPUNIT_ASSERT( NULL != restoredObject->m_arr[0] );
@@ -485,8 +485,8 @@ TEST( Serialization, sharedPointers )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
-   typesRegistry.addSerializableType< TestClassWithSharedPointers >( "TestClassWithSharedPointers", new TSerializableTypeInstantiator< TestClassWithSharedPointers >() );
+   typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
+   typesRegistry.addSerializableType< SerializationTestClassWithSharedPointers >( "SerializationTestClassWithSharedPointers", new TSerializableTypeInstantiator< SerializationTestClassWithSharedPointers >() );
 
    // prepare the serializers
    Array< byte > buffer;
@@ -496,16 +496,16 @@ TEST( Serialization, sharedPointers )
    ReflectionLoader loader( inStream );
 
    // serialize the original object
-   TestClass* sharedObj = new TestClass( 1, 2 );
-   TestClassWithSharedPointers obj1( "obj1", sharedObj );
-   TestClassWithSharedPointers obj2( "obj1", sharedObj );
+   SerializationTestClass* sharedObj = new SerializationTestClass( 1, 2 );
+   SerializationTestClassWithSharedPointers obj1( "obj1", sharedObj );
+   SerializationTestClassWithSharedPointers obj2( "obj1", sharedObj );
    saver.save( obj1 );
    saver.save( obj2 );
    saver.flush();
 
    // restore the object
-   TestClassWithSharedPointers* restoredObject1 = loader.load< TestClassWithSharedPointers >();
-   TestClassWithSharedPointers* restoredObject2 = loader.load< TestClassWithSharedPointers >();
+   SerializationTestClassWithSharedPointers* restoredObject1 = loader.load< SerializationTestClassWithSharedPointers >();
+   SerializationTestClassWithSharedPointers* restoredObject2 = loader.load< SerializationTestClassWithSharedPointers >();
    CPPUNIT_ASSERT( restoredObject1 != NULL );
    CPPUNIT_ASSERT( restoredObject2 != NULL );
    CPPUNIT_ASSERT( restoredObject1 != restoredObject2 );
@@ -526,8 +526,8 @@ TEST( Serialization, instancesTracking )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
-   typesRegistry.addSerializableType< TestClassWithSharedPointers >( "TestClassWithSharedPointers", new TSerializableTypeInstantiator< TestClassWithSharedPointers >() );
+   typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
+   typesRegistry.addSerializableType< SerializationTestClassWithSharedPointers >( "SerializationTestClassWithSharedPointers", new TSerializableTypeInstantiator< SerializationTestClassWithSharedPointers >() );
 
    // set up an instances tracker
    ReflectionObjectsTrackerMock tracker;
@@ -541,17 +541,17 @@ TEST( Serialization, instancesTracking )
 
    // serialize the objects - first one, than the other, so that their dependencies
    // are mapped independent of each other
-   TestClass* sharedObj = new TestClass( 1, 2, "sharedObj" );
-   TestClassWithSharedPointers obj1( "obj1", sharedObj );
-   TestClassWithSharedPointers obj2( "obj2", sharedObj );
+   SerializationTestClass* sharedObj = new SerializationTestClass( 1, 2, "sharedObj" );
+   SerializationTestClassWithSharedPointers obj1( "obj1", sharedObj );
+   SerializationTestClassWithSharedPointers obj2( "obj2", sharedObj );
    saver.save( obj1 );
    saver.flush();
    saver.save( obj2 );
    saver.flush();
 
    // restore the object
-   TestClassWithSharedPointers* restoredObject1 = loader.load< TestClassWithSharedPointers >();
-   TestClassWithSharedPointers* restoredObject2 = loader.load< TestClassWithSharedPointers >();
+   SerializationTestClassWithSharedPointers* restoredObject1 = loader.load< SerializationTestClassWithSharedPointers >();
+   SerializationTestClassWithSharedPointers* restoredObject2 = loader.load< SerializationTestClassWithSharedPointers >();
    CPPUNIT_ASSERT( restoredObject1 != NULL );
    CPPUNIT_ASSERT( restoredObject2 != NULL );
    CPPUNIT_ASSERT( restoredObject1 != restoredObject2 );
@@ -568,79 +568,11 @@ TEST( Serialization, instancesTracking )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST( RTTI, isExactlyA )
-{
-   // setup reflection types
-   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
-   typesRegistry.addSerializableType< DerivedTestClass >( "DerivedTestClass", new TSerializableTypeInstantiator< DerivedTestClass >() );
-
-   DerivedTestClass instA;
-   TestClass instB;
-
-   CPPUNIT_ASSERT( instA.isExactlyA< DerivedTestClass >() );
-   CPPUNIT_ASSERT( !instA.isExactlyA< TestClass >() );
-   CPPUNIT_ASSERT( !instB.isExactlyA< DerivedTestClass >() );
-   CPPUNIT_ASSERT( instB.isExactlyA< TestClass >() );
-
-   CPPUNIT_ASSERT( instA.isExactlyA( SerializableReflectionType( "DerivedTestClass" ) ) );
-   CPPUNIT_ASSERT( !instA.isExactlyA( SerializableReflectionType( "TestClass" ) ) );
-   CPPUNIT_ASSERT( !instB.isExactlyA( SerializableReflectionType( "DerivedTestClass" ) ) );
-   CPPUNIT_ASSERT( instB.isExactlyA( SerializableReflectionType( "TestClass" ) ) );
-
-   // cleanup - and now we don't need to delete the restored objects ourselves - the tracker will take care of that
-   typesRegistry.clear();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST( RTTI, isA )
-{
-   // setup reflection types
-   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
-   typesRegistry.addSerializableType< DerivedTestClass >( "DerivedTestClass", new TSerializableTypeInstantiator< DerivedTestClass >() );
-   typesRegistry.addSerializableType< TestClassWithPODArray >( "TestClassWithPODArray", new TSerializableTypeInstantiator< TestClassWithPODArray >() );
-
-   DerivedTestClass instA;
-   TestClass instB;
-   TestClassWithPODArray instC;
-
-   CPPUNIT_ASSERT( instA.isA< DerivedTestClass >() );
-   CPPUNIT_ASSERT( instA.isA< TestClass >() );
-   CPPUNIT_ASSERT( !instA.isA< TestClassWithPODArray >() );
-
-   CPPUNIT_ASSERT( !instB.isA< DerivedTestClass >() );
-   CPPUNIT_ASSERT( instB.isA< TestClass >() );
-   CPPUNIT_ASSERT( !instB.isA< TestClassWithPODArray >() );
-
-   CPPUNIT_ASSERT( !instC.isA< DerivedTestClass >() );
-   CPPUNIT_ASSERT( !instC.isA< TestClass >() );
-   CPPUNIT_ASSERT( instC.isA< TestClassWithPODArray >() );
-
-   CPPUNIT_ASSERT( instA.isA( SerializableReflectionType( "DerivedTestClass" ) ) );
-   CPPUNIT_ASSERT( instA.isA( SerializableReflectionType( "TestClass" ) ) );
-   CPPUNIT_ASSERT( !instA.isA( SerializableReflectionType( "TestClassWithPODArray" ) ) );
-
-   CPPUNIT_ASSERT( !instB.isA( SerializableReflectionType( "DerivedTestClass" ) ) );
-   CPPUNIT_ASSERT( instB.isA( SerializableReflectionType( "TestClass" ) ) );
-   CPPUNIT_ASSERT( !instB.isA( SerializableReflectionType( "TestClassWithPODArray" ) ) );
-
-   CPPUNIT_ASSERT( !instC.isA( SerializableReflectionType( "DerivedTestClass" ) ) );
-   CPPUNIT_ASSERT( !instC.isA( SerializableReflectionType( "TestClass" ) ) );
-   CPPUNIT_ASSERT( instC.isA( SerializableReflectionType( "TestClassWithPODArray" ) ) );
-
-   // cleanup - and now we don't need to delete the restored objects ourselves - the tracker will take care of that
-   typesRegistry.clear();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 TEST( Serialization, loadSaveNotifications )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClassNotifiable >( "TestClassNotifiable", new TSerializableTypeInstantiator< TestClassNotifiable >() );
+   typesRegistry.addSerializableType< SerializationTestClassNotifiable >( "SerializationTestClassNotifiable", new TSerializableTypeInstantiator< SerializationTestClassNotifiable >() );
 
    // prepare the serializers
    Array< byte > buffer;
@@ -650,7 +582,7 @@ TEST( Serialization, loadSaveNotifications )
    ReflectionLoader loader( inStream );
 
    // serialize the object
-   TestClassNotifiable obj( 5 ); 
+   SerializationTestClassNotifiable obj( 5 ); 
 
    // check if the pre-notification managed to populate the other value
 
@@ -667,7 +599,7 @@ TEST( Serialization, loadSaveNotifications )
    saver.flush();
 
    // restore the object
-   TestClassNotifiable* restoredObject = loader.load< TestClassNotifiable >();
+   SerializationTestClassNotifiable* restoredObject = loader.load< SerializationTestClassNotifiable >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    
    CPPUNIT_ASSERT_EQUAL( 5, obj.m_valOrig );
@@ -681,64 +613,6 @@ TEST( Serialization, loadSaveNotifications )
 
    // cleanup
    delete restoredObject;
-   typesRegistry.clear();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST( Reflection, primitiveTypes )
-{
-   // setup reflection types
-   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addExternalType< int >( "int" );
-   typesRegistry.addExternalType< bool >( "bool" );
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
-
-   ReflectionType* intType = typesRegistry.find< int >();
-   CPPUNIT_ASSERT( NULL != intType );
-
-   ReflectionType* boolType = typesRegistry.find< bool >();
-   CPPUNIT_ASSERT( NULL != boolType );
-
-   ReflectionType* testClassType = typesRegistry.find< TestClass >();
-   CPPUNIT_ASSERT( NULL != testClassType );
-
-   // this one wasn't defined
-   ReflectionType* testNotifiableClassType = typesRegistry.find< TestClassNotifiable >();
-   CPPUNIT_ASSERT( NULL == testNotifiableClassType );
-
-   // and neither was this one
-   ReflectionType* uintType = typesRegistry.find< uint >();
-   CPPUNIT_ASSERT( NULL == uintType );
-
-   CPPUNIT_ASSERT( intType->isExactlyA( *boolType ) == false );
-   CPPUNIT_ASSERT( intType->isA( *boolType ) == false );
-
-   CPPUNIT_ASSERT( boolType->isExactlyA( *boolType ) == true );
-   CPPUNIT_ASSERT( boolType->isA( *boolType ) == true );
-
-   // cleanup
-   typesRegistry.clear();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-TEST( Reflection, casts )
-{
-   // setup reflection types
-   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   typesRegistry.addSerializableType< TestClass >( "TestClass", new TSerializableTypeInstantiator< TestClass >() );
-   typesRegistry.addSerializableType< DerivedTestClass >( "DerivedTestClass", new TSerializableTypeInstantiator< DerivedTestClass >() );
-
-   DerivedTestClass derrivedTestClassObj;
-
-   TestClass* testClassPtr = DynamicCast< TestClass >( &derrivedTestClassObj );
-   CPPUNIT_ASSERT( NULL != testClassPtr );
-
-   DerivedTestClass* derrivedTestClassPtr = DynamicCast< DerivedTestClass >( &derrivedTestClassObj );
-   CPPUNIT_ASSERT( NULL != derrivedTestClassPtr );
-
-   // cleanup
    typesRegistry.clear();
 }
 

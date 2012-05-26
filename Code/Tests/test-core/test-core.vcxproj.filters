@@ -167,6 +167,9 @@
     <ClCompile Include="MatrixUtilsTests.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="ReflectionTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">

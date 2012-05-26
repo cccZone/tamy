@@ -38,6 +38,7 @@ namespace
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_ABSTRACT_OBJECT( Resource )
+   PARENT( ReflectionObject);
    PROPERTY( std::vector< ResourceObject* >, m_managedObjects )
    PROPERTY( std::vector< int >, m_freeIds )
 END_OBJECT()

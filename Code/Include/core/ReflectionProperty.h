@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "core\types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,6 +79,16 @@ public:
     */
    virtual void* edit() = 0;
 
+   /**
+    * Tells if the property can aggregate other properties, or is it a leaf.
+    */
+   virtual bool isComposite() const = 0;
+
+   /**
+    * Returns an instance of ReflectionObject this property belongs to.
+    */
+   inline ReflectionObject* getHostObject() const { return m_observer; }
+
    // -------------------------------------------------------------------------
    // Type identification mechanism.
    // -------------------------------------------------------------------------
@@ -96,9 +107,17 @@ public:
    virtual const ReflectionType& getVirtualClass() const = 0;
 
    /**
-    * Returns the type the property is parametrized with.
+    * Returns the type the property is parametrized with ( static type, but accessed through a specific instance ).
     */
    virtual const ReflectionType& getPropertyClass() const = 0;
+
+   /**
+    * Another RTTI method is required:
+    *
+    * static const ReflectionType& getRTTIClass();
+    *
+    * It should return the static type of the represented property.
+    */
 
    // -------------------------------------------------------------------------
    // Observation mechanism
@@ -129,7 +148,7 @@ protected:
 /**
  * This specialized property allows to create properties for all types of data.
  */
-template <typename T>
+template< typename T >
 class TReflectionProperty : public ReflectionProperty
 {
 private:
@@ -149,6 +168,7 @@ public:
    // -------------------------------------------------------------------------
    void set( void* val );
    void* edit();
+   bool isComposite() const { return false; }
 
    // -------------------------------------------------------------------------
    // Type identification mechanism implementation.
@@ -163,8 +183,8 @@ public:
 /**
  * This specialized property allows to create properties for all types of pointers.
  */
-template <typename T>
-class TReflectionProperty<T*> : public ReflectionProperty
+template< typename T >
+class TReflectionProperty< T* > : public ReflectionProperty
 {
 private:
    T** m_val;
@@ -183,6 +203,7 @@ public:
    // -------------------------------------------------------------------------
    void set( void* val );
    void* edit();
+   bool isComposite() const { return false; }
 
    // -------------------------------------------------------------------------
    // Type identification mechanism implementation.
@@ -195,44 +216,39 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A marker interface for the properties that hold STL vectors.
+ * A marker interface for the properties that holds arrays of data.
  * It's needed so that we can write generic editors for those properties.
  */
-class VectorReflectionProperty : public ReflectionProperty
+class ReflectionPropertyArray : public ReflectionProperty
 {
 private:
    std::string             m_emptyStr;
 
 public:
-   virtual ~VectorReflectionProperty() {}
+   /**
+    * Constructor.
+    *
+    * @param hostObject
+    */
+   ReflectionPropertyArray( ReflectionObject* hostObject );
+   virtual ~ReflectionPropertyArray() {}
 
    /**
     * Returns the size of the array.
     */
-   virtual unsigned int size() const { return 0; }
+   virtual uint size() const = 0;
 
    /**
-    * Allows to view the properties of the selected item.
+    * Returns an object the specified array element contains.
     *
-    * @param idx     item's index
-    * @param view    properties viewer
+    * @param idx     element's index
     */
-   virtual void viewProperties( unsigned int idx, ReflectionPropertiesView& view ) {}
+   virtual ReflectionObject* getElement( uint idx ) = 0;
 
    // -------------------------------------------------------------------------
    // ReflectionProperty implementation
    // -------------------------------------------------------------------------
-   const std::string& getName() const { return m_emptyStr; }
-   const std::string& getLabel() const { return m_emptyStr; }
-   void set( void* val ) {}
-   void* edit() { return NULL; }
-
-   // -------------------------------------------------------------------------
-   // Type identification mechanism implementation.
-   // -------------------------------------------------------------------------
-   const ReflectionType& getVirtualClass() const;
-   const ReflectionType& getPropertyClass() const;
-   static const ReflectionType& getRTTIClass();
+   bool isComposite() const { return true; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -241,7 +257,7 @@ public:
  * This specialized property can hold a vector of pointers
  */
 template< typename T >
-class TReflectionProperty< std::vector< T* > > : public VectorReflectionProperty
+class TReflectionProperty< std::vector< T* > > : public ReflectionPropertyArray
 {
 private:
    std::vector<T*>*     m_val;
@@ -258,14 +274,21 @@ public:
    // -------------------------------------------------------------------------
    // VectorProperty implementation
    // -------------------------------------------------------------------------
-   unsigned int size() const;
-   void viewProperties( unsigned int idx, ReflectionPropertiesView& view );
+   uint size() const;
+   ReflectionObject* getElement( uint idx );
 
    // -------------------------------------------------------------------------
    // ReflectionProperty implementation
    // -------------------------------------------------------------------------
    void set( void* val );
    void* edit();
+
+   // -------------------------------------------------------------------------
+   // Type identification mechanism implementation.
+   // -------------------------------------------------------------------------
+   const ReflectionType& getVirtualClass() const;
+   const ReflectionType& getPropertyClass() const;
+   static const ReflectionType& getRTTIClass();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -277,10 +300,10 @@ template< typename T >
 class TEditableReflectionProperty
 {
 private:
-   ReflectionProperty&   m_property;
+   ReflectionProperty*   m_property;
 
 public:
-   TEditableReflectionProperty( ReflectionProperty& property );
+   TEditableReflectionProperty( ReflectionProperty* property );
    ~TEditableReflectionProperty();
 
    /**
