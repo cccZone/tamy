@@ -13,7 +13,6 @@
 class ReflectionSaver;
 class ReflectionLoader;
 class ReflectionProperty;
-class ReflectionProperties;
 class OutStream;
 class InStream;
 
@@ -100,7 +99,7 @@ public:
     *
     * @return reference to the created property
     */
-   virtual ReflectionProperty& createProperty( void* object, ReflectionProperties& outProperties ) const = 0;
+   virtual ReflectionProperty* createProperty( void* object ) const = 0;
 
 protected:
    /**
@@ -151,7 +150,7 @@ public:
    void load( void* object, InStream& stream ) const;
    void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
    void restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const;
-   ReflectionProperty& createProperty( void* object, ReflectionProperties& outProperties ) const;
+   ReflectionProperty* createProperty( void* object ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -175,7 +174,7 @@ public:
    void load( void* object, InStream& stream ) const;
    void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
    void restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const;
-   ReflectionProperty& createProperty( void* object, ReflectionProperties& outProperties ) const;
+   ReflectionProperty* createProperty( void* object ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -199,7 +198,7 @@ public:
    void load( void* object, InStream& stream ) const;
    void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
    void restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const;
-   ReflectionProperty& createProperty( void* object, ReflectionProperties& outProperties ) const;
+   ReflectionProperty* createProperty( void* object ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

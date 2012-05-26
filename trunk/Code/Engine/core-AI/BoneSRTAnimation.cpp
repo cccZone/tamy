@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( BoneSRTAnimation );
+   PARENT( ReflectionObject);
    PROPERTY( std::string, m_boneName );
    PROPERTY( std::vector< float >, m_orientation.m_time );
    PROPERTY( std::vector< Quaternion >, m_orientation.m_keys );

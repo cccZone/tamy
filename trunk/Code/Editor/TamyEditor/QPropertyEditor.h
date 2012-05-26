@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor\QPropertyEditor.h
 /// @brief  base class for all qt property editors
+#pragma once
 
 #include "core\ReflectionPropertyEditor.h"
 #include <QFrame>
@@ -20,8 +19,7 @@ class TamyEditor;
 /**
  * This base class will provide all editors with a uniform look & feel.
  */
-class QPropertyEditor : public QFrame,
-                        public TReflectionPropertyEditor<QPropertiesView>
+class QPropertyEditor : public QFrame, public ReflectionPropertyEditor
 {
    Q_OBJECT
 
@@ -35,8 +33,8 @@ public:
    // -------------------------------------------------------------------------
    // TReflectionPropertyEditor implementation
    // -------------------------------------------------------------------------
-   void initialize( QPropertiesView& view );
-   void deinitialize( QPropertiesView& view );
+   void initialize( ReflectionObjectEditor* parent );
+   void deinitialize( ReflectionObjectEditor* parent );
 
 protected:
    /**
@@ -44,7 +42,7 @@ protected:
     *
     * @param property   property this editor edits
     */
-   QPropertyEditor(const QString& propertyLabel);
+   QPropertyEditor( const QString& propertyLabel );
 
    /**
     * Called when the editor gets initialized.

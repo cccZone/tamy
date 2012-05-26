@@ -1,7 +1,18 @@
 /// @file   core\ReflectionPropertyEditor.h
 /// @brief  property editor interface
-#pragma once
+#ifndef _REFLECTION_PROPERTY_EDITOR_H
+#define _REFLECTION_PROPERTY_EDITOR_H
 
+#include <vector>
+#include "core\types.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+class ReflectionPropertyArray;
+class ReflectionPropertyEditorComposite;
+class ReflectionObjectEditor;
+class ReflectionObject;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -13,35 +24,120 @@ class ReflectionPropertyEditor
 {
 public:
    virtual ~ReflectionPropertyEditor() {}
+
+   /**
+    * This method will be called once the editor is created.
+    *
+    * @param parentEditor    object editor that manages this editor.
+    */
+   virtual void initialize( ReflectionObjectEditor* parentEditor ) = 0;
+
+   /**
+    * This method will be called when the editor is about to be destroyed.
+    *
+    * @param parentEditor    object editor that manages this editor.
+    */
+   virtual void deinitialize( ReflectionObjectEditor* parentEditor ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This specialized interface of property editor is what you should derive all
- * your editors from!
- * It's specialized to work with a specific type of view, allowing to treat it
- * as a factory of stuff required etc.
+ * This is a special type of editor that will be created whenever an array-property
+ * is encountered.
+ * It holds an array of object editors, which in turn hold other property editors.
  */
-template <typename ViewType>
-class TReflectionPropertyEditor : public ReflectionPropertyEditor
+class ReflectionPropertyEditorComposite : public ReflectionPropertyEditor
 {
+private:
+   ReflectionPropertyArray*                     m_arrayProperty;
+   std::vector< ReflectionObjectEditor* >		   m_editors;
+
 public:
-   virtual ~TReflectionPropertyEditor() {}
+   ReflectionPropertyEditorComposite( ReflectionPropertyArray* arrayProperty );
+   virtual ~ReflectionPropertyEditorComposite();
+
+   /**
+    * Adds a new editor to the composite.
+    */
+   inline void addObjectEditor( ReflectionObjectEditor* editor ) { m_editors.push_back( editor ); }
+
+   /**
+    * Returns the number of managed editors.
+    */
+   inline uint getEditorsCount() const { return m_editors.size(); }
+
+   /**
+    * Returns an editor for the specified element.
+    *
+    * CAUTION: some instances may be null, because some elements of the array
+    * may not have a proper editor defined.
+    *
+    * @param idx		index of an element we we want to retrieve an editor of
+    */
+   inline ReflectionObjectEditor* getEditor( int idx ) { return m_editors[idx]; }
+
+   // -------------------------------------------------------------------------
+   // TReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void initialize( ReflectionObjectEditor* parentEditor );
+   void deinitialize( ReflectionObjectEditor* parentEditor );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * This editor node holds the actual property editors.
+ */
+class ReflectionObjectEditor
+{
+private:
+   ReflectionObject*                               m_editedObject;
+   std::vector< ReflectionPropertyEditor* >		   m_editors;
+
+public:
+   ReflectionObjectEditor( ReflectionObject* m_editedObject );
+   virtual ~ReflectionObjectEditor();
+
+   /**
+    * Returns a reference to the edited object.
+    */
+   inline ReflectionObject& getEditedObject() { return *m_editedObject; }
+
+   /**
+    * Adds a new editor to the composite.
+    */
+   inline void addPropertyEditor( ReflectionPropertyEditor* editor ) { m_editors.push_back( editor ); }
+
+   /**
+    * Returns the number of property editors registered with this object editor.
+    */
+   inline uint getPropertiesCount() const { return m_editors.size(); }
+
+   /**
+    * Returns the specified property editor.
+    */
+   inline ReflectionPropertyEditor* getPropertyEditor( uint idx ) const { return m_editors[idx]; }
 
    /**
     * This method will be called once the editor is created.
     *
-    * @param view    view that manages the editor.
+    * @param parent    composite that manages the editor.
     */
-   virtual void initialize( ViewType& view ) = 0;
+   virtual void initialize( ReflectionPropertyEditorComposite* parentComposite );
 
    /**
     * This method will be called when the editor is about to be destroyed.
     *
-    * @param view    view that manages the editor.
+    * @param parent    composite that manages the editor.
     */
-   virtual void deinitialize( ViewType& view ) = 0;
+   virtual void deinitialize( ReflectionPropertyEditorComposite* parentComposite );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "core\ReflectionPropertyEditor.inl"
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _REFLECTION_PROPERTY_EDITOR_H

@@ -173,7 +173,7 @@ const ReflectionType& TReflectionProperty< T* >::getRTTIClass()
 
 template< typename T >
 TReflectionProperty< std::vector< T* > >::TReflectionProperty( ReflectionObject* hostObject, std::vector< T* >* val ) 
-   : ReflectionProperty( hostObject )
+   : ReflectionPropertyArray( hostObject )
    , m_val( val )
 {
 }
@@ -192,7 +192,7 @@ void TReflectionProperty< std::vector< T* > >::set( void* val )
 template< typename T >
 void* TReflectionProperty< std::vector< T* > >::edit()
 {
-   return this;
+   return m_val;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -206,13 +206,39 @@ unsigned int TReflectionProperty< std::vector< T* > >::size() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TReflectionProperty< std::vector< T* > >::viewProperties( unsigned int idx, ReflectionPropertiesView& view )
+ReflectionObject* TReflectionProperty< std::vector< T* > >::getElement( uint idx )
 {
-   T* item = ( *m_val )[idx];
-   if ( item )
-   {
-      item->viewProperties( view );
-   }
+   return ( *m_val )[idx];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const ReflectionType& TReflectionProperty< std::vector< T* > >::getVirtualClass() const
+{
+   return getRTTIClass();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const ReflectionType& TReflectionProperty< std::vector< T* > >::getPropertyClass() const
+{
+   const ReflectionType* type = ReflectionTypesRegistry::getInstance().find< T >();
+   ASSERT_MSG( type != NULL, "This property type doesn't exist" );
+
+   return *type;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const ReflectionType& TReflectionProperty< std::vector< T* > >::getRTTIClass()
+{
+   const ReflectionType* type = ReflectionTypesRegistry::getInstance().find< T >();
+   ASSERT_MSG( type != NULL, "This property type doesn't exist" );
+
+   return *type;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -220,8 +246,8 @@ void TReflectionProperty< std::vector< T* > >::viewProperties( unsigned int idx,
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-TEditableReflectionProperty< T >::TEditableReflectionProperty( ReflectionProperty& property )
-: m_property( property )
+TEditableReflectionProperty< T >::TEditableReflectionProperty( ReflectionProperty* property )
+   : m_property( property )
 {
 }
 
@@ -230,6 +256,8 @@ TEditableReflectionProperty< T >::TEditableReflectionProperty( ReflectionPropert
 template< typename T >
 TEditableReflectionProperty< T >::~TEditableReflectionProperty()
 {
+   delete m_property;
+   m_property = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -237,7 +265,7 @@ TEditableReflectionProperty< T >::~TEditableReflectionProperty()
 template< typename T >
 const std::string& TEditableReflectionProperty< T >::getLabel() const
 {
-   return m_property.getLabel();
+   return m_property->getLabel();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -245,7 +273,7 @@ const std::string& TEditableReflectionProperty< T >::getLabel() const
 template< typename T >
 void TEditableReflectionProperty< T >::set( const T& val ) 
 {
-   m_property.set( ( void* )( &val ) );
+   m_property->set( ( void* )( &val ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -253,7 +281,7 @@ void TEditableReflectionProperty< T >::set( const T& val )
 template< typename T >
 const T& TEditableReflectionProperty< T >::get() const 
 {
-   void* val = m_property.edit();
+   void* val = m_property->edit();
    ASSERT_MSG( val != NULL, "Non-pointer properties must be initialized before thay can be edited" );
 
    T* typedVal = reinterpret_cast< T* >( val );
@@ -266,7 +294,7 @@ const T& TEditableReflectionProperty< T >::get() const
 template< typename T >
 T& TEditableReflectionProperty< T >::get() 
 {
-   void* val = m_property.edit();
+   void* val = m_property->edit();
    ASSERT_MSG( val != NULL, "Non-pointer properties must be initialized before thay can be edited" );
 
    T* typedVal = reinterpret_cast< T* >( val );
@@ -279,7 +307,7 @@ T& TEditableReflectionProperty< T >::get()
 template< typename T >
 const ReflectionType& TEditableReflectionProperty< T >::getType() const
 {
-   return m_property.getPropertyClass();
+   return m_property->getPropertyClass();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

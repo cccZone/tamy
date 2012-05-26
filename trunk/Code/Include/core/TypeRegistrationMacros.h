@@ -111,6 +111,7 @@
          typesRegistry.addExternalType< float >( "float" );                   \
          typesRegistry.addExternalType< double >( "double" );                 \
          typesRegistry.addExternalType< std::string >( "std::string" );       \
+         typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL, "" ) ; \
       }                                                                       \
    } registerClass##EnumType;                                                 \
    DEFINE_TYPE_ID( int )                                                      \
@@ -126,7 +127,8 @@
    DEFINE_TYPE_ID( double )                                                   \
    DEFINE_TYPE_ID( std::string )                                              \
    DEFINE_TYPE_ID( ReflectionEnum )                                           \
-   DEFINE_TYPE_ID( ReflectionObject )
+   DEFINE_TYPE_ID( ReflectionObject )														\
+   DEFINE_TYPE_ID( TResourceHandle< ReflectionObject > )
 
 #endif
 

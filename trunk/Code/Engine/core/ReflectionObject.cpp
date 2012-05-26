@@ -1,8 +1,13 @@
 #include "core/ReflectionObject.h"
 #include "core/ReflectionType.h"
 #include "core/ReflectionPropertiesView.h"
-#include "core/ReflectionProperties.h"
+#include "core/ReflectionProperty.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( ReflectionObject )
+END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,12 +29,7 @@ bool ReflectionObject::isA( const SerializableReflectionType& referenceType ) co
 
 void ReflectionObject::viewProperties( ReflectionPropertiesView& view )
 {
-   const SerializableReflectionType& thisType = getVirtualRTTI();
-
-   ReflectionProperties* properties = new ReflectionProperties( *this, thisType.m_name );
-   thisType.collectProperties( this, *properties );
-
-   view.set( properties );
+   view.set( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

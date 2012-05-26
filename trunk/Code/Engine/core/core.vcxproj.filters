@@ -229,9 +229,6 @@
     <ClCompile Include="ReflectionTypeID.cpp">
       <Filter>RTTI\Core</Filter>
     </ClCompile>
-    <ClCompile Include="ReflectionProperties.cpp">
-      <Filter>RTTI\Properties</Filter>
-    </ClCompile>
     <ClCompile Include="ReflectionProperty.cpp">
       <Filter>RTTI\Properties</Filter>
     </ClCompile>
@@ -259,6 +256,12 @@
     </ClCompile>
     <ClCompile Include="VectorUtil.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionPropertyEditor.cpp">
+      <Filter>RTTI\Properties</Filter>
+    </ClCompile>
+    <ClCompile Include="ReflectionPropertiesView.cpp">
+      <Filter>RTTI\Properties</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -527,9 +530,6 @@
     <ClInclude Include="..\..\Include\core\ReflectionTypeID.h">
       <Filter>RTTI\Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\ReflectionProperties.h">
-      <Filter>RTTI\Properties</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\ReflectionPropertiesView.h">
       <Filter>RTTI\Properties</Filter>
     </ClInclude>
@@ -570,6 +570,9 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\math.h" />
+    <ClInclude Include="..\..\Include\core\ReflectionMacros.h">
+      <Filter>RTTI\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">
@@ -695,9 +698,6 @@
     <None Include="..\..\Include\core\ReflectionTypeID.inl">
       <Filter>RTTI\Core</Filter>
     </None>
-    <None Include="..\..\Include\core\ReflectionProperties.inl">
-      <Filter>RTTI\Properties</Filter>
-    </None>
     <None Include="..\..\Include\core\ReflectionPropertiesView.inl">
       <Filter>RTTI\Properties</Filter>
     </None>
@@ -712,6 +712,9 @@
     </None>
     <None Include="..\..\Include\core\Vector.inl">
       <Filter>Math</Filter>
+    </None>
+    <None Include="..\..\Include\core\ReflectionPropertyEditor.inl">
+      <Filter>RTTI\Properties</Filter>
     </None>
   </ItemGroup>
 </Project>

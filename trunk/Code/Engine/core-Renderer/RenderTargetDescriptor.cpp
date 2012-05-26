@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RenderTargetDescriptor );
+   PARENT( ReflectionObject );
    PROPERTY( std::string, m_id );
    PROPERTY( bool, m_isDynamic );
    PROPERTY( unsigned int, m_initialWidth );

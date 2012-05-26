@@ -5,55 +5,32 @@
 
 #include "core\Component.h"
 #include "core\ReflectionPropertiesView.h"
-#include "QPropertyEditor.h"
+#include <QFrame>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class TamyEditor;
-class QToolBox;
-class QWidget;
+class QVBoxLayout;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Properties browser widget.
  */
-class QPropertiesView : public QPropertyEditor, 
-                        public TReflectionPropertiesView<QPropertiesView>
+class QPropertiesView : public QFrame, public ReflectionPropertiesView
 {
    Q_OBJECT
 
 private:
-   QToolBox*      m_toolBox;
-   QLayout*       m_currWidget;
+   QVBoxLayout*    m_layout;
 
 public:
    QPropertiesView();
    ~QPropertiesView();
 
-
-   // -------------------------------------------------------------------------
-   // Editor widgets management
-   // -------------------------------------------------------------------------
-   /**
-    * This method adds a new single-property editor widget to the properties
-    * editor window.
-    *
-    * @param editorWidget  widget of the editor we want to add
-    */
-   void addPropertyEditor( QWidget* editorWidget );
-
-   /**
-    * This method removes a single-property editor widget from the properties
-    * editor window.
-    *
-    * @param editorWidget  widget of the editor we want to remove
-    */
-   void removePropertyEditor( QWidget& editorWidget );
-
 protected:
-   void onSet( ReflectionProperties& properties );
+   void onSet( ReflectionObjectEditor* rootEditor );
 
 private:
    void initFactory();

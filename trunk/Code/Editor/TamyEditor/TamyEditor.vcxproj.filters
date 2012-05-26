@@ -31,9 +31,6 @@
     <Filter Include="Widgets\PropertiesEditorWidget">
       <UniqueIdentifier>{f09e027f-0b6b-4f2f-a703-991f4acc9dc3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widgets\PropertiesEditorWidget\Editors">
-      <UniqueIdentifier>{fd5f3c59-02db-4b10-b334-3fd96042b190}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ResourceEditors\RenderingPipelineEditor\Blocks">
       <UniqueIdentifier>{684af1ca-eef5-4500-a6a7-ed0877e768ec}</UniqueIdentifier>
     </Filter>
@@ -140,6 +137,12 @@
     </Filter>
     <Filter Include="ResourceEditors\GeometryShaderEditor\Blocks">
       <UniqueIdentifier>{8ce575a6-c7f5-4b87-bd6d-feed0c213feb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\PropertiesEditorWidget\PropertyEditors">
+      <UniqueIdentifier>{fd5f3c59-02db-4b10-b334-3fd96042b190}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\PropertiesEditorWidget\NodeEditors">
+      <UniqueIdentifier>{a51fb409-d6e1-47e5-972e-e835d7b19c32}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -418,9 +421,6 @@
     <ClCompile Include="tamyeditor.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ArrayPropertyEditor.cpp">
-      <Filter>QtImplementation\Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_BoolPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
     </ClCompile>
@@ -444,9 +444,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_TreeWidget.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ArrayPropertyEditor.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_BoolPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
@@ -484,23 +481,20 @@
     <ClCompile Include="GeneratedFiles\Debug\moc_Vec3PropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="ArrayPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
-    </ClCompile>
     <ClCompile Include="BoolPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="MtxPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="ResourcePropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="StringPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="Vec3PropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="SceneTreeViewer.cpp">
       <Filter>Widgets\SceneTreeViewer</Filter>
@@ -565,9 +559,6 @@
     <ClCompile Include="QPropertiesView.cpp">
       <Filter>Widgets\PropertiesEditorWidget</Filter>
     </ClCompile>
-    <ClCompile Include="QPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget</Filter>
-    </ClCompile>
     <ClCompile Include="RPBPostProcess.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
@@ -575,7 +566,7 @@
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="IntPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_IntPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
@@ -584,7 +575,7 @@
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="FloatPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="RPBStart.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
@@ -609,7 +600,7 @@
     </ClCompile>
     <ClCompile Include="TypesRegistry.cpp" />
     <ClCompile Include="EnumPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_EnumPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
@@ -744,7 +735,7 @@
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
     <ClCompile Include="ObjectPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_ObjectPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
@@ -828,7 +819,7 @@
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
     <ClCompile Include="SurfacePropertiesPropertyEditor.cpp">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="MaterialEditor.cpp">
       <Filter>ResourceEditors\MaterialEditor</Filter>
@@ -923,6 +914,33 @@
     <ClCompile Include="GBVec4.cpp">
       <Filter>ResourceEditors\GeometryShaderEditor\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="QReflectionPropertyEditorComposite.cpp">
+      <Filter>Widgets\PropertiesEditorWidget\NodeEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QReflectionObjectEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QReflectionObjectEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_QReflectionObjectEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="QReflectionObjectEditor.cpp">
+      <Filter>Widgets\PropertiesEditorWidget\NodeEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QReflectionPropertyEditorComposite.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QReflectionPropertyEditorComposite.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_QReflectionPropertyEditorComposite.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="QPropertyEditor.cpp">
+      <Filter>Widgets\PropertiesEditorWidget\NodeEditors</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -957,29 +975,26 @@
     <CustomBuild Include="tamyeditor.h">
       <Filter>Core</Filter>
     </CustomBuild>
-    <CustomBuild Include="ArrayPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
-    </CustomBuild>
     <CustomBuild Include="BoolPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="FloatPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="IntPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="MtxPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="ResourcePropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="StringPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="Vec3PropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="SceneTreeViewer.h">
       <Filter>Widgets\SceneTreeViewer</Filter>
@@ -1017,9 +1032,6 @@
     <CustomBuild Include="renderingpipelineeditor.ui">
       <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="QPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget</Filter>
-    </CustomBuild>
     <CustomBuild Include="QPropertiesView.h">
       <Filter>Widgets\PropertiesEditorWidget</Filter>
     </CustomBuild>
@@ -1033,7 +1045,7 @@
       <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="EnumPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="skeletonanimationeditor.ui">
       <Filter>QtImplementation\Form Files</Filter>
@@ -1063,7 +1075,7 @@
       <Filter>ResourceEditors\TextureEditor</Filter>
     </CustomBuild>
     <CustomBuild Include="ObjectPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="FragmentShaderEditor.h">
       <Filter>ResourceEditors\ShaderEditors</Filter>
@@ -1087,7 +1099,7 @@
       <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
     <CustomBuild Include="SurfacePropertiesPropertyEditor.h">
-      <Filter>Widgets\PropertiesEditorWidget\Editors</Filter>
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="MaterialEditor.h">
       <Filter>ResourceEditors\MaterialEditor</Filter>
@@ -1100,6 +1112,15 @@
     </CustomBuild>
     <CustomBuild Include="geometryshadereditor.ui">
       <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QReflectionObjectEditor.h">
+      <Filter>Widgets\PropertiesEditorWidget\NodeEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QReflectionPropertyEditorComposite.h">
+      <Filter>Widgets\PropertiesEditorWidget\NodeEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QPropertyEditor.h">
+      <Filter>Widgets\PropertiesEditorWidget\NodeEditors</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>
