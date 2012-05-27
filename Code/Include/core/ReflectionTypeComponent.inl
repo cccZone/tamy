@@ -25,7 +25,7 @@ void ReflectionTypeComponent::savePtr( const T* dataPtr, const ReflectionSaver& 
 
    if ( dataPtr != NULL )
    {
-      uint dependencyIdx = dependenciesMapper.findDependency( reinterpret_cast< const ReflectionObject& >( *dataPtr ) );
+      uint dependencyIdx = dependenciesMapper.findDependency( reinterpret_cast< const ReflectionObject* >( dataPtr ) );
       stream << dependencyIdx;
    }
 }
@@ -148,7 +148,9 @@ void TMemberField< T* >::mapDependencies( const void* object, ReflectionSaver& d
    const char* memberPtr = (const char*)object + m_dataOffset;
    T* const * dataPtr = reinterpret_cast< T* const * >( memberPtr );
 
-   dependenciesCollector.addDependency( reinterpret_cast< const ReflectionObject& >( **dataPtr ) );
+   // add the stored object as a dependency
+   const T* storedObject = static_cast< const T* >( *dataPtr ) ;
+   dependenciesCollector.addDependency( storedObject );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -160,7 +162,8 @@ void TMemberField< T* >::restoreDependencies( void* object, const ReflectionLoad
    T** dataPtr = reinterpret_cast< T** >( memberPtr );
 
    // the pointer contains a dependency index - now we just have to find a corresponding object
-   *dataPtr = reinterpret_cast< T* >( dependenciesMapper.findDependency( (uint)(*dataPtr) ) );
+   T* restoredObject = reinterpret_cast< T* >( dependenciesMapper.findDependency( (uint)(*dataPtr) ) );
+   *dataPtr = restoredObject;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -239,7 +242,9 @@ void TMemberField< std::vector< T* > >::mapDependencies( const void* object, Ref
    uint count = dataPtr->size();
    for ( uint i = 0; i < count; ++i )
    {
-      dependenciesCollector.addDependency( reinterpret_cast< const ReflectionObject& >( *(*dataPtr)[i] ) );
+      // add the stored object as a dependency
+      const T* storedObject = reinterpret_cast< const T* >( (*dataPtr)[i] ) ;
+      dependenciesCollector.addDependency( storedObject );
    }
 }
 
@@ -255,7 +260,8 @@ void TMemberField< std::vector< T* > >::restoreDependencies( void* object, const
    for ( uint i = 0; i < count; ++i )
    {
       // the pointers contain indices to the actual dependencies - now we just have to find corresponding objects
-      (*dataPtr)[i] = reinterpret_cast< T* >( dependenciesMapper.findDependency( (uint)(*dataPtr)[i] ) );
+      T* restoredObject = reinterpret_cast< T* >( dependenciesMapper.findDependency( (uint)(*dataPtr)[i] ) );
+      (*dataPtr)[i] = restoredObject;
    }
 }
 

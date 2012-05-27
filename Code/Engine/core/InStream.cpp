@@ -13,6 +13,7 @@ InStream& InStream::operator>>( std::string& val )
    // load its contents
    char* tmpStr = new char[len + 1];
    load( (void*)tmpStr, len );
+   tmpStr[len] = 0;
    val = std::string( tmpStr );
    delete tmpStr;
 
