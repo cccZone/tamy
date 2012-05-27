@@ -66,6 +66,14 @@ public:
 private:
    void initialize();
    bool loadDependencies( InStream& stream );
+
+   
+   /**
+    * Restores the dependencies on the objects the specified object references.
+    *
+    * @param object              restored object
+    */
+   void restoreDependencies( ReflectionObject* object ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

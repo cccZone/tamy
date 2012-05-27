@@ -320,7 +320,7 @@ void ResourcesManager::save( const FilePath& name )
       File* file = m_filesystem->open( name, std::ios_base::out | fileAccessMode );
       OutFileStream fileStream( file );
       ReflectionSaver saver( fileStream );
-      saver.save( *res );
+      saver.save( res );
    }
 }
 

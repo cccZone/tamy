@@ -25,6 +25,9 @@ private:
    std::vector< uint >                       m_serializedObjectsIndices;
    OutStream&                                m_outStream;
 
+   // objects added as the dependencies the dependencies of which have not yet been maped
+   std::vector< const ReflectionObject* >    m_objectsToMap;
+
 public:
    /**
     * Constructor.
@@ -50,8 +53,7 @@ public:
     *
     * @param object
     */
-   template< typename T >
-   void save( const T& object );
+   void save( const ReflectionObject* object );
 
    /**
     * Flushes the serialized data out to the output stream, thus finishing
@@ -64,7 +66,7 @@ public:
     *
     * @param   dependency
     */
-   void addDependency( const ReflectionObject& dependency );
+   void addDependency( const ReflectionObject* dependency );
 
    /**
     * Returns a pointer to a dependency with the specified index.
@@ -72,8 +74,15 @@ public:
     * @param   reference to a dependency
     * @return  index of the dependency
     */
-   inline uint findDependency( const ReflectionObject& dependency ) const;
+   inline uint findDependency( const ReflectionObject* dependency ) const;
 
+private:
+   /**
+    * Maps the dependencies on the objects the specified object references.
+    *
+    * @param object              mapped object
+    */
+   void mapDependencies( const ReflectionObject* object );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

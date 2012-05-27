@@ -179,7 +179,7 @@ TEST( ReflectionEnum, enumMembers )
 
    // serialize the object
    TestEnumClass obj( Wensday ); 
-   saver.save( obj );
+   saver.save( &obj );
    saver.flush();
 
    // restore the object

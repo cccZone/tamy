@@ -19,12 +19,52 @@ ReflectionSaver::~ReflectionSaver()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ReflectionSaver::addDependency( const ReflectionObject& dependency )
+void ReflectionSaver::save( const ReflectionObject* object )
 {
+   // Check if the object isn't already stored somewhere in the dependencies map.
+   // If it is, there's no point in serializing it again.
    uint count = m_dependencies.size();
    for ( uint i = 0; i < count; ++i )
    {
-      if ( m_dependencies[i] == &dependency )
+      if ( m_dependencies[i] == object )
+      {
+         // it was already serialized - just add its dependency index to the saved objects list
+         m_serializedObjectsIndices.push_back( i );
+         return;
+      }
+   }
+
+   // Create a map of all pointers we're about to serialize.
+   // In other words - map the dependencies the saved object has
+
+   // ...and the very first dependency is our object itself - memorize its index so that we know
+   // which object on the long list of serialized objects was the serialized one
+   m_objectsToMap.clear();
+   m_serializedObjectsIndices.push_back( m_dependencies.size() );
+   addDependency( object );
+
+   // map its dependencies
+   while( !m_objectsToMap.empty() )
+   {
+      const ReflectionObject* objectToMap = m_objectsToMap.back(); m_objectsToMap.pop_back();
+      ASSERT( objectToMap != NULL );
+      mapDependencies( objectToMap );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionSaver::addDependency( const ReflectionObject* dependency )
+{
+   if ( !dependency )
+   {
+      return;
+   }
+
+   uint count = m_dependencies.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      if ( m_dependencies[i] == dependency )
       {
          // this dependency is already known
          return;
@@ -32,10 +72,37 @@ void ReflectionSaver::addDependency( const ReflectionObject& dependency )
    }
 
    // notify the object that it's about to be serialized
-   const_cast< ReflectionObject& >( dependency ).onObjectPreSave();
+   const_cast< ReflectionObject* >( dependency )->onObjectPreSave();
 
    // this is a new dependency
-   m_dependencies.push_back( &dependency );
+   m_dependencies.push_back( dependency );
+   m_objectsToMap.push_back( dependency );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionSaver::mapDependencies( const ReflectionObject* object )
+{
+   const SerializableReflectionType& objType = object->getVirtualRTTI();
+
+   // create a list of classes in the inheritance hierarchy and start mapping their dependencies
+   std::list< const SerializableReflectionType* > reflectionTypesList;
+   objType.mapTypesHierarchy( reflectionTypesList );
+
+   // map the dependencies on particular subtypes
+   Array< byte > tempSerializationDataBuf;
+   while( !reflectionTypesList.empty() )
+   {
+      const SerializableReflectionType* nextType = reflectionTypesList.front();
+      reflectionTypesList.pop_front();
+
+      unsigned int membersCount = nextType->m_memberFields.size();
+      for ( uint i = 0; i < membersCount; ++i )
+      {
+         ReflectionTypeComponent* member = nextType->m_memberFields[i];
+         member->mapDependencies( object, *this );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

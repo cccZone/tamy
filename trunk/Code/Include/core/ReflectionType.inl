@@ -86,7 +86,7 @@ void SerializableReflectionType::save( const T& object, const ReflectionSaver& d
       // hierarchy, we can still deserialize the object properly
       OutArrayStream tempDataStream( tempSerializationDataBuf );
 
-      nextType->saveMemberFields( object, dependenciesMapper, tempDataStream );
+      nextType->saveMemberFields( &object, dependenciesMapper, tempDataStream );
 
       // ok - serialize the chunk size
       stream << tempSerializationDataBuf.size();
@@ -159,7 +159,7 @@ T* SerializableReflectionType::load( InStream& stream )
       }
       else
       {
-         deserializedHierarchyType->loadMemberFields( *object, stream );
+         deserializedHierarchyType->loadMemberFields( object, stream );
       }
    }
 
@@ -169,7 +169,7 @@ T* SerializableReflectionType::load( InStream& stream )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void SerializableReflectionType::saveMemberFields( const T& object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const
+void SerializableReflectionType::saveMemberFields( const T* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const
 {
    // serialize the member
    unsigned int membersCount = m_memberFields.size();
@@ -186,7 +186,7 @@ void SerializableReflectionType::saveMemberFields( const T& object, const Reflec
       stream << member->m_id;
 
       // save the member data
-      member->save( &object, dependenciesMapper, tempDataStream );
+      member->save( object, dependenciesMapper, tempDataStream );
 
       // write the size of the serialized data, and the data itself
       stream << tempSerializationDataBuf.size();
@@ -200,7 +200,7 @@ void SerializableReflectionType::saveMemberFields( const T& object, const Reflec
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void SerializableReflectionType::loadMemberFields( T& object, InStream& stream ) const
+void SerializableReflectionType::loadMemberFields( T* object, InStream& stream ) const
 {
    uint serializedMembersCount = 0;
    stream >> serializedMembersCount;
@@ -229,57 +229,7 @@ void SerializableReflectionType::loadMemberFields( T& object, InStream& stream )
       else
       {
          // deserialize the member data
-         member->load( &object, stream );
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-void SerializableReflectionType::mapDependencies( const T& object, ReflectionSaver& dependenciesCollector ) const
-{
-   // create a list of classes in the inheritance hierarchy and start mapping their dependencies
-   std::list< const SerializableReflectionType* > reflectionTypesList;
-   mapTypesHierarchy( reflectionTypesList );
-
-   // map the dependencies on particular subtypes
-   Array< byte > tempSerializationDataBuf;
-   while( !reflectionTypesList.empty() )
-   {
-      const SerializableReflectionType* nextType = reflectionTypesList.front();
-      reflectionTypesList.pop_front();
-
-      unsigned int membersCount = nextType->m_memberFields.size();
-      for ( uint i = 0; i < membersCount; ++i )
-      {
-         ReflectionTypeComponent* member = nextType->m_memberFields[i];
-         member->mapDependencies( &object, dependenciesCollector );
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T >
-void SerializableReflectionType::restoreDependencies( T& object, const ReflectionLoader& dependenciesMapper ) const
-{
-   // create a list of classes in the inheritance hierarchy and start restoring their dependencies
-   std::list< const SerializableReflectionType* > reflectionTypesList;
-   mapTypesHierarchy( reflectionTypesList );
-
-   // restore the dependencies on particular subtypes
-   Array< byte > tempSerializationDataBuf;
-   while( !reflectionTypesList.empty() )
-   {
-      const SerializableReflectionType* nextType = reflectionTypesList.front();
-      reflectionTypesList.pop_front();
-
-      unsigned int membersCount = nextType->m_memberFields.size();
-      for ( uint i = 0; i < membersCount; ++i )
-      {
-         ReflectionTypeComponent* member = nextType->m_memberFields[i];
-         member->restoreDependencies( &object, dependenciesMapper );
+         member->load( object, stream );
       }
    }
 }

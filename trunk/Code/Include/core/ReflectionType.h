@@ -94,7 +94,6 @@ public:
    std::string                                        m_patchedName;
    unsigned int                                       m_patchedId;
 
-private:
    SerializableTypeInstantiator*                      m_instantiator;
    std::vector< ReflectionTypeComponent* >            m_memberFields;
 
@@ -180,6 +179,11 @@ public:
     */
    void collectImplementations( std::vector< const SerializableReflectionType* >& outDerivedTypes ) const;
 
+   /**
+    * Returns a list of all types present in this type's hierarchy.
+    */
+   void mapTypesHierarchy( std::list< const SerializableReflectionType* >& outReflectionTypesList ) const;
+
    // ----------------------------------------------------------------------
    // Patching support
    // ----------------------------------------------------------------------
@@ -216,23 +220,6 @@ public:
    template< typename T >
    static T* load( InStream& stream );
 
-   /**
-    * Maps the dependencies on the objects the specified object references.
-    *
-    * @param object              mapped object
-    * @param dependenciesMapper  dependencies (embedded objects) collector
-    */
-   template< typename T >
-   void mapDependencies( const T& object, ReflectionSaver& dependenciesCollector ) const;
-
-   /**
-    * Restores the dependencies on the objects the specified object references.
-    *
-    * @param object              restored object
-    * @param dependenciesMapper  dependencies (embedded objects) mapper
-    */
-   template< typename T >
-   void restoreDependencies( T& object, const ReflectionLoader& dependenciesMapper ) const;
 
    // ----------------------------------------------------------------------
    // ReflectionType implementation
@@ -241,12 +228,10 @@ public:
 
 private:
    template< typename T >
-   void saveMemberFields( const T& object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const;
+   void saveMemberFields( const T* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const;
 
    template< typename T >
-   void loadMemberFields( T& object, InStream& stream ) const;
-
-   void mapTypesHierarchy( std::list< const SerializableReflectionType* >& outReflectionTypesList ) const;
+   void loadMemberFields( T* object, InStream& stream ) const;
 
 };
 

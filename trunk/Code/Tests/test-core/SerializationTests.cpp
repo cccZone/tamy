@@ -137,13 +137,13 @@ namespace // anonymous
    {
       DECLARE_STRUCT()
 
-      SerializationTestClass*        m_ptr;
+      ReflectionObject*        m_ptr;
 
-      SerializationTestClassWithSharedPointers( const char* id = NULL, SerializationTestClass* ptr = NULL ) : ReflectionObject( id ), m_ptr( ptr ) {}
+      SerializationTestClassWithSharedPointers( const char* id = NULL, ReflectionObject* ptr = NULL ) : ReflectionObject( id ), m_ptr( ptr ) {}
       ~SerializationTestClassWithSharedPointers() { m_ptr = NULL; }
    };
    BEGIN_OBJECT( SerializationTestClassWithSharedPointers );
-      PROPERTY( SerializationTestClassWithSharedPointers*, m_ptr );
+      PROPERTY( ReflectionObject*, m_ptr );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
@@ -241,8 +241,8 @@ TEST( Serialization, simpleTypes )
    ReflectionLoader loader( inStream );
 
    // serialize the object
-   SerializationTestClass obj( 5, 10 ); 
-   saver.save( obj );
+   SerializationTestClass obj( 5, 10, "obj.m_uniqueId" ); 
+   saver.save( &obj );
    saver.flush();
 
    // restore the object
@@ -250,6 +250,10 @@ TEST( Serialization, simpleTypes )
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( 5, restoredObject->m_val1 );
    CPPUNIT_ASSERT_EQUAL( 10, restoredObject->m_val2 );
+
+   // check if the unique IDs have been restored correctly
+   CPPUNIT_ASSERT_EQUAL( obj.m_uniqueId, restoredObject->m_uniqueId );
+
 
    // cleanup
    delete restoredObject;
@@ -273,7 +277,7 @@ TEST( Serialization, patching )
 
    // serialize the original object
    SerializationTestClass obj( 6, 11 ); 
-   saver.save( obj );
+   saver.save( &obj );
    saver.flush();
 
    // clear the types registry
@@ -310,7 +314,7 @@ TEST( Serialization, inheritance )
 
    // serialize the object
    DerivedSerializationTestClass obj( 1, 4, 7 ); 
-   saver.save( obj );
+   saver.save( &obj );
    saver.flush();
 
    // restore the object
@@ -345,7 +349,7 @@ TEST( Serialization, patching_inheritanceMissingOneType )
 
    // serialize the original object
    DerivedSerializationTestClass obj( 3, 2, 8 ); 
-   saver.save( obj );
+   saver.save( &obj );
    saver.flush();
 
    // clear the type definitions and define a new type that has an inheritance definition removed
@@ -384,7 +388,7 @@ TEST( Serialization, pointers )
    // serialize the original object
    SerializationTestClassWithPointers* obj1 = new SerializationTestClassWithPointers( 1 );
    SerializationTestClassWithPointers obj2( 2, obj1 );
-   saver.save( obj2 );
+   saver.save( &obj2 );
    saver.flush();
 
    // restore the object
@@ -420,7 +424,7 @@ TEST( Serialization, podsArrays )
    obj.m_arr.push_back( 1 );
    obj.m_arr.push_back( 2 );
    obj.m_arr.push_back( 3 );
-   saver.save( obj );
+   saver.save( &obj );
    saver.flush();
 
    // restore the object
@@ -457,7 +461,7 @@ TEST( Serialization, pointersArrays )
    obj.m_arr.push_back( new SerializationTestClass( 1, 2 ) );
    obj.m_arr.push_back( new SerializationTestClass( 3, 4 ) );
    obj.m_arr.push_back( new SerializationTestClass( 5, 6 ) );
-   saver.save( obj );
+   saver.save( &obj );
    saver.flush();
 
    // restore the object
@@ -485,6 +489,7 @@ TEST( Serialization, sharedPointers )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< SerializationTestClassWithSharedPointers >( "SerializationTestClassWithSharedPointers", new TSerializableTypeInstantiator< SerializationTestClassWithSharedPointers >() );
 
@@ -499,8 +504,8 @@ TEST( Serialization, sharedPointers )
    SerializationTestClass* sharedObj = new SerializationTestClass( 1, 2 );
    SerializationTestClassWithSharedPointers obj1( "obj1", sharedObj );
    SerializationTestClassWithSharedPointers obj2( "obj1", sharedObj );
-   saver.save( obj1 );
-   saver.save( obj2 );
+   saver.save( &obj1 );
+   saver.save( &obj2 );
    saver.flush();
 
    // restore the object
@@ -509,6 +514,8 @@ TEST( Serialization, sharedPointers )
    CPPUNIT_ASSERT( restoredObject1 != NULL );
    CPPUNIT_ASSERT( restoredObject2 != NULL );
    CPPUNIT_ASSERT( restoredObject1 != restoredObject2 );
+   CPPUNIT_ASSERT( restoredObject1->m_ptr != NULL );
+   CPPUNIT_ASSERT( restoredObject2->m_ptr != NULL );
    CPPUNIT_ASSERT( restoredObject1->m_ptr == restoredObject2->m_ptr );
    CPPUNIT_ASSERT( sharedObj != restoredObject1->m_ptr );
 
@@ -517,6 +524,56 @@ TEST( Serialization, sharedPointers )
    delete restoredObject1;
    delete restoredObject2;
    delete sharedObj;
+   typesRegistry.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST( Serialization, deepNestingOfTheSharedPointers )
+{
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+
+   typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
+   typesRegistry.addSerializableType< SerializationTestClassWithSharedPointers >( "SerializationTestClassWithSharedPointers", new TSerializableTypeInstantiator< SerializationTestClassWithSharedPointers >() );
+
+   // prepare the serializers
+   Array< byte > buffer;
+   OutArrayStream outStream( buffer );
+   InArrayStream inStream( buffer );
+   ReflectionSaver saver( outStream );
+   ReflectionLoader loader( inStream );
+
+   // serialize the original object
+   SerializationTestClass* sharedObjLevel2 = new SerializationTestClass( 1, 2 );
+   SerializationTestClassWithSharedPointers* sharedObjLevel1 = new SerializationTestClassWithSharedPointers( "sharedObjLevel1", sharedObjLevel2 );
+   SerializationTestClassWithSharedPointers obj1( "obj1", sharedObjLevel1 );
+   SerializationTestClassWithSharedPointers obj2( "obj2", sharedObjLevel1 );
+   saver.save( &obj1 );
+   saver.save( &obj2 );
+   saver.flush();
+
+   // restore the object
+   SerializationTestClassWithSharedPointers* restoredObject1 = loader.load< SerializationTestClassWithSharedPointers >();
+   SerializationTestClassWithSharedPointers* restoredObject2 = loader.load< SerializationTestClassWithSharedPointers >();
+   CPPUNIT_ASSERT( restoredObject1 != NULL );
+   CPPUNIT_ASSERT( restoredObject2 != NULL );
+   CPPUNIT_ASSERT( restoredObject1 != restoredObject2 );
+   CPPUNIT_ASSERT( restoredObject1->m_ptr != NULL );
+   CPPUNIT_ASSERT( restoredObject2->m_ptr != NULL );
+   CPPUNIT_ASSERT( restoredObject1->m_ptr == restoredObject2->m_ptr );
+   CPPUNIT_ASSERT( sharedObjLevel1 != restoredObject1->m_ptr );
+
+   SerializationTestClassWithSharedPointers* restoredSharedObjLevel1 = dynamic_cast< SerializationTestClassWithSharedPointers * >( restoredObject1->m_ptr );
+   CPPUNIT_ASSERT( NULL != restoredSharedObjLevel1->m_ptr );
+   CPPUNIT_ASSERT( sharedObjLevel2 != restoredSharedObjLevel1->m_ptr );
+
+   // cleanup
+   delete restoredObject1;
+   delete restoredObject2;
+   delete restoredSharedObjLevel1;
+   delete sharedObjLevel2;
+   delete sharedObjLevel1;
    typesRegistry.clear();
 }
 
@@ -544,9 +601,9 @@ TEST( Serialization, instancesTracking )
    SerializationTestClass* sharedObj = new SerializationTestClass( 1, 2, "sharedObj" );
    SerializationTestClassWithSharedPointers obj1( "obj1", sharedObj );
    SerializationTestClassWithSharedPointers obj2( "obj2", sharedObj );
-   saver.save( obj1 );
+   saver.save( &obj1 );
    saver.flush();
-   saver.save( obj2 );
+   saver.save( &obj2 );
    saver.flush();
 
    // restore the object
@@ -590,7 +647,7 @@ TEST( Serialization, loadSaveNotifications )
    CPPUNIT_ASSERT_EQUAL( 0, obj.m_valPreSave );
    CPPUNIT_ASSERT_EQUAL( 0, obj.m_valPostLoad );
 
-   saver.save( obj );
+   saver.save( &obj );
 
    CPPUNIT_ASSERT_EQUAL( 5, obj.m_valOrig );
    CPPUNIT_ASSERT_EQUAL( 1, obj.m_valPreSave );

@@ -125,12 +125,38 @@ bool ReflectionLoader::loadDependencies( InStream& stream )
    // now that we have the dependencies, it's time to map them in the loaded objects
    for ( uint i = 0; i < dependenciesCount; ++i )
    {
-      ReflectionObject& object = *m_dependencies[i];
-      const SerializableReflectionType& depTypeInfo = object.getVirtualRTTI();
-      depTypeInfo.restoreDependencies( object, *this );
+      ReflectionObject* object = m_dependencies[i];
+      restoreDependencies( object );
    }
 
    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionLoader::restoreDependencies( ReflectionObject* object ) const
+{
+   const SerializableReflectionType& objType = object->getVirtualRTTI();
+
+   // create a list of classes in the inheritance hierarchy and start restoring their dependencies
+   std::list< const SerializableReflectionType* > reflectionTypesList;
+   objType.mapTypesHierarchy( reflectionTypesList );
+
+   // restore the dependencies on particular subtypes
+   Array< byte > tempSerializationDataBuf;
+   while( !reflectionTypesList.empty() )
+   {
+      const SerializableReflectionType* nextType = reflectionTypesList.front();
+      reflectionTypesList.pop_front();
+
+      unsigned int membersCount = nextType->m_memberFields.size();
+      for ( uint i = 0; i < membersCount; ++i )
+      {
+         ReflectionTypeComponent* member = nextType->m_memberFields[i];
+         member->restoreDependencies( object, *this );
+
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
