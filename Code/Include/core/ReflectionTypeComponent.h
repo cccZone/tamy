@@ -11,7 +11,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class ReflectionSaver;
-class ReflectionLoader;
+class ReflectionDependenciesCallback;
 class ReflectionProperty;
 class OutStream;
 class InStream;
@@ -89,7 +89,7 @@ public:
     * @param object                    restored object
     * @param dependenciesMapper        dependencies (embedded objects) mapper
     */
-   virtual void restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const = 0;
+   virtual void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const = 0;
 
    /**
     * Creates a property for this type member of the specified object.
@@ -149,7 +149,7 @@ public:
    void save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const;
    void load( void* object, InStream& stream ) const;
    void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
-   void restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const;
+   void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const;
    ReflectionProperty* createProperty( void* object ) const;
 };
 
@@ -173,7 +173,7 @@ public:
    void save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const;
    void load( void* object, InStream& stream ) const;
    void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
-   void restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const;
+   void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const;
    ReflectionProperty* createProperty( void* object ) const;
 };
 
@@ -197,7 +197,7 @@ public:
    void save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const;
    void load( void* object, InStream& stream ) const;
    void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
-   void restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const;
+   void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const;
    ReflectionProperty* createProperty( void* object ) const;
 };
 

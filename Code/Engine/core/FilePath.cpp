@@ -103,7 +103,7 @@ std::string FilePath::toAbsolutePath( const Filesystem& fs ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-OutStream& operator<<( OutStream& serializer, FilePath& path )
+OutStream& operator<<( OutStream& serializer, const FilePath& path )
 {
    serializer << path.m_relativePath;
    return serializer;

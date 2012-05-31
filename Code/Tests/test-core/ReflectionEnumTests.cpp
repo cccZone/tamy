@@ -1,7 +1,5 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core\ReflectionEnum.h"
-#include "core\InArrayStream.h"
-#include "core\OutArrayStream.h"
 #include "core\ReflectionType.h"
 #include "core\ReflectionTypesRegistry.h"
 #include "core\ReflectionSaver.h"
@@ -9,6 +7,9 @@
 #include "core\ReflectionObject.h"
 #include "core\ReflectionPropertyEditor.h"
 #include "core\ReflectionPropertiesView.h"
+#include "core\Resource.h"
+#include "core\InArrayStream.h"
+#include "core\OutArrayStream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -168,14 +169,14 @@ TEST( ReflectionEnum, enumMembers )
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
    typesRegistry.addEnumType< WeekDays >( "WeekDays" );
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< TestEnumClass >( "TestEnumClass", new TSerializableTypeInstantiator< TestEnumClass >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
    ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
 
    // serialize the object
    TestEnumClass obj( Wensday ); 
@@ -183,7 +184,9 @@ TEST( ReflectionEnum, enumMembers )
    saver.flush();
 
    // restore the object
-   TestEnumClass* restoredObject = loader.load< TestEnumClass >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   TestEnumClass* restoredObject = loader.getNextObject< TestEnumClass >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( Wensday, restoredObject->m_val );
 

@@ -263,6 +263,9 @@
     <ClCompile Include="ReflectionPropertiesView.cpp">
       <Filter>RTTI\Properties</Filter>
     </ClCompile>
+    <ClCompile Include="ReflectionSerializationUtil.cpp">
+      <Filter>RTTI\Serialization</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -572,6 +575,12 @@
     <ClInclude Include="..\..\Include\core\math.h" />
     <ClInclude Include="..\..\Include\core\ReflectionMacros.h">
       <Filter>RTTI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionSerializationMacros.h">
+      <Filter>RTTI\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionSerializationUtil.h">
+      <Filter>RTTI\Serialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

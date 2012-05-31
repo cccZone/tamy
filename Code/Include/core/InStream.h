@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <string>
+#include "core/types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,6 +40,13 @@ public:
     * @param val     loaded string
     */
    InStream& operator>>( std::string& val );
+
+   /**
+    * Skips a certain part of the stream.
+    *
+    * @param sizeInBytes
+    */
+   void skip( uint sizeInBytes );
 
    /**
     * Loading implementation.

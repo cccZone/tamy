@@ -1,7 +1,6 @@
 #include "core\ResourcesManager.h"
 #include "core\IProgressObserver.h"
-#include "core\InFileStream.h"
-#include "core\OutFileStream.h"
+#include "core\ReflectionSerializationUtil.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -210,37 +209,6 @@ void ResourcesManager::scan( const FilePath& rootDir, FilesystemScanner& scanner
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* ResourcesManager::loadResource( const FilePath& filePath )
-{
-   IProgressObserver* observer = createObserver();
-
-   Resource* res = NULL;
-   try
-   {
-      observer->initialize( "Loading engine resource " + filePath, 1 );
-
-      std::string extension = filePath.extractExtension();
-      std::ios_base::openmode fileAccessMode = Resource::getFileAccessMode( extension );
-
-      File* file = m_filesystem->open( filePath, std::ios_base::in | fileAccessMode );
-      InFileStream fileStream( file );
-      ReflectionLoader loader( fileStream );
-      res = loader.load< Resource >();
-
-      observer->advance();
-   }
-   catch( std::exception& ex )
-   {
-      ASSERT_MSG( false, ex.what() );
-   }
-
-   delete observer;
-
-   return res;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 Resource& ResourcesManager::create( const FilePath& filePath )
 {
    Resource* res = findResource( filePath );
@@ -257,22 +225,50 @@ Resource& ResourcesManager::create( const FilePath& filePath )
          {
             res = resourceClass->instantiate< Resource >();
          }
-      }
 
-      // set the path of the resource and register it with the manager
-      if ( res )
-      {
-         res->setFilePath( filePath );
-         addResource( res );
+         // set the path of the resource and register it with the manager
+         if ( res )
+         {
+            res->setFilePath( filePath );
+            addResource( res );
+         }
       }
    }
    
    if ( res == NULL )
    {
-      throw std::runtime_error( "Resource not found" );
+      ASSERT_MSG( false, "Resource not found" );
    }
 
    return *res;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Resource* ResourcesManager::loadResource( const FilePath& filePath )
+{
+   // initialize the progress observer
+   IProgressObserver* progressObserver = createObserver();
+   Resource* res = ReflectionSerializationUtil::loadResource( filePath, progressObserver );
+   delete progressObserver;
+
+   return res;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesManager::save( const FilePath& filePath )
+{
+   Resource* resourceToSave = findResource( filePath );
+   if ( !resourceToSave )
+   {
+      // nothing to save
+      return;
+   }
+
+   IProgressObserver* progressObserver = createObserver();
+   ReflectionSerializationUtil::saveResource( resourceToSave, progressObserver );
+   delete progressObserver;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -304,23 +300,6 @@ void ResourcesManager::free( Resource* resource )
    if ( it != m_resources.end() )
    {
       m_resources.erase( it );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesManager::save( const FilePath& name )
-{
-   Resource* res = findResource( name );
-   if ( res != NULL )
-   {
-      std::string extension = name.extractExtension();
-      std::ios_base::openmode fileAccessMode = Resource::getFileAccessMode( extension );
-
-      File* file = m_filesystem->open( name, std::ios_base::out | fileAccessMode );
-      OutFileStream fileStream( file );
-      ReflectionSaver saver( fileStream );
-      saver.save( res );
    }
 }
 

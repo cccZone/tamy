@@ -91,6 +91,7 @@
 #include "core/ReflectionSaver.h"
 #include "core/ReflectionLoader.h"
 #include "core/ReflectionObjectsTracker.h"
+#include "core/ReflectionSerializationUtil.h"
 
 // ----------------------------------------------------------------------------
 // Resources

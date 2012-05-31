@@ -13,6 +13,13 @@ class InStream;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * This class represents a path to a file in our file system.
+ *
+ * It doesn't necessarily have to be a path to the file on the hard drive,
+ * because Tamy archive files may contain multiple resource files, which when loaded
+ * will populate our file system with corresponding files ( @see ReflectionSaver )
+ */
 class FilePath
 {
 private:
@@ -38,6 +45,11 @@ public:
     * @param rhs
     */
    FilePath( const FilePath& rhs );
+
+   /**
+    * Tells if the path is empty.
+    */
+   inline bool empty() const { return m_relativePath.length() == 0; }
 
    /**
     * Returns the relative file path as a raw string.
@@ -91,7 +103,7 @@ public:
    // -------------------------------------------------------------------------
    // Serialization support
    // -------------------------------------------------------------------------
-   friend OutStream& operator<<( OutStream& serializer, FilePath& path );
+   friend OutStream& operator<<( OutStream& serializer, const FilePath& path );
    friend InStream& operator>>( InStream& serializer, FilePath& path );
 
    // -------------------------------------------------------------------------

@@ -1,6 +1,5 @@
 #include "core/InStream.h"
-#include "core/types.h"
-
+#include "core/Array.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,6 +17,15 @@ InStream& InStream::operator>>( std::string& val )
    delete tmpStr;
 
    return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void InStream::skip( uint sizeInBytes )
+{
+   Array< byte > skipBuf( sizeInBytes ); 
+   skipBuf.resize( sizeInBytes );
+   load( (byte*)skipBuf, sizeInBytes );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

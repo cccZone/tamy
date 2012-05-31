@@ -82,7 +82,6 @@ TEST( RoundBuffer, manyAllocations )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-
 TEST( RoundBuffer, performance )
 {
    RoundBuffer buffer( 4096 );

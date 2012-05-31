@@ -78,7 +78,8 @@ void Resource::setFilePath( const FilePath& path, ResourcesManager* host )
 {
    if ( m_host != host )
    {
-      throw std::logic_error( "Only the host manager can move a resource to a different path" );
+      ASSERT_MSG( false, "Only the host manager can move a resource to a different path" );
+      return;
    }
    m_filePath = path;
 }
@@ -89,7 +90,8 @@ void Resource::saveResource()
 {
    if ( m_host == NULL )
    {
-      throw std::runtime_error( "Only managed resources can be saved using this method" );
+      ASSERT_MSG( false, "Only managed resources can be saved using this method" );
+      return;
    }
 
    onResourceSave( *m_host );
@@ -177,7 +179,8 @@ void Resource::registerResource( const std::string& extension,
    }
    else
    {
-      throw std::runtime_error( std::string( "Resource with extension ") + extension + " is already registered");
+      std::string errMsg = std::string( "Resource with extension ") + extension + " is already registered";
+      ASSERT_MSG(false, errMsg.c_str() );
    }
 }
 
@@ -241,13 +244,13 @@ ResourceObject& Resource::getObject( int objectId )
    if ( objectId >= (int)m_managedObjects.size() )
    {
       ASSERT_MSG( objectId < (int)m_managedObjects.size(), "Trying to access an object that doesn't exist" );
-      throw std::runtime_error( "Trying to access an object that doesn't exist" );
+      return *((ResourceObject*)NULL);
    }
 
    if ( (int)m_managedObjects[ objectId ] == NULL )
    {
       ASSERT_MSG( m_managedObjects[ objectId ] != NULL, "Trying to access an object that was removed" );
-      throw std::runtime_error( "Trying to access an object that was removed" );
+      return *((ResourceObject*)NULL);
    }
 
    return *( m_managedObjects[ objectId ] );

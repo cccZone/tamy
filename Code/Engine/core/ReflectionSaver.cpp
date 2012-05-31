@@ -1,12 +1,14 @@
 #include "core/ReflectionSaver.h"
 #include "core/OutStream.h"
-#include "core/OutArrayStream.h"
 #include "core/ReflectionObject.h"
+#include "core/Resource.h"
+#include "core/ReflectionSerializationMacros.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ReflectionSaver::ReflectionSaver( OutStream& stream ) 
-   : m_outStream( stream )
+ReflectionSaver::ReflectionSaver( OutStream& outStream ) 
+   : m_outStream( outStream )
 {
 }
 
@@ -41,7 +43,7 @@ void ReflectionSaver::save( const ReflectionObject* object )
    // which object on the long list of serialized objects was the serialized one
    m_objectsToMap.clear();
    m_serializedObjectsIndices.push_back( m_dependencies.size() );
-   addDependency( object );
+   addInternalDependency( object );
 
    // map its dependencies
    while( !m_objectsToMap.empty() )
@@ -61,6 +63,41 @@ void ReflectionSaver::addDependency( const ReflectionObject* dependency )
       return;
    }
 
+   if ( dependency->isA< Resource >() )
+   {
+      addExternalDependency( dependency );
+   }
+   else
+   {
+      addInternalDependency( dependency );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionSaver::addExternalDependency( const ReflectionObject* dependency )
+{
+   // check the uniqueness of the dependency
+   uint count = m_externalDependencies.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      if ( m_externalDependencies[i] == dependency )
+      {
+         // this external dependency is already known
+         return;
+      }
+   }
+
+   // don't save a resource, flag it as an external dependency instead
+   const Resource* res = static_cast< const Resource* >( dependency );
+   m_externalDependencies.push_back( res );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionSaver::addInternalDependency( const ReflectionObject* dependency )
+{
+   // check the uniqueness of the dependency
    uint count = m_dependencies.size();
    for ( uint i = 0; i < count; ++i )
    {
@@ -109,46 +146,16 @@ void ReflectionSaver::mapDependencies( const ReflectionObject* object )
 
 void ReflectionSaver::flush()
 {
-   // First, we need to serialize the dependencies map.
-   {
-      // number of stored dependencies
-      uint dependenciesCount = m_dependencies.size();
-      m_outStream << dependenciesCount;
+   // First, serialize the external dependencies
+   saveExternalDependencies( m_outStream );
 
-      // dependencies themselves
-      for ( uint i = 0; i < dependenciesCount; ++i )
-      {
-         // store the unique id of the type so that we can look it up quickly afterwards
-         m_outStream << m_dependencies[i]->m_uniqueId;
-
-         // save the data to a temp buffer, 'cause we'll be needing a skip size of the data
-         // so that if we manage to find this instance in our records during deserialization ( providing
-         // that we keep track of course ), we can just skip reading it
-         {
-            Array< byte > tmpDataBuf;
-            OutArrayStream tmpDataStream( tmpDataBuf );
-
-            const SerializableReflectionType& depTypeInfo = m_dependencies[i]->getVirtualRTTI();
-            depTypeInfo.save( *m_dependencies[i], *this, tmpDataStream );
-
-            // store the size of the data
-            uint dataSize = tmpDataBuf.size();
-            m_outStream << dataSize;
-
-            // and then the data itself
-            m_outStream.save( (byte*)tmpDataBuf, dataSize );
-         }
-      }
-
-      // clear the dependencies list
-      m_dependencies.clear();
-   }
+   // Next, we need to serialize the dependencies map.
+   saveInternalDependencies( m_outStream );
 
    // now serialize the indices of the saved objects
    {
       uint savedObjectsCount = m_serializedObjectsIndices.size();
       m_outStream << savedObjectsCount;
-
       for ( uint i = 0; i < savedObjectsCount; ++i )
       {
          m_outStream << m_serializedObjectsIndices[i];
@@ -156,6 +163,135 @@ void ReflectionSaver::flush()
 
       // clear the saved objects indices list
       m_serializedObjectsIndices.clear();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionSaver::saveExternalDependencies( OutStream& outStream )
+{
+   // use a temporary stream, 'cause we need to write a skip size for this piece of data
+   Array< byte > tmpDataBuf;
+   OutArrayStream tmpDataStream( tmpDataBuf );
+
+   // number of stored dependencies
+   {
+      uint dependenciesCount = m_externalDependencies.size();
+      tmpDataStream << dependenciesCount;
+
+      // dependencies themselves
+      for ( uint i = 0; i < dependenciesCount; ++i )
+      {
+         tmpDataStream << m_externalDependencies[i]->getFilePath();
+      }
+   }
+
+   // store the size of the data
+   uint dataSize = tmpDataBuf.size();
+   outStream << dataSize;
+
+   // and then the data itself
+   outStream.save( (byte*)tmpDataBuf, dataSize );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionSaver::saveInternalDependencies( OutStream& outStream )
+{
+   // number of stored dependencies
+   uint dependenciesCount = m_dependencies.size();
+   outStream << dependenciesCount;
+
+   // dependencies themselves
+   for ( uint i = 0; i < dependenciesCount; ++i )
+   {
+      // store the unique id of the type so that we can look it up quickly afterwards
+      outStream << m_dependencies[i]->m_uniqueId;
+
+      // save the data to a temp buffer, 'cause we'll be needing a skip size of the data
+      // so that if we manage to find this instance in our records during deserialization ( providing
+      // that we keep track of course ), we can just skip reading it
+      {
+         Array< byte > tmpDataBuf;
+         OutArrayStream tmpDataStream( tmpDataBuf );
+
+         const SerializableReflectionType& depTypeInfo = m_dependencies[i]->getVirtualRTTI();
+         depTypeInfo.save( *m_dependencies[i], *this, tmpDataStream );
+
+         // store the size of the data
+         uint dataSize = tmpDataBuf.size();
+         outStream << dataSize;
+
+         // and then the data itself
+         outStream.save( (byte*)tmpDataBuf, dataSize );
+      }
+   }
+
+   // clear the dependencies list
+   m_dependencies.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+uint ReflectionSaver::findDependency( const ReflectionObject* dependency ) const
+{
+   if ( dependency->isA< Resource >() )
+   {
+      const Resource* resDep = static_cast< const Resource* >( dependency );
+
+      // it's an external dependency
+      uint dependenciesCount = m_externalDependencies.size();
+      for ( uint i = 0; i < dependenciesCount; ++i )
+      {
+         if ( m_externalDependencies[i] == resDep )
+         {
+            // found it - mark that's an external dependency by setting the 
+            return CREATE_EXTERNAL_DEPENDENCY_INDEX( i );
+         }
+      }
+   }
+   else
+   {
+      // it's an internal dependency
+      uint dependenciesCount = m_dependencies.size();
+      for ( uint i = 0; i < dependenciesCount; ++i )
+      {
+         if ( m_dependencies[i] == dependency )
+         {
+            // found it
+            return CREATE_INTERNAL_DEPENDENCY_INDEX( i );
+         }
+      }
+   }
+
+   // we didn't map such a dependency - how did it got queried for then?
+   ASSERT_MSG( false, "Unmapped dependency queried - check the dependency mapping related code" );
+   return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionSaver::collectExternalDependencies( std::vector< FilePath >& outDependencies ) const
+{
+   uint count = m_externalDependencies.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      const FilePath& newDependencyPath = m_externalDependencies[i]->getFilePath();
+      bool isUnique = true;
+      uint currResourcesCount = outDependencies.size();
+      for ( uint j = 0; j < currResourcesCount; ++j )
+      {
+         if ( outDependencies[j] == newDependencyPath )
+         {
+            isUnique = false;
+            break;
+         }
+      }
+
+      if ( isUnique )
+      {
+         outDependencies.push_back( newDependencyPath );
+      }
    }
 }
 
