@@ -9,14 +9,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-T* ReflectionLoader::load()
+T* ReflectionLoader::getNextObject()
 {
-   // perform a lazy load
-   if ( m_loadedObjects.empty() )
-   {
-      initialize();
-   }
-
    // get the first object from the list, or return NULL if it's empty
    if ( m_loadedObjects.empty() )
    {
@@ -24,11 +18,9 @@ T* ReflectionLoader::load()
    }
    else
    {
+      // notify all loaded objects that it's been successfully loaded
       ReflectionObject* obj = m_loadedObjects.front();
       m_loadedObjects.pop_front();
-
-      // notify the object that it's been successfully loaded
-      obj->onObjectLoaded();
 
       return static_cast< T* >( obj );
    }
@@ -36,20 +28,5 @@ T* ReflectionLoader::load()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ReflectionObject* ReflectionLoader::findDependency( uint dependencyIdx ) const
-{
-   if ( dependencyIdx == 0 )
-   {
-      // this is a NULL reference
-      return NULL;
-   }
-   else
-   {
-      --dependencyIdx;
-      return ( dependencyIdx < m_dependencies.size() ) ? m_dependencies[dependencyIdx] : NULL;
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
 
 #endif // _REFLECTION_LOADER_H

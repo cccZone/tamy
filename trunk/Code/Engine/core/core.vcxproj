@@ -104,6 +104,7 @@
     <ClCompile Include="ReflectionProperty.cpp" />
     <ClCompile Include="ReflectionPropertyEditor.cpp" />
     <ClCompile Include="ReflectionSaver.cpp" />
+    <ClCompile Include="ReflectionSerializationUtil.cpp" />
     <ClCompile Include="ReflectionType.cpp" />
     <ClCompile Include="ReflectionTypeComponent.cpp" />
     <ClCompile Include="ReflectionTypeID.cpp" />
@@ -166,6 +167,8 @@
     <ClInclude Include="..\..\Include\core\ReflectionProperty.h" />
     <ClInclude Include="..\..\Include\core\ReflectionPropertyEditor.h" />
     <ClInclude Include="..\..\Include\core\ReflectionSaver.h" />
+    <ClInclude Include="..\..\Include\core\ReflectionSerializationMacros.h" />
+    <ClInclude Include="..\..\Include\core\ReflectionSerializationUtil.h" />
     <ClInclude Include="..\..\Include\core\ReflectionType.h" />
     <ClInclude Include="..\..\Include\core\ReflectionTypeComponent.h" />
     <ClInclude Include="..\..\Include\core\ReflectionTypeID.h" />

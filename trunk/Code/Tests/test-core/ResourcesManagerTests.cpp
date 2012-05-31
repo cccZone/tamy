@@ -5,6 +5,8 @@
 #include "core\ResourcesManager.h"
 #include <string>
 #include <map>
+#include "core\InArrayStream.h"
+#include "core\OutArrayStream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,6 +58,7 @@ namespace // anonymous
    BEGIN_RESOURCE(ResourceMock, txt, AM_BINARY);
       PROPERTY_EDIT("val", int, m_val);
    END_OBJECT();
+
    // -------------------------------------------------------------------------
 
    class ObjMock : public ResourceObject
@@ -77,12 +80,34 @@ namespace // anonymous
    BEGIN_OBJECT( ObjMock );
       PARENT( ResourceObject );
    END_OBJECT();
+
+   // -------------------------------------------------------------------------
+
+   class ResourceWithPointerMock : public Resource
+   {
+      DECLARE_RESOURCE()
+
+   public:
+      Resource*		 m_referencedRes;
+
+   public:
+      ResourceWithPointerMock( const FilePath& resourceName = FilePath() ) 
+         : Resource( resourceName )
+         , m_referencedRes( NULL )
+      {}
+
+   };
+   BEGIN_RESOURCE( ResourceWithPointerMock, rwp, AM_BINARY );
+      PROPERTY_EDIT( "m_referencedRes", Resource*, m_referencedRes );
+   END_OBJECT();
+
 } // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
 DEFINE_TYPE_ID( ResourceMock )
 DEFINE_TYPE_ID( ObjMock )
+DEFINE_TYPE_ID( ResourceWithPointerMock )
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -97,7 +122,7 @@ TEST(ResourcesManager, basic)
    typesRegistry.addSerializableType< ResourceHandle >( "ResourceHandle", NULL  );
 
    ResourcesManager& manager = ResourcesManager::getInstance();
-   manager.setFilesystem(new Filesystem("..\\Data"));
+   manager.setFilesystem( new Filesystem( "..\\Data" ) );
 
    InitializerMock* initializer = new InitializerMock();
    manager.addComponent( initializer );
@@ -156,6 +181,64 @@ TEST( Resource, resourceHandles )
    mgr.reset();
 
    // clear the types registry
+   typesRegistry.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST( Resource, allRelatedResourcesAreSerializedTogether )
+{
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
+   typesRegistry.addSerializableType< ResourceWithPointerMock >( "ResourceWithPointerMock", new TSerializableTypeInstantiator< ResourceWithPointerMock >() );
+
+   // prepare the resources
+   ResourcesManager& mgr = ResourcesManager::getInstance();
+   mgr.reset();
+   mgr.setFilesystem(new Filesystem("..\\Data"));
+
+   FilePath resource1Name( "res1.rwp" );
+   ResourceWithPointerMock* res1 = new ResourceWithPointerMock( resource1Name );
+   mgr.addResource( res1 );
+
+   FilePath resource2Name( "res2.rwp" );
+   ResourceWithPointerMock* res2 = new ResourceWithPointerMock( resource2Name );
+   mgr.addResource( res2 );
+
+   // define the dependencies between the resources
+   res1->m_referencedRes = res2;
+   res2->m_referencedRes = res1;
+
+   // save the one of the resources
+   res1->saveResource();
+
+   // reset the resources manager, so that the original resources get deleted
+   mgr.reset();
+   res1 = NULL;
+   res2 = NULL;
+
+   // restore the resources
+   ResourceWithPointerMock* restoredRes1 = static_cast< ResourceWithPointerMock* >( &mgr.create( resource1Name ) );
+   CPPUNIT_ASSERT( restoredRes1 != NULL );
+   
+   // but you'll be able to reclaim it from the resources manager
+   Resource* restoredResourceGeneric = mgr.findResource( resource2Name );
+   CPPUNIT_ASSERT( restoredResourceGeneric != NULL );
+   CPPUNIT_ASSERT( restoredResourceGeneric->isExactlyA< ResourceWithPointerMock >() );
+
+   ResourceWithPointerMock* restoredRes2 = static_cast< ResourceWithPointerMock* >( restoredResourceGeneric );
+   CPPUNIT_ASSERT( restoredRes1 != restoredRes2 );
+   CPPUNIT_ASSERT( restoredRes1->m_referencedRes != NULL );
+   CPPUNIT_ASSERT( restoredRes2->m_referencedRes != NULL );
+   CPPUNIT_ASSERT( restoredRes1->m_referencedRes == restoredRes2 );
+   CPPUNIT_ASSERT( restoredRes2->m_referencedRes == restoredRes1 );
+
+   // cleanup
+   mgr.reset();
+   restoredRes1 = NULL;
+   restoredRes2 = NULL;
    typesRegistry.clear();
 }
 

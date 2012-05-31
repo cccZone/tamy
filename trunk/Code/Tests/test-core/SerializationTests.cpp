@@ -1,6 +1,4 @@
 #include "core-TestFramework\TestFramework.h"
-#include "core\InArrayStream.h"
-#include "core\OutArrayStream.h"
 #include "core\ReflectionTypeComponent.h"
 #include "core\ReflectionType.h"
 #include "core\ReflectionTypesRegistry.h"
@@ -9,6 +7,9 @@
 #include "core\ReflectionObject.h"
 #include "core\ReflectionObjectsTracker.h"
 #include "core\ReflectionPropertiesView.h"
+#include "core\Resource.h"
+#include "core\InArrayStream.h"
+#include "core\OutArrayStream.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -154,21 +155,18 @@ namespace // anonymous
 
       int      m_valOrig;
       int      m_valPreSave;
-      int      m_valPostLoad;
 
-      SerializationTestClassNotifiable( int val = 0 ) : m_valOrig( val ), m_valPreSave( 0 ), m_valPostLoad( 0 ) {}
+      SerializationTestClassNotifiable( int val = 0 ) : m_valOrig( val ), m_valPreSave( 0 ) {}
       virtual ~SerializationTestClassNotifiable() {}
 
       // ----------------------------------------------------------------------
       // ReflectionObject implementation
       // ----------------------------------------------------------------------
       void onObjectPreSave() { m_valPreSave = 1; }
-      void onObjectLoaded() { m_valPostLoad = 1; }
    };
    BEGIN_OBJECT( SerializationTestClassNotifiable );
       PROPERTY( int, m_valOrig );
       PROPERTY( int, m_valPreSave );
-      PROPERTY( int, m_valPostLoad );
    END_OBJECT();
 
    // -------------------------------------------------------------------------
@@ -231,22 +229,24 @@ TEST( Serialization, simpleTypes )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() ); 
    
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the object
    SerializationTestClass obj( 5, 10, "obj.m_uniqueId" ); 
+   ReflectionSaver saver( outStream );
    saver.save( &obj );
    saver.flush();
 
    // restore the object
-   SerializationTestClass* restoredObject = loader.load< SerializationTestClass >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   SerializationTestClass* restoredObject = loader.getNextObject< SerializationTestClass >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( 5, restoredObject->m_val1 );
    CPPUNIT_ASSERT_EQUAL( 10, restoredObject->m_val2 );
@@ -266,17 +266,17 @@ TEST( Serialization, patching )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the original object
    SerializationTestClass obj( 6, 11 ); 
+   ReflectionSaver saver( outStream );
    saver.save( &obj );
    saver.flush();
 
@@ -287,7 +287,9 @@ TEST( Serialization, patching )
    typesRegistry.addSerializableType< PatchedSerializationTestClass >( "PatchedSerializationTestClass", new TSerializableTypeInstantiator< PatchedSerializationTestClass >(), "SerializationTestClass" );
 
    // restore the object
-   PatchedSerializationTestClass* restoredObject = loader.load< PatchedSerializationTestClass >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   PatchedSerializationTestClass* restoredObject = loader.getNextObject< PatchedSerializationTestClass >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( 11, restoredObject->m_val );
 
@@ -302,23 +304,25 @@ TEST( Serialization, inheritance )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< DerivedSerializationTestClass >( "DerivedSerializationTestClass", new TSerializableTypeInstantiator< DerivedSerializationTestClass >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the object
    DerivedSerializationTestClass obj( 1, 4, 7 ); 
+   ReflectionSaver saver( outStream );
    saver.save( &obj );
    saver.flush();
 
    // restore the object
-   SerializationTestClass* restoredObjectBase = loader.load< SerializationTestClass >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   SerializationTestClass* restoredObjectBase = loader.getNextObject< SerializationTestClass >();
    CPPUNIT_ASSERT( restoredObjectBase != NULL );
    CPPUNIT_ASSERT_EQUAL( 1, restoredObjectBase->m_val1 );
    CPPUNIT_ASSERT_EQUAL( 4, restoredObjectBase->m_val2 );
@@ -337,28 +341,31 @@ TEST( Serialization, patching_inheritanceMissingOneType )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< DerivedSerializationTestClass >( "DerivedSerializationTestClass", new TSerializableTypeInstantiator< DerivedSerializationTestClass >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the original object
    DerivedSerializationTestClass obj( 3, 2, 8 ); 
+   ReflectionSaver saver( outStream );
    saver.save( &obj );
    saver.flush();
 
    // clear the type definitions and define a new type that has an inheritance definition removed
    typesRegistry.clear();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< PatchedSerializationTestClass >( "PatchedSerializationTestClass", new TSerializableTypeInstantiator< PatchedSerializationTestClass >(), "SerializationTestClass" );
    typesRegistry.addSerializableType< PatchedDerivedSerializationTestClass >( "PatchedDerivedSerializationTestClass", new TSerializableTypeInstantiator< PatchedDerivedSerializationTestClass >(), "DerivedSerializationTestClass" );
 
    // restore the object
-   PatchedSerializationTestClass* restoredObjectBase = loader.load< PatchedSerializationTestClass >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   PatchedSerializationTestClass* restoredObjectBase = loader.getNextObject< PatchedSerializationTestClass >();
    CPPUNIT_ASSERT( restoredObjectBase != NULL );
    CPPUNIT_ASSERT_EQUAL( 2, restoredObjectBase->m_val );
 
@@ -376,23 +383,25 @@ TEST( Serialization, pointers )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClassWithPointers >( "SerializationTestClassWithPointers", new TSerializableTypeInstantiator< SerializationTestClassWithPointers >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the original object
    SerializationTestClassWithPointers* obj1 = new SerializationTestClassWithPointers( 1 );
    SerializationTestClassWithPointers obj2( 2, obj1 );
+   ReflectionSaver saver( outStream );
    saver.save( &obj2 );
    saver.flush();
 
    // restore the object
-   SerializationTestClassWithPointers* restoredObject = loader.load< SerializationTestClassWithPointers >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   SerializationTestClassWithPointers* restoredObject = loader.getNextObject< SerializationTestClassWithPointers >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( 2, restoredObject->m_val );
 
@@ -410,25 +419,27 @@ TEST( Serialization, podsArrays )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClassWithPODArray >( "SerializationTestClassWithPODArray", new TSerializableTypeInstantiator< SerializationTestClassWithPODArray >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the original object
    SerializationTestClassWithPODArray obj;
    obj.m_arr.push_back( 1 );
    obj.m_arr.push_back( 2 );
    obj.m_arr.push_back( 3 );
+   ReflectionSaver saver( outStream );
    saver.save( &obj );
    saver.flush();
 
    // restore the object
-   SerializationTestClassWithPODArray* restoredObject = loader.load< SerializationTestClassWithPODArray >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   SerializationTestClassWithPODArray* restoredObject = loader.getNextObject< SerializationTestClassWithPODArray >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( (uint)3, restoredObject->m_arr.size() );
    CPPUNIT_ASSERT_EQUAL( 1, restoredObject->m_arr[0] );
@@ -446,26 +457,28 @@ TEST( Serialization, pointersArrays )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< SerializationTestClassWithPtrArray >( "SerializationTestClassWithPtrArray", new TSerializableTypeInstantiator< SerializationTestClassWithPtrArray >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the original object
    SerializationTestClassWithPtrArray obj;
    obj.m_arr.push_back( new SerializationTestClass( 1, 2 ) );
    obj.m_arr.push_back( new SerializationTestClass( 3, 4 ) );
    obj.m_arr.push_back( new SerializationTestClass( 5, 6 ) );
+   ReflectionSaver saver( outStream );
    saver.save( &obj );
    saver.flush();
 
    // restore the object
-   SerializationTestClassWithPtrArray* restoredObject = loader.load< SerializationTestClassWithPtrArray >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   SerializationTestClassWithPtrArray* restoredObject = loader.getNextObject< SerializationTestClassWithPtrArray >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    CPPUNIT_ASSERT_EQUAL( (uint)3, restoredObject->m_arr.size() );
    CPPUNIT_ASSERT( NULL != restoredObject->m_arr[0] );
@@ -490,27 +503,29 @@ TEST( Serialization, sharedPointers )
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
    typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< SerializationTestClassWithSharedPointers >( "SerializationTestClassWithSharedPointers", new TSerializableTypeInstantiator< SerializationTestClassWithSharedPointers >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the original object
    SerializationTestClass* sharedObj = new SerializationTestClass( 1, 2 );
    SerializationTestClassWithSharedPointers obj1( "obj1", sharedObj );
    SerializationTestClassWithSharedPointers obj2( "obj1", sharedObj );
+   ReflectionSaver saver( outStream );
    saver.save( &obj1 );
    saver.save( &obj2 );
    saver.flush();
 
    // restore the object
-   SerializationTestClassWithSharedPointers* restoredObject1 = loader.load< SerializationTestClassWithSharedPointers >();
-   SerializationTestClassWithSharedPointers* restoredObject2 = loader.load< SerializationTestClassWithSharedPointers >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   SerializationTestClassWithSharedPointers* restoredObject1 = loader.getNextObject< SerializationTestClassWithSharedPointers >();
+   SerializationTestClassWithSharedPointers* restoredObject2 = loader.getNextObject< SerializationTestClassWithSharedPointers >();
    CPPUNIT_ASSERT( restoredObject1 != NULL );
    CPPUNIT_ASSERT( restoredObject2 != NULL );
    CPPUNIT_ASSERT( restoredObject1 != restoredObject2 );
@@ -533,29 +548,30 @@ TEST( Serialization, deepNestingOfTheSharedPointers )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< SerializationTestClassWithSharedPointers >( "SerializationTestClassWithSharedPointers", new TSerializableTypeInstantiator< SerializationTestClassWithSharedPointers >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the original object
    SerializationTestClass* sharedObjLevel2 = new SerializationTestClass( 1, 2 );
    SerializationTestClassWithSharedPointers* sharedObjLevel1 = new SerializationTestClassWithSharedPointers( "sharedObjLevel1", sharedObjLevel2 );
    SerializationTestClassWithSharedPointers obj1( "obj1", sharedObjLevel1 );
    SerializationTestClassWithSharedPointers obj2( "obj2", sharedObjLevel1 );
+   ReflectionSaver saver( outStream );
    saver.save( &obj1 );
    saver.save( &obj2 );
    saver.flush();
 
    // restore the object
-   SerializationTestClassWithSharedPointers* restoredObject1 = loader.load< SerializationTestClassWithSharedPointers >();
-   SerializationTestClassWithSharedPointers* restoredObject2 = loader.load< SerializationTestClassWithSharedPointers >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   SerializationTestClassWithSharedPointers* restoredObject1 = loader.getNextObject< SerializationTestClassWithSharedPointers >();
+   SerializationTestClassWithSharedPointers* restoredObject2 = loader.getNextObject< SerializationTestClassWithSharedPointers >();
    CPPUNIT_ASSERT( restoredObject1 != NULL );
    CPPUNIT_ASSERT( restoredObject2 != NULL );
    CPPUNIT_ASSERT( restoredObject1 != restoredObject2 );
@@ -583,6 +599,7 @@ TEST( Serialization, instancesTracking )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< SerializationTestClassWithSharedPointers >( "SerializationTestClassWithSharedPointers", new TSerializableTypeInstantiator< SerializationTestClassWithSharedPointers >() );
 
@@ -590,25 +607,27 @@ TEST( Serialization, instancesTracking )
    ReflectionObjectsTrackerMock tracker;
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream, tracker );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the objects - first one, than the other, so that their dependencies
    // are mapped independent of each other
    SerializationTestClass* sharedObj = new SerializationTestClass( 1, 2, "sharedObj" );
    SerializationTestClassWithSharedPointers obj1( "obj1", sharedObj );
    SerializationTestClassWithSharedPointers obj2( "obj2", sharedObj );
+   ReflectionSaver saver( outStream );
    saver.save( &obj1 );
    saver.flush();
    saver.save( &obj2 );
    saver.flush();
 
    // restore the object
-   SerializationTestClassWithSharedPointers* restoredObject1 = loader.load< SerializationTestClassWithSharedPointers >();
-   SerializationTestClassWithSharedPointers* restoredObject2 = loader.load< SerializationTestClassWithSharedPointers >();
+   ReflectionLoader loader( &tracker );
+   loader.deserialize( inStream );
+   SerializationTestClassWithSharedPointers* restoredObject1 = loader.getNextObject< SerializationTestClassWithSharedPointers >();
+   loader.deserialize( inStream );
+   SerializationTestClassWithSharedPointers* restoredObject2 = loader.getNextObject< SerializationTestClassWithSharedPointers >();
    CPPUNIT_ASSERT( restoredObject1 != NULL );
    CPPUNIT_ASSERT( restoredObject2 != NULL );
    CPPUNIT_ASSERT( restoredObject1 != restoredObject2 );
@@ -629,14 +648,13 @@ TEST( Serialization, loadSaveNotifications )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClassNotifiable >( "SerializationTestClassNotifiable", new TSerializableTypeInstantiator< SerializationTestClassNotifiable >() );
 
    // prepare the serializers
-   Array< byte > buffer;
-   OutArrayStream outStream( buffer );
-   InArrayStream inStream( buffer );
-   ReflectionSaver saver( outStream );
-   ReflectionLoader loader( inStream );
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
 
    // serialize the object
    SerializationTestClassNotifiable obj( 5 ); 
@@ -645,28 +663,26 @@ TEST( Serialization, loadSaveNotifications )
 
    CPPUNIT_ASSERT_EQUAL( 5, obj.m_valOrig );
    CPPUNIT_ASSERT_EQUAL( 0, obj.m_valPreSave );
-   CPPUNIT_ASSERT_EQUAL( 0, obj.m_valPostLoad );
 
+   ReflectionSaver saver( outStream );
    saver.save( &obj );
 
    CPPUNIT_ASSERT_EQUAL( 5, obj.m_valOrig );
    CPPUNIT_ASSERT_EQUAL( 1, obj.m_valPreSave );
-   CPPUNIT_ASSERT_EQUAL( 0, obj.m_valPostLoad );
 
    saver.flush();
 
    // restore the object
-   SerializationTestClassNotifiable* restoredObject = loader.load< SerializationTestClassNotifiable >();
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   SerializationTestClassNotifiable* restoredObject = loader.getNextObject< SerializationTestClassNotifiable >();
    CPPUNIT_ASSERT( restoredObject != NULL );
    
    CPPUNIT_ASSERT_EQUAL( 5, obj.m_valOrig );
    CPPUNIT_ASSERT_EQUAL( 1, obj.m_valPreSave );
-   CPPUNIT_ASSERT_EQUAL( 0, obj.m_valPostLoad );
 
    CPPUNIT_ASSERT_EQUAL( 5, restoredObject->m_valOrig );
    CPPUNIT_ASSERT_EQUAL( 1, restoredObject->m_valPreSave );
-   CPPUNIT_ASSERT_EQUAL( 1, restoredObject->m_valPostLoad );
-
 
    // cleanup
    delete restoredObject;

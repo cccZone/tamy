@@ -93,7 +93,7 @@ void TMemberField< T >::mapDependencies( const void* object, ReflectionSaver& de
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< T >::restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const
+void TMemberField< T >::restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const
 {
    // there are no dependencies among simple types, just pointers
 }
@@ -156,7 +156,7 @@ void TMemberField< T* >::mapDependencies( const void* object, ReflectionSaver& d
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< T* >::restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const
+void TMemberField< T* >::restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
    T** dataPtr = reinterpret_cast< T** >( memberPtr );
@@ -251,7 +251,7 @@ void TMemberField< std::vector< T* > >::mapDependencies( const void* object, Ref
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< std::vector< T* > >::restoreDependencies( void* object, const ReflectionLoader& dependenciesMapper ) const
+void TMemberField< std::vector< T* > >::restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
    std::vector< T* >* dataPtr = reinterpret_cast< std::vector< T* >* >( memberPtr );
