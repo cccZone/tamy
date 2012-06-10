@@ -8,7 +8,6 @@
 #include "core/ReflectionSerializationMacros.h"
 
 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 ReflectionLoader::ReflectionLoader( ReflectionObjectsTracker* tracker )
@@ -32,10 +31,18 @@ ReflectionLoader::~ReflectionLoader()
 
 void ReflectionLoader::deserialize( InStream& inStream, std::vector< FilePath >* outDependenciesToLoad, std::vector< FilePath >* outRemappedDependencies )
 {
-   // 1. load external dependencies
+   // 1. check if it's indeed one of our resources and it's version number
+   uint magicNo;
+   inStream >> magicNo;
+   if ( magicNo != TAMY_ARCHIVE_MAGIC_NO )
+   {
+      return;
+   }
+
+   // 2. load external dependencies
    uint firstExternalDependencyIdx = loadExternalDependencies( inStream, outDependenciesToLoad, outRemappedDependencies );
 
-   // 2. load internal dependencies
+   // 3. load internal dependencies
    bool result = loadInternalDependencies( inStream, firstExternalDependencyIdx );
    if ( !result )
    {
@@ -43,7 +50,7 @@ void ReflectionLoader::deserialize( InStream& inStream, std::vector< FilePath >*
       return;
    }
 
-   // 3. load the indices of serialized objects
+   // 4. load the indices of serialized objects
    uint serializedObjectsCount = 0;
    inStream >> serializedObjectsCount;
    if ( serializedObjectsCount == 0 )
@@ -60,7 +67,7 @@ void ReflectionLoader::deserialize( InStream& inStream, std::vector< FilePath >*
       return;
    }
 
-   // deserialize the objects
+   // 5. deserialize the objects
    for ( uint i = 0; i < serializedObjectsCount; ++i )
    {
       uint serializedObjectIdx = -1;
@@ -69,14 +76,14 @@ void ReflectionLoader::deserialize( InStream& inStream, std::vector< FilePath >*
       m_loadedObjects.push_back( m_dependencies[serializedObjectIdx] );
    }
 
-   // copy all encountered dependencies to the list of all objects this loader's ever loaded
+   // 6. copy all encountered dependencies to the list of all objects this loader's ever loaded
    uint dependenciesCount = m_dependencies.size();
    for ( uint i = 0; i < dependenciesCount; ++i )
    {
       m_allLoadedObjects.push_back( m_dependencies[i] );
    }
 
-   // clean temporary data
+   // 7. clean temporary data
    m_dependencies.clear();
 }
 

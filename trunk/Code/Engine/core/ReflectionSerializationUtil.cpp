@@ -310,6 +310,9 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
       {
          delete loadedResources[i];
       }
+
+      // and exit - no further steps should be taken at this point
+      return;
    }
 
    // make sure that all loaded objects are informed that they were loaded

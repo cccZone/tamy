@@ -146,13 +146,16 @@ void ReflectionSaver::mapDependencies( const ReflectionObject* object )
 
 void ReflectionSaver::flush()
 {
-   // First, serialize the external dependencies
+   // 1. save the archive magic number
+   m_outStream << TAMY_ARCHIVE_MAGIC_NO;
+
+   // 2. serialize the external dependencies
    saveExternalDependencies( m_outStream );
 
-   // Next, we need to serialize the dependencies map.
+   // 3. we need to serialize the dependencies map.
    saveInternalDependencies( m_outStream );
 
-   // now serialize the indices of the saved objects
+   // 4. now serialize the indices of the saved objects
    {
       uint savedObjectsCount = m_serializedObjectsIndices.size();
       m_outStream << savedObjectsCount;
