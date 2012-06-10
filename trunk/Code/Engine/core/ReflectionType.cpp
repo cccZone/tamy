@@ -248,12 +248,12 @@ void SerializableReflectionType::collectParents( std::vector< const Serializable
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SerializableReflectionType::collectImplementations( std::vector< const SerializableReflectionType* >& outDerivedTypes ) const
+void SerializableReflectionType::collectImplementations( std::vector< const SerializableReflectionType* >& outDerivedTypes, bool includeAbstractTypes ) const
 {
    const ReflectionTypesRegistry& registry = ReflectionTypesRegistry::getInstance();
 
    std::vector< const SerializableReflectionType* > types;
-   registry.getMatchingSerializableTypes( m_id, types );
+   registry.getMatchingSerializableTypes( m_id, types, includeAbstractTypes );
 
    // remove self from the list
    uint count = types.size();

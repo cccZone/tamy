@@ -107,10 +107,13 @@ public:
    /**
     * Looks for serializable types that either are the type specified as the template
     * parameter, or derive from it, and put them in the specified array.
+    *
+    * @param outTypes                  the types will be appended to this list
+    * @param includeAbstractTypes      should abstract types be listed as well?
     */
    template< typename T >
-   void getMatchingSerializableTypes( std::vector< const SerializableReflectionType* >& outTypes ) const;
-   void getMatchingSerializableTypes( uint id, std::vector< const SerializableReflectionType* >& outTypes ) const;
+   void getMatchingSerializableTypes( std::vector< const SerializableReflectionType* >& outTypes, bool includeAbstractTypes ) const;
+   void getMatchingSerializableTypes( uint id, std::vector< const SerializableReflectionType* >& outTypes, bool includeAbstractTypes ) const;
 
    /**
     * Flushes all registered types.

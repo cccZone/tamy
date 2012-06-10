@@ -18,9 +18,11 @@ RenderTargetDescriptorDialog::RenderTargetDescriptorDialog( QWidget* parent, Ren
    // fill the usages list
    {
       m_ui.usageComboBox->clear();
-      TReflectionEnum< TextureUsage > textureUsagesEnum;
+
+      ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+      TReflectionEnum< TextureUsage >* textureUsagesEnum = static_cast< TReflectionEnum< TextureUsage >* >( typesRegistry.find< TextureUsage >() );
       std::vector< std::string > textureUsagesNames;
-      textureUsagesEnum.getEnumerators( textureUsagesNames );
+      textureUsagesEnum->getEnumerators( textureUsagesNames );
 
       unsigned int count = textureUsagesNames.size();
       for( unsigned int i = 0; i < count; ++i )
@@ -79,8 +81,10 @@ void RenderTargetDescriptorDialog::changeReadability( int isReadable )
 
 void RenderTargetDescriptorDialog::usageChanged( const QString& usage )
 {
-   TReflectionEnum< TextureUsage > textureUsagesEnum;
-   TextureUsage usageVal = (TextureUsage)textureUsagesEnum.getValue( usage.toStdString() );
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   TReflectionEnum< TextureUsage >* textureUsagesEnum = static_cast< TReflectionEnum< TextureUsage >* >( typesRegistry.find< TextureUsage >() );
+
+   TextureUsage usageVal = (TextureUsage)textureUsagesEnum->getValue( usage.toStdString() );
    
    m_descriptor.setUsage( usageVal );
 }

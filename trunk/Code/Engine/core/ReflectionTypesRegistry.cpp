@@ -80,7 +80,7 @@ SerializableReflectionType* ReflectionTypesRegistry::findSerializable( const std
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ReflectionTypesRegistry::getMatchingSerializableTypes( uint id, std::vector< const SerializableReflectionType* >& outTypes ) const
+void ReflectionTypesRegistry::getMatchingSerializableTypes( uint id, std::vector< const SerializableReflectionType* >& outTypes, bool includeAbstractTypes ) const
 {
    const SerializableReflectionType* baseType = findSerializable( id );
 
@@ -91,6 +91,12 @@ void ReflectionTypesRegistry::getMatchingSerializableTypes( uint id, std::vector
 
    for ( SerializableTypesMap::const_iterator it = m_serializableTypesMap.begin(); it != m_serializableTypesMap.end(); ++it )
    {
+      if ( !includeAbstractTypes && it->second->isAbstract() )
+      {
+         // we currently are not looking for the abstract relatives of this type
+         continue;
+      }
+
       if ( it->second->isA( *baseType ) )
       {
          outTypes.push_back( it->second );

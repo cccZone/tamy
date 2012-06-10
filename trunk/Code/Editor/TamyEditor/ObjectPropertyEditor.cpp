@@ -55,15 +55,12 @@ void ObjectPropertyEditor::onInitialize()
 
          // and finally add the names of the non-abstract implementations of the property type
          std::vector< const SerializableReflectionType* > implementations;
-         propertyClass.collectImplementations( implementations );
+         propertyClass.collectImplementations( implementations, false );
 
          unsigned int count = implementations.size();
          for ( unsigned int i = 0; i < count; ++i )
          {
-            if ( !implementations[i]->isAbstract() )
-            {
-               m_typeSelectionBox->addItem( implementations[i]->m_name.c_str() );
-            }
+            m_typeSelectionBox->addItem( implementations[i]->m_name.c_str() );
          }
       }
 
