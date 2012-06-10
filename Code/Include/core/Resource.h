@@ -77,6 +77,13 @@ public:
     */
    virtual const char* getVirtualExtension() { return ""; }
 
+   /**
+    * Called after the resource was successfully loaded from an archive and all its internal and external
+    * dependencies were resolved.
+    *
+    * Calls the onResourceLoaded method and registers all active components with the resource.
+    */
+   void finalizeResourceLoading();
 
    // -------------------------------------------------------------------------
    // Resource types management
@@ -156,8 +163,11 @@ protected:
     virtual void onResourceSave( ResourcesManager& mgr ) {}
 
    /**
-    * The method is called by the resources manager once
-    * the resource has successfully been registered with the manager.
+    * This is the place to kick off all post-load activities that involve resolution of inter-object
+    * dependencies.
+    * It's guaranteed that the method will be called AFTER all loaded objects receive an onObjectLoaded method call.
+    * What's not guaranteed is the ordered in which the onResourceLoaded method will be called on multiple resources
+    * loaded at the same time.
     */
     virtual void onResourceLoaded( ResourcesManager& mgr ) {}
 

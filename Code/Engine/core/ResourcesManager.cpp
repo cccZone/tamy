@@ -95,6 +95,24 @@ bool ResourcesManager::addResource( Resource* resource )
       return false;
    }
 
+   if ( !registerNewResource( resource ) )
+   {
+      return false;
+   }
+
+   resource->finalizeResourceLoading();
+   return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool ResourcesManager::registerNewResource( Resource* resource )
+{
+   if ( resource == NULL )
+   {
+      return false;
+   }
+
    if ( resource->isManaged() )
    {
       return false;
@@ -116,13 +134,6 @@ bool ResourcesManager::addResource( Resource* resource )
    resource->setFilePath( correctResourcePath );
    m_resources.insert( std::make_pair( correctResourcePath, resource ) );
    resource->setResourcesManager( *this );
-
-   // inform the resource about the registered components
-   unsigned int count = getComponentsCount();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      resource->onComponentAdded( *getComponent( i ) );
-   }
 
    return true;
 }

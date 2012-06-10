@@ -144,16 +144,6 @@ void GraphBlock::onObjectLoaded()
    __super::onObjectLoaded();
 
    setPos( m_position );
-
-   // recalculate the objects bounds
-   calculateBounds();
-
-   // inform the sockets about the move, so that they in turn can refresh 
-   // the connections bounds
-   for ( std::vector< GraphBlockSocket* >::iterator it = m_sockets.begin(); it != m_sockets.end(); ++it )
-   {
-      (*it)->calculateConnectionBounds();
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -397,8 +387,6 @@ void GraphBlockSocket::onObjectLoaded()
    ASSERT_MSG( m_parent != NULL, "Information about this socket's parent was not deserialized properly" );
    setParentItem( m_parent );
    setPos( m_position );
-
-   calculateBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -619,8 +607,6 @@ void GraphBlockConnection::onObjectLoaded()
 
    ASSERT_MSG( m_source != NULL, "Information about this connection's source socket was not deserialized properly" );
    ASSERT_MSG( m_destination != NULL, "Information about this connection's destination socket was not deserialized properly" );
-
-   calculateBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

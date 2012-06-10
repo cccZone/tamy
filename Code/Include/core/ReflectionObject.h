@@ -74,6 +74,13 @@ public:
    // -------------------------------------------------------------------------
    /**
     * Called once an object and all of its dependencies is fully loaded.
+    *
+    * CAUTION: the order in which those methods will be called on dependent objects
+    * is UNDEFINED. Therefore it's not a good place to be accessing any methods on the
+    * referenced objects, because those objects onObjectLoaded method may have not yet been called !
+    *
+    * If you need to do that, Resurce::onResourceLoaded is the place to do it as that method
+    * will be called once ALL dependencies have been restored and all objects have their onObjectLoaded method called.
     */
    virtual void onObjectLoaded() {}
 

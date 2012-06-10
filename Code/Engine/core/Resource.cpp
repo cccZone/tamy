@@ -105,8 +105,6 @@ void Resource::setResourcesManager( ResourcesManager& mgr )
 {
    ASSERT_MSG( m_host == NULL, "This resource is already added to a resources manager" );
    m_host = &mgr;
-
-   onResourceLoaded( mgr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -254,6 +252,22 @@ ResourceObject& Resource::getObject( int objectId )
    }
 
    return *( m_managedObjects[ objectId ] );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Resource::finalizeResourceLoading()
+{
+   ASSERT_MSG( isManaged(), "Trying to access an object that was removed" );
+
+   // inform the resource about the registered components
+   onResourceLoaded( *m_host );
+
+   unsigned int count = m_host->getComponentsCount();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      onComponentAdded( *m_host->getComponent( i ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -44,6 +44,12 @@ public:
       GBS_ROUNDED,
    };
 
+protected:
+   // sockets
+   std::vector< GraphBlockSocket* >    m_sockets;
+   unsigned int                        m_leftSocketsCount;
+   unsigned int                        m_rightSocketsCount;
+
 private:
    std::string                         m_caption;
 
@@ -56,11 +62,6 @@ private:
    static QPen                         s_borderPen;
    static QPen                         s_selectionPen;
    QFont                               m_font;
-
-   // sockets
-   std::vector< GraphBlockSocket* >    m_sockets;
-   unsigned int                        m_leftSocketsCount;
-   unsigned int                        m_rightSocketsCount;
 
 public:
    /**
@@ -110,6 +111,11 @@ public:
     * @param outSocketNames
     */
    void getAllSockets( GraphBlockSocketPosition position, std::set< std::string >& outSocketNames ) const;
+
+   /**
+    * Gives access to the array of sockets
+    */
+   const std::vector< GraphBlockSocket* >& accessSockets() const { return m_sockets; }
 
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
@@ -249,6 +255,11 @@ public:
    virtual ReflectionObject& getSocket() { return *( reinterpret_cast< ReflectionObject* >( NULL ) ); }
 
    /**
+    * Calculate the bounds of the socket.
+    */
+   void calculateBounds();
+
+   /**
     * Recalculates the bounds of the connections this socket is involved in.
     */
    void calculateConnectionBounds();
@@ -326,9 +337,6 @@ protected:
    // -------------------------------------------------------------------------
    void onObjectPreSave();
    void onObjectLoaded();
-
-private:
-   void calculateBounds();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
