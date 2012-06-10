@@ -46,7 +46,7 @@ T* SerializableReflectionType::instantiate() const
 
 bool SerializableReflectionType::isAbstract() const
 {
-   return m_instantiator != NULL;
+   return m_instantiator == NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

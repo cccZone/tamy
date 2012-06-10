@@ -80,7 +80,7 @@ template< typename TPipeline, typename TNode >
 void PipelineLayout< TPipeline, TNode >::getNodesClasses( std::vector< const SerializableReflectionType* >& classes )
 {
    ReflectionTypesRegistry& classesReg = ReflectionTypesRegistry::getInstance();
-   classesReg.getMatchingSerializableTypes< TNode >( classes );
+   classesReg.getMatchingSerializableTypes< TNode >( classes, false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

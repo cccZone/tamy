@@ -152,10 +152,10 @@ void ReflectionTypesRegistry::getMatchingTypes( std::vector< const ReflectionTyp
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void ReflectionTypesRegistry::getMatchingSerializableTypes( std::vector< const SerializableReflectionType* >& outTypes ) const
+void ReflectionTypesRegistry::getMatchingSerializableTypes( std::vector< const SerializableReflectionType* >& outTypes, bool includeAbstractTypes ) const
 {
    ReflectionTypeID< T > typeId;
-   getMatchingSerializableTypes( typeId.m_id, outTypes );
+   getMatchingSerializableTypes( typeId.m_id, outTypes, includeAbstractTypes );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

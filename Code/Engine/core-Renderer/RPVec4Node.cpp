@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RPVec4Node );
-   PARENT( RenderngPipelineNode );
+   PARENT( RenderingPipelineNode );
    PROPERTY_EDIT( "vector", Vector, m_vector );
 END_OBJECT();
 

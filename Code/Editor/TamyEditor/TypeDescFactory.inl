@@ -15,7 +15,7 @@ TypeDescFactory< T >::TypeDescFactory( const QString& iconsDir, const Filesystem
 , m_defaultIcon( defaultIcon )
 {
    ReflectionTypesRegistry& typesReg = ReflectionTypesRegistry::getInstance();
-   typesReg.getMatchingSerializableTypes< T >( m_classes );
+   typesReg.getMatchingSerializableTypes< T >( m_classes, false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RPTextureNode );
-   PARENT( RenderngPipelineNode );
+   PARENT( RenderingPipelineNode );
    PROPERTY_EDIT( "Texture", Texture*, m_texture );
 END_OBJECT();
 

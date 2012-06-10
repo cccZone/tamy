@@ -51,9 +51,12 @@ void VertexShaderEditor::onInitialize()
    // set the properties
    {
       m_ui.vertexDescIdComboBox->clear();
-      TReflectionEnum< VertexDescId > vertexDescIdEnum;
+
+      ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+      TReflectionEnum< VertexDescId >* vertexDescIdEnum = static_cast< TReflectionEnum< VertexDescId >* >( typesRegistry.find< VertexDescId >() );
+
       std::vector< std::string > vertexDescIds;
-      vertexDescIdEnum.getEnumerators( vertexDescIds );
+      vertexDescIdEnum->getEnumerators( vertexDescIds );
 
       unsigned int count = vertexDescIds.size();
       for( unsigned int i = 0; i < count; ++i )
@@ -175,8 +178,10 @@ bool VertexShaderEditor::compile()
 
 void VertexShaderEditor::onVertexIdChange( const QString& newId )
 {
-   TReflectionEnum< VertexDescId > vertexDescIdEnum;
-   VertexDescId idVal = (VertexDescId)vertexDescIdEnum.getValue( newId.toStdString() );
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   TReflectionEnum< VertexDescId >* vertexDescIdEnum = static_cast< TReflectionEnum< VertexDescId >* >( typesRegistry.find< VertexDescId >() );
+
+   VertexDescId idVal = (VertexDescId)vertexDescIdEnum->getValue( newId.toStdString() );
 
    m_shader.setVertexDescription( idVal );
 }

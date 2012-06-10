@@ -176,8 +176,9 @@ public:
     * this type is a parent.
     *
     * @param outDerivedTypes
+    * @param includeAbstractTypes      should abstract implementations be taken into consideration?
     */
-   void collectImplementations( std::vector< const SerializableReflectionType* >& outDerivedTypes ) const;
+   void collectImplementations( std::vector< const SerializableReflectionType* >& outDerivedTypes, bool includeAbstractTypes ) const;
 
    /**
     * Returns a list of all types present in this type's hierarchy.
