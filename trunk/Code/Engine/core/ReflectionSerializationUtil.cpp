@@ -227,7 +227,7 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
    // Go through all resources in the list and load them. New resources
    // will be added to the list as we keep mapping them.
    std::vector< ReflectionObject* > loadedResources;
-   std::list< ReflectionObject* > allLoadedObjects;
+   std::vector< ReflectionObject* > allLoadedObjects;
    uint loadedResourceIdx = 0;
    while( loadedResourceIdx < resourcesToLoad.size() )
    {
@@ -292,15 +292,15 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
       {
          Resource* res = static_cast< Resource* >( loadedResources[i] );
          res->setFilePath( resourcesToLoad[i] );
-         resMgr.addResource( res );
+         resMgr.registerNewResource( res );
 
          // and since we're already iterating over the resources and casting them - put the resources in the output array
          outResources.push_back( res );
       }
 
-      // it was successful - map inter-resource dependencies
+      // it was successful - map inter-resource dependencies on all loaded objects
       ExternalDependenciesMapper externalDependenciesMapper( resourcesMap );
-      externalDependenciesMapper.mapDependencies( loadedResources );
+      externalDependenciesMapper.mapDependencies( allLoadedObjects );
    }
    else
    {
@@ -312,10 +312,23 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
       }
    }
 
-   // last but not least, make sure that all loaded objects are informed that they were loaded
-   for ( std::list< ReflectionObject* >::const_iterator it = allLoadedObjects.begin(); it != allLoadedObjects.end(); ++it )
+   // make sure that all loaded objects are informed that they were loaded
+   uint allLoadedObjectsCount = allLoadedObjects.size();
+   for ( uint i = 0; i < allLoadedObjectsCount; ++i )
    {
-      (*it)->onObjectLoaded();
+      allLoadedObjects[i]->onObjectLoaded();
+   }
+
+   // At this point all dependencies between the objects have been restored
+   // and the resources have been registered with the resources manager.
+   // Since it's the resources that manage the loaded objects, perform one last step -
+   // inform them that everything has been successfully loaded so that they can kick off any final
+   // post-load group activities
+   uint allLoadedResources = loadedResources.size();
+   for ( uint i = 0; i < allLoadedResources; ++i )
+   {
+      Resource* res = static_cast< Resource* >( loadedResources[i] );
+      res->finalizeResourceLoading();
    }
 }
 

@@ -91,7 +91,14 @@ void GBNodeInput< TNode >::disconnect()
 template< typename TNode >
 bool GBNodeInput< TNode >::canConnect( GBNodeOutput< TNode >& output ) const
 {
-   return output.getDataType() != NULL;
+   // if we're connecting two basic data types ( such as void input with a void output i.e. )
+   // we're not gonna get any data types if we query the 'output.getDataType() method ).
+   // That's why we need to compare the pointer to the types those two methods return.
+   // If they are the same ( or both equal NULL ), then we can safely connect those sockets,
+   // 'cause they marshal the same data type
+   const ReflectionType* inputDataType = getDataType();
+   const ReflectionType* outputDataType = output.getDataType();
+   return inputDataType == outputDataType;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

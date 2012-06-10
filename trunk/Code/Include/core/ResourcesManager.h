@@ -18,6 +18,7 @@ class Resource;
 class IProgressObserver;
 class FilesystemScanner;
 class FilePath;
+class ReflectionSerializationUtil;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -152,7 +153,8 @@ public:
    Resource& create( const FilePath& name );
 
    /**
-    * Registers a new resource instance with the resources manager.
+    * Registers a new resource instance with the resources manager and notifies it about this fact
+    * by calling the onResourceLoaded method and by registering all active components with it.
     *
     * @param resource   new resource instance to register
     * @return           'true' if the resource was added, 'false' otherwise ( in the latter case the passed resource
@@ -258,6 +260,19 @@ protected:
     * @param resource
     */
    void free( Resource* resource );
+
+   // -------------------------------------------------------------------------
+   // Serialization helpers
+   // -------------------------------------------------------------------------
+
+   friend class ReflectionSerializationUtil;
+
+   /**
+    * Registers a new resource with the resources manager.
+    *
+    * @param resource
+    */
+   bool registerNewResource( Resource* resource );
 
 private:
    /**

@@ -175,13 +175,26 @@ void GraphLayout::restoreState()
    // restore blocks
    for ( std::vector< GraphBlock* >::iterator it = m_blocks.begin(); it != m_blocks.end(); ++it )
    {
-      addItem( *it );
+      GraphBlock* block = *it;
+      addItem( block );
+
+      // calculate the bounds of the block and its sockets so that they can be properly displayed on the canvas
+      block->calculateBounds();
+
+      const std::vector< GraphBlockSocket* >& sockets = block->accessSockets();
+      uint socketsCount = sockets.size();
+      for ( uint i = 0; i < socketsCount; ++i )
+      {
+         sockets[i]->calculateBounds();
+      }
    }
 
    // restore connections
    for ( std::vector< GraphBlockConnection* >::iterator it = m_connections.begin(); it != m_connections.end(); ++it )
    {
       addItem( *it );
+
+      // calculate the bounds of the connections between the blocks so that they can be properly displayed on the canvas
       (*it)->calculateBounds();
    }
 }
