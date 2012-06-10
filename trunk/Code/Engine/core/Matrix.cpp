@@ -255,8 +255,8 @@ void Matrix::getRotation( EulerAngles& outAngles ) const
 
 Matrix& Matrix::setMul( const Matrix& a, const Matrix& b )
 {
-   ASSERT_MSG( &a == this, "Passing itself as one of this method parameters will yield unpredicted results" );
-   ASSERT_MSG( &b == this, "Passing itself as one of this method parameters will yield unpredicted results" );
+   ASSERT_MSG( &a != this, "Passing itself as one of this method parameters will yield unpredicted results" );
+   ASSERT_MSG( &b != this, "Passing itself as one of this method parameters will yield unpredicted results" );
 
    for ( int row = 0; row < 4; ++row )
    {
