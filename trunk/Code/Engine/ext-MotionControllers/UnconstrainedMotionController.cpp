@@ -100,7 +100,7 @@ void UnconstrainedMotionController::rotate( float pitch, float yaw )
    regenerateVectors( rightVec, upVec, lookVec );
 
    m_controlledNode.setRightVec( rightVec );
-   m_controlledNode.setUpVec( Vector::OY );
+   m_controlledNode.setUpVec( upVec );
    m_controlledNode.setLookVec( lookVec );
 }
 
