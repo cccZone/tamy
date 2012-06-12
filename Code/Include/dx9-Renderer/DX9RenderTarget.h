@@ -30,9 +30,9 @@ public:
    /**
     * Returns the color of the specified pixel.
     *
-    * @param pos     pixel position
+    * @param pos     pixel position ( in viewport coordinates - <-1, 1> on each axis )
     */
-   void getPixel( const Point& pos, Color& outColor ) const;
+   void getPixel( const Vector& pos, Color& outColor ) const;
 
    /**
     * Returns the DirectX texture instance.

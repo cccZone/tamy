@@ -44,7 +44,7 @@ DX9RenderTarget::~DX9RenderTarget()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9RenderTarget::getPixel( const Point& pos, Color& outColor ) const
+void DX9RenderTarget::getPixel( const Vector& pos, Color& outColor ) const
 {
    if ( !m_dxTexture )
    {
