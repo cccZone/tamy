@@ -134,15 +134,15 @@ TEST(ResourcesManager, basic)
    manager.reset();
    initializer->objsCount = 0;
 
-   ResourceMock& res1 = dynamic_cast< ResourceMock& >( manager.create( FilePath( "resourceMock.txt" ) ) );
-   CPPUNIT_ASSERT_EQUAL(5, res1.getValue());
+   ResourceMock* res1 = dynamic_cast< ResourceMock* >( manager.create( FilePath( "resourceMock.txt" ) ) );
+   CPPUNIT_ASSERT_EQUAL(5, res1->getValue());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
    CPPUNIT_ASSERT_EQUAL(1, initializer->objsCount);
 
-   ResourceMock& res2 = dynamic_cast< ResourceMock& >( manager.create( FilePath( "resourceMock.txt" ) ) );
+   ResourceMock* res2 = dynamic_cast< ResourceMock* >( manager.create( FilePath( "resourceMock.txt" ) ) );
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, manager.getResourcesCount());
    CPPUNIT_ASSERT_EQUAL(1, initializer->objsCount);
-   CPPUNIT_ASSERT(&res1 == &res2);
+   CPPUNIT_ASSERT(res1 == res2);
 
    // clear the types registry
    typesRegistry.clear();
@@ -220,7 +220,7 @@ TEST( Resource, allRelatedResourcesAreSerializedTogether )
    res2 = NULL;
 
    // restore the resources
-   ResourceWithPointerMock* restoredRes1 = static_cast< ResourceWithPointerMock* >( &mgr.create( resource1Name ) );
+   ResourceWithPointerMock* restoredRes1 = static_cast< ResourceWithPointerMock* >( mgr.create( resource1Name ) );
    CPPUNIT_ASSERT( restoredRes1 != NULL );
    
    // but you'll be able to reclaim it from the resources manager

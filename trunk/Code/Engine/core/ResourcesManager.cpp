@@ -220,7 +220,7 @@ void ResourcesManager::scan( const FilePath& rootDir, FilesystemScanner& scanner
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource& ResourcesManager::create( const FilePath& filePath )
+Resource* ResourcesManager::create( const FilePath& filePath )
 {
    Resource* res = findResource( filePath );
    if ( res == NULL )
@@ -251,7 +251,7 @@ Resource& ResourcesManager::create( const FilePath& filePath )
       ASSERT_MSG( false, "Resource not found" );
    }
 
-   return *res;
+   return res;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

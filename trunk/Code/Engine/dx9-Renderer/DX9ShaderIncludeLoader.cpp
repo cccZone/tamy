@@ -9,9 +9,9 @@
 HRESULT DX9ShaderIncludeLoader::Open( D3DXINCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID *ppData, UINT *pBytes )
 {
    ResourcesManager& resMgr = ResourcesManager::getInstance();
-   FragmentShader& res = resMgr.create< FragmentShader >( FilePath( pFileName ) );
+   FragmentShader* res = resMgr.create< FragmentShader >( FilePath( pFileName ) );
 
-   const std::string& script = DynamicCast< FragmentShader >( &res )->getScript();
+   const std::string& script = res->getScript();
 
    *ppData = (LPCVOID)script.c_str();
    *pBytes = script.length();

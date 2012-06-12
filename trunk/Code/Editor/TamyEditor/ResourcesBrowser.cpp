@@ -214,7 +214,7 @@ void ResourcesBrowser::editResource( const std::string& path, const QIcon& resou
 
    try
    {
-      resource = &m_rm->create( path );
+      resource = m_rm->create( path );
    }
    catch( std::exception& ex )
    {

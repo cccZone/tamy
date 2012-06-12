@@ -382,7 +382,7 @@ void SkeletonAnimationEditor::animatedModelLoaded()
 void SkeletonAnimationEditor::loadAnimatedModel( const std::string& modelResourcePath )
 {
    // load the skeleton
-   Model* modelForAnimation = DynamicCast< Model >( &ResourcesManager::getInstance().create( modelResourcePath ) );
+   Model* modelForAnimation = ResourcesManager::getInstance().create< Model >( modelResourcePath );
    if ( !modelForAnimation )
    {
       // couldn't load the model resource
