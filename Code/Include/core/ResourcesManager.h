@@ -141,7 +141,7 @@ public:
     *                   currently set filesystem)
     */
    template< typename RESOURCE_TYPE >
-   RESOURCE_TYPE& create( const FilePath& name );
+   RESOURCE_TYPE* create( const FilePath& name );
 
    /**
     * Creates a resource based on a file with the specified name and registers it
@@ -150,7 +150,7 @@ public:
     * @param name       name of the resource file (should exist in the
     *                   currently set filesystem)
     */
-   Resource& create( const FilePath& name );
+   Resource* create( const FilePath& name );
 
    /**
     * Registers a new resource instance with the resources manager and notifies it about this fact

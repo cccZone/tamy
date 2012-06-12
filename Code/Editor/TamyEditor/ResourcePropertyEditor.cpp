@@ -78,7 +78,7 @@ void ResourcePropertyEditor::valChanged()
    if ( !m_paths.empty() )
    {
       ResourcesManager& rm = ResourcesManager::getInstance();
-      newVal = &rm.create( m_paths[ 0 ] );
+      newVal = rm.create( m_paths[ 0 ] );
 
       // verify that the types match
       const ReflectionType& newTypeClass = newVal->getVirtualRTTI();

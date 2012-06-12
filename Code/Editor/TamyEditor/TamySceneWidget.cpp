@@ -176,7 +176,7 @@ void TamySceneWidget::initialize()
 
    try
    {
-      pipeline = dynamic_cast< RenderingPipeline* >( &m_resMgr->create( m_rendererPipelineName ) );
+      pipeline = m_resMgr->create<RenderingPipeline>( m_rendererPipelineName );
       sceneRenderer = new RenderingPipelineMechanism( pipeline );
       m_renderingMech->add( "sceneRenderer", sceneRenderer );
       m_renderingMech->add( "selectionRenderer", m_selectionRenderer, false );

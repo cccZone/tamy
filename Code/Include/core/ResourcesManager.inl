@@ -91,13 +91,13 @@ void ResourcesManager::setProgressObserver()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename RESOURCE_TYPE >
-RESOURCE_TYPE& ResourcesManager::create( const FilePath& name )
+RESOURCE_TYPE* ResourcesManager::create( const FilePath& name )
 {
    FilePath nameWithCorrectExtension;
    name.changeFileExtension( RESOURCE_TYPE::getExtension(), nameWithCorrectExtension ) ;
-   Resource& res = create( nameWithCorrectExtension );
+   Resource* res = create( nameWithCorrectExtension );
 
-   return *DynamicCast< RESOURCE_TYPE >( &res );
+   return DynamicCast< RESOURCE_TYPE >( res );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
