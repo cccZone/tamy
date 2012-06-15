@@ -104,6 +104,7 @@
     <ClCompile Include="MemoryPoolTests.cpp" />
     <ClCompile Include="NodesHierarchyTests.cpp" />
     <ClCompile Include="PlaneTests.cpp" />
+    <ClCompile Include="PlatformTests.cpp" />
     <ClCompile Include="QuaternionTests.cpp" />
     <ClCompile Include="ReflectionEnumTests.cpp" />
     <ClCompile Include="ReflectionPropertiesTests.cpp" />

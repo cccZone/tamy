@@ -236,30 +236,22 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
 
       // first check if such a resource is not yet loaded ( perhaps it's already there, and we can save time )
       Resource* res = resMgr.findResource( loadedResourcePath );
-      if ( res != NULL )
+      if ( res == NULL )
       {
-         // yup - it already exists. Advance the observer as well to show that we 'loaded' it successfully
-         if ( progressObserver )
+         // open the file for loading
+         std::string extension = loadedResourcePath.extractExtension();
+         std::ios_base::openmode accessMode = Resource::getFileAccessMode( extension );
+         File* file = filesystem.open( loadedResourcePath, std::ios_base::in | accessMode );
+
+         if ( file )
          {
-            progressObserver->advance();
+            InFileStream inStream( file );
+            ReflectionLoader loader;
+            loader.deserialize( inStream, &resourcesToLoad, &resourcesMap );
+            res = loader.getNextObject< Resource >();
+
+            allLoadedObjects.insert( allLoadedObjects.end(), loader.m_allLoadedObjects.begin(), loader.m_allLoadedObjects.end() );
          }
-         continue;
-      }
-
-
-      // open the file for loading
-      std::string extension = loadedResourcePath.extractExtension();
-      std::ios_base::openmode accessMode = Resource::getFileAccessMode( extension );
-      File* file = filesystem.open( loadedResourcePath, std::ios_base::in | accessMode );
-
-      if ( file )
-      {
-         InFileStream inStream( file );
-         ReflectionLoader loader;
-         loader.deserialize( inStream, &resourcesToLoad, &resourcesMap );
-         res = loader.getNextObject< Resource >();
-
-         allLoadedObjects.insert( allLoadedObjects.end(), loader.m_allLoadedObjects.begin(), loader.m_allLoadedObjects.end() );
       }
 
       if ( res )
@@ -291,8 +283,12 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
       for ( uint i = 0; i < count; ++i )
       {
          Resource* res = static_cast< Resource* >( loadedResources[i] );
-         res->setFilePath( resourcesToLoad[i] );
-         resMgr.registerNewResource( res );
+         if ( !res->isManaged() )
+         {
+            // register the managed resources
+            res->setFilePath( resourcesToLoad[i] );
+            resMgr.registerNewResource( res );
+         }
 
          // and since we're already iterating over the resources and casting them - put the resources in the output array
          outResources.push_back( res );
@@ -308,7 +304,12 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
       uint count = loadedResources.size();
       for ( uint i = 0; i < count; ++i )
       {
-         delete loadedResources[i];
+         Resource* res = static_cast< Resource* >( loadedResources[i] );
+         if ( !res->isManaged() )
+         {
+            // delete only the unmanaged resources ( we could have encountered resources that are already registered with the resources manager - DO NOT touch those )
+            delete res;
+         }
       }
 
       // and exit - no further steps should be taken at this point

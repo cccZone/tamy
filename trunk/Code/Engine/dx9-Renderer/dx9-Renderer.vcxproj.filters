@@ -141,6 +141,9 @@
     <ClCompile Include="DX9ShaderCompiler.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="DX9DebugPrimitivesSet.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">
@@ -202,6 +205,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderConstantsCompiler.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9DebugPrimitivesSet.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

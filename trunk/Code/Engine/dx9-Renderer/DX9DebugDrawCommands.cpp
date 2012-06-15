@@ -2,10 +2,7 @@
 #include "dx9-Renderer\DX9Renderer.h"
 #include "core-Renderer\Camera.h"
 #include "core\Color.h"
-#include <stdexcept>
-
-#define _USE_MATH_DEFINES
-#include <math.h>
+#include "core\Math.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,6 +25,81 @@ void RCDrawDebugArc::execute( Renderer& renderer )
 void RCDrawDebugArrow::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
+
+   Vector dir;
+   dir.setSub( m_end, m_start ).normalize();
+
+   Vector perpVec1, perpVec2;
+   VectorUtil::calculatePerpendicularVector( dir, perpVec1 );
+   perpVec1.normalize();
+   perpVec2.setCross( dir, perpVec1 );
+
+   perpVec1.mul( m_lineWidth );
+   perpVec2.mul( m_lineWidth );
+
+
+   // draw the box
+   {
+      Vector vertices[8];
+      vertices[0].setAdd( m_start, perpVec1 );
+      vertices[1].setSub( m_start, perpVec1 );
+      vertices[2].setAdd( m_start, perpVec2 );
+      vertices[3].setSub( m_start, perpVec2 );
+
+      // top face
+      vertices[4].setAdd( m_end, perpVec1 );
+      vertices[5].setSub( m_end, perpVec1 );
+      vertices[6].setAdd( m_end, perpVec2 );
+      vertices[7].setSub( m_end, perpVec2 );
+
+      // add the lines:
+      // bottom face
+      dxRenderer.addDebugTriangle( vertices[0], vertices[2], vertices[1], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[0], vertices[3], vertices[2], m_color, m_overlay );
+
+      // top face
+      dxRenderer.addDebugTriangle( vertices[4], vertices[6], vertices[5], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[4], vertices[7], vertices[6], m_color, m_overlay );
+
+      // right face
+      dxRenderer.addDebugTriangle( vertices[0], vertices[5], vertices[1], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[0], vertices[4], vertices[5], m_color, m_overlay );
+
+      // left face
+      dxRenderer.addDebugTriangle( vertices[7], vertices[2], vertices[6], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[7], vertices[3], vertices[2], m_color, m_overlay );
+
+      // front face
+      dxRenderer.addDebugTriangle( vertices[1], vertices[6], vertices[2], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[1], vertices[5], vertices[6], m_color, m_overlay );
+
+      // back face
+      dxRenderer.addDebugTriangle( vertices[4], vertices[3], vertices[7], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[4], vertices[0], vertices[3], m_color, m_overlay );
+   }
+
+   // draw the arrow tip as a cone
+   {
+      Vector vertices[5];
+      const float tipSizeMultiplier = 6;
+      perpVec1.mul( tipSizeMultiplier );
+      perpVec2.mul( tipSizeMultiplier );
+      vertices[0].setAdd( m_end, perpVec1 );
+      vertices[1].setSub( m_end, perpVec1 );
+      vertices[2].setAdd( m_end, perpVec2 );
+      vertices[3].setSub( m_end, perpVec2 );
+      vertices[4].setMulAdd( dir, m_lineWidth * tipSizeMultiplier * 2, m_end );
+
+      // cone bottom
+      dxRenderer.addDebugTriangle( vertices[0], vertices[2], vertices[1], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[0], vertices[3], vertices[2], m_color, m_overlay );
+
+      // cone top
+      dxRenderer.addDebugTriangle( vertices[0], vertices[1], vertices[4], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[1], vertices[2], vertices[4], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[2], vertices[3], vertices[4], m_color, m_overlay );
+      dxRenderer.addDebugTriangle( vertices[3], vertices[0], vertices[4], m_color, m_overlay );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,8 +108,8 @@ void RCDrawDebugBox::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
 
-   static Vector vertices[8];
-   static Vector transformedVertices[8];
+   Vector vertices[8];
+   Vector transformedVertices[8];
 
    // define the box vertices
    // bottom face
@@ -60,22 +132,116 @@ void RCDrawDebugBox::execute( Renderer& renderer )
 
    // add the lines:
    // bottom face
-   dxRenderer.addDebugLine( transformedVertices[0], transformedVertices[1], m_color );
-   dxRenderer.addDebugLine( transformedVertices[1], transformedVertices[2], m_color );
-   dxRenderer.addDebugLine( transformedVertices[2], transformedVertices[3], m_color );
-   dxRenderer.addDebugLine( transformedVertices[3], transformedVertices[0], m_color );
-
+   dxRenderer.addDebugTriangle( transformedVertices[0], transformedVertices[2], transformedVertices[1], m_color, m_overlay );
+   dxRenderer.addDebugTriangle( transformedVertices[0], transformedVertices[3], transformedVertices[2], m_color, m_overlay );
+   
    // top face
-   dxRenderer.addDebugLine( transformedVertices[4], transformedVertices[5], m_color );
-   dxRenderer.addDebugLine( transformedVertices[5], transformedVertices[6], m_color );
-   dxRenderer.addDebugLine( transformedVertices[6], transformedVertices[7], m_color );
-   dxRenderer.addDebugLine( transformedVertices[7], transformedVertices[4], m_color );
+   dxRenderer.addDebugTriangle( transformedVertices[4], transformedVertices[6], transformedVertices[5], m_color, m_overlay );
+   dxRenderer.addDebugTriangle( transformedVertices[4], transformedVertices[7], transformedVertices[6], m_color, m_overlay );
 
-   // side lines
-   dxRenderer.addDebugLine( transformedVertices[0], transformedVertices[4], m_color );
-   dxRenderer.addDebugLine( transformedVertices[1], transformedVertices[5], m_color );
-   dxRenderer.addDebugLine( transformedVertices[2], transformedVertices[6], m_color );
-   dxRenderer.addDebugLine( transformedVertices[3], transformedVertices[7], m_color );
+   // right face
+   dxRenderer.addDebugTriangle( transformedVertices[0], transformedVertices[5], transformedVertices[1], m_color, m_overlay );
+   dxRenderer.addDebugTriangle( transformedVertices[0], transformedVertices[4], transformedVertices[5], m_color, m_overlay );
+
+   // left face
+   dxRenderer.addDebugTriangle( transformedVertices[7], transformedVertices[2], transformedVertices[6], m_color, m_overlay );
+   dxRenderer.addDebugTriangle( transformedVertices[7], transformedVertices[3], transformedVertices[2], m_color, m_overlay );
+
+   // front face
+   dxRenderer.addDebugTriangle( transformedVertices[1], transformedVertices[6], transformedVertices[2], m_color, m_overlay );
+   dxRenderer.addDebugTriangle( transformedVertices[1], transformedVertices[5], transformedVertices[6], m_color, m_overlay );
+
+   // back face
+   dxRenderer.addDebugTriangle( transformedVertices[4], transformedVertices[3], transformedVertices[7], m_color, m_overlay );
+   dxRenderer.addDebugTriangle( transformedVertices[4], transformedVertices[0], transformedVertices[3], m_color, m_overlay );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RCDrawDebugRing::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
+
+   const Vector& origin = m_transform.position();
+   const Vector& mainAxis = m_transform.forwardVec();
+   const Vector& sideAxis = m_transform.sideVec();
+   Vector circumferenceAxis = m_transform.upVec();
+   
+   const uint segmentsCount = 12;
+   const uint segmentVerticesCount = 3;
+   
+   // calculate torus vertices
+   const uint verticesCount = segmentsCount * segmentVerticesCount;
+   Vector* vertices = new Vector[verticesCount];
+   {
+      const float dMainAngle = DEG2RAD( 360.0f / (float)segmentsCount );
+      const float dSegmentAngle = DEG2RAD( 360.0f / (float)segmentVerticesCount );
+      float mainAngle = 0.0f;
+  
+      Quaternion mainRot, circumferenceRot;
+      Vector vtxPos, posOnCircumference, radiusDisplacement, radiusVec;
+      radiusVec.setMul( sideAxis, m_radius );
+      uint vtxIdx = 0;
+      for ( uint segmentIdx = 0; segmentIdx < segmentsCount; ++segmentIdx, mainAngle += dMainAngle )
+      {
+         mainRot.setAxisAngle( mainAxis, mainAngle );
+         mainRot.transform( radiusVec, radiusDisplacement );
+
+         float segmentAngle = 0.0f;
+         for ( uint segVtxIdx = 0; segVtxIdx < segmentVerticesCount; ++segVtxIdx, segmentAngle += dSegmentAngle )
+         {
+            circumferenceRot.setAxisAngle( circumferenceAxis, segmentAngle );
+            Quaternion rotQ;
+            rotQ.setMul( circumferenceRot, mainRot );
+
+            // first - create a point on the circumference of the toruses' segment
+            vtxPos.setMul( sideAxis, m_circumferenceWidth );
+            rotQ.transform( vtxPos, posOnCircumference );
+
+            // and displace the circumference point so that it ends up in its final position on the toruses' circumference
+            vertices[vtxIdx].setAdd( radiusDisplacement, posOnCircumference );
+            vertices[vtxIdx].add( origin );
+
+            ++vtxIdx;
+         }
+      }
+   }
+
+   // set torus indices
+   const uint indicesCount = verticesCount * 6;
+   word* indices = new word[indicesCount];
+   {
+      uint idx = 0;
+      for ( uint segmentIdx = 0; segmentIdx < segmentsCount; ++segmentIdx )
+      {
+         uint currSegmentFirstVtx = segmentIdx * segmentVerticesCount;
+         uint nextSegmentFirstVtx = ( currSegmentFirstVtx + segmentVerticesCount ) % verticesCount;
+
+         for ( uint segVtxIdx = 0; segVtxIdx < segmentVerticesCount; ++segVtxIdx )
+         {
+            uint skipOffset = 0;
+            if ( segVtxIdx == 0 )
+            {
+               skipOffset = segmentVerticesCount;
+            }
+
+            indices[ idx++ ] = currSegmentFirstVtx + segVtxIdx - 1 + skipOffset;
+            indices[ idx++ ] = currSegmentFirstVtx + segVtxIdx;
+            indices[ idx++ ] = nextSegmentFirstVtx + segVtxIdx - 1 + skipOffset;
+
+
+            indices[ idx++ ] = currSegmentFirstVtx + segVtxIdx;
+            indices[ idx++ ] = nextSegmentFirstVtx + segVtxIdx;
+            indices[ idx++ ] = nextSegmentFirstVtx + segVtxIdx - 1 + skipOffset;
+         }
+      }
+   }
+   // add the mesh to draw
+   dxRenderer.addIndexedMesh( vertices, verticesCount, indices, indicesCount, m_color, m_overlay );
+
+   // cleanup
+   delete [] indices;
+   delete [] vertices;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

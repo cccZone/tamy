@@ -10,6 +10,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#define OVERLAY      true
+
+///////////////////////////////////////////////////////////////////////////////
+
 class Renderer;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,22 +88,28 @@ public:
 class RCDrawDebugArrow : public RenderCommand
 {
 private:
+   float             m_lineWidth;
    Vector            m_start;
    Vector            m_end;
    Color             m_color;
+   bool              m_overlay;
 
 public:
    /**
     * Constructor.
     *
+    * @param lineWidth
     * @param start
     * @param end
     * @param color
+    * @param overlay
     */
-   RCDrawDebugArrow( const Vector& start, const Vector& end, const Color& color )
-      : m_start( start )
+   RCDrawDebugArrow( float lineWidth, const Vector& start, const Vector& end, const Color& color, bool overlay = false )
+      : m_lineWidth( lineWidth )
+      , m_start( start )
       , m_end( end )
       , m_color( color )
+      , m_overlay( overlay )
    {}
 
    // -------------------------------------------------------------------------
@@ -119,6 +129,7 @@ private:
    Matrix            m_transform;
    Vector            m_size;
    Color             m_color;
+   bool              m_overlay;
 
 public:
    /**
@@ -127,10 +138,50 @@ public:
     * @param transform
     * @param size
     * @param color
+    * @param overlay
     */
-   RCDrawDebugBox( const Matrix& transform, const Vector& size, const Color& color )
+   RCDrawDebugBox( const Matrix& transform, const Vector& size, const Color& color, bool overlay = false )
       : m_transform( transform )
       , m_size( size )
+      , m_color( color )
+      , m_overlay( overlay )
+   {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Rendering command for drawing a debug ring.
+ */
+class RCDrawDebugRing : public RenderCommand
+{
+private:
+   float             m_circumferenceWidth;
+   float             m_radius;
+   Matrix            m_transform;
+   Color             m_color;
+   bool              m_overlay;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param circumferenceWidth
+    * @param transform
+    * @param radius
+    * @param color
+    * @param overlay
+    */
+   RCDrawDebugRing( float circumferenceWidth, const Matrix& transform, float radius, const Color& color, bool overlay = false )
+      : m_circumferenceWidth( circumferenceWidth )
+      , m_radius( radius )
+      , m_overlay( overlay )
+      , m_transform( transform )
       , m_color( color )
    {}
 

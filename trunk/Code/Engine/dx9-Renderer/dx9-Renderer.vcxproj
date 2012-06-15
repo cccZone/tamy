@@ -85,6 +85,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DX9DebugPrimitivesSet.cpp" />
     <ClCompile Include="DX9DebugDrawCommands.cpp" />
     <ClCompile Include="DX9EffectsResourcesStorage.cpp" />
     <ClCompile Include="DX9FontResourcesStorage.cpp" />
@@ -124,6 +125,7 @@
     <ClCompile Include="DX9ShaderParamTexture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9DebugPrimitivesSet.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9EffectsResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9FontResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegmentsResourcesStorage.h" />
