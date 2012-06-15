@@ -170,6 +170,9 @@
     <ClCompile Include="ReflectionTests.cpp">
       <Filter>RTTI</Filter>
     </ClCompile>
+    <ClCompile Include="PlatformTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">

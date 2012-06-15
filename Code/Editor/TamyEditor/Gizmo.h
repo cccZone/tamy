@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor\Gizmo.h
 /// @brief  A selected object manipulation gizmo.
+#pragma once
 
 #include "core\Color.h"
 #include "core\IDebugDraw.h"
@@ -57,9 +56,9 @@ public:
    void onDebugRender( Renderer& renderer ) const;
 
 private:
-   void drawTranslationGizmo( Renderer& renderer ) const;
-   void drawRotationGizmo( Renderer& renderer ) const;
-   void drawScalingGizmo( Renderer& renderer ) const;
+   void drawTranslationGizmo( Renderer& renderer, float size ) const;
+   void drawRotationGizmo( Renderer& renderer, float size ) const;
+   void drawScalingGizmo( Renderer& renderer, float size ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

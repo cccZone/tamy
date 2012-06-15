@@ -30,6 +30,7 @@ class SceneRendererInputController;
 class TimeControllerTrack;
 class QueryRenderingPass;
 class SceneQuery;
+class Gizmo;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -60,6 +61,9 @@ private:
    CompositeRenderingMechanism*                       m_renderingMech;
    SelectionRenderingPass*                            m_selectionRenderer;
    QueryRenderingPass*                                m_queryRenderer;
+
+   // a gizmo that will be displayed when a scene object that can be manipulated gets selected
+   Gizmo*                                             m_gizmo;
 
 public:
    /**

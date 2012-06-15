@@ -3,7 +3,6 @@
 #include "SelectedEntityRepresentation.h"
 
 // representations
-#include "Gizmo.h"
 #include "SelectedGeometry.h"
 
 

@@ -10,6 +10,7 @@
 #include <QEvent.h>
 #include "SceneRendererInputController.h"
 #include "QueryRenderingPass.h"
+#include "Gizmo.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,6 +32,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
    , m_selectionRenderer( new SelectionRenderingPass() )
    , m_queryRenderer( new QueryRenderingPass() )
    , m_resMgr( NULL )
+   , m_gizmo( NULL )
 {
    m_hWnd = static_cast< HWND >( winId() );
    memset( m_keyBuffer, 0, sizeof( unsigned char ) * 256 );
@@ -496,6 +498,23 @@ unsigned char TamySceneWidget::toDXKey( int qtKeyCode ) const
 void TamySceneWidget::onEntitySelected( Entity& entity )
 {
    m_selectionRenderer->add( entity );
+
+   // create a manipulator gizmo
+   {
+      // delete the old one
+      if ( m_gizmo )
+      {
+         delete m_gizmo;
+         m_gizmo = NULL;
+      }
+
+      // create a new gizmo
+      if ( entity.isA< SpatialEntity >() )
+      {
+         m_gizmo = new Gizmo( static_cast< SpatialEntity& >( entity ) );
+         m_debugScene->add( *m_gizmo );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -503,6 +522,15 @@ void TamySceneWidget::onEntitySelected( Entity& entity )
 void TamySceneWidget::onEntityDeselected( Entity& entity )
 {
    m_selectionRenderer->remove( entity );
+
+   // remove the manipulator gizmo
+   if ( m_gizmo )
+   {
+      m_debugScene->remove( *m_gizmo );
+
+      delete m_gizmo;
+      m_gizmo = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

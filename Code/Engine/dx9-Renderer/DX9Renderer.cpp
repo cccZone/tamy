@@ -1,6 +1,7 @@
 #include "dx9-Renderer\DX9Renderer.h"
 #include "dx9-Renderer\DXErrorParser.h"
 #include "dx9-Renderer\DX9RenderTarget.h"
+#include "dx9-Renderer\DX9DebugPrimitivesSet.h"
 #include "core-Renderer\Camera.h"
 #include <stdexcept>
 #include <string>
@@ -27,10 +28,7 @@ DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
       , m_creationParams( creationParams )
       , m_deviceLost( false )
       , m_hardwareTLOn( hardwareTLOn )
-      , DEBUG_LINES_MAX_COUNT( 65535 )
-      , m_linesBuffer( NULL )
-      , m_pVertex( NULL )
-      , m_linesCount( 0 )
+      , DEBUG_ELEMENTS_MAX_COUNT( 65535 )
 {
    m_viewport.X = 0;
    m_viewport.Y = 0;
@@ -54,7 +52,14 @@ DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
    ADD_RESOURCE_STORAGE( RenderTargetsStorage, m_renderTargets );
 
    // setup debug data
-   m_linesBuffer = createVertexBuffer( DEBUG_LINES_MAX_COUNT * sizeof( DebugVertex ), 0, D3DFVF_XYZ | D3DFVF_DIFFUSE, D3DPOOL_MANAGED );
+   {
+      m_debugPrimitives[DPS_LINES]              = new DX9RegularDebugPrimitivesSet( *this, D3DPT_LINELIST,        true,    DEBUG_ELEMENTS_MAX_COUNT );
+      m_debugPrimitives[DPS_TRIANGLES]          = new DX9RegularDebugPrimitivesSet( *this, D3DPT_TRIANGLELIST,    true,    DEBUG_ELEMENTS_MAX_COUNT );
+      m_debugPrimitives[DPS_MESHES]             = new DX9IndexedDebugPrimitivesSet( *this, D3DPT_TRIANGLELIST,    true,    DEBUG_ELEMENTS_MAX_COUNT );
+      m_debugPrimitives[DPS_LINES_OVERLAY]      = new DX9RegularDebugPrimitivesSet( *this, D3DPT_LINELIST,        false,   DEBUG_ELEMENTS_MAX_COUNT );
+      m_debugPrimitives[DPS_TRIANGLES_OVERLAY]  = new DX9RegularDebugPrimitivesSet( *this, D3DPT_TRIANGLELIST,    false,   DEBUG_ELEMENTS_MAX_COUNT );
+      m_debugPrimitives[DPS_MESHES_OVERLAY]     = new DX9IndexedDebugPrimitivesSet( *this, D3DPT_TRIANGLELIST,    false,   DEBUG_ELEMENTS_MAX_COUNT );
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -71,12 +76,11 @@ DX9Renderer::~DX9Renderer()
    m_storages.clear();
    
    // release debug stuff
-   if ( m_linesBuffer )
+   for ( uint i = 0; i < DPS_MAX; ++i )
    {
-      m_linesBuffer->Release();
-      m_linesBuffer = NULL;
+      delete m_debugPrimitives[i];
+      m_debugPrimitives[i] = NULL;
    }
-   m_pVertex = NULL;
 
    // release the rendering device
    if ( m_d3Device != NULL )
@@ -405,24 +409,27 @@ DX9RenderTarget* DX9Renderer::getRenderTarget( RenderTarget& renderTarget )
 
 void DX9Renderer::beginScene()
 {
+   // begin scene rendering
    m_d3Device->BeginScene();
 
-   // reset the debug data
-   m_linesCount = 0;
-   ASSERT_MSG( m_pVertex == NULL, "Debug lines VB wasn't properly unlocked" );
-   m_linesBuffer->Lock( 0, DEBUG_LINES_MAX_COUNT * sizeof( DebugVertex ), (void**)&m_pVertex, 0 );
+   // kick off debug rendering
+   for ( uint i = 0; i < DPS_MAX; ++i )
+   {
+      m_debugPrimitives[i]->begin();
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 void DX9Renderer::endScene()
 {
-   if ( m_pVertex != NULL )
+   // finish debug rendering
+   for ( uint i = 0; i < DPS_MAX; ++i )
    {
-      m_linesBuffer->Unlock();
-      m_pVertex = NULL;
+      m_debugPrimitives[i]->end();
    }
 
+   // finish scene rendering
    m_d3Device->EndScene();
 }
 
@@ -438,21 +445,21 @@ void DX9Renderer::flushDebugScene()
    m_d3Device->SetTransform( D3DTS_WORLD, ( const D3DXMATRIX* )&Matrix::IDENTITY );
    m_d3Device->SetTransform( D3DTS_PROJECTION, ( const D3DXMATRIX* )&projectionMtx );
    m_d3Device->SetTransform( D3DTS_VIEW, ( const D3DXMATRIX* )&viewMtx );
+   
 
-   // unlock the lines buffer
-   m_linesBuffer->Unlock();
-   m_pVertex = NULL;
-
-   // draw the lines
+   // set the state
    m_d3Device->SetRenderState( D3DRS_AMBIENT, 0xFFFFFFFF );
    m_d3Device->SetRenderState( D3DRS_LIGHTING, false );
    m_d3Device->SetRenderState( D3DRS_AMBIENTMATERIALSOURCE, D3DMCS_COLOR1 );
    m_d3Device->SetRenderState( D3DRS_DIFFUSEMATERIALSOURCE, D3DMCS_COLOR1 );
-   m_d3Device->SetRenderState( D3DRS_ZENABLE, true );
-   m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, true );
+   m_d3Device->SetRenderState( D3DRS_FILLMODE, D3DFILL_SOLID );
    m_d3Device->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
-   m_d3Device->SetStreamSource( 0, m_linesBuffer, 0, sizeof( DebugVertex ) );
-   m_d3Device->DrawPrimitive( D3DPT_LINELIST, 0, m_linesCount );
+   
+   // draw particular sets of primitives
+   for ( uint i = 0; i < DPS_MAX; ++i )
+   {
+      m_debugPrimitives[i]->draw( m_d3Device );
+   }
 
    // cleanup
    m_d3Device->SetRenderState( D3DRS_AMBIENT, 0 );
@@ -460,22 +467,81 @@ void DX9Renderer::flushDebugScene()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DX9Renderer::addDebugLine( const Vector& start, const Vector& end, const Color& color )
+void DX9Renderer::addDebugLine( const Vector& start, const Vector& end, const Color& color, bool overlay )
 {
-   if ( !m_pVertex )
+   DX9RegularDebugPrimitivesSet* primitivesSet = static_cast< DX9RegularDebugPrimitivesSet* >( m_debugPrimitives[ overlay ? DPS_LINES_OVERLAY : DPS_LINES ] );
+   if ( !primitivesSet->m_pVertices )
    {
       return;
    }
 
-   m_pVertex->m_vtx = ( const D3DXVECTOR3& )start;
-   m_pVertex->m_color = D3DCOLOR_COLORVALUE( color.r, color.g, color.b, color.a );
-   ++m_pVertex;
+   DWORD colorVal = D3DCOLOR_COLORVALUE( color.r, color.g, color.b, color.a );
 
-   m_pVertex->m_vtx = ( const D3DXVECTOR3& )end;
-   m_pVertex->m_color = D3DCOLOR_COLORVALUE( color.r, color.g, color.b, color.a );
-   ++m_pVertex;
+   primitivesSet->m_pVertices->m_vtx = ( const D3DXVECTOR3& )start;
+   primitivesSet->m_pVertices->m_color = colorVal;
+   ++primitivesSet->m_pVertices;
 
-   ++m_linesCount;
+   primitivesSet->m_pVertices->m_vtx = ( const D3DXVECTOR3& )end;
+   primitivesSet->m_pVertices->m_color = colorVal;
+   ++primitivesSet->m_pVertices;
+
+   ++primitivesSet->m_primitivesCount;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DX9Renderer::addDebugTriangle( const Vector& v1, const Vector& v2, const Vector& v3, const Color& color, bool overlay )
+{
+   DX9RegularDebugPrimitivesSet* primitivesSet = static_cast< DX9RegularDebugPrimitivesSet* >( m_debugPrimitives[ overlay ? DPS_TRIANGLES_OVERLAY : DPS_TRIANGLES ] );
+   if ( !primitivesSet->m_pVertices )
+   {
+      return;
+   }
+
+   DWORD colorVal = D3DCOLOR_COLORVALUE( color.r, color.g, color.b, color.a );
+
+   primitivesSet->m_pVertices->m_vtx = ( const D3DXVECTOR3& )v1;
+   primitivesSet->m_pVertices->m_color = colorVal;
+   ++primitivesSet->m_pVertices;
+
+   primitivesSet->m_pVertices->m_vtx = ( const D3DXVECTOR3& )v2;
+   primitivesSet->m_pVertices->m_color = colorVal;
+   ++primitivesSet->m_pVertices;
+
+   primitivesSet->m_pVertices->m_vtx = ( const D3DXVECTOR3& )v3;
+   primitivesSet->m_pVertices->m_color = colorVal;
+   ++primitivesSet->m_pVertices;
+
+   ++primitivesSet->m_primitivesCount;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DX9Renderer::addIndexedMesh( const Vector* vertices, uint verticesCount, const word* indices, uint indicesCount, const Color& color, bool overlay )
+{
+   DX9IndexedDebugPrimitivesSet* primitivesSet = static_cast< DX9IndexedDebugPrimitivesSet* >( m_debugPrimitives[ overlay ? DPS_MESHES_OVERLAY : DPS_MESHES ] );
+   if ( !primitivesSet->m_pVertices || !primitivesSet->m_pIndices )
+   {
+      return;
+   }
+
+   DWORD colorVal = D3DCOLOR_COLORVALUE( color.r, color.g, color.b, color.a );
+
+   // setup new mesh
+   primitivesSet->addMesh( indicesCount );
+
+   // copy vertices
+   for ( uint i = 0; i < verticesCount; ++i, ++primitivesSet->m_pVertices )
+   {
+      primitivesSet->m_pVertices->m_vtx = ( const D3DXVECTOR3& )vertices[i];
+      primitivesSet->m_pVertices->m_color = colorVal;
+   }
+   primitivesSet->m_verticesCount += verticesCount;
+
+   // copy indices
+   memcpy( primitivesSet->m_pIndices, indices, sizeof( word ) * indicesCount );
+   primitivesSet->m_pIndices += indicesCount;
+   primitivesSet->m_indicesCount += indicesCount;
 }
 
 /////////////////////////////////////////////////////////////////////////////

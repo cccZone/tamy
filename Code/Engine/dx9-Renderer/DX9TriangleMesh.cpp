@@ -1,7 +1,5 @@
 #include "dx9-Renderer\DX9TriangleMesh.h"
 #include "dx9-Renderer\DX9Renderer.h"
-#include <stdexcept>
-
 #include "core-Renderer\LitVertex.h"
 
 
@@ -80,7 +78,8 @@ void DX9TriangleMesh::initialize()
    HRESULT res = D3DXCreateMeshFVF( trianglesCount, verticesCount, D3DXMESH_MANAGED, FVF, m_d3Device, &dxMesh );
    if ( FAILED(res) ) 
    { 
-      throw std::logic_error( "Can't create a mesh" ); 
+      ASSERT_MSG( false, "Can't create a mesh" ); 
+      return;
    }
 
    // fill the vertex buffer, analyze the bounding sphere radius on the way
@@ -88,7 +87,8 @@ void DX9TriangleMesh::initialize()
    res = dxMesh->LockVertexBuffer( 0, (void**)&pVertex );
    if ( FAILED( res ) ) 
    { 
-      throw std::logic_error( "Can't lock the mesh's vertex buffer" );
+      ASSERT_MSG( false, "Can't lock the mesh's vertex buffer" );
+      return;
    }
    vertices->copyTo( pVertex );
    dxMesh->UnlockVertexBuffer();
@@ -99,12 +99,14 @@ void DX9TriangleMesh::initialize()
    res = dxMesh->LockIndexBuffer( 0, (void**)&pIndex );
    if ( FAILED( res ) ) 
    { 
-      throw std::logic_error( "Can't lock the mesh's index buffer" ); 
+      ASSERT_MSG( false, "Can't lock the mesh's index buffer" ); 
+      return;
    }
    res = dxMesh->LockAttributeBuffer(0, &pAttrib );
    if ( FAILED( res ) ) 
    { 
-      throw std::logic_error( "Can't lock the mesh's attributes buffer" );
+      ASSERT_MSG( false, "Can't lock the mesh's attributes buffer" );
+      return;
    }
 
    for ( unsigned int i = 0; i < trianglesCount; ++i )
