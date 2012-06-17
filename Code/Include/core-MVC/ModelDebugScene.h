@@ -8,7 +8,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class DebugScene;
+class Model;
 class IDebugDrawable;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,11 +20,11 @@ class IDebugDrawable;
 class ModelDebugScene : public ModelView
 {
 private:
-   DebugScene&                   m_debugScene;
+   Model&                        m_debugScene;
    std::set< IDebugDrawable* >   m_entities;
 
 public:
-   ModelDebugScene( DebugScene& debugScene );
+   ModelDebugScene( Model& debugScene );
    ~ModelDebugScene();
 
    // -------------------------------------------------------------------------

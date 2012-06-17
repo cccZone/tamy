@@ -389,7 +389,7 @@ QString SceneTreeViewer::EntityTreeItem::getEntityName( Entity* entity ) const
 
    if ( ( geometry = dynamic_cast< Geometry* >( entity ) ) != NULL )
    {
-      return geometry->getGeometryName().c_str();
+      return geometry->getMeshName().c_str();
    }
    else
    {

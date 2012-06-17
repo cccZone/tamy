@@ -94,6 +94,15 @@
     <Filter Include="Geometry\GeometryShader\Nodes">
       <UniqueIdentifier>{13811136-7bb4-4d68-9f57-9273ee471fc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\RenderTree">
+      <UniqueIdentifier>{1601212b-c375-49c6-bf6f-2334b3e6e6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\RenderableSurfaces">
+      <UniqueIdentifier>{a5194200-09f1-4f16-b33e-a649addf10fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\BasicRenderCommands">
+      <UniqueIdentifier>{aea930df-4d3d-446a-ba5f-54682bcb5f8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -189,23 +198,14 @@
     <ClCompile Include="RenderingPipelineSockets.cpp">
       <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTarget.cpp">
-      <Filter>Materials\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="RenderingView.cpp">
       <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClCompile>
     <ClCompile Include="RenderResource.cpp">
       <Filter>Core\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="SceneRenderTreeBuilder.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Views</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Core\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderTexture.cpp">
-      <Filter>Materials\Resources</Filter>
     </ClCompile>
     <ClCompile Include="RPSBTextured.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
@@ -343,6 +343,18 @@
       <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
+    <ClCompile Include="RenderTree.cpp">
+      <Filter>Core\RenderTree</Filter>
+    </ClCompile>
+    <ClCompile Include="StatefulRenderTreeBuilder.cpp">
+      <Filter>Core\RenderTree</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
+      <Filter>Core\RenderableSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderTexture.cpp">
+      <Filter>Core\RenderableSurfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -480,9 +492,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\PixelShader.h">
       <Filter>Materials\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h">
-      <Filter>Materials\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VertexShader.h">
       <Filter>Geometry\Resources</Filter>
     </ClInclude>
@@ -507,13 +516,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h">
       <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h">
-      <Filter>Materials\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h">
-      <Filter>Mechanisms\RenderingPipeline\Views</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RenderState.h">
       <Filter>Mechanisms\RenderingPipeline\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h">
@@ -693,6 +696,24 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptors.h">
       <Filter>Geometry\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderTree.h">
+      <Filter>Core\RenderTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderState.h">
+      <Filter>Core\RenderTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\StatefulRenderTreeBuilder.h">
+      <Filter>Core\RenderTree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h">
+      <Filter>Core\RenderableSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h">
+      <Filter>Core\RenderableSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\BasicRenderCommands.h">
+      <Filter>Core\BasicRenderCommands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

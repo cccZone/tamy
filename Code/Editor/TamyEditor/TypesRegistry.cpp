@@ -116,3 +116,12 @@ REGISTER_TYPE( NodeManipulationState );
 REGISTER_EXTERNAL_TYPE( QPointF );
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "GizmoMaterial.h"
+#include "GizmoAxis.h"
+#include "Gizmo.h"
+REGISTER_ABSTRACT_TYPE( GizmoMaterial );
+REGISTER_ABSTRACT_TYPE( GizmoAxis );
+REGISTER_ABSTRACT_TYPE( Gizmo );
+
+///////////////////////////////////////////////////////////////////////////////

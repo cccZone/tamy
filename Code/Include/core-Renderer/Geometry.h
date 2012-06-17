@@ -97,19 +97,26 @@ public:
    virtual const BoundingVolume& getBoundingVolume() const;
 
    /**
+    * Sets the new geometry resource.
+    *
+    * @param 
+    */
+   void setMesh( GeometryResource& mesh );
+
+   /**
     * Returns the name of the geometry resource used by this geometry entity.
     */
-   std::string getGeometryName() const;
+   std::string getMeshName() const;
 
    /**
     * Tells if the entity has a geometry resource attached.
     */
-   inline bool hasGeometry() const { return m_resource != NULL; }
+   inline bool hasMesh() const { return m_resource != NULL; }
 
    /**
     * Returns the attached geometry resource.
     */
-   inline GeometryResource& getGeometry() const { return *m_resource; }
+   inline GeometryResource& getMesh() const { return *m_resource; }
 
 protected:
    /**

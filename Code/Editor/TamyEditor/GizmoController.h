@@ -1,5 +1,5 @@
-/// @file   TamyEditor/NodeTransformController.h
-/// @brief  translates the manipulated node
+/// @file   TamyEditor/GizmoController.h
+/// @brief  manipulates the selected objects through its manipulation gizmo
 #pragma once
 
 #include "SceneRendererInputController.h"
@@ -14,18 +14,11 @@ class Renderer;
 class Camera;
 class SpatialEntity;
 class Node;
+class GizmoAxis;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-enum NodeTransformControlMode
-{
-   NTM_TRANSLATE,
-   NTM_ROTATE
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-class NodeTransformController : public SceneRendererInputController
+class GizmoController : public SceneRendererInputController
 {
 private:
    enum MovementDirection
@@ -40,22 +33,18 @@ private:
    UserInputController*                   m_uic;
    const Renderer*                        m_renderer;
    const Camera*                          m_camera;
-   std::vector< SpatialEntity* >          m_nodes;
+   GizmoAxis&                             m_gizmoAxis;
 
    bool                                   m_movementDir[4];
-   Vector                                 m_rotationAxis;
-
-   NodeTransformControlMode               m_controlMode;
 
 public:
    /**
     * Constructor.
     *
-    * @param nodes    controlled nodes
-    * @param mode     control mode
+    * @param gizmoAxis
     */
-   NodeTransformController( const std::vector< SpatialEntity* >& nodes, NodeTransformControlMode mode );
-   ~NodeTransformController();
+   GizmoController( GizmoAxis& gizmoAxis );
+   ~GizmoController();
 
    // -------------------------------------------------------------------------
    // SceneRendererInputController implementation
@@ -73,10 +62,6 @@ public:
    void keySmashed( unsigned char keyCode );
    void keyHeld( unsigned char keyCode );
    void keyReleased( unsigned char keyCode );
-
-private:
-   void transformNode( Node& node, const Vector& valChange ) const;
-   void selectGlobalRotationAxis( Vector& outRotationAxis ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

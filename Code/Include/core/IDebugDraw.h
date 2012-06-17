@@ -2,12 +2,10 @@
 /// @brief  a common debug draw interface of the engine
 #pragma once
 
-#include <vector>
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Renderer;
+class Model;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,48 +24,17 @@ public:
    virtual ~IDebugDrawable() {}
 
    /**
-    * Should be called when it's time to render some stuff using a debug renderer.
+    * Initialize the debug geometry in this method
     *
     * @param renderer
     */
-   virtual void onDebugRender( Renderer& renderer ) const = 0;
+   virtual void onInitializeDebugRepresentation( Model& debugScene ) const = 0;
+
+   /**
+    * Deinitialize the debug geometry in this method.
+    */
+   virtual void onDeinitializeDebugRepresentation( Model& debugScene ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-/**
- * A composite capable of holding many debug drawables and exposing them 
- * to the host mechanism as a single instance.
- */
-class DebugScene : public IDebugDrawable
-{
-private:
-   std::vector< IDebugDrawable* >   m_drawables;
-
-public:
-   /**
-    * Adds a new drawable to the scene.
-    *
-    * @param drawable
-    */
-   void add( IDebugDrawable& drawable );
-
-   /**
-    * Removes a drawable from the scene.
-    *
-    * @param drawable
-    */
-   void remove( IDebugDrawable& drawable );
-
-   /**
-    * Clears the contents of the debug scene.
-    */
-   void clear();
-
-   // -------------------------------------------------------------------------
-   // IDebugDrawable implementation
-   // -------------------------------------------------------------------------
-   void onDebugRender( Renderer& renderer ) const;
-};
-
-///////////////////////////////////////////////////////////////////////////////

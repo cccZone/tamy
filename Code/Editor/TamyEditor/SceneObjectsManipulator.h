@@ -37,12 +37,6 @@ public:
    SceneObjectsManipulator( SceneEditor& editor );
    ~SceneObjectsManipulator();
 
-
-   /**
-    * Called by the SceneEditor when manipulation-related settings have changed.
-    */
-   void onSettingsChanged();
-
    // -------------------------------------------------------------------------
    // States API
    // -------------------------------------------------------------------------

@@ -10,6 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 enum NodeTransformControlMode;
+class GizmoAxis;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +21,22 @@ class NodeManipulationState : public FSMState< SceneObjectsManipulator >, public
 {
    DECLARE_CLASS()
 
+private:
+   GizmoAxis*        m_gizmoAxis;
+
 public:
+   /**
+    * Constructor.
+    */
+   NodeManipulationState();
+
+   /**
+    * Sets the gizmo axis we will use to manipulate the object.
+    *
+    * @param selectedGizmoAxis
+    */
+   void setGizmoAxis( GizmoAxis& selectedGizmoAxis );
+
    // ----------------------------------------------------------------------
    // FSMState implementation
    // ----------------------------------------------------------------------
@@ -30,7 +46,6 @@ public:
    // ----------------------------------------------------------------------
    // SceneObjectsManipulatorState implementation
    // ----------------------------------------------------------------------
-   void onSettingsChanged();
    bool keySmashed( unsigned char keyCode );
    bool keyHeld( unsigned char keyCode );
    bool keyReleased( unsigned char keyCode );

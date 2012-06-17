@@ -32,7 +32,6 @@ RenderingPipelineMechanism::RenderingPipelineMechanism( RenderingPipeline* pipel
    : m_pipeline( pipeline )
    , m_renderer( NULL )
    , m_runtimeDataBuffer( NULL )
-   , m_debugScene( NULL )
 {
    // attach self as the observer
    if ( m_pipeline )
@@ -63,8 +62,6 @@ RenderingPipelineMechanism::~RenderingPipelineMechanism()
       delete m_scenes[i];
    }
    m_scenes.clear();
-
-   m_debugScene = NULL;
 
    delete m_runtimeDataBuffer;
    m_runtimeDataBuffer = NULL;
@@ -128,20 +125,6 @@ const Array< Geometry*> & RenderingPipelineMechanism::getSceneElements( RPMScene
 { 
    ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to query a scene with an invalid sceneId" );
    return m_scenes[sceneId]->m_visibleElems; 
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineMechanism::setDebugScene( DebugScene& debugScene )
-{
-   m_debugScene = &debugScene;
-
-   // attach it to the models
-   unsigned int count = m_scenes.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      m_scenes[i]->setDebugScene( debugScene );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -244,17 +227,25 @@ void RenderingPipelineMechanism::pipelineDeinitialization()
 {
    ASSERT( m_renderer != NULL );
 
-   // deinitialize nodes
+   // 1.) detach observers
    for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
    {
       // some of the nodes might not be there - verify that
       (*it)->detachObserver( *this );
    }
+
+   // 2.) deinitialize the nodes
+   for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
+   {
+      // some of the nodes might not be there - verify that
+      (*it)->detachObserver( *this );
+   }
+
    m_nodesQueue.clear();
 
+   // deinitialize render targets
    if ( m_pipeline )
    {
-      // deinitialize render targets
       const std::vector< RenderTargetDescriptor* >& renderTargets = m_pipeline->getRenderTargets();
       for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
       {
@@ -368,43 +359,11 @@ void RenderingPipelineMechanism::cacheNodes()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineMechanism::renderDebugScene( RenderTarget* renderTarget )
-{
-   if ( !m_renderer )
-   {
-      return;
-   }
-
-   // set the rendering target
-   new ( (*m_renderer)() ) RCActivateRenderTarget( renderTarget );
-
-   // prepare for debug scene rendering
-   new ( (*m_renderer)() ) RCBeginDebugScene();
-
-   // draw a reference grid
-   static float gridLinesSpacing = 10;
-   static float gridSize = 1000;
-   static Color gridColor( 100, 100, 255 );
-   new ( (*m_renderer)() ) RCDrawDebugGrid( gridSize, gridLinesSpacing, gridColor );
-
-   // draw the debug info
-   if ( m_debugScene != NULL )
-   {
-      m_debugScene->onDebugRender( *m_renderer );
-   }
-
-   // render the scene
-   new ( (*m_renderer)() ) RCEndDebugScene();
-}
-
-///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingPipelineMechanism::RenderedScene::RenderedScene()
    : m_renderingView( NULL )
-   , m_debugSceneView( NULL )
    , m_model( NULL )
 {
 }
@@ -413,8 +372,6 @@ RenderingPipelineMechanism::RenderedScene::RenderedScene()
 
 RenderingPipelineMechanism::RenderedScene::~RenderedScene()
 {
-   delete m_debugSceneView;
-   m_debugSceneView = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -430,9 +387,6 @@ void RenderingPipelineMechanism::RenderedScene::initialize( Renderer& renderer )
 
 void RenderingPipelineMechanism::RenderedScene::deinitialize( Renderer& renderer )
 {
-   delete m_debugSceneView;
-   m_debugSceneView = NULL;
-
    delete m_renderingView;
    m_renderingView = NULL;
 }
@@ -458,11 +412,6 @@ void RenderingPipelineMechanism::RenderedScene::setModel( Model* model )
    {
       // detach the old model from the views
       m_model->detach( *m_renderingView );
-
-      if ( m_debugSceneView )
-      {
-         m_model->detach( *m_debugSceneView );
-      }
    }
 
    // set the new model
@@ -472,35 +421,6 @@ void RenderingPipelineMechanism::RenderedScene::setModel( Model* model )
    {
       // attach the new model to the views
       m_model->attach( *m_renderingView );
-
-      if ( m_debugSceneView )
-      {
-         m_model->attach( *m_debugSceneView );
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineMechanism::RenderedScene::setDebugScene( DebugScene& scene )
-{
-   ASSERT_MSG( m_renderingView != NULL, "Rendering view doesn't exist" );
-   if ( m_renderingView == NULL )
-   {
-      return;
-   }
-
-   if ( m_model && m_debugSceneView )
-   {
-      m_model->detach( *m_debugSceneView );
-   }
-
-   delete m_debugSceneView;
-   m_debugSceneView = new ModelDebugScene( scene );
-
-   if ( m_model )
-   {
-      m_model->attach( *m_debugSceneView );
    }
 }
 

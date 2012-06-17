@@ -16,7 +16,6 @@
 #include "SceneTreeViewer.h"
 #include "SelectionManager.h"
 #include "SceneObjectsManipulator.h"
-#include "NodeTransformController.h"
 #include "DropFrame.h"
 #include "FSNodeMimeData.h"
 
@@ -32,7 +31,6 @@ SceneEditor::SceneEditor( Model& scene )
    , m_selectionManager( NULL )
    , m_playing( false )
    , m_sceneObjectsManipulator( NULL )
-   , m_objectsManipulationMode( NTM_TRANSLATE )
 {
 }
 
@@ -318,16 +316,14 @@ void SceneEditor::selectionCleaned()
 
 void SceneEditor::setNodeTranslateMode()
 {
-   m_objectsManipulationMode = NTM_TRANSLATE;
-   m_sceneObjectsManipulator->onSettingsChanged();
+   m_sceneWidget->setGizmoTranslationMode();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SceneEditor::setNodeRotateMode()
 {
-   m_objectsManipulationMode = NTM_ROTATE;
-   m_sceneObjectsManipulator->onSettingsChanged();
+   m_sceneWidget->setGizmoRotationMode();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

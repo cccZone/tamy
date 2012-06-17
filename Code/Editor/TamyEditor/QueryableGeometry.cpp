@@ -16,7 +16,7 @@ QueryableGeometry::QueryableGeometry( Geometry& geometry )
 
 void QueryableGeometry::render( Renderer& renderer, PixelShader& shader )
 {
-   if ( !m_geometry.hasGeometry() )
+   if ( !m_geometry.hasMesh() )
    {
       return;
    }

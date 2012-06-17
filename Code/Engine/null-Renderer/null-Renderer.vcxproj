@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="NullBasicRenderCommands.cpp" />
     <ClCompile Include="NullDebugDrawCommands.cpp" />
     <ClCompile Include="NullEffectShader.cpp" />
     <ClCompile Include="NullFont.cpp" />

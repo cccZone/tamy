@@ -2,193 +2,230 @@
 #include "core-Renderer.h"
 #include "core.h"
 #include "core-MVC.h"
+#include "GizmoAxis.h"
+#include "GizmoMaterial.h"
+#include "DebugGeometryBuilder.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Gizmo::Gizmo( SpatialEntity& node )
+BEGIN_ABSTRACT_OBJECT(Gizmo)
+   PARENT( SpatialEntity )
+END_OBJECT()
+
+///////////////////////////////////////////////////////////////////////////////
+
+Gizmo::Gizmo( SpatialEntity& node, Mode mode, Camera& activeCamera )
    : m_node( node )
-   , SIZE( 10.f )
+   , m_mode( (Mode)-1 )
    , OX_COLOR( 1, 0, 0, 1 )
    , OY_COLOR( 0, 1, 0, 1 )
    , OZ_COLOR( 0, 0, 1, 1 )
+   , m_translationOp( new TranslationGizmoOp() )
+   , m_rotationOp( new RotationGizmoOp() )
+   , m_scalingOp( new ScalingGizmoOp() )
 {
+   m_axisMaterial[0] = new GizmoMaterial( 0, OX_COLOR );
+   m_axisMaterial[1] = new GizmoMaterial( 1, OY_COLOR );
+   m_axisMaterial[2] = new GizmoMaterial( 2, OZ_COLOR );
+
+   for ( byte i = 0; i < 3; ++i )
+   {
+      m_meshes[i] = NULL;
+      m_geometry[i] = new GizmoAxis( i, m_node, activeCamera );
+      m_geometry[i]->addState( *( m_axisMaterial[i] ) );
+      add( m_geometry[i] );
+   }
+
    // set the initial mode
-   setMode( GM_SCALING );
+   setMode( mode );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Gizmo::~Gizmo()
 {
+   // remove the materials, since they are not managed
+   for ( byte i = 0; i < 3; ++i )
+   {
+      delete m_axisMaterial[i];
+      m_axisMaterial[i] = NULL;
+   }
+
+   // geometries will be removed by this entity
+   for ( byte i = 0; i < 3; ++i )
+   {
+      m_geometry[i] = NULL;
+   }
+
+   delete m_translationOp;
+   m_translationOp = NULL;
+
+   delete m_rotationOp;
+   m_rotationOp = NULL;
+
+   delete m_scalingOp;
+   m_scalingOp = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Gizmo::setMode( Mode mode )
 {
+   if ( m_mode == mode )
+   {
+      return;
+   }
+
    // set the new mode and the related geometry
    m_mode = mode;
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-void Gizmo::onDebugRender( Renderer& renderer ) const
-{
-   // we want the gizmo's size to be always the same - no matter how far away the camera is from the object.
-   // So calculate the distance to the object and rescale the gizmo accordingly
-   const Matrix& nodeMtx = m_node.getGlobalMtx();
-
-   Vector cameraPos;
-   renderer.getActiveCamera().getPosition( cameraPos );
-   cameraPos.sub( nodeMtx.position() );
-   float distFromCamera = cameraPos.length();
-   float size = SIZE * distFromCamera;
-
-   // draw a proper gizmo shape
    switch( m_mode )
    {
    case GM_TRANSLATION:
       {
-         drawTranslationGizmo( renderer, size );
+         createTranslationGizmo();
          break;
       }
 
    case GM_ROTATION:
       {
-         drawRotationGizmo( renderer, size );
+         createRotationGizmo();
          break;
       }
 
    case GM_SCALING:
       {
-         drawScalingGizmo( renderer, size );
+         createScalingGizmo();
          break;
       }
    }
 }
 
+// <gizmo.todo>:
+// - custom vertices can be used to define meshes
+// - ability to switch between the edition modes
+// - nodes can be manipulated ONLY by dragging the gizmo ( or manual transform edition )
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
-void Gizmo::drawTranslationGizmo( Renderer& renderer, float size ) const
+void Gizmo::createTranslationGizmo()
 {
    const Matrix& mtx = m_node.getGlobalMtx();
-   const Vector& start = mtx.position();
 
-   float armHalfLength = 0.01f * size;
-   float armHalfDim = 0.0003f * size;
-
+   float armLength = 0.2f;
+   float armHalfDim = 0.003f;
    Vector ox, oy, oz;
-   mtx.transformNorm( Vector::OX, ox );
-   mtx.transformNorm( Vector::OY, oy );
-   mtx.transformNorm( Vector::OZ, oz );
-   ox.mul( armHalfLength ).add( start );
-   oy.mul( armHalfLength ).add( start );
-   oz.mul( armHalfLength ).add( start );
+   ox.setMul( Vector::OX, armLength );
+   oy.setMul( Vector::OY, armLength );
+   oz.setMul( Vector::OZ, armLength );
 
    // OX
-   new ( renderer() ) RCDrawDebugArrow( armHalfDim, start, ox, OX_COLOR, OVERLAY );
+   delete m_meshes[0];
+   m_meshes[0] = DebugGeometryBuilder::createArrow( armHalfDim, Vector::ZERO, ox );
+   m_geometry[0]->setMesh( *m_meshes[0] );
+   m_geometry[0]->setOperation( *m_translationOp );
 
    // OY
-   new ( renderer() ) RCDrawDebugArrow( armHalfDim, start, oy, OY_COLOR, OVERLAY );
+   delete m_meshes[1];
+   m_meshes[1] = DebugGeometryBuilder::createArrow( armHalfDim, Vector::ZERO, oy );
+   m_geometry[1]->setMesh( *m_meshes[1] );
+   m_geometry[1]->setOperation( *m_translationOp );
 
    // OZ
-   new ( renderer() ) RCDrawDebugArrow( armHalfDim, start, oz, OZ_COLOR, OVERLAY );
+   delete m_meshes[2];
+   m_meshes[2] = DebugGeometryBuilder::createArrow( armHalfDim, Vector::ZERO, oz );
+   m_geometry[2]->setMesh( *m_meshes[2] );
+   m_geometry[2]->setOperation( *m_translationOp );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Gizmo::drawRotationGizmo( Renderer& renderer, float size ) const
+void Gizmo::createRotationGizmo()
 {
    const Matrix& mtx = m_node.getGlobalMtx();
-   const Vector& start = mtx.position();
    Quaternion rotQ;
 
-   float ringRadius = 0.02f * size;
-   float ringCircumferenceWidth = 0.0003f * size;
+   float ringRadius = 0.2f;
+   float ringCircumferenceWidth = 0.003f;
 
    Matrix transformOX, transformOY, transformOZ;
-   Quaternion q; 
 
    // <math.todo> next candidate for optimization as soon as I introduce the Transform class - get rid of those matrices then!!!
 
    // calculate transform OX
    {
-      q.setAxisAngle( mtx.sideVec(), DEG2RAD( 90.0f ) );
-      mtx.getRotation( rotQ );
-      rotQ.mul( q );
-
+      rotQ.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
       transformOX.setRotation( rotQ );
-      transformOX.setPosition( start );
    }
 
    // calculate transform OY
    {
-      q.setAxisAngle( mtx.upVec(), DEG2RAD( 90.0f ) );
-      mtx.getRotation( rotQ );
-      rotQ.mul( q );
-
+      rotQ.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
       transformOY.setRotation( rotQ );
-      transformOY.setPosition( start );
    }
 
    // calculate transform OZ
    {
-      q.setAxisAngle( mtx.forwardVec(), DEG2RAD( 90.0f ) );
-      mtx.getRotation( rotQ );
-      rotQ.mul( q );
-
+      rotQ.setAxisAngle( Vector::OZ, DEG2RAD( 90.0f ) );
       transformOZ.setRotation( rotQ );
-      transformOZ.setPosition( start );
    }
 
+   const uint segmentsCount = 56;
+   const uint segmentVerticesCount = 3;
+   float innerRadius = ringRadius - ringCircumferenceWidth * 0.5f;
+   float outerRadius = ringRadius + ringCircumferenceWidth * 0.5f;
+
    // OX
-   new ( renderer() ) RCDrawDebugRing( ringCircumferenceWidth, transformOX, ringRadius, OX_COLOR, OVERLAY );
+   delete m_meshes[0];
+   m_meshes[0] = DebugGeometryBuilder::createTorus( innerRadius, outerRadius, transformOX, segmentsCount, segmentVerticesCount );
+   m_geometry[0]->setMesh( *( m_meshes[0] ) );
+   m_geometry[0]->setOperation( *m_rotationOp );
    
    // OY
-   new ( renderer() ) RCDrawDebugRing( ringCircumferenceWidth, transformOY, ringRadius, OY_COLOR, OVERLAY );
+   delete m_meshes[1];
+   m_meshes[1] = DebugGeometryBuilder::createTorus( innerRadius, outerRadius, transformOY, segmentsCount, segmentVerticesCount );
+   m_geometry[1]->setMesh( *( m_meshes[1] ) );
+   m_geometry[1]->setOperation( *m_rotationOp );
 
    // OZ
-   new ( renderer() ) RCDrawDebugRing( ringCircumferenceWidth, transformOZ, ringRadius, OZ_COLOR, OVERLAY );
+   delete m_meshes[2];
+   m_meshes[2] = DebugGeometryBuilder::createTorus( innerRadius, outerRadius, transformOZ, segmentsCount, segmentVerticesCount );
+   m_geometry[2]->setMesh( *( m_meshes[2] ) );
+   m_geometry[2]->setOperation( *m_rotationOp );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Gizmo::drawScalingGizmo( Renderer& renderer, float size ) const
+void Gizmo::createScalingGizmo()
 {
    const Matrix& mtx = m_node.getGlobalMtx();
 
-
-   float armHalfLength = 0.01f * size;
-   float armHalfDim = 0.0003f * size;
-
-   Vector endBoxSize( armHalfDim, armHalfDim, armHalfDim );
-   endBoxSize.mul( 6 );
-
-   const Vector oxBoxSize( armHalfLength, armHalfDim, armHalfDim );
-   const Vector oyBoxSize( armHalfDim, armHalfLength, armHalfDim );
-   const Vector ozBoxSize( armHalfDim, armHalfDim, armHalfLength );
+   float armLength = 0.2f;
+   float armHalfDim = 0.003f;
+   Vector ox, oy, oz;
+   ox.setMul( Vector::OX, armLength );
+   oy.setMul( Vector::OY, armLength );
+   oz.setMul( Vector::OZ, armLength );
 
    // OX
-   Matrix boxTransform = mtx;
-   boxTransform.m41 += armHalfLength;
-   new ( renderer() ) RCDrawDebugBox( boxTransform, oxBoxSize, OX_COLOR, OVERLAY );
-   boxTransform.m41 += armHalfLength;
-   new ( renderer() ) RCDrawDebugBox( boxTransform, endBoxSize, OX_COLOR, OVERLAY );
+   delete m_meshes[0];
+   m_meshes[0] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector::ZERO, ox );
+   m_geometry[0]->setMesh( *m_meshes[0] );
+   m_geometry[0]->setOperation( *m_scalingOp );
 
    // OY
-   boxTransform.m41 = mtx.m41;
-   boxTransform.m42 += armHalfLength;
-   new ( renderer() ) RCDrawDebugBox( boxTransform, oyBoxSize, OY_COLOR, OVERLAY );
-   boxTransform.m42 += armHalfLength;
-   new ( renderer() ) RCDrawDebugBox( boxTransform, endBoxSize, OY_COLOR, OVERLAY );
+   delete m_meshes[1];
+   m_meshes[1] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector::ZERO, oy );
+   m_geometry[1]->setMesh( *m_meshes[1] );
+   m_geometry[1]->setOperation( *m_scalingOp );
 
    // OZ
-   boxTransform.m42 = mtx.m42;
-   boxTransform.m43 += armHalfLength;
-   new ( renderer() ) RCDrawDebugBox( boxTransform, ozBoxSize, OZ_COLOR, OVERLAY );
-   boxTransform.m43 += armHalfLength;
-   new ( renderer() ) RCDrawDebugBox( boxTransform, endBoxSize, OZ_COLOR, OVERLAY );
+   delete m_meshes[2];
+   m_meshes[2] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector::ZERO, oz );
+   m_geometry[2]->setMesh( *m_meshes[2] );
+   m_geometry[2]->setOperation( *m_scalingOp );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

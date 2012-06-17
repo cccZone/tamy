@@ -84,5 +84,8 @@
     <ClCompile Include="NullShaderCompiler.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="NullBasicRenderCommands.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

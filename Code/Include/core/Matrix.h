@@ -3,6 +3,7 @@
 #pragma once
 
 #include <iostream>
+#include "core/types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -213,6 +214,13 @@ struct Matrix
    const Vector& position() const;
 
    /**
+    * Returns the specified row vector.
+    *
+    * @param axisIdx    values in range <0..3> ONLY
+    */
+   const Vector& getRow( byte rowIdx ) const;
+
+   /**
     * Sets the new value for the row that represents the side axis.
     *
     * @param vec
@@ -245,7 +253,14 @@ struct Matrix
     *
     * @param outScaleVec
     */
-   void scale( Vector& outScaleVec ) const;
+   void getScale( Vector& outScaleVec ) const;
+
+   /**
+    * Applies a uniform scale to this matrix ( it doesn't override any coefficients, but is multipled by them ).
+    *
+    * @param scale
+    */
+   void scaleUniform( float scale );
 
    /**
     * Returns the coordinate system axes and the position vector.

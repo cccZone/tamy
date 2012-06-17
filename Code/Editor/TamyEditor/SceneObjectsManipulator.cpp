@@ -1,5 +1,4 @@
 #include "SceneObjectsManipulator.h"
-#include "NodeTransformController.h"
 #include "TamySceneWidget.h"
 #include "core-MVC/SpatialEntity.h"
 
@@ -34,13 +33,6 @@ SceneObjectsManipulator::~SceneObjectsManipulator()
    m_activeController = NULL;
 
    m_selectedNodes.clear();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SceneObjectsManipulator::onSettingsChanged()
-{
-   getCurrentState< SceneObjectsManipulatorState >().onSettingsChanged();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -143,7 +135,6 @@ void SceneObjectsManipulator::onEntitySelected( Entity& entity )
    }
 
    m_selectedNodes.push_back( node );
-   onSettingsChanged();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,7 +147,6 @@ void SceneObjectsManipulator::onEntityDeselected( Entity& entity )
       if ( m_selectedNodes[i] == &entity )
       {
          m_selectedNodes.erase( m_selectedNodes.begin() + i );
-         onSettingsChanged();     
          break;
       }
    }

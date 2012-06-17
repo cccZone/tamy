@@ -1,6 +1,6 @@
 #include "NodeManipulationState.h"
 #include "NavigationState.h"
-#include "NodeTransformController.h"
+#include "GizmoController.h"
 #include "TamySceneWidget.h"
 #include "SceneEditor.h"
 
@@ -10,12 +10,25 @@
 BEGIN_OBJECT( NodeManipulationState )
 END_OBJECT()
 
+///////////////////////////////////////////////////////////////////////////////
+
+NodeManipulationState::NodeManipulationState()
+   : m_gizmoAxis( NULL )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void NodeManipulationState::setGizmoAxis( GizmoAxis& selectedGizmoAxis )
+{
+   m_gizmoAxis = &selectedGizmoAxis;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void NodeManipulationState::activate()
 {
-   if ( fsm().areNodesSelected() )
+   if ( fsm().areNodesSelected() && m_gizmoAxis )
    {
       setupController();
    }
@@ -34,22 +47,10 @@ void NodeManipulationState::deactivate()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void NodeManipulationState::onSettingsChanged()
-{
-   // reset the node transform controller
-   setupController();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void NodeManipulationState::setupController()
 {
    SceneObjectsManipulator& controller = fsm();
-
-   SceneEditor& sceneEditor = controller.getSceneEditor();
-   NodeTransformControlMode manipulationMode = sceneEditor.getObjectsManipulationMode();
-
-   controller.setController( new NodeTransformController( controller.getSelectedNodes(), manipulationMode ) ); 
+   controller.setController( new GizmoController( *m_gizmoAxis ) ); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////

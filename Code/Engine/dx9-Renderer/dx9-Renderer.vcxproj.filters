@@ -144,6 +144,9 @@
     <ClCompile Include="DX9DebugPrimitivesSet.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="DX9BasicRenderCommands.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">

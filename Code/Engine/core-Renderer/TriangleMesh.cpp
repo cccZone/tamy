@@ -26,6 +26,7 @@ TriangleMesh::TriangleMesh( const FilePath& resourceName, const std::vector<LitV
    , m_faces(faces)
 {
    m_identityMtx = Matrix::IDENTITY;
+   calculateBoundingVolume();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,6 +39,13 @@ TriangleMesh::~TriangleMesh()
 ///////////////////////////////////////////////////////////////////////////////
 
 void TriangleMesh::onResourceLoaded( ResourcesManager& mgr )
+{
+   calculateBoundingVolume();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TriangleMesh::calculateBoundingVolume()
 {
    unsigned int verticesCount = m_vertices.size();
    for (unsigned int i = 0; i < verticesCount; ++i)

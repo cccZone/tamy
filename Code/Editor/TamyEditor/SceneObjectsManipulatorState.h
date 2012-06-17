@@ -17,11 +17,6 @@ public:
    virtual ~SceneObjectsManipulatorState() {}
 
    /**
-    * Called when some manipulation settings have changed.
-    */
-   virtual void onSettingsChanged() = 0;
-
-   /**
     * Called when a key gets smashed.
     *
     * @param keyCode

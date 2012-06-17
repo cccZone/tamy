@@ -39,7 +39,7 @@ SelectedGeometry::~SelectedGeometry()
 
 void SelectedGeometry::render( Renderer& renderer )
 {
-   if ( !m_geometry.hasGeometry() )
+   if ( !m_geometry.hasMesh() )
    {
       return;
    }

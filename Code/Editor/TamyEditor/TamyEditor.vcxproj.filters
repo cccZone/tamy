@@ -105,9 +105,6 @@
     <Filter Include="Widgets\SceneRenderWidget\SelectionVisualisation\Representations">
       <UniqueIdentifier>{6fe4e01d-1429-4836-9539-287446e9a303}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widgets\SceneRenderWidget\InputControl">
-      <UniqueIdentifier>{668a3d7e-80a9-4339-963e-589d599793ca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ResourceEditors\SceneEditor\SceneObjectsManipulator">
       <UniqueIdentifier>{918d34f8-d97e-4468-8459-6791183489e6}</UniqueIdentifier>
     </Filter>
@@ -143,6 +140,21 @@
     </Filter>
     <Filter Include="Widgets\PropertiesEditorWidget\NodeEditors">
       <UniqueIdentifier>{a51fb409-d6e1-47e5-972e-e835d7b19c32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\DebugScene">
+      <UniqueIdentifier>{2be6db81-e837-4cdd-bbba-b4a2dfc201e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\Gizmo">
+      <UniqueIdentifier>{8845a5d1-6ddb-4dc7-b9d7-8a71b348711d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\Grid">
+      <UniqueIdentifier>{6bf4be7f-7a55-4d73-9cdb-e4e8f66491f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\SceneEditor\SceneObjectsManipulator\States">
+      <UniqueIdentifier>{3141c001-9177-4762-bb54-79b20e6693f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl">
+      <UniqueIdentifier>{668a3d7e-80a9-4339-963e-589d599793ca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -258,24 +270,12 @@
       <Filter>Core\SelectionManager</Filter>
     </ClInclude>
     <ClInclude Include="CameraMovementController.h">
-      <Filter>Widgets\SceneRenderWidget\InputControl</Filter>
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
     </ClInclude>
     <ClInclude Include="SceneRendererInputController.h">
       <Filter>Widgets\SceneRenderWidget</Filter>
     </ClInclude>
-    <ClInclude Include="NodeTransformController.h">
-      <Filter>Widgets\SceneRenderWidget\InputControl</Filter>
-    </ClInclude>
-    <ClInclude Include="Gizmo.h">
-      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
-    </ClInclude>
     <ClInclude Include="SceneObjectsManipulator.h">
-      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
-    </ClInclude>
-    <ClInclude Include="NodeManipulationState.h">
-      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
-    </ClInclude>
-    <ClInclude Include="NavigationState.h">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClInclude>
     <ClInclude Include="SceneObjectsManipulatorState.h">
@@ -397,6 +397,33 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_geometryshadereditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorDebugRenderer.h">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
+    </ClInclude>
+    <ClInclude Include="GizmoAxis.h">
+      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="Gizmo.h">
+      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="GizmoMaterial.h">
+      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugGeometryBuilder.h">
+      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugGrid.h">
+      <Filter>Widgets\SceneRenderWidget\Grid</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeManipulationState.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
+    </ClInclude>
+    <ClInclude Include="NavigationState.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
+    </ClInclude>
+    <ClInclude Include="GizmoController.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -699,21 +726,9 @@
       <Filter>Core\SelectionManager</Filter>
     </ClCompile>
     <ClCompile Include="CameraMovementController.cpp">
-      <Filter>Widgets\SceneRenderWidget\InputControl</Filter>
-    </ClCompile>
-    <ClCompile Include="NodeTransformController.cpp">
-      <Filter>Widgets\SceneRenderWidget\InputControl</Filter>
-    </ClCompile>
-    <ClCompile Include="Gizmo.cpp">
-      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation</Filter>
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
     </ClCompile>
     <ClCompile Include="SceneObjectsManipulator.cpp">
-      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
-    </ClCompile>
-    <ClCompile Include="NavigationState.cpp">
-      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
-    </ClCompile>
-    <ClCompile Include="NodeManipulationState.cpp">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClCompile>
     <ClCompile Include="SceneQuery.cpp">
@@ -940,6 +955,33 @@
     </ClCompile>
     <ClCompile Include="QPropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\NodeEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorDebugRenderer.cpp">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
+    </ClCompile>
+    <ClCompile Include="GizmoAxis.cpp">
+      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Gizmo.cpp">
+      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="GizmoMaterial.cpp">
+      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugGeometryBuilder.cpp">
+      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugGrid.cpp">
+      <Filter>Widgets\SceneRenderWidget\Grid</Filter>
+    </ClCompile>
+    <ClCompile Include="NavigationState.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeManipulationState.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
+    </ClCompile>
+    <ClCompile Include="GizmoController.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

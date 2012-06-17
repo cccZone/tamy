@@ -267,6 +267,14 @@ struct Vector
     */
    bool isNormalized() const;
 
+   /**
+    * Stores the contents of this vector in the specified raw vector instance.
+    *
+    * @param rawVector
+    */
+   template< int Dim >
+   void store( TVector< Dim >& rawVector );
+
    // -------------------------------------------------------------------------
    // Serialization support
    // -------------------------------------------------------------------------

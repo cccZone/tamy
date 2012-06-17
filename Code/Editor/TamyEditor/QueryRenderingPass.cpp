@@ -127,7 +127,7 @@ void QueryRenderingPass::render( Renderer& renderer )
    // notify about the completed queries
    for ( QueriesList::iterator it = m_completedQueriesList.begin(); it != m_completedQueriesList.end(); ++it )
    {
-      (*it)->notifyResult();
+      (*it)->notifyResult( (uint)this );
    }
    m_completedQueriesList.clear();
 
@@ -160,7 +160,7 @@ void QueryRenderingPass::render( Renderer& renderer )
    // create the commands that will get the queried results
    for ( QueriesList::iterator it = m_queriesList.begin(); it != m_queriesList.end(); ++it )
    {
-      new ( renderer() ) RCGetPixel( *m_sceneSnapshot, (*it)->getQueriedPosition(), (Color&)(*it)->getResultBuffer() );
+      new ( renderer() ) RCGetPixel( *m_sceneSnapshot, (*it)->getQueriedPosition(), (Color&)(*it)->getResultBuffer( (uint)this ) );
    }
 
    // remove all queries from the list - we have fulfilled them

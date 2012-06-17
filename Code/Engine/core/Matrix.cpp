@@ -354,6 +354,14 @@ const Vector& Matrix::position() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+const Vector& Matrix::getRow( byte rowIdx ) const
+{
+   ASSERT_MSG( rowIdx >= 0 && rowIdx <= 3, "Matrix row index out of bounds" );
+   return ( const Vector& )( m[rowIdx][0] );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Matrix::setSideVec( const Vector& vec ) const
 {
    ( Vector& )( m[0][0] ) = vec;
@@ -382,9 +390,18 @@ void Matrix::setPosition( const Vector& pos ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Matrix::scale( Vector& outScaleVec ) const
+void Matrix::getScale( Vector& outScaleVec ) const
 {
    outScaleVec.setNormalized( m[0][0], m[1][1], m[2][2] );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Matrix::scaleUniform( float scale )
+{
+   m[0][0] *= scale;
+   m[1][1] *= scale;
+   m[2][2] *= scale;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

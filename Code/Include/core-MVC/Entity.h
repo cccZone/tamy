@@ -95,7 +95,8 @@ public:
     *
     * @param entity     entity we want to remove
     * @param release    this parameter specifies whether the entity
-    *                   should be deleted when it's removed.
+    *                   should be deleted when it's removed ( the param is taken into account
+    *                   in case of the managed entities only )
     */
    void remove( Entity& entity, bool release = true );
 
