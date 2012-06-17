@@ -122,6 +122,7 @@
     <ClCompile Include="RenderTargetDescriptor.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="RenderableTexture.cpp" />
+    <ClCompile Include="RenderTree.cpp" />
     <ClCompile Include="RPCameraNode.cpp" />
     <ClCompile Include="RPDebugRendererNode.cpp" />
     <ClCompile Include="RPAdapterNode.cpp" />
@@ -134,7 +135,6 @@
     <ClCompile Include="RPStartNode.cpp" />
     <ClCompile Include="RPTextureNode.cpp" />
     <ClCompile Include="RPVec4Node.cpp" />
-    <ClCompile Include="SceneRenderTreeBuilder.cpp" />
     <ClCompile Include="ShaderTexture.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
@@ -145,6 +145,7 @@
     <ClCompile Include="LineSegments.cpp" />
     <ClCompile Include="LitVertex.cpp" />
     <ClCompile Include="SkinnedGeometry.cpp" />
+    <ClCompile Include="StatefulRenderTreeBuilder.cpp" />
     <ClCompile Include="StaticGeometry.cpp" />
     <ClCompile Include="RPSBTextured.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
@@ -181,6 +182,7 @@
     <None Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\BasicRenderCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ComputedRenderState.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
@@ -224,6 +226,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderableTexture.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderTree.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPCameraNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPDebugRendererNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h" />
@@ -253,6 +256,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h" />
     <ClInclude Include="..\..\Include\core-Renderer\LitVertex.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SkinnedGeometry.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\StatefulRenderTreeBuilder.h" />
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSBTextured.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingParams.h" />

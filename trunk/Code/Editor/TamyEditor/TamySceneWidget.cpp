@@ -10,6 +10,7 @@
 #include <QEvent.h>
 #include "SceneRendererInputController.h"
 #include "QueryRenderingPass.h"
+#include "EditorDebugRenderer.h"
 #include "Gizmo.h"
 
 
@@ -27,11 +28,13 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
    , m_renderer( NULL )
    , m_camera( NULL )
    , m_scene( NULL )
-   , m_debugScene( NULL )
    , m_renderingMech( NULL )
    , m_selectionRenderer( new SelectionRenderingPass() )
    , m_queryRenderer( new QueryRenderingPass() )
+   , m_debugRenderer( new EditorDebugRenderer() )
+   , m_queryDebugRenderer( new QueryRenderingPass() )
    , m_resMgr( NULL )
+   , m_gizmoMode( Gizmo::GM_TRANSLATION )
    , m_gizmo( NULL )
 {
    m_hWnd = static_cast< HWND >( winId() );
@@ -68,6 +71,9 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
    m_camera = &m_renderer->getActiveCamera();
    m_camera->accessLocalMtx().setTranslation( Vector( 0, 5, 0 ) );
 
+   // attach the dedicated  query renderer to the the debug scene
+   m_debugRenderer->attachSceneView( *m_queryDebugRenderer );
+
    // create and setup the time controller
    m_localTimeController = new TimeController( timeController );
    m_localTimeController->add("rendering");
@@ -99,13 +105,21 @@ TamySceneWidget::~TamySceneWidget()
 
    m_camera = NULL;
 
-   // we're taking care of this rendering pass ourselves
-   delete m_selectionRenderer;
-   m_selectionRenderer = NULL;
+   // delete custom rendering passes
+   {
+      m_debugRenderer->detachSceneView( *m_queryDebugRenderer );
+      delete m_queryDebugRenderer;
+      m_queryDebugRenderer = NULL;
 
-   // we're taking care of this rendering pass ourselves as well
-   delete m_queryRenderer;
-   m_queryRenderer = NULL;
+      delete m_selectionRenderer;
+      m_selectionRenderer = NULL;
+
+      delete m_queryRenderer;
+      m_queryRenderer = NULL;
+
+      delete m_debugRenderer;
+      m_debugRenderer = NULL;
+   }
 
    m_renderingMech = NULL;
    m_renderer->setMechanism( NULL );
@@ -159,19 +173,12 @@ void TamySceneWidget::deinitialize()
       // don't release the selection renderer - we're managing that one on our own
       m_renderingMech->reset();
    }
-
-   // remove the scenes
-   delete m_debugScene; m_debugScene = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TamySceneWidget::initialize()
 {
-   // create a debug renderer
-   delete m_debugScene;
-   m_debugScene = new DebugScene();
-
    // initialize the rendering pipeline
    RenderingPipeline* pipeline = NULL;
    RenderingPipelineMechanism* sceneRenderer = NULL;
@@ -181,8 +188,10 @@ void TamySceneWidget::initialize()
       pipeline = m_resMgr->create<RenderingPipeline>( m_rendererPipelineName );
       sceneRenderer = new RenderingPipelineMechanism( pipeline );
       m_renderingMech->add( "sceneRenderer", sceneRenderer );
+      m_renderingMech->add( "debugRenderer", m_debugRenderer, false );
       m_renderingMech->add( "selectionRenderer", m_selectionRenderer, false );
       m_renderingMech->add( "queryRenderer", m_queryRenderer, false );
+      m_renderingMech->add( "queryDebugRenderer", m_queryDebugRenderer, false );
    }
    catch ( std::exception& ex)
    {
@@ -190,14 +199,9 @@ void TamySceneWidget::initialize()
    }
 
    // setup the debug scene
-   if ( sceneRenderer )
+   if ( sceneRenderer && m_scene )
    {
-      sceneRenderer->setDebugScene( *m_debugScene );
-
-      if ( m_scene )
-      {
-         sceneRenderer->addScene( RPS_Main, *m_scene );
-      }
+      sceneRenderer->addScene( RPS_Main, *m_scene );
    }
 
    // attach the views
@@ -511,8 +515,8 @@ void TamySceneWidget::onEntitySelected( Entity& entity )
       // create a new gizmo
       if ( entity.isA< SpatialEntity >() )
       {
-         m_gizmo = new Gizmo( static_cast< SpatialEntity& >( entity ) );
-         m_debugScene->add( *m_gizmo );
+         m_gizmo = new Gizmo( static_cast< SpatialEntity& >( entity ), m_gizmoMode, *m_camera );
+         m_debugRenderer->add( *m_gizmo );
       }
    }
 }
@@ -526,7 +530,7 @@ void TamySceneWidget::onEntityDeselected( Entity& entity )
    // remove the manipulator gizmo
    if ( m_gizmo )
    {
-      m_debugScene->remove( *m_gizmo );
+      m_debugRenderer->remove( *m_gizmo );
 
       delete m_gizmo;
       m_gizmo = NULL;
@@ -537,6 +541,7 @@ void TamySceneWidget::onEntityDeselected( Entity& entity )
 
 void TamySceneWidget::queryScene( SceneQuery& query ) const
 {
+   m_queryDebugRenderer->query( query );
    m_queryRenderer->query( query );
 }
 
@@ -544,7 +549,31 @@ void TamySceneWidget::queryScene( SceneQuery& query ) const
 
 void TamySceneWidget::toggleDebugMode()
 {
+   m_queryDebugRenderer->toggleDebugMode();
    m_queryRenderer->toggleDebugMode();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::setGizmoTranslationMode()
+{
+   m_gizmoMode = Gizmo::GM_TRANSLATION;
+
+   if ( m_gizmo )
+   {
+      m_gizmo->setMode( m_gizmoMode );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::setGizmoRotationMode()
+{
+   m_gizmoMode = Gizmo::GM_ROTATION;
+   if ( m_gizmo )
+   {
+      m_gizmo->setMode( m_gizmoMode );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

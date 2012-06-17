@@ -1,8 +1,8 @@
-#pragma once
-
 /// @file   core-Renderer\ShaderTexture.h
 /// @brief  common interface that allows to use various types of textures
 ///         as a shader param
+#pragma once
+
 
 #include "core\Subject.h"
 #include "core-Renderer\ShaderParam.h"

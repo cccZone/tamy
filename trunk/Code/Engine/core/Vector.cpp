@@ -317,3 +317,33 @@ InStream& operator>>( InStream& serializer, Vector& rhs )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::store( TVector< 2 >& rawVector )
+{
+   rawVector.v[0] = x;
+   rawVector.v[1] = y;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::store( TVector< 3 >& rawVector )
+{
+   rawVector.v[0] = x;
+   rawVector.v[1] = y;
+   rawVector.v[2] = z;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::store( TVector< 4 >& rawVector )
+{
+   rawVector.v[0] = x;
+   rawVector.v[1] = y;
+   rawVector.v[2] = z;
+   rawVector.v[3] = w;
+}
+
+///////////////////////////////////////////////////////////////////////////////

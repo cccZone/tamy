@@ -25,14 +25,13 @@ public:
 
 private:
    Vector               m_queryPos;
-   SpatialEntity*       m_selectionCandidate;
 
 public:
    // ----------------------------------------------------------------------
    // SceneQuery implementation
    // ----------------------------------------------------------------------
    const Vector& getQueriedPosition() const { return m_queryPos; }
-   void setResult( Entity* foundEntity );
+   void setResult( const Array< Entity* >& foundEntities );
 
    // ----------------------------------------------------------------------
    // FSMState implementation
@@ -43,10 +42,12 @@ public:
    // ----------------------------------------------------------------------
    // SceneObjectsManipulatorState implementation
    // ----------------------------------------------------------------------
-   void onSettingsChanged();
    bool keySmashed( unsigned char keyCode );
    bool keyHeld( unsigned char keyCode );
    bool keyReleased( unsigned char keyCode );
+
+private:
+   void analyzeSelectedNodes( const Array< SpatialEntity* >& selectedNodes );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

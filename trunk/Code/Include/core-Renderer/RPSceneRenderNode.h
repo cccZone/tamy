@@ -31,7 +31,7 @@ private:
    bool                                m_clearDepthBuffer;
 
    // runtime data
-   MemoryPool*                         m_treeMemPool;
+   TRuntimeVar< MemoryPool* >          m_treeMemPool;
    TRuntimeVar< RenderTarget* >        m_renderTarget;
 
 public:
@@ -45,6 +45,7 @@ public:
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
    void onCreateLayout( RenderingPipelineMechanism& host ) const;
+   void onDestroyLayout( RenderingPipelineMechanism& host ) const;
    void onUpdate( RenderingPipelineMechanism& host ) const;
 
    // -------------------------------------------------------------------------

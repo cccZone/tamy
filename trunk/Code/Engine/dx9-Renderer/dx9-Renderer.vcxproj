@@ -85,6 +85,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DX9BasicRenderCommands.cpp" />
     <ClCompile Include="DX9DebugPrimitivesSet.cpp" />
     <ClCompile Include="DX9DebugDrawCommands.cpp" />
     <ClCompile Include="DX9EffectsResourcesStorage.cpp" />

@@ -28,7 +28,8 @@ public:
    // -------------------------------------------------------------------------
    // IDebugDrawable representation
    // -------------------------------------------------------------------------
-   void onDebugRender( Renderer& renderer ) const;
+   void onInitializeDebugRepresentation( Model& debugScene ) const;
+   void onDeinitializeDebugRepresentation( Model& debugScene ) const;
 
 protected:
    // -------------------------------------------------------------------------

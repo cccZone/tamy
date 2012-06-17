@@ -112,7 +112,17 @@ const BoundingVolume& Geometry::getBoundingVolume() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::string Geometry::getGeometryName() const
+void Geometry::setMesh( GeometryResource& mesh )
+{
+   m_resource = &mesh;
+
+   delete m_globalBounds;
+   m_globalBounds = m_resource->getBoundingVolume().clone();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::string Geometry::getMeshName() const
 {
    if ( m_resource )
    {

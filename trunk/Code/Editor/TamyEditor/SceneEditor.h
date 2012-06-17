@@ -14,7 +14,6 @@ class Entity;
 class SceneTreeViewer;
 class SelectionManager;
 class SceneObjectsManipulator;
-enum NodeTransformControlMode;
 class TamySceneWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,7 +37,6 @@ private:
 
    // objects manipulation
    SceneObjectsManipulator*                  m_sceneObjectsManipulator;
-   NodeTransformControlMode                  m_objectsManipulationMode;
 
    std::vector< std::string >                m_droppedPaths;
 
@@ -50,11 +48,6 @@ public:
     */
    SceneEditor( Model& scene );
    ~SceneEditor();
-
-   /**
-    * Returns the currently set objects manipulation mode.
-    */
-   inline NodeTransformControlMode getObjectsManipulationMode() const { return m_objectsManipulationMode; }
 
    /**
     * Returns the SelectionManager instance used by the editor.

@@ -60,6 +60,13 @@ void RenderingPipelineNode::createLayout( RenderingPipelineMechanism& host ) con
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void RenderingPipelineNode::destroyLayout( RenderingPipelineMechanism& host ) const
+{
+   onDestroyLayout( host );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void RenderingPipelineNode::update( RenderingPipelineMechanism& host ) const
 {
    onUpdate( host );

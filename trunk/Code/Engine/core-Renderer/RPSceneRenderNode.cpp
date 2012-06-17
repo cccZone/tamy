@@ -23,7 +23,6 @@ END_OBJECT();
 RPSceneRenderNode::RPSceneRenderNode()
    : m_renderedSceneId( RPS_Main )
    , m_builder( NULL )
-   , m_treeMemPool( new MemoryPool( 1024 * 1024 ) )
    , m_clearDepthBuffer( true )
 {
    defineInput( new RPVoidInput( "Input" ) );
@@ -34,7 +33,6 @@ RPSceneRenderNode::RPSceneRenderNode()
 RPSceneRenderNode::~RPSceneRenderNode()
 {
    delete m_builder; m_builder = NULL;
-   delete m_treeMemPool; m_treeMemPool = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,14 +53,38 @@ void RPSceneRenderNode::onCreateLayout( RenderingPipelineMechanism& host ) const
 {
    RuntimeDataBuffer& data = host.data();
 
+   // register runtime members
    data.registerVar( m_renderTarget );
+   data.registerVar( m_treeMemPool );
 
-   RenderTarget* trg = host.getRenderTarget( m_renderTargetId );
-   data[ m_renderTarget ] = trg;
+   // create the render target
+   RenderTarget* trg = NULL;
+   {
+      trg = host.getRenderTarget( m_renderTargetId );
+      data[ m_renderTarget ] = trg;
+   }
 
    // find the existing outputs and set the data on them
-   RPTextureOutput* output = DynamicCast< RPTextureOutput >( findOutput( "Output" ) );
-   output->setValue( data, trg );
+   {
+      RPTextureOutput* output = DynamicCast< RPTextureOutput >( findOutput( "Output" ) );
+      output->setValue( data, trg );
+   }
+
+   // create a memory pool for the render tree
+   {
+      MemoryPool* treeMemPool = new MemoryPool( 1024 * 1024 );
+      data[ m_treeMemPool ] = treeMemPool;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPSceneRenderNode::onDestroyLayout( RenderingPipelineMechanism& host ) const
+{
+   RuntimeDataBuffer& data = host.data();
+
+   MemoryPool* treeMemPool = data[ m_treeMemPool ];
+   delete treeMemPool;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,7 +100,8 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
    RuntimeDataBuffer& data = host.data();
    RenderTarget* trg = data[ m_renderTarget ];
    Renderer& renderer = host.getRenderer();
-  
+   MemoryPool* treeMemPool = data[ m_treeMemPool ];
+
    // activate the render target we want to render to
    new ( renderer() ) RCActivateRenderTarget( trg );
 
@@ -86,8 +109,8 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
    const Array< Geometry* >& visibleElems = host.getSceneElements( m_renderedSceneId );
 
    // build a tree sorting the nodes by the attributes
-   m_treeMemPool->reset();
-   StateTreeNode* root = m_builder->buildRenderTree( *m_treeMemPool, visibleElems, data );
+   treeMemPool->reset();
+   StateTreeNode* root = m_builder->buildRenderTree( *treeMemPool, visibleElems, data );
 
    if ( root )
    {

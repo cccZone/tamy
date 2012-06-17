@@ -18,6 +18,10 @@
 #include "core-Renderer\ShaderParam.h"
 #include "core-Renderer\RenderingParams.h"
 // ----------------------------------------------------------------------------
+// --> BasicRenderCommands
+// ----------------------------------------------------------------------------
+#include "core-Renderer\BasicRenderCommands.h"
+// ----------------------------------------------------------------------------
 // --> Camera
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Camera.h"
@@ -26,11 +30,20 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer\ShaderCompiler.h"
 // ----------------------------------------------------------------------------
+// --> RenderableSurfaces
+// ----------------------------------------------------------------------------
+#include "core-Renderer\ShaderTexture.h"
+#include "core-Renderer\RenderTarget.h"
+// ----------------------------------------------------------------------------
+// --> RenderTree
+// ----------------------------------------------------------------------------
+#include "core-Renderer\RenderTree.h"
+#include "core-Renderer\StatefulRenderTreeBuilder.h"
+// ----------------------------------------------------------------------------
 // --> Resources
 // ----------------------------------------------------------------------------
 #include "core-Renderer\RenderResource.h"
 #include "core-Renderer\RenderResourceStorage.h"
-
 
 // ----------------------------------------------------------------------------
 // Effects
@@ -127,7 +140,7 @@
 #include "core-Renderer\SurfaceProperties.h"
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\PixelShader.h"
-#include "core-Renderer\RenderTarget.h"
+
 
 // ----------------------------------------------------------------------------
 // Mechanisms

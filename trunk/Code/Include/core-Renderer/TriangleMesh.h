@@ -77,6 +77,12 @@ public:
    // Resource implementation
    // -------------------------------------------------------------------------
    void onResourceLoaded(ResourcesManager& mgr);
+
+private:
+   /**
+    * Recalulcates the bounding volume.
+    */
+   void calculateBoundingVolume();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -26,8 +26,9 @@ BoneEntity::~BoneEntity()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BoneEntity::onDebugRender( Renderer& renderer ) const
+void BoneEntity::onInitializeDebugRepresentation( Model& debugScene ) const
 {
+   /*
    SpatialEntity* parentNode = NULL;
    if ( isAttached() )
    {
@@ -43,6 +44,15 @@ void BoneEntity::onDebugRender( Renderer& renderer ) const
 
       new ( renderer() ) RCDrawDebugLine( start[3], end[3], Color( 0, 0, 0 ) );
    }
+   */
+   // <renderer.todo> implement me
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BoneEntity::onDeinitializeDebugRepresentation( Model& debugScene ) const
+{
+   // <renderer.todo> implement me
 }
 
 ///////////////////////////////////////////////////////////////////////////////

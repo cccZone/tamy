@@ -10,6 +10,7 @@
 #include "core-Renderer\Camera.h"
 #include "core-MVC\ModelComponent.h"
 #include "SelectionManagerListener.h"
+#include "Gizmo.h"
 #include <d3d9.h>
 #include <set>
 
@@ -21,7 +22,6 @@ class Renderer;
 class KeysStatusManager;
 class Camera;
 class Model;
-class DebugScene;
 class ResourcesManager;
 class CompositeRenderingMechanism;
 class TimeController;
@@ -30,7 +30,7 @@ class SceneRendererInputController;
 class TimeControllerTrack;
 class QueryRenderingPass;
 class SceneQuery;
-class Gizmo;
+class EditorDebugRenderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,12 +57,16 @@ private:
    Camera*                                            m_camera;
 
    Model*                                             m_scene;
-   DebugScene*                                        m_debugScene;
    CompositeRenderingMechanism*                       m_renderingMech;
    SelectionRenderingPass*                            m_selectionRenderer;
    QueryRenderingPass*                                m_queryRenderer;
 
+   // debug renderer
+   EditorDebugRenderer*                               m_debugRenderer;
+   QueryRenderingPass*                                m_queryDebugRenderer;
+
    // a gizmo that will be displayed when a scene object that can be manipulated gets selected
+   Gizmo::Mode                                        m_gizmoMode;
    Gizmo*                                             m_gizmo;
 
 public:
@@ -122,6 +126,20 @@ public:
    void setRenderingPipeline( const FilePath& pipeline );
 
    // -------------------------------------------------------------------------
+   // Objects manipulation gizmo management
+   // -------------------------------------------------------------------------
+
+   /**
+    * Sets the objects manipulation gizmo in the translation mode.
+    */
+   void setGizmoTranslationMode();
+
+   /**
+    * Sets the objects manipulation gizmo in the rotation mode.
+    */
+   void setGizmoRotationMode();
+
+   // -------------------------------------------------------------------------
    // Accessors
    // -------------------------------------------------------------------------
    inline Renderer& getRenderer() const { return *m_renderer; }
@@ -129,8 +147,6 @@ public:
    inline Camera& getCamera() const { return *m_camera; }
 
    inline KeysStatusManager& getKeysStatusManager() const { return *m_keysStatusManager; }
-
-   inline DebugScene& getDebugScene() const { return *m_debugScene; }
 
    inline CompositeRenderingMechanism& getRenderingMech() const { return *m_renderingMech; }
 

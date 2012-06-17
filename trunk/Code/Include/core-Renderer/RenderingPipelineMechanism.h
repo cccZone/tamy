@@ -60,7 +60,6 @@ private:
 
    private:
       RenderingView*                               m_renderingView;
-      ModelDebugScene*                             m_debugSceneView;
       Model*                                       m_model;
 
    public:
@@ -75,8 +74,6 @@ private:
 
       void setModel( Model* model );
 
-      void setDebugScene( DebugScene& scene );
-
       void queryVisibleElements();
 
    };
@@ -86,8 +83,6 @@ private:
 
    Renderer*                                    m_renderer;
    std::vector< RenderedScene* >                m_scenes;
-
-   DebugScene*                                  m_debugScene;
 
    std::vector< RenderingPipelineNode* >        m_nodesQueue;
 
@@ -150,13 +145,6 @@ public:
     * @param sceneId
     */
    const Array< Geometry*> & getSceneElements( RPMSceneId sceneId ) const;
-
-   /**
-    * Sets a debug scene instance.
-    *
-    * @param debug scene
-    */
-   void setDebugScene( DebugScene& debugScene );
 
    /**
     * Returns a render target registered under the specified ID.

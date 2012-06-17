@@ -5,7 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ModelDebugScene::ModelDebugScene( DebugScene& debugScene )
+ModelDebugScene::ModelDebugScene( Model& debugScene )
    : m_debugScene( debugScene )
 {
 }
@@ -25,7 +25,7 @@ void ModelDebugScene::onEntityAdded( Entity& entity )
    if ( drawable )
    {
       m_entities.insert( drawable );
-      m_debugScene.add( *drawable );
+      drawable->onInitializeDebugRepresentation( m_debugScene );
    }
 }
 
@@ -37,7 +37,7 @@ void ModelDebugScene::onEntityRemoved( Entity& entity )
    if ( drawable )
    {
       m_entities.erase( drawable );
-      m_debugScene.remove( *drawable );
+      drawable->onDeinitializeDebugRepresentation( m_debugScene );
    }
 }
 
@@ -54,7 +54,8 @@ void ModelDebugScene::resetContents()
 {
    for ( std::set< IDebugDrawable* >::const_iterator it = m_entities.begin(); it != m_entities.end(); ++it )
    {
-      m_debugScene.remove( **it );
+      IDebugDrawable* drawable = *it;
+      drawable->onDeinitializeDebugRepresentation( m_debugScene );
    }
    m_entities.clear();
 }

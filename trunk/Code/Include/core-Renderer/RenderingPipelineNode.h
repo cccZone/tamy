@@ -29,6 +29,13 @@ public:
     * @param host    pass from the context of which the rendering takes place
     */
    void createLayout( RenderingPipelineMechanism& host ) const;
+
+   /**
+    * Called in order to deinitialize node's runtime data layout.
+    *
+    * @param host    pass from the context of which the rendering takes place
+    */
+   void destroyLayout( RenderingPipelineMechanism& host ) const;
    
    /**
     * Called in order to perform all rendering-related things.
@@ -58,6 +65,13 @@ protected:
     * @param host    pass from the context of which the rendering takes place
     */
    virtual void onCreateLayout( RenderingPipelineMechanism& host ) const {}
+
+   /**
+    * Called when the rendering mechanism destroys the current data layout.
+    *
+    * @param host    pass from the context of which the rendering takes place
+    */
+   virtual void onDestroyLayout( RenderingPipelineMechanism& host ) const {}
    
    /**
     * Called in order to perform all rendering-related things the implementation is responsible for.

@@ -3,13 +3,21 @@
 #pragma once
 
 #include "core\Color.h"
-#include "core\IDebugDraw.h"
+#include "core-MVC\SpatialEntity.h"
+#include "core-Renderer\RenderState.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class SpatialEntity;
 class Renderer;
+class GizmoAxis;
+class GizmoMaterial;
+class TriangleMesh;
+class TranslationGizmoOp;
+class RotationGizmoOp;
+class ScalingGizmoOp;
+class Camera;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -17,8 +25,10 @@ class Renderer;
  * A gizmo showing the selected object's orientation and indicating 
  * the selected manipulation mode ( moving, rotating, scaling ).
  */
-class Gizmo : public IDebugDrawable
+class Gizmo : public SpatialEntity
 {
+   DECLARE_CLASS()
+
 public:
    enum Mode
    {
@@ -28,21 +38,31 @@ public:
    };
 
 private:
-   const float       SIZE;
-   const Color       OX_COLOR;
-   const Color       OY_COLOR;
-   const Color       OZ_COLOR;
+   const Color             OX_COLOR;
+   const Color             OY_COLOR;
+   const Color             OZ_COLOR;
 
-   SpatialEntity& m_node;
-   Mode           m_mode;
+   SpatialEntity&          m_node;
+   Mode                    m_mode;
+
+   TriangleMesh*           m_meshes[3];
+   GizmoMaterial*          m_axisMaterial[3];
+   GizmoAxis*              m_geometry[3];
+
+   // operations
+   TranslationGizmoOp*     m_translationOp;
+   RotationGizmoOp*        m_rotationOp;
+   ScalingGizmoOp*         m_scalingOp;
 
 public:
    /**
     * Constructor.
     *
-    * @param node       node for which the gizmo will be drawn
+    * @param node             node for which the gizmo will be drawn
+    * @param mode             mode in which the gizmo should work
+    * @param activeCamera
     */
-   Gizmo( SpatialEntity& node );
+   Gizmo( SpatialEntity& node, Mode mode, Camera& activeCamera );
    ~Gizmo();
 
    /**
@@ -50,15 +70,10 @@ public:
     */
    void setMode( Mode mode );
 
-   // -------------------------------------------------------------------------
-   // IDebugDrawable implementation
-   // -------------------------------------------------------------------------
-   void onDebugRender( Renderer& renderer ) const;
-
 private:
-   void drawTranslationGizmo( Renderer& renderer, float size ) const;
-   void drawRotationGizmo( Renderer& renderer, float size ) const;
-   void drawScalingGizmo( Renderer& renderer, float size ) const;
+   void createTranslationGizmo();
+   void createRotationGizmo();
+   void createScalingGizmo();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

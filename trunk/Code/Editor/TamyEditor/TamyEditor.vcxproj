@@ -180,6 +180,9 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"   -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\."  "-I." "-I.\GeneratedFiles" "-I." "-I." "FragmentShaderEditor.h" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"</Command>
     </CustomBuild>
+    <ClInclude Include="DebugGeometryBuilder.h" />
+    <ClInclude Include="DebugGrid.h" />
+    <ClInclude Include="EditorDebugRenderer.h" />
     <ClInclude Include="GBBool.h" />
     <ClInclude Include="GBCamera.h" />
     <ClInclude Include="GBFloat.h" />
@@ -223,6 +226,8 @@
     </CustomBuild>
     <ClInclude Include="GeometryShaderLayout.h" />
     <ClInclude Include="GeometryShaderSocketRepresentation.h" />
+    <ClInclude Include="GizmoAxis.h" />
+    <ClInclude Include="GizmoMaterial.h" />
     <ClInclude Include="MaterialLayout.h" />
     <ClInclude Include="MaterialSocketRepresentation.h" />
     <ClInclude Include="MBBool.h" />
@@ -237,7 +242,7 @@
     <ClInclude Include="MBVec4.h" />
     <ClInclude Include="NavigationState.h" />
     <ClInclude Include="NodeManipulationState.h" />
-    <ClInclude Include="NodeTransformController.h" />
+    <ClInclude Include="GizmoController.h" />
     <CustomBuild Include="ObjectPropertyEditor.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -737,6 +742,9 @@
     <ClInclude Include="TypeDescFactory.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DebugGeometryBuilder.cpp" />
+    <ClCompile Include="DebugGrid.cpp" />
+    <ClCompile Include="EditorDebugRenderer.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_QReflectionObjectEditor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
@@ -761,6 +769,8 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="GizmoAxis.cpp" />
+    <ClCompile Include="GizmoMaterial.cpp" />
     <ClCompile Include="QReflectionObjectEditor.cpp" />
     <ClCompile Include="QReflectionPropertyEditorComposite.cpp" />
     <ClCompile Include="CameraMovementController.cpp" />
@@ -963,7 +973,7 @@
     <ClCompile Include="MBVec4.cpp" />
     <ClCompile Include="NavigationState.cpp" />
     <ClCompile Include="NodeManipulationState.cpp" />
-    <ClCompile Include="NodeTransformController.cpp" />
+    <ClCompile Include="GizmoController.cpp" />
     <ClCompile Include="ObjectPropertyEditor.cpp" />
     <ClInclude Include="PipelineSocket.inl">
       <FileType>CppCode</FileType>

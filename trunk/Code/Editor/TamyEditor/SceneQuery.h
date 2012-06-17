@@ -5,6 +5,9 @@
 
 #include <d3dx9.h>
 #include "core/Vector.h"
+#include "core/Array.h"
+#include "core/types.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +26,10 @@ struct Vector;
 class SceneQuery
 {
 private:
-   Vector          m_resultBuf;
+   uint                    m_resultsCount;
+   const uint              m_maxResults;
+   Array< Vector >         m_resultBuf;
+   Array< uint >           m_resultOwnerId;
 
 public:
    virtual ~SceneQuery() {}
@@ -35,13 +41,17 @@ public:
 
    /**
     * Notifies about the query completion.
+    *
+    * @param resultOwnerId
     */
-   void notifyResult();
+   void notifyResult( uint resultOwnerId );
 
    /**
     * Returns the result buffer.
+    *
+    * @param resultOwnerId
     */
-   inline Vector& getResultBuffer() { return m_resultBuf; }
+   Vector& getResultBuffer( uint resultOwnerId );
 
 protected:
    SceneQuery();
@@ -50,10 +60,9 @@ protected:
     * The manager will call this method to inform that the query's been
     * completed and will pass the results as the parameter.
     *
-    * @param foundEntity   a pointer to the queried entity, or NULL 
-    *                      if noting is found
+    * @param foundEntities    pointers to the queried entity ( may contain NULL pointers )
     */
-   virtual void setResult( Entity* foundEntity ) = 0;
+   virtual void setResult( const Array< Entity* >& foundEntities ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
