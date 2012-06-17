@@ -3,6 +3,7 @@
 #include "core-Renderer/BasicRenderCommands.h"
 #include "core-Renderer/LitVertex.h"
 #include "core-Renderer/Camera.h"
+#include "core/Math.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,7 +31,7 @@ GizmoAxis::~GizmoAxis()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GizmoAxis::transformManipulatedNodes( const Vector& screenSpaceTransformation )
+void GizmoAxis::transformManipulatedNodes( const Vector& viewportSpaceTransformation )
 {
    if ( m_operation == NULL )
    {
@@ -41,10 +42,10 @@ void GizmoAxis::transformManipulatedNodes( const Vector& screenSpaceTransformati
    // to transform something along this manipulation axis.
    // We want the value to be maximal when the user is sliding the mouse along the axis, and
    // become smaller until reaching zero if he moves the mouse perpendicularly to he axis.
-   // Since the input 'screenSpaceTransformation' contains the transformation values in the screen space,
-   // all we need to do is take our manipulation axis, transform it to the screen space ( with respect
+   // Since the input 'viewportSpaceTransformation' contains the transformation values in the viewport space,
+   // all we need to do is take our manipulation axis, transform it to the viewport space ( with respect
    // to the active camera ) and then calculate a dot product between our 2d manipulation axis and 
-   // the screen space transformation vector - thus calculating our transformation value.
+   // the viewport space transformation vector - thus calculating our transformation value.
    const Matrix& manipulationMatrix = Matrix::IDENTITY;
    const Vector& manipulationAxis = manipulationMatrix.getRow( m_axisIdx );
 
@@ -52,13 +53,11 @@ void GizmoAxis::transformManipulatedNodes( const Vector& screenSpaceTransformati
    {
       Matrix viewProjMtx;
       viewProjMtx.setMul( m_activeCamera.getViewMtx(), m_activeCamera.getProjectionMtx() );
-      Vector screenSpaceManipulationAxis;
-      viewProjMtx.transformNorm( manipulationAxis, screenSpaceManipulationAxis );
+      Vector viewportSpaceManipulationAxis;
+      viewProjMtx.transformNorm( manipulationAxis, viewportSpaceManipulationAxis );
 
-      transformationValue = screenSpaceManipulationAxis.dot( screenSpaceTransformation );
+      transformationValue = viewportSpaceManipulationAxis.dot( viewportSpaceTransformation );
    }
-
-   // <gizmo.todo> !!!!! fix the erroneous transformationValue calculations ( sometimes instead of moving along the desired axis, the object is moving in the opposite direction )
 
    Matrix transformationMtx;
    m_operation->transformManipulatedNodes( manipulationAxis, transformationValue, transformationMtx );
@@ -116,73 +115,20 @@ void TranslationGizmoOp::transformManipulatedNodes( const Vector& manipulationAx
 
 void RotationGizmoOp::transformManipulatedNodes( const Vector& manipulationAxis, float transformationValue, Matrix& outTransformationMtx ) const
 {
-   // <gizmo.todo> implement me
+   Quaternion rotQ;
+   rotQ.setAxisAngle( manipulationAxis, transformationValue );
+
+   outTransformationMtx.setRotation( rotQ );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ScalingGizmoOp::transformManipulatedNodes( const Vector& manipulationAxis, float transformationValue, Matrix& outTransformationMtx ) const
 {
-   // <gizmo.todo> implement me
+   Vector scaleVec;
+   scaleVec.setMul( manipulationAxis, transformationValue ).add( Vector::ONE );
+
+   outTransformationMtx.scale( scaleVec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-/*
-Matrix& localMtx = node.accessLocalMtx();
-switch( m_controlMode )
-{
-case NTM_TRANSLATE:
-{
-// calculate the camera relative translation
-Vector vecX, vecY, vecZ, camPos;
-m_camera->getGlobalVectors( vecX, vecY, vecZ, camPos );
-
-vecX.normalize();
-vecY.normalize();
-
-Vector camRelValsX, camRelValsY, camRelVals;
-camRelValsX.setMul( vecX, valChange.x );
-camRelValsY.setMul( vecY, valChange.y );
-camRelVals.setSub( camRelValsX, camRelValsY );
-
-// manipulate the node
-Matrix changeMtx;
-changeMtx.setTranslation( camRelVals );
-localMtx.preMul( changeMtx );
-break;
-}
-
-case NTM_ROTATE:
-{
-// manipulate the node
-Quaternion rotQ;
-rotQ.setAxisAngle( m_rotationAxis, valChange.x + valChange.y );
-Matrix changeMtx;
-changeMtx.setRotation( rotQ );
-localMtx.preMul( changeMtx );
-break;
-}
-
-default:
-{
-break;
-}
-}
-
-// regenerate node's transformation matrix' vectors to ensure their orthogonality
-Vector rightVec, upVec, lookVec;
-node.getRightVec( rightVec );
-node.getUpVec( upVec );
-node.getLookVec( lookVec );
-
-lookVec.normalize();
-rightVec.setCross( upVec, lookVec );
-rightVec.normalize();
-upVec.setCross( lookVec, rightVec );
-upVec.normalize();
-
-node.setRightVec( rightVec );
-node.setUpVec( upVec );
-node.setLookVec( lookVec );
-*/

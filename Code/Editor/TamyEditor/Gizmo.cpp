@@ -102,11 +102,8 @@ void Gizmo::setMode( Mode mode )
    }
 }
 
-// <gizmo.todo>:
-// - custom vertices can be used to define meshes
-// - ability to switch between the edition modes
-// - nodes can be manipulated ONLY by dragging the gizmo ( or manual transform edition )
-
+// <gizmo.todo>: custom vertices can be used to define meshes ( for gizmo axes coloring )
+// <gizmo.todo>: fix axis display for rotated objects
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -148,7 +148,8 @@ void QueryRenderingPass::render( Renderer& renderer )
       return;
    }
 
-   // set the rendering target
+   // set the rendering target & clean the Z buffer
+   new ( renderer() ) RCClearDepthBuffer();
    new ( renderer() ) RCActivateRenderTarget( m_sceneSnapshot );
 
    // draw the representations

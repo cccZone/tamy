@@ -406,6 +406,15 @@ void Matrix::scaleUniform( float scale )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Matrix::scale( const Vector& scaleVec )
+{
+   m[0][0] *= scaleVec.x;
+   m[1][1] *= scaleVec.y;
+   m[2][2] *= scaleVec.z;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Matrix& Matrix::setInverse( const Matrix& rhs )
 {
    // implementation of the algorithm taken from here: ftp://download.intel.com/design/PentiumIII/sml/24504301.pdf

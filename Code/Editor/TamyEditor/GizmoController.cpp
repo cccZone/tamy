@@ -66,7 +66,9 @@ void GizmoController::update( float timeElapsed )
    else
    {
       valChange.x = m_uic->getMouseSpeed().v[0] * movementSpeed;
-      valChange.y = m_uic->getMouseSpeed().v[1] * movementSpeed;
+
+      // we need to negate this value, 'cause we want it expressed in viewport space ( where Y axis goes up, not down )
+      valChange.y = -m_uic->getMouseSpeed().v[1] * movementSpeed;
    }
 
    // transform the manipulated nodes
