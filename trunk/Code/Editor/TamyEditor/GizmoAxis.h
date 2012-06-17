@@ -65,9 +65,9 @@ public:
    /**
     * Transforms the manipulated nodes using the specified transformation vector.
     *
-    * @param screenSpaceTransformation
+    * @param viewportSpaceTransformation
     */
-   void transformManipulatedNodes( const Vector& screenSpaceTransformation );
+   void transformManipulatedNodes( const Vector& viewportSpaceTransformation );
 
    // -------------------------------------------------------------------------
    // Entity implementation

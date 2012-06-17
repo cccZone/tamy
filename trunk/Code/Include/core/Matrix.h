@@ -256,11 +256,18 @@ struct Matrix
    void getScale( Vector& outScaleVec ) const;
 
    /**
-    * Applies a uniform scale to this matrix ( it doesn't override any coefficients, but is multipled by them ).
+    * Applies a uniform scale to this matrix ( it doesn't override any coefficients, but is multiplied by them ).
     *
     * @param scale
     */
    void scaleUniform( float scale );
+
+   /**
+    * Applies a non-uniform scale to this matrix ( it doesn't override any coefficients, but is multiplied by them ).
+    *
+    * @param scaleVec
+    */
+   void scale( const Vector& scaleVec );
 
    /**
     * Returns the coordinate system axes and the position vector.
