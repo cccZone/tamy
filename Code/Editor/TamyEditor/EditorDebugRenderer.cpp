@@ -8,6 +8,7 @@
 #include "core-Renderer/BasicRenderCommands.h"
 #include "core-MVC.h"
 #include "core.h"
+#include "DebugGrid.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,6 +120,11 @@ void EditorDebugRenderer::initialize( Renderer& renderer )
    for ( uint i = 0; i < count; ++i )
    {
       m_debugScene->attach( *m_externalSceneViews[i] );
+   }
+
+   // add the grid
+   {
+      m_debugScene->add( new DebugGrid() );
    }
 }
 

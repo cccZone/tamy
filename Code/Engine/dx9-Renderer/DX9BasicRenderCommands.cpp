@@ -4,6 +4,43 @@
 #include <d3dx9.h>
 
 
+void RCSetFixedMaterial::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = dynamic_cast< DX9Renderer& >( renderer );
+   IDirect3DDevice9& d3Device = dxRenderer.getD3Device();
+
+   D3DMATERIAL9 mat;
+   d3Device.GetMaterial( &mat );
+
+   switch( m_materialComponent )
+   {
+   case MC_Ambient:
+      {
+         mat.Ambient = (const D3DCOLORVALUE&)m_color;
+         break;
+      }
+
+   case MC_Diffuse:
+      {
+         mat.Diffuse = (const D3DCOLORVALUE&)m_color;
+         break;
+      }
+
+   case MC_Specular:
+      {
+         mat.Specular = (const D3DCOLORVALUE&)m_color;
+         break;
+      }
+
+   case MC_Emissive:
+      {
+         mat.Emissive = (const D3DCOLORVALUE&)m_color;
+         break;
+      }
+   }
+   d3Device.SetMaterial( &mat );
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void RCSetAmbientColor::execute( Renderer& renderer )

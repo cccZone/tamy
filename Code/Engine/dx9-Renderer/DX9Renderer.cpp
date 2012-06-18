@@ -412,6 +412,9 @@ void DX9Renderer::beginScene()
    // begin scene rendering
    m_d3Device->BeginScene();
 
+   // reset the rendering state to its most basic form
+   m_d3Device->SetRenderState( D3DRS_FILLMODE, D3DFILL_SOLID );
+
    // kick off debug rendering
    for ( uint i = 0; i < DPS_MAX; ++i )
    {

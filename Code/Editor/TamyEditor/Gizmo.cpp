@@ -25,10 +25,18 @@ Gizmo::Gizmo( SpatialEntity& node, Mode mode, Camera& activeCamera )
    , m_rotationOp( new RotationGizmoOp() )
    , m_scalingOp( new ScalingGizmoOp() )
 {
-   m_axisMaterial[0] = new GizmoMaterial( 0, OX_COLOR );
-   m_axisMaterial[1] = new GizmoMaterial( 1, OY_COLOR );
-   m_axisMaterial[2] = new GizmoMaterial( 2, OZ_COLOR );
+   // create materials for particular axes
+   {
+      FilePath gizmoShaderPath( "Editor/Shaders/Gizmo.tpsh" );
+      PixelShader* shader = ResourcesManager::getInstance().create< PixelShader >( gizmoShaderPath );
+      ASSERT_MSG( shader != NULL, "Gizmo shader doesn't exist" );
 
+      m_axisMaterial[0] = new GizmoMaterial( 0, OX_COLOR, *shader );
+      m_axisMaterial[1] = new GizmoMaterial( 1, OY_COLOR, *shader );
+      m_axisMaterial[2] = new GizmoMaterial( 2, OZ_COLOR, *shader );
+   }
+
+   // create gizmo axes
    for ( byte i = 0; i < 3; ++i )
    {
       m_meshes[i] = NULL;
@@ -102,8 +110,7 @@ void Gizmo::setMode( Mode mode )
    }
 }
 
-// <gizmo.todo>: custom vertices can be used to define meshes ( for gizmo axes coloring )
-// <gizmo.todo>: fix axis display for rotated objects
+// <gizmo.todo>: manual editor values don't get refreshed when the user manipulates using gizmo
 
 ///////////////////////////////////////////////////////////////////////////////
 

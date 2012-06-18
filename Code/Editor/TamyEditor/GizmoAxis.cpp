@@ -91,7 +91,9 @@ bool GizmoAxis::onPreRender( Renderer& renderer )
    dirToCamera.setSub( cameraPos, nodeMtx.position() );
    float scale = dirToCamera.length();
 
-   nodeMtx.scaleUniform( scale );
+   Matrix scaleMtx;
+   scaleMtx.scaleUniform( scale );
+   nodeMtx.preMul( scaleMtx );
 
    new ( renderer() ) RCSetVertexDeclaration( LitVertex::FVF );
    new ( renderer() ) RCSetWorldMatrix( nodeMtx );

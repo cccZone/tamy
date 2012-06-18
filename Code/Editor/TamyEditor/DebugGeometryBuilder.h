@@ -8,8 +8,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class TriangleMesh;
+class LineSegments;
 struct LitVertex;
 struct Face;
+struct Color;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -50,6 +52,15 @@ public:
     * @return        new triangle mesh instance
     */
    static TriangleMesh* createTorus( float innerRadius, float outerRadius, const Matrix& transform, int segmentsCount, int segmentVerticesCount );
+
+   /**
+    * Creates a grid in XZ plane composed of line segments.
+    *
+    * @param size       grid size
+    * @param spacing    spacing between subsequent lines
+    * @param color
+    */
+   static LineSegments* createGrid( float size, float spacing, const Color& color );
 
 private:
    static void addCone( float baseSize, const Vector& start, const Vector& end, std::vector< LitVertex >& outVertices, std::vector< Face >& outFaces );

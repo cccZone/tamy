@@ -123,6 +123,15 @@ void SerializableReflectionType::addMemberField( ReflectionTypeComponent* member
 
 ///////////////////////////////////////////////////////////////////////////////
 
+ReflectionTypeComponent* SerializableReflectionType::findMemberField( const std::string& memberName ) const
+{
+   uint memberId = ReflectionTypeComponent::generateId( memberName );
+   ReflectionTypeComponent* foundComponent = findMemberField( memberId );
+   return foundComponent;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 ReflectionTypeComponent* SerializableReflectionType::findMemberField( uint memberId ) const
 {
    // check if this is not one of the patched members

@@ -410,9 +410,6 @@
     <ClInclude Include="GizmoMaterial.h">
       <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
     </ClInclude>
-    <ClInclude Include="DebugGeometryBuilder.h">
-      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
-    </ClInclude>
     <ClInclude Include="DebugGrid.h">
       <Filter>Widgets\SceneRenderWidget\Grid</Filter>
     </ClInclude>
@@ -424,6 +421,12 @@
     </ClInclude>
     <ClInclude Include="GizmoController.h">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugGeometryBuilder.h">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleColorDebugMat.h">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -968,9 +971,6 @@
     <ClCompile Include="GizmoMaterial.cpp">
       <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
     </ClCompile>
-    <ClCompile Include="DebugGeometryBuilder.cpp">
-      <Filter>Widgets\SceneRenderWidget\Gizmo</Filter>
-    </ClCompile>
     <ClCompile Include="DebugGrid.cpp">
       <Filter>Widgets\SceneRenderWidget\Grid</Filter>
     </ClCompile>
@@ -982,6 +982,12 @@
     </ClCompile>
     <ClCompile Include="GizmoController.cpp">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugGeometryBuilder.cpp">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleColorDebugMat.cpp">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

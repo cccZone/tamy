@@ -10,6 +10,42 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+enum MaterialColor
+{
+   MC_Ambient,
+   MC_Diffuse,
+   MC_Specular,
+   MC_Emissive
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Command sets the selected material component used by the fixed rendering pipeline.
+ */
+class RCSetFixedMaterial  : public RenderCommand
+{
+private:
+   MaterialColor  m_materialComponent;
+   Color          m_color;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param materialComponent
+    * @param color
+    */
+   RCSetFixedMaterial( MaterialColor materialComponent, const Color& color ) : m_materialComponent( materialComponent ), m_color( color ) {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Command sets the global ambient color.
  */
@@ -31,7 +67,6 @@ public:
    // -------------------------------------------------------------------------
    void execute( Renderer& renderer );
 };
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -117,14 +152,6 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-
-enum MaterialColor
-{
-   MC_Ambient,
-   MC_Diffuse,
-   MC_Specular,
-   MC_Emissive
-};
 
 enum SourceVertexColor
 {

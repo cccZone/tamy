@@ -1,5 +1,5 @@
-/// @file   TamyEditor/GizmoMaterial.h
-/// @brief  material gizmo is drawn with
+/// @file   TamyEditor/SingleColorDebugMat.h
+/// @brief  a material that draws things with a single color
 #pragma once
 
 #include "core/ReflectionObject.h"
@@ -13,14 +13,13 @@ class PixelShader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class GizmoMaterial : public ReflectionObject, public TRenderState< GizmoMaterial >
+class SingleColorDebugMat : public ReflectionObject, public TRenderState< SingleColorDebugMat >
 {
    DECLARE_CLASS();
 
 private:
-   byte                    m_axisIdx;
    Color                   m_color;
-   PixelShader&            m_shader;
+   PixelShader*            m_shader;
 
 public:
    /**
@@ -30,15 +29,15 @@ public:
     * @param color
     * @param shader
     */
-   GizmoMaterial( byte axisIdx, const Color& color, PixelShader& shader );
+   SingleColorDebugMat( const Color& color );
 
    // -------------------------------------------------------------------------
    // TRenderState implementation
    // -------------------------------------------------------------------------
    void onPreRender( Renderer& renderer ) const;
    void onPostRender( Renderer& renderer ) const;
-   bool onEquals( const GizmoMaterial& rhs ) const { return m_axisIdx == rhs.m_axisIdx; }
-   bool onLess( const GizmoMaterial& rhs ) const { return m_axisIdx < rhs.m_axisIdx; }
+   bool onEquals( const SingleColorDebugMat& rhs ) const { return m_color == rhs.m_color; }
+   bool onLess( const SingleColorDebugMat& rhs ) const { return m_color < rhs.m_color; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
