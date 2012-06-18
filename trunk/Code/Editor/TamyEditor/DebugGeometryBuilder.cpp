@@ -1,5 +1,6 @@
 #include "DebugGeometryBuilder.h"
 #include "core-Renderer/TriangleMesh.h"
+#include "core-Renderer/LineSegments.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,7 +19,7 @@ TriangleMesh* DebugGeometryBuilder::createArrow( float size, const Vector& start
    perpVec2.mul( size );
 
 
-   // the lipe
+   // the line
    std::vector<LitVertex> vertices;
    std::vector<Face> faces;
    addCuboid( size, start, end, vertices, faces );
@@ -270,6 +271,24 @@ TriangleMesh* DebugGeometryBuilder::createTorus( float innerRadius, float outerR
    }
 
    TriangleMesh* mesh = new TriangleMesh( FilePath(), vertices, outFaces );
+   return mesh;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+LineSegments* DebugGeometryBuilder::createGrid( float size, float spacing, const Color& color )
+{
+   LineSegments* mesh = new LineSegments();
+
+   const float dim = spacing <= 0 ? 0 : ( size / spacing );
+   float varPos;
+   for ( float i = -dim; i <= dim; ++i )
+   {
+      varPos = i * spacing;
+      mesh->add( LineSegment( Vector( -size, 0, varPos ), Vector( size, 0, varPos ), color ) );
+      mesh->add( LineSegment( Vector( varPos, 0, -size ), Vector( varPos, 0, size ), color ) );
+   }
+
    return mesh;
 }
 

@@ -102,7 +102,7 @@ void MtxPropertyEditor::yawValChanged(double val)
    Matrix rotMtx, transMtx, finalMtx;
    rotMtx.setRotation( orientation );
    transMtx.setTranslation( currVal.position() );
-   finalMtx.setMul( transMtx, rotMtx );
+   finalMtx.setMul( rotMtx, transMtx );
 
    m_property->set( finalMtx );
 }
@@ -120,7 +120,7 @@ void MtxPropertyEditor::pitchValChanged(double val)
    Matrix rotMtx, transMtx, finalMtx;
    rotMtx.setRotation( orientation );
    transMtx.setTranslation( currVal.position() );
-   finalMtx.setMul( transMtx, rotMtx );
+   finalMtx.setMul( rotMtx, transMtx );
 
    m_property->set( finalMtx );
 }
@@ -138,7 +138,7 @@ void MtxPropertyEditor::rollValChanged(double val)
    Matrix rotMtx, transMtx, finalMtx;
    rotMtx.setRotation( orientation );
    transMtx.setTranslation( currVal.position() );
-   finalMtx.setMul( transMtx, rotMtx );
+   finalMtx.setMul( rotMtx, transMtx );
 
    m_property->set( finalMtx );
 }

@@ -148,10 +148,18 @@ public:
    /**
     * Looks for a member with the specified member id.
     *
-    * @param memberId
+    * @param      memberId
     * @return     pointer to the member definition, or NULL if such a member is not defined
     */
    ReflectionTypeComponent* findMemberField( uint memberId ) const;
+
+   /**
+    * Looks for a member with the specified member name.
+    *
+    * @param      memberName
+    * @return     pointer to the member definition, or NULL if such a member is not defined
+    */
+   ReflectionTypeComponent* findMemberField( const std::string& memberName ) const;
 
    /**
     * Creates the properties for this type and the specified object.

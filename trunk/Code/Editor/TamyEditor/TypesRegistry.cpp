@@ -120,8 +120,12 @@ REGISTER_EXTERNAL_TYPE( QPointF );
 #include "GizmoMaterial.h"
 #include "GizmoAxis.h"
 #include "Gizmo.h"
+#include "DebugGrid.h"
+#include "SingleColorDebugMat.h"
 REGISTER_ABSTRACT_TYPE( GizmoMaterial );
 REGISTER_ABSTRACT_TYPE( GizmoAxis );
 REGISTER_ABSTRACT_TYPE( Gizmo );
+REGISTER_ABSTRACT_TYPE( DebugGrid );
+REGISTER_ABSTRACT_TYPE( SingleColorDebugMat );
 
 ///////////////////////////////////////////////////////////////////////////////
