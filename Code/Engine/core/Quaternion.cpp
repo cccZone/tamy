@@ -387,7 +387,7 @@ float Quaternion::decompose( const Vector& decompositionAxis, Quaternion& outRem
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Quaternion::transform( const Vector& inVec, Vector& outVec )
+void Quaternion::transform( const Vector& inVec, Vector& outVec ) const
 {
    float x2 = x*x;
    float y2 = y*y;

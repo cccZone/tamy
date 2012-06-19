@@ -127,6 +127,13 @@ float Plane::dotNormal( const Vector& normal ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Plane::getNormal( Vector& outPlaneNormal ) const
+{
+   memcpy( outPlaneNormal.v.v, p, sizeof( float ) * 3 );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 std::ostream& operator<<( std::ostream& stream, const Plane& rhs )
 {
    stream << "[" << rhs.a << ", " << rhs.b << ", " << rhs.c << ", " << rhs.d << "]";

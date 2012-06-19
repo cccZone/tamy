@@ -19,7 +19,7 @@ QReflectionPropertyEditorComposite::QReflectionPropertyEditorComposite( Reflecti
 
    setFrameStyle( QFrame::StyledPanel );
 
-   QString propertyLabel = "<propertyLabel.todo>";
+   QString propertyLabel = property->getName().c_str();
    if (propertyLabel.isEmpty() == false)
    {
       QLabel* label = new QLabel( propertyLabel, this );

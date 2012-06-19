@@ -72,48 +72,48 @@ TEST( Quaternion, retrievingAxisAngleValues )
 TEST( Quaternion, angleDecomposition )
 {
    Quaternion quat;
-	Quaternion remainingQuat;
-	float angle;
+   Quaternion remainingQuat;
+   float angle;
 
-	{
-		quat.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
+   {
+      quat.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
 
-		// a decomposition along the creation axis should not leave any quaternion behind
-		{
-			angle = quat.decompose( Vector::OX, remainingQuat );
+      // a decomposition along the creation axis should not leave any quaternion behind
+      {
+         angle = quat.decompose( Vector::OX, remainingQuat );
 
-			COMPARE_QUAT( remainingQuat, Quaternion::IDENTITY );
-			CPPUNIT_ASSERT_DOUBLES_EQUAL( 90.0f, RAD2DEG( angle ), 1e-3 );
-		}
+         COMPARE_QUAT( remainingQuat, Quaternion::IDENTITY );
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( 90.0f, RAD2DEG( angle ), 1e-3 );
+      }
 
-		// a decomposition along an orthogonal axis should leave the entire quaternion untouched
-		// and return angle == 0
-		{
-			angle = quat.decompose( Vector::OY, remainingQuat );
+      // a decomposition along an orthogonal axis should leave the entire quaternion untouched
+      // and return angle == 0
+      {
+         angle = quat.decompose( Vector::OY, remainingQuat );
 
-			COMPARE_QUAT( remainingQuat, quat );
-			CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0395f, RAD2DEG( angle ), 1e-3 );
-		}
-	}
+         COMPARE_QUAT( remainingQuat, quat );
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0395f, RAD2DEG( angle ), 1e-3 );
+      }
+   }
 
-	quat.setAxisAngle( Vector::OX_NEG, DEG2RAD( 45.0f ) );
-	{
-		// complete removal
-		{
-			angle = quat.decompose( Vector::OX_NEG, remainingQuat );
+   quat.setAxisAngle( Vector::OX_NEG, DEG2RAD( 45.0f ) );
+   {
+      // complete removal
+      {
+         angle = quat.decompose( Vector::OX_NEG, remainingQuat );
 
-			COMPARE_QUAT( remainingQuat, Quaternion::IDENTITY );
-			CPPUNIT_ASSERT_DOUBLES_EQUAL( 45.0f, RAD2DEG( angle ), 1e-3 );
-		}
+         COMPARE_QUAT( remainingQuat, Quaternion::IDENTITY );
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( 45.0f, RAD2DEG( angle ), 1e-3 );
+      }
 
-		// null removal
-		{
-			angle = quat.decompose( Vector::OY, remainingQuat );
+      // null removal
+      {
+         angle = quat.decompose( Vector::OY, remainingQuat );
 
-			COMPARE_QUAT( remainingQuat, quat );
-			CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0395f, RAD2DEG( angle ), 1e-3 );
-		}
-	}
+         COMPARE_QUAT( remainingQuat, quat );
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0395f, RAD2DEG( angle ), 1e-3 );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

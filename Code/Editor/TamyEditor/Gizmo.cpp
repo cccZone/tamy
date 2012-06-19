@@ -156,8 +156,6 @@ void Gizmo::createRotationGizmo()
 
    Matrix transformOX, transformOY, transformOZ;
 
-   // <math.todo> next candidate for optimization as soon as I introduce the Transform class - get rid of those matrices then!!!
-
    // calculate transform OX
    {
       rotQ.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );

@@ -26,5 +26,6 @@
 #include "core\MatrixUtils.h"
 #include "core\Plane.h"
 #include "core\Quaternion.h"
+#include "core\Transform.h"
 #include "core\Algorithms.h"
 #include "core\MathDefs.h"

@@ -122,6 +122,7 @@
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="PointVolume.cpp" />
     <ClCompile Include="Ray.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="CollisionTests.cpp" />
     <ClCompile Include="QuadraticEquations.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="..\..\Include\core\IntervalOperation.h" />
     <ClInclude Include="..\..\Include\core\MatrixUtils.h" />
     <ClInclude Include="..\..\Include\core\StringUtils.h" />
+    <ClInclude Include="..\..\Include\core\Transform.h" />
     <ClInclude Include="..\..\Include\core\TypeRegistrationMacros.h" />
     <ClInclude Include="..\..\Include\core\types.h" />
     <ClInclude Include="..\..\Include\core\UniqueObject.h" />

@@ -362,30 +362,31 @@ const Vector& Matrix::getRow( byte rowIdx ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Matrix::setSideVec( const Vector& vec ) const
+void Matrix::setSideVec( const Vector& vec )
 {
    ( Vector& )( m[0][0] ) = vec;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Matrix::setUpVec( const Vector& vec ) const
+void Matrix::setUpVec( const Vector& vec )
 {
    ( Vector& )( m[1][0] ) = vec;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Matrix::setForwardVec( const Vector& vec ) const
+void Matrix::setForwardVec( const Vector& vec )
 {
    ( Vector& )( m[2][0] ) = vec;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Matrix::setPosition( const Vector& pos ) const
+void Matrix::setPosition( const Vector& pos )
 {
    ( Vector& )( m[3][0] ) = pos;
+   m44 = 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

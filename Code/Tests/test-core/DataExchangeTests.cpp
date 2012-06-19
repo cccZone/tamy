@@ -22,8 +22,6 @@ TEST( Vector3, exchangingDataWithDX )
    CPPUNIT_ASSERT_EQUAL( 7.0f, castTamyVec.z );
 }
 
-// <math.todo>: an array of Vector 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST( Vector4, exchangingDataWithDX )

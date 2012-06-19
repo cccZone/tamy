@@ -42,31 +42,39 @@ struct EulerAngles
    // -------------------------------------------------------------------------
    bool operator==(const EulerAngles& rhs) const;
    bool operator!=(const EulerAngles& rhs) const;
-   EulerAngles& operator=(const EulerAngles& rhs);
-
-   // <math.todo> replace those operators with methods
-   EulerAngles operator+(const EulerAngles& rhs) const;
-   EulerAngles& operator+=(const EulerAngles& rhs);
-   EulerAngles operator-(const EulerAngles& rhs) const;
-   EulerAngles& operator-=(const EulerAngles& rhs);
-   EulerAngles operator*(const EulerAngles& rhs) const;
-   EulerAngles& operator*=(const EulerAngles& rhs);
-   EulerAngles operator/(const EulerAngles& rhs) const;
-   EulerAngles& operator/=(const EulerAngles& rhs);
-
-   EulerAngles operator+(float val) const;
-   EulerAngles& operator+=(float val);
-   EulerAngles operator-(float val) const;
-   EulerAngles& operator-=(float val);
-   EulerAngles operator*(float val) const;
-   EulerAngles& operator*=(float val);
-   EulerAngles operator/(float val) const;
-   EulerAngles& operator/=(float val);
-   
+   EulerAngles& operator=(const EulerAngles& rhs);   
   
    // -------------------------------------------------------------------------
    // Operations
    // -------------------------------------------------------------------------
+
+   /**
+    * this = a + b
+    *
+    * @return  this instance, to allow to chain the operations
+    */
+   EulerAngles& setAdd( const EulerAngles& a, const EulerAngles& b );
+
+   /**
+    * this = a - b
+    *
+    * @return  this instance, to allow to chain the operations
+    */
+   EulerAngles& setSub( const EulerAngles& a, const EulerAngles& b );
+
+   /**
+    * this += a
+    *
+    * @return  this instance, to allow to chain the operations
+    */
+   EulerAngles& add( const EulerAngles& a );
+
+   /**
+    * this -= a
+    *
+    * @return  this instance, to allow to chain the operations
+    */
+   EulerAngles& sub( const EulerAngles& a );
 
    /**
     * Constructor that calculates the shortest rotation angle that transforms vec1 into vec2.

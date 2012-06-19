@@ -266,6 +266,9 @@
     <ClCompile Include="ReflectionSerializationUtil.cpp">
       <Filter>RTTI\Serialization</Filter>
     </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -581,6 +584,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\ReflectionSerializationUtil.h">
       <Filter>RTTI\Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Transform.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
