@@ -187,7 +187,7 @@ struct Quaternion
     * @param inVec      vector to transform
     * @param outVec     transformed vector
     */
-   void transform( const Vector& inVec, Vector& outVec );
+   void transform( const Vector& inVec, Vector& outVec ) const;
 
    /**
     * This method writes the description of the quaternion to the specified 

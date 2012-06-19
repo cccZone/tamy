@@ -53,24 +53,3 @@ bool DebugGrid::onPreRender( Renderer& renderer )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
-   // <gizmo.todo> move this code to the editor debug renderer
-/*
-   // prepare for debug scene rendering
-   new ( renderer() ) RCBeginDebugScene();
-
-   // draw a reference grid
-   static float gridLinesSpacing = 10;
-   static float gridSize = 1000;
-   static Color gridColor( 100, 100, 255 );
-   new ( renderer() ) RCDrawDebugGrid( gridSize, gridLinesSpacing, gridColor );
-
-   // draw the debug info
-   if ( m_debugScene != NULL )
-   {
-      m_debugScene->onDebugRender( *m_renderer );
-   }
-
-   // render the scene
-   new ( (*m_renderer)() ) RCEndDebugScene();*/

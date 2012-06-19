@@ -150,8 +150,8 @@ Vector& Vector::sub( const Vector& vec )
 Vector& Vector::neg()
 {
    x = -x;
-   x = -y;
-   y = -z;
+   y = -y;
+   z = -z;
    w = -w;
    return *this;
 }

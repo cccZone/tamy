@@ -135,140 +135,47 @@ EulerAngles& EulerAngles::operator=( const EulerAngles& rhs )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles EulerAngles::operator+( const EulerAngles& rhs ) const
+EulerAngles& EulerAngles::setAdd( const EulerAngles& a, const EulerAngles& b )
 {
-   return EulerAngles(yaw + rhs.yaw, pitch + rhs.pitch, roll + rhs.roll);
-}
+   yaw = a.yaw + b.yaw;
+   pitch = a.pitch + b.pitch;
+   roll = a.roll + b.roll;
 
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles& EulerAngles::operator+=( const EulerAngles& rhs )
-{
-   yaw += rhs.yaw;
-   pitch += rhs.pitch;
-   roll += rhs.roll;
    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles EulerAngles::operator-( const EulerAngles& rhs ) const
+EulerAngles& EulerAngles::setSub( const EulerAngles& a, const EulerAngles& b )
 {
-   return EulerAngles(yaw - rhs.yaw, pitch - rhs.pitch, roll - rhs.roll);
-}
+   yaw = a.yaw - b.yaw;
+   pitch = a.pitch - b.pitch;
+   roll = a.roll - b.roll;
 
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles& EulerAngles::operator-=( const EulerAngles& rhs )
-{
-   yaw -= rhs.yaw;
-   pitch -= rhs.pitch;
-   roll -= rhs.roll;
    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles EulerAngles::operator*( const EulerAngles& rhs ) const
+EulerAngles& EulerAngles::add( const EulerAngles& a )
 {
-   return EulerAngles(yaw * rhs.yaw, pitch * rhs.pitch, roll * rhs.roll);
-}
+   yaw += a.yaw;
+   pitch += a.pitch;
+   roll += a.roll;
 
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles& EulerAngles::operator*=( const EulerAngles& rhs )
-{
-   yaw *= rhs.yaw;
-   pitch *= rhs.pitch;
-   roll *= rhs.roll;
    return *this;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EulerAngles EulerAngles::operator/( const EulerAngles& rhs ) const
+EulerAngles& EulerAngles::sub( const EulerAngles& a )
 {
-   return EulerAngles(yaw / rhs.yaw, pitch / rhs.pitch, roll / rhs.roll);
-}
+   yaw -= a.yaw;
+   pitch -= a.pitch;
+   roll -= a.roll;
 
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles& EulerAngles::operator/=( const EulerAngles& rhs )
-{
-   yaw /= rhs.yaw;
-   pitch /= rhs.pitch;
-   roll /= rhs.roll;
    return *this;
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles EulerAngles::operator+( float val ) const
-{
-   return EulerAngles(yaw + val, pitch + val, roll + val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles& EulerAngles::operator+=(float val)
-{
-   yaw += val;
-   pitch += val;
-   roll += val;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles EulerAngles::operator-(float val) const
-{
-   return EulerAngles(yaw - val, pitch - val, roll - val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles& EulerAngles::operator-=(float val)
-{
-   yaw -= val;
-   pitch -= val;
-   roll -= val;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles EulerAngles::operator*(float val) const
-{
-   return EulerAngles(yaw * val, pitch * val, roll * val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles& EulerAngles::operator*=(float val)
-{
-   yaw *= val;
-   pitch *= val;
-   roll *= val;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles EulerAngles::operator/(float val) const
-{
-   return EulerAngles(yaw / val, pitch / val, roll / val);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-EulerAngles& EulerAngles::operator/=(float val)
-{
-   yaw /= val;
-   pitch /= val;
-   roll /= val;
-   return *this;
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 

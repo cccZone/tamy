@@ -99,6 +99,11 @@ struct Plane
     */
    float dotNormal( const Vector& normal ) const;
 
+   /**
+    * Returns the normal of the plane.
+    */
+   void getNormal( Vector& outPlaneNormal ) const;
+
    // -------------------------------------------------------------------------
    // Serialization support
    // -------------------------------------------------------------------------

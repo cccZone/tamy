@@ -225,28 +225,28 @@ struct Matrix
     *
     * @param vec
     */
-   void setSideVec( const Vector& vec ) const;
+   void setSideVec( const Vector& vec );
 
    /**
     * Sets the new value for the row that represents the up axis.
     *
     * @param vec
     */
-   void setUpVec( const Vector& vec ) const;
+   void setUpVec( const Vector& vec );
 
    /**
     * Sets the new value for the row that represents the forward axis.
     *
     * @param vec
     */
-   void setForwardVec( const Vector& vec ) const;
+   void setForwardVec( const Vector& vec );
 
    /**
     * Sets the new value for the row that represents the position.
     *
     * @param pos
     */
-   void setPosition( const Vector& pos ) const;
+   void setPosition( const Vector& pos );
 
    /**
     * Returns the scale the matrix describes.

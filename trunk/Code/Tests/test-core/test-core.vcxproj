@@ -112,6 +112,7 @@
     <ClCompile Include="RoundBufferTest.cpp" />
     <ClCompile Include="RuntimeDataTests.cpp" />
     <ClCompile Include="SerializationTests.cpp" />
+    <ClCompile Include="TransformTests.cpp" />
     <ClCompile Include="UpdatingGlobalMatricesTests.cpp" />
     <ClCompile Include="VectorTests.cpp" />
     <ClCompile Include="VisitorTests.cpp" />

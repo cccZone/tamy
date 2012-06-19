@@ -173,6 +173,9 @@
     <ClCompile Include="PlatformTests.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="TransformTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">
