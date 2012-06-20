@@ -1,4 +1,4 @@
-h1. Reflection objects editors
+=Reflection objects editors=
 
 This feature allows you to create an object edition framework in your editor. 
 
@@ -8,7 +8,7 @@ your custom editors for you - once you create the custom editors of course and r
 
 Let's take a look how it's done.
 
-h3. Custom editor
+==Custom editor==
 Let's start from the leaves of our system - that is from the custom editors dedicated to particular engine types.
 
 Let's say we want to be able to edit an integer value our objects might hold as properties.
@@ -42,7 +42,7 @@ All you need to do is implement the `ReflectionPropertyEditor` interface.
 a single parameter of type `TEditableReflectionProperty< EditedType >`, where `EditedType` stands for the property type
 this editor deals with ( `int` in this case ).
 
-h3. Custom object view implementation
+==Custom object view implementation==
 
 Here's how the most basic ( but fully operational ) implementation looks like.
 
@@ -74,7 +74,7 @@ You have a few association methods at your disposal that deal in different data 
   * `associate` - for primitive types ( i.e: int, Vector, std::string  - anything that doesn't inherit from ReflectionObject )
   * `associateAbstract` - for objects that inherit from ReflectionObject. There's a trick here however - imagine you have a `class A` and `class B` derrived from it, and a custom editor for each of them. In order for those editors to be created correctly, you need to register the editor of the more specific type ( `class B` ) *first*, and the more generic one ( `class A` ) next.
   
-h3. Architecture
+==Architecture==
 
 `ReflectionPropertiesView` creates a tree composed of `ReflectionObjectEditor` instances. You can find the algorithm in `ReflectionPropertiesView::set` method.
 Each `ReflectionObjectEditor` in turn holds a list of `ReflectionPropertyEditor` instances, corresponding to particular properties of the object. 
