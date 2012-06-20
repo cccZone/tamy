@@ -1,5 +1,6 @@
 #include "core\ReflectionPropertyEditor.h"
 #include "core\ReflectionProperty.h"
+#include "core\ReflectionObject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,18 +53,31 @@ void ReflectionPropertyEditorComposite::deinitialize( ReflectionObjectEditor* pa
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionPropertyEditorComposite::onPropertyChanged()
+{
+   // nothing to do in the default implementation
+}
+
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 ReflectionObjectEditor::ReflectionObjectEditor( ReflectionObject* editedObject )
    : m_editedObject( editedObject )
 {
+   // attach the listener
+   m_editedObject->attachListener( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ReflectionObjectEditor::~ReflectionObjectEditor()
 {
+   // detach the listener
+   m_editedObject->detachListener( *this );
+
+   // destroy the editors
    uint count = m_editors.size();
    for ( uint i = 0; i < count; ++i )
    {
@@ -97,6 +111,25 @@ void ReflectionObjectEditor::deinitialize( ReflectionPropertyEditorComposite* pa
    {
       ReflectionPropertyEditor* editor = m_editors[i];
       editor->deinitialize( this );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionObjectEditor::onPropertyChanged( ReflectionProperty& property )
+{
+   uint changedPropertyId = ReflectionTypeComponent::generateId( property.getName() );
+
+   unsigned int count = m_editors.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      ReflectionPropertyEditor* editor = m_editors[i];
+      if ( editor->m_propertyId == changedPropertyId )
+      {
+         // found the property editor that corresponds to the changed property
+         editor->onPropertyChanged();
+         break;
+      }
    }
 }
 

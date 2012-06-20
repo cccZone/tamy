@@ -99,7 +99,8 @@ public:
     *
     * @return reference to the created property
     */
-   virtual ReflectionProperty* createProperty( void* object ) const = 0;
+   ReflectionProperty* createProperty( void* object ) const;
+
 
 protected:
    /**
@@ -127,6 +128,16 @@ protected:
     */
    template< typename T >
    T* loadPtr( InStream& stream ) const;
+
+   /**
+    * Instantiates a property for this type member of the specified object.
+    *
+    * @param object
+    * @param outProperties
+    *
+    * @return reference to the created property
+    */
+   virtual ReflectionProperty* instantiateProperty( void* object ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -150,7 +161,7 @@ public:
    void load( void* object, InStream& stream ) const;
    void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
    void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const;
-   ReflectionProperty* createProperty( void* object ) const;
+   ReflectionProperty* instantiateProperty( void* object ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -174,7 +185,7 @@ public:
    void load( void* object, InStream& stream ) const;
    void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
    void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const;
-   ReflectionProperty* createProperty( void* object ) const;
+   ReflectionProperty* instantiateProperty( void* object ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -198,7 +209,7 @@ public:
    void load( void* object, InStream& stream ) const;
    void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
    void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const;
-   ReflectionProperty* createProperty( void* object ) const;
+   ReflectionProperty* instantiateProperty( void* object ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

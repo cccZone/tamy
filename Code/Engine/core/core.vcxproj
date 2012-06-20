@@ -163,6 +163,7 @@
     <ClInclude Include="..\..\Include\core\ReflectionLoader.h" />
     <ClInclude Include="..\..\Include\core\ReflectionMacros.h" />
     <ClInclude Include="..\..\Include\core\ReflectionObject.h" />
+    <ClInclude Include="..\..\Include\core\ReflectionObjectChangeListener.h" />
     <ClInclude Include="..\..\Include\core\ReflectionObjectsTracker.h" />
     <ClInclude Include="..\..\Include\core\ReflectionPropertiesView.h" />
     <ClInclude Include="..\..\Include\core\ReflectionProperty.h" />

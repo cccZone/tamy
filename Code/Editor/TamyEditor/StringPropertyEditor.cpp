@@ -23,12 +23,12 @@ StringPropertyEditor::~StringPropertyEditor()
 
 void StringPropertyEditor::setupUi()
 {
-   QLineEdit* edit = new QLineEdit(this);
-   addWidget(edit);
+   m_edit = new QLineEdit(this);
+   addWidget(m_edit);
    
-   edit->setText(m_property->get().c_str());
+   m_edit->setText(m_property->get().c_str());
 
-   connect(edit, SIGNAL(textChanged(const QString&)), this, SLOT(valChanged(const QString&)));
+   connect(m_edit, SIGNAL(textChanged(const QString&)), this, SLOT(valChanged(const QString&)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,6 +37,13 @@ void StringPropertyEditor::valChanged(const QString& val)
 {
    std::string newVal = val.toStdString();
    m_property->set( newVal );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void StringPropertyEditor::onPropertyChanged()
+{
+   m_edit->setText(m_property->get().c_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////

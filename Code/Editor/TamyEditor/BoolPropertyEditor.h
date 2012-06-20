@@ -9,6 +9,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class QCheckBox;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Editor widget that will edit boolean properties.
  */
@@ -19,6 +23,8 @@ class BoolPropertyEditor : public QPropertyEditor
 private:
    TEditableReflectionProperty< bool >*    m_val;
 
+   QCheckBox*                              m_checkBox;
+
 public:
    /**
     * Constructor.
@@ -27,6 +33,11 @@ public:
     */
    BoolPropertyEditor( TEditableReflectionProperty< bool >* property );
    ~BoolPropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void valChanged(int val);

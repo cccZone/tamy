@@ -31,7 +31,7 @@ public:
    virtual ~QPropertyEditor();
 
    // -------------------------------------------------------------------------
-   // TReflectionPropertyEditor implementation
+   // ReflectionPropertyEditor implementation
    // -------------------------------------------------------------------------
    void initialize( ReflectionObjectEditor* parent );
    void deinitialize( ReflectionObjectEditor* parent );

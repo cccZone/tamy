@@ -53,3 +53,12 @@ Color ColorFrame::getEngineColor() const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void ColorFrame::setColor( const Color& color )
+{
+   QColor newColor( color.r * 255, color.g * 255, color.b * 255, color.a * 255 );
+   setPalette( QPalette( newColor ) );
+   emit changed( newColor );
+}
+
+///////////////////////////////////////////////////////////////////////////////

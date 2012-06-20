@@ -107,6 +107,11 @@ void ReflectionPropertiesView::analyzeSingleProperty( ReflectionProperty* analyz
    // store the editor in the parent composite editor
    if ( editor != NULL )
    {
+      // set up the property id of the edited property - it will be used by the editor
+      // to identify self in the process of property change notifications
+      editor->m_propertyId = ReflectionTypeComponent::generateId( analyzedProperty->getName() );
+
+      // add the editor to the object node
       populatedObjectEditor->addPropertyEditor( editor );
    }
 }

@@ -67,6 +67,9 @@ void GizmoAxis::transformManipulatedNodes( const Vector& viewportSpaceTransforma
    // we're multiplying transformationMtx*nodeMtx, because we want to manipulate the object in it's LOCAL SPACE.
    // If you want to manipulate it in WORLD SPACE, use 'mul' instead
    nodeMtx.preMul( transformationMtx );
+
+   // notify the object that it's value has externally changed ( other editors might be watching )
+   m_editedNode.notifyPropertyChange( "m_localMtx" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

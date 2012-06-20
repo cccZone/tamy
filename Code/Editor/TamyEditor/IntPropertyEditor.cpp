@@ -23,11 +23,11 @@ IntPropertyEditor::~IntPropertyEditor()
 
 void IntPropertyEditor::setupUi()
 {
-   QSpinBox* val = new QSpinBox(this); addWidget(val);
-   val->setRange( -INT_MAX, INT_MAX );
-   val->setValue( m_property->get() );
+   m_val = new QSpinBox(this); addWidget(m_val);
+   m_val->setRange( -INT_MAX, INT_MAX );
+   m_val->setValue( m_property->get() );
 
-   connect(val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));
+   connect(m_val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,6 +35,13 @@ void IntPropertyEditor::setupUi()
 void IntPropertyEditor::valChanged(int val)
 {
    m_property->set( val );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void IntPropertyEditor::onPropertyChanged()
+{
+   m_val->setValue( m_property->get() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,11 +67,11 @@ UIntPropertyEditor::~UIntPropertyEditor()
 
 void UIntPropertyEditor::setupUi()
 {
-   QSpinBox* val = new QSpinBox(this); addWidget(val);
-   val->setRange( 0, INT_MAX );
-   val->setValue( m_property->get() );
+   m_val = new QSpinBox(this); addWidget(m_val);
+   m_val->setRange( 0, INT_MAX );
+   m_val->setValue( m_property->get() );
 
-   connect(val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));
+   connect(m_val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,6 +79,13 @@ void UIntPropertyEditor::setupUi()
 void UIntPropertyEditor::valChanged(int val)
 {
    m_property->set( val );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void UIntPropertyEditor::onPropertyChanged()
+{
+   m_val->setValue( m_property->get() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,11 +111,11 @@ LongPropertyEditor::~LongPropertyEditor()
 
 void LongPropertyEditor::setupUi()
 {
-   QSpinBox* val = new QSpinBox(this); addWidget(val);
-   val->setRange( -LONG_MAX, LONG_MAX );
-   val->setValue( m_property->get() );
+   m_val = new QSpinBox(this); addWidget(m_val);
+   m_val->setRange( -LONG_MAX, LONG_MAX );
+   m_val->setValue( m_property->get() );
 
-   connect(val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));
+   connect(m_val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -109,6 +123,13 @@ void LongPropertyEditor::setupUi()
 void LongPropertyEditor::valChanged(int val)
 {
    m_property->set( val );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void LongPropertyEditor::onPropertyChanged()
+{
+   m_val->setValue( m_property->get() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -134,11 +155,11 @@ ULongPropertyEditor::~ULongPropertyEditor()
 
 void ULongPropertyEditor::setupUi()
 {
-   QSpinBox* val = new QSpinBox(this); addWidget(val);
-   val->setRange( 0, LONG_MAX );
-   val->setValue( m_property->get() );
+   m_val = new QSpinBox(this); addWidget(m_val);
+   m_val->setRange( 0, LONG_MAX );
+   m_val->setValue( m_property->get() );
 
-   connect(val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));
+   connect(m_val, SIGNAL(valueChanged(int)), this, SLOT(valChanged(int)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -149,5 +170,10 @@ void ULongPropertyEditor::valChanged(int val)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
+
+void ULongPropertyEditor::onPropertyChanged()
+{
+   m_val->setValue( m_property->get() );
+}
+
 ///////////////////////////////////////////////////////////////////////////////

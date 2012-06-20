@@ -12,3 +12,17 @@ ReflectionTypeComponent::ReflectionTypeComponent( const std::string& memberName 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+ReflectionProperty* ReflectionTypeComponent::createProperty( void* object ) const
+{
+   ReflectionProperty* property = instantiateProperty( object );
+   
+   if( property != NULL )
+   {
+      property->setParams( m_memberName, m_label, m_isEditable, m_canBeSaved );
+   }
+
+   return property;
+}
+
+///////////////////////////////////////////////////////////////////////////////

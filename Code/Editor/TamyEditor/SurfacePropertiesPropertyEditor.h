@@ -10,6 +10,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class ColorFrame;
+class QDoubleSpinBox;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Editor widget that will edit color properties.
  */
@@ -18,7 +23,13 @@ class SurfacePropertiesPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableReflectionProperty< SurfaceProperties >*   m_property;
+   TEditableReflectionProperty< SurfaceProperties >*     m_property;
+
+   ColorFrame*                                           m_ambientVal;
+   ColorFrame*                                           m_diffuseVal;
+   ColorFrame*                                           m_emissiveVal;
+   ColorFrame*                                           m_specularVal;
+   QDoubleSpinBox*                                       m_powerVal;
 
 public:
    /**
@@ -28,6 +39,11 @@ public:
     */
    SurfacePropertiesPropertyEditor( TEditableReflectionProperty< SurfaceProperties >* property );
    ~SurfacePropertiesPropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void ambientChanged( const QColor& color );

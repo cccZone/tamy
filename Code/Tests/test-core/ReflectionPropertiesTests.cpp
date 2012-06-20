@@ -44,6 +44,8 @@ namespace // anonymous
 
       void deinitialize( ReflectionObjectEditor* parentEditor ) {}
 
+      void onPropertyChanged() {}
+
       void setValue( T val )
       {
          m_property->set( val );

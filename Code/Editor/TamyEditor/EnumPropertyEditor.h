@@ -10,6 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Enum;
+class QComboBox;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,6 +24,8 @@ class EnumPropertyEditor : public QPropertyEditor
 private:
    TEditableReflectionProperty< ReflectionEnum >*    m_property;
 
+   QComboBox*                                        m_editCombo;
+
 public:
    /**
     * Constructor.
@@ -31,6 +34,11 @@ public:
     */
    EnumPropertyEditor( TEditableReflectionProperty< ReflectionEnum >* property );
    ~EnumPropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void valChanged( const QString& val );
