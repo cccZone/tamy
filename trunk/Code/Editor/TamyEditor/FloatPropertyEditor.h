@@ -8,6 +8,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class QDoubleSpinBox;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Editor widget that will edit float value properties.
  */
@@ -16,7 +20,9 @@ class FloatPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableReflectionProperty< float >*    m_property;
+   TEditableReflectionProperty< float >*     m_property;
+   
+   QDoubleSpinBox*                           m_val;
 
 public:
    /**
@@ -26,6 +32,11 @@ public:
     */
    FloatPropertyEditor( TEditableReflectionProperty< float >* property );
    ~FloatPropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void valChanged(double val);
@@ -46,6 +57,8 @@ class DoublePropertyEditor : public QPropertyEditor
 private:
    TEditableReflectionProperty< double >*    m_property;
 
+   QDoubleSpinBox*                           m_val;
+
 public:
    /**
     * Constructor.
@@ -54,6 +67,11 @@ public:
     */
    DoublePropertyEditor( TEditableReflectionProperty< double >* property );
    ~DoublePropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void valChanged(double val);

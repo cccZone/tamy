@@ -101,7 +101,7 @@ void TMemberField< T >::restoreDependencies( void* object, const ReflectionDepen
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ReflectionProperty* TMemberField< T >::createProperty( void* object ) const
+ReflectionProperty* TMemberField< T >::instantiateProperty( void* object ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
    T* dataPtr = reinterpret_cast< T* >( memberPtr );
@@ -169,7 +169,7 @@ void TMemberField< T* >::restoreDependencies( void* object, const ReflectionDepe
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ReflectionProperty* TMemberField< T* >::createProperty( void* object ) const
+ReflectionProperty* TMemberField< T* >::instantiateProperty( void* object ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
    T** dataPtr = reinterpret_cast< T** >( memberPtr );
@@ -268,7 +268,7 @@ void TMemberField< std::vector< T* > >::restoreDependencies( void* object, const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ReflectionProperty* TMemberField< std::vector< T* > >::createProperty( void* object ) const
+ReflectionProperty* TMemberField< std::vector< T* > >::instantiateProperty( void* object ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
    std::vector< T* >* dataPtr = reinterpret_cast< std::vector< T* >* >( memberPtr );

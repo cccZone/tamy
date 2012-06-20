@@ -10,6 +10,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class QDoubleSpinBox;
+class QDoubleSpinBox;
+class QDoubleSpinBox;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Editor widget that will edit 3D vector properties.
  */
@@ -20,6 +26,10 @@ class Vec3PropertyEditor : public QPropertyEditor
 private:
    TEditableReflectionProperty< Vector >* m_property;
 
+   QDoubleSpinBox*                        m_xVal;
+   QDoubleSpinBox*                        m_yVal;
+   QDoubleSpinBox*                        m_zVal;
+
 public:
    /**
     * Constructor.
@@ -28,6 +38,11 @@ public:
     */
    Vec3PropertyEditor( TEditableReflectionProperty< Vector >* property );
    ~Vec3PropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void xValChanged(double val);

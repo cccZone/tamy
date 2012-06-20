@@ -10,6 +10,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class QDoubleSpinBox;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Editor widget that will edit matrix properties.
  */
@@ -20,6 +24,13 @@ class MtxPropertyEditor : public QPropertyEditor
 private:
    TEditableReflectionProperty< Matrix >*    m_property;
 
+   QDoubleSpinBox*                           m_yawVal;
+   QDoubleSpinBox*                           m_pitchVal;
+   QDoubleSpinBox*                           m_rollVal;
+   QDoubleSpinBox*                           m_xVal;
+   QDoubleSpinBox*                           m_yVal;
+   QDoubleSpinBox*                           m_zVal;
+
 public:
    /**
     * Constructor.
@@ -28,6 +39,12 @@ public:
     */
    MtxPropertyEditor( TEditableReflectionProperty< Matrix >* property );
    ~MtxPropertyEditor();
+
+protected:
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void yawValChanged(double val);
@@ -40,6 +57,7 @@ public slots:
 
 private:
    void setupUi();
+   void initializeValues();
 
 };
 

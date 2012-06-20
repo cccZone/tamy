@@ -57,9 +57,9 @@ void QPropertiesView::initFactory()
    associate< unsigned long,        ULongPropertyEditor >();
    associateAbstract< Resource*,         ResourcePropertyEditor >();
    associateAbstract< ReflectionObject*, ObjectPropertyEditor >();
-   associateEnums< EnumPropertyEditor >();
-   associateArray< QReflectionPropertyEditorComposite >();
-   associateObjectNode< QReflectionObjectEditor >();
+   defineEnums< EnumPropertyEditor >();
+   defineArray< QReflectionPropertyEditorComposite >();
+   defineObjectNode< QReflectionObjectEditor >();
 }
 
 

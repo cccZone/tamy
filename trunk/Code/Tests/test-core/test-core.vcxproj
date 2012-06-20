@@ -107,6 +107,7 @@
     <ClCompile Include="PlatformTests.cpp" />
     <ClCompile Include="QuaternionTests.cpp" />
     <ClCompile Include="ReflectionEnumTests.cpp" />
+    <ClCompile Include="ReflectionObjectTests.cpp" />
     <ClCompile Include="ReflectionPropertiesTests.cpp" />
     <ClCompile Include="ReflectionTests.cpp" />
     <ClCompile Include="RoundBufferTest.cpp" />

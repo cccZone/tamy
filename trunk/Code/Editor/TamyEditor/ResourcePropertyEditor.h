@@ -38,6 +38,11 @@ public:
    ResourcePropertyEditor( TEditableReflectionProperty< Resource* >* property );
    ~ResourcePropertyEditor();
 
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
+
 public slots:
    void valChanged();
    void valErased( bool );

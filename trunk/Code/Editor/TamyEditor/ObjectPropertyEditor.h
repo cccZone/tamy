@@ -40,6 +40,11 @@ public:
    ObjectPropertyEditor( TEditableReflectionProperty< ReflectionObject* >* property );
    ~ObjectPropertyEditor();
 
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
+
 public slots:
    void valChanged( const QString& text );
 

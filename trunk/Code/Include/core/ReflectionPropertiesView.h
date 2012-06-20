@@ -137,8 +137,10 @@ private:
    public:
       virtual ~EditorNodeCreator() {}
 
-      virtual NodeType* create( ParamType* obj ) 
+      virtual NodeType* create( ParamType* obj )
       {
+         // we're providing this generic implementation, because this type will be used if the user doesn't
+         // register his own ObjectNodeCreator or ArrayNodeCreator.
          return new NodeType( obj );
       }
    };
@@ -239,35 +241,35 @@ public:
    }
 
    /**
-    * This method associates the enum properties with an editor.
+    * This method defines the enum properties with an editor.
     *
     * @param EDITOR_IMPL               property editor class
     */
    template< class EDITOR_IMPL >
-   void associateEnums()
+   void defineEnums()
    {
       m_creators.push_back( new TEnumCreator< EDITOR_IMPL >() );
    }
 
    /**
-    * This method associates the array properties with an editor.
+    * This method defines the array properties with an editor.
     *
     * @param EDITOR_IMPL               array property editor class
     */
    template< class EDITOR_IMPL >
-   void associateArray()
+   void defineArray()
    {
       delete m_arrayNodeCreator;
       m_arrayNodeCreator = new TArrayNodeCreator< EDITOR_IMPL >();
    }
 
    /**
-    * This method associates an object node with a concrete editor.
+    * This method defines an object node with a concrete editor.
     *
     * @param EDITOR_IMPL               object node editor class
     */
    template< class EDITOR_IMPL >
-   void associateObjectNode()
+   void defineObjectNode()
    {
       delete m_objectNodeCreator;
       m_objectNodeCreator = new TObjectNodeCreator< EDITOR_IMPL >();

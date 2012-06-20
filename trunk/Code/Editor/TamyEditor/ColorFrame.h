@@ -46,6 +46,11 @@ public:
     */
    Color getEngineColor() const;
 
+   /**
+    * Sets the new color value.
+    */
+   void setColor( const Color& color );
+
 signals:
    /**
     * Signal emitted when the color value changes.

@@ -230,7 +230,6 @@ void SerializableReflectionType::collectProperties( void* hostObj, std::vector< 
          // copy the field flags
          if ( property != NULL )
          {
-            property->setParams( field.m_memberName, field.m_label, field.m_isEditable, field.m_canBeSaved );
             outProperties.push_back( property );
          }
       }

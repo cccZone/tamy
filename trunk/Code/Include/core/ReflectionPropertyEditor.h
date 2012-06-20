@@ -5,6 +5,7 @@
 
 #include <vector>
 #include "core\types.h"
+#include "core\ReflectionObjectChangeListener.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,6 +24,9 @@ class ReflectionObject;
 class ReflectionPropertyEditor
 {
 public:
+   uint            m_propertyId;   
+
+public:
    virtual ~ReflectionPropertyEditor() {}
 
    /**
@@ -38,6 +42,17 @@ public:
     * @param parentEditor    object editor that manages this editor.
     */
    virtual void deinitialize( ReflectionObjectEditor* parentEditor ) = 0;
+
+   /**
+    * Called when the property this editor edits has changed.
+    */
+   virtual void onPropertyChanged() = 0;
+
+protected:
+   /**
+    * Constructor.
+    */
+   ReflectionPropertyEditor() : m_propertyId( 0 ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,10 +93,11 @@ public:
    inline ReflectionObjectEditor* getEditor( int idx ) { return m_editors[idx]; }
 
    // -------------------------------------------------------------------------
-   // TReflectionPropertyEditor implementation
+   // ReflectionPropertyEditor implementation
    // -------------------------------------------------------------------------
    void initialize( ReflectionObjectEditor* parentEditor );
    void deinitialize( ReflectionObjectEditor* parentEditor );
+   void onPropertyChanged();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,7 +105,7 @@ public:
 /**
  * This editor node holds the actual property editors.
  */
-class ReflectionObjectEditor
+class ReflectionObjectEditor : public ReflectionObjectChangeListener
 {
 private:
    ReflectionObject*                               m_editedObject;
@@ -132,6 +148,11 @@ public:
     * @param parent    composite that manages the editor.
     */
    virtual void deinitialize( ReflectionPropertyEditorComposite* parentComposite );
+
+   // -------------------------------------------------------------------------
+   // ReflectionObjectChangeListener implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged( ReflectionProperty& property );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

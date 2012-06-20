@@ -31,25 +31,25 @@ void Vec3PropertyEditor::setupUi()
    layout->setMargin( 0 );
 
    layout->addWidget(new QLabel("X:", this));
-   QDoubleSpinBox* xVal = new QDoubleSpinBox(this); layout->addWidget(xVal);
-   xVal->setRange( -FLT_MAX, FLT_MAX );
+   m_xVal = new QDoubleSpinBox(this); layout->addWidget(m_xVal);
+   m_xVal->setRange( -FLT_MAX, FLT_MAX );
 
    layout->addWidget(new QLabel("Y:", this));
-   QDoubleSpinBox* yVal = new QDoubleSpinBox(this); layout->addWidget(yVal);
-   yVal->setRange( -FLT_MAX, FLT_MAX );
+   m_yVal = new QDoubleSpinBox(this); layout->addWidget(m_yVal);
+   m_yVal->setRange( -FLT_MAX, FLT_MAX );
 
    layout->addWidget(new QLabel("Z:", this));
-   QDoubleSpinBox* zVal = new QDoubleSpinBox(this); layout->addWidget(zVal);
-   zVal->setRange( -FLT_MAX, FLT_MAX );
+   m_zVal = new QDoubleSpinBox(this); layout->addWidget(m_zVal);
+   m_zVal->setRange( -FLT_MAX, FLT_MAX );
 
    const Vector& currVal = m_property->get();
-   xVal->setValue(currVal.x);
-   yVal->setValue(currVal.y);
-   zVal->setValue(currVal.z);
+   m_xVal->setValue(currVal.x);
+   m_yVal->setValue(currVal.y);
+   m_zVal->setValue(currVal.z);
 
-   connect(xVal, SIGNAL(valueChanged(double)), this, SLOT(xValChanged(double)));
-   connect(yVal, SIGNAL(valueChanged(double)), this, SLOT(yValChanged(double)));
-   connect(zVal, SIGNAL(valueChanged(double)), this, SLOT(zValChanged(double)));
+   connect(m_xVal, SIGNAL(valueChanged(double)), this, SLOT(xValChanged(double)));
+   connect(m_yVal, SIGNAL(valueChanged(double)), this, SLOT(yValChanged(double)));
+   connect(m_zVal, SIGNAL(valueChanged(double)), this, SLOT(zValChanged(double)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -77,6 +77,16 @@ void Vec3PropertyEditor::zValChanged(double val)
    Vector currVal = m_property->get();
    currVal.z = val;
    m_property->set( currVal );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Vec3PropertyEditor::onPropertyChanged()
+{
+   const Vector& currVal = m_property->get();
+   m_xVal->setValue(currVal.x);
+   m_yVal->setValue(currVal.y);
+   m_zVal->setValue(currVal.z);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

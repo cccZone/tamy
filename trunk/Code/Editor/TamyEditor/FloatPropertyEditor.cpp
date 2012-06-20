@@ -23,12 +23,12 @@ FloatPropertyEditor::~FloatPropertyEditor()
 
 void FloatPropertyEditor::setupUi()
 {
-   QDoubleSpinBox* val = new QDoubleSpinBox(this); addWidget(val);
-   val->setSingleStep( 0.1 );
-   val->setRange( -FLT_MAX, FLT_MAX );
-   val->setValue( m_property->get() );
+   m_val = new QDoubleSpinBox(this); addWidget(m_val);
+   m_val->setSingleStep( 0.1 );
+   m_val->setRange( -FLT_MAX, FLT_MAX );
+   m_val->setValue( m_property->get() );
 
-   connect(val, SIGNAL(valueChanged(double)), this, SLOT(valChanged(double)));
+   connect(m_val, SIGNAL(valueChanged(double)), this, SLOT(valChanged(double)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,6 +36,13 @@ void FloatPropertyEditor::setupUi()
 void FloatPropertyEditor::valChanged(double val)
 {
    m_property->set( val );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FloatPropertyEditor::onPropertyChanged()
+{
+   m_val->setValue( m_property->get() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,12 +68,12 @@ DoublePropertyEditor::~DoublePropertyEditor()
 
 void DoublePropertyEditor::setupUi()
 {
-   QDoubleSpinBox* val = new QDoubleSpinBox(this); addWidget(val);
-   val->setSingleStep( 0.1 );
-   val->setRange( -FLT_MAX, FLT_MAX );
-   val->setValue( m_property->get() );
+   m_val = new QDoubleSpinBox(this); addWidget(m_val);
+   m_val->setSingleStep( 0.1 );
+   m_val->setRange( -FLT_MAX, FLT_MAX );
+   m_val->setValue( m_property->get() );
 
-   connect(val, SIGNAL(valueChanged(double)), this, SLOT(valChanged(double)));
+   connect(m_val, SIGNAL(valueChanged(double)), this, SLOT(valChanged(double)));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,6 +81,13 @@ void DoublePropertyEditor::setupUi()
 void DoublePropertyEditor::valChanged(double val)
 {
    m_property->set( val );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DoublePropertyEditor::onPropertyChanged()
+{
+   m_val->setValue( m_property->get() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

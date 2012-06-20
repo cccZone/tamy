@@ -36,6 +36,7 @@ public:
    // -------------------------------------------------------------------------
    virtual void initialize( ReflectionObjectEditor* parentNode );
    virtual void deinitialize( ReflectionObjectEditor* parentNode );
+   virtual void onPropertyChanged();
 
    // -------------------------------------------------------------------------
    // Editor widgets management

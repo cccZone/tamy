@@ -33,60 +33,75 @@ void MtxPropertyEditor::setupUi()
    rotRowLayout->setSpacing( 0 );
    rotRowLayout->setMargin( 0 );
 
-   QDoubleSpinBox* yawVal = new QDoubleSpinBox(rotRow); 
-   yawVal->setRange( -FLT_MAX, FLT_MAX );
+   m_yawVal = new QDoubleSpinBox(rotRow); 
+   m_yawVal->setRange( -FLT_MAX, FLT_MAX );
    rotRowLayout->addWidget(new QLabel("yaw:", rotRow)); 
-   rotRowLayout->addWidget(yawVal);
+   rotRowLayout->addWidget(m_yawVal);
 
-   QDoubleSpinBox* pitchVal = new QDoubleSpinBox(rotRow); 
-   pitchVal->setRange( -FLT_MAX, FLT_MAX );
+   m_pitchVal = new QDoubleSpinBox(rotRow); 
+   m_pitchVal->setRange( -FLT_MAX, FLT_MAX );
    rotRowLayout->addWidget(new QLabel("pitch:", rotRow));
-   rotRowLayout->addWidget(pitchVal);
+   rotRowLayout->addWidget(m_pitchVal);
 
-   QDoubleSpinBox* rollVal = new QDoubleSpinBox(rotRow); 
-   rollVal->setRange( -FLT_MAX, FLT_MAX );
+   m_rollVal = new QDoubleSpinBox(rotRow); 
+   m_rollVal->setRange( -FLT_MAX, FLT_MAX );
    rotRowLayout->addWidget(new QLabel("roll:", rotRow));
-   rotRowLayout->addWidget(rollVal);
+   rotRowLayout->addWidget(m_rollVal);
 
    QGroupBox* posRow = new QGroupBox( "translation", this ); addWidget(posRow);
    QHBoxLayout* posRowLayout = new QHBoxLayout(posRow);
    posRowLayout->setSpacing( 0 );
    posRowLayout->setMargin( 0 );
-   QDoubleSpinBox* xVal = new QDoubleSpinBox(posRow);
-   xVal->setRange( -FLT_MAX, FLT_MAX );
+   m_xVal = new QDoubleSpinBox(posRow);
+   m_xVal->setRange( -FLT_MAX, FLT_MAX );
    posRowLayout->addWidget(new QLabel("x:", posRow));
-   posRowLayout->addWidget(xVal);
-   QDoubleSpinBox* yVal = new QDoubleSpinBox(posRow); 
-   yVal->setRange( -FLT_MAX, FLT_MAX );
+   posRowLayout->addWidget(m_xVal);
+   m_yVal = new QDoubleSpinBox(posRow); 
+   m_yVal->setRange( -FLT_MAX, FLT_MAX );
    posRowLayout->addWidget(new QLabel("y:", posRow));
-   posRowLayout->addWidget(yVal);
-   QDoubleSpinBox* zVal = new QDoubleSpinBox(posRow); 
-   zVal->setRange( -FLT_MAX, FLT_MAX );
+   posRowLayout->addWidget(m_yVal);
+   m_zVal = new QDoubleSpinBox(posRow); 
+   m_zVal->setRange( -FLT_MAX, FLT_MAX );
    posRowLayout->addWidget(new QLabel("z:", posRow));
-   posRowLayout->addWidget(zVal);
+   posRowLayout->addWidget(m_zVal);
 
+   // set the start value
+   initializeValues();
+   
+   // connect the view to the model
+   connect(m_yawVal, SIGNAL(valueChanged(double)), this, SLOT(yawValChanged(double)));
+   connect(m_pitchVal, SIGNAL(valueChanged(double)), this, SLOT(pitchValChanged(double)));
+   connect(m_rollVal, SIGNAL(valueChanged(double)), this, SLOT(rollValChanged(double)));
+
+   connect(m_xVal, SIGNAL(valueChanged(double)), this, SLOT(xValChanged(double)));
+   connect(m_yVal, SIGNAL(valueChanged(double)), this, SLOT(yValChanged(double)));
+   connect(m_zVal, SIGNAL(valueChanged(double)), this, SLOT(zValChanged(double)));
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MtxPropertyEditor::initializeValues()
+{
    // set the start value
    Matrix currVal = m_property->get();
 
    EulerAngles orientation;
    currVal.getRotation( orientation );
-   yawVal->setValue(orientation.yaw);
-   pitchVal->setValue(orientation.pitch);
-   rollVal->setValue(orientation.roll);
+   m_yawVal->setValue(orientation.yaw);
+   m_pitchVal->setValue(orientation.pitch);
+   m_rollVal->setValue(orientation.roll);
 
    Vector pos = currVal.position();
-   xVal->setValue(pos.x);
-   yVal->setValue(pos.y);
-   zVal->setValue(pos.z);
-   
-   // connect the view to the model
-   connect(yawVal, SIGNAL(valueChanged(double)), this, SLOT(yawValChanged(double)));
-   connect(pitchVal, SIGNAL(valueChanged(double)), this, SLOT(pitchValChanged(double)));
-   connect(rollVal, SIGNAL(valueChanged(double)), this, SLOT(rollValChanged(double)));
+   m_xVal->setValue(pos.x);
+   m_yVal->setValue(pos.y);
+   m_zVal->setValue(pos.z);
+}
 
-   connect(xVal, SIGNAL(valueChanged(double)), this, SLOT(xValChanged(double)));
-   connect(yVal, SIGNAL(valueChanged(double)), this, SLOT(yValChanged(double)));
-   connect(zVal, SIGNAL(valueChanged(double)), this, SLOT(zValChanged(double)));
+///////////////////////////////////////////////////////////////////////////////
+
+void MtxPropertyEditor::onPropertyChanged()
+{
+   initializeValues();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

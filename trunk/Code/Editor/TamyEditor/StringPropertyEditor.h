@@ -10,6 +10,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class QLineEdit;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Editor widget that will edit string properties.
  */
@@ -18,7 +22,9 @@ class StringPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableReflectionProperty< std::string >* m_property;
+   TEditableReflectionProperty< std::string >*  m_property;
+
+   QLineEdit*                                   m_edit;
 
 public:
    /**
@@ -28,6 +34,11 @@ public:
     */
    StringPropertyEditor( TEditableReflectionProperty< std::string >* property );
    ~StringPropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void valChanged(const QString& val);

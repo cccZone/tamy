@@ -80,6 +80,12 @@ void QReflectionPropertyEditorComposite::deinitialize( ReflectionObjectEditor* p
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void QReflectionPropertyEditorComposite::onPropertyChanged()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void QReflectionPropertyEditorComposite::addPropertyEditor( QWidget* editorWidget )
 {
    editorWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );

@@ -8,6 +8,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class QSpinBox;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Editor widget that will edit integer value properties.
  */
@@ -16,7 +20,9 @@ class IntPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableReflectionProperty< int >*   m_property;
+   TEditableReflectionProperty< int >*    m_property;
+
+   QSpinBox*                              m_val;
 
 public:
    /**
@@ -26,6 +32,11 @@ public:
     */
    IntPropertyEditor( TEditableReflectionProperty< int >* property );
    ~IntPropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void valChanged(int val);
@@ -44,7 +55,9 @@ class UIntPropertyEditor : public QPropertyEditor
    Q_OBJECT
 
 private:
-   TEditableReflectionProperty< unsigned int >*   m_property;
+   TEditableReflectionProperty< unsigned int >*    m_property;
+
+   QSpinBox*                                       m_val;
 
 public:
    /**
@@ -54,6 +67,11 @@ public:
     */
    UIntPropertyEditor( TEditableReflectionProperty< unsigned int >* property );
    ~UIntPropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void valChanged(int val);
@@ -74,6 +92,8 @@ class LongPropertyEditor : public QPropertyEditor
 private:
    TEditableReflectionProperty< long >*   m_property;
 
+   QSpinBox*                              m_val;
+
 public:
    /**
     * Constructor.
@@ -82,6 +102,11 @@ public:
     */
    LongPropertyEditor( TEditableReflectionProperty< long >* property );
    ~LongPropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void valChanged(int val);
@@ -102,6 +127,8 @@ class ULongPropertyEditor : public QPropertyEditor
 private:
    TEditableReflectionProperty< unsigned long >*   m_property;
 
+   QSpinBox*                                       m_val;
+
 public:
    /**
     * Constructor.
@@ -110,6 +137,11 @@ public:
     */
    ULongPropertyEditor( TEditableReflectionProperty< unsigned long >* property );
    ~ULongPropertyEditor();
+
+   // -------------------------------------------------------------------------
+   // ReflectionPropertyEditor implementation
+   // -------------------------------------------------------------------------
+   void onPropertyChanged();
 
 public slots:
    void valChanged(int val);

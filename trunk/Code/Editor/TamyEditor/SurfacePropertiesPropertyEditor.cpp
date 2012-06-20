@@ -40,9 +40,9 @@ void SurfacePropertiesPropertyEditor::setupUi()
       ambientLayout->setMargin( 0 );
 
       ambientLayout->addWidget( new QLabel( "Ambient:", this ) );
-      ColorFrame* ambientVal = new ColorFrame( ambientFrame, val.getAmbientColor() ); 
-      ambientLayout->addWidget( ambientVal );
-      connect( ambientVal, SIGNAL( changed( const QColor& ) ), this, SLOT( ambientChanged( const QColor& ) ) );
+      m_ambientVal = new ColorFrame( ambientFrame, val.getAmbientColor() ); 
+      ambientLayout->addWidget( m_ambientVal );
+      connect( m_ambientVal, SIGNAL( changed( const QColor& ) ), this, SLOT( ambientChanged( const QColor& ) ) );
    }
 
    {
@@ -52,9 +52,9 @@ void SurfacePropertiesPropertyEditor::setupUi()
       diffuseLayout->setMargin( 0 );
 
       diffuseLayout->addWidget( new QLabel( "Diffuse:", this ) );
-      ColorFrame* diffuseVal = new ColorFrame( diffuseFrame, val.getDiffuseColor() ); 
-      diffuseLayout->addWidget( diffuseVal );
-      connect( diffuseVal, SIGNAL( changed( const QColor& ) ), this, SLOT( diffuseChanged( const QColor& ) ) );
+      m_diffuseVal = new ColorFrame( diffuseFrame, val.getDiffuseColor() ); 
+      diffuseLayout->addWidget( m_diffuseVal );
+      connect( m_diffuseVal, SIGNAL( changed( const QColor& ) ), this, SLOT( diffuseChanged( const QColor& ) ) );
    }
 
    {
@@ -64,9 +64,9 @@ void SurfacePropertiesPropertyEditor::setupUi()
       emissiveLayout->setMargin( 0 );
 
       emissiveLayout->addWidget( new QLabel( "Emissive:", this ) );
-      ColorFrame* emissiveVal = new ColorFrame( emissiveFrame, val.getEmissiveColor() ); 
-      emissiveLayout->addWidget( emissiveVal );
-      connect( emissiveVal, SIGNAL( changed( const QColor& ) ), this, SLOT( emissiveChanged( const QColor& ) ) );
+      m_emissiveVal = new ColorFrame( emissiveFrame, val.getEmissiveColor() ); 
+      emissiveLayout->addWidget( m_emissiveVal );
+      connect( m_emissiveVal, SIGNAL( changed( const QColor& ) ), this, SLOT( emissiveChanged( const QColor& ) ) );
    }
 
    {
@@ -76,9 +76,9 @@ void SurfacePropertiesPropertyEditor::setupUi()
       specularLayout->setMargin( 0 );
 
       specularLayout->addWidget( new QLabel( "Specular:", this ) );
-      ColorFrame* specularVal = new ColorFrame( specularFrame, val.getSpecularColor() ); 
-      specularLayout->addWidget( specularVal );
-      connect( specularVal, SIGNAL( changed( const QColor& ) ), this, SLOT( specularChanged( const QColor& ) ) );
+      m_specularVal = new ColorFrame( specularFrame, val.getSpecularColor() ); 
+      specularLayout->addWidget( m_specularVal );
+      connect( m_specularVal, SIGNAL( changed( const QColor& ) ), this, SLOT( specularChanged( const QColor& ) ) );
    }
 
    {
@@ -88,8 +88,10 @@ void SurfacePropertiesPropertyEditor::setupUi()
       powerLayout->setMargin( 0 );
 
       powerLayout->addWidget( new QLabel( "Specular power:", this ) );
-      QDoubleSpinBox* powerVal = new QDoubleSpinBox( this ); powerLayout->addWidget( powerVal );
-      connect( powerVal, SIGNAL( valueChanged( double ) ), this, SLOT( powerChanged( double ) ) );
+      m_powerVal = new QDoubleSpinBox( this ); 
+      powerLayout->addWidget( m_powerVal );
+      m_powerVal->setValue( val.getPower() );
+      connect( m_powerVal, SIGNAL( valueChanged( double ) ), this, SLOT( powerChanged( double ) ) );
    }
 
 }
@@ -137,6 +139,20 @@ void SurfacePropertiesPropertyEditor::emissiveChanged( const QColor& color )
    SurfaceProperties mat = m_property->get();
    mat.setEmissiveColor( Color( color.redF(), color.greenF(), color.blueF(), color.alphaF() ) );
    m_property->set( mat );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SurfacePropertiesPropertyEditor::onPropertyChanged()
+{
+   const SurfaceProperties& val = m_property->get();
+
+   m_ambientVal->setColor( val.getAmbientColor() );
+   m_diffuseVal->setColor( val.getDiffuseColor() );
+   m_emissiveVal->setColor( val.getEmissiveColor() );
+   m_specularVal->setColor( val.getSpecularColor() );
+   m_powerVal->setValue( val.getPower() );
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -6,6 +6,7 @@
 #include "core/types.h"
 #include <string>
 #include "core/ReflectionMacros.h"
+#include "core/Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,6 +14,7 @@
 class SerializableReflectionType;
 class ReflectionPropertiesView;
 class ReflectionProperty;
+class ReflectionObjectChangeListener;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,8 +28,11 @@ class ReflectionObject
 
 public:
    // a unique id assigned to each instance
-   typedef std::string     UniqueId;
-   UniqueId                m_uniqueId;
+   typedef std::string                                UniqueId;
+   UniqueId                                           m_uniqueId;
+
+private:
+   Array< ReflectionObjectChangeListener* >           m_listener;
 
 public:
 
@@ -72,6 +77,27 @@ public:
    // -------------------------------------------------------------------------
    // Notifications
    // -------------------------------------------------------------------------
+
+   /**
+    * Attaches a new object listener.
+    *
+    * @param listener
+    */
+   void attachListener( ReflectionObjectChangeListener& listener );
+
+   /**
+    * Attaches a new object listener.
+    *
+    * @param listener
+    */
+   void detachListener( ReflectionObjectChangeListener& listener );
+
+   /**
+    * Notifies that the value of one of this object's properties has changed.
+    *
+    * @param propertyName     name of the property that's changed
+    */
+   void notifyPropertyChange( const std::string& propertyName );
 
    /**
     * Called once an object and all of its dependencies is fully loaded.

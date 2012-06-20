@@ -88,6 +88,8 @@ namespace // anonymous
 
       void deinitialize( ReflectionObjectEditor* parentEditor ) {}
 
+      void onPropertyChanged() {}
+
       void setValue( ReflectionEnum val )
       {
          m_property->set( val );
@@ -206,7 +208,7 @@ TEST( ReflectionEnum, enumProperties )
 
    // create the properties viewer
    PropertiesViewMock propertiesView;
-   propertiesView.associateEnums< EditorMock >();
+   propertiesView.defineEnums< EditorMock >();
 
    // create an object and view its properties
    TestEnumClass obj;

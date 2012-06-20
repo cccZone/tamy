@@ -176,6 +176,9 @@
     <ClCompile Include="TransformTests.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="ReflectionObjectTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">
