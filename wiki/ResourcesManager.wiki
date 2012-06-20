@@ -1,0 +1,17 @@
+=Resources=
+
+Resource is a special kind of class that binds a working engine object and a file in a filesystem that contains the definition of that object.
+As such, the bulk of built-in functionality revolves around the issues of serialization and dependencies mapping.
+
+Resource class is the cornerstone of the Resources system the engine is built upon. A single Resource is considered a constant data source, referenced by other engine classes that operate on that data, but not modifying it. Imagine an animation clip being such a resource - you can have one clip instance in the memory, and multiple animation players playing it on multiple characters moving on screen.
+
+==Resource definition==
+
+==Resources management==
+In order to facilitate resources management, a singleton ResourcesManager class was introduced.
+
+
+You are not obliged to use the ResourcesManager - if you want to use it localy, you can just create it as a regular object - after all its a regular class.
+But if you want to load it from the filesystem, we strongly suggest you going through the ResourcesManager API, which will take care of loading all external resources the resource may reference.
+
+==Serialization==
