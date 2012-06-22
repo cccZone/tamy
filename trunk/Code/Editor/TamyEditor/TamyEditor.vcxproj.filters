@@ -156,6 +156,9 @@
     <Filter Include="ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl">
       <UniqueIdentifier>{668a3d7e-80a9-4339-963e-589d599793ca}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\SplittableTabWidget">
+      <UniqueIdentifier>{1bc2add4-4e81-4ba9-9e2a-6c8fd1733fe9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -427,6 +430,9 @@
     </ClInclude>
     <ClInclude Include="SingleColorDebugMat.h">
       <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
+    </ClInclude>
+    <ClInclude Include="TabsTree.h">
+      <Filter>Widgets\SplittableTabWidget</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -989,6 +995,45 @@
     <ClCompile Include="SingleColorDebugMat.cpp">
       <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_SplittableTabWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_SplittableTabWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_SplittableTabWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="SplittableTabWidget.cpp">
+      <Filter>Widgets\SplittableTabWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="LeafTabWidget.cpp">
+      <Filter>Widgets\SplittableTabWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_LeafTabWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_LeafTabWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_LeafTabWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="TabsTree.cpp">
+      <Filter>Widgets\SplittableTabWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="TabsSplitterWidget.cpp">
+      <Filter>Widgets\SplittableTabWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_TabsSplitterWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_TabsSplitterWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_TabsSplitterWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1169,6 +1214,15 @@
     </CustomBuild>
     <CustomBuild Include="QPropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\NodeEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="SplittableTabWidget.h">
+      <Filter>Widgets\SplittableTabWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="LeafTabWidget.h">
+      <Filter>Widgets\SplittableTabWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TabsSplitterWidget.h">
+      <Filter>Widgets\SplittableTabWidget</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>
