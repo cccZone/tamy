@@ -16,6 +16,7 @@
 #include "core-MVC.h"
 #include "core-Renderer.h"
 #include "core-AI.h"
+#include "SplittableTabWidget.h"
 
 // importers
 #include "ml-IWF.h"
@@ -80,10 +81,9 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 
    // add the editors tabs
    {
-      m_editorsTabs = new QTabWidget( ui.renderWindow );
-      m_editorsTabs->setTabsClosable( true );
+      m_editorsTabs = new SplittableTabWidget( ui.renderWindow );
+      connect( m_editorsTabs, SIGNAL( onTabClosed( QWidget* ) ), this, SLOT( onEditorTabClosed( QWidget* ) ) );
       ui.renderWindow->layout()->addWidget( m_editorsTabs );
-      connect( m_editorsTabs, SIGNAL( tabCloseRequested ( int ) ), this, SLOT( closeResourceEditor( int ) ) );
    }
 
    // create the timer
@@ -118,24 +118,19 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 TamyEditor::~TamyEditor()
 {
    // remove all editors
-   std::vector< ResourceEditor* > editorsToDelete;
-   unsigned int editorsCount = m_editorsTabs->count();
+   std::vector< QWidget* > widgets;
+   m_editorsTabs->collectPageWidgets( widgets );
+   m_editorsTabs->clear();
+
+   uint editorsCount = widgets.size();
    for ( unsigned int i = 0; i < editorsCount; ++i )
    {
-      QWidget* editorWidget = m_editorsTabs->widget( i );
-      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
+      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( widgets[i] );
       if ( editor )
       {
          editor->deinitialize( true );
-         editorsToDelete.push_back( editor );
       }
-   }
-   m_editorsTabs->clear();
-
-   editorsCount = editorsToDelete.size();
-   for ( unsigned int i = 0; i < editorsCount; ++i )
-   {
-      delete editorsToDelete[i];
+      delete widgets[i];
    }
 
    // delete the subsystems
@@ -164,20 +159,6 @@ void TamyEditor::setupResourcesManager( const char* fsRoot )
    resMgr.addImporter< IWFScene, Model >( "iwf" );
    resMgr.addImporter< BlenderScene, Model >( "dae" );
    resMgr.setProgressObserver< ProgressDialog >();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamyEditor::addToMainWidget(QWidget* widget)
-{
-   ui.renderWindow->layout()->addWidget( widget );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamyEditor::removeFromMainWidget(QWidget& widget)
-{
-   ui.renderWindow->layout()->removeWidget( &widget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -339,16 +320,13 @@ void TamyEditor::editResource( Resource& resource, const QIcon& icon )
 {
    // first - look for a tab with the same path - if there is one, it means that we're
    // already editing this resource
-   unsigned int count = m_editorsTabs->count();
-   for ( unsigned int i = 0; i < count; ++i )
+   SplittableTabLocation location;
+   bool found = m_editorsTabs->findTabByName( resource.getFilePath().c_str(), location );
+   if ( found )
    {
-      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( m_editorsTabs->widget( i ) );
-      if ( editor && editor->getLabel() == resource.getFilePath().c_str() )
-      {
-         // yep - we're already editing it. Focus on it and that's it
-         m_editorsTabs->setCurrentIndex( i );
-         return;
-      }
+      // yep - we're already editing it. Focus on it and that's it
+      m_editorsTabs->setActiveTab( location );
+      return;
    }
 
    // if we got this far, it means that we need a new editor to edit this resource
@@ -356,25 +334,21 @@ void TamyEditor::editResource( Resource& resource, const QIcon& icon )
    if ( editor )
    {
       editor->initialize( resource.getFilePath().c_str(), icon );
-
-      int newTabIdx = m_editorsTabs->addTab( editor, editor->getIcon(), editor->getLabel() );
-      m_editorsTabs->setCurrentIndex( newTabIdx );
+      m_editorsTabs->addTab( editor, editor->getIcon(), editor->getLabel() );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::closeResourceEditor( int editorTabIdx )
+void TamyEditor::onEditorTabClosed( QWidget* editorWidget )
 {
-   // delete the selected tab's contents
-   QWidget* editorWidget = m_editorsTabs->widget( editorTabIdx );
    ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
    if ( editor )
    {
-      editor->deinitialize( true );
+      editor->deinitialize( false );
       delete editor;
    }
- }
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -384,10 +358,14 @@ void TamyEditor::onDirChanged( const FilePath& dir )
 
    // if any of the resource editors are editing a resource from the deleted directory, close them
    // immediately
-   int editorsCount = m_editorsTabs->count();
-   for ( int i = 0; i < editorsCount; ++i )
+   std::vector< QWidget* > widgets;
+   std::vector< SplittableTabLocation > tabsLocations;
+   m_editorsTabs->collectPageWidgets( widgets, &tabsLocations );
+
+   uint editorsCount = widgets.size();
+   for ( uint i = 0; i < editorsCount; ++i )
    {
-      QWidget* editorWidget = m_editorsTabs->widget( i );
+      QWidget* editorWidget = widgets[i];
       ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
       if ( !editor )
       {
@@ -399,7 +377,7 @@ void TamyEditor::onDirChanged( const FilePath& dir )
       if ( editor && resourcePath.isSubPath( dir ) && !fs.doesExist( resourcePath ) )
       {
          editor->deinitialize( false );
-         m_editorsTabs->removeTab( i-- );
+         m_editorsTabs->removeTab( tabsLocations[i] );
       }
    }
 }
@@ -418,10 +396,14 @@ void TamyEditor::onFileRemoved( const FilePath& path )
 
    // if any of the resource editors are editing a deleted resource, close them
    // immediately
-   int editorsCount = m_editorsTabs->count();
-   for ( int i = 0; i < editorsCount; ++i )
+   std::vector< QWidget* > widgets;
+   std::vector< SplittableTabLocation > tabsLocations;
+   m_editorsTabs->collectPageWidgets( widgets, &tabsLocations );
+
+   uint editorsCount = widgets.size();
+   for ( uint i = 0; i < editorsCount; ++i )
    {
-      QWidget* editorWidget = m_editorsTabs->widget( i );
+      QWidget* editorWidget = widgets[i];
       ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
       if ( !editor )
       {
@@ -433,7 +415,7 @@ void TamyEditor::onFileRemoved( const FilePath& path )
       if ( editor && path == FilePath( resourcePath.toStdString() ) )
       {
          editor->deinitialize( false );
-         m_editorsTabs->removeTab( i-- );
+         m_editorsTabs->removeTab( tabsLocations[i] );
       }
    }
 }

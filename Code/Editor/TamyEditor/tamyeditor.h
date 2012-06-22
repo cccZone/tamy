@@ -17,7 +17,7 @@ class QSettings;
 class QDockWidget;
 class QTreeWidget;
 class TimeController;
-class QTabWidget;
+class SplittableTabWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,7 @@ private:
    static TamyEditor*               s_theInstance;
 
    Ui::TamyEditorClass              ui;
-   QTabWidget*                      m_editorsTabs;
+   SplittableTabWidget*             m_editorsTabs;
 
    // time tracking
    CTimer*                          m_mainTime;
@@ -72,19 +72,13 @@ public:
    // -------------------------------------------------------------------------
    // window space management
    // -------------------------------------------------------------------------
-   /**
-    * Adds a new widget to the main window widget.
-    *
-    * @param widget     widget to add
-    */
-   void addToMainWidget( QWidget* widget );
 
    /**
-    * Removes a widget from the main window widget.
+    * Sets the currently active tab widget.
     *
-    * @param widget     widget to remove
+    * @param tabWidget
     */
-   void removeFromMainWidget( QWidget& widget );
+   void setActiveTabWidget( QTabWidget* tabWidget );
 
    /**
     * This method gives access to the 'File' menu.
@@ -133,8 +127,8 @@ public:
    void onFileRemoved( const FilePath& path );
 
 public slots:
+   void onEditorTabClosed( QWidget* editorWidget );
    void updateMain();
-   void closeResourceEditor( int );
 
 protected:
    void closeEvent( QCloseEvent *event );

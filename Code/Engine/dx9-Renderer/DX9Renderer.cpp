@@ -440,6 +440,9 @@ void DX9Renderer::endScene()
 
 void DX9Renderer::flushDebugScene()
 {
+   // <renderer.todo> as soon as I confirm that the debug renderer node from the rendering pipeline works, remove all debug-draw related code from here,
+   // as well as the commands that used to reference it
+
    // set transformations
    Camera& camera = getActiveCamera();
    const Matrix& projectionMtx = camera.getProjectionMtx();
