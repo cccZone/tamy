@@ -17,7 +17,7 @@ class QSettings;
 class QDockWidget;
 class QTreeWidget;
 class TimeController;
-class SplittableTabWidget;
+class MainEditorPanel;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -32,7 +32,7 @@ private:
    static TamyEditor*               s_theInstance;
 
    Ui::TamyEditorClass              ui;
-   SplittableTabWidget*             m_editorsTabs;
+   MainEditorPanel*                 m_editorsTabs;
 
    // time tracking
    CTimer*                          m_mainTime;
@@ -40,7 +40,6 @@ private:
    TimeController*                  m_timeController;
 
    // ui settings management
-   QSettings*                       m_uiSettings;
    QSettings*                       m_editorSettings;
 
 public:
@@ -111,13 +110,32 @@ public:
     */
    inline TimeController& getTimeController() const { return *m_timeController; }
 
+   // -------------------------------------------------------------------------
+   // Resources edition
+   // -------------------------------------------------------------------------
    /**
-    * Edits the selected resource.
+    * Creates a resources editor for the specified resource
     *
     * @param resource
     * @param icon
     */
-   void editResource( Resource& resource, const QIcon& icon );
+   ResourceEditor* createResourceEditor( Resource* resource, const QIcon& icon );
+
+   /**
+    * Adds the specified editor to the main window.
+    *
+    * @param editor
+    * @param dock       should the editor be added to the editors tab manager ( Qt::NoDockWidgetArea ), or docked in a separate window
+    */
+   void addResourceEditor( ResourceEditor* editor, Qt::DockWidgetArea dockArea = Qt::NoDockWidgetArea );
+
+   /**
+    * Finds and activates a resource editor corresponding to the specified resource.
+    *
+    * @param resource
+    * @return           'true' if an editor exists and we ewre able to activate it, 'false' otherwise
+    */
+   bool activateResourceEditor( Resource* resource );
 
    // -------------------------------------------------------------------------
    // FilesystemListener implementation
@@ -132,11 +150,6 @@ public slots:
 
 protected:
    void closeEvent( QCloseEvent *event );
-   void serializeUISettings( bool save );
-
-   void serializeWidgetSettings( QWidget& widget, bool save );
-   void serializeDockWidgetSettings( QDockWidget& widget, bool save );
-   void serializeTreeWidgetSettings( QTreeWidget& widget, bool save );
 
 private:
    /**
