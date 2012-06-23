@@ -278,9 +278,11 @@ void MainEditorPanel::loadLayout( QSettings& outSettings )
          {
             bool isInternal = outSettings.value( "internal" ).toBool();
             FilePath path( outSettings.value( "path" ).toString().toStdString() );
-            if ( path.empty() )
+
+            if ( resMgr.getFilesystem().doesExist( path ) == false )
             {
-               // resource path wasn't serialized
+               // the file no longer exists - skip it
+               outSettings.endGroup();
                continue;
             }
 
@@ -288,6 +290,7 @@ void MainEditorPanel::loadLayout( QSettings& outSettings )
             if ( !resource )
             {
                // the resource doesn't exist any more - skip it
+               outSettings.endGroup();
                continue;
             }
 
@@ -299,6 +302,7 @@ void MainEditorPanel::loadLayout( QSettings& outSettings )
             if ( !editor )
             {
                // for some reason we couldn't create an editor for this resource - so skip it
+               outSettings.endGroup();
                continue;
             }
 
