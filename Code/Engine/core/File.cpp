@@ -43,18 +43,16 @@ File::File( const Filesystem& hostFS, const FilePath& name, const std::ios_base:
    std::string absoluteName = m_name.toAbsolutePath( m_hostFS );
 
    fopen_s( &m_file, absoluteName.c_str(), openModeStr.c_str() );
-   if (m_file == NULL)
-   {
-      std::string errorMsg = std::string( "Can't open file " ) + absoluteName;
-      throw std::runtime_error( errorMsg );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 File::~File()
 {
-   fclose( m_file );
+   if ( m_file )
+   {
+      fclose( m_file );
+   }
    m_file = NULL;
 
    // notify the filesystem that the file edition has finished
@@ -68,6 +66,8 @@ File::~File()
 
 void File::seek(DWORD offset, std::ios_base::seekdir dir)
 {
+   ASSERT_MSG( m_file, "File not opened" );
+
    int whence;
    switch(dir)
    {
@@ -97,6 +97,7 @@ void File::seek(DWORD offset, std::ios_base::seekdir dir)
 
 std::size_t File::tell() const
 {
+   ASSERT_MSG( m_file, "File not opened" );
    return ftell(m_file);
 }
 
@@ -104,6 +105,7 @@ std::size_t File::tell() const
 
 std::size_t File::read(byte* buffer, std::size_t size)
 {
+   ASSERT_MSG( m_file, "File not opened" );
    std::size_t bytesRead = fread(buffer, 1, size, m_file);
    return bytesRead;
 }
@@ -112,6 +114,7 @@ std::size_t File::read(byte* buffer, std::size_t size)
 
 std::size_t File::write(byte* buffer, std::size_t size)
 {
+   ASSERT_MSG( m_file, "File not opened" );
    std::size_t bytesWritten = fwrite(buffer, 1, size, m_file);
    return bytesWritten;
 }
@@ -120,6 +123,7 @@ std::size_t File::write(byte* buffer, std::size_t size)
 
 void File::readString(char* outStrData, std::size_t size)
 {
+   ASSERT_MSG( m_file, "File not opened" );
    fgets(outStrData, size, m_file);
 }
 
@@ -127,6 +131,8 @@ void File::readString(char* outStrData, std::size_t size)
 
 void File::writeString(const char* strData)
 {
+   ASSERT_MSG( m_file, "File not opened" );
+
    if ( fputs(strData, m_file) == EOF )
    {
       ASSERT_MSG( false, "Can't write a string to a file" );
@@ -137,6 +143,7 @@ void File::writeString(const char* strData)
 
 void File::flush()
 {
+   ASSERT_MSG( m_file, "File not opened" );
    fflush(m_file);
 }
 
@@ -144,6 +151,7 @@ void File::flush()
 
 bool File::eof() const
 {
+   ASSERT_MSG( m_file, "File not opened" );
    return feof(m_file) != 0;
 }
 
@@ -151,6 +159,7 @@ bool File::eof() const
 
 std::size_t File::size() const
 {
+   ASSERT_MSG( m_file, "File not opened" );
    return _filelength(m_file->_file); 
 }
 
@@ -158,6 +167,7 @@ std::size_t File::size() const
 
 void File::setSize(std::size_t newSize)
 {
+   ASSERT_MSG( m_file, "File not opened" );
    if ( _chsize(m_file->_file, newSize) != 0 )
    {
       ASSERT_MSG( false, "Couldn't resize a file" );

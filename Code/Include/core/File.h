@@ -30,6 +30,11 @@ public:
    ~File();
 
    /**
+    * Checks if the file was successfully opened.
+    */
+   inline bool isOpened() const { return m_file != NULL; }
+
+   /**
     * Returns the name of the file.
     *
     * @return     name of the file

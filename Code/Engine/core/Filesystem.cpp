@@ -97,16 +97,12 @@ const std::string& Filesystem::getCurrRoot() const
 
 bool Filesystem::doesExist( const FilePath& fileName ) const
 {
-   File* file = NULL;
-   try
+   if ( fileName.empty() )
    {
-      file = open( fileName );
-   }
-   catch (std::runtime_error&)
-   {
-      file = NULL;
+      return false;
    }
 
+   File* file = open( fileName );
    bool exists = (file != NULL);
    delete file;
 
@@ -118,6 +114,11 @@ bool Filesystem::doesExist( const FilePath& fileName ) const
 File* Filesystem::open( const FilePath& fileName, const std::ios_base::openmode mode ) const
 {
    File* file = new File( *this, fileName, mode );
+   if ( !file->isOpened() )
+   {
+      delete file;
+      file = NULL;
+   }
 
    return file;
 }
