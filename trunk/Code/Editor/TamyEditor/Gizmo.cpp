@@ -110,8 +110,6 @@ void Gizmo::setMode( Mode mode )
    }
 }
 
-// <gizmo.todo>: manual editor values don't get refreshed when the user manipulates using gizmo
-
 ///////////////////////////////////////////////////////////////////////////////
 
 void Gizmo::createTranslationGizmo()

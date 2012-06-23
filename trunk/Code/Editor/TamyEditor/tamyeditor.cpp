@@ -16,7 +16,8 @@
 #include "core-MVC.h"
 #include "core-Renderer.h"
 #include "core-AI.h"
-#include "SplittableTabWidget.h"
+#include "MainEditorPanel.h"
+#include "UISerializationUtil.h"
 
 // importers
 #include "ml-IWF.h"
@@ -50,12 +51,18 @@ void TamyEditor::createInstance( QApplication& app, const char* fsRoot, QWidget 
 {
    delete s_theInstance;
    s_theInstance = new TamyEditor( app, fsRoot, parent, flags );
+
+   // serialize UI layout
+   UISerializationUtil::serialize( s_theInstance, s_theInstance->m_editorsTabs, false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TamyEditor::destroyInstance()
 {
+   // deserialize UI layout
+   UISerializationUtil::serialize( s_theInstance, s_theInstance->m_editorsTabs, true );
+
    delete s_theInstance;
    s_theInstance = NULL;
 
@@ -81,7 +88,7 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 
    // add the editors tabs
    {
-      m_editorsTabs = new SplittableTabWidget( ui.renderWindow );
+      m_editorsTabs = new MainEditorPanel( ui.renderWindow, this );
       connect( m_editorsTabs, SIGNAL( onTabClosed( QWidget* ) ), this, SLOT( onEditorTabClosed( QWidget* ) ) );
       ui.renderWindow->layout()->addWidget( m_editorsTabs );
    }
@@ -96,10 +103,6 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 
    // create the main subsystems
    m_timeController = new TimeController();
-
-   // create the UI settings manager
-   m_uiSettings = new QSettings( "Coversion", "TamyEditor" );
-   serializeUISettings( false );
 
    // associate resources with their respective editors
    associate< Model, SceneEditor >();
@@ -118,26 +121,25 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
 TamyEditor::~TamyEditor()
 {
    // remove all editors
-   std::vector< QWidget* > widgets;
-   m_editorsTabs->collectPageWidgets( widgets );
+   std::vector< ResourceEditor* > editors;
+   m_editorsTabs->collectEditors( editors );
    m_editorsTabs->clear();
 
-   uint editorsCount = widgets.size();
+   uint editorsCount = editors.size();
    for ( unsigned int i = 0; i < editorsCount; ++i )
    {
-      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( widgets[i] );
+      ResourceEditor* editor = editors[i];
       if ( editor )
       {
          editor->deinitialize( true );
       }
-      delete widgets[i];
+      delete editor;
    }
 
    // delete the subsystems
    delete m_timeController; m_timeController = NULL;
    delete m_mainTime; m_mainTime = NULL;
    delete m_mainTimeSlot; m_mainTimeSlot = NULL;
-   delete m_uiSettings; m_uiSettings = NULL;
    delete m_editorSettings; m_editorSettings = NULL;
 }
 
@@ -196,145 +198,47 @@ void TamyEditor::updateMain()
 
 void TamyEditor::closeEvent( QCloseEvent *event )
 {
-   // serialize the settings
-   serializeUISettings( true );
-
    // accept the event
    event->accept();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::serializeUISettings( bool save )
-{
-   std::list< QWidget* >   widgetsQueue;
-   widgetsQueue.push_back( this );
-
-   while( !widgetsQueue.empty() )
-   {
-      QWidget* currWidget = widgetsQueue.front();
-      widgetsQueue.pop_front();
-
-      serializeWidgetSettings( *currWidget, save );
-
-      // analyze the widget's children
-      const QObjectList& children = currWidget->children();
-      foreach( QObject* obj, children )
-      {
-         QWidget* childWidget = dynamic_cast< QWidget* >( obj );
-         if ( childWidget )
-         {
-            widgetsQueue.push_back( childWidget );
-         }
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamyEditor::serializeWidgetSettings( QWidget& widget, bool save )
-{
-   QString objName = widget.objectName();
-   if ( objName.isEmpty() )
-   {
-      return;
-   }
-   m_uiSettings->beginGroup( objName );
-
-   // serialize common widget settings
-   if ( save )
-   {
-      m_uiSettings->setValue( "size", widget.size() );
-      m_uiSettings->setValue( "pos", widget.pos() );
-   }
-   else
-   {
-      widget.resize( m_uiSettings->value( "size", widget.size() ).toSize() );
-      widget.move( m_uiSettings->value( "pos", widget.pos() ).toPoint() );
-   }
-
-   // serialize type specific settings (non-exclusive ifs block)
-   if ( dynamic_cast< QDockWidget* >( &widget ) )
-   {
-      serializeDockWidgetSettings( *dynamic_cast< QDockWidget* >( &widget ), save );
-   }
-
-   if ( dynamic_cast< QTreeWidget* >( &widget ) )
-   {
-      serializeTreeWidgetSettings( *dynamic_cast< QTreeWidget* >( &widget ), save );
-   }
-
-   // close the widget's settings group
-   m_uiSettings->endGroup();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamyEditor::serializeDockWidgetSettings( QDockWidget& widget, bool save )
-{
-   if ( save )
-   {
-      m_uiSettings->setValue( "features", (int)widget.features() );
-      m_uiSettings->setValue( "floating", widget.isFloating() );
-   }
-   else
-   {
-      widget.setFeatures( ( QDockWidget::DockWidgetFeatures )m_uiSettings->value( "features", (int)widget.features() ).toInt() );
-      widget.setFloating( m_uiSettings->value( "floating", widget.isFloating() ).toBool() );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamyEditor::serializeTreeWidgetSettings( QTreeWidget& widget, bool save )
-{
-   // gather info about present columns count
-   QList< QVariant > columnSizes;
-   int count = widget.columnCount();
-   for ( int i = 0; i < count; ++i )
-   {
-      columnSizes.push_back( widget.columnWidth( i ) );
-   }
-
-   if ( save )
-   {
-      m_uiSettings->setValue( "columnSizes", columnSizes );
-   }
-   else
-   {
-      columnSizes = m_uiSettings->value( "columnSizes", columnSizes ).toList();
-
-      // set the column sizes
-      widget.setColumnCount( columnSizes.size() );
-      int colIdx = 0;
-      foreach( QVariant width, columnSizes )
-      {
-         widget.setColumnWidth( colIdx++, width.toInt() );
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void TamyEditor::editResource( Resource& resource, const QIcon& icon )
+bool TamyEditor::activateResourceEditor( Resource* resource )
 {
    // first - look for a tab with the same path - if there is one, it means that we're
    // already editing this resource
-   SplittableTabLocation location;
-   bool found = m_editorsTabs->findTabByName( resource.getFilePath().c_str(), location );
+   TabLocation location;
+   bool found = m_editorsTabs->findTabByName( resource->getFilePath().c_str(), location );
    if ( found )
    {
       // yep - we're already editing it. Focus on it and that's it
       m_editorsTabs->setActiveTab( location );
-      return;
    }
 
+   return found;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ResourceEditor* TamyEditor::createResourceEditor( Resource* resource, const QIcon& icon )
+{
    // if we got this far, it means that we need a new editor to edit this resource
-   ResourceEditor* editor = GenericFactory< Resource, ResourceEditor >::create( resource );
+   ResourceEditor* editor = GenericFactory< Resource, ResourceEditor >::create( *resource );
    if ( editor )
    {
-      editor->initialize( resource.getFilePath().c_str(), icon );
-      m_editorsTabs->addTab( editor, editor->getIcon(), editor->getLabel() );
+      editor->initialize( resource->getFilePath().c_str(), icon );
+   }
+   return editor;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::addResourceEditor( ResourceEditor* editor, Qt::DockWidgetArea dockArea )
+{
+   if ( editor != NULL )
+   {
+      m_editorsTabs->addEditor( editor, editor->getIcon(), editor->getLabel(), dockArea );
    }
 }
 
@@ -358,20 +262,14 @@ void TamyEditor::onDirChanged( const FilePath& dir )
 
    // if any of the resource editors are editing a resource from the deleted directory, close them
    // immediately
-   std::vector< QWidget* > widgets;
-   std::vector< SplittableTabLocation > tabsLocations;
-   m_editorsTabs->collectPageWidgets( widgets, &tabsLocations );
+   std::vector< ResourceEditor* > editors;
+   std::vector< TabLocation > tabsLocations;
+   m_editorsTabs->collectEditors( editors, &tabsLocations );
 
-   uint editorsCount = widgets.size();
+   uint editorsCount = editors.size();
    for ( uint i = 0; i < editorsCount; ++i )
    {
-      QWidget* editorWidget = widgets[i];
-      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
-      if ( !editor )
-      {
-         continue;
-      }
-
+      ResourceEditor* editor = editors[i];
       FilePath resourcePath( editor->getLabel().toStdString() );
 
       if ( editor && resourcePath.isSubPath( dir ) && !fs.doesExist( resourcePath ) )
@@ -396,20 +294,14 @@ void TamyEditor::onFileRemoved( const FilePath& path )
 
    // if any of the resource editors are editing a deleted resource, close them
    // immediately
-   std::vector< QWidget* > widgets;
-   std::vector< SplittableTabLocation > tabsLocations;
-   m_editorsTabs->collectPageWidgets( widgets, &tabsLocations );
+   std::vector< ResourceEditor* > editors;
+   std::vector< TabLocation > tabsLocations;
+   m_editorsTabs->collectEditors( editors, &tabsLocations );
 
-   uint editorsCount = widgets.size();
+   uint editorsCount = editors.size();
    for ( uint i = 0; i < editorsCount; ++i )
    {
-      QWidget* editorWidget = widgets[i];
-      ResourceEditor* editor = dynamic_cast< ResourceEditor* >( editorWidget );
-      if ( !editor )
-      {
-         continue;
-      }
-
+      ResourceEditor* editor = editors[i];
       QString resourcePath = editor->getLabel();
 
       if ( editor && path == FilePath( resourcePath.toStdString() ) )

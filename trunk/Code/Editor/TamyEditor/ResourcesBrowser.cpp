@@ -224,7 +224,12 @@ void ResourcesBrowser::editResource( const std::string& path, const QIcon& resou
 
    if ( resource )
    {
-      TamyEditor::getInstance().editResource( *resource, resourceIcon );
+      TamyEditor& tamyEd = TamyEditor::getInstance();
+      if ( tamyEd.activateResourceEditor( resource ) == false )
+      {
+         ResourceEditor* resourceEd = tamyEd.createResourceEditor( resource, resourceIcon );
+         tamyEd.addResourceEditor( resourceEd );
+      }
    }
 }
 

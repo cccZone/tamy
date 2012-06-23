@@ -156,8 +156,14 @@
     <Filter Include="ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl">
       <UniqueIdentifier>{668a3d7e-80a9-4339-963e-589d599793ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widgets\SplittableTabWidget">
-      <UniqueIdentifier>{1bc2add4-4e81-4ba9-9e2a-6c8fd1733fe9}</UniqueIdentifier>
+    <Filter Include="Widgets\DockableTabWidget">
+      <UniqueIdentifier>{025bd5b4-5d2d-4ab6-8e1d-097d97465b8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\MainEditorPanel">
+      <UniqueIdentifier>{97ff5a79-b7f9-431c-a0a0-6c08e4339364}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\UISerialization">
+      <UniqueIdentifier>{aed02c39-6473-4cd4-9d03-7c8b4cf30481}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -431,8 +437,8 @@
     <ClInclude Include="SingleColorDebugMat.h">
       <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
     </ClInclude>
-    <ClInclude Include="TabsTree.h">
-      <Filter>Widgets\SplittableTabWidget</Filter>
+    <ClInclude Include="UISerializationUtil.h">
+      <Filter>Core\UISerialization</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -995,44 +1001,32 @@
     <ClCompile Include="SingleColorDebugMat.cpp">
       <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_SplittableTabWidget.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_DockableTabWidget.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_SplittableTabWidget.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_DockableTabWidget.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Template\moc_SplittableTabWidget.cpp">
+    <ClCompile Include="GeneratedFiles\Template\moc_DockableTabWidget.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
-    <ClCompile Include="SplittableTabWidget.cpp">
-      <Filter>Widgets\SplittableTabWidget</Filter>
+    <ClCompile Include="DockableTabWidget.cpp">
+      <Filter>Widgets\DockableTabWidget</Filter>
     </ClCompile>
-    <ClCompile Include="LeafTabWidget.cpp">
-      <Filter>Widgets\SplittableTabWidget</Filter>
+    <ClCompile Include="MainEditorPanel.cpp">
+      <Filter>Core\MainEditorPanel</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_LeafTabWidget.cpp">
+    <ClCompile Include="GeneratedFiles\Debug\moc_MainEditorPanel.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_LeafTabWidget.cpp">
+    <ClCompile Include="GeneratedFiles\Release\moc_MainEditorPanel.cpp">
       <Filter>QtImplementation\Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Template\moc_LeafTabWidget.cpp">
+    <ClCompile Include="GeneratedFiles\Template\moc_MainEditorPanel.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
-    <ClCompile Include="TabsTree.cpp">
-      <Filter>Widgets\SplittableTabWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="TabsSplitterWidget.cpp">
-      <Filter>Widgets\SplittableTabWidget</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_TabsSplitterWidget.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_TabsSplitterWidget.cpp">
-      <Filter>QtImplementation\Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Template\moc_TabsSplitterWidget.cpp">
-      <Filter>QtImplementation\Generated Files\Template</Filter>
+    <ClCompile Include="UISerializationUtil.cpp">
+      <Filter>Core\UISerialization</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1215,14 +1209,11 @@
     <CustomBuild Include="QPropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\NodeEditors</Filter>
     </CustomBuild>
-    <CustomBuild Include="SplittableTabWidget.h">
-      <Filter>Widgets\SplittableTabWidget</Filter>
+    <CustomBuild Include="DockableTabWidget.h">
+      <Filter>Widgets\DockableTabWidget</Filter>
     </CustomBuild>
-    <CustomBuild Include="LeafTabWidget.h">
-      <Filter>Widgets\SplittableTabWidget</Filter>
-    </CustomBuild>
-    <CustomBuild Include="TabsSplitterWidget.h">
-      <Filter>Widgets\SplittableTabWidget</Filter>
+    <CustomBuild Include="MainEditorPanel.h">
+      <Filter>Core\MainEditorPanel</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>
