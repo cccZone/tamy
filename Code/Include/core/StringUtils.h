@@ -27,9 +27,21 @@ void tokenize( const std::string& str,
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Calculates a has value based on the string contents;
+ * Calculates a has value based on the string contents
+ *
+ * @param str
+ * @return     hash value
  */
 unsigned int calculateHash( const std::string& str );
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Converts all characters in the string to upper case.
+ *
+ * @param inOutStr
+ */
+void toUpper( std::string& inOutStr );
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -1,4 +1,6 @@
 #include "core\StringUtils.h"
+#include "core/types.h"
+#include "core/Assert.h"
 
 
 namespace StringUtils
@@ -49,6 +51,34 @@ unsigned int calculateHash( const std::string& str )
    }
 
    return hash;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void toUpper( std::string& inOutStr )
+{
+   uint count = inOutStr.length();
+   char offset = 'A' - 'a';
+
+   ASSERT_MSG( count < 512, "String is too long" );
+   char tmpStr[512];
+   const char* analyzedStr = inOutStr.c_str();
+   for ( uint i = 0; i < count; ++i )
+   {
+      char c = analyzedStr[i];
+
+      if ( c >= 'a' && c <= 'z' )
+      {
+         tmpStr[i] = (char)(c + offset);
+      }
+      else
+      {
+         tmpStr[i] = (char)c;
+      }
+   }
+   tmpStr[count] = 0;
+
+   inOutStr = tmpStr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

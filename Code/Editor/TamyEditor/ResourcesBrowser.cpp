@@ -76,10 +76,48 @@ void ResourcesBrowser::initUI()
    layout->setSpacing(0);
    layout->setMargin(0);
 
+   // create the tabs manager that will host all browser feature tabs
+   {
+      m_tabsManager = new QTabWidget( dockWidgetContents );
+      m_tabsManager->setObjectName( "ResourcesBrowser/tabsManager" );
+      layout->addWidget( m_tabsManager );
+
+      // setup the scene tree container widget
+      setupFilesystemTree();
+      
+      // setup the bookmarks tab
+      setupBookmarks();
+
+      // setup the search tab
+      setupFileFinder();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::setupFilesystemTree()
+{
+   ASSERT( m_tabsManager != NULL );
+
+   QString topObjectName( "ResourcesBrowser/filesystemTreeFrame" );
+
+   // frame
+   QFrame* frame = NULL;
+   QVBoxLayout* layout = NULL;
+   {
+      frame = new QFrame( m_tabsManager );
+      frame->setObjectName( topObjectName );
+      layout = new QVBoxLayout( frame );
+      frame->setLayout( layout );
+      layout->setSpacing(0);
+      layout->setMargin(0);
+      m_tabsManager->addTab( frame, "Files" );
+   }
+
    // toolbar
    {
-      QToolBar* toolbar = new QToolBar( dockWidgetContents );
-      dockWidgetContents->setObjectName("ResourcesBrowser/toolbar");
+      QToolBar* toolbar = new QToolBar( frame );
+      toolbar->setObjectName( topObjectName + "/toolbar" );
       layout->addWidget( toolbar );
 
       // toggle file tabs
@@ -88,11 +126,94 @@ void ResourcesBrowser::initUI()
          toolbar->addAction( m_toggleFileTypesViewBtn );
          connect( m_toggleFileTypesViewBtn, SIGNAL( triggered() ), this, SLOT( onToggleFilesFiltering() ) );
       }
+   }
+
+   // filesystem tree
+   {
+      m_fsTree = new FSTreeWidget( frame, topObjectName + "/m_fsTree", m_iconsDir );
+      layout->addWidget( m_fsTree );
+
+      QStringList columnLabels; 
+      columnLabels.push_back( "Name" );
+      columnLabels.push_back( "Size" );
+      m_fsTree->setColumnCount( columnLabels.size() );
+      m_fsTree->setHeaderLabels( columnLabels );
+      m_fsTree->setDragEnabled( true ); 
+      m_fsTree->setDropIndicatorShown( true ); 
+      connect( m_fsTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( onEditResource( QTreeWidgetItem*, int ) ) );
+      connect( m_fsTree, SIGNAL( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ), this, SLOT( onGetItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ) );
+      connect( m_fsTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( onAddNode( QTreeWidgetItem*, unsigned int ) ) );
+      connect( m_fsTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( onRemoveNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
+      connect( m_fsTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( onClearNode( QTreeWidgetItem* ) ) );
+      connect( m_fsTree, SIGNAL( popupMenuShown( QTreeWidgetItem*, QMenu& ) ), this, SLOT( onPopupMenuShown( QTreeWidgetItem*, QMenu& ) ) );
+
+      m_rootDir = new FSRootNode( m_fsTree, m_rm->getFilesystem() );
+      m_fsTree->addTopLevelItem( m_rootDir );
+
+      m_rootDir->setExpanded( true );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::setupBookmarks()
+{
+   ASSERT( m_tabsManager != NULL );
+
+   QString topObjectName( "ResourcesBrowser/bookmarksFrame" );
+
+   // frame
+   QFrame* frame = NULL;
+   QVBoxLayout* layout = NULL;
+   {
+      frame = new QFrame( m_tabsManager );
+      frame->setObjectName( topObjectName );
+      layout = new QVBoxLayout( frame );
+      frame->setLayout( layout );
+      layout->setSpacing(0);
+      layout->setMargin(0);
+      m_tabsManager->addTab( frame, "Bookmarks" );
+   }
+
+   // bookmarks list
+   {
+      m_bookmarks = new QListWidget( m_tabsManager );
+      m_bookmarks->setContextMenuPolicy( Qt::CustomContextMenu );
+      m_bookmarks->setObjectName( topObjectName + "/m_bookmarks" );
+      layout->addWidget( m_bookmarks );
+
+      connect( m_bookmarks, SIGNAL( itemDoubleClicked( QListWidgetItem* ) ), this, SLOT( onFocusOnFile( QListWidgetItem* ) ) );
+      connect( m_bookmarks, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( showBookmarksPopupMenu( const QPoint& ) ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::setupFileFinder()
+{
+   QString topObjectName( "ResourcesBrowser/fileFinderFrame" );
+
+   // frame
+   QFrame* frame = NULL;
+   QVBoxLayout* layout = NULL;
+   {
+      frame = new QFrame( m_tabsManager );
+      frame->setObjectName( topObjectName );
+      layout = new QVBoxLayout( frame );
+      frame->setLayout( layout );
+      layout->setSpacing(0);
+      layout->setMargin(0);
+      m_tabsManager->addTab( frame, "Search" );
+   }
+
+   // toolbar
+   {
+      QToolBar* toolbar = new QToolBar( m_tabsManager );
+      toolbar->setObjectName( topObjectName + "/toolbar" );
+      layout->addWidget( toolbar );
 
       // find file
       {
-         toolbar->addSeparator();
-
          m_findFile = new QAction( tr( "Find file" ), toolbar );
          m_findFile->setIcon( QIcon( m_iconsDir + "search.png" ) );
          toolbar->addAction( m_findFile );
@@ -101,47 +222,16 @@ void ResourcesBrowser::initUI()
          m_searchedFileName = new QLineEdit( toolbar );
          toolbar->addWidget( m_searchedFileName );
       }
-
    }
 
-   // create the tabs manager that will host the tabs with the filesystem tree and the list of bookmarks
+   // results list
    {
-      m_tabsManager = new QTabWidget( dockWidgetContents );
-      m_tabsManager->setObjectName( "ResourcesBrowser/tabsManager" );
-      layout->addWidget( m_tabsManager );
+      m_searchResults = new QListWidget( m_tabsManager );
+      m_searchResults->setObjectName( topObjectName + "/m_searchResults" );
+      layout->addWidget( m_searchResults );
 
-      // setup the scene tree container widget
-      {
-         m_fsTree = new FSTreeWidget( m_tabsManager, "ResourcesBrowser/m_fsTree", m_iconsDir );
-         m_tabsManager->addTab( m_fsTree, "Files" );
+      connect( m_searchResults, SIGNAL( itemDoubleClicked( QListWidgetItem* ) ), this, SLOT( onFocusOnFile( QListWidgetItem* ) ) );
 
-         QStringList columnLabels; 
-         columnLabels.push_back( "Name" );
-         columnLabels.push_back( "Size" );
-         m_fsTree->setColumnCount( columnLabels.size() );
-         m_fsTree->setHeaderLabels( columnLabels );
-         m_fsTree->setDragEnabled( true ); 
-         m_fsTree->setDropIndicatorShown( true ); 
-         connect( m_fsTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( onEditResource( QTreeWidgetItem*, int ) ) );
-         connect( m_fsTree, SIGNAL( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ), this, SLOT( onGetItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ) );
-         connect( m_fsTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( onAddNode( QTreeWidgetItem*, unsigned int ) ) );
-         connect( m_fsTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( onRemoveNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
-         connect( m_fsTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( onClearNode( QTreeWidgetItem* ) ) );
-         connect( m_fsTree, SIGNAL( popupMenuShown( QTreeWidgetItem*, QMenu& ) ), this, SLOT( onPopupMenuShown( QTreeWidgetItem*, QMenu& ) ) );
-
-         m_rootDir = new FSRootNode( m_fsTree, m_rm->getFilesystem() );
-         m_fsTree->addTopLevelItem( m_rootDir );
-
-         m_rootDir->setExpanded( true );
-      }
-
-      // setup the bookmarks tab
-      {
-         m_bookmarks = new QListWidget( m_tabsManager );
-         m_tabsManager->addTab( m_bookmarks, "Bookmarks" );
-
-         connect( m_bookmarks, SIGNAL( itemDoubleClicked( QListWidgetItem* ) ), this, SLOT( onJumpToBookmark( QListWidgetItem* ) ) );
-      }
    }
 }
 
@@ -211,7 +301,7 @@ FSTreeNode* ResourcesBrowser::find( const std::string& dir )
    unsigned int count = pathParts.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      std::string currPathPart = pathParts[i] + "/";
+      std::string currPathPart = pathParts[i];
       FSTreeNode* nextItem = currItem->find( currPathPart );
       if ( !nextItem )
       {
@@ -235,10 +325,9 @@ FSTreeNode* ResourcesBrowser::find( const std::string& dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FSTreeNode* ResourcesBrowser::open( const std::string& dir )
+FSTreeNode* ResourcesBrowser::open( const FilePath& path )
 {
    // split the path int particular elements
-   FilePath path( dir );
    std::vector< std::string > pathParts;
    path.getElements( pathParts );
 
@@ -257,7 +346,7 @@ FSTreeNode* ResourcesBrowser::open( const std::string& dir )
    FSTreeNode* foundItem = NULL;
    for ( unsigned int i = 0; i < count; ++i )
    {
-      std::string currPathPart = pathParts[i] + "/";
+      std::string currPathPart = pathParts[i];
       FSTreeNode* nextItem = currItem->find( currPathPart );
       if ( !nextItem )
       {
@@ -580,10 +669,33 @@ void ResourcesBrowser::addBookmark( const FilePath& relativePath )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::onJumpToBookmark( QListWidgetItem* item )
+void ResourcesBrowser::showBookmarksPopupMenu( const QPoint& pos )
+{
+   QListWidgetItem* clickedItem = m_bookmarks->itemAt( pos );
+   if ( !clickedItem )
+   {
+      // no item was clicked - ignore
+      return;
+   }
+
+   // create the menu
+   QMenu* popupMenu = new QMenu( this );
+   {
+      QAction* removeBookmarkAction = new RemoveBookmarkAction( QIcon( m_iconsDir + "removeBookmark.png" ), "Remove", this, m_bookmarks, clickedItem );
+      connect( removeBookmarkAction, SIGNAL( triggered() ), this, SLOT( removeBookmark() ) );
+      popupMenu->addAction( removeBookmarkAction );
+   }
+
+   // display the menu
+   popupMenu->popup( mapToGlobal( pos ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::onFocusOnFile( QListWidgetItem* item )
 {
    std::string path = item->data( BOOKMARK_FILEPATH_DATA_INDEX ).toString().toStdString();
-   FSTreeNode* node = open( path );
+   FSTreeNode* node = open( FilePath( path ) );
    if ( !node )
    {
       // the node doesn't exist - do nothing
@@ -601,13 +713,57 @@ void ResourcesBrowser::onJumpToBookmark( QListWidgetItem* item )
 
 void ResourcesBrowser::onFindFile()
 {
-   std::string fileName = m_searchedFileName->text().toStdString();
-   
-   std::vector< FilePath > paths;
-   m_rm->getFilesystem().find( fileName, paths );
-   if ( !paths.empty() )
+   struct SearchListened : public FilesystemScanner
    {
-      open( paths[0] );
+      std::vector< FilePath >       m_paths;
+      std::string                   m_filter;
+
+      SearchListened( const std::string& filter )
+         : m_filter( filter )
+      {
+         StringUtils::toUpper( m_filter);
+      }
+
+      void onDirectory( const FilePath& name )
+      {
+         std::string relPath = name.getRelativePath();
+         StringUtils::toUpper( relPath );
+         if ( relPath.find( m_filter ) != std::string::npos )
+         {
+            m_paths.push_back( name );
+         }
+      }
+
+      void onFile( const FilePath& name )
+      {
+         std::string relPath = name.getRelativePath();
+         StringUtils::toUpper( relPath );
+         if ( relPath.find( m_filter ) != std::string::npos )
+         {
+            m_paths.push_back( name );
+         }
+      }
+   };
+
+   // clear previous search results
+   m_searchResults->clear();
+
+   // start the search
+   std::string filter = m_searchedFileName->text().toStdString();
+   SearchListened scanner( filter );
+
+   FilePath searchRootDir( m_rootDir->getRelativePath() );
+   m_rm->getFilesystem().scan( searchRootDir, scanner, true );
+
+   // present the results
+   uint count = scanner.m_paths.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      QListWidgetItem* item = new QListWidgetItem();
+      item->setText( scanner.m_paths[i].c_str() );
+      item->setData( BOOKMARK_FILEPATH_DATA_INDEX, scanner.m_paths[i].c_str() );
+
+      m_searchResults->addItem( item );
    }
 }
 
@@ -769,6 +925,27 @@ AddBookmarkAction::AddBookmarkAction( const QIcon& icon, const char* name, QObje
 void AddBookmarkAction::onTriggered()
 {
    m_browser.addBookmark( m_relativePath );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+RemoveBookmarkAction::RemoveBookmarkAction( const QIcon& icon, const char* name, QObject* parent, QListWidget* bookmarksList, QListWidgetItem* removedItem )
+   : QAction( icon, name, parent )
+   , m_bookmarksList( bookmarksList )
+   , m_removedItem( removedItem )
+{
+   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RemoveBookmarkAction::onTriggered()
+{
+   int itemIdx = m_bookmarksList->row( m_removedItem );
+   QListWidgetItem* item = m_bookmarksList->takeItem( itemIdx );
+   delete item;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

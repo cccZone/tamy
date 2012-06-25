@@ -52,12 +52,13 @@ private:
    QAction*                      m_toggleFileTypesViewBtn;
    bool                          m_viewResourcesOnly;
 
+   // bookmarks
+   QListWidget*                  m_bookmarks;
+
    // find file action
    QAction*                      m_findFile;
    QLineEdit*                    m_searchedFileName;
-
-   // bookmarks
-   QListWidget*                  m_bookmarks;
+   QListWidget*                  m_searchResults;
 
    // resource management stuff
    ResourcesManager*             m_rm;
@@ -132,8 +133,9 @@ public slots:
    void onRemoveNode( QTreeWidgetItem* parent, QTreeWidgetItem* child );
    void onClearNode( QTreeWidgetItem* node );
    void onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu );
-   void onJumpToBookmark( QListWidgetItem* item );
+   void onFocusOnFile( QListWidgetItem* item );
    void onFindFile();
+   void showBookmarksPopupMenu( const QPoint& pt );
 
 private:
    void initUI();
@@ -150,9 +152,9 @@ private:
     * Opens a node ( whether it's already been mapped or not ), providing that it exists.
     * Otherwise it will finish at the last valid path element.
     *
-    * @param dir
+    * @param path
     */
-   FSTreeNode* open( const std::string& dir );
+   FSTreeNode* open( const FilePath& path );
 
    /**
     * Focuses the browser on the specified tree node.
@@ -169,6 +171,13 @@ private:
    friend class FSRootNode;
    inline TreeWidgetDescFactory* getDescFactory() { return this; }
    void addNode( unsigned int idx, const std::string& parentDir );
+
+   // -------------------------------------------------------------------------
+   // layout setup helper methods
+   // -------------------------------------------------------------------------
+   void setupFilesystemTree();
+   void setupBookmarks();
+   void setupFileFinder();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -234,6 +243,32 @@ public:
     * @param browser
     */
    AddBookmarkAction( const QIcon& icon, const char* name, QObject* parent, const FilePath& relativePath, ResourcesBrowser& browser );
+
+public slots:
+   void onTriggered();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class RemoveBookmarkAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   QListWidget*           m_bookmarksList;
+   QListWidgetItem*       m_removedItem;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param icon
+    * @param name
+    * @param parent
+    * @param bookmarksList
+    * @param removedItem
+    */
+   RemoveBookmarkAction( const QIcon& icon, const char* name, QObject* parent, QListWidget* bookmarksList, QListWidgetItem* removedItem );
 
 public slots:
    void onTriggered();

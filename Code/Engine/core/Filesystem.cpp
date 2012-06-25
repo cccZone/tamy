@@ -324,9 +324,7 @@ void Filesystem::scan( const FilePath& rootDir, FilesystemScanner& scanner, bool
       WIN32_FIND_DATA findFileData;
       HANDLE hFind;
       bool result = true;
-      for ( hFind = FindFirstFile( ( currPath + "*" ).c_str(), &findFileData );
-            hFind != INVALID_HANDLE_VALUE && result; 
-            result = FindNextFile( hFind, &findFileData ) )
+      for ( hFind = FindFirstFile( ( currPath + "*" ).c_str(), &findFileData ); hFind != INVALID_HANDLE_VALUE && result; result = FindNextFile( hFind, &findFileData ) )
       {
          std::string name = findFileData.cFileName;
          if ( ( findFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY )
@@ -502,13 +500,6 @@ std::string Filesystem::extractExtension( const std::string& fileName )
    {
       return "";
    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Filesystem::find( const std::string& nameFilter, std::vector< FilePath >& outPaths ) const
-{
-   // <ResourcesBrowser.todo> !!!!!!!!!!!!!!!!!!!!!!! implement me !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
 ///////////////////////////////////////////////////////////////////////////////

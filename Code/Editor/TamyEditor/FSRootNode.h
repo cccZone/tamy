@@ -13,6 +13,9 @@
  */
 class FSRootNode : public FSTreeNode
 {
+private:
+   std::string          m_fsNodeName;
+
 public:
    /**
     * Constructor.
@@ -25,6 +28,7 @@ public:
    // -------------------------------------------------------------------------
    // FSTreeNode implementation
    // -------------------------------------------------------------------------
+   bool compareNodeName( const std::string& name ) const;
    std::string getRelativePath() const;
    TreeWidgetDescFactory* getDescFactory( ResourcesBrowser& resourcesFactory );
    void addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory );
