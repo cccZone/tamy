@@ -2,13 +2,17 @@
 #include "ResourcesBrowser.h"
 #include <stdexcept>
 #include <QFileIconProvider>
+#include "core/Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 FSLeafNode::FSLeafNode( FSTreeNode* parent, const std::string& nodeName, const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory )
-   : FSTreeNode( parent, nodeName, fs )
+   : FSTreeNode( parent, fs )
+   , m_fsNodeName( nodeName )
 {
+   ASSERT_MSG( m_fsNodeName.empty() ? true : m_fsNodeName.c_str()[ m_fsNodeName.length() - 1 ] != '/', "This is a leaf node, dedicated to a file, thus it can't end with a slash" );
+
    // set icon
    setEntryIcon( fs, itemsFactory );
 
@@ -112,6 +116,13 @@ TreeWidgetDescFactory* FSLeafNode::getDescFactory( ResourcesBrowser& resourcesFa
 void FSLeafNode::addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory )
 {
    throw std::logic_error( "This operation should never be performed" );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool FSLeafNode::compareNodeName( const std::string& name ) const
+{
+   return name == m_fsNodeName;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

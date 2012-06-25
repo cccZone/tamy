@@ -5,7 +5,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 FSRootNode::FSRootNode( QTreeWidget* parent, const Filesystem& fs )
-: FSTreeNode( parent, "/", fs )
+: FSTreeNode( parent, fs )
+, m_fsNodeName( "/" )
+
 {
    QString iconsDir = fs.getShortcut( "editorIcons" ).c_str();
    setIcon( 0, QIcon( iconsDir + "dirIcon.png" ) );
@@ -34,6 +36,13 @@ void FSRootNode::addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFacto
 {
    std::string path = getRelativePath();
    return resourcesFactory.addNode( typeIdx, path );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool FSRootNode::compareNodeName( const std::string& name ) const
+{
+   return name.empty() || name == m_fsNodeName;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -5,18 +5,16 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FSTreeNode::FSTreeNode( FSTreeNode* parent, const std::string& nodeName, const Filesystem& fs )
+FSTreeNode::FSTreeNode( FSTreeNode* parent, const Filesystem& fs )
 : QTreeWidgetItem( parent )
-, m_fsNodeName( nodeName )
 , m_fs( fs )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FSTreeNode::FSTreeNode( QTreeWidget* parent, const std::string& nodeName, const Filesystem& fs )
+FSTreeNode::FSTreeNode( QTreeWidget* parent, const Filesystem& fs )
 : QTreeWidgetItem( parent )
-, m_fsNodeName( nodeName )
 , m_fs( fs )
 {
 }
@@ -29,7 +27,7 @@ FSTreeNode* FSTreeNode::find( const std::string& nodeName )
    for( int i = 0; i < count; ++i )
    {
       FSTreeNode* entry = dynamic_cast< FSTreeNode* >( child( i ) );
-      if ( entry && entry->m_fsNodeName == nodeName )
+      if ( entry && entry->compareNodeName( nodeName ) )
       {
          return entry;
       }

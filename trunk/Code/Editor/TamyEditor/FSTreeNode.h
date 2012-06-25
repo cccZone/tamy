@@ -21,7 +21,6 @@ class TreeWidgetDescFactory;
 class FSTreeNode : public QTreeWidgetItem 
 {
 protected:
-   std::string          m_fsNodeName;
    const Filesystem&    m_fs;
 
 public:
@@ -71,6 +70,13 @@ public:
    virtual void addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory ) = 0;
 
    /**
+    * Compares the node name.
+    *
+    * @param name
+    */
+   virtual bool compareNodeName( const std::string& name ) const = 0;
+
+   /**
     * Removes a child node, deleting the corresponding entry from
     * the file system.
     *
@@ -95,21 +101,19 @@ protected:
     * Constructor for common nodes.
     *
     * @param parent
-    * @param nodeName
     * @param fs         file system which contains physical files & dirs 
     *                   corresponding to the nodes
     */
-   FSTreeNode( FSTreeNode* parent, const std::string& nodeName, const Filesystem& fs );
+   FSTreeNode( FSTreeNode* parent, const Filesystem& fs );
 
    /**
     * Constructor for the root node.
     *
     * @param parent
-    * @param nodeName
     * @param fs         file system which contains physical files & dirs 
     *                   corresponding to the nodes
     */
-   FSTreeNode( QTreeWidget* parent, const std::string& nodeName, const Filesystem& fs );
+   FSTreeNode( QTreeWidget* parent, const Filesystem& fs );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
