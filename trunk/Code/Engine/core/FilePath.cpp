@@ -2,6 +2,7 @@
 #include "core/InStream.h"
 #include "core/OutStream.h"
 #include "core/Filesystem.h"
+#include "core/StringUtils.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,6 +116,13 @@ InStream& operator>>( InStream& serializer, FilePath& path )
 {
    serializer >> path.m_relativePath;
    return serializer;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FilePath::getElements( std::vector< std::string >& outPathElements ) const
+{
+   StringUtils::tokenize( m_relativePath, "/", outPathElements );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

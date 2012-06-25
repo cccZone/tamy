@@ -5,6 +5,7 @@
 #include <QTreeWidget>
 #include <QTabWidget>
 #include "MainEditorPanel.h"
+#include "SerializableWidget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,6 +104,21 @@ void UISerializationUtil::serializeWidgetSettings( QWidget& widget, QSettings& o
       }
    }
 
+   {
+      SerializableWidget* serializableWidget = dynamic_cast< SerializableWidget* >( &widget );
+      if ( serializableWidget )
+      {
+         if ( save )
+         {
+            serializableWidget->saveLayout( outSettings );
+         }
+         else
+         {
+            serializableWidget->loadLayout( outSettings );
+         }
+      }
+   }
+
    // close the widget's settings group
    outSettings.endGroup();
 }
@@ -158,7 +174,19 @@ void UISerializationUtil::serializeTreeWidgetSettings( QTreeWidget& widget, QSet
 
 void UISerializationUtil::serializeTabWidgetSettings( QTabWidget& widget, QSettings& outSettings, bool save )
 {
-   // nothing to do here for now
+   // serialize index of the active tab
+   if ( save )
+   {
+      int activeTabIdx = widget.currentIndex();
+      outSettings.setValue( "activeTabIdx", activeTabIdx );
+   }
+   else
+   {
+      int activeTabIdx;
+      activeTabIdx = outSettings.value( "activeTabIdx", activeTabIdx ).toInt();
+      widget.setCurrentIndex( activeTabIdx );
+   }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

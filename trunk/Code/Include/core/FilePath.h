@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -163,6 +164,13 @@ public:
     * @param fs      filesystem with respect to which we want to transform the path
     */
    std::string toAbsolutePath( const Filesystem& fs) const;
+
+   /**
+    * Returns the elements of the path ( particular directories and the name of the file.
+    *
+    * @param outPathElements
+    */
+   void getElements( std::vector< std::string >& outPathElements ) const;
 
 };
 
