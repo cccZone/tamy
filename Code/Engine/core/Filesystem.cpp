@@ -505,3 +505,10 @@ std::string Filesystem::extractExtension( const std::string& fileName )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void Filesystem::find( const std::string& nameFilter, std::vector< FilePath >& outPaths ) const
+{
+   // <ResourcesBrowser.todo> !!!!!!!!!!!!!!!!!!!!!!! implement me !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+}
+
+///////////////////////////////////////////////////////////////////////////////

@@ -10,6 +10,7 @@
 #include <QPoint>
 #include "TypeDescFactory.h"
 #include "TreeWidget.h"
+#include "SerializableWidget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,22 +20,46 @@ class QPushButton;
 class FSTreeNode;
 class FSDirNode;
 class FSRootNode;
+class QTabWidget;
+class QListWidget;
+class QListWidgetItem;
+class QSettings;
+class QLineEdit;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class ResourcesBrowser : public QDockWidget, 
                          public FilesystemListener,
                          public FilesystemScanner,
-                         public TreeWidgetDescFactory
+                         public TreeWidgetDescFactory,
+                         public SerializableWidget
 {
    Q_OBJECT
 
 private:
+   enum TaIndex
+   {
+      TI_Files       = 0,
+      TI_Bookmarks   = 1,
+   };
+
+private:
+   QTabWidget*                   m_tabsManager;
    TreeWidget*                   m_fsTree;
    FSTreeNode*                   m_rootDir;
+
+   // file type toggle action
    QAction*                      m_toggleFileTypesViewBtn;
    bool                          m_viewResourcesOnly;
 
+   // find file action
+   QAction*                      m_findFile;
+   QLineEdit*                    m_searchedFileName;
+
+   // bookmarks
+   QListWidget*                  m_bookmarks;
+
+   // resource management stuff
    ResourcesManager*             m_rm;
    QString                       m_iconsDir;
    TypeDescFactory< Resource >*  m_itemsFactory;
@@ -67,6 +92,19 @@ public:
     */
    void editResource( const std::string& path, const QIcon& resourceIcon );
 
+   /**
+    * Adds a new bookmark.
+    *
+    * @param relativePath
+    */
+   void addBookmark( const FilePath& relativePath );
+
+   // -------------------------------------------------------------------------
+   // SerializableWidget implementation
+   // -------------------------------------------------------------------------
+   void saveLayout( QSettings& settings );
+   void loadLayout( QSettings& settings );
+
    // -------------------------------------------------------------------------
    // FilesystemListener implementation
    // -------------------------------------------------------------------------
@@ -94,11 +132,34 @@ public slots:
    void onRemoveNode( QTreeWidgetItem* parent, QTreeWidgetItem* child );
    void onClearNode( QTreeWidgetItem* node );
    void onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu );
+   void onJumpToBookmark( QListWidgetItem* item );
+   void onFindFile();
 
 private:
    void initUI();
    void refresh( const std::string& rootDir = "/" );
+
+   /**
+    * Finds an existing node, providing that it's already been mapped.
+    *
+    * @param dir
+    */
    FSTreeNode* find( const std::string& dir );
+
+   /**
+    * Opens a node ( whether it's already been mapped or not ), providing that it exists.
+    * Otherwise it will finish at the last valid path element.
+    *
+    * @param dir
+    */
+   FSTreeNode* open( const std::string& dir );
+
+   /**
+    * Focuses the browser on the specified tree node.
+    *
+    * @param node
+    */
+   void focusOn( FSTreeNode* node );
 
    // -------------------------------------------------------------------------
    // interface for the nodes
@@ -147,6 +208,32 @@ public:
     * @param recursive     should all dependencies be saved as well?
     */
    SaveResourceAction( const QIcon& icon, const char* name, QObject* parent, Resource& resource, bool recursive );
+
+public slots:
+   void onTriggered();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class AddBookmarkAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   FilePath                m_relativePath;
+   ResourcesBrowser&       m_browser;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param icon
+    * @param name
+    * @param parent
+    * @param relativePath
+    * @param browser
+    */
+   AddBookmarkAction( const QIcon& icon, const char* name, QObject* parent, const FilePath& relativePath, ResourcesBrowser& browser );
 
 public slots:
    void onTriggered();

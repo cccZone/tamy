@@ -138,6 +138,15 @@ public:
    void scan( const FilePath& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
 
    /**
+    * Looks for files or directories names of which match the specified filter ( that's why it's a regular string and 
+    * not a FilePath instance we are taking as a parameter ).
+    * 
+    * @param nameFilter       file/dir name filter ( may contain meta-characters )
+    * @param outPaths         paths to the files/directories we found
+    */
+   void find( const std::string& nameFilter, std::vector< FilePath >& outPaths ) const;
+
+   /**
     * Creates a new directory.
     *
     * @param dirName    relative path to the directory we want to create.
