@@ -52,7 +52,7 @@
     * [RendererCore#DebugRenderer Debug renderer]
     * [RendererCore#Rendering_pipeline Rendering pipeline]
     * [RendererCore#Camera Camera]
-    * [RendererCore#Setting_it_up Setting it up]
+    * [SettingUpRenderer Setting it up]
   * [ Importers ]
     * [BlenderImporter From Blender]
     * [BVHImporter From BVH MoCap]
