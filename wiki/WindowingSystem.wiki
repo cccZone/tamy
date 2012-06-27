@@ -2,6 +2,7 @@
 
 The windowing system lets you create and manage application windows in a platform-independent manner.
 
+
 ==Window builder==
 Use the `WindowBuilder` instance to create the application window.
 
