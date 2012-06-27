@@ -38,7 +38,7 @@
     * [AnimationSystem Animation system]
   * [ Application management ]
     * [TimeController Time controller]
-    * [UserInputController User input controller]
+    * [WindowingSystem Windowing system]
   * [ MVC ]
     * [Model Model and entities]
     * [SpatialEntity Spatial entity]
