@@ -8,7 +8,7 @@ The windowing system lets you create and manage application windows in a platfor
 Use the `WindowBuilder` instance to create the application window.
 
 {{{
-MAIN_FUNCTION()
+MAIN_FUNCTION_START()
 {
    const uint windowWidth = 800;
    const uint windowHeight = 600;
