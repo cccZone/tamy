@@ -7,6 +7,10 @@ Resource class is the cornerstone of the Resources system the engine is built up
 
 ==Resource definition==
 
+{{{
+
+}}}
+
 ==Resources management==
 In order to facilitate resources management, a singleton ResourcesManager class was introduced.
 
