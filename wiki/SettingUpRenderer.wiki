@@ -1,3 +1,4 @@
+#labels Renderer
 =Setting up a renderer=
 
 
@@ -36,7 +37,21 @@ delete device;
 }}}
 
 
- * Having created the renderer, you can now set up the rendering mechanism
+ * Having created the renderer, you can now set up the rendering mechanism. In this case we're gonna load a rendering pipeline and plug it in as a rendering mechanism:
 
 {{{
+ResourcesManager& resMgr = ResourcesManager::getInstance();
+ 
+// load the rendering pipeline
+RenderingPipeline* renderingMechanism = resMgr.create< RenderingPipeline >( "renderer.rpl" );
+if ( !renderingMechanism )
+{
+   ASSERT_MSG( renderingMechanism, "Rendering pipeline 'renderer.rpl' doesn't exist" );
+   delete renderer;
+   return -1;
+}
+renderer->setMechanism( new RenderingPipelineMechanism( renderingMechanism ) );
 }}}
+
+
+And that's all. Just be sure to delete the renderer instance once you're done with it :)
