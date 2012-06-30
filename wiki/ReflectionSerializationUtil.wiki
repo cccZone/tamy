@@ -100,4 +100,12 @@ It allows you to serialize:
 If you want to find out what resources a particular object depends on, you can simply call `collectExternalDependencies`, and the method will return a list of `FilePaths` to the referenced resources.
 
 {{{
+   /**
+    * Collects paths to resources the specified object references ( hierarchically - this means
+    * that it's gonna map the resources the immediately referenced resources reference and so on... )
+    *
+    * @param objectToMap
+    * @param outDependenciesPaths
+    */
+   static void collectExternalDependencies( const ReflectionObject* objectToMap, std::vector< FilePath >& outDependenciesPaths );
 }}}
