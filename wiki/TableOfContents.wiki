@@ -68,6 +68,7 @@
 	    * [SceneRenderWidget Scene render widget]
 	    * [SceneTreeViewer Scene tree viewer]
 	    * [TreeWidget Tree widget]
+            * [ClosableFrame Closable frame]
   * [ For designers ]
     * [SceneEditor Scene editor]
       * [SceneEditor#Game_deployment Game deployment]
