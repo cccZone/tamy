@@ -1,0 +1,20 @@
+=Serialization util=
+
+`ReflectionSerializationUtil` is a swiss army knife when it comes to serialization.
+
+It allows you to serialize:
+
+  * individual objects - in this mode it will discard all referenced resources and save only the specified object and its internal hierarchy. It's not a good mode to serialize something that references resources.
+{{{
+}}}
+
+  * groups of resources - these methods are perfect for saving resources and their entire network of dependencies.
+{{{
+}}}
+
+==Dependencies mapper==
+
+If you want to find out what resources a particular object depends on, you can simply call `collectExternalDependencies`, and the method will return a list of `FilePaths` to the referenced resources.
+
+{{{
+}}}
