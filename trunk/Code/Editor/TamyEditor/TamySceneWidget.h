@@ -125,6 +125,11 @@ public:
     */
    void setRenderingPipeline( const FilePath& pipeline );
 
+   /**
+    * Returns filepath to the currently used rendering pipeline resource.
+    */
+   const FilePath& getRenderingPipeline() const { return m_rendererPipelineName; }
+
    // -------------------------------------------------------------------------
    // Objects manipulation gizmo management
    // -------------------------------------------------------------------------

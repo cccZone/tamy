@@ -1,8 +1,6 @@
-#pragma once
-
-/// @file   core-AppFlow\WindowMessagesProcessor.h
+/// @file   win-AppFlow\WindowMessagesProcessor.h
 /// @brief  classes for window messages processing
-
+#pragma once
 
 #include <windows.h>
 #include <vector>

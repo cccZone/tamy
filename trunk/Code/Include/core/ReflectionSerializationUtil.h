@@ -20,6 +20,9 @@ class IProgressObserver;
 class ReflectionSerializationUtil
 {
 public:
+   // -------------------------------------------------------------------------
+   // Standalone objects
+   // -------------------------------------------------------------------------
    /**
     * Saves a single reflection object. Use this method to serialize
     * a standalone object that DOESN'T depend on any Resource instances.
@@ -69,6 +72,9 @@ public:
     */
    static void loadObjects( const FilePath& loadPath, std::vector< ReflectionObject* >& outObjects, IProgressObserver* progressObserver = NULL );
 
+   // -------------------------------------------------------------------------
+   // Resources
+   // -------------------------------------------------------------------------
    /**
     * Saves a single resource into a dedicated file.
     *
@@ -104,6 +110,19 @@ public:
     * @param progressObserver ( optional )
     */
    static void loadResources( const FilePath& loadPath, std::vector< Resource* >& outResources, IProgressObserver* progressObserver = NULL );
+
+   // -------------------------------------------------------------------------
+   // Tools
+   // -------------------------------------------------------------------------
+
+   /**
+    * Collects paths to resources the specified object references ( hierarchically - this means
+    * that it's gonna map the resources the immediately referenced resources reference and so on... )
+    *
+    * @param objectToMap
+    * @param outDependenciesPaths
+    */
+   static void collectExternalDependencies( const ReflectionObject* objectToMap, std::vector< FilePath >& outDependenciesPaths ); 
 };
 
 ///////////////////////////////////////////////////////////////////////////////

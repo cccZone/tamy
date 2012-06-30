@@ -74,7 +74,8 @@
 #include "core/ReflectionTypeComponent.h"
 #include "core/ReflectionTypeID.h"
 #include "core/ReflectionTypesRegistry.h"
-#include "core\ReflectionObjectChangeListener.h"
+#include "core/ReflectionObjectChangeListener.h"
+#include "core/ReflectionDependenciesCallback.h"
 #include "core/types.h"
 // ----------------------------------------------------------------------------
 // -->Enum
@@ -103,6 +104,10 @@
 #include "core\ResourceStorage.h"
 #include "core\ResourceHandle.h"
 #include "core\ResourceImporter.h"
+// ----------------------------------------------------------------------------
+// -->DependenciesMapper
+// ----------------------------------------------------------------------------
+#include "core\ResourceDependenciesMapper.h"
 
 // ----------------------------------------------------------------------------
 // SpatialStorage

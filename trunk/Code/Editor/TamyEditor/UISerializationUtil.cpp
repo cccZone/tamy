@@ -182,7 +182,7 @@ void UISerializationUtil::serializeTabWidgetSettings( QTabWidget& widget, QSetti
    }
    else
    {
-      int activeTabIdx;
+      int activeTabIdx = 0;
       activeTabIdx = outSettings.value( "activeTabIdx", activeTabIdx ).toInt();
       widget.setCurrentIndex( activeTabIdx );
    }

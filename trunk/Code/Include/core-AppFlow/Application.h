@@ -28,14 +28,14 @@ public:
    };
 
 private:
-   std::string m_name;
-   ExecutionContext* m_context;
-   TimeController* m_timeController;
+   std::string             m_name;
+   ExecutionContext*       m_context;
+   TimeController*         m_timeController;
 
 public:
    virtual ~Application();
 
-   const std::string& getName() const {return m_name;}
+   const std::string& getName() const { return m_name; }
    bool operator==(const Application& rhs) const {return m_name == rhs.m_name;}
    bool operator!=(const Application& rhs) const {return !(*this == rhs);}
    bool operator<(const Application& rhs) const {return m_name < rhs.m_name;}

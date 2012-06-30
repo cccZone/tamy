@@ -3,8 +3,6 @@
 #else
 
 #include "core/StringUtils.h"
-#include "core/ReflectionLoader.h"
-#include "core/ReflectionSaver.h"
 #include "core/ReflectionProperty.h"
 
 
@@ -18,7 +16,7 @@ uint ReflectionTypeComponent::generateId( const std::string& memberName )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void ReflectionTypeComponent::savePtr( const T* dataPtr, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const
+void ReflectionTypeComponent::savePtr( const T* dataPtr, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const
 {
    bool isPtrNull = (dataPtr == NULL);
    stream << isPtrNull;
@@ -65,7 +63,7 @@ TMemberField< T >::TMemberField( const std::string& memberName, int offset )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< T >::save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const
+void TMemberField< T >::save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const
 {
    const char* memberPtr = (const char*)object + m_dataOffset;
    const T* dataPtr = reinterpret_cast< const T* >( memberPtr );
@@ -85,7 +83,7 @@ void TMemberField< T >::load( void* object, InStream& stream ) const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< T >::mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const
+void TMemberField< T >::mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const
 {
    // there are no dependencies among simple types, just pointers
 }
@@ -93,7 +91,7 @@ void TMemberField< T >::mapDependencies( const void* object, ReflectionSaver& de
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< T >::restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const
+void TMemberField< T >::restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const
 {
    // there are no dependencies among simple types, just pointers
 }
@@ -123,7 +121,7 @@ TMemberField< T* >::TMemberField( const std::string& memberName, int offset )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< T* >::save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const
+void TMemberField< T* >::save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const
 {
    const char* memberPtr = (const char*)object + m_dataOffset;
    T* const * dataPtr = reinterpret_cast< T* const * >( memberPtr );
@@ -143,7 +141,7 @@ void TMemberField< T* >::load( void* object, InStream& stream ) const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< T* >::mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const
+void TMemberField< T* >::mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const
 {
    const char* memberPtr = (const char*)object + m_dataOffset;
    T* const * dataPtr = reinterpret_cast< T* const * >( memberPtr );
@@ -156,13 +154,13 @@ void TMemberField< T* >::mapDependencies( const void* object, ReflectionSaver& d
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< T* >::restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const
+void TMemberField< T* >::restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
    T** dataPtr = reinterpret_cast< T** >( memberPtr );
 
    // the pointer contains a dependency index - now we just have to find a corresponding object
-   T* restoredObject = reinterpret_cast< T* >( dependenciesMapper.findDependency( (uint)(*dataPtr) ) );
+   T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr) ) );
    *dataPtr = restoredObject;
 }
 
@@ -191,7 +189,7 @@ TMemberField< std::vector< T* > >::TMemberField( const std::string& memberName, 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< std::vector< T* > >::save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const
+void TMemberField< std::vector< T* > >::save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const
 {
    const char* memberPtr = (const char*)object + m_dataOffset;
    const std::vector< T* >* dataPtr = reinterpret_cast< const std::vector< T* >* >( memberPtr );
@@ -234,7 +232,7 @@ void TMemberField< std::vector< T* > >::load( void* object, InStream& stream ) c
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< std::vector< T* > >::mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const
+void TMemberField< std::vector< T* > >::mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const
 {
    const char* memberPtr = (const char*)object + m_dataOffset;
    const std::vector< T* >* dataPtr = reinterpret_cast< const std::vector< T* >* >( memberPtr );
@@ -251,7 +249,7 @@ void TMemberField< std::vector< T* > >::mapDependencies( const void* object, Ref
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TMemberField< std::vector< T* > >::restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const
+void TMemberField< std::vector< T* > >::restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
    std::vector< T* >* dataPtr = reinterpret_cast< std::vector< T* >* >( memberPtr );
@@ -260,7 +258,7 @@ void TMemberField< std::vector< T* > >::restoreDependencies( void* object, const
    for ( uint i = 0; i < count; ++i )
    {
       // the pointers contain indices to the actual dependencies - now we just have to find corresponding objects
-      T* restoredObject = reinterpret_cast< T* >( dependenciesMapper.findDependency( (uint)(*dataPtr)[i] ) );
+      T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr)[i] ) );
       (*dataPtr)[i] = restoredObject;
    }
 }

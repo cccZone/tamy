@@ -11,15 +11,13 @@
 #include "core-Renderer\BestFullScreenDevice.h"
 #include "core-Renderer\BestWindowedDevice.h"
 
-#include <stdexcept>
+#include "core/Assert.h"
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-RenderingDevice* SimpleTamyConfigurator::selectRenderingDevice(IDirect3D9& d3d9,
-                                                               unsigned int width, 
-                                                               unsigned int height, 
-                                                               bool fullScreen)
+RenderingDevice* SimpleTamyConfigurator::selectRenderingDevice(IDirect3D9& d3d9, unsigned int width, unsigned int height, bool fullScreen)
 {
    std::vector<RenderingDevice*> allDevicesDB;
    RenderDevicesEnumerator enumerator(d3d9);
@@ -46,7 +44,8 @@ RenderingDevice* SimpleTamyConfigurator::selectRenderingDevice(IDirect3D9& d3d9,
 
    if (applicableDevices.size() == 0)
    {
-      throw std::runtime_error("No applicable graphics device found");
+      ASSERT_MSG( false, "No applicable graphics device found" );
+      return NULL;
    }
 
    RenderingDevice* ourDevice = new RenderingDevice(*(applicableDevices[0]));

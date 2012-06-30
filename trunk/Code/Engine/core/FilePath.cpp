@@ -28,7 +28,7 @@ FilePath::FilePath( const std::string& path )
 
 FilePath::FilePath( const FilePath& rhs )
 {
-   m_relativePath= rhs.m_relativePath;
+   m_relativePath = rhs.m_relativePath;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

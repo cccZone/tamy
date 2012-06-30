@@ -14,13 +14,14 @@
 #include "core-MVC/TypesRegistry.cpp"
 #include "core-AI/TypesRegistry.cpp"
 #include "core-Renderer/TypesRegistry.cpp"
+#include "core-AppFlow/TypesRegistry.cpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 
 namespace // anonymous
 {
-	typedef std::map<const char*, CppUnit::TestSuite*> T_SuiteRegistry;
-	T_SuiteRegistry* g_SuiteRegistry = NULL;
+   typedef std::map<const char*, CppUnit::TestSuite*> T_SuiteRegistry;
+   T_SuiteRegistry* g_SuiteRegistry = NULL;
 
 } // anonymous namespace
 
@@ -28,22 +29,22 @@ namespace // anonymous
 
 CppUnit::TestSuite& registerSuite(const char* name)
 {
-	if (g_SuiteRegistry == NULL)
-	{
-		g_SuiteRegistry = new T_SuiteRegistry;
-	}
+   if (g_SuiteRegistry == NULL)
+   {
+      g_SuiteRegistry = new T_SuiteRegistry;
+   }
 
-	T_SuiteRegistry::iterator i = g_SuiteRegistry->find(name);
-	if (i == g_SuiteRegistry->end())
-	{
-		CppUnit::TestSuite* suite = new CppUnit::TestSuite(name);
-		(*g_SuiteRegistry)[name] = suite;
-		return *suite;
-	}
-	else
-	{
-		return *i->second;
-	}
+   T_SuiteRegistry::iterator i = g_SuiteRegistry->find(name);
+   if (i == g_SuiteRegistry->end())
+   {
+      CppUnit::TestSuite* suite = new CppUnit::TestSuite(name);
+      (*g_SuiteRegistry)[name] = suite;
+      return *suite;
+   }
+   else
+   {
+      return *i->second;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,8 +52,8 @@ CppUnit::TestSuite& registerSuite(const char* name)
 int main(int argc, char** argv)
 {
    if (g_SuiteRegistry == NULL)
-	{
-		return 0;
+   {
+      return 0;
    }
 
    // informs test-listener about testresults

@@ -15,6 +15,7 @@
 #include "core-AppFlow\Application.h"
 #include "core-AppFlow\ApplicationManager.h"
 #include "core-AppFlow\ExecutionContext.h"
+#include "core-AppFlow\GameConfig.h"
 
 // ----------------------------------------------------------------------------
 // TimeController
@@ -35,5 +36,4 @@
 // ----------------------------------------------------------------------------
 // WindowingSystem
 // ----------------------------------------------------------------------------
-#include "core-AppFlow\IWindowMessagesProcessor.h"
 #include "core-AppFlow\WindowBuilder.h"

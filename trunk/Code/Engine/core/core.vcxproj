@@ -97,6 +97,7 @@
     <ClCompile Include="OutStream.cpp" />
     <ClCompile Include="Plane.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="ResourceDependenciesMapper.cpp" />
     <ClCompile Include="ReflectionEnum.cpp" />
     <ClCompile Include="ReflectionLoader.cpp" />
     <ClCompile Include="ReflectionObject.cpp" />
@@ -140,6 +141,8 @@
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Algorithms.h" />
     <ClInclude Include="..\..\Include\core\Color.h" />
+    <ClInclude Include="..\..\Include\core\ReflectionDependenciesCallback.h" />
+    <ClInclude Include="..\..\Include\core\ResourceDependenciesMapper.h" />
     <ClInclude Include="..\..\Include\core\FilePath.h" />
     <ClInclude Include="..\..\Include\core\GraphBuilder.h" />
     <ClInclude Include="..\..\Include\core\GraphBuilderNode.h" />

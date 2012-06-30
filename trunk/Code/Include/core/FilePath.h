@@ -15,11 +15,8 @@ class InStream;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This class represents a path to a file in our file system.
- *
- * It doesn't necessarily have to be a path to the file on the hard drive,
- * because Tamy archive files may contain multiple resource files, which when loaded
- * will populate our file system with corresponding files ( @see ReflectionSaver )
+ * This class represents a path to a file in our file system ( relative
+ * to the filesystem root ).
  */
 class FilePath
 {

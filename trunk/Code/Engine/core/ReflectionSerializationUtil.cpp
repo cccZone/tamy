@@ -7,6 +7,7 @@
 #include "core/Resource.h"
 #include "core/ReflectionObject.h"
 #include "core/IProgressObserver.h"
+#include "core/ResourceDependenciesMapper.h"
 #include "core/Assert.h"
 
 
@@ -295,8 +296,8 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
       }
 
       // it was successful - map inter-resource dependencies on all loaded objects
-      ExternalDependenciesMapper externalDependenciesMapper( resourcesMap );
-      externalDependenciesMapper.mapDependencies( allLoadedObjects );
+      ExternalDependenciesLinker linker( resourcesMap );
+      linker.linkDependencies( allLoadedObjects );
    }
    else
    {
@@ -334,6 +335,15 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
       Resource* res = static_cast< Resource* >( loadedResources[i] );
       res->finalizeResourceLoading();
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionSerializationUtil::collectExternalDependencies( const ReflectionObject* objectToMap, std::vector< FilePath >& outDependenciesPaths )
+{
+   // it was successful - map inter-resource dependencies on all loaded objects
+   ResourceDepenenciesMapper mapper( outDependenciesPaths );
+   mapper.mapDependencies( objectToMap );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

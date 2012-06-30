@@ -1,35 +1,33 @@
+/// @file   core-AppFlow\WindowBuilder.h
+/// @brief  Application window builder
 #pragma once
 
-/// @file   core-AppFlow\WindowBuilder.h
-/// @brief  generic interface for a windows creator
-
-#include <windows.h>
+#include <string>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+typedef unsigned long      WindowHandle;
 class IWindowMessagesProcessor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Window builder should create a window and plug a message processor
- * into it. The message processor will receive the messages about 
- * window events (resizing, moving, mouse & keyboard clicks etc.)
+ * Application window builder.
  */
 class WindowBuilder
 {
 public:
-   virtual ~WindowBuilder() {}
-
    /**
-    * The method creates a window and plugs a message processor
-    * into it.
+    * The method creates an application window.
     *
-    * @param   winMsgProcessor
+    * @param   appName
+    * @param   fullScreen
+    * @param   winWidth
+    * @param   winHeight
     * @return  window handle
     */
-   virtual HWND create(IWindowMessagesProcessor& winMsgProcessor); 
+   static WindowHandle createWindow( const std::string& appName, bool fullScreen, unsigned int winWidth, unsigned int winHeight );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -139,9 +139,11 @@ public:
     *
     * @param name       name of the resource file (should exist in the
     *                   currently set filesystem)
+    * @param loadOnly   if set to 'true', the manager won't attempt to create a new resource
+    *                   if it doesn't already exist in the filesystem
     */
    template< typename RESOURCE_TYPE >
-   RESOURCE_TYPE* create( const FilePath& name );
+   RESOURCE_TYPE* create( const FilePath& name, bool loadOnly = false );
 
    /**
     * Creates a resource based on a file with the specified name and registers it
@@ -149,8 +151,10 @@ public:
     *
     * @param name       name of the resource file (should exist in the
     *                   currently set filesystem)
+    * @param loadOnly   if set to 'true', the manager won't attempt to create a new resource
+    *                   if it doesn't already exist in the filesystem
     */
-   Resource* create( const FilePath& name );
+   Resource* create( const FilePath& name, bool loadOnly = false );
 
    /**
     * Registers a new resource instance with the resources manager and notifies it about this fact

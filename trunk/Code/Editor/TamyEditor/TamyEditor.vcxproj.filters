@@ -165,6 +165,12 @@
     <Filter Include="Core\UISerialization">
       <UniqueIdentifier>{aed02c39-6473-4cd4-9d03-7c8b4cf30481}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\SceneEditor\GameDeployment">
+      <UniqueIdentifier>{e6c44350-9afd-4ab6-be3c-b29cb418ad26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\ClosableFrame">
+      <UniqueIdentifier>{2fd610ea-ca47-4933-84b6-4537bb3e0f3b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -442,6 +448,12 @@
     </ClInclude>
     <ClInclude Include="SerializableWidget.h">
       <Filter>Core\UISerialization</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_gamedeploymentframe.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRunner.h">
+      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1031,6 +1043,33 @@
     <ClCompile Include="UISerializationUtil.cpp">
       <Filter>Core\UISerialization</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_GameDeploymentFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_GameDeploymentFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_GameDeploymentFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDeploymentFrame.cpp">
+      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
+    </ClCompile>
+    <ClCompile Include="ClosableFrame.cpp">
+      <Filter>Widgets\ClosableFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ClosableFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ClosableFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ClosableFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRunner.cpp">
+      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1217,6 +1256,15 @@
     </CustomBuild>
     <CustomBuild Include="MainEditorPanel.h">
       <Filter>Core\MainEditorPanel</Filter>
+    </CustomBuild>
+    <CustomBuild Include="gamedeploymentframe.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GameDeploymentFrame.h">
+      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ClosableFrame.h">
+      <Filter>Widgets\ClosableFrame</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>
