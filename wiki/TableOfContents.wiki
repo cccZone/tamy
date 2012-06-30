@@ -70,4 +70,4 @@
 		  * [TreeWidget Tree widget]
   * [ For designers ]
     * [SceneEditor Scene editor]
-	  * [SceneEditor#Game_deployment Game deployment]
+      * [SceneEditor#Game_deployment Game deployment]
