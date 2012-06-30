@@ -1,6 +1,13 @@
+#labels Gamedeployment,deployment,gane
 =Scene editor=
 
 Using this editor you will be able to create game models as well as the entire game levels.
 
 
 ==Game deployment==
+Click this button on the toolbar.
+
+It will open the game deployment dialog, where you'll be able to specify additional details:
+
+
+ * platform - select the platform you want to deploy the game on
