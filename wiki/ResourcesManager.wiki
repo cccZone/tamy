@@ -19,3 +19,13 @@ You are not obliged to use the ResourcesManager - if you want to use it localy, 
 But if you want to load it from the filesystem, we strongly suggest you going through the ResourcesManager API, which will take care of loading all external resources the resource may reference.
 
 ==Serialization==
+
+Resources rarely go just by themselves. They usually reference other resources etc.
+
+In order to serialize the whole net of resource dependencies, a special tool's been prepared - `ReflectionSerializationUtil`.
+
+Apart from handling resources serialization, it also allows you to serialize standalone objects and has a few other tools up its sleeve.
+
+For details, reference the dedicated [ReflectionSerializationUtil Wiki page]
+
+A special tool's been prepared to facilitate the serialization of 
