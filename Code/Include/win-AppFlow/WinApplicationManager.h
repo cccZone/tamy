@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core-AppFlow\ApplicationManager.h"
-#include "core-AppFlow\IWindowMessagesProcessor.h"
+#include "win-AppFlow\IWindowMessagesProcessor.h"
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <windows.h>
@@ -18,13 +18,12 @@ class WinApplicationManager : public ApplicationManager,
                               public IWindowMessagesProcessor
 {
 private:
-   std::string m_programName;
-   CTimer* m_timer;
+   CTimer*              m_timer;
    
-   unsigned long m_lastFrameRate;
+   unsigned long        m_lastFrameRate;
 
 public:
-   WinApplicationManager(const std::string& programName);
+   WinApplicationManager();
    ~WinApplicationManager();
 
    bool wndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

@@ -161,7 +161,7 @@ void Filesystem::remove( const FilePath& path ) const
    ZeroMemory( &fileOp, sizeof( SHFILEOPSTRUCT ) );
    fileOp.pFrom = absPath;
    fileOp.wFunc = FO_DELETE;
-   fileOp.fFlags = FOF_SILENT | FOF_ALLOWUNDO;
+   fileOp.fFlags = FOF_SILENT | FOF_NOCONFIRMATION;
    int result = SHFileOperation( &fileOp );
    
    // cleanup

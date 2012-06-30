@@ -201,7 +201,10 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// Declares a specific resourceBEGIN_RESOURCE_NO_PARENT
+/**
+ * Declares a specific resource without implicit parent declaration ( BEGIN_RESOURCE
+ * will declare Resource as a parent )
+ */
 #define BEGIN_RESOURCE_NO_PARENT( ClassName, Extension, AccessMode )          \
    class RegisterResource##Extension                                          \
    {                                                                          \
@@ -219,7 +222,9 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// Declares a specific resourceBEGIN_RESOURCE_NO_PARENT
+/**
+ * Declares a specific resource, implicitly declaring Resource as the parent.
+ */ 
 #define BEGIN_RESOURCE( ClassName, Extension, AccessMode )                    \
       BEGIN_RESOURCE_NO_PARENT( ClassName, Extension, AccessMode );           \
       PARENT( Resource );

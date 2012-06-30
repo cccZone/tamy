@@ -258,14 +258,14 @@ ReflectionObject* ReflectionLoader::findDependency( uint dependencyIdx ) const
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-ExternalDependenciesMapper::ExternalDependenciesMapper( const std::vector< FilePath >& externalDependencies )
+ExternalDependenciesLinker::ExternalDependenciesLinker( const std::vector< FilePath >& externalDependencies )
    : m_externalDependencies( externalDependencies )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ExternalDependenciesMapper::mapDependencies( const std::vector< ReflectionObject* >& objectsToProcess )
+void ExternalDependenciesLinker::linkDependencies( const std::vector< ReflectionObject* >& objectsToProcess )
 {
    std::list< const SerializableReflectionType* > reflectionTypesList;
 
@@ -298,7 +298,7 @@ void ExternalDependenciesMapper::mapDependencies( const std::vector< ReflectionO
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ReflectionObject* ExternalDependenciesMapper::findDependency( uint dependencyIdx ) const
+ReflectionObject* ExternalDependenciesLinker::findDependency( uint dependencyIdx ) const
 {
    if ( IS_DEPENDENCY_NULL( dependencyIdx ) )
    {

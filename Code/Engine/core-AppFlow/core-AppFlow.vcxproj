@@ -77,8 +77,10 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Include\core-AppFlow\TypesRegistry.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="ApplicationManager.cpp" />
+    <ClCompile Include="GameConfig.cpp" />
     <ClCompile Include="TimeController.cpp" />
     <ClCompile Include="TimeControllerTrack.cpp" />
     <ClCompile Include="UserInputController.cpp" />
@@ -89,6 +91,7 @@
     <ClInclude Include="..\..\Include\core-AppFlow\ApplicationManager.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\ExecutionContext.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\ApplicationData.h" />
+    <ClInclude Include="..\..\Include\core-AppFlow\GameConfig.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\TimeController.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\TimeControllerTrack.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\TimeDependent.h" />
@@ -97,7 +100,6 @@
     <ClInclude Include="..\..\Include\core-AppFlow\KeysStatusManager.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\KeysStatusModel.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\KeyStatusHandler.h" />
-    <ClInclude Include="..\..\Include\core-AppFlow\IWindowMessagesProcessor.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\WindowBuilder.h" />
     <ClInclude Include="..\..\Include\core-AppFlow.h" />
   </ItemGroup>

@@ -10,8 +10,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ReflectionSaver;
-class ReflectionDependenciesCallback;
+class ReflectionDependencyMapperCallback;
+class ReflectionDependencyLinkerCallback;
 class ReflectionProperty;
 class OutStream;
 class InStream;
@@ -65,7 +65,7 @@ public:
       * @param dependenciesMapper      dependencies ( embedded objects ) mapper
       * @param stream                  output data stream to which the object should be serialized
       */
-   virtual void save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const = 0;
+   virtual void save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const = 0;
 
    /**
     * Deserializes the the member's data.
@@ -81,15 +81,15 @@ public:
     * @param object                    mapped object
     * @param dependenciesMapper        dependencies (embedded objects) collector
     */
-   virtual void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const = 0;
+   virtual void mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const = 0;
 
    /**
     * Restores the dependencies on the objects the specified object references.
     *
     * @param object                    restored object
-    * @param dependenciesMapper        dependencies (embedded objects) mapper
+    * @param dependenciesLinker        dependencies (embedded objects) linker
     */
-   virtual void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const = 0;
+   virtual void restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const = 0;
 
    /**
     * Creates a property for this type member of the specified object.
@@ -118,7 +118,7 @@ protected:
     * @param stream                    stream to serialize the pointer in
     */
    template< typename T >
-   void savePtr( const T* dataPtr, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const;
+   void savePtr( const T* dataPtr, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const;
 
    /**
     * A helper method for deserializing a pointer.
@@ -157,10 +157,10 @@ public:
    // -------------------------------------------------------------------------
    // ReflectionTypeComponent implementation
    // -------------------------------------------------------------------------
-   void save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const;
+   void save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const;
    void load( void* object, InStream& stream ) const;
-   void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
-   void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const;
+   void mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const;
+   void restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const;
    ReflectionProperty* instantiateProperty( void* object ) const;
 };
 
@@ -181,10 +181,10 @@ public:
    // -------------------------------------------------------------------------
    // ReflectionTypeComponent implementation
    // -------------------------------------------------------------------------
-   void save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const;
+   void save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const;
    void load( void* object, InStream& stream ) const;
-   void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
-   void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const;
+   void mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const;
+   void restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const;
    ReflectionProperty* instantiateProperty( void* object ) const;
 };
 
@@ -205,10 +205,10 @@ public:
    // -------------------------------------------------------------------------
    // ReflectionTypeComponent implementation
    // -------------------------------------------------------------------------
-   void save( const void* object, const ReflectionSaver& dependenciesMapper, OutStream& stream ) const;
+   void save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const;
    void load( void* object, InStream& stream ) const;
-   void mapDependencies( const void* object, ReflectionSaver& dependenciesCollector ) const;
-   void restoreDependencies( void* object, const ReflectionDependenciesCallback& dependenciesMapper ) const;
+   void mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const;
+   void restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const;
    ReflectionProperty* instantiateProperty( void* object ) const;
 };
 

@@ -12,6 +12,7 @@
 #include "core-MVC/TypesRegistry.cpp"
 #include "core-Renderer/TypesRegistry.cpp"
 #include "core-AI/TypesRegistry.cpp"
+#include "core-AppFlow/TypesRegistry.cpp"
 
 ///////////////////////////////////////////////////////////////////////////////
 

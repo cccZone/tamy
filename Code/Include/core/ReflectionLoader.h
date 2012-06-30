@@ -7,6 +7,7 @@
 #include <list>
 #include "core/types.h"
 #include "core/FilePath.h"
+#include "core/ReflectionDependenciesCallback.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,28 +19,9 @@ class ReflectionObjectsTracker;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * An interface for a reflection dependency query callback.
- */
-class ReflectionDependenciesCallback
-{
-public:
-   virtual ~ReflectionDependenciesCallback() {}
-
-   /**
-    * Returns a pointer to a dependency with the specified index.
-    *
-    * @param   dependencyIdx
-    * @return  dependency
-    */
-   virtual ReflectionObject* findDependency( uint dependencyIdx ) const = 0;
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
  * Serialization tool for loading archives of serialized objects.
  */
-class ReflectionLoader : public ReflectionDependenciesCallback
+class ReflectionLoader : public ReflectionDependencyLinkerCallback
 {
 public:
    // list of ALL objects loaded from the archive
@@ -76,7 +58,7 @@ public:
      * @param outRemappedDependencies         NEEDS TO BE specified ALONG with the outDependenciesToLoad.
      *                                        This object's external dependencies will be APPENDED to this array, 
     *                                        and its internal dependency indices will be updated to map to those names, so that
-    *                                        later on the object and the final dependencies list can be passed to the ExternalDependenciesMapper
+    *                                        later on the object and the final dependencies list can be passed to the ExternalDependenciesLinker
    *                                        which will finish the loading process.
     */
    void deserialize( InStream& inStream, std::vector< FilePath >* outDependenciesToLoad = NULL, std::vector< FilePath >* outRemappedDependencies = NULL );
@@ -84,7 +66,7 @@ public:
    /**
     * Retrieves the next loaded object.
     *
-    * CAUTION: be sure to use the ExternalDependenciesMapper if you expect the loaded object to have any external resources.
+    * CAUTION: be sure to use the ExternalDependenciesLinker if you expect the loaded object to have any external resources.
     *
     * @param T                               expected object type
     *
@@ -113,9 +95,9 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A tool that maps the external dependencies between the deserialized objects.
+ * A tool that links the external dependencies between the deserialized objects.
  */
-class ExternalDependenciesMapper : public ReflectionDependenciesCallback
+class ExternalDependenciesLinker : public ReflectionDependencyLinkerCallback
 {
 private:
    const std::vector< FilePath >&         m_externalDependencies;
@@ -126,7 +108,7 @@ public:
     *
     * @param externalDependencies
     */
-   ExternalDependenciesMapper( const std::vector< FilePath >& externalDependencies );
+   ExternalDependenciesLinker( const std::vector< FilePath >& externalDependencies );
 
    /**
     * Fills the pointers to Resource objects that weren't loaded during the standard loading process.
@@ -136,7 +118,7 @@ public:
     *
     * @param objectsToProcess
     */
-   void mapDependencies( const std::vector< ReflectionObject* >& objectsToProcess );
+   void linkDependencies( const std::vector< ReflectionObject* >& objectsToProcess );
 
    // -------------------------------------------------------------------------
    // ReflectionDependenciesCallback implementation

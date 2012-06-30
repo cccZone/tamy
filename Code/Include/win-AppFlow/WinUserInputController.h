@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core-AppFlow\UserInputController.h"
-#include "core-AppFlow\IWindowMessagesProcessor.h"
+#include "win-AppFlow\IWindowMessagesProcessor.h"
 #include <windows.h>
 
 

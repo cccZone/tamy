@@ -8,6 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Model;
+class QVBoxLayout;
 class TimeControllerTrack;
 class QScrollArea;
 class Entity;
@@ -15,6 +16,10 @@ class SceneTreeViewer;
 class SelectionManager;
 class SceneObjectsManipulator;
 class TamySceneWidget;
+class RenderingPipeline;
+struct GameDeploymentInfo;
+class ProgressDialog;
+class GameRunner;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +31,7 @@ private:
    Model&                                    m_scene;
 
    // editor related stuff
+   QVBoxLayout*                              m_mainLayout;
    TimeControllerTrack*                      m_sceneTrack;
    QIcon                                     m_runSceneIcon;
    QIcon                                     m_stopSceneIcon;
@@ -64,6 +70,7 @@ protected:
 private:
    void runScene();
    void stopScene();
+   GameRunner* deployGame( const GameDeploymentInfo& info, ProgressDialog* progressDialog );
 
 public slots:
    void saveScene();
@@ -74,6 +81,15 @@ public slots:
    void setNodeTranslateMode();
    void setNodeRotateMode();
    void toggleDebugMode();
+   void showGameDeploymentFrame();
+   void onDeployGame( QWidget* colorCodedWidget, const GameDeploymentInfo& info );
+
+   /**
+    * This slot removes the specified widget from the main layout.
+    *
+    * @param closedWidget
+    */
+   void onEmbedededWidgetClosed( QWidget* closedWidget );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

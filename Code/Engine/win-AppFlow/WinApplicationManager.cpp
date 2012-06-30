@@ -5,10 +5,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-WinApplicationManager::WinApplicationManager(const std::string& programName)
-      : m_programName(programName),
-      m_timer(new CTimer()),
-      m_lastFrameRate(0)
+WinApplicationManager::WinApplicationManager()
+   : m_timer(new CTimer())
+   , m_lastFrameRate(0)
 {
 }
 

@@ -7,6 +7,7 @@
 #include "core/types.h"
 #include "core/Array.h"
 #include "core/FilePath.h"
+#include "core/ReflectionDependenciesCallback.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,7 +30,7 @@ class Resource;
  * A single serialized archive can contain multiple files and, when loaded by the resource
  * manager, can add mappings to multiple new file system files.
  */
-class ReflectionSaver
+class ReflectionSaver : public ReflectionDependencyMapperCallback
 {
 private:
    OutStream&                                m_outStream;
@@ -81,26 +82,17 @@ public:
    void flush();
 
    /**
-    * Adds a dependency and returns its index.
-    *
-    * @param   dependency
-    */
-   void addDependency( const ReflectionObject* dependency );
-
-   /**
-    * Returns a pointer to a dependency with the specified index.
-    *
-    * @param   reference to a dependency
-    * @return  index of the dependency
-    */
-   uint findDependency( const ReflectionObject* dependency ) const;
-
-   /**
     * Collects all mapped external dependencies.
     *
     * @param outDependencies
     */
    void collectExternalDependencies( std::vector< FilePath >& outDependencies ) const;
+
+   // -------------------------------------------------------------------------
+   // ReflectionDependencyMapperCallback implementation
+   // -------------------------------------------------------------------------
+   void addDependency( const ReflectionObject* dependency );
+   uint findDependency( const ReflectionObject* dependency ) const;
 
 private:
    /**

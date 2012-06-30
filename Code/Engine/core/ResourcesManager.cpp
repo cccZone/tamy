@@ -220,7 +220,7 @@ void ResourcesManager::scan( const FilePath& rootDir, FilesystemScanner& scanner
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Resource* ResourcesManager::create( const FilePath& filePath )
+Resource* ResourcesManager::create( const FilePath& filePath, bool loadOnly )
 {
    Resource* res = findResource( filePath );
    if ( res == NULL )
@@ -228,7 +228,7 @@ Resource* ResourcesManager::create( const FilePath& filePath )
       // the resource doesn't exist yet - try loading it
       res = loadResource( filePath );
 
-      if ( !res )
+      if ( !res && !loadOnly )
       {
          // the resource doesn't exist at all - create a new one
          const SerializableReflectionType* resourceClass = static_cast< const SerializableReflectionType* >( Resource::findResourceClass( filePath.extractExtension() ) );
@@ -246,11 +246,6 @@ Resource* ResourcesManager::create( const FilePath& filePath )
       }
    }
    
-   if ( res == NULL )
-   {
-      ASSERT_MSG( false, "Resource not found" );
-   }
-
    return res;
 }
 
