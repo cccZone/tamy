@@ -66,7 +66,7 @@ Each application requires you to name it in its constructor. Those names will la
 
 The names *HAVE TO BE UNIQUE*.
 
-==ApplicationManager==
+==Application manager==
 
 Application manager manages particular applications, organizing them into a state machine, where each applications become states.
 
