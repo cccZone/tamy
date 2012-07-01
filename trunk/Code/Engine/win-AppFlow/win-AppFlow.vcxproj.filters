@@ -29,5 +29,6 @@
     <ClInclude Include="..\..\Include\win-AppFlow\IWindowMessagesProcessor.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\win-AppFlow.h" />
   </ItemGroup>
 </Project>

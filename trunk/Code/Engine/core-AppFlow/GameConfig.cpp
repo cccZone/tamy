@@ -3,7 +3,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_RESOURCE( GameConfig, gdf, AM_BINARY )
+BEGIN_RESOURCE( GameConfig, gcf, AM_BINARY )
    PROPERTY( FilePath, m_renderingPipelinePath )
    PROPERTY( FilePath, m_worldModelPath )
 END_RESOURCE()

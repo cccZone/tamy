@@ -5,6 +5,8 @@
 #include <QFrame>
 #include <QCloseEvent>
 #include "ui_gamedeploymentframe.h"
+#include <core/FilePath.h>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,9 +31,14 @@ enum GameDeploymentPlatform
  */
 struct GameDeploymentInfo
 {
-   std::string                m_targetDir;
-   GameDeploymentPlatform     m_platform;
-   bool                       m_runAfterDeployment;
+   std::string                   m_targetDir;
+   GameDeploymentPlatform        m_platform;
+
+   std::vector< FilePath >       m_projectDirectories;
+   FilePath                      m_renderingPipelinePath;
+   FilePath                      m_worldModelPath;
+
+   bool                          m_runAfterDeployment;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

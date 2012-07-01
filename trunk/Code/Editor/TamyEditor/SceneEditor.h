@@ -70,7 +70,6 @@ protected:
 private:
    void runScene();
    void stopScene();
-   GameRunner* deployGame( const GameDeploymentInfo& info, ProgressDialog* progressDialog );
 
 public slots:
    void saveScene();

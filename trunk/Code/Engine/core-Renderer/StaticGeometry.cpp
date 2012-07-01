@@ -20,6 +20,7 @@ StaticGeometry::StaticGeometry()
    : Geometry()
    , m_vertexShader( NULL )
 {
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,6 +29,7 @@ StaticGeometry::StaticGeometry( GeometryResource& resource )
    : Geometry( resource )
    , m_vertexShader( NULL )
 {
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,16 +72,13 @@ void StaticGeometry::onPostRender( Renderer& renderer )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void StaticGeometry::onComponentAdded( Component< Model >& component )
+void StaticGeometry::initialize()
 {
-   __super::onComponentAdded( component );
-
    ResourcesManager& rm = ResourcesManager::getInstance();
    static FilePath shaderName( SHADERS_DIR "VertexShaders/staticGeometry.tvsh" );
 
    m_vertexShader = rm.create< VertexShader >( shaderName );
    ASSERT_MSG( m_vertexShader, "Vertex shader could not be loaded" );
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////

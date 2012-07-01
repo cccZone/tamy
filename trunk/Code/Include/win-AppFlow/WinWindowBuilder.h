@@ -17,6 +17,7 @@
 class CompositeWindowMessagesProcessor;
 class WinApplicationManager;
 class WinUserInputController;
+class ApplicationManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,11 +30,11 @@ class WinWindowBuilder
 public:
    struct WindowParams
    {
-      char windowTitle[MAX_LOADSTRING];
-      char windowClassName[MAX_LOADSTRING];
-      UINT menuID;
-      UINT width;
-      UINT height;
+      char                          windowTitle[MAX_LOADSTRING];
+      char                          windowClassName[MAX_LOADSTRING];
+      UINT                          menuID;
+      UINT                          width;
+      UINT                          height;
 
       WindowParams()
          : menuID(-1)
@@ -92,6 +93,11 @@ public:
     */
    HWND createWindowedModeWindow( const WindowParams& windowParams ) const;
 
+   /**
+    * Returns the ApplicationManager instance that's running this game.
+    */
+   inline WinApplicationManager& getApplicationMgr() { return *m_appManager; }
+
 protected:
    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 };
@@ -101,7 +107,7 @@ protected:
 /**
  * Windows platform definition of the main function
  */
-#define MAIN_FUNCTION_START()                                                      \
+#define MAIN_FUNCTION_START() \
 int APIENTRY _tWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow ) \
 {  \
    WinWindowBuilder::initialize( hInstance, nCmdShow, NULL );

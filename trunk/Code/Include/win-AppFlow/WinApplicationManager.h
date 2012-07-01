@@ -1,3 +1,5 @@
+/// @file   win-AppFlow/WinApplicationManager.h
+/// @brief  Windows implementation of the ApplicationManager
 #pragma once
 
 #include "core-AppFlow\ApplicationManager.h"
@@ -14,6 +16,9 @@ class CTimer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Windows implementation of the ApplicationManager.
+ */
 class WinApplicationManager : public ApplicationManager,
                               public IWindowMessagesProcessor
 {

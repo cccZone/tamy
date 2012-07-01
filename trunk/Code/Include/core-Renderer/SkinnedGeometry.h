@@ -36,7 +36,7 @@ private:
    // runtime data
    BoundingVolume*                     m_vol;
    std::vector< Node* >                m_bones;
-   Array< Matrix >                 m_boneMatrices;
+   Array< Matrix >                     m_boneMatrices;
 
 public:
    /**
@@ -65,11 +65,11 @@ protected:
    // -------------------------------------------------------------------------
    void onAttached(Entity& parent);
    void onDetached(Entity& parent);
-   void onComponentAdded( Component< Model >& component );
    Entity* cloneSelf() const;
 
 private:
    void instantiateSkeleton( Entity& parent );
+   void initialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

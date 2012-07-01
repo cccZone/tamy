@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core-AppFlow.h
 /// @brief  aggregate include file for the 'core-AppFlow' project
+#pragma once
 
 
 // ----------------------------------------------------------------------------

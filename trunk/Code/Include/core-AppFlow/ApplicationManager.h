@@ -108,9 +108,7 @@ public:
 
    // ---------------------- ExecutionContext implementation ------------------
    void signal(const Application& app, int signalId);
-   void signal(const Application& app, 
-               const std::string& receiverApp, 
-               int signalId);
+   void signal(const Application& app, const std::string& receiverApp, int signalId);
 
 protected:
 

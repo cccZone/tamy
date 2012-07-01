@@ -32,6 +32,14 @@ WindowHandle WindowBuilder::createWindow( const std::string& appName, bool fullS
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+ApplicationManager& WindowBuilder::getApplicationManager()
+{
+   WinWindowBuilder& builder = WinWindowBuilder::getInstance();
+   return builder.getApplicationMgr();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -45,11 +53,13 @@ WinWindowBuilder::WinWindowBuilder()
    , m_nCmdShow(0)
    , m_icon(NULL)
 {
+   // prepare window messages processors
    m_appManager = new WinApplicationManager();
    m_inputManager = new WinUserInputController();
    m_msgProcessors = new CompositeWindowMessagesProcessor();
    m_msgProcessors->add( *m_appManager );
    m_msgProcessors->add( *m_inputManager );
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
