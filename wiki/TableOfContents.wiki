@@ -40,6 +40,7 @@
     * [ Application management ]
       * [TimeController Time controller]
       * [WindowingSystem Windowing system]
+      * [CreatingApplications Creating applications]
     * [ MVC ]
       * [Model Model and entities]
       * [SpatialEntity Spatial entity]
