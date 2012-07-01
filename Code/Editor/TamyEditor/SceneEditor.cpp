@@ -25,6 +25,7 @@
 // game deployment
 #include "GameDeploymentFrame.h"
 #include "GameRunner.h"
+#include "GameDeploymentUtil.h"
 
 // drag & drop
 #include "DropFrame.h"
@@ -392,7 +393,21 @@ void SceneEditor::onDeployGame( QWidget* colorCodeWidget, const GameDeploymentIn
       // create a progress dialog that will track the deployment process
       ProgressDialog* progressDialog = new ProgressDialog( this );
 
-      gameRunner = deployGame( info, progressDialog );
+      // fill the missing fields in the deployment info structure
+      GameDeploymentInfo deploymentInfo = info;
+      deploymentInfo.m_renderingPipelinePath = m_sceneWidget->getRenderingPipeline();
+      deploymentInfo.m_worldModelPath = m_scene.getFilePath();
+
+      // <deployment.todo> !!!!!!!! get directories from the project ( create something that holds the project settings )
+      {
+         FilePath sceneDir;
+         m_scene.getFilePath().extractDir( sceneDir );
+         deploymentInfo.m_projectDirectories.push_back( sceneDir );
+         deploymentInfo.m_projectDirectories.push_back( FilePath( "/Renderer/" ) );
+      }
+
+      // deploy the game
+      gameRunner = GameDeploymentUtil::deployGame( deploymentInfo, progressDialog );
 
       // cleanup
       delete progressDialog;
@@ -419,188 +434,6 @@ void SceneEditor::onDeployGame( QWidget* colorCodeWidget, const GameDeploymentIn
 
    // cleanup
    delete gameRunner;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-static bool CopyFileEnsurePath( const std::string& sourcePath, const std::string& targetPath )
-{
-   // create the target directory
-   {
-      std::vector< std::string > pathElements;
-      StringUtils::tokenize( targetPath, "/\\", pathElements );
-
-      std::string currentPath = pathElements[0];
-      uint count = pathElements.size() - 1;
-      for( uint i = 1; i < count; ++i )
-      {
-         currentPath += "\\" + pathElements[i];
-         bool result = CreateDirectoryA( currentPath.c_str(), NULL );
-         if ( !result )
-         {
-            DWORD errCode = GetLastError();
-            if ( errCode != ERROR_ALREADY_EXISTS )
-            {
-               // the directory couldn't be created for some reason
-               return false;
-            }
-         }
-      }
-   }
-
-   // copy the file
-   bool result = CopyFileA( sourcePath.c_str(), targetPath.c_str(), false );
-   return result;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-GameRunner* SceneEditor::deployGame( const GameDeploymentInfo& info, ProgressDialog* progressDialog )
-{
-   // WHAT HAPPENS WHEN MORE PLATFORMS ARE IMPLEMENTED?
-   // A lot's gonna change around here when Android, iPhone and other platforms appear, but for now let's keep this block in this method.
-   // What's not gonna change is the fact the method's gonna return a GameRunner instance.
-
-
-   if ( info.m_targetDir.empty() )
-   {
-      // cant' deploy to an unspecified directory
-      return NULL;
-   }
-
-   ResourcesManager& resMgr = ResourcesManager::getInstance();
-   Filesystem& fs = resMgr.getFilesystem();
-   std::string DEPLOYMENT_RESOURCES_ROOT = info.m_targetDir + "/Data/";
-
-
-   // get the rendering pipeline, 'cause it's one of the elements we're gonna be saving
-   const FilePath& renderingPipelinePath = m_sceneWidget->getRenderingPipeline();
-   RenderingPipeline* pipeline = resMgr.findResource< RenderingPipeline >( renderingPipelinePath );
-   if ( !pipeline )
-   {
-      // the pipeline wasn't loaded - that's weird ( since we have the scene widget initialized and all ).
-      // Investigate, but don't deploy anything.
-      ASSERT_MSG( pipeline != NULL, "Rendering pipeline not defined" );
-
-      return NULL;
-   }
-
-   // save the resources ( we want to save the state most up to date )
-   {
-      m_scene.saveResource();
-      pipeline->saveResource();
-   }
-
-   // create the resources map that needs to be copied
-   std::vector< FilePath > externalDependencies;
-   {
-      ReflectionSerializationUtil::collectExternalDependencies( &m_scene, externalDependencies );
-      ReflectionSerializationUtil::collectExternalDependencies( pipeline, externalDependencies );
-   }
-
-   progressDialog->initialize( "Game deployment", externalDependencies.size() );
-
-   // copy the resources to the "Data" directory
-   {
-      uint count = externalDependencies.size();
-      bool deploymentSuccessful = true;
-      for ( uint i = 0; i < count; ++i )
-      {
-         std::string sourcePath = externalDependencies[i].toAbsolutePath( fs );
-         std::string targetPath = DEPLOYMENT_RESOURCES_ROOT + externalDependencies[i].c_str();
-         deploymentSuccessful = CopyFileEnsurePath( sourcePath.c_str(), targetPath.c_str() );
-
-         // advance the progress dialog
-         progressDialog->advance();
-      }
-
-      if ( !deploymentSuccessful )
-      {
-         // something broke down - bail
-         return NULL;
-      }
-   }
-
-      
-   // copy the selected game binary 
-   std::string gameExePath = info.m_targetDir + "/game.exe";
-   {
-      std::string binSourcePath;
-      switch( info.m_platform )
-      {
-      case GDP_WINDOWS_OPENGL:
-         {
-            binSourcePath = fs.getCurrRoot() + "/Deployment/GameWinOpenGL/game.exe";
-            break;
-         }
-
-      case GDP_WINDOWS_DX9: // fallthrough
-      default:
-         {
-            binSourcePath = fs.getCurrRoot() + "/Deployment/GameWinDX9/game.exe";
-            break;
-         }
-      }
-
-      bool deploymentSuccessful = CopyFileEnsurePath( binSourcePath.c_str(), gameExePath.c_str() );
-      // advance the progress dialog
-      progressDialog->advance();
-
-      if ( !deploymentSuccessful )
-      {
-         // something broke down - bail
-         return NULL;
-      }
-   }
-
-   // save the configuration resource
-   {
-      GameConfig* config = new GameConfig();
-      config->m_renderingPipelinePath = renderingPipelinePath;
-      config->m_worldModelPath = m_scene.getFilePath();
-
-      // save it in this filesystem
-      FilePath gameConfigPath( "game.gcf" );
-      ReflectionSerializationUtil::saveObject( config, gameConfigPath );
-
-      // destroy the config instance
-      delete config;
-
-      // move it to the destination
-      std::string gameConfigSourcePath = gameConfigPath.toAbsolutePath( fs );
-      std::string gameConfigDestPath = DEPLOYMENT_RESOURCES_ROOT + "/" + gameConfigPath.c_str();
-      bool deploymentSuccessful = CopyFileEnsurePath( gameConfigSourcePath, gameConfigDestPath ); 
-
-      // delete the temporary file
-      fs.remove( gameConfigPath );
-
-      if ( !deploymentSuccessful )
-      {
-         // something broke down - bail
-         return NULL;
-      }
-
-   }
-
-   // create the runner
-   GameRunner* runner = NULL;
-   switch( info.m_platform )
-   {
-   case GDP_WINDOWS_OPENGL:
-      {
-         runner = new WindowsGameRunner( gameExePath );
-         break;
-      }
-
-   case GDP_WINDOWS_DX9: // fallthrough
-   default:
-      {
-         runner = new WindowsGameRunner( gameExePath );
-         break;
-      }
-   }
-
-   return runner;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

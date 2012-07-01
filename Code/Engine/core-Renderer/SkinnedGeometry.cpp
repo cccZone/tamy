@@ -25,6 +25,7 @@ SkinnedGeometry::SkinnedGeometry()
    , m_vol( new AABoundingBox() )
    , m_vertexShader( NULL )
 {
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,6 +36,7 @@ SkinnedGeometry::SkinnedGeometry( GeometryResource& geometry, Skeleton& skeleton
    , m_vertexShader( NULL )
    , m_vol( new AABoundingBox() )
 {
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,10 +149,8 @@ void SkinnedGeometry::onDetached( Entity& parent )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SkinnedGeometry::onComponentAdded( Component< Model >& component )
+void SkinnedGeometry::initialize()
 {
-   __super::onComponentAdded( component );
-
    // load the shader
    ResourcesManager& rm = ResourcesManager::getInstance();
    static FilePath shaderName( SHADERS_DIR "VertexShaders/skinnedGeometry.tvsh" );

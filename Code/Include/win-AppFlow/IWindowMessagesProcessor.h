@@ -1,4 +1,4 @@
-/// @file   win-AppFlow\WindowMessagesProcessor.h
+/// @file   win-AppFlow\IWindowMessagesProcessor.h
 /// @brief  classes for window messages processing
 #pragma once
 

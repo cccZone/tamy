@@ -8,7 +8,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 typedef unsigned long      WindowHandle;
-class IWindowMessagesProcessor;
+class ApplicationManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,6 +28,11 @@ public:
     * @return  window handle
     */
    static WindowHandle createWindow( const std::string& appName, bool fullScreen, unsigned int winWidth, unsigned int winHeight );
+
+   /**
+    * Returns the singleton instance of ApplicationManager running this game.
+    */
+   static ApplicationManager& getApplicationManager();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

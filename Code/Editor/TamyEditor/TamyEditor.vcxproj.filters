@@ -455,6 +455,9 @@
     <ClInclude Include="GameRunner.h">
       <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
     </ClInclude>
+    <ClInclude Include="GameDeploymentUtil.h">
+      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -1068,6 +1071,9 @@
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
     <ClCompile Include="GameRunner.cpp">
+      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDeploymentUtil.cpp">
       <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
     </ClCompile>
   </ItemGroup>

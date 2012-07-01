@@ -1,3 +1,5 @@
+/// @file   win-AppFlow/WinUserInputController.h
+/// @brief  Windows user input system
 #pragma once
 
 #include "core-AppFlow\UserInputController.h"
@@ -7,6 +9,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Windows user input system.
+ */
 class WinUserInputController : public UserInputController,
                                public IWindowMessagesProcessor
 {

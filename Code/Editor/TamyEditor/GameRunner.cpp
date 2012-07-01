@@ -17,8 +17,11 @@ WindowsGameRunner::WindowsGameRunner( const std::string& exePath )
 void WindowsGameRunner::run()
 {
    STARTUPINFOA startupInfo;
+   memset( &startupInfo, 0, sizeof( STARTUPINFOA ) );
    startupInfo.cb = sizeof( STARTUPINFOA );
+
    PROCESS_INFORMATION processInfo;
+   memset( &processInfo, 0, sizeof( PROCESS_INFORMATION ) );
 
    // get the startup directory
    std::string executionDir;

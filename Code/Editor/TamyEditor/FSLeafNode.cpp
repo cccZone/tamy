@@ -68,13 +68,13 @@ void FSLeafNode::setEntrySize( const Filesystem& fs )
    std::string relativePath = getRelativePath();
 
    std::size_t fileSize = 0;
-   try
+   File* file = fs.open( relativePath );
+   if ( file )
    {
-      File* file = fs.open( relativePath );
       fileSize = file->size();
       delete file;
    }
-   catch ( std::exception& ex )
+   else
    {
       fileSize = 0;
    }

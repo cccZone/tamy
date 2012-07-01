@@ -26,7 +26,12 @@ SingleTextureMaterial::SingleTextureMaterial( const std::string& name )
    , m_shader( NULL )
    , m_texture( NULL )
    , m_renderableTexture( new RenderableTexture() )
-{}
+{
+   // load the shader
+   static FilePath shaderName( SHADERS_DIR "MaterialShader.tpsh" );
+   m_shader = ResourcesManager::getInstance().create< PixelShader >( shaderName );
+   ASSERT_MSG( m_shader != NULL, "Shader used by the SingleTextureMaterial could not be loaded" )
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -76,26 +81,6 @@ void SingleTextureMaterial::onPostRender( Renderer& renderer ) const
 
 void SingleTextureMaterial::onComponentAdded( Component< Model >& component )
 {
-   ModelComponent< ResourcesManager >* comp = dynamic_cast< ModelComponent< ResourcesManager >* >( &component );
-   if ( comp )
-   {
-      // load the shader
-      ResourcesManager& rm = comp->get();
-      static FilePath shaderName( SHADERS_DIR "MaterialShader.psh" );
-      m_shader = rm.findResource< PixelShader >( shaderName );
-      if ( !m_shader )
-      {
-         m_shader = new PixelShader( shaderName );
-         
-         // load the shader code
-         File* shaderFile = rm.getFilesystem().open( shaderName, std::ios_base::in );
-         StreamBuffer< char > shaderCodeBuf( *shaderFile );
-         m_shader->setScript( shaderCodeBuf.getBuffer() );
-         delete shaderFile;
-
-         rm.addResource( m_shader );
-      }
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

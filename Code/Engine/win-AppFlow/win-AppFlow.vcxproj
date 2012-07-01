@@ -90,6 +90,7 @@
     <ClCompile Include="WinWindowBuilder.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\win-AppFlow.h" />
     <ClInclude Include="..\..\Include\win-AppFlow\IWindowMessagesProcessor.h" />
     <ClInclude Include="..\..\Include\win-AppFlow\WinApplicationManager.h" />
     <ClInclude Include="..\..\Include\win-AppFlow\WinUserInputController.h" />

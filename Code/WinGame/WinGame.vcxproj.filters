@@ -9,5 +9,13 @@
     <ClCompile Include="main.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="GameApplication.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GameApplication.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
