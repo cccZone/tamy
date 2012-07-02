@@ -1,8 +1,9 @@
 #labels Projects
 =Projects=
 
-Tamy allows you to divide your repository among many projects you can share resources between.
+When you work with Tamy, you work on *projects*. 
 
+A project is an easy way of aggregating multiple resources ( very often shared among various projects ) and letting you work only with those you manually selected, thus filtering all unwanted resources from your view, letting you focus only on what's important to your project.
 
 ==Activating a project==
 
