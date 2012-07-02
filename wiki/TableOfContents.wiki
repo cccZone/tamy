@@ -77,5 +77,6 @@
             * [TreeWidget Tree widget]
             * [ClosableFrame Closable frame]
   * [ For designers ]
+    * [Projects Projects]
     * [SceneEditor Scene editor]
       * [SceneEditor#Game_deployment Game deployment]
