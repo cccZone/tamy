@@ -33,6 +33,13 @@ FilePath::FilePath( const FilePath& rhs )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void FilePath::set( const std::string& path )
+{
+   Filesystem::normalize( path, m_relativePath );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool FilePath::isSubPath( const FilePath& path ) const
 {
    return ( m_relativePath.find( path.m_relativePath ) != std::string::npos );

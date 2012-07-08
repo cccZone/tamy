@@ -1,12 +1,14 @@
 #include "FSDirNode.h"
-#include "ResourcesBrowser.h"
+#include "FilesystemTree.h"
+#include "core\ResourcesManager.h"
+#include "core\Filesystem.h"
 #include "core/Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FSDirNode::FSDirNode( FSTreeNode* parent, const std::string& nodeName, const Filesystem& fs )
-   : FSTreeNode( parent, fs )
+FSDirNode::FSDirNode( FSTreeNode* parent, const std::string& nodeName )
+   : FSTreeNode( parent )
    , m_fsNodeName( nodeName )
 {
    ASSERT_MSG( m_fsNodeName.empty() ? true : m_fsNodeName.c_str()[ m_fsNodeName.length() - 1 ] == '/', "This is a directory node, thus it has to end with a slash" );
@@ -18,6 +20,7 @@ FSDirNode::FSDirNode( FSTreeNode* parent, const std::string& nodeName, const Fil
    }
 
    // set the icon
+   Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
    QString iconsDir = fs.getShortcut( "editorIcons" ).c_str();
    setIcon( 0, QIcon( iconsDir + "dirIcon.png" ) );
 
@@ -40,14 +43,14 @@ std::string FSDirNode::getRelativePath() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TreeWidgetDescFactory* FSDirNode::getDescFactory( ResourcesBrowser& resourcesFactory )
+TreeWidgetDescFactory* FSDirNode::getDescFactory( FilesystemTree& resourcesFactory )
 {
    return resourcesFactory.getDescFactory();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FSDirNode::addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory )
+void FSDirNode::addNode( unsigned int typeIdx, FilesystemTree& resourcesFactory )
 {
    std::string path = getRelativePath();
    return resourcesFactory.addNode( typeIdx, path );
@@ -55,10 +58,10 @@ void FSDirNode::addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactor
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FSDirNode::editResource( ResourcesBrowser& editorsFactory )
+void FSDirNode::openItem( FilesystemTree& hostTree )
 {
    std::string thisDir = getRelativePath();
-   editorsFactory.refresh( thisDir );
+   hostTree.refresh( thisDir );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

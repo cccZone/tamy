@@ -22,18 +22,17 @@ public:
     *
     * @param parent
     * @param nodeName
-    * @param fs         file system with the editor icons
     */
-   FSDirNode( FSTreeNode* parent, const std::string& nodeName, const Filesystem& fs );
+   FSDirNode( FSTreeNode* parent, const std::string& nodeName );
 
    // -------------------------------------------------------------------------
    // FSTreeNode implementation
    // -------------------------------------------------------------------------
    bool compareNodeName( const std::string& name ) const;
    std::string getRelativePath() const;
-   TreeWidgetDescFactory* getDescFactory( ResourcesBrowser& resourcesFactory );
-   void addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory );
-   void editResource( ResourcesBrowser& editorsFactory );
+   TreeWidgetDescFactory* getDescFactory( FilesystemTree& resourcesFactory );
+   void addNode( unsigned int typeIdx, FilesystemTree& resourcesFactory );
+   void openItem( FilesystemTree& hostTree );
 
 };
 

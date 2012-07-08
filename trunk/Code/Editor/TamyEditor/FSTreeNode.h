@@ -1,7 +1,7 @@
+/// @file   TamyEditor\FSTreeNode.h
+/// @brief  Resource browser;'s filesystem tree widget node
 #pragma once
 
-/// @file   TamyEditor\FSTreeNode.h
-/// @brief  Resource browser tree widget node
 
 #include <QTreeWidgetItem>
 #include <string>
@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ResourcesBrowser;
+class FilesystemTree;
 class Filesystem;
 class TreeWidgetDescFactory;
 
@@ -20,16 +20,7 @@ class TreeWidgetDescFactory;
  */
 class FSTreeNode : public QTreeWidgetItem 
 {
-protected:
-   const Filesystem&    m_fs;
-
 public:
-   /**
-    * Constructor creating the root node.
-    *
-    * @param hostTree
-    * @param fs         file system from which we can access entry icons
-    */
    virtual ~FSTreeNode() {}
 
    /**
@@ -40,11 +31,11 @@ public:
    FSTreeNode* find( const std::string& nodeName );
 
    /**
-    * Opens the resource encapsulated in the node for edition.
+    * Opens the item in its own specific way.
     *
-    * @param editorsFactory    factory capable of creating proper editors
+    * @param hostTree    host tree
     */
-   virtual void editResource( ResourcesBrowser& editorsFactory ) {}
+   virtual void openItem( FilesystemTree& hostTree ) {}
 
    /**
     * Returns a relative path leading to this fs node.
@@ -52,22 +43,21 @@ public:
    virtual std::string getRelativePath() const = 0;
 
    /**
-    * Returns an item descriptions factory for the specific node.
-    * The factory will tell what items can be attached
-    * to this node.
+    * This is a call marshaling method - a node can marshal it or not, thus allowing
+    * for new items creation or not.
     * 
     * @param resourcesFactory    factory capable of creating the actual resources
     */
-   virtual TreeWidgetDescFactory* getDescFactory( ResourcesBrowser& resourcesFactory ) = 0;
+   virtual TreeWidgetDescFactory* getDescFactory( FilesystemTree& resourcesFactory ) = 0;
 
    /**
-    * Creates a new child of the type specified by an index
-    * expressed in terms of the node's TreeWidgetDescFactory.
+    * This is a call marshaling method - a node can marshal it or not, thus allowing
+    * for new items to be added or not.
     *
     * @param typeIdx
     * @param resourcesFactory    factory capable of creating the actual resources
     */
-   virtual void addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory ) = 0;
+   virtual void addNode( unsigned int typeIdx, FilesystemTree& resourcesFactory ) = 0;
 
    /**
     * Compares the node name.
@@ -101,19 +91,15 @@ protected:
     * Constructor for common nodes.
     *
     * @param parent
-    * @param fs         file system which contains physical files & dirs 
-    *                   corresponding to the nodes
     */
-   FSTreeNode( FSTreeNode* parent, const Filesystem& fs );
+   FSTreeNode( FSTreeNode* parent );
 
    /**
     * Constructor for the root node.
     *
     * @param parent
-    * @param fs         file system which contains physical files & dirs 
-    *                   corresponding to the nodes
     */
-   FSTreeNode( QTreeWidget* parent, const Filesystem& fs );
+   FSTreeNode( QTreeWidget* parent );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

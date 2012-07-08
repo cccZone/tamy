@@ -12,16 +12,21 @@
 #include <QSettings>
 #include "core.h"
 #include "progressdialog.h"
-#include "FSNodeMimeData.h"
 #include "tamyeditor.h"
+#include "Project.h"
 #include <list>
+
+// trees
+#include "FilesystemTree.h"
+#include "ProjectTree.h"
 
 // nodes
 #include "FSTreeNode.h"
 #include "FSRootNode.h"
 #include "FSDirNode.h"
 #include "FSLeafNode.h"
-
+#include "ProjectDirNode.h"
+#include "ProjectLeafNode.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,33 +38,22 @@
 ResourcesBrowser::ResourcesBrowser( QWidget* parentWidget )
    : QDockWidget( "Resources Browser", parentWidget )
    , m_tabsManager( NULL )
-   , m_fsTree( NULL )
-   , m_rootDir( NULL )
-   , m_rm( NULL )
-   , m_toggleFileTypesViewBtn( NULL )
-   , m_viewResourcesOnly( false )
+   , m_projectBrowserTree( NULL )
+   , m_activeProject( NULL )
 {
    setObjectName("ResourcesBrowser/dockWidget");
 
-   m_rm = &ResourcesManager::getInstance();
-   Filesystem& fs = m_rm->getFilesystem();
-   fs.attach( *this );
-
+   Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
    m_iconsDir = fs.getShortcut( "editorIcons" ).c_str();
-
-   m_itemsFactory = new TypeDescFactory< Resource >( m_iconsDir, fs, "unknownResourceIcon.png" );
 
    // initialize user interface
    initUI();
-   onToggleFilesFiltering();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 ResourcesBrowser::~ResourcesBrowser()
 {
-   delete m_itemsFactory;
-   m_itemsFactory = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -82,7 +76,8 @@ void ResourcesBrowser::initUI()
       m_tabsManager->setObjectName( "ResourcesBrowser/tabsManager" );
       layout->addWidget( m_tabsManager );
 
-      // setup the scene tree container widget
+      // setup the scene tree container widgets
+      setupProjectTree();
       setupFilesystemTree();
       
       // setup the bookmarks tab
@@ -91,6 +86,23 @@ void ResourcesBrowser::initUI()
       // setup the search tab
       setupFileFinder();
    }
+
+   // by default activate the filesystem browser - that's where the user should start
+   // by creating a project
+   m_tabsManager->setCurrentIndex( TI_Filesystem );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::setupProjectTree()
+{
+   ASSERT( m_tabsManager != NULL );
+
+   m_projectBrowserTree = new ProjectTree( m_tabsManager );
+
+   // add the tree to a new tab
+   m_tabsManager->addTab( m_projectBrowserTree, "Project" );
+   connect( m_projectBrowserTree, SIGNAL( popupMenuRequest( QTreeWidgetItem*, QMenu& ) ), this, SLOT( showProjectBrowserPopupMenu( QTreeWidgetItem*, QMenu& ) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -99,59 +111,10 @@ void ResourcesBrowser::setupFilesystemTree()
 {
    ASSERT( m_tabsManager != NULL );
 
-   QString topObjectName( "ResourcesBrowser/filesystemTreeFrame" );
+   m_filesystemBrowserTree = new FilesystemTree( m_tabsManager );
 
-   // frame
-   QFrame* frame = NULL;
-   QVBoxLayout* layout = NULL;
-   {
-      frame = new QFrame( m_tabsManager );
-      frame->setObjectName( topObjectName );
-      layout = new QVBoxLayout( frame );
-      frame->setLayout( layout );
-      layout->setSpacing(0);
-      layout->setMargin(0);
-      m_tabsManager->addTab( frame, "Files" );
-   }
-
-   // toolbar
-   {
-      QToolBar* toolbar = new QToolBar( frame );
-      toolbar->setObjectName( topObjectName + "/toolbar" );
-      layout->addWidget( toolbar );
-
-      // toggle file tabs
-      {
-         m_toggleFileTypesViewBtn = new QAction( tr( "Toggle file types" ), toolbar );
-         toolbar->addAction( m_toggleFileTypesViewBtn );
-         connect( m_toggleFileTypesViewBtn, SIGNAL( triggered() ), this, SLOT( onToggleFilesFiltering() ) );
-      }
-   }
-
-   // filesystem tree
-   {
-      m_fsTree = new FSTreeWidget( frame, topObjectName + "/m_fsTree", m_iconsDir );
-      layout->addWidget( m_fsTree );
-
-      QStringList columnLabels; 
-      columnLabels.push_back( "Name" );
-      columnLabels.push_back( "Size" );
-      m_fsTree->setColumnCount( columnLabels.size() );
-      m_fsTree->setHeaderLabels( columnLabels );
-      m_fsTree->setDragEnabled( true ); 
-      m_fsTree->setDropIndicatorShown( true ); 
-      connect( m_fsTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( onEditResource( QTreeWidgetItem*, int ) ) );
-      connect( m_fsTree, SIGNAL( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ), this, SLOT( onGetItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ) );
-      connect( m_fsTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( onAddNode( QTreeWidgetItem*, unsigned int ) ) );
-      connect( m_fsTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( onRemoveNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
-      connect( m_fsTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( onClearNode( QTreeWidgetItem* ) ) );
-      connect( m_fsTree, SIGNAL( popupMenuShown( QTreeWidgetItem*, QMenu& ) ), this, SLOT( onPopupMenuShown( QTreeWidgetItem*, QMenu& ) ) );
-
-      m_rootDir = new FSRootNode( m_fsTree, m_rm->getFilesystem() );
-      m_fsTree->addTopLevelItem( m_rootDir );
-
-      m_rootDir->setExpanded( true );
-   }
+   m_tabsManager->addTab( m_filesystemBrowserTree, "Filesystem" );
+   connect( m_filesystemBrowserTree, SIGNAL( popupMenuRequest( QTreeWidgetItem*, QMenu& ) ), this, SLOT( showFilesystemBrowserPopupMenu( QTreeWidgetItem*, QMenu& ) ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -237,349 +200,16 @@ void ResourcesBrowser::setupFileFinder()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesBrowser::onDirChanged( const FilePath& dir )
+void ResourcesBrowser::showProjectBrowserPopupMenu( QTreeWidgetItem* node, QMenu& menu )
 {
-   refresh( dir.getRelativePath() );
-}
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
 
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onFileEdited( const FilePath& path )
-{
-   FilePath dir;
-   path.extractDir( dir );
-   refresh( dir.getRelativePath() );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onFileRemoved( const FilePath& path )
-{
-   FilePath dir;
-   path.extractDir( dir );
-   refresh( dir.getRelativePath() );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::refresh( const std::string& rootDir )
-{
-   // find the entry corresponding to the specified root directory
-   FSTreeNode* entry = find( rootDir );
-   if ( !entry )
-   {
-      return;
-   }
-
-   // clean it up
-   entry->clear();
-
-   // scan the contents of the resources manager
-   if ( m_rm != NULL )
-   {
-      m_rm->scan( rootDir, *this, false );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-FSTreeNode* ResourcesBrowser::find( const std::string& dir )
-{
-   // split the path int particular elements
-   FilePath path( dir );
-   std::vector< std::string > pathParts;
-   path.getElements( pathParts );
-
-   // if there were no elements, simply return the root node
-   if ( pathParts.empty() )
-   {
-      return m_rootDir;
-   }
-
-   // find the node
-   FSTreeNode* currItem = m_rootDir;
-   unsigned int count = pathParts.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      std::string currPathPart = pathParts[i];
-      FSTreeNode* nextItem = currItem->find( currPathPart );
-      if ( !nextItem )
-      {
-         // that's the last leaf - there's nothing else to search in - bail
-         break;
-      }
-
-      if ( i + 1 == count )
-      {
-         // we found it
-         return nextItem;
-      }
-
-      // keep on looking starting from the node we've just analyzed
-      currItem = nextItem;
-   }
-
-   // the node hasn't been mapped yet
-   return NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-FSTreeNode* ResourcesBrowser::open( const FilePath& path )
-{
-   // split the path int particular elements
-   std::vector< std::string > pathParts;
-   path.getElements( pathParts );
-
-   // if there were no elements, simply return the root node
-   if ( pathParts.empty() )
-   {
-      return m_rootDir;
-   }
-
-   // start mapping the nodes
-   std::string currRelativePath = "/";
-
-   FSTreeNode* currItem = m_rootDir;
-   unsigned int count = pathParts.size();
-
-   FSTreeNode* foundItem = NULL;
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      std::string currPathPart = pathParts[i];
-      FSTreeNode* nextItem = currItem->find( currPathPart );
-      if ( !nextItem )
-      {
-         // that's the last leaf thus far - so scan it
-         m_rm->scan( currRelativePath, *this, false );
-
-         // and try finding the corresponding node again
-         nextItem = currItem->find( currPathPart );
-      }
-
-      if ( !nextItem )
-      {
-         // still nothing - this means that the path we're looking for doesn't exist - so bail
-         break;
-      }
-
-      if ( i + 1 == count )
-      {
-         // we found it
-         foundItem = nextItem;
-         break;
-      }
-
-      // keep on looking starting from the node we've just analyzed
-      currRelativePath += currPathPart;
-      currItem = nextItem;
-   }
-
-   if ( foundItem )
-   {
-      // we found it - just to be sure, rescan the contents
-      m_rm->scan( foundItem->getRelativePath(), *this, false );
-
-      if ( dynamic_cast< FSDirNode* >( foundItem ) )
-      {
-         foundItem->setExpanded( true );
-      }
-   }
-
-   // the path doesn't exist
-   return foundItem;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::focusOn( FSTreeNode* node )
-{
-   m_fsTree->setCurrentItem( node );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::createResource( const SerializableReflectionType& type, const std::string& parentDir )
-{
-   Resource* newResource = type.instantiate< Resource >();
-
-   // learn the new file's name
-   const Filesystem& fs = m_rm->getFilesystem();
-   std::string extension = newResource->getVirtualExtension();
-
-   bool ok = false;
-   QString fullFileName = QInputDialog::getText( this, "New resource", "Resource name:", QLineEdit::Normal, "", &ok );
-   if ( !ok ) 
-   {
-      // no file was selected or user pressed 'cancel'
-      return;
-   }
-
-   // once the file is open, extract the directory name
-   std::string fileName = parentDir + fullFileName.toStdString() + "." + extension;
-
-   // create & save the resource
-   newResource->setFilePath( fileName );
-   m_rm->addResource( newResource );
-   newResource->saveResource();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::editResource( const std::string& path, const QIcon& resourceIcon )
-{
-   ProgressDialog progressDlg;
-   progressDlg.initialize( "Loading a resource", 1 );
-   Resource* resource = NULL;
-
-   try
-   {
-      resource = m_rm->create( path );
-   }
-   catch( std::exception& ex )
-   {
-      ASSERT_MSG( false, ex.what() );
-   }
-   progressDlg.advance();
-
-   if ( resource )
-   {
-      TamyEditor& tamyEd = TamyEditor::getInstance();
-      if ( tamyEd.activateResourceEditor( resource ) == false )
-      {
-         ResourceEditor* resourceEd = tamyEd.createResourceEditor( resource, resourceIcon );
-         tamyEd.addResourceEditor( resourceEd );
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onDirectory( const FilePath& name )
-{
-   ASSERT_MSG( m_rm != NULL, "This method can only be called when ResourcesManager instance is available" );
-
-   const Filesystem& fs = m_rm->getFilesystem();
-
-   std::string parentDirName = fs.extractDir( name );
-   std::string newNodeName = fs.extractNodeName( name );
-
-   FSTreeNode* parent = find( parentDirName );
-   ASSERT_MSG( parent != NULL, "Parent directory not found" );
-   if ( parent && parent->find( newNodeName ) == NULL )
-   { 
-      // add the new node ( but only if it's unique )
-      new FSDirNode( parent, newNodeName, fs );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onFile( const FilePath& name )
-{
-   ASSERT_MSG( m_rm != NULL, "This method can only be called when ResourcesManager instance is available" );
-
-   const Filesystem& fs = m_rm->getFilesystem();
-
-   if ( m_viewResourcesOnly )
-   {
-      std::string extension = name.extractExtension();
-      if ( !Resource::isResource( extension ) )
-      {
-         return;
-      }
-   }
-
-   FilePath parentDirName;
-   name.extractDir( parentDirName );
-   std::string newNodeName = name.extractNodeName();
-
-   FSTreeNode* parent = find( parentDirName.getRelativePath() );
-   ASSERT_MSG( parent != NULL, "Parent directory not found" );
-   if ( parent && parent->find( newNodeName ) == NULL )
-   {
-      // add the new node ( but only if it's unique )
-      new FSLeafNode( parent, newNodeName, fs, *m_itemsFactory );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onEditResource( QTreeWidgetItem* item, int column )
-{
-   FSTreeNode* entry = dynamic_cast< FSTreeNode* >( item );
-   entry->editResource( *this );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onToggleFilesFiltering()
-{
-   // change the view mode flag
-   m_viewResourcesOnly = !m_viewResourcesOnly;
-
-   // update the icon on the view type toggling button
-   QString iconName;
-   if ( m_viewResourcesOnly )
-   {
-      iconName = m_iconsDir + "resource.png";
-      m_toggleFileTypesViewBtn->setToolTip( "Switch to viewing all files" );
-   }
-   else
-   {
-      iconName = m_iconsDir + "fileInDir.png";
-      m_toggleFileTypesViewBtn->setToolTip( "Switch to viewing resources only" );
-   }
-   m_toggleFileTypesViewBtn->setIcon( QIcon( iconName ) );
-
-   // refresh the view
-   m_rootDir->clear();
-   refresh();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onGetItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr )
-{
-   FSTreeNode* item = dynamic_cast< FSTreeNode* >( parent );
-   outFactoryPtr = item->getDescFactory( *this );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onAddNode( QTreeWidgetItem* parent, unsigned int typeIdx )
-{  
-   FSTreeNode* item = dynamic_cast< FSTreeNode* >( parent );
-   item->addNode( typeIdx, *this );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onRemoveNode( QTreeWidgetItem* parent, QTreeWidgetItem* child )
-{
-   FSTreeNode* parentItem = dynamic_cast< FSTreeNode* >( parent );
-   FSTreeNode* childItem = dynamic_cast< FSTreeNode* >( child );
-   parentItem->removeNode( childItem );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onClearNode( QTreeWidgetItem* node )
-{
-   FSTreeNode* item = dynamic_cast< FSTreeNode* >( node );
-   item->clearNodes();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu )
-{
    // create additional save actions, providing the item we clicked
    // is a loaded resource
-   FSLeafNode* nodeItem = dynamic_cast< FSLeafNode* >( node );
+  ProjectLeafNode* nodeItem = dynamic_cast< ProjectLeafNode* >( node );
    if ( nodeItem )
    {
-      Resource* resource = m_rm->findResource( nodeItem->getRelativePath() );
+      Resource* resource = resMgr.findResource( nodeItem->getRelativePath() );
       if ( resource != NULL )
       {
          menu.addSeparator();
@@ -594,6 +224,31 @@ void ResourcesBrowser::onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu )
 
    // create additional save actions providing the item we clicked
    // is a directory 
+   ProjectDirNode* dirNode = dynamic_cast< ProjectDirNode* >( node );
+   if ( dirNode )
+   {
+      menu.addSeparator();
+
+      QAction* addBookmarkAction = new AddBookmarkAction( QIcon( m_iconsDir + "addBookmark.png" ), "Add bookmark", this, FilePath( dirNode->getRelativePath() ), *this );
+      menu.addAction( addBookmarkAction );
+
+      if ( m_activeProject != NULL )
+      {
+         menu.addSeparator();
+
+         // we might also want ot remove directories from a project
+         FilePath dirPath( dirNode->getRelativePath() );
+         QAction* removeProjectDir = new ManageProjectDirAction( QIcon( m_iconsDir + "removeProjectDir.png" ), "Remove form project", this, m_activeProject, dirPath, false );
+         menu.addAction( removeProjectDir );
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::showFilesystemBrowserPopupMenu( QTreeWidgetItem* node, QMenu& menu )
+{
+   // create additional save actions providing the item we clicked is a directory 
    FSDirNode* dirNode = dynamic_cast< FSDirNode* >( node );
    if ( dirNode )
    {
@@ -601,54 +256,45 @@ void ResourcesBrowser::onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu )
 
       QAction* addBookmarkAction = new AddBookmarkAction( QIcon( m_iconsDir + "addBookmark.png" ), "Add bookmark", this, FilePath( dirNode->getRelativePath() ), *this );
       menu.addAction( addBookmarkAction );
-   }
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-unsigned int ResourcesBrowser::typesCount() const
-{
-   return m_itemsFactory->typesCount() + 1;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::getDesc( unsigned int idx, QString& outDesc, QIcon& outIcon ) const
-{
-   if ( idx == 0 )
-   {
-      // a directory
-      outDesc = "Directory";
-      outIcon = QIcon( m_iconsDir + "dirIcon.png" );
-   }
-   else
-   {
-      // a resource
-      m_itemsFactory->getDesc( idx - 1, outDesc, outIcon );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ResourcesBrowser::addNode( unsigned int idx, const std::string& parentDir )
-{
-   if ( idx == 0 )
-   {
-      // learn the new file's name
-      const Filesystem& fs = m_rm->getFilesystem();
-      bool ok = false;
-      QString newDirName = QInputDialog::getText( this, "New directory", "Dir name:", QLineEdit::Normal, "", &ok );
-      if ( ok )
+      if ( m_activeProject != NULL )
       {
+         menu.addSeparator();
 
-         fs.mkdir( parentDir + newDirName.toStdString() );
+         // if there's an active project, we might want to add or remove directories to/from it
+         FilePath dirPath( dirNode->getRelativePath() );
+         bool isMember = m_activeProject->isMember( dirPath );
+         if ( !isMember )
+         {
+            QAction* addProjectDir = new ManageProjectDirAction( QIcon( m_iconsDir + "addProjectDir.png" ), "Add to project", this, m_activeProject, dirPath, true );
+            menu.addAction( addProjectDir );
+         }
       }
    }
-   else
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesBrowser::setActiveProject( Project* project )
+{
+   if ( m_activeProject == project )
    {
-      const SerializableReflectionType& type = m_itemsFactory->getClass( idx - 1 );
-      createResource( type, parentDir );
+      // nothing happens
+      return;
    }
+
+   m_activeProject = project;
+
+   // switch the data source to the one provided by the new project
+   FilesystemSection* projectFilesystemSection = NULL;
+   if ( m_activeProject )
+   {
+      projectFilesystemSection = &m_activeProject->getFilesystemSection();
+   }
+   m_projectBrowserTree->setSource( projectFilesystemSection );
+
+   // and finally switch to a proper tab
+   m_tabsManager->setCurrentIndex( m_activeProject ? TI_Project : TI_Filesystem );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -694,19 +340,30 @@ void ResourcesBrowser::showBookmarksPopupMenu( const QPoint& pos )
 
 void ResourcesBrowser::onFocusOnFile( QListWidgetItem* item )
 {
-   std::string path = item->data( BOOKMARK_FILEPATH_DATA_INDEX ).toString().toStdString();
-   FSTreeNode* node = open( FilePath( path ) );
-   if ( !node )
+   std::string pathStr = item->data( BOOKMARK_FILEPATH_DATA_INDEX ).toString().toStdString();
+   FilePath path( pathStr );
+
+   // try opening the file in the filesystem browser
    {
-      // the node doesn't exist - do nothing
-      return;
+      FSTreeNode* node = m_filesystemBrowserTree->open( path );
+      if ( node )
+      {
+         m_filesystemBrowserTree->focusOn( node );
+         m_tabsManager->setCurrentIndex( TI_Filesystem );
+      }
    }
 
-   // focus on that item
-   focusOn( node );
-
-   // activate the files tab
-   m_tabsManager->setCurrentIndex( TI_Files );
+   // and now try opening it in the project browser. If we find it, we'll focus on the file there,
+   // thus overriding the previous focus - which is more desirable, since we always consider project
+   // items more important than filesystem items in terms of our work flow with the ResourcesBrowser
+   {
+      ProjectTreeNode* node = m_projectBrowserTree->open( path );
+      if ( node )
+      {
+         m_projectBrowserTree->focusOn( node );
+         m_tabsManager->setCurrentIndex( TI_Project );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -752,8 +409,10 @@ void ResourcesBrowser::onFindFile()
    std::string filter = m_searchedFileName->text().toStdString();
    SearchListened scanner( filter );
 
-   FilePath searchRootDir( m_rootDir->getRelativePath() );
-   m_rm->getFilesystem().scan( searchRootDir, scanner, true );
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
+   Filesystem& fs = resMgr.getFilesystem();
+   FilePath searchRootDir( fs.getCurrRoot() );
+   resMgr.getFilesystem().scan( searchRootDir, scanner, true );
 
    // present the results
    uint count = scanner.m_paths.size();
@@ -787,34 +446,6 @@ void ResourcesBrowser::saveLayout( QSettings& settings )
       settings.setValue( "bookmarks", bookmarks );
    }
 
-   // save all open directories
-   {
-      QString openDirectories;
-      
-      std::list< FSTreeNode* > nodesToExplore;
-      nodesToExplore.push_back( m_rootDir );
-      while ( !nodesToExplore.empty() )
-      {
-         FSTreeNode* currNode = nodesToExplore.front(); nodesToExplore.pop_front();
-         if ( currNode->isExpanded() )
-         {
-            // memorize only expanded nodes
-            openDirectories += ";" + QString( currNode->getRelativePath().c_str() );
-         }
-
-         uint childrenCount = currNode->childCount();
-         for ( uint i = 0; i < childrenCount; ++i )
-         {
-            FSDirNode* childDirNode = dynamic_cast< FSDirNode* >( currNode->child( i ) );
-            if ( childDirNode )
-            {
-               nodesToExplore.push_back( childDirNode );
-            }
-         }
-      }
-
-      settings.setValue( "openDirectories", openDirectories );
-   }
 
    // finish serialization
    settings.endGroup();
@@ -840,53 +471,8 @@ void ResourcesBrowser::loadLayout( QSettings& settings )
       }
    }
 
-   // deserialize all open directories
-   {
-      std::string openDirectories = settings.value( "openDirectories" ).toString().toStdString();
-
-      std::vector< std::string > arrOpenDirectories;
-      StringUtils::tokenize( openDirectories, ";", arrOpenDirectories );
-      uint count = arrOpenDirectories.size();
-      for ( uint i = 0; i < count; ++i )
-      {
-         open( arrOpenDirectories[i] );
-      }
-   }
-
    // finish serialization
    settings.endGroup();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-FSTreeWidget::FSTreeWidget( QWidget* parent, const QString& objName, const QString& iconsDir )
-   : TreeWidget( parent, objName, iconsDir )
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-QMimeData* FSTreeWidget::mimeData( const QList<QTreeWidgetItem *> items ) const
-{
-   QMimeData* data = __super::mimeData( items );
-
-   std::vector< std::string > paths;
-   unsigned int count = items.size();
-   for ( unsigned int i = 0; i < count; ++i )
-   {
-      FSTreeNode* node = dynamic_cast< FSTreeNode* >( items[ i ] );
-      if ( node )
-      {
-         paths.push_back( node->getRelativePath() );
-      }
-   }
-
-   FSNodeMimeData dataEncoder( paths );
-   dataEncoder.save( *data );
-
-   return data;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -949,3 +535,35 @@ void RemoveBookmarkAction::onTriggered()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+ManageProjectDirAction::ManageProjectDirAction( const QIcon& icon, const char* name, QObject* parent, Project* project, const FilePath& relativePath, bool add )
+   : QAction( icon, name, parent )
+   , m_project( project )
+   , m_relativePath( relativePath )
+   , m_add( add )
+{
+   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ManageProjectDirAction::onTriggered()
+{  
+   if ( m_add )
+   {
+      m_project->addDirectory( m_relativePath );
+   }
+   else
+   {
+      m_project->removeDirectory( m_relativePath );
+   }
+
+   // any change to the project needs to be saved
+   m_project->saveResource();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+

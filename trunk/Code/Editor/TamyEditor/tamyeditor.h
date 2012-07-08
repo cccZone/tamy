@@ -8,6 +8,8 @@
 #include "core.h"
 #include "core\GenericFactory.h"
 #include "ResourceEditor.h"
+#include "core/Delegate.h"
+#include "core/FilePath.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,6 +20,8 @@ class QDockWidget;
 class QTreeWidget;
 class TimeController;
 class MainEditorPanel;
+class ResourcesBrowser;
+class Project;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,8 +33,12 @@ class TamyEditor : public QMainWindow, public FilesystemListener, public Generic
    Q_OBJECT
 
 private:
+   typedef Delegate< bool ( const FilePath&, const FilePath& ) >     PathTest;
+
+private:
    static TamyEditor*               s_theInstance;
 
+   QApplication&                    m_app;
    Ui::TamyEditorClass              ui;
    MainEditorPanel*                 m_editorsTabs;
 
@@ -41,6 +49,16 @@ private:
 
    // ui settings management
    QSettings*                       m_editorSettings;
+
+   // resources browser
+   ResourcesBrowser*                m_resourcesBrowser;
+
+   // project management
+   Project*                         m_activeProject;
+   // we need this in case the project gets deleted - the resource may have already been deleted, and the only way to tell 
+   // if the deleted project was the active one would be to compare the paths
+   FilePath                         m_activeProjectPath;
+
 
 public:
    ~TamyEditor();
@@ -67,6 +85,11 @@ public:
     * Returns the singleton instance.
     */
    static TamyEditor& getInstance() { return *s_theInstance; }
+
+   /**
+    * Returns the resources browser instance.
+    */
+   inline ResourcesBrowser& getResourcesBrowser() { return *m_resourcesBrowser; }
 
    // -------------------------------------------------------------------------
    // window space management
@@ -133,14 +156,28 @@ public:
     * Finds and activates a resource editor corresponding to the specified resource.
     *
     * @param resource
-    * @return           'true' if an editor exists and we ewre able to activate it, 'false' otherwise
+    * @return           'true' if an editor exists and we were able to activate it, 'false' otherwise
     */
    bool activateResourceEditor( Resource* resource );
 
    // -------------------------------------------------------------------------
+   // Project management
+   // -------------------------------------------------------------------------
+   /**
+    * Sets the specified project as an active one
+    */
+   void setActiveProject( Project* project );
+
+   /**
+    * Returns the active project instance, or NULL if no project is active at the moment.
+    */
+   inline Project* getActiveProject() const { return m_activeProject; }
+
+   // -------------------------------------------------------------------------
    // FilesystemListener implementation
    // -------------------------------------------------------------------------
-   void onDirChanged( const FilePath& dir );
+   void onDirAdded( const FilePath& dir );
+   void onDirRemoved( const FilePath& dir );
    void onFileEdited( const FilePath& path );
    void onFileRemoved( const FilePath& path );
 
@@ -163,6 +200,22 @@ private:
    TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent = 0, Qt::WFlags flags = 0 );
 
    void setupResourcesManager( const char* fsRoot );
+
+   /**
+    * Closes all active editors that pass the specified path test.
+    *
+    * @param path
+    * @param test
+    */
+   void closeEditors( const FilePath& path, const PathTest& test );
+
+   // -------------------------------------------------------------------------
+   // path tests
+   // -------------------------------------------------------------------------
+   bool isSamePath( const FilePath& resourcePath, const FilePath& checkedPath );
+   bool isParentDir( const FilePath& resourcePath, const FilePath& dir );
+   bool isResourceFromDeletedDir( const FilePath& resourcePath, const FilePath& deletedDir );
+   bool allTrue( const FilePath& resourcePath, const FilePath& deletedDir ) { return true; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

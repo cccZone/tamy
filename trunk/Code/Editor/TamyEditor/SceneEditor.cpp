@@ -22,17 +22,11 @@
 // properties browser
 #include "SelectedEntityPropertiesViewer.h"
 
-// game deployment
-#include "GameDeploymentFrame.h"
-#include "GameRunner.h"
-#include "GameDeploymentUtil.h"
-
 // drag & drop
 #include "DropFrame.h"
 #include "FSNodeMimeData.h"
 
 // tools
-#include "ClosableFrame.h"
 #include "progressDialog.h"
 
 
@@ -134,14 +128,6 @@ void SceneEditor::onInitialize()
 
          toolBar->addSeparator();
       }
-
-      // deploy application
-      {
-         QAction* actionDeployGame = new QAction( QIcon( iconsDir + tr( "/deployGame.png" ) ), tr( "Deploy game" ), toolBar );
-         toolBar->addAction( actionDeployGame );
-         connect( actionDeployGame, SIGNAL( triggered() ), this, SLOT( showGameDeploymentFrame() ) );
-      }
-
    }
 
    // add the splitter that will host the render window and the browsers frames
@@ -358,22 +344,6 @@ void SceneEditor::toggleDebugMode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneEditor::showGameDeploymentFrame()
-{
-   ClosableFrame* closableFrame = new ClosableFrame( this );
-   connect( closableFrame, SIGNAL( onCloseRequest( QWidget* ) ), this, SLOT( onEmbedededWidgetClosed( QWidget* ) ) );
-
-   GameDeploymentFrame* frame = new GameDeploymentFrame( closableFrame );
-   connect( frame, SIGNAL( deployGame( QWidget*, const GameDeploymentInfo& ) ), this, SLOT( onDeployGame( QWidget*, const GameDeploymentInfo& ) ) );
-
-   closableFrame->setWidget( frame );
-
-   // simply embed the new frame in the main one at the top
-   m_mainLayout->insertWidget( 1, closableFrame, 0 );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void SceneEditor::onEmbedededWidgetClosed( QWidget* closedWidget )
 {
    m_mainLayout->removeWidget( closedWidget );
@@ -385,55 +355,3 @@ void SceneEditor::onEmbedededWidgetClosed( QWidget* closedWidget )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneEditor::onDeployGame( QWidget* colorCodeWidget, const GameDeploymentInfo& info )
-{
-   // deploy the game
-   GameRunner* gameRunner = NULL;
-   {
-      // create a progress dialog that will track the deployment process
-      ProgressDialog* progressDialog = new ProgressDialog( this );
-
-      // fill the missing fields in the deployment info structure
-      GameDeploymentInfo deploymentInfo = info;
-      deploymentInfo.m_renderingPipelinePath = m_sceneWidget->getRenderingPipeline();
-      deploymentInfo.m_worldModelPath = m_scene.getFilePath();
-
-      // <deployment.todo> !!!!!!!! get directories from the project ( create something that holds the project settings )
-      {
-         FilePath sceneDir;
-         m_scene.getFilePath().extractDir( sceneDir );
-         deploymentInfo.m_projectDirectories.push_back( sceneDir );
-         deploymentInfo.m_projectDirectories.push_back( FilePath( "/Renderer/" ) );
-      }
-
-      // deploy the game
-      gameRunner = GameDeploymentUtil::deployGame( deploymentInfo, progressDialog );
-
-      // cleanup
-      delete progressDialog;
-   }
-
-   // color code the specified widget to indicate if the deployment went well or not
-   {
-      colorCodeWidget->setAutoFillBackground( true );
-      QPalette palette = colorCodeWidget->palette();
-
-      const QColor opSuccessfulColor( 135,255, 56 );
-      const QColor opFailedColor( 255, 92, 43 );
-      palette.setColor( QPalette::Button, ( gameRunner != NULL ) ? opSuccessfulColor : opFailedColor );
-
-      colorCodeWidget->setPalette( palette );
-   }
-
-   // if the deployment was successful, and the user chose to - run the game
-   if ( gameRunner && info.m_runAfterDeployment )
-   {
-      // create a game runner
-      gameRunner->run();
-   }
-
-   // cleanup
-   delete gameRunner;
-}
-
-///////////////////////////////////////////////////////////////////////////////

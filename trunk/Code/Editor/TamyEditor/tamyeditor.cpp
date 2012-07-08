@@ -2,6 +2,7 @@
 #include "core-AppFlow.h"
 #include "core-Renderer.h"
 #include "core-MVC.h"
+#include "core-AI.h"
 #include "progressdialog.h"
 #include <QTimer.h>
 #include <QSettings.h>
@@ -12,10 +13,8 @@
 #include <QSplitter>
 #include <QFrame>
 #include <QVBoxLayout>
+#include <QPalette>
 #include "ResourcesBrowser.h"
-#include "core-MVC.h"
-#include "core-Renderer.h"
-#include "core-AI.h"
 #include "MainEditorPanel.h"
 #include "UISerializationUtil.h"
 
@@ -34,11 +33,14 @@
 #include "TextureEditor.h"
 #include "MaterialEditor.h"
 #include "GeometryShaderEditor.h"
+#include "ProjectEditor.h"
 
 // resources
 #include "RenderingPipelineLayout.h"
 #include "MaterialLayout.h"
 #include "GeometryShaderLayout.h"
+#include "ResourceManagementUtil.h"
+#include "Project.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -73,17 +75,21 @@ void TamyEditor::destroyInstance()
 ///////////////////////////////////////////////////////////////////////////////
 
 TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, Qt::WFlags flags )
-: QMainWindow( parent, flags )
-, m_mainTime( new CTimer() )
+   : QMainWindow( parent, flags )
+   , m_app( app )
+   , m_mainTime( new CTimer() )
+   , m_resourcesBrowser( NULL )
+   , m_activeProject( NULL )
 {
    ui.setupUi( this );
+   setAutoFillBackground( true );
 
    setupResourcesManager( fsRoot );
 
    // add the resources browser
    {
-      ResourcesBrowser* resourcesManagerFrame = new ResourcesBrowser( this );
-      addDockWidget( Qt::LeftDockWidgetArea, resourcesManagerFrame );
+      m_resourcesBrowser = new ResourcesBrowser( this );
+      addDockWidget( Qt::LeftDockWidgetArea, m_resourcesBrowser );
    }
 
    // add the editors tabs
@@ -114,6 +120,7 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
    associate< GeometryShaderLayout, GeometryShaderEditor >();
    associate< SkeletonAnimation, SkeletonAnimationEditor >();
    associate< Texture, TextureEditor >();
+   associate< Project, ProjectEditor >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -223,11 +230,24 @@ bool TamyEditor::activateResourceEditor( Resource* resource )
 
 ResourceEditor* TamyEditor::createResourceEditor( Resource* resource, const QIcon& icon )
 {
+   // no editor can be created without an active project
+   if ( m_activeProject == NULL )
+   {
+      return NULL;
+   }
+
+   // and even if there's an active project, the edited resource must be a part of it
+   FilePath resourcePath = resource->getFilePath();
+   if ( m_activeProject->isMember( resourcePath ) == false )
+   {
+      return NULL;
+   }
+
    // if we got this far, it means that we need a new editor to edit this resource
    ResourceEditor* editor = GenericFactory< Resource, ResourceEditor >::create( *resource );
    if ( editor )
    {
-      editor->initialize( resource->getFilePath().c_str(), icon );
+      editor->initialize( resourcePath.c_str(), icon );
    }
    return editor;
 }
@@ -256,10 +276,58 @@ void TamyEditor::onEditorTabClosed( QWidget* editorWidget )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::onDirChanged( const FilePath& dir )
+void TamyEditor::onDirAdded( const FilePath& dir )
 {
-   const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+   // nothing to do here
+}
 
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::onDirRemoved( const FilePath& dir )
+{
+   if ( m_activeProject )
+   {
+      // if the removed directory was where the active project was located, we need to close the project
+      if ( m_activeProjectPath.isSubPath( dir ) )
+      {
+         // yes it was - close the project
+         setActiveProject( NULL );
+      }
+   }
+   else
+   {
+      closeEditors( dir, PathTest::FROM_METHOD( TamyEditor, isResourceFromDeletedDir, this ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::onFileEdited( const FilePath& path )
+{
+   // nothing to do here
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::onFileRemoved( const FilePath& path )
+{
+   // if the removed file was the active project resource, close the project
+   if ( m_activeProject && m_activeProjectPath == path )
+   {
+      // yes it was - close the project
+      setActiveProject( NULL );
+   }
+   else
+   {
+      // and close any editors tied to this particular resource ( Project may also have an editor assigned to it and it may be open at the moment )
+      closeEditors( path, PathTest::FROM_METHOD( TamyEditor, isSamePath, this ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::closeEditors( const FilePath& dir, const PathTest& test )
+{
    // if any of the resource editors are editing a resource from the deleted directory, close them
    // immediately
    std::vector< ResourceEditor* > editors;
@@ -272,7 +340,7 @@ void TamyEditor::onDirChanged( const FilePath& dir )
       ResourceEditor* editor = editors[i];
       FilePath resourcePath( editor->getLabel().toStdString() );
 
-      if ( editor && resourcePath.isSubPath( dir ) && !fs.doesExist( resourcePath ) )
+      if ( editor && test( resourcePath, dir ) )
       {
          editor->deinitialize( false );
          m_editorsTabs->removeTab( tabsLocations[i] );
@@ -282,34 +350,55 @@ void TamyEditor::onDirChanged( const FilePath& dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::onFileEdited( const FilePath& path )
+bool TamyEditor::isSamePath( const FilePath& resourcePath, const FilePath& checkedPath )
 {
+   return resourcePath == checkedPath;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamyEditor::onFileRemoved( const FilePath& path )
+bool TamyEditor::isParentDir( const FilePath& resourcePath, const FilePath& dir )
+{
+   return resourcePath.isSubPath( dir );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool TamyEditor::isResourceFromDeletedDir( const FilePath& resourcePath, const FilePath& deletedDir )
 {
    const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+   return resourcePath.isSubPath( deletedDir ) && !fs.doesExist( resourcePath );
+}
 
-   // if any of the resource editors are editing a deleted resource, close them
-   // immediately
-   std::vector< ResourceEditor* > editors;
-   std::vector< TabLocation > tabsLocations;
-   m_editorsTabs->collectEditors( editors, &tabsLocations );
+///////////////////////////////////////////////////////////////////////////////
 
-   uint editorsCount = editors.size();
-   for ( uint i = 0; i < editorsCount; ++i )
+void TamyEditor::setActiveProject( Project* project )
+{
+   if ( m_activeProject == project )
    {
-      ResourceEditor* editor = editors[i];
-      QString resourcePath = editor->getLabel();
-
-      if ( editor && path == FilePath( resourcePath.toStdString() ) )
-      {
-         editor->deinitialize( false );
-         m_editorsTabs->removeTab( tabsLocations[i] );
-      }
+      // nothing's changed
+      return;
    }
+
+   // close all active editors
+   closeEditors( FilePath( "/" ), PathTest::FROM_METHOD( TamyEditor, allTrue, this ) );
+
+   // set the new project as the active one
+   m_activeProject = project;
+
+   // memorize project's path
+   // set the project path
+   if ( m_activeProject )
+   {
+      m_activeProjectPath = m_activeProject->getFilePath();
+   }
+   else
+   {
+      m_activeProjectPath = FilePath();
+   }
+
+   // notify the resources browser about it
+   m_resourcesBrowser->setActiveProject( m_activeProject );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

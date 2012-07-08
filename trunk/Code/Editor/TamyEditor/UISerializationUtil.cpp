@@ -6,11 +6,12 @@
 #include <QTabWidget>
 #include "MainEditorPanel.h"
 #include "SerializableWidget.h"
+#include "tamyeditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UISerializationUtil::serialize( QWidget* rootWidget, MainEditorPanel* editorsPanel, bool save )
+void UISerializationUtil::serialize( TamyEditor* rootWidget, MainEditorPanel* editorsPanel, bool save )
 {
    // create the settings instance
    QSettings* uiSettings = new QSettings( "Coversion", "TamyEditor" );

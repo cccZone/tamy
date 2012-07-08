@@ -17,9 +17,7 @@ class SelectionManager;
 class SceneObjectsManipulator;
 class TamySceneWidget;
 class RenderingPipeline;
-struct GameDeploymentInfo;
 class ProgressDialog;
-class GameRunner;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -80,8 +78,6 @@ public slots:
    void setNodeTranslateMode();
    void setNodeRotateMode();
    void toggleDebugMode();
-   void showGameDeploymentFrame();
-   void onDeployGame( QWidget* colorCodedWidget, const GameDeploymentInfo& info );
 
    /**
     * This slot removes the specified widget from the main layout.

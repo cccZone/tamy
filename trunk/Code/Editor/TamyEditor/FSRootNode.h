@@ -21,17 +21,16 @@ public:
     * Constructor.
     *
     * @param parent
-    * @param fs         file system with the editor icons
     */
-   FSRootNode( QTreeWidget* parent, const Filesystem& fs );
+   FSRootNode( QTreeWidget* parent );
 
    // -------------------------------------------------------------------------
    // FSTreeNode implementation
    // -------------------------------------------------------------------------
    bool compareNodeName( const std::string& name ) const;
    std::string getRelativePath() const;
-   TreeWidgetDescFactory* getDescFactory( ResourcesBrowser& resourcesFactory );
-   void addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory );
+   TreeWidgetDescFactory* getDescFactory( FilesystemTree& resourcesFactory );
+   void addNode( unsigned int typeIdx, FilesystemTree& resourcesFactory );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

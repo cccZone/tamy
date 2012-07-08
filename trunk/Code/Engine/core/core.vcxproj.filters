@@ -275,6 +275,9 @@
     <ClCompile Include="ResourceDependenciesMapper.cpp">
       <Filter>Resources\DependenciesMapper</Filter>
     </ClCompile>
+    <ClCompile Include="FilesystemSection.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -602,6 +605,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\ReflectionDependenciesCallback.h">
       <Filter>RTTI\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\FilesystemSection.h">
+      <Filter>Filesystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

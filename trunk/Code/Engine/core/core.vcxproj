@@ -82,6 +82,7 @@
     <ClCompile Include="Assert.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="FilePath.cpp" />
+    <ClCompile Include="FilesystemSection.cpp" />
     <ClCompile Include="GraphBuilder.cpp" />
     <ClCompile Include="GraphBuilderNode.cpp" />
     <ClCompile Include="GraphBuilderSockets.cpp" />
@@ -141,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Algorithms.h" />
     <ClInclude Include="..\..\Include\core\Color.h" />
+    <ClInclude Include="..\..\Include\core\FilesystemSection.h" />
     <ClInclude Include="..\..\Include\core\ReflectionDependenciesCallback.h" />
     <ClInclude Include="..\..\Include\core\ResourceDependenciesMapper.h" />
     <ClInclude Include="..\..\Include\core\FilePath.h" />

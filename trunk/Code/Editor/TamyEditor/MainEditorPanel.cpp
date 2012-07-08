@@ -8,6 +8,7 @@
 #include "tamyeditor.h"
 #include "core/Assert.h"
 #include "core/ResourcesManager.h"
+#include "Project.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -223,6 +224,17 @@ void MainEditorPanel::saveLayout( QSettings& outSettings )
    char tmpEditorGroupStr[32];
 
    outSettings.beginGroup( "MainEditorPanel/activeEditors" );
+
+   // first - serialize the active project's path, if there's one
+   Project* activeProject = TamyEditor::getInstance().getActiveProject();
+   if ( activeProject )
+   {
+      FilePath projectPath = activeProject->getFilePath();
+      outSettings.setValue( "activeProjectPath", QString( projectPath.c_str() ) );
+   }
+   
+   // if there's an active project, serialize the active editors ( editors may work only in the project scope )
+   if ( activeProject )
    {
       std::vector< ResourceEditor* > editors;
       std::vector< TabLocation > tabsLocations;
@@ -268,6 +280,18 @@ void MainEditorPanel::loadLayout( QSettings& outSettings )
    TamyEditor& tamyEd = TamyEditor::getInstance();
 
    outSettings.beginGroup( "MainEditorPanel/activeEditors" );
+
+   // first - deserialize the active project and load it
+   Project* activeProject = NULL;
+   {
+      FilePath projectPath = outSettings.value( "activeProjectPath" ).toString().toStdString();
+      activeProject = resMgr.create< Project >( projectPath, true );
+      tamyEd.setActiveProject( activeProject );
+   }
+
+   // if the project was successfully restored, load the editors that were present 
+   // when the layout was last saved with it
+   if ( activeProject )
    {
       uint count = outSettings.value( "editorsCount" ).toInt();
       for ( uint i = 0; i < count; ++i )
@@ -279,14 +303,7 @@ void MainEditorPanel::loadLayout( QSettings& outSettings )
             bool isInternal = outSettings.value( "internal" ).toBool();
             FilePath path( outSettings.value( "path" ).toString().toStdString() );
 
-            if ( resMgr.getFilesystem().doesExist( path ) == false )
-            {
-               // the file no longer exists - skip it
-               outSettings.endGroup();
-               continue;
-            }
-
-            Resource* resource = resMgr.create( path );
+            Resource* resource = resMgr.create( path, true );
             if ( !resource )
             {
                // the resource doesn't exist any more - skip it

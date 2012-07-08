@@ -32,6 +32,20 @@ void DockableTabWidget::showPopupMenu( const QPoint& pos )
       return;
    }
 
+   QPoint globalClickPos = mapToGlobal( pos );
+
+   // show the pop-up only if you click a tab, and not the window contents
+   {
+      QWidget* w = widget(0);
+      QPoint posInTab = w->mapFromGlobal( globalClickPos );
+      if ( posInTab.y() >= 0 )
+      {
+         // it's already in the tab contents area - don't show the menu
+         return;
+      }
+   }
+   
+
    // create the menu
    QMenu* popupMenu = new QMenu( this );
    {
@@ -41,7 +55,7 @@ void DockableTabWidget::showPopupMenu( const QPoint& pos )
    }
 
    // display the menu
-   popupMenu->popup( mapToGlobal( pos ) );
+   popupMenu->popup( globalClickPos );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

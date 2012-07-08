@@ -179,6 +179,9 @@
     <ClCompile Include="ReflectionObjectTests.cpp">
       <Filter>RTTI</Filter>
     </ClCompile>
+    <ClCompile Include="FilesystemSectionTests.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">
