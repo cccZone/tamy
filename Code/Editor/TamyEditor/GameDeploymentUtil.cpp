@@ -1,5 +1,5 @@
 #include "GameDeploymentUtil.h"
-#include "GameDeploymentFrame.h"
+#include "GameDeploymentInfo.h"
 #include "GameRunner.h"
 #include "progressDialog.h"
 #include "core.h"
@@ -109,7 +109,6 @@ bool GameDeploymentUtil::recreateDirectoriesStructures( const std::string& targe
       directories.push_back( projectDirectories[i] );
 
       // scan both the filesystem and the resources manager
-      fs.scan( projectDirectories[i], directoryNamesScanner, true );
       resMgr.scan( projectDirectories[i], directoryNamesScanner, true );
    }
 
@@ -143,7 +142,6 @@ bool GameDeploymentUtil::copyProjectFiles( const std::string& targetDir, const s
    for ( uint i = 0; i < directoriesCount; ++i )
    {
       // scan both the filesystem and the resources manager
-      fs.scan( projectDirectories[i], fileNamesScanner, true );
       resMgr.scan( projectDirectories[i], fileNamesScanner, true );
    }
 

@@ -214,8 +214,14 @@ void ResourcesManager::scan( const FilePath& rootDir, FilesystemScanner& scanner
             scanner.onFile( it->first );
          }
       }
-
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesManager::remove( const FilePath& path )
+{
+   m_filesystem->remove( path );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -242,6 +248,9 @@ Resource* ResourcesManager::create( const FilePath& filePath, bool loadOnly )
          {
             res->setFilePath( filePath );
             addResource( res );
+
+            // last but not least - save the new resource on the hard drive
+            res->saveResource();
          }
       }
    }
@@ -346,7 +355,14 @@ void ResourcesManager::onComponentRemoved( Component< ResourcesManager >& compon
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ResourcesManager::onDirChanged( const FilePath& dir )
+void ResourcesManager::onDirAdded( const FilePath& dir )
+{
+   // nothing to do here
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourcesManager::onDirRemoved( const FilePath& dir )
 {
    std::vector< FilePath > entriesToRemove;
 
@@ -355,7 +371,7 @@ void ResourcesManager::onDirChanged( const FilePath& dir )
    for ( ResourcesMap::iterator it = m_resources.begin(); it != m_resources.end(); ++it )
    {
       const FilePath& path = it->first;
-      if ( path.isSubPath( dir ) )
+      if ( path.isSubPath( dir ) || path == dir )
       {
          bool doesResourceExist = m_filesystem->doesExist( path );
          if ( !doesResourceExist )

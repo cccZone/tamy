@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core\Filesystem.h
 /// @brief  file system manager
+#pragma once
 
 #include <string>
 #include <vector>
@@ -39,11 +38,18 @@ public:
    virtual void onFileRemoved( const FilePath& path ) = 0;
 
    /**
-    * Called when the contents of a directory changes.
+    * Called when a directory was added.
     *
-    * @param dir     directory the contents of which were changed
+    * @param dir     directory that was added
     */
-   virtual void onDirChanged( const FilePath& dir ) = 0;
+   virtual void onDirAdded( const FilePath& dir ) = 0;
+
+   /**
+    * Called when a directory was removed.
+    *
+    * @param dir     directory that was removed
+    */
+   virtual void onDirRemoved( const FilePath& dir ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,7 +81,7 @@ public:
  * A manager of the file system that can be used to access 
  * external files.
  */
-class Filesystem 
+class Filesystem
 {
 private:
    typedef std::map< std::string, std::string > Shortcuts;
@@ -111,6 +117,13 @@ public:
    const std::string& getCurrRoot() const;
 
    /**
+    * Checks if the specified path points to a directory, or a regular file.
+    *
+    * @param path
+    */
+   bool isDir( const FilePath& path ) const;
+
+   /**
     * A quick way to check if the given file exists in the file system.
     *
     * @param fileName   name of the file we want to find
@@ -128,16 +141,6 @@ public:
    File* open( const FilePath& fileName, const std::ios_base::openmode mode = std::ios_base::in ) const;
 
    /**
-    * The method scans the file system, starting from the specified root
-    * directory, and informs via the FilesystemScanner interface about its finding.
-    *
-    * @param rootDir          directory from which the scanning should begin
-    * @param scanner
-    * @param recursive        use recursive search through the directories tree
-    */
-   void scan( const FilePath& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
-
-   /**
     * Creates a new directory.
     *
     * @param dirName    relative path to the directory we want to create.
@@ -148,8 +151,10 @@ public:
     * Removes an fs element specified by the path from the file system.
     *
     * @param path       path to an element we want to remove
+    *
+    * @return           'true' if the element was successfully removed, 'false' otherwise
     */
-   void remove( const FilePath& path ) const;
+   bool remove( const FilePath& path ) const;
 
    // -------------------------------------------------------------------------
    // Listeners management
@@ -254,7 +259,17 @@ public:
     *
     * @param fileName
     */
-   static std::string extractExtension( const std::string& fileNam );
+   static std::string extractExtension( const std::string& fileName );
+
+   /**
+    * The method scans the file system, starting from the specified root
+    * directory, and informs via the FilesystemScanner interface about its finding.
+    *
+    * @param rootDir          directory from which the scanning should begin
+    * @param scanner
+    * @param recursive        use recursive search through the directories tree
+    */
+   void scan( const FilePath& rootDir, FilesystemScanner& scanner, bool recursive = true ) const;
 
 protected:
    friend class File;
@@ -269,7 +284,7 @@ protected:
 private:
    void notifyFileEditedChange( const FilePath& path ) const;
    void notifyFileRemovedChange( const FilePath& path ) const;
-   void notifyDirChange( const FilePath& dir ) const;
+   void notifyDirChange( const FilePath& dir, bool wasAdded ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,14 +1,15 @@
 #include "FSRootNode.h"
-#include "ResourcesBrowser.h"
+#include "FilesystemTree.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FSRootNode::FSRootNode( QTreeWidget* parent, const Filesystem& fs )
-: FSTreeNode( parent, fs )
-, m_fsNodeName( "/" )
-
+FSRootNode::FSRootNode( QTreeWidget* parent )
+   : FSTreeNode( parent )
+   , m_fsNodeName( "/" )
 {
+   Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+
    QString iconsDir = fs.getShortcut( "editorIcons" ).c_str();
    setIcon( 0, QIcon( iconsDir + "dirIcon.png" ) );
 
@@ -25,14 +26,14 @@ std::string FSRootNode::getRelativePath() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TreeWidgetDescFactory* FSRootNode::getDescFactory( ResourcesBrowser& resourcesFactory )
+TreeWidgetDescFactory* FSRootNode::getDescFactory( FilesystemTree& resourcesFactory )
 {
    return resourcesFactory.getDescFactory();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FSRootNode::addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory )
+void FSRootNode::addNode( unsigned int typeIdx, FilesystemTree& resourcesFactory )
 {
    std::string path = getRelativePath();
    return resourcesFactory.addNode( typeIdx, path );

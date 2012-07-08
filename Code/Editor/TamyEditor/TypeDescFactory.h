@@ -1,8 +1,7 @@
-#ifndef _TYPE_DESC_FACTORY_H
-#define _TYPE_DESC_FACTORY_H
-
 /// @file   TamyEditor/TypeDescFactory.h
 /// @brief  Factory creating descriptions of types.
+#ifndef _TYPE_DESC_FACTORY_H
+#define _TYPE_DESC_FACTORY_H
 
 #include "TreeWidgetDescFactory.h"
 #include "core.h"
@@ -40,26 +39,20 @@ public:
    TypeDescFactory( const QString& iconsDir, const Filesystem& fs, const QString& defaultIcon );
 
    /**
-    * Returns the specified type.
+    * Removes a specific type from the list of created types.
     *
-    * @param idx     type index.
+    * @param TypeToRemove
     */
-   const SerializableReflectionType& getClass( unsigned int idx ) const;
-
-   /**
-    * Returns the description for the specified type.
-    *
-    * @param type       type we want the description of
-    * @param outDesc    textual description
-    * @param outIcon    visual description
-    */
-   void getDesc( const SerializableReflectionType& type, QString& outDesc, QIcon& outIcon ) const;
+   template< typename TypeToRemove >
+   void removeType();
 
    // -------------------------------------------------------------------------
    // TreeWidgetDescFactory implementation
    // -------------------------------------------------------------------------
    unsigned int typesCount() const;
    void getDesc( unsigned int idx, QString& outDesc, QIcon& outIcon ) const;
+   void getDesc( const SerializableReflectionType& type, QString& outDesc, QIcon& outIcon ) const;
+   const SerializableReflectionType* getClass( unsigned int idx ) const;;
 
 private:
    QString getIconName( const SerializableReflectionType& type ) const;

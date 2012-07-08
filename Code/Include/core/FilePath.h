@@ -45,6 +45,13 @@ public:
    FilePath( const FilePath& rhs );
 
    /**
+    * Sets a new path.
+    *
+    * @param path
+    */
+   void set( const std::string& path );
+
+   /**
     * Tells if the path is empty.
     */
    inline bool empty() const { return m_relativePath.length() == 0; }

@@ -1,20 +1,22 @@
-#pragma 
-
 /// @file   TamyEditor\FSLeafNode.h
-/// @brief  A node describing a file in a file system tree structure.
+/// @brief  A filesystem tree leaf node.
+#pragma once
 
 #include "FSTreeNode.h"
-#include "TypeDescFactory.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class TreeWidgetDescFactory;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
- * A node describing a file in a file system tree structure.
+ * A filesystem tree leaf node.
  */
 class FSLeafNode : public FSTreeNode
 {
-private:
+protected:
    std::string          m_fsNodeName;
 
 public:
@@ -23,22 +25,21 @@ public:
     *
     * @param parent
     * @param nodeName
-    * @param fs         file system from which we can access entry files
     * @param itemsFactory
     */
-   FSLeafNode( FSTreeNode* parent,  const std::string& nodeName, const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory );
+   FSLeafNode( FSTreeNode* parent,  const std::string& nodeName, TreeWidgetDescFactory& itemsFactory );
 
    // -------------------------------------------------------------------------
    // FSTreeNode implementation
    // -------------------------------------------------------------------------
    bool compareNodeName( const std::string& name ) const;
    std::string getRelativePath() const;
-   TreeWidgetDescFactory* getDescFactory( ResourcesBrowser& resourcesFactory );
-   void addNode( unsigned int typeIdx, ResourcesBrowser& resourcesFactory );
-   void editResource( ResourcesBrowser& editorsFactory );
+   TreeWidgetDescFactory* getDescFactory( FilesystemTree& resourcesFactory );
+   void addNode( unsigned int typeIdx, FilesystemTree& resourcesFactory );
+   void openItem( FilesystemTree& hostTree );
 
 private:
-   void setEntryIcon( const Filesystem& fs, TypeDescFactory< Resource >& itemsFactory );
+   void setEntryIcon( const Filesystem& fs, TreeWidgetDescFactory& itemsFactory );
    void setEntryName( const Filesystem& fs );
    void setEntrySize( const Filesystem& fs );
 };

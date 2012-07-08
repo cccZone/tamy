@@ -1,21 +1,20 @@
 #include "FSTreeNode.h"
+#include "core\ResourcesManager.h"
 #include "core\Filesystem.h"
 #include "core\FilePath.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FSTreeNode::FSTreeNode( FSTreeNode* parent, const Filesystem& fs )
+FSTreeNode::FSTreeNode( FSTreeNode* parent )
 : QTreeWidgetItem( parent )
-, m_fs( fs )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FSTreeNode::FSTreeNode( QTreeWidget* parent, const Filesystem& fs )
+FSTreeNode::FSTreeNode( QTreeWidget* parent )
 : QTreeWidgetItem( parent )
-, m_fs( fs )
 {
 }
 
@@ -26,7 +25,7 @@ FSTreeNode* FSTreeNode::find( const std::string& nodeName )
    int count = childCount();
    for( int i = 0; i < count; ++i )
    {
-      FSTreeNode* entry = dynamic_cast< FSTreeNode* >( child( i ) );
+      FSTreeNode* entry = static_cast< FSTreeNode* >( child( i ) );
       if ( entry && entry->compareNodeName( nodeName ) )
       {
          return entry;
@@ -42,7 +41,7 @@ void FSTreeNode::removeNode( FSTreeNode* child )
 {
    FilePath path( child->getRelativePath() );
 
-   m_fs.remove( path );
+   ResourcesManager::getInstance().remove( path );
    removeChild( child );
 }
 
@@ -53,7 +52,7 @@ void FSTreeNode::clearNodes()
    int count = childCount();
    for( int i = 0; i < count; ++i )
    {
-      removeNode( dynamic_cast< FSTreeNode* >( child( 0 ) ) );
+      removeNode( static_cast< FSTreeNode* >( child( 0 ) ) );
    }
 }
 

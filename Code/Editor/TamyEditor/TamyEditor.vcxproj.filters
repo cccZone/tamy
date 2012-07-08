@@ -87,9 +87,6 @@
     <Filter Include="Core\ResourcesBrowser">
       <UniqueIdentifier>{e6f94e6b-b366-4a87-987b-4c261f72106e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\ResourcesBrowser\Nodes">
-      <UniqueIdentifier>{c700c38d-9216-4d62-9788-a5425978b4ba}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widgets\SceneTreeViewer">
       <UniqueIdentifier>{83a51f51-4786-42cf-91c5-4a6ef3c52b52}</UniqueIdentifier>
     </Filter>
@@ -165,11 +162,35 @@
     <Filter Include="Core\UISerialization">
       <UniqueIdentifier>{aed02c39-6473-4cd4-9d03-7c8b4cf30481}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ResourceEditors\SceneEditor\GameDeployment">
-      <UniqueIdentifier>{e6c44350-9afd-4ab6-be3c-b29cb418ad26}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widgets\ClosableFrame">
       <UniqueIdentifier>{2fd610ea-ca47-4933-84b6-4537bb3e0f3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ResourcesBrowser\FilesystemBrowser">
+      <UniqueIdentifier>{87ebc0f9-8d3f-4b7c-9e30-3d1755481f35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ResourcesBrowser\FilesystemBrowser\Nodes">
+      <UniqueIdentifier>{c700c38d-9216-4d62-9788-a5425978b4ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ResourcesBrowser\ProjectBrowser">
+      <UniqueIdentifier>{18ad6878-55d9-4c8f-90f0-b01bd0506f55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ResourcesBrowser\Utils">
+      <UniqueIdentifier>{8b095e52-a432-4698-8455-cfa05624016f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ResourcesBrowser\ProjectBrowser\Nodes">
+      <UniqueIdentifier>{3bb0942c-9a1b-4e17-9a16-b1286bc7a806}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\ProjectEditor">
+      <UniqueIdentifier>{8345c6e5-d544-4858-a491-4cbd5816df0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\ProjectEditor\GameDeployment">
+      <UniqueIdentifier>{e6c44350-9afd-4ab6-be3c-b29cb418ad26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Project">
+      <UniqueIdentifier>{ba57689d-2d94-4a7f-9c96-06f178f971fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\DropArea\ResourceDropArea">
+      <UniqueIdentifier>{3a1bdc77-94fb-47f8-9e41-8526d49010f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -182,11 +203,8 @@
     <ClInclude Include="SceneTreeEditor.h">
       <Filter>Widgets\SceneTreeViewer</Filter>
     </ClInclude>
-    <ClInclude Include="FSTreeNode.h">
-      <Filter>Core\ResourcesBrowser</Filter>
-    </ClInclude>
     <ClInclude Include="FSRootNode.h">
-      <Filter>Core\ResourcesBrowser\Nodes</Filter>
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="MimeDataEncoder.h">
       <Filter>Widgets\DropArea</Filter>
@@ -232,9 +250,6 @@
     </ClInclude>
     <ClInclude Include="RenderTargetMimeData.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="FSNodeMimeData.h">
-      <Filter>Core\ResourcesBrowser</Filter>
     </ClInclude>
     <ClInclude Include="RenderingPipelineSocketRepresentation.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
@@ -453,10 +468,43 @@
       <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="GameRunner.h">
-      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
+      <Filter>ResourceEditors\ProjectEditor\GameDeployment</Filter>
     </ClInclude>
     <ClInclude Include="GameDeploymentUtil.h">
-      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
+      <Filter>ResourceEditors\ProjectEditor\GameDeployment</Filter>
+    </ClInclude>
+    <ClInclude Include="FSTreeNode.h">
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManagementUtil.h">
+      <Filter>Core\ResourcesBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="FSLeafNode.h">
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="AdditionalTreeItemFactories.h">
+      <Filter>Core\ResourcesBrowser\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="FSNodeMimeData.h">
+      <Filter>Core\ResourcesBrowser\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectTreeNode.h">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectRootNode.h">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectDirNode.h">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectLeafNode.h">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser\Nodes</Filter>
+    </ClInclude>
+    <ClInclude Include="FSTreeItemsFactory.h">
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser</Filter>
+    </ClInclude>
+    <ClInclude Include="Project.h">
+      <Filter>Core\Project</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -565,17 +613,11 @@
     <ClCompile Include="ModelEditor.cpp">
       <Filter>Widgets\SceneTreeViewer\Editors</Filter>
     </ClCompile>
-    <ClCompile Include="FSTreeNode.cpp">
-      <Filter>Core\ResourcesBrowser</Filter>
-    </ClCompile>
     <ClCompile Include="FSDirNode.cpp">
-      <Filter>Core\ResourcesBrowser\Nodes</Filter>
-    </ClCompile>
-    <ClCompile Include="FSLeafNode.cpp">
-      <Filter>Core\ResourcesBrowser\Nodes</Filter>
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="FSRootNode.cpp">
-      <Filter>Core\ResourcesBrowser\Nodes</Filter>
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser\Nodes</Filter>
     </ClCompile>
     <ClCompile Include="SceneEditor.cpp">
       <Filter>ResourceEditors\SceneEditor</Filter>
@@ -648,9 +690,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_RenderTargetDescriptorDialog.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="FSNodeMimeData.cpp">
-      <Filter>Core\ResourcesBrowser</Filter>
     </ClCompile>
     <ClCompile Include="RenderTargetMimeData.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
@@ -1046,18 +1085,6 @@
     <ClCompile Include="UISerializationUtil.cpp">
       <Filter>Core\UISerialization</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_GameDeploymentFrame.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_GameDeploymentFrame.cpp">
-      <Filter>QtImplementation\Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Template\moc_GameDeploymentFrame.cpp">
-      <Filter>QtImplementation\Generated Files\Template</Filter>
-    </ClCompile>
-    <ClCompile Include="GameDeploymentFrame.cpp">
-      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
-    </ClCompile>
     <ClCompile Include="ClosableFrame.cpp">
       <Filter>Widgets\ClosableFrame</Filter>
     </ClCompile>
@@ -1071,10 +1098,94 @@
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
     <ClCompile Include="GameRunner.cpp">
-      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
+      <Filter>ResourceEditors\ProjectEditor\GameDeployment</Filter>
     </ClCompile>
     <ClCompile Include="GameDeploymentUtil.cpp">
-      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
+      <Filter>ResourceEditors\ProjectEditor\GameDeployment</Filter>
+    </ClCompile>
+    <ClCompile Include="FSTreeNode.cpp">
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_FilesystemTree.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_FilesystemTree.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_FilesystemTree.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="FilesystemTree.cpp">
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManagementUtil.cpp">
+      <Filter>Core\ResourcesBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="FSLeafNode.cpp">
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectTree.cpp">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ProjectTree.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ProjectTree.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ProjectTree.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="AdditionalTreeItemFactories.cpp">
+      <Filter>Core\ResourcesBrowser\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="FSNodeMimeData.cpp">
+      <Filter>Core\ResourcesBrowser\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectTreeNode.cpp">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectRootNode.cpp">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectDirNode.cpp">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectLeafNode.cpp">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser\Nodes</Filter>
+    </ClCompile>
+    <ClCompile Include="FSTreeItemsFactory.cpp">
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ProjectEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ProjectEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ProjectEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectEditor.cpp">
+      <Filter>ResourceEditors\ProjectEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Project.cpp">
+      <Filter>Core\Project</Filter>
+    </ClCompile>
+    <ClCompile Include="GameDeploymentInfo.cpp">
+      <Filter>ResourceEditors\ProjectEditor\GameDeployment</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceDropArea.cpp">
+      <Filter>Widgets\DropArea\ResourceDropArea</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ResourceDropArea.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ResourceDropArea.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ResourceDropArea.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1095,6 +1206,9 @@
     </None>
     <None Include="PipelineLayout.inl">
       <Filter>Widgets\PipelineWidget</Filter>
+    </None>
+    <None Include="ResourceManagementUtil.inl">
+      <Filter>Core\ResourcesBrowser</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1141,10 +1255,7 @@
       <Filter>Widgets\SceneTreeViewer\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="FSDirNode.h">
-      <Filter>Core\ResourcesBrowser\Nodes</Filter>
-    </CustomBuild>
-    <CustomBuild Include="FSLeafNode.h">
-      <Filter>Core\ResourcesBrowser\Nodes</Filter>
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser\Nodes</Filter>
     </CustomBuild>
     <CustomBuild Include="DropArea.h">
       <Filter>Widgets\DropArea</Filter>
@@ -1266,11 +1377,23 @@
     <CustomBuild Include="gamedeploymentframe.ui">
       <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
-    <CustomBuild Include="GameDeploymentFrame.h">
-      <Filter>ResourceEditors\SceneEditor\GameDeployment</Filter>
-    </CustomBuild>
     <CustomBuild Include="ClosableFrame.h">
       <Filter>Widgets\ClosableFrame</Filter>
+    </CustomBuild>
+    <CustomBuild Include="FilesystemTree.h">
+      <Filter>Core\ResourcesBrowser\FilesystemBrowser</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ProjectTree.h">
+      <Filter>Core\ResourcesBrowser\ProjectBrowser</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ProjectEditor.h">
+      <Filter>ResourceEditors\ProjectEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="GameDeploymentInfo.h">
+      <Filter>ResourceEditors\ProjectEditor\GameDeployment</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ResourceDropArea.h">
+      <Filter>Widgets\DropArea\ResourceDropArea</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

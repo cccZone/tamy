@@ -5,6 +5,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class TamyEditor;
 class QWidget;
 class QDockWidget;
 class QTreeWidget;
@@ -17,7 +18,7 @@ class MainEditorPanel;
 class UISerializationUtil
 {
 public:
-   static void serialize( QWidget* rootWidget, MainEditorPanel* editorsPanel, bool save );
+   static void serialize( TamyEditor* rootWidget, MainEditorPanel* editorsPanel, bool save );
 
 protected:
    static void serializeWidgetSettings( QWidget& widget, QSettings& outSettings, bool save );

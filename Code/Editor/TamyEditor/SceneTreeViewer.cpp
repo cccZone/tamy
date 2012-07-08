@@ -229,7 +229,12 @@ void SceneTreeViewer::getItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFa
 void SceneTreeViewer::addNode( QTreeWidgetItem* parent, unsigned int typeIdx )
 {
    SceneTreeEditor* editor = createEditor( dynamic_cast< EntityTreeItem* >( parent ) );
-   editor->addEntity( m_itemsFactory->getClass( typeIdx ) );
+
+   const SerializableReflectionType* itemType = m_itemsFactory->getClass( typeIdx );
+   if ( itemType )
+   {
+      editor->addEntity( *itemType );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

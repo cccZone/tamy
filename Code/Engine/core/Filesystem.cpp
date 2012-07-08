@@ -95,6 +95,21 @@ const std::string& Filesystem::getCurrRoot() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool Filesystem::isDir( const FilePath& fileName ) const
+{
+   if ( fileName.empty() )
+   {
+      // yup - it's the root directory
+      return true;
+   }
+
+   std::string absPathStr = fileName.toAbsolutePath( *this );
+   DWORD attribs = GetFileAttributesA( absPathStr.c_str() );
+   return ( ( attribs & FILE_ATTRIBUTE_DIRECTORY ) == INVALID_FILE_ATTRIBUTES );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool Filesystem::doesExist( const FilePath& fileName ) const
 {
    if ( fileName.empty() )
@@ -102,11 +117,9 @@ bool Filesystem::doesExist( const FilePath& fileName ) const
       return false;
    }
 
-   File* file = open( fileName );
-   bool exists = (file != NULL);
-   delete file;
-
-   return exists;
+   std::string absPathStr = fileName.toAbsolutePath( *this );
+   DWORD attribs = GetFileAttributesA( absPathStr.c_str() );
+   return attribs != INVALID_FILE_ATTRIBUTES;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -139,16 +152,25 @@ void Filesystem::mkdir( const FilePath& dirName ) const
 
    FilePath parentDir;
    dirName.extractDir( parentDir );
-   notifyDirChange( parentDir );
+   notifyDirChange( parentDir, true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Filesystem::remove( const FilePath& path ) const
+bool Filesystem::remove( const FilePath& path ) const
 {
+   std::string absPathStr = path.toAbsolutePath( *this );
+
+   // check file attributes
+   DWORD attribs = GetFileAttributesA( absPathStr.c_str() );
+   if ( attribs == INVALID_FILE_ATTRIBUTES )
+   {
+      // the file doesn't seem to exist
+      return false;
+   }
+
    // create a double-null terminated string with the absolute path
    // to the element we want to remove
-   std::string absPathStr = path.toAbsolutePath( *this );
    std::size_t strLen = absPathStr.length() + 2;
    char* absPath = new char[ strLen ];
    memset( absPath, 0, strLen );
@@ -168,7 +190,20 @@ void Filesystem::remove( const FilePath& path ) const
    delete [] absPath;
 
    // send notifications
-   notifyFileRemovedChange( path );
+   if ( result == 0 )
+   {
+      // operation was successful, so notify the listeners about it
+      if ( ( attribs & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY )
+      {
+         notifyDirChange( path, false );
+      }
+      else
+      {
+         notifyFileRemovedChange( path );
+      }
+   }
+
+   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -301,11 +336,18 @@ void Filesystem::notifyFileRemovedChange( const FilePath& path ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Filesystem::notifyDirChange( const FilePath& dir ) const
+void Filesystem::notifyDirChange( const FilePath& dir, bool wasAdded ) const
 {
    for ( Listeners::const_iterator it = m_listeners.begin(); it != m_listeners.end(); ++it )
    {
-      ( *it )->onDirChanged( dir );
+      if ( wasAdded )
+      {
+         ( *it )->onDirAdded( dir );
+      }
+      else
+      {
+         ( *it )->onDirRemoved( dir );
+      }
    }
 }
 

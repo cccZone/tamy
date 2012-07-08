@@ -157,6 +157,18 @@ public:
    Resource* create( const FilePath& name, bool loadOnly = false );
 
    /**
+    * Removes a resource corresponding to the specified filepath.
+    * It will remove both the memory and the filesystem representation of the resource.
+    *
+    * If it's not a resource path that has been specified, or it's a resource that
+    * hasn't been loaded into the system memory, the item will be deleted
+    * either way.
+    *
+    * @param path       path to a resource we want to remove
+    */
+   void remove( const FilePath& path );
+
+   /**
     * Registers a new resource instance with the resources manager and notifies it about this fact
     * by calling the onResourceLoaded method and by registering all active components with it.
     *
@@ -253,7 +265,8 @@ protected:
    // -------------------------------------------------------------------------
    // FilesystemListener implementation
    // -------------------------------------------------------------------------
-   void onDirChanged( const FilePath& dir );
+   void onDirAdded( const FilePath& dir );
+   void onDirRemoved( const FilePath& dir );
    void onFileEdited( const FilePath& path );
    void onFileRemoved( const FilePath& path );
 

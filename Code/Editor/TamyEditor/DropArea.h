@@ -30,6 +30,13 @@ public:
    DropArea( QWidget* parent, MimeDataEncoder* dataEncoder );
    ~DropArea();
 
+   /**
+    * Sets a different data encoder.
+    *
+    * @param dataEncoder
+    */
+   void setDataEncoder( MimeDataEncoder* dataEncoder );
+
 public slots:
    void clear();
 

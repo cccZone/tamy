@@ -20,6 +20,25 @@ TypeDescFactory< T >::TypeDescFactory( const QString& iconsDir, const Filesystem
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template< typename T > template< typename TypeToRemove >
+void TypeDescFactory< T >::removeType()
+{
+    const SerializableReflectionType& type = TypeToRemove::getStaticRTTI();
+
+    uint count = m_classes.size();
+    for ( uint i = 0; i < count; ++i )
+    {
+       if ( m_classes[i]->isExactlyA( type ) )
+       {
+          // found it - remove it and exit
+          m_classes.erase( m_classes.begin() + i );
+          break;
+       }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 template< typename T >
 unsigned int TypeDescFactory< T >::typesCount() const 
 {
@@ -81,9 +100,9 @@ void TypeDescFactory< T >::getDesc( const SerializableReflectionType& type, QStr
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-const SerializableReflectionType& TypeDescFactory< T >::getClass( unsigned int idx ) const
+const SerializableReflectionType* TypeDescFactory< T >::getClass( unsigned int idx ) const
 {
-   return *m_classes[ idx ];
+   return m_classes[ idx ];
 }
 
 ///////////////////////////////////////////////////////////////////////////////

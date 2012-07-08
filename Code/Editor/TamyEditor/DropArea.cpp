@@ -28,6 +28,14 @@ DropArea::~DropArea()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void DropArea::setDataEncoder( MimeDataEncoder* dataEncoder )
+{
+   delete m_dataEncoder;
+   m_dataEncoder = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void DropArea::dragEnterEvent( QDragEnterEvent *event )
 {
    setBackgroundRole( QPalette::Highlight );
