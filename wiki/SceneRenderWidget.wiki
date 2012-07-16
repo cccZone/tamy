@@ -28,6 +28,6 @@ It's a `ModelView` that's attached to the main scene and keeps track of the enti
 
 ==Creating a debug representation of a scene entity==
 
-If you want to create a new representation for your engine or game entity, simply derrive from `DebugRepresentation` ( which you'll find in `TamyEditor/Widgets/SceneRenderWidget/DebugRepresentations` ).
+If you want to create a new representation for your engine or game entity, simply derrive from `SpatialEntity` and put your new class along with other representations in this filter -> `TamyEditor/Widgets/SceneRenderWidget/DebugRepresentations`.
 
 Next - register it with `DebugEntitiesManager` in its constructor, and that's it.
