@@ -48,9 +48,6 @@
     <ClCompile Include="NullShaderParamVec4Array.cpp">
       <Filter>ShaderParams</Filter>
     </ClCompile>
-    <ClCompile Include="NullDebugDrawCommands.cpp">
-      <Filter>RenderCommands</Filter>
-    </ClCompile>
     <ClCompile Include="NullEffectShader.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>
@@ -78,13 +75,13 @@
     <ClCompile Include="NullRenderTarget.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>
-    <ClCompile Include="NullRenderingPipelineMechanism.cpp">
-      <Filter>RenderCommands</Filter>
-    </ClCompile>
     <ClCompile Include="NullShaderCompiler.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="NullBasicRenderCommands.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="NullDirectionalLight.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>
   </ItemGroup>

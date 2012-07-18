@@ -1,6 +1,6 @@
 #include "dx9-Renderer\DX9LineSegments.h"
 #include "dx9-Renderer\DX9Renderer.h"
-#include <stdexcept>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,7 +22,7 @@ void RCRenderLineSegments::execute( Renderer& renderer )
 D3DVERTEXELEMENT9 DX9LineSegments::s_vtxDecl[] = 
 {
    {0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-   {0, 12, D3DDECLTYPE_FLOAT4, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
+   {0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
    D3DDECL_END()
 };
 
@@ -102,7 +102,8 @@ void DX9LineSegments::create()
    HRESULT res = m_vb->Lock( 0, 0, (void**)&pVertex, 0 );
    if ( FAILED( res) ) 
    { 
-      throw std::runtime_error( "Can't lock a vertex buffer" );
+      ASSERT_MSG( false, "Can't lock a vertex buffer" );
+      return;
    }
 
    D3DXVECTOR4 tmpColor;
@@ -122,7 +123,8 @@ void DX9LineSegments::create()
    res = m_vb->Unlock();
    if ( FAILED( res ) ) 
    { 
-      throw std::runtime_error( "Failed to unlock the vertex buffer" );
+      ASSERT_MSG( false, "Failed to unlock the vertex buffer" );
+      return;
    }
 
 }

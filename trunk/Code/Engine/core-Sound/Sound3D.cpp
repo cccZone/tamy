@@ -5,7 +5,7 @@
 #include "core-Sound\SoundListener.h"
 #include "core\NodeVisitor.h"
 #include "core\TNodesVisitor.h"
-#include <stdexcept>
+#include "core\Assert.h"
 #include <math.h>
 
 
@@ -40,7 +40,8 @@ void Sound3D::assignChannel(SoundDevice& device)
 {
    if (m_channel != NULL)
    {
-      throw std::logic_error("The 3d sound already has a channel assigned");
+      ASSERT_MSG( false, "The 3d sound already has a channel assigned");
+      return;
    }
 
    m_channel = &(device.activateSound(m_sound));
@@ -55,7 +56,8 @@ void Sound3D::deassignChannel(SoundDevice& device)
 {
    if (m_channel == NULL)
    {
-      throw std::logic_error("No channel assigned");
+      ASSERT_MSG( false, "No channel assigned");
+      return;
    }
    device.deactivateSound(*m_channel);
    m_channel = NULL;

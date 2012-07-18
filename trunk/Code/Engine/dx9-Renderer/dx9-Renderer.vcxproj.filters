@@ -51,9 +51,6 @@
     <ClCompile Include="DX9PixelShader.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>
-    <ClCompile Include="DX9RenderingPipelineMechanism.cpp">
-      <Filter>RenderCommands</Filter>
-    </ClCompile>
     <ClCompile Include="DX9ShaderParamTexture.cpp">
       <Filter>ShaderParams</Filter>
     </ClCompile>
@@ -114,9 +111,6 @@
     <ClCompile Include="DX9PixelShaderResourcesStorage.cpp">
       <Filter>RenderResources</Filter>
     </ClCompile>
-    <ClCompile Include="DX9DebugDrawCommands.cpp">
-      <Filter>RenderCommands</Filter>
-    </ClCompile>
     <ClCompile Include="DX9SkeletonResourcesStorage.cpp">
       <Filter>RenderResources</Filter>
     </ClCompile>
@@ -145,6 +139,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="DX9BasicRenderCommands.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9DirectionalLight.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>
   </ItemGroup>

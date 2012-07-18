@@ -2,7 +2,6 @@
 #include "core-Renderer.h"
 #include "core.h"
 #include "tinyxml/tinyxml.h"
-#include <stdexcept>
 
 #include "ml-Blender/ColladaParser.h"
 #include "ml-Blender/DSBindStructure.h"
@@ -103,7 +102,8 @@ ControllerCS::ControllerCS( TiXmlNode* controllerNode, ResourcesManager& rm )
 {
    if ( !controllerNode )
    {
-      throw std::invalid_argument( "NULL pointer instead a valid TiXmlNode mesh node specified" );
+      ASSERT_MSG( false, "NULL pointer instead a valid TiXmlNode mesh node specified" );
+      return;
    }
 
    TiXmlElement* controllerElem = controllerNode->ToElement();

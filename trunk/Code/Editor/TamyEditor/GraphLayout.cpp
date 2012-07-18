@@ -62,7 +62,7 @@ void GraphLayout::remove( GraphBlock* block )
    }
 
    // remove the block itself
-   removeNode( block->getNode() );
+   removeNode( *block->getNode() );
 
    std::vector< GraphBlock* >::iterator it = std::find( m_blocks.begin(), m_blocks.end(), block );
    if ( it != m_blocks.end() )
@@ -186,6 +186,16 @@ void GraphLayout::restoreState()
       for ( uint i = 0; i < socketsCount; ++i )
       {
          sockets[i]->calculateBounds();
+      }
+   }
+
+   // remove connections to non-existing blocks
+   int count = m_connections.size();
+   for( int i = count - 1; i >= 0; --i )
+   {
+      if ( !m_connections[i]->isOk() )
+      {
+         removeConnection( *m_connections[i] );
       }
    }
 

@@ -8,6 +8,7 @@
 void RCRenderTriangleMesh::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+
    DX9TriangleMesh* mesh = dxRenderer.getTriangleMesh( m_mesh );
    if ( mesh )
    {
@@ -20,11 +21,11 @@ void RCRenderTriangleMesh::execute( Renderer& renderer )
 ///////////////////////////////////////////////////////////////////////////////
 
 DX9TriangleMesh::DX9TriangleMesh( const DX9Renderer& renderer, const TriangleMesh& mesh )
-: m_mesh( mesh )
-, m_renderer( renderer )
-, m_d3Device( &renderer.getD3Device() )
-, m_vb( NULL )
-, m_ib( NULL )
+   : m_mesh( mesh )
+   , m_renderer( renderer )
+   , m_d3Device( &renderer.getD3Device() )
+   , m_vb( NULL )
+   , m_ib( NULL )
 {
    initialize();
 }

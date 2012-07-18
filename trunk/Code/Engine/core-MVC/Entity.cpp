@@ -1,6 +1,6 @@
 #include "core-MVC\Entity.h"
 #include "core-MVC\Model.h"
-#include <stdexcept>
+#include "core\Assert.h"
 #include <typeinfo>
 #include <algorithm>
 
@@ -72,7 +72,8 @@ void Entity::add( Entity* entity, bool manage )
 {
    if ( entity == NULL )
    {
-      throw std::invalid_argument( "NULL pointer instead an Entity instance" );
+      ASSERT_MSG( false, "NULL pointer instead an Entity instance" );
+      return;
    }
 
    // reparent the entity
@@ -155,7 +156,7 @@ void Entity::onAttachToModel(Model& model)
 {
    if (m_hostModel != NULL)
    {
-      throw std::runtime_error("This entity is already attached to a model");
+      ASSERT_MSG( false, "This entity is already attached to a model");
    }
 
    m_hostModel = &model;
@@ -174,7 +175,7 @@ void Entity::onDetachFromModel(Model& model)
 {
    if (&model != m_hostModel)
    {
-      throw std::runtime_error("The model this entity is being detached from is not its host");
+      ASSERT_MSG( false,"The model this entity is being detached from is not its host");
    }
 
    unsigned int count = m_children.size();

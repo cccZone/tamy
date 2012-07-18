@@ -57,8 +57,6 @@ public:
    /**
     * This method returns a shared instance of a certain class.
     *
-    * @throw out_of_range if the instance of this class wasn't registered
-    *
     * @return     reference to the requested instance
     */
    template<typename Type>

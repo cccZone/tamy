@@ -47,6 +47,13 @@ bool FilePath::isSubPath( const FilePath& path ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool FilePath::isParent( const FilePath& parentCandidatePath ) const
+{
+   return ( parentCandidatePath.m_relativePath.find( m_relativePath ) != std::string::npos );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 std::string operator+( const char* str, const FilePath& path )
 {
    return str + path.m_relativePath;

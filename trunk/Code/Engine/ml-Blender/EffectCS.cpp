@@ -3,7 +3,6 @@
 #include "core.h"
 #include "core-Renderer.h"
 #include "tinyxml/tinyxml.h"
-#include <stdexcept>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,7 +11,8 @@ EffectCS::EffectCS( TiXmlNode* effectNode, ResourcesManager& rm )
 {
    if ( !effectNode )
    {
-      throw std::invalid_argument( "NULL pointer instead a valid TiXmlNode effect node specified" );
+      ASSERT_MSG( false, "NULL pointer instead a valid TiXmlNode effect node specified" );
+      return;
    }
 
    TiXmlElement* effectElem = effectNode->ToElement();

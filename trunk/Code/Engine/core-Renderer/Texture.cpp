@@ -1,7 +1,6 @@
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\Renderer.h"
 #include "core.h"
-#include <stdexcept>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,7 +38,8 @@ void Texture::getBuffer( byte*& imgBuffer, unsigned int& bufSize ) const
    File* file = fs.open( m_texFileName, std::ios_base::in | std::ios_base::binary );
    if (file == NULL)
    {
-      throw std::invalid_argument( "Texture file doesn't exist" );
+      ASSERT_MSG( false, "Texture file doesn't exist" );
+      return;
    }
    StreamBuffer<byte> buf(*file);
 
@@ -47,7 +47,8 @@ void Texture::getBuffer( byte*& imgBuffer, unsigned int& bufSize ) const
    if ( bufSize == 0 )
    {
       delete file;
-      throw std::invalid_argument( "Empty texture image" );
+      ASSERT_MSG( false, "Empty texture image" );
+      return;
    }
 
    imgBuffer = new byte[ bufSize ];

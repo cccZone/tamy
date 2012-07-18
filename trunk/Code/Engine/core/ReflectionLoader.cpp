@@ -73,14 +73,22 @@ void ReflectionLoader::deserialize( InStream& inStream, std::vector< FilePath >*
       uint serializedObjectIdx = -1;
       inStream >> serializedObjectIdx;
       
-      m_loadedObjects.push_back( m_dependencies[serializedObjectIdx] );
+      ReflectionObject* obj = m_dependencies[serializedObjectIdx];
+      if ( obj )
+      {
+         m_loadedObjects.push_back( obj );
+      }
    }
 
    // 6. copy all encountered dependencies to the list of all objects this loader's ever loaded
    uint dependenciesCount = m_dependencies.size();
    for ( uint i = 0; i < dependenciesCount; ++i )
    {
-      m_allLoadedObjects.push_back( m_dependencies[i] );
+      ReflectionObject* obj = m_dependencies[i];
+      if ( obj )
+      {
+         m_allLoadedObjects.push_back( obj );
+      }
    }
 
    // 7. clean temporary data
@@ -176,7 +184,7 @@ bool ReflectionLoader::loadInternalDependencies( InStream& stream, uint firstExt
          dependency = SerializableReflectionType::load< ReflectionObject >( stream );
 
          // and if we're using an instances tracker, add it to it
-         if ( m_instancesTracker )
+         if ( m_instancesTracker && dependency )
          {
             m_instancesTracker->trackInstance( dependency );
          }
@@ -193,7 +201,10 @@ bool ReflectionLoader::loadInternalDependencies( InStream& stream, uint firstExt
    for ( uint i = 0; i < dependenciesCount; ++i )
    {
       ReflectionObject* object = m_dependencies[i];
-      restoreDependencies( object );
+      if ( object )
+      {
+         restoreDependencies( object );
+      }
    }
 
    return true;

@@ -22,17 +22,28 @@ PipelineSocket< TNode >::PipelineSocket( GBNodeSocket& socket )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-ReflectionObject& PipelineSocket< TNode >::getSocket()
+ReflectionObject* PipelineSocket< TNode >::getSocket()
 {
-   TNode& parentNode = dynamic_cast< TNode& >( getParentBlock().getNode() );
-   GBNodeSocket* socket = parentNode.findInput( getName() );
+   GraphBlock* parentBlock = getParentBlock();
+   if ( !parentBlock )
+   {
+      return NULL;
+   }
+
+   TNode* parentNode = dynamic_cast< TNode* >( parentBlock->getNode() );
+   if ( !parentNode )
+   {
+      return NULL;
+   }
+
+   GBNodeSocket* socket = parentNode->findInput( getName() );
    if ( !socket )
    {
-      socket = parentNode.findOutput( getName() );
+      socket = parentNode->findOutput( getName() );
    }
 
    ASSERT_MSG( socket != NULL, "Socket not found" );
-   return *socket;
+   return socket;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,14 +54,19 @@ bool PipelineSocket< TNode >::onConnectionAdded( GraphBlockConnection& connectio
    // handle connecting depending on the underlying socket type
    if ( &connection.getSource() == this )
    {
-      TNode& sourceNode = dynamic_cast< TNode& >( connection.getSource().getParentBlock().getNode() );
-      TNode& destNode = dynamic_cast< TNode& >( connection.getDestination().getParentBlock().getNode() );
+      GraphBlock* sourceParentBlock = connection.getSource().getParentBlock();
+      GraphBlock* destParentBlock = connection.getDestination().getParentBlock();
 
-      return sourceNode.connect( connection.getSource().getName(), destNode, connection.getDestination().getName() );
+      if ( sourceParentBlock && destParentBlock )
+      {
+         TNode* sourceNode = dynamic_cast< TNode* >( sourceParentBlock->getNode() );
+         TNode* destNode = dynamic_cast< TNode* >( destParentBlock->getNode() );
+
+         return sourceNode->connect( connection.getSource().getName(), *destNode, connection.getDestination().getName() );
+      }
    }
 
    return true;
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,10 +77,15 @@ void PipelineSocket< TNode >::onConnectionRemoved( GraphBlockConnection& connect
    // handle disconnecting depending on the underlying socket type
    if ( &connection.getSource() == this )
    {
-      TNode& sourceNode = dynamic_cast< TNode& >( connection.getSource().getParentBlock().getNode() );
-      TNode& destNode = dynamic_cast< TNode& >( connection.getDestination().getParentBlock().getNode() );
+      GraphBlock* sourceParentBlock = connection.getSource().getParentBlock();
+      GraphBlock* destParentBlock = connection.getDestination().getParentBlock();
 
-      sourceNode.disconnect( destNode, connection.getDestination().getName() );
+      if ( sourceParentBlock && destParentBlock )
+      {
+         TNode* sourceNode = dynamic_cast< TNode* >( sourceParentBlock->getNode() );
+         TNode* destNode = dynamic_cast< TNode* >( destParentBlock->getNode() );
+         sourceNode->disconnect( *destNode, connection.getDestination().getName() );
+      }
    }
 }
 

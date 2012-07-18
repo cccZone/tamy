@@ -21,19 +21,18 @@ REGISTER_TYPE( GraphBlockConnection );
 #include "RPBSceneRender.h"
 #include "RPBStart.h"
 #include "RPBAdapter.h"
-#include "RPBDebugRender.h"
 #include "RPBFloats2Vec4.h"
 #include "RPBCamera.h"
 #include "RPBTexture.h"
 #include "RPBFloat.h"
 #include "RPBVec4.h"
+#include "RPBDeferredLighting.h"
 #include "RenderingPipelineLayout.h"
 
 REGISTER_TYPE( RPBPostProcess );
 REGISTER_TYPE( RPBSceneRender );
 REGISTER_TYPE( RPBStart );
 REGISTER_TYPE( RPBAdapter );
-REGISTER_TYPE( RPBDebugRender );
 REGISTER_TYPE( RPSFloat );
 REGISTER_TYPE( RPSTexture );
 REGISTER_TYPE( RPSVoid );
@@ -47,6 +46,7 @@ REGISTER_TYPE( RPBCamera );
 REGISTER_TYPE( RPBTexture );
 REGISTER_TYPE( RPBFloat );
 REGISTER_TYPE( RPBVec4 );
+REGISTER_TYPE( RPBDeferredLighting );
 REGISTER_TYPE( RenderingPipelineLayout );
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -123,6 +123,8 @@ REGISTER_EXTERNAL_TYPE( QPointF );
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#include "DebugGeometry.h"
+#include "DRDirectionalLight.h"
 #include "GizmoMaterial.h"
 #include "GizmoAxis.h"
 #include "Gizmo.h"
@@ -133,5 +135,7 @@ REGISTER_ABSTRACT_TYPE( GizmoAxis );
 REGISTER_ABSTRACT_TYPE( Gizmo );
 REGISTER_ABSTRACT_TYPE( DebugGrid );
 REGISTER_ABSTRACT_TYPE( SingleColorDebugMat );
+REGISTER_ABSTRACT_TYPE( DebugGeometry );
+REGISTER_ABSTRACT_TYPE( DRDirectionalLight );
 
 ///////////////////////////////////////////////////////////////////////////////

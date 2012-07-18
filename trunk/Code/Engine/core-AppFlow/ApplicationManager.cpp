@@ -45,7 +45,7 @@ void ApplicationManager::setBlackboard(ApplicationData* blackboard)
 {
    if (blackboard == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead an ApplicationData instance");
+      ASSERT_MSG( false,  "NULL pointer instead an ApplicationData instance" );
    }
    delete m_blackboard;
    m_blackboard = blackboard;
@@ -58,8 +58,7 @@ void ApplicationManager::addApplication(Application& app)
    AppsMap::iterator it = m_apps.find(app.getName());
    if (it != m_apps.end())
    {
-      throw std::invalid_argument(std::string("Application '") + app.getName() +
-                                  std::string("' already registered"));
+      ASSERT_MSG( false, "Application already registered" );
    }
 
    m_apps.insert(std::make_pair(app.getName(), ApplicationNode(app)));
@@ -73,8 +72,7 @@ void ApplicationManager::setEntryApplication(const std::string& appName)
    AppsMap::iterator it = m_apps.find(appName);
    if (it == m_apps.end())
    {
-      throw std::invalid_argument(std::string("Application '") + appName +
-                                  std::string("' not registered"));
+      ASSERT_MSG( false, "Application not registered");
    }
 
    it->second.state = AS_SCHEDULED;
@@ -89,23 +87,20 @@ void ApplicationManager::connect(const std::string& originator,
    AppsMap::iterator originatorIt = m_apps.find(originator);
    if (originatorIt == m_apps.end())
    {
-      throw std::invalid_argument(std::string("Application '") + originator +
-                                  std::string("' not registered"));
+      ASSERT_MSG( false, "Application not registered" );
    }
 
    AppsMap::iterator targetAppIt = m_apps.find(targetApp);
    if (targetAppIt == m_apps.end())
    {
-      throw std::invalid_argument(std::string("Application '") + targetApp +
-                                  std::string("' not registered"));
+      ASSERT_MSG( false, "Application not registered");
    }
 
    ApplicationNode& originatorNode = originatorIt->second;
    std::map<int, std::string>::iterator connectionIt = originatorNode.connections.find(signal);
    if (connectionIt != originatorNode.connections.end())
    {
-      throw std::invalid_argument(std::string("Signal already defined for '") + originator +
-                                  std::string("'"));
+      ASSERT_MSG( false, "Signal already defined" );
    }
 
    originatorNode.connections.insert(std::make_pair(signal, targetApp));
@@ -186,7 +181,7 @@ bool ApplicationManager::step()
       if (currNode.state != AS_UNINITIALIZED) { numActive++; }    
       if (numRunning > 1)
       {
-         throw std::runtime_error("Only one application can be running at a time");
+         ASSERT_MSG( false, "Only one application can be running at a time");
       }
    }
 
@@ -210,15 +205,13 @@ void ApplicationManager::signal(const Application& app,
    AppsMap::iterator appIt = m_apps.find(receiverApp);
    if (appIt == m_apps.end())
    {
-      throw std::runtime_error(std::string("Application '") + receiverApp +
-                               std::string("' not registered"));
+      ASSERT_MSG( false, "Application not registered");
    }
    ApplicationNode& appNode = appIt->second;
 
    if ((appNode.state == AS_UNINITIALIZED) || (appNode.state == AS_FINISHED))
    {
-      throw std::logic_error(std::string("Application '") + receiverApp +
-                             std::string("' needs to be initialized in order to receive a signal"));
+      ASSERT_MSG( false, "Application needs to be initialized in order to receive a signal");
    }
 
    appNode.signalsQueue.push_back(std::make_pair(app.getName(), signalId));
@@ -252,8 +245,7 @@ void ApplicationManager::dispatchAppSignals(ApplicationNode& currNode)
          AppsMap::iterator targetAppIt = m_apps.find(connectionIt->second);
          if (targetAppIt == m_apps.end())
          {
-            throw std::runtime_error(std::string("Application '") + connectionIt->second +
-               std::string("' not registered"));
+            ASSERT_MSG( false, "Application not registered");
          }
 
          // switch over to the other application

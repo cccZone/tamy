@@ -64,7 +64,6 @@
 #include "core\StringUtils.h"
 #include "core\IProgressObserver.h"
 #include "core\Singleton.h"
-#include "core\IDebugDraw.h"
 
 // ----------------------------------------------------------------------------
 // RTTI

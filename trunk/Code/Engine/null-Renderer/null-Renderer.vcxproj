@@ -12,13 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NullBasicRenderCommands.cpp" />
-    <ClCompile Include="NullDebugDrawCommands.cpp" />
+    <ClCompile Include="NullDirectionalLight.cpp" />
     <ClCompile Include="NullEffectShader.cpp" />
     <ClCompile Include="NullFont.cpp" />
     <ClCompile Include="NullFullscreenQuad.cpp" />
     <ClCompile Include="NullLineSegments.cpp" />
     <ClCompile Include="NullPixelShader.cpp" />
-    <ClCompile Include="NullRenderingPipelineMechanism.cpp" />
     <ClCompile Include="NullRenderTarget.cpp" />
     <ClCompile Include="NullShaderCompiler.cpp" />
     <ClCompile Include="NullShaderParamBool.cpp" />

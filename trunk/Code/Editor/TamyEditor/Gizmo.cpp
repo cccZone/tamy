@@ -56,13 +56,14 @@ Gizmo::~Gizmo()
    // remove the materials, since they are not managed
    for ( byte i = 0; i < 3; ++i )
    {
-      delete m_axisMaterial[i];
-      m_axisMaterial[i] = NULL;
+      SAFE_DELETE( m_axisMaterial[i] );
    }
 
    // geometries will be removed by this entity
    for ( byte i = 0; i < 3; ++i )
    {
+      SAFE_DELETE( m_meshes[i] );
+
       m_geometry[i] = NULL;
    }
 

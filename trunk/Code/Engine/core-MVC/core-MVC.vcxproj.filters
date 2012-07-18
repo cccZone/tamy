@@ -7,9 +7,6 @@
     <Filter Include="Hierarchy">
       <UniqueIdentifier>{1fe7cf8c-1acb-4bbd-bc55-282a58e97488}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Debug">
-      <UniqueIdentifier>{853cfcf2-8231-4f00-a86b-363a6091f8ae}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entity.cpp">
@@ -23,9 +20,6 @@
     </ClCompile>
     <ClCompile Include="SpatialEntity.cpp">
       <Filter>Hierarchy</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelDebugScene.cpp">
-      <Filter>Debug</Filter>
     </ClCompile>
     <ClCompile Include="ModelEntity.cpp">
       <Filter>Hierarchy</Filter>
@@ -48,9 +42,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-MVC\SpatialEntity.h">
       <Filter>Hierarchy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-MVC\ModelDebugScene.h">
-      <Filter>Debug</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-MVC\ModelEntity.h">
       <Filter>Hierarchy</Filter>

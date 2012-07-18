@@ -96,7 +96,8 @@ private:
    TriangleMesh&        m_mesh;
 
 public:
-   RCRenderTriangleMesh( TriangleMesh& mesh ) : m_mesh( mesh ) {}
+   RCRenderTriangleMesh( TriangleMesh& mesh ) : m_mesh( mesh ) { m_mesh.addReference(); }
+   ~RCRenderTriangleMesh() { m_mesh.removeReference(); }
 
    // -------------------------------------------------------------------------
    // RenderCommand implementation

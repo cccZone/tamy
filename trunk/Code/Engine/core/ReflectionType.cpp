@@ -246,7 +246,6 @@ void SerializableReflectionType::collectParents( std::vector< const Serializable
    for ( uint i = 0; i < count; ++i )
    {
       const SerializableReflectionType* parent = registry.findSerializable( m_baseTypesIds[i] );
-      ASSERT_MSG( parent != NULL, "Parent of the type is not registered" );
       if ( parent != NULL )
       {
          outParentTypes.push_back( parent );

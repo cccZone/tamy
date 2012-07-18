@@ -2,6 +2,7 @@
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/RenderingPipelineSockets.h"
+#include "core-Renderer/BasicRenderCommands.h"
 #include "core-Renderer/RenderTarget.h"
 #include "core-Renderer/RenderingView.h"
 #include "core-Renderer/RPSBTextured.h"

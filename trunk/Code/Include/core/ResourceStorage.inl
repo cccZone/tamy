@@ -18,12 +18,15 @@ ResourceStorage<ResourceType>::~ResourceStorage()
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename ResourceType>
-ResourceType& ResourceStorage<ResourceType>::get(const std::string& name)
+ResourceType& ResourceStorage<ResourceType>::get( const std::string& name )
 {
    ResourceMap::iterator it = m_resources.find(name);
-   if (it != m_resources.end()) {return *(it->second);}
+   if ( it != m_resources.end() ) 
+   {
+      return *(it->second);
+   }
 
-   throw std::runtime_error(std::string("Resource ") + std::string(name) + " doesn't exist");
+   ASSERT_MSG( false, "Resource doesn't exist");
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,9 +35,12 @@ template<typename ResourceType>
 const ResourceType& ResourceStorage<ResourceType>::get(const std::string& name) const
 {
    ResourceMap::const_iterator it = m_resources.find(name);
-   if (it != m_resources.end()) {return *(it->second);}
+   if ( it != m_resources.end() ) 
+   {
+      return *(it->second);
+   }
 
-   throw std::runtime_error(std::string("Resource ") + std::string(name) + " doesn't exist");
+   ASSERT_MSG( false, "Resource doesn't exist");
 }
 
 ///////////////////////////////////////////////////////////////////////////////

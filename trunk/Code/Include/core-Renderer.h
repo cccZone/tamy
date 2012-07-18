@@ -144,10 +144,6 @@
 
 // ----------------------------------------------------------------------------
 // Mechanisms
-// -->DebugDraw
-// ----------------------------------------------------------------------------
-#include "core-Renderer\DebugDrawCommands.h"
-// ----------------------------------------------------------------------------
 // -->OverlayRenderer
 // ---->Elements
 // ----------------------------------------------------------------------------
@@ -173,13 +169,13 @@
 #include "core-Renderer/RPSceneRenderNode.h"
 #include "core-Renderer/RPStartNode.h"
 #include "core-Renderer/RPPostProcessNode.h"
-#include "core-Renderer/RPDebugRendererNode.h"
 #include "core-Renderer/RPSceneBuilder.h"
 #include "core-Renderer/RPCameraNode.h"
 #include "core-Renderer/RPFloats2Vec4Node.h"
 #include "core-Renderer/RPTextureNode.h"
 #include "core-Renderer/RPFloatNode.h"
 #include "core-Renderer/RPVec4Node.h"
+#include "core-Renderer/RPDeferredLightingNode.h"
 // ----------------------------------------------------------------------------
 // ---->Nodes\SceneTreeBuilders
 // ----------------------------------------------------------------------------
@@ -203,4 +199,4 @@
 // Lighting
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Light.h"
-
+#include "core-Renderer\DirectionalLight.h"

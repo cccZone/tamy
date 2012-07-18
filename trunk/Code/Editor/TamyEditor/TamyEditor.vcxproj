@@ -195,6 +195,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\." "-I." "-I.\GeneratedFiles" "-I." "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="DebugEntitiesManager.h" />
+    <ClInclude Include="DebugGeometry.h" />
     <ClInclude Include="DebugGeometryBuilder.h" />
     <ClInclude Include="DebugGrid.h" />
     <CustomBuild Include="DockableTabWidget.h">
@@ -211,6 +213,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\." "-I." "-I.\GeneratedFiles" "-I." "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="DRDirectionalLight.h" />
     <ClInclude Include="EditorDebugRenderer.h" />
     <CustomBuild Include="GameDeploymentInfo.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalInputs)</AdditionalInputs>
@@ -406,10 +409,12 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\." "-I." "-I.\GeneratedFiles" "-I." "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="QueryableDebugGeometry.h" />
     <ClInclude Include="ResourceManagementUtil.h" />
     <ClInclude Include="RPBCamera.h" />
     <ClInclude Include="RPBFloat.h" />
     <ClInclude Include="RPBFloats2Vec4.h" />
+    <ClInclude Include="RPBDeferredLighting.h" />
     <ClInclude Include="RPBTexture.h" />
     <ClInclude Include="RPBVec4.h" />
     <ClInclude Include="SceneObjectsManipulator.h" />
@@ -626,7 +631,6 @@
     <ClInclude Include="RenderingPipelineSocketRepresentation.h" />
     <ClInclude Include="RenderTargetMimeData.h" />
     <ClInclude Include="RPBAdapter.h" />
-    <ClInclude Include="RPBDebugRender.h" />
     <ClInclude Include="RPBPostProcess.h" />
     <ClInclude Include="RPBSceneRender.h" />
     <ClInclude Include="RPBStart.h" />
@@ -866,9 +870,12 @@
   <ItemGroup>
     <ClCompile Include="AdditionalTreeItemFactories.cpp" />
     <ClCompile Include="ClosableFrame.cpp" />
+    <ClCompile Include="DebugEntitiesManager.cpp" />
+    <ClCompile Include="DebugGeometry.cpp" />
     <ClCompile Include="DebugGeometryBuilder.cpp" />
     <ClCompile Include="DebugGrid.cpp" />
     <ClCompile Include="DockableTabWidget.cpp" />
+    <ClCompile Include="DRDirectionalLight.cpp" />
     <ClCompile Include="EditorDebugRenderer.cpp" />
     <ClCompile Include="FilesystemTree.cpp" />
     <ClCompile Include="FSLeafNode.cpp" />
@@ -1202,12 +1209,14 @@
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClCompile Include="PipelineBlock.cpp" />
+    <ClCompile Include="QueryableDebugGeometry.cpp" />
     <ClCompile Include="ResourceDropArea.cpp" />
     <ClCompile Include="ResourceManagementUtil.cpp" />
     <ClCompile Include="ResourcesBrowser.cpp" />
     <ClCompile Include="RPBCamera.cpp" />
     <ClCompile Include="RPBFloat.cpp" />
     <ClCompile Include="RPBFloats2Vec4.cpp" />
+    <ClCompile Include="RPBDeferredLighting.cpp" />
     <ClCompile Include="RPBTexture.cpp" />
     <ClCompile Include="RPBVec4.cpp" />
     <ClCompile Include="SceneObjectsManipulator.cpp" />
@@ -1277,7 +1286,6 @@
     <ClCompile Include="RenderTargetDescriptorDialog.cpp" />
     <ClCompile Include="RenderTargetMimeData.cpp" />
     <ClCompile Include="RPBAdapter.cpp" />
-    <ClCompile Include="RPBDebugRender.cpp" />
     <ClCompile Include="RPBPostProcess.cpp" />
     <ClCompile Include="RPBSceneRender.cpp" />
     <ClCompile Include="RPBStart.cpp" />

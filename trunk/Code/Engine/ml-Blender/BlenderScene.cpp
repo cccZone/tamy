@@ -67,7 +67,8 @@ void BlenderScene::import( Model& scene )
 
    if ( !result )
    {
-      throw std::runtime_error( "Error loading an XML file" );
+      ASSERT_MSG( false, "Error loading an XML file" );
+      return;
    }
 
    // start parsing the document
@@ -113,7 +114,8 @@ void BlenderScene::addSceneSlice( ISceneSlice* slice )
 {
    if ( slice == NULL )
    {
-      throw std::invalid_argument( "NULL pointer instead an IColladaSlice instance ");
+      ASSERT_MSG( false, "NULL pointer instead an IColladaSlice instance ");
+      return;
    }
 
    m_sceneSlicesMap.push_back( slice );
@@ -125,13 +127,15 @@ void BlenderScene::addSlice( const std::string& id, IColladaSlice* slice )
 {
    if ( slice == NULL )
    {
-      throw std::invalid_argument( "NULL pointer instead an IColladaSlice instance ");
+      ASSERT_MSG( false, "NULL pointer instead an IColladaSlice instance ");
+      return;
    }
 
    SlicesMap::const_iterator it = m_slicesMap.find( id );
    if ( it != m_slicesMap.end() )
    {
-      throw std::runtime_error( "Slice already exists" );
+      ASSERT_MSG( false, "Slice already exists" );
+      return;
    }
 
    m_slicesMap.insert( std::make_pair( id, slice ) );
@@ -144,13 +148,15 @@ Entity* BlenderScene::getEntity( const std::string& id ) const
    SlicesMap::const_iterator it = m_slicesMap.find( id );
    if ( it == m_slicesMap.end() )
    {
-      throw std::runtime_error( "Slice doesn't exist" );
+      ASSERT_MSG( false, "Slice doesn't exist" );
+      return NULL;
    }
 
    const IEntitySlice* entitySlice = dynamic_cast< const IEntitySlice* >( it->second );
    if ( entitySlice == NULL )
    {
-      throw std::runtime_error( "Required slice is does not describe an entity" );
+      ASSERT_MSG( false, "Required slice is does not describe an entity" );
+      return NULL;
    }
 
    return entitySlice->instantiate( *this );

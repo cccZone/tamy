@@ -172,9 +172,6 @@
     <ClCompile Include="Algorithms.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="IDebugDraw.cpp">
-      <Filter>Misc</Filter>
-    </ClCompile>
     <ClCompile Include="RuntimeData.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
@@ -478,9 +475,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\GraphAlgorithms.h">
       <Filter>DataStructures\Graphs</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\IDebugDraw.h">
-      <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\RoundBuffer.h">
       <Filter>DataStructures</Filter>

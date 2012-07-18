@@ -81,26 +81,6 @@ private:
    RenderTargetsStorage*                           m_renderTargets;
    std::vector< IRenderResourceStorage* >          m_storages;
 
-   // -------------------------------------------------------------------------
-   // Debug draw data
-   // -------------------------------------------------------------------------
-   enum DebugPrimitives
-   {
-      DPS_LINES,
-      DPS_TRIANGLES,
-      DPS_MESHES,
-      DPS_LINES_OVERLAY,
-      DPS_TRIANGLES_OVERLAY,
-      DPS_MESHES_OVERLAY,
-      DPS_MAX
-   };
-
-   // some limit definitions
-   const uint                                      DEBUG_ELEMENTS_MAX_COUNT;
-
-   // debug primitives
-   DX9DebugPrimitivesSet*                          m_debugPrimitives[DPS_MAX];
-
 public:
    /**
     * Constructor.
@@ -244,48 +224,6 @@ public:
     * A signal to stop rendering the scene.
     */
    void endScene();
-
-   // -------------------------------------------------------------------------
-   // Debug scene rendering
-   // -------------------------------------------------------------------------
-   /**
-    * Flush renders the contents of the debug scene.
-    */
-   void flushDebugScene();
-
-   /**
-    * Adds a debug line to the debug scene.
-    *
-    * @param start
-    * @param end
-    * @param color
-    * @param overlay       should be drawn on top of non-overlayed elements?
-    */
-   void addDebugLine( const Vector& start, const Vector& end, const Color& color, bool overlay = false );
-
-   /**
-    * Adds a debug triangle to the debug scene.
-    * CAUTION: specify the vertices in the winding order
-    *
-    * @param v1
-    * @param v2
-    * @param v3
-    * @param color
-    * @param overlay       should be drawn on top of non-overlayed elements?
-    */
-   void addDebugTriangle( const Vector& v1, const Vector& v2, const Vector& v3, const Color& color, bool overlay = false );
-
-   /**
-    * Adds an indexed meshe to the debug scene.
-    *
-    * @param vertices
-    * @param verticesCount
-    * @param indices
-    * @param indicesCount
-    * @param color
-    * @param overlay       should be drawn on top of non-overlayed elements?
-    */
-   void addIndexedMesh( const Vector* vertices, uint verticesCount, const word* indices, uint indicesCount, const Color& color, bool overlay = false );
 
 protected:
    void resetViewport(unsigned int width, unsigned int height);

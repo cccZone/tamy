@@ -12,6 +12,28 @@ END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+ReflectionObject::ReflectionObject( const char* uniqueId ) 
+   : m_uniqueId( uniqueId ? uniqueId : "" ) 
+   , m_referencesCounter( 1 )
+{}
+
+///////////////////////////////////////////////////////////////////////////////
+
+ReflectionObject::~ReflectionObject()
+{
+   ASSERT_MSG( m_referencesCounter <= 1, "There are still some references to the deleted object" );
+
+   // notify the listeners
+   uint listenersCount = m_listener.size();
+   for ( uint i = 0; i < listenersCount; ++i )
+   {
+      m_listener[i]->onObjectDeleted();
+   }
+   m_listener.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool ReflectionObject::isExactlyA( const SerializableReflectionType& referenceType ) const
 {
    const SerializableReflectionType& thisType = getVirtualRTTI();
@@ -98,6 +120,27 @@ void ReflectionObject::notifyPropertyChange( const std::string& propertyName )
 
    // cleanup
    delete property;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionObject::addReference()
+{
+   ++m_referencesCounter;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionObject::removeReference()
+{
+   if ( m_referencesCounter >= 1 )
+   {
+      --m_referencesCounter;
+   }
+   if ( m_referencesCounter < 1 )
+   {
+      delete this;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

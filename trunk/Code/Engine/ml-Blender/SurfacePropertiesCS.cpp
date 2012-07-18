@@ -2,7 +2,6 @@
 #include "core.h"
 #include "core-Renderer.h"
 #include "tinyxml/tinyxml.h"
-#include <stdexcept>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,7 +10,8 @@ SurfacePropertiesCS::SurfacePropertiesCS( TiXmlNode* materialNode, ResourcesMana
 {
    if ( !materialNode )
    {
-      throw std::invalid_argument( "NULL pointer instead a valid TiXmlNode material node specified" );
+      ASSERT_MSG( false, "NULL pointer instead a valid TiXmlNode material node specified" );
+      return;
    }
 
    TiXmlElement* materialElem = materialNode->ToElement();

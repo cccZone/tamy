@@ -1,5 +1,5 @@
 #include "core-Renderer\CompositeRenderingMechanism.h"
-#include <stdexcept>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,7 +23,8 @@ void CompositeRenderingMechanism::initialize( Renderer& renderer )
 {
    if ( m_renderer )
    {
-      throw std::logic_error( "Can't initialize the same mechanism twice" );
+      ASSERT_MSG( false, "Can't initialize the same mechanism twice" );
+      return;
    }
    m_renderer = &renderer;
 
@@ -50,7 +51,8 @@ void CompositeRenderingMechanism::add( const std::string& name, RenderingMechani
 {
    if ( mechanism == NULL )
    {
-      throw std::invalid_argument("NULL pointer instead a RenderingMechanism instance");
+      ASSERT_MSG( false, "NULL pointer instead a RenderingMechanism instance");
+      return;
    }
 
    // check if the mechanism with this name already exists

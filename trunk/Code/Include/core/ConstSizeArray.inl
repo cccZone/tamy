@@ -2,6 +2,8 @@
 #error "This file can only be included from ConstSizeArray.h"
 #else
 
+#include "core/Assert.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -119,7 +121,7 @@ T& ConstSizeArray<T>::at(unsigned int idx)
    ASSERT_MSG(idx < m_elements->size(),  "index out of array boundaries");
    if ((*m_isFree)[idx] == true)
    {
-      throw std::out_of_range("This element has been removed");
+      ASSERT_MSG( false, "This element has been removed" );
    }
    return (*m_elements)[idx];
 }
@@ -132,7 +134,7 @@ const T& ConstSizeArray<T>::at(unsigned int idx) const
    ASSERT_MSG(idx < m_elements->size(), "index out of array boundaries"); 
    if ((*m_isFree)[idx] == true)
    {
-      throw std::out_of_range("This element has been removed");
+      ASSERT_MSG( false, "This element has been removed");
    }
    return (*m_elements)[idx];
 }
@@ -145,7 +147,7 @@ T& ConstSizeArray<T>::operator[](unsigned int idx)
    ASSERT_MSG(idx < m_elements->size(),  "index out of array boundaries"); 
    if ((*m_isFree)[idx] == true)
    {
-      throw std::out_of_range("This element has been removed");
+      ASSERT_MSG( false, "This element has been removed");
    }
    return (*m_elements)[idx];
 }
@@ -158,7 +160,7 @@ const T& ConstSizeArray<T>::operator[](unsigned int idx) const
    ASSERT_MSG(idx < m_elements->size(), "index out of array boundaries");
    if ((*m_isFree)[idx] == true)
    {
-      throw std::out_of_range("This element has been removed");
+      ASSERT_MSG( false, "This element has been removed");
    }
    return (*m_elements)[idx];
 }
@@ -307,7 +309,7 @@ const T& ConstSizeArray<T>::iterator::operator*() const
 {
    if (m_idx >= m_elements->size())
    {
-      throw std::out_of_range("The end of array reached");
+      ASSERT_MSG( false, "The end of array reached");
    }
    return (*m_elements)[m_idx];
 }

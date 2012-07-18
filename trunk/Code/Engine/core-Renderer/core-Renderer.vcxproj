@@ -100,6 +100,7 @@
     <ClCompile Include="GNTimer.cpp" />
     <ClCompile Include="GNVec4.cpp" />
     <ClCompile Include="GNVertexShader.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="MaterialEntity.cpp" />
     <ClCompile Include="MaterialNode.cpp" />
@@ -124,10 +125,10 @@
     <ClCompile Include="RenderableTexture.cpp" />
     <ClCompile Include="RenderTree.cpp" />
     <ClCompile Include="RPCameraNode.cpp" />
-    <ClCompile Include="RPDebugRendererNode.cpp" />
     <ClCompile Include="RPAdapterNode.cpp" />
     <ClCompile Include="RPFloatNode.cpp" />
     <ClCompile Include="RPFloats2Vec4Node.cpp" />
+    <ClCompile Include="RPDeferredLightingNode.cpp" />
     <ClCompile Include="RPPostProcessNode.cpp" />
     <ClCompile Include="RPSBComputed.cpp" />
     <ClCompile Include="RPSceneBuilder.cpp" />
@@ -140,7 +141,7 @@
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="DirectionalLight.cpp" />
     <ClCompile Include="Skeleton.cpp" />
     <ClCompile Include="LineSegments.cpp" />
     <ClCompile Include="LitVertex.cpp" />
@@ -171,7 +172,6 @@
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\PixelShaderConstant.inl" />
     <None Include="..\..\Include\core-Renderer\Renderer.inl" />
-    <None Include="..\..\Include\core-Renderer\Light.inl" />
     <None Include="..\..\Include\core-Renderer\LineSegments.inl" />
     <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl" />
     <None Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.inl" />
@@ -184,7 +184,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ComputedRenderState.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\DebugDrawCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
@@ -200,6 +199,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\GNTimer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\GNVec4.h" />
     <ClInclude Include="..\..\Include\core-Renderer\GNVertexShader.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Light.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Material.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MaterialEntity.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MaterialNode.h" />
@@ -228,10 +228,10 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderableTexture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTree.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPCameraNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPDebugRendererNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPFloatNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPFloats2Vec4Node.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSBComputed.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneBuilder.h" />
@@ -250,7 +250,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\Renderer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingMechanism.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Camera.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\Light.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DirectionalLight.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Skeleton.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Face.h" />
     <ClInclude Include="..\..\Include\core-Renderer\LineSegments.h" />

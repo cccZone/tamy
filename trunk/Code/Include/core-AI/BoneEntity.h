@@ -3,7 +3,6 @@
 #pragma once
 
 #include "core-MVC/SpatialEntity.h"
-#include "core/IDebugDraw.h"
 #include "core-MVC/ModelComponent.h"
 
 
@@ -12,7 +11,7 @@
 /**
  * Entity composing a skeleton.
  */
-class BoneEntity : public SpatialEntity, public IDebugDrawable
+class BoneEntity : public SpatialEntity
 {
    DECLARE_CLASS();
 
@@ -24,12 +23,6 @@ public:
     */
    BoneEntity( const std::string& boneName = "" );
    ~BoneEntity();
-
-   // -------------------------------------------------------------------------
-   // IDebugDrawable representation
-   // -------------------------------------------------------------------------
-   void onInitializeDebugRepresentation( Model& debugScene ) const;
-   void onDeinitializeDebugRepresentation( Model& debugScene ) const;
 
 protected:
    // -------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 #error "This file can only be included from CompositeSpatialStorage.h"
 #else
 
-#include <stdexcept>
+#include "core/Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +25,7 @@ void CompositeSpatialStorage<Elem>::add(SpatialStorage<Elem>* storage)
 {
    if (storage == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a SpatialStorage instance");
+      ASSERT_MSG( false, "NULL pointer instead a SpatialStorage instance");
    }
 
    m_storages.push_back(storage);

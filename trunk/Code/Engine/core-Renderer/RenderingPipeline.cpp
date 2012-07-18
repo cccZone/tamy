@@ -122,7 +122,7 @@ RenderTargetDescriptor& RenderingPipeline::lockRenderTarget( const std::string& 
 {
    if ( !m_lockedRT.empty() )
    {
-      throw std::runtime_error( "Another render target is already locked" );
+      ASSERT_MSG( false, "Another render target is already locked" );
    }
 
    RenderTargetDescriptor* desc = findRenderTarget( id );
@@ -131,7 +131,6 @@ RenderTargetDescriptor& RenderingPipeline::lockRenderTarget( const std::string& 
       char errorMsg[512];
       sprintf_s( errorMsg, "Render target '%s' not found", id.c_str() );
       ASSERT_MSG( desc != NULL, errorMsg );
-      throw std::runtime_error( errorMsg );
    }
 
    m_lockedRT = id;
@@ -145,7 +144,7 @@ void RenderingPipeline::unlockRenderTarget( const std::string& id )
 {
    if ( m_lockedRT.empty() || m_lockedRT != id )
    {
-      throw std::runtime_error( "Trying to unlock a render target that hasn't been locked" );
+      ASSERT_MSG( false, "Trying to unlock a render target that hasn't been locked" );
    }
    m_lockedRT = "";
    notify( GBO_POST_CHANGE );

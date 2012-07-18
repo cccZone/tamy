@@ -192,6 +192,12 @@
     <Filter Include="Widgets\DropArea\ResourceDropArea">
       <UniqueIdentifier>{3a1bdc77-94fb-47f8-9e41-8526d49010f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\DebugRepresentations">
+      <UniqueIdentifier>{403ef588-b760-47f3-81a3-0f886628465a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\SceneRenderWidget\DebugMaterials">
+      <UniqueIdentifier>{decbf559-7363-40b8-8a58-abd55f043b35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -255,9 +261,6 @@
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </ClInclude>
     <ClInclude Include="RPBAdapter.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBDebugRender.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_skeletonanimationeditor.h">
@@ -455,9 +458,6 @@
     <ClInclude Include="DebugGeometryBuilder.h">
       <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
     </ClInclude>
-    <ClInclude Include="SingleColorDebugMat.h">
-      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
-    </ClInclude>
     <ClInclude Include="UISerializationUtil.h">
       <Filter>Core\UISerialization</Filter>
     </ClInclude>
@@ -505,6 +505,24 @@
     </ClInclude>
     <ClInclude Include="Project.h">
       <Filter>Core\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBDeferredLighting.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="DRDirectionalLight.h">
+      <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugEntitiesManager.h">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
+    </ClInclude>
+    <ClInclude Include="SingleColorDebugMat.h">
+      <Filter>Widgets\SceneRenderWidget\DebugMaterials</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugGeometry.h">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryableDebugGeometry.h">
+      <Filter>Widgets\SceneRenderWidget\SceneQueries\Representations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -705,9 +723,6 @@
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="RPBAdapter.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBDebugRender.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="SkeletonAnimationEditor.cpp">
@@ -1055,9 +1070,6 @@
     <ClCompile Include="DebugGeometryBuilder.cpp">
       <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
     </ClCompile>
-    <ClCompile Include="SingleColorDebugMat.cpp">
-      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_DockableTabWidget.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
@@ -1186,6 +1198,24 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Template\moc_ResourceDropArea.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBDeferredLighting.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="DRDirectionalLight.cpp">
+      <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugEntitiesManager.cpp">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
+    </ClCompile>
+    <ClCompile Include="SingleColorDebugMat.cpp">
+      <Filter>Widgets\SceneRenderWidget\DebugMaterials</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugGeometry.cpp">
+      <Filter>Widgets\SceneRenderWidget\DebugScene</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryableDebugGeometry.cpp">
+      <Filter>Widgets\SceneRenderWidget\SceneQueries\Representations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

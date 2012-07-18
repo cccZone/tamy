@@ -4,7 +4,6 @@
 
 #include "core-Renderer\RenderingMechanism.h"
 #include "core-Renderer\RenderCommand.h"
-#include "core\IDebugDraw.h"
 #include "core\Observer.h"
 #include "core\Array.h"
 #include <vector>
@@ -26,6 +25,7 @@ class RuntimeDataBuffer;
 class ModelDebugScene;
 class ModelView;
 class Geometry;
+class Light;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,6 +57,7 @@ private:
    {
    public:
       Array< Geometry* >                           m_visibleElems;
+      Array< Light* >                              m_visibleLights;
 
    private:
       RenderingView*                               m_renderingView;
@@ -147,6 +148,13 @@ public:
    const Array< Geometry*> & getSceneElements( RPMSceneId sceneId ) const;
 
    /**
+    * Returns visible scene lights.
+    *
+    * @param sceneId
+    */
+   const Array< Light*> & getSceneLights( RPMSceneId sceneId ) const;
+
+   /**
     * Returns a render target registered under the specified ID.
     *
     * @param id         render target id
@@ -183,48 +191,6 @@ private:
 
    void pipelineInitialization();
    void pipelineDeinitialization();
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Render command that begins the process of rendering a scene.
- */
-class RCBeginScene : public RenderCommand
-{
-public:
-   // -------------------------------------------------------------------------
-   // RenderCommand implementation
-   // -------------------------------------------------------------------------
-   void execute( Renderer& renderer );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Render command that ends the process of rendering a scene.
- */
-class RCEndScene : public RenderCommand
-{
-public:
-   // -------------------------------------------------------------------------
-   // RenderCommand implementation
-   // -------------------------------------------------------------------------
-   void execute( Renderer& renderer );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Render command that clears the contents of a depth buffer.
- */
-class RCClearDepthBuffer : public RenderCommand
-{
-public:
-   // -------------------------------------------------------------------------
-   // RenderCommand implementation
-   // -------------------------------------------------------------------------
-   void execute( Renderer& renderer );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

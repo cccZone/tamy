@@ -12,6 +12,7 @@ END_OBJECT()
 ///////////////////////////////////////////////////////////////////////////////
 
 SingleColorDebugMat::SingleColorDebugMat( const Color& color )
+   : m_color( color )
 {
    FilePath gizmoShaderPath( "Editor/Shaders/SingleColorDebugMat.tpsh" );
    m_shader = ResourcesManager::getInstance().create< PixelShader >( gizmoShaderPath );

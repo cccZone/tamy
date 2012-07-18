@@ -101,7 +101,7 @@ unsigned int DSIndexedBindStructure::getIndex( unsigned int dataIndex, const std
    }
    else
    {
-      throw std::out_of_range( "No such semantic defined" );
+      ASSERT_MSG( false, "No such semantic defined" );
       return -1;
    }
 }

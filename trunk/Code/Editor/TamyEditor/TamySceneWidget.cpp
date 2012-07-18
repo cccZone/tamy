@@ -11,6 +11,7 @@
 #include "SceneRendererInputController.h"
 #include "QueryRenderingPass.h"
 #include "EditorDebugRenderer.h"
+#include "DebugEntitiesManager.h"
 #include "Gizmo.h"
 
 
@@ -32,6 +33,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
    , m_selectionRenderer( new SelectionRenderingPass() )
    , m_queryRenderer( new QueryRenderingPass() )
    , m_debugRenderer( new EditorDebugRenderer() )
+   , m_debugEntitiesManager( new DebugEntitiesManager( *m_debugRenderer ) )
    , m_queryDebugRenderer( new QueryRenderingPass() )
    , m_resMgr( NULL )
    , m_gizmoMode( Gizmo::GM_TRANSLATION )
@@ -49,7 +51,8 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
       s_d3d9 = Direct3DCreate9( D3D_SDK_VERSION );
       if ( s_d3d9 == NULL )
       {
-         throw std::runtime_error( "Cannot initialize DirectX library" );
+         ASSERT_MSG( false, "Cannot initialize DirectX library" );
+         return;
       }
    }
 
@@ -76,12 +79,19 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
 
    // create and setup the time controller
    m_localTimeController = new TimeController( timeController );
-   m_localTimeController->add("rendering");
-   m_localTimeController->get("rendering").add( *m_renderer );
-   m_localTimeController->add("input");
-   m_localTimeController->get("input").add( *this );
-   m_localTimeController->get("input").add( *m_keysStatusManager );
-   m_inputHandlerTrack = &m_localTimeController->add( "inputHandler" );
+   {
+      m_localTimeController->add("rendering");
+      m_localTimeController->get("rendering").add( *m_renderer );
+
+      m_localTimeController->add("debugRendering");
+      m_localTimeController->get("debugRendering").add( *m_debugEntitiesManager );
+
+      m_localTimeController->add("input");
+      m_localTimeController->get("input").add( *this );
+      m_localTimeController->get("input").add( *m_keysStatusManager );
+
+      m_inputHandlerTrack = &m_localTimeController->add( "inputHandler" );
+   }
 
    // initialize the widget
    initialize();
@@ -107,6 +117,9 @@ TamySceneWidget::~TamySceneWidget()
 
    // delete custom rendering passes
    {
+      delete m_debugEntitiesManager;
+      m_debugEntitiesManager = NULL;
+
       m_debugRenderer->detachSceneView( *m_queryDebugRenderer );
       delete m_queryDebugRenderer;
       m_queryDebugRenderer = NULL;
@@ -164,6 +177,7 @@ void TamySceneWidget::deinitialize()
    // detach the views
    if ( m_scene )
    {
+      m_scene->detach( *m_debugEntitiesManager );
       m_scene->detach( *m_queryRenderer );
    }
 
@@ -207,6 +221,7 @@ void TamySceneWidget::initialize()
    // attach the views
    if ( m_scene )
    {
+      m_scene->attach( *m_debugEntitiesManager );
       m_scene->attach( *m_queryRenderer );
    }
 }

@@ -1,6 +1,7 @@
 #include "core-AI\BTNode.h"
 #include "core-AI\BTPrecondition.h"
-#include <stdexcept>
+#include "core\Assert.h"
+#include <string>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,7 @@ void BTNode::setPrecondition(BTPrecondition* precondition)
 {
    if (precondition == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a BTPrecondition instance");
+      ASSERT_MSG( false, "NULL pointer instead a BTPrecondition instance" );
    }
 
    delete m_precondition;

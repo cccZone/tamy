@@ -3,7 +3,7 @@
 #include "core-MVC\ModelView.h"
 #include "core-MVC\ModelComponent.h"
 #include "core\Stack.h"
-#include <stdexcept>
+#include "core\Assert.h"
 #include <algorithm>
 
 
@@ -102,7 +102,8 @@ void Model::add( Entity* entity, bool manage )
 {
    if ( entity == NULL )
    {
-      throw std::invalid_argument("NULL pointer instead an Entity instance");
+      ASSERT_MSG( false, "NULL pointer instead an Entity instance" );
+      return;
    }
 
    if ( manage == true )

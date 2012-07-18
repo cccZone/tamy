@@ -29,7 +29,7 @@ namespace // anonymous
          {
             char tmpStr[128];
             sprintf_s( tmpStr, "'%s' scope begin sign expected", label );
-            throw std::runtime_error( tmpStr );
+            ASSERT_MSG( false, tmpStr );
          }
       }
    };
@@ -282,7 +282,8 @@ namespace // anonymous
          inStream >> hierarchyLabel >> rootLabel;
          if ( hierarchyLabel != "HIERARCHY" || rootLabel != "ROOT" )
          {
-            throw std::runtime_error( "Invalid BVH file - missing skeleton definition" );
+            ASSERT_MSG( false, "Invalid BVH file - missing skeleton definition" );
+            return;
          }
 
          BVHBone* skeletonRoot = new BVHBone();
@@ -294,7 +295,8 @@ namespace // anonymous
          inStream >> motionLabel;
          if ( motionLabel != "MOTION" )
          {
-            throw std::runtime_error( "Invalid BVH file - missing motion definition" );
+            ASSERT_MSG( false, "Invalid BVH file - missing motion definition" );
+            return;
          }
 
          std::string framesLabel, frameTimeLabel0, frameTimeLabel1;
@@ -304,7 +306,8 @@ namespace // anonymous
          inStream >> framesLabel >> framesCount >> frameTimeLabel0 >> frameTimeLabel1 >> frameTimeDelta;
          if ( framesLabel != "Frames:" || frameTimeLabel0 != "Frame" || frameTimeLabel1 != "Time:" )
          {
-            throw std::runtime_error( "Invalid BVH file - missing frames definition" );
+            ASSERT_MSG( false, "Invalid BVH file - missing frames definition" );
+            return;
          }
 
          // load the frames

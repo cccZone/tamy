@@ -38,7 +38,6 @@ public:
     * This method returns an instance of a sound listener currently activated
     * in this scene.
     *
-    * @throw std::logic_error if there's no listener set
     * @return                 currently active sound listener
     */
    SoundListener& getActiveListener();

@@ -4,7 +4,6 @@
 #include "core\File.h"
 #include "core\Assert.h"
 #include "dx9-Renderer\DXErrorParser.h"
-#include <stdexcept>
 #include "dx9-Renderer/DX9ShaderIncludeLoader.h"
 
 
@@ -123,14 +122,14 @@ void DX9PixelShader::compile()
          errorsBuf->Release();
          std::string errMsg = std::string( "Shader compilation error: " ) + compilationErrors;
          ASSERT_MSG( false, errMsg.c_str() );
-         throw std::runtime_error( errMsg );
       }
       else
       {
          std::string errMsg = translateDxError( "Error while compiling a shader", res );
          ASSERT_MSG( false, errMsg.c_str() );
-         throw std::runtime_error( errMsg );
       }
+
+      return;
    }
 
    res = m_d3Device->CreatePixelShader( ( const DWORD* )shaderBuf->GetBufferPointer(), &m_dxPixelShader );
@@ -139,7 +138,6 @@ void DX9PixelShader::compile()
    {
       std::string errMsg = translateDxError( "Error while creating a shader", res );
       ASSERT_MSG( false, errMsg.c_str() );
-      throw std::runtime_error( errMsg );
    }
 }
 

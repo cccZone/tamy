@@ -1,6 +1,6 @@
 #include "dx9-Renderer\DX9SkeletonResourcesStorage.h"
 #include "dx9-Renderer\DX9Renderer.h"
-#include <stdexcept>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,7 +16,8 @@ IDirect3DVertexBuffer9* RenderResourceStorage< DX9Renderer, Skeleton, IDirect3DV
    HRESULT res = vb->Lock( 0, 0, (void**)&pWeight, 0 );
    if ( FAILED( res ) ) 
    { 
-      throw std::runtime_error( "Can't lock a vertex buffer" );
+      ASSERT_MSG( false, "Can't lock a vertex buffer" );
+      return NULL;
    }
 
    for ( unsigned int i = 0; i < weightsCount; ++i )
@@ -28,7 +29,8 @@ IDirect3DVertexBuffer9* RenderResourceStorage< DX9Renderer, Skeleton, IDirect3DV
    res = vb->Unlock();
    if ( FAILED( res ) ) 
    { 
-      throw std::runtime_error("Failed to unlock the vertex buffer");
+      ASSERT_MSG( false, "Failed to unlock the vertex buffer");
+      return NULL;
    }
 
    return vb;

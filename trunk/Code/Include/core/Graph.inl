@@ -2,6 +2,8 @@
 #error "This file can only be included from Graph.h"
 #else
 
+#include "core/Assert.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -84,7 +86,8 @@ EDGE& Graph<NODE, EDGE>::getEdge( Index idx )
    }
    else
    {
-      throw std::out_of_range( "Trying to access a non-existing edge" );
+      ASSERT_MSG( false, "Trying to access a non-existing edge" );
+      return *((EDGE*)NULL);
    }
 }
 
@@ -99,7 +102,8 @@ const EDGE& Graph<NODE, EDGE>::getEdge( Index idx ) const
    }
    else
    {
-      throw std::out_of_range( "Trying to access a non-existing edge" );
+      ASSERT_MSG( false, "Trying to access a non-existing edge" );
+      return *((EDGE*)NULL);
    }
 }
 

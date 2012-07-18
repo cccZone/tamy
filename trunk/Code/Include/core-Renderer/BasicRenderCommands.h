@@ -260,3 +260,45 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Render command that begins the process of rendering a scene.
+ */
+class RCBeginScene : public RenderCommand
+{
+public:
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Render command that ends the process of rendering a scene.
+ */
+class RCEndScene : public RenderCommand
+{
+public:
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Render command that clears the contents of a depth buffer.
+ */
+class RCClearDepthBuffer : public RenderCommand
+{
+public:
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////

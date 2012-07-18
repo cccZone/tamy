@@ -116,7 +116,7 @@ public:
    /**
     * Returns the attached geometry resource.
     */
-   inline GeometryResource& getMesh() const { return *m_resource; }
+   inline GeometryResource* getMesh() const { return m_resource; }
 
 protected:
    /**

@@ -1,7 +1,7 @@
 #include "dx9-Renderer\DX9EffectsResourcesStorage.h"
 #include "dx9-Renderer\DX9Renderer.h"
 #include "dx9-Renderer\DXErrorParser.h"
-#include <stdexcept>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,12 +23,13 @@ ID3DXEffect* RenderResourceStorage< DX9Renderer, EffectShader, ID3DXEffect >::cr
       {
          std::string compilationErrors = ( const char* )errorsBuf->GetBufferPointer();
          errorsBuf->Release();
-         throw std::runtime_error( std::string( "Effect compilation error: " ) + compilationErrors );
+         std::string errMsg =std::string( "Effect compilation error: " ) + compilationErrors;
+         ASSERT_MSG( false, errMsg.c_str() );
       }
       else
       {
          std::string errMsg = translateDxError( "Error while loading an effect", res );
-         throw std::runtime_error( errMsg );
+         ASSERT_MSG( false, errMsg.c_str() );
       }
    }
 

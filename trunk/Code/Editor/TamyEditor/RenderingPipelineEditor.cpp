@@ -173,10 +173,16 @@ void RenderingPipelineEditor::handleBlockSelection( GraphBlock* selectedBlock )
    selectedBlock->viewProperties( *m_blockPropertiesRootView );
 
    // node properties
-   ReflectionObject& node = selectedBlock->getNode();
+   ReflectionObject* node = selectedBlock->getNode();
+   ASSERT_MSG( node != NULL, "Node stored by the block doesn't exist" );
+   if ( !node )
+   {
+      return;
+   }
+
    m_nodePropertiesRootView = new QPropertiesView();
    m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
-   node.viewProperties( *m_nodePropertiesRootView );
+   node->viewProperties( *m_nodePropertiesRootView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -189,10 +195,16 @@ void RenderingPipelineEditor::handleSocketSelection( GraphBlockSocket* selectedS
    }
 
    // node properties
-   ReflectionObject& node = selectedSocket->getSocket();
+   ReflectionObject* node = selectedSocket->getSocket();
+   ASSERT_MSG( node != NULL, "Node stored by the socket doesn't exist" );
+   if ( !node )
+   {
+      return;
+   }
+
    m_nodePropertiesRootView = new QPropertiesView();
    m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
-   node.viewProperties( *m_nodePropertiesRootView );
+   node->viewProperties( *m_nodePropertiesRootView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

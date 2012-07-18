@@ -3,7 +3,6 @@
 #include "core-Renderer.h"
 #include "core.h"
 #include "tinyxml/tinyxml.h"
-#include <stdexcept>
 
 #include "ml-Blender/ColladaParser.h"
 #include "ml-Blender/DSBindStructure.h"
@@ -92,7 +91,8 @@ MeshCS::MeshCS( TiXmlNode* geometryNode, ResourcesManager& rm )
 {
    if ( !geometryNode )
    {
-      throw std::invalid_argument( "NULL pointer instead a valid TiXmlNode mesh node specified" );
+      ASSERT_MSG( false, "NULL pointer instead a valid TiXmlNode mesh node specified" );
+      return;
    }
 
    TiXmlElement* geometryElem = geometryNode->ToElement();
@@ -128,7 +128,8 @@ MeshCS::MeshCS( TiXmlNode* geometryNode, ResourcesManager& rm )
 
    if ( meshData.vertices.empty() || meshData.faces.empty() )
    {
-      throw std::runtime_error( "Insufficient data to create a mesh" );
+      ASSERT_MSG( false, "Insufficient data to create a mesh" );
+      return;
    }
    m_mesh = new TriangleMesh( geometryName, meshData.vertices, meshData.faces );
 

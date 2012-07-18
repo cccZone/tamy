@@ -37,7 +37,6 @@ T& TResourceHandle< T >::get()
       char msg[512];
       sprintf_s( msg, "Resource '%s' not found", m_resourcePath.c_str() );
       ASSERT_MSG( resource != NULL, msg );
-      throw std::runtime_error( msg );
    }
 
    ResourceObject& obj = resource->getObject( m_objectId );
@@ -47,7 +46,6 @@ T& TResourceHandle< T >::get()
       char msg[512];
       sprintf_s( msg, "Object '%d' from resource '%s' doesn't match the expected type", m_objectId, m_resourcePath.c_str() );
       ASSERT_MSG( tObj != NULL, msg );
-      throw std::runtime_error( msg );
    }
 
    return *tObj;
@@ -64,7 +62,6 @@ const T& TResourceHandle< T >::get() const
       char msg[512];
       sprintf_s( msg, "Resource '%s' not found", m_resourcePath.c_str() );
       ASSERT_MSG( resource != NULL, msg );
-      throw std::runtime_error( msg );
    }
 
    ResourceObject& obj = resource->getObject( m_objectId );
@@ -74,7 +71,6 @@ const T& TResourceHandle< T >::get() const
       char msg[512];
       sprintf_s( msg, "Object '%d' from resource '%s' doesn't match the expected type", m_objectId, m_resourcePath.c_str() );
       ASSERT_MSG( tObj != NULL, msg );
-      throw std::runtime_error( msg );
    }
 
    return *tObj;

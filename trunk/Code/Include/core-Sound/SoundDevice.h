@@ -36,9 +36,6 @@ public:
 
    /**
     * The method assigns a sound to a free channel, allowing it to be played
-    *
-    * @throw std::runtime_error if there are no channels left or if the sound
-    *                           already has a channel assigned
     */
    SoundChannel& activateSound(Sound& sound);
 

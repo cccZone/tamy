@@ -75,7 +75,10 @@ ReflectionObjectEditor::ReflectionObjectEditor( ReflectionObject* editedObject )
 ReflectionObjectEditor::~ReflectionObjectEditor()
 {
    // detach the listener
-   m_editedObject->detachListener( *this );
+   if ( m_editedObject )
+   {
+      m_editedObject->detachListener( *this );
+   }
 
    // destroy the editors
    uint count = m_editors.size();
@@ -131,6 +134,13 @@ void ReflectionObjectEditor::onPropertyChanged( ReflectionProperty& property )
          break;
       }
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ReflectionObjectEditor::onObjectDeleted()
+{
+   m_editedObject = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

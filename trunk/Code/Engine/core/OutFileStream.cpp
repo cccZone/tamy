@@ -1,6 +1,6 @@
 #include "core\OutFileStream.h"
 #include "core\File.h"
-#include <stdexcept>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -10,7 +10,7 @@ OutFileStream::OutFileStream( File* archive )
 {
    if ( m_archive == NULL )
    {
-      throw std::invalid_argument("NULL pointer instead a File instance");
+      ASSERT_MSG( false, "NULL pointer instead a File instance" );
    }
 }
 

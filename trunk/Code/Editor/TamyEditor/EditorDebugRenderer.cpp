@@ -156,6 +156,8 @@ void EditorDebugRenderer::deinitialize( Renderer& renderer )
 
 void EditorDebugRenderer::render( Renderer& renderer )
 {
+   new ( renderer() ) RCBeginScene();
+
    // render directly to the back buffer
    new ( renderer() ) RCActivateRenderTarget( NULL );
 
@@ -181,6 +183,8 @@ void EditorDebugRenderer::render( Renderer& renderer )
       // get rid of the tree
       MEMPOOL_DELETE( root );
    }
+
+   new ( renderer() ) RCEndScene();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

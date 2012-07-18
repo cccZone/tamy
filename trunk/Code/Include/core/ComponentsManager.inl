@@ -42,22 +42,10 @@ void ComponentsManager< Derived >::update( float timeElapsed )
 template< typename Derived >
 void ComponentsManager< Derived >::addComponent( Component< Derived >* component )
 {
-   try
-   {
-      Derived& derivedMgr = *( dynamic_cast< Derived* >( this ) );
-      component->initialize( derivedMgr );
-      component->onServiceRegistered( derivedMgr );
-   }
-   catch ( std::exception& ex )
-   {
-      delete component;
-
-#ifdef _DEBUG
-      throw ex;
-#else
-      return;
-#endif
-   }
+   Derived& derivedMgr = *( dynamic_cast< Derived* >( this ) );
+   component->initialize( derivedMgr );
+   component->onServiceRegistered( derivedMgr );
+   
    m_comps.push_back( component );
    onComponentAdded( *component );
 }
@@ -147,7 +135,8 @@ void ComponentsManager< Derived >::registerService( Component< Derived >& host, 
    bool result = m_services->setShared< T >( service );
    if ( result == false )
    {
-      throw std::runtime_error( "Service is already registered" );
+      ASSERT_MSG( false, "Service is already registered" );
+      return;
    }
    host.addService( &service );
 

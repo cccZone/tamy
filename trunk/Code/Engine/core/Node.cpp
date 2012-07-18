@@ -1,5 +1,5 @@
 #include "core\Node.h"
-#include <stdexcept>
+#include "core\ASsert.h"
 #include <algorithm>
 #include "core\NodeObserver.h"
 #include "core\BoundingVolume.h"
@@ -189,7 +189,7 @@ void Node::setBoundingVolume( BoundingVolume* volume )
 {
    if (volume == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a BoundingVolume instance");
+      ASSERT_MSG( false, "NULL pointer instead a BoundingVolume instance");
    }
    delete m_volume;
    m_volume = volume;
@@ -204,7 +204,7 @@ Node& Node::getParentNode()
 {
    if (m_parent == NULL) 
    {
-      throw std::logic_error(std::string("This node doesn't have a parent"));
+      ASSERT_MSG( false, "This node doesn't have a parent" );
    }
    return *m_parent;
 }

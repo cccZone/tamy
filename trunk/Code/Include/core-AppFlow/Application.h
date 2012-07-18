@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdexcept>
+#include "core\Assert.h"
 #include <string>
 #include "core-AppFlow\TimeController.h"
 #include "core-AppFlow\ExecutionContext.h"
@@ -93,7 +93,7 @@ protected:
    {
       if (m_context == NULL)
       {
-         throw std::runtime_error("Application not embedded in an execution context");
+         ASSERT_MSG( false, "Application not embedded in an execution context" );
       }
 
       return *m_context;
@@ -103,7 +103,7 @@ protected:
    {
       if (m_context == NULL)
       {
-         throw std::runtime_error("Application not embedded in an execution context");
+         ASSERT_MSG( false, "Application not embedded in an execution context" );
       }
 
       return *m_context;

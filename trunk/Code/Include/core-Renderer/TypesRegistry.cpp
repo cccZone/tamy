@@ -99,13 +99,13 @@ MAP_TYPE( GBNodeInput<RenderingPipelineNode>, ReflectionObject );
 REGISTER_TYPE( RPSceneRenderNode );
 REGISTER_TYPE( RPPostProcessNode );
 REGISTER_TYPE( RPStartNode );
-REGISTER_TYPE( RPDebugRendererNode );
 REGISTER_TYPE( RPAdapterNode );
 REGISTER_TYPE( RPCameraNode );
 REGISTER_TYPE( RPFloats2Vec4Node );
 REGISTER_TYPE( RPTextureNode );
 REGISTER_TYPE( RPFloatNode );
 REGISTER_TYPE( RPVec4Node );
+REGISTER_TYPE( RPDeferredLightingNode );
 REGISTER_TYPE( RPFloatInput );
 REGISTER_TYPE( RPFloatOutput );
 REGISTER_TYPE( RPTextureInput );
@@ -129,5 +129,10 @@ REGISTER_TYPE( RPSBComputed );
 REGISTER_ENUM_TYPE( TextureUsage );
 REGISTER_ENUM_TYPE( RPMSceneId );
 REGISTER_ABSTRACT_TYPE( ComputedRenderState );
+
+///////////////////////////////////////////////////////////////////////////////
+
+REGISTER_ABSTRACT_TYPE( Light );
+REGISTER_TYPE( DirectionalLight );
 
 ///////////////////////////////////////////////////////////////////////////////

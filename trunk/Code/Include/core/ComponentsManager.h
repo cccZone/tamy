@@ -138,8 +138,6 @@ public:
    /**
     * This method queries for a service. If one is not found,
     * an exception will be thrown.
-    *
-    * @throw std::out_of_range   if the requested service is not found
     * 
     * @return           service instance.
     */

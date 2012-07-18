@@ -153,6 +153,7 @@ public:
    // ReflectionObjectChangeListener implementation
    // -------------------------------------------------------------------------
    void onPropertyChanged( ReflectionProperty& property );
+   void onObjectDeleted();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

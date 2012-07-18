@@ -137,32 +137,29 @@ SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene, const S
 
    // transformation
    float a, b, c, d;
-   Matrix& localMtx = entity->accessLocalMtx();
-   localMtx = Matrix::IDENTITY;
+   Quaternion rotation;
    for ( TiXmlElement* rotateElem = nodeElem->FirstChildElement( "rotate" ); rotateElem != NULL; rotateElem = rotateElem->NextSiblingElement( "rotate" ) )
    {
       sscanf_s( rotateElem->GetText(), "%f %f %f %f", &a, &b, &c, &d );
 
-      Matrix axisRotMtx = Matrix::IDENTITY;
-
       // switch the y & z components - and that yields the necessity to invert the rotation angle
       Quaternion rotQuat;
       rotQuat.setAxisAngle( Vector( a, b, c ), DEG2RAD( -d ) );
-      Matrix rotMtx; rotMtx.setRotation( rotQuat );
-      Matrix newLocalMtx;
-      localMtx.setMul( axisRotMtx, localMtx );
+
+      rotation.mul( rotQuat );
    }
 
+   Matrix& localMtx = entity->accessLocalMtx();
+   localMtx = Matrix::IDENTITY;
    {
       TiXmlElement* translateElem = nodeElem->FirstChildElement( "translate" );
       ASSERT( translateElem != NULL );
       sscanf_s( translateElem->GetText(), "%f %f %f", &a, &b, &c );
 
       // switch the y & z components
-      localMtx.m[3][0] = a;
-      localMtx.m[3][1] = c;
-      localMtx.m[3][2] = b;
+      localMtx.setTranslation( Vector( a, b, c ) );
    }
+   localMtx.setRotation( rotation );
 
    // geometry
    for ( TiXmlElement* geometryElem = nodeElem->FirstChildElement( "instance_geometry" ); geometryElem != NULL; geometryElem = geometryElem->NextSiblingElement( "instance_geometry" ))

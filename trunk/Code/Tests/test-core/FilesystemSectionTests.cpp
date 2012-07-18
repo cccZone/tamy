@@ -110,7 +110,7 @@ TEST( FilesystemSection, restrictedAccessToSpecificDirectories )
 
       // now add the root dir to section and check if it can be changed
       section.addDirectory( childDirPath );
-      CPPUNIT_ASSERT( false == section.isMember( rootDirPath ) );
+      CPPUNIT_ASSERT( true == section.isMember( rootDirPath ) );
       CPPUNIT_ASSERT( true == section.isMember( childDirPath ) );
 
       // now add the root dir to section and check if it can be changed
@@ -127,7 +127,7 @@ TEST( FilesystemSection, restrictedAccessToSpecificDirectories )
 
       // now add the root dir to section and check if it can be changed
       section.addDirectory( childDirPath );
-      CPPUNIT_ASSERT( false == section.isMember( rootDirPath ) );
+      CPPUNIT_ASSERT( true == section.isMember( rootDirPath ) );
       CPPUNIT_ASSERT( true == section.isMember( childDirPath ) );
 
       // now add the root dir to section and check if it can be changed
@@ -211,6 +211,9 @@ TEST( FilesystemSection, listener )
 
    // add a new directory ( and remove it afterwards ) in a directory that's not part of the section
    {
+      // create a sub dir used during the test
+      filesystem.mkdir( FilePath( "/testSection/" ) );
+
       FSListenerMock listener;
       section.attach( listener );
 
@@ -218,17 +221,20 @@ TEST( FilesystemSection, listener )
       // So we can be sure that whoever changes anything in the filesystem that's under our section's jurisdiction,
       // we'll find out about it.
       listener.reset();
-      filesystem.mkdir( FilePath( "/someDir/" ) );
+      filesystem.mkdir( FilePath( "/testSection/someDir/" ) );
       CPPUNIT_ASSERT_EQUAL( 0, listener.m_dirsChanged );
       CPPUNIT_ASSERT_EQUAL( 0, listener.m_filesEdited );
       CPPUNIT_ASSERT_EQUAL( 0, listener.m_filesRemoved );
 
-      filesystem.remove( FilePath( "/someDir/" ) );
+      filesystem.remove( FilePath( "/testSection/someDir/" ) );
       CPPUNIT_ASSERT_EQUAL( 0, listener.m_dirsChanged );
       CPPUNIT_ASSERT_EQUAL( 0, listener.m_filesEdited );
       CPPUNIT_ASSERT_EQUAL( 0, listener.m_filesRemoved );
 
       section.detach( listener );
+
+      // cleanup
+      filesystem.remove( FilePath( "/testSection/" ) );
    }
 
    // same thing, but when we're doing it in a section directory

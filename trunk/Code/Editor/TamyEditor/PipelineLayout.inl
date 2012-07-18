@@ -40,10 +40,21 @@ void PipelineLayout< TPipeline, TNode >::onResourceLoaded( ResourcesManager& mgr
       }
    }
 
-   // go through the existing blocks and set up their the sockets factory
-   for ( std::vector< GraphBlock* >::iterator it = m_blocks.begin(); it != m_blocks.end(); ++it )
+   // remove non-existing blocks
+   int count = (int)m_blocks.size();
+   for ( int i = count - 1; i >= 0; --i )
    {
-      initSocketsFactory( *dynamic_cast< PipelineBlock* >( *it ) );
+      if ( m_blocks[i] == NULL )
+      {
+         m_blocks.erase( m_blocks.begin() + i );
+      }
+   }
+
+   // go through the existing blocks and set up their the sockets factory
+   count = (int)m_blocks.size();
+   for ( int i = 0; i < count; ++i )
+   {
+      initSocketsFactory( *( static_cast< PipelineBlock* >( m_blocks[i] ) ) );
    }
 
    restoreState();
