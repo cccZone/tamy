@@ -110,26 +110,23 @@ T* SerializableReflectionType::load( InStream& stream )
    T* object = NULL;
    {
       uint id = -1;
+      ReflectionObject::UniqueId objectUniqueId; 
       stream >> id;
+      stream >> objectUniqueId;
 
       // find the corresponding type information
       SerializableReflectionType* deserializedType = typesRegistry.findSerializable( id );
-      if ( !deserializedType )
+      if ( deserializedType )
       {
-         // such a type doesn't exist
-         ASSERT_MSG( !deserializedType, "This type is not registered in the specified ReflectionTypesRegistry" );
-         return NULL;
+         // instantiate object of the deserialized type
+         object = deserializedType->instantiate< T >();
+         object->m_uniqueId = objectUniqueId;
       }
-
-      // instantiate object of the deserialized type
-      object = deserializedType->instantiate< T >();
-
-      // deserialize its unique id
-      stream >> object->m_uniqueId;
    }
 
 
-   // now start deserializing its properties
+   // Now start deserializing its properties - whether we managed to deserialize the object or not.
+   // we need to be able to read it.
    Array< byte > tempDataBuf;
    uint hierarchyTypesCount = 0;
    stream >> hierarchyTypesCount;

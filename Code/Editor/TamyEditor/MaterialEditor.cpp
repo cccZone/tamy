@@ -151,10 +151,16 @@ void MaterialEditor::handleBlockSelection( GraphBlock* selectedBlock )
    selectedBlock->viewProperties( *m_blockPropertiesRootView );
 
    // node properties
-   ReflectionObject& node = selectedBlock->getNode();
+   ReflectionObject* node = selectedBlock->getNode();
+   ASSERT_MSG( node != NULL, "The block doesn't store a node" );
+   if ( !node )
+   {
+      return;
+   }
+
    m_nodePropertiesRootView = new QPropertiesView();
    m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
-   node.viewProperties( *m_nodePropertiesRootView );
+   node->viewProperties( *m_nodePropertiesRootView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -167,10 +173,16 @@ void MaterialEditor::handleSocketSelection( GraphBlockSocket* selectedSocket )
    }
 
    // node properties
-   ReflectionObject& node = selectedSocket->getSocket();
+   ReflectionObject* node = selectedSocket->getSocket();
+   ASSERT_MSG( node != NULL, "The socket doesn't store a node" );
+   if ( !node )
+   {
+      return;
+   }
+
    m_nodePropertiesRootView = new QPropertiesView();
    m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
-   node.viewProperties( *m_nodePropertiesRootView );
+   node->viewProperties( *m_nodePropertiesRootView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

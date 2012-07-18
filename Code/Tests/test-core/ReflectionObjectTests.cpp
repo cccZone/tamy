@@ -17,8 +17,27 @@ namespace // anonymous
       // runtime data
       bool     m_preNotificationReceived;
       bool     m_postNotificationReceived;
+      bool*    m_deletionListener;
 
-      ReflectionObjectMock_ROT( int val = 0 ) : m_val( val ), m_preNotificationReceived( 0 ), m_postNotificationReceived( 0 ) {}
+      ReflectionObjectMock_ROT( int val = 0 ) 
+         : m_val( val )
+         , m_preNotificationReceived( 0 )
+         , m_postNotificationReceived( 0 )
+         , m_deletionListener( NULL ) 
+      {}
+
+      ReflectionObjectMock_ROT::~ReflectionObjectMock_ROT()
+      {
+         if ( m_deletionListener )
+         {
+            *m_deletionListener = true;
+         }
+      }
+
+      void setDeletionListener( bool* wasDeleted ) 
+      {
+         m_deletionListener = wasDeleted;
+      }
 
       void onPrePropertyChanged( ReflectionProperty& property )
       {
@@ -52,6 +71,8 @@ namespace // anonymous
       {
          m_notificationReceived = ( property.getName() == "m_val" );
       }
+
+      void onObjectDeleted() {}
    };
 
 }
@@ -79,7 +100,31 @@ TEST( ReflectionObject, propertyChangesObservation )
    CPPUNIT_ASSERT( true == listener.m_notificationReceived );
 
    // cleanup
+   object.detachListener( listener );
    typesRegistry.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST( ReflectionObject, referenceCounting )
+{
+   bool wasDeleted = false;
+   ReflectionObjectMock_ROT* object = new ReflectionObjectMock_ROT();
+   object->setDeletionListener( &wasDeleted );
+
+   CPPUNIT_ASSERT_EQUAL( 1, object->getReferencesCount() );
+   CPPUNIT_ASSERT_EQUAL( false, wasDeleted );
+
+   object->addReference();
+   CPPUNIT_ASSERT_EQUAL( 2, object->getReferencesCount() );
+   CPPUNIT_ASSERT_EQUAL( false, wasDeleted );
+
+   object->removeReference();
+   CPPUNIT_ASSERT_EQUAL( 1, object->getReferencesCount() );
+   CPPUNIT_ASSERT_EQUAL( false, wasDeleted );
+
+   object->removeReference();
+   CPPUNIT_ASSERT_EQUAL( true, wasDeleted );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

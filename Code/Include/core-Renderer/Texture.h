@@ -2,8 +2,8 @@
 /// @brief  image rendered on a surface
 #pragma once
 
-#include "core\Resource.h"
 #include "core-Renderer\ShaderTexture.h"
+#include "core\Resource.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\RenderResource.h"
 #include "core/UniqueObject.h"

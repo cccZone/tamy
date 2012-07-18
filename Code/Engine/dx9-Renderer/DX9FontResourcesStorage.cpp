@@ -1,6 +1,6 @@
 #include "dx9-Renderer\DX9FontResourcesStorage.h"
 #include "dx9-Renderer\DX9Renderer.h"
-#include <stdexcept>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,7 +15,8 @@ ID3DXFont* RenderResourceStorage< DX9Renderer, Font, ID3DXFont >::createResource
 
    if ( FAILED( res ) || dxFont == NULL )
    {
-      throw std::runtime_error( std::string( "Font " ) + obj.getName() + " could not be created" );
+      ASSERT_MSG( false,  "Font could not be created" );
+      return NULL;
    }
    */
    // <renderer.todo> implement fonts

@@ -1,7 +1,7 @@
 #include "core-Sound\SoundDevice.h"
 #include "core-Sound\Sound.h"
 #include "core-Sound\SoundChannel.h"
-#include <stdexcept>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,7 +30,7 @@ SoundChannel& SoundDevice::activateSound(Sound& sound)
 {
    if (getChannelsCount() == m_activeChannels.size())
    {
-      throw std::runtime_error("All sound channels are currently occupied");
+      ASSERT_MSG( false, "All sound channels are currently occupied" );
    }
 
    SoundChannel* channel = createChannel(sound, m_numBuffersUsed);

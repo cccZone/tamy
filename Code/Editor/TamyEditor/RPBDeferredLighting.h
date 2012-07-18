@@ -1,8 +1,8 @@
-/// @file   TamyEditor/RPBDebugRender.h
-/// @brief  rendering pipeline block representing a node that renders a debug scenes
+/// @file   TamyEditor/RPBDeferredLighting.h
+/// @brief  rendering pipeline block representing a lights provider node
 #pragma once
 
-#include "core-Renderer/RPDebugRendererNode.h"
+#include "core-Renderer/RPDeferredLightingNode.h"
 #include "PipelineBlock.h"
 #include "core/ResourceHandle.h"
 
@@ -10,9 +10,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Rendering pipeline block representing a node that renders scenes.
+ * Rendering pipeline block representing a lights provider node.
  */
-class RPBDebugRender : public TPipelineBlock< RPDebugRendererNode, RenderingPipelineNode >
+class RPBDeferredLighting : public TPipelineBlock< RPDeferredLightingNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,14 +20,14 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBDebugRender() : TPipelineBlock< RPDebugRendererNode, RenderingPipelineNode >() {}
+   RPBDeferredLighting() : TPipelineBlock< RPDeferredLightingNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.
     *
     * @param node    represented node
     */
-   RPBDebugRender( RPDebugRendererNode& node );
+   RPBDeferredLighting( RPDeferredLightingNode& node );
 
 protected:
    // -------------------------------------------------------------------------
@@ -36,8 +36,8 @@ protected:
    /**
     * Returns the shape of the block.
     */
-   virtual Shape getShape() const { return GBS_RECTANGLE; }
-   virtual QColor getBgColor() const { return QColor( 166, 198, 224 ); }
+   virtual Shape getShape() const { return GBS_ROUNDED; }
+   virtual QColor getBgColor() const { return QColor( 141, 93, 255 ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

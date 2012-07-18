@@ -1,12 +1,13 @@
 #include "core-Renderer\OverlayRenderingMechanism.h"
 #include "core-Renderer\Overlay.h"
-#include <stdexcept>
+#include "core\Assert.h"
+#include <string>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 OverlayRenderingMechanism::OverlayRenderingMechanism()
-:  m_overlay(NULL)
+   : m_overlay(NULL)
 {
 }
 
@@ -22,7 +23,8 @@ void OverlayRenderingMechanism::setOverlay(Overlay* overlay)
 {
    if (overlay == NULL)
    {
-      throw std::runtime_error("NULL pointer instead an Overlay instance");
+      ASSERT_MSG( false, "NULL pointer instead an Overlay instance" );
+      return;
    }
 
    delete m_overlay;

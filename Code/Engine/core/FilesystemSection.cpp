@@ -26,7 +26,8 @@ bool FilesystemSection::isMember( const FilePath& path ) const
    uint count = m_allowedDirs.size();
    for ( uint i = 0; i < count; ++i )
    {
-      if ( path.isSubPath( m_allowedDirs[i] ) )
+      const FilePath& allowedDir = m_allowedDirs[i];
+      if ( allowedDir.isSubPath( path ) || allowedDir.isParent( path ) )
       {
          return true;
       }

@@ -2,7 +2,7 @@
 #error "This file can only be included from SingletonsManager.h"
 #else
 
-#include <stdexcept>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,7 +12,7 @@ bool SingletonsManager::setShared(Type* shared)
 {
    if (shared == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a valid instance");
+      ASSERT_MSG( false, "NULL pointer instead a valid instance");
    }
    return add(new TManageable<Type> (shared));
 }
@@ -69,7 +69,8 @@ Type& SingletonsManager::shared()
       TManageable<Type>* f = dynamic_cast<TManageable<Type>*> (m_shared[i]);
       if (f != NULL) {return **f;}
    }
-   throw std::out_of_range("Unknown class type");
+
+   ASSERT_MSG( false, "Unknown class type" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

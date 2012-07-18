@@ -1,6 +1,6 @@
 #include "core-Renderer\BestFullScreenDevice.h"
 #include "core-Renderer\RenderingDevice.h"
-#include <stdexcept>
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -10,8 +10,8 @@ unsigned int BestFullScreenDevice::runTests(const RenderingDevice& device) const
 {
    if (device.windowed == true)
    {
-      throw std::runtime_error("We're trying to find the best fullscreen mode, \
-                               and there are windowed modes on the list");
+      ASSERT_MSG( false, "We're trying to find the best fullscreen mode, and there are windowed modes on the list");
+      return 0;
    }
 
    unsigned int score = 0;

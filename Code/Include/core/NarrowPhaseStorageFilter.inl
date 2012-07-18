@@ -2,7 +2,7 @@
 #error "This file can only be included from NarrowPhaseStorageFilter.h"
 #else
 
-#include <stdexcept>
+#include "core\Assert.h"
 #include "core\Triangle.h"
 
 
@@ -14,7 +14,7 @@ NarrowPhaseStorageFilter<Elem>::NarrowPhaseStorageFilter(SpatialStorage<Elem>* s
 {
    if (m_storage == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a SpatialStorage instance");
+      ASSERT_MSG( false, "NULL pointer instead a SpatialStorage instance");
    }
 }
 

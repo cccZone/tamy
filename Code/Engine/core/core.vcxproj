@@ -86,7 +86,6 @@
     <ClCompile Include="GraphBuilder.cpp" />
     <ClCompile Include="GraphBuilderNode.cpp" />
     <ClCompile Include="GraphBuilderSockets.cpp" />
-    <ClCompile Include="IDebugDraw.cpp" />
     <ClCompile Include="InArrayStream.cpp" />
     <ClCompile Include="InStream.cpp" />
     <ClCompile Include="MatrixUtils.cpp" />
@@ -149,7 +148,6 @@
     <ClInclude Include="..\..\Include\core\GraphBuilder.h" />
     <ClInclude Include="..\..\Include\core\GraphBuilderNode.h" />
     <ClInclude Include="..\..\Include\core\GraphBuilderSockets.h" />
-    <ClInclude Include="..\..\Include\core\IDebugDraw.h" />
     <ClInclude Include="..\..\Include\core\InArrayStream.h" />
     <ClInclude Include="..\..\Include\core\InStream.h" />
     <ClInclude Include="..\..\Include\core\IProgressObserver.h" />

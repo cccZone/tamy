@@ -24,6 +24,12 @@ public:
     * @param property
     */
    virtual void onPropertyChanged( ReflectionProperty& property ) = 0;
+
+   /**
+    * Called by the object the listener is attached to to inform that it's being deleted and should 
+    * no longer be listened to.
+    */
+   virtual void onObjectDeleted() = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -75,9 +75,14 @@ void TMemberField< T >::save( const void* object, const ReflectionDependencyMapp
 template< typename T >
 void TMemberField< T >::load( void* object, InStream& stream ) const 
 {
-   char* memberPtr = (char*)object + m_dataOffset;
-   T* dataPtr = reinterpret_cast< T* >( memberPtr );
-   stream >> *dataPtr;
+   T tmpData;
+   stream >> tmpData;
+   if ( object )
+   {
+      char* memberPtr = (char*)object + m_dataOffset;
+      T* dataPtr = reinterpret_cast< T* >( memberPtr );
+      *dataPtr = tmpData;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -133,9 +138,14 @@ void TMemberField< T* >::save( const void* object, const ReflectionDependencyMap
 template< typename T >
 void TMemberField< T* >::load( void* object, InStream& stream ) const 
 {
-   char* memberPtr = (char*)object + m_dataOffset;
-   T** dataPtr = reinterpret_cast< T** >( memberPtr );
-   *dataPtr = loadPtr< T >( stream );
+   T* restoredPtr = loadPtr< T >( stream );
+
+   if ( object )
+   {
+      char* memberPtr = (char*)object + m_dataOffset;
+      T** dataPtr = reinterpret_cast< T** >( memberPtr );
+      *dataPtr = restoredPtr;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -219,13 +229,20 @@ void TMemberField< std::vector< T* > >::load( void* object, InStream& stream ) c
    stream >> count;
 
    // make place in the array
-   dataPtr->resize( count, NULL );
+   if ( object )
+   {
+      dataPtr->resize( count, NULL );
+   }
 
    // deserialize the entries
    for ( uint i = 0; i < count; ++i )
    {
       // deserialize the pointer
-      (*dataPtr)[i] = loadPtr< T >( stream );
+      T* restoredPtr = loadPtr< T >( stream );
+      if ( object )
+      {
+         (*dataPtr)[i] = restoredPtr;
+      }
    }
 }
 

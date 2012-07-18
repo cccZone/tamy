@@ -26,8 +26,8 @@ TPipelineBlock< TNode, TBaseNode >::TPipelineBlock( TNode& node )
 template< typename TNode, typename TBaseNode >
 TPipelineBlock< TNode, TBaseNode >::~TPipelineBlock()
 {
-   TNode& nodePtr = dynamic_cast< TNode& >( getNode() );
-   nodePtr.detachObserver( *this );
+   TNode* nodePtr = dynamic_cast< TNode* >( getNode() );
+   nodePtr->detachObserver( *this );
 
    delete m_node;
    m_node = NULL;
@@ -45,9 +45,9 @@ void TPipelineBlock< TNode, TBaseNode >::initialize()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-ReflectionObject& TPipelineBlock< TNode, TBaseNode >::getNode() 
+ReflectionObject* TPipelineBlock< TNode, TBaseNode >::getNode() 
 { 
-   return m_node->get();
+   return &m_node->get();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,8 +57,8 @@ void TPipelineBlock< TNode, TBaseNode >::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
-   TNode& nodePtr = dynamic_cast< TNode& >( getNode() );
-   nodePtr.attachObserver( *this );
+   TNode* nodePtr = dynamic_cast< TNode* >( getNode() );
+   nodePtr->attachObserver( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

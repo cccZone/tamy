@@ -2,6 +2,8 @@
 #error "This file can only be included from RuntimeData.h"
 #else
 
+#include "core/Assert.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -51,7 +53,7 @@ void RuntimeDataBuffer::registerVar( const typename TRuntimeVar< T >& var, const
    VarsLayout::iterator it = m_varsLayout.find( varId );
    if ( it != m_varsLayout.end() )
    {
-      throw std::runtime_error( "This runtime variable has already been registered." );
+      ASSERT_MSG( false, "This runtime variable has already been registered." );
    }
    m_varsLayout.insert( std::make_pair( varId, m_size ) );
 
@@ -71,7 +73,7 @@ T& RuntimeDataBuffer::operator[]( const typename TRuntimeVar< T >& var )
    VarsLayout::iterator it = m_varsLayout.find( varId );
    if ( it == m_varsLayout.end() )
    {
-      throw std::runtime_error( "This runtime variable wasn't registered." );
+      ASSERT_MSG( false,  "This runtime variable wasn't registered." );
    }
 
    char* data = m_buffer + it->second;
@@ -87,7 +89,7 @@ const T& RuntimeDataBuffer::operator[]( const typename TRuntimeVar< T >& var ) c
    VarsLayout::iterator it = m_varsLayout.find( varId );
    if ( it == m_varsLayout.end() )
    {
-      throw std::runtime_error( "This runtime variable wasn't registered." );
+      ASSERT_MSG( false, "This runtime variable wasn't registered." );
    }
 
    char* data = m_buffer + it->second;

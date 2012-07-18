@@ -60,7 +60,7 @@ void ResourcesManager::reset()
       }
 
       resource->resetResourcesManager();
-      delete resource;
+      resource->removeReference();
    }
    m_resources.clear();
 }
@@ -71,7 +71,8 @@ void ResourcesManager::setFilesystem( Filesystem* filesystem )
 {
    if (filesystem == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a Filesystem instance");
+      ASSERT_MSG( false,  "NULL pointer instead a Filesystem instance" );
+      return;
    }
 
    // we need to delete all resources along with changing the filesystem
@@ -127,7 +128,7 @@ bool ResourcesManager::registerNewResource( Resource* resource )
    {
       // a resource by this name already exists - and we can't replace it, since
       // pointers to it may exist all over the running application
-      delete resource;
+      resource->removeReference();
       return false;
    }
 
@@ -144,7 +145,8 @@ void ResourcesManager::moveResource( Resource* resource, const FilePath& newPath
 {
    if ( resource == NULL )
    {
-      throw std::invalid_argument("NULL pointer instead a Resource instance");
+      ASSERT_MSG( false,  "NULL pointer instead a Resource instance" );
+      return;
    }
 
    if ( resource->isManaged() )
@@ -390,7 +392,7 @@ void ResourcesManager::onDirRemoved( const FilePath& dir )
       m_resources.erase( it );
 
       res->resetResourcesManager();
-      delete res;
+      res->removeReference();
    }
 }
 
@@ -413,7 +415,7 @@ void ResourcesManager::onFileRemoved( const FilePath& path )
       m_resources.erase( it );
 
       res->resetResourcesManager();
-      delete res;
+      res->removeReference();
    }
 }
 

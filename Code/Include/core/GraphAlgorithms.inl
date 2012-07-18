@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <vector>
 #include <list>
-#include <stdexcept>
+#include "core/Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ void GraphDijkstra( Graph<NODE, EDGE>& outGraph,
 {
    if (outGraph.getNodesCount() > 0)
    {
-      throw std::invalid_argument("Output graph needs to be passed empty");
+      ASSERT_MSG( false, "Output graph needs to be passed empty");
    }
 
    // -------------------------------------------------------------------------
@@ -244,7 +244,7 @@ void GraphTopologicalSort( std::vector< typename Graph<NODE, EDGE>::Index >& out
 
    if ( tempGraph.getEdgesCount() > 0 )
    {
-      throw std::runtime_error( "The graph is not a DAG" );
+      ASSERT_MSG( false, "The graph is not a DAG" );
    }
 }
 

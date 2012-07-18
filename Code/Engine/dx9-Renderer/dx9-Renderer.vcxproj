@@ -87,7 +87,7 @@
   <ItemGroup>
     <ClCompile Include="DX9BasicRenderCommands.cpp" />
     <ClCompile Include="DX9DebugPrimitivesSet.cpp" />
-    <ClCompile Include="DX9DebugDrawCommands.cpp" />
+    <ClCompile Include="DX9DirectionalLight.cpp" />
     <ClCompile Include="DX9EffectsResourcesStorage.cpp" />
     <ClCompile Include="DX9FontResourcesStorage.cpp" />
     <ClCompile Include="DX9FullscreenQuad.cpp" />
@@ -95,7 +95,6 @@
     <ClCompile Include="DX9PixelShader.cpp" />
     <ClCompile Include="DX9PixelShaderResourcesStorage.cpp" />
     <ClCompile Include="DX9Renderer.cpp" />
-    <ClCompile Include="DX9RenderingPipelineMechanism.cpp" />
     <ClCompile Include="DX9RenderTarget.cpp" />
     <ClCompile Include="DX9EffectShader.cpp" />
     <ClCompile Include="DX9RenderTargetResourcesStorage.cpp" />

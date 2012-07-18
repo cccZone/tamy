@@ -31,7 +31,7 @@ public:
    // -------------------------------------------------------------------------
    // GraphBlockSocket implementation
    // -------------------------------------------------------------------------
-   ReflectionObject& getSocket();
+   ReflectionObject* getSocket();
 
 protected:
    bool onConnectionAdded( GraphBlockConnection& connection );

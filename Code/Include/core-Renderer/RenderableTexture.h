@@ -5,6 +5,8 @@
 #include "core-Renderer\ShaderTexture.h"
 
 
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * An adapter that allows to plug a texture image into a shader.
  */
@@ -33,3 +35,5 @@ public:
    ShaderParam< PixelShader >* createPixelShaderTextureSetter( const std::string& paramName );
    ShaderParam< VertexShader >* createVertexShaderTextureSetter( const std::string& paramName );
 };
+
+///////////////////////////////////////////////////////////////////////////////

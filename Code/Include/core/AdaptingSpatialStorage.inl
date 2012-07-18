@@ -2,7 +2,7 @@
 #error "This file can only be included from AdaptingSpatialStorage.h"
 #else
 
-#include <stdexcept>
+#include"core/Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,7 +13,7 @@ AdaptingSpatialStorage<FromType, ToType>::AdaptingSpatialStorage(SpatialStorage<
 {
    if (m_storage == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a SpatialStorage instance");
+      ASSERT_MSG( false, "NULL pointer instead a SpatialStorage instance");
    }
 }
 

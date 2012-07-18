@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor/QueryableGeometry.h
 /// @brief  a queryable representation of a geometrical entity
+#pragma once
 
 #include "QueryableEntity.h"
 

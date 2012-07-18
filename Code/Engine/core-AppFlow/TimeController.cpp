@@ -1,5 +1,5 @@
 #include "core-AppFlow\TimeController.h"
-#include <stdexcept>
+#include "core\Assert.h"
 #include <algorithm>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,7 +117,7 @@ TimeControllerTrack& TimeController::get(const std::string& trackID)
 
    if (it == m_tracks.end())
    {
-      throw std::runtime_error(std::string("Track ") + trackID + " doesn't exist");
+      ASSERT_MSG( false, "Track doesn't exist");
    }
 
    return **it;

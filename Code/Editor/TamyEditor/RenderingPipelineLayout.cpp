@@ -6,12 +6,12 @@
 #include "RenderingPipelineSocketRepresentation.h"
 #include "RPBPostProcess.h"
 #include "RPBSceneRender.h"
-#include "RPBDebugRender.h"
 #include "RPBStart.h"
 #include "RPBAdapter.h"
 #include "RPBFloats2Vec4.h"
 #include "RPBCamera.h"
 #include "RPBTexture.h"
+#include "RPBDeferredLighting.h"
 #include "RPBFloat.h"
 #include "RPBVec4.h"
 
@@ -41,7 +41,6 @@ void RenderingPipelineLayout::initBlocksFactory()
 {
    // create block-to-node associations
    associate< RPSceneRenderNode, RPBSceneRender >();
-   associate< RPDebugRendererNode, RPBDebugRender >();
    associate< RPStartNode, RPBStart >();
    associate< RPAdapterNode, RPBAdapter >();
    associate< RPPostProcessNode, RPBPostProcess >();
@@ -50,6 +49,7 @@ void RenderingPipelineLayout::initBlocksFactory()
    associate< RPTextureNode, RPBTexture >();
    associate< RPFloatNode, RPBFloat >();
    associate< RPVec4Node, RPBVec4 >();
+   associate< RPDeferredLightingNode, RPBDeferredLighting >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

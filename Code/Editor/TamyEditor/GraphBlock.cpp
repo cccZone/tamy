@@ -384,9 +384,11 @@ void GraphBlockSocket::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
-   ASSERT_MSG( m_parent != NULL, "Information about this socket's parent was not deserialized properly" );
-   setParentItem( m_parent );
-   setPos( m_position );
+   if ( m_parent )
+   {
+      setParentItem( m_parent );
+      setPos( m_position );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -601,18 +603,12 @@ GraphBlockConnection::GraphBlockConnection( GraphBlockSocket* source, GraphBlock
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphBlockConnection::onObjectLoaded()
-{
-   __super::onObjectLoaded();
-
-   ASSERT_MSG( m_source != NULL, "Information about this connection's source socket was not deserialized properly" );
-   ASSERT_MSG( m_destination != NULL, "Information about this connection's destination socket was not deserialized properly" );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void GraphBlockConnection::calculateBounds()
 {
+   if ( !m_source || !m_destination )
+   {
+      return;
+   }
    QPointF start = m_source->scenePos();
    QPointF end = m_destination->scenePos();
 
@@ -623,10 +619,32 @@ void GraphBlockConnection::calculateBounds()
 
 void GraphBlockConnection::onRemoved()
 {
-   m_source->removeConnection( *this );
-   m_destination->removeConnection( *this );
-   m_source = NULL;
-   m_destination = NULL;
+   if ( m_source )
+   {
+      m_source->removeConnection( *this );
+      m_source = NULL;
+   }
+
+   if ( m_destination )
+   {
+      m_destination->removeConnection( *this );
+      m_destination = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+bool GraphBlockConnection::isOk() const
+{
+   if ( !m_source || !m_source->parentItem() )
+   {
+      return false;
+   }
+
+   if ( !m_destination || !m_destination->parentItem() )
+   {
+      return false;
+   }
+
+   return true;
+}

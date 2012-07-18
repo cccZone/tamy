@@ -117,8 +117,17 @@ public:
 
    /**
     * Checks if the specified path is a sub path of this path.
+    *
+    * @param path
     */
    bool isSubPath( const FilePath& path ) const;
+
+   /**
+    * Checks if the specified path is a parent directory of this path.
+    *
+    * @param parentCandidatePath
+    */
+   bool isParent( const FilePath& parentCandidatePath ) const;
 
    /**
     * Extracts an extension of the specified filename.

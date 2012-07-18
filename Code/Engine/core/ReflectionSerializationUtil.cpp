@@ -111,7 +111,11 @@ void ReflectionSerializationUtil::loadObjects( const FilePath& loadPath, std::ve
    // last but not least, make sure that all loaded objects are informed that they were loaded
    for ( std::list< ReflectionObject* >::const_iterator it = loader.m_allLoadedObjects.begin(); it != loader.m_allLoadedObjects.end(); ++it )
    {
-      (*it)->onObjectLoaded();
+      ReflectionObject* object = *it;
+      if ( object )
+      {
+         object->onObjectLoaded();
+      }
    }
 }
 

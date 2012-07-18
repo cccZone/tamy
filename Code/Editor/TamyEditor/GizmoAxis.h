@@ -9,6 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Camera;
+class VertexShader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -41,6 +42,7 @@ private:
    SpatialEntity&                   m_editedNode;
    Camera&                          m_activeCamera;
    GizmoOperation*                  m_operation;
+   VertexShader*                    m_vertexShader;
 
    // since the gizmo is not camera-relative and we'll be scaling it so that it's always the same size, we want to
    // see it always and never be culled away
@@ -79,6 +81,10 @@ public:
    // -------------------------------------------------------------------------
    const BoundingVolume& getBoundingVolume() const { return m_bounds; }
    bool onPreRender( Renderer& renderer );
+   void onPostRender( Renderer& renderer );
+
+private:
+   void initialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

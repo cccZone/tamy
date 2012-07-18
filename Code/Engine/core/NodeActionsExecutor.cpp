@@ -36,7 +36,7 @@ void NodeActionsExecutor::add(Node& node, NodeAction* action)
 {
    if (action == NULL)
    {
-      throw std::invalid_argument("NULL pointer instead a NodeAction instance");
+      ASSERT_MSG( false, "NULL pointer instead a NodeAction instance");
    }
 
    ActionsStorage::iterator it = std::find_if(m_actions.begin(), m_actions.end(), comparator(node));

@@ -3,6 +3,8 @@
 #include "core-Renderer/BasicRenderCommands.h"
 #include "core-Renderer/LitVertex.h"
 #include "core-Renderer/Camera.h"
+#include "core-Renderer/VertexShader.h"
+#include "core-Renderer/Defines.h"
 #include "core/Math.h"
 
 
@@ -20,12 +22,14 @@ GizmoAxis::GizmoAxis( byte axisIdx, SpatialEntity& editedNode, Camera& activeCam
    , m_activeCamera( activeCamera )
    , m_operation( NULL )
 {
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 GizmoAxis::~GizmoAxis()
 {
+   m_vertexShader = NULL;
    m_operation = NULL;
 }
 
@@ -85,6 +89,11 @@ void GizmoAxis::onUpdate( float timeElapsed )
 
 bool GizmoAxis::onPreRender( Renderer& renderer )
 {
+   if ( !m_vertexShader )
+   {
+      return false;
+   }
+
    Camera& camera = renderer.getActiveCamera();
    Matrix nodeMtx = m_editedNode.getGlobalMtx();
 
@@ -98,10 +107,38 @@ bool GizmoAxis::onPreRender( Renderer& renderer )
    scaleMtx.scaleUniform( scale );
    nodeMtx.preMul( scaleMtx );
 
-   new ( renderer() ) RCSetVertexDeclaration( LitVertex::FVF );
-   new ( renderer() ) RCSetWorldMatrix( nodeMtx );
+   // setup the vertex shader
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
+   {
+      Matrix worldViewMtx;
+      worldViewMtx.setMul( nodeMtx, camera.getViewMtx() );
+      comm->setMtx( "g_mWorldView", worldViewMtx );
+      comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
+   }
+
 
    return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GizmoAxis::onPostRender( Renderer& renderer )
+{
+   if ( m_vertexShader )
+   {
+      new ( renderer() ) RCUnbindVertexShader( *m_vertexShader );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GizmoAxis::initialize()
+{
+   ResourcesManager& rm = ResourcesManager::getInstance();
+   static FilePath shaderName( SHADERS_DIR "VertexShaders/staticGeometry.tvsh" );
+
+   m_vertexShader = rm.create< VertexShader >( shaderName );
+   ASSERT_MSG( m_vertexShader, "Vertex shader could not be loaded" );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -34,7 +34,11 @@ public:
 private:
    Array< ReflectionObjectChangeListener* >           m_listener;
 
+   // a counter that counts the number of references to this object
+   int                                                m_referencesCounter;
+
 public:
+   virtual ~ReflectionObject();
 
    /**
     * Checks if the type of this instance matches exactly the specified reference type.
@@ -128,13 +132,33 @@ public:
     */
    virtual void onPropertyChanged( ReflectionProperty& property ) {}
 
+   // -------------------------------------------------------------------------
+   // References counting
+   // -------------------------------------------------------------------------
+   /**
+    * Checks how many references to the object are there.
+    */
+   inline int getReferencesCount() const { return m_referencesCounter; }
+
+   /**
+    * Adds a new reference to the object.
+    */
+   void addReference();
+
+   /**
+    * Removes a reference to the object.
+    * 
+    * When the references counter reaches 0, the object will be automatically deleted.
+    */
+   void removeReference();
+
 protected:
    /**
     * Constructor.
     *
     * @param uniqueId   ( optional )
     */
-   ReflectionObject( const char* uniqueId = NULL ) : m_uniqueId( uniqueId ? uniqueId : "" ) {}
+   ReflectionObject( const char* uniqueId = NULL );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -144,6 +168,18 @@ protected:
  */
 template< typename T >
 T* DynamicCast( ReflectionObject* obj );
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A macro that safely deletes a ReflectionObject instance
+ */
+#define SAFE_DELETE( object ) \
+   if ( object ) \
+   { \
+      object->removeReference(); \
+      object = NULL; \
+   }
 
 ///////////////////////////////////////////////////////////////////////////////
 

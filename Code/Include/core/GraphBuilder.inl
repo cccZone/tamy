@@ -65,12 +65,17 @@ void GraphBuilder< Impl, NodeType >::buildGraph( Graph< NodeType* >& outGraph ) 
    NodeType* startNode = NULL;
    for ( std::vector< NodeType* >::const_iterator it = m_nodes.begin(); it != m_nodes.end(); ++it )
    {
+      NodeType* node = *it;
+      if ( !node )
+      {
+         continue;
+      }
       if ( startNode == NULL )
       {
          startNode = dynamic_cast< StartNodeType* >( *it );
       }
 
-      outGraph.addNode( dynamic_cast< NodeType* >( *it ) );
+      outGraph.addNode( *it );
    }
    if ( startNode == NULL )
    {
@@ -101,13 +106,18 @@ void GraphBuilder< Impl, NodeType >::buildGraph( Graph< NodeType* >& outGraph ) 
       checkedNode->getSubsequentNodes( neighbors );
       for ( std::vector< NodeType* >::const_iterator it = neighbors.begin(); it != neighbors.end(); ++it )
       {
-         Graph< NodeType* >::Index neighboringNodeIdx = outGraph.getNodeIdx( *it );
+         NodeType* neighborNode = *it;
+         if ( !neighborNode )
+         {
+            continue;
+         }
+         Graph< NodeType* >::Index neighboringNodeIdx = outGraph.getNodeIdx( neighborNode );
 
          // create a connection in the graph
          outGraph.connect( nodeIdx, neighboringNodeIdx );
 
          // put he neighbor up for analysis
-         nodesToAnalyze.push_back( *it );
+         nodesToAnalyze.push_back( neighborNode );
       }
    }
 }

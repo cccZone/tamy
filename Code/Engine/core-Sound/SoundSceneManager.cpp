@@ -41,7 +41,7 @@ SoundListener& SoundSceneManager::getActiveListener()
 {
    if (m_activeListener == NULL)
    {
-      throw std::runtime_error("No active listener set");
+      ASSERT_MSG( false, "No active listener set" );
    }
    return *m_activeListener;
 }

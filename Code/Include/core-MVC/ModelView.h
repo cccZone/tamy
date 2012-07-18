@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core-MVC\ModelView.h
 /// @brief  view that observes changes of a model
+#pragma once
 
 #include <vector>
 

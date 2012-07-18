@@ -87,7 +87,7 @@ public:
    /**
     * Returns the represented node instance.
     */
-   virtual ReflectionObject& getNode() { return *( reinterpret_cast< ReflectionObject* >( NULL ) ); }
+   virtual ReflectionObject* getNode() { return NULL; }
 
    /**
     * Returns a list of connections the block's involved in.
@@ -232,7 +232,7 @@ public:
    /**
     * Returns the parent graph block.
     */
-   inline GraphBlock& getParentBlock() const { return *m_parent; }
+   inline GraphBlock* getParentBlock() const { return m_parent; }
 
    /**
     * Returns the socket's name.
@@ -252,7 +252,7 @@ public:
    /**
     * Returns the represented socket instance.
     */
-   virtual ReflectionObject& getSocket() { return *( reinterpret_cast< ReflectionObject* >( NULL ) ); }
+   virtual ReflectionObject* getSocket() { return NULL; }
 
    /**
     * Calculate the bounds of the socket.
@@ -393,11 +393,11 @@ public:
     */
    inline GraphBlockSocket& getDestination() { return *m_destination; }
 
-protected:
-   // -------------------------------------------------------------------------
-   // Object implementation
-   // -------------------------------------------------------------------------
-   void onObjectLoaded();
+   /**
+    * Tells if the connection actually connects two blocks ( it may so happen that one
+    * of them wasn't deserialized ).
+    */
+   bool isOk() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

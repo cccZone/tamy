@@ -6,16 +6,14 @@
 #include "core-Renderer/RenderTarget.h"
 #include "core-Renderer/RenderingView.h"
 #include "core-Renderer/RenderingPipelineNode.h"
-#include "core-Renderer/DebugDrawCommands.h"
+#include "core-Renderer/BasicRenderCommands.h"
 #include "core-Renderer/RPStartNode.h"
 #include "core/AABoundingBox.h"
 #include "core-MVC/Model.h"
-#include "core-MVC/ModelDebugScene.h"
 #include "core/Graph.h"
 #include "core/GraphAlgorithms.h"
 #include "core/RuntimeData.h"
 #include "core/ReflectionEnum.h"
-#include "core/IDebugDraw.h"
 #include <algorithm>
 
 
@@ -129,6 +127,14 @@ const Array< Geometry*> & RenderingPipelineMechanism::getSceneElements( RPMScene
 
 ///////////////////////////////////////////////////////////////////////////////
 
+const Array< Light*> & RenderingPipelineMechanism::getSceneLights( RPMSceneId sceneId ) const 
+{ 
+   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to query a scene with an invalid sceneId" );
+   return m_scenes[sceneId]->m_visibleLights; 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 RenderTarget* RenderingPipelineMechanism::getRenderTarget( const std::string& id ) const
 {
    if ( m_pipeline )
@@ -137,7 +143,8 @@ RenderTarget* RenderingPipelineMechanism::getRenderTarget( const std::string& id
    }
    else
    {
-      throw std::runtime_error( "Rendering pipeline mechanism isn't properly initialized" );
+      ASSERT_MSG( false, "Rendering pipeline mechanism isn't properly initialized" );
+      return NULL;
    }
 }
 
@@ -428,8 +435,13 @@ void RenderingPipelineMechanism::RenderedScene::setModel( Model* model )
 
 void RenderingPipelineMechanism::RenderedScene::queryVisibleElements()
 {
+   // query the visible geometry
    m_visibleElems.clear();
    m_renderingView->collectRenderables( m_visibleElems );
+
+   // query visible lights
+   m_visibleLights.clear();
+   m_renderingView->collectLights( m_visibleLights );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

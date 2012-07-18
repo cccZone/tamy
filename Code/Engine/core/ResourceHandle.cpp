@@ -51,7 +51,7 @@ void ResourceObject::setHostResource( Resource& hostResource, int objectId )
 {
    if ( m_hostResource != NULL )
    {
-      throw std::runtime_error( "The object is already managed by a resource" );
+      ASSERT_MSG( false, "The object is already managed by a resource" );
    }
    m_hostResource = &hostResource;
    m_objectId = objectId;
@@ -63,7 +63,7 @@ void ResourceObject::resetHostResource()
 {
    if ( m_hostResource == NULL )
    {
-      throw std::runtime_error( "The object is not managed by any resource" );
+      ASSERT_MSG( false,  "The object is not managed by any resource" );
    }
    m_hostResource = NULL;
    m_objectId = -1;

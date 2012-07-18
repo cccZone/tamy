@@ -1,7 +1,7 @@
 #include "dx9-Renderer\DX9Initializer.h"
 #include "dx9-Renderer\DX9Renderer.h"
 #include "core-Renderer\RenderingDevice.h"
-#include <stdexcept>
+#include "core\Assert.h"
 #include <string>
 
 
@@ -59,7 +59,8 @@ IDirect3DDevice9* DX9Initializer::createNullDevice()
       case D3DERR_OUTOFVIDEOMEMORY: errMsg += "due to lack of video memory"; break;
       default: errMsg += "- unknown problem occurred"; break;
       }
-      throw std::runtime_error(errMsg);
+      ASSERT_MSG( false, errMsg.c_str() );
+      return NULL;
    }
 
    return d3Device;
@@ -150,7 +151,8 @@ DX9Renderer* DX9Initializer::createDisplay( DX9Settings& settings, HWND hWnd, UL
       case D3DERR_OUTOFVIDEOMEMORY: errMsg += "due to lack of video memory"; break;
       default: errMsg += "- unknown problem occurred"; break;
       }
-      throw std::runtime_error(errMsg);
+      ASSERT_MSG( false, errMsg.c_str() );
+      return NULL;
    }
    else
    {

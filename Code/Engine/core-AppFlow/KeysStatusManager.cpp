@@ -1,6 +1,7 @@
 #include "core-AppFlow\KeysStatusManager.h"
 #include "core-AppFlow\KeysStatusModel.h"
 #include "core-AppFlow\KeyStatusHandler.h"
+#include "core\Assert.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,7 +92,8 @@ void KeysStatusManager::addHandler( KeyStatusHandler* handler )
 {
    if ( handler == NULL )
    {
-      throw std::invalid_argument( "NULL pointer instead a KeyStatusHandler instance" );
+      ASSERT_MSG( false, "NULL pointer instead a KeyStatusHandler instance" );
+      return;
    }
 
    m_handlers.push_back( handler );

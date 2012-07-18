@@ -66,13 +66,13 @@ T& BlenderScene::getResource( const std::string& id ) const
    SlicesMap::const_iterator it = m_slicesMap.find( id );
    if ( it == m_slicesMap.end() )
    {
-      throw std::runtime_error( "Slice doesn't exist" );
+      ASSERT_MSG( false, "Slice doesn't exist" );
    }
 
    const IResourceSlice* resourceSlice = dynamic_cast< const IResourceSlice* >( it->second );
    if ( resourceSlice == NULL )
    {
-      throw std::runtime_error( "Required slice is does not describe a resource" );
+      ASSERT_MSG( false, "Required slice is does not describe a resource" );
    }
 
    return resourceSlice->getResource< T >();

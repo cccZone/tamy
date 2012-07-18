@@ -2,7 +2,7 @@
 #error "This file can only be included from GraphBuilderNode.h"
 #else
 
-#include <stdexcept>
+#include "core/Assert.h"
 #include "core/GraphBuilderSockets.h"
 #include <algorithm>
 
@@ -53,7 +53,7 @@ bool GraphBuilderNode< Impl >::connect( const std::string& outputName, Impl& des
    {
       char tmp[128];
       sprintf_s( tmp, "Output '%s' not found", outputName.c_str() );
-      throw std::runtime_error( tmp );
+      ASSERT_MSG( false, tmp );
    }
 
    output->connect( destNode );
@@ -66,7 +66,7 @@ bool GraphBuilderNode< Impl >::connect( const std::string& outputName, Impl& des
    {
       char tmp[128];
       sprintf_s( tmp, "Input '%s' not found", inputName.c_str() );
-      throw std::runtime_error( tmp );
+      ASSERT_MSG( false, tmp );
    }
 
    bool result = input->connect( *output );
@@ -91,7 +91,7 @@ void GraphBuilderNode< Impl >::disconnect( Impl& destNode, const std::string& in
    {
       char tmp[128];
       sprintf_s( tmp, "Input '%s' not found", inputName.c_str() );
-      throw std::runtime_error( tmp );
+      ASSERT_MSG( false, tmp );
    }
 
    input->disconnect();
@@ -249,7 +249,7 @@ const T& GraphBuilderNode< Impl >::getInput( const std::string& inputName ) cons
    {
       char tmp[128];
       sprintf_s( tmp, "Unable to find input '%s'", inputName.c_str() );
-      throw std::runtime_error( tmp );
+      ASSERT_MSG( false, tmp );
    }
 
    T* dataSource = DynamicCast< T >( input );
@@ -257,7 +257,7 @@ const T& GraphBuilderNode< Impl >::getInput( const std::string& inputName ) cons
    {
       char tmp[128];
       sprintf_s( tmp, "Input's '%s' type doesn't match the specified one", inputName.c_str() );
-      throw std::runtime_error( tmp );
+      ASSERT_MSG( false, tmp );
    }
 
    return *dataSource;
@@ -273,7 +273,7 @@ const T& GraphBuilderNode< Impl >::getOutput( const std::string& outputName ) co
    {
       char tmp[128];
       sprintf_s( tmp, "Unable to find output '%s'", outputName.c_str() );
-      throw std::runtime_error( tmp );
+      ASSERT_MSG( false, tmp );
    }
 
    T* castOutput = DynamicCast< T >( output );
@@ -281,7 +281,7 @@ const T& GraphBuilderNode< Impl >::getOutput( const std::string& outputName ) co
    {
       char tmp[128];
       sprintf_s( tmp, "Output's '%s' type doesn't match the specified one", outputName.c_str() );
-      throw std::runtime_error( tmp );
+      ASSERT_MSG( false, tmp );
    }
 
    return *castOutput;

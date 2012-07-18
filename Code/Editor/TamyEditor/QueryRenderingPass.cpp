@@ -4,9 +4,11 @@
 #include "QueryableEntity.h"
 #include "SceneQuery.h"
 
+#include "DebugGeometry.h"
+
 // representations
 #include "QueryableGeometry.h"
-
+#include "QueryableDebugGeometry.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +18,7 @@ QueryRenderingPass::QueryRenderingPass()
    , m_debugMode( false )
 {
    // define associations
+   associateAbstract< DebugGeometry, QueryableDebugGeometry > ();
    associateAbstract< Geometry, QueryableGeometry > ();
 }
 
