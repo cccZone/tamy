@@ -426,6 +426,16 @@ void Filesystem::normalize( const std::string& fileName, std::string& outFileNam
          nextDoubleSlash = outFileName.find( "//" );
       }
    }
+
+   // last but not least - the name HAS TO start with a slash - if it doesn't, add it
+   {
+      bool isPathAbsolute = outFileName.length() >= 2 && outFileName.c_str()[1] == ':';
+      bool isInvalidRelative = outFileName.empty() || outFileName.c_str()[0] != '/';
+      if ( !isPathAbsolute && isInvalidRelative )
+      {
+         outFileName = std::string( "/" ) + outFileName;
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

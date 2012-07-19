@@ -119,7 +119,7 @@ TEST( Filesystem, normalize )
    std::string outDir;
 
    Filesystem::normalize( "", outDir );
-   CPPUNIT_ASSERT_EQUAL( std::string( "" ), outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/" ), outDir );
 
    Filesystem::normalize( "/", outDir );
    CPPUNIT_ASSERT_EQUAL( std::string( "/" ), outDir );
@@ -140,7 +140,7 @@ TEST( Filesystem, normalize )
    CPPUNIT_ASSERT_EQUAL( std::string( "/ula/ala.txt" ), outDir );
 
    Filesystem::normalize( "ala\\ula\\ala.txt", outDir );
-   CPPUNIT_ASSERT_EQUAL( std::string( "ala/ula/ala.txt" ), outDir );
+   CPPUNIT_ASSERT_EQUAL( std::string( "/ala/ula/ala.txt" ), outDir );
 
    Filesystem::normalize( "\\ala\\ula\\ala.txt", outDir );
    CPPUNIT_ASSERT_EQUAL( std::string( "/ala/ula/ala.txt" ), outDir );
