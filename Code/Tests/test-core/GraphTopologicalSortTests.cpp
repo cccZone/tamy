@@ -71,19 +71,3 @@ TEST(GraphTopologicalSort, complex)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-TEST(GraphTopologicalSort, DAG)
-{
-   MockGraph graph;
-   graph.addNode( MockNode() ); // 0th - start node
-   graph.addNode( MockNode() ); // 1st
-   graph.addNode( MockNode() ); // 2nd
-   graph.connect( 0, 1 );
-   graph.connect( 1, 2 );
-   graph.connect( 2, 0 );
-
-   std::vector< MockGraph::Index > result;
-   CPPUNIT_ASSERT_THROW( GraphTopologicalSort( result, graph ), std::runtime_error );
-}
-
-///////////////////////////////////////////////////////////////////////////////

@@ -28,7 +28,7 @@ SingleTextureMaterial::SingleTextureMaterial( const std::string& name )
    , m_renderableTexture( new RenderableTexture() )
 {
    // load the shader
-   static FilePath shaderName( SHADERS_DIR "MaterialShader.tpsh" );
+   static FilePath shaderName( SHADERS_DIR "PixelShaders/singleTextureMaterial.tpsh" );
    m_shader = ResourcesManager::getInstance().create< PixelShader >( shaderName );
    ASSERT_MSG( m_shader != NULL, "Shader used by the SingleTextureMaterial could not be loaded" )
 }

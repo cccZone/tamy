@@ -54,19 +54,15 @@ TEST(ConstSizeArray, removingElements)
    CPPUNIT_ASSERT_EQUAL((unsigned int)4, arr.size());
    CPPUNIT_ASSERT_EQUAL(0, arr[0]);
    CPPUNIT_ASSERT_EQUAL(1, arr[1]);
-   CPPUNIT_ASSERT_THROW(arr[2], std::out_of_range);
    CPPUNIT_ASSERT_EQUAL(3, arr[3]); // yes - indices don't change
 
    arr.remove(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)4, arr.size());
-   CPPUNIT_ASSERT_THROW(arr[0], std::out_of_range);
    CPPUNIT_ASSERT_EQUAL(1, arr[1]);
-   CPPUNIT_ASSERT_THROW(arr[2], std::out_of_range);
    CPPUNIT_ASSERT_EQUAL(3, arr[3]);
 
    arr.remove(1);
    CPPUNIT_ASSERT_EQUAL((unsigned int)4, arr.size());
-   CPPUNIT_ASSERT_THROW(arr[1], std::out_of_range);
    CPPUNIT_ASSERT_EQUAL(3, arr[3]);
 
    arr.remove(3);
@@ -160,9 +156,6 @@ TEST(ConstSizeArray, iterator)
    ConstSizeArray<int>::iterator it = arr.begin();
    CPPUNIT_ASSERT_EQUAL(5, *it);
 
-   // operator set on the array end
-   it = arr.end();
-   CPPUNIT_ASSERT_THROW(*it, std::out_of_range);
 
    // prefix incrementation operator
    it = arr.begin();
@@ -178,7 +171,6 @@ TEST(ConstSizeArray, iterator)
    CPPUNIT_ASSERT_EQUAL(9, *(it++));
    CPPUNIT_ASSERT_EQUAL(5, *(it++));
    CPPUNIT_ASSERT_EQUAL(6, *(it++));
-   CPPUNIT_ASSERT_THROW(*it, std::out_of_range);
 
    // prefix decrementation operator
    it = arr.end();
@@ -209,7 +201,6 @@ TEST(ConstSizeArray, iterator)
    CPPUNIT_ASSERT_EQUAL(2, *(it++));
    CPPUNIT_ASSERT_EQUAL(5, *(it++));
    CPPUNIT_ASSERT_EQUAL(6, *(it++));
-   CPPUNIT_ASSERT_THROW(*it, std::out_of_range);
 
    // decrementation with removed middle element
    it = arr.end();
@@ -227,7 +218,6 @@ TEST(ConstSizeArray, iterator)
    it = arr.begin();
    CPPUNIT_ASSERT_EQUAL(2, *(it++));
    CPPUNIT_ASSERT_EQUAL(5, *(it++));
-   CPPUNIT_ASSERT_THROW(*it, std::out_of_range);
 
    // decrementation without boundary elements
    it = arr.end();
