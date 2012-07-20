@@ -143,7 +143,7 @@ struct VS_OUTPUT
 
 ==Rendering pipeline==
 
-On the Scene node you can define the render targets to which the scene should be rendered.
+You can define the render targets to which the scene node will render the scene.
 Simply set the "Render target id" parameter with the names of render targets you defined, separating them with semicolons (;).
 
 If you want to render directly to the backbuffer, simply give a name that's doesn't match any existing render target defined for the pipeline ( that's why it's considered a good practice to reserve the word `BackBuffer` and use that for these occasions )
