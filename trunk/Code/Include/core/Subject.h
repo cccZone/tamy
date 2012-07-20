@@ -40,12 +40,12 @@ public:
    }
 
 protected:
-   void notify(const MessageEnum& msg)
+   void notify( const MessageEnum& msg )
    {
       unsigned int count = m_observers.size();
       for (unsigned int i = 0; i < count; ++i)
       {
-         m_observers[i]->update(dynamic_cast<SubjectType&> (*this), msg);
+         m_observers[i]->update( static_cast< SubjectType& >( *this ), msg );
       }
    }
 

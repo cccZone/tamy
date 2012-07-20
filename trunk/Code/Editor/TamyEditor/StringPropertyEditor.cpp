@@ -28,15 +28,19 @@ void StringPropertyEditor::setupUi()
    
    m_edit->setText(m_property->get().c_str());
 
-   connect(m_edit, SIGNAL(textChanged(const QString&)), this, SLOT(valChanged(const QString&)));
+   connect(m_edit, SIGNAL( editingFinished() ), this, SLOT( valChanged() ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void StringPropertyEditor::valChanged(const QString& val)
+void StringPropertyEditor::valChanged()
 {
-   std::string newVal = val.toStdString();
-   m_property->set( newVal );
+   std::string newVal = m_edit->text().toStdString();
+   const std::string& oldVal = m_property->get();
+   if ( newVal != oldVal )
+   {
+      m_property->set( newVal );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

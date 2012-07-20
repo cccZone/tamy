@@ -155,6 +155,13 @@ public:
    const Array< Light*> & getSceneLights( RPMSceneId sceneId ) const;
 
    /**
+    * Checks if a render target registered with the specified ID exists.
+    *
+    * @param id         render target id
+    */
+   bool isRenderTargetDefined( const std::string& id ) const;
+
+   /**
     * Returns a render target registered under the specified ID.
     *
     * @param id         render target id

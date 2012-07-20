@@ -149,6 +149,13 @@ public:
    void defineOutput( TOutputSocket* output );
 
    /**
+    * Removes an output with the specified name
+    *
+    * @param name
+    */
+   void removeOutput( const std::string& name );
+
+   /**
     * Returns the specified input.
     *
     * @param T             node input type

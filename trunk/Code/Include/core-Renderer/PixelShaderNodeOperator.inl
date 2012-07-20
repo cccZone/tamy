@@ -121,17 +121,21 @@ void PixelShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode
    if ( m_hostNode )
    {
       // add it to the new node
-      GBNodeInput< TNode >* input = m_hostNode->findInput( inputName );
       const ReflectionType* constantDataType = m_constant->getDataType();
-      const ReflectionType* inputDataType = input->getDataType();
-      ASSERT_MSG( constantDataType && inputDataType, "Pixel shader constant or input data type not registered with the reflection system" );
 
-      if ( input && !constantDataType->isExactlyA( *inputDataType ) )
+      GBNodeInput< TNode >* input = m_hostNode->findInput( inputName );
+      if ( input )
       {
-         m_hostNode->removeInput( inputName );
-         input = NULL;
+         // the new node already has such input - check if its type matches our type. If not remove it
+         const ReflectionType* inputDataType = input->getDataType();
+         if ( !constantDataType->isExactlyA( *inputDataType ) )
+         {
+            m_hostNode->removeInput( inputName );
+            input = NULL;
+         }
       }
 
+      // at this point if we don't have an input, we need to create a new one
       if ( !input )
       {
          input = hostNode->createInput( *constantDataType, inputName );

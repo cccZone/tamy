@@ -41,7 +41,7 @@ public:
    void onPropertyChanged();
 
 public slots:
-   void valChanged(const QString& val);
+   void valChanged();
 
 private:
    void setupUi();
