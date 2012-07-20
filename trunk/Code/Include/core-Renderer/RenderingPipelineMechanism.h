@@ -27,18 +27,6 @@ class ModelView;
 class Geometry;
 class Light;
 
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Scenes a rendering pipeline can render ( contains a list of all scenes 
- * we can possibly register and operate on ).
- */
-enum RPMSceneId
-{
-   RPS_Main,
-   RPS_Debug,
-   RPS_MaxScenes
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -83,7 +71,7 @@ private:
    RenderingPipeline*                           m_pipeline;
 
    Renderer*                                    m_renderer;
-   std::vector< RenderedScene* >                m_scenes;
+   RenderedScene*                               m_scene;
 
    std::vector< RenderingPipelineNode* >        m_nodesQueue;
 
@@ -113,46 +101,22 @@ public:
    // Params management
    // -------------------------------------------------------------------------
    /**
-    * Registers a new scene for rendering.
+    * Registers a new scene for rendering, or unregisters it, if NULL instance is passed
     *
     * @param scene
     */
-   void addScene( RPMSceneId sceneId, Model& scene );
-
-   /**
-    * Removes the specified scene from rendering.
-    *
-    * @param scene
-    */
-   void removeScene( Model& scene );
-
-   /**
-    * Removes a scene registered under the specified sceneId from rendering.
-    *
-    * @param sceneId
-    */
-   void removeScene( RPMSceneId sceneId );
-
-   /**
-    * Checks if the scene with the specified id is registered.
-    *
-    * @param sceneId
-    */
-   inline bool isSceneActive( RPMSceneId sceneId ) const { return ( unsigned int )sceneId < RPS_MaxScenes; }
+   void setScene( Model* scene );
 
    /**
     * Returns the visible elements from the scene
     *
-    * @param sceneId
     */
-   const Array< Geometry*> & getSceneElements( RPMSceneId sceneId ) const;
+   const Array< Geometry*> & getSceneElements() const;
 
    /**
     * Returns visible scene lights.
-    *
-    * @param sceneId
     */
-   const Array< Light*> & getSceneLights( RPMSceneId sceneId ) const;
+   const Array< Light*> & getSceneLights() const;
 
    /**
     * Checks if a render target registered with the specified ID exists.

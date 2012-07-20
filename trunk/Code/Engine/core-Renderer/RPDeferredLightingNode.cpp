@@ -12,15 +12,13 @@
 
 BEGIN_OBJECT( RPDeferredLightingNode );
    PARENT( RenderingPipelineNode );
-   PROPERTY_EDIT( "Rendered scene id", RPMSceneId, m_renderedSceneId );
    PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPDeferredLightingNode::RPDeferredLightingNode()
-   : m_renderedSceneId( RPS_Main )
-   , m_shader( NULL )
+   : m_shader( NULL )
 {
    m_depthBufferInput = new RPTextureInput( "DepthBuffer" );
    m_normalBufferInput = new RPTextureInput( "NormalBuffer" );
@@ -103,7 +101,7 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    ShaderTexture* depthBufferTex = m_depthBufferInput->getValue( data );
    ShaderTexture* normalBufferTex = m_normalBufferInput->getValue( data );
-   if ( !host.isSceneActive( m_renderedSceneId ) || !m_shader || !depthBufferTex || !normalBufferTex )
+   if ( !m_shader || !depthBufferTex || !normalBufferTex )
    {
       // no scene - no rendering
       return;
@@ -123,7 +121,7 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    }
 
    // render light volumes
-   const Array< Light* >& visibleLights = host.getSceneLights( m_renderedSceneId );  
+   const Array< Light* >& visibleLights = host.getSceneLights();  
    uint lightsCount = visibleLights.size();
    for ( uint i = 0; i < lightsCount; ++i )
    {

@@ -9,16 +9,11 @@
 #include "core/MemoryPool.h"
 
 
-// TODO: !!!!!!!!!!!!!!!! MEGA WTOPA:
-// SPRAWDZIC czy pozostale edytory nie beda sie crashowaly
-// Wyjebac RPMSceneId i zwiazana z tym konfiguracje
-
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RPSceneRenderNode );
    PARENT( RenderingPipelineNode );
-   PROPERTY_EDIT( "Rendered scene id", RPMSceneId, m_renderedSceneId );
    PROPERTY_EDIT( "Scene contents builder", RPSceneBuilder*, m_builder );
    PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
    PROPERTY_EDIT( "Clear depth buffer", bool, m_clearDepthBuffer );
@@ -27,8 +22,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPSceneRenderNode::RPSceneRenderNode()
-   : m_renderedSceneId( RPS_Main )
-   , m_builder( NULL )
+   : m_builder( NULL )
    , m_clearDepthBuffer( true )
    , m_renderTargetId( "Color" )
 {
@@ -177,7 +171,7 @@ void RPSceneRenderNode::onDestroyLayout( RenderingPipelineMechanism& host ) cons
 
 void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-   if ( !host.isSceneActive( m_renderedSceneId ) || !m_builder )
+   if ( !m_builder )
    {
       // no scene - no rendering
       return;
@@ -197,7 +191,7 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
    }
 
    // collect the renderables
-   const Array< Geometry* >& visibleElems = host.getSceneElements( m_renderedSceneId );
+   const Array< Geometry* >& visibleElems = host.getSceneElements();
 
    // build a tree sorting the nodes by the attributes
    treeMemPool->reset();

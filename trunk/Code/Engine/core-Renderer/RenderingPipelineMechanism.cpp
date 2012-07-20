@@ -19,29 +19,16 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ENUM( RPMSceneId );
-   ENUM_VAL( RPS_Main );
-   ENUM_VAL( RPS_Debug );
-END_ENUM();
-
-///////////////////////////////////////////////////////////////////////////////
-
 RenderingPipelineMechanism::RenderingPipelineMechanism( RenderingPipeline* pipeline )
    : m_pipeline( pipeline )
    , m_renderer( NULL )
    , m_runtimeDataBuffer( NULL )
+   , m_scene( new RenderedScene() )
 {
    // attach self as the observer
    if ( m_pipeline )
    {
       m_pipeline->attachObserver( *this );
-   }
-
-   // initialize the scenes vector
-   m_scenes.resize( RPS_MaxScenes );
-   for ( int i = 0; i < RPS_MaxScenes; ++i )
-   {
-      m_scenes[i] = new RenderedScene();
    }
 }
 
@@ -55,11 +42,8 @@ RenderingPipelineMechanism::~RenderingPipelineMechanism()
       m_pipeline->detachObserver( *this );
    }
 
-   for ( int i = 0; i < RPS_MaxScenes; ++i )
-   {
-      delete m_scenes[i];
-   }
-   m_scenes.clear();
+   delete m_scene;
+   m_scene = NULL;
 
    delete m_runtimeDataBuffer;
    m_runtimeDataBuffer = NULL;
@@ -67,70 +51,23 @@ RenderingPipelineMechanism::~RenderingPipelineMechanism()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineMechanism::addScene( RPMSceneId sceneId, Model& scene )
+void RenderingPipelineMechanism::setScene( Model* scene )
 {
-   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to add a scene with an invalid sceneId" );
-   if ( ( unsigned int )sceneId < RPS_MaxScenes )
-   {
-      // make sure we're not trying to set the same scene for two different ids by removing it
-      removeScene( scene );
-
-      // detach the listeners from the old scene
-      removeScene( sceneId );
-
-      // set the new scene
-      m_scenes[sceneId]->setModel( &scene );
-   }
+   m_scene->setModel( scene );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineMechanism::removeScene( RPMSceneId sceneId )
-{
-   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to remove a scene with an invalid sceneId" );
-   if ( ( unsigned int )sceneId < RPS_MaxScenes )
-   {
-      // remove the model
-      m_scenes[sceneId]->setModel( NULL );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineMechanism::removeScene( Model& scene )
-{
-   bool foundMatch = false;
-
-   for( std::vector< RenderedScene* >::iterator it = m_scenes.begin(); it != m_scenes.end(); ++it )
-   {
-      if ( **it == scene )
-      {
-         // verify that the scene's not registered twice - that would prove the addition mechanism
-         // that tries to remove the duplicates before registering the scene fails
-         ASSERT_MSG( foundMatch == false, "Check the addition mechanism - it allowed for a scene to be registered under two distinct ids" );
-
-         foundMatch = true;
-
-         // remove the model
-         (*it)->setModel( NULL );
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-const Array< Geometry*> & RenderingPipelineMechanism::getSceneElements( RPMSceneId sceneId ) const 
+const Array< Geometry*> & RenderingPipelineMechanism::getSceneElements() const 
 { 
-   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to query a scene with an invalid sceneId" );
-   return m_scenes[sceneId]->m_visibleElems; 
+   return m_scene->m_visibleElems; 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const Array< Light*> & RenderingPipelineMechanism::getSceneLights( RPMSceneId sceneId ) const 
+const Array< Light*> & RenderingPipelineMechanism::getSceneLights() const 
 { 
-   ASSERT_MSG( ( unsigned int )sceneId < RPS_MaxScenes, "Trying to query a scene with an invalid sceneId" );
-   return m_scenes[sceneId]->m_visibleLights; 
+   return m_scene->m_visibleLights; 
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -177,11 +114,8 @@ void RenderingPipelineMechanism::initialize( Renderer& renderer )
    // memorize the renderer instance
    m_renderer = &renderer;
 
-   // initialize the scenes
-   for( std::vector< RenderedScene* >::iterator it = m_scenes.begin(); it != m_scenes.end(); ++it )
-   {
-      (*it)->initialize( *m_renderer );
-   }
+   // initialize the scene
+   m_scene->initialize( *m_renderer );
 
    // initialize the pipeline
    pipelineInitialization();
@@ -199,10 +133,7 @@ void RenderingPipelineMechanism::deinitialize( Renderer& renderer )
    pipelineDeinitialization();
 
    // deinitialize the scenes
-   for( std::vector< RenderedScene* >::iterator it = m_scenes.begin(); it != m_scenes.end(); ++it )
-   {
-      (*it)->deinitialize( *m_renderer );
-   }
+   m_scene->deinitialize( *m_renderer );
 
    // reset the memorized renderer instance
    m_renderer = NULL;
@@ -291,17 +222,13 @@ void RenderingPipelineMechanism::render( Renderer& renderer )
    }
 
    // get visible geometry for all scenes
-   unsigned int count = m_scenes.size();
-   for( unsigned int i = 0; i < count; ++i )
-   {
-      m_scenes[i]->queryVisibleElements();
-   }
+   m_scene->queryVisibleElements();
 
    // render the pipeline
    new ( renderer() ) RCBeginScene();
 
-   count = m_nodesQueue.size();
-   for( unsigned int i = 0; i < count; ++i )
+   uint count = m_nodesQueue.size();
+   for( uint i = 0; i < count; ++i )
    {
       m_nodesQueue[i]->update( *this );
    }
