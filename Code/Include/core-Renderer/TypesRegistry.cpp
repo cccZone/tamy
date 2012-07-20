@@ -127,7 +127,6 @@ REGISTER_ABSTRACT_TYPE( RPSceneBuilder );
 REGISTER_TYPE( RPSBTextured );
 REGISTER_TYPE( RPSBComputed );
 REGISTER_ENUM_TYPE( TextureUsage );
-REGISTER_ENUM_TYPE( RPMSceneId );
 REGISTER_ABSTRACT_TYPE( ComputedRenderState );
 
 ///////////////////////////////////////////////////////////////////////////////

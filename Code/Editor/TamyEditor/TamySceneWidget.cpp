@@ -215,7 +215,7 @@ void TamySceneWidget::initialize()
    // setup the debug scene
    if ( sceneRenderer && m_scene )
    {
-      sceneRenderer->addScene( RPS_Main, *m_scene );
+      sceneRenderer->setScene( m_scene );
    }
 
    // attach the views

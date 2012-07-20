@@ -41,7 +41,6 @@ class RPDeferredLightingNode : public RenderingPipelineNode
 
 private:
    // static data
-   RPMSceneId                          m_renderedSceneId;
    std::string                         m_renderTargetId;
 
    // runtime data

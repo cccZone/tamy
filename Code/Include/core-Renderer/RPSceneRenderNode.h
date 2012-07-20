@@ -25,7 +25,6 @@ class RPSceneRenderNode : public RenderingPipelineNode
 
 private:
    // static data
-   RPMSceneId                                m_renderedSceneId;
    RPSceneBuilder*                           m_builder;
    std::string                               m_renderTargetId;
    bool                                      m_clearDepthBuffer;

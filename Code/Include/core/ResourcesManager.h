@@ -11,6 +11,10 @@
 #include "core\ResourceImporter.h"
 
 
+// <resources.todo> When we have a coupled resource - a layout and a graph i.e., and we remove the graph ( the layout depends on )
+// then if we try removing the layout, it crashes, 'cause it keeps an invalid reference to the long gone resource
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 class Filesystem;
