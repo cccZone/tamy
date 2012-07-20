@@ -25,14 +25,14 @@ class RPSceneRenderNode : public RenderingPipelineNode
 
 private:
    // static data
-   RPMSceneId                          m_renderedSceneId;
-   RPSceneBuilder*                     m_builder;
-   std::string                         m_renderTargetId;
-   bool                                m_clearDepthBuffer;
+   RPMSceneId                                m_renderedSceneId;
+   RPSceneBuilder*                           m_builder;
+   std::string                               m_renderTargetId;
+   bool                                      m_clearDepthBuffer;
 
    // runtime data
-   TRuntimeVar< MemoryPool* >          m_treeMemPool;
-   TRuntimeVar< RenderTarget* >        m_renderTarget;
+   TRuntimeVar< MemoryPool* >                m_treeMemPool;
+   TRuntimeVar< Array< RenderTarget* >* >    m_renderTargets;
 
 public:
    /**
@@ -52,6 +52,10 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onPropertyChanged( ReflectionProperty& property );
+
+private:
+   void defineOutputs();
+   void refreshRenderTargets( RenderingPipelineMechanism& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

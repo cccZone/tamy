@@ -60,7 +60,10 @@ bool RenderingPipeline::addRenderTarget( RenderTargetDescriptor* descriptor )
       return false;
    }
 
-   m_renderTargets.push_back( descriptor );
+   notify( GBO_PRE_CHANGE );
+   m_renderTargets.push_back( descriptor );  
+   notify( GBO_POST_CHANGE );
+
    return true;
 }
 

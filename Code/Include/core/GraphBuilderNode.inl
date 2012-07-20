@@ -207,6 +207,27 @@ void GraphBuilderNode< Impl >::defineOutput( TOutputSocket* output )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Impl >
+void GraphBuilderNode< Impl >::removeOutput( const std::string& name )
+{
+   for ( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
+   {
+      if ( (*it)->getName() == name )
+      {
+         (*it)->detachObserver( *this );
+
+         delete *it;
+         m_outputs.erase( it );
+
+         notify( GBNO_OUTPUTS_CHANGED );
+
+         break;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
 void GraphBuilderNode< Impl >::onBulkSocketsInitialization()
 {
    // attach self as an observer of the sockets

@@ -67,6 +67,13 @@ public:
    RenderTarget* getRenderTarget( const std::string& id, RuntimeDataBuffer& runtimeData ) const;
 
    /**
+    * Looks for a render target descriptor with the specified id.
+    *
+    * @param id         render target id
+    */
+   RenderTargetDescriptor* findRenderTarget( const std::string& id ) const;
+
+   /**
     * Returns a list of all defined render targets.
     */
    inline const std::vector< RenderTargetDescriptor* >& getRenderTargets() const { return m_renderTargets; }
@@ -90,13 +97,6 @@ protected:
    void onNodeAdded( RenderingPipelineNode* node );
    void onNodeRemoved( RenderingPipelineNode& node );
 
-private:
-   /**
-    * Looks for a render target descriptor with the specified id.
-    *
-    * @param id         render target id
-    */
-   RenderTargetDescriptor* findRenderTarget( const std::string& id ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

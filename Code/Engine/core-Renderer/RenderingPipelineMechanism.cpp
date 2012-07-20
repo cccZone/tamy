@@ -135,6 +135,22 @@ const Array< Light*> & RenderingPipelineMechanism::getSceneLights( RPMSceneId sc
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool RenderingPipelineMechanism::isRenderTargetDefined( const std::string& id ) const
+{
+   if ( m_pipeline )
+   {
+      RenderTargetDescriptor* rtDesc = m_pipeline->findRenderTarget( id );
+      return rtDesc != NULL;
+   }
+   else
+   {
+      ASSERT_MSG( false, "Rendering pipeline mechanism isn't properly initialized" );
+      return NULL;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 RenderTarget* RenderingPipelineMechanism::getRenderTarget( const std::string& id ) const
 {
    if ( m_pipeline )
@@ -245,7 +261,7 @@ void RenderingPipelineMechanism::pipelineDeinitialization()
    for ( std::vector< RenderingPipelineNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
    {
       // some of the nodes might not be there - verify that
-      (*it)->detachObserver( *this );
+      (*it)->destroyLayout( *this );
    }
 
    m_nodesQueue.clear();
@@ -330,15 +346,8 @@ void RenderingPipelineMechanism::update( RenderingPipelineNode& subject, const G
 {
    if ( m_renderer != NULL )
    {
-      if ( msg == GBNO_CHANGED )
-      {
-         pipelineDeinitialization();
-      }
-
-      if ( msg == GBNO_CHANGED )
-      {
-         pipelineInitialization();
-      }
+      pipelineDeinitialization();
+      pipelineInitialization();
    }
 }
 
