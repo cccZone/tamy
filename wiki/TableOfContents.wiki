@@ -60,6 +60,7 @@
       * [RendererCore#Rendering_pipeline Rendering pipeline]
       * [RendererCore#Camera Camera]
       * [SettingUpRenderer Setting it up]
+      * [CommonResources Common resources]
     * [ Importers ]
       * [BlenderImporter From Blender]
       * [BVHImporter From BVH MoCap]
