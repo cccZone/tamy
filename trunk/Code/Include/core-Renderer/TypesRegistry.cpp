@@ -25,7 +25,6 @@ REGISTER_TYPE( TriangleMesh );
 ///////////////////////////////////////////////////////////////////////////////
 
 REGISTER_ABSTRACT_TYPE( ShaderTexture );
-REGISTER_TYPE( SingleTextureMaterial );
 REGISTER_TYPE( MaterialEntity );
 REGISTER_TYPE( VertexShader );
 REGISTER_TYPE( PixelShader );
@@ -123,11 +122,7 @@ REGISTER_TYPE( RPVec4Output );
 REGISTER_TYPE( RPMatrixInput );
 REGISTER_TYPE( RPMatrixOutput );
 REGISTER_TYPE( RenderTargetDescriptor );
-REGISTER_ABSTRACT_TYPE( RPSceneBuilder );
-REGISTER_TYPE( RPSBTextured );
-REGISTER_TYPE( RPSBComputed );
 REGISTER_ENUM_TYPE( TextureUsage );
-REGISTER_ABSTRACT_TYPE( ComputedRenderState );
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -87,6 +87,22 @@ void MaterialEntity::onPropertyChanged( ReflectionProperty& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void MaterialEntity::setMaterial( Material* material )
+{
+   // deinitialize the old material dependencies
+   deinitializeMaterial();
+   detachListeners();
+
+   // set the new material
+   m_material = material;
+
+   // initialize it and the dependencies
+   initializeMaterial();
+   attachListeners();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void MaterialEntity::update( Material& subject )
 {
    // do nothing - this is an initial update
@@ -132,14 +148,17 @@ void MaterialEntity::initializeMaterial()
 
    // create the material graph
    Graph< MaterialNode* > materialGraph;
-   m_material->buildGraph< MNPixelShader >( materialGraph );
+   m_material->buildReverseGraph< MNPixelShader >( materialGraph );
 
    std::vector< Graph< MaterialNode* >::Index > sortedNodes;
    GraphTopologicalSort( sortedNodes, materialGraph );
 
-   for ( std::vector< Graph< MaterialNode* >::Index >::const_iterator it = sortedNodes.begin(); it != sortedNodes.end(); ++it )
+   // insert the nodes backwards, because the graph was built backwards, but we still want
+   // to run the update from the start nodes to the end node
+   int count = sortedNodes.size();
+   for ( int i = count - 1; i >= 0; --i )
    {
-      m_nodesQueue.push_back( materialGraph.getNode( *it ) );
+      m_nodesQueue.push_back( materialGraph.getNode( sortedNodes[i] ) );
    }
 
    // create new runtime data buffer
@@ -147,8 +166,8 @@ void MaterialEntity::initializeMaterial()
    m_dataBuf = new RuntimeDataBuffer();
 
    // initialize the nodes
-   unsigned int count = m_nodesQueue.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   count = m_nodesQueue.size();
+   for ( int i = 0; i < count; ++i )
    {
       m_nodesQueue[i]->createLayout( *this );
    }

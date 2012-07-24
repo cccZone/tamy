@@ -265,10 +265,10 @@ class ShaderParamTexture : public ShaderParam< T >
 {
 private:
    std::string          m_name;
-   Texture&             m_val;
+   Texture*             m_val;
 
 public:
-   ShaderParamTexture( const std::string& name, Texture& val );
+   ShaderParamTexture( const std::string& name, Texture* val );
 
    // -------------------------------------------------------------------------
    // ShaderParam implementation

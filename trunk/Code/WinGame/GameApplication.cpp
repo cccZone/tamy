@@ -81,7 +81,7 @@ void GameApplication::initialize()
       // load the game scene
       {
          Model* worldScene = resMgr.create< Model >( gameConfig->m_worldModelPath, true );
-         renderingMechanism->addScene( RPS_Main, *worldScene );
+         renderingMechanism->setScene( worldScene );
 
          TimeControllerTrack& worldTrack = timeController().add( "world" );
          worldTrack.add( *worldScene );

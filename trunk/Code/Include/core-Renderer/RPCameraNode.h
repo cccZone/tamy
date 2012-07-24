@@ -21,6 +21,7 @@ private:
    RPFloatOutput*    m_farZ;
    RPFloatOutput*    m_viewportWidth;
    RPFloatOutput*    m_viewportHeight;
+   RPMatrixOutput*   m_view;
    RPMatrixOutput*   m_invView;
    RPMatrixOutput*   m_invProj;
 

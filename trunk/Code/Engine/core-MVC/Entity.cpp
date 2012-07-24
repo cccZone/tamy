@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_OBJECT( Entity )
+BEGIN_ABSTRACT_OBJECT( Entity )
    PARENT( ReflectionObject );
    PROPERTY_EDIT( "name", std::string, m_name )
    PROPERTY( Entity*, m_parent )

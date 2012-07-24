@@ -6,8 +6,9 @@
 #include "core\Subject.h"
 #include "core\UniqueObject.h"
 #include "core\Color.h"
-#include "core/RoundBuffer.h"
-#include "core-AppFlow/TimeDependent.h"
+#include "core\RoundBuffer.h"
+#include "core-AppFlow\TimeDependent.h"
+#include "core\types.h"
 #include <vector>
 #include <map>
 #include <set>
@@ -134,8 +135,16 @@ public:
     *
     * @param renderTarget     a pointer to a rendering target, or NULL
     *                         if we want to use the back buffer.
+    * @param targetIdx        target index
     */
-   void setRenderTarget( RenderTarget* renderTarget );
+   void bindRenderTarget( RenderTarget* renderTarget, uint targetIdx );
+
+   /**
+    * Unbinds the specified render target, disabling any further rendering to it.
+    *
+    * @param targetIdx
+    */
+   void unbindRenderTarget( uint targetIdx );
 
    // ----------------------------------------------------------------------------
    // Camera management
@@ -210,14 +219,23 @@ protected:
     * If NULL is specified, it should activate the back buffer.
     *
     * @param renderTarget
+    * @param targetIdx
     */
-   virtual void activateRenderTarget( RenderTarget* renderTarget ) = 0;
+   virtual void activateRenderTarget( RenderTarget* renderTarget, uint targetIdx ) = 0;
+
+   /**
+    * This method should render inactive the specified render target slot on the underlying rendering device.
+    *
+    * @param targetIdx
+    */
+   virtual void deactivateRenderTarget( uint targetIdx ) = 0;
 
    /**
     * This method should clean the currently set rendering target
     * using the specified color.
     *
     * @param bgColor
+    * @param targetIdx
     */
    virtual void cleanRenderTarget( const Color& bgColor ) = 0;
 

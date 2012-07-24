@@ -48,8 +48,7 @@ private:
    TRuntimeVar< RenderTarget* >        m_renderTarget;
 
    // sockets data
-   RPTextureInput*                     m_depthBufferInput;
-   RPTextureInput*                     m_normalBufferInput;
+   RPTextureInput*                     m_depthNormalBufferInput;
    RPTextureOutput*                    m_lightTexture;
 
 public:

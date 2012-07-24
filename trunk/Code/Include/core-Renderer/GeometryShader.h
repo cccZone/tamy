@@ -27,6 +27,11 @@ public:
    GeometryShader( const FilePath& resourceName = FilePath() );
    ~GeometryShader();
 
+   // -------------------------------------------------------------------------
+   // Resource implementation
+   // -------------------------------------------------------------------------
+   void onResourceLoaded( ResourcesManager& mgr );
+
 protected:
    // -------------------------------------------------------------------------
    // GraphBuilder implementation

@@ -170,6 +170,8 @@ void QueryRenderingPass::render( Renderer& renderer )
    // remove all queries from the list - we have fulfilled them
    m_completedQueriesList = m_queriesList;
    m_queriesList.clear();
+
+   new ( renderer() ) RCDeactivateRenderTarget();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

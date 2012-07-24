@@ -196,7 +196,7 @@ void DX9Renderer::attemptToRecoverGraphicsSystem()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DX9Renderer::activateRenderTarget( RenderTarget* renderTarget )
+void DX9Renderer::activateRenderTarget( RenderTarget* renderTarget, uint targetIdx )
 {
    IDirect3DSurface9* renderTargetSurface = NULL;
 
@@ -225,8 +225,19 @@ void DX9Renderer::activateRenderTarget( RenderTarget* renderTarget )
       m_d3Device->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, &renderTargetSurface );
    }
 
-   m_d3Device->SetRenderTarget( 0, renderTargetSurface );
+   m_d3Device->SetRenderTarget( targetIdx, renderTargetSurface );
    renderTargetSurface->Release();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DX9Renderer::deactivateRenderTarget( uint targetIdx )
+{
+   // target with an index equal 0 can't be deactivated, thus the if clause checking that case
+   if ( targetIdx > 0 )
+   {
+      m_d3Device->SetRenderTarget( targetIdx, NULL );
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////

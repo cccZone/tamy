@@ -37,6 +37,13 @@ public:
    void createLayout( const GeometryEntity& host ) const;
 
    /**
+    * Called when the graph is fully restored. Allows to reprocess certain nodes - remove
+    * unused sockets etc. and get the graph structure up to date with external
+    * dependencies in general.
+    */
+   virtual void onGraphLoaded() {}
+
+   /**
     * Called by the entity that uses the material in order to set it up.
     *
     * @param renderer

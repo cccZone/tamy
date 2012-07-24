@@ -138,6 +138,8 @@ std::string Geometry::getMeshName() const
 
 void Geometry::onChildAttached( Entity& child )
 {
+   __super::onChildAttached( child );
+
    RenderState* renderState = dynamic_cast< RenderState* >( &child );
    if ( renderState )
    {
@@ -149,6 +151,8 @@ void Geometry::onChildAttached( Entity& child )
 
 void Geometry::onChildDetached( Entity& child )
 {
+   __super::onChildDetached( child );
+
    RenderState* renderState = dynamic_cast< RenderState* >( &child );
    if ( renderState )
    {

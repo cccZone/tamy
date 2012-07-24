@@ -28,6 +28,11 @@ public:
    Material( const FilePath& resourceName = FilePath() );
    ~Material();
 
+   // -------------------------------------------------------------------------
+   // Resource implementation
+   // -------------------------------------------------------------------------
+   void onResourceLoaded( ResourcesManager& mgr );
+
 protected:
    // -------------------------------------------------------------------------
    // GraphBuilder implementation

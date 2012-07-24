@@ -51,8 +51,11 @@ bool StaticGeometry::onPreRender( Renderer& renderer )
 
    RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
    {
+      const Matrix& worldMtx = getGlobalMtx();
+
       Matrix worldViewMtx;
-      worldViewMtx.setMul( getGlobalMtx(), camera.getViewMtx() );
+      worldViewMtx.setMul( worldMtx, camera.getViewMtx() );
+      comm->setMtx( "g_mWorld", worldMtx );
       comm->setMtx( "g_mWorldView", worldViewMtx );
       comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
    }

@@ -235,6 +235,7 @@ void GraphLayout::createContextMenu( QMenu* menu, const QPointF& scenePos )
    else if ( block != NULL )
    {
       // if the clicked item is a block...
+      block->onCreateContextMenu( menu );
    }
    else if ( socket != NULL )
    {

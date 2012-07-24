@@ -6,6 +6,7 @@
 #include "core-Renderer/RenderingPipelineSockets.h"
 #include "core-Renderer/PixelShader.h"
 #include "core-Renderer/PixelShaderConstant.h"
+#include "core-Renderer/MRTUtil.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,7 +14,7 @@
 BEGIN_OBJECT( RPPostProcessNode );
    PARENT( RenderingPipelineNode );
    PROPERTY_EDIT( "Pixel shader", PixelShader*, m_shader );
-   PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
+   PROPERTY_EDIT( "Render target ids", std::string, m_renderTargetId );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,10 +22,11 @@ END_OBJECT();
 RPPostProcessNode::RPPostProcessNode()
    : m_shader( NULL )
    , m_shaderNode( NULL )
+   , m_renderTargetId( "Color" )
 {
-   defineOutput( new RPTextureOutput( "Output" ) );
-
    m_shaderNode = new PixelShaderNodeOperator< RenderingPipelineNode >( *this );
+
+   MRTUtil::defineOutputs( m_renderTargetId, this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,7 +55,11 @@ void RPPostProcessNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 
-   if ( property.getName() == "m_shader" && m_shader )
+   if ( property.getName() == "m_renderTargetId" )
+   {
+      MRTUtil::defineOutputs( m_renderTargetId, this );
+   }
+   else if ( property.getName() == "m_shader" && m_shader )
    {
       m_shaderNode->setShader( *m_shader );
    }
@@ -77,14 +83,15 @@ void RPPostProcessNode::onCreateLayout( RenderingPipelineMechanism& host ) const
 {
    RuntimeDataBuffer& data = host.data();
 
-   data.registerVar( m_renderTarget );
+   data.registerVar( m_renderTargets );
 
-   RenderTarget* trg = host.getRenderTarget( m_renderTargetId );
-   data[ m_renderTarget ] = trg;
+   // create the render target
+   {
+      Array< RenderTarget* >* renderTargets = new Array< RenderTarget* >();
+      data[ m_renderTargets ] = renderTargets;
 
-   // find the existing outputs and set the data on them
-   RPTextureOutput* output = DynamicCast< RPTextureOutput >( findOutput( "Output" ) );
-   output->setValue( data, trg );
+      MRTUtil::refreshRenderTargets( host, this, *renderTargets );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -97,41 +104,49 @@ void RPPostProcessNode::onUpdate( RenderingPipelineMechanism& host ) const
    }
 
    RuntimeDataBuffer& data = host.data();
-   RenderTarget* trg = data[ m_renderTarget ];
+   Array< RenderTarget* >& renderTargets = *(data[ m_renderTargets ]);
+   if ( renderTargets.size() == 0 )
+   {
+      // nothing to render the scene to - bail
+      return;
+   }
+
    Renderer& renderer = host.getRenderer();
 
-   // activate the render target we want to render to
-   new ( renderer() ) RCActivateRenderTarget( trg );
+   // activate render targets we want to render to
+   uint rtCount = renderTargets.size();
+   for ( uint i = 0; i < rtCount; ++i )
+   {
+      new ( renderer() ) RCActivateRenderTarget( renderTargets[i], i );
+   }
 
    // bind the shader
    m_shaderNode->bindShader( renderer, data );
 
-   // render the quad
-   renderQuad( renderer, trg );
-
-   // cleanup
-   new ( renderer() ) RCUnbindPixelShader( *m_shader );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPPostProcessNode::renderQuad( Renderer& renderer, RenderTarget* rt ) const
-{
-   // get the render target size
-   unsigned int trgWidth, trgHeight;
-   if ( rt )
+   // determine the quad size ( take any of the defined render targets, since
+   // MRT requires them all to have the same size anyway ).
+   unsigned int quadWidth, quadHeight;
+   if ( renderTargets[0] )
    {
-      trgWidth = rt->getWidth();
-      trgHeight = rt->getHeight();
+      quadWidth = renderTargets[0]->getWidth();
+      quadHeight = renderTargets[0]->getHeight();
    }
    else
    {
-      trgWidth = renderer.getViewportWidth();
-      trgHeight = renderer.getViewportHeight();
+      quadWidth = renderer.getViewportWidth();
+      quadHeight = renderer.getViewportHeight();
    }
+   
+   new ( renderer() ) RCFullscreenQuad( quadWidth, quadHeight );
 
-   new ( renderer() ) RCActivateRenderTarget( rt );
-   new ( renderer() ) RCFullscreenQuad( trgWidth, trgHeight );
+   // cleanup
+   new ( renderer() ) RCUnbindPixelShader( *m_shader );
+
+   // unbind render targets
+   for ( uint i = 0; i < rtCount; ++i )
+   {
+      new ( renderer() ) RCDeactivateRenderTarget( i );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

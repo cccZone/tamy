@@ -380,9 +380,6 @@
     <ClInclude Include="PipelineSocket.inl">
       <Filter>Widgets\PipelineWidget</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineBlock.h">
-      <Filter>Widgets\PipelineWidget</Filter>
-    </ClInclude>
     <ClInclude Include="PipelineLayout.h">
       <Filter>Widgets\PipelineWidget</Filter>
     </ClInclude>
@@ -1424,6 +1421,9 @@
     </CustomBuild>
     <CustomBuild Include="ResourceDropArea.h">
       <Filter>Widgets\DropArea\ResourceDropArea</Filter>
+    </CustomBuild>
+    <CustomBuild Include="PipelineBlock.h">
+      <Filter>Widgets\PipelineWidget</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

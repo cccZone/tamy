@@ -268,7 +268,6 @@ void DX9VertexShader::beginRendering()
 
 void DX9VertexShader::endRendering()
 {
-   m_d3Device->SetVertexDeclaration( NULL );
    m_d3Device->SetVertexShader( NULL );
 }
 

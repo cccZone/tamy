@@ -3,10 +3,12 @@
 #include "core-Renderer\RenderingView.h"
 #include "core-Renderer\RenderingMechanism.h"
 #include "core-Renderer\Geometry.h"
+#include "core-Renderer\Light.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\RenderState.h"
-#include "core-Renderer\RPSBTextured.h"
+#include "core-Renderer\StatefulRenderTreeBuilder.h"
+#include "core-Renderer\RenderTree.h"
 #include "core\AABoundingBox.h"
 #include "core\MemoryPool.h"
 #include "core\RuntimeData.h"
@@ -35,7 +37,9 @@ namespace // anonymous
 
       void attemptToRecoverGraphicsSystem() {}
 
-      void activateRenderTarget( RenderTarget* renderTarget ) {}
+      void activateRenderTarget( RenderTarget* renderTarget, uint targetIdx ) {}
+
+      void deactivateRenderTarget( uint targetIdx ) {}
 
       void cleanRenderTarget( const Color& bgColor ) {}
    };
@@ -47,15 +51,12 @@ namespace // anonymous
    private:
       Model&               m_model;
       RenderingView*       m_view;
-      RPSBTextured*        m_builder;
       MemoryPool*          m_treeMemPool;
-      RuntimeDataBuffer    m_data;
 
    public:
       RenderingMechanismMock( Model& model ) 
          : m_model( model )
          , m_view( NULL ) 
-         , m_builder( new RPSBTextured() )
          , m_treeMemPool( new MemoryPool( 1024 * 1024 ) )
       {
       }
@@ -63,7 +64,6 @@ namespace // anonymous
       ~RenderingMechanismMock()
       {
          delete m_treeMemPool; m_treeMemPool = NULL;
-         delete m_builder; m_builder = NULL;
       }
 
       void initialize( Renderer& renderer ) 
@@ -85,7 +85,7 @@ namespace // anonymous
 
          // build a tree sorting the nodes by the attributes
          m_treeMemPool->reset();
-         StateTreeNode* root = m_builder->buildRenderTree( *m_treeMemPool, renderables, m_data );
+         StateTreeNode* root = StatefulRenderTreeBuilder::buildRenderTree( *m_treeMemPool, renderables );
 
          if ( root )
          {
@@ -192,6 +192,8 @@ TEST( RenderingView, basics )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Geometry >( "Geometry", NULL );
+   typesRegistry.addSerializableType< Light >( "Light", NULL );
    typesRegistry.addSerializableType< RenderStateMock >( "RenderStateMock", NULL );
 
    RenderStateMock effect1( "1" );
@@ -228,6 +230,8 @@ TEST( RenderingView, statesBatching )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Geometry >( "Geometry", NULL );
+   typesRegistry.addSerializableType< Light >( "Light", NULL );
    typesRegistry.addSerializableType< RenderStateMock >( "RenderStateMock", NULL );
 
    RenderStateMock effect1( "1" );
@@ -267,6 +271,8 @@ TEST( RenderingView, manySingleStatesBatching )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Geometry >( "Geometry", NULL );
+   typesRegistry.addSerializableType< Light >( "Light", NULL );
    typesRegistry.addSerializableType< RenderStateMock >( "RenderStateMock", NULL );
 
    RenderStateMock state1( "1" );
@@ -311,6 +317,8 @@ TEST( RenderingView, simpleMultipleStatesBatching )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< Geometry >( "Geometry", NULL );
+   typesRegistry.addSerializableType< Light >( "Light", NULL );
    typesRegistry.addSerializableType< RenderStateMock >( "RenderStateMock", NULL );
 
    RenderStateMock state1( "1" );

@@ -68,9 +68,10 @@ bool SkinnedGeometry::onPreRender( Renderer& renderer )
       Matrix& boneMatrix = m_boneMatrices[i];
       const Matrix& invBindPoseMtx = m_skeleton->getInvBindPoseMtx( bone->getName() );
 
-      boneMatrix.setMul( invBindPoseMtx, bone->getGlobalMtx() ).mul( camera.getViewMtx() );
+      boneMatrix.setMul( invBindPoseMtx, bone->getGlobalMtx() );
    }
    comm->setMtx( "g_mSkinningMatrices", m_boneMatrices, m_boneMatrices.size() );
+   comm->setMtx( "g_mView", camera.getViewMtx() );
    comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
 
    return true;

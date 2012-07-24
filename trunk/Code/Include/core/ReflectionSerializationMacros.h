@@ -10,6 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #define EXTERNAL_DEPENDENCY_MARKER     0x8000000
+#define MAX_EXTERNAL_DEPENDENCIES      1024
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,6 +26,11 @@
       if ( outIsExternal ) \
       { \
          outDependencyIdx = ( compressedIdx ^ EXTERNAL_DEPENDENCY_MARKER ) - 1; \
+         if ( outDependencyIdx > MAX_EXTERNAL_DEPENDENCIES ) \
+         { \
+            outIsExternal = false; \
+            outDependencyIdx = -1; \
+         } \
       } else { \
          outDependencyIdx = compressedIdx - 1; \
       } \

@@ -24,15 +24,15 @@ unsigned int RenderableTexture::getHeight() const
 
 ShaderParam< EffectShader >* RenderableTexture::createEffectShaderTextureSetter( const std::string& paramName )
 {
-    return m_texture ? new ShaderParamTexture< EffectShader >( paramName, *m_texture ) : NULL;
+    return new ShaderParamTexture< EffectShader >( paramName, m_texture );
 }
 
 ShaderParam< PixelShader >* RenderableTexture::createPixelShaderTextureSetter( const std::string& paramName )
 {
-    return m_texture ? new ShaderParamTexture< PixelShader >( paramName, *m_texture ) : NULL;
+    return new ShaderParamTexture< PixelShader >( paramName, m_texture );
 }
 
 ShaderParam< VertexShader >* RenderableTexture::createVertexShaderTextureSetter( const std::string& paramName )
 {
-    return m_texture ? new ShaderParamTexture< VertexShader >( paramName, *m_texture ) : NULL;
+    return new ShaderParamTexture< VertexShader >( paramName, m_texture );
 }

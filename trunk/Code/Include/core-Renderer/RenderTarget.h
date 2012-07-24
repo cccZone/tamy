@@ -192,15 +192,41 @@ public:
 class RCActivateRenderTarget  : public RenderCommand
 {
 private:
-   RenderTarget*    m_renderTarget;
+   RenderTarget*     m_renderTarget;
+   uint              m_targetIdx;
 
 public:
    /**
     * Constructor.
     *
     * @param renderTarget     ptr to the render target ( NULL value also accepted )
+    * @param targetIdx        target index
     */
-   RCActivateRenderTarget( RenderTarget* renderTarget );
+   RCActivateRenderTarget( RenderTarget* renderTarget, uint targetIdx = 0 );
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Command that unbinds a render target, disabling any further rendering to it.
+ */
+class RCDeactivateRenderTarget  : public RenderCommand
+{
+private:
+   uint              m_targetIdx;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param targetIdx        target index
+    */
+   RCDeactivateRenderTarget( uint targetIdx = 0 );
 
    // -------------------------------------------------------------------------
    // RenderCommand implementation

@@ -84,7 +84,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
-    <ClCompile Include="ComputedRenderState.cpp" />
+    <ClCompile Include="BasicRenderingEntitiesFactory.cpp" />
     <ClCompile Include="FragmentShader.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
     <ClCompile Include="Geometry.cpp" />
@@ -115,6 +115,7 @@
     <ClCompile Include="MNTexture.cpp" />
     <ClCompile Include="MNTimer.cpp" />
     <ClCompile Include="MNVec4.cpp" />
+    <ClCompile Include="MRTUtil.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="RenderingPipelineNode.cpp" />
     <ClCompile Include="RenderingPipelineMechanism.cpp" />
@@ -130,8 +131,6 @@
     <ClCompile Include="RPFloats2Vec4Node.cpp" />
     <ClCompile Include="RPDeferredLightingNode.cpp" />
     <ClCompile Include="RPPostProcessNode.cpp" />
-    <ClCompile Include="RPSBComputed.cpp" />
-    <ClCompile Include="RPSceneBuilder.cpp" />
     <ClCompile Include="RPSceneRenderNode.cpp" />
     <ClCompile Include="RPStartNode.cpp" />
     <ClCompile Include="RPTextureNode.cpp" />
@@ -148,7 +147,6 @@
     <ClCompile Include="SkinnedGeometry.cpp" />
     <ClCompile Include="StatefulRenderTreeBuilder.cpp" />
     <ClCompile Include="StaticGeometry.cpp" />
-    <ClCompile Include="RPSBTextured.cpp" />
     <ClCompile Include="TriangleMesh.cpp" />
     <ClCompile Include="DeviceFilter.cpp" />
     <ClCompile Include="RenderDevicesEnumerator.cpp" />
@@ -163,7 +161,6 @@
     <ClCompile Include="TextField.cpp" />
     <ClCompile Include="GeometryResource.cpp" />
     <ClCompile Include="EffectShader.cpp" />
-    <ClCompile Include="SingleTextureMaterial.cpp" />
     <ClCompile Include="RenderingView.cpp" />
     <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="VertexDescriptions.cpp" />
@@ -183,7 +180,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderCommands.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\ComputedRenderState.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\BasicRenderingEntitiesFactory.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
@@ -214,6 +211,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\MNTexture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNTimer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MNVec4.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\MRTUtil.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h" />
@@ -233,8 +231,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPFloats2Vec4Node.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPSBComputed.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPSceneBuilder.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPTextureNode.h" />
@@ -258,7 +254,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\SkinnedGeometry.h" />
     <ClInclude Include="..\..\Include\core-Renderer\StatefulRenderTreeBuilder.h" />
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPSBTextured.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingParams.h" />
     <ClInclude Include="..\..\Include\core-Renderer\TriangleMesh.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexArray.h" />
@@ -282,7 +277,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\GeometryResource.h" />
     <ClInclude Include="..\..\Include\core-Renderer\EffectShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Geometry.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\SingleTextureMaterial.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h" />
     <ClInclude Include="..\..\Include\core-Renderer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptors.h" />

@@ -94,7 +94,7 @@ public:
     *
     * @param material
     */
-   inline void setMaterial( Material* material ) { m_material = material; }
+   void setMaterial( Material* material );
 
    // -------------------------------------------------------------------------
    // RenderState implementation

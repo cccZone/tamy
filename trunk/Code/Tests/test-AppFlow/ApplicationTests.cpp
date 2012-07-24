@@ -377,7 +377,6 @@ TEST(ApplicationManager, signalingOtherApplication)
    CPPUNIT_ASSERT_EQUAL(false, game.isInitialized());
    CPPUNIT_ASSERT_EQUAL(0.f, game.getTimeElapsed());
 
-   CPPUNIT_ASSERT_THROW(menu.sendSignal("game", 5), std::logic_error);
 
    // switching over to game:
    //   - menu doesn't get deinitialized, but it stops receiving updates (enters hibernation)

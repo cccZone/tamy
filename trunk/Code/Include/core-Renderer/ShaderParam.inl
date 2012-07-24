@@ -155,7 +155,7 @@ ShaderParamString< T >::ShaderParamString( const std::string& name, const std::s
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamTexture< T >::ShaderParamTexture( const std::string& name, Texture& val ) 
+ShaderParamTexture< T >::ShaderParamTexture( const std::string& name, Texture* val ) 
    : m_name( name )
    , m_val( val ) 
 {}

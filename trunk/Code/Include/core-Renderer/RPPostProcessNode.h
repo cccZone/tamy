@@ -29,7 +29,7 @@ private:
 
    // runtime data
    PixelShaderNodeOperator< RenderingPipelineNode >*              m_shaderNode;
-   TRuntimeVar< RenderTarget* >                                   m_renderTarget;
+   TRuntimeVar< Array< RenderTarget* >* >                         m_renderTargets;
 
 public:
    RPPostProcessNode();
@@ -47,15 +47,6 @@ public:
    void onPrePropertyChanged( ReflectionProperty& property );
    void onPropertyChanged( ReflectionProperty& property );
    void onObjectLoaded();
-
-protected:
-   /**
-    * Renders the full screen quad geometry.
-    *
-    * @param renderer
-    * @param rt         render target
-    */
-   void renderQuad( Renderer& renderer, RenderTarget* rt ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

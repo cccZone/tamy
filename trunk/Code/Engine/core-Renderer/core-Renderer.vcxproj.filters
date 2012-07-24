@@ -73,9 +73,6 @@
     <Filter Include="Mechanisms\RenderingPipeline\Views">
       <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders">
-      <UniqueIdentifier>{a95137c7-8213-4a7d-aa9f-9256f0fc932e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tools">
       <UniqueIdentifier>{5a93e70c-6c1d-4bda-9166-812a8da9be22}</UniqueIdentifier>
     </Filter>
@@ -174,9 +171,6 @@
     <ClCompile Include="StaticGeometry.cpp">
       <Filter>Geometry\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="SingleTextureMaterial.cpp">
-      <Filter>Materials\Entities</Filter>
-    </ClCompile>
     <ClCompile Include="VertexDescriptions.cpp">
       <Filter>Geometry\Entities</Filter>
     </ClCompile>
@@ -212,12 +206,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Core\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSBTextured.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
-    </ClCompile>
-    <ClCompile Include="RPSBComputed.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
     </ClCompile>
     <ClCompile Include="FragmentShader.cpp">
       <Filter>Geometry\Resources</Filter>
@@ -312,9 +300,6 @@
     <ClCompile Include="RenderableTexture.cpp">
       <Filter>Materials\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="ComputedRenderState.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="RenderTree.cpp">
       <Filter>Core\RenderTree</Filter>
@@ -343,9 +328,6 @@
     <ClCompile Include="RPTextureNode.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClCompile>
-    <ClCompile Include="RPSceneBuilder.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneRendering</Filter>
-    </ClCompile>
     <ClCompile Include="RPSceneRenderNode.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\SceneRendering</Filter>
     </ClCompile>
@@ -366,6 +348,12 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="MRTUtil.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicRenderingEntitiesFactory.cpp">
+      <Filter>Tools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -489,9 +477,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h">
       <Filter>Geometry\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\SingleTextureMaterial.h">
-      <Filter>Materials\Entities</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h">
       <Filter>Geometry\Entities</Filter>
     </ClInclude>
@@ -549,12 +534,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h">
       <Filter>Core\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPSBTextured.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPSBComputed.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h">
       <Filter>Tools</Filter>
@@ -658,9 +637,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderableTexture.h">
       <Filter>Materials\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ComputedRenderState.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneTreeBuilders</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingParams.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -706,9 +682,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\SceneRendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPSceneBuilder.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneRendering</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPCameraNode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClInclude>
@@ -723,6 +696,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MRTUtil.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\BasicRenderingEntitiesFactory.h">
+      <Filter>Tools</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -20,12 +20,10 @@ END_OBJECT();
 RPDeferredLightingNode::RPDeferredLightingNode()
    : m_shader( NULL )
 {
-   m_depthBufferInput = new RPTextureInput( "DepthBuffer" );
-   m_normalBufferInput = new RPTextureInput( "NormalBuffer" );
+   m_depthNormalBufferInput = new RPTextureInput( "DepthNormals" );
    m_lightTexture = new RPTextureOutput( "LightsTexture" );
 
-   defineInput( m_depthBufferInput );
-   defineInput( m_normalBufferInput );
+   defineInput( m_depthNormalBufferInput );
    defineOutput( m_lightTexture );
 }
 
@@ -33,8 +31,7 @@ RPDeferredLightingNode::RPDeferredLightingNode()
 
 RPDeferredLightingNode::~RPDeferredLightingNode()
 {
-   m_depthBufferInput = NULL;
-   m_normalBufferInput = NULL;
+   m_depthNormalBufferInput = NULL;
    m_lightTexture = NULL;
 }
 
@@ -57,8 +54,7 @@ void RPDeferredLightingNode::onObjectLoaded()
 
 void RPDeferredLightingNode::initializeSocketd()
 {
-   m_depthBufferInput = DynamicCast< RPTextureInput >( findInput( "DepthBuffer" ) );
-   m_normalBufferInput = DynamicCast< RPTextureInput >( findInput( "NormalBuffer" ) );
+   m_depthNormalBufferInput = DynamicCast< RPTextureInput >( findInput( "DepthNormals" ) );
    m_lightTexture = DynamicCast< RPTextureOutput >( findOutput( "LightsTexture" ) );
 
 }
@@ -97,11 +93,14 @@ void RPDeferredLightingNode::onDestroyLayout( RenderingPipelineMechanism& host )
 
 void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
+   if ( !m_depthNormalBufferInput )
+   {
+      return;
+   }
    RuntimeDataBuffer& data = host.data();
 
-   ShaderTexture* depthBufferTex = m_depthBufferInput->getValue( data );
-   ShaderTexture* normalBufferTex = m_normalBufferInput->getValue( data );
-   if ( !m_shader || !depthBufferTex || !normalBufferTex )
+   ShaderTexture* depthNormalsBufferTex = m_depthNormalBufferInput->getValue( data );
+   if ( !m_shader || !depthNormalsBufferTex )
    {
       // no scene - no rendering
       return;
@@ -116,8 +115,7 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    // set the shader data
    RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
    {
-      comm->setTexture( "depthBuffer", *depthBufferTex );
-      comm->setTexture( "normalBuffer", *normalBufferTex );
+      comm->setTexture( "depthNormalsTex", *depthNormalsBufferTex );
    }
 
    // render light volumes
@@ -131,6 +129,7 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    // cleanup
    new ( renderer() ) RCUnbindPixelShader( *m_shader );
+   new ( renderer() ) RCDeactivateRenderTarget();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
