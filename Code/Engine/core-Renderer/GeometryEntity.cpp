@@ -113,16 +113,19 @@ void GeometryEntity::initializeGeometryShader()
       return;
    }
 
-   // create the material graph
-   Graph< GeometryShaderNode* > materialGraph;
-   m_geometryShader->buildGraph< GNVertexShader >( materialGraph );
+   // create the geometry graph
+   Graph< GeometryShaderNode* > geometryGraph;
+   m_geometryShader->buildReverseGraph< GNVertexShader >( geometryGraph );
 
    std::vector< Graph< GeometryShaderNode* >::Index > sortedNodes;
-   GraphTopologicalSort( sortedNodes, materialGraph );
+   GraphTopologicalSort( sortedNodes, geometryGraph );
 
-   for ( std::vector< Graph< GeometryShaderNode* >::Index >::const_iterator it = sortedNodes.begin(); it != sortedNodes.end(); ++it )
+   // insert the nodes backwards, because the graph was built backwards, but we still want
+   // to run the update from the start nodes to the end node
+   int count = sortedNodes.size();
+   for ( int i = count - 1; i >= 0; --i )
    {
-      m_nodesQueue.push_back( materialGraph.getNode( *it ) );
+      m_nodesQueue.push_back( geometryGraph.getNode( sortedNodes[i] ) );
    }
 
    // create new runtime data buffer
@@ -130,8 +133,8 @@ void GeometryEntity::initializeGeometryShader()
    m_dataBuf = new RuntimeDataBuffer();
 
    // initialize the nodes
-   unsigned int count = m_nodesQueue.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   count = m_nodesQueue.size();
+   for ( int i = 0; i < count; ++i )
    {
       m_nodesQueue[i]->createLayout( *this );
    }

@@ -47,6 +47,13 @@ private:
       }
    };
 
+   enum PSETabs
+   {
+      PSE_TAB_RENDERING,
+      PSE_TAB_TEXTURE_STAGES,
+      PSE_TAB_OUTPUT
+   };
+
 private:
    Ui::PixelShaderEditorWindow         m_ui;
 

@@ -238,7 +238,7 @@ void ResourcesBrowser::showProjectBrowserPopupMenu( QTreeWidgetItem* node, QMenu
 
          // we might also want ot remove directories from a project
          FilePath dirPath( dirNode->getRelativePath() );
-         QAction* removeProjectDir = new ManageProjectDirAction( QIcon( m_iconsDir + "removeProjectDir.png" ), "Remove form project", this, m_activeProject, dirPath, false );
+         QAction* removeProjectDir = new ManageProjectDirAction( QIcon( m_iconsDir + "removeProjectDir.png" ), "Remove from project", this, m_activeProject, dirPath, false );
          menu.addAction( removeProjectDir );
       }
    }

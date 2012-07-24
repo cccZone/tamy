@@ -5,7 +5,9 @@
 #include "core-Renderer/BasicRenderCommands.h"
 #include "core-Renderer/RenderTarget.h"
 #include "core-Renderer/RenderingView.h"
-#include "core-Renderer/RPSBTextured.h"
+#include "core-Renderer/MRTUtil.h"
+#include "core-Renderer/StatefulRenderTreeBuilder.h"
+#include "core-Renderer/RenderTree.h"
 #include "core/MemoryPool.h"
 
 
@@ -14,27 +16,24 @@
 
 BEGIN_OBJECT( RPSceneRenderNode );
    PARENT( RenderingPipelineNode );
-   PROPERTY_EDIT( "Scene contents builder", RPSceneBuilder*, m_builder );
-   PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
+   PROPERTY_EDIT( "Render target ids", std::string, m_renderTargetId );
    PROPERTY_EDIT( "Clear depth buffer", bool, m_clearDepthBuffer );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPSceneRenderNode::RPSceneRenderNode()
-   : m_builder( NULL )
-   , m_clearDepthBuffer( true )
+   : m_clearDepthBuffer( true )
    , m_renderTargetId( "Color" )
 {
    defineInput( new RPVoidInput( "Input" ) );
    
-   defineOutputs();
+   MRTUtil::defineOutputs( m_renderTargetId, this );
 }
 ///////////////////////////////////////////////////////////////////////////////
 
 RPSceneRenderNode::~RPSceneRenderNode()
 {
-   delete m_builder; m_builder = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,89 +42,9 @@ void RPSceneRenderNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 
-   if ( property.getName() == "m_builder" && m_builder )
-   {
-      m_builder->defineSockets( *this );
-   }
-
    if ( property.getName() == "m_renderTargetId" )
    {
-      defineOutputs();
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPSceneRenderNode::defineOutputs()
-{
-   std::vector< std::string > renderTargets;
-   StringUtils::tokenize( m_renderTargetId, ";", renderTargets );
-
-   // go through the existing sockets and create a list of sockets that correspond to removed render targets
-   {
-      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs = getOutputs();
-      int outputsCount = outputs.size();
-      for ( int outputIdx = outputsCount - 1; outputIdx >= 0; --outputIdx )
-      {
-         const std::string& outputName = outputs[outputIdx]->getName();
-         bool stillExists = false;
-         uint renderTargetsCount = renderTargets.size();
-         for ( uint rtIdx = 0; rtIdx < renderTargetsCount; ++rtIdx )
-         {
-            if ( renderTargets[rtIdx] == outputName )
-            {
-               stillExists = true;
-               renderTargets.erase( renderTargets.begin() + rtIdx );
-               break;
-            }
-         }
-
-         if ( stillExists )
-         {
-            outputs.erase( outputs.begin() + outputIdx );
-         }
-      }
-
-      // remove the outputs that remain on the list
-      outputsCount = outputs.size();
-      for ( int outputIdx = outputsCount - 1; outputIdx >= 0; --outputIdx )
-      {
-         const std::string& outputName = outputs[outputIdx]->getName();
-         this->removeOutput( outputName );
-      }
-
-      // now add new outputs
-      uint renderTargetsCount = renderTargets.size();
-      for ( uint rtIdx = 0; rtIdx < renderTargetsCount; ++rtIdx )
-      {
-         const std::string& rtName = renderTargets[rtIdx];
-         defineOutput( new RPTextureOutput( rtName ) );
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPSceneRenderNode::refreshRenderTargets( RenderingPipelineMechanism& host ) const
-{
-   RuntimeDataBuffer& data = host.data();
-   Array< RenderTarget* >& renderTargets = *(data[ m_renderTargets ]);
-
-   // remove old render targets
-   renderTargets.clear();
-
-   // acquire the new ones
-   std::vector< GBNodeOutput< RenderingPipelineNode >* > renderTargetOutputs = getOutputs();
-   uint count = renderTargetOutputs.size();
-   renderTargets.resize( count );
-   for ( uint i = 0; i < count; ++i )
-   {
-      RPTextureOutput* rtOutput = static_cast< RPTextureOutput* >( renderTargetOutputs[i] );
-      const std::string& renderTargetName = rtOutput->getName();
-
-      RenderTarget* target = host.getRenderTarget( renderTargetName );
-      // we'll either find a target with the name we defined, or we're going to be rendering directly to back buffer.
-      renderTargets[i] = target;
+      MRTUtil::defineOutputs( m_renderTargetId, this );
    }
 }
 
@@ -144,7 +63,7 @@ void RPSceneRenderNode::onCreateLayout( RenderingPipelineMechanism& host ) const
       Array< RenderTarget* >* renderTargets = new Array< RenderTarget* >();
       data[ m_renderTargets ] = renderTargets;
 
-      refreshRenderTargets( host );
+      MRTUtil::refreshRenderTargets( host, this, *renderTargets );
    }
 
    // create a memory pool for the render tree
@@ -171,23 +90,23 @@ void RPSceneRenderNode::onDestroyLayout( RenderingPipelineMechanism& host ) cons
 
 void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-   if ( !m_builder )
-   {
-      // no scene - no rendering
-      return;
-   }
-
    RuntimeDataBuffer& data = host.data();
 
    Array< RenderTarget* >& renderTargets = *(data[ m_renderTargets ]);
+   if ( renderTargets.size() == 0 )
+   {
+      // nothing to render the scene to - bail
+      return;
+   }
+
    Renderer& renderer = host.getRenderer();
    MemoryPool* treeMemPool = data[ m_treeMemPool ];
 
-   // activate render targets we want to render to and set them on the outputs
+   // activate render targets we want to render to
    uint rtCount = renderTargets.size();
    for ( uint i = 0; i < rtCount; ++i )
    {
-      new ( renderer() ) RCActivateRenderTarget( renderTargets[i] );
+      new ( renderer() ) RCActivateRenderTarget( renderTargets[i], i );
    }
 
    // collect the renderables
@@ -195,7 +114,7 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    // build a tree sorting the nodes by the attributes
    treeMemPool->reset();
-   StateTreeNode* root = m_builder->buildRenderTree( *treeMemPool, visibleElems, data );
+   StateTreeNode* root = StatefulRenderTreeBuilder::buildRenderTree( *treeMemPool, visibleElems );
 
    if ( root )
    {
@@ -210,6 +129,13 @@ void RPSceneRenderNode::onUpdate( RenderingPipelineMechanism& host ) const
       // get rid of the tree
       MEMPOOL_DELETE( root );
    }
+
+   // unbind render targets
+   for ( uint i = 0; i < rtCount; ++i )
+   {
+      new ( renderer() ) RCDeactivateRenderTarget( i );
+   }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

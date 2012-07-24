@@ -40,3 +40,14 @@ bool SurfaceProperties::operator==( const SurfaceProperties& rhs ) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void SurfaceProperties::set( const Color& ambient, const Color& diffuse, const Color& specular, const Color& emissive, float power )
+{
+   m_ambient = ambient;
+   m_diffuse = diffuse;
+   m_specular = specular;
+   m_emissive = emissive;
+   m_power = power;
+}
+
+///////////////////////////////////////////////////////////////////////////////

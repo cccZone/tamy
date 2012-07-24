@@ -3,6 +3,9 @@
 #include "core-Renderer/MaterialEntity.h"
 
 
+// TODO: !!!!!!!!! (BUGS) !!!!!!!!!!!!!!!!!
+// - random crash on exit
+
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( MNPixelShader );
@@ -35,7 +38,34 @@ void MNPixelShader::onObjectLoaded()
 
    if ( m_shader )
    {
+      // set the shader on the object
       m_shaderNode->setShader( *m_shader );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MNPixelShader::onGraphLoaded()
+{
+   // remove the non-existing sockets
+   std::vector< std::string > sockets;
+   const std::vector< TInputSocket* >& inputs = getInputs();
+   uint count = inputs.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      if ( inputs[i] != NULL )
+      {
+         sockets.push_back( inputs[i]->getName() );
+      }
+   }
+
+   m_shaderNode->filterSockets( sockets );
+
+   // remove non-existing sockets
+   count = sockets.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      removeInput( sockets[i] );
    }
 }
 

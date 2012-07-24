@@ -448,7 +448,15 @@ void Model::onComponentRemoved( Component< Model >& component )
 
 void Model::onResourceLoaded( ResourcesManager& mgr )
 {
+   __super::onResourceLoaded( mgr );
+
    addComponent( new ModelComponent< ResourcesManager >( mgr ) );
+
+   // inform all entities that they are loaded
+   for ( Entities::iterator it = m_entities.begin(); it != m_entities.end(); ++it )
+   {
+      (*it)->onAttachToModel(*this);
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -463,12 +471,6 @@ void Model::onObjectLoaded()
    for ( unsigned int i = 0; i < count; ++i )
    {
       m_entities[i] = m_managedEntities[i];
-   }
-
-   // inform all entities that they are loaded
-   for ( Entities::iterator it = m_entities.begin(); it != m_entities.end(); ++it )
-   {
-      (*it)->onAttachToModel(*this);
    }
 }
 

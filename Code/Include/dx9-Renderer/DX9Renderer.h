@@ -231,7 +231,8 @@ protected:
    void renderingEnd();
    bool isGraphicsSystemReady() const;
    void attemptToRecoverGraphicsSystem();
-   void activateRenderTarget( RenderTarget* renderTarget );
+   void activateRenderTarget( RenderTarget* renderTarget, uint targetIdx );
+   void deactivateRenderTarget( uint targetIdx );
    void cleanRenderTarget( const Color& bgColor );
 
 private:

@@ -178,11 +178,11 @@ void Renderer::resizeViewport(unsigned int width, unsigned int height,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Renderer::setRenderTarget( RenderTarget* renderTarget )
+void Renderer::bindRenderTarget( RenderTarget* renderTarget, uint targetIdx )
 {
    static Color backBufferColor( 81, 176, 255 );
 
-   activateRenderTarget( renderTarget );
+   activateRenderTarget( renderTarget, targetIdx );
    if ( !shouldRenderTargetBeCleaned( renderTarget ) )
    {
       return;
@@ -199,6 +199,13 @@ void Renderer::setRenderTarget( RenderTarget* renderTarget )
       cleanRenderTarget( backBufferColor );
    }
    markRenderTargetCleaned( renderTarget );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::unbindRenderTarget( uint targetIdx )
+{
+   deactivateRenderTarget( targetIdx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

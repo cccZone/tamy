@@ -37,10 +37,10 @@ EffectCS::~EffectCS()
 
 Entity* EffectCS::instantiate( const BlenderScene& host ) const
 {
-   SingleTextureMaterial* material = new SingleTextureMaterial( m_materialName );
+   MaterialEntity* material = BasicRenderingEntitiesFactory::createMaterial( m_materialName );
 
    SurfaceProperties& surfPropertiesRes = host.getResource< SurfaceProperties >( m_materialId );
-   material->setSurfaceProperties( surfPropertiesRes );
+   material->accessSurfaceProperties() = surfPropertiesRes;
 
    return material;
 }

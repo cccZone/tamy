@@ -87,6 +87,13 @@ public:
     * @param inputName
     */
    void disconnect( Impl& destNode, const std::string& inputName );
+
+   /**
+    * Disconnects this node from the specified node - disconnects all involved inputs.
+    *
+    * @param destNode
+    */
+   void disconnect( Impl& destNode );
    
    /**
     * Returns an array of all defined input sockets.
@@ -117,6 +124,13 @@ public:
     * @param outputName
     */
    TOutputSocket* findOutput( const std::string& outputName ) const;
+
+   /**
+    * Checks if this node is directly connected with the specified node.
+    *
+    * @param otherNode
+    */
+   bool isConnectedWith( Impl* otherNode ) const;
 
    // -------------------------------------------------------------------------
    // Observer implementation

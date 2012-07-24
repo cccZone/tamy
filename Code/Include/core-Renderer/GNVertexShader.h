@@ -40,6 +40,7 @@ public:
    // -------------------------------------------------------------------------
    // GeometryShaderNode implementation
    // -------------------------------------------------------------------------
+   void onGraphLoaded();
    void preRender( Renderer& renderer, const GeometryEntity& entity ) const;
    void postRender( Renderer& renderer, const GeometryEntity& entity ) const;
 

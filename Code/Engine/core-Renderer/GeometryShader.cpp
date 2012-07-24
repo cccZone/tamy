@@ -38,3 +38,16 @@ void GeometryShader::onNodeRemoved( GeometryShaderNode& node )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void GeometryShader::onResourceLoaded( ResourcesManager& mgr )
+{
+   __super::onResourceLoaded( mgr );
+
+   uint count = m_nodes.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      m_nodes[i]->onGraphLoaded();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

@@ -52,8 +52,7 @@ void GraphDijkstra( Graph<NODE, EDGE>& outGraph,
  * @param inGraph             graph we want to run algorithm on
  */
 template< typename NODE, typename EDGE >
-void GraphTopologicalSort( std::vector< typename Graph<NODE, EDGE>::Index >& outNodesArr,
-                           const Graph<NODE, EDGE>& inGraph );
+void GraphTopologicalSort( std::vector< typename Graph<NODE, EDGE>::Index >& outNodesArr, const Graph<NODE, EDGE>& inGraph );
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -66,6 +66,31 @@ void VertexShaderNodeOperator< TNode >::resetShader()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
+void VertexShaderNodeOperator< TNode >::filterSockets( std::vector< std::string >& inOutSocketNames ) const
+{
+   // create sockets for new constants
+   unsigned int constantsCount = m_constants.size();
+   for ( unsigned int constIdx = 0; constIdx < constantsCount; ++constIdx )
+   {
+      // first - locate the corresponding input and remove it from the list
+      const std::string& constantName = m_constants[constIdx]->m_constant->getName();
+      uint socketsCount = inOutSocketNames.size();
+      for ( uint socketIdx = 0; socketIdx < socketsCount; ++socketIdx )
+      {
+         if ( inOutSocketNames[socketIdx] == constantName )
+         {
+            // found it - this socket corresponds to an existing constant, so we're 
+            // crossing it off the list
+            inOutSocketNames.erase( inOutSocketNames.begin() + socketIdx );
+            break;
+         }
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename TNode >
 RCBindVertexShader& VertexShaderNodeOperator< TNode >::bindShader( Renderer& renderer, RuntimeDataBuffer& data )
 {
    RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_shader );

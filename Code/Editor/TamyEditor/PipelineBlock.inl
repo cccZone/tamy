@@ -57,13 +57,13 @@ void TPipelineBlock< TNode, TBaseNode >::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
-   TNode* nodePtr = dynamic_cast< TNode* >( getNode() );
-   nodePtr->attachObserver( *this );
+   m_nodePtr = dynamic_cast< TNode* >( getNode() );
+   m_nodePtr->attachObserver( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<  typename TNode, typename TBaseNode >
+template< typename TNode, typename TBaseNode >
 void TPipelineBlock< TNode, TBaseNode >::update( TBaseNode& node )
 {
    refreshInputs( node );

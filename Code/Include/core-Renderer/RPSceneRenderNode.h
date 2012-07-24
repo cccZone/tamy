@@ -11,7 +11,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class RenderTarget;
-class RPSceneBuilder;
 class MemoryPool;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +24,6 @@ class RPSceneRenderNode : public RenderingPipelineNode
 
 private:
    // static data
-   RPSceneBuilder*                           m_builder;
    std::string                               m_renderTargetId;
    bool                                      m_clearDepthBuffer;
 
@@ -51,10 +49,6 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onPropertyChanged( ReflectionProperty& property );
-
-private:
-   void defineOutputs();
-   void refreshRenderTargets( RenderingPipelineMechanism& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

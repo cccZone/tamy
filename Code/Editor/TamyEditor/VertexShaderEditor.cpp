@@ -162,6 +162,10 @@ bool VertexShaderEditor::compile()
    ShaderCompiler compiler;
    bool status = compiler.compileVertexShader( shaderContents, m_shader.getEntryFunctionName().c_str() );
 
+   // show the compile output tab
+   m_ui.tabWidget->setCurrentIndex( VSE_TAB_OUTPUT );
+
+   // output the status
    if ( status )
    {
       m_ui.compilationOutput->setText( "Compilation successful" );

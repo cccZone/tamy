@@ -18,6 +18,7 @@ RPCameraNode::RPCameraNode()
    , m_farZ( new RPFloatOutput( "farZ" ) )
    , m_viewportWidth( new RPFloatOutput( "width" ) )
    , m_viewportHeight( new RPFloatOutput( "height" ) )
+   , m_view( new RPMatrixOutput( "view" ) )
    , m_invView( new RPMatrixOutput( "invView" ) )
    , m_invProj( new RPMatrixOutput( "invProj" ) )
 {
@@ -25,6 +26,7 @@ RPCameraNode::RPCameraNode()
    defineOutput( m_farZ );
    defineOutput( m_viewportWidth );
    defineOutput( m_viewportHeight );
+   defineOutput( m_view );
    defineOutput( m_invView );
    defineOutput( m_invProj );
 }
@@ -37,6 +39,7 @@ RPCameraNode::~RPCameraNode()
    m_farZ = NULL;
    m_viewportWidth = NULL;
    m_viewportHeight = NULL;
+   m_view = NULL;
    m_invView = NULL;
    m_invProj = NULL;
 }
@@ -52,6 +55,7 @@ void RPCameraNode::onObjectLoaded()
    m_farZ = DynamicCast< RPFloatOutput >( findOutput( "farZ" ) );
    m_viewportWidth = DynamicCast< RPFloatOutput >( findOutput( "width" ) );
    m_viewportHeight = DynamicCast< RPFloatOutput >( findOutput( "height" ) );
+   m_view = DynamicCast< RPMatrixOutput >( findOutput( "view" ) );
    m_invView = DynamicCast< RPMatrixOutput >( findOutput( "invView" ) );
    m_invProj = DynamicCast< RPMatrixOutput >( findOutput( "invProj" ) );
 }
@@ -72,6 +76,8 @@ void RPCameraNode::onUpdate( RenderingPipelineMechanism& host ) const
    Matrix invMtx, transInvMtx;
 
    const Matrix& viewMtx = camera.getViewMtx();
+   m_view->setValue( data, viewMtx );
+
    invMtx.setInverse( viewMtx );
    transInvMtx.setTransposed( invMtx );
    m_invView->setValue( data, transInvMtx );

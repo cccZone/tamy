@@ -25,6 +25,13 @@ class VertexShaderEditor : public ResourceEditor
    Q_OBJECT
 
 private:
+   enum VSETabs
+   {
+      VSE_TAB_PROPERTIES,
+      VSE_TAB_OUTPUT
+   };
+
+private:
    Ui::VertexShaderEditorWindow     m_ui;
 
    VertexShader&                    m_shader;

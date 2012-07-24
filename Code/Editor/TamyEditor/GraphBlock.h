@@ -117,6 +117,13 @@ public:
     */
    const std::vector< GraphBlockSocket* >& accessSockets() const { return m_sockets; }
 
+   /**
+    * Override this method in order to provide an implementation-specific context menu for the block.
+    *
+    * @param menu
+    */
+   virtual void onCreateContextMenu( QMenu* menu ) {}
+
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
@@ -170,12 +177,25 @@ protected:
    void addSocket( GraphBlockSocket* socket );
 
    /**
-    * Removes a socket on the specified position with the specified name, deleting its instance.
+    * Removes a single socket on the specified position with the specified name, deleting its instance 
+    * and getting rid of any connections that use them.
+    *
+    * @param position
+    * @param socketName
+    */
+   void removeSocket( GraphBlockSocketPosition position, const std::string& socketName );
+
+   /**
+    * Removes sockets on the specified position with the specified names in bulk, deleting their instances
+    * and getting rid of any connections that use them.
     *
     * @param position
     * @param socketNames
     */
    void removeSockets( GraphBlockSocketPosition position, const std::set< std::string >& socketNames );
+
+private:
+   void removeSingleSocket( GraphBlockSocketPosition position, const std::string& socketName );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -282,6 +302,11 @@ public:
     * @param connection
     */
    void removeConnection( GraphBlockConnection& connection );
+
+   /**
+    * Removes all connections the socket is involved in.
+    */
+   void removeAllConnections();
 
    /**
     * Checks the connection between this socket and the specified one.

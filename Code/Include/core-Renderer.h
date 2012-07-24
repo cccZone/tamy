@@ -113,7 +113,6 @@
 // Materials
 // --> Entities
 // ----------------------------------------------------------------------------
-#include "core-Renderer\SingleTextureMaterial.h"
 #include "core-Renderer\MaterialEntity.h"
 // ----------------------------------------------------------------------------
 // --> MaterialGraph
@@ -169,19 +168,12 @@
 #include "core-Renderer/RPSceneRenderNode.h"
 #include "core-Renderer/RPStartNode.h"
 #include "core-Renderer/RPPostProcessNode.h"
-#include "core-Renderer/RPSceneBuilder.h"
 #include "core-Renderer/RPCameraNode.h"
 #include "core-Renderer/RPFloats2Vec4Node.h"
 #include "core-Renderer/RPTextureNode.h"
 #include "core-Renderer/RPFloatNode.h"
 #include "core-Renderer/RPVec4Node.h"
 #include "core-Renderer/RPDeferredLightingNode.h"
-// ----------------------------------------------------------------------------
-// ---->Nodes\SceneTreeBuilders
-// ----------------------------------------------------------------------------
-#include "core-Renderer/RPSBTextured.h"
-#include "core-Renderer/RPSBComputed.h"
-#include "core-Renderer/ComputedRenderState.h"
 // ----------------------------------------------------------------------------
 // ---->Tools
 // ----------------------------------------------------------------------------
@@ -200,3 +192,8 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Light.h"
 #include "core-Renderer\DirectionalLight.h"
+
+// ----------------------------------------------------------------------------
+// Tools
+// ----------------------------------------------------------------------------
+#include "core-Renderer/BasicRenderingEntitiesFactory.h"

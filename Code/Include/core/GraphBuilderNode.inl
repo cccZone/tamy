@@ -43,6 +43,31 @@ void GraphBuilderNode< Impl >::getSubsequentNodes( std::vector< Impl* >& outNode
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Impl >
+bool GraphBuilderNode< Impl >::isConnectedWith( Impl* otherNode ) const
+{
+   uint outputsCount = m_outputs.size();
+   for( uint outputIdx = 0; outputIdx < outputsCount; ++outputIdx )
+   {
+      const std::vector< Impl* >& connectedNodes = m_outputs[outputIdx]->getConnectedNodes();
+
+      uint nodesCount = connectedNodes.size();
+      for ( uint nodeIdx = 0; nodeIdx < nodesCount; ++nodeIdx )
+      {
+         if ( connectedNodes[nodeIdx] == otherNode )
+         {
+            // found it - there is a connection between the nodes.
+            return true;
+         }
+      }
+   }
+
+   // the two nodes are not connected
+   return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
 bool GraphBuilderNode< Impl >::connect( const std::string& outputName, Impl& destNode, const std::string& inputName )
 {
    // looking at a connection from input's perspective, a node is interested in a node 
@@ -85,24 +110,42 @@ void GraphBuilderNode< Impl >::disconnect( Impl& destNode, const std::string& in
 {
    // disconnect the other node's input
    TInputSocket* input = destNode.findInput( inputName );
-   TOutputSocket* output = input->getOutput();
-
    if ( !input )
    {
-      char tmp[128];
-      sprintf_s( tmp, "Input '%s' not found", inputName.c_str() );
-      ASSERT_MSG( false, tmp );
+      // input could have been removed - and since there's nothing to do here, bail
+      return;
    }
 
    input->disconnect();
    destNode.notify( GBNO_CHANGED );
 
    // disconnect the output
+   TOutputSocket* output = input->getOutput();
    if ( output )
    {
       output->disconnect( destNode );
       notify( GBNO_CHANGED );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
+void GraphBuilderNode< Impl >::disconnect( Impl& destNode )
+{
+   uint outputsCount = m_outputs.size();
+   for ( uint i = 0; i < outputsCount; ++i )
+   {
+      TOutputSocket* output = m_outputs[i];
+      if ( output )
+      {
+         output->disconnect( destNode );
+      }
+   }
+
+   // send notifications
+   destNode.notify( GBNO_CHANGED );
+   notify( GBNO_CHANGED );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

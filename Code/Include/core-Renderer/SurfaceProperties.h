@@ -31,6 +31,17 @@ public:
       return !(*this == rhs);
    }
 
+   /**
+    * Sets new surface properties.
+    *
+    * @param ambient
+    * @param diffuse
+    * @param specular
+    * @Param emissive
+    * @param power
+    */
+   void set( const Color& ambient, const Color& diffuse, const Color& specular, const Color& emissive, float power );
+
    void setAmbientColor( const Color& ambient ) { m_ambient = ambient; }
    void setDiffuseColor( const Color& diffuse ) { m_diffuse = diffuse; }
    void setSpecularColor( const Color& specular ) { m_specular = specular; }

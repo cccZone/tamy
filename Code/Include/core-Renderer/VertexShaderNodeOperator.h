@@ -61,6 +61,13 @@ public:
    void resetShader();
 
    /**
+    * Filters the sockets that DON'T belong to the current set of pixel shader constants.
+    *
+    * @param inOutSocketName
+    */
+   void filterSockets( std::vector< std::string >& inOutSocketNames ) const;
+
+   /**
     * Propagates the data from the input to the assigned shader constant
     *
     * @param renderer

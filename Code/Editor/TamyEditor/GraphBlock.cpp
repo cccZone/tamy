@@ -184,22 +184,51 @@ void GraphBlock::addSocket( GraphBlockSocket* socket )
 
 void GraphBlock::removeSockets( GraphBlockSocketPosition position, const std::set< std::string >& socketNames )
 {
-   for ( std::set< std::string >::const_iterator it = socketNames.begin(); it != socketNames.end(); ++it )
+   for ( std::set< std::string >::const_iterator removedSocketNameIt = socketNames.begin(); removedSocketNameIt != socketNames.end(); ++removedSocketNameIt )
    {
-      unsigned int count = m_sockets.size();
-      for ( unsigned int i = 0; i < count; ++i )
-      {
-         GraphBlockSocket* socket = m_sockets[i];
-         if ( socket->getPosition() == position && socket->getName() == *it )
-         {
-            delete socket;
-            m_sockets.erase( m_sockets.begin() + i );
-            break;
-         }
-      }
+      removeSingleSocket( position, *removedSocketNameIt );
    }
 
    calculateBounds();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlock::removeSocket( GraphBlockSocketPosition position, const std::string& socketName )
+{
+   removeSingleSocket( position, socketName );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlock::removeSingleSocket( GraphBlockSocketPosition position, const std::string& socketName )
+{
+   GraphLayout* hostLayout = static_cast< GraphLayout* >( scene() );
+
+   unsigned int count = m_sockets.size();
+   for ( unsigned int socketIdx = 0; socketIdx < count; ++socketIdx )
+   {
+      GraphBlockSocket* socket = m_sockets[socketIdx];
+      if ( socket->getPosition() == position && socket->getName() == socketName )
+      {
+         // remove the connections that bind this socket to the other ones
+         if ( hostLayout )
+         {
+            std::vector< GraphBlockConnection* > connections = socket->getConnections();
+            uint connectionsCount = connections.size();
+            for( uint connIdx = 0; connIdx < connectionsCount; ++connIdx )
+            {
+               GraphBlockConnection* connection = connections[connIdx];
+               hostLayout->removeConnection( *connection );
+            }
+         }
+
+         // delete the socket
+         delete socket;
+         m_sockets.erase( m_sockets.begin() + socketIdx );
+         break;
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -577,12 +606,14 @@ GraphBlockConnection* GraphBlockConnection::createConnection( GraphBlockSocket* 
     
    if ( source->addConnection( *connection ) == false )
    {
+      delete connection;
       return NULL;
    }
 
    if ( destination->addConnection( *connection ) == false )
    {
       source->removeConnection( *connection );
+      delete connection;
       return NULL;
    }
    

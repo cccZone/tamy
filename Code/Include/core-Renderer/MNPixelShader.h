@@ -40,6 +40,7 @@ public:
    // -------------------------------------------------------------------------
    // MaterialNode implementation
    // -------------------------------------------------------------------------
+   void onGraphLoaded();
    void preRender( Renderer& renderer, const MaterialEntity& entity ) const;
    void postRender( Renderer& renderer, const MaterialEntity& entity ) const;
 
