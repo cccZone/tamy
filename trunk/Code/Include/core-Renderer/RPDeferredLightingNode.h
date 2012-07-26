@@ -9,7 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class RenderTarget;
-class PixelShader;
 class RPTextureInput;
 class RPTextureOutput;
 
@@ -40,16 +39,14 @@ class RPDeferredLightingNode : public RenderingPipelineNode
    DECLARE_CLASS()
 
 private:
-   // static data
-   std::string                         m_renderTargetId;
-
    // runtime data
-   PixelShader*                        m_shader;
-   TRuntimeVar< RenderTarget* >        m_renderTarget;
+   TRuntimeVar< RenderTarget* >        m_lightsDirectionRT;
+   TRuntimeVar< RenderTarget* >        m_lightsColorRT;
 
    // sockets data
    RPTextureInput*                     m_depthNormalBufferInput;
-   RPTextureOutput*                    m_lightTexture;
+   RPTextureOutput*                    m_lightsDirection;
+   RPTextureOutput*                    m_lightsColor;
 
 public:
    /**

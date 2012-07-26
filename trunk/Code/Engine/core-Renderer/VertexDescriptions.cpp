@@ -7,6 +7,8 @@ BEGIN_ENUM( VertexDescId );
    ENUM_VAL( VDI_SIMPLE );
    ENUM_VAL( VDI_SIMPLE_SKINNING );
    ENUM_VAL( VDI_SIMPLE_SCREENSPACE );
+   ENUM_VAL( VDI_DEBUG_GEOMETRY );
+   ENUM_VAL( VDI_LIGHT );
 END_ENUM();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,10 +38,25 @@ VertexDescriptor SimpleScreenspaceDesc[] =
    VERTEX_DESCRIPTOR_END()
 };
 
+VertexDescriptor DebugGeometryDesc[] = 
+{
+   {0, 0, VTXTYPE_FLOAT3, VTXMETHOD_DEFAULT, VTXUSAGE_POSITION, 0}, // stream 0, position
+   {0, 12, VTXTYPE_D3DCOLOR, VTXMETHOD_DEFAULT, VTXUSAGE_COLOR, 0}, // stream 0, color
+   VERTEX_DESCRIPTOR_END()
+};
+
+VertexDescriptor LightGeometryDesc[] = 
+{
+   {0, 0, VTXTYPE_FLOAT3, VTXMETHOD_DEFAULT, VTXUSAGE_POSITION, 0}, // stream 0, position
+   VERTEX_DESCRIPTOR_END()
+};
+
 VertexDescriptor* g_vertexDescriptions[] = {
    SimpleDesc,
    SimpleSkinningDesc,
    SimpleScreenspaceDesc,
+   DebugGeometryDesc,
+   LightGeometryDesc,
 };
 
 ///////////////////////////////////////////////////////////////////////////////

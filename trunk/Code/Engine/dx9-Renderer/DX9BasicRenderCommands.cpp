@@ -164,3 +164,22 @@ void RCClearDepthBuffer::execute( Renderer& renderer )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void RCStateTest::execute( Renderer& renderer )
+{
+   DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+   IDirect3DDevice9& d3Device = dxRenderer.getD3Device();
+
+   DWORD res = 0;
+   {
+      d3Device.GetRenderState( D3DRS_ZENABLE, &res );
+      ASSERT_MSG( res == m_zTest, "Z testing is not set correctly" );
+   }
+
+   {
+      d3Device.GetRenderState( D3DRS_ZWRITEENABLE, &res );
+      ASSERT_MSG( res == m_zWrite, "Z writing is not set correctly" );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

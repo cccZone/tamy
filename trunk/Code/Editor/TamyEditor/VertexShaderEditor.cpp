@@ -63,6 +63,9 @@ void VertexShaderEditor::onInitialize()
       {
          m_ui.vertexDescIdComboBox->addItem( vertexDescIds[i].c_str() );
       }
+
+      // select current description
+      m_ui.vertexDescIdComboBox->setCurrentIndex( m_shader.getVertexDescriptionId() );
    }
    connect( m_ui.vertexDescIdComboBox, SIGNAL( currentIndexChanged( const QString& ) ), this, SLOT( onVertexIdChange( const QString& ) ) );
 

@@ -1,42 +1,90 @@
 #include "core-Renderer\DirectionalLight.h"
-#include "core\NodeVisitor.h"
-#include "core\TNodesVisitor.h"
 #include "core\BoundingSpace.h"
+#include "core\ResourcesManager.h"
 #include "core-Renderer\Renderer.h"
+#include "core-Renderer\VertexShader.h"
+#include "core-Renderer\PixelShader.h"
+#include "core-Renderer\Camera.h"
+#include "core-Renderer\Defines.h"
+#include "core-Renderer\FullscreenQuad.h"
+#include "core-Renderer\BasicRenderCommands.h"
 
+// TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// 1. point lights
+// 2. better debug representation of the directional light ( an arrow or sth )
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( DirectionalLight );
    PARENT( Light );
-   PROPERTY_EDIT( "Ambient color", Color, m_ambient );
-   PROPERTY_EDIT( "Diffuse color", Color, m_diffuse );
-   PROPERTY_EDIT( "Specular color", Color, m_specular );
+   PROPERTY_EDIT( "Color", Color, m_color );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 DirectionalLight::DirectionalLight( const std::string& name )
    : Light( name )
-   , m_ambient(0, 0, 0, 0)
-   , m_diffuse(0, 0, 0, 0)
-   , m_specular(0, 0, 0, 0)
+   , m_color(1, 1, 1, 1 )
+   , m_pixelShader( NULL )
 {
    setBoundingVolume( new BoundingSpace() ); 
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectionalLight::onAccept( NodeVisitor& visitor )
+DirectionalLight::~DirectionalLight()
 {
-   REGISTER_NODE_VISITOR( TNodesVisitor<DirectionalLight> );
+   // resources manager will take care of these objects in due time
+   m_pixelShader = NULL;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::onObjectLoaded()
+{
+   __super::onObjectLoaded();
+
+   initialize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectionalLight::render( Renderer& renderer )
+void DirectionalLight::render( Renderer& renderer, ShaderTexture* depthNormalsBufferTex )
 {
-   new ( renderer() ) RCRenderDirectionalLight( *this );
+   if ( !m_pixelShader )
+   {
+      return;
+   }
+   
+   const Matrix& globalMtx = getGlobalMtx();
+
+   // set and configure the pixel shader
+   RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_pixelShader );
+   {
+      psComm->setVec4( "g_lightDirWS", globalMtx.forwardVec() );
+      psComm->setVec4( "g_lightColor", (const Vector&)m_color );
+   }
+
+   // draw the geometry
+   uint quadWidth = renderer.getViewportWidth();
+   uint quadHeight = renderer.getViewportHeight();
+   new ( renderer() ) RCFullscreenQuad( quadWidth, quadHeight );
+
+   // cleanup
+   new ( renderer() ) RCUnbindPixelShader( *m_pixelShader );
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::initialize()
+{
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
+
+   FilePath psPath( LIGHTING_SHADERS_DIR "directionalLight.tpsh" );
+   m_pixelShader = resMgr.create< PixelShader >( psPath, true );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

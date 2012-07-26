@@ -12,7 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NullBasicRenderCommands.cpp" />
-    <ClCompile Include="NullDirectionalLight.cpp" />
     <ClCompile Include="NullEffectShader.cpp" />
     <ClCompile Include="NullFont.cpp" />
     <ClCompile Include="NullFullscreenQuad.cpp" />

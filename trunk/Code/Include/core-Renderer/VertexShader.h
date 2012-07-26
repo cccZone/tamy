@@ -38,6 +38,11 @@ public:
    void setVertexDescription( VertexDescId vertexDescId );
 
    /**
+    * Returns the id of the vertex description this shader uses.
+    */
+   inline VertexDescId getVertexDescriptionId() const { return m_vertexDescId; }
+
+   /**
     * Returns the description of the vertex the shader supports( providing it's vertex shader )
     */
    inline const VertexDescriptor* getVerexDescription() const { return g_vertexDescriptions[ m_vertexDescId ]; }

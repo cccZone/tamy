@@ -87,7 +87,6 @@
   <ItemGroup>
     <ClCompile Include="DX9BasicRenderCommands.cpp" />
     <ClCompile Include="DX9DebugPrimitivesSet.cpp" />
-    <ClCompile Include="DX9DirectionalLight.cpp" />
     <ClCompile Include="DX9EffectsResourcesStorage.cpp" />
     <ClCompile Include="DX9FontResourcesStorage.cpp" />
     <ClCompile Include="DX9FullscreenQuad.cpp" />
