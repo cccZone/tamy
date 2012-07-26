@@ -302,3 +302,27 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+class RCStateTest : public RenderCommand
+{
+public:
+   bool        m_zTest;
+   bool        m_zWrite;
+
+public:
+   /**
+    * Constructor.
+    */
+   RCStateTest()
+      : m_zTest( false )
+      , m_zWrite( false )
+   {}
+
+   // -------------------------------------------------------------------------
+   // RenderCommand implementation
+   // -------------------------------------------------------------------------
+   void execute( Renderer& renderer );
+
+};
+
+///////////////////////////////////////////////////////////////////////////////

@@ -29,13 +29,10 @@ private:
    };
 
 private:
-   static D3DVERTEXELEMENT9         s_vtxDecl[];
-
    const DX9Renderer&               m_renderer;
    IDirect3DDevice9&                m_d3Device;
    const LineSegments&              m_lines;
 
-   LPDIRECT3DVERTEXDECLARATION9     m_vertexDecl;
    IDirect3DVertexBuffer9*          m_vb;
    UINT                             m_segsCount;
 

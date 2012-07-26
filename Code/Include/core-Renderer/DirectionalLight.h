@@ -11,6 +11,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class PixelShader;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * This is a special kind of node that represents a directional light lighting the scene
  */
@@ -19,47 +23,29 @@ class DirectionalLight : public Light, public UniqueObject< DirectionalLight >
    DECLARE_CLASS();
 
 public:
-   Color m_ambient;
-   Color m_diffuse;
-   Color m_specular;
+   Color          m_color;
+
+   PixelShader*   m_pixelShader;
 
 public:
    DirectionalLight( const std::string& name = "" );
-   virtual ~DirectionalLight() {}
+   virtual ~DirectionalLight();
 
    // -------------------------------------------------------------------------
    // Light implementation
    // -------------------------------------------------------------------------
-   void render( Renderer& renderer );
+   void render( Renderer& renderer, ShaderTexture* depthNormalsBufferTex );
 
-protected:
-   void onAccept( NodeVisitor& visitor );
-};
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onObjectLoaded();
 
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * A command that renders a single directional light.
- */
-class RCRenderDirectionalLight : public RenderCommand
-{
 private:
-   DirectionalLight&       m_light;
-
-public:
-   /**
-    * Constructor.
-    *
-    * @param light
-    */
-   RCRenderDirectionalLight( DirectionalLight& light ) : m_light( light ) {}
-
-   // -------------------------------------------------------------------------
-   // RenderCommand implementation
-   // -------------------------------------------------------------------------
-   void execute( Renderer& renderer );
+   void initialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
 
 #endif // _DIRECTIONAL_LIGHT_H

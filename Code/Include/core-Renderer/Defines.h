@@ -5,7 +5,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define MATERIALS_DIR   "/Renderer/Materials/"
-#define SHADERS_DIR     "/Renderer/Shaders/"
+#define MATERIALS_DIR            "/Renderer/Materials/"
+#define SHADERS_DIR              "/Renderer/Shaders/"
+#define LIGHTING_SHADERS_DIR     "/Renderer/Lighting/"
 
 ///////////////////////////////////////////////////////////////////////////////

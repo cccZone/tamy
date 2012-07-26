@@ -9,6 +9,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class ShaderTexture;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * Base class for the light.
  */
@@ -29,8 +33,9 @@ public:
     * Renders the light volume.
     *
     * @param renderer
+    * @param depthNormalsBufferTex        a texture containing scene depth and normals
     */
-   virtual void render( Renderer& renderer ) {}
+   virtual void render( Renderer& renderer, ShaderTexture* depthNormalsBufferTex ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

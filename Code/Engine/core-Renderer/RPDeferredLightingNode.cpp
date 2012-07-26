@@ -12,19 +12,19 @@
 
 BEGIN_OBJECT( RPDeferredLightingNode );
    PARENT( RenderingPipelineNode );
-   PROPERTY_EDIT( "Render target id", std::string, m_renderTargetId );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPDeferredLightingNode::RPDeferredLightingNode()
-   : m_shader( NULL )
 {
    m_depthNormalBufferInput = new RPTextureInput( "DepthNormals" );
-   m_lightTexture = new RPTextureOutput( "LightsTexture" );
+   m_lightsDirection = new RPTextureOutput( "LightsDirection" );
+   m_lightsColor = new RPTextureOutput( "LightsColor" );
 
    defineInput( m_depthNormalBufferInput );
-   defineOutput( m_lightTexture );
+   defineOutput( m_lightsDirection );
+   defineOutput( m_lightsColor );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,8 @@ RPDeferredLightingNode::RPDeferredLightingNode()
 RPDeferredLightingNode::~RPDeferredLightingNode()
 {
    m_depthNormalBufferInput = NULL;
-   m_lightTexture = NULL;
+   m_lightsDirection = NULL;
+   m_lightsColor = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,11 +41,6 @@ RPDeferredLightingNode::~RPDeferredLightingNode()
 void RPDeferredLightingNode::onObjectLoaded()
 {
    __super::onObjectLoaded();
-
-   // load the lighting shader
-   ResourcesManager& resMgr = ResourcesManager::getInstance();
-   FilePath shaderPath( "/Renderer/Shaders/RenderingPipeline/DeferredLighting.tpsh" );
-   m_shader = resMgr.create< PixelShader >( shaderPath );
 
    // initialize node sockets
    initializeSocketd();
@@ -55,8 +51,8 @@ void RPDeferredLightingNode::onObjectLoaded()
 void RPDeferredLightingNode::initializeSocketd()
 {
    m_depthNormalBufferInput = DynamicCast< RPTextureInput >( findInput( "DepthNormals" ) );
-   m_lightTexture = DynamicCast< RPTextureOutput >( findOutput( "LightsTexture" ) );
-
+   m_lightsDirection = DynamicCast< RPTextureOutput >( findOutput( "LightsDirection" ) );
+   m_lightsColor = DynamicCast< RPTextureOutput >( findOutput( "LightsColor" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,19 +62,26 @@ void RPDeferredLightingNode::onCreateLayout( RenderingPipelineMechanism& host ) 
    RuntimeDataBuffer& data = host.data();
 
    // register runtime members
-   data.registerVar( m_renderTarget );
+   data.registerVar( m_lightsDirectionRT );
+   data.registerVar( m_lightsColorRT );
 
-   // create the render target
-   RenderTarget* trg = NULL;
+   // create the render targets
+   RenderTarget* lightsDirectionRT = NULL;
+   RenderTarget* lightsColorRT = NULL;
    {
-      trg = host.getRenderTarget( m_renderTargetId );
-      data[ m_renderTarget ] = trg;
+      lightsDirectionRT = host.getRenderTarget( "LightsDirection" );
+      lightsColorRT = host.getRenderTarget( "LightsColor" ); 
+      data[ m_lightsDirectionRT ] = lightsDirectionRT;
+      data[ m_lightsColorRT ] = lightsColorRT;
    }
 
    // find the existing outputs and set the data on them
    {
-      RPTextureOutput* output = DynamicCast< RPTextureOutput >( findOutput( "LightsTexture" ) );
-      output->setValue( data, trg );
+      RPTextureOutput* lightsDirectionOutput = DynamicCast< RPTextureOutput >( findOutput( "LightsDirection" ) );
+      lightsDirectionOutput->setValue( data, lightsDirectionRT );
+
+      RPTextureOutput* lightsColorOutput = DynamicCast< RPTextureOutput >( findOutput( "LightsColor" ) );
+      lightsColorOutput->setValue( data, lightsColorRT );
    }
 }
 
@@ -100,23 +103,20 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    RuntimeDataBuffer& data = host.data();
 
    ShaderTexture* depthNormalsBufferTex = m_depthNormalBufferInput->getValue( data );
-   if ( !m_shader || !depthNormalsBufferTex )
+   RenderTarget* lightsDirectionRT = data[ m_lightsDirectionRT ];
+   RenderTarget* lightsColorRT = data[ m_lightsColorRT ];
+
+   if ( !depthNormalsBufferTex || !lightsDirectionRT || !lightsColorRT )
    {
       // no scene - no rendering
       return;
    }
 
-   RenderTarget* trg = data[ m_renderTarget ];
    Renderer& renderer = host.getRenderer();
 
    // activate the render target we want to render to
-   new ( renderer() ) RCActivateRenderTarget( trg );
-
-   // set the shader data
-   RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
-   {
-      comm->setTexture( "depthNormalsTex", *depthNormalsBufferTex );
-   }
+   new ( renderer() ) RCActivateRenderTarget( lightsDirectionRT, 0 );
+   new ( renderer() ) RCActivateRenderTarget( lightsColorRT, 1 );
 
    // render light volumes
    const Array< Light* >& visibleLights = host.getSceneLights();  
@@ -124,12 +124,12 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    for ( uint i = 0; i < lightsCount; ++i )
    {
       Light* light = visibleLights[i];
-      light->render( renderer );
+      light->render( renderer, depthNormalsBufferTex );
    }
 
    // cleanup
-   new ( renderer() ) RCUnbindPixelShader( *m_shader );
-   new ( renderer() ) RCDeactivateRenderTarget();
+   new ( renderer() ) RCDeactivateRenderTarget( 0 );
+   new ( renderer() ) RCDeactivateRenderTarget( 1 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

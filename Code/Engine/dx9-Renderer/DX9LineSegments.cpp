@@ -19,24 +19,13 @@ void RCRenderLineSegments::execute( Renderer& renderer )
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-D3DVERTEXELEMENT9 DX9LineSegments::s_vtxDecl[] = 
-{
-   {0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-   {0, 12, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
-   D3DDECL_END()
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
 DX9LineSegments::DX9LineSegments( const DX9Renderer& renderer, const LineSegments& lines )
    : m_renderer( renderer )
    , m_d3Device( renderer.getD3Device() )
    , m_lines( lines )
-   , m_vertexDecl(NULL)
    , m_vb(NULL)
    , m_segsCount(0)
 {
-   m_d3Device.CreateVertexDeclaration( s_vtxDecl, &m_vertexDecl );
    create();
 }
 
@@ -46,11 +35,6 @@ DX9LineSegments::~DX9LineSegments()
 {
    destroy();
 
-   if (m_vertexDecl != NULL)
-   {
-      m_vertexDecl->Release();
-      m_vertexDecl = NULL;
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,7 +48,6 @@ void DX9LineSegments::render()
    }
 
    m_d3Device.SetStreamSource( 0, m_vb, 0, sizeof( LineVertex ) );
-   m_d3Device.SetVertexDeclaration( m_vertexDecl );
    m_d3Device.DrawPrimitive( D3DPT_LINELIST, 0, m_segsCount );
 }
 

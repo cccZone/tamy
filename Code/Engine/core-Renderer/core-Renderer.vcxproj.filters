@@ -103,11 +103,14 @@
     <Filter Include="Mechanisms\RenderingPipeline\Nodes\SceneRendering">
       <UniqueIdentifier>{e921bee1-bd56-4f28-abd8-705a62a8f98a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline\Nodes\Lighting">
-      <UniqueIdentifier>{01433fbe-b039-4f75-9228-ed454f868993}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Mechanisms\RenderingPipeline\Nodes\Misc">
       <UniqueIdentifier>{a0187aaf-f333-4d45-9aa3-dee340577caa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting\Entities">
+      <UniqueIdentifier>{80a4f5cf-6fca-4f71-bbde-7cf6bea3472f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting\PipelineNode">
+      <UniqueIdentifier>{cb50b816-b3ad-45eb-ac8b-2447c7295270}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -169,9 +172,6 @@
       <Filter>Geometry\Core</Filter>
     </ClCompile>
     <ClCompile Include="StaticGeometry.cpp">
-      <Filter>Geometry\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexDescriptions.cpp">
       <Filter>Geometry\Entities</Filter>
     </ClCompile>
     <ClCompile Include="PixelShader.cpp">
@@ -313,9 +313,6 @@
     <ClCompile Include="ShaderTexture.cpp">
       <Filter>Core\RenderableSurfaces</Filter>
     </ClCompile>
-    <ClCompile Include="DirectionalLight.cpp">
-      <Filter>Lighting</Filter>
-    </ClCompile>
     <ClCompile Include="RPFloatNode.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClCompile>
@@ -343,9 +340,6 @@
     <ClCompile Include="RPStartNode.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClCompile>
-    <ClCompile Include="RPDeferredLightingNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Lighting</Filter>
-    </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Lighting</Filter>
     </ClCompile>
@@ -354,6 +348,15 @@
     </ClCompile>
     <ClCompile Include="BasicRenderingEntitiesFactory.cpp">
       <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexDescriptions.cpp">
+      <Filter>Geometry\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="RPDeferredLightingNode.cpp">
+      <Filter>Lighting\PipelineNode</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Lighting\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -475,9 +478,6 @@
       <Filter>Geometry\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\StaticGeometry.h">
-      <Filter>Geometry\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h">
       <Filter>Geometry\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\PixelShader.h">
@@ -640,9 +640,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderingParams.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptors.h">
-      <Filter>Geometry\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderTree.h">
       <Filter>Core\RenderTree</Filter>
     </ClInclude>
@@ -660,9 +657,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderCommands.h">
       <Filter>Core\BasicRenderCommands</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\DirectionalLight.h">
-      <Filter>Lighting</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Light.h">
       <Filter>Lighting</Filter>
@@ -694,14 +688,23 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\Lighting</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MRTUtil.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\SceneRendering</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderingEntitiesFactory.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptors.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h">
+      <Filter>Geometry\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h">
+      <Filter>Lighting\PipelineNode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DirectionalLight.h">
+      <Filter>Lighting\Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

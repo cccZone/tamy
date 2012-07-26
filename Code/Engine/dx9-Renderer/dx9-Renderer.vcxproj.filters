@@ -141,9 +141,6 @@
     <ClCompile Include="DX9BasicRenderCommands.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>
-    <ClCompile Include="DX9DirectionalLight.cpp">
-      <Filter>RenderCommands</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">
