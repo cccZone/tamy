@@ -2,6 +2,7 @@
 #pragma once
 
 #include "core\Assert.h"
+#include "core\types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -55,6 +56,17 @@ public:
     * @param outLookAtMtx
     */
    static void generateLookAtLH( const Vector& cameraOriginPos, const Vector& lookAtPos, const Vector& upAxis, Matrix& outLookAtMtx );
+
+   /**
+    * Generates a viewport matrix used to transform a projected position to a viewport position.
+    *
+    * @param offsetX       viewport left corner offset ( in pixels )
+    * @param offsetY       viewport top corner offset ( in pixels )
+    * @param width         viewport width
+    * @param height         viewport height
+    * @param outViewportMtx
+    */
+   static void generateViewportMatrix( uint offsetX, uint offsetY, uint width, uint height, Matrix& outViewportMtx );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

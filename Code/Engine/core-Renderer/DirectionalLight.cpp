@@ -2,7 +2,6 @@
 #include "core\BoundingSpace.h"
 #include "core\ResourcesManager.h"
 #include "core-Renderer\Renderer.h"
-#include "core-Renderer\VertexShader.h"
 #include "core-Renderer\PixelShader.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Defines.h"
@@ -10,8 +9,8 @@
 #include "core-Renderer\BasicRenderCommands.h"
 
 // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// 1. point lights
-// 2. better debug representation of the directional light ( an arrow or sth )
+// 1. better debug representation of the directional light ( an arrow or sth )
+// 2. bump mapping
 
 ///////////////////////////////////////////////////////////////////////////////
 

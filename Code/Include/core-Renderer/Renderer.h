@@ -9,6 +9,7 @@
 #include "core\RoundBuffer.h"
 #include "core-AppFlow\TimeDependent.h"
 #include "core\types.h"
+#include "core\Matrix.h"
 #include <vector>
 #include <map>
 #include <set>
@@ -78,6 +79,7 @@ private:
    unsigned int                     m_topClientArea;
    unsigned int                     m_rightClientArea;
    unsigned int                     m_bottomClientArea;
+   Matrix                           m_viewportMatrix;
 
    RendererState*                   m_initialState;
    RendererState*                   m_renderingState;
@@ -124,6 +126,11 @@ public:
     * This method returns the height of currently set viewport
     */
    unsigned int getViewportHeight() const {return m_viewportHeight;}
+
+   /**
+    * Returns current viewport matrix.
+    */
+   inline const Matrix& getViewportMtx() const { return m_viewportMatrix; }
 
    /**
     * A command for setting a render target.

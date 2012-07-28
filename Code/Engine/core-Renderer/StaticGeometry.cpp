@@ -53,11 +53,10 @@ bool StaticGeometry::onPreRender( Renderer& renderer )
    {
       const Matrix& worldMtx = getGlobalMtx();
 
-      Matrix worldViewMtx;
-      worldViewMtx.setMul( worldMtx, camera.getViewMtx() );
+      Matrix worldViewProjMtx;
+      worldViewProjMtx.setMul( worldMtx, camera.getViewMtx() ).mul( camera.getProjectionMtx() );
       comm->setMtx( "g_mWorld", worldMtx );
-      comm->setMtx( "g_mWorldView", worldViewMtx );
-      comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
+      comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
    }
 
    return true;

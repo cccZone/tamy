@@ -128,5 +128,6 @@ REGISTER_ENUM_TYPE( TextureUsage );
 
 REGISTER_ABSTRACT_TYPE( Light );
 REGISTER_TYPE( DirectionalLight );
+REGISTER_TYPE( PointLight );
 
 ///////////////////////////////////////////////////////////////////////////////

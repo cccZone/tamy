@@ -14,6 +14,7 @@
 class ResourcesManager;
 class TiXmlNode;
 class Skeleton;
+class FilePath;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -27,7 +28,7 @@ private:
    Skeleton*                        m_skeleton;
 
 public:
-   ControllerCS( TiXmlNode* geometryNode, ResourcesManager& rm );
+   ControllerCS( TiXmlNode* geometryNode, const FilePath& deploymentDir, ResourcesManager& rm );
 
    // -------------------------------------------------------------------------
    // IEntitySlice implementation

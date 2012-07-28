@@ -1,5 +1,5 @@
-#include "DRDirectionalLight.h"
-#include "core-Renderer/DirectionalLight.h"
+#include "DRPointLight.h"
+#include "core-Renderer/PointLight.h"
 #include "core-Renderer/Geometry.h"
 #include "core-Renderer/TriangleMesh.h"
 #include "DebugGeometryBuilder.h"
@@ -8,18 +8,18 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( DRDirectionalLight )
+BEGIN_ABSTRACT_OBJECT( DRPointLight )
    PARENT( DebugGeometry )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DRDirectionalLight::DRDirectionalLight( DirectionalLight& light )
+DRPointLight::DRPointLight( PointLight& light )
    : DebugGeometry( &light )
    , m_light( light )
    , m_mesh( NULL )
 {
-   m_mesh = DebugGeometryBuilder::createArrow( 0.5f, Vector::ZERO, Vector::OX );
+   m_mesh = DebugGeometryBuilder::createTorus( 0.5f, 1.0f, Matrix::IDENTITY, 6, 5 );
    m_material = new SingleColorDebugMat( Color( 255, 242, 61 ) );
 
    setMesh( *m_mesh );
@@ -28,7 +28,7 @@ DRDirectionalLight::DRDirectionalLight( DirectionalLight& light )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DRDirectionalLight::~DRDirectionalLight()
+DRPointLight::~DRPointLight()
 {
    m_mesh->removeReference();
    m_mesh = NULL;

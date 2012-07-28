@@ -1,7 +1,6 @@
-/// @file   core-Renderer\DirectionalLight.h
-/// @brief  a directional light
-#ifndef _DIRECTIONAL_LIGHT_H
-#define _DIRECTIONAL_LIGHT_H
+/// @file   core-Renderer/PointLight.h
+/// @brief  point light entity
+#pragma once
 
 #include "core-Renderer\Light.h"
 #include "core-Renderer\RenderCommand.h"
@@ -11,27 +10,35 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+struct BoundingSphere;
 class PixelShader;
+class VertexShader;
+class TriangleMesh;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * This is a special kind of node that represents a directional light in a scene
+ * This is a special kind of node that represents a point light in a scene
  */
-class DirectionalLight : public Light, public UniqueObject< DirectionalLight >
+class PointLight : public Light, public UniqueObject< PointLight >
 {
    DECLARE_CLASS();
 
 public:
    // static data
-   Color          m_color;
+   Color             m_color;
+   float             m_attenuation;
+   float             m_radius;
 
-   /// runtime data
-   PixelShader*   m_pixelShader;
+   // runtime data
+   BoundingSphere*   m_boundingSphere;
+   VertexShader*     m_vertexShader;
+   PixelShader*      m_pixelShader;
+   TriangleMesh*     m_pointLightMesh;
 
 public:
-   DirectionalLight( const std::string& name = "" );
-   virtual ~DirectionalLight();
+   PointLight( const std::string& name = "" );
+   virtual ~PointLight();
 
    // -------------------------------------------------------------------------
    // Light implementation
@@ -42,12 +49,10 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
+   void onPropertyChanged( ReflectionProperty& property );
 
 private:
    void initialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
-#endif // _DIRECTIONAL_LIGHT_H

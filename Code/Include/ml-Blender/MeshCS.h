@@ -11,6 +11,7 @@
 class TriangleMesh;
 class ResourcesManager;
 class TiXmlNode;
+class FilePath;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +24,7 @@ private:
    TriangleMesh*  m_mesh;
 
 public:
-   MeshCS( TiXmlNode* geometryNode, ResourcesManager& rm );
+   MeshCS( TiXmlNode* geometryNode, const FilePath& deploymentDir, ResourcesManager& rm );
 
 protected:
    // -------------------------------------------------------------------------

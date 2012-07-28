@@ -260,8 +260,11 @@ void DX9VertexShader::setTexture( const char* paramName, IDirect3DTexture9* text
 void DX9VertexShader::beginRendering()
 {
    ASSERT( m_vertexDecl != NULL );
-   m_d3Device->SetVertexDeclaration( m_vertexDecl );
-   m_d3Device->SetVertexShader( m_dxVertexShader );
+   if ( m_vertexDecl )
+   {
+      m_d3Device->SetVertexDeclaration( m_vertexDecl );
+      m_d3Device->SetVertexShader( m_dxVertexShader );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

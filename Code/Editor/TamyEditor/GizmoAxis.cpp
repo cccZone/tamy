@@ -110,10 +110,10 @@ bool GizmoAxis::onPreRender( Renderer& renderer )
    // setup the vertex shader
    RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
    {
-      Matrix worldViewMtx;
-      worldViewMtx.setMul( nodeMtx, camera.getViewMtx() );
-      comm->setMtx( "g_mWorldView", worldViewMtx );
-      comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
+      Matrix worldViewProjMtx;
+      worldViewProjMtx.setMul( nodeMtx, camera.getViewMtx() ).mul( camera.getProjectionMtx() );
+      comm->setMtx( "g_mWorld", nodeMtx );
+      comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
    }
 
 

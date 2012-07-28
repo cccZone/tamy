@@ -9,7 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SceneCS::SceneCS( TiXmlNode* sceneNode, ResourcesManager& rm )
+SceneCS::SceneCS( TiXmlNode* sceneNode, const FilePath& deploymentDir, ResourcesManager& rm )
    : m_rm( rm )
 {
    TiXmlElement* sceneElem = sceneNode->ToElement();

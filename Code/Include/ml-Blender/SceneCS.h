@@ -13,6 +13,7 @@ class ResourcesManager;
 class TiXmlNode;
 class TiXmlElement;
 class SpatialEntity;
+class FilePath;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +44,7 @@ private:
    std::vector< NodeDef* >          m_nodes;
 
 public:
-   SceneCS( TiXmlNode* meshNode, ResourcesManager& rm );
+   SceneCS( TiXmlNode* meshNode, const FilePath& deploymentDir, ResourcesManager& rm );
    ~SceneCS();
 
    // -------------------------------------------------------------------------

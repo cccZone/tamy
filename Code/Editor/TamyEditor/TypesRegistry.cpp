@@ -125,6 +125,7 @@ REGISTER_EXTERNAL_TYPE( QPointF );
 
 #include "DebugGeometry.h"
 #include "DRDirectionalLight.h"
+#include "DRPointLight.h"
 #include "GizmoMaterial.h"
 #include "GizmoAxis.h"
 #include "Gizmo.h"
@@ -137,5 +138,6 @@ REGISTER_ABSTRACT_TYPE( DebugGrid );
 REGISTER_ABSTRACT_TYPE( SingleColorDebugMat );
 REGISTER_ABSTRACT_TYPE( DebugGeometry );
 REGISTER_ABSTRACT_TYPE( DRDirectionalLight );
+REGISTER_ABSTRACT_TYPE( DRPointLight );
 
 ///////////////////////////////////////////////////////////////////////////////
