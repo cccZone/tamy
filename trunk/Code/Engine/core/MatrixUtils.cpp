@@ -84,3 +84,14 @@ void MatrixUtils::generateLookAtLH( const Vector& cameraOriginPos, const Vector&
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void MatrixUtils::generateViewportMatrix( uint offsetX, uint offsetY, uint width, uint height, Matrix& outViewportMtx )
+{
+   outViewportMtx = Matrix::IDENTITY;
+   outViewportMtx.m11 = (float)width;
+   outViewportMtx.m22 = -(float)height;
+   outViewportMtx.m41 = (float)offsetX;
+   outViewportMtx.m42 = (float)( height + offsetY );
+}
+
+///////////////////////////////////////////////////////////////////////////////

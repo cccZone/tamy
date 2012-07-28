@@ -7,7 +7,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-EffectCS::EffectCS( TiXmlNode* effectNode, ResourcesManager& rm )
+EffectCS::EffectCS( TiXmlNode* effectNode, const FilePath& deploymentDir, ResourcesManager& rm )
 {
    if ( !effectNode )
    {

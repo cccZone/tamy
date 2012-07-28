@@ -5,6 +5,7 @@
 #include "core-Renderer\Camera.h"
 #include "core\Point.h"
 #include "core\Assert.h"
+#include "core\MatrixUtils.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,6 +40,8 @@ Renderer::Renderer(unsigned int viewportWidth,
 , m_renderCommands( 1024 * 1024 ) // 1 MB for the commands
 {
    m_defaultCamera = new Camera( "defaultCamera", *this, Camera::PT_PERSPECTIVE );
+
+   MatrixUtils::generateViewportMatrix( 0, 0, m_viewportWidth, m_viewportHeight, m_viewportMatrix );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -165,6 +168,7 @@ void Renderer::resizeViewport(unsigned int width, unsigned int height,
 {
    m_viewportWidth = width;
    m_viewportHeight = height;
+   MatrixUtils::generateViewportMatrix( 0, 0, m_viewportWidth, m_viewportHeight, m_viewportMatrix );
 
    m_leftClientArea = leftClientArea;
    m_topClientArea = topClientArea;

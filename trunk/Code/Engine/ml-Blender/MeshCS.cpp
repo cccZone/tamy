@@ -87,7 +87,7 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MeshCS::MeshCS( TiXmlNode* geometryNode, ResourcesManager& rm )
+MeshCS::MeshCS( TiXmlNode* geometryNode, const FilePath& deploymentDir, ResourcesManager& rm )
 {
    if ( !geometryNode )
    {
@@ -131,7 +131,9 @@ MeshCS::MeshCS( TiXmlNode* geometryNode, ResourcesManager& rm )
       ASSERT_MSG( false, "Insufficient data to create a mesh" );
       return;
    }
-   m_mesh = new TriangleMesh( geometryName, meshData.vertices, meshData.faces );
+
+   FilePath geometryPath( deploymentDir.getRelativePath() + geometryName + "." + TriangleMesh::getExtension() );
+   m_mesh = new TriangleMesh( geometryPath, meshData.vertices, meshData.faces );
 
    // register a mesh with the resources manager
    rm.addResource( m_mesh );

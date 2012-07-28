@@ -521,6 +521,9 @@
     <ClInclude Include="QueryableDebugGeometry.h">
       <Filter>Widgets\SceneRenderWidget\SceneQueries\Representations</Filter>
     </ClInclude>
+    <ClInclude Include="DRPointLight.h">
+      <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -1213,6 +1216,9 @@
     </ClCompile>
     <ClCompile Include="QueryableDebugGeometry.cpp">
       <Filter>Widgets\SceneRenderWidget\SceneQueries\Representations</Filter>
+    </ClCompile>
+    <ClCompile Include="DRPointLight.cpp">
+      <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -18,8 +18,9 @@ BlenderScene::BlenderScene( const FilePath& path, ResourcesManager& rm, IProgres
    : TResourceImporter< Model >( path, rm, observer )
    , m_document( NULL )
 {
-   // define the slices
+   path.extractDir( m_deploymentDir );
 
+   // define the slices
    m_definitions.push_back( new TSliceDefinition< SurfacePropertiesCS >( "library_effects", "effect" ) );
    m_definitions.push_back( new TSliceDefinition< EffectCS >( "library_materials", "material" ) );
 

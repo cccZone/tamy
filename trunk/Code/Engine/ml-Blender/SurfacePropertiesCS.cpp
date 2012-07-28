@@ -6,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SurfacePropertiesCS::SurfacePropertiesCS( TiXmlNode* materialNode, ResourcesManager& rm )
+SurfacePropertiesCS::SurfacePropertiesCS( TiXmlNode* materialNode, const FilePath& deploymentDir, ResourcesManager& rm )
 {
    if ( !materialNode )
    {

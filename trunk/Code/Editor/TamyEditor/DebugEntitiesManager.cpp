@@ -4,6 +4,7 @@
 
 // debug representations
 #include "DRDirectionalLight.h"
+#include "DRPointLight.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,6 +13,7 @@ DebugEntitiesManager::DebugEntitiesManager( EditorDebugRenderer& debugRenderer )
    : m_debugRenderer( debugRenderer )
 {
    associate< DirectionalLight, DRDirectionalLight >();
+   associate< PointLight, DRPointLight >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

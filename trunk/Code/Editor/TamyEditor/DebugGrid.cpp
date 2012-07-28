@@ -69,10 +69,9 @@ bool DebugGrid::onPreRender( Renderer& renderer )
    // setup the vertex shader
    RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
    {
-      Matrix worldViewMtx;
-      worldViewMtx.setMul( getGlobalMtx(), camera.getViewMtx() );
-      comm->setMtx( "g_mWorldView", worldViewMtx );
-      comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
+      Matrix worldViewProjMtx;
+      worldViewProjMtx.setMul( camera.getViewMtx(), camera.getProjectionMtx() );
+      comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
    }
 
    return true;

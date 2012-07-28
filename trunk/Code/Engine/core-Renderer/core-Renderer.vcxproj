@@ -116,6 +116,7 @@
     <ClCompile Include="MNTimer.cpp" />
     <ClCompile Include="MNVec4.cpp" />
     <ClCompile Include="MRTUtil.cpp" />
+    <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="RenderingPipeline.cpp" />
     <ClCompile Include="RenderingPipelineNode.cpp" />
     <ClCompile Include="RenderingPipelineMechanism.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\MNVec4.h" />
     <ClInclude Include="..\..\Include\core-Renderer\MRTUtil.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\PointLight.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h" />

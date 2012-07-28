@@ -109,7 +109,7 @@
     <Filter Include="Lighting\Entities">
       <UniqueIdentifier>{80a4f5cf-6fca-4f71-bbde-7cf6bea3472f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lighting\PipelineNode">
+    <Filter Include="Lighting\PipelineNodes">
       <UniqueIdentifier>{cb50b816-b3ad-45eb-ac8b-2447c7295270}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -353,9 +353,12 @@
       <Filter>Geometry\Core</Filter>
     </ClCompile>
     <ClCompile Include="RPDeferredLightingNode.cpp">
-      <Filter>Lighting\PipelineNode</Filter>
+      <Filter>Lighting\PipelineNodes</Filter>
     </ClCompile>
     <ClCompile Include="DirectionalLight.cpp">
+      <Filter>Lighting\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
       <Filter>Lighting\Entities</Filter>
     </ClCompile>
   </ItemGroup>
@@ -701,9 +704,12 @@
       <Filter>Geometry\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h">
-      <Filter>Lighting\PipelineNode</Filter>
+      <Filter>Lighting\PipelineNodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DirectionalLight.h">
+      <Filter>Lighting\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\PointLight.h">
       <Filter>Lighting\Entities</Filter>
     </ClInclude>
   </ItemGroup>

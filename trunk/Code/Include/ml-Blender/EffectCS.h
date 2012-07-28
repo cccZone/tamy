@@ -11,6 +11,7 @@
 
 class ResourcesManager;
 class TiXmlNode;
+class FilePath;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,7 +25,7 @@ private:
    std::string    m_materialId;
 
 public:
-   EffectCS( TiXmlNode* effectNode, ResourcesManager& rm );
+   EffectCS( TiXmlNode* effectNode, const FilePath& deploymentDir, ResourcesManager& rm );
    ~EffectCS();
 
    // -------------------------------------------------------------------------

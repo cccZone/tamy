@@ -41,7 +41,7 @@ void TSliceDefinition< T >::parse( TiXmlNode* sceneSlice, BlenderScene& host )
       ASSERT( resElem != NULL );
 
       std::string id = resElem->Attribute( "id" );
-      IColladaSlice* slice = new T( resElem, host.getResourcesManager() );
+      IColladaSlice* slice = new T( resElem, host.getDeploymentDir(), host.getResourcesManager() );
 
       ISceneSlice* sceneSlice = dynamic_cast< ISceneSlice* >( slice );
       if ( sceneSlice )

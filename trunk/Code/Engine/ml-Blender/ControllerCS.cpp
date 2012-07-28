@@ -98,7 +98,7 @@ namespace // anonymous
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ControllerCS::ControllerCS( TiXmlNode* controllerNode, ResourcesManager& rm )
+ControllerCS::ControllerCS( TiXmlNode* controllerNode, const FilePath& deploymentDir, ResourcesManager& rm )
 {
    if ( !controllerNode )
    {
@@ -125,7 +125,8 @@ ControllerCS::ControllerCS( TiXmlNode* controllerNode, ResourcesManager& rm )
    parser.initialize();   
 
    // create a skeleton resource
-   m_skeleton = new Skeleton( controllerName );
+   FilePath skeletonPath( deploymentDir.getRelativePath() + controllerName + "." + Skeleton::getExtension() );
+   m_skeleton = new Skeleton( skeletonPath );
 
    // initialize the skeleton resource
    DataSource* skeletonData = parser.getSource( "joints" );

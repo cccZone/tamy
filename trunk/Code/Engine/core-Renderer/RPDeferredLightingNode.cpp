@@ -8,6 +8,9 @@
 #include "core/ResourcesManager.h"
 
 
+// TODO: !!!!!!!!!!!!!!!!!  Expose alpha blending settings and z-buffer test settings through the pixel shader editor interface
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( RPDeferredLightingNode );

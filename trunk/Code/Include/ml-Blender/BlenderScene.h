@@ -4,6 +4,7 @@
 #ifndef _BLENDER_SCENE_H
 #define _BLENDER_SCENE_H
 
+#include "core/FilePath.h"
 #include "core/ResourceImporter.h"
 #include <string>
 #include <vector>
@@ -30,6 +31,7 @@ class BlenderScene : public TResourceImporter< Model >
 {
 private:
    TiXmlDocument*                                  m_document;
+   FilePath                                        m_deploymentDir;
 
    typedef std::vector< SliceDefinition* >         SlicesDefinitions;
    SlicesDefinitions                               m_definitions;
@@ -56,6 +58,11 @@ public:
     * Returns the used instance of resources manager.
     */
    inline ResourcesManager& getResourcesManager() { return m_rm; }
+
+   /**
+    * Returns path to the directory all imported elements should be deployed in.
+    */
+   inline const FilePath& getDeploymentDir() const { return m_deploymentDir; }
 
    // -------------------------------------------------------------------------
    // ResourceImporter implementation

@@ -14,6 +14,7 @@ class Texture;
 class Shader;
 class ResourcesManager;
 class TiXmlNode;
+class FilePath;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -26,7 +27,7 @@ private:
    SurfaceProperties*      m_surfaceProperties;
 
 public:
-   SurfacePropertiesCS( TiXmlNode* effectNode, ResourcesManager& rm );
+   SurfacePropertiesCS( TiXmlNode* effectNode, const FilePath& deploymentDir, ResourcesManager& rm );
    ~SurfacePropertiesCS();
 
 protected:
