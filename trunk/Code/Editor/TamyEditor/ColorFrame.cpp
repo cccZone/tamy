@@ -13,6 +13,7 @@ ColorFrame::ColorFrame( QWidget* parent, const Color& color )
    setAutoFillBackground( true );
    setFrameStyle( QFrame::Panel | QFrame::Sunken );
    setLineWidth( 1 );
+   setMinimumSize( 20, 20 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,6 +25,7 @@ ColorFrame::ColorFrame( QWidget* parent, const QColor& color )
    setAutoFillBackground( true );
    setFrameStyle( QFrame::Panel | QFrame::Sunken );
    setLineWidth( 1 );
+   setMinimumSize( 20, 20 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

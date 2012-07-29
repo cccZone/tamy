@@ -25,6 +25,7 @@ class DirectionalLight : public Light, public UniqueObject< DirectionalLight >
 public:
    // static data
    Color          m_color;
+   float          m_strength;
 
    /// runtime data
    PixelShader*   m_pixelShader;

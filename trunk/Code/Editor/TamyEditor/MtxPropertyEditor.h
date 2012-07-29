@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor\MtxPropertyEditor.h
 /// @brief  matrix property editor
+#pragma once
 
 #include "core\ReflectionProperty.h"
 #include "QPropertyEditor.h"

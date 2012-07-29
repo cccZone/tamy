@@ -9,7 +9,6 @@
 #include "core-Renderer\BasicRenderCommands.h"
 
 // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// 1. better debug representation of the directional light ( an arrow or sth )
 // 2. bump mapping
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +16,7 @@
 BEGIN_OBJECT( DirectionalLight );
    PARENT( Light );
    PROPERTY_EDIT( "Color", Color, m_color );
+   PROPERTY_EDIT( "strength", float, m_strength );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,6 +24,7 @@ END_OBJECT();
 DirectionalLight::DirectionalLight( const std::string& name )
    : Light( name )
    , m_color(1, 1, 1, 1 )
+   , m_strength( 1 )
    , m_pixelShader( NULL )
 {
    setBoundingVolume( new BoundingSpace() ); 
@@ -64,6 +65,7 @@ void DirectionalLight::render( Renderer& renderer, ShaderTexture* depthNormalsTe
    {
       psComm->setVec4( "g_lightDirWS", globalMtx.forwardVec() );
       psComm->setVec4( "g_lightColor", (const Vector&)m_color );
+      psComm->setFloat( "g_strength", m_strength );
 
       psComm->setTexture( "g_DepthNormals", *depthNormalsTex );
       psComm->setTexture( "g_SceneColor", *sceneColorTex );

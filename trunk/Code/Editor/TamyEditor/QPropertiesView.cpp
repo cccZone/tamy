@@ -17,7 +17,7 @@
 #include "ObjectPropertyEditor.h"
 #include "QReflectionPropertyEditorComposite.h"
 #include "QReflectionObjectEditor.h"
-
+#include "ColorPropertyEditor.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -55,6 +55,7 @@ void QPropertiesView::initFactory()
    associate< unsigned int,         UIntPropertyEditor >();
    associate< long,                 LongPropertyEditor >();
    associate< unsigned long,        ULongPropertyEditor >();
+   associate< Color,                ColorPropertyEditor >();
    associateAbstract< Resource*,         ResourcePropertyEditor >();
    associateAbstract< ReflectionObject*, ObjectPropertyEditor >();
    defineEnums< EnumPropertyEditor >();

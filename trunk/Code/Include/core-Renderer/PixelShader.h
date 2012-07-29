@@ -72,6 +72,16 @@ struct PixelShaderParams
    BlendFunc                     m_alphaBlendSourceFunc;
    BlendFunc                     m_alphaBlendDestFunc;
 
+   bool                          m_stencilEnable;
+   StencilOp                     m_stencilFail;
+   StencilOp                     m_stencilZFail;
+   StencilOp                     m_stencilPass;
+   ComparisonFunc                m_stencilFunc;
+   ulong                         m_stencilRef;
+   ulong                         m_stencilMask;
+   ulong                         m_stencilWriteMask;
+
+
    PixelShaderParams()
       : m_cullingMode( CULL_CCW )
       , m_useZBuffer( true )
@@ -86,6 +96,14 @@ struct PixelShaderParams
       , m_useSeparateAlphaBlend( false )
       , m_alphaBlendSourceFunc( BLEND_ONE )
       , m_alphaBlendDestFunc( BLEND_ZERO )
+      , m_stencilEnable( false )
+      , m_stencilFail( STENCILOP_KEEP )
+      , m_stencilZFail( STENCILOP_KEEP )
+      , m_stencilPass( STENCILOP_KEEP )
+      , m_stencilFunc( CMP_ALWAYS )
+      , m_stencilRef( 0 )
+      , m_stencilMask( 0xFFFFFFFF )
+      , m_stencilWriteMask( 0xFFFFFFFF )
    {}
 
    // -------------------------------------------------------------------------

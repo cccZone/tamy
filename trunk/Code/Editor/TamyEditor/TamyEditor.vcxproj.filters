@@ -198,6 +198,9 @@
     <Filter Include="Widgets\SceneRenderWidget\DebugMaterials">
       <UniqueIdentifier>{decbf559-7363-40b8-8a58-abd55f043b35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\HexEditorWidget">
+      <UniqueIdentifier>{121fb861-4722-484f-b163-406e16eefb8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -1220,6 +1223,30 @@
     <ClCompile Include="DRPointLight.cpp">
       <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClCompile>
+    <ClCompile Include="ColorPropertyEditor.cpp">
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ColorPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ColorPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ColorPropertyEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="HexEditor.cpp">
+      <Filter>Widgets\HexEditorWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_HexEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_HexEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_HexEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1430,6 +1457,12 @@
     </CustomBuild>
     <CustomBuild Include="PipelineBlock.h">
       <Filter>Widgets\PipelineWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ColorPropertyEditor.h">
+      <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
+    </CustomBuild>
+    <CustomBuild Include="HexEditor.h">
+      <Filter>Widgets\HexEditorWidget</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

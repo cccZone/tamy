@@ -184,7 +184,7 @@ void Renderer::resizeViewport(unsigned int width, unsigned int height,
 
 void Renderer::bindRenderTarget( RenderTarget* renderTarget, uint targetIdx )
 {
-   static Color backBufferColor( 81, 176, 255 );
+   static Color backBufferColor( 0, 0, 0 );
 
    activateRenderTarget( renderTarget, targetIdx );
    if ( !shouldRenderTargetBeCleaned( renderTarget ) )
