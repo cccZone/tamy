@@ -31,6 +31,14 @@ void RCBindPixelShader::execute( Renderer& renderer )
 void RCUnbindPixelShader::execute( Renderer& renderer )
 {
    DX9Renderer& dxRenderer = static_cast< DX9Renderer& >( renderer );
+   DX9PixelShader* dxShader = dxRenderer.getPixelShader( m_shader );
+   if ( dxShader )
+   {
+      // reset the rendering state
+      dxShader->endRendering();
+   }
+
+   // and reset the shader
    dxRenderer.getD3Device().SetPixelShader( NULL );
 }
 
@@ -275,10 +283,46 @@ void DX9PixelShader::setTexture( const char* paramName, IDirect3DTexture9* textu
 void DX9PixelShader::beginRendering()
 {
    const PixelShaderParams& params = m_shader.getParams();
+   
    m_d3Device->SetRenderState( D3DRS_CULLMODE, params.m_cullingMode );
    m_d3Device->SetRenderState( D3DRS_ZENABLE, params.m_useZBuffer );
    m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, params.m_writeToZBuffer );
+   m_d3Device->SetRenderState( D3DRS_ZFUNC, params.m_depthTestFunc );
+
+   m_d3Device->SetRenderState( D3DRS_ALPHATESTENABLE, params.m_useAlphaTest );
+   if ( params.m_useAlphaTest )
+   {
+      m_d3Device->SetRenderState( D3DRS_ALPHAFUNC, params.m_alphaTestFunc );
+      m_d3Device->SetRenderState( D3DRS_ALPHAREF, params.m_useAlphaTest );
+   }
+
+   m_d3Device->SetRenderState( D3DRS_ALPHABLENDENABLE, params.m_useBlending );
+   if ( params.m_useBlending )
+   {
+      m_d3Device->SetRenderState( D3DRS_SRCBLEND, params.m_blendSourceFunc );
+      m_d3Device->SetRenderState( D3DRS_DESTBLEND, params.m_blendDestFunc );
+
+      m_d3Device->SetRenderState( D3DRS_SEPARATEALPHABLENDENABLE, params.m_useSeparateAlphaBlend );
+      if ( params.m_useSeparateAlphaBlend )
+      {
+         m_d3Device->SetRenderState( D3DRS_SRCBLENDALPHA, params.m_alphaBlendSourceFunc );
+         m_d3Device->SetRenderState( D3DRS_DESTBLENDALPHA, params.m_alphaBlendDestFunc );
+      }
+   }
+
    m_d3Device->SetPixelShader( m_dxPixelShader );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DX9PixelShader::endRendering()
+{
+   m_d3Device->SetRenderState( D3DRS_CULLMODE, D3DCULL_CCW );
+   m_d3Device->SetRenderState( D3DRS_ZENABLE, true );
+   m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, true );
+   m_d3Device->SetRenderState( D3DRS_ZFUNC, D3DCMP_LESSEQUAL );
+   m_d3Device->SetRenderState( D3DRS_ALPHATESTENABLE, false );
+   m_d3Device->SetRenderState( D3DRS_ALPHABLENDENABLE, false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

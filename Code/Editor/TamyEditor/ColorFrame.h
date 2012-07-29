@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   TamyEditor\ColorFrame.h
 /// @brief  Widget showing a color
+#pragma once
 
 #include <QFrame.h>
 

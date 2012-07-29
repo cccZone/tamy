@@ -52,6 +52,7 @@ public:
    void setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size );
    void setTexture( const char* paramName, IDirect3DTexture9* texture );
    void beginRendering();
+   void endRendering();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

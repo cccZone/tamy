@@ -33,9 +33,10 @@ public:
     * Renders the light volume.
     *
     * @param renderer
-    * @param depthNormalsBufferTex        a texture containing scene depth and normals
+    * @param depthNormalsTex        a texture containing scene depth and normals
+    * @param sceneColorTex          a texture with rendered scene colors ( coming from the materials of scene objects )
     */
-   virtual void render( Renderer& renderer, ShaderTexture* depthNormalsBufferTex ) {}
+   virtual void render( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex ) {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

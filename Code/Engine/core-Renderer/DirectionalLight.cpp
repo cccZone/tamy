@@ -50,7 +50,7 @@ void DirectionalLight::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectionalLight::render( Renderer& renderer, ShaderTexture* depthNormalsBufferTex )
+void DirectionalLight::render( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex )
 {
    if ( !m_pixelShader )
    {
@@ -64,6 +64,9 @@ void DirectionalLight::render( Renderer& renderer, ShaderTexture* depthNormalsBu
    {
       psComm->setVec4( "g_lightDirWS", globalMtx.forwardVec() );
       psComm->setVec4( "g_lightColor", (const Vector&)m_color );
+
+      psComm->setTexture( "g_DepthNormals", *depthNormalsTex );
+      psComm->setTexture( "g_SceneColor", *sceneColorTex );
    }
 
    // draw the geometry
