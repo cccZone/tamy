@@ -58,7 +58,7 @@ void RPSceneRenderNode::onCreateLayout( RenderingPipelineMechanism& host ) const
    data.registerVar( m_renderTargets );
    data.registerVar( m_treeMemPool );
 
-   // create the render target
+   // create render targets
    {
       Array< RenderTarget* >* renderTargets = new Array< RenderTarget* >();
       data[ m_renderTargets ] = renderTargets;

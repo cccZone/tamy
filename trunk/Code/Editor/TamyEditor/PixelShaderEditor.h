@@ -17,6 +17,7 @@ class ResourcesManager;
 class Renderer;
 class QTabWidget;
 class QComboBox;
+class ColorFrame;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -59,11 +60,14 @@ private:
 
    QStringList                         m_addressModes;
    QStringList                         m_filteringModes;
+   QStringList                         m_comparisonFunctions;
+   QStringList                         m_blendFunctions;
 
    PixelShader&                        m_shader;
    ShaderSyntaxHighlighter*            m_highlighter;
    QTabWidget*                         m_textureStagesTabs;
    std::vector< TextureStageTabDef >   m_textureStagesTabWidgets;
+   ColorFrame*                         m_alphaTestRefColor;
 
    ResourcesManager*                   m_resourceMgr;
    bool                                m_docModified;
@@ -96,6 +100,7 @@ public slots:
 private:
    void synchronize();
    void initializeTextureStagesTab();
+   void refreshRenderingParamsUI();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

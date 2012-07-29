@@ -16,37 +16,21 @@ class RPTextureOutput;
 
 /**
  * A node that provides information about the scene lights visible from the active camera.
- *
- * <lights.todo> : !!!! Even though I could technically use other building blocks that I already
- * have at my disposal to build this functionality, I want to encapsulate it
- * in one concise node. 
- * Additionally - one thing's missing from the blocks, and that is the ability to render geometry 
- * other than what GeometryResources can contain. Lights are also geometrical figures,
- * but I need to put more data in their vertices there than just the positions and normals.
- * That's why I decided to first create a standalone node that will deal with this 
- * new thing, and once I have the whole thing working, I will make the pipeline
- * more generic in terms of the geometry vertex definition - I will need that extra
- * flexibility when it comes to particles rendering etc.
- *
- * But even when that is done, I doubt I will move away from having just one node that calculates
- * the scene lighting, even if it's just a facade for the functionality of a couple of other blocks.
- * I want to keep it simple from the user's perspective.
- *
- * Once that's done - revise this comment!!!!!
  */
 class RPDeferredLightingNode : public RenderingPipelineNode
 {
    DECLARE_CLASS()
 
 private:
+   std::string                               m_renderTargetId;
+
    // runtime data
-   TRuntimeVar< RenderTarget* >        m_lightsDirectionRT;
-   TRuntimeVar< RenderTarget* >        m_lightsColorRT;
+   TRuntimeVar< Array< RenderTarget* >* >    m_renderTargets;
 
    // sockets data
-   RPTextureInput*                     m_depthNormalBufferInput;
-   RPTextureOutput*                    m_lightsDirection;
-   RPTextureOutput*                    m_lightsColor;
+   RPTextureInput*                           m_sceneColorInput;
+   RPTextureInput*                           m_depthNormalsInput;
+
 
 public:
    /**
@@ -66,9 +50,7 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-
-private:
-   void initializeSocketd();
+   void onPropertyChanged( ReflectionProperty& property );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

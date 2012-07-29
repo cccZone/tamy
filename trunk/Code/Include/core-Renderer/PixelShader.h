@@ -8,6 +8,7 @@
 #include "core/UniqueObject.h"
 #include "core-Renderer/RenderResource.h"
 #include "core-Renderer/RenderingParams.h"
+#include "core/types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,11 +58,34 @@ struct PixelShaderParams
    CullingMode                   m_cullingMode;
    bool                          m_useZBuffer;
    bool                          m_writeToZBuffer;
+   ComparisonFunc                m_depthTestFunc;
+
+   bool                          m_useAlphaTest;
+   ComparisonFunc                m_alphaTestFunc;
+   ulong                         m_alphaTestRefVal;
+
+   bool                          m_useBlending;
+   BlendFunc                     m_blendSourceFunc;
+   BlendFunc                     m_blendDestFunc;
+
+   bool                          m_useSeparateAlphaBlend;
+   BlendFunc                     m_alphaBlendSourceFunc;
+   BlendFunc                     m_alphaBlendDestFunc;
 
    PixelShaderParams()
       : m_cullingMode( CULL_CCW )
       , m_useZBuffer( true )
       , m_writeToZBuffer( true )
+      , m_depthTestFunc( CMP_LESSEQUAL )
+      , m_useAlphaTest( false )
+      , m_alphaTestFunc( CMP_ALWAYS )
+      , m_alphaTestRefVal( 1 )
+      , m_useBlending( false )
+      , m_blendSourceFunc( BLEND_ONE )
+      , m_blendDestFunc( BLEND_ZERO )
+      , m_useSeparateAlphaBlend( false )
+      , m_alphaBlendSourceFunc( BLEND_ONE )
+      , m_alphaBlendDestFunc( BLEND_ZERO )
    {}
 
    // -------------------------------------------------------------------------

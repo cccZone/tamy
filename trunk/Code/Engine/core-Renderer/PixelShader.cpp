@@ -44,6 +44,16 @@ OutStream& operator<<( OutStream& stream, const PixelShaderParams& params )
    stream << params.m_cullingMode;
    stream << params.m_useZBuffer;
    stream << params.m_writeToZBuffer;
+   stream << params.m_depthTestFunc;
+   stream << params.m_useAlphaTest;
+   stream << params.m_alphaTestFunc;
+   stream << params.m_alphaTestRefVal;
+   stream << params.m_useBlending;
+   stream << params.m_blendSourceFunc;
+   stream << params.m_blendDestFunc;
+   stream << params.m_useSeparateAlphaBlend;
+   stream << params.m_alphaBlendSourceFunc;
+   stream << params.m_alphaBlendDestFunc;
 
    return stream;
 }
@@ -55,6 +65,16 @@ InStream& operator>>( InStream& stream, PixelShaderParams& params )
    stream >> params.m_cullingMode;
    stream >> params.m_useZBuffer;
    stream >> params.m_writeToZBuffer;
+   stream >> params.m_depthTestFunc;
+   stream >> params.m_useAlphaTest;
+   stream >> params.m_alphaTestFunc;
+   stream >> params.m_alphaTestRefVal;
+   stream >> params.m_useBlending;
+   stream >> params.m_blendSourceFunc;
+   stream >> params.m_blendDestFunc;
+   stream >> params.m_useSeparateAlphaBlend;
+   stream >> params.m_alphaBlendSourceFunc;
+   stream >> params.m_alphaBlendDestFunc;
 
    return stream;
 }

@@ -43,7 +43,7 @@ public:
    // -------------------------------------------------------------------------
    // Light implementation
    // -------------------------------------------------------------------------
-   void render( Renderer& renderer, ShaderTexture* depthNormalsBufferTex );
+   void render( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex );
 
    // -------------------------------------------------------------------------
    // Object implementation

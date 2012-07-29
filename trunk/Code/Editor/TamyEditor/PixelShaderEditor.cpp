@@ -3,6 +3,7 @@
 #include "tamyeditor.h"
 #include "core.h"
 #include "core-Renderer.h"
+#include "ColorFrame.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QTextBrowser>
@@ -57,14 +58,72 @@ void PixelShaderEditor::onInitialize()
    {
       const PixelShaderParams& params = m_shader.getParams();
 
-      m_ui.cullingMode->setCurrentIndex( params.m_cullingMode - 1 );
-      connect( m_ui.cullingMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+      // geometry group box
+      {
+         m_ui.cullingMode->setCurrentIndex( params.m_cullingMode - 1 );
+         connect( m_ui.cullingMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+      }
 
-      m_ui.zBufferEnabled->setChecked( params.m_useZBuffer );
-      connect( m_ui.zBufferEnabled, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
+      // depth group box
+      {
+         m_ui.zBufferEnabled->setChecked( params.m_useZBuffer );
+         connect( m_ui.zBufferEnabled, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
 
-      m_ui.zBufferWriteEnabled->setChecked( params.m_writeToZBuffer );
-      connect( m_ui.zBufferWriteEnabled, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
+         m_ui.zBufferWriteEnabled->setChecked( params.m_writeToZBuffer );
+         connect( m_ui.zBufferWriteEnabled, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.depthTestFuncCombo->setCurrentIndex( params.m_depthTestFunc - 1 );
+         connect( m_ui.depthTestFuncCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+      }
+
+      // alpha test group box
+      {
+         m_ui.alphaTest->setChecked( params.m_useAlphaTest );
+         connect( m_ui.alphaTest, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.alphaTestFuncCombo->setCurrentIndex( params.m_alphaTestFunc - 1 );
+         connect( m_ui.alphaTestFuncCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+         // create the reference color picker
+         {
+            QHBoxLayout* layout = new QHBoxLayout( m_ui.alphaTestRefColor );
+            layout->setSpacing( 0 );
+            layout->setMargin( 0 );
+            m_ui.alphaTestRefColor->setLayout( layout );
+
+            Color color;
+            color.setFromLong( params.m_alphaTestRefVal );
+            m_alphaTestRefColor = new ColorFrame( m_ui.alphaTestRefColor, color );
+            layout->addWidget( m_alphaTestRefColor );
+            connect( m_alphaTestRefColor, SIGNAL( changed( const QColor& ) ), this, SLOT( onParamChange() ) );
+         }
+      }
+
+      // blending group box
+      {
+         m_ui.useAlphaBlend->setChecked( params.m_useBlending );
+         connect( m_ui.useAlphaBlend, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.blendSrcFuncCombo->setCurrentIndex( params.m_blendSourceFunc - 1 );
+         connect( m_ui.blendSrcFuncCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.blendDestFuncCombo->setCurrentIndex( params.m_blendDestFunc - 1 );
+         connect( m_ui.blendDestFuncCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+      }
+
+      // separate alpha blending group box
+      {
+         m_ui.useSeparatedAlphaBlending->setChecked( params.m_useSeparateAlphaBlend );
+         connect( m_ui.useSeparatedAlphaBlending, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.alphaBlendSrcFuncCombo->setCurrentIndex( params.m_alphaBlendSourceFunc - 1 );
+         connect( m_ui.alphaBlendSrcFuncCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.alphaBlendDestFuncCombo->setCurrentIndex( params.m_alphaBlendDestFunc - 1 );
+         connect( m_ui.alphaBlendDestFuncCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+      }
+
+      refreshRenderingParamsUI();
    }
 
    // set texture stages tabs
@@ -189,9 +248,46 @@ void PixelShaderEditor::onParamChange()
 {
    PixelShaderParams& params = m_shader.changeParams();
 
+   // copy the values
    params.m_cullingMode = (CullingMode)( m_ui.cullingMode->currentIndex() + 1 );
+
    params.m_useZBuffer = m_ui.zBufferEnabled->isChecked();
    params.m_writeToZBuffer = m_ui.zBufferWriteEnabled->isChecked();
+   params.m_depthTestFunc = (ComparisonFunc)( m_ui.depthTestFuncCombo->currentIndex() + 1 );
+
+   params.m_useAlphaTest = m_ui.alphaTest->isChecked();
+   params.m_alphaTestFunc = (ComparisonFunc)( m_ui.alphaTestFuncCombo->currentIndex() + 1 );
+   params.m_alphaTestRefVal = (ulong)m_alphaTestRefColor->getEngineColor();
+
+   params.m_useBlending = m_ui.useAlphaBlend->isChecked();
+   params.m_blendSourceFunc = (BlendFunc)( m_ui.blendSrcFuncCombo->currentIndex() + 1 );
+   params.m_blendDestFunc = (BlendFunc)( m_ui.blendDestFuncCombo->currentIndex() + 1 );
+
+   params.m_useSeparateAlphaBlend = m_ui.useSeparatedAlphaBlending->isChecked();
+   params.m_alphaBlendSourceFunc = (BlendFunc)( m_ui.alphaBlendSrcFuncCombo->currentIndex() + 1 );
+   params.m_alphaBlendDestFunc = (BlendFunc)( m_ui.alphaBlendDestFuncCombo->currentIndex() + 1 );
+
+   refreshRenderingParamsUI();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PixelShaderEditor::refreshRenderingParamsUI()
+{
+   const PixelShaderParams& params = m_shader.getParams();
+
+   // enable/disable certain fields depending on whether the group they depend on was enabled or disabled
+   m_ui.depthTestFuncCombo->setEnabled( params.m_useZBuffer );
+
+   m_ui.alphaTestFuncCombo->setEnabled( params.m_useAlphaTest );
+   m_alphaTestRefColor->setEnabled( params.m_useAlphaTest );
+
+   m_ui.blendSrcFuncCombo->setEnabled( params.m_useBlending );
+   m_ui.blendDestFuncCombo->setEnabled( params.m_useBlending );
+
+   m_ui.useSeparatedAlphaBlending->setEnabled( params.m_useBlending );
+   m_ui.alphaBlendSrcFuncCombo->setEnabled( params.m_useBlending && params.m_useSeparateAlphaBlend );
+   m_ui.alphaBlendDestFuncCombo->setEnabled( params.m_useBlending && params.m_useSeparateAlphaBlend );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

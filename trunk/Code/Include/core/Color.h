@@ -2,6 +2,8 @@
 /// @brief  color representation
 #pragma once
 
+#include "core/types.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,6 +55,13 @@ struct Color
     * Conversion operator to a DWORD representation.
     */
    operator unsigned long() const;
+
+   /**
+    * Sets the color value from an internet-friendly representation.
+    *
+    * @param val
+    */
+   void setFromLong( ulong val );
 
    // -------------------------------------------------------------------------
    // Serialization support

@@ -71,7 +71,7 @@ void PointLight::onPropertyChanged( ReflectionProperty& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PointLight::render( Renderer& renderer, ShaderTexture* depthNormalsBufferTex )
+void PointLight::render( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex )
 {
    if ( !m_vertexShader || !m_pixelShader || !m_pointLightMesh )
    {
@@ -103,7 +103,8 @@ void PointLight::render( Renderer& renderer, ShaderTexture* depthNormalsBufferTe
       psComm->setFloat( "g_farZ", activeCamera.getFarClippingPlane() );
       psComm->setMtx( "g_mtxProjToView", mtxInvProj );
       psComm->setMtx( "g_mtxViewToWorld", mtxInvView );
-      psComm->setTexture( "g_DepthNormals", *depthNormalsBufferTex );
+      psComm->setTexture( "g_DepthNormals", *depthNormalsTex );
+      psComm->setTexture( "g_SceneColor", *sceneColorTex );
    }
 
    // set and configure the vertex shader
