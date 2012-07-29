@@ -28,6 +28,9 @@ public:
     * Returns the edited value.
     */
    ulong getValue() const;
+
+public slots:
+   void valChanged();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
