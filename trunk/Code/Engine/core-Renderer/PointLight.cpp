@@ -92,9 +92,6 @@ void PointLight::render( Renderer& renderer, ShaderTexture* depthNormalsTex, Sha
       Matrix mtxInvProj;
       mtxInvProj.setInverse( activeCamera.getProjectionMtx() );
 
-      Matrix mtxInvView;
-      mtxInvView.setInverse( activeCamera.getViewMtx() );
-
       Vector lightOriginViewSpace;
       activeCamera.getViewMtx().transform( globalMtx.position(), lightOriginViewSpace );
 
@@ -105,7 +102,6 @@ void PointLight::render( Renderer& renderer, ShaderTexture* depthNormalsTex, Sha
       psComm->setFloat( "g_radius", m_radius );
       psComm->setFloat( "g_farZ", activeCamera.getFarClippingPlane() );
       psComm->setMtx( "g_mtxProjToView", mtxInvProj );
-      psComm->setMtx( "g_mtxViewToWorld", mtxInvView );
       psComm->setTexture( "g_DepthNormals", *depthNormalsTex );
       psComm->setTexture( "g_SceneColor", *sceneColorTex );
    }

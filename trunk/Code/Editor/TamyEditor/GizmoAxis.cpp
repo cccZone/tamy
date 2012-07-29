@@ -50,7 +50,7 @@ void GizmoAxis::transformManipulatedNodes( const Vector& viewportSpaceTransforma
    // all we need to do is take our manipulation axis, transform it to the viewport space ( with respect
    // to the active camera ) and then calculate a dot product between our 2d manipulation axis and 
    // the viewport space transformation vector - thus calculating our transformation value.
-   const Matrix& manipulationMatrix = Matrix::IDENTITY;
+   const Matrix& manipulationMatrix = m_editedNode.getGlobalMtx();
    const Vector& manipulationAxis = manipulationMatrix.getRow( m_axisIdx );
 
    float transformationValue = 0.0f;
@@ -59,17 +59,15 @@ void GizmoAxis::transformManipulatedNodes( const Vector& viewportSpaceTransforma
       viewProjMtx.setMul( m_activeCamera.getViewMtx(), m_activeCamera.getProjectionMtx() );
       Vector viewportSpaceManipulationAxis;
       viewProjMtx.transformNorm( manipulationAxis, viewportSpaceManipulationAxis );
-
       transformationValue = viewportSpaceManipulationAxis.dot( viewportSpaceTransformation );
    }
 
    Matrix transformationMtx;
-   m_operation->transformManipulatedNodes( manipulationAxis, transformationValue, transformationMtx );
-
-   Matrix& nodeMtx = m_editedNode.accessLocalMtx();
+   m_operation->transformManipulatedNodes( Matrix::IDENTITY.getRow( m_axisIdx ), transformationValue, transformationMtx );
 
    // we're multiplying transformationMtx*nodeMtx, because we want to manipulate the object in it's LOCAL SPACE.
    // If you want to manipulate it in WORLD SPACE, use 'mul' instead
+   Matrix& nodeMtx = m_editedNode.accessLocalMtx();
    nodeMtx.preMul( transformationMtx );
 
    // notify the object that it's value has externally changed ( other editors might be watching )
@@ -110,9 +108,16 @@ bool GizmoAxis::onPreRender( Renderer& renderer )
    // setup the vertex shader
    RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
    {
+      Matrix worldViewMtx;
+      worldViewMtx.setMul( nodeMtx, camera.getViewMtx() );
+
       Matrix worldViewProjMtx;
-      worldViewProjMtx.setMul( nodeMtx, camera.getViewMtx() ).mul( camera.getProjectionMtx() );
-      comm->setMtx( "g_mWorld", nodeMtx );
+      worldViewProjMtx.setMul( worldViewMtx, camera.getProjectionMtx() );
+
+      comm->setMtx( "g_mWorldView", worldViewMtx );
+      comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
+
+      comm->setMtx( "g_mWorldView", nodeMtx );
       comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
    }
 

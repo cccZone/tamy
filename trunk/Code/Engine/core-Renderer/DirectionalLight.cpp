@@ -63,7 +63,10 @@ void DirectionalLight::render( Renderer& renderer, ShaderTexture* depthNormalsTe
    // set and configure the pixel shader
    RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_pixelShader );
    {
-      psComm->setVec4( "g_lightDirWS", globalMtx.forwardVec() );
+      Camera& activeCamera = renderer.getActiveCamera();
+      Vector lightDirVS;
+      activeCamera.getViewMtx().transformNorm( globalMtx.forwardVec(), lightDirVS );
+      psComm->setVec4( "g_lightDirVS", lightDirVS );
       psComm->setVec4( "g_lightColor", (const Vector&)m_color );
       psComm->setFloat( "g_strength", m_strength );
 
