@@ -19,7 +19,9 @@ DRDirectionalLight::DRDirectionalLight( DirectionalLight& light )
    , m_light( light )
    , m_mesh( NULL )
 {
-   m_mesh = DebugGeometryBuilder::createArrow( 0.5f, Vector::ZERO, Vector::OX );
+   Vector endPos;
+   endPos.setMul( Vector::OZ, 2.0f );
+   m_mesh = DebugGeometryBuilder::createArrow( 0.2f, Vector::ZERO, endPos );
    m_material = new SingleColorDebugMat( Color( 255, 242, 61 ) );
 
    setMesh( *m_mesh );

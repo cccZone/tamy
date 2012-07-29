@@ -57,9 +57,13 @@ bool DebugGeometry::onPreRender( Renderer& renderer )
    {
       const Matrix& worldMtx = getGlobalMtx();
 
+      Matrix worldViewMtx;
+      worldViewMtx.setMul( worldMtx, camera.getViewMtx() );
+
       Matrix worldViewProjMtx;
-      worldViewProjMtx.setMul( worldMtx, camera.getViewMtx() ).mul( camera.getProjectionMtx() );
-      comm->setMtx( "g_mWorld", worldMtx );
+      worldViewProjMtx.setMul( worldViewMtx, camera.getProjectionMtx() );
+
+      comm->setMtx( "g_mWorldView", worldMtx );
       comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
    }
 

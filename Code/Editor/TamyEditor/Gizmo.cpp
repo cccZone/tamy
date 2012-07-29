@@ -157,13 +157,13 @@ void Gizmo::createRotationGizmo()
 
    // calculate transform OX
    {
-      rotQ.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
+      rotQ.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
       transformOX.setRotation( rotQ );
    }
 
    // calculate transform OY
    {
-      rotQ.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
+      rotQ.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
       transformOY.setRotation( rotQ );
    }
 

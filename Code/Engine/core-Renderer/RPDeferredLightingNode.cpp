@@ -124,10 +124,6 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
       new ( renderer() ) RCActivateRenderTarget( renderTargets[i], i );
    }
 
-   // <lighting.todo>: !!!!!! once everything else works fine, use a regular scene builder here
-   // to build a rendering tree and save on those pixel shader/vertex shader commands.
-   // That will require that each light is built using GeometryEntity
-
    // render light volumes
    const Array< Light* >& visibleLights = host.getSceneLights();  
    uint lightsCount = visibleLights.size();
