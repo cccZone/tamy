@@ -18,6 +18,7 @@ class Renderer;
 class QTabWidget;
 class QComboBox;
 class ColorFrame;
+class HexEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -51,6 +52,8 @@ private:
    enum PSETabs
    {
       PSE_TAB_RENDERING,
+      PSE_TAB_ALPHA_BLENDING,
+      PSE_TAB_STENCIL,
       PSE_TAB_TEXTURE_STAGES,
       PSE_TAB_OUTPUT
    };
@@ -68,6 +71,9 @@ private:
    QTabWidget*                         m_textureStagesTabs;
    std::vector< TextureStageTabDef >   m_textureStagesTabWidgets;
    ColorFrame*                         m_alphaTestRefColor;
+   HexEditor*                          m_stencilRef;
+   HexEditor*                          m_stencilMask;
+   HexEditor*                          m_stencilWriteMask;
 
    ResourcesManager*                   m_resourceMgr;
    bool                                m_docModified;

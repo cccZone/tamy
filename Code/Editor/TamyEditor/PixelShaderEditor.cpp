@@ -4,6 +4,7 @@
 #include "core.h"
 #include "core-Renderer.h"
 #include "ColorFrame.h"
+#include "HexEditor.h"
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QTextBrowser>
@@ -86,10 +87,7 @@ void PixelShaderEditor::onInitialize()
 
          // create the reference color picker
          {
-            QHBoxLayout* layout = new QHBoxLayout( m_ui.alphaTestRefColor );
-            layout->setSpacing( 0 );
-            layout->setMargin( 0 );
-            m_ui.alphaTestRefColor->setLayout( layout );
+            QLayout* layout = m_ui.alphaTestRefColor->layout();
 
             Color color;
             color.setFromLong( params.m_alphaTestRefVal );
@@ -121,6 +119,33 @@ void PixelShaderEditor::onInitialize()
 
          m_ui.alphaBlendDestFuncCombo->setCurrentIndex( params.m_alphaBlendDestFunc - 1 );
          connect( m_ui.alphaBlendDestFuncCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+      }
+
+      // stencil operations group box
+      {
+         m_ui.useStencil->setChecked( params.m_stencilEnable );
+         connect( m_ui.useStencil, SIGNAL( toggled( bool ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.stencilFailCombo->setCurrentIndex( params.m_stencilFail - 1 );
+         connect( m_ui.stencilFailCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.stencilZFailCombo->setCurrentIndex( params.m_stencilZFail - 1 );
+         connect( m_ui.stencilZFailCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.stencilPassCombo->setCurrentIndex( params.m_stencilPass - 1 );
+         connect( m_ui.stencilPassCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+         m_ui.stencilFuncCombo->setCurrentIndex( params.m_stencilFunc - 1 );
+         connect( m_ui.stencilFuncCombo, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onParamChange() ) );
+
+         m_stencilRef = new HexEditor( m_ui.stencilRefFrame, params.m_stencilRef );
+         m_ui.stencilRefFrame->layout()->addWidget( m_stencilRef );
+
+         m_stencilMask = new HexEditor( m_ui.stencilMaskFrame, params.m_stencilMask );
+         m_ui.stencilMaskFrame->layout()->addWidget( m_stencilMask );
+
+         m_stencilWriteMask = new HexEditor( m_ui.stencilWriteMaskFrame, params.m_stencilWriteMask );
+         m_ui.stencilWriteMaskFrame->layout()->addWidget( m_stencilWriteMask );
       }
 
       refreshRenderingParamsUI();
@@ -267,6 +292,15 @@ void PixelShaderEditor::onParamChange()
    params.m_alphaBlendSourceFunc = (BlendFunc)( m_ui.alphaBlendSrcFuncCombo->currentIndex() + 1 );
    params.m_alphaBlendDestFunc = (BlendFunc)( m_ui.alphaBlendDestFuncCombo->currentIndex() + 1 );
 
+   params.m_stencilEnable = m_ui.useStencil->isChecked();
+   params.m_stencilFail = (StencilOp)( m_ui.stencilFailCombo->currentIndex() + 1 );
+   params.m_stencilZFail = (StencilOp)( m_ui.stencilZFailCombo->currentIndex() + 1 );
+   params.m_stencilPass = (StencilOp)( m_ui.stencilPassCombo->currentIndex() + 1 );
+   params.m_stencilFunc = (ComparisonFunc)( m_ui.stencilFuncCombo->currentIndex() + 1 );
+   params.m_stencilRef = m_stencilRef->getValue();
+   params.m_stencilMask = m_stencilMask->getValue();
+   params.m_stencilWriteMask = m_stencilWriteMask->getValue();
+
    refreshRenderingParamsUI();
 }
 
@@ -288,6 +322,14 @@ void PixelShaderEditor::refreshRenderingParamsUI()
    m_ui.useSeparatedAlphaBlending->setEnabled( params.m_useBlending );
    m_ui.alphaBlendSrcFuncCombo->setEnabled( params.m_useBlending && params.m_useSeparateAlphaBlend );
    m_ui.alphaBlendDestFuncCombo->setEnabled( params.m_useBlending && params.m_useSeparateAlphaBlend );
+
+   m_ui.stencilFailCombo->setEnabled( params.m_stencilEnable );
+   m_ui.stencilZFailCombo->setEnabled( params.m_stencilEnable );
+   m_ui.stencilPassCombo->setEnabled( params.m_stencilEnable );
+   m_ui.stencilFuncCombo->setEnabled( params.m_stencilEnable );
+   m_stencilRef->setEnabled( params.m_stencilEnable );
+   m_stencilMask->setEnabled( params.m_stencilEnable );
+   m_stencilWriteMask->setEnabled( params.m_stencilEnable );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

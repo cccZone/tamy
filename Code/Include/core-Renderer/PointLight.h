@@ -27,6 +27,7 @@ class PointLight : public Light, public UniqueObject< PointLight >
 public:
    // static data
    Color             m_color;
+   float             m_strength;
    float             m_attenuation;
    float             m_radius;
 

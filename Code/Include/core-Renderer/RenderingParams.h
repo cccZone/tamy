@@ -81,3 +81,18 @@ enum BlendFunc
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+enum StencilOp
+{
+   STENCILOP_KEEP          = 1,
+   STENCILOP_ZERO          = 2,
+   STENCILOP_REPLACE       = 3,
+   STENCILOP_INCRSAT       = 4,
+   STENCILOP_DECRSAT       = 5,
+   STENCILOP_INVERT        = 6,
+   STENCILOP_INCR          = 7,
+   STENCILOP_DECR          = 8,
+   STENCILOP_FORCE_BYTE   = 0x7f
+};
+
+///////////////////////////////////////////////////////////////////////////////

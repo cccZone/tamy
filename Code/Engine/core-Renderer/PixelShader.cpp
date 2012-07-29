@@ -53,7 +53,15 @@ OutStream& operator<<( OutStream& stream, const PixelShaderParams& params )
    stream << params.m_blendDestFunc;
    stream << params.m_useSeparateAlphaBlend;
    stream << params.m_alphaBlendSourceFunc;
-   stream << params.m_alphaBlendDestFunc;
+   stream << params.m_alphaBlendDestFunc;   
+   stream << params.m_stencilEnable;
+   stream << params.m_stencilFail;
+   stream << params.m_stencilZFail;
+   stream << params.m_stencilPass;
+   stream << params.m_stencilFunc;
+   stream << params.m_stencilRef;
+   stream << params.m_stencilMask;
+   stream << params.m_stencilWriteMask;
 
    return stream;
 }
@@ -75,6 +83,14 @@ InStream& operator>>( InStream& stream, PixelShaderParams& params )
    stream >> params.m_useSeparateAlphaBlend;
    stream >> params.m_alphaBlendSourceFunc;
    stream >> params.m_alphaBlendDestFunc;
+   stream >> params.m_stencilEnable;
+   stream >> params.m_stencilFail;
+   stream >> params.m_stencilZFail;
+   stream >> params.m_stencilPass;
+   stream >> params.m_stencilFunc;
+   stream >> params.m_stencilRef;
+   stream >> params.m_stencilMask;
+   stream >> params.m_stencilWriteMask;
 
    return stream;
 }

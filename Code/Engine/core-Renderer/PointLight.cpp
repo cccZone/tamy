@@ -16,6 +16,7 @@
 BEGIN_OBJECT( PointLight );
    PARENT( Light );
    PROPERTY_EDIT( "Color", Color, m_color );
+   PROPERTY_EDIT( "strength", float, m_strength );
    PROPERTY_EDIT( "attenuation", float, m_attenuation );
    PROPERTY_EDIT( "radius", float, m_radius );
 END_OBJECT();
@@ -27,6 +28,7 @@ PointLight::PointLight( const std::string& name )
    , m_color(1, 1, 1, 1 )
    , m_attenuation( 1.0f )
    , m_radius( 1.0f )
+   , m_strength( 1.0f )
    , m_pixelShader( NULL )
    , m_vertexShader( NULL )
    , m_pointLightMesh( NULL )
@@ -98,6 +100,7 @@ void PointLight::render( Renderer& renderer, ShaderTexture* depthNormalsTex, Sha
 
       psComm->setVec4( "g_lightOriginVS", lightOriginViewSpace );
       psComm->setVec4( "g_lightColor", ( const Vector& )m_color );
+      psComm->setFloat( "g_strength", m_strength );
       psComm->setFloat( "g_attenuation", m_attenuation );
       psComm->setFloat( "g_radius", m_radius );
       psComm->setFloat( "g_farZ", activeCamera.getFarClippingPlane() );

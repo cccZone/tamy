@@ -203,13 +203,19 @@
            <item>
             <widget class="QTabWidget" name="tabWidget">
              <property name="currentIndex">
-              <number>0</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="RenderingOptionsTab">
               <attribute name="title">
                <string>Rendering</string>
               </attribute>
-              <layout class="QVBoxLayout" name="verticalLayout">
+              <layout class="QVBoxLayout" name="verticalLayout_7">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="margin">
+                <number>0</number>
+               </property>
                <item>
                 <widget class="QScrollArea" name="scrollArea_2">
                  <property name="widgetResizable">
@@ -219,12 +225,15 @@
                   <property name="geometry">
                    <rect>
                     <x>0</x>
-                    <y>-100</y>
-                    <width>956</width>
-                    <height>515</height>
+                    <y>0</y>
+                    <width>991</width>
+                    <height>210</height>
                    </rect>
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_5">
+                   <property name="margin">
+                    <number>9</number>
+                   </property>
                    <item>
                     <widget class="QGroupBox" name="geometryGroupBox">
                      <property name="title">
@@ -351,6 +360,38 @@
                      </layout>
                     </widget>
                    </item>
+                  </layout>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="AlphaBlendingTab">
+              <attribute name="title">
+               <string>Alpha blending</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="margin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QScrollArea" name="scrollArea_3">
+                 <property name="widgetResizable">
+                  <bool>true</bool>
+                 </property>
+                 <widget class="QWidget" name="scrollAreaWidgetContents_3">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>974</width>
+                    <height>360</height>
+                   </rect>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_8">
                    <item>
                     <widget class="QGroupBox" name="alphaTestGroupBox">
                      <property name="title">
@@ -387,12 +428,32 @@
                       </item>
                       <item row="3" column="1">
                        <widget class="QFrame" name="alphaTestRefColor">
+                        <property name="minimumSize">
+                         <size>
+                          <width>0</width>
+                          <height>20</height>
+                         </size>
+                        </property>
+                        <property name="maximumSize">
+                         <size>
+                          <width>16777215</width>
+                          <height>20</height>
+                         </size>
+                        </property>
                         <property name="frameShape">
                          <enum>QFrame::StyledPanel</enum>
                         </property>
                         <property name="frameShadow">
-                         <enum>QFrame::Raised</enum>
+                         <enum>QFrame::Sunken</enum>
                         </property>
+                        <layout class="QVBoxLayout" name="verticalLayout_6">
+                         <property name="spacing">
+                          <number>0</number>
+                         </property>
+                         <property name="margin">
+                          <number>0</number>
+                         </property>
+                        </layout>
                        </widget>
                       </item>
                       <item row="2" column="1">
@@ -875,6 +936,349 @@
                         </item>
                        </widget>
                       </item>
+                     </layout>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="StencilTab">
+              <attribute name="title">
+               <string>Stencil</string>
+              </attribute>
+              <layout class="QVBoxLayout" name="verticalLayout_9">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="margin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QScrollArea" name="scrollArea_4">
+                 <property name="widgetResizable">
+                  <bool>true</bool>
+                 </property>
+                 <widget class="QWidget" name="scrollAreaWidgetContents_4">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>974</width>
+                    <height>213</height>
+                   </rect>
+                  </property>
+                  <layout class="QFormLayout" name="formLayout_5">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label_11">
+                     <property name="text">
+                      <string>Enable stencil:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QCheckBox" name="useStencil">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label_12">
+                     <property name="text">
+                      <string>Stencil fail:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="stencilFailCombo">
+                     <item>
+                      <property name="text">
+                       <string>Keep</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Zero</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Replace</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Increase Saturation</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Decrease Saturation</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Invert</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Increase</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Decrease</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_13">
+                     <property name="text">
+                      <string>Stencil Z fail:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="stencilZFailCombo">
+                     <item>
+                      <property name="text">
+                       <string>Keep</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Zero</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Replace</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Increase Saturation</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Decrease Saturation</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Invert</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Increase</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Decrease</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_14">
+                     <property name="text">
+                      <string>Stencil pass:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QComboBox" name="stencilPassCombo">
+                     <item>
+                      <property name="text">
+                       <string>Keep</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Zero</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Replace</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Increase Saturation</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Decrease Saturation</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Invert</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Increase</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Decrease</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_15">
+                     <property name="text">
+                      <string>Stencil func:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="QComboBox" name="stencilFuncCombo">
+                     <item>
+                      <property name="text">
+                       <string>Never</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Less ( &lt; )</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Equal ( == )</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>LessEqual ( &lt;= )</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Greater ( &gt; )</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>NotEqual ( != )</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>GreaterEqual ( &gt;= )</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Always</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QLabel" name="label_16">
+                     <property name="text">
+                      <string>Stencil ref:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="QFrame" name="stencilRefFrame">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_10">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="margin">
+                       <number>0</number>
+                      </property>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item row="6" column="0">
+                    <widget class="QLabel" name="label_17">
+                     <property name="text">
+                      <string>Stencil mask:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="6" column="1">
+                    <widget class="QFrame" name="stencilMaskFrame">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_11">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="margin">
+                       <number>0</number>
+                      </property>
+                     </layout>
+                    </widget>
+                   </item>
+                   <item row="7" column="0">
+                    <widget class="QLabel" name="label_18">
+                     <property name="text">
+                      <string>Stencil write mask:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="1">
+                    <widget class="QFrame" name="stencilWriteMaskFrame">
+                     <property name="minimumSize">
+                      <size>
+                       <width>0</width>
+                       <height>20</height>
+                      </size>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::StyledPanel</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Raised</enum>
+                     </property>
+                     <layout class="QVBoxLayout" name="verticalLayout_12">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                      <property name="margin">
+                       <number>0</number>
+                      </property>
                      </layout>
                     </widget>
                    </item>

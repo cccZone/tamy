@@ -284,11 +284,15 @@ void DX9PixelShader::beginRendering()
 {
    const PixelShaderParams& params = m_shader.getParams();
    
+   // geometry
    m_d3Device->SetRenderState( D3DRS_CULLMODE, params.m_cullingMode );
+
+   // depth buffer
    m_d3Device->SetRenderState( D3DRS_ZENABLE, params.m_useZBuffer );
    m_d3Device->SetRenderState( D3DRS_ZWRITEENABLE, params.m_writeToZBuffer );
    m_d3Device->SetRenderState( D3DRS_ZFUNC, params.m_depthTestFunc );
 
+   // alpha tests
    m_d3Device->SetRenderState( D3DRS_ALPHATESTENABLE, params.m_useAlphaTest );
    if ( params.m_useAlphaTest )
    {
@@ -296,6 +300,7 @@ void DX9PixelShader::beginRendering()
       m_d3Device->SetRenderState( D3DRS_ALPHAREF, params.m_useAlphaTest );
    }
 
+   // alpha blending
    m_d3Device->SetRenderState( D3DRS_ALPHABLENDENABLE, params.m_useBlending );
    if ( params.m_useBlending )
    {
@@ -308,6 +313,19 @@ void DX9PixelShader::beginRendering()
          m_d3Device->SetRenderState( D3DRS_SRCBLENDALPHA, params.m_alphaBlendSourceFunc );
          m_d3Device->SetRenderState( D3DRS_DESTBLENDALPHA, params.m_alphaBlendDestFunc );
       }
+   }
+
+   // stencil operations
+   m_d3Device->SetRenderState( D3DRS_STENCILENABLE, params.m_stencilEnable );
+   if ( params.m_stencilEnable )
+   {
+      m_d3Device->SetRenderState( D3DRS_STENCILFAIL, params.m_stencilFail );
+      m_d3Device->SetRenderState( D3DRS_STENCILZFAIL, params.m_stencilZFail );
+      m_d3Device->SetRenderState( D3DRS_STENCILPASS, params.m_stencilPass );
+      m_d3Device->SetRenderState( D3DRS_STENCILFUNC, params.m_stencilFunc );
+      m_d3Device->SetRenderState( D3DRS_STENCILREF, params.m_stencilRef );
+      m_d3Device->SetRenderState( D3DRS_STENCILMASK, params.m_stencilMask );
+      m_d3Device->SetRenderState( D3DRS_STENCILWRITEMASK, params.m_stencilWriteMask );
    }
 
    m_d3Device->SetPixelShader( m_dxPixelShader );
@@ -323,6 +341,7 @@ void DX9PixelShader::endRendering()
    m_d3Device->SetRenderState( D3DRS_ZFUNC, D3DCMP_LESSEQUAL );
    m_d3Device->SetRenderState( D3DRS_ALPHATESTENABLE, false );
    m_d3Device->SetRenderState( D3DRS_ALPHABLENDENABLE, false );
+   m_d3Device->SetRenderState( D3DRS_STENCILENABLE, false );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
