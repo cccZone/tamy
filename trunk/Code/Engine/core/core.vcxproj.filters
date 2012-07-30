@@ -275,6 +275,9 @@
     <ClCompile Include="FilesystemSection.cpp">
       <Filter>Filesystem</Filter>
     </ClCompile>
+    <ClCompile Include="Profiler.cpp">
+      <Filter>Timer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -602,6 +605,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\FilesystemSection.h">
       <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Profiler.h">
+      <Filter>Timer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

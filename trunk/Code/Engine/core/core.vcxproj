@@ -96,6 +96,7 @@
     <ClCompile Include="OutFileStream.cpp" />
     <ClCompile Include="OutStream.cpp" />
     <ClCompile Include="Plane.cpp" />
+    <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="ResourceDependenciesMapper.cpp" />
     <ClCompile Include="ReflectionEnum.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="..\..\Include\core\Algorithms.h" />
     <ClInclude Include="..\..\Include\core\Color.h" />
     <ClInclude Include="..\..\Include\core\FilesystemSection.h" />
+    <ClInclude Include="..\..\Include\core\Profiler.h" />
     <ClInclude Include="..\..\Include\core\ReflectionDependenciesCallback.h" />
     <ClInclude Include="..\..\Include\core\ResourceDependenciesMapper.h" />
     <ClInclude Include="..\..\Include\core\FilePath.h" />

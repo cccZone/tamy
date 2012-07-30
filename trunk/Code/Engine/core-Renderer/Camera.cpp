@@ -8,6 +8,7 @@
 #include "core\Matrix.h"
 #include "core\MatrixUtils.h"
 #include "core\MathDefs.h"
+#include "core\Profiler.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,8 +72,10 @@ void Camera::setProjection( ProjectionType projectionType )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const Matrix& Camera::getViewMtx() 
+const Matrix& Camera::getViewMtx()
 {
+   PROFILED();
+
    updateViewMtx();
    return m_mtxView;
 }
@@ -81,6 +84,8 @@ const Matrix& Camera::getViewMtx()
 
 const Matrix& Camera::getProjectionMtx() 
 {
+   PROFILED();
+
    if (m_mtxProjectionDirty == true)
    {
       updateProjectionMtx();
@@ -131,6 +136,8 @@ float Camera::getFOV() const
 
 void Camera::updateViewMtx()
 {
+   PROFILED();
+
    const Matrix& globalMtx = getGlobalMtx();
    Vector rightVec, upVec, lookVec, position;
    globalMtx.getVectors( rightVec, upVec, lookVec, position );
@@ -149,6 +156,8 @@ void Camera::updateViewMtx()
 
 void Camera::updateProjectionMtx()
 {  
+   PROFILED();
+
    switch( m_projectionType )
    {
    case PT_PERSPECTIVE:

@@ -100,7 +100,7 @@ void Array<T>::allocate(unsigned int newSize)
    {
       newArr[i] = m_arr[i];
    }
-   delete m_arr;
+   delete [] m_arr;
    m_arr = newArr;
    m_size = newSizePow2;
 }

@@ -42,6 +42,10 @@
 #include "ResourceManagementUtil.h"
 #include "Project.h"
 
+// tools
+#include "ProfilerFrame.h"
+#include "core/Profiler.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -80,6 +84,7 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
    , m_mainTime( new CTimer() )
    , m_resourcesBrowser( NULL )
    , m_activeProject( NULL )
+   , m_activeProfilerView( NULL )
 {
    ui.setupUi( this );
    setAutoFillBackground( true );
@@ -121,6 +126,13 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
    associate< SkeletonAnimation, SkeletonAnimationEditor >();
    associate< Texture, TextureEditor >();
    associate< Project, ProjectEditor >();
+
+   // setup menu contents
+   {
+      QAction* startProfilerAction = new QAction( "Profiler", ui.menuView );
+      connect( startProfilerAction, SIGNAL( triggered() ), this, SLOT( startProfiler() ) );
+      ui.menuView->addAction( startProfilerAction );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -195,10 +207,25 @@ QToolBar& TamyEditor::getToolBar()
 
 void TamyEditor::updateMain()
 {
-   m_mainTime->tick();
-   float timeElapsed = m_mainTime->getTimeElapsed();
+   if ( m_activeProfilerView )
+   {
+      Profiler::getInstance().beginFrame();
+   }
 
-   m_timeController->update( timeElapsed );
+   // update engine's main loop
+   {
+      m_mainTime->tick();
+      float timeElapsed = m_mainTime->getTimeElapsed();
+
+      m_timeController->update( timeElapsed );
+   }
+
+   // update the profiling view, if it's active
+   if ( m_activeProfilerView )
+   {
+       Profiler::getInstance().endFrame();
+      m_activeProfilerView->update();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -271,6 +298,12 @@ void TamyEditor::onEditorTabClosed( QWidget* editorWidget )
    {
       editor->deinitialize( false );
       delete editor;
+   }
+
+   // this may have been the profiler
+   if ( editorWidget == m_activeProfilerView )
+   {
+      m_activeProfilerView = NULL;
    }
 }
 
@@ -399,6 +432,20 @@ void TamyEditor::setActiveProject( Project* project )
 
    // notify the resources browser about it
    m_resourcesBrowser->setActiveProject( m_activeProject );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamyEditor::startProfiler()
+{
+   if ( m_activeProfilerView )
+   {
+      // a profiler is already active
+      return;
+   }
+
+   m_activeProfilerView = new ProfilerFrame();
+   m_editorsTabs->addEditor( m_activeProfilerView, QIcon(), QString( "Profiler" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
