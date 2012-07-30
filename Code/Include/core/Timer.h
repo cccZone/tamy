@@ -17,7 +17,7 @@ private:
 
    unsigned long   m_frameRate;
    unsigned long   m_fpsFrameCount;
-	float           m_fpsTimeElapsed;
+   float           m_fpsTimeElapsed;
 
 public:
    CTimer();

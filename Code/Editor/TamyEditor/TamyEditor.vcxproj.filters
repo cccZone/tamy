@@ -201,6 +201,9 @@
     <Filter Include="Widgets\HexEditorWidget">
       <UniqueIdentifier>{121fb861-4722-484f-b163-406e16eefb8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\ProfilerFrame">
+      <UniqueIdentifier>{a357defc-8096-4a65-8fe2-d0fd69bde90c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -1247,6 +1250,18 @@
     <ClCompile Include="GeneratedFiles\Template\moc_HexEditor.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
+    <ClCompile Include="ProfilerFrame.cpp">
+      <Filter>Core\ProfilerFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ProfilerFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ProfilerFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ProfilerFrame.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1463,6 +1478,9 @@
     </CustomBuild>
     <CustomBuild Include="HexEditor.h">
       <Filter>Widgets\HexEditorWidget</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ProfilerFrame.h">
+      <Filter>Core\ProfilerFrame</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

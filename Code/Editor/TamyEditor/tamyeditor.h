@@ -22,6 +22,7 @@ class TimeController;
 class MainEditorPanel;
 class ResourcesBrowser;
 class Project;
+class ProfilerFrame;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -59,6 +60,8 @@ private:
    // if the deleted project was the active one would be to compare the paths
    FilePath                         m_activeProjectPath;
 
+   // profiler view
+   ProfilerFrame*                   m_activeProfilerView;
 
 public:
    ~TamyEditor();
@@ -184,6 +187,7 @@ public:
 public slots:
    void onEditorTabClosed( QWidget* editorWidget );
    void updateMain();
+   void startProfiler();
 
 protected:
    void closeEvent( QCloseEvent *event );

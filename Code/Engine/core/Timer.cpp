@@ -8,7 +8,7 @@
 CTimer::CTimer()
       : m_frameRate(0),
       m_fpsFrameCount(0),
-	   m_fpsTimeElapsed(0)
+      m_fpsTimeElapsed(0)
 {
    __int64 freq;
    QueryPerformanceFrequency((LARGE_INTEGER*)&freq);
@@ -53,14 +53,14 @@ void CTimer::tick()
    m_lastTime = currTime;
 
    // Calculate Frame Rate
-	m_fpsFrameCount++;
-	m_fpsTimeElapsed += m_timeElapsed;
-	if (m_fpsTimeElapsed > 1.0f) 
+   m_fpsFrameCount++;
+   m_fpsTimeElapsed += m_timeElapsed;
+   if (m_fpsTimeElapsed > 1.0f) 
     {
-		m_frameRate			= m_fpsFrameCount;
-		m_fpsFrameCount   = 0;
-		m_fpsTimeElapsed	= 0.0f;
-	}
+      m_frameRate			= m_fpsFrameCount;
+      m_fpsFrameCount   = 0;
+      m_fpsTimeElapsed	= 0.0f;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

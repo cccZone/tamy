@@ -42,6 +42,9 @@
     <Filter Include="RTTI">
       <UniqueIdentifier>{a308b446-82c1-4c48-b089-998814d6d34f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{61efc0af-e938-44a6-a312-6fbedcda6e46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NodesHierarchyTests.cpp">
@@ -181,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="FilesystemSectionTests.cpp">
       <Filter>Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="ProfilerTests.cpp">
+      <Filter>Timer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
