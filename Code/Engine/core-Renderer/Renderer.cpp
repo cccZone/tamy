@@ -6,6 +6,7 @@
 #include "core\Point.h"
 #include "core\Assert.h"
 #include "core\MatrixUtils.h"
+#include "core\Profiler.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,6 +118,8 @@ void Renderer::InitialState::render(Renderer& renderer)
 
 void Renderer::RenderingState::render( Renderer& renderer )
 {
+   PROFILED();
+
    if ( renderer.isGraphicsSystemReady() == false )
    {
       renderer.setDeviceLostState();

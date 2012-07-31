@@ -1262,6 +1262,18 @@
     <ClCompile Include="GeneratedFiles\Template\moc_ProfilerFrame.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
+    <ClCompile Include="ProfilerChart.cpp">
+      <Filter>Core\ProfilerFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ProfilerChart.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ProfilerChart.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_ProfilerChart.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1480,6 +1492,9 @@
       <Filter>Widgets\HexEditorWidget</Filter>
     </CustomBuild>
     <CustomBuild Include="ProfilerFrame.h">
+      <Filter>Core\ProfilerFrame</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ProfilerChart.h">
       <Filter>Core\ProfilerFrame</Filter>
     </CustomBuild>
   </ItemGroup>
