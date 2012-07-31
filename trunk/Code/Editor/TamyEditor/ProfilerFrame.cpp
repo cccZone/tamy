@@ -1,6 +1,11 @@
 #include "ProfilerFrame.h"
 #include <QTreeWidget>
 #include <QHBoxLayout>
+#include <QFormLayout>
+#include <QSplitter>
+#include <QScrollArea>
+#include <QLabel>
+#include "ProfilerChart.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -8,20 +13,53 @@
 ProfilerFrame::ProfilerFrame()
    : m_callstackTree( NULL )
 {
-   // setup the frame layout
-   QHBoxLayout* layout = new QHBoxLayout( this );
-   setLayout( layout );
+   // create the main window splitter
+   QSplitter* windowSplitter = new QSplitter( Qt::Horizontal, this );
+   {
+      // setup the frame layout and add the splitter widget to it
+      QHBoxLayout* layout = new QHBoxLayout( this );
+      layout->setMargin( 0 );
+      layout->setSpacing( 0 );
+      setLayout( layout );
+
+      layout->addWidget( windowSplitter );
+   }
 
    // create a tree widget that will display a call-stack of profiled methods
-   m_callstackTree = new QTreeWidget( this );
+   m_callstackTree = new QTreeWidget( windowSplitter );
    {
       m_callstackTree->setColumnCount( 2 );
       QStringList headerLabels;
-      headerLabels << "Trace ID" << "Name";
+      headerLabels << "Timer ID" << "Name";
       m_callstackTree->setHeaderLabels( headerLabels );
+
+      connect( m_callstackTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( showSelectedTimerProfile( QTreeWidgetItem*, int ) ) );
+
+      windowSplitter->addWidget( m_callstackTree );
    }
 
-   layout->addWidget( m_callstackTree );
+   // create a frame where we'll put the charts
+   {
+      QScrollArea* chartsFrameScrollArea = new QScrollArea( windowSplitter );
+      chartsFrameScrollArea->setWidgetResizable( true );
+      windowSplitter->addWidget( chartsFrameScrollArea );
+
+      QFrame* chartsFrame = new QFrame( chartsFrameScrollArea );
+      chartsFrameScrollArea->setWidget( chartsFrame );
+
+      m_chartsLayout = new QFormLayout( chartsFrame );
+      chartsFrame->setLayout( m_chartsLayout );
+   }
+
+   // configure the splitter
+   {
+      windowSplitter->setOpaqueResize( false );
+
+      QList< int > splitterWindowSizes;
+      splitterWindowSizes.push_back( width() / 2 );
+      splitterWindowSizes.push_back( width() / 2 );
+      windowSplitter->setSizes( splitterWindowSizes );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,7 +78,19 @@ void ProfilerFrame::onDeinitialize( bool saveProgress )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ProfilerFrame::update()
+uint ProfilerFrame::getTimerId( QTreeWidgetItem* item ) const
+{
+   uint itemTimerId = 0;
+   if ( item != NULL )
+   {
+      itemTimerId = item->data( CALLSTACK_COL_TIMER_ID, 0 ).toInt();
+   }
+   return itemTimerId;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ProfilerFrame::update( float timeElapsed )
 {
    const Profiler& profiler = Profiler::getInstance();
 
@@ -48,7 +98,7 @@ void ProfilerFrame::update()
    QTreeWidgetItem* item = NULL;
    const Profiler::Trace* prevTrace = NULL;
 
-   uint tracesCount = profiler.getCount();
+   uint tracesCount = profiler.getTracesCount();
    for ( uint i = 0; i < tracesCount; ++i )
    {
       // step through subsequent traces, adding new tree leaves if required,
@@ -62,11 +112,25 @@ void ProfilerFrame::update()
          item = addCallstackItem( parentItem, profiler, trace );
       }
 
-      // update the profiling information in the item
-      updateCallstackProfile( item, profiler, trace );
-
       // memorize the parent item and the parent trace id for future lookups
       prevTrace = &trace;
+   }
+
+
+   // update timers
+   uint chartsCount = m_charts.size();
+   for ( uint i = 0; i < chartsCount; ++i )
+   {
+      ProfilerChart* chart = m_charts[i].m_chart;
+      QLabel* topValueLabel = m_charts[i].m_topValueLabel;
+
+
+      double timerTimeElapsed = profiler.getTimeElapsed( chart->m_timerId );
+      float topValue = chart->addSample( timeElapsed, timerTimeElapsed );
+
+      QString topValueText;
+      topValueText.sprintf( "%.3f [us]", topValue * 1000.0f );
+      topValueLabel->setText( topValueText );
    }
 }
 
@@ -83,7 +147,7 @@ void ProfilerFrame::findCallstackItem( const Profiler::Trace* prevTrace, const P
       for( int i = 0; i < count; ++i )
       {
          QTreeWidgetItem* childItem = m_callstackTree->topLevelItem( i );
-         uint itemTraceId = childItem->data( CALLSTACK_COL_TRACE_ID, 0 ).toInt();
+         uint itemTraceId = getTimerId( childItem );
          if ( itemTraceId == trace.m_parentTimerId )
          {
             // found it
@@ -110,7 +174,7 @@ void ProfilerFrame::findCallstackItem( const Profiler::Trace* prevTrace, const P
          // bears the new trace's parent's id
          for ( analyzedItem = parentItem->parent(); analyzedItem != NULL; analyzedItem = parentItem->parent() )
          {
-            uint itemTraceId = analyzedItem->data( CALLSTACK_COL_TRACE_ID, 0 ).toInt();
+            uint itemTraceId = getTimerId( analyzedItem );
             if ( itemTraceId == trace.m_parentTimerId )
             {
                // found it
@@ -132,7 +196,7 @@ void ProfilerFrame::findCallstackItem( const Profiler::Trace* prevTrace, const P
       {
          QTreeWidgetItem* childItem = analyzedItem->child( i );
 
-         uint itemTraceId = childItem->data( CALLSTACK_COL_TRACE_ID, 0 ).toInt();
+         uint itemTraceId = getTimerId( childItem );
          if ( itemTraceId == trace.m_timerId )
          {
             // found it
@@ -148,7 +212,7 @@ void ProfilerFrame::findCallstackItem( const Profiler::Trace* prevTrace, const P
       for( int i = 0; i < count; ++i )
       {
          QTreeWidgetItem* childItem = m_callstackTree->topLevelItem( i );
-         uint itemTraceId = childItem->data( CALLSTACK_COL_TRACE_ID, 0 ).toInt();
+         uint itemTraceId = getTimerId( childItem );
          if ( itemTraceId == trace.m_timerId )
          {
             // found it
@@ -182,15 +246,51 @@ QTreeWidgetItem* ProfilerFrame::addCallstackItem( QTreeWidgetItem* parentItem, c
    // setup the new item
    const std::string& timerName = profiler.getName( trace.m_timerId );
    newItem->setText( CALLSTACK_COL_NAME, timerName.c_str() );
-   newItem->setData( CALLSTACK_COL_TRACE_ID, 0, QVariant::fromValue< int >( trace.m_timerId ) );
+   newItem->setData( CALLSTACK_COL_TIMER_ID, 0, QVariant::fromValue< int >( trace.m_timerId ) );
 
    return newItem;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ProfilerFrame::updateCallstackProfile( QTreeWidgetItem* item, const Profiler& profiler, const Profiler::Trace& trace )
+void ProfilerFrame::showSelectedTimerProfile( QTreeWidgetItem* timerItem, int clickedColumnIdx )
 {
+   // check if we aren't already plotting a chart for this one
+   uint timerId = getTimerId( timerItem );
+
+   uint chartsCount = m_charts.size();
+   for ( uint i = 0; i < chartsCount; ++i )
+   {
+      if ( m_charts[i].m_chart->m_timerId == timerId )
+      {
+         // yup - already plotting this one
+         return;
+      }
+   }
+
+   // we currently don't have a chart for this timer, so let's create it
+   Profiler& profiler = Profiler::getInstance();
+
+   QString chartLabel;
+   chartLabel.sprintf( "%d ) %s:", timerId, profiler.getName( timerId ).c_str() );
+
+   QFrame* chartFrame = new QFrame( m_chartsLayout->parentWidget() );
+   {
+      QHBoxLayout* chartFrameLayout = new QHBoxLayout( chartFrame );
+      chartFrameLayout->setMargin( 0.0f );
+      chartFrameLayout->setSpacing( 0.0f );
+      chartFrame->setLayout( chartFrameLayout );
+
+      ProfilerChart* chart = new ProfilerChart( m_chartsLayout->parentWidget(), timerId );
+      chartFrameLayout->addWidget( chart );
+   
+      QLabel* topValueLabel = new QLabel( chartFrame );
+      chartFrameLayout->addWidget( topValueLabel );
+
+      m_charts.push_back( ChartDesc( chart, topValueLabel ) );
+   }
+
+   m_chartsLayout->addRow( chartLabel, chartFrame );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

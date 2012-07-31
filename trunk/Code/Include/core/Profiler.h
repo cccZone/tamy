@@ -116,7 +116,7 @@ public:
    /**
     * Returns the number of recorded traces.
     */
-   inline uint getCount() const { return m_tracesCount; }
+   inline uint getTracesCount() const { return m_tracesCount; }
 
    /**
     * Returns the specified trace details.
@@ -125,6 +125,18 @@ public:
     */
    inline const Trace& getTrace( uint traceIdx ) const { return *m_traces[traceIdx]; }
 
+
+   /**
+    * Returns the number of timers.
+    */
+   inline uint getTimersCount() const { return m_timers.size(); }
+
+   /**
+    * Returns the amount of time the timer was running this frame.
+    *
+    * @param timerId
+    */
+   inline double getTimeElapsed( uint timerId ) const { return m_timers[timerId - 1]->m_timeElapsed; }
 
 private:
    /**

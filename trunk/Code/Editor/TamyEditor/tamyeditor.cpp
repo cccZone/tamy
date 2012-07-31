@@ -207,25 +207,21 @@ QToolBar& TamyEditor::getToolBar()
 
 void TamyEditor::updateMain()
 {
+   // tick the main timer
+   m_mainTime->tick();
+   float timeElapsed = m_mainTime->getTimeElapsed();
+
+   // gather the profiling information
    if ( m_activeProfilerView )
    {
+      Profiler::getInstance().endFrame();
+      m_activeProfilerView->update( timeElapsed );
       Profiler::getInstance().beginFrame();
    }
 
+
    // update engine's main loop
-   {
-      m_mainTime->tick();
-      float timeElapsed = m_mainTime->getTimeElapsed();
-
-      m_timeController->update( timeElapsed );
-   }
-
-   // update the profiling view, if it's active
-   if ( m_activeProfilerView )
-   {
-       Profiler::getInstance().endFrame();
-      m_activeProfilerView->update();
-   }
+   m_timeController->update( timeElapsed );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

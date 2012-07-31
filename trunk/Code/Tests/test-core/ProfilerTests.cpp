@@ -21,7 +21,7 @@ TEST( Profiler, basics )
       profiler.start( timerId1 );
       profiler.end( timerId1 );
 
-      CPPUNIT_ASSERT_EQUAL( (uint)1, profiler.getCount() );
+      CPPUNIT_ASSERT_EQUAL( (uint)1, profiler.getTracesCount() );
       CPPUNIT_ASSERT_EQUAL( timerId1, profiler.getTrace(0).m_timerId );
    }
    
@@ -33,7 +33,7 @@ TEST( Profiler, basics )
       profiler.start( timerId2 );
       profiler.end( timerId2 );
 
-      CPPUNIT_ASSERT_EQUAL( (uint)2, profiler.getCount() );
+      CPPUNIT_ASSERT_EQUAL( (uint)2, profiler.getTracesCount() );
       
       CPPUNIT_ASSERT_EQUAL( timerId1, profiler.getTrace(0).m_timerId );
       CPPUNIT_ASSERT_EQUAL( timerId2, profiler.getTrace(1).m_timerId );
@@ -47,7 +47,7 @@ TEST( Profiler, basics )
          profiler.end( timerId2 );
       profiler.end( timerId1 );
 
-      CPPUNIT_ASSERT_EQUAL( (uint)2, profiler.getCount() );
+      CPPUNIT_ASSERT_EQUAL( (uint)2, profiler.getTracesCount() );
 
       CPPUNIT_ASSERT_EQUAL( timerId1, profiler.getTrace(0).m_timerId );
       CPPUNIT_ASSERT_EQUAL( timerId2, profiler.getTrace(1).m_timerId );
@@ -83,7 +83,7 @@ TEST( Profiler, recurrency )
       profiler.end( timerId2 );
    profiler.end( timerId1 );
 
-   CPPUNIT_ASSERT_EQUAL( (uint)7, profiler.getCount() );
+   CPPUNIT_ASSERT_EQUAL( (uint)7, profiler.getTracesCount() );
 
    CPPUNIT_ASSERT_EQUAL( timerId1, profiler.getTrace(0).m_timerId );
    CPPUNIT_ASSERT_EQUAL( timerId2, profiler.getTrace(1).m_timerId );
