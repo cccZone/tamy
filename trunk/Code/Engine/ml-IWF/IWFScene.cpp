@@ -249,11 +249,7 @@ void IWFScene::addDynamicMesh(const std::string& meshFileName,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void IWFScene::addStaticGeometry( Model& scene,
-                                  ResourcesManager& rm,
-                                  std::vector<MeshDefinition> meshes,
-                                  const Matrix& situation,
-                                  const std::string& objName )
+void IWFScene::addStaticGeometry( Model& scene, ResourcesManager& rm, std::vector<MeshDefinition> meshes, const Matrix& situation, const std::string& objName )
 {
    // create main mesh
    unsigned int count = meshes.size();
@@ -280,6 +276,7 @@ void IWFScene::addStaticGeometry( Model& scene,
       if ( ( geometryRes = rm.findResource< TriangleMesh >( geomResPath ) ) == NULL )
       {
          geometryRes = new TriangleMesh( geomResPath, currMesh.vertices, currMesh.faces );
+         geometryRes->calculateTangents();
          rm.addResource( geometryRes );
       }
 

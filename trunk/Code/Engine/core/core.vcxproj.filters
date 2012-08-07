@@ -95,6 +95,9 @@
     <Filter Include="Resources\DependenciesMapper">
       <UniqueIdentifier>{14968df2-5173-4559-bcdb-fe447c11c998}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math\Geometry">
+      <UniqueIdentifier>{e956afe6-0a48-4e7f-9789-026764d370da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -277,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="Profiler.cpp">
       <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleUtil.cpp">
+      <Filter>Math\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -608,6 +614,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Profiler.h">
       <Filter>Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\TriangleUtil.h">
+      <Filter>Math\Geometry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

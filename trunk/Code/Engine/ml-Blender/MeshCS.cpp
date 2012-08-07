@@ -134,9 +134,12 @@ MeshCS::MeshCS( TiXmlNode* geometryNode, const FilePath& deploymentDir, Resource
 
    FilePath geometryPath( deploymentDir.getRelativePath() + geometryName + "." + TriangleMesh::getExtension() );
    m_mesh = new TriangleMesh( geometryPath, meshData.vertices, meshData.faces );
+   m_mesh->calculateTangents();
 
    // register a mesh with the resources manager
    rm.addResource( m_mesh );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+// <geometry.todo> !!!!!!!!!!!!!!! read vertex tangents !!!!!!!!!!!!!!!!!!!!!!!

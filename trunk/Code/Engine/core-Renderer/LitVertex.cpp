@@ -6,10 +6,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ulong LitVertex::FVF = FVF_XYZ | FVF_NORMAL | FVF_TEX1;
-
-///////////////////////////////////////////////////////////////////////////////
-
 ulong VertexWeight::FVF = FVF_DIFFUSE | FVF_SPECULAR;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,6 +14,7 @@ OutStream& operator<<( OutStream& stream, const LitVertex& vtx )
 {
    stream << vtx.m_coords;
    stream << vtx.m_normal;
+   stream << vtx.m_tangent;
    stream << vtx.m_textureCoords;
    return stream;
 }
@@ -28,6 +25,7 @@ InStream& operator>>( InStream& stream, LitVertex& vtx )
 {
    stream >> vtx.m_coords;
    stream >> vtx.m_normal;
+   stream >> vtx.m_tangent;
    stream >> vtx.m_textureCoords;
    return stream;
 }
@@ -54,7 +52,7 @@ InStream& operator>>( InStream& stream, VertexWeight& weight )
 
 std::ostream& operator<<(std::ostream& stream, const LitVertex& vertex)
 {
-   stream << "[" << vertex.m_coords << "; " << vertex.m_normal << "]";
+   stream << "[" << vertex.m_coords << "; " << vertex.m_normal << "; " << vertex.m_tangent <<"]";
 
    return stream;
 }

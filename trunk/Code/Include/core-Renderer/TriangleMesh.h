@@ -67,6 +67,11 @@ public:
     */
    inline const std::vector<Face>& getFaces() const;
 
+   /**
+    * Calculates texture-space tangent vectors. 
+    */
+   void calculateTangents();
+
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------

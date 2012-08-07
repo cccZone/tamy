@@ -17,7 +17,8 @@ VertexDescriptor SimpleDesc[] =
 {
    {0, 0, VTXTYPE_FLOAT3, VTXMETHOD_DEFAULT, VTXUSAGE_POSITION, 0}, // stream 0, position
    {0, 12, VTXTYPE_FLOAT3, VTXMETHOD_DEFAULT, VTXUSAGE_NORMAL, 0},   // stream 0, normal
-   {0, 24, VTXTYPE_FLOAT2, VTXMETHOD_DEFAULT, VTXUSAGE_TEXCOORD, 0},   // stream 0, texture coords
+   {0, 24, VTXTYPE_FLOAT3, VTXMETHOD_DEFAULT, VTXUSAGE_TANGENT, 0},   // stream 0, tangent
+   {0, 36, VTXTYPE_FLOAT2, VTXMETHOD_DEFAULT, VTXUSAGE_TEXCOORD, 0},   // stream 0, texture coords
    VERTEX_DESCRIPTOR_END()
 };
 
@@ -25,7 +26,8 @@ VertexDescriptor SimpleSkinningDesc[] =
 {
    {0, 0, VTXTYPE_FLOAT3, VTXMETHOD_DEFAULT, VTXUSAGE_POSITION, 0}, // stream 0, position
    {0, 12, VTXTYPE_FLOAT3, VTXMETHOD_DEFAULT, VTXUSAGE_NORMAL, 0},   // stream 0, normal
-   {0, 24, VTXTYPE_FLOAT2, VTXMETHOD_DEFAULT, VTXUSAGE_TEXCOORD, 0},   // stream 0, texture coords
+   {0, 24, VTXTYPE_FLOAT3, VTXMETHOD_DEFAULT, VTXUSAGE_TANGENT, 0},   // stream 0, tangent
+   {0, 36, VTXTYPE_FLOAT2, VTXMETHOD_DEFAULT, VTXUSAGE_TEXCOORD, 0},   // stream 0, texture coords
    {1, 0, VTXTYPE_FLOAT4, VTXMETHOD_DEFAULT, VTXUSAGE_TEXCOORD, 1}, // stream 1, blend weights (up to 4 influences)
    {1, 16, VTXTYPE_FLOAT4, VTXMETHOD_DEFAULT, VTXUSAGE_BLENDINDICES, 0},   // stream 1, blend indices (up to 4 influences)
    VERTEX_DESCRIPTOR_END()

@@ -1,0 +1,6 @@
+#include "core-TestFramework\TestFramework.h"
+#include "core\TriangleUtil.h"
+#include "core\Vector.h"
+
+
+///////////////////////////////////////////////////////////////////////////////

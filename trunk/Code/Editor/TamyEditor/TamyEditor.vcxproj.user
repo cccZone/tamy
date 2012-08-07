@@ -9,7 +9,7 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
-    <QTDIR>G:\Programs\Qt</QTDIR>
+    <QTDIR>C:\Qt\4.7.3</QTDIR>
     <LocalDebuggerEnvironment Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">PATH=$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
     <LocalDebuggerEnvironment Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">PATH=$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>
     <LocalDebuggerEnvironment Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">PATH=$(QTDIR)\bin%3b$(PATH)</LocalDebuggerEnvironment>

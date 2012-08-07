@@ -1,6 +1,7 @@
 #include "ml-IWF\IWFMeshLoader.h"
 #include "ml-IWF\libIWF\iwfObjects.h"
 #include "ml-IWF\MeshDefinition.h"
+#include "core\TriangleUtil.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,8 +17,7 @@ IWFMeshLoader::IWFMeshLoader(iwfMesh* fileMesh,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void IWFMeshLoader::parseMesh(std::vector<MeshDefinition>& meshes, 
-                              const std::string& name)
+void IWFMeshLoader::parseMesh( std::vector<MeshDefinition>& meshes, const std::string& name )
 {
    Vector minPos(10000000, 10000000, 10000000);
    Vector maxPos(-10000000, -10000000, -10000000);
@@ -53,19 +53,17 @@ void IWFMeshLoader::parseMesh(std::vector<MeshDefinition>& meshes,
       // geometry creation step 2: create vertices
       for (UINT i = 0; i < surface->VertexCount; i++)
       {
-         Vector vertexPos(surface->Vertices[i].x,
-                               surface->Vertices[i].y,
-                               surface->Vertices[i].z);
+         const iwfVertex& vtx = surface->Vertices[i];
+         Vector vertexPos(vtx.x, vtx.y, vtx.z );
+         Vector vertexNormal(vtx.Normal.x, vtx.Normal.y, vtx.Normal.z );
 
-         mesh->vertices.push_back(LitVertex(
-            vertexPos.x,
-            vertexPos.y,
-            vertexPos.z,
-            surface->Vertices[i].Normal.x,
-            surface->Vertices[i].Normal.y,
-            surface->Vertices[i].Normal.z,
-            surface->Vertices[i].TexCoords[0][0],
-            surface->Vertices[i].TexCoords[0][1]));
+         mesh->vertices.push_back( LitVertex() );
+         LitVertex& vertex = mesh->vertices.back();
+
+         vertexPos.store( vertex.m_coords );
+         vertexNormal.store( vertex.m_normal );
+         vertex.m_textureCoords[0] = vtx.TexCoords[0][0];
+         vertex.m_textureCoords[1] = vtx.TexCoords[0][1];
 
          if (vertexPos.x < minPos.x) minPos.x = vertexPos.x;
          if (vertexPos.y < minPos.y) minPos.y = vertexPos.y;

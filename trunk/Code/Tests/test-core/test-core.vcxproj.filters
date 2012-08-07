@@ -188,6 +188,9 @@
     <ClCompile Include="ProfilerTests.cpp">
       <Filter>Timer</Filter>
     </ClCompile>
+    <ClCompile Include="TriangleTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">

@@ -21,17 +21,17 @@ struct LitVertex
 {
    TVector<3>   m_coords;
    TVector<3>   m_normal;
+   TVector<3>   m_tangent;
    TVector<2>   m_textureCoords;
-
-   static ulong FVF;
 
    /**
     * Constructor for a simple mesh vertex.
     */
-   LitVertex( float x, float y, float z, float nx, float ny, float nz, float u, float v )
+   LitVertex( float x, float y, float z, float nx, float ny, float nz, float tx, float ty, float tz, float u, float v )
    {
       m_coords.v[0] = x; m_coords.v[1] = y; m_coords.v[2] = z;
       m_normal.v[0] = nx; m_normal.v[1] = ny; m_normal.v[2] = nz;
+      m_tangent.v[0] = tx; m_tangent.v[1] = ty; m_tangent.v[2] = tz;
       m_textureCoords.v[0] = u; m_textureCoords.v[1] = v;
    }
 
@@ -39,6 +39,7 @@ struct LitVertex
    {
       m_coords.setUniform( 0.0f );
       m_normal.setUniform( 0.0f );
+      m_tangent.setUniform( 0.0f );
       m_textureCoords.setUniform( 0.0f );
    }
 
