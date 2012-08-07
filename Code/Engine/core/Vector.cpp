@@ -347,3 +347,33 @@ void Vector::store( TVector< 4 >& rawVector )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::load( const TVector< 2 >& rawVector )
+{
+   x = rawVector.v[0];
+   y = rawVector.v[1];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::load( const TVector< 3 >& rawVector )
+{
+   x = rawVector.v[0];
+   y = rawVector.v[1];
+   z = rawVector.v[2];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::load( const TVector< 4 >& rawVector )
+{
+   x = rawVector.v[0];
+   y = rawVector.v[1];
+   z = rawVector.v[2];
+   w = rawVector.v[3];
+}
+
+///////////////////////////////////////////////////////////////////////////////

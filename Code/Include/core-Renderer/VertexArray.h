@@ -24,13 +24,6 @@ public:
    virtual std::size_t getVtxSize() const = 0;
 
    /**
-    * Returns the FVF vertex specification.
-    *
-    * @return  vertex FVF
-    */
-   virtual DWORD getFVF() const = 0;
-
-   /**
     * Returns the number of vertices in the array
     */
    virtual unsigned int size() const = 0;
@@ -57,8 +50,6 @@ private:
 
 public:
    std::size_t getVtxSize() const {return sizeof(T);}
-
-   DWORD getFVF() const {return T::FVF;}
 
    unsigned int size() const {return m_vertices.size();}
 

@@ -136,6 +136,7 @@
     <ClCompile Include="ResourcesManager.cpp" />
     <ClCompile Include="EulerAngles.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="TriangleUtil.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="VectorUtil.cpp" />
   </ItemGroup>
@@ -204,6 +205,7 @@
     <ClInclude Include="..\..\Include\core\MatrixUtils.h" />
     <ClInclude Include="..\..\Include\core\StringUtils.h" />
     <ClInclude Include="..\..\Include\core\Transform.h" />
+    <ClInclude Include="..\..\Include\core\TriangleUtil.h" />
     <ClInclude Include="..\..\Include\core\TypeRegistrationMacros.h" />
     <ClInclude Include="..\..\Include\core\types.h" />
     <ClInclude Include="..\..\Include\core\UniqueObject.h" />

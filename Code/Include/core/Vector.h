@@ -275,6 +275,14 @@ struct Vector
    template< int Dim >
    void store( TVector< Dim >& rawVector );
 
+   /**
+    * Loads the contents of the specified raw vector instance and initializes this vector with it.
+    *
+    * @param rawVector
+    */
+   template< int Dim >
+   void load( const TVector< Dim >& rawVector );
+
    // -------------------------------------------------------------------------
    // Serialization support
    // -------------------------------------------------------------------------

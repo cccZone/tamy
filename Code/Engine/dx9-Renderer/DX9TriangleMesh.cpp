@@ -65,21 +65,73 @@ void DX9TriangleMesh::initialize()
 {
    VertexArray* vertices = m_mesh.getGenericVertexArray();
    const std::vector< Face >& faces = m_mesh.getFaces();
-   unsigned int verticesCount = vertices->size();
-   unsigned int trianglesCount = faces.size();
+   m_verticesCount = vertices->size();
+   m_facesCount = faces.size();
 
-   if ( verticesCount == 0 || trianglesCount == 0 )
+   if ( m_verticesCount == 0 || m_facesCount == 0 )
    {
       delete vertices;
       return;
    }
 
+   // create a vertex buffer
+   m_vb = m_renderer.createVertexBuffer( m_verticesCount * sizeof( LitVertex ), 0, 0, D3DPOOL_MANAGED );
+   if ( !m_vb )
+   {
+      ASSERT_MSG( false, "Can't create a vertex buffer for the triangle mesh" ); 
+      return;
+   }
+
+   // create an index buffer
+   m_ib = m_renderer.createIndexBuffer( m_facesCount * sizeof( Face ), 0, D3DFMT_INDEX16, D3DPOOL_MANAGED );
+   if ( !m_ib )
+   {
+      ASSERT_MSG( false, "Can't create an index buffer for the triangle mesh" ); 
+      return;
+   }
+
+   // fill the vertex buffer
+   {
+      void* pVertex = NULL;
+      HRESULT res = m_vb->Lock( 0, 0, (void**)&pVertex, 0 );
+      if ( FAILED( res ) ) 
+      { 
+         ASSERT_MSG( false, "Can't lock the mesh's vertex buffer" );
+         return;
+      }
+      vertices->copyTo( pVertex );
+      m_vb->Unlock();
+   }
+
+   // fill the index buffer
+   {
+      USHORT* pIndex= NULL;
+      HRESULT res = m_ib->Lock( 0, 0, (void**)&pIndex, 0 );
+      if ( FAILED( res ) ) 
+      { 
+         ASSERT_MSG( false, "Can't lock the mesh's index buffer" );
+         return;
+      }
+      
+      for ( unsigned int i = 0; i < m_facesCount; ++i )
+      {
+         const Face& face = faces[i];
+         *pIndex++  = face.idx[0]; 
+         *pIndex++  = face.idx[1]; 
+         *pIndex++  = face.idx[2];
+      }
+
+      m_ib->Unlock();
+   }
+
+
+   /*
+
    ID3DXMesh* dxMesh = NULL;
-   DWORD FVF = vertices->getFVF();
-   HRESULT res = D3DXCreateMeshFVF( trianglesCount, verticesCount, D3DXMESH_MANAGED, FVF, m_d3Device, &dxMesh );
+   HRESULT res = D3DXCreateMeshFVF( trianglesCount, verticesCount, D3DXMESH_MANAGED, 0, m_d3Device, &dxMesh );
    if ( FAILED(res) ) 
    { 
-      ASSERT_MSG( false, "Can't create a mesh" ); 
+      ASSERT_MSG( false, "Can't create a vertex buffer for the triangle mesh" ); 
       return;
    }
 
@@ -129,6 +181,7 @@ void DX9TriangleMesh::initialize()
    m_verticesCount = dxMesh->GetNumVertices();
    m_facesCount = dxMesh->GetNumFaces();
    dxMesh->Release();
+   */
 }
 
 ///////////////////////////////////////////////////////////////////////////////

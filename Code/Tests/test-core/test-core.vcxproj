@@ -116,6 +116,7 @@
     <ClCompile Include="RuntimeDataTests.cpp" />
     <ClCompile Include="SerializationTests.cpp" />
     <ClCompile Include="TransformTests.cpp" />
+    <ClCompile Include="TriangleTests.cpp" />
     <ClCompile Include="UpdatingGlobalMatricesTests.cpp" />
     <ClCompile Include="VectorTests.cpp" />
     <ClCompile Include="VisitorTests.cpp" />
