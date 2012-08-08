@@ -179,6 +179,18 @@ public:
    std::string toAbsolutePath( const Filesystem& fs) const;
 
    /**
+    * Converts the specified relative path to the file system absolute path.
+    *
+    * This is the faster version of the method that operates on a constant memory buffer
+    * specified as the 2nd argument of the method call. The buffer must be preallocated
+    * and have a proper length.
+    *
+    * @param fs               filesystem with respect to which we want to transform the path
+    * @param outAbsPath
+    */
+   void toAbsolutePath( const Filesystem& fs, char* outAbsPath ) const;
+
+   /**
     * Returns the elements of the path ( particular directories and the name of the file.
     *
     * @param outPathElements

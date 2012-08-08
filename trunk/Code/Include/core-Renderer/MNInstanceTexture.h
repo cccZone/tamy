@@ -9,6 +9,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class MSTextureOutput;
+class MSBoolOutput;
 class Texture;
 class RenderableTexture;
 
@@ -23,7 +24,8 @@ private:
    MaterialTextures     m_usage;
 
    // runtime data
-   MSTextureOutput*     m_output;
+   MSTextureOutput*     m_textureOutput;
+   MSBoolOutput*        m_isTextureSetOutput;
    RenderableTexture*   m_renderableTexture;
 
 public:

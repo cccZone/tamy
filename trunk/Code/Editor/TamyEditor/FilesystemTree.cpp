@@ -137,7 +137,7 @@ void FilesystemTree::onToggleFilesFiltering()
    m_toggleFileTypesViewBtn->setIcon( QIcon( iconName ) );
 
    // refresh the view
-   refresh();
+   refreshRecursive();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -158,9 +158,7 @@ void FilesystemTree::onDirRemoved( const FilePath& dir )
 
 void FilesystemTree::onFileEdited( const FilePath& path )
 {
-   FilePath dir;
-   path.extractDir( dir );
-   refresh( dir.getRelativePath() );
+   // do nothing
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -222,6 +220,47 @@ void FilesystemTree::removeDirectory( const FilePath& dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void FilesystemTree::refreshRecursive( const std::string& rootDir ) 
+{
+   FSTreeNode* rootDirNode = find( rootDir );
+   if ( !rootDirNode )
+   {
+      return;
+   }
+
+   // collect all directories that need refreshing
+   std::vector< std::string > directoriesToRefresh;
+   {
+      Stack< FSTreeNode* > dirs;
+      dirs.push( rootDirNode );
+      while ( !dirs.empty() )
+      {
+         FSTreeNode* analyzedNode = dirs.pop();
+         if ( dynamic_cast< FSLeafNode* >( analyzedNode ) != NULL )
+         {
+            // this is a leaf node - we only want to scan composite nodes
+            continue;
+         }
+         directoriesToRefresh.push_back( analyzedNode->getRelativePath() );
+
+         int childrenCount = analyzedNode->childCount();
+         for ( int i = 0; i < childrenCount; ++i )
+         {
+            dirs.push( static_cast< FSTreeNode* >( analyzedNode->child( i ) ) );
+         }
+      }
+   }
+
+   // refresh collected directories
+   uint count = directoriesToRefresh.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      refresh( directoriesToRefresh[i] );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void FilesystemTree::refresh( const std::string& rootDir )
 {
    // find the entry corresponding to the specified root directory
@@ -231,16 +270,22 @@ void FilesystemTree::refresh( const std::string& rootDir )
       return;
    }
 
-   // clean it up
-   rootDirNode->clear();
+   // collect the items in the root dir, so that we can keep track of what items have disappeared
+   int count = rootDirNode->childCount();
+   std::set< FSTreeNode* > childrenToRemove;
+   for ( int i = 0; i < count; ++i )
+   {
+      childrenToRemove.insert( static_cast< FSTreeNode* >( rootDirNode->child(i) ) );
+   }
 
 
    // scan the contents of the resources manager
    struct Scanner : public FilesystemScanner
    {
-      FSTreeNode*                   m_rootDirNode;
-      TreeWidgetDescFactory*        m_itemsFactory;
-      bool                          m_viewResourcesOnly;
+      FSTreeNode*                      m_rootDirNode;
+      TreeWidgetDescFactory*           m_itemsFactory;
+      bool                             m_viewResourcesOnly;
+      std::set< FSTreeNode* >&    m_childrenToRemove;
 
       // Even though this scanner is the only reference point of m_itemsFactory,
       // we're gonna leave it defined locally in the method for two reasons:
@@ -259,23 +304,29 @@ void FilesystemTree::refresh( const std::string& rootDir )
       //
       //       so this operation would simplify nothing
 
-      Scanner( FSTreeNode* rootDirNode, TreeWidgetDescFactory* itemsFactory, bool viewResourcesOnly )
+      Scanner( FSTreeNode* rootDirNode, TreeWidgetDescFactory* itemsFactory, bool viewResourcesOnly, std::set< FSTreeNode* >& childrenToRemove )
          : m_rootDirNode( rootDirNode )
          , m_itemsFactory( itemsFactory )
          , m_viewResourcesOnly( viewResourcesOnly )
+         , m_childrenToRemove( childrenToRemove )
       {
       }
 
       void onDirectory( const FilePath& name )
       {
          const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-         std::string parentDirName = fs.extractDir( name );
          std::string newNodeName = fs.extractNodeName( name );
 
-         if ( m_rootDirNode->find( newNodeName ) == NULL )
-         { 
+         FSTreeNode* node = m_rootDirNode->find( newNodeName );
+         if ( node == NULL )
+         {
             // add the new node ( but only if it's unique )
             new FSDirNode( m_rootDirNode, newNodeName );
+         }
+         else
+         {
+            // already got it in the tree, so remove it from the list of items to remove
+            m_childrenToRemove.erase( node );
          }
       }
 
@@ -290,23 +341,33 @@ void FilesystemTree::refresh( const std::string& rootDir )
             }
          }
 
-         FilePath parentDirName;
-         name.extractDir( parentDirName );
          std::string newNodeName = name.extractNodeName();
 
-         if ( m_rootDirNode->find( newNodeName ) == NULL )
+         FSTreeNode* node = m_rootDirNode->find( newNodeName );
+         if ( node == NULL )
          {
             // add the new node ( but only if it's unique )
             new FSLeafNode( m_rootDirNode, newNodeName, *m_itemsFactory );
+         }
+         else
+         {
+            // already got it in the tree, so remove it from the list of items to remove
+            m_childrenToRemove.erase( node );
          }
       }
    };
 
    // scan the directory
-   Scanner scanner( rootDirNode, m_itemsFactory, m_viewResourcesOnly );
+   Scanner scanner( rootDirNode, m_itemsFactory, m_viewResourcesOnly, childrenToRemove );
    ResourcesManager& resMgr = ResourcesManager::getInstance();
    resMgr.scan( rootDir, scanner, false );
 
+   // remove the remaining items
+   for ( std::set< FSTreeNode* >::iterator it = childrenToRemove.begin(); it != childrenToRemove.end(); ++it )
+   {
+      FSTreeNode* item = *it;
+      rootDirNode->removeChild( item );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

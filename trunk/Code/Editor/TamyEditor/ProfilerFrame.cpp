@@ -1,11 +1,18 @@
 #include "ProfilerFrame.h"
 #include <QTreeWidget>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QFormLayout>
 #include <QSplitter>
 #include <QScrollArea>
 #include <QLabel>
+#include <QTabWidget>
+#include <QListWidget>
+#include <QToolBar>
+#include <QAction>
 #include "ProfilerChart.h"
+#include "core/ResourcesManager.h"
+#include "core/Filesystem.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,17 +32,61 @@ ProfilerFrame::ProfilerFrame()
       layout->addWidget( windowSplitter );
    }
 
-   // create a tree widget that will display a call-stack of profiled methods
-   m_callstackTree = new QTreeWidget( windowSplitter );
+   // create a tab manager that will contain various views of the active timers
    {
-      m_callstackTree->setColumnCount( 2 );
-      QStringList headerLabels;
-      headerLabels << "Timer ID" << "Name";
-      m_callstackTree->setHeaderLabels( headerLabels );
+      QTabWidget* tabManager = new QTabWidget( windowSplitter );
+      windowSplitter->addWidget( tabManager );
 
-      connect( m_callstackTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( showSelectedTimerProfile( QTreeWidgetItem*, int ) ) );
+      // create a tree widget that will display a call-stack of profiled methods
+      m_callstackTree = new QTreeWidget( tabManager );
+      {
+         QStringList headerLabels;
+         headerLabels << "Timer ID" << "Name";
+         m_callstackTree->setColumnCount( headerLabels.size() );
+         m_callstackTree->setHeaderLabels( headerLabels );
 
-      windowSplitter->addWidget( m_callstackTree );
+         connect( m_callstackTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( showSelectedTimerProfile( QTreeWidgetItem*, int ) ) );
+
+         tabManager->addTab( m_callstackTree, QString( "Callstack" ) );
+      }
+
+      // create a list that will display all activated timers with basic info about their activity
+      QFrame* timersListFrame = new QFrame( tabManager );
+      {
+         tabManager->addTab( timersListFrame, QString( "All timers" ) );
+
+         // initialize frame's layout
+         QVBoxLayout* layout = new QVBoxLayout( timersListFrame );
+         {
+            layout->setSpacing( 0 );
+            layout->setMargin( 0 );
+            timersListFrame->setLayout( layout );
+         }
+
+         // create a toolbar
+         QToolBar* toolbar = new QToolBar( timersListFrame );
+         {
+            QString iconsDir = ResourcesManager::getInstance().getFilesystem().getShortcut( "editorIcons" ).c_str();
+            layout->addWidget( toolbar );
+
+            QAction* resetStatisticsAction = new QAction( QIcon( iconsDir + "/quit.png" ), tr( "Reset statistics" ), toolbar );
+            toolbar->addAction( resetStatisticsAction );
+            connect( resetStatisticsAction, SIGNAL( triggered() ), this, SLOT( resetTimersListStatistics() ) );
+         }
+
+         // and the list
+         m_timersList = new QTreeWidget( tabManager );
+         {
+            layout->addWidget( m_timersList );
+
+            QStringList headerLabels;
+            headerLabels << "Timer ID" << "Name" << "Min" << "Curr" << "Max" << "Total";
+            m_timersList->setColumnCount( headerLabels.size() );
+            m_timersList->setHeaderLabels( headerLabels );
+
+            connect( m_timersList, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( showSelectedTimerProfile( QTreeWidgetItem*, int ) ) );
+         }
+      }
    }
 
    // create a frame where we'll put the charts
@@ -94,30 +145,69 @@ void ProfilerFrame::update( float timeElapsed )
 {
    const Profiler& profiler = Profiler::getInstance();
 
-   QTreeWidgetItem* parentItem = NULL;
-   QTreeWidgetItem* item = NULL;
-   const Profiler::Trace* prevTrace = NULL;
-
-   uint tracesCount = profiler.getTracesCount();
-   for ( uint i = 0; i < tracesCount; ++i )
+   // update the callstack view
    {
-      // step through subsequent traces, adding new tree leaves if required,
-      // and updating the profiling information for each
-      const Profiler::Trace& trace = profiler.getTrace( i );
+      QTreeWidgetItem* parentItem = NULL;
+      QTreeWidgetItem* item = NULL;
+      const Profiler::Trace* prevTrace = NULL;
 
-      findCallstackItem( prevTrace, trace, parentItem, item );
-      if ( item == NULL )
+      uint tracesCount = profiler.getTracesCount();
+      for ( uint i = 0; i < tracesCount; ++i )
       {
-         // an entry for this method doesn't exist yet - add it
-         item = addCallstackItem( parentItem, profiler, trace );
-      }
+         // step through subsequent traces, adding new tree leaves if required,
+         // and updating the profiling information for each
+         const Profiler::Trace& trace = profiler.getTrace( i );
 
-      // memorize the parent item and the parent trace id for future lookups
-      prevTrace = &trace;
+         findCallstackItem( prevTrace, trace, parentItem, item );
+         if ( item == NULL )
+         {
+            // an entry for this method doesn't exist yet - add it
+            item = addCallstackItem( parentItem, profiler, trace );
+         }
+
+         // memorize the parent item and the parent trace id for future lookups
+         prevTrace = &trace;
+      }
+   }
+
+   // update the timers list
+   {
+      uint lastTimerId = profiler.getTimersCount();
+      for ( uint timerId = 1; timerId <= lastTimerId; ++timerId )
+      {
+         QTreeWidgetItem* timerItem = getTimersListItem( timerId );
+         double timerTimeElapsed = profiler.getTimeElapsed( timerId ) * 1000.0f; // scale up to [us]
+
+         
+         // determine new minimum value
+         {
+            double minVal = timerItem->data( TIMERSLIST_COL_MIN, 0 ).toDouble();
+            minVal =  ( minVal < timerTimeElapsed ) ? minVal : timerTimeElapsed;
+            timerItem->setData( TIMERSLIST_COL_MIN, 0, QVariant::fromValue< double >( minVal ) );
+         }
+
+         // determine new average value
+         {
+            timerItem->setData( TIMERSLIST_COL_CURR, 0, QVariant::fromValue< double >( timerTimeElapsed ) );
+         }
+
+         // determine new maximum value
+         {
+            double maxVal = timerItem->data( TIMERSLIST_COL_MAX, 0 ).toDouble();
+            maxVal = ( maxVal > timerTimeElapsed ) ? maxVal : timerTimeElapsed;
+            timerItem->setData( TIMERSLIST_COL_MAX, 0, QVariant::fromValue< double >( maxVal ) );
+         }
+
+         // sum the total value
+         {
+            double totalVal = timerItem->data( TIMERSLIST_COL_TOTAL, 0 ).toDouble();
+            timerItem->setData( TIMERSLIST_COL_TOTAL, 0, QVariant::fromValue< double >( totalVal + timerTimeElapsed ) );
+         }
+      }
    }
 
 
-   // update timers
+   // update active timers
    uint chartsCount = m_charts.size();
    for ( uint i = 0; i < chartsCount; ++i )
    {
@@ -132,6 +222,47 @@ void ProfilerFrame::update( float timeElapsed )
       topValueText.sprintf( "%.3f [us]", topValue * 1000.0f );
       topValueLabel->setText( topValueText );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+QTreeWidgetItem* ProfilerFrame::getTimersListItem( uint timerId )
+{
+   // first, locate the item on the list
+   int itemsCount = m_timersList->topLevelItemCount();
+   int insertionIdx = itemsCount;
+   for ( int i = 0; i < itemsCount; ++i )
+   {
+      QTreeWidgetItem* item = m_timersList->topLevelItem( i );
+      uint id = getTimerId( item );
+
+      if ( id == timerId )
+      {
+         // found it
+         return item;
+      }
+      else if ( id > timerId )
+      {
+         insertionIdx = i - 1;
+         break;
+      }
+   }
+
+   // create a new entry
+   const Profiler& profiler = Profiler::getInstance();
+
+   QTreeWidgetItem* item = new QTreeWidgetItem( m_timersList );
+   m_timersList->insertTopLevelItem( insertionIdx, item );
+
+   const std::string& timerName = profiler.getName( timerId );
+   item->setData( TIMERSLIST_COL_TIMER_ID, 0, QVariant::fromValue< int >( timerId ) );
+   item->setText( TIMERSLIST_COL_NAME, timerName.c_str() );
+   item->setData( TIMERSLIST_COL_MIN, 0, QVariant::fromValue< double >( 10000000.0f ) );
+   item->setData( TIMERSLIST_COL_CURR, 0, QVariant::fromValue< double >( 0 ) );
+   item->setData( TIMERSLIST_COL_MAX, 0, QVariant::fromValue< double >( 0 ) );
+   item->setData( TIMERSLIST_COL_TOTAL, 0, QVariant::fromValue< double >( 0 ) );
+
+   return item;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -172,7 +303,7 @@ void ProfilerFrame::findCallstackItem( const Profiler::Trace* prevTrace, const P
       {
          // this is a call made from higher up in the call stack, so we need to find the parent item that
          // bears the new trace's parent's id
-         for ( analyzedItem = parentItem->parent(); analyzedItem != NULL; analyzedItem = parentItem->parent() )
+         for ( analyzedItem = parentItem->parent(); analyzedItem != NULL; analyzedItem = analyzedItem->parent() )
          {
             uint itemTraceId = getTimerId( analyzedItem );
             if ( itemTraceId == trace.m_parentTimerId )
@@ -291,6 +422,22 @@ void ProfilerFrame::showSelectedTimerProfile( QTreeWidgetItem* timerItem, int cl
    }
 
    m_chartsLayout->addRow( chartLabel, chartFrame );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ProfilerFrame::resetTimersListStatistics()
+{
+   int count = m_timersList->topLevelItemCount();
+   for ( int i = 0; i < count; ++i )
+   {
+      QTreeWidgetItem* timerItem = m_timersList->topLevelItem( i );
+
+      timerItem->setData( TIMERSLIST_COL_MIN, 0, QVariant::fromValue< double >( 10000000.0f ) );
+      timerItem->setData( TIMERSLIST_COL_CURR, 0, QVariant::fromValue< double >( 0 ) );
+      timerItem->setData( TIMERSLIST_COL_MAX, 0, QVariant::fromValue< double >( 0 ) );
+      timerItem->setData( TIMERSLIST_COL_TOTAL, 0, QVariant::fromValue< double >( 0 ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

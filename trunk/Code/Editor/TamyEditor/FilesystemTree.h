@@ -122,7 +122,14 @@ signals:
 private:
    void initialize( const QString& objectName );
 
-      /**
+   /**
+    * Recursively refreshes the contents of the tree, starting from the specified directory.
+    *
+    * @param rootDir
+    */
+   void refreshRecursive( const std::string& rootDir = "/" );
+
+   /**
     * Refreshes the contents of the tree, starting from the specified directory.
     *
     * @param rootDir

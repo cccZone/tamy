@@ -24,6 +24,7 @@
 #include "ResourceManagementUtil.h"
 #include <QSettings>
 #include "AdditionalTreeItemFactories.h"
+#include <set>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -171,7 +172,7 @@ void ProjectTree::onToggleFilesFiltering()
    m_toggleFileTypesViewBtn->setIcon( QIcon( iconName ) );
 
    // refresh the view
-   refresh();
+   refreshRecursive();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -192,9 +193,7 @@ void ProjectTree::onDirRemoved( const FilePath& dir )
 
 void ProjectTree::onFileEdited( const FilePath& path )
 {
-   FilePath dir;
-   path.extractDir( dir );
-   refresh( dir.getRelativePath() );
+   // do nothing
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -266,6 +265,47 @@ void ProjectTree::removeDirectory( const FilePath& dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void ProjectTree::refreshRecursive( const std::string& rootDir ) 
+{
+   ProjectTreeNode* rootDirNode = find( rootDir );
+   if ( !rootDirNode )
+   {
+      return;
+   }
+
+   // collect all directories that need refreshing
+   std::vector< std::string > directoriesToRefresh;
+   {
+      Stack< ProjectTreeNode* > dirs;
+      dirs.push( rootDirNode );
+      while ( !dirs.empty() )
+      {
+         ProjectTreeNode* analyzedNode = dirs.pop();
+         if ( dynamic_cast< ProjectLeafNode* >( analyzedNode ) != NULL )
+         {
+            // this is a leaf node - we only want to scan composite nodes
+            continue;
+         }
+         directoriesToRefresh.push_back( analyzedNode->getRelativePath() );
+
+         int childrenCount = analyzedNode->childCount();
+         for ( int i = 0; i < childrenCount; ++i )
+         {
+            dirs.push( static_cast< ProjectTreeNode* >( analyzedNode->child( i ) ) );
+         }
+      }
+   }
+
+   // refresh collected directories
+   uint count = directoriesToRefresh.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      refresh( directoriesToRefresh[i] );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void ProjectTree::refresh( const std::string& rootDir )
 {
    // find the entry corresponding to the specified root directory
@@ -275,71 +315,90 @@ void ProjectTree::refresh( const std::string& rootDir )
       return;
    }
 
-   // clean it up
-   rootDirNode->clear();
-
-   if ( !m_section )
+   // collect the items in the root dir, so that we can keep track of what items have disappeared
+   int count = rootDirNode->childCount();
+   std::set< ProjectTreeNode* > childrenToRemove;
+   for ( int i = 0; i < count; ++i )
    {
-      // there's no section to scan
-      return;
+      childrenToRemove.insert( static_cast< ProjectTreeNode* >( rootDirNode->child(i) ) );
    }
 
-   // scan the contents of the resources manager
-   struct Scanner : public FilesystemSectionScanner
-   {
-      ProjectTreeNode*                    m_rootDirNode;
-      TreeWidgetDescFactory*              m_itemsFactory;
-      bool                                m_viewResourcesOnly;
-
-      Scanner( FilesystemSection& section, ProjectTreeNode* rootDirNode, TreeWidgetDescFactory* itemsFactory, bool viewResourcesOnly )
-         : FilesystemSectionScanner( section )
-         , m_rootDirNode( rootDirNode )
-         , m_itemsFactory( itemsFactory )
-         , m_viewResourcesOnly( viewResourcesOnly )
+   // scan the directory
+   if ( m_section )
+   {  
+      struct Scanner : public FilesystemSectionScanner
       {
-      }
+         ProjectTreeNode*                    m_rootDirNode;
+         TreeWidgetDescFactory*              m_itemsFactory;
+         bool                                m_viewResourcesOnly;
 
-      void onSectionDirectory( const FilePath& name )
-      {
-         const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-         std::string parentDirName = fs.extractDir( name );
-         std::string newNodeName = fs.extractNodeName( name );
+         std::set< ProjectTreeNode* >&       m_childrenToRemove;
 
-         if ( m_rootDirNode->find( newNodeName ) == NULL )
-         { 
-            // add the new node ( but only if it's unique )
-            new ProjectDirNode( m_rootDirNode, newNodeName );
-         }
-      }
-
-      void onSectionFile( const FilePath& name )
-      {
-         if ( m_viewResourcesOnly )
+         Scanner( FilesystemSection& section, ProjectTreeNode* rootDirNode, TreeWidgetDescFactory* itemsFactory, bool viewResourcesOnly, std::set< ProjectTreeNode* >& childrenToRemove )
+            : FilesystemSectionScanner( section )
+            , m_rootDirNode( rootDirNode )
+            , m_itemsFactory( itemsFactory )
+            , m_viewResourcesOnly( viewResourcesOnly )
+            , m_childrenToRemove( childrenToRemove )
          {
-            std::string extension = name.extractExtension();
-            if ( !Resource::isResource( extension ) )
+         }
+
+         void onSectionDirectory( const FilePath& name )
+         {
+            const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
+            std::string newNodeName = fs.extractNodeName( name );
+
+            ProjectTreeNode* node = m_rootDirNode->find( newNodeName );
+            if ( node == NULL )
+            { 
+               // add the new node ( but only if it's unique )
+               new ProjectDirNode( m_rootDirNode, newNodeName );
+            }
+            else
             {
-               return;
+               // already got it in the tree, so remove it from the list of items to remove
+               m_childrenToRemove.erase( node );
             }
          }
 
-         FilePath parentDirName;
-         name.extractDir( parentDirName );
-         std::string newNodeName = name.extractNodeName();
-
-         if ( m_rootDirNode->find( newNodeName ) == NULL )
+         void onSectionFile( const FilePath& name )
          {
-            // add the new node ( but only if it's unique )
-            new ProjectLeafNode( m_rootDirNode, newNodeName, *m_itemsFactory );
+            if ( m_viewResourcesOnly )
+            {
+               std::string extension = name.extractExtension();
+               if ( !Resource::isResource( extension ) )
+               {
+                  return;
+               }
+            }
+
+            std::string newNodeName = name.extractNodeName();
+
+            ProjectTreeNode* node = m_rootDirNode->find( newNodeName );
+            if ( node == NULL )
+            {
+               // add the new node ( but only if it's unique )
+               new ProjectLeafNode( m_rootDirNode, newNodeName, *m_itemsFactory );
+            }
+            else
+            {
+               // already got it in the tree, so remove it from the list of items to remove
+               m_childrenToRemove.erase( node );
+            }
          }
-      }
-   };
+      };
 
-   // scan the directory
-   Scanner scanner( *m_section, rootDirNode, m_itemsFactory, m_viewResourcesOnly );
-   ResourcesManager& resMgr = ResourcesManager::getInstance();
-   resMgr.scan( rootDir, scanner, false );
+      Scanner scanner( *m_section, rootDirNode, m_itemsFactory, m_viewResourcesOnly, childrenToRemove );
+      ResourcesManager& resMgr = ResourcesManager::getInstance();
+      resMgr.scan( rootDir, scanner, false );
+   }
 
+   // remove the remaining items
+   for ( std::set< ProjectTreeNode* >::iterator it = childrenToRemove.begin(); it != childrenToRemove.end(); ++it )
+   {
+      ProjectTreeNode* item = *it;
+      rootDirNode->removeChild( item );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

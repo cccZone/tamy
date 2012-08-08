@@ -15,7 +15,7 @@ Profiler::Profiler()
    , m_engineTimer( new CTimer() )
    , m_active( false ) 
 {
-   m_traces.resize( MAX_TRACE_LENGTH, NULL );
+   m_traces = new PTrace[ MAX_TRACE_LENGTH ];
    for ( uint i = 0; i < MAX_TRACE_LENGTH; ++i )
    {
       m_traces[i] = new Trace();
@@ -26,6 +26,7 @@ Profiler::Profiler()
 
 Profiler::Profiler( const Profiler& )
    : MAX_TRACE_LENGTH( 0 )
+   , m_traces( NULL )
    , m_tracesCount( 0 )
    , m_engineTimer( NULL )
    , m_active( false ) 
@@ -45,6 +46,7 @@ Profiler::~Profiler()
    {
       delete m_traces[i];
    }
+   delete [] m_traces;
 
    uint timersCount = m_timers.size();
    for ( uint i = 0; i < timersCount; ++i )
@@ -83,6 +85,7 @@ void Profiler::beginFrame()
    {
       m_timers[i]->m_activationTimestamp = -1.0f;
       m_timers[i]->m_timeElapsed = 0.0f;
+      m_timers[i]->m_activeInstancesCount = 0;
    }
 }
 
@@ -102,24 +105,36 @@ void Profiler::start( uint timerId )
       // no more room for traces
       return;
    }
-   uint traceIdx = m_tracesCount;
-   m_stackTraceIdx = traceIdx;
-   ++m_tracesCount;
 
-   // memorize the parent timer index
-   m_traces[traceIdx]->m_parentTimerId = m_parentTimerIdx;
-   m_parentTimerIdx = timerId;
-
-   // memorize the id of a timer that left this trace
-   m_traces[traceIdx]->m_timerId = timerId;
-
-   double& activationTimestamp = m_timers[timerId - 1]->m_activationTimestamp;
-   if ( activationTimestamp < 0 )
+   // stack trace management code
    {
-      // start counting only when the timer is activated for the first time.
-      // If it's already been activated, and this is a nested activation, don't consider
-      // this an activation and just keep on counting
-      activationTimestamp = m_engineTimer->getCurrentTime();
+      uint traceIdx = m_tracesCount;
+      m_stackTraceIdx = traceIdx;
+      ++m_tracesCount;
+
+      // memorize the parent timer index
+      m_traces[traceIdx]->m_parentTimerId = m_parentTimerIdx;
+      m_parentTimerIdx = timerId;
+
+      // memorize the id of a timer that left this trace
+      m_traces[traceIdx]->m_timerId = timerId;
+   }
+
+   // timer activation code
+   {
+      int& activeInstancesCount = m_timers[timerId - 1]->m_activeInstancesCount;
+      if ( activeInstancesCount == 0 )
+      {
+         double& activationTimestamp = m_timers[timerId - 1]->m_activationTimestamp;
+
+         // start counting only when the timer is activated for the first time.
+         // If it's already been activated, and this is a nested activation, don't consider
+         // this an activation and just keep on counting
+         activationTimestamp = m_engineTimer->getCurrentTime();
+      }
+
+      // increase activations counter
+      ++activeInstancesCount;
    }
 }
 
@@ -133,19 +148,36 @@ void Profiler::end( uint timerId )
       return;
    }
 
+   // measure the time as soon as you step into this method
    double currTime = m_engineTimer->getCurrentTime();
 
-   uint traceIdx = m_stackTraceIdx; 
-   --m_stackTraceIdx;
+   // stack trace management code
+   {
+      uint traceIdx = m_stackTraceIdx; 
+      --m_stackTraceIdx;
 
-   // recover the parent timer index
-   m_parentTimerIdx = m_traces[traceIdx]->m_parentTimerId;
+      // recover the parent timer index
+      m_parentTimerIdx = m_traces[traceIdx]->m_parentTimerId;
+   }
 
-   Timer* timer = m_timers[timerId - 1];
-   ASSERT( timer->m_activationTimestamp > 0 );
-   timer->m_timeElapsed += ( currTime - timer->m_activationTimestamp );
+   // timer deactivation code
+   {
+      int& activeInstancesCount = m_timers[timerId - 1]->m_activeInstancesCount;
 
-   timer->m_activationTimestamp = -1;
+      // decrease activations counter
+      ASSERT( activeInstancesCount > 0 );
+      --activeInstancesCount;
+      if ( activeInstancesCount == 0 )
+      {
+         // count the elapsed time only for the first activated instance
+         Timer* timer = m_timers[timerId - 1];
+         ASSERT( timer->m_activationTimestamp > 0 );
+
+         timer->m_timeElapsed += ( currTime - timer->m_activationTimestamp );
+
+         timer->m_activationTimestamp = -1;
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

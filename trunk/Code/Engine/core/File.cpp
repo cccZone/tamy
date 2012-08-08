@@ -2,6 +2,7 @@
 #include "core\Assert.h"
 #include "core\Filesystem.h"
 #include "core\FilePath.h"
+#include "core\Profiler.h"
 #include <io.h>
 
 
@@ -12,37 +13,50 @@ File::File( const Filesystem& hostFS, const FilePath& name, const std::ios_base:
    , m_name( name )
    , m_openMode( openMode )
 {
-   std::string openModeStr;
-
-   if ( ( ( openMode & std::ios_base::in ) == std::ios_base::in ) 
-     && ( ( openMode & std::ios_base::out ) == std::ios_base::out ) )
+   // construct the attributes string
+   char openModeStr[4];
    {
-      if ( ( openMode & std::ios_base::trunc ) == std::ios_base::trunc )
+      char idx = 0;
+   
+      if ( ( ( openMode & std::ios_base::in ) == std::ios_base::in ) && ( ( openMode & std::ios_base::out ) == std::ios_base::out ) )
       {
-         openModeStr += "w+";
+         if ( ( openMode & std::ios_base::trunc ) == std::ios_base::trunc )
+         {
+            openModeStr[0] = 'w';
+            openModeStr[1] = '+';
+         }
+         else
+         {
+            openModeStr[0] = 'a';
+            openModeStr[1] = '+';
+         }
+         idx = 2;
       }
-      else
+      else if ( ( openMode & std::ios_base::in ) == std::ios_base::in )
       {
-         openModeStr += "a+";
+         openModeStr[0] = 'r';
+         idx = 1;
       }
-   }
-   else if ( ( openMode & std::ios_base::in ) == std::ios_base::in )
-   {
-      openModeStr += "r";
-   }
-   else if ( ( openMode & std::ios_base::out ) == std::ios_base::out )
-   {
-      openModeStr += "w";
+      else if ( ( openMode & std::ios_base::out ) == std::ios_base::out )
+      {
+         openModeStr[0] = 'w';
+         idx = 1;
+      }
+
+      if ( ( openMode & std::ios_base::binary ) == std::ios_base::binary )
+      {
+         openModeStr[idx] = 'b';
+         ++idx;
+      }
+      openModeStr[idx] = 0;
    }
 
-   if ( ( openMode & std::ios_base::binary ) == std::ios_base::binary )
-   {
-      openModeStr += "b";
-   }
+   // get the absolute path to the opened file
+   char absoluteName[255];
+   m_name.toAbsolutePath( m_hostFS, absoluteName );
 
-   std::string absoluteName = m_name.toAbsolutePath( m_hostFS );
-
-   fopen_s( &m_file, absoluteName.c_str(), openModeStr.c_str() );
+   // open the file
+   fopen_s( &m_file, absoluteName, openModeStr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

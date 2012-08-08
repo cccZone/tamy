@@ -15,10 +15,12 @@ END_OBJECT();
 
 MNInstanceTexture::MNInstanceTexture()
    : m_usage( MT_DIFFUSE_1 )
-   , m_output( new MSTextureOutput( "Texture" ) )
+   , m_textureOutput( new MSTextureOutput( "Texture" ) )
+   , m_isTextureSetOutput( new MSBoolOutput( "IsSet" ) )
    , m_renderableTexture( new RenderableTexture() )
 {
-   defineOutput( m_output );
+   defineOutput( m_textureOutput );
+   defineOutput( m_isTextureSetOutput );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,7 +30,8 @@ MNInstanceTexture::~MNInstanceTexture()
    delete m_renderableTexture;
    m_renderableTexture = NULL;
 
-   m_output = NULL;
+   m_textureOutput = NULL;
+   m_isTextureSetOutput = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,16 +40,27 @@ void MNInstanceTexture::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
-   // find the existing inputs
-   m_output = DynamicCast< MSTextureOutput >( findOutput( "Texture" ) );
+   // delete the old output instances and replace them with the loaded ones
+   delete m_textureOutput;
+   delete m_isTextureSetOutput;
+
+   m_textureOutput = DynamicCast< MSTextureOutput >( findOutput( "Texture" ) );
+   m_isTextureSetOutput = DynamicCast< MSBoolOutput >( findOutput( "IsSet" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MNInstanceTexture::preRender( Renderer& renderer, const MaterialEntity& entity ) const
 {
-   m_renderableTexture->setTexture( entity.getTexture( m_usage ) );
-   m_output->setValue( entity.data(), m_renderableTexture );
+   Texture* tex = entity.getTexture( m_usage );
+
+   m_renderableTexture->setTexture( tex );
+   m_textureOutput->setValue( entity.data(), m_renderableTexture );
+
+   if ( m_isTextureSetOutput )
+   {
+      m_isTextureSetOutput->setValue( entity.data(), tex != NULL );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

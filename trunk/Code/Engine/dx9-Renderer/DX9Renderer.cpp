@@ -297,18 +297,25 @@ IDirect3DIndexBuffer9* DX9Renderer::createIndexBuffer( UINT length,  DWORD usage
 /////////////////////////////////////////////////////////////////////////////
 
 const D3DFORMAT g_ColorTextureFormats[] = { D3DFMT_DXT5, D3DFMT_DXT3, D3DFMT_X8R8G8B8, D3DFMT_DXT1, D3DFMT_X1R5G5B5, D3DFMT_R5G6B5, D3DFMT_UNKNOWN };
-const D3DFORMAT g_DepthTextureFormats[] = { D3DFMT_A8R8G8B8, D3DFMT_D32, D3DFMT_D24S8, D3DFMT_D24X8, D3DFMT_D24X4S4, D3DFMT_D16, D3DFMT_D15S1, D3DFMT_UNKNOWN };
+const D3DFORMAT g_DepthTextureFormats[] = { D3DFMT_R32F, D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN };
 const D3DFORMAT g_LuminanceTextureFormats[] = { D3DFMT_G32R32F, D3DFMT_G16R16F, D3DFMT_UNKNOWN };
 const D3DFORMAT g_HDRTextureFormats[] = { D3DFMT_A32B32G32R32F, D3DFMT_A16B16G16R16F, D3DFMT_UNKNOWN };
 const D3DFORMAT g_DataTextureFormats[] = { D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN };
+const D3DFORMAT g_32BitFPTextureFormats[] = { D3DFMT_R32F, D3DFMT_UNKNOWN };
+const D3DFORMAT g_UncompressedColorTextureFormats[] = { D3DFMT_X8R8G8B8, D3DFMT_X1R5G5B5, D3DFMT_R5G6B5, D3DFMT_UNKNOWN };
+const D3DFORMAT g_CompressedColorTextureFormats[] = { D3DFMT_DXT5, D3DFMT_DXT3, D3DFMT_DXT1, D3DFMT_UNKNOWN };
+
 
 const D3DFORMAT* g_textureFormats[] =
 {
-   g_ColorTextureFormats,           // TU_COLOR
-   g_DepthTextureFormats,           // TU_DEPTH
-   g_LuminanceTextureFormats,       // TU_LUMINANCE 
-   g_HDRTextureFormats,             // TU_HDR
-   g_DataTextureFormats,            // TU_DATA_TEXTURE
+   g_ColorTextureFormats,              // TU_COLOR
+   g_DepthTextureFormats,              // TU_DEPTH
+   g_LuminanceTextureFormats,          // TU_LUMINANCE 
+   g_HDRTextureFormats,                // TU_HDR
+   g_DataTextureFormats,               // TU_DATA_TEXTURE
+   g_32BitFPTextureFormats,            // TU_32BIT_FP
+   g_UncompressedColorTextureFormats,  // TU_COLOR_UNCOMPRESSED
+   g_CompressedColorTextureFormats,    // TU_COLOR_COMPRESSED
 };
 
 void DX9Renderer::sampleOptimalTextureFormats()
