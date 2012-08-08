@@ -1,6 +1,7 @@
 #include "core\ResourcesManager.h"
 #include "core\IProgressObserver.h"
 #include "core\ReflectionSerializationUtil.h"
+#include "core\Profiler.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -173,6 +174,8 @@ void ResourcesManager::moveResource( Resource* resource, const FilePath& newPath
 
 Resource* ResourcesManager::findResource( const FilePath& name )
 {
+   PROFILED();
+
    ResourcesMap::iterator it = m_resources.find( name );
    if ( it != m_resources.end() )
    {
@@ -230,6 +233,8 @@ void ResourcesManager::remove( const FilePath& path )
 
 Resource* ResourcesManager::create( const FilePath& filePath, bool loadOnly )
 {
+   PROFILED();
+
    Resource* res = findResource( filePath );
    if ( res == NULL )
    {
@@ -264,6 +269,8 @@ Resource* ResourcesManager::create( const FilePath& filePath, bool loadOnly )
 
 Resource* ResourcesManager::loadResource( const FilePath& filePath )
 {
+   PROFILED();
+
    // initialize the progress observer
    IProgressObserver* progressObserver = createObserver();
    Resource* res = ReflectionSerializationUtil::loadResource( filePath, progressObserver );
@@ -276,6 +283,8 @@ Resource* ResourcesManager::loadResource( const FilePath& filePath )
 
 void ResourcesManager::save( const FilePath& filePath )
 {
+   PROFILED();
+
    Resource* resourceToSave = findResource( filePath );
    if ( !resourceToSave )
    {

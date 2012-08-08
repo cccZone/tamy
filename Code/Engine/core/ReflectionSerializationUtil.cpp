@@ -128,8 +128,6 @@ void ReflectionSerializationUtil::saveResource( const Resource* resource, IProgr
    saveResources( resourcesToSave, progressObserver );
 }
 
-///////////////////////////////////////////////////////////////////////////////
-
 void ReflectionSerializationUtil::saveResources( const std::vector< const Resource* >& resources, IProgressObserver* progressObserver )
 {
    ResourcesManager& resMgr = ResourcesManager::getInstance();

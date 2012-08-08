@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core\types.h"
-#include "core\Array.h"
+#include <vector>
 #include <string>
 
 
@@ -33,8 +33,9 @@ public:
       std::string          m_name;
       double               m_activationTimestamp;
       double               m_timeElapsed;
+      int                  m_activeInstancesCount;
 
-      Timer( const std::string& name ) : m_name( name ), m_activationTimestamp( -1 ), m_timeElapsed( 0 ) {}
+      Timer( const std::string& name ) : m_name( name ), m_activationTimestamp( -1 ), m_timeElapsed( 0 ), m_activeInstancesCount( 0 ) {}
    };
 
    struct Trace 
@@ -49,8 +50,10 @@ private:
 
    CTimer*                 m_engineTimer;
 
-   Array< Timer* >         m_timers;
-   Array< Trace* >         m_traces;
+   std::vector< Timer* >   m_timers;
+
+   typedef Trace*          PTrace;
+   PTrace*                 m_traces;
 
    bool                    m_active;
    uint                    m_stackTraceIdx;

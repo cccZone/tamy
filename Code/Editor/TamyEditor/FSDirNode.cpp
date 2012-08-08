@@ -14,9 +14,10 @@ FSDirNode::FSDirNode( FSTreeNode* parent, const std::string& nodeName )
    ASSERT_MSG( m_fsNodeName.empty() ? true : m_fsNodeName.c_str()[ m_fsNodeName.length() - 1 ] == '/', "This is a directory node, thus it has to end with a slash" );
 
    // strip the name of the last slash
+   std::string label;
    if ( !m_fsNodeName.empty() )
    {
-      m_fsNodeName = m_fsNodeName.substr( 0, m_fsNodeName.length() - 1 );
+      label = m_fsNodeName.substr( 0, m_fsNodeName.length() - 1 );
    }
 
    // set the icon
@@ -25,7 +26,7 @@ FSDirNode::FSDirNode( FSTreeNode* parent, const std::string& nodeName )
    setIcon( 0, QIcon( iconsDir + "dirIcon.png" ) );
 
    // set the description
-   setText( 0, m_fsNodeName.c_str() );
+   setText( 0, label.c_str() );
    setText( 1, "DIR" );
 }
 
@@ -36,7 +37,7 @@ std::string FSDirNode::getRelativePath() const
    ASSERT_MSG ( parent(), "Directory node has to have a parent" );
 
    std::string path = dynamic_cast< FSTreeNode* >( parent() )->getRelativePath();
-   path += m_fsNodeName + "/";
+   path += m_fsNodeName;
 
    return path;
 }
@@ -68,7 +69,24 @@ void FSDirNode::openItem( FilesystemTree& hostTree )
 
 bool FSDirNode::compareNodeName( const std::string& name ) const
 {
-   return name == m_fsNodeName;
+   uint len1 = m_fsNodeName.length();
+   uint len2 = name.length();
+
+   const char* name1 = m_fsNodeName.c_str();
+   const char* name2 = name.c_str();
+
+   bool slashlessComparison = ( len2 > 0 && name2[ len2 - 1 ] != '/' );
+   if ( slashlessComparison )
+   {
+      --len1;
+   }
+
+   if ( len1 != len2 )
+   {
+      return false;
+   }
+
+   return strncmp( name1, name2, len1 ) == 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

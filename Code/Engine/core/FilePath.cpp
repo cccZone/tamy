@@ -3,6 +3,7 @@
 #include "core/OutStream.h"
 #include "core/Filesystem.h"
 #include "core/StringUtils.h"
+#include "core/Profiler.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -114,6 +115,20 @@ void FilePath::changeFileExtension( const std::string& newExtension, FilePath& o
 std::string FilePath::toAbsolutePath( const Filesystem& fs ) const
 {
    return fs.getCurrRoot() + m_relativePath;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FilePath::toAbsolutePath( const Filesystem& fs, char* outAbsPath ) const
+{
+   int firstPartLen = fs.getCurrRoot().length();
+   int secondPartLen = m_relativePath.length();
+
+   const char* firstPathPart = fs.getCurrRoot().c_str();
+   const char* secondPathPart = m_relativePath.c_str();
+   memcpy( outAbsPath, firstPathPart, firstPartLen );
+   memcpy( outAbsPath + firstPartLen, secondPathPart, secondPartLen );
+   outAbsPath[firstPartLen + secondPartLen ] = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

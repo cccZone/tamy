@@ -3,14 +3,6 @@
 #include "core.h"
 
 
-// <geometry.todo> !!!!!!!!!!!!!!!!!!
-// - At this point it's the vertex type that specifies the vertex description used,
-// but the engine associates vertex description with a vertex shader, which is wrong.
-// Make geometry define vertex description it's using!
-//
-// - Some geometries use arbitrary vertex formats ( FVF formats, i.e. debug geometry ) - make sure those will work after this change is implemented
-//
-
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_RESOURCE_NO_PARENT( TriangleMesh, ttm, AM_BINARY );
