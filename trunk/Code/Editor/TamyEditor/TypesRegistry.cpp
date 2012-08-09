@@ -27,6 +27,7 @@ REGISTER_TYPE( GraphBlockConnection );
 #include "RPBFloat.h"
 #include "RPBVec4.h"
 #include "RPBDeferredLighting.h"
+#include "RPBSoftShadows.h"
 #include "RenderingPipelineLayout.h"
 
 REGISTER_TYPE( RPBPostProcess );
@@ -47,6 +48,7 @@ REGISTER_TYPE( RPBTexture );
 REGISTER_TYPE( RPBFloat );
 REGISTER_TYPE( RPBVec4 );
 REGISTER_TYPE( RPBDeferredLighting );
+REGISTER_TYPE( RPBSoftShadows );
 REGISTER_TYPE( RenderingPipelineLayout );
 
 ///////////////////////////////////////////////////////////////////////////////

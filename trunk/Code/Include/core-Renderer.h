@@ -199,8 +199,9 @@
 // --> PipelineNodes
 // ----------------------------------------------------------------------------
 #include "core-Renderer\RPDeferredLightingNode.h"
+#include "core-Renderer\RPSoftShadowsNode.h"
 
 // ----------------------------------------------------------------------------
 // Tools
 // ----------------------------------------------------------------------------
-#include "core-Renderer/BasicRenderingEntitiesFactory.h"
+#include "core-Renderer\BasicRenderingEntitiesFactory.h"

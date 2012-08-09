@@ -530,6 +530,9 @@
     <ClInclude Include="DRPointLight.h">
       <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClInclude>
+    <ClInclude Include="RPBSoftShadows.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -1273,6 +1276,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Template\moc_ProfilerChart.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBSoftShadows.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

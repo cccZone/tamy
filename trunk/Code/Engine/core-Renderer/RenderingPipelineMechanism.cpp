@@ -72,6 +72,13 @@ const Array< Light*> & RenderingPipelineMechanism::getSceneLights() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+const RenderingView* RenderingPipelineMechanism::getSceneRenderingView() const
+{
+   return m_scene->m_renderingView;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool RenderingPipelineMechanism::isRenderTargetDefined( const std::string& id ) const
 {
    if ( m_pipeline )

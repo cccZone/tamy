@@ -47,8 +47,9 @@ private:
       Array< Geometry* >                           m_visibleElems;
       Array< Light* >                              m_visibleLights;
 
-   private:
       RenderingView*                               m_renderingView;
+
+    private:
       Model*                                       m_model;
 
    public:
@@ -117,6 +118,11 @@ public:
     * Returns visible scene lights.
     */
    const Array< Light*> & getSceneLights() const;
+
+   /**
+    *
+    */
+   const RenderingView* getSceneRenderingView() const;
 
    /**
     * Checks if a render target registered with the specified ID exists.

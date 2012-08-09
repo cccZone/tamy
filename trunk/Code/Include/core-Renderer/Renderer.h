@@ -10,6 +10,7 @@
 #include "core-AppFlow\TimeDependent.h"
 #include "core\types.h"
 #include "core\Matrix.h"
+#include "core\Stack.h"
 #include <vector>
 #include <map>
 #include <set>
@@ -70,9 +71,14 @@ private:
    typedef std::set< RenderTarget* >   RenderTargetsList;
 
 private:
+   // rendering mechanism
    RenderingMechanism*              m_mechanism;
-   Camera*                          m_defaultCamera;
 
+   // camera
+   Camera*                          m_defaultCamera;
+   Stack< Camera* >                 m_camerasStack;
+
+   // viewport
    unsigned int                     m_viewportWidth;
    unsigned int                     m_viewportHeight;
    unsigned int                     m_leftClientArea;
@@ -81,18 +87,20 @@ private:
    unsigned int                     m_bottomClientArea;
    Matrix                           m_viewportMatrix;
 
+   // internal state machine
    RendererState*                   m_initialState;
    RendererState*                   m_renderingState;
    RendererState*                   m_deviceLostState;
    RendererState*                   m_currentRendererState;
 
+   // render targets
    RenderTargetsList                m_renderTargetsList;
 
+   // render commands
    RoundBuffer                      m_renderCommands;
 
 public:
-   Renderer(unsigned int viewportWidth = 800,
-            unsigned int viewportHeight = 600);
+   Renderer( uint viewportWidth = 800, uint viewportHeight = 600 );
    virtual ~Renderer();
 
    /**
@@ -159,12 +167,25 @@ public:
    /**
     * Returns the currently active camera ( const version )
     */
-   inline const Camera& getActiveCamera() const { return *m_defaultCamera; }
+   inline const Camera& getActiveCamera() const { return *m_camerasStack.top(); }
 
    /**
     * Returns the currently active camera.
     */
-   inline Camera& getActiveCamera() { return *m_defaultCamera; }
+   inline Camera& getActiveCamera() { return *m_camerasStack.top(); }
+
+   /**
+    * Pushes a camera to the top of the camera stack, thus making it an active camera for this renderer.
+    *
+    * @param camera
+    */
+   void pushCamera( Camera& camera );
+
+   /**
+    * Pops a camera from the top of the stack, deactivating it.
+    * The default camera will never be popped - there always needs to be at least one active camera remaining.
+    */
+   void popCamera();
 
    // ----------------------------------------------------------------------------
    // Render commands queue
