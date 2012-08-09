@@ -32,26 +32,39 @@ private:
    };
 
 private:
-   StackSeg<T>* top;
+   StackSeg<T>*   m_top;
 
 public:
-   Stack() : top(NULL) {}
-   Stack(const Stack& rhs) : top(new StackSeg<T>(*(rhs.top))) {}
-   ~Stack() {delete top; top = NULL;}
+   /**
+    * Default constructor.
+    */
+   Stack() : m_top( NULL ) {}
 
-   void push(T elem)
+   /**
+    * Copy constructor.
+    */
+   Stack( const Stack& rhs ) : m_top( new StackSeg< T >( *rhs.m_top ) ) {}
+   ~Stack() { delete m_top; m_top = NULL; }
+
+   /**
+    * Pushes a new element on top of the stack
+    */
+   void push( T elem )
    {
       StackSeg<T>* newSeg = new StackSeg<T>();
-      newSeg->prev = top;
+      newSeg->prev = m_top;
       newSeg->elem = elem;
 
-      top = newSeg;
+      m_top = newSeg;
    }
 
+   /**
+    * Pops an element from the top of the stack
+    */
    T pop()
    {
-      StackSeg<T>* removedSeg = top;
-      top = removedSeg->prev;
+      StackSeg<T>* removedSeg = m_top;
+      m_top = removedSeg->prev;
       removedSeg->prev = NULL;
       T elem = removedSeg->elem;
       delete removedSeg;
@@ -59,7 +72,20 @@ public:
       return elem;
    }
 
-   bool empty() const {return top == NULL;}
+   /**
+    * Allows to peek at the element that's at the top of the stack ( const version )
+    */
+   const T& top() const { return m_top->elem; }
+
+   /**
+    * Allows to peek at the element that's at the top of the stack ( non-const version )
+    */
+   T& top() { return m_top->elem; }
+
+   /**
+    * Tells if the stack is empty.
+    */
+   bool empty() const {return m_top == NULL;}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

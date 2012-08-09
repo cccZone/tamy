@@ -15,6 +15,7 @@ class Shader;
 class ResourcesManager;
 class TiXmlNode;
 class FilePath;
+class TiXmlElement;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +36,13 @@ protected:
    //  TResourceSlice< SurfaceProperties > implementation
    // -------------------------------------------------------------------------
    void* getResourcePtr() const { return m_surfaceProperties; }
+
+private:
+   // -------------------------------------------------------------------------
+   //  Material shading techniques parsers
+   // -------------------------------------------------------------------------
+   void parseLambert( TiXmlElement* techniqueRoot );
+   void parsePhong( TiXmlElement* techniqueRoot );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

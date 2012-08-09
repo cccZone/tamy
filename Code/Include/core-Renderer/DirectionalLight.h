@@ -4,14 +4,15 @@
 #define _DIRECTIONAL_LIGHT_H
 
 #include "core-Renderer\Light.h"
-#include "core-Renderer\RenderCommand.h"
 #include "core\Color.h"
 #include "core\UniqueObject.h"
+#include "core\Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class PixelShader;
+class Geometry;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -24,11 +25,15 @@ class DirectionalLight : public Light, public UniqueObject< DirectionalLight >
 
 public:
    // static data
-   Color          m_color;
-   float          m_strength;
+   Color                m_color;
+   float                m_strength;
 
    /// runtime data
-   PixelShader*   m_pixelShader;
+   PixelShader*         m_lightingShader;
+   PixelShader*         m_shadowDepthMapShader;
+   PixelShader*         m_shadowProjectionShader;
+
+   Array< Geometry* >   m_visibleGeometry;
 
 public:
    DirectionalLight( const std::string& name = "" );
@@ -37,7 +42,8 @@ public:
    // -------------------------------------------------------------------------
    // Light implementation
    // -------------------------------------------------------------------------
-   void render( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex );
+   void renderLighting( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex );
+   void renderShadowMap( Renderer& renderer, RenderTarget* shadowDepthBuffer, RenderTarget* screenSpaceShadowMap, const RenderingView* renderedSceneView );
 
    // -------------------------------------------------------------------------
    // Object implementation
@@ -49,6 +55,5 @@ private:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-
 
 #endif // _DIRECTIONAL_LIGHT_H

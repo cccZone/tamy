@@ -40,11 +40,25 @@ void RenderingView::collectRenderables( Array< Geometry* >& outVisibleElems )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void RenderingView::collectRenderables( const BoundingVolume& volume, Array< Geometry* >& outVisibleElems ) const
+{
+   m_geometryStorage->query( volume, outVisibleElems );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void RenderingView::collectLights( Array< Light* >& outVisibleLights )
 {
    // tag visible objects
    const BoundingVolume& volume = m_renderer.getActiveCamera().getFrustum();
 
+   m_lightsStorage->query( volume, outVisibleLights );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingView::collectLights( const BoundingVolume& volume, Array< Light* >& outVisibleLights ) const
+{
    m_lightsStorage->query( volume, outVisibleLights );
 }
 

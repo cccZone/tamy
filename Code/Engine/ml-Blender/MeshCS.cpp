@@ -14,11 +14,15 @@
 
 namespace // anonymous
 {
-   void switchYZ( TVector< 3 >& vec )
+   void adjustCoordinateSystem( TVector< 3 >& vec )
    {
+      // switch Y and Z coordinate
       float tmp = vec.v[2];
       vec.v[2] = vec.v[1];
       vec.v[1] = tmp;
+
+      // flip X axis
+      vec.v[0] *= -1;
    }
 
    class DSVertices : public DSBindStructure
@@ -34,7 +38,7 @@ namespace // anonymous
       {
          LitVertex& vtx = *( static_cast< LitVertex* >( data ) );
          getSource( "POSITION" ).readData( dataOffset, &vtx.m_coords );
-         switchYZ( vtx.m_coords );
+         adjustCoordinateSystem( vtx.m_coords );
       }
    };
 
@@ -78,7 +82,7 @@ namespace // anonymous
             unsigned int normalIdx = getIndex( dataOffset, "NORMAL", i );
 
             getSource( "NORMAL" ).readData( normalIdx, &vertices[vtxIdx].m_normal );
-            switchYZ( vertices[vtxIdx].m_normal );
+            adjustCoordinateSystem( vertices[vtxIdx].m_normal );
          }
       }
    };
@@ -141,5 +145,3 @@ MeshCS::MeshCS( TiXmlNode* geometryNode, const FilePath& deploymentDir, Resource
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-// <geometry.todo> !!!!!!!!!!!!!!! read vertex tangents !!!!!!!!!!!!!!!!!!!!!!!

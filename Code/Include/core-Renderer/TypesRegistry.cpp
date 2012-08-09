@@ -104,7 +104,6 @@ REGISTER_TYPE( RPFloats2Vec4Node );
 REGISTER_TYPE( RPTextureNode );
 REGISTER_TYPE( RPFloatNode );
 REGISTER_TYPE( RPVec4Node );
-REGISTER_TYPE( RPDeferredLightingNode );
 REGISTER_TYPE( RPFloatInput );
 REGISTER_TYPE( RPFloatOutput );
 REGISTER_TYPE( RPTextureInput );
@@ -129,5 +128,7 @@ REGISTER_ENUM_TYPE( TextureUsage );
 REGISTER_ABSTRACT_TYPE( Light );
 REGISTER_TYPE( DirectionalLight );
 REGISTER_TYPE( PointLight );
+REGISTER_TYPE( RPDeferredLightingNode );
+REGISTER_TYPE( RPSoftShadowsNode );
 
 ///////////////////////////////////////////////////////////////////////////////

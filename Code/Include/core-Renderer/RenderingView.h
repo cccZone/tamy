@@ -48,11 +48,27 @@ public:
    void collectRenderables( Array< Geometry* >& outVisibleElems );
 
    /**
+    * Collects renderables from the specified bounding volume
+    *
+    * @param volume
+    * @param outVisibleElems
+    */
+   void collectRenderables( const BoundingVolume& volume, Array< Geometry* >& outVisibleElems ) const;
+
+   /**
     * Collects visible lights that affect the scene and should be rendered this frame.
     *
     * @param outVisibleLights
     */
    void collectLights( Array< Light* >& outVisibleLights );
+
+   /**
+    * Collects lights from the specified bounding volume
+    *
+    * @param volume
+    * @param outVisibleLights
+    */
+   void collectLights( const BoundingVolume& volume, Array< Light* >& outVisibleLights ) const;
 
    // ----------------------------------------------------------------------
    // ModelView implementation

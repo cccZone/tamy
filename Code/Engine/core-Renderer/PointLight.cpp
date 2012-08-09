@@ -73,7 +73,7 @@ void PointLight::onPropertyChanged( ReflectionProperty& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PointLight::render( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex )
+void PointLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex )
 {
    if ( !m_vertexShader || !m_pixelShader || !m_pointLightMesh )
    {
@@ -127,27 +127,41 @@ void PointLight::render( Renderer& renderer, ShaderTexture* depthNormalsTex, Sha
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void PointLight::renderShadowMap( Renderer& renderer, RenderTarget* shadowDepthBuffer, RenderTarget* screenSpaceShadowMap, const RenderingView* renderedSceneView )
+{
+   // <renderer.todo> renderShadowMap - implement me !!!!!!!!!!!!!!!
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void PointLight::initialize()
 {
    ResourcesManager& resMgr = ResourcesManager::getInstance();
 
-   FilePath vsPath( LIGHTING_SHADERS_DIR "pointLight.tvsh" );
-   m_vertexShader = resMgr.create< VertexShader >( vsPath, true );
-
-   FilePath psPath( LIGHTING_SHADERS_DIR "pointLight.tpsh" );
-   m_pixelShader = resMgr.create< PixelShader >( psPath, true );
-
-   FilePath meshPath( LIGHTING_SHADERS_DIR "pointLight.ttm" );
-   m_pointLightMesh = resMgr.create< TriangleMesh >( meshPath, true );
-
-   if ( !m_boundingSphere )
+   // lighting shaders and geometry
    {
-      m_boundingSphere = new BoundingSphere( Vector::ZERO, m_radius );
-      setBoundingVolume( m_boundingSphere ); 
+      FilePath vsPath( LIGHTING_SHADERS_DIR "Lights/pointLight.tvsh" );
+      m_vertexShader = resMgr.create< VertexShader >( vsPath, true );
+
+      FilePath psPath( LIGHTING_SHADERS_DIR "Lights/pointLight.tpsh" );
+      m_pixelShader = resMgr.create< PixelShader >( psPath, true );
+
+      FilePath meshPath( LIGHTING_SHADERS_DIR "Lights/pointLight.ttm" );
+      m_pointLightMesh = resMgr.create< TriangleMesh >( meshPath, true );
+
+      if ( !m_boundingSphere )
+      {
+         m_boundingSphere = new BoundingSphere( Vector::ZERO, m_radius );
+         setBoundingVolume( m_boundingSphere ); 
+      }
+      else
+      {
+         m_boundingSphere->radius = m_radius;
+      }
    }
-   else
+
+   // shadow shaders
    {
-      m_boundingSphere->radius = m_radius;
    }
 }
 

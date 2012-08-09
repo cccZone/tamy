@@ -361,6 +361,9 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Lighting\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="RPSoftShadowsNode.cpp">
+      <Filter>Lighting\PipelineNodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -711,6 +714,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\PointLight.h">
       <Filter>Lighting\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPSoftShadowsNode.h">
+      <Filter>Lighting\PipelineNodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,6 +27,7 @@ RPDeferredLightingNode::RPDeferredLightingNode()
    m_sceneColorInput = new RPTextureInput( "SceneColor" );
    defineInput( m_sceneColorInput );
 
+   // <memory.todo> when the object is being loaded, the outputs created here will leak memory. Fix that - maybe by introducing a separate serialization constructor...
    MRTUtil::defineOutputs( m_renderTargetId, this );
 }
 
@@ -45,6 +46,9 @@ void RPDeferredLightingNode::onObjectLoaded()
    __super::onObjectLoaded();
 
    // find input socket
+   delete m_depthNormalsInput;
+   delete m_sceneColorInput;
+
    m_depthNormalsInput = DynamicCast< RPTextureInput >( findInput( "DepthNormals" ) );
    m_sceneColorInput = DynamicCast< RPTextureInput >( findInput( "SceneColor" ) );
 }
@@ -130,7 +134,7 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    for ( uint i = 0; i < lightsCount; ++i )
    {
       Light* light = visibleLights[i];
-      light->render( renderer, depthNormalsTex, sceneColorTex );
+      light->renderLighting( renderer, depthNormalsTex, sceneColorTex );
    }
 
    // unbind render targets
