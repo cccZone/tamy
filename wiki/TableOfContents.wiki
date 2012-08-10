@@ -59,6 +59,7 @@
       * [RendererCore#DebugRenderer Debug renderer]
       * [RendererCore#Rendering_pipeline Rendering pipeline]
       * [RendererCore#Camera Camera]
+      * [RendererCore#Cameras_stack Cameras stack]
       * [SettingUpRenderer Setting it up]
       * [CommonResources Common resources]
     * [ Importers ]
