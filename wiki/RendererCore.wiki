@@ -151,3 +151,24 @@ If you want to render directly to the backbuffer, simply give a name that's does
 
 
 ==Camera==
+
+==Cameras stack==
+There may be many cameras used throught a rendering frame time - we may be rendering the scene from a light perspective i.e.
+
+For that very purpose, a cameras stack was introduced. 
+If you need, you can simply push a new camera onto a stack - it will immediately become an active camera, and all subsequent operations will use it.
+
+{{{
+Renderer::pushCamera( Camera& camera );
+}}}
+
+Once you're done with that camera, simply pop it from the stack
+
+{{{
+Renderer::popCamera();
+}}}
+
+The stack can never be empty - if you pop all cameras from it, the default one will be automatically pushed back to the top ( as the only element ). The reason for that is simple - the renderer MUST have a camera to render anything.
+
+*CAUTION*:
+The stack operates on the main rendering thread, so make sure NOT to access the cameras from the rendering queue tread, as it will not point to a correct camera any longer.
