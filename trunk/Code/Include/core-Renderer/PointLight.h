@@ -45,7 +45,7 @@ public:
    // Light implementation
    // -------------------------------------------------------------------------
    void renderLighting( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex );
-   void renderShadowMap( Renderer& renderer, RenderTarget* shadowDepthBuffer, RenderTarget* screenSpaceShadowMap, const RenderingView* renderedSceneView );
+   void renderShadowMap( Renderer& renderer, RenderTarget* shadowDepthBuffer, RenderTarget* screenSpaceShadowMap, const RenderingView* renderedSceneView, const Array< Geometry* >& geometryToRender );
 
    // -------------------------------------------------------------------------
    // Object implementation

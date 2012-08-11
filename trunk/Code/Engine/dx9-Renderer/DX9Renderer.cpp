@@ -225,7 +225,8 @@ void DX9Renderer::activateRenderTarget( RenderTarget* renderTarget, uint targetI
       m_d3Device->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, &renderTargetSurface );
    }
 
-   m_d3Device->SetRenderTarget( targetIdx, renderTargetSurface );
+   HRESULT res = m_d3Device->SetRenderTarget( targetIdx, renderTargetSurface );
+   ASSERT_MSG( !FAILED( res ), "The specified surface could not be used as a render target" );
    renderTargetSurface->Release();
 }
 
