@@ -65,4 +65,14 @@ extern TamyAssertFunc _tamyAssert;
  */
 #define ASSERT_MSG( expression, msg ) { static AssertionHandle handler( __FUNCTION__, __FILE__, __LINE__ ); (void)( ( !!( expression ) ) || ( !!( handler.isIgnored() ) ) || ( _tamyAssert( msg, handler ), 0 ) ); }
 
+/**
+ * Macro that comes in handy in loops, if we want to continue the loop execution on an assert
+ */
+#define ASSERT_MSG_CONTINUE( condition, msg ) ASSERT_MSG( condition, msg ) if ( !( condition ) ) { continue; }
+
+/**
+ * Macro that comes in handy in loops, if we want to break the loop execution on an assert
+ */
+#define ASSERT_MSG_BREAK( condition, msg ) ASSERT_MSG( condition, msg ) if ( !( condition ) ) { break; }
+
 ///////////////////////////////////////////////////////////////////////////////

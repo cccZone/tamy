@@ -17,7 +17,9 @@ void RCBindVertexShader::execute( Renderer& renderer )
    {
       // set the shader parameters
       setParams( renderer, dxShader );
-      dxShader->beginRendering();
+
+      // <vs.todo> !!!!!!!!!!!! VERTEX SHADER TECHNIQUE IDX
+      dxShader->beginRendering( 0 );
    }
 }
 
@@ -41,7 +43,6 @@ DX9VertexShader::DX9VertexShader( const DX9Renderer& renderer, const VertexShade
    : m_shader( shader )
    , m_renderer( renderer )
    , m_d3Device( &renderer.getD3Device() )
-   , m_dxVertexShader( NULL )
    , m_shaderConstants( NULL )
    , m_vertexDecl( NULL )
 {
@@ -54,11 +55,15 @@ DX9VertexShader::~DX9VertexShader()
 {
    m_d3Device = NULL;
 
-   if ( m_dxVertexShader != NULL )
+   uint count = m_dxVertexShader.size();
+   for ( uint i = 0; i < count; ++i )
    {
-      m_dxVertexShader->Release();
-      m_dxVertexShader = NULL;
+      if ( m_dxVertexShader[i] != NULL )
+      {
+         m_dxVertexShader[i]->Release();
+      }
    }
+   m_dxVertexShader.clear();
 
    if ( m_shaderConstants )
    {
@@ -86,56 +91,65 @@ void DX9VertexShader::initialize()
    flags = D3DXSHADER_DEBUG;
 #endif
 
-   ID3DXBuffer* shaderBuf = NULL;
-   ID3DXBuffer* errorsBuf = NULL;
-   DX9ShaderIncludeLoader includesLoader;
-   HRESULT res = D3DXCompileShader(
-      shaderContents.c_str(), 
-      shaderContents.length(),
-      NULL,                            // defines
-      &includesLoader,
-      m_shader.getEntryFunctionName().c_str(),
-      shaderProfile, 
-      flags,
-      &shaderBuf, 
-      &errorsBuf,
-      &m_shaderConstants );
+   // compile all included techniques
+   ASSERT_MSG( m_dxVertexShader.empty(), "There are still some initialized vertex shaders left behind" );
 
-   if ( FAILED(res) || shaderBuf == NULL )
+   uint techniquesCount = m_shader.getTechniquesCount();
+   for ( uint techniqueIdx = 0; techniqueIdx < techniquesCount; ++techniqueIdx )
    {
-      if ( errorsBuf != NULL )
-      {
-         std::string compilationErrors = ( const char* )errorsBuf->GetBufferPointer();
-         errorsBuf->Release();
-         std::string errMsg = std::string( "Shader compilation error: " ) + compilationErrors;
-         ASSERT_MSG( false, errMsg.c_str() );
-         return;
-      }
-      else
-      {
-         std::string errMsg = translateDxError( "Error while compiling a shader", res );
-         ASSERT_MSG( false, errMsg.c_str() );
-         return;
-      }
-   }
+      ID3DXBuffer* shaderBuf = NULL;
+      ID3DXBuffer* errorsBuf = NULL;
+      DX9ShaderIncludeLoader includesLoader;
+      HRESULT res = D3DXCompileShader(
+         shaderContents.c_str(), 
+         shaderContents.length(),
+         NULL,                            // defines
+         &includesLoader,
+         m_shader.getEntryFunctionName( techniqueIdx ).c_str(),
+         shaderProfile, 
+         flags,
+         &shaderBuf, 
+         &errorsBuf,
+         &m_shaderConstants );
 
-   res = m_d3Device->CreateVertexShader( ( const DWORD* )shaderBuf->GetBufferPointer(), &m_dxVertexShader );
-   shaderBuf->Release();
-   if ( FAILED(res) )
-   {
-      std::string errMsg = translateDxError( "Error while creating a shader", res );
-      ASSERT_MSG( false, errMsg.c_str() );
-      return;
+      if ( FAILED(res) || shaderBuf == NULL )
+      {
+         if ( errorsBuf != NULL )
+         {
+            std::string compilationErrors = ( const char* )errorsBuf->GetBufferPointer();
+            errorsBuf->Release();
+            std::string errMsg = std::string( "Shader compilation error: " ) + compilationErrors;
+            ASSERT_MSG( false, errMsg.c_str() );
+            return;
+         }
+         else
+         {
+            std::string errMsg = translateDxError( "Error while compiling a shader", res );
+            ASSERT_MSG( false, errMsg.c_str() );
+            return;
+         }
+      }
+
+      IDirect3DVertexShader9* dxVertexShader = NULL;
+      res = m_d3Device->CreateVertexShader( ( const DWORD* )shaderBuf->GetBufferPointer(), &dxVertexShader );
+      shaderBuf->Release();
+      if ( FAILED(res) )
+      {
+         std::string errMsg = translateDxError( "Error while creating a shader", res );
+         ASSERT_MSG( false, errMsg.c_str() );
+         dxVertexShader = NULL;
+      }
+
+      m_dxVertexShader.push_back( dxVertexShader );
    }
 
    // create the vertex declaration
    // <renderer.todo> right now VertexDescriptor is an exact replica of D3DVERTEXELEMENT9 - but this needs
    // to change in  order to support OpenGL, DX11 etc.
-   res = m_d3Device->CreateVertexDeclaration( (const D3DVERTEXELEMENT9 *)m_shader.getVerexDescription(), &m_vertexDecl );
+   HRESULT res = m_d3Device->CreateVertexDeclaration( (const D3DVERTEXELEMENT9 *)m_shader.getVerexDescription(), &m_vertexDecl );
    if ( FAILED( res ) )
    {
       ASSERT_MSG( false, "Can't create a vertex declaration" );
-      return;
    }
 }
 
@@ -257,13 +271,13 @@ void DX9VertexShader::setTexture( const char* paramName, IDirect3DTexture9* text
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DX9VertexShader::beginRendering()
+void DX9VertexShader::beginRendering( uint techniqueIdx )
 {
    ASSERT( m_vertexDecl != NULL );
    if ( m_vertexDecl )
    {
       m_d3Device->SetVertexDeclaration( m_vertexDecl );
-      m_d3Device->SetVertexShader( m_dxVertexShader );
+      m_d3Device->SetVertexShader( m_dxVertexShader[techniqueIdx] );
    }
 }
 

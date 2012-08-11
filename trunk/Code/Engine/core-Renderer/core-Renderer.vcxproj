@@ -137,6 +137,7 @@
     <ClCompile Include="RPStartNode.cpp" />
     <ClCompile Include="RPTextureNode.cpp" />
     <ClCompile Include="RPVec4Node.cpp" />
+    <ClCompile Include="ShaderCompiler.cpp" />
     <ClCompile Include="ShaderTexture.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />

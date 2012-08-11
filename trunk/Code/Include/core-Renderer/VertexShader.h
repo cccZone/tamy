@@ -21,8 +21,13 @@ class VertexShader : public Resource, public UniqueObject< VertexShader >, publi
 
 private:
    std::string                   m_script;
-   std::string                   m_entryFunctionName;
+   std::string                   m_entryFunctionName;   // ';'-separated list of entry function names
+   std::string                   m_techniqueNames;      // ';'-separated list of technique names
    VertexDescId                  m_vertexDescId;
+
+   // runtime data
+   std::vector< std::string >    m_arrEntryFunctionNames;
+   std::vector< std::string >    m_arrTechniqueNames;
 
 public:
    /**
@@ -59,17 +64,39 @@ public:
     *
     * @param script
     */
-   inline void setScript( const std::string& script ) { m_script = script; setDirty(); }
+   void setScript( const std::string& script );
 
    /**
-    * Returns the name of the shader entry function
+    * Returns the name of the specified technique
+    *
+    * @param techniqueIdx
     */
-   inline const std::string& getEntryFunctionName() const { return m_entryFunctionName; }
+   inline const std::string& getTechiqueName( uint techniqueIdx ) const { return m_arrTechniqueNames[ techniqueIdx ]; }
+
+   /**
+    * Returns the name of the shader entry function for the specified technique.
+    *
+    * @param techniqueIdx
+    */
+   inline const std::string& getEntryFunctionName( uint techniqueIdx ) const { return m_arrEntryFunctionNames[ techniqueIdx ]; }
+
+   /**
+    * Returns the number of techniques the vertex shader can handle
+    */
+   inline uint getTechniquesCount() const { return m_arrEntryFunctionNames.size(); }
 
    /**
     * Creates a texture setting shader parameter for the effect shader.
     */
    static ShaderParam< VertexShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
+
+   // -------------------------------------------------------------------------
+   // Object implementation
+   // -------------------------------------------------------------------------
+   void onObjectLoaded();
+
+private:
+   void parseTechniques();
 };
 
 ///////////////////////////////////////////////////////////////////////////////
