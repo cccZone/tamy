@@ -36,13 +36,49 @@ void VertexShaderNodeOperator< TNode >::setShader( VertexShader& shader )
    m_shader = &shader;
 
    ShaderCompiler compiler;
-   std::vector< VertexShaderConstant< TNode >* > constants;
-   compiler.compileVertexShaderConstants( m_shader->getScript(), m_shader->getEntryFunctionName().c_str(), constants );
+   std::vector< VertexShaderConstant< TNode >* > allConstants;
 
-   unsigned int count = constants.size();
+   // let's compile all techniques to extract all possible shader constants used
+   uint techniquesCount = shader.getTechniquesCount();
+   for ( uint techniqueIdx = 0; techniqueIdx < techniquesCount; ++techniqueIdx )
+   {
+      const std::string& techniqueEntryFunc = m_shader->getEntryFunctionName( techniqueIdx );
+      std::vector< VertexShaderConstant< TNode >* > constants;
+
+      compiler.compileVertexShaderConstants( m_shader->getScript(), techniqueEntryFunc.c_str(), constants );
+
+      uint constantsCount = constants.size();
+      uint allConstantsCount = constants.size();
+      for ( uint constantIdx = 0; constantIdx < constantsCount; ++constantIdx )
+      {
+         const std::string& checkedConstantName = constants[constantIdx]->getName();
+
+         // look for a similar constant - browse through the constants that were already added to the 'allConstants' list
+         // only, since the new ones are bound to be unique
+         bool isNew = true;
+         for ( uint mainConstantIdx = 0; mainConstantIdx < allConstantsCount; ++mainConstantIdx )
+         {
+            if ( allConstants[mainConstantIdx]->getName() == checkedConstantName )
+            {
+               // already have it
+               delete constants[constantIdx];
+               isNew = false;
+               break;
+            }
+         }
+
+         if ( isNew )
+         {
+            // this is a new constant - add it to the list
+            allConstants.push_back( constants[constantIdx] );
+         }
+      }
+   }
+
+   unsigned int count = allConstants.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      m_constants.push_back( new ConstantDef( constants[i] ) );
+      m_constants.push_back( new ConstantDef( allConstants[i] ) );
       m_constants.back()->setHostNode( &m_hostNode );
    }
 }

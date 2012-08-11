@@ -364,6 +364,9 @@
     <ClCompile Include="RPSoftShadowsNode.cpp">
       <Filter>Lighting\PipelineNodes</Filter>
     </ClCompile>
+    <ClCompile Include="ShaderCompiler.cpp">
+      <Filter>Core\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">

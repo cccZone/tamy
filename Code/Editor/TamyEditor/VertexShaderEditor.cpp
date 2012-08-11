@@ -162,23 +162,41 @@ bool VertexShaderEditor::compile()
       return true;
    }
 
+   std::vector< std::string > techniqueNames;
+   std::vector< std::string > entryFunctionNames;
    ShaderCompiler compiler;
-   bool status = compiler.compileVertexShader( shaderContents, m_shader.getEntryFunctionName().c_str() );
-
-   // show the compile output tab
-   m_ui.tabWidget->setCurrentIndex( VSE_TAB_OUTPUT );
-
-   // output the status
-   if ( status )
+   if ( compiler.parseVertexShaderTechniques( shaderContents, techniqueNames, entryFunctionNames ) == false )
    {
-      m_ui.compilationOutput->setText( "Compilation successful" );
-      return true;
-   }
-   else
-   {
-      m_ui.compilationOutput->setText( compiler.getLastError().c_str() );
+      m_ui.compilationOutput->setText( tr( "Compilation failed\n" ) + compiler.getLastError().c_str() );
       return false;
    }
+
+   bool compilationResults = true;
+   QString compilationResultsStr;
+
+   uint techniquesCount = techniqueNames.size();
+   for ( uint techniqueIdx = 0; techniqueIdx < techniquesCount; ++techniqueIdx )
+   {
+      bool status = compiler.compileVertexShader( shaderContents, entryFunctionNames[techniqueIdx].c_str() );
+
+      // show the compile output tab
+      m_ui.tabWidget->setCurrentIndex( VSE_TAB_OUTPUT );
+
+      // output the status
+      compilationResultsStr += tr( "Technique [") + techniqueNames[techniqueIdx].c_str() + tr( "," ) + entryFunctionNames[techniqueIdx].c_str() + tr("]\n-----------------------------------\n" );
+      if ( status )
+      {
+         compilationResultsStr += tr( "Compilation successful\n\n" );
+      }
+      else
+      {
+         compilationResultsStr += tr( "Compilation failed:\n" ) + compiler.getLastError().c_str() + tr( "\n\n" );
+         compilationResults = false;
+      }
+   }
+
+   m_ui.compilationOutput->setText( compilationResultsStr );
+   return compilationResults;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -77,6 +77,14 @@ public:
    bool compileVertexShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename VertexShaderConstant< TNode >* >& outConstants );
 
    /**
+    * Parses the techniques contained in the specified vertex shader code.
+    *
+    * @return  'true' if the shader compiles OK, 'false' if any errors were encountered.
+    *          In the latter case, check the `getLastError` method for the exact error message.
+    */
+   bool parseVertexShaderTechniques( const std::string& shaderCode, std::vector< std::string >& outTechniqueNames, std::vector< std::string >& outEntryFunctions );
+
+   /**
     * Returns the last error message.
     */
    inline const std::string& getLastError() const { return m_errorMsg; }
