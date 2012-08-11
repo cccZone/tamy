@@ -126,6 +126,7 @@ void RPSoftShadowsNode::onUpdate( RenderingPipelineMechanism& host ) const
     
       // render the scene as many times as there are visible lights that cast shadows
       const RenderingView* renderingView = host.getSceneRenderingView();
+      const Array< Geometry* >& geometryToRender = host.getSceneElements();
 
       const Array< Light* >& visibleLights = host.getSceneLights();  
       uint lightsCount = visibleLights.size();
@@ -133,7 +134,7 @@ void RPSoftShadowsNode::onUpdate( RenderingPipelineMechanism& host ) const
       {
          Light* light = visibleLights[i];
 
-         light->renderShadowMap( renderer, shadowDepthBuffer, screenSpaceShadowMap, renderingView );
+         light->renderShadowMap( renderer, shadowDepthBuffer, screenSpaceShadowMap, renderingView, geometryToRender );
       }
    }
 

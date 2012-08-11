@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-MVC/SpatialEntity.h"
-
+#include "core/Array.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -11,6 +11,7 @@ class Renderer;
 class ShaderTexture;
 class RenderTarget;
 class RenderingView;
+class Geometry;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -48,9 +49,10 @@ public:
     * @param renderer
     * @param shadowDepthBuffer      a render target to which the scene depth seen from the light's perspective will be rendered
     * @param screenSpaceShadowMap   output shadow map seen from the active camera's perspective
+    * @param renderedSceneView      
     * @param geometryToRender       geometry to be rendered
     */
-   virtual void renderShadowMap( Renderer& renderer, RenderTarget* shadowDepthBuffer, RenderTarget* screenSpaceShadowMap, const RenderingView* renderedSceneView ) {}
+   virtual void renderShadowMap( Renderer& renderer, RenderTarget* shadowDepthBuffer, RenderTarget* screenSpaceShadowMap, const RenderingView* renderedSceneView, const Array< Geometry* >& geometryToRender ) {}
 
    /**
     * Tells if the light is set to cast shadows.
