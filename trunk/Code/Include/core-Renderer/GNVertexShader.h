@@ -30,6 +30,15 @@ public:
    GNVertexShader();
    ~GNVertexShader();
 
+   /**
+    * A custom method for this node. It will prepare a render command that sets up and binds
+    * the vertex shader this node represents.
+    *
+    * @param renderer
+    * @param entity
+    */
+   RCBindVertexShader* createRenderCommand( Renderer& renderer, const GeometryEntity& entity ) const;
+
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------

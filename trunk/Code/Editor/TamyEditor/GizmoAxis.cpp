@@ -85,11 +85,11 @@ void GizmoAxis::onUpdate( float timeElapsed )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool GizmoAxis::onPreRender( Renderer& renderer )
+RCBindVertexShader* GizmoAxis::onPreRender( Renderer& renderer )
 {
    if ( !m_vertexShader )
    {
-      return false;
+      return NULL;
    }
 
    Camera& camera = renderer.getActiveCamera();
@@ -106,7 +106,7 @@ bool GizmoAxis::onPreRender( Renderer& renderer )
    nodeMtx.preMul( scaleMtx );
 
    // setup the vertex shader
-   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader, renderer );
    {
       Matrix worldViewMtx;
       worldViewMtx.setMul( nodeMtx, camera.getViewMtx() );
@@ -121,8 +121,7 @@ bool GizmoAxis::onPreRender( Renderer& renderer )
       comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
    }
 
-
-   return true;
+   return comm;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -94,7 +94,7 @@ void PixelShaderNodeOperator< TNode >::filterSockets( std::vector< std::string >
 template< typename TNode >
 RCBindPixelShader& PixelShaderNodeOperator< TNode >::bindShader( Renderer& renderer, RuntimeDataBuffer& data )
 {
-   RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader );
+   RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader, renderer );
 
    // set the shader constants
    unsigned int count = m_constants.size();

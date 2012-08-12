@@ -6,6 +6,7 @@
 #include <vector>
 #include "core-Renderer/PixelShaderConstant.h"
 #include "core-Renderer/VertexShaderConstant.h"
+#include "core/types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,10 +80,32 @@ public:
    /**
     * Parses the techniques contained in the specified vertex shader code.
     *
+    * Different techniques are actually the names of output structures of particular main functions the vertex
+    * shader code contains.
+    *
+    * In order to tell whether the specified function is the vertex shader technique's main function
+    * one needs to annotate it with a <technique> comment, like so:
+    *
+    *  // <technique>
+    *  TECHNIQUE_STRUCT main(...)
+    *
     * @return  'true' if the shader compiles OK, 'false' if any errors were encountered.
     *          In the latter case, check the `getLastError` method for the exact error message.
     */
    bool parseVertexShaderTechniques( const std::string& shaderCode, std::vector< std::string >& outTechniqueNames, std::vector< std::string >& outEntryFunctions );
+
+   /**
+    * Parses the vertex shader technique required by the specified pixel shader.
+    *
+    * It assumes the pixel shader main method declaration is properly annotated, and looks like this:
+    *
+    *  // <psMain>
+    *  OUPTUT_STRUCT main( TECHNIQUE_STRUCT In )
+    *
+    * @param   shaderCode
+    * @return  required technique name
+    */
+   std::string parseRequiredVertexShaderTechnique( const std::string& shaderCode );
 
    /**
     * Returns the last error message.

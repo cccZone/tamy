@@ -22,7 +22,7 @@ GizmoMaterial::GizmoMaterial( byte axisIdx, const Color& color, PixelShader& sha
 
 void GizmoMaterial::onPreRender( Renderer& renderer ) const
 {   
-   RCBindPixelShader* effectComm = new ( renderer() ) RCBindPixelShader( m_shader );
+   RCBindPixelShader* effectComm = new ( renderer() ) RCBindPixelShader( m_shader, renderer );
    effectComm->setVec4( "g_color", (const Vector&)m_color );
 }
 
@@ -30,7 +30,7 @@ void GizmoMaterial::onPreRender( Renderer& renderer ) const
 
 void GizmoMaterial::onPostRender( Renderer& renderer ) const
 {
-   new ( renderer() ) RCUnbindPixelShader( m_shader );
+   new ( renderer() ) RCUnbindPixelShader( m_shader, renderer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

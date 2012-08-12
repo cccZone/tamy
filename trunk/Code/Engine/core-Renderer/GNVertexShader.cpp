@@ -91,15 +91,22 @@ void GNVertexShader::onGraphLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GNVertexShader::preRender( Renderer& renderer, const GeometryEntity& entity ) const
+RCBindVertexShader* GNVertexShader::createRenderCommand( Renderer& renderer, const GeometryEntity& entity ) const
 {
-   if ( !m_shader || !m_shaderNode )
+   RCBindVertexShader* comm = NULL;
+   if ( m_shader && m_shaderNode )
    {
-      return;
+      comm = m_shaderNode->bindShader( renderer, entity.data() );
    }
 
-   // bind the shader
-   m_shaderNode->bindShader( renderer, entity.data() );
+   return comm;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GNVertexShader::preRender( Renderer& renderer, const GeometryEntity& entity ) const
+{
+   // nothing to do here
 }
 
 ///////////////////////////////////////////////////////////////////////////////

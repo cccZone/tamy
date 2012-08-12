@@ -75,4 +75,9 @@ extern TamyAssertFunc _tamyAssert;
  */
 #define ASSERT_MSG_BREAK( condition, msg ) ASSERT_MSG( condition, msg ) if ( !( condition ) ) { break; }
 
+/**
+ * Macro that comes in handy when we want to exit a method by returning a boolean value indicating failure ( false )
+ */
+#define ASSERT_MSG_RET_FALSE( condition, msg ) ASSERT_MSG( condition, msg ) if ( !( condition ) ) { return false; }
+
 ///////////////////////////////////////////////////////////////////////////////

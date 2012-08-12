@@ -57,24 +57,24 @@ DebugGrid::~DebugGrid()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool DebugGrid::onPreRender( Renderer& renderer )
+RCBindVertexShader* DebugGrid::onPreRender( Renderer& renderer )
 {
    if ( !m_vertexShader )
    {
-      return false;
+      return NULL;
    }
 
    Camera& camera = renderer.getActiveCamera();
 
    // setup the vertex shader
-   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader, renderer );
    {
       Matrix worldViewProjMtx;
       worldViewProjMtx.setMul( camera.getViewMtx(), camera.getProjectionMtx() );
       comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
    }
 
-   return true;
+   return comm;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

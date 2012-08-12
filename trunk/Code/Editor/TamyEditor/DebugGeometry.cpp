@@ -44,16 +44,16 @@ const BoundingVolume& DebugGeometry::getBoundingVolume() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool DebugGeometry::onPreRender( Renderer& renderer )
+RCBindVertexShader* DebugGeometry::onPreRender( Renderer& renderer )
 {
    if ( !m_vertexShader )
    {
-      return false;
+      return NULL;
    }
 
    Camera& camera = renderer.getActiveCamera();
 
-   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader, renderer );
    {
       const Matrix& worldMtx = getGlobalMtx();
 
@@ -67,8 +67,7 @@ bool DebugGeometry::onPreRender( Renderer& renderer )
       comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
    }
 
-
-   return true;
+   return comm;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

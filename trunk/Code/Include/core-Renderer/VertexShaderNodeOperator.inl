@@ -48,7 +48,7 @@ void VertexShaderNodeOperator< TNode >::setShader( VertexShader& shader )
       compiler.compileVertexShaderConstants( m_shader->getScript(), techniqueEntryFunc.c_str(), constants );
 
       uint constantsCount = constants.size();
-      uint allConstantsCount = constants.size();
+      uint allConstantsCount = allConstants.size();
       for ( uint constantIdx = 0; constantIdx < constantsCount; ++constantIdx )
       {
          const std::string& checkedConstantName = constants[constantIdx]->getName();
@@ -127,9 +127,9 @@ void VertexShaderNodeOperator< TNode >::filterSockets( std::vector< std::string 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-RCBindVertexShader& VertexShaderNodeOperator< TNode >::bindShader( Renderer& renderer, RuntimeDataBuffer& data )
+RCBindVertexShader* VertexShaderNodeOperator< TNode >::bindShader( Renderer& renderer, RuntimeDataBuffer& data )
 {
-   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_shader );
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_shader, renderer );
 
    // set the shader constants
    unsigned int count = m_constants.size();
@@ -140,7 +140,7 @@ RCBindVertexShader& VertexShaderNodeOperator< TNode >::bindShader( Renderer& ren
       constant->setValue( *comm, *input, data );
    }
 
-   return *comm;
+   return comm;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

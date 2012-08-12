@@ -2,6 +2,7 @@
 #include "core-Renderer\GeometryResource.h"
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\RenderState.h"
+#include "core-Renderer\VertexShaderConfigurator.h"
 #include "core-MVC\SpatialEntity.h"
 #include "core-MVC.h"
 #include "core.h"
@@ -55,12 +56,18 @@ Geometry::~Geometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Geometry::render( Renderer& renderer )
+void Geometry::render( Renderer& renderer, VertexShaderConfigurator* externalConfigurator )
 {
    if ( m_resource )
    {
-      if ( onPreRender( renderer ) )
+      RCBindVertexShader* vsComm = onPreRender( renderer );
+      if ( vsComm )
       {
+         if ( externalConfigurator )
+         {
+            externalConfigurator->configure( *this, vsComm );
+         }
+
          m_resource->render( renderer );
          onPostRender( renderer );
       }

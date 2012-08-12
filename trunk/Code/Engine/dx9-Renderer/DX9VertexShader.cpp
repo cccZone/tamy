@@ -18,8 +18,7 @@ void RCBindVertexShader::execute( Renderer& renderer )
       // set the shader parameters
       setParams( renderer, dxShader );
 
-      // <vs.todo> !!!!!!!!!!!! VERTEX SHADER TECHNIQUE IDX
-      dxShader->beginRendering( 0 );
+      dxShader->beginRendering( m_techniqueIdx );
    }
 }
 

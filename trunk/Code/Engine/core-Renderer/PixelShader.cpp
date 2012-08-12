@@ -4,6 +4,7 @@
 #include "core-Renderer\ShaderParam.h"
 #include "core-Renderer\ShaderTexture.h"
 #include "core-Renderer\PixelShaderConstant.h"
+#include "core-Renderer\VertexShader.h"
 #include "core-Renderer\ShaderCompiler.h"
 #include "core.h"
 #include <stdexcept>
@@ -104,6 +105,7 @@ BEGIN_RESOURCE( PixelShader, tpsh, AM_BINARY )
    PROPERTY( std::string, m_entryFunctionName )
    PROPERTY( PixelShaderParams, m_params )
    PROPERTY( std::vector< TextureStageParams >, m_textureStages )
+   PROPERTY( uint, m_requiredVertexShaderTechniqueId )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -111,6 +113,7 @@ END_RESOURCE()
 PixelShader::PixelShader( const FilePath& resourceName )
    : Resource( resourceName )
    , m_entryFunctionName( "main" )
+   , m_requiredVertexShaderTechniqueId( 0 )
 {
 }
 
@@ -136,6 +139,11 @@ void PixelShader::setScript( const std::string& script )
    m_script = script;
 
    parseTextureStages();
+
+   ShaderCompiler compiler;
+   std::string techniqueName = compiler.parseRequiredVertexShaderTechnique( m_script );
+   m_requiredVertexShaderTechniqueId = VertexShader::generateTechniqueId( techniqueName );
+
    setDirty(); 
 }
 
@@ -169,6 +177,27 @@ void PixelShader::parseTextureStages()
          m_textureStages.pop_back();
       }
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+RCBindPixelShader::RCBindPixelShader( PixelShader& shader, Renderer& renderer )
+   : m_shader( shader )
+{
+   uint techniqueId = m_shader.getRequiredVertexShaderTechnique();
+   renderer.setVertexShaderTechnique( techniqueId );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+RCUnbindPixelShader::RCUnbindPixelShader( PixelShader& shader, Renderer& renderer )
+   : m_shader( shader )
+{
+   renderer.resetVertexShaderTechnique();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

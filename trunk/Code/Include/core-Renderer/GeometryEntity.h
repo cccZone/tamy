@@ -11,6 +11,7 @@
 class GeometryShader;
 class RuntimeDataBuffer;
 class GeometryShaderNode;
+class GNVertexShader;
 enum GraphBuilderOperation;
 enum GraphBuilderNodeOperation;
 
@@ -31,6 +32,7 @@ private:
 
    // runtime data
    RuntimeDataBuffer*                     m_dataBuf;
+   GNVertexShader*                        m_vsNode;
    std::vector< GeometryShaderNode* >     m_nodesQueue;
 
 public:
@@ -57,7 +59,7 @@ public:
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
-   bool onPreRender( Renderer& renderer );
+   RCBindVertexShader* onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
 
    // -------------------------------------------------------------------------

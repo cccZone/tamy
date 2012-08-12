@@ -128,6 +128,7 @@ private:
    std::string                               m_entryFunctionName;
    PixelShaderParams                         m_params;
    std::vector< TextureStageParams >         m_textureStages;
+   uint                                      m_requiredVertexShaderTechniqueId;
 
    // runtime data
    std::vector< std::string >                m_textureStageName;
@@ -197,6 +198,11 @@ public:
    inline const std::string& getEntryFunctionName() const { return m_entryFunctionName; }
 
    /**
+    * Returns the id of a vertex shader technique this pixel shader requires.
+    */
+   inline uint getRequiredVertexShaderTechnique() const { return m_requiredVertexShaderTechniqueId; }
+
+   /**
     * Creates a texture setting shader parameter for the effect shader.
     */
    static ShaderParam< PixelShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
@@ -224,7 +230,7 @@ public:
    /**
     * Constructor.
     */
-   RCBindPixelShader( PixelShader& shader ) : m_shader( shader ) {}
+   RCBindPixelShader( PixelShader& shader, Renderer& renderer );
 
    // -------------------------------------------------------------------------
    // Shader program setters
@@ -246,7 +252,7 @@ public:
    /**
     * Constructor.
     */
-   RCUnbindPixelShader( PixelShader& shader ) : m_shader( shader ) {}
+   RCUnbindPixelShader( PixelShader& shader, Renderer& renderer );
 
    // -------------------------------------------------------------------------
    // Shader program setters

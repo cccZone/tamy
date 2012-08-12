@@ -80,7 +80,7 @@ public:
    // Geometry implementation
    // -------------------------------------------------------------------------
    const BoundingVolume& getBoundingVolume() const { return m_bounds; }
-   bool onPreRender( Renderer& renderer );
+   RCBindVertexShader* onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
 
 private:

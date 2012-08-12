@@ -47,6 +47,13 @@
 #include "core\NodeActionsExecutor.h"
 
 // ----------------------------------------------------------------------------
+// Logging
+// ----------------------------------------------------------------------------
+#include "core\Assert.h"
+#include "core\IProgressObserver.h"
+#include "core\Log.h"
+
+// ----------------------------------------------------------------------------
 // Math
 // ----------------------------------------------------------------------------
 #include "core\Math.h"
@@ -58,11 +65,9 @@
 #include "core\GenericFactory.h"
 #include "core\Observer.h"
 #include "core\Subject.h"
-#include "core\Assert.h"
 #include "core\IntervalOperation.h"
 #include "core\UniqueObject.h"
 #include "core\StringUtils.h"
-#include "core\IProgressObserver.h"
 #include "core\Singleton.h"
 
 // ----------------------------------------------------------------------------

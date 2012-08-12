@@ -98,6 +98,9 @@
     <Filter Include="Math\Geometry">
       <UniqueIdentifier>{e956afe6-0a48-4e7f-9789-026764d370da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Logging">
+      <UniqueIdentifier>{98a4edde-bb95-45aa-819a-c83ac13ab9e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -162,9 +165,6 @@
     </ClCompile>
     <ClCompile Include="Vector.cpp">
       <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Assert.cpp">
-      <Filter>Misc</Filter>
     </ClCompile>
     <ClCompile Include="Singleton.cpp">
       <Filter>Misc\Singleton</Filter>
@@ -284,6 +284,12 @@
     <ClCompile Include="TriangleUtil.cpp">
       <Filter>Math\Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="Assert.cpp">
+      <Filter>Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>Logging</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -327,9 +333,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\dostream.h">
       <Filter>Streams</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Assert.h">
-      <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\HierarchyWriter.h">
       <Filter>Misc</Filter>
@@ -464,9 +467,6 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core.h" />
-    <ClInclude Include="..\..\Include\core\IProgressObserver.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h">
       <Filter>Resources</Filter>
     </ClInclude>
@@ -617,6 +617,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\TriangleUtil.h">
       <Filter>Math\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Assert.h">
+      <Filter>Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\IProgressObserver.h">
+      <Filter>Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Log.h">
+      <Filter>Logging</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

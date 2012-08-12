@@ -257,7 +257,10 @@ bool PixelShaderEditor::compile()
    // output the status
    if ( status )
    {
-      m_ui.compilationOutput->setText( "Compilation successful" );
+      // check the required vertex shader technique
+      std::string vsTechniqueName = compiler.parseRequiredVertexShaderTechnique( shaderContents );
+
+      m_ui.compilationOutput->setText( tr( "Compilation successful\nRequred vertex shader technique: " ) + ( vsTechniqueName.empty() ? tr( "<<default>>" ) : vsTechniqueName.c_str() ) );
       return true;
    }
    else

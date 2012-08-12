@@ -99,6 +99,9 @@ private:
    // render commands
    RoundBuffer                      m_renderCommands;
 
+   // shaders support
+   uint                             m_vertexShaderTechnique;
+
 public:
    Renderer( uint viewportWidth = 800, uint viewportHeight = 600 );
    virtual ~Renderer();
@@ -186,6 +189,25 @@ public:
     * The default camera will never be popped - there always needs to be at least one active camera remaining.
     */
    void popCamera();
+
+   // ----------------------------------------------------------------------------
+   // Shaders API
+   // ----------------------------------------------------------------------------
+
+   /**
+    * Sets an id of a vertex shader technique the vertex shaders from this point on should use
+    */
+   inline void setVertexShaderTechnique( uint techniqueId ) { m_vertexShaderTechnique = techniqueId; }
+
+   /**
+    * Resets an id of a vertex shader technique the vertex shaders from this point on should use
+    */
+   inline void resetVertexShaderTechnique() { m_vertexShaderTechnique = 0; }
+
+   /**
+    * Returns the id of a vertex shader technique that should be used to render the geometry.
+    */
+   inline uint getVertexShaderTechnique() const { return m_vertexShaderTechnique; }
 
    // ----------------------------------------------------------------------------
    // Render commands queue

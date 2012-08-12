@@ -57,7 +57,7 @@ protected:
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
-   bool onPreRender( Renderer& renderer );
+   RCBindVertexShader* onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
 
    // -------------------------------------------------------------------------
