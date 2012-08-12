@@ -75,7 +75,7 @@ public:
    const Matrix& getProjectionMtx();
 
    /**
-    * Sets new near plane dimensions ( values in range (0,1) )
+    * Sets new near plane dimensions
     *
     * @param width
     * @param height

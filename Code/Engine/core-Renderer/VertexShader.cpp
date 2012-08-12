@@ -51,8 +51,15 @@ void VertexShader::onObjectLoaded()
    StringUtils::tokenize( m_entryFunctionName, ";", m_arrEntryFunctionNames );
 
    // tokenize technique names
-   m_arrTechniqueNames.clear();
-   StringUtils::tokenize( m_techniqueNames, ";", m_arrTechniqueNames );
+   m_arrTechniqueIds.clear();
+   std::vector< std::string > arrTechniqueNames;
+   StringUtils::tokenize( m_techniqueNames, ";", arrTechniqueNames );
+
+   uint techniquesCount = arrTechniqueNames.size();
+   for ( uint i = 0; i < techniquesCount; ++i )
+   {
+      m_arrTechniqueIds.push_back( generateTechniqueId( arrTechniqueNames[i] ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,12 +77,13 @@ void VertexShader::parseTechniques()
 {
    // clear previous list of technique entry functions
    m_arrEntryFunctionNames.clear();
-   m_arrTechniqueNames.clear();
+   m_arrTechniqueIds.clear();
    m_entryFunctionName = "";
    m_techniqueNames = "";
 
    ShaderCompiler compiler;
-   bool result = compiler.parseVertexShaderTechniques( m_script, m_arrTechniqueNames, m_arrEntryFunctionNames );
+   std::vector< std::string > arrTechniqueNames;
+   bool result = compiler.parseVertexShaderTechniques( m_script, arrTechniqueNames, m_arrEntryFunctionNames );
    if ( !result )
    {
       ASSERT_MSG( false, compiler.getLastError().c_str() );
@@ -92,12 +100,68 @@ void VertexShader::parseTechniques()
    else
    {
       // create the semicolon separated version of the arrays for serialization
-      uint techniquesCount = m_techniqueNames.size();
+      uint techniquesCount = arrTechniqueNames.size();
       for ( uint i = 0; i < techniquesCount; ++i )
       {
          m_entryFunctionName += m_arrEntryFunctionNames[i] + ";";
-         m_techniqueNames += m_arrTechniqueNames[i] + ";";
+         m_techniqueNames += arrTechniqueNames[i] + ";";
+
+         m_arrTechniqueIds.push_back( generateTechniqueId( arrTechniqueNames[i] ) );
       }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+uint VertexShader::generateTechniqueId( const std::string& techqniueName )
+{
+   if ( techqniueName.empty() )
+   {
+      return 0;
+   }
+   else
+   {
+      return StringUtils::calculateHash( techqniueName );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+int VertexShader::findTechnique( uint techniqueId ) const
+{
+   uint count = m_arrTechniqueIds.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      if ( m_arrTechniqueIds[i] == techniqueId )
+      {
+         return i;
+      }
+   }
+
+   return -1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+RCBindVertexShader::RCBindVertexShader( VertexShader& shader, Renderer& renderer )
+   : m_shader( shader )
+{
+   uint techniqueId = renderer.getVertexShaderTechnique();
+   if ( techniqueId != 0 )
+   {
+      m_techniqueIdx = shader.findTechnique( techniqueId );
+      ASSERT_MSG( m_techniqueIdx >= 0, "This vertex shader does not implement the required technique. Default technique will be used" );
+      if ( m_techniqueIdx < 0 )
+      {
+         m_techniqueIdx = 0;
+      }
+   }
+   else
+   {
+      // use default technique, because no specific technique is required
+      m_techniqueIdx = 0;
    }
 }
 

@@ -75,7 +75,7 @@ public:
     *
     * @return           rendering command that binds the pixel shader
     */
-   RCBindVertexShader& bindShader( Renderer& renderer, RuntimeDataBuffer& data );
+   RCBindVertexShader* bindShader( Renderer& renderer, RuntimeDataBuffer& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

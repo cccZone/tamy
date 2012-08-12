@@ -88,6 +88,7 @@
     <ClCompile Include="GraphBuilderSockets.cpp" />
     <ClCompile Include="InArrayStream.cpp" />
     <ClCompile Include="InStream.cpp" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="MatrixUtils.cpp" />
     <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="Node.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="..\..\Include\core\Algorithms.h" />
     <ClInclude Include="..\..\Include\core\Color.h" />
     <ClInclude Include="..\..\Include\core\FilesystemSection.h" />
+    <ClInclude Include="..\..\Include\core\Log.h" />
     <ClInclude Include="..\..\Include\core\Profiler.h" />
     <ClInclude Include="..\..\Include\core\ReflectionDependenciesCallback.h" />
     <ClInclude Include="..\..\Include\core\ResourceDependenciesMapper.h" />

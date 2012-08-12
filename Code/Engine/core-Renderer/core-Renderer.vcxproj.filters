@@ -721,5 +721,8 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPSoftShadowsNode.h">
       <Filter>Lighting\PipelineNodes</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConfigurator.h">
+      <Filter>Geometry\Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

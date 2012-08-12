@@ -87,7 +87,7 @@ void PointLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormals
    viewProjMtx.setMul( activeCamera.getViewMtx(), activeCamera.getProjectionMtx() ); 
 
    // set and configure the pixel shader
-   RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_pixelShader );
+   RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_pixelShader, renderer );
    {
       Matrix mtxInvProj;
       mtxInvProj.setInverse( activeCamera.getProjectionMtx() );
@@ -107,7 +107,7 @@ void PointLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormals
    }
 
    // set and configure the vertex shader
-   RCBindVertexShader* vsComm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
+   RCBindVertexShader* vsComm = new ( renderer() ) RCBindVertexShader( *m_vertexShader, renderer );
    {
       Matrix scaleMtx; scaleMtx.scaleUniform( m_radius );
       Matrix modelViewProjMtx;      
@@ -121,7 +121,7 @@ void PointLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormals
 
    // cleanup
    new ( renderer() ) RCUnbindVertexShader( *m_vertexShader );
-   new ( renderer() ) RCUnbindPixelShader( *m_pixelShader );
+   new ( renderer() ) RCUnbindPixelShader( *m_pixelShader, renderer );
 
 }
 

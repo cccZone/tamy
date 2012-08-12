@@ -12,6 +12,8 @@ class BoundingVolume;
 class GeometryResource;
 class RenderState;
 class Renderer;
+class VertexShaderConfigurator;
+class RCBindVertexShader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -59,8 +61,11 @@ public:
 
    /**
     * Renders the geometry.
+    * 
+    * @param renderer
+    * @param externalConfigurator
     */
-   virtual void render( Renderer& renderer );
+   virtual void render( Renderer& renderer, VertexShaderConfigurator* externalConfigurator = NULL );
 
    // -------------------------------------------------------------------------
    // Render states management
@@ -121,11 +126,17 @@ public:
 protected:
    /**
     * Called before the geometry rendering command is issued.
+    *
+    * @param renderer
+    * @return render command that binds and configures a vertex shader used to render this piece of geometry ( or NULL if the geometry should not be rendered )
     */
-   virtual bool onPreRender( Renderer& renderer ) { return false; }
+   virtual RCBindVertexShader* onPreRender( Renderer& renderer ) { return NULL; }
 
    /**
     * Called after the geometry rendering command is issued.
+    *
+    * @param renderer
+    * @param externalConfigurator
     */
    virtual void onPostRender( Renderer& renderer ) {}
 

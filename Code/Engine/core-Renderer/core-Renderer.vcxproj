@@ -288,6 +288,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\VertexShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShader.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConfigurator.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConstant.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.h" />
   </ItemGroup>

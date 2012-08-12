@@ -27,7 +27,7 @@ private:
 
    // runtime data
    std::vector< std::string >    m_arrEntryFunctionNames;
-   std::vector< std::string >    m_arrTechniqueNames;
+   std::vector< uint >           m_arrTechniqueIds;
 
 public:
    /**
@@ -66,12 +66,18 @@ public:
     */
    void setScript( const std::string& script );
 
+   // -------------------------------------------------------------------------
+   // Rendering techniques
+   // -------------------------------------------------------------------------
    /**
-    * Returns the name of the specified technique
-    *
-    * @param techniqueIdx
+    * A helper method that generates unique ids for rendering techniques.
     */
-   inline const std::string& getTechiqueName( uint techniqueIdx ) const { return m_arrTechniqueNames[ techniqueIdx ]; }
+   static uint generateTechniqueId( const std::string& techqniueName );
+
+   /**
+    * Looks for a technique with the specified id. If the shader doesn't implement such, a negative index will be returned.
+    */
+   int findTechnique( uint techniqueId ) const;
 
    /**
     * Returns the name of the shader entry function for the specified technique.
@@ -106,11 +112,12 @@ private:
  */
 class RCBindVertexShader : public ShaderRenderCommand< VertexShader >
 {
-private:
+public:
    VertexShader&              m_shader;
+   int                        m_techniqueIdx;
 
 public:
-   RCBindVertexShader( VertexShader& shader ) : m_shader( shader ) {}
+   RCBindVertexShader( VertexShader& shader, Renderer& renderer );
 
    // -------------------------------------------------------------------------
    // RenderCommand implementation

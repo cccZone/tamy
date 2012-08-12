@@ -20,6 +20,7 @@ GeometryEntity::GeometryEntity( const std::string& name )
    : Geometry( name )
    , m_geometryShader( NULL )
    , m_dataBuf( NULL )
+   , m_vsNode( NULL )
 {
 }
 
@@ -30,6 +31,7 @@ GeometryEntity::~GeometryEntity()
    deinitializeGeometryShader();
    detachListeners();
    m_geometryShader = NULL;
+   m_vsNode = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,6 +130,16 @@ void GeometryEntity::initializeGeometryShader()
       m_nodesQueue.push_back( geometryGraph.getNode( sortedNodes[i] ) );
    }
 
+   // get the vertex shader node instance
+   if ( sortedNodes.empty() )
+   {
+      m_vsNode = NULL;
+   }
+   else
+   {
+      m_vsNode = static_cast< GNVertexShader* >( m_nodesQueue.back() );
+   }
+
    // create new runtime data buffer
    delete m_dataBuf;
    m_dataBuf = new RuntimeDataBuffer();
@@ -183,20 +195,24 @@ void GeometryEntity::detachListeners()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool GeometryEntity::onPreRender( Renderer& renderer )
+RCBindVertexShader* GeometryEntity::onPreRender( Renderer& renderer )
 {
    unsigned int count = m_nodesQueue.size();
-   if ( count == 0 )
+   if ( count == 0 || m_vsNode == NULL )
    {
-      return false;
+      return NULL;
    }
 
+   // make the nodes prepare all data for rendering
    for ( unsigned int i = 0; i < count; ++i )
    {
       m_nodesQueue[i]->preRender( renderer, *this );
    }
 
-   return true;
+   // finally set up the render command
+   RCBindVertexShader* comm = m_vsNode->createRenderCommand( renderer, *this );
+
+   return comm;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

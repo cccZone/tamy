@@ -112,7 +112,7 @@ void MNPixelShader::postRender( Renderer& renderer, const MaterialEntity& entity
 {
    if ( m_shader )
    {
-      new ( renderer() ) RCUnbindPixelShader( *m_shader );
+      new ( renderer() ) RCUnbindPixelShader( *m_shader, renderer );
    }
 }
 

@@ -25,7 +25,7 @@ void SingleColorDebugMat::onPreRender( Renderer& renderer ) const
 {
    if ( m_shader )
    {
-      RCBindPixelShader* effectComm = new ( renderer() ) RCBindPixelShader( *m_shader );
+      RCBindPixelShader* effectComm = new ( renderer() ) RCBindPixelShader( *m_shader, renderer );
       effectComm->setVec4( "g_color", (const Vector&)m_color );
    }
 }
@@ -36,7 +36,7 @@ void SingleColorDebugMat::onPostRender( Renderer& renderer ) const
 {
    if ( m_shader )
    {
-      new ( renderer() ) RCUnbindPixelShader( *m_shader );
+      new ( renderer() ) RCUnbindPixelShader( *m_shader, renderer );
    }
 }
 

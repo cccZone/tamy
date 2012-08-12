@@ -44,9 +44,9 @@ void SelectedGeometry::render( Renderer& renderer )
       return;
    }
 
-   new ( renderer() ) RCBindPixelShader( *m_selectionMarker );
+   new ( renderer() ) RCBindPixelShader( *m_selectionMarker, renderer );
    m_geometry.render( renderer );
-   new ( renderer() ) RCUnbindPixelShader( *m_selectionMarker );
+   new ( renderer() ) RCUnbindPixelShader( *m_selectionMarker, renderer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

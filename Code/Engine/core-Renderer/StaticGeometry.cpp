@@ -40,16 +40,16 @@ StaticGeometry::~StaticGeometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool StaticGeometry::onPreRender( Renderer& renderer )
+RCBindVertexShader* StaticGeometry::onPreRender( Renderer& renderer )
 {
    if ( !m_vertexShader )
    {
-      return false;
+      return NULL;
    }
 
    Camera& camera = renderer.getActiveCamera();
 
-   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader, renderer );
    {
       const Matrix& worldMtx = getGlobalMtx();
 
@@ -63,7 +63,7 @@ bool StaticGeometry::onPreRender( Renderer& renderer )
       comm->setMtx( "g_mWorldViewProj", worldViewProjMtx );
    }
 
-   return true;
+   return comm;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -21,7 +21,7 @@ void QueryableGeometry::render( Renderer& renderer, PixelShader& shader )
       return;
    }
 
-   RCBindPixelShader* effectComm = new ( renderer() ) RCBindPixelShader( shader );
+   RCBindPixelShader* effectComm = new ( renderer() ) RCBindPixelShader( shader, renderer );
 
    Vector ptrVal;
    QueryRenderingPass::ptrToVec( &m_geometry, ptrVal );
@@ -29,7 +29,7 @@ void QueryableGeometry::render( Renderer& renderer, PixelShader& shader )
 
    m_geometry.render( renderer );
 
-   new ( renderer() ) RCUnbindPixelShader( shader );
+   new ( renderer() ) RCUnbindPixelShader( shader, renderer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

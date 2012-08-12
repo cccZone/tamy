@@ -48,17 +48,18 @@ SkinnedGeometry::~SkinnedGeometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool SkinnedGeometry::onPreRender( Renderer& renderer )
+RCBindVertexShader* SkinnedGeometry::onPreRender( Renderer& renderer )
 {
    if ( !m_skeleton || !m_vertexShader || m_bones.empty() )
    {
-      return false;
+      return NULL;
    }
 
    Camera& camera = renderer.getActiveCamera();
 
    new ( renderer() ) RCBindSkeleton( *m_skeleton );
-   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader );
+
+   RCBindVertexShader* comm = new ( renderer() ) RCBindVertexShader( *m_vertexShader, renderer );
 
    // set the transformation matrices
    unsigned int bonesCount = m_bones.size();
@@ -74,7 +75,7 @@ bool SkinnedGeometry::onPreRender( Renderer& renderer )
    comm->setMtx( "g_mView", camera.getViewMtx() );
    comm->setMtx( "g_mProjection", camera.getProjectionMtx() );
 
-   return true;
+   return comm;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

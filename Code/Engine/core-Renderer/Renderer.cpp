@@ -39,6 +39,7 @@ Renderer::Renderer(unsigned int viewportWidth,
 , m_deviceLostState(new DeviceLostState())
 , m_currentRendererState( m_initialState ) // we always start in the initial state
 , m_renderCommands( 1024 * 1024 ) // 1 MB for the commands
+, m_vertexShaderTechnique( 0 )
 {
    m_defaultCamera = new Camera( "defaultCamera", *this, Camera::PT_PERSPECTIVE );
    m_camerasStack.push( m_defaultCamera );

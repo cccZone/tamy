@@ -140,7 +140,7 @@ void RPPostProcessNode::onUpdate( RenderingPipelineMechanism& host ) const
    new ( renderer() ) RCFullscreenQuad( quadWidth, quadHeight );
 
    // cleanup
-   new ( renderer() ) RCUnbindPixelShader( *m_shader );
+   new ( renderer() ) RCUnbindPixelShader( *m_shader, renderer );
 
    // unbind render targets
    for ( uint i = 0; i < rtCount; ++i )
