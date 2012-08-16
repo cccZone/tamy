@@ -13,6 +13,10 @@
 
 class PixelShader;
 class Geometry;
+class RenderTarget;
+class RenderingView;
+struct AABoundingBox;
+class Camera;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -43,7 +47,7 @@ public:
    // Light implementation
    // -------------------------------------------------------------------------
    void renderLighting( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex );
-   void renderShadowMap( Renderer& renderer, RenderTarget* shadowDepthBuffer, RenderTarget* screenSpaceShadowMap, const RenderingView* renderedSceneView, const Array< Geometry* >& geometryToRender );
+   void renderShadowMap( Renderer& renderer, const ShadowRendererData& data );
 
    // -------------------------------------------------------------------------
    // Object implementation
@@ -52,6 +56,12 @@ public:
 
 private:
    void initialize();
+
+   void calculateCascadesBounds( Camera& activeCamera, float pcfBlurSize, float shadowMapDimensions, AABoundingBox* outArrCascadesBounds );
+
+   void calculateCascadeFrustumBounds( Camera& activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart ) const;
+
+   void renderCascade( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -87,6 +87,8 @@
   <ItemGroup>
     <ClCompile Include="DX9BasicRenderCommands.cpp" />
     <ClCompile Include="DX9DebugPrimitivesSet.cpp" />
+    <ClCompile Include="DX9DepthBuffer.cpp" />
+    <ClCompile Include="DX9DepthBufferResourcesStorage.cpp" />
     <ClCompile Include="DX9EffectsResourcesStorage.cpp" />
     <ClCompile Include="DX9FontResourcesStorage.cpp" />
     <ClCompile Include="DX9FullscreenQuad.cpp" />
@@ -125,6 +127,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9DebugPrimitivesSet.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9DepthBuffer.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9DepthBufferResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9EffectsResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9FontResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9LineSegmentsResourcesStorage.h" />

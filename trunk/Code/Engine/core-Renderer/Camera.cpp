@@ -22,7 +22,7 @@ Camera::Camera( const std::string& name, Renderer& renderer, ProjectionType proj
       , m_nearPlaneWidth( 1 )
       , m_nearPlaneHeight( 1 / 1.3333f )
       , m_nearZPlane( 1.01f )
-      , m_farZPlane( 5000.0f )
+      , m_farZPlane( 1024.0f )
       , m_mtxProjectionDirty( true )
 {
    m_renderer.attachObserver(*this);
@@ -119,6 +119,14 @@ void Camera::setClippingPlanes(float nearZPlane, float farZPlane)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Camera::getClippingPlanes( float& outNearZPlane, float& outFarZPlane ) const
+{
+   outNearZPlane = m_nearZPlane;
+   outFarZPlane = m_farZPlane;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Camera::setFOV(float angle)
 {
    m_fov = DEG2RAD(angle);
@@ -139,17 +147,7 @@ void Camera::updateViewMtx()
    PROFILED();
 
    const Matrix& globalMtx = getGlobalMtx();
-   Vector rightVec, upVec, lookVec, position;
-   globalMtx.getVectors( rightVec, upVec, lookVec, position );
-
-   // create a view matrix
-   m_mtxView = Matrix::IDENTITY;
-   m_mtxView.m[0][0] = rightVec.x; m_mtxView.m[0][1] = upVec.x; m_mtxView.m[0][2] = lookVec.x; 
-   m_mtxView.m[1][0] = rightVec.y; m_mtxView.m[1][1] = upVec.y; m_mtxView.m[1][2] = lookVec.y;
-   m_mtxView.m[2][0] = rightVec.z; m_mtxView.m[2][1] = upVec.z; m_mtxView.m[2][2] = lookVec.z;
-   m_mtxView.m[3][0] = -position.dot( rightVec );
-   m_mtxView.m[3][1] = -position.dot( upVec );
-   m_mtxView.m[3][2] = -position.dot( lookVec );
+   MatrixUtils::calculateViewMtx( globalMtx, m_mtxView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -169,7 +167,7 @@ void Camera::updateProjectionMtx()
    case PT_ORTHO:
       {
          // we want the viewport to span from -1 to 1 on both axes, so we specify 2 as the size of each of the viewport dimensions
-         MatrixUtils::generateOrthogonalProjection( 2.0f, 2.0f, m_nearZPlane, m_farZPlane, m_mtx3DProjection );
+         MatrixUtils::generateOrthogonalProjection( m_nearPlaneWidth, m_nearPlaneHeight, m_nearZPlane, m_farZPlane, m_mtx3DProjection );
          break;
       }
    }
@@ -179,7 +177,7 @@ void Camera::updateProjectionMtx()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Frustum Camera::getFrustum()
+void Camera::calculateFrustum( Frustum& outFrustum )
 {
    const Matrix& viewMtx = getViewMtx();
    const Matrix& projMtx = getProjectionMtx();
@@ -187,46 +185,41 @@ Frustum Camera::getFrustum()
    Matrix combinedMtx;
    combinedMtx.setMul( viewMtx, projMtx );
 
-   Frustum frustrum;
+   outFrustum.planes[FP_BOTTOM].a = -(combinedMtx.m14 + combinedMtx.m12);
+   outFrustum.planes[FP_BOTTOM].b = -(combinedMtx.m24 + combinedMtx.m22);
+   outFrustum.planes[FP_BOTTOM].c = -(combinedMtx.m34 + combinedMtx.m32);
+   outFrustum.planes[FP_BOTTOM].d = -(combinedMtx.m44 + combinedMtx.m42);
+   outFrustum.planes[FP_BOTTOM].normalize();
 
-   frustrum.planes[FP_BOTTOM].a = -(combinedMtx.m14 + combinedMtx.m12);
-   frustrum.planes[FP_BOTTOM].b = -(combinedMtx.m24 + combinedMtx.m22);
-   frustrum.planes[FP_BOTTOM].c = -(combinedMtx.m34 + combinedMtx.m32);
-   frustrum.planes[FP_BOTTOM].d = -(combinedMtx.m44 + combinedMtx.m42);
-   frustrum.planes[FP_BOTTOM].normalize();
+   outFrustum.planes[FP_TOP].a = -(combinedMtx.m14 - combinedMtx.m12);
+   outFrustum.planes[FP_TOP].b = -(combinedMtx.m24 - combinedMtx.m22);
+   outFrustum.planes[FP_TOP].c = -(combinedMtx.m34 - combinedMtx.m32);
+   outFrustum.planes[FP_TOP].d = -(combinedMtx.m44 - combinedMtx.m42);
+   outFrustum.planes[FP_TOP].normalize();
 
-   frustrum.planes[FP_TOP].a = -(combinedMtx.m14 - combinedMtx.m12);
-   frustrum.planes[FP_TOP].b = -(combinedMtx.m24 - combinedMtx.m22);
-   frustrum.planes[FP_TOP].c = -(combinedMtx.m34 - combinedMtx.m32);
-   frustrum.planes[FP_TOP].d = -(combinedMtx.m44 - combinedMtx.m42);
-   frustrum.planes[FP_TOP].normalize();
+   outFrustum.planes[FP_LEFT].a  = -(combinedMtx.m14 + combinedMtx.m11);
+   outFrustum.planes[FP_LEFT].b  = -(combinedMtx.m24 + combinedMtx.m21);
+   outFrustum.planes[FP_LEFT].c  = -(combinedMtx.m34 + combinedMtx.m31);
+   outFrustum.planes[FP_LEFT].d  = -(combinedMtx.m44 + combinedMtx.m41);
+   outFrustum.planes[FP_LEFT].normalize();
 
-   frustrum.planes[FP_LEFT].a  = -(combinedMtx.m14 + combinedMtx.m11);
-   frustrum.planes[FP_LEFT].b  = -(combinedMtx.m24 + combinedMtx.m21);
-   frustrum.planes[FP_LEFT].c  = -(combinedMtx.m34 + combinedMtx.m31);
-   frustrum.planes[FP_LEFT].d  = -(combinedMtx.m44 + combinedMtx.m41);
-   frustrum.planes[FP_LEFT].normalize();
+   outFrustum.planes[FP_RIGHT].a = -(combinedMtx.m14 - combinedMtx.m11);
+   outFrustum.planes[FP_RIGHT].b = -(combinedMtx.m24 - combinedMtx.m21);
+   outFrustum.planes[FP_RIGHT].c = -(combinedMtx.m34 - combinedMtx.m31);
+   outFrustum.planes[FP_RIGHT].d = -(combinedMtx.m44 - combinedMtx.m41);
+   outFrustum.planes[FP_RIGHT].normalize();
 
-   frustrum.planes[FP_RIGHT].a = -(combinedMtx.m14 - combinedMtx.m11);
-   frustrum.planes[FP_RIGHT].b = -(combinedMtx.m24 - combinedMtx.m21);
-   frustrum.planes[FP_RIGHT].c = -(combinedMtx.m34 - combinedMtx.m31);
-   frustrum.planes[FP_RIGHT].d = -(combinedMtx.m44 - combinedMtx.m41);
-   frustrum.planes[FP_RIGHT].normalize();
+   outFrustum.planes[FP_FAR].a   = -(combinedMtx.m14 - combinedMtx.m13);
+   outFrustum.planes[FP_FAR].b   = -(combinedMtx.m24 - combinedMtx.m23);
+   outFrustum.planes[FP_FAR].c   = -(combinedMtx.m34 - combinedMtx.m33);
+   outFrustum.planes[FP_FAR].d   = -(combinedMtx.m44 - combinedMtx.m43);
+   outFrustum.planes[FP_FAR].normalize();
 
-   frustrum.planes[FP_FAR].a   = -(combinedMtx.m14 - combinedMtx.m13);
-   frustrum.planes[FP_FAR].b   = -(combinedMtx.m24 - combinedMtx.m23);
-   frustrum.planes[FP_FAR].c   = -(combinedMtx.m34 - combinedMtx.m33);
-   frustrum.planes[FP_FAR].d   = -(combinedMtx.m44 - combinedMtx.m43);
-   frustrum.planes[FP_FAR].normalize();
-
-   frustrum.planes[FP_NEAR].a   = -combinedMtx.m13;
-   frustrum.planes[FP_NEAR].b   = -combinedMtx.m23;
-   frustrum.planes[FP_NEAR].c   = -combinedMtx.m33;
-   frustrum.planes[FP_NEAR].d   = -combinedMtx.m43;
-   frustrum.planes[FP_NEAR].normalize();
-
-
-   return frustrum;
+   outFrustum.planes[FP_NEAR].a   = -combinedMtx.m13;
+   outFrustum.planes[FP_NEAR].b   = -combinedMtx.m23;
+   outFrustum.planes[FP_NEAR].c   = -combinedMtx.m33;
+   outFrustum.planes[FP_NEAR].d   = -combinedMtx.m43;
+   outFrustum.planes[FP_NEAR].normalize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

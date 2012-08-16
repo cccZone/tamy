@@ -23,6 +23,7 @@ namespace // anonymous
       void activateRenderTarget( RenderTarget* renderTarget, uint targetIdx ) {}
       void deactivateRenderTarget( uint targetIdx ) {}
       void cleanRenderTarget( const Color& bgColor ) {}
+      void activateDepthBuffer( DepthBuffer& buffer ) {}
    };
 } // anonymous
 
@@ -36,7 +37,8 @@ TEST(Camera, frustrumCreation)
    camera.setClippingPlanes(10, 100);
    camera.setFOV(90);
 
-   Frustum frustrum = camera.getFrustum();
+   Frustum frustrum;
+   camera.calculateFrustum( frustrum );
 
    CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(Vector(0, 0, -2), 1)));
    CPPUNIT_ASSERT_EQUAL(false, testCollision(frustrum, BoundingSphere(Vector(0, 0, 8), 1)));
@@ -58,7 +60,7 @@ TEST(Camera, frustrumCreation)
    rotY.setAxisAngle( Vector::OY, DEG2RAD( 90 ) );
    camera.accessLocalMtx().setRotation( rotY );
 
-   frustrum = camera.getFrustum();
+   camera.calculateFrustum( frustrum );
 
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(10, 0, 0), 1)));
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(100, 0, 0), 1)));
@@ -68,7 +70,7 @@ TEST(Camera, frustrumCreation)
    rotY.setAxisAngle( Vector::OY, DEG2RAD( -90 ) );
    camera.accessLocalMtx().setRotation( rotY );
 
-   frustrum = camera.getFrustum();
+   camera.calculateFrustum( frustrum );
 
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(-10, 0, 0), 1)));
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(-100, 0, 0), 1)));
@@ -82,7 +84,8 @@ TEST(Camera, createRay)
 {
    RendererImplementationMock renderer;
    Camera camera( "camera", renderer, Camera::PT_PERSPECTIVE);
-   Frustum frustum = camera.getFrustum();
+   Frustum frustum;
+   camera.calculateFrustum( frustum );
    Vector expectedNormal;
 
    // a basic plane running straight through the screen's center

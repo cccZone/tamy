@@ -3,7 +3,7 @@
 #include "core-Renderer/Camera.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/RenderTargetDescriptor.h"
-#include "core-Renderer/RenderTarget.h"
+#include "core-Renderer/DepthBufferDescriptor.h"
 #include "core-Renderer/RenderingView.h"
 #include "core-Renderer/RenderingPipelineNode.h"
 #include "core-Renderer/BasicRenderCommands.h"
@@ -110,6 +110,21 @@ RenderTarget* RenderingPipelineMechanism::getRenderTarget( const std::string& id
 
 ///////////////////////////////////////////////////////////////////////////////
 
+DepthBuffer* RenderingPipelineMechanism::getDepthBuffer( const std::string& id ) const
+{
+   if ( m_pipeline )
+   {
+      return m_pipeline->getDepthBuffer( id, *m_runtimeDataBuffer );
+   }
+   else
+   {
+      ASSERT_MSG( false, "Rendering pipeline mechanism isn't properly initialized" );
+      return NULL;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void RenderingPipelineMechanism::initialize( Renderer& renderer )
 {
    ASSERT_MSG( m_renderer == NULL, "The mechanism is already initialized" );
@@ -157,15 +172,23 @@ void RenderingPipelineMechanism::pipelineInitialization()
       // first - initialize data layouts
       delete m_runtimeDataBuffer;
       m_runtimeDataBuffer = new RuntimeDataBuffer();
-      const std::vector< RenderTargetDescriptor* >& renderTargets = m_pipeline->getRenderTargets();
 
       // initialize nodes
       cacheNodes();
 
-      // 1.) initialize data the nodes may be precaching ( i.e. render targets )
-      for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
+      // 1.) initialize data the nodes may be precaching ( i.e. render targets and depth buffers )
       {
-         (*it)->initialize( *m_runtimeDataBuffer, *m_renderer );
+         const std::vector< RenderTargetDescriptor* >& renderTargets = m_pipeline->getRenderTargets();
+         for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
+         {
+            (*it)->initialize( *m_runtimeDataBuffer, *m_renderer );
+         }
+
+         const std::vector< DepthBufferDescriptor* >& depthBuffers = m_pipeline->getDepthBuffers();
+         for ( std::vector< DepthBufferDescriptor* >::const_iterator it = depthBuffers.begin(); it != depthBuffers.end(); ++it )
+         {
+            (*it)->initialize( *m_runtimeDataBuffer );
+         }
       }
 
       // 2.) initialize the nodes
@@ -204,11 +227,17 @@ void RenderingPipelineMechanism::pipelineDeinitialization()
 
    m_nodesQueue.clear();
 
-   // deinitialize render targets
+   // deinitialize render targets and depth buffers
    if ( m_pipeline )
    {
       const std::vector< RenderTargetDescriptor* >& renderTargets = m_pipeline->getRenderTargets();
       for ( std::vector< RenderTargetDescriptor* >::const_iterator it = renderTargets.begin(); it != renderTargets.end(); ++it )
+      {
+         (*it)->deinitialize( *m_runtimeDataBuffer );
+      }
+
+      const std::vector< DepthBufferDescriptor* >& depthBuffers = m_pipeline->getDepthBuffers();
+      for ( std::vector< DepthBufferDescriptor* >::const_iterator it = depthBuffers.begin(); it != depthBuffers.end(); ++it )
       {
          (*it)->deinitialize( *m_runtimeDataBuffer );
       }

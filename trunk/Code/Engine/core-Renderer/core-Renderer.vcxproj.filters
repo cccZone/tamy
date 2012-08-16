@@ -367,6 +367,12 @@
     <ClCompile Include="ShaderCompiler.cpp">
       <Filter>Core\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="DepthBufferDescriptor.cpp">
+      <Filter>Mechanisms\RenderingPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="DepthBuffer.cpp">
+      <Filter>Core\RenderableSurfaces</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -723,6 +729,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConfigurator.h">
       <Filter>Geometry\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DepthBufferDescriptor.h">
+      <Filter>Mechanisms\RenderingPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DepthBuffer.h">
+      <Filter>Core\RenderableSurfaces</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

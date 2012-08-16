@@ -1,6 +1,7 @@
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\RenderingMechanism.h"
 #include "core-Renderer\RenderTarget.h"
+#include "core-Renderer\DepthBuffer.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\Camera.h"
 #include "core\Point.h"
@@ -40,6 +41,7 @@ Renderer::Renderer(unsigned int viewportWidth,
 , m_currentRendererState( m_initialState ) // we always start in the initial state
 , m_renderCommands( 1024 * 1024 ) // 1 MB for the commands
 , m_vertexShaderTechnique( 0 )
+, m_defaultDepthBuffer( NULL )
 {
    m_defaultCamera = new Camera( "defaultCamera", *this, Camera::PT_PERSPECTIVE );
    m_camerasStack.push( m_defaultCamera );
@@ -60,6 +62,9 @@ Renderer::~Renderer()
 
    delete m_defaultCamera;
    m_defaultCamera = NULL;
+
+   delete m_defaultDepthBuffer;
+   m_defaultDepthBuffer = NULL;
 
    m_currentRendererState = NULL;
 
@@ -126,6 +131,10 @@ void Renderer::render()
 
 void Renderer::InitialState::render(Renderer& renderer)
 {
+   // create the default depth buffer
+   renderer.m_defaultDepthBuffer = new DepthBuffer( renderer.m_viewportWidth, renderer.m_viewportHeight );
+   renderer.pushDepthBuffer( renderer.m_defaultDepthBuffer );
+
    renderer.resetViewport(renderer.m_viewportWidth, renderer.m_viewportHeight);
    renderer.setRenderingState();
 
@@ -199,6 +208,12 @@ void Renderer::resizeViewport(unsigned int width, unsigned int height,
    m_rightClientArea = rightClientArea;
    m_bottomClientArea = bottomClientArea;
 
+   // resize the default depth buffer as well
+   if ( m_defaultDepthBuffer )
+   {
+      m_defaultDepthBuffer->setDimensions( width, height );
+   }
+
    notify(RO_RESIZE_VIEWPORT);
 
    resetViewport(m_viewportWidth, m_viewportHeight);
@@ -255,6 +270,40 @@ void Renderer::markRenderTargetCleaned( RenderTarget* renderTarget )
 void Renderer::resetRenderTargetsList()
 {
    m_renderTargetsList.clear();
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+
+void Renderer::pushDepthBuffer( DepthBuffer* depthBuffer )
+{
+   if ( depthBuffer != NULL )
+   {
+      m_depthBuffersStack.push( depthBuffer );
+
+      activateDepthBuffer( *depthBuffer );
+   }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void Renderer::popDepthBuffer( DepthBuffer* depthBuffer )
+{
+   ASSERT_MSG( m_depthBuffersStack.top() == depthBuffer, "Trying to deactivate a depth buffer that's not currently active" );
+   if ( m_depthBuffersStack.top() != depthBuffer )
+   {
+      return;
+   }
+
+   m_depthBuffersStack.pop();
+   ASSERT_MSG( !m_depthBuffersStack.empty(), "Somehow all depth buffers have been deactivated - check your code" );
+   if ( m_depthBuffersStack.empty() )
+   {
+      // push back the default depth buffer - the stack MUSTN'T be empty
+      m_depthBuffersStack.push( m_defaultDepthBuffer );
+   }
+
+   activateDepthBuffer( *m_depthBuffersStack.top() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,6 @@
 #include "core-Renderer\DirectionalLight.h"
 #include "core\BoundingSpace.h"
+#include "core\MatrixUtils.h"
 #include "core\ResourcesManager.h"
 #include "core-Renderer\Renderer.h"
 #include "core-Renderer\PixelShader.h"
@@ -8,6 +9,7 @@
 #include "core-Renderer\FullscreenQuad.h"
 #include "core-Renderer\BasicRenderCommands.h"
 #include "core-Renderer\RenderTarget.h"
+#include "core-Renderer\DepthBuffer.h"
 #include "core-Renderer\RenderingView.h"
 #include "core-Renderer\Geometry.h"
 #include "core-Renderer\VertexShader.h"
@@ -21,6 +23,12 @@ BEGIN_OBJECT( DirectionalLight );
    PROPERTY_EDIT( "Color", Color, m_color );
    PROPERTY_EDIT( "strength", float, m_strength );
 END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////////////
+
+#define NUM_CASCADES    4
+
+float g_cascadeIntervals[] = { 0.0f, 5.0f / 100.0f, 15.0f / 100.0f, 60.0f / 100.0f, 1.0f };
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -100,7 +108,23 @@ void DirectionalLight::renderLighting( Renderer& renderer, ShaderTexture* depthN
 // but since there's a point light there, that light will influence it.
 // If we just calculate a single shadow map for all lights, there's no way of telling which lights influence which regions of the scene
 
-void DirectionalLight::renderShadowMap( Renderer& renderer, RenderTarget* shadowDepthBuffer, RenderTarget* screenSpaceShadowMap, const RenderingView* renderedSceneView, const Array< Geometry* >& geometryToRender )
+
+// TODO: !!!!!!!!!! DOCUMENT the VertexShaderConfigurator - it's a tool that allows to set custom values on a vertex shader depending 
+// on the context from which that vertex shader is called ( like this for instance ).
+// It works with Geometry entities, not vertex shaders themselves.
+// It allows to render arbitrary geometry ( that's set up with arbitrary vertex shaders ) using arbitrary rendering technique
+// ( imposed by the pixel shader in use ) by setting up the technique-related shader constants on those vertex shaders.
+//
+// This technology resembles DX effects, but with a difference that here the main item for us is the pixel shader.
+// The pixel shader defines what sort of data it requires from the preceding vertex shader ( by setting the vertex shader technique ).
+// Vertex shader on the other hand may require a specific set of constants being set for that technique - additional 
+// to the constants it normally uses to render geometry using its default technique.
+//
+// So we're building a vertex shader family tree this way - the default technique being responsible for rendering the geometry
+// itself, and additional techniques are built on top of that and provide additional data ( such as data to compute shadows ).
+
+
+void DirectionalLight::renderShadowMap( Renderer& renderer, const ShadowRendererData& data )
 {
    if ( !m_castsShadows || !m_shadowDepthMapShader || !m_shadowProjectionPS )
    {
@@ -108,33 +132,133 @@ void DirectionalLight::renderShadowMap( Renderer& renderer, RenderTarget* shadow
    }
 
    Camera& activeCamera = renderer.getActiveCamera();
+   const Matrix& lightGlobalMtx = getGlobalMtx();
+
+   const float pcfBlurSize = 3.0f;
+
+   AABoundingBox cascadesBounds[NUM_CASCADES];
+   calculateCascadesBounds( activeCamera, pcfBlurSize, (float)data.m_shadowDepthTexture->getWidth(), cascadesBounds );
+
+   // set the light camera
+   Camera lightCamera( "dirLightCamera", renderer, Camera::PT_ORTHO );
+   lightCamera.setLocalMtx( lightGlobalMtx );
+
+   {
+      uint cascadeIdx = 0;
+
+      lightCamera.setNearPlaneDimensions( cascadesBounds[cascadeIdx].max.x - cascadesBounds[cascadeIdx].min.x, cascadesBounds[cascadeIdx].max.y - cascadesBounds[cascadeIdx].min.y );
+      lightCamera.setClippingPlanes( cascadesBounds[cascadeIdx].min.z, cascadesBounds[cascadeIdx].max.z );
+   }
+
+   // render the cascade part
+   renderCascade( renderer, activeCamera, lightCamera, data );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfBlurSize, float shadowMapDimensions, AABoundingBox* outArrCascadesBounds )
+{
+   // calculate the camera depth range
+   float cameraRange = activeCamera.getFarClippingPlane() - activeCamera.getNearClippingPlane();
+
+   Matrix invViewCamera;
+   invViewCamera.setInverse( activeCamera.getViewMtx() );
+   const Matrix& lightGlobalMtx = getGlobalMtx();
+
+   Matrix lightViewMtx;
+   MatrixUtils::calculateViewMtx( lightGlobalMtx, lightViewMtx );
+
+   Matrix cameraToLightViewTransform;
+   cameraToLightViewTransform.setMul( invViewCamera, lightViewMtx );
+
+   // calculate light frustum bounds
+   AABoundingBox cascadeFrustumBounds;
+   Vector worldUnitsPerTexel;
+   for ( uint i = 0; i < NUM_CASCADES; ++i )
+   {
+      float frustumIntervalBegin = max( 1.01f, g_cascadeIntervals[i] * cameraRange );
+      float frustumIntervalEnd = g_cascadeIntervals[i + 1] * cameraRange;
+
+      calculateCascadeFrustumBounds( activeCamera, frustumIntervalBegin, frustumIntervalEnd, cascadeFrustumBounds );
+
+      // transform the bounds to light
+      AABoundingBox& lightFrustumBounds = outArrCascadesBounds[i];
+      cascadeFrustumBounds.transform( cameraToLightViewTransform, lightFrustumBounds );
+
+      // memorize the clipping planes
+      float lightCameraNearZ = lightFrustumBounds.min.z;
+      float lightCameraFarZ = lightFrustumBounds.max.z;
+
+      // now adjust the light frustum a bit in order to remove the shimmering effect
+      // of shadow edges whenever the camera is moved
+      {
+         // We calculate a looser bound based on the size of the PCF blur.  This ensures us that we're 
+         // sampling within the correct map.
+         float scaleDueToBlurAMT = ( (float)( pcfBlurSize * 2 + 1 ) / shadowMapDimensions );
+         Vector vScaleDueToBlurAMT( scaleDueToBlurAMT, scaleDueToBlurAMT, 0.0f, 0.0f );
+
+         float normalizeByBufferSize = ( 1.0f / shadowMapDimensions );
+         Vector vNormalizeByBufferSize( normalizeByBufferSize, normalizeByBufferSize, 0.0f, 0.0f );
+
+         // We calculate the offsets as a percentage of the bound.
+         Vector broaderOffset;
+         broaderOffset.setSub( lightFrustumBounds.max, lightFrustumBounds.min ).mul( 0.5f ).mul( vScaleDueToBlurAMT );
+
+         lightFrustumBounds.max.add( broaderOffset );
+         lightFrustumBounds.min.sub( broaderOffset );
+
+         // The world units per texel are used to snap the orthographic projection to texel sized increments.  
+         // Because we're fitting tightly to the cascades, the shimmering shadow edges will still be present when the 
+         // camera rotates.  However, when zooming in or strafing the shadow edge will not shimmer.
+         worldUnitsPerTexel.setSub( lightFrustumBounds.max, lightFrustumBounds.min ).mul( vNormalizeByBufferSize );
+      }
+
+      // Snap the camera to 1-pixel increments so that camera movement doesn't cause the shadows to jitter around the edges
+      {
+         lightFrustumBounds.min.div( worldUnitsPerTexel );
+         lightFrustumBounds.min.floor();
+         lightFrustumBounds.min.mul( worldUnitsPerTexel );
+
+         lightFrustumBounds.max.div( worldUnitsPerTexel );
+         lightFrustumBounds.max.floor();
+         lightFrustumBounds.max.mul( worldUnitsPerTexel );
+      }
+
+      // set the clipping planes and store the bounding box
+      lightFrustumBounds.min.z = lightCameraNearZ;
+      lightFrustumBounds.max.z = lightCameraFarZ;
+   }
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::calculateCascadeFrustumBounds( Camera& activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart ) const
+{
+   float prevNearZ, prevFarZ;
+   activeCamera.getClippingPlanes( prevNearZ, prevFarZ );
+   activeCamera.setClippingPlanes( intervalBegin, intervalEnd );
+
+   Frustum frustum;
+   activeCamera.calculateFrustum( frustum );
+   frustum.calculateBoundingBox( outFrustumPart );
+
+   activeCamera.setClippingPlanes( prevNearZ, prevFarZ );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::renderCascade( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data )
+{
    uint viewportWidth = (uint)activeCamera.getNearPlaneWidth();
    uint viewportHeight = (uint)activeCamera.getNearPlaneHeight();
 
-   // use light as a camera
-   Camera lightCamera( "dirLightCamera", renderer, Camera::PT_PERSPECTIVE );
+   // 1. render the shadow depth buffer
    {
-      float farZ = activeCamera.getFarClippingPlane();
-      lightCamera.setClippingPlanes( activeCamera.getNearClippingPlane(), activeCamera.getFarClippingPlane() );
-      lightCamera.setNearPlaneDimensions( viewportWidth, viewportHeight );
+      new ( renderer() ) RCActivateRenderTarget( data.m_shadowDepthTexture );
+      new ( renderer() ) RCActivateDepthBuffer( data.m_shadowDepthSurface );
+      new ( renderer() ) RCClearDepthBuffer();
 
-      Matrix mtx = getGlobalMtx();
-      {
-         // move the camera to the very top of the scene's bounding box, so that all elements are captured
-         Vector position;
-         position.setMul( mtx.forwardVec(), -500 );// TODO: !!! light distance needs to be calculated accurately, or else those nasty steps artifacts will be visible
-         mtx.setPosition( position );
-         lightCamera.setLocalMtx( mtx );
-      }
-      // TODO: !!!!!!! - once the shadows work fine, optimize the number of rendered shadows by not taking the geometry that can't be possibly seen by the active camera into account ( A BSP test or something )
-   }
-
-   // 1. we need to clear the depth buffer before this operation
-   new ( renderer() ) RCClearDepthBuffer();
-
-   // 2. render the shadow depth buffer
-   {
-      new ( renderer() ) RCActivateRenderTarget( shadowDepthBuffer );
       new ( renderer() ) RCBindPixelShader( *m_shadowDepthMapShader, renderer );
 
       // render the scene with the new camera
@@ -142,7 +266,7 @@ void DirectionalLight::renderShadowMap( Renderer& renderer, RenderTarget* shadow
       {
          m_visibleGeometry.clear();
          static BoundingSpace boundingSpace;
-         renderedSceneView->collectRenderables( boundingSpace, m_visibleGeometry );
+         data.m_renderingView->collectRenderables( boundingSpace, m_visibleGeometry );
 
          uint sceneElemsCount = m_visibleGeometry.size();
          for ( uint i = 0; i < sceneElemsCount; ++i )
@@ -153,56 +277,31 @@ void DirectionalLight::renderShadowMap( Renderer& renderer, RenderTarget* shadow
       renderer.popCamera();
 
       new ( renderer() ) RCUnbindPixelShader( *m_shadowDepthMapShader, renderer );
-
-      // no need to deactivate current render target, as we'll be reassigning it in a sec
+      new ( renderer() ) RCDeactivateDepthBuffer( data.m_shadowDepthSurface );
    }
 
-   // 3. again, clean the depth buffer
+   // 2. again, clean the depth buffer
    new ( renderer() ) RCClearDepthBuffer();
 
-   // 4. render the shadow projection map
+   // 3. render the shadow projection map
    {
-      new ( renderer() ) RCActivateRenderTarget( screenSpaceShadowMap );
+      new ( renderer() ) RCActivateRenderTarget( data.m_screenSpaceShadowMap );
       RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_shadowProjectionPS, renderer );
       {
          // set the shadow map
-         psComm->setFloat( "g_texelWidth", 1.0f / (float)shadowDepthBuffer->getWidth() );
-         psComm->setFloat( "g_texelHeight", 1.0f / (float)shadowDepthBuffer->getHeight() );
-         psComm->setTexture( "g_shadowDepthMap", *shadowDepthBuffer );
+         float texelDimension = 1.0f / (float)data.m_shadowDepthTexture->getWidth();
+         psComm->setFloat( "g_texelDimension", texelDimension );
+         psComm->setTexture( "g_shadowDepthMap", *data.m_shadowDepthTexture );
       }
       
-
-      // TODO: !!!!!!!!!! DOCUMENT this configurator - it's a tool that allows to set custom values on a vertex shader depending 
-      // on the context from which that vertex shader is called ( like this for instance ).
-      // It works with Geometry entities, not vertex shaders themselves.
-      // It allows to render arbitrary geometry ( that's set up with arbitrary vertex shaders ) using arbitrary rendering technique
-      // ( imposed by the pixel shader in use ) by setting up the technique-related shader constants on those vertex shaders.
-      //
-      // This technology resembles DX effects, but with a difference that here the main item for us is the pixel shader.
-      // The pixel shader defines what sort of data it requires from the preceding vertex shader ( by setting the vertex shader technique ).
-      // Vertex shader on the other hand may require a specific set of constants being set for that technique - additional 
-      // to the constants it normally uses to render geometry using its default technique.
-      //
-      // So we're building a veretx shader family tree this way - teh default technique being responsible for rendering the geometry
-      // itself, and additional techniques are built on top of that and provide additional data ( such as data to compute shadows ).
       struct VSSetter : public VertexShaderConfigurator
       {
          Matrix      m_lightViewProjMtx;
-         Matrix      m_textureMtx;
 
          VSSetter( Camera& activeCamera, Camera& lightCamera, RenderTarget* shadowDepthBuffer )
          {
             // set the matrix used to calculate the shadow map texel position
             m_lightViewProjMtx.setMul( lightCamera.getViewMtx(), lightCamera.getProjectionMtx() );
-
-            float widthTexOffs  = 0.5f + (0.5f / (float)shadowDepthBuffer->getWidth() );
-            float heightTexOffs = 0.5f + (0.5f / (float)shadowDepthBuffer->getHeight() );
-            Matrix matTexAdj( 0.5f,                   0.0f,    0.0f,    0.0f,
-                              0.0f,                  -0.5f,    0.0f,    0.0f,
-                              0.0f,                   0.0f,    1.0f,    0.0f,
-                              widthTexOffs,  heightTexOffs,    0.0f,    1.0f );
-
-            m_textureMtx.setMul( m_lightViewProjMtx, matTexAdj );
          }
 
          void configure( const Geometry& geometry, RCBindVertexShader* command )
@@ -212,26 +311,22 @@ void DirectionalLight::renderShadowMap( Renderer& renderer, RenderTarget* shadow
             Matrix lightViewProjMtx;
             lightViewProjMtx.setMul( geometryWorldMtx, m_lightViewProjMtx );
 
-            Matrix textureMtx;
-            textureMtx.setMul( geometryWorldMtx, m_textureMtx );
-
             command->setMtx( "g_matLightViewProj", lightViewProjMtx );
-            command->setMtx( "g_matTexture", textureMtx );
          }
-      } vsSetter( activeCamera, lightCamera, shadowDepthBuffer );
+      } vsSetter( activeCamera, lightCamera, data.m_shadowDepthTexture );
 
       // render visible scene elements
-      uint sceneElemsCount = geometryToRender.size();
+      uint sceneElemsCount = data.m_geometryToRender->size();
       for ( uint i = 0; i < sceneElemsCount; ++i )
       {
-         geometryToRender[i]->render( renderer, &vsSetter );
+         (*data.m_geometryToRender)[i]->render( renderer, &vsSetter );
       }
 
       new ( renderer() ) RCUnbindPixelShader( *m_shadowProjectionPS, renderer );
       new ( renderer() ) RCDeactivateRenderTarget();
    }
    
-   // 5. clean the depth buffer once we're done
+   // 4. clean the depth buffer once we're done
    new ( renderer() ) RCClearDepthBuffer();
 }
 

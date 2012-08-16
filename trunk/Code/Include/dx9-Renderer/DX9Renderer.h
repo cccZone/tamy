@@ -17,7 +17,8 @@
 #include "dx9-Renderer\DX9SkeletonResourcesStorage.h"
 #include "dx9-Renderer\DX9VertexShaderResourcesStorage.h"
 #include "dx9-Renderer\DX9TextureResourcesStorage.h"
-#include "dx9-Renderer/DX9RenderTargetResourcesStorage.h"
+#include "dx9-Renderer\DX9RenderTargetResourcesStorage.h"
+#include "dx9-Renderer\DX9DepthBufferResourcesStorage.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -79,7 +80,11 @@ private:
    VertexShadersStorage*                           m_vertexShaders;
    TexturesStorage*                                m_textures;
    RenderTargetsStorage*                           m_renderTargets;
+   DepthBuffersStorage*                            m_depthBuffers;
    std::vector< IRenderResourceStorage* >          m_storages;
+
+   // acvite depth buffer instance
+   DX9DepthBuffer*                                 m_activeDepthBuffer;
 
 public:
    /**
@@ -212,6 +217,13 @@ public:
     */
    DX9RenderTarget* getRenderTarget( RenderTarget& renderTarget );
 
+   /**
+    * Returns an implementation dedicated to the specified depth buffer resource.
+    *
+    * @param deepthBuffer
+    */
+   DX9DepthBuffer* getDepthBuffer( DepthBuffer& deepthBuffer );
+
    // -------------------------------------------------------------------------
    // Scene rendering
    // -------------------------------------------------------------------------
@@ -234,6 +246,7 @@ protected:
    void activateRenderTarget( RenderTarget* renderTarget, uint targetIdx );
    void deactivateRenderTarget( uint targetIdx );
    void cleanRenderTarget( const Color& bgColor );
+   void activateDepthBuffer( DepthBuffer& buffer );
 
 private:
    void initRenderer();

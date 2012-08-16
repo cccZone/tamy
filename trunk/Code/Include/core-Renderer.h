@@ -34,6 +34,7 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer\ShaderTexture.h"
 #include "core-Renderer\RenderTarget.h"
+#include "core-Renderer\DepthBuffer.h"
 // ----------------------------------------------------------------------------
 // --> RenderTree
 // ----------------------------------------------------------------------------
@@ -157,10 +158,12 @@
 // ----------------------------------------------------------------------------
 // -->RenderingPipeline
 // ----------------------------------------------------------------------------
-#include "core-Renderer/RenderingPipeline.h"
-#include "core-Renderer/RenderingPipelineNode.h"
-#include "core-Renderer/RenderingPipelineMechanism.h"
-#include "core-Renderer/RenderingPipelineSockets.h"
+#include "core-Renderer\RenderingPipeline.h"
+#include "core-Renderer\RenderingPipelineNode.h"
+#include "core-Renderer\RenderingPipelineMechanism.h"
+#include "core-Renderer\RenderingPipelineSockets.h"
+#include "core-Renderer\RenderTargetDescriptor.h"
+#include "core-Renderer\DepthBufferDescriptor.h"
 // ----------------------------------------------------------------------------
 // ---->Nodes
 // ----------------------------------------------------------------------------
@@ -178,7 +181,6 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer\PixelShaderNodeOperator.h"
 #include "core-Renderer\PixelShaderConstant.h"
-#include "core-Renderer\RenderTargetDescriptor.h"
 // ----------------------------------------------------------------------------
 // ----> Views
 // ----------------------------------------------------------------------------

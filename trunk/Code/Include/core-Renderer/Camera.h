@@ -97,7 +97,21 @@ public:
     */
    inline float getAspectRatio() const {return m_aspectRatio;}
 
-   void setClippingPlanes(float nearZPlane, float farZPlane);
+   /**
+    * Sets the camera clipping planes.
+    *
+    * @param nearZPlane
+    * @param farZPlane
+    */
+   void setClippingPlanes( float nearZPlane, float farZPlane );
+
+   /**
+    * Returns the camera clipping planes.
+    *
+    * @param outNearZPlane
+    * @param outFarZPlane
+    */
+   void getClippingPlanes( float& outNearZPlane, float& outFarZPlane ) const;
    inline float getNearClippingPlane() const {return m_nearZPlane;}
    inline float getFarClippingPlane() const {return m_farZPlane;}
 
@@ -124,8 +138,10 @@ public:
    /**
     * The method returns the current camera frustum (in global coordinates)
     * The planes in the frustum ARE NORMALIZED
+    *
+    * @param outFrustum
     */
-   Frustum getFrustum();
+   void calculateFrustum( Frustum& outFrustum );
 
    /**
     * The method constructs a ray running from the camera global position

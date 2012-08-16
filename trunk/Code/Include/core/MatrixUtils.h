@@ -67,6 +67,14 @@ public:
     * @param outViewportMtx
     */
    static void generateViewportMatrix( uint offsetX, uint offsetY, uint width, uint height, Matrix& outViewportMtx );
+
+   /**
+    * Calculates a matrix that transforms all objects to the view space of the specified input matrix.
+    *
+    * @param inMtx
+    * @param outViewMtx
+    */
+   static void calculateViewMtx( const Matrix& inMtx, Matrix& outViewMtx );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

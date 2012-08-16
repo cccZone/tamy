@@ -27,6 +27,13 @@ struct Frustum : public BoundingVolume
 {
    Plane planes[6];
 
+   /**
+    * Calculates the bounding box of the frustum.
+    *
+    * @param outBB
+    */
+   void calculateBoundingBox( AABoundingBox& outBB ) const;
+
    // -------------------------------------------------------------------------
    // Bounding volume implementation
    // -------------------------------------------------------------------------

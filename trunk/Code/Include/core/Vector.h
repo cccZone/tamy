@@ -139,6 +139,14 @@ struct Vector
    Vector& setMul( const Vector& vec, float t );
 
    /**
+    * this = vec1 * vec2 ( component by component )
+    * 
+    * @param vec1
+    * @param vec2
+    */
+   Vector& setMul( const Vector& vec1, const Vector& vec2 );
+
+   /**
     * this = vec1 * t + vec2
     * 
     * @param vec1
@@ -146,6 +154,14 @@ struct Vector
     * @param vec2
     */
    Vector& setMulAdd( const Vector& vec1, float t, const Vector& vec2 );
+
+   /**
+    * this = vec1 / vec2 ( component by component )
+    * 
+    * @param vec1
+    * @param vec2
+    */
+   Vector& setDiv( const Vector& vec1, const Vector& vec2 );
 
    /**
     * this = vec1 + vec2
@@ -171,6 +187,20 @@ struct Vector
    Vector& mul( float t );
 
    /**
+    * this = this * vec ( component by component )
+    * 
+    * @param vec
+    */
+   Vector& mul( const Vector& vec );
+
+   /**
+    * this = this / vec ( component by component )
+    * 
+    * @param vec
+    */
+   Vector& div( const Vector& vec );
+
+   /**
     * this = this  + vec
     * 
     * @param vec
@@ -193,6 +223,11 @@ struct Vector
     * Normalizes this vector (in place).
     */
    Vector& normalize();
+
+   /**
+    * Calculates the floor of each of the vector's components.
+    */
+   Vector& floor();
 
    /**
     * Linearly interpolates a vector between values a and b ( from a to b )

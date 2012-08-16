@@ -33,9 +33,10 @@ RenderingView::~RenderingView()
 void RenderingView::collectRenderables( Array< Geometry* >& outVisibleElems )
 {
    // tag visible objects
-   const BoundingVolume& volume = m_renderer.getActiveCamera().getFrustum();
+   Frustum frustum;
+   m_renderer.getActiveCamera().calculateFrustum( frustum );
 
-   m_geometryStorage->query( volume, outVisibleElems );
+   m_geometryStorage->query( frustum, outVisibleElems );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,9 +51,10 @@ void RenderingView::collectRenderables( const BoundingVolume& volume, Array< Geo
 void RenderingView::collectLights( Array< Light* >& outVisibleLights )
 {
    // tag visible objects
-   const BoundingVolume& volume = m_renderer.getActiveCamera().getFrustum();
+   Frustum frustum;
+   m_renderer.getActiveCamera().calculateFrustum( frustum );
 
-   m_lightsStorage->query( volume, outVisibleLights );
+   m_lightsStorage->query( frustum, outVisibleLights );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
