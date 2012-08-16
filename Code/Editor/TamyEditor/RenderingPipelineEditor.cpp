@@ -3,6 +3,7 @@
 #include "core-Renderer.h"
 #include "RenderingPipelineLayout.h"
 #include "RenderTargetDescriptorDialog.h"
+#include "DepthBufferDescriptorDialog.h"
 #include "QPropertiesView.h"
 #include "tamyeditor.h"
 #include "RenderTargetMimeData.h"
@@ -62,7 +63,7 @@ void RenderingPipelineEditor::onInitialize()
       m_ui.addTargetButton->setIcon( QIcon( iconsDir + tr( "/plus.png" ) ) );
       m_ui.removeTargetButton->setIcon( QIcon( iconsDir + tr( "/minus.png" ) ) );
 
-      m_renderTargetsList = new RenderTargetsListWidget( this );
+      m_renderTargetsList = new QListWidget( this );
       m_ui.renderTargetsPageLayout->addWidget( m_renderTargetsList );
 
       connect( m_ui.addTargetButton, SIGNAL( clicked() ), this, SLOT( addRenderTarget() ) );
@@ -71,7 +72,21 @@ void RenderingPipelineEditor::onInitialize()
 
       updateRenderTargetsList();
    }
-   
+
+   // configure the depth buffers list
+   {
+      m_ui.addDepthBufferButton->setIcon( QIcon( iconsDir + tr( "/plus.png" ) ) );
+      m_ui.removeDepthBufferButton->setIcon( QIcon( iconsDir + tr( "/minus.png" ) ) );
+
+      m_depthBuffersList = new QListWidget( this );
+      m_ui.depthBuffersPageLayout->addWidget( m_depthBuffersList );
+
+      connect( m_ui.addDepthBufferButton, SIGNAL( clicked() ), this, SLOT( addDepthBuffer() ) );
+      connect( m_ui.removeDepthBufferButton, SIGNAL( clicked() ), this, SLOT( removeDepthBuffer() ) );
+      connect( m_depthBuffersList, SIGNAL( itemClicked( QListWidgetItem* ) ), this, SLOT( editDepthBuffer( QListWidgetItem* ) ) );
+
+      updateDepthBuffersList();
+   }
 
    // set the toolbar
    QToolBar* toolbar = new QToolBar( m_ui.toolbarFrame );
@@ -117,6 +132,7 @@ void RenderingPipelineEditor::onDeinitialize( bool saveProgress )
    m_nodePropertiesRootView = NULL;
 
    m_renderTargetsList = NULL;
+   m_depthBuffersList = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -284,33 +300,70 @@ void RenderingPipelineEditor::editRenderTarget( QListWidgetItem* rtItem )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
 
-RenderTargetsListWidget::RenderTargetsListWidget( QWidget* parent )
-   : QListWidget( parent )
+void RenderingPipelineEditor::updateDepthBuffersList()
 {
-   setDragEnabled( true );
-   setDragDropMode( QAbstractItemView::DragOnly );
+   m_depthBuffersList->clear();
+
+   const std::vector< DepthBufferDescriptor* >& descriptors = m_renderingPipelineLayout.getPipeline().getDepthBuffers();
+   unsigned int count = descriptors.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      m_depthBuffersList->addItem( descriptors[i]->getID().c_str() );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QMimeData* RenderTargetsListWidget::mimeData( const QList< QListWidgetItem* > items ) const
+void RenderingPipelineEditor::addDepthBuffer()
 {
-   QMimeData* data = __super::mimeData( items );
-
-   std::string selectedTargetID;
-   foreach( QListWidgetItem* item, items )
+   DepthBufferDescriptor* desc = new DepthBufferDescriptor();
+   DepthBufferDescriptorDialog dialog( this, *desc );
+   if ( dialog.exec() != QDialog::Accepted )
    {
-      selectedTargetID = item->text().toStdString();
-      break;
+      delete desc;
+      return;
    }
 
-   RenderTargetMimeData dataEncoder( selectedTargetID );
-   dataEncoder.save( *data );
+   if ( desc->getID().empty() )
+   {
+      delete desc;
+      return;
+   }
 
-   return data;
+   RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
+   if ( pipeline.addDepthBuffer( desc ) )
+   {
+      m_depthBuffersList->addItem( desc->getID().c_str() );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::removeDepthBuffer()
+{
+   RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
+
+   QList< QListWidgetItem* > itemsToRemove = m_depthBuffersList->selectedItems();
+   foreach( QListWidgetItem* item, itemsToRemove )
+   {
+      QString selectedBufferId = item->text();
+      pipeline.removeDepthBuffer( selectedBufferId.toStdString() );
+
+      delete item;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::editDepthBuffer( QListWidgetItem* dbItem )
+{
+   RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
+   DepthBufferDescriptor& desc = pipeline.lockDepthBuffer( dbItem->text().toStdString() );
+
+   DepthBufferDescriptorDialog dialog( this, desc, false );
+   dialog.exec();
+   pipeline.unlockDepthBuffer( dbItem->text().toStdString() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

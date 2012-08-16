@@ -127,7 +127,7 @@ void PointLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormals
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PointLight::renderShadowMap( Renderer& renderer, RenderTarget* shadowDepthBuffer, RenderTarget* screenSpaceShadowMap, const RenderingView* renderedSceneView, const Array< Geometry* >& geometryToRender )
+void PointLight::renderShadowMap( Renderer& renderer, const ShadowRendererData& data )
 {
    // <renderer.todo> renderShadowMap - implement me !!!!!!!!!!!!!!!
 }

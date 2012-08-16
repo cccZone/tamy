@@ -31,6 +31,8 @@ namespace // anonymous
       void deactivateRenderTarget( uint targetIdx ) {}
 
       void cleanRenderTarget( const Color& bgColor ) {}
+
+      void activateDepthBuffer( DepthBuffer& buffer ) {}
    };
 
    // -------------------------------------------------------------------------

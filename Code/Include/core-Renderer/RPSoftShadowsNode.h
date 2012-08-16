@@ -13,6 +13,7 @@
 class RenderTarget;
 class MemoryPool;
 class PixelShader;
+class DepthBuffer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,14 +26,16 @@ class RPSoftShadowsNode : public RenderingPipelineNode
 
 private:
    // static data
-   std::string                               m_shadowDepthBufferId;
+   std::string                               m_shadowDepthTextureId;
+   std::string                               m_shadowDepthSurfaceId;
    std::string                               m_screenSpaceShadowMapId;
 
    // runtime data
-   RPTextureOutput*                          m_shadowDepthBufferOutput;
+   RPTextureOutput*                          m_shadowDepthTextureOutput;
    RPTextureOutput*                          m_screenSpaceShadowMapOutput;
 
-   TRuntimeVar< RenderTarget* >              m_shadowDepthBuffer;
+   TRuntimeVar< RenderTarget* >              m_shadowDepthTexture;
+   TRuntimeVar< DepthBuffer* >               m_shadowDepthSurface;
    TRuntimeVar< RenderTarget* >              m_screenSpaceShadowMap;
    TRuntimeVar< MemoryPool* >                m_treeMemPool;
 

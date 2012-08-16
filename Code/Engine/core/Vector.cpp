@@ -81,12 +81,34 @@ Vector& Vector::setMul( const Vector& vec, float t )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Vector& Vector::setMul( const Vector& vec1, const Vector& vec2 )
+{
+   x = vec1.x * vec2.x;
+   y = vec1.y * vec2.y;
+   z = vec1.z * vec2.z;
+   w = vec1.w * vec2.w;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Vector& Vector::setMulAdd( const Vector& vec1, float t, const Vector& vec2 )
 {
    x = vec1.x * t + vec2.x;
    y = vec1.y * t + vec2.y;
    z = vec1.z * t + vec2.z;
    w = vec1.w * t + vec2.w;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::setDiv( const Vector& vec1, const Vector& vec2 )
+{
+   x = vec1.x / vec2.x;
+   y = vec1.y / vec2.y;
+   z = vec1.z / vec2.z;
+   w = vec1.w / vec2.w;
    return *this;
 }
 
@@ -120,6 +142,28 @@ Vector& Vector::mul( float t )
    y *= t;
    z *= t;
    w *= t;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::mul( const Vector& vec )
+{
+   x *= vec.x;
+   y *= vec.y;
+   z *= vec.z;
+   w *= vec.w;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::div( const Vector& vec )
+{
+   x /= vec.x;
+   y /= vec.y;
+   z /= vec.z;
+   w /= vec.w;
    return *this;
 }
 
@@ -256,6 +300,18 @@ Vector& Vector::normalize()
       y /= len;
       z /= len;
    }
+
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Vector& Vector::floor()
+{
+   x = floorf( x );
+   y = floorf( y );
+   z = floorf( z );
+   w = floorf( w );
 
    return *this;
 }

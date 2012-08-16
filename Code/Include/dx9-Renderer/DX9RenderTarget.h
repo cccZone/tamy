@@ -22,6 +22,7 @@ private:
    const  DX9Renderer&     m_renderer;
    const RenderTarget&     m_renderTarget;
    IDirect3DTexture9*      m_dxTexture;
+   IDirect3DSurface9*      m_dxDepthBuffer;
 
 public:
    DX9RenderTarget( const DX9Renderer& renderer, const RenderTarget& renderTarget );
@@ -39,6 +40,9 @@ public:
     */
    inline IDirect3DTexture9* getDxTexture() const { return m_dxTexture; }
 
+   // -------------------------------------------------------------------------
+   // Device events handlers
+   // -------------------------------------------------------------------------
    void onLostDevice();
    void onResetDevice();
 

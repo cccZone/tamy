@@ -23,6 +23,7 @@ class RendererObserver;
 class RenderingMechanism;
 class RenderingTargetsPolicy;
 class RenderTarget;
+class DepthBuffer;
 class Camera;
 class RenderCommand;
 
@@ -95,6 +96,10 @@ private:
 
    // render targets
    RenderTargetsList                m_renderTargetsList;
+
+   // depth buffers stack
+   DepthBuffer*                     m_defaultDepthBuffer;
+   Stack< DepthBuffer* >            m_depthBuffersStack;
 
    // render commands
    RoundBuffer                      m_renderCommands;
@@ -189,6 +194,25 @@ public:
     * The default camera will never be popped - there always needs to be at least one active camera remaining.
     */
    void popCamera();
+
+   // -------------------------------------------------------------------------
+   // Depth buffers management
+   // -------------------------------------------------------------------------
+
+   /**
+    * Pushes a new depth buffer to the top of the stack, activating it.
+    *
+    * @param depthBuffer
+    */
+   void pushDepthBuffer( DepthBuffer* depthBuffer );
+
+   /**
+    * Pops a depth buffer to the top of the stack ( confirming that the buffer we're about 
+    * to pop is the one we specified, otherwise nothing is popped and an assertion will be thrown ).
+    *
+    * @param depthBuffer
+    */
+   void popDepthBuffer( DepthBuffer* depthBuffer );
 
    // ----------------------------------------------------------------------------
    // Shaders API
@@ -288,6 +312,18 @@ protected:
     * @param targetIdx
     */
    virtual void cleanRenderTarget( const Color& bgColor ) = 0;
+
+   // -------------------------------------------------------------------------
+   // Depth buffers management
+   // -------------------------------------------------------------------------
+
+   /**
+    * Activates th specified depth buffer.
+    *
+    * @param buffer
+    */
+   virtual void activateDepthBuffer( DepthBuffer& buffer ) = 0;
+
 
 private:
    bool shouldRenderTargetBeCleaned( RenderTarget* renderTarget ) const;

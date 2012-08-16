@@ -27,6 +27,7 @@ DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
       , m_creationParams( creationParams )
       , m_deviceLost( false )
       , m_hardwareTLOn( hardwareTLOn )
+      , m_activeDepthBuffer( NULL )
 {
    m_viewport.X = 0;
    m_viewport.Y = 0;
@@ -48,6 +49,7 @@ DX9Renderer::DX9Renderer( IDirect3D9& d3d9,
    ADD_RESOURCE_STORAGE( VertexShadersStorage, m_vertexShaders );
    ADD_RESOURCE_STORAGE( TexturesStorage, m_textures );
    ADD_RESOURCE_STORAGE( RenderTargetsStorage, m_renderTargets );
+   ADD_RESOURCE_STORAGE( DepthBuffersStorage, m_depthBuffers );
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -250,6 +252,28 @@ void DX9Renderer::cleanRenderTarget( const Color& bgColor )
 
 /////////////////////////////////////////////////////////////////////////////
 
+void DX9Renderer::activateDepthBuffer( DepthBuffer& buffer )
+{
+   DX9DepthBuffer* depthBuffer = getDepthBuffer( buffer );
+   if ( m_activeDepthBuffer == depthBuffer )
+   {
+      // we're trying to activate the same depth buffer that's already active - bail
+      return;
+   }
+
+   if ( m_activeDepthBuffer )
+   {
+      m_activeDepthBuffer->deactivate();
+   }
+   m_activeDepthBuffer = depthBuffer;
+   if ( m_activeDepthBuffer )
+   {
+      m_activeDepthBuffer->activate();
+   }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
 IDirect3DVertexBuffer9* DX9Renderer::createVertexBuffer( UINT length, DWORD usageFlags, DWORD fvf, D3DPOOL memoryPool ) const
 {
    ASSERT_MSG( length > 0, "Invalid size of a vertex buffer specified" );
@@ -305,7 +329,8 @@ const D3DFORMAT g_DataTextureFormats[] = { D3DFMT_A8R8G8B8, D3DFMT_UNKNOWN };
 const D3DFORMAT g_32BitFPTextureFormats[] = { D3DFMT_R32F, D3DFMT_UNKNOWN };
 const D3DFORMAT g_UncompressedColorTextureFormats[] = { D3DFMT_X8R8G8B8, D3DFMT_X1R5G5B5, D3DFMT_R5G6B5, D3DFMT_UNKNOWN };
 const D3DFORMAT g_CompressedColorTextureFormats[] = { D3DFMT_DXT5, D3DFMT_DXT3, D3DFMT_DXT1, D3DFMT_UNKNOWN };
-
+const D3DFORMAT g_DepthStencilTextureFormats[] = { D3DFMT_D24X8, D3DFMT_D24S8, D3DFMT_D24X4S4, D3DFMT_D15S1, D3DFMT_UNKNOWN };
+const D3DFORMAT g_PureDepthBufferTextureFormats[] = { D3DFMT_D32, D3DFMT_D16, D3DFMT_UNKNOWN };
 
 const D3DFORMAT* g_textureFormats[] =
 {
@@ -317,6 +342,9 @@ const D3DFORMAT* g_textureFormats[] =
    g_32BitFPTextureFormats,            // TU_32BIT_FP
    g_UncompressedColorTextureFormats,  // TU_COLOR_UNCOMPRESSED
    g_CompressedColorTextureFormats,    // TU_COLOR_COMPRESSED
+   g_DepthStencilTextureFormats,       // TU_DEPTH_STENCIL
+   g_PureDepthBufferTextureFormats,    // TU_PURE_DEPTH_BUFFER
+
 };
 
 void DX9Renderer::sampleOptimalTextureFormats()
@@ -408,6 +436,13 @@ IDirect3DTexture9* DX9Renderer::getTexture( Texture& texture )
 DX9RenderTarget* DX9Renderer::getRenderTarget( RenderTarget& renderTarget )
 {
    return m_renderTargets->getInstance( renderTarget );
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+DX9DepthBuffer* DX9Renderer::getDepthBuffer( DepthBuffer& deepthBuffer )
+{
+   return m_depthBuffers->getInstance( deepthBuffer );
 }
 
 /////////////////////////////////////////////////////////////////////////////

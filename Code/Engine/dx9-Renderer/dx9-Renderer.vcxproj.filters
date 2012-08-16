@@ -141,6 +141,12 @@
     <ClCompile Include="DX9BasicRenderCommands.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>
+    <ClCompile Include="DX9DepthBuffer.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9DepthBufferResourcesStorage.cpp">
+      <Filter>RenderResources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">
@@ -206,6 +212,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9DebugPrimitivesSet.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9DepthBuffer.h">
+      <Filter>RenderCommands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9DepthBufferResourcesStorage.h">
+      <Filter>RenderResources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

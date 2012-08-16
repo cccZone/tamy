@@ -35,6 +35,7 @@ private:
    QPropertiesView*                          m_nodePropertiesRootView;
 
    QListWidget*                              m_renderTargetsList;
+   QListWidget*                              m_depthBuffersList;
 
 public:
    /**
@@ -58,25 +59,15 @@ public slots:
    void addRenderTarget();
    void removeRenderTarget();
    void editRenderTarget( QListWidgetItem* rtItem );
-
+   void addDepthBuffer();
+   void removeDepthBuffer();
+   void editDepthBuffer( QListWidgetItem* dbItem );
 
 private:
    void updateRenderTargetsList();
+   void updateDepthBuffersList();
    void handleBlockSelection( GraphBlock* selectedBlock );
    void handleSocketSelection( GraphBlockSocket* selectedSocket );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-class RenderTargetsListWidget : public QListWidget
-{
-   Q_OBJECT
-
-public:
-   RenderTargetsListWidget( QWidget* parent );
-
-protected:
-   QMimeData* mimeData( const QList< QListWidgetItem *> items ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

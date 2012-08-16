@@ -95,3 +95,21 @@ void MatrixUtils::generateViewportMatrix( uint offsetX, uint offsetY, uint width
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void MatrixUtils::calculateViewMtx( const Matrix& inMtx, Matrix& outViewMtx )
+{
+   Vector rightVec, upVec, lookVec, position;
+   inMtx.getVectors( rightVec, upVec, lookVec, position );
+
+   // create a view matrix
+   outViewMtx = Matrix::IDENTITY;
+   outViewMtx.m[0][0] = rightVec.x; outViewMtx.m[0][1] = upVec.x; outViewMtx.m[0][2] = lookVec.x; 
+   outViewMtx.m[1][0] = rightVec.y; outViewMtx.m[1][1] = upVec.y; outViewMtx.m[1][2] = lookVec.y;
+   outViewMtx.m[2][0] = rightVec.z; outViewMtx.m[2][1] = upVec.z; outViewMtx.m[2][2] = lookVec.z;
+   outViewMtx.m[3][0] = -position.dot( rightVec );
+   outViewMtx.m[3][1] = -position.dot( upVec );
+   outViewMtx.m[3][2] = -position.dot( lookVec );
+
+}
+
+///////////////////////////////////////////////////////////////////////////////

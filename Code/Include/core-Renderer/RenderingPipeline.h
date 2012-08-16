@@ -13,6 +13,8 @@ class RenderingPipelineNode;
 class RenderingPipelineMechanism;
 class RenderTargetDescriptor;
 class RenderTarget;
+class DepthBufferDescriptor;
+class DepthBuffer;
 class RuntimeDataBuffer;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,9 +29,11 @@ class RenderingPipeline : public Resource, public GraphBuilder< RenderingPipelin
 
 private:
    std::vector< RenderTargetDescriptor* >       m_renderTargets;
+   std::vector< DepthBufferDescriptor* >        m_depthBuffers;
 
    // runtime data
    std::string                                  m_lockedRT;
+   std::string                                  m_lockedDB;
 
 public:
    /**
@@ -89,6 +93,57 @@ public:
     * Unlocks the specified render target.
     */
    void unlockRenderTarget( const std::string& id );
+
+   // -------------------------------------------------------------------------
+   // Depth buffers management
+   // -------------------------------------------------------------------------
+
+   /**
+    * Adds a new depth buffer definition.
+    *
+    * @param descriptor    depth buffer descriptor
+    * @return              'true' if the depth buffer was added successfully, 'false' otherwise
+    */
+   bool addDepthBuffer( DepthBufferDescriptor* descriptor );
+
+   /**
+    * Removes the specified depth buffer descriptor.
+    *
+    * @param id         depth buffer id
+    */
+   void removeDepthBuffer( const std::string& id );
+
+   /**
+    * Returns a depth buffer registered under the specified ID.
+    *
+    * @param id            depth buffer id
+    * @param runtimeData   runtime data buffer the depth buffer is stored in
+    */
+   DepthBuffer* getDepthBuffer( const std::string& id, RuntimeDataBuffer& runtimeData ) const;
+
+   /**
+    * Looks for a depth buffer descriptor with the specified id.
+    *
+    * @param id         depth buffer id
+    */
+   DepthBufferDescriptor* findDepthBuffer( const std::string& id ) const;
+
+   /**
+    * Returns a list of all defined depth buffers.
+    */
+   inline const std::vector< DepthBufferDescriptor* >& getDepthBuffers() const { return m_depthBuffers; }
+  
+   /**
+    * Locks the specified depth buffer descriptor, allowing to change it.
+    *
+    * @param id         depth buffer id
+    */
+   DepthBufferDescriptor& lockDepthBuffer( const std::string& id );
+
+   /**
+    * Unlocks the specified depth buffer.
+    */
+   void unlockDepthBuffer( const std::string& id );
 
 protected:
    // -------------------------------------------------------------------------

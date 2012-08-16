@@ -15,20 +15,22 @@
 
 BEGIN_OBJECT( RPSoftShadowsNode );
    PARENT( RenderingPipelineNode );
-   PROPERTY_EDIT( "Shadow depth buf id", std::string, m_shadowDepthBufferId );
+   PROPERTY_EDIT( "Shadow depth texture id", std::string, m_shadowDepthTextureId );
+   PROPERTY_EDIT( "Shadow depth surface id", std::string, m_shadowDepthSurfaceId );
    PROPERTY_EDIT( "Shadow map id", std::string, m_screenSpaceShadowMapId );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPSoftShadowsNode::RPSoftShadowsNode()
-   : m_shadowDepthBufferId( "ShadowDepthBuffer" )
+   : m_shadowDepthTextureId( "ShadowDepthTexture" )
+   , m_shadowDepthSurfaceId( "ShadowDepthSurface" )
    , m_screenSpaceShadowMapId( "SS_ShadowMap" )
 {
    defineInput( new RPVoidInput( "Input" ) );
 
-   m_shadowDepthBufferOutput = new RPTextureOutput( m_shadowDepthBufferId );
-   defineOutput( m_shadowDepthBufferOutput );
+   m_shadowDepthTextureOutput = new RPTextureOutput( m_shadowDepthTextureId );
+   defineOutput( m_shadowDepthTextureOutput );
 
    m_screenSpaceShadowMapOutput = new RPTextureOutput( m_screenSpaceShadowMapId );
    defineOutput( m_screenSpaceShadowMapOutput );
@@ -46,8 +48,8 @@ void RPSoftShadowsNode::onObjectLoaded()
    __super::onObjectLoaded();
 
    // find output sockets
-   delete m_shadowDepthBufferOutput;
-   m_shadowDepthBufferOutput = DynamicCast< RPTextureOutput >( findOutput( m_shadowDepthBufferId ) );
+   delete m_shadowDepthTextureOutput;
+   m_shadowDepthTextureOutput = DynamicCast< RPTextureOutput >( findOutput( m_shadowDepthTextureId ) );
 
    delete m_screenSpaceShadowMapOutput;
    m_screenSpaceShadowMapOutput = DynamicCast< RPTextureOutput >( findOutput( m_screenSpaceShadowMapId ) );
@@ -59,13 +61,13 @@ void RPSoftShadowsNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
 
-   if ( property.getName() == "m_shadowDepthBufferId" || property.getName() == "m_screenSpaceShadowMapId" )
+   if ( property.getName() == "m_shadowDepthTextureId" || property.getName() == "m_screenSpaceShadowMapId" )
    {
       std::string rtIds;
-      rtIds = m_shadowDepthBufferId + ";" + m_screenSpaceShadowMapId;
+      rtIds = m_shadowDepthTextureId + ";" + m_screenSpaceShadowMapId;
       MRTUtil::defineOutputs( rtIds, this );
 
-      m_shadowDepthBufferOutput = DynamicCast< RPTextureOutput >( findOutput( m_shadowDepthBufferId ) );
+      m_shadowDepthTextureOutput = DynamicCast< RPTextureOutput >( findOutput( m_shadowDepthTextureId ) );
       m_screenSpaceShadowMapOutput = DynamicCast< RPTextureOutput >( findOutput( m_screenSpaceShadowMapId ) );
 
    } 
@@ -78,17 +80,22 @@ void RPSoftShadowsNode::onCreateLayout( RenderingPipelineMechanism& host ) const
    RuntimeDataBuffer& data = host.data();
 
    // register runtime members
-   data.registerVar( m_shadowDepthBuffer );
+   data.registerVar( m_shadowDepthTexture );
+   data.registerVar( m_shadowDepthSurface );
    data.registerVar( m_screenSpaceShadowMap );
    data.registerVar( m_treeMemPool );
 
    // create render targets
    {
-      RenderTarget* shadowDepthBuffer = host.getRenderTarget( m_shadowDepthBufferId );
-      data[ m_shadowDepthBuffer ] = shadowDepthBuffer;
+      RenderTarget* shadowDepthTexture = host.getRenderTarget( m_shadowDepthTextureId );
+      data[ m_shadowDepthTexture ] = shadowDepthTexture;
+
+      DepthBuffer* shadowDepthSurface = host.getDepthBuffer( m_shadowDepthSurfaceId );
+      data[ m_shadowDepthSurface ] = shadowDepthSurface;
 
       RenderTarget* screenSpaceShadowMap = host.getRenderTarget( m_screenSpaceShadowMapId );
       data[ m_screenSpaceShadowMap ] = screenSpaceShadowMap;
+
    }
 
    // create a memory pool for the render tree
@@ -117,16 +124,21 @@ void RPSoftShadowsNode::onUpdate( RenderingPipelineMechanism& host ) const
 
 
    // get the render targets used to render the shadow
-   RenderTarget* shadowDepthBuffer = data[ m_shadowDepthBuffer];
+   RenderTarget* shadowDepthTexture = data[ m_shadowDepthTexture ];
+   DepthBuffer* shadowDepthSurface = data[ m_shadowDepthSurface ];
    RenderTarget* screenSpaceShadowMap = data[ m_screenSpaceShadowMap ];
 
-   if ( shadowDepthBuffer )
+   if ( shadowDepthTexture && shadowDepthSurface )
    {
       // The shadow depth buffer needs to be an off-screen render target. The other one can be the back buffer
     
       // render the scene as many times as there are visible lights that cast shadows
-      const RenderingView* renderingView = host.getSceneRenderingView();
-      const Array< Geometry* >& geometryToRender = host.getSceneElements();
+      ShadowRendererData data;
+      data.m_renderingView = host.getSceneRenderingView();
+      data.m_geometryToRender = &host.getSceneElements();
+      data.m_shadowDepthTexture = shadowDepthTexture;
+      data.m_shadowDepthSurface = shadowDepthSurface;
+      data.m_screenSpaceShadowMap = screenSpaceShadowMap;
 
       const Array< Light* >& visibleLights = host.getSceneLights();  
       uint lightsCount = visibleLights.size();
@@ -134,12 +146,12 @@ void RPSoftShadowsNode::onUpdate( RenderingPipelineMechanism& host ) const
       {
          Light* light = visibleLights[i];
 
-         light->renderShadowMap( renderer, shadowDepthBuffer, screenSpaceShadowMap, renderingView, geometryToRender );
+         light->renderShadowMap( renderer, data );
       }
    }
 
    // send the final shadow map to the output
-   m_shadowDepthBufferOutput->setValue( data, shadowDepthBuffer );
+   m_shadowDepthTextureOutput->setValue( data, shadowDepthTexture );
    m_screenSpaceShadowMapOutput->setValue( data, screenSpaceShadowMap );
 }
 

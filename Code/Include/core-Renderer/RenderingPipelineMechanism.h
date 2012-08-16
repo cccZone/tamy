@@ -17,6 +17,7 @@ class Camera;
 class Renderer;
 class RenderTarget;
 class RenderTargetDescriptor;
+class DepthBuffer;
 class RenderingView;
 class RenderingPipelineNode;
 enum GraphBuilderOperation;
@@ -139,11 +140,11 @@ public:
    RenderTarget* getRenderTarget( const std::string& id ) const;
 
    /**
-    * Renders the debug scene on the specified render target.
+    * Returns a depth buffer registered under the specified ID.
     *
-    * @param renderTarget
+    * @param id         depth buffer id
     */
-   void renderDebugScene( RenderTarget* renderTarget );
+   DepthBuffer* getDepthBuffer( const std::string& id ) const;
 
    // -------------------------------------------------------------------------
    // RenderingMechanism implementation

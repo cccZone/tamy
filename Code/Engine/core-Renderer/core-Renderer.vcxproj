@@ -85,6 +85,8 @@
   <ItemGroup>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="BasicRenderingEntitiesFactory.cpp" />
+    <ClCompile Include="DepthBuffer.cpp" />
+    <ClCompile Include="DepthBufferDescriptor.cpp" />
     <ClCompile Include="FragmentShader.cpp" />
     <ClCompile Include="FullscreenQuad.cpp" />
     <ClCompile Include="Geometry.cpp" />
@@ -185,6 +187,8 @@
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderingEntitiesFactory.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DepthBuffer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DepthBufferDescriptor.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h" />
     <ClInclude Include="..\..\Include\core-Renderer\FullscreenQuad.h" />
     <ClInclude Include="..\..\Include\core-Renderer\GeometryEntity.h" />

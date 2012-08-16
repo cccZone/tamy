@@ -120,7 +120,6 @@ float Plane::dotCoord( const Vector& coord ) const
 
 float Plane::dotNormal( const Vector& normal ) const
 {
-   ASSERT_MSG( normal.isNormalized(), "This method requires a unit vector passed as a parameter" );
    float t = normal.x * a + normal.y * b + normal.z * c;
    return t;
 }

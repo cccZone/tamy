@@ -533,6 +533,9 @@
     <ClInclude Include="RPBSoftShadows.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_depthbufferdescriptordialog.h">
+      <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -1280,6 +1283,18 @@
     <ClCompile Include="RPBSoftShadows.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
+    <ClCompile Include="DepthBufferDescriptorDialog.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_DepthBufferDescriptorDialog.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_DepthBufferDescriptorDialog.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_DepthBufferDescriptorDialog.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1502,6 +1517,12 @@
     </CustomBuild>
     <CustomBuild Include="ProfilerChart.h">
       <Filter>Core\ProfilerFrame</Filter>
+    </CustomBuild>
+    <CustomBuild Include="DepthBufferDescriptorDialog.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="depthbufferdescriptordialog.ui">
+      <Filter>QtImplementation\Form Files</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

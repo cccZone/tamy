@@ -121,6 +121,7 @@ REGISTER_TYPE( RPVec4Output );
 REGISTER_TYPE( RPMatrixInput );
 REGISTER_TYPE( RPMatrixOutput );
 REGISTER_TYPE( RenderTargetDescriptor );
+REGISTER_TYPE( DepthBufferDescriptor );
 REGISTER_ENUM_TYPE( TextureUsage );
 
 ///////////////////////////////////////////////////////////////////////////////
