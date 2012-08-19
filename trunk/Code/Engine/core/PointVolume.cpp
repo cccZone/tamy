@@ -3,6 +3,7 @@
 #include "core\Assert.h"
 #include "core\Matrix.h"
 #include "core\Plane.h"
+#include "core\AABoundingBox.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,6 +29,14 @@ void PointVolume::transform( const Matrix& mtx, BoundingVolume& transformedVolum
    PointVolume& transformedPoint = static_cast< PointVolume& >( transformedVolume );
 
    mtx.transform( point, transformedPoint.point );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PointVolume::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
+{
+   outBoundingBox.min = point;
+   outBoundingBox.max = point;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

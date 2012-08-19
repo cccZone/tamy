@@ -4,7 +4,8 @@
 
 #include <vector>
 #include "core-MVC\ModelView.h"
-#include "core/RegularOctree.h"
+#include "core\RegularOctree.h"
+#include "core\AABoundingBox.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,7 +13,6 @@
 class Renderer;
 class Geometry;
 class Light;
-struct AABoundingBox;
 class Camera;
 class RenderState;
 class SceneRenderTreeBuilder;
@@ -31,7 +31,9 @@ private:
 
    MemoryPool*                                              m_treeMemPool;
    RegularOctree< Geometry >*                               m_geometryStorage;
-   RegularOctree< Light >*                                m_lightsStorage;
+   RegularOctree< Light >*                                  m_lightsStorage;
+
+   AABoundingBox                                            m_sceneBounds;
 
 public:
    /**
@@ -69,6 +71,11 @@ public:
     * @param outVisibleLights
     */
    void collectLights( const BoundingVolume& volume, Array< Light* >& outVisibleLights ) const;
+
+   /**
+    * Returns the scene bounds.
+    */
+   inline const AABoundingBox& getSceneBounds() const { return m_sceneBounds; }
 
    // ----------------------------------------------------------------------
    // ModelView implementation

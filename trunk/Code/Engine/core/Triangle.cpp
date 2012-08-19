@@ -2,6 +2,7 @@
 #include "core\CollisionTests.h"
 #include "core\Matrix.h"
 #include "core\Plane.h"
+#include "core\AABoundingBox.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -74,6 +75,15 @@ void Triangle::transform( const Matrix& mtx, BoundingVolume& transformedVolume )
    mtx.transform( v[2], newV[2] );
 
    transformedTriangle.initFromCoplanarPoints( newV[0], newV[1], newV[2] );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Triangle::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
+{
+   outBoundingBox.include( v[0] );
+   outBoundingBox.include( v[1] );
+   outBoundingBox.include( v[2] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -147,6 +147,9 @@
     <ClCompile Include="DX9DepthBufferResourcesStorage.cpp">
       <Filter>RenderResources</Filter>
     </ClCompile>
+    <ClCompile Include="DX9Viewport.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9Renderer.h">

@@ -10,8 +10,8 @@
 
 AABoundingBox::AABoundingBox()
 {
-   min = Vector(0, 0, 0);
-   max = Vector(0, 0, 0);
+   min.set( FLT_MAX, FLT_MAX, FLT_MAX );
+   max.set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,6 +33,14 @@ void AABoundingBox::add( const AABoundingBox& otherBox, AABoundingBox& unionBox 
    unionBox.max.x = this->max.x > otherBox.max.x ? this->max.x : otherBox.max.x;
    unionBox.max.y = this->max.y > otherBox.max.y ? this->max.y : otherBox.max.y;
    unionBox.max.z = this->max.z > otherBox.max.z ? this->max.z : otherBox.max.z;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void AABoundingBox::reset()
+{
+   min.set( FLT_MAX, FLT_MAX, FLT_MAX );
+   max.set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,6 +79,14 @@ void AABoundingBox::transform( const Matrix& mtx, BoundingVolume& transformedVol
          }
       }
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void AABoundingBox::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
+{
+   outBoundingBox.min = min;
+   outBoundingBox.max = max;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

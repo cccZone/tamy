@@ -7,6 +7,9 @@
 #include "core\Color.h"
 #include "core\UniqueObject.h"
 #include "core\Array.h"
+#include "core\AABoundingBox.h"
+#include "core-Renderer\VertexShaderConfigurator.h"
+#include "core-Renderer\Viewport.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,12 +23,43 @@ class Camera;
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#define NUM_CASCADES       4
+#define CASCADES_IN_ROW    2
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * This is a special kind of node that represents a directional light in a scene
  */
 class DirectionalLight : public Light, public UniqueObject< DirectionalLight >
 {
    DECLARE_CLASS();
+
+private:
+   struct CascadeConfig
+   {
+      Viewport             m_viewport;
+      AABoundingBox        m_lightFrustumBounds;
+      float                m_cameraNearZ;
+      float                m_cameraFarZ;
+   };
+
+   struct VSSetter : public VertexShaderConfigurator
+   {
+      Matrix                  m_lightViewProjMtx;
+
+      /**
+       * Constructor.
+       *
+       * @param lightCamera
+       */
+      VSSetter( Camera& lightCamera );
+
+      // ----------------------------------------------------------------------
+      // VertexShaderConfigurator implementation
+      // ----------------------------------------------------------------------
+      void configure( const Geometry& geometry, RCBindVertexShader* command );
+   };
 
 public:
    // static data
@@ -38,6 +72,7 @@ public:
    PixelShader*         m_shadowProjectionPS;
 
    Array< Geometry* >   m_visibleGeometry;
+   CascadeConfig        m_cascadeConfigs[NUM_CASCADES];
 
 public:
    DirectionalLight( const std::string& name = "" );
@@ -57,11 +92,13 @@ public:
 private:
    void initialize();
 
-   void calculateCascadesBounds( Camera& activeCamera, float pcfBlurSize, float shadowMapDimensions, AABoundingBox* outArrCascadesBounds );
+   void calculateCascadesBounds( Camera& activeCamera, float pcfBlurSize, float cascadeDimensions, const RenderingView* renderingView );
 
    void calculateCascadeFrustumBounds( Camera& activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart ) const;
 
-   void renderCascade( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data );
+   void renderCascades( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data );
+
+   void combineCascades( Renderer& renderer, const ShadowRendererData& data, Camera& activeCamera, Camera& lightCamera, float cascadeDimensions );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

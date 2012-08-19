@@ -81,5 +81,8 @@
     <ClCompile Include="NullBasicRenderCommands.cpp">
       <Filter>RenderCommands</Filter>
     </ClCompile>
+    <ClCompile Include="NullViewport.cpp">
+      <Filter>RenderCommands</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

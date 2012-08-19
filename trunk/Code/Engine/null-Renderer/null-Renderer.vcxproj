@@ -34,6 +34,7 @@
     <ClCompile Include="NullSkeleton.cpp" />
     <ClCompile Include="NullTriangleMesh.cpp" />
     <ClCompile Include="NullVertexShader.cpp" />
+    <ClCompile Include="NullViewport.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B8125434-1049-4001-84FF-4DDFF564969D}</ProjectGuid>

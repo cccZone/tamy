@@ -26,6 +26,7 @@ class RenderTarget;
 class DepthBuffer;
 class Camera;
 class RenderCommand;
+struct Viewport;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -120,18 +121,22 @@ public:
    void render();
 
    /**
-    * Changes the size of the active viewport
-    */
-   void resizeViewport(unsigned int width, unsigned int height,
-                       unsigned int leftClientArea, unsigned int topClientArea,
-                       unsigned int rightClientArea, unsigned int bottomClientArea);
-
-   /**
     * This method set a new rendering mechanism.
     *
     * @param mech    new mechanism that will be used for rendering.
     */
    void setMechanism(RenderingMechanism* mech);
+
+   // -------------------------------------------------------------------------
+   // Viewport management
+   // -------------------------------------------------------------------------
+
+   /**
+    * Changes the size of the active viewport
+    */
+   void resizeViewport( unsigned int width, unsigned int height,
+                       unsigned int leftClientArea, unsigned int topClientArea,
+                       unsigned int rightClientArea, unsigned int bottomClientArea );
 
    /**
     * This method returns the width of currently set viewport
@@ -147,6 +152,17 @@ public:
     * Returns current viewport matrix.
     */
    inline const Matrix& getViewportMtx() const { return m_viewportMatrix; }
+
+   /**
+    * Returns the viewport description.
+    *
+    * @param outViewportDesc
+    */
+   void getViewport( Viewport& outViewportDesc );
+
+   // ----------------------------------------------------------------------------
+   // Render targets management
+   // ----------------------------------------------------------------------------
 
    /**
     * A command for setting a render target.

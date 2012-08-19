@@ -83,6 +83,14 @@ public:
    void setNearPlaneDimensions( float width, float height );
 
    /**
+    * Returns the dimensions of the new near plane
+    *
+    * @param outWidth
+    * @param outHeight
+    */
+   void getNearPlaneDimensions( float& outWidth, float& outHeight ) const;
+
+   /**
     * Retrieves the width of the near plane.
     */
    inline float getNearPlaneWidth() const { return m_nearPlaneWidth; }

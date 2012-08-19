@@ -16,6 +16,7 @@ void RCBindVertexShader::execute( Renderer& renderer )
    if ( dxShader )
    {
       // set the shader parameters
+      dxShader->setActiveTechnique( m_techniqueIdx );
       setParams( renderer, dxShader );
 
       dxShader->beginRendering( m_techniqueIdx );
@@ -31,6 +32,7 @@ void RCUnbindVertexShader::execute( Renderer& renderer )
    if ( dxShader )
    {
       dxShader->endRendering();
+      dxShader->setActiveTechnique( -1 );
    }
 }
 
@@ -44,6 +46,7 @@ DX9VertexShader::DX9VertexShader( const DX9Renderer& renderer, const VertexShade
    , m_d3Device( &renderer.getD3Device() )
    , m_shaderConstants( NULL )
    , m_vertexDecl( NULL )
+   , m_activeConstantsTable( NULL )
 {
    initialize();
 }
@@ -61,20 +64,22 @@ DX9VertexShader::~DX9VertexShader()
       {
          m_dxVertexShader[i]->Release();
       }
+
+      if ( m_shaderConstants[i] )
+      {
+         m_shaderConstants[i]->Release();
+      }
    }
    m_dxVertexShader.clear();
-
-   if ( m_shaderConstants )
-   {
-      m_shaderConstants->Release();
-      m_shaderConstants = NULL;
-   }
+   m_shaderConstants.clear();
 
    if ( m_vertexDecl )
    {
       m_vertexDecl->Release();
       m_vertexDecl = NULL;
    }
+
+   m_activeConstantsTable = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -98,6 +103,7 @@ void DX9VertexShader::initialize()
    {
       ID3DXBuffer* shaderBuf = NULL;
       ID3DXBuffer* errorsBuf = NULL;
+      ID3DXConstantTable* constantsTable = NULL;
       DX9ShaderIncludeLoader includesLoader;
       HRESULT res = D3DXCompileShader(
          shaderContents.c_str(), 
@@ -109,7 +115,7 @@ void DX9VertexShader::initialize()
          flags,
          &shaderBuf, 
          &errorsBuf,
-         &m_shaderConstants );
+         &constantsTable );
 
       if ( FAILED(res) || shaderBuf == NULL )
       {
@@ -140,7 +146,10 @@ void DX9VertexShader::initialize()
       }
 
       m_dxVertexShader.push_back( dxVertexShader );
+      m_shaderConstants.push_back( constantsTable );
    }
+
+   m_activeConstantsTable = NULL;
 
    // create the vertex declaration
    // <renderer.todo> right now VertexDescriptor is an exact replica of D3DVERTEXELEMENT9 - but this needs
@@ -154,12 +163,26 @@ void DX9VertexShader::initialize()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void DX9VertexShader::setActiveTechnique( int techniqueIdx )
+{
+   if ( techniqueIdx >= 0 )
+   {
+      m_activeConstantsTable = m_shaderConstants[ techniqueIdx ];
+   }
+   else
+   {
+      m_activeConstantsTable = NULL;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void DX9VertexShader::setBool( const char* paramName, bool val )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      m_shaderConstants->SetBool( m_d3Device, hConstant, val );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      m_activeConstantsTable->SetBool( m_d3Device, hConstant, val );
    }
 }
 
@@ -167,10 +190,10 @@ void DX9VertexShader::setBool( const char* paramName, bool val )
 
 void DX9VertexShader::setInt( const char* paramName, int val )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      m_shaderConstants->SetInt( m_d3Device, hConstant, val );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      m_activeConstantsTable->SetInt( m_d3Device, hConstant, val );
    }
 }
 
@@ -178,11 +201,14 @@ void DX9VertexShader::setInt( const char* paramName, int val )
 
 void DX9VertexShader::setIntArray( const char* paramName, int* valsArr, unsigned int size )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      HRESULT res = m_shaderConstants->SetIntArray( m_d3Device, hConstant, valsArr, size );
-      ASSERT( SUCCEEDED( res ) );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      if ( hConstant )
+      {
+         HRESULT res = m_activeConstantsTable->SetIntArray( m_d3Device, hConstant, valsArr, size );
+         ASSERT( SUCCEEDED( res ) );
+      }
    }
 }
 
@@ -190,10 +216,10 @@ void DX9VertexShader::setIntArray( const char* paramName, int* valsArr, unsigned
 
 void DX9VertexShader::setFloat( const char* paramName, float val )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      m_shaderConstants->SetFloat( m_d3Device, hConstant, val );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      m_activeConstantsTable->SetFloat( m_d3Device, hConstant, val );
    }
 }
 
@@ -201,11 +227,14 @@ void DX9VertexShader::setFloat( const char* paramName, float val )
 
 void DX9VertexShader::setFloatArray( const char* paramName, float* valsArr, unsigned int size )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      HRESULT res = m_shaderConstants->SetFloatArray( m_d3Device, hConstant, valsArr, size );
-      ASSERT( SUCCEEDED( res ) );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      if ( hConstant )
+      {
+         HRESULT res = m_activeConstantsTable->SetFloatArray( m_d3Device, hConstant, valsArr, size );
+         ASSERT( SUCCEEDED( res ) );
+      }
    }
 }
 
@@ -213,10 +242,14 @@ void DX9VertexShader::setFloatArray( const char* paramName, float* valsArr, unsi
 
 void DX9VertexShader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      m_shaderConstants->SetMatrix( m_d3Device, hConstant, &matrix );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      if ( hConstant )
+      {
+         HRESULT res = m_activeConstantsTable->SetMatrix( m_d3Device, hConstant, &matrix );
+         ASSERT_MSG( SUCCEEDED( res ), translateDxError( "setMtx", res ).c_str() );
+      }
    }
 }
 
@@ -224,11 +257,14 @@ void DX9VertexShader::setMtx( const char* paramName, const D3DXMATRIX& matrix )
 
 void DX9VertexShader::setMtxArray( const char* paramName, const D3DXMATRIX* matrices, unsigned int size )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      HRESULT res = m_shaderConstants->SetMatrixArray( m_d3Device, hConstant, matrices, size );
-      ASSERT( SUCCEEDED( res ) );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      if ( hConstant )
+      {
+         HRESULT res = m_activeConstantsTable->SetMatrixArray( m_d3Device, hConstant, matrices, size );
+         ASSERT_MSG( SUCCEEDED( res ), translateDxError( "setMtxArray", res ).c_str() );
+      }
    }
 }
 
@@ -236,10 +272,14 @@ void DX9VertexShader::setMtxArray( const char* paramName, const D3DXMATRIX* matr
 
 void DX9VertexShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      m_shaderConstants->SetVector( m_d3Device, hConstant, &vec );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      if ( hConstant )
+      {
+         HRESULT res = m_activeConstantsTable->SetVector( m_d3Device, hConstant, &vec );
+         ASSERT_MSG( SUCCEEDED( res ), translateDxError( "setVec4", res ).c_str() );
+      }
    }
 }
 
@@ -247,10 +287,10 @@ void DX9VertexShader::setVec4( const char* paramName, const D3DXVECTOR4& vec )
 
 void DX9VertexShader::setVec4Array( const char* paramName, const D3DXVECTOR4* vecArr, unsigned int size )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      HRESULT res = m_shaderConstants->SetVectorArray( m_d3Device, hConstant, vecArr, size );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      HRESULT res = m_activeConstantsTable->SetVectorArray( m_d3Device, hConstant, vecArr, size );
       ASSERT_MSG( SUCCEEDED( res ), translateDxError( "setVec4Array", res ).c_str() );
    }
 }
@@ -259,10 +299,10 @@ void DX9VertexShader::setVec4Array( const char* paramName, const D3DXVECTOR4* ve
 
 void DX9VertexShader::setTexture( const char* paramName, IDirect3DTexture9* texture )
 {
-   if ( m_shaderConstants )
+   if ( m_activeConstantsTable )
    {
-      D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      UINT samplerIdx = m_shaderConstants->GetSamplerIndex( hConstant );
+      D3DXHANDLE hConstant = m_activeConstantsTable->GetConstantByName( NULL, paramName );
+      UINT samplerIdx = m_activeConstantsTable->GetSamplerIndex( hConstant );
       
       m_d3Device->SetTexture( samplerIdx, texture );
    }

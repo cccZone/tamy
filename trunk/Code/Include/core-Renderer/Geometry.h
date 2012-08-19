@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core-Renderer\Geometry.h
 /// @brief  3D geometry representation
+#pragma once
 
 #include "core-MVC\SpatialEntity.h"
 
@@ -14,6 +13,7 @@ class RenderState;
 class Renderer;
 class VertexShaderConfigurator;
 class RCBindVertexShader;
+struct AABoundingBox;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -100,6 +100,13 @@ public:
     * @param   bounding volume instance
     */
    virtual const BoundingVolume& getBoundingVolume() const;
+
+   /**
+    * Calculates a bounding box around the geometry ( in world space coordinates ).
+    *
+    * @param boundingBox
+    */
+   void getBoundingBox( AABoundingBox& boundingBox ) const;
 
    /**
     * Sets the new geometry resource.

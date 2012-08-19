@@ -147,24 +147,6 @@ void DX9RenderTarget::createTexture()
 
    IDirect3DDevice9& d3Device = m_renderer.getD3Device();
 
-   // make sure the render target dimensions are not smaller the depth buffer dimensions, otherwise
-   // nothing will get rendered to this render target
-   {
-      IDirect3DSurface9 *pZStencilSurface;
-      d3Device.GetDepthStencilSurface( &pZStencilSurface );
-
-      D3DSURFACE_DESC surfDesc;
-      pZStencilSurface->GetDesc( &surfDesc );
-
-      // adjust render target's dimensions, and inform the user about it
-      CONDITIONAL_LOG( width <= surfDesc.Width && height <= surfDesc.Height, "This render target is larger than depth buffer dimensions. It's dimensions will be reduced to fit those of thye depth buffer." );
-      width = min( width, surfDesc.Width );
-      height = min( height, surfDesc.Height );
-
-      // release the pointer to the surface - we no longer need it
-      pZStencilSurface->Release();
-   }
-
    HRESULT res = D3DXCreateTexture( &d3Device,
       width, height,          // dimensions
       1,                      // MIP levels

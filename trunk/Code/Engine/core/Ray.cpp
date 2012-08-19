@@ -44,6 +44,18 @@ void Ray::transform( const Matrix& mtx, BoundingVolume& transformedVolume ) cons
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Ray::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
+{
+   Vector end;
+   end.setAdd( origin, direction );
+
+   outBoundingBox.reset();
+   outBoundingBox.include( origin );
+   outBoundingBox.include( end );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 PlaneClassification Ray::classifyAgainsPlane( const Plane& plane ) const
 {
    ASSERT_MSG(false, "Ray::classifyAgainsPlane(const Plane&) - Method not implemented");

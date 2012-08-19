@@ -21,12 +21,21 @@ private:
    const DX9Renderer&                           m_renderer;
    IDirect3DDevice9*                            m_d3Device;
    std::vector< IDirect3DVertexShader9* >       m_dxVertexShader;
-   ID3DXConstantTable*                          m_shaderConstants;
+   std::vector< ID3DXConstantTable* >           m_shaderConstants;
    IDirect3DVertexDeclaration9*                 m_vertexDecl;
+
+   ID3DXConstantTable*                          m_activeConstantsTable;
 
 public:
    DX9VertexShader( const DX9Renderer& renderer, const VertexShader& shader );
    ~DX9VertexShader();
+
+   /**
+    * Activates the specified rendering technique. Pass -1 to deactivate the previously active technique.
+    *
+    * @param techniqueIdx
+    */
+   void setActiveTechnique( int techniqueIdx );
 
    // -------------------------------------------------------------------------
    // Parameters setting
