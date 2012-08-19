@@ -119,6 +119,14 @@ const BoundingVolume& Geometry::getBoundingVolume() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Geometry::getBoundingBox( AABoundingBox& boundingBox ) const
+{
+   const BoundingVolume& boundingVol = getBoundingVolume();
+   boundingVol.calculateBoundingBox( boundingBox );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Geometry::setMesh( GeometryResource& mesh )
 {
    m_resource = &mesh;

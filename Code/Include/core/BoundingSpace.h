@@ -1,6 +1,10 @@
+/// @file   core/BoundingSpace.h
+/// @brief  an infinite space bounding volume
 #pragma once
 
 #include "core\BoundingVolume.h"
+#include "core\AABoundingBox.h"
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +21,7 @@ struct BoundingSpace : public BoundingVolume
    // -------------------------------------------------------------------------
    BoundingVolume* clone() const { return new BoundingSpace(); }
    void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const {}
+   void calculateBoundingBox( AABoundingBox& outBoundingBox ) const { outBoundingBox.min.set( -FLT_MAX, -FLT_MAX, -FLT_MAX ); outBoundingBox.max.set( FLT_MAX, FLT_MAX, FLT_MAX ); }
    float distanceToPlane( const Plane& plane ) const { return 0; }
    bool testCollision( const PointVolume& point ) const { return true; }
    bool testCollision( const AABoundingBox& rhs ) const { return true; }

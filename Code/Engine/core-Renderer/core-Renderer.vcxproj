@@ -295,6 +295,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConfigurator.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConstant.h" />
     <ClInclude Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\Viewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core-MVC\core-MVC.vcxproj">

@@ -59,6 +59,13 @@ public:
    virtual void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const = 0;
 
    /**
+    * Calculates an axis-aligned bounding box around the specified bounding volume.
+    *
+    * @param outBoundingBox
+    */
+   virtual void calculateBoundingBox( AABoundingBox& outBoundingBox ) const = 0;
+
+   /**
     * This method checks on which side of the specified plane
     * is the volume situated.
     *

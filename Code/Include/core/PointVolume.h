@@ -28,6 +28,7 @@ struct PointVolume : public BoundingVolume
    // -------------------------------------------------------------------------
    BoundingVolume* clone() const;
    void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
+   void calculateBoundingBox( AABoundingBox& outBoundingBox ) const;
    float distanceToPlane( const Plane& plane ) const;
    bool testCollision( const PointVolume& point ) const;
    bool testCollision( const AABoundingBox& rhs ) const;

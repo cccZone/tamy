@@ -4,6 +4,8 @@
 #include "core\PointVolume.h"
 #include "core\Plane.h"
 #include "core\Matrix.h"
+#include "core\AABoundingBox.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -39,6 +41,15 @@ void BoundingSphere::transform( const Matrix& mtx, BoundingVolume& transformedVo
 
    mtx.transform( origin, transformedSphere.origin );
    transformedSphere.radius = radius;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BoundingSphere::calculateBoundingBox( AABoundingBox& outBoundingBox ) const 
+{
+   Vector radVec( radius, radius, radius );
+   outBoundingBox.min.setSub( origin, radVec );
+   outBoundingBox.max.setAdd( origin, radVec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

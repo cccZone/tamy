@@ -122,6 +122,7 @@
     <ClCompile Include="DX9TriangleMeshResourcesStorage.cpp" />
     <ClCompile Include="DX9VertexShader.cpp" />
     <ClCompile Include="DX9VertexShaderResourcesStorage.cpp" />
+    <ClCompile Include="DX9Viewport.cpp" />
     <ClCompile Include="DXErrorParser.cpp" />
     <ClCompile Include="DX9ShaderParamTexture.cpp" />
   </ItemGroup>

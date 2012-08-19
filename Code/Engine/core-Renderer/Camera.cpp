@@ -110,6 +110,14 @@ void Camera::setNearPlaneDimensions(float width, float height)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Camera::getNearPlaneDimensions( float& outWidth, float& outHeight ) const
+{
+   outWidth = m_nearPlaneWidth;
+   outHeight = m_nearPlaneHeight;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Camera::setClippingPlanes(float nearZPlane, float farZPlane) 
 {
    m_nearZPlane = nearZPlane; 

@@ -40,24 +40,6 @@
     <Filter Include="Effects\Resources">
       <UniqueIdentifier>{9885c467-2a83-46d5-b474-1a1573c3059d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mechanisms">
-      <UniqueIdentifier>{276eb3c8-13a8-40f4-bd45-12038506cd29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline">
-      <UniqueIdentifier>{c91f1825-625c-42f0-8469-826c27be0b92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline\Nodes">
-      <UniqueIdentifier>{b7de2671-afb7-471e-9881-7dd4812c6bc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mechanisms\OverlayRenderer">
-      <UniqueIdentifier>{b356757b-adc7-4be2-a1ed-247c79d751d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mechanisms\OverlayRenderer\Mechanism">
-      <UniqueIdentifier>{00f2694b-d7e3-44dd-a5ee-56d0cc5cba1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mechanisms\OverlayRenderer\Elements">
-      <UniqueIdentifier>{e788649b-7b14-4322-8f63-2ae1d57c10bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Resources">
       <UniqueIdentifier>{334e02c4-4c10-4596-a912-36ec0b7ff55e}</UniqueIdentifier>
     </Filter>
@@ -69,9 +51,6 @@
     </Filter>
     <Filter Include="Core\Tools">
       <UniqueIdentifier>{a8533512-26b5-45b6-af11-e62b8e23d0c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Mechanisms\RenderingPipeline\Views">
-      <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tools">
       <UniqueIdentifier>{5a93e70c-6c1d-4bda-9166-812a8da9be22}</UniqueIdentifier>
@@ -97,6 +76,21 @@
     <Filter Include="Core\BasicRenderCommands">
       <UniqueIdentifier>{aea930df-4d3d-446a-ba5f-54682bcb5f8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lighting\Entities">
+      <UniqueIdentifier>{80a4f5cf-6fca-4f71-bbde-7cf6bea3472f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting\PipelineNodes">
+      <UniqueIdentifier>{cb50b816-b3ad-45eb-ac8b-2447c7295270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms">
+      <UniqueIdentifier>{276eb3c8-13a8-40f4-bd45-12038506cd29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\RenderingPipeline">
+      <UniqueIdentifier>{c91f1825-625c-42f0-8469-826c27be0b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\RenderingPipeline\Nodes">
+      <UniqueIdentifier>{b7de2671-afb7-471e-9881-7dd4812c6bc1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Mechanisms\RenderingPipeline\Nodes\DataProviders">
       <UniqueIdentifier>{7275609d-8c43-4a0c-b577-343a9cfdfb83}</UniqueIdentifier>
     </Filter>
@@ -106,11 +100,17 @@
     <Filter Include="Mechanisms\RenderingPipeline\Nodes\Misc">
       <UniqueIdentifier>{a0187aaf-f333-4d45-9aa3-dee340577caa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lighting\Entities">
-      <UniqueIdentifier>{80a4f5cf-6fca-4f71-bbde-7cf6bea3472f}</UniqueIdentifier>
+    <Filter Include="Mechanisms\RenderingPipeline\Views">
+      <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lighting\PipelineNodes">
-      <UniqueIdentifier>{cb50b816-b3ad-45eb-ac8b-2447c7295270}</UniqueIdentifier>
+    <Filter Include="Mechanisms\OverlayRenderer">
+      <UniqueIdentifier>{b356757b-adc7-4be2-a1ed-247c79d751d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\OverlayRenderer\Mechanism">
+      <UniqueIdentifier>{00f2694b-d7e3-44dd-a5ee-56d0cc5cba1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mechanisms\OverlayRenderer\Elements">
+      <UniqueIdentifier>{e788649b-7b14-4322-8f63-2ae1d57c10bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -735,6 +735,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DepthBuffer.h">
       <Filter>Core\RenderableSurfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\Viewport.h">
+      <Filter>Core\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

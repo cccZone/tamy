@@ -130,7 +130,7 @@ namespace // anonymous
          , m_bounds( Vector( -1, -1, -1 ), Vector( 1, 1, 1 ) )
       {}
 
-      void render( Renderer& renderer )
+      void render( Renderer& renderer, VertexShaderConfigurator* externalConfigurator )
       {
          new ( renderer() ) RenderingCommandMock( m_id );
       }

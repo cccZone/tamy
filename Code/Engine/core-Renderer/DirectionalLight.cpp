@@ -26,8 +26,6 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define NUM_CASCADES    4
-
 float g_cascadeIntervals[] = { 0.0f, 5.0f / 100.0f, 15.0f / 100.0f, 60.0f / 100.0f, 1.0f };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -123,7 +121,6 @@ void DirectionalLight::renderLighting( Renderer& renderer, ShaderTexture* depthN
 // So we're building a vertex shader family tree this way - the default technique being responsible for rendering the geometry
 // itself, and additional techniques are built on top of that and provide additional data ( such as data to compute shadows ).
 
-
 void DirectionalLight::renderShadowMap( Renderer& renderer, const ShadowRendererData& data )
 {
    if ( !m_castsShadows || !m_shadowDepthMapShader || !m_shadowProjectionPS )
@@ -132,44 +129,51 @@ void DirectionalLight::renderShadowMap( Renderer& renderer, const ShadowRenderer
    }
 
    Camera& activeCamera = renderer.getActiveCamera();
-   const Matrix& lightGlobalMtx = getGlobalMtx();
 
    const float pcfBlurSize = 3.0f;
-
-   AABoundingBox cascadesBounds[NUM_CASCADES];
-   calculateCascadesBounds( activeCamera, pcfBlurSize, (float)data.m_shadowDepthTexture->getWidth(), cascadesBounds );
+   float cascadeDimensions = (float)( data.m_shadowDepthTexture->getWidth() ) / (float)CASCADES_IN_ROW;
+   calculateCascadesBounds( activeCamera, pcfBlurSize, cascadeDimensions, data.m_renderingView );
 
    // set the light camera
    Camera lightCamera( "dirLightCamera", renderer, Camera::PT_ORTHO );
+   const Matrix& lightGlobalMtx = getGlobalMtx();
    lightCamera.setLocalMtx( lightGlobalMtx );
+   lightCamera.setPosition( Vector::ZERO );
 
-   {
-      uint cascadeIdx = 0;
+   // render cascades
+   renderCascades( renderer, activeCamera, lightCamera, data );
 
-      lightCamera.setNearPlaneDimensions( cascadesBounds[cascadeIdx].max.x - cascadesBounds[cascadeIdx].min.x, cascadesBounds[cascadeIdx].max.y - cascadesBounds[cascadeIdx].min.y );
-      lightCamera.setClippingPlanes( cascadesBounds[cascadeIdx].min.z, cascadesBounds[cascadeIdx].max.z );
-   }
-
-   // render the cascade part
-   renderCascade( renderer, activeCamera, lightCamera, data );
+   // combine the cascades
+   combineCascades( renderer, data, activeCamera, lightCamera, cascadeDimensions );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfBlurSize, float shadowMapDimensions, AABoundingBox* outArrCascadesBounds )
+void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfBlurSize, float cascadeDimensions, const RenderingView* renderingView )
 {
    // calculate the camera depth range
    float cameraRange = activeCamera.getFarClippingPlane() - activeCamera.getNearClippingPlane();
 
-   Matrix invViewCamera;
-   invViewCamera.setInverse( activeCamera.getViewMtx() );
-   const Matrix& lightGlobalMtx = getGlobalMtx();
-
-   Matrix lightViewMtx;
-   MatrixUtils::calculateViewMtx( lightGlobalMtx, lightViewMtx );
-
+   // pre-calculate light camera transformations that we'll use later on during AABBs calculations
    Matrix cameraToLightViewTransform;
-   cameraToLightViewTransform.setMul( invViewCamera, lightViewMtx );
+   {
+      Matrix invViewCamera;
+      invViewCamera.setInverse( activeCamera.getViewMtx() );
+      Matrix lightGlobalMtx = getGlobalMtx();
+      lightGlobalMtx.setPosition( Vector::ZERO );
+
+      Matrix lightViewMtx;
+      MatrixUtils::calculateViewMtx( lightGlobalMtx, lightViewMtx );
+
+      cameraToLightViewTransform.setMul( invViewCamera, lightViewMtx );
+   }
+
+   // acquire scene's AABB and transform it to the light view space
+   AABoundingBox sceneAABBInLightSpace;
+   {
+      const AABoundingBox& sceneBounds = renderingView->getSceneBounds();
+      sceneBounds.transform( cameraToLightViewTransform, sceneAABBInLightSpace );
+   }
 
    // calculate light frustum bounds
    AABoundingBox cascadeFrustumBounds;
@@ -178,11 +182,13 @@ void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfB
    {
       float frustumIntervalBegin = max( 1.01f, g_cascadeIntervals[i] * cameraRange );
       float frustumIntervalEnd = g_cascadeIntervals[i + 1] * cameraRange;
+      m_cascadeConfigs[i].m_cameraNearZ = frustumIntervalBegin;
+      m_cascadeConfigs[i].m_cameraFarZ = frustumIntervalEnd;
 
       calculateCascadeFrustumBounds( activeCamera, frustumIntervalBegin, frustumIntervalEnd, cascadeFrustumBounds );
 
       // transform the bounds to light
-      AABoundingBox& lightFrustumBounds = outArrCascadesBounds[i];
+      AABoundingBox& lightFrustumBounds = m_cascadeConfigs[i].m_lightFrustumBounds;
       cascadeFrustumBounds.transform( cameraToLightViewTransform, lightFrustumBounds );
 
       // memorize the clipping planes
@@ -194,10 +200,10 @@ void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfB
       {
          // We calculate a looser bound based on the size of the PCF blur.  This ensures us that we're 
          // sampling within the correct map.
-         float scaleDueToBlurAMT = ( (float)( pcfBlurSize * 2 + 1 ) / shadowMapDimensions );
+         float scaleDueToBlurAMT = ( (float)( pcfBlurSize * 2 + 1 ) / cascadeDimensions );
          Vector vScaleDueToBlurAMT( scaleDueToBlurAMT, scaleDueToBlurAMT, 0.0f, 0.0f );
 
-         float normalizeByBufferSize = ( 1.0f / shadowMapDimensions );
+         float normalizeByBufferSize = ( 1.0f / cascadeDimensions );
          Vector vNormalizeByBufferSize( normalizeByBufferSize, normalizeByBufferSize, 0.0f, 0.0f );
 
          // We calculate the offsets as a percentage of the bound.
@@ -225,10 +231,21 @@ void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfB
       }
 
       // set the clipping planes and store the bounding box
-      lightFrustumBounds.min.z = lightCameraNearZ;
-      lightFrustumBounds.max.z = lightCameraFarZ;
+      // TODO:!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      lightFrustumBounds.min.z = -100.0f;
+      lightFrustumBounds.max.z = 100.0f;
+      
+      // calculate viewport
+      {
+         Viewport& viewport = m_cascadeConfigs[i].m_viewport;
+         viewport.m_minZ = 0.0f;
+         viewport.m_maxZ = 1.0f;
+         viewport.m_offsetX = (ulong)( ( i % CASCADES_IN_ROW ) * cascadeDimensions );
+         viewport.m_offsetY = (ulong)( ( i / CASCADES_IN_ROW ) * cascadeDimensions );
+         viewport.m_width = (ulong)cascadeDimensions;
+         viewport.m_height = (ulong)cascadeDimensions;
+      }
    }
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -248,85 +265,119 @@ void DirectionalLight::calculateCascadeFrustumBounds( Camera& activeCamera, floa
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectionalLight::renderCascade( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data )
+
+void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data )
 {
-   uint viewportWidth = (uint)activeCamera.getNearPlaneWidth();
-   uint viewportHeight = (uint)activeCamera.getNearPlaneHeight();
+   // store the original camera settings
+   float origCameraNearZ, origCameraFarZ;
+   activeCamera.getClippingPlanes( origCameraNearZ, origCameraFarZ );
 
-   // 1. render the shadow depth buffer
+   // bind the shader and set the render target
+   new ( renderer() ) RCActivateRenderTarget( data.m_shadowDepthTexture );
+   new ( renderer() ) RCActivateDepthBuffer( data.m_shadowDepthSurface );
+   new ( renderer() ) RCBindPixelShader( *m_shadowDepthMapShader, renderer );
+   new ( renderer() ) RCClearDepthBuffer();
+
+   // render cascades
+   for ( uint cascadeIdx = 0; cascadeIdx < NUM_CASCADES; ++cascadeIdx )
    {
-      new ( renderer() ) RCActivateRenderTarget( data.m_shadowDepthTexture );
-      new ( renderer() ) RCActivateDepthBuffer( data.m_shadowDepthSurface );
-      new ( renderer() ) RCClearDepthBuffer();
+      const AABoundingBox& cascadeBounds = m_cascadeConfigs[cascadeIdx].m_lightFrustumBounds;
+      lightCamera.setNearPlaneDimensions( cascadeBounds.max.x - cascadeBounds.min.x, cascadeBounds.max.y - cascadeBounds.min.y );
+      lightCamera.setClippingPlanes( cascadeBounds.min.z, cascadeBounds.max.z );
+      //activeCamera.setClippingPlanes( m_cascadeConfigs[cascadeIdx].m_cameraNearZ, m_cascadeConfigs[cascadeIdx].m_cameraFarZ );
 
-      new ( renderer() ) RCBindPixelShader( *m_shadowDepthMapShader, renderer );
+      new ( renderer() ) RCSetViewport( m_cascadeConfigs[cascadeIdx].m_viewport );
 
       // render the scene with the new camera
-      renderer.pushCamera( lightCamera );
       {
+         VSSetter vsSetter( lightCamera );
+
          m_visibleGeometry.clear();
-         static BoundingSpace boundingSpace;
-         data.m_renderingView->collectRenderables( boundingSpace, m_visibleGeometry );
+         data.m_renderingView->collectRenderables( cascadeBounds, m_visibleGeometry );
 
          uint sceneElemsCount = m_visibleGeometry.size();
          for ( uint i = 0; i < sceneElemsCount; ++i )
          {
-            m_visibleGeometry[i]->render( renderer );
+            m_visibleGeometry[i]->render( renderer, &vsSetter);
          }
       }
-      renderer.popCamera();
-
-      new ( renderer() ) RCUnbindPixelShader( *m_shadowDepthMapShader, renderer );
-      new ( renderer() ) RCDeactivateDepthBuffer( data.m_shadowDepthSurface );
    }
 
-   // 2. again, clean the depth buffer
+   // clean up
+   new ( renderer() ) RCResetViewport();
+   new ( renderer() ) RCUnbindPixelShader( *m_shadowDepthMapShader, renderer );
+   new ( renderer() ) RCDeactivateDepthBuffer( data.m_shadowDepthSurface );
+   new ( renderer() ) RCDeactivateRenderTarget();
+
+   // restore previous camera settings
+   activeCamera.setClippingPlanes( origCameraNearZ, origCameraFarZ );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::combineCascades( Renderer& renderer, const ShadowRendererData& data, Camera& activeCamera, Camera& lightCamera, float cascadeDimensions )
+{
+   float depthRanges[NUM_CASCADES + 1];
+   Vector viewportOffsets[NUM_CASCADES];
+   Matrix clipToLightSpaceMtx[NUM_CASCADES];
+
+   float shadowMapDimension = (float)data.m_shadowDepthTexture->getWidth();
+
+   Matrix worldToClipSpace;
+   worldToClipSpace.setMul( activeCamera.getViewMtx(), activeCamera.getProjectionMtx() );
+
+   Matrix invClipSpace;
+   invClipSpace.setInverse( worldToClipSpace );
+
+   for( uint i = 0; i < NUM_CASCADES; ++i )
+   {
+      CascadeConfig& config = m_cascadeConfigs[i];
+      depthRanges[i] = config.m_cameraFarZ;
+      viewportOffsets[i].set( (float)config.m_viewport.m_offsetX / shadowMapDimension, (float)config.m_viewport.m_offsetY / shadowMapDimension, 0 );
+
+      // calculate the transformation matrix
+      {
+         const AABoundingBox& cascadeBounds = m_cascadeConfigs[i].m_lightFrustumBounds;
+         lightCamera.setNearPlaneDimensions( cascadeBounds.max.x - cascadeBounds.min.x, cascadeBounds.max.y - cascadeBounds.min.y );
+         lightCamera.setClippingPlanes( cascadeBounds.min.z, cascadeBounds.max.z );
+
+         Matrix lightViewProj;
+         lightViewProj.setMul( lightCamera.getViewMtx(), lightCamera.getProjectionMtx() );
+
+         clipToLightSpaceMtx[i].setMul( invClipSpace, lightViewProj );     
+      }
+   }
+   depthRanges[NUM_CASCADES] = FLT_MAX;
+
+   // again, clean the depth buffer
    new ( renderer() ) RCClearDepthBuffer();
 
-   // 3. render the shadow projection map
+   //  render the shadow projection map
    {
       new ( renderer() ) RCActivateRenderTarget( data.m_screenSpaceShadowMap );
       RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_shadowProjectionPS, renderer );
       {
          // set the shadow map
-         float texelDimension = 1.0f / (float)data.m_shadowDepthTexture->getWidth();
+         float texelDimension = 1.0f / cascadeDimensions;
          psComm->setFloat( "g_texelDimension", texelDimension );
          psComm->setTexture( "g_shadowDepthMap", *data.m_shadowDepthTexture );
+         psComm->setFloat( "g_cascadeDepthRanges", depthRanges, NUM_CASCADES + 1 );
+         psComm->setVec4( "g_cascadeOffsets", viewportOffsets, NUM_CASCADES  );
+         psComm->setMtx( "g_clipToLightSpaceMtx", clipToLightSpaceMtx , NUM_CASCADES );
       }
-      
-      struct VSSetter : public VertexShaderConfigurator
-      {
-         Matrix      m_lightViewProjMtx;
-
-         VSSetter( Camera& activeCamera, Camera& lightCamera, RenderTarget* shadowDepthBuffer )
-         {
-            // set the matrix used to calculate the shadow map texel position
-            m_lightViewProjMtx.setMul( lightCamera.getViewMtx(), lightCamera.getProjectionMtx() );
-         }
-
-         void configure( const Geometry& geometry, RCBindVertexShader* command )
-         {
-            const Matrix& geometryWorldMtx = geometry.getGlobalMtx();
-
-            Matrix lightViewProjMtx;
-            lightViewProjMtx.setMul( geometryWorldMtx, m_lightViewProjMtx );
-
-            command->setMtx( "g_matLightViewProj", lightViewProjMtx );
-         }
-      } vsSetter( activeCamera, lightCamera, data.m_shadowDepthTexture );
-
+    
       // render visible scene elements
       uint sceneElemsCount = data.m_geometryToRender->size();
       for ( uint i = 0; i < sceneElemsCount; ++i )
       {
-         (*data.m_geometryToRender)[i]->render( renderer, &vsSetter );
+         (*data.m_geometryToRender)[i]->render( renderer );
       }
 
       new ( renderer() ) RCUnbindPixelShader( *m_shadowProjectionPS, renderer );
       new ( renderer() ) RCDeactivateRenderTarget();
    }
    
-   // 4. clean the depth buffer once we're done
+   // clean the depth buffer once we're done
    new ( renderer() ) RCClearDepthBuffer();
 }
 
@@ -350,6 +401,27 @@ void DirectionalLight::initialize()
       FilePath shadowProjectionPSPath( LIGHTING_SHADERS_DIR "Shadows/DirectionalLight/shadowProjectionShader.tpsh" );
       m_shadowProjectionPS = resMgr.create< PixelShader >( shadowProjectionPSPath, true );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+DirectionalLight::VSSetter::VSSetter( Camera& lightCamera )
+{
+   m_lightViewProjMtx.setMul( lightCamera.getViewMtx(), lightCamera.getProjectionMtx() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::VSSetter::configure( const Geometry& geometry, RCBindVertexShader* command )
+{
+   const Matrix& geometryWorldMtx = geometry.getGlobalMtx();
+
+   Matrix lightViewProjMtx;
+   lightViewProjMtx.setMul( geometryWorldMtx, m_lightViewProjMtx );
+
+   command->setMtx( "g_matLightViewProj", lightViewProjMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
 #include "core-Renderer\DepthBuffer.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\Camera.h"
+#include "core-Renderer\Viewport.h"
 #include "core\Point.h"
 #include "core\Assert.h"
 #include "core\MatrixUtils.h"
@@ -217,6 +218,18 @@ void Renderer::resizeViewport(unsigned int width, unsigned int height,
    notify(RO_RESIZE_VIEWPORT);
 
    resetViewport(m_viewportWidth, m_viewportHeight);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Renderer::getViewport( Viewport& outViewportDesc )
+{
+   outViewportDesc.m_minZ = 0.0f;
+   outViewportDesc.m_maxZ = 1.0f;
+   outViewportDesc.m_offsetX = 0.0f;
+   outViewportDesc.m_offsetY = 0.0f;
+   outViewportDesc.m_width = m_viewportWidth;
+   outViewportDesc.m_height = m_viewportHeight;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

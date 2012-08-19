@@ -201,8 +201,11 @@ void DX9PixelShader::setFloatArray( const char* paramName, float* valsArr, unsig
    if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      HRESULT res = m_shaderConstants->SetFloatArray( m_d3Device, hConstant, valsArr, size );
-      ASSERT( SUCCEEDED( res ) );
+      if ( hConstant )
+      {
+         HRESULT res = m_shaderConstants->SetFloatArray( m_d3Device, hConstant, valsArr, size );
+         ASSERT( SUCCEEDED( res ) );
+      }
    }
 }
 
@@ -224,8 +227,11 @@ void DX9PixelShader::setMtxArray( const char* paramName, const D3DXMATRIX* matri
    if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      HRESULT res = m_shaderConstants->SetMatrixArray( m_d3Device, hConstant, matrices, size );
-      ASSERT( SUCCEEDED( res ) );
+      if ( hConstant )
+      {
+         HRESULT res = m_shaderConstants->SetMatrixArray( m_d3Device, hConstant, matrices, size );
+         ASSERT( SUCCEEDED( res ) );
+      }
    }
 }
 
@@ -247,8 +253,11 @@ void DX9PixelShader::setVec4Array( const char* paramName, const D3DXVECTOR4* vec
    if ( m_shaderConstants )
    {
       D3DXHANDLE hConstant = m_shaderConstants->GetConstantByName( NULL, paramName );
-      HRESULT res = m_shaderConstants->SetVectorArray( m_d3Device, hConstant, vecArr, size );
-      ASSERT_MSG( SUCCEEDED( res ), translateDxError( "setVec4Array", res ).c_str() );
+      if ( hConstant != NULL )
+      {
+         HRESULT res = m_shaderConstants->SetVectorArray( m_d3Device, hConstant, vecArr, size );
+         ASSERT_MSG( SUCCEEDED( res ), translateDxError( "setVec4Array", res ).c_str() );
+      }
    }
 }
 

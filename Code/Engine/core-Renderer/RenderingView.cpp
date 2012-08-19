@@ -17,6 +17,10 @@ RenderingView::RenderingView( Renderer& renderer, const AABoundingBox& sceneBB )
    , m_geometryStorage( new RegularOctree< Geometry >( sceneBB ) )
    , m_lightsStorage( new RegularOctree< Light >( sceneBB ) )
 {
+   // we don't set these bounds to the sceneBB values, because those are just
+   // maximum extents of the scene, while m_sceneBounds hold the actual bounds of the scene 
+   // ( spanning the elemnts it currently holds )
+   m_sceneBounds.reset();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,7 +74,15 @@ void RenderingView::onEntityAdded( Entity& entity )
 {
    if ( entity.isA< Geometry >() )
    {
-      m_geometryStorage->insert( static_cast< Geometry& >( entity ) );
+      // insert the geometry to the octree
+      Geometry& geometry = static_cast< Geometry& >( entity );
+      m_geometryStorage->insert( geometry );
+
+      // include the geometry's bounds in the scene's bounds
+      AABoundingBox geometryBoundingBox;
+      geometry.getBoundingBox( geometryBoundingBox );
+
+      m_sceneBounds.add( geometryBoundingBox, m_sceneBounds );
    }
    else if ( entity.isA< Light >() )
    {
@@ -84,7 +96,11 @@ void RenderingView::onEntityRemoved(Entity& entity)
 {
    if ( entity.isA< Geometry >() )
    {
-      m_geometryStorage->remove( static_cast< Geometry& >( entity ) );
+      // remove the geometry from the octree
+      Geometry& geometry = static_cast< Geometry& >( entity );
+      m_geometryStorage->remove( geometry );
+
+      // recalculate scene bounds - TODO!!!!!!!! ( use the octree to do it )
    }
    else if ( entity.isA< Light >() )
    {

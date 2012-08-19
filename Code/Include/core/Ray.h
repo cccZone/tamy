@@ -45,6 +45,7 @@ struct Ray : public BoundingVolume
    // -------------------------------------------------------------------------
    BoundingVolume* clone() const;
    void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
+   void calculateBoundingBox( AABoundingBox& outBoundingBox ) const;
    PlaneClassification classifyAgainsPlane( const Plane& plane ) const;
    float distanceToPlane( const Plane& plane ) const;
    bool testCollision( const PointVolume& point ) const;
