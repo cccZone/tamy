@@ -156,6 +156,15 @@ struct Vector
    Vector& setMulAdd( const Vector& vec1, float t, const Vector& vec2 );
 
    /**
+    * this = vec1 * t + vec2 ( component by component )
+    * 
+    * @param vec1
+    * @param t
+    * @param vec2
+    */
+   Vector& setMulAdd( const Vector& vec1, const Vector& t, const Vector& vec2 );
+
+   /**
     * this = vec1 / vec2 ( component by component )
     * 
     * @param vec1

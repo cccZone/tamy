@@ -103,6 +103,17 @@ Vector& Vector::setMulAdd( const Vector& vec1, float t, const Vector& vec2 )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Vector& Vector::setMulAdd( const Vector& vec1, const Vector& t, const Vector& vec2 )
+{
+   x = vec1.x * t.x + vec2.x;
+   y = vec1.y * t.y + vec2.y;
+   z = vec1.z * t.z + vec2.z;
+   w = vec1.w * t.w + vec2.w;
+   return *this;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Vector& Vector::setDiv( const Vector& vec1, const Vector& vec2 )
 {
    x = vec1.x / vec2.x;

@@ -155,24 +155,31 @@ void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfB
    float cameraRange = activeCamera.getFarClippingPlane() - activeCamera.getNearClippingPlane();
 
    // pre-calculate light camera transformations that we'll use later on during AABBs calculations
-   Matrix cameraToLightViewTransform;
+   Matrix cameraToLightViewTransform, lightViewMtx;
    {
       Matrix invViewCamera;
       invViewCamera.setInverse( activeCamera.getViewMtx() );
       Matrix lightGlobalMtx = getGlobalMtx();
       lightGlobalMtx.setPosition( Vector::ZERO );
 
-      Matrix lightViewMtx;
       MatrixUtils::calculateViewMtx( lightGlobalMtx, lightViewMtx );
 
       cameraToLightViewTransform.setMul( invViewCamera, lightViewMtx );
    }
 
    // acquire scene's AABB and transform it to the light view space
-   AABoundingBox sceneAABBInLightSpace;
+   Vector sceneBBPointsLightSpace[8];
    {
       const AABoundingBox& sceneBounds = renderingView->getSceneBounds();
-      sceneBounds.transform( cameraToLightViewTransform, sceneAABBInLightSpace );
+
+      Vector sceneAABBPoints[8];
+      createBBPoints( sceneBounds, sceneAABBPoints );
+
+      // Transform the scene bounding box to light space.
+      for( int i = 0; i < 8; ++i ) 
+      {
+         lightViewMtx.transform( sceneAABBPoints[i], sceneBBPointsLightSpace[i] );
+      }
    }
 
    // calculate light frustum bounds
@@ -185,15 +192,11 @@ void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfB
       m_cascadeConfigs[i].m_cameraNearZ = frustumIntervalBegin;
       m_cascadeConfigs[i].m_cameraFarZ = frustumIntervalEnd;
 
-      calculateCascadeFrustumBounds( activeCamera, frustumIntervalBegin, frustumIntervalEnd, cascadeFrustumBounds );
+      calculateCameraCascadeFrustumBounds( activeCamera, frustumIntervalBegin, frustumIntervalEnd, cascadeFrustumBounds );
 
       // transform the bounds to light
       AABoundingBox& lightFrustumBounds = m_cascadeConfigs[i].m_lightFrustumBounds;
       cascadeFrustumBounds.transform( cameraToLightViewTransform, lightFrustumBounds );
-
-      // memorize the clipping planes
-      float lightCameraNearZ = lightFrustumBounds.min.z;
-      float lightCameraFarZ = lightFrustumBounds.max.z;
 
       // now adjust the light frustum a bit in order to remove the shimmering effect
       // of shadow edges whenever the camera is moved
@@ -230,11 +233,8 @@ void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfB
          lightFrustumBounds.max.mul( worldUnitsPerTexel );
       }
 
-      // set the clipping planes and store the bounding box
-      // TODO:!!!!!!!!! !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      lightFrustumBounds.min.z = -100.0f;
-      lightFrustumBounds.max.z = 100.0f;
-      
+      calculateLightClippingPlanes( sceneBBPointsLightSpace, lightFrustumBounds );
+
       // calculate viewport
       {
          Viewport& viewport = m_cascadeConfigs[i].m_viewport;
@@ -250,7 +250,7 @@ void DirectionalLight::calculateCascadesBounds( Camera& activeCamera, float pcfB
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectionalLight::calculateCascadeFrustumBounds( Camera& activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart ) const
+void DirectionalLight::calculateCameraCascadeFrustumBounds( Camera& activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart ) const
 {
    float prevNearZ, prevFarZ;
    activeCamera.getClippingPlanes( prevNearZ, prevFarZ );
@@ -261,6 +261,322 @@ void DirectionalLight::calculateCascadeFrustumBounds( Camera& activeCamera, floa
    frustum.calculateBoundingBox( outFrustumPart );
 
    activeCamera.setClippingPlanes( prevNearZ, prevFarZ );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::createBBPoints( const AABoundingBox& inAABB, Vector* outBBPoints ) const
+{
+   //This map enables us to use a for loop and do vector math.
+   static const Vector extentsMap[] = 
+   { 
+      Vector( 1.0f, 1.0f, -1.0f, 1.0f ), 
+      Vector( -1.0f, 1.0f, -1.0f, 1.0f ), 
+      Vector( 1.0f, -1.0f, -1.0f, 1.0f ),
+      Vector( -1.0f, -1.0f, -1.0f, 1.0f ),
+      Vector( 1.0f, 1.0f, 1.0f, 1.0f ),
+      Vector( -1.0f, 1.0f, 1.0f, 1.0f ),
+      Vector( 1.0f, -1.0f, 1.0f, 1.0f ),
+      Vector( -1.0f, -1.0f, 1.0f, 1.0f )
+   };
+
+   Vector extents;
+   extents.setSub( inAABB.max, inAABB.min );
+
+   Vector center;
+   center.setAdd( inAABB.min, inAABB.max ).mul( 0.5f );
+
+   for( int i = 0; i < 8; ++i ) 
+   {
+      outBBPoints[i].setMulAdd( extents, extentsMap[i], center );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::calculateLightClippingPlanes( const Vector* sceneBBInLightSpace, AABoundingBox& inOutLightFrustumBounds ) const
+{
+   struct Triangle 
+   {
+      Vector pt[3];
+      BOOL culled;
+   };
+
+   // Initialize the near and far planes
+   float nearPlane = FLT_MAX;
+   float farPlane = -FLT_MAX;
+
+   Triangle triangleList[16];
+   int triangleCount = 1;
+
+   triangleList[0].pt[0] = sceneBBInLightSpace[0];
+   triangleList[0].pt[1] = sceneBBInLightSpace[1];
+   triangleList[0].pt[2] = sceneBBInLightSpace[2];
+   triangleList[0].culled = false;
+
+   // These are the indices used to tesselate an AABB into a list of triangles.
+   static const int bbTriIndexes[] = 
+   {
+      0,1,2,  1,2,3,
+      4,5,6,  5,6,7,
+      0,2,4,  2,4,6,
+      1,3,5,  3,5,7,
+      0,1,4,  1,4,5,
+      2,3,6,  3,6,7 
+   };
+
+   int pointPassesCollision[3];
+
+   // At a high level: 
+   // 1. Iterate over all 12 triangles of the AABB.  
+   // 2. Clip the triangles against each plane. Create new triangles as needed.
+   // 3. Find the min and max z values as the near and far plane.
+
+   //This is easier because the triangles are in camera spacing making the collisions tests simple comparisions.
+
+   float lightCameraOrthographicMinX = inOutLightFrustumBounds.min.x;
+   float lightCameraOrthographicMaxX = inOutLightFrustumBounds.max.x;
+   float lightCameraOrthographicMinY = inOutLightFrustumBounds.min.y;
+   float lightCameraOrthographicMaxY = inOutLightFrustumBounds.max.y;
+
+   for( int bbTriIter = 0; bbTriIter < 12; ++bbTriIter ) 
+   {
+
+      triangleList[0].pt[0] = sceneBBInLightSpace[ bbTriIndexes[ bbTriIter*3 + 0 ] ];
+      triangleList[0].pt[1] = sceneBBInLightSpace[ bbTriIndexes[ bbTriIter*3 + 1 ] ];
+      triangleList[0].pt[2] = sceneBBInLightSpace[ bbTriIndexes[ bbTriIter*3 + 2 ] ];
+      triangleCount = 1;
+      triangleList[0].culled = FALSE;
+
+      // Clip each invidual triangle against the 4 frustums.  When ever a triangle is clipped into new triangles, 
+      //add them to the list.
+      for( int frustumPlaneIter = 0; frustumPlaneIter < 4; ++frustumPlaneIter ) 
+      {
+
+         float edge;
+         int component;
+
+         if( frustumPlaneIter == 0 ) 
+         {
+            edge = lightCameraOrthographicMinX;
+            component = 0;
+         } 
+         else if( frustumPlaneIter == 1 ) 
+         {
+            edge = lightCameraOrthographicMaxX;
+            component = 0;
+         } 
+         else if( frustumPlaneIter == 2 ) 
+         {
+            edge = lightCameraOrthographicMinY;
+            component = 1;
+         } 
+         else 
+         {
+            edge = lightCameraOrthographicMaxY;
+            component = 1;
+         }
+
+         for( int triIter=0; triIter < triangleCount; ++triIter ) 
+         {
+            // We don't delete triangles, so we skip those that have been culled.
+            if( !triangleList[triIter].culled ) 
+            {
+               int insideVertCount = 0;
+               Vector tempOrder;
+
+               // Test against the correct frustum plane.
+               // This could be written more compactly, but it would be harder to understand.
+
+               if( frustumPlaneIter == 0 ) 
+               {
+                  for( int triPtIter=0; triPtIter < 3; ++triPtIter ) 
+                  {
+                     if( triangleList[triIter].pt[triPtIter].x > lightCameraOrthographicMinX ) 
+                     { 
+                        pointPassesCollision[triPtIter] = 1;
+                     }
+                     else 
+                     {
+                        pointPassesCollision[triPtIter] = 0;
+                     }
+                     insideVertCount += pointPassesCollision[triPtIter];
+                  }
+               }
+               else if( frustumPlaneIter == 1 ) 
+               {
+                  for( INT triPtIter=0; triPtIter < 3; ++triPtIter ) 
+                  {
+                     if( triangleList[triIter].pt[triPtIter].x < lightCameraOrthographicMaxX )
+                     {
+                        pointPassesCollision[triPtIter] = 1;
+                     }
+                     else
+                     { 
+                        pointPassesCollision[triPtIter] = 0;
+                     }
+                     insideVertCount += pointPassesCollision[triPtIter];
+                  }
+               }
+               else if( frustumPlaneIter == 2 ) 
+               {
+                  for( INT triPtIter=0; triPtIter < 3; ++triPtIter ) 
+                  {
+                     if( triangleList[triIter].pt[triPtIter].y > lightCameraOrthographicMinY ) 
+                     {
+                        pointPassesCollision[triPtIter] = 1;
+                     }
+                     else 
+                     {
+                        pointPassesCollision[triPtIter] = 0;
+                     }
+                     insideVertCount += pointPassesCollision[triPtIter];
+                  }
+               }
+               else 
+               {
+                  for( INT triPtIter=0; triPtIter < 3; ++triPtIter ) 
+                  {
+                     if( triangleList[triIter].pt[triPtIter].y < lightCameraOrthographicMaxY ) 
+                     {
+                        pointPassesCollision[triPtIter] = 1;
+                     }
+                     else 
+                     {
+                        pointPassesCollision[triPtIter] = 0;
+                     }
+                     insideVertCount += pointPassesCollision[triPtIter];
+                  }
+               }
+
+               // Move the points that pass the frustum test to the begining of the array.
+               if( pointPassesCollision[1] && !pointPassesCollision[0] ) 
+               {
+                  tempOrder =  triangleList[triIter].pt[0];   
+                  triangleList[triIter].pt[0] = triangleList[triIter].pt[1];
+                  triangleList[triIter].pt[1] = tempOrder;
+                  pointPassesCollision[0] = TRUE;            
+                  pointPassesCollision[1] = FALSE;            
+               }
+               if( pointPassesCollision[2] && !pointPassesCollision[1] ) 
+               {
+                  tempOrder =  triangleList[triIter].pt[1];   
+                  triangleList[triIter].pt[1] = triangleList[triIter].pt[2];
+                  triangleList[triIter].pt[2] = tempOrder;
+                  pointPassesCollision[1] = TRUE;            
+                  pointPassesCollision[2] = FALSE;                        
+               }
+               if( pointPassesCollision[1] && !pointPassesCollision[0] ) 
+               {
+                  tempOrder =  triangleList[triIter].pt[0];   
+                  triangleList[triIter].pt[0] = triangleList[triIter].pt[1];
+                  triangleList[triIter].pt[1] = tempOrder;
+                  pointPassesCollision[0] = TRUE;            
+                  pointPassesCollision[1] = FALSE;            
+               }
+
+               if( insideVertCount == 0 ) 
+               { // All points failed. We're done,  
+                  triangleList[triIter].culled = true;
+               }
+               else if( insideVertCount == 1 ) 
+               {// One point passed. Clip the triangle against the Frustum plane
+                  triangleList[triIter].culled = false;
+
+                  Vector vert0ToVert1, vert0ToVert2;
+                  vert0ToVert1.setSub( triangleList[triIter].pt[1], triangleList[triIter].pt[0] );
+                  vert0ToVert2.setSub( triangleList[triIter].pt[2], triangleList[triIter].pt[0] );
+
+                  // Find the collision ratio.
+                  FLOAT hitPointTimeRatio = edge - triangleList[triIter].pt[0][component];
+
+                  // Calculate the distance along the vector as ratio of the hit ratio to the component.
+                  FLOAT distanceAlongVector01 = hitPointTimeRatio / vert0ToVert1[component];
+                  FLOAT distanceAlongVector02 = hitPointTimeRatio / vert0ToVert2[component];
+
+                  // Add the point plus a percentage of the vector.
+                  vert0ToVert1.mul( distanceAlongVector01 ).add( triangleList[triIter].pt[0] );
+                  vert0ToVert2.mul( distanceAlongVector02 ).add( triangleList[triIter].pt[0] );
+
+                  triangleList[triIter].pt[1] = vert0ToVert2;
+                  triangleList[triIter].pt[2] = vert0ToVert1;
+
+               }
+               else if( insideVertCount == 2 ) 
+               { // 2 in  // tesselate into 2 triangles
+
+
+                  // Copy the triangle\(if it exists) after the current triangle out of
+                  // the way so we can override it with the new triangle we're inserting.
+                  triangleList[triangleCount] = triangleList[triIter+1];
+
+                  triangleList[triIter].culled = false;
+                  triangleList[triIter+1].culled = false;
+
+                  // Get the vector from the outside point into the 2 inside points.
+                  Vector vert2ToVert0, vert2ToVert1;
+                  vert2ToVert0.setSub( triangleList[triIter].pt[0], triangleList[triIter].pt[2] );
+                  vert2ToVert1.setSub( triangleList[triIter].pt[1], triangleList[triIter].pt[2] );
+
+                  // Get the hit point ratio.
+                  float hitPointTime_2_0 =  edge - triangleList[triIter].pt[2][component];
+                  float distanceAlongVector_2_0 = hitPointTime_2_0 / vert2ToVert0[component];
+
+                  // Calculate the new vert by adding the percentage of the vector plus point 2.
+                  vert2ToVert0.mul( distanceAlongVector_2_0 ).add( triangleList[triIter].pt[2] );
+
+                  // Add a new triangle.
+                  triangleList[triIter+1].pt[0] = triangleList[triIter].pt[0];
+                  triangleList[triIter+1].pt[1] = triangleList[triIter].pt[1];
+                  triangleList[triIter+1].pt[2] = vert2ToVert0;
+
+                  //Get the hit point ratio.
+                  float hitPointTime_2_1 =  edge - triangleList[triIter].pt[2][component];
+                  float distanceAlongVector_2_1 = hitPointTime_2_1 / vert2ToVert1[component];
+                  vert2ToVert1.mul( distanceAlongVector_2_1 ).add( triangleList[triIter].pt[2] );
+                  triangleList[triIter].pt[0] = triangleList[triIter+1].pt[1];
+                  triangleList[triIter].pt[1] = triangleList[triIter+1].pt[2];
+                  triangleList[triIter].pt[2] = vert2ToVert1;
+
+                  // Increment triangle count and skip the triangle we just inserted.
+                  ++triangleCount;
+                  ++triIter;
+
+
+               }
+               else 
+               { // all in
+                  triangleList[triIter].culled = false;
+
+               }
+            }// end if !culled loop            
+         }
+      }
+      for( int index = 0; index < triangleCount; ++index ) 
+      {
+         if( !triangleList[index].culled ) 
+         {
+            // Set the near and far plan and the min and max z values respectively.
+            for( int vertind = 0; vertind < 3; ++ vertind ) 
+            {
+               float triangleCoordZ = triangleList[index].pt[vertind].z;
+               if( nearPlane > triangleCoordZ ) 
+               {
+                  nearPlane = triangleCoordZ;
+               }
+               if( farPlane  <triangleCoordZ ) 
+               {
+                  farPlane = triangleCoordZ;
+               }
+            }
+         }
+      }
+   }  
+
+
+   // set the clipping planes on the output bounding box 
+   inOutLightFrustumBounds.min.z = nearPlane;
+   inOutLightFrustumBounds.max.z = farPlane;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

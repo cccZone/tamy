@@ -94,7 +94,11 @@ private:
 
    void calculateCascadesBounds( Camera& activeCamera, float pcfBlurSize, float cascadeDimensions, const RenderingView* renderingView );
 
-   void calculateCascadeFrustumBounds( Camera& activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart ) const;
+   void calculateCameraCascadeFrustumBounds( Camera& activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart ) const;
+
+   void createBBPoints( const AABoundingBox& inAABB, Vector* outBBPoints ) const;
+
+   void calculateLightClippingPlanes( const Vector* sceneBBInLightSpace, AABoundingBox& inOutLightFrustumBounds ) const;
 
    void renderCascades( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data );
 
