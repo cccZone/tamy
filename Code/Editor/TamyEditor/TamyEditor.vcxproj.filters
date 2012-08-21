@@ -530,9 +530,6 @@
     <ClInclude Include="DRPointLight.h">
       <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClInclude>
-    <ClInclude Include="RPBSoftShadows.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_depthbufferdescriptordialog.h">
       <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
@@ -1279,9 +1276,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Template\moc_ProfilerChart.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBSoftShadows.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="DepthBufferDescriptorDialog.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
