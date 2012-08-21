@@ -44,8 +44,7 @@ public:
    // -------------------------------------------------------------------------
    // Light implementation
    // -------------------------------------------------------------------------
-   void renderLighting( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex );
-   void renderShadowMap( Renderer& renderer, const ShadowRendererData& data );
+   void render( Renderer& renderer, const LightingRenderData& data );
 
    // -------------------------------------------------------------------------
    // Object implementation

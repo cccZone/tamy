@@ -9,6 +9,7 @@
 #include "core-Renderer\FullscreenQuad.h"
 #include "core-Renderer\BasicRenderCommands.h"
 #include "core-Renderer\TriangleMesh.h"
+#include "core-Renderer\RenderTarget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -73,7 +74,7 @@ void PointLight::onPropertyChanged( ReflectionProperty& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void PointLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex )
+void PointLight::render( Renderer& renderer, const LightingRenderData& data )
 {
    if ( !m_vertexShader || !m_pixelShader || !m_pointLightMesh )
    {
@@ -85,6 +86,9 @@ void PointLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormals
 
    Matrix viewProjMtx;
    viewProjMtx.setMul( activeCamera.getViewMtx(), activeCamera.getProjectionMtx() ); 
+
+   // activate the final render target
+   new ( renderer() ) RCActivateRenderTarget( data.m_finalLightColorTarget );
 
    // set and configure the pixel shader
    RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_pixelShader, renderer );
@@ -102,8 +106,8 @@ void PointLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormals
       psComm->setFloat( "g_radius", m_radius );
       psComm->setFloat( "g_farZ", activeCamera.getFarClippingPlane() );
       psComm->setMtx( "g_mtxProjToView", mtxInvProj );
-      psComm->setTexture( "g_DepthNormals", *depthNormalsTex );
-      psComm->setTexture( "g_SceneColor", *sceneColorTex );
+      psComm->setTexture( "g_DepthNormals", *data.m_depthNormalsTex );
+      psComm->setTexture( "g_SceneColor", *data.m_sceneColorTex );
    }
 
    // set and configure the vertex shader
@@ -122,14 +126,8 @@ void PointLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormals
    // cleanup
    new ( renderer() ) RCUnbindVertexShader( *m_vertexShader );
    new ( renderer() ) RCUnbindPixelShader( *m_pixelShader, renderer );
+   new ( renderer() ) RCDeactivateRenderTarget();
 
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void PointLight::renderShadowMap( Renderer& renderer, const ShadowRendererData& data )
-{
-   // <renderer.todo> renderShadowMap - implement me !!!!!!!!!!!!!!!
 }
 
 ///////////////////////////////////////////////////////////////////////////////

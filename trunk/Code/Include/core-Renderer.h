@@ -202,7 +202,6 @@
 // --> PipelineNodes
 // ----------------------------------------------------------------------------
 #include "core-Renderer\RPDeferredLightingNode.h"
-#include "core-Renderer\RPSoftShadowsNode.h"
 
 // ----------------------------------------------------------------------------
 // Tools

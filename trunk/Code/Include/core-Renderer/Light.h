@@ -19,13 +19,19 @@ class Geometry;
 /**
  * A helper structure that aggregates all data needed to render shadows.
  */
-struct ShadowRendererData
+struct LightingRenderData
 {
+   // data required by the shadow calculation shaders
    const RenderingView*             m_renderingView;
    const Array< Geometry* >*        m_geometryToRender;
    RenderTarget*                    m_shadowDepthTexture;
    DepthBuffer*                     m_shadowDepthSurface;
    RenderTarget*                    m_screenSpaceShadowMap;
+
+   // data required by the lighting calculation shaders
+   ShaderTexture*                   m_depthNormalsTex;
+   ShaderTexture*                   m_sceneColorTex;
+   RenderTarget*                    m_finalLightColorTarget;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,18 +59,9 @@ public:
     * Renders the light volume.
     *
     * @param renderer
-    * @param depthNormalsTex        a texture containing scene depth and normals
-    * @param sceneColorTex          a texture with rendered scene colors ( coming from the materials of scene objects )
-    */
-   virtual void renderLighting( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex ) {}
-
-   /**
-    * Renders a shadow mp of the shadows cast by this light.
-    *
-    * @param renderer
     * @param data
     */
-   virtual void renderShadowMap( Renderer& renderer, const ShadowRendererData& data ) {}
+   virtual void render( Renderer& renderer, const LightingRenderData& data ) {}
 
    /**
     * Tells if the light is set to cast shadows.

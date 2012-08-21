@@ -16,6 +16,21 @@
 #include "core-Renderer\VertexShaderConfigurator.h"
 
 
+// TODO: !!!!!!!!!! DOCUMENT the VertexShaderConfigurator - it's a tool that allows to set custom values on a vertex shader depending 
+// on the context from which that vertex shader is called ( like this for instance ).
+// It works with Geometry entities, not vertex shaders themselves.
+// It allows to render arbitrary geometry ( that's set up with arbitrary vertex shaders ) using arbitrary rendering technique
+// ( imposed by the pixel shader in use ) by setting up the technique-related shader constants on those vertex shaders.
+//
+// This technology resembles DX effects, but with a difference that here the main item for us is the pixel shader.
+// The pixel shader defines what sort of data it requires from the preceding vertex shader ( by setting the vertex shader technique ).
+// Vertex shader on the other hand may require a specific set of constants being set for that technique - additional 
+// to the constants it normally uses to render geometry using its default technique.
+//
+// So we're building a vertex shader family tree this way - the default technique being responsible for rendering the geometry
+// itself, and additional techniques are built on top of that and provide additional data ( such as data to compute shadows ).
+
+
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( DirectionalLight );
@@ -26,7 +41,7 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float g_cascadeIntervals[] = { 0.0f, 3.0f / 100.0f, 12.0f / 100.0f, 30.0f / 100.0f, 1.0f };
+float g_cascadeIntervals[] = { 0.0f, 5.0f / 100.0f, 12.0f / 100.0f, 30.0f / 100.0f, 1.0f };
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -66,18 +81,41 @@ void DirectionalLight::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectionalLight::renderLighting( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex )
+void DirectionalLight::render( Renderer& renderer, const LightingRenderData& data )
 {
    if ( !m_lightingShader )
    {
       return;
    }
    
-   const Matrix& globalMtx = getGlobalMtx();
+   // first - render a shadow map, if this light is set to cast shadows
+   bool drawShadows = castsShadows();
+   if ( drawShadows )
+   {
+      renderShadowMap( renderer, data );
+   }
+
+   // and now render the light contribution
+   renderLighting( renderer, data, drawShadows );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DirectionalLight::renderLighting( Renderer& renderer, const LightingRenderData& data, bool drawShadows )
+{
+   if ( !data.m_depthNormalsTex || !data.m_sceneColorTex )
+   {
+      return;
+   }
+
+   // activate the final render target
+   new ( renderer() ) RCActivateRenderTarget( data.m_finalLightColorTarget );
 
    // set and configure the pixel shader
    RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_lightingShader, renderer );
    {
+      const Matrix& globalMtx = getGlobalMtx();
+
       Camera& activeCamera = renderer.getActiveCamera();
       Vector lightDirVS;
       activeCamera.getViewMtx().transformNorm( globalMtx.forwardVec(), lightDirVS );
@@ -85,8 +123,14 @@ void DirectionalLight::renderLighting( Renderer& renderer, ShaderTexture* depthN
       psComm->setVec4( "g_lightColor", (const Vector&)m_color );
       psComm->setFloat( "g_strength", m_strength );
 
-      psComm->setTexture( "g_DepthNormals", *depthNormalsTex );
-      psComm->setTexture( "g_SceneColor", *sceneColorTex );
+      psComm->setTexture( "g_DepthNormals", *data.m_depthNormalsTex );
+      psComm->setTexture( "g_SceneColor", *data.m_sceneColorTex );
+
+      psComm->setBool( "g_drawShadows", drawShadows );
+      if ( data.m_screenSpaceShadowMap )
+      {
+         psComm->setTexture( "g_ShadowMap", *data.m_screenSpaceShadowMap );
+      }
    }
 
    // draw the geometry
@@ -96,34 +140,14 @@ void DirectionalLight::renderLighting( Renderer& renderer, ShaderTexture* depthN
 
    // cleanup
    new ( renderer() ) RCUnbindPixelShader( *m_lightingShader, renderer );
+   new ( renderer() ) RCDeactivateRenderTarget();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: !!!!!!!!!!! shadow calculations need to be calculated along with the light propagation volume - get rid of the soft shadows node as soon as all the shadow related
-// calculations work fine, and then alter the light volume shape ( the rendered one ) with respect to the cast shadows.
-// We need that for situations, in which there's a point light located in another light's shadow. Such object would normally be black from the shaded side,
-// but since there's a point light there, that light will influence it.
-// If we just calculate a single shadow map for all lights, there's no way of telling which lights influence which regions of the scene
-
-
-// TODO: !!!!!!!!!! DOCUMENT the VertexShaderConfigurator - it's a tool that allows to set custom values on a vertex shader depending 
-// on the context from which that vertex shader is called ( like this for instance ).
-// It works with Geometry entities, not vertex shaders themselves.
-// It allows to render arbitrary geometry ( that's set up with arbitrary vertex shaders ) using arbitrary rendering technique
-// ( imposed by the pixel shader in use ) by setting up the technique-related shader constants on those vertex shaders.
-//
-// This technology resembles DX effects, but with a difference that here the main item for us is the pixel shader.
-// The pixel shader defines what sort of data it requires from the preceding vertex shader ( by setting the vertex shader technique ).
-// Vertex shader on the other hand may require a specific set of constants being set for that technique - additional 
-// to the constants it normally uses to render geometry using its default technique.
-//
-// So we're building a vertex shader family tree this way - the default technique being responsible for rendering the geometry
-// itself, and additional techniques are built on top of that and provide additional data ( such as data to compute shadows ).
-
-void DirectionalLight::renderShadowMap( Renderer& renderer, const ShadowRendererData& data )
+void DirectionalLight::renderShadowMap( Renderer& renderer, const LightingRenderData& data )
 {
-   if ( !m_castsShadows || !m_shadowDepthMapShader || !m_shadowProjectionPS )
+   if ( !m_castsShadows || !m_shadowDepthMapShader || !m_shadowProjectionPS || !data.m_shadowDepthTexture )
    {
       return;
    }
@@ -582,8 +606,13 @@ void DirectionalLight::calculateLightClippingPlanes( const Vector* sceneBBInLigh
 ///////////////////////////////////////////////////////////////////////////////
 
 
-void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data )
+void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const LightingRenderData& data )
 {
+   if ( !data.m_shadowDepthTexture || !data.m_shadowDepthSurface )
+   {
+      return;
+   }
+
    // bind the shader and set the render target
    new ( renderer() ) RCActivateRenderTarget( data.m_shadowDepthTexture );
    new ( renderer() ) RCActivateDepthBuffer( data.m_shadowDepthSurface );
@@ -625,8 +654,13 @@ void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectionalLight::combineCascades( Renderer& renderer, const ShadowRendererData& data, Camera& activeCamera, Camera& lightCamera, float cascadeDimensions )
+void DirectionalLight::combineCascades( Renderer& renderer, const LightingRenderData& data, Camera& activeCamera, Camera& lightCamera, float cascadeDimensions )
 {
+   if ( !data.m_screenSpaceShadowMap )
+   {
+      return;
+   }
+
    float depthRanges[NUM_CASCADES + 1];
    Vector viewportOffsets[NUM_CASCADES];
    Matrix clipToLightSpaceMtx[NUM_CASCADES];

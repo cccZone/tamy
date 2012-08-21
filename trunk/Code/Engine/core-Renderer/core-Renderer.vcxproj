@@ -135,7 +135,6 @@
     <ClCompile Include="RPDeferredLightingNode.cpp" />
     <ClCompile Include="RPPostProcessNode.cpp" />
     <ClCompile Include="RPSceneRenderNode.cpp" />
-    <ClCompile Include="RPSoftShadowsNode.cpp" />
     <ClCompile Include="RPStartNode.cpp" />
     <ClCompile Include="RPTextureNode.cpp" />
     <ClCompile Include="RPVec4Node.cpp" />
@@ -240,7 +239,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h" />
-    <ClInclude Include="..\..\Include\core-Renderer\RPSoftShadowsNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPTextureNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPVec4Node.h" />

@@ -22,14 +22,24 @@ class RPDeferredLightingNode : public RenderingPipelineNode
    DECLARE_CLASS()
 
 private:
-   std::string                               m_renderTargetId;
+   std::string                               m_finalLightColorTargetId;
+   std::string                               m_shadowDepthTextureId;
+   std::string                               m_shadowDepthSurfaceId;
+   std::string                               m_screenSpaceShadowMapId;
 
    // runtime data
-   TRuntimeVar< Array< RenderTarget* >* >    m_renderTargets;
+   TRuntimeVar< RenderTarget* >              m_shadowDepthTexture;
+   TRuntimeVar< DepthBuffer* >               m_shadowDepthSurface;
+   TRuntimeVar< RenderTarget* >              m_screenSpaceShadowMap;
+   TRuntimeVar< RenderTarget* >              m_finalLightColorTarget;
 
    // sockets data
    RPTextureInput*                           m_sceneColorInput;
    RPTextureInput*                           m_depthNormalsInput;
+
+   RPTextureOutput*                          m_finalLightColorTargetOutput;
+   RPTextureOutput*                          m_shadowDepthTextureOutput;
+   RPTextureOutput*                          m_screenSpaceShadowMapOutput;
 
 
 public:

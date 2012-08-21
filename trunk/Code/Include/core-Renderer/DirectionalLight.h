@@ -81,8 +81,7 @@ public:
    // -------------------------------------------------------------------------
    // Light implementation
    // -------------------------------------------------------------------------
-   void renderLighting( Renderer& renderer, ShaderTexture* depthNormalsTex, ShaderTexture* sceneColorTex );
-   void renderShadowMap( Renderer& renderer, const ShadowRendererData& data );
+   void render( Renderer& renderer, const LightingRenderData& data );
 
    // -------------------------------------------------------------------------
    // Object implementation
@@ -92,6 +91,16 @@ public:
 private:
    void initialize();
 
+   // -------------------------------------------------------------------------
+   // Lighting computation related methods
+   // -------------------------------------------------------------------------
+   void renderLighting( Renderer& renderer, const LightingRenderData& data, bool drawShadows );
+
+   // -------------------------------------------------------------------------
+   // Shadow map computation related methods
+   // -------------------------------------------------------------------------
+   void renderShadowMap( Renderer& renderer, const LightingRenderData& data );
+
    void calculateCascadesBounds( Camera& activeCamera, float pcfBlurSize, float cascadeDimensions, const RenderingView* renderingView );
 
    void calculateCameraCascadeFrustumBounds( Camera& activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart ) const;
@@ -100,9 +109,9 @@ private:
 
    void calculateLightClippingPlanes( const Vector* sceneBBInLightSpace, AABoundingBox& inOutLightFrustumBounds ) const;
 
-   void renderCascades( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data );
+   void renderCascades( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const LightingRenderData& data );
 
-   void combineCascades( Renderer& renderer, const ShadowRendererData& data, Camera& activeCamera, Camera& lightCamera, float cascadeDimensions );
+   void combineCascades( Renderer& renderer, const LightingRenderData& data, Camera& activeCamera, Camera& lightCamera, float cascadeDimensions );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -14,7 +14,6 @@
 #include "RPBFloat.h"
 #include "RPBVec4.h"
 #include "RPBDeferredLighting.h"
-#include "RPBSoftShadows.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,7 +51,6 @@ void RenderingPipelineLayout::initBlocksFactory()
    associate< RPFloatNode, RPBFloat >();
    associate< RPVec4Node, RPBVec4 >();
    associate< RPDeferredLightingNode, RPBDeferredLighting >();
-   associate< RPSoftShadowsNode, RPBSoftShadows >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
