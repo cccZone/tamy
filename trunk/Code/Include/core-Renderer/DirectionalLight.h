@@ -46,7 +46,7 @@ private:
 
    struct VSSetter : public VertexShaderConfigurator
    {
-      Matrix                  m_lightViewProjMtx;
+      Matrix               m_lightViewProjMtx;
 
       /**
        * Constructor.
