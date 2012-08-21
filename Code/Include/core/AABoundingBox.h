@@ -37,6 +37,14 @@ struct AABoundingBox : public BoundingVolume
    AABoundingBox( const Vector& min, const Vector& max );
 
    /**
+    * Sets new bounds and expands them at the same time, so that the bounding box becomes larger.
+    *
+    * @param bounds
+    * @param multiplier
+    */
+   void setExpanded( const AABoundingBox& bounds, float multiplier );
+
+   /**
     * Union of two boxes.
     *
     * @param otherBox

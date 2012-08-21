@@ -26,7 +26,7 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float g_cascadeIntervals[] = { 0.0f, 5.0f / 100.0f, 15.0f / 100.0f, 60.0f / 100.0f, 1.0f };
+float g_cascadeIntervals[] = { 0.0f, 3.0f / 100.0f, 12.0f / 100.0f, 30.0f / 100.0f, 1.0f };
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -564,7 +564,7 @@ void DirectionalLight::calculateLightClippingPlanes( const Vector* sceneBBInLigh
                {
                   nearPlane = triangleCoordZ;
                }
-               if( farPlane  <triangleCoordZ ) 
+               if( farPlane < triangleCoordZ ) 
                {
                   farPlane = triangleCoordZ;
                }
@@ -584,10 +584,6 @@ void DirectionalLight::calculateLightClippingPlanes( const Vector* sceneBBInLigh
 
 void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const ShadowRendererData& data )
 {
-   // store the original camera settings
-   float origCameraNearZ, origCameraFarZ;
-   activeCamera.getClippingPlanes( origCameraNearZ, origCameraFarZ );
-
    // bind the shader and set the render target
    new ( renderer() ) RCActivateRenderTarget( data.m_shadowDepthTexture );
    new ( renderer() ) RCActivateDepthBuffer( data.m_shadowDepthSurface );
@@ -595,12 +591,12 @@ void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera,
    new ( renderer() ) RCClearDepthBuffer();
 
    // render cascades
+   AABoundingBox expandedCascadeBounds;
    for ( uint cascadeIdx = 0; cascadeIdx < NUM_CASCADES; ++cascadeIdx )
    {
       const AABoundingBox& cascadeBounds = m_cascadeConfigs[cascadeIdx].m_lightFrustumBounds;
       lightCamera.setNearPlaneDimensions( cascadeBounds.max.x - cascadeBounds.min.x, cascadeBounds.max.y - cascadeBounds.min.y );
       lightCamera.setClippingPlanes( cascadeBounds.min.z, cascadeBounds.max.z );
-      //activeCamera.setClippingPlanes( m_cascadeConfigs[cascadeIdx].m_cameraNearZ, m_cascadeConfigs[cascadeIdx].m_cameraFarZ );
 
       new ( renderer() ) RCSetViewport( m_cascadeConfigs[cascadeIdx].m_viewport );
 
@@ -608,6 +604,7 @@ void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera,
       {
          VSSetter vsSetter( lightCamera );
 
+         expandedCascadeBounds.setExpanded( cascadeBounds, 2.0f );
          m_visibleGeometry.clear();
          data.m_renderingView->collectRenderables( cascadeBounds, m_visibleGeometry );
 
@@ -624,9 +621,6 @@ void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera,
    new ( renderer() ) RCUnbindPixelShader( *m_shadowDepthMapShader, renderer );
    new ( renderer() ) RCDeactivateDepthBuffer( data.m_shadowDepthSurface );
    new ( renderer() ) RCDeactivateRenderTarget();
-
-   // restore previous camera settings
-   activeCamera.setClippingPlanes( origCameraNearZ, origCameraFarZ );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -675,8 +669,10 @@ void DirectionalLight::combineCascades( Renderer& renderer, const ShadowRenderer
       {
          // set the shadow map
          float texelDimension = 1.0f / cascadeDimensions;
+         float cascadeScale = cascadeDimensions / shadowMapDimension;
          psComm->setFloat( "g_texelDimension", texelDimension );
          psComm->setTexture( "g_shadowDepthMap", *data.m_shadowDepthTexture );
+         psComm->setFloat( "g_cascadeScale", cascadeScale );
          psComm->setFloat( "g_cascadeDepthRanges", depthRanges, NUM_CASCADES + 1 );
          psComm->setVec4( "g_cascadeOffsets", viewportOffsets, NUM_CASCADES  );
          psComm->setMtx( "g_clipToLightSpaceMtx", clipToLightSpaceMtx , NUM_CASCADES );

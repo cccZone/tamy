@@ -24,6 +24,14 @@ AABoundingBox::AABoundingBox( const Vector& _min, const Vector& _max )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void AABoundingBox::setExpanded( const AABoundingBox& bounds, float multiplier )
+{
+   min.setMul( bounds.min, multiplier );
+   max.setMul( bounds.max, multiplier );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void AABoundingBox::add( const AABoundingBox& otherBox, AABoundingBox& unionBox ) const
 {
    unionBox.min.x = this->min.x < otherBox.min.x ? this->min.x : otherBox.min.x;
