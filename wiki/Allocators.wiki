@@ -37,8 +37,8 @@ void dealloc( void* ptr );
 
 ==Existing allocators==
 
- * DefaultAllocator - allocates memory in the system heap
- * MemoryPoolAllocator - allocates memory in a dedicated MemoryPool
+ * `DefaultAllocator` - allocates memory in the system heap
+ * `MemoryPoolAllocator` - allocates memory in a dedicated MemoryPool
 
 ==Allocated object's placement operators==
 
