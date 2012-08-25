@@ -23,8 +23,8 @@ template< typename T >
 class ShaderRenderCommand : public RenderCommand 
 {
 private:
-   MemoryPoolAllocator&             m_allocator;
-   Array< ShaderParam< T >* >       m_shaderParams;
+   MemoryPoolAllocator&                                  m_allocator;
+   Array< ShaderParam< T >*, MemoryPoolAllocator >       m_shaderParams;
 
 public:
    /**

@@ -1,11 +1,10 @@
+/// @file   core\Array.h
+/// @brief  a reusable array container
 #ifndef _ARRAY_H
 #define _ARRAY_H
 
-/// @file   core\Array.h
-/// @brief  a reusable array container
-
-
 #include "core\Assert.h"
+#include "core\DefaultAllocator.h"
 #include <stdio.h>
 
 
@@ -23,28 +22,31 @@
  * A plain c-style array turned into object oriented gizmo - has the speed
  * of c-style array, and the powers of object oriented containers.
  */
-template< typename T >
+template< typename T, typename TAllocator = DefaultAllocator >
 class Array
 {
 private:
-   unsigned int m_size;
-   unsigned int m_elementsCount;
-   T* m_arr;
+   unsigned int   m_size;
+   unsigned int   m_elementsCount;
+   T*             m_arr;
+
+   TAllocator*    m_defaultAllocator;
+   TAllocator*    m_allocator;
 
 public:
    /**
     * Constructor.
     *
-    *The parameter passed here preallocates the amount of memory necessary
+    * The parameter passed here preallocates the amount of memory necessary
     * for the array to store the passed number of elements.
     * It WILL NOT allocate these elements !!!
     *
     * @param size    initial array size (array will allocate memory to
     *                incorporate at least that many elements up front).
     */
-   Array(unsigned int size = 1);
+   Array( unsigned int size = 1, TAllocator* allocator = NULL );
 
-   Array(const Array& rhs);
+   Array( const Array& rhs );
 
    ~Array();
 

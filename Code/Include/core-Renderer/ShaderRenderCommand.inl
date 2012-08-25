@@ -12,7 +12,7 @@
 template< typename T >
 ShaderRenderCommand< T >::ShaderRenderCommand( MemoryPoolAllocator& allocator )
    : m_allocator( allocator )
-   , m_shaderParams( 16 ) // TODO: !!!!!!!!!!!! MAKE ARRAYS ALLOCATOR FRIENDLY AND USE ONE IN HERE !!!!!!!!!!!!!!
+   , m_shaderParams( 4, &allocator )
 {
 }
 
