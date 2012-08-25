@@ -35,9 +35,9 @@ void VertexShader::setVertexDescription( VertexDescId vertexDescId )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderParam< VertexShader >* VertexShader::createTextureSetter( const std::string& paramName, ShaderTexture& val )
+ShaderParam< VertexShader >* VertexShader::createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val )
 {
-   return val.createVertexShaderTextureSetter( paramName );
+   return val.createVertexShaderTextureSetter( allocator, paramName );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -146,7 +146,8 @@ int VertexShader::findTechnique( uint techniqueId ) const
 ///////////////////////////////////////////////////////////////////////////////
 
 RCBindVertexShader::RCBindVertexShader( VertexShader& shader, Renderer& renderer )
-   : m_shader( shader )
+   : ShaderRenderCommand< VertexShader >( *renderer.getAllocator() )
+   , m_shader( shader )
 {
    uint techniqueId = renderer.getVertexShaderTechnique();
    if ( techniqueId != 0 )

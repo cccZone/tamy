@@ -215,7 +215,7 @@ void List<T, TAllocator>::Elem::operator delete( void* ptr, TAllocator& allocato
 template< typename T, typename TAllocator >
 void* List<T, TAllocator>::Elem::operator new( size_t size )
 {
-   ASSERT_MSG( false, "Round buffer object can only be allocated in a round buffer." );
+   ASSERT_MSG( false, "Linked list element can only be allocated using a dedicated allocator." );
    return NULL;
 }
 
@@ -224,7 +224,7 @@ void* List<T, TAllocator>::Elem::operator new( size_t size )
 template< typename T, typename TAllocator >
 void List<T, TAllocator>::Elem::operator delete( void* ptr )
 {
-   ASSERT_MSG( false, "Can't delete a round buffer object - you need to delete the buffer that holds it." );
+   ASSERT_MSG( false, "Linked list element can only be allocated using a dedicated allocator." );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

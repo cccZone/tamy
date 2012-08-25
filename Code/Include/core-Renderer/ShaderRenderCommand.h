@@ -11,6 +11,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class ShaderTexture;
+class MemoryPoolAllocator;
+class IDString;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,22 +23,29 @@ template< typename T >
 class ShaderRenderCommand : public RenderCommand 
 {
 private:
-   Array< ShaderParam< T >* >      m_shaderParams;
+   MemoryPoolAllocator&             m_allocator;
+   Array< ShaderParam< T >* >       m_shaderParams;
 
 public:
+   /**
+    * Constructor.
+    *
+    * @param allocator
+    */
+   ShaderRenderCommand( MemoryPoolAllocator& allocator );
    virtual ~ShaderRenderCommand();
 
-   void setBool( const std::string& paramName, bool val );
-   void setInt( const std::string& paramName, int val );
-   void setInt( const std::string& paramName, const int* arr, unsigned int size );
-   void setFloat( const std::string& paramName, float val );
-   void setFloat( const std::string& paramName, const float* arr, unsigned int size );
-   void setMtx( const std::string& paramName, const Matrix& val );
-   void setMtx( const std::string& paramName, const Matrix* arr, unsigned int size );
-   void setString( const std::string& paramName, const std::string& val );
-   void setTexture( const std::string& paramName, ShaderTexture& val );
-   void setVec4( const std::string& paramName, const Vector& val );
-   void setVec4( const std::string& paramName, const Vector* arr, unsigned int size );
+   void setBool( const IDString& paramName, bool val );
+   void setInt( const IDString& paramName, int val );
+   void setInt( const IDString& paramName, const int* arr, unsigned int size );
+   void setFloat( const IDString& paramName, float val );
+   void setFloat( const IDString& paramName, const float* arr, unsigned int size );
+   void setMtx( const IDString& paramName, const Matrix& val );
+   void setMtx( const IDString& paramName, const Matrix* arr, unsigned int size );
+   void setString( const IDString& paramName, const std::string& val );
+   void setTexture( const IDString& paramName, ShaderTexture& val );
+   void setVec4( const IDString& paramName, const Vector& val );
+   void setVec4( const IDString& paramName, const Vector* arr, unsigned int size );
 
 protected:
    /**

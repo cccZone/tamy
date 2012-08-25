@@ -79,6 +79,7 @@
 #include "core\UniqueObject.h"
 #include "core\StringUtils.h"
 #include "core\Singleton.h"
+#include "core\IDString.h"
 
 // ----------------------------------------------------------------------------
 // RTTI

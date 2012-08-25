@@ -36,9 +36,19 @@ void EffectShader::setScript( const std::string& script )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderParam< EffectShader >* EffectShader::createTextureSetter( const std::string& paramName, ShaderTexture& val )
+ShaderParam< EffectShader >* EffectShader::createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val )
 {
-   return val.createEffectShaderTextureSetter( paramName );
+   return val.createEffectShaderTextureSetter( allocator, paramName );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+RCBindEffect::RCBindEffect( EffectShader& shader, Renderer& renderer ) 
+   : ShaderRenderCommand< EffectShader >( *renderer.getAllocator() )
+   , m_shader( shader ) 
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////

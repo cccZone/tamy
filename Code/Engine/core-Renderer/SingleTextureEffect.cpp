@@ -61,7 +61,7 @@ void SingleTextureEffect::onPreRender( Renderer& renderer ) const
    }
 
    Camera& camera = renderer.getActiveCamera();
-   RCBindEffect* comm = new ( renderer() ) RCBindEffect( *m_effect );
+   RCBindEffect* comm = new ( renderer() ) RCBindEffect( *m_effect, renderer );
 
    Matrix worldViewMtx;
    worldViewMtx.setMul( m_parentNode->getGlobalMtx(), camera.getViewMtx() );

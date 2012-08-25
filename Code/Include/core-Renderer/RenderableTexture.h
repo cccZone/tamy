@@ -31,9 +31,9 @@ public:
    // -------------------------------------------------------------------------
    unsigned int getWidth() const;
    unsigned int getHeight() const;
-   ShaderParam< EffectShader >* createEffectShaderTextureSetter( const std::string& paramName );
-   ShaderParam< PixelShader >* createPixelShaderTextureSetter( const std::string& paramName );
-   ShaderParam< VertexShader >* createVertexShaderTextureSetter( const std::string& paramName );
+   ShaderParam< EffectShader >* createEffectShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName );
+   ShaderParam< PixelShader >* createPixelShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName );
+   ShaderParam< VertexShader >* createVertexShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
