@@ -93,8 +93,12 @@ public:
 
    /**
     * Creates a texture setting shader parameter for the effect shader.
+    *
+    * @param allocator
+    * @param paramName
+    * @param val
     */
-   static ShaderParam< VertexShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
+   static ShaderParam< VertexShader >* createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val );
 
    // -------------------------------------------------------------------------
    // Object implementation

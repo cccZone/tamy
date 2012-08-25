@@ -15,6 +15,8 @@
 class EffectShader;
 class PixelShader;
 class VertexShader;
+class MemoryPoolAllocator;
+class IDString;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -73,17 +75,17 @@ public:
    /**
     * Creates a texture setter for an effect shader.
     */
-   virtual ShaderParam< EffectShader >* createEffectShaderTextureSetter( const std::string& paramName ) = 0;
+   virtual ShaderParam< EffectShader >* createEffectShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) = 0;
 
    /**
     * Creates a texture setter for a pixel shader.
     */
-   virtual ShaderParam< PixelShader >* createPixelShaderTextureSetter( const std::string& paramName ) = 0;
+   virtual ShaderParam< PixelShader >* createPixelShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) = 0;
 
    /**
     * Creates a texture setter for a vertex shader.
     */
-   virtual ShaderParam< VertexShader >* createVertexShaderTextureSetter( const std::string& paramName ) = 0;
+   virtual ShaderParam< VertexShader >* createVertexShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

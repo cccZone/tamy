@@ -149,9 +149,9 @@ void PixelShader::setScript( const std::string& script )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderParam< PixelShader >* PixelShader::createTextureSetter( const std::string& paramName, ShaderTexture& val )
+ShaderParam< PixelShader >* PixelShader::createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val )
 {
-   return val.createPixelShaderTextureSetter( paramName );
+   return val.createPixelShaderTextureSetter( allocator, paramName );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,8 @@ void PixelShader::parseTextureStages()
 ///////////////////////////////////////////////////////////////////////////////
 
 RCBindPixelShader::RCBindPixelShader( PixelShader& shader, Renderer& renderer )
-   : m_shader( shader )
+   : ShaderRenderCommand< PixelShader >( *renderer.getAllocator() )
+   , m_shader( shader )
 {
    uint techniqueId = m_shader.getRequiredVertexShaderTechnique();
    renderer.setVertexShaderTechnique( techniqueId );

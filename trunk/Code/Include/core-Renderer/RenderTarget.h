@@ -10,6 +10,7 @@
 #include "core\UniqueObject.h"
 #include "core\Color.h"
 #include "core\Point.h"
+#include "core\IDString.h"
 #include <string>
 #include <windows.h>
 
@@ -76,9 +77,9 @@ public:
    // -------------------------------------------------------------------------
    inline unsigned int getWidth() const { return m_width; }
    inline unsigned int getHeight() const { return m_height; }
-   inline ShaderParam< EffectShader >* createEffectShaderTextureSetter( const std::string& paramName ) { return new ShaderParamRenderTarget< EffectShader >( paramName, *this ); }
-   inline ShaderParam< PixelShader >* createPixelShaderTextureSetter( const std::string& paramName ) { return new ShaderParamRenderTarget< PixelShader >( paramName, *this ); }
-   inline ShaderParam< VertexShader >* createVertexShaderTextureSetter( const std::string& paramName ){ return new ShaderParamRenderTarget< VertexShader >( paramName, *this ); }
+   inline ShaderParam< EffectShader >* createEffectShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) { return new ( allocator ) ShaderParamRenderTarget< EffectShader >( paramName.getId(), *this ); }
+   inline ShaderParam< PixelShader >* createPixelShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) { return new ( allocator ) ShaderParamRenderTarget< PixelShader >( paramName.getId(), *this ); }
+   inline ShaderParam< VertexShader >* createVertexShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ){ return new ( allocator ) ShaderParamRenderTarget< VertexShader >( paramName.getId(), *this ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

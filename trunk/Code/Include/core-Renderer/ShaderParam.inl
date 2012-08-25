@@ -4,15 +4,51 @@
 
 #include "core/Matrix.h"
 #include "core/Vector.h"
+#include "core/MemoryPoolAllocator.h"
+#include "core/Assert.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void* ShaderParam< T >::operator new( size_t size, MemoryPoolAllocator& allocator )
+{
+   void* ptr = allocator.alloc( size );
+   return ptr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void ShaderParam< T >::operator delete( void* ptr, MemoryPoolAllocator& allocator )
+{
+   allocator.dealloc( ptr );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void* ShaderParam< T >::operator new( size_t size )
+{
+   ASSERT_MSG( false, "ShaderParam object can only be allocated in a dedicated memory pool" );
+   return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void ShaderParam< T >::operator delete( void* ptr )
+{
+   ASSERT_MSG( false, "ShaderParam object can only be allocated in a dedicated memory pool" );
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamBool< T >::ShaderParamBool( const std::string& name, bool val ) 
-   : m_name( name )
+ShaderParamBool< T >::ShaderParamBool( const IDString& nameId, bool val ) 
+   : m_name( nameId )
    , m_val( val ) 
 {}
 
@@ -21,8 +57,8 @@ ShaderParamBool< T >::ShaderParamBool( const std::string& name, bool val )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamInt< T >::ShaderParamInt( const std::string& name, int val ) 
-   : m_name( name )
+ShaderParamInt< T >::ShaderParamInt( const IDString& nameId, int val ) 
+   : m_name( nameId )
    , m_val( val ) 
 {}
 
@@ -31,8 +67,8 @@ ShaderParamInt< T >::ShaderParamInt( const std::string& name, int val )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamIntArray< T >::ShaderParamIntArray( const std::string& name, const int* arr, unsigned int size ) 
-   : m_name( name )
+ShaderParamIntArray< T >::ShaderParamIntArray( const IDString& nameId, const int* arr, unsigned int size ) 
+   : m_name( nameId )
    , m_size( size )
 {
    m_val = new int[size];
@@ -52,8 +88,8 @@ ShaderParamIntArray< T >::~ShaderParamIntArray()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamFloat< T >::ShaderParamFloat( const std::string& name, float val ) 
-   : m_name( name )
+ShaderParamFloat< T >::ShaderParamFloat( const IDString& nameId, float val ) 
+   : m_name( nameId )
    , m_val( val ) 
 {}
 
@@ -62,8 +98,8 @@ ShaderParamFloat< T >::ShaderParamFloat( const std::string& name, float val )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamFloatArray< T >::ShaderParamFloatArray( const std::string& name, const float* arr, unsigned int size ) 
-   : m_name( name )
+ShaderParamFloatArray< T >::ShaderParamFloatArray( const IDString& nameId, const float* arr, unsigned int size ) 
+   : m_name( nameId )
    , m_size( size )
 {
    m_val = new float[size];
@@ -83,8 +119,8 @@ ShaderParamFloatArray< T >::~ShaderParamFloatArray()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamMtx< T >::ShaderParamMtx( const std::string& name, const Matrix& val ) 
-   : m_name( name )
+ShaderParamMtx< T >::ShaderParamMtx( const IDString& nameId, const Matrix& val ) 
+   : m_name( nameId )
    , m_val( val ) 
 {}
 
@@ -93,8 +129,8 @@ ShaderParamMtx< T >::ShaderParamMtx( const std::string& name, const Matrix& val 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamMtxArray< T >::ShaderParamMtxArray( const std::string& name, const Matrix* arr, unsigned int size ) 
-   : m_name( name )
+ShaderParamMtxArray< T >::ShaderParamMtxArray( const IDString& nameId, const Matrix* arr, unsigned int size ) 
+   : m_name( nameId )
    , m_size( size )
 {
    m_val = new Matrix[size];
@@ -114,8 +150,8 @@ ShaderParamMtxArray< T >::~ShaderParamMtxArray()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamVec4< T >::ShaderParamVec4( const std::string& name, const Vector& val ) 
-   : m_name( name )
+ShaderParamVec4< T >::ShaderParamVec4( const IDString& nameId, const Vector& val ) 
+   : m_name( nameId )
    , m_val( val ) 
 {}
 
@@ -124,8 +160,8 @@ ShaderParamVec4< T >::ShaderParamVec4( const std::string& name, const Vector& va
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamVec4Array< T >::ShaderParamVec4Array( const std::string& name, const Vector* arr, unsigned int size ) 
-   : m_name( name )
+ShaderParamVec4Array< T >::ShaderParamVec4Array( const IDString& nameId, const Vector* arr, unsigned int size ) 
+   : m_name( nameId )
    , m_size( size )
 {
    m_val = new Vector[size];
@@ -145,8 +181,8 @@ ShaderParamVec4Array< T >::~ShaderParamVec4Array()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamString< T >::ShaderParamString( const std::string& name, const std::string& val ) 
-   : m_name( name )
+ShaderParamString< T >::ShaderParamString( const IDString& nameId, const std::string& val ) 
+   : m_name( nameId )
    , m_val( val ) 
 {}
 
@@ -155,8 +191,8 @@ ShaderParamString< T >::ShaderParamString( const std::string& name, const std::s
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamTexture< T >::ShaderParamTexture( const std::string& name, Texture* val ) 
-   : m_name( name )
+ShaderParamTexture< T >::ShaderParamTexture( const IDString& nameId, Texture* val ) 
+   : m_name( nameId )
    , m_val( val ) 
 {}
 
@@ -165,8 +201,8 @@ ShaderParamTexture< T >::ShaderParamTexture( const std::string& name, Texture* v
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-ShaderParamRenderTarget< T >::ShaderParamRenderTarget( const std::string& name, RenderTarget& val )
-   : m_name( name )
+ShaderParamRenderTarget< T >::ShaderParamRenderTarget( const IDString& nameId, RenderTarget& val )
+   : m_name( nameId )
    , m_val( val ) 
 {
 }

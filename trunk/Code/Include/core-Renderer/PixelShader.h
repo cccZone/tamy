@@ -17,6 +17,7 @@ class Filesystem;
 class RCBindPixelShader;
 class InStream;
 class OutStream;
+class IDString;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -204,8 +205,12 @@ public:
 
    /**
     * Creates a texture setting shader parameter for the effect shader.
+    *
+    * @param allocator
+    * @param paramName
+    * @param val
     */
-   static ShaderParam< PixelShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
+   static ShaderParam< PixelShader >* createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val );
 
    // -------------------------------------------------------------------------
    // Resource implementation

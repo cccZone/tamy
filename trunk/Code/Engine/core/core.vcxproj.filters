@@ -302,6 +302,9 @@
     <ClCompile Include="MemoryPoolAllocator.cpp">
       <Filter>MemoryManagement\Allocators</Filter>
     </ClCompile>
+    <ClCompile Include="IDString.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -647,6 +650,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\MemoryPoolAllocator.h">
       <Filter>MemoryManagement\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\IDString.h">
+      <Filter>Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

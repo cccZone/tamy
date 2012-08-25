@@ -14,6 +14,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class IDString;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * A shader class represents a program written in HLSL.
  */
@@ -50,8 +54,12 @@ public:
 
    /**
     * Creates a texture setting shader parameter for the effect shader.
+    *
+    * @param allocator
+    * @param paramName
+    * @param val
     */
-   static ShaderParam< EffectShader >* createTextureSetter( const std::string& paramName, ShaderTexture& val );
+   static ShaderParam< EffectShader >* createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,7 +75,13 @@ private:
    std::string                m_techniqueName;
 
 public:
-   RCBindEffect( EffectShader& shader ) : m_shader( shader ) {}
+   /**
+    * Constructor.
+    *
+    * @param shader
+    * @param renderer
+    */
+   RCBindEffect( EffectShader& shader, Renderer& renderer );
 
    /**
     * Sets the specified rendering technique.

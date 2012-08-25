@@ -27,6 +27,8 @@ class DepthBuffer;
 class Camera;
 class RenderCommand;
 struct Viewport;
+class MemoryPool;
+class MemoryPoolAllocator;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -103,6 +105,8 @@ private:
    Stack< DepthBuffer* >            m_depthBuffersStack;
 
    // render commands
+   MemoryPool*                      m_commandsDataMemoryPool;
+   MemoryPoolAllocator*             m_commandsDataAllocator;
    RoundBuffer                      m_renderCommands;
 
    // shaders support
@@ -256,6 +260,11 @@ public:
     * Gives access to the commands buffer.
     */
    inline RoundBuffer& operator()() { return m_renderCommands; }
+
+   /**
+    * Gives access to a designated allocator that manages rendering commands data related memory
+    */
+   inline MemoryPoolAllocator* getAllocator() { return m_commandsDataAllocator; }
 
    // ----------------------------------------------------------------------------
    // TimeDependent implementation

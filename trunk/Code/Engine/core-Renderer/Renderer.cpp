@@ -9,6 +9,7 @@
 #include "core\Assert.h"
 #include "core\MatrixUtils.h"
 #include "core\Profiler.h"
+#include "core\MemoryPoolAllocator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,6 +49,10 @@ Renderer::Renderer(unsigned int viewportWidth,
    m_camerasStack.push( m_defaultCamera );
 
    MatrixUtils::generateViewportMatrix( 0, 0, m_viewportWidth, m_viewportHeight, m_viewportMatrix );
+
+   // create a memory pool dedicated to keeping the rendering commands related data
+   m_commandsDataMemoryPool = new MemoryPool( 1024 * 1024 ); // 1MB for the commands data
+   m_commandsDataAllocator = new MemoryPoolAllocator( m_commandsDataMemoryPool );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -77,6 +82,12 @@ Renderer::~Renderer()
 
    delete m_deviceLostState;
    m_deviceLostState = NULL;
+
+   delete m_commandsDataAllocator;
+   m_commandsDataAllocator = NULL;
+
+   delete m_commandsDataMemoryPool;
+   m_commandsDataMemoryPool = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
