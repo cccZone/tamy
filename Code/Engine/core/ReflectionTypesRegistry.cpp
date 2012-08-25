@@ -1,6 +1,7 @@
 #include "core/ReflectionTypesRegistry.h"
 #include "core/ReflectionType.h"
 #include "core/ReflectionEnum.h"
+#include "core/MemoryPoolAllocator.h"
 #include "core/types.h"
 
 
@@ -14,6 +15,9 @@ ReflectionTypesRegistry::ReflectionTypesRegistry()
    : m_genericEnumType( NULL )
 {
    m_genericEnumType = new ReflectionEnum( "ReflectionEnum" );
+
+   m_sharedMemoryPool = new MemoryPool( 2048 );
+   m_sharedMemoryPoolAllocator = new MemoryPoolAllocator( m_sharedMemoryPool );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,6 +28,12 @@ ReflectionTypesRegistry::~ReflectionTypesRegistry()
 
    delete m_genericEnumType;
    m_genericEnumType = NULL;
+
+   delete m_sharedMemoryPoolAllocator;
+   m_sharedMemoryPoolAllocator = NULL;
+
+   delete m_sharedMemoryPool;
+   m_sharedMemoryPool = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

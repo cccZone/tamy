@@ -1,6 +1,8 @@
 #include "core/ReflectionType.h"
 #include "core/ReflectionTypeComponent.h"
 #include "core/Assert.h"
+#include "core/List.h"
+#include "core/MemoryPoolAllocator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,6 +29,7 @@ SerializableReflectionType::SerializableReflectionType( const std::string& name,
    , m_patchedName( patchedName )
    , m_instantiator( NULL )
    , m_patchedId( -1 )
+   , m_searchMemPool( new MemoryPool( 256 ) )
 {
    if ( !m_patchedName.empty() )
    {
@@ -46,6 +49,9 @@ SerializableReflectionType::~SerializableReflectionType()
       delete m_memberFields[i];
    }
    m_memberFields.clear();
+
+   delete m_searchMemPool;
+   m_searchMemPool = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,7 +67,7 @@ void SerializableReflectionType::setupInstantiator( SerializableTypeInstantiator
 bool SerializableReflectionType::isA( const ReflectionType& referenceType ) const
 {
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-
+   /*
    // explore the inheritance hierarchy of this type and verify
    // if any type in it matches the specified reference type
    std::list< const SerializableReflectionType* > bfs;
@@ -86,7 +92,32 @@ bool SerializableReflectionType::isA( const ReflectionType& referenceType ) cons
             bfs.push_back( parentType );
          }
       }
+   }*/
+
+   List< const SerializableReflectionType*, MemoryPoolAllocator > bfs( typesRegistry.m_sharedMemoryPoolAllocator );
+   bfs.pushBack( this );
+   while ( !bfs.empty() )
+   {
+      const SerializableReflectionType* currType = bfs.front();
+      bfs.popFront();
+
+      if ( currType->m_id == referenceType.m_id )
+      {
+         return true;
+      }
+
+      // gather the base types
+      uint childrenCount = currType->m_baseTypesIds.size();
+      for ( uint i = 0; i < childrenCount; ++i )
+      {
+         const SerializableReflectionType* parentType = typesRegistry.findSerializable( currType->m_baseTypesIds[i] );
+         if ( parentType )
+         {
+            bfs.pushBack( parentType );
+         }
+      }
    }
+   typesRegistry.m_sharedMemoryPool->reset();
 
    return false;
 }

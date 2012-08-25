@@ -112,6 +112,9 @@
     <Filter Include="Mechanisms\OverlayRenderer\Elements">
       <UniqueIdentifier>{e788649b-7b14-4322-8f63-2ae1d57c10bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\ShaderRenderCommand">
+      <UniqueIdentifier>{770a2909-ab11-4ef6-a54c-974e7496fcfa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -381,12 +384,6 @@
     <None Include="..\..\Include\core-Renderer\TriangleMesh.inl">
       <Filter>Geometry\Resources</Filter>
     </None>
-    <None Include="..\..\Include\core-Renderer\ShaderRenderCommand.inl">
-      <Filter>Core</Filter>
-    </None>
-    <None Include="..\..\Include\core-Renderer\ShaderParam.inl">
-      <Filter>Core</Filter>
-    </None>
     <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl">
       <Filter>Core\Resources</Filter>
     </None>
@@ -401,6 +398,12 @@
     </None>
     <None Include="..\..\Include\core-Renderer\VertexShaderConstant.inl">
       <Filter>Tools</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\ShaderRenderCommand.inl">
+      <Filter>Core\ShaderRenderCommand</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\ShaderParam.inl">
+      <Filter>Core\ShaderRenderCommand</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -521,12 +524,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h">
       <Filter>Mechanisms\RenderingPipeline\Views</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\ShaderRenderCommand.h">
-      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderResourceStorage.h">
       <Filter>Core\Resources</Filter>
@@ -732,6 +729,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Viewport.h">
       <Filter>Core\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderRenderCommand.h">
+      <Filter>Core\ShaderRenderCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h">
+      <Filter>Core\ShaderRenderCommand</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

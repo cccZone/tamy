@@ -18,6 +18,7 @@ class ReflectionTypeComponent;
 class ReflectionProperty;
 class OutStream;
 class InStream;
+class MemoryPool;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -101,6 +102,9 @@ public:
    NamesMap                                           m_patchedMemberNames;
 
    std::vector< uint >                                m_baseTypesIds;
+
+   // runtime data
+   MemoryPool*                                        m_searchMemPool;
 
 public:
    /**
