@@ -36,7 +36,7 @@
           * [ReflectionProperties#Architecture Architecture]
         * [ReflectionSerializationUtil Serialization util]
       * [SpatialStorage Spatial storages]
-      * [StringID StringID]
+      * [IDString IDString]
     * [ AI ]
       * [AnimationSystem Animation system]
     * [ Application management ]
