@@ -13,6 +13,8 @@
 class ReflectionType;
 class SerializableReflectionType;
 struct SerializableTypeInstantiator;
+class MemoryPool;
+class MemoryPoolAllocator;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,6 +23,14 @@ struct SerializableTypeInstantiator;
  */
 class ReflectionTypesRegistry
 {
+public:
+   MemoryPoolAllocator*                                     m_sharedMemoryPoolAllocator;
+
+   // This memory pool can be accessed using the exposed public allocator - m_sharedMemoryPoolAllocator.
+   // It's main purpose is to provide a common, dedicated area in memory for all type-related
+   // functionality in order to avoid constant memory reallocations
+   MemoryPool*                                              m_sharedMemoryPool;
+
 private:
    typedef std::map< int, ReflectionType* >                 BaseTypesMap;
    typedef std::map< int, SerializableReflectionType* >     SerializableTypesMap;

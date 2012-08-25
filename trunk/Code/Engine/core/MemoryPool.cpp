@@ -81,6 +81,12 @@ void* MemoryPool::alloc( size_t size )
 void MemoryPool::dealloc( void* ptr )
 {
    --m_allocationsCount;
+
+   if ( m_allocationsCount == 0 )
+   {
+      // reset the allocation start offset
+      m_allocStartOffset = 0;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

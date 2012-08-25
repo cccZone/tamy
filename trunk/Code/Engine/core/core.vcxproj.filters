@@ -101,6 +101,12 @@
     <Filter Include="Logging">
       <UniqueIdentifier>{98a4edde-bb95-45aa-819a-c83ac13ab9e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MemoryManagement">
+      <UniqueIdentifier>{4f28b540-68e1-4a68-916b-a68bebf02395}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MemoryManagement\Allocators">
+      <UniqueIdentifier>{023ea3c9-eca4-4304-85db-1d7366d120d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -175,13 +181,7 @@
     <ClCompile Include="Algorithms.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="RuntimeData.cpp">
-      <Filter>DataStructures</Filter>
-    </ClCompile>
     <ClCompile Include="RoundBuffer.cpp">
-      <Filter>DataStructures</Filter>
-    </ClCompile>
-    <ClCompile Include="MemoryPool.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
     <ClCompile Include="FilePath.cpp">
@@ -289,6 +289,18 @@
     </ClCompile>
     <ClCompile Include="Log.cpp">
       <Filter>Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPool.cpp">
+      <Filter>MemoryManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="RuntimeData.cpp">
+      <Filter>MemoryManagement</Filter>
+    </ClCompile>
+    <ClCompile Include="DefautAllocator.cpp">
+      <Filter>MemoryManagement\Allocators</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPoolAllocator.cpp">
+      <Filter>MemoryManagement\Allocators</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -488,12 +500,6 @@
     <ClInclude Include="..\..\Include\core\RoundBuffer.h">
       <Filter>DataStructures</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\RuntimeData.h">
-      <Filter>DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\MemoryPool.h">
-      <Filter>DataStructures</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\FilePath.h">
       <Filter>Filesystem</Filter>
     </ClInclude>
@@ -627,6 +633,21 @@
     <ClInclude Include="..\..\Include\core\Log.h">
       <Filter>Logging</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\List.h">
+      <Filter>DataStructures</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MemoryPool.h">
+      <Filter>MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\RuntimeData.h">
+      <Filter>MemoryManagement</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\DefaultAllocator.h">
+      <Filter>MemoryManagement\Allocators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MemoryPoolAllocator.h">
+      <Filter>MemoryManagement\Allocators</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\Array.inl">
@@ -713,9 +734,6 @@
     <None Include="..\..\Include\core\RoundBuffer.inl">
       <Filter>DataStructures</Filter>
     </None>
-    <None Include="..\..\Include\core\RuntimeData.inl">
-      <Filter>DataStructures</Filter>
-    </None>
     <None Include="..\..\Include\core\GraphBuilderSockets.inl">
       <Filter>DataStructures\DataPipeline</Filter>
     </None>
@@ -769,6 +787,12 @@
     </None>
     <None Include="..\..\Include\core\ReflectionPropertyEditor.inl">
       <Filter>RTTI\Properties</Filter>
+    </None>
+    <None Include="..\..\Include\core\List.inl">
+      <Filter>DataStructures</Filter>
+    </None>
+    <None Include="..\..\Include\core\RuntimeData.inl">
+      <Filter>MemoryManagement</Filter>
     </None>
   </ItemGroup>
 </Project>

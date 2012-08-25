@@ -191,6 +191,9 @@
     <ClCompile Include="TriangleTests.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="ListTests.cpp">
+      <Filter>DataStructures</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">
