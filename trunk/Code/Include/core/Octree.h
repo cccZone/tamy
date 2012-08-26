@@ -15,6 +15,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class MemoryPool;
+class MemoryPoolAllocator;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * An octree representation. This is an abstract version of such a tree.
  * Each tree inherited from it will be queried in the same way, however
@@ -29,13 +34,17 @@ protected:
    // root node of the tree
    Sector* m_root;
 
+   // allocator
+   MemoryPool*             m_memoryPool;
+   MemoryPoolAllocator*    m_allocator;
+
 public:
    /**
     * Constructor. 
     *
     * @param treeBB     bounding box for the tree
     */
-   Octree(const AABoundingBox& treeBB);
+   Octree( const AABoundingBox& treeBB );
 
    virtual ~Octree();
 
@@ -74,9 +83,7 @@ public:
     * @param output        upon method return this array will be filled
     *                      with found sectors that match the query criteria.
     */
-   void querySectors(const BoundingVolume& boundingVol, 
-                     Sector& searchRoot,
-                     Array<Sector*>& output) const;
+   void querySectors( const BoundingVolume& boundingVol, Sector& searchRoot, Array< Sector*, MemoryPoolAllocator >& output ) const;
 
 protected:
       /**

@@ -295,6 +295,7 @@
     <None Include="..\..\Include\core\RoundBuffer.inl" />
     <None Include="..\..\Include\core\RuntimeData.inl" />
     <None Include="..\..\Include\core\SharedSpatialStorage.inl" />
+    <None Include="..\..\Include\core\Stack.inl" />
     <None Include="..\..\Include\core\TNodesSpatialStorage.inl" />
     <None Include="..\..\Include\core\BSPNodeTree.inl" />
     <None Include="..\..\Include\core\DynamicOctree.inl" />

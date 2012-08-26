@@ -104,7 +104,7 @@ public:
     * @param elem    element we want to add
     * @return        handle to the element we've just added
     */
-   SGHandle insert(Elem* elem);
+   SGHandle insert( Elem* elem );
 
    /**
     * The method allows to remove an element from a tree. The element 
@@ -112,7 +112,7 @@ public:
     *
     * @param elemHandle    handle to an element we want to remove
     */
-   void remove(SGHandle elemHandle);
+   void remove( SGHandle elemHandle );
 
    /**
     * This method returns the number of elements in the tree, 
@@ -131,23 +131,21 @@ protected:
    Elem& getElement(unsigned int idx) const;
 
 protected:
-   void addElemToTree(SGElement* element, 
-                      Sector& subTreeRoot,
-                      Array<Sector*>& changedSectors);
+   void addElemToTree( SGElement* element, Sector& subTreeRoot, Array< Sector* , MemoryPoolAllocator >& changedSectors );
 
-   void performSectorSubdivision(Sector& sector);
+   void performSectorSubdivision( Sector& sector );
 
    // -------------------------------------------------------------------------
    // Elements management
    // -------------------------------------------------------------------------
-   unsigned int addElement(SGElement* element);
-   SGElement* releaseElement(unsigned int idx);
+   unsigned int addElement( SGElement* element );
+   SGElement* releaseElement( unsigned int idx );
 
    // -------------------------------------------------------------------------
    // Handles management
    // -------------------------------------------------------------------------
    SGHandle addHandle();
-   void releaseHandle(SGHandle idx);
+   void releaseHandle( SGHandle idx );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -9,15 +9,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-StaticGeometryOctree<Elem>::StaticGeometryOctree(
-                                          const AABoundingBox& treeBB, 
-                                          int maxElements,
-                                          int maxDepth,
-                                          int initDepth)
-: Octree(treeBB)
-, m_elements(65536)
-, m_maxElemsPerSector(maxElements)
-, m_maxDepth(maxDepth)
+StaticGeometryOctree<Elem>::StaticGeometryOctree( const AABoundingBox& treeBB, int maxElements, int maxDepth, int initDepth )
+   : Octree( treeBB )
+   , m_elements( 65536 )
+   , m_maxElemsPerSector( maxElements )
+   , m_maxDepth( maxDepth )
 {
    if (m_maxElemsPerSector <= 0)      {m_maxElemsPerSector = 1;}
    if (m_maxDepth < 0)                {m_maxDepth = 0;}
@@ -31,15 +27,13 @@ StaticGeometryOctree<Elem>::StaticGeometryOctree(
 template<typename Elem>
 StaticGeometryOctree<Elem>::~StaticGeometryOctree()
 {
-   for (ElementsArray::iterator it = m_elements.begin();
-      it != m_elements.end(); ++it)
+   for ( ElementsArray::iterator it = m_elements.begin(); it != m_elements.end(); ++it )
    {
       delete *it;
    }
    m_elements.clear();
 
-   for (HandlesArray::iterator it = m_handles.begin();
-      it != m_handles.end(); ++it)
+   for ( HandlesArray::iterator it = m_handles.begin(); it != m_handles.end(); ++it )
    {
       delete *it;
    }
@@ -49,21 +43,20 @@ StaticGeometryOctree<Elem>::~StaticGeometryOctree()
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-SGHandle StaticGeometryOctree<Elem>::insert(Elem* elem)
+SGHandle StaticGeometryOctree<Elem>::insert( Elem* elem )
 {
    SGHandle handle = addHandle();
    SGElementParts& elemParts = *(m_handles[handle]);
 
-   Array<Sector*> changedSectors;
-   addElemToTree(new SGElement(handle, elem), *m_root, changedSectors);
+   Array< Sector*, MemoryPoolAllocator > changedSectors( 16, m_allocator );
+   addElemToTree( new SGElement(handle, elem), *m_root, changedSectors );
 
    Sector* sector = NULL;
    unsigned int sectorsCount = changedSectors.size();
-   for (unsigned int i = 0; i < sectorsCount; ++i)
+   for ( unsigned int i = 0; i < sectorsCount; ++i )
    {
       sector = changedSectors[i];
-      if (  (sector->m_elems.size() > m_maxElemsPerSector) 
-         && (sector->getDepth() < m_maxDepth))
+      if ( ( sector->m_elems.size() > m_maxElemsPerSector ) && ( sector->getDepth() < m_maxDepth ) )
       {
          performSectorSubdivision(*sector);
       }
@@ -82,20 +75,18 @@ void StaticGeometryOctree<Elem>::performSectorSubdivision(Sector& sector)
    // perform the copy of elements used in this sector
    unsigned int childrenCount = sector.getChildrenCount();
    unsigned int elemsCount = sector.m_elems.size();
-   Array<Sector*> changedSectors(elemsCount * childrenCount);
+   Array< Sector*, MemoryPoolAllocator> changedSectors( elemsCount * childrenCount, m_allocator );
 
    unsigned int elemIdx = 0;
    SGElementParts* vecParts = NULL;
-   for (unsigned int i = 0; i < elemsCount; ++i)
+   for ( unsigned int i = 0; i < elemsCount; ++i )
    {
       elemIdx = sector.m_elems[i];
-      SGElement* elementToInsert = releaseElement(elemIdx);
+      SGElement* elementToInsert = releaseElement( elemIdx );
 
       vecParts = m_handles[elementToInsert->handle];
-      SGElementParts::iterator sgElemPartIt = std::find(vecParts->begin(),
-                                                        vecParts->end(),
-                                                        elemIdx);
-      if (sgElemPartIt != vecParts->end())
+      SGElementParts::iterator sgElemPartIt = std::find( vecParts->begin(), vecParts->end(), elemIdx);
+      if ( sgElemPartIt != vecParts->end() )
       {
          vecParts->erase(sgElemPartIt);
       }
@@ -109,14 +100,15 @@ void StaticGeometryOctree<Elem>::performSectorSubdivision(Sector& sector)
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-void StaticGeometryOctree<Elem>::addElemToTree(SGElement* element, 
-                                               Sector& subTreeRoot,
-                                               Array<Sector*>& changedSectors)
+void StaticGeometryOctree<Elem>::addElemToTree( SGElement* element, Sector& subTreeRoot, Array< Sector*, MemoryPoolAllocator >& changedSectors )
 {
-   if (subTreeRoot.doesIntersect(element->elem->getBoundingVolume()) == false) {return;}
+   if ( subTreeRoot.doesIntersect( element->elem->getBoundingVolume() ) == false ) 
+   {
+      return;
+   }
 
    unsigned int childrenCount = subTreeRoot.getChildrenCount();
-   if (childrenCount > 0)
+   if  (childrenCount > 0 )
    {
       // this is a composite - split the element across the sector's clipping
       // planes and try adding the resulting elements to the subtrees
@@ -190,14 +182,14 @@ void StaticGeometryOctree<Elem>::addElemToTree(SGElement* element,
 
       // determine where the elements from the final split will be located
       unsigned int elemOffsetShift = 0;
-      switch (splitPlanesCount)
+      switch ( splitPlanesCount )
       {
       case 1: elemOffsetShift = 1; break;
       case 2: elemOffsetShift = 3; break;
       case 3: elemOffsetShift = 7; break;
       default: ASSERT_MSG(false, "invalid number of split planes");
       };
-      for (unsigned int subSectorIdx = 0; subSectorIdx < childrenCount; ++subSectorIdx)
+      for ( unsigned int subSectorIdx = 0; subSectorIdx < childrenCount; ++subSectorIdx )
       {
          SGElement* elem = splitElems[subSectorIdx + elemOffsetShift];
          if (elem != NULL) 
@@ -222,7 +214,7 @@ void StaticGeometryOctree<Elem>::addElemToTree(SGElement* element,
 template<typename Elem>
 void StaticGeometryOctree<Elem>::remove(SGHandle elemHandle)
 {
-   Array<Sector*> sectors;
+   Array< Sector*, MemoryPoolAllocator > sectors( 16, m_allocator );
 
    SGElementParts& elemParts = *(m_handles[elemHandle]);
    unsigned int count = elemParts.size();
@@ -232,10 +224,10 @@ void StaticGeometryOctree<Elem>::remove(SGHandle elemHandle)
 
       // remove the element from the tree sectors
       sectors.clear();
-      querySectors(m_elements[elemIdx]->elem->getBoundingVolume(), *m_root, sectors);
+      querySectors( m_elements[elemIdx]->elem->getBoundingVolume(), *m_root, sectors );
       unsigned int sectorsCount = sectors.size();
       unsigned int idx;
-      for (unsigned int j = 0; j < sectorsCount; ++j)
+      for ( unsigned int j = 0; j < sectorsCount; ++j )
       {
          idx = sectors[j]->m_elems.find(elemIdx);
          if (idx == EOA) {continue;}

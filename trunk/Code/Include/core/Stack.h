@@ -1,9 +1,10 @@
-#pragma once
-
 /// @file   core\Stack
 /// @brief  simple stack implementation
+#ifndef _STACK_H
+#define _STACK_H
 
 #include <stdio.h>
+#include "core/DefaultAllocator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,81 +12,83 @@
 /**
  * This is an extremely simple implementation of a stack.
  */
-template<typename T>
+template< typename T, typename TAllocator = DefaultAllocator >
 struct Stack
 {
 private:
-   template<typename T>
    struct StackSeg
    {
-      T elem;
-      StackSeg* prev;
+      StackSeg*   m_prev;
+      T           m_elem;
 
-      StackSeg() : elem(NULL), prev(NULL) {}
+      /**
+       * Constructor.
+       *
+       * @param prev
+       * @param elem
+       */
+      StackSeg( StackSeg* prev, T elem );
+      ~StackSeg();
 
-      StackSeg(const StackSeg& rhs) 
-      : elem(rhs.elem)
-      , prev(new StackSeg(*(rhs.prev))) 
-      {}
+      // ----------------------------------------------------------------------
+      // Placement allocation operators
+      // ----------------------------------------------------------------------
+      void* operator new( size_t size, TAllocator* allocator );
+      void operator delete( void* ptr, TAllocator* allocator );
 
-      ~StackSeg() {delete prev; prev = NULL; elem = NULL;}
+   private:
+      // ----------------------------------------------------------------------
+      // Disabled regular allocation operators
+      // ----------------------------------------------------------------------
+      void* operator new( size_t size );
+      void operator delete( void* ptr );
    };
 
 private:
-   StackSeg<T>*   m_top;
+   StackSeg*         m_top;
+
+   TAllocator*       m_defaultAllocator;
+   TAllocator*       m_allocator;
 
 public:
    /**
-    * Default constructor.
+    * Constructor.
+    *
+    * @param allocator     custom memory allocator
     */
-   Stack() : m_top( NULL ) {}
-
-   /**
-    * Copy constructor.
-    */
-   Stack( const Stack& rhs ) : m_top( new StackSeg< T >( *rhs.m_top ) ) {}
-   ~Stack() { delete m_top; m_top = NULL; }
+   Stack( TAllocator* allocator = NULL );
+   ~Stack();
 
    /**
     * Pushes a new element on top of the stack
     */
-   void push( T elem )
-   {
-      StackSeg<T>* newSeg = new StackSeg<T>();
-      newSeg->prev = m_top;
-      newSeg->elem = elem;
-
-      m_top = newSeg;
-   }
+   void push( T elem );
 
    /**
     * Pops an element from the top of the stack
     */
-   T pop()
-   {
-      StackSeg<T>* removedSeg = m_top;
-      m_top = removedSeg->prev;
-      removedSeg->prev = NULL;
-      T elem = removedSeg->elem;
-      delete removedSeg;
-
-      return elem;
-   }
+   T pop();
 
    /**
     * Allows to peek at the element that's at the top of the stack ( const version )
     */
-   const T& top() const { return m_top->elem; }
+   const T& top() const;
 
    /**
     * Allows to peek at the element that's at the top of the stack ( non-const version )
     */
-   T& top() { return m_top->elem; }
+   T& top();
 
    /**
     * Tells if the stack is empty.
     */
-   bool empty() const {return m_top == NULL;}
+   bool empty() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#include "core/Stack.inl"
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _STACK_H

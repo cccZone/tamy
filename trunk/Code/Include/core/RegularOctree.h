@@ -6,6 +6,7 @@
 
 #include "core\Octree.h"
 #include "core\ConstSizeArray.h"
+#include "core\types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,11 +18,11 @@ template<typename Elem>
 class RegularOctree : public Octree<Elem>
 {
 private:
-   typedef ConstSizeArray<Elem*> ElementsArray;
-   ElementsArray m_elements;
+   typedef ConstSizeArray< Elem* >  ElementsArray;
+   ElementsArray                    m_elements;
 
-   unsigned int m_maxElemsPerSector;
-   unsigned int m_maxTreeDepth;
+   uint                             m_maxElemsPerSector;
+   uint                             m_maxTreeDepth;
 
 public:
    /**
@@ -36,10 +37,7 @@ public:
     * @param initDepth           initial depth to which the tree should be 
     *                            subdivided upon creation
     */
-   RegularOctree(const AABoundingBox& treeBB, 
-                 unsigned int maxElemsPerSector = 64,
-                 unsigned int maxTreeDepth = 5,
-                 unsigned int initDepth = 0);
+   RegularOctree( const AABoundingBox& treeBB, uint maxElemsPerSector = 64, uint maxTreeDepth = 5, uint initDepth = 0 );
 
    ~RegularOctree();
 
