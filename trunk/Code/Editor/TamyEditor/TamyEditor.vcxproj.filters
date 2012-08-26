@@ -1297,12 +1297,6 @@
     <None Include="TypeDescFactory.inl">
       <Filter>Widgets\TreeWidget</Filter>
     </None>
-    <None Include="..\..\..\Assets\Editor\Shaders\SelectionMarker.psh">
-      <Filter>Widgets\SceneRenderWidget\SelectionVisualisation\Representations</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Editor\Shaders\SceneQueryEffect.psh">
-      <Filter>Widgets\SceneRenderWidget\SceneQueries</Filter>
-    </None>
     <None Include="PipelineBlock.inl">
       <Filter>Widgets\PipelineWidget</Filter>
     </None>

@@ -11,16 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Include\ml-BVH.h" />
-    <ClInclude Include="..\..\Include\ml-BVH\BVHLoader.h" />
+    <ClInclude Include="..\..\Include\ml-FBX.h" />
+    <ClInclude Include="..\..\Include\ml-FBX\FBXSceneLoader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BVHLoader.cpp" />
+    <ClCompile Include="FBXSceneLoader.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1E2B772F-3F08-43B8-B75C-5302A6CBA9BE}</ProjectGuid>
+    <ProjectGuid>{76BCE2E2-3702-4229-AE8C-1385BBE61605}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>mlBlender</RootNamespace>
+    <RootNamespace>mlFBX</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -54,7 +54,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -72,7 +73,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
