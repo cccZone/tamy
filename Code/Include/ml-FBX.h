@@ -1,9 +1,9 @@
-/// @file   ml-BVH.h
-/// @brief  composite include file for the 'ml-BVH' project
+/// @file   ml-FBX.h
+/// @brief  composite include file for the 'ml-FBX' project
 #pragma once
 
 
 // ----------------------------------------------------------------------------
 // Core
 // ----------------------------------------------------------------------------
-#include "ml-BVH\BVHLoader.h"
+#include "ml-FBX\FBXSceneLoader.h"

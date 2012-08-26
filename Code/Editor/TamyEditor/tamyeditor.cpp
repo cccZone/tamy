@@ -22,6 +22,7 @@
 #include "ml-IWF.h"
 #include "ml-Blender.h"
 #include "ml-BVH.h"
+#include "ml-FBX.h"
 
 // editors
 #include "SceneEditor.h"
@@ -175,6 +176,7 @@ void TamyEditor::setupResourcesManager( const char* fsRoot )
    fs->attach( *this );
 
    // register external resources
+   resMgr.addImporter< FBXSceneLoader, Model >( "fbx" );
    resMgr.addImporter< BVHModelLoader, Model >( "bvh" );
    resMgr.addImporter< BVHSkeletonAnimationLoader, SkeletonAnimation >( "bvh" );
    resMgr.addImporter< IWFScene, Model >( "iwf" );
