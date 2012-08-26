@@ -25,7 +25,7 @@
 template< typename T, typename TAllocator = DefaultAllocator >
 class Array
 {
-private:
+public:
    unsigned int   m_size;
    unsigned int   m_elementsCount;
    T*             m_arr;
@@ -41,13 +41,18 @@ public:
     * for the array to store the passed number of elements.
     * It WILL NOT allocate these elements !!!
     *
-    * @param size    initial array size (array will allocate memory to
-    *                incorporate at least that many elements up front).
+    * @param size       initial array size (array will allocate memory to
+    *                   incorporate at least that many elements up front).
+    * @param allocator  custom memory allocator
     */
    Array( unsigned int size = 1, TAllocator* allocator = NULL );
 
+   /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
    Array( const Array& rhs );
-
    ~Array();
 
    /**
@@ -72,7 +77,7 @@ public:
     *
     * @param rhs  array from which we want to copy elements
     */
-   void copyFrom(const Array<T>& rhs);
+   void copyFrom( const Array<T>& rhs );
 
    /**
     * The method reallocates th memory the array is using, preparing it 

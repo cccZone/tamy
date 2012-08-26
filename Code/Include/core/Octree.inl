@@ -2,13 +2,18 @@
 #error "This file can only be included from Octree.h"
 #else
 
+#include "core\MemoryPoolAllocator.h"
+#include "core\List.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-Octree<Elem>::Octree(const AABoundingBox& treeBB)
-: m_root(new Sector(treeBB))
+Octree<Elem>::Octree( const AABoundingBox& treeBB )
+   : m_root( new Sector( treeBB ) )
 {
+   m_memoryPool = new MemoryPool( 65535 );
+   m_allocator = new MemoryPoolAllocator( m_memoryPool );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,6 +23,12 @@ Octree<Elem>::~Octree()
 {
    delete m_root;
    m_root = NULL;
+
+   delete m_allocator;
+   m_allocator = NULL;
+
+   delete m_memoryPool;
+   m_memoryPool = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,11 +36,11 @@ Octree<Elem>::~Octree()
 template< typename Elem >
 void Octree< Elem >::query( const BoundingVolume& boundingVol, Array< Elem* >& output ) const
 {
-   Array< Sector* > candidateSectors;
+   Array< Sector*, MemoryPoolAllocator > candidateSectors( 16, m_allocator );
    querySectors( boundingVol, *m_root, candidateSectors );
 
    unsigned int elemsCount = getElementsCount();
-   Array< bool > elemsToOutput;
+   Array< bool, MemoryPoolAllocator > elemsToOutput( 16, m_allocator );
    elemsToOutput.resize( elemsCount, false );
 
    unsigned int sectorsCount = candidateSectors.size();
@@ -65,29 +76,29 @@ void Octree< Elem >::query( const BoundingVolume& boundingVol, Array< Elem* >& o
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Elem >
-void Octree< Elem >::querySectors( const BoundingVolume& boundingVol, Sector& searchRoot, Array<Sector*>& output ) const
+void Octree< Elem >::querySectors( const BoundingVolume& boundingVol, Sector& searchRoot, Array< Sector*, MemoryPoolAllocator >& output ) const
 {
-   Stack<Sector*> stack;
-   stack.push(&searchRoot);
+   Stack< Sector*, MemoryPoolAllocator > stack( m_allocator );
+   stack.push( &searchRoot );
 
-   while(stack.empty() == false)
+   while( stack.empty() == false )
    {
       Sector* currSector = stack.pop();
 
-      if (currSector->doesIntersect(boundingVol) == false) {continue;}
+      if (currSector->doesIntersect( boundingVol ) == false) {continue;}
 
       unsigned int childrenCount = currSector->getChildrenCount();
-      if (childrenCount > 0)
+      if ( childrenCount > 0 )
       {
-         ASSERT_MSG(currSector->m_elems.size() == 0, "Composite node has an element assigned");
-         for (unsigned int i = 0; i < childrenCount; ++i)
+         ASSERT_MSG( currSector->m_elems.size() == 0, "Composite node has an element assigned" );
+         for ( unsigned int i = 0; i < childrenCount; ++i )
          {
-            stack.push(&currSector->getChild(i));
+            stack.push( &currSector->getChild(i) );
          }
       }
       else
       {
-         output.push_back(currSector);
+         output.push_back( currSector );
       }
    }
 }
@@ -99,10 +110,10 @@ void Octree<Elem>::subdivideTree(Sector& root, unsigned int depth)
 {
    unsigned int desiredDepth = root.getDepth() + depth;
 
-   std::list<Sector*> sectorsQueue;
-   sectorsQueue.push_back(m_root);
+   List< Sector*, MemoryPoolAllocator > sectorsQueue( m_allocator );
+   sectorsQueue.pushBack(m_root);
    
-   while (sectorsQueue.size())
+   while( !sectorsQueue.empty() )
    {
       Sector* sector = sectorsQueue.front();
       
@@ -111,13 +122,13 @@ void Octree<Elem>::subdivideTree(Sector& root, unsigned int depth)
          sector->subdivide();
 
          unsigned int childrenCount = sector->getChildrenCount();
-         for (unsigned int i = 0; i < childrenCount; ++i)
+         for ( unsigned int i = 0; i < childrenCount; ++i )
          {
-            sectorsQueue.push_back(&sector->getChild(i));
+            sectorsQueue.pushBack( &sector->getChild(i) );
          }
       }
 
-      sectorsQueue.pop_front();
+      sectorsQueue.popFront();
    }
 }
 

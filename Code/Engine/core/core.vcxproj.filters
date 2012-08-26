@@ -107,6 +107,9 @@
     <Filter Include="MemoryManagement\Allocators">
       <UniqueIdentifier>{023ea3c9-eca4-4304-85db-1d7366d120d4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DataStructures\Containers">
+      <UniqueIdentifier>{b8f2cdd9-51b6-4889-8021-2bc3bf92e23d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -328,19 +331,10 @@
     <ClInclude Include="..\..\Include\core\Timer.h">
       <Filter>Timer</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\Array.h">
-      <Filter>DataStructures</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\CellSpacePartition.h">
       <Filter>DataStructures</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\ConstSizeArray.h">
-      <Filter>DataStructures</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\Point.h">
-      <Filter>DataStructures</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Stack.h">
       <Filter>DataStructures</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Delegate.h">
@@ -636,9 +630,6 @@
     <ClInclude Include="..\..\Include\core\Log.h">
       <Filter>Logging</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\List.h">
-      <Filter>DataStructures</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\MemoryPool.h">
       <Filter>MemoryManagement</Filter>
     </ClInclude>
@@ -654,14 +645,20 @@
     <ClInclude Include="..\..\Include\core\IDString.h">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\Array.h">
+      <Filter>DataStructures\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ConstSizeArray.h">
+      <Filter>DataStructures\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\List.h">
+      <Filter>DataStructures\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Stack.h">
+      <Filter>DataStructures\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Include\core\Array.inl">
-      <Filter>DataStructures</Filter>
-    </None>
-    <None Include="..\..\Include\core\ConstSizeArray.inl">
-      <Filter>DataStructures</Filter>
-    </None>
     <None Include="..\..\Include\core\GenericFactory.inl">
       <Filter>Misc\AbstractFactoryPattern</Filter>
     </None>
@@ -794,11 +791,20 @@
     <None Include="..\..\Include\core\ReflectionPropertyEditor.inl">
       <Filter>RTTI\Properties</Filter>
     </None>
-    <None Include="..\..\Include\core\List.inl">
-      <Filter>DataStructures</Filter>
-    </None>
     <None Include="..\..\Include\core\RuntimeData.inl">
       <Filter>MemoryManagement</Filter>
+    </None>
+    <None Include="..\..\Include\core\Array.inl">
+      <Filter>DataStructures\Containers</Filter>
+    </None>
+    <None Include="..\..\Include\core\ConstSizeArray.inl">
+      <Filter>DataStructures\Containers</Filter>
+    </None>
+    <None Include="..\..\Include\core\List.inl">
+      <Filter>DataStructures\Containers</Filter>
+    </None>
+    <None Include="..\..\Include\core\Stack.inl">
+      <Filter>DataStructures\Containers</Filter>
     </None>
   </ItemGroup>
 </Project>

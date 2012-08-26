@@ -6,19 +6,25 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-RegularOctree<Elem>::RegularOctree(const AABoundingBox& treeBB, 
-                                   unsigned int maxElemsPerSector,
-                                   unsigned int maxTreeDepth,
-                                   unsigned int initDepth)
-: Octree(treeBB)
-, m_elements(65536)
-, m_maxElemsPerSector(maxElemsPerSector)
-, m_maxTreeDepth(maxTreeDepth)
+RegularOctree<Elem>::RegularOctree( const AABoundingBox& treeBB, uint maxElemsPerSector, uint maxTreeDepth, uint initDepth)
+   : Octree( treeBB )
+   , m_elements( 65536 )
+   , m_maxElemsPerSector( maxElemsPerSector )
+   , m_maxTreeDepth( maxTreeDepth )
 {
-   if (m_maxElemsPerSector == 0) {m_maxElemsPerSector = 1;}
+   if (m_maxElemsPerSector == 0) 
+   {
+      m_maxElemsPerSector = 1;
+   }
 
-   if (initDepth < 0) {initDepth = 0;}
-   if (initDepth > m_maxTreeDepth) {initDepth = m_maxTreeDepth;}
+   if (initDepth < 0) 
+   {
+      initDepth = 0;
+   }
+   if (initDepth > m_maxTreeDepth) 
+   {
+      initDepth = m_maxTreeDepth;
+   }
    subdivideTree(*m_root, initDepth);
 }
 
@@ -32,12 +38,14 @@ RegularOctree<Elem>::~RegularOctree()
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-bool RegularOctree<Elem>::isAdded(const Elem& elem) const
+bool RegularOctree<Elem>::isAdded( const Elem& elem ) const
 {
-   for (ElementsArray::iterator it = m_elements.begin(); 
-        it != m_elements.end(); ++it)
+   for ( ElementsArray::iterator it = m_elements.begin(); it != m_elements.end(); ++it )
    {
-      if (&elem == (*it)) {return true;}
+      if ( &elem == (*it) ) 
+      {
+         return true;
+      }
    }
    return false;
 }
@@ -45,15 +53,18 @@ bool RegularOctree<Elem>::isAdded(const Elem& elem) const
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-void RegularOctree<Elem>::insert(Elem& elem)
+void RegularOctree< Elem >::insert( Elem& elem )
 {
-   if (isAdded(elem) == true) {return;}
+   if ( isAdded(elem) == true ) 
+   {
+      return;
+   }
 
    // insert the element to the collection of elements
    unsigned int elemIdx = m_elements.insert(&elem);
 
    // place the element id in the correct sector
-   Array<Sector*> candidateSectors;
+   Array< Sector*, MemoryPoolAllocator > candidateSectors( 16, m_allocator );
    unsigned int sectorsCount = 0;
 
    querySectors(elem.getBoundingVolume(), *m_root, candidateSectors);
@@ -79,17 +90,17 @@ void RegularOctree<Elem>::insert(Elem& elem)
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-void RegularOctree<Elem>::remove(Elem& elem)
+void RegularOctree< Elem >::remove( Elem& elem )
 {
    // remove the element from the array of elements
    unsigned int removedElemIdx = m_elements.find(&elem);
    m_elements.remove(removedElemIdx);
 
    // step through the tree and remove all the references to this element
-   Stack<Sector*> stack;
+   Stack< Sector*, MemoryPoolAllocator > stack( m_allocator );
    stack.push(m_root);
 
-   while(stack.empty() == false)
+   while( stack.empty() == false )
    {
       Sector* currSector = stack.pop();
 
@@ -114,7 +125,7 @@ void RegularOctree<Elem>::remove(Elem& elem)
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-unsigned int RegularOctree<Elem>::getElementsCount() const
+unsigned int RegularOctree< Elem >::getElementsCount() const
 {
    return m_elements.size();
 }
@@ -122,7 +133,7 @@ unsigned int RegularOctree<Elem>::getElementsCount() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-Elem& RegularOctree<Elem>::getElement(unsigned int idx) const
+Elem& RegularOctree< Elem >::getElement(unsigned int idx) const
 {
    return *(m_elements[idx]);
 }
@@ -130,24 +141,25 @@ Elem& RegularOctree<Elem>::getElement(unsigned int idx) const
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-void RegularOctree<Elem>::spreadChildren(Sector& sector)
+void RegularOctree< Elem >::spreadChildren( Sector& sector )
 {
    // distribute the sector's elements among its children
-   Array<unsigned int> elemsToDistribute(sector.m_elems);
-   unsigned int elemsCount = elemsToDistribute.size();
+   unsigned int elemsCount = sector.m_elems.size();
+   Array< unsigned int, MemoryPoolAllocator > elemsToDistribute( elemsCount, m_allocator );
+   elemsToDistribute.copyFrom( sector.m_elems );
    sector.m_elems.clear();
 
-   Array<Sector*> candidateSectors;
+   Array< Sector*, MemoryPoolAllocator > candidateSectors( 16, m_allocator );
    unsigned int sectorsCount = 0;
-   for (unsigned int i = 0; i < elemsCount; ++i)
+   for ( unsigned int i = 0; i < elemsCount; ++i )
    {
       candidateSectors.clear();
-      querySectors(m_elements[elemsToDistribute[i]]->getBoundingVolume(), sector, candidateSectors);
+      querySectors( m_elements[elemsToDistribute[i]]->getBoundingVolume(), sector, candidateSectors );
 
       sectorsCount = candidateSectors.size();
-      for (unsigned int j = 0; j < sectorsCount; ++j)
+      for ( unsigned int j = 0; j < sectorsCount; ++j )
       {
-         candidateSectors[j]->m_elems.push_back(elemsToDistribute[i]);
+         candidateSectors[j]->m_elems.push_back( elemsToDistribute[i] );
       }
    }
 }
@@ -155,7 +167,7 @@ void RegularOctree<Elem>::spreadChildren(Sector& sector)
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-void RegularOctree<Elem>::clear()
+void RegularOctree< Elem >::clear()
 {
    m_elements.clear();
    clearSectors();

@@ -10,7 +10,10 @@ DynamicOctree<Elem>::DynamicOctree(const AABoundingBox& treeBB, int treeDepth)
 : Octree(treeBB)
 , m_elements(65536)
 {
-   if (treeDepth < 0) {treeDepth = 0;}
+   if ( treeDepth < 0 ) 
+   {
+      treeDepth = 0;
+   }
 
    subdivideTree(*m_root, treeDepth);
 }
@@ -20,8 +23,7 @@ DynamicOctree<Elem>::DynamicOctree(const AABoundingBox& treeBB, int treeDepth)
 template<typename Elem>
 DynamicOctree<Elem>::~DynamicOctree()
 {
-   for (ElementsArray::iterator it = m_elements.begin();
-        it != m_elements.end(); ++it)
+   for ( ElementsArray::iterator it = m_elements.begin(); it != m_elements.end(); ++it )
    {
       delete *it;
    }
@@ -63,10 +65,10 @@ void DynamicOctree<Elem>::update(Elem& elem)
 template<typename Elem>
 void DynamicOctree<Elem>::clearTree()
 {
-   Stack<Sector*> sectors;
+   Stack< Sector*, MemoryPoolAllocator > sectors( m_allocator );
    sectors.push(m_root);
 
-   while(sectors.empty() == false)
+   while( sectors.empty() == false )
    {
       Sector* currSector = sectors.pop();
 
@@ -86,8 +88,7 @@ void DynamicOctree<Elem>::clearTree()
 template<typename Elem>
 bool DynamicOctree<Elem>::isAdded(const Elem& elem) const
 {
-   for (ElementsArray::iterator it = m_elements.begin();
-      it != m_elements.end(); ++it)
+   for ( ElementsArray::iterator it = m_elements.begin(); it != m_elements.end(); ++it )
    {
       if (&elem == (*it)->elem) {return true;}
    }
@@ -114,14 +115,13 @@ void DynamicOctree<Elem>::insert(Elem& elem)
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-void DynamicOctree<Elem>::putElemInTree(unsigned int elemIdx, 
-                                        TreeElem& treeElem)
+void DynamicOctree<Elem>::putElemInTree( unsigned int elemIdx, TreeElem& treeElem )
 {
    // place the element id in the correct sector
-   Array<Sector*> candidateSectors;
+   Array< Sector*, MemoryPoolAllocator > candidateSectors( 16, m_allocator );
    unsigned int sectorsCount = 0;
 
-   querySectors(treeElem.elem->getBoundingVolume(), *m_root, candidateSectors);
+   querySectors( treeElem.elem->getBoundingVolume(), *m_root, candidateSectors );
    sectorsCount = candidateSectors.size();
 
    ASSERT_MSG(sectorsCount > 0, "The world is too small to add this element");
@@ -160,8 +160,7 @@ void DynamicOctree<Elem>::remove(Elem& elem)
    TreeElem* treeElem = NULL;
 
    unsigned int removedElemIdx = 0;
-   for (ElementsArray::iterator it = m_elements.begin();
-        it != m_elements.end(); ++it, ++removedElemIdx)
+   for ( ElementsArray::iterator it = m_elements.begin(); it != m_elements.end(); ++it, ++removedElemIdx )
    {
       if (&elem == (*it)->elem) 
       {
@@ -169,7 +168,10 @@ void DynamicOctree<Elem>::remove(Elem& elem)
          break;
       }
    }
-   if (treeElem == NULL) {return;}
+   if ( treeElem == NULL ) 
+   {
+      return;
+   }
 
    unsigned int sectorsCount = treeElem->hostSectors.size();
    for (unsigned int i = 0; i < sectorsCount; ++i)

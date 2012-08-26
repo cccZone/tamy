@@ -21,7 +21,7 @@ Array< T, TAllocator >::Array( unsigned int size, TAllocator* allocator )
 
    m_arr = (T*)m_allocator->alloc( sizeof( T ) );
 
-   if (size > 1)
+   if ( size > 1 )
    {
       allocate( size );
    }
@@ -49,7 +49,7 @@ Array< T, TAllocator >::Array( const Array& rhs )
 
    m_arr = (T*)m_allocator->alloc( sizeof( T ) * m_size );
 
-   for (unsigned int i = 0; i < m_elementsCount; ++i)
+   for ( unsigned int i = 0; i < m_elementsCount; ++i )
    {
       m_arr[i] = rhs.m_arr[i];
    }
@@ -99,10 +99,10 @@ unsigned int Array< T, TAllocator >::size() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T, typename TAllocator >
-void Array< T, TAllocator >::copyFrom(const Array<T>& rhs)
+void Array< T, TAllocator >::copyFrom( const Array<T>& rhs )
 {
-   allocate(size() + rhs.size());
-   for (unsigned int i = 0; i < rhs.m_elementsCount; ++i)
+   allocate( size() + rhs.size() );
+   for ( unsigned int i = 0; i < rhs.m_elementsCount; ++i )
    {
       m_arr[m_elementsCount + i] = rhs.m_arr[i];
    }

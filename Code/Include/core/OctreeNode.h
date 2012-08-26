@@ -30,13 +30,13 @@ private:
    };
 
 public:
-   Array<Elem> m_elems;
+   Array< Elem >                       m_elems;
 
 private:
-   OctreeNode**   m_children;
-   AABoundingBox  m_bb;
-   Plane          m_splitPlanes[3];
-   unsigned int   m_depth;
+   OctreeNode**                        m_children;
+   AABoundingBox                       m_bb;
+   Plane                               m_splitPlanes[3];
+   unsigned int                        m_depth;
 
 public:
    OctreeNode(const AABoundingBox& bb, unsigned int depth = 0);

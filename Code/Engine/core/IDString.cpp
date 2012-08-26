@@ -104,9 +104,9 @@ uint IDStringsPool::registerString( const char* str )
    }
 
    // it's a new string - add it
-   uint strLength = strlen( str );
-   char* strCopy = new char[strLength + 1];
-   strcpy( strCopy, str );
+   uint strLength = strlen( str ) + 1;
+   char* strCopy = new char[strLength];
+   strcpy_s( strCopy, strLength, str );
 
    uint stringId = m_strings.size();
    m_strings.push_back( strCopy );
