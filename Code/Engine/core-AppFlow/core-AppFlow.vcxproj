@@ -84,7 +84,6 @@
     <ClCompile Include="TimeController.cpp" />
     <ClCompile Include="TimeControllerTrack.cpp" />
     <ClCompile Include="UserInputController.cpp" />
-    <ClCompile Include="KeysStatusManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-AppFlow\Application.h" />
@@ -97,9 +96,6 @@
     <ClInclude Include="..\..\Include\core-AppFlow\TimeDependent.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\TimeEvent.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\UserInputController.h" />
-    <ClInclude Include="..\..\Include\core-AppFlow\KeysStatusManager.h" />
-    <ClInclude Include="..\..\Include\core-AppFlow\KeysStatusModel.h" />
-    <ClInclude Include="..\..\Include\core-AppFlow\KeyStatusHandler.h" />
     <ClInclude Include="..\..\Include\core-AppFlow\WindowBuilder.h" />
     <ClInclude Include="..\..\Include\core-AppFlow.h" />
   </ItemGroup>

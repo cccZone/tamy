@@ -96,7 +96,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationTests.cpp" />
-    <ClCompile Include="KeyStatusHandlerTests.cpp" />
     <ClCompile Include="TimeControllerTests.cpp" />
     <ClCompile Include="UserInputManagerTests.cpp" />
   </ItemGroup>

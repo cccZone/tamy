@@ -1,9 +1,10 @@
 #include "SceneObjectsManipulator.h"
 #include "TamySceneWidget.h"
 #include "core-MVC/SpatialEntity.h"
+#include "SceneEditor.h"
+#include "SelectionManager.h"
 
 // states
-#include "SceneObjectsManipulatorState.h"
 #include "NavigationState.h"
 #include "NodeManipulationState.h"
 
@@ -53,6 +54,10 @@ void SceneObjectsManipulator::setController( SceneRendererInputController* contr
 void SceneObjectsManipulator::initialize( TamySceneWidget& widget )
 {
    m_widget = &widget;
+
+   // initialize the states as input receivers
+   getState< NavigationState >().initInput( widget );
+   getState< NodeManipulationState >().initInput( widget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,50 +70,11 @@ void SceneObjectsManipulator::update( float timeElapsed )
    {
       m_activeController->update( timeElapsed );
    }
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-void SceneObjectsManipulator::keySmashed( unsigned char keyCode )
-{
-   if ( getCurrentState< SceneObjectsManipulatorState >().keySmashed( keyCode ) )
+   // check if any other keys were pressed and execute actions assigned to them
+   if ( m_widget->isKeyPressed( VK_DELETE ) )
    {
-      return;
-   }
-
-   if ( m_activeController )
-   {
-      m_activeController->keySmashed( keyCode );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SceneObjectsManipulator::keyHeld( unsigned char keyCode )
-{
-   if ( getCurrentState< SceneObjectsManipulatorState >().keyHeld( keyCode ) )
-   {
-      return;
-   }
-
-   if ( m_activeController )
-   {
-      m_activeController->keyHeld( keyCode );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void SceneObjectsManipulator::keyReleased( unsigned char keyCode )
-{
-   if ( getCurrentState< SceneObjectsManipulatorState >().keyReleased( keyCode ) )
-   {
-      return;
-   }
-
-   if ( m_activeController )
-   {
-      m_activeController->keyReleased( keyCode );
+      deleteSelectedEntities();
    }
 }
 
@@ -153,3 +119,64 @@ void SceneObjectsManipulator::onEntityDeselected( Entity& entity )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void SceneObjectsManipulator::deleteSelectedEntities()
+{
+   SelectionManager& selectionMgr = m_sceneEditor.getSelectionMgr();
+   std::vector< Entity* > selectedEntities = selectionMgr.getSelectedEntities();
+   selectionMgr.resetSelection();
+
+   // Analyze all selected entities and select only the ones that are the topmost parents
+   // among the selected entities.
+   // In other words - delete only the entities that don't have their parents ( immediate or not ) listed
+   // as a selected entity.
+   
+   uint selectedEntitiesCount = selectedEntities.size();
+
+   std::set< Entity* > allUniqueChildren;
+   {
+      Array< Entity* > allChildren;
+      for ( uint entityIdx = 0; entityIdx < selectedEntitiesCount; ++entityIdx )
+      {
+         Entity* entity = selectedEntities[entityIdx];
+         entity->collectChildren( allChildren );
+      }
+
+      // remove duplicates
+      uint allChildrenCount = allChildren.size();
+      for ( uint i = 0; i < allChildrenCount; ++i )
+      {
+         allUniqueChildren.insert( allChildren[i] );
+      }
+   }
+
+   // remove all children from the list of the selected entities
+   for ( int entityIdx = selectedEntitiesCount - 1; entityIdx >= 0; --entityIdx )
+   {
+      Entity* entity = selectedEntities[entityIdx];
+      if ( allUniqueChildren.find( entity ) != allUniqueChildren.end() )
+      {
+         // this is one of the children - it's gonna get deleted either way, so skip it
+         selectedEntities.erase( selectedEntities.begin() + entityIdx );
+      }
+   }
+
+   // now that we only have the topmost entities, it's time to remove them
+   selectedEntitiesCount = selectedEntities.size();
+   for ( uint entityIdx = 0; entityIdx < selectedEntitiesCount; ++entityIdx )
+   {
+      Entity* entity = selectedEntities[entityIdx];
+      Entity* parent = entity->m_parent;
+      if ( parent )
+      {
+         parent->remove( *entity );
+      }
+      else
+      {
+         m_sceneEditor.getScene().remove( *entity );
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+

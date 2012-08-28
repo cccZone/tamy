@@ -13,9 +13,6 @@
     <ClCompile Include="ApplicationTests.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="KeyStatusHandlerTests.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="TimeControllerTests.cpp">
       <Filter>Core</Filter>
     </ClCompile>

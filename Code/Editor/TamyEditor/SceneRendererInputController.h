@@ -11,7 +11,7 @@ class TamySceneWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneRendererInputController : public KeyStatusHandler, public TimeDependent
+class SceneRendererInputController : public TimeDependent
 {
 public:
    virtual ~SceneRendererInputController() {}

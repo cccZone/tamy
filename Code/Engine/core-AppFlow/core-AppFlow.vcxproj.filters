@@ -14,9 +14,6 @@
     <Filter Include="UserInputController">
       <UniqueIdentifier>{829d1df1-ab82-4baa-8863-6e5382196981}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UserInputController\KeyStatusObservation">
-      <UniqueIdentifier>{be29a7d8-003f-4339-834d-4ba2f8ac0caf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="WindowingSystem">
       <UniqueIdentifier>{861caf92-5dc8-4e0c-9427-55bef743ccdd}</UniqueIdentifier>
     </Filter>
@@ -36,9 +33,6 @@
     </ClCompile>
     <ClCompile Include="UserInputController.cpp">
       <Filter>UserInputController</Filter>
-    </ClCompile>
-    <ClCompile Include="KeysStatusManager.cpp">
-      <Filter>UserInputController\KeyStatusObservation</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Include\core-AppFlow\TypesRegistry.cpp" />
     <ClCompile Include="GameConfig.cpp">
@@ -72,15 +66,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-AppFlow\UserInputController.h">
       <Filter>UserInputController</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-AppFlow\KeysStatusManager.h">
-      <Filter>UserInputController\KeyStatusObservation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-AppFlow\KeysStatusModel.h">
-      <Filter>UserInputController\KeyStatusObservation</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-AppFlow\KeyStatusHandler.h">
-      <Filter>UserInputController\KeyStatusObservation</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-AppFlow\WindowBuilder.h">
       <Filter>WindowingSystem</Filter>

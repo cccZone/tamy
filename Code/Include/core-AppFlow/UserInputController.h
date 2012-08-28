@@ -3,7 +3,6 @@
 #pragma once
 
 #include "core\Point.h"
-#include "core-AppFlow\KeysStatusModel.h"
 #include "core-AppFlow\TimeDependent.h"
 
 
@@ -16,7 +15,7 @@ typedef TVector<2> MouseSpeedVec;
 /**
  * User input handling mechanism.
  */
-class UserInputController : public KeysStatusModel, public TimeDependent
+class UserInputController : public TimeDependent
 {
 private:
    Point             m_relativePt;
@@ -57,9 +56,11 @@ public:
     */
    const MouseSpeedVec& getMouseSpeed() const { return m_mouseSpeed; }
 
-   // -------------------------------------------------------------------------
-   // KeysStatusModel implementation
-   // -------------------------------------------------------------------------
+   /**
+    * Tells if the specified key is currently pressed.
+    *
+    * @param keyCode
+    */
    bool isKeyPressed( unsigned char keyCode ) const;
 
 protected:

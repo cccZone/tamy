@@ -28,9 +28,6 @@
 // UserInputController
 // ----------------------------------------------------------------------------
 #include "core-AppFlow\UserInputController.h"
-#include "core-AppFlow\KeysStatusModel.h"
-#include "core-AppFlow\KeyStatusHandler.h"
-#include "core-AppFlow\KeysStatusManager.h"
 
 // ----------------------------------------------------------------------------
 // WindowingSystem

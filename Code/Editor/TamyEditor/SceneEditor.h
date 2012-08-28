@@ -54,6 +54,11 @@ public:
    ~SceneEditor();
 
    /**
+    * Returns the edited scene.
+    */
+   inline Model& getScene() const { return m_scene; }
+
+   /**
     * Returns the SelectionManager instance used by the editor.
     */
    inline SelectionManager& getSelectionMgr() const { return *m_selectionManager; }

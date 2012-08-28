@@ -1,8 +1,7 @@
-#ifndef _ENTITY_H
-#define _ENTITY_H
-
 /// @file   core-MVC\Entity.h
 /// @brief  object populating a model
+#ifndef _ENTITY_H
+#define _ENTITY_H
 
 /**
  * Entities management:
@@ -28,6 +27,7 @@
 #include "core\ReflectionObject.h"
 #include "core-MVC\Model.h"
 #include "core\Component.h"
+#include "core\Array.h"
 #include <vector>
 
 
@@ -121,6 +121,13 @@ public:
     * Returns the entity's children.
     */
    inline const Children& getEntityChildren() const;
+
+   /**
+    * Collects all entities for which this entity is a parent at some stage ( recursive collection ).
+    *
+    * @param outChildren
+    */
+   void collectChildren( Array< Entity* >& outChildren ) const;
 
    // -------------------------------------------------------------------------
    // Serializable implementation

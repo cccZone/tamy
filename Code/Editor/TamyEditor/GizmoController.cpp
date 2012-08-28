@@ -52,6 +52,12 @@ void GizmoController::initialize( TamySceneWidget& widget )
 
 void GizmoController::update( float timeElapsed )
 {
+   // check which keys are pressed
+   m_movementDir[MD_FRONT] = m_uic->isKeyPressed( 'W' );
+   m_movementDir[MD_BACK] = m_uic->isKeyPressed( 'S' );
+   m_movementDir[MD_LEFT] = m_uic->isKeyPressed( 'A' );
+   m_movementDir[MD_RIGHT] = m_uic->isKeyPressed( 'D' );
+
    // calculate the parameter change factor ( relative to the camera orientation )
    float movementSpeed = 0.1f * timeElapsed;
    Vector valChange( 0, 0, 0 );
@@ -73,77 +79,6 @@ void GizmoController::update( float timeElapsed )
 
    // transform the manipulated nodes
    m_gizmoAxis.transformManipulatedNodes( valChange );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void GizmoController::keySmashed( unsigned char keyCode )
-{
-
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void GizmoController::keyHeld( unsigned char keyCode )
-{
-   switch( keyCode )
-   {
-   case 'W':
-      {
-         m_movementDir[MD_FRONT] = true;
-         break;
-      }
-
-   case 'S':
-      {
-         m_movementDir[MD_BACK] = true;
-         break;
-      }
-
-   case 'A':
-      {
-         m_movementDir[MD_LEFT] = true;
-         break;
-      }
-
-   case 'D':
-      {
-         m_movementDir[MD_RIGHT] = true;
-         break;
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void GizmoController::keyReleased( unsigned char keyCode )
-{
-   switch( keyCode )
-   {
-   case 'W':
-      {
-         m_movementDir[MD_FRONT] = false;
-         break;
-      }
-
-   case 'S':
-      {
-         m_movementDir[MD_BACK] = false;
-         break;
-      }
-
-   case 'A':
-      {
-         m_movementDir[MD_LEFT] = false;
-         break;
-      }
-
-   case 'D':
-      {
-         m_movementDir[MD_RIGHT] = false;
-         break;
-      }
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

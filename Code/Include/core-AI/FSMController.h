@@ -39,7 +39,7 @@ public:
     * Registers a new FSM state.
     */
    template< typename State >
-   void registerState();
+   State* registerState();
 
    /**
     * Registers a new FSM state.

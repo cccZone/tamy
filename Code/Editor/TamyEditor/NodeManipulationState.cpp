@@ -14,7 +14,15 @@ END_OBJECT()
 
 NodeManipulationState::NodeManipulationState()
    : m_gizmoAxis( NULL )
+   , m_uic( NULL )
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void NodeManipulationState::initInput( TamySceneWidget& widget )
+{
+   m_uic = &widget;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,40 +55,21 @@ void NodeManipulationState::deactivate()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void NodeManipulationState::execute( float timeElapsed )
+{
+   if ( !m_uic->isKeyPressed( VK_LBUTTON ) )
+   {
+      // we released the manipulated object - go back to the navigation mode
+      transitionTo< NavigationState >();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void NodeManipulationState::setupController()
 {
    SceneObjectsManipulator& controller = fsm();
    controller.setController( new GizmoController( *m_gizmoAxis ) ); 
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool NodeManipulationState::keySmashed( unsigned char keyCode )
-{
-   // nothing to do here
-   return false;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool NodeManipulationState::keyHeld( unsigned char keyCode )
-{
-   // nothing to do here
-   return false;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool NodeManipulationState::keyReleased( unsigned char keyCode )
-{
-   if ( keyCode == VK_LBUTTON )
-   {
-      // we released the manipulated object - go back to the navigation mode
-      transitionTo< NavigationState >();
-      return true;
-   }
-
-   return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

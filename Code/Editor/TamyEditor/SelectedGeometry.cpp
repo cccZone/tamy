@@ -1,6 +1,5 @@
 #include "SelectedGeometry.h"
 #include "core-Renderer.h"
-#include "SelectionManager.h"
 #include "tamyeditor.h"
 
 

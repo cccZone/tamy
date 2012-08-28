@@ -1,6 +1,7 @@
 #include "core-MVC\Entity.h"
 #include "core-MVC\Model.h"
 #include "core\Assert.h"
+#include "core\List.h"
 #include <typeinfo>
 #include <algorithm>
 
@@ -133,6 +134,37 @@ void Entity::remove( Entity& entity, bool release )
    if ( it != m_children.end() )
    {
       m_children.erase( it );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Entity::collectChildren( Array< Entity* >& outChildren ) const
+{
+   List< Entity* > entitiesQueue;
+
+   // fill the list with this entity's immediate children - we'll start the search with them
+   uint childrenCount = m_children.size();
+   for ( uint i = 0; i < childrenCount; ++i )
+   {
+      entitiesQueue.pushBack( m_children[i] );
+   }
+
+   // BFS through the children tree to collect all attached entities
+   while( !entitiesQueue.empty() )
+   {
+      Entity* entity = entitiesQueue.front();
+      entitiesQueue.popFront();
+
+      // store the child in the output array
+      outChildren.push_back( entity );
+
+      // get the children of the child and put them down for further analysis
+      childrenCount = entity->m_children.size();
+      for ( uint i = 0; i < childrenCount; ++i )
+      {
+         entitiesQueue.pushBack( entity->m_children[i] );
+      }
    }
 }
 

@@ -13,7 +13,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class Entity;
-class SelectionManager;
 class Camera;
 class SceneTreeEditor;
 class TreeWidget;

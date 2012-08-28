@@ -4,31 +4,40 @@
 
 #include "core-AI/FSMState.h"
 #include "SceneObjectsManipulator.h"
-#include "SceneObjectsManipulatorState.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 enum NodeTransformControlMode;
 class GizmoAxis;
+class UserInputController;
+class TamySceneWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * SceneObjectsManipulator node manipulation state.
  */
-class NodeManipulationState : public FSMState< SceneObjectsManipulator >, public SceneObjectsManipulatorState
+class NodeManipulationState : public FSMState< SceneObjectsManipulator >
 {
    DECLARE_CLASS()
 
 private:
-   GizmoAxis*        m_gizmoAxis;
+   GizmoAxis*                 m_gizmoAxis;
+   UserInputController*       m_uic;
 
 public:
    /**
     * Constructor.
     */
    NodeManipulationState();
+
+   /**
+    * Initializes the input controller this state uses to check the user's input.
+    *
+    * @param widget
+    */
+   void initInput( TamySceneWidget& widget );
 
    /**
     * Sets the gizmo axis we will use to manipulate the object.
@@ -42,13 +51,7 @@ public:
    // ----------------------------------------------------------------------
    void activate();
    void deactivate();
-
-   // ----------------------------------------------------------------------
-   // SceneObjectsManipulatorState implementation
-   // ----------------------------------------------------------------------
-   bool keySmashed( unsigned char keyCode );
-   bool keyHeld( unsigned char keyCode );
-   bool keyReleased( unsigned char keyCode );
+   void execute( float timeElapsed );
 
 private:
    void setupController();

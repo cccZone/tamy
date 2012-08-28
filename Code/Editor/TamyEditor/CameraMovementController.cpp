@@ -49,6 +49,15 @@ void CameraMovementController::update( float timeElapsed )
    float movementSpeed = 40 * timeElapsed;
    float rotationSpeed = 0.1f * timeElapsed;
 
+   // check which keys are pressed
+   m_movementDir[MD_FRONT] = m_uic->isKeyPressed( 'W' );
+   m_movementDir[MD_BACK] = m_uic->isKeyPressed( 'S' );
+   m_movementDir[MD_LEFT] = m_uic->isKeyPressed( 'A' );
+   m_movementDir[MD_RIGHT] = m_uic->isKeyPressed( 'D' );
+
+   m_rotating = m_uic->isKeyPressed( VK_RBUTTON );
+   m_uic->setRelativeMouseMovement( m_rotating );
+
    // process the keys
    Vector moveVec;
    if ( m_movementDir[MD_FRONT] )  
@@ -80,91 +89,6 @@ void CameraMovementController::update( float timeElapsed )
       float mouseSpeedX = m_uic->getMouseSpeed().v[0] * rotationSpeed;
       float mouseSpeedY = m_uic->getMouseSpeed().v[1] * rotationSpeed;
       m_cameraController->rotate( mouseSpeedY, mouseSpeedX );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void CameraMovementController::keySmashed( unsigned char keyCode )
-{
-   // this controller doesn't react to sudden key smashes
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void CameraMovementController::keyHeld( unsigned char keyCode )
-{
-   switch( keyCode )
-   {
-   case VK_RBUTTON:
-      {
-         m_rotating = true;
-         m_uic->setRelativeMouseMovement( m_rotating );
-         break;
-      }
-
-   case 'W':
-      {
-         m_movementDir[MD_FRONT] = true;
-         break;
-      }
-
-   case 'S':
-      {
-         m_movementDir[MD_BACK] = true;
-         break;
-      }
-
-   case 'A':
-      {
-         m_movementDir[MD_LEFT] = true;
-         break;
-      }
-
-   case 'D':
-      {
-         m_movementDir[MD_RIGHT] = true;
-         break;
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void CameraMovementController::keyReleased( unsigned char keyCode )
-{
-   switch( keyCode )
-   {
-   case VK_RBUTTON:
-      {
-         m_rotating = false;
-         m_uic->setRelativeMouseMovement( m_rotating );
-         break;
-      }
-
-   case 'W':
-      {
-         m_movementDir[MD_FRONT] = false;
-         break;
-      }
-
-   case 'S':
-      {
-         m_movementDir[MD_BACK] = false;
-         break;
-      }
-
-   case 'A':
-      {
-         m_movementDir[MD_LEFT] = false;
-         break;
-      }
-
-   case 'D':
-      {
-         m_movementDir[MD_RIGHT] = false;
-         break;
-      }
    }
 }
 
