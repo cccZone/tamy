@@ -512,7 +512,6 @@
     <ClInclude Include="RPBTexture.h" />
     <ClInclude Include="RPBVec4.h" />
     <ClInclude Include="SceneObjectsManipulator.h" />
-    <ClInclude Include="SceneObjectsManipulatorState.h" />
     <ClInclude Include="SceneRendererInputController.h" />
     <ClInclude Include="SelectionManagerListener.h" />
     <CustomBuild Include="TextureEditor.h">

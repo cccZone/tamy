@@ -68,7 +68,7 @@ StateInterface& FSMController< Impl >::getCurrentState() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Impl > template< typename State >
-void FSMController< Impl >::registerState()
+State* FSMController< Impl >::registerState()
 {
    // check if the state isn't already registered
    unsigned int count = m_states.size();
@@ -77,12 +77,15 @@ void FSMController< Impl >::registerState()
       if ( m_states[i]->isExactlyA< typename State >() )
       {
          // yup - we already have it registered
-         return;
+         return NULL;
       }
    }
 
-   m_states.push_back( static_cast< FSMState< Impl >* >( new State() ) );
+   State* state = new State();
+   m_states.push_back( static_cast< FSMState< Impl >* >( state ) );
    m_states.back()->setHostController( static_cast< Impl& >( *this ) );
+
+   return state;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

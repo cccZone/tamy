@@ -17,6 +17,21 @@ END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+NavigationState::NavigationState()
+   : m_uic( NULL )
+   , m_waitingForQueryResults( false )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void NavigationState::initInput( TamySceneWidget& widget )
+{
+   m_uic = &widget;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void NavigationState::activate()
 {
    fsm().setController( new CameraMovementController() ); 
@@ -31,42 +46,25 @@ void NavigationState::deactivate()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool NavigationState::keySmashed( unsigned char keyCode )
+void NavigationState::execute( float timeElapsed )
 {
-   if ( keyCode == VK_LBUTTON )
+   if ( !m_waitingForQueryResults && m_uic->isKeyPressed( VK_LBUTTON ) )
    {
       TamySceneWidget& sceneWidget = fsm().getSceneWidget();
 
       // issue an object selection command
       sceneWidget.localToViewport( sceneWidget.getMousePos(), m_queryPos );
       sceneWidget.queryScene( *this );
-
-      return true;
+      m_waitingForQueryResults = true;
    }
-
-   return false;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool NavigationState::keyHeld( unsigned char keyCode )
-{
-   // nothing to do here
-   return false;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool NavigationState::keyReleased( unsigned char keyCode )
-{
-   // nothing to do here
-   return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void NavigationState::setResult( const Array< Entity* >& foundEntities )
 {
+   m_waitingForQueryResults = false;
+
    // analyze the found entities and determine what ( if any ) spatial entities were found,
    // and whether a gizmo axis was selected
    GizmoAxis* selectedGizmoAxis = NULL;
@@ -113,9 +111,9 @@ void NavigationState::setResult( const Array< Entity* >& foundEntities )
    }
 
  
-   if ( selectedGizmoAxis )
+   if ( selectedGizmoAxis && m_uic->isKeyPressed( VK_LBUTTON ) )
    {
-      // if a gizmo axis was selected, then it means we want to manipulate the selected object.
+      // if a gizmo axis was selected ( and the selection button is still pressed ) then it means we want to manipulate the selected object.
       // At this point we're no longer interested in any other selected objects
 
       ASSERT_MSG( fsm().areNodesSelected(), "There are no selected nodes, and yet we managed to select a manipulation gizmo somehow. Check it!" );

@@ -4,10 +4,13 @@
 
 #include "core-AI/FSMState.h"
 #include "SceneObjectsManipulator.h"
-#include "SceneObjectsManipulatorState.h"
 #include "SceneQuery.h"
 #include "core\Vector.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+class UserInputController;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,15 +21,29 @@
  * the desired object or to switch to manipulation mode by pressing
  * and holding the Left Mouse Button and moving the mouse around.
  */
-class NavigationState : public FSMState< SceneObjectsManipulator >, public SceneObjectsManipulatorState, public SceneQuery
+class NavigationState : public FSMState< SceneObjectsManipulator >, public SceneQuery
 {
 public:
    DECLARE_CLASS()
 
 private:
-   Vector               m_queryPos;
+   UserInputController*       m_uic;
+   Vector                     m_queryPos;
+   bool                       m_waitingForQueryResults;
 
 public:
+   /**
+    * Constructor.
+    */
+   NavigationState();
+
+   /**
+    * Initializes the input controller this state uses to check the user's input.
+    *
+    * @param widget
+    */
+   void initInput( TamySceneWidget& widget );
+
    // ----------------------------------------------------------------------
    // SceneQuery implementation
    // ----------------------------------------------------------------------
@@ -38,13 +55,7 @@ public:
    // ----------------------------------------------------------------------
    void activate();
    void deactivate();
-
-   // ----------------------------------------------------------------------
-   // SceneObjectsManipulatorState implementation
-   // ----------------------------------------------------------------------
-   bool keySmashed( unsigned char keyCode );
-   bool keyHeld( unsigned char keyCode );
-   bool keyReleased( unsigned char keyCode );
+   void execute( float timeElapsed );
 
 private:
    void analyzeSelectedNodes( const Array< SpatialEntity* >& selectedNodes );

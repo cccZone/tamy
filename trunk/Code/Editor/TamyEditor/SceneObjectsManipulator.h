@@ -4,7 +4,6 @@
 
 #include "SceneRendererInputController.h"
 #include "core-AI/FSMController.h"
-#include "SceneObjectsManipulatorState.h"
 #include "SelectionManagerListener.h"
 #include <vector>
 
@@ -79,17 +78,16 @@ public:
    void update( float timeElapsed );
 
    // -------------------------------------------------------------------------
-   // KeyStatusHandler implementation
-   // -------------------------------------------------------------------------
-   void keySmashed( unsigned char keyCode );
-   void keyHeld( unsigned char keyCode );
-   void keyReleased( unsigned char keyCode );
-
-   // -------------------------------------------------------------------------
    // SelectionManagerListener implementation
    // -------------------------------------------------------------------------
    void onEntitySelected( Entity& entity );
    void onEntityDeselected( Entity& entity );
+
+private:
+   /**
+    * This method deletes all currently selected entities.
+    */
+   void deleteSelectedEntities();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

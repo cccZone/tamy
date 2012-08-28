@@ -47,13 +47,6 @@ public:
    // TimeDependent implementation
    // -------------------------------------------------------------------------
    void update( float timeElapsed );
-
-   // -------------------------------------------------------------------------
-   // KeyStatusHandler implementation
-   // -------------------------------------------------------------------------
-   void keySmashed( unsigned char keyCode );
-   void keyHeld( unsigned char keyCode );
-   void keyReleased( unsigned char keyCode );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

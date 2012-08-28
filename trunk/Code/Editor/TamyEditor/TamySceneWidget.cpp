@@ -25,7 +25,6 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
    : QWidget( parent, f )
    , m_rendererPipelineName( rendererPipelineName )
    , m_localTimeController( NULL )
-   , m_keysStatusManager( NULL )
    , m_renderer( NULL )
    , m_camera( NULL )
    , m_scene( NULL )
@@ -43,8 +42,6 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
    memset( m_keyBuffer, 0, sizeof( unsigned char ) * 256 );
 
    setFocusPolicy( Qt::ClickFocus );
-
-   m_keysStatusManager = new KeysStatusManager( *this );
 
    if (s_d3d9 == NULL)
    {
@@ -88,7 +85,6 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
 
       m_localTimeController->add("input");
       m_localTimeController->get("input").add( *this );
-      m_localTimeController->get("input").add( *m_keysStatusManager );
 
       m_inputHandlerTrack = &m_localTimeController->add( "inputHandler" );
    }
@@ -108,10 +104,6 @@ TamySceneWidget::~TamySceneWidget()
    m_inputHandlerTrack = NULL;
    delete m_localTimeController;
    m_localTimeController = NULL;
-
-   m_keysStatusManager->removeAllHandlers();
-   delete m_keysStatusManager; 
-   m_keysStatusManager = NULL;
 
    m_camera = NULL;
 
@@ -233,10 +225,7 @@ void TamySceneWidget::setInputController( SceneRendererInputController* controll
    m_inputHandlerTrack->reset();
 
    // create an input controller
-   m_keysStatusManager->removeAllHandlers();
    controller->initialize( *this );
-   m_keysStatusManager->addHandler( controller );
-
   m_inputHandlerTrack->add( *controller );
 }
 

@@ -19,7 +19,6 @@
 
 class TamyEditor;
 class Renderer;
-class KeysStatusManager;
 class Camera;
 class Model;
 class ResourcesManager;
@@ -49,7 +48,6 @@ private:
 
    // input tracking
    unsigned char                                      m_keyBuffer[256];
-   KeysStatusManager*                                 m_keysStatusManager;
    TimeControllerTrack*                               m_inputHandlerTrack;
 
    // required services
@@ -152,8 +150,6 @@ public:
    inline Renderer& getRenderer() const { return *m_renderer; }
 
    inline Camera& getCamera() const { return *m_camera; }
-
-   inline KeysStatusManager& getKeysStatusManager() const { return *m_keysStatusManager; }
 
    inline CompositeRenderingMechanism& getRenderingMech() const { return *m_renderingMech; }
 

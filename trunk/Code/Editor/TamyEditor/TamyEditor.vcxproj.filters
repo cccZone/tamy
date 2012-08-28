@@ -93,9 +93,6 @@
     <Filter Include="Widgets\SceneTreeViewer\Editors">
       <UniqueIdentifier>{06a1dfb4-deca-4972-9144-6563bc944319}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\SelectionManager">
-      <UniqueIdentifier>{1e96a4ee-a710-4693-a31c-0d2992d23ec5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widgets\SceneRenderWidget\SelectionVisualisation">
       <UniqueIdentifier>{73130267-9dcf-4fc3-b145-f001f12ce254}</UniqueIdentifier>
     </Filter>
@@ -204,6 +201,9 @@
     <Filter Include="Core\ProfilerFrame">
       <UniqueIdentifier>{a357defc-8096-4a65-8fe2-d0fd69bde90c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\SceneEditor\SelectionManager">
+      <UniqueIdentifier>{1e96a4ee-a710-4693-a31c-0d2992d23ec5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -303,22 +303,16 @@
       <Filter>Widgets\SceneRenderWidget\SelectionVisualisation\Representations</Filter>
     </ClInclude>
     <ClInclude Include="SelectionManagerListener.h">
-      <Filter>Core\SelectionManager</Filter>
+      <Filter>ResourceEditors\SceneEditor\SelectionManager</Filter>
     </ClInclude>
     <ClInclude Include="SelectionManager.h">
-      <Filter>Core\SelectionManager</Filter>
+      <Filter>ResourceEditors\SceneEditor\SelectionManager</Filter>
     </ClInclude>
     <ClInclude Include="CameraMovementController.h">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
     </ClInclude>
     <ClInclude Include="SceneRendererInputController.h">
       <Filter>Widgets\SceneRenderWidget</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneObjectsManipulator.h">
-      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneObjectsManipulatorState.h">
-      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClInclude>
     <ClInclude Include="SceneQuery.h">
       <Filter>Widgets\SceneRenderWidget</Filter>
@@ -532,6 +526,9 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_depthbufferdescriptordialog.h">
       <Filter>QtImplementation\Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneObjectsManipulator.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -819,13 +816,10 @@
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
     <ClCompile Include="SelectionManager.cpp">
-      <Filter>Core\SelectionManager</Filter>
+      <Filter>ResourceEditors\SceneEditor\SelectionManager</Filter>
     </ClCompile>
     <ClCompile Include="CameraMovementController.cpp">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneObjectsManipulator.cpp">
-      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClCompile>
     <ClCompile Include="SceneQuery.cpp">
       <Filter>Widgets\SceneRenderWidget</Filter>
@@ -1288,6 +1282,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Template\moc_DepthBufferDescriptorDialog.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneObjectsManipulator.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
