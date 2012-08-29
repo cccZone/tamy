@@ -1,5 +1,7 @@
 =Table Of Contents=
   * [ For programmers ]
+    * [ Miscellaneous ]
+      * [DLLs DLLs]
     * [ Setup ]
       * [QTConfiguration QT Configuration]
     * [ Core ]
