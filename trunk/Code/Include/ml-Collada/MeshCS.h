@@ -1,9 +1,9 @@
-/// @file   ml-Blender/MeshCS.h
+/// @file   ml-Collada/MeshCS.h
 /// @brief  a slice that represents a triangle mesh resource
 
 #pragma once
 
-#include "ml-Blender/IColladaSlice.h"
+#include "ml-Collada/IColladaSlice.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
-#include "ml-Blender/SceneCS.h"
-#include "ml-Blender/BlenderScene.h"
+#include "ml-Collada/SceneCS.h"
+#include "ml-Collada/ColladaScene.h"
 #include "core.h"
 #include "core-MVC.h"
 #include "core-Renderer.h"
@@ -62,7 +62,7 @@ SceneCS::NodeDef* SceneCS::createNode( TiXmlElement* nodeElem )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneCS::instantiate( const BlenderScene& host, Model& scene ) const
+void SceneCS::instantiate( const ColladaScene& host, Model& scene ) const
 {
    unsigned int count = m_nodes.size();
    for ( unsigned int i = 0; i < count; ++i )
@@ -125,7 +125,7 @@ SceneCS::NodeDef::~NodeDef()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene, const SceneCS& hostSlice ) const
+SpatialEntity* SceneCS::NodeDef::instantiate( const ColladaScene& scene, const SceneCS& hostSlice ) const
 {
    std::string id = nodeElem->Attribute( "id" );
    SpatialEntity* entity = new SpatialEntity( id );
@@ -199,7 +199,7 @@ SpatialEntity* SceneCS::NodeDef::instantiate( const BlenderScene& scene, const S
    return entity;
 }
 
-void SceneCS::NodeDef::parseMaterial( TiXmlElement& elem, const BlenderScene& scene, Entity* entity ) const
+void SceneCS::NodeDef::parseMaterial( TiXmlElement& elem, const ColladaScene& scene, Entity* entity ) const
 {
    // material
    TiXmlElement* materialBindElem = elem.FirstChildElement( "bind_material" );
@@ -219,7 +219,7 @@ void SceneCS::NodeDef::parseMaterial( TiXmlElement& elem, const BlenderScene& sc
    }
 }
 
-void SceneCS::NodeDef::parseSkeletons( TiXmlElement& elem, const SceneCS& hostSlice, const BlenderScene& scene, Entity* entity ) const
+void SceneCS::NodeDef::parseSkeletons( TiXmlElement& elem, const SceneCS& hostSlice, const ColladaScene& scene, Entity* entity ) const
 {
    TiXmlElement* skeletonElem = elem.FirstChildElement( "skeleton" );
    if ( skeletonElem )

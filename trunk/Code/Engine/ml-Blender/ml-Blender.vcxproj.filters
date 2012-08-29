@@ -1,85 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="BlenderScene.cpp" />
-    <ClCompile Include="EffectCS.cpp">
-      <Filter>Slices</Filter>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="BlenderSceneExporter.cpp">
+      <Filter>SceneExport</Filter>
     </ClCompile>
-    <ClCompile Include="MeshCS.cpp">
-      <Filter>Slices</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneCS.cpp">
-      <Filter>Slices</Filter>
-    </ClCompile>
-    <ClCompile Include="ControllerCS.cpp">
-      <Filter>Slices</Filter>
-    </ClCompile>
-    <ClCompile Include="DataSource.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="ColladaParser.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="DSBindStructure.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="DSIndexedBindStructure.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="DSIndexed.cpp">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="SurfacePropertiesCS.cpp">
-      <Filter>Slices</Filter>
-    </ClCompile>
+    <ClCompile Include="PythonInterface.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Include\ml-Blender\BlenderScene.h" />
-    <ClInclude Include="..\..\Include\ml-Blender.h" />
-    <ClInclude Include="..\..\Include\ml-Blender\IColladaSlice.h" />
-    <ClInclude Include="..\..\Include\ml-Blender\EffectCS.h">
-      <Filter>Slices</Filter>
+    <ClInclude Include="..\..\Include\ml-Blender\BlenderSceneExporter.h">
+      <Filter>SceneExport</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\MeshCS.h">
-      <Filter>Slices</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\SceneCS.h">
-      <Filter>Slices</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\ControllerCS.h">
-      <Filter>Slices</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\DataSource.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\ColladaParser.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\DSBindStructure.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\DSIndexedBindStructure.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\DSIndexed.h">
-      <Filter>Data</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\ml-Blender\SurfacePropertiesCS.h">
-      <Filter>Slices</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-Blender\PythonInterface.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Slices">
-      <UniqueIdentifier>{83e053b3-101e-47bc-8cb1-0497c589fd07}</UniqueIdentifier>
+    <Filter Include="SceneExport">
+      <UniqueIdentifier>{bc3b5723-282f-4f7a-a30c-6edc5e39f79d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Data">
-      <UniqueIdentifier>{bf3e932c-27d1-4226-a410-64be87d891f7}</UniqueIdentifier>
+    <Filter Include="Python">
+      <UniqueIdentifier>{b15be2ff-51f6-45c9-baa9-a055cfc08a8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Include\ml-Blender\BlenderScene.inl" />
-    <None Include="..\..\Include\ml-Blender\ColladaParser.inl">
-      <Filter>Data</Filter>
+    <None Include="..\..\Include\ml-Blender\TamyModelExport.py">
+      <Filter>Python</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -1,9 +1,9 @@
-/// @file   ml-Blender/DSIndexed.h
+/// @file   ml-Collada/DSIndexed.h
 /// @brief  a COLLADA data structure with indexed array
 
 #pragma once
 
-#include "ml-Blender/DataSource.h"
+#include "ml-Collada/DataSource.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

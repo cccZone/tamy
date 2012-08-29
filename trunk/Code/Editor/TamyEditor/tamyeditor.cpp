@@ -20,7 +20,7 @@
 
 // importers
 #include "ml-IWF.h"
-#include "ml-Blender.h"
+#include "ml-Collada.h"
 #include "ml-BVH.h"
 #include "ml-FBX.h"
 
@@ -180,7 +180,7 @@ void TamyEditor::setupResourcesManager( const char* fsRoot )
    resMgr.addImporter< BVHModelLoader, Model >( "bvh" );
    resMgr.addImporter< BVHSkeletonAnimationLoader, SkeletonAnimation >( "bvh" );
    resMgr.addImporter< IWFScene, Model >( "iwf" );
-   resMgr.addImporter< BlenderScene, Model >( "dae" );
+   resMgr.addImporter< ColladaScene, Model >( "dae" );
    resMgr.setProgressObserver< ProgressDialog >();
 }
 

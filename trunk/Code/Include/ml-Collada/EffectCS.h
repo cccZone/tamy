@@ -1,19 +1,16 @@
-/// @file   ml-Blender/ControllerCS.h
-/// @brief  a slice that represents an entity controller
+/// @file   ml-Collada/IColladaSlice.h
+/// @brief  a slice representing a visual effect
 
 #pragma once
 
-#include "ml-Blender/IColladaSlice.h"
-#include <vector>
-#include "core-Renderer/LitVertex.h"
-#include "core-Renderer/SkinnedGeometry.h"
+#include "ml-Collada/IColladaSlice.h"
+#include <string>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class ResourcesManager;
 class TiXmlNode;
-class Skeleton;
 class FilePath;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,19 +18,20 @@ class FilePath;
 /**
  * An instantiator of triangle mesh resource.
  */
-class ControllerCS : public IColladaSlice, public IEntitySlice
+class EffectCS : public IColladaSlice, public IEntitySlice
 {
 private:
-   std::string                      m_skinSource;
-   Skeleton*                        m_skeleton;
+   std::string    m_materialName;
+   std::string    m_materialId;
 
 public:
-   ControllerCS( TiXmlNode* geometryNode, const FilePath& deploymentDir, ResourcesManager& rm );
+   EffectCS( TiXmlNode* effectNode, const FilePath& deploymentDir, ResourcesManager& rm );
+   ~EffectCS();
 
    // -------------------------------------------------------------------------
    // IEntitySlice implementation
    // -------------------------------------------------------------------------
-   Entity* instantiate( const BlenderScene& host ) const;
+   Entity* instantiate( const ColladaScene& host ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

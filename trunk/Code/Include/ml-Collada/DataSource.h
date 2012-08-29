@@ -1,4 +1,4 @@
-/// @file   ml-Blender/DataInput.h
+/// @file   ml-Collada/DataInput.h
 /// @brief  COLLADA data source description
 
 #pragma once

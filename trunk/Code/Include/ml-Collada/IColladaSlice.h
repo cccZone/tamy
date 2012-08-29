@@ -1,4 +1,4 @@
-/// @file   ml-Blender/IColladaSlice.h
+/// @file   ml-Collada/IColladaSlice.h
 /// @brief  a slice parser interface
 
 #pragma once
@@ -10,7 +10,7 @@
 
 class Entity;
 class TiXmlNode;
-class BlenderScene;
+class ColladaScene;
 class Model;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ class IEntitySlice
 public:
    virtual ~IEntitySlice() {}
 
-   virtual Entity* instantiate( const BlenderScene& host ) const = 0;
+   virtual Entity* instantiate( const ColladaScene& host ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -71,7 +71,7 @@ protected:
 public:
    virtual ~ISceneSlice() {}
 
-   virtual void instantiate( const BlenderScene& host, Model& scene ) const = 0;
+   virtual void instantiate( const ColladaScene& host, Model& scene ) const = 0;
 
    inline void setID( const std::string& id ) { m_id = id; }
 };

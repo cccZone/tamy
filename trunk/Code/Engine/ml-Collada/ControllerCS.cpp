@@ -1,14 +1,14 @@
-#include "ml-Blender/ControllerCS.h"
+#include "ml-Collada/ControllerCS.h"
 #include "core-Renderer.h"
 #include "core.h"
 #include "tinyxml/tinyxml.h"
 
-#include "ml-Blender/ColladaParser.h"
-#include "ml-Blender/DSBindStructure.h"
-#include "ml-Blender/DSIndexedBindStructure.h"
-#include "ml-Blender/DSIndexed.h"
-#include "ml-Blender/MeshCS.h"
-#include "ml-Blender/BlenderScene.h"
+#include "ml-Collada/ColladaParser.h"
+#include "ml-Collada/DSBindStructure.h"
+#include "ml-Collada/DSIndexedBindStructure.h"
+#include "ml-Collada/DSIndexed.h"
+#include "ml-Collada/MeshCS.h"
+#include "ml-Collada/ColladaScene.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ ControllerCS::ControllerCS( TiXmlNode* controllerNode, const FilePath& deploymen
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Entity* ControllerCS::instantiate( const BlenderScene& host ) const
+Entity* ControllerCS::instantiate( const ColladaScene& host ) const
 {
    TriangleMesh& skinMesh = host.getResource< TriangleMesh >( m_skinSource );
    return new SkinnedGeometry( skinMesh, *m_skeleton );

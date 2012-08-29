@@ -1,10 +1,9 @@
+/// @file   ml-Collada.h
+/// @brief  composite include file for the 'ml-Collada' project
 #pragma once
-
-/// @file   ml-Blender.h
-/// @brief  aggregate include file for the 'ml-Blender' project
 
 
 // ----------------------------------------------------------------------------
 // Loaders
 // ----------------------------------------------------------------------------
-#include "ml-Blender\BlenderScene.h"
+#include "ml-Collada\ColladaScene.h"

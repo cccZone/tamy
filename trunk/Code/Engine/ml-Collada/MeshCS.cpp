@@ -1,13 +1,13 @@
-#include "ml-Blender/MeshCS.h"
-#include "ml-Blender/BlenderScene.h"
+#include "ml-Collada/MeshCS.h"
+#include "ml-Collada/ColladaScene.h"
 #include "core-Renderer.h"
 #include "core.h"
 #include "tinyxml/tinyxml.h"
 
-#include "ml-Blender/ColladaParser.h"
-#include "ml-Blender/DSBindStructure.h"
-#include "ml-Blender/DSIndexedBindStructure.h"
-#include "ml-Blender/DSIndexed.h"
+#include "ml-Collada/ColladaParser.h"
+#include "ml-Collada/DSBindStructure.h"
+#include "ml-Collada/DSIndexedBindStructure.h"
+#include "ml-Collada/DSIndexed.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

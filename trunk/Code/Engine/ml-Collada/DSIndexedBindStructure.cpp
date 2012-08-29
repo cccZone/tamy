@@ -1,5 +1,5 @@
-#include "ml-Blender/DSIndexedBindStructure.h"
-#include "ml-Blender/ColladaParser.h"
+#include "ml-Collada/DSIndexedBindStructure.h"
+#include "ml-Collada/ColladaParser.h"
 #include "tinyxml/tinyxml.h"
 #include "core.h"
 

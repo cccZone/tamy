@@ -1781,15 +1781,14 @@
       <Project>{6259b6c0-58c1-4cda-adf7-4e3da807bca9}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\..\Engine\ml-Collada\ml-Collada.vcxproj">
+      <Project>{652a9b5d-dd4a-46ab-bf3b-35b34f8fd195}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\Engine\ml-FBX\ml-FBX.vcxproj">
       <Project>{76bce2e2-3702-4229-ae8c-1385bbe61605}</Project>
     </ProjectReference>
     <ProjectReference Include="..\..\Engine\ml-IWF\ml-IWF.vcxproj">
       <Project>{6258ff02-94e3-4527-89c7-ecffab554aee}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Engine\ml-Blender\ml-Blender.vcxproj">
-      <Project>{269AD9D8-247F-4F55-8438-C6DC4532A12F}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\..\Engine\ml-BVH\ml-BVH.vcxproj">

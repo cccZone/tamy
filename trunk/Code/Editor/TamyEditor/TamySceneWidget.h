@@ -163,12 +163,15 @@ protected:
    // -------------------------------------------------------------------------
    // QWidget implementation
    // -------------------------------------------------------------------------
-   void moveEvent(QMoveEvent* event);
-   void resizeEvent(QResizeEvent* event);
-   void keyPressEvent(QKeyEvent* event);
-   void keyReleaseEvent(QKeyEvent* event);
-   void mousePressEvent(QMouseEvent* event);
-   void mouseReleaseEvent(QMouseEvent* event);
+   void moveEvent( QMoveEvent* event );
+   void resizeEvent( QResizeEvent* event );
+   void keyPressEvent( QKeyEvent* event );
+   void keyReleaseEvent( QKeyEvent* event );
+   void mousePressEvent( QMouseEvent* event );
+   void mouseReleaseEvent( QMouseEvent* event );
+   void showEvent( QShowEvent* event );
+   void hideEvent( QHideEvent* event );
+   void focusOutEvent( QFocusEvent* event );
 
    // -------------------------------------------------------------------------
    // UserInputController implementation
