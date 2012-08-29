@@ -329,6 +329,39 @@ void TamySceneWidget::mouseReleaseEvent( QMouseEvent* event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void TamySceneWidget::showEvent( QShowEvent* event )
+{
+   // reset the keys buffer
+   memset( m_keyBuffer, 0, sizeof(unsigned char) * 256 );
+
+   // pass the event higher
+   __super::showEvent( event );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::hideEvent( QHideEvent* event )
+{
+   // reset the keys buffer
+   memset( m_keyBuffer, 0, sizeof(unsigned char) * 256 );
+
+   // pass the event higher
+   __super::hideEvent( event );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TamySceneWidget::focusOutEvent( QFocusEvent* event )
+{
+   // reset the keys buffer
+   memset( m_keyBuffer, 0, sizeof(unsigned char) * 256 );
+
+   // pass the event higher
+   __super::focusOutEvent( event );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void TamySceneWidget::onRelativeMouseMovement()
 {
    this->cursor().setShape( Qt::BlankCursor );

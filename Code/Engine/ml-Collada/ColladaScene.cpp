@@ -1,20 +1,20 @@
-#include "ml-Blender/BlenderScene.h"
+#include "ml-Collada/ColladaScene.h"
 #include "tinyxml/tinyxml.h"
 #include "core.h"
 #include "core-MVC.h"
 #include "core-Renderer.h"
 
 // resources instantiators
-#include "ml-Blender/EffectCS.h"
-#include "ml-Blender/SurfacePropertiesCS.h"
-#include "ml-Blender/MeshCS.h"
-#include "ml-Blender/ControllerCS.h"
-#include "ml-Blender/SceneCS.h"
+#include "ml-Collada/EffectCS.h"
+#include "ml-Collada/SurfacePropertiesCS.h"
+#include "ml-Collada/MeshCS.h"
+#include "ml-Collada/ControllerCS.h"
+#include "ml-Collada/SceneCS.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BlenderScene::BlenderScene( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer )
+ColladaScene::ColladaScene( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer )
    : TResourceImporter< Model >( path, rm, observer )
    , m_document( NULL )
 {
@@ -31,7 +31,7 @@ BlenderScene::BlenderScene( const FilePath& path, ResourcesManager& rm, IProgres
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BlenderScene::~BlenderScene()
+ColladaScene::~ColladaScene()
 {
    for ( SlicesDefinitions::const_iterator it = m_definitions.begin(); it != m_definitions.end(); ++it )
    {
@@ -51,7 +51,7 @@ BlenderScene::~BlenderScene()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderScene::import( Model& scene )
+void ColladaScene::import( Model& scene )
 {
    // load the file contents into a string
    const Filesystem& fs = m_rm.getFilesystem();
@@ -111,7 +111,7 @@ void BlenderScene::import( Model& scene )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderScene::addSceneSlice( ISceneSlice* slice )
+void ColladaScene::addSceneSlice( ISceneSlice* slice )
 {
    if ( slice == NULL )
    {
@@ -124,7 +124,7 @@ void BlenderScene::addSceneSlice( ISceneSlice* slice )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderScene::addSlice( const std::string& id, IColladaSlice* slice )
+void ColladaScene::addSlice( const std::string& id, IColladaSlice* slice )
 {
    if ( slice == NULL )
    {
@@ -144,7 +144,7 @@ void BlenderScene::addSlice( const std::string& id, IColladaSlice* slice )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Entity* BlenderScene::getEntity( const std::string& id ) const
+Entity* ColladaScene::getEntity( const std::string& id ) const
 {
    SlicesMap::const_iterator it = m_slicesMap.find( id );
    if ( it == m_slicesMap.end() )

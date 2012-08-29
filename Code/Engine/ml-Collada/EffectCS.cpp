@@ -1,5 +1,5 @@
-#include "ml-Blender/EffectCS.h"
-#include "ml-Blender/BlenderScene.h"
+#include "ml-Collada/EffectCS.h"
+#include "ml-Collada/ColladaScene.h"
 #include "core.h"
 #include "core-Renderer.h"
 #include "tinyxml/tinyxml.h"
@@ -35,7 +35,7 @@ EffectCS::~EffectCS()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Entity* EffectCS::instantiate( const BlenderScene& host ) const
+Entity* EffectCS::instantiate( const ColladaScene& host ) const
 {
    MaterialEntity* material = BasicRenderingEntitiesFactory::createMaterial( m_materialName );
 

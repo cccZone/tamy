@@ -1,9 +1,9 @@
-/// @file   ml-Blender/DSBindStructure.h
+/// @file   ml-Collada/DSBindStructure.h
 /// @brief  a COLLADA data structure for data described by multiple inputs with indexing
 
 #pragma once
 
-#include "ml-Blender/DataSource.h"
+#include "ml-Collada/DataSource.h"
 #include <map>
 
 

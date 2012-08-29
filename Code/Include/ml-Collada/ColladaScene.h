@@ -1,4 +1,4 @@
-/// @file   ml-Blender/BlenderScene.h
+/// @file   ml-Collada/ColladaScene.h
 /// @brief  a Blender scene importer
 
 #ifndef _BLENDER_SCENE_H
@@ -27,7 +27,7 @@ class Entity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class BlenderScene : public TResourceImporter< Model >
+class ColladaScene : public TResourceImporter< Model >
 {
 private:
    TiXmlDocument*                                  m_document;
@@ -46,8 +46,8 @@ public:
    /**
     * Constructor.
     */
-   BlenderScene( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer );
-   ~BlenderScene();
+   ColladaScene( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer );
+   ~ColladaScene();
 
    /**
     * Returns the used instance of progress observer.
@@ -112,7 +112,7 @@ class SliceDefinition
 public:
    virtual ~SliceDefinition() {}
 
-   virtual void parse( TiXmlNode* sceneSlice, BlenderScene& host ) = 0;
+   virtual void parse( TiXmlNode* sceneSlice, ColladaScene& host ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,12 +130,12 @@ public:
    // -------------------------------------------------------------------------
    // SliceDefinition implementation
    // -------------------------------------------------------------------------
-   void parse( TiXmlNode* sceneSlice, BlenderScene& host );
+   void parse( TiXmlNode* sceneSlice, ColladaScene& host );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "ml-Blender/BlenderScene.inl"
+#include "ml-Collada/ColladaScene.inl"
 
 ///////////////////////////////////////////////////////////////////////////////
 

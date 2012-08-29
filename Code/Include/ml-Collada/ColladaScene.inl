@@ -1,5 +1,5 @@
 #ifndef _BLENDER_SCENE_H
-#error "This file can only be included from BlenderScene.h"
+#error "This file can only be included from ColladaScene.h"
 #else
 
 #include "tinyxml/tinyxml.h"
@@ -18,7 +18,7 @@ TSliceDefinition< T >::TSliceDefinition( const std::string& sliceTag, const std:
 ///////////////////////////////////////////////////////////////////////////////
 
 template < typename T >
-void TSliceDefinition< T >::parse( TiXmlNode* sceneSlice, BlenderScene& host )
+void TSliceDefinition< T >::parse( TiXmlNode* sceneSlice, ColladaScene& host )
 {
    TiXmlElement* objectsSlice = sceneSlice->FirstChildElement( m_sliceTag.c_str() );
    if ( !objectsSlice )
@@ -61,7 +61,7 @@ void TSliceDefinition< T >::parse( TiXmlNode* sceneSlice, BlenderScene& host )
 ///////////////////////////////////////////////////////////////////////////////
 
 template < typename T >
-T& BlenderScene::getResource( const std::string& id ) const
+T& ColladaScene::getResource( const std::string& id ) const
 {
    SlicesMap::const_iterator it = m_slicesMap.find( id );
    if ( it == m_slicesMap.end() )

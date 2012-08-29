@@ -1,4 +1,4 @@
-/// @file   ml-Blender/ColladaParser.h
+/// @file   ml-Collada/ColladaParser.h
 /// @brief  COLLADA data input
 
 #ifndef _COLLADA_PARSER_H
@@ -98,7 +98,7 @@ public:
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "ml-Blender/ColladaParser.inl"
+#include "ml-Collada/ColladaParser.inl"
 
 ///////////////////////////////////////////////////////////////////////////////
 

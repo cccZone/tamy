@@ -1,9 +1,9 @@
-/// @file   ml-Blender/IColladaSlice.h
+/// @file   ml-Collada/IColladaSlice.h
 /// @brief  a slice representing surface properties
 
 #pragma once
 
-#include "ml-Blender/IColladaSlice.h"
+#include "ml-Collada/IColladaSlice.h"
 #include <string>
 
 

@@ -1,9 +1,9 @@
-/// @file   ml-Blender/SceneCS.h
+/// @file   ml-Collada/SceneCS.h
 /// @brief  a slice that represents a scene object
 
 #pragma once
 
-#include "ml-Blender/IColladaSlice.h"
+#include "ml-Collada/IColladaSlice.h"
 #include <vector>
 
 
@@ -31,11 +31,11 @@ private:
       NodeDef( TiXmlElement* elem );
       ~NodeDef();
 
-      SpatialEntity* instantiate( const BlenderScene& scene, const SceneCS& hostSlice ) const;
+      SpatialEntity* instantiate( const ColladaScene& scene, const SceneCS& hostSlice ) const;
 
    private:
-      void parseMaterial( TiXmlElement& elem, const BlenderScene& scene, Entity* entity ) const;
-      void parseSkeletons( TiXmlElement& elem, const SceneCS& hostSlice, const BlenderScene& scene, Entity* entity ) const;
+      void parseMaterial( TiXmlElement& elem, const ColladaScene& scene, Entity* entity ) const;
+      void parseSkeletons( TiXmlElement& elem, const SceneCS& hostSlice, const ColladaScene& scene, Entity* entity ) const;
    };
    friend struct NodeDef;
 
@@ -50,7 +50,7 @@ public:
    // -------------------------------------------------------------------------
    // IEntitySlice implementation
    // -------------------------------------------------------------------------
-   void instantiate( const BlenderScene& host, Model& scene ) const;
+   void instantiate( const ColladaScene& host, Model& scene ) const;
 
 private:
    NodeDef* createNode( TiXmlElement* nodeElem );
