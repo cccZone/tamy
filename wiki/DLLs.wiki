@@ -3,5 +3,5 @@
 In order to peek at what's been exported in a DLL, use the following commandline command:
 
 {{{
-dumpbin /export <dll-file>
+dumpbin /exports <dll-file>
 }}}
