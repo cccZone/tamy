@@ -2,6 +2,7 @@
   * [ For programmers ]
     * [ Miscellaneous ]
       * [DLLs DLLs]
+      * [SystemVariables Required system variables]
     * [ Setup ]
       * [QTConfiguration QT Configuration]
     * [ Core ]
