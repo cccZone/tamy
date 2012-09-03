@@ -44,7 +44,7 @@ public:
     *
     * @param texPath
     */
-   inline void setTextureName( const FilePath& texPath ) { setDirty(); m_texFileName = texPath; }
+   inline void setImagePath( const FilePath& texPath ) { setDirty(); m_texFileName = texPath; }
 
    /**
     * Returns the name of the image file.

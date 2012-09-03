@@ -71,7 +71,10 @@ public:
    // Render states management
    // -------------------------------------------------------------------------
    /**
-    * Adds a new render state.
+    * Adds a new render state. 
+    *
+    * If you're adding a child entity that implements the RenderState interface using 'add' method,
+    * this method will be invoked automatically, so you don't need to worry about registering it as a state yourself.
     *
     * @param state
     */

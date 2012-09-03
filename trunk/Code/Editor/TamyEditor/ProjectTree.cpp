@@ -345,8 +345,7 @@ void ProjectTree::refresh( const std::string& rootDir )
 
          void onSectionDirectory( const FilePath& name )
          {
-            const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-            std::string newNodeName = fs.extractNodeName( name );
+            std::string newNodeName = FilesystemUtils::extractNodeName( name );
 
             ProjectTreeNode* node = m_rootDirNode->find( newNodeName );
             if ( node == NULL )

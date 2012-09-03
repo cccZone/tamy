@@ -294,7 +294,7 @@ void IWFScene::addStaticGeometry( Model& scene, ResourcesManager& rm, std::vecto
          if ( ( texture = rm.findResource< Texture >( texResourceName ) ) == NULL )
          {
             texture = new Texture( texResourceName );
-            texture->setTextureName( texName );
+            texture->setImagePath( texName );
             rm.addResource( texture );
          }
          material->setTexture( MT_DIFFUSE_1, texture );

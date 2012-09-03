@@ -2,6 +2,7 @@
 #include "core/InStream.h"
 #include "core/OutStream.h"
 #include "core/Filesystem.h"
+#include "core/FilesystemUtils.h"
 #include "core/StringUtils.h"
 #include "core/Profiler.h"
 
@@ -22,7 +23,7 @@ FilePath::~FilePath()
 
 FilePath::FilePath( const std::string& path )
 {
-   Filesystem::normalize( path, m_relativePath );
+   FilesystemUtils::normalize( path, m_relativePath );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,7 +37,7 @@ FilePath::FilePath( const FilePath& rhs )
 
 void FilePath::set( const std::string& path )
 {
-   Filesystem::normalize( path, m_relativePath );
+   FilesystemUtils::normalize( path, m_relativePath );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,28 +65,28 @@ std::string operator+( const char* str, const FilePath& path )
 
 std::string FilePath::extractExtension() const
 {
-   return Filesystem::extractExtension( m_relativePath );
+   return FilesystemUtils::extractExtension( m_relativePath );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void FilePath::extractDir( FilePath& outDir ) const
 {
-   outDir.m_relativePath = Filesystem::extractDir( m_relativePath );
+   outDir.m_relativePath = FilesystemUtils::extractDir( m_relativePath );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void FilePath::leaveDir(  unsigned int levels, FilePath& outDirectory ) const
 {
-   Filesystem::leaveDir( m_relativePath, levels, outDirectory.m_relativePath );
+   FilesystemUtils::leaveDir( m_relativePath, levels, outDirectory.m_relativePath );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 std::string FilePath::extractNodeName() const
 {
-   return Filesystem::extractNodeName( m_relativePath );
+   return FilesystemUtils::extractNodeName( m_relativePath );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

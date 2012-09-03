@@ -60,8 +60,8 @@ int main(int argc, char *argv[])
    // the application is started from Build\$(ProjectName)\$(Configuration)\ subdir - we have to escape
    // from there, and there should be our Assets directory
    std::string assetsDir;
-   Filesystem::normalize( szDirectory, assetsDir ); 
-   Filesystem::leaveDir( assetsDir, 3, assetsDir ); 
+   FilesystemUtils::normalize( szDirectory, assetsDir ); 
+   FilesystemUtils::leaveDir( assetsDir, 3, assetsDir ); 
    assetsDir += "/Assets/";
 
    TamyEditor::createInstance( a, assetsDir.c_str() );

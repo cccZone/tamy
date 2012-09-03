@@ -315,7 +315,7 @@ void FilesystemTree::refresh( const std::string& rootDir )
       void onDirectory( const FilePath& name )
       {
          const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-         std::string newNodeName = fs.extractNodeName( name );
+         std::string newNodeName = FilesystemUtils::extractNodeName( name );
 
          FSTreeNode* node = m_rootDirNode->find( newNodeName );
          if ( node == NULL )

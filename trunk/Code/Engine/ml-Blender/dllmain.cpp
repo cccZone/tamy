@@ -3,6 +3,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// type includes
+#include "core/TypesRegistry.cpp"
+#include "core-MVC/TypesRegistry.cpp"
+#include "core-Renderer/TypesRegistry.cpp"
+
+///////////////////////////////////////////////////////////////////////////////
+
 BOOL APIENTRY DllMain( HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved )
 {
    switch ( ul_reason_for_call )

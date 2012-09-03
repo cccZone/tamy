@@ -72,6 +72,22 @@ public:
     */
    void calculateTangents();
 
+   /**
+    * Sets new vertices on the mesh.
+    *
+    * @param arrVertices
+    * @param verticesCount
+    */
+   void setVertices( const LitVertex* arrVertices, uint verticesCount );
+
+   /**
+    * Sets new faces on the mesh.
+    *
+    * @param arrVertices
+    * @param verticesCount
+    */
+   void setFaces( const Face* arrFaces, uint facesCount );
+
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------

@@ -308,6 +308,9 @@
     <ClCompile Include="IDString.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
+    <ClCompile Include="FilesystemUtils.cpp">
+      <Filter>Filesystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -656,6 +659,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Stack.h">
       <Filter>DataStructures\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\FilesystemUtils.h">
+      <Filter>Filesystem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

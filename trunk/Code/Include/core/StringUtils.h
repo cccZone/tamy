@@ -45,4 +45,16 @@ void toUpper( std::string& inOutStr );
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Converts a unicode string to a regular string.
+ *
+ * CAUTION: allocates the memory for the ASCII string, so be sure to release it afterwards
+ * with a call to 'free'
+ *
+ * @param unicodeStr
+ */
+char* unicodeToAnsii( const wchar_t* unicodeStr );
+
+///////////////////////////////////////////////////////////////////////////////
+
 } // StringUtils

@@ -34,6 +34,7 @@
 #include "core\FilesystemSection.h"
 #include "core\StreamBuffer.h"
 #include "core\FilePath.h"
+#include "core\FilesystemUtils.h"
 
 // ----------------------------------------------------------------------------
 // HierarchicalNodes
