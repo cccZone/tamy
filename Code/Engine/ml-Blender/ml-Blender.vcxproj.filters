@@ -11,7 +11,17 @@
     <ClInclude Include="..\..\Include\ml-Blender\BlenderSceneExporter.h">
       <Filter>SceneExport</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\ml-Blender\TamyMaterial.h">
+      <Filter>SceneExport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-Blender\DllDefines.h" />
     <ClInclude Include="..\..\Include\ml-Blender\PythonInterface.h" />
+    <ClInclude Include="..\..\Include\ml-Blender\TamyScene.h">
+      <Filter>SceneExport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-Blender\TamyMesh.h">
+      <Filter>SceneExport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="SceneExport">
@@ -22,7 +32,19 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Include\ml-Blender\TamyModelExport.py">
+    <None Include="..\..\Include\ml-Blender\__init__.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="..\..\Include\ml-Blender\export_tamy.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="..\..\Include\ml-Blender\tamy_material.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="..\..\Include\ml-Blender\tamy_mesh.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="..\..\Include\ml-Blender\tamy_scene.py">
       <Filter>Python</Filter>
     </None>
   </ItemGroup>

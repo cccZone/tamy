@@ -1,6 +1,8 @@
 #include "core\StringUtils.h"
 #include "core/types.h"
 #include "core/Assert.h"
+#include <wchar.h>
+
 
 
 namespace StringUtils
@@ -79,6 +81,31 @@ void toUpper( std::string& inOutStr )
    tmpStr[count] = 0;
 
    inOutStr = tmpStr;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+char* unicodeToAnsii( const wchar_t* unicodeStr )
+{
+   size_t l = wcslen( unicodeStr );
+   char* asciiStr = (char*)malloc( l + 1 ); 
+   ASSERT( asciiStr != NULL );
+
+   for( size_t i = 0; i < l; ++i ) 
+   {
+      if ( unicodeStr[i] > 127 ) 
+      {
+         asciiStr[i] = '?'; // no ascii
+      }
+      else
+      {
+         asciiStr[i] = unicodeStr[i] & 0xff;
+      }
+   }
+
+   asciiStr[l] = 0;
+
+   return asciiStr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

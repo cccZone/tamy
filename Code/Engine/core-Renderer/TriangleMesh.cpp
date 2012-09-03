@@ -160,3 +160,41 @@ void TriangleMesh::calculateTangents()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void TriangleMesh::setVertices( const LitVertex* arrVertices, uint verticesCount )
+{
+   m_vertices.clear();
+   m_vertices.resize( verticesCount );
+   m_boundingVol.reset();
+
+   Vector point;
+   for ( uint i = 0; i < verticesCount; ++i )
+   {
+      m_vertices[i] = arrVertices[i];
+
+      // recalculate the bounding box
+      point.load( m_vertices[i].m_coords );
+      m_boundingVol.include( point );
+   }
+
+   // mark the render resource as dirty
+   setDirty();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TriangleMesh::setFaces( const Face* arrFaces, uint facesCount )
+{
+   m_faces.clear();
+   m_faces.resize( facesCount );
+
+   for ( uint i = 0; i < facesCount; ++i )
+   {
+      m_faces[i] = arrFaces[i];
+   }
+
+   // mark the render resource as dirty
+   setDirty();
+}
+
+///////////////////////////////////////////////////////////////////////////////

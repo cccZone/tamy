@@ -151,7 +151,7 @@ void TextureEditor::onTextureSet()
       QImage image( absolutePath.c_str() );
       if ( image.isNull() == false )
       {
-         m_texture.setTextureName( m_imagePaths[i] );
+         m_texture.setImagePath( m_imagePaths[i] );
          break;
       }
    }
