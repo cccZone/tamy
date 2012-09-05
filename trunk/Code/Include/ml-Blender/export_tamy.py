@@ -59,7 +59,7 @@ def proxy_scene_export_to_tamy( filesystemRoot, exportDir, textures, materials, 
 		
 ### ===========================================================================
 
-def export_scene(operator, context, filesystemRoot="", filepath="", bUseSelection=True, globalMatrix=None, ):
+def export_scene(operator, context, filesystemRoot="", filepath="", bUseSelection=True, globalMatrix=None ):
 
 	# measure the execution time - just in case
 	import time

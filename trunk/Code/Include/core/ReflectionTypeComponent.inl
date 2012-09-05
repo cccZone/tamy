@@ -190,6 +190,88 @@ ReflectionProperty* TMemberField< T* >::instantiateProperty( void* object ) cons
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
+TMemberField< std::vector< T > >::TMemberField( const std::string& memberName, int offset ) 
+   : ReflectionTypeComponent( memberName )
+   , m_dataOffset( offset )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< std::vector< T > >::save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const
+{
+   const char* memberPtr = (const char*)object + m_dataOffset;
+   const std::vector< T >* dataPtr = reinterpret_cast< const std::vector< T >* >( memberPtr );
+
+   // serialize the number of entries
+   uint count = dataPtr->size();
+   stream << count;
+
+   // serialize the entires
+   for ( uint i = 0; i < count; ++i )
+   {
+      stream << (*dataPtr)[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< std::vector< T > >::load( void* object, InStream& stream ) const 
+{
+   char* memberPtr = (char*)object + m_dataOffset;
+   std::vector< T >* dataPtr = reinterpret_cast< std::vector< T >* >( memberPtr );
+
+   // deserialize the number of entries
+   uint count;
+   stream >> count;
+
+   // make place in the array
+   if ( object )
+   {
+      dataPtr->resize( count );
+   }
+
+   // deserialize the entries
+   for ( uint i = 0; i < count; ++i )
+   {
+      stream >> (*dataPtr)[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< std::vector< T > >::mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const
+{
+   // there are no dependencies among simple types, just pointers
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< std::vector< T > >::restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const
+{
+   // there are no dependencies among simple types, just pointers
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+ReflectionProperty* TMemberField< std::vector< T > >::instantiateProperty( void* object ) const
+{
+   char* memberPtr = (char*)object + m_dataOffset;
+   std::vector< T >* dataPtr = reinterpret_cast< std::vector< T >* >( memberPtr );
+
+   return new TReflectionProperty< std::vector< T > >( (ReflectionObject*)object, dataPtr );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
 TMemberField< std::vector< T* > >::TMemberField( const std::string& memberName, int offset ) 
    : ReflectionTypeComponent( memberName )
    , m_dataOffset( offset )

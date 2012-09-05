@@ -3,7 +3,7 @@
 ### ===========================================================================
 
 from ctypes import *
-
+from array import *
 
 ### ===========================================================================
 
@@ -180,19 +180,25 @@ class TamyMesh( Structure ):
 ### we need to split them into sub meshes before we can export them to Tamy.
 ###
 ### This method accomplishes that, it splits the meshes and appends them on the export list
-def create_tamy_meshes( blenderMesh, outMeshes ):
-		
+def create_tamy_meshes( meshName, blenderMesh, outMeshes ):
+			
+	# create a copy of all vertices - there's a possibility we'll be doing some splitting etc
+	# and we might introduce new vertices as we go along
+	vertices = blenderMesh.vertices[:]
+	
 	# first, split the non-triangular faces
 	faces = []
 	materialPerFace = []
-	split_polygons_into_triangles( blenderMesh.polygons, faces, materialPerFace )
+	split_polygons_into_triangles( blenderMesh.polygons, faces, materialPerFace, vertices )
 	
 	# now - create Tamy meshes, each dedicated to a single material
 	singleMaterialMeshes = []
 	materialsSet = set( materialPerFace )
 	for checkedMatIdx in materialsSet:
-
-		newMesh = TamyMesh( "%s_%d" % ( blenderMesh.name, len( singleMaterialMeshes ) ) )
+	
+		newMeshName = "%s_%d" % ( meshName, len( singleMaterialMeshes ) )
+		newMesh = TamyMesh( newMeshName )
+		
 		singleMaterialMeshes.append( newMesh )
 		newMesh.addMaterial( checkedMatIdx )
 		
@@ -234,28 +240,40 @@ def create_tamy_meshes( blenderMesh, outMeshes ):
 		if ( mergedMesh is not None ):
 			
 			outMeshes.append( mergedMesh )
-			mergedMesh.setVertices( blenderMesh.vertices )
+			mergedMesh.setVertices( vertices )
 			
 	
 ### ===========================================================================
 	
 ### A helper method that splits non-triangular polygons into faces ( by rearranging their indices of course ;)
-def split_polygons_into_triangles( polygons, faces, materialPerFace ):
+def split_polygons_into_triangles( polygons, faces, materialPerFace, vertices ):
 
 	for poly in polygons:
 		indicesCount = len( poly.vertices )
 		
+		# First check to see if it's supposed to be smoothed or not
+		# Smoothed polygons share vertices with other polygons, while hard polygons don't,
+		# and we need to duplicate their vertices
+		
+		indices = array( 'i', poly.vertices[:] )
+		if ( poly.use_smooth == False ):		
+			for i in range( len( indices ) ):				
+				vtx = vertices[indices[i]]
+				indices[i] = len( vertices )
+				vertices.append( vtx )
+		
+		# split the polygon if needed
 		if ( indicesCount == 3 ):
 			# it's a regular face
-			faces.append( TamyFace( poly.vertices ) )
+			faces.append( TamyFace( indices ) )
 			materialPerFace.append( poly.material_index )
 		elif ( indicesCount == 4 ):
 			# it's a quad
-			faces.append( TamyFace( [ poly.vertices[0], poly.vertices[1], poly.vertices[2] ] ) )
-			faces.append( TamyFace( [ poly.vertices[0], poly.vertices[2], poly.vertices[3] ] ) )
+			faces.append( TamyFace( [ indices[0], indices[1], indices[2] ] ) )
+			faces.append( TamyFace( [ indices[0], indices[2], indices[3] ] ) )
 			materialPerFace.append( poly.material_index )
 			materialPerFace.append( poly.material_index )
 		else:
 			print( "\nWARNING Unsupported polygon with more than 4 vertices encountered" )
-
+			
 ### ===========================================================================

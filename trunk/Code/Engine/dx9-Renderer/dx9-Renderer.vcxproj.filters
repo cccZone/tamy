@@ -7,9 +7,6 @@
     <Filter Include="Initializer">
       <UniqueIdentifier>{e451281e-fb38-4515-bc54-9eee720566ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{a1bc06f2-62ac-4637-95f5-b21e91e7a145}</UniqueIdentifier>
-    </Filter>
     <Filter Include="RenderCommands">
       <UniqueIdentifier>{2a16e6e7-d40a-4d4d-a4a9-38e5c69a9859}</UniqueIdentifier>
     </Filter>
@@ -19,14 +16,8 @@
     <Filter Include="RenderResources">
       <UniqueIdentifier>{59e02a1b-87bd-4992-9da3-741e56a57a42}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shaders\VertexShaders">
-      <UniqueIdentifier>{1293abeb-7e08-4fa3-84d4-b98febb6aa50}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\PixelShaders">
-      <UniqueIdentifier>{5f395b3a-0958-416c-9413-fc990e1cec19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\Lib">
-      <UniqueIdentifier>{8e34f2c5-78ca-493f-bbbc-26ec8c9d5814}</UniqueIdentifier>
+    <Filter Include="ShaderCompiler">
+      <UniqueIdentifier>{05205765-1626-4ef1-ab8a-0f552aba2cfc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -132,9 +123,6 @@
     <ClCompile Include="DX9ShaderIncludeLoader.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="DX9ShaderCompiler.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="DX9DebugPrimitivesSet.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -149,6 +137,18 @@
     </ClCompile>
     <ClCompile Include="DX9Viewport.cpp">
       <Filter>RenderCommands</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9PixelShaderConstantsCompiler.cpp">
+      <Filter>ShaderCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderCompilerUtils.cpp">
+      <Filter>ShaderCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9ShaderCompiler.cpp">
+      <Filter>ShaderCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="DX9VertexShaderConstantsCompiler.cpp">
+      <Filter>ShaderCompiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -207,12 +207,6 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderIncludeLoader.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShaderConstantsCompiler.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderConstantsCompiler.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9DebugPrimitivesSet.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -222,34 +216,14 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9DepthBufferResourcesStorage.h">
       <Filter>RenderResources</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
-      <Filter>Shaders\PixelShaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Luminance.psh">
-      <Filter>Shaders\PixelShaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh">
-      <Filter>Shaders\PixelShaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
-      <Filter>Shaders\PixelShaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
-      <Filter>Shaders\VertexShaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
-      <Filter>Shaders\VertexShaders</Filter>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\DepthFunctions.shl">
-      <Filter>Shaders\Lib</Filter>
-    </None>
-    <None Include="..\..\Include\dx9-Renderer\DX9PixelShaderConstantsCompiler.inl">
-      <Filter>Core</Filter>
-    </None>
-    <None Include="..\..\Include\dx9-Renderer\DX9VertexShaderConstantsCompiler.inl">
-      <Filter>Core</Filter>
-    </None>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9PixelShaderConstantsCompiler.h">
+      <Filter>ShaderCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderConstantsCompiler.h">
+      <Filter>ShaderCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\dx9-Renderer\ShaderCompilerUtils.h">
+      <Filter>ShaderCompiler</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include "core/ReflectionType.h"
 #include "core/GraphBuilderSockets.h"
 #include "core/Math.h"
+#include "core-Renderer/ShaderTexture.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

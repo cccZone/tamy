@@ -139,6 +139,7 @@
     <ClCompile Include="RPTextureNode.cpp" />
     <ClCompile Include="RPVec4Node.cpp" />
     <ClCompile Include="ShaderCompiler.cpp" />
+    <ClCompile Include="ShaderConstantDesc.cpp" />
     <ClCompile Include="ShaderTexture.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
@@ -245,6 +246,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderTreeBuilder.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h" />
     <ClInclude Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderConstantDesc.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderRenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h" />

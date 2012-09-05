@@ -164,6 +164,10 @@ void BlenderSceneExporter::createScene( const TamyScene& exportedScene )
    FilePath scenePath( m_scenesExportDir + exportedScene.name );
    Model* scene = resMgr.create< Model >( scenePath );
 
+   // if the scene existed, delete its contents
+   scene->clear();
+
+   // and start adding new entities
    for ( int i = 0; i < exportedScene.entitiesCount; ++i )
    {
       SpatialEntity* entity = createEntity( exportedScene.entities[i] );

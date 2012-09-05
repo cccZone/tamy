@@ -21,16 +21,7 @@ bool ShaderCompiler::compilePixelShaderTextureStages( const std::string& shaderC
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<>
-bool ShaderCompiler::compilePixelShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename PixelShaderConstant< RenderingPipelineNode >* >& outConstants )
-{
-   return true;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-bool ShaderCompiler::compilePixelShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename PixelShaderConstant< MaterialNode >* >& outConstants )
+bool ShaderCompiler::compilePixelShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< ShaderConstantDesc >& outConstants )
 {
    return true;
 }
@@ -44,8 +35,7 @@ bool ShaderCompiler::compileVertexShader( const std::string& shaderCode, const c
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<>
-bool ShaderCompiler::compileVertexShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename VertexShaderConstant< GeometryShaderNode >* >& outConstants )
+bool ShaderCompiler::compileVertexShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< ShaderConstantDesc >& outConstants )
 {
    return true;
 }

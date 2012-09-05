@@ -27,9 +27,10 @@
 #include "core-Renderer\Camera.h"
 #include "core-Renderer\Viewport.h"
 // ----------------------------------------------------------------------------
-// --> Tools
+// --> ShadersCompiler
 // ----------------------------------------------------------------------------
 #include "core-Renderer\ShaderCompiler.h"
+#include "core-Renderer\ShaderConstantDesc.h"
 // ----------------------------------------------------------------------------
 // --> RenderableSurfaces
 // ----------------------------------------------------------------------------

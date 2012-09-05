@@ -19,6 +19,8 @@ if "bpy" in locals():
 import bpy
 from bpy.props import StringProperty, FloatProperty, BoolProperty, EnumProperty
 
+import os
+
 from bpy_extras.io_utils import ( ImportHelper, ExportHelper, axis_conversion, )
 
 class ExportTamy( bpy.types.Operator, ExportHelper ):
@@ -35,7 +37,7 @@ class ExportTamy( bpy.types.Operator, ExportHelper ):
 	filesystemRoot = bpy.props.StringProperty(
 			name="Filesystem root",
 			description="Filesystem root directory",
-			default="G:/Docs/Projects/Tamy/Assets/" )
+			default=os.environ['ASSETS_ROOT'] )
 			
 	bUseSelection = BoolProperty(
 			name="Selection Only",
@@ -43,35 +45,13 @@ class ExportTamy( bpy.types.Operator, ExportHelper ):
 			default=False,
 			)
 
-	axis_forward = EnumProperty(
-			name="Forward",
-			items=(	('X', "X Forward", ""),
-					('Y', "Y Forward", ""),
-					('Z', "Z Forward", ""),
-					('-X', "-X Forward", ""),
-					('-Y', "-Y Forward", ""),
-					('-Z', "-Z Forward", ""),
-					),
-			default='Y',
-			)
-
-	axis_up = EnumProperty(
-			name="Up",
-			items=(	('X', "X Up", ""),
-					('Y', "Y Up", ""),
-					('Z', "Z Up", ""),
-					('-X', "-X Up", ""),
-					('-Y', "-Y Up", ""),
-					('-Z', "-Z Up", ""),
-					),
-			default='Z',
-			)
 
 	def execute(self, context):
 		from . import export_tamy
 
 		keywords = self.as_keywords( ignore=( "axis_forward", "axis_up", "filter_glob", "check_existing", ) )
-		globalMatrix = axis_conversion( to_forward=self.axis_forward, to_up=self.axis_up, ).to_4x4()
+		globalMatrix = axis_conversion( to_forward='Z', to_up='Y' ).to_4x4()
+		print( globalMatrix )
 		keywords["globalMatrix"] = globalMatrix
 		keywords["filesystemRoot"] = self.filesystemRoot
 

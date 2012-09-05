@@ -191,6 +191,30 @@ public:
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Type-specific class member description for serializing arrays of POD types.
+ */
+template< typename T >
+class TMemberField< std::vector< T > > : public ReflectionTypeComponent
+{
+private:
+   int               m_dataOffset;
+
+public:
+   TMemberField( const std::string& memberName, int offset );
+
+   // -------------------------------------------------------------------------
+   // ReflectionTypeComponent implementation
+   // -------------------------------------------------------------------------
+   void save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const;
+   void load( void* object, InStream& stream ) const;
+   void mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const;
+   void restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const;
+   ReflectionProperty* instantiateProperty( void* object ) const;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
  * Type-specific class member description for serializing arrays of pointers.
  */
 template< typename T >

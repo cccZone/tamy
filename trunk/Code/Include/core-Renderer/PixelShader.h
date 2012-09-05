@@ -8,6 +8,7 @@
 #include "core/UniqueObject.h"
 #include "core-Renderer/RenderResource.h"
 #include "core-Renderer/RenderingParams.h"
+#include "core-Renderer/ShaderConstantDesc.h"
 #include "core/types.h"
 
 
@@ -131,8 +132,9 @@ private:
    std::vector< TextureStageParams >         m_textureStages;
    uint                                      m_requiredVertexShaderTechniqueId;
 
-   // runtime data
    std::vector< std::string >                m_textureStageName;
+   std::vector< ShaderConstantDesc >         m_constantsDescriptions;
+
 
 public:
    /**
@@ -211,6 +213,12 @@ public:
     * @param val
     */
    static ShaderParam< PixelShader >* createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val );
+
+   /**
+    * Returns the descriptions of the compiled shader constants.
+    * These descriptions can be passed to a constants compiler to compile them into pipeline node constants.
+    */
+   const std::vector< ShaderConstantDesc >& getConstantsDescriptions() const { return m_constantsDescriptions; }
 
    // -------------------------------------------------------------------------
    // Resource implementation
