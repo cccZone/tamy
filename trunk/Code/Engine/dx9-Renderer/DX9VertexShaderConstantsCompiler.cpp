@@ -1,97 +1,93 @@
-#ifndef _DX9_VERTEX_SHADER_CONSTANTS_COMPILER_H
-#error "This file can only be included from DX9VertexShaderConstantsCompiler.h"
-#else
-
+#include "dx9-Renderer/DX9VertexShaderConstantsCompiler.h"
 #include "core-Renderer/VertexShaderConstant.h"
 #include "dx9-Renderer/DX9ShaderIncludeLoader.h"
 #include "dx9-Renderer/DXErrorParser.h"
 #include "dx9-Renderer/DX9Initializer.h"
+#include "dx9-Renderer/ShaderCompilerUtils.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename TNode >
-VertexShaderConstant< TNode >* DX9VertexShaderConstantsCompiler< TNode >::createScalarConstant( const D3DXCONSTANT_DESC& desc ) const
+bool DX9VertexShaderConstantsCompiler::createScalarConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const
 {
    switch( desc.Type )
    {
    case D3DXPT_BOOL:
       {
-         return new VSCBool< TNode >( desc.Name, false );
+         outDesc.m_type = ShaderConstantDesc::CT_Bool;
+         outDesc.m_name = desc.Name;
+         return true;
       }
 
    case D3DXPT_INT:
       {
-         return new VSCInt< TNode >( desc.Name, 0 );
+         outDesc.m_type = ShaderConstantDesc::CT_Int;
+         outDesc.m_name = desc.Name;
+         return true;
       }
 
    case D3DXPT_FLOAT:
       {
-         return new VSCFloat< TNode >( desc.Name, 0.0f );
+         outDesc.m_type = ShaderConstantDesc::CT_Float;
+         outDesc.m_name = desc.Name;
+         return true;
       }
 
    case D3DXPT_STRING:
       {
-         return new VSCString< TNode >( desc.Name );
+         outDesc.m_type = ShaderConstantDesc::CT_String;
+         outDesc.m_name = desc.Name;
+         return true;
       }
    }
 
-   return NULL;
+   return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename TNode >
-VertexShaderConstant< TNode >* DX9VertexShaderConstantsCompiler< TNode >::createObjectConstant( const D3DXCONSTANT_DESC& desc ) const
+bool DX9VertexShaderConstantsCompiler::createObjectConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const
 {
-   switch( desc.Type )
+   if ( ShaderCompilerUtils::isTexture( desc ) )
    {
-   case D3DXPT_TEXTURE:          // fallthrough
-   case D3DXPT_TEXTURE1D:        // fallthrough
-   case D3DXPT_TEXTURE2D:        // fallthrough
-   case D3DXPT_TEXTURE3D:        // fallthrough
-   case D3DXPT_TEXTURECUBE:      // fallthrough
-   case D3DXPT_SAMPLER:          // fallthrough
-   case D3DXPT_SAMPLER1D:        // fallthrough
-   case D3DXPT_SAMPLER2D:        // fallthrough
-   case D3DXPT_SAMPLER3D:        // fallthrough
-   case D3DXPT_SAMPLERCUBE:
-      {
-         return new VSCTexture< TNode >( desc.Name );
-      }
+      outDesc.m_type = ShaderConstantDesc::CT_Texture;
+      outDesc.m_name = desc.Name;
+      return true;
    }
 
-   return NULL;
+   return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename TNode >
-VertexShaderConstant< TNode >* DX9VertexShaderConstantsCompiler< TNode >::createMatrixConstant( const D3DXCONSTANT_DESC& desc ) const
+bool DX9VertexShaderConstantsCompiler::createMatrixConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const
 {
    if ( desc.Type == D3DXPT_FLOAT )
    {
-      return new VSCMatrix< TNode >( desc.Name );
+      outDesc.m_type = ShaderConstantDesc::CT_Matrix;
+      outDesc.m_name = desc.Name;
+      return true;
    }
 
-   return NULL;
+   return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename TNode >
-VertexShaderConstant< TNode >* DX9VertexShaderConstantsCompiler< TNode >::createConstant( const D3DXCONSTANT_DESC& desc ) const
+bool  DX9VertexShaderConstantsCompiler::createConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const
 {
    switch( desc.Class )
    {
    case D3DXPC_SCALAR:
       {
-         return createScalarConstant( desc );
+         return createScalarConstant( desc, outDesc );
       }
 
    case D3DXPC_VECTOR:
       {
-         return new VSCVec4< TNode >( desc.Name );
+         outDesc.m_type = ShaderConstantDesc::CT_Vec4;
+         outDesc.m_name = desc.Name;
+         return true;
       }
 
    case D3DXPC_MATRIX_ROWS:
@@ -101,22 +97,21 @@ VertexShaderConstant< TNode >* DX9VertexShaderConstantsCompiler< TNode >::create
 
    case D3DXPC_MATRIX_COLUMNS:
       {
-         return createMatrixConstant( desc );
+         return createMatrixConstant( desc, outDesc );
       }
 
    case D3DXPC_OBJECT:
       {
-         return createObjectConstant( desc );
+         return createObjectConstant( desc, outDesc );
       }
    }
 
-   return NULL;
+   return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename TNode >
-bool DX9VertexShaderConstantsCompiler< TNode >::compile( const std::string& shaderCode, const char* entryFunction, std::vector< typename VertexShaderConstant< TNode >* >& outConstants )
+bool DX9VertexShaderConstantsCompiler::compile( const std::string& shaderCode, const char* entryFunction, std::vector< ShaderConstantDesc >& outConstants )
 {
    // create a renderer
    IDirect3D9* d3d9 = Direct3DCreate9( D3D_SDK_VERSION );
@@ -153,16 +148,16 @@ bool DX9VertexShaderConstantsCompiler< TNode >::compile( const std::string& shad
    else
    {
       std::vector< D3DXCONSTANT_DESC > constants;
-      result = parseConstants( shaderConstants, m_errorMsg, constants );
+      ShaderConstantDesc newConstant;
+      result = ShaderCompilerUtils::parseConstants( shaderConstants, m_errorMsg, constants );
       if ( result )
       {
          unsigned int constantsCount = constants.size();
          for ( unsigned int i = 0; i < constantsCount; ++i )
          {
-            VertexShaderConstant< TNode >* constant = createConstant( constants[i] );
-            if ( constant != NULL )
+            if ( createConstant( constants[i], newConstant ) )
             {
-               outConstants.push_back( constant );
+               outConstants.push_back( newConstant );
             }
          }
       }
@@ -180,5 +175,3 @@ bool DX9VertexShaderConstantsCompiler< TNode >::compile( const std::string& shad
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-#endif // _DX9_VERTEX_SHADER_CONSTANTS_COMPILER_H
