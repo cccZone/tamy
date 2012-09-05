@@ -36,9 +36,9 @@ void PixelShaderNodeOperator< TNode >::setShader( PixelShader& shader )
 
    m_shader = &shader;
 
-   ShaderCompiler compiler;
+   const std::vector< ShaderConstantDesc >& constantsDescriptions = shader.getConstantsDescriptions();
    std::vector< PixelShaderConstant< TNode >* > constants;
-   compiler.compilePixelShaderConstants( m_shader->getScript(), m_shader->getEntryFunctionName().c_str(), constants );
+   buildConstantsSockets( constantsDescriptions, constants );
 
    unsigned int count = constants.size();
    for ( unsigned int i = 0; i < count; ++i )
@@ -106,6 +106,70 @@ RCBindPixelShader& PixelShaderNodeOperator< TNode >::bindShader( Renderer& rende
    }
 
    return *comm;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename TNode >
+void PixelShaderNodeOperator< TNode >::buildConstantsSockets( const std::vector< ShaderConstantDesc >& constants, std::vector< PixelShaderConstant< TNode >* >& outConstantsSockets ) const
+{
+   uint count = constants.size();
+   outConstantsSockets.resize( count );
+
+   for ( uint i = 0; i < count; ++i )
+   {
+      const ShaderConstantDesc& constant = constants[i];
+      switch( constant.m_type )
+      {
+         case ShaderConstantDesc::CT_Bool:
+            {
+               outConstantsSockets[i] = new PSCBool< TNode >( constant.m_name.c_str(), false );
+               break;
+            }
+
+         case ShaderConstantDesc::CT_Int:
+            {
+               outConstantsSockets[i] = new PSCInt< TNode >( constant.m_name.c_str(), 0 );
+               break;
+            }
+
+         case ShaderConstantDesc::CT_Float:
+            {
+               outConstantsSockets[i] = new PSCFloat< TNode >( constant.m_name.c_str(), 0.0f );
+               break;
+            }
+
+         case ShaderConstantDesc::CT_Matrix:
+            {
+               outConstantsSockets[i] = new PSCMatrix< TNode >( constant.m_name.c_str() );
+               break;
+            }
+
+         case ShaderConstantDesc::CT_String:
+            {
+               outConstantsSockets[i] = new PSCString< TNode >( constant.m_name.c_str() );
+               break;
+            }
+
+         case ShaderConstantDesc::CT_Texture:
+            {
+               outConstantsSockets[i] = new PSCTexture< TNode >( constant.m_name.c_str() );
+               break;
+            }
+
+         case ShaderConstantDesc::CT_Vec4:
+            {
+               outConstantsSockets[i] = new PSCVec4< TNode >( constant.m_name.c_str() );
+               break;
+            }
+
+         default:
+            {
+               ASSERT_MSG( false, "Unknown pixel shader constant type encountered" );
+               break;
+            }
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

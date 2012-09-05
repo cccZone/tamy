@@ -94,6 +94,7 @@
     <ClCompile Include="DX9FullscreenQuad.cpp" />
     <ClCompile Include="DX9LineSegmentsResourcesStorage.cpp" />
     <ClCompile Include="DX9PixelShader.cpp" />
+    <ClCompile Include="DX9PixelShaderConstantsCompiler.cpp" />
     <ClCompile Include="DX9PixelShaderResourcesStorage.cpp" />
     <ClCompile Include="DX9Renderer.cpp" />
     <ClCompile Include="DX9RenderTarget.cpp" />
@@ -121,10 +122,12 @@
     <ClCompile Include="DX9Font.cpp" />
     <ClCompile Include="DX9TriangleMeshResourcesStorage.cpp" />
     <ClCompile Include="DX9VertexShader.cpp" />
+    <ClCompile Include="DX9VertexShaderConstantsCompiler.cpp" />
     <ClCompile Include="DX9VertexShaderResourcesStorage.cpp" />
     <ClCompile Include="DX9Viewport.cpp" />
     <ClCompile Include="DXErrorParser.cpp" />
     <ClCompile Include="DX9ShaderParamTexture.cpp" />
+    <ClCompile Include="ShaderCompilerUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9DebugPrimitivesSet.h" />
@@ -151,35 +154,13 @@
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9VertexShaderResourcesStorage.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DXErrorParser.h" />
     <ClInclude Include="..\..\Include\dx9-Renderer\DX9ShaderIncludeLoader.h" />
+    <ClInclude Include="..\..\Include\dx9-Renderer\ShaderCompilerUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core-Renderer\core-Renderer.vcxproj">
       <Project>{dbcd9f77-4064-4db9-ac18-516ed35b24ce}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\Assets\Renderer\Shaders\MaterialShader.psh">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\DepthFunctions.shl" />
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\HDR.psh">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Luminance.psh">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\RenderingPipeline\Postprocess.psh">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\SkinnedGeometry.vsh">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\..\Assets\Renderer\Shaders\StaticGeometry.vsh">
-      <FileType>Document</FileType>
-    </None>
-    <None Include="..\..\Include\dx9-Renderer\DX9PixelShaderConstantsCompiler.inl" />
-    <None Include="..\..\Include\dx9-Renderer\DX9VertexShaderConstantsCompiler.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

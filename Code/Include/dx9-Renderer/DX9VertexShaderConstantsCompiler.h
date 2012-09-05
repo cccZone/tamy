@@ -11,25 +11,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename TNode >
 class DX9VertexShaderConstantsCompiler
 {
 public:
    std::string m_errorMsg;
 
 public:
-   bool compile( const std::string& shaderCode, const char* entryFunction, std::vector< typename VertexShaderConstant< TNode >* >& outConstants );
+   bool compile( const std::string& shaderCode, const char* entryFunction, std::vector< ShaderConstantDesc >& outConstants );
 
 private:
-   VertexShaderConstant< TNode >* createScalarConstant( const D3DXCONSTANT_DESC& desc ) const;
-   VertexShaderConstant< TNode >* createObjectConstant( const D3DXCONSTANT_DESC& desc ) const;
-   VertexShaderConstant< TNode >* createMatrixConstant( const D3DXCONSTANT_DESC& desc ) const;
-   VertexShaderConstant< TNode >* createConstant( const D3DXCONSTANT_DESC& desc ) const;
+   bool createScalarConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const;
+   bool createObjectConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const;
+   bool createMatrixConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const;
+   bool createConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const;
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-#include "dx9-Renderer/DX9VertexShaderConstantsCompiler.inl"
 
 ///////////////////////////////////////////////////////////////////////////////
 

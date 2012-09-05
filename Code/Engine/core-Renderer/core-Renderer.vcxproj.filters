@@ -49,9 +49,6 @@
     <Filter Include="Lighting">
       <UniqueIdentifier>{ec716647-fce2-4f1a-a57b-7417ca64819e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Tools">
-      <UniqueIdentifier>{a8533512-26b5-45b6-af11-e62b8e23d0c3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Tools">
       <UniqueIdentifier>{5a93e70c-6c1d-4bda-9166-812a8da9be22}</UniqueIdentifier>
     </Filter>
@@ -114,6 +111,15 @@
     </Filter>
     <Filter Include="Core\ShaderRenderCommand">
       <UniqueIdentifier>{770a2909-ab11-4ef6-a54c-974e7496fcfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ShaderCompiler">
+      <UniqueIdentifier>{a8533512-26b5-45b6-af11-e62b8e23d0c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ShaderCompiler\Constants">
+      <UniqueIdentifier>{9bbb63ff-4547-46c0-8de8-fbb7315c6aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\ShaderCompiler\NodeOperators">
+      <UniqueIdentifier>{3301b1eb-a623-43ed-b42f-ec8403271774}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -365,13 +371,16 @@
       <Filter>Lighting\Entities</Filter>
     </ClCompile>
     <ClCompile Include="ShaderCompiler.cpp">
-      <Filter>Core\Tools</Filter>
+      <Filter>Core\ShaderCompiler</Filter>
     </ClCompile>
     <ClCompile Include="DepthBufferDescriptor.cpp">
       <Filter>Mechanisms\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="DepthBuffer.cpp">
       <Filter>Core\RenderableSurfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderConstantDesc.cpp">
+      <Filter>Core\ShaderCompiler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -387,23 +396,23 @@
     <None Include="..\..\Include\core-Renderer\RenderResourceStorage.inl">
       <Filter>Core\Resources</Filter>
     </None>
-    <None Include="..\..\Include\core-Renderer\PixelShaderConstant.inl">
-      <Filter>Tools</Filter>
-    </None>
-    <None Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.inl">
-      <Filter>Tools</Filter>
-    </None>
-    <None Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.inl">
-      <Filter>Tools</Filter>
-    </None>
-    <None Include="..\..\Include\core-Renderer\VertexShaderConstant.inl">
-      <Filter>Tools</Filter>
-    </None>
     <None Include="..\..\Include\core-Renderer\ShaderRenderCommand.inl">
       <Filter>Core\ShaderRenderCommand</Filter>
     </None>
     <None Include="..\..\Include\core-Renderer\ShaderParam.inl">
       <Filter>Core\ShaderRenderCommand</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\PixelShaderConstant.inl">
+      <Filter>Core\ShaderCompiler\Constants</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\VertexShaderConstant.inl">
+      <Filter>Core\ShaderCompiler\Constants</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.inl">
+      <Filter>Core\ShaderCompiler\NodeOperators</Filter>
+    </None>
+    <None Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.inl">
+      <Filter>Core\ShaderCompiler\NodeOperators</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -542,10 +551,7 @@
       <Filter>Core\Camera</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ShaderCompiler.h">
-      <Filter>Core\Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h">
-      <Filter>Tools</Filter>
+      <Filter>Core\ShaderCompiler</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\FragmentShader.h">
       <Filter>Geometry\Resources</Filter>
@@ -633,15 +639,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\GeometryShaderNode.h">
       <Filter>Geometry\GeometryShader</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.h">
-      <Filter>Tools</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConstant.h">
-      <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderableTexture.h">
       <Filter>Materials\Resources</Filter>
@@ -735,6 +732,21 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h">
       <Filter>Core\ShaderRenderCommand</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderConstantDesc.h">
+      <Filter>Core\ShaderCompiler</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\PixelShaderConstant.h">
+      <Filter>Core\ShaderCompiler\Constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderConstant.h">
+      <Filter>Core\ShaderCompiler\Constants</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\PixelShaderNodeOperator.h">
+      <Filter>Core\ShaderCompiler\NodeOperators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.h">
+      <Filter>Core\ShaderCompiler\NodeOperators</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

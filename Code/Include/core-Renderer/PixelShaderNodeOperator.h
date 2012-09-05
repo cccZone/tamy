@@ -76,6 +76,15 @@ public:
     * @return           rendering command that binds the pixel shader
     */
    RCBindPixelShader& bindShader( Renderer& renderer, RuntimeDataBuffer& data );
+
+private:
+   /**
+    * This helper methods builds the actual node sockets for the specified shader constants.
+    *
+    * @param constants
+    * @param outConstantsSockets
+    */
+   void buildConstantsSockets( const std::vector< ShaderConstantDesc >& constants, std::vector< PixelShaderConstant< TNode >* >& outConstantsSockets ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

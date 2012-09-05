@@ -15,20 +15,23 @@ class TamyMatrix( Structure ):
 	def __init__( self, blenderMtx ):
 		sideVec, upVec, frontVec, transVec = blenderMtx[:]
 		self.m[0] = sideVec[0]
-		self.m[1] = sideVec[1]
-		self.m[2] = sideVec[2]
-		self.m[3] = sideVec[3]
-		self.m[4] = upVec[0]
+		self.m[1] = upVec[0]
+		self.m[2] = frontVec[0]
+		self.m[3] = transVec[0]
+		
+		self.m[4] = sideVec[1]
 		self.m[5] = upVec[1]
-		self.m[6] = upVec[2]
-		self.m[7] = upVec[3]
-		self.m[8] = frontVec[0]
-		self.m[9] = frontVec[1]
+		self.m[6] = frontVec[1]
+		self.m[7] = transVec[1]
+		
+		self.m[8] = sideVec[2]
+		self.m[9] = upVec[2]
 		self.m[10] = frontVec[2]
-		self.m[11] = frontVec[3]
-		self.m[12] = transVec[0]
-		self.m[13] = transVec[1]
-		self.m[14] = transVec[2]
+		self.m[11] = transVec[2]
+		
+		self.m[12] = sideVec[3]
+		self.m[13] = upVec[3]
+		self.m[14] = frontVec[3]
 		self.m[15] = transVec[3]
 		
 ### ===========================================================================
@@ -97,7 +100,7 @@ def get_materials_and_entities( context, bUseSelection, globalMatrix, sceneName,
 		if derived is None:
 			continue
 
-		for obDerived, mat in derived:
+		for obDerived, objectMtx in derived:
 			if ob.type not in {'MESH', 'CURVE', 'SURFACE', 'FONT', 'META'}:
 				continue
 			
@@ -107,8 +110,8 @@ def get_materials_and_entities( context, bUseSelection, globalMatrix, sceneName,
 				derivedBlenderMesh = None
 				
 			if derivedBlenderMesh:
-				matrix = globalMatrix * mat
-				derivedBlenderMesh.transform(matrix)
+				matrix = globalMatrix * objectMtx
+				# derivedBlenderMesh.transform(matrix)
 				meshObjects.append( ( obDerived, derivedBlenderMesh, matrix ) )
 				matLs = derivedBlenderMesh.materials
 				matLsLen = len(matLs)
@@ -143,7 +146,7 @@ def get_materials_and_entities( context, bUseSelection, globalMatrix, sceneName,
 							f.material_index = 0
 
 			if free:
-				free_derived_objects(ob)
+				free_derived_objects(derivedBlenderMesh)
 	
 	# Create the materials
 	texturesDict = {}
@@ -156,9 +159,9 @@ def get_materials_and_entities( context, bUseSelection, globalMatrix, sceneName,
 	# Create the entities
 	entities = []
 	for ob, blenderMesh, matrix in meshObjects:
-	
+
 		meshes = []
-		tamy_mesh.create_tamy_meshes( blenderMesh, meshes )		
+		tamy_mesh.create_tamy_meshes( ob.name, blenderMesh, meshes )		
 		entities.append( TamyEntity( meshes, matrix, ob.name ) )
 		
 	tamyScene = TamyScene( entities, sceneName )

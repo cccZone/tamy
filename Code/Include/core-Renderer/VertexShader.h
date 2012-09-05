@@ -3,11 +3,12 @@
 
 #pragma once
 
-#include "core-Renderer/VertexDescriptions.h"
+#include "core-Renderer\VertexDescriptions.h"
 #include "core-Renderer\ShaderRenderCommand.h"
-#include "core/Resource.h"
-#include "core/UniqueObject.h"
 #include "core-Renderer\RenderResource.h"
+#include "core-Renderer\ShaderConstantDesc.h"
+#include "core\Resource.h"
+#include "core\UniqueObject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,14 +21,15 @@ class VertexShader : public Resource, public UniqueObject< VertexShader >, publi
    DECLARE_RESOURCE()
 
 private:
-   std::string                   m_script;
-   std::string                   m_entryFunctionName;   // ';'-separated list of entry function names
-   std::string                   m_techniqueNames;      // ';'-separated list of technique names
-   VertexDescId                  m_vertexDescId;
+   std::string                               m_script;
+   std::string                               m_entryFunctionName;   // ';'-separated list of entry function names
+   std::string                               m_techniqueNames;      // ';'-separated list of technique names
+   VertexDescId                              m_vertexDescId;
+   std::vector< ShaderConstantDesc >         m_constantsDescriptions;
 
    // runtime data
-   std::vector< std::string >    m_arrEntryFunctionNames;
-   std::vector< uint >           m_arrTechniqueIds;
+   std::vector< std::string >                m_arrEntryFunctionNames;
+   std::vector< uint >                       m_arrTechniqueIds;
 
 public:
    /**
@@ -100,6 +102,12 @@ public:
     */
    static ShaderParam< VertexShader >* createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val );
 
+   /**
+    * Returns the descriptions of the compiled shader constants.
+    * These descriptions can be passed to a constants compiler to compile them into pipeline node constants.
+    */
+   const std::vector< ShaderConstantDesc >& getConstantsDescriptions() const { return m_constantsDescriptions; }
+
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------
@@ -107,6 +115,7 @@ public:
 
 private:
    void parseTechniques();
+   void parseConstants();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

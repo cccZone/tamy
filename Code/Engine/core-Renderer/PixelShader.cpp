@@ -106,6 +106,8 @@ BEGIN_RESOURCE( PixelShader, tpsh, AM_BINARY )
    PROPERTY( PixelShaderParams, m_params )
    PROPERTY( std::vector< TextureStageParams >, m_textureStages )
    PROPERTY( uint, m_requiredVertexShaderTechniqueId )
+   PROPERTY( std::vector< std::string >, m_textureStageName )
+   PROPERTY( std::vector< ShaderConstantDesc >, m_constantsDescriptions )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -129,7 +131,11 @@ void PixelShader::onResourceLoaded( ResourcesManager& mgr )
 {
    __super::onResourceLoaded( mgr );
 
-   parseTextureStages();
+   if ( m_constantsDescriptions.empty() || m_textureStageName.empty() )
+   {
+      // the shader probably wasn't compiled - so attempt it now
+      parseTextureStages();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -161,7 +167,9 @@ void PixelShader::parseTextureStages()
    // parse constants
    ShaderCompiler compiler;
    m_textureStageName.clear();
+   m_constantsDescriptions.clear();
    compiler.compilePixelShaderTextureStages( m_script, m_entryFunctionName.c_str(), m_textureStageName );
+   compiler.compilePixelShaderConstants( m_script, m_entryFunctionName.c_str(), m_constantsDescriptions );
 
    // resize the number of supported texture
    unsigned int count = m_textureStageName.size();

@@ -14,6 +14,7 @@ BEGIN_RESOURCE( VertexShader, tvsh, AM_BINARY )
    PROPERTY( std::string, m_entryFunctionName )
    PROPERTY( std::string, m_techniqueNames )
    PROPERTY( VertexDescId, m_vertexDescId )
+   PROPERTY( std::vector< ShaderConstantDesc >, m_constantsDescriptions )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,7 +68,8 @@ void VertexShader::onObjectLoaded()
 void VertexShader::setScript( const std::string& script ) 
 { 
    m_script = script; 
-   parseTechniques(); 
+   parseTechniques();
+   parseConstants();
    setDirty(); 
 }
 
@@ -139,6 +141,46 @@ int VertexShader::findTechnique( uint techniqueId ) const
    }
 
    return -1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void VertexShader::parseConstants()
+{
+   m_constantsDescriptions.clear();
+   ShaderCompiler compiler;
+
+   // for each technique, collect the constants, and then merge them into one large list of unique constants
+   uint techniquesCount = m_arrEntryFunctionNames.size();
+   for ( uint techniqueIdx = 0; techniqueIdx < techniquesCount; ++techniqueIdx )
+   {
+      std::vector< ShaderConstantDesc > newConstants;
+      compiler.compileVertexShaderConstants( m_script, m_arrEntryFunctionNames[techniqueIdx].c_str(), newConstants );
+
+      uint newConstantsCount = newConstants.size();
+      uint allConstantsCount = m_constantsDescriptions.size();
+      for ( uint newIdx = 0; newIdx < newConstantsCount; ++newIdx )
+      {
+         bool exists = false;
+         const ShaderConstantDesc& testedConstant = newConstants[newIdx];
+
+         for ( uint allIdx = 0; allIdx < allConstantsCount; ++allIdx )
+         {
+            if ( testedConstant == m_constantsDescriptions[allIdx] )
+            {
+               // the same constant is already on our list
+               exists = true;
+               break;
+            }
+         }
+
+         if ( !exists )
+         {
+            // this is a brand new constant
+            m_constantsDescriptions.push_back( testedConstant );
+         }
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

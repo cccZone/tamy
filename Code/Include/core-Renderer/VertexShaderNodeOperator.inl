@@ -35,45 +35,9 @@ void VertexShaderNodeOperator< TNode >::setShader( VertexShader& shader )
 
    m_shader = &shader;
 
-   ShaderCompiler compiler;
+   const std::vector< ShaderConstantDesc >& constantsDescriptions = shader.getConstantsDescriptions();
    std::vector< VertexShaderConstant< TNode >* > allConstants;
-
-   // let's compile all techniques to extract all possible shader constants used
-   uint techniquesCount = shader.getTechniquesCount();
-   for ( uint techniqueIdx = 0; techniqueIdx < techniquesCount; ++techniqueIdx )
-   {
-      const std::string& techniqueEntryFunc = m_shader->getEntryFunctionName( techniqueIdx );
-      std::vector< VertexShaderConstant< TNode >* > constants;
-
-      compiler.compileVertexShaderConstants( m_shader->getScript(), techniqueEntryFunc.c_str(), constants );
-
-      uint constantsCount = constants.size();
-      uint allConstantsCount = allConstants.size();
-      for ( uint constantIdx = 0; constantIdx < constantsCount; ++constantIdx )
-      {
-         const std::string& checkedConstantName = constants[constantIdx]->getName();
-
-         // look for a similar constant - browse through the constants that were already added to the 'allConstants' list
-         // only, since the new ones are bound to be unique
-         bool isNew = true;
-         for ( uint mainConstantIdx = 0; mainConstantIdx < allConstantsCount; ++mainConstantIdx )
-         {
-            if ( allConstants[mainConstantIdx]->getName() == checkedConstantName )
-            {
-               // already have it
-               delete constants[constantIdx];
-               isNew = false;
-               break;
-            }
-         }
-
-         if ( isNew )
-         {
-            // this is a new constant - add it to the list
-            allConstants.push_back( constants[constantIdx] );
-         }
-      }
-   }
+   buildConstantsSockets( constantsDescriptions, allConstants );
 
    unsigned int count = allConstants.size();
    for ( unsigned int i = 0; i < count; ++i )
@@ -141,6 +105,70 @@ RCBindVertexShader* VertexShaderNodeOperator< TNode >::bindShader( Renderer& ren
    }
 
    return comm;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename TNode >
+void VertexShaderNodeOperator< TNode >::buildConstantsSockets( const std::vector< ShaderConstantDesc >& constants, std::vector< VertexShaderConstant< TNode >* >& outConstantsSockets ) const
+{
+   uint count = constants.size();
+   outConstantsSockets.resize( count );
+
+   for ( uint i = 0; i < count; ++i )
+   {
+      const ShaderConstantDesc& constant = constants[i];
+      switch( constant.m_type )
+      {
+      case ShaderConstantDesc::CT_Bool:
+         {
+            outConstantsSockets[i] = new VSCBool< TNode >( constant.m_name.c_str(), false );
+            break;
+         }
+
+      case ShaderConstantDesc::CT_Int:
+         {
+            outConstantsSockets[i] = new VSCInt< TNode >( constant.m_name.c_str(), 0 );
+            break;
+         }
+
+      case ShaderConstantDesc::CT_Float:
+         {
+            outConstantsSockets[i] = new VSCFloat< TNode >( constant.m_name.c_str(), 0.0f );
+            break;
+         }
+
+      case ShaderConstantDesc::CT_Matrix:
+         {
+            outConstantsSockets[i] = new VSCMatrix< TNode >( constant.m_name.c_str() );
+            break;
+         }
+
+      case ShaderConstantDesc::CT_String:
+         {
+            outConstantsSockets[i] = new VSCString< TNode >( constant.m_name.c_str() );
+            break;
+         }
+
+      case ShaderConstantDesc::CT_Texture:
+         {
+            outConstantsSockets[i] = new VSCTexture< TNode >( constant.m_name.c_str() );
+            break;
+         }
+
+      case ShaderConstantDesc::CT_Vec4:
+         {
+            outConstantsSockets[i] = new VSCVec4< TNode >( constant.m_name.c_str() );
+            break;
+         }
+
+      default:
+         {
+            ASSERT_MSG( false, "Unknown vertex shader constant type encountered" );
+            break;
+         }
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -38,8 +38,7 @@ public:
     * @return  'true' if the shader compiles OK, 'false' if any errors were encountered.
     *          In the latter case, check the `getLastError` method for the exact error message.
     */
-   template< typename TNode >
-   bool compilePixelShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename PixelShaderConstant< TNode >* >& outConstants );
+   bool compilePixelShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< ShaderConstantDesc >& outConstants );
 
    /**
     * Compiles a list of texture stages required by a pixel shader.
@@ -74,8 +73,7 @@ public:
     * @return  'true' if the shader compiles OK, 'false' if any errors were encountered.
     *          In the latter case, check the `getLastError` method for the exact error message.
     */
-   template< typename TNode >
-   bool compileVertexShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< typename VertexShaderConstant< TNode >* >& outConstants );
+   bool compileVertexShaderConstants( const std::string& shaderCode, const char* entryFunction, std::vector< ShaderConstantDesc >& outConstants );
 
    /**
     * Parses the techniques contained in the specified vertex shader code.

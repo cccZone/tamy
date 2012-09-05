@@ -11,25 +11,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename TNode >
 class DX9PixelShaderConstantsCompiler
 {
 public:
    std::string m_errorMsg;
 
 public:
-   bool compile( const std::string& shaderCode, const char* entryFunction, std::vector< typename PixelShaderConstant< TNode >* >& outConstants );
+   bool compile( const std::string& shaderCode, const char* entryFunction, std::vector< ShaderConstantDesc >& outConstants );
 
 private:
-   PixelShaderConstant< TNode >* createScalarConstant( const D3DXCONSTANT_DESC& desc ) const;
-   PixelShaderConstant< TNode >* createObjectConstant( const D3DXCONSTANT_DESC& desc ) const;
-   PixelShaderConstant< TNode >* createMatrixConstant( const D3DXCONSTANT_DESC& desc ) const;
-   PixelShaderConstant< TNode >* createConstant( const D3DXCONSTANT_DESC& desc ) const;
+   bool createScalarConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const;
+   bool createObjectConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const;
+   bool createMatrixConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const;
+   bool createConstant( const D3DXCONSTANT_DESC& desc, ShaderConstantDesc& outDesc ) const;
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-#include "dx9-Renderer/DX9PixelShaderConstantsCompiler.inl"
 
 ///////////////////////////////////////////////////////////////////////////////
 
