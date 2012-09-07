@@ -5,81 +5,71 @@
 from ctypes import *
 from . import tamy_mesh
 from . import tamy_material
+from . import tamy_entities
+from . import tamy_misc
 
-### ===========================================================================
-
-### A helper structure that represents an exportable matrix	
-class TamyMatrix( Structure ):
-	_fields_= [ ( "m", c_float * 16 ) ]
 	
-	def __init__( self, blenderMtx ):
-		sideVec, upVec, frontVec, transVec = blenderMtx[:]
-		self.m[0] = sideVec[0]
-		self.m[1] = upVec[0]
-		self.m[2] = frontVec[0]
-		self.m[3] = transVec[0]
-		
-		self.m[4] = sideVec[1]
-		self.m[5] = upVec[1]
-		self.m[6] = frontVec[1]
-		self.m[7] = transVec[1]
-		
-		self.m[8] = sideVec[2]
-		self.m[9] = upVec[2]
-		self.m[10] = frontVec[2]
-		self.m[11] = transVec[2]
-		
-		self.m[12] = sideVec[3]
-		self.m[13] = upVec[3]
-		self.m[14] = frontVec[3]
-		self.m[15] = transVec[3]
-		
-### ===========================================================================
-
-#### A class that represents a SpatialEntity
-class TamyEntity( Structure ):
-	
-	_fields_= [	( "name", c_char_p ),
-				( "meshesList", POINTER( tamy_mesh.TamyMesh ) ),
-				( "localMatrix", TamyMatrix ),
-				( "meshesCount", c_int ) ]
-				
-	def __init__( self, meshes, matrix, name ):
-	
-		self.name = name.encode( "utf-8" )
-		self.localMatrix = TamyMatrix( matrix )
-		
-		self.meshesCount = len(meshes)
-		self.meshesList = ( tamy_mesh.TamyMesh * self.meshesCount )()
-		i = 0
-		for mesh in meshes:
-			self.meshesList[i] = mesh
-			i += 1
-		
 ### ===========================================================================
 
 #### A class that represents a Model
-class TamyScene( Structure ):
+class TamyScene:
 	
-	_fields_= [	( "name", c_char_p ),
-				( "entities", POINTER( TamyEntity ) ),
-				( "entitiesCount", c_int ) ]
-				
-	def __init__( self, tamyEntities, name ):
-	
-		self.name = name.encode( "utf-8" )
+	def __init__( self, sceneName ):
+		self.sceneName = sceneName
+		self.textures = []
+		self.entities = []
+		self.materials = []
 		
-		self.entitiesCount = len(tamyEntities)
-		self.entities = ( TamyEntity * self.entitiesCount )()
-		i = 0
-		for tamyEntity in tamyEntities:
-			self.entities[i] = tamyEntity
-			i += 1
+	def export( self, filesystemRoot, exportDir ):
+		
+		import os
+		tamyExportModule = cdll.LoadLibrary( "%s/addons/io_export_tamy/ml-Blender.dll" % os.environ['BLENDER_SCRIPTS'] )
+		
+		if tamyExportModule is None:
+			print( "\nERROR: ml-Blender.dll not found" )
+			return
+			
+		tamyExportModule.begin_export( filesystemRoot.encode( "utf-8" ), exportDir.encode( "utf-8" ), len( self.entities ) )
+		
+		# 1. export the textures
+		texturesCount = len( self.textures )
+		exportTexturesArr = ( tamy_material.TamyTexture * texturesCount )()
+		for i in range( texturesCount ):
+			exportTexturesArr[i] = self.textures[i]
+			
+		tamyExportModule.export_textures( exportTexturesArr, texturesCount )
+		
+		
+		# 2. export the materials
+		materialsCount = len( self.materials )
+		exportMaterialsArr = ( tamy_material.TamyMaterial * materialsCount )()
+		for i in range( materialsCount ):
+			exportMaterialsArr[i] = self.materials[i]
+		
+		tamyExportModule.export_materials( exportMaterialsArr, materialsCount )
+
+		# 3. export individual entities.
+		#
+		# CAUTION: Export order is crucial here. The C counterpart also knows that and
+		# it will place the exported entities in the exact order in which there are exported.
+		# But in order for the scene to be assembled correctly later on, the order needs to be 
+		# preserved, since individual entities reference themselves not by pointers ( since we can't
+		# really do that when exporting to C ), but by their indices in the entities[] array.
+		for entityId, blenderObj, localMtx, tamyEntity in self.entities:
+			
+			if entityId == 'MESH':
+				tamyExportModule.export_geometry_entity( tamyEntity )
+				
+			elif entityId == 'LIGHT':
+				tamyExportModule.export_light_entity( tamyEntity )
+				
+		# 4. assemble the scene
+		tamyExportModule.assemble_scene( self.sceneName.encode( "utf-8" ) )
 		
 ### ===========================================================================
 
-### Creates a dictionary of all materials  used in the scene and the mesh objects that use them
-def get_materials_and_entities( context, bUseSelection, globalMatrix, sceneName, outArrTextures, outArrMaterials ):
+### Builds the entities present in the scene and compiles the final scene that will be exported to blender
+def compile_scene( context, bUseSelection, globalMatrix, tamyScene ):
 
 	scene = context.scene
 
@@ -87,13 +77,30 @@ def get_materials_and_entities( context, bUseSelection, globalMatrix, sceneName,
 		objects = (ob for ob in scene.objects if ob.is_visible(scene) and ob.select)
 	else:
 		objects = (ob for ob in scene.objects if ob.is_visible(scene))
+		
+	materialDict = {}
+	entitiesDict = {}  # pair( blenderObject, index of a TamyEntity in the 'entities' array )
+	build_entities_and_materials( scene, objects, tamyScene.entities, materialDict, entitiesDict )
+	
+	# Create the materials
+	texturesDict = {}
+	for matAndImage in materialDict.values():
+		tamyScene.materials.append( tamy_material.TamyMaterial( matAndImage[0], matAndImage[1], texturesDict ) )
+		
+	# Create texture entires
+	tamyScene.textures = texturesDict.keys()
+		
+	# Set the parenting hierarchy
+	define_hierarchy( tamyScene.entities, entitiesDict, globalMatrix )
+		
+### ===========================================================================
+
+def build_entities_and_materials( scene, objects, outEntities, outMaterialsDict, outEntitiesDict ):
 	
 	from bpy_extras.io_utils import create_derived_objects, free_derived_objects
 	
-	materialDict = {}
-	meshObjects = []
-	for ob in objects:
-		
+	for ob in objects:	
+	
 		# get derived objects
 		free, derived = create_derived_objects(scene, ob)
 
@@ -101,70 +108,108 @@ def get_materials_and_entities( context, bUseSelection, globalMatrix, sceneName,
 			continue
 
 		for obDerived, objectMtx in derived:
-			if ob.type not in {'MESH', 'CURVE', 'SURFACE', 'FONT', 'META'}:
-				continue
+
+			tamyEntity = None
+			tamyEntityType = ''
 			
-			try:
-				derivedBlenderMesh = obDerived.to_mesh( scene, True, 'PREVIEW' )
-			except:
-				derivedBlenderMesh = None
+			# The object represents a mesh
+			if ob.type in {'MESH', 'CURVE', 'SURFACE', 'FONT', 'META'}:
+				try:
+					derivedBlenderMesh = obDerived.to_mesh( scene, True, 'PREVIEW' )
+				except:
+					derivedBlenderMesh = None
+					
+				if derivedBlenderMesh:
+					build_materials( derivedBlenderMesh, outMaterialsDict )
+					
+					meshes = []
+					meshName = "%s" % ob.name
+					tamy_mesh.create_tamy_meshes( meshName, derivedBlenderMesh, meshes )
+					tamyEntity = tamy_entities.TamyGeometry( meshes, ob.name )
+					tamyEntityType = 'MESH'
+					
+					# cleanup
+					if free:
+						free_derived_objects( derivedBlenderMesh )
+			
+			# The object represents a light				
+			elif ob.type == 'LAMP':
+				tamyEntityType = 'LIGHT'
+				tamyEntity = tamy_entities.TamyLight( ob.name, ob.data )
 				
-			if derivedBlenderMesh:
-				matrix = globalMatrix * objectMtx
-				# derivedBlenderMesh.transform(matrix)
-				meshObjects.append( ( obDerived, derivedBlenderMesh, matrix ) )
-				matLs = derivedBlenderMesh.materials
-				matLsLen = len(matLs)
+			
+			# add new entity to our list
+			if tamyEntity is not None:
+				entityIdx = len( outEntities )
+				outEntitiesDict[ob] = entityIdx					
+				outEntities.append( ( tamyEntityType, obDerived, objectMtx, tamyEntity ) )
+					
 
-				# get material/image tuples.
-				if derivedBlenderMesh.tessface_uv_textures:
-					if not matLs:
-						mat = matName = None
+### ===========================================================================	
 
-					for f, uf in zip( derivedBlenderMesh.tessfaces, derivedBlenderMesh.tessface_uv_textures.active.data ):
-						if matLs:
-							matIndex = f.material_index
-							if matIndex >= matLsLen:
-								matIndex = f.mat = 0
-							mat = matLs[matIndex]
-							matName = None if mat is None else mat.name
-						# else the name is already set to 'none'
-
-						img = uf.image
-						imgName = None if img is None else img.name
-
-						materialDict.setdefault( ( matName, imgName ), ( mat, img ) )
-
-				else:
-					for mat in matLs:
-						if mat:  # material may be None so check its not.
-							materialDict.setdefault( ( mat.name, None ), ( mat, None ) )
-
-					# Why 0 Why!
-					for f in derivedBlenderMesh.tessfaces:
-						if f.material_index >= matLsLen:
-							f.material_index = 0
-
-			if free:
-				free_derived_objects(derivedBlenderMesh)
-	
-	# Create the materials
-	texturesDict = {}
-	for matAndImage in materialDict.values():
-		outArrMaterials.append( tamy_material.TamyMaterial( matAndImage[0], matAndImage[1], texturesDict ) )
+def build_materials( derivedBlenderMesh, outMaterialsDict ):
 		
-	# Create texture entires
-	outArrTextures = texturesDict.keys()
-	
-	# Create the entities
-	entities = []
-	for ob, blenderMesh, matrix in meshObjects:
+	matLs = derivedBlenderMesh.materials
+	matLsLen = len(matLs)
 
-		meshes = []
-		tamy_mesh.create_tamy_meshes( ob.name, blenderMesh, meshes )		
-		entities.append( TamyEntity( meshes, matrix, ob.name ) )
+	# get material/image tuples.
+	if derivedBlenderMesh.tessface_uv_textures:
+		if not matLs:
+			mat = matName = None
+
+		for f, uf in zip( derivedBlenderMesh.tessfaces, derivedBlenderMesh.tessface_uv_textures.active.data ):
+			if matLs:
+				matIndex = f.material_index
+				if matIndex >= matLsLen:
+					matIndex = f.mat = 0
+				mat = matLs[matIndex]
+				matName = None if mat is None else mat.name
+			# else the name is already set to 'none'
+
+			img = uf.image
+			imgName = None if img is None else img.name
+
+			outMaterialsDict.setdefault( ( matName, imgName ), ( mat, img ) )
+
+	else:
+		for mat in matLs:
+			if mat:  # material may be None so check its not.
+				outMaterialsDict.setdefault( ( mat.name, None ), ( mat, None ) )
+
+		# Why 0 Why!
+		for f in derivedBlenderMesh.tessfaces:
+			if f.material_index >= matLsLen:
+				f.material_index = 0
+
+### ===========================================================================
+
+### @param entities - it's a tuple: ( ELEM_ID, blenderObject, objectLocalMatrix, TamyEntity )
+def define_hierarchy( entities, entitiesDict, globalMatrix ):
+	for i in range( len( entities ) ):
+		blenderObject = entities[i][1]
+		obMatrix = entities[i][2]
+		tamyEntity = entities[i][3]
 		
-	tamyScene = TamyScene( entities, sceneName )
-	return tamyScene
+		if ( blenderObject.parent_type != 'OBJECT' and blenderObject.parent_type !='BONE' and blenderObject.parent_type !='LATTICE' ):
+			# Object can't be a part of any hierearchy, but nonetheless set its local matrix
+			print( "Opt 1" )
+			tamyEntity.set_matrix( obMatrix )
+			continue
+		
+		if blenderObject.parent is None:
+			# it's the root of a hierarchy - therefore its local matrix should be multipliend by the desired global
+			# matrix to convert its coordinate system to Tamy
+			print( "Opt 2" )
+			mtx = globalMatrix * obMatrix
+			tamyEntity.set_matrix( mtx )
+			continue
+			
+		# set the entity's parent index
+		print( "Opt 3" )
+		parentIdx = entitiesDict[ blenderObject.parent ]
+		tamyEntity.set_parent( parentIdx )
+		
+		# and finally - set its matrix
+		tamyEntity.set_matrix( obMatrix )
 		
 ### ===========================================================================

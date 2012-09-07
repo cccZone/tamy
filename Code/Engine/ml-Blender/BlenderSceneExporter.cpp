@@ -28,7 +28,7 @@ BlenderSceneExporter::BlenderSceneExporter()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderSceneExporter::initialize( const char* filesystemRoot, const char* exportDir ) 
+void BlenderSceneExporter::initialize( const char* filesystemRoot, const char* exportDir, int entitiesCount ) 
 { 
    // set the filesystem path
    Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
@@ -65,6 +65,10 @@ void BlenderSceneExporter::initialize( const char* filesystemRoot, const char* e
       delete m_materialDefinitions[i];
    }
    m_materialDefinitions.clear();
+
+   m_exportedEntities.clear();
+   m_exportedEntities.resize( entitiesCount );
+   m_nextEntityIdx = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,6 +84,8 @@ void BlenderSceneExporter::reset()
       delete m_materialDefinitions[i];
    }
    m_materialDefinitions.clear();
+
+   m_exportedEntities.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -136,6 +142,15 @@ void BlenderSceneExporter::storeMaterials( TamyMaterial* arrMaterials, int mater
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void BlenderSceneExporter::addEntity( SpatialEntity* entity, int parentIdx )
+{
+   m_exportedEntities[m_nextEntityIdx].m_entity = entity;
+   m_exportedEntities[m_nextEntityIdx].m_parentIndex = parentIdx;
+   ++m_nextEntityIdx;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 TriangleMesh* BlenderSceneExporter::createMesh( const TamyMesh& exportedMesh )
 {
    ResourcesManager& resMgr = ResourcesManager::getInstance();
@@ -156,51 +171,64 @@ TriangleMesh* BlenderSceneExporter::createMesh( const TamyMesh& exportedMesh )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderSceneExporter::createScene( const TamyScene& exportedScene )
+SpatialEntity* BlenderSceneExporter::createGeometryEntity( const TamyGeometry& exportedGeometryEntity ) 
 {
-   ResourcesManager& resMgr = ResourcesManager::getInstance();
-
-   // create the resource
-   FilePath scenePath( m_scenesExportDir + exportedScene.name );
-   Model* scene = resMgr.create< Model >( scenePath );
-
-   // if the scene existed, delete its contents
-   scene->clear();
-
-   // and start adding new entities
-   for ( int i = 0; i < exportedScene.entitiesCount; ++i )
+   if ( exportedGeometryEntity.meshesCount == 0 )
    {
-      SpatialEntity* entity = createEntity( exportedScene.entities[i] );
-      scene->add( entity );
+      // nothing to do here, but we still need to fill the slot in the entities array
+      return NULL;
    }
 
-   // save the resource
-   scene->saveResource();
+   if ( exportedGeometryEntity.meshesCount == 1 )
+   {
+      Geometry* geometry = instantiateStaticGeometry( exportedGeometryEntity, 0, true );
+      geometry->setLocalMtx( exportedGeometryEntity.localMatrix );
+      return geometry;
+   }
+   else
+   {
+      // there's more than one mesh in the entity, so aggregate them under one SpatialEntity
+      SpatialEntity* parentEntity = new SpatialEntity( exportedGeometryEntity.name );
+      parentEntity->setLocalMtx( exportedGeometryEntity.localMatrix );
+
+      for ( int i = 0; i < exportedGeometryEntity.meshesCount; ++i )
+      {
+         Geometry* geometry = instantiateStaticGeometry( exportedGeometryEntity, i, false );
+         if ( geometry )
+         {
+            parentEntity->add( geometry );
+         }
+      }
+
+      return parentEntity;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-SpatialEntity* BlenderSceneExporter::createEntity( const TamyEntity& exportedEntity )
+Geometry* BlenderSceneExporter::instantiateStaticGeometry( const TamyGeometry& exportedGeometryEntity, int meshIdx, bool useOriginalName )
 {
-   SpatialEntity* entity = new SpatialEntity( exportedEntity.name );
-   entity->setLocalMtx( exportedEntity.localMatrix );
+   Geometry* geometry = NULL;
 
-   // attach meshes and materials
-   for ( int i = 0; i < exportedEntity.meshesCount; ++i )
+   const TamyMesh& exportedMesh = exportedGeometryEntity.meshesList[0];
+
+   // create the mesh
+   TriangleMesh* mesh = createMesh( exportedMesh );
+   ASSERT_MSG( mesh != NULL, "Specified mesh wasn't correctly loaded" );
+   if ( mesh != NULL )
    {
-      const TamyMesh& exportedMesh = exportedEntity.meshesList[i];
-
-      // create the mesh
-      TriangleMesh* mesh = createMesh( exportedMesh );
-      ASSERT_MSG( mesh != NULL, "Specified mesh wasn't correctly loaded" );
-      if ( mesh == NULL )
+      char entityName[512];
+      if ( useOriginalName )
       {
-         continue;
+         sprintf_s( entityName, "%s", exportedGeometryEntity.name );
+      }
+      else
+      {
+         sprintf_s( entityName, "%s_%d", exportedGeometryEntity.name, meshIdx );
       }
 
-      // at the moment we're importing only static entities
-      Geometry* geometry = new StaticGeometry( *mesh );
-      entity->add( geometry );
+      // at the moment we're importing only the static geometry
+      geometry = new StaticGeometry( *mesh, entityName );
 
       // now attach the defined materials to it
       for ( int i = 0; i < exportedMesh.materialsCount; ++i )
@@ -210,7 +238,7 @@ SpatialEntity* BlenderSceneExporter::createEntity( const TamyEntity& exportedEnt
       }
    }
 
-   return entity;
+   return geometry;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -255,6 +283,113 @@ void BlenderSceneExporter::attachMaterialToGeometry( Geometry* geometryEntity, u
    }
 
    geometryEntity->add( materialEntity );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SpatialEntity* BlenderSceneExporter::createLightEntity( const TamyLight& exportedLightEntity )
+{
+   SpatialEntity* lightEntity = NULL;
+
+   switch( exportedLightEntity.type )
+   {
+   case LT_Directional:
+      {
+         lightEntity = instantiateDirectionalLight( exportedLightEntity );
+         break;
+      }
+
+   case LT_Point:
+      {
+         lightEntity = instantiatePointLight( exportedLightEntity );
+         break;
+      }
+
+   case LT_Spotlight:
+      {
+         // not implemented yet
+         break;
+      }
+
+   case LT_Hemisphere:
+      {
+         // not implemented yet
+         break;
+      }
+
+   case LT_Area:
+      {
+         // not implemented yet
+         break;
+      }
+   }
+
+   return lightEntity;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SpatialEntity* BlenderSceneExporter::instantiateDirectionalLight( const TamyLight& exportedLightEntity )
+{
+   DirectionalLight* light = new DirectionalLight( exportedLightEntity.name );
+   light->setLocalMtx( exportedLightEntity.localMatrix );
+
+   light->m_color = exportedLightEntity.lightColor;
+   light->m_strength = exportedLightEntity.energy;
+
+   return light;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+SpatialEntity* BlenderSceneExporter::instantiatePointLight( const TamyLight& exportedLightEntity )
+{
+   PointLight* light = new PointLight( exportedLightEntity.name );
+   light->setLocalMtx( exportedLightEntity.localMatrix );
+
+   light->m_color = exportedLightEntity.lightColor;
+   light->m_strength = exportedLightEntity.energy;
+
+   return light;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BlenderSceneExporter::assembleScene( const char* sceneName )
+{
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
+
+   // create the resource
+   FilePath scenePath( m_scenesExportDir + sceneName );
+   Model* scene = resMgr.create< Model >( scenePath );
+
+   // if the scene existed, delete its contents
+   scene->clear();
+
+   // setup the parenting hierarchy
+   uint entitiesCount = m_exportedEntities.size();
+   for ( uint i = 0; i < entitiesCount; ++i )
+   {
+      ExportedEntity& exportedEntity = m_exportedEntities[i];
+
+      if ( exportedEntity.m_parentIndex >= 0 )
+      {
+         // this one has a parent
+         SpatialEntity* parentEntity = m_exportedEntities[ exportedEntity.m_parentIndex ].m_entity;
+         parentEntity->add( exportedEntity.m_entity );
+      }
+      else
+      {
+         // this is the top level entity
+         scene->add( exportedEntity.m_entity );
+      }
+   }
+
+   // save the resource
+   scene->saveResource();
+
+   // cleanup
+   reset();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

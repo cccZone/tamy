@@ -10,21 +10,16 @@
 struct TamyTexture;
 struct TamyMaterial;
 struct TamyScene;
+struct TamyGeometry;
 struct TamyMesh;
+struct TamyLight;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Begins the export procedure.
  */
-ML_BLENDER_API void begin_export( const char* filesystemRoot, const char* exportDir );
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Ends the export procedure and cleans up after itself.
- */
-ML_BLENDER_API void end_export();
+ML_BLENDER_API void begin_export( const char* filesystemRoot, const char* exportDir, int entitiesCount );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -50,8 +45,22 @@ ML_BLENDER_API void export_meshes( TamyMesh* arrMeshes, int meshesCount );
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Exports an entire scene from Blender to Tamy.
+ * Exports a single Geometry entity from Blender to Tamy.
  */
-ML_BLENDER_API void export_scene( TamyScene scene );
+ML_BLENDER_API void export_geometry_entity( TamyGeometry geometry );
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Exports a single Light entity from Blender to Tamy.
+ */
+ML_BLENDER_API void export_light_entity( TamyLight light );
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Called once all entities have been exported. It assembles the scene using those exported entities.
+ */
+ML_BLENDER_API void assemble_scene( const char* sceneName );
 
 ///////////////////////////////////////////////////////////////////////////////
