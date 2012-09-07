@@ -38,10 +38,16 @@
     <None Include="..\..\Include\ml-Blender\export_tamy.py">
       <Filter>Python</Filter>
     </None>
+    <None Include="..\..\Include\ml-Blender\tamy_entities.py">
+      <Filter>Python</Filter>
+    </None>
     <None Include="..\..\Include\ml-Blender\tamy_material.py">
       <Filter>Python</Filter>
     </None>
     <None Include="..\..\Include\ml-Blender\tamy_mesh.py">
+      <Filter>Python</Filter>
+    </None>
+    <None Include="..\..\Include\ml-Blender\tamy_misc.py">
       <Filter>Python</Filter>
     </None>
     <None Include="..\..\Include\ml-Blender\tamy_scene.py">

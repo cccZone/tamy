@@ -11,8 +11,9 @@
 
 struct TamyMesh;
 struct TamyScene;
-struct TamyEntity;
+struct TamyGeometry;
 struct TamyTexture;
+struct TamyLight;
 class SpatialEntity;
 class TriangleMesh;
 class Geometry;
@@ -48,6 +49,12 @@ private:
       ~MaterialDefinition();
    };
 
+   struct ExportedEntity
+   {
+      SpatialEntity*                         m_entity;
+      int                                    m_parentIndex;
+   };
+
 private:
    static BlenderSceneExporter               s_theIntance;
 
@@ -58,6 +65,8 @@ private:
 
    std::vector< Texture* >                   m_textures;
    std::vector< MaterialDefinition* >        m_materialDefinitions;
+   std::vector< ExportedEntity >             m_exportedEntities;
+   uint                                      m_nextEntityIdx;
 
 public:
    /**
@@ -70,8 +79,9 @@ public:
     *
     * @param filesystemRoot
     * @param exportDir
+    * @param entitiesCount
     */
-   void initialize( const char* filesystemRoot, const char* exportDir );
+   void initialize( const char* filesystemRoot, const char* exportDir, int entitiesCount );
 
    /**
     * Purges all temporary buffers, preparing the singleton instance for the next use.
@@ -94,6 +104,14 @@ public:
    void storeMaterials( TamyMaterial* arrMaterials, int materialsCount );
 
    /**
+    * Adds an entity to the collection of exported entities under the correct index.
+    *
+    * @param entity
+    * @param parentIdx
+    */
+   void addEntity( SpatialEntity* entity, int parentIdx );
+
+   /**
     * Creates a mesh resource.
     *
     * @param exportedMesh
@@ -101,25 +119,31 @@ public:
    TriangleMesh* createMesh( const TamyMesh& exportedMesh );
 
    /**
+    * Creates a geometry entity
+    *
+    * @param exportedGeometryEntity
+    */
+   SpatialEntity* createGeometryEntity( const TamyGeometry& exportedGeometryEntity );
+
+   /**
+    * Creates a light entity.
+    *
+    * @param exportedLightEntity
+    */
+   SpatialEntity* createLightEntity( const TamyLight& exportedLightEntity );
+
+   /**
     * Creates a scene resource.
     *
-    * @param exportedScene
+    * @param sceneName
     */
-   void createScene( const TamyScene& exportedScene );
+   void assembleScene( const char* sceneName );
 
 private:
    /**
     * Constructor.
     */
    BlenderSceneExporter();
-
-   /**
-    * A helper method that creates a spatial entity based on the exported
-    * entity description.
-    *
-    * @param exportedEntity
-    */
-   SpatialEntity* createEntity( const TamyEntity& exportedEntity );
 
    /**
     * Creates and attaches a material entity to the specified geometry entity.
@@ -129,7 +153,30 @@ private:
     * @param geometryEntity
     * @param materialIdx
     */
-   void BlenderSceneExporter::attachMaterialToGeometry( Geometry* geometryEntity, uint materialIdx ) const;
+   void attachMaterialToGeometry( Geometry* geometryEntity, uint materialIdx ) const;
+
+   /**
+    * This helper method instantiates a single StaticGeometry entity according to the specified description.
+    *
+    * @param exportedGeometryEntity
+    * @param meshIdx
+    * @param useOriginalName        ( tells if the entity should be named exactly after the exportedGeometryEntity, or should a mesh index be appended to that name )
+    */
+   Geometry* instantiateStaticGeometry( const TamyGeometry& exportedGeometryEntity, int meshIdx, bool useOriginalName );
+
+   /**
+    * Instantiates a single directional light entity.
+    *
+    * @param exportedLightEntity
+    */
+   SpatialEntity* instantiateDirectionalLight( const TamyLight& exportedLightEntity );
+   
+   /**
+    * Instantiates a single point light entity.
+    *
+    * @param exportedLightEntity
+    */
+   SpatialEntity* instantiatePointLight( const TamyLight& exportedLightEntity );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

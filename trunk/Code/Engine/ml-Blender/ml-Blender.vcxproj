@@ -39,8 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\ml-Blender\export_tamy.py" />
+    <None Include="..\..\Include\ml-Blender\tamy_entities.py" />
     <None Include="..\..\Include\ml-Blender\tamy_material.py" />
     <None Include="..\..\Include\ml-Blender\tamy_mesh.py" />
+    <None Include="..\..\Include\ml-Blender\tamy_misc.py" />
     <None Include="..\..\Include\ml-Blender\tamy_scene.py" />
     <None Include="..\..\Include\ml-Blender\__init__.py" />
   </ItemGroup>

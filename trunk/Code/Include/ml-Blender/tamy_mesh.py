@@ -4,6 +4,8 @@
 
 from ctypes import *
 from array import *
+import bpy
+import copy
 
 ### ===========================================================================
 
@@ -28,6 +30,21 @@ class TamyVertex( Structure ):
 		self.nx, self.ny, self.nz = normal[:]
 		self.tanx, self.tany, self.tanz, = (0, 0, 0)
 		self.u, self.v =  uv[:]
+		
+	def __init__( self, blenderVertex ):
+	
+		self.x, self.y, self.z = blenderVertex.co[:]
+		self.nx, self.ny, self.nz = blenderVertex.normal[:]
+		self.tanx, self.tany, self.tanz = ( 0, 0, 0 )
+		self.u, self.v =  ( 0, 0 )
+		
+	def __copy__( self ):
+		result = TamyVertex( ( self.x, self.y, self.z ), ( self.nx, self.ny, self.nz ), ( self.u, self.v ) )
+		return result
+		
+	def setNormal( self, normalTuple ):
+		self.nx, self.ny, self.nz = normalTuple[:]
+		
 		
 ### ===========================================================================
 
@@ -106,45 +123,6 @@ class TamyMesh( Structure ):
 		
 	# -------------------------------------------------------------------------
 		
-	### Sets mesh vertices nad adjusts face indices to index into the local array
-	def setVertices( self, vertices ):
-		
-		tmpVerticesList = []
-		indicesMap = []
-		
-		for i in range( len( vertices ) ):
-			indicesMap.append( -1 )
-		
-		# map the vertices
-		for i in range( self.facesCount ):
-			face = self.facesList[i]
-			
-			for j in range( 3 ):
-				vertexIdx = face.idx[j]
-				
-				if ( indicesMap[ vertexIdx ] < 0 ):
-					# map only the unmapped index
-					remappedVtxIdx = len( tmpVerticesList )
-					indicesMap[ vertexIdx ] = remappedVtxIdx
-					tmpVerticesList.append( vertices[ vertexIdx ] )
-				
-		# copy the mapped vertices to our local structure
-		self.verticesCount = len( tmpVerticesList )
-		self.verticesList = ( TamyVertex * self.verticesCount )()
-		i = 0
-		for vtx in tmpVerticesList:
-			self.verticesList[i] = TamyVertex( vtx.co, vtx.normal )
-			i += 1
-			
-		# remap face indices
-		for i in range( self.facesCount ):
-			face = self.facesList[i]
-			
-			for j in range( 3 ):
-				face.idx[j] = indicesMap[ face.idx[j] ]
-				
-	# -------------------------------------------------------------------------
-		
 	### Adds a new material to the mesh
 	def addMaterial( self, materialIdx ):
 		newMaterialsList = ( c_int * ( self.materialsCount + 1 ) )()
@@ -172,6 +150,44 @@ class TamyMesh( Structure ):
 		self.materialsList = newMaterialsList
 		self.materialsCount = newSize
 		
+	# -------------------------------------------------------------------------
+		
+	### Sets mesh vertices nad adjusts face indices to index into the local array
+	def setVertices( self, vertices ):
+		
+		tmpVerticesList = []
+		indicesMap = []
+		
+		for i in range( len( vertices ) ):
+			indicesMap.append( -1 )
+		
+		# map the vertices
+		for i in range( self.facesCount ):
+			face = self.facesList[i]
+			
+			for j in range( 3 ):
+				vertexIdx = face.idx[j]
+				
+				if ( indicesMap[ vertexIdx ] < 0 ):
+					# map only the unmapped index
+					remappedVtxIdx = len( tmpVerticesList )
+					indicesMap[ vertexIdx ] = remappedVtxIdx
+					tmpVerticesList.append( vertices[ vertexIdx ] )
+				
+		# copy the mapped vertices to our local structure
+		self.verticesCount = len( tmpVerticesList )
+		self.verticesList = ( TamyVertex * self.verticesCount )()
+		i = 0
+		for vtx in tmpVerticesList:
+			self.verticesList[i] = vtx
+			i += 1
+			
+		# remap face indices
+		for i in range( self.facesCount ):
+			face = self.facesList[i]
+			for j in range( 3 ):
+				face.idx[j] = indicesMap[ face.idx[j] ]
+		
 ### ===========================================================================
 
 ### Since Blender meshes are not compatible with Tamy meshes in terms of
@@ -184,7 +200,9 @@ def create_tamy_meshes( meshName, blenderMesh, outMeshes ):
 			
 	# create a copy of all vertices - there's a possibility we'll be doing some splitting etc
 	# and we might introduce new vertices as we go along
-	vertices = blenderMesh.vertices[:]
+	vertices = []
+	for blenderVtx in blenderMesh.vertices:
+		vertices.append( TamyVertex( blenderVtx ) )
 	
 	# first, split the non-triangular faces
 	faces = []
@@ -232,6 +250,7 @@ def create_tamy_meshes( meshName, blenderMesh, outMeshes ):
 			# reset that material instance, so that we don't merge it twice
 			singleMaterialMeshes[j] = None		
 
+
 	# set the meshes in the output array and initialize them with vertices
 	for i in range( meshesCount ):
 	
@@ -240,9 +259,8 @@ def create_tamy_meshes( meshName, blenderMesh, outMeshes ):
 		if ( mergedMesh is not None ):
 			
 			outMeshes.append( mergedMesh )
-			mergedMesh.setVertices( vertices )
+			mergedMesh.setVertices( vertices )		
 			
-	
 ### ===========================================================================
 	
 ### A helper method that splits non-triangular polygons into faces ( by rearranging their indices of course ;)
@@ -256,23 +274,31 @@ def split_polygons_into_triangles( polygons, faces, materialPerFace, vertices ):
 		# and we need to duplicate their vertices
 		
 		indices = array( 'i', poly.vertices[:] )
-		if ( poly.use_smooth == False ):		
-			for i in range( len( indices ) ):				
-				vtx = vertices[indices[i]]
-				indices[i] = len( vertices )
-				vertices.append( vtx )
 		
-		# split the polygon if needed
+		if ( poly.use_smooth == False ):	
+			for i in range( len( indices ) ):				
+				# duplicate the vertices
+				originalVertex = vertices[indices[i]]
+				duplicatedVertex = copy.deepcopy( originalVertex )
+				duplicatedVertex.setNormal( poly.normal )
+				
+				indices[i] = len( vertices )
+				vertices.append( duplicatedVertex )
+			
+		# split the polygon if needed and flip the winding order of the triangles
+		# at the same time ( because we're switching coordinate system handedness here )
 		if ( indicesCount == 3 ):
 			# it's a regular face
-			faces.append( TamyFace( indices ) )
+			faces.append( TamyFace( [ indices[0], indices[2], indices[1] ] ) )
 			materialPerFace.append( poly.material_index )
+				
 		elif ( indicesCount == 4 ):
 			# it's a quad
-			faces.append( TamyFace( [ indices[0], indices[1], indices[2] ] ) )
-			faces.append( TamyFace( [ indices[0], indices[2], indices[3] ] ) )
+			faces.append( TamyFace( [ indices[0], indices[2], indices[1] ] ) )
+			faces.append( TamyFace( [ indices[0], indices[3], indices[2] ] ) )
 			materialPerFace.append( poly.material_index )
 			materialPerFace.append( poly.material_index )
+
 		else:
 			print( "\nWARNING Unsupported polygon with more than 4 vertices encountered" )
 			

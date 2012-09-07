@@ -8,18 +8,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void begin_export( const char* filesystemRoot, const char* exportDir )
+void begin_export( const char* filesystemRoot, const char* exportDir, int entitiesCount )
 {
    // reset the export tool's contents, so that we start fresh
-   BlenderSceneExporter::getInstance().initialize( filesystemRoot, exportDir );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void end_export()
-{
-   // we're done with the export - cleanup
-   BlenderSceneExporter::getInstance().reset();
+   BlenderSceneExporter::getInstance().initialize( filesystemRoot, exportDir, entitiesCount );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,11 +48,29 @@ void export_meshes( TamyMesh* arrMeshes, int meshesCount )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void export_scene( TamyScene scene )
+void export_geometry_entity( TamyGeometry geometry )
+{
+   BlenderSceneExporter& exporter = BlenderSceneExporter::getInstance();
+   SpatialEntity* entity = exporter.createGeometryEntity( geometry );
+   exporter.addEntity( entity, geometry.parentIdx );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void export_light_entity( TamyLight light )
+{
+   BlenderSceneExporter& exporter = BlenderSceneExporter::getInstance();
+   SpatialEntity* entity = exporter.createLightEntity( light );
+   exporter.addEntity( entity, light.parentIdx );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void assemble_scene( const char* sceneName )
 {
    BlenderSceneExporter& exporter = BlenderSceneExporter::getInstance();
 
-   exporter.createScene( scene );
+   exporter.assembleScene( sceneName );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,12 +80,15 @@ void export_scene( TamyScene scene )
 // TODO:
 // I> GEOMETRIA
 // 1. export bryly miekkiej    ( done )
-// 2. export bryly twarder
-// 3. export dwoch odrebnych bryl
-// 4. export dwoch bryl polaczyonych w hierarchie
+// 2. export bryly twarde      ( done )
+// 3. export dwoch odrebnych bryl   ( done )
+// 4. export dwoch bryl polaczyonych w hierarchie !!!!!!!!!!!!!!!
 //
 // MATERIALY
 // 1. export dwoch bryl, kazdej z innym materialem
 // 2. export tekstury diffuse
 // 3. export tekstury normalek
 // 4. export tekstury specular ( i wsparcie w modelu oswietlenia )
+//
+// INNE ELEMENTY SCENY
+// 1. swiatla (done )

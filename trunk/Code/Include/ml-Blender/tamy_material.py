@@ -4,13 +4,8 @@
 
 from ctypes import *
 import bpy
+from . import tamy_misc
 
-
-### This class represents a color exported to Tamy
-class TamyColor( Structure ):
-
-	_fields_ = [ ("r", c_float), ("g", c_float), ("b", c_float), ("a", c_float) ]
-	
 		
 ### ===========================================================================
 	
@@ -29,9 +24,9 @@ class TamyTexture( Structure ):
 ### A class that represents a material
 class TamyMaterial( Structure ):
 	_fields_ = [("name", c_char_p),
-				("ambientColor", TamyColor),
-				("diffuseColor", TamyColor),
-				("specularColor", TamyColor),
+				("ambientColor", tamy_misc.TamyColor),
+				("diffuseColor", tamy_misc.TamyColor),
+				("specularColor", tamy_misc.TamyColor),
 				("normalTextureIndex", c_int),
 				("diffuseTexturesIndices", POINTER(c_int)),
 				("diffuseTexturesCount", c_int) ]
@@ -44,18 +39,18 @@ class TamyMaterial( Structure ):
 		self.name = materialName.encode( "utf-8" )
 
 		if not material:
-			self.ambientColor = TamyColor( 0.0, 0.0, 0.0, 1.0 )
-			self.diffuseColor = TamyColor( 0.0, 0.0, 0.0, 1.0 )
-			self.specularColor = TamyColor( 0.0, 0.0, 0.0, 1.0 )
+			self.ambientColor = tamy_misc.TamyColor( 0.0, 0.0, 0.0, 1.0 )
+			self.diffuseColor = tamy_misc.TamyColor( 0.0, 0.0, 0.0, 1.0 )
+			self.specularColor = tamy_misc.TamyColor( 0.0, 0.0, 0.0, 1.0 )
 		else:
 			r, g, b = ( material.ambient * material.diffuse_color )[:]
-			self.ambientColor = TamyColor( r, g, b, 1.0  )
+			self.ambientColor = tamy_misc.TamyColor( r, g, b, 1.0  )
 			
 			r, g, b = material.diffuse_color[:]
-			self.diffuseColor = TamyColor( r, g, b, 1.0 )
+			self.diffuseColor = tamy_misc.TamyColor( r, g, b, 1.0 )
 			
 			r, g, b = material.specular_color[:]
-			self.specularColor = TamyColor( r, g, b, 1.0 )
+			self.specularColor = tamy_misc.TamyColor( r, g, b, 1.0 )
 
 		slots = self.get_material_image_texslots( material )  # can be None
 

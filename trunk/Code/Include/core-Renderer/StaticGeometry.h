@@ -26,15 +26,18 @@ private:
 public:
    /**
     * Default constructor.
+    *
+    * @param name
     */
-   StaticGeometry();
+   StaticGeometry( const char* name = NULL );
 
    /**
     * Constructor.
     *
     * @param resource   shared geometry resource
+    * @param name
     */
-   StaticGeometry( GeometryResource& resource );
+   StaticGeometry( GeometryResource& resource, const char* name = NULL );
    ~StaticGeometry();
 
 protected:

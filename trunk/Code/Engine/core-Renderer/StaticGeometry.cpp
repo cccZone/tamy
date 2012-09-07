@@ -16,8 +16,8 @@ END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-StaticGeometry::StaticGeometry()
-   : Geometry()
+StaticGeometry::StaticGeometry( const char* name )
+   : Geometry( name != NULL ? name : "" )
    , m_vertexShader( NULL )
 {
    initialize();
@@ -25,8 +25,8 @@ StaticGeometry::StaticGeometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-StaticGeometry::StaticGeometry( GeometryResource& resource )
-   : Geometry( resource )
+StaticGeometry::StaticGeometry( GeometryResource& resource, const char* name  )
+   : Geometry( resource, name != NULL ? name : "" )
    , m_vertexShader( NULL )
 {
    initialize();
