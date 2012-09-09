@@ -86,8 +86,8 @@ void assemble_scene( const char* sceneName )
 //
 // MATERIALY
 // 1. export dwoch bryl, kazdej z innym materialem ( done )
-// 2. export tekstury diffuse
-// 3. export tekstury normalek
+// 2. export tekstury diffuse ( done )
+// 3. export tekstury normalek ( done )
 // 4. export tekstury specular ( i wsparcie w modelu oswietlenia )
 // 5. oswietlenie ambientowe z ustawien swiata
 

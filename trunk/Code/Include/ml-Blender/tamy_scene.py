@@ -84,8 +84,10 @@ def compile_scene( context, bUseSelection, globalMatrix, tamyScene ):
 	build_entities_and_materials( scene, objects, tamyScene.materials, tamyScene.entities, materialDict, texturesDict, entitiesDict )
 	
 	# Create texture entires
+	tamyScene.textures = [ None for i in range( len( texturesDict ) ) ]
 	for texturePath in texturesDict.keys():
-		tamyScene.textures.append( tamy_material.TamyTexture( texturePath ) )
+		textureIdx = texturesDict[texturePath]
+		tamyScene.textures[textureIdx] = tamy_material.TamyTexture( texturePath )
 		
 	# Set the parenting hierarchy
 	define_hierarchy( tamyScene.entities, entitiesDict, globalMatrix )

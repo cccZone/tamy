@@ -162,6 +162,7 @@ TriangleMesh* BlenderSceneExporter::createMesh( const TamyMesh& exportedMesh )
    // set mesh data
    triangleMesh->setVertices( exportedMesh.verticesList, exportedMesh.verticesCount );
    triangleMesh->setFaces( exportedMesh.facesList, exportedMesh.facesCount );
+   triangleMesh->calculateTangents();
 
    // save the resource
    triangleMesh->saveResource();
