@@ -93,7 +93,7 @@ void BlenderSceneExporter::reset()
 void BlenderSceneExporter::createTexture( const TamyTexture& exportedTexture )
 {
    Texture* texture = NULL;
-   if ( exportedTexture.path == NULL )
+   if ( exportedTexture.path != NULL )
    {
       ResourcesManager& resMgr = ResourcesManager::getInstance();
 

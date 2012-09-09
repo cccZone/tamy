@@ -82,13 +82,14 @@ void assemble_scene( const char* sceneName )
 // 1. export bryly miekkiej    ( done )
 // 2. export bryly twarde      ( done )
 // 3. export dwoch odrebnych bryl   ( done )
-// 4. export dwoch bryl polaczyonych w hierarchie !!!!!!!!!!!!!!!
+// 4. export dwoch bryl polaczyonych w hierarchie ( done )
 //
 // MATERIALY
-// 1. export dwoch bryl, kazdej z innym materialem
+// 1. export dwoch bryl, kazdej z innym materialem ( done )
 // 2. export tekstury diffuse
 // 3. export tekstury normalek
 // 4. export tekstury specular ( i wsparcie w modelu oswietlenia )
-//
+// 5. oswietlenie ambientowe z ustawien swiata
+
 // INNE ELEMENTY SCENY
 // 1. swiatla (done )

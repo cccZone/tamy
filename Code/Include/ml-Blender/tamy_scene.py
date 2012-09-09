@@ -78,27 +78,24 @@ def compile_scene( context, bUseSelection, globalMatrix, tamyScene ):
 	else:
 		objects = (ob for ob in scene.objects if ob.is_visible(scene))
 		
-	materialDict = {}
-	entitiesDict = {}  # pair( blenderObject, index of a TamyEntity in the 'entities' array )
-	build_entities_and_materials( scene, objects, tamyScene.entities, materialDict, entitiesDict )
-	
-	# Create the materials
+	materialDict = {} # pairs of ( BlenderMaterial : exportOrdinalIdx )
+	entitiesDict = {}  # pairs of ( blenderObject, : exportOrdinalIndex )
 	texturesDict = {}
-	for matAndImage in materialDict.values():
-		tamyScene.materials.append( tamy_material.TamyMaterial( matAndImage[0], matAndImage[1], texturesDict ) )
-		
+	build_entities_and_materials( scene, objects, tamyScene.materials, tamyScene.entities, materialDict, texturesDict, entitiesDict )
+	
 	# Create texture entires
-	tamyScene.textures = texturesDict.keys()
+	for texturePath in texturesDict.keys():
+		tamyScene.textures.append( tamy_material.TamyTexture( texturePath ) )
 		
 	# Set the parenting hierarchy
 	define_hierarchy( tamyScene.entities, entitiesDict, globalMatrix )
 		
 ### ===========================================================================
 
-def build_entities_and_materials( scene, objects, outEntities, outMaterialsDict, outEntitiesDict ):
+def build_entities_and_materials( scene, objects, outMaterials, outEntities, outMaterialsDict, outTexturesDict, outEntitiesDict ):
 	
 	from bpy_extras.io_utils import create_derived_objects, free_derived_objects
-	
+		
 	for ob in objects:	
 	
 		# get derived objects
@@ -120,11 +117,11 @@ def build_entities_and_materials( scene, objects, outEntities, outMaterialsDict,
 					derivedBlenderMesh = None
 					
 				if derivedBlenderMesh:
-					build_materials( derivedBlenderMesh, outMaterialsDict )
+					build_materials( derivedBlenderMesh, outMaterials, outMaterialsDict, outTexturesDict )
 					
 					meshes = []
 					meshName = "%s" % ob.name
-					tamy_mesh.create_tamy_meshes( meshName, derivedBlenderMesh, meshes )
+					tamy_mesh.create_tamy_meshes( meshName, derivedBlenderMesh, outMaterialsDict, meshes )
 					tamyEntity = tamy_entities.TamyGeometry( meshes, ob.name )
 					tamyEntityType = 'MESH'
 					
@@ -147,39 +144,12 @@ def build_entities_and_materials( scene, objects, outEntities, outMaterialsDict,
 
 ### ===========================================================================	
 
-def build_materials( derivedBlenderMesh, outMaterialsDict ):
+def build_materials( derivedBlenderMesh, outMaterials, outMaterialsDict, outTexturesDict ):
 		
-	matLs = derivedBlenderMesh.materials
-	matLsLen = len(matLs)
-
-	# get material/image tuples.
-	if derivedBlenderMesh.tessface_uv_textures:
-		if not matLs:
-			mat = matName = None
-
-		for f, uf in zip( derivedBlenderMesh.tessfaces, derivedBlenderMesh.tessface_uv_textures.active.data ):
-			if matLs:
-				matIndex = f.material_index
-				if matIndex >= matLsLen:
-					matIndex = f.mat = 0
-				mat = matLs[matIndex]
-				matName = None if mat is None else mat.name
-			# else the name is already set to 'none'
-
-			img = uf.image
-			imgName = None if img is None else img.name
-
-			outMaterialsDict.setdefault( ( matName, imgName ), ( mat, img ) )
-
-	else:
-		for mat in matLs:
-			if mat:  # material may be None so check its not.
-				outMaterialsDict.setdefault( ( mat.name, None ), ( mat, None ) )
-
-		# Why 0 Why!
-		for f in derivedBlenderMesh.tessfaces:
-			if f.material_index >= matLsLen:
-				f.material_index = 0
+	for material in derivedBlenderMesh.materials:
+		if material is not None:
+			outMaterialsDict[material] = len(outMaterials)
+			outMaterials.append( tamy_material.TamyMaterial( material, outTexturesDict ) )
 
 ### ===========================================================================
 
@@ -192,24 +162,26 @@ def define_hierarchy( entities, entitiesDict, globalMatrix ):
 		
 		if ( blenderObject.parent_type != 'OBJECT' and blenderObject.parent_type !='BONE' and blenderObject.parent_type !='LATTICE' ):
 			# Object can't be a part of any hierearchy, but nonetheless set its local matrix
-			print( "Opt 1" )
 			tamyEntity.set_matrix( obMatrix )
 			continue
 		
 		if blenderObject.parent is None:
 			# it's the root of a hierarchy - therefore its local matrix should be multipliend by the desired global
 			# matrix to convert its coordinate system to Tamy
-			print( "Opt 2" )
 			mtx = globalMatrix * obMatrix
 			tamyEntity.set_matrix( mtx )
 			continue
-			
+		
 		# set the entity's parent index
-		print( "Opt 3" )
 		parentIdx = entitiesDict[ blenderObject.parent ]
 		tamyEntity.set_parent( parentIdx )
 		
-		# and finally - set its matrix
-		tamyEntity.set_matrix( obMatrix )
+		# and finally - set its matrix, and we need a local matrix at this point, so since
+		# we have global matrices only, we can simply subtract the child's from the parent's
+		# and get what we want
+		parentMtx = entities[parentIdx][2]
+		localMtx = parentMtx.inverted() * obMatrix
+
+		tamyEntity.set_matrix( localMtx )
 		
 ### ===========================================================================

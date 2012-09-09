@@ -45,6 +45,9 @@ class TamyVertex( Structure ):
 	def setNormal( self, normalTuple ):
 		self.nx, self.ny, self.nz = normalTuple[:]
 		
+	def setUV( self, u, v ):
+		self.u = u
+		self.v = v
 		
 ### ===========================================================================
 
@@ -67,7 +70,7 @@ class TamyFace( Structure ):
 		if ( self.idx[2] == otherFace.idx[2] ):
 			return False
 		
-		return True
+		return True	
 		
 ### ===========================================================================
 
@@ -149,7 +152,19 @@ class TamyMesh( Structure ):
 			
 		self.materialsList = newMaterialsList
 		self.materialsCount = newSize
-		
+	
+	# -------------------------------------------------------------------------
+	
+	### Maps material indices to the ones from the specified materials dictionary
+	###
+	### It's required that the `materialsExportOrderDict` should contain pairs ( Material : index ),
+	### where the `index` stands for the ordinal number with which the material will be exported
+	def mapMaterials( self, originalMeshMaterials, materialsExportOrderDict ):
+		for i in range( self.materialsCount ):
+			blenderMaterial = originalMeshMaterials[self.materialsList[i]]
+			mappedMaterialIdx = materialsExportOrderDict[blenderMaterial]
+			self.materialsList[i] = mappedMaterialIdx
+			
 	# -------------------------------------------------------------------------
 		
 	### Sets mesh vertices nad adjusts face indices to index into the local array
@@ -187,6 +202,7 @@ class TamyMesh( Structure ):
 			face = self.facesList[i]
 			for j in range( 3 ):
 				face.idx[j] = indicesMap[ face.idx[j] ]
+				
 		
 ### ===========================================================================
 
@@ -195,19 +211,28 @@ class TamyMesh( Structure ):
 ### they may use ( Tamy assumes a mesh uses the same number of materials to render all of its faces ),
 ### we need to split them into sub meshes before we can export them to Tamy.
 ###
-### This method accomplishes that, it splits the meshes and appends them on the export list
-def create_tamy_meshes( meshName, blenderMesh, outMeshes ):
+### This method accomplishes that, it splits the meshes and appends them on the export list.
+###
+### It's required that the `materialsExportOrderDict` should contain pairs ( Material : index ),
+### where the `index` stands for the ordinal number with which the material will be exported
+def create_tamy_meshes( meshName, blenderMesh, materialsExportOrderDict, outMeshes ):
 			
-	# create a copy of all vertices - there's a possibility we'll be doing some splitting etc
+	# create a copy of all vertices and face indices - there's a possibility we'll be doing some splitting etc
 	# and we might introduce new vertices as we go along
 	vertices = []
 	for blenderVtx in blenderMesh.vertices:
 		vertices.append( TamyVertex( blenderVtx ) )
+		
+	faces = []	
+	for poly in blenderMesh.polygons:
+		faces.append( poly.vertices )
 	
-	# first, split the non-triangular faces
-	faces = []
+	# create a map of UV coordinates assigned to each vertex
+	vertices, faces = calculate_unique_uv_coords( blenderMesh, vertices, faces )
+	
+	# split the non-triangular faces
 	materialPerFace = []
-	split_polygons_into_triangles( blenderMesh.polygons, faces, materialPerFace, vertices )
+	faces = split_polygons_into_triangles( blenderMesh.polygons, faces, materialPerFace, vertices )
 	
 	# now - create Tamy meshes, each dedicated to a single material
 	singleMaterialMeshes = []
@@ -259,22 +284,103 @@ def create_tamy_meshes( meshName, blenderMesh, outMeshes ):
 		if ( mergedMesh is not None ):
 			
 			outMeshes.append( mergedMesh )
-			mergedMesh.setVertices( vertices )		
+			mergedMesh.setVertices( vertices )
+			
+	# map the materials indices to the ones from our materials dictionary
+	mergedMesh.mapMaterials( blenderMesh.materials, materialsExportOrderDict )			
+
+### ===========================================================================
+
+def uv_key( u, v ):
+    return round(u, 6), round(-v, 6)
+	
+### The method splits vertices so that each has only a single UV coordinate assigned.
+def calculate_unique_uv_coords( blenderMesh, vertices, faces ):
+
+	if bool( blenderMesh.tessface_uv_textures ) != True:
+		# No uv's present
+		return vertices, faces
+	
+	splitVertices = []
+
+    # for each face uv coordinate, add it to the UniqueList of the vertex
+	uvsDict = [ [] for i in range( len( vertices ) ) ]
+	polyIdx = 0
+	for poly in blenderMesh.polygons:
+	
+		polyUVs = blenderMesh.tessface_uv_textures.active.data[polyIdx]
+		
+		uvOffset = 0
+		for vtxIdx in poly.vertices:		
+			uvCoord = uv_key( polyUVs.uv[uvOffset][0], polyUVs.uv[uvOffset][1] )
+			
+			arrUVs = uvsDict[vtxIdx]
+			arrUVs.append( uvCoord )
+			
+			uvOffset += 1
+				
+		polyIdx += 1
+		
+	# change them all into sets to eliminate duplicate uvs
+	outUVCoordsToIndicesMap = [ [] for i in range( len( vertices ) ) ]
+	for vtxIdx in range( len( uvsDict ) ):
+		uvsDict[vtxIdx] = set( uvsDict[vtxIdx] )
+
+		for uvCoords in uvsDict[vtxIdx]:
+			originalVertex = vertices[vtxIdx]
+			
+			outUVCoordsToIndicesMap[vtxIdx].append( ( uvCoords, len( splitVertices ) ) )
+			
+			copiedVertex = copy.deepcopy( originalVertex )
+			copiedVertex.setUV( uvCoords[0], uvCoords[1] )
+			splitVertices.append( copiedVertex )
+			
+		
+	# split the polygons and duplicate the vertices so that each vertex has
+	# only one set of UV coordinates assigned
+	polyIdx = 0
+	newFaces = []
+	for poly in blenderMesh.polygons:	
+	
+		polyUVs = blenderMesh.tessface_uv_textures.active.data[polyIdx]
+		faceVtxIndices = []
+		for i in range( len( poly.vertices ) ):
+		
+			uvCoord = uv_key( polyUVs.uv[i][0], polyUVs.uv[i][1] )	
+			vtxIdx = poly.vertices[i]
+			
+			for vtxUvCoords, newVtxIdx in outUVCoordsToIndicesMap[vtxIdx]:
+				if vtxUvCoords == uvCoord:
+					faceVtxIndices.append( newVtxIdx )
+					break
+			
+		newFaces.append( faceVtxIndices )
+		polyIdx += 1
+		
+	return splitVertices, newFaces
 			
 ### ===========================================================================
 	
 ### A helper method that splits non-triangular polygons into faces ( by rearranging their indices of course ;)
 def split_polygons_into_triangles( polygons, faces, materialPerFace, vertices ):
-
-	for poly in polygons:
-		indicesCount = len( poly.vertices )
+	
+	tamyFaces = []
+		
+	faceIdx = 0
+	for faceIdx in range( len( polygons ) ):
+		poly = polygons[faceIdx]
+		face = faces[faceIdx]
+		indicesCount = len( face )
 		
 		# First check to see if it's supposed to be smoothed or not
 		# Smoothed polygons share vertices with other polygons, while hard polygons don't,
 		# and we need to duplicate their vertices
 		
-		indices = array( 'i', poly.vertices[:] )
+		indices = array( 'i', face[:] )
 		
+		# 1. Duplicate the vertices as many times as necessary, so that each 
+		#    vertex has only one set of UV coordinates assigned, and wears
+		#    a unique normal if the face it belongs to is supposed to be rendered flat
 		if ( poly.use_smooth == False ):	
 			for i in range( len( indices ) ):				
 				# duplicate the vertices
@@ -284,22 +390,24 @@ def split_polygons_into_triangles( polygons, faces, materialPerFace, vertices ):
 				
 				indices[i] = len( vertices )
 				vertices.append( duplicatedVertex )
-			
-		# split the polygon if needed and flip the winding order of the triangles
+		
+		# 2. triangulate the polygon if needed and flip the winding order of the triangles
 		# at the same time ( because we're switching coordinate system handedness here )
 		if ( indicesCount == 3 ):
 			# it's a regular face
-			faces.append( TamyFace( [ indices[0], indices[2], indices[1] ] ) )
+			tamyFaces.append( TamyFace( [ indices[0], indices[2], indices[1] ] ) )
 			materialPerFace.append( poly.material_index )
 				
 		elif ( indicesCount == 4 ):
 			# it's a quad
-			faces.append( TamyFace( [ indices[0], indices[2], indices[1] ] ) )
-			faces.append( TamyFace( [ indices[0], indices[3], indices[2] ] ) )
+			tamyFaces.append( TamyFace( [ indices[0], indices[2], indices[1] ] ) )
+			tamyFaces.append( TamyFace( [ indices[0], indices[3], indices[2] ] ) )
 			materialPerFace.append( poly.material_index )
 			materialPerFace.append( poly.material_index )
 
 		else:
 			print( "\nWARNING Unsupported polygon with more than 4 vertices encountered" )
+			
+	return tamyFaces
 			
 ### ===========================================================================
