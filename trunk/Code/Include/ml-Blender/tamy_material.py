@@ -33,7 +33,7 @@ class TamyMaterial( Structure ):
 	
 	# -------------------------------------------------------------------------
 	
-	def __init__( self, material, image, texturesDict ):
+	def __init__( self, material, texturesDict ):
 	
 		materialName = material.name if material else "None"
 		self.name = materialName.encode( "utf-8" )
@@ -54,12 +54,11 @@ class TamyMaterial( Structure ):
 
 		slots = self.get_material_image_texslots( material )  # can be None
 
-		if slots:
-
+		if slots:			
 			# we only want one of each special texture ( i.e. normal, specular and opacity maps )
 			normal = [s for s in slots if s.use_map_normal]
 			if len( normal ) > 0:
-				self.normalTextureIndex = get_texture_index( normal[0] )
+				self.normalTextureIndex = self.get_texture_index( normal[0], texturesDict )
 			else:
 				self.normalTextureIndex = -1
 
@@ -70,7 +69,7 @@ class TamyMaterial( Structure ):
 			diffuseTextureIndices = []
 			for s in slots:
 				if ( s.use_map_color_diffuse ):
-					texIdx = get_texture_index( s )
+					texIdx = self.get_texture_index( s, texturesDict )
 					if texIdx >= 0:
 						diffuseTextureIndices.append( texIdx )
 
@@ -88,7 +87,7 @@ class TamyMaterial( Structure ):
 		textureIdx = -1
 		
 		if ( textureSlot.texture.type == 'IMAGE' ):
-			texturePath = bpy.path.abspath( normal[0].texture.image.filepath )
+			texturePath = bpy.path.abspath( textureSlot.texture.image.filepath )
 				
 			# check if the texture was mapped and exported
 			if ( texturePath in texturesDict ):
@@ -104,6 +103,7 @@ class TamyMaterial( Structure ):
 	
 	### This helper functions enumerates all occupied texture slots
 	def get_material_image_texslots( self, material ):
+	
 		# blender utility func.
 		if material:
 			return [s for s in material.texture_slots if s and s.texture.type == 'IMAGE' and s.texture.image]
