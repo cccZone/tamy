@@ -100,7 +100,7 @@ void PointLight::render( Renderer& renderer, const LightingRenderData& data )
       activeCamera.getViewMtx().transform( globalMtx.position(), lightOriginViewSpace );
 
       Vector halfPixel;
-      LightUtils::calculateHalfPixel( renderer, data.m_depthNormalsTex, halfPixel );
+      LightUtils::calculateHalfPixel( renderer, data.m_depthTex, halfPixel );
 
       psComm->setVec4( "g_halfPixel", halfPixel );
       psComm->setVec4( "g_lightOriginVS", lightOriginViewSpace );
@@ -110,8 +110,10 @@ void PointLight::render( Renderer& renderer, const LightingRenderData& data )
       psComm->setFloat( "g_radius", m_radius );
       psComm->setFloat( "g_farZ", activeCamera.getFarClippingPlane() );
       psComm->setMtx( "g_mtxProjToView", mtxInvProj );
-      psComm->setTexture( "g_DepthNormals", *data.m_depthNormalsTex );
-      psComm->setTexture( "g_SceneColor", *data.m_sceneColorTex );
+      psComm->setTexture( "g_Depth", data.m_depthTex );
+      psComm->setTexture( "g_Normals", data.m_normalsTex );
+      psComm->setTexture( "g_Specular", data.m_specularTex );
+      psComm->setTexture( "g_SceneColor", data.m_sceneColorTex );
    }
 
    // set and configure the vertex shader

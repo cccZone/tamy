@@ -1,3 +1,5 @@
+/// @file   core/Subject.h
+/// @brief Subject-Observer pattern
 #pragma once
 
 #include <vector>
@@ -15,20 +17,34 @@ template<typename SubjectType, typename MessageEnum>
 class Subject
 {
 private:
-   std::vector<Observer<SubjectType, MessageEnum>*> m_observers;
+   std::vector<Observer< SubjectType, MessageEnum>* > m_observers;
 
 public:
    virtual ~Subject() {}
 
-   void attachObserver(Observer<SubjectType, MessageEnum>& observer)
+   /**
+    * Attaches a new observer.
+    *
+    * @param observer
+    * @param sendInitialUpdate   should the initial update be sent?
+    */
+   void attachObserver( Observer< SubjectType, MessageEnum >& observer, bool sendInitialUpdate = true )
    {
       m_observers.push_back(&observer);
 
-      SubjectType& castSubject = static_cast< SubjectType& >( *this );
-      observer.update( castSubject );
+      if ( sendInitialUpdate )
+      {
+         SubjectType& castSubject = static_cast< SubjectType& >( *this );
+         observer.update( castSubject );
+      }
    }
 
-   void detachObserver(Observer<SubjectType, MessageEnum>& observer)
+   /**
+    * Detaches the observer.
+    *
+    * @param observer 
+    */
+   void detachObserver( Observer< SubjectType, MessageEnum >& observer )
    {
       for (typename std::vector<Observer<SubjectType, MessageEnum>*>::iterator it = m_observers.begin();
            it != m_observers.end(); ++it)

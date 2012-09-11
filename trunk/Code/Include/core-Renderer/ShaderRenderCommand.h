@@ -43,7 +43,7 @@ public:
    void setMtx( const IDString& paramName, const Matrix& val );
    void setMtx( const IDString& paramName, const Matrix* arr, unsigned int size );
    void setString( const IDString& paramName, const std::string& val );
-   void setTexture( const IDString& paramName, ShaderTexture& val );
+   void setTexture( const IDString& paramName, ShaderTexture* val );
    void setVec4( const IDString& paramName, const Vector& val );
    void setVec4( const IDString& paramName, const Vector* arr, unsigned int size );
 

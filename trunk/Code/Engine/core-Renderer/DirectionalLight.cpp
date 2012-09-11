@@ -103,7 +103,7 @@ void DirectionalLight::render( Renderer& renderer, const LightingRenderData& dat
 
 void DirectionalLight::renderLighting( Renderer& renderer, const LightingRenderData& data, bool drawShadows )
 {
-   if ( !data.m_depthNormalsTex || !data.m_sceneColorTex )
+   if ( !data.m_sceneColorTex )
    {
       return;
    }
@@ -117,7 +117,7 @@ void DirectionalLight::renderLighting( Renderer& renderer, const LightingRenderD
       const Matrix& globalMtx = getGlobalMtx();
       
       Vector halfPixel;
-      LightUtils::calculateHalfPixel( renderer, data.m_depthNormalsTex, halfPixel );
+      LightUtils::calculateHalfPixel( renderer, data.m_depthTex, halfPixel );
 
       Camera& activeCamera = renderer.getActiveCamera();
       Vector lightDirVS;
@@ -127,13 +127,15 @@ void DirectionalLight::renderLighting( Renderer& renderer, const LightingRenderD
       psComm->setVec4( "g_lightColor", (const Vector&)m_color );
       psComm->setFloat( "g_strength", m_strength );
 
-      psComm->setTexture( "g_DepthNormals", *data.m_depthNormalsTex );
-      psComm->setTexture( "g_SceneColor", *data.m_sceneColorTex );
+      psComm->setTexture( "g_Depth", data.m_depthTex );
+      psComm->setTexture( "g_Normals", data.m_normalsTex );
+      psComm->setTexture( "g_Speculars", data.m_specularTex );
+      psComm->setTexture( "g_SceneColor", data.m_sceneColorTex );
 
       psComm->setBool( "g_drawShadows", drawShadows );
       if ( data.m_screenSpaceShadowMap )
       {
-         psComm->setTexture( "g_ShadowMap", *data.m_screenSpaceShadowMap );
+         psComm->setTexture( "g_ShadowMap", data.m_screenSpaceShadowMap );
       }
    }
 
@@ -709,7 +711,7 @@ void DirectionalLight::combineCascades( Renderer& renderer, const LightingRender
          float texelDimension = 1.0f / cascadeDimensions;
          float cascadeScale = cascadeDimensions / shadowMapDimension;
          psComm->setFloat( "g_texelDimension", texelDimension );
-         psComm->setTexture( "g_shadowDepthMap", *data.m_shadowDepthTexture );
+         psComm->setTexture( "g_shadowDepthMap", data.m_shadowDepthTexture );
          psComm->setFloat( "g_cascadeScale", cascadeScale );
          psComm->setFloat( "g_cascadeDepthRanges", depthRanges, NUM_CASCADES + 1 );
          psComm->setVec4( "g_cascadeOffsets", viewportOffsets, NUM_CASCADES  );

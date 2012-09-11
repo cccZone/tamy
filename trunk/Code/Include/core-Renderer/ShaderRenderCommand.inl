@@ -107,14 +107,17 @@ void ShaderRenderCommand< T >::setString( const IDString& paramName, const std::
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void ShaderRenderCommand< T >::setTexture( const IDString& paramName, ShaderTexture& val )
+void ShaderRenderCommand< T >::setTexture( const IDString& paramName, ShaderTexture* val )
 {
    // we're using the good old Visitor pattern here to get around that we can't 
    // have template virtual methods - so we'll make our resources introduce
    // themselves to the ShaderTexture by calling a proper method on it,
    // and it will be the shader texture's responsibility to instantiate
    // a proper param setter.
-   m_shaderParams.push_back( T::createTextureSetter( m_allocator, paramName, val ) );
+   if ( val )
+   {
+      m_shaderParams.push_back( T::createTextureSetter( m_allocator, paramName, *val ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

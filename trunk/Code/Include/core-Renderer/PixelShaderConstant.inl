@@ -119,7 +119,7 @@ void PSCTexture< TNode >::setValue( RCBindPixelShader& comm, const GBNodeInput< 
    ShaderTexture* val = castInput.getValue( data );
    if ( val )
    {
-      comm.setTexture( getName(), *val );
+      comm.setTexture( getName(), val );
    }
 }
 

@@ -27,8 +27,14 @@ RPDeferredLightingNode::RPDeferredLightingNode()
    , m_shadowDepthSurfaceId( "ShadowDepthSurface" )
    , m_screenSpaceShadowMapId( "SS_ShadowMap" )
 {
-   m_depthNormalsInput = new RPTextureInput( "DepthNormals" );
-   defineInput( m_depthNormalsInput );
+   m_normalsInput = new RPTextureInput( "Normals" );
+   defineInput( m_normalsInput );
+
+   m_specularInput = new RPTextureInput( "Specular" );
+   defineInput( m_specularInput );
+
+   m_depthInput = new RPTextureInput( "Depth" );
+   defineInput( m_depthInput );
    
    m_sceneColorInput = new RPTextureInput( "SceneColor" );
    defineInput( m_sceneColorInput );
@@ -52,7 +58,9 @@ RPDeferredLightingNode::RPDeferredLightingNode()
 
 RPDeferredLightingNode::~RPDeferredLightingNode()
 {
-   m_depthNormalsInput = NULL;
+   m_normalsInput = NULL;
+   m_specularInput = NULL;
+   m_depthInput = NULL;
    m_sceneColorInput = NULL;
 
    m_finalLightColorTargetOutput = NULL;
@@ -67,14 +75,18 @@ void RPDeferredLightingNode::onObjectLoaded()
    __super::onObjectLoaded();
 
    // find input socket
-   delete m_depthNormalsInput;
+   delete m_normalsInput;
+   delete m_specularInput;
+   delete m_depthInput;
    delete m_sceneColorInput;
    delete m_finalLightColorTargetOutput;
    delete m_shadowDepthTextureOutput;
    delete m_screenSpaceShadowMapOutput;
 
 
-   m_depthNormalsInput = DynamicCast< RPTextureInput >( findInput( "DepthNormals" ) );
+   m_normalsInput = DynamicCast< RPTextureInput >( findInput( "Normals" ) );
+   m_specularInput = DynamicCast< RPTextureInput >( findInput( "Specular" ) );
+   m_depthInput = DynamicCast< RPTextureInput >( findInput( "Depth" ) );
    m_sceneColorInput = DynamicCast< RPTextureInput >( findInput( "SceneColor" ) );
 
    m_finalLightColorTargetOutput = DynamicCast< RPTextureOutput >( findOutput( m_finalLightColorTargetId ) );
@@ -140,40 +152,40 @@ void RPDeferredLightingNode::onDestroyLayout( RenderingPipelineMechanism& host )
 
 void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-   if ( !m_depthNormalsInput || !m_sceneColorInput )
-   {
-      return;
-   }
-
+  
    RuntimeDataBuffer& data = host.data();
 
-   ShaderTexture* depthNormalsTex = m_depthNormalsInput->getValue( data );
-   ShaderTexture* sceneColorTex = m_sceneColorInput->getValue( data );
-   if ( !depthNormalsTex || !sceneColorTex )
+   LightingRenderData renderingData;
+   memset( &renderingData, 0, sizeof( LightingRenderData ) );
+
+   if ( m_depthInput )
    {
-      // no scene - no rendering
-      return;
+      renderingData.m_depthTex = m_depthInput->getValue( data );
    }
 
+   if ( m_normalsInput )
+   {
+      renderingData.m_normalsTex = m_normalsInput->getValue( data );
+   }
+
+   if ( m_specularInput )
+   {
+      renderingData.m_specularTex = m_specularInput->getValue( data );
+   }
+
+   if ( m_sceneColorInput )
+   {
+      renderingData.m_sceneColorTex = m_sceneColorInput->getValue( data );
+   }
 
    Renderer& renderer = host.getRenderer();
 
-   // get the render targets used to render the shadow
-   RenderTarget* shadowDepthTexture = data[ m_shadowDepthTexture ];
-   DepthBuffer* shadowDepthSurface = data[ m_shadowDepthSurface ];
-   RenderTarget* screenSpaceShadowMap = data[ m_screenSpaceShadowMap ];
-   RenderTarget* finalLightColorTarget = data[ m_finalLightColorTarget ];
-
-
-   LightingRenderData renderingData;
    renderingData.m_renderingView = host.getSceneRenderingView();
    renderingData.m_geometryToRender = &host.getSceneElements();
-   renderingData.m_shadowDepthTexture = shadowDepthTexture;
-   renderingData.m_shadowDepthSurface = shadowDepthSurface;
-   renderingData.m_screenSpaceShadowMap = screenSpaceShadowMap;
-   renderingData.m_depthNormalsTex = depthNormalsTex;
-   renderingData.m_sceneColorTex = sceneColorTex;
-   renderingData.m_finalLightColorTarget = finalLightColorTarget;
+   renderingData.m_shadowDepthTexture = data[ m_shadowDepthTexture ];
+   renderingData.m_shadowDepthSurface = data[ m_shadowDepthSurface ];
+   renderingData.m_screenSpaceShadowMap = data[ m_screenSpaceShadowMap ];
+   renderingData.m_finalLightColorTarget = data[ m_finalLightColorTarget ];
 
 
    // render light volumes
@@ -187,9 +199,9 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    }
 
    // set the outputs
-   m_shadowDepthTextureOutput->setValue( data, shadowDepthTexture );
-   m_screenSpaceShadowMapOutput->setValue( data, screenSpaceShadowMap );
-   m_finalLightColorTargetOutput->setValue( data, finalLightColorTarget );
+   m_shadowDepthTextureOutput->setValue( data, renderingData.m_shadowDepthTexture );
+   m_screenSpaceShadowMapOutput->setValue( data, renderingData.m_screenSpaceShadowMap );
+   m_finalLightColorTargetOutput->setValue( data, renderingData.m_finalLightColorTarget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

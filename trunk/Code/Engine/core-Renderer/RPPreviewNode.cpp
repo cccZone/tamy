@@ -80,7 +80,7 @@ void RPPreviewNode::onUpdate( RenderingPipelineMechanism& host ) const
    {
       comm->setInt( "g_mode", (int)m_type );
       comm->setInt( "g_farZ", activeCam.getFarClippingPlane() );
-      comm->setTexture( "g_Texture", *texture );
+      comm->setTexture( "g_Texture", texture );
    }
 
    // determine the quad size ( take any of the defined render targets, since

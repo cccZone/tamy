@@ -58,14 +58,7 @@ void TPipelineBlock< TNode, TBaseNode >::onObjectLoaded()
    __super::onObjectLoaded();
 
    m_nodePtr = static_cast< TNode* >( getNode() );
-   m_nodePtr->attachObserver( *this );
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename TNode, typename TBaseNode >
-void TPipelineBlock< TNode, TBaseNode >::update( TBaseNode& node )
-{
    // don't do the initial update - just go with all the sockets you have.
    // If we refresh the sockets in here ( and this method will be called in response
    // to attaching an observer only, which in turn is called only during an object load
@@ -73,6 +66,16 @@ void TPipelineBlock< TNode, TBaseNode >::update( TBaseNode& node )
    //
    // That's why we're just going with the stored block's look, and if you necessarily
    // need to make a pos-load update, execute it from the Layout's onResourceLoaded
+   m_nodePtr->attachObserver( *this, false );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename TNode, typename TBaseNode >
+void TPipelineBlock< TNode, TBaseNode >::update( TBaseNode& node )
+{
+   refreshInputs( node );
+   refreshOutputs( node );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

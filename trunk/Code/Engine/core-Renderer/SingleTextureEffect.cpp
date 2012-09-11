@@ -75,7 +75,7 @@ void SingleTextureEffect::onPreRender( Renderer& renderer ) const
    if ( m_texture != NULL )
    {
       m_renderableTexture->setTexture( m_texture );
-      comm->setTexture( "g_MeshTexture", *m_renderableTexture );
+      comm->setTexture( "g_MeshTexture", m_renderableTexture );
    }
 
    comm->setTechnique( "singleTextureRenderer" );
