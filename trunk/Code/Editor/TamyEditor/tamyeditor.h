@@ -23,6 +23,7 @@ class MainEditorPanel;
 class ResourcesBrowser;
 class Project;
 class ProfilerFrame;
+class QProgressBar;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -62,6 +63,9 @@ private:
 
    // profiler view
    ProfilerFrame*                   m_activeProfilerView;
+
+   // status bar widgets
+   QProgressBar*                    m_progressBar;
 
 public:
    ~TamyEditor();
@@ -125,6 +129,11 @@ public:
     * @return           toolbar instance
     */
    QToolBar& getToolBar();
+
+   /**
+    * Returns a pointer to the progress bar located in the status panel.
+    */
+   QProgressBar* getProgressBar() { return m_progressBar; }
 
    /**
     * Returns editor related settings.

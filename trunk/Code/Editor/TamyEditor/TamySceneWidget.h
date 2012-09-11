@@ -63,7 +63,6 @@ private:
    // debug renderer
    EditorDebugRenderer*                               m_debugRenderer;
    DebugEntitiesManager*                              m_debugEntitiesManager;
-   QueryRenderingPass*                                m_queryDebugRenderer;
 
    // a gizmo that will be displayed when a scene object that can be manipulated gets selected
    Gizmo::Mode                                        m_gizmoMode;

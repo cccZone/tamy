@@ -99,7 +99,7 @@ void ProjectEditor::onDeploy()
    if ( deploymentInfo.isOk() )
    {
       // create a progress dialog that will track the deployment process
-      ProgressDialog* progressDialog = new ProgressDialog( this );
+      ProgressDialog* progressDialog = new ProgressDialog();
         
       // deploy the game
       gameRunner = GameDeploymentUtil::deployGame( deploymentInfo, progressDialog );

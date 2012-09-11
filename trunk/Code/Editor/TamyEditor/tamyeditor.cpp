@@ -14,6 +14,7 @@
 #include <QFrame>
 #include <QVBoxLayout>
 #include <QPalette>
+#include <QProgressBar>
 #include "ResourcesBrowser.h"
 #include "MainEditorPanel.h"
 #include "UISerializationUtil.h"
@@ -133,6 +134,17 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
       QAction* startProfilerAction = new QAction( "Profiler", ui.menuView );
       connect( startProfilerAction, SIGNAL( triggered() ), this, SLOT( startProfiler() ) );
       ui.menuView->addAction( startProfilerAction );
+   }
+
+   // setup the status bar
+   {
+      m_progressBar = new QProgressBar( ui.statusBar );
+      m_progressBar->setMaximum(0);
+      m_progressBar->setMinimum(0);
+      m_progressBar->setValue(0);
+      m_progressBar->setMaximumSize( 100, 10 );
+
+      ui.statusBar->addWidget( m_progressBar );
    }
 }
 

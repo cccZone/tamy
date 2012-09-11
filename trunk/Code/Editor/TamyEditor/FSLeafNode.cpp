@@ -58,8 +58,8 @@ void FSLeafNode::setEntryIcon( const Filesystem& fs, TreeWidgetDescFactory& item
    if ( resourceType )
    {
       // as the first shot, try creating an icon corresponding to the type of the resource
-      QString typeName;
-      itemsFactory.getDesc( *resourceType, typeName, icon );
+      QString typeName, groupName;
+      itemsFactory.getDesc( *resourceType, typeName, groupName, icon );
    }
 
    if ( icon.isNull() )

@@ -27,26 +27,27 @@ unsigned int DirectoriesFactoryWrapper::typesCount() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectoriesFactoryWrapper::getDesc( unsigned int idx, QString& outDesc, QIcon& outIcon ) const
+void DirectoriesFactoryWrapper::getDesc( unsigned int idx, QString& outDesc, QString& outGroup, QIcon& outIcon ) const
 {
    if ( idx == 0 )
    {
       // a directory
       outDesc = "Directory";
+      outGroup = "";
       outIcon = QIcon( m_iconsDir + "dirIcon.png" );
    }
    else
    {
       // a resource
-      m_wrappedFactory->getDesc( idx - 1, outDesc, outIcon );
+      m_wrappedFactory->getDesc( idx - 1, outDesc, outGroup, outIcon );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DirectoriesFactoryWrapper::getDesc( const SerializableReflectionType& type, QString& outDesc, QIcon& outIcon ) const
+void DirectoriesFactoryWrapper::getDesc( const SerializableReflectionType& type, QString& outDesc, QString& outGroup, QIcon& outIcon ) const
 {
-   m_wrappedFactory->getDesc( type, outDesc, outIcon );
+   m_wrappedFactory->getDesc( type, outDesc, outGroup, outIcon );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

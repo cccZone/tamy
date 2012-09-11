@@ -52,13 +52,46 @@ void TreeWidget::showPopupMenu( const QPoint& pos )
          QMenu* addMenu = popupMenu->addMenu( "Add" );
 
          QString  desc;
+         QString  group;
          QIcon    icon;
+
+         typedef std::map< QString, QMenu* > GroupMenusMap;
+         GroupMenusMap   groups;
+
          unsigned int factoriesCount = itemsFactory->typesCount();
          for ( unsigned int i = 0; i < factoriesCount; ++i )
          {
-            itemsFactory->getDesc( i, desc, icon );
+            itemsFactory->getDesc( i, desc, group, icon );
+
+            // find a proper group for this item ( or create a new one )
+            QMenu* groupMenu = NULL;
+            if ( group.isEmpty() )
+            {
+               // if no group name was specified, simply aggregate the entries in the Add submenu
+               groupMenu = addMenu;
+            }
+            else
+            {
+               GroupMenusMap::iterator groupIt = groups.find( group );
+               if ( groupIt != groups.end() )
+               {
+                  groupMenu = groupIt->second;
+               }
+               else
+               {
+                  groupMenu = new QMenu( group, addMenu );
+                  groups.insert( std::make_pair( group, groupMenu ) );
+               }
+            }
+
             QAction* addAction = new NodeCreationAction( icon, desc, i, this );
-            addMenu->addAction( addAction );
+            groupMenu->addAction( addAction );
+         }
+
+         // now add all the groups to the menu in alphabetical order
+         for ( GroupMenusMap::iterator it = groups.begin(); it != groups.end(); ++it )
+         {
+            addMenu->addMenu( it->second );
          }
       }
 

@@ -33,7 +33,6 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
    , m_queryRenderer( new QueryRenderingPass() )
    , m_debugRenderer( new EditorDebugRenderer() )
    , m_debugEntitiesManager( new DebugEntitiesManager( *m_debugRenderer ) )
-   , m_queryDebugRenderer( new QueryRenderingPass() )
    , m_resMgr( NULL )
    , m_gizmoMode( Gizmo::GM_TRANSLATION )
    , m_gizmo( NULL )
@@ -72,7 +71,7 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
    m_camera->accessLocalMtx().setTranslation( Vector( 0, 5, 0 ) );
 
    // attach the dedicated  query renderer to the the debug scene
-   m_debugRenderer->attachSceneView( *m_queryDebugRenderer );
+   m_debugRenderer->attachSceneView( *m_queryRenderer );
 
    // create and setup the time controller
    m_localTimeController = new TimeController( timeController );
@@ -112,12 +111,10 @@ TamySceneWidget::~TamySceneWidget()
       delete m_debugEntitiesManager;
       m_debugEntitiesManager = NULL;
 
-      m_debugRenderer->detachSceneView( *m_queryDebugRenderer );
-      delete m_queryDebugRenderer;
-      m_queryDebugRenderer = NULL;
-
       delete m_selectionRenderer;
       m_selectionRenderer = NULL;
+
+      m_debugRenderer->detachSceneView( *m_queryRenderer );
 
       delete m_queryRenderer;
       m_queryRenderer = NULL;
@@ -197,7 +194,6 @@ void TamySceneWidget::initialize()
       m_renderingMech->add( "debugRenderer", m_debugRenderer, false );
       m_renderingMech->add( "selectionRenderer", m_selectionRenderer, false );
       m_renderingMech->add( "queryRenderer", m_queryRenderer, false );
-      m_renderingMech->add( "queryDebugRenderer", m_queryDebugRenderer, false );
    }
    catch ( std::exception& ex)
    {
@@ -578,7 +574,6 @@ void TamySceneWidget::onEntityDeselected( Entity& entity )
 
 void TamySceneWidget::queryScene( SceneQuery& query ) const
 {
-   m_queryDebugRenderer->query( query );
    m_queryRenderer->query( query );
 }
 
@@ -586,7 +581,6 @@ void TamySceneWidget::queryScene( SceneQuery& query ) const
 
 void TamySceneWidget::toggleDebugMode()
 {
-   m_queryDebugRenderer->toggleDebugMode();
    m_queryRenderer->toggleDebugMode();
 }
 

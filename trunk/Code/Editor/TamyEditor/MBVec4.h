@@ -28,16 +28,6 @@ public:
     * @param node    represented node
     */
    MBVec4( MNVec4& node );
-
-protected:
-   // -------------------------------------------------------------------------
-   // GraphBlock implementation
-   // -------------------------------------------------------------------------
-   /**
-    * Returns the shape of the block.
-    */
-   virtual Shape getShape() const { return GBS_ROUNDED; }
-   virtual QColor getBgColor() const { return QColor( 141, 136, 167 ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

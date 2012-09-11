@@ -28,16 +28,6 @@ public:
     * @param node    represented node
     */
    RPBFloats2Vec4( RPFloats2Vec4Node& node );
-
-protected:
-   // -------------------------------------------------------------------------
-   // GraphBlock implementation
-   // -------------------------------------------------------------------------
-   /**
-    * Returns the shape of the block.
-    */
-   virtual Shape getShape() const { return GBS_CIRCLE; }
-   virtual QColor getBgColor() const { return QColor( 221, 200, 255 ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

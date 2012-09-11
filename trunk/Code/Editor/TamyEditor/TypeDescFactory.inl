@@ -3,7 +3,9 @@
 #else
 
 #include "core\Filesystem.h"
+#include "tamyeditor.h"
 #include <QIcon.h>
+#include <QSettings>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -48,16 +50,16 @@ unsigned int TypeDescFactory< T >::typesCount() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TypeDescFactory< T >::getDesc( unsigned int idx,  QString& outDesc, QIcon& outIcon ) const
+void TypeDescFactory< T >::getDesc( unsigned int idx,  QString& outDesc, QString& outGroup, QIcon& outIcon ) const
 {
    const SerializableReflectionType& type = *m_classes[ idx ];
-   getDesc( type, outDesc, outIcon );
+   getDesc( type, outDesc, outGroup, outIcon );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-void TypeDescFactory< T >::getDesc( const SerializableReflectionType& type, QString& outDesc, QIcon& outIcon ) const
+void TypeDescFactory< T >::getDesc( const SerializableReflectionType& type, QString& outDesc, QString& outGroup, QIcon& outIcon ) const
 {
    // get the name of the type
    outDesc = type.m_name.c_str();
@@ -94,6 +96,16 @@ void TypeDescFactory< T >::getDesc( const SerializableReflectionType& type, QStr
    else
    {
       outIcon = QIcon( m_iconsDir + m_defaultIcon );
+   }
+
+   // find the group for this type - these are stored in the Settings.ini
+   {
+      QSettings& edSettings = TamyEditor::getInstance().getSettings();
+      edSettings.beginGroup( "TypeGroups" );
+
+      outGroup = edSettings.value( outDesc ).toString();
+
+      edSettings.endGroup();
    }
 }
 

@@ -3,6 +3,10 @@
 #else
 
 #include "PipelineBlock.h"
+#include <QBrush>
+#include <QImage>
+#include "core/ResourcesManager.h"
+#include "core/Filesystem.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,6 +16,11 @@ PipelineLayout< TPipeline, TNode >::PipelineLayout( const FilePath& resourceName
    : Resource( resourceName )
    , m_pipeline( NULL )
 {
+   const std::string& rootDir = ResourcesManager::getInstance().getFilesystem().getCurrRoot();
+   std::string imagePath = rootDir + "Editor/Icons/pipelineEditorBackground.png";
+   QImage image( imagePath.c_str() );
+   QBrush bgImageBrush( image );
+   setBackgroundBrush( bgImageBrush );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

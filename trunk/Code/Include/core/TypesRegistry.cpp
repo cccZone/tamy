@@ -17,7 +17,7 @@ REGISTER_EXTERNAL_TYPE( Color );
 ///////////////////////////////////////////////////////////////////////////////
 
 REGISTER_EXTERNAL_TYPE( FilePath );
-REGISTER_TYPE( Resource );
+REGISTER_ABSTRACT_TYPE( Resource );
 REGISTER_TYPE( ResourceHandle );
 REGISTER_TYPE( ResourceObject );
 
