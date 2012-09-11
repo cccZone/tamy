@@ -98,6 +98,10 @@
 #include "core-Renderer\Skeleton.h"
 #include "core-Renderer\VertexShader.h"
 #include "core-Renderer\FragmentShader.h"
+// ----------------------------------------------------------------------------
+// -->Utilities
+// ----------------------------------------------------------------------------
+#include "core-Renderer\MeshUtils.h"
 
 // ----------------------------------------------------------------------------
 // Initialization
@@ -170,6 +174,7 @@
 // ---->Nodes
 // ----------------------------------------------------------------------------
 #include "core-Renderer/RPAdapterNode.h"
+#include "core-Renderer/RPPreviewNode.h"
 #include "core-Renderer/RPSceneRenderNode.h"
 #include "core-Renderer/RPStartNode.h"
 #include "core-Renderer/RPPostProcessNode.h"

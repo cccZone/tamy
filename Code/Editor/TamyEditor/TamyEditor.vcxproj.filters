@@ -530,6 +530,9 @@
     <ClInclude Include="SceneObjectsManipulator.h">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClInclude>
+    <ClInclude Include="RPBPreview.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_progressdialog.cpp">
@@ -1285,6 +1288,9 @@
     </ClCompile>
     <ClCompile Include="SceneObjectsManipulator.cpp">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBPreview.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

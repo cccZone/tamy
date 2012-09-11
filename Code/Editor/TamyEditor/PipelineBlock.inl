@@ -26,7 +26,7 @@ TPipelineBlock< TNode, TBaseNode >::TPipelineBlock( TNode& node )
 template< typename TNode, typename TBaseNode >
 TPipelineBlock< TNode, TBaseNode >::~TPipelineBlock()
 {
-   TNode* nodePtr = dynamic_cast< TNode* >( getNode() );
+   TNode* nodePtr = static_cast< TNode* >( getNode() );
    nodePtr->detachObserver( *this );
 
    delete m_node;
@@ -57,7 +57,7 @@ void TPipelineBlock< TNode, TBaseNode >::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
-   m_nodePtr = dynamic_cast< TNode* >( getNode() );
+   m_nodePtr = static_cast< TNode* >( getNode() );
    m_nodePtr->attachObserver( *this );
 }
 
@@ -66,8 +66,13 @@ void TPipelineBlock< TNode, TBaseNode >::onObjectLoaded()
 template< typename TNode, typename TBaseNode >
 void TPipelineBlock< TNode, TBaseNode >::update( TBaseNode& node )
 {
-   refreshInputs( node );
-   refreshOutputs( node );
+   // don't do the initial update - just go with all the sockets you have.
+   // If we refresh the sockets in here ( and this method will be called in response
+   // to attaching an observer only, which in turn is called only during an object load
+   // and at that point it's absolutely forbidden to delete any objects which those methods may do.
+   //
+   // That's why we're just going with the stored block's look, and if you necessarily
+   // need to make a pos-load update, execute it from the Layout's onResourceLoaded
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,9 +1,6 @@
 #include "ext-MotionControllers\UnconstrainedMotionController.h"
 #include "core\Node.h"
-#include "core\Vector.h"
-#include "core\Matrix.h"
-#include "core\Quaternion.h"
-#include "core\MathDefs.h"
+#include "core\Math.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,6 +30,7 @@ void UnconstrainedMotionController::rotate(float pitch, float yaw, float roll)
 
    if (pitch)
    {
+      pitch = clamp( pitch, -89.0f, 89.0f );
       Quaternion rotQ;
       rotQ.setAxisAngle( rightVec, DEG2RAD( pitch ) );
       
@@ -76,13 +74,31 @@ void UnconstrainedMotionController::rotate( float pitch, float yaw )
    m_controlledNode.getRightVec( rightVec );
    m_controlledNode.getLookVec( lookVec );
 
+   Quaternion currRotationQuat;
+   m_controlledNode.getGlobalMtx().getRotation( currRotationQuat );
+
    if ( pitch )
    {
+      Vector lookVec2D;   
+      lookVec2D.setCross( rightVec, Vector::OY );
+
+      float currPitch = 0.0f;
+      {
+         float currPitchDot = lookVec2D.dot( lookVec );
+         currPitchDot = clamp( currPitchDot, -1.0f, 1.0f );
+         float currPitchSign = lookVec.dot( Vector::OY ) > 0 ? -1.0f : 1.0f;
+
+         currPitch = RAD2DEG( currPitchSign * acos( currPitchDot ) );
+      }
+
+      float newPitch = currPitch + pitch;
+      newPitch = clamp( newPitch, -89.0f, 89.0f );
+
       Quaternion rotQ;
-      rotQ.setAxisAngle( rightVec, DEG2RAD( pitch ) );
+      rotQ.setAxisAngle( rightVec, DEG2RAD( newPitch ) );
 
       Vector tmpVec;
-      rotQ.transform( lookVec, tmpVec ); lookVec = tmpVec;
+      rotQ.transform( lookVec2D, lookVec );
    }
 
    if ( yaw )

@@ -28,6 +28,7 @@ struct TamyMaterial
    Color          specularColor;
 
    int            normalTextureIndex;
+   int            specularTextureIndex;
 
    int*           diffuseTexturesIndices;
    int            diffuseTexturesCount;

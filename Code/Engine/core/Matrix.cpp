@@ -587,6 +587,31 @@ void Matrix::getVectors( Vector& outSideVec, Vector& outUpVec, Vector& outForwar
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Matrix::setRows( const Vector& sideVec, const Vector& upVec, const Vector& forwardVec, const Vector& pos )
+{
+   m[0][0] = sideVec.x;
+   m[0][1] = sideVec.y;
+   m[0][2] = sideVec.z;
+   m[0][3] = 0.0f;
+
+   m[1][0] = upVec.x;
+   m[1][1] = upVec.y;
+   m[1][2] = upVec.z;
+   m[1][3] = 0.0f;
+
+   m[2][0] = forwardVec.x;
+   m[2][1] = forwardVec.y;
+   m[2][2] = forwardVec.z;
+   m[2][3] = 0.0f;
+
+   m[3][0] = pos.x;
+   m[3][1] = pos.y;
+   m[3][2] = pos.z;
+   m[3][3] = 1.0f;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Matrix::transform( const Vector& rhs, Vector& outVec ) const
 {
    float inV[] = {rhs.x, rhs.y, rhs.z, 1};

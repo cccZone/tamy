@@ -115,10 +115,14 @@ void DirectionalLight::renderLighting( Renderer& renderer, const LightingRenderD
    RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_lightingShader, renderer );
    {
       const Matrix& globalMtx = getGlobalMtx();
+      
+      Vector halfPixel;
+      LightUtils::calculateHalfPixel( renderer, data.m_depthNormalsTex, halfPixel );
 
       Camera& activeCamera = renderer.getActiveCamera();
       Vector lightDirVS;
       activeCamera.getViewMtx().transformNorm( globalMtx.forwardVec(), lightDirVS );
+      psComm->setVec4( "g_halfPixel", halfPixel );
       psComm->setVec4( "g_lightDirVS", lightDirVS );
       psComm->setVec4( "g_lightColor", (const Vector&)m_color );
       psComm->setFloat( "g_strength", m_strength );

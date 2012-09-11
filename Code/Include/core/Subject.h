@@ -23,7 +23,9 @@ public:
    void attachObserver(Observer<SubjectType, MessageEnum>& observer)
    {
       m_observers.push_back(&observer);
-      observer.update(dynamic_cast<SubjectType&> (*this));
+
+      SubjectType& castSubject = static_cast< SubjectType& >( *this );
+      observer.update( castSubject );
    }
 
    void detachObserver(Observer<SubjectType, MessageEnum>& observer)

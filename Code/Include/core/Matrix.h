@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "core/types.h"
+#include "core/Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -249,6 +250,26 @@ struct Matrix
    void setPosition( const Vector& pos );
 
    /**
+    * Returns the coordinate system axes and the position vector.
+    *
+    * @param outSideVec
+    * @param outUpVec
+    * @param outForwardVec
+    * @param outPos
+    */
+   void getVectors( Vector& outSideVec, Vector& outUpVec, Vector& outForwardVec, Vector& outPos ) const;
+
+   /**
+    * Composes the matrix from the specified row vectors
+    *
+    * @param sideVec
+    * @param upVec
+    * @param forwardVec
+    * @param pos
+    */
+   void setRows( const Vector& sideVec, const Vector& upVec, const Vector& forwardVec, const Vector& pos = Vector::OW );
+
+   /**
     * Returns the scale the matrix describes.
     *
     * @param outScaleVec
@@ -269,15 +290,6 @@ struct Matrix
     */
    void scale( const Vector& scaleVec );
 
-   /**
-    * Returns the coordinate system axes and the position vector.
-    *
-    * @param outSideVec
-    * @param outUpVec
-    * @param outForwardVec
-    * @param outPos
-    */
-   void getVectors( Vector& outSideVec, Vector& outUpVec, Vector& outForwardVec, Vector& outPos ) const;
 
    /**
     * Transforms the specified vector.
