@@ -2,7 +2,6 @@
 #include "QReflectionPropertyEditorComposite.h"
 #include "core/ReflectionObject.h"
 #include <QVBoxLayout>
-#include <QtGui\QSpacerItem>
 #include <QLabel>
 
 
@@ -12,8 +11,9 @@ QReflectionObjectEditor::QReflectionObjectEditor( ReflectionObject* editedObject
    : ReflectionObjectEditor( editedObject )
 {
    m_layout = new QVBoxLayout( this );
+   m_layout->setAlignment( Qt::AlignTop );
    m_layout->setSpacing(0);
-   m_layout->setMargin(0);
+   m_layout->setMargin(1);
 
    setFrameStyle( QFrame::StyledPanel );
 
@@ -29,8 +29,6 @@ QReflectionObjectEditor::QReflectionObjectEditor( ReflectionObject* editedObject
       m_layout->addWidget(label);
    }
 
-   m_spacer = new QSpacerItem( 20, 20, QSizePolicy::Fixed, QSizePolicy::Expanding );
-   m_layout->addSpacerItem( m_spacer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,13 +61,8 @@ void QReflectionObjectEditor::deinitialize( ReflectionPropertyEditorComposite* p
 
 void QReflectionObjectEditor::addPropertyEditor( QWidget* editorWidget )
 {
-   m_layout->removeItem( m_spacer );
-
    editorWidget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
    m_layout->addWidget(editorWidget);
-
-   m_layout->addSpacerItem( m_spacer );
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////

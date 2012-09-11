@@ -10,10 +10,10 @@
 QPropertyEditor::QPropertyEditor( const QString& propertyLabel )
 {
    m_layout = new QVBoxLayout( this );
-   m_layout->setSpacing(0);
-   m_layout->setMargin(0);
+   m_layout->setAlignment( Qt::AlignTop );
+   m_layout->setSpacing(1);
+   m_layout->setMargin(2);
 
-   setFrameStyle( QFrame::StyledPanel );
 
    if( propertyLabel.isEmpty() == false )
    {
@@ -24,9 +24,6 @@ QPropertyEditor::QPropertyEditor( const QString& propertyLabel )
       label->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
       m_layout->addWidget( label );
    }
-
-   m_spacer = new QSpacerItem( 20, 20, QSizePolicy::Fixed, QSizePolicy::Expanding );
-   m_layout->addSpacerItem( m_spacer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -56,12 +53,8 @@ void QPropertyEditor::deinitialize( ReflectionObjectEditor* parent )
 
 void QPropertyEditor::addWidget( QWidget* widget )
 {
-   m_layout->removeItem( m_spacer );
-
    widget->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
    m_layout->addWidget(widget);
-
-   m_layout->addSpacerItem( m_spacer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -2,6 +2,7 @@
 /// @brief     a graphical representation of a graph node
 #pragma once
 
+#include <QGraphicsProxyWidget>
 #include <QGraphicsItem>
 #include <QColor>
 #include <QRectF>
@@ -48,13 +49,12 @@ private:
    QPointF                             m_position;
    QRectF                              m_bounds;
    QRectF                              m_captionBounds;
-   QRectF                              m_textBounds;
    QRectF                              m_totalBounds;
 
    QFont                               m_font;
 
-   // TODO: ue QGraphics proxy widget to draw this
-   QWidget*                            m_centralWidget;
+   QGraphicsProxyWidget*               m_centralWidget;
+   QWidget*                            m_embeddedWidget;
 
 public:
    /**
@@ -69,6 +69,13 @@ public:
     * @param caption
     */
    void setCaption( const char* caption );
+
+   /**
+    * Sets a widget in the center of the block.
+    *
+    * @param widget
+    */
+   void setCentralWidget( QWidget* widget );
 
    /**
     * Checks if the block overlaps the specified position.

@@ -94,4 +94,4 @@ void assemble_scene( const char* sceneName )
 
 // INNE ELEMENTY SCENY
 // 1. swiatla (done )
-// 2. ustawienia point light'a
+// 2. ustawienia point light'a ( done )

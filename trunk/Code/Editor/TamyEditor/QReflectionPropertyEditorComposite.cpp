@@ -14,10 +14,10 @@ QReflectionPropertyEditorComposite::QReflectionPropertyEditorComposite( Reflecti
 : ReflectionPropertyEditorComposite( property )
 {
    QVBoxLayout* layout = new QVBoxLayout( this );
-   layout->setSpacing(0);
-   layout->setMargin(0);
+   layout->setSpacing(1);
+   layout->setMargin(1);
 
-   setFrameStyle( QFrame::StyledPanel );
+   setFrameStyle( QFrame::NoFrame );
 
    QString propertyLabel = property->getName().c_str();
    if (propertyLabel.isEmpty() == false)
@@ -35,7 +35,7 @@ QReflectionPropertyEditorComposite::QReflectionPropertyEditorComposite( Reflecti
    m_toolBox->setStyleSheet( "QToolBox::tab {                                 \
                              background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,                 \
                              stop: 0 #60C7FF, stop: 1.0 #149CE0);                                    \
-                             border-radius: 5px;                                                  \
+                             border-radius: 5px;                                                     \
                              color: black;                                                           \
                              }                                                                       \
                              QToolBox::tab:selected {                                                \

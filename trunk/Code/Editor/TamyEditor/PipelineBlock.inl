@@ -2,6 +2,8 @@
 #error "This file can only be included from PipelineBlock.h"
 #else
 
+#include "QPropertiesView.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,6 +21,11 @@ TPipelineBlock< TNode, TBaseNode >::TPipelineBlock( TNode& node )
    : m_node( NULL )
    , m_nodePtr( &node )
 {
+
+   // set the properties viewer as the central widget
+   QPropertiesView* nodePropertiesRootView = new QPropertiesView();
+   m_nodePtr->viewProperties( *nodePropertiesRootView );
+   setCentralWidget( nodePropertiesRootView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,6 +74,12 @@ void TPipelineBlock< TNode, TBaseNode >::onObjectLoaded()
    // That's why we're just going with the stored block's look, and if you necessarily
    // need to make a pos-load update, execute it from the Layout's onResourceLoaded
    m_nodePtr->attachObserver( *this, false );
+
+
+   // set the properties viewer as the central widget
+   QPropertiesView* nodePropertiesRootView = new QPropertiesView();
+   m_nodePtr->viewProperties( *nodePropertiesRootView );
+   setCentralWidget( nodePropertiesRootView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
