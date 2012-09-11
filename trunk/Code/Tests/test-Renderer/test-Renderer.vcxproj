@@ -102,6 +102,7 @@
     <ClCompile Include="SkeletonTests.cpp" />
     <ClCompile Include="VertexArrayTests.cpp" />
     <ClCompile Include="CameraTests.cpp" />
+    <ClCompile Include="VertexTangentsTests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Engine\core-Renderer\core-Renderer.vcxproj">

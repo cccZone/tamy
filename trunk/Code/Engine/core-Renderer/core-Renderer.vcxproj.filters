@@ -121,6 +121,9 @@
     <Filter Include="Core\ShaderCompiler\NodeOperators">
       <UniqueIdentifier>{3301b1eb-a623-43ed-b42f-ec8403271774}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Geometry\Utilities">
+      <UniqueIdentifier>{cdd5c643-836c-48aa-bacc-4dc66cdc9322}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -381,6 +384,12 @@
     </ClCompile>
     <ClCompile Include="ShaderConstantDesc.cpp">
       <Filter>Core\ShaderCompiler</Filter>
+    </ClCompile>
+    <ClCompile Include="RPPreviewNode.cpp">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshUtils.cpp">
+      <Filter>Geometry\Utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -747,6 +756,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.h">
       <Filter>Core\ShaderCompiler\NodeOperators</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPPreviewNode.h">
+      <Filter>Mechanisms\RenderingPipeline\Nodes\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\MeshUtils.h">
+      <Filter>Geometry\Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

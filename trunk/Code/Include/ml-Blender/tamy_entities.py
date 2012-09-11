@@ -76,6 +76,7 @@ class TamyLight( Structure ):
 				( "type", c_int ),
 				( "lightColor", tamy_misc.TamyColor ),
 				( "energy", c_float ),
+				( "distance", c_float ),
 				( "useSpecular", c_bool ),
 				( "castShadows", c_bool ),
 				( "shadowColor", tamy_misc.TamyColor ),
@@ -96,7 +97,7 @@ class TamyLight( Structure ):
 		self.lightColor = tamy_misc.TamyColor( blenderLight.color[0], blenderLight.color[1], blenderLight.color[2], 1.0 ) 
 		self.energy = blenderLight.energy
 		self.useSpecular = blenderLight.use_specular
-	
+		self.distance = blenderLight.distance
 		
 		lightTypeDict = { 'SUN' : 0, 'POINT' : 1, 'SPOT' : 2, 'HEMI' : 3, 'AREA' : 4 }
 		self.type = lightTypeDict[blenderLight.type]

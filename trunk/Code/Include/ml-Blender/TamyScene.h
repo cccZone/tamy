@@ -35,6 +35,7 @@ struct TamyLight
    
    Color                lightColor;
    float                energy;
+   float                distance;
    bool                 useSpecular;
 
    bool                 castShadows;

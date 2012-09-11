@@ -14,6 +14,7 @@ BEGIN_ENUM( MaterialTextures );
    ENUM_VAL( MT_DIFFUSE_1 );
    ENUM_VAL( MT_DIFFUSE_2 );
    ENUM_VAL( MT_NORMALS );
+   ENUM_VAL( MT_SPECULAR );
 END_ENUM();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,6 +25,7 @@ BEGIN_OBJECT( MaterialEntity );
    PROPERTY_EDIT( "diffuse tex 1", Texture*, m_texture[ MT_DIFFUSE_1 ] );
    PROPERTY_EDIT( "diffuse tex 2", Texture*, m_texture[ MT_DIFFUSE_2 ] );
    PROPERTY_EDIT( "normals tex", Texture*, m_texture[ MT_NORMALS ] );
+   PROPERTY_EDIT( "specular tex", Texture*, m_texture[ MT_SPECULAR ] );
    PROPERTY_EDIT( "surface properties", SurfaceProperties, m_surfaceProperties );
 END_OBJECT();
 

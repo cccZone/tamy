@@ -28,7 +28,7 @@ PointLight::PointLight( const std::string& name )
    : Light( name )
    , m_color(1, 1, 1, 1 )
    , m_attenuation( 1.0f )
-   , m_radius( 1.0f )
+   , m_radius( 100.0f )
    , m_strength( 1.0f )
    , m_pixelShader( NULL )
    , m_vertexShader( NULL )
@@ -99,6 +99,10 @@ void PointLight::render( Renderer& renderer, const LightingRenderData& data )
       Vector lightOriginViewSpace;
       activeCamera.getViewMtx().transform( globalMtx.position(), lightOriginViewSpace );
 
+      Vector halfPixel;
+      LightUtils::calculateHalfPixel( renderer, data.m_depthNormalsTex, halfPixel );
+
+      psComm->setVec4( "g_halfPixel", halfPixel );
       psComm->setVec4( "g_lightOriginVS", lightOriginViewSpace );
       psComm->setVec4( "g_lightColor", ( const Vector& )m_color );
       psComm->setFloat( "g_strength", m_strength );

@@ -25,6 +25,7 @@ enum MaterialTextures
    MT_DIFFUSE_1,
    MT_DIFFUSE_2,
    MT_NORMALS,
+   MT_SPECULAR,
 
    MT_MAX
 };

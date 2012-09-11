@@ -46,7 +46,8 @@ void CameraMovementController::initialize( TamySceneWidget& widget )
 
 void CameraMovementController::update( float timeElapsed )
 {
-   float movementSpeed = 40 * timeElapsed;
+   float speedMul = m_uic->isKeyPressed( VK_SHIFT ) ? 4.0f : 1.0f;
+   float movementSpeed = 10.0f * speedMul * timeElapsed;
    float rotationSpeed = 0.1f * timeElapsed;
 
    // check which keys are pressed

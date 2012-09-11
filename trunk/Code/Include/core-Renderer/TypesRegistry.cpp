@@ -103,6 +103,7 @@ REGISTER_TYPE( RPSceneRenderNode );
 REGISTER_TYPE( RPPostProcessNode );
 REGISTER_TYPE( RPStartNode );
 REGISTER_TYPE( RPAdapterNode );
+REGISTER_TYPE( RPPreviewNode );
 REGISTER_TYPE( RPCameraNode );
 REGISTER_TYPE( RPFloats2Vec4Node );
 REGISTER_TYPE( RPTextureNode );
@@ -127,6 +128,7 @@ REGISTER_TYPE( RPMatrixOutput );
 REGISTER_TYPE( RenderTargetDescriptor );
 REGISTER_TYPE( DepthBufferDescriptor );
 REGISTER_ENUM_TYPE( TextureUsage );
+REGISTER_ENUM_TYPE( PreviewType );
 
 ///////////////////////////////////////////////////////////////////////////////
 

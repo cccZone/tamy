@@ -37,5 +37,8 @@
     <ClCompile Include="DepthEncodingTests.cpp">
       <Filter>Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="VertexTangentsTests.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

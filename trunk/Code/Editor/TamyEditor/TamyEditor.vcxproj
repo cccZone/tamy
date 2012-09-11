@@ -509,6 +509,7 @@
     <ClInclude Include="RPBFloat.h" />
     <ClInclude Include="RPBFloats2Vec4.h" />
     <ClInclude Include="RPBDeferredLighting.h" />
+    <ClInclude Include="RPBPreview.h" />
     <ClInclude Include="RPBTexture.h" />
     <ClInclude Include="RPBVec4.h" />
     <ClInclude Include="SceneObjectsManipulator.h" />
@@ -1376,6 +1377,7 @@
     <ClCompile Include="RPBFloat.cpp" />
     <ClCompile Include="RPBFloats2Vec4.cpp" />
     <ClCompile Include="RPBDeferredLighting.cpp" />
+    <ClCompile Include="RPBPreview.cpp" />
     <ClCompile Include="RPBTexture.cpp" />
     <ClCompile Include="RPBVec4.cpp" />
     <ClCompile Include="SceneObjectsManipulator.cpp" />

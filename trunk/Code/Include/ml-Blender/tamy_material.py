@@ -28,6 +28,7 @@ class TamyMaterial( Structure ):
 				("diffuseColor", tamy_misc.TamyColor),
 				("specularColor", tamy_misc.TamyColor),
 				("normalTextureIndex", c_int),
+				("specularTextureIndex", c_int),
 				("diffuseTexturesIndices", POINTER(c_int)),
 				("diffuseTexturesCount", c_int) ]
 	
@@ -58,10 +59,15 @@ class TamyMaterial( Structure ):
 			# we only want one of each special texture ( i.e. normal, specular and opacity maps )
 			normal = [s for s in slots if s.use_map_normal]
 			if len( normal ) > 0:
-				print( "Normal texture = %s" % normal[0].texture.image.filepath )
 				self.normalTextureIndex = self.get_texture_index( normal[0], texturesDict )
 			else:
 				self.normalTextureIndex = -1
+				
+			specular = [s for s in slots if s.use_map_specular]
+			if len( specular ) > 0:
+				self.specularTextureIndex = self.get_texture_index( specular[0], texturesDict )
+			else:
+				self.specularTextureIndex = -1
 
 			# make sure no textures are lost. Everything that doesn't fit
 			# into a channel is exported as diffuse texture.
@@ -69,7 +75,6 @@ class TamyMaterial( Structure ):
 			diffuseTextureIndices = []
 			for s in slots:
 				if ( s.use_map_color_diffuse ):
-					print( "Color texture = %s" % s.texture.image.filepath )
 					texIdx = self.get_texture_index( s, texturesDict )
 					if texIdx >= 0:
 						diffuseTextureIndices.append( texIdx )

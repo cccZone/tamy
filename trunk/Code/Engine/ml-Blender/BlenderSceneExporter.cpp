@@ -271,6 +271,12 @@ void BlenderSceneExporter::attachMaterialToGeometry( Geometry* geometryEntity, u
          materialEntity->setTexture( MT_NORMALS, normalTexture );
       }
 
+      if ( materialDef.specularTextureIndex >= 0 && materialDef.specularTextureIndex < (int)m_textures.size() )
+      {
+         Texture* specularTexture = m_textures[ materialDef.specularTextureIndex ];
+         materialEntity->setTexture( MT_SPECULAR, specularTexture );
+      }
+
       for ( int i = MT_DIFFUSE_1; i < MT_DIFFUSE_2; ++i )
       {
          int mapIdx = i - MT_DIFFUSE_1;
@@ -350,6 +356,7 @@ SpatialEntity* BlenderSceneExporter::instantiatePointLight( const TamyLight& exp
 
    light->m_color = exportedLightEntity.lightColor;
    light->m_strength = exportedLightEntity.energy;
+   light->m_radius = exportedLightEntity.distance;
 
    return light;
 }
@@ -407,6 +414,7 @@ BlenderSceneExporter::MaterialDefinition::MaterialDefinition( const TamyMaterial
    diffuseColor = rhs.diffuseColor;
    specularColor = rhs.specularColor;
    normalTextureIndex = rhs.normalTextureIndex;
+   specularTextureIndex = rhs.specularTextureIndex;
 
    diffuseTexturesCount = rhs.diffuseTexturesCount;
    if ( diffuseTexturesCount > 0 )
