@@ -31,9 +31,6 @@ MaterialLayout::MaterialLayout( const FilePath& resourceName )
 {
    // create block-to-node associations
    initBlocksFactory();
-
-   // customize the looks
-   setBackgroundBrush( QColor( 209, 226, 165 ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

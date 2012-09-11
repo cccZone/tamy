@@ -223,7 +223,7 @@ void ReflectionSerializationUtil::loadResources( const FilePath& loadPath, std::
    // notify about the serialization progress
    if ( progressObserver )
    {
-      progressObserver->initialize( "Loading resource", outResources.size() );
+      progressObserver->initialize( "Loading resource", resourcesToLoad.size() );
    }
 
 

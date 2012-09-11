@@ -375,10 +375,10 @@ SceneTreeViewer::EntityTreeItem::EntityTreeItem( Entity* entity,
 {
    ASSERT_MSG( entity != NULL, "Entity can't be NULL" );
 
-   QString typeDesc;
+   QString typeDesc, group;
    QIcon icon;
    const SerializableReflectionType& virtType = entity->getVirtualRTTI();
-   itemsFactory.getDesc( virtType, typeDesc, icon );
+   itemsFactory.getDesc( virtType, typeDesc, group, icon );
 
    setText( 0, getEntityName( entity ) );
    setText( 1, typeDesc );

@@ -18,9 +18,30 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QPen GraphBlock::s_textPen( QBrush( QColor( 0, 0, 0 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
-QPen GraphBlock::s_borderPen( QBrush( QColor( 0, 0, 0 ) ), 3.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
-QPen GraphBlock::s_selectionPen( QBrush( QColor( 255, 226, 96 ) ), 3.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+QPen s_textPen( QBrush( QColor( 30, 30, 30 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+QPen s_textShadowPen( QBrush( QColor( 130, 130, 130 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+QPen s_borderPen( QBrush( QColor( 200, 200, 200 ) ), 0.5f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+QPen s_connectionPen( QBrush( QColor( 200, 200, 200 ) ), 2.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
+
+float g_socketWidth = 10.0f;
+float g_socketHeight = 10.0f;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A utility method for drawing a text with shadow behind it.
+ */
+static void drawShadowedText( QPainter* painter, const QRectF& rect, const QString& text, const QTextOption& options )
+{
+   painter->setPen( s_textShadowPen );
+   QRectF textShadowRect = rect;
+   textShadowRect.setLeft( textShadowRect.left() + 1.0f );
+   textShadowRect.setRight( textShadowRect.right() + 1.0f );
+   painter->drawText( textShadowRect, text, options );
+
+   painter->setPen( s_textPen );
+   painter->drawText( rect, text, options );
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -30,6 +51,7 @@ GraphBlock::GraphBlock()
    , m_bounds( QPointF( 0, 0 ), QSizeF( 100, 100 ) )
    , m_captionBounds( QPointF( 0, 0 ), QSizeF( 100, 0 ) )
    , m_font( "Arial", 15, QFont::Light )
+   , m_centralWidget( NULL )
 {
    m_font.setStyle( QFont::StyleNormal );
    m_font.setStyleHint( QFont::AnyStyle );
@@ -58,58 +80,50 @@ bool GraphBlock::doesOverlap( const QPointF& pos ) const
 
 void GraphBlock::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget )
 { 
-   Shape shape = getShape();
-   QColor fillColor = getBgColor();
-   QPen pen = getBorderPen();
+   QLinearGradient fillBrush( QPointF(0, 0), QPointF(0, m_captionBounds.height()));
+   fillBrush.setColorAt( 0, isSelected() ? QColor( 255, 226, 96 ) : QColor( 200, 200, 200 ) );
+   fillBrush.setColorAt( 0.5f, QColor( 70, 70, 70 ) );
 
    painter->save();
 
    painter->setRenderHint( QPainter::Antialiasing, true );
    painter->setRenderHint( QPainter::TextAntialiasing, true );
    painter->setFont( m_font );
-   // draw the header
-   {
-      painter->setPen( pen );
-      painter->setBrush( fillColor );
-
-      switch( shape )
-      {
-      case GBS_RECTANGLE:
-         {
-            painter->drawRect( m_captionBounds );
-            break;
-         }
-
-      case GBS_CIRCLE:
-         {
-            QPainterPath path;
-            int halfHeight = ( m_captionBounds.bottom() + m_captionBounds.top() ) * 0.5;
-            path.moveTo( m_captionBounds.right(), m_captionBounds.bottom() );
-            path.lineTo( m_captionBounds.right(), halfHeight );
-            path.arcTo( m_captionBounds, 0.0f, 180.0f );
-            path.lineTo( m_captionBounds.left(), m_captionBounds.bottom() );
-
-            painter->drawPath( path );
-
-            break;
-         }
-
-      case GBS_ROUNDED:
-         {
-            painter->drawRoundedRect( m_captionBounds, 4.0f, 4.0f );
-            break;
-         }
-      }
-
-      painter->drawText( m_captionBounds, m_caption.c_str(), QTextOption( Qt::AlignCenter ) );
-   }
+   
+   const float edgeRadius = 3.0f;
 
    // draw the block's layout
    {
-      painter->setPen( pen );
+      painter->setPen( s_borderPen );
+
       painter->setBrush( QColor( 150, 150, 150 ) );
-      painter->drawRect( m_bounds );
+      painter->setOpacity( 0.5f );
+      painter->drawRoundedRect( m_bounds, edgeRadius, edgeRadius );
    }
+
+   // draw the header
+   {
+      
+      QPainterPath path;
+
+      QRectF topBB = m_captionBounds;
+      topBB.setHeight( m_captionBounds.height() + edgeRadius );
+
+      QRectF bottomBB = m_captionBounds;
+      bottomBB.setTop( m_captionBounds.height() );
+      bottomBB.setHeight( edgeRadius );
+
+      path.addRoundedRect( topBB, edgeRadius, edgeRadius );
+      path.addRect( bottomBB );
+
+      painter->setOpacity( 1.0f );
+      painter->setPen( Qt::NoPen );
+      painter->setBrush( fillBrush );
+      painter->drawPath( path );
+
+      drawShadowedText( painter, m_captionBounds, m_caption.c_str(), QTextOption( Qt::AlignCenter ) );
+   }
+
 
    painter->restore();
 }
@@ -285,6 +299,14 @@ void GraphBlock::calculateBounds()
    m_bounds.setTop( captionHeight );
    m_bounds.setWidth( blockWidth );
    m_bounds.setHeight( blockHeight );
+
+   m_textBounds = m_bounds;
+   m_textBounds.setLeft( g_socketWidth + 2 );
+   m_textBounds.setWidth( blockWidth - 2 * ( g_socketWidth + 2 ) );
+   m_textBounds.setHeight( captionHeight );
+   m_totalBounds = m_captionBounds;
+
+
    m_totalBounds = m_totalBounds.united( m_bounds );
 
    // position the sockets
@@ -293,7 +315,6 @@ void GraphBlock::calculateBounds()
 
    float rightSocketY = rightSocketsSpacing * 0.5f;
    float leftSocketY = leftSocketsSpacing * 0.5f;
-   float socketRectSize = 10.0f;
    for ( std::vector< GraphBlockSocket* >::const_iterator it = m_sockets.begin(); it != m_sockets.end(); ++it )
    {
       GraphBlockSocket* socket = *it;
@@ -309,7 +330,7 @@ void GraphBlock::calculateBounds()
 
       case GBSP_OUTPUT:
          {
-            socket->setPos( blockWidth, captionHeight + rightSocketY );
+            socket->setPos( blockWidth - g_socketWidth, captionHeight + rightSocketY );
             rightSocketY += rightSocketsSpacing;
             break;
          }
@@ -380,16 +401,12 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-QPen GraphBlockSocket::s_borderPen( QBrush( QColor( 0, 0, 0 ) ), 1.0f, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin );
-
-///////////////////////////////////////////////////////////////////////////////
-
 GraphBlockSocket::GraphBlockSocket()
    : QGraphicsItem( NULL )
    , m_parent( NULL )
    , m_blockSide( GBSP_INPUT )
    , m_name( "" )
-   , m_font( "Arial", 10, QFont::Light )
+   , m_font( "Verdana", 8, QFont::Light )
 {
    setFlag( QGraphicsItem::ItemIsSelectable, true );
    setFlag( QGraphicsItem::ItemIsMovable, false );
@@ -449,16 +466,15 @@ void GraphBlockSocket::paint( QPainter* painter, const QStyleOptionGraphicsItem*
    painter->setRenderHint( QPainter::Antialiasing, true );
    painter->setRenderHint( QPainter::TextAntialiasing, true );
 
-   QPen borderPen = getBorderPen();
    QColor bgColor = getBgColor();
 
-   painter->setPen( borderPen );
+   painter->setPen( s_borderPen );
    painter->setBrush( bgColor );
    painter->drawRect( m_bounds );
 
    painter->setFont( m_font );
    painter->setBrush( QColor( 0, 0, 0 ) );
-   painter->drawText( m_nameBounds, m_name.c_str(), QTextOption( Qt::AlignCenter ) );
+   drawShadowedText( painter, m_nameBounds, m_name.c_str(), QTextOption( Qt::AlignCenter ) );
 
    painter->restore();
 }
@@ -487,14 +503,14 @@ void GraphBlockSocket::calculateBounds()
    {
    case GBSP_INPUT:
       {
-         m_bounds = QRectF( QPointF( -10.0f, -5.0f ), QSizeF( 10.0f, 10.0f ) );
-         m_nameBounds = QRectF( QPointF( textMarginSize, -fontHeight * 0.5f ), QSizeF( nameWidth, fontHeight ) );
+         m_bounds = QRectF( QPointF( 0.0f, -g_socketHeight * 0.5f), QSizeF( g_socketWidth, g_socketHeight ) );
+         m_nameBounds = QRectF( QPointF( g_socketWidth + textMarginSize, -fontHeight * 0.5f ), QSizeF( nameWidth, fontHeight ) );
          break;
       }
 
    case GBSP_OUTPUT:
       {
-         m_bounds = QRectF( QPointF( 0, -5.0f ), QSizeF( 10.0f, 10.0f ) );
+         m_bounds = QRectF( QPointF( 0, -g_socketHeight * 0.5f ), QSizeF( g_socketWidth, g_socketHeight ) );
          m_nameBounds = QRectF( QPointF( -nameWidth - textMarginSize, -fontHeight * 0.5f ), QSizeF( nameWidth, fontHeight ) );
          break;
       }
@@ -679,3 +695,39 @@ bool GraphBlockConnection::isOk() const
 
    return true;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+QRectF GraphBlockConnection::boundingRect() const
+{
+   QLineF l = line();
+
+   m_displayedPath = QPainterPath();
+   m_displayedPath.moveTo( l.p1() );
+   QPointF c1, c2;
+   c1 = l.p1();
+   c1.setX( c1.x() + 50.0f );
+
+   c2 = l.p2();
+   c2.setX( c2.x() - 50.0f );
+
+   m_displayedPath.cubicTo( c1, c2, l.p2() );
+
+   return m_displayedPath.boundingRect();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlockConnection::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
+{
+   painter->save();
+
+   painter->setRenderHint( QPainter::Antialiasing, true );
+   painter->setBrush( Qt::NoBrush );
+   painter->setPen( s_connectionPen );
+   painter->drawPath( m_displayedPath );
+   
+   painter->restore();
+}
+
+///////////////////////////////////////////////////////////////////////////////

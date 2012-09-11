@@ -28,16 +28,6 @@ public:
     * @param node    represented node
     */
    RPBAdapter( RPAdapterNode& node );
-
-protected:
-   // -------------------------------------------------------------------------
-   // GraphBlock implementation
-   // -------------------------------------------------------------------------
-   /**
-    * Returns the shape of the block.
-    */
-   virtual Shape getShape() const { return GBS_CIRCLE; }
-   virtual QColor getBgColor() const { return QColor( 183, 145, 75 ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

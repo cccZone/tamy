@@ -33,8 +33,8 @@ public:
    // TreeWidgetDescFactory implementation
    // -------------------------------------------------------------------------
    unsigned int typesCount() const;
-   void getDesc( unsigned int idx, QString& outDesc, QIcon& outIcon ) const;
-   void getDesc( const SerializableReflectionType& type, QString& outDesc, QIcon& outIcon ) const;
+   void getDesc( unsigned int idx, QString& outDesc, QString& outGroup, QIcon& outIcon ) const;
+   void getDesc( const SerializableReflectionType& type, QString& outDesc, QString& outGroup, QIcon& outIcon ) const;
    const SerializableReflectionType* getClass( unsigned int idx ) const;
 
 };

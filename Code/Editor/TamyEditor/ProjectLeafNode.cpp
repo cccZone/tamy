@@ -44,8 +44,8 @@ void ProjectLeafNode::setEntryIcon( const Filesystem& fs, TreeWidgetDescFactory&
    if ( resourceType )
    {
       // as the first shot, try creating an icon corresponding to the type of the resource
-      QString typeName;
-      itemsFactory.getDesc( *resourceType, typeName, icon );
+      QString typeName, group;
+      itemsFactory.getDesc( *resourceType, typeName, group, icon );
    }
 
    if ( icon.isNull() )

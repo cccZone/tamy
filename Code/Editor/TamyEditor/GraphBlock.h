@@ -36,14 +36,6 @@ class GraphBlock : public ReflectionObject, public QGraphicsItem
 {
    DECLARE_CLASS() 
 
-public:
-   enum Shape
-   {
-      GBS_RECTANGLE,
-      GBS_CIRCLE,
-      GBS_ROUNDED,
-   };
-
 protected:
    // sockets
    std::vector< GraphBlockSocket* >    m_sockets;
@@ -56,12 +48,13 @@ private:
    QPointF                             m_position;
    QRectF                              m_bounds;
    QRectF                              m_captionBounds;
+   QRectF                              m_textBounds;
    QRectF                              m_totalBounds;
 
-   static QPen                         s_textPen;
-   static QPen                         s_borderPen;
-   static QPen                         s_selectionPen;
    QFont                               m_font;
+
+   // TODO: ue QGraphics proxy widget to draw this
+   QWidget*                            m_centralWidget;
 
 public:
    /**
@@ -155,21 +148,6 @@ protected:
    // Block layout settings
    // -------------------------------------------------------------------------
    /**
-    * Returns the shape of the block.
-    */
-   virtual Shape getShape() const { return GBS_RECTANGLE; }
-
-   /**
-    * Returns the color of the block background.
-    */
-   virtual QColor getBgColor() const { return QColor( 255, 255, 255 ); }
-
-   /**
-    * Returns the pen used to draw the border.
-    */
-   virtual QPen getBorderPen() const { return isSelected() ? s_selectionPen : s_borderPen; }
-
-   /**
     * Adds a new socket to the block.
     *
     * @param socket
@@ -227,7 +205,6 @@ private:
 
    std::vector< GraphBlockConnection* >      m_connections;
 
-   static QPen                               s_borderPen;
    QFont                                     m_font;
    QRectF                                    m_bounds;
    QRectF                                    m_nameBounds;
@@ -263,6 +240,11 @@ public:
     * Returns the current socket position.
     */
    inline GraphBlockSocketPosition getPosition() const { return m_blockSide; }
+
+   /**
+    * Returns the color of the socket.
+    */
+   virtual QColor getBgColor() const { return QColor( 0, 0, 0 ); }
 
    /**
     * Returns the width of the socket's name.
@@ -341,16 +323,6 @@ protected:
     */
    virtual void onConnectionRemoved( GraphBlockConnection& connection ) {}
 
-   /**
-    * Returns the background color the socket should be drawn with.
-    */
-   virtual QColor getBgColor() const { return QColor( 255, 255, 255 ); }
-
-   /**
-    * Returns the p[en the socket's frame should be drawn with
-    */
-   virtual QPen getBorderPen() const { return s_borderPen; }
-
    // -------------------------------------------------------------------------
    // QGraphicsItem implementation
    // -------------------------------------------------------------------------
@@ -380,6 +352,7 @@ private:
    GraphBlockSocket*       m_source;
    GraphBlockSocket*       m_destination;
 
+   mutable QPainterPath    m_displayedPath;
 
 public:
    /**
@@ -423,6 +396,12 @@ public:
     * of them wasn't deserialized ).
     */
    bool isOk() const;
+
+   // -------------------------------------------------------------------------
+   // QGraphicsLineItem implementation
+   // -------------------------------------------------------------------------
+   QRectF boundingRect() const;
+   void paint( QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget = 0 );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

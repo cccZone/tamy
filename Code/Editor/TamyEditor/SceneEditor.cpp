@@ -294,7 +294,7 @@ void SceneEditor::saveScene()
 {
    try
    {
-      ProgressDialog progressObserver( this );
+      ProgressDialog progressObserver;
       progressObserver.initialize( "Saving...", 1 );
       m_scene.saveResource();
       progressObserver.advance();

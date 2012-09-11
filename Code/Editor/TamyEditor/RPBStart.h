@@ -28,17 +28,6 @@ public:
     * @param node    represented node
     */
    RPBStart( RPStartNode& node );
-
-protected:
-   // -------------------------------------------------------------------------
-   // GraphBlock implementation
-   // -------------------------------------------------------------------------
-
-   /**
-    * Returns the shape of the block.
-    */
-   virtual Shape getShape() const { return GBS_RECTANGLE; }
-   virtual QColor getBgColor() const { return QColor( 224, 207, 166 ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

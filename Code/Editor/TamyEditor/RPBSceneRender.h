@@ -28,16 +28,6 @@ public:
     * @param node    represented node
     */
    RPBSceneRender( RPSceneRenderNode& node );
-
-protected:
-   // -------------------------------------------------------------------------
-   // GraphBlock implementation
-   // -------------------------------------------------------------------------
-   /**
-    * Returns the shape of the block.
-    */
-   virtual Shape getShape() const { return GBS_RECTANGLE; }
-   virtual QColor getBgColor() const { return QColor( 166, 198, 224 ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

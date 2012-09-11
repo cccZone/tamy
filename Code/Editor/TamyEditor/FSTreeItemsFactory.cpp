@@ -18,13 +18,14 @@ unsigned int FSTreeItemsFactory::typesCount() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FSTreeItemsFactory::getDesc( unsigned int idx, QString& outDesc, QIcon& outIcon ) const
+void FSTreeItemsFactory::getDesc( unsigned int idx, QString& outDesc, QString& outGroup, QIcon& outIcon ) const
 {
    switch( idx )
    {
       case FS_ITEM_DIR:
       {
          outDesc = "Directory";
+         outGroup = "";
          outIcon = QIcon( m_iconsDir + "dirIcon.png" );
 
          break;
@@ -33,6 +34,7 @@ void FSTreeItemsFactory::getDesc( unsigned int idx, QString& outDesc, QIcon& out
       case FS_ITEM_PROJECT:
       {
          outDesc = "Project";
+         outGroup = "";
          outIcon = QIcon( m_iconsDir + "ProjectIcon.png" );
          break;
       }
@@ -41,7 +43,7 @@ void FSTreeItemsFactory::getDesc( unsigned int idx, QString& outDesc, QIcon& out
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FSTreeItemsFactory::getDesc( const SerializableReflectionType& type, QString& outDesc, QIcon& outIcon ) const
+void FSTreeItemsFactory::getDesc( const SerializableReflectionType& type, QString& outDesc, QString& outGroup, QIcon& outIcon ) const
 {
 }
 
