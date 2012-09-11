@@ -249,9 +249,6 @@
     <ClCompile Include="MNSpatialEntity.cpp">
       <Filter>Materials\MaterialGraph\Nodes</Filter>
     </ClCompile>
-    <ClCompile Include="Material.cpp">
-      <Filter>Materials\MaterialGraph</Filter>
-    </ClCompile>
     <ClCompile Include="MaterialNode.cpp">
       <Filter>Materials\MaterialGraph</Filter>
     </ClCompile>
@@ -390,6 +387,9 @@
     </ClCompile>
     <ClCompile Include="MeshUtils.cpp">
       <Filter>Geometry\Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Materials\MaterialGraph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

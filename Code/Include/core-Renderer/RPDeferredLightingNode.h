@@ -35,7 +35,9 @@ private:
 
    // sockets data
    RPTextureInput*                           m_sceneColorInput;
-   RPTextureInput*                           m_depthNormalsInput;
+   RPTextureInput*                           m_normalsInput;
+   RPTextureInput*                           m_specularInput;
+   RPTextureInput*                           m_depthInput;
 
    RPTextureOutput*                          m_finalLightColorTargetOutput;
    RPTextureOutput*                          m_shadowDepthTextureOutput;

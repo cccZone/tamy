@@ -119,7 +119,7 @@ void VSCTexture< TNode >::setValue( RCBindVertexShader& comm, const GBNodeInput<
    ShaderTexture* val = castInput.getValue( data );
    if ( val )
    {
-      comm.setTexture( getName(), *val );
+      comm.setTexture( getName(), val );
    }
 }
 

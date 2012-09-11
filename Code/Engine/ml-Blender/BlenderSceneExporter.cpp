@@ -343,6 +343,7 @@ SpatialEntity* BlenderSceneExporter::instantiateDirectionalLight( const TamyLigh
 
    light->m_color = exportedLightEntity.lightColor;
    light->m_strength = exportedLightEntity.energy;
+   light->setShadowsCaster( exportedLightEntity.castShadows );
 
    return light;
 }
@@ -357,6 +358,8 @@ SpatialEntity* BlenderSceneExporter::instantiatePointLight( const TamyLight& exp
    light->m_color = exportedLightEntity.lightColor;
    light->m_strength = exportedLightEntity.energy;
    light->m_radius = exportedLightEntity.distance;
+   light->m_attenuation = exportedLightEntity.linearAttenuation;
+   light->setShadowsCaster( exportedLightEntity.castShadows );
 
    return light;
 }
