@@ -25,10 +25,11 @@ QPropertiesView::QPropertiesView()
 {
    // setup the UI
    m_layout = new QVBoxLayout( this );
+   m_layout->setAlignment( Qt::AlignTop );
    m_layout->setSpacing(0);
    m_layout->setMargin(0);
 
-   setFrameStyle( QFrame::StyledPanel );
+   setFrameStyle( QFrame::NoFrame );
 
    // setup editor factories
    initFactory();
@@ -71,8 +72,6 @@ void QPropertiesView::onSet( ReflectionObjectEditor* rootEditor )
    QReflectionObjectEditor* arrRootEditor = static_cast< QReflectionObjectEditor* >( rootEditor );
    m_layout->addWidget( arrRootEditor );
 
-   QSpacerItem* spacer = new QSpacerItem( 20, 20, QSizePolicy::Fixed, QSizePolicy::Expanding );
-   m_layout->addSpacerItem( spacer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

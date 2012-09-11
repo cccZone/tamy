@@ -9,7 +9,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 class QVBoxLayout;
-class QSpacerItem;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +21,6 @@ class QReflectionObjectEditor : public QFrame, public ReflectionObjectEditor
 
 private:
    QVBoxLayout*      m_layout;
-   QSpacerItem*      m_spacer;
 
 public:
    /**

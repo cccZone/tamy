@@ -11,7 +11,6 @@
 
 class QPropertiesView;
 class QVBoxLayout;
-class QSpacerItem;
 class TamyEditor;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +24,6 @@ class QPropertyEditor : public QFrame, public ReflectionPropertyEditor
 
 private:
    QVBoxLayout*      m_layout;
-   QSpacerItem*      m_spacer;
 
 public:
    virtual ~QPropertyEditor();

@@ -45,13 +45,16 @@ static void drawShadowedText( QPainter* painter, const QRectF& rect, const QStri
 
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <QLabel> 
+
 GraphBlock::GraphBlock()
    : QGraphicsItem( NULL )
    , m_caption( "" )
    , m_bounds( QPointF( 0, 0 ), QSizeF( 100, 100 ) )
    , m_captionBounds( QPointF( 0, 0 ), QSizeF( 100, 0 ) )
-   , m_font( "Arial", 15, QFont::Light )
-   , m_centralWidget( NULL )
+   , m_font( "Verdana", 15, QFont::Light )
+   , m_centralWidget( new QGraphicsProxyWidget( this ) )
+   , m_embeddedWidget( NULL )
 {
    m_font.setStyle( QFont::StyleNormal );
    m_font.setStyleHint( QFont::AnyStyle );
@@ -66,6 +69,15 @@ GraphBlock::GraphBlock()
 
 GraphBlock::~GraphBlock()
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphBlock::setCentralWidget( QWidget* widget )
+{
+   m_embeddedWidget = widget;
+   m_centralWidget->setWidget( m_embeddedWidget );
+   calculateBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -285,10 +297,12 @@ void GraphBlock::calculateBounds()
    float socketsHeight = std::max( leftSocketsCount, rightSocketsCount ) * socketSize;
 
    // calculate the bounds
-   float blockWidth = std::max( captionWidth, longestLeftSocketName + longestRightSocketName );
-   blockWidth = std::max( blockWidth, 100.0f ); // make sure the block isn't too narrow
+   QRectF centralWidgetBounds = m_centralWidget->subWidgetRect( m_embeddedWidget );
 
-   float blockHeight = captionHeight + socketsHeight;
+   float blockWidth = std::max( captionWidth, longestLeftSocketName + longestRightSocketName );
+   blockWidth = std::max( blockWidth, (float)centralWidgetBounds.width() ); // make sure the block isn't too narrow
+   blockWidth = std::max( blockWidth, 100.0f ); // make sure the block isn't too narrow
+   float blockHeight = captionHeight + centralWidgetBounds.height() + socketsHeight;
 
    // set the caption bounds
    m_captionBounds.setWidth( blockWidth );
@@ -300,14 +314,11 @@ void GraphBlock::calculateBounds()
    m_bounds.setWidth( blockWidth );
    m_bounds.setHeight( blockHeight );
 
-   m_textBounds = m_bounds;
-   m_textBounds.setLeft( g_socketWidth + 2 );
-   m_textBounds.setWidth( blockWidth - 2 * ( g_socketWidth + 2 ) );
-   m_textBounds.setHeight( captionHeight );
-   m_totalBounds = m_captionBounds;
-
-
+   // calculate the bounds of this block
    m_totalBounds = m_totalBounds.united( m_bounds );
+
+   // set the position of the central widget
+   m_centralWidget->setPos( ( blockWidth - centralWidgetBounds.width() ) * 0.5f, captionHeight );
 
    // position the sockets
    float leftSocketsSpacing = ( leftSocketsCount > 0 ) ? ( socketsHeight / (float)leftSocketsCount ) : 0;
@@ -315,6 +326,7 @@ void GraphBlock::calculateBounds()
 
    float rightSocketY = rightSocketsSpacing * 0.5f;
    float leftSocketY = leftSocketsSpacing * 0.5f;
+   float socketsVertOffset = captionHeight + centralWidgetBounds.height();
    for ( std::vector< GraphBlockSocket* >::const_iterator it = m_sockets.begin(); it != m_sockets.end(); ++it )
    {
       GraphBlockSocket* socket = *it;
@@ -323,14 +335,14 @@ void GraphBlock::calculateBounds()
       {
       case GBSP_INPUT:
          {
-            socket->setPos( 0, captionHeight + leftSocketY );
+            socket->setPos( 0, socketsVertOffset + leftSocketY );
             leftSocketY += leftSocketsSpacing;
             break;
          }
 
       case GBSP_OUTPUT:
          {
-            socket->setPos( blockWidth - g_socketWidth, captionHeight + rightSocketY );
+            socket->setPos( blockWidth - g_socketWidth, socketsVertOffset + rightSocketY );
             rightSocketY += rightSocketsSpacing;
             break;
          }
