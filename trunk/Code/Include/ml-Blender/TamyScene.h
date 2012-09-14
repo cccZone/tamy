@@ -3,8 +3,26 @@
 
 #include "ml-Blender/TamyMesh.h"
 #include "core/Matrix.h"
+#include "core/Vector.h"
+#include "core/Color.h"
+#include "core/Quaternion.h"
 
 
+///////////////////////////////////////////////////////////////////////////////
+
+class SpatialEntity;
+
+///////////////////////////////////////////////////////////////////////////////
+
+struct TamyMatrix
+{
+   Matrix               rotationMtx;
+   Vector               position;
+
+   void applyTo( Matrix& outTransform ) const;
+
+   void applyToLight( Matrix& outTransform ) const;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,7 +34,7 @@ struct TamyGeometry
    const char*          name;
 
    TamyMesh*            meshesList;
-   Matrix               localMatrix;
+   TamyMatrix           localMatrix;
 
    int                  meshesCount;
    int                  parentIdx;
@@ -50,7 +68,7 @@ struct TamyLight
    float                spotAngle;
    bool                 spotlightCastsOnlyShadows;
      
-   Matrix               localMatrix;
+   TamyMatrix           localMatrix;
    int                  parentIdx;
 };
 

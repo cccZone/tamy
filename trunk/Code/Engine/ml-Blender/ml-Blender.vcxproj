@@ -14,6 +14,7 @@
     <ClCompile Include="BlenderSceneExporter.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="PythonInterface.cpp" />
+    <ClCompile Include="TamyScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ml-Blender\BlenderSceneExporter.h" />

@@ -142,10 +142,12 @@ void BlenderSceneExporter::storeMaterials( TamyMaterial* arrMaterials, int mater
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void BlenderSceneExporter::addEntity( SpatialEntity* entity, int parentIdx )
+void BlenderSceneExporter::addEntity( SpatialEntity* entity, const Matrix& transform, int parentIdx )
 {
-   m_exportedEntities[m_nextEntityIdx].m_entity = entity;
-   m_exportedEntities[m_nextEntityIdx].m_parentIndex = parentIdx;
+   ExportedEntity& exportedEntity = m_exportedEntities[m_nextEntityIdx];
+   exportedEntity.m_entity = entity;
+   exportedEntity.m_parentIndex = parentIdx;
+   exportedEntity.m_globalMtx = transform;
    ++m_nextEntityIdx;
 }
 
@@ -183,14 +185,12 @@ SpatialEntity* BlenderSceneExporter::createGeometryEntity( const TamyGeometry& e
    if ( exportedGeometryEntity.meshesCount == 1 )
    {
       Geometry* geometry = instantiateStaticGeometry( exportedGeometryEntity, 0, true );
-      geometry->setLocalMtx( exportedGeometryEntity.localMatrix );
       return geometry;
    }
    else
    {
       // there's more than one mesh in the entity, so aggregate them under one SpatialEntity
       SpatialEntity* parentEntity = new SpatialEntity( exportedGeometryEntity.name );
-      parentEntity->setLocalMtx( exportedGeometryEntity.localMatrix );
 
       for ( int i = 0; i < exportedGeometryEntity.meshesCount; ++i )
       {
@@ -339,7 +339,6 @@ SpatialEntity* BlenderSceneExporter::createLightEntity( const TamyLight& exporte
 SpatialEntity* BlenderSceneExporter::instantiateDirectionalLight( const TamyLight& exportedLightEntity )
 {
    DirectionalLight* light = new DirectionalLight( exportedLightEntity.name );
-   light->setLocalMtx( exportedLightEntity.localMatrix );
 
    light->m_color = exportedLightEntity.lightColor;
    light->m_strength = exportedLightEntity.energy;
@@ -353,7 +352,6 @@ SpatialEntity* BlenderSceneExporter::instantiateDirectionalLight( const TamyLigh
 SpatialEntity* BlenderSceneExporter::instantiatePointLight( const TamyLight& exportedLightEntity )
 {
    PointLight* light = new PointLight( exportedLightEntity.name );
-   light->setLocalMtx( exportedLightEntity.localMatrix );
 
    light->m_color = exportedLightEntity.lightColor;
    light->m_strength = exportedLightEntity.energy;
@@ -378,6 +376,7 @@ void BlenderSceneExporter::assembleScene( const char* sceneName )
    scene->clear();
 
    // setup the parenting hierarchy
+   Matrix localMtx, invParentGlobalMtx;
    uint entitiesCount = m_exportedEntities.size();
    for ( uint i = 0; i < entitiesCount; ++i )
    {
@@ -386,13 +385,20 @@ void BlenderSceneExporter::assembleScene( const char* sceneName )
       if ( exportedEntity.m_parentIndex >= 0 )
       {
          // this one has a parent
-         SpatialEntity* parentEntity = m_exportedEntities[ exportedEntity.m_parentIndex ].m_entity;
+         ExportedEntity& exportedParentEntity = m_exportedEntities[ exportedEntity.m_parentIndex ];
+         SpatialEntity* parentEntity = exportedParentEntity.m_entity;
          parentEntity->add( exportedEntity.m_entity );
+
+         // set the matrix of it
+         invParentGlobalMtx.setInverse( exportedParentEntity.m_globalMtx );
+         localMtx.setMul( exportedEntity.m_globalMtx, invParentGlobalMtx );
+         exportedEntity.m_entity->setLocalMtx( localMtx );
       }
       else
       {
          // this is the top level entity
          scene->add( exportedEntity.m_entity );
+         exportedEntity.m_entity->setLocalMtx( exportedEntity.m_globalMtx );
       }
    }
 

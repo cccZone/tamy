@@ -33,23 +33,19 @@ class TamyVertex( Structure ):
 		
 	def __init__( self, blenderVertex ):
 	
-		self.x, self.y, self.z = blenderVertex.co[:]
-		self.nx, self.ny, self.nz = blenderVertex.normal[:]
+	    # flip the y & z coordinates of the vertices
+		self.x, self.z, self.y = blenderVertex.co[:]
+		self.nx, self.nz, self.ny = blenderVertex.normal[:]
 		self.tanx, self.tany, self.tanz = ( 0, 0, 0 )
 		self.u, self.v =  ( 0, 0 )
-		
-		# flip the y coordinate of the vertices
-		self.y = -self.y;	
-		self.ny = -self.ny;
-
 		
 	def __copy__( self ):
 		result = TamyVertex( ( self.x, self.y, self.z ), ( self.nx, self.ny, self.nz ), ( self.u, self.v ) )
 		return result
 		
 	def setNormal( self, normalTuple ):
-		self.nx, self.ny, self.nz = normalTuple[:]
-		self.ny = -self.ny;
+	    # flip the y & z coordinates of the vertices
+		self.nx, self.nz, self.ny = normalTuple[:]
 		
 	def setUV( self, u, v ):
 		self.u = u

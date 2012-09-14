@@ -20,7 +20,6 @@ import bpy
 from bpy.props import StringProperty, FloatProperty, BoolProperty, EnumProperty
 
 import os
-import mathutils
 
 from bpy_extras.io_utils import ( ImportHelper, ExportHelper, axis_conversion, )
 
@@ -52,14 +51,6 @@ class ExportTamy( bpy.types.Operator, ExportHelper ):
 
 		keywords = self.as_keywords( ignore=( "filter_glob", "check_existing", ) )
 		
-		# This matrix will changes the handedness of the coordinate system.
-		# Blender uses a right-handed coordinate system, while Tamy uses the left-handed one.
-		# Keep in mind that we'll need to flip the triangle faces vertices order as well! - this is
-		# Accomplished in tamy_mesh.split_polygons_into_triangles method
-		
-		globalMatrix = mathutils.Matrix( ( ( 1, 0, 0, 0 ), ( 0, 0, 1, 0 ), ( 0, 1, 0, 0 ), ( 0, 0, 0, 1 ) ) )
-		
-		keywords["globalMatrix"] = globalMatrix
 		keywords["filesystemRoot"] = self.filesystemRoot
 
 		return export_tamy.export_scene( self, context, **keywords )

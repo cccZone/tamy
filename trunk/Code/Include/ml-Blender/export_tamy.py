@@ -9,24 +9,21 @@ from ctypes import *
 
 ### This method initializes the export procedure, making sure all relevant input data has correct values
 ### and that the editor is in the correct state
-def initialize_exporter( globalMatrix ):
-
-	if globalMatrix is None:
-		globalMatrix = mathutils.Matrix()
+def initialize_exporter( ):
 
 	if bpy.ops.object.mode_set.poll():
 		bpy.ops.object.mode_set(mode='OBJECT')
 	
 ### ===========================================================================
 
-def export_scene(operator, context, filesystemRoot="", filepath="", bUseSelection=True, globalMatrix=None ):
+def export_scene(operator, context, filesystemRoot="", filepath="", bUseSelection=True ):
 
 	# measure the execution time - just in case
 	import time
 	time1 = time.clock()
 	
 	# initialize export
-	initialize_exporter( globalMatrix )
+	initialize_exporter()
 	
 	# dismantle the specified filepath into the filesystem path and the name of the saved scene
 	import os
@@ -34,7 +31,7 @@ def export_scene(operator, context, filesystemRoot="", filepath="", bUseSelectio
 	
 	# make a list of all materials and entities in the scene
 	tamyScene = tamy_scene.TamyScene( sceneName )
-	tamy_scene.compile_scene( context, bUseSelection, globalMatrix, tamyScene )
+	tamy_scene.compile_scene( context, bUseSelection, tamyScene )
 	
 	# and now export it all
 	tamyScene.export( filesystemRoot, exportDir )

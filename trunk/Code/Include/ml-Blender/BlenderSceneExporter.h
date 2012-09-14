@@ -5,6 +5,7 @@
 #include <vector>
 #include "core/types.h"
 #include "ml-Blender/TamyMaterial.h"
+#include "core/Matrix.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,6 +53,7 @@ private:
    struct ExportedEntity
    {
       SpatialEntity*                         m_entity;
+      Matrix                                 m_globalMtx;
       int                                    m_parentIndex;
    };
 
@@ -107,9 +109,10 @@ public:
     * Adds an entity to the collection of exported entities under the correct index.
     *
     * @param entity
+    * @param transform
     * @param parentIdx
     */
-   void addEntity( SpatialEntity* entity, int parentIdx );
+   void addEntity( SpatialEntity* entity, const Matrix& transform, int parentIdx );
 
    /**
     * Creates a mesh resource.

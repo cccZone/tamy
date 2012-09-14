@@ -16,29 +16,35 @@ class TamyColor( Structure ):
 
 ### A helper structure that represents an exportable matrix	
 class TamyMatrix( Structure ):
-	_fields_= [ ( "m", c_float * 16 ) ]
+	_fields_= [ ( "matRot", c_float * 16 ),
+				( "pos", c_float * 4 ) ]
 	
 	def __init__( self, blenderMtx ):
 		col0, col1, col2, col3 = blenderMtx[:]
-		self.m[0] = 1 #sideVec[0]
-		self.m[1] = 0 #upVec[0]
-		self.m[2] = 0 #frontVec[0]
-		self.m[3] = 0 #transVec[0]
+		self.matRot[0] = col0[0]
+		self.matRot[1] = col1[0]
+		self.matRot[2] = col2[0]
+		self.matRot[3] = col3[0]
 		
-		self.m[4] = 0 #sideVec[1]
-		self.m[5] = 1 #upVec[1]
-		self.m[6] = 0 #frontVec[1]
-		self.m[7] = 0 #transVec[1]
+		self.matRot[4] = col0[1]
+		self.matRot[5] = col1[1]
+		self.matRot[6] = col2[1]
+		self.matRot[7] = col3[1]
 		
-		self.m[8] = 0 #sideVec[2]
-		self.m[9] = 0 #upVec[2]
-		self.m[10] = 1 #frontVec[2]
-		self.m[11] = 0 #transVec[2]
+		self.matRot[8] = col0[2]
+		self.matRot[9] = col1[2]
+		self.matRot[10] = col2[2]
+		self.matRot[11] = col3[2]
 		
-		self.m[12] = col0[3]
-		self.m[13] = col1[3]
-		self.m[14] = col2[3]
-		self.m[15] = col3[3]
+		self.matRot[12] = 0
+		self.matRot[13] = 0
+		self.matRot[14] = 0
+		self.matRot[15] = 1
+		
+		self.pos[0] = col0[3]
+		self.pos[1] = col1[3]
+		self.pos[2] = col2[3]
+		self.pos[3] = col3[3]
 
 		
 ### ===========================================================================
