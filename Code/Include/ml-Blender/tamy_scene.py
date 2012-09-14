@@ -69,7 +69,7 @@ class TamyScene:
 ### ===========================================================================
 
 ### Builds the entities present in the scene and compiles the final scene that will be exported to blender
-def compile_scene( context, bUseSelection, globalMatrix, tamyScene ):
+def compile_scene( context, bUseSelection, tamyScene ):
 
 	scene = context.scene
 
@@ -90,7 +90,7 @@ def compile_scene( context, bUseSelection, globalMatrix, tamyScene ):
 		tamyScene.textures[textureIdx] = tamy_material.TamyTexture( texturePath )
 		
 	# Set the parenting hierarchy
-	define_hierarchy( tamyScene.entities, entitiesDict, globalMatrix )
+	define_hierarchy( tamyScene.entities, entitiesDict )
 		
 ### ===========================================================================
 
@@ -155,34 +155,29 @@ def build_materials( derivedBlenderMesh, outMaterials, outMaterialsDict, outText
 
 ### ===========================================================================
 
+import mathutils
+
 ### @param entities - it's a tuple: ( ELEM_ID, blenderObject, objectLocalMatrix, TamyEntity )
-def define_hierarchy( entities, entitiesDict, globalMatrix ):
+def define_hierarchy( entities, entitiesDict ):
+	
 	for i in range( len( entities ) ):
 		blenderObject = entities[i][1]
 		obMatrix = entities[i][2]
 		tamyEntity = entities[i][3]
 		
+		tamyEntity.set_matrix( obMatrix )
+		
 		if ( blenderObject.parent_type != 'OBJECT' and blenderObject.parent_type !='BONE' and blenderObject.parent_type !='LATTICE' ):
 			# Object can't be a part of any hierearchy, but nonetheless set its local matrix
-			tamyEntity.set_matrix( obMatrix )
 			continue
 		
 		if blenderObject.parent is None:
 			# it's the root of a hierarchy - therefore its local matrix should be multipliend by the desired global
 			# matrix to convert its coordinate system to Tamy
-			tamyEntity.set_matrix( obMatrix )
 			continue
 		
 		# set the entity's parent index
 		parentIdx = entitiesDict[ blenderObject.parent ]
 		tamyEntity.set_parent( parentIdx )
-		
-		# and finally - set its matrix, and we need a local matrix at this point, so since
-		# we have global matrices only, we can simply subtract the child's from the parent's
-		# and get what we want
-		parentMtx = entities[parentIdx][2]
-		localMtx = parentMtx.inverted() * obMatrix
-
-		tamyEntity.set_matrix( obMatrix )
 		
 ### ===========================================================================

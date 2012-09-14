@@ -52,7 +52,10 @@ void export_geometry_entity( TamyGeometry geometry )
 {
    BlenderSceneExporter& exporter = BlenderSceneExporter::getInstance();
    SpatialEntity* entity = exporter.createGeometryEntity( geometry );
-   exporter.addEntity( entity, geometry.parentIdx );
+
+   Matrix globalMtx;
+   geometry.localMatrix.applyTo( globalMtx );
+   exporter.addEntity( entity, globalMtx, geometry.parentIdx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,7 +64,10 @@ void export_light_entity( TamyLight light )
 {
    BlenderSceneExporter& exporter = BlenderSceneExporter::getInstance();
    SpatialEntity* entity = exporter.createLightEntity( light );
-   exporter.addEntity( entity, light.parentIdx );
+
+   Matrix globalMtx;
+   light.localMatrix.applyToLight( globalMtx );
+   exporter.addEntity( entity, globalMtx, light.parentIdx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

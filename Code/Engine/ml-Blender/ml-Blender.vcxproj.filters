@@ -6,6 +6,9 @@
       <Filter>SceneExport</Filter>
     </ClCompile>
     <ClCompile Include="PythonInterface.cpp" />
+    <ClCompile Include="TamyScene.cpp">
+      <Filter>SceneExport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ml-Blender\BlenderSceneExporter.h">
