@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ResourceEditor.h"
+#include <QAction>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,6 +19,9 @@ class SceneObjectsManipulator;
 class TamySceneWidget;
 class RenderingPipeline;
 class ProgressDialog;
+class DebugEntitiesManager;
+enum DebugFeature;
+class QueryRenderingPass;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -82,7 +86,6 @@ public slots:
    void selectionCleaned();
    void setNodeTranslateMode();
    void setNodeRotateMode();
-   void toggleDebugMode();
 
    /**
     * This slot removes the specified widget from the main layout.
@@ -90,6 +93,53 @@ public slots:
     * @param closedWidget
     */
    void onEmbedededWidgetClosed( QWidget* closedWidget );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class QueryRendererDebugAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   QueryRenderingPass&        m_queryRenderer;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param queryRenderer
+    * @param parentWidget
+    */
+   QueryRendererDebugAction( QueryRenderingPass& queryRenderer, QWidget* parentWidget );
+
+public slots:
+   void onTriggered();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class DebugEntitiesAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   DebugEntitiesManager&      m_debugEntitiesManager;
+   DebugFeature               m_toggledFeature;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param label
+    * @param toggledFeature      toggled debug feature
+    * @param debugEntitiesManager
+    * @param parentWidget
+    */
+   DebugEntitiesAction( const char* label, DebugFeature toggledFeature, DebugEntitiesManager& debugEntitiesManager, QWidget* parentWidget );
+
+public slots:
+   void onTriggered();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

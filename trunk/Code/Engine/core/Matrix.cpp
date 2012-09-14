@@ -112,37 +112,21 @@ Matrix& Matrix::setTranslation( const Vector& translationVec )
 
 Matrix& Matrix::setRotation( const Quaternion& q )
 {
-   // quaternion should be normalized
-   float ww = q.w*q.w;
-   float xx = q.x*q.x;
-   float yy = q.y*q.y;
-   float zz = q.z*q.z;
-   float xy = q.x*q.y;
-   float zw = q.z*q.w;
-   float yw = q.y*q.w;
-   float yz = q.y*q.z;
-   float xw = q.x*q.w;
-   float xz = q.x*q.z;
+   Vector quatVec;
+   quatVec.load( q.q );
 
-   m[0][0] = 1.0f - 2.0f * ( yy + zz );
-   m[0][1] = 2.0f * ( xy + zw );
-   m[0][2] = 2.0f * ( xz - yw );
-   m[0][3] = 0.0f;
+   Vector q2; q2.setAdd( quatVec, quatVec );
+   Vector xq2; xq2.setMul( q2, quatVec.x );
+   Vector yq2; yq2.setMul( q2, quatVec.y );
+   Vector zq2; zq2.setMul( q2, quatVec.z );
+   Vector wq2; wq2.setMul( q2, quatVec.w );
 
-   m[1][0] = 2.0f * ( xy - zw );
-   m[1][1] = 1.0f - 2.0f * ( xx + zz );
-   m[1][2] = 2.0f * ( yz + xw ); 
-   m[1][3] = 0.0f;
+   Vector c0; c0.set( 1.0f - ( yq2.y + zq2.z ), xq2.y + wq2.z , xq2.z - wq2.y, 0.0f );
+   Vector c1; c1.set( xq2.y - wq2.z, 1.0f - ( xq2.x + zq2.z), yq2.z + wq2.x, 0.0f );
+   Vector c2; c2.set( xq2.z + wq2.y , yq2.z - wq2.x, 1.0f - ( xq2.x + yq2.y ), 0.0f );
 
-  
-   m[2][0] = 2.0f * ( xz + yw );
-   m[2][1] = 2.0f * ( yz - xw );
-   m[2][2] = 1.0f - 2.0f * ( xx + yy );
-   m[2][3] = 0.0f;
-
-   m[3][0] = m[3][1] = m[3][2] = 0.0f;
-   m[3][3] = 1.0f;
-
+   setRows( c0, c1, c2 );
+   
    return *this;
 }
 
@@ -184,6 +168,8 @@ void Matrix::getRotation( Quaternion& q ) const
       q.y = (m[1][2] + m[2][1] ) / s;
       q.z = 0.25f * s;
    }
+   
+   q.normalize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

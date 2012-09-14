@@ -361,6 +361,76 @@ bool Vector::isNormalized() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Vector::setSelect( const VectorComparison& comparisonResult, const Vector& trueVec, const Vector& falseVec )
+{
+   for ( int i = 0; i < 4; ++i )
+   {
+      v[i] = comparisonResult.b[i] ? trueVec.v[i] : falseVec.v[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Vector::less( const Vector& rhs, VectorComparison& outResult ) const
+{
+   for ( int i = 0; i < 4; ++i )
+   {
+      outResult.b[i] = v[i] < rhs.v[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Vector::lessEqual( const Vector& rhs, VectorComparison& outResult ) const
+{
+   for ( int i = 0; i < 4; ++i )
+   {
+      outResult.b[i] = v[i] <= rhs.v[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Vector::greater( const Vector& rhs, VectorComparison& outResult ) const
+{
+   for ( int i = 0; i < 4; ++i )
+   {
+      outResult.b[i] = v[i] > rhs.v[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Vector::greaterEqual( const Vector& rhs, VectorComparison& outResult ) const
+{
+   for ( int i = 0; i < 4; ++i )
+   {
+      outResult.b[i] = v[i] >= rhs.v[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Vector::equal( const Vector& rhs, VectorComparison& outResult ) const
+{
+   for ( int i = 0; i < 4; ++i )
+   {
+      outResult.b[i] = v[i] == rhs.v[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Vector::notEqual( const Vector& rhs, VectorComparison& outResult ) const
+{
+   for ( int i = 0; i < 4; ++i )
+   {
+      outResult.b[i] = v[i] != rhs.v[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 std::ostream& operator<<( std::ostream& stream, const Vector& rhs )
 {
    stream << rhs.v;

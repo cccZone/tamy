@@ -443,9 +443,6 @@
     <ClInclude Include="DebugGrid.h">
       <Filter>Widgets\SceneRenderWidget\Grid</Filter>
     </ClInclude>
-    <ClInclude Include="NodeManipulationState.h">
-      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
-    </ClInclude>
     <ClInclude Include="NavigationState.h">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
     </ClInclude>
@@ -532,6 +529,18 @@
     </ClInclude>
     <ClInclude Include="RPBPreview.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GizmoNodeManipulationState.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanarNodeManipulationState.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraPlaneNodeManipulator.h">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
+    </ClInclude>
+    <ClInclude Include="DRGeometry.h">
+      <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1061,9 +1070,6 @@
     <ClCompile Include="NavigationState.cpp">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
     </ClCompile>
-    <ClCompile Include="NodeManipulationState.cpp">
-      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
-    </ClCompile>
     <ClCompile Include="GizmoController.cpp">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
     </ClCompile>
@@ -1285,6 +1291,18 @@
     </ClCompile>
     <ClCompile Include="RPBPreview.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GizmoNodeManipulationState.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanarNodeManipulationState.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraPlaneNodeManipulator.cpp">
+      <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\InputControl</Filter>
+    </ClCompile>
+    <ClCompile Include="DRGeometry.cpp">
+      <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

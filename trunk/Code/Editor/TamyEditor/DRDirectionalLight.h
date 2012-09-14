@@ -32,6 +32,12 @@ public:
     */
    DRDirectionalLight( DirectionalLight& light );
    ~DRDirectionalLight();
+
+   // -------------------------------------------------------------------------
+   // DebugGeometry implementation
+   // -------------------------------------------------------------------------
+   void enableBoundingBox( bool enable );
+   void enableDebugShape( bool enable );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

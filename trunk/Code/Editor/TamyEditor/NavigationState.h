@@ -58,7 +58,7 @@ public:
    void execute( float timeElapsed );
 
 private:
-   void analyzeSelectedNodes( const Array< SpatialEntity* >& selectedNodes );
+   void commitSelectdEntities( const Array< Entity* >& selectedEntities );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

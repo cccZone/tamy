@@ -40,6 +40,19 @@ public:
    RCBindVertexShader* onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
 
+   // -------------------------------------------------------------------------
+   // Debug features controlled by the host DebugEntitiesManager
+   // -------------------------------------------------------------------------
+   /**
+    * Shows the bounding box of the object.
+    */
+   virtual void enableBoundingBox( bool enable ) {}
+   
+   /**
+    * Shows the assigned debug shape.
+    */
+   virtual void enableDebugShape( bool enable ) {}
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

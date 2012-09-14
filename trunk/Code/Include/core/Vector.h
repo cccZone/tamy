@@ -4,6 +4,7 @@
 #define _VECTOR_H
 
 #include <iostream>
+#include "core/TVector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,46 +12,15 @@
 class OutStream;
 class InStream;
 
+
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A vector that can have an arbitrary, but fixed number of coordinates.
- *
- * It's not a mathematical vector though - it's just a data structure.
- * That's why it should not have any mathematical operations defined!!!
- * Instead, create a class that contains it and contains relevant math functions
+ * Result of a comparison of two vectors.
  */
-template< int Dim >
-struct TVector
+struct VectorComparison
 {
-private:
-   enum { ARR_SIZE = Dim };
-
-public:
-
-   float v[ARR_SIZE];
-
-   // -------------------------------------------------------------------------
-   // Operators
-   // -------------------------------------------------------------------------
-   float& operator[]( int idx );
-   float operator[]( int idx ) const;
-
-   // -------------------------------------------------------------------------
-   // Operations
-   // -------------------------------------------------------------------------
-
-   /**
-    * Sets a single value for all coordinates.
-    */
-   void setUniform( float val );
-
-   // -------------------------------------------------------------------------
-   // Serialization support
-   // -------------------------------------------------------------------------
-   template< int VDim > friend std::ostream& operator<<( std::ostream& stream, const TVector< VDim >& rhs );
-   template< int VDim > friend OutStream& operator<<( OutStream& serializer, const TVector< VDim >& rhs );
-   template< int VDim > friend InStream& operator>>( InStream& serializer, TVector< VDim >& rhs );
+   bool        b[4];
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -129,6 +99,15 @@ struct Vector
     */
    Vector& setNormalized( const Vector& vec );
    Vector& setNormalized( float x, float y, float z );
+
+   /**
+    * Sets individual vector components depending on the specified vector comparison result.
+    *
+    * @param comparisonResult
+    * @param trueVec             if the result for the component is true, a corresponding component from this vector will be selected
+    * @param falseVec            opposite to the aboce
+    */
+   void setSelect( const VectorComparison& comparisonResult, const Vector& trueVec, const Vector& falseVec );
 
    /**
     * this = vec * t
@@ -326,6 +305,58 @@ struct Vector
     */
    template< int Dim >
    void load( const TVector< Dim >& rawVector );
+
+   // -------------------------------------------------------------------------
+   // Vector comparison
+   // -------------------------------------------------------------------------
+
+   /**
+    * Compares two vectors component by component: this < rhs
+    *
+    * @param rhs
+    * @param outResult
+    */
+   void less( const Vector& rhs, VectorComparison& outResult ) const;
+
+   /**
+    * Compares two vectors component by component: this <= rhs
+    *
+    * @param rhs
+    * @param outResult
+    */
+   void lessEqual( const Vector& rhs, VectorComparison& outResult ) const;
+
+   /**
+    * Compares two vectors component by component: this > rhs
+    *
+    * @param rhs
+    * @param outResult
+    */
+   void greater( const Vector& rhs, VectorComparison& outResult ) const;
+
+   /**
+    * Compares two vectors component by component: this >= rhs
+    *
+    * @param rhs
+    * @param outResult
+    */
+   void greaterEqual( const Vector& rhs, VectorComparison& outResult ) const;
+
+   /**
+    * Compares two vectors component by component: this == rhs
+    *
+    * @param rhs
+    * @param outResult
+    */
+   void equal( const Vector& rhs, VectorComparison& outResult ) const;
+
+   /**
+    * Compares two vectors component by component: this != rhs
+    *
+    * @param rhs
+    * @param outResult
+    */
+   void notEqual( const Vector& rhs, VectorComparison& outResult ) const;
 
    // -------------------------------------------------------------------------
    // Serialization support

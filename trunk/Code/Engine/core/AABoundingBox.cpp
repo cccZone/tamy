@@ -66,27 +66,14 @@ void AABoundingBox::transform( const Matrix& mtx, BoundingVolume& transformedVol
    ASSERT( dynamic_cast< AABoundingBox* >( &transformedVolume ) != NULL );
    AABoundingBox& transformedBox = static_cast< AABoundingBox& >( transformedVolume );
 
-   float av, bv;
-   transformedBox.min = transformedBox.max = Vector( mtx.m[3][0], mtx.m[3][1], mtx.m[3][2] );
+   Vector tMin, tMax;
+   mtx.transform( min, tMin );
+   mtx.transform( max, tMax );
 
-   for ( int i = 0; i < 3; ++i)
-   {
-      for ( int j = 0; j < 3; ++j )
-      {
-         av = mtx.m[i][j] * min[j];
-         bv = mtx.m[i][j] * max[j];
-         if (av < bv)
-         {
-            transformedBox.min[i] += av;
-            transformedBox.max[i] += bv;
-         } 
-         else 
-         {
-            transformedBox.min[i] += bv;
-            transformedBox.max[i] += av;
-         }
-      }
-   }
+   VectorComparison smaller;
+   tMin.less( tMax, smaller );
+   transformedBox.min.setSelect( smaller, tMin, tMax );
+   transformedBox.max.setSelect( smaller, tMax, tMin );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -48,7 +48,6 @@ TEST(Camera, frustrumCreation)
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(0, 0, 100), 1)));
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(0, 0, 8), 2)));
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(0, 0, 10), 1)));
-   CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(0, 0, 100), 1)));
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(0, 0, 50), 1)));
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(-20, 0, 50), 1)));
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(20, 0, 50), 1)));
@@ -97,7 +96,7 @@ TEST(Camera, createRay)
    // test the rays running through the frustum's clipping planes:
    // - bottom plane
    Vector planeNormal(frustum.planes[FP_BOTTOM].a, frustum.planes[FP_BOTTOM].b, frustum.planes[FP_BOTTOM].c);
-   expectedNormal.setCross( planeNormal, Vector::OX ).normalize();
+   expectedNormal.setCross( planeNormal, Vector::OX_NEG ).normalize();
 
    camera.createRay( 0, -1, result );
    COMPARE_VEC(Vector(0, 0, 0), result.origin);
@@ -105,7 +104,7 @@ TEST(Camera, createRay)
 
    // - top plane
    planeNormal = Vector(frustum.planes[FP_TOP].a, frustum.planes[FP_TOP].b, frustum.planes[FP_TOP].c);
-   expectedNormal.setCross( planeNormal, Vector::OX_NEG ).normalize();
+   expectedNormal.setCross( planeNormal, Vector::OX ).normalize();
 
    camera.createRay( 0, 1, result );
    COMPARE_VEC(Vector(0, 0, 0), result.origin);
@@ -113,7 +112,7 @@ TEST(Camera, createRay)
 
    // - left plane
    planeNormal = Vector(frustum.planes[FP_LEFT].a, frustum.planes[FP_LEFT].b, frustum.planes[FP_LEFT].c);
-   expectedNormal.setCross( Vector::OY, planeNormal ).normalize();
+   expectedNormal.setCross( Vector::OY_NEG, planeNormal ).normalize();
 
    camera.createRay( -1, 0, result );
    COMPARE_VEC(Vector(0, 0, 0), result.origin);
@@ -121,7 +120,7 @@ TEST(Camera, createRay)
 
    // - right plane
    planeNormal = Vector(frustum.planes[FP_RIGHT].a, frustum.planes[FP_RIGHT].b, frustum.planes[FP_RIGHT].c);
-   expectedNormal.setCross( Vector::OY_NEG, planeNormal ).normalize();
+   expectedNormal.setCross( Vector::OY, planeNormal ).normalize();
 
    camera.createRay( 1, 0, result );
    COMPARE_VEC(Vector(0, 0, 0), result.origin);

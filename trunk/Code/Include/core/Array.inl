@@ -91,6 +91,14 @@ unsigned int Array< T, TAllocator >::containerSize() const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T, typename TAllocator >
+bool Array< T, TAllocator >::empty() const 
+{
+   return m_elementsCount == 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T, typename TAllocator >
 unsigned int Array< T, TAllocator >::size() const 
 {
    return m_elementsCount;

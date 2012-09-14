@@ -1,5 +1,5 @@
-/// @file   TamyEditor/DRPointLight.h
-/// @brief  debug representation of a point light
+/// @file   TamyEditor/DRGeometry.h
+/// @brief  debug representation of a Geometry entity
 #pragma once
 
 #include "DebugGeometry.h"
@@ -7,19 +7,18 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class PointLight;
 class Geometry;
 class TriangleMesh;
 class SingleColorDebugMat;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class DRPointLight : public DebugGeometry
+class DRGeometry : public DebugGeometry
 {
    DECLARE_CLASS()
 
 private:
-   PointLight&             m_light;
+   Geometry&               m_geometry;
 
    TriangleMesh*           m_mesh;
    SingleColorDebugMat*    m_material;
@@ -30,8 +29,8 @@ public:
     *
     * @param light
     */
-   DRPointLight( PointLight& light );
-   ~DRPointLight();
+   DRGeometry( Geometry& geometry );
+   ~DRGeometry();
 
    // -------------------------------------------------------------------------
    // DebugGeometry implementation

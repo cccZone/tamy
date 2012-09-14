@@ -20,24 +20,24 @@ class SingleColorDebugMat : public ReflectionObject, public TRenderState< Single
 private:
    Color                   m_color;
    PixelShader*            m_shader;
+   bool                    m_wireframe;
 
 public:
    /**
     * Constructor.
     *
-    * @param axisIdx
     * @param color
-    * @param shader
+    * @param wireframe
     */
-   SingleColorDebugMat( const Color& color );
+   SingleColorDebugMat( const Color& color, bool wireframe = false );
 
    // -------------------------------------------------------------------------
    // TRenderState implementation
    // -------------------------------------------------------------------------
    void onPreRender( Renderer& renderer ) const;
    void onPostRender( Renderer& renderer ) const;
-   bool onEquals( const SingleColorDebugMat& rhs ) const { return m_color == rhs.m_color; }
-   bool onLess( const SingleColorDebugMat& rhs ) const { return m_color < rhs.m_color; }
+   bool onEquals( const SingleColorDebugMat& rhs ) const { return m_color == rhs.m_color && m_wireframe == rhs.m_wireframe; }
+   bool onLess( const SingleColorDebugMat& rhs ) const { return m_color < rhs.m_color && m_wireframe  < rhs.m_wireframe; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

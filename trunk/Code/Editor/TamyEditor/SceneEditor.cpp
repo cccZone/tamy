@@ -11,6 +11,8 @@
 #include <QScrollArea.h>
 #include <QPalette>
 #include <QColor>
+#include <QMenu>
+#include <QToolButton>
 
 // scene rendering widget
 #include "TamySceneWidget.h"
@@ -18,6 +20,8 @@
 #include "SceneTreeViewer.h"
 #include "SelectionManager.h"
 #include "SceneObjectsManipulator.h"
+#include "DebugEntitiesManager.h"
+#include "QueryRenderingPass.h"
 
 // properties browser
 #include "SelectedEntityPropertiesViewer.h"
@@ -72,63 +76,10 @@ void SceneEditor::onInitialize()
    m_mainLayout->setContentsMargins(0, 0, 0, 0);
    setLayout( m_mainLayout );
 
-   // add the toolbar
-   {
-      QToolBar* toolBar = new QToolBar( this );
-      m_mainLayout->addWidget( toolBar );
+   // create and add the toolbar ( we need to do this before we add any other parts to the layout as we want it to stay on top )
+   QToolBar* toolBar = new QToolBar( this );
+   m_mainLayout->addWidget( toolBar );
 
-      // resource management actions
-      {
-         QAction* actionSaveScene = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save Scene" ), toolBar );
-         toolBar->addAction( actionSaveScene );
-         connect( actionSaveScene, SIGNAL( triggered() ), this, SLOT( saveScene() ) );
-
-         toolBar->addSeparator();
-      }
-
-      // scene execution commands
-      {
-         m_runSceneIcon = QIcon( iconsDir + tr( "/play.png" ) );
-         m_stopSceneIcon = QIcon( iconsDir + tr( "/stop.png" ) );
-
-         m_actionRun = new QAction( m_runSceneIcon, tr( "Run" ), toolBar );
-         m_actionRun->setShortcut( QKeySequence( tr( "F5" ) ) );
-         toolBar->addAction( m_actionRun );
-         connect( m_actionRun, SIGNAL( triggered() ), this, SLOT( toggleSceneExecution() ) );
-
-         toolBar->addSeparator();
-      }
-
-      // object manipulation mode change commands
-      {
-         QActionGroup* actionGroup = new QActionGroup( toolBar );
-
-         QAction* actionTranslate = new QAction( QIcon( iconsDir + tr( "/translate.png" ) ), tr( "Translate" ), toolBar );
-         actionTranslate->setCheckable( true );
-         toolBar->addAction( actionTranslate );
-         actionGroup->addAction( actionTranslate );
-         connect( actionTranslate, SIGNAL( triggered() ), this, SLOT( setNodeTranslateMode() ) );
-
-         QAction* actionRotate = new QAction( QIcon( iconsDir + tr( "/rotate.png" ) ), tr( "Rotate" ), toolBar );
-         actionRotate->setCheckable( true );
-         toolBar->addAction( actionRotate );
-         actionGroup->addAction( actionRotate );
-         connect( actionRotate, SIGNAL( triggered() ), this, SLOT( setNodeRotateMode() ) );
-         actionTranslate->setChecked( true );
-
-         toolBar->addSeparator();
-      }
-
-      // debug stuff
-      {
-
-         QAction* actionDebug = new QAction( QIcon( iconsDir + tr( "/cog.png" ) ), tr( "Debug" ), toolBar );
-         toolBar->addAction( actionDebug );
-         connect( actionDebug, SIGNAL( triggered() ), this, SLOT( toggleDebugMode() ) );
-
-         toolBar->addSeparator();
-      }
-   }
 
    // add the splitter that will host the render window and the browsers frames
    {
@@ -192,6 +143,88 @@ void SceneEditor::onInitialize()
          }
       }
    }
+
+
+   // fill the toolbar
+   {
+      // resource management actions
+      {
+         QAction* actionSaveScene = new QAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save Scene" ), toolBar );
+         toolBar->addAction( actionSaveScene );
+         connect( actionSaveScene, SIGNAL( triggered() ), this, SLOT( saveScene() ) );
+
+         toolBar->addSeparator();
+      }
+
+      // scene execution commands
+      {
+         m_runSceneIcon = QIcon( iconsDir + tr( "/play.png" ) );
+         m_stopSceneIcon = QIcon( iconsDir + tr( "/stop.png" ) );
+
+         m_actionRun = new QAction( m_runSceneIcon, tr( "Run" ), toolBar );
+         m_actionRun->setShortcut( QKeySequence( tr( "F5" ) ) );
+         toolBar->addAction( m_actionRun );
+         connect( m_actionRun, SIGNAL( triggered() ), this, SLOT( toggleSceneExecution() ) );
+
+         toolBar->addSeparator();
+      }
+
+      // object manipulation mode change commands
+      {
+         QActionGroup* actionGroup = new QActionGroup( toolBar );
+
+         QAction* actionTranslate = new QAction( QIcon( iconsDir + tr( "/translate.png" ) ), tr( "Translate" ), toolBar );
+         actionTranslate->setCheckable( true );
+         toolBar->addAction( actionTranslate );
+         actionGroup->addAction( actionTranslate );
+         connect( actionTranslate, SIGNAL( triggered() ), this, SLOT( setNodeTranslateMode() ) );
+
+         QAction* actionRotate = new QAction( QIcon( iconsDir + tr( "/rotate.png" ) ), tr( "Rotate" ), toolBar );
+         actionRotate->setCheckable( true );
+         toolBar->addAction( actionRotate );
+         actionGroup->addAction( actionRotate );
+         connect( actionRotate, SIGNAL( triggered() ), this, SLOT( setNodeRotateMode() ) );
+         actionTranslate->setChecked( true );
+
+         toolBar->addSeparator();
+      }
+
+      // debug stuff
+      {
+         QToolButton *debugMenuButton = new QToolButton( toolBar );
+         debugMenuButton->setIcon( QIcon( iconsDir + tr( "/cog.png" ) ) );
+         debugMenuButton->setPopupMode( QToolButton::MenuButtonPopup );
+         toolBar->addWidget( debugMenuButton );
+
+         QMenu *debugMenu = new QMenu( debugMenuButton );
+         debugMenuButton->setMenu( debugMenu );
+
+         // scene queries
+         QueryRendererDebugAction* sceneQueryDebugAction = new QueryRendererDebugAction(m_sceneWidget->getQueryRenderer(), debugMenu );
+         debugMenu->addAction( sceneQueryDebugAction );
+
+         // debugable entities
+         {
+            ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+            TReflectionEnum< DebugFeature >* debugFeatureEnum = static_cast< TReflectionEnum< DebugFeature >* >( typesRegistry.find< DebugFeature >() );
+
+            std::vector< std::string > debugFeatureEnumIds;
+            debugFeatureEnum->getEnumerators( debugFeatureEnumIds );
+
+            DebugEntitiesManager& debugEntitiesManager = m_sceneWidget->getDebugEntitiesManager();
+
+            unsigned int count = debugFeatureEnumIds.size();
+            for( unsigned int i = 0; i < count; ++i )
+            {
+               DebugEntitiesAction* action = new DebugEntitiesAction( debugFeatureEnumIds[i].c_str(), (DebugFeature)i, debugEntitiesManager, debugMenu );
+               debugMenu->addAction( action );
+            }
+         }
+
+         toolBar->addSeparator();
+      }
+   }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -337,13 +370,6 @@ void SceneEditor::setNodeRotateMode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneEditor::toggleDebugMode()
-{
-   m_sceneWidget->toggleDebugMode();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void SceneEditor::onEmbedededWidgetClosed( QWidget* closedWidget )
 {
    m_mainLayout->removeWidget( closedWidget );
@@ -354,4 +380,48 @@ void SceneEditor::onEmbedededWidgetClosed( QWidget* closedWidget )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
+QueryRendererDebugAction::QueryRendererDebugAction( QueryRenderingPass& queryRenderer, QWidget* parentWidget )
+   : QAction( "Scene query", parentWidget )
+   , m_queryRenderer( queryRenderer )
+{
+   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
+
+   setCheckable( true );
+   setChecked( false );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void QueryRendererDebugAction::onTriggered()
+{
+   m_queryRenderer.toggleDebugMode();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+DebugEntitiesAction::DebugEntitiesAction( const char* label, DebugFeature toggledFeature, DebugEntitiesManager& debugEntitiesManager, QWidget* parentWidget )
+   : QAction( label, parentWidget )
+   , m_toggledFeature( toggledFeature )
+   , m_debugEntitiesManager( debugEntitiesManager )
+{
+   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
+
+   bool featureState = m_debugEntitiesManager.getDebugDisplayState( m_toggledFeature );
+   setCheckable( true );
+   setChecked( featureState );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DebugEntitiesAction::onTriggered()
+{
+   bool newState = m_debugEntitiesManager.toggleDebugDisplay( m_toggledFeature );
+   setChecked( newState );
+}
+
+///////////////////////////////////////////////////////////////////////////////

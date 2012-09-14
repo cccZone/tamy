@@ -65,7 +65,7 @@ public:
    /**
     * Returns an array of currently selected nodes.
     */
-   inline std::vector< SpatialEntity* > getSelectedNodes() const { return m_selectedNodes; }
+   inline const std::vector< SpatialEntity* >& getSelectedNodes() const { return m_selectedNodes; }
 
    // -------------------------------------------------------------------------
    // SceneRendererInputController implementation

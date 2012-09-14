@@ -6,7 +6,8 @@
 
 // states
 #include "NavigationState.h"
-#include "NodeManipulationState.h"
+#include "GizmoNodeManipulationState.h"
+#include "PlanarNodeManipulationState.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,7 +23,8 @@ SceneObjectsManipulator::SceneObjectsManipulator( SceneEditor& editor )
    , m_activeController( NULL )
 {
    registerState< NavigationState >();
-   registerState< NodeManipulationState >();
+   registerState< GizmoNodeManipulationState >();
+   registerState< PlanarNodeManipulationState >();
    begin< NavigationState >();
 }
 
@@ -57,7 +59,8 @@ void SceneObjectsManipulator::initialize( TamySceneWidget& widget )
 
    // initialize the states as input receivers
    getState< NavigationState >().initInput( widget );
-   getState< NodeManipulationState >().initInput( widget );
+   getState< GizmoNodeManipulationState >().initInput( widget );
+   getState< PlanarNodeManipulationState >().initInput( widget );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -24,6 +24,7 @@
 // ----------------------------------------------------------------------------
 // Core math
 // ----------------------------------------------------------------------------
+#include "core\TVector.h"
 #include "core\Vector.h"
 #include "core\VectorUtil.h"
 #include "core\EulerAngles.h"
