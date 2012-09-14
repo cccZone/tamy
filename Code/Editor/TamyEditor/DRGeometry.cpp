@@ -1,5 +1,4 @@
-#include "DRPointLight.h"
-#include "core-Renderer/PointLight.h"
+#include "DRGeometry.h"
 #include "core-Renderer/Geometry.h"
 #include "core-Renderer/TriangleMesh.h"
 #include "DebugGeometryBuilder.h"
@@ -8,26 +7,30 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BEGIN_ABSTRACT_OBJECT( DRPointLight )
-   PARENT( DebugGeometry )
+BEGIN_ABSTRACT_OBJECT( DRGeometry )
+PARENT( DebugGeometry )
 END_OBJECT()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DRPointLight::DRPointLight( PointLight& light )
-   : DebugGeometry( &light )
-   , m_light( light )
+DRGeometry::DRGeometry( Geometry& geometry )
+   : DebugGeometry( &geometry )
+   , m_geometry( geometry )
    , m_mesh( NULL )
 {
-   m_mesh = DebugGeometryBuilder::createTorus( 0.5f, 1.0f, Matrix::IDENTITY, 6, 5 );
-   m_material = new SingleColorDebugMat( Color( 255, 242, 61 ) );
+   AABoundingBox bb;
+   const BoundingVolume& bounds = geometry.getMesh()->getBoundingVolume();
+   bounds.calculateBoundingBox( bb );
+
+   m_mesh = DebugGeometryBuilder::createBox( bb.min, bb.max );
+   m_material = new SingleColorDebugMat( Color( 255, 242, 61 ), true );
 
    setMesh( *m_mesh );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-DRPointLight::~DRPointLight()
+DRGeometry::~DRGeometry()
 {
    m_mesh->removeReference();
    m_mesh = NULL;
@@ -38,13 +41,7 @@ DRPointLight::~DRPointLight()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DRPointLight::enableBoundingBox( bool enable )
-{
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void DRPointLight::enableDebugShape( bool enable )
+void DRGeometry::enableBoundingBox( bool enable )
 {
    if ( enable )
    {
@@ -54,6 +51,12 @@ void DRPointLight::enableDebugShape( bool enable )
    {
       removeState( *m_material );
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DRGeometry::enableDebugShape( bool enable )
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////

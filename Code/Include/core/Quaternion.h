@@ -3,6 +3,7 @@
 #pragma once
 
 #include <iostream>
+#include "core/TVector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,7 +22,7 @@ struct Quaternion
 {
    union
    {
-      float q[4];
+      TVector< 4 > q;
 
       struct 
       {

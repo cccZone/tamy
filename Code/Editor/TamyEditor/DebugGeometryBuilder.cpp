@@ -5,6 +5,59 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+TriangleMesh* DebugGeometryBuilder::createBox( const Vector& min, const Vector& max )
+{
+   std::vector<LitVertex> vertices;
+   std::vector<Face> faces;
+   vertices.resize( 8 );
+   faces.resize( 12 );
+
+   Vector tmpVec;
+   {
+      // bottom face vertices
+      tmpVec.set( min.x, min.y, max.z ); tmpVec.store( vertices[0].m_coords );
+      tmpVec.set( min.x, min.y, min.z ); tmpVec.store( vertices[1].m_coords );
+      tmpVec.set( max.x, min.y, max.z ); tmpVec.store( vertices[2].m_coords );
+      tmpVec.set( max.x, min.y, min.z ); tmpVec.store( vertices[3].m_coords );
+
+      // top face vertices
+      tmpVec.set( min.x, max.y, max.z ); tmpVec.store( vertices[4].m_coords );
+      tmpVec.set( min.x, max.y, min.z ); tmpVec.store( vertices[5].m_coords );
+      tmpVec.set( max.x, max.y, max.z ); tmpVec.store( vertices[6].m_coords );
+      tmpVec.set( max.x, max.y, min.z ); tmpVec.store( vertices[7].m_coords );
+
+      // add the lines:
+      // bottom face
+      faces[0].idx[0] = 0; faces[0].idx[1] = 1; faces[0].idx[2] = 2;
+      faces[1].idx[0] = 1; faces[1].idx[1] = 3; faces[1].idx[2] = 2;
+
+      // top face
+      faces[2].idx[0] = 5; faces[2].idx[1] = 4; faces[2].idx[2] = 7;
+      faces[3].idx[0] = 4; faces[3].idx[1] = 6; faces[3].idx[2] = 7;
+
+      // right face
+      faces[4].idx[0] = 1; faces[4].idx[1] = 5; faces[4].idx[2] = 3;
+      faces[5].idx[0] = 5; faces[5].idx[1] = 7; faces[5].idx[2] = 3;
+
+      // left face
+      faces[6].idx[0] = 0; faces[6].idx[1] = 4; faces[6].idx[2] = 1;
+      faces[7].idx[0] = 4; faces[7].idx[1] = 5; faces[7].idx[2] = 1;
+
+      // front face
+      faces[8].idx[0] = 2; faces[8].idx[1] = 6; faces[8].idx[2] = 0;
+      faces[9].idx[0] = 6; faces[9].idx[1] = 4; faces[9].idx[2] = 0;
+
+      // back face
+      faces[10].idx[0] = 3; faces[10].idx[1] = 7; faces[10].idx[2] = 2;
+      faces[11].idx[0] = 7; faces[11].idx[1] = 6; faces[11].idx[2] = 2;
+   }
+
+   TriangleMesh* mesh = new TriangleMesh( FilePath(), vertices, faces );
+   return mesh;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 TriangleMesh* DebugGeometryBuilder::createArrow( float size, const Vector& start, const Vector& end )
 {
    Vector dir;

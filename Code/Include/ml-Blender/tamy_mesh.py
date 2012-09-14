@@ -38,16 +38,22 @@ class TamyVertex( Structure ):
 		self.tanx, self.tany, self.tanz = ( 0, 0, 0 )
 		self.u, self.v =  ( 0, 0 )
 		
+		# flip the y coordinate of the vertices
+		self.y = -self.y;	
+		self.ny = -self.ny;
+
+		
 	def __copy__( self ):
 		result = TamyVertex( ( self.x, self.y, self.z ), ( self.nx, self.ny, self.nz ), ( self.u, self.v ) )
 		return result
 		
 	def setNormal( self, normalTuple ):
 		self.nx, self.ny, self.nz = normalTuple[:]
+		self.ny = -self.ny;
 		
 	def setUV( self, u, v ):
 		self.u = u
-		self.v = v
+		self.v = -v
 		
 ### ===========================================================================
 
@@ -292,7 +298,7 @@ def create_tamy_meshes( meshName, blenderMesh, materialsExportOrderDict, outMesh
 ### ===========================================================================
 
 def uv_key( u, v ):
-    return round(u, 6), round(-v, 6)
+    return round(u, 6), round(v, 6)
 	
 ### The method splits vertices so that each has only a single UV coordinate assigned.
 def calculate_unique_uv_coords( blenderMesh, vertices, faces ):

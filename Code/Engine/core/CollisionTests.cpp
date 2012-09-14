@@ -79,67 +79,17 @@ bool testCollision( const AABoundingBox& aabb, const BoundingSphere& sphere )
 
 bool testCollision( const AABoundingBox& aabb, const Frustum& frustum )
 {
-   Vector nearPoint;
-
-   for ( int i =0; i < 6; ++i )
+   Vector pv, nv;
+   for ( int i = 0; i < 6; ++i )
    {
-      Vector planeNormal( frustum.planes[i].a, frustum.planes[i].b, frustum.planes[i].c );
+      const Plane& plane = frustum.planes[i];
 
-      if (planeNormal.x > 0.0f)
-      {
-         if (planeNormal.y > 0.0f)
-         {
-            if (planeNormal.z > 0.0f)
-            {
-               nearPoint.x = aabb.min.x; nearPoint.y = aabb.min.y; nearPoint.z = aabb.min.z;
-            }
-            else
-            {
-               nearPoint.x = aabb.min.x; nearPoint.y = aabb.min.y; nearPoint.z = aabb.max.z;
-            }
-         }
-         else
-         {
-            if (planeNormal.z> 0.0f)
-            {
-               nearPoint.x = aabb.min.x; nearPoint.y = aabb.max.y; nearPoint.z = aabb.min.z;
-            }
-            else
-            {
-               nearPoint.x = aabb.min.x; nearPoint.y = aabb.max.y; nearPoint.z = aabb.max.z;
-            }
-         }
-      }
-      else 
-      {
-         if (planeNormal.y > 0.0f)
-         {
-            if (planeNormal.z > 0.0f)
-            {
-               nearPoint.x = aabb.max.x; nearPoint.y = aabb.min.y; nearPoint.z = aabb.min.z;
-            }
-            else
-            {
-               nearPoint.x = aabb.max.x; nearPoint.y = aabb.min.y; nearPoint.z = aabb.max.z;
-            }
-         }
-         else
-         {
-            if (planeNormal.z > 0.0f)
-            {
-               nearPoint.x = aabb.max.x; nearPoint.y = aabb.max.y; nearPoint.z = aabb.min.z;
-            }
-            else
-            {
-               nearPoint.x = aabb.max.x; nearPoint.y = aabb.max.y; nearPoint.z = aabb.max.z;
-            }
-         }
-      }
+      pv.set( plane.a > 0 ? aabb.max.x : aabb.min.x, plane.b > 0 ? aabb.max.y : aabb.min.y, plane.c > 0 ? aabb.max.z : aabb.min.z, 1.0f );
 
-      float dist = nearPoint.dot( planeNormal );
-      dist = dist + frustum.planes[i].d;
-      if ( dist > 0 )
+      float n = plane.dotCoord( pv );
+      if ( n < 0 )
       {
+         // bounding box is outside the frustum
          return false;
       }
    }
@@ -153,7 +103,8 @@ bool testCollision( const Frustum& frustum, const BoundingSphere& sphere )
 {
    for (int i = 0; i < 6; ++i)
    {
-      if ( frustum.planes[i].dotCoord( sphere.origin ) > sphere.radius ) 
+      float n = frustum.planes[i].dotCoord( sphere.origin );
+      if ( n < -sphere.radius ) 
       {
          return false;
       }

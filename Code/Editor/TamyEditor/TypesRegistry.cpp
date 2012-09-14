@@ -114,10 +114,12 @@ REGISTER_TYPE( GBTimer );
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "NavigationState.h"
-#include "NodeManipulationState.h"
+#include "GizmoNodeManipulationState.h"
+#include "PlanarNodeManipulationState.h"
 
 REGISTER_TYPE( NavigationState );
-REGISTER_TYPE( NodeManipulationState );
+REGISTER_TYPE( GizmoNodeManipulationState );
+REGISTER_TYPE( PlanarNodeManipulationState );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -128,11 +130,13 @@ REGISTER_EXTERNAL_TYPE( QPointF );
 #include "DebugGeometry.h"
 #include "DRDirectionalLight.h"
 #include "DRPointLight.h"
+#include "DRGeometry.h"
 #include "GizmoMaterial.h"
 #include "GizmoAxis.h"
 #include "Gizmo.h"
 #include "DebugGrid.h"
 #include "SingleColorDebugMat.h"
+#include "DebugEntitiesManager.h"
 REGISTER_ABSTRACT_TYPE( GizmoMaterial );
 REGISTER_ABSTRACT_TYPE( GizmoAxis );
 REGISTER_ABSTRACT_TYPE( Gizmo );
@@ -141,5 +145,7 @@ REGISTER_ABSTRACT_TYPE( SingleColorDebugMat );
 REGISTER_ABSTRACT_TYPE( DebugGeometry );
 REGISTER_ABSTRACT_TYPE( DRDirectionalLight );
 REGISTER_ABSTRACT_TYPE( DRPointLight );
+REGISTER_ABSTRACT_TYPE( DRGeometry );
+REGISTER_ENUM_TYPE( DebugFeature );
 
 ///////////////////////////////////////////////////////////////////////////////

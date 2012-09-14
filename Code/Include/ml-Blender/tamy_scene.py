@@ -170,8 +170,7 @@ def define_hierarchy( entities, entitiesDict, globalMatrix ):
 		if blenderObject.parent is None:
 			# it's the root of a hierarchy - therefore its local matrix should be multipliend by the desired global
 			# matrix to convert its coordinate system to Tamy
-			mtx = globalMatrix * obMatrix
-			tamyEntity.set_matrix( mtx )
+			tamyEntity.set_matrix( obMatrix )
 			continue
 		
 		# set the entity's parent index
@@ -184,6 +183,6 @@ def define_hierarchy( entities, entitiesDict, globalMatrix ):
 		parentMtx = entities[parentIdx][2]
 		localMtx = parentMtx.inverted() * obMatrix
 
-		tamyEntity.set_matrix( localMtx )
+		tamyEntity.set_matrix( obMatrix )
 		
 ### ===========================================================================

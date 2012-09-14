@@ -151,7 +151,7 @@ void Gizmo::createRotationGizmo()
    Quaternion rotQ;
 
    float ringRadius = 0.2f;
-   float ringCircumferenceWidth = 0.003f;
+   float ringCircumferenceWidth = 0.008f;
 
    Matrix transformOX, transformOY, transformOZ;
 

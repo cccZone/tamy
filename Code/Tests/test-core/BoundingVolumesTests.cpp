@@ -107,12 +107,12 @@ TEST(AABoundingBox, intersects_BoundingSphere)
 TEST(BoundingSphere, intersects_Frustrum)
 {
    Frustum frustrum;
-   frustrum.planes[0]  = Plane(         0,          0,         -1, 1.01f);
-   frustrum.planes[1]  = Plane(         0,          0,          1, -5002.28f);
-   frustrum.planes[2]  = Plane(-0.707107f,          0, -0.707107f, 0);
-   frustrum.planes[3]  = Plane( 0.707107f,          0, -0.707107f, 0);
-   frustrum.planes[4]  = Plane(         0,  0.707107f, -0.707107f, 0);
-   frustrum.planes[5]  = Plane(         0, -0.707107f, -0.707107f, 0);
+   frustrum.planes[0]  = Plane(         0,          0,         1, -1.01f);
+   frustrum.planes[1]  = Plane(         0,          0,        -1, 5002.28f);
+   frustrum.planes[2]  = Plane( 0.707107f,          0,  0.707107f, 0);
+   frustrum.planes[3]  = Plane(-0.707107f,          0,  0.707107f, 0);
+   frustrum.planes[4]  = Plane(         0, -0.707107f,  0.707107f, 0);
+   frustrum.planes[5]  = Plane(         0,  0.707107f,  0.707107f, 0);
 
    // completely inside
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(0, 0, 100), 1)));

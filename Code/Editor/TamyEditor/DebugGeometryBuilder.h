@@ -19,6 +19,14 @@ class DebugGeometryBuilder
 {
 public:
    /**
+    * Creates a cube mesh.
+    *
+    * @param min     bounding box's minimum extent
+    * @param max     bounding box's maximum extent
+    */
+   static TriangleMesh* createBox( const Vector& min, const Vector& max );
+
+   /**
     * Creates a line-shaped mesh with an arrow-shaped tip.
     *
     * @param size    arrow line 'width'

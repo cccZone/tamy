@@ -107,7 +107,7 @@
     <Filter Include="MemoryManagement\Allocators">
       <UniqueIdentifier>{023ea3c9-eca4-4304-85db-1d7366d120d4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DataStructures\Containers">
+    <Filter Include="DataStructures\Collections">
       <UniqueIdentifier>{b8f2cdd9-51b6-4889-8021-2bc3bf92e23d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -649,19 +649,25 @@
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Array.h">
-      <Filter>DataStructures\Containers</Filter>
+      <Filter>DataStructures\Collections</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\ConstSizeArray.h">
-      <Filter>DataStructures\Containers</Filter>
+      <Filter>DataStructures\Collections</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\List.h">
-      <Filter>DataStructures\Containers</Filter>
+      <Filter>DataStructures\Collections</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Stack.h">
-      <Filter>DataStructures\Containers</Filter>
+      <Filter>DataStructures\Collections</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\FilesystemUtils.h">
       <Filter>Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\CollectionUtils.h">
+      <Filter>DataStructures\Collections</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\TVector.h">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -791,9 +797,6 @@
     <None Include="..\..\Include\core\CellSpacePartition.inl">
       <Filter>DataStructures</Filter>
     </None>
-    <None Include="..\..\Include\core\Vector.inl">
-      <Filter>Math</Filter>
-    </None>
     <None Include="..\..\Include\core\ReflectionPropertyEditor.inl">
       <Filter>RTTI\Properties</Filter>
     </None>
@@ -801,16 +804,25 @@
       <Filter>MemoryManagement</Filter>
     </None>
     <None Include="..\..\Include\core\Array.inl">
-      <Filter>DataStructures\Containers</Filter>
+      <Filter>DataStructures\Collections</Filter>
     </None>
     <None Include="..\..\Include\core\ConstSizeArray.inl">
-      <Filter>DataStructures\Containers</Filter>
+      <Filter>DataStructures\Collections</Filter>
     </None>
     <None Include="..\..\Include\core\List.inl">
-      <Filter>DataStructures\Containers</Filter>
+      <Filter>DataStructures\Collections</Filter>
     </None>
     <None Include="..\..\Include\core\Stack.inl">
-      <Filter>DataStructures\Containers</Filter>
+      <Filter>DataStructures\Collections</Filter>
+    </None>
+    <None Include="..\..\Include\core\CollectionUtils.inl">
+      <Filter>DataStructures\Collections</Filter>
+    </None>
+    <None Include="..\..\Include\core\TVector.inl">
+      <Filter>Math</Filter>
+    </None>
+    <None Include="..\..\Include\core\Vector.inl">
+      <Filter>Math</Filter>
     </None>
   </ItemGroup>
 </Project>

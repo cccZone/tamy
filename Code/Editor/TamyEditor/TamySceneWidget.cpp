@@ -579,13 +579,6 @@ void TamySceneWidget::queryScene( SceneQuery& query ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TamySceneWidget::toggleDebugMode()
-{
-   m_queryRenderer->toggleDebugMode();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void TamySceneWidget::setGizmoTranslationMode()
 {
    m_gizmoMode = Gizmo::GM_TRANSLATION;

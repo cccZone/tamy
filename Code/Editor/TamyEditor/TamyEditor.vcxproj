@@ -209,6 +209,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\." "-I." "-I.\GeneratedFiles" "-I." "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="CameraPlaneNodeManipulator.h" />
     <ClInclude Include="DebugEntitiesManager.h" />
     <ClInclude Include="DebugGeometry.h" />
     <ClInclude Include="DebugGeometryBuilder.h" />
@@ -242,6 +243,7 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\." "-I." "-I.\GeneratedFiles" "-I." "-I."</Command>
     </CustomBuild>
     <ClInclude Include="DRDirectionalLight.h" />
+    <ClInclude Include="DRGeometry.h" />
     <ClInclude Include="DRPointLight.h" />
     <ClInclude Include="EditorDebugRenderer.h" />
     <CustomBuild Include="GameDeploymentInfo.h">
@@ -373,7 +375,7 @@
     <ClInclude Include="MBTimer.h" />
     <ClInclude Include="MBVec4.h" />
     <ClInclude Include="NavigationState.h" />
-    <ClInclude Include="NodeManipulationState.h" />
+    <ClInclude Include="GizmoNodeManipulationState.h" />
     <ClInclude Include="GizmoController.h" />
     <CustomBuild Include="ObjectPropertyEditor.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -456,6 +458,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\." "-I." "-I.\GeneratedFiles" "-I." "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="PlanarNodeManipulationState.h" />
     <ClInclude Include="Project.h" />
     <CustomBuild Include="ProjectTree.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -969,6 +972,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AdditionalTreeItemFactories.cpp" />
+    <ClCompile Include="CameraPlaneNodeManipulator.cpp" />
     <ClCompile Include="ClosableFrame.cpp" />
     <ClCompile Include="ColorPropertyEditor.cpp" />
     <ClCompile Include="DebugEntitiesManager.cpp" />
@@ -978,6 +982,7 @@
     <ClCompile Include="DepthBufferDescriptorDialog.cpp" />
     <ClCompile Include="DockableTabWidget.cpp" />
     <ClCompile Include="DRDirectionalLight.cpp" />
+    <ClCompile Include="DRGeometry.cpp" />
     <ClCompile Include="DRPointLight.cpp" />
     <ClCompile Include="EditorDebugRenderer.cpp" />
     <ClCompile Include="FilesystemTree.cpp" />
@@ -1158,6 +1163,7 @@
     <ClCompile Include="GizmoMaterial.cpp" />
     <ClCompile Include="HexEditor.cpp" />
     <ClCompile Include="MainEditorPanel.cpp" />
+    <ClCompile Include="PlanarNodeManipulationState.cpp" />
     <ClCompile Include="ProfilerChart.cpp" />
     <ClCompile Include="ProfilerFrame.cpp" />
     <ClCompile Include="Project.cpp" />
@@ -1368,7 +1374,7 @@
     <ClCompile Include="MBTimer.cpp" />
     <ClCompile Include="MBVec4.cpp" />
     <ClCompile Include="NavigationState.cpp" />
-    <ClCompile Include="NodeManipulationState.cpp" />
+    <ClCompile Include="GizmoNodeManipulationState.cpp" />
     <ClCompile Include="GizmoController.cpp" />
     <ClCompile Include="ObjectPropertyEditor.cpp" />
     <ClInclude Include="PipelineSocket.inl">

@@ -133,6 +133,5 @@ class TamyLight( Structure ):
 		
 	def set_matrix( self, matrix ):
 		self.localMtx = tamy_misc.TamyMatrix( matrix )
-		self.localMtx.invertRotation()
 	
 ### ===========================================================================

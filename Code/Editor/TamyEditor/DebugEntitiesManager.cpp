@@ -1,19 +1,36 @@
 #include "DebugEntitiesManager.h"
 #include "EditorDebugRenderer.h"
 #include "core-Renderer.h"
+#include "core.h"
 
 // debug representations
 #include "DRDirectionalLight.h"
 #include "DRPointLight.h"
+#include "DRGeometry.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_ENUM( DebugFeature );
+   ENUM_VAL( BoundingBoxes );
+   ENUM_VAL( DebugShapes );
+END_ENUM();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 DebugEntitiesManager::DebugEntitiesManager( EditorDebugRenderer& debugRenderer )
    : m_debugRenderer( debugRenderer )
 {
+   // set debug features
+   m_debugFeatureEnabled = new bool[MAX_DEBUG_FEATURES];
+   memset( m_debugFeatureEnabled, 0, sizeof( bool ) * MAX_DEBUG_FEATURES );
+
+   m_debugFeatureEnabled[DebugShapes] = true;
+
+   // register debug representations
    associate< DirectionalLight, DRDirectionalLight >();
    associate< PointLight, DRPointLight >();
+   associateAbstract< Geometry, DRGeometry >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,6 +38,26 @@ DebugEntitiesManager::DebugEntitiesManager( EditorDebugRenderer& debugRenderer )
 DebugEntitiesManager::~DebugEntitiesManager()
 {
    resetContents();
+
+   delete [] m_debugFeatureEnabled;
+   m_debugFeatureEnabled = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool DebugEntitiesManager::toggleDebugDisplay( DebugFeature flag )
+{
+   m_debugFeatureEnabled[flag] = !m_debugFeatureEnabled[flag];
+
+   // apply the feature to the existing representations
+   uint count = m_representations.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      DebugGeometry* representation = m_representations[i];
+      applyFeature( representation, flag );
+   }
+
+   return m_debugFeatureEnabled[flag];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,6 +99,12 @@ void DebugEntitiesManager::onEntityAdded( Entity& entity )
       m_debugRenderer.add( *representation );
       m_representedEntities.push_back( spatialEntity );
       m_representations.push_back( representation );
+
+      // apply all debug features to it
+      for ( uint i = 0; i < MAX_DEBUG_FEATURES; ++i )
+      {
+         applyFeature( representation, (DebugFeature)i );
+      }
    }
 }
 
@@ -107,6 +150,28 @@ void DebugEntitiesManager::resetContents()
    m_representations.clear();
 
    m_representedEntities.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DebugEntitiesManager::applyFeature( DebugGeometry* representation, DebugFeature feature )
+{
+   bool enable = m_debugFeatureEnabled[feature];
+
+   switch( feature )
+   {
+   case BoundingBoxes:
+      {
+         representation->enableBoundingBox( enable );
+         break;
+      }
+
+   case DebugShapes:
+      {
+         representation->enableDebugShape( enable );
+         break;
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

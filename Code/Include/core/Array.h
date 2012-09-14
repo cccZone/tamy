@@ -61,6 +61,11 @@ public:
    void clear();
 
    /**
+    * Checks if the container is empty.
+    */
+   bool empty() const; 
+
+   /**
     * The method returns the number of elements that can be put
     * in the array without it being resized.
     */

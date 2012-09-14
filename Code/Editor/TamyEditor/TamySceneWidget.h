@@ -113,21 +113,11 @@ public:
    void localToViewport( const Point& inScreenPt, Vector& outViewportPt ) const;
 
    /**
-    * Toggles the widget debug mode.
-    */
-   void toggleDebugMode();
-
-   /**
     * Changes the pipeline the widget uses to render stuff.
     *
     * @param pipeline
     */
    void setRenderingPipeline( const FilePath& pipeline );
-
-   /**
-    * Returns filepath to the currently used rendering pipeline resource.
-    */
-   const FilePath& getRenderingPipeline() const { return m_rendererPipelineName; }
 
    // -------------------------------------------------------------------------
    // Objects manipulation gizmo management
@@ -143,6 +133,11 @@ public:
     */
    void setGizmoRotationMode();
 
+   /**
+    * Returns currently set gizmo manipulation mode.
+    */
+   inline Gizmo::Mode getGizmoMode() const { return m_gizmoMode; }
+
    // -------------------------------------------------------------------------
    // Accessors
    // -------------------------------------------------------------------------
@@ -151,6 +146,21 @@ public:
    inline Camera& getCamera() const { return *m_camera; }
 
    inline CompositeRenderingMechanism& getRenderingMech() const { return *m_renderingMech; }
+
+   /**
+    * Gives access to the scene queries renderer, allowing to toggle certain debugging features.
+    */
+   inline QueryRenderingPass& getQueryRenderer() const { return *m_queryRenderer; }
+
+   /**
+    * Gives access to the debug entities manager that allows to toggle certain debugging features.
+    */
+   inline DebugEntitiesManager& getDebugEntitiesManager() const { return *m_debugEntitiesManager; }
+   
+   /**
+    * Returns filepath to the currently used rendering pipeline resource.
+    */
+   const FilePath& getRenderingPipeline() const { return m_rendererPipelineName; }
 
    // -------------------------------------------------------------------------
    // SelectionManagerListener implementation

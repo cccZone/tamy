@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Algorithms.h" />
+    <ClInclude Include="..\..\Include\core\CollectionUtils.h" />
     <ClInclude Include="..\..\Include\core\Color.h" />
     <ClInclude Include="..\..\Include\core\DefaultAllocator.h" />
     <ClInclude Include="..\..\Include\core\FilesystemSection.h" />
@@ -217,6 +218,7 @@
     <ClInclude Include="..\..\Include\core\StringUtils.h" />
     <ClInclude Include="..\..\Include\core\Transform.h" />
     <ClInclude Include="..\..\Include\core\TriangleUtil.h" />
+    <ClInclude Include="..\..\Include\core\TVector.h" />
     <ClInclude Include="..\..\Include\core\TypeRegistrationMacros.h" />
     <ClInclude Include="..\..\Include\core\types.h" />
     <ClInclude Include="..\..\Include\core\UniqueObject.h" />
@@ -269,6 +271,7 @@
     <None Include="..\..\Include\core\Algorithms.inl" />
     <None Include="..\..\Include\core\Array.inl" />
     <None Include="..\..\Include\core\CellSpacePartition.inl" />
+    <None Include="..\..\Include\core\CollectionUtils.inl" />
     <None Include="..\..\Include\core\ConstSizeArray.inl" />
     <None Include="..\..\Include\core\Graph.inl" />
     <None Include="..\..\Include\core\GraphAlgorithms.inl" />
@@ -314,6 +317,7 @@
     <None Include="..\..\Include\core\ResourcesManager.inl" />
     <None Include="..\..\Include\core\ResourceStorage.inl" />
     <None Include="..\..\Include\core\UniqueObject.inl" />
+    <None Include="..\..\Include\core\TVector.inl" />
     <None Include="..\..\Include\core\Vector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

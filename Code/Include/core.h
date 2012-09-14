@@ -12,6 +12,7 @@
 #include "core\Stack.h"
 #include "core\RoundBuffer.h"
 #include "core\List.h"
+#include "core\CollectionUtils.h"
 // ----------------------------------------------------------------------------
 // -->Graphs
 // ----------------------------------------------------------------------------
