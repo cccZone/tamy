@@ -18,7 +18,7 @@ TEST(NodesHierarchy, attachingChild)
 
    CPPUNIT_ASSERT_EQUAL(false, root.hasParentNode());
    CPPUNIT_ASSERT_EQUAL(true, child->hasParentNode());
-   CPPUNIT_ASSERT_EQUAL(&root, &(child->getParentNode()));
+   CPPUNIT_ASSERT_EQUAL(&root, child->getParentNode());
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -39,7 +39,7 @@ TEST(NodesHierarchy, switchingChildren)
    CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (0), differentRoot.getChildrenCount());
 
    CPPUNIT_ASSERT_EQUAL(true, child->hasParentNode());
-   CPPUNIT_ASSERT_EQUAL(&root, &(child->getParentNode()));
+   CPPUNIT_ASSERT_EQUAL(&root, child->getParentNode());
 
    differentRoot.addChild(child);
 
@@ -47,7 +47,7 @@ TEST(NodesHierarchy, switchingChildren)
    CPPUNIT_ASSERT_EQUAL(static_cast<unsigned int> (1), differentRoot.getChildrenCount());
 
    CPPUNIT_ASSERT_EQUAL(true, child->hasParentNode());
-   CPPUNIT_ASSERT_EQUAL(&differentRoot, &(child->getParentNode()));
+   CPPUNIT_ASSERT_EQUAL(&differentRoot, child->getParentNode());
 };
 
 ///////////////////////////////////////////////////////////////////////////////

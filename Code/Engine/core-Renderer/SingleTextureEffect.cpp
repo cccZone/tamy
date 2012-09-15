@@ -163,7 +163,7 @@ void SingleTextureEffect::onObjectLoaded()
 
    if ( isAttached() )
    {
-      m_parentNode = dynamic_cast< SpatialEntity *>( &getParent() );
+      m_parentNode = dynamic_cast< SpatialEntity *>( getParent() );
    }
 }
 

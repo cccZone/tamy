@@ -16,10 +16,9 @@ bool Entity::isAttached() const { return m_parent != NULL; }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Entity& Entity::getParent() const
+Entity* Entity::getParent() const
 {
-   ASSERT_MSG( m_parent != NULL, "Entity doesn't have a parent" );
-   return *m_parent;
+   return m_parent;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -101,7 +101,7 @@ void NavigationState::setResult( const Array< Entity* >& foundEntities )
             while( spatialEntityCandidate && !spatialEntityCandidate->isA< SpatialEntity >() )
             {
                // find a parent of the entity that's a node
-               spatialEntityCandidate = &spatialEntityCandidate->getParent();
+               spatialEntityCandidate = spatialEntityCandidate->getParent();
             }
 
             if ( spatialEntityCandidate != NULL )

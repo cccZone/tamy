@@ -84,6 +84,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
+    <ClCompile Include="AmbientLight.cpp" />
     <ClCompile Include="BasicRenderingEntitiesFactory.cpp" />
     <ClCompile Include="DepthBuffer.cpp" />
     <ClCompile Include="DepthBufferDescriptor.cpp" />
@@ -186,6 +187,7 @@
     <None Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\AmbientLight.h" />
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderingEntitiesFactory.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />

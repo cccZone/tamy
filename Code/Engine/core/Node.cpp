@@ -200,13 +200,9 @@ void Node::setBoundingVolume( BoundingVolume* volume )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Node& Node::getParentNode()
+Node* Node::getParentNode()
 {
-   if (m_parent == NULL) 
-   {
-      ASSERT_MSG( false, "This node doesn't have a parent" );
-   }
-   return *m_parent;
+   return m_parent;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -216,15 +212,14 @@ void Node::addChild(Node* childNode)
 {
    if (childNode->hasParentNode())
    {
-      Node& prevParent = childNode->getParentNode();
-      prevParent.removeChild(*childNode);
+      Node* prevParent = childNode->getParentNode();
+      prevParent->removeChild(*childNode);
    }
 
    m_childrenNodes.push_back(childNode);
    childNode->setParent(*this);
 
-   for (std::list<NodeObserver*>::iterator it = m_observers.begin();
-        it != m_observers.end(); ++it)
+   for ( std::list<NodeObserver*>::iterator it = m_observers.begin(); it != m_observers.end(); ++it )
    {
       (*it)->childAdded(*this, *childNode);
    }

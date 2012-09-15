@@ -132,10 +132,8 @@ public:
    /**
     * A node can have a single parent node. This method will return 
     * a reference to it if this is the case.
-    *
-    * @throws std::logic_error if the parent doesn't have a node set
     */
-   Node& getParentNode();
+   Node* getParentNode();
 
    /**
     * A node can have any number of children. Their positions

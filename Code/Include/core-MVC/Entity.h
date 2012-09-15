@@ -115,7 +115,7 @@ public:
    /**
     * Returns the parent of this entity (if it's attached to one).
     */
-   inline Entity& getParent() const;
+   inline Entity* getParent() const;
 
    /**
     * Returns the entity's children.

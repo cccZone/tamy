@@ -135,6 +135,7 @@ REGISTER_ENUM_TYPE( PreviewType );
 REGISTER_ABSTRACT_TYPE( Light );
 REGISTER_TYPE( DirectionalLight );
 REGISTER_TYPE( PointLight );
+REGISTER_TYPE( AmbientLight );
 REGISTER_TYPE( RPDeferredLightingNode );
 
 ///////////////////////////////////////////////////////////////////////////////

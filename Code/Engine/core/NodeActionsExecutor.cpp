@@ -86,8 +86,7 @@ void NodeActionsExecutor::findActionNodes(Node& inNodeToAnalyze,
    bool foundActionNode = false;
    while ((analyzedNode != NULL) && (foundActionNode == false))
    {
-      it = std::find_if(m_actions.begin(), m_actions.end(), 
-                        comparator(*analyzedNode));
+      it = std::find_if( m_actions.begin(), m_actions.end(), comparator(*analyzedNode) );
       if (it != m_actions.end())
       {
          outActions.insert(it->second);
@@ -96,7 +95,7 @@ void NodeActionsExecutor::findActionNodes(Node& inNodeToAnalyze,
 
       if (analyzedNode->hasParentNode())
       {
-         analyzedNode = &(analyzedNode->getParentNode());
+         analyzedNode = analyzedNode->getParentNode();
       }
       else
       {
