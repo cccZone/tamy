@@ -47,7 +47,7 @@ void GNSpatialEntity::onCreateLayout( const GeometryEntity& host ) const
 {
    RuntimeDataBuffer& data = host.data();
    data.registerVar( m_parentNode );
-   data[ m_parentNode ] = DynamicCast< SpatialEntity >( &host.getParent() );
+   data[ m_parentNode ] = DynamicCast< SpatialEntity >( host.getParent() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

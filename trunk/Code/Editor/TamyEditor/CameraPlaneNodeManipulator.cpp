@@ -109,13 +109,31 @@ void CameraPlaneNodeManipulator::translateSelectedNodes( const Vector& valChange
    Vector displacement;
    displacement.setAdd( sideDisplacement, upDisplacement );
 
-   Matrix transformMtx;
-   transformMtx.setTranslation( displacement );
-
+ 
    // apply the transform
+   Quaternion parentOrientation;
+   Vector transformedDisplacement;
+   Matrix transformMtx;
+
    uint count = m_selectedNodes.size();
    for ( uint i = 0; i < count; ++i )
    {
+      SpatialEntity* entity = m_selectedNodes[i];
+      Node* parentNode = entity->getParentNode();
+      if ( parentNode )
+      {
+         // if it's a child node that we're moving, move it with respect to it's parent node coordinate system
+         parentNode->getGlobalMtx().getRotation( parentOrientation );
+         parentOrientation.conjugate();
+         parentOrientation.transform( displacement, transformedDisplacement );
+
+         transformMtx.setTranslation( transformedDisplacement );
+      }
+      else
+      {
+         transformMtx.setTranslation( displacement );
+      }
+
       m_selectedNodes[i]->accessLocalMtx().mul( transformMtx );
    }
 }
@@ -127,7 +145,7 @@ void CameraPlaneNodeManipulator::rotateSelectedNodes( const Vector& valChange ) 
    const Matrix& cameraGlobalMtx = m_camera->getLocalMtx();
 
    float rollAngleMag = sqrt( valChange.x * valChange.x + valChange.y * valChange.y );
-   float rollAngleSign = ( valChange.x + valChange.y ) >= 0 ? 1.0f : -1.0f;
+   float rollAngleSign = ( valChange.x + valChange.y ) >= 0 ? -1.0f : 1.0f;
    float rollAngle = DEG2RAD( rollAngleMag * rollAngleSign );
 
    Quaternion rollQuat;
@@ -135,23 +153,36 @@ void CameraPlaneNodeManipulator::rotateSelectedNodes( const Vector& valChange ) 
 
    // apply the transform
    Transform currentTransform;
-
+   Quaternion parentOrientation, entityOrientation, newEntityOrientation;
    Matrix transformMtx;
-   SpatialEntity* entity;
    uint count = m_selectedNodes.size();
    for ( uint i = 0; i < count; ++i )
    {
-      entity = m_selectedNodes[i];
+      SpatialEntity* entity = m_selectedNodes[i];
+
       const Matrix& entityLocalMtx = entity->getLocalMtx();
       currentTransform.set( entityLocalMtx );
 
-      currentTransform.m_rotation.mul( rollQuat );
+      Node* parentNode = entity->getParentNode();
+      if ( parentNode )
+      {
+         // if it's a child node that we're moving, move it with respect to it's parent node coordinate system
+         // @see Quaternion::worldToLocalTransform test to see exactly how and why this works
+
+         entity->getGlobalMtx().getRotation( entityOrientation );
+         newEntityOrientation.setMul( entityOrientation, rollQuat );
+
+         parentNode->getGlobalMtx().getRotation( parentOrientation );
+         parentOrientation.conjugate();
+
+         currentTransform.m_rotation.setMul( newEntityOrientation, parentOrientation );
+      }
+      else
+      {
+         currentTransform.m_rotation.mul( rollQuat );
+      }
+
       currentTransform.toMatrix( transformMtx );
-
-      // TODO: !!!!!!!! our math works only with left handed systems. Quaternions break when a right handed system matrix
-      // is used - so DON'T USE THEM. Export models from Blender using a different convention, instead of matrix shuffling.
-      // The exported matrices absolutely need to be left-handed
-
       entity->setLocalMtx( transformMtx );
    }
 }

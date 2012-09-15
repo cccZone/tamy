@@ -169,7 +169,7 @@ void SceneTreeViewer::buildEntitiesStack( Entity& entity, std::list< Entity* >& 
    stack.push_front( &entity );
    while( stack.front()->isAttached() )
    {
-      stack.push_front( &stack.front()->getParent() );
+      stack.push_front( stack.front()->getParent() );
    }
 }
 

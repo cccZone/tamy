@@ -391,6 +391,9 @@
     <ClCompile Include="Material.cpp">
       <Filter>Materials\MaterialGraph</Filter>
     </ClCompile>
+    <ClCompile Include="AmbientLight.cpp">
+      <Filter>Lighting\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">
@@ -762,6 +765,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MeshUtils.h">
       <Filter>Geometry\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\AmbientLight.h">
+      <Filter>Lighting\Entities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

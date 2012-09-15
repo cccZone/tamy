@@ -96,7 +96,7 @@ void assemble_scene( const char* sceneName )
 // 3. export tekstury normalek ( done )
 // 4. export tekstury specular ( i wsparcie w modelu oswietlenia ) ( done )
 // 5. oswietlenie ambientowe z ustawien swiata
-// 6. wsparcie dla dokladnych materialow ( kolor specular'a itd )7
+// 6. wsparcie dla dokladnych materialow ( kolor specular'a itd )
 
 // INNE ELEMENTY SCENY
 // 1. swiatla (done )

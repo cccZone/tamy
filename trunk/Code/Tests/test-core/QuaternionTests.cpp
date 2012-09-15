@@ -205,3 +205,50 @@ TEST( Quaternion, transform )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST( Quaternion, worldToLocalTransform )
+{
+   Quaternion parentWorld, childLocal, childWorld;
+
+   // define parent and child transforms
+   parentWorld.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
+   childLocal.setAxisAngle( Vector::OZ, DEG2RAD( 90.0f ) );
+
+   // calculate and test their concatenation
+   childWorld.setMul( childLocal, parentWorld ); // (1) - this equation MUST be the same as equation (2) in order for this test to give true results
+
+   {
+      Vector oxConcatenatedParentChildSpace;
+      childWorld.transform( Vector::OX, oxConcatenatedParentChildSpace );
+      COMPARE_VEC( Vector::OY, oxConcatenatedParentChildSpace );
+   }
+
+   // introduce additional world rotation that should be applied only to the child
+   Quaternion childWorldRotation;
+   childWorldRotation.setAxisAngle( Vector::OX, DEG2RAD( 45.0f ) );
+
+   Quaternion newChildWorld;
+   newChildWorld.setMul( childWorld, childWorldRotation );
+
+   // test the new world transform
+   {
+      Vector oxConcatenatedParentChildSpace;
+      newChildWorld.transform( Vector::OX, oxConcatenatedParentChildSpace );
+      COMPARE_VEC( Vector( 0.0f, 0.70710659f, 0.70710659f ), oxConcatenatedParentChildSpace );
+   }
+
+
+   Quaternion invParentWorld;
+   invParentWorld.setConjugated( parentWorld );
+   childLocal.setMul( newChildWorld, invParentWorld );
+
+   // recalculate and test the new local transform
+   childWorld.setMul( childLocal, parentWorld );  // (2) - this equation MUST be the same as equation (1) in order for this test to give true results
+   {
+      Vector oxConcatenatedParentChildSpace;
+      childWorld.transform( Vector::OX, oxConcatenatedParentChildSpace );
+      COMPARE_VEC( Vector( 0.0f, 0.70710659f, 0.70710659f ), oxConcatenatedParentChildSpace );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
