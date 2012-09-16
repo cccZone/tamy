@@ -113,8 +113,6 @@ public:
 
 public slots:
    void onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu );
-   void onGetItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr );
-   void onAddNode( QTreeWidgetItem* parent, unsigned int typeIdx );
    void onRemoveNode( QTreeWidgetItem* parent, QTreeWidgetItem* child );
    void onClearNode( QTreeWidgetItem* node );
    void onItemDoubleClicked( QTreeWidgetItem* item, int column );
@@ -146,6 +144,10 @@ private:
     */
    void refreshRecursive( const std::string& rootDir = "/" );
 
+   /**
+    * Creates the part of a popup menu responsible for adding new project resources
+    */
+   void buildAddResourcesMenu( QTreeWidgetItem* parentItem, QMenu& menu );
 
    // -------------------------------------------------------------------------
    // interface for the nodes
@@ -168,6 +170,35 @@ public:
 
 protected:
    QMimeData* mimeData( const QList<QTreeWidgetItem *> items ) const;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class AddProjectResourceAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   ProjectTree*                  m_parentTree;
+   ProjectTreeNode*              m_parentNode;
+   TreeWidgetDescFactory*        m_itemsFactory;
+   int                           m_typeIdx;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param icon
+    * @param desc
+    * @param typeIdx
+    * @param parentTree
+    * @param parentNode
+    * @param itemsFactory
+    */
+   AddProjectResourceAction( const QIcon& icon, const QString& desc, unsigned int typeIdx, ProjectTree* parentTree, ProjectTreeNode* parentNode, TreeWidgetDescFactory* itemsFactory );
+
+public slots:
+   void onTriggered();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -9,6 +9,7 @@
 // tree widget
 #include "FSNodeMimeData.h"
 #include <QTreeWidgetItem>
+#include "MenuUtils.h"
 
 // nodes
 #include "FSTreeNode.h"
@@ -100,8 +101,6 @@ void FilesystemTree::initialize( const QString& topObjectName )
       m_fsTree->setDragEnabled( true ); 
       m_fsTree->setDropIndicatorShown( true ); 
       connect( m_fsTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( onItemDoubleClicked( QTreeWidgetItem*, int ) ) );
-      connect( m_fsTree, SIGNAL( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ), this, SLOT( onGetItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ) );
-      connect( m_fsTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( onAddNode( QTreeWidgetItem*, unsigned int ) ) );
       connect( m_fsTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( onRemoveNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
       connect( m_fsTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( onClearNode( QTreeWidgetItem* ) ) );
       connect( m_fsTree, SIGNAL( popupMenuShown( QTreeWidgetItem*, QMenu& ) ), this, SLOT( onPopupMenuShown( QTreeWidgetItem*, QMenu& ) ) );
@@ -532,23 +531,6 @@ void FilesystemTree::addNode( unsigned int idx, const std::string& parentDir )
          break;
       }
    }
-
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void FilesystemTree::onGetItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr )
-{
-   FSTreeNode* item = dynamic_cast< FSTreeNode* >( parent );
-   outFactoryPtr = item->getDescFactory( *this );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void FilesystemTree::onAddNode( QTreeWidgetItem* parent, unsigned int typeIdx )
-{  
-   FSTreeNode* item = dynamic_cast< FSTreeNode* >( parent );
-   item->addNode( typeIdx, *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -580,6 +562,34 @@ void FilesystemTree::onItemDoubleClicked( QTreeWidgetItem* item, int column )
 
 void FilesystemTree::onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu )
 {
+   class AddResourceActionFactory : public MenuActionsFactory
+   {
+   private:
+      FilesystemTree*               m_parentTree;
+      FSTreeNode*                   m_parentNode;
+      TreeWidgetDescFactory*        m_itemsFactory;
+
+   public:
+      AddResourceActionFactory( FilesystemTree* parentTree, FSTreeNode* parentNode, TreeWidgetDescFactory* itemsFactory )
+         : m_parentTree( parentTree )
+         , m_parentNode( parentNode )
+         , m_itemsFactory( itemsFactory )
+      {}
+
+      QAction* create( const QIcon& icon, const QString& desc, int itemTypeIdx, QWidget* parentWidget ) const
+      {
+         QAction* action = new AddFilesystemResourceAction( icon, desc, itemTypeIdx, m_parentTree, m_parentNode, m_itemsFactory );
+         return action;
+      }
+   };
+
+   // attach the entities addition sub-menu
+   FSTreeNode* parentNode = static_cast< FSTreeNode* >( node );
+   TreeWidgetDescFactory* itemsFactory = parentNode->getDescFactory( *this );
+
+   AddResourceActionFactory actionsFactory( this, parentNode, itemsFactory );
+   MenuUtils::itemsListMenu( itemsFactory, actionsFactory, &menu );
+
    emit popupMenuRequest( node, menu );
 }
 
@@ -677,6 +687,27 @@ QMimeData* FSTreeWidget::mimeData( const QList<QTreeWidgetItem *> items ) const
    dataEncoder.save( *data );
 
    return data;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+AddFilesystemResourceAction::AddFilesystemResourceAction( const QIcon& icon, const QString& desc, unsigned int typeIdx, FilesystemTree* parentTree, FSTreeNode* parentNode, TreeWidgetDescFactory* itemsFactory )
+   : QAction( icon, desc, parentTree )
+   , m_parentTree( parentTree )
+   , m_typeIdx( typeIdx )
+   , m_parentNode( parentNode )
+   , m_itemsFactory( itemsFactory )
+{
+   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void AddFilesystemResourceAction::onTriggered()
+{
+   m_parentNode->addNode( m_typeIdx, *m_parentTree );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

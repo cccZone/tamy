@@ -99,6 +99,13 @@ public:
     */
    void setCamera( Camera& camera );
 
+   /**
+    * Shows a pop0up menu that allows to select and add a node to the root of the scene.
+    *
+    * @param pos     where the menu should be displayed ( in global screen coordinates )
+    */
+   void showAddItemPopup( const QPoint& pos );
+
    // -------------------------------------------------------------------------
    // ModelView implementation
    // -------------------------------------------------------------------------
@@ -129,16 +136,45 @@ signals:
 public slots:
    void selectItem( QTreeWidgetItem* item, int column );
    void focusOnItem( QTreeWidgetItem* item, int column );
-   void getItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr );
-   void addNode( QTreeWidgetItem* parent, unsigned int typeIdx );
    void removeNode( QTreeWidgetItem* parent, QTreeWidgetItem* child );
    void clearNode( QTreeWidgetItem* node );
+   void popupMenuShown( QTreeWidgetItem* selectedItem, QMenu& menu);
 
 private:
    void initUI();
    void buildEntitiesStack( Entity& entity, std::list< Entity* >& stack ) const;
    EntityTreeItem* find( Entity& entity );
    SceneTreeEditor* createEditor( EntityTreeItem* item );
+   void buildAddEntitiesMenu( QTreeWidgetItem* parentItem, QMenu& menu );
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class AddSceneNodeAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   SceneTreeEditor*              m_editor;
+   TypeDescFactory< Entity >*    m_itemsFactory;
+   int                           m_typeIdx;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param icon
+    * @param desc
+    * @param typeIdx
+    * @param parent
+    * @param editor
+    * @param itemsFactory
+    */
+   AddSceneNodeAction( const QIcon& icon, const QString& desc, unsigned int typeIdx, QWidget* parent, SceneTreeEditor* editor, TypeDescFactory< Entity >* itemsFactory );
+   ~AddSceneNodeAction();
+
+public slots:
+   void onTriggered();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

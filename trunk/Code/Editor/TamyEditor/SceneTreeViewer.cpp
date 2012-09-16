@@ -11,6 +11,7 @@
 #include "core-Renderer.h"
 #include "TypeDescFactory.h"
 #include "TreeWidget.h"
+#include "MenuUtils.h"
 
 // editors
 #include "ModelEditor.h"
@@ -66,10 +67,9 @@ void SceneTreeViewer::initUI()
    m_sceneTree->setHeaderLabels( columnLabels );
    connect( m_sceneTree, SIGNAL( itemClicked( QTreeWidgetItem*, int ) ), this, SLOT( selectItem( QTreeWidgetItem*, int ) ) );
    connect( m_sceneTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( focusOnItem( QTreeWidgetItem*, int ) ) );
-   connect( m_sceneTree, SIGNAL( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ), this, SLOT( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ) );
-   connect( m_sceneTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( addNode( QTreeWidgetItem*, unsigned int ) ) );
    connect( m_sceneTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
    connect( m_sceneTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( clearNode( QTreeWidgetItem* ) ) );
+   connect( m_sceneTree, SIGNAL( popupMenuShown( QTreeWidgetItem*, QMenu& ) ), this, SLOT( popupMenuShown( QTreeWidgetItem*, QMenu& ) ) );
 
    m_rootItem = new EntityTreeItem( m_sceneTree );
    m_sceneTree->addTopLevelItem( m_rootItem );
@@ -219,39 +219,71 @@ void SceneTreeViewer::focusOnItem( QTreeWidgetItem* item, int column )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneTreeViewer::getItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr )
+void SceneTreeViewer::showAddItemPopup( const QPoint& pos )
 {
-   outFactoryPtr = m_itemsFactory;
+   QMenu* popupMenu = new QMenu( this );
+
+   buildAddEntitiesMenu( NULL, *popupMenu );
+
+   // display the menu
+   popupMenu->popup( pos );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SceneTreeViewer::addNode( QTreeWidgetItem* parent, unsigned int typeIdx )
+void SceneTreeViewer::popupMenuShown( QTreeWidgetItem* selectedItem, QMenu& menu )
 {
-   SceneTreeEditor* editor = createEditor( dynamic_cast< EntityTreeItem* >( parent ) );
+   buildAddEntitiesMenu( selectedItem, menu );
+}
 
-   const SerializableReflectionType* itemType = m_itemsFactory->getClass( typeIdx );
-   if ( itemType )
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneTreeViewer::buildAddEntitiesMenu( QTreeWidgetItem* parentItem, QMenu& menu )
+{
+   class AddEntityActionFactory : public MenuActionsFactory
    {
-      editor->addEntity( *itemType );
-   }
+   private:
+      SceneTreeViewer&              m_viewer;
+      QTreeWidgetItem*              m_parentItem;
+      TypeDescFactory< Entity >*    m_itemsFactory;
+
+   public:
+      AddEntityActionFactory( SceneTreeViewer& viewer, QTreeWidgetItem* parentItem, TypeDescFactory< Entity >* itemsFactory )
+         : m_viewer( viewer )
+         , m_parentItem( parentItem )
+         , m_itemsFactory( itemsFactory )
+      {}
+
+      QAction* create( const QIcon& icon, const QString& desc, int itemTypeIdx, QWidget* parentWidget ) const
+      {
+         SceneTreeEditor* parentEditor = m_viewer.createEditor( static_cast< EntityTreeItem* >( m_parentItem ) );
+         QAction* action = new AddSceneNodeAction( icon, desc, itemTypeIdx, parentWidget, parentEditor, m_itemsFactory );
+         return action;
+      }
+   };
+
+   // attach the entities addition submenu
+   AddEntityActionFactory actionsFactory( *this, parentItem, m_itemsFactory );
+   MenuUtils::itemsListMenu( m_itemsFactory, actionsFactory, &menu );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SceneTreeViewer::removeNode( QTreeWidgetItem* parent, QTreeWidgetItem* child )
 {
-   SceneTreeEditor* parentEditor = createEditor( dynamic_cast< EntityTreeItem* >( parent ) );
-   EntityTreeItem* item = dynamic_cast< EntityTreeItem* >( child );
+   SceneTreeEditor* parentEditor = createEditor( static_cast< EntityTreeItem* >( parent ) );
+   EntityTreeItem* item = static_cast< EntityTreeItem* >( child );
    parentEditor->removeEntity( item->getEntity() );
+   delete parentEditor;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void SceneTreeViewer::clearNode( QTreeWidgetItem* node )
 {
-   SceneTreeEditor* editor = createEditor( dynamic_cast< EntityTreeItem* >( node ) );
+   SceneTreeEditor* editor = createEditor( static_cast< EntityTreeItem* >( node ) );
    editor->clearEntity();
+   delete editor;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -431,6 +463,38 @@ SceneTreeViewer::EntityTreeItem* SceneTreeViewer::EntityTreeItem::find( Entity* 
    }
 
    return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+AddSceneNodeAction::AddSceneNodeAction( const QIcon& icon, const QString& desc, unsigned int typeIdx, QWidget* parent, SceneTreeEditor* editor, TypeDescFactory< Entity >* itemsFactory )
+   : QAction( icon, desc, parent )
+   , m_typeIdx( typeIdx )
+   , m_editor( editor )
+   , m_itemsFactory( itemsFactory )
+{
+   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+AddSceneNodeAction::~AddSceneNodeAction()
+{
+   delete m_editor;
+   m_editor = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void AddSceneNodeAction::onTriggered()
+{
+   const SerializableReflectionType* itemType = m_itemsFactory->getClass( m_typeIdx );
+   if ( itemType )
+   {
+      m_editor->addEntity( *itemType );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

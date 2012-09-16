@@ -374,6 +374,7 @@
     <ClInclude Include="MBTexture.h" />
     <ClInclude Include="MBTimer.h" />
     <ClInclude Include="MBVec4.h" />
+    <ClInclude Include="MenuUtils.h" />
     <ClInclude Include="NavigationState.h" />
     <ClInclude Include="GizmoNodeManipulationState.h" />
     <ClInclude Include="GizmoController.h" />
@@ -1163,6 +1164,7 @@
     <ClCompile Include="GizmoMaterial.cpp" />
     <ClCompile Include="HexEditor.cpp" />
     <ClCompile Include="MainEditorPanel.cpp" />
+    <ClCompile Include="MenuUtils.cpp" />
     <ClCompile Include="PlanarNodeManipulationState.cpp" />
     <ClCompile Include="ProfilerChart.cpp" />
     <ClCompile Include="ProfilerFrame.cpp" />
@@ -1742,6 +1744,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
+    <None Include="MenuUtils.inl" />
     <None Include="PipelineBlock.inl" />
     <None Include="PipelineLayout.inl" />
     <None Include="ResourceManagementUtil.inl" />

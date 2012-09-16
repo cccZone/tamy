@@ -83,11 +83,6 @@ public:
    void onEntitySelected( Entity& entity );
    void onEntityDeselected( Entity& entity );
 
-private:
-   /**
-    * This method deletes all currently selected entities.
-    */
-   void deleteSelectedEntities();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

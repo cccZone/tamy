@@ -103,8 +103,6 @@ public:
 
 public slots:
    void onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu );
-   void onGetItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr );
-   void onAddNode( QTreeWidgetItem* parent, unsigned int typeIdx );
    void onRemoveNode( QTreeWidgetItem* parent, QTreeWidgetItem* child );
    void onClearNode( QTreeWidgetItem* node );
    void onItemDoubleClicked( QTreeWidgetItem* item, int column );
@@ -158,6 +156,35 @@ public:
 
 protected:
    QMimeData* mimeData( const QList<QTreeWidgetItem *> items ) const;
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+class AddFilesystemResourceAction : public QAction
+{
+   Q_OBJECT
+
+private:
+   FilesystemTree*               m_parentTree;
+   FSTreeNode*                   m_parentNode;
+   TreeWidgetDescFactory*        m_itemsFactory;
+   int                           m_typeIdx;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param icon
+    * @param desc
+    * @param typeIdx
+    * @param parentTree
+    * @param parentNode
+    * @param itemsFactory
+    */
+   AddFilesystemResourceAction( const QIcon& icon, const QString& desc, unsigned int typeIdx, FilesystemTree* parentTree, FSTreeNode* parentNode, TreeWidgetDescFactory* itemsFactory );
+
+public slots:
+   void onTriggered();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

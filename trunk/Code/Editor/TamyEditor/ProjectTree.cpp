@@ -10,6 +10,7 @@
 #include "FSNodeMimeData.h"
 #include "TypeDescFactory.h"
 #include <QTreeWidgetItem>
+#include "MenuUtils.h"
 
 // nodes
 #include "ProjectTreeNode.h"
@@ -106,8 +107,6 @@ void ProjectTree::initialize( const QString& topObjectName )
       m_fsTree->setDragEnabled( true ); 
       m_fsTree->setDropIndicatorShown( true ); 
       connect( m_fsTree, SIGNAL( itemDoubleClicked( QTreeWidgetItem*, int ) ), this, SLOT( onItemDoubleClicked( QTreeWidgetItem*, int ) ) );
-      connect( m_fsTree, SIGNAL( getItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ), this, SLOT( onGetItemsFactory( QTreeWidgetItem*, TreeWidgetDescFactory*& ) ) );
-      connect( m_fsTree, SIGNAL( addNode( QTreeWidgetItem*, unsigned int ) ), this, SLOT( onAddNode( QTreeWidgetItem*, unsigned int ) ) );
       connect( m_fsTree, SIGNAL( removeNode( QTreeWidgetItem*, QTreeWidgetItem* ) ), this, SLOT( onRemoveNode( QTreeWidgetItem*, QTreeWidgetItem* ) ) );
       connect( m_fsTree, SIGNAL( clearNode( QTreeWidgetItem* ) ), this, SLOT( onClearNode( QTreeWidgetItem* ) ) );
       connect( m_fsTree, SIGNAL( popupMenuShown( QTreeWidgetItem*, QMenu& ) ), this, SLOT( onPopupMenuShown( QTreeWidgetItem*, QMenu& ) ) );
@@ -543,38 +542,6 @@ void ProjectTree::addNode( unsigned int idx, const std::string& parentDir )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ProjectTree::onGetItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr )
-{
-   if ( !m_section )
-   {
-      // there's no section - don't show a thing
-      outFactoryPtr = NULL;
-      return;
-   }
-
-   ProjectTreeNode* nodeItem = dynamic_cast< ProjectTreeNode* >( parent );
-   FilePath path = nodeItem->getRelativePath();
-   if ( !m_section->isMember( path ) )
-   {
-      // the path is not a part of the displayed section - don't show a thing
-      outFactoryPtr = NULL;
-      return;
-   }
-
-   ProjectTreeNode* item = dynamic_cast< ProjectTreeNode* >( parent );
-   outFactoryPtr = item->getDescFactory( *this );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void ProjectTree::onAddNode( QTreeWidgetItem* parent, unsigned int typeIdx )
-{  
-   ProjectTreeNode* item = static_cast< ProjectTreeNode* >( parent );
-   item->addNode( typeIdx, *this );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void ProjectTree::onRemoveNode( QTreeWidgetItem* parent, QTreeWidgetItem* child )
 {
    ProjectTreeNode* parentItem = static_cast< ProjectTreeNode* >( parent );
@@ -616,7 +583,42 @@ void ProjectTree::onPopupMenuShown( QTreeWidgetItem* node, QMenu& menu )
       return;
    }
 
+   buildAddResourcesMenu( node, menu );
+
    emit popupMenuRequest( node, menu );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ProjectTree::buildAddResourcesMenu( QTreeWidgetItem* parentItem, QMenu& menu )
+{
+   class AddResourceActionFactory : public MenuActionsFactory
+   {
+   private:
+      ProjectTree*                  m_parentTree;
+      ProjectTreeNode*              m_parentNode;
+      TreeWidgetDescFactory*        m_itemsFactory;
+
+   public:
+      AddResourceActionFactory( ProjectTree* parentTree, ProjectTreeNode* parentNode, TreeWidgetDescFactory* itemsFactory )
+         : m_parentTree( parentTree )
+         , m_parentNode( parentNode )
+         , m_itemsFactory( itemsFactory )
+      {}
+
+      QAction* create( const QIcon& icon, const QString& desc, int itemTypeIdx, QWidget* parentWidget ) const
+      {
+         QAction* action = new AddProjectResourceAction( icon, desc, itemTypeIdx, m_parentTree, m_parentNode, m_itemsFactory );
+         return action;
+      }
+   };
+
+   // attach the entities addition submenu
+   ProjectTreeNode* parentNode = static_cast< ProjectTreeNode* >( parentItem );
+   TreeWidgetDescFactory* itemsFactory = parentNode->getDescFactory( *this );
+
+   AddResourceActionFactory actionsFactory( this, parentNode, itemsFactory );
+   MenuUtils::itemsListMenu( itemsFactory, actionsFactory, &menu );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -713,6 +715,27 @@ QMimeData* ProjectTreeWidget::mimeData( const QList<QTreeWidgetItem *> items ) c
    dataEncoder.save( *data );
 
    return data;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+AddProjectResourceAction::AddProjectResourceAction( const QIcon& icon, const QString& desc, unsigned int typeIdx, ProjectTree* parentTree, ProjectTreeNode* parentNode, TreeWidgetDescFactory* itemsFactory )
+   : QAction( icon, desc, parentTree )
+   , m_parentTree( parentTree )
+   , m_typeIdx( typeIdx )
+   , m_parentNode( parentNode )
+   , m_itemsFactory( itemsFactory )
+{
+   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void AddProjectResourceAction::onTriggered()
+{
+   m_parentNode->addNode( m_typeIdx, *m_parentTree );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

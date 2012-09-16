@@ -7,7 +7,7 @@ UserInputController::UserInputController()
 : m_relativePt( 0, 0 )
 , m_relativeModeOn(0)
 {
-   memset(m_keyBuffer, 256 * sizeof(unsigned char), 0);
+   memset(m_keyBuffer, 0, 256 * sizeof(unsigned char));
 
    m_mouseSpeed.setUniform( 0 );
 }
