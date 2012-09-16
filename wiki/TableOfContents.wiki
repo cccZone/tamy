@@ -59,6 +59,7 @@
       * [RendererCore#Render_commands Render commands]
       * [RendererCore#Scene_tree Scene tree]
       * [RendererCore#Geometry Geometry]
+        * [RendererCore#Vertex_shader Vertex shader]
       * [RendererCore#Materials Materials]
         * [RendererCore#Pixel_shader Pixel shader]
       * [RendererCore#DebugRenderer Debug renderer]
