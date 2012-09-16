@@ -43,3 +43,26 @@ void setVec4( const IDString& paramName, const Vector* arr, unsigned int size );
 Each constant name is identified using an [IDString IDString] for performance reasons.
 
 ==Support for multiple rendering techniques==
+
+Imagine that you're  rendering an arbitrary mesh. The mesh represents a gello, and you want it to shake with every movement.
+
+What you would probably do is write a custom vertex shader that would apply some wavy motion to particular groups of vertices, making the mesh appear as if it was shaking, even though the underlying geometry is perfectly still.
+
+But now imagine that you came up with a custom shader that calculates per pixel motion blur, or some facy lighting. In order to have it, you need to expand your vertex shader with some extra capabilities, so that it calculates extra data.
+
+That additional requirement would add new code to your existing shader, mixing two functionalities you may not even want ( say your lighting shader doesn't caer that much about the shaky geometry and can safely do without it ).
+
+
+Another thing to keep in mind is that this requirement for a completely new vertex shading, or data it outputs, comes from a dedicated pixel shader - which is operating on data the vertex shader outputs.
+
+
+In order to support cases like this, where we have a need for different vertex shading techniques, the engine introduces a concept of a Vertex shader technique.
+
+A technique is just a regular shader function , treated as a *main* function ( it needs to have an output semantics set etc. ).
+
+
+You mark such a technique using a special annotation placed directly above the function declaration:
+{{{
+}}}
+
+The pixel shader that requires that technique can now be annotated with a reference to it, and should use the same input structure the vertex shader function returned.
