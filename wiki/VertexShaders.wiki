@@ -63,6 +63,19 @@ A technique is just a regular shader function , treated as a *main* function ( i
 
 You mark such a technique using a special annotation placed directly above the function declaration:
 {{{
+// <technique>
+VS_SHADOW_OUTPUT mainShadow( VDI_SIMPLE In )
+{
+   // ...
+}
 }}}
 
-The pixel shader that requires that technique can now be annotated with a reference to it, and should use the same input structure the vertex shader function returned.
+The function must return a structure, because its name is used as a definition of the techique name and assures, that the pixel shader will now which VS technique to select.
+
+On the other hand, a pixel shader that requires that technique can now be annotated with a reference to it, and should use the same input structure the vertex shader function returned.
+{{{
+// <psMain>
+float4 main( VS_SHADOW_OUTPUT In ) : COLOR0 {
+   // ...
+}
+}}}
