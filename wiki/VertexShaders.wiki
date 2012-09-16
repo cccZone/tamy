@@ -1,3 +1,4 @@
+#labels VertexShader
 =Vertex shaders=
 
 Writen in HLSL, they allow to define a mesh geometry should be deformed before it's rendered.
@@ -58,6 +59,8 @@ Another thing to keep in mind is that this requirement for a completely new vert
 
 In order to support cases like this, where we have a need for different vertex shading techniques, the engine introduces a concept of a Vertex shader technique.
 
+===HLSL===
+
 A technique is just a regular shader function , treated as a *main* function ( it needs to have an output semantics set etc. ).
 
 
@@ -79,3 +82,42 @@ float4 main( VS_SHADOW_OUTPUT In ) : COLOR0 {
    // ...
 }
 }}}
+
+===C++===
+A technique may require some extra data constants being set on the C++ side.
+
+A `VertexShaderConfigurator` interface serves just that very purpose.
+
+It has just one method
+{{{
+void configure( const Geometry& geometry, RCBindVertexShader* command );
+}}}
+
+It's a Visitor pattern and will be called for every rendered `Geometry` entity rendered from a context of a particular vertex shader command.
+
+The method is a place to setup additional shader parameters required by the particular vertex shader technique.
+
+You pass an instance to it to the rendered geometry, like so:
+{{{
+   VSSetter vsSetter;  // <-- a VertexShaderConfigurator implementation
+   someGometry->render( renderer, &vsSetter );
+}}}
+
+
+===What technique will be selected for rendering===
+But how do you know which technique will be used and what constants you should set?
+
+Well - at this moment you can easily trace it from the code flow.
+The current pipeline of working with the shaders is:
+1. bind a pixel shader
+2. bind a vertex shader
+3. render the geometry
+4. unbind the vertex shader
+5. unbind the pixel shader
+
+That gives you a fairly accurate knowledge which vertex shader technique  will be used at point 3, since the employed pixel shader will define it.
+
+I must mention that a pixel shader can have only one entry point, and thus it has a unique vertex shader technique assigned to it.
+
+===Possible refactoring===
+If the need comes, I might extend the interfaces a bit to inform which technique will be used, so that we can create universal setters for a group of vertex shaders that have a `switch` clause inside or something and configure the shaders that way -  but for now, there's no need for that.
