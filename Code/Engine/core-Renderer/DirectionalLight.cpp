@@ -16,21 +16,6 @@
 #include "core-Renderer\VertexShaderConfigurator.h"
 
 
-// TODO: !!!!!!!!!! DOCUMENT the VertexShaderConfigurator - it's a tool that allows to set custom values on a vertex shader depending 
-// on the context from which that vertex shader is called ( like this for instance ).
-// It works with Geometry entities, not vertex shaders themselves.
-// It allows to render arbitrary geometry ( that's set up with arbitrary vertex shaders ) using arbitrary rendering technique
-// ( imposed by the pixel shader in use ) by setting up the technique-related shader constants on those vertex shaders.
-//
-// This technology resembles DX effects, but with a difference that here the main item for us is the pixel shader.
-// The pixel shader defines what sort of data it requires from the preceding vertex shader ( by setting the vertex shader technique ).
-// Vertex shader on the other hand may require a specific set of constants being set for that technique - additional 
-// to the constants it normally uses to render geometry using its default technique.
-//
-// So we're building a vertex shader family tree this way - the default technique being responsible for rendering the geometry
-// itself, and additional techniques are built on top of that and provide additional data ( such as data to compute shadows ).
-
-
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( DirectionalLight );

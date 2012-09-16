@@ -1,7 +1,7 @@
-#pragma once
-
 /// @file   TamyEditor\EntityEditor.h
 /// @brief  scene tree editor operating on the specified entity
+#pragma once
+
 
 #include "SceneTreeEditor.h"
 #include <string>

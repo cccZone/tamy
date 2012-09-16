@@ -44,57 +44,6 @@ void TreeWidget::showPopupMenu( const QPoint& pos )
          popupMenu->addSeparator();
       }
 
-      // adding new nodes
-      TreeWidgetDescFactory* itemsFactory = NULL;
-      emit getItemsFactory( m_popupMenuItem, itemsFactory );
-      if ( itemsFactory && itemsFactory->typesCount() > 0 )
-      {
-         QMenu* addMenu = popupMenu->addMenu( "Add" );
-
-         QString  desc;
-         QString  group;
-         QIcon    icon;
-
-         typedef std::map< QString, QMenu* > GroupMenusMap;
-         GroupMenusMap   groups;
-
-         unsigned int factoriesCount = itemsFactory->typesCount();
-         for ( unsigned int i = 0; i < factoriesCount; ++i )
-         {
-            itemsFactory->getDesc( i, desc, group, icon );
-
-            // find a proper group for this item ( or create a new one )
-            QMenu* groupMenu = NULL;
-            if ( group.isEmpty() )
-            {
-               // if no group name was specified, simply aggregate the entries in the Add submenu
-               groupMenu = addMenu;
-            }
-            else
-            {
-               GroupMenusMap::iterator groupIt = groups.find( group );
-               if ( groupIt != groups.end() )
-               {
-                  groupMenu = groupIt->second;
-               }
-               else
-               {
-                  groupMenu = new QMenu( group, addMenu );
-                  groups.insert( std::make_pair( group, groupMenu ) );
-               }
-            }
-
-            QAction* addAction = new NodeCreationAction( icon, desc, i, this );
-            groupMenu->addAction( addAction );
-         }
-
-         // now add all the groups to the menu in alphabetical order
-         for ( GroupMenusMap::iterator it = groups.begin(); it != groups.end(); ++it )
-         {
-            addMenu->addMenu( it->second );
-         }
-      }
-
       // removing the node
       if ( m_popupMenuItem->parent() )
       {
@@ -115,6 +64,7 @@ void TreeWidget::showPopupMenu( const QPoint& pos )
       popupMenu->popup( mapToGlobal( pos ) );
    }
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -160,15 +110,6 @@ void TreeWidget::deepCollapse( QTreeWidgetItem* root, bool expand )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TreeWidget::addNode( int typeIdx )
-{
-   ASSERT_MSG( m_popupMenuItem, "No tree item selected" );
-
-   emit addNode( m_popupMenuItem, typeIdx );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void TreeWidget::removeNode()
 {
    ASSERT_MSG( m_popupMenuItem, "No tree item selected" );
@@ -184,28 +125,6 @@ void TreeWidget::clearNode()
    ASSERT_MSG( m_popupMenuItem, "No tree item selected" );
 
    emit clearNode( m_popupMenuItem );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-NodeCreationAction::NodeCreationAction( const QIcon& icon, 
-                                        const QString& desc,
-                                        unsigned int typeIdx,
-                                        TreeWidget* parent )
-: QAction( icon, desc, parent )
-, m_parent( *parent )
-, m_typeIdx( typeIdx )
-{
-   connect( this, SIGNAL( triggered() ), this, SLOT( onTriggered() ) );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void NodeCreationAction::onTriggered()
-{
-   m_parent.addNode( m_typeIdx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

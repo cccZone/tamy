@@ -44,23 +44,6 @@ public:
    inline QTreeWidgetItem* getPopupMenuItem() { return m_popupMenuItem; }
 
 signals:
-   /**
-    * Acquires an instance of items factory, items which can be added
-    * to the specified parent item.
-    *
-    * @param parent
-    * @param outFactoryPtr
-    */
-   void getItemsFactory( QTreeWidgetItem* parent, TreeWidgetDescFactory*& outFactoryPtr );
-
-   /**
-    * Called when we want to add a child node to the specified parent node.
-    * The child's type is specified with a typeIdx.
-    *
-    * @param parent
-    * @param typeIdx
-    */
-   void addNode( QTreeWidgetItem* parent, unsigned int typeIdx );
 
    /**
     * Removes a child node form a parent node
@@ -78,7 +61,7 @@ signals:
    void clearNode( QTreeWidgetItem* node );
 
    /**
-    * Called when a popup menu is displayed.
+    * Called when a pop-up menu is displayed.
     *
     * @param parent
     * @param menu
@@ -93,38 +76,7 @@ public slots:
    void clearNode();
 
 private:
-   friend class NodeCreationAction;
-   void addNode( int typeIdx );
-
    void deepCollapse( QTreeWidgetItem* root, bool expand );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-class NodeCreationAction : public QAction
-{
-   Q_OBJECT
-
-private:
-   TreeWidget&    m_parent;
-   int            m_typeIdx;
-
-public:
-   /**
-    * Constructor.
-    *
-    * @param icon
-    * @param desc
-    * @param typeIdx
-    * @param parent
-    */
-   NodeCreationAction( const QIcon& icon, 
-                       const QString& desc,
-                       unsigned int typeIdx,
-                       TreeWidget* parent );
-
-public slots:
-   void onTriggered();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

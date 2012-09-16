@@ -87,12 +87,6 @@
     <Filter Include="Core\ResourcesBrowser">
       <UniqueIdentifier>{e6f94e6b-b366-4a87-987b-4c261f72106e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widgets\SceneTreeViewer">
-      <UniqueIdentifier>{83a51f51-4786-42cf-91c5-4a6ef3c52b52}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widgets\SceneTreeViewer\Editors">
-      <UniqueIdentifier>{06a1dfb4-deca-4972-9144-6563bc944319}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widgets\SceneRenderWidget\SelectionVisualisation">
       <UniqueIdentifier>{73130267-9dcf-4fc3-b145-f001f12ce254}</UniqueIdentifier>
     </Filter>
@@ -204,6 +198,15 @@
     <Filter Include="ResourceEditors\SceneEditor\SelectionManager">
       <UniqueIdentifier>{1e96a4ee-a710-4693-a31c-0d2992d23ec5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\SceneEditor\SceneTreeViewer">
+      <UniqueIdentifier>{83a51f51-4786-42cf-91c5-4a6ef3c52b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\SceneEditor\SceneTreeViewer\Editors">
+      <UniqueIdentifier>{06a1dfb4-deca-4972-9144-6563bc944319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets\Menus">
+      <UniqueIdentifier>{8e1531eb-4ade-4509-ba78-e38cae87bba1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -213,7 +216,7 @@
       <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="SceneTreeEditor.h">
-      <Filter>Widgets\SceneTreeViewer</Filter>
+      <Filter>ResourceEditors\SceneEditor\SceneTreeViewer</Filter>
     </ClInclude>
     <ClInclude Include="FSRootNode.h">
       <Filter>Core\ResourcesBrowser\FilesystemBrowser\Nodes</Filter>
@@ -542,6 +545,9 @@
     <ClInclude Include="DRGeometry.h">
       <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClInclude>
+    <ClInclude Include="MenuUtils.h">
+      <Filter>Widgets\Menus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_tamyeditor.cpp">
@@ -635,13 +641,13 @@
       <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="SceneTreeViewer.cpp">
-      <Filter>Widgets\SceneTreeViewer</Filter>
+      <Filter>ResourceEditors\SceneEditor\SceneTreeViewer</Filter>
     </ClCompile>
     <ClCompile Include="EntityEditor.cpp">
-      <Filter>Widgets\SceneTreeViewer\Editors</Filter>
+      <Filter>ResourceEditors\SceneEditor\SceneTreeViewer\Editors</Filter>
     </ClCompile>
     <ClCompile Include="ModelEditor.cpp">
-      <Filter>Widgets\SceneTreeViewer\Editors</Filter>
+      <Filter>ResourceEditors\SceneEditor\SceneTreeViewer\Editors</Filter>
     </ClCompile>
     <ClCompile Include="FSDirNode.cpp">
       <Filter>Core\ResourcesBrowser\FilesystemBrowser\Nodes</Filter>
@@ -1304,6 +1310,9 @@
     <ClCompile Include="DRGeometry.cpp">
       <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClCompile>
+    <ClCompile Include="MenuUtils.cpp">
+      <Filter>Widgets\Menus</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1320,6 +1329,9 @@
     </None>
     <None Include="ResourceManagementUtil.inl">
       <Filter>Core\ResourcesBrowser</Filter>
+    </None>
+    <None Include="MenuUtils.inl">
+      <Filter>Widgets\Menus</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1357,13 +1369,13 @@
       <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="SceneTreeViewer.h">
-      <Filter>Widgets\SceneTreeViewer</Filter>
+      <Filter>ResourceEditors\SceneEditor\SceneTreeViewer</Filter>
     </CustomBuild>
     <CustomBuild Include="EntityEditor.h">
-      <Filter>Widgets\SceneTreeViewer\Editors</Filter>
+      <Filter>ResourceEditors\SceneEditor\SceneTreeViewer\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="ModelEditor.h">
-      <Filter>Widgets\SceneTreeViewer\Editors</Filter>
+      <Filter>ResourceEditors\SceneEditor\SceneTreeViewer\Editors</Filter>
     </CustomBuild>
     <CustomBuild Include="FSDirNode.h">
       <Filter>Core\ResourcesBrowser\FilesystemBrowser\Nodes</Filter>

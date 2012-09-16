@@ -19,8 +19,11 @@ DRGeometry::DRGeometry( Geometry& geometry )
    , m_mesh( NULL )
 {
    AABoundingBox bb;
-   const BoundingVolume& bounds = geometry.getMesh()->getBoundingVolume();
-   bounds.calculateBoundingBox( bb );
+   if ( geometry.getMesh() != NULL )
+   {
+      const BoundingVolume& bounds = geometry.getMesh()->getBoundingVolume();
+      bounds.calculateBoundingBox( bb );
+   }
 
    m_mesh = DebugGeometryBuilder::createBox( bb.min, bb.max );
    m_material = new SingleColorDebugMat( Color( 255, 242, 61 ), true );

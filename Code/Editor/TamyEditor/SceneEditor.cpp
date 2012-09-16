@@ -13,6 +13,7 @@
 #include <QColor>
 #include <QMenu>
 #include <QToolButton>
+#include <QKeyEvent>
 
 // scene rendering widget
 #include "TamySceneWidget.h"
@@ -46,6 +47,7 @@ SceneEditor::SceneEditor( Model& scene )
    , m_playing( false )
    , m_sceneObjectsManipulator( NULL )
 {
+   setFocusPolicy( Qt::StrongFocus );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,6 +64,7 @@ void SceneEditor::onInitialize()
    
    TimeController& timeController = TamyEditor::getInstance().getTimeController();
    m_sceneTrack = &timeController.add( "SceneEditor" );
+   m_sceneTrack->add( *this );
 
    // create a selection manager
    m_selectionManager = new SelectionManager();
@@ -246,6 +249,9 @@ void SceneEditor::onDeinitialize( bool saveProgress )
       m_selectionManager = NULL;
    }
 
+   // remove self from the time track
+   m_sceneTrack->remove( *this );
+
    // gonna get disposed of by the rendering widget
    m_sceneObjectsManipulator = NULL;
 }
@@ -377,6 +383,100 @@ void SceneEditor::onEmbedededWidgetClosed( QWidget* closedWidget )
    // dispose of the widget
    closedWidget->setParent( NULL );
    closedWidget->deleteLater();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneEditor::update( float timeElapsed )
+{
+   // input coming from the embedded scene rendering widget ( which steals the focus from the main editor window )
+
+   if ( m_sceneWidget->isKeyPressed( VK_DELETE ) )
+   {
+      deleteSelectedEntities();
+   }
+
+   if ( m_sceneWidget->isKeyPressed( VK_CONTROL ) && m_sceneWidget->isKeyPressed( VK_RBUTTON ) )
+   {
+      // any Ctrl key + Right mouse button clicked in the scene rendering widget's area
+      // opens a menu that allows to add a new element to the root of the scene
+      Point mousePos = m_sceneWidget->getMousePos();
+      QPoint pos( mousePos.x, mousePos.y );
+
+      m_sceneTreeViewer->showAddItemPopup( m_sceneWidget->mapToGlobal( pos ) );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneEditor::keyPressEvent( QKeyEvent* event )
+{
+   // input coming from other widgets embedded in the scene editor frame
+
+   // check if any other keys were pressed and execute actions assigned to them
+   if ( event->key() ==  Qt::Key_Delete )
+   {
+      deleteSelectedEntities();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SceneEditor::deleteSelectedEntities()
+{
+   std::vector< Entity* > selectedEntities = m_selectionManager->getSelectedEntities();
+   m_selectionManager->resetSelection();
+
+   // Analyze all selected entities and select only the ones that are the topmost parents
+   // among the selected entities.
+   // In other words - delete only the entities that don't have their parents ( immediate or not ) listed
+   // as a selected entity.
+
+   uint selectedEntitiesCount = selectedEntities.size();
+
+   std::set< Entity* > allUniqueChildren;
+   {
+      Array< Entity* > allChildren;
+      for ( uint entityIdx = 0; entityIdx < selectedEntitiesCount; ++entityIdx )
+      {
+         Entity* entity = selectedEntities[entityIdx];
+         entity->collectChildren( allChildren );
+      }
+
+      // remove duplicates
+      uint allChildrenCount = allChildren.size();
+      for ( uint i = 0; i < allChildrenCount; ++i )
+      {
+         allUniqueChildren.insert( allChildren[i] );
+      }
+   }
+
+   // remove all children from the list of the selected entities
+   for ( int entityIdx = selectedEntitiesCount - 1; entityIdx >= 0; --entityIdx )
+   {
+      Entity* entity = selectedEntities[entityIdx];
+      if ( allUniqueChildren.find( entity ) != allUniqueChildren.end() )
+      {
+         // this is one of the children - it's gonna get deleted either way, so skip it
+         selectedEntities.erase( selectedEntities.begin() + entityIdx );
+      }
+   }
+
+   // now that we only have the topmost entities, it's time to remove them
+   selectedEntitiesCount = selectedEntities.size();
+   for ( uint entityIdx = 0; entityIdx < selectedEntitiesCount; ++entityIdx )
+   {
+      Entity* entity = selectedEntities[entityIdx];
+      Entity* parent = entity->m_parent;
+      if ( parent )
+      {
+         parent->remove( *entity );
+      }
+      else
+      {
+         m_scene.remove( *entity );
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

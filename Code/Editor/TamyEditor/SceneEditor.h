@@ -4,6 +4,7 @@
 
 #include "ResourceEditor.h"
 #include <QAction>
+#include "core-AppFlow/TimeDependent.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,10 +23,17 @@ class ProgressDialog;
 class DebugEntitiesManager;
 enum DebugFeature;
 class QueryRenderingPass;
+class QKeyEvent;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SceneEditor : public ResourceEditor
+/**
+ * Simple editor for opening a new scene in the editor.
+ *
+ * the class implements TimeDependent because it needs to be ticked every frame in order
+ * to respond to the input coming from the scene rendering widget
+ */
+class SceneEditor : public ResourceEditor, public TimeDependent
 {
    Q_OBJECT  
 
@@ -67,6 +75,11 @@ public:
     */
    inline SelectionManager& getSelectionMgr() const { return *m_selectionManager; }
 
+   // -------------------------------------------------------------------------
+   // TimeDependent implementation
+   // -------------------------------------------------------------------------
+   void update( float timeElapsed );
+
 protected:
    // -------------------------------------------------------------------------
    // ResourceEditor implementation
@@ -74,9 +87,19 @@ protected:
    void onInitialize();
    void onDeinitialize( bool saveProgress );
 
+   // -------------------------------------------------------------------------
+   // QWidget implementation
+   // -------------------------------------------------------------------------
+   void keyPressEvent( QKeyEvent* event );
+
 private:
    void runScene();
    void stopScene();
+
+   /**
+    * This method deletes all currently selected entities.
+    */
+   void deleteSelectedEntities();
 
 public slots:
    void saveScene();
