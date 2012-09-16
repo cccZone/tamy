@@ -40,6 +40,6 @@ void setVec4( const IDString& paramName, const Vector& val );
 void setVec4( const IDString& paramName, const Vector* arr, unsigned int size );
 }}}
 
-Each constant name is identified using an IDString for performance reasons.
+Each constant name is identified using an [IDString IDString] for performance reasons.
 
 ==Support for multiple rendering techniques==
