@@ -69,6 +69,8 @@ void BlenderSceneExporter::initialize( const char* filesystemRoot, const char* e
    m_exportedEntities.clear();
    m_exportedEntities.resize( entitiesCount );
    m_nextEntityIdx = 0;
+
+   m_worldEntities.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -86,6 +88,7 @@ void BlenderSceneExporter::reset()
    m_materialDefinitions.clear();
 
    m_exportedEntities.clear();
+   m_worldEntities.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -329,6 +332,7 @@ SpatialEntity* BlenderSceneExporter::createLightEntity( const TamyLight& exporte
          // not implemented yet
          break;
       }
+
    }
 
    return lightEntity;
@@ -360,6 +364,19 @@ SpatialEntity* BlenderSceneExporter::instantiatePointLight( const TamyLight& exp
    light->setShadowsCaster( exportedLightEntity.castShadows );
 
    return light;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void BlenderSceneExporter::setupWorld( const TamyWorld& worldSettings )
+{
+   // create an ambient light
+   {
+      AmbientLight* ambientLight = new AmbientLight( "AmbientLight" );
+      ambientLight->m_lightColor = worldSettings.ambientLightColor;
+
+      m_worldEntities.push_back( ambientLight );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -400,6 +417,22 @@ void BlenderSceneExporter::assembleScene( const char* sceneName )
          scene->add( exportedEntity.m_entity );
          exportedEntity.m_entity->setLocalMtx( exportedEntity.m_globalMtx );
       }
+   }
+
+   // add the world-related entities
+   entitiesCount = m_worldEntities.size();
+   if ( entitiesCount > 0 )
+   {
+      // group them under one entity, for the ease of access
+      SpatialEntity* worldEntities = new SpatialEntity( "World" );
+
+      for ( uint i = 0; i < entitiesCount; ++i )
+      {
+         Entity* entity = m_worldEntities[i];
+         worldEntities->add( entity );
+      }
+
+      scene->add( worldEntities );
    }
 
    // save the resource

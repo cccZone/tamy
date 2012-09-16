@@ -62,8 +62,11 @@ class TamyScene:
 				
 			elif entityId == 'LIGHT':
 				tamyExportModule.export_light_entity( tamyEntity )
-				
-		# 4. assemble the scene
+			
+		# 4. export world settings
+		tamyExportModule.export_world_settings( self.worldSettings ) 
+		
+		# 5. assemble the scene
 		tamyExportModule.assemble_scene( self.sceneName.encode( "utf-8" ) )
 		
 ### ===========================================================================
@@ -91,6 +94,9 @@ def compile_scene( context, bUseSelection, tamyScene ):
 		
 	# Set the parenting hierarchy
 	define_hierarchy( tamyScene.entities, entitiesDict )
+	
+	# Create the world
+	tamyScene.worldSettings = tamy_entities.TamyWorld( scene.world )
 		
 ### ===========================================================================
 

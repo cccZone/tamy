@@ -18,6 +18,7 @@ class RenderState;
 class SceneRenderTreeBuilder;
 class MemoryPool;
 class RuntimeDataBuffer;
+class AmbientLight;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -34,6 +35,7 @@ private:
    MemoryPool*                                              m_treeMemPool;
    RegularOctree< Geometry >*                               m_geometryStorage;
    RegularOctree< Light >*                                  m_lightsStorage;
+   AmbientLight*                                            m_ambientLight;
 
    AABoundingBox                                            m_sceneBounds;
 
@@ -73,6 +75,13 @@ public:
     * @param outVisibleLights
     */
    void collectLights( const BoundingVolume& volume, Array< Light* >& outVisibleLights ) const;
+
+   /**
+    * Returns an ambient light instance that lights the scene.
+    * There can be only one, or none at all. If more than one is added, only one will be selected to be rendered,
+    * but which one will it be is undetermined.
+    */
+   inline AmbientLight* getAmbientLight() const { return m_ambientLight; }
 
    /**
     * Returns the scene bounds.

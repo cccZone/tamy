@@ -80,7 +80,7 @@ enum TamyLightType
    LT_Point = 1,
    LT_Spotlight = 2,
    LT_Hemisphere = 3,
-   LT_Area = 4
+   LT_Area = 4,
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,6 +90,16 @@ enum LightFalloffType
    FOT_Constant = 0,
    FOT_InverseLinear = 1,
    FOT_InverseSquare = 2
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * This structure holds global rendering settings.
+ */
+struct TamyWorld
+{
+   Color                ambientLightColor;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -135,3 +135,15 @@ class TamyLight( Structure ):
 		self.localMtx = tamy_misc.TamyMatrix( matrix )
 	
 ### ===========================================================================
+
+### This structure holds global rendering settings.
+class TamyWorld( Structure ):
+	_fields_= [ ( "ambientLightColor", tamy_misc.TamyColor ) ]
+	
+	### Constructor
+	###
+	### @param blenderWorld ( bpy.types.World(ID) )
+	def __init__( self, blenderWorld ):
+		self.ambientLightColor = tamy_misc.TamyColor( blenderWorld.ambient_color[0], blenderWorld.ambient_color[1], blenderWorld.ambient_color[2], 1.0 )
+	
+### ===========================================================================

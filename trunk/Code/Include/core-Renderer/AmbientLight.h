@@ -1,5 +1,5 @@
 /// @file   core-Renderer/AmbientLight.h
-/// @brief  a light that provides a uniform, ambient lighting for the scene
+/// @brief  an entity that provides a uniform, ambient lighting for the scene
 #pragma once
 
 #include "core-Renderer\Light.h"
@@ -9,12 +9,21 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class PixelShader;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
- * A light that provides a uniform, ambient lighting for the scene.
+ * An entity that provides a uniform, ambient lighting for the scene.
  */
-class AmbientLight : public Light, public UniqueObject< AmbientLight >
+class AmbientLight : public SpatialEntity, public UniqueObject< AmbientLight >
 {
    DECLARE_CLASS();
+
+public:
+   Color             m_lightColor;
+
+   PixelShader*      m_shader;
 
 public:
    /**
@@ -23,15 +32,22 @@ public:
    AmbientLight( const std::string& name = "" );
    ~AmbientLight();
 
-   // -------------------------------------------------------------------------
-   // Light implementation
-   // -------------------------------------------------------------------------
-   void render( Renderer& renderer, const LightingRenderData& data );
+   /**
+    * Renders the ambient light.
+    *
+    * @param renderer
+    * @param sceneColorTex       a texture with raw scene albedo
+    * @param renderTarget        render target to which the lit scene should be drawn
+    */
+   void render( Renderer& renderer, ShaderTexture* sceneColorTex, RenderTarget* renderTarget );
 
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
+
+private:
+   void initialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

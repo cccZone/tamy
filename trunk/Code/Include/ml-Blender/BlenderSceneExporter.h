@@ -15,11 +15,13 @@ struct TamyScene;
 struct TamyGeometry;
 struct TamyTexture;
 struct TamyLight;
+struct TamyWorld;
 class SpatialEntity;
 class TriangleMesh;
 class Geometry;
 class Texture;
 class Material;
+class Entity;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -69,6 +71,7 @@ private:
    std::vector< MaterialDefinition* >        m_materialDefinitions;
    std::vector< ExportedEntity >             m_exportedEntities;
    uint                                      m_nextEntityIdx;
+   std::vector< Entity* >                    m_worldEntities;
 
 public:
    /**
@@ -134,6 +137,13 @@ public:
     * @param exportedLightEntity
     */
    SpatialEntity* createLightEntity( const TamyLight& exportedLightEntity );
+
+   /**
+    * Sets up global rendering data.
+    *
+    * @param worldSettings
+    */
+   void setupWorld( const TamyWorld& worldSettings );
 
    /**
     * Creates a scene resource.
