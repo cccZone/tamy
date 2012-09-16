@@ -4,7 +4,9 @@
 #include "core-Renderer/RenderingPipelineMechanism.h"
 #include "core-Renderer/PixelShader.h"
 #include "core-Renderer/Renderer.h"
+#include "core-Renderer/RenderingView.h"
 #include "core-Renderer/Light.h"
+#include "core-Renderer/AmbientLight.h"
 #include "core-Renderer/MRTUtil.h"
 #include "core/ResourcesManager.h"
 
@@ -180,7 +182,8 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
 
    Renderer& renderer = host.getRenderer();
 
-   renderingData.m_renderingView = host.getSceneRenderingView();
+   const RenderingView* view = host.getSceneRenderingView();
+   renderingData.m_renderingView = view;
    renderingData.m_geometryToRender = &host.getSceneElements();
    renderingData.m_shadowDepthTexture = data[ m_shadowDepthTexture ];
    renderingData.m_shadowDepthSurface = data[ m_shadowDepthSurface ];
@@ -188,8 +191,20 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    renderingData.m_finalLightColorTarget = data[ m_finalLightColorTarget ];
 
 
-   // render light volumes
+   // render the ambient light first
+   AmbientLight* ambientLight = view->getAmbientLight();
+   if ( ambientLight )
+   {
+      ambientLight->render( renderer, renderingData.m_sceneColorTex, renderingData.m_finalLightColorTarget );
+   }
+
+   // collect visible lights - query the host for them rather than the view, 
+   // because it pools the visible lights every frame so that all lighting node can operate on the exact same lights
+   // and in order to save CPU time needed to query for the visible lights
    const Array< Light* >& visibleLights = host.getSceneLights();  
+
+   // render light volumes - use the additive color blend to blend on top of the base color
+   // prepared by the ambient light
    uint lightsCount = visibleLights.size();
    for ( uint i = 0; i < lightsCount; ++i )
    {

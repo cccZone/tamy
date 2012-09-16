@@ -13,6 +13,7 @@ struct TamyScene;
 struct TamyGeometry;
 struct TamyMesh;
 struct TamyLight;
+struct TamyWorld;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -55,6 +56,13 @@ ML_BLENDER_API void export_geometry_entity( TamyGeometry geometry );
  * Exports a single Light entity from Blender to Tamy.
  */
 ML_BLENDER_API void export_light_entity( TamyLight light );
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Exports the settings of the world ( ambient lighting setup, fog, sky data and so on )
+ */
+ML_BLENDER_API void export_world_settings( TamyWorld world );
 
 ///////////////////////////////////////////////////////////////////////////////
 

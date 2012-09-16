@@ -124,6 +124,9 @@
     <Filter Include="Geometry\Utilities">
       <UniqueIdentifier>{cdd5c643-836c-48aa-bacc-4dc66cdc9322}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lighting\Global">
+      <UniqueIdentifier>{a6632a64-2d90-4e1c-b255-300cc519da13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -392,7 +395,7 @@
       <Filter>Materials\MaterialGraph</Filter>
     </ClCompile>
     <ClCompile Include="AmbientLight.cpp">
-      <Filter>Lighting\Entities</Filter>
+      <Filter>Lighting\Global</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -767,7 +770,7 @@
       <Filter>Geometry\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\AmbientLight.h">
-      <Filter>Lighting\Entities</Filter>
+      <Filter>Lighting\Global</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
