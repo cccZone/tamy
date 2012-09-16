@@ -1,0 +1,45 @@
+=Vertex shaders=
+
+Writen in HLSL, they allow to define a mesh geometry should be deformed before it's rendered.
+
+==Usage==
+They are instantiated using a `VertexShader` resource, and can be loaded as such.
+
+{{{
+FilePath vsPath( LIGHTING_SHADERS_DIR "Lights/pointLight.tvsh" );
+m_vertexShader = resMgr.create< VertexShader >( vsPath, true );
+}}}
+
+Once you have a handle to a vertex shader, you can use it by binding it to a rendering device before you draw any geometry. That's important - the call that binds the shader should go *BEFORE* any calls to geometry drawing that's supposed to use that shader.
+
+{{{
+RCBindVertexShader* vsComm = new ( renderer() ) RCBindVertexShader( *m_vertexShader, renderer );
+}}}
+
+Once you're done, you should clean up using a dedicated render command:
+
+{{{
+new ( renderer() ) RCUnbindVertexShader( *m_vertexShader );
+}}}
+
+==Vertex shader binding command==
+
+The `RCBindVertexShader` command has a couple of methods that allow you to set the vertex shader constants:
+
+{{{
+void setBool( const IDString& paramName, bool val );
+void setInt( const IDString& paramName, int val );
+void setInt( const IDString& paramName, const int* arr, unsigned int size );
+void setFloat( const IDString& paramName, float val );
+void setFloat( const IDString& paramName, const float* arr, unsigned int size );
+void setMtx( const IDString& paramName, const Matrix& val );
+void setMtx( const IDString& paramName, const Matrix* arr, unsigned int size );
+void setString( const IDString& paramName, const std::string& val );
+void setTexture( const IDString& paramName, ShaderTexture* val );
+void setVec4( const IDString& paramName, const Vector& val );
+void setVec4( const IDString& paramName, const Vector* arr, unsigned int size );
+}}}
+
+Each constant name is identified using an IDString for performance reasons.
+
+==Support for multiple rendering techniques==
