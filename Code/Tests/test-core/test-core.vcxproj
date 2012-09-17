@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AABoundingBoxTests.cpp" />
     <ClCompile Include="AlgorithmTests.cpp" />
     <ClCompile Include="DataExchangeTests.cpp" />
     <ClCompile Include="EulerAnglesTests.cpp" />

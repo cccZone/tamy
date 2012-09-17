@@ -40,5 +40,8 @@
     <ClCompile Include="VertexTangentsTests.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
+    <ClCompile Include="CascadedShadowsTests.cpp">
+      <Filter>Shaders</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

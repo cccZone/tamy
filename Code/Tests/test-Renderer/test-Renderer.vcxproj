@@ -95,6 +95,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CascadedShadowsTests.cpp" />
     <ClCompile Include="DepthEncodingTests.cpp" />
     <ClCompile Include="RenderCommandTests.cpp" />
     <ClCompile Include="RendererTests.cpp" />

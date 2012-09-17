@@ -104,7 +104,7 @@ void assemble_scene( const char* sceneName )
 // 2. export tekstury diffuse ( done )
 // 3. export tekstury normalek ( done )
 // 4. export tekstury specular ( i wsparcie w modelu oswietlenia ) ( done )
-// 5. wsparcie dla dokladnych materialow ( kolor specular'a itd )
+// 5. wsparcie dla dokladnych materialow ( kolor specular'a itd ) = http://http.developer.nvidia.com/GPUGems/gpugems_ch18.html
 
 // INNE ELEMENTY SCENY
 // 1. swiatla (done )

@@ -194,6 +194,9 @@
     <ClCompile Include="ListTests.cpp">
       <Filter>DataStructures</Filter>
     </ClCompile>
+    <ClCompile Include="AABoundingBoxTests.cpp">
+      <Filter>BoundingVolumes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">

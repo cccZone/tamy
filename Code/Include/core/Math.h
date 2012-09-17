@@ -35,3 +35,4 @@
 #include "core\Transform.h"
 #include "core\Algorithms.h"
 #include "core\MathDefs.h"
+#include "core\PlaneUtils.h"

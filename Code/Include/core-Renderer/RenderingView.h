@@ -22,8 +22,6 @@ class AmbientLight;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: !!!!!!!!!! DEBUG ENTITIES DISSAPEAR, because the octree used in the rendering view is static and does not recompute their positions.
-
 /**
 * This view manages the visibility of renderables.
 */ 

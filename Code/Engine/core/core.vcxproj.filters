@@ -311,6 +311,9 @@
     <ClCompile Include="FilesystemUtils.cpp">
       <Filter>Filesystem</Filter>
     </ClCompile>
+    <ClCompile Include="PlaneUtils.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core\Node.h">
@@ -667,6 +670,9 @@
       <Filter>DataStructures\Collections</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\TVector.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\PlaneUtils.h">
       <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
