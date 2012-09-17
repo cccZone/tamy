@@ -97,8 +97,7 @@ public:
    // -------------------------------------------------------------------------
 
    /**
-    * Calculates a bounding volume around the geometry ( in the parent's space,
-    * if the entity is attached to one ).
+    * Calculates a bounding volume around the geometry ( in world space ).
     *
     * @param   bounding volume instance
     */

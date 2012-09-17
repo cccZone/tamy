@@ -86,6 +86,7 @@
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
     <ClCompile Include="AmbientLight.cpp" />
     <ClCompile Include="BasicRenderingEntitiesFactory.cpp" />
+    <ClCompile Include="CascadedShadowsUtils.cpp" />
     <ClCompile Include="DepthBuffer.cpp" />
     <ClCompile Include="DepthBufferDescriptor.cpp" />
     <ClCompile Include="FragmentShader.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\AmbientLight.h" />
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderingEntitiesFactory.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\CascadedShadowsUtils.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DepthBuffer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DepthBufferDescriptor.h" />

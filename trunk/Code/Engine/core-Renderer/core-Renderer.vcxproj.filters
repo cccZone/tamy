@@ -127,6 +127,9 @@
     <Filter Include="Lighting\Global">
       <UniqueIdentifier>{a6632a64-2d90-4e1c-b255-300cc519da13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lighting\Utils">
+      <UniqueIdentifier>{b7f451fa-9fbd-44a8-9a6a-9753033f62c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CompositeRenderingMechanism.cpp">
@@ -396,6 +399,9 @@
     </ClCompile>
     <ClCompile Include="AmbientLight.cpp">
       <Filter>Lighting\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="CascadedShadowsUtils.cpp">
+      <Filter>Lighting\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -771,6 +777,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\AmbientLight.h">
       <Filter>Lighting\Global</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\CascadedShadowsUtils.h">
+      <Filter>Lighting\Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

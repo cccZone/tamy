@@ -7,10 +7,14 @@
 #include "core\Color.h"
 #include "core\UniqueObject.h"
 #include "core\Array.h"
-#include "core\AABoundingBox.h"
 #include "core-Renderer\VertexShaderConfigurator.h"
-#include "core-Renderer\Viewport.h"
+#include "core-Renderer\CascadedShadowsUtils.h"
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+#define NUM_CASCADES       4
+#define CASCADES_IN_ROW    2
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,13 +22,7 @@ class PixelShader;
 class Geometry;
 class RenderTarget;
 class RenderingView;
-struct AABoundingBox;
 class Camera;
-
-///////////////////////////////////////////////////////////////////////////////
-
-#define NUM_CASCADES       4
-#define CASCADES_IN_ROW    2
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -36,14 +34,6 @@ class DirectionalLight : public Light, public UniqueObject< DirectionalLight >
    DECLARE_CLASS();
 
 private:
-   struct CascadeConfig
-   {
-      Viewport             m_viewport;
-      AABoundingBox        m_lightFrustumBounds;
-      float                m_cameraNearZ;
-      float                m_cameraFarZ;
-   };
-
    struct VSSetter : public VertexShaderConfigurator
    {
       Matrix               m_lightViewProjMtx;
@@ -72,7 +62,8 @@ public:
    PixelShader*         m_shadowProjectionPS;
 
    Array< Geometry* >   m_visibleGeometry;
-   CascadeConfig        m_cascadeConfigs[NUM_CASCADES];
+   CascadesConfig       m_cascadeCalculationConfig;
+   CascadeStage         m_calculatedCascadeStages[NUM_CASCADES];
 
 public:
    DirectionalLight( const std::string& name = "" );
@@ -100,14 +91,6 @@ private:
    // Shadow map computation related methods
    // -------------------------------------------------------------------------
    void renderShadowMap( Renderer& renderer, const LightingRenderData& data );
-
-   void calculateCascadesBounds( Camera& activeCamera, float pcfBlurSize, float cascadeDimensions, const RenderingView* renderingView );
-
-   void calculateCameraCascadeFrustumBounds( Camera& activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart ) const;
-
-   void createBBPoints( const AABoundingBox& inAABB, Vector* outBBPoints ) const;
-
-   void calculateLightClippingPlanes( const Vector* sceneBBInLightSpace, AABoundingBox& inOutLightFrustumBounds ) const;
 
    void renderCascades( Renderer& renderer, Camera& activeCamera, Camera& lightCamera, const LightingRenderData& data );
 

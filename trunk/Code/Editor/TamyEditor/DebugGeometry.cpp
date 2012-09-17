@@ -37,13 +37,6 @@ DebugGeometry::~DebugGeometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const BoundingVolume& DebugGeometry::getBoundingVolume() const
-{
-   return getMesh()->getBoundingVolume();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 RCBindVertexShader* DebugGeometry::onPreRender( Renderer& renderer )
 {
    if ( !m_vertexShader )

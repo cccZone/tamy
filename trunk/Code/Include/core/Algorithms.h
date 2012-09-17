@@ -58,6 +58,28 @@ float mag( T value );
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Returns the lower of two values
+ *
+ * @param   val1
+ * @param   val2
+ */
+template< typename T >
+float min2( T val1, T val2 );
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Returns the higher of two values
+ *
+ * @param   val1
+ * @param   val2
+ */
+template< typename T >
+float max2( T val1, T val2 );
+
+///////////////////////////////////////////////////////////////////////////////
+
 
 #include "core/Algorithms.inl"
 

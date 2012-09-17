@@ -36,7 +36,6 @@ public:
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
-   const BoundingVolume& getBoundingVolume() const;
    RCBindVertexShader* onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
 
