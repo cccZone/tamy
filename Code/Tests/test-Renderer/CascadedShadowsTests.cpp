@@ -151,6 +151,7 @@ TEST( CascadedShadowsUtils, singleCascadeStage )
       COMPARE_VEC( Vector( -8.1888838f, -8.1888838f, -100 ), calculatedCascadeStage.m_lightFrustumBounds.min );
       COMPARE_VEC( Vector(  8.1888838f,  8.1888838f,  100 ), calculatedCascadeStage.m_lightFrustumBounds.max );
    }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

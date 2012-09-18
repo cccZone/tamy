@@ -8,13 +8,14 @@
 #include <QTextBrowser>
 #include <QMessageBox.h>
 #include <QTextCursor>
+#include "TextEditWidget.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 VertexShaderEditor::VertexShaderEditor( VertexShader& shader )
    : m_shader( shader )
-   , m_highlighter( NULL )
+   , m_scriptEditor( NULL )
    , m_resourceMgr( NULL )
 {
 }
@@ -35,17 +36,16 @@ void VertexShaderEditor::onInitialize()
 
    // setup ui
    m_ui.setupUi( this );
-   m_highlighter = new ShaderSyntaxHighlighter( m_ui.scriptEditor->document() );
 
    // set the editor up
-   m_ui.scriptEditor->setPlainText( m_shader.getScript().c_str() );
-   m_ui.scriptEditor->setTabStopWidth( 15 );
-   m_ui.scriptEditor->setFont( QFont( "Courier", 12 ) );
-   m_ui.scriptEditor->setCurrentFont( QFont( "Courier", 12 ) );
-   m_ui.scriptEditor->setAcceptRichText( false );
-   m_ui.scriptEditor->setLineWrapMode( QTextEdit::NoWrap );
-   connect( m_ui.scriptEditor, SIGNAL( textChanged() ), this, SLOT( onScriptModified() ) );
-   connect( m_ui.scriptEditor, SIGNAL( cursorPositionChanged() ), this, SLOT( onTextCursorMoved() ) );
+   m_scriptEditor = new TextEditWidget( m_ui.editorFrame );
+   m_ui.editorFrame->layout()->addWidget( m_scriptEditor );
+   QFont font( "Courier", 12 );
+   m_scriptEditor->setFont( font );
+   m_scriptEditor->setSyntaxHighlighter( new ShaderSyntaxHighlighter() );
+   m_scriptEditor->setPlainText( m_shader.getScript().c_str() );
+   connect( m_scriptEditor, SIGNAL( textChanged() ), this, SLOT( onScriptModified() ) );
+
    m_docModified = false;
 
    // set the properties
@@ -99,12 +99,12 @@ void VertexShaderEditor::onInitialize()
       QAction* actionUndo = new QAction( QIcon( iconsDir + tr( "/undo.png" ) ), tr( "Undo" ), toolbar );
       actionUndo->setShortcut( QKeySequence( tr( "Ctrl+Z" ) ) );
       toolbar->addAction( actionUndo );
-      connect( actionUndo, SIGNAL( triggered() ), m_ui.scriptEditor, SLOT( undo() ) );
+      connect( actionUndo, SIGNAL( triggered() ), m_scriptEditor, SLOT( undo() ) );
 
       QAction* actionRedo = new QAction( QIcon( iconsDir + tr( "/redo.png" ) ), tr( "Redo" ), toolbar );
       actionRedo->setShortcut( QKeySequence( tr( "Ctrl+Y" ) ) );
       toolbar->addAction( actionRedo );
-      connect( actionRedo, SIGNAL( triggered() ), m_ui.scriptEditor, SLOT( redo() ) );
+      connect( actionRedo, SIGNAL( triggered() ), m_scriptEditor, SLOT( redo() ) );
 
       toolbar->addSeparator();
    }
@@ -132,9 +132,6 @@ void VertexShaderEditor::onDeinitialize( bool saveProgress )
          save();
       }
    }
-
-   delete m_highlighter;
-   m_highlighter = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -155,7 +152,7 @@ bool VertexShaderEditor::compile()
 {
    m_ui.compilationOutput->clear();
 
-   std::string shaderContents = m_ui.scriptEditor->toPlainText().toStdString();
+   std::string shaderContents = m_scriptEditor->toPlainText().toStdString();
    if ( shaderContents.empty() )
    {
       m_ui.compilationOutput->setText( "No code to compile" );
@@ -220,20 +217,9 @@ void VertexShaderEditor::onScriptModified()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void VertexShaderEditor::onTextCursorMoved()
-{
-   QTextCursor cursor = m_ui.scriptEditor->textCursor();
-
-   char tmpStr[256];
-   sprintf( tmpStr, "Row: %d, Col: %d", cursor.blockNumber(), cursor.columnNumber() );
-   m_ui.statusBar->setText( tmpStr );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void VertexShaderEditor::synchronize()
 {
-   m_shader.setScript( m_ui.scriptEditor->toPlainText().toStdString() );
+   m_shader.setScript( m_scriptEditor->toPlainText().toStdString() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -256,7 +242,7 @@ void VertexShaderEditor::importFrom()
    delete file;
 
    // set the new contents in the editor
-   m_ui.scriptEditor->setPlainText( m_shader.getScript().c_str() );
+   m_scriptEditor->setPlainText( m_shader.getScript().c_str() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

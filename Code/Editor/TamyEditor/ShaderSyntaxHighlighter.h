@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <QSyntaxHighlighter>
+#include "TextSyntaxHighlighter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,18 +11,9 @@
 /**
  * Material syntax highlighter.
  */
-class ShaderSyntaxHighlighter : public QSyntaxHighlighter
+class ShaderSyntaxHighlighter : public TextSyntaxHighlighter
 {
-   Q_OBJECT
-
 private:
-   struct HighlightingRule
-   {
-      QRegExp                    pattern;
-      QTextCharFormat            format;
-   };
-   QVector< HighlightingRule >   m_highlightingRules;
-
    QRegExp                       m_commentStartExpression;
    QRegExp                       m_commentEndExpression;
 
@@ -34,16 +25,17 @@ private:
    QTextCharFormat               m_quotationFormat;
    QTextCharFormat               m_functionFormat;
 
+
 public:
    /**
     * Constructor.
-    *
-    * @param editedDoc
     */
-   ShaderSyntaxHighlighter( QTextDocument* editedDoc = 0 );
+   ShaderSyntaxHighlighter();
 
-protected:
-   void highlightBlock( const QString &text );
+   // -------------------------------------------------------------------------
+   // TextSyntaxHighlighter implementation
+   // -------------------------------------------------------------------------
+   void onHighlightBlock( const QString &text );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
