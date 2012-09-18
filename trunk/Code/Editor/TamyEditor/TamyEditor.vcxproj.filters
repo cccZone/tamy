@@ -207,6 +207,9 @@
     <Filter Include="Widgets\Menus">
       <UniqueIdentifier>{8e1531eb-4ade-4509-ba78-e38cae87bba1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widgets\TextEditor">
+      <UniqueIdentifier>{9a9fb08e-7340-4284-969a-9874bb307c9f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -890,15 +893,6 @@
     <ClCompile Include="GeneratedFiles\Template\moc_FragmentShaderEditor.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_ShaderSyntaxHighlighter.cpp">
-      <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_ShaderSyntaxHighlighter.cpp">
-      <Filter>QtImplementation\Generated Files\Release</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Template\moc_ShaderSyntaxHighlighter.cpp">
-      <Filter>QtImplementation\Generated Files\Template</Filter>
-    </ClCompile>
     <ClCompile Include="ShaderSyntaxHighlighter.cpp">
       <Filter>ResourceEditors\ShaderEditors</Filter>
     </ClCompile>
@@ -1313,6 +1307,30 @@
     <ClCompile Include="MenuUtils.cpp">
       <Filter>Widgets\Menus</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_TextEditWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_TextEditWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_TextEditWidget.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="TextEditWidget.cpp">
+      <Filter>Widgets\TextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_TextSyntaxHighlighter.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_TextSyntaxHighlighter.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_TextSyntaxHighlighter.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="TextSyntaxHighlighter.cpp">
+      <Filter>Widgets\TextEditor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1538,6 +1556,12 @@
     </CustomBuild>
     <CustomBuild Include="depthbufferdescriptordialog.ui">
       <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TextEditWidget.h">
+      <Filter>Widgets\TextEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="TextSyntaxHighlighter.h">
+      <Filter>Widgets\TextEditor</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

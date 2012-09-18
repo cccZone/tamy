@@ -27,10 +27,6 @@ END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float g_cascadeIntervals[] = { 0.0f, 5.0f / 100.0f, 12.0f / 100.0f, 30.0f / 100.0f, 1.0f };
-
-///////////////////////////////////////////////////////////////////////////////
-
 DirectionalLight::DirectionalLight( const std::string& name )
    : Light( name )
    , m_color(1, 1, 1, 1 )
@@ -48,7 +44,7 @@ DirectionalLight::DirectionalLight( const std::string& name )
    m_cascadeCalculationConfig.m_cascadeIntervals[0] = 0.0f;
    m_cascadeCalculationConfig.m_cascadeIntervals[1] = 10.0f;
    m_cascadeCalculationConfig.m_cascadeIntervals[2] = 30.0f;
-   m_cascadeCalculationConfig.m_cascadeIntervals[3] = 90.0f;
+   m_cascadeCalculationConfig.m_cascadeIntervals[3] = 120.0f;
    m_cascadeCalculationConfig.m_cascadeIntervals[4] = FLT_MAX;
 }
 
@@ -207,7 +203,7 @@ void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera,
          uint sceneElemsCount = m_visibleGeometry.size();
          for ( uint i = 0; i < sceneElemsCount; ++i )
          {
-            m_visibleGeometry[i]->render( renderer, &vsSetter);
+            m_visibleGeometry[i]->render( renderer, &vsSetter );
          }
       }
    }

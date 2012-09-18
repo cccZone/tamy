@@ -10,10 +10,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ShaderSyntaxHighlighter;
 class VertexShader;
 class ResourcesManager;
 class Renderer;
+class TextEditWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -35,8 +35,8 @@ private:
    Ui::VertexShaderEditorWindow     m_ui;
 
    VertexShader&                    m_shader;
-   ShaderSyntaxHighlighter*         m_highlighter;
 
+   TextEditWidget*                  m_scriptEditor;
    ResourcesManager*                m_resourceMgr;
    bool                             m_docModified;
 
@@ -59,7 +59,6 @@ public slots:
    void save();
    bool compile();
    void onScriptModified();
-   void onTextCursorMoved();
    void onVertexIdChange( const QString& newId );
    void importFrom();
    void exportTo();

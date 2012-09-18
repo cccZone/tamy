@@ -19,6 +19,7 @@ class QTabWidget;
 class QComboBox;
 class ColorFrame;
 class HexEditor;
+class TextEditWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -67,6 +68,7 @@ private:
    QStringList                         m_blendFunctions;
 
    PixelShader&                        m_shader;
+   TextEditWidget*                     m_scriptEditor;
    ShaderSyntaxHighlighter*            m_highlighter;
    QTabWidget*                         m_textureStagesTabs;
    std::vector< TextureStageTabDef >   m_textureStagesTabWidgets;
@@ -97,7 +99,6 @@ public slots:
    void save();
    bool compile();
    void onScriptModified();
-   void onTextCursorMoved();
    void onParamChange();
    void onTextureStageChange();
    void importFrom();

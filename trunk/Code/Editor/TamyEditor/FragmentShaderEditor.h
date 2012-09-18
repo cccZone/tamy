@@ -10,10 +10,10 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class ShaderSyntaxHighlighter;
 class FragmentShader;
 class ResourcesManager;
 class Renderer;
+class TextEditWidget;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -28,8 +28,8 @@ private:
    Ui::FragmentShaderEditorWindow   m_ui;
 
    FragmentShader&                  m_shader;
-   ShaderSyntaxHighlighter*         m_highlighter;
 
+   TextEditWidget*                  m_scriptEditor;
    ResourcesManager*                m_resourceMgr;
    bool                             m_docModified;
 
@@ -51,7 +51,6 @@ public:
 public slots:
    void save();
    void onScriptModified();
-   void onTextCursorMoved();
    void importFrom();
    void exportTo();
 

@@ -4,7 +4,6 @@
 #include "core/Math.h"
 
 
-// TODO: !!!!!!!!!!! Z clipping planes for the objectQueryBounds shift as I'm changing the viewport size - fix that
 // TODO: !!!!!!!!!!! large imperfections when looking at a surface from a sharp angle from up close - cascade seems to short
 // TODO: !!!!!!!!!!! implement shadow edge smoothing
 
