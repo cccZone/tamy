@@ -15,6 +15,7 @@ class TextSyntaxHighlighter;
 class QPaintEvent;
 class LinesWidget;
 class CodeEditorWidget;
+class QToolBar;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -29,13 +30,16 @@ private:
 
    TextSyntaxHighlighter*     m_highlighter;
 
+   QAction*                   m_toggleSelectionHighlightAction;
+
 public:
    /**
     * Constructor.
     *
     * @param parentWidget
+    * @param toolbar       toolbar we want to add text editor related actions
     */
-   TextEditWidget( QWidget* parentWidget ); 
+   TextEditWidget( QWidget* parentWidget, QToolBar* toolbar = NULL ); 
    ~TextEditWidget();
 
    /**
@@ -69,7 +73,7 @@ signals:
    void textChanged();
 
 public slots:
-   void onTextChanged();
+   void onTextChanged( int position, int charsRemoved, int charsAdded );
    void onTextCursorMoved();
    void onSelectionChanged();
    void undo();
@@ -78,6 +82,21 @@ public slots:
 
 private:
    void highlightCurrentLine();
+
+   /**
+    * Returns the desired ( correct ) indentation level of text at the specified position.
+    *
+    * @param text
+    * @param position
+    */
+   int getIndentationLevel( const QString& text, int position ) const;
+
+   /**
+    * Formats the edited text.
+    *
+    * @param changedPosition     changed text position
+    */
+   void formatText( int changedPosition );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
