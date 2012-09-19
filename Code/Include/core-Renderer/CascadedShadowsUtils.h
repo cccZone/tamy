@@ -39,6 +39,10 @@ struct CascadeStage
    Viewport             m_viewport;
    AABoundingBox        m_objectsQueryBounds;
    AABoundingBox        m_lightFrustumBounds;
+
+   // temporary position and rotation we should set for the light for the time of cascade rendering
+   Matrix               m_lightMtx;
+
    float                m_cameraNearZ;
    float                m_cameraFarZ;
 };
@@ -57,7 +61,7 @@ public:
     * @param config
     * @param outArrCascadeStages
     */
-   static void calculateCascadesBounds( const CascadesConfig& config, CascadeStage* outArrCascadeStages );
+   static void calculateCascadesBounds( const CascadesConfig& config, CascadeStage* outArrCascadeStages);
 
 private:
    static void calculateCameraCascadeFrustumBounds( Camera* activeCamera, float intervalBegin, float intervalEnd, AABoundingBox& outFrustumPart );

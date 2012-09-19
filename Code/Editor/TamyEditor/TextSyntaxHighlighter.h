@@ -19,15 +19,14 @@ public:
    {
       QRegExp                    pattern;
       QTextCharFormat            format;
-      bool                       enabled;
-
-      HighlightingRule() : enabled( true ) {}
    };
 
 private:
    QVector< HighlightingRule >   m_highlightingRules;
 
-   int                           m_textInstanceHighlightRule;
+   HighlightingRule              m_textInstanceHighlightRule;
+   bool                          m_textInstanceHighlightRuleActive;
+   bool                          m_textInstanceHighlightEnabled;
 
 public:
    /**
@@ -51,12 +50,29 @@ public:
     */
    HighlightingRule& appendRule();
 
+public slots:
+   void toggleSelectionHighlight();
+
 protected:
    void highlightBlock( const QString &text );
+
+   /**
+    * Implement this method if you want to provide some specific way in which certain blocks of text
+    * should be highlighted.
+    *
+    * @param text
+    */
    virtual void onHighlightBlock( const QString &text ) {}
 
 private:
    void initializeDefaultRules();
+
+   /**
+    * Runs the specified rule.
+    *
+    * @param rule
+    */
+   void executeRule( const HighlightingRule& rule, const QString& text );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

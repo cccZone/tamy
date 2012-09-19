@@ -4,7 +4,6 @@
 #include "core/Math.h"
 
 
-// TODO: !!!!!!!!!!! large imperfections when looking at a surface from a sharp angle from up close - cascade seems to short
 // TODO: !!!!!!!!!!! implement shadow edge smoothing
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,7 +49,7 @@ void CascadedShadowsUtils::calculateCascadesBounds( const CascadesConfig& config
       float frustumIntervalBegin = max2( nearCameraClippingPlane, config.m_cascadeIntervals[i] );
       float frustumIntervalEnd = min2( farCameraClippingPlane, config.m_cascadeIntervals[i + 1] );
       outArrCascadeStages[i].m_cameraNearZ = frustumIntervalBegin;
-      outArrCascadeStages[i].m_cameraFarZ = frustumIntervalEnd;
+      outArrCascadeStages[i].m_cameraFarZ = frustumIntervalEnd - nearCameraClippingPlane; // counter the near camera clipping plane
 
       calculateCameraCascadeFrustumBounds( activeCamera, frustumIntervalBegin, frustumIntervalEnd, cascadeFrustumBoundsWS );
 
@@ -118,6 +117,27 @@ void CascadedShadowsUtils::calculateCascadesBounds( const CascadesConfig& config
       lightFrustumBounds.transform( invLightViewMtx, outArrCascadeStages[i].m_objectsQueryBounds );
    }
 
+
+   // adjust frustum clipping planes keeping in mind that the camera's gonna be offset
+   // and calculate the light position
+   for ( uint i = 0; i < numCascades; ++i )
+   {
+      AABoundingBox& lightFrustumBounds = outArrCascadeStages[i].m_lightFrustumBounds;
+
+      lightFrustumBounds.min.z -= furthestCameraDistanceFromOrigin;
+      lightFrustumBounds.max.z -= furthestCameraDistanceFromOrigin;
+
+      Vector frustumCenter;
+      frustumCenter.setAdd( lightFrustumBounds.min, lightFrustumBounds.max ).mul( 0.5f );
+      frustumCenter.z = furthestCameraDistanceFromOrigin;
+
+      Vector lightPos;
+      invLightViewMtx.transform( frustumCenter, lightPos );
+
+      Matrix& lightMtx = outArrCascadeStages[i].m_lightMtx;
+      lightMtx = config.m_lightRotationMtx;
+      lightMtx.setPosition( lightPos );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

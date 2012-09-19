@@ -45,8 +45,13 @@ void PixelShaderEditor::onInitialize()
    // setup ui
    m_ui.setupUi( this );
 
+   // create a toolbar
+   QString iconsDir = m_resourceMgr->getFilesystem().getShortcut( "editorIcons" ).c_str();
+   QToolBar* toolbar = new QToolBar( m_ui.toolbarFrame );
+   m_ui.toolbarFrame->layout()->addWidget( toolbar );
+
    // set the editor up
-   m_scriptEditor = new TextEditWidget( m_ui.editorFrame );
+   m_scriptEditor = new TextEditWidget( m_ui.editorFrame, toolbar );
    m_ui.editorFrame->layout()->addWidget( m_scriptEditor );
    QFont font( "Courier", 12 );
    m_scriptEditor->setFont( font );
@@ -156,11 +161,7 @@ void PixelShaderEditor::onInitialize()
       initializeTextureStagesTab();
    }
 
-   // set the toolbar
-   QString iconsDir = m_resourceMgr->getFilesystem().getShortcut( "editorIcons" ).c_str();
-   
-   QToolBar* toolbar = new QToolBar( m_ui.toolbarFrame );
-   m_ui.toolbarFrame->layout()->addWidget( toolbar );
+   // initialize the toolbar
 
    // file management
    {

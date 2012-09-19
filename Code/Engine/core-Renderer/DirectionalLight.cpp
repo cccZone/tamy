@@ -44,8 +44,8 @@ DirectionalLight::DirectionalLight( const std::string& name )
    m_cascadeCalculationConfig.m_cascadeIntervals[0] = 0.0f;
    m_cascadeCalculationConfig.m_cascadeIntervals[1] = 10.0f;
    m_cascadeCalculationConfig.m_cascadeIntervals[2] = 30.0f;
-   m_cascadeCalculationConfig.m_cascadeIntervals[3] = 120.0f;
-   m_cascadeCalculationConfig.m_cascadeIntervals[4] = FLT_MAX;
+   m_cascadeCalculationConfig.m_cascadeIntervals[3] = 60.0f;
+   m_cascadeCalculationConfig.m_cascadeIntervals[4] = 120.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -155,11 +155,12 @@ void DirectionalLight::renderShadowMap( Renderer& renderer, const LightingRender
    m_cascadeCalculationConfig.m_cascadeDimensions = (float)( data.m_shadowDepthTexture->getWidth() ) / (float)CASCADES_IN_ROW;
    m_cascadeCalculationConfig.m_sceneBounds = data.m_renderingView->getSceneBounds();
    m_cascadeCalculationConfig.m_activeCamera = &activeCamera;
+
+   Vector lightPos;
    CascadedShadowsUtils::calculateCascadesBounds( m_cascadeCalculationConfig, m_calculatedCascadeStages );
 
    // set the light camera
    Camera lightCamera( "dirLightCamera", renderer, Camera::PT_ORTHO );
-   lightCamera.setLocalMtx( m_cascadeCalculationConfig.m_lightRotationMtx );
 
    // render cascades
    renderCascades( renderer, activeCamera, lightCamera, data );
@@ -190,6 +191,7 @@ void DirectionalLight::renderCascades( Renderer& renderer, Camera& activeCamera,
       const AABoundingBox& cascadeBounds = m_calculatedCascadeStages[cascadeIdx].m_lightFrustumBounds;
       lightCamera.setNearPlaneDimensions( cascadeBounds.max.x - cascadeBounds.min.x, cascadeBounds.max.y - cascadeBounds.min.y );
       lightCamera.setClippingPlanes( cascadeBounds.min.z, cascadeBounds.max.z );
+      lightCamera.setLocalMtx( m_calculatedCascadeStages[cascadeIdx].m_lightMtx );
 
       new ( renderer() ) RCSetViewport( m_calculatedCascadeStages[cascadeIdx].m_viewport );
 
@@ -247,6 +249,7 @@ void DirectionalLight::combineCascades( Renderer& renderer, const LightingRender
          const AABoundingBox& cascadeBounds = stage.m_lightFrustumBounds;
          lightCamera.setNearPlaneDimensions( cascadeBounds.max.x - cascadeBounds.min.x, cascadeBounds.max.y - cascadeBounds.min.y );
          lightCamera.setClippingPlanes( cascadeBounds.min.z, cascadeBounds.max.z );
+         lightCamera.setLocalMtx( m_calculatedCascadeStages[i].m_lightMtx );
 
          Matrix lightViewProj;
          lightViewProj.setMul( lightCamera.getViewMtx(), lightCamera.getProjectionMtx() );

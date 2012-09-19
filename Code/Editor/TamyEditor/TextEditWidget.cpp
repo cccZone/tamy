@@ -6,16 +6,17 @@
 #include <QScrollBar>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
 #include "TextSyntaxHighlighter.h"
+#include "core/ResourcesManager.h"
+#include "core/Filesystem.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#define LINE_NUMBERS_AREA_WIDTH  40
-
-///////////////////////////////////////////////////////////////////////////////
-
-TextEditWidget::TextEditWidget( QWidget* parentWidget )
+TextEditWidget::TextEditWidget( QWidget* parentWidget, QToolBar* toolbar )
    : QFrame( parentWidget )
    , m_highlighter( NULL )
 {
@@ -23,6 +24,17 @@ TextEditWidget::TextEditWidget( QWidget* parentWidget )
    mainLayout->setMargin( 0 );
    mainLayout->setSpacing( 1 );
    setLayout( mainLayout );
+
+   // add our own stuff to the specified toolbar
+   if ( toolbar )
+   {
+      QString iconsDir = ResourcesManager::getInstance().getFilesystem().getShortcut( "editorIcons" ).c_str();
+
+      // add edition-related actions
+      m_toggleSelectionHighlightAction = toolbar->addAction( QIcon( iconsDir + "highlightSelection.png" ), tr( "Highlight selection" ) );
+
+      toolbar->addSeparator();
+   }
 
    // create the main text editor are that will become a host to a list of lines and the text editor
    QFrame* textEditFrame = new QFrame( this );
@@ -46,10 +58,10 @@ TextEditWidget::TextEditWidget( QWidget* parentWidget )
          textEditLayout->addWidget( m_editor, 1 );
 
          m_editor->setLineWrapMode( QPlainTextEdit::NoWrap );
-         connect( m_editor, SIGNAL( textChanged() ), this, SLOT( onTextChanged() ) );
+         connect( m_editor->document(), SIGNAL( contentsChange( int, int, int ) ), this, SLOT( onTextChanged( int, int, int ) ) );
          connect( m_editor, SIGNAL( cursorPositionChanged() ), this, SLOT( onTextCursorMoved() ) );
          connect( m_editor, SIGNAL( selectionChanged() ), this, SLOT( onSelectionChanged() ) );
-         connect( m_editor, SIGNAL( updateRequest( QRect,int ) ), m_lineNumbers, SLOT( updateArea( QRect,int ) ) );
+         connect( m_editor, SIGNAL( updateRequest( QRect, int ) ), m_lineNumbers, SLOT( updateArea( QRect, int ) ) );
 
          // make sure we synchronize the scrollbars between the lines list and the editor
          QScrollBar* editorScrollBar = m_editor->verticalScrollBar();
@@ -89,6 +101,10 @@ void TextEditWidget::setSyntaxHighlighter( TextSyntaxHighlighter* highlighter )
    }
 
    m_highlighter->setDocument( m_editor->document() );
+
+   // connect the action that toggles an active selection highlight
+   connect( m_toggleSelectionHighlightAction, SIGNAL( triggered() ), m_highlighter, SLOT( toggleSelectionHighlight() ) );
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -121,9 +137,104 @@ QString TextEditWidget::toPlainText() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TextEditWidget::onTextChanged()
+void TextEditWidget::onTextChanged( int position, int charsRemoved, int charsAdded  )
 {
-   emit textChanged();
+   if ( charsAdded == 1 )
+   {
+      formatText( position );
+   }
+
+   if ( charsRemoved > 0 || charsAdded > 0 )
+   {
+      // inform the listeners only if the text changed - we're not interested in formatting changes
+      emit textChanged();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+int TextEditWidget::getIndentationLevel( const QString& text, int position ) const
+{
+   // this code assumes that you can use only one curly brace  ( { or } ) or a pair of them per line.
+   // If you'll use more, only the last pair will be taken into account
+
+   // first - extract the previous line of text
+   int prevLineIdx = text.lastIndexOf( '\n', position - 1 );
+   if ( prevLineIdx < 0 )
+   {
+      prevLineIdx = 0;
+   }
+   QString prevLine = text.mid( prevLineIdx, position - prevLineIdx );
+
+   // respect an opening brace as the start of a new indentation level,
+   // but check if it's not closed at the same line
+   int openingBraceIdx = prevLine.lastIndexOf( '{' );
+   int closingBraceIdx = prevLine.indexOf( '}', openingBraceIdx );
+   int tabsCount = ( openingBraceIdx >= 0 && closingBraceIdx < 0 );
+
+   // check how many tabs does it have
+   int lineLen = prevLine.length();
+   for ( int idx = 0; idx >= 0 && idx < lineLen; )
+   {
+      idx = prevLine.indexOf( '\t', idx );
+      if ( idx >= 0 )
+      {
+         ++tabsCount;
+         ++idx;
+      }
+   }
+
+   return tabsCount;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TextEditWidget::formatText( int changedPosition )
+{
+   // check if it's the new line that was created
+   QTextCursor cursor = m_editor->textCursor();
+   QString text = m_editor->document()->toPlainText();
+
+   // check if a tab should be inserted
+   int tabsToInsert = 0;
+   int tabsInsertionPos = 0;
+   QChar newChar = text.at( changedPosition );
+   if ( newChar == '\n' )
+   {
+      tabsToInsert = getIndentationLevel( text, changedPosition );
+
+      // insert tabs
+      cursor.setPosition( changedPosition + 1 );
+      for( int i = 0; i < tabsToInsert; ++i )
+      {
+         cursor.insertText( "\t" );
+      }
+   }
+
+   if ( newChar == '}' && changedPosition > 0 )
+   {
+      QChar prevChar;
+      int testedPos = changedPosition - 1;
+      int removalStartPos = -1;
+      do
+      {
+         prevChar = text.at( testedPos );
+         --testedPos;
+
+         if ( prevChar == '\t' && removalStartPos < 0 )
+         {
+            removalStartPos = testedPos + 1;
+         }
+      } while ( prevChar == '\t' || prevChar == ' ' );
+
+      if ( prevChar == '\n' && removalStartPos >= 0 )
+      {
+         // remove one tab
+         cursor.setPosition( removalStartPos );
+         cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor, changedPosition - removalStartPos );
+         cursor.removeSelectedText();
+      }
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -155,8 +266,8 @@ void TextEditWidget::onSelectionChanged()
    QTextCursor cursor = m_editor->textCursor();
    int cursorPos = cursor.position();
    cursor.select( QTextCursor::WordUnderCursor );
-   cursor.setPosition( cursorPos );
    QString selectedText = cursor.selectedText();
+   cursor.setPosition( cursorPos );
 
    m_highlighter->highlightAllInstances( selectedText );
 }
