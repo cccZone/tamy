@@ -14,6 +14,7 @@
 #include "RPBFloat.h"
 #include "RPBVec4.h"
 #include "RPBDeferredLighting.h"
+#include "RPBLightIndices.h"
 #include "RPBPreview.h"
 
 
@@ -49,6 +50,7 @@ void RenderingPipelineLayout::initBlocksFactory()
    associate< RPFloatNode, RPBFloat >();
    associate< RPVec4Node, RPBVec4 >();
    associate< RPDeferredLightingNode, RPBDeferredLighting >();
+   associate< RPLightIndicesNode, RPBLightIndices >();
    associate< RPPreviewNode, RPBPreview >();
 }
 

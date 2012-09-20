@@ -509,6 +509,7 @@
     </CustomBuild>
     <ClInclude Include="QueryableDebugGeometry.h" />
     <ClInclude Include="ResourceManagementUtil.h" />
+    <ClInclude Include="RPBLightIndices.h" />
     <ClInclude Include="RPBCamera.h" />
     <ClInclude Include="RPBFloat.h" />
     <ClInclude Include="RPBFloats2Vec4.h" />
@@ -1434,6 +1435,7 @@
     <ClCompile Include="ResourceDropArea.cpp" />
     <ClCompile Include="ResourceManagementUtil.cpp" />
     <ClCompile Include="ResourcesBrowser.cpp" />
+    <ClCompile Include="RPBLightIndices.cpp" />
     <ClCompile Include="RPBCamera.cpp" />
     <ClCompile Include="RPBFloat.cpp" />
     <ClCompile Include="RPBFloats2Vec4.cpp" />

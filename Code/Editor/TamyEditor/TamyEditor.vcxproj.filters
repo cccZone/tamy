@@ -210,6 +210,18 @@
     <Filter Include="Widgets\TextEditor">
       <UniqueIdentifier>{9a9fb08e-7340-4284-969a-9874bb307c9f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\RenderingPipelineEditor\Blocks\Lighting">
+      <UniqueIdentifier>{6cf3be8d-c6f1-40a1-a5df-a7fdca1ed310}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\RenderingPipelineEditor\Blocks\SceneRendering">
+      <UniqueIdentifier>{56568268-aaf2-4493-8fa4-b59d6442dd1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders">
+      <UniqueIdentifier>{a0fb3340-f457-4d56-9e7f-a4c16e628f20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\RenderingPipelineEditor\Blocks\misc">
+      <UniqueIdentifier>{c70eed69-41d9-4769-9329-d420a5e76bfb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -254,15 +266,6 @@
     <ClInclude Include="RenderingPipelineLayout.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
     </ClInclude>
-    <ClInclude Include="RPBPostProcess.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBStart.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBSceneRender.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_rendertargetdescriptordialog.h">
       <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
@@ -271,9 +274,6 @@
     </ClInclude>
     <ClInclude Include="RenderingPipelineSocketRepresentation.h">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBAdapter.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_skeletonanimationeditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
@@ -328,21 +328,6 @@
     </ClInclude>
     <ClInclude Include="ResourceEditor.h">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBFloats2Vec4.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBCamera.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBTexture.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBFloat.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="RPBVec4.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_fragmentshadereditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
@@ -506,9 +491,6 @@
     <ClInclude Include="Project.h">
       <Filter>Core\Project</Filter>
     </ClInclude>
-    <ClInclude Include="RPBDeferredLighting.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
     <ClInclude Include="DRDirectionalLight.h">
       <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClInclude>
@@ -533,9 +515,6 @@
     <ClInclude Include="SceneObjectsManipulator.h">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClInclude>
-    <ClInclude Include="RPBPreview.h">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClInclude>
     <ClInclude Include="GizmoNodeManipulationState.h">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
     </ClInclude>
@@ -550,6 +529,42 @@
     </ClInclude>
     <ClInclude Include="MenuUtils.h">
       <Filter>Widgets\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBDeferredLighting.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBSceneRender.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\SceneRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBPostProcess.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\SceneRendering</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBVec4.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBTexture.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBFloats2Vec4.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBFloat.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBCamera.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBStart.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBAdapter.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBPreview.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="RPBLightIndices.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\Lighting</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -700,9 +715,6 @@
     <ClCompile Include="QPropertiesView.cpp">
       <Filter>Widgets\PropertiesEditorWidget</Filter>
     </ClCompile>
-    <ClCompile Include="RPBPostProcess.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_GraphLayout.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
     </ClCompile>
@@ -717,12 +729,6 @@
     </ClCompile>
     <ClCompile Include="FloatPropertyEditor.cpp">
       <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBStart.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBSceneRender.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="RenderTargetDescriptorDialog.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
@@ -742,9 +748,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_EnumPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBAdapter.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="SkeletonAnimationEditor.cpp">
       <Filter>ResourceEditors\SkeletonAnimationEditor</Filter>
@@ -865,21 +868,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Template\moc_ObjectPropertyEditor.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBFloats2Vec4.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBCamera.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBTexture.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBFloat.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="RPBVec4.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="FragmentShaderEditor.cpp">
       <Filter>ResourceEditors\ShaderEditors</Filter>
@@ -1205,9 +1193,6 @@
     <ClCompile Include="GeneratedFiles\Template\moc_ResourceDropArea.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
-    <ClCompile Include="RPBDeferredLighting.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
     <ClCompile Include="DRDirectionalLight.cpp">
       <Filter>Widgets\SceneRenderWidget\DebugRepresentations</Filter>
     </ClCompile>
@@ -1289,9 +1274,6 @@
     <ClCompile Include="SceneObjectsManipulator.cpp">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator</Filter>
     </ClCompile>
-    <ClCompile Include="RPBPreview.cpp">
-      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks</Filter>
-    </ClCompile>
     <ClCompile Include="GizmoNodeManipulationState.cpp">
       <Filter>ResourceEditors\SceneEditor\SceneObjectsManipulator\States</Filter>
     </ClCompile>
@@ -1330,6 +1312,42 @@
     </ClCompile>
     <ClCompile Include="TextSyntaxHighlighter.cpp">
       <Filter>Widgets\TextEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBDeferredLighting.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBSceneRender.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\SceneRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBPostProcess.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\SceneRendering</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBTexture.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBVec4.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBFloats2Vec4.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBFloat.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBCamera.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\DataProviders</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBAdapter.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBPreview.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBStart.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBLightIndices.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\Lighting</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

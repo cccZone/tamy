@@ -1,0 +1,23 @@
+/// @file   core-Renderer/ShaderUtils.h
+/// @brief
+#pragma once
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+class Renderer;
+class ShaderTexture;
+struct Vector;
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A set of utility methods used when playing with various shaders.
+ */
+class ShaderUtils
+{
+public:
+   static void calculateHalfPixel( Renderer& renderer, ShaderTexture* inputTex, Vector& halfPixel );
+};
+
+///////////////////////////////////////////////////////////////////////////////
