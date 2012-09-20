@@ -35,6 +35,17 @@ public:
     * @param outRenderTargets       list of render targets
     */
    static void refreshRenderTargets( RenderingPipelineMechanism& host, const RenderingPipelineNode* node, Array< RenderTarget* >& outRenderTargets );
+
+   /**
+    * Rebuilds a list of render targets for the specific pipeline instance and for the specific outputs only
+    *
+    * @param host                   host pipeline instance that contains the definitions of render targets
+    * @param node                   modified rendering pipeline node
+    * @param renderTargetIds        ;-separated list of render target names
+    * @param outRenderTargets       list of render targets
+    */
+   static void refreshRenderTargets( RenderingPipelineMechanism& host, const RenderingPipelineNode* node, const std::string& renderTargetIds, Array< RenderTarget* >& outRenderTargets );
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

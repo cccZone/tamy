@@ -11,6 +11,12 @@
 class RenderTarget;
 class RPTextureInput;
 class RPTextureOutput;
+class PixelShader;
+class VertexShader;
+class TriangleMesh;
+class DeferredDirectionalLightRenderer;
+class DeferredPointLightRenderer;
+class DeferredAmbientLightRenderer;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,26 +28,30 @@ class RPDeferredLightingNode : public RenderingPipelineNode
    DECLARE_CLASS()
 
 private:
-   std::string                               m_finalLightColorTargetId;
-   std::string                               m_shadowDepthTextureId;
-   std::string                               m_shadowDepthSurfaceId;
-   std::string                               m_screenSpaceShadowMapId;
+   std::string                                           m_finalLightColorTargetId;
+   std::string                                           m_shadowDepthTextureId;
+   std::string                                           m_shadowDepthSurfaceId;
+   std::string                                           m_screenSpaceShadowMapId;
 
    // runtime data
-   TRuntimeVar< RenderTarget* >              m_shadowDepthTexture;
-   TRuntimeVar< DepthBuffer* >               m_shadowDepthSurface;
-   TRuntimeVar< RenderTarget* >              m_screenSpaceShadowMap;
-   TRuntimeVar< RenderTarget* >              m_finalLightColorTarget;
+   TRuntimeVar< RenderTarget* >                          m_shadowDepthTexture;
+   TRuntimeVar< DepthBuffer* >                           m_shadowDepthSurface;
+   TRuntimeVar< RenderTarget* >                          m_screenSpaceShadowMap;
+   TRuntimeVar< RenderTarget* >                          m_finalLightColorTarget;
+
+   TRuntimeVar< DeferredDirectionalLightRenderer* >      m_directionalLightsRenderer;
+   TRuntimeVar< DeferredPointLightRenderer* >            m_pointLightsRenderer;
+   TRuntimeVar< DeferredAmbientLightRenderer* >          m_ambientLightRenderer;
 
    // sockets data
-   RPTextureInput*                           m_sceneColorInput;
-   RPTextureInput*                           m_normalsInput;
-   RPTextureInput*                           m_specularInput;
-   RPTextureInput*                           m_depthInput;
+   RPTextureInput*                                       m_sceneColorInput;
+   RPTextureInput*                                       m_normalsInput;
+   RPTextureInput*                                       m_specularInput;
+   RPTextureInput*                                       m_depthInput;
 
-   RPTextureOutput*                          m_finalLightColorTargetOutput;
-   RPTextureOutput*                          m_shadowDepthTextureOutput;
-   RPTextureOutput*                          m_screenSpaceShadowMapOutput;
+   RPTextureOutput*                                      m_finalLightColorTargetOutput;
+   RPTextureOutput*                                      m_shadowDepthTextureOutput;
+   RPTextureOutput*                                      m_screenSpaceShadowMapOutput;
 
 
 public:

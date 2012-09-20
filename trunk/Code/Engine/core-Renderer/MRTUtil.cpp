@@ -82,3 +82,31 @@ void MRTUtil::refreshRenderTargets( RenderingPipelineMechanism& host, const Rend
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void MRTUtil::refreshRenderTargets( RenderingPipelineMechanism& host, const RenderingPipelineNode* node, const std::string& renderTargetIds, Array< RenderTarget* >& outRenderTargets )
+{
+   RuntimeDataBuffer& data = host.data();
+   // remove old render targets
+   outRenderTargets.clear();
+
+   std::vector< std::string > renderTargets;
+   StringUtils::tokenize( renderTargetIds, ";", renderTargets );
+
+   // acquire the new ones
+   uint count = renderTargets.size();
+   outRenderTargets.resize( count );
+   for ( uint i = 0; i < count; ++i )
+   {
+      GBNodeOutput< RenderingPipelineNode >* output = node->findOutput( renderTargets[i] );
+      RPTextureOutput* rtOutput = static_cast< RPTextureOutput* >( output );
+      const std::string& renderTargetName = rtOutput->getName();
+
+      RenderTarget* target = host.getRenderTarget( renderTargetName );
+
+      // we'll either find a target with the name we defined, or we're going to be rendering directly to back buffer.
+      outRenderTargets[i] = target;
+      rtOutput->setValue( data, target );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

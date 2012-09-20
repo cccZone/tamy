@@ -90,15 +90,6 @@ void VertexShader::parseTechniques()
    {
       ASSERT_MSG( false, compiler.getLastError().c_str() );
    }
-
-   if ( !result || m_arrEntryFunctionNames.empty() )
-   {
-      // if no technique markers were found or there was a parsing error, assume there's just one common technique 
-      // that uses the 'main' method as its entry function
-
-      m_entryFunctionName = "main";
-      m_arrEntryFunctionNames.push_back( m_entryFunctionName );
-   }
    else
    {
       // create the semicolon separated version of the arrays for serialization

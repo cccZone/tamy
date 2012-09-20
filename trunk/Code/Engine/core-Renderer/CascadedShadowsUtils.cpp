@@ -4,8 +4,6 @@
 #include "core/Math.h"
 
 
-// TODO: !!!!!!!!!!! implement shadow edge smoothing
-
 ///////////////////////////////////////////////////////////////////////////////
 
 void CascadedShadowsUtils::calculateCascadesBounds( const CascadesConfig& config, CascadeStage* outArrCascadeStages )

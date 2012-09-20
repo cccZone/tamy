@@ -11,9 +11,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 struct BoundingSphere;
-class PixelShader;
-class VertexShader;
-class TriangleMesh;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,18 +30,10 @@ public:
 
    // runtime data
    BoundingSphere*   m_boundingSphere;
-   VertexShader*     m_vertexShader;
-   PixelShader*      m_pixelShader;
-   TriangleMesh*     m_pointLightMesh;
 
 public:
    PointLight( const std::string& name = "" );
    virtual ~PointLight();
-
-   // -------------------------------------------------------------------------
-   // Light implementation
-   // -------------------------------------------------------------------------
-   void render( Renderer& renderer, const LightingRenderData& data );
 
    // -------------------------------------------------------------------------
    // Object implementation

@@ -84,9 +84,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Include\core-Renderer\TypesRegistry.cpp" />
+    <ClCompile Include="IndexedDirectionalLightRenderer.cpp" />
     <ClCompile Include="AmbientLight.cpp" />
     <ClCompile Include="BasicRenderingEntitiesFactory.cpp" />
     <ClCompile Include="CascadedShadowsUtils.cpp" />
+    <ClCompile Include="DeferredAmbientLightRenderer.cpp" />
+    <ClCompile Include="DeferredDirectionalLightRenderer.cpp" />
+    <ClCompile Include="DeferredPointLightRenderer.cpp" />
     <ClCompile Include="DepthBuffer.cpp" />
     <ClCompile Include="DepthBufferDescriptor.cpp" />
     <ClCompile Include="FragmentShader.cpp" />
@@ -131,6 +135,7 @@
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="RenderableTexture.cpp" />
     <ClCompile Include="RenderTree.cpp" />
+    <ClCompile Include="RPLightIndicesNode.cpp" />
     <ClCompile Include="RPCameraNode.cpp" />
     <ClCompile Include="RPAdapterNode.cpp" />
     <ClCompile Include="RPFloatNode.cpp" />
@@ -145,6 +150,7 @@
     <ClCompile Include="ShaderCompiler.cpp" />
     <ClCompile Include="ShaderConstantDesc.cpp" />
     <ClCompile Include="ShaderTexture.cpp" />
+    <ClCompile Include="ShaderUtils.cpp" />
     <ClCompile Include="SingleTextureEffect.cpp" />
     <ClCompile Include="CompositeRenderingMechanism.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -188,10 +194,16 @@
     <None Include="..\..\Include\core-Renderer\VertexShaderNodeOperator.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\core-Renderer\IndexedDirectionalLightRenderer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\IndexedLightingRenderData.h" />
     <ClInclude Include="..\..\Include\core-Renderer\AmbientLight.h" />
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderCommands.h" />
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderingEntitiesFactory.h" />
     <ClInclude Include="..\..\Include\core-Renderer\CascadedShadowsUtils.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DeferredAmbientLightRenderer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DeferredDirectionalLightRenderer.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DeferredLightingRenderData.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\DeferredPointLightRenderer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DepthBuffer.h" />
     <ClInclude Include="..\..\Include\core-Renderer\DepthBufferDescriptor.h" />
@@ -240,6 +252,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderTarget.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderableTexture.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderTree.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPLightIndicesNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPCameraNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPFloatNode.h" />
@@ -258,6 +271,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\ShaderParam.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderRenderCommand.h" />
     <ClInclude Include="..\..\Include\core-Renderer\ShaderTexture.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderUtils.h" />
     <ClInclude Include="..\..\Include\core-Renderer\SingleTextureEffect.h" />
     <ClInclude Include="..\..\Include\core-Renderer\CompositeRenderingMechanism.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Renderer.h" />

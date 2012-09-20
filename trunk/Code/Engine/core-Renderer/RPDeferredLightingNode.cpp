@@ -5,10 +5,21 @@
 #include "core-Renderer/PixelShader.h"
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/RenderingView.h"
-#include "core-Renderer/Light.h"
-#include "core-Renderer/AmbientLight.h"
 #include "core-Renderer/MRTUtil.h"
 #include "core/ResourcesManager.h"
+#include "core-Renderer/Defines.h"
+
+// lights
+#include "core-Renderer/Light.h"
+#include "core-Renderer/AmbientLight.h"
+#include "core-Renderer/DirectionalLight.h"
+#include "core-Renderer/PointLight.h"
+
+// rendering methods
+#include "core-Renderer/DeferredLightingRenderData.h"
+#include "core-Renderer/DeferredDirectionalLightRenderer.h"
+#include "core-Renderer/DeferredPointLightRenderer.h"
+#include "core-Renderer/DeferredAmbientLightRenderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -49,11 +60,6 @@ RPDeferredLightingNode::RPDeferredLightingNode()
 
    m_screenSpaceShadowMapOutput = new RPTextureOutput( m_screenSpaceShadowMapId );
    defineOutput( m_screenSpaceShadowMapOutput );
-
-
-   // <memory.todo> when the object is being loaded, the outputs created here will leak memory. Fix that - maybe by introducing a separate serialization constructor...
-   std::string allRenderTargetIds = m_finalLightColorTargetId + ";" + m_shadowDepthTextureId + ";" + m_screenSpaceShadowMapId;
-   MRTUtil::defineOutputs( allRenderTargetIds, this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,7 +90,6 @@ void RPDeferredLightingNode::onObjectLoaded()
    delete m_finalLightColorTargetOutput;
    delete m_shadowDepthTextureOutput;
    delete m_screenSpaceShadowMapOutput;
-
 
    m_normalsInput = DynamicCast< RPTextureInput >( findInput( "Normals" ) );
    m_specularInput = DynamicCast< RPTextureInput >( findInput( "Specular" ) );
@@ -127,6 +132,9 @@ void RPDeferredLightingNode::onCreateLayout( RenderingPipelineMechanism& host ) 
    data.registerVar( m_shadowDepthSurface );
    data.registerVar( m_screenSpaceShadowMap );
    data.registerVar( m_finalLightColorTarget );
+   data.registerVar( m_directionalLightsRenderer );
+   data.registerVar( m_pointLightsRenderer );
+   data.registerVar( m_ambientLightRenderer );
 
    // create render targets
    {
@@ -142,23 +150,49 @@ void RPDeferredLightingNode::onCreateLayout( RenderingPipelineMechanism& host ) 
       RenderTarget* finalLightColorTarget = host.getRenderTarget( m_finalLightColorTargetId );
       data[ m_finalLightColorTarget ] = finalLightColorTarget;
    }
+
+   // create dedicated light renderers
+   {
+      data[ m_directionalLightsRenderer ] = new DeferredDirectionalLightRenderer( 4, 2 );
+      data[ m_pointLightsRenderer ] = new DeferredPointLightRenderer();
+      data[ m_ambientLightRenderer ] = new DeferredAmbientLightRenderer();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void RPDeferredLightingNode::onDestroyLayout( RenderingPipelineMechanism& host ) const
 {
+   RuntimeDataBuffer& data = host.data();
+
+   delete data[ m_directionalLightsRenderer ];
+   data[ m_directionalLightsRenderer ] = NULL;
+
+   delete data[ m_pointLightsRenderer ];
+   data[ m_pointLightsRenderer ] = NULL;
+
+   delete data[ m_ambientLightRenderer ];
+   data[ m_ambientLightRenderer ] = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-  
    RuntimeDataBuffer& data = host.data();
 
-   LightingRenderData renderingData;
-   memset( &renderingData, 0, sizeof( LightingRenderData ) );
+   DeferredDirectionalLightRenderer* directionalLightsRenderer = data[ m_directionalLightsRenderer ];
+   DeferredPointLightRenderer* pointLightsRenderer = data[ m_pointLightsRenderer ];
+   DeferredAmbientLightRenderer* ambientLightRenderer = data[ m_ambientLightRenderer ];
+
+   if ( !pointLightsRenderer || !directionalLightsRenderer || !ambientLightRenderer )
+   {
+      // no renderers on board - no rendering can take place
+      return;
+   }
+  
+   DeferredLightingRenderData renderingData;
+   memset( &renderingData, 0, sizeof( DeferredLightingRenderData ) );
 
    if ( m_depthInput )
    {
@@ -195,7 +229,7 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    AmbientLight* ambientLight = view->getAmbientLight();
    if ( ambientLight )
    {
-      ambientLight->render( renderer, renderingData.m_sceneColorTex, renderingData.m_finalLightColorTarget );
+      ambientLightRenderer->render( renderer, ambientLight, renderingData.m_sceneColorTex, renderingData.m_finalLightColorTarget );
    }
 
    // collect visible lights - query the host for them rather than the view, 
@@ -209,8 +243,21 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    for ( uint i = 0; i < lightsCount; ++i )
    {
       Light* light = visibleLights[i];
+      switch( light->getType() )
+      {
+      case Light::LT_Directional:
+         {
+            directionalLightsRenderer->render( renderer, static_cast< DirectionalLight* >( light ), renderingData );
 
-      light->render( renderer, renderingData );
+            break;
+         }
+
+      case Light::LT_Point:
+         {
+            pointLightsRenderer->render( renderer, static_cast< PointLight* >( light ), renderingData );
+            break;
+         }
+      }
    }
 
    // set the outputs

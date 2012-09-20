@@ -146,7 +146,10 @@
 #include "core-Renderer\SurfaceProperties.h"
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\PixelShader.h"
-
+// ----------------------------------------------------------------------------
+// --> Methods
+// ----------------------------------------------------------------------------
+#include "core-Renderer\RPSceneRenderNode.h"
 
 // ----------------------------------------------------------------------------
 // Mechanisms
@@ -175,7 +178,6 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer/RPAdapterNode.h"
 #include "core-Renderer/RPPreviewNode.h"
-#include "core-Renderer/RPSceneRenderNode.h"
 #include "core-Renderer/RPStartNode.h"
 #include "core-Renderer/RPPostProcessNode.h"
 #include "core-Renderer/RPCameraNode.h"
@@ -206,11 +208,13 @@
 #include "core-Renderer\PointLight.h"
 #include "core-Renderer\AmbientLight.h"
 // ----------------------------------------------------------------------------
-// --> PipelineNodes
+// --> Methods
 // ----------------------------------------------------------------------------
 #include "core-Renderer\RPDeferredLightingNode.h"
+#include "core-Renderer\RPLightIndicesNode.h"
 
 // ----------------------------------------------------------------------------
 // Tools
 // ----------------------------------------------------------------------------
 #include "core-Renderer\BasicRenderingEntitiesFactory.h"
+#include "core-Renderer\ShaderUtils.h"

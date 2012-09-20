@@ -55,6 +55,14 @@ bool ShaderCompiler::parseVertexShaderTechniques( const std::string& shaderCode,
       startPos = functionDeclEnd + 1;
    }
 
+   if ( outEntryFunctions.empty() )
+   {
+      // if no technique markers were found or there was a parsing error, assume there's just one common technique 
+      // that uses the 'main' method as its entry function
+      outTechniqueNames.push_back( "<<default>>" );
+      outEntryFunctions.push_back( "main" );
+   }
+
    return true;
 }
 

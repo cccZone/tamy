@@ -137,5 +137,6 @@ REGISTER_TYPE( DirectionalLight );
 REGISTER_TYPE( PointLight );
 REGISTER_TYPE( AmbientLight );
 REGISTER_TYPE( RPDeferredLightingNode );
+REGISTER_TYPE( RPLightIndicesNode );
 
 ///////////////////////////////////////////////////////////////////////////////

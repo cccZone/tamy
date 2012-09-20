@@ -76,9 +76,6 @@
     <Filter Include="Lighting\Entities">
       <UniqueIdentifier>{80a4f5cf-6fca-4f71-bbde-7cf6bea3472f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lighting\PipelineNodes">
-      <UniqueIdentifier>{cb50b816-b3ad-45eb-ac8b-2447c7295270}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Mechanisms">
       <UniqueIdentifier>{276eb3c8-13a8-40f4-bd45-12038506cd29}</UniqueIdentifier>
     </Filter>
@@ -124,11 +121,26 @@
     <Filter Include="Geometry\Utilities">
       <UniqueIdentifier>{cdd5c643-836c-48aa-bacc-4dc66cdc9322}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lighting\Global">
-      <UniqueIdentifier>{a6632a64-2d90-4e1c-b255-300cc519da13}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Lighting\Utils">
       <UniqueIdentifier>{b7f451fa-9fbd-44a8-9a6a-9753033f62c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting\Methods">
+      <UniqueIdentifier>{cb50b816-b3ad-45eb-ac8b-2447c7295270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting\Methods\Deferred">
+      <UniqueIdentifier>{b751ea53-0009-4dcd-b564-4fae8d9e0a20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting\Methods\Deferred\LightRenderers">
+      <UniqueIdentifier>{4596a423-be10-4184-9a74-9bc146ca73ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting\Methods\Indexed">
+      <UniqueIdentifier>{dd93c5bc-8aff-4f8f-a407-d7032b7de1e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lighting\Methods\Indexed\LightRenderers">
+      <UniqueIdentifier>{3afa97b1-916f-4572-a5ba-9fadf6a1e005}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials\Methods">
+      <UniqueIdentifier>{86b65416-d280-4be8-a65c-b5e711eac7d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -340,9 +352,6 @@
     <ClCompile Include="RPTextureNode.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClCompile>
-    <ClCompile Include="RPSceneRenderNode.cpp">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneRendering</Filter>
-    </ClCompile>
     <ClCompile Include="RPCameraNode.cpp">
       <Filter>Mechanisms\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClCompile>
@@ -366,9 +375,6 @@
     </ClCompile>
     <ClCompile Include="VertexDescriptions.cpp">
       <Filter>Geometry\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="RPDeferredLightingNode.cpp">
-      <Filter>Lighting\PipelineNodes</Filter>
     </ClCompile>
     <ClCompile Include="DirectionalLight.cpp">
       <Filter>Lighting\Entities</Filter>
@@ -397,11 +403,35 @@
     <ClCompile Include="Material.cpp">
       <Filter>Materials\MaterialGraph</Filter>
     </ClCompile>
-    <ClCompile Include="AmbientLight.cpp">
-      <Filter>Lighting\Global</Filter>
-    </ClCompile>
     <ClCompile Include="CascadedShadowsUtils.cpp">
       <Filter>Lighting\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="RPDeferredLightingNode.cpp">
+      <Filter>Lighting\Methods\Deferred</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredDirectionalLightRenderer.cpp">
+      <Filter>Lighting\Methods\Deferred\LightRenderers</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredPointLightRenderer.cpp">
+      <Filter>Lighting\Methods\Deferred\LightRenderers</Filter>
+    </ClCompile>
+    <ClCompile Include="AmbientLight.cpp">
+      <Filter>Lighting\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="DeferredAmbientLightRenderer.cpp">
+      <Filter>Lighting\Methods\Deferred\LightRenderers</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderUtils.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="IndexedDirectionalLightRenderer.cpp">
+      <Filter>Lighting\Methods\Indexed\LightRenderers</Filter>
+    </ClCompile>
+    <ClCompile Include="RPLightIndicesNode.cpp">
+      <Filter>Lighting\Methods\Indexed</Filter>
+    </ClCompile>
+    <ClCompile Include="RPSceneRenderNode.cpp">
+      <Filter>Materials\Methods</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -700,9 +730,6 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPTextureNode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h">
-      <Filter>Mechanisms\RenderingPipeline\Nodes\SceneRendering</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPCameraNode.h">
       <Filter>Mechanisms\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClInclude>
@@ -726,9 +753,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\VertexDescriptions.h">
       <Filter>Geometry\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h">
-      <Filter>Lighting\PipelineNodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DirectionalLight.h">
       <Filter>Lighting\Entities</Filter>
@@ -775,11 +799,41 @@
     <ClInclude Include="..\..\Include\core-Renderer\MeshUtils.h">
       <Filter>Geometry\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core-Renderer\AmbientLight.h">
-      <Filter>Lighting\Global</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\CascadedShadowsUtils.h">
       <Filter>Lighting\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h">
+      <Filter>Lighting\Methods\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DeferredLightingRenderData.h">
+      <Filter>Lighting\Methods\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DeferredDirectionalLightRenderer.h">
+      <Filter>Lighting\Methods\Deferred\LightRenderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DeferredPointLightRenderer.h">
+      <Filter>Lighting\Methods\Deferred\LightRenderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\DeferredAmbientLightRenderer.h">
+      <Filter>Lighting\Methods\Deferred\LightRenderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\AmbientLight.h">
+      <Filter>Lighting\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\ShaderUtils.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\IndexedDirectionalLightRenderer.h">
+      <Filter>Lighting\Methods\Indexed\LightRenderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\IndexedLightingRenderData.h">
+      <Filter>Lighting\Methods\Indexed</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPLightIndicesNode.h">
+      <Filter>Lighting\Methods\Indexed</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h">
+      <Filter>Materials\Methods</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
