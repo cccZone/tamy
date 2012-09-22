@@ -36,6 +36,7 @@
 #include "MaterialEditor.h"
 #include "GeometryShaderEditor.h"
 #include "ProjectEditor.h"
+#include "MaterialInstanceEditor.h"
 
 // resources
 #include "RenderingPipelineLayout.h"
@@ -128,6 +129,7 @@ TamyEditor::TamyEditor( QApplication& app, const char* fsRoot, QWidget *parent, 
    associate< SkeletonAnimation, SkeletonAnimationEditor >();
    associate< Texture, TextureEditor >();
    associate< Project, ProjectEditor >();
+   associate< MaterialInstance, MaterialInstanceEditor >();
 
    // setup menu contents
    {

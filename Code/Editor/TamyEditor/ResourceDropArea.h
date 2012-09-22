@@ -32,13 +32,24 @@ public:
     * Constructor.
     *
     * @param parentWidget
+    * @param initialPath
     */
-   ResourceDropArea( QWidget* parentWidget );
+   ResourceDropArea( QWidget* parentWidget, const FilePath& initialPath = FilePath() );
 
    /**
     * Returns the file path.
     */
    inline const FilePath& getFilePath() const { return m_path; }
+
+   /**
+    * Sets a new file path. No signals will be emitted in response.
+    *
+    * @param path
+    */
+   void setFilePath( const FilePath& path );
+
+signals:
+   void pathChanged( const FilePath& newPath );
 
 public slots:
    void valChanged();

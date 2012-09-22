@@ -135,3 +135,27 @@ public:
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+class MSIntInput : public TGBNodeInput< MaterialNode, int >
+{
+   DECLARE_CLASS()
+
+public:
+   /**
+    * Constructor.
+    */
+   MSIntInput( const std::string& name = "" ) : TGBNodeInput< MaterialNode, int >( name ) {}
+};
+
+class MSIntOutput : public TGBNodeOutput< MaterialNode, int >
+{
+   DECLARE_CLASS()
+
+public:
+   /**
+    * Constructor.
+    */
+   MSIntOutput( const std::string& name = "" ) : TGBNodeOutput< MaterialNode, int >( name ) {}
+};
+
+///////////////////////////////////////////////////////////////////////////////

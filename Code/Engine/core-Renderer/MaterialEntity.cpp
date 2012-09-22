@@ -1,32 +1,12 @@
 #include "core-Renderer/MaterialEntity.h"
-#include "core-Renderer/Material.h"
-#include "core-Renderer/MaterialNode.h"
-#include "core-Renderer/Texture.h"
-#include "core/RuntimeData.h"
-#include "core-Renderer/MNPixelShader.h"
-#include "core/Graph.h"
-#include "core/GraphAlgorithms.h"
+#include "core-Renderer/MaterialInstance.h"
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-BEGIN_ENUM( MaterialTextures );
-   ENUM_VAL( MT_DIFFUSE_1 );
-   ENUM_VAL( MT_DIFFUSE_2 );
-   ENUM_VAL( MT_NORMALS );
-   ENUM_VAL( MT_SPECULAR );
-END_ENUM();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( MaterialEntity );
    PARENT( Entity );
-   PROPERTY_EDIT( "material", Material*, m_material );
-   PROPERTY_EDIT( "diffuse tex 1", Texture*, m_texture[ MT_DIFFUSE_1 ] );
-   PROPERTY_EDIT( "diffuse tex 2", Texture*, m_texture[ MT_DIFFUSE_2 ] );
-   PROPERTY_EDIT( "normals tex", Texture*, m_texture[ MT_NORMALS ] );
-   PROPERTY_EDIT( "specular tex", Texture*, m_texture[ MT_SPECULAR ] );
-   PROPERTY_EDIT( "surface properties", SurfaceProperties, m_surfaceProperties );
+   PROPERTY_EDIT( "Material instance", MaterialInstance*, m_material );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,196 +14,30 @@ END_OBJECT();
 MaterialEntity::MaterialEntity( const std::string& name )
    : Entity( name )
    , m_material( NULL )
-   , m_dataBuf( NULL )
 {
-   for ( unsigned int i = 0; i < MT_MAX; ++i )
-   {
-      m_texture[i] = NULL;
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialEntity::~MaterialEntity()
 {
-   deinitializeMaterial();
-   detachListeners();
    m_material = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialEntity::onObjectLoaded()
+void MaterialEntity::setMaterial( MaterialInstance* materialInstance )
 {
-   __super::onObjectLoaded();
-
-   attachListeners();
-   initializeMaterial();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::onPrePropertyChanged( ReflectionProperty& property )
-{
-   __super::onPrePropertyChanged( property );
-
-   if ( property.getName() == "m_material" )
-   {
-      deinitializeMaterial();
-      detachListeners();
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::onPropertyChanged( ReflectionProperty& property )
-{
-   __super::onPropertyChanged( property );
-
-   if ( property.getName() == "m_material" )
-   {
-      initializeMaterial();
-      attachListeners();
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::setMaterial( Material* material )
-{
-   // deinitialize the old material dependencies
-   deinitializeMaterial();
-   detachListeners();
-
-   // set the new material
-   m_material = material;
-
-   // initialize it and the dependencies
-   initializeMaterial();
-   attachListeners();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::update( Material& subject )
-{
-   // do nothing - this is an initial update
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::update( Material& subject, const GraphBuilderOperation& msg )
-{
-   if ( msg == GBO_PRE_CHANGE )
-   {
-      deinitializeMaterial();
-   }
-   else if ( msg == GBO_POST_CHANGE  )
-   {
-      initializeMaterial();
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::update( MaterialNode& subject )
-{
-   // do nothing - this is an initial update
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::update( MaterialNode& subject, const GraphBuilderNodeOperation& msg )
-{
-   deinitializeMaterial();
-   initializeMaterial();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::initializeMaterial()
-{
-   if ( !m_material )
-   {
-      return;
-   }
-
-   // create the material graph
-   Graph< MaterialNode* > materialGraph;
-   m_material->buildReverseGraph< MNPixelShader >( materialGraph );
-
-   std::vector< Graph< MaterialNode* >::Index > sortedNodes;
-   GraphTopologicalSort( sortedNodes, materialGraph );
-
-   // insert the nodes backwards, because the graph was built backwards, but we still want
-   // to run the update from the start nodes to the end node
-   int count = sortedNodes.size();
-   for ( int i = count - 1; i >= 0; --i )
-   {
-      m_nodesQueue.push_back( materialGraph.getNode( sortedNodes[i] ) );
-   }
-
-   // create new runtime data buffer
-   delete m_dataBuf;
-   m_dataBuf = new RuntimeDataBuffer();
-
-   // initialize the nodes
-   count = m_nodesQueue.size();
-   for ( int i = 0; i < count; ++i )
-   {
-      m_nodesQueue[i]->createLayout( *this );
-   }
-
-   // start observing nodes
-   for ( std::vector< MaterialNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
-   {
-      (*it)->attachObserver( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::deinitializeMaterial()
-{
-   // stop observing nodes
-   for ( std::vector< MaterialNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
-   {
-      (*it)->detachObserver( *this );
-   }
-
-   m_nodesQueue.clear();
-
-   delete m_dataBuf; m_dataBuf = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::attachListeners()
-{
-   if ( m_material )
-   {
-       m_material->attachObserver( *this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEntity::detachListeners()
-{
-   if ( m_material )
-   {
-      m_material->detachObserver( *this );
-   }
+   m_material = materialInstance;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MaterialEntity::onPreRender( Renderer& renderer ) const
 {
-   unsigned int count = m_nodesQueue.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   if ( m_material )
    {
-      m_nodesQueue[i]->preRender( renderer, *this );
+      m_material->preRender( renderer, *this );
    }
 }
 
@@ -231,10 +45,9 @@ void MaterialEntity::onPreRender( Renderer& renderer ) const
 
 void MaterialEntity::onPostRender( Renderer& renderer ) const
 {
-   unsigned int count = m_nodesQueue.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   if ( m_material )
    {
-      m_nodesQueue[i]->postRender( renderer, *this );
+      m_material->postRender( renderer, *this );
    }
 }
 
@@ -242,40 +55,14 @@ void MaterialEntity::onPostRender( Renderer& renderer ) const
 
 bool MaterialEntity::onEquals( const MaterialEntity& rhs ) const
 {
-   if ( m_material != rhs.m_material )
-   {
-      return false;
-   }
-
-   for ( unsigned int i = 0; i < MT_MAX; ++i )
-   {
-      if ( m_texture[i] != rhs.m_texture[i] )
-      {
-         return false;
-      }
-   }
-
-   return m_surfaceProperties == rhs.m_surfaceProperties;
+   return m_material == rhs.m_material;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool MaterialEntity::onLess( const MaterialEntity& rhs ) const
 {
-   if ( m_material < rhs.m_material )
-   {
-      return true;
-   }
-
-   for ( unsigned int i = 0; i < MT_MAX; ++i )
-   {
-      if ( m_texture[i] < rhs.m_texture[i] )
-      {
-         return true;
-      }
-   }
-
-   return ( &m_surfaceProperties < &rhs.m_surfaceProperties );
+   return m_material < rhs.m_material;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -194,6 +194,10 @@ void TextEditWidget::formatText( int changedPosition )
    // check if it's the new line that was created
    QTextCursor cursor = m_editor->textCursor();
    QString text = m_editor->document()->toPlainText();
+   if ( changedPosition < 0 || changedPosition >= text.length() )
+   {
+      return;
+   }
 
    // check if a tab should be inserted
    int tabsToInsert = 0;

@@ -14,6 +14,7 @@
 #include "MBInstanceTexture.h"
 #include "MBSurfaceProperties.h"
 #include "MBTimer.h"
+#include "MBMaterialIndex.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,6 +48,7 @@ void MaterialLayout::initBlocksFactory()
    associate< MNInstanceTexture, MBInstanceTexture >();
    associate< MNSurfaceProperties, MBSurfaceProperties >();
    associate< MNTimer, MBTimer >();
+   associate< MNMaterialIndex, MBMaterialIndex >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,6 +66,9 @@ void MaterialLayout::initSocketsFactory( PipelineBlock& block )
    factory.associate< MSMatrixOutput, MSSMatrix >();
    factory.associate< MSBoolInput, MSSBool >();
    factory.associate< MSBoolOutput, MSSBool >();
+   factory.associate< MSIntInput, MSSInt >();
+   factory.associate< MSIntOutput, MSSInt >();
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////

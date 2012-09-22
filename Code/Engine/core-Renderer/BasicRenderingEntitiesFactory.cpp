@@ -4,7 +4,7 @@
 
 // materials
 #include "core-Renderer/MaterialEntity.h"
-#include "core-Renderer/Material.h"
+#include "core-Renderer/MaterialInstance.h"
 
 // resources management
 #include "core/ResourcesManager.h"
@@ -17,8 +17,7 @@ MaterialEntity* BasicRenderingEntitiesFactory::createMaterial( const std::string
    MaterialEntity* entity = new MaterialEntity( name );
 
    ResourcesManager& resMgr = ResourcesManager::getInstance();
-   std::string materialPath = std::string( MATERIALS_DIR ) + "simpleTextured.rml";
-   Material* mat = resMgr.create< Material >( FilePath( materialPath ) );
+   MaterialInstance* mat = resMgr.create< MaterialInstance >( FilePath( DEFAULT_MATERIAL_INSTANCE ) );
    entity->setMaterial( mat );
 
    return entity;

@@ -43,6 +43,7 @@ REGISTER_ENUM_TYPE( VertexDescId );
 ///////////////////////////////////////////////////////////////////////////////
 
 REGISTER_TYPE( Material );
+REGISTER_TYPE( MaterialInstance );
 REGISTER_ABSTRACT_TYPE( MaterialNode );
 DEFINE_TYPE_ID( GBNodeOutput<MaterialNode> );
 MAP_TYPE( GBNodeInput<class MaterialNode>, ReflectionObject );
@@ -56,6 +57,7 @@ REGISTER_TYPE( MNBool );
 REGISTER_TYPE( MNInstanceTexture );
 REGISTER_TYPE( MNSurfaceProperties );
 REGISTER_TYPE( MNTimer );
+REGISTER_TYPE( MNMaterialIndex );
 REGISTER_TYPE( MSFloatInput );
 REGISTER_TYPE( MSFloatOutput );
 REGISTER_TYPE( MSMatrixInput );
@@ -66,6 +68,8 @@ REGISTER_TYPE( MSVec4Input );
 REGISTER_TYPE( MSVec4Output );
 REGISTER_TYPE( MSBoolInput );
 REGISTER_TYPE( MSBoolOutput );
+REGISTER_TYPE( MSIntInput );
+REGISTER_TYPE( MSIntOutput );
 REGISTER_ENUM_TYPE( MaterialTextures );
 
 ///////////////////////////////////////////////////////////////////////////////

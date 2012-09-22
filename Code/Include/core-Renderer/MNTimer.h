@@ -41,7 +41,7 @@ public:
    // -------------------------------------------------------------------------
    // MaterialNode implementation
    // -------------------------------------------------------------------------
-   void preRender( Renderer& renderer, const MaterialEntity& entity ) const;
+   void preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

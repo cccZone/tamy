@@ -2,7 +2,7 @@
 #include "core-Renderer/MaterialSockets.h"
 #include "core-Renderer/Texture.h"
 #include "core-Renderer/RenderableTexture.h"
-#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/MaterialInstance.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,10 +45,10 @@ void MNTexture::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNTexture::preRender( Renderer& renderer, const MaterialEntity& entity ) const
+void MNTexture::preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const
 {
    m_renderableTexture->setTexture( m_texture );
-   m_output->setValue( entity.data(), m_renderableTexture );
+   m_output->setValue( instance.data(), m_renderableTexture );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

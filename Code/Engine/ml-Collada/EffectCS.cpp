@@ -25,24 +25,41 @@ EffectCS::EffectCS( TiXmlNode* effectNode, const FilePath& deploymentDir, Resour
 
    std::string url = matInstanceElem->Attribute( "url" );
    m_materialId = url.substr( url.find_first_of( '#' ) + 1 );
+
+   char matPath[128];
+   sprintf_s( matPath, "%s%s.%s", deploymentDir.c_str(), m_materialName, MaterialInstance::getExtension() );
+   m_materialInstance = rm.create< MaterialInstance >( FilePath( matPath ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 EffectCS::~EffectCS()
 {
+   m_materialInstance = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Entity* EffectCS::instantiate( const ColladaScene& host ) const
 {
-   MaterialEntity* material = BasicRenderingEntitiesFactory::createMaterial( m_materialName );
+   // create a new material entity
+   MaterialEntity* materialEntity = BasicRenderingEntitiesFactory::createMaterial( m_materialName );
 
+   // create a new material instance and assign it the default renderer
+   {
+      materialEntity->setMaterial( m_materialInstance );
+
+      ResourcesManager& resMgr = ResourcesManager::getInstance();
+
+      Material* materialRenderer = resMgr.create< Material >( FilePath( DEFAULT_MATERIAL_RENDERER ), true );
+      m_materialInstance->setMaterialRenderer( materialRenderer );
+   }
+
+   // set the surface properties of the material instance
    SurfaceProperties& surfPropertiesRes = host.getResource< SurfaceProperties >( m_materialId );
-   material->accessSurfaceProperties() = surfPropertiesRes;
+   m_materialInstance->accessSurfaceProperties() = surfPropertiesRes;
 
-   return material;
+   return materialEntity;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

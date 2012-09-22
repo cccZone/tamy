@@ -73,3 +73,17 @@ BEGIN_OBJECT( MSBoolOutput );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( MSIntInput );
+   PARENT( ReflectionObject );
+   PROPERTY( std::string, m_name );
+   PROPERTY( MSOutput*, m_connectedOutput );
+END_OBJECT();
+
+BEGIN_OBJECT( MSIntOutput );
+   PARENT( ReflectionObject );
+   PROPERTY( std::string, m_name );
+   PROPERTY( std::vector< MaterialNode* >, m_connectedNodes );
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////////////

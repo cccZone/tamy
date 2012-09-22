@@ -50,16 +50,16 @@ void MNInstanceTexture::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNInstanceTexture::preRender( Renderer& renderer, const MaterialEntity& entity ) const
+void MNInstanceTexture::preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const
 {
-   Texture* tex = entity.getTexture( m_usage );
+   Texture* tex = instance.getTexture( m_usage );
 
    m_renderableTexture->setTexture( tex );
-   m_textureOutput->setValue( entity.data(), m_renderableTexture );
+   m_textureOutput->setValue( instance.data(), m_renderableTexture );
 
    if ( m_isTextureSetOutput )
    {
-      m_isTextureSetOutput->setValue( entity.data(), tex != NULL );
+      m_isTextureSetOutput->setValue( instance.data(), tex != NULL );
    }
 }
 

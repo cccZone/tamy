@@ -11,45 +11,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class Material;
-class RuntimeData;
-class MaterialNode;
-class Texture;
-enum GraphBuilderOperation;
-enum GraphBuilderNodeOperation;
-
-///////////////////////////////////////////////////////////////////////////////
-
-enum MaterialTextures
-{
-   MT_DIFFUSE_1,
-   MT_DIFFUSE_2,
-   MT_NORMALS,
-   MT_SPECULAR,
-
-   MT_MAX
-};
+class MaterialInstance;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Entity that allows to embed a material in a scene graph.
  */
-class MaterialEntity :  public Entity, public TRenderState< MaterialEntity >, 
-                        public Observer< Material, GraphBuilderOperation >,
-                        public Observer< MaterialNode, GraphBuilderNodeOperation >
+class MaterialEntity :  public Entity, public TRenderState< MaterialEntity >
 {
    DECLARE_CLASS()
 
-private:
+public:
    // static data
-   SurfaceProperties                m_surfaceProperties;
-   Texture*                         m_texture[ MT_MAX ];
-   Material*                        m_material;
-
-   // runtime data
-   RuntimeDataBuffer*               m_dataBuf;
-   std::vector< MaterialNode* >     m_nodesQueue;
+   MaterialInstance*                m_material;
 
 public:
    /**
@@ -61,41 +36,11 @@ public:
    ~MaterialEntity();
 
    /**
-    * Returns the runtime data buffer.
-    */
-   inline RuntimeDataBuffer& data() const { return *m_dataBuf; }
-
-   /**
-    * Gives access to material instance's surface properties.
-    */
-   inline SurfaceProperties& accessSurfaceProperties() { return m_surfaceProperties; }
-
-   /**
-    * Returns material instance's surface properties.
-    */
-   inline const SurfaceProperties& getSurfaceProperties() const { return m_surfaceProperties; }
-
-   /**
-    * Gives access to the specified texture associated with this material instance.
+    * Sets a new material instance on the entity.
     *
-    * @param textureUsage
+    * @param materialInstance
     */
-   inline Texture* getTexture( MaterialTextures textureUsage ) const { return m_texture[textureUsage]; }
-
-   /**
-    * Sets a new texture of the specified usage on the material instance.
-    *
-    * @param textureUsage
-    * @param texture
-    */
-   inline void setTexture( MaterialTextures textureUsage, Texture* texture ) { m_texture[textureUsage] = texture; }
-
-   /**
-    * Sets a new material resource this instance should use to render stuff.
-    *
-    * @param material
-    */
-   void setMaterial( Material* material );
+   void setMaterial( MaterialInstance* materialInstance );
 
    // -------------------------------------------------------------------------
    // RenderState implementation
@@ -105,32 +50,12 @@ public:
    bool onEquals( const MaterialEntity& rhs ) const;
    bool onLess( const MaterialEntity& rhs ) const;
 
-   // -------------------------------------------------------------------------
-   // Observer implementation
-   // -------------------------------------------------------------------------
-   void update( Material& subject );
-   void update( Material& subject, const GraphBuilderOperation& msg );
-   void update( MaterialNode& subject );
-   void update( MaterialNode& subject, const GraphBuilderNodeOperation& msg );
-
 protected:
-   // -------------------------------------------------------------------------
-   // Object implementation
-   // -------------------------------------------------------------------------
-   void onObjectLoaded();
-   void onPrePropertyChanged( ReflectionProperty& property );
-   void onPropertyChanged( ReflectionProperty& property );
 
    // -------------------------------------------------------------------------
    // Entity implementation
    // -------------------------------------------------------------------------
    Entity* cloneSelf() const;
-
-private:
-   void initializeMaterial();
-   void deinitializeMaterial();
-   void attachListeners();
-   void detachListeners();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

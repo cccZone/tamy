@@ -222,6 +222,9 @@
     <Filter Include="ResourceEditors\RenderingPipelineEditor\Blocks\misc">
       <UniqueIdentifier>{c70eed69-41d9-4769-9329-d420a5e76bfb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ResourceEditors\MaterialInstanceEditor">
+      <UniqueIdentifier>{cc06cf4b-da68-4bec-9d5f-cb57e5f030da}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_progressdialog.h">
@@ -565,6 +568,12 @@
     </ClInclude>
     <ClInclude Include="RPBLightIndices.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="MBMaterialIndex.h">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_materialinstanceeditor.h">
+      <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1349,6 +1358,33 @@
     <ClCompile Include="RPBLightIndices.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\Lighting</Filter>
     </ClCompile>
+    <ClCompile Include="MBMaterialIndex.cpp">
+      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MaterialInstanceEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_MaterialInstanceEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_MaterialInstanceEditor.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialInstanceEditor.cpp">
+      <Filter>ResourceEditors\MaterialInstanceEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialTexturePanel.cpp">
+      <Filter>ResourceEditors\MaterialInstanceEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_MaterialTexturePanel.cpp">
+      <Filter>QtImplementation\Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_MaterialTexturePanel.cpp">
+      <Filter>QtImplementation\Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Template\moc_MaterialTexturePanel.cpp">
+      <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1580,6 +1616,15 @@
     </CustomBuild>
     <CustomBuild Include="TextSyntaxHighlighter.h">
       <Filter>Widgets\TextEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MaterialInstanceEditor.h">
+      <Filter>ResourceEditors\MaterialInstanceEditor</Filter>
+    </CustomBuild>
+    <CustomBuild Include="materialinstanceeditor.ui">
+      <Filter>QtImplementation\Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MaterialTexturePanel.h">
+      <Filter>ResourceEditors\MaterialInstanceEditor</Filter>
     </CustomBuild>
   </ItemGroup>
 </Project>

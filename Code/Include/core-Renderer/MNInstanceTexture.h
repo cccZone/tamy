@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/MaterialNode.h"
-#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/MaterialInstance.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ public:
    // -------------------------------------------------------------------------
    // MaterialNode implementation
    // -------------------------------------------------------------------------
-   void preRender( Renderer& renderer, const MaterialEntity& entity ) const;
+   void preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

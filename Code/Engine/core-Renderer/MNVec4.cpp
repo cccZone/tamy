@@ -1,6 +1,6 @@
 #include "core-Renderer/MNVec4.h"
 #include "core-Renderer/MaterialSockets.h"
-#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/MaterialInstance.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,9 +37,9 @@ void MNVec4::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNVec4::preRender( Renderer& renderer, const MaterialEntity& entity ) const
+void MNVec4::preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const
 {
-   m_output->setValue( entity.data(), m_vector );
+   m_output->setValue( instance.data(), m_vector );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -5,6 +5,7 @@
 
 #include "ml-Collada/IColladaSlice.h"
 #include <string>
+#include "core/FilePath.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -12,6 +13,7 @@
 class ResourcesManager;
 class TiXmlNode;
 class FilePath;
+class MaterialInstance;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -21,8 +23,9 @@ class FilePath;
 class EffectCS : public IColladaSlice, public IEntitySlice
 {
 private:
-   std::string    m_materialName;
-   std::string    m_materialId;
+   std::string             m_materialName;
+   std::string             m_materialId;
+   MaterialInstance*       m_materialInstance;
 
 public:
    EffectCS( TiXmlNode* effectNode, const FilePath& deploymentDir, ResourcesManager& rm );

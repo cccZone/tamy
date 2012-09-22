@@ -228,8 +228,8 @@ void PixelShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode
       if ( !input )
       {
          input = hostNode->createInput( *constantDataType, inputName );
-         hostNode->defineInput( input );
          ASSERT_MSG( input != NULL, "No input available that's able to marshal the specified data type" );
+         hostNode->defineInput( input );
       }
 
       m_input = input;

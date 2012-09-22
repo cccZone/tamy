@@ -9,6 +9,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class MaterialInstance;
 class MaterialEntity;
 class Renderer;
 
@@ -34,7 +35,7 @@ public:
     *
     * @param host
     */
-   void createLayout( const MaterialEntity& host ) const;
+   void createLayout( const MaterialInstance& host ) const;
 
    /**
     * Called when the graph is fully restored. Allows to reprocess certain nodes - remove
@@ -44,20 +45,22 @@ public:
    virtual void onGraphLoaded() {}
 
    /**
-    * Called by the entity that uses the material in order to set it up.
+    * Called by the instance that uses the material in order to set it up.
     *
     * @param renderer
-    * @param entity
+    * @param instance      rendered material instance
+    * @param entity        rendered entity
     */
-   virtual void preRender( Renderer& renderer, const MaterialEntity& entity ) const {}
+   virtual void preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const {}
 
    /**
-    * Called by the entity that uses the material in order to clean up after using it.
+    * Called by the instance that uses the material in order to clean up after using it.
     *
     * @param renderer
-    * @param entity
+    * @param instance      rendered material instance
+    * @param entity        rendered entity
     */
-   virtual void postRender( Renderer& renderer, const MaterialEntity& entity ) const {}
+   virtual void postRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const {}
 
    // -----------------------------------------------------------------
    // Object implementation
@@ -71,7 +74,7 @@ protected:
     *
     * @param host
     */
-   virtual void onCreateLayout( const MaterialEntity& host ) const {}
+   virtual void onCreateLayout( const MaterialInstance& host ) const {}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

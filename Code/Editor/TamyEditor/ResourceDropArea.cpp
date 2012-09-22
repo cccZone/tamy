@@ -8,8 +8,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ResourceDropArea::ResourceDropArea( QWidget* parentWidget )
+ResourceDropArea::ResourceDropArea( QWidget* parentWidget, const FilePath& initialPath )
    : QFrame( parentWidget )
+   , m_path( initialPath )
 {
    QHBoxLayout* layout = new QHBoxLayout( this );
    layout->setSpacing(0);
@@ -21,6 +22,7 @@ ResourceDropArea::ResourceDropArea( QWidget* parentWidget )
    connect( m_resourceName, SIGNAL( changed() ), this, SLOT( valChanged() ) );
    m_resourceName->setMinimumSize( 20, 20 );
    m_resourceName->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Fixed );
+   m_resourceName->setText( m_path.c_str() );
    layout->addWidget( m_resourceName );
 
    // a button for NULLing the resource
@@ -37,6 +39,26 @@ ResourceDropArea::ResourceDropArea( QWidget* parentWidget )
    layout->addWidget( eraseButton );
 
    refreshPropertyName();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void ResourceDropArea::setFilePath( const FilePath& path )
+{
+   m_paths.clear();
+   if ( !path.empty() )
+   {
+      m_paths.push_back( path );
+   }
+
+   // disconnect the signal emitter - we don't want any signals emitted in response to this method's actions
+   disconnect( m_resourceName, SIGNAL( changed() ), this, SLOT( valChanged() ) );
+
+   refreshPropertyName();
+
+   // reconnect the signal emitter
+   connect( m_resourceName, SIGNAL( changed() ), this, SLOT( valChanged() ) );
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -61,6 +83,8 @@ void ResourceDropArea::valChanged()
 {
    refreshPropertyName();
    m_paths.clear();
+
+   emit pathChanged( m_path );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,6 +93,8 @@ void ResourceDropArea::valErased( bool )
 {
    m_paths.clear();
    refreshPropertyName();
+
+   emit pathChanged( m_path );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
