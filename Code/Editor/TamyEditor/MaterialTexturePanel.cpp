@@ -56,7 +56,7 @@ void MaterialTexturePanel::refreshImage()
    if ( texture )
    {
       const Filesystem& fs = ResourcesManager::getInstance().getFilesystem();
-      std::string absolutePath = fs.toAbsolutePath( texture->getFilePath() );
+      std::string absolutePath = fs.toAbsolutePath( texture->getTextureName() );
 
       QImage image( absolutePath.c_str() );
       m_imageDropArea->setPixmap( QPixmap::fromImage( image ) );

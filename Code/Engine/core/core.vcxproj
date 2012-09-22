@@ -153,6 +153,7 @@
     <ClInclude Include="..\..\Include\core\DefaultAllocator.h" />
     <ClInclude Include="..\..\Include\core\FilesystemSection.h" />
     <ClInclude Include="..\..\Include\core\FilesystemUtils.h" />
+    <ClInclude Include="..\..\Include\core\GraphBuilderNodeUtils.h" />
     <ClInclude Include="..\..\Include\core\IDString.h" />
     <ClInclude Include="..\..\Include\core\List.h" />
     <ClInclude Include="..\..\Include\core\Log.h" />
@@ -282,6 +283,7 @@
     <None Include="..\..\Include\core\CompositeSpatialStorage.inl" />
     <None Include="..\..\Include\core\GraphBuilder.inl" />
     <None Include="..\..\Include\core\GraphBuilderNode.inl" />
+    <None Include="..\..\Include\core\GraphBuilderNodeUtils.inl" />
     <None Include="..\..\Include\core\GraphBuilderSockets.inl" />
     <None Include="..\..\Include\core\InStream.inl" />
     <None Include="..\..\Include\core\List.inl" />

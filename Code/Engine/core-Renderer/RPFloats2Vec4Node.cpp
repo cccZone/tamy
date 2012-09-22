@@ -19,10 +19,13 @@ RPFloats2Vec4Node::RPFloats2Vec4Node()
    m_dataInput[3] = new RPFloatInput( "w" );
    m_output = new RPVec4Output( "Output" );
 
-   defineInput( m_dataInput[0] );
-   defineInput( m_dataInput[1] );
-   defineInput( m_dataInput[2] );
-   defineInput( m_dataInput[3] );
+   std::vector< GBNodeInput< RenderingPipelineNode >* > inputs;
+   inputs.push_back( m_dataInput[0] );
+   inputs.push_back( m_dataInput[1] );
+   inputs.push_back( m_dataInput[2] );
+   inputs.push_back( m_dataInput[3] );
+   defineInputs( inputs );
+
    defineOutput( m_output );
 }
 

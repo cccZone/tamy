@@ -19,8 +19,11 @@ GNTimer::GNTimer()
    , m_time( new GSFloatOutput( "t" ) )
    , m_sinTime( new GSFloatOutput( "sin(t * p) * a" ) )
 {
-   defineOutput( m_time );
-   defineOutput( m_sinTime );
+   std::vector< GBNodeOutput< GeometryShaderNode >* > outputs;
+   outputs.push_back( m_time );
+   outputs.push_back( m_sinTime );
+
+   defineOutputs( outputs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -18,11 +18,14 @@ MNSurfaceProperties::MNSurfaceProperties()
    , m_specularPower( new MSFloatOutput( "specularPower" ) )
    , m_emissive( new MSVec4Output( "emissive" ) )
 {
-   defineOutput( m_ambient );
-   defineOutput( m_diffuse );
-   defineOutput( m_specular );
-   defineOutput( m_specularPower );
-   defineOutput( m_emissive );
+   std::vector< GBNodeOutput< MaterialNode >* > outputs;
+   outputs.push_back( m_ambient );
+   outputs.push_back( m_diffuse );
+   outputs.push_back( m_specular );
+   outputs.push_back( m_specularPower );
+   outputs.push_back( m_emissive );
+
+   defineOutputs( outputs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

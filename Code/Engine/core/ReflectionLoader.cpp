@@ -328,7 +328,14 @@ ReflectionObject* ExternalDependenciesLinker::findDependency( uint dependencyIdx
          // reach to the active ResourcesManager instance and query the resource indicated by the dependency
          const FilePath& resourcePath = m_externalDependencies[ extractedDependencyIdx ];
          ResourcesManager& resMgr = ResourcesManager::getInstance();
+
          Resource* res = resMgr.findResource( resourcePath );
+         if ( res )
+         {
+            // found a reference to a resource - so increase the references counter on it
+            res->addReference();
+         }
+
          return res;
       }
       else
@@ -341,3 +348,16 @@ ReflectionObject* ExternalDependenciesLinker::findDependency( uint dependencyIdx
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
+// <todo.resources> !!!!! IMPORTANT !!!!! 
+//
+// Do it directly after the material system
+//
+// Right now all resources are reference counted.
+// That's because when they are destroyed, some resources may still depend on them etc.
+// The thing is - the number of references is automatically set during the load, but it's
+// not managed by most of the classes.
+// Introduce a way ( a serializable RefPtr or sth ) that will take care of that.
+// Automatic reference increase performed during load is located in the method above

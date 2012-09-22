@@ -26,7 +26,9 @@ RPPostProcessNode::RPPostProcessNode()
 {
    m_shaderNode = new PixelShaderNodeOperator< RenderingPipelineNode >( *this );
 
-   MRTUtil::defineOutputs( m_renderTargetId, this );
+   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+   MRTUtil::createOutputs( m_renderTargetId, outputs );
+   defineOutputs( outputs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,7 +36,22 @@ RPPostProcessNode::RPPostProcessNode()
 RPPostProcessNode::~RPPostProcessNode()
 {
    delete m_shaderNode; m_shaderNode = NULL;
+
+   if ( m_shader )
+   {
+      m_shader->removeReference();
+   }
    m_shader = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RPPostProcessNode::onGraphLoaded()
+{
+   if ( m_shader )
+   {
+      m_shaderNode->setShader( *m_shader );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -57,21 +74,11 @@ void RPPostProcessNode::onPropertyChanged( ReflectionProperty& property )
 
    if ( property.getName() == "m_renderTargetId" )
    {
-      MRTUtil::defineOutputs( m_renderTargetId, this );
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      MRTUtil::createOutputs( m_renderTargetId, outputs );
+      redefineOutputs( outputs );
    }
    else if ( property.getName() == "m_shader" && m_shader )
-   {
-      m_shaderNode->setShader( *m_shader );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RPPostProcessNode::onObjectLoaded()
-{
-   __super::onObjectLoaded();
-
-   if ( m_shader )
    {
       m_shaderNode->setShader( *m_shader );
    }

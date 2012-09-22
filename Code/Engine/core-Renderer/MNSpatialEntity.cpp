@@ -19,8 +19,11 @@ MNSpatialEntity::MNSpatialEntity()
    : m_worldMtx( new MSMatrixOutput( "world" ) )
    , m_worldViewMtx( new MSMatrixOutput( "worldView" ) )
 {
-   defineOutput( m_worldMtx );
-   defineOutput( m_worldViewMtx );
+   std::vector< GBNodeOutput< MaterialNode >* > outputs;
+   outputs.push_back( m_worldMtx );
+   outputs.push_back( m_worldViewMtx );
+
+   defineOutputs( outputs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,7 +3,9 @@
 #else
 
 #include "core/Assert.h"
+#include "core/Log.h"
 #include "core/GraphBuilderSockets.h"
+#include "core/GraphBuilderNodeUtils.h"
 #include <algorithm>
 
 
@@ -15,14 +17,12 @@ GraphBuilderNode< Impl >::~GraphBuilderNode()
    // remove inputs and outputs
    for( InputsMap::iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
    {
-      (*it)->detachObserver( *this );
       delete *it;
    }
    m_inputs.clear();
 
    for( OutputsMap::iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
    {
-      (*it)->detachObserver( *this );
       delete *it;
    }
    m_outputs.clear();
@@ -82,7 +82,6 @@ bool GraphBuilderNode< Impl >::connect( const std::string& outputName, Impl& des
    }
 
    output->connect( destNode );
-   notify( GBNO_CHANGED );
 
    // looking at a connection from input's perspective, a node is interested in an output 
    // it originates at - it's from where we're gonna get our data
@@ -95,11 +94,6 @@ bool GraphBuilderNode< Impl >::connect( const std::string& outputName, Impl& des
    }
 
    bool result = input->connect( *output );
-   if ( result )
-   {
-      destNode.notify( GBNO_CHANGED );
-   }
-
    return result;
 }
 
@@ -117,14 +111,12 @@ void GraphBuilderNode< Impl >::disconnect( Impl& destNode, const std::string& in
    }
 
    input->disconnect();
-   destNode.notify( GBNO_CHANGED );
 
    // disconnect the output
    TOutputSocket* output = input->getOutput();
    if ( output )
    {
       output->disconnect( destNode );
-      notify( GBNO_CHANGED );
    }
 }
 
@@ -142,10 +134,6 @@ void GraphBuilderNode< Impl >::disconnect( Impl& destNode )
          output->disconnect( destNode );
       }
    }
-
-   // send notifications
-   destNode.notify( GBNO_CHANGED );
-   notify( GBNO_CHANGED );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -188,39 +176,118 @@ void GraphBuilderNode< Impl >::defineInput( TInputSocket* input )
    TInputSocket* existingInput = findInput( input->getName() );
    if ( existingInput == NULL )
    {
-      input->attachObserver( *this );
       m_inputs.push_back( input );
-
       notify( GBNO_INPUTS_CHANGED );
    }
    else
    {
       char tmp[128];
       sprintf_s( tmp, "Trying to override the definition of input '%s'", existingInput->getName().c_str() );
+      LOG( tmp );
 
       delete input;
-      ASSERT_MSG( false, tmp );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Impl >
-void GraphBuilderNode< Impl >::removeInput( const std::string& name )
+void GraphBuilderNode< Impl >::defineInputs( const std::vector< TInputSocket* >& inputs )
 {
-   for ( InputsMap::const_iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
+   uint inputsAdded = 0;
+
+   uint count = inputs.size();
+   for ( uint i = 0; i < count; ++i )
    {
-      if ( (*it)->getName() == name )
+      TInputSocket* newInput = inputs[i];
+
+      TInputSocket* existingInput = findInput( newInput->getName() );
+      if ( existingInput == NULL )
       {
-         (*it)->detachObserver( *this );
-
-         delete *it;
-         m_inputs.erase( it );
-
-         notify( GBNO_INPUTS_CHANGED );
-
-         break;
+         m_inputs.push_back( newInput );
+         ++inputsAdded;
       }
+      else
+      {
+         char tmp[128];
+         sprintf_s( tmp, "Trying to override the definition of input '%s'", existingInput->getName().c_str() );
+         LOG( tmp );
+
+         delete newInput;
+      }
+   }
+
+   if ( inputsAdded > 0 )
+   {
+      notify( GBNO_INPUTS_CHANGED );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
+void GraphBuilderNode< Impl >::removeAllInputs()
+{
+   if ( m_inputs.empty() )
+   {
+      // there's nothing to be removed here
+      return;
+   }
+
+   uint count = m_inputs.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      TInputSocket* input = m_inputs[i];
+      delete input;
+   }
+   m_inputs.clear();
+
+   notify( GBNO_INPUTS_CHANGED );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
+void GraphBuilderNode< Impl >::removeSelectedInputs( const std::vector< std::string >& inputNames )
+{
+   if ( m_inputs.empty() || inputNames.empty() )
+   {
+      // there's nothing to be removed here
+      return;
+   }
+
+   uint namesCount = inputNames.size();
+   for ( uint nameIdx = 0; nameIdx < namesCount; ++nameIdx )
+   {
+      const std::string& removedInputName = inputNames[nameIdx];
+
+      uint count = m_inputs.size();
+      for ( uint i = 0; i < count; ++i )
+      {
+         if ( m_inputs[i]->getName() == removedInputName )
+         {
+            TInputSocket* input = m_inputs[i];
+            delete input;
+            m_inputs.erase( m_inputs.begin() + i );
+            break;
+         }
+      }
+   }
+
+   notify( GBNO_INPUTS_CHANGED );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
+void GraphBuilderNode< Impl >::redefineInputs( const std::vector< TInputSocket* >& inputs )
+{
+   int numInputsChanged = GraphBuilderNodeUtils::mergeSocketsLists( inputs, m_inputs );
+
+   // notify about the changes, if any were made
+   if ( numInputsChanged > 0 )
+   {
+      notify( GBNO_INPUTS_CHANGED );
    }
 }
 
@@ -229,77 +296,126 @@ void GraphBuilderNode< Impl >::removeInput( const std::string& name )
 template< typename Impl >
 void GraphBuilderNode< Impl >::defineOutput( TOutputSocket* output )
 {
+
+   // make sure we're not overriding the output
    TOutputSocket* existingOutput = findOutput( output->getName() );
    if ( existingOutput == NULL )
    {
-      output->attachObserver( *this );
       m_outputs.push_back( output );
-
       notify( GBNO_OUTPUTS_CHANGED );
    }
    else
    {
       char tmp[128];
       sprintf_s( tmp, "Trying to override the definition of output '%s'", existingOutput->getName().c_str() );
+      LOG( tmp );
 
       delete output;
-      ASSERT_MSG( false, tmp );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Impl >
-void GraphBuilderNode< Impl >::removeOutput( const std::string& name )
+void GraphBuilderNode< Impl >::defineOutputs( const std::vector< TOutputSocket* >& outputs )
 {
-   for ( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
+   uint outputsAdded = 0;
+
+   uint count = outputs.size();
+   for ( uint i = 0; i < count; ++i )
    {
-      if ( (*it)->getName() == name )
+      TOutputSocket* newOutput = outputs[i];
+
+      // make sure we're not overriding the output
+      TOutputSocket* existingOutput = findOutput( newOutput->getName() );
+      if ( existingOutput == NULL )
       {
-         (*it)->detachObserver( *this );
+         m_outputs.push_back( newOutput );
+         ++outputsAdded;
+      }
+      else
+      {
+         char tmp[128];
+         sprintf_s( tmp, "Trying to override the definition of output '%s'", existingOutput->getName().c_str() );
+         LOG( tmp );
 
-         delete *it;
-         m_outputs.erase( it );
-
-         notify( GBNO_OUTPUTS_CHANGED );
-
-         break;
+         delete newOutput;
       }
    }
-}
 
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename Impl >
-void GraphBuilderNode< Impl >::onBulkSocketsInitialization()
-{
-   // attach self as an observer of the sockets
-   for( InputsMap::iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
+   if ( outputsAdded > 0 )
    {
-      (*it)->attachObserver( *this );
-   }
-   for( OutputsMap::iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
-   {
-      (*it)->attachObserver( *this );
+      // notify the listeners only if we have something to notify of - meaning that any
+      // of the outputs were actually added to the node 
+      notify( GBNO_OUTPUTS_CHANGED );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Impl >
-void GraphBuilderNode< Impl >::update( GBNodeSocket& subject )
+void GraphBuilderNode< Impl >::removeAllOutputs()
 {
-   // do nothing - this is an initial update
+   if ( m_outputs.empty() )
+   {
+      // there's nothing to be removed here
+      return;
+   }
+
+   uint count = m_outputs.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      TOutputSocket* output = m_outputs[i];
+      delete output;
+   }
+   m_outputs.clear();
+
+   notify( GBNO_OUTPUTS_CHANGED );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Impl >
-void GraphBuilderNode< Impl >::update( GBNodeSocket& subject, const GBNodeSocketOperation& msg )
+void GraphBuilderNode< Impl >::removeSelectedOutputs( const std::vector< std::string >& outputNames )
 {
-   if ( msg == GBNSO_CHANGED )
+   if ( m_outputs.empty() || outputNames.empty() )
    {
-      notify( GBNO_CHANGED );
+      // there's nothing to be removed here
+      return;
+   }
+
+   uint namesCount = outputNames.size();
+   for ( uint nameIdx = 0; nameIdx < namesCount; ++nameIdx )
+   {
+      const std::string& removedOutputName = outputNames[nameIdx];
+
+      uint count = m_outputs.size();
+      for ( uint i = 0; i < count; ++i )
+      {
+         if ( m_outputs[i]->getName() == removedOutputName )
+         {
+            TOutputSocket* output = m_outputs[i];
+            delete output;
+            m_outputs.erase( m_outputs.begin() + i );
+            break;
+         }
+      }
+   }
+
+   notify( GBNO_OUTPUTS_CHANGED );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
+void GraphBuilderNode< Impl >::redefineOutputs( const std::vector< TOutputSocket* >& outputs )
+{
+   int numOutputsChanged = GraphBuilderNodeUtils::mergeSocketsLists( outputs, m_outputs );
+
+   // notify about the changes, if any were made
+   if ( numOutputsChanged > 0 )
+   {
+      notify( GBNO_OUTPUTS_CHANGED );
    }
 }
 

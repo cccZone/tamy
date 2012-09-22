@@ -29,18 +29,6 @@ GNVertexShader::~GNVertexShader()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GNVertexShader::onObjectLoaded()
-{
-   __super::onObjectLoaded();
-
-   if ( m_shader )
-   {
-      m_shaderNode->setShader( *m_shader );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void GNVertexShader::onPrePropertyChanged( ReflectionProperty& property )
 {
    __super::onPrePropertyChanged( property );
@@ -67,25 +55,9 @@ void GNVertexShader::onPropertyChanged( ReflectionProperty& property )
 
 void GNVertexShader::onGraphLoaded()
 {
-   // remove the non-existing sockets
-   std::vector< std::string > sockets;
-   const std::vector< TInputSocket* >& inputs = getInputs();
-   uint count = inputs.size();
-   for ( uint i = 0; i < count; ++i )
+   if ( m_shader )
    {
-      if ( inputs[i] != NULL )
-      {
-         sockets.push_back( inputs[i]->getName() );
-      }
-   }
-
-   m_shaderNode->filterSockets( sockets );
-
-   // remove non-existing sockets
-   count = sockets.size();
-   for ( uint i = 0; i < count; ++i )
-   {
-      removeInput( sockets[i] );
+      m_shaderNode->setShader( *m_shader );
    }
 }
 

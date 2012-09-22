@@ -675,6 +675,9 @@
     <ClInclude Include="..\..\Include\core\PlaneUtils.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\GraphBuilderNodeUtils.h">
+      <Filter>DataStructures\DataPipeline</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\GenericFactory.inl">
@@ -829,6 +832,9 @@
     </None>
     <None Include="..\..\Include\core\Vector.inl">
       <Filter>Math</Filter>
+    </None>
+    <None Include="..\..\Include\core\GraphBuilderNodeUtils.inl">
+      <Filter>DataStructures\DataPipeline</Filter>
     </None>
   </ItemGroup>
 </Project>

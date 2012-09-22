@@ -8,51 +8,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MRTUtil::defineOutputs( const std::string& renderTargetIds, RenderingPipelineNode* node )
+void MRTUtil::createOutputs( const std::string& renderTargetIds, std::vector< GBNodeOutput< RenderingPipelineNode >* >& outNodes )
 {
    std::vector< std::string > renderTargets;
    StringUtils::tokenize( renderTargetIds, ";", renderTargets );
 
-   // go through the existing sockets and create a list of sockets that correspond to removed render targets
+   // now add new outputs
+   uint renderTargetsCount = renderTargets.size();
+   for ( uint rtIdx = 0; rtIdx < renderTargetsCount; ++rtIdx )
    {
-      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs = node->getOutputs();
-      int outputsCount = outputs.size();
-      for ( int outputIdx = outputsCount - 1; outputIdx >= 0; --outputIdx )
-      {
-         const std::string& outputName = outputs[outputIdx]->getName();
-         bool stillExists = false;
-         uint renderTargetsCount = renderTargets.size();
-         for ( uint rtIdx = 0; rtIdx < renderTargetsCount; ++rtIdx )
-         {
-            if ( renderTargets[rtIdx] == outputName )
-            {
-               stillExists = true;
-               renderTargets.erase( renderTargets.begin() + rtIdx );
-               break;
-            }
-         }
-
-         if ( stillExists )
-         {
-            outputs.erase( outputs.begin() + outputIdx );
-         }
-      }
-
-      // remove the outputs that remain on the list
-      outputsCount = outputs.size();
-      for ( int outputIdx = outputsCount - 1; outputIdx >= 0; --outputIdx )
-      {
-         const std::string& outputName = outputs[outputIdx]->getName();
-         node->removeOutput( outputName );
-      }
-
-      // now add new outputs
-      uint renderTargetsCount = renderTargets.size();
-      for ( uint rtIdx = 0; rtIdx < renderTargetsCount; ++rtIdx )
-      {
-         const std::string& rtName = renderTargets[rtIdx];
-         node->defineOutput( new RPTextureOutput( rtName ) );
-      }
+      const std::string& rtName = renderTargets[rtIdx];
+      outNodes.push_back( new RPTextureOutput( rtName ) );
    }
 }
 

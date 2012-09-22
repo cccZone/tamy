@@ -108,12 +108,6 @@
     <Filter Include="ResourceEditors\ShaderEditors">
       <UniqueIdentifier>{01274f29-65ff-44c8-a660-7a2d3ecb06f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ResourceEditors\MaterialEditor">
-      <UniqueIdentifier>{83042337-b409-4974-ba49-8528b1653b4f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ResourceEditors\MaterialEditor\Blocks">
-      <UniqueIdentifier>{c45dca51-9a6c-439e-84cf-1d63e145a83d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Widgets\PipelineWidget">
       <UniqueIdentifier>{916cf57c-05c0-4f4b-9ce2-2c0bfce877e9}</UniqueIdentifier>
     </Filter>
@@ -224,6 +218,12 @@
     </Filter>
     <Filter Include="ResourceEditors\MaterialInstanceEditor">
       <UniqueIdentifier>{cc06cf4b-da68-4bec-9d5f-cb57e5f030da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\MaterialRendererEditor">
+      <UniqueIdentifier>{83042337-b409-4974-ba49-8528b1653b4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceEditors\MaterialRendererEditor\Blocks">
+      <UniqueIdentifier>{c45dca51-9a6c-439e-84cf-1d63e145a83d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -345,28 +345,28 @@
       <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="MaterialLayout.h">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor</Filter>
     </ClInclude>
     <ClInclude Include="MaterialSocketRepresentation.h">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor</Filter>
     </ClInclude>
     <ClInclude Include="MBPixelShader.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="MBSpatialEntity.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="MBCamera.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="MBTexture.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="MBFloat.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="MBVec4.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="PipelineSocket.h">
       <Filter>Widgets\PipelineWidget</Filter>
@@ -378,16 +378,16 @@
       <Filter>Widgets\PipelineWidget</Filter>
     </ClInclude>
     <ClInclude Include="MBBool.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="MBSurfaceProperties.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="MBInstanceTexture.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="MBTimer.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="GeometryShaderLayout.h">
       <Filter>ResourceEditors\GeometryShaderEditor</Filter>
@@ -570,7 +570,7 @@
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\Lighting</Filter>
     </ClInclude>
     <ClInclude Include="MBMaterialIndex.h">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_materialinstanceeditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
@@ -930,7 +930,7 @@
       <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </ClCompile>
     <ClCompile Include="MaterialEditor.cpp">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MaterialEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
@@ -942,43 +942,43 @@
       <Filter>QtImplementation\Generated Files\Template</Filter>
     </ClCompile>
     <ClCompile Include="MaterialLayout.cpp">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor</Filter>
     </ClCompile>
     <ClCompile Include="MaterialSocketRepresentation.cpp">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor</Filter>
     </ClCompile>
     <ClCompile Include="MBPixelShader.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="MBSpatialEntity.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="MBCamera.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="MBTexture.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="MBFloat.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="MBVec4.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="PipelineBlock.cpp">
       <Filter>Widgets\PipelineWidget</Filter>
     </ClCompile>
     <ClCompile Include="MBBool.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="MBSurfaceProperties.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="MBInstanceTexture.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="MBTimer.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="GeometryShaderEditor.cpp">
       <Filter>ResourceEditors\GeometryShaderEditor</Filter>
@@ -1359,7 +1359,7 @@
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\Lighting</Filter>
     </ClCompile>
     <ClCompile Include="MBMaterialIndex.cpp">
-      <Filter>ResourceEditors\MaterialEditor\Blocks</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_MaterialInstanceEditor.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
@@ -1543,7 +1543,7 @@
       <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>
     </CustomBuild>
     <CustomBuild Include="MaterialEditor.h">
-      <Filter>ResourceEditors\MaterialEditor</Filter>
+      <Filter>ResourceEditors\MaterialRendererEditor</Filter>
     </CustomBuild>
     <CustomBuild Include="materialeditor.ui">
       <Filter>QtImplementation\Form Files</Filter>

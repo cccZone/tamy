@@ -32,19 +32,49 @@ PixelShaderNodeOperator< TNode >::~PixelShaderNodeOperator()
 template< typename TNode >
 void PixelShaderNodeOperator< TNode >::setShader( PixelShader& shader )
 {
-   resetShader();
+   // delete constants
+   uint count = m_constants.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      delete m_constants[i];
+   }
+   m_constants.clear();
 
+   // set the new shader
    m_shader = &shader;
 
+   // create shader constants
    const std::vector< ShaderConstantDesc >& constantsDescriptions = shader.getConstantsDescriptions();
    std::vector< PixelShaderConstant< TNode >* > constants;
    buildConstantsSockets( constantsDescriptions, constants );
 
-   unsigned int count = constants.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   // create inputs for the constants
+   // add it to the new node
+   uint constantsCount = constants.size();
+
+   std::vector< GBNodeInput< TNode >* > inputs;
+   inputs.resize( constantsCount );
+
+   for ( uint i = 0; i < constantsCount; ++i )
    {
-      m_constants.push_back( new ConstantDef( constants[i] ) );
-      m_constants.back()->setHostNode( &m_hostNode );
+      PixelShaderConstant< TNode >* constant = constants[i];
+      const ReflectionType* constantDataType = constant->getDataType();
+
+      GBNodeInput< TNode >* input = m_hostNode.createInput( *constantDataType, constant->getName() );
+      ASSERT_MSG( input != NULL, "No input available that's able to marshal the specified data type" );
+
+      inputs[i] = input;
+   }
+
+   // define the inputs on the host node
+   m_hostNode.redefineInputs( inputs );
+
+   // create a map of constants and corresponding inputs
+   for ( unsigned int i = 0; i < constantsCount; ++i )
+   {
+      PixelShaderConstant< TNode >* constant = constants[i];
+      GBNodeInput< TNode >* input = m_hostNode.findInput( constant->getName() );
+      m_constants.push_back( new ConstantDef( constant, input ) );
    }
 }
 
@@ -53,13 +83,16 @@ void PixelShaderNodeOperator< TNode >::setShader( PixelShader& shader )
 template< typename TNode >
 void PixelShaderNodeOperator< TNode >::resetShader()
 {
-   unsigned int count = m_constants.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   // delete constants
+   uint count = m_constants.size();
+   for ( uint i = 0; i < count; ++i )
    {
-      m_constants[i]->setHostNode( NULL );
       delete m_constants[i];
    }
    m_constants.clear();
+
+   // clear all inputs
+   m_hostNode.removeAllInputs();
 
    m_shader = NULL;
 }
@@ -69,7 +102,6 @@ void PixelShaderNodeOperator< TNode >::resetShader()
 template< typename TNode >
 void PixelShaderNodeOperator< TNode >::filterSockets( std::vector< std::string >& inOutSocketNames ) const
 {
-   // create sockets for new constants
    unsigned int constantsCount = m_constants.size();
    for ( unsigned int constIdx = 0; constIdx < constantsCount; ++constIdx )
    {
@@ -177,10 +209,9 @@ void PixelShaderNodeOperator< TNode >::buildConstantsSockets( const std::vector<
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-PixelShaderNodeOperator< TNode >::ConstantDef::ConstantDef( PixelShaderConstant< TNode >* constant ) 
+PixelShaderNodeOperator< TNode >::ConstantDef::ConstantDef( PixelShaderConstant< TNode >* constant, GBNodeInput< TNode >* input ) 
    : m_constant( constant )
-   , m_input( NULL )
-   , m_hostNode( NULL )
+   , m_input( input )
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -194,48 +225,5 @@ PixelShaderNodeOperator< TNode >::ConstantDef::~ConstantDef()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template< typename TNode >
-void PixelShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode )
-{
-   const std::string& inputName = m_constant->getName();
-
-   if ( m_hostNode )
-   {
-      // remove it from the old node
-      m_hostNode->removeInput( inputName );
-   }
-
-   m_hostNode = hostNode;
-
-   if ( m_hostNode )
-   {
-      // add it to the new node
-      const ReflectionType* constantDataType = m_constant->getDataType();
-
-      GBNodeInput< TNode >* input = m_hostNode->findInput( inputName );
-      if ( input )
-      {
-         // the new node already has such input - check if its type matches our type. If not remove it
-         const ReflectionType* inputDataType = input->getDataType();
-         if ( !constantDataType->isExactlyA( *inputDataType ) )
-         {
-            m_hostNode->removeInput( inputName );
-            input = NULL;
-         }
-      }
-
-      // at this point if we don't have an input, we need to create a new one
-      if ( !input )
-      {
-         input = hostNode->createInput( *constantDataType, inputName );
-         ASSERT_MSG( input != NULL, "No input available that's able to marshal the specified data type" );
-         hostNode->defineInput( input );
-      }
-
-      m_input = input;
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
 
 #endif // _PIXEL_SHADER_NODE_OPERATOR_H

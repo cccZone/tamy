@@ -44,7 +44,7 @@ float mag( T value )
    }
    else
    {
-      float logVal = log10( value );
+      float logVal = (float)log10( value );
       int intMag = (int)logVal;
       if ( intMag > 0 )
       {

@@ -3,7 +3,10 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "core/Array.h"
+#include "core/GraphBuilderSockets.h"
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -19,13 +22,13 @@ class MRTUtil
 public:
 
    /**
-    * Defines new outputs on a rendering pipeline block based on the ;-separated list
+    * Creates new outputs on a rendering pipeline block based on the ;-separated list
     * of render target names.
     *
     * @param renderTargetIds        ;-separated list of render target names
-    * @param node                   modified rendering pipeline node
+    * @param outNodes               a list of generated outputs
     */
-   static void defineOutputs( const std::string& renderTargetIds, RenderingPipelineNode* node );
+   static void createOutputs( const std::string& renderTargetIds, std::vector< GBNodeOutput< RenderingPipelineNode >* >& outNodes );
 
    /**
     * Rebuilds a list of render targets for the specific pipeline instance.

@@ -3,6 +3,7 @@
 #include <QDoubleSpinBox>
 #include <QGroupBox>
 #include <QToolBox>
+#include <QToolBar>
 #include "ResourceDropArea.h"
 #include "MaterialTexturePanel.h"
 #include "ColorFrame.h"
@@ -31,6 +32,16 @@ void MaterialInstanceEditor::onInitialize()
 
    // setup the UI
    m_ui.setupUi( this );
+
+   // create the toolbar with editor actions
+   {
+      QToolBar* toolbar = new QToolBar( m_ui.toolbarFrame );
+      m_ui.toolbarFrame->layout()->addWidget( toolbar );
+
+      QAction* actionSave = toolbar->addAction( QIcon( iconsDir + tr( "/saveFile.png" ) ), tr( "Save" ) );
+      actionSave->setShortcut( QKeySequence( tr( "Ctrl+S" ) ) );
+      connect( actionSave, SIGNAL( triggered() ), this, SLOT( save() ) );
+   }
 
    // create the material preview
    {

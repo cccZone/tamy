@@ -22,13 +22,17 @@ RPCameraNode::RPCameraNode()
    , m_invView( new RPMatrixOutput( "invView" ) )
    , m_invProj( new RPMatrixOutput( "invProj" ) )
 {
-   defineOutput( m_nearZ );
-   defineOutput( m_farZ );
-   defineOutput( m_viewportWidth );
-   defineOutput( m_viewportHeight );
-   defineOutput( m_view );
-   defineOutput( m_invView );
-   defineOutput( m_invProj );
+   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+   outputs.push_back( m_nearZ );
+   outputs.push_back( m_farZ );
+   outputs.push_back( m_viewportWidth );
+   outputs.push_back( m_viewportHeight );
+   outputs.push_back( m_view );
+   outputs.push_back( m_invView );
+   outputs.push_back( m_invProj );
+
+   defineOutputs( outputs );
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -89,3 +93,4 @@ void RPCameraNode::onUpdate( RenderingPipelineMechanism& host ) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+

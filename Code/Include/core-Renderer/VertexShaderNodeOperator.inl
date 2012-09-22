@@ -31,19 +31,49 @@ VertexShaderNodeOperator< TNode >::~VertexShaderNodeOperator()
 template< typename TNode >
 void VertexShaderNodeOperator< TNode >::setShader( VertexShader& shader )
 {
-   resetShader();
+   // delete previously used constants
+   uint count = m_constants.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      delete m_constants[i];
+   }
+   m_constants.clear();
 
+   // set the new shader instance
    m_shader = &shader;
 
+   // create shader constants
    const std::vector< ShaderConstantDesc >& constantsDescriptions = shader.getConstantsDescriptions();
-   std::vector< VertexShaderConstant< TNode >* > allConstants;
-   buildConstantsSockets( constantsDescriptions, allConstants );
+   std::vector< VertexShaderConstant< TNode >* > constants;
+   buildConstantsSockets( constantsDescriptions, constants );
 
-   unsigned int count = allConstants.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   // create inputs for the constants
+   // add it to the new node
+   uint constantsCount = constants.size();
+
+   std::vector< GBNodeInput< TNode >* > inputs;
+   inputs.resize( constantsCount );
+
+   for ( uint i = 0; i < constantsCount; ++i )
    {
-      m_constants.push_back( new ConstantDef( allConstants[i] ) );
-      m_constants.back()->setHostNode( &m_hostNode );
+      VertexShaderConstant< TNode >* constant = constants[i];
+      const ReflectionType* constantDataType = constant->getDataType();
+
+      GBNodeInput< TNode >* input = m_hostNode.createInput( *constantDataType, constant->getName() );
+      ASSERT_MSG( input != NULL, "No input available that's able to marshal the specified data type" );
+
+      inputs[i] = input;
+   }
+
+   // define the inputs on the host node
+   m_hostNode.redefineInputs( inputs );
+
+   // create a map of constants and corresponding inputs
+   for ( unsigned int i = 0; i < constantsCount; ++i )
+   {
+      VertexShaderConstant< TNode >* constant = constants[i];
+      GBNodeInput< TNode >* input = m_hostNode.findInput( constant->getName() );
+      m_constants.push_back( new ConstantDef( constant, input ) );
    }
 }
 
@@ -52,10 +82,9 @@ void VertexShaderNodeOperator< TNode >::setShader( VertexShader& shader )
 template< typename TNode >
 void VertexShaderNodeOperator< TNode >::resetShader()
 {
-   unsigned int count = m_constants.size();
-   for ( unsigned int i = 0; i < count; ++i )
+   uint count = m_constants.size();
+   for ( uint i = 0; i < count; ++i )
    {
-      m_constants[i]->setHostNode( NULL );
       delete m_constants[i];
    }
    m_constants.clear();
@@ -176,10 +205,9 @@ void VertexShaderNodeOperator< TNode >::buildConstantsSockets( const std::vector
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode >
-VertexShaderNodeOperator< TNode >::ConstantDef::ConstantDef( VertexShaderConstant< TNode >* constant ) 
+VertexShaderNodeOperator< TNode >::ConstantDef::ConstantDef( VertexShaderConstant< TNode >* constant, GBNodeInput< TNode >* input ) 
    : m_constant( constant )
    , m_input( NULL )
-   , m_hostNode( NULL )
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -189,50 +217,6 @@ VertexShaderNodeOperator< TNode >::ConstantDef::~ConstantDef()
 {
    delete m_constant;
    m_constant = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename TNode >
-void VertexShaderNodeOperator< TNode >::ConstantDef::setHostNode( TNode* hostNode )
-{
-   const std::string& inputName = m_constant->getName();
-
-   if ( m_hostNode )
-   {
-      // remove it from the old node
-      m_hostNode->removeInput( inputName );
-   }
-
-   m_hostNode = hostNode;
-
-   if ( m_hostNode )
-   {
-      // add it to the new node
-      const ReflectionType* constantDataType = m_constant->getDataType();
-      
-      GBNodeInput< TNode >* input = m_hostNode->findInput( inputName );
-      if ( input )
-      {
-         // the new node already has such input - check if its type matches our type. If not remove it
-         const ReflectionType* inputDataType = input->getDataType();
-         if ( !constantDataType->isExactlyA( *inputDataType ) )
-         {
-            m_hostNode->removeInput( inputName );
-            input = NULL;
-         }
-      }
-
-      // at this point if we don't have an input, we need to create a new one
-      if ( !input )
-      {
-         input = hostNode->createInput( *constantDataType, inputName );
-         hostNode->defineInput( input );
-         ASSERT_MSG( input != NULL, "No input available that's able to marshal the specified data type" );
-      }
-
-      m_input = input;
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
