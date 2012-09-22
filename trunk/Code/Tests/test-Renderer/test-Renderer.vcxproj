@@ -97,6 +97,7 @@
   <ItemGroup>
     <ClCompile Include="CascadedShadowsTests.cpp" />
     <ClCompile Include="DepthEncodingTests.cpp" />
+    <ClCompile Include="MaterialsDBTests.cpp" />
     <ClCompile Include="RenderCommandTests.cpp" />
     <ClCompile Include="RendererTests.cpp" />
     <ClCompile Include="RenderingViewTests.cpp" />

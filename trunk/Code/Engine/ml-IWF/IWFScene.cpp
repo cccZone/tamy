@@ -268,42 +268,57 @@ void IWFScene::addStaticGeometry( Model& scene, ResourcesManager& rm, std::vecto
       MeshDefinition& currMesh = meshes[i];
 
       // create the geometry
-      char geomName[128];
-      sprintf_s( geomName, 128, "%s/%s.%s", sceneDir.c_str(), currMesh.name.c_str(), TriangleMesh::getExtension() );
-
-      FilePath geomResPath( geomName );
       TriangleMesh* geometryRes = NULL;
-      if ( ( geometryRes = rm.findResource< TriangleMesh >( geomResPath ) ) == NULL )
       {
-         geometryRes = new TriangleMesh( geomResPath, currMesh.vertices, currMesh.faces );
-         geometryRes->calculateTangents();
-         rm.addResource( geometryRes );
+         char geomName[128];
+         sprintf_s( geomName, 128, "%s/%s.%s", sceneDir.c_str(), currMesh.name.c_str(), TriangleMesh::getExtension() );
+
+         FilePath geomResPath( geomName );
+         if ( ( geometryRes = rm.findResource< TriangleMesh >( geomResPath ) ) == NULL )
+         {
+            geometryRes = new TriangleMesh( geomResPath, currMesh.vertices, currMesh.faces );
+            geometryRes->calculateTangents();
+            rm.addResource( geometryRes );
+         }
       }
+
 
       // create a rendering effect instance
       MaterialDefinition& mat = currMesh.material;
-      MaterialEntity* material = BasicRenderingEntitiesFactory::createMaterial( mat.matName );
-      material->accessSurfaceProperties().set( mat.ambient, mat.diffuse, mat.specular, mat.emissive, mat.power );
-      
-      if (mat.texName.length() > 0)
+      MaterialEntity* materialEntity = new MaterialEntity( mat.matName );
       {
-         FilePath texName( sceneDir.getRelativePath() + std::string( "/" ) + mat.texName );
-         FilePath texResourceName;
-         texName.changeFileExtension( Texture::getExtension(), texResourceName );
-         Texture* texture = NULL;
-         if ( ( texture = rm.findResource< Texture >( texResourceName ) ) == NULL )
+         char matInstancePath[128];
+         sprintf_s( matInstancePath, 128, "%s/%s.%s", sceneDir.c_str(), mat.matName.c_str(), MaterialInstance::getExtension() );
+
+         MaterialInstance* materialInstance = m_rm.create< MaterialInstance >( FilePath( matInstancePath ) );
+         materialEntity->setMaterial( materialInstance );
+
+         Material* materialRenderer = m_rm.create< Material >( FilePath( DEFAULT_MATERIAL_RENDERER ), true );
+         materialInstance->setMaterialRenderer( materialRenderer );
+
+         materialInstance->accessSurfaceProperties().set( mat.ambient, mat.diffuse, mat.specular, mat.emissive, mat.power );
+
+         if (mat.texName.length() > 0)
          {
-            texture = new Texture( texResourceName );
-            texture->setImagePath( texName );
-            rm.addResource( texture );
+            FilePath texName( sceneDir.getRelativePath() + std::string( "/" ) + mat.texName );
+            FilePath texResourceName;
+            texName.changeFileExtension( Texture::getExtension(), texResourceName );
+            Texture* texture = NULL;
+            if ( ( texture = rm.findResource< Texture >( texResourceName ) ) == NULL )
+            {
+               texture = new Texture( texResourceName );
+               texture->setImagePath( texName );
+               rm.addResource( texture );
+            }
+            materialInstance->setTexture( MT_DIFFUSE_1, texture );
          }
-         material->setTexture( MT_DIFFUSE_1, texture );
       }
-      
+
+
       // setup the geometry node
       Geometry* geometry = new StaticGeometry( *geometryRes );
       geometry->setLocalMtx( currMesh.localMtx );
-      geometry->add( material );
+      geometry->add( materialEntity );
 
       // add the geometry to the mesh
       if ( root )

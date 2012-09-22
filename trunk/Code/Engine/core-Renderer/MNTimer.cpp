@@ -1,6 +1,6 @@
 #include "core-Renderer/MNTimer.h"
 #include "core-Renderer/MaterialSockets.h"
-#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/MaterialInstance.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -44,13 +44,13 @@ void MNTimer::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNTimer::preRender( Renderer& renderer, const MaterialEntity& entity ) const
+void MNTimer::preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const
 {
    float currTime = (float)m_timer.getCurrentTime();
    float sinTime = sin( currTime * m_period ) * m_amplitude;
 
-   m_time->setValue( entity.data(), currTime );
-   m_sinTime->setValue( entity.data(), sinTime );
+   m_time->setValue( instance.data(), currTime );
+   m_sinTime->setValue( instance.data(), sinTime );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

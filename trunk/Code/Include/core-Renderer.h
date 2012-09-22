@@ -122,7 +122,7 @@
 // ----------------------------------------------------------------------------
 #include "core-Renderer\MaterialEntity.h"
 // ----------------------------------------------------------------------------
-// --> MaterialGraph
+// --> MaterialRendererGraph
 // ----------------------------------------------------------------------------
 #include "core-Renderer\Material.h"
 #include "core-Renderer\MaterialNode.h"
@@ -140,6 +140,7 @@
 #include "core-Renderer\MNInstanceTexture.h"
 #include "core-Renderer\MNSurfaceProperties.h"
 #include "core-Renderer\MNTimer.h"
+#include "core-Renderer\MNMaterialIndex.h"
 // ----------------------------------------------------------------------------
 // --> Resources
 // ----------------------------------------------------------------------------
@@ -150,6 +151,11 @@
 // --> Methods
 // ----------------------------------------------------------------------------
 #include "core-Renderer\RPSceneRenderNode.h"
+// ----------------------------------------------------------------------------
+// --> MaterialsDB
+// ----------------------------------------------------------------------------
+#include "core-Renderer\MaterialsDB.h"
+#include "core-Renderer\MaterialInstance.h"
 
 // ----------------------------------------------------------------------------
 // Mechanisms

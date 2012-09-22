@@ -1,0 +1,19 @@
+#include "MBMaterialIndex.h"
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+BEGIN_OBJECT( MBMaterialIndex );
+   PARENT( GraphBlock );
+   PROPERTY( TResourceHandle< MNMaterialIndex >*, m_node );
+END_OBJECT();
+
+///////////////////////////////////////////////////////////////////////////////
+
+MBMaterialIndex::MBMaterialIndex( MNMaterialIndex& node )
+   : TPipelineBlock< MNMaterialIndex, MaterialNode >( node )
+{
+   setCaption( "Material Idx" );
+}
+
+///////////////////////////////////////////////////////////////////////////////

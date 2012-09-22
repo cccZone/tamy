@@ -12,6 +12,7 @@
 
 #define TEXTURES_EXPORT_DIR      std::string( "/Textures/" )
 #define MATERIAL_PATH            std::string( "/Renderer/Materials/simpleTextured.tmat" )
+#define MATERIALS_EXPORT_DIR     std::string( "/Material/" )
 #define MESHES_EXPORT_DIR        std::string( "/Meshes/" )
 #define SCENES_EXPORT_DIR        std::string( "/Scenes/" )
 
@@ -22,7 +23,7 @@ BlenderSceneExporter BlenderSceneExporter::s_theIntance;
 ///////////////////////////////////////////////////////////////////////////////
 
 BlenderSceneExporter::BlenderSceneExporter()
-   : m_material( NULL )
+   : m_materialRenderer( NULL )
 {
 }
 
@@ -45,6 +46,7 @@ void BlenderSceneExporter::initialize( const char* filesystemRoot, const char* e
    m_texturesExportDir = relativeExportDir + TEXTURES_EXPORT_DIR;
    m_meshesExportDir = relativeExportDir + MESHES_EXPORT_DIR;
    m_scenesExportDir = relativeExportDir + SCENES_EXPORT_DIR;
+   m_materialsExportDir = relativeExportDir + MATERIALS_EXPORT_DIR;
 
    // physically create the directories
    FilesystemUtils::mkdir( fs.toAbsolutePath( m_texturesExportDir ).c_str() ); 
@@ -53,17 +55,11 @@ void BlenderSceneExporter::initialize( const char* filesystemRoot, const char* e
 
    // load the common material resource that will be used by all exported material entities
    ResourcesManager& resMgr = ResourcesManager::getInstance();
-   m_material = resMgr.create< Material >( MATERIAL_PATH, true );
-   ASSERT_MSG( m_material != NULL, "Required material resource not found" );
+   m_materialRenderer = resMgr.create< Material >( FilePath( DEFAULT_MATERIAL_RENDERER ), true );
+   ASSERT_MSG( m_materialRenderer != NULL, "Required material renderer resource not found" );
 
    // clear the storages
    m_textures.clear();
-
-   int count = m_materialDefinitions.size();
-   for ( int i = 0; i < count; ++i )
-   {
-      delete m_materialDefinitions[i];
-   }
    m_materialDefinitions.clear();
 
    m_exportedEntities.clear();
@@ -77,14 +73,9 @@ void BlenderSceneExporter::initialize( const char* filesystemRoot, const char* e
 
 void BlenderSceneExporter::reset()
 {
-   m_material = NULL;
+   m_materialRenderer = NULL;
    m_textures.clear();
 
-   int count = m_materialDefinitions.size();
-   for ( int i = 0; i < count; ++i )
-   {
-      delete m_materialDefinitions[i];
-   }
    m_materialDefinitions.clear();
 
    m_exportedEntities.clear();
@@ -128,19 +119,59 @@ void BlenderSceneExporter::storeMaterials( TamyMaterial* arrMaterials, int mater
 {
    ASSERT_MSG( m_materialDefinitions.empty(), "This method is going to override the existing materials definitions!" );
 
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
+
    // delete previous definitions
-   int count = m_materialDefinitions.size();
-   for ( int i = 0; i < count; ++i )
-   {
-      delete m_materialDefinitions[i];
-   }
    m_materialDefinitions.clear();
    m_materialDefinitions.resize( materialsCount );
 
+   char tmpMatPath[128];
    for( int i = 0; i < materialsCount; ++i )
    {
-      m_materialDefinitions[i] = new MaterialDefinition( arrMaterials[i] );
+      const TamyMaterial& exportedMaterial = arrMaterials[i];
+      m_materialDefinitions[i].m_materialName = exportedMaterial.name;
+
+      sprintf_s( tmpMatPath , "%s%s.%s", m_materialsExportDir.c_str(), exportedMaterial.name, MaterialInstance::getExtension() );
+      m_materialDefinitions[i].m_path = FilePath( tmpMatPath );
+
+      MaterialInstance* matInstance = resMgr.create< MaterialInstance >( m_materialDefinitions[i].m_path );
+      matInstance->setMaterialRenderer( m_materialRenderer );
+
+      // setup the material properties
+      {
+         // surface properties setup
+         SurfaceProperties& surfaceProperties = matInstance->accessSurfaceProperties();
+         surfaceProperties.setAmbientColor( exportedMaterial.ambientColor );
+         surfaceProperties.setDiffuseColor( exportedMaterial.diffuseColor );
+         surfaceProperties.setSpecularColor( exportedMaterial.specularColor );
+
+         // textures setup
+         if ( exportedMaterial.normalTextureIndex >= 0 && exportedMaterial.normalTextureIndex < (int)m_textures.size() )
+         {
+            Texture* normalTexture = m_textures[ exportedMaterial.normalTextureIndex ];
+            matInstance->setTexture( MT_NORMALS, normalTexture );
+         }
+
+         if ( exportedMaterial.specularTextureIndex >= 0 && exportedMaterial.specularTextureIndex < (int)m_textures.size() )
+         {
+            Texture* specularTexture = m_textures[ exportedMaterial.specularTextureIndex ];
+            matInstance->setTexture( MT_SPECULAR, specularTexture );
+         }
+
+         for ( int i = MT_DIFFUSE_1; i < MT_DIFFUSE_2; ++i )
+         {
+            int mapIdx = i - MT_DIFFUSE_1;
+            if ( mapIdx < exportedMaterial.diffuseTexturesCount )
+            {
+               int diffuseTextureIdx = exportedMaterial.diffuseTexturesIndices[mapIdx];
+               Texture* diffuseTexture = m_textures[ diffuseTextureIdx ];
+               matInstance->setTexture( (MaterialTextures)i, diffuseTexture );
+            }
+         }
+      }
    }
+
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -254,43 +285,12 @@ void BlenderSceneExporter::attachMaterialToGeometry( Geometry* geometryEntity, u
    {
       return;
    }
-   const MaterialDefinition& materialDef = *m_materialDefinitions[materialIdx];
+   const MaterialDefinition& materialDef = m_materialDefinitions[materialIdx];
+   MaterialEntity* materialEntity = new MaterialEntity( materialDef.m_materialName );
 
-   MaterialEntity* materialEntity = new MaterialEntity( materialDef.name );
-   materialEntity->setMaterial( m_material );
-
-   // setup the entity
-   {
-      // surface properties setup
-      SurfaceProperties& surfaceProperties = materialEntity->accessSurfaceProperties();
-      surfaceProperties.setAmbientColor( materialDef.ambientColor );
-      surfaceProperties.setDiffuseColor( materialDef.diffuseColor );
-      surfaceProperties.setSpecularColor( materialDef.specularColor );
-
-      // textures setup
-      if ( materialDef.normalTextureIndex >= 0 && materialDef.normalTextureIndex < (int)m_textures.size() )
-      {
-         Texture* normalTexture = m_textures[ materialDef.normalTextureIndex ];
-         materialEntity->setTexture( MT_NORMALS, normalTexture );
-      }
-
-      if ( materialDef.specularTextureIndex >= 0 && materialDef.specularTextureIndex < (int)m_textures.size() )
-      {
-         Texture* specularTexture = m_textures[ materialDef.specularTextureIndex ];
-         materialEntity->setTexture( MT_SPECULAR, specularTexture );
-      }
-
-      for ( int i = MT_DIFFUSE_1; i < MT_DIFFUSE_2; ++i )
-      {
-         int mapIdx = i - MT_DIFFUSE_1;
-         if ( mapIdx < materialDef.diffuseTexturesCount )
-         {
-            int diffuseTextureIdx = materialDef.diffuseTexturesIndices[mapIdx];
-            Texture* diffuseTexture = m_textures[ diffuseTextureIdx ];
-            materialEntity->setTexture( (MaterialTextures)i, diffuseTexture );
-         }
-      }
-   }
+   ResourcesManager& resMgr = ResourcesManager::getInstance();
+   MaterialInstance* material = resMgr.create< MaterialInstance >( materialDef.m_path, true );
+   materialEntity->setMaterial( material );
 
    geometryEntity->add( materialEntity );
 }
@@ -440,45 +440,6 @@ void BlenderSceneExporter::assembleScene( const char* sceneName )
 
    // cleanup
    reset();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-BlenderSceneExporter::MaterialDefinition::MaterialDefinition( const TamyMaterial& rhs )
-{
-   int nameLen = strlen( rhs.name ) + 1;
-   name = new char[nameLen];
-   strcpy_s( name, nameLen, rhs.name );
-
-   ambientColor = rhs.ambientColor;
-   diffuseColor = rhs.diffuseColor;
-   specularColor = rhs.specularColor;
-   normalTextureIndex = rhs.normalTextureIndex;
-   specularTextureIndex = rhs.specularTextureIndex;
-
-   diffuseTexturesCount = rhs.diffuseTexturesCount;
-   if ( diffuseTexturesCount > 0 )
-   {
-      diffuseTexturesIndices = new int[ diffuseTexturesCount ];
-      memcpy( diffuseTexturesIndices, rhs.diffuseTexturesIndices, sizeof( int ) * diffuseTexturesCount );
-   }
-   else
-   {
-      diffuseTexturesIndices = NULL;
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-BlenderSceneExporter::MaterialDefinition::~MaterialDefinition()
-{
-   delete [] name;
-   name = NULL;
-
-   delete [] diffuseTexturesIndices;
-   diffuseTexturesIndices = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

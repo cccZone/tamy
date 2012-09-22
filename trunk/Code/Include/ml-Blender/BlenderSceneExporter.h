@@ -6,6 +6,7 @@
 #include "core/types.h"
 #include "ml-Blender/TamyMaterial.h"
 #include "core/Matrix.h"
+#include "core/FilePath.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,28 +29,10 @@ class Entity;
 class BlenderSceneExporter
 {
 private:
-   /**
-    * A structure dedicated to storing the material settings. We inherit from TamyMaterial 
-    * structure on purpose here, in order to make sure all the data is there and will be copied
-    * in the only constructor, which also happens to be a copy constructor, for two reasons:
-    * - if anything changes in the base structure, the compiler will remind us to update the copying code as well.
-    * - because the base structure is used only during the export, and once the call to the export method
-    *   is over, the structures go out of scope. But since we want to use that data for lookup purposes later on, we need to copy it.
-    *
-    * So since we don't want to end up with a mess of dependencies, we separate the two structures 
-    * ( the one used for export from the one used for lookup ). That's because the latter has some
-    * additional operations that release the memory allocated for internal arrays etc, while the former
-    * is just used to give a meaning to the exported memory chunk.
-    */
-   struct MaterialDefinition : public TamyMaterial
+   struct MaterialDefinition
    {
-      /**
-       * Copy constructor.
-       *
-       * @param rhs
-       */
-      MaterialDefinition( const TamyMaterial& rhs );
-      ~MaterialDefinition();
+      std::string    m_materialName;
+      FilePath       m_path;
    };
 
    struct ExportedEntity
@@ -62,13 +45,14 @@ private:
 private:
    static BlenderSceneExporter               s_theIntance;
 
-   Material*                                 m_material;
+   Material*                                 m_materialRenderer;
    std::string                               m_texturesExportDir;
    std::string                               m_meshesExportDir;
    std::string                               m_scenesExportDir;
+   std::string                               m_materialsExportDir;
 
    std::vector< Texture* >                   m_textures;
-   std::vector< MaterialDefinition* >        m_materialDefinitions;
+   std::vector< MaterialDefinition >         m_materialDefinitions;
    std::vector< ExportedEntity >             m_exportedEntities;
    uint                                      m_nextEntityIdx;
    std::vector< Entity* >                    m_worldEntities;

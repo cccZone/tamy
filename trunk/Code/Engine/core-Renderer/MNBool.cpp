@@ -1,6 +1,6 @@
 #include "core-Renderer/MNBool.h"
 #include "core-Renderer/MaterialSockets.h"
-#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/MaterialInstance.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,9 +38,9 @@ void MNBool::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNBool::preRender( Renderer& renderer, const MaterialEntity& entity ) const
+void MNBool::preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const
 {
-   m_output->setValue( entity.data(), m_value );
+   m_output->setValue( instance.data(), m_value );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

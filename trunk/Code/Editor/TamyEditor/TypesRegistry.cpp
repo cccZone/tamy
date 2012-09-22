@@ -67,6 +67,7 @@ REGISTER_TYPE( RenderingPipelineLayout );
 #include "MBInstanceTexture.h"
 #include "MBSurfaceProperties.h"
 #include "MBTimer.h"
+#include "MBMaterialIndex.h"
 
 REGISTER_TYPE( MaterialLayout );
 REGISTER_TYPE( MSSFloat );
@@ -74,6 +75,7 @@ REGISTER_TYPE( MSSMatrix );
 REGISTER_TYPE( MSSTexture );
 REGISTER_TYPE( MSSVec4 );
 REGISTER_TYPE( MSSBool );
+REGISTER_TYPE( MSSInt );
 REGISTER_TYPE( MBPixelShader );
 REGISTER_TYPE( MBSpatialEntity );
 REGISTER_TYPE( MBCamera );
@@ -84,6 +86,7 @@ REGISTER_TYPE( MBBool );
 REGISTER_TYPE( MBInstanceTexture );
 REGISTER_TYPE( MBSurfaceProperties );
 REGISTER_TYPE( MBTimer );
+REGISTER_TYPE( MBMaterialIndex );
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -3,6 +3,7 @@
 #include "core-Renderer/Renderer.h"
 #include "core-Renderer/MaterialSockets.h"
 #include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/MaterialInstance.h"
 #include "core-Renderer/Camera.h"
 
 
@@ -43,25 +44,31 @@ void MNSpatialEntity::onObjectLoaded()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNSpatialEntity::onCreateLayout( const MaterialEntity& host ) const
+void MNSpatialEntity::onCreateLayout( const MaterialInstance& host ) const
 {
    RuntimeDataBuffer& data = host.data();
    data.registerVar( m_parentNode );
-   data[ m_parentNode ] = DynamicCast< SpatialEntity >( host.getParent() );
+   data[ m_parentNode ] = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNSpatialEntity::preRender( Renderer& renderer, const MaterialEntity& entity ) const
+void MNSpatialEntity::preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const
 {
-   RuntimeDataBuffer& data = entity.data();
-   SpatialEntity* node = data[ m_parentNode ];
+   RuntimeDataBuffer& data = instance.data();
+   SpatialEntity* parentNode = data[ m_parentNode ];
+   if ( !parentNode )
+   {
+      // initialize the parent entity if it wasn't initialized yet
+      parentNode = DynamicCast< SpatialEntity >( entity.getParent() );
+      data[ m_parentNode ] = parentNode;
+   }
 
-   if ( node )
+   if ( parentNode )
    {
       Camera& camera = renderer.getActiveCamera();
 
-      const Matrix& worldMtx = node->getGlobalMtx();
+      const Matrix& worldMtx = parentNode->getGlobalMtx();
       m_worldMtx->setValue( data, worldMtx );
 
       Matrix worldView;

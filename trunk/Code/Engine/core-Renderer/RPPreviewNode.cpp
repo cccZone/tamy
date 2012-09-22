@@ -79,7 +79,7 @@ void RPPreviewNode::onUpdate( RenderingPipelineMechanism& host ) const
    RCBindPixelShader* comm = new ( renderer() ) RCBindPixelShader( *m_shader, renderer );
    {
       comm->setInt( "g_mode", (int)m_type );
-      comm->setInt( "g_farZ", activeCam.getFarClippingPlane() );
+      comm->setFloat( "g_farZ", activeCam.getFarClippingPlane() );
       comm->setTexture( "g_Texture", texture );
    }
 

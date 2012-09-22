@@ -1,6 +1,6 @@
 #include "core-Renderer/MNPixelShader.h"
 #include "core-Renderer/PixelShader.h"
-#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/MaterialInstance.h"
 
 
 // TODO: !!!!!!!!! (BUGS) !!!!!!!!!!!!!!!!!
@@ -95,7 +95,7 @@ void MNPixelShader::onPropertyChanged( ReflectionProperty& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNPixelShader::preRender( Renderer& renderer, const MaterialEntity& entity ) const
+void MNPixelShader::preRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const
 {
    if ( !m_shader || !m_shaderNode )
    {
@@ -103,12 +103,12 @@ void MNPixelShader::preRender( Renderer& renderer, const MaterialEntity& entity 
    }
 
    // bind the shader
-   m_shaderNode->bindShader( renderer, entity.data() );
+   m_shaderNode->bindShader( renderer, instance.data() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MNPixelShader::postRender( Renderer& renderer, const MaterialEntity& entity ) const
+void MNPixelShader::postRender( Renderer& renderer, const MaterialInstance& instance, const MaterialEntity& entity ) const
 {
    if ( m_shader )
    {

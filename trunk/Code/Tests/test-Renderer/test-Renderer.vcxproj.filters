@@ -14,6 +14,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{c66478e6-435f-4aaf-9359-4dac0b2aae27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{3286ee9f-8dc7-44f9-9587-a07408ad1a92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RendererTests.cpp">
@@ -42,6 +45,9 @@
     </ClCompile>
     <ClCompile Include="CascadedShadowsTests.cpp">
       <Filter>Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialsDBTests.cpp">
+      <Filter>Materials</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

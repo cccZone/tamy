@@ -1,5 +1,5 @@
 #include "core-Renderer/MaterialNode.h"
-#include "core-Renderer/MaterialEntity.h"
+#include "core-Renderer/MaterialInstance.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,7 +47,7 @@ void MaterialNode::onPropertyChanged( ReflectionProperty& property )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialNode::createLayout( const MaterialEntity& host ) const
+void MaterialNode::createLayout( const MaterialInstance& host ) const
 {
    for( OutputsMap::const_iterator it = m_outputs.begin(); it != m_outputs.end(); ++it )
    {
@@ -81,6 +81,11 @@ GBNodeInput< MaterialNode >* MaterialNode::createInput( const ReflectionType& da
    {
       return new MSBoolInput( name );
    } 
+   else if ( dataType.m_name == "int" )
+   {
+      return new MSIntInput( name );
+   } 
+
 
    return NULL;
 }
