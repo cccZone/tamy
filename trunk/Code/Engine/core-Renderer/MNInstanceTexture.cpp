@@ -19,8 +19,11 @@ MNInstanceTexture::MNInstanceTexture()
    , m_isTextureSetOutput( new MSBoolOutput( "IsSet" ) )
    , m_renderableTexture( new RenderableTexture() )
 {
-   defineOutput( m_textureOutput );
-   defineOutput( m_isTextureSetOutput );
+   std::vector< GBNodeOutput< MaterialNode >* > outputs;
+   outputs.push_back( m_textureOutput );
+   outputs.push_back( m_isTextureSetOutput );
+
+   defineOutputs( outputs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

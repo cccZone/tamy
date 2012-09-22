@@ -28,7 +28,9 @@ RPSceneRenderNode::RPSceneRenderNode()
 {
    defineInput( new RPVoidInput( "Input" ) );
    
-   MRTUtil::defineOutputs( m_renderTargetId, this );
+   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+   MRTUtil::createOutputs( m_renderTargetId, outputs );
+   defineOutputs( outputs );
 }
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +46,9 @@ void RPSceneRenderNode::onPropertyChanged( ReflectionProperty& property )
 
    if ( property.getName() == "m_renderTargetId" )
    {
-      MRTUtil::defineOutputs( m_renderTargetId, this );
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      MRTUtil::createOutputs( m_renderTargetId, outputs );
+      redefineOutputs( outputs );
    }
 }
 

@@ -19,8 +19,11 @@ MNTimer::MNTimer()
    , m_time( new MSFloatOutput( "t" ) )
    , m_sinTime( new MSFloatOutput( "sin(t * p) * a" ) )
 {
-   defineOutput( m_time );
-   defineOutput( m_sinTime );
+   std::vector< GBNodeOutput< MaterialNode >* > outputs;
+   outputs.push_back( m_time );
+   outputs.push_back( m_sinTime );
+
+   defineOutputs( outputs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

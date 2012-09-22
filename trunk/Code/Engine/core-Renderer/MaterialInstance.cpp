@@ -46,6 +46,11 @@ MaterialInstance::~MaterialInstance()
 {
    deinitializeMaterial();
    detachListeners();
+
+   if ( m_materialRenderer )
+   {
+      m_materialRenderer->removeReference();
+   }
    m_materialRenderer = NULL;
 }
 
@@ -73,7 +78,12 @@ void MaterialInstance::setMaterialRenderer( Material* materialRenderer )
    detachListeners();
 
    // set the new material renderer
+   if ( m_materialRenderer )
+   {
+      m_materialRenderer->removeReference();
+   }
    m_materialRenderer = materialRenderer;
+   m_materialRenderer->addReference();
 
    // initialize it and the dependencies
    initializeMaterial();

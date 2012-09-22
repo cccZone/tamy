@@ -37,8 +37,6 @@ ResourceDropArea::ResourceDropArea( QWidget* parentWidget, const FilePath& initi
    eraseButton->setMaximumSize( 20, 20 );
    eraseButton->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
    layout->addWidget( eraseButton );
-
-   refreshPropertyName();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

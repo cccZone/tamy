@@ -23,14 +23,17 @@ GNCamera::GNCamera()
    , m_worldView( new GSMatrixOutput( "worldView" ) )
    , m_worldViewProj( new GSMatrixOutput( "worldViewProj" ) )
 {
-   defineOutput( m_nearZ );
-   defineOutput( m_farZ );
-   defineOutput( m_viewportWidth );
-   defineOutput( m_viewportHeight );
-   defineOutput( m_view );
-   defineOutput( m_proj );
-   defineOutput( m_worldView );
-   defineOutput( m_worldViewProj );
+   std::vector< GBNodeOutput< GeometryShaderNode >* > outputs;
+   outputs.push_back( m_nearZ );
+   outputs.push_back( m_farZ );
+   outputs.push_back( m_viewportWidth );
+   outputs.push_back( m_viewportHeight );
+   outputs.push_back( m_view );
+   outputs.push_back( m_proj );
+   outputs.push_back( m_worldView );
+   outputs.push_back( m_worldViewProj );
+
+   defineOutputs( outputs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

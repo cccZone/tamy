@@ -27,11 +27,9 @@ private:
    {
       PixelShaderConstant< TNode >*    m_constant;
       GBNodeInput< TNode >*            m_input;
-      TNode*                           m_hostNode;
 
-      ConstantDef( PixelShaderConstant< TNode >* constant );
+      ConstantDef( PixelShaderConstant< TNode >* constant, GBNodeInput< TNode >* input );
       ~ConstantDef();
-      void setHostNode( TNode* hostNode );
    };
 
 private:

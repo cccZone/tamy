@@ -18,15 +18,6 @@ GeometryShaderNode::~GeometryShaderNode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GeometryShaderNode::onObjectLoaded()
-{
-   __super::onObjectLoaded();
-
-   onBulkSocketsInitialization();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void GeometryShaderNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
@@ -38,10 +29,6 @@ void GeometryShaderNode::onPropertyChanged( ReflectionProperty& property )
    else if ( property.getName() == "m_outputs" )
    {
       notify( GBNO_OUTPUTS_CHANGED );
-   }
-   else
-   {
-      notify( GBNO_CHANGED );
    }
 }
 

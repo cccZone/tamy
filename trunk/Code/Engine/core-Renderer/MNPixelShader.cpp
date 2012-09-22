@@ -27,45 +27,18 @@ MNPixelShader::MNPixelShader()
 MNPixelShader::~MNPixelShader()
 {
    delete m_shaderNode; m_shaderNode = NULL;
+
    m_shader = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MNPixelShader::onObjectLoaded()
-{
-   __super::onObjectLoaded();
-
-   if ( m_shader )
-   {
-      // set the shader on the object
-      m_shaderNode->setShader( *m_shader );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MNPixelShader::onGraphLoaded()
 {
-   // remove the non-existing sockets
-   std::vector< std::string > sockets;
-   const std::vector< TInputSocket* >& inputs = getInputs();
-   uint count = inputs.size();
-   for ( uint i = 0; i < count; ++i )
+   if ( m_shader )
    {
-      if ( inputs[i] != NULL )
-      {
-         sockets.push_back( inputs[i]->getName() );
-      }
-   }
-
-   m_shaderNode->filterSockets( sockets );
-
-   // remove non-existing sockets
-   count = sockets.size();
-   for ( uint i = 0; i < count; ++i )
-   {
-      removeInput( sockets[i] );
+      // set the shader on the object
+      m_shaderNode->setShader( *m_shader );
    }
 }
 

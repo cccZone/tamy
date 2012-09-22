@@ -18,8 +18,11 @@ GNSpatialEntity::GNSpatialEntity()
    : m_worldMtx( new GSMatrixOutput( "world" ) )
    , m_worldViewMtx( new GSMatrixOutput( "worldView" ) )
 {
-   defineOutput( m_worldMtx );
-   defineOutput( m_worldViewMtx );
+   std::vector< GBNodeOutput< GeometryShaderNode >* > outputs;
+   outputs.push_back( m_worldMtx );
+   outputs.push_back( m_worldViewMtx );
+
+   defineOutputs( outputs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

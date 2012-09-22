@@ -62,7 +62,6 @@ public:
    // -----------------------------------------------------------------
    // Object implementation
    // -----------------------------------------------------------------
-   void onObjectLoaded();
    void onPropertyChanged( ReflectionProperty& property );
 
 protected:

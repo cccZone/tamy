@@ -38,6 +38,7 @@ public:
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
+   void onGraphLoaded();
    void onCreateLayout( RenderingPipelineMechanism& host ) const;
    void onUpdate( RenderingPipelineMechanism& host ) const;
 
@@ -46,7 +47,6 @@ public:
    // -------------------------------------------------------------------------
    void onPrePropertyChanged( ReflectionProperty& property );
    void onPropertyChanged( ReflectionProperty& property );
-   void onObjectLoaded();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

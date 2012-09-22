@@ -39,14 +39,18 @@ RPLightIndicesNode::RPLightIndicesNode()
    , m_screenSpaceShadowMapId( "SS_ShadowMap" )
 {
    m_normalsInput = new RPTextureInput( "Normals" );
-   defineInput( m_normalsInput );
-
    m_depthInput = new RPTextureInput( "Depth" );
-   defineInput( m_depthInput );
+
+   std::vector< GBNodeInput< RenderingPipelineNode >* > inputs;
+   inputs.push_back( m_normalsInput );
+   inputs.push_back( m_depthInput );
+   defineInputs( inputs );
 
    // <memory.todo> when the object is being loaded, the outputs created here will leak memory. Fix that - maybe by introducing a separate serialization constructor...
    std::string allRenderTargetIds = m_lightsColorTargetId + ";" + m_lightsDirectionTargetId + ";" + m_shadowDepthBufferId + ";" + m_screenSpaceShadowMapId;
-   MRTUtil::defineOutputs( allRenderTargetIds, this );
+   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+   MRTUtil::createOutputs( allRenderTargetIds, outputs );
+   defineOutputs( outputs );
 
    m_lightsColorOutput = static_cast< RPTextureOutput* >( findOutput( m_lightsColorTargetId ) );
    m_lightsDirectionOutput = static_cast< RPTextureOutput* >( findOutput( m_lightsDirectionTargetId ) );
@@ -100,7 +104,9 @@ void RPLightIndicesNode::onPropertyChanged( ReflectionProperty& property )
    if ( propertyName == "m_lightsColorTargetId" || propertyName == "m_lightsDirectionTargetId" || propertyName == "m_shadowDepthBufferId" || propertyName == "m_screenSpaceShadowMapId" )
    {
       std::string allRenderTargetIds = m_lightsColorTargetId + ";" + m_lightsDirectionTargetId + ";" + m_shadowDepthBufferId + ";" + m_screenSpaceShadowMapId;
-      MRTUtil::defineOutputs( allRenderTargetIds, this );
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      MRTUtil::createOutputs( allRenderTargetIds, outputs );
+      redefineOutputs( outputs );
 
       // acquire new output instances
       m_lightsColorOutput = static_cast< RPTextureOutput* >( findOutput( m_lightsColorTargetId ) );

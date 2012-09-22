@@ -25,13 +25,11 @@ class VertexShaderNodeOperator
 private:
    struct ConstantDef
    {
-      VertexShaderConstant< TNode >*      m_constant;
-      GBNodeInput< TNode >*               m_input;
-      TNode*                              m_hostNode;
+      VertexShaderConstant< TNode >*    m_constant;
+      GBNodeInput< TNode >*            m_input;
 
-      ConstantDef( VertexShaderConstant< TNode >* constant );
+      ConstantDef( VertexShaderConstant< TNode >* constant, GBNodeInput< TNode >* input );
       ~ConstantDef();
-      void setHostNode( TNode* hostNode );
    };
 
 private:

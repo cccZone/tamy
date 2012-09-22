@@ -18,15 +18,6 @@ MaterialNode::~MaterialNode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialNode::onObjectLoaded()
-{
-   __super::onObjectLoaded();
-
-   onBulkSocketsInitialization();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void MaterialNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
@@ -38,10 +29,6 @@ void MaterialNode::onPropertyChanged( ReflectionProperty& property )
    else if ( property.getName() == "m_outputs" )
    {
       notify( GBNO_OUTPUTS_CHANGED );
-   }
-   else
-   {
-      notify( GBNO_CHANGED );
    }
 }
 

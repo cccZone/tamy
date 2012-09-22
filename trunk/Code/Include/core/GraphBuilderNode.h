@@ -11,15 +11,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class GBNodeSocket;
-enum GBNodeSocketOperation;
 class GraphInstanceOwner;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 enum GraphBuilderNodeOperation
 {
-   GBNO_CHANGED,
    GBNO_INPUTS_CHANGED,
    GBNO_OUTPUTS_CHANGED,
 };
@@ -44,7 +41,7 @@ enum GraphBuilderNodeOperation
  *     schedules all outgoing connections for further processing with the host mechanism.
  */
 template< typename Impl >
-class GraphBuilderNode : public Subject< Impl, GraphBuilderNodeOperation >, public Observer< GBNodeSocket, GBNodeSocketOperation >
+class GraphBuilderNode : public Subject< Impl, GraphBuilderNodeOperation >
 {
 protected:
    typedef GBNodeInput< Impl > TInputSocket;
@@ -133,41 +130,87 @@ public:
    bool isConnectedWith( Impl* otherNode ) const;
 
    // -------------------------------------------------------------------------
-   // Observer implementation
-   // -------------------------------------------------------------------------
-   void update( GBNodeSocket& subject );
-   void update( GBNodeSocket& subject, const GBNodeSocketOperation& msg );
-
-   // -------------------------------------------------------------------------
    // Sockets management
    // -------------------------------------------------------------------------
    /**
-    * Defines a new node input.
+    * Defines a single node input. 
+    *
+    * Don't use it if you define multiple inputs at once, as it'll generate a lot of update traffic.
+    * Use 'defineInputs' instead.
     *
     * @param input
     */
    void defineInput( TInputSocket* input );
 
    /**
-    * Removes an input with the specified name
+    * Defines node's inputs.
     *
-    * @param name
+    * @param inputs
     */
-   void removeInput( const std::string& name );
+   void defineInputs( const std::vector< TInputSocket* >& inputs );
 
    /**
-    * Defines a new node output.
+    * Re-defines node's inputs, removing the existing ones ( or preserving them if the supplied list
+    * of inputs contains some that have the same name as the existing ones ), and creating new ones.
+    *
+    * Very useful if you would have to call removeAllInputs and then defineInputs, as it will
+    * save you unnecessary update traffic.
+    *
+    * @param input
+    */
+   void redefineInputs( const std::vector< TInputSocket* >& inputs );
+
+   /**
+    * Removes all of node's inputs.
+    */
+   void removeAllInputs();
+
+   /**
+    * Removes selected inputs.
+    *
+    * @param inputNames
+    */
+   void removeSelectedInputs( const std::vector< std::string >& inputNames );
+
+   /**
+    * Defines a single node output. 
+    *
+    * Don't use it if you define multiple outputs at once, as it'll generate a lot of update traffic.
+    * Use 'defineInputs' instead.
     *
     * @param output
     */
    void defineOutput( TOutputSocket* output );
 
    /**
-    * Removes an output with the specified name
+    * Defines node's outputs.
     *
-    * @param name
+    * @param outputs
     */
-   void removeOutput( const std::string& name );
+   void defineOutputs( const std::vector< TOutputSocket* >& outputs );
+
+   /**
+    * Re-defines node's outputs, removing the existing ones ( or preserving them if the supplied list
+    * of inputs contains some that have the same name as the existing ones ), and creating new ones.
+    *
+    * Very useful if you would have to call removeAllOutputs and then defineOutputs, as it will
+    * save you unnecessary update traffic.
+    *
+    * @param outputs
+    */
+   void redefineOutputs( const std::vector< TOutputSocket* >& outputs );
+
+   /**
+    * Removes all of node's outputs.
+    */
+   void removeAllOutputs();
+
+   /**
+    * Removes selected outputs.
+    *
+    * @param outputNames
+    */
+   void removeSelectedOutputs( const std::vector< std::string >& outputNames );
 
    /**
     * Returns the specified input.
@@ -187,11 +230,6 @@ public:
    template< typename T >
    const T& getOutput( const std::string& outputName ) const;
 
-protected:
-   /**
-    * Call this if you initialized the node's sockets in a bulk in the implementation.
-    */
-   void onBulkSocketsInitialization();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

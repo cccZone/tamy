@@ -50,7 +50,10 @@ namespace // anonymous
    public:
       GBMStartNode( int idx ) : GBMockNode( idx ) 
       {
-         defineOutput( new MockOutput() );
+         std::vector< GBNodeOutput< GBMockNode >* > outputs;
+         outputs.push_back( new MockOutput() );
+
+         defineOutputs( outputs );
       }
    };
 
@@ -61,7 +64,10 @@ namespace // anonymous
    public:
       GBMEndNode( int idx ) : GBMockNode( idx ) 
       {
-         defineInput( new MockInput() );
+         std::vector< GBNodeInput< GBMockNode >* > inputs;
+         inputs.push_back( new MockInput() );
+
+         defineInputs( inputs );
       }
    };
 
@@ -75,8 +81,13 @@ namespace // anonymous
    public:
       GBMUtilNode( int idx ) : GBMockNode( idx )
       {
-         defineInput( new MockInput() );
-         defineOutput( new MockOutput() );
+         std::vector< GBNodeInput< GBMockNode >* > inputs;
+         inputs.push_back( new MockInput() );
+         defineInputs( inputs );
+
+         std::vector< GBNodeOutput< GBMockNode >* > outputs;
+         outputs.push_back( new MockOutput() );
+         defineOutputs( outputs );
       }
    };
 

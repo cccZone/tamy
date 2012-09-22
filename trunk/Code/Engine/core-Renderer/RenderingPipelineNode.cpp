@@ -19,15 +19,6 @@ RenderingPipelineNode::~RenderingPipelineNode()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineNode::onObjectLoaded()
-{
-   __super::onObjectLoaded();
-
-   onBulkSocketsInitialization();
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void RenderingPipelineNode::onPropertyChanged( ReflectionProperty& property )
 {
    __super::onPropertyChanged( property );
@@ -39,10 +30,6 @@ void RenderingPipelineNode::onPropertyChanged( ReflectionProperty& property )
    else if ( property.getName() == "m_outputs" )
    {
       notify( GBNO_OUTPUTS_CHANGED );
-   }
-   else
-   {
-      notify( GBNO_CHANGED );
    }
 }
 

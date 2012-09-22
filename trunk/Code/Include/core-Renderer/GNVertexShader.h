@@ -42,7 +42,6 @@ public:
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------
-   void onObjectLoaded();
    void onPrePropertyChanged( ReflectionProperty& property );
    void onPropertyChanged( ReflectionProperty& property );
 

@@ -41,25 +41,26 @@ RPDeferredLightingNode::RPDeferredLightingNode()
    , m_screenSpaceShadowMapId( "SS_ShadowMap" )
 {
    m_normalsInput = new RPTextureInput( "Normals" );
-   defineInput( m_normalsInput );
-
    m_specularInput = new RPTextureInput( "Specular" );
-   defineInput( m_specularInput );
-
    m_depthInput = new RPTextureInput( "Depth" );
-   defineInput( m_depthInput );
-   
    m_sceneColorInput = new RPTextureInput( "SceneColor" );
-   defineInput( m_sceneColorInput );
 
    m_finalLightColorTargetOutput = new RPTextureOutput( m_finalLightColorTargetId );
-   defineOutput( m_finalLightColorTargetOutput );
-
    m_shadowDepthTextureOutput = new RPTextureOutput( m_shadowDepthTextureId );
-   defineOutput( m_shadowDepthTextureOutput );
-
    m_screenSpaceShadowMapOutput = new RPTextureOutput( m_screenSpaceShadowMapId );
-   defineOutput( m_screenSpaceShadowMapOutput );
+
+   std::vector< GBNodeInput< RenderingPipelineNode >* > inputs;
+   inputs.push_back( m_normalsInput );
+   inputs.push_back( m_specularInput );
+   inputs.push_back( m_depthInput );
+   inputs.push_back( m_sceneColorInput );
+   defineInputs( inputs );
+
+   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+   outputs.push_back( m_finalLightColorTargetOutput );
+   outputs.push_back( m_shadowDepthTextureOutput );
+   outputs.push_back( m_screenSpaceShadowMapOutput );
+   defineOutputs( outputs );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -112,7 +113,9 @@ void RPDeferredLightingNode::onPropertyChanged( ReflectionProperty& property )
    {
 
       std::string allRenderTargetIds = m_finalLightColorTargetId + ";" + m_shadowDepthTextureId + ";" + m_screenSpaceShadowMapId;
-      MRTUtil::defineOutputs( allRenderTargetIds, this );
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      MRTUtil::createOutputs( allRenderTargetIds, outputs );
+      redefineOutputs( outputs );
 
       // acquire new output instances
       m_finalLightColorTargetOutput = DynamicCast< RPTextureOutput >( findOutput( m_finalLightColorTargetId ) );

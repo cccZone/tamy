@@ -11,7 +11,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #define TEXTURES_EXPORT_DIR      std::string( "/Textures/" )
-#define MATERIAL_PATH            std::string( "/Renderer/Materials/simpleTextured.tmat" )
 #define MATERIALS_EXPORT_DIR     std::string( "/Material/" )
 #define MESHES_EXPORT_DIR        std::string( "/Meshes/" )
 #define SCENES_EXPORT_DIR        std::string( "/Scenes/" )
@@ -52,6 +51,7 @@ void BlenderSceneExporter::initialize( const char* filesystemRoot, const char* e
    FilesystemUtils::mkdir( fs.toAbsolutePath( m_texturesExportDir ).c_str() ); 
    FilesystemUtils::mkdir( fs.toAbsolutePath( m_meshesExportDir ).c_str() );
    FilesystemUtils::mkdir( fs.toAbsolutePath( m_scenesExportDir ).c_str() );
+   FilesystemUtils::mkdir( fs.toAbsolutePath( m_materialsExportDir ).c_str() );
 
    // load the common material resource that will be used by all exported material entities
    ResourcesManager& resMgr = ResourcesManager::getInstance();
@@ -169,6 +169,9 @@ void BlenderSceneExporter::storeMaterials( TamyMaterial* arrMaterials, int mater
             }
          }
       }
+
+      // save the material
+      matInstance->saveResource();
    }
 
 
