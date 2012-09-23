@@ -77,9 +77,9 @@ void MatrixUtils::generateLookAtLH( const Vector& cameraOriginPos, const Vector&
    outLookAtMtx.m21 = localSideAxis.y; outLookAtMtx.m22 = localUpAxis.y; outLookAtMtx.m23 = localForwardAxis.y; outLookAtMtx.m24 = 0.0;
    outLookAtMtx.m31 = localSideAxis.z; outLookAtMtx.m32 = localUpAxis.z; outLookAtMtx.m33 = localForwardAxis.z; outLookAtMtx.m34 = 0.0;
 
-   outLookAtMtx.m41 = -localSideAxis.dot( cameraOriginPos );
-   outLookAtMtx.m42 = -localUpAxis.dot( cameraOriginPos );
-   outLookAtMtx.m43 = -localForwardAxis.dot( cameraOriginPos );
+   outLookAtMtx.m41 = cameraOriginPos.x;//-localSideAxis.dot( cameraOriginPos );
+   outLookAtMtx.m42 = cameraOriginPos.y;//-localUpAxis.dot( cameraOriginPos );
+   outLookAtMtx.m43 = cameraOriginPos.z;//-localForwardAxis.dot( cameraOriginPos );
    outLookAtMtx.m44 = 1.0;
 }
 

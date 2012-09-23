@@ -32,7 +32,19 @@ public:
    BoundingSphere*   m_boundingSphere;
 
 public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
    PointLight( const std::string& name = "" );
+
+   /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   PointLight( const PointLight& rhs );
    virtual ~PointLight();
 
    // -------------------------------------------------------------------------
@@ -40,6 +52,12 @@ public:
    // -------------------------------------------------------------------------
    void onObjectLoaded();
    void onPropertyChanged( ReflectionProperty& property );
+
+protected:
+   // -------------------------------------------------------------------------
+   // Entity implementation
+   // -------------------------------------------------------------------------
+   Entity* cloneSelf() const;
 
 private:
    void initialize();

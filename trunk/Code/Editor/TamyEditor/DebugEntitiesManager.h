@@ -13,6 +13,7 @@
 
 class EditorDebugRenderer;
 class DebugGeometry;
+class DebugGrid;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,6 +39,7 @@ private:
    std::vector< DebugGeometry* >             m_representations;
 
    bool*                                     m_debugFeatureEnabled;
+   DebugGrid*                                m_debugGrid;
 
 public:
    /**
@@ -58,6 +60,18 @@ public:
     */
    bool toggleDebugDisplay( DebugFeature flag );
 
+   /**
+    * Disables all debug rendering features
+    */
+   void disableAll();
+
+   /**
+    * Shows/hides debug grid.
+    * 
+    * @param enable
+    */
+   void showGrid( bool enable );
+       
    // -------------------------------------------------------------------------
    // TimeDependent implementation
    // -------------------------------------------------------------------------
@@ -80,6 +94,19 @@ private:
     * @param feature
     */
    void applyFeature( DebugGeometry* representation, DebugFeature feature );
+
+
+   /**
+    * This method will be called by the EditorDebugRenderer instance this manager owns
+    * to inform it when a debug scene became available, so that the manager can
+    * add additional debug stuff to it.
+    *
+    * @param debugScene
+    */
+   friend EditorDebugRenderer;
+   void onDebugSceneCreated();
+   void onDebugSceneDestroyed();
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

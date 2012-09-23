@@ -19,6 +19,14 @@ ModelEntity::ModelEntity( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+ModelEntity::ModelEntity( const ModelEntity& rhs )
+   : SpatialEntity( rhs )
+   , m_model( rhs.m_model )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 ModelEntity::ModelEntity( Model& model, const std::string& name )
    : SpatialEntity( name )
    , m_model( &model )

@@ -19,6 +19,14 @@ MaterialEntity::MaterialEntity( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MaterialEntity::MaterialEntity( const MaterialEntity& rhs )
+   : Entity( rhs )
+   , m_material( rhs.m_material )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 MaterialEntity::~MaterialEntity()
 {
    m_material = NULL;

@@ -29,6 +29,20 @@ PointLight::PointLight( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+PointLight::PointLight( const PointLight& rhs )
+   : Light( rhs )
+   , m_color( rhs.m_color )
+   , m_attenuation( rhs.m_attenuation )
+   , m_radius( rhs.m_radius )
+   , m_strength( rhs.m_strength )
+   , m_boundingSphere( NULL )
+{
+   initialize();
+}
+
+
+///////////////////////////////////////////////////////////////////////////////
+
 PointLight::~PointLight()
 {
 }
@@ -70,6 +84,13 @@ void PointLight::initialize()
    {
       m_boundingSphere->radius = m_radius;
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Entity* PointLight::cloneSelf() const
+{
+   return new PointLight( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

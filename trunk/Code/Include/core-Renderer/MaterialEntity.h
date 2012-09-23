@@ -33,6 +33,13 @@ public:
     * @param name
     */
    MaterialEntity( const std::string& name = "" );
+
+   /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   MaterialEntity( const MaterialEntity& rhs );
    ~MaterialEntity();
 
    /**

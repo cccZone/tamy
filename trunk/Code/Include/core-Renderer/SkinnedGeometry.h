@@ -45,6 +45,13 @@ public:
    SkinnedGeometry();
 
    /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   SkinnedGeometry( const SkinnedGeometry& rhs );
+
+   /**
     * Constructor.
     *
     * @param geometry         shared geometry resource

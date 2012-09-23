@@ -34,6 +34,20 @@ Node::Node(const std::string& name)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Node::Node( const Node& rhs )
+   : m_name( rhs.m_name )
+   , m_parent( NULL )
+   , m_volume( rhs.m_volume->clone() )
+   , m_globalVolume( rhs.m_globalVolume->clone() )
+{
+   m_localMtx = rhs.m_localMtx;
+   m_globalMtx = rhs.m_globalMtx;
+   m_localMtxCache = rhs.m_localMtxCache;
+   m_parentGlobalMtxCache = rhs.m_parentGlobalMtxCache;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 Node::~Node()
 {
    delete m_volume;

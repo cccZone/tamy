@@ -8,13 +8,14 @@
 #include "core-Renderer/BasicRenderCommands.h"
 #include "core-MVC.h"
 #include "core.h"
-#include "DebugGrid.h"
+#include "DebugEntitiesManager.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 EditorDebugRenderer::EditorDebugRenderer()
-   : m_renderTreeBuilder( new StatefulRenderTreeBuilder() )
+   : m_host( NULL )
+   , m_renderTreeBuilder( new StatefulRenderTreeBuilder() )
    , m_treeMemPool( NULL )
    , m_debugScene( NULL )
    , m_renderingView( NULL )
@@ -28,6 +29,13 @@ EditorDebugRenderer::~EditorDebugRenderer()
 {
    delete m_renderTreeBuilder;
    m_renderTreeBuilder = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void EditorDebugRenderer::setHost( DebugEntitiesManager& host )
+{
+   m_host = &host;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -122,9 +130,10 @@ void EditorDebugRenderer::initialize( Renderer& renderer )
       m_debugScene->attach( *m_externalSceneViews[i] );
    }
 
-   // add the grid
+   // inform the host that the scene's been created and that it can add stuff to it
+   if ( m_host )
    {
-      m_debugScene->add( new DebugGrid() );
+      m_host->onDebugSceneCreated();
    }
 }
 
@@ -132,6 +141,12 @@ void EditorDebugRenderer::initialize( Renderer& renderer )
 
 void EditorDebugRenderer::deinitialize( Renderer& renderer )
 {
+   // inform the host that the scene's been created and that it can add stuff to it
+   if ( m_host )
+   {
+      m_host->onDebugSceneDestroyed();
+   }
+
    // detach external views
    uint count = m_externalSceneViews.size();
    for ( uint i = 0; i < count; ++i )

@@ -43,7 +43,19 @@ private:
    std::list<NodeObserver*>      m_observers;
 
 public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
    Node( const std::string& name );
+
+   /**
+    * Copy constructor.
+    *
+    * @param name
+    */
+   Node( const Node& rhs );
    virtual ~Node();
 
    /**

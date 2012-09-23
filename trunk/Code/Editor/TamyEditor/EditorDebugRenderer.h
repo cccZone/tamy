@@ -16,6 +16,7 @@ class Geometry;
 class MemoryPool;
 class Entity;
 class ModelView;
+class DebugEntitiesManager;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -27,6 +28,8 @@ class EditorDebugRenderer : public RenderingMechanism
 private:
    typedef Array< Geometry* >                      GeometryArray;
 
+   DebugEntitiesManager*                           m_host;
+
    StatefulRenderTreeBuilder*                      m_renderTreeBuilder;
    MemoryPool*                                     m_treeMemPool;
    Model*                                          m_debugScene;
@@ -34,13 +37,23 @@ private:
    GeometryArray*                                  m_visibleElems;
 
    Array< ModelView* >                             m_externalSceneViews;
+   Array< Entity* >                                m_entitiesToAdd;
 
 public:
    /**
     * Constructor.
+    *
+    * @param host
     */
    EditorDebugRenderer();
    ~EditorDebugRenderer();
+
+   /**
+    * Sets the host DebugEntitiesManager instance the state of this renderer is controlled by.
+    *
+    * @param host
+    */
+   void setHost( DebugEntitiesManager& host );
 
    /**
     * Adds a new entity for debug rendering.

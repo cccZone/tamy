@@ -24,6 +24,12 @@ public:
     * @param name    node name
     */
    SpatialEntity( const std::string& name = "" );
+
+   /**
+    * Copy constructor.
+    */
+   SpatialEntity( const SpatialEntity& rhs );
+
    virtual ~SpatialEntity();
 
 protected:

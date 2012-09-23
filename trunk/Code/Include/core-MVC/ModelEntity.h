@@ -28,6 +28,13 @@ public:
    ModelEntity( const std::string& name = "" );
 
    /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   ModelEntity( const ModelEntity& rhs );
+
+   /**
     * Constructor.
     *
     * @param model         model we want to embed

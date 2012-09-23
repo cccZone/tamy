@@ -30,7 +30,8 @@ Geometry::Geometry( const std::string& name )
 
 Geometry::Geometry( const Geometry& rhs )
    : SpatialEntity( rhs )
-   , m_globalBounds( new PointVolume( Vector( 0, 0, 0 ) ) )
+   , m_resource( rhs.m_resource )
+   , m_globalBounds( rhs.m_globalBounds->clone() )
 {
 }
 
@@ -84,9 +85,8 @@ void Geometry::addState( RenderState& state )
    {
       // add the state
       m_states.push_back( &state );
+      std::sort( m_states.begin(), m_states.end(), StateComparator() );
    }
-
-   std::sort( m_states.begin(), m_states.end(), StateComparator() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -155,6 +155,7 @@ void Geometry::onChildAttached( Entity& child )
 {
    __super::onChildAttached( child );
 
+   // !!! TODO: dynamic cast
    RenderState* renderState = dynamic_cast< RenderState* >( &child );
    if ( renderState )
    {

@@ -32,6 +32,13 @@ public:
    DebugGrid();
    ~DebugGrid();
 
+   /**
+    * Shows/hides the grid.
+    *
+    * @param enable
+    */
+   void show( bool enable );
+
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------

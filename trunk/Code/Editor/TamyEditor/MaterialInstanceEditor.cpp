@@ -8,12 +8,21 @@
 #include "MaterialTexturePanel.h"
 #include "ColorFrame.h"
 #include "core-Renderer.h"
+#include "core-MVC/Model.h"
+#include "core-MVC/ModelEntity.h"
+
+// scene widget
+#include "TamySceneWidget.h"
+#include "DebugEntitiesManager.h"
+#include "tamyeditor.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialInstanceEditor::MaterialInstanceEditor( MaterialInstance& materialInstance )
    : m_materialInstance( materialInstance )
+   , m_previewScene( NULL )
+   , m_sceneWidget( NULL )
 {
 }
 
@@ -45,6 +54,49 @@ void MaterialInstanceEditor::onInitialize()
 
    // create the material preview
    {
+      FilePath matPreviewPipeline( "/Editor/MaterialInstanceEditor/Pipeline/renderingPipeline.trp" );
+      TamyEditor& mainEditor = TamyEditor::getInstance();
+      m_sceneWidget = new TamySceneWidget( m_ui.materialPreviewFrame, 0, matPreviewPipeline, mainEditor.getTimeController() );
+      m_ui.materialPreviewFrame->layout()->addWidget( m_sceneWidget );
+
+      // disable all debug rendering features
+      m_sceneWidget->getDebugEntitiesManager().disableAll();
+      m_sceneWidget->getDebugEntitiesManager().showGrid( false );
+
+      // load the debug scene
+      m_previewScene = new Model( FilePath() );
+      m_sceneWidget->setScene( *m_previewScene );
+
+      // add the preview scene template setting
+      FilePath previewScenePath( "/Editor/MaterialInstanceEditor/Scenes/scene.tsc" );
+      Model* previewSceneTemplate = resourceMgr.create< Model >( previewScenePath, true );
+      if ( previewSceneTemplate )
+      {
+         m_previewScene->add( new ModelEntity( *previewSceneTemplate, "sceneTemplate" ) );
+      }
+      
+      // create an object we're gonna display the material on
+      FilePath sphereMeshPath( "/Editor/MaterialInstanceEditor/Meshes/sphere_0.ttm" );
+      TriangleMesh* sphereMesh = resourceMgr.create< TriangleMesh >( sphereMeshPath, true );
+      if ( sphereMesh )
+      {
+         StaticGeometry* materialSphere = new StaticGeometry( *sphereMesh, "SphereMesh" );
+
+         MaterialEntity* materialEntity = new MaterialEntity( "SphereMaterial" );
+         materialEntity->setMaterial( &m_materialInstance );
+         materialSphere->add( materialEntity );
+
+         m_previewScene->add( materialSphere );
+      }
+
+      // position the camera correctly
+      Camera& camera = m_sceneWidget->getCamera();
+      Matrix& localMtx = camera.accessLocalMtx();
+      localMtx.setRows( 
+         Vector( 0.69716400f, 0.0f, 0.71691173f, 0.0f ),
+         Vector( -0.35515326f, 0.86866885f, 0.34537038f, 0.0f ), 
+         Vector( -0.62275887f, -0.49539331f, 0.60560459f, 0.0f ), 
+         Vector( 2.7717988, 1.9607872, -2.4661171, 1.0f ) );
    }
 
    // create a properties browser for the material properties
@@ -130,6 +182,16 @@ void MaterialInstanceEditor::onInitialize()
 
 void MaterialInstanceEditor::onDeinitialize( bool saveProgress )
 {
+   if ( m_sceneWidget )
+   {
+      m_sceneWidget->clearScene();
+   }
+
+   if ( m_previewScene )
+   {
+      m_previewScene->removeReference();
+   }
+   m_previewScene = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
