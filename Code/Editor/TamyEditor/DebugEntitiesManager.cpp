@@ -4,6 +4,7 @@
 #include "core.h"
 
 // debug representations
+#include "DebugGrid.h"
 #include "DRDirectionalLight.h"
 #include "DRPointLight.h"
 #include "DRGeometry.h"
@@ -20,7 +21,10 @@ END_ENUM();
 
 DebugEntitiesManager::DebugEntitiesManager( EditorDebugRenderer& debugRenderer )
    : m_debugRenderer( debugRenderer )
+   , m_debugGrid( new DebugGrid() )
 {
+   debugRenderer.setHost( *this );
+
    // set debug features
    m_debugFeatureEnabled = new bool[MAX_DEBUG_FEATURES];
    memset( m_debugFeatureEnabled, 0, sizeof( bool ) * MAX_DEBUG_FEATURES );
@@ -38,6 +42,9 @@ DebugEntitiesManager::DebugEntitiesManager( EditorDebugRenderer& debugRenderer )
 DebugEntitiesManager::~DebugEntitiesManager()
 {
    resetContents();
+
+   delete m_debugGrid;
+   m_debugGrid = NULL;
 
    delete [] m_debugFeatureEnabled;
    m_debugFeatureEnabled = NULL;
@@ -58,6 +65,31 @@ bool DebugEntitiesManager::toggleDebugDisplay( DebugFeature flag )
    }
 
    return m_debugFeatureEnabled[flag];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DebugEntitiesManager::disableAll()
+{
+   memset( m_debugFeatureEnabled, 0, sizeof( bool ) * MAX_DEBUG_FEATURES );
+
+   uint count = m_representations.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      DebugGeometry* representation = m_representations[i];
+
+      for ( uint featIdx = 0; featIdx < MAX_DEBUG_FEATURES; ++featIdx )
+      {
+         applyFeature( representation, (DebugFeature)featIdx );
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DebugEntitiesManager::showGrid( bool enable )
+{
+   m_debugGrid->show( enable );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -172,6 +204,23 @@ void DebugEntitiesManager::applyFeature( DebugGeometry* representation, DebugFea
          break;
       }
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DebugEntitiesManager::onDebugSceneCreated()
+{
+   // add debug grid
+   m_debugRenderer.add( *m_debugGrid );
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void DebugEntitiesManager::onDebugSceneDestroyed()
+{
+   // remove debug grid
+   m_debugRenderer.remove( *m_debugGrid );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

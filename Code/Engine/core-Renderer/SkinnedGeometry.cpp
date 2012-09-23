@@ -30,6 +30,17 @@ SkinnedGeometry::SkinnedGeometry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+SkinnedGeometry::SkinnedGeometry( const SkinnedGeometry& rhs )
+   : Geometry( rhs )
+   , m_skeleton( m_skeleton )
+   , m_vertexShader( m_vertexShader )
+   , m_vol( new AABoundingBox() )
+{
+   initialize();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 SkinnedGeometry::SkinnedGeometry( GeometryResource& geometry, Skeleton& skeleton )
    : Geometry( geometry )
    , m_skeleton( &skeleton )

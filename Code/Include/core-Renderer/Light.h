@@ -33,6 +33,14 @@ public:
     * @param name
     */
    Light( LightType type, const std::string& name = "" );
+
+   /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   Light( const Light& rhs );
+
    virtual ~Light() {}
 
    /**
@@ -51,6 +59,12 @@ public:
     * Tells if the light is set to cast shadows.
     */
    inline bool castsShadows() const { return m_castsShadows; }
+
+protected:
+   // -------------------------------------------------------------------------
+   // Entity implementation
+   // -------------------------------------------------------------------------
+   Entity* cloneSelf() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

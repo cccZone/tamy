@@ -25,6 +25,15 @@ StaticGeometry::StaticGeometry( const char* name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+StaticGeometry::StaticGeometry( const StaticGeometry& rhs )
+   : Geometry( rhs )
+   , m_vertexShader( m_vertexShader )
+{
+   initialize();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 StaticGeometry::StaticGeometry( GeometryResource& resource, const char* name  )
    : Geometry( resource, name != NULL ? name : "" )
    , m_vertexShader( NULL )

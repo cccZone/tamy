@@ -26,6 +26,16 @@ GeometryEntity::GeometryEntity( const std::string& name )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+GeometryEntity::GeometryEntity( const GeometryEntity& rhs )
+   : Geometry( rhs )
+   , m_geometryShader( rhs.m_geometryShader )
+   , m_dataBuf( NULL )
+   , m_vsNode( NULL )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 GeometryEntity::~GeometryEntity()
 {
    deinitializeGeometryShader();

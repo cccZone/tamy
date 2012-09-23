@@ -88,3 +88,17 @@ void DebugGrid::onPostRender( Renderer& renderer )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+void DebugGrid::show( bool enable )
+{
+   if ( enable )
+   {
+      addState( *m_material );
+   }
+   else
+   {
+      removeState( *m_material );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

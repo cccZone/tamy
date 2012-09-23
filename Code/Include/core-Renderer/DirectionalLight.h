@@ -31,7 +31,25 @@ public:
    float                m_strength;
 
 public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
    DirectionalLight( const std::string& name = "" );
+
+   /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   DirectionalLight( const DirectionalLight& rhs );
+
+protected:
+   // -------------------------------------------------------------------------
+   // Entity implementation
+   // -------------------------------------------------------------------------
+   Entity* cloneSelf() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

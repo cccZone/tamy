@@ -21,3 +21,20 @@ DirectionalLight::DirectionalLight( const std::string& name )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+DirectionalLight::DirectionalLight( const DirectionalLight& rhs )
+   : Light( rhs )
+   , m_color( rhs.m_color )
+   , m_strength( rhs.m_strength )
+{
+   setBoundingVolume( new BoundingSpace() ); 
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Entity* DirectionalLight::cloneSelf() const
+{
+   return new DirectionalLight( *this );
+}
+
+///////////////////////////////////////////////////////////////////////////////

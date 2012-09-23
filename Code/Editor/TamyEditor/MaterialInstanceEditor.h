@@ -17,6 +17,8 @@ class ResourceDropArea;
 class ColorFrame;
 class QDoubleSpinBox;
 enum MaterialTextures;
+class TamySceneWidget;
+class Model;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -31,6 +33,9 @@ private:
    Ui::MaterialInstanceEditor                m_ui;
 
    MaterialInstance&                         m_materialInstance;
+
+   Model*                                    m_previewScene;
+   TamySceneWidget*                          m_sceneWidget;
 
    ResourceDropArea*                         m_materialRendererPath;
    ColorFrame*                               m_ambientColor;

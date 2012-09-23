@@ -22,8 +22,23 @@ public:
 public:
    /**
     * Constructor.
+    *
+    * @param name
     */
    AmbientLight( const std::string& name = "" );
+
+   /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   AmbientLight( const AmbientLight& rhs );
+
+protected:
+   // -------------------------------------------------------------------------
+   // Entity implementation
+   // -------------------------------------------------------------------------
+   Entity* cloneSelf() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -32,6 +32,13 @@ public:
    StaticGeometry( const char* name = NULL );
 
    /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   StaticGeometry( const StaticGeometry& rhs );
+
+   /**
     * Constructor.
     *
     * @param resource   shared geometry resource

@@ -22,6 +22,13 @@ public:
     * @param boneName
     */
    BoneEntity( const std::string& boneName = "" );
+
+   /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   BoneEntity( const BoneEntity& rhs );
    ~BoneEntity();
 
 protected:

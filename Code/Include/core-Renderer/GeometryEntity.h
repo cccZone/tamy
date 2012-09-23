@@ -42,6 +42,13 @@ public:
     * @param name
     */
    GeometryEntity( const std::string& name = "" );
+
+   /**
+    * Copy constructor.
+    *
+    * @param rhs
+    */
+   GeometryEntity( const GeometryEntity& rhs );
    ~GeometryEntity();
 
    /**
