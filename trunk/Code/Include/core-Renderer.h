@@ -148,9 +148,10 @@
 #include "core-Renderer\Texture.h"
 #include "core-Renderer\PixelShader.h"
 // ----------------------------------------------------------------------------
-// --> Methods
+// --> RenderingPipelineNodes
 // ----------------------------------------------------------------------------
 #include "core-Renderer\RPSceneRenderNode.h"
+#include "core-Renderer\RPMaterialsDBNode.h"
 // ----------------------------------------------------------------------------
 // --> MaterialsDB
 // ----------------------------------------------------------------------------
@@ -177,6 +178,7 @@
 #include "core-Renderer\RenderingPipelineNode.h"
 #include "core-Renderer\RenderingPipelineMechanism.h"
 #include "core-Renderer\RenderingPipelineSockets.h"
+#include "core-Renderer\RenderingPipelineTransaction.h"
 #include "core-Renderer\RenderTargetDescriptor.h"
 #include "core-Renderer\DepthBufferDescriptor.h"
 // ----------------------------------------------------------------------------

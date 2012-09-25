@@ -133,6 +133,7 @@
     <ClCompile Include="RenderingPipelineNode.cpp" />
     <ClCompile Include="RenderingPipelineMechanism.cpp" />
     <ClCompile Include="RenderingPipelineSockets.cpp" />
+    <ClCompile Include="RenderingPipelineTransaction.cpp" />
     <ClCompile Include="RenderResource.cpp" />
     <ClCompile Include="RenderTargetDescriptor.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
@@ -144,6 +145,7 @@
     <ClCompile Include="RPFloatNode.cpp" />
     <ClCompile Include="RPFloats2Vec4Node.cpp" />
     <ClCompile Include="RPDeferredLightingNode.cpp" />
+    <ClCompile Include="RPMaterialsDBNode.cpp" />
     <ClCompile Include="RPPostProcessNode.cpp" />
     <ClCompile Include="RPPreviewNode.cpp" />
     <ClCompile Include="RPSceneRenderNode.cpp" />
@@ -251,6 +253,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineMechanism.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineTransaction.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderResource.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderResourceStorage.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RenderState.h" />
@@ -264,6 +267,7 @@
     <ClInclude Include="..\..\Include\core-Renderer\RPFloatNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPFloats2Vec4Node.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPDeferredLightingNode.h" />
+    <ClInclude Include="..\..\Include\core-Renderer\RPMaterialsDBNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPPreviewNode.h" />
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h" />

@@ -93,7 +93,7 @@ void DX9Renderer::initRenderer()
 
 /////////////////////////////////////////////////////////////////////////////
 
-void DX9Renderer::resetViewport(unsigned int width, unsigned int height)
+void DX9Renderer::resetViewport( unsigned int width, unsigned int height )
 {
    if ((m_d3Device) && (m_creationParams.Windowed == TRUE))
    {
@@ -134,6 +134,49 @@ void DX9Renderer::resetViewport(unsigned int width, unsigned int height)
 
    // reinitialize the device
    initRenderer();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+void DX9Renderer::resizeViewport( unsigned int width, unsigned int height )
+{
+   // Store new sizes
+   m_creationParams.BackBufferWidth = width;
+   m_creationParams.BackBufferHeight = height;
+
+   m_viewport.X = 0;
+   m_viewport.Y = 0;
+   m_viewport.Width = width;
+   m_viewport.Height = height;
+   m_viewport.MinZ = 0.0f;
+   m_viewport.MaxZ = 1.0f;
+
+   // notify the storages about lost device context
+   unsigned int count = m_storages.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      m_storages[i]->onDeviceLost();
+   }
+
+   // Reset the device
+   D3DPRESENT_PARAMETERS creationParams = m_creationParams;
+   if (creationParams.Windowed) {creationParams.BackBufferFormat = D3DFMT_UNKNOWN;}
+   creationParams.BackBufferCount = 0;
+   creationParams.BackBufferWidth = 0;
+   creationParams.BackBufferHeight = 0;
+   if ( FAILED( m_d3Device->Reset( &creationParams ) ) )
+   {
+      ASSERT_MSG( false, "Could not reset the graphical device" );
+      return;
+   }
+   m_creationParams = creationParams;
+
+   // notify the storages about lost device context
+   count = m_storages.size();
+   for ( unsigned int i = 0; i < count; ++i )
+   {
+      m_storages[i]->onDeviceRestored();
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////

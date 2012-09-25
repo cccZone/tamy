@@ -4,6 +4,7 @@
 
 #include "core/Resource.h"
 #include "core/GraphBuilder.h"
+#include "core/GraphBuilderTransaction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,6 +28,14 @@ public:
     */
    Material( const FilePath& resourceName = FilePath() );
    ~Material();
+
+   // -------------------------------------------------------------------------
+   // GraphBuilder implementation
+   // -------------------------------------------------------------------------
+   /**
+    * Creates a transaction that will change this graph builder instance.
+    */
+   static GraphBuilderTransaction< Material, MaterialNode >* createTransaction() { return new GraphBuilderTransaction< Material, MaterialNode >(); }
 
    // -------------------------------------------------------------------------
    // Resource implementation

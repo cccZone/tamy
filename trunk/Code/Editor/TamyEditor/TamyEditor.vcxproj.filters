@@ -575,6 +575,9 @@
     <ClInclude Include="GeneratedFiles\ui_materialinstanceeditor.h">
       <Filter>QtImplementation\Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="RPBMaterialsDB.h">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\SceneRendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_tamyeditor.cpp">
@@ -1384,6 +1387,9 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Template\moc_MaterialTexturePanel.cpp">
       <Filter>QtImplementation\Generated Files\Template</Filter>
+    </ClCompile>
+    <ClCompile Include="RPBMaterialsDB.cpp">
+      <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\SceneRendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

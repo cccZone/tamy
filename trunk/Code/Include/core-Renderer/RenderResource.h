@@ -24,6 +24,7 @@ private:
    std::vector< IRenderResourceStorage* >    m_hostStorage;
    std::vector< int >                        m_resourceId;
    std::vector< bool >                       m_dirtyFlag;
+   mutable std::vector< bool >               m_freshDataNeededFlag;
 
 public:
    virtual ~RenderResource();
@@ -53,14 +54,42 @@ public:
    // Runtime change management
    // -------------------------------------------------------------------------
    /**
+    * [Application ---> Implementation]
     * Checks if the resource changed and its particular implementation needs to be refreshed.
     *
     * @param renderer
     */
    bool isDirty( const Renderer& renderer );
 
+   /**
+    * [Implementation ---> Application] 
+    * Marks the resource refreshed after one of its implementation's contents were destroyed.
+    *
+    * @param renderer
+    */
+   void markRefreshed( Renderer& renderer );
+
+   /**
+    * [Implementation ---> Application] 
+    * Checks if the particular buffer needs its data refreshed.
+    *
+    * Some may have had their implementations destroyed when a device was lost etc.
+    * and ones containing rarely refreshed data ( such as lightmaps or material description textures )
+    * will need to be refreshed once that happens
+    */
+   bool needsRefreshing( Renderer& renderer );
+
+   /**
+    * [Implementation ---> Application] 
+    * Communicates the fact that one of the render target's implementations was recreated
+    * and probably needs to be refreshed ( if anyone cares ).
+    */
+   void markNotFresh( const Renderer& renderer ) const;
+
+
 protected:
    /**
+    * [Application ---> Implementation]  
     * Indicates that the resource changed and the implementations should be refreshed.
     */
    void setDirty();

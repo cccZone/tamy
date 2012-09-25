@@ -29,6 +29,7 @@ REGISTER_TYPE( GraphBlockConnection );
 #include "RPBDeferredLighting.h"
 #include "RPBLightIndices.h"
 #include "RPBPreview.h"
+#include "RPBMaterialsDB.h"
 #include "RenderingPipelineLayout.h"
 
 REGISTER_TYPE( RPBPostProcess );
@@ -51,6 +52,7 @@ REGISTER_TYPE( RPBVec4 );
 REGISTER_TYPE( RPBDeferredLighting );
 REGISTER_TYPE( RPBLightIndices );
 REGISTER_TYPE( RPBPreview );
+REGISTER_TYPE( RPBMaterialsDB );
 REGISTER_TYPE( RenderingPipelineLayout );
 
 ///////////////////////////////////////////////////////////////////////////////

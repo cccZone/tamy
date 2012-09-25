@@ -678,6 +678,9 @@
     <ClInclude Include="..\..\Include\core\GraphBuilderNodeUtils.h">
       <Filter>DataStructures\DataPipeline</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\GraphBuilderTransaction.h">
+      <Filter>DataStructures\DataPipeline</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\GenericFactory.inl">
@@ -834,6 +837,9 @@
       <Filter>Math</Filter>
     </None>
     <None Include="..\..\Include\core\GraphBuilderNodeUtils.inl">
+      <Filter>DataStructures\DataPipeline</Filter>
+    </None>
+    <None Include="..\..\Include\core\GraphBuilderTransaction.inl">
       <Filter>DataStructures\DataPipeline</Filter>
     </None>
   </ItemGroup>

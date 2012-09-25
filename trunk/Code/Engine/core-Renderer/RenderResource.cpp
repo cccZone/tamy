@@ -27,6 +27,7 @@ int RenderResource::getRenderResourceId( const Renderer& renderer )
       m_resourceId.resize( rendererId + 1, -1 );
       m_hostStorage.resize( rendererId + 1, NULL );
       m_dirtyFlag.resize( rendererId + 1, false );
+      m_freshDataNeededFlag.resize( rendererId + 1, false );
    }
 
    return m_resourceId[ rendererId ];
@@ -45,11 +46,16 @@ void RenderResource::setRenderResourceId( const Renderer& renderer, IRenderResou
       // we're not setting the dirty flag at the beginning - it's a user mechanism, not something mandatory,
       // and besides, each newly created implementation should initialize itself at start
       m_dirtyFlag.resize( rendererId + 1, false );
+
+      m_freshDataNeededFlag.resize( rendererId + 1, false );
    }
 
    m_hostStorage[ rendererId ] = &hostStorage;
    m_resourceId[ rendererId ] = id;
    m_dirtyFlag[ rendererId ] = false;
+
+   // the first time we create a resource, it always needs fresh data
+   m_freshDataNeededFlag[ rendererId ] = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,6 +96,45 @@ bool RenderResource::isDirty( const Renderer& renderer )
    else
    {
       return false;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderResource::markRefreshed( Renderer& renderer )
+{
+   unsigned int rendererId = renderer.getIndex();
+   if ( rendererId < m_resourceId.size() )
+   {
+      m_freshDataNeededFlag[rendererId] = false;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool RenderResource::needsRefreshing( Renderer& renderer )
+{
+   unsigned int rendererId = renderer.getIndex();
+   if ( rendererId < m_resourceId.size() )
+   {
+      return m_freshDataNeededFlag[rendererId];
+   }
+   else
+   {
+      // at this point the resource doesn't have an implementation,
+      // so there's no point in 'refreshing' its contents
+      return false;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderResource::markNotFresh( const Renderer& renderer ) const
+{
+   unsigned int rendererId = renderer.getIndex();
+   if ( rendererId < m_resourceId.size() )
+   {
+      m_freshDataNeededFlag[rendererId] = true;
    }
 }
 

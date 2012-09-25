@@ -238,7 +238,8 @@ public:
    void endScene();
 
 protected:
-   void resetViewport(unsigned int width, unsigned int height);
+   void resetViewport( unsigned int width, unsigned int height );
+   void resizeViewport( unsigned int width, unsigned int height );
    void renderingBegin();
    void renderingEnd();
    bool isGraphicsSystemReady() const;

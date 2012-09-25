@@ -21,7 +21,7 @@
 #include "core\GraphBuilder.h"
 #include "core\GraphBuilderNode.h"
 #include "core\GraphBuilderSockets.h"
-
+#include "core\GraphBuilderTransaction.h"
 // ----------------------------------------------------------------------------
 // Delegates
 // ----------------------------------------------------------------------------

@@ -165,7 +165,7 @@ TamyEditor::~TamyEditor()
       ResourceEditor* editor = editors[i];
       if ( editor )
       {
-         editor->deinitialize( true );
+         editor->deinitialize( false );
       }
       delete editor;
    }

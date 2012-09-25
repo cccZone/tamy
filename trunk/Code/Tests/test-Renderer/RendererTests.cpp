@@ -59,6 +59,8 @@ namespace // anonymous
    protected:
       void resetViewport(unsigned int width, unsigned int height) {m_seqLog.push_back("Renderer - resetViewport");}
 
+      void resizeViewport( unsigned int width, unsigned int height ) {}
+
       void renderingBegin() {m_seqLog.push_back("Renderer - begin");}
 
       void renderingEnd() {m_seqLog.push_back("Renderer - end");}

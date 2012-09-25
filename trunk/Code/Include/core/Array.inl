@@ -143,7 +143,7 @@ void Array< T, TAllocator >::allocate(unsigned int newSize)
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T, typename TAllocator >
-void Array< T, TAllocator >::resize(unsigned int newSize, const T& defaultValue = 0)
+void Array< T, TAllocator >::resize(unsigned int newSize, const T& defaultValue )
 {
    allocate(newSize);
 

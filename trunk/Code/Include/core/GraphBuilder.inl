@@ -25,14 +25,26 @@ GraphBuilder< Impl, NodeType >::~GraphBuilder()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Impl, typename NodeType >
-void GraphBuilder< Impl, NodeType >::addNode( NodeType* node )
+void GraphBuilder< Impl, NodeType >::notifyPreChange()
 {
    notify( GBO_PRE_CHANGE );
+}
 
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl, typename NodeType >
+void GraphBuilder< Impl, NodeType >::notifyPostChange()
+{
+   notify( GBO_POST_CHANGE );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl, typename NodeType >
+void GraphBuilder< Impl, NodeType >::addNode( NodeType* node )
+{
    onNodeAdded( node );
    m_nodes.push_back( node );
-
-   notify( GBO_POST_CHANGE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,8 +59,6 @@ void GraphBuilder< Impl, NodeType >::removeNode( NodeType& node )
       return;
    }
    
-   notify( GBO_PRE_CHANGE );
-
    // remove the node from the graph
    NodeType* removedNode = *it;
    m_nodes.erase( it );
@@ -65,7 +75,6 @@ void GraphBuilder< Impl, NodeType >::removeNode( NodeType& node )
 
    // send notifications
    onNodeRemoved( node );
-   notify( GBO_POST_CHANGE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

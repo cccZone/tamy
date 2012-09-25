@@ -1,6 +1,7 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core\Graph.h"
 #include "core\GraphBuilder.h"
+#include "core\GraphBuilderTransaction.h"
 #include "core\GraphAlgorithms.h"
 
 
@@ -121,10 +122,11 @@ TEST( GraphBuilderInstantiation, simpleGraph )
    GraphBuilderMock builder;
 
    GBMockNode* node[] = { new GBMStartNode( 0 ), new GBMUtilNode( 1 ), new GBMEndNode( 2 ) };
-
-   builder.addNode( node[0] );
-   builder.addNode( node[1] );
-   builder.addNode( node[2] );
+   GraphBuilderTransaction< GraphBuilderMock, GBMockNode > transaction;
+   transaction.addNode( node[0] );
+   transaction.addNode( node[1] );
+   transaction.addNode( node[2] );
+   transaction.commit( builder );
 
    node[0]->connect( "Output", *node[1], "Input" );
    node[1]->connect( "Output", *node[2], "Input" );

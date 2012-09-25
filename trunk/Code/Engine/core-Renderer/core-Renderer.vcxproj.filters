@@ -103,9 +103,6 @@
     <Filter Include="Lighting\Methods\Indexed\LightRenderers">
       <UniqueIdentifier>{3afa97b1-916f-4572-a5ba-9fadf6a1e005}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Materials\Methods">
-      <UniqueIdentifier>{86b65416-d280-4be8-a65c-b5e711eac7d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="OverlayRenderer">
       <UniqueIdentifier>{b356757b-adc7-4be2-a1ed-247c79d751d8}</UniqueIdentifier>
     </Filter>
@@ -141,6 +138,9 @@
     </Filter>
     <Filter Include="Materials\MaterialRendererGraph\Nodes">
       <UniqueIdentifier>{01a3a4f1-9e01-4da8-85f4-d33414f68935}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Materials\RenderingPipelineNodes">
+      <UniqueIdentifier>{86b65416-d280-4be8-a65c-b5e711eac7d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -431,7 +431,7 @@
       <Filter>Lighting\Methods\Indexed</Filter>
     </ClCompile>
     <ClCompile Include="RPSceneRenderNode.cpp">
-      <Filter>Materials\Methods</Filter>
+      <Filter>Materials\RenderingPipelineNodes</Filter>
     </ClCompile>
     <ClCompile Include="MNMaterialIndex.cpp">
       <Filter>Materials\MaterialRendererGraph\Nodes</Filter>
@@ -441,6 +441,12 @@
     </ClCompile>
     <ClCompile Include="MaterialsDB.cpp">
       <Filter>Materials\MaterialsDB</Filter>
+    </ClCompile>
+    <ClCompile Include="RPMaterialsDBNode.cpp">
+      <Filter>Materials\RenderingPipelineNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingPipelineTransaction.cpp">
+      <Filter>RenderingPipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -842,7 +848,7 @@
       <Filter>Lighting\Methods\Indexed</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPSceneRenderNode.h">
-      <Filter>Materials\Methods</Filter>
+      <Filter>Materials\RenderingPipelineNodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MNMaterialIndex.h">
       <Filter>Materials\MaterialRendererGraph\Nodes</Filter>
@@ -852,6 +858,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MaterialsDB.h">
       <Filter>Materials\MaterialsDB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RPMaterialsDBNode.h">
+      <Filter>Materials\RenderingPipelineNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineTransaction.h">
+      <Filter>RenderingPipeline</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

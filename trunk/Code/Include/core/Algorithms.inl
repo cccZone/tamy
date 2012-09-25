@@ -76,7 +76,7 @@ float mag( T value )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-float min2( T val1, T val2 )
+T min2( T val1, T val2 )
 {
    return val1 < val2 ? val1 : val2;
 }
@@ -84,7 +84,7 @@ float min2( T val1, T val2 )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T >
-float max2( T val1, T val2 )
+T max2( T val1, T val2 )
 {
    return val1 > val2 ? val1 : val2;
 }

@@ -4,6 +4,7 @@
 
 #include "core/Resource.h"
 #include "core/GraphBuilder.h"
+#include "core/GraphBuilderTransaction.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -26,6 +27,14 @@ public:
     */
    GeometryShader( const FilePath& resourceName = FilePath() );
    ~GeometryShader();
+
+   // -------------------------------------------------------------------------
+   // GraphBuilder implementation
+   // -------------------------------------------------------------------------
+   /**
+    * Creates a transaction that will change this graph builder instance.
+    */
+   static GraphBuilderTransaction< GeometryShader, GeometryShaderNode >* createTransaction() { return new GraphBuilderTransaction< GeometryShader, GeometryShaderNode >(); }
 
    // -------------------------------------------------------------------------
    // Resource implementation

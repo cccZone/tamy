@@ -18,6 +18,8 @@ namespace // anonymous
    protected:
       void resetViewport( unsigned int width, unsigned int height ) {}
 
+      void resizeViewport( unsigned int width, unsigned int height ) {}
+
       void renderingBegin() {}
 
       void renderingEnd() {}

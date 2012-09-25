@@ -288,6 +288,15 @@ protected:
    virtual void resetViewport(unsigned int width, unsigned int height) = 0;
 
    /**
+    * This method sets the implementation-dependent details of the used viewport
+    *
+    * When it's called, the viewport-size dependent objects need to be rebuilt.
+    *
+    * It should perform all the required initialization to get the device ready for rendering.
+    */
+   virtual void resizeViewport(unsigned int width, unsigned int height) = 0;
+
+   /**
     * The method opens up the rendering conduct
     */
    virtual void renderingBegin() = 0;

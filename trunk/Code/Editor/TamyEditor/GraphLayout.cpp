@@ -40,6 +40,8 @@ GraphBlock& GraphLayout::add( const SerializableReflectionType& type, const QPoi
    addItem( block );
    block->setPos( pos );
 
+   emit onBlockAdded();
+
    return *block;
 }
 
@@ -74,6 +76,8 @@ void GraphLayout::remove( GraphBlock* block )
    {
       ASSERT_MSG( false, "The specified block doesn't belong to this layout" );
    }
+
+   emit onBlockRemoved();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

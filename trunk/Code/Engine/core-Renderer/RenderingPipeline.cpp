@@ -3,6 +3,7 @@
 #include "core-Renderer/RenderTargetDescriptor.h"
 #include "core-Renderer/DepthBufferDescriptor.h"
 #include "core-Renderer/RenderingPipelineMechanism.h"
+#include "core-Renderer/RenderingPipelineTransaction.h"
 #include "core-Renderer/RPStartNode.h"
 #include <algorithm>
 #include "core/Algorithms.h"
@@ -31,9 +32,19 @@ RenderingPipeline::~RenderingPipeline()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+GraphBuilderTransaction< RenderingPipeline, RenderingPipelineNode >* RenderingPipeline::createTransaction()
+{
+   return new RenderingPipelineTransaction();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void RenderingPipeline::onNodeAdded( RenderingPipelineNode* node )
 {
-   addObject( node );
+   if ( node )
+   {
+      addObject( node );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,28 +56,19 @@ void RenderingPipeline::onNodeRemoved( RenderingPipelineNode& node )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool RenderingPipeline::addRenderTarget( RenderTargetDescriptor* descriptor )
+void RenderingPipeline::addRenderTarget( RenderTargetDescriptor* descriptor )
 {
-   if ( descriptor == NULL )
-   {
-      ASSERT_MSG( descriptor != NULL, "NULL pointer specified instead a valid render target descriptor" );
-      return false;
-   }
+   ASSERT_MSG( descriptor != NULL, "NULL pointer specified instead a valid render target descriptor" );
 
    // check if the specified render target doesn't share an id with already registered one
    RenderTargetDescriptor* existingDescriptor = findRenderTarget( descriptor->getTargetID() );
    if ( existingDescriptor != NULL )
    {
-      ASSERT_MSG( descriptor == NULL, "The specified descriptor has an ID used by another render target." );
       delete descriptor;
-      return false;
+      return;
    }
 
-   notify( GBO_PRE_CHANGE );
    m_renderTargets.push_back( descriptor );  
-   notify( GBO_POST_CHANGE );
-
-   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,12 +80,9 @@ void RenderingPipeline::removeRenderTarget( const std::string& id )
    {
       if ( m_renderTargets[i]->getTargetID() == id )
       {
-         notify( GBO_PRE_CHANGE );
-
          delete m_renderTargets[i];
          m_renderTargets.erase( m_renderTargets.begin() + i );
 
-         notify( GBO_POST_CHANGE );
          break;
       }
    }
@@ -157,28 +156,19 @@ void RenderingPipeline::unlockRenderTarget( const std::string& id )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool RenderingPipeline::addDepthBuffer( DepthBufferDescriptor* descriptor )
+void RenderingPipeline::addDepthBuffer( DepthBufferDescriptor* descriptor )
 {
-   if ( descriptor == NULL )
-   {
-      ASSERT_MSG( descriptor != NULL, "NULL pointer specified instead a valid depth buffer descriptor" );
-      return false;
-   }
+   ASSERT_MSG( descriptor != NULL, "NULL pointer specified instead a valid depth buffer descriptor" );
 
    // check if the specified depth buffer doesn't share an id with already registered one
    DepthBufferDescriptor* existingDescriptor = findDepthBuffer( descriptor->getID() );
    if ( existingDescriptor != NULL )
    {
-      ASSERT_MSG( descriptor == NULL, "The specified descriptor has an ID used by another depth buffer." );
       delete descriptor;
-      return false;
+      return;
    }
 
-   notify( GBO_PRE_CHANGE );
    m_depthBuffers.push_back( descriptor );  
-   notify( GBO_POST_CHANGE );
-
-   return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -190,12 +180,8 @@ void RenderingPipeline::removeDepthBuffer( const std::string& id )
    {
       if ( m_depthBuffers[i]->getID() == id )
       {
-         notify( GBO_PRE_CHANGE );
-
          delete m_depthBuffers[i];
          m_depthBuffers.erase( m_depthBuffers.begin() + i );
-
-         notify( GBO_POST_CHANGE );
          break;
       }
    }

@@ -77,7 +77,12 @@ GraphBlock* PipelineLayout< TPipeline, TNode >::createNode( const SerializableRe
    TNode* node = type.instantiate< TNode >();
    PipelineBlock* block = create( *node );
    initSocketsFactory( *block );
-   m_pipeline->addNode( node );
+
+   GraphBuilderTransaction< TPipeline, TNode >* transaction = TPipeline::createTransaction();
+   transaction->addNode( node );
+   transaction->commit( *m_pipeline );
+   delete transaction;
+
    block->initialize();
 
    return block;
@@ -91,7 +96,10 @@ void PipelineLayout< TPipeline, TNode >::removeNode( ReflectionObject& node )
    TNode* rpNode = dynamic_cast< TNode* >( &node );
    ASSERT_MSG( rpNode != NULL, "Attempting to remove a node that's not a GraphBuilderNode" );
 
-   m_pipeline->removeNode( *rpNode );
+   GraphBuilderTransaction< TPipeline, TNode >* transaction = TPipeline::createTransaction();
+   transaction->removeNode( *rpNode );
+   transaction->commit( *m_pipeline );
+   delete transaction;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
