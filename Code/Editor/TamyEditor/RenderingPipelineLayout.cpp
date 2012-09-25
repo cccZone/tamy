@@ -16,6 +16,7 @@
 #include "RPBDeferredLighting.h"
 #include "RPBLightIndices.h"
 #include "RPBPreview.h"
+#include "RPBMaterialsDB.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,6 +53,7 @@ void RenderingPipelineLayout::initBlocksFactory()
    associate< RPDeferredLightingNode, RPBDeferredLighting >();
    associate< RPLightIndicesNode, RPBLightIndices >();
    associate< RPPreviewNode, RPBPreview >();
+   associate< RPMaterialsDBNode, RPBMaterialsDB >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

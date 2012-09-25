@@ -9,7 +9,9 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+class RenderingPipeline;
 class RenderingPipelineMechanism;
+class RenderingPipelineTransaction;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -52,12 +54,33 @@ public:
     */
    GBNodeInput< RenderingPipelineNode >* createInput( const ReflectionType& dataType, const std::string& name ) const;
 
+   /**
+    * Called when a node is added to the pipeline. It allows the node
+    * to create all necessary render targets, depth buffers and other 
+    * static resources it needs in order to work without bothering the user.
+    *
+    * Those resources however will be publicly accessible, so if the user wants,
+    * he can later on go in and change them.
+    *
+    * If any necessary resources already exist, they will be used as they are,
+    * without changing their current settings ( as other nodes might be using them as well ).
+    *
+    * CAUTION: if the node is removed, the resources will remain. That's because
+    * there may be other nodes using them already etc. We won't be checking that
+    * at this point, as it's not a big deal, but if a need comes, such a check
+    * may be implemented in the future.
+    *
+    * @param transaction
+    */
+   virtual void onCreatePrerequisites( RenderingPipelineTransaction& transaction ) const {}
+
    // -------------------------------------------------------------------------
    // Object implementation
    // -------------------------------------------------------------------------
    void onPropertyChanged( ReflectionProperty& property );
 
 protected:
+
    /**
     * Called when the rendering mechanism creates a data layout for the runtime data.
     *

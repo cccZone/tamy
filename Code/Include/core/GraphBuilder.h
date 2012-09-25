@@ -13,6 +13,9 @@
 
 class RuntimeDataBuffer;
 
+template< typename Impl, typename NodeType >
+class GraphBuilderTransaction;
+
 ///////////////////////////////////////////////////////////////////////////////
 
 enum GraphBuilderOperation
@@ -29,7 +32,7 @@ enum GraphBuilderOperation
 template< typename Impl, typename NodeType >
 class GraphBuilder : public Subject< Impl, GraphBuilderOperation >
 {
-protected:
+public:
    std::vector< NodeType* >        m_nodes;
 
 public:
@@ -40,22 +43,8 @@ public:
    virtual ~GraphBuilder();
 
    // -------------------------------------------------------------------------
-   // Nodes management
+   // Graph instancing
    // -------------------------------------------------------------------------
-   /**
-    * Adds a new node to the graph.
-    *
-    * @param node       node to add
-    */
-   void addNode( NodeType* node );
-
-   /**
-    * Removes a node from the graph
-    *
-    * @param node       node to remove
-    */
-   void removeNode( NodeType& node );
-
    /**
     * Returns a list of all defined nodes.
     */
@@ -110,6 +99,37 @@ protected:
     * @param node
     */
    virtual void onNodeRemoved( NodeType& node ) = 0;
+
+   
+private:
+   friend class GraphBuilderTransaction< Impl, NodeType >;
+   // -------------------------------------------------------------------------
+   // Transaction API
+   // -------------------------------------------------------------------------
+   /**
+    * Transaction code calls this method before it changes the graph state.
+    */
+   void notifyPreChange();
+
+   /**
+    * Transaction code calls this method after it changes the graph state.
+    */
+   void notifyPostChange();
+
+   /**
+    * Transaction adds a new node to the graph using this method.
+    *
+    * @param node       node to add
+    */
+   void addNode( NodeType* node );
+
+   /**
+    * Transaction removes a node from the graph using this method.
+    *
+    * @param node       node to remove
+    */
+   void removeNode( NodeType& node );
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

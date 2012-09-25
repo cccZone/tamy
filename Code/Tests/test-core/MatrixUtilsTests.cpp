@@ -55,6 +55,7 @@ TEST( MatrixUtils, generateLookAtLH )
    D3DXMatrixLookAtLH( &dxLookAtMtx, ( const D3DXVECTOR3* )&cameraOriginPos, ( const D3DXVECTOR3* )&lookAtPos, ( const D3DXVECTOR3* )&upAxis );
    COMPARE_MTX( dxLookAtMtx, tamyLookAtMtx );
 
+   // TODO: create a coorect LookAt matrix setup method-  one that will actually position the camera where we want and make it look at the specified node
 }
 
 ///////////////////////////////////////////////////////////////////////////////

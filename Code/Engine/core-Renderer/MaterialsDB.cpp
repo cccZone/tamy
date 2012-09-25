@@ -3,14 +3,25 @@
 #include "core\Assert.h"
 #include "core\StringUtils.h"
 
+// TODO: as soon as the material atlas is rendered ok, remove the singletonness from the MaterialsDB
+// and make it local to a RenderingView.
+// In order to do that, you'll need to make the MaterialInstance::m_index into a TRuntimeVar, initialized as the entities
+// are collected from the scene. That's because each pipeline will run its own rendering view and a different
+// subset of materials ( that depends on the actual scene contents ).
+//
+// That way we'll avoid putting the materials a scene doesn't use into the materials atlas!!!
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialsDB MaterialsDB::s_theInstance;
+uint MaterialsDB::RENDER_DATA_BUFFER_STRIDE = 4;
+uint MaterialsDB::TEXTURE_COORDS_STRIDE = 2;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialsDB::MaterialsDB()
+   : m_timestamp( 0 )
 {
    // preallocate a bit of space for materials - 512 entires should be more than enough
    m_materialHashes.allocate( 512 );
@@ -49,6 +60,7 @@ uint MaterialsDB::registerMaterial( const MaterialInstance& matInstance )
    }
 
    m_materialHashes.push_back( newMaterialHash );
+   m_materials.push_back( &matInstance );
 
    // the material's been appended to the end of our materials collection, so its index
    // is equal to the previous number of materials in the collection
@@ -67,6 +79,36 @@ uint MaterialsDB::calcHash( const MaterialInstance& matInstance ) const
 void MaterialsDB::clear()
 {
    m_materialHashes.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialsDB::collectMaterialData( Array< Vector >& outDataBuffer ) const
+{
+   uint count = m_materialHashes.size();
+   outDataBuffer.allocate( count * RENDER_DATA_BUFFER_STRIDE );
+
+   for ( uint i = 0; i < count; ++i )
+   {
+      const MaterialInstance* material = m_materials[i];
+
+      const SurfaceProperties& surfaceProps = material->getSurfaceProperties();
+      outDataBuffer.push_back( (const Vector&)surfaceProps.getAmbientColor() );
+      outDataBuffer.push_back( (const Vector&)surfaceProps.getDiffuseColor() );
+      outDataBuffer.push_back( (const Vector&)surfaceProps.getSpecularColor() );
+      outDataBuffer.back().w = surfaceProps.getPower();
+      outDataBuffer.push_back( (const Vector&)surfaceProps.getEmissiveColor() );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialsDB::generateTextureCoordinates( Array< Vector >& outTextureCoords ) const
+{
+   uint count = m_materialHashes.size();
+   outTextureCoords.allocate( count * TEXTURE_COORDS_STRIDE );
+
+   // TODO: !!!!!!!!!!!!! http://www.blackpawn.com/texts/lightmaps/
 }
 
 ///////////////////////////////////////////////////////////////////////////////

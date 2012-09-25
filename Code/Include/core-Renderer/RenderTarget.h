@@ -72,6 +72,7 @@ public:
     */
    inline const Color& getBackgroundColor() const { return m_bgColor; }
 
+
    // -------------------------------------------------------------------------
    // ShaderTexture implementation
    // -------------------------------------------------------------------------

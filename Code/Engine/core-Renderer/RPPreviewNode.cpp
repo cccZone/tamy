@@ -49,7 +49,7 @@ void RPPreviewNode::onObjectLoaded()
 
    // get the recreated inputs
    delete m_texInput;
-   m_texInput = new RPTextureInput( "Texture" );
+   m_texInput = static_cast< RPTextureInput* >( findInput( "Texture" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

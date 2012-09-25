@@ -16,6 +16,7 @@ class RenderTarget;
 class DepthBufferDescriptor;
 class DepthBuffer;
 class RuntimeDataBuffer;
+class RenderingPipelineTransaction;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -45,23 +46,16 @@ public:
    ~RenderingPipeline();
 
    // -------------------------------------------------------------------------
-   // Render targets management
+   // GraphBuilder implementation
    // -------------------------------------------------------------------------
    /**
-    * Adds a new render target definition.
-    *
-    * @param descriptor    render target descriptor
-    * @return              'true' if the target was added successfully, 'false' otherwise
+    * Creates a transaction that will change this graph builder instance.
     */
-   bool addRenderTarget( RenderTargetDescriptor* descriptor );
+   static GraphBuilderTransaction< RenderingPipeline, RenderingPipelineNode >* createTransaction();
 
-   /**
-    * Removes the specified render target descriptor.
-    *
-    * @param id         render target id
-    */
-   void removeRenderTarget( const std::string& id );
-
+   // -------------------------------------------------------------------------
+   // Render targets management
+   // -------------------------------------------------------------------------
    /**
     * Returns a render target registered under the specified ID.
     *
@@ -97,21 +91,6 @@ public:
    // -------------------------------------------------------------------------
    // Depth buffers management
    // -------------------------------------------------------------------------
-
-   /**
-    * Adds a new depth buffer definition.
-    *
-    * @param descriptor    depth buffer descriptor
-    * @return              'true' if the depth buffer was added successfully, 'false' otherwise
-    */
-   bool addDepthBuffer( DepthBufferDescriptor* descriptor );
-
-   /**
-    * Removes the specified depth buffer descriptor.
-    *
-    * @param id         depth buffer id
-    */
-   void removeDepthBuffer( const std::string& id );
 
    /**
     * Returns a depth buffer registered under the specified ID.
@@ -151,6 +130,42 @@ protected:
    // -------------------------------------------------------------------------
    void onNodeAdded( RenderingPipelineNode* node );
    void onNodeRemoved( RenderingPipelineNode& node );
+
+private:
+   // -------------------------------------------------------------------------
+   // Rendering pipeline transaction API
+   // -------------------------------------------------------------------------
+   friend class RenderingPipelineTransaction;
+
+   /**
+    * Adds a new depth buffer definition.
+    *
+    * @param descriptor    depth buffer descriptor
+    * @return              'true' if the depth buffer was added successfully, 'false' otherwise
+    */
+   void addDepthBuffer( DepthBufferDescriptor* descriptor );
+
+   /**
+    * Removes the specified depth buffer descriptor.
+    *
+    * @param id         depth buffer id
+    */
+   void removeDepthBuffer( const std::string& id );
+
+   /**
+    * Adds a new render target definition.
+    *
+    * @param descriptor    render target descriptor
+    * @return              'true' if the target was added successfully, 'false' otherwise
+    */
+   void addRenderTarget( RenderTargetDescriptor* descriptor );
+
+   /**
+    * Removes the specified render target descriptor.
+    *
+    * @param id         render target id
+    */
+   void removeRenderTarget( const std::string& id );
 
 };
 

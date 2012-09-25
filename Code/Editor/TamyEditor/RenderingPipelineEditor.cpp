@@ -17,10 +17,10 @@ RenderingPipelineEditor::RenderingPipelineEditor( RenderingPipelineLayout& rende
    : m_renderingPipelineLayout( renderingPipelineLayout )
    , m_blockPropertiesLayout( NULL )
    , m_blockPropertiesRootView( NULL )
-   , m_nodePropertiesLayout( NULL )
-   , m_nodePropertiesRootView( NULL )
    , m_renderTargetsList( NULL )
 {
+   connect( &m_renderingPipelineLayout, SIGNAL( onBlockAdded() ), this, SLOT( onBlockAdded() ) );
+   connect( &m_renderingPipelineLayout, SIGNAL( onBlockRemoved() ), this, SLOT( onBlockRemoved() ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -51,12 +51,6 @@ void RenderingPipelineEditor::onInitialize()
    m_ui.scrollableBlockPropertiesPanel->setLayout( m_blockPropertiesLayout );
    m_blockPropertiesLayout->setSpacing(0);
    m_blockPropertiesLayout->setMargin(0);
-
-   // attach the node properties viewer
-   m_nodePropertiesLayout = new QVBoxLayout( m_ui.scrollableNodePropertiesPanel );
-   m_ui.scrollableNodePropertiesPanel->setLayout( m_nodePropertiesLayout );
-   m_nodePropertiesLayout->setSpacing(0);
-   m_nodePropertiesLayout->setMargin(0);
 
    // configure the rendering targets list
    {
@@ -122,15 +116,6 @@ void RenderingPipelineEditor::onDeinitialize( bool saveProgress )
    delete m_blockPropertiesRootView;
    m_blockPropertiesRootView = NULL;
 
-   if ( m_nodePropertiesLayout )
-   {
-      m_nodePropertiesLayout->removeWidget( m_nodePropertiesRootView );
-      m_nodePropertiesLayout = NULL;
-   }
-
-   delete m_nodePropertiesRootView;
-   m_nodePropertiesRootView = NULL;
-
    m_renderTargetsList = NULL;
    m_depthBuffersList = NULL;
 }
@@ -155,14 +140,6 @@ void RenderingPipelineEditor::onSceneSelectionChanged()
       m_blockPropertiesRootView = NULL;
    }
 
-   if ( m_nodePropertiesRootView != NULL )
-   {
-      m_nodePropertiesLayout->removeWidget( m_nodePropertiesRootView );
-
-      delete m_nodePropertiesRootView;
-      m_nodePropertiesRootView = NULL;
-   }
-
    // handle selection of new item
    QList< QGraphicsItem* > selectedItems = m_renderingPipelineLayout.selectedItems();
    if ( selectedItems.size() != 1 )
@@ -171,7 +148,6 @@ void RenderingPipelineEditor::onSceneSelectionChanged()
    }
 
    handleBlockSelection( dynamic_cast< GraphBlock* >( selectedItems.back() ) );
-   handleSocketSelection( dynamic_cast< GraphBlockSocket* >( selectedItems.back() ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -188,39 +164,6 @@ void RenderingPipelineEditor::handleBlockSelection( GraphBlock* selectedBlock )
    m_blockPropertiesLayout->addWidget( m_blockPropertiesRootView );
    selectedBlock->viewProperties( *m_blockPropertiesRootView );
 
-   // node properties
-   ReflectionObject* node = selectedBlock->getNode();
-   ASSERT_MSG( node != NULL, "Node stored by the block doesn't exist" );
-   if ( !node )
-   {
-      return;
-   }
-
-   m_nodePropertiesRootView = new QPropertiesView();
-   m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
-   node->viewProperties( *m_nodePropertiesRootView );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RenderingPipelineEditor::handleSocketSelection( GraphBlockSocket* selectedSocket )
-{
-   if ( !selectedSocket )
-   {
-      return;
-   }
-
-   // node properties
-   ReflectionObject* node = selectedSocket->getSocket();
-   ASSERT_MSG( node != NULL, "Node stored by the socket doesn't exist" );
-   if ( !node )
-   {
-      return;
-   }
-
-   m_nodePropertiesRootView = new QPropertiesView();
-   m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
-   node->viewProperties( *m_nodePropertiesRootView );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -264,11 +207,12 @@ void RenderingPipelineEditor::addRenderTarget()
       return;
    }
 
-   RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
-   if ( pipeline.addRenderTarget( desc ) )
+   RenderingPipelineTransaction transaction;
+   if ( transaction.addRenderTarget( desc ) )
    {
       m_renderTargetsList->addItem( desc->getTargetID().c_str() );
    }
+   transaction.commit( m_renderingPipelineLayout.getPipeline() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -278,13 +222,15 @@ void RenderingPipelineEditor::removeRenderTarget()
    RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
 
    QList< QListWidgetItem* > itemsToRemove = m_renderTargetsList->selectedItems();
+   RenderingPipelineTransaction transaction;
    foreach( QListWidgetItem* item, itemsToRemove )
    {
       QString selectedTargetId = item->text();
-      pipeline.removeRenderTarget( selectedTargetId.toStdString() );
+      transaction.removeRenderTarget( selectedTargetId.toStdString() );
       
       delete item;
    }
+   transaction.commit( pipeline );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -331,11 +277,12 @@ void RenderingPipelineEditor::addDepthBuffer()
       return;
    }
 
-   RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
-   if ( pipeline.addDepthBuffer( desc ) )
+   RenderingPipelineTransaction transaction;
+   if ( transaction.addDepthBuffer( desc ) )
    {
       m_depthBuffersList->addItem( desc->getID().c_str() );
    }
+   transaction.commit( m_renderingPipelineLayout.getPipeline() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -345,13 +292,15 @@ void RenderingPipelineEditor::removeDepthBuffer()
    RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
 
    QList< QListWidgetItem* > itemsToRemove = m_depthBuffersList->selectedItems();
+   RenderingPipelineTransaction transaction;
    foreach( QListWidgetItem* item, itemsToRemove )
    {
       QString selectedBufferId = item->text();
-      pipeline.removeDepthBuffer( selectedBufferId.toStdString() );
+      transaction.removeDepthBuffer( selectedBufferId.toStdString() );
 
       delete item;
    }
+   transaction.commit( pipeline );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -364,6 +313,26 @@ void RenderingPipelineEditor::editDepthBuffer( QListWidgetItem* dbItem )
    DepthBufferDescriptorDialog dialog( this, desc, false );
    dialog.exec();
    pipeline.unlockDepthBuffer( dbItem->text().toStdString() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::onBlockAdded()
+{
+   // Block addition could have introduced new render targets and depth buffers.
+   // Refresh the respective lists
+   updateRenderTargetsList();
+   updateDepthBuffersList();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void RenderingPipelineEditor::onBlockRemoved()
+{
+   // Block addition could have removed some of the existing render targets and depth buffers.
+   // Refresh the respective lists
+   updateRenderTargetsList();
+   updateDepthBuffersList();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

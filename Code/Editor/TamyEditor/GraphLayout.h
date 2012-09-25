@@ -23,6 +23,8 @@ class QGraphicsLineItem;
  */
 class GraphLayout : public QGraphicsScene
 {
+   Q_OBJECT
+
 protected:
    std::vector< GraphBlock* >                m_blocks;            // the blocks will be managed by an outside resource
    std::vector< GraphBlockConnection* >      m_connections;       // connections between the blocks
@@ -75,7 +77,18 @@ public:
     * @param connection
     */
    void removeConnection( GraphBlockConnection& connection );
-   
+
+signals:
+   /**
+    * Emitted when a block is added to the layout.
+    */
+   void onBlockAdded();
+
+   /**
+    * Emitted when a block is removed from the layout.
+    */
+   void onBlockRemoved();
+
 protected:
    /**
     * Default constructor.

@@ -161,6 +161,9 @@ void DX9RenderTarget::createTexture()
       std::string errMsg = translateDxError( "Can't create a render target", res );
       ASSERT_MSG( false, errMsg.c_str() );
    }
+
+   // tell the render target that it needs to be refilled with data, 'cause it's just been created
+   m_renderTarget.markNotFresh( m_renderer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

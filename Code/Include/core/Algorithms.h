@@ -65,7 +65,7 @@ float mag( T value );
  * @param   val2
  */
 template< typename T >
-float min2( T val1, T val2 );
+T min2( T val1, T val2 );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -76,7 +76,7 @@ float min2( T val1, T val2 );
  * @param   val2
  */
 template< typename T >
-float max2( T val1, T val2 );
+T max2( T val1, T val2 );
 
 ///////////////////////////////////////////////////////////////////////////////
 

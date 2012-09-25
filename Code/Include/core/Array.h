@@ -111,6 +111,7 @@ public:
     */
    void resize(unsigned int newSize, const T& defaultValue = 0 );
 
+
    /**
     * The method appends a new element at the end of the array, 
     * resizing it if necessary.

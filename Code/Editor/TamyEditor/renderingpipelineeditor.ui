@@ -63,15 +63,15 @@
           <item>
            <widget class="QToolBox" name="toolBox">
             <property name="currentIndex">
-             <number>3</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="blockPropertiesPage">
              <property name="geometry">
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>98</width>
-               <height>71</height>
+               <width>220</width>
+               <height>418</height>
               </rect>
              </property>
              <attribute name="label">
@@ -94,46 +94,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>98</width>
-                   <height>28</height>
-                  </rect>
-                 </property>
-                </widget>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-            <widget class="QWidget" name="nodePropertiesPage">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>98</width>
-               <height>71</height>
-              </rect>
-             </property>
-             <attribute name="label">
-              <string>Node properties</string>
-             </attribute>
-             <layout class="QVBoxLayout" name="verticalLayout_3">
-              <property name="spacing">
-               <number>0</number>
-              </property>
-              <property name="margin">
-               <number>0</number>
-              </property>
-              <item>
-               <widget class="QScrollArea" name="scrollableNodePropertiesPanel">
-                <property name="widgetResizable">
-                 <bool>true</bool>
-                </property>
-                <widget class="QWidget" name="scrollableNodePropertiesPanel_2">
-                 <property name="geometry">
-                  <rect>
-                   <x>0</x>
-                   <y>0</y>
-                   <width>98</width>
-                   <height>28</height>
+                   <width>218</width>
+                   <height>416</height>
                   </rect>
                  </property>
                 </widget>

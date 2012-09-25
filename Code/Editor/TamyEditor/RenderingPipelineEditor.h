@@ -31,9 +31,6 @@ private:
    QVBoxLayout*                              m_blockPropertiesLayout;
    QPropertiesView*                          m_blockPropertiesRootView;
 
-   QVBoxLayout*                              m_nodePropertiesLayout;
-   QPropertiesView*                          m_nodePropertiesRootView;
-
    QListWidget*                              m_renderTargetsList;
    QListWidget*                              m_depthBuffersList;
 
@@ -62,12 +59,13 @@ public slots:
    void addDepthBuffer();
    void removeDepthBuffer();
    void editDepthBuffer( QListWidgetItem* dbItem );
+   void onBlockAdded();
+   void onBlockRemoved();
 
 private:
    void updateRenderTargetsList();
    void updateDepthBuffersList();
    void handleBlockSelection( GraphBlock* selectedBlock );
-   void handleSocketSelection( GraphBlockSocket* selectedSocket );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

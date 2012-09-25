@@ -104,6 +104,7 @@ REGISTER_ABSTRACT_TYPE( RenderingPipelineNode );
 DEFINE_TYPE_ID( GBNodeOutput<RenderingPipelineNode> );
 MAP_TYPE( GBNodeInput<RenderingPipelineNode>, ReflectionObject );
 REGISTER_TYPE( RPSceneRenderNode );
+REGISTER_TYPE( RPMaterialsDBNode );
 REGISTER_TYPE( RPPostProcessNode );
 REGISTER_TYPE( RPStartNode );
 REGISTER_TYPE( RPAdapterNode );
