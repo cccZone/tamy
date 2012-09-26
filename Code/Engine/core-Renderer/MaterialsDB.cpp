@@ -29,6 +29,12 @@ MaterialsDB::MaterialsDB()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+MaterialsDB::~MaterialsDB()
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 MaterialsDB::MaterialsDB( const MaterialsDB& rhs )
 {
    ASSERT_MSG( false, "Invalid operation on a singleton instance of MaterialsDB" );
@@ -43,7 +49,7 @@ void MaterialsDB::operator=( const MaterialsDB& rhs )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-uint MaterialsDB::registerMaterial( const MaterialInstance& matInstance )
+uint MaterialsDB::registerMaterial( MaterialInstance& matInstance )
 {
    // check if the material hasn't been registered before
    uint newMaterialHash = calcHash( matInstance );
@@ -61,6 +67,13 @@ uint MaterialsDB::registerMaterial( const MaterialInstance& matInstance )
 
    m_materialHashes.push_back( newMaterialHash );
    m_materials.push_back( &matInstance );
+
+   // attach self as a listener to the material
+   // We don't want to detach the observer ever - as long as it's in the DB, we want to keep observing it.
+   matInstance.attachObserver( *this );
+
+   // increase the timestamp
+   ++m_timestamp;
 
    // the material's been appended to the end of our materials collection, so its index
    // is equal to the previous number of materials in the collection
@@ -96,7 +109,7 @@ void MaterialsDB::collectMaterialData( Array< Vector >& outDataBuffer ) const
       outDataBuffer.push_back( (const Vector&)surfaceProps.getAmbientColor() );
       outDataBuffer.push_back( (const Vector&)surfaceProps.getDiffuseColor() );
       outDataBuffer.push_back( (const Vector&)surfaceProps.getSpecularColor() );
-      outDataBuffer.back().w = surfaceProps.getPower();
+      outDataBuffer.back().w = surfaceProps.getPower() / 255.0f;
       outDataBuffer.push_back( (const Vector&)surfaceProps.getEmissiveColor() );
    }
 }
@@ -109,6 +122,22 @@ void MaterialsDB::generateTextureCoordinates( Array< Vector >& outTextureCoords 
    outTextureCoords.allocate( count * TEXTURE_COORDS_STRIDE );
 
    // TODO: !!!!!!!!!!!!! http://www.blackpawn.com/texts/lightmaps/
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialsDB::update( MaterialInstance& subject )
+{
+   // Initial notification - skip it. The code that adds a new material to the DB
+   // has already increased the timestamp
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialsDB::update( MaterialInstance& subject, const MaterialInstanceOperation& msg )
+{
+   // increase the timestamp
+   ++m_timestamp;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

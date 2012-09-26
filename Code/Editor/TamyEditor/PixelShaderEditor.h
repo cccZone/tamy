@@ -7,6 +7,9 @@
 #include "ui_pixelshadereditor.h"
 #include "ResourceEditor.h"
 #include <vector>
+#include <string>
+#include "core-Renderer/PixelShader.h"
+#include <QIcon>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +23,7 @@ class QComboBox;
 class ColorFrame;
 class HexEditor;
 class TextEditWidget;
+class QPushButton;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +37,10 @@ class PixelShaderEditor : public ResourceEditor
 private:
    struct TextureStageTabDef
    {
+      QPushButton*      m_linkAddressingModes;
+      bool              m_addressingModesLinked;
+      QPushButton*      m_linkFilters;
+      bool              m_filteringModesLinked;
       QComboBox*        m_uAddressMode;
       QComboBox*        m_vAddressMode;
       QComboBox*        m_wAddressMode;
@@ -40,7 +48,11 @@ private:
       QComboBox*        m_magFilter;
       QComboBox*        m_mipFilter;
       TextureStageTabDef()
-         : m_uAddressMode( NULL )
+         : m_linkAddressingModes( NULL )
+         , m_addressingModesLinked( false )
+         , m_linkFilters( NULL )
+         , m_filteringModesLinked( false )
+         , m_uAddressMode( NULL )
          , m_vAddressMode( NULL )
          , m_wAddressMode( NULL )
          , m_minFilter( NULL )
@@ -57,6 +69,20 @@ private:
       PSE_TAB_STENCIL,
       PSE_TAB_TEXTURE_STAGES,
       PSE_TAB_OUTPUT
+   };
+
+   // A helper structure keeping all texture stage entries that were used during
+   // editor's lifetime, so that if a stage is brought back to life, we can restore its
+   // settings
+   struct TextureStageEntry
+   {
+      std::string          m_textureStageName;
+      TextureStageParams   m_params;
+
+      TextureStageEntry( const std::string& name, const TextureStageParams& params )
+         : m_textureStageName( name )
+         , m_params( params )
+      {}
    };
 
 private:
@@ -77,8 +103,13 @@ private:
    HexEditor*                          m_stencilMask;
    HexEditor*                          m_stencilWriteMask;
 
+   QIcon                               m_linkActiveIcon;
+   QIcon                               m_linkInactiveIcon;
+
    ResourcesManager*                   m_resourceMgr;
    bool                                m_docModified;
+
+   std::vector< TextureStageEntry >    m_textureStageSettingsDB;
 
 public:
    /**
@@ -103,11 +134,21 @@ public slots:
    void onTextureStageChange();
    void importFrom();
    void exportTo();
+   void onToggleAddressingModesLink( bool clicked );
+   void onToggleFiltersLink( bool clicked );
 
 private:
    void synchronize();
    void initializeTextureStagesTab();
    void refreshRenderingParamsUI();
+   void updateAddressingModesLinkState( int textureStage );
+   void updateFiltersLinkState( int textureStage );
+
+   // -------------------------------------------------------------------------
+   // Texture stage settings DB
+   // -------------------------------------------------------------------------
+   void addTextureStageToDB( const std::string& name, const TextureStageParams& params );
+   void restoreTextureStageFromDB( const std::string& name, TextureStageParams& outParams );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

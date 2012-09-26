@@ -32,6 +32,8 @@ struct DeferredLightingRenderData
    ShaderTexture*                   m_normalsTex;
    ShaderTexture*                   m_specularTex;
    ShaderTexture*                   m_sceneColorTex;
+   ShaderTexture*                   m_materialIndicesTex;
+   ShaderTexture*                   m_materialsDescriptorsTex;
    RenderTarget*                    m_finalLightColorTarget;
 };
 

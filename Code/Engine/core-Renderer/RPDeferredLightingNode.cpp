@@ -8,6 +8,10 @@
 #include "core-Renderer/MRTUtil.h"
 #include "core/ResourcesManager.h"
 #include "core-Renderer/Defines.h"
+#include "core-Renderer\RenderTargetDescriptor.h"
+#include "core-Renderer\DepthBufferDescriptor.h"
+#include "core-Renderer\RenderingPipelineTransaction.h"
+
 
 // lights
 #include "core-Renderer/Light.h"
@@ -26,34 +30,30 @@
 
 BEGIN_OBJECT( RPDeferredLightingNode );
    PARENT( RenderingPipelineNode );
-   PROPERTY_EDIT( "Render target ids", std::string, m_finalLightColorTargetId );
-   PROPERTY_EDIT( "Shadow depth texture id", std::string, m_shadowDepthTextureId );
-   PROPERTY_EDIT( "Shadow depth surface id", std::string, m_shadowDepthSurfaceId );
-   PROPERTY_EDIT( "Shadow map id", std::string, m_screenSpaceShadowMapId );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RPDeferredLightingNode::RPDeferredLightingNode()
-   : m_finalLightColorTargetId( "LitScene" )
-   , m_shadowDepthTextureId( "ShadowDepthTexture" )
-   , m_shadowDepthSurfaceId( "ShadowDepthSurface" )
-   , m_screenSpaceShadowMapId( "SS_ShadowMap" )
 {
    m_normalsInput = new RPTextureInput( "Normals" );
    m_specularInput = new RPTextureInput( "Specular" );
    m_depthInput = new RPTextureInput( "Depth" );
    m_sceneColorInput = new RPTextureInput( "SceneColor" );
+   m_materialIndicesInput = new RPTextureInput( "MaterialsIndices" );
+   m_materialsDescInput = new RPTextureInput( "MaterialsDescr" );
 
-   m_finalLightColorTargetOutput = new RPTextureOutput( m_finalLightColorTargetId );
-   m_shadowDepthTextureOutput = new RPTextureOutput( m_shadowDepthTextureId );
-   m_screenSpaceShadowMapOutput = new RPTextureOutput( m_screenSpaceShadowMapId );
+   m_finalLightColorTargetOutput = new RPTextureOutput( "LitScene" );
+   m_shadowDepthTextureOutput = new RPTextureOutput( "ShadowDepthBuffer" );
+   m_screenSpaceShadowMapOutput = new RPTextureOutput( "SS_ShadowMap" );
 
    std::vector< GBNodeInput< RenderingPipelineNode >* > inputs;
    inputs.push_back( m_normalsInput );
    inputs.push_back( m_specularInput );
    inputs.push_back( m_depthInput );
    inputs.push_back( m_sceneColorInput );
+   inputs.push_back( m_materialIndicesInput );
+   inputs.push_back( m_materialsDescInput );
    defineInputs( inputs );
 
    std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
@@ -71,6 +71,8 @@ RPDeferredLightingNode::~RPDeferredLightingNode()
    m_specularInput = NULL;
    m_depthInput = NULL;
    m_sceneColorInput = NULL;
+   m_materialIndicesInput = NULL;
+   m_materialsDescInput = NULL;
 
    m_finalLightColorTargetOutput = NULL;
    m_shadowDepthTextureOutput = NULL;
@@ -88,39 +90,60 @@ void RPDeferredLightingNode::onObjectLoaded()
    delete m_specularInput;
    delete m_depthInput;
    delete m_sceneColorInput;
+   delete m_materialIndicesInput;
+   delete m_materialsDescInput;
+
    delete m_finalLightColorTargetOutput;
    delete m_shadowDepthTextureOutput;
    delete m_screenSpaceShadowMapOutput;
 
-   m_normalsInput = DynamicCast< RPTextureInput >( findInput( "Normals" ) );
-   m_specularInput = DynamicCast< RPTextureInput >( findInput( "Specular" ) );
-   m_depthInput = DynamicCast< RPTextureInput >( findInput( "Depth" ) );
-   m_sceneColorInput = DynamicCast< RPTextureInput >( findInput( "SceneColor" ) );
+   m_normalsInput = static_cast< RPTextureInput* >( findInput( "Normals" ) );
+   m_specularInput = static_cast< RPTextureInput* >( findInput( "Specular" ) );
+   m_depthInput = static_cast< RPTextureInput* >( findInput( "Depth" ) );
+   m_sceneColorInput = static_cast< RPTextureInput* >( findInput( "SceneColor" ) );
+   m_materialIndicesInput = static_cast< RPTextureInput* >( findInput( "MaterialsIndices" ) );
+   m_materialsDescInput = static_cast< RPTextureInput* >( findInput( "MaterialsDescr" ) );
 
-   m_finalLightColorTargetOutput = DynamicCast< RPTextureOutput >( findOutput( m_finalLightColorTargetId ) );
-   m_shadowDepthTextureOutput = DynamicCast< RPTextureOutput >( findOutput( m_shadowDepthTextureId ) );
-   m_screenSpaceShadowMapOutput = DynamicCast< RPTextureOutput >( findOutput( m_screenSpaceShadowMapId ) );
+   m_finalLightColorTargetOutput = static_cast< RPTextureOutput* >( findOutput( "LitScene"  ) );
+   m_shadowDepthTextureOutput = static_cast< RPTextureOutput* >( findOutput( "ShadowDepthBuffer" ) );
+   m_screenSpaceShadowMapOutput = static_cast< RPTextureOutput* >( findOutput( "SS_ShadowMap" ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RPDeferredLightingNode::onPropertyChanged( ReflectionProperty& property )
+void RPDeferredLightingNode::onCreatePrerequisites( RenderingPipelineTransaction& transaction ) const
 {
-   __super::onPropertyChanged( property );
+   // create necessary render targets and depth buffers
 
-   const std::string& propertyName = property.getName();
-   if ( propertyName == "m_renderTargetId" || propertyName == "m_shadowDepthTextureId" || propertyName == "m_screenSpaceShadowMapId" )
+   // material descriptor render target
    {
+      RenderTargetDescriptor* rtDesc = new RenderTargetDescriptor();
+      rtDesc->setTargetID( "SS_ShadowMap" );
+      rtDesc->setDynamicSize( 1.0f, 1.0f );
+      rtDesc->setType( true );
+      rtDesc->setUsage( TU_32BIT_FP );
 
-      std::string allRenderTargetIds = m_finalLightColorTargetId + ";" + m_shadowDepthTextureId + ";" + m_screenSpaceShadowMapId;
-      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
-      MRTUtil::createOutputs( allRenderTargetIds, outputs );
-      redefineOutputs( outputs );
+      transaction.addRenderTarget( rtDesc );
+   }
 
-      // acquire new output instances
-      m_finalLightColorTargetOutput = DynamicCast< RPTextureOutput >( findOutput( m_finalLightColorTargetId ) );
-      m_shadowDepthTextureOutput = DynamicCast< RPTextureOutput >( findOutput( m_shadowDepthTextureId ) );
-      m_screenSpaceShadowMapOutput = DynamicCast< RPTextureOutput >( findOutput( m_screenSpaceShadowMapId ) );
+   // texture atlas render target
+   {
+      RenderTargetDescriptor* rtDesc = new RenderTargetDescriptor();
+      rtDesc->setTargetID( "ShadowDepthBuffer" );
+      rtDesc->setStaticSize( 2048, 2048 );
+      rtDesc->setType( false );
+      rtDesc->setUsage( TU_32BIT_FP );
+
+      transaction.addRenderTarget( rtDesc );
+   }
+
+   // texture atlas depth buffer
+   {
+      DepthBufferDescriptor* dbDesc = new DepthBufferDescriptor();
+      dbDesc->setID( "ShadowDepthBuffer" );
+      dbDesc->setSize( 2048, 2048 );
+
+      transaction.addDepthBuffer( dbDesc );
    }
 }
 
@@ -141,16 +164,16 @@ void RPDeferredLightingNode::onCreateLayout( RenderingPipelineMechanism& host ) 
 
    // create render targets
    {
-      RenderTarget* shadowDepthTexture = host.getRenderTarget( m_shadowDepthTextureId );
+      RenderTarget* shadowDepthTexture = host.getRenderTarget( "ShadowDepthBuffer" );
       data[ m_shadowDepthTexture ] = shadowDepthTexture;
 
-      DepthBuffer* shadowDepthSurface = host.getDepthBuffer( m_shadowDepthSurfaceId );
+      DepthBuffer* shadowDepthSurface = host.getDepthBuffer( "ShadowDepthBuffer" );
       data[ m_shadowDepthSurface ] = shadowDepthSurface;
 
-      RenderTarget* screenSpaceShadowMap = host.getRenderTarget( m_screenSpaceShadowMapId );
+      RenderTarget* screenSpaceShadowMap = host.getRenderTarget( "SS_ShadowMap" );
       data[ m_screenSpaceShadowMap ] = screenSpaceShadowMap;
 
-      RenderTarget* finalLightColorTarget = host.getRenderTarget( m_finalLightColorTargetId );
+      RenderTarget* finalLightColorTarget = host.getRenderTarget( "LitScene" );
       data[ m_finalLightColorTarget ] = finalLightColorTarget;
    }
 
@@ -217,6 +240,16 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
       renderingData.m_sceneColorTex = m_sceneColorInput->getValue( data );
    }
 
+   if ( m_materialIndicesInput )
+   {
+      renderingData.m_materialIndicesTex = m_materialIndicesInput->getValue( data );
+   }
+
+   if ( m_materialsDescInput )
+   {
+      renderingData.m_materialsDescriptorsTex = m_materialsDescInput->getValue( data );
+   }
+
    Renderer& renderer = host.getRenderer();
 
    const RenderingView* view = host.getSceneRenderingView();
@@ -232,7 +265,7 @@ void RPDeferredLightingNode::onUpdate( RenderingPipelineMechanism& host ) const
    AmbientLight* ambientLight = view->getAmbientLight();
    if ( ambientLight )
    {
-      ambientLightRenderer->render( renderer, ambientLight, renderingData.m_sceneColorTex, renderingData.m_finalLightColorTarget );
+      ambientLightRenderer->render( renderer, ambientLight, renderingData );
    }
 
    // collect visible lights - query the host for them rather than the view, 

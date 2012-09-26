@@ -10,6 +10,7 @@ class AmbientLight;
 class ShaderTexture;
 class RenderTarget;
 class PixelShader;
+struct DeferredLightingRenderData;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -30,10 +31,9 @@ public:
     *
     * @param renderer
     * @param light
-    * @param sceneColorTex       a texture with raw scene albedo
-    * @param renderTarget        render target to which the lit scene should be drawn
+    * @param data         light rendering data
     */
-   void render( Renderer& renderer, const AmbientLight* light, ShaderTexture* sceneColorTex, RenderTarget* renderTarget );
+   void render( Renderer& renderer, const AmbientLight* light, const DeferredLightingRenderData& data );
 
 };
 

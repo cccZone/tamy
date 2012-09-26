@@ -117,6 +117,9 @@ void DeferredDirectionalLightRenderer::renderLighting( Renderer& renderer, const
       psComm->setTexture( "g_Normals", data.m_normalsTex );
       psComm->setTexture( "g_Speculars", data.m_specularTex );
       psComm->setTexture( "g_SceneColor", data.m_sceneColorTex );
+      psComm->setInt( "g_materialsTexSize", data.m_materialsDescriptorsTex->getWidth() );
+      psComm->setTexture( "g_MaterialIndices", data.m_materialIndicesTex );
+      psComm->setTexture( "g_MaterialsDescr", data.m_materialsDescriptorsTex );
 
       psComm->setBool( "g_drawShadows", drawShadows );
       if ( data.m_screenSpaceShadowMap )

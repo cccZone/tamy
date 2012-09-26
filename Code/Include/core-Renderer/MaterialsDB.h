@@ -5,11 +5,13 @@
 #include "core/types.h"
 #include "core/Array.h"
 #include "core/Vector.h"
+#include "core/Observer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class MaterialInstance;
+enum MaterialInstanceOperation;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -20,7 +22,7 @@ class MaterialInstance;
  * access to all material instances used throughout the engine, and providing
  * all sorts of additional functionality related to materials management and rendering.
  */
-class MaterialsDB
+class MaterialsDB : public Observer< MaterialInstance, MaterialInstanceOperation >
 {
 public:
    static uint                         RENDER_DATA_BUFFER_STRIDE;
@@ -39,6 +41,7 @@ public:
     * Constructor ( public, cause we allow the creation of temporary databases for testing purposes ).
     */
    MaterialsDB();
+   ~MaterialsDB();
 
    /**
     * Returns the singleton instance of the DB.
@@ -51,7 +54,7 @@ public:
     * @param matInstance
     * @return     a unique ID assigned to this specific material instance
     */
-   uint registerMaterial( const MaterialInstance& matInstance );
+   uint registerMaterial( MaterialInstance& matInstance );
 
    /**
     * Clears the database.
@@ -62,6 +65,11 @@ public:
     * Returns a timestamp that marks any changes introduced to the DB.
     */
    inline int getTimestamp() const { return m_timestamp; }
+
+   /**
+    * Notifies the database that one of its materials has changed.
+    */
+   inline void notifyAboutChange() { ++m_timestamp; }
 
    /**
     * Collects material data for rendering.
@@ -94,6 +102,11 @@ public:
     */
    void generateTextureCoordinates( Array< Vector >& outTextureCoords ) const;
 
+   // -------------------------------------------------------------------------
+   // Observer implementation
+   // -------------------------------------------------------------------------
+   void update( MaterialInstance& subject );
+   void update( MaterialInstance& subject, const MaterialInstanceOperation& msg );
 
 private:
    /**

@@ -38,8 +38,8 @@ RPMaterialsDBNode::RPMaterialsDBNode()
 
    // load the shaders
    ResourcesManager& resMgr = ResourcesManager::getInstance();
-   m_descriptorsShader = resMgr.create< PixelShader >( FilePath( MATERIALS_DESC_SHADER ), true );
-   m_atlasShader = resMgr.create< PixelShader >( FilePath( MATERIALS_ATLAS_SHADER ), true );
+   m_descriptorsShader = resMgr.create< PixelShader >( FilePath( MATERIALS_DB_DIR "materialDescriptors.tpsh" ), true );
+   m_atlasShader = resMgr.create< PixelShader >( FilePath( MATERIALS_DB_DIR "texturesAtlas.tpsh" ), true );
 
 }
 
@@ -188,6 +188,7 @@ void RPMaterialsDBNode::onUpdate( RenderingPipelineMechanism& host ) const
    // we rebuilt the atlases, so now we need to memorize DB timestamp to make sure we don't
    // update them again if that's not gonna be necessary
    data[ m_dbTimestamp ] = latestDBTimestamp;
+   descriptorsRT->markRefreshed( renderer );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

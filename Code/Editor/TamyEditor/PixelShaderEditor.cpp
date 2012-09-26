@@ -12,6 +12,8 @@
 #include <QTabWidget>
 #include <QComboBox>
 #include <QTextCursor>
+#include <QPushButton>
+#include <QCheckBox>
 #include "TextEditWidget.h"
 
 
@@ -49,6 +51,10 @@ void PixelShaderEditor::onInitialize()
    QString iconsDir = m_resourceMgr->getFilesystem().getShortcut( "editorIcons" ).c_str();
    QToolBar* toolbar = new QToolBar( m_ui.toolbarFrame );
    m_ui.toolbarFrame->layout()->addWidget( toolbar );
+
+   // load some common icons
+   m_linkActiveIcon = QIcon( iconsDir + "linkActive.png" );
+   m_linkInactiveIcon = QIcon( iconsDir + "linkInactive.png" );
 
    // set the editor up
    m_scriptEditor = new TextEditWidget( m_ui.editorFrame, toolbar );
@@ -337,6 +343,10 @@ void PixelShaderEditor::refreshRenderingParamsUI()
 
 void PixelShaderEditor::initializeTextureStagesTab()
 {
+   m_resourceMgr = &ResourcesManager::getInstance();
+   QString iconsDir = m_resourceMgr->getFilesystem().getShortcut( "editorIcons" ).c_str();
+
+
    int activeTabIdx = 0;
 
    QLayout* layout = m_ui.textureStagesOptionsTab->layout();
@@ -361,17 +371,33 @@ void PixelShaderEditor::initializeTextureStagesTab()
       QFormLayout* layout = new QFormLayout( frame );
       frame->setLayout( layout );
 
-      m_textureStagesTabs->addTab( frame, m_shader.getTextureStageName( i ).c_str() );
+      const std::string& stageName = m_shader.getTextureStageName( i );
+      m_textureStagesTabs->addTab( frame, stageName.c_str() );
 
       // add the widgets
       m_textureStagesTabWidgets.push_back( TextureStageTabDef() );
       TextureStageTabDef& tabDef = m_textureStagesTabWidgets.back();
 
-      const TextureStageParams& stageSettings = m_shader.getTextureStage( i );
+      // attempt to restore texture stage state from DB
+      TextureStageParams& stageSettings = m_shader.changeTextureStage( i );
+      restoreTextureStageFromDB( stageName, stageSettings );
 
-      tabDef.m_uAddressMode = new QComboBox( frame );
-      tabDef.m_uAddressMode->addItems( m_addressModes );
-      tabDef.m_uAddressMode->setCurrentIndex( stageSettings.m_addressU - 1 );
+      // create the UI for the stage
+      QFrame* uAddressModeFrame = new QFrame( frame );
+      {
+         QHBoxLayout* uAddressModeLayout = new QHBoxLayout( uAddressModeFrame );
+         uAddressModeLayout->setMargin( 0 );
+         uAddressModeFrame->setLayout( uAddressModeLayout );
+
+         tabDef.m_uAddressMode = new QComboBox( uAddressModeFrame );
+         tabDef.m_uAddressMode->addItems( m_addressModes );
+         tabDef.m_uAddressMode->setCurrentIndex( stageSettings.m_addressU - 1 );
+         uAddressModeLayout->addWidget( tabDef.m_uAddressMode, 1 );
+
+         tabDef.m_linkAddressingModes = new QPushButton( uAddressModeFrame );
+         uAddressModeLayout->addWidget( tabDef.m_linkAddressingModes, 0, Qt::AlignRight );
+      }
+      connect( tabDef.m_linkAddressingModes, SIGNAL( clicked( bool ) ), this, SLOT( onToggleAddressingModesLink( bool ) ) );
       connect( tabDef.m_uAddressMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onTextureStageChange() ) );
 
       tabDef.m_vAddressMode = new QComboBox( frame );
@@ -384,9 +410,21 @@ void PixelShaderEditor::initializeTextureStagesTab()
       tabDef.m_wAddressMode->setCurrentIndex( stageSettings.m_addressW - 1 );
       connect( tabDef.m_wAddressMode, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onTextureStageChange() ) );
 
-      tabDef.m_minFilter = new QComboBox( frame );
-      tabDef.m_minFilter->addItems( m_filteringModes );
-      tabDef.m_minFilter->setCurrentIndex( stageSettings.m_minFilter );
+      QFrame* minFilterFrame = new QFrame( frame );
+      {
+         QHBoxLayout* minFilterLayout = new QHBoxLayout( minFilterFrame );
+         minFilterLayout->setMargin( 0 );
+         minFilterFrame->setLayout( minFilterLayout );
+
+         tabDef.m_minFilter = new QComboBox( frame );
+         tabDef.m_minFilter->addItems( m_filteringModes );
+         tabDef.m_minFilter->setCurrentIndex( stageSettings.m_minFilter );
+         minFilterLayout->addWidget( tabDef.m_minFilter, 1 );
+
+         tabDef.m_linkFilters = new QPushButton( minFilterFrame );
+         minFilterLayout->addWidget( tabDef.m_linkFilters, 0, Qt::AlignRight );
+      }
+      connect( tabDef.m_linkFilters, SIGNAL( clicked( bool ) ), this, SLOT( onToggleFiltersLink( bool ) ) );
       connect( tabDef.m_minFilter, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onTextureStageChange() ) );
 
       tabDef.m_magFilter = new QComboBox( frame );
@@ -399,13 +437,25 @@ void PixelShaderEditor::initializeTextureStagesTab()
       tabDef.m_mipFilter->setCurrentIndex( stageSettings.m_mipFilter );
       connect( tabDef.m_mipFilter, SIGNAL( currentIndexChanged( int ) ), this, SLOT( onTextureStageChange() ) );
 
-      layout->addRow( "U address mode:", tabDef.m_uAddressMode );
+      layout->addRow( "U address mode:", uAddressModeFrame );
       layout->addRow( "V address mode:", tabDef.m_vAddressMode );
       layout->addRow( "W address mode:", tabDef.m_wAddressMode );
-      layout->addRow( "Min filter:", tabDef.m_minFilter );
+      layout->addRow( "Min filter:", minFilterFrame );
       layout->addRow( "Mag filter:", tabDef.m_magFilter );
       layout->addRow( "Mip filter:", tabDef.m_mipFilter );
+
+
+      // determine state of the links - if all object in a group contain the same value, link them
+      // together
+      {
+         tabDef.m_addressingModesLinked = ( stageSettings.m_addressU == stageSettings.m_addressV && stageSettings.m_addressV == stageSettings.m_addressW );
+         tabDef.m_filteringModesLinked = ( stageSettings.m_minFilter == stageSettings.m_magFilter && stageSettings.m_magFilter == stageSettings.m_mipFilter );
+
+         updateAddressingModesLinkState( i );
+         updateFiltersLinkState( i );
+      }
    }
+
 
    m_textureStagesTabs->setCurrentIndex( activeTabIdx );
 }
@@ -421,12 +471,130 @@ void PixelShaderEditor::onTextureStageChange()
       TextureStageTabDef& tabDef = m_textureStagesTabWidgets[i];
       TextureStageParams& stageSettings = m_shader.changeTextureStage( i );
 
-      stageSettings.m_addressU = (TextureAddressingMode)( tabDef.m_uAddressMode->currentIndex() + 1 );
-      stageSettings.m_addressV = (TextureAddressingMode)( tabDef.m_vAddressMode->currentIndex() + 1 );
-      stageSettings.m_addressW = (TextureAddressingMode)( tabDef.m_wAddressMode->currentIndex() + 1 );
-      stageSettings.m_minFilter = (TextureFilteringMode)( tabDef.m_minFilter->currentIndex() );
-      stageSettings.m_magFilter = (TextureFilteringMode)( tabDef.m_magFilter->currentIndex() );
-      stageSettings.m_mipFilter = (TextureFilteringMode)( tabDef.m_mipFilter->currentIndex() );
+      if ( tabDef.m_addressingModesLinked )
+      {
+         // if the addressing modes are linked, apply the selected U addressing mode to all modes
+         stageSettings.m_addressU = (TextureAddressingMode)( tabDef.m_uAddressMode->currentIndex() + 1 );
+         stageSettings.m_addressV = stageSettings.m_addressW = stageSettings.m_addressU;
+
+         tabDef.m_vAddressMode->setCurrentIndex( stageSettings.m_addressV - 1 );
+         tabDef.m_wAddressMode->setCurrentIndex( stageSettings.m_addressW - 1 );
+      }
+      else
+      {
+         // otherwise update them individually
+         stageSettings.m_addressU = (TextureAddressingMode)( tabDef.m_uAddressMode->currentIndex() + 1 );
+         stageSettings.m_addressV = (TextureAddressingMode)( tabDef.m_vAddressMode->currentIndex() + 1 );
+         stageSettings.m_addressW = (TextureAddressingMode)( tabDef.m_wAddressMode->currentIndex() + 1 );
+      }
+
+
+      if ( tabDef.m_filteringModesLinked )
+      {
+         // same principle applies to linked filtering modes
+         stageSettings.m_minFilter = (TextureFilteringMode)( tabDef.m_minFilter->currentIndex() );
+         stageSettings.m_magFilter = stageSettings.m_mipFilter = stageSettings.m_minFilter;
+         tabDef.m_magFilter->setCurrentIndex( stageSettings.m_magFilter );
+         tabDef.m_mipFilter->setCurrentIndex( stageSettings.m_mipFilter );
+      }
+      else
+      {
+         stageSettings.m_minFilter = (TextureFilteringMode)( tabDef.m_minFilter->currentIndex() );
+         stageSettings.m_magFilter = (TextureFilteringMode)( tabDef.m_magFilter->currentIndex() );
+         stageSettings.m_mipFilter = (TextureFilteringMode)( tabDef.m_mipFilter->currentIndex() );
+      }
+
+      // memorize stage changes in DB
+      const std::string& stageName = m_shader.getTextureStageName( i );
+      addTextureStageToDB( stageName, stageSettings );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PixelShaderEditor::onToggleAddressingModesLink( bool clicked )
+{
+   int textureStageIdx = m_textureStagesTabs->currentIndex();
+
+   TextureStageTabDef& tabDef = m_textureStagesTabWidgets[textureStageIdx];
+   tabDef.m_addressingModesLinked = !tabDef.m_addressingModesLinked;
+   updateAddressingModesLinkState( textureStageIdx );
+
+   // memorize stage changes in DB
+   const std::string& stageName = m_shader.getTextureStageName( textureStageIdx );
+   TextureStageParams& stageSettings = m_shader.changeTextureStage( textureStageIdx );
+   addTextureStageToDB( stageName, stageSettings );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PixelShaderEditor::updateAddressingModesLinkState( int textureStage )
+{
+   TextureStageTabDef& tabDef = m_textureStagesTabWidgets[textureStage];
+   TextureStageParams& stageSettings = m_shader.changeTextureStage( textureStage );
+
+   if ( tabDef.m_addressingModesLinked )
+   {
+      // copy the settings from the first entry and block other entries
+      stageSettings.m_addressV = stageSettings.m_addressW = stageSettings.m_addressU;
+      tabDef.m_vAddressMode->setCurrentIndex( stageSettings.m_addressV - 1 );
+      tabDef.m_wAddressMode->setCurrentIndex( stageSettings.m_addressW - 1 );
+      tabDef.m_vAddressMode->setEnabled( false );
+      tabDef.m_wAddressMode->setEnabled( false );
+
+      tabDef.m_linkAddressingModes->setIcon( m_linkActiveIcon );
+   }
+   else
+   {
+      // enable all entries
+      tabDef.m_vAddressMode->setEnabled( true );
+      tabDef.m_wAddressMode->setEnabled( true );
+
+      tabDef.m_linkAddressingModes->setIcon( m_linkInactiveIcon );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PixelShaderEditor::onToggleFiltersLink( bool clicked )
+{
+   int textureStageIdx = m_textureStagesTabs->currentIndex();
+
+   TextureStageTabDef& tabDef = m_textureStagesTabWidgets[textureStageIdx];
+   tabDef.m_filteringModesLinked = !tabDef.m_filteringModesLinked;
+   updateFiltersLinkState( textureStageIdx );
+
+   // memorize stage changes in DB
+   const std::string& stageName = m_shader.getTextureStageName( textureStageIdx );
+   TextureStageParams& stageSettings = m_shader.changeTextureStage( textureStageIdx );
+   addTextureStageToDB( stageName, stageSettings );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PixelShaderEditor::updateFiltersLinkState( int textureStage )
+{
+   TextureStageTabDef& tabDef = m_textureStagesTabWidgets[textureStage];
+   TextureStageParams& stageSettings = m_shader.changeTextureStage( textureStage );
+
+   if ( tabDef.m_filteringModesLinked )
+   {
+      // copy the settings from the first entry and block other entries
+      stageSettings.m_magFilter = stageSettings.m_mipFilter = stageSettings.m_minFilter;
+      tabDef.m_magFilter->setCurrentIndex( stageSettings.m_magFilter );
+      tabDef.m_mipFilter->setCurrentIndex( stageSettings.m_mipFilter );
+      tabDef.m_magFilter->setEnabled( false );
+      tabDef.m_mipFilter->setEnabled( false );
+
+      tabDef.m_linkFilters->setIcon( m_linkActiveIcon );
+   }
+   else
+   {
+      // enable all entries
+      tabDef.m_magFilter->setEnabled( true );
+      tabDef.m_mipFilter->setEnabled( true );
+
+      tabDef.m_linkFilters->setIcon( m_linkInactiveIcon );
    }
 }
 
@@ -488,6 +656,44 @@ void PixelShaderEditor::exportTo()
    file->writeString( m_shader.getScript().c_str() );
    file->flush();
    delete file;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PixelShaderEditor::addTextureStageToDB( const std::string& name, const TextureStageParams& params )
+{
+   uint count = m_textureStageSettingsDB.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      if ( m_textureStageSettingsDB[i].m_textureStageName == name )
+      {
+         // update the existing state's contents
+         m_textureStageSettingsDB[i].m_params = params;
+         return;
+      }
+   }
+
+   // add a new entry
+   m_textureStageSettingsDB.push_back( TextureStageEntry( name, params ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void PixelShaderEditor::restoreTextureStageFromDB( const std::string& name, TextureStageParams& outParams )
+{
+   uint count = m_textureStageSettingsDB.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      if ( m_textureStageSettingsDB[i].m_textureStageName == name )
+      {
+         outParams = m_textureStageSettingsDB[i].m_params;
+         return;
+      }
+   }
+
+
+   // add a new entry
+   m_textureStageSettingsDB.push_back( TextureStageEntry( name, outParams ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

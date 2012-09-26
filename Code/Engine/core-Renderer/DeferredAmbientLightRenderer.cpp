@@ -8,6 +8,8 @@
 #include "core-Renderer\ShaderUtils.h"
 #include "core-Renderer\AmbientLight.h"
 #include "core-Renderer\Defines.h"
+#include "core-Renderer\DeferredLightingRenderData.h"
+#include "core-Renderer\MaterialsDB.h"
 #include "core\ResourcesManager.h"
 
 
@@ -31,7 +33,7 @@ DeferredAmbientLightRenderer::~DeferredAmbientLightRenderer()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DeferredAmbientLightRenderer::render( Renderer& renderer, const AmbientLight* light, ShaderTexture* sceneColorTex, RenderTarget* renderTarget )
+void DeferredAmbientLightRenderer::render( Renderer& renderer, const AmbientLight* light, const DeferredLightingRenderData& data )
 {
    if ( !m_shader )
    {
@@ -39,17 +41,20 @@ void DeferredAmbientLightRenderer::render( Renderer& renderer, const AmbientLigh
    }
 
    // activate the final render target
-   new ( renderer() ) RCActivateRenderTarget( renderTarget );
+   new ( renderer() ) RCActivateRenderTarget( data.m_finalLightColorTarget );
 
    // set and configure the pixel shader
    RCBindPixelShader* psComm = new ( renderer() ) RCBindPixelShader( *m_shader, renderer );
    {
       Vector halfPixel;
-      ShaderUtils::calculateHalfPixel( renderer, sceneColorTex, halfPixel );
+      ShaderUtils::calculateHalfPixel( renderer, data.m_sceneColorTex, halfPixel );
 
       psComm->setVec4( "g_halfPixel", halfPixel );
       psComm->setVec4( "g_lightColor", (const Vector&)light->m_lightColor );
-      psComm->setTexture( "g_SceneColor", sceneColorTex );
+      psComm->setTexture( "g_SceneColor", data.m_sceneColorTex );
+      psComm->setInt( "g_materialsTexSize", data.m_materialsDescriptorsTex->getWidth() );
+      psComm->setTexture( "g_MaterialIndices", data.m_materialIndicesTex );
+      psComm->setTexture( "g_MaterialsDescr", data.m_materialsDescriptorsTex );
    }
 
    // draw the geometry
