@@ -6,6 +6,7 @@
 #include "core/types.h"
 #include "core-Renderer/SurfaceProperties.h"
 #include "core/Observer.h"
+#include "core/Subject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -33,6 +34,13 @@ enum MaterialTextures
 
 ///////////////////////////////////////////////////////////////////////////////
 
+enum MaterialInstanceOperation
+{
+   MIO_MAT_CHANGED
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * A customized material instance, that supplies all data a material resource requires.
  *
@@ -42,25 +50,26 @@ enum MaterialTextures
  */
 class MaterialInstance : public Resource,
                         public Observer< Material, GraphBuilderOperation >,
-                        public Observer< MaterialNode, GraphBuilderNodeOperation >
+                        public Observer< MaterialNode, GraphBuilderNodeOperation >,
+                        public Subject< MaterialInstance, MaterialInstanceOperation >
 {
    DECLARE_RESOURCE()
 
 
 private:
-// static data
-   SurfaceProperties                m_surfaceProperties;
-   Material*                        m_materialRenderer;
-   std::vector< Texture* >          m_texture;
+   // static data
+   SurfaceProperties                         m_surfaceProperties;
+   Material*                                 m_materialRenderer;
+   std::vector< Texture* >                   m_texture;
 
    // runtime data
 
    // index of this material assigned to it by the materials DB it's registered with
-   uint                             m_index;
+   uint                                      m_index;
 
    // material-related  runtime data
-   RuntimeDataBuffer*               m_dataBuf;
-   std::vector< MaterialNode* >     m_nodesQueue;
+   RuntimeDataBuffer*                        m_dataBuf;
+   std::vector< MaterialNode* >              m_nodesQueue;
 
 public:
    /**
@@ -91,7 +100,7 @@ public:
    /**
     * Returns an instance of surface properties of this material instance ( non-const version )
     */
-   inline SurfaceProperties& accessSurfaceProperties() { return m_surfaceProperties; }
+   inline SurfaceProperties& accessSurfaceProperties() { notify( MIO_MAT_CHANGED ); return m_surfaceProperties; }
 
    /**
     * Returns an instance of surface properties of this material instance.
@@ -111,7 +120,7 @@ public:
     * @param textureUsage
     * @param texture
     */
-   inline void setTexture( MaterialTextures textureUsage, Texture* texture ) { m_texture[textureUsage] = texture; }
+   inline void setTexture( MaterialTextures textureUsage, Texture* texture ) { m_texture[textureUsage] = texture; notify( MIO_MAT_CHANGED ); }
 
    /**
     * Returns the runtime data buffer.

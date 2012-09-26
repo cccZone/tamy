@@ -183,7 +183,7 @@ public:
     *
     * @param stageIdx
     */
-   inline const std::string getTextureStageName( unsigned int stageIdx ) const { return m_textureStageName[stageIdx]; }
+   inline const std::string& getTextureStageName( unsigned int stageIdx ) const { return m_textureStageName[stageIdx]; }
 
    /**
     * Returns the drawing params.

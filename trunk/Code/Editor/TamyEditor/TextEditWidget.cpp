@@ -172,16 +172,17 @@ int TextEditWidget::getIndentationLevel( const QString& text, int position ) con
    int closingBraceIdx = prevLine.indexOf( '}', openingBraceIdx );
    int tabsCount = ( openingBraceIdx >= 0 && closingBraceIdx < 0 );
 
-   // check how many tabs does it have
+   // check how many leading tabs does it have
    int lineLen = prevLine.length();
-   for ( int idx = 0; idx >= 0 && idx < lineLen; )
+   for ( int idx = 1; idx < lineLen; ++idx )
    {
-      idx = prevLine.indexOf( '\t', idx );
-      if ( idx >= 0 )
+      QChar c = prevLine.at(idx);
+      if ( c != '\t' )
       {
-         ++tabsCount;
-         ++idx;
+         // no more leading tabs
+         break;
       }
+      ++tabsCount;
    }
 
    return tabsCount;

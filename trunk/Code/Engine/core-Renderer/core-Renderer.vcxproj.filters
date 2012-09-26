@@ -112,24 +112,6 @@
     <Filter Include="OverlayRenderer\Elements">
       <UniqueIdentifier>{e788649b-7b14-4322-8f63-2ae1d57c10bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingPipeline">
-      <UniqueIdentifier>{c91f1825-625c-42f0-8469-826c27be0b92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RenderingPipeline\Nodes">
-      <UniqueIdentifier>{b7de2671-afb7-471e-9881-7dd4812c6bc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RenderingPipeline\Nodes\DataProviders">
-      <UniqueIdentifier>{7275609d-8c43-4a0c-b577-343a9cfdfb83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RenderingPipeline\Nodes\SceneRendering">
-      <UniqueIdentifier>{e921bee1-bd56-4f28-abd8-705a62a8f98a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RenderingPipeline\Nodes\Misc">
-      <UniqueIdentifier>{a0187aaf-f333-4d45-9aa3-dee340577caa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RenderingPipeline\Views">
-      <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Materials\MaterialsDB">
       <UniqueIdentifier>{2ceab344-7eec-4f98-98f9-d74077171547}</UniqueIdentifier>
     </Filter>
@@ -141,6 +123,24 @@
     </Filter>
     <Filter Include="Materials\RenderingPipelineNodes">
       <UniqueIdentifier>{86b65416-d280-4be8-a65c-b5e711eac7d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OverlayRenderer\RenderingPipeline">
+      <UniqueIdentifier>{c91f1825-625c-42f0-8469-826c27be0b92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OverlayRenderer\RenderingPipeline\Nodes">
+      <UniqueIdentifier>{b7de2671-afb7-471e-9881-7dd4812c6bc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OverlayRenderer\RenderingPipeline\Nodes\DataProviders">
+      <UniqueIdentifier>{7275609d-8c43-4a0c-b577-343a9cfdfb83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OverlayRenderer\RenderingPipeline\Nodes\SceneRendering">
+      <UniqueIdentifier>{e921bee1-bd56-4f28-abd8-705a62a8f98a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OverlayRenderer\RenderingPipeline\Nodes\Misc">
+      <UniqueIdentifier>{a0187aaf-f333-4d45-9aa3-dee340577caa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OverlayRenderer\RenderingPipeline\Views">
+      <UniqueIdentifier>{bbcfb446-ce4a-4c00-898c-8c4dd0821f73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -217,19 +217,19 @@
       <Filter>Geometry\Entities</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipeline.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipelineNode.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipelineMechanism.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipelineSockets.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="RenderingView.cpp">
-      <Filter>RenderingPipeline\Views</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Views</Filter>
     </ClCompile>
     <ClCompile Include="RenderResource.cpp">
       <Filter>Core\Resources</Filter>
@@ -247,7 +247,7 @@
       <Filter>Materials\Entities</Filter>
     </ClCompile>
     <ClCompile Include="RenderTargetDescriptor.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="MNPixelShader.cpp">
       <Filter>Materials\MaterialRendererGraph\Nodes</Filter>
@@ -341,34 +341,34 @@
       <Filter>Core\RenderableSurfaces</Filter>
     </ClCompile>
     <ClCompile Include="RPFloatNode.cpp">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClCompile>
     <ClCompile Include="RPFloats2Vec4Node.cpp">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClCompile>
     <ClCompile Include="RPVec4Node.cpp">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClCompile>
     <ClCompile Include="RPTextureNode.cpp">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClCompile>
     <ClCompile Include="RPCameraNode.cpp">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClCompile>
     <ClCompile Include="RPPostProcessNode.cpp">
-      <Filter>RenderingPipeline\Nodes\SceneRendering</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\SceneRendering</Filter>
     </ClCompile>
     <ClCompile Include="RPAdapterNode.cpp">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\Misc</Filter>
     </ClCompile>
     <ClCompile Include="RPStartNode.cpp">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\Misc</Filter>
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>Lighting</Filter>
     </ClCompile>
     <ClCompile Include="MRTUtil.cpp">
-      <Filter>RenderingPipeline\Nodes\SceneRendering</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\SceneRendering</Filter>
     </ClCompile>
     <ClCompile Include="BasicRenderingEntitiesFactory.cpp">
       <Filter>Tools</Filter>
@@ -386,7 +386,7 @@
       <Filter>Core\ShaderCompiler</Filter>
     </ClCompile>
     <ClCompile Include="DepthBufferDescriptor.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClCompile>
     <ClCompile Include="DepthBuffer.cpp">
       <Filter>Core\RenderableSurfaces</Filter>
@@ -395,7 +395,7 @@
       <Filter>Core\ShaderCompiler</Filter>
     </ClCompile>
     <ClCompile Include="RPPreviewNode.cpp">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\Misc</Filter>
     </ClCompile>
     <ClCompile Include="MeshUtils.cpp">
       <Filter>Geometry\Utilities</Filter>
@@ -446,7 +446,7 @@
       <Filter>Materials\RenderingPipelineNodes</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipelineTransaction.cpp">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -586,19 +586,19 @@
       <Filter>Geometry\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineNode.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipeline.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineMechanism.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineSockets.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingView.h">
-      <Filter>RenderingPipeline\Views</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderResourceStorage.h">
       <Filter>Core\Resources</Filter>
@@ -610,7 +610,7 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\SceneRenderTreeBuilder.h">
-      <Filter>RenderingPipeline\Views</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Views</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\Defines.h" />
     <ClInclude Include="..\..\Include\core-Renderer\Camera.h">
@@ -629,7 +629,7 @@
       <Filter>Materials\Entities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderTargetDescriptor.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MNPixelShader.h">
       <Filter>Materials\MaterialRendererGraph\Nodes</Filter>
@@ -734,31 +734,31 @@
       <Filter>Lighting</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPFloatNode.h">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPFloats2Vec4Node.h">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPVec4Node.h">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPTextureNode.h">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPCameraNode.h">
-      <Filter>RenderingPipeline\Nodes\DataProviders</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\DataProviders</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPPostProcessNode.h">
-      <Filter>RenderingPipeline\Nodes\SceneRendering</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\SceneRendering</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPStartNode.h">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPAdapterNode.h">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MRTUtil.h">
-      <Filter>RenderingPipeline\Nodes\SceneRendering</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\SceneRendering</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\BasicRenderingEntitiesFactory.h">
       <Filter>Tools</Filter>
@@ -779,7 +779,7 @@
       <Filter>Geometry\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DepthBufferDescriptor.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\DepthBuffer.h">
       <Filter>Core\RenderableSurfaces</Filter>
@@ -809,7 +809,7 @@
       <Filter>Core\ShaderCompiler\NodeOperators</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RPPreviewNode.h">
-      <Filter>RenderingPipeline\Nodes\Misc</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline\Nodes\Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\MeshUtils.h">
       <Filter>Geometry\Utilities</Filter>
@@ -863,7 +863,7 @@
       <Filter>Materials\RenderingPipelineNodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Renderer\RenderingPipelineTransaction.h">
-      <Filter>RenderingPipeline</Filter>
+      <Filter>OverlayRenderer\RenderingPipeline</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -88,6 +88,8 @@ void MaterialInstance::setMaterialRenderer( Material* materialRenderer )
    // initialize it and the dependencies
    initializeMaterial();
    attachListeners();
+
+   notify( MIO_MAT_CHANGED );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

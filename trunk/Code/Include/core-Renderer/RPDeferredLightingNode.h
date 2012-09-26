@@ -28,11 +28,6 @@ class RPDeferredLightingNode : public RenderingPipelineNode
    DECLARE_CLASS()
 
 private:
-   std::string                                           m_finalLightColorTargetId;
-   std::string                                           m_shadowDepthTextureId;
-   std::string                                           m_shadowDepthSurfaceId;
-   std::string                                           m_screenSpaceShadowMapId;
-
    // runtime data
    TRuntimeVar< RenderTarget* >                          m_shadowDepthTexture;
    TRuntimeVar< DepthBuffer* >                           m_shadowDepthSurface;
@@ -48,6 +43,8 @@ private:
    RPTextureInput*                                       m_normalsInput;
    RPTextureInput*                                       m_specularInput;
    RPTextureInput*                                       m_depthInput;
+   RPTextureInput*                                       m_materialIndicesInput;
+   RPTextureInput*                                       m_materialsDescInput;
 
    RPTextureOutput*                                      m_finalLightColorTargetOutput;
    RPTextureOutput*                                      m_shadowDepthTextureOutput;
@@ -64,6 +61,7 @@ public:
    // -------------------------------------------------------------------------
    // RenderingPipelineNode implementation
    // -------------------------------------------------------------------------
+   void onCreatePrerequisites( RenderingPipelineTransaction& transaction ) const;
    void onCreateLayout( RenderingPipelineMechanism& host ) const;
    void onDestroyLayout( RenderingPipelineMechanism& host ) const;
    void onUpdate( RenderingPipelineMechanism& host ) const;
@@ -72,7 +70,6 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-   void onPropertyChanged( ReflectionProperty& property );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
