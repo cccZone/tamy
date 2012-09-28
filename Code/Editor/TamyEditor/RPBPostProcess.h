@@ -3,13 +3,13 @@
 #pragma once
 
 #include "core-Renderer/RPPostProcessNode.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPBPostProcess : public TPipelineBlock< RPPostProcessNode, RenderingPipelineNode >
+class RPBPostProcess : public TGraphBlock< RPPostProcessNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -17,7 +17,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBPostProcess() : TPipelineBlock< RPPostProcessNode, RenderingPipelineNode >() {}
+   RPBPostProcess() : TGraphBlock< RPPostProcessNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

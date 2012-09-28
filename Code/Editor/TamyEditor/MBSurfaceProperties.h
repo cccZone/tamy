@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/MNSurfaceProperties.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Material pipeline block representing an instance surface properties provider.
  */
-class MBSurfaceProperties : public TPipelineBlock< MNSurfaceProperties, MaterialNode >
+class MBSurfaceProperties : public TGraphBlock< MNSurfaceProperties, MaterialNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   MBSurfaceProperties() : TPipelineBlock< MNSurfaceProperties, MaterialNode >() {}
+   MBSurfaceProperties() : TGraphBlock< MNSurfaceProperties, MaterialNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

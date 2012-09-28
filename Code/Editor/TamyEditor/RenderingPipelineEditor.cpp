@@ -207,12 +207,12 @@ void RenderingPipelineEditor::addRenderTarget()
       return;
    }
 
-   RenderingPipelineTransaction transaction;
+   RenderingPipelineTransaction transaction( m_renderingPipelineLayout.getPipeline() );
    if ( transaction.addRenderTarget( desc ) )
    {
       m_renderTargetsList->addItem( desc->getTargetID().c_str() );
    }
-   transaction.commit( m_renderingPipelineLayout.getPipeline() );
+   transaction.commit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -222,7 +222,7 @@ void RenderingPipelineEditor::removeRenderTarget()
    RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
 
    QList< QListWidgetItem* > itemsToRemove = m_renderTargetsList->selectedItems();
-   RenderingPipelineTransaction transaction;
+   RenderingPipelineTransaction transaction( pipeline );
    foreach( QListWidgetItem* item, itemsToRemove )
    {
       QString selectedTargetId = item->text();
@@ -230,7 +230,7 @@ void RenderingPipelineEditor::removeRenderTarget()
       
       delete item;
    }
-   transaction.commit( pipeline );
+   transaction.commit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -277,12 +277,12 @@ void RenderingPipelineEditor::addDepthBuffer()
       return;
    }
 
-   RenderingPipelineTransaction transaction;
+   RenderingPipelineTransaction transaction( m_renderingPipelineLayout.getPipeline() );
    if ( transaction.addDepthBuffer( desc ) )
    {
       m_depthBuffersList->addItem( desc->getID().c_str() );
    }
-   transaction.commit( m_renderingPipelineLayout.getPipeline() );
+   transaction.commit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -292,7 +292,7 @@ void RenderingPipelineEditor::removeDepthBuffer()
    RenderingPipeline& pipeline = m_renderingPipelineLayout.getPipeline();
 
    QList< QListWidgetItem* > itemsToRemove = m_depthBuffersList->selectedItems();
-   RenderingPipelineTransaction transaction;
+   RenderingPipelineTransaction transaction( pipeline );
    foreach( QListWidgetItem* item, itemsToRemove )
    {
       QString selectedBufferId = item->text();
@@ -300,7 +300,7 @@ void RenderingPipelineEditor::removeDepthBuffer()
 
       delete item;
    }
-   transaction.commit( pipeline );
+   transaction.commit();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

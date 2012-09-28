@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GBTimer::GBTimer( GNTimer& node )
-   : TPipelineBlock< GNTimer, GeometryShaderNode >( node )
+   : TGraphBlock< GNTimer, GeometryShaderNode >( node )
 {
    setCaption( "Time" );
 }

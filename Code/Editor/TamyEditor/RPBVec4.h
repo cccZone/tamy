@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPVec4Node.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Rendering pipeline block representing a vector provider node.
  */
-class RPBVec4 : public TPipelineBlock< RPVec4Node, RenderingPipelineNode >
+class RPBVec4 : public TGraphBlock< RPVec4Node, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBVec4() : TPipelineBlock< RPVec4Node, RenderingPipelineNode >() {}
+   RPBVec4() : TGraphBlock< RPVec4Node, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GBBool::GBBool( GNBool& node )
-   : TPipelineBlock< GNBool, GeometryShaderNode >( node )
+   : TGraphBlock< GNBool, GeometryShaderNode >( node )
 {
    setCaption( "Bool" );
 }

@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBVec4::RPBVec4( RPVec4Node& node )
-   : TPipelineBlock< RPVec4Node, RenderingPipelineNode >( node )
+   : TGraphBlock< RPVec4Node, RenderingPipelineNode >( node )
 {
    setCaption( "Vec4" );
 }

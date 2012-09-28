@@ -1,14 +1,15 @@
-#ifndef _PIPELINE_BLOCK_H
-#error "This file can only be included from PipelineBlock.h"
+#ifndef _GRAPH_BLOCK_H
+#error "This file can only be included from GraphBlock.h"
 #else
 
 #include "QPropertiesView.h"
+#include "GraphBlockSocket.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-TPipelineBlock< TNode, TBaseNode >::TPipelineBlock()
+TGraphBlock< TNode, TBaseNode >::TGraphBlock()
    : m_node( NULL )
    , m_nodePtr( NULL )
 {
@@ -17,7 +18,7 @@ TPipelineBlock< TNode, TBaseNode >::TPipelineBlock()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-TPipelineBlock< TNode, TBaseNode >::TPipelineBlock( TNode& node )
+TGraphBlock< TNode, TBaseNode >::TGraphBlock( TNode& node )
    : m_node( NULL )
    , m_nodePtr( &node )
 {
@@ -31,7 +32,7 @@ TPipelineBlock< TNode, TBaseNode >::TPipelineBlock( TNode& node )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-TPipelineBlock< TNode, TBaseNode >::~TPipelineBlock()
+TGraphBlock< TNode, TBaseNode >::~TGraphBlock()
 {
    TNode* nodePtr = static_cast< TNode* >( getNode() );
    nodePtr->detachObserver( *this );
@@ -43,7 +44,7 @@ TPipelineBlock< TNode, TBaseNode >::~TPipelineBlock()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-void TPipelineBlock< TNode, TBaseNode >::initialize()
+void TGraphBlock< TNode, TBaseNode >::initialize()
 {
    m_node = new TResourceHandle< TNode >( *m_nodePtr );
    m_nodePtr->attachObserver( *this );
@@ -52,7 +53,7 @@ void TPipelineBlock< TNode, TBaseNode >::initialize()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-ReflectionObject* TPipelineBlock< TNode, TBaseNode >::getNode() 
+ReflectionObject* TGraphBlock< TNode, TBaseNode >::getNode() 
 { 
    return &m_node->get();
 }
@@ -60,7 +61,7 @@ ReflectionObject* TPipelineBlock< TNode, TBaseNode >::getNode()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-void TPipelineBlock< TNode, TBaseNode >::onObjectLoaded()
+void TGraphBlock< TNode, TBaseNode >::onObjectLoaded()
 {
    __super::onObjectLoaded();
 
@@ -85,7 +86,7 @@ void TPipelineBlock< TNode, TBaseNode >::onObjectLoaded()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-void TPipelineBlock< TNode, TBaseNode >::update( TBaseNode& node )
+void TGraphBlock< TNode, TBaseNode >::update( TBaseNode& node )
 {
    refreshInputs( node );
    refreshOutputs( node );
@@ -94,7 +95,7 @@ void TPipelineBlock< TNode, TBaseNode >::update( TBaseNode& node )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-void TPipelineBlock< TNode, TBaseNode >::update( TBaseNode& node, const GraphBuilderNodeOperation& msg )
+void TGraphBlock< TNode, TBaseNode >::update( TBaseNode& node, const GraphBuilderNodeOperation& msg )
 {
    if ( msg == GBNO_INPUTS_CHANGED )
    {
@@ -109,7 +110,7 @@ void TPipelineBlock< TNode, TBaseNode >::update( TBaseNode& node, const GraphBui
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-void TPipelineBlock< TNode, TBaseNode >::refreshInputs( TBaseNode& node )
+void TGraphBlock< TNode, TBaseNode >::refreshInputs( TBaseNode& node )
 {
    // first - gather the names of all inputs the block currently has
    std::set< std::string > inputNames;
@@ -142,7 +143,7 @@ void TPipelineBlock< TNode, TBaseNode >::refreshInputs( TBaseNode& node )
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-void TPipelineBlock< TNode, TBaseNode >::refreshOutputs( TBaseNode& node )
+void TGraphBlock< TNode, TBaseNode >::refreshOutputs( TBaseNode& node )
 {
    // first - gather the names of all outputs the block currently has
    std::set< std::string > outputNames;
@@ -174,4 +175,4 @@ void TPipelineBlock< TNode, TBaseNode >::refreshOutputs( TBaseNode& node )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // _PIPELINE_BLOCK_H
+#endif // _GRAPH_BLOCK_H

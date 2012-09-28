@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPDeferredLightingNode.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Rendering pipeline block representing a lights provider node.
  */
-class RPBDeferredLighting : public TPipelineBlock< RPDeferredLightingNode, RenderingPipelineNode >
+class RPBDeferredLighting : public TGraphBlock< RPDeferredLightingNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBDeferredLighting() : TPipelineBlock< RPDeferredLightingNode, RenderingPipelineNode >() {}
+   RPBDeferredLighting() : TGraphBlock< RPDeferredLightingNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

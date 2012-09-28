@@ -28,34 +28,31 @@ END_RESOURCE();
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialLayout::MaterialLayout( const FilePath& resourceName )
-   : PipelineLayout< Material, MaterialNode >( resourceName )
+   : TGraphLayout< Material, MaterialNode >( resourceName )
 {
-   // create block-to-node associations
-   initBlocksFactory();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialLayout::initBlocksFactory()
+void MaterialLayout::initBlocksFactory( BlocksFactory& factory )
 {
-   associate< MNPixelShader, MBPixelShader >();
-   associate< MNSpatialEntity, MBSpatialEntity >();
-   associate< MNCamera, MBCamera >();
-   associate< MNTexture, MBTexture >();
-   associate< MNFloat, MBFloat >();
-   associate< MNVec4, MBVec4 >();
-   associate< MNBool, MBBool >();
-   associate< MNInstanceTexture, MBInstanceTexture >();
-   associate< MNSurfaceProperties, MBSurfaceProperties >();
-   associate< MNTimer, MBTimer >();
-   associate< MNMaterialIndex, MBMaterialIndex >();
+   factory.associate< MNPixelShader, MBPixelShader >();
+   factory.associate< MNSpatialEntity, MBSpatialEntity >();
+   factory.associate< MNCamera, MBCamera >();
+   factory.associate< MNTexture, MBTexture >();
+   factory.associate< MNFloat, MBFloat >();
+   factory.associate< MNVec4, MBVec4 >();
+   factory.associate< MNBool, MBBool >();
+   factory.associate< MNInstanceTexture, MBInstanceTexture >();
+   factory.associate< MNSurfaceProperties, MBSurfaceProperties >();
+   factory.associate< MNTimer, MBTimer >();
+   factory.associate< MNMaterialIndex, MBMaterialIndex >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MaterialLayout::initSocketsFactory( PipelineBlock& block )
+void MaterialLayout::initSocketsFactory( SocketsFactory& factory )
 {
-   GenericFactory< GBNodeSocket, GraphBlockSocket >& factory = block.getSocketsFactory();
    factory.associate< MSTextureInput, MSSTexture >();
    factory.associate< MSTextureOutput, MSSTexture >();
    factory.associate< MSFloatInput, MSSFloat >();

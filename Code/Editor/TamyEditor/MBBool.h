@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/MNBool.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Material pipeline block representing a bool value provider node.
  */
-class MBBool : public TPipelineBlock< MNBool, MaterialNode >
+class MBBool : public TGraphBlock< MNBool, MaterialNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   MBBool() : TPipelineBlock< MNBool, MaterialNode >() {}
+   MBBool() : TGraphBlock< MNBool, MaterialNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

@@ -3,14 +3,14 @@
 #pragma once
 
 #include "core-Renderer/MNSpatialEntity.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 
-class MBSpatialEntity : public TPipelineBlock< MNSpatialEntity, MaterialNode >
+class MBSpatialEntity : public TGraphBlock< MNSpatialEntity, MaterialNode >
 {
    DECLARE_CLASS()
 
@@ -18,7 +18,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   MBSpatialEntity() : TPipelineBlock< MNSpatialEntity, MaterialNode >() {}
+   MBSpatialEntity() : TGraphBlock< MNSpatialEntity, MaterialNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

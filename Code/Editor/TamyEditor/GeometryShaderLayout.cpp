@@ -25,31 +25,28 @@ END_RESOURCE();
 ///////////////////////////////////////////////////////////////////////////////
 
 GeometryShaderLayout::GeometryShaderLayout( const FilePath& resourceName )
-   : PipelineLayout< GeometryShader, GeometryShaderNode >( resourceName )
+   : TGraphLayout< GeometryShader, GeometryShaderNode >( resourceName )
 {
-   // create block-to-node associations
-   initBlocksFactory();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GeometryShaderLayout::initBlocksFactory()
+void GeometryShaderLayout::initBlocksFactory( BlocksFactory& factory )
 {
-   associate< GNVertexShader, GBVertexShader >();
-   associate< GNSpatialEntity, GBSpatialEntity >();
-   associate< GNCamera, GBCamera >();
-   associate< GNTexture, GBTexture >();
-   associate< GNFloat, GBFloat >();
-   associate< GNVec4, GBVec4 >();
-   associate< GNBool, GBBool >();
-   associate< GNTimer, GBTimer >();
+   factory.associate< GNVertexShader, GBVertexShader >();
+   factory.associate< GNSpatialEntity, GBSpatialEntity >();
+   factory.associate< GNCamera, GBCamera >();
+   factory.associate< GNTexture, GBTexture >();
+   factory.associate< GNFloat, GBFloat >();
+   factory.associate< GNVec4, GBVec4 >();
+   factory.associate< GNBool, GBBool >();
+   factory.associate< GNTimer, GBTimer >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GeometryShaderLayout::initSocketsFactory( PipelineBlock& block )
+void GeometryShaderLayout::initSocketsFactory( SocketsFactory& factory )
 {
-   GenericFactory< GBNodeSocket, GraphBlockSocket >& factory = block.getSocketsFactory();
    factory.associate< GSTextureInput, GSSTexture >();
    factory.associate< GSTextureOutput, GSSTexture >();
    factory.associate< GSFloatInput, GSSFloat >();

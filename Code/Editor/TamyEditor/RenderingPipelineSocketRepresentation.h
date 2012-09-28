@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RenderingPipelineNode.h"
-#include "PipelineSocket.h"
+#include "GraphBlockSocket.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

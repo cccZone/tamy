@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GBTexture::GBTexture( GNTexture& node )
-   : TPipelineBlock< GNTexture, GeometryShaderNode >( node )
+   : TGraphBlock< GNTexture, GeometryShaderNode >( node )
 {
    setCaption( "Texture" );
 }

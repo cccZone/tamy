@@ -3,12 +3,12 @@
 #pragma once
 
 #include "core-Renderer/MNPixelShader.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class MBPixelShader : public TPipelineBlock< MNPixelShader, MaterialNode >
+class MBPixelShader : public TGraphBlock< MNPixelShader, MaterialNode >
 {
    DECLARE_CLASS()
 
@@ -16,7 +16,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   MBPixelShader() : TPipelineBlock< MNPixelShader, MaterialNode >() {}
+   MBPixelShader() : TGraphBlock< MNPixelShader, MaterialNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

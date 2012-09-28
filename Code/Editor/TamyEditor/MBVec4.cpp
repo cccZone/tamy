@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBVec4::MBVec4( MNVec4& node )
-   : TPipelineBlock< MNVec4, MaterialNode >( node )
+   : TGraphBlock< MNVec4, MaterialNode >( node )
 {
    setCaption( "Vec4" );
 }

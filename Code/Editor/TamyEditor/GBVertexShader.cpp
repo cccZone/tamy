@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GBVertexShader::GBVertexShader( GNVertexShader& node )
-   : TPipelineBlock< GNVertexShader, GeometryShaderNode >( node )
+   : TGraphBlock< GNVertexShader, GeometryShaderNode >( node )
 {
    setCaption( "Vertex shader" );
 }

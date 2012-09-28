@@ -2,22 +2,21 @@
 /// @brief  layout for a rendering pipeline
 #pragma once
 
-#include "GraphLayout.h"
-#include "PipelineLayout.h"
+#include "TGraphLayout.h"
 #include "core-Renderer/RenderingPipeline.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class RenderingPipelineNode;
-class PipelineBlock;
+class GraphBlock;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Layout for a rendering pipeline
  */
-class RenderingPipelineLayout : public PipelineLayout< RenderingPipeline, RenderingPipelineNode >
+class RenderingPipelineLayout : public TGraphLayout< RenderingPipeline, RenderingPipelineNode >
 {
    DECLARE_RESOURCE()
 
@@ -33,8 +32,8 @@ protected:
    // -------------------------------------------------------------------------
    // PipelineLayout implementation
    // -------------------------------------------------------------------------
-   void initBlocksFactory();
-   void initSocketsFactory( PipelineBlock& block );
+   void initBlocksFactory( BlocksFactory& factory );
+   void initSocketsFactory( SocketsFactory& factory );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

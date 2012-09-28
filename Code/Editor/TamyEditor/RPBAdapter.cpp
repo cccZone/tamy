@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBAdapter::RPBAdapter( RPAdapterNode& node )
-   : TPipelineBlock< RPAdapterNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPAdapterNode, RenderingPipelineNode >( node )
 {
    setCaption( "Adapter" );
 }

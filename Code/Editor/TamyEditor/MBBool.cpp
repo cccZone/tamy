@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBBool::MBBool( MNBool& node )
-   : TPipelineBlock< MNBool, MaterialNode >( node )
+   : TGraphBlock< MNBool, MaterialNode >( node )
 {
    setCaption( "Bool" );
 }

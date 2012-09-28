@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBPostProcess::RPBPostProcess( RPPostProcessNode& node )
-   : TPipelineBlock< RPPostProcessNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPPostProcessNode, RenderingPipelineNode >( node )
 {
    setCaption( "PostProcess" );
 }

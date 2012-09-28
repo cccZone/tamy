@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/MNVec4.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Material pipeline block representing a vector provider node.
  */
-class MBVec4 : public TPipelineBlock< MNVec4, MaterialNode >
+class MBVec4 : public TGraphBlock< MNVec4, MaterialNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   MBVec4() : TPipelineBlock< MNVec4, MaterialNode >() {}
+   MBVec4() : TGraphBlock< MNVec4, MaterialNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

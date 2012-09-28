@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBFloat::MBFloat( MNFloat& node )
-   : TPipelineBlock< MNFloat, MaterialNode >( node )
+   : TGraphBlock< MNFloat, MaterialNode >( node )
 {
    setCaption( "Float" );
 }

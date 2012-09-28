@@ -108,9 +108,6 @@
     <Filter Include="ResourceEditors\ShaderEditors">
       <UniqueIdentifier>{01274f29-65ff-44c8-a660-7a2d3ecb06f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Widgets\PipelineWidget">
-      <UniqueIdentifier>{916cf57c-05c0-4f4b-9ce2-2c0bfce877e9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ResourceEditors\GeometryShaderEditor">
       <UniqueIdentifier>{28140cc2-2a88-4968-9ad8-063fdfbaf60e}</UniqueIdentifier>
     </Filter>
@@ -368,15 +365,6 @@
     <ClInclude Include="MBVec4.h">
       <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineSocket.h">
-      <Filter>Widgets\PipelineWidget</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineSocket.inl">
-      <Filter>Widgets\PipelineWidget</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineLayout.h">
-      <Filter>Widgets\PipelineWidget</Filter>
-    </ClInclude>
     <ClInclude Include="MBBool.h">
       <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
     </ClInclude>
@@ -578,6 +566,18 @@
     <ClInclude Include="RPBMaterialsDB.h">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\SceneRendering</Filter>
     </ClInclude>
+    <ClInclude Include="GraphBlockSocket.h">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphBlockConnection.h">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphWidgetUtils.h">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClInclude>
+    <ClInclude Include="TGraphLayout.h">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GeneratedFiles\Release\moc_tamyeditor.cpp">
@@ -708,9 +708,6 @@
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_assertDialog.cpp">
       <Filter>QtImplementation\Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphBlock.cpp">
-      <Filter>Widgets\GraphWidget</Filter>
     </ClCompile>
     <ClCompile Include="RenderingPipelineEditor.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor</Filter>
@@ -967,9 +964,6 @@
     </ClCompile>
     <ClCompile Include="MBVec4.cpp">
       <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
-    </ClCompile>
-    <ClCompile Include="PipelineBlock.cpp">
-      <Filter>Widgets\PipelineWidget</Filter>
     </ClCompile>
     <ClCompile Include="MBBool.cpp">
       <Filter>ResourceEditors\MaterialRendererEditor\Blocks</Filter>
@@ -1391,6 +1385,18 @@
     <ClCompile Include="RPBMaterialsDB.cpp">
       <Filter>ResourceEditors\RenderingPipelineEditor\Blocks\SceneRendering</Filter>
     </ClCompile>
+    <ClCompile Include="GraphBlock.cpp">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphBlockSocket.cpp">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphBlockConnection.cpp">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphWidgetUtils.cpp">
+      <Filter>Widgets\GraphWidget</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tamyeditor.qrc">
@@ -1399,17 +1405,17 @@
     <None Include="TypeDescFactory.inl">
       <Filter>Widgets\TreeWidget</Filter>
     </None>
-    <None Include="PipelineBlock.inl">
-      <Filter>Widgets\PipelineWidget</Filter>
-    </None>
-    <None Include="PipelineLayout.inl">
-      <Filter>Widgets\PipelineWidget</Filter>
-    </None>
     <None Include="ResourceManagementUtil.inl">
       <Filter>Core\ResourcesBrowser</Filter>
     </None>
     <None Include="MenuUtils.inl">
       <Filter>Widgets\Menus</Filter>
+    </None>
+    <None Include="GraphBlock.inl">
+      <Filter>Widgets\GraphWidget</Filter>
+    </None>
+    <None Include="TGraphLayout.inl">
+      <Filter>Widgets\GraphWidget</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1595,9 +1601,6 @@
     </CustomBuild>
     <CustomBuild Include="ResourceDropArea.h">
       <Filter>Widgets\DropArea\ResourceDropArea</Filter>
-    </CustomBuild>
-    <CustomBuild Include="PipelineBlock.h">
-      <Filter>Widgets\PipelineWidget</Filter>
     </CustomBuild>
     <CustomBuild Include="ColorPropertyEditor.h">
       <Filter>Widgets\PropertiesEditorWidget\PropertyEditors</Filter>

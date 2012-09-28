@@ -133,7 +133,6 @@ void MaterialEditor::onSceneSelectionChanged()
    }
 
    handleBlockSelection( dynamic_cast< GraphBlock* >( selectedItems.back() ) );
-   handleSocketSelection( dynamic_cast< GraphBlockSocket* >( selectedItems.back() ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -153,28 +152,6 @@ void MaterialEditor::handleBlockSelection( GraphBlock* selectedBlock )
    // node properties
    ReflectionObject* node = selectedBlock->getNode();
    ASSERT_MSG( node != NULL, "The block doesn't store a node" );
-   if ( !node )
-   {
-      return;
-   }
-
-   m_nodePropertiesRootView = new QPropertiesView();
-   m_nodePropertiesLayout->addWidget( m_nodePropertiesRootView );
-   node->viewProperties( *m_nodePropertiesRootView );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MaterialEditor::handleSocketSelection( GraphBlockSocket* selectedSocket )
-{
-   if ( !selectedSocket )
-   {
-      return;
-   }
-
-   // node properties
-   ReflectionObject* node = selectedSocket->getSocket();
-   ASSERT_MSG( node != NULL, "The socket doesn't store a node" );
    if ( !node )
    {
       return;

@@ -34,7 +34,7 @@ public:
    /**
     * Creates a transaction that will change this graph builder instance.
     */
-   static GraphBuilderTransaction< GeometryShader, GeometryShaderNode >* createTransaction() { return new GraphBuilderTransaction< GeometryShader, GeometryShaderNode >(); }
+   static GraphBuilderTransaction< GeometryShader, GeometryShaderNode >* createTransaction( GeometryShader& geomShader ) { return new GraphBuilderTransaction< GeometryShader, GeometryShaderNode >( geomShader ); }
 
    // -------------------------------------------------------------------------
    // Resource implementation

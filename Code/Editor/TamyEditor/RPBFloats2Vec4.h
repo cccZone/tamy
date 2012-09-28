@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPFloats2Vec4Node.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Rendering pipeline block representing a node that packs 4 floats into a vector.
  */
-class RPBFloats2Vec4 : public TPipelineBlock< RPFloats2Vec4Node, RenderingPipelineNode >
+class RPBFloats2Vec4 : public TGraphBlock< RPFloats2Vec4Node, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBFloats2Vec4() : TPipelineBlock< RPFloats2Vec4Node, RenderingPipelineNode >() {}
+   RPBFloats2Vec4() : TGraphBlock< RPFloats2Vec4Node, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

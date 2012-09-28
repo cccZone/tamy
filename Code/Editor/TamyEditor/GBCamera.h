@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/GNCamera.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Geometry shader pipeline block representing a camera node.
  */
-class GBCamera : public TPipelineBlock< GNCamera, GeometryShaderNode >
+class GBCamera : public TGraphBlock< GNCamera, GeometryShaderNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   GBCamera() : TPipelineBlock< GNCamera, GeometryShaderNode >() {}
+   GBCamera() : TGraphBlock< GNCamera, GeometryShaderNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

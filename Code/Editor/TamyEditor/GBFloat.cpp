@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GBFloat::GBFloat( GNFloat& node )
-   : TPipelineBlock< GNFloat, GeometryShaderNode >( node )
+   : TGraphBlock< GNFloat, GeometryShaderNode >( node )
 {
    setCaption( "Float" );
 }

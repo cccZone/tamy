@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPAdapterNode.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Rendering pipeline block representing a rendering process start node.
  */
-class RPBAdapter : public TPipelineBlock< RPAdapterNode, RenderingPipelineNode >
+class RPBAdapter : public TGraphBlock< RPAdapterNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBAdapter() : TPipelineBlock< RPAdapterNode, RenderingPipelineNode >() {}
+   RPBAdapter() : TGraphBlock< RPAdapterNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

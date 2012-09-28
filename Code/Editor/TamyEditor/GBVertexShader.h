@@ -3,13 +3,13 @@
 #pragma once
 
 #include "core-Renderer/GNVertexShader.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class GBVertexShader : public TPipelineBlock< GNVertexShader, GeometryShaderNode >
+class GBVertexShader : public TGraphBlock< GNVertexShader, GeometryShaderNode >
 {
    DECLARE_CLASS()
 
@@ -17,7 +17,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   GBVertexShader() : TPipelineBlock< GNVertexShader, GeometryShaderNode >() {}
+   GBVertexShader() : TGraphBlock< GNVertexShader, GeometryShaderNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

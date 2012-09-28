@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPCameraNode.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Rendering pipeline block representing a camera node.
  */
-class RPBCamera : public TPipelineBlock< RPCameraNode, RenderingPipelineNode >
+class RPBCamera : public TGraphBlock< RPCameraNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBCamera() : TPipelineBlock< RPCameraNode, RenderingPipelineNode >() {}
+   RPBCamera() : TGraphBlock< RPCameraNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

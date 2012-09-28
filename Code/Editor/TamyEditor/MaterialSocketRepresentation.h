@@ -2,7 +2,7 @@
 /// @brief  material pipeline's socket representation
 #pragma once
 
-#include "PipelineSocket.h"
+#include "GraphBlockSocket.h"
 #include "core-Renderer/MaterialNode.h"
 
 

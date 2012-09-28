@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBMaterialsDB::RPBMaterialsDB( RPMaterialsDBNode& node )
-   : TPipelineBlock< RPMaterialsDBNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPMaterialsDBNode, RenderingPipelineNode >( node )
 {
    setCaption( "MaterialsDB" );
 }

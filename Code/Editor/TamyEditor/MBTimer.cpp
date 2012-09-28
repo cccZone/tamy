@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBTimer::MBTimer( MNTimer& node )
-   : TPipelineBlock< MNTimer, MaterialNode >( node )
+   : TGraphBlock< MNTimer, MaterialNode >( node )
 {
    setCaption( "Time" );
 }

@@ -66,31 +66,6 @@ public:
    // -------------------------------------------------------------------------
    // Connections management
    // -------------------------------------------------------------------------
-
-   /**
-    * Establishes a connection between this node's output `outputName`,
-    * and the `destNode's` input `inputName`
-    *
-    * @param outputName
-    * @param destNode
-    * @param inputName
-    */
-   bool connect( const std::string& outputName, Impl& destNode, const std::string& inputName );
-
-   /**
-    * Disconnects this node from the specified node's input.
-    *
-    * @param destNode
-    * @param inputName
-    */
-   void disconnect( Impl& destNode, const std::string& inputName );
-
-   /**
-    * Disconnects this node from the specified node - disconnects all involved inputs.
-    *
-    * @param destNode
-    */
-   void disconnect( Impl& destNode );
    
    /**
     * Returns an array of all defined input sockets.
@@ -229,6 +204,16 @@ public:
     */
    template< typename T >
    const T& getOutput( const std::string& outputName ) const;
+
+   /**
+    * Notifies the listeners that inputs connectivity has changed.
+    */
+   void notifyInputsChanged();
+
+   /**
+    * Notifies the listeners that outputs connectivity has changed.
+    */
+   void notifyOutputsChanged();
 
 };
 

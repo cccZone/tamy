@@ -3,13 +3,13 @@
 #pragma once
 
 #include "core-Renderer/GNSpatialEntity.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class GBSpatialEntity : public TPipelineBlock< GNSpatialEntity, GeometryShaderNode >
+class GBSpatialEntity : public TGraphBlock< GNSpatialEntity, GeometryShaderNode >
 {
    DECLARE_CLASS()
 
@@ -17,7 +17,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   GBSpatialEntity() : TPipelineBlock< GNSpatialEntity, GeometryShaderNode >() {}
+   GBSpatialEntity() : TGraphBlock< GNSpatialEntity, GeometryShaderNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

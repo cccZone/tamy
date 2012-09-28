@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/MNMaterialIndex.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Material pipeline block representing a material index provider node.
  */
-class MBMaterialIndex : public TPipelineBlock< MNMaterialIndex, MaterialNode >
+class MBMaterialIndex : public TGraphBlock< MNMaterialIndex, MaterialNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   MBMaterialIndex() : TPipelineBlock< MNMaterialIndex, MaterialNode >() {}
+   MBMaterialIndex() : TGraphBlock< MNMaterialIndex, MaterialNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

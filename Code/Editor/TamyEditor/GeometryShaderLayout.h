@@ -2,22 +2,21 @@
 /// @brief  geometry shader pipeline layout
 #pragma once
 
-#include "GraphLayout.h"
-#include "PipelineLayout.h"
+#include "TGraphLayout.h"
 #include "core-Renderer/GeometryShader.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class GeometryShaderNode;
-class PipelineBlock;
+class GraphBlock;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Layout for a rendering pipeline
  */
-class GeometryShaderLayout : public PipelineLayout< GeometryShader, GeometryShaderNode >
+class GeometryShaderLayout : public TGraphLayout< GeometryShader, GeometryShaderNode >
 {
    DECLARE_RESOURCE()
 
@@ -33,8 +32,8 @@ protected:
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
-   void initBlocksFactory();
-   void initSocketsFactory( PipelineBlock& block );
+   void initBlocksFactory( BlocksFactory& factory );
+   void initSocketsFactory( SocketsFactory& factory );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

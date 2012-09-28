@@ -1,7 +1,7 @@
-/// @file   TamyEditor/PipelineLayout.h
+/// @file   TamyEditor/TGraphLayout.h
 /// @brief  pipeline layout resource base
-#ifndef _PIPELINE_LAYOUT_H
-#define _PIPELINE_LAYOUT_H
+#ifndef _TGRAPH_LAYOUT_H
+#define _TGRAPH_LAYOUT_H
 
 #include "GraphLayout.h"
 #include "core.h"
@@ -9,15 +9,20 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class PipelineBlock;
+class GraphBlock;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TPipeline, typename TNode >
-class PipelineLayout : public Resource, public GraphLayout, public GenericFactory< TNode, PipelineBlock >
+class TGraphLayout : public Resource, public GraphLayout
 {
 protected:
-   TPipeline*                  m_pipeline;
+   typedef GenericFactory< ReflectionObject, GraphBlock >      BlocksFactory;
+   typedef GenericFactory< GBNodeSocket, GraphBlockSocket >    SocketsFactory;
+
+   TPipeline*                                         m_pipeline;
+   BlocksFactory*                                     m_blocksFactory;
+   SocketsFactory*                                    m_socketsFactory;
 
 public:
    /**
@@ -25,8 +30,8 @@ public:
     *
     * @param resourceName
     */
-   PipelineLayout( const FilePath& resourceName = FilePath() );
-   ~PipelineLayout();
+   TGraphLayout( const FilePath& resourceName = FilePath() );
+   ~TGraphLayout();
 
    /**
     * Returns a rendering pipeline the layout edits.
@@ -39,6 +44,9 @@ public:
    GraphBlock* createNode( const SerializableReflectionType& type );
    void removeNode( ReflectionObject& node );
    void getNodesClasses( std::vector< const SerializableReflectionType* >& classes );
+   bool connectNodes( ReflectionObject* sourceNode, const std::string& outputName, ReflectionObject* destinationNode, const std::string& inputName );
+   void disconnectNode( ReflectionObject* sourceNode, ReflectionObject* destinationNode, const std::string& inputName );
+   void breakPipelineConnections( const std::vector< GraphBlockConnection* >& connectionsToDelete ) const;
 
 protected:
    // -------------------------------------------------------------------------
@@ -47,17 +55,24 @@ protected:
    void onResourceLoaded( ResourcesManager& mgr );
 
    /**
-    * Called when we need to set a block up with socket definitions.
+    * Called in order to setup a blocks factory.
     *
-    * @param block
+    * @param factory
     */
-   virtual void initSocketsFactory( PipelineBlock& block ) = 0;
+   virtual void initBlocksFactory( BlocksFactory& factory ) = 0;
+
+   /**
+    * Called in order to setup a sockets factory.
+    *
+    * @param factory
+    */
+   virtual void initSocketsFactory( SocketsFactory& factory ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "PipelineLayout.inl"
+#include "TGraphLayout.inl"
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#endif // _PIPELINE_LAYOUT_H
+#endif // _TGRAPH_LAYOUT_H

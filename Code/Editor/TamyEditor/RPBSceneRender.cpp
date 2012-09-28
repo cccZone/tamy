@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBSceneRender::RPBSceneRender( RPSceneRenderNode& node )
-   : TPipelineBlock< RPSceneRenderNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPSceneRenderNode, RenderingPipelineNode >( node )
 {
    setCaption( "Scene" );
 }

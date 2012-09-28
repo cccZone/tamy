@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBInstanceTexture::MBInstanceTexture( MNInstanceTexture& node )
-   : TPipelineBlock< MNInstanceTexture, MaterialNode >( node )
+   : TGraphBlock< MNInstanceTexture, MaterialNode >( node )
 {
    setCaption( "Inst. Texture" );
 }

@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBLightIndices::RPBLightIndices( RPLightIndicesNode& node )
-   : TPipelineBlock< RPLightIndicesNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPLightIndicesNode, RenderingPipelineNode >( node )
 {
    setCaption( "Index Lights" );
 }
