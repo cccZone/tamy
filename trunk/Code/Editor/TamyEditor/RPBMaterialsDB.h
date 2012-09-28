@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPMaterialsDBNode.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Rendering pipeline block that manages the materials DB.
  */
-class RPBMaterialsDB : public TPipelineBlock< RPMaterialsDBNode, RenderingPipelineNode >
+class RPBMaterialsDB : public TGraphBlock< RPMaterialsDBNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBMaterialsDB() : TPipelineBlock< RPMaterialsDBNode, RenderingPipelineNode >() {}
+   RPBMaterialsDB() : TGraphBlock< RPMaterialsDBNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

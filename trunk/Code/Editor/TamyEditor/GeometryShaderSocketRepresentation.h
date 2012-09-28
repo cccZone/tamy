@@ -2,7 +2,7 @@
 /// @brief  geometry shader pipeline's socket representation
 #pragma once
 
-#include "PipelineSocket.h"
+#include "GraphBlockSocket.h"
 #include "core-Renderer/GeometryShaderNode.h"
 
 

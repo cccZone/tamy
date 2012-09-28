@@ -32,9 +32,9 @@ RenderingPipeline::~RenderingPipeline()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GraphBuilderTransaction< RenderingPipeline, RenderingPipelineNode >* RenderingPipeline::createTransaction()
+GraphBuilderTransaction< RenderingPipeline, RenderingPipelineNode >* RenderingPipeline::createTransaction( RenderingPipeline& pipeline )
 {
-   return new RenderingPipelineTransaction();
+   return new RenderingPipelineTransaction( pipeline );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

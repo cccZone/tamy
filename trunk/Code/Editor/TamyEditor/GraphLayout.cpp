@@ -1,6 +1,7 @@
 #include "GraphLayout.h"
 #include "core.h"
 #include "GraphBlock.h"
+#include "GraphBlockSocket.h"
 #include <algorithm>
 #include <QGraphicsSceneMouseEvent>
 #include <QPainter>
@@ -56,25 +57,36 @@ void GraphLayout::remove( GraphBlock* block )
    }
 
    // remove all connections the block's sockets is involved in
-   std::vector< GraphBlockConnection* > connections;
-   block->getConnections( connections );
-   for ( std::vector< GraphBlockConnection* >::iterator it = connections.begin(); it != connections.end(); ++it )
    {
-      removeConnection( **it );
+      std::vector< GraphBlockConnection* > connections;
+      int count = m_connections.size();
+      for ( int i = count - 1; i >= 0; --i )
+      {
+         GraphBlockConnection* connection = m_connections[i];
+         if ( connection->getSource().getParentBlock() == block || connection->getDestination().getParentBlock() == block )
+         {
+            removeItem( connection );
+            delete connection;
+            m_connections.erase( m_connections.begin() + i );
+         }
+      }
+
    }
 
-   // remove the block itself
-   removeNode( *block->getNode() );
+   // remove the block and the node it represents 
+   {
+      removeNode( *block->getNode() );
 
-   std::vector< GraphBlock* >::iterator it = std::find( m_blocks.begin(), m_blocks.end(), block );
-   if ( it != m_blocks.end() )
-   {
-      m_blocks.erase( it );
-      removeItem( block );
-   }
-   else
-   {
-      ASSERT_MSG( false, "The specified block doesn't belong to this layout" );
+      std::vector< GraphBlock* >::iterator it = std::find( m_blocks.begin(), m_blocks.end(), block );
+      if ( it != m_blocks.end() )
+      {
+         m_blocks.erase( it );
+         removeItem( block );
+      }
+      else
+      {
+         ASSERT_MSG( false, "The specified block doesn't belong to this layout" );
+      }
    }
 
    emit onBlockRemoved();
@@ -122,12 +134,15 @@ void GraphLayout::finishNegotiatingConnection( GraphBlockSocket* destinationSock
    }
 
    // verify that the connection doesn't exist and that we're connecting to a correctly positioned socket
-   if ( destinationSocket->getPosition() == GBSP_INPUT && !m_sourceSocket->isConnectedTo( *destinationSocket ) )
+   if ( destinationSocket->getPosition() == GBSP_INPUT && !areSocketsConnected( m_sourceSocket, destinationSocket ) )
    {
-      // create a connection
-      GraphBlockConnection* connection = GraphBlockConnection::createConnection( m_sourceSocket, destinationSocket );
-      if ( connection )
+      ReflectionObject* sourceNode = m_sourceSocket->getParentBlock()->getNode();
+      ReflectionObject* destinationNode = destinationSocket->getParentBlock()->getNode();
+      bool connectionEstablished = connectNodes( sourceNode, m_sourceSocket->getName(), destinationNode, destinationSocket->getName() );
+      
+      if ( connectionEstablished )
       {
+         GraphBlockConnection* connection = new GraphBlockConnection( m_sourceSocket, destinationSocket );
          m_connections.push_back( connection );
          addItem( connection );
       }
@@ -139,20 +154,60 @@ void GraphLayout::finishNegotiatingConnection( GraphBlockSocket* destinationSock
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GraphLayout::removeConnection( GraphBlockConnection& connection )
+bool GraphLayout::areSocketsConnected( GraphBlockSocket* source, GraphBlockSocket* destination ) const
 {
-   for( std::vector< GraphBlockConnection* >::iterator it = m_connections.begin(); it != m_connections.end(); ++it )
+   GraphBlock* sourceBlock = source->getParentBlock();
+   GraphBlock* destinationBlock = destination->getParentBlock();
+
+   uint count = m_connections.size();
+   for ( uint i = 0; i < count; ++i )
    {
-      if ( *it == &connection )
+      GraphBlockConnection* connection = m_connections[i];
+      if ( connection->doesConnect( sourceBlock, destinationBlock ) )
       {
-         connection.onRemoved();
-         
-         removeItem( *it );
-         delete *it;
-         m_connections.erase( it );
-         break;
+         return true;
       }
    }
+
+   return false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphLayout::disconnectSocket( GraphBlockSocket& socket )
+{
+   ReflectionObject* node = socket.getParentBlock()->getNode();
+   const std::string& socketName = socket.getName();
+
+   // find and remove all connections the socket was involved int
+   std::vector< GraphBlockConnection* > connectionsToDelete;
+
+   int count = m_connections.size();
+   for ( int i = count - 1; i >= 0; --i )
+   {
+      GraphBlockConnection* connection = m_connections[i];
+
+      if ( &connection->getSource() == &socket || &connection->getDestination() == &socket )
+      {
+         connectionsToDelete.push_back( connection );
+
+         m_connections.erase( m_connections.begin() + i );
+      }
+   }
+
+   // first - run the connections through the higher instance that's aware of the pipeline
+   // this graph represents, so that it can clean them up
+   breakPipelineConnections( connectionsToDelete );
+
+   // and then delete the connections
+   count = connectionsToDelete.size();
+   for ( int i = 0 ; i < count; ++i )
+   {
+      GraphBlockConnection* connection = connectionsToDelete[i];
+      removeItem( connection );
+      delete connection;
+   }
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -161,15 +216,26 @@ void GraphLayout::mouseMoveEvent( QGraphicsSceneMouseEvent* mouseEvent )
 {
    __super::mouseMoveEvent( mouseEvent );
 
-   if ( !m_drawnConnection )
+   if ( m_drawnConnection )
    {
-      return;
-   }
-   ASSERT( m_sourceSocket != NULL );
+      // update drawn connection
+      ASSERT( m_sourceSocket != NULL );
 
-   QPointF start = m_sourceSocket->scenePos();
-   QPointF end = mouseEvent->scenePos();
-   m_drawnConnection->setLine( start.rx(), start.ry(), end.rx(), end.ry() );
+      QPointF start = m_sourceSocket->scenePos();
+      QPointF end = mouseEvent->scenePos();
+      m_drawnConnection->setLine( start.rx(), start.ry(), end.rx(), end.ry() );
+   }
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void GraphLayout::onBlockMoved()
+{
+   for( std::vector< GraphBlockConnection* >::iterator it = m_connections.begin(); it != m_connections.end(); ++it )
+   {
+      (*it)->calculateBounds();
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -199,7 +265,10 @@ void GraphLayout::restoreState()
    {
       if ( !m_connections[i]->isOk() )
       {
-         removeConnection( *m_connections[i] );
+         GraphBlockConnection* connection = m_connections[i];
+         removeItem( connection );
+         delete connection;
+         m_connections.erase( m_connections.begin() + i );
       }
    }
 
@@ -325,11 +394,7 @@ GraphSocketRemoveConnectionsAction::GraphSocketRemoveConnectionsAction( GraphLay
 
 void GraphSocketRemoveConnectionsAction::onTriggered()
 {
-   std::vector< GraphBlockConnection* > connections = m_socket.getConnections();
-   for ( std::vector< GraphBlockConnection* >::iterator it = connections.begin(); it != connections.end(); ++it )
-   {
-      m_parent.removeConnection( **it );
-   }
+   m_parent.disconnectSocket( m_socket );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

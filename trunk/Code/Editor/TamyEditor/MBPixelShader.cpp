@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBPixelShader::MBPixelShader( MNPixelShader& node )
-   : TPipelineBlock< MNPixelShader, MaterialNode >( node )
+   : TGraphBlock< MNPixelShader, MaterialNode >( node )
 {
    setCaption( "Pixel shader" );
 }

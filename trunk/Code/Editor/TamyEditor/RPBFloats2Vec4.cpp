@@ -12,7 +12,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBFloats2Vec4::RPBFloats2Vec4( RPFloats2Vec4Node& node )
-   : TPipelineBlock< RPFloats2Vec4Node, RenderingPipelineNode >( node )
+   : TGraphBlock< RPFloats2Vec4Node, RenderingPipelineNode >( node )
 {
    setCaption( "Set Vec4" );
 }

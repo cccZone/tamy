@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/MNInstanceTexture.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Material pipeline block representing an instance texture provider node.
  */
-class MBInstanceTexture : public TPipelineBlock< MNInstanceTexture, MaterialNode >
+class MBInstanceTexture : public TGraphBlock< MNInstanceTexture, MaterialNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   MBInstanceTexture() : TPipelineBlock< MNInstanceTexture, MaterialNode >() {}
+   MBInstanceTexture() : TGraphBlock< MNInstanceTexture, MaterialNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBSurfaceProperties::MBSurfaceProperties( MNSurfaceProperties& node )
-   : TPipelineBlock< MNSurfaceProperties, MaterialNode >( node )
+   : TGraphBlock< MNSurfaceProperties, MaterialNode >( node )
 {
    setCaption( "Surf. props" );
 }

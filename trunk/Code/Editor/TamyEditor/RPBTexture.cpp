@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBTexture::RPBTexture( RPTextureNode& node )
-   : TPipelineBlock< RPTextureNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPTextureNode, RenderingPipelineNode >( node )
 {
    setCaption( "Texture" );
 }

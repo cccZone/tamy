@@ -122,14 +122,13 @@ TEST( GraphBuilderInstantiation, simpleGraph )
    GraphBuilderMock builder;
 
    GBMockNode* node[] = { new GBMStartNode( 0 ), new GBMUtilNode( 1 ), new GBMEndNode( 2 ) };
-   GraphBuilderTransaction< GraphBuilderMock, GBMockNode > transaction;
+   GraphBuilderTransaction< GraphBuilderMock, GBMockNode > transaction( builder );
    transaction.addNode( node[0] );
    transaction.addNode( node[1] );
    transaction.addNode( node[2] );
-   transaction.commit( builder );
-
-   node[0]->connect( "Output", *node[1], "Input" );
-   node[1]->connect( "Output", *node[2], "Input" );
+   transaction.commit();
+   transaction.connectNodes( node[0], "Output", node[1], "Input" );
+   transaction.connectNodes( node[1], "Output", node[2], "Input" );
 
    Graph< GBMockNode* > graph;
    builder.buildGraph< GBMUtilNode >( graph );

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/GNFloat.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Geometry shader pipeline block representing a float value provider node.
  */
-class GBFloat : public TPipelineBlock< GNFloat, GeometryShaderNode >
+class GBFloat : public TGraphBlock< GNFloat, GeometryShaderNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   GBFloat() : TPipelineBlock< GNFloat, GeometryShaderNode >() {}
+   GBFloat() : TGraphBlock< GNFloat, GeometryShaderNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

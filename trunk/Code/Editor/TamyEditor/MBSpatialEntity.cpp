@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBSpatialEntity::MBSpatialEntity( MNSpatialEntity& node )
-   : TPipelineBlock< MNSpatialEntity, MaterialNode >( node )
+   : TGraphBlock< MNSpatialEntity, MaterialNode >( node )
 {
    setCaption( "Spatial entity" );
 }

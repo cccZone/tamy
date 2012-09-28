@@ -2,22 +2,21 @@
 /// @brief  material pipeline layout
 #pragma once
 
-#include "GraphLayout.h"
-#include "PipelineLayout.h"
+#include "TGraphLayout.h"
 #include "core-Renderer/Material.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class MaterialNode;
-class PipelineBlock;
+class GraphBlock;
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Layout for a rendering pipeline
  */
-class MaterialLayout : public PipelineLayout< Material, MaterialNode >
+class MaterialLayout : public TGraphLayout< Material, MaterialNode >
 {
    DECLARE_RESOURCE()
 
@@ -33,8 +32,8 @@ protected:
    // -------------------------------------------------------------------------
    // Resource implementation
    // -------------------------------------------------------------------------
-   void initBlocksFactory();
-   void initSocketsFactory( PipelineBlock& block );
+   void initBlocksFactory( BlocksFactory& factory );
+   void initSocketsFactory( SocketsFactory& factory );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

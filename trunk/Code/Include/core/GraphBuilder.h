@@ -102,10 +102,11 @@ protected:
 
    
 private:
-   friend class GraphBuilderTransaction< Impl, NodeType >;
    // -------------------------------------------------------------------------
    // Transaction API
    // -------------------------------------------------------------------------
+   friend class GraphBuilderTransaction< Impl, NodeType >;
+
    /**
     * Transaction code calls this method before it changes the graph state.
     */

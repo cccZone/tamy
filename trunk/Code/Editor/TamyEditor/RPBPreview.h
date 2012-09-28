@@ -3,13 +3,13 @@
 #pragma once
 
 #include "core-Renderer/RPPreviewNode.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class RPBPreview : public TPipelineBlock< RPPreviewNode, RenderingPipelineNode >
+class RPBPreview : public TGraphBlock< RPPreviewNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -17,7 +17,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBPreview() : TPipelineBlock< RPPreviewNode, RenderingPipelineNode >() {}
+   RPBPreview() : TGraphBlock< RPPreviewNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

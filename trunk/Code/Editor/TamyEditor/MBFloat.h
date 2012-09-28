@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/MNFloat.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Material pipeline block representing a float value provider node.
  */
-class MBFloat : public TPipelineBlock< MNFloat, MaterialNode >
+class MBFloat : public TGraphBlock< MNFloat, MaterialNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   MBFloat() : TPipelineBlock< MNFloat, MaterialNode >() {}
+   MBFloat() : TGraphBlock< MNFloat, MaterialNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

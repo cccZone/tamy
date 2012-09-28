@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPLightIndicesNode.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Rendering pipeline block representing a light indexer node.
  */
-class RPBLightIndices : public TPipelineBlock< RPLightIndicesNode, RenderingPipelineNode >
+class RPBLightIndices : public TGraphBlock< RPLightIndicesNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBLightIndices() : TPipelineBlock< RPLightIndicesNode, RenderingPipelineNode >() {}
+   RPBLightIndices() : TGraphBlock< RPLightIndicesNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

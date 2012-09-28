@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBCamera::MBCamera( MNCamera& node )
-   : TPipelineBlock< MNCamera, MaterialNode >( node )
+   : TGraphBlock< MNCamera, MaterialNode >( node )
 {
    setCaption( "Camera" );
 }

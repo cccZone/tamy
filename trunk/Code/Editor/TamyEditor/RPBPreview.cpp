@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBPreview::RPBPreview( RPPreviewNode& node )
-   : TPipelineBlock< RPPreviewNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPPreviewNode, RenderingPipelineNode >( node )
 {
    setCaption( "Preview" );
 }

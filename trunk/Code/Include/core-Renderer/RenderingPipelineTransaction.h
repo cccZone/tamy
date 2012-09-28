@@ -28,6 +28,13 @@ private:
 
 public:
    /**
+    * Constructor.
+    *
+    * @param pipeline
+    */
+   RenderingPipelineTransaction( RenderingPipeline& pipeline );
+
+   /**
     * Adds a new render target definition.
     *
     * @param descriptor    render target descriptor

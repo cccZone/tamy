@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBCamera::RPBCamera( RPCameraNode& node )
-   : TPipelineBlock< RPCameraNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPCameraNode, RenderingPipelineNode >( node )
 {
    setCaption( "Camera" );
 }

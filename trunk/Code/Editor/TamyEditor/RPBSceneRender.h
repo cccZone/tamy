@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPSceneRenderNode.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Rendering pipeline block representing a node that renders scenes.
  */
-class RPBSceneRender : public TPipelineBlock< RPSceneRenderNode, RenderingPipelineNode >
+class RPBSceneRender : public TGraphBlock< RPSceneRenderNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBSceneRender() : TPipelineBlock< RPSceneRenderNode, RenderingPipelineNode >() {}
+   RPBSceneRender() : TGraphBlock< RPSceneRenderNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

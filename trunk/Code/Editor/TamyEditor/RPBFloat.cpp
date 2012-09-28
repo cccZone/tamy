@@ -12,7 +12,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBFloat::RPBFloat( RPFloatNode& node )
-   : TPipelineBlock< RPFloatNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPFloatNode, RenderingPipelineNode >( node )
 {
    setCaption( "Float" );
 }

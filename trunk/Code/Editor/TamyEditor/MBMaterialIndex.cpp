@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBMaterialIndex::MBMaterialIndex( MNMaterialIndex& node )
-   : TPipelineBlock< MNMaterialIndex, MaterialNode >( node )
+   : TGraphBlock< MNMaterialIndex, MaterialNode >( node )
 {
    setCaption( "Material Idx" );
 }

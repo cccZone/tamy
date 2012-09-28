@@ -6,6 +6,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+RenderingPipelineTransaction::RenderingPipelineTransaction( RenderingPipeline& pipeline )
+   : GraphBuilderTransaction< RenderingPipeline, RenderingPipelineNode >( pipeline )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool RenderingPipelineTransaction::addRenderTarget( RenderTargetDescriptor* descriptor )
 {
    if ( !descriptor )

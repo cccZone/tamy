@@ -50,8 +50,10 @@ public:
    // -------------------------------------------------------------------------
    /**
     * Creates a transaction that will change this graph builder instance.
+    *
+    * @param pipeline
     */
-   static GraphBuilderTransaction< RenderingPipeline, RenderingPipelineNode >* createTransaction();
+   static GraphBuilderTransaction< RenderingPipeline, RenderingPipelineNode >* createTransaction( RenderingPipeline& pipeline );
 
    // -------------------------------------------------------------------------
    // Render targets management

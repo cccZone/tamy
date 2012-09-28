@@ -7,6 +7,7 @@
 #include "GraphBlock.h"
 #include <QGraphicsScene>
 #include <QAction>
+#include "GraphBlockConnection.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -72,11 +73,16 @@ public:
    void finishNegotiatingConnection( GraphBlockSocket* destinationSocket );
 
    /**
-    * Removes the specified connection.
+    * Breaks all connections to or from the specified socket.
     *
-    * @param connection
+    * @param socket
     */
-   void removeConnection( GraphBlockConnection& connection );
+   void disconnectSocket( GraphBlockSocket& socket );
+
+   /**
+    * Called by a block to inform that its position has changed.
+    */
+   void onBlockMoved();
 
 signals:
    /**
@@ -130,6 +136,42 @@ protected:
     * @param classes          fill this list with available node types
     */
    virtual void getNodesClasses( std::vector< const SerializableReflectionType* >& classes ) = 0;
+
+   /**
+    * Creates a connection between two nodes.
+    *
+    * @param sourceNode
+    * @param outputName
+    * @param destinationNode
+    * @param inputName
+    * @return  'true' if connection was successfully established
+    */
+   virtual bool connectNodes( ReflectionObject* sourceNode, const std::string& outputName, ReflectionObject* destinationNode, const std::string& inputName ) = 0;
+
+   /**
+    * Disconnects the specified node.
+    *
+    * @param sourceNode
+    * @param destinationNode
+    * @param inputName
+    */
+   virtual void disconnectNode( ReflectionObject* sourceNode, ReflectionObject* destinationNode, const std::string& inputName ) = 0;
+
+   /**
+    * Breaks multiple pipeline connections specified in the array.
+    *
+    * @param connections
+    */
+   virtual void breakPipelineConnections( const std::vector< GraphBlockConnection* >& connections ) const = 0;
+
+private:
+   /**
+    * Checks if the two sockets are connected.
+    *
+    * @param source
+    * @param destination
+    */
+   bool areSocketsConnected( GraphBlockSocket* source, GraphBlockSocket* destination ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -187,8 +229,8 @@ class GraphSocketRemoveConnectionsAction : public QAction
    Q_OBJECT
 
 private:
-   GraphLayout&               m_parent;
-   GraphBlockSocket&          m_socket;
+   GraphLayout&                                 m_parent;
+   GraphBlockSocket&                            m_socket;
 
 public:
    /**

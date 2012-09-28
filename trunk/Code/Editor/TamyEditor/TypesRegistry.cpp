@@ -9,8 +9,10 @@ REGISTER_TYPE( Project );
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "GraphBlock.h"
+#include "GraphBlockSocket.h"
+#include "GraphBlockConnection.h"
 
-REGISTER_TYPE( GraphBlock );
+REGISTER_ABSTRACT_TYPE( GraphBlock );
 REGISTER_TYPE( GraphBlockSocket );
 REGISTER_TYPE( GraphBlockConnection );
 

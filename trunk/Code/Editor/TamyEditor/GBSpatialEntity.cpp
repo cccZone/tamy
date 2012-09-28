@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GBSpatialEntity::GBSpatialEntity( GNSpatialEntity& node )
-   : TPipelineBlock< GNSpatialEntity, GeometryShaderNode >( node )
+   : TGraphBlock< GNSpatialEntity, GeometryShaderNode >( node )
 {
    setCaption( "Spatial entity" );
 }

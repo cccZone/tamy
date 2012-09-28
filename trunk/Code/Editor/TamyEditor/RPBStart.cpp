@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBStart::RPBStart( RPStartNode& node )
-   : TPipelineBlock< RPStartNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPStartNode, RenderingPipelineNode >( node )
 {
    setCaption( "Start" );
 }

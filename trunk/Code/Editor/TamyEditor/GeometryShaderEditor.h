@@ -54,7 +54,6 @@ public slots:
 
 private:
    void handleBlockSelection( GraphBlock* selectedBlock );
-   void handleSocketSelection( GraphBlockSocket* selectedSocket );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

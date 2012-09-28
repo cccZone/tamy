@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GBCamera::GBCamera( GNCamera& node )
-   : TPipelineBlock< GNCamera, GeometryShaderNode >( node )
+   : TGraphBlock< GNCamera, GeometryShaderNode >( node )
 {
    setCaption( "Camera" );
 }

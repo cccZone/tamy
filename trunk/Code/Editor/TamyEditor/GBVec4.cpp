@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GBVec4::GBVec4( GNVec4& node )
-   : TPipelineBlock< GNVec4, GeometryShaderNode >( node )
+   : TGraphBlock< GNVec4, GeometryShaderNode >( node )
 {
    setCaption( "Vec4" );
 }

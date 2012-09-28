@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/GNBool.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Geometry shader pipeline block representing a bool value provider node.
  */
-class GBBool : public TPipelineBlock< GNBool, GeometryShaderNode >
+class GBBool : public TGraphBlock< GNBool, GeometryShaderNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   GBBool() : TPipelineBlock< GNBool, GeometryShaderNode >() {}
+   GBBool() : TGraphBlock< GNBool, GeometryShaderNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

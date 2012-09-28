@@ -30,37 +30,34 @@ END_RESOURCE();
 ///////////////////////////////////////////////////////////////////////////////
 
 RenderingPipelineLayout::RenderingPipelineLayout( const FilePath& resourceName )
-   : PipelineLayout< RenderingPipeline, RenderingPipelineNode >( resourceName )
+   : TGraphLayout< RenderingPipeline, RenderingPipelineNode >( resourceName )
 {
-   // create block-to-node associations
-   initBlocksFactory();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineLayout::initBlocksFactory()
+void RenderingPipelineLayout::initBlocksFactory( BlocksFactory& factory )
 {
    // create block-to-node associations
-   associate< RPSceneRenderNode, RPBSceneRender >();
-   associate< RPStartNode, RPBStart >();
-   associate< RPAdapterNode, RPBAdapter >();
-   associate< RPPostProcessNode, RPBPostProcess >();
-   associate< RPFloats2Vec4Node, RPBFloats2Vec4 >();
-   associate< RPCameraNode, RPBCamera >();
-   associate< RPTextureNode, RPBTexture >();
-   associate< RPFloatNode, RPBFloat >();
-   associate< RPVec4Node, RPBVec4 >();
-   associate< RPDeferredLightingNode, RPBDeferredLighting >();
-   associate< RPLightIndicesNode, RPBLightIndices >();
-   associate< RPPreviewNode, RPBPreview >();
-   associate< RPMaterialsDBNode, RPBMaterialsDB >();
+   factory.associate< RPSceneRenderNode, RPBSceneRender >();
+   factory.associate< RPStartNode, RPBStart >();
+   factory.associate< RPAdapterNode, RPBAdapter >();
+   factory.associate< RPPostProcessNode, RPBPostProcess >();
+   factory.associate< RPFloats2Vec4Node, RPBFloats2Vec4 >();
+   factory.associate< RPCameraNode, RPBCamera >();
+   factory.associate< RPTextureNode, RPBTexture >();
+   factory.associate< RPFloatNode, RPBFloat >();
+   factory.associate< RPVec4Node, RPBVec4 >();
+   factory.associate< RPDeferredLightingNode, RPBDeferredLighting >();
+   factory.associate< RPLightIndicesNode, RPBLightIndices >();
+   factory.associate< RPPreviewNode, RPBPreview >();
+   factory.associate< RPMaterialsDBNode, RPBMaterialsDB >();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RenderingPipelineLayout::initSocketsFactory( PipelineBlock& block )
+void RenderingPipelineLayout::initSocketsFactory( SocketsFactory& factory )
 {
-   GenericFactory< GBNodeSocket, GraphBlockSocket >& factory = block.getSocketsFactory();
    factory.associate< RPVoidInput, RPSVoid >();
    factory.associate< RPVoidOutput, RPSVoid >();
    factory.associate< RPTextureInput, RPSTexture >();

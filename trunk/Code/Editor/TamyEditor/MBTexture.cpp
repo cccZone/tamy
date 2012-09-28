@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MBTexture::MBTexture( MNTexture& node )
-   : TPipelineBlock< MNTexture, MaterialNode >( node )
+   : TGraphBlock< MNTexture, MaterialNode >( node )
 {
    setCaption( "Texture" );
 }

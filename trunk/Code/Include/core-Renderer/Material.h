@@ -35,7 +35,7 @@ public:
    /**
     * Creates a transaction that will change this graph builder instance.
     */
-   static GraphBuilderTransaction< Material, MaterialNode >* createTransaction() { return new GraphBuilderTransaction< Material, MaterialNode >(); }
+   static GraphBuilderTransaction< Material, MaterialNode >* createTransaction( Material& material ) { return new GraphBuilderTransaction< Material, MaterialNode >( material ); }
 
    // -------------------------------------------------------------------------
    // Resource implementation

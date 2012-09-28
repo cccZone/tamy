@@ -68,77 +68,6 @@ bool GraphBuilderNode< Impl >::isConnectedWith( Impl* otherNode ) const
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename Impl >
-bool GraphBuilderNode< Impl >::connect( const std::string& outputName, Impl& destNode, const std::string& inputName )
-{
-   // looking at a connection from input's perspective, a node is interested in a node 
-   // the connection connects this node to - it's a node that's gonna get 
-   // activated after this node's update is finished
-   TOutputSocket* output = findOutput( outputName );
-   if ( !output )
-   {
-      char tmp[128];
-      sprintf_s( tmp, "Output '%s' not found", outputName.c_str() );
-      ASSERT_MSG( false, tmp );
-   }
-
-   output->connect( destNode );
-
-   // looking at a connection from input's perspective, a node is interested in an output 
-   // it originates at - it's from where we're gonna get our data
-   TInputSocket* input = destNode.findInput( inputName );
-   if ( !input )
-   {
-      char tmp[128];
-      sprintf_s( tmp, "Input '%s' not found", inputName.c_str() );
-      ASSERT_MSG( false, tmp );
-   }
-
-   bool result = input->connect( *output );
-   return result;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename Impl >
-void GraphBuilderNode< Impl >::disconnect( Impl& destNode, const std::string& inputName )
-{
-   // disconnect the other node's input
-   TInputSocket* input = destNode.findInput( inputName );
-   if ( !input )
-   {
-      // input could have been removed - and since there's nothing to do here, bail
-      return;
-   }
-
-   input->disconnect();
-
-   // disconnect the output
-   TOutputSocket* output = input->getOutput();
-   if ( output )
-   {
-      output->disconnect( destNode );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename Impl >
-void GraphBuilderNode< Impl >::disconnect( Impl& destNode )
-{
-   uint outputsCount = m_outputs.size();
-   for ( uint i = 0; i < outputsCount; ++i )
-   {
-      TOutputSocket* output = m_outputs[i];
-      if ( output )
-      {
-         output->disconnect( destNode );
-      }
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename Impl >
 GBNodeInput< Impl >* GraphBuilderNode< Impl >::findInput( const std::string& inputName ) const
 {
    for ( InputsMap::const_iterator it = m_inputs.begin(); it != m_inputs.end(); ++it )
@@ -465,6 +394,22 @@ const T& GraphBuilderNode< Impl >::getOutput( const std::string& outputName ) co
    }
 
    return *castOutput;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
+void GraphBuilderNode< Impl >::notifyInputsChanged()
+{
+   notify( GBNO_INPUTS_CHANGED );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Impl >
+void GraphBuilderNode< Impl >::notifyOutputsChanged()
+{
+   notify( GBNO_OUTPUTS_CHANGED );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

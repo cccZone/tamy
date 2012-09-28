@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/RPFloatNode.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * Rendering pipeline block representing a float value provider node.
  */
-class RPBFloat : public TPipelineBlock< RPFloatNode, RenderingPipelineNode >
+class RPBFloat : public TGraphBlock< RPFloatNode, RenderingPipelineNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   RPBFloat() : TPipelineBlock< RPFloatNode, RenderingPipelineNode >() {}
+   RPBFloat() : TGraphBlock< RPFloatNode, RenderingPipelineNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

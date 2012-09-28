@@ -377,6 +377,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\." "-I." "-I.\GeneratedFiles" "-I." "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="GraphBlockConnection.h" />
     <ClInclude Include="MaterialLayout.h" />
     <ClInclude Include="MaterialSocketRepresentation.h" />
     <ClInclude Include="MBBool.h" />
@@ -408,31 +409,8 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"   -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\."  "-I." "-I.\GeneratedFiles" "-I." "-I." "ObjectPropertyEditor.h" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"</Command>
     </CustomBuild>
-    <CustomBuild Include="PipelineBlock.h">
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-      </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">%(AdditionalInputs)</AdditionalInputs>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
-      </Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
-      </Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">
-      </Command>
-    </CustomBuild>
-    <ClInclude Include="PipelineLayout.h" />
-    <ClInclude Include="PipelineSocket.h" />
+    <ClInclude Include="TGraphLayout.h" />
+    <ClInclude Include="GraphBlockSocket.h" />
     <CustomBuild Include="QReflectionObjectEditor.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath);$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing %(Identity)...</Message>
@@ -475,6 +453,7 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">.\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\moc.exe"  "%(FullPath)" -o ".\GeneratedFiles\$(ConfigurationName)\moc_%(Filename).cpp"  -DIMPORT_RTTI_REGISTRATIONS -DQT_DLL "-D$(NOINHERIT)\." "-I." "-I.\GeneratedFiles" "-I." "-I."</Command>
     </CustomBuild>
+    <ClInclude Include="GraphWidgetUtils.h" />
     <ClInclude Include="PlanarNodeManipulationState.h" />
     <ClInclude Include="Project.h" />
     <CustomBuild Include="ProjectTree.h">
@@ -1277,12 +1256,16 @@
     </ClCompile>
     <ClCompile Include="GizmoAxis.cpp" />
     <ClCompile Include="GizmoMaterial.cpp" />
+    <ClCompile Include="GraphBlock.cpp" />
+    <ClCompile Include="GraphBlockConnection.cpp" />
     <ClCompile Include="HexEditor.cpp" />
     <ClCompile Include="MainEditorPanel.cpp" />
     <ClCompile Include="MaterialInstanceEditor.cpp" />
     <ClCompile Include="MaterialTexturePanel.cpp" />
     <ClCompile Include="MBMaterialIndex.cpp" />
     <ClCompile Include="MenuUtils.cpp" />
+    <ClCompile Include="GraphBlockSocket.cpp" />
+    <ClCompile Include="GraphWidgetUtils.cpp" />
     <ClCompile Include="PlanarNodeManipulationState.cpp" />
     <ClCompile Include="ProfilerChart.cpp" />
     <ClCompile Include="ProfilerFrame.cpp" />
@@ -1485,10 +1468,6 @@
     <ClCompile Include="GizmoNodeManipulationState.cpp" />
     <ClCompile Include="GizmoController.cpp" />
     <ClCompile Include="ObjectPropertyEditor.cpp" />
-    <ClInclude Include="PipelineSocket.inl">
-      <FileType>CppCode</FileType>
-    </ClInclude>
-    <ClCompile Include="PipelineBlock.cpp" />
     <ClCompile Include="QueryableDebugGeometry.cpp" />
     <ClCompile Include="ResourceDropArea.cpp" />
     <ClCompile Include="ResourceManagementUtil.cpp" />
@@ -1538,7 +1517,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="GraphBlock.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_assertDialog.cpp" />
     <ClCompile Include="GeneratedFiles\Release\moc_tamyeditor.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -1870,8 +1848,8 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Template|Win32'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
     <None Include="MenuUtils.inl" />
-    <None Include="PipelineBlock.inl" />
-    <None Include="PipelineLayout.inl" />
+    <None Include="GraphBlock.inl" />
+    <None Include="TGraphLayout.inl" />
     <None Include="ResourceManagementUtil.inl" />
     <None Include="tamyeditor.qrc" />
     <ClCompile Include="FloatPropertyEditor.cpp">

@@ -63,16 +63,6 @@ void GraphBuilder< Impl, NodeType >::removeNode( NodeType& node )
    NodeType* removedNode = *it;
    m_nodes.erase( it );
 
-   // disconnect the node from other nodes
-   uint nodesCount = m_nodes.size();
-   for ( uint i = 0; i < nodesCount; ++i )
-   {
-      if ( m_nodes[i] )
-      {
-         m_nodes[i]->disconnect( *removedNode );
-      }
-   }
-
    // send notifications
    onNodeRemoved( node );
 }

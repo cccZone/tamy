@@ -3,7 +3,7 @@
 #pragma once
 
 #include "core-Renderer/GNVec4.h"
-#include "PipelineBlock.h"
+#include "GraphBlock.h"
 #include "core/ResourceHandle.h"
 
 
@@ -12,7 +12,7 @@
 /**
  * GeometryShader pipeline block representing a vector provider node.
  */
-class GBVec4 : public TPipelineBlock< GNVec4, GeometryShaderNode >
+class GBVec4 : public TGraphBlock< GNVec4, GeometryShaderNode >
 {
    DECLARE_CLASS()
 
@@ -20,7 +20,7 @@ public:
    /**
     * Default constructor required by the RTTI system.
     */
-   GBVec4() : TPipelineBlock< GNVec4, GeometryShaderNode >() {}
+   GBVec4() : TGraphBlock< GNVec4, GeometryShaderNode >() {}
 
    /**
     * Parametrized constructor required by the generic factory.

@@ -11,7 +11,7 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPBDeferredLighting::RPBDeferredLighting( RPDeferredLightingNode& node )
-   : TPipelineBlock< RPDeferredLightingNode, RenderingPipelineNode >( node )
+   : TGraphBlock< RPDeferredLightingNode, RenderingPipelineNode >( node )
 {
    setCaption( "Lights" );
 }
