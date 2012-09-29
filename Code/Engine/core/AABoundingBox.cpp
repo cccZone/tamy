@@ -45,6 +45,20 @@ void AABoundingBox::add( const AABoundingBox& otherBox, AABoundingBox& unionBox 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void AABoundingBox::getExtents( Vector& outExtents ) const
+{
+   outExtents.setSub( max, min );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void AABoundingBox::getCenter( Vector& outCenter ) const
+{
+   outCenter.setAdd( min, max ).mul( 0.5f );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void AABoundingBox::reset()
 {
    min.set( FLT_MAX, FLT_MAX, FLT_MAX );

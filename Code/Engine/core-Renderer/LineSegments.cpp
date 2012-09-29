@@ -15,22 +15,35 @@ END_RESOURCE()
 
 LineSegments::LineSegments( const FilePath& resourceName )
    : GeometryResource( resourceName )
+   , m_boundsDirty( true )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-
-void LineSegments::onResourceLoaded(ResourcesManager& mgr) 
+void LineSegments::calculateBoundingVolume()
 {
    // calculate the bounding box
    m_bb = AABoundingBox();
-   for (std::vector<LineSegment>::iterator it = m_segments.begin();
-      it != m_segments.end(); ++it )
+   for (std::vector<LineSegment>::iterator it = m_segments.begin(); it != m_segments.end(); ++it )
    {
       m_bb.include(it->start);
       m_bb.include(it->end);
    }
+
+   m_boundsDirty = false;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+const BoundingVolume& LineSegments::getBoundingVolume()
+{
+   if ( m_boundsDirty )
+   {
+      calculateBoundingVolume();
+   }
+
+   return m_bb;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

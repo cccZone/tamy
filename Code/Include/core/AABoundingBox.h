@@ -61,6 +61,20 @@ struct AABoundingBox : public BoundingVolume
    void include( const Vector& pt );
 
    /**
+    * Calculates a vector with the extents of the bounding box in all dimensions.
+    *
+    * @param outExtents
+    */
+   void getExtents( Vector& outExtents ) const;
+
+   /**
+    * Calculates the central point of the bounding box.
+    *
+    * @param outCenter
+    */
+   void getCenter( Vector& outCenter ) const;
+
+   /**
     * Resets the bounds.
     */
    void reset();

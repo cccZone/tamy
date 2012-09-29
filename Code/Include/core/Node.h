@@ -133,7 +133,7 @@ public:
     *
     * @return  node's contents bounding volume
     */
-   const BoundingVolume& getBoundingVolume();
+   const BoundingVolume& getBoundingVolume() const;
 
    /**
     * A node can have a single parent node. This method will return true

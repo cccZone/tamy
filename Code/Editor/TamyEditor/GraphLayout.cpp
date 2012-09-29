@@ -22,7 +22,19 @@ GraphLayout::GraphLayout()
 GraphLayout::~GraphLayout()
 {
    // the blocks are managed by an outside resource
+   uint count = m_blocks.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      delete m_blocks[i];
+   }
    m_blocks.clear();
+
+   count = m_connections.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      delete m_connections[i];
+   }
+   m_connections.clear();
 
    m_sourceSocket = NULL;
    m_drawnConnection = NULL;

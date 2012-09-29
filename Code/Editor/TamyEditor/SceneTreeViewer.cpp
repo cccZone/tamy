@@ -213,7 +213,15 @@ void SceneTreeViewer::focusOnItem( QTreeWidgetItem* item, int column )
    SpatialEntity* spatial = dynamic_cast< SpatialEntity* >( entityItem->getEntity() );
    if ( spatial )
    {
-      m_camera->lookAt( *spatial, 5.f );
+      AABoundingBox bb;
+      spatial->getBoundingVolume().calculateBoundingBox( bb );
+
+      Vector extents;
+      bb.getExtents( extents );
+
+      float radius = max2( extents.getMax<3>() * 1.5f, 5.0f );
+
+      m_camera->lookAt( *spatial, radius );
    }
 }
 

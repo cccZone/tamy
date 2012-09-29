@@ -7,6 +7,7 @@
 #include "core-Renderer/SurfaceProperties.h"
 #include "core/ReflectionEnum.h"
 #include "core/Observer.h"
+#include "core/RefPtr.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,7 @@ class MaterialEntity : public TRenderState< MaterialEntity >
 
 public:
    // static data
-   MaterialInstance*                m_material;
+   TRefPtr< MaterialInstance >             m_material;
 
 public:
    /**

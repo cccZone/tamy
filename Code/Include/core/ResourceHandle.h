@@ -6,6 +6,7 @@
 
 #include <string>
 #include "core/ReflectionObject.h"
+#include "core/RefPtr.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,7 +24,7 @@ class ResourceObject : public ReflectionObject
 
 private:
    // resource object management system related data
-   Resource*                     m_hostResource;      // host resource
+   TRefPtr< Resource >           m_hostResource;      // host resource
    int                           m_objectId;          // id of an object in the resource
 
    // we're befriending a resource, because it can manage objects
@@ -34,7 +35,7 @@ public:
     * Constructor.
     */
    ResourceObject();
-   virtual ~ResourceObject() {}
+   virtual ~ResourceObject();
 
    /**
     * Tells if the object is managed by a resource.

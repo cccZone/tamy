@@ -11,15 +11,23 @@ namespace
 {
    struct TestObject : public ReflectionObject
    {
+      DECLARE_STRUCT();
+
       int m_val;
 
       TestObject( int val = 7 ) : m_val( val ) {}
    };
+   BEGIN_OBJECT( TestObject );
+      PARENT( ReflectionObject );
+      PROPERTY( int, m_val );
+   END_OBJECT();
 
    // -------------------------------------------------------------------------
 
    struct ObjWithRefPtrMembers : public ReflectionObject
    {
+      DECLARE_STRUCT();
+
       TRefPtr< TestObject >        m_obj1;
       TRefPtr< TestObject >        m_obj2;
 
@@ -29,11 +37,18 @@ namespace
       {
       }
    };
+
+   BEGIN_OBJECT( ObjWithRefPtrMembers );
+      PARENT( ReflectionObject );
+      PROPERTY( TRefPtr< TestObject >, m_obj1 );
+      PROPERTY( TRefPtr< TestObject >, m_obj2 );
+   END_OBJECT();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 DEFINE_TYPE_ID( TestObject );
+DEFINE_TYPE_ID( TRefPtr< TestObject > );
 DEFINE_TYPE_ID( ObjWithRefPtrMembers );
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -108,10 +123,54 @@ TEST( RefPtr, classMember )
 
 TEST( RefPtr, dataAccess )
 {
-   TestObject obj (7 );
+   TestObject obj( 7 );
 
    TRefPtr< TestObject > ptr( &obj );
    CPPUNIT_ASSERT_EQUAL( 7, ptr->m_val );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST( RefPtr, serialization )
+{
+   // setup reflection types
+   ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
+   typesRegistry.addSerializableType< TestObject >( "TestObject", new TSerializableTypeInstantiator< TestObject >() );
+   typesRegistry.addSerializableType< ObjWithRefPtrMembers >( "ObjWithRefPtrMembers", new TSerializableTypeInstantiator< ObjWithRefPtrMembers >() );
+
+   // prepare the serializers
+   Array< byte > memBuf;
+   InArrayStream inStream( memBuf );
+   OutArrayStream outStream( memBuf );
+
+   // serialize the original object
+   TestObject obj1( 7 );
+   TestObject obj2( 13 );
+   ObjWithRefPtrMembers* obj3 = new ObjWithRefPtrMembers( &obj1, &obj2 );
+   ReflectionSaver saver( outStream );
+   saver.save( obj3 );
+   saver.flush();
+
+   // restore the object
+   ReflectionLoader loader;
+   loader.deserialize( inStream );
+   ObjWithRefPtrMembers* restoredObject = loader.getNextObject< ObjWithRefPtrMembers >();
+
+   CPPUNIT_ASSERT( restoredObject != NULL );
+
+   CPPUNIT_ASSERT( restoredObject->m_obj1 != NULL );
+   CPPUNIT_ASSERT( restoredObject->m_obj2 != NULL );
+
+   CPPUNIT_ASSERT_EQUAL( 1, restoredObject->m_obj1->getReferencesCount() );
+   CPPUNIT_ASSERT_EQUAL( 1, restoredObject->m_obj2->getReferencesCount() );
+
+   CPPUNIT_ASSERT_EQUAL( 7, restoredObject->m_obj1->m_val );
+   CPPUNIT_ASSERT_EQUAL( 13, restoredObject->m_obj2->m_val );
+
+   // cleanup
+   delete restoredObject;
+   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

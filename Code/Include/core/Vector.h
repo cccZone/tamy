@@ -291,6 +291,22 @@ struct Vector
    bool isNormalized() const;
 
    /**
+    * Returns a component of the lowest value.
+    *
+    * @param N    how many components should be taken into account during the comparison
+    */
+   template< int N >
+   float getMin() const;
+
+   /**
+    * Returns a component of the highest value.
+    *
+    * @param N    how many components should be taken into account during the comparison
+    */
+   template< int N >
+   float getMax() const;
+
+   /**
     * Stores the contents of this vector in the specified raw vector instance.
     *
     * @param rawVector

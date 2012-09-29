@@ -6,7 +6,7 @@
 
 BEGIN_OBJECT( MaterialEntity );
    PARENT( RenderState );
-   PROPERTY_EDIT( "Material instance", MaterialInstance*, m_material );
+   PROPERTY_EDIT( "Material instance", TRefPtr< MaterialInstance >, m_material );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ void MaterialEntity::setMaterial( MaterialInstance* materialInstance )
 
 void MaterialEntity::onPreRender( Renderer& renderer ) const
 {
-   if ( m_material )
+   if ( m_material.isNotNull() )
    {
       m_material->preRender( renderer, *this );
    }
@@ -53,7 +53,7 @@ void MaterialEntity::onPreRender( Renderer& renderer ) const
 
 void MaterialEntity::onPostRender( Renderer& renderer ) const
 {
-   if ( m_material )
+   if ( m_material.isNotNull() )
    {
       m_material->postRender( renderer, *this );
    }

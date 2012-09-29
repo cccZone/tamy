@@ -21,9 +21,9 @@ END_ENUM();
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_RESOURCE( MaterialInstance, tmi, AM_BINARY );
-   PROPERTY( Material*, m_materialRenderer );
+   PROPERTY( TRefPtr< Material >, m_materialRenderer );
    PROPERTY( SurfaceProperties, m_surfaceProperties );
-   PROPERTY( std::vector< Texture* >, m_texture );
+   PROPERTY( std::vector< TRefPtr< Texture > >, m_texture );
 END_RESOURCE();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,10 +47,6 @@ MaterialInstance::~MaterialInstance()
    deinitializeMaterial();
    detachListeners();
 
-   if ( m_materialRenderer )
-   {
-      m_materialRenderer->removeReference();
-   }
    m_materialRenderer = NULL;
 }
 
@@ -78,12 +74,7 @@ void MaterialInstance::setMaterialRenderer( Material* materialRenderer )
    detachListeners();
 
    // set the new material renderer
-   if ( m_materialRenderer )
-   {
-      m_materialRenderer->removeReference();
-   }
    m_materialRenderer = materialRenderer;
-   m_materialRenderer->addReference();
 
    // initialize it and the dependencies
    initializeMaterial();
@@ -132,7 +123,7 @@ void MaterialInstance::update( MaterialNode& subject, const GraphBuilderNodeOper
 
 void MaterialInstance::initializeMaterial()
 {
-   if ( !m_materialRenderer )
+   if ( m_materialRenderer.isNull() )
    {
       return;
    }
@@ -189,7 +180,7 @@ void MaterialInstance::deinitializeMaterial()
 
 void MaterialInstance::attachListeners()
 {
-   if ( m_materialRenderer )
+   if ( m_materialRenderer.isNotNull() )
    {
       m_materialRenderer->attachObserver( *this );
    }
@@ -199,7 +190,7 @@ void MaterialInstance::attachListeners()
 
 void MaterialInstance::detachListeners()
 {
-   if ( m_materialRenderer )
+   if ( m_materialRenderer.isNotNull() )
    {
       m_materialRenderer->detachObserver( *this );
    }

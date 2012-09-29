@@ -190,7 +190,7 @@ void Node::getGlobalVectors( Vector& outRightVec, Vector& outUpVec, Vector& outL
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const BoundingVolume& Node::getBoundingVolume()
+const BoundingVolume& Node::getBoundingVolume() const
 {
    const Matrix& globalMtx = getGlobalMtx();
    m_volume->transform( globalMtx, *m_globalVolume );

@@ -80,7 +80,7 @@ const T& TResourceHandle< T >::get() const
 
 bool ResourceObject::hasHostResource() const
 {
-   return m_hostResource != NULL;
+   return m_hostResource.isNotNull();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
