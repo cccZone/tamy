@@ -19,6 +19,11 @@ GraphBuilder< Impl, NodeType >::GraphBuilder()
 template< typename Impl, typename NodeType >
 GraphBuilder< Impl, NodeType >::~GraphBuilder()
 {
+   uint count = m_nodes.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      delete m_nodes[i];
+   }
    m_nodes.clear();
 }
 

@@ -22,7 +22,6 @@ END_OBJECT();
 Geometry::Geometry( const std::string& name )
    : SpatialEntity( name )
    , m_resource(NULL)
-   , m_globalBounds( new PointVolume( Vector( 0, 0, 0 ) ) )
 {
 }
 
@@ -31,8 +30,8 @@ Geometry::Geometry( const std::string& name )
 Geometry::Geometry( const Geometry& rhs )
    : SpatialEntity( rhs )
    , m_resource( rhs.m_resource )
-   , m_globalBounds( rhs.m_globalBounds->clone() )
 {
+   setBoundingVolume( m_resource->getBoundingVolume().clone() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,8 +39,9 @@ Geometry::Geometry( const Geometry& rhs )
 Geometry::Geometry( GeometryResource& resource, const std::string& name )
    : SpatialEntity( name )
    , m_resource( &resource )
-   , m_globalBounds( resource.getBoundingVolume().clone() )
 {
+   setBoundingVolume( m_resource->getBoundingVolume().clone() );
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -50,9 +50,6 @@ Geometry::~Geometry()
 {
    m_resource = NULL;
    m_states.clear();
-
-   delete m_globalBounds;
-   m_globalBounds = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,21 +101,6 @@ void Geometry::removeState( RenderState& state )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const BoundingVolume& Geometry::getBoundingVolume() const
-{
-   if ( m_resource )
-   {
-      const BoundingVolume& geomBoundingVol = m_resource->getBoundingVolume();
-
-      const Matrix& parentMtx = getGlobalMtx();
-      geomBoundingVol.transform( parentMtx, *m_globalBounds );
-   }
-
-   return *m_globalBounds;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void Geometry::getBoundingBox( AABoundingBox& boundingBox ) const
 {
    const BoundingVolume& boundingVol = getBoundingVolume();
@@ -131,8 +113,8 @@ void Geometry::setMesh( GeometryResource& mesh )
 {
    m_resource = &mesh;
 
-   delete m_globalBounds;
-   m_globalBounds = m_resource->getBoundingVolume().clone();
+   setBoundingVolume( m_resource->getBoundingVolume().clone() );
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -155,7 +137,6 @@ void Geometry::onChildAttached( Entity& child )
 {
    __super::onChildAttached( child );
 
-   // !!! TODO: dynamic cast
    RenderState* renderState = DynamicCast< RenderState >( &child );
    if ( renderState )
    {
@@ -183,15 +164,7 @@ void Geometry::onObjectLoaded()
    __super::onObjectLoaded();
 
    // refresh the global bounds
-   delete m_globalBounds;
-   if ( m_resource != NULL )
-   {
-      m_globalBounds = m_resource->getBoundingVolume().clone();
-   }
-   else
-   {
-      m_globalBounds = new PointVolume( Vector( 0, 0, 0 ) );
-   }
+   setBoundingVolume( m_resource->getBoundingVolume().clone() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -202,16 +175,7 @@ void Geometry::onPropertyChanged( ReflectionProperty& property )
 
    if ( property.getName() == "m_resource" )
    {
-      delete m_globalBounds;
-
-      if ( m_resource )
-      {
-         m_globalBounds = m_resource->getBoundingVolume().clone();
-      }
-      else
-      {
-         m_globalBounds = new PointVolume( Vector( FLT_MAX, FLT_MAX, FLT_MAX ) );
-      }
+      setBoundingVolume( m_resource->getBoundingVolume().clone() );
    }
 }
 

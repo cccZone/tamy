@@ -45,17 +45,21 @@ TEST( MatrixUtils, generateOrthogonalProjection )
 TEST( MatrixUtils, generateLookAtLH )
 {
    Matrix tamyLookAtMtx;
-   D3DXMATRIX dxLookAtMtx;
 
    Vector cameraOriginPos( 10, 20, -30 ); 
    Vector lookAtPos( 15, 20, -30 );
    Vector upAxis = Vector::OY;
 
    MatrixUtils::generateLookAtLH( cameraOriginPos, lookAtPos, upAxis, tamyLookAtMtx );
-   D3DXMatrixLookAtLH( &dxLookAtMtx, ( const D3DXVECTOR3* )&cameraOriginPos, ( const D3DXVECTOR3* )&lookAtPos, ( const D3DXVECTOR3* )&upAxis );
-   COMPARE_MTX( dxLookAtMtx, tamyLookAtMtx );
 
-   // TODO: create a coorect LookAt matrix setup method-  one that will actually position the camera where we want and make it look at the specified node
+   Vector expectedLookVec;
+   expectedLookVec.setSub( lookAtPos, cameraOriginPos ).normalize();
+
+   Vector transformedLookVec;
+   tamyLookAtMtx.transformNorm( Vector( 0, 0, 1 ), transformedLookVec );
+
+   COMPARE_VEC( cameraOriginPos, tamyLookAtMtx.position() );
+   COMPARE_VEC( expectedLookVec, transformedLookVec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

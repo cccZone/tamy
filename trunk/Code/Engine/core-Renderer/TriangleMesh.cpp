@@ -15,8 +15,8 @@ END_RESOURCE();
 ///////////////////////////////////////////////////////////////////////////////
 
 TriangleMesh::TriangleMesh()
+   : m_boundsDirty( true )
 {
-   m_identityMtx = Matrix::IDENTITY;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,8 +25,8 @@ TriangleMesh::TriangleMesh( const FilePath& resourceName, const std::vector<LitV
    : GeometryResource( resourceName )
    , m_vertices(vertices)
    , m_faces(faces)
+   , m_boundsDirty( false )
 {
-   m_identityMtx = Matrix::IDENTITY;
    calculateBoundingVolume();
 }
 
@@ -39,9 +39,14 @@ TriangleMesh::~TriangleMesh()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void TriangleMesh::onResourceLoaded( ResourcesManager& mgr )
+const BoundingVolume& TriangleMesh::getBoundingVolume()
 {
-   calculateBoundingVolume();
+   if ( m_boundsDirty ) 
+   {
+      calculateBoundingVolume();
+   }
+
+   return m_boundingVol;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,6 +58,8 @@ void TriangleMesh::calculateBoundingVolume()
    {
       m_boundingVol.include( ( const Vector& )( m_vertices[i].m_coords ) );
    }
+
+   m_boundsDirty = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -104,6 +111,7 @@ void TriangleMesh::setVertices( const LitVertex* arrVertices, uint verticesCount
    }
 
    // mark the render resource as dirty
+   m_boundsDirty = true;
    setDirty();
 }
 

@@ -32,7 +32,7 @@ void ResourceHandle::onObjectPreSave()
 
 BEGIN_OBJECT( ResourceObject );
    PARENT( ReflectionObject);
-   PROPERTY( Resource*, m_hostResource );
+   PROPERTY( TRefPtr< Resource >, m_hostResource );
    PROPERTY( int, m_objectId );
 END_OBJECT();
 
@@ -42,14 +42,20 @@ ResourceObject::ResourceObject()
    : m_hostResource( NULL )
    , m_objectId( -1 )
 {
+}
 
+///////////////////////////////////////////////////////////////////////////////
+
+ResourceObject::~ResourceObject()
+{
+   m_hostResource = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void ResourceObject::setHostResource( Resource& hostResource, int objectId )
 {
-   if ( m_hostResource != NULL )
+   if ( m_hostResource.isNotNull() )
    {
       ASSERT_MSG( false, "The object is already managed by a resource" );
    }
@@ -61,7 +67,7 @@ void ResourceObject::setHostResource( Resource& hostResource, int objectId )
 
 void ResourceObject::resetHostResource()
 {
-   if ( m_hostResource == NULL )
+   if ( m_hostResource.isNull() )
    {
       ASSERT_MSG( false,  "The object is not managed by any resource" );
    }

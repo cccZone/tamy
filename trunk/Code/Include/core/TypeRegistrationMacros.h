@@ -4,7 +4,7 @@
 
 #include "core/ReflectionObject.h"
 #include "core/ResourceHandle.h"
-
+#include "core/RefPtr.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,8 @@
       }                                                                       \
    } registerClass##ClassType;                                                \
    DEFINE_TYPE_ID( ClassType );                                               \
-   DEFINE_TYPE_ID( TResourceHandle< ClassType > );
+   DEFINE_TYPE_ID( TResourceHandle< ClassType > );                            \
+   DEFINE_TYPE_ID( TRefPtr< ClassType > );
 
    #define REGISTER_ABSTRACT_TYPE( ClassType )                                \
    struct ClassType##RTTIImporter                                             \
@@ -43,7 +44,8 @@
       }                                                                       \
    } registerClass##ClassType;                                                \
    DEFINE_TYPE_ID( ClassType );                                               \
-   DEFINE_TYPE_ID( TResourceHandle< ClassType > );
+   DEFINE_TYPE_ID( TResourceHandle< ClassType > );                            \
+   DEFINE_TYPE_ID( TRefPtr< ClassType > );
 
    #define PATCH_TYPE( PatchedType, NewType )                                 \
    struct PatchedType##NewType##RTTIImporter                                  \
@@ -55,7 +57,8 @@
       }                                                                       \
    } registerClass##PatchedType##NewType;                                     \
    DEFINE_TYPE_ID( NewType );                                                 \
-   DEFINE_TYPE_ID( TResourceHandle< NewType > );
+   DEFINE_TYPE_ID( TResourceHandle< NewType > );                              \
+   DEFINE_TYPE_ID( TRefPtr< ClassType > );
 
    #define PATCH_ABSTRACT_TYPE( PatchedType, NewType )                        \
    struct PatchedType##NewType##RTTIImporter                                  \
@@ -67,7 +70,8 @@
       }                                                                       \
    } registerClass##PatchedType##NewType;                                     \
    DEFINE_TYPE_ID( NewType );                                                 \
-   DEFINE_TYPE_ID( TResourceHandle< NewType > );
+   DEFINE_TYPE_ID( TResourceHandle< NewType > );                              \
+   DEFINE_TYPE_ID( TRefPtr< ClassType > );
 
    #define REGISTER_EXTERNAL_TYPE( ClassType )                                \
    struct ClassType##RTTIImporter                                             \

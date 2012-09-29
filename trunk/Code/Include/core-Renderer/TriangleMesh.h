@@ -34,7 +34,7 @@ private:
    std::vector< LitVertex >      m_vertices;
    std::vector< Face >           m_faces;
 
-   Matrix                        m_identityMtx;
+   bool                          m_boundsDirty;
    AABoundingBox                 m_boundingVol;
 
 public:
@@ -89,19 +89,14 @@ public:
    void setFaces( const Face* arrFaces, uint facesCount );
 
    // -------------------------------------------------------------------------
-   // Geometry implementation
+   // GeometryResource implementation
    // -------------------------------------------------------------------------
-   inline  const BoundingVolume& getBoundingVolume() const { return m_boundingVol; }
+   const BoundingVolume& getBoundingVolume();
    void render( Renderer& renderer );
-
-   // -------------------------------------------------------------------------
-   // Resource implementation
-   // -------------------------------------------------------------------------
-   void onResourceLoaded(ResourcesManager& mgr);
 
 private:
    /**
-    * Recalulcates the bounding volume.
+    * Recalculates the bounding volume.
     */
    void calculateBoundingVolume();
 };

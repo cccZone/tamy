@@ -54,6 +54,7 @@ class LineSegments : public GeometryResource, public RenderResource
 private:
    std::vector<LineSegment>   m_segments;
 
+   bool                       m_boundsDirty;
    AABoundingBox              m_bb;
 
 public:
@@ -87,13 +88,15 @@ public:
    // -------------------------------------------------------------------------
    // GeometryResource implementation
    // -------------------------------------------------------------------------
-   inline const BoundingVolume& getBoundingVolume() const { return m_bb; }
+   const BoundingVolume& getBoundingVolume();
    void render( Renderer& renderer );
 
-   // -------------------------------------------------------------------------
-   // Resource implementation
-   // -------------------------------------------------------------------------
-   void onResourceLoaded( ResourcesManager& mgr );
+private:
+   /**
+    * Recalculates the bounding volume.
+    */
+   void calculateBoundingVolume();
+
 };
 
 ///////////////////////////////////////////////////////////////////////////////

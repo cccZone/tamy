@@ -31,7 +31,6 @@ class Geometry : public SpatialEntity
 protected:
    // runtime data
    RenderStatesVec                  m_states;
-   BoundingVolume*                  m_globalBounds;
 
 private:
    // static data
@@ -95,14 +94,6 @@ public:
    // -------------------------------------------------------------------------
    // Geometry resource management
    // -------------------------------------------------------------------------
-
-   /**
-    * Calculates a bounding volume around the geometry ( in world space ).
-    *
-    * @param   bounding volume instance
-    */
-   virtual const BoundingVolume& getBoundingVolume() const;
-
    /**
     * Calculates a bounding box around the geometry ( in world space coordinates ).
     *

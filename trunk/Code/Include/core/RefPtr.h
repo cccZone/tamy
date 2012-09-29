@@ -36,6 +36,25 @@ public:
    RefPtr( const RefPtr& rhs );
    virtual ~RefPtr();
 
+   /**
+    * Checks if the pointer is NULL.
+    */
+   inline bool isNull() const { return m_obj == NULL; }
+
+   /**
+    * Checks if the pointer is not NULL.
+    */
+   inline bool isNotNull() const { return m_obj != NULL; }
+
+   /**
+    * Sets a new pointer value WITHOUT increasing its reference counter nor destroying the previous object.
+    *
+    * Used ONLY during serialization.
+    *
+    * @param obj
+    */
+   void setDuringSerialization( ReflectionObject* obj );
+
    // -------------------------------------------------------------------------
    // Operators
    // -------------------------------------------------------------------------
@@ -45,6 +64,10 @@ public:
    bool operator==( const ReflectionObject* obj ) const;
    bool operator!=( const RefPtr& rhs ) const;
    bool operator!=( const ReflectionObject* obj ) const;
+   bool operator<( const RefPtr& rhs ) const;
+   bool operator<( const ReflectionObject* obj ) const;
+   bool operator>( const RefPtr& rhs ) const;
+   bool operator>( const ReflectionObject* obj ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -66,11 +89,23 @@ public:
    TRefPtr( const TRefPtr& rhs );
    virtual ~TRefPtr();
 
+   /**
+    * Returns the raw version of stored pointer.
+    */
+   T* get() { return (T*)m_obj; }
+
+   /**
+    * Returns the raw version of stored pointer ( const version )
+    */
+   T* get() const { return (T*)m_obj; }
+
    // -------------------------------------------------------------------------
    // Access operators
    // -------------------------------------------------------------------------
    T* operator->()               { return (T*)m_obj; }
-   const T* operator->() const   { return (T*)m_obj; }
+   T* operator->() const         { return (T*)m_obj; }
+   T& operator*()                { return (T&)*m_obj; }
+   T& operator*() const          { return (T&)*m_obj; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

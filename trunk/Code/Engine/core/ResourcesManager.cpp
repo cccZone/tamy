@@ -2,6 +2,7 @@
 #include "core\IProgressObserver.h"
 #include "core\ReflectionSerializationUtil.h"
 #include "core\Profiler.h"
+#include "core\Log.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -46,7 +47,6 @@ ResourcesManager::~ResourcesManager()
 void ResourcesManager::reset()
 {
    unsigned int componentsCount = getComponentsCount();
-
    for ( ResourcesMap::iterator it = m_resources.begin(); it != m_resources.end(); ++it )
    {
       Resource* resource = it->second;
@@ -63,6 +63,7 @@ void ResourcesManager::reset()
       resource->resetResourcesManager();
       resource->removeReference();
    }
+
    m_resources.clear();
 }
 

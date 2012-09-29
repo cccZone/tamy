@@ -38,6 +38,13 @@ RefPtr::~RefPtr()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void RefPtr::setDuringSerialization( ReflectionObject* obj )
+{
+   m_obj = obj;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 RefPtr& RefPtr::operator=( const RefPtr& rhs )
 {
    // we're ditching the old object in favor of the new one, so we need to decrease
@@ -106,6 +113,34 @@ bool RefPtr::operator!=( const RefPtr& rhs ) const
 bool RefPtr::operator!=( const ReflectionObject* obj ) const
 {
    return m_obj != obj;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool RefPtr::operator<( const RefPtr& rhs ) const
+{
+   return m_obj < rhs.m_obj;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool RefPtr::operator<( const ReflectionObject* obj ) const
+{
+   return m_obj < obj;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool RefPtr::operator>( const RefPtr& rhs ) const
+{
+   return m_obj > rhs.m_obj;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool RefPtr::operator>( const ReflectionObject* obj ) const
+{
+   return m_obj > obj;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

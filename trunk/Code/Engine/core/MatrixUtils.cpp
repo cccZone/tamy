@@ -68,18 +68,19 @@ void MatrixUtils::generateOrthogonalProjection( float viewportWidth, float viewp
 
 void MatrixUtils::generateLookAtLH( const Vector& cameraOriginPos, const Vector& lookAtPos, const Vector& upAxis, Matrix& outLookAtMtx )
 {
-   Vector localForwardAxis, localSideAxis, localUpAxis;
-   localForwardAxis.setSub( lookAtPos, cameraOriginPos ).normalize();
-   localSideAxis.setCross( upAxis, localForwardAxis ).normalize();
-   localUpAxis.setCross( localForwardAxis, localSideAxis );
+   Vector lookVec;
+   lookVec.setSub( lookAtPos, cameraOriginPos ).normalize();
 
-   outLookAtMtx.m11 = localSideAxis.x; outLookAtMtx.m12 = localUpAxis.x; outLookAtMtx.m13 = localForwardAxis.x; outLookAtMtx.m14 = 0.0;
-   outLookAtMtx.m21 = localSideAxis.y; outLookAtMtx.m22 = localUpAxis.y; outLookAtMtx.m23 = localForwardAxis.y; outLookAtMtx.m24 = 0.0;
-   outLookAtMtx.m31 = localSideAxis.z; outLookAtMtx.m32 = localUpAxis.z; outLookAtMtx.m33 = localForwardAxis.z; outLookAtMtx.m34 = 0.0;
+   Vector sideVec;
+   sideVec.setCross( upAxis, lookVec );
 
-   outLookAtMtx.m41 = cameraOriginPos.x;//-localSideAxis.dot( cameraOriginPos );
-   outLookAtMtx.m42 = cameraOriginPos.y;//-localUpAxis.dot( cameraOriginPos );
-   outLookAtMtx.m43 = cameraOriginPos.z;//-localForwardAxis.dot( cameraOriginPos );
+   outLookAtMtx.m11 = sideVec.x; outLookAtMtx.m12 = sideVec.y; outLookAtMtx.m13 = sideVec.z; outLookAtMtx.m14 = 0.0;
+   outLookAtMtx.m21 = upAxis.x;  outLookAtMtx.m22 = upAxis.y;  outLookAtMtx.m23 = upAxis.z;  outLookAtMtx.m24 = 0.0;
+   outLookAtMtx.m31 = lookVec.x; outLookAtMtx.m32 = lookVec.y; outLookAtMtx.m33 = lookVec.z; outLookAtMtx.m34 = 0.0;
+
+   outLookAtMtx.m41 = cameraOriginPos.x;
+   outLookAtMtx.m42 = cameraOriginPos.y;
+   outLookAtMtx.m43 = cameraOriginPos.z;
    outLookAtMtx.m44 = 1.0;
 }
 

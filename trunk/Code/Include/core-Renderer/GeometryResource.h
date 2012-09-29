@@ -34,7 +34,7 @@ public:
     *
     * @param   new bounding volume instance
     */
-   virtual const BoundingVolume& getBoundingVolume() const { return *( reinterpret_cast< BoundingVolume* >( NULL ) ); }
+   virtual const BoundingVolume& getBoundingVolume() { return *( reinterpret_cast< BoundingVolume* >( NULL ) ); }
 
    /**
     * Renders the resource.

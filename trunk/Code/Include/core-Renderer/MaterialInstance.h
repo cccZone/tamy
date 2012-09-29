@@ -7,6 +7,8 @@
 #include "core-Renderer/SurfaceProperties.h"
 #include "core/Observer.h"
 #include "core/Subject.h"
+#include "core/RefPtr.h"
+#include "core-Renderer/Texture.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,7 +19,6 @@ class RuntimeDataBuffer;
 class MaterialNode;
 enum GraphBuilderOperation;
 enum GraphBuilderNodeOperation;
-class Texture;
 class MaterialEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,8 +60,8 @@ class MaterialInstance : public Resource,
 private:
    // static data
    SurfaceProperties                         m_surfaceProperties;
-   Material*                                 m_materialRenderer;
-   std::vector< Texture* >                   m_texture;
+   TRefPtr< Material >                       m_materialRenderer;
+   std::vector< TRefPtr< Texture > >         m_texture;
 
    // runtime data
 
@@ -95,7 +96,7 @@ public:
    /**
     * Returns a pointer to a material this instance is using.
     */
-   inline Material* getMaterialRenderer() const { return m_materialRenderer; }
+   inline Material* getMaterialRenderer() const { return m_materialRenderer.get(); }
 
    /**
     * Returns an instance of surface properties of this material instance ( non-const version )
@@ -112,7 +113,7 @@ public:
     *
     * @param textureUsage
     */
-   inline Texture* getTexture( MaterialTextures textureUsage ) const { return m_texture[textureUsage]; }
+   inline Texture* getTexture( MaterialTextures textureUsage ) const { return m_texture[textureUsage].get(); }
 
    /**
     * Sets a new texture of the specified usage on the material instance.
