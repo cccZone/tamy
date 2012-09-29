@@ -114,6 +114,7 @@
     <ClCompile Include="ReflectionObjectTests.cpp" />
     <ClCompile Include="ReflectionPropertiesTests.cpp" />
     <ClCompile Include="ReflectionTests.cpp" />
+    <ClCompile Include="RefPtrTests.cpp" />
     <ClCompile Include="RoundBufferTest.cpp" />
     <ClCompile Include="RuntimeDataTests.cpp" />
     <ClCompile Include="SerializationTests.cpp" />

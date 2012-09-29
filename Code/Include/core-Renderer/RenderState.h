@@ -2,6 +2,7 @@
 /// @brief  render state interface
 #pragma once
 
+#include "core-MVC/Entity.h"
 #include "core/ReflectionType.h"
 
 
@@ -15,9 +16,22 @@ class RuntimeDataBuffer;
 /**
  * Changes the rendering state of the graphics device.
  */
-class RenderState
+class RenderState : public Entity
 {
+   DECLARE_CLASS()
+
 public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
+   RenderState( const std::string& name = "" );
+
+   /**
+    * Copy constructor.
+    */
+   RenderState( const RenderState& rhs );
    virtual ~RenderState() {}
 
    /**
@@ -63,6 +77,19 @@ template< typename T >
 class TRenderState : public RenderState
 {
 public:
+   /**
+    * Constructor.
+    *
+    * @param name
+    */
+   TRenderState( const std::string& name = "" ) : RenderState( name ) {}
+
+   /**
+    * Copy constructor.
+    */
+   TRenderState( const TRenderState& rhs ) : RenderState( rhs ) {}
+   virtual ~TRenderState() {}
+
    // -------------------------------------------------------------------------
    // RenderStat implementation
    // -------------------------------------------------------------------------

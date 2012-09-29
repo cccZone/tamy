@@ -448,6 +448,9 @@
     <ClCompile Include="RenderingPipelineTransaction.cpp">
       <Filter>RenderingPipeline</Filter>
     </ClCompile>
+    <ClCompile Include="RenderState.cpp">
+      <Filter>Core\RenderTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core-Renderer\Renderer.inl">

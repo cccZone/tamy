@@ -104,6 +104,7 @@
     <ClCompile Include="PlaneUtils.cpp" />
     <ClCompile Include="Profiler.cpp" />
     <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="RefPtr.cpp" />
     <ClCompile Include="ResourceDependenciesMapper.cpp" />
     <ClCompile Include="ReflectionEnum.cpp" />
     <ClCompile Include="ReflectionLoader.cpp" />
@@ -162,6 +163,7 @@
     <ClInclude Include="..\..\Include\core\PlaneUtils.h" />
     <ClInclude Include="..\..\Include\core\Profiler.h" />
     <ClInclude Include="..\..\Include\core\ReflectionDependenciesCallback.h" />
+    <ClInclude Include="..\..\Include\core\RefPtr.h" />
     <ClInclude Include="..\..\Include\core\ResourceDependenciesMapper.h" />
     <ClInclude Include="..\..\Include\core\FilePath.h" />
     <ClInclude Include="..\..\Include\core\GraphBuilder.h" />
@@ -302,6 +304,7 @@
     <None Include="..\..\Include\core\ReflectionTypeComponent.inl" />
     <None Include="..\..\Include\core\ReflectionTypeID.inl" />
     <None Include="..\..\Include\core\ReflectionTypesRegistry.inl" />
+    <None Include="..\..\Include\core\RefPtr.inl" />
     <None Include="..\..\Include\core\ResourceHandle.inl" />
     <None Include="..\..\Include\core\RoundBuffer.inl" />
     <None Include="..\..\Include\core\RuntimeData.inl" />

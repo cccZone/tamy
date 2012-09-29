@@ -22,7 +22,7 @@ class RenderableTexture;
 * This effect will render the geometry using a single texture
 * and a material definition.
 */
-class SingleTextureEffect : public Entity, public TRenderState< SingleTextureEffect >
+class SingleTextureEffect : public TRenderState< SingleTextureEffect >
 {
    DECLARE_CLASS()
 

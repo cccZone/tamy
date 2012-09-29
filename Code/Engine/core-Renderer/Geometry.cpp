@@ -156,7 +156,7 @@ void Geometry::onChildAttached( Entity& child )
    __super::onChildAttached( child );
 
    // !!! TODO: dynamic cast
-   RenderState* renderState = dynamic_cast< RenderState* >( &child );
+   RenderState* renderState = DynamicCast< RenderState >( &child );
    if ( renderState )
    {
       addState( *renderState );
@@ -169,7 +169,7 @@ void Geometry::onChildDetached( Entity& child )
 {
    __super::onChildDetached( child );
 
-   RenderState* renderState = dynamic_cast< RenderState* >( &child );
+   RenderState* renderState = DynamicCast< RenderState >( &child );
    if ( renderState )
    {
       removeState( *renderState );

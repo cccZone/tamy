@@ -3,14 +3,33 @@
 #include "core\Assert.h"
 #include "core\StringUtils.h"
 
-// TODO: as soon as the material atlas is rendered ok, remove the singletonness from the MaterialsDB
-// and make it local to a RenderingView.
-// In order to do that, you'll need to make the MaterialInstance::m_index into a TRuntimeVar, initialized as the entities
-// are collected from the scene. That's because each pipeline will run its own rendering view and a different
-// subset of materials ( that depends on the actual scene contents ).
+// NOTE:
+// I was supposed to undo MaterialsDB as a singleton, turning it into a RenderingView component
+// ( same as an octree), that would manage only the materials used by a specific renderer.
 //
-// That way we'll avoid putting the materials a scene doesn't use into the materials atlas!!!
-
+// But that would require an introduction of:
+//  - An observation mechanism to MaterialEntity, which contain the managed MaterialInstances.
+//    If an entity is assigned another material instance, it should inform databases it's observed by.
+//    This is required, because when we're shifting from a singleton in favor of multiple db instances,
+//    we can no longer assume that when a material instance is loaded, it should immediately
+//    inform the one existing DB instance about it.
+//  - a MaterialInstance would have to store its index in a TRuntimeVar. That's not such a bad thing,
+//    as there are no contraindications for this ( no dependencies on it being accessible from 
+//    a context other than a runtime context ), but it's another change we would need to introduce.
+// 
+// All remaining things that need to be implemented would still have to be implemented nonetheless
+// ( such as multiple light response textures atlases generation etc ).
+//
+// Another thing is - what do we actually gain from having multiple DB instances around.
+// The only thing is a smaller amount of materials that have to be rendered for a view.
+// But the material descriptors texture and other artifacts a DB creates are rendered only
+// on-demand ( not every frame ), so it's not a big deal at this point.
+// Moreover, I don't expect a running game can be running with more than 512 materials at any 
+// given time, and that's what I'm optimizing here for.
+// So what I actually need is a way to unregister material only and make it effectively
+// at runtime - get rid of materials that are no longer used.
+// This will be handled by the streaming system, so if the DB works well, it should solve all 
+// materials count related issues.
 
 ///////////////////////////////////////////////////////////////////////////////
 

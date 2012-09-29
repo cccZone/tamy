@@ -110,6 +110,9 @@
     <Filter Include="DataStructures\Collections">
       <UniqueIdentifier>{b8f2cdd9-51b6-4889-8021-2bc3bf92e23d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RTTI\RefPtr">
+      <UniqueIdentifier>{ec44c914-d6af-4296-bf31-310f9ee911fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -313,6 +316,9 @@
     </ClCompile>
     <ClCompile Include="PlaneUtils.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="RefPtr.cpp">
+      <Filter>RTTI\RefPtr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -681,6 +687,9 @@
     <ClInclude Include="..\..\Include\core\GraphBuilderTransaction.h">
       <Filter>DataStructures\DataPipeline</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\RefPtr.h">
+      <Filter>RTTI\RefPtr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\GenericFactory.inl">
@@ -841,6 +850,9 @@
     </None>
     <None Include="..\..\Include\core\GraphBuilderTransaction.inl">
       <Filter>DataStructures\DataPipeline</Filter>
+    </None>
+    <None Include="..\..\Include\core\RefPtr.inl">
+      <Filter>RTTI\RefPtr</Filter>
     </None>
   </ItemGroup>
 </Project>

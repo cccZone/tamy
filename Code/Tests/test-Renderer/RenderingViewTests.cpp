@@ -183,6 +183,7 @@ namespace // anonymous
       }
    };
    BEGIN_OBJECT( RenderStateMock );
+      PARENT( ENTITY )
    END_OBJECT();
 }
 

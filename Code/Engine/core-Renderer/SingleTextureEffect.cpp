@@ -14,7 +14,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( SingleTextureEffect );
-   PARENT( Entity );
+   PARENT( RenderState );
    PROPERTY_EDIT( "material", SurfaceProperties, m_surfaceProperties );
    PROPERTY_EDIT( "texture", Texture*, m_texture );
 END_OBJECT();

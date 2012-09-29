@@ -135,6 +135,7 @@
     <ClCompile Include="RenderingPipelineSockets.cpp" />
     <ClCompile Include="RenderingPipelineTransaction.cpp" />
     <ClCompile Include="RenderResource.cpp" />
+    <ClCompile Include="RenderState.cpp" />
     <ClCompile Include="RenderTargetDescriptor.cpp" />
     <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="RenderableTexture.cpp" />
