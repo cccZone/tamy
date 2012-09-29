@@ -33,7 +33,7 @@ T* DynamicCast( ReflectionObject* obj )
 
    if ( obj->isA< T >() )
    {
-      T* castObj = static_cast< T* >( obj );
+      T* castObj = reinterpret_cast< T* >( obj );
       return castObj;
    }
    else

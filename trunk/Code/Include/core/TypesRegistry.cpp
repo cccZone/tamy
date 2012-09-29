@@ -20,5 +20,6 @@ REGISTER_EXTERNAL_TYPE( FilePath );
 REGISTER_ABSTRACT_TYPE( Resource );
 REGISTER_TYPE( ResourceHandle );
 REGISTER_TYPE( ResourceObject );
+REGISTER_EXTERNAL_TYPE( RefPtr );
 
 ///////////////////////////////////////////////////////////////////////////////

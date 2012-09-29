@@ -13,7 +13,7 @@ class PixelShader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class GizmoMaterial : public ReflectionObject, public TRenderState< GizmoMaterial >
+class GizmoMaterial : public TRenderState< GizmoMaterial >
 {
    DECLARE_CLASS();
 

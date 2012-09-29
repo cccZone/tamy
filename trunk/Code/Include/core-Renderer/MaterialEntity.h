@@ -18,7 +18,7 @@ class MaterialInstance;
 /**
  * Entity that allows to embed a material in a scene graph.
  */
-class MaterialEntity :  public Entity, public TRenderState< MaterialEntity >
+class MaterialEntity : public TRenderState< MaterialEntity >
 {
    DECLARE_CLASS()
 

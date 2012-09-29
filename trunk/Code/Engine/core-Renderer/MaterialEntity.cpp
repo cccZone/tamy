@@ -5,14 +5,14 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_OBJECT( MaterialEntity );
-   PARENT( Entity );
+   PARENT( RenderState );
    PROPERTY_EDIT( "Material instance", MaterialInstance*, m_material );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialEntity::MaterialEntity( const std::string& name )
-   : Entity( name )
+   : TRenderState< MaterialEntity >( name )
    , m_material( NULL )
 {
 }
@@ -20,7 +20,7 @@ MaterialEntity::MaterialEntity( const std::string& name )
 ///////////////////////////////////////////////////////////////////////////////
 
 MaterialEntity::MaterialEntity( const MaterialEntity& rhs )
-   : Entity( rhs )
+   : TRenderState< MaterialEntity >( rhs )
    , m_material( rhs.m_material )
 {
 }

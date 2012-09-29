@@ -13,7 +13,7 @@ class PixelShader;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-class SingleColorDebugMat : public ReflectionObject, public TRenderState< SingleColorDebugMat >
+class SingleColorDebugMat : public TRenderState< SingleColorDebugMat >
 {
    DECLARE_CLASS();
 

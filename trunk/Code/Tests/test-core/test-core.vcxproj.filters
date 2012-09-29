@@ -197,6 +197,9 @@
     <ClCompile Include="AABoundingBoxTests.cpp">
       <Filter>BoundingVolumes</Filter>
     </ClCompile>
+    <ClCompile Include="RefPtrTests.cpp">
+      <Filter>RTTI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">
