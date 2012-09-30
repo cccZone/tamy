@@ -162,13 +162,15 @@ TEST( RefPtr, serialization )
    CPPUNIT_ASSERT( restoredObject->m_obj1 != NULL );
    CPPUNIT_ASSERT( restoredObject->m_obj2 != NULL );
 
-   CPPUNIT_ASSERT_EQUAL( 1, restoredObject->m_obj1->getReferencesCount() );
-   CPPUNIT_ASSERT_EQUAL( 1, restoredObject->m_obj2->getReferencesCount() );
+   CPPUNIT_ASSERT_EQUAL( obj1.getReferencesCount(), restoredObject->m_obj1->getReferencesCount() );
+   CPPUNIT_ASSERT_EQUAL( obj2.getReferencesCount(), restoredObject->m_obj2->getReferencesCount() );
 
    CPPUNIT_ASSERT_EQUAL( 7, restoredObject->m_obj1->m_val );
    CPPUNIT_ASSERT_EQUAL( 13, restoredObject->m_obj2->m_val );
 
    // cleanup
+   restoredObject->m_obj1->removeReference();
+   restoredObject->m_obj2->removeReference();
    delete restoredObject;
    typesRegistry.clear();
 }

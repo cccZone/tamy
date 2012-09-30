@@ -200,6 +200,9 @@
     <ClCompile Include="RefPtrTests.cpp">
       <Filter>RTTI</Filter>
     </ClCompile>
+    <ClCompile Include="FrustumTests.cpp">
+      <Filter>BoundingVolumes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">
