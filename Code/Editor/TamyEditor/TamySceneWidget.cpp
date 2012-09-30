@@ -85,6 +85,8 @@ TamySceneWidget::TamySceneWidget( QWidget* parent, Qt::WindowFlags f, const File
       m_localTimeController->add("input");
       m_localTimeController->get("input").add( *this );
 
+      m_gizmoTrack = &m_localTimeController->add("gizmo");
+
       m_inputHandlerTrack = &m_localTimeController->add( "inputHandler" );
    }
 
@@ -163,6 +165,14 @@ void TamySceneWidget::setRenderingPipeline( const FilePath& pipeline )
 
 void TamySceneWidget::deinitialize()
 {
+   // delete the gizmo
+   if ( m_gizmo )
+   {
+      m_gizmoTrack->remove( *m_gizmo );
+      delete m_gizmo;
+      m_gizmo = NULL;
+   }
+
    // detach the views
    if ( m_scene )
    {
@@ -541,6 +551,7 @@ void TamySceneWidget::onEntitySelected( Entity& entity )
       // delete the old one
       if ( m_gizmo )
       {
+         m_gizmoTrack->remove( *m_gizmo );
          delete m_gizmo;
          m_gizmo = NULL;
       }
@@ -549,6 +560,7 @@ void TamySceneWidget::onEntitySelected( Entity& entity )
       if ( entity.isA< SpatialEntity >() )
       {
          m_gizmo = new Gizmo( static_cast< SpatialEntity& >( entity ), m_gizmoMode, *m_camera );
+         m_gizmoTrack->add( *m_gizmo );
          m_debugRenderer->add( *m_gizmo );
       }
    }
@@ -563,6 +575,7 @@ void TamySceneWidget::onEntityDeselected( Entity& entity )
    // remove the manipulator gizmo
    if ( m_gizmo )
    {
+      m_gizmoTrack->remove( *m_gizmo );
       m_debugRenderer->remove( *m_gizmo );
 
       delete m_gizmo;

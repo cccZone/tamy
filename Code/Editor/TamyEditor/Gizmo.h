@@ -5,6 +5,7 @@
 #include "core\Color.h"
 #include "core-MVC\SpatialEntity.h"
 #include "core-Renderer\RenderState.h"
+#include "core-AppFlow\TimeDependent.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,7 @@ class Camera;
  * A gizmo showing the selected object's orientation and indicating 
  * the selected manipulation mode ( moving, rotating, scaling ).
  */
-class Gizmo : public SpatialEntity
+class Gizmo : public SpatialEntity, public TimeDependent
 {
    DECLARE_CLASS()
 
@@ -69,6 +70,11 @@ public:
     * Sets a new mode in which the gizmo will be displayed.
     */
    void setMode( Mode mode );
+
+   // -------------------------------------------------------------------------
+   // TimeDependent implementation
+   // -------------------------------------------------------------------------
+   void update( float timeElapsed );
 
 private:
    void createTranslationGizmo();

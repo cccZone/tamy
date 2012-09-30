@@ -7,7 +7,6 @@
 #include "core-Renderer/Defines.h"
 #include "core/Math.h"
 
-
 ///////////////////////////////////////////////////////////////////////////////
 
 BEGIN_ABSTRACT_OBJECT(GizmoAxis)
@@ -17,12 +16,13 @@ END_OBJECT()
 ///////////////////////////////////////////////////////////////////////////////
 
 GizmoAxis::GizmoAxis( byte axisIdx, SpatialEntity& editedNode, Camera& activeCamera )
-   : m_axisIdx( axisIdx )
+   : Geometry( "gizmoAxis" )
+   , m_axisIdx( axisIdx )
    , m_editedNode( editedNode )
    , m_activeCamera( activeCamera )
    , m_operation( NULL )
 {
-   initialize();
+   initialize();  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ void GizmoAxis::transformManipulatedNodes( const Vector& viewportSpaceTransforma
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GizmoAxis::onUpdate( float timeElapsed )
+void GizmoAxis::update( float timeElapsed )
 {
    // synchronize axis position with object's position
    const Matrix& nodeMtx = m_editedNode.getGlobalMtx();

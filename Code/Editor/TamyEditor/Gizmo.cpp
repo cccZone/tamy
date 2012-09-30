@@ -109,6 +109,12 @@ void Gizmo::setMode( Mode mode )
          break;
       }
    }
+
+   // set custom bounds for the geometries
+   for ( uint i = 0; i < 3; ++i )
+   {
+      m_geometry[i]->setBoundingVolume( new BoundingSpace() );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -227,6 +233,16 @@ void Gizmo::createScalingGizmo()
    m_meshes[2] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector::ZERO, oz );
    m_geometry[2]->setMesh( *m_meshes[2] );
    m_geometry[2]->setOperation( *m_scalingOp );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Gizmo::update( float timeElapsed )
+{
+   for ( uint i = 0; i < 3; ++i )
+   {
+      m_geometry[i]->update( timeElapsed );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

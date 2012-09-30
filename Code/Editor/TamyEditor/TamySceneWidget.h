@@ -49,6 +49,7 @@ private:
    // input tracking
    unsigned char                                      m_keyBuffer[256];
    TimeControllerTrack*                               m_inputHandlerTrack;
+   TimeControllerTrack*                               m_gizmoTrack;
 
    // required services
    ResourcesManager*                                  m_resMgr;
