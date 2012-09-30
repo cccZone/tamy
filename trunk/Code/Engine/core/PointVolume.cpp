@@ -72,9 +72,7 @@ bool PointVolume::testCollision( const BoundingSphere& rhs ) const
 
 bool PointVolume::testCollision( const Frustum& rhs ) const
 {
-   // <math.todo>: implement me
-   ASSERT_MSG(false, "PointVolume::testCollision(const Frustum&) - Method not implemented");
-   return false;
+   return ::testCollision( rhs, *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

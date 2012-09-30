@@ -115,6 +115,23 @@ bool testCollision( const Frustum& frustum, const BoundingSphere& sphere )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+bool testCollision( const Frustum& frustum, const PointVolume& point )
+{
+   const Vector& pt = point.point;
+   for ( int i = 0; i < 6; ++i )
+   {
+      float n = frustum.planes[i].dotCoord( pt );
+      if ( n < 0 ) 
+      {
+         return false;
+      }
+   }
+
+   return true;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 bool testCollision( const AABoundingBox& aabb, const Ray& ray )
 {
    return ( rayToAABBDistance( ray, aabb ) < FLT_MAX );

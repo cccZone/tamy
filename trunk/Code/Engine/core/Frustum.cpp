@@ -37,10 +37,9 @@ float Frustum::distanceToPlane( const Plane& plane ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-bool Frustum::testCollision(const PointVolume& point) const
+bool Frustum::testCollision(const PointVolume& point ) const
 {
-   // <math.todo>: implement me
-   return false;
+   return ::testCollision( *this, point );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
