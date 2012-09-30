@@ -47,9 +47,10 @@ public:
     * Returns a pointer to a dependency with the specified index.
     *
     * @param   dependencyIdx
+    * @param   outWasFound       tells if the dependency was successfully resolved or not
     * @return  dependency
     */
-   virtual ReflectionObject* findDependency( uint dependencyIdx ) const = 0;
+   virtual ReflectionObject* findDependency( uint dependencyIdx, bool& outWasFound ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -78,7 +78,7 @@ public:
    // -------------------------------------------------------------------------
    // ReflectionDependenciesCallback implementation
    // -------------------------------------------------------------------------
-   ReflectionObject* findDependency( uint dependencyIdx ) const;
+   ReflectionObject* findDependency( uint dependencyIdx, bool& outWasFound ) const;
 
 private:
    uint loadExternalDependencies( InStream& stream, std::vector< FilePath >* outDependenciesToLoad, std::vector< FilePath >* outRemappedDependencies );
@@ -123,7 +123,7 @@ public:
    // -------------------------------------------------------------------------
    // ReflectionDependenciesCallback implementation
    // -------------------------------------------------------------------------
-   ReflectionObject* findDependency( uint dependencyIdx ) const;
+   ReflectionObject* findDependency( uint dependencyIdx, bool& outWasFound ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

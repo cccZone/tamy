@@ -24,7 +24,7 @@ class ResourceObject : public ReflectionObject
 
 private:
    // resource object management system related data
-   TRefPtr< Resource >           m_hostResource;      // host resource
+   Resource*                     m_hostResource;      // host resource - can't be a RefPtr, because it's managed by the resource it references, thus causing a circular dependency
    int                           m_objectId;          // id of an object in the resource
 
    // we're befriending a resource, because it can manage objects
