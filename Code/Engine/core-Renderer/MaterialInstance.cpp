@@ -153,24 +153,12 @@ void MaterialInstance::initializeMaterial()
    {
       m_nodesQueue[i]->createLayout( *this );
    }
-
-   // start observing nodes
-   for ( std::vector< MaterialNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
-   {
-      (*it)->attachObserver( *this );
-   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MaterialInstance::deinitializeMaterial()
 {
-   // stop observing nodes
-   for ( std::vector< MaterialNode* >::iterator it = m_nodesQueue.begin(); it != m_nodesQueue.end(); ++it )
-   {
-      (*it)->detachObserver( *this );
-   }
-
    m_nodesQueue.clear();
 
    delete m_dataBuf; m_dataBuf = NULL;
@@ -183,6 +171,13 @@ void MaterialInstance::attachListeners()
    if ( m_materialRenderer.isNotNull() )
    {
       m_materialRenderer->attachObserver( *this );
+
+      // start observing nodes
+      const std::vector< MaterialNode* >& nodes = m_materialRenderer->getNodes();
+      for ( std::vector< MaterialNode* >::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
+      {
+         (*it)->attachObserver( *this );
+      }
    }
 }
 
@@ -193,6 +188,13 @@ void MaterialInstance::detachListeners()
    if ( m_materialRenderer.isNotNull() )
    {
       m_materialRenderer->detachObserver( *this );
+
+      // stop observing nodes
+      const std::vector< MaterialNode* >& nodes = m_materialRenderer->getNodes();
+      for ( std::vector< MaterialNode* >::const_iterator it = nodes.begin(); it != nodes.end(); ++it )
+      {
+         (*it)->detachObserver( *this );
+      }
    }
 }
 
