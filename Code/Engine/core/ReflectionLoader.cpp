@@ -238,8 +238,9 @@ void ReflectionLoader::restoreDependencies( ReflectionObject* object ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ReflectionObject* ReflectionLoader::findDependency( uint dependencyIdx ) const
+ReflectionObject* ReflectionLoader::findDependency( uint dependencyIdx, bool& outWasFound ) const
 {
+   outWasFound = false;
    if ( IS_DEPENDENCY_NULL( dependencyIdx ) )
    {
       // this is a NULL reference
@@ -259,6 +260,7 @@ ReflectionObject* ReflectionLoader::findDependency( uint dependencyIdx ) const
       }
       else
       {
+         outWasFound = true;
          return extractedDependencyIdx < m_dependencies.size() ? m_dependencies[extractedDependencyIdx] : NULL;
       }     
       return NULL;
@@ -298,9 +300,9 @@ void ExternalDependenciesLinker::linkDependencies( const std::vector< Reflection
          reflectionTypesList.pop_front();
 
          unsigned int membersCount = nextType->m_memberFields.size();
-         for ( uint i = 0; i < membersCount; ++i )
+         for ( uint j = 0; j < membersCount; ++j )
          {
-            ReflectionTypeComponent* member = nextType->m_memberFields[i];
+            ReflectionTypeComponent* member = nextType->m_memberFields[j];
             member->restoreDependencies( object, *this );
          }
       }
@@ -309,8 +311,9 @@ void ExternalDependenciesLinker::linkDependencies( const std::vector< Reflection
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ReflectionObject* ExternalDependenciesLinker::findDependency( uint dependencyIdx ) const
+ReflectionObject* ExternalDependenciesLinker::findDependency( uint dependencyIdx, bool& outWasFound ) const
 {
+   outWasFound = false;
    if ( IS_DEPENDENCY_NULL( dependencyIdx ) )
    {
       // this is a NULL reference
@@ -330,12 +333,7 @@ ReflectionObject* ExternalDependenciesLinker::findDependency( uint dependencyIdx
          ResourcesManager& resMgr = ResourcesManager::getInstance();
 
          Resource* res = resMgr.findResource( resourcePath );
-         if ( res )
-         {
-            // found a reference to a resource - so increase the references counter on it
-            res->addReference();
-         }
-
+         outWasFound = true;
          return res;
       }
       else
@@ -348,16 +346,3 @@ ReflectionObject* ExternalDependenciesLinker::findDependency( uint dependencyIdx
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
-
-// <todo.resources> !!!!! IMPORTANT !!!!! 
-//
-// Do it directly after the material system
-//
-// Right now all resources are reference counted.
-// That's because when they are destroyed, some resources may still depend on them etc.
-// The thing is - the number of references is automatically set during the load, but it's
-// not managed by most of the classes.
-// Introduce a way ( a serializable RefPtr or sth ) that will take care of that.
-// Automatic reference increase performed during load is located in the method above

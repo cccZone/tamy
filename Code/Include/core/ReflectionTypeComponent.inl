@@ -170,7 +170,8 @@ void TMemberField< T* >::restoreDependencies( void* object, const ReflectionDepe
    T** dataPtr = reinterpret_cast< T** >( memberPtr );
 
    // the pointer contains a dependency index - now we just have to find a corresponding object
-   T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr) ) );
+   bool wasRestored = false;
+   T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr), wasRestored ) );
    *dataPtr = restoredObject;
 }
 
@@ -243,7 +244,12 @@ void TMemberField< TRefPtr< T > >::restoreDependencies( void* object, const Refl
    TRefPtr< T >* dataPtr = reinterpret_cast< TRefPtr< T >* >( memberPtr );
 
    // the pointer contains a dependency index - now we just have to find a corresponding object
-   T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(dataPtr->get()) ) );
+   bool wasRestored = false;
+   T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)( dataPtr->get() ), wasRestored ) );
+   if ( wasRestored )
+   {
+      restoredObject->addReference();
+   }
    dataPtr->setDuringSerialization( restoredObject );
 }
 
@@ -430,7 +436,8 @@ void TMemberField< std::vector< T* > >::restoreDependencies( void* object, const
    for ( uint i = 0; i < count; ++i )
    {
       // the pointers contain indices to the actual dependencies - now we just have to find corresponding objects
-      T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr)[i] ) );
+      bool wasRestored = false;
+      T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr)[i], wasRestored ) );
       (*dataPtr)[i] = restoredObject;
    }
 }
@@ -536,7 +543,12 @@ void TMemberField< std::vector< TRefPtr< T > > >::restoreDependencies( void* obj
    for ( uint i = 0; i < count; ++i )
    {
       // the pointers contain indices to the actual dependencies - now we just have to find corresponding objects
-      T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr)[i].get() ) );
+      bool wasRestored = false;
+      T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr)[i].get(), wasRestored ) );
+      if ( wasRestored )
+      {
+         restoredObject->addReference();
+      }
       (*dataPtr)[i].setDuringSerialization( restoredObject );
    }
 }
