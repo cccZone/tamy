@@ -33,7 +33,7 @@ public:
 /**
  * A single axis of the nodes manipulation gizmo.
  */
-class GizmoAxis : public Geometry
+class GizmoAxis : public Geometry, public TimeDependent
 {
    DECLARE_CLASS()
 
@@ -43,10 +43,6 @@ private:
    Camera&                          m_activeCamera;
    GizmoOperation*                  m_operation;
    VertexShader*                    m_vertexShader;
-
-   // since the gizmo is not camera-relative and we'll be scaling it so that it's always the same size, we want to
-   // see it always and never be culled away
-   BoundingSpace                    m_bounds;
 
 public:
    /**
@@ -71,15 +67,14 @@ public:
     */
    void transformManipulatedNodes( const Vector& viewportSpaceTransformation );
 
-   // -------------------------------------------------------------------------
-   // Entity implementation
-   // -------------------------------------------------------------------------
-   void onUpdate( float timeElapsed );
+   /**
+    * Updates axis' transform.
+    */
+   void update( float timeElapsed );
 
    // -------------------------------------------------------------------------
    // Geometry implementation
    // -------------------------------------------------------------------------
-   const BoundingVolume& getBoundingVolume() const { return m_bounds; }
    RCBindVertexShader* onPreRender( Renderer& renderer );
    void onPostRender( Renderer& renderer );
 
