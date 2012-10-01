@@ -5,6 +5,7 @@
       * [SystemVariables Required system variables]
     * [ Setup ]
       * [QTConfiguration QT Configuration]
+      * [Autoexp Autoexp.dat]
     * [ Core ]
       * [BoundingShapes Bounding shapes]
       * [HierarchicalNodes Hierarchical nodes system]
