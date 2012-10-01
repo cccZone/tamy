@@ -13,7 +13,7 @@
 
 BEGIN_OBJECT( RPPostProcessNode );
    PARENT( RenderingPipelineNode );
-   PROPERTY_EDIT( "Pixel shader", PixelShader*, m_shader );
+   PROPERTY_EDIT( "Pixel shader", TRefPtr< PixelShader >, m_shader );
    PROPERTY_EDIT( "Render target ids", std::string, m_renderTargetId );
 END_OBJECT();
 
@@ -36,11 +36,6 @@ RPPostProcessNode::RPPostProcessNode()
 RPPostProcessNode::~RPPostProcessNode()
 {
    delete m_shaderNode; m_shaderNode = NULL;
-
-   if ( m_shader )
-   {
-      m_shader->removeReference();
-   }
    m_shader = NULL;
 }
 
@@ -48,7 +43,7 @@ RPPostProcessNode::~RPPostProcessNode()
 
 void RPPostProcessNode::onGraphLoaded()
 {
-   if ( m_shader )
+   if ( m_shader.isNotNull() )
    {
       m_shaderNode->setShader( *m_shader );
    }
@@ -78,7 +73,7 @@ void RPPostProcessNode::onPropertyChanged( ReflectionProperty& property )
       MRTUtil::createOutputs( m_renderTargetId, outputs );
       redefineOutputs( outputs );
    }
-   else if ( property.getName() == "m_shader" && m_shader )
+   else if ( property.getName() == "m_shader" && m_shader.isNotNull() )
    {
       m_shaderNode->setShader( *m_shader );
    }
@@ -105,7 +100,7 @@ void RPPostProcessNode::onCreateLayout( RenderingPipelineMechanism& host ) const
 
 void RPPostProcessNode::onUpdate( RenderingPipelineMechanism& host ) const
 {
-   if ( !m_shader || !m_shaderNode )
+   if ( m_shader.isNull() || !m_shaderNode )
    {
       return;
    }

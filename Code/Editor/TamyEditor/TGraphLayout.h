@@ -14,7 +14,7 @@ class GraphBlock;
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TPipeline, typename TNode >
-class TGraphLayout : public Resource, public GraphLayout
+class TGraphLayout : public Resource, public GraphLayout, public Observer< typename TNode, GraphBuilderNodeOperation >
 {
 protected:
    typedef GenericFactory< ReflectionObject, GraphBlock >      BlocksFactory;
@@ -48,6 +48,12 @@ public:
    void disconnectNode( ReflectionObject* sourceNode, ReflectionObject* destinationNode, const std::string& inputName );
    void breakPipelineConnections( const std::vector< GraphBlockConnection* >& connectionsToDelete ) const;
 
+   // -------------------------------------------------------------------------
+   // Observer implementation
+   // -------------------------------------------------------------------------
+   void update( TNode& subject );
+   void update( TNode& subject, const GraphBuilderNodeOperation& msg );
+
 protected:
    // -------------------------------------------------------------------------
    // Resource implementation
@@ -67,6 +73,27 @@ protected:
     * @param factory
     */
    virtual void initSocketsFactory( SocketsFactory& factory ) = 0;
+
+private:
+   /**
+    * Finds a block that corresponds to the specified node.
+    */
+   GraphBlock* getNodeBlock( const TNode& node ) const;
+
+   /**
+    * Refreshes the block's inputs.
+    */
+   void refreshInputs( TNode& node, GraphBlock* block );
+
+   /**
+    * Refreshes the block's outputs.
+    */
+   void refreshOutputs( TNode& node, GraphBlock* block );
+
+   /**
+    * Removes broken sockets.
+    */
+   void removeBrokenConnections( const GraphBlock* block, const std::set< std::string >& removedSocketsNames );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

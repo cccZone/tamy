@@ -259,9 +259,9 @@ template< typename T >
 ReflectionProperty* TMemberField< TRefPtr< T > >::instantiateProperty( void* object ) const
 {
    char* memberPtr = (char*)object + m_dataOffset;
-   T** dataPtr = reinterpret_cast< T** >( memberPtr );
+   TRefPtr< T >* dataPtr = reinterpret_cast< TRefPtr< T >* >( memberPtr );
 
-   return new TReflectionProperty< T* >( (ReflectionObject*)object, dataPtr );
+   return new TReflectionProperty< TRefPtr< T > >( (ReflectionObject*)object, dataPtr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,8 +3,9 @@
 #pragma once
 
 #include "core-Renderer/RenderingPipelineNode.h"
-#include "core/RuntimeData.h"
 #include "core-Renderer/PixelShaderNodeOperator.h"
+#include "core/RuntimeData.h"
+#include "core/RefPtr.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,7 @@ class RPPostProcessNode : public RenderingPipelineNode
 
 private:
    // static data
-   PixelShader*                                                   m_shader;
+   TRefPtr< PixelShader >                                         m_shader;
    std::string                                                    m_renderTargetId;
 
    // runtime data
