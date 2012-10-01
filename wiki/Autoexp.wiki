@@ -2,7 +2,7 @@
 
 Put the following applicable in adequate sections.
 
-==AutoExpand==
+==`AutoExpand`==
 
 {{{
 ; Tamy
@@ -11,7 +11,7 @@ Quaternion=x=<x> y=<y> z=<z> w=<w>
 Plane=a=<a> b=<b> c=<c> d=<d>
 }}}
 
-==Visualizer==
+==`Visualizer`==
 
 {{{
 ; Tamy
