@@ -146,13 +146,6 @@ public:
     */
    void calculateBounds();
 
-protected:
-   // -------------------------------------------------------------------------
-   // ReflectionObject implementation
-   // -------------------------------------------------------------------------
-   void onObjectPreSave();
-   void onObjectLoaded();
-
    // -------------------------------------------------------------------------
    // Block layout settings
    // -------------------------------------------------------------------------
@@ -181,6 +174,13 @@ protected:
     */
    void removeSockets( GraphBlockSocketPosition position, const std::set< std::string >& socketNames );
 
+protected:
+   // -------------------------------------------------------------------------
+   // ReflectionObject implementation
+   // -------------------------------------------------------------------------
+   void onObjectPreSave();
+   void onObjectLoaded();
+
 private:
    void removeSingleSocket( GraphBlockSocketPosition position, const std::string& socketName );
 };
@@ -188,7 +188,7 @@ private:
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename TNode, typename TBaseNode >
-class TGraphBlock : public GraphBlock, public Observer< typename TBaseNode, GraphBuilderNodeOperation >
+class TGraphBlock : public GraphBlock
 {
 protected:
    TNode*                                                m_nodePtr;
@@ -218,23 +218,6 @@ public:
    // Object implementation
    // -------------------------------------------------------------------------
    void onObjectLoaded();
-
-   // -------------------------------------------------------------------------
-   // Observer implementation
-   // -------------------------------------------------------------------------
-   void update( TBaseNode& subject );
-   void update( TBaseNode& subject, const GraphBuilderNodeOperation& msg );
-
-protected:
-   /**
-    * Refreshes the block's inputs.
-    */
-   void refreshInputs( TBaseNode& node );
-
-   /**
-    * Refreshes the block's outputs.
-    */
-   void refreshOutputs( TBaseNode& node );
    
 private:
    void initSocketsFactory();

@@ -35,7 +35,7 @@ DeferredAmbientLightRenderer::~DeferredAmbientLightRenderer()
 
 void DeferredAmbientLightRenderer::render( Renderer& renderer, const AmbientLight* light, const DeferredLightingRenderData& data )
 {
-   if ( !m_shader )
+   if ( !m_shader || !data.m_materialsDescriptorsTex )
    {
       return;
    }
