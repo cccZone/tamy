@@ -340,10 +340,8 @@ void TMemberField< std::vector< T > >::restoreDependencies( void* object, const 
 template< typename T >
 ReflectionProperty* TMemberField< std::vector< T > >::instantiateProperty( void* object ) const
 {
-   char* memberPtr = (char*)object + m_dataOffset;
-   std::vector< T >* dataPtr = reinterpret_cast< std::vector< T >* >( memberPtr );
-
-   return new TReflectionProperty< std::vector< T > >( (ReflectionObject*)object, dataPtr );
+   // at the moment these properties can't be edited
+   return NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -562,6 +560,304 @@ ReflectionProperty* TMemberField< std::vector< TRefPtr< T > > >::instantiateProp
    std::vector< TRefPtr< T > >* dataPtr = reinterpret_cast< std::vector< TRefPtr< T > >* >( memberPtr );
 
    return new TReflectionProperty< std::vector< TRefPtr< T > > >( (ReflectionObject*)object, dataPtr );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+TMemberField< Array< T > >::TMemberField( const std::string& memberName, int offset ) 
+   : ReflectionTypeComponent( memberName )
+   , m_dataOffset( offset )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< T > >::save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const
+{
+   const char* memberPtr = (const char*)object + m_dataOffset;
+   const Array< T >* dataPtr = reinterpret_cast< const Array< T >* >( memberPtr );
+
+   // serialize the number of entries
+   uint count = dataPtr->size();
+   stream << count;
+
+   // serialize the entires
+   for ( uint i = 0; i < count; ++i )
+   {
+      stream << (*dataPtr)[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< T > >::load( void* object, InStream& stream ) const 
+{
+   char* memberPtr = (char*)object + m_dataOffset;
+   Array< T >* dataPtr = reinterpret_cast< Array< T >* >( memberPtr );
+
+   // deserialize the number of entries
+   uint count;
+   stream >> count;
+
+   // make place in the array
+   if ( object )
+   {
+      dataPtr->allocate( count );
+   }
+
+   // deserialize the entries
+   for ( uint i = 0; i < count; ++i )
+   {
+      stream >> (*dataPtr)[i];
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< T > >::mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const
+{
+   // there are no dependencies among simple types, just pointers
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< T > >::restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const
+{
+   // there are no dependencies among simple types, just pointers
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+ReflectionProperty* TMemberField< Array< T > >::instantiateProperty( void* object ) const
+{
+   // at the moment these properties can't be edited
+   return NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+TMemberField< Array< T* > >::TMemberField( const std::string& memberName, int offset ) 
+   : ReflectionTypeComponent( memberName )
+   , m_dataOffset( offset )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< T* > >::save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const
+{
+   const char* memberPtr = (const char*)object + m_dataOffset;
+   const Array< T* >* dataPtr = reinterpret_cast< const Array< T* >* >( memberPtr );
+
+   // serialize the number of entries
+   uint count = dataPtr->size();
+   stream << count;
+
+   // serialize the entires
+   for ( uint i = 0; i < count; ++i )
+   {
+      // serialize the pointer
+      savePtr( (*dataPtr)[i], dependenciesMapper, stream );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< T* > >::load( void* object, InStream& stream ) const 
+{
+   char* memberPtr = (char*)object + m_dataOffset;
+   Array< T* >* dataPtr = reinterpret_cast< Array< T* >* >( memberPtr );
+
+   // deserialize the number of entries
+   uint count;
+   stream >> count;
+
+   // make place in the array
+   if ( object )
+   {
+      dataPtr->resize( count, NULL );
+   }
+
+   // deserialize the entries
+   for ( uint i = 0; i < count; ++i )
+   {
+      // deserialize the pointer
+      T* restoredPtr = loadPtr< T >( stream );
+      if ( object )
+      {
+         (*dataPtr)[i] = restoredPtr;
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< T* > >::mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const
+{
+   const char* memberPtr = (const char*)object + m_dataOffset;
+   const Array< T* >* dataPtr = reinterpret_cast< const Array< T* >* >( memberPtr );
+
+   uint count = dataPtr->size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      // add the stored object as a dependency
+      const T* storedObject = reinterpret_cast< const T* >( (*dataPtr)[i] ) ;
+      dependenciesCollector.addDependency( storedObject );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< T* > >::restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const
+{
+   char* memberPtr = (char*)object + m_dataOffset;
+   Array< T* >* dataPtr = reinterpret_cast< Array< T* >* >( memberPtr );
+
+   uint count = dataPtr->size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      // the pointers contain indices to the actual dependencies - now we just have to find corresponding objects
+      bool wasRestored = false;
+      T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr)[i], wasRestored ) );
+      (*dataPtr)[i] = restoredObject;
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+ReflectionProperty* TMemberField< Array< T* > >::instantiateProperty( void* object ) const
+{
+   char* memberPtr = (char*)object + m_dataOffset;
+   Array< T* >* dataPtr = reinterpret_cast< Array< T* >* >( memberPtr );
+
+   return new TReflectionProperty< Array< T* > >( (ReflectionObject*)object, dataPtr );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+TMemberField< Array< TRefPtr< T > > >::TMemberField( const std::string& memberName, int offset ) 
+   : ReflectionTypeComponent( memberName )
+   , m_dataOffset( offset )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< TRefPtr< T > > >::save( const void* object, const ReflectionDependencyMapperCallback& dependenciesMapper, OutStream& stream ) const
+{
+   const char* memberPtr = (const char*)object + m_dataOffset;
+   const Array< TRefPtr< T > >* dataPtr = reinterpret_cast< const Array< TRefPtr< T > >* >( memberPtr );
+
+   // serialize the number of entries
+   uint count = dataPtr->size();
+   stream << count;
+
+   // serialize the entires
+   for ( uint i = 0; i < count; ++i )
+   {
+      // serialize the pointer
+      savePtr( (*dataPtr)[i].get(), dependenciesMapper, stream );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< TRefPtr< T > > >::load( void* object, InStream& stream ) const 
+{
+   char* memberPtr = (char*)object + m_dataOffset;
+   Array< TRefPtr< T > >* dataPtr = reinterpret_cast< Array< TRefPtr< T > >* >( memberPtr );
+
+   // deserialize the number of entries
+   uint count;
+   stream >> count;
+
+   // make place in the array
+   if ( object )
+   {
+      dataPtr->resize( count, NULL );
+   }
+
+   // deserialize the entries
+   for ( uint i = 0; i < count; ++i )
+   {
+      // deserialize the pointer
+      T* restoredPtr = loadPtr< T >( stream );
+      if ( object )
+      {
+         (*dataPtr)[i].setDuringSerialization( restoredPtr );
+      }
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< TRefPtr< T > > >::mapDependencies( const void* object, ReflectionDependencyMapperCallback& dependenciesCollector ) const
+{
+   const char* memberPtr = (const char*)object + m_dataOffset;
+   const Array< TRefPtr< T > >* dataPtr = reinterpret_cast< const Array< TRefPtr< T > >* >( memberPtr );
+
+   uint count = dataPtr->size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      // add the stored object as a dependency
+      const T* storedObject = reinterpret_cast< const T* >( (*dataPtr)[i].get() ) ;
+      dependenciesCollector.addDependency( storedObject );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TMemberField< Array< TRefPtr< T > > >::restoreDependencies( void* object, const ReflectionDependencyLinkerCallback& dependenciesLinker ) const
+{
+   char* memberPtr = (char*)object + m_dataOffset;
+   Array< TRefPtr< T > >* dataPtr = reinterpret_cast< Array< TRefPtr< T > >* >( memberPtr );
+
+   uint count = dataPtr->size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      // the pointers contain indices to the actual dependencies - now we just have to find corresponding objects
+      bool wasRestored = false;
+      T* restoredObject = reinterpret_cast< T* >( dependenciesLinker.findDependency( (uint)(*dataPtr)[i].get(), wasRestored ) );
+      if ( wasRestored )
+      {
+         restoredObject->addReference();
+      }
+      (*dataPtr)[i].setDuringSerialization( restoredObject );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+ReflectionProperty* TMemberField< Array< TRefPtr< T > > >::instantiateProperty( void* object ) const
+{
+   char* memberPtr = (char*)object + m_dataOffset;
+   Array< TRefPtr< T > >* dataPtr = reinterpret_cast< Array< TRefPtr< T > >* >( memberPtr );
+
+   return new TReflectionProperty< Array< TRefPtr< T > > >( (ReflectionObject*)object, dataPtr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

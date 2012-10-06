@@ -193,43 +193,43 @@ void Camera::calculateFrustum( Frustum& outFrustum )
    Matrix combinedMtx;
    combinedMtx.setMul( viewMtx, projMtx );
 
-   
-   outFrustum.planes[FP_LEFT].a  = (combinedMtx.m14 + combinedMtx.m11);
-   outFrustum.planes[FP_LEFT].b  = (combinedMtx.m24 + combinedMtx.m21);
-   outFrustum.planes[FP_LEFT].c  = (combinedMtx.m34 + combinedMtx.m31);
-   outFrustum.planes[FP_LEFT].d  = (combinedMtx.m44 + combinedMtx.m41);
+   // <fastfloat.todo>
+   outFrustum.planes[FP_LEFT][0]  = (combinedMtx.m14 + combinedMtx.m11);
+   outFrustum.planes[FP_LEFT][1]  = (combinedMtx.m24 + combinedMtx.m21);
+   outFrustum.planes[FP_LEFT][2]  = (combinedMtx.m34 + combinedMtx.m31);
+   outFrustum.planes[FP_LEFT][3]  = (combinedMtx.m44 + combinedMtx.m41);
    outFrustum.planes[FP_LEFT].normalize();
 
-   outFrustum.planes[FP_RIGHT].a = (combinedMtx.m14 - combinedMtx.m11);
-   outFrustum.planes[FP_RIGHT].b = (combinedMtx.m24 - combinedMtx.m21);
-   outFrustum.planes[FP_RIGHT].c = (combinedMtx.m34 - combinedMtx.m31);
-   outFrustum.planes[FP_RIGHT].d = (combinedMtx.m44 - combinedMtx.m41);
+   outFrustum.planes[FP_RIGHT][0] = (combinedMtx.m14 - combinedMtx.m11);
+   outFrustum.planes[FP_RIGHT][1] = (combinedMtx.m24 - combinedMtx.m21);
+   outFrustum.planes[FP_RIGHT][2] = (combinedMtx.m34 - combinedMtx.m31);
+   outFrustum.planes[FP_RIGHT][3] = (combinedMtx.m44 - combinedMtx.m41);
    outFrustum.planes[FP_RIGHT].normalize();
 
 
-   outFrustum.planes[FP_BOTTOM].a = (combinedMtx.m14 + combinedMtx.m12);
-   outFrustum.planes[FP_BOTTOM].b = (combinedMtx.m24 + combinedMtx.m22);
-   outFrustum.planes[FP_BOTTOM].c = (combinedMtx.m34 + combinedMtx.m32);
-   outFrustum.planes[FP_BOTTOM].d = (combinedMtx.m44 + combinedMtx.m42);
+   outFrustum.planes[FP_BOTTOM][0] = (combinedMtx.m14 + combinedMtx.m12);
+   outFrustum.planes[FP_BOTTOM][1] = (combinedMtx.m24 + combinedMtx.m22);
+   outFrustum.planes[FP_BOTTOM][2] = (combinedMtx.m34 + combinedMtx.m32);
+   outFrustum.planes[FP_BOTTOM][3] = (combinedMtx.m44 + combinedMtx.m42);
    outFrustum.planes[FP_BOTTOM].normalize();
 
-   outFrustum.planes[FP_TOP].a = (combinedMtx.m14 - combinedMtx.m12);
-   outFrustum.planes[FP_TOP].b = (combinedMtx.m24 - combinedMtx.m22);
-   outFrustum.planes[FP_TOP].c = (combinedMtx.m34 - combinedMtx.m32);
-   outFrustum.planes[FP_TOP].d = (combinedMtx.m44 - combinedMtx.m42);
+   outFrustum.planes[FP_TOP][0] = (combinedMtx.m14 - combinedMtx.m12);
+   outFrustum.planes[FP_TOP][1] = (combinedMtx.m24 - combinedMtx.m22);
+   outFrustum.planes[FP_TOP][2] = (combinedMtx.m34 - combinedMtx.m32);
+   outFrustum.planes[FP_TOP][3] = (combinedMtx.m44 - combinedMtx.m42);
    outFrustum.planes[FP_TOP].normalize();
 
 
-   outFrustum.planes[FP_FAR].a   = (combinedMtx.m14 - combinedMtx.m13);
-   outFrustum.planes[FP_FAR].b   = (combinedMtx.m24 - combinedMtx.m23);
-   outFrustum.planes[FP_FAR].c   = (combinedMtx.m34 - combinedMtx.m33);
-   outFrustum.planes[FP_FAR].d   = (combinedMtx.m44 - combinedMtx.m43);
+   outFrustum.planes[FP_FAR][0]   = (combinedMtx.m14 - combinedMtx.m13);
+   outFrustum.planes[FP_FAR][1]   = (combinedMtx.m24 - combinedMtx.m23);
+   outFrustum.planes[FP_FAR][2]   = (combinedMtx.m34 - combinedMtx.m33);
+   outFrustum.planes[FP_FAR][3]   = (combinedMtx.m44 - combinedMtx.m43);
    outFrustum.planes[FP_FAR].normalize();
 
-   outFrustum.planes[FP_NEAR].a   = combinedMtx.m13;
-   outFrustum.planes[FP_NEAR].b   = combinedMtx.m23;
-   outFrustum.planes[FP_NEAR].c   = combinedMtx.m33;
-   outFrustum.planes[FP_NEAR].d   = combinedMtx.m43;
+   outFrustum.planes[FP_NEAR][0]   = combinedMtx.m13;
+   outFrustum.planes[FP_NEAR][1]   = combinedMtx.m23;
+   outFrustum.planes[FP_NEAR][2]   = combinedMtx.m33;
+   outFrustum.planes[FP_NEAR][3]   = combinedMtx.m43;
    outFrustum.planes[FP_NEAR].normalize();
 }
 

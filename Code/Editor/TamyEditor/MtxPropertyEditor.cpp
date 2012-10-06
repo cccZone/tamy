@@ -87,9 +87,9 @@ void MtxPropertyEditor::initializeValues()
 
    EulerAngles orientation;
    currVal.getRotation( orientation );
-   m_yawVal->setValue(orientation.yaw);
-   m_pitchVal->setValue(orientation.pitch);
-   m_rollVal->setValue(orientation.roll);
+   m_yawVal->setValue( orientation.getYaw() );
+   m_pitchVal->setValue( orientation.getPitch() );
+   m_rollVal->setValue( orientation.getRoll() );
 
    Vector pos = currVal.position();
    m_xVal->setValue(pos.x);
@@ -112,7 +112,7 @@ void MtxPropertyEditor::yawValChanged(double val)
 
    EulerAngles orientation;
    currVal.getRotation( orientation );
-   orientation.yaw = (float)val;
+   orientation[EulerAngles::Yaw] = (float)val;
    
    Matrix rotMtx, transMtx, finalMtx;
    rotMtx.setRotation( orientation );
@@ -130,7 +130,7 @@ void MtxPropertyEditor::pitchValChanged(double val)
 
    EulerAngles orientation;
    currVal.getRotation( orientation );
-   orientation.pitch = (float)val;
+   orientation[EulerAngles::Pitch] = (float)val;
 
    Matrix rotMtx, transMtx, finalMtx;
    rotMtx.setRotation( orientation );
@@ -148,7 +148,7 @@ void MtxPropertyEditor::rollValChanged(double val)
 
    EulerAngles orientation;
    currVal.getRotation( orientation );
-   orientation.roll = (float)val;
+   orientation[EulerAngles::Roll] = (float)val;
 
    Matrix rotMtx, transMtx, finalMtx;
    rotMtx.setRotation( orientation );

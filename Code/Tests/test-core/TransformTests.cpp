@@ -95,15 +95,18 @@ TEST( Transform, planeTransformation )
    Matrix transformMtx;
    {
       Matrix m1, m2;
+      EulerAngles angles;
+      angles.set( FastFloat::fromFloat( 45.0f ), FastFloat::fromFloat( 60.0f ), FastFloat::fromFloat( -10.0f ) );
       m1.setTranslation( Vector( 1, 2, 3 ) );
-      m2.setRotation( EulerAngles( 45.0f, 60.0f, -10.0f ) );
+      m2.setRotation( angles );
       transformMtx.setMul( m2, m1 );
 
       trans.set( transformMtx );
    }
 
    // create a test plane
-   Plane testPlane( 1, 0, 0, 10 );
+   Plane testPlane;
+   testPlane.set( Float_1, Float_0, Float_0, FastFloat::fromFloat( 10.0f ) );
 
    // transform the plane
    Plane tamyTransformedPlane;
@@ -210,7 +213,7 @@ TEST( Transform, inversion )
    concatenatedTransformB.setMul( invTransform , transform );
 
    COMPARE_QUAT( concatenatedTransformA.m_rotation, concatenatedTransformB.m_rotation );
-   COMPARE_QUAT( Quaternion::IDENTITY, concatenatedTransformB.m_rotation );
+   COMPARE_QUAT( Quaternion::getIdentity(), concatenatedTransformB.m_rotation );
 
    COMPARE_VEC( concatenatedTransformA.m_translation, concatenatedTransformB.m_translation );
    COMPARE_VEC( Vector::ZERO, concatenatedTransformB.m_translation );

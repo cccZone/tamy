@@ -3,7 +3,6 @@
 #include "core\Vector.h"
 #include "core\Matrix.h"
 #include "core\Quaternion.h"
-#include "core\Plane.h"
 #include "core\MathDefs.h"
 
 
@@ -11,25 +10,29 @@
 
 TEST(EulerAngles, normalization)
 {
-   EulerAngles o1(360, 720, -360);
-   o1.normalize();
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o1.yaw, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o1.pitch, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o1.roll, 1e-3);
+   EulerAngles o1, o2;
 
-   EulerAngles o2(124, -91, -369);
+   o1.set( FastFloat::fromFloat( 360.0f ), FastFloat::fromFloat( 720.0f ), FastFloat::fromFloat( -360.0f ) );
+   o1.normalize();
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o1.getYaw(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o1.getPitch(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o1.getRoll(), 1e-3);
+
+   o2.set( FastFloat::fromFloat( 124.0f ), FastFloat::fromFloat( -91.0f ), FastFloat::fromFloat( -369.0f ) );
    o2.normalize();
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(124.f, o2.yaw, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(-91.f, o2.pitch, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(-9.f, o2.roll, 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(124.f, o2.getYaw(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(-91.f, o2.getPitch(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(-9.f, o2.getRoll(), 1e-3);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST(EulerAngles, comparisonOperatesOnNormalizedOrientation)
 {
-   EulerAngles o1(124, -96, -369);
-   EulerAngles o2(124, -96, -9);
+   EulerAngles o1, o2;
+
+   o1.set( FastFloat::fromFloat( 124.0f ), FastFloat::fromFloat( -91.0f ), FastFloat::fromFloat( -369.0f ) );
+   o2.set( FastFloat::fromFloat( 124.0f ), FastFloat::fromFloat( -91.0f ), FastFloat::fromFloat( -9.0f ) );
    CPPUNIT_ASSERT_EQUAL(o1, o2);
 }
 
@@ -38,10 +41,10 @@ TEST(EulerAngles, comparisonOperatesOnNormalizedOrientation)
 TEST( EulerAngles, fromMatrix )
 {
    Matrix rotMtx;
-   EulerAngles angles;
+   EulerAngles angles, testAngle;
 
    {
-      EulerAngles testAngle( 90.0f, 0.0f, 0.0f );
+      testAngle.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -50,7 +53,7 @@ TEST( EulerAngles, fromMatrix )
 
    {
       // northern gimball lock
-      EulerAngles testAngle( 0.0f, 90.0f, 0.0f );
+      testAngle.set( Float_0, FastFloat::fromFloat( 90.0f ), Float_0 );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -59,7 +62,7 @@ TEST( EulerAngles, fromMatrix )
 
    {
       // another case of northern gimball lock
-      EulerAngles testAngle( 45.0f, 90.0f, 0.0f );
+      testAngle.set( FastFloat::fromFloat( 45.0f ), FastFloat::fromFloat( 90.0f ), Float_0 );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -68,7 +71,7 @@ TEST( EulerAngles, fromMatrix )
 
    {
       // another case of northern gimball lock
-      EulerAngles testAngle( -45.0f, 90.0f, 0.0f );
+      testAngle.set( FastFloat::fromFloat( -45.0f ), FastFloat::fromFloat( 90.0f ), Float_0 );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -76,7 +79,7 @@ TEST( EulerAngles, fromMatrix )
    }
 
    {
-      EulerAngles testAngle( 0.0f, 0.0f, 90.0f );
+      testAngle.set( Float_0, Float_0, FastFloat::fromFloat( 90.0f ) );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -84,7 +87,7 @@ TEST( EulerAngles, fromMatrix )
    }
 
    {
-      EulerAngles testAngle( -90.0f, 0.0f, 0.0f );
+      testAngle.set( FastFloat::fromFloat( -90.0f ), Float_0, Float_0 );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -93,7 +96,7 @@ TEST( EulerAngles, fromMatrix )
 
    {
       // southern gimball lock
-      EulerAngles testAngle( 0.0f, -90.0f, 0.0f );
+      testAngle.set( Float_0, FastFloat::fromFloat( -90.0f ), Float_0 );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -102,7 +105,7 @@ TEST( EulerAngles, fromMatrix )
 
    {
       // another case of southern gimball lock
-      EulerAngles testAngle( 45.0f, -90.0f, 0.0f );
+      testAngle.set( FastFloat::fromFloat( 45.0f ), FastFloat::fromFloat( -90.0f ), Float_0 );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -111,7 +114,7 @@ TEST( EulerAngles, fromMatrix )
 
    {
       // another case of southern gimball lock
-      EulerAngles testAngle( -45.0f, -90.0f, 0.0f );
+      testAngle.set( FastFloat::fromFloat( -45.0f ), FastFloat::fromFloat( -90.0f ), Float_0 );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -119,7 +122,7 @@ TEST( EulerAngles, fromMatrix )
    }
 
    {
-      EulerAngles testAngle( 0.0f, 0.0f, -90.0f );
+      testAngle.set( Float_0, Float_0, FastFloat::fromFloat( -90.0f ) );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -127,7 +130,7 @@ TEST( EulerAngles, fromMatrix )
    }
    
    {
-      EulerAngles testAngle( 45.0f, 45.0f, 45.0f );
+      testAngle.set( FastFloat::fromFloat( 45.0f ), FastFloat::fromFloat( 45.0f ), FastFloat::fromFloat( 45.0f ) );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -135,7 +138,7 @@ TEST( EulerAngles, fromMatrix )
    }
 
    {
-      EulerAngles testAngle( 10.0f, 20.0f, 30.0f );
+      testAngle.set( FastFloat::fromFloat( 10.0f ), FastFloat::fromFloat( 20.0f ), FastFloat::fromFloat( 30.0f ) );
       rotMtx.setRotation( testAngle);
       rotMtx.getRotation( angles );
 
@@ -149,36 +152,36 @@ TEST( EulerAngles, setFromShortestRotation )
 {
    EulerAngles o;
    o.setFromShortestRotation( Vector::OZ, Vector::OX );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(90.f, o.yaw, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.pitch, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.roll, 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(90.f, o.getYaw(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getPitch(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getRoll(), 1e-3);
 
    o.setFromShortestRotation( Vector::OZ, Vector::OX_NEG );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(-90.f, o.yaw, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.pitch, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.roll, 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(-90.f, o.getYaw(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getPitch(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getRoll(), 1e-3);
 
    o.setFromShortestRotation( Vector::OY, Vector::OZ );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.yaw, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(90.f, o.pitch, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.roll, 1e-1);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getYaw(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(90.f, o.getPitch(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getRoll(), 1e-1);
 
    o.setFromShortestRotation( Vector::OX, Vector::OY );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.yaw, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.pitch, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(90.f, o.roll, 1e-1);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getYaw(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getPitch(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(90.f, o.getRoll(), 1e-1);
 
    o.setFromShortestRotation( Vector::OY, Vector::OX );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.yaw, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.pitch, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(-90.f, o.roll, 1e-1);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getYaw(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getPitch(), 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(-90.f, o.getRoll(), 1e-1);
 
    Vector diagVec( 0, 0.5f, 0.5f );
    diagVec.normalize();
    o.setFromShortestRotation( Vector::OY, diagVec );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, o.yaw, 1e-3 );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL( 45.f, o.pitch, 1e-3 );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, o.roll, 1e-1 );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, o.getYaw(), 1e-3 );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL( 45.f, o.getPitch(), 1e-3 );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, o.getRoll(), 1e-1 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -213,7 +216,7 @@ TEST( EulerAngles, setFromQuaternion )
          // there's another issue with Quaternion->EulerAngle conversion here. For yaw < -90.0f && yaw > 90.0f,
          // the returned rotation is a rotation complement- basically it will return info that 'pitch' and 'roll' 
          // are both equal 180deg and 'yaw' = sign('acutalYaw') > 0 ? 90.0f - 'actualYaw' : 90.0f + 'actualYaw'.
-         // I browsed the web but the euqations they have there exhibit the same characteristics, that's why I'm using
+         // I browsed the web but the equations they have there exhibit the same characteristics, that's why I'm using
          // this high-tolerance comparison method here
          COMPARE_QUAT_ALLOW_CONJUGATION( testQ, q );
       }

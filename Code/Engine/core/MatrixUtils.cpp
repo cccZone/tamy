@@ -7,17 +7,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void MatrixUtils::lerp( const Matrix& start, const Matrix& end, float lerpDist, Matrix& outInterpolatedMtx )
+void MatrixUtils::lerp( const Matrix& start, const Matrix& end, const FastFloat& lerpDist, Matrix& outInterpolatedMtx )
 {
-   ASSERT_MSG( lerpDist <= 1, "The value for advancement should be <= 1");
-   ASSERT_MSG( lerpDist >= 0, "The value for advancement should be >= 0");
+   ASSERT_MSG( lerpDist <= Float_1, "The value for advancement should be <= 1");
+   ASSERT_MSG( lerpDist >= Float_0, "The value for advancement should be >= 0");
 
    // translation
 
    Vector startPos( start.m[3][0], start.m[3][1], start.m[3][2] );
    Vector endPos( end.m[3][0], end.m[3][1], end.m[3][2] );
    Vector resultPos;
-   resultPos.setSub( endPos, startPos ).mul( lerpDist ).add( startPos );
+   resultPos.setSub( endPos, startPos ).mul( lerpDist.getFloat() ).add( startPos );
 
    Matrix translationMtx;
    translationMtx.setTranslation( resultPos );

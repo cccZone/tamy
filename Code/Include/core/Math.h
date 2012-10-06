@@ -19,11 +19,12 @@
 // ----------------------------------------------------------------------------
 // Geometry
 // ----------------------------------------------------------------------------
-#include "core/TriangleUtil.h"
+#include "core\TriangleUtil.h"
 
 // ----------------------------------------------------------------------------
 // Core math
 // ----------------------------------------------------------------------------
+#include "core\MathDataStorage.h"
 #include "core\TVector.h"
 #include "core\Vector.h"
 #include "core\VectorUtil.h"
@@ -36,3 +37,4 @@
 #include "core\Algorithms.h"
 #include "core\MathDefs.h"
 #include "core\PlaneUtils.h"
+#include "core\FastFloat.h"

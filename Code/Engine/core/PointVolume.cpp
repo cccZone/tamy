@@ -41,10 +41,11 @@ void PointVolume::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// <fastfloat.todo>
 float PointVolume::distanceToPlane( const Plane& plane ) const
 {
-   float distance = plane.dotCoord( point );
-   return distance;
+   const FastFloat& distance = plane.dotCoord( point );
+   return distance.getFloat();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

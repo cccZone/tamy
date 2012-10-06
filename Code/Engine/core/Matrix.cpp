@@ -113,7 +113,7 @@ Matrix& Matrix::setTranslation( const Vector& translationVec )
 Matrix& Matrix::setRotation( const Quaternion& q )
 {
    Vector quatVec;
-   quatVec.load( q.q );
+   quatVec.load( q.m_quad );
 
    Vector q2; q2.setAdd( quatVec, quatVec );
    Vector xq2; xq2.setMul( q2, quatVec.x );
@@ -139,34 +139,34 @@ void Matrix::getRotation( Quaternion& q ) const
    if( trace > -1.0f ) 
    {
       float s = sqrt( trace + 1.0f ) * 2.0f;
-      q.w = 0.25f * s;
-      q.x = ( m[1][2] - m[2][1] ) / s;
-      q.y = ( m[2][0] - m[0][2] ) / s;
-      q.z = ( m[0][1] - m[1][0] ) / s;
+      q[3] = 0.25f * s;
+      q[0] = ( m[1][2] - m[2][1] ) / s;
+      q[1] = ( m[2][0] - m[0][2] ) / s;
+      q[2] = ( m[0][1] - m[1][0] ) / s;
    } 
    else if ( m[0][0] > m[1][1] && m[0][0] > m[2][2] ) 
    {
       float s = 2.0f * sqrt( 1.0f + m[0][0] - m[1][1] - m[2][2]);
-      q.w = (m[1][2] - m[2][1] ) / s;
-      q.x = 0.25f * s;
-      q.y = (m[0][1] + m[1][0] ) / s;
-      q.z = (m[0][2] + m[2][0] ) / s;
+      q[3] = (m[1][2] - m[2][1] ) / s;
+      q[0] = 0.25f * s;
+      q[1] = (m[0][1] + m[1][0] ) / s;
+      q[2] = (m[0][2] + m[2][0] ) / s;
    } 
    else if ( m[1][1] > m[2][2] ) 
    {
       float s = 2.0f * sqrt( 1.0f + m[1][1] - m[0][0] - m[2][2]);
-      q.w = (m[0][2] - m[2][0] ) / s;
-      q.x = (m[0][1] + m[1][0] ) / s;
-      q.y = 0.25f * s;
-      q.z = (m[1][2] + m[2][1] ) / s;
+      q[3] = (m[0][2] - m[2][0] ) / s;
+      q[0] = (m[0][1] + m[1][0] ) / s;
+      q[1] = 0.25f * s;
+      q[2] = (m[1][2] + m[2][1] ) / s;
    } 
    else 
    {
       float s = 2.0f * sqrt( 1.0f + m[2][2] - m[0][0] - m[1][1] );
-      q.w = (m[1][0] - m[0][1] ) / s;
-      q.x = (m[0][2] + m[2][0] ) / s;
-      q.y = (m[1][2] + m[2][1] ) / s;
-      q.z = 0.25f * s;
+      q[3] = (m[1][0] - m[0][1] ) / s;
+      q[0] = (m[0][2] + m[2][0] ) / s;
+      q[1] = (m[1][2] + m[2][1] ) / s;
+      q[2] = 0.25f * s;
    }
    
    q.normalize();
@@ -177,12 +177,12 @@ void Matrix::getRotation( Quaternion& q ) const
 Matrix& Matrix::setRotation( const EulerAngles& angles )
 {
    // Assuming the angles are in radians.
-   double cy = cos( DEG2RAD( angles.yaw ) );
-   double sy = sin( DEG2RAD( angles.yaw ) );
-   double cr = cos( DEG2RAD( angles.roll ) );
-   double sr = sin( DEG2RAD( angles.roll ) );
-   double cp = cos( DEG2RAD( angles.pitch ) );
-   double sp = sin( DEG2RAD( angles.pitch ) );
+   double cy = cos( DEG2RAD( angles[ EulerAngles::Yaw ] ) );
+   double sy = sin( DEG2RAD( angles[ EulerAngles::Yaw ] ) );
+   double cr = cos( DEG2RAD( angles[ EulerAngles::Roll ] ) );
+   double sr = sin( DEG2RAD( angles[ EulerAngles::Roll ] ) );
+   double cp = cos( DEG2RAD( angles[ EulerAngles::Pitch ] ) );
+   double sp = sin( DEG2RAD( angles[ EulerAngles::Pitch ] ) );
 
   // Mtx(Roll) * Mtx(Pitch) * Mtx(Yaw) - to be in sync with the counterpart method Quaternion::setFromEulerAngles( const EulerAngles& angles )
 
@@ -214,27 +214,27 @@ void Matrix::getRotation( EulerAngles& outAngles ) const
    if ( m[2][1] < -0.998f ) 
    { 
       // singularity at north pole
-      outAngles.yaw = -atan2( m[0][2], m[1][2] );
-      outAngles.pitch = (float)M_PI_2;
-      outAngles.roll = 0;
+      outAngles[ EulerAngles::Yaw ] = -atan2( m[0][2], m[1][2] );
+      outAngles[ EulerAngles::Pitch ] = (float)M_PI_2;
+      outAngles[ EulerAngles::Roll ] = 0;
    }
    else if ( m[2][1] > 0.998f ) 
    { 
       // singularity at south pole
-      outAngles.yaw = -atan2( m[0][2], -m[1][2] );
-      outAngles.pitch = (float)-M_PI_2;
-      outAngles.roll = 0;
+      outAngles[ EulerAngles::Yaw ] = -atan2( m[0][2], -m[1][2] );
+      outAngles[ EulerAngles::Pitch ] = (float)-M_PI_2;
+      outAngles[ EulerAngles::Roll ] = 0;
    }
    else
    {
-      outAngles.yaw = atan2( m[2][0], m[2][2] );
-      outAngles.roll = atan2( m[0][1], m[1][1] );
-      outAngles.pitch = asin( -m[2][1] );
+      outAngles[ EulerAngles::Yaw ] = atan2( m[2][0], m[2][2] );
+      outAngles[ EulerAngles::Roll ] = atan2( m[0][1], m[1][1] );
+      outAngles[ EulerAngles::Pitch ] = asin( -m[2][1] );
    }
 
-   outAngles.yaw = RAD2DEG( outAngles.yaw );
-   outAngles.pitch = RAD2DEG( outAngles.pitch );
-   outAngles.roll = RAD2DEG( outAngles.roll );
+   outAngles[ EulerAngles::Yaw ] = RAD2DEG( outAngles[ EulerAngles::Yaw ] );
+   outAngles[ EulerAngles::Pitch ] = RAD2DEG( outAngles[ EulerAngles::Pitch ] );
+   outAngles[ EulerAngles::Roll ] = RAD2DEG( outAngles[ EulerAngles::Roll ] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

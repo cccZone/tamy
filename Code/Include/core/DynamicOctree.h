@@ -1,8 +1,7 @@
-#ifndef _DYNAMIC_OCTREE_H
-#define _DYNAMIC_OCTREE_H
-
 /// @file   core\DynamicOctree.h
 /// @brief  an octree capable of storing dynamic (moving) objects
+#ifndef _DYNAMIC_OCTREE_H
+#define _DYNAMIC_OCTREE_H
 
 #include "core\Octree.h"
 #include "core\ConstSizeArray.h"
@@ -17,6 +16,8 @@
 template<typename Elem>
 class DynamicOctree : public Octree<Elem>
 {
+    ALIGNED_CLASS();
+
 private:
    /**
     * A helper structure for storing elements added to the tree.

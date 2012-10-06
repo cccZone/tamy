@@ -82,6 +82,7 @@
     <ClCompile Include="Assert.cpp" />
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="DefautAllocator.cpp" />
+    <ClCompile Include="FastFloat.cpp" />
     <ClCompile Include="FilePath.cpp" />
     <ClCompile Include="FilesystemSection.cpp" />
     <ClCompile Include="FilesystemUtils.cpp" />
@@ -92,9 +93,11 @@
     <ClCompile Include="InArrayStream.cpp" />
     <ClCompile Include="InStream.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="MathDataStorage.cpp" />
     <ClCompile Include="MatrixUtils.cpp" />
     <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="MemoryPoolAllocator.cpp" />
+    <ClCompile Include="MemoryUtils.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="NodeActionsExecutor.cpp" />
     <ClCompile Include="OutArrayStream.cpp" />
@@ -122,6 +125,7 @@
     <ClCompile Include="ResourceImporter.cpp" />
     <ClCompile Include="RoundBuffer.cpp" />
     <ClCompile Include="RuntimeData.cpp" />
+    <ClCompile Include="SimdUtils.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="StringUtils.cpp" />
@@ -152,6 +156,7 @@
     <ClInclude Include="..\..\Include\core\CollectionUtils.h" />
     <ClInclude Include="..\..\Include\core\Color.h" />
     <ClInclude Include="..\..\Include\core\DefaultAllocator.h" />
+    <ClInclude Include="..\..\Include\core\EngineDefines.h" />
     <ClInclude Include="..\..\Include\core\FilesystemSection.h" />
     <ClInclude Include="..\..\Include\core\FilesystemUtils.h" />
     <ClInclude Include="..\..\Include\core\GraphBuilderNodeUtils.h" />
@@ -160,8 +165,10 @@
     <ClInclude Include="..\..\Include\core\List.h" />
     <ClInclude Include="..\..\Include\core\Log.h" />
     <ClInclude Include="..\..\Include\core\MemoryPoolAllocator.h" />
+    <ClInclude Include="..\..\Include\core\MemoryUtils.h" />
     <ClInclude Include="..\..\Include\core\PlaneUtils.h" />
     <ClInclude Include="..\..\Include\core\Profiler.h" />
+    <ClInclude Include="..\..\Include\core\MathDataStorage.h" />
     <ClInclude Include="..\..\Include\core\ReflectionDependenciesCallback.h" />
     <ClInclude Include="..\..\Include\core\RefPtr.h" />
     <ClInclude Include="..\..\Include\core\ResourceDependenciesMapper.h" />
@@ -204,6 +211,8 @@
     <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h" />
     <ClInclude Include="..\..\Include\core\RoundBuffer.h" />
     <ClInclude Include="..\..\Include\core\RuntimeData.h" />
+    <ClInclude Include="..\..\Include\core\FastFloat.h" />
+    <ClInclude Include="..\..\Include\core\SimdUtils.h" />
     <ClInclude Include="..\..\Include\core\Singleton.h" />
     <ClInclude Include="..\..\Include\core\TNodesVisitor.h" />
     <ClInclude Include="..\..\Include\core\NodeAction.h" />
@@ -279,6 +288,10 @@
     <None Include="..\..\Include\core\CellSpacePartition.inl" />
     <None Include="..\..\Include\core\CollectionUtils.inl" />
     <None Include="..\..\Include\core\ConstSizeArray.inl" />
+    <None Include="..\..\Include\core\EulerAnglesFpu.inl" />
+    <None Include="..\..\Include\core\EulerAnglesSimd.inl" />
+    <None Include="..\..\Include\core\FastFloatFpu.inl" />
+    <None Include="..\..\Include\core\FastFloatSimd.inl" />
     <None Include="..\..\Include\core\Graph.inl" />
     <None Include="..\..\Include\core\GraphAlgorithms.inl" />
     <None Include="..\..\Include\core\GenericFactory.inl" />
@@ -293,6 +306,10 @@
     <None Include="..\..\Include\core\List.inl" />
     <None Include="..\..\Include\core\NarrowPhaseStorageFilter.inl" />
     <None Include="..\..\Include\core\OutStream.inl" />
+    <None Include="..\..\Include\core\PlaneFpu.inl" />
+    <None Include="..\..\Include\core\PlaneSimd.inl" />
+    <None Include="..\..\Include\core\QuaternionFpu.inl" />
+    <None Include="..\..\Include\core\QuaternionSimd.inl" />
     <None Include="..\..\Include\core\ReflectionEnum.inl" />
     <None Include="..\..\Include\core\ReflectionLoader.inl" />
     <None Include="..\..\Include\core\ReflectionObject.inl" />
@@ -309,6 +326,7 @@
     <None Include="..\..\Include\core\RoundBuffer.inl" />
     <None Include="..\..\Include\core\RuntimeData.inl" />
     <None Include="..\..\Include\core\SharedSpatialStorage.inl" />
+    <None Include="..\..\Include\core\SimdUtils.inl" />
     <None Include="..\..\Include\core\Stack.inl" />
     <None Include="..\..\Include\core\TNodesSpatialStorage.inl" />
     <None Include="..\..\Include\core\BSPNodeTree.inl" />
@@ -327,7 +345,8 @@
     <None Include="..\..\Include\core\ResourceStorage.inl" />
     <None Include="..\..\Include\core\UniqueObject.inl" />
     <None Include="..\..\Include\core\TVector.inl" />
-    <None Include="..\..\Include\core\Vector.inl" />
+    <None Include="..\..\Include\core\VectorFpu.inl" />
+    <None Include="..\..\Include\core\VectorSimd.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

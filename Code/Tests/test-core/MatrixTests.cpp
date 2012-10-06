@@ -13,7 +13,7 @@ TEST( Matrix, fromEulerAngles )
 {
    D3DXMATRIX dxRotMtx;
    Matrix tamyRotMtx;
-   EulerAngles angles;
+   EulerAngles angles, testAngle;
 
    for ( float roll = -179.0f; roll <= 179.0f; roll += 15.0f )
    {
@@ -23,7 +23,7 @@ TEST( Matrix, fromEulerAngles )
          {
             D3DXMatrixRotationYawPitchRoll( &dxRotMtx, DEG2RAD(yaw), DEG2RAD(pitch), DEG2RAD(roll) );
 
-            EulerAngles testAngle(yaw, pitch, roll);
+            testAngle.set( FastFloat::fromFloat( yaw ), FastFloat::fromFloat( pitch ), FastFloat::fromFloat( roll ) );
             tamyRotMtx.setRotation( testAngle );
             COMPARE_MTX( dxRotMtx, tamyRotMtx );
          }
@@ -51,7 +51,9 @@ TEST( Matrix, vectorTransformation )
    CPPUNIT_ASSERT_DOUBLES_EQUAL(4.f, result.z, 1e-3);
 
    // rotations
-   m.setRotation( EulerAngles(90.f, 0, 0) );
+   EulerAngles angles;
+   angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
+   m.setRotation( angles );
    m.transform( Vector::OZ, result );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.x, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
@@ -63,7 +65,9 @@ TEST( Matrix, vectorTransformation )
 TEST( Matrix, matrixConcatenation )
 {
    Matrix m1, m2;
-   m1.setRotation( EulerAngles(90.f, 0, 0) );
+   EulerAngles angles;
+   angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
+   m1.setRotation( angles );
    m2.setTranslation( Vector( 1, 2, 3 ) );
 
    // compare the matrices - one concatenated using DX methods,
@@ -81,7 +85,9 @@ TEST( Matrix, matrixConcatenation )
 TEST( Matrix, preMultiplyingSelf )
 {
    Matrix m1, m2;
-   m1.setRotation( EulerAngles(90.f, 0, 0) );
+   EulerAngles angles;
+   angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
+   m1.setRotation( angles );
    m2.setTranslation( Vector( 1, 2, 3 ) );
 
    Matrix cleanMulResult;
@@ -97,7 +103,9 @@ TEST( Matrix, preMultiplyingSelf )
 TEST( Matrix, transformingSimpleCoordinate )
 {
    Matrix m1, m2;
-   m1.setRotation( EulerAngles(90.f, 0, 0) );
+   EulerAngles angles;
+   angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
+   m1.setRotation( angles );
    m2.setTranslation( Vector( 1, 2, 3 ) );
 
    Matrix transformMtx;
@@ -126,7 +134,9 @@ TEST( Matrix, transformingSimpleNormal )
 
    // rotation
    {
-      mtx.setRotation( EulerAngles(90.f, 0, 0) );
+      EulerAngles angles;
+      angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
+      mtx.setRotation( angles );
 
       Vector tamyNormalTransformed;
       mtx.transformNorm( Vector::OX, tamyNormalTransformed );
@@ -166,18 +176,22 @@ TEST( Matrix, transformingCoordinates )
 {
    Matrix mtx;
    Vector result;
+   EulerAngles angles;
 
-   mtx.setRotation( EulerAngles(90.f, 0, 0) ).transform( Vector::OZ, result );
+   angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
+   mtx.setRotation( angles).transform( Vector::OZ, result );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.x, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.z, 1e-3);
 
-   mtx.setRotation( EulerAngles(-90.f, 0, 0) ).transform( Vector::OZ, result );
+   angles.set( FastFloat::fromFloat( -90.0f ), Float_0, Float_0 );
+   mtx.setRotation( angles ).transform( Vector::OZ, result );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.f, result.x, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.z, 1e-3);
 
-   mtx.setRotation( EulerAngles(0, 90.f, 0) ).transform( Vector::OY, result );
+   angles.set( Float_0, FastFloat::fromFloat( 90.0f ), Float_0 );
+   mtx.setRotation( angles ).transform( Vector::OY, result );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.x, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.z, 1e-3);
@@ -194,18 +208,22 @@ TEST( Matrix, fromVectorAngle )
 {
    Matrix mtx;
    Vector result;
+   EulerAngles angles;
 
-   mtx.setRotation( EulerAngles(90.f, 0, 0) ).transform( Vector::OZ, result );
+   angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
+   mtx.setRotation( angles ).transform( Vector::OZ, result );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.x, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.z, 1e-3);
 
-   mtx.setRotation( EulerAngles(-90.f, 0, 0) ).transform( Vector::OZ, result );
+   angles.set( FastFloat::fromFloat( -90.0f ), Float_0, Float_0 );
+   mtx.setRotation( angles ).transform( Vector::OZ, result );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.f, result.x, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.z, 1e-3);
 
-   mtx.setRotation( EulerAngles(0, 90.f, 0) ).transform( Vector::OY, result );
+   angles.set( Float_0, FastFloat::fromFloat( 90.0f ), Float_0 );
+   mtx.setRotation( angles ).transform( Vector::OY, result );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.x, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.z, 1e-3);
@@ -247,8 +265,10 @@ TEST( Matrix, directAccessToVectorComponents )
 TEST( Matrix, invertingMatrix )
 {
    Matrix m1, m2, mtx;
+   EulerAngles angles;
+   angles.set( FastFloat::fromFloat( 45.0f ), FastFloat::fromFloat( 60.0f ), FastFloat::fromFloat( -10.0f ) );
    m1.setTranslation( Vector( 1, 2, 3 ) );
-   m2.setRotation( EulerAngles( 45.0f, 60.0f, -10.0f ) );
+   m2.setRotation( angles );
    mtx.setMul( m2, m1 );
 
    Matrix tamyInvertedMtx;
@@ -291,11 +311,14 @@ TEST( Matrix, transposingMatrix )
 
 TEST( Matrix, planeTransformation )
 {
-   Plane testPlane( 1, 0, 0, 10 );
+   Plane testPlane;
+   testPlane.set( Quad_1000, FastFloat::fromFloat( 10.0f ) );
 
    Matrix m1, m2, mtx;
+   EulerAngles angles;
+   angles.set( FastFloat::fromFloat( 45.0f ), FastFloat::fromFloat( 60.0f ), FastFloat::fromFloat( -10.0f ) );
    m1.setTranslation( Vector( 1, 2, 3 ) );
-   m2.setRotation( EulerAngles( 45.0f, 60.0f, -10.0f ) );
+   m2.setRotation( angles );
    mtx.setMul( m2, m1 );
 
    Plane tamyTransformedPlane;

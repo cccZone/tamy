@@ -6,14 +6,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(TriangleSplitter, notCuttingPlaneUsed)
+TEST( TriangleSplitter, notCuttingPlaneUsed )
 {
    Triangle vol(Vector(-1, 0, 1), Vector(1, 0, 1), Vector(-1, 0, -1));
 
    // plane that the triangle is behind
    Array<Triangle*> frontSplit;
    Array<Triangle*> backSplit;
-   vol.split(Plane(0, 0, 1, -2), frontSplit, backSplit);
+   Plane plane;
+   plane.set( Float_0, Float_0, Float_1, Float_Minus2 );
+
+   vol.split(plane, frontSplit, backSplit);
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, frontSplit.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, backSplit.size());
@@ -27,7 +30,8 @@ TEST(TriangleSplitter, notCuttingPlaneUsed)
    backSplit.clear();
 
    // plane that the triangle is in front of
-   vol.split(Plane(0, 0, 1, 2), frontSplit, backSplit);
+   plane.set( Float_0, Float_0, Float_1, Float_2 );
+   vol.split( plane, frontSplit, backSplit);
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, frontSplit.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, backSplit.size());
@@ -42,13 +46,15 @@ TEST(TriangleSplitter, notCuttingPlaneUsed)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(TriangleSplitter, cuttingTriangleThroughTwoEdges)
+TEST( TriangleSplitter, cuttingTriangleThroughTwoEdges )
 {
    Triangle vol(Vector(-1, 0, 1), Vector(1, 0, 1), Vector(-1, 0, -1));
 
    Array<Triangle*> frontSplit;
    Array<Triangle*> backSplit;
-   vol.split(Plane(1, 0, 0, 0), frontSplit, backSplit);
+   Plane plane;
+   plane.set( Float_1, Float_0, Float_0, Float_0 );
+   vol.split( plane, frontSplit, backSplit );
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, frontSplit.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, backSplit.size());
@@ -72,13 +78,15 @@ TEST(TriangleSplitter, cuttingTriangleThroughTwoEdges)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(TriangleSplitter, cuttingTrianlgeThorughEdgeAndVertex)
+TEST( TriangleSplitter, cuttingTrianlgeThorughEdgeAndVertex )
 {
    Triangle vol(Vector(-1, 0, 1), Vector(1, 0, 1), Vector(0, 0, -1));
 
    Array<Triangle*> frontSplit;
    Array<Triangle*> backSplit;
-   vol.split(Plane(1, 0, 0, 0), frontSplit, backSplit);
+   Plane plane;
+   plane.set( Float_1, Float_0, Float_0, Float_0 );
+   vol.split(plane, frontSplit, backSplit);
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, frontSplit.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, backSplit.size());
@@ -97,13 +105,16 @@ TEST(TriangleSplitter, cuttingTrianlgeThorughEdgeAndVertex)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(TriangleSplitter, planeIsOnOneOfTheEdges)
+TEST( TriangleSplitter, planeIsOnOneOfTheEdges )
 {
    Triangle vol(Vector(0, 0, 1), Vector(1, 0, 1), Vector(0, 0, 0));
 
    Array<Triangle*> frontSplit;
    Array<Triangle*> backSplit;
-   vol.split(Plane(1, 0, 0, 0), frontSplit, backSplit);
+   Plane plane;
+   plane.set( Float_1, Float_0, Float_0, Float_0 );
+
+   vol.split(plane, frontSplit, backSplit);
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, frontSplit.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, backSplit.size());
@@ -117,13 +128,16 @@ TEST(TriangleSplitter, planeIsOnOneOfTheEdges)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(TriangleSplitter, planeIsOnOneOfTheVertices)
+TEST( TriangleSplitter, planeIsOnOneOfTheVertices )
 {
    Triangle vol(Vector(-1, 0, 1), Vector(1, 0, 1), Vector(0, 0, 0));
 
    Array<Triangle*> frontSplit;
    Array<Triangle*> backSplit;
-   vol.split(Plane(0, 0, 1, 0), frontSplit, backSplit);
+   Plane plane;
+   plane.set( Float_0, Float_0, Float_1, Float_0 );
+
+   vol.split(plane, frontSplit, backSplit);
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, frontSplit.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, backSplit.size());
@@ -137,7 +151,7 @@ TEST(TriangleSplitter, planeIsOnOneOfTheVertices)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(TriangleSplitter, nonStandardTriangle)
+TEST( TriangleSplitter, nonStandardTriangle )
 {
    Triangle vol(Vector(-1.5f, 0, 1), 
                 Vector( 2.5f, 0, 2.5f), 
@@ -145,7 +159,10 @@ TEST(TriangleSplitter, nonStandardTriangle)
 
    Array<Triangle*> frontSplit;
    Array<Triangle*> backSplit;
-   vol.split(Plane(1, 0, 0, -1.5f), frontSplit, backSplit);
+   Plane plane;
+   plane.set( Quad_1000, FastFloat::fromFloat( -1.5f ) );
+
+   vol.split( plane, frontSplit, backSplit );
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, frontSplit.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, backSplit.size());
@@ -169,7 +186,7 @@ TEST(TriangleSplitter, nonStandardTriangle)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TEST(TriangleSplitter, bugTriangle)
+TEST( TriangleSplitter, bugTriangle )
 {
    Triangle vol(Vector( 11, -29,  2), 
                 Vector( 11, -29, -2), 
@@ -177,7 +194,10 @@ TEST(TriangleSplitter, bugTriangle)
 
    Array<Triangle*> frontSplit;
    Array<Triangle*> backSplit;
-   vol.split(Plane(0, 0, 1, 0), frontSplit, backSplit);
+   Plane plane;
+   plane.set( Float_0, Float_0, Float_1, Float_0 );
+
+   vol.split(plane, frontSplit, backSplit);
 
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, frontSplit.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)2, backSplit.size());

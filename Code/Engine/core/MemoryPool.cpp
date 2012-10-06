@@ -1,4 +1,5 @@
 #include "core/MemoryPool.h"
+#include "core/MemoryUtils.h"
 #include "core/Assert.h"
 #include <stdio.h>
 
@@ -12,7 +13,7 @@ int MemoryPool::POOL_INFO_CHUNK_SIZE = sizeof( size_t ) + sizeof( void* );
 MemoryPool::MemoryPool( size_t size )
 {
    m_bufSize = size;
-   m_memory = new char[ m_bufSize ];
+   m_memory = new char[ m_bufSize + MemoryUtils::ALIGNMENT ];
    m_allocStartOffset = 0;
    m_allocationsCount = 0;
 }
@@ -46,7 +47,8 @@ void MemoryPool::reset()
 
 void* MemoryPool::alloc( size_t size )
 {
-   size_t sizeAtEnd = m_bufSize - m_allocStartOffset - POOL_INFO_CHUNK_SIZE;
+   size_t additionalAllocationSize = POOL_INFO_CHUNK_SIZE + MemoryUtils::ALIGNMENT;
+   size_t sizeAtEnd = m_bufSize - m_allocStartOffset - additionalAllocationSize;
 
    if ( size < sizeAtEnd )
    {
@@ -54,18 +56,20 @@ void* MemoryPool::alloc( size_t size )
       char* ptr = m_memory + m_allocStartOffset;
 
       // memorize pointer to the buffer and the chunk size
-      size += POOL_INFO_CHUNK_SIZE;
+      size += additionalAllocationSize;
       *(void**)ptr = this;
       ptr += sizeof( void* );
       *(size_t*)ptr = size;
       ptr += sizeof( size );
 
-      // move the pointer to the free memory start
-      m_allocStartOffset += size;
+      // align the actual pointer that we return
+      ptr = (char*)MemoryUtils::alignPointer( ptr, MemoryUtils::ALIGNMENT );
 
+      // move the pointer of the next free memory area
+      m_allocStartOffset += size;
       ++m_allocationsCount;
 
-      // return the pointer
+      // return a pointer to the allocated memory
       return ptr;
    }
    else
@@ -93,7 +97,8 @@ void MemoryPool::dealloc( void* ptr )
 
 MemoryPool* MemoryPool::getPoolPtr( void* ptr )
 {
-   MemoryPool* poolPtr = reinterpret_cast< MemoryPool* >( *(void**)( (char*)ptr - POOL_INFO_CHUNK_SIZE ) );
+   void* unalignedPtr = MemoryUtils::resolveAlignedPointer( ptr );
+   MemoryPool* poolPtr = reinterpret_cast< MemoryPool* >( *(void**)( (char*)unalignedPtr - POOL_INFO_CHUNK_SIZE ) );
    if ( !poolPtr )
    {
       ASSERT_MSG( false, "Accessing an object that's not allocated in a memory pool" );

@@ -117,25 +117,45 @@ void AABoundingBox::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float AABoundingBox::distanceToPlane(const Plane& plane) const
+float AABoundingBox::distanceToPlane( const Plane& plane ) const
 {
-   Vector planeNormal(plane.a, plane.b, plane.c);
+   Vector planeNormal;
+   plane.getNormal( planeNormal );
 
    Vector nearPoint, farPoint;
 
-   if (planeNormal.x > 0.0f) {farPoint.x = max.x; nearPoint.x = min.x;}
-   else {farPoint.x = min.x; nearPoint.x = max.x;}
-   if (planeNormal.y > 0.0f) {farPoint.y = max.y; nearPoint.y = min.y;}
-   else {farPoint.y = min.y; nearPoint.y = max.y;}
-   if (planeNormal.z > 0.0f) {farPoint.z = max.z; nearPoint.z = min.z;}
-   else {farPoint.z = min.z; nearPoint.z = max.z;}
+   if ( planeNormal.x > 0.0f ) 
+   {
+      farPoint.x = max.x; nearPoint.x = min.x;
+   }
+   else 
+   {
+      farPoint.x = min.x; nearPoint.x = max.x;
+   }
 
-   if ( plane.dotCoord( nearPoint ) > 0.0f)
+   if ( planeNormal.y > 0.0f ) 
+   {
+      farPoint.y = max.y; nearPoint.y = min.y;
+   }
+   else 
+   {
+      farPoint.y = min.y; nearPoint.y = max.y;
+   }
+   if (planeNormal.z > 0.0f) 
+   {
+      farPoint.z = max.z; nearPoint.z = min.z;
+   }
+   else 
+   {
+      farPoint.z = min.z; nearPoint.z = max.z;
+   }
+
+   if ( plane.dotCoord( nearPoint ) > Float_0 )
    {
       // the box is in front
       return 1;
    }
-   if ( plane.dotCoord( farPoint ) >= 0.0f)
+   if ( plane.dotCoord( farPoint ) >= Float_0 )
    {
       return 0;
    }

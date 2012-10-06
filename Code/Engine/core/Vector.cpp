@@ -2,6 +2,7 @@
 #include "core\OutStream.h"
 #include "core\InStream.h"
 #include "core\Math.h"
+#include "core\FastFloat.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -330,11 +331,12 @@ Vector& Vector::floor()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector& Vector::setLerp( const Vector& a, const Vector& b, float t )
+Vector& Vector::setLerp( const Vector& a, const Vector& b, const FastFloat& t )
 {
-   x = a.x + ( b.x - a.x ) * t;
-   y = a.y + ( b.y - a.y ) * t;
-   z = a.z + ( b.z - a.z ) * t;
+   // <fastfloat.todo> once Vector uses SIMD, remove those getFloat() calls
+   x = a.x + ( b.x - a.x ) * t.getFloat();
+   y = a.y + ( b.y - a.y ) * t.getFloat();
+   z = a.z + ( b.z - a.z ) * t.getFloat();
 
    return *this;
 }
@@ -563,3 +565,23 @@ void Vector::load( const TVector< 4 >& rawVector )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+Vector g_quadConstants[QuadMathConst_MAX] = 
+{
+   QUAD_CONSTANT( 0.0f, 0.0f, 0.0f, 0.0f ),
+   QUAD_CONSTANT( 1.0f, 1.0f, 1.0f, 1.0f ),
+
+   QUAD_CONSTANT( -1.0f, -1.0f, -1.0f, -1.0f ),
+
+   QUAD_CONSTANT( 1.0f, 0.0f, 0.0f, 0.0f ),
+   QUAD_CONSTANT( 0.0f, 1.0f, 0.0f, 0.0f ),
+   QUAD_CONSTANT( 0.0f, 0.0f, 1.0f, 0.0f ),
+   QUAD_CONSTANT( 0.0f, 0.0f, 0.0f, 1.0f ),
+   QUAD_CONSTANT(-1.0f, 0.0f, 0.0f, 0.0f ),
+   QUAD_CONSTANT( 0.0f,-1.0f, 0.0f, 0.0f ),
+   QUAD_CONSTANT( 0.0f, 0.0f,-1.0f, 0.0f ),
+   QUAD_CONSTANT( 0.0f, 0.0f, 0.0f,-1.0f ),
+};
+
+///////////////////////////////////////////////////////////////////////////////
+

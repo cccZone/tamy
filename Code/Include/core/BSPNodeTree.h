@@ -3,6 +3,7 @@
 #ifndef _BSP_NODE_TREE_H
 #define _BSP_NODE_TREE_H
 
+#include "core\MemoryUtils.h"
 #include "core\Array.h"
 #include "core\Plane.h"
 
@@ -21,9 +22,13 @@ struct Vector;
 template <class Polygon>
 class BSPNodeTree
 {
+   ALIGNED_CLASS();
+
 private:
    struct Node
    {
+      ALIGNED_STRUCT();
+
       Node* back;
       Node* front;
       Plane splitPlane;

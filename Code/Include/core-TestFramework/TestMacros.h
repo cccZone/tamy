@@ -5,9 +5,9 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #define COMPARE_EULER(v1, v2)                                                 \
-   CPPUNIT_ASSERT(fabs(v1.pitch - v2.pitch) < 0.0001f);                       \
-   CPPUNIT_ASSERT(fabs(v1.yaw - v2.yaw) < 0.0001f);                           \
-   CPPUNIT_ASSERT(fabs(v1.roll - v2.roll) < 0.0001f);
+   CPPUNIT_ASSERT(fabs(v1.getPitch() - v2.getPitch()) < 0.0001f);             \
+   CPPUNIT_ASSERT(fabs(v1.getYaw() - v2.getYaw()) < 0.0001f);                 \
+   CPPUNIT_ASSERT(fabs(v1.getRoll() - v2.getRoll()) < 0.0001f);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -27,10 +27,13 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #define COMPARE_QUAT(v1, v2)                                                  \
-   CPPUNIT_ASSERT(fabs(v1.x - v2.x) < 0.001f);                                \
-   CPPUNIT_ASSERT(fabs(v1.y - v2.y) < 0.001f);                                \
-   CPPUNIT_ASSERT(fabs(v1.z - v2.z) < 0.001f);                                \
-   CPPUNIT_ASSERT(fabs(v1.w - v2.w) < 0.001f);
+   if ( fabs(v1[0] - v2[0]) >= 0.001f ||                                        \
+        fabs(v1[1] - v2[1]) >= 0.001f ||                                        \
+        fabs(v1[2] - v2[2]) >= 0.001f ||                                        \
+        fabs(v1[3] - v2[3]) >= 0.001f )                                         \
+   {                                                                          \
+      CPPUNIT_ASSERT( false );                                                \
+   }
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -38,13 +41,13 @@
    {                                                                          \
       Quaternion conjV2;                                                      \
       conjV2 = v2; conjV2.conjugate();                                        \
-      if ( fabs(v1.x - v2.x) >= 0.001f || fabs(v1.y - v2.y) >= 0.001f || fabs(v1.z - v2.z) >= 0.001f || fabs(v1.w - v2.w) >= 0.001f ) \
+      if ( fabs(v1[0] - v2[0]) >= 0.001f || fabs(v1[1] - v2[1]) >= 0.001f || fabs(v1[2] - v2[2]) >= 0.001f || fabs(v1[3] - v2[3]) >= 0.001f ) \
       {                                                                       \
-         if ( fabs(v1.x + v2.x) >= 0.001f || fabs(v1.y + v2.y) >= 0.001f || fabs(v1.z + v2.z) >= 0.001f || fabs(v1.w + v2.w) >= 0.001f ) \
+         if ( fabs(v1[0] + v2[0]) >= 0.001f || fabs(v1[1] + v2[1]) >= 0.001f || fabs(v1[2] + v2[2]) >= 0.001f || fabs(v1[3] + v2[3]) >= 0.001f ) \
          {                                                                    \
-            if ( fabs(v1.x - conjV2.x) >= 0.001f || fabs(v1.y - conjV2.y) >= 0.001f || fabs(v1.z - conjV2.z) >= 0.001f || fabs(v1.w - conjV2.w) >= 0.001f ) \
+            if ( fabs(v1[0] - conjV2[0]) >= 0.001f || fabs(v1[1] - conjV2[1]) >= 0.001f || fabs(v1[2] - conjV2[2]) >= 0.001f || fabs(v1[3] - conjV2[3]) >= 0.001f ) \
             {                                                                 \
-               if ( fabs(v1.x + conjV2.x) >= 0.001f || fabs(v1.y + conjV2.y) >= 0.001f || fabs(v1.z + conjV2.z) >= 0.001f || fabs(v1.w + conjV2.w) >= 0.001f ) \
+               if ( fabs(v1[0] + conjV2[0]) >= 0.001f || fabs(v1[1] + conjV2[1]) >= 0.001f || fabs(v1[2] + conjV2[2]) >= 0.001f || fabs(v1[3] + conjV2[3]) >= 0.001f ) \
                {                                                              \
                   CPPUNIT_ASSERT( false );                                    \
                }                                                              \
@@ -52,22 +55,7 @@
          }                                                                    \
       }                                                                       \
    }
-   /*
-      CPPUNIT_ASSERT(fabs(v1.w - v2.w) < 0.001f);                             \
-      float dx = fabs(v1.x - v2.x);                                           \
-      float dy = fabs(v1.y - v2.y);                                           \
-      float dz = fabs(v1.z - v2.z);                                           \
-      if ( dx > 1e-3 || dy > 1e-3 || dz > 1e-3 )                              \
-      {                                                                       \
-         dx = fabs( v1.x + v2.x );                                            \
-         dy = fabs( v1.y + v2.y );                                            \
-         dz = fabs( v1.z + v2.z );                                            \
-         CPPUNIT_ASSERT(dx < 0.001f);                                         \
-         CPPUNIT_ASSERT(dy < 0.001f);                                         \
-         CPPUNIT_ASSERT(dz < 0.001f);                                         \
-      }                                                                       \
-   }
-   */
+
 ///////////////////////////////////////////////////////////////////////////////
 
 #define COMPARE_QUAT_AXIS_ANGLE(q, axis, angle)                               \
@@ -82,20 +70,26 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #define COMPARE_PLANE(v1, v2)                                                 \
-   CPPUNIT_ASSERT(fabs(v1.a - v2.a) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.b - v2.b) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.c - v2.c) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.d - v2.d) < 0.0001f);
+   CPPUNIT_ASSERT(fabs(v1.a - v2[0]) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1.b - v2[1]) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1.c - v2[2]) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1.d - v2[3]) < 0.0001f);
 
 ///////////////////////////////////////////////////////////////////////////////
 
 #define COMPARE_MTX(rhs, lhs)                                                 \
 {                                                                             \
-   for (char col = 0; col < 4; ++col)                                         \
+   bool err = false;                                                          \
+   for (char col = 0; col < 4 && !err ; ++col)                                \
    {                                                                          \
-      for (char row = 0; row < 4; ++row)                                      \
+      for (char row = 0; row < 4 && !err; ++row)                              \
       {                                                                       \
-         CPPUNIT_ASSERT(fabs(rhs.m[col][row] - lhs.m[col][row]) < 0.0001f);   \
+         if ( fabs(rhs.m[col][row] - lhs.m[col][row]) >= 0.0001f )            \
+         {                                                                    \
+            CPPUNIT_ASSERT( false );                                          \
+            err = true;                                                       \
+            break;                                                            \
+         }                                                                    \
       }                                                                       \
    }                                                                          \
 }

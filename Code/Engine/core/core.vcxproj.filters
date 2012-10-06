@@ -113,6 +113,24 @@
     <Filter Include="RTTI\RefPtr">
       <UniqueIdentifier>{ec44c914-d6af-4296-bf31-310f9ee911fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math\Implementations">
+      <UniqueIdentifier>{ea5be6eb-8b4a-444a-bbe2-35fdd54b8677}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Implementations\Simd">
+      <UniqueIdentifier>{f69ae934-21a7-4d4e-91c6-b2a2f6949e20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Implementations\Fpu">
+      <UniqueIdentifier>{fe4e053b-2a0b-42c8-8239-6f6b4fc77484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\MathTypes">
+      <UniqueIdentifier>{3fb6f28e-456c-4821-bff0-0edb48ab68ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Utils">
+      <UniqueIdentifier>{2a554255-6391-43a2-92b4-f1bb159bd9a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Core">
+      <UniqueIdentifier>{a28cb97a-26c6-4fc8-a81a-1f441eb73ec1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -169,23 +187,11 @@
     <ClCompile Include="ResourcesManager.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
-    <ClCompile Include="EulerAngles.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="Singleton.cpp">
       <Filter>Misc\Singleton</Filter>
     </ClCompile>
     <ClCompile Include="ResourceHandle.cpp">
       <Filter>Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Algorithms.cpp">
-      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="RoundBuffer.cpp">
       <Filter>DataStructures</Filter>
@@ -254,18 +260,6 @@
     <ClCompile Include="Color.cpp">
       <Filter>Misc</Filter>
     </ClCompile>
-    <ClCompile Include="Plane.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Quaternion.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="MatrixUtils.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
-    <ClCompile Include="VectorUtil.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="ReflectionPropertyEditor.cpp">
       <Filter>RTTI\Properties</Filter>
     </ClCompile>
@@ -274,9 +268,6 @@
     </ClCompile>
     <ClCompile Include="ReflectionSerializationUtil.cpp">
       <Filter>RTTI\Serialization</Filter>
-    </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="ResourceDependenciesMapper.cpp">
       <Filter>Resources\DependenciesMapper</Filter>
@@ -314,11 +305,50 @@
     <ClCompile Include="FilesystemUtils.cpp">
       <Filter>Filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="PlaneUtils.cpp">
-      <Filter>Math</Filter>
-    </ClCompile>
     <ClCompile Include="RefPtr.cpp">
       <Filter>RTTI\RefPtr</Filter>
+    </ClCompile>
+    <ClCompile Include="EulerAngles.cpp">
+      <Filter>Math\MathTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Math\MathTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Plane.cpp">
+      <Filter>Math\MathTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Quaternion.cpp">
+      <Filter>Math\MathTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Math\MathTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>Math\MathTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="Algorithms.cpp">
+      <Filter>Math\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixUtils.cpp">
+      <Filter>Math\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneUtils.cpp">
+      <Filter>Math\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="VectorUtil.cpp">
+      <Filter>Math\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MathDataStorage.cpp">
+      <Filter>Math\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="FastFloat.cpp">
+      <Filter>Math\MathTypes</Filter>
+    </ClCompile>
+    <ClCompile Include="SimdUtils.cpp">
+      <Filter>Math\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryUtils.cpp">
+      <Filter>MemoryManagement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -478,15 +508,6 @@
     <ClInclude Include="..\..\Include\core\ResourceStorage.h">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\EulerAngles.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Matrix.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Vector.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core.h" />
     <ClInclude Include="..\..\Include\core\ResourceManagerComponent.h">
       <Filter>Resources</Filter>
@@ -496,9 +517,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\Singleton.h">
       <Filter>Misc\Singleton</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Algorithms.h">
-      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\ResourceHandle.h">
       <Filter>Resources</Filter>
@@ -587,21 +605,6 @@
     <ClInclude Include="..\..\Include\core\Color.h">
       <Filter>Misc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\Plane.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Quaternion.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\MatrixUtils.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\MathDefs.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\VectorUtil.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\math.h" />
     <ClInclude Include="..\..\Include\core\ReflectionMacros.h">
       <Filter>RTTI\Core</Filter>
@@ -611,9 +614,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\ReflectionSerializationUtil.h">
       <Filter>RTTI\Serialization</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Transform.h">
-      <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\ReflectionObjectChangeListener.h">
       <Filter>RTTI\Core</Filter>
@@ -675,12 +675,6 @@
     <ClInclude Include="..\..\Include\core\CollectionUtils.h">
       <Filter>DataStructures\Collections</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\TVector.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\PlaneUtils.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\GraphBuilderNodeUtils.h">
       <Filter>DataStructures\DataPipeline</Filter>
     </ClInclude>
@@ -689,6 +683,55 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\RefPtr.h">
       <Filter>RTTI\RefPtr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\FastFloat.h">
+      <Filter>Math\MathTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\EulerAngles.h">
+      <Filter>Math\MathTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Matrix.h">
+      <Filter>Math\MathTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Plane.h">
+      <Filter>Math\MathTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Vector.h">
+      <Filter>Math\MathTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Quaternion.h">
+      <Filter>Math\MathTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Transform.h">
+      <Filter>Math\MathTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\TVector.h">
+      <Filter>Math\MathTypes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\VectorUtil.h">
+      <Filter>Math\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Algorithms.h">
+      <Filter>Math\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MatrixUtils.h">
+      <Filter>Math\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\PlaneUtils.h">
+      <Filter>Math\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\EngineDefines.h" />
+    <ClInclude Include="..\..\Include\core\MathDefs.h">
+      <Filter>Math\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MathDataStorage.h">
+      <Filter>Math\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\SimdUtils.h">
+      <Filter>Math\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MemoryUtils.h">
+      <Filter>MemoryManagement</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -754,9 +797,6 @@
     </None>
     <None Include="..\..\Include\core\Graph.inl">
       <Filter>DataStructures\Graphs</Filter>
-    </None>
-    <None Include="..\..\Include\core\Algorithms.inl">
-      <Filter>Math</Filter>
     </None>
     <None Include="..\..\Include\core\ResourceHandle.inl">
       <Filter>Resources</Filter>
@@ -839,12 +879,6 @@
     <None Include="..\..\Include\core\CollectionUtils.inl">
       <Filter>DataStructures\Collections</Filter>
     </None>
-    <None Include="..\..\Include\core\TVector.inl">
-      <Filter>Math</Filter>
-    </None>
-    <None Include="..\..\Include\core\Vector.inl">
-      <Filter>Math</Filter>
-    </None>
     <None Include="..\..\Include\core\GraphBuilderNodeUtils.inl">
       <Filter>DataStructures\DataPipeline</Filter>
     </None>
@@ -853,6 +887,45 @@
     </None>
     <None Include="..\..\Include\core\RefPtr.inl">
       <Filter>RTTI\RefPtr</Filter>
+    </None>
+    <None Include="..\..\Include\core\FastFloatSimd.inl">
+      <Filter>Math\Implementations\Simd</Filter>
+    </None>
+    <None Include="..\..\Include\core\FastFloatFpu.inl">
+      <Filter>Math\Implementations\Fpu</Filter>
+    </None>
+    <None Include="..\..\Include\core\VectorFpu.inl">
+      <Filter>Math\Implementations\Fpu</Filter>
+    </None>
+    <None Include="..\..\Include\core\TVector.inl">
+      <Filter>Math\MathTypes</Filter>
+    </None>
+    <None Include="..\..\Include\core\Algorithms.inl">
+      <Filter>Math\Utils</Filter>
+    </None>
+    <None Include="..\..\Include\core\VectorSimd.inl">
+      <Filter>Math\Implementations\Simd</Filter>
+    </None>
+    <None Include="..\..\Include\core\PlaneFpu.inl">
+      <Filter>Math\Implementations\Fpu</Filter>
+    </None>
+    <None Include="..\..\Include\core\PlaneSimd.inl">
+      <Filter>Math\Implementations\Simd</Filter>
+    </None>
+    <None Include="..\..\Include\core\EulerAnglesFpu.inl">
+      <Filter>Math\Implementations\Fpu</Filter>
+    </None>
+    <None Include="..\..\Include\core\EulerAnglesSimd.inl">
+      <Filter>Math\Implementations\Simd</Filter>
+    </None>
+    <None Include="..\..\Include\core\QuaternionFpu.inl">
+      <Filter>Math\Implementations\Fpu</Filter>
+    </None>
+    <None Include="..\..\Include\core\QuaternionSimd.inl">
+      <Filter>Math\Implementations\Simd</Filter>
+    </None>
+    <None Include="..\..\Include\core\SimdUtils.inl">
+      <Filter>Math\Utils</Filter>
     </None>
   </ItemGroup>
 </Project>

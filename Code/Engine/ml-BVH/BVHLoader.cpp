@@ -162,8 +162,9 @@ namespace // anonymous
          bool hasTranslation = false;
 
          float rotAngle;
-         Quaternion orientation( 0, 0, 0, 1 );
-         Quaternion tmpOrientation( 0, 0, 0, 1 );
+         Quaternion orientation, tmpOrientation;
+         orientation.setIdentity();
+         tmpOrientation.setIdentity();
          bool hasOrientation = false;
 
          for ( std::vector< std::string >::const_iterator it = m_channels.begin(); it != m_channels.end(); ++it )

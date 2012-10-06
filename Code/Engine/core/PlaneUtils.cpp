@@ -17,19 +17,21 @@ bool PlaneUtils::calculatePlanesIntersection( const Plane& p1, const Plane& p2, 
    n31.setCross( n3, n1 );
    n12.setCross( n1, n2 );
 
-   float den = -p1.dotNormal( n23 );
-   if ( den == 0 )
+   FastFloat den = p1.dotNormal( n23 );
+   den.neg();
+   if ( den == Float_0 )
    {
       // planes are parallel
       return false;
    }
 
    Vector a, b, c;
-   a.setMul( n23, p1.d );
-   b.setMul( n31, p2.d );
-   c.setMul( n12, p3.d );
+   a.setMul( n23, p1[3] );
+   b.setMul( n31, p2[3] );
+   c.setMul( n12, p3[3] );
 
-   outIntersectionPt.setAdd( a, b ).add( c ).mul( 1.0f / den );
+   den.reciprocal();
+   outIntersectionPt.setAdd( a, b ).add( c ).mul( den.getFloat() );
    return true;
 }
 

@@ -3,6 +3,7 @@
 #ifndef _ARRAY_H
 #define _ARRAY_H
 
+#include "core\MemoryUtils.h"
 #include "core\Assert.h"
 #include "core\DefaultAllocator.h"
 #include <stdio.h>
@@ -25,6 +26,8 @@
 template< typename T, typename TAllocator = DefaultAllocator >
 class Array
 {
+   ALIGNED_CLASS();
+
 public:
    unsigned int   m_size;
    unsigned int   m_elementsCount;
@@ -109,7 +112,7 @@ public:
     * @param defaultValue  value for the automatically created
     *                      elements
     */
-   void resize(unsigned int newSize, const T& defaultValue = 0 );
+   void resize( unsigned int newSize, const T& defaultValue = 0 );
 
 
    /**
@@ -118,7 +121,7 @@ public:
     *
     * @param elem    elements that's gonna be appended
     */
-   void push_back(const T& elem);
+   void push_back( const T& elem );
 
    /**
     * Accesses the last element in the array (providing there is one).
@@ -130,6 +133,28 @@ public:
     * Accesses the last element in the array (providing there is one).
     */
    T& back();
+
+   /**
+    * The method inserts a new element at the beginning of the array, 
+    * resizing it if necessary.
+    *
+    * CAUTION: This operation is expensive in comparison to push_back, as all
+    * data the array contains need to be moved one step forward.
+    *
+    * @param elem    elements that's gonna be inserted
+    */
+   void push_front( const T& elem );
+
+   /**
+    * Accesses the first element in the array (providing there is one).
+    * (const version)
+    */
+   const T& front() const;
+
+   /**
+    * Accesses the first element in the array (providing there is one).
+    */
+   T& front();
 
    /**
     * The method removes an element at the given index.

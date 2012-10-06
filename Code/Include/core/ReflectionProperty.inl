@@ -418,6 +418,184 @@ const ReflectionType& TReflectionProperty< std::vector< TRefPtr< T > > >::getRTT
    return *type;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+TReflectionProperty< Array< T* > >::TReflectionProperty( ReflectionObject* hostObject, Array< T* >* val ) 
+   : ReflectionPropertyArray( hostObject )
+   , m_val( val )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TReflectionProperty< Array< T* > >::set( void* val )
+{
+   notifyBeforeChange();
+   notifyAfterChange();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void* TReflectionProperty< Array< T* > >::edit()
+{
+   return m_val;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+unsigned int TReflectionProperty< Array< T* > >::size() const
+{
+   return m_val->size();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+ReflectionObject* TReflectionProperty< Array< T* > >::getElement( uint idx )
+{
+   return ( *m_val )[idx];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const ReflectionType& TReflectionProperty< Array< T* > >::getVirtualClass() const
+{
+   return getRTTIClass();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const ReflectionType& TReflectionProperty< Array< T* > >::getPropertyClass() const
+{
+   const ReflectionType* type = ReflectionTypesRegistry::getInstance().find< T >();
+   ASSERT_MSG( type != NULL, "This property type doesn't exist" );
+
+   return *type;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const ReflectionType& TReflectionProperty< Array< T* > >::getRTTIClass()
+{
+   const ReflectionType* type = ReflectionTypesRegistry::getInstance().find< T >();
+   ASSERT_MSG( type != NULL, "This property type doesn't exist" );
+
+   return *type;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+TReflectionProperty< Array< TRefPtr< T > > >::TReflectionProperty( ReflectionObject* hostObject, Array< TRefPtr< T > >* val ) 
+   : ReflectionPropertyArray( hostObject )
+   , m_val( val )
+{
+   uint count = m_val->size();
+   m_tmpVal.resize( count, NULL );
+   for ( uint i = 0; i < count; ++i )
+   {
+      m_tmpVal[i] = (*m_val)[i].get();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void TReflectionProperty< Array< TRefPtr< T > > >::set( void* val )
+{
+   notifyBeforeChange();
+
+   uint oldSize = m_val->size();
+   uint newSize = m_tmpVal.size();
+   if ( oldSize > newSize )
+   {
+      uint count = oldSize - newSize;
+      for ( uint i = 0; i < count; ++i )
+      {
+         m_val->pop_back();
+      }
+   }
+   else if ( oldSize < newSize )
+   {
+      uint count = newSize - oldSize;
+      for ( uint i = 0; i < count; ++i )
+      {
+         m_val->push_back( TRefPtr< T >() );
+      }
+   }
+
+   for ( uint i = 0; i < newSize; ++i )
+   {
+      (*m_val)[i] = m_tmpVal[i];
+   }
+
+   notifyAfterChange();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+void* TReflectionProperty< Array< TRefPtr< T > > >::edit()
+{
+   return &m_tmpVal;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+unsigned int TReflectionProperty< Array< TRefPtr< T > > >::size() const
+{
+   return m_val->size();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+ReflectionObject* TReflectionProperty< Array< TRefPtr< T > > >::getElement( uint idx )
+{
+   return ( *m_val )[idx].get();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const ReflectionType& TReflectionProperty< Array< TRefPtr< T > > >::getVirtualClass() const
+{
+   return getRTTIClass();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const ReflectionType& TReflectionProperty< Array< TRefPtr< T > > >::getPropertyClass() const
+{
+   const ReflectionType* type = ReflectionTypesRegistry::getInstance().find< T >();
+   ASSERT_MSG( type != NULL, "This property type doesn't exist" );
+
+   return *type;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T >
+const ReflectionType& TReflectionProperty< Array< TRefPtr< T > > >::getRTTIClass()
+{
+   const ReflectionType* type = ReflectionTypesRegistry::getInstance().find< T >();
+   ASSERT_MSG( type != NULL, "This property type doesn't exist" );
+
+   return *type;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

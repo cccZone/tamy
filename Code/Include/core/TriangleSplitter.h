@@ -10,6 +10,7 @@
 
 struct Vector;
 struct Plane;
+struct FastFloat;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -48,7 +49,7 @@ public:
     * @param startVtxIdx   the beginning of the edge
     * @param endVtxIdx     the end of the edge
     */
-   virtual void splitEdge( float percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, typename VERTEX& outVertex ) const = 0;
+   virtual void splitEdge( const FastFloat& percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, typename VERTEX& outVertex ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -91,7 +92,7 @@ public:
    void split( const SplittableTriangle<VERTEX>& triangle, const Plane& plane, Array<TRIANGLE*>& front, Array<TRIANGLE*>& back) const;
 
 private: 
-   VERTEX splitEdge(float percentage, const VERTEX& v1, const VERTEX& v2) const;
+   VERTEX splitEdge(const FastFloat& percentage, const VERTEX& v1, const VERTEX& v2) const;
    void triangulatePoly(const Array<VERTEX>& poly, typename Array<TRIANGLE*>& output) const;
 };
 

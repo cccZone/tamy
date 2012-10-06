@@ -134,7 +134,7 @@ TEST( CascadedShadowsUtils, singleCascadeStage )
    // but test it for the initial camera position ( in the origin, not translated ).
    // This way we have a light shining in the same direction the camera's looking ( shining at our back so to speak )
    {
-      lightTransform.m_rotation = Quaternion::IDENTITY;
+      lightTransform.m_rotation = Quaternion::getIdentity();
       lightTransform.toMatrix( cascadesConfig.m_lightRotationMtx );
 
       cameraTransform = Transform::IDENTITY;

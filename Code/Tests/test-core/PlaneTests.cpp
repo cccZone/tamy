@@ -99,12 +99,12 @@ TEST( Plane, normalize )
    Plane tamyPlane;
    D3DXPLANE dxPlane;
 
-   tamyPlane.set( 1, 2, -3, 10 );
+   tamyPlane.set( Float_1, Float_2, FastFloat::fromFloat( -3.0f ), FastFloat::fromFloat( 10.0f ) );
    D3DXPlaneNormalize( &dxPlane, ( const D3DXPLANE* )&tamyPlane );
    tamyPlane.normalize();
    COMPARE_PLANE( dxPlane, tamyPlane );
 
-   tamyPlane.set( -1, -1, 0, -1 );
+   tamyPlane.set( Float_Minus1, Float_Minus1, Float_0, Float_Minus1 );
    D3DXPlaneNormalize( &dxPlane, ( const D3DXPLANE* )&tamyPlane );
    tamyPlane.normalize();
    COMPARE_PLANE( dxPlane, tamyPlane );
@@ -118,15 +118,15 @@ TEST( Plane, dotCoord )
    Vector testPt;
    
    testPt.set( 3, 2, -1 );
-   plane.set( 1, 0, 0, 10 );
+   plane.set( Quad_1000, FastFloat::fromFloat( 10.0f ) );
    float dxDot = D3DXPlaneDotCoord( ( const D3DXPLANE* )&plane, ( const D3DXVECTOR3* )&testPt );
-   float tamyDot = plane.dotCoord( testPt );
+   float tamyDot = plane.dotCoord( testPt ).getFloat();
    CPPUNIT_ASSERT_DOUBLES_EQUAL( dxDot, tamyDot, 1e-3f );
 
    testPt.set( 3, 2, -1 );
-   plane.set( 0, -1, 0, -12 );
+   plane.set( Quad_Neg_0100, FastFloat::fromFloat( -12.0f ) );
    dxDot = D3DXPlaneDotCoord( ( const D3DXPLANE* )&plane, ( const D3DXVECTOR3* )&testPt );
-   tamyDot = plane.dotCoord( testPt );
+   tamyDot = plane.dotCoord( testPt ).getFloat();
    CPPUNIT_ASSERT_DOUBLES_EQUAL( dxDot, tamyDot, 1e-3f );
 }
 
@@ -138,15 +138,15 @@ TEST( Plane, dotNormal )
    Vector testPt;
 
    testPt.set( 3, 2, -1 );
-   plane.set( 1, 0, 0, 10 );
+   plane.set( Quad_1000, FastFloat::fromFloat( 10.0f ) );
    float dxDot = D3DXPlaneDotNormal( ( const D3DXPLANE* )&plane, ( const D3DXVECTOR3* )&testPt );
-   float tamyDot = plane.dotNormal( testPt );
+   float tamyDot = plane.dotNormal( testPt ).getFloat();
    CPPUNIT_ASSERT_DOUBLES_EQUAL( dxDot, tamyDot, 1e-3f );
 
    testPt.set( 3, 2, -1 );
-   plane.set( 0, -1, 0, -12 );
+   plane.set( Quad_Neg_0100, FastFloat::fromFloat( -12.0f ) );
    dxDot = D3DXPlaneDotNormal( ( const D3DXPLANE* )&plane, ( const D3DXVECTOR3* )&testPt );
-   tamyDot = plane.dotNormal( testPt );
+   tamyDot = plane.dotNormal( testPt ).getFloat();
    CPPUNIT_ASSERT_DOUBLES_EQUAL( dxDot, tamyDot, 1e-3f );
 }
 

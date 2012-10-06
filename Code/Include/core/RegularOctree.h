@@ -1,8 +1,7 @@
-#ifndef _REGULAR_OCTREE_H
-#define _REGULAR_OCTREE_H
-
 /// @file   core\RegularOctree.h
 /// @brief  an octree spatial container
+#ifndef _REGULAR_OCTREE_H
+#define _REGULAR_OCTREE_H
 
 #include "core\Octree.h"
 #include "core\ConstSizeArray.h"
@@ -17,6 +16,8 @@
 template<typename Elem>
 class RegularOctree : public Octree<Elem>
 {
+   ALIGNED_CLASS();
+
 private:
    typedef ConstSizeArray< Elem* >  ElementsArray;
    ElementsArray                    m_elements;

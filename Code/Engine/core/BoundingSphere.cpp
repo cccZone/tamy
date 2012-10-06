@@ -56,15 +56,18 @@ void BoundingSphere::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
 
 float BoundingSphere::distanceToPlane( const Plane& plane ) const
 {
-   float distance = plane.dotCoord( origin );
-   
-   if ( fabs(distance) <= radius ) 
+   // <fastfloat.todo>
+   const FastFloat distance = plane.dotCoord( origin );
+   FastFloat absDist;
+   absDist.setAbs( distance );
+
+   if ( absDist.getFloat() <= radius ) 
    { 
       return 0; 
    }
    else
    { 
-      return distance; 
+      return distance.getFloat(); 
    }
 }
 

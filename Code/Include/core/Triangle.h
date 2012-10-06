@@ -65,7 +65,7 @@ public:
    // -------------------------------------------------------------------------
    // SplittableTriangle implementation
    // -------------------------------------------------------------------------
-   void splitEdge( float percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, Vector& outEdge ) const;
+   void splitEdge( const FastFloat& percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, Vector& outEdge ) const;
 
    void split( const Plane& splitPlane, Array< Triangle* >& frontSplit, Array< Triangle* >& backSplit );
 
