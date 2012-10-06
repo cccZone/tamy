@@ -145,7 +145,7 @@ void Array< T, TAllocator >::allocate(unsigned int newSize)
    T* newArr = (T*)m_allocator->alloc( sizeof( T ) * newSizePow2 );
 
 #ifdef _USE_FAST_ARRAYS
-   memcpy( newArray, m_arr, sizeof( T ) * m_elementsCount );
+   memcpy( newArr, m_arr, sizeof( T ) * m_elementsCount );
 #else
    for (unsigned int i = 0; i < m_elementsCount; ++i)
    {
@@ -169,7 +169,7 @@ void Array< T, TAllocator >::resize(unsigned int newSize, const T& defaultValue 
    {
 
 #ifdef _USE_FAST_ARRAYS
-      memset( m_arr + newSize, defaultValue, sizeof( T ) * ( newSize - m_elementsCount ) );
+      memset( m_arr + newSize, (int)defaultValue, sizeof( T ) * ( m_elementsCount - newSize ) );
 #else
       for (unsigned int i = newSize; i < m_elementsCount; ++i)
       {
@@ -182,7 +182,7 @@ void Array< T, TAllocator >::resize(unsigned int newSize, const T& defaultValue 
    {
 
 #ifdef _USE_FAST_ARRAYS
-      memcpy( m_arr + m_elementsCount, defaultValue, sizeof( T ) * ( newSize - m_elementsCount ) );
+      memset( m_arr + m_elementsCount, (int)defaultValue, sizeof( T ) * ( newSize - m_elementsCount ) );
 #else
       for (unsigned int i = m_elementsCount; i < newSize; ++i)
       {
@@ -277,7 +277,7 @@ void Array< T, TAllocator >::remove(unsigned int idx)
    ASSERT_MSG(idx < m_elementsCount, "index out of array boundaries"); 
 
 #ifdef _USE_FAST_ARRAYS
-   memcpy( m_arr, m_arr + 1, sizeof( T ) * ( m_elementsCount - 1 ) );
+   memcpy( m_arr + idx, m_arr + idx + 1, sizeof( T ) * ( m_elementsCount - idx - 1 ) );
 #else
    for (unsigned int i = idx + 1; i < m_elementsCount; ++i)
    {
