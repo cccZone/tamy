@@ -5,7 +5,8 @@
 #include "core-TestFramework\MatrixWriter.h"
 #include "core\BoundingVolume.h"
 #include "core\BSPNodeTree.h"
-#include <d3dx9.h>
+#include "core\FastFloat.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -25,28 +26,26 @@ namespace // anonymous
          v[2] = v3;
       }
 
-      Plane getPlane() const
+      void getPlane( Plane& outPlane ) const
       {
-         Plane plane;
-         plane.setFromPoints( v[0], v[2], v[1] );
-         return plane;
+         outPlane.setFromPoints( v[0], v[2], v[1] );
       }
 
       PlaneClassification classifyAgainst(const Plane& plane)
       {
-         float dist1 = plane.dotCoord( v[0] );
-         float dist2 = plane.dotCoord( v[1] );
-         float dist3 = plane.dotCoord( v[2] );
+         const FastFloat dist1 = plane.dotCoord( v[0] );
+         const FastFloat dist2 = plane.dotCoord( v[1] );
+         const FastFloat dist3 = plane.dotCoord( v[2] );
 
-         if ((dist1 < 0) && (dist2 < 0) && (dist3 < 0))
+         if ( ( dist1 < Float_0 ) && ( dist2 < Float_0 ) && ( dist3 < Float_0 ) )
          {
             return PPC_BACK;
          }
-         else if ((dist1 > 0) && (dist2 > 0) && (dist3 > 0))
+         else if ( ( dist1 > Float_0 ) && ( dist2 > Float_0 ) && ( dist3 > Float_0) )
          {
             return PPC_FRONT;
          }
-         else if ((dist1 == 0) && (dist2 == 0) && (dist3 == 0))
+         else if ( ( dist1 == Float_0 ) && ( dist2 == Float_0 ) && ( dist3 == Float_0 ) )
          {
             return PPC_COPLANAR;
          }
@@ -60,14 +59,14 @@ namespace // anonymous
 
       const Vector& vertexPos(unsigned int vtxIdx) const {return v[vtxIdx];}
 
-      void splitEdge( float percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, Vector& outVertex ) const
+      void splitEdge( const FastFloat& percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, Vector& outVertex ) const
       {
          const Vector& v1 = v[startVtxIdx];
 
          Vector edge;
          edge.setSub( v[endVtxIdx], v1 );
 
-         outVertex.setMulAdd( edge, percentage, v1 );
+         outVertex.setMulAdd( edge, percentage.getFloat(), v1 );
       }
 
       void split( const Plane& plane, Array<TriangleMock*>& frontSplit, Array<TriangleMock*>& backSplit)

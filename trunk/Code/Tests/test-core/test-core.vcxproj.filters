@@ -203,6 +203,9 @@
     <ClCompile Include="FrustumTests.cpp">
       <Filter>BoundingVolumes</Filter>
     </ClCompile>
+    <ClCompile Include="FastFloatTests.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">

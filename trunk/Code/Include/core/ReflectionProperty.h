@@ -8,6 +8,7 @@
 #include <vector>
 #include "core\types.h"
 #include "core\RefPtr.h"
+#include "core\Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -348,6 +349,87 @@ public:
     * @param val
     */
    TReflectionProperty( ReflectionObject* hostObject, std::vector< TRefPtr< T > >* val );
+
+   // -------------------------------------------------------------------------
+   // VectorProperty implementation
+   // -------------------------------------------------------------------------
+   uint size() const;
+   ReflectionObject* getElement( uint idx );
+
+   // -------------------------------------------------------------------------
+   // ReflectionProperty implementation
+   // -------------------------------------------------------------------------
+   void set( void* val );
+   void* edit();
+
+   // -------------------------------------------------------------------------
+   // Type identification mechanism implementation.
+   // -------------------------------------------------------------------------
+   const ReflectionType& getVirtualClass() const;
+   const ReflectionType& getPropertyClass() const;
+   static const ReflectionType& getRTTIClass();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * This specialized property can hold an array of pointers
+ */
+template< typename T >
+class TReflectionProperty< Array< T* > > : public ReflectionPropertyArray
+{
+private:
+   Array<T*>*     m_val;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param hostObject
+    * @param val
+    */
+   TReflectionProperty( ReflectionObject* hostObject, Array<T*>* val );
+
+   // -------------------------------------------------------------------------
+   // VectorProperty implementation
+   // -------------------------------------------------------------------------
+   uint size() const;
+   ReflectionObject* getElement( uint idx );
+
+   // -------------------------------------------------------------------------
+   // ReflectionProperty implementation
+   // -------------------------------------------------------------------------
+   void set( void* val );
+   void* edit();
+
+   // -------------------------------------------------------------------------
+   // Type identification mechanism implementation.
+   // -------------------------------------------------------------------------
+   const ReflectionType& getVirtualClass() const;
+   const ReflectionType& getPropertyClass() const;
+   static const ReflectionType& getRTTIClass();
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * This specialized property can hold an array of reference counted pointers
+ */
+template< typename T >
+class TReflectionProperty< Array< TRefPtr< T > > > : public ReflectionPropertyArray
+{
+private:
+   Array< TRefPtr< T > >*     m_val;
+   Array< T* >                m_tmpVal;
+
+public:
+   /**
+    * Constructor.
+    *
+    * @param hostObject
+    * @param val
+    */
+   TReflectionProperty( ReflectionObject* hostObject, Array< TRefPtr< T > >* val );
 
    // -------------------------------------------------------------------------
    // VectorProperty implementation

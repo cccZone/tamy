@@ -96,7 +96,8 @@ TEST(Camera, createRay)
 
    // test the rays running through the frustum's clipping planes:
    // - bottom plane
-   Vector planeNormal(frustum.planes[FP_BOTTOM].a, frustum.planes[FP_BOTTOM].b, frustum.planes[FP_BOTTOM].c);
+   Vector planeNormal;
+   frustum.planes[FP_BOTTOM].getNormal( planeNormal );
    expectedNormal.setCross( planeNormal, Vector::OX_NEG ).normalize();
 
    camera.createRay( 0, -1, result );
@@ -104,7 +105,7 @@ TEST(Camera, createRay)
    COMPARE_VEC(expectedNormal, result.direction);
 
    // - top plane
-   planeNormal = Vector(frustum.planes[FP_TOP].a, frustum.planes[FP_TOP].b, frustum.planes[FP_TOP].c);
+   frustum.planes[FP_TOP].getNormal( planeNormal );
    expectedNormal.setCross( planeNormal, Vector::OX ).normalize();
 
    camera.createRay( 0, 1, result );
@@ -112,7 +113,7 @@ TEST(Camera, createRay)
    COMPARE_VEC(expectedNormal, result.direction);
 
    // - left plane
-   planeNormal = Vector(frustum.planes[FP_LEFT].a, frustum.planes[FP_LEFT].b, frustum.planes[FP_LEFT].c);
+   frustum.planes[FP_LEFT].getNormal( planeNormal );
    expectedNormal.setCross( Vector::OY_NEG, planeNormal ).normalize();
 
    camera.createRay( -1, 0, result );
@@ -120,7 +121,7 @@ TEST(Camera, createRay)
    COMPARE_VEC(expectedNormal, result.direction);
 
    // - right plane
-   planeNormal = Vector(frustum.planes[FP_RIGHT].a, frustum.planes[FP_RIGHT].b, frustum.planes[FP_RIGHT].c);
+   frustum.planes[FP_RIGHT].getNormal( planeNormal );
    expectedNormal.setCross( Vector::OY, planeNormal ).normalize();
 
    camera.createRay( 1, 0, result );

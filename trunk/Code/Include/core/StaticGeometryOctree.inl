@@ -117,10 +117,10 @@ void StaticGeometryOctree<Elem>::addElemToTree( SGElement* element, Sector& subT
       unsigned int splitPlanesCount = subTreeRoot.getSplitPlanesCount();
       ASSERT_MSG(splitPlanesCount > 0, "invalid number of split planes");
       ASSERT_MSG(splitPlanesCount <= 3, "invalid number of split planes");
-      Plane* planes = new Plane[splitPlanesCount];
+      const Plane* planes[3];
       for (unsigned int i = 0; i < splitPlanesCount; ++i)
       {
-         planes[i] = subTreeRoot.getSplitPlane(i);
+         planes[i] = &subTreeRoot.getSplitPlane(i);
       }
       
       Array<SGElement*> splitElems(16);
@@ -139,7 +139,7 @@ void StaticGeometryOctree<Elem>::addElemToTree( SGElement* element, Sector& subT
 
             if (currElem != NULL)
             {
-               float objPlaneClassification = currElem->elem->getBoundingVolume().distanceToPlane(planes[planeIdx]);
+               float objPlaneClassification = currElem->elem->getBoundingVolume().distanceToPlane( *planes[planeIdx] );
 
                if (objPlaneClassification < 0)
                {
@@ -150,7 +150,7 @@ void StaticGeometryOctree<Elem>::addElemToTree( SGElement* element, Sector& subT
                   // object intersects the plane
                   Elem* frontElem = NULL;
                   Elem* backElem = NULL;
-                  currElem->elem->split(planes[planeIdx], &frontElem, &backElem);
+                  currElem->elem->split( *planes[planeIdx], &frontElem, &backElem );
 
                   SGHandle oldHandle = currElem->handle;
                   delete currElem;
@@ -177,8 +177,6 @@ void StaticGeometryOctree<Elem>::addElemToTree( SGElement* element, Sector& subT
          elemStartIdx = elemEndIdx;
          elemEndIdx = splitElems.size();
       }
-
-      delete [] planes;
 
       // determine where the elements from the final split will be located
       unsigned int elemOffsetShift = 0;

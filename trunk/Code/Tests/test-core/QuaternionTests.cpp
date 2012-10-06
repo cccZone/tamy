@@ -3,7 +3,7 @@
 #include "core\Vector.h"
 #include "core\Matrix.h"
 #include "core\Quaternion.h"
-#include "core\Plane.h"
+#include "core\FastFloat.h"
 #include "core\MathDefs.h"
 
 
@@ -82,7 +82,7 @@ TEST( Quaternion, angleDecomposition )
       {
          angle = quat.decompose( Vector::OX, remainingQuat );
 
-         COMPARE_QUAT( remainingQuat, Quaternion::IDENTITY );
+         COMPARE_QUAT( remainingQuat, Quaternion::getIdentity() );
          CPPUNIT_ASSERT_DOUBLES_EQUAL( 90.0f, RAD2DEG( angle ), 1e-3 );
       }
 
@@ -102,7 +102,7 @@ TEST( Quaternion, angleDecomposition )
       {
          angle = quat.decompose( Vector::OX_NEG, remainingQuat );
 
-         COMPARE_QUAT( remainingQuat, Quaternion::IDENTITY );
+         COMPARE_QUAT( remainingQuat, Quaternion::getIdentity() );
          CPPUNIT_ASSERT_DOUBLES_EQUAL( 45.0f, RAD2DEG( angle ), 1e-3 );
       }
 
@@ -111,7 +111,7 @@ TEST( Quaternion, angleDecomposition )
          angle = quat.decompose( Vector::OY, remainingQuat );
 
          COMPARE_QUAT( remainingQuat, quat );
-         CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0395f, RAD2DEG( angle ), 1e-3 );
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0f, RAD2DEG( angle ), 1e-1 );
       }
    }
 }
@@ -149,12 +149,10 @@ TEST( Quaternion, setFromEulerAngles )
       {
          for ( float roll = -179.0f; roll <= 179.0f; roll += 15.0f )
          {
-            ea.yaw = yaw;
-            ea.pitch = pitch;
-            ea.roll = roll;
+            ea.set( FastFloat::fromFloat( yaw ), FastFloat::fromFloat( pitch ), FastFloat::fromFloat( roll ) );
 
             tamyQuat.setFromEulerAngles( ea );
-            D3DXQuaternionRotationYawPitchRoll( &dxQuat, DEG2RAD( ea.yaw ), DEG2RAD( ea.pitch ), DEG2RAD( ea.roll ) ); 
+            D3DXQuaternionRotationYawPitchRoll( &dxQuat, DEG2RAD( yaw ), DEG2RAD( pitch ), DEG2RAD( roll ) ); 
 
             COMPARE_QUAT( dxQuat, tamyQuat );
          }
@@ -170,13 +168,13 @@ TEST( Quaternion, slerp )
    q1.setAxisAngle( Vector::OY, 0.0f );
    q2.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
 
-   resultQ.setSlerp( q1, q2, 0.0f );
+   resultQ.setSlerp( q1, q2, Float_0 );
    COMPARE_QUAT( q1, resultQ );
 
-   resultQ.setSlerp( q1, q2, 1.0f );
+   resultQ.setSlerp( q1, q2, Float_1 );
    COMPARE_QUAT( q2, resultQ );
 
-   resultQ.setSlerp( q1, q2, 0.5f );
+   resultQ.setSlerp( q1, q2, Float_Inv2 );
    COMPARE_QUAT_AXIS_ANGLE( resultQ, Vector::OY, 45.0f );
 }
 

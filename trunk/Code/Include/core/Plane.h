@@ -1,8 +1,12 @@
 /// @file   core/PLane.h
 /// @brief  mathematical plane representation
-#pragma once
+#ifndef _PLANE_H
+#define _PLANE_H
 
 #include <iostream>
+#include "core\MathDataStorage.h"
+#include "core\FastFloat.h"
+#include "core\MemoryUtils.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,49 +22,56 @@ struct Vector;
  */
 struct Plane
 {
-   union
-   {
-      float p[4];
+   // This class needs to be aligned to a 16-byte boundary, when dynamically allocated
+   ALIGNED_STRUCT();
 
-      struct 
-      {
-         float a, b, c, d;
-      };
-   };
+   QuadStorage     m_quad;
 
    /**
-    * Default constructor.
+    * Creates a null plane.
     */
-   Plane();
+   inline void setZero();
 
    /**
-    * Constructor.
+    * Creates a plane by adapting vector components as plane equation components.
+    *
+    * @param vec
+    */
+   inline void set( const Vector& vec );
+
+   /**
+    * Creates a plane from a normal and a distance to origin
+    *
+    * @param normal    plane normal
+    * @param distance  plane normal
+    */
+   inline void set( const Vector& normal, const FastFloat& distance );
+
+   /**
+    * Creates a plane from four float components.
     *
     * @param a, b, c, d    plane parameters
     */
-   Plane( float a, float b, float c, float d );
-
+   inline void set( const FastFloat& a, const FastFloat& b, const FastFloat& c, const FastFloat& d );
 
    // -------------------------------------------------------------------------
    // Operators
    // -------------------------------------------------------------------------
-   Plane& operator=( const Plane& rhs );
-   bool operator==( const Plane& rhs ) const;
-   bool operator!=( const Plane& rhs ) const;
+   inline void operator=( const Plane& rhs );
+   inline bool operator==( const Plane& rhs ) const;
+   inline bool operator!=( const Plane& rhs ) const;
+
+   /**
+    * This operator gives access to individual plane components.
+    *
+    * @param idx        requested component idx
+    */
+   inline float& operator[]( int idx );
+   inline float operator[]( int idx ) const;
 
    // -------------------------------------------------------------------------
    // Operations
    // -------------------------------------------------------------------------
-
-   /**
-    * Sets the new components on the plane.
-    *
-    * @param a
-    * @param b
-    * @param c
-    * @param d
-    */
-   Plane& set( float a, float b, float c, float d );
 
    /**
     * Determines a plane based on a point that lies on the plane and the normal of the plane.
@@ -68,7 +79,7 @@ struct Plane
     * @param point
     * @param normal
     */
-   Plane& setFromPointNormal( const Vector& point, const Vector& normal );
+   void setFromPointNormal( const Vector& point, const Vector& normal );
 
    /**
     * Determines a plane based on three specified coplanar points.
@@ -77,12 +88,12 @@ struct Plane
     * @param p2
     * @param p3
     */
-   Plane& setFromPoints( const Vector& p1, const Vector& p2, const Vector& p3 );
+   void setFromPoints( const Vector& p1, const Vector& p2, const Vector& p3 );
 
    /**
     * Normalizes the plane
     */
-   Plane& normalize();
+   inline void normalize();
 
    /**
     * Calculates a dot product treating the specified vector as a coordinate in space.
@@ -90,19 +101,20 @@ struct Plane
     *
     * @param coord
     */
-   float dotCoord( const Vector& coord ) const;
+   inline const FastFloat dotCoord( const Vector& coord ) const;
 
    /**
     * Calculates a dot product treating the specified vector as a normal vector ( unit length vector ).
     *
     * @param normal
     */
-   float dotNormal( const Vector& normal ) const;
+   inline const FastFloat dotNormal( const Vector& normal ) const;
 
    /**
     * Returns the normal of the plane.
     */
-   void getNormal( Vector& outPlaneNormal ) const;
+   inline void getNormal( Vector& outPlaneNormal ) const;
+
 
    // -------------------------------------------------------------------------
    // Serialization support
@@ -113,3 +125,13 @@ struct Plane
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#ifdef _USE_SIMD
+   #include "core/PlaneSimd.inl"
+#else
+   #include "core/PlaneFpu.inl"
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _PLANE_H

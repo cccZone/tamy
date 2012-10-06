@@ -27,7 +27,7 @@ private:
    struct VecLerp
    {
    public:
-      void operator()( Vector& outVec, const Vector& start, const Vector& end, float percentage ) const
+      void operator()( Vector& outVec, const Vector& start, const Vector& end, const FastFloat& percentage ) const
       {
          outVec.setLerp( start, end, percentage );
       }
@@ -36,7 +36,7 @@ private:
    struct QuatLerp
    {
    public:
-      void operator()( Quaternion& outQuat, const Quaternion& start, const Quaternion& end, float percentage ) const
+      void operator()( Quaternion& outQuat, const Quaternion& start, const Quaternion& end, const FastFloat& percentage ) const
       {
          outQuat.setSlerp( start, end, percentage );
       }

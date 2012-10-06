@@ -3,6 +3,8 @@
 #else
 
 #include "core/Assert.h"
+#include "core/FastFloat.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -44,8 +46,8 @@ void AnimationTimeline< T, LERP >::addKey( float time, const T& key )
       if ( idx < count )
       {
          // this is the very first key
-         m_time.insert( m_time.begin(), time );
-         m_keys.insert( m_keys.begin(), key );
+         m_time.push_front( time );
+         m_keys.push_front( key );
       }
       else
       {
@@ -88,20 +90,24 @@ bool AnimationTimeline< T, LERP >::getKey( unsigned int& lastCheckedKeyIdx, floa
    }
 
    // find the time
+   FastFloat ffTime;
+   ffTime.setFromFloat( time );
+
    unsigned lastIdx, nextIdx;
-   float lastTime, nextTime;
+   FastFloat lastTime, nextTime, lerpFactor, duration;
    lastIdx = lastCheckedKeyIdx;
    for ( unsigned int i = 0; i < count; ++i )
    {
       nextIdx = ( lastIdx + 1 ) % count;
-      lastTime = m_time[ lastIdx ];
-      nextTime = m_time[ nextIdx ];
+      lastTime.setFromFloat( m_time[ lastIdx ] );
+      nextTime.setFromFloat( m_time[ nextIdx ] );
 
-      if ( lastTime <= time && time < nextTime )
+      if ( lastTime <= ffTime && ffTime < nextTime )
       {
-         float duration = ( nextTime - lastTime );
-         ASSERT_MSG( duration > 0.0f, "Two keys can't occupy the same time frame" );
-         float lerpFactor = ( time - lastTime ) / duration;
+         duration.setSub( nextTime, lastTime );
+         ASSERT_MSG( duration > Float_0, "Two keys can't occupy the same time frame" );
+         lerpFactor.setSub( ffTime, lastTime );
+         lerpFactor.div( duration );
 
          // we found our key space
          m_lerp( outKey, m_keys[ lastIdx ], m_keys[ nextIdx ], lerpFactor );

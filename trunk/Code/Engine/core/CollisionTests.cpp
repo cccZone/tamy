@@ -8,6 +8,7 @@
 #include "core\QuadraticEquations.h"
 #include "core\Vector.h"
 #include "core\Plane.h"
+#include "core\FastFloat.h"
 #include "core\types.h"
 
 
@@ -54,23 +55,28 @@ bool testCollision( const AABoundingBox& aabb1, const AABoundingBox& aabb2 )
 
 bool testCollision( const AABoundingBox& aabb, const BoundingSphere& sphere )
 {
-   Plane plane(0, 0, -1, aabb.min.z);
-   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
+   Plane plane;
+   
+   // <fastfloat.todo>
+   FastFloat sphereRad;
+   sphereRad.setFromFloat( sphere.radius );
+   plane.set( Float_0, Float_0, Float_Minus1, FastFloat::fromFloat( aabb.min.z ) );
+   if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane = Plane(0, 0,  1, -aabb.max.z);
-   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
+   plane.set( Float_0, Float_0,  Float_1, FastFloat::fromFloat( -aabb.max.z ) );
+   if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane = Plane(0, -1, 0, aabb.min.y);
-   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
+   plane.set( Float_0, Float_Minus1, Float_0, FastFloat::fromFloat( aabb.min.y ) );
+   if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane = Plane(0,  1, 0, -aabb.max.y);
-   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
+   plane.set( Float_0,  Float_1, Float_0, FastFloat::fromFloat( -aabb.max.y ) );
+   if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane = Plane(-1, 0, 0, aabb.min.x);
-   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
+   plane.set( Float_Minus1, Float_0, Float_0, FastFloat::fromFloat( aabb.min.x ) );
+   if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane = Plane( 1, 0, 0, -aabb.max.x);
-   if ( plane.dotCoord( sphere.origin ) > sphere.radius ) { return false; }
+   plane.set( Float_1, Float_0, Float_0, FastFloat::fromFloat( -aabb.max.x ) );
+   if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
    return true;
 }
@@ -84,10 +90,10 @@ bool testCollision( const AABoundingBox& aabb, const Frustum& frustum )
    {
       const Plane& plane = frustum.planes[i];
 
-      pv.set( plane.a > 0 ? aabb.max.x : aabb.min.x, plane.b > 0 ? aabb.max.y : aabb.min.y, plane.c > 0 ? aabb.max.z : aabb.min.z, 1.0f );
+      pv.set( plane[0] > 0 ? aabb.max.x : aabb.min.x, plane[1] > 0 ? aabb.max.y : aabb.min.y, plane[2] > 0 ? aabb.max.z : aabb.min.z, 1.0f );
 
-      float n = plane.dotCoord( pv );
-      if ( n < 0 )
+      const FastFloat n = plane.dotCoord( pv );
+      if ( n < Float_0 )
       {
          // bounding box is outside the frustum
          return false;
@@ -101,10 +107,13 @@ bool testCollision( const AABoundingBox& aabb, const Frustum& frustum )
 
 bool testCollision( const Frustum& frustum, const BoundingSphere& sphere )
 {
-   for (int i = 0; i < 6; ++i)
+   FastFloat negSphereRad;
+   negSphereRad.setFromFloat( -sphere.radius );
+
+   for ( int i = 0; i < 6; ++i )
    {
-      float n = frustum.planes[i].dotCoord( sphere.origin );
-      if ( n < -sphere.radius ) 
+      const FastFloat n = frustum.planes[i].dotCoord( sphere.origin );
+      if ( n < negSphereRad ) 
       {
          return false;
       }
@@ -120,8 +129,8 @@ bool testCollision( const Frustum& frustum, const PointVolume& point )
    const Vector& pt = point.point;
    for ( int i = 0; i < 6; ++i )
    {
-      float n = frustum.planes[i].dotCoord( pt );
-      if ( n < 0 ) 
+      const FastFloat n = frustum.planes[i].dotCoord( pt );
+      if ( n < Float_0 ) 
       {
          return false;
       }
@@ -141,11 +150,15 @@ bool testCollision( const AABoundingBox& aabb, const Ray& ray )
 
 bool testCollision( const Ray& ray, const Plane& plane, Vector& intersectionPt )
 {
-   float t = rayToPlaneDistance( ray, plane );
+   const FastFloat t = rayToPlaneDistance( ray, plane );
 
-   if ( t >= FLT_MAX ) { return false; }
+   if ( t >= Float_INF ) 
+   { 
+      return false; 
+   }
 
-   intersectionPt.setMulAdd( ray.direction, t, ray.origin );
+   // <fastfloat.todo>
+   intersectionPt.setMulAdd( ray.direction, t.getFloat(), ray.origin );
 
    return true;
 }
@@ -260,31 +273,32 @@ bool testCollision( const Ray& ray, const Triangle& triangle )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToPlaneDistance( const Ray& ray, const Plane& plane )
+const FastFloat rayToPlaneDistance( const Ray& ray, const Plane& plane )
 {
-   float planeDistance = plane.dotCoord( ray.origin );
-   float projRayLength = plane.dotNormal( ray.direction );
+   const FastFloat planeDistance = plane.dotCoord( ray.origin );
+   const FastFloat projRayLength = plane.dotNormal( ray.direction );
 
-   float t;
-   if ( projRayLength == 0 )
+   FastFloat t;
+   if ( projRayLength == Float_0 )
    {
-      if ( planeDistance == 0 )
+      if ( planeDistance == Float_0 )
       {
-         t = 0;
+         t = Float_0;
       }
       else
       {
-         t = -1;
+         t = Float_Minus1;
       }
    }
    else
    {
-      t = - ( planeDistance / projRayLength );
+      t.setDiv(  planeDistance, projRayLength );
+      t.neg();
    }
 
-   if ( t < 0 ) 
+   if ( t < Float_0 ) 
    {
-      return FLT_MAX;
+      return Float_INF;
    }
    else
    {

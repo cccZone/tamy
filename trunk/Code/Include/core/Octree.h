@@ -1,8 +1,7 @@
-#ifndef _OCTREE_H
-#define _OCTREE_H
-
 /// @file   core\Octree.h
 /// @brief  an octree spatial container
+#ifndef _OCTREE_H
+#define _OCTREE_H
 
 #include "core\SpatialStorage.h"
 #include "core\OctreeNode.h"
@@ -28,6 +27,8 @@ class MemoryPoolAllocator;
 template<typename Elem>
 class Octree : public SpatialStorage<Elem>
 {
+   ALIGNED_CLASS();
+
 protected:
    typedef OctreeNode<unsigned int> Sector;
 

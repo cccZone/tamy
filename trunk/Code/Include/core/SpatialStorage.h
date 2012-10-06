@@ -1,8 +1,8 @@
-#pragma once
-
 /// @file   core\SpatialStorage.h
 /// @brief  a spatial storage interface
+#pragma once
 
+#include "core\MemoryUtils.h"
 #include "core\Array.h"
 
 
@@ -21,6 +21,8 @@ class BoundingVolume;
 template<typename Elem>
 class SpatialStorage
 {
+   ALIGNED_CLASS();
+
 public:
    virtual ~SpatialStorage() {}
 
@@ -32,8 +34,7 @@ public:
     * @param output        upon method return this array will be filled with
     *                      elements overlapping the query volume
     */
-   virtual void query(const BoundingVolume& boundingVol, 
-                      Array<Elem*>& output) const = 0;
+   virtual void query( const BoundingVolume& boundingVol, Array<Elem*>& output ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -9,10 +9,10 @@
 BEGIN_OBJECT( BoneSRTAnimation );
    PARENT( ReflectionObject);
    PROPERTY( std::string, m_boneName );
-   PROPERTY( std::vector< float >, m_orientation.m_time );
-   PROPERTY( std::vector< Quaternion >, m_orientation.m_keys );
-   PROPERTY( std::vector< float >, m_translation.m_time );
-   PROPERTY( std::vector< Vector >, m_translation.m_keys );
+   PROPERTY( Array< float >, m_orientation.m_time );
+   PROPERTY( Array< Quaternion >, m_orientation.m_keys );
+   PROPERTY( Array< float >, m_translation.m_time );
+   PROPERTY( Array< Vector >, m_translation.m_keys );
 END_OBJECT();
 
 ///////////////////////////////////////////////////////////////////////////////

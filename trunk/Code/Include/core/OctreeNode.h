@@ -3,6 +3,7 @@
 #ifndef _OCTREE_NODE_H
 #define _OCTREE_NODE_H
 
+#include "core\MemoryUtils.h"
 #include "core\Array.h"
 #include "core\AABoundingBox.h"
 #include "core\Plane.h"
@@ -16,6 +17,8 @@
 template <typename Elem>
 class OctreeNode
 {
+   ALIGNED_CLASS();
+
 private:
    enum
    {

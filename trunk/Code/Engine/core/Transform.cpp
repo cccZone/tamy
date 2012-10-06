@@ -12,8 +12,8 @@ Transform Transform::IDENTITY;
 
 Transform::Transform()
    : m_translation( Vector::ZERO )
-   , m_rotation( Quaternion::IDENTITY )
 {
+   m_rotation.setIdentity();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,8 +28,8 @@ Transform::Transform( const Quaternion& rotation )
 
 Transform::Transform( const Vector& translation )
    : m_translation( translation )
-   , m_rotation( Quaternion::IDENTITY )
 {
+   m_rotation.setIdentity();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -180,8 +180,13 @@ void Transform::transform( const Plane& inPlane, Plane& outPlane ) const
    Vector rotatedPlaneNormal;
    m_rotation.transform( planeNormal, rotatedPlaneNormal );
 
-   float newDist = rotatedPlaneNormal.dot( m_translation );
-   outPlane.set( rotatedPlaneNormal.x, rotatedPlaneNormal.y, rotatedPlaneNormal.z, inPlane.d - newDist );
+   Vector newDistVec;
+   newDistVec[3] = rotatedPlaneNormal.dot( m_translation );
+   rotatedPlaneNormal[3] = inPlane[3];
+   
+   Vector newPlaneEq;
+   newPlaneEq.setSub( rotatedPlaneNormal, newDistVec );
+   outPlane.set( newPlaneEq );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

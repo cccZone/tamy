@@ -1,8 +1,7 @@
-#ifndef _NARROW_PHASE_STORAGE_FILTER_H
-#define _NARROW_PHASE_STORAGE_FILTER_H
-
 /// @file   core\NarrowPhaseStorageFilter.h
 /// @brief  spatial storage decorator with narrow-phase query filter
+#ifndef _NARROW_PHASE_STORAGE_FILTER_H
+#define _NARROW_PHASE_STORAGE_FILTER_H
 
 #include "core\SpatialStorage.h"
 
@@ -18,6 +17,8 @@
 template <typename Elem>
 class NarrowPhaseStorageFilter : public SpatialStorage<Elem>
 {
+   ALIGNED_CLASS();
+
 private:
    SpatialStorage<Elem>* m_storage;
 

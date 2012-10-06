@@ -1,7 +1,11 @@
 /// @file   core\EulerAngles.h
 /// @brief  Euler angles representation
-#pragma once
+#ifndef _EULER_ANGLES_H
+#define _EULER_ANGLES_H
 
+#include "core\MemoryUtils.h"
+#include "core\MathDataStorage.h"
+#include "core\FastFloat.h"
 #include <iostream>
 
 
@@ -20,69 +24,95 @@ class InStream;
  */
 struct EulerAngles
 {
-   /// these values are stored in degrees
-   float yaw, pitch, roll;
+   ALIGNED_STRUCT();
+
+   enum FieldsLayout
+   {
+      Yaw,
+      Pitch,
+      Roll,
+      NotUsed
+   };
+
+   // data layout in the quad: { yaw, pitch, roll, not used }
+   QuadStorage     m_quad;
 
    /**
-    * Default constructor.
+    * Creates a null plane.
     */
-   EulerAngles();
+   inline void setZero();
 
    /**
-    * Constructor.
+    * Creates an Euler angle from three float components.
     *
     * @param yaw       rotation around OY axis ( degrees )
     * @param pitch     rotation around OX axis ( degrees )
     * @param roll      rotation around OZ axis ( degrees )
     */
-   EulerAngles( float yaw, float pitch, float roll );
+   inline void set( float yaw, float pitch, float roll );
+
+   /**
+    * Creates an Euler angle from three fast float components.
+    *
+    * @param yaw       rotation around OY axis ( degrees )
+    * @param pitch     rotation around OX axis ( degrees )
+    * @param roll      rotation around OZ axis ( degrees )
+    */
+   inline void set( const FastFloat& yaw, const FastFloat& pitch, const FastFloat& roll );
 
    // -------------------------------------------------------------------------
    // Operators
    // -------------------------------------------------------------------------
-   bool operator==(const EulerAngles& rhs) const;
-   bool operator!=(const EulerAngles& rhs) const;
-   EulerAngles& operator=(const EulerAngles& rhs);   
-  
+   inline bool operator==( const EulerAngles& rhs ) const;
+   inline bool operator!=( const EulerAngles& rhs ) const;
+   inline void operator=( const EulerAngles& rhs );   
+
+   /**
+    * These operators gives access to individual angle components.
+    *
+    * @param idx        requested component idx
+    */
+   inline float& operator[]( int idx );
+   inline float operator[]( int idx ) const;
+
+   /**
+    * These methods gives access to individual angle components.
+    */
+   inline float getYaw() const;
+   inline float getPitch() const;
+   inline float getRoll() const;
+
    // -------------------------------------------------------------------------
    // Operations
    // -------------------------------------------------------------------------
 
    /**
     * this = a + b
-    *
-    * @return  this instance, to allow to chain the operations
     */
-   EulerAngles& setAdd( const EulerAngles& a, const EulerAngles& b );
+   inline void setAdd( const EulerAngles& a, const EulerAngles& b );
 
    /**
     * this = a - b
-    *
-    * @return  this instance, to allow to chain the operations
     */
-   EulerAngles& setSub( const EulerAngles& a, const EulerAngles& b );
+   inline void setSub( const EulerAngles& a, const EulerAngles& b );
 
    /**
     * this += a
-    *
-    * @return  this instance, to allow to chain the operations
     */
-   EulerAngles& add( const EulerAngles& a );
+   inline void add( const EulerAngles& a );
 
    /**
     * this -= a
-    *
-    * @return  this instance, to allow to chain the operations
     */
-   EulerAngles& sub( const EulerAngles& a );
+   inline void sub( const EulerAngles& a );
 
    /**
-    * Constructor that calculates the shortest rotation angle that transforms vec1 into vec2.
+    * Calculates the shortest rotation angle that transforms vec1 into vec2.
     *
     * @param vec1
     * @param vec2
     */
-   EulerAngles& setFromShortestRotation( const Vector& vec1, const Vector& vec2 );
+   void setFromShortestRotation( const Vector& vec1, const Vector& vec2 );
 
    /**
     * Constructor that converts a quaternion to Euler angles.
@@ -98,19 +128,21 @@ struct EulerAngles
     *
     * @param quat
     */
-   EulerAngles& setFromQuaternion( const Quaternion& quat );
+   void setFromQuaternion( const Quaternion& quat );
 
    /**
     * Returns a normalized version of the orientation.
     * Angles of the normalized orientation are in range[0, 360)
+    *
+    * @param outNormalized
     */
-   EulerAngles normalized() const;
+   inline void normalized( EulerAngles& outNormalized ) const;
 
    /**
     * Normalizes this orientation.
     * Angles of the normalized orientation are in range[0, 360)
     */
-   EulerAngles& normalize();
+   inline void normalize();
 
    /**
     * This method writes the contents of the orientation to the specified 
@@ -129,3 +161,13 @@ struct EulerAngles
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#ifdef _USE_SIMD
+   #include "core/EulerAnglesSimd.inl"
+#else
+   #include "core/EulerAnglesFpu.inl"
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _EULER_ANGLES_H

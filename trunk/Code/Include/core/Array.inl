@@ -2,6 +2,8 @@
 #error "This file can only be included from Array.h"
 #else
 
+#include "core\EngineDefines.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -49,10 +51,14 @@ Array< T, TAllocator >::Array( const Array& rhs )
 
    m_arr = (T*)m_allocator->alloc( sizeof( T ) * m_size );
 
+#ifdef _USE_FAST_ARRAYS
+   memcpy( m_arr, rhs.m_arr, sizeof( T ) * m_elementsCount );
+#else
    for ( unsigned int i = 0; i < m_elementsCount; ++i )
    {
       m_arr[i] = rhs.m_arr[i];
    }
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -110,10 +116,16 @@ template< typename T, typename TAllocator >
 void Array< T, TAllocator >::copyFrom( const Array<T>& rhs )
 {
    allocate( size() + rhs.size() );
+
+#ifdef _USE_FAST_ARRAYS
+   memcpy( m_arr + m_elementsCount, rhs.m_arr, sizeof( T ) * rhs.m_elementsCount );
+#else
    for ( unsigned int i = 0; i < rhs.m_elementsCount; ++i )
    {
       m_arr[m_elementsCount + i] = rhs.m_arr[i];
    }
+#endif
+
    m_elementsCount += rhs.m_elementsCount;
 }
 
@@ -131,10 +143,16 @@ void Array< T, TAllocator >::allocate(unsigned int newSize)
    }
 
    T* newArr = (T*)m_allocator->alloc( sizeof( T ) * newSizePow2 );
+
+#ifdef _USE_FAST_ARRAYS
+   memcpy( newArray, m_arr, sizeof( T ) * m_elementsCount );
+#else
    for (unsigned int i = 0; i < m_elementsCount; ++i)
    {
       newArr[i] = m_arr[i];
    }
+#endif
+
    m_allocator->dealloc( m_arr );
    m_arr = newArr;
    m_size = newSizePow2;
@@ -149,17 +167,29 @@ void Array< T, TAllocator >::resize(unsigned int newSize, const T& defaultValue 
 
    if (newSize < m_elementsCount)
    {
+
+#ifdef _USE_FAST_ARRAYS
+      memset( m_arr + newSize, defaultValue, sizeof( T ) * ( newSize - m_elementsCount ) );
+#else
       for (unsigned int i = newSize; i < m_elementsCount; ++i)
       {
          m_arr[i] = defaultValue;
       }
+#endif
+
    }
    else
    {
+
+#ifdef _USE_FAST_ARRAYS
+      memcpy( m_arr + m_elementsCount, defaultValue, sizeof( T ) * ( newSize - m_elementsCount ) );
+#else
       for (unsigned int i = m_elementsCount; i < newSize; ++i)
       {
          m_arr[i] = defaultValue;
       }
+#endif
+
    }
    m_elementsCount = newSize;
 }
@@ -176,6 +206,30 @@ void Array< T, TAllocator >::push_back(const T& elem)
    }
 
    m_arr[m_elementsCount] = elem;
+   m_elementsCount = newElementsCount;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T, typename TAllocator >
+void Array< T, TAllocator >::push_front( const T& elem )
+{
+   unsigned int newElementsCount = m_elementsCount + 1;
+   if (newElementsCount > m_size)
+   {
+      allocate(m_size << 1);
+   }
+
+#ifdef _USE_FAST_ARRAYS
+   memcpy( m_arr + 1, m_arr, sizeof( T ) * m_elementsCount );
+#else
+   for (unsigned int i = 0; i < m_elementsCount; ++i )
+   {
+      m_arr[i + 1] = m_arr[i];
+   }
+#endif
+
+   m_arr[0] = elem;
    m_elementsCount = newElementsCount;
 }
 
@@ -200,14 +254,37 @@ T& Array< T, TAllocator >::back()
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T, typename TAllocator >
+const T& Array< T, TAllocator >::front() const
+{
+   ASSERT_MSG(m_elementsCount > 0,  "array is empty"); 
+   return m_arr[0];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T, typename TAllocator >
+T& Array< T, TAllocator >::front()
+{
+   ASSERT_MSG(m_elementsCount > 0,  "array is empty"); 
+   return m_arr[0];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T, typename TAllocator >
 void Array< T, TAllocator >::remove(unsigned int idx)
 {
    ASSERT_MSG(idx < m_elementsCount, "index out of array boundaries"); 
 
+#ifdef _USE_FAST_ARRAYS
+   memcpy( m_arr, m_arr + 1, sizeof( T ) * ( m_elementsCount - 1 ) );
+#else
    for (unsigned int i = idx + 1; i < m_elementsCount; ++i)
    {
       m_arr[i - 1] = m_arr[i];
    }
+#endif
+
    m_elementsCount--;
 }
 

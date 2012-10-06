@@ -3,6 +3,9 @@
 #ifndef _ANIMATION_TIMELINE_H
 #define _ANIMATION_TIMELINE_H
 
+#include "core/MemoryUtils.h"
+#include "core/Array.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -19,9 +22,11 @@
 template< typename T, typename LERP >
 class AnimationTimeline
 {
+   ALIGNED_CLASS();
+
 public:
-   std::vector< float >    m_time;
-   std::vector< T >        m_keys;
+   Array< float >          m_time;
+   Array< T >              m_keys;
 
 private:
    LERP                    m_lerp;

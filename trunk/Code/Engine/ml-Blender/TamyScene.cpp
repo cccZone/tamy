@@ -8,9 +8,9 @@ void TamyMatrix::applyTo( Matrix& outTransform ) const
    Quaternion rotQuat;
    rotationMtx.getRotation( rotQuat );
 
-   float tmp = rotQuat.q[1];
-   rotQuat.q[1] = -rotQuat.q[2];
-   rotQuat.q[2] = tmp;
+   float tmp = rotQuat[1];
+   rotQuat[1] = -rotQuat[2];
+   rotQuat[2] = tmp;
 
    // position coordinates for the geometry are swapped as well - not the case with the lights though!!!
    Vector swappedPos;

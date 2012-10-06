@@ -73,9 +73,9 @@ namespace // anonymous
                angle.setFromQuaternion( orient );
                switch( m_keyIdx )
                {
-               case BAKEY_YAW: { outPoints[i].setY( angle.yaw ); break; }
-               case BAKEY_PITCH: { outPoints[i].setY( angle.pitch ); break; }
-               case BAKEY_ROLL: { outPoints[i].setY( angle.roll ); break; }
+               case BAKEY_YAW: { outPoints[i].setY( angle.getYaw() ); break; }
+               case BAKEY_PITCH: { outPoints[i].setY( angle.getPitch() ); break; }
+               case BAKEY_ROLL: { outPoints[i].setY( angle.getRoll() ); break; }
                }
             }
          }
@@ -119,9 +119,9 @@ namespace // anonymous
                angle.setFromQuaternion( orient );
                switch( m_keyIdx )
                {
-               case BAKEY_YAW: { result.setY( angle.yaw ); break; }
-               case BAKEY_PITCH: { result.setY( angle.pitch ); break; }
-               case BAKEY_ROLL: { result.setY( angle.roll ); break; }
+               case BAKEY_YAW: { result.setY( angle.getYaw() ); break; }
+               case BAKEY_PITCH: { result.setY( angle.getPitch() ); break; }
+               case BAKEY_ROLL: { result.setY( angle.getRoll() ); break; }
                }
             }
          }
@@ -173,9 +173,9 @@ namespace // anonymous
             // update the edited key feature
             switch( m_keyIdx )
             {
-            case BAKEY_YAW: { angle.yaw = pos.y(); break; }
-            case BAKEY_PITCH: { angle.pitch = pos.y(); break; }
-            case BAKEY_ROLL: { angle.roll = pos.y(); break; }
+            case BAKEY_YAW: { angle[EulerAngles::Yaw] = pos.y(); break; }
+            case BAKEY_PITCH: { angle[EulerAngles::Pitch] = pos.y(); break; }
+            case BAKEY_ROLL: { angle[EulerAngles::Roll] = pos.y(); break; }
             }
             angle.normalize();
 

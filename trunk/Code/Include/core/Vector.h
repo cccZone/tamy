@@ -3,15 +3,16 @@
 #ifndef _VECTOR_H
 #define _VECTOR_H
 
-#include <iostream>
+#include "core/MathDataStorage.h"
 #include "core/TVector.h"
+#include <iostream>
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class OutStream;
 class InStream;
-
+struct FastFloat;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -22,6 +23,30 @@ struct VectorComparison
 {
    bool        b[4];
 };
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum QuadMathConstants
+{
+   QuadMathConst_0,
+   QuadMathConst_1,
+
+   QuadMathConst_Minus1,
+
+   QuadMathConst_1000,
+   QuadMathConst_0100,
+   QuadMathConst_0010,
+   QuadMathConst_0001,
+   QuadMathConst_Neg_1000,
+   QuadMathConst_Neg_0100,
+   QuadMathConst_Neg_0010,
+   QuadMathConst_Neg_0001,
+
+   QuadMathConst_MAX
+};
+struct Vector;
+extern Vector          g_quadConstants[QuadMathConst_MAX];
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -227,7 +252,7 @@ struct Vector
     * @param b
     * @param t
     */
-   Vector& setLerp( const Vector& a, const Vector& b, float t );
+   Vector& setLerp( const Vector& a, const Vector& b, const FastFloat& t );
 
    /**
     * Calculate a dot product with another vector ( taking only 3 coordinates into account ).
@@ -322,6 +347,20 @@ struct Vector
    template< int Dim >
    void load( const TVector< Dim >& rawVector );
 
+   /**
+    * Stores the contents of this vector in the specified quad storage.
+    *
+    * @param storage
+    */
+   inline void store( QuadStorage& storage ) const;
+
+   /**
+    * Initializes the vector with the contents of the specified quad storage.
+    *
+    * @param storage
+    */
+   inline void load( const QuadStorage& storage );
+
    // -------------------------------------------------------------------------
    // Vector comparison
    // -------------------------------------------------------------------------
@@ -384,7 +423,11 @@ struct Vector
 
 ///////////////////////////////////////////////////////////////////////////////
 
-#include "core/Vector.inl"
+#ifdef _USE_SIMD
+   #include "core/VectorSimd.inl"
+#else
+   #include "core/VectorFpu.inl"
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 

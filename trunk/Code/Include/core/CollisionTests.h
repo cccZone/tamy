@@ -1,4 +1,8 @@
+/// @file   core/CollisionTests.h
+/// @brief  library of basic volumes collision tests
 #pragma once
+
+#include "core\FastFloat.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -70,7 +74,7 @@ Vector findIntersectionRemovalVector( const AABoundingBox& aabb, const AABoundin
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToPlaneDistance( const Ray& ray, const Plane& plane );
+const FastFloat rayToPlaneDistance( const Ray& ray, const Plane& plane );
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -1,9 +1,12 @@
 /// @file   core\Quaternion.h
 /// @brief  quaternion representation
-#pragma once
+#ifndef _QUATERNION_H
+#define _QUATERNION_H
 
 #include <iostream>
-#include "core/TVector.h"
+#include "core\MathDataStorage.h"
+#include "core\FastFloat.h"
+#include "core\MemoryUtils.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,39 +23,47 @@ struct Vector;
  */
 struct Quaternion
 {
-   union
-   {
-      TVector< 4 > q;
+   // This class needs to be aligned to a 16-byte boundary, when dynamically allocated
+   ALIGNED_STRUCT();
 
-      struct 
-      {
-         float x, y, z, w;
-      };
-   };
-
-   // -------------------------------------------------------------------------
-   // Static values
-   // -------------------------------------------------------------------------
-   static Quaternion     IDENTITY;
+   QuadStorage    m_quad;
 
    /**
     * Default constructor.
     */
-   Quaternion();
+   inline Quaternion();
 
    /**
-    * Constructor.
+    * Returns an identity quaternion.
+    */
+   static Quaternion getIdentity();
+
+   /**
+    * Sets an identity quaternion.
+    */
+   inline void setIdentity();
+
+   /**
+    * Creates a quaternion from four float coordinates.
     *
     * @param x, y, z, w       quaternion coordinates
     */
-   Quaternion( float x, float y, float z, float w );
+   inline void set( float x, float y, float z, float w );
 
    // -------------------------------------------------------------------------
    // Operators
    // -------------------------------------------------------------------------
-   Quaternion& operator=( const Quaternion& rhs );
-   bool operator==( const Quaternion& rhs ) const;
-   bool operator!=( const Quaternion& rhs ) const;
+   inline void operator=( const Quaternion& rhs );
+   inline bool operator==( const Quaternion& rhs ) const;
+   inline bool operator!=( const Quaternion& rhs ) const;
+
+   /**
+    * This operator gives access to individual plane components.
+    *
+    * @param idx        requested component idx
+    */
+   inline float& operator[]( int idx );
+   inline float operator[]( int idx ) const;
 
    // -------------------------------------------------------------------------
    // Setters
@@ -61,56 +72,56 @@ struct Quaternion
    /**
     * this = q1 + q2
     */
-   Quaternion& setAdd( const Quaternion& q1, const Quaternion& q2 );
+   inline void setAdd( const Quaternion& q1, const Quaternion& q2 );
 
    /**
     * this = q1 - q2
     */
-   Quaternion& setSub( const Quaternion& q1, const Quaternion& q2 );
+   inline void setSub( const Quaternion& q1, const Quaternion& q2 );
 
    /**
     * this = q1 * q2
     */
-   Quaternion& setMul( const Quaternion& q1, const Quaternion& q2 );
+   inline void setMul( const Quaternion& q1, const Quaternion& q2 );
 
    /**
     * this = this + q2
     */
-   Quaternion& add( const Quaternion& rhs );
+   inline void add( const Quaternion& rhs );
 
    /**
     * this = this - q2
     */
-   Quaternion& sub( const Quaternion& rhs );
+   inline void sub( const Quaternion& rhs );
 
    /**
     * this = this * q2.
     */
-   Quaternion& mul( const Quaternion& rhs );
+   inline void mul( const Quaternion& rhs );
 
    /**
     * this = -this;
     */
-   Quaternion& neg();
+   inline void neg();
 
    /**
     * Sets the inverse of the specified quaternion, which accounts for the same rotation, only in the opposite
     * direction.
     */
-   Quaternion& setConjugated( const Quaternion& rhs );
+   inline void setConjugated( const Quaternion& rhs );
 
    /**
    * Inverts the specified quaternion, which accounts for the same rotation, only in the opposite
    * direction.
     */
-   Quaternion& conjugate();
+   inline void conjugate();
 
    /**
     * Converts EulerAngles into a quaternion
     *
     * @param angles           Euler angles
     */
-   Quaternion& setFromEulerAngles( const EulerAngles& angles );
+   void setFromEulerAngles( const EulerAngles& angles );
 
    /**
     * Creates a quaternion from an axis and an angle.
@@ -119,7 +130,7 @@ struct Quaternion
     * @param axis
     * @param angle      expressed in RADIANS
     */
-   Quaternion& setAxisAngle( const Vector& axis, float angle );
+   inline void setAxisAngle( const Vector& axis, float angle );
 
    /**
     * Creates a quaternion that describes the shortest rotation that would
@@ -128,7 +139,7 @@ struct Quaternion
     * @param v1         start vector
     * @param v2         end vector
     */
-   Quaternion& setFromShortestRotation( const Vector& v1, const Vector& v2 );
+   void setFromShortestRotation( const Vector& v1, const Vector& v2 );
 
    /**
     * Creates a new quaternion that is a result of a spherical interpolation
@@ -138,12 +149,12 @@ struct Quaternion
     * @param b             end quaternion
     * @param t             interpolation distance
     */
-   Quaternion& setSlerp( const Quaternion& a, const Quaternion& b, float t );
+   inline void setSlerp( const Quaternion& a, const Quaternion& b, const FastFloat& t );
 
    /**
     * Normalizes the quaternion.
     */
-   Quaternion& normalize();
+   inline void normalize();
 
    /**
     * Returns the axis this quaternion rotates about. 
@@ -153,7 +164,7 @@ struct Quaternion
     *
     * @param outAxis
     */
-   void getAxis( Vector& outAxis ) const;
+   inline void getAxis( Vector& outAxis ) const;
 
    /**
     * Returns the angle this quaternion rotates about ( in RADIANS ).
@@ -161,12 +172,12 @@ struct Quaternion
     * CAUTION: This method doesn't work for identity quaternion,
     * because in that case there's no axis and angle defined to begin with.
     */
-   float getAngle() const;
+   inline float getAngle() const;
 
    /**
     * Removes the component that rotates this quaternion about the specified axis.
     */
-   Quaternion& removeAxisComponent( const Vector& axis );
+   void removeAxisComponent( const Vector& axis );
 
    /**
     * Decomposes a quaternion about the specified axis, returning the angle that it would
@@ -188,7 +199,7 @@ struct Quaternion
     * @param inVec      vector to transform
     * @param outVec     transformed vector
     */
-   void transform( const Vector& inVec, Vector& outVec ) const;
+   inline void transform( const Vector& inVec, Vector& outVec ) const;
 
    /**
     * This method writes the description of the quaternion to the specified 
@@ -207,3 +218,13 @@ struct Quaternion
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#ifdef _USE_SIMD
+   #include "core/QuaternionSimd.inl"
+#else
+   #include "core/QuaternionFpu.inl"
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _QUATERNION_H

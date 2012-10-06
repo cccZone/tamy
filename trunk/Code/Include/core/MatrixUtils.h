@@ -9,6 +9,7 @@
 
 struct Matrix;
 struct Vector;
+struct FastFloat;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -23,7 +24,7 @@ public:
     * @param lerpDist
     * @param outInterpolatedMtx
     */
-   static void lerp( const Matrix& start, const Matrix& end, float lerpDist, Matrix& outInterpolatedMtx );
+   static void lerp( const Matrix& start, const Matrix& end, const FastFloat& lerpDist, Matrix& outInterpolatedMtx );
 
    /**
     * Generates an perspective projection matrix.

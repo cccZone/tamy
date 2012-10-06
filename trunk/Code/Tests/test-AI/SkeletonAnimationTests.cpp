@@ -63,17 +63,17 @@ TEST( SkeletonAnimationController, architecture )
 
    BoneSRTAnimation* rootBoneKeys = new BoneSRTAnimation( "root" );
    rootBoneKeys->addTranslationKey( 0.f, Vector::OX );
-   rootBoneKeys->addOrientationKey( 0.f, Quaternion::IDENTITY );
+   rootBoneKeys->addOrientationKey( 0.f, Quaternion::getIdentity() );
    animSource.addKeys( rootBoneKeys );
 
    BoneSRTAnimation* hipBoneKeys = new BoneSRTAnimation( "hip" );
    hipBoneKeys->addTranslationKey( 0.f, Vector::OX );
-   hipBoneKeys->addOrientationKey( 0.f, Quaternion::IDENTITY );
+   hipBoneKeys->addOrientationKey( 0.f, Quaternion::getIdentity() );
    animSource.addKeys( hipBoneKeys );
 
    BoneSRTAnimation* legBoneKeys = new BoneSRTAnimation( "leg" );
    legBoneKeys->addTranslationKey( 0.f, Vector::OX );
-   legBoneKeys->addOrientationKey( 0.f, Quaternion::IDENTITY );
+   legBoneKeys->addOrientationKey( 0.f, Quaternion::getIdentity() );
    animSource.addKeys( legBoneKeys );
 
    // add an animation controller to the hierarchy

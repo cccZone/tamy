@@ -1,5 +1,6 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core\Vector.h"
+#include "core\FastFloat.h"
 #include "core\MathDefs.h"
 
 
@@ -28,13 +29,13 @@ TEST( Vector, lerp )
  
    Vector result;
 
-   result.setLerp( start, end, 0.0f );
+   result.setLerp( start, end, Float_0 );
    COMPARE_VEC( start, result );
 
-   result.setLerp( start, end, 1.0f );
+   result.setLerp( start, end, Float_1 );
    COMPARE_VEC( end, result );
 
-   result.setLerp( start, end, 0.5f );
+   result.setLerp( start, end, Float_Inv2 );
    COMPARE_VEC( Vector( 1.5f, 3.f, 4.5f ), result );
 }
 

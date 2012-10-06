@@ -76,8 +76,7 @@ void BSPNodeTree<Polygon>::createSubtree( Node* currNode, const Array<Polygon*>&
    unsigned int selectedSplitPolyIdx = 0;
    Polygon* splittingPolygon = geometry[selectedSplitPolyIdx];
 
-   Plane splittingPlane = splittingPolygon->getPlane();
-   currNode->splitPlane = splittingPlane;
+   splittingPolygon->getPlane( currNode->splitPlane );
 
    currNode->geometry.push_back(splittingPolygon);
 
@@ -86,8 +85,11 @@ void BSPNodeTree<Polygon>::createSubtree( Node* currNode, const Array<Polygon*>&
    unsigned int polysCount = geometry.size();
    for (unsigned int i = 0; i < polysCount; ++i)
    {
-      if (selectedSplitPolyIdx == i) {continue;}
-      classifyPolygonAgainstPlane(splittingPlane, geometry[i], currNode, backPolys, frontPolys);
+      if (selectedSplitPolyIdx == i) 
+      {
+         continue;
+      }
+      classifyPolygonAgainstPlane( currNode->splitPlane, geometry[i], currNode, backPolys, frontPolys );
    }
 
    if (backPolys.size() > 0)

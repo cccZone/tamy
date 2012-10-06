@@ -132,9 +132,10 @@ float Ray::getDistanceTo( const BoundingVolume& rhs ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// <fastfloat.todo>
 float Ray::distanceToPlane( const Plane& plane ) const
 {
-   return rayToPlaneDistance( *this, plane );
+   return rayToPlaneDistance( *this, plane ).getFloat();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

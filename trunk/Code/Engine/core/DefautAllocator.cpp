@@ -1,4 +1,5 @@
 #include "core\DefaultAllocator.h"
+#include "core\MemoryUtils.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,7 +8,7 @@
 
 void* DefaultAllocator::alloc( size_t size )
 {
-   void* ptr = malloc( size );
+   void* ptr = MemoryUtils::mallocAligned( size, MemoryUtils::ALIGNMENT );
    return ptr;
 }
 
@@ -15,7 +16,7 @@ void* DefaultAllocator::alloc( size_t size )
 
 void DefaultAllocator::dealloc( void* ptr )
 {
-   free( ptr );
+   MemoryUtils::freeAligned( ptr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

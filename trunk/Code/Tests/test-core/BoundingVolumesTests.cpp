@@ -107,12 +107,15 @@ TEST(AABoundingBox, intersects_BoundingSphere)
 TEST(BoundingSphere, intersects_Frustrum)
 {
    Frustum frustrum;
-   frustrum.planes[0]  = Plane(         0,          0,         1, -1.01f);
-   frustrum.planes[1]  = Plane(         0,          0,        -1, 5002.28f);
-   frustrum.planes[2]  = Plane( 0.707107f,          0,  0.707107f, 0);
-   frustrum.planes[3]  = Plane(-0.707107f,          0,  0.707107f, 0);
-   frustrum.planes[4]  = Plane(         0, -0.707107f,  0.707107f, 0);
-   frustrum.planes[5]  = Plane(         0,  0.707107f,  0.707107f, 0);
+   const FastFloat ff_707 = FastFloat::fromFloat( 0.707107f );
+   const FastFloat ff_neg_707 = FastFloat::fromFloat( -0.707107f );
+
+   frustrum.planes[0].set( Float_0,    Float_0,    Float_1,       FastFloat::fromFloat( -1.01f ) );
+   frustrum.planes[1].set( Float_0,    Float_0,    Float_Minus1,  FastFloat::fromFloat( 5002.28f ) );
+   frustrum.planes[2].set( ff_707,     Float_0,    ff_707,        Float_0 );
+   frustrum.planes[3].set( ff_neg_707, Float_0,    ff_707,        Float_0 );
+   frustrum.planes[4].set( Float_0,    ff_neg_707, ff_707,        Float_0 );
+   frustrum.planes[5].set( Float_0,    ff_707,     ff_707,        Float_0 );
 
    // completely inside
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(0, 0, 100), 1)));
@@ -217,7 +220,8 @@ TEST(BoundingSphere, intersects_Ray)
 
 TEST(Ray, intersects_Plane)
 {
-   Plane plane(0, 0, -1, 0);
+   Plane plane;
+   plane.set( Quad_Neg_0010, Float_0 );
    Vector intersectionPt;
 
    CPPUNIT_ASSERT_EQUAL(true, testCollision(Ray(Vector(0, 0, -1), Vector(0, 0, 1)), plane, intersectionPt));
@@ -233,15 +237,14 @@ TEST(Ray, intersects_Plane)
    CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(Vector(0, 0, 1), Vector(0, 0, 1)), plane, intersectionPt));
 
    // another case
-   CPPUNIT_ASSERT_EQUAL(true, testCollision(Ray(Vector(0, 0, 0.5f), Vector(0, 0, 1)), 
-                                             Plane(0, -1, 0, 0), 
-                                             intersectionPt));
+   Plane testPlane;
+   testPlane.set( Quad_Neg_0100, Float_0 );
+   CPPUNIT_ASSERT_EQUAL( true, testCollision( Ray( Vector(0, 0, 0.5f), Vector(0, 0, 1) ), testPlane, intersectionPt ) );
    COMPARE_VEC(Vector(0, 0, 0.5f), intersectionPt);
 
    // another case
-   CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(Vector(-2, 0, 0), Vector(0, 0, 1)), 
-                                             Plane(-1, 0, 0, -1), 
-                                             intersectionPt));
+   testPlane.set( Quad_Neg_1000, Float_Minus1 );
+   CPPUNIT_ASSERT_EQUAL( false, testCollision( Ray( Vector(-2, 0, 0), Vector(0, 0, 1)), testPlane, intersectionPt ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -275,7 +278,6 @@ TEST(Triangle, intersects_Ray)
    CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(Vector(0, 0, 12), Vector(0, 1, 0)), tri));
    CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(Vector(0, 0, 8), Vector(1, 0, 0)), tri));
    CPPUNIT_ASSERT_EQUAL(false, testCollision(Ray(Vector(0, 0, 12), Vector(1, 0, 0)), tri));
-
 }
 
 ///////////////////////////////////////////////////////////////////////////////

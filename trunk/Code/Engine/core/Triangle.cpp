@@ -3,6 +3,7 @@
 #include "core\Matrix.h"
 #include "core\Plane.h"
 #include "core\AABoundingBox.h"
+#include "core\MathDataStorage.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -88,32 +89,32 @@ void Triangle::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Triangle::splitEdge( float percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, Vector& outEdge ) const
+void Triangle::splitEdge( const FastFloat& percentage, unsigned int startVtxIdx, unsigned int endVtxIdx, Vector& outEdge ) const
 {
    const Vector& v1 = v[startVtxIdx];
    Vector edge;
    edge.setSub( v[endVtxIdx], v1 );
 
-   outEdge.setMulAdd( edge, percentage, v1 );
+   outEdge.setMulAdd( edge, percentage.getFloat(), v1 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 PlaneClassification Triangle::classifyAgainsPlane( const Plane& plane ) const
 {
-    float dist1 = plane.dotCoord( v[0] );
-    float dist2 = plane.dotCoord( v[1] );
-    float dist3 = plane.dotCoord( v[2] );
+    const FastFloat dist1 = plane.dotCoord( v[0] );
+    const FastFloat dist2 = plane.dotCoord( v[1] );
+    const FastFloat dist3 = plane.dotCoord( v[2] );
 
-    if ( ( dist1 < 0 ) && ( dist2 < 0 ) && ( dist3 < 0 ) )
+    if ( ( dist1 < Float_0 ) && ( dist2 < Float_0 ) && ( dist3 < Float_0 ) )
     {
         return PPC_BACK;
     }
-    else if ( ( dist1 > 0 ) && ( dist2 > 0 ) && ( dist3 > 0 ) )
+    else if ( ( dist1 > Float_0 ) && ( dist2 > Float_0 ) && ( dist3 > Float_0 ) )
     {
         return PPC_FRONT;
     }
-    else if ( ( dist1 == 0 ) && ( dist2 == 0 ) && ( dist3 == 0 ) )
+    else if ( ( dist1 == Float_0 ) && ( dist2 == Float_0 ) && ( dist3 == Float_0 ) )
     {
         return PPC_COPLANAR;
     }
@@ -127,6 +128,10 @@ PlaneClassification Triangle::classifyAgainsPlane( const Plane& plane ) const
 
 float Triangle::distanceToPlane( const Plane& plane ) const
 {
+   FastFloat posEps, negEps;
+   posEps = Float_1e_4;
+   negEps.setNeg( Float_1e_4 );
+
    int frontCount = 0;
    int backCount = 0;
    for (unsigned int i = 0; i < 3; ++i)
@@ -134,13 +139,12 @@ float Triangle::distanceToPlane( const Plane& plane ) const
       Vector vtx = v[i];
       vtx.w = 1;
 
-      float dist = plane.dotCoord( vtx );
-
-      if (dist > 0.0001f)
+      const FastFloat dist = plane.dotCoord( vtx );
+      if ( dist > posEps )
       {
          ++frontCount;
       }
-      else if (dist < -0.0001f)
+      else if ( dist < negEps )
       {
          ++backCount;
       }

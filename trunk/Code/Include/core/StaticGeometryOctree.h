@@ -1,8 +1,7 @@
-#ifndef _STATIC_GEOMETRY_OCTREE_H
-#define _STATIC_GEOMETRY_OCTREE_H
-
 /// @file   core\StaticGeometryOctree.h
 /// @brief  an octree for storing static geometry
+#ifndef _STATIC_GEOMETRY_OCTREE_H
+#define _STATIC_GEOMETRY_OCTREE_H
 
 #include "core\Octree.h"
 #include "core\ConstSizeArray.h"
@@ -38,9 +37,13 @@ typedef std::vector<unsigned int> SGElementParts;
 template<typename Elem>
 class StaticGeometryOctree : public Octree<Elem>
 {
+   ALIGNED_CLASS();
+
 private:
    struct SGElement
    {
+      ALIGNED_STRUCT();
+
       /* This is the handle assigned to the original element.
        * Since it can be split into many sub elements, we want to 
        * keep track which elements comprise iterator. */
