@@ -6,6 +6,7 @@
 #include "core\Vector.h"
 #include "core\Assert.h"
 #include "core\TriangleSplitter.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,8 @@ struct Plane;
  */
 struct Triangle : public BoundingVolume, public SplittableTriangle< Vector >
 {
+   DECLARE_ALLOCATOR( Triangle, AM_ALIGNED_16 );
+
 private:
    Vector v[3];
    Vector e[3];
@@ -75,7 +78,7 @@ public:
    BoundingVolume* clone() const;
    void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
    void calculateBoundingBox( AABoundingBox& outBoundingBox ) const;
-   float distanceToPlane( const Plane& plane ) const;
+   const FastFloat distanceToPlane( const Plane& plane ) const;
    PlaneClassification classifyAgainsPlane( const Plane& plane ) const;
    bool testCollision( const PointVolume& point ) const;
    bool testCollision( const AABoundingBox& rhs ) const;

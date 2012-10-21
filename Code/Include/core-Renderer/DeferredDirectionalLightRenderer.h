@@ -5,6 +5,7 @@
 #include "core\Array.h"
 #include "core-Renderer\VertexShaderConfigurator.h"
 #include "core-Renderer\CascadedShadowsUtils.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,9 +23,13 @@ class Geometry;
  */
 class DeferredDirectionalLightRenderer
 {
+   DECLARE_ALLOCATOR( DeferredDirectionalLightRenderer, AM_DEFAULT );
+
 private:
    struct VSSetter : public VertexShaderConfigurator
    {
+      DECLARE_ALLOCATOR( VSSetter, AM_ALIGNED_16 );
+
       Matrix               m_lightViewProjMtx;
 
       /**

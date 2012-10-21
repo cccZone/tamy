@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\StringUtils.h"
 #include "core/types.h"
 #include "core/Assert.h"

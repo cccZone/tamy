@@ -23,6 +23,7 @@ class Camera;
  */
 class DirectionalLight : public Light, public UniqueObject< DirectionalLight >
 {
+   DECLARE_ALLOCATOR( DirectionalLight, AM_ALIGNED_16 );
    DECLARE_CLASS();
 
 public:

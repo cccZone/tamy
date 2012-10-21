@@ -18,6 +18,7 @@
  */
 class VertexShader : public Resource, public UniqueObject< VertexShader >, public RenderResource
 {
+   DECLARE_ALLOCATOR( VertexShader, AM_DEFAULT );
    DECLARE_RESOURCE()
 
 private:
@@ -100,7 +101,7 @@ public:
     * @param paramName
     * @param val
     */
-   static ShaderParam< VertexShader >* createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val );
+   static ShaderParam< VertexShader >* createTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName, ShaderTexture& val );
 
    /**
     * Returns the descriptions of the compiled shader constants.
@@ -125,6 +126,8 @@ private:
  */
 class RCBindVertexShader : public ShaderRenderCommand< VertexShader >
 {
+   DECLARE_ALLOCATOR( RCBindVertexShader, AM_DEFAULT );
+
 public:
    VertexShader&              m_shader;
    int                        m_techniqueIdx;
@@ -145,6 +148,8 @@ public:
  */
 class RCUnbindVertexShader : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCUnbindVertexShader, AM_DEFAULT );
+
 private:
    VertexShader&           m_shader;
 

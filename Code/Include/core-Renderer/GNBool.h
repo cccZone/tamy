@@ -13,6 +13,7 @@ class GSBoolOutput;
 
 class GNBool : public GeometryShaderNode
 {
+   DECLARE_ALLOCATOR( GNBool, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

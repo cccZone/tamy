@@ -16,6 +16,8 @@ class File;
  */
 class OutFileStream: public OutStream
 {
+   DECLARE_ALLOCATOR( OutFileStream, AM_DEFAULT );
+
 private:
    File* m_archive;
 

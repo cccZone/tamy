@@ -3,7 +3,8 @@
 #pragma once
 
 #include <vector>
-#include "core/Filesystem.h"
+#include "core\Filesystem.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,8 @@ class FilePath;
  */
 class FilesystemSection : public FilesystemListener
 {
+   DECLARE_ALLOCATOR( FilesystemSection, AM_DEFAULT );
+
 private:
    Filesystem&                            m_filesystem;
 

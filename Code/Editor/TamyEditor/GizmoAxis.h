@@ -25,7 +25,7 @@ public:
     * @param transformationValue
     * @param outTransformationMtx
     */
-   virtual void transformManipulatedNodes( const Vector& manipulationAxis, float transformationValue, Matrix& outTransformationMtx ) const = 0;
+   virtual void transformManipulatedNodes( const Vector& manipulationAxis, const FastFloat& transformationValue, Matrix& outTransformationMtx ) const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ private:
 class TranslationGizmoOp : public GizmoOperation
 {
 public:
-   void transformManipulatedNodes( const Vector& manipulationAxis, float transformationValue, Matrix& outTransformationMtx ) const;
+   void transformManipulatedNodes( const Vector& manipulationAxis, const FastFloat& transformationValue, Matrix& outTransformationMtx ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ public:
 class RotationGizmoOp : public GizmoOperation
 {
 public:
-   void transformManipulatedNodes( const Vector& manipulationAxis, float transformationValue, Matrix& outTransformationMtx ) const;
+   void transformManipulatedNodes( const Vector& manipulationAxis, const FastFloat& transformationValue, Matrix& outTransformationMtx ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ public:
 class ScalingGizmoOp : public GizmoOperation
 {
 public:
-   void transformManipulatedNodes( const Vector& manipulationAxis, float transformationValue, Matrix& outTransformationMtx ) const;
+   void transformManipulatedNodes( const Vector& manipulationAxis, const FastFloat& transformationValue, Matrix& outTransformationMtx ) const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

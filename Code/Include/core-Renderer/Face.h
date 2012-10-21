@@ -12,6 +12,8 @@
 
 struct Face
 {
+   DECLARE_ALLOCATOR( Face, AM_DEFAULT );
+
    USHORT idx[3];
 
    Face()

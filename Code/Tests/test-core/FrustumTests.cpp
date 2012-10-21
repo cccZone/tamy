@@ -53,7 +53,7 @@ TEST( Frustum, frustumBoundingBox )
    COMPARE_VEC( Vector(  110.0f,  120.0f, 130.0f ), frustumBounds.max );
 
    // rotated & translated camera
-   cameraTransform.m_rotation.setAxisAngle( Vector::OY, DEG2RAD( 90 ) );
+   cameraTransform.m_rotation.setAxisAngle( Vector_OY, FastFloat::fromFloat( DEG2RAD( 90 ) ) );
    cameraTransform.toMatrix( camera.accessLocalMtx() );
    camera.calculateFrustum( frustum );
    frustum.calculateBoundingBox( frustumBounds );
@@ -81,7 +81,7 @@ TEST( Frustum, pointFrustumIntersection )
    camera.setFOV(90);
 
    Frustum frustum;
-   PointVolume ptVolume( Vector::ZERO );
+   PointVolume ptVolume( Vector_ZERO );
    camera.calculateFrustum( frustum );
 
    ptVolume.point.set( 0, 0, 1 );

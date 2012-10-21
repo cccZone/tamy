@@ -1,11 +1,11 @@
+/// @file   core\ResourceStorage.h
+/// @brief  and implementation of IWFScene
 #ifndef _RESOURCE_STORAGE_H
 #define _RESOURCE_STORAGE_H
 
-/// @file   core\ResourceStorage.h
-/// @brief  and implementation of IWFScene
-
 #include <map>
 #include <string>
+#include "core\MemoryRouter.h"
 #include "core\Assert.h"
 
 
@@ -19,6 +19,8 @@
 template<typename ResourceType>
 class ResourceStorage
 {
+   DECLARE_ALLOCATOR( ResourceStorage, AM_DEFAULT );
+
 private:
    typedef std::map<std::string, ResourceType*> ResourceMap;
    ResourceMap m_resources;

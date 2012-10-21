@@ -1,7 +1,10 @@
+/// @file   core-Renderer/RenderDevicesEnumerator.h
+/// @brief  enumerates installed rendering devices
 #pragma once
 
 #include <d3d9.h>
 #include <vector>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,6 +16,8 @@ enum VERTEXPROCESSING_TYPE;
 
 class RenderDevicesEnumerator
 {
+   DECLARE_ALLOCATOR( RenderDevicesEnumerator, AM_DEFAULT );
+
 private:
    IDirect3D9& m_d3d9;
    D3DDISPLAYMODE m_windowedDisplayMode;

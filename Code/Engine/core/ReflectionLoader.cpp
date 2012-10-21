@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/ReflectionLoader.h"
 #include "core/InStream.h"
 #include "core/InArrayStream.h"

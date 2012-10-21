@@ -26,6 +26,7 @@ class RenderingPipelineTransaction;
  */
 class RenderingPipeline : public Resource, public GraphBuilder< RenderingPipeline, RenderingPipelineNode >
 {
+   DECLARE_ALLOCATOR( RenderingPipeline, AM_DEFAULT );
    DECLARE_RESOURCE();
 
 private:

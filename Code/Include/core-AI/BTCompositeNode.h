@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core-AI\BTCompositeNode.h
-/// @brief  a composite of beavior tree nodes
+/// @brief  a composite of behavior tree nodes
+#pragma once
 
 #include "core-AI\BTNode.h"
 #include <vector>
@@ -15,6 +14,8 @@
  */
 class BTCompositeNode : public BTNode
 {
+   DECLARE_ALLOCATOR( BTCompositeNode, AM_DEFAULT );
+
 protected:
    std::vector<BTNode*> m_nodes;
 

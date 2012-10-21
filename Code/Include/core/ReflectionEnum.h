@@ -8,6 +8,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "core/MemoryRouter.h"
 #include "core/ReflectionType.h"
 
 
@@ -18,6 +19,8 @@
  */
 class ReflectionEnum : public ReflectionType
 {
+   DECLARE_ALLOCATOR( ReflectionEnum, AM_DEFAULT );
+
 public:
    /**
     * Constructor.

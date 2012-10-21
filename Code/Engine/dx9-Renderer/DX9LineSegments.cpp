@@ -69,7 +69,7 @@ void DX9LineSegments::onResetDevice()
 
 void DX9LineSegments::create()
 {
-   const std::vector<LineSegment>& segments = m_lines.getSegments();
+   const Array<LineSegment>& segments = m_lines.getSegments();
    m_segsCount = segments.size();
    if (m_segsCount == 0)
    {

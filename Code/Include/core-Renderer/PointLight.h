@@ -19,6 +19,7 @@ struct BoundingSphere;
  */
 class PointLight : public Light, public UniqueObject< PointLight >
 {
+   DECLARE_ALLOCATOR( PointLight, AM_ALIGNED_16 );
    DECLARE_CLASS();
 
 public:

@@ -2,39 +2,33 @@
 /// @brief  default memory allocator
 #pragma once
 
+#include "core\types.h"
+#include "core\MemoryAllocator.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
  * Default memory allocator.
  */
-class DefaultAllocator
+class DefaultAllocator : public MemoryAllocator
 {
+private:
+   ulong       m_allocatedMemorySize;
+
 public:
-   /**
-    * Destroys an object allocated by the allocator
-    */
-   template< typename T >
-   void destroy( T* obj )
-   {
-      if ( obj )
-      {
-         obj->~T();
-         dealloc( obj );
-      }
-   }
+   DefaultAllocator();
 
-   /**
-    * Allocates a chunk of memory of the specified size.
-    *
-    * @param size
-    */
+   // -------------------------------------------------------------------------
+   // MemoryAllocator implementation
+   // -------------------------------------------------------------------------
    void* alloc( size_t size );
+   void dealloc( void* ptr );
 
    /**
-    * Deallocates the memory from the specified address.
+    * Returns the amount of memory allocated by this allocator.
     */
-   void dealloc( void* ptr );
+   inline ulong getAllocatedMemorySize() const { return m_allocatedMemorySize; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

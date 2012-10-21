@@ -77,8 +77,12 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
    SoundMock step("step");
    Sound3DMock barkingSound("barkingSound", bark, 1);
    Sound3DMock walkingSound("walkingSound", step, 1);
-   barkingSound.accessLocalMtx().setTranslation( Vector( -10, 0, 0 ) );
-   walkingSound.accessLocalMtx().setTranslation( Vector( 10, 0, 0 ) );
+
+   Vector testPos;
+   testPos.set( -10, 0, 0 );
+   barkingSound.accessLocalMtx().setTranslation( testPos );
+   testPos.set( 10, 0, 0 );
+   walkingSound.accessLocalMtx().setTranslation( testPos );
 
    SoundListenerMock* listener = new SoundListenerMock();
    soundScene.setListener(listener);
@@ -90,14 +94,16 @@ TEST(SoundRenderer, channelsAreReleasedIfSoundCantBeHeardAnymore)
 
    // first - the listener is near the man - he can hear his walking,
    // but he can't hear the dog barking
-   listener->accessLocalMtx().setTranslation( Vector( 10, 0, 0 ) );
+   testPos.set( 10, 0, 0 );
+   listener->accessLocalMtx().setTranslation( testPos );
    soundRenderer.update(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    CPPUNIT_ASSERT_EQUAL(std::string("step"), soundDevice.getChannel(0).getSound().getName());
 
    // next moment - the listener moves close to the dog - he can hear it barking,
    // but he can't hear the man walking
-   listener->accessLocalMtx().setTranslation( Vector( -10, 0, 0 ) );
+   testPos.set( -10, 0, 0 );
+   listener->accessLocalMtx().setTranslation( testPos );
    soundRenderer.update(0);
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundDevice.getActiveChannelsCount());
    CPPUNIT_ASSERT_EQUAL(std::string("bark"), soundDevice.getChannel(0).getSound().getName());

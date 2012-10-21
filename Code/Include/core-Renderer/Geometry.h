@@ -26,6 +26,7 @@ typedef std::vector< RenderState* >    RenderStatesVec;
  */
 class Geometry : public SpatialEntity
 {
+   DECLARE_ALLOCATOR( Geometry, AM_DEFAULT );
    DECLARE_CLASS()
 
 protected:

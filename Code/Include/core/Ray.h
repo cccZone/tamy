@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core\BoundingVolume.h"
+#include "core\MemoryRouter.h"
 #include "core\Vector.h"
 
 
@@ -13,6 +14,8 @@
  */
 struct Ray : public BoundingVolume
 {
+   DECLARE_ALLOCATOR( Ray, AM_ALIGNED_16 );
+
    Vector origin;
 
    // direction should always be a normalized vector. If it's 
@@ -38,7 +41,7 @@ struct Ray : public BoundingVolume
     *
     * @param rhs
     */
-   float getDistanceTo( const BoundingVolume& rhs ) const;
+   const FastFloat getDistanceTo( const BoundingVolume& rhs ) const;
 
    // -------------------------------------------------------------------------
    // BoundingVolume implementation
@@ -47,7 +50,7 @@ struct Ray : public BoundingVolume
    void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
    void calculateBoundingBox( AABoundingBox& outBoundingBox ) const;
    PlaneClassification classifyAgainsPlane( const Plane& plane ) const;
-   float distanceToPlane( const Plane& plane ) const;
+   const FastFloat distanceToPlane( const Plane& plane ) const;
    bool testCollision( const PointVolume& point ) const;
    bool testCollision( const AABoundingBox& rhs ) const;
    bool testCollision( const BoundingSphere& rhs ) const;

@@ -3,6 +3,7 @@
 #else
 
 #include "core\EngineDefines.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,7 +22,7 @@ Array< T, TAllocator >::Array( unsigned int size, TAllocator* allocator )
       m_allocator = m_defaultAllocator;
    }
 
-   m_arr = (T*)m_allocator->alloc( sizeof( T ) );
+   m_arr = (T*)MemoryRouter::getInstance().alloc( sizeof( T ), GET_ALLOC_MODE( T ), m_allocator );
 
    if ( size > 1 )
    {
@@ -49,7 +50,7 @@ Array< T, TAllocator >::Array( const Array& rhs )
       m_allocator = rhs.m_allocator;
    }
 
-   m_arr = (T*)m_allocator->alloc( sizeof( T ) * m_size );
+   m_arr = (T*)MemoryRouter::getInstance().alloc( sizeof( T ) * m_size, GET_ALLOC_MODE( T ), m_allocator );
 
 #ifdef _USE_FAST_ARRAYS
    memcpy( m_arr, rhs.m_arr, sizeof( T ) * m_elementsCount );
@@ -66,7 +67,7 @@ Array< T, TAllocator >::Array( const Array& rhs )
 template< typename T, typename TAllocator >
 Array< T, TAllocator >::~Array()
 {
-   m_allocator->dealloc( m_arr );
+   MemoryRouter::getInstance().dealloc( m_arr, GET_ALLOC_MODE( T ) );
    m_arr = NULL;
 
    m_elementsCount = 0;
@@ -134,7 +135,10 @@ void Array< T, TAllocator >::copyFrom( const Array<T>& rhs )
 template< typename T, typename TAllocator >
 void Array< T, TAllocator >::allocate(unsigned int newSize)
 {
-   if (newSize < m_size) {return;}
+   if ( newSize <= m_size ) 
+   {
+      return;
+   }
 
    unsigned int newSizePow2 = m_size;
    while (newSizePow2 < newSize)
@@ -142,7 +146,8 @@ void Array< T, TAllocator >::allocate(unsigned int newSize)
       newSizePow2 = newSizePow2 << 1;
    }
 
-   T* newArr = (T*)m_allocator->alloc( sizeof( T ) * newSizePow2 );
+   MemoryRouter& router = MemoryRouter::getInstance();
+   T* newArr = (T*)router.alloc( sizeof( T ) * newSizePow2, GET_ALLOC_MODE( T ), m_allocator );
 
 #ifdef _USE_FAST_ARRAYS
    memcpy( newArr, m_arr, sizeof( T ) * m_elementsCount );
@@ -153,7 +158,7 @@ void Array< T, TAllocator >::allocate(unsigned int newSize)
    }
 #endif
 
-   m_allocator->dealloc( m_arr );
+   router.dealloc( m_arr, GET_ALLOC_MODE( T ) );
    m_arr = newArr;
    m_size = newSizePow2;
 }
@@ -197,6 +202,15 @@ void Array< T, TAllocator >::resize(unsigned int newSize, const T& defaultValue 
 ///////////////////////////////////////////////////////////////////////////////
 
 template< typename T, typename TAllocator >
+void Array< T, TAllocator >::resizeWithoutInitializing( unsigned int newSize )
+{
+   allocate( newSize );
+   m_elementsCount = newSize;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename T, typename TAllocator >
 void Array< T, TAllocator >::push_back(const T& elem)
 {
    unsigned int newElementsCount = m_elementsCount + 1;
@@ -205,7 +219,10 @@ void Array< T, TAllocator >::push_back(const T& elem)
       allocate(m_size << 1);
    }
 
-   m_arr[m_elementsCount] = elem;
+   void* ptr = (void*)&m_arr[m_elementsCount];
+   new ( ptr ) T( elem );
+
+   //m_arr[m_elementsCount] = elem;
    m_elementsCount = newElementsCount;
 }
 
@@ -229,7 +246,9 @@ void Array< T, TAllocator >::push_front( const T& elem )
    }
 #endif
 
-   m_arr[0] = elem;
+   void* ptr = (void*)&m_arr;
+   new ( ptr ) T( elem );
+   //m_arr[0] = elem;
    m_elementsCount = newElementsCount;
 }
 

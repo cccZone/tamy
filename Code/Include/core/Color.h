@@ -2,7 +2,8 @@
 /// @brief  color representation
 #pragma once
 
-#include "core/types.h"
+#include "core\types.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,8 @@ class InStream;
  */
 struct Color
 {
+   DECLARE_ALLOCATOR( Color, AM_ALIGNED_16 );
+
    union
    {
       struct

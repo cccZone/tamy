@@ -1,9 +1,7 @@
+/// @file   core\SharedSpatialStorage.h
+/// @brief  spatial storage decorator that doesn't destroy the decorated storage
 #ifndef _SHARED_SPATIAL_STORAGE_H
 #define _SHARED_SPATIAL_STORAGE_H
-
-/// @file   core\SharedSpatialStorage.h
-/// @brief  spatial storage decorator that doesn't destroy 
-///         the decorated storage
 
 #include "core\SpatialStorage.h"
 #include <vector>
@@ -17,6 +15,8 @@
 template <typename Elem>
 class SharedSpatialStorage : public SpatialStorage<Elem>
 {
+   DECLARE_ALLOCATOR( SharedSpatialStorage, AM_DEFAULT );
+
 private:
    SpatialStorage<Elem>& m_storage;
 

@@ -3,6 +3,7 @@
 #else
 
 #include "core\MathDataStorage.h"
+#include <math.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -274,6 +275,70 @@ void FastFloat::neg()
 {
    static ALIGN_16 const uint signMask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
    m_val = _mm_xor_ps( m_val, *( const FastFloatStorage*)&signMask );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FastFloat::sin()
+{
+   float v = ::sin( m_val.m128_f32[0] );
+   m_val = _mm_set1_ps( v );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FastFloat::cos()
+{
+   float v = ::cos( m_val.m128_f32[0] );
+   m_val = _mm_set1_ps( v );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FastFloat::setSin( const FastFloat& val )
+{
+   float v = ::sin( val.m_val.m128_f32[0] );
+   m_val = _mm_set1_ps( v );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FastFloat::setCos( const FastFloat& val )
+{
+   float v = ::cos( val.m_val.m128_f32[0] );
+   m_val = _mm_set1_ps( v );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FastFloat::asin()
+{
+   float v = ::asin( m_val.m128_f32[0] );
+   m_val = _mm_set1_ps( v );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FastFloat::acos()
+{
+   float v = ::acos( m_val.m128_f32[0] );
+   m_val = _mm_set1_ps( v );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FastFloat::setAsin( const FastFloat& val )
+{
+   float v = ::asin( val.m_val.m128_f32[0] );
+   m_val = _mm_set1_ps( v );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FastFloat::setAcos( const FastFloat& val )
+{
+   float v = ::acos( val.m_val.m128_f32[0] );
+   m_val = _mm_set1_ps( v );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

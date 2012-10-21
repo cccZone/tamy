@@ -23,12 +23,13 @@ class SpatialEntity;
  */
 class Skeleton : public Resource, public RenderResource
 {
+   DECLARE_ALLOCATOR( Skeleton, AM_ALIGNED_16 );
    DECLARE_RESOURCE()
 
 private:
    Matrix                        m_bindShapeMtx;
    std::vector< std::string >    m_boneNames;
-   std::vector< Matrix >         m_invBoneMatrices;
+   Array< Matrix >               m_invBoneMatrices;
    std::vector< VertexWeight >   m_weights;
 
 public:  
@@ -103,6 +104,8 @@ public:
  */
 class RCBindSkeleton : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCBindSkeleton, AM_DEFAULT );
+
 private:
    Skeleton&         m_skeleton;
 
@@ -122,6 +125,8 @@ public:
  */
 class RCUnbindSkeleton : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCUnbindSkeleton, AM_DEFAULT );
+
 private:
    Skeleton&         m_skeleton;
 

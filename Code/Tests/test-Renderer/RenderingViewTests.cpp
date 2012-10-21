@@ -23,6 +23,8 @@ namespace // anonymous
 {
    class RendererMock : public Renderer
    {
+      DECLARE_ALLOCATOR( RendererMock, AM_DEFAULT );
+
    public:
       std::string                  m_seqLog;
 
@@ -52,6 +54,8 @@ namespace // anonymous
 
    class RenderingMechanismMock : public RenderingMechanism
    {     
+      DECLARE_ALLOCATOR( RenderingMechanismMock, AM_DEFAULT );
+
    private:
       Model&               m_model;
       RenderingView*       m_view;
@@ -106,6 +110,8 @@ namespace // anonymous
 
    class RenderingCommandMock : public RenderCommand
    {
+      DECLARE_ALLOCATOR( RenderingCommandMock, AM_DEFAULT );
+
    private:
       std::string    m_id;
 
@@ -122,6 +128,8 @@ namespace // anonymous
 
    class GeometryMock : public Geometry
    {
+      DECLARE_ALLOCATOR( GeometryMock, AM_ALIGNED_16 );
+
    private:
       std::string    m_id;
       AABoundingBox  m_bounds;
@@ -147,6 +155,7 @@ namespace // anonymous
 
    class RenderStateMock : public TRenderState< RenderStateMock >
    {
+      DECLARE_ALLOCATOR( RenderStateMock, AM_DEFAULT );
       DECLARE_CLASS();
 
    private:
@@ -197,6 +206,7 @@ TEST( RenderingView, basics )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Geometry >( "Geometry", NULL );
    typesRegistry.addSerializableType< Light >( "Light", NULL );
    typesRegistry.addSerializableType< RenderStateMock >( "RenderStateMock", NULL );

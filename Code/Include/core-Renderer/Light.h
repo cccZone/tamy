@@ -12,6 +12,7 @@
  */
 class Light : public SpatialEntity
 {
+   DECLARE_ALLOCATOR( Light, AM_DEFAULT );
    DECLARE_CLASS();
 
 public:

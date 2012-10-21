@@ -13,6 +13,7 @@ class MSVec4Output;
 
 class MNVec4 : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNVec4, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

@@ -3,7 +3,7 @@
 #ifndef _ARRAY_H
 #define _ARRAY_H
 
-#include "core\MemoryUtils.h"
+#include "core\MemoryRouter.h"
 #include "core\Assert.h"
 #include "core\DefaultAllocator.h"
 #include <stdio.h>
@@ -26,7 +26,7 @@
 template< typename T, typename TAllocator = DefaultAllocator >
 class Array
 {
-   ALIGNED_CLASS();
+   DECLARE_ALLOCATOR( Array, AM_DEFAULT );
 
 public:
    unsigned int   m_size;
@@ -114,6 +114,14 @@ public:
     */
    void resize( unsigned int newSize, const T& defaultValue = 0 );
 
+   /**
+    * Resizes an array without initializing new members.
+    *
+    * Perfect for resizing an array of complex types.
+    *
+    * @param newSize
+    */
+   void resizeWithoutInitializing( unsigned int newSize );
 
    /**
     * The method appends a new element at the end of the array, 

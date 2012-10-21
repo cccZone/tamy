@@ -1,5 +1,8 @@
+/// @file   core-Sound/SoundRenderer.h
+/// @brief  renders a sound scene into existence, playing in on a designated sound device
 #pragma once
 
+#include "core\MemoryRouter.h"
 #include "core\Array.h"
 
 
@@ -13,11 +16,13 @@ class Sound3D;
 
 /**
  * Just as the graphical renderer converts the scene nodes into 
- * a visiual representation, the SoundRenderer converts the applicable
+ * a visual representation, the SoundRenderer converts the applicable
  * scene nodes into an audio representation
  */
 class SoundRenderer
 {
+   DECLARE_ALLOCATOR( SoundRenderer, AM_DEFAULT );
+
 private:
    SoundDevice& m_soundDevice;
    Array<SoundSceneManager*> m_soundScenes;

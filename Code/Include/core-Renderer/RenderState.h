@@ -76,6 +76,8 @@ public:
 template< typename T >
 class TRenderState : public RenderState
 {
+   DECLARE_ALLOCATOR( TRenderState, AM_DEFAULT );
+
 public:
    /**
     * Constructor.

@@ -5,6 +5,7 @@
 #define REFLECTION_PROPERTIES_VIEW_H
 
 #include <vector>
+#include "core\MemoryRouter.h"
 #include "core\GenericFactory.h"
 #include "core\ReflectionPropertyEditor.h"
 #include "core\Assert.h"
@@ -34,6 +35,8 @@ class ReflectionProperty;
  */
 class ReflectionPropertiesView
 {
+   DECLARE_ALLOCATOR( ReflectionPropertiesView, AM_DEFAULT );
+
 private:
    // -------------------------------------------------------------------------
    // internal types definitions
@@ -54,6 +57,8 @@ private:
    template< class REPR_IMPL, class ENTITY_IMPL >
    class TStaticCreator : public Creator
    {
+      DECLARE_ALLOCATOR( TStaticCreator, AM_DEFAULT );
+
    private:
       const ReflectionType&    m_refClass;
 
@@ -80,6 +85,8 @@ private:
    template< class REPR_IMPL, class ENTITY_IMPL >
    class TPolymorphicCreator : public Creator
    {
+      DECLARE_ALLOCATOR( TPolymorphicCreator, AM_DEFAULT );
+
    private:
       const ReflectionType&    m_refClass;
 
@@ -106,6 +113,8 @@ private:
    template< class REPR_IMPL >
    class TEnumCreator : public Creator
    {
+      DECLARE_ALLOCATOR( TEnumCreator, AM_DEFAULT );
+
    private:
       const ReflectionType&      m_genericEnumType;
 
@@ -134,6 +143,8 @@ private:
    template< typename NodeType, typename ParamType >
    class EditorNodeCreator
    {
+      DECLARE_ALLOCATOR( EditorNodeCreator, AM_DEFAULT );
+
    public:
       virtual ~EditorNodeCreator() {}
 
@@ -155,6 +166,8 @@ private:
    template< class REPR_IMPL >
    class TArrayNodeCreator : public ArrayNodeCreator
    {
+      DECLARE_ALLOCATOR( TArrayNodeCreator, AM_DEFAULT );
+
    public:
       ReflectionPropertyEditorComposite* create( ReflectionPropertyArray* property )
       {
@@ -167,6 +180,8 @@ private:
    template< class REPR_IMPL >
    class TObjectNodeCreator : public ObjectNodeCreator
    {
+      DECLARE_ALLOCATOR( TObjectNodeCreator, AM_DEFAULT );
+
    public:
       ReflectionObjectEditor* create( ReflectionObject* property )
       {

@@ -7,8 +7,9 @@
 
 namespace // anonymous
 {
-   class RoundBufferObjectMock : public RoundBufferObject
+   class RoundBufferObjectMock
    {
+      DECLARE_ALLOCATOR( RoundBufferObjectMock, AM_DEFAULT );
    };
 
 } // anonymous
@@ -20,14 +21,14 @@ TEST( RoundBuffer, oneObject )
    RoundBuffer buffer( 512 );
 
    const int OBJECTS_COUNT = 100;
-   RoundBufferObject* obj = new( buffer ) RoundBufferObjectMock();
+   RoundBufferObjectMock* obj = new( &buffer ) RoundBufferObjectMock();
 
    CPPUNIT_ASSERT_EQUAL( (unsigned int)1, buffer.getAllocationsCount() );
-   CPPUNIT_ASSERT_EQUAL( obj, buffer.front< RoundBufferObject >() );
+   CPPUNIT_ASSERT_EQUAL( obj, buffer.front< RoundBufferObjectMock >() );
 
-   ROUNDBUF_DELETE( obj );
+   delete obj;
    CPPUNIT_ASSERT_EQUAL( (unsigned int)0, buffer.getAllocationsCount() );
-   CPPUNIT_ASSERT_EQUAL( (RoundBufferObject*)NULL, buffer.front< RoundBufferObject >() );
+   CPPUNIT_ASSERT_EQUAL( (RoundBufferObjectMock*)NULL, buffer.front< RoundBufferObjectMock >() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -37,20 +38,20 @@ TEST( RoundBuffer, twoObjects )
    RoundBuffer buffer( 512 );
 
    const int OBJECTS_COUNT = 100;
-   RoundBufferObject* obj1 = new( buffer ) RoundBufferObjectMock();
-   RoundBufferObject* obj2 = new( buffer ) RoundBufferObjectMock();
+   RoundBufferObjectMock* obj1 = new( &buffer ) RoundBufferObjectMock();
+   RoundBufferObjectMock* obj2 = new( &buffer ) RoundBufferObjectMock();
 
    CPPUNIT_ASSERT_EQUAL( (unsigned int)2, buffer.getAllocationsCount() );
-   CPPUNIT_ASSERT_EQUAL( obj1, buffer.front< RoundBufferObject >() );
+   CPPUNIT_ASSERT_EQUAL( obj1, buffer.front< RoundBufferObjectMock >() );
 
-   ROUNDBUF_DELETE( obj1 );
+   delete obj1;
    CPPUNIT_ASSERT_EQUAL( (unsigned int)1, buffer.getAllocationsCount() );
-   CPPUNIT_ASSERT_EQUAL( obj2, buffer.front< RoundBufferObject >() );
+   CPPUNIT_ASSERT_EQUAL( obj2, buffer.front< RoundBufferObjectMock >() );
 
-   ROUNDBUF_DELETE( obj2 );
+   delete obj2;
    CPPUNIT_ASSERT_EQUAL( (unsigned int)0, buffer.getAllocationsCount() );
    CPPUNIT_ASSERT_EQUAL( (size_t)0, buffer.getMemoryUsed() );
-   CPPUNIT_ASSERT_EQUAL( (RoundBufferObject*)NULL, buffer.front< RoundBufferObject >() );
+   CPPUNIT_ASSERT_EQUAL( (RoundBufferObjectMock*)NULL, buffer.front< RoundBufferObjectMock >() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,22 +61,22 @@ TEST( RoundBuffer, manyAllocations )
    RoundBuffer buffer( 4096 );
 
    const int OBJECTS_COUNT = 100;
-   RoundBufferObject* arr[ OBJECTS_COUNT ];
+   RoundBufferObjectMock* arr[ OBJECTS_COUNT ];
 
    // allocate
    for ( int j = 0; j < OBJECTS_COUNT; ++j )
    {
-      arr[j] = new( buffer ) RoundBufferObjectMock();
-      CPPUNIT_ASSERT_EQUAL( arr[0], buffer.front< RoundBufferObject >() );
+      arr[j] = new( &buffer ) RoundBufferObjectMock();
+      CPPUNIT_ASSERT_EQUAL( arr[0], buffer.front< RoundBufferObjectMock >() );
    }
 
    // deallocate
    for ( int j = 0; j < OBJECTS_COUNT; ++j )
    {
-      ROUNDBUF_DELETE( arr[j] );
+      delete arr[j];
       if ( j < OBJECTS_COUNT - 1 )
       {
-         CPPUNIT_ASSERT_EQUAL( arr[ j + 1 ], buffer.front< RoundBufferObject >() );
+         CPPUNIT_ASSERT_EQUAL( arr[ j + 1 ], buffer.front< RoundBufferObjectMock >() );
       }
    }
 }
@@ -88,7 +89,7 @@ TEST( RoundBuffer, performance )
 
    const int OBJECTS_COUNT = 100;
    const int LOOPS_COUNT = 65535;
-   RoundBufferObject* arr[ OBJECTS_COUNT ];
+   RoundBufferObjectMock* arr[ OBJECTS_COUNT ];
 
    CTimer timer;
    timer.tick();
@@ -104,13 +105,13 @@ TEST( RoundBuffer, performance )
       // allocate
       for ( int j = 0; j < OBJECTS_COUNT; ++j )
       {
-         arr[j] = new( buffer ) RoundBufferObjectMock();
+         arr[j] = new( &buffer ) RoundBufferObjectMock();
       }
 
       // deallocate
       for ( int j = 0; j < OBJECTS_COUNT; ++j )
       {
-         ROUNDBUF_DELETE( arr[j] );
+         delete arr[j];
       }
    }
    timer.tick();

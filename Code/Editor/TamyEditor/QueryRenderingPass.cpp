@@ -169,10 +169,10 @@ void QueryRenderingPass::ptrToVec( void* ptr, Vector& outVec  )
    PtrAsBytes ptrRep;
    ptrRep.ptr = (long)ptr;
 
-   outVec.x = ( float )( ptrRep.b[0] / 255.f );
-   outVec.y = ( float )( ptrRep.b[1] / 255.f );
-   outVec.z = ( float )( ptrRep.b[2] / 255.f );
-   outVec.w = ( float )( ptrRep.b[3] / 255.f );
+   outVec[0] = ( float )( ptrRep.b[0] / 255.f );
+   outVec[1] = ( float )( ptrRep.b[1] / 255.f );
+   outVec[2] = ( float )( ptrRep.b[2] / 255.f );
+   outVec[3] = ( float )( ptrRep.b[3] / 255.f );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -180,10 +180,10 @@ void QueryRenderingPass::ptrToVec( void* ptr, Vector& outVec  )
 void* QueryRenderingPass::vecToPtr( const Vector& vec )
 {
    PtrAsBytes ptrRep;
-   unsigned int r = ( unsigned int )( vec.x * 255.f );
-   unsigned int g = ( unsigned int )( vec.y * 255.f );
-   unsigned int b = ( unsigned int )( vec.z * 255.f );
-   unsigned int a = ( unsigned int )( vec.w * 255.f );
+   unsigned int r = ( unsigned int )( vec[0] * 255.f );
+   unsigned int g = ( unsigned int )( vec[1] * 255.f );
+   unsigned int b = ( unsigned int )( vec[2] * 255.f );
+   unsigned int a = ( unsigned int )( vec[3] * 255.f );
 
    ptrRep.b[0] = r;
    ptrRep.b[1] = g;

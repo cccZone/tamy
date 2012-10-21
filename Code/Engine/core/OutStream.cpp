@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/OutStream.h"
 #include "core/types.h"
 

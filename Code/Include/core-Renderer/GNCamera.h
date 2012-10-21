@@ -14,6 +14,7 @@ class GSMatrixOutput;
 
 class GNCamera : public GeometryShaderNode
 {
+   DECLARE_ALLOCATOR( GNCamera, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

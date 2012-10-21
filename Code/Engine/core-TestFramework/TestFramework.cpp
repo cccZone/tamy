@@ -49,6 +49,13 @@ CppUnit::TestSuite& registerSuite(const char* name)
 
 ///////////////////////////////////////////////////////////////////////////////
 
+static void testsRunnerAssertCallback( const char* msg, AssertionHandle& assertHandle )
+{
+   CPPUNIT_ASSERT_MESSAGE( msg, false );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 int main(int argc, char** argv)
 {
    if (g_SuiteRegistry == NULL)
@@ -56,7 +63,10 @@ int main(int argc, char** argv)
       return 0;
    }
 
-   // informs test-listener about testresults
+   // register an assert callback
+   registerAssertCallback( &testsRunnerAssertCallback );
+
+   // informs test-listener about test results
    CppUnit::TestResult testResult;
 
    // register listener for collecting the test-results

@@ -155,7 +155,7 @@ void PixelShader::setScript( const std::string& script )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderParam< PixelShader >* PixelShader::createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val )
+ShaderParam< PixelShader >* PixelShader::createTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName, ShaderTexture& val )
 {
    return val.createPixelShaderTextureSetter( allocator, paramName );
 }

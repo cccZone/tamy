@@ -3,6 +3,8 @@
 #pragma once
 
 
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * An interface that allows to automatically gather info about loaded objects during deserialization.
  */
@@ -25,3 +27,5 @@ public:
     */
    virtual ReflectionObject* findInstance( const ReflectionObject::UniqueId& id ) = 0;
 };
+
+///////////////////////////////////////////////////////////////////////////////

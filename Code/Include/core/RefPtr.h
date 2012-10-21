@@ -3,6 +3,7 @@
 #ifndef _REF_PTR_H
 #define _REF_PTR_H
 
+#include "core\MemoryRouter.h"
 #include <string>
 
 
@@ -19,6 +20,8 @@ class ReflectionObject;
  */
 class RefPtr
 {
+   DECLARE_ALLOCATOR( RefPtr, AM_DEFAULT );
+
 protected:
    ReflectionObject*       m_obj;
 

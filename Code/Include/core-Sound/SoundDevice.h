@@ -1,6 +1,9 @@
+/// @file   core-Sound/SoundDevice.h
+/// @brief  device sounds are being played on
 #pragma once
 
 #include <vector>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -16,6 +19,8 @@ class SoundChannel;
  */
 class SoundDevice
 {
+   DECLARE_ALLOCATOR( SoundDevice, AM_DEFAULT );
+
 private:
    int m_numBuffersUsed;
    std::vector<SoundChannel*> m_activeChannels;

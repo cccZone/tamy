@@ -15,11 +15,11 @@ namespace // anonymous
 
    struct TriangleMock : public SplittableTriangle<Vector>
    {
+      DECLARE_ALLOCATOR( TriangleMock, AM_ALIGNED_16 );
+
       Vector v[3];
 
-      TriangleMock(const Vector& v1,
-         const Vector& v2,
-         const Vector& v3)
+      TriangleMock(const Vector& v1, const Vector& v2, const Vector& v3)
       {
          v[0] = v1;
          v[1] = v2;
@@ -66,7 +66,7 @@ namespace // anonymous
          Vector edge;
          edge.setSub( v[endVtxIdx], v1 );
 
-         outVertex.setMulAdd( edge, percentage.getFloat(), v1 );
+         outVertex.setMulAdd( edge, percentage, v1 );
       }
 
       void split( const Plane& plane, Array<TriangleMock*>& frontSplit, Array<TriangleMock*>& backSplit)
@@ -82,8 +82,8 @@ namespace // anonymous
          for (int i = 0; i < 3; ++i)
          {
             tmpDir.setSub( v[i], rhs.v[i] );
-            float dist = tmpDir.length();
-            if (dist > 1e-3) 
+            const FastFloat dist = tmpDir.length();
+            if (dist > Float_1e_3) 
             {
                match = false;
                break;

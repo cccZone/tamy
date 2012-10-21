@@ -6,9 +6,10 @@
 #include "core\Subject.h"
 #include "core\UniqueObject.h"
 #include "core\Color.h"
-#include "core\RoundBuffer.h"
 #include "core-AppFlow\TimeDependent.h"
 #include "core\types.h"
+#include "core\MemoryRouter.h"
+#include "core\RoundBuffer.h"
 #include "core\Matrix.h"
 #include "core\Stack.h"
 #include <vector>
@@ -19,6 +20,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 struct Point;
+class RoundBuffer;
 class RendererObserver;
 class RenderingMechanism;
 class RenderingTargetsPolicy;
@@ -57,6 +59,8 @@ enum RendererOps
  */
 class Renderer : public Subject< Renderer, RendererOps >, public UniqueObject< Renderer >, public TimeDependent
 {
+   DECLARE_ALLOCATOR( Renderer, AM_DEFAULT );
+
 private:
    
    /**
@@ -107,7 +111,7 @@ private:
    // render commands
    MemoryPool*                      m_commandsDataMemoryPool;
    MemoryPoolAllocator*             m_commandsDataAllocator;
-   RoundBuffer                      m_renderCommands;
+   RoundBuffer*                     m_renderCommands;
 
    // shaders support
    uint                             m_vertexShaderTechnique;
@@ -259,7 +263,7 @@ public:
    /**
     * Gives access to the commands buffer.
     */
-   inline RoundBuffer& operator()() { return m_renderCommands; }
+   inline RoundBuffer* operator()() { return m_renderCommands; }
 
    /**
     * Gives access to a designated allocator that manages rendering commands data related memory

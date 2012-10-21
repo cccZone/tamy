@@ -7,7 +7,8 @@
 #include <string>
 #include <map>
 #include <list>
-#include "core/types.h"
+#include "core\MemoryRouter.h"
+#include "core\types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -28,6 +29,8 @@ class MemoryPool;
  */
 class ReflectionType
 {
+   DECLARE_ALLOCATOR( ReflectionType, AM_DEFAULT );
+
 public:
    // type name and its id version
    std::string                                        m_name;
@@ -82,6 +85,8 @@ struct SerializableTypeInstantiator
 template< typename T >
 struct TSerializableTypeInstantiator : public SerializableTypeInstantiator
 {
+   DECLARE_ALLOCATOR( TSerializableTypeInstantiator, AM_DEFAULT );
+
    void* instantiate() const;
 };
 
@@ -91,6 +96,8 @@ struct TSerializableTypeInstantiator : public SerializableTypeInstantiator
  */
 class SerializableReflectionType : public ReflectionType
 {
+   DECLARE_ALLOCATOR( SerializableReflectionType, AM_DEFAULT );
+
 public:
    std::string                                        m_patchedName;
    unsigned int                                       m_patchedId;

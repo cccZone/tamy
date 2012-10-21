@@ -3,9 +3,10 @@
 #ifndef _REFLECTION_TYPE_COMPONENT
 #define _REFLECTION_TYPE_COMPONENT
 
-#include "core/types.h"
-#include "core/RefPtr.h"
-#include "core/Array.h"
+#include "core\MemoryRouter.h"
+#include "core\types.h"
+#include "core\RefPtr.h"
+#include "core\Array.h"
 #include <string>
 #include <vector>
 
@@ -25,6 +26,8 @@ class InStream;
  */
 class ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( ReflectionTypeComponent, AM_DEFAULT );
+
 public:
    std::string                m_memberName;
    uint                       m_id;
@@ -150,6 +153,8 @@ protected:
 template< typename T >
 class TMemberField : public ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( TMemberField, AM_DEFAULT );
+
 private:
    int               m_dataOffset;
 
@@ -174,6 +179,8 @@ public:
 template< typename T >
 class TMemberField< T* > : public ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( TMemberField, AM_DEFAULT );
+
 private:
    int               m_dataOffset;
 
@@ -198,6 +205,8 @@ public:
 template< typename T >
 class TMemberField< TRefPtr< T > > : public ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( TMemberField, AM_DEFAULT );
+
 private:
    int               m_dataOffset;
 
@@ -222,6 +231,8 @@ public:
 template< typename T >
 class TMemberField< std::vector< T > > : public ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( TMemberField, AM_DEFAULT );
+
 private:
    int               m_dataOffset;
 
@@ -246,6 +257,8 @@ public:
 template< typename T >
 class TMemberField< std::vector< T* > > : public ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( TMemberField, AM_DEFAULT );
+
 private:
    int               m_dataOffset;
 
@@ -270,6 +283,8 @@ public:
 template< typename T >
 class TMemberField< std::vector< TRefPtr< T > > > : public ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( TMemberField, AM_DEFAULT );
+
 private:
    int               m_dataOffset;
 
@@ -294,6 +309,8 @@ public:
 template< typename T >
 class TMemberField< Array< T > > : public ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( TMemberField, AM_DEFAULT );
+
 private:
    int               m_dataOffset;
 
@@ -318,6 +335,8 @@ public:
 template< typename T >
 class TMemberField< Array< T* > > : public ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( TMemberField, AM_DEFAULT );
+
 private:
    int               m_dataOffset;
 
@@ -342,6 +361,8 @@ public:
 template< typename T >
 class TMemberField< Array< TRefPtr< T > > > : public ReflectionTypeComponent
 {
+   DECLARE_ALLOCATOR( TMemberField, AM_DEFAULT );
+
 private:
    int               m_dataOffset;
 

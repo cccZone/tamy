@@ -47,9 +47,11 @@ TEST(SoundSceneManager, soundsAreHeardOnlyToCertainDistance)
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToDisable.size());
 
    // we're completely outside the sound hearing are - no sound is heard
+   Vector pos;
    soundsToEnable.clear();
    soundsToDisable.clear();
-   listener->accessLocalMtx().setTranslation( Vector( dogSoundHearingRadius + 1, 0, 0 ) );
+   pos.set( dogSoundHearingRadius + 1, 0, 0 );
+   listener->accessLocalMtx().setTranslation( pos );
    activeSounds = &(soundScene.update(soundsToDisable, soundsToEnable));
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToEnable.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundsToDisable.size());
@@ -59,7 +61,8 @@ TEST(SoundSceneManager, soundsAreHeardOnlyToCertainDistance)
 
    soundsToEnable.clear();
    soundsToDisable.clear();
-   listener->accessLocalMtx().setTranslation( Vector( dogSoundHearingRadius - 1, 0, 0 ) );
+   pos.set( dogSoundHearingRadius - 1, 0, 0 );
+   listener->accessLocalMtx().setTranslation( pos );
    activeSounds = &(soundScene.update(soundsToDisable, soundsToEnable));
    CPPUNIT_ASSERT_EQUAL((unsigned int)1, soundsToEnable.size());
    CPPUNIT_ASSERT_EQUAL((unsigned int)0, soundsToDisable.size());

@@ -2,6 +2,7 @@
 /// @brief  3D camera
 #pragma once
 
+#include "core\MemoryRouter.h"
 #include "core\Node.h"
 #include "core\Observer.h"
 #include "core\Frustum.h"
@@ -23,6 +24,8 @@ enum RendererOps;
  */
 class Camera : public Node, public Observer<Renderer, RendererOps>
 {
+   DECLARE_ALLOCATOR( Camera, AM_ALIGNED_16 );
+
 public:
    enum ProjectionType
    {
@@ -41,7 +44,6 @@ private:
    float                m_nearPlaneWidth;
    float                m_nearPlaneHeight;
 
-   Matrix               m_mtxIdentity;
    Matrix               m_mtxView;
    Matrix               m_mtx3DProjection;
 
@@ -131,7 +133,7 @@ public:
     * @param node
     * @param distance      ( must be >0 )
     */
-   void lookAt( Node& node, float distance );
+   void lookAt( Node& node, const FastFloat& distance );
 
    /**
     * Sets the fov of the camera (angle specified in degrees)

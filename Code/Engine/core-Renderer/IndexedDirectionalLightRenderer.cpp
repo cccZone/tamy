@@ -131,7 +131,7 @@ void IndexedDirectionalLightRenderer::renderShadowMap( Renderer& renderer, const
    Camera& activeCamera = renderer.getActiveCamera();
 
    m_cascadeCalculationConfig.m_lightRotationMtx = light->getGlobalMtx();
-   m_cascadeCalculationConfig.m_lightRotationMtx.setPosition( Vector::ZERO );
+   m_cascadeCalculationConfig.m_lightRotationMtx.setPosition<3>( Quad_0 );
 
    m_cascadeCalculationConfig.m_cascadeDimensions = (float)( data.m_shadowDepthTexture->getWidth() ) / (float)m_cascadeCalculationConfig.m_numCascadesPerTextureRow;
    m_cascadeCalculationConfig.m_sceneBounds = data.m_renderingView->getSceneBounds();
@@ -170,8 +170,8 @@ void IndexedDirectionalLightRenderer::renderCascades( Renderer& renderer, Camera
    for ( int cascadeIdx = 0; cascadeIdx < m_cascadeCalculationConfig.m_numCascades; ++cascadeIdx )
    {
       const AABoundingBox& cascadeBounds = m_calculatedCascadeStages[cascadeIdx].m_lightFrustumBounds;
-      lightCamera.setNearPlaneDimensions( cascadeBounds.max.x - cascadeBounds.min.x, cascadeBounds.max.y - cascadeBounds.min.y );
-      lightCamera.setClippingPlanes( cascadeBounds.min.z, cascadeBounds.max.z );
+      lightCamera.setNearPlaneDimensions( cascadeBounds.max[0] - cascadeBounds.min[0], cascadeBounds.max[1] - cascadeBounds.min[1] );
+      lightCamera.setClippingPlanes( cascadeBounds.min[2], cascadeBounds.max[2] );
       lightCamera.setLocalMtx( m_calculatedCascadeStages[cascadeIdx].m_lightMtx );
 
       new ( renderer() ) RCSetViewport( m_calculatedCascadeStages[cascadeIdx].m_viewport );
@@ -230,8 +230,8 @@ void IndexedDirectionalLightRenderer::combineCascades( Renderer& renderer, const
       // calculate the transformation matrix
       {
          const AABoundingBox& cascadeBounds = stage.m_lightFrustumBounds;
-         lightCamera.setNearPlaneDimensions( cascadeBounds.max.x - cascadeBounds.min.x, cascadeBounds.max.y - cascadeBounds.min.y );
-         lightCamera.setClippingPlanes( cascadeBounds.min.z, cascadeBounds.max.z );
+         lightCamera.setNearPlaneDimensions( cascadeBounds.max[0] - cascadeBounds.min[0], cascadeBounds.max[1] - cascadeBounds.min[1] );
+         lightCamera.setClippingPlanes( cascadeBounds.min[2], cascadeBounds.max[2] );
          lightCamera.setLocalMtx( m_calculatedCascadeStages[i].m_lightMtx );
 
          Matrix lightViewProj;

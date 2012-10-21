@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\NodeActionsExecutor.h"
 #include "core\Node.h"
 #include "core\NodeAction.h"

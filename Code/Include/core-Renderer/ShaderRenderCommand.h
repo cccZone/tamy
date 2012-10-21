@@ -5,6 +5,7 @@
 
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\ShaderParam.h"
+#include "core\MemoryRouter.h"
 #include "core\Array.h"
 
 
@@ -22,8 +23,10 @@ class IDString;
 template< typename T >
 class ShaderRenderCommand : public RenderCommand 
 {
+   DECLARE_ALLOCATOR( ShaderRenderCommand, AM_DEFAULT );
+
 private:
-   MemoryPoolAllocator&                                  m_allocator;
+   MemoryPoolAllocator*                                  m_allocator;
    Array< ShaderParam< T >*, MemoryPoolAllocator >       m_shaderParams;
 
 public:

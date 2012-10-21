@@ -5,9 +5,10 @@
 
 #include <vector>
 #include <list>
-#include "core/types.h"
-#include "core/FilePath.h"
-#include "core/ReflectionDependenciesCallback.h"
+#include "core\MemoryRouter.h"
+#include "core\types.h"
+#include "core\FilePath.h"
+#include "core\ReflectionDependenciesCallback.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,6 +24,8 @@ class ReflectionObjectsTracker;
  */
 class ReflectionLoader : public ReflectionDependencyLinkerCallback
 {
+   DECLARE_ALLOCATOR( ReflectionLoader, AM_DEFAULT );
+
 public:
    // list of ALL objects loaded from the archive
    std::list< ReflectionObject* >            m_allLoadedObjects;
@@ -99,6 +102,8 @@ private:
  */
 class ExternalDependenciesLinker : public ReflectionDependencyLinkerCallback
 {
+   DECLARE_ALLOCATOR( ExternalDependenciesLinker, AM_DEFAULT );
+
 private:
    const std::vector< FilePath >&         m_externalDependencies;
 

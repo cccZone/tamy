@@ -33,21 +33,21 @@ unsigned int RenderableTexture::getHeight() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderParam< EffectShader >* RenderableTexture::createEffectShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName )
+ShaderParam< EffectShader >* RenderableTexture::createEffectShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName )
 {
     return new ( allocator ) ShaderParamTexture< EffectShader >( paramName.getId(), m_texture );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderParam< PixelShader >* RenderableTexture::createPixelShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName )
+ShaderParam< PixelShader >* RenderableTexture::createPixelShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName )
 {
     return new ( allocator ) ShaderParamTexture< PixelShader >( paramName.getId(), m_texture );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderParam< VertexShader >* RenderableTexture::createVertexShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName )
+ShaderParam< VertexShader >* RenderableTexture::createVertexShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName )
 {
     return new ( allocator ) ShaderParamTexture< VertexShader >( paramName.getId(), m_texture );
 }

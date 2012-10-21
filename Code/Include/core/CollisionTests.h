@@ -78,14 +78,14 @@ const FastFloat rayToPlaneDistance( const Ray& ray, const Plane& plane );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToPointDistance( const Ray& ray, const Vector& point );
+const FastFloat rayToPointDistance( const Ray& ray, const Vector& point );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToAABBDistance( const Ray& ray, const AABoundingBox& aabb );
+const FastFloat rayToAABBDistance( const Ray& ray, const AABoundingBox& aabb );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToBSDistance( const Ray& ray, const BoundingSphere& bs );
+const FastFloat rayToBSDistance( const Ray& ray, const BoundingSphere& bs );
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -1,38 +1,7 @@
+#include "core.h"
 #include "core/MemoryUtils.h"
 #include <memory>
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-int MemoryUtils::ALIGNMENT = 16;
-
-///////////////////////////////////////////////////////////////////////////////
-
-void* MemoryUtils::mallocAligned( uint size, uint alignment )
-{
-   void *pa, *ptr;
-
-   pa = ::malloc( ( size + alignment - 1) + sizeof( void* ) );
-
-   if( !pa )
-   {
-      return NULL;
-   }
-
-   ptr = alignPointer( pa, alignment );
-   return ptr;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void MemoryUtils::freeAligned( void* ptr )
-{
-   void* origPtr = resolveAlignedPointer( ptr );
-   if ( origPtr )
-   {
-      free( origPtr );
-   }
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -57,6 +26,16 @@ void* MemoryUtils::resolveAlignedPointer( void* alignedPtr )
    {
       return NULL;
    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool MemoryUtils::isAddressAligned( void* ptr, uint alignment )
+{
+   ulong specifiedAddr = (ulong)ptr;
+   ulong alignedAddr = ( specifiedAddr + sizeof( void* ) + alignment - 1 ) & ~( alignment - 1 );
+
+   return ( ( specifiedAddr - alignedAddr ) % alignment ) == 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

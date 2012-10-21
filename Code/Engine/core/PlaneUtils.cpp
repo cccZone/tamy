@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/PlaneUtils.h"
 #include "core/Plane.h"
 #include "core/Vector.h"
@@ -26,12 +27,14 @@ bool PlaneUtils::calculatePlanesIntersection( const Plane& p1, const Plane& p2, 
    }
 
    Vector a, b, c;
-   a.setMul( n23, p1[3] );
-   b.setMul( n31, p2[3] );
-   c.setMul( n12, p3[3] );
+   a.setMul( n23, p1.getComponent(3) );
+   b.setMul( n31, p2.getComponent(3) );
+   c.setMul( n12, p3.getComponent(3) );
 
    den.reciprocal();
-   outIntersectionPt.setAdd( a, b ).add( c ).mul( den.getFloat() );
+   outIntersectionPt.setAdd( a, b );
+   outIntersectionPt.add( c );
+   outIntersectionPt.mul( den );
    return true;
 }
 

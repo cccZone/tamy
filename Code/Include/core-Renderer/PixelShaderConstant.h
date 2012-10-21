@@ -7,6 +7,7 @@
 #include "core/ReflectionType.h"
 #include "core/GraphBuilderSockets.h"
 #include "core-Renderer/ShaderTexture.h"
+#include "core/MemoryRouter.h"
 #include "core/Math.h"
 
 
@@ -69,6 +70,8 @@ protected:
 template< typename TNode, typename DataType >
 class TPixelShaderConstant : public PixelShaderConstant< TNode >
 {
+   DECLARE_ALLOCATOR( TPixelShaderConstant, AM_DEFAULT );
+
 public:
    virtual ~TPixelShaderConstant() {}
 
@@ -94,6 +97,8 @@ protected:
 template< typename TNode >
 class PSCBool : public TPixelShaderConstant< TNode, bool >
 {
+   DECLARE_ALLOCATOR( PSCBool, AM_DEFAULT );
+
 private:
    bool           m_defaultVal;
 
@@ -120,6 +125,8 @@ public:
 template< typename TNode >
 class PSCInt : public TPixelShaderConstant< TNode, int >
 {
+   DECLARE_ALLOCATOR( PSCInt, AM_DEFAULT );
+
 private:
    int           m_defaultVal;
 
@@ -146,6 +153,8 @@ public:
 template< typename TNode >
 class PSCFloat : public TPixelShaderConstant< TNode, float >
 {
+   DECLARE_ALLOCATOR( PSCFloat, AM_DEFAULT );
+
 private:
    float           m_defaultVal;
 
@@ -172,6 +181,8 @@ public:
 template< typename TNode >
 class PSCString : public TPixelShaderConstant< TNode, std::string >
 {
+   DECLARE_ALLOCATOR( PSCString, AM_DEFAULT );
+
 public:
    /**
     * Constructor.
@@ -194,6 +205,8 @@ public:
 template< typename TNode >
 class PSCTexture : public TPixelShaderConstant< TNode, ShaderTexture >
 {
+   DECLARE_ALLOCATOR( PSCTexture, AM_DEFAULT );
+
 public:
    /**
     * Constructor.
@@ -216,6 +229,8 @@ public:
 template< typename TNode >
 class PSCVec4 : public TPixelShaderConstant< TNode, Vector >
 {
+   DECLARE_ALLOCATOR( PSCVec4, AM_DEFAULT );
+
 public:
    /**
     * Constructor.
@@ -238,6 +253,8 @@ public:
 template< typename TNode >
 class PSCMatrix : public TPixelShaderConstant< TNode, Matrix >
 {
+   DECLARE_ALLOCATOR( PSCMatrix, AM_DEFAULT );
+
 public:
    /**
     * Constructor.

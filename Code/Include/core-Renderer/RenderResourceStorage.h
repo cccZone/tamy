@@ -4,6 +4,7 @@
 #define _RENDER_RESOURCE_STORAGE_H
 
 #include "core\Delegate.h"
+#include "core\MemoryRouter.h"
 #include <vector>
 #include <list>
 
@@ -50,6 +51,8 @@ public:
 template< typename RENDERER, typename ENGINE_TYPE, typename RENDER_RESOURCE >
 class RenderResourceStorage : public IRenderResourceStorage
 {
+   DECLARE_ALLOCATOR( RenderResourceStorage, AM_DEFAULT );
+
 private:
    const RENDERER&                  m_renderer;
    std::vector< ENGINE_TYPE* >      m_engineObjects;

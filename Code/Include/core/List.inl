@@ -2,6 +2,7 @@
 #error "This file can only be included from List.h"
 #else
 
+#include "core/MemoryRouter.h"
 #include "core/Assert.h"
 
 
@@ -31,7 +32,7 @@ List< T, TAllocator >::~List()
    {
       toRemove = elem;
       elem = elem->m_nextElem;
-      m_allocator->destroy( toRemove );
+      delete toRemove;
    }
 
    m_tail = NULL;
@@ -54,7 +55,7 @@ bool List< T, TAllocator >::empty() const
 template< typename T, typename TAllocator >
 void List< T, TAllocator >::pushBack( T elem )
 {
-   Elem* newTail = new ( *m_allocator ) Elem( elem );
+   Elem* newTail = new ( m_allocator ) Elem( elem );
    if ( m_tail )
    {
       m_tail->m_nextElem = newTail;
@@ -77,7 +78,7 @@ void List< T, TAllocator >::popBack()
    {
       Elem* removedTail = m_tail;
       m_tail = m_tail->m_prevElem;
-      m_allocator->destroy( removedTail );
+      delete removedTail;
 
       if ( m_tail )
       {
@@ -95,7 +96,7 @@ void List< T, TAllocator >::popBack()
 template< typename T, typename TAllocator >
 void List< T, TAllocator >::pushFront( T elem )
 {
-   Elem* newHead = new ( *m_allocator ) Elem( elem );
+   Elem* newHead = new ( m_allocator ) Elem( elem );
    if ( m_head )
    {
       m_head->m_prevElem = newHead;
@@ -118,8 +119,7 @@ void List< T, TAllocator >::popFront()
    {
       Elem* removedHead = m_head;
       m_head = m_head->m_nextElem;
-
-      m_allocator->dealloc( removedHead );
+      delete removedHead;
 
       if ( m_head )
       {
@@ -193,42 +193,5 @@ T List< T, TAllocator >::front()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T, typename TAllocator >
-void* List<T, TAllocator>::Elem::operator new( size_t size, TAllocator& allocator )
-{
-   return allocator.alloc( size );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T, typename TAllocator >
-void List<T, TAllocator>::Elem::operator delete( void* ptr, TAllocator& allocator )
-{
-   allocator.dealloc( ptr );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T, typename TAllocator >
-void* List<T, TAllocator>::Elem::operator new( size_t size )
-{
-   ASSERT_MSG( false, "Linked list element can only be allocated using a dedicated allocator." );
-   return NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T, typename TAllocator >
-void List<T, TAllocator>::Elem::operator delete( void* ptr )
-{
-   ASSERT_MSG( false, "Linked list element can only be allocated using a dedicated allocator." );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-
 
 #endif // _LIST_H

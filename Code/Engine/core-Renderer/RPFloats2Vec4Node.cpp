@@ -61,10 +61,10 @@ void RPFloats2Vec4Node::onUpdate( RenderingPipelineMechanism& host ) const
    RuntimeDataBuffer& data = host.data();
 
    Vector vec;
-   vec.x = m_dataInput[0]->getValue( data );
-   vec.y = m_dataInput[1]->getValue( data );
-   vec.z = m_dataInput[2]->getValue( data );
-   vec.w = m_dataInput[3]->getValue( data );
+   vec[0] = m_dataInput[0]->getValue( data );
+   vec[1] = m_dataInput[1]->getValue( data );
+   vec[2] = m_dataInput[2]->getValue( data );
+   vec[3] = m_dataInput[3]->getValue( data );
    m_output->setValue( data, vec );
 }
 

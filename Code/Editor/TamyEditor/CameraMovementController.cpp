@@ -46,8 +46,9 @@ void CameraMovementController::initialize( TamySceneWidget& widget )
 
 void CameraMovementController::update( float timeElapsed )
 {
-   float speedMul = m_uic->isKeyPressed( VK_SHIFT ) ? 4.0f : 1.0f;
-   float movementSpeed = 10.0f * speedMul * timeElapsed;
+   float speedMul =m_uic->isKeyPressed( VK_SHIFT ) ? 4.0f : 1.0f;
+   FastFloat movementSpeed; movementSpeed.setFromFloat( 10.0f * speedMul * timeElapsed );
+   FastFloat negMovementSpeed; negMovementSpeed.setNeg( movementSpeed );
    float rotationSpeed = 0.1f * timeElapsed;
 
    // check which keys are pressed
@@ -69,13 +70,13 @@ void CameraMovementController::update( float timeElapsed )
 
    if ( m_movementDir[MD_BACK] )
    { 
-      moveVec.setMul( m_cameraController->getLookVec(), -movementSpeed );
+      moveVec.setMul( m_cameraController->getLookVec(), negMovementSpeed );
       m_cameraController->move( moveVec ); 
    }
 
    if ( m_movementDir[MD_LEFT] )   
    { 
-      moveVec.setMul( m_cameraController->getRightVec(), -movementSpeed );
+      moveVec.setMul( m_cameraController->getRightVec(), negMovementSpeed );
       m_cameraController->move( moveVec ); 
    }
 

@@ -33,6 +33,8 @@ class Font : public RenderResource
  */
 class RCDrawText : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCDrawText, AM_DEFAULT );
+
 private:
    Font&                m_font;
    std::string          m_text;

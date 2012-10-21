@@ -14,6 +14,7 @@ class RPVec4Output;
 
 class RPFloats2Vec4Node : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPFloats2Vec4Node, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

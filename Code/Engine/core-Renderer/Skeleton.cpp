@@ -8,7 +8,7 @@
 BEGIN_RESOURCE( Skeleton, tsk, AM_BINARY )
    PROPERTY( Matrix, m_bindShapeMtx )
    PROPERTY( std::vector< std::string >, m_boneNames )
-   PROPERTY( std::vector< Matrix >, m_invBoneMatrices )
+   PROPERTY( Array< Matrix >, m_invBoneMatrices )
    PROPERTY( std::vector< VertexWeight >, m_weights )
 END_RESOURCE()
 
@@ -17,7 +17,7 @@ END_RESOURCE()
 Skeleton::Skeleton( const FilePath& resourceName )
    : Resource( resourceName )
 {
-   m_bindShapeMtx = Matrix::IDENTITY;
+   m_bindShapeMtx.setIdentity();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ void Skeleton::setTransformation( const std::string& boneName, const Matrix& inv
    {
       // this is a new bone
       m_boneNames.push_back( boneName );
-      m_invBoneMatrices.push_back( Matrix::IDENTITY );
+      m_invBoneMatrices.push_back( Matrix() );
       m_invBoneMatrices.back().setMul( m_bindShapeMtx, invBoneMtx );
    }
    else

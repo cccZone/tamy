@@ -1,7 +1,10 @@
+/// @file   core-Sound/Sound.h
+/// @brief  a sound representation
 #pragma once
 
 #include <string>
 #include <windows.h>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,7 +38,7 @@ public:
     * @param bufSize - size of the preallocated buffer - that's how much
     *                  data we want read from the file
     *
-    * @return the actural number of bytes read from the file
+    * @return the actual number of bytes read from the file
     */
    virtual DWORD getData(DWORD periodicPos, char* data, DWORD bufSize) = 0;
 

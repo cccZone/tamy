@@ -131,6 +131,12 @@
     <Filter Include="Math\Core">
       <UniqueIdentifier>{a28cb97a-26c6-4fc8-a81a-1f441eb73ec1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MemoryManagement\MemoryPools">
+      <UniqueIdentifier>{a4cc08a6-1b6a-4368-b6c3-30b8b8dd6f89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MemoryManagement\Core">
+      <UniqueIdentifier>{073f0cb1-ab61-47cd-bc58-d353cace740c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -192,9 +198,6 @@
     </ClCompile>
     <ClCompile Include="ResourceHandle.cpp">
       <Filter>Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="RoundBuffer.cpp">
-      <Filter>DataStructures</Filter>
     </ClCompile>
     <ClCompile Include="FilePath.cpp">
       <Filter>Filesystem</Filter>
@@ -287,12 +290,6 @@
     <ClCompile Include="Log.cpp">
       <Filter>Logging</Filter>
     </ClCompile>
-    <ClCompile Include="MemoryPool.cpp">
-      <Filter>MemoryManagement</Filter>
-    </ClCompile>
-    <ClCompile Include="RuntimeData.cpp">
-      <Filter>MemoryManagement</Filter>
-    </ClCompile>
     <ClCompile Include="DefautAllocator.cpp">
       <Filter>MemoryManagement\Allocators</Filter>
     </ClCompile>
@@ -347,8 +344,23 @@
     <ClCompile Include="SimdUtils.cpp">
       <Filter>Math\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="GlobalAllocationsTracer.cpp">
+      <Filter>MemoryManagement\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryPool.cpp">
+      <Filter>MemoryManagement\MemoryPools</Filter>
+    </ClCompile>
+    <ClCompile Include="RuntimeData.cpp">
+      <Filter>MemoryManagement\MemoryPools</Filter>
+    </ClCompile>
     <ClCompile Include="MemoryUtils.cpp">
-      <Filter>MemoryManagement</Filter>
+      <Filter>MemoryManagement\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryRouter.cpp">
+      <Filter>MemoryManagement\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="RoundBuffer.cpp">
+      <Filter>MemoryManagement\MemoryPools</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -524,9 +536,6 @@
     <ClInclude Include="..\..\Include\core\GraphAlgorithms.h">
       <Filter>DataStructures\Graphs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\RoundBuffer.h">
-      <Filter>DataStructures</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\FilePath.h">
       <Filter>Filesystem</Filter>
     </ClInclude>
@@ -642,12 +651,6 @@
     <ClInclude Include="..\..\Include\core\Log.h">
       <Filter>Logging</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\MemoryPool.h">
-      <Filter>MemoryManagement</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\RuntimeData.h">
-      <Filter>MemoryManagement</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\DefaultAllocator.h">
       <Filter>MemoryManagement\Allocators</Filter>
     </ClInclude>
@@ -721,17 +724,35 @@
       <Filter>Math\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\EngineDefines.h" />
-    <ClInclude Include="..\..\Include\core\MathDefs.h">
-      <Filter>Math\Utils</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\MathDataStorage.h">
       <Filter>Math\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\SimdUtils.h">
       <Filter>Math\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\MatrixFpu.inl">
+      <Filter>Math\Implementations\Fpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MathDefs.h">
+      <Filter>Math\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MemoryPool.h">
+      <Filter>MemoryManagement\MemoryPools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\RuntimeData.h">
+      <Filter>MemoryManagement\MemoryPools</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Include\core\MemoryUtils.h">
-      <Filter>MemoryManagement</Filter>
+      <Filter>MemoryManagement\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MemoryRouter.h">
+      <Filter>MemoryManagement\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\MemoryAllocator.h">
+      <Filter>MemoryManagement\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\RoundBuffer.h">
+      <Filter>MemoryManagement\MemoryPools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -807,9 +828,6 @@
     <None Include="..\..\Include\core\UniqueObject.inl">
       <Filter>Misc</Filter>
     </None>
-    <None Include="..\..\Include\core\RoundBuffer.inl">
-      <Filter>DataStructures</Filter>
-    </None>
     <None Include="..\..\Include\core\GraphBuilderSockets.inl">
       <Filter>DataStructures\DataPipeline</Filter>
     </None>
@@ -860,9 +878,6 @@
     </None>
     <None Include="..\..\Include\core\ReflectionPropertyEditor.inl">
       <Filter>RTTI\Properties</Filter>
-    </None>
-    <None Include="..\..\Include\core\RuntimeData.inl">
-      <Filter>MemoryManagement</Filter>
     </None>
     <None Include="..\..\Include\core\Array.inl">
       <Filter>DataStructures\Collections</Filter>
@@ -926,6 +941,18 @@
     </None>
     <None Include="..\..\Include\core\SimdUtils.inl">
       <Filter>Math\Utils</Filter>
+    </None>
+    <None Include="..\..\Include\core\MatrixSimd.inl">
+      <Filter>Math\Implementations\Simd</Filter>
+    </None>
+    <None Include="..\..\Include\core\RuntimeData.inl">
+      <Filter>MemoryManagement\MemoryPools</Filter>
+    </None>
+    <None Include="..\..\Include\core\MemoryRouter.inl">
+      <Filter>MemoryManagement\Core</Filter>
+    </None>
+    <None Include="..\..\Include\core\RoundBuffer.inl">
+      <Filter>MemoryManagement\MemoryPools</Filter>
     </None>
   </ItemGroup>
 </Project>

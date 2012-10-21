@@ -27,6 +27,10 @@
 #define Float_1e_2         g_floatConstants[FloatMathConst_1e_2]
 #define Float_1e_3         g_floatConstants[FloatMathConst_1e_3]
 #define Float_1e_4         g_floatConstants[FloatMathConst_1e_4]
+#define Float_Minus1e_1    g_floatConstants[FloatMathConst_Minus1e_1]
+#define Float_Minus1e_2    g_floatConstants[FloatMathConst_Minus1e_2]
+#define Float_Minus1e_3    g_floatConstants[FloatMathConst_Minus1e_3]
+#define Float_Minus1e_4    g_floatConstants[FloatMathConst_Minus1e_4]
 
 #define Float_Inv2         g_floatConstants[FloatMathConst_Inv2]
 #define Float_Inv3         g_floatConstants[FloatMathConst_Inv3]
@@ -35,7 +39,12 @@
 #define Float_MinusInv3    g_floatConstants[FloatMathConst_MinusInv3]
 #define Float_MinusInv4    g_floatConstants[FloatMathConst_MinusInv4]
 
+#define Float_PI           g_floatConstants[FloatMathConst_PI]
+#define Float_Rad2Deg      g_floatConstants[FloatMathConst_Rad2Deg]
+#define Float_Deg2Rad      g_floatConstants[FloatMathConst_Deg2Rad]
+
 #define Float_INF          g_floatConstants[FloatMathConst_INF]
+#define Float_NegINF       g_floatConstants[FloatMathConst_NegINF]
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -61,7 +70,7 @@
    typedef __m128                         QuadStorage;
 
    #define FLOAT_CONSTANT( a )            FastFloat( _mm_set_ps( a, a, a, a ) )
-   #define QUAD_CONSTANT( a, b, c, d )    Vector( a, b, c, d )
+   #define QUAD_CONSTANT( a, b, c, d )    _mm_setr_ps( a, b, c, d )
 
 #else
 
@@ -70,7 +79,7 @@
    typedef struct{ ALIGN_16 float v[4]; } QuadStorage;
 
    #define FLOAT_CONSTANT( a )            FastFloat( a )
-   #define QUAD_CONSTANT( a, b, c, d )    Vector( a, b, c, d )
+   #define QUAD_CONSTANT( a, b, c, d )    { a, b, c, d }
 
 #endif
 

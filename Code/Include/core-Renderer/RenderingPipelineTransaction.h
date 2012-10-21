@@ -19,6 +19,8 @@ class DepthBufferDescriptor;
  */
 class RenderingPipelineTransaction : public GraphBuilderTransaction< RenderingPipeline, RenderingPipelineNode >
 {
+   DECLARE_ALLOCATOR( RenderingPipelineTransaction, AM_DEFAULT );
+
 private:
    std::vector< RenderTargetDescriptor* >       m_renderTargetsToAdd;
    std::vector< std::string >                   m_renderTargetsToRemove;

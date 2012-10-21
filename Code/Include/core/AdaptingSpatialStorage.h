@@ -1,8 +1,7 @@
-#ifndef _ADAPTING_SPATIAL_STORAGE_H
-#define _ADAPTING_SPATIAL_STORAGE_H
-
 /// @file   core\AdaptingSpatialStorage.h
 /// @brief  spatial storage that adapts the type of results it returns
+#ifndef _ADAPTING_SPATIAL_STORAGE_H
+#define _ADAPTING_SPATIAL_STORAGE_H
 
 #include "core\SpatialStorage.h"
 #include <vector>
@@ -16,6 +15,8 @@
 template <typename FromType, typename ToType>
 class AdaptingSpatialStorage : public SpatialStorage<ToType>
 {
+   DECLARE_ALLOCATOR( AdaptingSpatialStorage, AM_DEFAULT );
+
 private:
    SpatialStorage<FromType>* m_storage;
 

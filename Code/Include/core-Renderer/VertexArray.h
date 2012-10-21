@@ -1,10 +1,10 @@
-#pragma once
-
 /// @file   core-Renderer\VertexArray.h
 /// @brief  generic wrapper around an array of non-polymorphic vertices
+#pragma once
 
 #include <vector>
 #include <windows.h>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -45,6 +45,8 @@ public:
 template <typename T>
 class TVertexArray : public VertexArray
 {
+   DECLARE_ALLOCATOR( TVertexArray, AM_DEFAULT );
+
 private:
    std::vector<T> m_vertices;
 

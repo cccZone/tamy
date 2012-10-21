@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\Ray.h"
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
@@ -12,9 +13,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 Ray::Ray() 
-   : origin( 0, 0, 0 )
-   , direction( 0, 0, 1 ) 
-{}
+   : origin( Quad_0 )
+   , direction( Quad_0010 ) 
+{
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 Ray::Ray( const Vector& _origin, const Vector& _direction )
@@ -109,7 +111,7 @@ bool Ray::testCollision( const Triangle& rhs ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Ray::getDistanceTo( const BoundingVolume& rhs ) const
+const FastFloat Ray::getDistanceTo( const BoundingVolume& rhs ) const
 {
    if (dynamic_cast<const PointVolume*> (&rhs) != NULL)
    {
@@ -126,16 +128,15 @@ float Ray::getDistanceTo( const BoundingVolume& rhs ) const
    else
    {
       ASSERT_MSG(false, "Ray::getDistanceTo(...) not implemented for this type of bounding volume");
-      return FLT_MAX;
+      return Float_INF;
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// <fastfloat.todo>
-float Ray::distanceToPlane( const Plane& plane ) const
+const FastFloat Ray::distanceToPlane( const Plane& plane ) const
 {
-   return rayToPlaneDistance( *this, plane ).getFloat();
+   return rayToPlaneDistance( *this, plane );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

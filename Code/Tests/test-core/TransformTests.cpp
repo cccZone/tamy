@@ -16,7 +16,7 @@ TEST( Transform, matrixConversion )
    Quaternion testRot;
    Vector testTrans;
    {
-      testRot.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
+      testRot.setAxisAngle( Quad_1000, FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
       templateTranslationMtx.setRotation( testRot );
 
       Matrix translationMtx;
@@ -45,7 +45,7 @@ TEST( Transform, vectorTransformation )
    // construct a transformation we'll use for testing
    Transform trans;
    {
-      trans.m_rotation.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
+      trans.m_rotation.setAxisAngle( Quad_1000, FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
       trans.m_translation.set( 10, 20, 30 );
    }
 
@@ -69,7 +69,7 @@ TEST( Transform, normalTransformation )
    // construct a transformation we'll use for testing
    Transform trans;
    {
-      trans.m_rotation.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
+      trans.m_rotation.setAxisAngle( Quad_1000, FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
       trans.m_translation.set( 10, 20, 30 );
    }
 
@@ -134,12 +134,12 @@ TEST( Transform, multiplication )
    // construct the component transformations
    Transform transA;
    {
-      transA.m_rotation.setAxisAngle( Vector::OX, DEG2RAD( 45.0f ) );
+      transA.m_rotation.setAxisAngle( Quad_1000, FastFloat::fromFloat( DEG2RAD( 45.0f ) ) );
       transA.m_translation.set( 2, 0, 0 );
    }
    Transform transB;
    {
-      transB.m_rotation.setAxisAngle( Vector::OY, DEG2RAD( 45.0f ) );
+      transB.m_rotation.setAxisAngle( Quad_0100, FastFloat::fromFloat( DEG2RAD( 45.0f ) ) );
       transB.m_translation.set( 0, 0, 1 );
    }
 
@@ -198,7 +198,7 @@ TEST( Transform, inversion )
    // they should add up to an identity transformation
    Transform transform;
    {
-      transform.m_rotation.setAxisAngle( Vector::OX, DEG2RAD( 45.0f ) );
+      transform.m_rotation.setAxisAngle( Quad_1000, FastFloat::fromFloat( DEG2RAD( 45.0f ) ) );
       transform.m_translation.set( 2, 0, 0 );
    }
 
@@ -216,7 +216,7 @@ TEST( Transform, inversion )
    COMPARE_QUAT( Quaternion::getIdentity(), concatenatedTransformB.m_rotation );
 
    COMPARE_VEC( concatenatedTransformA.m_translation, concatenatedTransformB.m_translation );
-   COMPARE_VEC( Vector::ZERO, concatenatedTransformB.m_translation );
+   COMPARE_VEC( Vector( Quad_0 ), concatenatedTransformB.m_translation );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

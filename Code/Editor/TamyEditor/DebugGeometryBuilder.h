@@ -71,8 +71,8 @@ public:
    static LineSegments* createGrid( float size, float spacing, const Color& color );
 
 private:
-   static void addCone( float baseSize, const Vector& start, const Vector& end, std::vector< LitVertex >& outVertices, std::vector< Face >& outFaces );
-   static void addCuboid( float size, const Vector& start, const Vector& end, std::vector< LitVertex >& outVertices, std::vector< Face >& outFaces );
+   static void addCone( const FastFloat& baseSize, const Vector& start, const Vector& end, std::vector< LitVertex >& outVertices, std::vector< Face >& outFaces );
+   static void addCuboid( const FastFloat& size, const Vector& start, const Vector& end, std::vector< LitVertex >& outVertices, std::vector< Face >& outFaces );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -40,14 +40,14 @@ TEST( VertexTangents, basic )
       binormalVec.setCross( normalVec, tangentVec );
       tangentToObjectSpace.setRows( tangentVec, binormalVec, normalVec );
 
-      tangentToObjectSpace.transformNorm( Vector::OZ, objSpaceNormal );
-      COMPARE_VEC( Vector::OZ_NEG, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_0010, objSpaceNormal );
+      COMPARE_VEC( Vector( Quad_Neg_0010 ), objSpaceNormal );
 
-      tangentToObjectSpace.transformNorm( Vector::OX, objSpaceNormal );
-      COMPARE_VEC( Vector::OX, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_1000, objSpaceNormal );
+      COMPARE_VEC( Vector( Quad_1000 ), objSpaceNormal );
 
-      tangentToObjectSpace.transformNorm( Vector::OY, objSpaceNormal );
-      COMPARE_VEC( Vector::OY_NEG, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_0100, objSpaceNormal );
+      COMPARE_VEC( Vector( Quad_Neg_0100 ), objSpaceNormal );
 
    }
 
@@ -58,14 +58,14 @@ TEST( VertexTangents, basic )
       binormalVec.setCross( normalVec, tangentVec );
       tangentToObjectSpace.setRows( tangentVec, binormalVec, normalVec );
 
-      tangentToObjectSpace.transformNorm( Vector::OZ, objSpaceNormal );
-      COMPARE_VEC( Vector::OZ, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_0010, objSpaceNormal );
+      COMPARE_VEC( Vector( Quad_0010 ), objSpaceNormal );
     
-      tangentToObjectSpace.transformNorm( Vector::OX, objSpaceNormal );
-      COMPARE_VEC( Vector::OX_NEG, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_1000, objSpaceNormal );
+      COMPARE_VEC( Vector( Quad_Neg_1000 ), objSpaceNormal );
 
-      tangentToObjectSpace.transformNorm( Vector::OY, objSpaceNormal );
-      COMPARE_VEC( Vector::OY_NEG, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_0100, objSpaceNormal );
+      COMPARE_VEC( Vector( Quad_Neg_0100 ), objSpaceNormal );
    }
 
    // mesh normal pointing to the right
@@ -75,14 +75,14 @@ TEST( VertexTangents, basic )
       binormalVec.setCross( normalVec, tangentVec );
       tangentToObjectSpace.setRows( tangentVec, binormalVec, normalVec );
 
-      tangentToObjectSpace.transformNorm( Vector::OZ, objSpaceNormal );
-      COMPARE_VEC( Vector::OX, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_0010, objSpaceNormal );
+      COMPARE_VEC( Vector( Quad_1000 ), objSpaceNormal );
 
-      tangentToObjectSpace.transformNorm( Vector::OX, objSpaceNormal );
-      COMPARE_VEC( Vector::OZ, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_1000, objSpaceNormal );
+      COMPARE_VEC( Vector( Quad_0010 ), objSpaceNormal );
 
-      tangentToObjectSpace.transformNorm( Vector::OY, objSpaceNormal );
-      COMPARE_VEC( Vector::OY_NEG, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_0100, objSpaceNormal );
+      COMPARE_VEC( Vector( Quad_Neg_0100 ), objSpaceNormal );
    }
 }
 
@@ -109,7 +109,7 @@ TEST( VertexTangents, rotatedFace )
    }
 
    Quaternion rotQuat;
-   rotQuat.setAxisAngle( Vector::OY, DEG2RAD( 180.0f ) );
+   rotQuat.setAxisAngle( Quad_0100, FastFloat::fromFloat( DEG2RAD( 180.0f ) ) );
 
    {
       Vector rotTangentVec, rotBinormalVec, rotNormalVec, objSpaceNormal;
@@ -121,17 +121,17 @@ TEST( VertexTangents, rotatedFace )
       Matrix tangentToObjectSpace;
       tangentToObjectSpace.setRows( rotTangentVec, rotBinormalVec, rotNormalVec );
 
-      tangentToObjectSpace.transformNorm( Vector::OZ, objSpaceNormal );
-      // COMPARE_VEC( Vector::OZ_NEG, objSpaceNormal ); - non-rotated result
-      COMPARE_VEC( Vector::OZ, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_0010, objSpaceNormal );
+      // COMPARE_VEC( Vector_NEG_OZ, objSpaceNormal ); - non-rotated result
+      COMPARE_VEC( Vector( Quad_0010 ), objSpaceNormal );
 
-      tangentToObjectSpace.transformNorm( Vector::OX, objSpaceNormal );
-      // COMPARE_VEC( Vector::OX, objSpaceNormal ); - non-rotated result
-      COMPARE_VEC( Vector::OX_NEG, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_1000, objSpaceNormal );
+      // COMPARE_VEC( Vector_OX, objSpaceNormal ); - non-rotated result
+      COMPARE_VEC( Vector( Quad_Neg_1000 ), objSpaceNormal );
 
-      tangentToObjectSpace.transformNorm( Vector::OY, objSpaceNormal );
-      // COMPARE_VEC( Vector::OY_NEG, objSpaceNormal ); - non-rotated result
-      COMPARE_VEC( Vector::OY_NEG, objSpaceNormal );
+      tangentToObjectSpace.transformNorm( Quad_0100, objSpaceNormal );
+      // COMPARE_VEC( Vector_NEG_OY, objSpaceNormal ); - non-rotated result
+      COMPARE_VEC( Vector( Quad_Neg_0100 ), objSpaceNormal );
 
    }
 }

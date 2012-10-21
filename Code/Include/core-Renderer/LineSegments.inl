@@ -6,8 +6,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 LineSegment::LineSegment()
-   : start( 0, 0, 0 )
-   , end( 0, 0, 0 )
+   : start( Quad_0 )
+   , end( Quad_0 )
 {
 }
 
@@ -30,7 +30,7 @@ bool LineSegment::operator==( const LineSegment& rhs ) const
    endDiff.setSub( end, rhs.end );
 
 
-   return ( ( startDiff.lengthSq() < 0.001f ) && (endDiff.lengthSq() < 0.001f ) );
+   return ( ( startDiff.lengthSq() < Float_1e_3 ) && (endDiff.lengthSq() < Float_1e_3 ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

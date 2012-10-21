@@ -1,4 +1,6 @@
+#include "core.h"
 #include "core/FastFloat.h"
+#include "core/MathDefs.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,7 +25,10 @@ FastFloat g_floatConstants[FloatMathConst_MAX] =
    FLOAT_CONSTANT( 0.01f ),
    FLOAT_CONSTANT( 0.001f ),
    FLOAT_CONSTANT( 0.0001f ),
-
+   FLOAT_CONSTANT( -0.1f ),
+   FLOAT_CONSTANT( -0.01f ),
+   FLOAT_CONSTANT( -0.001f ),
+   FLOAT_CONSTANT( -0.0001f ),
 
    FLOAT_CONSTANT( 1.0f/2.0f ),
    FLOAT_CONSTANT( 1.0f/3.0f ),
@@ -33,7 +38,12 @@ FastFloat g_floatConstants[FloatMathConst_MAX] =
    FLOAT_CONSTANT( -1.0f/3.0f ),
    FLOAT_CONSTANT( -1.0f/4.0f ),
 
+   FLOAT_CONSTANT( (float)M_PI ),
+   FLOAT_CONSTANT( 180.f / (float)M_PI ),
+   FLOAT_CONSTANT( (float)M_PI / 180.f ),
+
    FLOAT_CONSTANT( 3.402823466e+38F ),
+   FLOAT_CONSTANT( -3.402823466e+38F ),
 };
 
 ///////////////////////////////////////////////////////////////////////////////

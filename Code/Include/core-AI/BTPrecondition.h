@@ -1,7 +1,8 @@
-#pragma once
-
 /// @file   Engine\BTPrecondition.h
 /// @brief  behavior tree node's precondition
+#pragma once
+
+#include "core/MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,6 +31,8 @@ public:
  */
 class NullBTPrecondition : public BTPrecondition
 {
+   DECLARE_ALLOCATOR( NullBTPrecondition, AM_DEFAULT );
+
 public:
    bool check() {return true;}
 };

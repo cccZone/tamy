@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <windows.h>
+#include "core/MemoryRouter.h"
 #include "core/FilePath.h"
 
 
@@ -20,6 +21,8 @@ class FilePath;
  */
 class File
 {
+   DECLARE_ALLOCATOR( File, AM_DEFAULT );
+
 private:
    const Filesystem&          m_hostFS;
    FILE*                      m_file;

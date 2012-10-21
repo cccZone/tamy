@@ -14,6 +14,7 @@
  */
 class AmbientLight : public SpatialEntity, public UniqueObject< AmbientLight >
 {
+   DECLARE_ALLOCATOR( AmbientLight, AM_ALIGNED_16 );
    DECLARE_CLASS();
 
 public:

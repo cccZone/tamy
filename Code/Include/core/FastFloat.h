@@ -3,7 +3,7 @@
 #ifndef _FAST_FLOAT_H
 #define _FAST_FLOAT_H
 
-#include "core\MemoryUtils.h"
+#include "core\MemoryRouter.h"
 #include "core\MathDataStorage.h"
 #include "core\types.h"
 
@@ -30,6 +30,10 @@ enum FloatMathConstants
    FloatMathConst_1e_2,
    FloatMathConst_1e_3,
    FloatMathConst_1e_4,
+   FloatMathConst_Minus1e_1,
+   FloatMathConst_Minus1e_2,
+   FloatMathConst_Minus1e_3,
+   FloatMathConst_Minus1e_4,
 
    FloatMathConst_Inv2,
    FloatMathConst_Inv3,
@@ -39,7 +43,12 @@ enum FloatMathConstants
    FloatMathConst_MinusInv3,
    FloatMathConst_MinusInv4,
 
+   FloatMathConst_PI,
+   FloatMathConst_Rad2Deg,
+   FloatMathConst_Deg2Rad,
+
    FloatMathConst_INF,
+   FloatMathConst_NegINF,
 
    FloatMathConst_MAX
 };
@@ -53,8 +62,7 @@ extern FastFloat           g_floatConstants[FloatMathConst_MAX];
  */
 struct FastFloat
 {
-   // This class needs to be aligned to a 16-byte boundary, when dynamically allocated
-   ALIGNED_STRUCT();
+   DECLARE_ALLOCATOR( FastFloat, AM_ALIGNED_16 );
 
    FastFloatStorage     m_val;
 
@@ -287,6 +295,50 @@ struct FastFloat
     * this = -this;
     */
    inline void neg();
+
+   // -------------------------------------------------------------------------
+   // Trigonometry methods
+   // -------------------------------------------------------------------------
+
+   /**
+    * this = sin(this)
+    */
+   inline void sin();
+
+   /**
+    * this = cos(this)
+    */
+   inline void cos();
+
+   /**
+    * this = sin(val)
+    */
+   inline void setSin( const FastFloat& val );
+
+   /**
+    * this = cos(val)
+    */
+   inline void setCos( const FastFloat& val );
+
+   /**
+    * this = asin(this)
+    */
+   inline void asin();
+
+   /**
+    * this = acos(this)
+    */
+   inline void acos();
+
+   /**
+    * this = sin(val)
+    */
+   inline void setAsin( const FastFloat& val );
+
+   /**
+    * this = cos(val)
+    */
+   inline void setAcos( const FastFloat& val );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

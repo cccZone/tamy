@@ -28,6 +28,7 @@ class RenderTargetSizePolicy;
  */
 class RenderTarget : public ShaderTexture, public UniqueObject< RenderTarget >, public RenderResource
 {
+   DECLARE_ALLOCATOR( RenderTarget, AM_DEFAULT );
    DECLARE_CLASS()
 
 private:
@@ -78,9 +79,9 @@ public:
    // -------------------------------------------------------------------------
    inline unsigned int getWidth() const { return m_width; }
    inline unsigned int getHeight() const { return m_height; }
-   inline ShaderParam< EffectShader >* createEffectShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) { return new ( allocator ) ShaderParamRenderTarget< EffectShader >( paramName.getId(), *this ); }
-   inline ShaderParam< PixelShader >* createPixelShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) { return new ( allocator ) ShaderParamRenderTarget< PixelShader >( paramName.getId(), *this ); }
-   inline ShaderParam< VertexShader >* createVertexShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ){ return new ( allocator ) ShaderParamRenderTarget< VertexShader >( paramName.getId(), *this ); }
+   inline ShaderParam< EffectShader >* createEffectShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName ) { return new ( allocator ) ShaderParamRenderTarget< EffectShader >( paramName.getId(), *this ); }
+   inline ShaderParam< PixelShader >* createPixelShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName ) { return new ( allocator ) ShaderParamRenderTarget< PixelShader >( paramName.getId(), *this ); }
+   inline ShaderParam< VertexShader >* createVertexShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName ){ return new ( allocator ) ShaderParamRenderTarget< VertexShader >( paramName.getId(), *this ); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -108,6 +109,8 @@ public:
  */
 class RTSPDynamic : public RenderTargetSizePolicy, public Observer< Renderer, RendererOps >
 {
+   DECLARE_ALLOCATOR( RTSPDynamic, AM_DEFAULT );
+
 private:
    Renderer&         m_renderer;
    float             m_widthScale;
@@ -138,6 +141,8 @@ public:
  */
 class RTSPStatic : public RenderTargetSizePolicy
 {
+   DECLARE_ALLOCATOR( RTSPStatic, AM_DEFAULT );
+
 private:
    unsigned int      m_width;
    unsigned int      m_height;
@@ -159,6 +164,8 @@ public:
  */
 class RTSPTexture : public RenderTargetSizePolicy, public Observer< ShaderTexture, ShaderTextureOps >
 {
+   DECLARE_ALLOCATOR( RTSPTexture, AM_DEFAULT );
+
 private:
    Renderer&         m_renderer;
    ShaderTexture&    m_texture;
@@ -193,6 +200,8 @@ public:
  */
 class RCActivateRenderTarget  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCActivateRenderTarget, AM_DEFAULT );
+
 private:
    RenderTarget*     m_renderTarget;
    uint              m_targetIdx;
@@ -219,6 +228,8 @@ public:
  */
 class RCDeactivateRenderTarget  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCDeactivateRenderTarget, AM_DEFAULT );
+
 private:
    uint              m_targetIdx;
 
@@ -243,6 +254,8 @@ public:
  */
 class RCGetPixel : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCGetPixel, AM_DEFAULT );
+
 private:
    RenderTarget&        m_renderTarget;
    Vector               m_queryPos;

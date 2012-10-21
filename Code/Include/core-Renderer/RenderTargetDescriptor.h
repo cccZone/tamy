@@ -20,6 +20,7 @@ class Renderer;
  */
 class RenderTargetDescriptor : public ReflectionObject
 {
+   DECLARE_ALLOCATOR( RenderTargetDescriptor, AM_DEFAULT );
    DECLARE_CLASS()
 
 private:

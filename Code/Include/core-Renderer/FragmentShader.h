@@ -10,6 +10,7 @@
 
 class FragmentShader : public Resource
 {
+   DECLARE_ALLOCATOR( FragmentShader, AM_DEFAULT );
    DECLARE_RESOURCE()
 
 private:

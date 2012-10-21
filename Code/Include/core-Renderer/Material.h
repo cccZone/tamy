@@ -18,6 +18,7 @@ class RuntimeDataBuffer;
 
 class Material : public Resource, public GraphBuilder< Material, MaterialNode >
 {
+   DECLARE_ALLOCATOR( Material, AM_DEFAULT );
    DECLARE_RESOURCE()
 
 public:

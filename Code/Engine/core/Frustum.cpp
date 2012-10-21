@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\Frustum.h"
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
@@ -29,10 +30,10 @@ void Frustum::transform( const Matrix& mtx, BoundingVolume& transformedVolume ) 
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Frustum::distanceToPlane( const Plane& plane ) const
+const FastFloat Frustum::distanceToPlane( const Plane& plane ) const
 {
    ASSERT_MSG(false, "Frustum::distanceToPlane(const Plane&) - Method not implemented");
-   return 0;
+   return Float_0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

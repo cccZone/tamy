@@ -13,6 +13,7 @@ class RPFloatOutput;
 
 class RPFloatNode : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPFloatNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\PointVolume.h"
 #include "core\CollisionTests.h"
 #include "core\Assert.h"
@@ -41,11 +42,10 @@ void PointVolume::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// <fastfloat.todo>
-float PointVolume::distanceToPlane( const Plane& plane ) const
+const FastFloat PointVolume::distanceToPlane( const Plane& plane ) const
 {
    const FastFloat& distance = plane.dotCoord( point );
-   return distance.getFloat();
+   return distance;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

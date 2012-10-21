@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\Vector.h"
 #include "core\OutStream.h"
 #include "core\InStream.h"
@@ -7,484 +8,19 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector Vector::ZERO( 0.0f, 0.0f, 0.0f, 0.0f );
-Vector Vector::ONE( 1.0f, 1.0f, 1.0f, 1.0f );
-Vector Vector::OX( 1.0f, 0.0f, 0.0f, 0.0f );
-Vector Vector::OY( 0.0f, 1.0f, 0.0f, 0.0f );
-Vector Vector::OZ( 0.0f, 0.0f, 1.0f, 0.0f );
-Vector Vector::OW( 0.0f, 0.0f, 0.0f, 1.0f );
-Vector Vector::OX_NEG( -1.0f, 0.0f, 0.0f, 0.0f );
-Vector Vector::OY_NEG( 0.0f, -1.0f, 0.0f, 0.0f );
-Vector Vector::OZ_NEG( 0.0f, 0.0f, -1.0f, 0.0f );
-Vector Vector::OW_NEG( 0.0f, 0.0f, 0.0f, -1.0f );
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector::Vector() 
-   : x(0)
-   , y(0)
-   , z(0) 
-   , w(0)
-{}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector::Vector( float _x, float _y, float _z, float _w ) 
-   : x(_x)
-   , y(_y)
-   , z(_z) 
-   , w(_w)
-{}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool Vector::equals4( const Vector& rhs ) const
-{
-   return x == rhs.x && y == rhs.y && z == rhs.z && w == rhs.w;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool Vector::operator==( const Vector& rhs ) const
-{
-   return x == rhs.x && y == rhs.y && z == rhs.z;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-bool Vector::operator!=( const Vector& rhs ) const
-{
-   return !( *this == rhs );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::operator=( const Vector& rhs )
-{
-   x = rhs.x;
-   y = rhs.y;
-   z = rhs.z;
-   w = rhs.w;
-
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setMul( const Vector& vec, float t )
-{
-   x = vec.x * t;
-   y = vec.y * t;
-   z = vec.z * t;
-   w = vec.w * t;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setMul( const Vector& vec1, const Vector& vec2 )
-{
-   x = vec1.x * vec2.x;
-   y = vec1.y * vec2.y;
-   z = vec1.z * vec2.z;
-   w = vec1.w * vec2.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setMulAdd( const Vector& vec1, float t, const Vector& vec2 )
-{
-   x = vec1.x * t + vec2.x;
-   y = vec1.y * t + vec2.y;
-   z = vec1.z * t + vec2.z;
-   w = vec1.w * t + vec2.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setMulAdd( const Vector& vec1, const Vector& t, const Vector& vec2 )
-{
-   x = vec1.x * t.x + vec2.x;
-   y = vec1.y * t.y + vec2.y;
-   z = vec1.z * t.z + vec2.z;
-   w = vec1.w * t.w + vec2.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setDiv( const Vector& vec1, const Vector& vec2 )
-{
-   x = vec1.x / vec2.x;
-   y = vec1.y / vec2.y;
-   z = vec1.z / vec2.z;
-   w = vec1.w / vec2.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setAdd( const Vector& vec1, const Vector& vec2 )
-{
-   x = vec1.x + vec2.x;
-   y = vec1.y + vec2.y;
-   z = vec1.z + vec2.z;
-   w = vec1.w + vec2.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setSub( const Vector& vec1, const Vector& vec2 )
-{
-   x = vec1.x - vec2.x;
-   y = vec1.y - vec2.y;
-   z = vec1.z - vec2.z;
-   w = vec1.w - vec2.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::mul( float t )
-{
-   x *= t;
-   y *= t;
-   z *= t;
-   w *= t;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::mul( const Vector& vec )
-{
-   x *= vec.x;
-   y *= vec.y;
-   z *= vec.z;
-   w *= vec.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::div( const Vector& vec )
-{
-   x /= vec.x;
-   y /= vec.y;
-   z /= vec.z;
-   w /= vec.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::add( const Vector& vec )
-{
-   x += vec.x;
-   y += vec.y;
-   z += vec.z;
-   w += vec.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::sub( const Vector& vec )
-{
-   x -= vec.x;
-   y -= vec.y;
-   z -= vec.z;
-   w -= vec.w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::neg()
-{
-   x = -x;
-   y = -y;
-   z = -z;
-   w = -w;
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float Vector::dot( const Vector& rhs ) const
-{
-   return x * rhs.x + y * rhs.y + z * rhs.z;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float Vector::dot4( const Vector& rhs ) const
-{
-   return x * rhs.x + y * rhs.y + z * rhs.z + w * rhs.w;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setCross( const Vector& v1, const Vector& v2 )
-{
-   x = v1.y * v2.z - v1.z * v2.y;
-   y = v1.z * v2.x - v1.x * v2.z;
-   z = v1.x * v2.y - v1.y * v2.x;
-   w = 1.0f;
-   
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::preCross( const Vector& rhs )
-{
-   Vector tmpVec;
-   tmpVec.setCross( *this, rhs );
-
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::postCross( const Vector& rhs )
-{
-   Vector tmpVec;
-   tmpVec.setCross( rhs, *this );
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::set( float _x, float _y, float _z, float _w )
-{
-   x = _x;
-   y = _y;
-   z = _z;
-   w = _w;
-
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setNormalized( const Vector& rhs )
-{
-   setNormalized( rhs.x, rhs.y, rhs.z );
-
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setNormalized( float _x, float _y, float _z )
-{
-   float len = sqrt( _x * _x + _y * _y + _z * _z );
-   if (len == 0)
-   {
-      x = y = z = w = 0;
-   }
-   else
-   {
-      x = _x / len;
-      y = _y / len;
-      z = _z / len;
-   }
-
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::normalize()
-{
-   float len = sqrt(x * x + y * y + z * z);
-   if (len == 0)
-   {
-      x = y = z = 0;
-   }
-   else
-   {
-      x /= len;
-      y /= len;
-      z /= len;
-   }
-
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::floor()
-{
-   x = floorf( x );
-   y = floorf( y );
-   z = floorf( z );
-   w = floorf( w );
-
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector& Vector::setLerp( const Vector& a, const Vector& b, const FastFloat& t )
-{
-   // <fastfloat.todo> once Vector uses SIMD, remove those getFloat() calls
-   x = a.x + ( b.x - a.x ) * t.getFloat();
-   y = a.y + ( b.y - a.y ) * t.getFloat();
-   z = a.z + ( b.z - a.z ) * t.getFloat();
-
-   return *this;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float Vector::length() const
-{
-   return sqrt(x * x + y * y + z * z);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-float Vector::lengthSq() const
-{
-   return x * x + y * y + z * z;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 bool Vector::isNormalized() const
 {
-   return abs( lengthSq() - 1.0f ) < 1e-6;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Vector::setSelect( const VectorComparison& comparisonResult, const Vector& trueVec, const Vector& falseVec )
-{
-   for ( int i = 0; i < 4; ++i )
-   {
-      v[i] = comparisonResult.b[i] ? trueVec.v[i] : falseVec.v[i];
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Vector::less( const Vector& rhs, VectorComparison& outResult ) const
-{
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.b[i] = v[i] < rhs.v[i];
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Vector::lessEqual( const Vector& rhs, VectorComparison& outResult ) const
-{
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.b[i] = v[i] <= rhs.v[i];
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Vector::greater( const Vector& rhs, VectorComparison& outResult ) const
-{
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.b[i] = v[i] > rhs.v[i];
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Vector::greaterEqual( const Vector& rhs, VectorComparison& outResult ) const
-{
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.b[i] = v[i] >= rhs.v[i];
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Vector::equal( const Vector& rhs, VectorComparison& outResult ) const
-{
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.b[i] = v[i] == rhs.v[i];
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void Vector::notEqual( const Vector& rhs, VectorComparison& outResult ) const
-{
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.b[i] = v[i] != rhs.v[i];
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-float Vector::getMin<2>() const
-{
-   return min2( x, y );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-float Vector::getMin<3>() const
-{
-   return min2( x, min2( y, z ) );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-float Vector::getMin<4>() const
-{
-   return min2( x, min2( y, min2( z, w ) ) );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-float Vector::getMax<2>() const
-{
-   return max2( x, y );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-float Vector::getMax<3>() const
-{
-   return max2( x, max2( y, z ) );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-float Vector::getMax<4>() const
-{
-   return max2( x, max2( y, max2( z, w ) ) );
+   FastFloat v;
+   v.setSub( lengthSq(), Float_1 );
+   v.abs();
+   return v < Float_1e_4;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 std::ostream& operator<<( std::ostream& stream, const Vector& rhs )
 {
-   stream << rhs.v;
+   stream << rhs[0] << rhs[1] << rhs[2] << rhs[3];
    return stream;
 }
 
@@ -492,7 +28,7 @@ std::ostream& operator<<( std::ostream& stream, const Vector& rhs )
 
 OutStream& operator<<( OutStream& serializer, const Vector& rhs )
 {
-   serializer << rhs.v;
+   serializer << rhs[0] << rhs[1] << rhs[2] << rhs[3];
    return serializer;
 }
 
@@ -500,73 +36,13 @@ OutStream& operator<<( OutStream& serializer, const Vector& rhs )
 
 InStream& operator>>( InStream& serializer, Vector& rhs )
 {
-   serializer >> rhs.v;
+   serializer >> rhs[0] >> rhs[1] >> rhs[2] >> rhs[3];
    return serializer;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-template<>
-void Vector::store( TVector< 2 >& rawVector )
-{
-   rawVector.v[0] = x;
-   rawVector.v[1] = y;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-void Vector::store( TVector< 3 >& rawVector )
-{
-   rawVector.v[0] = x;
-   rawVector.v[1] = y;
-   rawVector.v[2] = z;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-void Vector::store( TVector< 4 >& rawVector )
-{
-   rawVector.v[0] = x;
-   rawVector.v[1] = y;
-   rawVector.v[2] = z;
-   rawVector.v[3] = w;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-void Vector::load( const TVector< 2 >& rawVector )
-{
-   x = rawVector.v[0];
-   y = rawVector.v[1];
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-void Vector::load( const TVector< 3 >& rawVector )
-{
-   x = rawVector.v[0];
-   y = rawVector.v[1];
-   z = rawVector.v[2];
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template<>
-void Vector::load( const TVector< 4 >& rawVector )
-{
-   x = rawVector.v[0];
-   y = rawVector.v[1];
-   z = rawVector.v[2];
-   w = rawVector.v[3];
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-Vector g_quadConstants[QuadMathConst_MAX] = 
+QuadStorage g_quadConstants[QuadMathConst_MAX] = 
 {
    QUAD_CONSTANT( 0.0f, 0.0f, 0.0f, 0.0f ),
    QUAD_CONSTANT( 1.0f, 1.0f, 1.0f, 1.0f ),
@@ -585,3 +61,276 @@ Vector g_quadConstants[QuadMathConst_MAX] =
 
 ///////////////////////////////////////////////////////////////////////////////
 
+Vector  q_vecConstants[VecConstants_MAX] =
+{
+   Vector( Quad_1000 ),
+   Vector( Quad_0100 ),
+   Vector( Quad_0010 ),
+   Vector( Quad_0001 ),
+   Vector( Quad_Neg_1000 ),
+   Vector( Quad_Neg_0100 ),
+   Vector( Quad_Neg_0010 ),
+   Vector( Quad_Neg_0001 ),
+   Vector( Quad_0 ),
+   Vector( Quad_1 ),
+};
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+#ifndef _USE_SIMD
+
+// Code that runs on FPU
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMin<2>() const
+{
+   float val = min2( m_quad.v[0], m_quad.v[1] );
+   return ( const FastFloat& )val;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMin<3>() const
+{
+   float val = min2( m_quad.v[0], min2( m_quad.v[1], m_quad.v[2] ) );
+   return ( const FastFloat& )val;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMin<4>() const
+{
+   float val = min2( m_quad.v[0], min2( m_quad.v[1], min2( m_quad.v[2], m_quad.v[3] ) ) );
+   return ( const FastFloat& )val;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMax<2>() const
+{
+   float val = max2( m_quad.v[0], m_quad.v[1] );
+   return ( const FastFloat& )val;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMax<3>() const
+{
+   float val = max2( m_quad.v[0], max2( m_quad.v[1], m_quad.v[2] ) );
+   return ( const FastFloat& )val;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMax<4>() const
+{
+   float val = max2( m_quad.v[0], max2( m_quad.v[1], max2( m_quad.v[2], m_quad.v[3] ) ) );
+   return ( const FastFloat& )val;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::store( TVector< 2 >& rawVector )
+{
+   rawVector.v[0] = m_quad.v[0];
+   rawVector.v[1] = m_quad.v[1];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::store( TVector< 3 >& rawVector )
+{
+   rawVector.v[0] = m_quad.v[0];
+   rawVector.v[1] = m_quad.v[1];
+   rawVector.v[2] = m_quad.v[2];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::store( TVector< 4 >& rawVector )
+{
+   rawVector.v[0] = m_quad.v[0];
+   rawVector.v[1] = m_quad.v[1];
+   rawVector.v[2] = m_quad.v[2];
+   rawVector.v[3] = m_quad.v[3];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::load( const TVector< 2 >& rawVector )
+{
+   m_quad.v[0] = rawVector.v[0];
+   m_quad.v[1] = rawVector.v[1];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::load( const TVector< 3 >& rawVector )
+{
+   m_quad.v[0] = rawVector.v[0];
+   m_quad.v[1] = rawVector.v[1];
+   m_quad.v[2] = rawVector.v[2];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::load( const TVector< 4 >& rawVector )
+{
+   m_quad.v[0] = rawVector.v[0];
+   m_quad.v[1] = rawVector.v[1];
+   m_quad.v[2] = rawVector.v[2];
+   m_quad.v[3] = rawVector.v[3];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+// End of the code that runs on FPU
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+#else // _USE_SIMD
+
+// Code that runs on SIMD
+
+#include "core\SimdUtils.h"
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMin<2>() const
+{
+   const __m128 minVal = _mm_min_ps( _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 1, 1, 1, 1) ), _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 0, 0, 0, 0 ) ) );
+   return *( const FastFloat* )&minVal;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMin<3>() const
+{
+   const __m128 xy = _mm_min_ps( _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 1, 1, 1, 1 ) ), _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 0, 0, 0, 0 ) ) );
+   const __m128 minVal = _mm_min_ps( _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 2, 2, 2, 2 ) ), xy );
+   return *( const FastFloat* )&minVal;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMin<4>() const
+{
+   __m128 sum0 = _mm_min_ps( _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 1, 0, 3, 2) ), m_quad );
+   const __m128 sum1 = _mm_shuffle_ps( sum0, sum0, _MM_SHUFFLE( 2, 3, 0, 1 ) );
+   sum0 = _mm_min_ps( sum0, sum1 );
+
+   return *( const FastFloat* )&sum0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMax<2>() const
+{
+   const __m128 maxVal = _mm_max_ps( _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 1, 1, 1, 1) ), _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 0, 0, 0, 0 ) ) );
+   return *( const FastFloat* )&maxVal;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMax<3>() const
+{
+   const __m128 xy = _mm_max_ps( _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 1, 1, 1, 1 ) ), _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 0, 0, 0, 0 ) ) );
+   const __m128 maxVal = _mm_max_ps( _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 2, 2, 2, 2 ) ), xy );
+   return *( const FastFloat* )&maxVal;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+const FastFloat Vector::getMax<4>() const
+{
+   __m128 sum0 = _mm_max_ps( _mm_shuffle_ps( m_quad, m_quad, _MM_SHUFFLE( 1, 0, 3, 2) ), m_quad );
+   const __m128 sum1 = _mm_shuffle_ps( sum0, sum0, _MM_SHUFFLE( 2, 3, 0, 1 ) );
+   sum0 = _mm_max_ps( sum0, sum1 );
+
+   return *( const FastFloat* )&sum0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::store( TVector< 2 >& rawVector )
+{
+   rawVector.v[0] = m_quad.m128_f32[0];
+   rawVector.v[1] = m_quad.m128_f32[1];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::store( TVector< 3 >& rawVector )
+{
+   rawVector.v[0] = m_quad.m128_f32[0];
+   rawVector.v[1] = m_quad.m128_f32[1];
+   rawVector.v[2] = m_quad.m128_f32[2];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::store( TVector< 4 >& rawVector )
+{
+   rawVector.v[0] = m_quad.m128_f32[0];
+   rawVector.v[1] = m_quad.m128_f32[1];
+   rawVector.v[2] = m_quad.m128_f32[2];
+   rawVector.v[3] = m_quad.m128_f32[3];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::load( const TVector< 2 >& rawVector )
+{
+   SimdUtils::toSimd( rawVector.v[0], rawVector.v[1], 0.0f, 0.0f, &m_quad );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::load( const TVector< 3 >& rawVector )
+{
+   SimdUtils::toSimd( rawVector.v[0], rawVector.v[1], rawVector.v[2], 0.0f, &m_quad );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<>
+void Vector::load( const TVector< 4 >& rawVector )
+{
+   SimdUtils::toSimd( rawVector.v[0], rawVector.v[1], rawVector.v[2], rawVector.v[3], &m_quad );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+// End of the code that runs on SIMD
+
+#endif // _USE_SIMD
+
+///////////////////////////////////////////////////////////////////////////////

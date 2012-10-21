@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/FilesystemUtils.h"
 #include "core/StringUtils.h"
 #include "core/types.h"

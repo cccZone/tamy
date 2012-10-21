@@ -2,7 +2,8 @@
 /// @brief  a spatial entity you can embed a whole model in
 #pragma once
 
-#include "core-MVC/SpatialEntity.h"
+#include "core\MemoryRouter.h"
+#include "core-MVC\SpatialEntity.h"
 #include <vector>
 
 
@@ -10,7 +11,8 @@
 
 class ModelEntity : public SpatialEntity
 {
-   DECLARE_CLASS()
+   DECLARE_ALLOCATOR( ModelEntity, AM_ALIGNED_16 );
+   DECLARE_CLASS();
 
 private:
    // static data

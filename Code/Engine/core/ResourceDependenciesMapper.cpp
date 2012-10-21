@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/ResourceDependenciesMapper.h"
 #include "core/ReflectionType.h"
 #include "core/ReflectionTypeComponent.h"

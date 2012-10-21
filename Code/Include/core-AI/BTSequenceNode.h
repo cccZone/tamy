@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core-AI\BTSequenceNode.h
 /// @brief  Node that executed the behavior it aggregates sequentially
+#pragma once
 
 #include "core-AI\BTCompositeNode.h"
 
@@ -14,6 +13,8 @@
  */
 class BTSequenceNode : public BTCompositeNode
 {
+   DECLARE_ALLOCATOR( BTSequenceNode, AM_DEFAULT );
+
 private:
    unsigned int m_currNode;
 

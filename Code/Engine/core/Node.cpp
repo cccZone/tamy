@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\Node.h"
 #include "core\ASsert.h"
 #include <algorithm>
@@ -11,25 +12,25 @@
 Node::Node(const std::string& name)
    : m_name(name)
    , m_parent(NULL)
-   , m_volume( new BoundingSphere( Vector( 0, 0, 0 ), 0) )
-   , m_globalVolume( new BoundingSphere( Vector( 0, 0, 0 ), 0 ) )
+   , m_volume( new BoundingSphere( Vector( Quad_0 ), 0) )
+   , m_globalVolume( new BoundingSphere( Vector( Quad_0 ), 0 ) )
 {
-   m_localMtx = Matrix::IDENTITY;
-   m_globalMtx = Matrix::IDENTITY;
+   m_localMtx.setIdentity();
+   m_globalMtx.setIdentity();
 
    // initialize our cache with some stupid data to force the initial update
    // of the global matrix for all the objects
-   m_localMtxCache = Matrix::IDENTITY;
-   m_localMtxCache.m[0][0] = -1;
-   m_localMtxCache.m[1][1] = -1;
-   m_localMtxCache.m[2][2] = -1;
-   m_localMtxCache.m[3][3] = -1;
+   m_localMtxCache.setIdentity();
+   m_localMtxCache( 0, 0 ) = -1;
+   m_localMtxCache( 1, 1 ) = -1;
+   m_localMtxCache( 2, 2 ) = -1;
+   m_localMtxCache( 3, 3 ) = -1;
 
-   m_parentGlobalMtxCache = Matrix::IDENTITY;
-   m_parentGlobalMtxCache.m[0][0] = -1;
-   m_parentGlobalMtxCache.m[1][1] = -1;
-   m_parentGlobalMtxCache.m[2][2] = -1;
-   m_parentGlobalMtxCache.m[3][3] = -1;
+   m_parentGlobalMtxCache.setIdentity();
+   m_parentGlobalMtxCache( 0, 0 ) = -1;
+   m_parentGlobalMtxCache( 1, 1 ) = -1;
+   m_parentGlobalMtxCache( 2, 2 ) = -1;
+   m_parentGlobalMtxCache( 3, 3 ) = -1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -77,72 +78,56 @@ void Node::setLocalMtx( const Matrix& localMtx )
 
 void Node::setRightVec( const Vector& vec )
 {
-   m_localMtx.m[0][0] = vec.x;
-   m_localMtx.m[0][1] = vec.y;
-   m_localMtx.m[0][2] = vec.z;
+   m_localMtx.setSideVec<3>( vec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Node::setUpVec( const Vector& vec )
 {
-   m_localMtx.m[1][0] = vec.x;
-   m_localMtx.m[1][1] = vec.y;
-   m_localMtx.m[1][2] = vec.z;
+   m_localMtx.setUpVec<3>( vec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Node::setLookVec( const Vector& vec )
 {
-   m_localMtx.m[2][0] = vec.x;
-   m_localMtx.m[2][1] = vec.y;
-   m_localMtx.m[2][2] = vec.z;
+   m_localMtx.setForwardVec<3>( vec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Node::setPosition( const Vector& vec )
 {
-   m_localMtx.m[3][0] = vec.x;
-   m_localMtx.m[3][1] = vec.y;
-   m_localMtx.m[3][2] = vec.z;
+   m_localMtx.setPosition<3>( vec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Node::getRightVec( Vector& outRightVec ) const
 {
-   outRightVec.x = m_localMtx.m[0][0];
-   outRightVec.y = m_localMtx.m[0][1];
-   outRightVec.z = m_localMtx.m[0][2];
+   outRightVec = m_localMtx.sideVec();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Node::getUpVec( Vector& outUpVec ) const
 {
-   outUpVec.x = m_localMtx.m[1][0];
-   outUpVec.y = m_localMtx.m[1][1];
-   outUpVec.z = m_localMtx.m[1][2];
+   outUpVec = m_localMtx.upVec();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Node::getLookVec( Vector& outLookVec ) const
 {
-   outLookVec.x = m_localMtx.m[2][0];
-   outLookVec.y = m_localMtx.m[2][1];
-   outLookVec.z = m_localMtx.m[2][2];
+   outLookVec = m_localMtx.forwardVec();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Node::getPosition( Vector& outPos ) const
 {
-   outPos.x = m_localMtx.m[3][0];
-   outPos.y = m_localMtx.m[3][1];
-   outPos.z = m_localMtx.m[3][2];
+   outPos = m_localMtx.position();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

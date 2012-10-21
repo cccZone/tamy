@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\EulerAngles.h"
 #include "core\OutStream.h"
 #include "core\InStream.h"
@@ -61,15 +62,23 @@ void EulerAngles::setFromShortestRotation( const Vector& vec1, const Vector& vec
    ASSERT_MSG( vec1.isNormalized(), "vec1 needs to be normalized in order for setFromShortestRotation to work" );
    ASSERT_MSG( vec2.isNormalized(), "vec2 needs to be normalized in order for setFromShortestRotation to work" );
 
-   float angle = acos( vec1.dot( vec2 ) );
+   FastFloat angle = vec1.dot( vec2 );
+   angle.acos();
+
+   FastFloat negPolarHalfAngle;
+   negPolarHalfAngle.setSub( angle, Float_PI );
+   
+   angle.abs();
+   negPolarHalfAngle.abs();
+
    Vector axis;
 
-   if( fabs( angle ) < 1e-4 )
+   if( angle < Float_1e_4 )
    {
-      angle = 0;
-      axis = Vector::OZ;
+      angle = Float_0;
+      axis = Quad_0010;
    }
-   else if ( fabs( angle - M_PI ) < 1e-3 )
+   else if ( negPolarHalfAngle < Float_1e_3 )
    { 
       axis.setCross( vec1, vec2 );
       axis.normalize();

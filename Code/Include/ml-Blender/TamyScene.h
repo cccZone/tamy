@@ -2,6 +2,7 @@
 /// @brief  Tamy scene export-related proxies
 
 #include "ml-Blender/TamyMesh.h"
+#include "ml-Blender/BaseExportStructs.h"
 #include "core/Matrix.h"
 #include "core/Vector.h"
 #include "core/Color.h"
@@ -16,8 +17,8 @@ class SpatialEntity;
 
 struct TamyMatrix
 {
-   Matrix               rotationMtx;
-   Vector               position;
+   ExportMatrix         rotationMtx;
+   ExportVector         position;
 
    void applyTo( Matrix& outTransform ) const;
 

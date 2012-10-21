@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\File.h"
 #include "core\Assert.h"
 #include "core\Filesystem.h"

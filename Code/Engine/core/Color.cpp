@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\Color.h"
 #include "core\OutStream.h"
 #include "core\InStream.h"

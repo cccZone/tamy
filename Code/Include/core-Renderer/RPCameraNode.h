@@ -14,6 +14,7 @@ class RPMatrixOutput;
 
 class RPCameraNode : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPCameraNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

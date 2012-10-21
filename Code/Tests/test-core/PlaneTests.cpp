@@ -11,38 +11,38 @@ TEST( Plane, setFromPointNormal )
    D3DXPLANE dxPlane;
    Vector point, normal;
    
-   point = Vector( 10, 20, 30 );
-   normal = Vector::OX;
+   point.set( 10, 20, 30 );
+   normal.set( Quad_1000 );
    D3DXPlaneFromPointNormal( &dxPlane, ( const D3DXVECTOR3* )&point, ( const D3DXVECTOR3* )&normal );
    tamyPlane.setFromPointNormal( point, normal );
    COMPARE_PLANE( dxPlane, tamyPlane );
 
-   point = Vector( -4, 0, 5.5f );
-   normal = Vector::OY;
+   point.set( -4, 0, 5.5f );
+   normal.set( Quad_0100 );
    D3DXPlaneFromPointNormal( &dxPlane, ( const D3DXVECTOR3* )&point, ( const D3DXVECTOR3* )&normal );
    tamyPlane.setFromPointNormal( point, normal );
    COMPARE_PLANE( dxPlane, tamyPlane );
 
-   point = Vector( 0, 0, -20.0f );
-   normal = Vector::OZ;
+   point.set( 0, 0, -20.0f );
+   normal.set( Quad_0010 );
    D3DXPlaneFromPointNormal( &dxPlane, ( const D3DXVECTOR3* )&point, ( const D3DXVECTOR3* )&normal );
    tamyPlane.setFromPointNormal( point, normal );
    COMPARE_PLANE( dxPlane, tamyPlane );
 
-   point = Vector( 10, 20, 30 );
-   normal = Vector::OX_NEG;
+   point.set( 10, 20, 30 );
+   normal.set( Quad_Neg_1000 );
    D3DXPlaneFromPointNormal( &dxPlane, ( const D3DXVECTOR3* )&point, ( const D3DXVECTOR3* )&normal );
    tamyPlane.setFromPointNormal( point, normal );
    COMPARE_PLANE( dxPlane, tamyPlane );
 
-   point = Vector( -4, 0, 5.5f );
-   normal = Vector::OY_NEG;
+   point.set( -4, 0, 5.5f );
+   normal.set( Quad_Neg_0100 );
    D3DXPlaneFromPointNormal( &dxPlane, ( const D3DXVECTOR3* )&point, ( const D3DXVECTOR3* )&normal );
    tamyPlane.setFromPointNormal( point, normal );
    COMPARE_PLANE( dxPlane, tamyPlane );
 
-   point = Vector( 0, 0, -20.0f );
-   normal = Vector::OZ_NEG;
+   point.set( 0, 0, -20.0f );
+   normal.set( Quad_Neg_0010 );
    D3DXPlaneFromPointNormal( &dxPlane, ( const D3DXVECTOR3* )&point, ( const D3DXVECTOR3* )&normal );
    tamyPlane.setFromPointNormal( point, normal );
    COMPARE_PLANE( dxPlane, tamyPlane );

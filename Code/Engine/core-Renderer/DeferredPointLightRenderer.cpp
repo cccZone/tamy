@@ -89,9 +89,12 @@ void DeferredPointLightRenderer::render( Renderer& renderer, const PointLight* l
    // set and configure the vertex shader
    RCBindVertexShader* vsComm = new ( renderer() ) RCBindVertexShader( *m_vertexShader, renderer );
    {
-      Matrix scaleMtx; scaleMtx.scaleUniform( light->m_radius );
+      // <fastfloat.todo>
+      FastFloat rad; rad.setFromFloat( light->m_radius );
+      Matrix scaleMtx; scaleMtx.scaleUniform( rad );
       Matrix modelViewProjMtx;      
-      modelViewProjMtx.setMul( scaleMtx, globalMtx ).mul( viewProjMtx );
+      modelViewProjMtx.setMul( scaleMtx, globalMtx );
+      modelViewProjMtx.mul( viewProjMtx );
 
       vsComm->setMtx( "g_mtxModelViewProj", modelViewProjMtx );
    }

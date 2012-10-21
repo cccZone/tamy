@@ -16,13 +16,15 @@
  */
 struct BoundingSpace : public BoundingVolume
 {
+   DECLARE_ALLOCATOR( BoundingSpace, AM_ALIGNED_16 );
+
    // -------------------------------------------------------------------------
    // BoundingVolume implementation
    // -------------------------------------------------------------------------
    BoundingVolume* clone() const { return new BoundingSpace(); }
    void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const {}
    void calculateBoundingBox( AABoundingBox& outBoundingBox ) const { outBoundingBox.min.set( -FLT_MAX, -FLT_MAX, -FLT_MAX ); outBoundingBox.max.set( FLT_MAX, FLT_MAX, FLT_MAX ); }
-   float distanceToPlane( const Plane& plane ) const { return 0; }
+   const FastFloat distanceToPlane( const Plane& plane ) const { return Float_0; }
    bool testCollision( const PointVolume& point ) const { return true; }
    bool testCollision( const AABoundingBox& rhs ) const { return true; }
    bool testCollision( const BoundingSphere& rhs ) const { return true; }

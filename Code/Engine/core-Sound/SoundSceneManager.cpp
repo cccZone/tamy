@@ -76,7 +76,7 @@ Array< Sound3D* >& SoundSceneManager::update( Array< Sound3D* >& soundsToDisable
    m_activeSoundsArr.clear();
 
    const Matrix& listenerMtx = m_activeListener->getGlobalMtx();
-   Vector listenerPos( listenerMtx.m[3][0], listenerMtx.m[3][1], listenerMtx.m[3][2] );
+   Vector listenerPos = listenerMtx.position();
    Matrix soundMtx;
    Vector distVec;
 
@@ -85,7 +85,7 @@ Array< Sound3D* >& SoundSceneManager::update( Array< Sound3D* >& soundsToDisable
    for (DWORD i = 0; i < soundsCount; ++i)
    {
       soundMtx = m_soundsArr[i]->getGlobalMtx();
-      distVec.setSub( listenerPos, Vector(soundMtx.m[3][0], soundMtx.m[3][1], soundMtx.m[3][2] ) );
+      distVec.setSub( listenerPos, soundMtx.position() );
 
       sound = m_soundsArr[i];
 

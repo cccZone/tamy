@@ -21,7 +21,7 @@ void UnconstrainedMotionController::move(const Vector& transVec)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void UnconstrainedMotionController::rotate(float pitch, float yaw, float roll)
+void UnconstrainedMotionController::rotate( float pitch, float yaw, float roll )
 {
    Vector rightVec, upVec, lookVec;
    m_controlledNode.getRightVec( rightVec );
@@ -30,9 +30,15 @@ void UnconstrainedMotionController::rotate(float pitch, float yaw, float roll)
 
    if (pitch)
    {
-      pitch = clamp( pitch, -89.0f, 89.0f );
+      static FastFloat maxPosPitch = FastFloat::fromFloat( 89.0f );
+      static FastFloat maxNegPitch = FastFloat::fromFloat( -89.0f );
+
+      FastFloat simdPitch;
+      simdPitch.setClamped( FastFloat::fromFloat( pitch ), maxNegPitch, maxPosPitch );
+      simdPitch.mul( Float_Deg2Rad );
+
       Quaternion rotQ;
-      rotQ.setAxisAngle( rightVec, DEG2RAD( pitch ) );
+      rotQ.setAxisAngle( rightVec, simdPitch );
       
       Vector tmpVec;
       rotQ.transform( upVec, tmpVec ); upVec = tmpVec;
@@ -41,8 +47,12 @@ void UnconstrainedMotionController::rotate(float pitch, float yaw, float roll)
 
    if (yaw)
    {
+      FastFloat simdYaw;
+      simdYaw.setFromFloat( yaw );
+      simdYaw.mul( Float_Deg2Rad );
+
       Quaternion rotQ;
-      rotQ.setAxisAngle( upVec, DEG2RAD( yaw ) );
+      rotQ.setAxisAngle( upVec, simdYaw );
 
       Vector tmpVec;
       rotQ.transform( rightVec, tmpVec ); rightVec = tmpVec;
@@ -51,8 +61,12 @@ void UnconstrainedMotionController::rotate(float pitch, float yaw, float roll)
 
    if (roll)
    {
+      FastFloat simdRoll;
+      simdRoll.setFromFloat( roll );
+      simdRoll.mul( Float_Deg2Rad );
+
       Quaternion rotQ;
-      rotQ.setAxisAngle( lookVec, DEG2RAD( roll ) );
+      rotQ.setAxisAngle( lookVec, simdRoll );
 
       Vector tmpVec;
       rotQ.transform( rightVec, tmpVec ); rightVec = tmpVec;
@@ -80,22 +94,29 @@ void UnconstrainedMotionController::rotate( float pitch, float yaw )
    if ( pitch )
    {
       Vector lookVec2D;   
-      lookVec2D.setCross( rightVec, Vector::OY );
+      lookVec2D.setCross( rightVec, Quad_0100 );
 
-      float currPitch = 0.0f;
+      FastFloat currPitch = Float_0;
       {
-         float currPitchDot = lookVec2D.dot( lookVec );
-         currPitchDot = clamp( currPitchDot, -1.0f, 1.0f );
-         float currPitchSign = lookVec.dot( Vector::OY ) > 0 ? -1.0f : 1.0f;
+         FastFloat currPitchDot = lookVec2D.dot( lookVec );
+         currPitchDot.setClamped( currPitchDot, Float_Minus1, Float_1 );
+         currPitchDot.acos();
 
-         currPitch = RAD2DEG( currPitchSign * acos( currPitchDot ) );
+         FastFloat dot = lookVec.dot( Quad_0100 );
+         currPitch.setFlipSign( currPitchDot, dot );
+         currPitch.mul( Float_Rad2Deg );
       }
 
-      float newPitch = currPitch + pitch;
-      newPitch = clamp( newPitch, -89.0f, 89.0f );
+      static FastFloat maxPosPitch = FastFloat::fromFloat( 89.0f );
+      static FastFloat maxNegPitch = FastFloat::fromFloat( -89.0f );
+
+      FastFloat newPitch;
+      newPitch.setAdd( currPitch, FastFloat::fromFloat( pitch ) );
+      newPitch.setClamped( newPitch, maxNegPitch, maxPosPitch );
+      newPitch.mul( Float_Deg2Rad );
 
       Quaternion rotQ;
-      rotQ.setAxisAngle( rightVec, DEG2RAD( newPitch ) );
+      rotQ.setAxisAngle( rightVec, newPitch );
 
       Vector tmpVec;
       rotQ.transform( lookVec2D, lookVec );
@@ -103,8 +124,12 @@ void UnconstrainedMotionController::rotate( float pitch, float yaw )
 
    if ( yaw )
    {
+      FastFloat simdYaw;
+      simdYaw.setFromFloat( yaw );
+      simdYaw.mul( Float_Deg2Rad );
+
       Quaternion rotQ;
-      rotQ.setAxisAngle( Vector::OY, DEG2RAD( yaw ) );
+      rotQ.setAxisAngle( Quad_0100, simdYaw );
 
       Vector tmpVec;
       rotQ.transform( rightVec, tmpVec ); rightVec = tmpVec;
@@ -112,7 +137,7 @@ void UnconstrainedMotionController::rotate( float pitch, float yaw )
    }
 
    // regenerate vectors
-   Vector upVec = Vector::OY;
+   Vector upVec = Quad_0100;
    regenerateVectors( rightVec, upVec, lookVec );
 
    m_controlledNode.setRightVec( rightVec );
@@ -127,9 +152,11 @@ void UnconstrainedMotionController::setPosition( const Vector& vec )
    const Vector& currentGlobalPos = getPosition();
    Matrix newLocalMtx = m_controlledNode.getLocalMtx();
 
-   newLocalMtx.m41 += vec.x - currentGlobalPos.x;
-   newLocalMtx.m42 += vec.y - currentGlobalPos.y;
-   newLocalMtx.m43 += vec.z - currentGlobalPos.z;
+   Vector newPos;
+   newPos.setSub( vec, currentGlobalPos );
+   newPos.setAdd( newLocalMtx.position(), newPos );
+   newLocalMtx.setPosition<3>( newPos );
+
    m_controlledNode.setLocalMtx(newLocalMtx);
 }
 

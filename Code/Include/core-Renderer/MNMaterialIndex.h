@@ -18,6 +18,7 @@ class Texture;
  */
 class MNMaterialIndex : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNMaterialIndex, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

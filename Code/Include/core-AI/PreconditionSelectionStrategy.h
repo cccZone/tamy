@@ -1,9 +1,8 @@
-#pragma once
-
 /// @file   core-AI\PreconditionSelectionStrategy.h
 /// @brief  precondition-based node selection strategy
-//
+#pragma once
 
+#include "core\MemoryRouter.h"
 #include "core-AI\BTNodeSelectionStrategy.h"
 
 
@@ -15,6 +14,8 @@
  */
 class PreconditionSelectionStrategy : public BTNodeSelectionStrategy
 {
+   DECLARE_ALLOCATOR( PreconditionSelectionStrategy, AM_DEFAULT );
+
 public:
    unsigned int getNodeIdx(const std::vector<BTNode*>& nodes);
 };

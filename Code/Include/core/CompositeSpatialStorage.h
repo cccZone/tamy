@@ -1,8 +1,7 @@
-#ifndef _COMPOSITE_SPATIAL_STORAGE_H
-#define _COMPOSITE_SPATIAL_STORAGE_H
-
 /// @file   core\CompositeSpatialStorage.h
 /// @brief  spatial storage composite
+#ifndef _COMPOSITE_SPATIAL_STORAGE_H
+#define _COMPOSITE_SPATIAL_STORAGE_H
 
 #include "core\SpatialStorage.h"
 #include <vector>
@@ -17,6 +16,8 @@
 template <typename Elem>
 class CompositeSpatialStorage : public SpatialStorage<Elem>
 {
+   DECLARE_ALLOCATOR( CompositeSpatialStorage, AM_DEFAULT );
+
 private:
    std::vector<SpatialStorage<Elem>*> m_storages;
 

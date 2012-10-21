@@ -4,6 +4,7 @@
 #define _STACK_H
 
 #include <stdio.h>
+#include "core/MemoryRouter.h"
 #include "core/DefaultAllocator.h"
 
 
@@ -15,9 +16,13 @@
 template< typename T, typename TAllocator = DefaultAllocator >
 struct Stack
 {
+   DECLARE_ALLOCATOR( Stack, AM_DEFAULT );
+
 private:
    struct StackSeg
    {
+      DECLARE_ALLOCATOR( StackSeg, AM_DEFAULT );
+
       StackSeg*   m_prev;
       T           m_elem;
 
@@ -29,19 +34,6 @@ private:
        */
       StackSeg( StackSeg* prev, T elem );
       ~StackSeg();
-
-      // ----------------------------------------------------------------------
-      // Placement allocation operators
-      // ----------------------------------------------------------------------
-      void* operator new( size_t size, TAllocator* allocator );
-      void operator delete( void* ptr, TAllocator* allocator );
-
-   private:
-      // ----------------------------------------------------------------------
-      // Disabled regular allocation operators
-      // ----------------------------------------------------------------------
-      void* operator new( size_t size );
-      void operator delete( void* ptr );
    };
 
 private:

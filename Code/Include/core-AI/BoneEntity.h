@@ -13,6 +13,7 @@
  */
 class BoneEntity : public SpatialEntity
 {
+   DECLARE_ALLOCATOR( BoneEntity, AM_DEFAULT );
    DECLARE_CLASS();
 
 public:

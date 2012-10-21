@@ -12,9 +12,9 @@
 namespace // anonymous
 {
    Vector GLOBAL_AXES[] = {
-      Vector::OX,
-      Vector::OY,
-      Vector::OZ
+      Vector_OX,
+      Vector_OY,
+      Vector_OZ
    };
 }
 
@@ -64,17 +64,17 @@ void GizmoController::update( float timeElapsed )
    bool anyKeyHeld = m_movementDir[MD_FRONT] || m_movementDir[MD_BACK] || m_movementDir[MD_LEFT] || m_movementDir[MD_RIGHT];
    if ( anyKeyHeld )
    {
-      if ( m_movementDir[MD_FRONT] )  { valChange.y += movementSpeed; }
-      if ( m_movementDir[MD_BACK] )   { valChange.y -= movementSpeed; }
-      if ( m_movementDir[MD_LEFT] )   { valChange.x -= movementSpeed; }
-      if ( m_movementDir[MD_RIGHT] )  { valChange.x += movementSpeed; }
+      if ( m_movementDir[MD_FRONT] )  { valChange[1] += movementSpeed; }
+      if ( m_movementDir[MD_BACK] )   { valChange[1] -= movementSpeed; }
+      if ( m_movementDir[MD_LEFT] )   { valChange[0] -= movementSpeed; }
+      if ( m_movementDir[MD_RIGHT] )  { valChange[0] += movementSpeed; }
    }
    else
    {
-      valChange.x = m_uic->getMouseSpeed().v[0] * movementSpeed;
+      valChange[0] = m_uic->getMouseSpeed().v[0] * movementSpeed;
 
       // we need to negate this value, 'cause we want it expressed in viewport space ( where Y axis goes up, not down )
-      valChange.y = -m_uic->getMouseSpeed().v[1] * movementSpeed;
+      valChange[1] = -m_uic->getMouseSpeed().v[1] * movementSpeed;
    }
 
    // transform the manipulated nodes

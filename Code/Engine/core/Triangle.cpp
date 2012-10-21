@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\Triangle.h"
 #include "core\CollisionTests.h"
 #include "core\Matrix.h"
@@ -45,13 +46,16 @@ void Triangle::initFromCoplanarPoints( const Vector& pt1, const Vector& pt2, con
 
    // calculate the edge normals
    Vector tmpPerpVec;
-   tmpPerpVec.setCross( e[1], e[0] ).preCross( e[0] );
+   tmpPerpVec.setCross( e[1], e[0] );
+   tmpPerpVec.preCross( e[0] );
    en[0].setNormalized( tmpPerpVec );
 
-   tmpPerpVec.setCross( e[2], e[1] ).preCross( e[1] );
+   tmpPerpVec.setCross( e[2], e[1] );
+   tmpPerpVec.preCross( e[1] );
    en[1].setNormalized( tmpPerpVec );
 
-   tmpPerpVec.setCross( e[0], e[2] ).preCross( e[2] );
+   tmpPerpVec.setCross( e[0], e[2] );
+   tmpPerpVec.preCross( e[2] );
    en[2].setNormalized( tmpPerpVec );
 }
 
@@ -95,7 +99,7 @@ void Triangle::splitEdge( const FastFloat& percentage, unsigned int startVtxIdx,
    Vector edge;
    edge.setSub( v[endVtxIdx], v1 );
 
-   outEdge.setMulAdd( edge, percentage.getFloat(), v1 );
+   outEdge.setMulAdd( edge, percentage, v1 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -126,7 +130,7 @@ PlaneClassification Triangle::classifyAgainsPlane( const Plane& plane ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Triangle::distanceToPlane( const Plane& plane ) const
+const FastFloat Triangle::distanceToPlane( const Plane& plane ) const
 {
    FastFloat posEps, negEps;
    posEps = Float_1e_4;
@@ -137,7 +141,7 @@ float Triangle::distanceToPlane( const Plane& plane ) const
    for (unsigned int i = 0; i < 3; ++i)
    {
       Vector vtx = v[i];
-      vtx.w = 1;
+      vtx[3] = 1;
 
       const FastFloat dist = plane.dotCoord( vtx );
       if ( dist > posEps )
@@ -152,15 +156,15 @@ float Triangle::distanceToPlane( const Plane& plane ) const
 
    if ( frontCount == 3 ) 
    {
-      return 1;
+      return Float_1;
    }
    else if ( backCount == 3 ) 
    {
-      return -1;
+      return Float_Minus1;
    }
    else 
    {
-      return 0;
+      return Float_0;
    }
 }
 

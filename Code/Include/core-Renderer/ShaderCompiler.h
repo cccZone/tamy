@@ -4,15 +4,18 @@
 
 #include <string>
 #include <vector>
-#include "core-Renderer/PixelShaderConstant.h"
-#include "core-Renderer/VertexShaderConstant.h"
-#include "core/types.h"
+#include "core\MemoryRouter.h"
+#include "core-Renderer\PixelShaderConstant.h"
+#include "core-Renderer\VertexShaderConstant.h"
+#include "core\types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class ShaderCompiler
 {
+   DECLARE_ALLOCATOR( ShaderCompiler, AM_DEFAULT );
+
 private:
    std::string    m_errorMsg;
 

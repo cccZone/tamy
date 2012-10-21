@@ -20,6 +20,7 @@ class MemoryPool;
  */
 class RPSceneRenderNode : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPSceneRenderNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

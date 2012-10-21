@@ -12,14 +12,28 @@
 
 Quaternion::Quaternion()
 {
-   SimdUtils::toSimd( 0.0f, 0.0f, 0.0f, 1.0f, &m_quad );
+   m_quad = Quad_0001;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+Quaternion::Quaternion( const QuadStorage& quad )
+   : m_quad( quad )
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Quaternion::setIdentity()
 {
-   SimdUtils::toSimd( 0.0f, 0.0f, 0.0f, 1.0f, &m_quad );
+   m_quad = Quad_0001;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Quaternion::set( const QuadStorage& quad )
+{
+   m_quad = quad;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -31,19 +45,18 @@ void Quaternion::set( float x, float y, float z, float w )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Quaternion::setAxisAngle( const Vector& axis, float angle )
+void Quaternion::setAxisAngle( const Vector& axis, const FastFloat& angle )
 {
    ASSERT_MSG( axis.isNormalized(), "Axis vector is not unit length" );
 
-   // <fastfloat.todo>
-   __m128 simdAxis;
-   SimdUtils::toSimd( axis.x, axis.y, axis.z, axis.w, &simdAxis );
+   FastFloat halfAngle;
+   halfAngle.setMul( angle, Float_Inv2 );
+   FastFloat s, c;
+   s.setSin( halfAngle );
+   c.setCos( halfAngle );
 
-   FastFloat s; s.setFromFloat( sin( angle * 0.5f ) );
-   simdAxis = _mm_mul_ps( simdAxis, s.m_val );
-
-   FastFloat w; w.setFromFloat( cos( angle/2 ) );
-   SimdUtils::setXYZ_W( &simdAxis, &w.m_val, &m_quad );
+   __m128 rotatedAxis = _mm_mul_ps( axis.m_quad, s.m_val );
+   SimdUtils::setXYZ_W( &rotatedAxis, &c.m_val, &m_quad );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -250,20 +263,17 @@ void Quaternion::getAxis( Vector& outAxis ) const
    SimdUtils::lessZeroMask( &wComp, &wLessZero );
    SimdUtils::flipSign( &axis, &wLessZero, &axis );
 
-   // <fastfloat.todo>
-   outAxis.x = axis.m128_f32[0];
-   outAxis.y = axis.m128_f32[1];
-   outAxis.z = axis.m128_f32[2];
-   outAxis.w = axis.m128_f32[3];
+   outAxis.m_quad = axis;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Quaternion::getAngle() const
+void Quaternion::getAngle( FastFloat& outAngle ) const
 {
    __m128 wComp;
    SimdUtils::getComponent( &m_quad, 3, &wComp );
-   return 2.0f * (float)acos( wComp.m128_f32[3] );
+   float v = ::acos( wComp.m128_f32[0] );
+   outAngle.m_val = _mm_set1_ps( v * 2.0f );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -271,8 +281,7 @@ float Quaternion::getAngle() const
 void Quaternion::transform( const Vector& inVec, Vector& outVec ) const
 {
    // <fastfloat.todo> this will change as soon as Vector gets converted to SIMD
-   __m128 simdVec;
-   SimdUtils::toSimd( inVec.x, inVec.y, inVec.z, inVec.w, &simdVec );
+   __m128 simdVec = inVec.m_quad;
 
    __m128 qreal;
    SimdUtils::getComponent( &m_quad, 3, &qreal );
@@ -290,13 +299,7 @@ void Quaternion::transform( const Vector& inVec, Vector& outVec ) const
    SimdUtils::cross( &m_quad, &simdVec, &imagCrossDir );
    SimdUtils::addMul( &ret, &imagCrossDir, &qreal, &ret );
 
-   __m128 outSimdVec = _mm_add_ps( ret, ret );
-
-   // <fastfloat.todo> this will change as soon as Vector gets converted to SIMD
-   outVec.x = outSimdVec.m128_f32[0];
-   outVec.y = outSimdVec.m128_f32[1];
-   outVec.z = outSimdVec.m128_f32[2];
-   outVec.w = outSimdVec.m128_f32[3];
+   outVec.m_quad = _mm_add_ps( ret, ret );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

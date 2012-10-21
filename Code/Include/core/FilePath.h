@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,8 @@ class InStream;
  */
 class FilePath
 {
+   DECLARE_ALLOCATOR( FilePath, AM_DEFAULT );
+
 private:
    std::string       m_relativePath;
 

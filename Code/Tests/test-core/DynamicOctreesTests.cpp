@@ -22,9 +22,9 @@ namespace // anonymous
 
       void move(float ox, float oy, float oz)
       {
-         m_boundingSphere.origin.x = ox;
-         m_boundingSphere.origin.y = oy;
-         m_boundingSphere.origin.z = oz;
+         m_boundingSphere.origin[0] = ox;
+         m_boundingSphere.origin[1] = oy;
+         m_boundingSphere.origin[2] = oz;
       }
    };
 

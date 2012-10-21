@@ -24,6 +24,7 @@ class GeometryEntity :  public Geometry,
                         public Observer< GeometryShader, GraphBuilderOperation >,
                         public Observer< GeometryShaderNode, GraphBuilderNodeOperation >
 {
+   DECLARE_ALLOCATOR( GeometryEntity, AM_DEFAULT );
    DECLARE_CLASS()
 
 private:

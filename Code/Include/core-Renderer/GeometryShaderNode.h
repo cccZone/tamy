@@ -16,6 +16,7 @@ class Renderer;
 
 class GeometryShaderNode : public ResourceObject, public GraphBuilderNode< GeometryShaderNode >
 {
+   DECLARE_ALLOCATOR( GeometryShaderNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:

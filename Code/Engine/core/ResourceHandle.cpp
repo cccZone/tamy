@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/ResourceHandle.h"
 #include "core/Resource.h"
 

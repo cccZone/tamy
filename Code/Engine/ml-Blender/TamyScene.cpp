@@ -5,8 +5,11 @@
 
 void TamyMatrix::applyTo( Matrix& outTransform ) const
 {
+   Matrix tamyRotMtx;
+   rotationMtx.store( tamyRotMtx );
+
    Quaternion rotQuat;
-   rotationMtx.getRotation( rotQuat );
+   tamyRotMtx.getRotation( rotQuat );
 
    float tmp = rotQuat[1];
    rotQuat[1] = -rotQuat[2];
@@ -14,22 +17,29 @@ void TamyMatrix::applyTo( Matrix& outTransform ) const
 
    // position coordinates for the geometry are swapped as well - not the case with the lights though!!!
    Vector swappedPos;
-   swappedPos.set( position.x, position.z, position.y, 0 );
+   position.store( swappedPos );
+   swappedPos[3] = 0;
    
    outTransform.setRotation( rotQuat );
-   outTransform.setPosition( swappedPos );
+   outTransform.setPosition<3>( swappedPos );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TamyMatrix::applyToLight( Matrix& outTransform ) const
 {
-   Vector side, up, forward, pos;
-   rotationMtx.getVectors( side, up, forward, pos );
-   up.mul( -1.0f );
-   forward.mul( -1.0f );
+   Matrix tamyRotMtx;
+   rotationMtx.store( tamyRotMtx );
 
-   outTransform.setRows( side, up, forward, position );
+   Vector side, up, forward, pos;
+   tamyRotMtx.getVectors( side, up, forward, pos );
+   up.mul( Float_Minus1 );
+   forward.mul( Float_Minus1 );
+
+   Vector tamyPos;
+   position.store( tamyPos );
+
+   outTransform.setRows( side, up, forward, tamyPos );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

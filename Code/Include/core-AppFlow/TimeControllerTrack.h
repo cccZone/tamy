@@ -1,7 +1,10 @@
+/// @file   core-AppFlow/TimeControllerTrack.h
+/// @brief  time controller track
 #pragma once
 
 #include <vector>
 #include <string>
+#include "core\MemoryRouter.h"
 #include "core-AppFlow\TimeDependent.h"
 #include "core-AppFlow\TimeEvent.h"
 
@@ -10,6 +13,8 @@
 
 class TimeControllerTrack
 {
+   DECLARE_ALLOCATOR( TimeControllerTrack, AM_DEFAULT );
+
 private:
    std::string                   m_id;
    float                         m_speed;

@@ -9,6 +9,9 @@
     <ClCompile Include="TamyScene.cpp">
       <Filter>SceneExport</Filter>
     </ClCompile>
+    <ClCompile Include="BaseExportStructs.cpp">
+      <Filter>SceneExport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\ml-Blender\BlenderSceneExporter.h">
@@ -23,6 +26,9 @@
       <Filter>SceneExport</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\ml-Blender\TamyMesh.h">
+      <Filter>SceneExport</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ml-Blender\BaseExportStructs.h">
       <Filter>SceneExport</Filter>
     </ClInclude>
   </ItemGroup>

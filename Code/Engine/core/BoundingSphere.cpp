@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\BoundingSphere.h"
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
@@ -10,25 +11,33 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 BoundingSphere::BoundingSphere()
-   : origin(0, 0, 0, 1)
-   , radius(0)
+   : origin( Quad_0001 )
+   , radius( Float_0 )
 {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-BoundingSphere::BoundingSphere(const Vector& _origin, float _radius)
+BoundingSphere::BoundingSphere( const Vector& _origin, float _radius )
    : origin( _origin )
-   , radius( _radius )
 {
-   origin.w = 1;
+   radius.setFromFloat( _radius );
+   origin[3] = 1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+BoundingSphere::BoundingSphere( const BoundingSphere& rhs )
+   : origin( rhs.origin )
+   , radius( rhs.radius )
+{
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 BoundingVolume* BoundingSphere::clone() const
 {
-   return new BoundingSphere( origin, radius );
+   return new BoundingSphere( *this );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,27 +56,29 @@ void BoundingSphere::transform( const Matrix& mtx, BoundingVolume& transformedVo
 
 void BoundingSphere::calculateBoundingBox( AABoundingBox& outBoundingBox ) const 
 {
-   Vector radVec( radius, radius, radius );
+   Vector radVec;
+   radVec.setBroadcast( radius );
+
    outBoundingBox.min.setSub( origin, radVec );
    outBoundingBox.max.setAdd( origin, radVec );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float BoundingSphere::distanceToPlane( const Plane& plane ) const
+const FastFloat BoundingSphere::distanceToPlane( const Plane& plane ) const
 {
    // <fastfloat.todo>
    const FastFloat distance = plane.dotCoord( origin );
    FastFloat absDist;
    absDist.setAbs( distance );
 
-   if ( absDist.getFloat() <= radius ) 
+   if ( absDist <= radius ) 
    { 
-      return 0; 
+      return Float_0; 
    }
    else
    { 
-      return distance.getFloat(); 
+      return distance; 
    }
 }
 
@@ -118,7 +129,7 @@ bool BoundingSphere::testCollision(const Triangle& rhs) const
 
 bool BoundingSphere::hasVolume() const
 {
-   return radius > 0;
+   return radius > Float_0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

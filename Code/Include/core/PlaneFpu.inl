@@ -16,14 +16,14 @@ void Plane::setZero()
 
 void Plane::set( const Vector& vec )
 {
-   memcpy( m_quad.v, vec.v.v, sizeof( float ) * 4 );
+   memcpy( m_quad.v, vec.m_quad.v, sizeof( float ) * 4 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Plane::set( const Vector& normal, const FastFloat& distance )
 {
-   memcpy( m_quad.v, normal.v.v, sizeof( float ) * 3 );
+   memcpy( m_quad.v, normal.m_quad.v, sizeof( float ) * 3 );
    m_quad.v[3] = distance.m_val;
 }
 
@@ -76,6 +76,13 @@ float Plane::operator[]( int idx ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+const FastFloat Plane::getComponent( uint idx ) const
+{
+   return *( const FastFloat* )&m_quad.v[idx];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Plane::normalize()
 {
    float length = sqrt( m_quad.v[0]*m_quad.v[0] + m_quad.v[1]*m_quad.v[1] + m_quad.v[2]*m_quad.v[2] );
@@ -93,7 +100,7 @@ void Plane::normalize()
 const FastFloat Plane::dotCoord( const Vector& coord ) const
 {
    FastFloat t;
-   t.m_val = coord.x * m_quad.v[0] + coord.y * m_quad.v[1] + coord.z * m_quad.v[2] + m_quad.v[3];
+   t.m_val = coord.m_quad.v[0] * m_quad.v[0] + coord.m_quad.v[1] * m_quad.v[1] + coord.m_quad.v[2] * m_quad.v[2] + m_quad.v[3];
    return t;
 }
 
@@ -102,7 +109,7 @@ const FastFloat Plane::dotCoord( const Vector& coord ) const
 const FastFloat Plane::dotNormal( const Vector& normal ) const
 {
    FastFloat t;
-   t.m_val = normal.x * m_quad.v[0] + normal.y * m_quad.v[1] + normal.z * m_quad.v[2];
+   t.m_val = normal.m_quad.v[0] * m_quad.v[0] + normal.m_quad.v[1] * m_quad.v[1] + normal.m_quad.v[2] * m_quad.v[2];
    return t;
 }
 
@@ -110,7 +117,7 @@ const FastFloat Plane::dotNormal( const Vector& normal ) const
 
 void Plane::getNormal( Vector& outPlaneNormal ) const
 {
-   memcpy( outPlaneNormal.v.v, m_quad.v, sizeof( float ) * 3 );
+   memcpy( outPlaneNormal.m_quad.v, m_quad.v, sizeof( float ) * 3 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

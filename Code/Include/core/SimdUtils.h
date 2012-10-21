@@ -77,6 +77,14 @@ public:
    static void flipSign( const __m128* quad, const __m128* mask, __m128* outQuad );
 
    /**
+    * Calculates a square root of the specified quad.
+    *
+    * @param quad
+    * @param outQuad
+    */
+   static void sqrt( const __m128* quad, __m128* outQuad );
+
+   /**
     * Calculates a square root of the specified quad, and returns its reciprocal.
     *
     * @param quad
@@ -84,6 +92,13 @@ public:
     */
    static void sqrtInverse( const __m128* quad, __m128* outQuad );
 
+   /**
+    * Calculates the floor value of the specified SIMD number.
+    *
+    * @param quad
+    * @param outQuad
+    */
+   static void floor( const __m128* quad, __m128* outQuad );
 
    // -------------------------------------------------------------------------
    // Conversion operations
@@ -122,6 +137,14 @@ public:
     * @param outComponent
     */
    static void getComponent( const __m128* quad, const int idx, __m128* outComponent );
+
+   /**
+    * Transposes a matrix.
+    *
+    * @param inRows       matrix rows
+    * @param outRows      transposed matrix rows
+    */
+   static void transpose( const __m128* inRows, __m128* outRows );
 
    // -------------------------------------------------------------------------
    // Masking operations

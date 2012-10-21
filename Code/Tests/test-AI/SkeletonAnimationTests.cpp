@@ -62,17 +62,17 @@ TEST( SkeletonAnimationController, architecture )
    SkeletonAnimation animSource;
 
    BoneSRTAnimation* rootBoneKeys = new BoneSRTAnimation( "root" );
-   rootBoneKeys->addTranslationKey( 0.f, Vector::OX );
+   rootBoneKeys->addTranslationKey( 0.f, Quad_1000 );
    rootBoneKeys->addOrientationKey( 0.f, Quaternion::getIdentity() );
    animSource.addKeys( rootBoneKeys );
 
    BoneSRTAnimation* hipBoneKeys = new BoneSRTAnimation( "hip" );
-   hipBoneKeys->addTranslationKey( 0.f, Vector::OX );
+   hipBoneKeys->addTranslationKey( 0.f, Quad_1000 );
    hipBoneKeys->addOrientationKey( 0.f, Quaternion::getIdentity() );
    animSource.addKeys( hipBoneKeys );
 
    BoneSRTAnimation* legBoneKeys = new BoneSRTAnimation( "leg" );
-   legBoneKeys->addTranslationKey( 0.f, Vector::OX );
+   legBoneKeys->addTranslationKey( 0.f, Quad_1000 );
    legBoneKeys->addOrientationKey( 0.f, Quaternion::getIdentity() );
    animSource.addKeys( legBoneKeys );
 
@@ -85,24 +85,30 @@ TEST( SkeletonAnimationController, architecture )
    // spatial entities - but not the ones that are connected via non-spatial entities
    animController->update( 0.f );
    Matrix result, expected;
-   expected.setTranslation( Vector( 1, 0, 0 ) );
+   Vector expectedTransl;
+   expectedTransl.set( 1, 0, 0 );
+   expected.setTranslation( expectedTransl );
    result = root->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
-   expected.setTranslation( Vector( 2, 0, 0 ) );
+   expectedTransl.set( 2, 0, 0 );
+   expected.setTranslation( expectedTransl );
    result = hip->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
-   expected.setTranslation( Vector( 3, 0, 0 ) );
+   expectedTransl.set( 3, 0, 0 );
+   expected.setTranslation( expectedTransl );
    result = leg->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
-   expected.setTranslation( Vector( 2, 0, 0 ) );
+   expectedTransl.set( 2, 0, 0 );
+   expected.setTranslation( expectedTransl );
    result = anotherLeg->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
    // this one is connected via a non-node entity - so it's considered to be detached from the skeleton
-   expected.setTranslation( Vector( 0, 0, 0 ) );
+   expectedTransl.set( 0, 0, 0 );
+   expected.setTranslation( expectedTransl );
    result = gun->getGlobalMtx();
    COMPARE_MTX( expected, result );
 
@@ -132,7 +138,7 @@ TEST( SkeletonAnimationController, trackTimeControl )
    SkeletonAnimation animSource;
 
    BoneSRTAnimation* rootBoneKeys = new BoneSRTAnimation( "root" );
-   rootBoneKeys->addTranslationKey( 3.f, Vector::ZERO );
+   rootBoneKeys->addTranslationKey( 3.f, Quad_0 );
    animSource.addKeys( rootBoneKeys );
 
    animController->setAnimationSource( animSource );

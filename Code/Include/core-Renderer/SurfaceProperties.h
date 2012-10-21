@@ -13,6 +13,8 @@
  */
 class SurfaceProperties
 {
+   DECLARE_ALLOCATOR( SurfaceProperties, AM_DEFAULT );
+
 private:
    Color m_ambient;
    Color m_diffuse;

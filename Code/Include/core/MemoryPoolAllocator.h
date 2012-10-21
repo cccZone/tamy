@@ -2,7 +2,8 @@
 /// @brief  This allocator allocates data in a designated memory pool
 #pragma once
 
-#include "core/MemoryPool.h"
+#include "core\MemoryPool.h"
+#include "core\MemoryAllocator.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -10,7 +11,7 @@
 /**
  * This allocator allocates data in a designated memory pool.
  */
-class MemoryPoolAllocator
+class MemoryPoolAllocator : public MemoryAllocator
 {
 private:
    MemoryPool*   m_defaultPool;
@@ -25,30 +26,12 @@ public:
    MemoryPoolAllocator( MemoryPool* pool = 0 );
    ~MemoryPoolAllocator();
 
-   /**
-    * Destroys an object allocated by the allocator
-    */
-   template< typename T >
-   void destroy( T* obj )
-   {
-      if ( obj )
-      {
-         obj->~T();
-         m_pool->dealloc( obj );
-      }
-   }
-
-   /**
-    * Allocates a chunk of memory of the specified size.
-    *
-    * @param size
-    */
+   // -------------------------------------------------------------------------
+   // MemoryAllocator implementation
+   // -------------------------------------------------------------------------
    void* alloc( size_t size );
-
-   /**
-    * Deallocates the memory from the specified address.
-    */
    void dealloc( void* ptr );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+

@@ -15,6 +15,7 @@ void MeshUtils::calculateVertexTangents( const std::vector< Face >& faces, std::
    Vector* tan2 = tan1 + vertexCount;
    memset( tan1, 0, vertexCount * sizeof(Vector) * 2 );
 
+   Vector sdir, tdir;
    uint trianglesCount = faces.size();
    for ( uint i = 0; i < trianglesCount; ++i )
    {
@@ -48,8 +49,8 @@ void MeshUtils::calculateVertexTangents( const std::vector< Face >& faces, std::
       { 
          r = 1.0f / r;
 
-         Vector sdir( (t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r );
-         Vector tdir( (s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r );
+         sdir.set( (t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r );
+         tdir.set( (s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r );
 
          tan1[i1].add( sdir );
          tan1[i2].add( sdir );
@@ -68,14 +69,17 @@ void MeshUtils::calculateVertexTangents( const std::vector< Face >& faces, std::
       const Vector& t = tan1[i];
 
       // Gram-Schmidt orthogonalize
-      float normTan1Dot = vertexNorm.dot( t );
-      vertexTangent.setMulAdd( vertexNorm, -normTan1Dot, t ).normalize();
+      FastFloat normTan1Dot;
+      normTan1Dot.setNeg( vertexNorm.dot( t ) );
+      vertexTangent.setMulAdd( vertexNorm, normTan1Dot, t );
+      vertexTangent.normalize();
 
       // Calculate handedness
       normTanCross.setCross( vertexNorm, t );
-      float crossTan2Dot = normTanCross.dot( tan2[i] );
-      float handedness =  ( crossTan2Dot < 0.0f ) ? -1.0f : 1.0f;
-      vertexTangent.mul( 1.0f / handedness );
+      FastFloat handedness;
+      handedness.setSign( normTanCross.dot( tan2[i] ) );
+      handedness.reciprocal();
+      vertexTangent.mul( handedness );
 
       // store the results
       vertexTangent.store( inOutVertices[i].m_tangent );

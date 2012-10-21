@@ -67,7 +67,7 @@ void DX9RenderTarget::getPixel( const Vector& pos, Color& outColor ) const
    }
 
    // check the validity of the queried position
-   if ( pos.x >= rtDesc.Width || pos.y >= rtDesc.Height )
+   if ( pos[0] >= rtDesc.Width || pos[1] >= rtDesc.Height )
    {
       ASSERT_MSG( false, "Queried position is outside the screen boundaries." );
       return;
@@ -101,8 +101,8 @@ void DX9RenderTarget::getPixel( const Vector& pos, Color& outColor ) const
       return;
    }
 
-   unsigned int x = ( unsigned int )( ( rtDesc.Width * ( pos.x + 1.f ) ) / 2.f );
-   unsigned int y = ( unsigned int )( ( rtDesc.Height * ( 1.f - pos.y ) ) / 2.f );
+   unsigned int x = ( unsigned int )( ( rtDesc.Width * ( pos[0] + 1.f ) ) / 2.f );
+   unsigned int y = ( unsigned int )( ( rtDesc.Height * ( 1.f - pos[1] ) ) / 2.f );
 
    unsigned int addr = y * lockedRect.Pitch + x * 4;
    unsigned char* ptr = ( unsigned char* )( lockedRect.pBits ) + addr;

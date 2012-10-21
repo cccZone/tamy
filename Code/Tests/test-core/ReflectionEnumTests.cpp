@@ -204,6 +204,7 @@ TEST( ReflectionEnum, enumProperties )
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
    typesRegistry.addEnumType< WeekDays >( "WeekDays" );
+   typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
    typesRegistry.addSerializableType< TestEnumClass >( "TestEnumClass", new TSerializableTypeInstantiator< TestEnumClass >() );
 
    // create the properties viewer
@@ -230,6 +231,7 @@ TEST( ReflectionEnum, castTests )
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
    typesRegistry.addEnumType< WeekDays >( "WeekDays" );
    typesRegistry.addEnumType< WeekEnd >( "WeekEnd" );
+   typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
 
    ReflectionType& genericEnumType = typesRegistry.getGenericEnumType();
    TReflectionEnum< WeekEnd >* weekendEnum = dynamic_cast< TReflectionEnum< WeekEnd >* >( typesRegistry.find< WeekEnd>() );

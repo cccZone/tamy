@@ -1,10 +1,10 @@
+/// @file   core\Graph.h
+/// @brief  graph representation
 #ifndef _GRAPH_H
 #define _GRAPH_H
 
-/// @file   core\Graph.h
-/// @brief  graph representation
-
 #include <vector>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,6 +27,8 @@ struct DefaultEdge;
 template <typename NODE, typename EDGE = DefaultEdge< NODE > >
 class Graph
 {
+   DECLARE_ALLOCATOR( Graph, AM_ALIGNED_16 );
+
 public:
     typedef int Index;
     enum {InvalidIndex = -1};

@@ -8,6 +8,8 @@ namespace // anonymous
 {
    struct VertexTypeA
    {
+      DECLARE_ALLOCATOR( VertexTypeA, AM_DEFAULT );
+
       int a;
    };
 
@@ -15,6 +17,8 @@ namespace // anonymous
 
    struct VertexTypeB
    {
+      DECLARE_ALLOCATOR( VertexTypeB, AM_DEFAULT );
+
       char a;
    };
 

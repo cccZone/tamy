@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/ReflectionType.h"
 #include "core/ReflectionTypeComponent.h"
 #include "core/Assert.h"
@@ -67,32 +68,6 @@ void SerializableReflectionType::setupInstantiator( SerializableTypeInstantiator
 bool SerializableReflectionType::isA( const ReflectionType& referenceType ) const
 {
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
-   /*
-   // explore the inheritance hierarchy of this type and verify
-   // if any type in it matches the specified reference type
-   std::list< const SerializableReflectionType* > bfs;
-   bfs.push_back( this );
-   while ( !bfs.empty() )
-   {
-      const SerializableReflectionType* currType = bfs.front();
-      bfs.pop_front();
-
-      if ( currType->m_id == referenceType.m_id )
-      {
-         return true;
-      }
-
-      // gather the base types
-      uint childrenCount = currType->m_baseTypesIds.size();
-      for ( uint i = 0; i < childrenCount; ++i )
-      {
-         const SerializableReflectionType* parentType = typesRegistry.findSerializable( currType->m_baseTypesIds[i] );
-         if ( parentType )
-         {
-            bfs.push_back( parentType );
-         }
-      }
-   }*/
 
    List< const SerializableReflectionType*, MemoryPoolAllocator > bfs( typesRegistry.m_sharedMemoryPoolAllocator );
    bfs.pushBack( this );

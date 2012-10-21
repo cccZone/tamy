@@ -4,6 +4,7 @@
 #define _REFLECTION_PROPERTY_EDITOR_H
 
 #include <vector>
+#include "core\MemoryRouter.h"
 #include "core\types.h"
 #include "core\ReflectionObjectChangeListener.h"
 
@@ -23,6 +24,8 @@ class ReflectionObject;
  */
 class ReflectionPropertyEditor
 {
+   DECLARE_ALLOCATOR( ReflectionPropertyEditor, AM_DEFAULT );
+
 public:
    uint            m_propertyId;   
 
@@ -64,6 +67,8 @@ protected:
  */
 class ReflectionPropertyEditorComposite : public ReflectionPropertyEditor
 {
+   DECLARE_ALLOCATOR( ReflectionPropertyEditorComposite, AM_DEFAULT );
+
 private:
    ReflectionPropertyArray*                     m_arrayProperty;
    std::vector< ReflectionObjectEditor* >		   m_editors;
@@ -107,6 +112,8 @@ public:
  */
 class ReflectionObjectEditor : public ReflectionObjectChangeListener
 {
+   DECLARE_ALLOCATOR( ReflectionObjectEditor, AM_DEFAULT );
+
 private:
    ReflectionObject*                               m_editedObject;
    std::vector< ReflectionPropertyEditor* >		   m_editors;

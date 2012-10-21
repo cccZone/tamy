@@ -1,5 +1,6 @@
 #include "core-TestFramework\TestFramework.h"
 #include "core\ReflectionObject.h"
+#include "core\Resource.h"
 #include "core\RefPtr.h"
 #include "core\InArrayStream.h"
 #include "core\OutArrayStream.h"
@@ -136,6 +137,7 @@ TEST( RefPtr, serialization )
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
    typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
+   typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< TestObject >( "TestObject", new TSerializableTypeInstantiator< TestObject >() );
    typesRegistry.addSerializableType< ObjWithRefPtrMembers >( "ObjWithRefPtrMembers", new TSerializableTypeInstantiator< ObjWithRefPtrMembers >() );
 
@@ -172,6 +174,7 @@ TEST( RefPtr, serialization )
    restoredObject->m_obj1->removeReference();
    restoredObject->m_obj2->removeReference();
    delete restoredObject;
+   delete obj3;
    typesRegistry.clear();
 }
 

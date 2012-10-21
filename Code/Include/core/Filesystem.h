@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,6 +84,8 @@ public:
  */
 class Filesystem
 {
+   DECLARE_ALLOCATOR( Filesystem, AM_DEFAULT );
+
 private:
    typedef std::map< std::string, std::string > Shortcuts;
    typedef std::vector< FilesystemListener* >   Listeners;

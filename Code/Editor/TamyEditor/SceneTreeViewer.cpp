@@ -219,7 +219,9 @@ void SceneTreeViewer::focusOnItem( QTreeWidgetItem* item, int column )
       Vector extents;
       bb.getExtents( extents );
 
-      float radius = max2( extents.getMax<3>() * 1.5f, 5.0f );
+      FastFloat radius;
+      radius.setMul( extents.getMax<3>(), FastFloat::fromFloat( 1.5f ) );
+      radius.setMax( radius, Float_5 );
 
       m_camera->lookAt( *spatial, radius );
    }

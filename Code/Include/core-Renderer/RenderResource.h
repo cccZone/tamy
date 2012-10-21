@@ -3,6 +3,7 @@
 #pragma once
 
 #include <vector>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,8 @@ class IRenderResourceStorage;
  */
 class RenderResource
 {
+   DECLARE_ALLOCATOR( RenderResource, AM_DEFAULT );
+
 private:
    std::vector< IRenderResourceStorage* >    m_hostStorage;
    std::vector< int >                        m_resourceId;

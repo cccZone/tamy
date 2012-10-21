@@ -18,37 +18,37 @@ TEST(PlaneClassification, AABoundingBox)
 
    Plane plane;
    plane.set( Quad_1000, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0100, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_Neg_1000, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_Minus2 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_1 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_3 );
-   CPPUNIT_ASSERT(0 < vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(0 < vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, FastFloat::fromFloat( -3.0f ) );
-   CPPUNIT_ASSERT(0 > vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(0 > vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane) );
 
    AABoundingBox zeroVol(Vector(0, 0, 0), Vector(0, 0, 0));
    plane.set( Quad_0010, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f,  zeroVol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_COPLANAR, zeroVol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f,  zeroVol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_COPLANAR, zeroVol.classifyAgainsPlane(plane) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -59,37 +59,37 @@ TEST(PlaneClassification, BoundingSphere)
 
    Plane plane;
    plane.set( Quad_0010, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0100, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_1000, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_Minus1 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_1 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_2 );
-   CPPUNIT_ASSERT(0 < vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(0 < vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_Minus2 );
-   CPPUNIT_ASSERT(0 > vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(0 > vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane) );
 
    BoundingSphere zeroVol(Vector(0, 0, 0), 0);
    plane.set( Quad_0010, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f,  zeroVol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_COPLANAR, zeroVol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f,  zeroVol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_COPLANAR, zeroVol.classifyAgainsPlane(plane) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,16 +100,16 @@ TEST(PlaneClassification, PointVolume)
 
    Plane plane;
    plane.set( Quad_0010, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_COPLANAR, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_COPLANAR, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_1 );
-   CPPUNIT_ASSERT(vol.distanceToPlane(plane) > 0);
-   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(vol.distanceToPlane(plane) > Float_0);
+   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_Minus1 );
-   CPPUNIT_ASSERT(vol.distanceToPlane(plane) < 0);
-   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(vol.distanceToPlane(plane) < Float_0);
+   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -121,58 +121,58 @@ TEST(PlaneClassification, Triangle)
    // oy
    Plane plane;
    plane.set( Quad_0100, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_COPLANAR, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_COPLANAR, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0100, Float_1 );
-   CPPUNIT_ASSERT(vol.distanceToPlane(plane) > 0);
-   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(vol.distanceToPlane(plane) > Float_0);
+   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0100, Float_Minus1 );
-   CPPUNIT_ASSERT(vol.distanceToPlane(plane) < 0);
-   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(vol.distanceToPlane(plane) < Float_0);
+   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane) );
 
    // ox
    plane.set( Quad_1000, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_1000, Float_Minus1 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_1000, Float_1 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_1000, Float_2 );
-   CPPUNIT_ASSERT(vol.distanceToPlane(plane) > 0);
-   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(vol.distanceToPlane(plane) > Float_0 );
+   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_1000, Float_Minus2 );
-   CPPUNIT_ASSERT(vol.distanceToPlane(plane) < 0);
-   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(vol.distanceToPlane(plane) < Float_0 );
+   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane) );
 
    // oz
    plane.set( Quad_0010, Float_0 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_Minus1 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_1 );
-   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane));
-   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT_EQUAL(0.f, vol.distanceToPlane(plane).getFloat() );
+   CPPUNIT_ASSERT_EQUAL(PPC_SPANNING, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_2 );
-   CPPUNIT_ASSERT(vol.distanceToPlane(plane) > 0);
-   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(vol.distanceToPlane(plane) > Float_0 );
+   CPPUNIT_ASSERT_EQUAL(PPC_FRONT, vol.classifyAgainsPlane(plane) );
 
    plane.set( Quad_0010, Float_Minus2 );
-   CPPUNIT_ASSERT(vol.distanceToPlane(plane) < 0);
-   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane));
+   CPPUNIT_ASSERT(vol.distanceToPlane(plane) < Float_0 );
+   CPPUNIT_ASSERT_EQUAL(PPC_BACK, vol.classifyAgainsPlane(plane) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

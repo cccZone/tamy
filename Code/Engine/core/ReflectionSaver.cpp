@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/ReflectionSaver.h"
 #include "core/OutStream.h"
 #include "core/ReflectionObject.h"

@@ -21,6 +21,7 @@ class DepthBuffer;
  */
 class RPMaterialsDBNode : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPMaterialsDBNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\Timer.h"
 #include <windows.h>
 #include <mmsystem.h>

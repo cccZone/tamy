@@ -48,12 +48,13 @@ TEST( MatrixUtils, generateLookAtLH )
 
    Vector cameraOriginPos( 10, 20, -30 ); 
    Vector lookAtPos( 15, 20, -30 );
-   Vector upAxis = Vector::OY;
+   Vector upAxis; upAxis.set( Quad_0100 );
 
    MatrixUtils::generateLookAtLH( cameraOriginPos, lookAtPos, upAxis, tamyLookAtMtx );
 
    Vector expectedLookVec;
-   expectedLookVec.setSub( lookAtPos, cameraOriginPos ).normalize();
+   expectedLookVec.setSub( lookAtPos, cameraOriginPos );
+   expectedLookVec.normalize();
 
    Vector transformedLookVec;
    tamyLookAtMtx.transformNorm( Vector( 0, 0, 1 ), transformedLookVec );

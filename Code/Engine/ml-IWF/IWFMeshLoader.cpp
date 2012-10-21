@@ -17,10 +17,10 @@ IWFMeshLoader::IWFMeshLoader(iwfMesh* fileMesh,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void IWFMeshLoader::parseMesh( std::vector<MeshDefinition>& meshes, const std::string& name )
+void IWFMeshLoader::parseMesh( Array<MeshDefinition>& meshes, const std::string& name )
 {
-   Vector minPos(10000000, 10000000, 10000000);
-   Vector maxPos(-10000000, -10000000, -10000000);
+   Vector minPos; minPos.set(10000000, 10000000, 10000000);
+   Vector maxPos; maxPos.set(-10000000, -10000000, -10000000);
 
    std::vector<MaterialDefinition> tmpMaterials;
    MeshDefinition* mesh = NULL;
@@ -45,7 +45,7 @@ void IWFMeshLoader::parseMesh( std::vector<MeshDefinition>& meshes, const std::s
       }
 
       // select proper mesh based on the material
-      mesh = selectMeshByMaterial(tex, mat, meshes);
+      mesh = selectMeshByMaterial( tex, mat, meshes );
 
       // geometry creation step 1: create faces
       addSurface(surface, mesh->vertices.size(), mesh->faces);
@@ -54,8 +54,8 @@ void IWFMeshLoader::parseMesh( std::vector<MeshDefinition>& meshes, const std::s
       for (UINT i = 0; i < surface->VertexCount; i++)
       {
          const iwfVertex& vtx = surface->Vertices[i];
-         Vector vertexPos(vtx.x, vtx.y, vtx.z );
-         Vector vertexNormal(vtx.Normal.x, vtx.Normal.y, vtx.Normal.z );
+         Vector vertexPos; vertexPos.set(vtx.x, vtx.y, vtx.z );
+         Vector vertexNormal; vertexNormal.set(vtx.Normal.x, vtx.Normal.y, vtx.Normal.z );
 
          mesh->vertices.push_back( LitVertex() );
          LitVertex& vertex = mesh->vertices.back();
@@ -65,34 +65,28 @@ void IWFMeshLoader::parseMesh( std::vector<MeshDefinition>& meshes, const std::s
          vertex.m_textureCoords[0] = vtx.TexCoords[0][0];
          vertex.m_textureCoords[1] = vtx.TexCoords[0][1];
 
-         if (vertexPos.x < minPos.x) minPos.x = vertexPos.x;
-         if (vertexPos.y < minPos.y) minPos.y = vertexPos.y;
-         if (vertexPos.z < minPos.z) minPos.z = vertexPos.z;
-
-         if (vertexPos.x > maxPos.x) maxPos.x = vertexPos.x;
-         if (vertexPos.y > maxPos.y) maxPos.y = vertexPos.y;
-         if (vertexPos.z > maxPos.z) maxPos.z = vertexPos.z;
+         minPos.setMin( minPos, vertexPos );
+         maxPos.setMax( maxPos, vertexPos );
       }
    }
 
    // translate all vertices so that the mesh is centered around the global origin
-   Vector meshTranslation(minPos.x + (maxPos.x - minPos.x) / 2.f,
-                               minPos.y + (maxPos.y - minPos.y) / 2.f,
-                               minPos.z + (maxPos.z - minPos.z) / 2.f);
-
+   Vector meshTranslation;
+   meshTranslation.setAdd( minPos, maxPos );
+   meshTranslation.mul( Float_Inv2 );
+   
    unsigned int meshesCount = meshes.size();
    for (unsigned int i = 0; i < meshesCount; ++i)
    {
       mesh = &(meshes[i]);
-      for (std::vector<LitVertex>::iterator vertexIt = mesh->vertices.begin();
-           vertexIt != mesh->vertices.end(); ++vertexIt)
+      for ( std::vector<LitVertex>::iterator vertexIt = mesh->vertices.begin(); vertexIt != mesh->vertices.end(); ++vertexIt )
       {
-         vertexIt->m_coords.v[0] -= meshTranslation.x; 
-         vertexIt->m_coords.v[1] -= meshTranslation.y; 
-         vertexIt->m_coords.v[2] -= meshTranslation.z; 
+         vertexIt->m_coords.v[0] -= meshTranslation[0]; 
+         vertexIt->m_coords.v[1] -= meshTranslation[1]; 
+         vertexIt->m_coords.v[2] -= meshTranslation[2]; 
       }
 
-      mesh->localMtx.setTranslation( Vector( meshTranslation.x, meshTranslation.y, meshTranslation.z ) );
+      mesh->localMtx.setTranslation( meshTranslation );
    }
 
 
@@ -240,8 +234,7 @@ void IWFMeshLoader::addSurface(iwfSurface* surface,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MeshDefinition* IWFMeshLoader::selectMeshByMaterial(iwfTexture* texture, iwfMaterial* material,
-                                                    std::vector<MeshDefinition>& meshes)
+MeshDefinition* IWFMeshLoader::selectMeshByMaterial( iwfTexture* texture, iwfMaterial* material, Array< MeshDefinition >& meshes )
 {
    std::string newMaterialName = ((material != NULL) && (material->Name != NULL)) ? material->Name : "";
    std::string newTextureName  = ((texture != NULL) && (texture->Name != NULL)) ? texture->Name : "";

@@ -151,34 +151,34 @@ TEST( EulerAngles, fromMatrix )
 TEST( EulerAngles, setFromShortestRotation )
 {
    EulerAngles o;
-   o.setFromShortestRotation( Vector::OZ, Vector::OX );
+   o.setFromShortestRotation( Vector_OZ, Vector_OX );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(90.f, o.getYaw(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getPitch(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getRoll(), 1e-3);
 
-   o.setFromShortestRotation( Vector::OZ, Vector::OX_NEG );
+   o.setFromShortestRotation( Vector_OZ, Vector_NEG_OX );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(-90.f, o.getYaw(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getPitch(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getRoll(), 1e-3);
 
-   o.setFromShortestRotation( Vector::OY, Vector::OZ );
+   o.setFromShortestRotation( Vector_OY, Vector_OZ );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getYaw(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(90.f, o.getPitch(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getRoll(), 1e-1);
 
-   o.setFromShortestRotation( Vector::OX, Vector::OY );
+   o.setFromShortestRotation( Vector_OX, Vector_OY );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getYaw(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getPitch(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(90.f, o.getRoll(), 1e-1);
 
-   o.setFromShortestRotation( Vector::OY, Vector::OX );
+   o.setFromShortestRotation( Vector_OY, Vector_OX );
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getYaw(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, o.getPitch(), 1e-3);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(-90.f, o.getRoll(), 1e-1);
 
    Vector diagVec( 0, 0.5f, 0.5f );
    diagVec.normalize();
-   o.setFromShortestRotation( Vector::OY, diagVec );
+   o.setFromShortestRotation( Vector_OY, diagVec );
    CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, o.getYaw(), 1e-3 );
    CPPUNIT_ASSERT_DOUBLES_EQUAL( 45.f, o.getPitch(), 1e-3 );
    CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, o.getRoll(), 1e-1 );
@@ -191,7 +191,7 @@ TEST( EulerAngles, setFromQuaternion )
    Vector arbitraryAxis( 0.3f, 0.5f, -0.2f );
    arbitraryAxis.normalize();
 
-   Vector axis[] = { Vector::OY, Vector::OZ, Vector::OX, Vector::OX_NEG, Vector::OY_NEG, Vector::OZ_NEG, arbitraryAxis };
+   Vector axis[] = { Vector_OY, Vector_OZ, Vector_OX, Vector_NEG_OX, Vector_NEG_OY, Vector_NEG_OZ, arbitraryAxis };
 
    // conversion Quaternion->EulerAngle is not so well defined, especially for complex rotations.
    // That's why the last part of the test - the one that rotates around an arbitrarily selected axis
@@ -208,7 +208,7 @@ TEST( EulerAngles, setFromQuaternion )
    {
       for ( float angle = -179.0f; angle <= 179.0f; angle += 1.0f )
       {
-         q.setAxisAngle( axis[axisIdx], DEG2RAD( angle ) );
+         q.setAxisAngle( axis[axisIdx], FastFloat::fromFloat( DEG2RAD( angle ) ) );
 
          ea.setFromQuaternion( q );
          testQ.setFromEulerAngles( ea );

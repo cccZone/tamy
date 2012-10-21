@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/Transform.h"
 #include "core/Matrix.h"
 #include "core/EulerAngles.h"
@@ -11,17 +12,17 @@ Transform Transform::IDENTITY;
 ///////////////////////////////////////////////////////////////////////////////
 
 Transform::Transform()
-   : m_translation( Vector::ZERO )
 {
+   m_translation.setZero();
    m_rotation.setIdentity();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 Transform::Transform( const Quaternion& rotation )
-   : m_translation( Vector::ZERO )
-   , m_rotation( rotation )
+   : m_rotation( rotation )
 {
+   m_translation.setZero();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -83,7 +84,7 @@ void Transform::getRotation( EulerAngles& outAngles ) const
 void Transform::toMatrix( Matrix& outMatrix ) const
 {
    outMatrix.setRotation( m_rotation );
-   outMatrix.setPosition( m_translation );
+   outMatrix.setPosition<3>( m_translation );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -181,7 +182,7 @@ void Transform::transform( const Plane& inPlane, Plane& outPlane ) const
    m_rotation.transform( planeNormal, rotatedPlaneNormal );
 
    Vector newDistVec;
-   newDistVec[3] = rotatedPlaneNormal.dot( m_translation );
+   newDistVec[3] = rotatedPlaneNormal.dot( m_translation ).getFloat();
    rotatedPlaneNormal[3] = inPlane[3];
    
    Vector newPlaneEq;

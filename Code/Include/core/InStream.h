@@ -5,7 +5,8 @@
 
 #include <vector>
 #include <string>
-#include "core/types.h"
+#include "core\MemoryRouter.h"
+#include "core\types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,6 +16,8 @@
  */
 class InStream
 {
+   DECLARE_ALLOCATOR( InStream, AM_DEFAULT );
+
 public:
    virtual ~InStream() {}
 

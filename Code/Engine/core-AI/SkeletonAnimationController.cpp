@@ -140,7 +140,7 @@ void SkeletonAnimationController::onUpdate( float timeElapsed )
       }
       else
       {
-         updateMtx = Matrix::IDENTITY;
+         updateMtx.setIdentity();
       }
 
       if ( player->getTranslation( m_trackTime, translation ) )

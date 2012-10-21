@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/ResourceImporter.h"
 #include "core/IProgressObserver.h"
 

@@ -3,10 +3,11 @@
 #ifndef _GRAPH_BUILDER_NODE_H
 #define _GRAPH_BUILDER_NODE_H
 
-#include "core/Resource.h"
-#include "core/Subject.h"
-#include "core/Observer.h"
-#include "core/GraphBuilderSockets.h"
+#include "core\MemoryRouter.h"
+#include "core\Resource.h"
+#include "core\Subject.h"
+#include "core\Observer.h"
+#include "core\GraphBuilderSockets.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -43,6 +44,8 @@ enum GraphBuilderNodeOperation
 template< typename Impl >
 class GraphBuilderNode : public Subject< Impl, GraphBuilderNodeOperation >
 {
+   DECLARE_ALLOCATOR( GraphBuilderNode, AM_ALIGNED_16 );
+
 protected:
    typedef GBNodeInput< Impl > TInputSocket;
    typedef GBNodeOutput< Impl > TOutputSocket;

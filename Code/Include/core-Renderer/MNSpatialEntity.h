@@ -14,6 +14,7 @@ class SpatialEntity;
 
 class MNSpatialEntity : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNSpatialEntity, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

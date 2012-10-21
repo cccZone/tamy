@@ -21,6 +21,8 @@ enum RendererOps;
  */
 class TextField : public Overlay, public Observer<Renderer, RendererOps>
 {
+   DECLARE_ALLOCATOR( TextField, AM_DEFAULT );
+
 private:
    Renderer&         m_renderer;
    Font*             m_font;

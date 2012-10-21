@@ -17,6 +17,7 @@ class RuntimeDataBuffer;
 
 class GeometryShader : public Resource, public GraphBuilder< GeometryShader, GeometryShaderNode >
 {
+   DECLARE_ALLOCATOR( GeometryShader, AM_DEFAULT );
    DECLARE_RESOURCE()
 
 public:

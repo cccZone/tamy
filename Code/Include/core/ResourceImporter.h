@@ -3,8 +3,9 @@
 #pragma once
 
 #include <string>
-#include "core/FilePath.h"
-#include "core/ReflectionType.h"
+#include "core\MemoryRouter.h"
+#include "core\FilePath.h"
+#include "core\ReflectionType.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,6 +22,8 @@ class ReflectionType;
  */
 class ResourceImporter
 {
+   DECLARE_ALLOCATOR( ResourceImporter, AM_DEFAULT );
+
 protected:
    FilePath             m_loadedFileName;
    ResourcesManager&    m_rm;
@@ -52,6 +55,8 @@ protected:
 template< typename ResourceType >
 class TResourceImporter : public ResourceImporter
 {
+   DECLARE_ALLOCATOR( TResourceImporter, AM_DEFAULT );
+
 public:
    /**
     * Constructor.

@@ -115,6 +115,7 @@ TEST(ResourcesManager, basic)
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< ObjMock >( "ObjMock", new TSerializableTypeInstantiator< ObjMock >() );
    typesRegistry.addSerializableType< ResourceObject >( "ResourceObject", NULL );
@@ -154,6 +155,7 @@ TEST( Resource, resourceHandles )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< ObjMock >( "ObjMock", new TSerializableTypeInstantiator< ObjMock >() );
    typesRegistry.addSerializableType< ResourceObject >( "ResourceObject", NULL );

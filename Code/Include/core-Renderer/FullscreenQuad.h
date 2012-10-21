@@ -13,6 +13,8 @@
  */
 class RCFullscreenQuad : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCFullscreenQuad, AM_DEFAULT );
+
 private:
    uint           m_width;
    uint           m_height;
@@ -33,6 +35,8 @@ public:
  */
 class RCScreenQuad : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCScreenQuad, AM_DEFAULT );
+
 private:
    uint           m_offsetX;
    uint           m_offsetY;

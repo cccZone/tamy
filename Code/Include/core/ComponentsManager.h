@@ -1,8 +1,7 @@
-#ifndef _COMPONENTS_MANAGER_H
-#define _COMPONENTS_MANAGER_H
-
 /// @file   core\ComponentsManager.h
 /// @brief  base for all component oriented classes
+#ifndef _COMPONENTS_MANAGER_H
+#define _COMPONENTS_MANAGER_H
 
 #include "core\Component.h"
 #include <vector>
@@ -29,6 +28,8 @@ class SingletonsManager;
 template < typename Derived >
 class ComponentsManager
 {
+   DECLARE_ALLOCATOR( ComponentsManager, AM_DEFAULT );
+
 public:
    typedef std::vector< Component< Derived >* >   ComponentsArr;
 

@@ -1,6 +1,8 @@
+/// @file   core-Renderer/DeviceFilterElem.h
+/// @brief  device filter element
 #pragma once
 
-#include <d3d9.h>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

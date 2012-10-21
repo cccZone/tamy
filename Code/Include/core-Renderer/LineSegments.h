@@ -4,6 +4,7 @@
 #define _LINE_SEGMENTS_H
 
 #include <vector>
+#include "core\MemoryRouter.h"
 #include "core-Renderer\GeometryResource.h"
 #include "core-Renderer\RenderCommand.h"
 #include "core-Renderer\RenderResource.h"
@@ -20,6 +21,8 @@
  */
 struct LineSegment
 {
+   DECLARE_ALLOCATOR( LineSegment, AM_ALIGNED_16 );
+
    Vector      start;
    Vector      end;
    Color       color;
@@ -49,10 +52,11 @@ struct LineSegment
  */
 class LineSegments : public GeometryResource, public RenderResource
 {
-   DECLARE_RESOURCE()
+   DECLARE_ALLOCATOR( LineSegments, AM_ALIGNED_16 );
+   DECLARE_RESOURCE();
 
 private:
-   std::vector<LineSegment>   m_segments;
+   Array<LineSegment>         m_segments;
 
    bool                       m_boundsDirty;
    AABoundingBox              m_bb;
@@ -83,7 +87,7 @@ public:
    /**
     * Returns the line segments of this geometry.
     */
-   inline const std::vector< LineSegment >& getSegments() const { return m_segments; }
+   inline const Array< LineSegment >& getSegments() const { return m_segments; }
 
    // -------------------------------------------------------------------------
    // GeometryResource implementation
@@ -106,6 +110,8 @@ private:
  */
 class RCRenderLineSegments : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCRenderLineSegments, AM_DEFAULT );
+
 private:
    LineSegments&        m_segments;
 

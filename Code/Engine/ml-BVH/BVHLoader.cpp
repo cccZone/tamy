@@ -51,7 +51,7 @@ namespace // anonymous
 
          if ( variable == "OFFSET" )
          {
-            inStream >> m_offset.x >> m_offset.y >> m_offset.z;
+            inStream >> m_offset[0] >> m_offset[1] >> m_offset[2];
          }
 
          validateLabel( inStream, "}" );
@@ -124,7 +124,7 @@ namespace // anonymous
             }
             else if ( variable == "OFFSET" )
             {
-               inStream >> m_offset.x >> m_offset.y >> m_offset.z;
+               inStream >> m_offset[0] >> m_offset[1] >> m_offset[2];
             }
             else if ( variable == "CHANNELS" )
             {
@@ -158,7 +158,8 @@ namespace // anonymous
       void parseAnimationFrames( std::stringstream& inStream, float frameTime )
       {
          // add a keyframe
-         Vector trans( 0, 0, 0 );
+         Vector trans;
+         trans.setZero();
          bool hasTranslation = false;
 
          float rotAngle;
@@ -172,23 +173,23 @@ namespace // anonymous
             const std::string& channelId = *it;
             if ( channelId == "Xposition" )
             {
-               inStream >> trans.x;
+               inStream >> trans[0];
                hasTranslation = true;
             }
             else if ( channelId == "Yposition" )
             {
-               inStream >> trans.y;
+               inStream >> trans[1];
                hasTranslation = true;
             }
             else if ( channelId == "Zposition" )
             {
-               inStream >> trans.z;
+               inStream >> trans[2];
                hasTranslation = true;
             }
             else if ( channelId == "Xrotation" )
             {
                inStream >> rotAngle;
-               tmpOrientation.setAxisAngle( Vector::OX, DEG2RAD( rotAngle ) );
+               tmpOrientation.setAxisAngle( Quad_1000, FastFloat::fromFloat( DEG2RAD( rotAngle ) ) );
                tmpOrientation.mul( orientation );
                orientation = tmpOrientation;
                hasOrientation = true;
@@ -196,7 +197,7 @@ namespace // anonymous
             else if ( channelId == "Yrotation" )
             {
                inStream >> rotAngle;
-               tmpOrientation.setAxisAngle( Vector::OY, DEG2RAD( rotAngle ) );
+               tmpOrientation.setAxisAngle( Quad_0100, FastFloat::fromFloat( DEG2RAD( rotAngle ) ) );
                tmpOrientation.mul( orientation );
                orientation = tmpOrientation;
                hasOrientation = true;
@@ -204,7 +205,7 @@ namespace // anonymous
             else if ( channelId == "Zrotation" )
             {
                inStream >> rotAngle;
-               tmpOrientation.setAxisAngle( Vector::OZ, DEG2RAD( rotAngle ) );
+               tmpOrientation.setAxisAngle( Quad_0010, FastFloat::fromFloat( DEG2RAD( rotAngle ) ) );
                tmpOrientation.mul( orientation );
                orientation = tmpOrientation;
                hasOrientation = true;
@@ -232,7 +233,7 @@ namespace // anonymous
       SpatialEntity* instantiate( SkeletonAnimation& animation )
       {
          BoneEntity* entity = new BoneEntity( m_boneName );
-         entity->accessLocalMtx().setTranslation( Vector( m_offset.x, m_offset.y, m_offset.z ) );
+         entity->accessLocalMtx().setTranslation( m_offset );
 
          unsigned int count = m_children.size();
          for ( unsigned int i = 0; i < count; ++i )

@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/GraphBuilderSockets.h"
 #include "core/GraphBuilderNode.h"
 #include <algorithm>

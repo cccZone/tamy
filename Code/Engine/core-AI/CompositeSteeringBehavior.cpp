@@ -34,12 +34,13 @@ void CompositeSteeringBehavior::add(SteeringBehavior* behavior,
 
 void CompositeSteeringBehavior::calculateVelocity( float timeElapsed, Vector& outVelocity )
 {
-   outVelocity = Vector::ZERO;
+   outVelocity.setZero();
 
    unsigned int count = m_behaviors.size();
    for (unsigned int i = 0; i < count; ++i)
    {
-      Vector vel = Vector::ZERO;
+      Vector vel;
+      vel.setZero();
       m_behaviors[i]->behavior->calculateVelocity( timeElapsed, vel );
       vel.mul( m_behaviors[i]->weight );
       outVelocity.add( vel );

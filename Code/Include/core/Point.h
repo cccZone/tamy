@@ -3,7 +3,8 @@
 #pragma once
 
 #include <iostream>
-#include "core/Vector.h"
+#include "core\MemoryRouter.h"
+#include "core\Vector.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,12 +14,14 @@
  */
 struct Point
 {
+   DECLARE_ALLOCATOR( Point, AM_DEFAULT );
+
    int x;
    int y;
 
    Point( int _x, int _y ) : x(_x), y(_y) {}
    Point() : x(0), y(0) {}
-   Point( const Vector& vec ) : x( (int)vec.x ), y( (int)vec.y ) {}
+   Point( const Vector& vec ) : x( (int)vec[0] ), y( (int)vec[1] ) {}
 
    bool operator==(const Point& rhs) const
    {

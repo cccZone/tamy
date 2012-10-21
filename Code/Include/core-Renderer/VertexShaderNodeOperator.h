@@ -22,9 +22,13 @@ class RCBindVertexShader;
 template< typename TNode >
 class VertexShaderNodeOperator
 {
+   DECLARE_ALLOCATOR( VertexShaderNodeOperator, AM_DEFAULT );
+
 private:
    struct ConstantDef
    {
+      DECLARE_ALLOCATOR( ConstantDef, AM_DEFAULT );
+
       VertexShaderConstant< TNode >*    m_constant;
       GBNodeInput< TNode >*            m_input;
 

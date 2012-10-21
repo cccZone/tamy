@@ -21,6 +21,7 @@ class MaterialInstance;
  */
 class MaterialEntity : public TRenderState< MaterialEntity >
 {
+   DECLARE_ALLOCATOR( MaterialEntity, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:

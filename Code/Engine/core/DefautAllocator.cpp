@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\DefaultAllocator.h"
 #include "core\MemoryUtils.h"
 #include <stdio.h>
@@ -6,9 +7,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+DefaultAllocator::DefaultAllocator()
+   : m_allocatedMemorySize( 0 )
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void* DefaultAllocator::alloc( size_t size )
 {
-   void* ptr = MemoryUtils::mallocAligned( size, MemoryUtils::ALIGNMENT );
+   void* ptr = ::malloc( size );
+   m_allocatedMemorySize += size;
    return ptr;
 }
 
@@ -16,7 +25,10 @@ void* DefaultAllocator::alloc( size_t size )
 
 void DefaultAllocator::dealloc( void* ptr )
 {
-   MemoryUtils::freeAligned( ptr );
+   ulong allocatedSize = *( (ulong*)ptr - 4 );
+   m_allocatedMemorySize -= allocatedSize;
+
+   ::free( ptr );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

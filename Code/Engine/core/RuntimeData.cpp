@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\RuntimeData.h"
 #include <stdio.h>
 

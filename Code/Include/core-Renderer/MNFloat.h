@@ -13,6 +13,7 @@ class MSFloatOutput;
 
 class MNFloat : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNFloat, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

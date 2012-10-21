@@ -17,6 +17,7 @@ class Renderer;
 
 class MaterialNode : public ResourceObject, public GraphBuilderNode< MaterialNode >
 {
+   DECLARE_ALLOCATOR( MaterialNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:

@@ -142,22 +142,30 @@ SpatialEntity* SceneCS::NodeDef::instantiate( const ColladaScene& scene, const S
    {
       sscanf_s( rotateElem->GetText(), "%f %f %f %f", &a, &b, &c, &d );
 
+      FastFloat rotAngle;
+      rotAngle.setFromFloat( DEG2RAD( -d ) );
+
       // switch the y & z components - and that yields the necessity to invert the rotation angle
+      Vector axis;
+      axis.set( a, b, c );
       Quaternion rotQuat;
-      rotQuat.setAxisAngle( Vector( a, b, c ), DEG2RAD( -d ) );
+      rotQuat.setAxisAngle( axis, rotAngle );
 
       rotation.mul( rotQuat );
    }
 
    Matrix& localMtx = entity->accessLocalMtx();
-   localMtx = Matrix::IDENTITY;
+   localMtx.setIdentity();
    {
       TiXmlElement* translateElem = nodeElem->FirstChildElement( "translate" );
       ASSERT( translateElem != NULL );
       sscanf_s( translateElem->GetText(), "%f %f %f", &a, &b, &c );
 
+      Vector axis;
+      axis.set( a, b, c );
+
       // switch the y & z components
-      localMtx.setTranslation( Vector( a, b, c ) );
+      localMtx.setTranslation( axis );
    }
    localMtx.setRotation( rotation );
 

@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/ReflectionSerializationUtil.h"
 #include "core/FilePath.h"
 #include "core/InFileStream.h"

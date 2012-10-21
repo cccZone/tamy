@@ -1,13 +1,14 @@
-#pragma once
-
 /// @file   core\Managable.h
 /// @brief  instance that can be managed by the SingletonsManager
+#pragma once
+
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * A common interface for all manageables that gives possibility to store them
+ * A common interface for all managables that gives possibility to store them
  * in collections.
  */
 class Manageable
@@ -24,6 +25,8 @@ public:
 template<typename T>
 class TManageable : public Manageable
 {
+   DECLARE_ALLOCATOR( TManageable, AM_DEFAULT );
+
 private:
    T* m_object;
    bool m_destroy;

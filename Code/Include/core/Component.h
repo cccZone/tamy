@@ -1,11 +1,12 @@
+/// @file   core\Component.h
+/// @brief  component that can perform some services
 #ifndef _COMPONENT_H
 #define _COMPONENT_H
 
-/// @file   core\Component.h
-/// @brief  component that can perform some services
-
+#include "core\MemoryRouter.h"
 #include <string>
 #include <set>
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -18,6 +19,8 @@
 template<typename Manager>
 class Component
 {
+   DECLARE_ALLOCATOR( Component, AM_DEFAULT );
+
 private:
    std::string m_name;
    std::set< void* > m_hostedServices;

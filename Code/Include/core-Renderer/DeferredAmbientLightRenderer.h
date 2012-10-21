@@ -2,6 +2,8 @@
 /// @brief  an ambient light renderer that uses a deferred rendering method
 #pragma once
 
+#include "core\MemoryRouter.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -16,6 +18,8 @@ struct DeferredLightingRenderData;
 
 class DeferredAmbientLightRenderer
 {
+   DECLARE_ALLOCATOR( DeferredAmbientLightRenderer, AM_DEFAULT );
+
 private:
    PixelShader*      m_shader;
 

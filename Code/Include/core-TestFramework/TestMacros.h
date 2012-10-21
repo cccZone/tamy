@@ -12,17 +12,17 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #define COMPARE_VEC(v1, v2)                                                   \
-   CPPUNIT_ASSERT(fabs(v1.x - v2.x) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.y - v2.y) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.z - v2.z) < 0.0001f);
+   CPPUNIT_ASSERT(fabs(v1[0] - v2[0]) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1[1] - v2[1]) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1[2] - v2[2]) < 0.0001f);
 
 ///////////////////////////////////////////////////////////////////////////////
 
 #define COMPARE_VEC4(v1, v2)                                                  \
-   CPPUNIT_ASSERT(fabs(v1.x - v2.x) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.y - v2.y) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.z - v2.z) < 0.0001f);                               \
-   CPPUNIT_ASSERT(fabs(v1.w - v2.w) < 0.0001f);
+   CPPUNIT_ASSERT(fabs(v1[0] - v2[0]) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1[1] - v2[1]) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1[2] - v2[2]) < 0.0001f);                               \
+   CPPUNIT_ASSERT(fabs(v1[3] - v2[3]) < 0.0001f);
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -60,10 +60,11 @@
 
 #define COMPARE_QUAT_AXIS_ANGLE(q, axis, angle)                               \
    {                                                                          \
-      float cqaaAngle; Vector cqaaAxis;                                       \
-      cqaaAngle = RAD2DEG( q.getAngle() );                                    \
+      FastFloat cqaaAngle; Vector cqaaAxis;                                   \
+      q.getAngle( cqaaAngle );                                                \
+      cqaaAngle.mul( Float_Rad2Deg );                                         \
       q.getAxis( cqaaAxis );                                                  \
-      CPPUNIT_ASSERT(fabs(cqaaAngle - angle) < 0.0001f);                      \
+      CPPUNIT_ASSERT(fabs(cqaaAngle.getFloat() - angle) < 0.0001f);           \
       COMPARE_VEC( axis, cqaaAxis );                                          \
    }
 
@@ -80,11 +81,11 @@
 #define COMPARE_MTX(rhs, lhs)                                                 \
 {                                                                             \
    bool err = false;                                                          \
-   for (char col = 0; col < 4 && !err ; ++col)                                \
+   for ( char col = 0; col < 4 && !err ; ++col )                              \
    {                                                                          \
-      for (char row = 0; row < 4 && !err; ++row)                              \
+      for ( char row = 0; row < 4 && !err; ++row )                            \
       {                                                                       \
-         if ( fabs(rhs.m[col][row] - lhs.m[col][row]) >= 0.0001f )            \
+         if ( fabs( rhs( col, row ) - lhs( col, row ) ) >= 0.0001f )          \
          {                                                                    \
             CPPUNIT_ASSERT( false );                                          \
             err = true;                                                       \

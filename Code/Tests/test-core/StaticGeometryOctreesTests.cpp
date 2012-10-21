@@ -3,6 +3,7 @@
 #include "core\BoundingSphere.h"
 #include "core\Triangle.h"
 #include "core\Vector.h"
+#include "core\MemoryRouter.h"
 #include <vector>
 #include <map>
 #include <stdexcept>
@@ -14,9 +15,12 @@ namespace // anonymous
 {
    class GeometricalObjectMock
    {
+      DECLARE_ALLOCATOR( GeometricalObjectMock, AM_ALIGNED_16 );
+
    private:
-      BoundingSphere m_boundingSphere;
-      std::vector<Triangle> m_geometry;
+      Array< Triangle >    m_geometry;
+
+      BoundingSphere       m_boundingSphere;
 
    public:
       GeometricalObjectMock()
@@ -41,9 +45,7 @@ namespace // anonymous
          return m_geometry.at(idx);
       }
 
-      void split(const Plane& splitPlane,
-                 GeometricalObjectMock** frontSplit,
-                 GeometricalObjectMock** backSplit)
+      void split( const Plane& splitPlane, GeometricalObjectMock** frontSplit, GeometricalObjectMock** backSplit )
       {
          Array<Triangle*> front;
          Array<Triangle*> back;
@@ -89,20 +91,18 @@ namespace // anonymous
             for (unsigned int vtxIdx = 0; vtxIdx < 3; ++vtxIdx)
             {
                const Vector& vtx = m_geometry[i].vertex(vtxIdx);
-               if (vtx.x > maxV.x) {maxV.x = vtx.x;}
-               if (vtx.y > maxV.y) {maxV.y = vtx.y;}
-               if (vtx.z > maxV.z) {maxV.z = vtx.z;}
-
-               if (vtx.x < minV.x) {minV.x = vtx.x;}
-               if (vtx.y < minV.y) {minV.y = vtx.y;}
-               if (vtx.z < minV.z) {minV.z = vtx.z;}
+               maxV.setMax( vtx, maxV );
+               minV.setMin( vtx, minV );
             }
          }
 
          Vector dist;
          dist.setSub( maxV, minV );
-         m_boundingSphere.origin.setMulAdd( dist, 0.5f, minV );
-         m_boundingSphere.radius = dist.length() / 2.f;
+         m_boundingSphere.origin.setMulAdd( dist, Float_Inv2, minV );
+
+         FastFloat rad;
+         rad.setDiv( dist.length(), Float_2 );
+         m_boundingSphere.radius = rad;
       }
    };
 
@@ -117,15 +117,11 @@ TEST( StaticGeometryOctree, geometryCrossingSectorsBoundaryIsSplit )
    int initDepth = 1;
    int maxDepth = 2;
 
-   StaticGeometryOctree<GeometricalObjectMock> tree(treeBB, 
-                                                    maxObjects, 
-                                                    maxDepth,
-                                                    initDepth);
+   StaticGeometryOctree<GeometricalObjectMock> tree( treeBB, maxObjects, maxDepth, initDepth );
 
    GeometricalObjectMock* object = new GeometricalObjectMock();
-   object->addTriangle(Triangle(Vector(-1, 11, 10),
-                                Vector( 1, 11, 10),
-                                Vector(-1,  9, 10)));
+   Triangle tri( Vector(-1, 11, 10), Vector( 1, 11, 10), Vector(-1,  9, 10) );
+   object->addTriangle( tri );
    tree.insert(object);
 
    for ( uint i = 0; i < 1000; ++i )

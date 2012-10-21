@@ -1,3 +1,5 @@
+/// @file   core-Sound/OggFile.h
+/// @brief sound loaded from an OGG file
 #pragma once
 
 #include "core-Sound\Sound.h"
@@ -8,8 +10,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Sound loaded from an OGG file
+ */
 class OggFile : public Sound  
 {
+   DECLARE_ALLOCATOR( OggFile, AM_DEFAULT );
+
 private:
 
 public:

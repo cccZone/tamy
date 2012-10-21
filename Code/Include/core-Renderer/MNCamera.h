@@ -14,6 +14,7 @@ class MSMatrixOutput;
 
 class MNCamera : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNCamera, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

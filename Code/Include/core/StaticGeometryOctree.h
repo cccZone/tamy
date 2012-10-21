@@ -3,6 +3,7 @@
 #ifndef _STATIC_GEOMETRY_OCTREE_H
 #define _STATIC_GEOMETRY_OCTREE_H
 
+#include "core\MemoryRouter.h"
 #include "core\Octree.h"
 #include "core\ConstSizeArray.h"
 #include <vector>
@@ -37,12 +38,12 @@ typedef std::vector<unsigned int> SGElementParts;
 template<typename Elem>
 class StaticGeometryOctree : public Octree<Elem>
 {
-   ALIGNED_CLASS();
+   DECLARE_ALLOCATOR( StaticGeometryOctree, AM_ALIGNED_16 );
 
 private:
    struct SGElement
    {
-      ALIGNED_STRUCT();
+      DECLARE_ALLOCATOR( SGElement, AM_ALIGNED_16 );
 
       /* This is the handle assigned to the original element.
        * Since it can be split into many sub elements, we want to 

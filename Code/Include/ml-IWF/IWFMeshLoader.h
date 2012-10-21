@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core-Renderer\Face.h"
+#include "core\Array.h"
 #include <vector>
 
 
@@ -27,16 +28,12 @@ public:
                  const std::vector<iwfTexture*>& textures, 
                  const std::vector<iwfMaterial*>& materials);
 
-   void parseMesh(std::vector<MeshDefinition>& meshes, 
-                  const std::string& name);
+   void parseMesh( Array<MeshDefinition>& meshes, const std::string& name );
 
 private:
-   MeshDefinition* selectMeshByMaterial(iwfTexture* texture, 
-                                        iwfMaterial* material, 
-                                        std::vector<MeshDefinition>& meshes);
+   MeshDefinition* selectMeshByMaterial( iwfTexture* texture, iwfMaterial* material, Array< MeshDefinition >& meshes );
 
-   void addSurface(iwfSurface* surface, USHORT vertexStart, 
-                   std::vector<Face >& faces);
+   void addSurface( iwfSurface* surface, USHORT vertexStart, std::vector<Face >& faces );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

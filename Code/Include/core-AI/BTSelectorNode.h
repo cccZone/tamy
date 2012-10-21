@@ -18,6 +18,8 @@ class BTNodeSelectionStrategy;
  */
 class BTSelectorNode : public BTCompositeNode
 {
+   DECLARE_ALLOCATOR( BTSelectorNode, AM_DEFAULT );
+
 private:
    BTNodeSelectionStrategy* m_selStrategy;
 

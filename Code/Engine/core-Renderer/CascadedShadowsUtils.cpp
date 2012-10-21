@@ -63,14 +63,16 @@ void CascadedShadowsUtils::calculateCascadesBounds( const CascadesConfig& config
          // We calculate a looser bound based on the size of the PCF blur.  This ensures us that we're 
          // sampling within the correct map.
          float scaleDueToBlurAMT = ( (float)( config.m_pcfBlurSize * 2 + 1 ) / cascadeDimensions );
-         Vector vScaleDueToBlurAMT( scaleDueToBlurAMT, scaleDueToBlurAMT, 0.0f, 0.0f );
+         Vector vScaleDueToBlurAMT; vScaleDueToBlurAMT.set( scaleDueToBlurAMT, scaleDueToBlurAMT, 0.0f, 0.0f );
 
          float normalizeByBufferSize = ( 1.0f / cascadeDimensions );
-         Vector vNormalizeByBufferSize( normalizeByBufferSize, normalizeByBufferSize, 0.0f, 0.0f );
+         Vector vNormalizeByBufferSize; vNormalizeByBufferSize.set( normalizeByBufferSize, normalizeByBufferSize, 0.0f, 0.0f );
 
          // We calculate the offsets as a percentage of the bound.
          Vector broaderOffset;
-         broaderOffset.setSub( lightFrustumBounds.max, lightFrustumBounds.min ).mul( 0.5f ).mul( vScaleDueToBlurAMT );
+         broaderOffset.setSub( lightFrustumBounds.max, lightFrustumBounds.min );
+         broaderOffset.mul( Float_Inv2 );
+         broaderOffset.mul( vScaleDueToBlurAMT );
 
          lightFrustumBounds.max.add( broaderOffset );
          lightFrustumBounds.min.sub( broaderOffset );
@@ -78,7 +80,8 @@ void CascadedShadowsUtils::calculateCascadesBounds( const CascadesConfig& config
          // The world units per texel are used to snap the orthographic projection to texel sized increments.  
          // Because we're fitting tightly to the cascades, the shimmering shadow edges will still be present when the 
          // camera rotates.  However, when zooming in or strafing the shadow edge will not shimmer.
-         worldUnitsPerTexel.setSub( lightFrustumBounds.max, lightFrustumBounds.min ).mul( vNormalizeByBufferSize );
+         worldUnitsPerTexel.setSub( lightFrustumBounds.max, lightFrustumBounds.min );
+         worldUnitsPerTexel.mul( vNormalizeByBufferSize );
       }
 
       // Snap the camera to 1-pixel increments so that camera movement doesn't cause the shadows to jitter around the edges
@@ -95,9 +98,9 @@ void CascadedShadowsUtils::calculateCascadesBounds( const CascadesConfig& config
       calculateLightClippingPlanes( sceneBBPointsLightSpace, lightFrustumBounds );
 
       // find the furthest distance of the camera from the origin for all calculated cascades
-      if ( lightFrustumBounds.min.z < furthestCameraDistanceFromOrigin )
+      if ( lightFrustumBounds.min[2] < furthestCameraDistanceFromOrigin )
       {
-         furthestCameraDistanceFromOrigin = lightFrustumBounds.min.z;
+         furthestCameraDistanceFromOrigin = lightFrustumBounds.min[2];
       }
 
       // calculate viewport
@@ -122,19 +125,20 @@ void CascadedShadowsUtils::calculateCascadesBounds( const CascadesConfig& config
    {
       AABoundingBox& lightFrustumBounds = outArrCascadeStages[i].m_lightFrustumBounds;
 
-      lightFrustumBounds.min.z -= furthestCameraDistanceFromOrigin;
-      lightFrustumBounds.max.z -= furthestCameraDistanceFromOrigin;
+      lightFrustumBounds.min[2] -= furthestCameraDistanceFromOrigin;
+      lightFrustumBounds.max[2] -= furthestCameraDistanceFromOrigin;
 
       Vector frustumCenter;
-      frustumCenter.setAdd( lightFrustumBounds.min, lightFrustumBounds.max ).mul( 0.5f );
-      frustumCenter.z = furthestCameraDistanceFromOrigin;
+      frustumCenter.setAdd( lightFrustumBounds.min, lightFrustumBounds.max );
+      frustumCenter.mul( Float_Inv2 );
+      frustumCenter[2] = furthestCameraDistanceFromOrigin;
 
       Vector lightPos;
       invLightViewMtx.transform( frustumCenter, lightPos );
 
       Matrix& lightMtx = outArrCascadeStages[i].m_lightMtx;
       lightMtx = config.m_lightRotationMtx;
-      lightMtx.setPosition( lightPos );
+      lightMtx.setPosition<3>( lightPos );
    }
 }
 
@@ -160,7 +164,7 @@ void CascadedShadowsUtils::createBBPoints( const AABoundingBox& inAABB, Vector* 
    //This map enables us to use a for loop and do vector math.
    static const Vector extentsMap[] = 
    { 
-      Vector( 1.0f, 1.0f, -1.0f, 1.0f ), 
+      Vector( 1.0f, 1.0f, -1.0f, 1.0f ),
       Vector( -1.0f, 1.0f, -1.0f, 1.0f ), 
       Vector( 1.0f, -1.0f, -1.0f, 1.0f ),
       Vector( -1.0f, -1.0f, -1.0f, 1.0f ),
@@ -170,11 +174,10 @@ void CascadedShadowsUtils::createBBPoints( const AABoundingBox& inAABB, Vector* 
       Vector( -1.0f, -1.0f, 1.0f, 1.0f )
    };
 
-   Vector extents;
-   extents.setSub( inAABB.max, inAABB.min ).mul( 0.5f );
-
-   Vector center;
-   center.setAdd( inAABB.min, inAABB.max ).mul( 0.5f );
+   Vector extents, center;
+   inAABB.getExtents( extents );
+   inAABB.getCenter( center );
+   extents.mul( Float_Inv2 );
 
    for( int i = 0; i < 8; ++i ) 
    {
@@ -222,12 +225,12 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
    // 2. Clip the triangles against each plane. Create new triangles as needed.
    // 3. Find the min and max z values as the near and far plane.
 
-   //This is easier because the triangles are in camera spacing making the collisions tests simple comparisions.
+   //This is easier because the triangles are in camera spacing making the collisions tests simple comparisons.
 
-   float lightCameraOrthographicMinX = inOutLightFrustumBounds.min.x;
-   float lightCameraOrthographicMaxX = inOutLightFrustumBounds.max.x;
-   float lightCameraOrthographicMinY = inOutLightFrustumBounds.min.y;
-   float lightCameraOrthographicMaxY = inOutLightFrustumBounds.max.y;
+   const FastFloat lightCameraOrthographicMinX = inOutLightFrustumBounds.min.getComponent(0);
+   const FastFloat lightCameraOrthographicMaxX = inOutLightFrustumBounds.max.getComponent(0);
+   const FastFloat lightCameraOrthographicMinY = inOutLightFrustumBounds.min.getComponent(1);
+   const FastFloat lightCameraOrthographicMaxY = inOutLightFrustumBounds.max.getComponent(1);
 
    for( int bbTriIter = 0; bbTriIter < 12; ++bbTriIter ) 
    {
@@ -243,7 +246,7 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
       for( int frustumPlaneIter = 0; frustumPlaneIter < 4; ++frustumPlaneIter ) 
       {
 
-         float edge;
+         FastFloat edge;
          int component;
 
          if( frustumPlaneIter == 0 ) 
@@ -282,7 +285,7 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
                {
                   for( int triPtIter = 0; triPtIter < 3; ++triPtIter ) 
                   {
-                     if( triangleList[triIter].pt[triPtIter].x > lightCameraOrthographicMinX ) 
+                     if( triangleList[triIter].pt[triPtIter].getComponent(0) > lightCameraOrthographicMinX ) 
                      { 
                         pointPassesCollision[triPtIter] = 1;
                      }
@@ -297,7 +300,7 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
                {
                   for( int triPtIter = 0; triPtIter < 3; ++triPtIter ) 
                   {
-                     if( triangleList[triIter].pt[triPtIter].x < lightCameraOrthographicMaxX )
+                     if( triangleList[triIter].pt[triPtIter].getComponent(0) < lightCameraOrthographicMaxX )
                      {
                         pointPassesCollision[triPtIter] = 1;
                      }
@@ -312,7 +315,7 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
                {
                   for( int triPtIter = 0; triPtIter < 3; ++triPtIter ) 
                   {
-                     if( triangleList[triIter].pt[triPtIter].y > lightCameraOrthographicMinY ) 
+                     if( triangleList[triIter].pt[triPtIter].getComponent(1) > lightCameraOrthographicMinY ) 
                      {
                         pointPassesCollision[triPtIter] = 1;
                      }
@@ -327,7 +330,7 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
                {
                   for( int triPtIter = 0; triPtIter < 3; ++triPtIter ) 
                   {
-                     if( triangleList[triIter].pt[triPtIter].y < lightCameraOrthographicMaxY ) 
+                     if( triangleList[triIter].pt[triPtIter].getComponent(1) < lightCameraOrthographicMaxY ) 
                      {
                         pointPassesCollision[triPtIter] = 1;
                      }
@@ -370,7 +373,8 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
                   triangleList[triIter].culled = true;
                }
                else if( insideVertCount == 1 ) 
-               {// One point passed. Clip the triangle against the Frustum plane
+               {
+                  // One point passed. Clip the triangle against the Frustum plane
                   triangleList[triIter].culled = false;
 
                   Vector vert0ToVert1, vert0ToVert2;
@@ -378,15 +382,19 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
                   vert0ToVert2.setSub( triangleList[triIter].pt[2], triangleList[triIter].pt[0] );
 
                   // Find the collision ratio.
-                  float hitPointTimeRatio = edge - triangleList[triIter].pt[0][component];
+                  FastFloat hitPointTimeRatio;
+                  hitPointTimeRatio.setSub( edge, triangleList[triIter].pt[0].getComponent( component ) );
 
                   // Calculate the distance along the vector as ratio of the hit ratio to the component.
-                  float distanceAlongVector01 = hitPointTimeRatio / vert0ToVert1[component];
-                  float distanceAlongVector02 = hitPointTimeRatio / vert0ToVert2[component];
+                  FastFloat distanceAlongVector01, distanceAlongVector02;
+                  distanceAlongVector01.setDiv( hitPointTimeRatio, vert0ToVert1.getComponent( component ) );
+                  distanceAlongVector02.setDiv( hitPointTimeRatio, vert0ToVert2.getComponent( component ) );
 
                   // Add the point plus a percentage of the vector.
-                  vert0ToVert1.mul( distanceAlongVector01 ).add( triangleList[triIter].pt[0] );
-                  vert0ToVert2.mul( distanceAlongVector02 ).add( triangleList[triIter].pt[0] );
+                  vert0ToVert1.mul( distanceAlongVector01 );
+                  vert0ToVert1.add( triangleList[triIter].pt[0] );
+                  vert0ToVert2.mul( distanceAlongVector02 );
+                  vert0ToVert2.add( triangleList[triIter].pt[0] );
 
                   triangleList[triIter].pt[1] = vert0ToVert2;
                   triangleList[triIter].pt[2] = vert0ToVert1;
@@ -409,11 +417,14 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
                   vert2ToVert1.setSub( triangleList[triIter].pt[1], triangleList[triIter].pt[2] );
 
                   // Get the hit point ratio.
-                  float hitPointTime_2_0 =  edge - triangleList[triIter].pt[2][component];
-                  float distanceAlongVector_2_0 = hitPointTime_2_0 / vert2ToVert0[component];
+                  const FastFloat triComp = triangleList[triIter].pt[2].getComponent( component );
+                  FastFloat hitPointTime_2_0, distanceAlongVector_2_0;
+                  hitPointTime_2_0.setSub( edge, triComp );
+                  distanceAlongVector_2_0.setDiv( hitPointTime_2_0, vert2ToVert0.getComponent( component ) );
 
                   // Calculate the new vert by adding the percentage of the vector plus point 2.
-                  vert2ToVert0.mul( distanceAlongVector_2_0 ).add( triangleList[triIter].pt[2] );
+                  vert2ToVert0.mul( distanceAlongVector_2_0 );
+                  vert2ToVert0.add( triangleList[triIter].pt[2] );
 
                   // Add a new triangle.
                   triangleList[triIter+1].pt[0] = triangleList[triIter].pt[0];
@@ -421,9 +432,11 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
                   triangleList[triIter+1].pt[2] = vert2ToVert0;
 
                   //Get the hit point ratio.
-                  float hitPointTime_2_1 =  edge - triangleList[triIter].pt[2][component];
-                  float distanceAlongVector_2_1 = hitPointTime_2_1 / vert2ToVert1[component];
-                  vert2ToVert1.mul( distanceAlongVector_2_1 ).add( triangleList[triIter].pt[2] );
+                  FastFloat hitPointTime_2_1, distanceAlongVector_2_1;
+                  hitPointTime_2_1.setSub( edge, triComp );
+                  distanceAlongVector_2_1.setDiv( hitPointTime_2_1, vert2ToVert1.getComponent( component ) );
+                  vert2ToVert1.mul( distanceAlongVector_2_1 );
+                  vert2ToVert1.add( triangleList[triIter].pt[2] );
                   triangleList[triIter].pt[0] = triangleList[triIter+1].pt[1];
                   triangleList[triIter].pt[1] = triangleList[triIter+1].pt[2];
                   triangleList[triIter].pt[2] = vert2ToVert1;
@@ -449,7 +462,7 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
             // Set the near and far plan and the min and max z values respectively.
             for( int vertind = 0; vertind < 3; ++ vertind ) 
             {
-               float triangleCoordZ = triangleList[index].pt[vertind].z;
+               float triangleCoordZ = triangleList[index].pt[vertind][2];
                if( nearPlane > triangleCoordZ ) 
                {
                   nearPlane = triangleCoordZ;
@@ -465,8 +478,8 @@ void CascadedShadowsUtils::calculateLightClippingPlanes( const Vector* sceneBBIn
 
 
    // set the clipping planes on the output bounding box 
-   inOutLightFrustumBounds.min.z = nearPlane;
-   inOutLightFrustumBounds.max.z = farPlane;
+   inOutLightFrustumBounds.min[2] = nearPlane;
+   inOutLightFrustumBounds.max[2] = farPlane;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

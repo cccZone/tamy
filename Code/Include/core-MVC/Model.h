@@ -1,8 +1,7 @@
-#ifndef _MODEL_H
-#define _MODEL_H
-
 /// @file   core-MVC\Model.h
 /// @brief  MVC model
+#ifndef _MODEL_H
+#define _MODEL_H
 
 #include <vector>
 #include "core\ComponentsManager.h"
@@ -27,7 +26,8 @@ class Loader;
  */
 class Model : public Resource, public ComponentsManager< Model >, public TimeDependent
 {
-   DECLARE_RESOURCE()
+   DECLARE_ALLOCATOR( Model, AM_ALIGNED_16 );
+   DECLARE_RESOURCE();
 
 private:
    typedef Delegate< void ( Entity& ) >   Functor;

@@ -1,5 +1,8 @@
+/// @file   core-Renderer/CompositeRenderingMechanism.h
+/// @brief  a composite that can execute many rendering mechanisms in a sequential order
 #pragma once
 
+#include "core\MemoryRouter.h"
 #include "core-Renderer\RenderingMechanism.h"
 #include <vector>
 #include <map>
@@ -15,8 +18,12 @@
  */
 class CompositeRenderingMechanism : public RenderingMechanism
 {
+   DECLARE_ALLOCATOR( CompositeRenderingMechanism, AM_DEFAULT );
+
    struct MechDef
    {
+      DECLARE_ALLOCATOR( MechDef, AM_DEFAULT );
+
       std::string                               m_name;
       RenderingMechanism*                       m_mechanism;
       bool                                      m_release;

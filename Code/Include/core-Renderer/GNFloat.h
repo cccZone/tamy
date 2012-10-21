@@ -13,6 +13,7 @@ class GSFloatOutput;
 
 class GNFloat : public GeometryShaderNode
 {
+   DECLARE_ALLOCATOR( GNFloat, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

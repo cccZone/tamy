@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/Assert.h"
 #include <cassert>
 #include <stdio.h>

@@ -1,8 +1,11 @@
 /// @file   core\Matrix.h
 /// @brief  matrix representation
-#pragma once
+#ifndef _MATRIX_H
+#define _MATRIX_H
 
 #include <iostream>
+#include "core/EngineDefines.h"
+#include "core/MemoryRouter.h"
 #include "core/types.h"
 #include "core/Vector.h"
 
@@ -19,67 +22,75 @@ class InStream;
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * Mathematical matrix - expressed in row major order expressed in left-handed 
- * Cartesian coordinate system.
+ * Mathematical matrix - expressed in left-handed Cartesian coordinate system.
  */
 struct Matrix
 {
-   union
-   {
-      float m[4][4];
-
-      struct  
-      {
-         float m11;
-         float m12;
-         float m13;
-         float m14;
-         float m21;
-         float m22;
-         float m23;
-         float m24;
-         float m31;
-         float m32;
-         float m33;
-         float m34;
-         float m41;
-         float m42;
-         float m43;
-         float m44;
-      };
-   };
-
-   static Matrix IDENTITY;
+   DECLARE_ALLOCATOR( Matrix, AM_ALIGNED_16 );
+   
+   QuadStorage    m_rows[4];
+   static Matrix  IDENTITY;
 
    /**
     * Default constructor.
     */
-   Matrix();
+   inline Matrix();
+
+   /**
+    * Sets an identity matrix.
+    */
+   inline void setIdentity();
 
    /**
     * Constructor.
     *
-    * @param values  an array of 16 values
+    * @param values  an array of 16 values ( 16-bytes aligned ) in Row-Major format
     */
-   Matrix( const float* values );
+   inline void set( const float* values );
 
    /**
     * Constructor.
     *
-    * @param 16 float values
+    * @param 16 float values in Row-Major format
     */
-   Matrix( float _11, float _12, float _13, float _14, 
-           float _21, float _22, float _23, float _24, 
-           float _31, float _32, float _33, float _34,
-           float _41, float _42, float _43, float _44 );
+   inline void set(  float _11, float _12, float _13, float _14, 
+                     float _21, float _22, float _23, float _24, 
+                     float _31, float _32, float _33, float _34,
+                     float _41, float _42, float _43, float _44 );
 
+   /**
+    * Composes the matrix from the specified row vectors
+    *
+    * @param sideVec
+    * @param upVec
+    * @param forwardVec
+    * @param pos
+    */
+   inline void setRows( const Vector& sideVec, const Vector& upVec, const Vector& forwardVec, const Vector& pos = Quad_0001 );
+
+   /**
+    * Sets the specified column.
+    *
+    * @param colIdx        column index
+    * @param vec           column vector
+    */
+   inline void setColumn( int colIdx, const Vector& vec );
 
    // -------------------------------------------------------------------------
    // Operators
    // -------------------------------------------------------------------------
-   Matrix& operator=(const Matrix& rhs);
-   bool operator==(const Matrix& rhs) const;
-   bool operator!=(const Matrix& rhs) const;
+   inline void operator=( const Matrix& rhs );
+   inline bool operator==( const Matrix& rhs ) const;
+   inline bool operator!=( const Matrix& rhs ) const;
+
+   /**
+    * An operator that gives access to individual matrix values.
+    *
+    * @param row
+    * @param col
+    */
+   inline float operator()( int row, int col ) const;
+   inline float& operator()( int row, int col );
 
    // -------------------------------------------------------------------------
    // Operations
@@ -90,21 +101,21 @@ struct Matrix
     *
     * @param translationVec
     */
-   Matrix& setTranslation( const Vector& translationVec );
+   void setTranslation( const Vector& translationVec );
 
    /**
     * Creates a rotation matrix with rotation equal to the specified quaternion.
     *
     * @param rotationQuat
     */
-   Matrix& setRotation( const Quaternion& rotationQuat );
+   void setRotation( const Quaternion& rotationQuat );
 
    /**
     * Creates a rotation matrix with rotation corresponding to the specified Euler angle value
     *
     * @param angles
     */
-   Matrix& setRotation( const EulerAngles& angles );
+   void setRotation( const EulerAngles& angles );
 
    /**
     * Returns the rotation this matrix describes in the form of a quaternion.
@@ -126,7 +137,7 @@ struct Matrix
     * @param a
     * @param b
     */
-   Matrix& setMul( const Matrix& a, const Matrix& b );
+   inline void setMul( const Matrix& a, const Matrix& b );
 
    /**
     * this = this * a
@@ -135,7 +146,7 @@ struct Matrix
     *
     * @param a
     */
-   Matrix& mul( const Matrix& a );
+   void mul( const Matrix& a );
 
    /**
     * this = a * this
@@ -144,7 +155,7 @@ struct Matrix
     *
     * @param a
     */
-   Matrix& preMul( const Matrix& a );
+   void preMul( const Matrix& a );
 
    /**
     * this = a * t
@@ -152,38 +163,38 @@ struct Matrix
     * @param a
     * @param t
     */
-   Matrix& setMul( const Matrix& a, float t );
+   inline void setMul( const Matrix& a, const FastFloat& t );
 
    /**
     * this *= t
     *
     * @param t
     */
-   Matrix& mul( float t );
+   inline void mul( const FastFloat& t );
 
    /**
     * Sets an inverse of the specified matrix.
     *
     * @param rhs
     */
-   Matrix& setInverse( const Matrix& rhs );
+   inline void setInverse( const Matrix& rhs );
 
    /**
     * Inverts the matrix.
     */
-   Matrix& invert();
+   void invert();
 
    /**
     * Sets a transposed version of the specified matrix.
     *
     * @param rhs
     */
-   Matrix& setTransposed( const Matrix& rhs );
+   inline void setTransposed( const Matrix& rhs );
 
    /**
     * Transposes the matrix.
     */
-   Matrix& transpose();
+   void transpose();
 
    /**
     * Sets an inverse transpose of the specified matrix.
@@ -192,40 +203,41 @@ struct Matrix
     *
     * @param rhs
     */
-   Matrix& setInverseTranspose( const Matrix& rhs );
+   void setInverseTranspose( const Matrix& rhs );
 
    /**
     * Returns the matrix side vector.
     */
-   const Vector& sideVec() const;
+   inline const Vector& sideVec() const;
 
    /**
     * Returns the matrix up vector.
     */
-   const Vector& upVec() const;
+   inline const Vector& upVec() const;
 
    /**
     * Returns the matrix forward vector.
     */
-   const Vector& forwardVec() const;
+   inline const Vector& forwardVec() const;
 
    /**
     * Returns the matrix position.
     */
-   const Vector& position() const;
+   inline const Vector& position() const;
 
    /**
     * Returns the specified row vector.
     *
     * @param axisIdx    values in range <0..3> ONLY
     */
-   const Vector& getRow( byte rowIdx ) const;
+   inline const Vector& getRow( byte rowIdx ) const;
 
    /**
     * Sets the new value for the row that represents the side axis.
     *
     * @param vec
     */
+   template< int N >
    void setSideVec( const Vector& vec );
 
    /**
@@ -233,6 +245,7 @@ struct Matrix
     *
     * @param vec
     */
+   template< int N >
    void setUpVec( const Vector& vec );
 
    /**
@@ -240,6 +253,7 @@ struct Matrix
     *
     * @param vec
     */
+   template< int N >
    void setForwardVec( const Vector& vec );
 
    /**
@@ -247,6 +261,7 @@ struct Matrix
     *
     * @param pos
     */
+   template< int N >
    void setPosition( const Vector& pos );
 
    /**
@@ -257,39 +272,28 @@ struct Matrix
     * @param outForwardVec
     * @param outPos
     */
-   void getVectors( Vector& outSideVec, Vector& outUpVec, Vector& outForwardVec, Vector& outPos ) const;
-
-   /**
-    * Composes the matrix from the specified row vectors
-    *
-    * @param sideVec
-    * @param upVec
-    * @param forwardVec
-    * @param pos
-    */
-   void setRows( const Vector& sideVec, const Vector& upVec, const Vector& forwardVec, const Vector& pos = Vector::OW );
+   inline void getVectors( Vector& outSideVec, Vector& outUpVec, Vector& outForwardVec, Vector& outPos ) const;
 
    /**
     * Returns the scale the matrix describes.
     *
     * @param outScaleVec
     */
-   void getScale( Vector& outScaleVec ) const;
+   inline void getScale( Vector& outScaleVec ) const;
 
    /**
     * Applies a uniform scale to this matrix ( it doesn't override any coefficients, but is multiplied by them ).
     *
     * @param scale
     */
-   void scaleUniform( float scale );
+   inline void scaleUniform( const FastFloat& scale );
 
    /**
     * Applies a non-uniform scale to this matrix ( it doesn't override any coefficients, but is multiplied by them ).
     *
     * @param scaleVec
     */
-   void scale( const Vector& scaleVec );
-
+   inline void scale( const Vector& scaleVec );
 
    /**
     * Transforms the specified vector.
@@ -297,7 +301,7 @@ struct Matrix
     * @param inVec     vector to be transformed.
     * @param outVec  transformed vector
     */
-   void transform( const Vector& inVec, Vector& outVec ) const;
+   inline void transform( const Vector& inVec, Vector& outVec ) const;
 
    /**
     * Transforms the specified normal vector
@@ -305,7 +309,7 @@ struct Matrix
     * @param inNorm        normal vector to be transformed.
     * @param outNorm    transformed normal
     */
-   void transformNorm( const Vector& inNorm, Vector& outNorm ) const;
+   inline void transformNorm( const Vector& inNorm, Vector& outNorm ) const;
 
    /**
     * Transforms the specified plane.
@@ -322,7 +326,21 @@ struct Matrix
     * @param rhs
     * @param outVec
     */
-   void transform4( const Vector& rhs, Vector& outVec ) const;
+   inline void transform4( const Vector& rhs, Vector& outVec ) const;
+
+   /**
+    * Returns the matrix in row-major format.
+    *
+    * @param outRowMajorMtx
+    */
+   inline void getRowMajor( float* __restrict outRowMajorMtx ) const;
+
+   /**
+    * Returns the matrix in column-major format.
+    *
+    * @param outColumnMajorMtx
+    */
+   inline void getColumnMajor( float* __restrict outColumnMajorMtx ) const;
 
    /**
     * This method writes the contents of the orientation to the specified 
@@ -342,3 +360,13 @@ struct Matrix
 };
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#ifdef _USE_SIMD
+   #include "core/MatrixSimd.inl"
+#else
+   #include "core/MatrixFpu.inl"
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+
+#endif // _MATRIX_H

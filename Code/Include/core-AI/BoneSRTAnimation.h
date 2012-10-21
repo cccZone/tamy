@@ -21,11 +21,14 @@ class BoneSRTAnimationPlayer;
  */
 class BoneSRTAnimation : public ReflectionObject
 {
+   DECLARE_ALLOCATOR( BoneSRTAnimation, AM_DEFAULT );
    DECLARE_CLASS();
 
 private:
    struct VecLerp
    {
+      DECLARE_ALLOCATOR( VecLerp, AM_DEFAULT );
+
    public:
       void operator()( Vector& outVec, const Vector& start, const Vector& end, const FastFloat& percentage ) const
       {
@@ -35,6 +38,8 @@ private:
 
    struct QuatLerp
    {
+      DECLARE_ALLOCATOR( QuatLerp, AM_DEFAULT );
+
    public:
       void operator()( Quaternion& outQuat, const Quaternion& start, const Quaternion& end, const FastFloat& percentage ) const
       {

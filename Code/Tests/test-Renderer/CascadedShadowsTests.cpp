@@ -11,6 +11,8 @@ namespace // anonymous
 {
    class RendererImplementationMock : public Renderer
    {
+      DECLARE_ALLOCATOR( RendererImplementationMock, AM_DEFAULT );
+
    protected:
       void resetViewport(unsigned int width, unsigned int height) {}
       void resizeViewport( unsigned int width, unsigned int height ) {}
@@ -41,7 +43,7 @@ TEST( CascadedShadowsUtils, singleCascadeStage )
    // achieve the desired shining direction must rotate the OZ vector so that it becomes an OY_NEG vector.
    // Pitching the vector ( rotating it about OX axis ) by 90 degrees will do just that.
    Transform lightTransform;
-   lightTransform.m_rotation.setAxisAngle( Vector::OX, DEG2RAD( 90.0 ) );
+   lightTransform.m_rotation.setAxisAngle( Quad_1000, FastFloat::fromFloat( DEG2RAD( 90.0 ) ) );
    lightTransform.toMatrix( cascadesConfig.m_lightRotationMtx );
 
    // let's define the scene boundaries
@@ -100,7 +102,7 @@ TEST( CascadedShadowsUtils, singleCascadeStage )
 
    // now rotate the camera only ( move it back to the origin )
    {
-      cameraTransform.m_rotation.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
+      cameraTransform.m_rotation.setAxisAngle( Quad_0100, FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
       cameraTransform.m_translation.set( 0, 0, 0 );
       cameraTransform.toMatrix( camera.accessLocalMtx() );
       CascadedShadowsUtils::calculateCascadesBounds( cascadesConfig, &calculatedCascadeStage );
@@ -116,7 +118,7 @@ TEST( CascadedShadowsUtils, singleCascadeStage )
 
    // now rotate and translate the camera
    {
-      cameraTransform.m_rotation.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
+      cameraTransform.m_rotation.setAxisAngle( Quad_0100, FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
       cameraTransform.m_translation.set( 10, 20, 30 );
       cameraTransform.toMatrix( camera.accessLocalMtx() );
       CascadedShadowsUtils::calculateCascadesBounds( cascadesConfig, &calculatedCascadeStage );
@@ -152,7 +154,7 @@ TEST( CascadedShadowsUtils, singleCascadeStage )
 
    // roll the light source
    {
-      lightTransform.m_rotation.setAxisAngle( Vector::OZ, DEG2RAD( 45.0f ) );
+      lightTransform.m_rotation.setAxisAngle( Quad_0010, FastFloat::fromFloat( DEG2RAD( 45.0f ) ) );
       lightTransform.toMatrix( cascadesConfig.m_lightRotationMtx );
 
       cameraTransform = Transform::IDENTITY;

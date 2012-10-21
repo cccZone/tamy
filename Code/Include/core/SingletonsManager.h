@@ -1,8 +1,8 @@
+/// @file   core\SingletonsManager.h
+/// @brief  tool for managing unique instances of classes
 #ifndef _SINGLETONS_MANAGER_H
 #define _SINGLETONS_MANAGER_H
 
-/// @file   core\SingletonsManager.h
-/// @brief  tool for managing unique instances of classes
 
 #include <vector>
 #include "core\Manageable.h"
@@ -15,6 +15,8 @@
  */
 class SingletonsManager
 {
+   DECLARE_ALLOCATOR( SingletonsManager, AM_DEFAULT );
+
 private:
    std::vector<Manageable*> m_shared;
 

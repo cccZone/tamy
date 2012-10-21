@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/Profiler.h"
 #include "core/Assert.h"
 #include "core/Timer.h"

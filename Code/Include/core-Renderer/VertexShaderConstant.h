@@ -4,6 +4,7 @@
 #define _VERTEX_SHADER_CONSTANT_H
 
 #include <string>
+#include "core/MemoryRouter.h"
 #include "core/ReflectionType.h"
 #include "core/GraphBuilderSockets.h"
 #include "core/Math.h"
@@ -69,6 +70,8 @@ protected:
 template< typename TNode, typename DataType >
 class TVertexShaderConstant : public VertexShaderConstant< TNode >
 {
+   DECLARE_ALLOCATOR( TVertexShaderConstant, AM_DEFAULT );
+
 public:
    virtual ~TVertexShaderConstant() {}
 
@@ -94,6 +97,8 @@ protected:
 template< typename TNode >
 class VSCBool : public TVertexShaderConstant< TNode, bool >
 {
+   DECLARE_ALLOCATOR( VSCBool, AM_DEFAULT );
+
 private:
    bool           m_defaultVal;
 
@@ -120,6 +125,8 @@ public:
 template< typename TNode >
 class VSCInt : public TVertexShaderConstant< TNode, int >
 {
+   DECLARE_ALLOCATOR( VSCInt, AM_DEFAULT );
+
 private:
    int           m_defaultVal;
 
@@ -146,6 +153,8 @@ public:
 template< typename TNode >
 class VSCFloat : public TVertexShaderConstant< TNode, float >
 {
+   DECLARE_ALLOCATOR( VSCFloat, AM_DEFAULT );
+
 private:
    float           m_defaultVal;
 
@@ -172,6 +181,8 @@ public:
 template< typename TNode >
 class VSCString : public TVertexShaderConstant< TNode, std::string >
 {
+   DECLARE_ALLOCATOR( VSCString, AM_DEFAULT );
+
 public:
    /**
     * Constructor.
@@ -194,6 +205,8 @@ public:
 template< typename TNode >
 class VSCTexture : public TVertexShaderConstant< TNode, ShaderTexture >
 {
+   DECLARE_ALLOCATOR( VSCTexture, AM_DEFAULT );
+
 public:
    /**
     * Constructor.
@@ -216,6 +229,8 @@ public:
 template< typename TNode >
 class VSCVec4 : public TVertexShaderConstant< TNode, Vector >
 {
+   DECLARE_ALLOCATOR( VSCVec4, AM_DEFAULT );
+
 public:
    /**
     * Constructor.
@@ -238,6 +253,8 @@ public:
 template< typename TNode >
 class VSCMatrix : public TVertexShaderConstant< TNode, Matrix >
 {
+   DECLARE_ALLOCATOR( VSCMatrix, AM_DEFAULT );
+
 public:
    /**
     * Constructor.

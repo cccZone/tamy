@@ -358,7 +358,10 @@ RenderingPipelineMechanism::RenderedScene::~RenderedScene()
 void RenderingPipelineMechanism::RenderedScene::initialize( Renderer& renderer )
 {
    // create the model views
-   AABoundingBox sceneBB( Vector( -10000, -10000, -10000 ), Vector( 10000, 10000, 10000 ) );
+   Vector min, max;
+   min.set( -10000, -10000, -10000 );
+   max.set( 10000, 10000, 10000 );
+   AABoundingBox sceneBB( min, max );
    m_renderingView = new RenderingView( renderer, sceneBB );
 }
 

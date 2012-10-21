@@ -13,12 +13,12 @@
 
 Sound3D::Sound3D(const std::string& name, Sound& sound, float soundHearingRadius)
 : Node(name)
-, m_soundHearingRadius(soundHearingRadius)
 , m_channel(NULL)
 , m_sound(sound)
-, m_soundHearingRadiusSq(soundHearingRadius * soundHearingRadius)
 , m_looped(true)
 {
+   m_soundHearingRadius.setFromFloat( soundHearingRadius );
+   m_soundHearingRadiusSq.setMul( m_soundHearingRadius, m_soundHearingRadius );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

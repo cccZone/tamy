@@ -3,7 +3,8 @@
 #ifndef _FSM_STATE_H
 #define _FSM_STATE_H
 
-#include "core/ReflectionObject.h"
+#include "core\MemoryRouter.h"
+#include "core\ReflectionObject.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,8 @@
 template< typename Controller >
 class FSMState : public ReflectionObject
 {
+   DECLARE_ALLOCATOR( FSMState, AM_DEFAULT );
+
 protected:
    Controller*             m_fsm;
 

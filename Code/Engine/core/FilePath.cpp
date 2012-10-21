@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/FilePath.h"
 #include "core/InStream.h"
 #include "core/OutStream.h"

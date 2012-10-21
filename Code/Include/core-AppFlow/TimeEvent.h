@@ -1,6 +1,9 @@
+/// @file   core-AppFlow/TimeEvent.h
+/// @brief  an event triggered from a time track
 #pragma once
 
 #include <string>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -11,6 +14,8 @@
  */
 class TimeEvent
 {
+   DECLARE_ALLOCATOR( TimeEvent, AM_DEFAULT );
+
 private:
    std::string m_id;
 
@@ -30,6 +35,8 @@ protected:
 template<typename T>
 class TTimeEvent : public TimeEvent
 {
+   DECLARE_ALLOCATOR( TTimeEvent, AM_DEFAULT );
+
 private:
    T& m_instance;
 

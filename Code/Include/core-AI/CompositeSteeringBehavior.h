@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core-AI\SteeringBehavior.h"
+#include "core\FastFloat.h"
 #include <vector>
 
 
@@ -15,16 +16,19 @@ struct Vector;
  */
 class CompositeSteeringBehavior : public SteeringBehavior
 {
+   DECLARE_ALLOCATOR( CompositeSteeringBehavior, AM_DEFAULT );
+
 private:
    struct BehaviorDesc
    {
       SteeringBehavior* behavior;
-      float weight;
+      FastFloat weight;
 
       BehaviorDesc(SteeringBehavior* _behavior, float _weight)
          : behavior(_behavior)
-         , weight(_weight)
-      {}
+      {
+         weight.setFromFloat( _weight );
+      }
    };
 
 private:
@@ -40,7 +44,7 @@ public:
     * @param weight     how important is the force it calculates to the
     *                   total force returned by the composite
     */
-   void add(SteeringBehavior* behavior, float weight);
+   void add( SteeringBehavior* behavior, float weight );
 
    // -------------------------------------------------------------------------
    // SteeringBehavior implementation

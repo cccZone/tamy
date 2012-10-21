@@ -4,6 +4,7 @@
 #define _OUT_STREAM_H
 
 #include <vector>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -13,6 +14,8 @@
  */
 class OutStream
 {
+   DECLARE_ALLOCATOR( OutStream, AM_DEFAULT );
+
 public:
    virtual ~OutStream() {}
 

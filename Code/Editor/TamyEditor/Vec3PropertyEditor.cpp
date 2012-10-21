@@ -43,9 +43,9 @@ void Vec3PropertyEditor::setupUi()
    m_zVal->setRange( -FLT_MAX, FLT_MAX );
 
    const Vector& currVal = m_property->get();
-   m_xVal->setValue(currVal.x);
-   m_yVal->setValue(currVal.y);
-   m_zVal->setValue(currVal.z);
+   m_xVal->setValue(currVal[0]);
+   m_yVal->setValue(currVal[1]);
+   m_zVal->setValue(currVal[2]);
 
    connect(m_xVal, SIGNAL(valueChanged(double)), this, SLOT(xValChanged(double)));
    connect(m_yVal, SIGNAL(valueChanged(double)), this, SLOT(yValChanged(double)));
@@ -57,7 +57,7 @@ void Vec3PropertyEditor::setupUi()
 void Vec3PropertyEditor::xValChanged(double val)
 {
    Vector currVal = m_property->get();
-   currVal.x = val;
+   currVal[0] = val;
    m_property->set( currVal );
 }
 
@@ -66,7 +66,7 @@ void Vec3PropertyEditor::xValChanged(double val)
 void Vec3PropertyEditor::yValChanged(double val)
 {
    Vector currVal = m_property->get();
-   currVal.y = val;
+   currVal[1] = val;
    m_property->set( currVal );
 }
 
@@ -75,7 +75,7 @@ void Vec3PropertyEditor::yValChanged(double val)
 void Vec3PropertyEditor::zValChanged(double val)
 {
    Vector currVal = m_property->get();
-   currVal.z = val;
+   currVal[2] = val;
    m_property->set( currVal );
 }
 
@@ -84,9 +84,9 @@ void Vec3PropertyEditor::zValChanged(double val)
 void Vec3PropertyEditor::onPropertyChanged()
 {
    const Vector& currVal = m_property->get();
-   m_xVal->setValue(currVal.x);
-   m_yVal->setValue(currVal.y);
-   m_zVal->setValue(currVal.z);
+   m_xVal->setValue(currVal[0]);
+   m_yVal->setValue(currVal[1]);
+   m_zVal->setValue(currVal[2]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

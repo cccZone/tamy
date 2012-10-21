@@ -27,7 +27,7 @@ class MemoryPoolAllocator;
 template<typename Elem>
 class Octree : public SpatialStorage<Elem>
 {
-   ALIGNED_CLASS();
+   DECLARE_ALLOCATOR( Octree< Elem >, AM_ALIGNED_16 );
 
 protected:
    typedef OctreeNode<unsigned int> Sector;

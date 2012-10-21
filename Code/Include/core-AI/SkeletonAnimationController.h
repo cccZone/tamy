@@ -2,9 +2,9 @@
 /// @brief  basic animation controller entity
 #pragma once
 
-#include "core-MVC/Entity.h"
-#include "core/Node.h"
-#include "core/Matrix.h"
+#include "core-MVC\Entity.h"
+#include "core\Node.h"
+#include "core\Matrix.h"
 #include <vector>
 
 
@@ -24,6 +24,7 @@ class SpatialEntity;
  */
 class SkeletonAnimationController : public Entity
 {
+   DECLARE_ALLOCATOR( SkeletonAnimationController, AM_DEFAULT );
    DECLARE_CLASS()
 
 private:
@@ -34,7 +35,7 @@ private:
    SpatialEntity*                            m_parent;
    std::vector< Node* >                      m_skeleton;
    std::vector< BoneSRTAnimationPlayer* >    m_bonePlayers;
-   std::vector< Matrix >                     m_referenceMtcs;
+   Array< Matrix >                           m_referenceMtcs;
    float                                     m_trackTime;
    bool                                      m_pause;
  

@@ -1,3 +1,5 @@
+/// @file   core-Renderer/DevTypeFilter.h
+/// @brief  device type filter
 #pragma once
 
 #include "core-Renderer\DeviceFilterElem.h"
@@ -8,6 +10,8 @@
 
 class DevTypeFilter : public DeviceFilterElem
 {
+   DECLARE_ALLOCATOR( DevTypeFilter, AM_DEFAULT );
+
 private:
    D3DDEVTYPE m_devType;
 

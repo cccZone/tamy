@@ -2,9 +2,9 @@
 /// @brief  tool for scheduling tasks in time
 #pragma once
 
-
 #include <vector>
 #include <string>
+#include "core\MemoryRouter.h"
 #include "core-AppFlow\TimeControllerTrack.h"
 
 
@@ -23,6 +23,8 @@
  */
 class TimeController
 {
+   DECLARE_ALLOCATOR( TimeController, AM_DEFAULT );
+
 private:
    class FindTrack
    {

@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   Engine\BTNodeSelectionStrategy.h
 /// @brief  selector of a node that is to be executed by a BTSelectorNodes
+#pragma once
 
 #include <vector>
 

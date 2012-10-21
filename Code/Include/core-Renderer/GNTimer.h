@@ -14,6 +14,7 @@ class GSFloatOutput;
 
 class GNTimer : public GeometryShaderNode
 {
+   DECLARE_ALLOCATOR( GNTimer, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:
