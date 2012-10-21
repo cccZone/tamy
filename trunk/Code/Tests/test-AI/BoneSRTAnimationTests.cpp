@@ -7,7 +7,7 @@
 TEST( BoneSRTAnimation, duration )
 {
    BoneSRTAnimation anim;
-   anim.addTranslationKey( 1.0f, Vector::ZERO );
+   anim.addTranslationKey( 1.0f, Quad_0 );
    anim.addOrientationKey( 2.0f, Quaternion::getIdentity() );
 
    CPPUNIT_ASSERT_EQUAL( 2.0f, anim.getDuration() );
@@ -18,8 +18,8 @@ TEST( BoneSRTAnimation, duration )
 TEST( BoneSRTAnimation, simpleTranslationAnim )
 {
    BoneSRTAnimation anim;
-   anim.addTranslationKey( 0, Vector::ZERO );
-   anim.addTranslationKey( 1, Vector::OX );
+   anim.addTranslationKey( 0, Quad_0 );
+   anim.addTranslationKey( 1, Quad_1000 );
 
    CPPUNIT_ASSERT_EQUAL( 1.0f, anim.getDuration() );
 

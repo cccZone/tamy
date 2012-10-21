@@ -3,9 +3,10 @@
 #ifndef _FSM_CONTROLLER_H
 #define _FSM_CONTROLLER_H
 
-#include "core/ReflectionObject.h"
-#include "core-AI/FSMState.h"
-#include "core-AppFlow/TimeDependent.h"
+#include "core\MemoryRouter.h"
+#include "core\ReflectionObject.h"
+#include "core-AI\FSMState.h"
+#include "core-AppFlow\TimeDependent.h"
 #include <vector>
 
 
@@ -20,6 +21,8 @@
 template< typename Impl >
 class FSMController : public ReflectionObject, public TimeDependent
 {
+   DECLARE_ALLOCATOR( FSMController, AM_DEFAULT );
+
 private:
    FSMState< Impl >*                   m_currentState;
    FSMState< Impl >*                   m_nextState;

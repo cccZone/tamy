@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\Quaternion.h"
 #include "core\EulerAngles.h"
 #include "core\OutStream.h"
@@ -55,20 +56,23 @@ void Quaternion::setFromEulerAngles( const EulerAngles& angles )
 
 void Quaternion::setFromShortestRotation( const Vector& v1, const Vector& v2 )
 {
-   float d = v1.dot( v2 ); 
+   const FastFloat d = v1.dot( v2 ); 
 
    Vector axis;
    axis.setCross( v1, v2 );
 
-   float qw = (float)sqrt( v1.lengthSq() * v2.lengthSq() ) + d;
-   if ( qw < 0.0001f ) 
+   FastFloat qw;
+   qw.setMul( v1.lengthSq(), v2.lengthSq() );
+   qw.sqrt();
+   qw.add( d );
+   if ( qw < Float_1e_4 ) 
    { 
       // vectors are 180 degrees apart
-      set( -v1.z, v1.y, v1.x, 0.0f );
+      set( -v1[2], v1[1], v1[0], 0.0f );
    } 
    else
    {
-      set( axis.x, axis.y, axis.z, qw );
+      set( axis[0], axis[1], axis[2], qw.getFloat() );
    }
 
    // normalize the quaternion
@@ -83,35 +87,42 @@ void Quaternion::removeAxisComponent( const Vector& axis )
    Vector rotatedAxis;
    transform( axis, rotatedAxis );
 
-   float dot = axis.dot( rotatedAxis );
-   if ( dot - 1.0f > -1e-3f )
+   const FastFloat dot = axis.dot( rotatedAxis );
+   FastFloat negAngleDiff, posAngleDiff;
+   negAngleDiff.setSub( dot, Float_1 );
+   posAngleDiff.setAdd( dot, Float_1 );
+
+   if ( negAngleDiff > Float_Minus1e_3 )
    {
       // the axis is the main rotation axis, so there's nothing
       // left from the quaternion's rotation now
       setIdentity();
    }
-   else if ( dot + 1.0f < 1e-3f )
+   else if ( posAngleDiff < Float_1e_3 )
    {
       // the axis goes in the opposite direction
       Vector perpVector;
       VectorUtil::calculatePerpendicularVector( axis, perpVector );
       perpVector.normalize();
       
-      set( perpVector.x, perpVector.y, perpVector.z, 0.0f );
+      perpVector[3] = 0.0f;
+      set( perpVector.m_quad );
    }
    else
    {
-      const float rotationAngle = acos( dot );
+      FastFloat rotationAngle; 
+      rotationAngle.setAcos( dot );
 
       Vector rotationAxis;
-      rotationAxis.setCross( axis, rotatedAxis ).normalize();
-      setAxisAngle(rotationAxis, rotationAngle);
+      rotationAxis.setCross( axis, rotatedAxis );
+      rotationAxis.normalize();
+      setAxisAngle( rotationAxis, rotationAngle );
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float Quaternion::decompose( const Vector& decompositionAxis, Quaternion& outRemainingQuaternion ) const
+void Quaternion::decompose( const Vector& decompositionAxis, Quaternion& outRemainingQuaternion, FastFloat& outAngle ) const
 {
    ASSERT_MSG( decompositionAxis.isNormalized(), "The decomposition axis must be a unit-length vector." );
    
@@ -126,8 +137,7 @@ float Quaternion::decompose( const Vector& decompositionAxis, Quaternion& outRem
       axisRot.setMul( inv_rest, *this );
    }
 
-   float a = axisRot.getAngle();
-   return a;
+   axisRot.getAngle( outAngle );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

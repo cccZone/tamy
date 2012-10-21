@@ -1,8 +1,7 @@
-#ifndef _RESOURCES_MANAGER_H
-#define _RESOURCES_MANAGER_H
-
 /// @file   core\ResourcesManager.h
 /// @brief  manager of file resources used by the game
+#ifndef _RESOURCES_MANAGER_H
+#define _RESOURCES_MANAGER_H
 
 #include <map>
 #include <string>
@@ -36,12 +35,16 @@ class ReflectionSerializationUtil;
  */
 class ResourcesManager : public ComponentsManager< ResourcesManager >, public FilesystemListener
 {
+   DECLARE_ALLOCATOR( ResourcesManager, AM_DEFAULT );
+
 private:
 
    // -------------------------------------------------------------------------
 
    class ResourceImporterCreator
    {
+      DECLARE_ALLOCATOR( ResourceImporterCreator, AM_DEFAULT );
+
    public:
       virtual ~ResourceImporterCreator() {}
       
@@ -54,6 +57,8 @@ private:
    template< typename T >
    class TResourceImporterCreator : public ResourceImporterCreator
    {
+      DECLARE_ALLOCATOR( TResourceImporterCreator, AM_DEFAULT );
+
    public:
       ResourceImporter* create( const FilePath& path, ResourcesManager& rm, IProgressObserver* observer ) const
       {
@@ -65,6 +70,8 @@ private:
 
    class ProgressObserverCreator
    {
+      DECLARE_ALLOCATOR( ProgressObserverCreator, AM_DEFAULT );
+
    public:
       virtual ~ProgressObserverCreator() {}
       
@@ -77,6 +84,8 @@ private:
    template< typename T >
    class TProgressObserverCreator : public ProgressObserverCreator
    {
+      DECLARE_ALLOCATOR( TProgressObserverCreator, AM_DEFAULT );
+
    public:
       IProgressObserver* create() const
       {

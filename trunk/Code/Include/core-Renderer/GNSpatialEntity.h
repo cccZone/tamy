@@ -14,6 +14,7 @@ class SpatialEntity;
 
 class GNSpatialEntity : public GeometryShaderNode
 {
+   DECLARE_ALLOCATOR( GNSpatialEntity, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

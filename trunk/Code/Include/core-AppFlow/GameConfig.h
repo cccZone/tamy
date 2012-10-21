@@ -13,6 +13,7 @@
  */
 struct GameConfig : public Resource
 {
+   DECLARE_ALLOCATOR( GameConfig, AM_DEFAULT );
    DECLARE_RESOURCE();
 
 public:

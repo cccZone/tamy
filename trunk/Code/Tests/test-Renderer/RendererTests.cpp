@@ -9,6 +9,8 @@ namespace // anonymous
 {
    class RenderingMechanismMock : public RenderingMechanism
    {
+      DECLARE_ALLOCATOR( RenderingMechanismMock, AM_DEFAULT );
+
    private:
       std::string m_id;
       std::vector<std::string>& m_seqLog;
@@ -39,6 +41,8 @@ namespace // anonymous
 
    class RendererImplementationMock : public Renderer
    {
+      DECLARE_ALLOCATOR( RendererImplementationMock, AM_DEFAULT );
+
    private:
       std::vector<std::string>& m_seqLog;
       bool m_deviceReady;

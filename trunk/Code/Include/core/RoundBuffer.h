@@ -3,6 +3,9 @@
 #ifndef _ROUND_BUFFER_H
 #define _ROUND_BUFFER_H
 
+#include "core\MemoryRouter.h"
+#include "core\MemoryAllocator.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -10,8 +13,10 @@
  * This is a structure similar to a queue, but it operates
  * on a constant area of memory, and thus is much much faster.
  */
-class RoundBuffer
+class RoundBuffer : public MemoryAllocator
 {
+   DECLARE_ALLOCATOR( RoundBuffer, AM_DEFAULT );
+
 private:
    static int     BUFFER_INFO_CHUNK_SIZE;
    size_t         m_bufSize;
@@ -46,61 +51,12 @@ public:
    template< typename T >
    T* front();
 
-   /**
-    * Extracts the pointer to the buffer the object is stored in.
-    *
-    * @param ptr
-    */
-   static RoundBuffer* getBufferPtr( void* ptr );
-
-   /**
-    * Allocates a chunk of memory of the specified size.
-    *
-    * @param size
-    */
+   // -------------------------------------------------------------------------
+   // MemoryAllocator implementation
+   // -------------------------------------------------------------------------
    void* alloc( size_t size );
-
-   /**
-    * Deallocates the memory from the specified address.
-    */
    void dealloc( void* ptr );
 };
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * An object that can be allocated in a round buffer.
- */
-class RoundBufferObject
-{
-public:
-   virtual ~RoundBufferObject();
-
-   /**
-    * Placement allocator for the buffer.
-    */
-   void* operator new( size_t size, RoundBuffer& buffer );
-
-   /**
-    * Placement deallocator for the buffer.
-    */
-   void operator delete( void* ptr, RoundBuffer& buffer );
-
-private:
-   /**
-    * Regular allocator for the buffer - can't use it.
-    */
-   void* operator new( size_t size );
-
-   /**
-    * Regular deallocator - can't use it.
-    */
-   void operator delete( void* ptr );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-#define ROUNDBUF_DELETE( Obj ) if ( Obj ) { static_cast< RoundBufferObject* >(Obj)->~RoundBufferObject(); Obj = NULL; }
 
 ///////////////////////////////////////////////////////////////////////////////
 

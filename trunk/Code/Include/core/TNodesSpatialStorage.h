@@ -1,8 +1,7 @@
-#ifndef _T_NODES_SPATIAL_STORAGE_H
-#define _T_NODES_SPATIAL_STORAGE_H
-
 /// @file   core\TNodesSpatialStorage.h
 /// @file   a spatial storage for keeping nodes
+#ifndef _T_NODES_SPATIAL_STORAGE_H
+#define _T_NODES_SPATIAL_STORAGE_H
 
 #include "core\SpatialStorage.h"
 #include "core\Node.h"
@@ -31,6 +30,8 @@ class TNodesSpatialStorage : public SpatialStorage<NodeType>,
                              public TNodesVisitor<NodeType>,
                              public NodeObserver
 {
+   DECLARE_ALLOCATOR( TNodesSpatialStorage, AM_DEFAULT );
+
 private:
    Node* m_root;
    ConcreteSpatialStorage<NodeType>* m_storage;

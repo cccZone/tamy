@@ -3,7 +3,7 @@
 ///         as a shader param
 #pragma once
 
-
+#include "core\MemoryRouter.h"
 #include "core\Subject.h"
 #include "core-Renderer\ShaderParam.h"
 #include "core\ReflectionEnum.h"
@@ -75,17 +75,17 @@ public:
    /**
     * Creates a texture setter for an effect shader.
     */
-   virtual ShaderParam< EffectShader >* createEffectShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) = 0;
+   virtual ShaderParam< EffectShader >* createEffectShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName ) = 0;
 
    /**
     * Creates a texture setter for a pixel shader.
     */
-   virtual ShaderParam< PixelShader >* createPixelShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) = 0;
+   virtual ShaderParam< PixelShader >* createPixelShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName ) = 0;
 
    /**
     * Creates a texture setter for a vertex shader.
     */
-   virtual ShaderParam< VertexShader >* createVertexShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName ) = 0;
+   virtual ShaderParam< VertexShader >* createVertexShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName ) = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

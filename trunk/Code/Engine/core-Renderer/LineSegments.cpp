@@ -8,7 +8,7 @@
 
 BEGIN_RESOURCE_NO_PARENT( LineSegments, tls, AM_BINARY )
    PARENT( GeometryResource )
-   PROPERTY( std::vector<LineSegment>, m_segments )
+   PROPERTY( Array<LineSegment>, m_segments )
 END_RESOURCE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -25,10 +25,13 @@ void LineSegments::calculateBoundingVolume()
 {
    // calculate the bounding box
    m_bb = AABoundingBox();
-   for (std::vector<LineSegment>::iterator it = m_segments.begin(); it != m_segments.end(); ++it )
+
+   uint count = m_segments.size();
+   for ( uint i = 0; i < count; ++i )
    {
-      m_bb.include(it->start);
-      m_bb.include(it->end);
+      const LineSegment& seg = m_segments[i];
+      m_bb.include( seg.start );
+      m_bb.include( seg.end );
    }
 
    m_boundsDirty = false;
@@ -62,18 +65,18 @@ void LineSegments::remove(const LineSegment& segment)
 {
    m_bb = AABoundingBox();
 
-   for (std::vector<LineSegment>::iterator it = m_segments.begin();
-        it != m_segments.end();)
+   int count = m_segments.size();
+   for ( int i = count - 1; i >= 0; --i )
    {
-      if (*it == segment)
+      const LineSegment& seg = m_segments[i];
+      if ( seg == segment )
       {
-         it = m_segments.erase(it);
+         m_segments.remove( i );
       }
       else
       {
-         m_bb.include(it->start);
-         m_bb.include(it->end);
-         ++it;
+         m_bb.include( seg.start );
+         m_bb.include( seg.end );
       }
    }
 }

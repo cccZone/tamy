@@ -12,6 +12,8 @@ namespace // anonymous
 {
    class RendererMock : public Renderer
    {
+      DECLARE_ALLOCATOR( RendererMock, AM_DEFAULT );
+
    public:
       std::string                  m_seqLog;
 
@@ -41,6 +43,8 @@ namespace // anonymous
 
    class RenderingCommandMock : public RenderCommand
    {
+      DECLARE_ALLOCATOR( RenderingCommandMock, AM_DEFAULT );
+
    public:
       void execute( Renderer& renderer )
       {
@@ -51,7 +55,9 @@ namespace // anonymous
    // -------------------------------------------------------------------------
 
    class RenderingMechanismMock : public RenderingMechanism
-   {     
+   {
+      DECLARE_ALLOCATOR( RenderingMechanismMock, AM_DEFAULT );
+
    private:
       bool     m_issueCommand;
 

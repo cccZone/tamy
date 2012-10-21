@@ -10,16 +10,16 @@ void ShaderUtils::calculateHalfPixel( Renderer& renderer, ShaderTexture* inputTe
 {
    if ( inputTex )
    {
-      outHalfPixel.x = 1.0f / (float)inputTex->getWidth();
-      outHalfPixel.y = 1.0f / (float)inputTex->getHeight();
+      outHalfPixel[0] = 1.0f / (float)inputTex->getWidth();
+      outHalfPixel[1] = 1.0f / (float)inputTex->getHeight();
    }
    else
    {
-      outHalfPixel.x = 1.0f / (float)renderer.getViewportWidth();
-      outHalfPixel.y = 1.0f / (float)renderer.getViewportHeight();
+      outHalfPixel[0] = 1.0f / (float)renderer.getViewportWidth();
+      outHalfPixel[1] = 1.0f / (float)renderer.getViewportHeight();
    }
-   outHalfPixel.z = 0.0f;
-   outHalfPixel.mul( 0.5f );
+   outHalfPixel[2] = 0.0f;
+   outHalfPixel.mul( Float_Inv2 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

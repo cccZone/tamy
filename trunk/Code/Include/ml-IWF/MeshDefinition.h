@@ -48,7 +48,7 @@ struct MeshDefinition
 
    MeshDefinition()
    {
-      localMtx = Matrix::IDENTITY;
+      localMtx.setIdentity();
    }
 
    MeshDefinition(const MeshDefinition& rhs)

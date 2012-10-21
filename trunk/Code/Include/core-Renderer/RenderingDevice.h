@@ -1,8 +1,11 @@
+/// @file   core-Renderer/RenderingDevice.h
+/// @brief  a rendering device description
 #pragma once
 
 #include <windows.h>
 #include <d3d9.h>
 #include <vector>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -27,6 +30,8 @@ enum VERTEXPROCESSING_TYPE
  */
 struct RenderingDevice
 {
+   DECLARE_ALLOCATOR( RenderingDevice, AM_DEFAULT );
+
    D3DDISPLAYMODE                     displayMode;
    ULONG                              adapterOrdinal;
    D3DDEVTYPE                         deviceType;

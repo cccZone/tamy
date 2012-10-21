@@ -18,6 +18,7 @@ class SpatialEntity;
  */
 class StaticGeometry : public Geometry
 {
+   DECLARE_ALLOCATOR( StaticGeometry, AM_DEFAULT );
    DECLARE_CLASS()
 
 private:

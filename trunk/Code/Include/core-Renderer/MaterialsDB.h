@@ -24,6 +24,8 @@ enum MaterialInstanceOperation;
  */
 class MaterialsDB : public Observer< MaterialInstance, MaterialInstanceOperation >
 {
+   DECLARE_ALLOCATOR( MaterialsDB, AM_DEFAULT );
+
 public:
    static uint                         RENDER_DATA_BUFFER_STRIDE;
    static uint                         TEXTURE_COORDS_STRIDE;

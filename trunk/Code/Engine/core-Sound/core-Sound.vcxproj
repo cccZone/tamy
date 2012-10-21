@@ -92,7 +92,6 @@
     <ClInclude Include="..\..\Include\core-Sound\SoundListener.h" />
     <ClInclude Include="..\..\Include\core-Sound\SoundRenderer.h" />
     <ClInclude Include="..\..\Include\core-Sound\SoundSceneManager.h" />
-    <ClInclude Include="..\..\Include\core-Sound\SoundEntitiesFactory.h" />
     <ClInclude Include="..\..\Include\core-Sound.h" />
   </ItemGroup>
   <ItemGroup>

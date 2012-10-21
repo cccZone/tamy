@@ -20,6 +20,8 @@ class ShaderTexture;
  */
 struct DeferredLightingRenderData
 {
+   DECLARE_ALLOCATOR( DeferredLightingRenderData, AM_DEFAULT );
+
    // data required by the shadow calculation shaders
    const RenderingView*             m_renderingView;
    const Array< Geometry* >*        m_geometryToRender;

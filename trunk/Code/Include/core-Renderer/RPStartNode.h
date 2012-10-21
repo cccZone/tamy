@@ -12,6 +12,7 @@
  */
 class RPStartNode : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPStartNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:

@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\OutFileStream.h"
 #include "core\File.h"
 #include "core\Assert.h"

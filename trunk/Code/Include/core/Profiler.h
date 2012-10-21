@@ -2,6 +2,7 @@
 /// @brief  profiling tool
 #pragma once
 
+#include "core\MemoryRouter.h"
 #include "core\types.h"
 #include <vector>
 #include <string>
@@ -27,9 +28,13 @@ class CTimer;
  */
 class Profiler
 {
+   DECLARE_ALLOCATOR( Profiler, AM_DEFAULT );
+
 public:
    struct Timer
    {
+      DECLARE_ALLOCATOR( Timer, AM_DEFAULT );
+
       std::string          m_name;
       double               m_activationTimestamp;
       double               m_timeElapsed;
@@ -40,6 +45,8 @@ public:
 
    struct Trace 
    {
+      DECLARE_ALLOCATOR( Trace, AM_DEFAULT );
+
       uint                 m_parentTimerId;
       uint                 m_timerId;
    };

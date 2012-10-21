@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\RefPtr.h"
 #include "core\ReflectionObject.h"
 #include "core\OutStream.h"

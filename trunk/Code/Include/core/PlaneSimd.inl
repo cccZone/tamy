@@ -17,14 +17,14 @@ void Plane::setZero()
 
 void Plane::set( const Vector& vec )
 {
-   SimdUtils::toSimd( vec.x, vec.y, vec.z, vec.w, &m_quad );
+   m_quad = vec.m_quad;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Plane::set( const Vector& normal, const FastFloat& distance )
 {
-   SimdUtils::toSimd( normal.x, normal.y, normal.z, distance.m_val.m128_f32[3], &m_quad ); 
+   SimdUtils::setXYZ_W( &normal.m_quad, &distance.m_val, &m_quad );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,6 +75,15 @@ float Plane::operator[]( int idx ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+const FastFloat Plane::getComponent( uint idx ) const
+{
+   __m128 comp;
+   SimdUtils::getComponent( &m_quad, idx, &comp );
+   return *( const FastFloat* )&comp;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Plane::normalize()
 {
    __m128 dot;
@@ -92,9 +101,7 @@ void Plane::normalize()
 
 const FastFloat Plane::dotCoord( const Vector& coord ) const
 {
-   // <fastfloat.todo> this will be taken directly from vector's SIMD representation
-   __m128 vecQuad;
-   SimdUtils::toSimd( coord.x, coord.y, coord.z, coord.w, &vecQuad );
+   __m128 vecQuad = coord.m_quad;
 
    // plane.x * coord.x, plane.y * coord.y, plane.z * coord.z, plane.w * 1
    static ALIGN_16 const uint discardWMask[4] = { 0xffffffff, 0xffffffff, 0xffffffff, 0x00000000 };
@@ -105,30 +112,26 @@ const FastFloat Plane::dotCoord( const Vector& coord ) const
    __m128 dot;
    SimdUtils::dot<4>( &m_quad, &vecQuad, &dot );
 
-   return FastFloat( dot );
+   return ( const FastFloat& )dot;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 const FastFloat Plane::dotNormal( const Vector& normal ) const
 {
-   // <fastfloat.todo> this will be taken directly from vector's SIMD representation
-   __m128 vecQuad;
-   SimdUtils::toSimd( normal.x, normal.y, normal.z, normal.w, &vecQuad );
-
    __m128 dot;
-   SimdUtils::dot<3>( &vecQuad, &m_quad, &dot );
+   SimdUtils::dot<3>( &normal.m_quad, &m_quad, &dot );
 
-   return FastFloat( dot );
+   return ( const FastFloat& )dot;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Plane::getNormal( Vector& outPlaneNormal ) const
 {
-   outPlaneNormal.x = m_quad.m128_f32[0];
-   outPlaneNormal.y = m_quad.m128_f32[1];
-   outPlaneNormal.z = m_quad.m128_f32[2];
+   // <fastfloat.todo> turn 'discardWMask' and other static masks into shared globals
+   static ALIGN_16 const uint discardWMask[4] = { 0xffffffff, 0xffffffff, 0xffffffff, 0x00000000 };
+   outPlaneNormal.m_quad = _mm_and_ps( m_quad, *( const __m128* )&discardWMask );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

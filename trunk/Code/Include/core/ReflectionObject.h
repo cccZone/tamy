@@ -3,10 +3,11 @@
 #ifndef _REFLECTION_OBJECT_H
 #define _REFLECTION_OBJECT_H
 
-#include "core/types.h"
+#include "core\MemoryRouter.h"
+#include "core\types.h"
 #include <string>
-#include "core/ReflectionMacros.h"
-#include "core/Array.h"
+#include "core\ReflectionMacros.h"
+#include "core\Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -24,7 +25,8 @@ class ReflectionObjectChangeListener;
  */
 class ReflectionObject
 {
-   DECLARE_CLASS()
+   DECLARE_ALLOCATOR( ReflectionObject, AM_DEFAULT );
+   DECLARE_CLASS();
 
 public:
    // a unique id assigned to each instance

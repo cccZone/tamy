@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/ReflectionTypesRegistry.h"
 #include "core/ReflectionType.h"
 #include "core/ReflectionEnum.h"

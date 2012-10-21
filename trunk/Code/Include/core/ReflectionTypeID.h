@@ -3,6 +3,7 @@
 #ifndef REFLECTION_TYPE_ID_H
 #define REFLECTION_TYPE_ID_H
 
+#include "core\MemoryRouter.h"
 #include "core\StringUtils.h"
 #include <string>
 
@@ -15,6 +16,8 @@
 template< typename T >
 struct ReflectionTypeID
 {
+   DECLARE_ALLOCATOR( ReflectionTypeID, AM_DEFAULT );
+
    std::string    m_name;
    unsigned int   m_id;
 

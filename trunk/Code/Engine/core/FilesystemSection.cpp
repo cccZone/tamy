@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/FilesystemSection.h"
 #include "core/Filesystem.h"
 #include "core/FilePath.h"

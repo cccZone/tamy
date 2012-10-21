@@ -31,7 +31,7 @@ Stack< T, TAllocator >::~Stack()
    {
       toRemove = elem;
       elem = elem->m_prev;
-      m_allocator->destroy( toRemove );
+      delete toRemove;
    }
 
    m_top = NULL;
@@ -61,7 +61,7 @@ T Stack< T, TAllocator >::pop()
    removedSeg->m_prev = NULL;
 
    T elem = removedSeg->m_elem;
-   m_allocator->destroy( removedSeg );
+   delete removedSeg;
 
    return elem;
 }
@@ -106,39 +106,6 @@ template< typename T, typename TAllocator >
 Stack< T, TAllocator >::StackSeg::~StackSeg() 
 { 
    m_prev = NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T, typename TAllocator >
-void* Stack< T, TAllocator >::StackSeg::operator new( size_t size, TAllocator* allocator )
-{
-   return allocator->alloc( size );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T, typename TAllocator >
-void Stack< T, TAllocator >::StackSeg::operator delete( void* ptr, TAllocator* allocator )
-{
-   allocator->dealloc( ptr );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T, typename TAllocator >
-void* Stack< T, TAllocator >::StackSeg::operator new( size_t size )
-{
-   ASSERT_MSG( false, "Stack element can only be allocated using a dedicated allocator." );
-   return NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-template< typename T, typename TAllocator >
-void Stack< T, TAllocator >::StackSeg::operator delete( void* ptr )
-{
-   ASSERT_MSG( false, "Stack element can only be allocated using a dedicated allocator." );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

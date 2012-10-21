@@ -13,6 +13,7 @@ class GSVec4Output;
 
 class GNVec4 : public GeometryShaderNode
 {
+   DECLARE_ALLOCATOR( GNVec4, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

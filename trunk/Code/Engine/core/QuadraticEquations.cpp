@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\QuadraticEquations.h"
 #include <math.h>
 

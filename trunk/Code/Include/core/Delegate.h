@@ -1,4 +1,8 @@
+/// @file   core/Delegate.h
+/// @brief  a fast delegate
 #pragma once
+
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,6 +19,8 @@ class Delegate;
 template <typename R>
 class Delegate< R ( ) >
 {
+   DECLARE_ALLOCATOR( Delegate, AM_DEFAULT );
+
 public:
     
     typedef R return_type;
@@ -109,6 +115,8 @@ protected:
 template <typename R, typename PARAM1>
 class Delegate< R (PARAM1) >
 {
+   DECLARE_ALLOCATOR( Delegate, AM_DEFAULT );
+
 public:
     
     typedef R return_type;
@@ -207,6 +215,8 @@ public:
 template <typename R, typename PARAM1, typename PARAM2>
 class Delegate< R (PARAM1, PARAM2) >
 {
+   DECLARE_ALLOCATOR( Delegate, AM_DEFAULT );
+
 public:
     
     typedef R return_type;

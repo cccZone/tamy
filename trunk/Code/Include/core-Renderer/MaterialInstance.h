@@ -54,6 +54,7 @@ class MaterialInstance : public Resource,
                         public Observer< MaterialNode, GraphBuilderNodeOperation >,
                         public Subject< MaterialInstance, MaterialInstanceOperation >
 {
+   DECLARE_ALLOCATOR( MaterialInstance, AM_DEFAULT );
    DECLARE_RESOURCE()
 
 

@@ -1,7 +1,9 @@
+/// @file   core-Renderer/DeviceFilter.h
+/// @brief  rendering device filter
 #pragma once
 
-#include <d3d9.h>
 #include <vector>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,6 +16,8 @@ class DevicesSorter;
 
 class DeviceFilter
 {
+   DECLARE_ALLOCATOR( DeviceFilter, AM_DEFAULT );
+
 private:
    std::vector<DeviceFilterElem*> m_filters;
    DevicesSorter* m_sorter;

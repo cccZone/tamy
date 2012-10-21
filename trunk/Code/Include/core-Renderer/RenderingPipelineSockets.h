@@ -18,6 +18,7 @@ typedef GBNodeOutput< RenderingPipelineNode > RPOutput;
 
 class RPBoolInput : public TGBNodeInput< RenderingPipelineNode, bool >
 {
+   DECLARE_ALLOCATOR( RPBoolInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -29,6 +30,7 @@ public:
 
 class RPBoolOutput : public TGBNodeOutput< RenderingPipelineNode, bool >
 {
+   DECLARE_ALLOCATOR( RPBoolOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -42,6 +44,7 @@ public:
 
 class RPFloatInput : public TGBNodeInput< RenderingPipelineNode, float >
 {
+   DECLARE_ALLOCATOR( RPFloatInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -53,6 +56,7 @@ public:
 
 class RPFloatOutput : public TGBNodeOutput< RenderingPipelineNode, float >
 {
+   DECLARE_ALLOCATOR( RPFloatOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -66,6 +70,7 @@ public:
 
 class RPIntInput : public TGBNodeInput< RenderingPipelineNode, int >
 {
+   DECLARE_ALLOCATOR( RPIntInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -77,6 +82,7 @@ public:
 
 class RPIntOutput : public TGBNodeOutput< RenderingPipelineNode, int >
 {
+   DECLARE_ALLOCATOR( RPIntOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -90,6 +96,7 @@ public:
 
 class RPMatrixInput : public TGBNodeInput< RenderingPipelineNode, Matrix >
 {
+   DECLARE_ALLOCATOR( RPMatrixInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -101,6 +108,7 @@ public:
 
 class RPMatrixOutput : public TGBNodeOutput< RenderingPipelineNode, Matrix >
 {
+   DECLARE_ALLOCATOR( RPMatrixOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -114,6 +122,7 @@ public:
 
 class RPStringInput : public TGBNodeInput< RenderingPipelineNode, std::string >
 {
+   DECLARE_ALLOCATOR( RPStringInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -125,6 +134,7 @@ public:
 
 class RPStringOutput : public TGBNodeOutput< RenderingPipelineNode, std::string >
 {
+   DECLARE_ALLOCATOR( RPStringOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -138,6 +148,7 @@ public:
 
 class RPTextureInput : public TGBNodePtrInput< RenderingPipelineNode, ShaderTexture >
 {
+   DECLARE_ALLOCATOR( RPTextureInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -149,6 +160,7 @@ public:
 
 class RPTextureOutput : public TGBNodePtrOutput< RenderingPipelineNode, ShaderTexture >
 {
+   DECLARE_ALLOCATOR( RPTextureOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -162,6 +174,7 @@ public:
 
 class RPVec4Input : public TGBNodeInput< RenderingPipelineNode, Vector >
 {
+   DECLARE_ALLOCATOR( RPVec4Input, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -173,6 +186,7 @@ public:
 
 class RPVec4Output : public TGBNodeOutput< RenderingPipelineNode, Vector >
 {
+   DECLARE_ALLOCATOR( RPVec4Output, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -186,6 +200,7 @@ public:
 
 class RPVoidInput : public GBNodeInput< RenderingPipelineNode >
 {
+   DECLARE_ALLOCATOR( RPVoidInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -197,6 +212,7 @@ public:
 
 class RPVoidOutput : public GBNodeOutput< RenderingPipelineNode >
 {
+   DECLARE_ALLOCATOR( RPVoidOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:

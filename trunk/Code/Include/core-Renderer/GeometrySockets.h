@@ -18,6 +18,7 @@ typedef GBNodeOutput< GeometryShaderNode > GSOutput;
 
 class GSFloatInput : public TGBNodeInput< GeometryShaderNode, float >
 {
+   DECLARE_ALLOCATOR( GSFloatInput, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:
@@ -29,6 +30,7 @@ public:
 
 class GSFloatOutput : public TGBNodeOutput< GeometryShaderNode, float >
 {
+   DECLARE_ALLOCATOR( GSFloatOutput, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:
@@ -42,6 +44,7 @@ public:
 
 class GSMatrixInput : public TGBNodeInput< GeometryShaderNode, Matrix >
 {
+   DECLARE_ALLOCATOR( GSMatrixInput, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:
@@ -53,6 +56,7 @@ public:
 
 class GSMatrixOutput : public TGBNodeOutput< GeometryShaderNode, Matrix >
 {
+   DECLARE_ALLOCATOR( GSMatrixOutput, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:
@@ -66,6 +70,7 @@ public:
 
 class GSTextureInput : public TGBNodePtrInput< GeometryShaderNode, ShaderTexture >
 {
+   DECLARE_ALLOCATOR( GSTextureInput, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:
@@ -77,6 +82,7 @@ public:
 
 class GSTextureOutput : public TGBNodePtrOutput< GeometryShaderNode, ShaderTexture >
 {
+   DECLARE_ALLOCATOR( GSTextureOutput, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:
@@ -91,6 +97,7 @@ public:
 
 class GSVec4Input : public TGBNodeInput< GeometryShaderNode, Vector >
 {
+   DECLARE_ALLOCATOR( GSVec4Input, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:
@@ -102,6 +109,7 @@ public:
 
 class GSVec4Output : public TGBNodeOutput< GeometryShaderNode, Vector >
 {
+   DECLARE_ALLOCATOR( GSVec4Output, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:
@@ -115,6 +123,7 @@ public:
 
 class GSBoolInput : public TGBNodeInput< GeometryShaderNode, bool >
 {
+   DECLARE_ALLOCATOR( GSBoolInput, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:
@@ -126,6 +135,7 @@ public:
 
 class GSBoolOutput : public TGBNodeOutput< GeometryShaderNode, bool >
 {
+   DECLARE_ALLOCATOR( GSBoolOutput, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:

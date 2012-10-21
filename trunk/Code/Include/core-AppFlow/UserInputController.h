@@ -17,6 +17,8 @@ typedef TVector<2> MouseSpeedVec;
  */
 class UserInputController : public TimeDependent
 {
+   DECLARE_ALLOCATOR( UserInputController, AM_DEFAULT );
+
 private:
    Point             m_relativePt;
    Point             m_prevMousePos;

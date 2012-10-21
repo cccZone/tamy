@@ -41,7 +41,7 @@ Renderer::Renderer(unsigned int viewportWidth,
 , m_renderingState(new RenderingState())
 , m_deviceLostState(new DeviceLostState())
 , m_currentRendererState( m_initialState ) // we always start in the initial state
-, m_renderCommands( 1024 * 1024 ) // 1 MB for the commands
+, m_renderCommands( new RoundBuffer( 1024 * 1024 ) ) // 1 MB for the commands
 , m_vertexShaderTechnique( 0 )
 , m_defaultDepthBuffer( NULL )
 {
@@ -88,6 +88,9 @@ Renderer::~Renderer()
 
    delete m_commandsDataMemoryPool;
    m_commandsDataMemoryPool = NULL;
+
+   delete m_renderCommands;
+   m_renderCommands = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -335,10 +338,10 @@ void Renderer::popDepthBuffer( DepthBuffer* depthBuffer )
 void Renderer::executeCommands()
 {
    RenderCommand* c = NULL;
-   while ( c = m_renderCommands.front< RenderCommand >() )
+   while ( c = m_renderCommands->front< RenderCommand >() )
    {
       c->execute( *this );
-      c->~RenderCommand();
+      delete c;
    }
 }
 

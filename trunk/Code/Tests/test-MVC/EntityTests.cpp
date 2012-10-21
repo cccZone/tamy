@@ -10,6 +10,7 @@ namespace // anonymous
 {
    class ClonableEntityAMock : public Entity
    {
+      DECLARE_ALLOCATOR( ClonableEntityAMock, AM_DEFAULT );
       DECLARE_CLASS()
 
    private:
@@ -36,6 +37,7 @@ namespace // anonymous
 
    class ClonableEntityBMock : public Entity
    {
+      DECLARE_ALLOCATOR( ClonableEntityBMock, AM_DEFAULT );
       DECLARE_CLASS()
 
    private:
@@ -70,6 +72,7 @@ TEST( Entity, cloningSimple )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Entity >( "Entity", new TSerializableTypeInstantiator< Entity >() ); 
    typesRegistry.addSerializableType< ClonableEntityAMock >( "ClonableEntityAMock", new TSerializableTypeInstantiator< ClonableEntityAMock >() ); 
 
@@ -91,6 +94,7 @@ TEST( Entity, cloningHierarchy )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Entity >( "Entity", new TSerializableTypeInstantiator< Entity >() ); 
    typesRegistry.addSerializableType< ClonableEntityAMock >( "ClonableEntityAMock", new TSerializableTypeInstantiator< ClonableEntityAMock >() ); 
    typesRegistry.addSerializableType< ClonableEntityBMock >( "ClonableEntityBMock", new TSerializableTypeInstantiator< ClonableEntityBMock >() ); 

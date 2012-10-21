@@ -16,6 +16,8 @@ class File;
  */
 class InFileStream: public InStream
 {
+   DECLARE_ALLOCATOR( InFileStream, AM_DEFAULT );
+
 private:
    File* m_archive;
 

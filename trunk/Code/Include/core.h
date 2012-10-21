@@ -10,7 +10,6 @@
 #include "core\CellSpacePartition.h"
 #include "core\Point.h"
 #include "core\Stack.h"
-#include "core\RoundBuffer.h"
 #include "core\List.h"
 #include "core\CollectionUtils.h"
 // ----------------------------------------------------------------------------
@@ -61,12 +60,19 @@
 
 // ----------------------------------------------------------------------------
 // MemoryManagement
+// -->Pools
 // ----------------------------------------------------------------------------
-#include "core\MemoryUtils.h"
 #include "core\MemoryPool.h"
 #include "core\RuntimeData.h"
+#include "core\RoundBuffer.h"
 // ----------------------------------------------------------------------------
-// Allocators
+// -->Core
+// ----------------------------------------------------------------------------
+#include "core\MemoryRouter.h"
+#include "core\MemoryUtils.h"
+#include "core\MemoryAllocator.h"
+// ----------------------------------------------------------------------------
+// -->Allocators
 // ----------------------------------------------------------------------------
 #include "core\DefaultAllocator.h"
 #include "core\MemoryPoolAllocator.h"

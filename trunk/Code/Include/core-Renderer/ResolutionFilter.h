@@ -1,3 +1,5 @@
+/// @file   core-Renderer/DevTypeFilter.h
+/// @brief  resolution filter
 #pragma once
 
 #include "core-Renderer\DeviceFilterElem.h"
@@ -8,6 +10,8 @@
 
 class ResolutionFilter : public DeviceFilterElem
 {
+   DECLARE_ALLOCATOR( ResolutionFilter, AM_DEFAULT );
+
 private:
    unsigned int m_width;
    unsigned int m_height;

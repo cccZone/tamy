@@ -1,3 +1,5 @@
+/// @file   core-Sound/Sound3D.h
+/// @brief  a scene node that emits sounds
 #pragma once
 
 #include "core\Node.h"
@@ -17,17 +19,19 @@ class SoundListener;
  */
 class Sound3D : public Node
 {
+   DECLARE_ALLOCATOR( Sound3D, AM_DEFAULT );
+
 protected:
-   float m_soundHearingRadius;
-   SoundChannel* m_channel;
+   FastFloat            m_soundHearingRadius;
+   SoundChannel*        m_channel;
 
 private:
-   Sound& m_sound;
-   float m_soundHearingRadiusSq;
-   bool m_looped;
+   Sound&               m_sound;
+   FastFloat            m_soundHearingRadiusSq;
+   bool                 m_looped;
 
 public:
-   Sound3D(const std::string& name, Sound& sound, float soundHearingRadius);
+   Sound3D( const std::string& name, Sound& sound, float soundHearingRadius );
    virtual ~Sound3D();
 
    virtual void update(SoundListener& listener) = 0;
@@ -38,8 +42,8 @@ public:
    void deassignChannel(SoundDevice& device);
    bool hasChannelAssigned() const {return m_channel != NULL;}
 
-   float getHearingRadius() const {return m_soundHearingRadius;}
-   float getHearingRadiusSq() const {return m_soundHearingRadiusSq;}
+   inline const FastFloat& getHearingRadius() const { return m_soundHearingRadius; }
+   inline const FastFloat& getHearingRadiusSq() const { return m_soundHearingRadiusSq; }
 
    /**
     * This method allows to define whether the played sound should 

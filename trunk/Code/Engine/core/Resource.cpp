@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\Resource.h"
 #include "core\ResourcesManager.h"
 #include "core\ReflectionTypesRegistry.h"

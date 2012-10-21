@@ -3,8 +3,9 @@
 #pragma once
 
 #include <string>
-#include "core/types.h"
-#include "core/Array.h"
+#include "core\MemoryRouter.h"
+#include "core\types.h"
+#include "core\Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,8 @@
  */
 class IDString
 {
+   DECLARE_ALLOCATOR( IDString, AM_DEFAULT );
+
 private:
    uint           m_stringId;
 

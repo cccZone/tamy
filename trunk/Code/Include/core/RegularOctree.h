@@ -16,7 +16,7 @@
 template<typename Elem>
 class RegularOctree : public Octree<Elem>
 {
-   ALIGNED_CLASS();
+   DECLARE_ALLOCATOR( RegularOctree< Elem >, AM_ALIGNED_16 );
 
 private:
    typedef ConstSizeArray< Elem* >  ElementsArray;

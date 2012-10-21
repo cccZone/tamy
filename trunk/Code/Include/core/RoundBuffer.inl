@@ -24,6 +24,7 @@ T* RoundBuffer::front()
    else
    {
       char* startAddr = m_memory + m_allocStartOffset + BUFFER_INFO_CHUNK_SIZE;
+      startAddr = (char*)MemoryRouter::convertAllocatedToObjectAddress( startAddr, GET_ALLOC_MODE( T ) );
       return reinterpret_cast< T* >( startAddr );
    }
 }

@@ -1,9 +1,9 @@
-#pragma once
-
 /// @file   core-Renderer\ModelComponent.h
 /// @brief  A component that can be attached to a model.
+#pragma once
 
 #include "core\Component.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,6 +18,8 @@ class Model;
 template< typename T >
 class ModelComponent : public Component<Model>
 {
+   DECLARE_ALLOCATOR( ModelComponent, AM_DEFAULT );
+
 private:
    T&          m_component;
 

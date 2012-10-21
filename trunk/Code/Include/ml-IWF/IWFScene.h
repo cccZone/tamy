@@ -124,7 +124,7 @@ private:
     */
    virtual void addStaticGeometry( Model& scene,
                                    ResourcesManager& rm,
-                                   std::vector<MeshDefinition> meshes,
+                                   const Array< MeshDefinition >& meshes,
                                    const Matrix& situation,
                                    const std::string& objName );
 };

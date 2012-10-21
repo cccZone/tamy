@@ -53,7 +53,7 @@ void GizmoAxis::transformManipulatedNodes( const Vector& viewportSpaceTransforma
    const Matrix& manipulationMatrix = m_editedNode.getGlobalMtx();
    const Vector& manipulationAxis = manipulationMatrix.getRow( m_axisIdx );
 
-   float transformationValue = 0.0f;
+   FastFloat transformationValue = Float_0;
    {
       Matrix viewProjMtx;
       viewProjMtx.setMul( m_activeCamera.getViewMtx(), m_activeCamera.getProjectionMtx() );
@@ -99,7 +99,7 @@ RCBindVertexShader* GizmoAxis::onPreRender( Renderer& renderer )
    camera.getPosition( cameraPos );
    Vector dirToCamera;
    dirToCamera.setSub( cameraPos, nodeMtx.position() );
-   float scale = dirToCamera.length();
+   const FastFloat scale = dirToCamera.length();
 
    Matrix scaleMtx;
    scaleMtx.scaleUniform( scale );
@@ -149,7 +149,7 @@ void GizmoAxis::initialize()
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-void TranslationGizmoOp::transformManipulatedNodes( const Vector& manipulationAxis, float transformationValue, Matrix& outTransformationMtx ) const
+void TranslationGizmoOp::transformManipulatedNodes( const Vector& manipulationAxis, const FastFloat& transformationValue, Matrix& outTransformationMtx ) const
 {
    Vector translation;
    translation.setMul( manipulationAxis, transformationValue );
@@ -159,7 +159,7 @@ void TranslationGizmoOp::transformManipulatedNodes( const Vector& manipulationAx
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void RotationGizmoOp::transformManipulatedNodes( const Vector& manipulationAxis, float transformationValue, Matrix& outTransformationMtx ) const
+void RotationGizmoOp::transformManipulatedNodes( const Vector& manipulationAxis, const FastFloat& transformationValue, Matrix& outTransformationMtx ) const
 {
    Quaternion rotQ;
    rotQ.setAxisAngle( manipulationAxis, transformationValue );
@@ -169,10 +169,11 @@ void RotationGizmoOp::transformManipulatedNodes( const Vector& manipulationAxis,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void ScalingGizmoOp::transformManipulatedNodes( const Vector& manipulationAxis, float transformationValue, Matrix& outTransformationMtx ) const
+void ScalingGizmoOp::transformManipulatedNodes( const Vector& manipulationAxis, const FastFloat& transformationValue, Matrix& outTransformationMtx ) const
 {
    Vector scaleVec;
-   scaleVec.setMul( manipulationAxis, transformationValue ).add( Vector::ONE );
+   scaleVec.setMul( manipulationAxis, transformationValue );
+   scaleVec.add( Vector_ONE );
 
    outTransformationMtx.scale( scaleVec );
 }

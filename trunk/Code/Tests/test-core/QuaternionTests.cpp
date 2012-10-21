@@ -14,7 +14,7 @@ TEST( Quaternion, fromAxisAngle )
    Vector arbitraryAxis( 0.3f, 0.5f, -0.2f );
    arbitraryAxis.normalize();
 
-   Vector axis[] = { Vector::OX, Vector::OY, Vector::OZ, Vector::OX_NEG, Vector::OY_NEG, Vector::OZ_NEG, arbitraryAxis };
+   Vector axis[] = { Vector( Quad_1000 ), Vector( Quad_0100 ), Vector( Quad_0010 ), Vector( Quad_Neg_1000 ), Vector( Quad_Neg_0100 ), Vector( Quad_Neg_0010 ), arbitraryAxis };
    int axisCount = 7;
 
    D3DXQUATERNION dxQuat;
@@ -24,7 +24,7 @@ TEST( Quaternion, fromAxisAngle )
    {
       for ( float angle = -179.0f; angle <= 179.0f; angle += 1.0f )
       {
-         tamyQuat.setAxisAngle( axis[axisIdx], DEG2RAD( angle ) );
+         tamyQuat.setAxisAngle( axis[axisIdx], FastFloat::fromFloat( DEG2RAD( angle ) ) );
          D3DXQuaternionRotationAxis( &dxQuat, ( const D3DXVECTOR3* )&axis[axisIdx], DEG2RAD( angle ) );
          COMPARE_QUAT( dxQuat, tamyQuat );
       }
@@ -38,12 +38,12 @@ TEST( Quaternion, retrievingAxisAngleValues )
    Vector arbitraryAxis( 0.3f, 0.5f, -0.2f );
    arbitraryAxis.normalize();
 
-   Vector axis[] = { Vector::OX, Vector::OY, Vector::OZ, Vector::OX_NEG, Vector::OY_NEG, Vector::OZ_NEG, arbitraryAxis };
+   Vector axis[] = { Vector( Quad_1000 ), Vector( Quad_0100 ), Vector( Quad_0010 ), Vector( Quad_Neg_1000 ), Vector( Quad_Neg_0100 ), Vector( Quad_Neg_0010 ), arbitraryAxis };
    int axisCount = 7;
 
    Quaternion quat;
    Vector retAxis;
-
+   FastFloat retAngle, signChange;
    for ( int axisIdx = 0; axisIdx < axisCount; ++axisIdx )
    {
       for ( float angle = -179.0f; angle <= 179.0f; angle += 1.0f )
@@ -53,14 +53,16 @@ TEST( Quaternion, retrievingAxisAngleValues )
             // the method doesn't work for angles == 0
             continue;
          }
-         quat.setAxisAngle( axis[axisIdx], DEG2RAD( angle ) );
-
-         float retAngle = RAD2DEG( quat.getAngle() );
-         float signChange = retAngle * angle > 0.0f ? 1.0f : -1.0f;
-
-         CPPUNIT_ASSERT_DOUBLES_EQUAL( abs( angle ), retAngle, 1e-3 );
+         quat.setAxisAngle( axis[axisIdx], FastFloat::fromFloat( DEG2RAD( angle ) ) );
+         quat.getAngle( retAngle );
+         retAngle.mul( Float_Rad2Deg );
+         
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( abs( angle ), retAngle.getFloat(), 1e-3 );
 
          quat.getAxis( retAxis );
+
+         signChange.setMul( retAngle, FastFloat::fromFloat( angle ) );
+         signChange.sign();
          retAxis.mul( signChange );
          COMPARE_VEC( axis[axisIdx], retAxis );
       }
@@ -73,45 +75,49 @@ TEST( Quaternion, angleDecomposition )
 {
    Quaternion quat;
    Quaternion remainingQuat;
-   float angle;
+   FastFloat angle;
 
    {
-      quat.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
+      quat.setAxisAngle( Vector( Quad_1000 ), FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
 
       // a decomposition along the creation axis should not leave any quaternion behind
       {
-         angle = quat.decompose( Vector::OX, remainingQuat );
+         quat.decompose( Vector( Quad_1000 ), remainingQuat, angle );
+         angle.mul( Float_Rad2Deg );
 
          COMPARE_QUAT( remainingQuat, Quaternion::getIdentity() );
-         CPPUNIT_ASSERT_DOUBLES_EQUAL( 90.0f, RAD2DEG( angle ), 1e-3 );
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( 90.0f, angle.getFloat(), 1e-3 );
       }
 
       // a decomposition along an orthogonal axis should leave the entire quaternion untouched
       // and return angle == 0
       {
-         angle = quat.decompose( Vector::OY, remainingQuat );
+         quat.decompose( Vector( Quad_0100 ), remainingQuat, angle );
+         angle.mul( Float_Rad2Deg );
 
          COMPARE_QUAT( remainingQuat, quat );
-         CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0395f, RAD2DEG( angle ), 1e-3 );
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0395f, angle.getFloat(), 1e-3 );
       }
    }
 
-   quat.setAxisAngle( Vector::OX_NEG, DEG2RAD( 45.0f ) );
+   quat.setAxisAngle( Vector( Quad_Neg_1000 ), FastFloat::fromFloat( DEG2RAD( 45.0f ) ) );
    {
       // complete removal
       {
-         angle = quat.decompose( Vector::OX_NEG, remainingQuat );
+         quat.decompose( Vector( Quad_Neg_1000 ), remainingQuat, angle );
+         angle.mul( Float_Rad2Deg );
 
          COMPARE_QUAT( remainingQuat, Quaternion::getIdentity() );
-         CPPUNIT_ASSERT_DOUBLES_EQUAL( 45.0f, RAD2DEG( angle ), 1e-3 );
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( 45.0f, angle.getFloat(), 1e-3 );
       }
 
       // null removal
       {
-         angle = quat.decompose( Vector::OY, remainingQuat );
+         quat.decompose( Vector( Quad_0100 ), remainingQuat, angle );
+         angle.mul( Float_Rad2Deg );
 
          COMPARE_QUAT( remainingQuat, quat );
-         CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0f, RAD2DEG( angle ), 1e-1 );
+         CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.0f, angle.getFloat(), 1e-1 );
       }
    }
 }
@@ -122,17 +128,17 @@ TEST( Quaternion, setFromShortestRotation )
 {
    Quaternion quat;
 
-   quat.setFromShortestRotation( Vector::OZ, Vector::OX );
-   COMPARE_QUAT_AXIS_ANGLE( quat, Vector::OY, 90.0f );   
+   quat.setFromShortestRotation( Vector( Quad_0010 ), Vector( Quad_1000 ) );
+   COMPARE_QUAT_AXIS_ANGLE( quat, Vector( Quad_0100 ), 90.0f );   
 
-   quat.setFromShortestRotation( Vector::OZ, Vector::OX_NEG );
-   COMPARE_QUAT_AXIS_ANGLE( quat, Vector::OY_NEG, 90.0f );
+   quat.setFromShortestRotation( Vector( Quad_0010 ), Vector( Quad_Neg_1000 ) );
+   COMPARE_QUAT_AXIS_ANGLE( quat, Vector( Quad_Neg_0100 ), 90.0f );
 
-   quat.setFromShortestRotation( Vector::OY, Vector::OZ );
-   COMPARE_QUAT_AXIS_ANGLE( quat, Vector::OX, 90.0f );
+   quat.setFromShortestRotation( Vector( Quad_0100 ), Vector( Quad_0010 ) );
+   COMPARE_QUAT_AXIS_ANGLE( quat, Vector( Quad_1000 ), 90.0f );
 
-   quat.setFromShortestRotation( Vector::OX, Vector::OY );
-   COMPARE_QUAT_AXIS_ANGLE( quat, Vector::OZ, 90.0f );
+   quat.setFromShortestRotation( Vector( Quad_1000 ), Vector( Quad_0100 ) );
+   COMPARE_QUAT_AXIS_ANGLE( quat, Vector( Quad_0010 ), 90.0f );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -165,8 +171,8 @@ TEST( Quaternion, setFromEulerAngles )
 TEST( Quaternion, slerp )
 {
    Quaternion q1, q2, resultQ;
-   q1.setAxisAngle( Vector::OY, 0.0f );
-   q2.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
+   q1.setAxisAngle( Vector( Quad_0100 ), Float_0 );
+   q2.setAxisAngle( Vector( Quad_0100 ), FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
 
    resultQ.setSlerp( q1, q2, Float_0 );
    COMPARE_QUAT( q1, resultQ );
@@ -175,7 +181,7 @@ TEST( Quaternion, slerp )
    COMPARE_QUAT( q2, resultQ );
 
    resultQ.setSlerp( q1, q2, Float_Inv2 );
-   COMPARE_QUAT_AXIS_ANGLE( resultQ, Vector::OY, 45.0f );
+   COMPARE_QUAT_AXIS_ANGLE( resultQ, Vector( Quad_0100 ), 45.0f );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -185,21 +191,21 @@ TEST( Quaternion, transform )
    Quaternion q;
    Vector result;
 
-   q.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
-   q.transform( Vector::OZ, result );
-   COMPARE_VEC( Vector::OX, result );
+   q.setAxisAngle( Vector( Quad_0100 ), FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
+   q.transform( Vector( Quad_0010 ), result );
+   COMPARE_VEC( Vector( Quad_1000 ), result );
 
-   q.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
-   q.transform( Vector::OY, result );
-   COMPARE_VEC( Vector::OZ, result );
+   q.setAxisAngle( Vector( Quad_1000 ), FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
+   q.transform( Vector( Quad_0100 ), result );
+   COMPARE_VEC( Vector( Quad_0010 ), result );
 
-   q.setAxisAngle( Vector::OZ, DEG2RAD( 90.0f ) );
-   q.transform( Vector::OX, result );
-   COMPARE_VEC( Vector::OY, result );
+   q.setAxisAngle( Vector( Quad_0010 ), FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
+   q.transform( Vector( Quad_1000 ), result );
+   COMPARE_VEC( Vector( Quad_0100 ), result );
 
-   q.setAxisAngle( Vector::OZ_NEG, DEG2RAD( 90.0f ) );
-   q.transform( Vector::OX, result );
-   COMPARE_VEC( Vector::OY_NEG, result );
+   q.setAxisAngle( Vector( Quad_Neg_0010 ), FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
+   q.transform( Vector( Quad_1000 ), result );
+   COMPARE_VEC( Vector( Quad_Neg_0100 ), result );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -209,21 +215,21 @@ TEST( Quaternion, worldToLocalTransform )
    Quaternion parentWorld, childLocal, childWorld;
 
    // define parent and child transforms
-   parentWorld.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
-   childLocal.setAxisAngle( Vector::OZ, DEG2RAD( 90.0f ) );
+   parentWorld.setAxisAngle( Vector( Quad_0100 ), FastFloat::fromFloat(  DEG2RAD( 90.0f ) ) );
+   childLocal.setAxisAngle( Vector( Quad_0010 ), FastFloat::fromFloat( DEG2RAD( 90.0f ) ) );
 
    // calculate and test their concatenation
    childWorld.setMul( childLocal, parentWorld ); // (1) - this equation MUST be the same as equation (2) in order for this test to give true results
 
    {
       Vector oxConcatenatedParentChildSpace;
-      childWorld.transform( Vector::OX, oxConcatenatedParentChildSpace );
-      COMPARE_VEC( Vector::OY, oxConcatenatedParentChildSpace );
+      childWorld.transform( Vector( Quad_1000 ), oxConcatenatedParentChildSpace );
+      COMPARE_VEC( Vector( Quad_0100 ), oxConcatenatedParentChildSpace );
    }
 
    // introduce additional world rotation that should be applied only to the child
    Quaternion childWorldRotation;
-   childWorldRotation.setAxisAngle( Vector::OX, DEG2RAD( 45.0f ) );
+   childWorldRotation.setAxisAngle( Vector( Quad_1000 ), FastFloat::fromFloat( DEG2RAD( 45.0f ) ) );
 
    Quaternion newChildWorld;
    newChildWorld.setMul( childWorld, childWorldRotation );
@@ -231,7 +237,7 @@ TEST( Quaternion, worldToLocalTransform )
    // test the new world transform
    {
       Vector oxConcatenatedParentChildSpace;
-      newChildWorld.transform( Vector::OX, oxConcatenatedParentChildSpace );
+      newChildWorld.transform( Vector( Quad_1000 ), oxConcatenatedParentChildSpace );
       COMPARE_VEC( Vector( 0.0f, 0.70710659f, 0.70710659f ), oxConcatenatedParentChildSpace );
    }
 
@@ -244,7 +250,7 @@ TEST( Quaternion, worldToLocalTransform )
    childWorld.setMul( childLocal, parentWorld );  // (2) - this equation MUST be the same as equation (1) in order for this test to give true results
    {
       Vector oxConcatenatedParentChildSpace;
-      childWorld.transform( Vector::OX, oxConcatenatedParentChildSpace );
+      childWorld.transform( Vector( Quad_1000 ), oxConcatenatedParentChildSpace );
       COMPARE_VEC( Vector( 0.0f, 0.70710659f, 0.70710659f ), oxConcatenatedParentChildSpace );
    }
 }

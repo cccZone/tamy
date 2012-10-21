@@ -123,28 +123,28 @@ void Gizmo::createTranslationGizmo()
 {
    const Matrix& mtx = m_node.getGlobalMtx();
 
-   float armLength = 0.2f;
+   static FastFloat armLength = FastFloat::fromFloat( 0.2f );
    float armHalfDim = 0.003f;
    Vector ox, oy, oz;
-   ox.setMul( Vector::OX, armLength );
-   oy.setMul( Vector::OY, armLength );
-   oz.setMul( Vector::OZ, armLength );
+   ox.setMul( Vector_OX, armLength );
+   oy.setMul( Vector_OY, armLength );
+   oz.setMul( Vector_OZ, armLength );
 
    // OX
    delete m_meshes[0];
-   m_meshes[0] = DebugGeometryBuilder::createArrow( armHalfDim, Vector::ZERO, ox );
+   m_meshes[0] = DebugGeometryBuilder::createArrow( armHalfDim, Vector_ZERO, ox );
    m_geometry[0]->setMesh( *m_meshes[0] );
    m_geometry[0]->setOperation( *m_translationOp );
 
    // OY
    delete m_meshes[1];
-   m_meshes[1] = DebugGeometryBuilder::createArrow( armHalfDim, Vector::ZERO, oy );
+   m_meshes[1] = DebugGeometryBuilder::createArrow( armHalfDim, Vector_ZERO, oy );
    m_geometry[1]->setMesh( *m_meshes[1] );
    m_geometry[1]->setOperation( *m_translationOp );
 
    // OZ
    delete m_meshes[2];
-   m_meshes[2] = DebugGeometryBuilder::createArrow( armHalfDim, Vector::ZERO, oz );
+   m_meshes[2] = DebugGeometryBuilder::createArrow( armHalfDim, Vector_ZERO, oz );
    m_geometry[2]->setMesh( *m_meshes[2] );
    m_geometry[2]->setOperation( *m_translationOp );
 }
@@ -161,21 +161,23 @@ void Gizmo::createRotationGizmo()
 
    Matrix transformOX, transformOY, transformOZ;
 
+   static FastFloat rotAngle = FastFloat::fromFloat( DEG2RAD( 90.0f ) );
+
    // calculate transform OX
    {
-      rotQ.setAxisAngle( Vector::OY, DEG2RAD( 90.0f ) );
+      rotQ.setAxisAngle( Vector_OY, rotAngle );
       transformOX.setRotation( rotQ );
    }
 
    // calculate transform OY
    {
-      rotQ.setAxisAngle( Vector::OX, DEG2RAD( 90.0f ) );
+      rotQ.setAxisAngle( Vector_OX, rotAngle );
       transformOY.setRotation( rotQ );
    }
 
    // calculate transform OZ
    {
-      rotQ.setAxisAngle( Vector::OZ, DEG2RAD( 90.0f ) );
+      rotQ.setAxisAngle( Vector_OZ, rotAngle );
       transformOZ.setRotation( rotQ );
    }
 
@@ -209,28 +211,28 @@ void Gizmo::createScalingGizmo()
 {
    const Matrix& mtx = m_node.getGlobalMtx();
 
-   float armLength = 0.2f;
+   static FastFloat armLength = FastFloat::fromFloat( 0.2f );
    float armHalfDim = 0.003f;
    Vector ox, oy, oz;
-   ox.setMul( Vector::OX, armLength );
-   oy.setMul( Vector::OY, armLength );
-   oz.setMul( Vector::OZ, armLength );
+   ox.setMul( Vector_OX, armLength );
+   oy.setMul( Vector_OY, armLength );
+   oz.setMul( Vector_OZ, armLength );
 
    // OX
    delete m_meshes[0];
-   m_meshes[0] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector::ZERO, ox );
+   m_meshes[0] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector_ZERO, ox );
    m_geometry[0]->setMesh( *m_meshes[0] );
    m_geometry[0]->setOperation( *m_scalingOp );
 
    // OY
    delete m_meshes[1];
-   m_meshes[1] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector::ZERO, oy );
+   m_meshes[1] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector_ZERO, oy );
    m_geometry[1]->setMesh( *m_meshes[1] );
    m_geometry[1]->setOperation( *m_scalingOp );
 
    // OZ
    delete m_meshes[2];
-   m_meshes[2] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector::ZERO, oz );
+   m_meshes[2] = DebugGeometryBuilder::createBoxHeadedArrow( armHalfDim, Vector_ZERO, oz );
    m_geometry[2]->setMesh( *m_meshes[2] );
    m_geometry[2]->setOperation( *m_scalingOp );
 }

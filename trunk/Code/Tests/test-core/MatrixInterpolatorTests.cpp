@@ -40,7 +40,7 @@ TEST( MatrixInterpolator, rotation )
    Matrix start;
    Matrix end;
 
-   start = Matrix::IDENTITY;
+   start.setIdentity();
    EulerAngles ea;
    ea.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
    end.setRotation( ea );

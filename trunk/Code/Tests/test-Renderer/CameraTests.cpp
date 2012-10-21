@@ -14,6 +14,8 @@ namespace // anonymous
 {
    class RendererImplementationMock : public Renderer
    {
+      DECLARE_ALLOCATOR( RendererImplementationMock, AM_DEFAULT );
+
    protected:
       void resetViewport(unsigned int width, unsigned int height) {}
       void resizeViewport( unsigned int width, unsigned int height ) {}
@@ -57,7 +59,7 @@ TEST(Camera, frustrumCreation)
 
    // camera rotated
    Quaternion rotY;
-   rotY.setAxisAngle( Vector::OY, DEG2RAD( 90 ) );
+   rotY.setAxisAngle( Quad_0100, FastFloat::fromFloat( DEG2RAD( 90 ) ) );
    camera.accessLocalMtx().setRotation( rotY );
 
    camera.calculateFrustum( frustrum );
@@ -67,7 +69,7 @@ TEST(Camera, frustrumCreation)
    CPPUNIT_ASSERT_EQUAL(true, testCollision(frustrum, BoundingSphere(Vector(50, 0, 0), 1)));
 
    // camera rotated
-   rotY.setAxisAngle( Vector::OY, DEG2RAD( -90 ) );
+   rotY.setAxisAngle( Quad_0100, FastFloat::fromFloat( DEG2RAD( -90 ) ) );
    camera.accessLocalMtx().setRotation( rotY );
 
    camera.calculateFrustum( frustrum );
@@ -98,7 +100,8 @@ TEST(Camera, createRay)
    // - bottom plane
    Vector planeNormal;
    frustum.planes[FP_BOTTOM].getNormal( planeNormal );
-   expectedNormal.setCross( planeNormal, Vector::OX_NEG ).normalize();
+   expectedNormal.setCross( planeNormal, Quad_Neg_1000 );
+   expectedNormal.normalize();
 
    camera.createRay( 0, -1, result );
    COMPARE_VEC(Vector(0, 0, 0), result.origin);
@@ -106,7 +109,8 @@ TEST(Camera, createRay)
 
    // - top plane
    frustum.planes[FP_TOP].getNormal( planeNormal );
-   expectedNormal.setCross( planeNormal, Vector::OX ).normalize();
+   expectedNormal.setCross( planeNormal, Quad_1000 );
+   expectedNormal.normalize();
 
    camera.createRay( 0, 1, result );
    COMPARE_VEC(Vector(0, 0, 0), result.origin);
@@ -114,7 +118,8 @@ TEST(Camera, createRay)
 
    // - left plane
    frustum.planes[FP_LEFT].getNormal( planeNormal );
-   expectedNormal.setCross( Vector::OY_NEG, planeNormal ).normalize();
+   expectedNormal.setCross( Quad_Neg_0100, planeNormal );
+   expectedNormal.normalize();
 
    camera.createRay( -1, 0, result );
    COMPARE_VEC(Vector(0, 0, 0), result.origin);
@@ -122,7 +127,8 @@ TEST(Camera, createRay)
 
    // - right plane
    frustum.planes[FP_RIGHT].getNormal( planeNormal );
-   expectedNormal.setCross( Vector::OY, planeNormal ).normalize();
+   expectedNormal.setCross( Quad_0100, planeNormal );
+   expectedNormal.normalize();
 
    camera.createRay( 1, 0, result );
    COMPARE_VEC(Vector(0, 0, 0), result.origin);

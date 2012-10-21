@@ -11,7 +11,7 @@
 
 template< typename T >
 ShaderRenderCommand< T >::ShaderRenderCommand( MemoryPoolAllocator& allocator )
-   : m_allocator( allocator )
+   : m_allocator( &allocator )
    , m_shaderParams( 4, &allocator )
 {
 }
@@ -24,7 +24,7 @@ ShaderRenderCommand< T >::~ShaderRenderCommand()
    unsigned int count = m_shaderParams.size();
    for ( unsigned int i = 0; i < count; ++i )
    {
-      m_allocator.destroy( m_shaderParams[i] );
+      delete m_shaderParams[i];
    }
 }
 

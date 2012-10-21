@@ -24,10 +24,13 @@ namespace // anonymous
       {
          std::string val = elem.GetText();
          std::stringstream valStr( val );
-         valStr   >> m_mtx.m11 >> m_mtx.m12 >> m_mtx.m13 >> m_mtx.m14
-                  >> m_mtx.m21 >> m_mtx.m22 >> m_mtx.m23 >> m_mtx.m24
-                  >> m_mtx.m31 >> m_mtx.m32 >> m_mtx.m33 >> m_mtx.m34
-                  >> m_mtx.m41 >> m_mtx.m42 >> m_mtx.m43 >> m_mtx.m44;
+         ALIGN_16 float mtxCmp[16];
+
+         valStr   >> mtxCmp[0] >> mtxCmp[1] >> mtxCmp[2] >> mtxCmp[3]
+                  >> mtxCmp[4] >> mtxCmp[5] >> mtxCmp[6] >> mtxCmp[7]
+                  >> mtxCmp[8] >> mtxCmp[9] >> mtxCmp[10] >> mtxCmp[11]
+                  >> mtxCmp[12] >> mtxCmp[13] >> mtxCmp[14] >> mtxCmp[15];
+         m_mtx.set( mtxCmp );
       }
 
       unsigned int size() const { return 1; }

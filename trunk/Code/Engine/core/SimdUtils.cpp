@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/SimdUtils.h"
 #include "core/types.h"
 
@@ -80,6 +81,13 @@ void SimdUtils::flipSign( const __m128* quad, const __m128* mask, __m128* outQua
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void SimdUtils::sqrt( const __m128* quad, __m128* outQuad )
+{
+   *outQuad = _mm_sqrt_ps( *quad );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void SimdUtils::sqrtInverse( const __m128* quad, __m128* outQuad )
 {
    *outQuad = _mm_rsqrt_ps( *quad );
@@ -103,7 +111,7 @@ const __m128 SimdUtils::fromFloat( float val )
 
 void SimdUtils::setXYZ_W( const __m128* xyz, const __m128* w, __m128* outQuad )
 {
-#if HK_SSE_VERSION >= 0x41
+#if SSE_VERSION >= 0x41
    *outQuad = _mm_blend_ps( *xyz, *w, 0x8 );
 #else
    *outQuad = _mm_shuffle_ps( *xyz, _mm_unpackhi_ps( *xyz, *w ), _MM_SHUFFLE( 3,0,1,0 ) );
@@ -126,10 +134,48 @@ void SimdUtils::getComponent( const __m128* quad, const int idx, __m128* outComp
    const __m128 mask = *( const __m128* )&indexToMask[ idx * 4 ];
    __m128 selected = _mm_and_ps( mask, *quad ); 
 
-   const __m128 zwxy = _mm_shuffle_ps( selected, selected, _MM_SHUFFLE( 1,0,3,2 ) );
+   const __m128 zwxy = _mm_shuffle_ps( selected, selected, 0x4e ); // 0x4e == _MM_SHUFFLE( 1,0,3,2 )
    selected = _mm_or_ps( selected, zwxy );
-   const __m128 yxwz = _mm_shuffle_ps( selected, selected, _MM_SHUFFLE( 2,3,0,1 ) );
+   const __m128 yxwz = _mm_shuffle_ps( selected, selected, 0xb1 ); // 0xb1 == _MM_SHUFFLE( 2,3,0,1 )
    *outComponent = _mm_or_ps( selected, yxwz );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SimdUtils::transpose( const __m128* inRows, __m128* outRows )
+{
+   __m128 tmp0, tmp1, tmp2, tmp3;
+
+   tmp0 = _mm_shuffle_ps( inRows[0], inRows[1], 0x44);
+   tmp2 = _mm_shuffle_ps( inRows[0], inRows[1], 0xEE);
+   tmp1 = _mm_shuffle_ps( inRows[2], inRows[3], 0x44);
+   tmp3 = _mm_shuffle_ps( inRows[2], inRows[3], 0xEE);
+
+   outRows[0] = _mm_shuffle_ps( tmp0, tmp1, 0x88 );
+   outRows[1] = _mm_shuffle_ps( tmp0, tmp1, 0xDD );
+   outRows[2] = _mm_shuffle_ps( tmp2, tmp3, 0x88 );
+   outRows[3] = _mm_shuffle_ps( tmp2, tmp3, 0xDD );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void SimdUtils::floor( const __m128* inVal, __m128* outVal ) 
+{ 
+#if SSE_VERSION >= 0x41
+   *outVal = _mm_floor_ss( *inVal, *inVal );
+#else
+   static ALIGN_16 const uint two23[4]  = { 0x4B000000, 0x4B000000, 0x4B000000, 0x4B000000 }; // 2^23 as float
+
+   const __m128 b = _mm_castsi128_ps( _mm_srli_epi32( _mm_slli_epi32( _mm_castps_si128( *inVal ), 1 ), 1 ) ); // fabs(v)
+   const __m128 d = _mm_sub_ps( _mm_add_ps( _mm_add_ps( _mm_sub_ps( *inVal, *(__m128*)&two23 ), *(__m128*)&two23 ), *(__m128*)&two23 ), *(__m128*)&two23 ); // the meat of floor
+   const __m128 largeMaskE = _mm_cmpgt_ps( b, *(__m128*)&two23 ); // $ffffffff if v >= 2^23
+   const __m128 g = _mm_cmplt_ps( *inVal, d ); // check for possible off by one error
+   const __m128 h = _mm_cvtepi32_ps( _mm_castps_si128( g ) ); // convert positive check result to -1.0, negative to 0.0
+   const __m128 t = _mm_add_ps( d, h ); // add in the error if there is one
+
+   // Select between output result and input value based on v >= 2^23
+   *outVal = _mm_or_ps( _mm_and_ps( largeMaskE, *inVal ), _mm_andnot_ps( largeMaskE, t ) );
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////

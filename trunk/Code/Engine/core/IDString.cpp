@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\IDString.h"
 #include "stdio.h"
 

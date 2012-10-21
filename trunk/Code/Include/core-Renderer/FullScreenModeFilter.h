@@ -1,3 +1,5 @@
+/// @file   core-Renderer/DevTypeFilter.h
+/// @brief  full-screen mode filter
 #pragma once
 
 #include "core-Renderer\DeviceFilterElem.h"
@@ -8,6 +10,8 @@
 
 class FullScreenModeFilter : public DeviceFilterElem
 {
+   DECLARE_ALLOCATOR( FullScreenModeFilter, AM_DEFAULT );
+
 private:
    bool m_fullScreen;
 

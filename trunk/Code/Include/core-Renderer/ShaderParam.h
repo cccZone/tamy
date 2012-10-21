@@ -5,6 +5,7 @@
 
 #include <string>
 #include "core/types.h"
+#include "core/MemoryRouter.h"
 #include "core/IDString.h"
 
 
@@ -30,6 +31,8 @@ class MemoryPoolAllocator;
 template< typename T >
 class ShaderParam
 {
+   DECLARE_ALLOCATOR( ShaderParam, AM_DEFAULT );
+
 public:
    virtual ~ShaderParam() {}
 
@@ -40,19 +43,6 @@ public:
     * @param shaderPtr        pointer to an implementation specific shader - reinterpret_cast it
     */
    virtual void setParam( Renderer& renderer, void* shaderPtr ) = 0;
-
-   // ----------------------------------------------------------------------
-   // Placement allocation operators
-   // ----------------------------------------------------------------------
-   void* operator new( size_t size, MemoryPoolAllocator& allocator );
-   void operator delete( void* ptr, MemoryPoolAllocator& allocator );
-
-private:
-   // ----------------------------------------------------------------------
-   // Disabled regular allocation operators
-   // ----------------------------------------------------------------------
-   void* operator new( size_t size );
-   void operator delete( void* ptr );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -63,6 +53,8 @@ private:
 template< typename T >
 class ShaderParamBool : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamBool, AM_DEFAULT );
+
 private:
    IDString             m_name;
    bool                 m_val;
@@ -84,6 +76,8 @@ public:
 template< typename T >
 class ShaderParamInt : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamInt, AM_DEFAULT );
+
 private:
    IDString             m_name;
    int                  m_val;
@@ -105,6 +99,8 @@ public:
 template< typename T >
 class ShaderParamIntArray : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamIntArray, AM_DEFAULT );
+
 private:
    IDString             m_name;
    int*                 m_val;
@@ -128,6 +124,8 @@ public:
 template< typename T >
 class ShaderParamFloat : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamFloat, AM_DEFAULT );
+
 private:
    IDString             m_name;
    float                m_val;
@@ -149,6 +147,8 @@ public:
 template< typename T >
 class ShaderParamFloatArray : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamFloatArray, AM_DEFAULT );
+
 private:
    IDString             m_name;
    float*               m_val;
@@ -172,6 +172,8 @@ public:
 template< typename T >
 class ShaderParamMtx : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamMtx, AM_ALIGNED_16 );
+
 private:
    IDString             m_name;
    Matrix               m_val;
@@ -193,6 +195,8 @@ public:
 template< typename T >
 class ShaderParamMtxArray : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamMtxArray, AM_DEFAULT );
+
 private:
    IDString             m_name;
    Matrix*              m_val;
@@ -216,6 +220,8 @@ public:
 template< typename T >
 class ShaderParamVec4 : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamVec4, AM_ALIGNED_16 );
+
 private:
    IDString             m_name;
    Vector               m_val;
@@ -237,6 +243,8 @@ public:
 template< typename T >
 class ShaderParamVec4Array : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamVec4Array, AM_DEFAULT );
+
 private:
    IDString             m_name;
    Vector*              m_val;
@@ -260,6 +268,8 @@ public:
 template< typename T >
 class ShaderParamString : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamString, AM_DEFAULT );
+
 private:
    IDString             m_name;
    std::string          m_val;
@@ -281,6 +291,8 @@ public:
 template< typename T >
 class ShaderParamTexture : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamTexture, AM_DEFAULT );
+
 private:
    IDString             m_name;
    Texture*             m_val;
@@ -302,6 +314,8 @@ public:
 template< typename T >
 class ShaderParamRenderTarget : public ShaderParam< T >
 {
+   DECLARE_ALLOCATOR( ShaderParamRenderTarget, AM_DEFAULT );
+
 private:
    IDString             m_name;
    RenderTarget&        m_val;

@@ -2,7 +2,7 @@
 /// @brief  a spatial storage interface
 #pragma once
 
-#include "core\MemoryUtils.h"
+#include "core\MemoryRouter.h"
 #include "core\Array.h"
 
 
@@ -21,7 +21,7 @@ class BoundingVolume;
 template<typename Elem>
 class SpatialStorage
 {
-   ALIGNED_CLASS();
+   DECLARE_ALLOCATOR( SpatialStorage< Elem >, AM_ALIGNED_16 );
 
 public:
    virtual ~SpatialStorage() {}

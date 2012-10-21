@@ -2,6 +2,7 @@
 /// @brief  spaceship-like movement for the node
 #pragma once
 
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -21,6 +22,8 @@ struct Vector;
  */
 class UnconstrainedMotionController
 {
+   DECLARE_ALLOCATOR( UnconstrainedMotionController, AM_DEFAULT );
+
 private:
    Node&    m_controlledNode;
 

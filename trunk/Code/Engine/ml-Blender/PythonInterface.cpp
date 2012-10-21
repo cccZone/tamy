@@ -89,24 +89,3 @@ void assemble_scene( const char* sceneName )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
-
-// TODO:
-// I> GEOMETRIA
-// 1. export bryly miekkiej    ( done )
-// 2. export bryly twarde      ( done )
-// 3. export dwoch odrebnych bryl   ( done )
-// 4. export dwoch bryl polaczyonych w hierarchie ( done )
-//
-// MATERIALY
-// 1. export dwoch bryl, kazdej z innym materialem ( done )
-// 2. export tekstury diffuse ( done )
-// 3. export tekstury normalek ( done )
-// 4. export tekstury specular ( i wsparcie w modelu oswietlenia ) ( done )
-// 5. wsparcie dla dokladnych materialow ( kolor specular'a itd ) = http://http.developer.nvidia.com/GPUGems/gpugems_ch18.html
-
-// INNE ELEMENTY SCENY
-// 1. swiatla (done )
-// 2. ustawienia point light'a ( done )
-// 3. oswietlenie ambientowe z ustawien swiata (done)

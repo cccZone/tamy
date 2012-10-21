@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\ResourcesManager.h"
 #include "core\IProgressObserver.h"
 #include "core\ReflectionSerializationUtil.h"

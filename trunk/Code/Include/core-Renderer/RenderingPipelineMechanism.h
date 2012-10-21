@@ -38,12 +38,16 @@ class RenderingPipelineMechanism : public RenderingMechanism,
                                    public Observer< RenderingPipeline, GraphBuilderOperation >,
                                    public Observer< RenderingPipelineNode, GraphBuilderNodeOperation >
 {
+   DECLARE_ALLOCATOR( RenderingPipelineMechanism, AM_DEFAULT );
+
 private:
    /**
     * A helper structure that binds a rendered scene to the rendering mechanisms.
     */
    class RenderedScene
    {
+      DECLARE_ALLOCATOR( RenderedScene, AM_DEFAULT );
+
    public:
       Array< Geometry* >                           m_visibleElems;
       Array< Light* >                              m_visibleLights;

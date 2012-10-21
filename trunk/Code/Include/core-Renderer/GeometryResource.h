@@ -18,6 +18,7 @@ class Renderer;
  */
 class GeometryResource : public Resource
 {
+   DECLARE_ALLOCATOR( GeometryResource, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:

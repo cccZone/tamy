@@ -38,12 +38,12 @@ void BSPNodeTree<Polygon>::query(const Vector& pos, Array<Polygon*>& results, No
       checkedNode = m_root;
    }
 
-   float planeDist = queriedPos.distanceToPlane( checkedNode->splitPlane );
+   const FastFloat planeDist = queriedPos.distanceToPlane( checkedNode->splitPlane );
 
    // determine the order in which we're gonna traverse the subtree
    Node* nodeToCheckFirst;
    Node* nodeToCheckSecond;
-   if ( planeDist < 0 ) // behind the plane
+   if ( planeDist < Float_0 ) // behind the plane
    {
       nodeToCheckFirst = checkedNode->front;
       nodeToCheckSecond = checkedNode->back;

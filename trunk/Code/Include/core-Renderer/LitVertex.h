@@ -19,6 +19,8 @@ class OutStream;
  */
 struct LitVertex
 {
+   DECLARE_ALLOCATOR( LitVertex, AM_DEFAULT );
+
    TVector<3>   m_coords;
    TVector<3>   m_normal;
    TVector<3>   m_tangent;
@@ -51,6 +53,8 @@ struct LitVertex
 
 struct VertexWeight
 {
+   DECLARE_ALLOCATOR( VertexWeight, AM_DEFAULT );
+
    TVector<4>          m_weights;
    TVector<4>          m_indices;
 

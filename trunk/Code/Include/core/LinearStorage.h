@@ -22,6 +22,8 @@
 template<typename T>
 class LinearStorage : public SpatialStorage<T>
 {
+   DECLARE_ALLOCATOR( LinearStorage, AM_DEFAULT );
+
 private:
    Array<T*>* m_container;
 

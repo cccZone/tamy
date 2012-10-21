@@ -3,7 +3,7 @@
 #ifndef _EULER_ANGLES_H
 #define _EULER_ANGLES_H
 
-#include "core\MemoryUtils.h"
+#include "core\MemoryRouter.h"
 #include "core\MathDataStorage.h"
 #include "core\FastFloat.h"
 #include <iostream>
@@ -24,7 +24,7 @@ class InStream;
  */
 struct EulerAngles
 {
-   ALIGNED_STRUCT();
+   DECLARE_ALLOCATOR( EulerAngles, AM_ALIGNED_16 );
 
    enum FieldsLayout
    {

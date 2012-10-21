@@ -18,6 +18,7 @@ class Renderer;
  */
 class DepthBufferDescriptor : public ReflectionObject
 {
+   DECLARE_ALLOCATOR( DepthBufferDescriptor, AM_DEFAULT );
    DECLARE_CLASS()
 
 private:

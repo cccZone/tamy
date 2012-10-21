@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\MatrixUtils.h"
 #include "core\Vector.h"
 #include "core\Matrix.h"
@@ -13,11 +14,13 @@ void MatrixUtils::lerp( const Matrix& start, const Matrix& end, const FastFloat&
    ASSERT_MSG( lerpDist >= Float_0, "The value for advancement should be >= 0");
 
    // translation
+   Vector startPos = start.position();
+   Vector endPos = end.position();
 
-   Vector startPos( start.m[3][0], start.m[3][1], start.m[3][2] );
-   Vector endPos( end.m[3][0], end.m[3][1], end.m[3][2] );
    Vector resultPos;
-   resultPos.setSub( endPos, startPos ).mul( lerpDist.getFloat() ).add( startPos );
+   resultPos.setSub( endPos, startPos );
+   resultPos.mul( lerpDist );
+   resultPos.add( startPos );
 
    Matrix translationMtx;
    translationMtx.setTranslation( resultPos );
@@ -44,24 +47,25 @@ void MatrixUtils::generatePrespectiveProjection( float fov, float aspectRatio, f
    float yScale = 1.0f / tan( fov / 2.0f );
    float xScale = yScale / aspectRatio;
 
-   memset( (float*)(outProjMtx.m), 0, sizeof( float ) * 16 );
-   outProjMtx.m11 = xScale;
-   outProjMtx.m22 = yScale;
-   outProjMtx.m33 = farZPlane / ( farZPlane - nearZPlane );
-   outProjMtx.m34 = 1.0f;
-   outProjMtx.m43 = -( nearZPlane * farZPlane ) / ( farZPlane - nearZPlane );
+   outProjMtx.setIdentity();
+   outProjMtx( 0, 0 ) = xScale;
+   outProjMtx( 1, 1 ) = yScale;
+   outProjMtx( 2, 2 ) = farZPlane / ( farZPlane - nearZPlane );
+   outProjMtx( 2, 3 ) = 1.0f;
+   outProjMtx( 3, 2 ) = -( nearZPlane * farZPlane ) / ( farZPlane - nearZPlane );
+   outProjMtx( 3, 3 ) = 0.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MatrixUtils::generateOrthogonalProjection( float viewportWidth, float viewportHeight, float nearZPlane, float farZPlane, Matrix& outProjMtx )
 {
-   memset( (float*)(outProjMtx.m), 0, sizeof( float ) * 16 );
-   outProjMtx.m11 = 2.0f / viewportWidth;
-   outProjMtx.m22 = 2.0f / viewportHeight;
-   outProjMtx.m33 = 1.0f / ( farZPlane - nearZPlane );
-   outProjMtx.m43 = -nearZPlane / ( farZPlane - nearZPlane );
-   outProjMtx.m44 = 1.0f;
+   outProjMtx.setIdentity();
+   outProjMtx( 0, 0 ) = 2.0f / viewportWidth;
+   outProjMtx( 1, 1 ) = 2.0f / viewportHeight;
+   outProjMtx( 2, 2 ) = 1.0f / ( farZPlane - nearZPlane );
+   outProjMtx( 3, 2 ) = -nearZPlane / ( farZPlane - nearZPlane );
+   outProjMtx( 3, 3 ) = 1.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -69,30 +73,28 @@ void MatrixUtils::generateOrthogonalProjection( float viewportWidth, float viewp
 void MatrixUtils::generateLookAtLH( const Vector& cameraOriginPos, const Vector& lookAtPos, const Vector& upAxis, Matrix& outLookAtMtx )
 {
    Vector lookVec;
-   lookVec.setSub( lookAtPos, cameraOriginPos ).normalize();
+   lookVec.setSub( lookAtPos, cameraOriginPos );
+   lookVec.normalize();
 
    Vector sideVec;
    sideVec.setCross( upAxis, lookVec );
 
-   outLookAtMtx.m11 = sideVec.x; outLookAtMtx.m12 = sideVec.y; outLookAtMtx.m13 = sideVec.z; outLookAtMtx.m14 = 0.0;
-   outLookAtMtx.m21 = upAxis.x;  outLookAtMtx.m22 = upAxis.y;  outLookAtMtx.m23 = upAxis.z;  outLookAtMtx.m24 = 0.0;
-   outLookAtMtx.m31 = lookVec.x; outLookAtMtx.m32 = lookVec.y; outLookAtMtx.m33 = lookVec.z; outLookAtMtx.m34 = 0.0;
-
-   outLookAtMtx.m41 = cameraOriginPos.x;
-   outLookAtMtx.m42 = cameraOriginPos.y;
-   outLookAtMtx.m43 = cameraOriginPos.z;
-   outLookAtMtx.m44 = 1.0;
+   outLookAtMtx.setSideVec<3>( sideVec );
+   outLookAtMtx.setUpVec<3>( upAxis );
+   outLookAtMtx.setForwardVec<3>( lookVec );
+   outLookAtMtx.setPosition<3>( cameraOriginPos );
+   outLookAtMtx.setColumn( 3, Quad_0001 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void MatrixUtils::generateViewportMatrix( uint offsetX, uint offsetY, uint width, uint height, Matrix& outViewportMtx )
 {
-   outViewportMtx = Matrix::IDENTITY;
-   outViewportMtx.m11 = (float)width;
-   outViewportMtx.m22 = -(float)height;
-   outViewportMtx.m41 = (float)offsetX;
-   outViewportMtx.m42 = (float)( height + offsetY );
+   outViewportMtx.setIdentity();
+   outViewportMtx( 0, 0 ) = (float)width;
+   outViewportMtx( 1, 1 ) = -(float)height;
+   outViewportMtx( 3, 0 ) = (float)offsetX;
+   outViewportMtx( 3, 1 ) = (float)( height + offsetY );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,14 +105,24 @@ void MatrixUtils::calculateViewMtx( const Matrix& inMtx, Matrix& outViewMtx )
    inMtx.getVectors( rightVec, upVec, lookVec, position );
 
    // create a view matrix
-   outViewMtx = Matrix::IDENTITY;
-   outViewMtx.m[0][0] = rightVec.x; outViewMtx.m[0][1] = upVec.x; outViewMtx.m[0][2] = lookVec.x; 
-   outViewMtx.m[1][0] = rightVec.y; outViewMtx.m[1][1] = upVec.y; outViewMtx.m[1][2] = lookVec.y;
-   outViewMtx.m[2][0] = rightVec.z; outViewMtx.m[2][1] = upVec.z; outViewMtx.m[2][2] = lookVec.z;
-   outViewMtx.m[3][0] = -position.dot( rightVec );
-   outViewMtx.m[3][1] = -position.dot( upVec );
-   outViewMtx.m[3][2] = -position.dot( lookVec );
+   outViewMtx.setIdentity();
+   outViewMtx.setSideVec<3>( rightVec );
+   outViewMtx.setUpVec<3>( upVec );
+   outViewMtx.setForwardVec<3>( lookVec );
+   outViewMtx.transpose();
 
+   FastFloat d;
+   
+   d.setNeg( position.dot( rightVec ) );
+   outViewMtx( 3, 0 ) = d.getFloat();
+
+   d.setNeg( position.dot( upVec ) );
+   outViewMtx( 3, 1 ) = d.getFloat();
+
+   d.setNeg( position.dot( lookVec ) );
+   outViewMtx( 3, 2 ) = d.getFloat();
+
+   outViewMtx.setColumn( 3, Quad_0001 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

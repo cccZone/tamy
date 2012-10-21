@@ -15,6 +15,7 @@ class RenderableTexture;
 
 class MNTexture : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNTexture, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

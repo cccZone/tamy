@@ -27,6 +27,8 @@ class AmbientLight;
 */ 
 class RenderingView : public ModelView
 {
+   DECLARE_ALLOCATOR( RenderingView, AM_ALIGNED_16 );
+
 private:
    Renderer&                                                m_renderer;
 

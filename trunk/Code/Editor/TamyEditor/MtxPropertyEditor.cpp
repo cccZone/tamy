@@ -92,9 +92,9 @@ void MtxPropertyEditor::initializeValues()
    m_rollVal->setValue( orientation.getRoll() );
 
    Vector pos = currVal.position();
-   m_xVal->setValue(pos.x);
-   m_yVal->setValue(pos.y);
-   m_zVal->setValue(pos.z);
+   m_xVal->setValue(pos[0]);
+   m_yVal->setValue(pos[1]);
+   m_zVal->setValue(pos[2]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -165,9 +165,9 @@ void MtxPropertyEditor::xValChanged(double val)
    Matrix currVal = m_property->get();
 
    Vector pos = currVal.position();
-   pos.x = (float)val;
+   pos[0] = (float)val;
 
-   currVal.setPosition( pos );
+   currVal.setPosition<3>( pos );
    
    m_property->set( currVal );
 }
@@ -179,9 +179,9 @@ void MtxPropertyEditor::yValChanged(double val)
    Matrix currVal = m_property->get();
 
    Vector pos = currVal.position();
-   pos.y = (float)val;
+   pos[1] = (float)val;
 
-   currVal.setPosition( pos );
+   currVal.setPosition<3>( pos );
 
    m_property->set( currVal );
 }
@@ -193,9 +193,9 @@ void MtxPropertyEditor::zValChanged(double val)
    Matrix currVal = m_property->get();
 
    Vector pos = currVal.position();
-   pos.z = (float)val;
+   pos[2] = (float)val;
 
-   currVal.setPosition( pos );
+   currVal.setPosition<3>( pos );
 
    m_property->set( currVal );
 }

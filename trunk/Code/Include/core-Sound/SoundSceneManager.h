@@ -1,8 +1,8 @@
-#pragma once
-
 /// @file   core-Sound\SoundSceneManager.h
 /// @brief  a sound scene
+#pragma once
 
+#include "core\MemoryRouter.h"
 #include "core\Array.h"
 #include <windows.h>
 
@@ -19,6 +19,8 @@ class SoundListener;
  */
 class SoundSceneManager
 {
+   DECLARE_ALLOCATOR( SoundSceneManager, AM_DEFAULT );
+
 private:
    SoundListener* m_activeListener;
 

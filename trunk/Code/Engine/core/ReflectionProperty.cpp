@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\ReflectionProperty.h"
 #include "core\ReflectionTypesRegistry.h"
 #include "core\ReflectionObject.h"

@@ -28,6 +28,7 @@
  */
 class TriangleMesh : public GeometryResource, public RenderResource
 {
+   DECLARE_ALLOCATOR( TriangleMesh, AM_ALIGNED_16 );
    DECLARE_RESOURCE()
 
 private:
@@ -108,6 +109,8 @@ private:
  */
 class RCRenderTriangleMesh : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCRenderTriangleMesh, AM_DEFAULT );
+
 private:
    TriangleMesh&        m_mesh;
 

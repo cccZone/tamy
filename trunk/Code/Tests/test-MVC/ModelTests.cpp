@@ -14,6 +14,7 @@ namespace // anonymous
 
    class EntityAMock : public Entity
    {
+      DECLARE_ALLOCATOR( EntityAMock, AM_DEFAULT );
       DECLARE_CLASS()
 
    private:
@@ -40,6 +41,7 @@ namespace // anonymous
 
    class EntityBMock : public Entity
    {
+      DECLARE_ALLOCATOR( EntityBMock, AM_DEFAULT );
       DECLARE_CLASS()
 
    private:
@@ -66,6 +68,8 @@ namespace // anonymous
 
    class UpdatedEntityMock : public Entity
    {
+      DECLARE_ALLOCATOR( UpdatedEntityMock, AM_DEFAULT );
+
    private:
       float m_value;
 
@@ -88,6 +92,8 @@ namespace // anonymous
 
    class MockComponentA : public Component<Model>
    {
+      DECLARE_ALLOCATOR( MockComponentA, AM_DEFAULT );
+
    public:
       void initialize(Model& mgr) {}
    };
@@ -96,6 +102,8 @@ namespace // anonymous
 
    class MockComponentB : public Component<Model>
    {
+      DECLARE_ALLOCATOR( MockComponentB, AM_DEFAULT );
+
    public:
       void initialize(Model& mgr) {}
    };
@@ -104,6 +112,8 @@ namespace // anonymous
 
    class ViewMock : public ModelView
    {
+      DECLARE_ALLOCATOR( ViewMock, AM_DEFAULT );
+
    private:
       int m_entitiesCount;
 
@@ -139,6 +149,8 @@ namespace // anonymous
 
    class ViewsCreatingViewMock : public ModelView
    {
+      DECLARE_ALLOCATOR( ViewsCreatingViewMock, AM_DEFAULT );
+
    private:
       typedef std::map<Entity*, ModelView*> Views;
       Views m_views;

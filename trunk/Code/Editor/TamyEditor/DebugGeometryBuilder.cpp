@@ -15,16 +15,16 @@ TriangleMesh* DebugGeometryBuilder::createBox( const Vector& min, const Vector& 
    Vector tmpVec;
    {
       // bottom face vertices
-      tmpVec.set( min.x, min.y, max.z ); tmpVec.store( vertices[0].m_coords );
-      tmpVec.set( min.x, min.y, min.z ); tmpVec.store( vertices[1].m_coords );
-      tmpVec.set( max.x, min.y, max.z ); tmpVec.store( vertices[2].m_coords );
-      tmpVec.set( max.x, min.y, min.z ); tmpVec.store( vertices[3].m_coords );
+      tmpVec.set( min[0], min[1], max[2] ); tmpVec.store( vertices[0].m_coords );
+      tmpVec.set( min[0], min[1], min[2] ); tmpVec.store( vertices[1].m_coords );
+      tmpVec.set( max[0], min[1], max[2] ); tmpVec.store( vertices[2].m_coords );
+      tmpVec.set( max[0], min[1], min[2] ); tmpVec.store( vertices[3].m_coords );
 
       // top face vertices
-      tmpVec.set( min.x, max.y, max.z ); tmpVec.store( vertices[4].m_coords );
-      tmpVec.set( min.x, max.y, min.z ); tmpVec.store( vertices[5].m_coords );
-      tmpVec.set( max.x, max.y, max.z ); tmpVec.store( vertices[6].m_coords );
-      tmpVec.set( max.x, max.y, min.z ); tmpVec.store( vertices[7].m_coords );
+      tmpVec.set( min[0], max[1], max[2] ); tmpVec.store( vertices[4].m_coords );
+      tmpVec.set( min[0], max[1], min[2] ); tmpVec.store( vertices[5].m_coords );
+      tmpVec.set( max[0], max[1], max[2] ); tmpVec.store( vertices[6].m_coords );
+      tmpVec.set( max[0], max[1], min[2] ); tmpVec.store( vertices[7].m_coords );
 
       // add the lines:
       // bottom face
@@ -61,27 +61,29 @@ TriangleMesh* DebugGeometryBuilder::createBox( const Vector& min, const Vector& 
 TriangleMesh* DebugGeometryBuilder::createArrow( float size, const Vector& start, const Vector& end )
 {
    Vector dir;
-   dir.setSub( end, start ).normalize();
+   dir.setSub( end, start );
+   dir.normalize();
 
    Vector perpVec1, perpVec2;
    VectorUtil::calculatePerpendicularVector( dir, perpVec1 );
    perpVec1.normalize();
    perpVec2.setCross( dir, perpVec1 );
 
-   perpVec1.mul( size );
-   perpVec2.mul( size );
+   FastFloat simdSize; simdSize.setFromFloat( size );
+   perpVec1.mul( simdSize );
+   perpVec2.mul( simdSize );
 
 
    // the line
    std::vector<LitVertex> vertices;
    std::vector<Face> faces;
-   addCuboid( size, start, end, vertices, faces );
+   addCuboid( simdSize, start, end, vertices, faces );
 
    // the cone tip
-   const float tipSizeMultiplier = 1.3f;
+   FastFloat tipSize; tipSize.setFromFloat( 1.3f * size );
    Vector tipEnd;
-   tipEnd.setMulAdd( dir, size * tipSizeMultiplier, end );
-   addCone( size * tipSizeMultiplier, end, tipEnd, vertices, faces );
+   tipEnd.setMulAdd( dir, tipSize, end );
+   addCone( tipSize, end, tipEnd, vertices, faces );
    TriangleMesh* mesh = new TriangleMesh( FilePath(), vertices, faces );
    return mesh;
 }
@@ -90,28 +92,31 @@ TriangleMesh* DebugGeometryBuilder::createArrow( float size, const Vector& start
 
 TriangleMesh* DebugGeometryBuilder::createBoxHeadedArrow( float size, const Vector& start, const Vector& end )
 {
+   FastFloat simdSize; simdSize.setFromFloat( size );
+
    Vector dir;
-   dir.setSub( end, start ).normalize();
+   dir.setSub( end, start );
+   dir.normalize();
 
    Vector perpVec1, perpVec2;
    VectorUtil::calculatePerpendicularVector( dir, perpVec1 );
    perpVec1.normalize();
    perpVec2.setCross( dir, perpVec1 );
 
-   perpVec1.mul( size );
-   perpVec2.mul( size );
+   perpVec1.mul( simdSize );
+   perpVec2.mul( simdSize );
 
 
    // the line
    std::vector<LitVertex> vertices;
    std::vector<Face> faces;
-   addCuboid( size, start, end, vertices, faces );
+   addCuboid( simdSize, start, end, vertices, faces );
    
    // and the box-shaped tip
-   const float tipSizeMultiplier = 6;
+   FastFloat tipSize; tipSize.setFromFloat( 6 * size );
    Vector tipEnd;
-   tipEnd.setMulAdd( dir, size * tipSizeMultiplier, end );
-   addCuboid( tipSizeMultiplier * size, end, tipEnd, vertices, faces );
+   tipEnd.setMulAdd( dir, tipSize, end );
+   addCuboid( tipSize, end, tipEnd, vertices, faces );
    
    TriangleMesh* mesh = new TriangleMesh( FilePath(), vertices, faces );
    return mesh;
@@ -119,11 +124,12 @@ TriangleMesh* DebugGeometryBuilder::createBoxHeadedArrow( float size, const Vect
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DebugGeometryBuilder::addCone( float baseSize, const Vector& start, const Vector& end, std::vector< LitVertex >& outVertices, std::vector< Face >& outFaces )
+void DebugGeometryBuilder::addCone( const FastFloat& baseSize, const Vector& start, const Vector& end, std::vector< LitVertex >& outVertices, std::vector< Face >& outFaces )
 {
    // calculate additional vectors needed for cuboid construction
    Vector dir;
-   dir.setSub( end, start ).normalize();
+   dir.setSub( end, start );
+   dir.normalize();
 
    Vector perpVec1, perpVec2;
    VectorUtil::calculatePerpendicularVector( dir, perpVec1 );
@@ -148,15 +154,17 @@ void DebugGeometryBuilder::addCone( float baseSize, const Vector& start, const V
 
    Vector tmpVec;
    {
-      const float tipSizeMultiplier = 6;
-      perpVec1.mul( tipSizeMultiplier );
-      perpVec2.mul( tipSizeMultiplier );
+      perpVec1.mul( Float_6 );
+      perpVec2.mul( Float_6 );
 
-      tmpVec.setAdd( start, perpVec1 ).sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 0].m_coords );
-      tmpVec.setSub( start, perpVec1 ).sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 1].m_coords );
-      tmpVec.setAdd( start, perpVec1 ).add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 2].m_coords );
-      tmpVec.setSub( start, perpVec1 ).add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 3].m_coords );
-      tmpVec.setMulAdd( dir, baseSize * tipSizeMultiplier * 2, end ); tmpVec.store( outVertices[firstVtxIdx + 4].m_coords );
+      tmpVec.setAdd( start, perpVec1 ); tmpVec.sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 0].m_coords );
+      tmpVec.setSub( start, perpVec1 ); tmpVec.sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 1].m_coords );
+      tmpVec.setAdd( start, perpVec1 ); tmpVec.add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 2].m_coords );
+      tmpVec.setSub( start, perpVec1 ); tmpVec.add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 3].m_coords );
+
+      FastFloat tipSizeMultiplier; tipSizeMultiplier.setFromFloat( 12 );
+      tipSizeMultiplier.mul( baseSize );
+      tmpVec.setMulAdd( dir, tipSizeMultiplier, end ); tmpVec.store( outVertices[firstVtxIdx + 4].m_coords );
 
       // cone bottom
       outFaces[firstFaceIdx + 0].idx[0] = firstVtxIdx + 0; outFaces[firstFaceIdx + 0].idx[1] = firstVtxIdx + 1; outFaces[firstFaceIdx + 0].idx[2] = firstVtxIdx + 2;
@@ -173,11 +181,12 @@ void DebugGeometryBuilder::addCone( float baseSize, const Vector& start, const V
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void DebugGeometryBuilder::addCuboid( float size, const Vector& start, const Vector& end, std::vector< LitVertex >& outVertices, std::vector< Face >& outFaces )
+void DebugGeometryBuilder::addCuboid( const FastFloat& size, const Vector& start, const Vector& end, std::vector< LitVertex >& outVertices, std::vector< Face >& outFaces )
 {
    // calculate additional vectors needed for cuboid construction
    Vector dir;
-   dir.setSub( end, start ).normalize();
+   dir.setSub( end, start );
+   dir.normalize();
 
    Vector perpVec1, perpVec2;
    VectorUtil::calculatePerpendicularVector( dir, perpVec1 );
@@ -203,16 +212,16 @@ void DebugGeometryBuilder::addCuboid( float size, const Vector& start, const Vec
    Vector tmpVec;
    {
       // bottom face vertices
-      tmpVec.setAdd( start, perpVec1 ).sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 0].m_coords );
-      tmpVec.setSub( start, perpVec1 ).sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 1].m_coords );
-      tmpVec.setAdd( start, perpVec1 ).add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 2].m_coords );
-      tmpVec.setSub( start, perpVec1 ).add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 3].m_coords );
+      tmpVec.setAdd( start, perpVec1 ); tmpVec.sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 0].m_coords );
+      tmpVec.setSub( start, perpVec1 ); tmpVec.sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 1].m_coords );
+      tmpVec.setAdd( start, perpVec1 ); tmpVec.add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 2].m_coords );
+      tmpVec.setSub( start, perpVec1 ); tmpVec.add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 3].m_coords );
 
       // top face vertices
-      tmpVec.setAdd( end, perpVec1 ).sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 4].m_coords );
-      tmpVec.setSub( end, perpVec1 ).sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 5].m_coords );
-      tmpVec.setAdd( end, perpVec1 ).add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 6].m_coords );
-      tmpVec.setSub( end, perpVec1 ).add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 7].m_coords );
+      tmpVec.setAdd( end, perpVec1 ); tmpVec.sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 4].m_coords );
+      tmpVec.setSub( end, perpVec1 ); tmpVec.sub( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 5].m_coords );
+      tmpVec.setAdd( end, perpVec1 ); tmpVec.add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 6].m_coords );
+      tmpVec.setSub( end, perpVec1 ); tmpVec.add( perpVec2 ); tmpVec.store( outVertices[firstVtxIdx + 7].m_coords );
 
       // add the lines:
       // bottom face
@@ -250,28 +259,28 @@ TriangleMesh* DebugGeometryBuilder::createTorus( float innerRadius, float outerR
    const Vector& sideAxis = transform.sideVec();
    Vector circumferenceAxis = transform.upVec();
 
-   float circumferenceWidth = outerRadius - innerRadius;
-   float radius = innerRadius + circumferenceWidth;
+   FastFloat circumferenceWidth; circumferenceWidth.setFromFloat( outerRadius - innerRadius );
+   FastFloat radius; radius.setFromFloat( innerRadius + outerRadius - innerRadius );
 
    // calculate torus vertices
    const uint verticesCount = segmentsCount * segmentVerticesCount;
    std::vector<LitVertex> vertices( verticesCount );
    {
-      const float dMainAngle = DEG2RAD( 360.0f / (float)segmentsCount );
-      const float dSegmentAngle = DEG2RAD( 360.0f / (float)segmentVerticesCount );
-      float mainAngle = 0.0f;
+      FastFloat dMainAngle; dMainAngle.setFromFloat( DEG2RAD( 360.0f / (float)segmentsCount ) );
+      FastFloat dSegmentAngle; dSegmentAngle.setFromFloat( DEG2RAD( 360.0f / (float)segmentVerticesCount ) );
+      FastFloat mainAngle = Float_0;
 
       Quaternion mainRot, circumferenceRot;
       Vector vtxPos, posOnCircumference, radiusDisplacement, radiusVec, torusVtx;
       radiusVec.setMul( sideAxis, radius );
       uint vtxIdx = 0;
-      for ( uint segmentIdx = 0; segmentIdx < segmentsCount; ++segmentIdx, mainAngle += dMainAngle )
+      for ( uint segmentIdx = 0; segmentIdx < segmentsCount; ++segmentIdx, mainAngle.add( dMainAngle ) )
       {
          mainRot.setAxisAngle( mainAxis, mainAngle );
          mainRot.transform( radiusVec, radiusDisplacement );
 
-         float segmentAngle = 0.0f;
-         for ( uint segVtxIdx = 0; segVtxIdx < segmentVerticesCount; ++segVtxIdx, segmentAngle += dSegmentAngle )
+         FastFloat segmentAngle = Float_0;
+         for ( uint segVtxIdx = 0; segVtxIdx < segmentVerticesCount; ++segVtxIdx, segmentAngle.add( dSegmentAngle ) )
          {
             circumferenceRot.setAxisAngle( circumferenceAxis, segmentAngle );
             Quaternion rotQ;

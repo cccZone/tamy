@@ -14,6 +14,7 @@ class MSFloatOutput;
 
 class MNTimer : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNTimer, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

@@ -1,3 +1,5 @@
+/// @file    core-Sound/WavFile.h
+/// @brief  sound loaded from a WAV file
 #pragma once
 
 #include "core-Sound\Sound.h"
@@ -62,11 +64,16 @@ struct WAVEFORMATEXTENSIBLE
 
 ///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Sound loaded from a WAV file.
+ */
 class WavFile : public Sound  
 {
+   DECLARE_ALLOCATOR( WavFile, AM_DEFAULT );
+
 private:
    WAVEFILETYPE	m_type;
-	WAVEFORMATEXTENSIBLE m_ext;		// For non-WAVEFORMATEXTENSIBLE wavefiles, the header is stored in the Format member of wfEXT
+	WAVEFORMATEXTENSIBLE m_ext;		// For non-WAVEFORMATEXTENSIBLE wav-files, the header is stored in the Format member of wfEXT
 	char*          m_data;
 	DWORD          m_dataSize;
 	File*          m_file;

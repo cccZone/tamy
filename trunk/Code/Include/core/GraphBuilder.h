@@ -3,10 +3,10 @@
 #ifndef _GRAPH_BUILDER_H
 #define _GRAPH_BUILDER_H
 
-#include "core/Resource.h"
+#include "core\Resource.h"
 #include <vector>
-#include "core/Subject.h"
-#include "core/Graph.h"
+#include "core\Subject.h"
+#include "core\Graph.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

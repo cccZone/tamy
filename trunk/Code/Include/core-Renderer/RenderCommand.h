@@ -2,7 +2,7 @@
 /// @brief  a render command interface
 #pragma once
 
-#include "core\RoundBuffer.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -15,7 +15,7 @@ class Renderer;
  * A renderer command issues implementation specific rendering methods.
  */
 
-class RenderCommand : public RoundBufferObject
+class RenderCommand
 {
 public:
    virtual ~RenderCommand() {}

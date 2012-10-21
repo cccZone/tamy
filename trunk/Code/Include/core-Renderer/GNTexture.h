@@ -15,6 +15,7 @@ class RenderableTexture;
 
 class GNTexture : public GeometryShaderNode
 {
+   DECLARE_ALLOCATOR( GNTexture, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

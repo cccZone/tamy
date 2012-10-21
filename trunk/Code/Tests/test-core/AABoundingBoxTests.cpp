@@ -13,7 +13,7 @@ TEST( AABoundingBox, transformation )
    AABoundingBox transformedBB;
 
    {
-      transform.m_rotation.setAxisAngle( Vector::OZ, DEG2RAD( 45.0f ) );
+      transform.m_rotation.setAxisAngle( Vector_OZ, FastFloat::fromFloat( DEG2RAD( 45.0f ) ) );
       transform.toMatrix( transformMtx );
       centralBB.transform( transformMtx, transformedBB );
 
@@ -22,7 +22,7 @@ TEST( AABoundingBox, transformation )
    }
 
    {
-      transform.m_rotation.setAxisAngle( Vector::OX, DEG2RAD( 45.0f ) );
+      transform.m_rotation.setAxisAngle( Vector_OX, FastFloat::fromFloat( DEG2RAD( 45.0f ) ) );
       transform.toMatrix( transformMtx );
       centralBB.transform( transformMtx, transformedBB );
 
@@ -31,7 +31,7 @@ TEST( AABoundingBox, transformation )
    }
 
    {
-      transform.m_rotation.setAxisAngle( Vector::OY, DEG2RAD( 45.0f ) );
+      transform.m_rotation.setAxisAngle( Vector_OY, FastFloat::fromFloat( DEG2RAD( 45.0f ) ) );
       transform.toMatrix( transformMtx );
       centralBB.transform( transformMtx, transformedBB );
 

@@ -27,6 +27,7 @@ enum PreviewType
  */
 class RPPreviewNode : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPPreviewNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

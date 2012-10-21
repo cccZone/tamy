@@ -14,6 +14,8 @@
  */
 class DepthBuffer : public RenderResource
 {
+   DECLARE_ALLOCATOR( DepthBuffer, AM_DEFAULT );
+
 private:
    uint     m_width;
    uint     m_height;
@@ -52,6 +54,8 @@ public:
  */
 class RCActivateDepthBuffer  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCActivateDepthBuffer, AM_DEFAULT );
+
 private:
    DepthBuffer*     m_depthBuffer;
 
@@ -76,6 +80,8 @@ public:
  */
 class RCDeactivateDepthBuffer  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCDeactivateDepthBuffer, AM_DEFAULT );
+
 private:
    DepthBuffer*     m_depthBuffer;
 

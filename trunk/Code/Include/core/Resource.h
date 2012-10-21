@@ -3,6 +3,7 @@
 #ifndef _RESOURCE_H
 #define _RESOURCE_H
 
+#include "core\MemoryRouter.h"
 #include "core\ReflectionObject.h"
 #include "core\Component.h"
 #include "core\ResourceHandle.h"
@@ -22,6 +23,7 @@ class ReflectionType;
  */
 class Resource : public ReflectionObject
 {
+   DECLARE_ALLOCATOR( Resource, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:

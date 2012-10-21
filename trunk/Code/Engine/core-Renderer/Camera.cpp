@@ -27,9 +27,8 @@ Camera::Camera( const std::string& name, Renderer& renderer, ProjectionType proj
 {
    m_renderer.attachObserver(*this);
 
-   m_mtxIdentity = Matrix::IDENTITY;
-   m_mtxView = Matrix::IDENTITY;
-   m_mtx3DProjection = Matrix::IDENTITY;
+   m_mtxView.setIdentity();
+   m_mtx3DProjection.setIdentity();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -192,44 +191,30 @@ void Camera::calculateFrustum( Frustum& outFrustum )
 
    Matrix combinedMtx;
    combinedMtx.setMul( viewMtx, projMtx );
+   combinedMtx.transpose();
+   Vector planeVec;
 
-   // <fastfloat.todo>
-   outFrustum.planes[FP_LEFT][0]  = (combinedMtx.m14 + combinedMtx.m11);
-   outFrustum.planes[FP_LEFT][1]  = (combinedMtx.m24 + combinedMtx.m21);
-   outFrustum.planes[FP_LEFT][2]  = (combinedMtx.m34 + combinedMtx.m31);
-   outFrustum.planes[FP_LEFT][3]  = (combinedMtx.m44 + combinedMtx.m41);
+   planeVec.setAdd( combinedMtx.position(), combinedMtx.sideVec() );
+   planeVec.store( outFrustum.planes[FP_LEFT].m_quad );
    outFrustum.planes[FP_LEFT].normalize();
 
-   outFrustum.planes[FP_RIGHT][0] = (combinedMtx.m14 - combinedMtx.m11);
-   outFrustum.planes[FP_RIGHT][1] = (combinedMtx.m24 - combinedMtx.m21);
-   outFrustum.planes[FP_RIGHT][2] = (combinedMtx.m34 - combinedMtx.m31);
-   outFrustum.planes[FP_RIGHT][3] = (combinedMtx.m44 - combinedMtx.m41);
+   planeVec.setSub( combinedMtx.position(), combinedMtx.sideVec() );
+   planeVec.store( outFrustum.planes[FP_RIGHT].m_quad );
    outFrustum.planes[FP_RIGHT].normalize();
 
-
-   outFrustum.planes[FP_BOTTOM][0] = (combinedMtx.m14 + combinedMtx.m12);
-   outFrustum.planes[FP_BOTTOM][1] = (combinedMtx.m24 + combinedMtx.m22);
-   outFrustum.planes[FP_BOTTOM][2] = (combinedMtx.m34 + combinedMtx.m32);
-   outFrustum.planes[FP_BOTTOM][3] = (combinedMtx.m44 + combinedMtx.m42);
+   planeVec.setAdd( combinedMtx.position(), combinedMtx.upVec() );
+   planeVec.store( outFrustum.planes[FP_BOTTOM].m_quad );
    outFrustum.planes[FP_BOTTOM].normalize();
 
-   outFrustum.planes[FP_TOP][0] = (combinedMtx.m14 - combinedMtx.m12);
-   outFrustum.planes[FP_TOP][1] = (combinedMtx.m24 - combinedMtx.m22);
-   outFrustum.planes[FP_TOP][2] = (combinedMtx.m34 - combinedMtx.m32);
-   outFrustum.planes[FP_TOP][3] = (combinedMtx.m44 - combinedMtx.m42);
+   planeVec.setSub( combinedMtx.position(), combinedMtx.upVec() );
+   planeVec.store( outFrustum.planes[FP_TOP].m_quad );
    outFrustum.planes[FP_TOP].normalize();
 
-
-   outFrustum.planes[FP_FAR][0]   = (combinedMtx.m14 - combinedMtx.m13);
-   outFrustum.planes[FP_FAR][1]   = (combinedMtx.m24 - combinedMtx.m23);
-   outFrustum.planes[FP_FAR][2]   = (combinedMtx.m34 - combinedMtx.m33);
-   outFrustum.planes[FP_FAR][3]   = (combinedMtx.m44 - combinedMtx.m43);
+   planeVec.setSub( combinedMtx.position(), combinedMtx.forwardVec() );
+   planeVec.store( outFrustum.planes[FP_FAR].m_quad );
    outFrustum.planes[FP_FAR].normalize();
 
-   outFrustum.planes[FP_NEAR][0]   = combinedMtx.m13;
-   outFrustum.planes[FP_NEAR][1]   = combinedMtx.m23;
-   outFrustum.planes[FP_NEAR][2]   = combinedMtx.m33;
-   outFrustum.planes[FP_NEAR][3]   = combinedMtx.m43;
+   combinedMtx.forwardVec().store( outFrustum.planes[FP_NEAR].m_quad );
    outFrustum.planes[FP_NEAR].normalize();
 }
 
@@ -238,14 +223,16 @@ void Camera::calculateFrustum( Frustum& outFrustum )
 void Camera::createRay( float viewportX, float viewportY, Ray& outRay )
 {
    // now I treat the mouse position as if it was located on the near clipping plane
-   Vector mouseOnNearPlane( viewportX, viewportY, -m_nearZPlane );
+   Vector mouseOnNearPlane;
+   mouseOnNearPlane.set( viewportX, viewportY, -m_nearZPlane );
 
    // these 3d coords are in the viewport space - now I need to transform them into world space
    const Matrix& viewMtx = getViewMtx();
    const Matrix& projMtx = getProjectionMtx();
 
    Matrix combinedMtx;
-   combinedMtx.setMul( viewMtx, projMtx ).invert();
+   combinedMtx.setMul( viewMtx, projMtx );
+   combinedMtx.invert();
 
    // once I have the backwards transformation, I use it on the 3D mouse coord
    Vector projMouseOnNearPlane;
@@ -254,12 +241,13 @@ void Camera::createRay( float viewportX, float viewportY, Ray& outRay )
    // now I just need to find the vector between this point and the camera world space position and normalize it, and I should get my direction:
    const Matrix& globalMtx = getGlobalMtx();
    outRay.origin = globalMtx.position();
-   outRay.direction.setSub( projMouseOnNearPlane, outRay.origin ).normalize();
+   outRay.direction.setSub( projMouseOnNearPlane, outRay.origin );
+   outRay.direction.normalize();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Camera::lookAt( Node& node, float distance )
+void Camera::lookAt( Node& node, const FastFloat& distance )
 {
    const Matrix& targetNodeMtx = node.getGlobalMtx();
    const Vector& targetNodePos = targetNodeMtx.position();
@@ -268,11 +256,14 @@ void Camera::lookAt( Node& node, float distance )
    // I used to normalize the look vector here, but is there a need to do it really? we assume
    // it's always normalized
    ASSERT_MSG( targetNodeLookVec.isNormalized(), "Look vector not normalized" );
+   FastFloat negDist;
+   negDist.setNeg( distance );
    Vector newPosition;
-   newPosition.setMul( targetNodeLookVec, -distance ).add( targetNodePos );
+   newPosition.setMul( targetNodeLookVec, negDist );
+   newPosition.add( targetNodePos );
 
    Matrix lookAtMtx;
-   MatrixUtils::generateLookAtLH( newPosition, targetNodePos, Vector::OY, lookAtMtx );
+   MatrixUtils::generateLookAtLH( newPosition, targetNodePos, Quad_0100, lookAtMtx );
    setLocalMtx( lookAtMtx );
 }
 

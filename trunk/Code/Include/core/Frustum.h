@@ -2,6 +2,7 @@
 /// @brief  Frustum representation
 #pragma once
 
+#include "core\MemoryRouter.h"
 #include "core\BoundingVolume.h"
 #include "core\Plane.h"
 
@@ -25,6 +26,8 @@ enum PlanesEnum
  */
 struct Frustum : public BoundingVolume
 {
+   DECLARE_ALLOCATOR( Frustum, AM_ALIGNED_16 );
+
    Plane planes[6];
 
    // -------------------------------------------------------------------------
@@ -33,7 +36,7 @@ struct Frustum : public BoundingVolume
    BoundingVolume* clone() const;
    void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
    void calculateBoundingBox( AABoundingBox& outBoundingBox ) const;
-   float distanceToPlane( const Plane& plane ) const;
+   const FastFloat distanceToPlane( const Plane& plane ) const;
    bool testCollision( const PointVolume& point ) const;
    bool testCollision( const AABoundingBox& rhs ) const;
    bool testCollision( const BoundingSphere& rhs ) const;

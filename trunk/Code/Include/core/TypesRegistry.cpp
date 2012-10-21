@@ -1,5 +1,5 @@
-#include "core/TypeRegistrationMacros.h"
 #include "core.h"
+#include "core/TypeRegistrationMacros.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 

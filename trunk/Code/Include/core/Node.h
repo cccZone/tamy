@@ -6,6 +6,7 @@
 #include <string>
 #include "core\Array.h"
 #include "core\Matrix.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,6 +23,8 @@ struct Vector;
  */
 class Node
 {
+   DECLARE_ALLOCATOR( Node, AM_ALIGNED_16 );
+
 protected:
    // local coordinate system
    Matrix                        m_localMtx;

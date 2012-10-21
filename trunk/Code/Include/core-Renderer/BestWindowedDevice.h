@@ -1,3 +1,5 @@
+/// @file   core-Renderer/BestFullScreenDevice.h
+/// @brief  best rendering device for in-window rendering
 #pragma once
 
 #include "core-Renderer\DevicesSorter.h"
@@ -12,6 +14,8 @@ struct RenderingDevice;
 
 class BestWindowedDevice : public DevicesSorter
 {
+   DECLARE_ALLOCATOR( BestWindowedDevice, AM_DEFAULT );
+
 protected:
    unsigned int runTests(const RenderingDevice& device) const;
 

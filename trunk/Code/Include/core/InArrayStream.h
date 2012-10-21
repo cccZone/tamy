@@ -14,6 +14,8 @@
  */
 class InArrayStream : public InStream
 {
+   DECLARE_ALLOCATOR( InArrayStream, AM_DEFAULT );
+
 private:
    const Array< byte >&    m_buffer;
    int                     m_offset;

@@ -45,6 +45,9 @@
     <Filter Include="Timer">
       <UniqueIdentifier>{61efc0af-e938-44a6-a312-6fbedcda6e46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{6c1f357d-c9f7-432a-a954-2b37904de158}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="NodesHierarchyTests.cpp">
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="FastFloatTests.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryManagementTests.cpp">
+      <Filter>Memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

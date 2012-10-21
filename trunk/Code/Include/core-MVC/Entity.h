@@ -24,6 +24,7 @@
  * will transparently connect to the other one.
  */
 
+#include "core\MemoryRouter.h"
 #include "core\ReflectionObject.h"
 #include "core-MVC\Model.h"
 #include "core\Component.h"
@@ -42,6 +43,7 @@
  */
 class Entity : public ReflectionObject
 {
+   DECLARE_ALLOCATOR( Entity, AM_DEFAULT );
    DECLARE_CLASS()
 
 public:

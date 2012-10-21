@@ -36,7 +36,7 @@ void EffectShader::setScript( const std::string& script )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderParam< EffectShader >* EffectShader::createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val )
+ShaderParam< EffectShader >* EffectShader::createTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName, ShaderTexture& val )
 {
    return val.createEffectShaderTextureSetter( allocator, paramName );
 }

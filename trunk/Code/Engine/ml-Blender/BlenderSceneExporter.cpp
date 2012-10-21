@@ -63,7 +63,7 @@ void BlenderSceneExporter::initialize( const char* filesystemRoot, const char* e
    m_materialDefinitions.clear();
 
    m_exportedEntities.clear();
-   m_exportedEntities.resize( entitiesCount );
+   m_exportedEntities.resizeWithoutInitializing( entitiesCount );
    m_nextEntityIdx = 0;
 
    m_worldEntities.clear();

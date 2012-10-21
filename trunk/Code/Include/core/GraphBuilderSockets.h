@@ -3,9 +3,9 @@
 #ifndef _GRAPH_BUILDER_SOCKETS_H
 #define _GRAPH_BUILDER_SOCKETS_H
 
-#include "core/ReflectionObject.h"
-#include "core/Subject.h"
-#include "core/RuntimeData.h"
+#include "core\ReflectionObject.h"
+#include "core\Subject.h"
+#include "core\RuntimeData.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,6 +23,8 @@ enum GBNodeSocketOperation
 
 class GBNodeSocket : public ReflectionObject, public Subject< GBNodeSocket, GBNodeSocketOperation >
 {
+   DECLARE_ALLOCATOR( GBNodeSocket, AM_ALIGNED_16 );
+
 protected:
    std::string                               m_name;
 
@@ -53,6 +55,8 @@ public:
 template< typename TNode >
 class GBNodeOutput : public GBNodeSocket
 {
+   DECLARE_ALLOCATOR( GBNodeOutput, AM_ALIGNED_16 );
+
 protected:
    std::vector< TNode* >     m_connectedNodes;
 
@@ -105,6 +109,8 @@ public:
 template< typename TNode >
 class GBNodeInput : public GBNodeSocket
 {
+   DECLARE_ALLOCATOR( GBNodeInput, AM_ALIGNED_16 );
+
 protected:
    GBNodeOutput< TNode >*             m_connectedOutput;
 
@@ -159,6 +165,8 @@ protected:
 template< typename TNode, typename TData >
 class TGBNodeOutput : public GBNodeOutput< TNode >
 {
+   DECLARE_ALLOCATOR( TGBNodeOutput, AM_ALIGNED_16 );
+
 private:
    TRuntimeVar< TData >          m_value;
 
@@ -198,6 +206,8 @@ public:
 template< typename TNode, typename TData >
 class TGBNodeInput : public GBNodeInput< TNode >
 {
+   DECLARE_ALLOCATOR( TGBNodeInput, AM_ALIGNED_16 );
+
 public:
    /**
     * Constructor.
@@ -229,6 +239,8 @@ protected:
 template< typename TNode, typename TData >
 class TGBNodePtrOutput : public GBNodeOutput< TNode >
 {
+   DECLARE_ALLOCATOR( TGBNodePtrOutput, AM_ALIGNED_16 );
+
 private:
    TRuntimeVar< TData* >         m_value;
 
@@ -268,6 +280,8 @@ public:
 template< typename TNode, typename TData >
 class TGBNodePtrInput : public GBNodeInput< TNode >
 {
+   DECLARE_ALLOCATOR( TGBNodePtrInput, AM_ALIGNED_16 );
+
 public:
    /**
     * Constructor.

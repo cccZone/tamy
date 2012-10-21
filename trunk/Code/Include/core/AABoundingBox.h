@@ -1,8 +1,8 @@
-#pragma once
-
 /// @file   core\AABoundingBox.h
 /// @brief  an axis aligned bounding box
+#pragma once
 
+#include "core\MemoryRouter.h"
 #include "core\BoundingVolume.h"
 #include "core\Vector.h"
 
@@ -20,6 +20,8 @@ struct Plane;
  */
 struct AABoundingBox : public BoundingVolume
 {
+   DECLARE_ALLOCATOR( AABoundingBox, AM_ALIGNED_16 );
+
    Vector min;
    Vector max;
 
@@ -42,7 +44,7 @@ struct AABoundingBox : public BoundingVolume
     * @param bounds
     * @param multiplier
     */
-   void setExpanded( const AABoundingBox& bounds, float multiplier );
+   void setExpanded( const AABoundingBox& bounds, const FastFloat& multiplier );
 
    /**
     * Union of two boxes.
@@ -85,7 +87,7 @@ struct AABoundingBox : public BoundingVolume
    BoundingVolume* clone() const;
    void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
    void calculateBoundingBox( AABoundingBox& outBoundingBox ) const;
-   float distanceToPlane( const Plane& plane ) const;
+   const FastFloat distanceToPlane( const Plane& plane ) const;
    bool testCollision(const PointVolume& point) const;
    bool testCollision(const AABoundingBox& rhs) const;
    bool testCollision(const BoundingSphere& rhs) const;

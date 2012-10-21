@@ -67,7 +67,7 @@ void PointLight::onPropertyChanged( ReflectionProperty& property )
    {
       // we don't use scaling for entity transforms, that's why we need to manually
       // change the bounding sphere radius
-      m_boundingSphere->radius = m_radius;
+      m_boundingSphere->radius.setFromFloat( m_radius );
    }
 }
 
@@ -77,12 +77,12 @@ void PointLight::initialize()
 {
    if ( !m_boundingSphere )
    {
-      m_boundingSphere = new BoundingSphere( Vector::ZERO, m_radius );
+      m_boundingSphere = new BoundingSphere( Quad_0, m_radius );
       setBoundingVolume( m_boundingSphere ); 
    }
    else
    {
-      m_boundingSphere->radius = m_radius;
+      m_boundingSphere->radius.setFromFloat( m_radius );
    }
 }
 

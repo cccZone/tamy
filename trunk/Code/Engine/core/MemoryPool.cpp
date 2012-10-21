@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/MemoryPool.h"
 #include "core/MemoryUtils.h"
 #include "core/Assert.h"
@@ -13,7 +14,7 @@ int MemoryPool::POOL_INFO_CHUNK_SIZE = sizeof( size_t ) + sizeof( void* );
 MemoryPool::MemoryPool( size_t size )
 {
    m_bufSize = size;
-   m_memory = new char[ m_bufSize + MemoryUtils::ALIGNMENT ];
+   m_memory = new char[ m_bufSize ];
    m_allocStartOffset = 0;
    m_allocationsCount = 0;
 }
@@ -47,7 +48,7 @@ void MemoryPool::reset()
 
 void* MemoryPool::alloc( size_t size )
 {
-   size_t additionalAllocationSize = POOL_INFO_CHUNK_SIZE + MemoryUtils::ALIGNMENT;
+   size_t additionalAllocationSize = POOL_INFO_CHUNK_SIZE;
    size_t sizeAtEnd = m_bufSize - m_allocStartOffset - additionalAllocationSize;
 
    if ( size < sizeAtEnd )
@@ -61,9 +62,6 @@ void* MemoryPool::alloc( size_t size )
       ptr += sizeof( void* );
       *(size_t*)ptr = size;
       ptr += sizeof( size );
-
-      // align the actual pointer that we return
-      ptr = (char*)MemoryUtils::alignPointer( ptr, MemoryUtils::ALIGNMENT );
 
       // move the pointer of the next free memory area
       m_allocStartOffset += size;
@@ -97,8 +95,7 @@ void MemoryPool::dealloc( void* ptr )
 
 MemoryPool* MemoryPool::getPoolPtr( void* ptr )
 {
-   void* unalignedPtr = MemoryUtils::resolveAlignedPointer( ptr );
-   MemoryPool* poolPtr = reinterpret_cast< MemoryPool* >( *(void**)( (char*)unalignedPtr - POOL_INFO_CHUNK_SIZE ) );
+   MemoryPool* poolPtr = reinterpret_cast< MemoryPool* >( *(void**)( (char*)ptr - POOL_INFO_CHUNK_SIZE ) );
    if ( !poolPtr )
    {
       ASSERT_MSG( false, "Accessing an object that's not allocated in a memory pool" );

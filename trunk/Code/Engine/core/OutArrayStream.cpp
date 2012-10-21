@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/OutArrayStream.h"
 #include <memory>
 

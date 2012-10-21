@@ -46,9 +46,9 @@ namespace // anonymous
 
                switch( m_keyIdx )
                {
-               case BAKEY_POS_X: { outPoints[i].setY( pos.x * ANIMATION_VALUE_SCALE ); break; }
-               case BAKEY_POS_Y: { outPoints[i].setY( pos.y * ANIMATION_VALUE_SCALE ); break; }
-               case BAKEY_POS_Z: { outPoints[i].setY( pos.z * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_X: { outPoints[i].setY( pos[0] * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_Y: { outPoints[i].setY( pos[1] * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_Z: { outPoints[i].setY( pos[2] * ANIMATION_VALUE_SCALE ); break; }
                }
             }
          }
@@ -98,9 +98,9 @@ namespace // anonymous
 
                switch( m_keyIdx )
                {
-               case BAKEY_POS_X: { result.setY( pos.x * ANIMATION_VALUE_SCALE ); break; }
-               case BAKEY_POS_Y: { result.setY( pos.y * ANIMATION_VALUE_SCALE ); break; }
-               case BAKEY_POS_Z: { result.setY( pos.z * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_X: { result.setY( pos[0] * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_Y: { result.setY( pos[1] * ANIMATION_VALUE_SCALE ); break; }
+               case BAKEY_POS_Z: { result.setY( pos[2] * ANIMATION_VALUE_SCALE ); break; }
                }
             }
          }
@@ -146,9 +146,9 @@ namespace // anonymous
 
             switch( m_keyIdx )
             {
-            case BAKEY_POS_X: { posKey.x = pos.y() / ANIMATION_VALUE_SCALE; break; }
-            case BAKEY_POS_Y: { posKey.y = pos.y() / ANIMATION_VALUE_SCALE; break; }
-            case BAKEY_POS_Z: { posKey.z = pos.y() / ANIMATION_VALUE_SCALE; break; }
+            case BAKEY_POS_X: { posKey[0] = pos.y() / ANIMATION_VALUE_SCALE; break; }
+            case BAKEY_POS_Y: { posKey[1] = pos.y() / ANIMATION_VALUE_SCALE; break; }
+            case BAKEY_POS_Z: { posKey[2] = pos.y() / ANIMATION_VALUE_SCALE; break; }
             }
 
             m_boneAnimation.setTranslationKey( pointIdx, posKey );

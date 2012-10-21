@@ -1,11 +1,11 @@
-#pragma once
-
 /// @file   core-Sound\SoundChannel.h
-/// @brief  an aoudio device channel that can be used to play a sound
+/// @brief  an audio device channel that can be used to play a sound
+#pragma once
 
 #include <string>
 #include <windows.h>
 #include <vector>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +20,8 @@ class Sound;
  */
 class SoundChannel
 {
+   DECLARE_ALLOCATOR( SoundChannel, AM_DEFAULT );
+
 private:
    Sound& m_sound;
    DWORD m_sampleLength;

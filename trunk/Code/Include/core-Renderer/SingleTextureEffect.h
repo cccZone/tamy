@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core-Renderer\SingleTextureEffect.h
 /// @brief  simple rendering effect
+#pragma once
 
 #include "core-MVC\Entity.h"
 #include "core-Renderer\SurfaceProperties.h"
@@ -24,6 +23,7 @@ class RenderableTexture;
 */
 class SingleTextureEffect : public TRenderState< SingleTextureEffect >
 {
+   DECLARE_ALLOCATOR( SingleTextureEffect, AM_DEFAULT );
    DECLARE_CLASS()
 
 private:

@@ -56,7 +56,7 @@ void IWFScene::import( Model& scene )
 
       IWFMeshLoader meshLoader( sceneFile.m_vpMeshList[i], sceneFile.m_vpTextureList, sceneFile.m_vpMaterialList );
 
-      std::vector<MeshDefinition> meshes;
+      Array<MeshDefinition> meshes;
       meshLoader.parseMesh(meshes, meshName);
 
       Matrix objMtx = reinterpret_cast< Matrix& >( sceneFile.m_vpMeshList[i]->ObjectMatrix );
@@ -249,7 +249,7 @@ void IWFScene::addDynamicMesh(const std::string& meshFileName,
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void IWFScene::addStaticGeometry( Model& scene, ResourcesManager& rm, std::vector<MeshDefinition> meshes, const Matrix& situation, const std::string& objName )
+void IWFScene::addStaticGeometry( Model& scene, ResourcesManager& rm, const Array< MeshDefinition >& meshes, const Matrix& situation, const std::string& objName )
 {
    // create main mesh
    unsigned int count = meshes.size();
@@ -265,7 +265,7 @@ void IWFScene::addStaticGeometry( Model& scene, ResourcesManager& rm, std::vecto
 
    for (unsigned int i = 0; i < count; ++i)
    {
-      MeshDefinition& currMesh = meshes[i];
+      const MeshDefinition& currMesh = meshes[i];
 
       // create the geometry
       TriangleMesh* geometryRes = NULL;
@@ -284,7 +284,7 @@ void IWFScene::addStaticGeometry( Model& scene, ResourcesManager& rm, std::vecto
 
 
       // create a rendering effect instance
-      MaterialDefinition& mat = currMesh.material;
+      const MaterialDefinition& mat = currMesh.material;
       MaterialEntity* materialEntity = new MaterialEntity( mat.matName );
       {
          char matInstancePath[128];

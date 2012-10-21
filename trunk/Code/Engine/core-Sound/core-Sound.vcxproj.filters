@@ -10,9 +10,6 @@
     <Filter Include="SoundScene">
       <UniqueIdentifier>{96f6b428-b3bb-4039-a4e1-f41a60aeef0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Factories">
-      <UniqueIdentifier>{7cc8658c-e85f-4b52-a581-1fd4aadd7a9e}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\core-Sound\Sound.h">
@@ -41,9 +38,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Sound\SoundSceneManager.h">
       <Filter>SoundScene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core-Sound\SoundEntitiesFactory.h">
-      <Filter>Factories</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core-Sound.h" />
   </ItemGroup>

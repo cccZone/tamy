@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\BoundingVolume.h"
 #include "core\Plane.h"
 
@@ -6,12 +7,12 @@
 
 PlaneClassification BoundingVolume::classifyAgainsPlane(const Plane& plane) const
 {
-   float dist = distanceToPlane(plane);
-   if ( dist < 0 )
+   FastFloat dist = distanceToPlane(plane);
+   if ( dist < Float_0 )
    {
       return PPC_BACK;
    }
-   else if ( dist > 0 )
+   else if ( dist > Float_0 )
    {
       return PPC_FRONT;
    }

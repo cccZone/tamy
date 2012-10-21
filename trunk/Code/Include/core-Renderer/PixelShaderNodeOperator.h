@@ -22,9 +22,13 @@ class RCBindPixelShader;
 template< typename TNode >
 class PixelShaderNodeOperator
 {
+   DECLARE_ALLOCATOR( PixelShaderNodeOperator, AM_DEFAULT );
+
 private:
    struct ConstantDef
    {
+      DECLARE_ALLOCATOR( ConstantDef, AM_DEFAULT );
+
       PixelShaderConstant< TNode >*    m_constant;
       GBNodeInput< TNode >*            m_input;
 

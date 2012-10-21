@@ -13,9 +13,9 @@
 namespace // anonymous
 {
    Vector GLOBAL_AXES[] = {
-      Vector::OX,
-      Vector::OY,
-      Vector::OZ
+      Vector( Quad_1000 ),
+      Vector( Quad_0100 ),
+      Vector( Quad_0010 )
    };
 }
 
@@ -65,17 +65,17 @@ void CameraPlaneNodeManipulator::update( float timeElapsed )
    bool anyKeyHeld = m_movementDir[MD_FRONT] || m_movementDir[MD_BACK] || m_movementDir[MD_LEFT] || m_movementDir[MD_RIGHT];
    if ( anyKeyHeld )
    {
-      if ( m_movementDir[MD_FRONT] )  { valChange.y += movementSpeed; }
-      if ( m_movementDir[MD_BACK] )   { valChange.y -= movementSpeed; }
-      if ( m_movementDir[MD_LEFT] )   { valChange.x -= movementSpeed; }
-      if ( m_movementDir[MD_RIGHT] )  { valChange.x += movementSpeed; }
+      if ( m_movementDir[MD_FRONT] )  { valChange[1] += movementSpeed; }
+      if ( m_movementDir[MD_BACK] )   { valChange[1] -= movementSpeed; }
+      if ( m_movementDir[MD_LEFT] )   { valChange[0] -= movementSpeed; }
+      if ( m_movementDir[MD_RIGHT] )  { valChange[0] += movementSpeed; }
    }
    else
    {
-      valChange.x = m_sceneWidget->getMouseSpeed().v[0] * movementSpeed;
+      valChange[0] = m_sceneWidget->getMouseSpeed().v[0] * movementSpeed;
 
       // we need to negate this value, 'cause we want it expressed in viewport space ( where Y axis goes up, not down )
-      valChange.y = -m_sceneWidget->getMouseSpeed().v[1] * movementSpeed;
+      valChange[1] = -m_sceneWidget->getMouseSpeed().v[1] * movementSpeed;
    }
 
    // manipulate the selected nodes
@@ -103,8 +103,8 @@ void CameraPlaneNodeManipulator::translateSelectedNodes( const Vector& valChange
    const Matrix& cameraGlobalMtx = m_camera->getGlobalMtx();
    
    Vector sideDisplacement, upDisplacement;
-   sideDisplacement.setMul( cameraGlobalMtx.sideVec(), valChange.x );
-   upDisplacement.setMul( cameraGlobalMtx.upVec(), valChange.y );
+   sideDisplacement.setMul( cameraGlobalMtx.sideVec(), valChange.getComponent(0) );
+   upDisplacement.setMul( cameraGlobalMtx.upVec(), valChange.getComponent(1) );
 
    Vector displacement;
    displacement.setAdd( sideDisplacement, upDisplacement );
@@ -144,9 +144,24 @@ void CameraPlaneNodeManipulator::rotateSelectedNodes( const Vector& valChange ) 
 {
    const Matrix& cameraGlobalMtx = m_camera->getLocalMtx();
 
-   float rollAngleMag = sqrt( valChange.x * valChange.x + valChange.y * valChange.y );
-   float rollAngleSign = ( valChange.x + valChange.y ) >= 0 ? -1.0f : 1.0f;
-   float rollAngle = DEG2RAD( rollAngleMag * rollAngleSign );
+   const FastFloat valChange0 = valChange.getComponent(0);
+   const FastFloat valChange1 = valChange.getComponent(1);
+   FastFloat valChange0Sq;
+   valChange0Sq.setMul( valChange0, valChange0 );
+   FastFloat valChange1Sq;
+   valChange1Sq.setMul( valChange1, valChange1 );
+
+   FastFloat rollAngleMag;
+   rollAngleMag.setAdd( valChange0Sq, valChange1Sq);
+   rollAngleMag.sqrt();
+
+   FastFloat rollAngleSign;
+   rollAngleSign.setAdd( valChange0, valChange1 );
+   rollAngleSign.neg();
+
+   FastFloat rollAngle;
+   rollAngle.setFlipSign( rollAngleMag, rollAngleSign );
+   rollAngle.mul( Float_Deg2Rad );
 
    Quaternion rollQuat;
    rollQuat.setAxisAngle( cameraGlobalMtx.forwardVec(), rollAngle );

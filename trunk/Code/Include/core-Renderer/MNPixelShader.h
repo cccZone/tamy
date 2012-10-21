@@ -14,7 +14,8 @@ class PixelShader;
 
 class MNPixelShader : public MaterialNode
 {
-DECLARE_CLASS()
+   DECLARE_ALLOCATOR( MNPixelShader, AM_ALIGNED_16 );
+   DECLARE_CLASS()
 
 private:
    // static data

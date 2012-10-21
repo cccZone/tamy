@@ -17,7 +17,7 @@
 template <typename Elem>
 class NarrowPhaseStorageFilter : public SpatialStorage<Elem>
 {
-   ALIGNED_CLASS();
+   DECLARE_ALLOCATOR( NarrowPhaseStorageFilter< Elem >, AM_ALIGNED_16 );
 
 private:
    SpatialStorage<Elem>* m_storage;

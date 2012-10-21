@@ -25,6 +25,7 @@ class DeferredAmbientLightRenderer;
  */
 class RPDeferredLightingNode : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPDeferredLightingNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

@@ -6,7 +6,7 @@
 #include <iostream>
 #include "core\MathDataStorage.h"
 #include "core\FastFloat.h"
-#include "core\MemoryUtils.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -23,8 +23,7 @@ struct Vector;
  */
 struct Quaternion
 {
-   // This class needs to be aligned to a 16-byte boundary, when dynamically allocated
-   ALIGNED_STRUCT();
+   DECLARE_ALLOCATOR( Quaternion, AM_ALIGNED_16 );
 
    QuadStorage    m_quad;
 
@@ -32,6 +31,13 @@ struct Quaternion
     * Default constructor.
     */
    inline Quaternion();
+
+   /**
+    * Constructor.
+    *
+    * @param quad
+    */
+   inline Quaternion( const QuadStorage& quad );
 
    /**
     * Returns an identity quaternion.
@@ -42,6 +48,13 @@ struct Quaternion
     * Sets an identity quaternion.
     */
    inline void setIdentity();
+
+   /**
+    * Creates a quaternion from a single quad.
+    *
+    * @param quad
+    */
+   inline void set( const QuadStorage& quad );
 
    /**
     * Creates a quaternion from four float coordinates.
@@ -130,7 +143,7 @@ struct Quaternion
     * @param axis
     * @param angle      expressed in RADIANS
     */
-   inline void setAxisAngle( const Vector& axis, float angle );
+   inline void setAxisAngle( const Vector& axis, const FastFloat& angle );
 
    /**
     * Creates a quaternion that describes the shortest rotation that would
@@ -172,7 +185,7 @@ struct Quaternion
     * CAUTION: This method doesn't work for identity quaternion,
     * because in that case there's no axis and angle defined to begin with.
     */
-   inline float getAngle() const;
+   inline void getAngle( FastFloat& outAngle ) const;
 
    /**
     * Removes the component that rotates this quaternion about the specified axis.
@@ -189,7 +202,7 @@ struct Quaternion
     * @param outRemainingQuaternion
     * @return decomposed rotation angle ( in RADIANS )
     */
-   float decompose( const Vector& decompositionAxis, Quaternion& outRemainingQuaternion ) const;
+   void decompose( const Vector& decompositionAxis, Quaternion& outRemainingQuaternion, FastFloat& outAngle ) const;
 
    /**
     * Rotates a vector.

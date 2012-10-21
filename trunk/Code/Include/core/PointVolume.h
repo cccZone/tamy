@@ -1,8 +1,8 @@
-#pragma once
-
 /// @file      core\PointVolume.h
 /// @brief     a bounding volume with size of a point
+#pragma once
 
+#include "core\MemoryRouter.h"
 #include "core\BoundingVolume.h"
 #include "core\Vector.h"
 
@@ -14,6 +14,8 @@
  */
 struct PointVolume : public BoundingVolume
 {
+   DECLARE_ALLOCATOR( PointVolume, AM_ALIGNED_16 );
+
    Vector point;
 
    /**
@@ -29,7 +31,7 @@ struct PointVolume : public BoundingVolume
    BoundingVolume* clone() const;
    void transform( const Matrix& mtx, BoundingVolume& transformedVolume ) const;
    void calculateBoundingBox( AABoundingBox& outBoundingBox ) const;
-   float distanceToPlane( const Plane& plane ) const;
+   const FastFloat distanceToPlane( const Plane& plane ) const;
    bool testCollision( const PointVolume& point ) const;
    bool testCollision( const AABoundingBox& rhs ) const;
    bool testCollision( const BoundingSphere& rhs ) const;

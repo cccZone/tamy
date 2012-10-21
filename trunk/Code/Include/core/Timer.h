@@ -2,6 +2,8 @@
 /// @brief  simple timer
 #pragma once
 
+#include "core\MemoryRouter.h"
+
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -10,6 +12,8 @@
  */
 class CTimer
 {
+   DECLARE_ALLOCATOR( CTimer, AM_DEFAULT );
+
 private:
    __int64         m_lastTime;
    float           m_timeScale;

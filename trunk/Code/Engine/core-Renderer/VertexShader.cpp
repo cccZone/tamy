@@ -36,7 +36,7 @@ void VertexShader::setVertexDescription( VertexDescId vertexDescId )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-ShaderParam< VertexShader >* VertexShader::createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val )
+ShaderParam< VertexShader >* VertexShader::createTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName, ShaderTexture& val )
 {
    return val.createVertexShaderTextureSetter( allocator, paramName );
 }

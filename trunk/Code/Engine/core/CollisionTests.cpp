@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\CollisionTests.h"
 #include "core\AABoundingBox.h"
 #include "core\Ray.h"
@@ -23,27 +24,30 @@ static bool areRangesOverlapping( float min1, float max1, float min2, float max2
 
 bool testCollision( const AABoundingBox& aabb, const Vector& point )
 {
-   return areRangesOverlapping( aabb.min.x, aabb.max.x, point.x, point.x ) && 
-      areRangesOverlapping( aabb.min.y, aabb.max.y, point.y, point.y ) && 
-      areRangesOverlapping( aabb.min.z, aabb.max.z, point.z, point.z );
+   // <fastfloat.todo> areRangesOverlapping - this can be done using a selector
+   return areRangesOverlapping( aabb.min[0], aabb.max[0], point[0], point[0] ) && 
+      areRangesOverlapping( aabb.min[1], aabb.max[1], point[1], point[1] ) && 
+      areRangesOverlapping( aabb.min[2], aabb.max[2], point[2], point[2] );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool testCollision( const AABoundingBox& aabb1, const AABoundingBox& aabb2 )
 {
+   // <fastfloat.todo> areRangesOverlapping - this can be done using a selector
+
    uint collidingPlanes = 0;
-   if ( areRangesOverlapping( aabb1.min.x, aabb1.max.x, aabb2.min.x, aabb2.max.x ) )
+   if ( areRangesOverlapping( aabb1.min[0], aabb1.max[0], aabb2.min[0], aabb2.max[0] ) )
    {
       collidingPlanes++;
    }
 
-   if (areRangesOverlapping( aabb1.min.y, aabb1.max.y, aabb2.min.y, aabb2.max.y ) )
+   if (areRangesOverlapping( aabb1.min[1], aabb1.max[1], aabb2.min[1], aabb2.max[1] ) )
    {
       collidingPlanes++;
    }
 
-   if (areRangesOverlapping( aabb1.min.z, aabb1.max.z, aabb2.min.z, aabb2.max.z ) )
+   if (areRangesOverlapping( aabb1.min[2], aabb1.max[2], aabb2.min[2], aabb2.max[2] ) )
    {
       collidingPlanes++;
    }
@@ -57,25 +61,23 @@ bool testCollision( const AABoundingBox& aabb, const BoundingSphere& sphere )
 {
    Plane plane;
    
-   // <fastfloat.todo>
-   FastFloat sphereRad;
-   sphereRad.setFromFloat( sphere.radius );
-   plane.set( Float_0, Float_0, Float_Minus1, FastFloat::fromFloat( aabb.min.z ) );
+   FastFloat sphereRad = sphere.radius;
+   plane.set( Float_0, Float_0, Float_Minus1, FastFloat::fromFloat( aabb.min[2] ) );
    if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane.set( Float_0, Float_0,  Float_1, FastFloat::fromFloat( -aabb.max.z ) );
+   plane.set( Float_0, Float_0,  Float_1, FastFloat::fromFloat( -aabb.max[2] ) );
    if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane.set( Float_0, Float_Minus1, Float_0, FastFloat::fromFloat( aabb.min.y ) );
+   plane.set( Float_0, Float_Minus1, Float_0, FastFloat::fromFloat( aabb.min[1] ) );
    if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane.set( Float_0,  Float_1, Float_0, FastFloat::fromFloat( -aabb.max.y ) );
+   plane.set( Float_0,  Float_1, Float_0, FastFloat::fromFloat( -aabb.max[1] ) );
    if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane.set( Float_Minus1, Float_0, Float_0, FastFloat::fromFloat( aabb.min.x ) );
+   plane.set( Float_Minus1, Float_0, Float_0, FastFloat::fromFloat( aabb.min[0] ) );
    if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
-   plane.set( Float_1, Float_0, Float_0, FastFloat::fromFloat( -aabb.max.x ) );
+   plane.set( Float_1, Float_0, Float_0, FastFloat::fromFloat( -aabb.max[0] ) );
    if ( plane.dotCoord( sphere.origin ) > sphereRad ) { return false; }
 
    return true;
@@ -90,7 +92,7 @@ bool testCollision( const AABoundingBox& aabb, const Frustum& frustum )
    {
       const Plane& plane = frustum.planes[i];
 
-      pv.set( plane[0] > 0 ? aabb.max.x : aabb.min.x, plane[1] > 0 ? aabb.max.y : aabb.min.y, plane[2] > 0 ? aabb.max.z : aabb.min.z, 1.0f );
+      pv.set( plane[0] > 0 ? aabb.max[0] : aabb.min[0], plane[1] > 0 ? aabb.max[1] : aabb.min[1], plane[2] > 0 ? aabb.max[2] : aabb.min[2], 1.0f );
 
       const FastFloat n = plane.dotCoord( pv );
       if ( n < Float_0 )
@@ -108,7 +110,7 @@ bool testCollision( const AABoundingBox& aabb, const Frustum& frustum )
 bool testCollision( const Frustum& frustum, const BoundingSphere& sphere )
 {
    FastFloat negSphereRad;
-   negSphereRad.setFromFloat( -sphere.radius );
+   negSphereRad.setNeg( sphere.radius );
 
    for ( int i = 0; i < 6; ++i )
    {
@@ -143,7 +145,7 @@ bool testCollision( const Frustum& frustum, const PointVolume& point )
 
 bool testCollision( const AABoundingBox& aabb, const Ray& ray )
 {
-   return ( rayToAABBDistance( ray, aabb ) < FLT_MAX );
+   return ( rayToAABBDistance( ray, aabb ) < Float_INF );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -158,7 +160,7 @@ bool testCollision( const Ray& ray, const Plane& plane, Vector& intersectionPt )
    }
 
    // <fastfloat.todo>
-   intersectionPt.setMulAdd( ray.direction, t.getFloat(), ray.origin );
+   intersectionPt.setMulAdd( ray.direction, t, ray.origin );
 
    return true;
 }
@@ -169,7 +171,11 @@ bool testCollision( const BoundingSphere& sphere, const Vector& point )
 {
    Vector to;
    to.setSub( sphere.origin, point );
-   return ( to.lengthSq() < sphere.radius * sphere.radius);
+
+   FastFloat radiusSq;
+   radiusSq.setMul( sphere.radius, sphere.radius );
+
+   return ( to.lengthSq() < radiusSq );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -178,9 +184,11 @@ bool testCollision(const BoundingSphere& sphere, const BoundingSphere& rhs)
 {
    Vector to;
    to.setSub(sphere.origin, rhs.origin );
-   float totalRadius  = sphere.radius + rhs.radius;
+   FastFloat totalRadius;
+   totalRadius.setAdd( sphere.radius, rhs.radius );
+   totalRadius.mul( totalRadius );
 
-   return ( ( &sphere != &rhs ) && ( to.lengthSq() < totalRadius * totalRadius ) );
+   return ( ( &sphere != &rhs ) && ( to.lengthSq() < totalRadius ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -189,16 +197,19 @@ void findIntersectionRemovalVector( const BoundingSphere& sphere, const Bounding
 {
    Vector toColidor;
    toColidor.setSub( colidor.origin, sphere.origin );
-   float distFromEachOther = toColidor.length();
+   const FastFloat distFromEachOther = toColidor.length();
 
-   float amountOfOverLap = colidor.radius + sphere.radius - distFromEachOther;
-   if ( amountOfOverLap >= 0 )
+   FastFloat amountOfOverLap;
+   amountOfOverLap.setAdd( colidor.radius, sphere.radius );
+   amountOfOverLap.sub( distFromEachOther );
+   if ( amountOfOverLap >= Float_0 )
    {
-      outRemovalVec.setMul( toColidor, amountOfOverLap / distFromEachOther );
+      amountOfOverLap.div( distFromEachOther );
+      outRemovalVec.setMul( toColidor, amountOfOverLap );
    }
    else
    {
-      outRemovalVec = Vector::ZERO;
+      outRemovalVec = Quad_0;
    }
 }
 
@@ -206,24 +217,35 @@ void findIntersectionRemovalVector( const BoundingSphere& sphere, const Bounding
 
 void findIntersectionRemovalVector( const AABoundingBox& aabb, const AABoundingBox& colidor, Vector& outRemovalVec )
 {
-   outRemovalVec = Vector::ZERO;
+   outRemovalVec = Quad_0;
 
-   if (areRangesOverlapping(aabb.min.x, aabb.max.x, colidor.max.x, colidor.max.x))
+   // <fastfloat.todo> areRangesOverlapping - this can be done using a selector
+
+   if (areRangesOverlapping(aabb.min[0], aabb.max[0], colidor.max[0], colidor.max[0]))
    {
-      outRemovalVec.x = aabb.min.x - colidor.max.x;
+      outRemovalVec[0] = aabb.min[0] - colidor.max[0];
    }
-   else if (areRangesOverlapping(aabb.min.x, aabb.max.x, colidor.min.x, colidor.min.x))
+   else if (areRangesOverlapping(aabb.min[0], aabb.max[0], colidor.min[0], colidor.min[0]))
    {
-      outRemovalVec.x = aabb.max.x - colidor.min.x;
+      outRemovalVec[0] = aabb.max[0] - colidor.min[0];
    }
 
-   if (areRangesOverlapping(aabb.min.z, aabb.max.z, colidor.max.z, colidor.max.z))
+   if (areRangesOverlapping(aabb.min[1], aabb.max[1], colidor.max[1], colidor.max[1]))
    {
-      outRemovalVec.z = aabb.min.z - colidor.max.z;
+      outRemovalVec[1] = aabb.min[1] - colidor.max[1];
    }
-   else if (areRangesOverlapping(aabb.min.z, aabb.max.z, colidor.min.z, colidor.min.z))
+   else if (areRangesOverlapping(aabb.min[1], aabb.max[1], colidor.min[1], colidor.min[1]))
    {
-      outRemovalVec.z = aabb.max.z - colidor.min.z;
+      outRemovalVec[1] = aabb.max[1] - colidor.min[1];
+   }
+
+   if (areRangesOverlapping(aabb.min[2], aabb.max[2], colidor.max[2], colidor.max[2]))
+   {
+      outRemovalVec[2] = aabb.min[2] - colidor.max[2];
+   }
+   else if (areRangesOverlapping(aabb.min[2], aabb.max[2], colidor.min[2], colidor.min[2]))
+   {
+      outRemovalVec[2] = aabb.max[2] - colidor.min[2];
    }
 }
 
@@ -231,7 +253,7 @@ void findIntersectionRemovalVector( const AABoundingBox& aabb, const AABoundingB
 
 bool testCollision( const BoundingSphere& sphere, const Ray& ray )
 {
-   return ( rayToBSDistance( ray, sphere ) < FLT_MAX );
+   return ( rayToBSDistance( ray, sphere ) < Float_INF );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -260,8 +282,8 @@ bool testCollision( const Ray& ray, const Triangle& triangle )
    for ( int i = 0; i < 3; ++i )
    {
       int nextIdx = ( i + 1 ) % 3;
-      float dot = tmpCrossProducts[i].dot( tmpCrossProducts[nextIdx] );
-      if ( dot < 0 )
+      const FastFloat dot = tmpCrossProducts[i].dot( tmpCrossProducts[nextIdx] );
+      if ( dot < Float_0 )
       {
          // the point lies outside the triangle
          return false;
@@ -308,22 +330,23 @@ const FastFloat rayToPlaneDistance( const Ray& ray, const Plane& plane )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToPointDistance( const Ray& ray, const Vector& point )
+const FastFloat rayToPointDistance( const Ray& ray, const Vector& point )
 {
    Vector vecToPt;
    vecToPt.setSub( point, ray.origin );
 
-   float t = vecToPt.dot( ray.direction );
-   if (t < 0)
+   const FastFloat t = vecToPt.dot( ray.direction );
+   if ( t < Float_0 )
    {
       // if the point lies behind the ray's origin, the distance is infinite
-      return FLT_MAX;
+      return Float_INF;
    }
 
    // check if the projected point lies on the ray
    Vector resultPt;
-   resultPt.setMulAdd( ray.direction, t, ray.origin ).sub( vecToPt );
-   if ( resultPt.lengthSq() < 1e-3 )
+   resultPt.setMulAdd( ray.direction, t, ray.origin );
+   resultPt.sub( vecToPt );
+   if ( resultPt.lengthSq() < Float_1e_3 )
    {
       // if it does - return the calculated distance
       return t;
@@ -331,32 +354,41 @@ float rayToPointDistance( const Ray& ray, const Vector& point )
    else
    {
       // if not - it's not on the ray, so the distance to it is infinite
-      return FLT_MAX;
+      return Float_INF;
    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToAABBDistance(const Ray& ray, const AABoundingBox& aabb)
+const FastFloat rayToAABBDistance(const Ray& ray, const AABoundingBox& aabb)
 {
    // 'slabs' algorithm
-   float tMin = -FLT_MAX;
-   float tMax = FLT_MAX;
-   float t1, t2, fTemp;
+   FastFloat tMin; tMin.setNeg( Float_INF );
+   FastFloat tMax = Float_INF;
+   FastFloat t1, t2, fTemp;
 
    Vector extentsMin;
    extentsMin.setSub( aabb.min, ray.origin );
    Vector extentsMax;
    extentsMax.setSub( aabb.max, ray.origin );
 
+   // <fastfloat> this should also be feasible to do using selectors
+   FastFloat dir, dirAbs, dirComp;
    for (int i = 0; i < 3; ++i)
    {
-      if ( fabsf( ray.direction[i] ) > 1e-3f )
+      dirComp = ray.direction.getComponent( i );
+      dirAbs.setAbs( dirComp );
+      if ( dirAbs > Float_1e_3 )
       {
-         fTemp = 1.0f / ray.direction[i];
-         t1 = extentsMax[i] * fTemp;
-         t2 = extentsMin[i] * fTemp;
-         if (t1 > t2) {fTemp = t1; t1 = t2; t2 = fTemp; }
+         fTemp.setReciprocal( dirComp );
+         t1.setMul( extentsMax.getComponent( i ), fTemp );
+         t2.setMul( extentsMin.getComponent( i ), fTemp );
+         if (t1 > t2) 
+         {
+            fTemp = t1; 
+            t1 = t2; 
+            t2 = fTemp; 
+         }
 
          if ( t1 > tMin ) 
          {
@@ -369,56 +401,60 @@ float rayToAABBDistance(const Ray& ray, const AABoundingBox& aabb)
 
          if ( tMin > tMax )
          {
-            return FLT_MAX;
+            return Float_INF;
          }
-         if ( tMax < 0 )
+         if ( tMax < Float_0 )
          {
-            return FLT_MAX;
+            return Float_INF;
          }
       }
       else
       {
          if ( ( ray.origin[i] < aabb.min[i] ) || ( ray.origin[i] > aabb.max[i] ) )
          {
-            return FLT_MAX;
+            return Float_INF;
          }
       }
    }
 
-   if ( tMin < 0 )
+   if ( tMin < Float_0 )
    {
-      tMin = 0;
+      tMin = Float_0;
    }
    return tMin;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float rayToBSDistance( const Ray& ray, const BoundingSphere& bs )
+const FastFloat rayToBSDistance( const Ray& ray, const BoundingSphere& bs )
 {
-   float a, b, c, l2, t;
+   FastFloat a, b, c, l2;
 
    Vector L;
    L.setSub( ray.origin, bs.origin );
    l2 = L.lengthSq();
 
    a = ray.direction.lengthSq();
-   b = 2.0f * ray.direction.dot( L );
-   c = l2 - ( bs.radius * bs.radius );
+   b.setMul( Float_2, ray.direction.dot( L ) );
 
-   if ( c < 0.0f ) 
+   c.setMul( bs.radius, bs.radius );
+   c.neg();
+   c.add( l2 );
+
+   if ( c < Float_0 ) 
    {
       // the ray starts inside the sphere
-      return 0;
+      return Float_0;
    }
 
-   if ( !solveQuadratic( a, b, c, t ) ) 
+   float t;
+   if ( !solveQuadratic( a.getFloat(), b.getFloat(), c.getFloat(), t ) ) 
    {
       // the sphere doesn't intersect the plane
-      return FLT_MAX;
+      return Float_INF;
    }
 
-   return t;
+   return FastFloat::fromFloat( t );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

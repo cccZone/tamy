@@ -27,6 +27,7 @@ class Node;
  */
 class SkinnedGeometry : public Geometry
 {
+   DECLARE_ALLOCATOR( SkinnedGeometry, AM_DEFAULT );
    DECLARE_CLASS()
 
 private:

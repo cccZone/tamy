@@ -14,6 +14,7 @@ struct BoundingSpace;
 struct Matrix;
 struct PointVolume;
 struct Plane;
+struct FastFloat;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -74,7 +75,7 @@ public:
     *                =0 - the volume intersects the plane
     *                >0 - the volume is in front of the plane
     */
-   virtual float distanceToPlane(const Plane& plane) const = 0;
+   virtual const FastFloat distanceToPlane(const Plane& plane) const = 0;
 
    virtual bool testCollision(const PointVolume& point) const = 0;
 

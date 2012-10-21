@@ -128,7 +128,7 @@ void MaterialsDB::collectMaterialData( Array< Vector >& outDataBuffer ) const
       outDataBuffer.push_back( (const Vector&)surfaceProps.getAmbientColor() );
       outDataBuffer.push_back( (const Vector&)surfaceProps.getDiffuseColor() );
       outDataBuffer.push_back( (const Vector&)surfaceProps.getSpecularColor() );
-      outDataBuffer.back().w = surfaceProps.getPower() / 255.0f;
+      outDataBuffer.back()[3] = surfaceProps.getPower() / 255.0f;
       outDataBuffer.push_back( (const Vector&)surfaceProps.getEmissiveColor() );
    }
 }

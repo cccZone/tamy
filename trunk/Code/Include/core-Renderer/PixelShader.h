@@ -3,6 +3,7 @@
 #ifndef _PIXEL_SHADER_H
 #define _PIXEL_SHADER_H
 
+#include "core/MemoryRouter.h"
 #include "core/Resource.h"
 #include "core-Renderer/ShaderRenderCommand.h"
 #include "core/UniqueObject.h"
@@ -27,6 +28,8 @@ class IDString;
  */
 struct TextureStageParams
 {
+   DECLARE_ALLOCATOR( TextureStageParams, AM_DEFAULT );
+
    TextureAddressingMode         m_addressU;
    TextureAddressingMode         m_addressV;
    TextureAddressingMode         m_addressW;
@@ -57,6 +60,8 @@ struct TextureStageParams
  */
 struct PixelShaderParams
 {
+   DECLARE_ALLOCATOR( PixelShaderParams, AM_DEFAULT );
+
    CullingMode                   m_cullingMode;
    bool                          m_useZBuffer;
    bool                          m_writeToZBuffer;
@@ -122,6 +127,7 @@ struct PixelShaderParams
  */
 class PixelShader : public Resource, public UniqueObject< PixelShader >, public RenderResource
 {
+   DECLARE_ALLOCATOR( PixelShader, AM_DEFAULT );
    DECLARE_RESOURCE()
 
 private:
@@ -212,7 +218,7 @@ public:
     * @param paramName
     * @param val
     */
-   static ShaderParam< PixelShader >* createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val );
+   static ShaderParam< PixelShader >* createTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName, ShaderTexture& val );
 
    /**
     * Returns the descriptions of the compiled shader constants.
@@ -236,6 +242,8 @@ private:
  */
 class RCBindPixelShader : public ShaderRenderCommand< PixelShader >
 {
+   DECLARE_ALLOCATOR( RCBindPixelShader, AM_DEFAULT );
+
 private:
    PixelShader&               m_shader;
    
@@ -258,6 +266,8 @@ public:
  */
 class RCUnbindPixelShader : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCUnbindPixelShader, AM_DEFAULT );
+
 private:
    PixelShader&         m_shader;
 

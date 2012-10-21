@@ -17,6 +17,7 @@ struct Quaternion;
 
 class SkeletonAnimation : public Resource
 {
+   DECLARE_ALLOCATOR( SkeletonAnimation, AM_DEFAULT );
    DECLARE_RESOURCE();
 
 private:

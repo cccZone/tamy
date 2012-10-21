@@ -5,12 +5,15 @@
 #include "core\TNodesVisitor.h"
 #include "core\Array.h"
 #include "core\Triangle.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
 
 class NodeA : public Node
 {
+   DECLARE_ALLOCATOR( NodeA, AM_ALIGNED_16 );
+
 private:
    Array<Triangle*> m_geometry;
 

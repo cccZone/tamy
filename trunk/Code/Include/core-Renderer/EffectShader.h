@@ -1,7 +1,6 @@
-#pragma once
-
 /// @file   core-Renderer\EffectShader.h
 /// @brief  effect shader abstraction
+#pragma once
 
 #include <core\Array.h>
 #include "core\Resource.h"
@@ -23,6 +22,7 @@ class IDString;
  */
 class EffectShader : public Resource, public RenderResource
 {
+   DECLARE_ALLOCATOR( EffectShader, AM_DEFAULT );
    DECLARE_RESOURCE()
 
 private:
@@ -59,7 +59,7 @@ public:
     * @param paramName
     * @param val
     */
-   static ShaderParam< EffectShader >* createTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName, ShaderTexture& val );
+   static ShaderParam< EffectShader >* createTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName, ShaderTexture& val );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -103,6 +103,8 @@ public:
  */
 class RCUnbindEffect : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCUnbindEffect, AM_DEFAULT );
+
 private:
    EffectShader&        m_shader;
 

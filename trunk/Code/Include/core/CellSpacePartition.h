@@ -5,7 +5,8 @@
 
 #include <list>
 #include <vector>
-#include "BoundingVolume.h"
+#include "core\BoundingVolume.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,14 +21,16 @@ struct Vector;
 template< class entity >
 struct Cell
 {
-  std::list< entity* > m_inhabitants;
+   DECLARE_ALLOCATOR( Cell, AM_ALIGNED_16 );
 
-  AABoundingBox m_bbox;
-  Cell( const Vector& min, const Vector& max )
-  { 
+   std::list< entity* > m_inhabitants;
+
+   AABoundingBox m_bbox;
+   Cell( const Vector& min, const Vector& max )
+   { 
       m_bbox.min = min;
       m_bbox.max = max;
-  }
+   }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -38,6 +41,8 @@ struct Cell
 template< class entity >
 class CellSpacePartition
 {
+   DECLARE_ALLOCATOR( CellSpacePartition, AM_ALIGNED_16 );
+
 private:
    std::vector< Cell< entity > >      m_cells;
 

@@ -15,6 +15,7 @@ class RenderableTexture;
 
 class RPTextureNode : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPTextureNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

@@ -13,6 +13,7 @@ class MSBoolOutput;
 
 class MNBool : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNBool, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

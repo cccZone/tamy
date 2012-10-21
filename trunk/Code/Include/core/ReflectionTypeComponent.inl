@@ -607,7 +607,7 @@ void TMemberField< Array< T > >::load( void* object, InStream& stream ) const
    // make place in the array
    if ( object )
    {
-      dataPtr->allocate( count );
+      dataPtr->resizeWithoutInitializing( count );
    }
 
    // deserialize the entries

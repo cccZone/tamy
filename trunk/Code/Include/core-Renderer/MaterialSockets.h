@@ -17,6 +17,7 @@ typedef GBNodeOutput< MaterialNode > MSOutput;
 
 class MSFloatInput : public TGBNodeInput< MaterialNode, float >
 {
+   DECLARE_ALLOCATOR( MSFloatInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -28,6 +29,7 @@ public:
 
 class MSFloatOutput : public TGBNodeOutput< MaterialNode, float >
 {
+   DECLARE_ALLOCATOR( MSFloatOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -41,6 +43,7 @@ public:
 
 class MSMatrixInput : public TGBNodeInput< MaterialNode, Matrix >
 {
+   DECLARE_ALLOCATOR( MSMatrixInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -52,6 +55,7 @@ public:
 
 class MSMatrixOutput : public TGBNodeOutput< MaterialNode, Matrix >
 {
+   DECLARE_ALLOCATOR( MSMatrixOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -65,6 +69,7 @@ public:
 
 class MSTextureInput : public TGBNodePtrInput< MaterialNode, ShaderTexture >
 {
+   DECLARE_ALLOCATOR( MSTextureInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -76,6 +81,7 @@ public:
 
 class MSTextureOutput : public TGBNodePtrOutput< MaterialNode, ShaderTexture >
 {
+   DECLARE_ALLOCATOR( MSTextureOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -90,6 +96,7 @@ public:
 
 class MSVec4Input : public TGBNodeInput< MaterialNode, Vector >
 {
+   DECLARE_ALLOCATOR( MSVec4Input, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -101,6 +108,7 @@ public:
 
 class MSVec4Output : public TGBNodeOutput< MaterialNode, Vector >
 {
+   DECLARE_ALLOCATOR( MSVec4Output, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -114,6 +122,7 @@ public:
 
 class MSBoolInput : public TGBNodeInput< MaterialNode, bool >
 {
+   DECLARE_ALLOCATOR( MSBoolInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -125,6 +134,7 @@ public:
 
 class MSBoolOutput : public TGBNodeOutput< MaterialNode, bool >
 {
+   DECLARE_ALLOCATOR( MSBoolOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -138,6 +148,7 @@ public:
 
 class MSIntInput : public TGBNodeInput< MaterialNode, int >
 {
+   DECLARE_ALLOCATOR( MSIntInput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:
@@ -149,6 +160,7 @@ public:
 
 class MSIntOutput : public TGBNodeOutput< MaterialNode, int >
 {
+   DECLARE_ALLOCATOR( MSIntOutput, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:

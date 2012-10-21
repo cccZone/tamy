@@ -12,6 +12,8 @@
  */
 class RenderableTexture : public ShaderTexture
 {
+   DECLARE_ALLOCATOR( RenderableTexture, AM_DEFAULT );
+
 private:
    Texture*    m_texture;
 
@@ -31,9 +33,9 @@ public:
    // -------------------------------------------------------------------------
    unsigned int getWidth() const;
    unsigned int getHeight() const;
-   ShaderParam< EffectShader >* createEffectShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName );
-   ShaderParam< PixelShader >* createPixelShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName );
-   ShaderParam< VertexShader >* createVertexShaderTextureSetter( MemoryPoolAllocator& allocator, const IDString& paramName );
+   ShaderParam< EffectShader >* createEffectShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName );
+   ShaderParam< PixelShader >* createPixelShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName );
+   ShaderParam< VertexShader >* createVertexShaderTextureSetter( MemoryPoolAllocator* allocator, const IDString& paramName );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

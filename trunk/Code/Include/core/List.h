@@ -4,6 +4,7 @@
 #define _LIST_H
 
 #include "core/DefaultAllocator.h"
+#include "core/MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,28 +15,19 @@
 template< typename T, typename TAllocator = DefaultAllocator >
 class List
 {
+   DECLARE_ALLOCATOR( List, AM_DEFAULT );
+
 private:
    struct Elem
    {
+      DECLARE_ALLOCATOR( Elem, AM_DEFAULT );
+
       T        m_element;
       Elem*    m_nextElem;
       Elem*    m_prevElem;
 
       Elem( T element ) : m_element( element ), m_nextElem( NULL ), m_prevElem( NULL ) {}
       ~Elem() { m_nextElem = NULL; m_prevElem = NULL; }
-
-      // ----------------------------------------------------------------------
-      // Placement allocation operators
-      // ----------------------------------------------------------------------
-      void* operator new( size_t size, TAllocator& allocator );
-      void operator delete( void* ptr, TAllocator& allocator );
-
-   private:
-      // ----------------------------------------------------------------------
-      // Disabled regular allocation operators
-      // ----------------------------------------------------------------------
-      void* operator new( size_t size );
-      void operator delete( void* ptr );
    };
 
    TAllocator*    m_defaultAllocator;

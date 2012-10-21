@@ -1,7 +1,8 @@
-#pragma once
-
 /// @file   Engine\BTNode.h
 /// @brief  behavior tree node abstract
+#pragma once
+
+#include "core/MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,6 +31,8 @@ enum ExecutionState
 */
 class BTNode
 {
+   DECLARE_ALLOCATOR( BTNode, AM_DEFAULT );
+
 private:
    BTPrecondition* m_precondition;
 

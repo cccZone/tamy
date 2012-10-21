@@ -23,6 +23,7 @@ class SingletonsManager;
  */
 class Texture : public Resource, public RenderResource, public UniqueObject< Texture >
 {
+   DECLARE_ALLOCATOR( Texture, AM_DEFAULT );
    DECLARE_RESOURCE()
 
 private:

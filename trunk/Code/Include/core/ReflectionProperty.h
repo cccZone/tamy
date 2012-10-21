@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "core\MemoryRouter.h"
 #include "core\types.h"
 #include "core\RefPtr.h"
 #include "core\Array.h"
@@ -29,6 +30,8 @@ class ReflectionType;
  */
 class ReflectionProperty
 {
+   DECLARE_ALLOCATOR( ReflectionProperty, AM_DEFAULT );
+
 private:
    ReflectionObject*                m_observer;
    std::string                      m_name;
@@ -153,6 +156,8 @@ protected:
 template< typename T >
 class TReflectionProperty : public ReflectionProperty
 {
+   DECLARE_ALLOCATOR( TReflectionProperty, AM_DEFAULT );
+
 private:
    T*             m_val;
 
@@ -188,6 +193,8 @@ public:
 template< typename T >
 class TReflectionProperty< T* > : public ReflectionProperty
 {
+   DECLARE_ALLOCATOR( TReflectionProperty, AM_DEFAULT );
+
 private:
    T** m_val;
 
@@ -223,6 +230,8 @@ public:
 template< typename T >
 class TReflectionProperty< TRefPtr< T > > : public ReflectionProperty
 {
+   DECLARE_ALLOCATOR( TReflectionProperty, AM_DEFAULT );
+
 private:
    TRefPtr< T >*  m_val;
    T*             m_tmpVal;
@@ -259,6 +268,8 @@ public:
  */
 class ReflectionPropertyArray : public ReflectionProperty
 {
+   DECLARE_ALLOCATOR( ReflectionPropertyArray, AM_DEFAULT );
+
 private:
    std::string             m_emptyStr;
 
@@ -297,6 +308,8 @@ public:
 template< typename T >
 class TReflectionProperty< std::vector< T* > > : public ReflectionPropertyArray
 {
+   DECLARE_ALLOCATOR( TReflectionProperty, AM_DEFAULT );
+
 private:
    std::vector<T*>*     m_val;
 
@@ -337,6 +350,8 @@ public:
 template< typename T >
 class TReflectionProperty< std::vector< TRefPtr< T > > > : public ReflectionPropertyArray
 {
+   DECLARE_ALLOCATOR( TReflectionProperty, AM_DEFAULT );
+
 private:
    std::vector< TRefPtr< T > >*     m_val;
    std::vector< T* >                m_tmpVal;
@@ -378,6 +393,8 @@ public:
 template< typename T >
 class TReflectionProperty< Array< T* > > : public ReflectionPropertyArray
 {
+   DECLARE_ALLOCATOR( TReflectionProperty, AM_DEFAULT );
+
 private:
    Array<T*>*     m_val;
 
@@ -418,6 +435,8 @@ public:
 template< typename T >
 class TReflectionProperty< Array< TRefPtr< T > > > : public ReflectionPropertyArray
 {
+   DECLARE_ALLOCATOR( TReflectionProperty, AM_DEFAULT );
+
 private:
    Array< TRefPtr< T > >*     m_val;
    Array< T* >                m_tmpVal;
@@ -459,6 +478,8 @@ public:
 template< typename T >
 class TEditableReflectionProperty
 {
+   DECLARE_ALLOCATOR( TEditableReflectionProperty, AM_DEFAULT );
+
 private:
    ReflectionProperty*   m_property;
 

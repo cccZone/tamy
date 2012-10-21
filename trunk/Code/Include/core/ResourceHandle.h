@@ -5,8 +5,9 @@
 #define _RESOURCE_HANDLE_H
 
 #include <string>
-#include "core/ReflectionObject.h"
-#include "core/RefPtr.h"
+#include "core\MemoryRouter.h"
+#include "core\ReflectionObject.h"
+#include "core\RefPtr.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -20,6 +21,7 @@ class Resource;
  */
 class ResourceObject : public ReflectionObject
 {
+   DECLARE_ALLOCATOR( ResourceObject, AM_DEFAULT );
    DECLARE_CLASS()
 
 private:
@@ -74,6 +76,7 @@ protected:
  */
 class ResourceHandle : public ReflectionObject
 {
+   DECLARE_ALLOCATOR( ResourceHandle, AM_DEFAULT );
    DECLARE_CLASS()
 
 protected:
@@ -102,6 +105,8 @@ public:
 template< typename T >
 class TResourceHandle : public ResourceHandle
 {
+   DECLARE_ALLOCATOR( TResourceHandle, AM_DEFAULT );
+
 public:
    /**
     * Constructor.

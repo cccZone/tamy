@@ -33,6 +33,8 @@ struct Viewport
  */
 class RCSetViewport : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCSetViewport, AM_DEFAULT );
+
 private:
    Viewport    m_viewport;
 
@@ -59,6 +61,8 @@ public:
  */
 class RCResetViewport : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCResetViewport, AM_DEFAULT );
+
 public:
    // -------------------------------------------------------------------------
    // RenderCommand implementation

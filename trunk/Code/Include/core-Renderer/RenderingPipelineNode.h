@@ -20,6 +20,7 @@ class RenderingPipelineTransaction;
  */
 class RenderingPipelineNode : public ResourceObject, public GraphBuilderNode< RenderingPipelineNode >
 {
+   DECLARE_ALLOCATOR( RenderingPipelineNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 public:

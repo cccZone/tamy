@@ -1,3 +1,5 @@
+/// @file   core-Renderer\OverlayRenderingMechanism.h
+/// @brief   this rendering mechanism allows to render screen overlay elements (2d elements with some text etc. - like huds...)
 #pragma once
 
 #include "core-Renderer\RenderingMechanism.h"
@@ -15,6 +17,8 @@ class Overlay;
  */
 class OverlayRenderingMechanism : public RenderingMechanism
 {
+   DECLARE_ALLOCATOR( OverlayRenderingMechanism, AM_DEFAULT );
+
 private:
    Overlay* m_overlay;
 

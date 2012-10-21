@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\AABoundingBox.h"
 #include "core\Assert.h"
 #include "core\CollisionTests.h"
@@ -24,7 +25,7 @@ AABoundingBox::AABoundingBox( const Vector& _min, const Vector& _max )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AABoundingBox::setExpanded( const AABoundingBox& bounds, float multiplier )
+void AABoundingBox::setExpanded( const AABoundingBox& bounds, const FastFloat& multiplier )
 {
    min.setMul( bounds.min, multiplier );
    max.setMul( bounds.max, multiplier );
@@ -34,13 +35,8 @@ void AABoundingBox::setExpanded( const AABoundingBox& bounds, float multiplier )
 
 void AABoundingBox::add( const AABoundingBox& otherBox, AABoundingBox& unionBox ) const
 {
-   unionBox.min.x = this->min.x < otherBox.min.x ? this->min.x : otherBox.min.x;
-   unionBox.min.y = this->min.y < otherBox.min.y ? this->min.y : otherBox.min.y;
-   unionBox.min.z = this->min.z < otherBox.min.z ? this->min.z : otherBox.min.z;
-
-   unionBox.max.x = this->max.x > otherBox.max.x ? this->max.x : otherBox.max.x;
-   unionBox.max.y = this->max.y > otherBox.max.y ? this->max.y : otherBox.max.y;
-   unionBox.max.z = this->max.z > otherBox.max.z ? this->max.z : otherBox.max.z;
+   unionBox.min.setMin( unionBox.min, min );
+   unionBox.max.setMax( unionBox.max, max );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -54,15 +50,16 @@ void AABoundingBox::getExtents( Vector& outExtents ) const
 
 void AABoundingBox::getCenter( Vector& outCenter ) const
 {
-   outCenter.setAdd( min, max ).mul( 0.5f );
+   outCenter.setAdd( min, max );
+   outCenter.mul( Float_Inv2 );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void AABoundingBox::reset()
 {
-   min.set( FLT_MAX, FLT_MAX, FLT_MAX );
-   max.set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
+   min.setBroadcast( Float_INF );
+   max.setBroadcast( Float_NegINF );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -81,30 +78,38 @@ void AABoundingBox::transform( const Matrix& mtx, BoundingVolume& transformedVol
    AABoundingBox& transformedBox = static_cast< AABoundingBox& >( transformedVolume );
 
    // begin at transform position
-   transformedBox.min = transformedBox.max = mtx.position();
+   transformedBox.min = mtx.position();
+   transformedBox.max = transformedBox.min;
 
    // find extreme points by considering product of 
    // min and max with each component of mtx.
-   float     a, b;
+   float a, b;
+   ALIGN_16 float tMin[4];
+   ALIGN_16 float tMax[4];
+   memset( tMin, 0, sizeof( float ) * 4 );
+   memset( tMax, 0, sizeof( float ) * 4 );
    for( uint j = 0; j < 3; ++j )
    {
       for( uint i = 0; i < 3; ++i )
       {
-         a = mtx.m[i][j] * min.v[i];
-         b = mtx.m[i][j] * max.v[i];
+         a = mtx( i, j ) * min[i];
+         b = mtx( i, j ) * max[i];
 
          if( a < b )
          {
-            transformedBox.min.v[j] += a;
-            transformedBox.max.v[j] += b;
+            tMin[j] += a;
+            tMax[j] += b;
          }
          else
          {
-            transformedBox.min.v[j] += b;
-            transformedBox.max.v[j] += a;
+            tMin[j] += b;
+            tMax[j] += a;
          }
       }
    }
+
+   transformedBox.min.set( tMin );
+   transformedBox.max.set( tMax );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -117,52 +122,55 @@ void AABoundingBox::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-float AABoundingBox::distanceToPlane( const Plane& plane ) const
+const FastFloat AABoundingBox::distanceToPlane( const Plane& plane ) const
 {
    Vector planeNormal;
    plane.getNormal( planeNormal );
 
    Vector nearPoint, farPoint;
 
-   if ( planeNormal.x > 0.0f ) 
+   // <fastfloat.todo> selectors
+   if ( planeNormal[0] > 0.0f ) 
    {
-      farPoint.x = max.x; nearPoint.x = min.x;
+      farPoint[0] = max[0]; nearPoint[0] = min[0];
    }
    else 
    {
-      farPoint.x = min.x; nearPoint.x = max.x;
+      farPoint[0] = min[0]; nearPoint[0] = max[0];
    }
 
-   if ( planeNormal.y > 0.0f ) 
+   if ( planeNormal[1] > 0.0f ) 
    {
-      farPoint.y = max.y; nearPoint.y = min.y;
+      farPoint[1] = max[1]; nearPoint[1] = min[1];
    }
    else 
    {
-      farPoint.y = min.y; nearPoint.y = max.y;
+      farPoint[1] = min[1]; nearPoint[1] = max[1];
    }
-   if (planeNormal.z > 0.0f) 
+
+
+   if (planeNormal[2] > 0.0f) 
    {
-      farPoint.z = max.z; nearPoint.z = min.z;
+      farPoint[2] = max[2]; nearPoint[2] = min[2];
    }
    else 
    {
-      farPoint.z = min.z; nearPoint.z = max.z;
+      farPoint[2] = min[2]; nearPoint[2] = max[2];
    }
 
    if ( plane.dotCoord( nearPoint ) > Float_0 )
    {
       // the box is in front
-      return 1;
+      return Float_1;
    }
    if ( plane.dotCoord( farPoint ) >= Float_0 )
    {
-      return 0;
+      return Float_0;
    }
    else
    {
       // the box is behind
-      return -1;
+      return Float_Minus1;
    }
 }
 
@@ -218,19 +226,10 @@ bool AABoundingBox::hasVolume() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void AABoundingBox::include(const Vector& pt)
+void AABoundingBox::include( const Vector& pt )
 {
-   for (char i = 0; i < 3; ++i)
-   {
-      if ( pt[i] < min[i] ) 
-      {
-         min[i] = pt[i];
-      }
-      if ( pt[i] > max[i] ) 
-      {
-         max[i] = pt[i];
-      }
-   }
+   min.setMin( pt, min );
+   max.setMax( pt, max );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

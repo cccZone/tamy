@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core/RoundBuffer.h"
 #include "core\Assert.h"
 #include <stdio.h>
@@ -5,7 +6,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int RoundBuffer::BUFFER_INFO_CHUNK_SIZE = sizeof( size_t ) + sizeof( void* );
+int RoundBuffer::BUFFER_INFO_CHUNK_SIZE = sizeof( size_t );
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -46,8 +47,6 @@ void* RoundBuffer::alloc( size_t size )
 
       // memorize pointer to the buffer and the chunk size
       size += BUFFER_INFO_CHUNK_SIZE;
-      *(void**)ptr = this;
-      ptr += sizeof( void* );
       *(size_t*)ptr = size;
       ptr += sizeof( size );
 
@@ -89,61 +88,6 @@ void RoundBuffer::dealloc( void* ptr )
    }
 
    --m_allocationsCount;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-RoundBuffer* RoundBuffer::getBufferPtr( void* ptr )
-{
-   RoundBuffer* bufPtr = reinterpret_cast< RoundBuffer* >(*(void**)( (char*)ptr - BUFFER_INFO_CHUNK_SIZE ));
-   if ( !bufPtr )
-   {
-      ASSERT_MSG( false, "Accessing an object that's not allocated in a round buffer" );
-   }
-   return bufPtr;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
-RoundBufferObject::~RoundBufferObject()
-{
-   // get the memory
-   RoundBuffer* bufPtr = RoundBuffer::getBufferPtr( this );
-   if ( bufPtr )
-   {
-      bufPtr->dealloc( this );
-   }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void* RoundBufferObject::operator new( size_t size, RoundBuffer& buffer )
-{
-   return buffer.alloc( size );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RoundBufferObject::operator delete( void* ptr, RoundBuffer& buffer )
-{
-   buffer.dealloc( ptr );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void* RoundBufferObject::operator new( size_t size )
-{
-   ASSERT_MSG( false, "Round buffer object can only be allocated in a round buffer." );
-   return NULL;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
-void RoundBufferObject::operator delete( void* ptr )
-{
-   ASSERT_MSG( false, "Can't delete a round buffer object - you need to delete the buffer that holds it." );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

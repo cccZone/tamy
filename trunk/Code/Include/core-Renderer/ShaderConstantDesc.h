@@ -3,6 +3,7 @@
 #pragma once
 
 #include <string>
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,8 @@ class OutStream;
  */
 struct ShaderConstantDesc
 {
+   DECLARE_ALLOCATOR( ShaderConstantDesc, AM_DEFAULT );
+
    enum Type
    {
       CT_Bool,

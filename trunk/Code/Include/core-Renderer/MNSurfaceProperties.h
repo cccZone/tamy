@@ -15,6 +15,7 @@ class Texture;
 
 class MNSurfaceProperties : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNSurfaceProperties, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseExportStructs.cpp" />
     <ClCompile Include="BlenderSceneExporter.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="PythonInterface.cpp" />
     <ClCompile Include="TamyScene.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\ml-Blender\BaseExportStructs.h" />
     <ClInclude Include="..\..\Include\ml-Blender\BlenderSceneExporter.h" />
     <ClInclude Include="..\..\Include\ml-Blender\DllDefines.h" />
     <ClInclude Include="..\..\Include\ml-Blender\PythonInterface.h" />

@@ -14,7 +14,8 @@ class VertexShader;
 
 class GNVertexShader : public GeometryShaderNode
 {
-DECLARE_CLASS()
+   DECLARE_ALLOCATOR( GNVertexShader, AM_ALIGNED_16 );
+   DECLARE_CLASS()
 
 private:
    // static data

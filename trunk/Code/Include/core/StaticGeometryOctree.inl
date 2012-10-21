@@ -139,13 +139,13 @@ void StaticGeometryOctree<Elem>::addElemToTree( SGElement* element, Sector& subT
 
             if (currElem != NULL)
             {
-               float objPlaneClassification = currElem->elem->getBoundingVolume().distanceToPlane( *planes[planeIdx] );
+               const FastFloat objPlaneClassification = currElem->elem->getBoundingVolume().distanceToPlane( *planes[planeIdx] );
 
-               if (objPlaneClassification < 0)
+               if ( objPlaneClassification < Float_0 )
                {
                   backSplit = currElem;
                }
-               else if (objPlaneClassification == 0)
+               else if ( objPlaneClassification == Float_0 )
                {
                   // object intersects the plane
                   Elem* frontElem = NULL;

@@ -413,10 +413,10 @@ void TamySceneWidget::localToViewport( const Point& screenPt, Vector& viewportPt
    if ( x < 0 ) x = 0;
    if ( y < 0 ) y = 0;
 
-   viewportPt.x = ( x / ( w * 0.5f ) ) - 1;
-   viewportPt.y = 1 - ( y / ( h * 0.5f ) );
-   viewportPt.z = 0.0f;
-   viewportPt.w = 0.0f;
+   viewportPt[0] = ( x / ( w * 0.5f ) ) - 1;
+   viewportPt[1] = 1 - ( y / ( h * 0.5f ) );
+   viewportPt[2] = 0.0f;
+   viewportPt[3] = 0.0f;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

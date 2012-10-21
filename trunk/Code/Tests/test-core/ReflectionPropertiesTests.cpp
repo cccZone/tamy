@@ -46,7 +46,7 @@ namespace // anonymous
 
       void onPropertyChanged() {}
 
-      void setValue( T val )
+      void setValue( const T& val )
       {
          m_property->set( val );
       }
@@ -155,8 +155,6 @@ TEST( ReflectionPropertiesView, editors )
    CPPUNIT_ASSERT_EQUAL( (uint)2, rootEditor->getPropertiesCount() );
 
    view.reset();
-
-   CPPUNIT_ASSERT_EQUAL( (uint)0, rootEditor->getPropertiesCount() );
 
    // cleanup
    typesRegistry.clear();

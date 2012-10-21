@@ -1,10 +1,10 @@
+/// @file   core\StreamBuffer.h
+/// @brief  utility for reading file contents as a c-style array
 #ifndef _STREAM_BUFFER_H
 #define _STREAM_BUFFER_H
 
-/// @file   core\StreamBuffer.h
-/// @brief  utility for reading file contents as a c-style array
-
 #include "core\Filesystem.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -17,6 +17,8 @@
 template<typename T>
 class StreamBuffer
 {
+   DECLARE_ALLOCATOR( StreamBuffer, AM_DEFAULT );
+
 private:
    T* m_buffer;
    std::size_t m_size;

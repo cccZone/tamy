@@ -14,6 +14,8 @@
  */
 class OutArrayStream : public OutStream
 {
+   DECLARE_ALLOCATOR( OutArrayStream, AM_DEFAULT );
+
 private:
    Array< byte >&          m_buffer;
 

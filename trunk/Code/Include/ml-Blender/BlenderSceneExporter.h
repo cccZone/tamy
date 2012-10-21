@@ -5,8 +5,10 @@
 #include <vector>
 #include "core/types.h"
 #include "ml-Blender/TamyMaterial.h"
+#include "ml-Blender/BaseExportStructs.h"
 #include "core/Matrix.h"
 #include "core/FilePath.h"
+#include "core/Array.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -35,7 +37,7 @@ private:
       FilePath       m_path;
    };
 
-   struct ExportedEntity
+   ALIGN_16 struct ExportedEntity
    {
       SpatialEntity*                         m_entity;
       Matrix                                 m_globalMtx;
@@ -53,7 +55,7 @@ private:
 
    std::vector< Texture* >                   m_textures;
    std::vector< MaterialDefinition >         m_materialDefinitions;
-   std::vector< ExportedEntity >             m_exportedEntities;
+   Array< ExportedEntity >                   m_exportedEntities;
    uint                                      m_nextEntityIdx;
    std::vector< Entity* >                    m_worldEntities;
 

@@ -4,10 +4,11 @@
 #define _REFLECTION_SAVER_H
 
 #include <vector>
-#include "core/types.h"
-#include "core/Array.h"
-#include "core/FilePath.h"
-#include "core/ReflectionDependenciesCallback.h"
+#include "core\MemoryRouter.h"
+#include "core\types.h"
+#include "core\Array.h"
+#include "core\FilePath.h"
+#include "core\ReflectionDependenciesCallback.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -32,6 +33,8 @@ class Resource;
  */
 class ReflectionSaver : public ReflectionDependencyMapperCallback
 {
+   DECLARE_ALLOCATOR( ReflectionSaver, AM_DEFAULT );
+
 private:
    OutStream&                                m_outStream;
 

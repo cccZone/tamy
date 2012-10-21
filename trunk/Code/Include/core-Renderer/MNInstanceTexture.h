@@ -17,6 +17,7 @@ class RenderableTexture;
 
 class MNInstanceTexture : public MaterialNode
 {
+   DECLARE_ALLOCATOR( MNInstanceTexture, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

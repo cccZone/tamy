@@ -3,7 +3,7 @@
 #ifndef _BSP_NODE_TREE_H
 #define _BSP_NODE_TREE_H
 
-#include "core\MemoryUtils.h"
+#include "core\MemoryRouter.h"
 #include "core\Array.h"
 #include "core\Plane.h"
 
@@ -22,12 +22,12 @@ struct Vector;
 template <class Polygon>
 class BSPNodeTree
 {
-   ALIGNED_CLASS();
+   DECLARE_ALLOCATOR( BSPNodeTree, AM_ALIGNED_16 );
 
 private:
    struct Node
    {
-      ALIGNED_STRUCT();
+      DECLARE_ALLOCATOR( Node, AM_ALIGNED_16 );
 
       Node* back;
       Node* front;

@@ -1,13 +1,12 @@
-#ifndef _GENERIC_FACTORY_H
-#define _GENERIC_FACTORY_H
-
 /// @file   core\GenericFactory.h
 /// @file   abstract factory pattern
-
+#ifndef _GENERIC_FACTORY_H
+#define _GENERIC_FACTORY_H
 
 #include <map>
 #include <vector>
 #include <algorithm>
+#include "core\MemoryRouter.h"
 #include "core\ReflectionObject.h"
 
 
@@ -38,6 +37,8 @@ public:
 template< class REPR_BASE, class REPR_IMPL, class ENTITY_BASE, class ENTITY_IMPL >
 class TCreator : public Creator< ENTITY_BASE, REPR_BASE >
 {
+   DECLARE_ALLOCATOR( TCreator, AM_DEFAULT );
+
 public:
    REPR_BASE* operator()( ENTITY_BASE* obj )
    {
@@ -54,12 +55,16 @@ public:
 template< class ENTITY, class REPR_BASE >
 class GenericFactory
 {
+   DECLARE_ALLOCATOR( GenericFactory, AM_DEFAULT );
+
 private:
    // -------------------------------------------------------------------------
    // internal types definitions
    // -------------------------------------------------------------------------
    struct TypeDef
    {
+      DECLARE_ALLOCATOR( TypeDef, AM_DEFAULT );
+
       const ReflectionType&               classType;
       Creator<ENTITY, REPR_BASE>*         creator;
 

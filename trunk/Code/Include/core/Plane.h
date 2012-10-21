@@ -6,7 +6,7 @@
 #include <iostream>
 #include "core\MathDataStorage.h"
 #include "core\FastFloat.h"
-#include "core\MemoryUtils.h"
+#include "core\MemoryRouter.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,8 +22,7 @@ struct Vector;
  */
 struct Plane
 {
-   // This class needs to be aligned to a 16-byte boundary, when dynamically allocated
-   ALIGNED_STRUCT();
+   DECLARE_ALLOCATOR( Plane, AM_ALIGNED_16 );
 
    QuadStorage     m_quad;
 
@@ -68,6 +67,13 @@ struct Plane
     */
    inline float& operator[]( int idx );
    inline float operator[]( int idx ) const;
+
+   /**
+    * Returns the specified plane component.
+    *
+    * @param idx
+    */
+   inline const FastFloat getComponent( uint idx ) const;
 
    // -------------------------------------------------------------------------
    // Operations

@@ -3,7 +3,7 @@
 #ifndef _ANIMATION_TIMELINE_H
 #define _ANIMATION_TIMELINE_H
 
-#include "core/MemoryUtils.h"
+#include "core/MemoryRouter.h"
 #include "core/Array.h"
 
 
@@ -22,7 +22,7 @@
 template< typename T, typename LERP >
 class AnimationTimeline
 {
-   ALIGNED_CLASS();
+   DECLARE_ALLOCATOR( AnimationTimeline, AM_ALIGNED_16 );
 
 public:
    Array< float >          m_time;

@@ -21,6 +21,7 @@ class PixelShader;
  */
 class RPPostProcessNode : public RenderingPipelineNode
 {
+   DECLARE_ALLOCATOR( RPPostProcessNode, AM_ALIGNED_16 );
    DECLARE_CLASS()
 
 private:

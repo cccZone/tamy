@@ -3,7 +3,8 @@
 #ifndef _GRAPH_BUILDER_TRANSACTION_H
 #define _GRAPH_BUILDER_TRANSACTION_H
 
-#include "core/GraphBuilder.h"
+#include "core\MemoryRouter.h"
+#include "core\GraphBuilder.h"
 #include <vector>
 
 
@@ -18,6 +19,8 @@
 template< typename Impl, typename NodeType >
 class GraphBuilderTransaction
 {
+   DECLARE_ALLOCATOR( GraphBuilderTransaction, AM_ALIGNED_16 );
+
 protected:
    typedef GBNodeInput< NodeType > TInputSocket;
    typedef GBNodeOutput< NodeType > TOutputSocket;

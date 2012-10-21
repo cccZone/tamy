@@ -13,7 +13,7 @@ TEST( Matrix, fromEulerAngles )
 {
    D3DXMATRIX dxRotMtx;
    Matrix tamyRotMtx;
-   EulerAngles angles, testAngle;
+   EulerAngles testAngle;
 
    for ( float roll = -179.0f; roll <= 179.0f; roll += 15.0f )
    {
@@ -40,24 +40,24 @@ TEST( Matrix, vectorTransformation )
 
    // translations
    m.setTranslation( Vector( 1, 2, 3 ) );
-   m.transform( Vector::ZERO, result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(2.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(3.f, result.z, 1e-3);
+   m.transform( Vector( 0, 0, 0 ), result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(2.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(3.f, result[2], 1e-3);
 
    m.transform( Vector( 3, 2, 1 ), result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(4.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(4.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(4.f, result.z, 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(4.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(4.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(4.f, result[2], 1e-3);
 
    // rotations
    EulerAngles angles;
    angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
    m.setRotation( angles );
-   m.transform( Vector::OZ, result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.z, 1e-3);
+   m.transform( Vector( 0, 0, 1 ), result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[2], 1e-3);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -114,16 +114,16 @@ TEST( Matrix, transformingSimpleCoordinate )
    // this transform will first translate a vector by ( 1, 2, 3 ) and then rotate it clockwise by 90 degrees
 
    D3DXVECTOR3 dxVecTransformed;
-   D3DXVec3TransformCoord( &dxVecTransformed, ( const D3DXVECTOR3* )&Vector::OZ, ( const D3DXMATRIX* )&transformMtx );
+   D3DXVec3TransformCoord( &dxVecTransformed, ( const D3DXVECTOR3* )&Quad_0010, ( const D3DXMATRIX* )&transformMtx );
 
    Vector tamyVecTransformed;
-   transformMtx.transform( Vector::OZ, tamyVecTransformed );
+   transformMtx.transform( Vector( Quad_0010 ), tamyVecTransformed );
 
    COMPARE_VEC( dxVecTransformed, tamyVecTransformed );
 
-   CPPUNIT_ASSERT_DOUBLES_EQUAL( 4.f, tamyVecTransformed.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(2.f, tamyVecTransformed.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.f, tamyVecTransformed.z, 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL( 4.f, tamyVecTransformed[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(2.f, tamyVecTransformed[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.f, tamyVecTransformed[2], 1e-3);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -139,16 +139,16 @@ TEST( Matrix, transformingSimpleNormal )
       mtx.setRotation( angles );
 
       Vector tamyNormalTransformed;
-      mtx.transformNorm( Vector::OX, tamyNormalTransformed );
+      mtx.transformNorm( Quad_1000, tamyNormalTransformed );
 
       D3DXVECTOR3 dxNormalTransformed;
-      D3DXVec3TransformNormal( &dxNormalTransformed, ( const D3DXVECTOR3* )&Vector::OX, ( const D3DXMATRIX* )&mtx );
+      D3DXVec3TransformNormal( &dxNormalTransformed, ( const D3DXVECTOR3* )&Quad_1000, ( const D3DXMATRIX* )&mtx );
 
       COMPARE_VEC( dxNormalTransformed, tamyNormalTransformed );
 
-      CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, tamyNormalTransformed.x, 1e-3 );
-      CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, tamyNormalTransformed.y, 1e-3 );
-      CPPUNIT_ASSERT_DOUBLES_EQUAL( -1.f, tamyNormalTransformed.z, 1e-3 );
+      CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, tamyNormalTransformed[0], 1e-3 );
+      CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, tamyNormalTransformed[1], 1e-3 );
+      CPPUNIT_ASSERT_DOUBLES_EQUAL( -1.f, tamyNormalTransformed[2], 1e-3 );
    }
 
    // translation
@@ -156,16 +156,16 @@ TEST( Matrix, transformingSimpleNormal )
       mtx.setTranslation( Vector( 0, 0, 10 ) );
 
       Vector tamyNormalTransformed;
-      mtx.transformNorm( Vector::OX, tamyNormalTransformed );
+      mtx.transformNorm( Quad_1000, tamyNormalTransformed );
 
       D3DXVECTOR3 dxNormalTransformed;
-      D3DXVec3TransformNormal( &dxNormalTransformed, ( const D3DXVECTOR3* )&Vector::OX, ( const D3DXMATRIX* )&mtx );
+      D3DXVec3TransformNormal( &dxNormalTransformed, ( const D3DXVECTOR3* )&Quad_1000, ( const D3DXMATRIX* )&mtx );
 
       COMPARE_VEC( dxNormalTransformed, tamyNormalTransformed );
 
-      CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.f, tamyNormalTransformed.x, 1e-3 );
-      CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, tamyNormalTransformed.y, 1e-3 );
-      CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, tamyNormalTransformed.z, 1e-3 );
+      CPPUNIT_ASSERT_DOUBLES_EQUAL( 1.f, tamyNormalTransformed[0], 1e-3 );
+      CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, tamyNormalTransformed[1], 1e-3 );
+      CPPUNIT_ASSERT_DOUBLES_EQUAL( 0.f, tamyNormalTransformed[2], 1e-3 );
    }
 }
 
@@ -179,27 +179,31 @@ TEST( Matrix, transformingCoordinates )
    EulerAngles angles;
 
    angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
-   mtx.setRotation( angles).transform( Vector::OZ, result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.z, 1e-3);
+   mtx.setRotation( angles);
+   mtx.transform( Quad_0010, result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[2], 1e-3);
 
    angles.set( FastFloat::fromFloat( -90.0f ), Float_0, Float_0 );
-   mtx.setRotation( angles ).transform( Vector::OZ, result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.z, 1e-3);
+   mtx.setRotation( angles ); 
+   mtx.transform( Quad_0010, result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[2], 1e-3);
 
    angles.set( Float_0, FastFloat::fromFloat( 90.0f ), Float_0 );
-   mtx.setRotation( angles ).transform( Vector::OY, result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.z, 1e-3);
+   mtx.setRotation( angles ); 
+   mtx.transform( Quad_0100, result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result[2], 1e-3);
 
-   mtx.setTranslation( Vector(1, 2, 3) ).transform( Vector( 10, 20, 30 ), result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(11.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(22.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(33.f, result.z, 1e-3);
+   mtx.setTranslation( Vector(1, 2, 3) );
+   mtx.transform( Vector( 10, 20, 30 ), result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(11.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(22.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(33.f, result[2], 1e-3);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -211,38 +215,44 @@ TEST( Matrix, fromVectorAngle )
    EulerAngles angles;
 
    angles.set( FastFloat::fromFloat( 90.0f ), Float_0, Float_0 );
-   mtx.setRotation( angles ).transform( Vector::OZ, result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.z, 1e-3);
+   mtx.setRotation( angles );
+   mtx.transform( Quad_0010, result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[2], 1e-3);
 
    angles.set( FastFloat::fromFloat( -90.0f ), Float_0, Float_0 );
-   mtx.setRotation( angles ).transform( Vector::OZ, result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.z, 1e-3);
+   mtx.setRotation( angles );
+   mtx.transform( Quad_0010, result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(-1.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[2], 1e-3);
 
    angles.set( Float_0, FastFloat::fromFloat( 90.0f ), Float_0 );
-   mtx.setRotation( angles ).transform( Vector::OY, result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result.z, 1e-3);
+   mtx.setRotation( angles );
+   mtx.transform( Quad_0100, result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(0.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(1.f, result[2], 1e-3);
 
-   mtx.setTranslation( Vector(1, 2, 3) ).transform( Vector( 10, 20, 30 ), result );
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(11.f, result.x, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(22.f, result.y, 1e-3);
-   CPPUNIT_ASSERT_DOUBLES_EQUAL(33.f, result.z, 1e-3);
+   mtx.setTranslation( Vector(1, 2, 3) );
+   mtx.transform( Vector( 10, 20, 30 ), result );
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(11.f, result[0], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(22.f, result[1], 1e-3);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(33.f, result[2], 1e-3);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TEST( Matrix, directAccessToVectorComponents )
 {
-   Matrix mtx(
-       1,  2,  3,  4,
-       5,  6,  7,  8,
-       9, 10, 11, 12,
-      13, 14, 15, 16 );
+   const ALIGN_16 float mtxCoeffs[16] = { 1,  2,  3,  4,
+      5,  6,  7,  8,
+      9, 10, 11, 12,
+      13, 14, 15, 16 };
+
+   Matrix mtx;
+   mtx.set( mtxCoeffs );
 
    Vector expectedSideVec( 1, 2, 3, 4 );
    Vector expectedUpVec( 5, 6, 7, 8 );
@@ -288,18 +298,25 @@ TEST( Matrix, invertingMatrix )
 
 TEST( Matrix, transposingMatrix )
 {
-   Matrix mtx(
-      1,  2,  3,  4,
-      5,  6,  7,  8,
-      9, 10, 11, 12,
-      13, 14, 15, 16 );
+   Matrix mtx, mtxExpected;
+   mtx.set( 1,  2,  3,  4,
+            5,  6,  7,  8,
+            9, 10, 11, 12,
+            13, 14, 15, 16 );
+
+   mtxExpected.set( 1, 5, 9, 13,
+            2, 6, 10, 14,
+            3, 7, 11, 15,
+            4, 8, 12, 16 );
 
    Matrix tamyTransposedMtx;
    tamyTransposedMtx.setTransposed( mtx );
 
-   D3DXMATRIX dxTransposedMtx;
+   D3DXMATRIX dxTransposedMtx = ( const D3DXMATRIX& )mtx;
+   const Vector& side = mtx.sideVec();
    D3DXMatrixTranspose( &dxTransposedMtx, ( const D3DXMATRIX* )&mtx );
 
+   COMPARE_MTX( mtxExpected, tamyTransposedMtx );
    COMPARE_MTX( dxTransposedMtx, tamyTransposedMtx );
 
    // now check the self-inverted matrix
@@ -340,7 +357,7 @@ TEST( Matrix, setFromQuaternion )
    Vector arbitraryAxis( 0.3f, 0.5f, -0.2f );
    arbitraryAxis.normalize();
 
-   Vector axis[] = { Vector::OX, Vector::OY, Vector::OZ, Vector::OX_NEG, Vector::OY_NEG, Vector::OZ_NEG, arbitraryAxis };
+   Vector axis[] = { Vector( Quad_1000 ), Vector( Quad_0100 ), Vector( Quad_0010 ), Vector( Quad_Neg_1000 ), Vector( Quad_Neg_0100 ), Vector( Quad_Neg_0010 ), arbitraryAxis };
    int axisCount = 7;
 
    Quaternion q;
@@ -352,7 +369,7 @@ TEST( Matrix, setFromQuaternion )
    {
       for ( float angle = -179.0f; angle <= 179.0f; angle += 1.0f )
       {
-         q.setAxisAngle( axis[axisIdx], DEG2RAD( angle ) );
+         q.setAxisAngle( axis[axisIdx], FastFloat::fromFloat( DEG2RAD( angle ) ) );
 
          // test if the matrix generated by our method is the same as the one generated by DirectX
          tamyMtx.setRotation( q );

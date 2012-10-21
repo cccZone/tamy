@@ -25,6 +25,8 @@ enum MaterialColor
  */
 class RCSetFixedMaterial  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCSetFixedMaterial, AM_DEFAULT );
+
 private:
    MaterialColor  m_materialComponent;
    Color          m_color;
@@ -51,6 +53,8 @@ public:
  */
 class RCSetAmbientColor  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCSetAmbientColor, AM_DEFAULT );
+
 private:
    Color       m_color;
 
@@ -75,6 +79,8 @@ public:
  */
 class RCSetZBuffer  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCSetZBuffer, AM_DEFAULT );
+
 private:
    bool           m_performTest;
    bool           m_enableWrite;
@@ -102,6 +108,8 @@ public:
  */
 class RCEnableLighting  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCEnableLighting, AM_DEFAULT );
+
 private:
    bool           m_enable;
 
@@ -134,6 +142,8 @@ enum GeometryFillMode
  */
 class RCSetFillMode  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCSetFillMode, AM_DEFAULT );
+
 private:
    GeometryFillMode       m_fillMode;
 
@@ -166,6 +176,8 @@ enum SourceVertexColor
  */
 class RCSetColorSource  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCSetColorSource, AM_DEFAULT );
+
 private:
    MaterialColor              m_materialColor;
    SourceVertexColor          m_sourceVertexColor;
@@ -192,6 +204,8 @@ public:
  */
 class RCSetVertexDeclaration  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCSetVertexDeclaration, AM_DEFAULT );
+
 private:
    ulong                      m_vertexDeclaration;
 
@@ -216,6 +230,8 @@ public:
  */
 class RCSetWorldMatrix  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCSetWorldMatrix, AM_DEFAULT );
+
 private:
    Matrix                      m_mtx;
 
@@ -240,6 +256,8 @@ public:
  */
 class RCSetCameraMatrices  : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCSetCameraMatrices, AM_DEFAULT );
+
 private:
    Matrix                      m_viewMtx;
    Matrix                      m_projectionMtx;
@@ -266,6 +284,8 @@ public:
  */
 class RCBeginScene : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCBeginScene, AM_DEFAULT );
+
 public:
    // -------------------------------------------------------------------------
    // RenderCommand implementation
@@ -280,6 +300,8 @@ public:
  */
 class RCEndScene : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCEndScene, AM_DEFAULT );
+
 public:
    // -------------------------------------------------------------------------
    // RenderCommand implementation
@@ -294,6 +316,8 @@ public:
  */
 class RCClearDepthBuffer : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCClearDepthBuffer, AM_DEFAULT );
+
 public:
    // -------------------------------------------------------------------------
    // RenderCommand implementation
@@ -305,6 +329,8 @@ public:
 
 class RCStateTest : public RenderCommand
 {
+   DECLARE_ALLOCATOR( RCStateTest, AM_DEFAULT );
+
 public:
    bool        m_zTest;
    bool        m_zWrite;

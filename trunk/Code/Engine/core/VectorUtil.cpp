@@ -1,3 +1,4 @@
+#include "core.h"
 #include "core\VectorUtil.h"
 #include "core\Vector.h"
 #include <math.h>
@@ -13,9 +14,9 @@ void VectorUtil::calculatePerpendicularVector( const Vector& inVec, Vector& outP
    int ok1 = 1;
    int ok2 = 2;
 
-   float a0 = abs( inVec.x );
-   float a1 = abs( inVec.y );
-   float a2 = abs( inVec.z );
+   float a0 = abs( inVec[0] );
+   float a1 = abs( inVec[1] );
+   float a2 = abs( inVec[2] );
 
    // sort the indices to make min index point to the smallest
    if( a1 < a0 )
@@ -31,7 +32,7 @@ void VectorUtil::calculatePerpendicularVector( const Vector& inVec, Vector& outP
       min = 2;
    }
 
-   outPerpVec = Vector::ZERO;
+   outPerpVec.setZero();
    outPerpVec[ok1] = inVec[ok2];
    outPerpVec[ok2] = -inVec[ok1];
 }

@@ -3,8 +3,10 @@
 #ifndef _VECTOR_H
 #define _VECTOR_H
 
+#include "core/MemoryRouter.h"
 #include "core/MathDataStorage.h"
 #include "core/TVector.h"
+#include "core/FastFloat.h"
 #include <iostream>
 
 
@@ -19,11 +21,17 @@ struct FastFloat;
 /**
  * Result of a comparison of two vectors.
  */
-struct VectorComparison
-{
-   bool        b[4];
-};
+#ifdef _USE_SIMD
 
+   typedef __m128 VectorComparison;
+
+#else
+   struct VectorComparison
+   {
+      bool        b[4];
+   };
+
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -45,8 +53,38 @@ enum QuadMathConstants
 
    QuadMathConst_MAX
 };
+extern QuadStorage          g_quadConstants[QuadMathConst_MAX];
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum VecConstants
+{
+   VecConstants_OX,
+   VecConstants_OY,
+   VecConstants_OZ,
+   VecConstants_OW,
+   VecConstants_NEG_OX,
+   VecConstants_NEG_OY,
+   VecConstants_NEG_OZ,
+   VecConstants_NEG_OW,
+   VecConstants_ZERO,
+   VecConstants_ONE,
+
+   VecConstants_MAX
+};
 struct Vector;
-extern Vector          g_quadConstants[QuadMathConst_MAX];
+extern Vector          q_vecConstants[VecConstants_MAX];
+
+#define Vector_OX       q_vecConstants[ VecConstants_OX ]
+#define Vector_OY       q_vecConstants[ VecConstants_OY ]
+#define Vector_OZ       q_vecConstants[ VecConstants_OZ ]
+#define Vector_OW       q_vecConstants[ VecConstants_OW ]
+#define Vector_NEG_OX   q_vecConstants[ VecConstants_NEG_OX ]
+#define Vector_NEG_OY   q_vecConstants[ VecConstants_NEG_OY ]
+#define Vector_NEG_OZ   q_vecConstants[ VecConstants_NEG_OZ ]
+#define Vector_NEG_OW   q_vecConstants[ VecConstants_NEG_OW ]
+#define Vector_ZERO     q_vecConstants[ VecConstants_ZERO ]
+#define Vector_ONE     q_vecConstants[ VecConstants_ONE ]
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -55,42 +93,70 @@ extern Vector          g_quadConstants[QuadMathConst_MAX];
  */
 struct Vector
 {
-   union
-   {
-      TVector< 4 > v;
+   DECLARE_ALLOCATOR( Vector, AM_ALIGNED_16 );
 
-      struct 
-      {
-         float x, y, z, w;
-      };
-   };
-
-   // -------------------------------------------------------------------------
-   // Static values
-   // -------------------------------------------------------------------------
-   static Vector     ZERO;
-   static Vector     ONE;
-   static Vector     OX;
-   static Vector     OY;
-   static Vector     OZ;
-   static Vector     OW;
-   static Vector     OX_NEG;
-   static Vector     OY_NEG;
-   static Vector     OZ_NEG;
-   static Vector     OW_NEG;
-
+   QuadStorage       m_quad;
 
    /**
     * Default constructor.
     */
-   Vector();
+   inline Vector();
+
+   /**
+    * @Obsolete
+    *
+    * Creates a vector from 4 float values.
+    *
+    * @param x, y, z, w    coordinates
+    */
+   inline explicit Vector( float x, float y, float z, float w = 0.0f );
 
    /**
     * Constructor.
     *
+    * @param quad
+    */
+   inline Vector( const QuadStorage& quad );
+
+   /**
+    * Resets the vector to the default state.
+    */
+   inline void setZero();
+
+   /**
+    * Creates a vector from 4 float values
+    *
     * @param x, y, z, w    coordinates
     */
-   Vector( float x, float y, float z, float w = 0.0f );
+   inline void set( float x, float y, float z, float w = 0.0f );
+
+   /**
+    * Creates a vector from an array of 4, 16-bytes aligned floats
+    *
+    * @param coords
+    */
+   inline void set( float* coords );
+
+   /**
+    * creates a vector from 4 fast float values
+    *
+    * @param x, y, z, w    coordinates
+    */
+   inline void set( const FastFloat& x, const FastFloat& y, const FastFloat& z, const FastFloat& w = Float_0 );
+
+   /**
+    * Creates a vector from a quad
+    *
+    * @param quad
+    */
+   inline void set( const QuadStorage& quad );
+
+   /**
+    *
+    *  @param val
+    * Sets all vector components to the specified value.
+    */
+   inline void setBroadcast( const FastFloat& val );
 
    // -------------------------------------------------------------------------
    // Operators
@@ -98,41 +164,55 @@ struct Vector
    /**
     * Compares four coordinates of the two vectors.
     */
-   bool equals4( const Vector& rhs ) const;
+   inline bool equals4( const Vector& rhs ) const;
 
    /**
     * Compares three coordinates of the two vectors.
     */
-   bool operator==(const Vector& rhs) const;
-   bool operator!=(const Vector& rhs) const;
+   inline bool operator==(const Vector& rhs) const;
+   inline bool operator!=(const Vector& rhs) const;
+
+   /**
+    * Assignment operator.
+    *
+    * @param rhs
+    */
+   inline void operator=( const Vector& rhs );
+
+   /**
+    * Returns the specified vector component.
+    *
+    * @param idx
+    */
    inline float& operator[]( int idx );
    inline float operator[]( int idx ) const;
 
-   Vector& operator=(const Vector& rhs);
+   /**
+    * Returns the specified vector component.
+    *
+    * @param idx
+    */
+   inline const FastFloat getComponent( uint idx ) const;
 
    // -------------------------------------------------------------------------
    // Operations
    // -------------------------------------------------------------------------
 
    /**
-    * Sets new coordinates on the vector.
-    */
-   Vector& set( float x, float y, float z, float w = 0.0f );
-
-   /**
     * Sets the normalized value of the other vector.
     */
-   Vector& setNormalized( const Vector& vec );
-   Vector& setNormalized( float x, float y, float z );
+   inline void setNormalized( const Vector& vec );
+   inline void setNormalized( float x, float y, float z );
+   inline void setNormalized( const FastFloat& x, const FastFloat& y, const FastFloat& z );
 
    /**
     * Sets individual vector components depending on the specified vector comparison result.
     *
     * @param comparisonResult
     * @param trueVec             if the result for the component is true, a corresponding component from this vector will be selected
-    * @param falseVec            opposite to the aboce
+    * @param falseVec            opposite to the above
     */
-   void setSelect( const VectorComparison& comparisonResult, const Vector& trueVec, const Vector& falseVec );
+   inline void setSelect( const VectorComparison& comparisonResult, const Vector& trueVec, const Vector& falseVec );
 
    /**
     * this = vec * t
@@ -140,7 +220,7 @@ struct Vector
     * @param vec
     * @param t
     */
-   Vector& setMul( const Vector& vec, float t );
+   inline void setMul( const Vector& vec, const FastFloat& t );
 
    /**
     * this = vec1 * vec2 ( component by component )
@@ -148,7 +228,7 @@ struct Vector
     * @param vec1
     * @param vec2
     */
-   Vector& setMul( const Vector& vec1, const Vector& vec2 );
+   inline void setMul( const Vector& vec1, const Vector& vec2 );
 
    /**
     * this = vec1 * t + vec2
@@ -157,7 +237,7 @@ struct Vector
     * @param t
     * @param vec2
     */
-   Vector& setMulAdd( const Vector& vec1, float t, const Vector& vec2 );
+   inline void setMulAdd( const Vector& vec1, const FastFloat& t, const Vector& vec2 );
 
    /**
     * this = vec1 * t + vec2 ( component by component )
@@ -166,7 +246,7 @@ struct Vector
     * @param t
     * @param vec2
     */
-   Vector& setMulAdd( const Vector& vec1, const Vector& t, const Vector& vec2 );
+   inline void setMulAdd( const Vector& vec1, const Vector& t, const Vector& vec2 );
 
    /**
     * this = vec1 / vec2 ( component by component )
@@ -174,7 +254,7 @@ struct Vector
     * @param vec1
     * @param vec2
     */
-   Vector& setDiv( const Vector& vec1, const Vector& vec2 );
+   inline void setDiv( const Vector& vec1, const Vector& vec2 );
 
    /**
     * this = vec1 + vec2
@@ -182,7 +262,7 @@ struct Vector
     * @param vec1
     * @param vec2
     */
-   Vector& setAdd( const Vector& vec1, const Vector& vec2 );
+   inline void setAdd( const Vector& vec1, const Vector& vec2 );
 
    /**
     * this = vec1 - vec2
@@ -190,57 +270,57 @@ struct Vector
     * @param vec1
     * @param vec2
     */
-   Vector& setSub( const Vector& vec1, const Vector& vec2 );
+   inline void setSub( const Vector& vec1, const Vector& vec2 );
 
    /**
     * this = this * t
     * 
     * @param t
     */
-   Vector& mul( float t );
+   inline void mul( const FastFloat& t );
 
    /**
     * this = this * vec ( component by component )
     * 
     * @param vec
     */
-   Vector& mul( const Vector& vec );
+   inline void mul( const Vector& vec );
 
    /**
     * this = this / vec ( component by component )
     * 
     * @param vec
     */
-   Vector& div( const Vector& vec );
+   inline void div( const Vector& vec );
 
    /**
     * this = this  + vec
     * 
     * @param vec
     */
-   Vector& add( const Vector& vec );
+   inline void add( const Vector& vec );
 
    /**
     * this = this - vec
     * 
     * @param vec
     */
-   Vector& sub( const Vector& vec );
+   inline void sub( const Vector& vec );
 
    /**
     * this = this * -1
     */
-   Vector& neg();
+   inline void neg();
 
    /**
     * Normalizes this vector (in place).
     */
-   Vector& normalize();
+   inline void normalize();
 
    /**
     * Calculates the floor of each of the vector's components.
     */
-   Vector& floor();
+   inline void floor();
 
    /**
     * Linearly interpolates a vector between values a and b ( from a to b )
@@ -252,21 +332,21 @@ struct Vector
     * @param b
     * @param t
     */
-   Vector& setLerp( const Vector& a, const Vector& b, const FastFloat& t );
+   inline void setLerp( const Vector& a, const Vector& b, const FastFloat& t );
 
    /**
     * Calculate a dot product with another vector ( taking only 3 coordinates into account ).
     *
     * @param rhs     other vector we want to use in the calculations
     */
-   float dot( const Vector& rhs ) const;
+   inline const FastFloat dot( const Vector& rhs ) const;
 
    /**
     * Calculate a dot product with another vector ( taking all 4 coordinates into account ).
     *
     * @param rhs     other vector we want to use in the calculations
     */
-   float dot4( const Vector& rhs ) const;
+   inline const FastFloat dot4( const Vector& rhs ) const;
 
    /**
     * Creates a vector that's a result of a cross product between the specified vectors.
@@ -274,7 +354,7 @@ struct Vector
     * @param v1
     * @param v2
     */
-   Vector& setCross( const Vector& v1, const Vector& v2 );
+   inline void setCross( const Vector& v1, const Vector& v2 );
 
    /**
     * Calculates a cross product between this and the specified vector and stores
@@ -285,7 +365,7 @@ struct Vector
     *
     * @param rhs
     */
-   Vector& preCross( const Vector& rhs );
+   inline void preCross( const Vector& rhs );
 
    /**
     * Calculates a cross product between this and the specified vector and stores
@@ -298,17 +378,17 @@ struct Vector
     *
     * @param rhs
     */
-   Vector& postCross( const Vector& rhs );
+   inline void postCross( const Vector& rhs );
 
    /**
     * Returns the length of this vector.
     */
-   float length() const;
+   inline const FastFloat length() const;
 
    /**
     * Returns the squared length of this vector.
     */
-   float lengthSq() const;
+   inline const FastFloat lengthSq() const;
 
    /**
     * Checks if the vector is unit-length.
@@ -321,7 +401,7 @@ struct Vector
     * @param N    how many components should be taken into account during the comparison
     */
    template< int N >
-   float getMin() const;
+   const FastFloat getMin() const;
 
    /**
     * Returns a component of the highest value.
@@ -329,7 +409,31 @@ struct Vector
     * @param N    how many components should be taken into account during the comparison
     */
    template< int N >
-   float getMax() const;
+   const FastFloat getMax() const;
+
+   /**
+    * this = ( a > b ) ? a : b )
+    *
+    * @param a
+    * @param b
+    */ 
+   inline void setMax( const Vector& a, const Vector& b );
+
+   /**
+    * this = ( a < b ) ? a : b )
+    *
+    * @param a
+    * @param b
+    */ 
+   inline void setMin( const Vector& a, const Vector& b );
+
+   /**
+    * this = min( minVal, max( a, maxVal ) )
+    *
+    * @param a
+    * @param b
+    */ 
+   inline void setClamped( const Vector& a, const Vector& minVal, const Vector& maxVal );
 
    /**
     * Stores the contents of this vector in the specified raw vector instance.
@@ -371,7 +475,7 @@ struct Vector
     * @param rhs
     * @param outResult
     */
-   void less( const Vector& rhs, VectorComparison& outResult ) const;
+   inline void less( const Vector& rhs, VectorComparison& outResult ) const;
 
    /**
     * Compares two vectors component by component: this <= rhs
@@ -379,7 +483,7 @@ struct Vector
     * @param rhs
     * @param outResult
     */
-   void lessEqual( const Vector& rhs, VectorComparison& outResult ) const;
+   inline void lessEqual( const Vector& rhs, VectorComparison& outResult ) const;
 
    /**
     * Compares two vectors component by component: this > rhs
@@ -387,7 +491,7 @@ struct Vector
     * @param rhs
     * @param outResult
     */
-   void greater( const Vector& rhs, VectorComparison& outResult ) const;
+   inline void greater( const Vector& rhs, VectorComparison& outResult ) const;
 
    /**
     * Compares two vectors component by component: this >= rhs
@@ -395,7 +499,7 @@ struct Vector
     * @param rhs
     * @param outResult
     */
-   void greaterEqual( const Vector& rhs, VectorComparison& outResult ) const;
+   inline void greaterEqual( const Vector& rhs, VectorComparison& outResult ) const;
 
    /**
     * Compares two vectors component by component: this == rhs
@@ -403,7 +507,7 @@ struct Vector
     * @param rhs
     * @param outResult
     */
-   void equal( const Vector& rhs, VectorComparison& outResult ) const;
+   inline void equal( const Vector& rhs, VectorComparison& outResult ) const;
 
    /**
     * Compares two vectors component by component: this != rhs
@@ -411,7 +515,7 @@ struct Vector
     * @param rhs
     * @param outResult
     */
-   void notEqual( const Vector& rhs, VectorComparison& outResult ) const;
+   inline void notEqual( const Vector& rhs, VectorComparison& outResult ) const;
 
    // -------------------------------------------------------------------------
    // Serialization support
