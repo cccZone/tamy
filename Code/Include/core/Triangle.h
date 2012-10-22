@@ -19,7 +19,7 @@ struct Plane;
  * This structure represents a triangle with some basic operations
  * we can perform on it.
  */
-struct Triangle : public BoundingVolume, public SplittableTriangle< Vector >
+ALIGN_16 struct Triangle : public BoundingVolume, public SplittableTriangle< Vector >
 {
    DECLARE_ALLOCATOR( Triangle, AM_ALIGNED_16 );
 

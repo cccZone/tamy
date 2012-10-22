@@ -14,7 +14,7 @@
  * to bound things that should be considered ubiquitous,
  * like directional and ambient lighting
  */
-struct BoundingSpace : public BoundingVolume
+ALIGN_16 struct BoundingSpace : public BoundingVolume
 {
    DECLARE_ALLOCATOR( BoundingSpace, AM_ALIGNED_16 );
 

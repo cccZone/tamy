@@ -4,6 +4,7 @@
 
 #include "core/AABoundingBox.h"
 #include "core/Matrix.h"
+#include "core/MemoryRouter.h"
 #include "core-Renderer/Viewport.h"
 
 
@@ -16,6 +17,8 @@ struct Vector;
 
 struct CascadesConfig
 {
+   DECLARE_ALLOCATOR( CascadesConfig, AM_ALIGNED_16 );
+
    // runtime data
    Camera*           m_activeCamera;
    Matrix            m_lightRotationMtx;
@@ -36,6 +39,8 @@ struct CascadesConfig
 
 struct CascadeStage
 {
+   DECLARE_ALLOCATOR( CascadeStage, AM_ALIGNED_16 );
+
    Viewport             m_viewport;
    AABoundingBox        m_objectsQueryBounds;
    AABoundingBox        m_lightFrustumBounds;

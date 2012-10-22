@@ -10,7 +10,7 @@
 /**
  * The structure describes a sphere bounding an object
  */
-struct BoundingSphere : public BoundingVolume
+ALIGN_16 struct BoundingSphere : public BoundingVolume
 {
    DECLARE_ALLOCATOR( BoundingSphere, AM_ALIGNED_16 );
 

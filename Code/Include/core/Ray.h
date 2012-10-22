@@ -12,7 +12,7 @@
 /**
  * Mathematical representation of a ray.
  */
-struct Ray : public BoundingVolume
+ALIGN_16 struct Ray : public BoundingVolume
 {
    DECLARE_ALLOCATOR( Ray, AM_ALIGNED_16 );
 

@@ -13,6 +13,8 @@ namespace // anonymous
       DECLARE_ALLOCATOR( TestClass, AM_DEFAULT );
    };
 
+   // -------------------------------------------------------------------------
+
    template< typename T >
    struct TemplateTestClass
    {
@@ -22,6 +24,20 @@ namespace // anonymous
       {
          DECLARE_ALLOCATOR( NestedClass, AM_ALIGNED_16 );
       };
+   };
+
+   // -------------------------------------------------------------------------
+
+   struct MisalignedData
+   {
+      DECLARE_ALLOCATOR( MisalignedData, AM_ALIGNED_16 );
+
+      char     m_singleByte;
+
+      ALIGN_16 struct 
+      {
+         float v[4];
+      } m_quad;
    };
 
 } // anonymous
@@ -95,7 +111,8 @@ TEST( MemoryRouter, objectsAllocation )
 
    TestClass* obj = new TestClass();
    CPPUNIT_ASSERT( obj != NULL );
-   CPPUNIT_ASSERT_EQUAL( (ulong)(sizeof( TestClass ) + sizeof(void*)), router.getAllocatedMemorySize() - initialAllocatedMemorySize );
+   ulong expectedSize = MemoryRouter::calcAlignedSize( (ulong)(sizeof( TestClass ) + sizeof(void*)), 16 );
+   CPPUNIT_ASSERT_EQUAL( expectedSize, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
 
    delete obj;
    CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
@@ -116,11 +133,43 @@ TEST( MemoryRouter, objectsPlacement )
    CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
 
    // entire memory was allocated in the specified external pool
-   CPPUNIT_ASSERT_EQUAL( (ulong)(sizeof( TestClass ) + sizeof(void*)), defaultAllocator.getAllocatedMemorySize() );
+   ulong expectedSize = MemoryRouter::calcAlignedSize( (ulong)(sizeof( TestClass ) + sizeof(void*)), 16 );
+   CPPUNIT_ASSERT_EQUAL( expectedSize, defaultAllocator.getAllocatedMemorySize() );
 
    delete obj;
    CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
    CPPUNIT_ASSERT_EQUAL( (ulong)0, defaultAllocator.getAllocatedMemorySize() );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST( MemoryRouter, ensureStaticallyAllocatedMembersAlignment )
+{
+   MisalignedData data;
+
+   int startAddr = (int)&data;
+   int singleByteMemberOffset = (int)&data.m_singleByte - startAddr;
+   int quadOffset = (int)&data.m_quad - startAddr;
+
+   CPPUNIT_ASSERT_EQUAL( 1, (int)sizeof( data.m_singleByte ) );
+   CPPUNIT_ASSERT_EQUAL( 0, singleByteMemberOffset );
+   CPPUNIT_ASSERT_EQUAL( 0, quadOffset % 16 );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+TEST( MemoryRouter, ensureDynamicallyAllocatedMembersAlignment )
+{
+   MisalignedData* data = new MisalignedData();
+
+   int startAddr = (int)data;
+   int singleByteMemberOffset = (int)&data->m_singleByte - startAddr;
+   int quadOffset = (int)&data->m_quad - startAddr;
+
+   CPPUNIT_ASSERT_EQUAL( 0, singleByteMemberOffset );
+   CPPUNIT_ASSERT_EQUAL( 0, quadOffset % 16 );
+
+   delete data;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

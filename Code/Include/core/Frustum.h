@@ -24,7 +24,7 @@ enum PlanesEnum
 /**
  * Frustum representation.
  */
-struct Frustum : public BoundingVolume
+ALIGN_16 struct Frustum : public BoundingVolume
 {
    DECLARE_ALLOCATOR( Frustum, AM_ALIGNED_16 );
 
