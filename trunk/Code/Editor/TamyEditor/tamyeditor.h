@@ -8,8 +8,8 @@
 #include "core.h"
 #include "core\GenericFactory.h"
 #include "ResourceEditor.h"
-#include "core/Delegate.h"
-#include "core/FilePath.h"
+#include "core\Delegate.h"
+#include "core\FilePath.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////

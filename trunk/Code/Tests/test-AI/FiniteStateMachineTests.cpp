@@ -89,6 +89,7 @@ TEST( StateMachine, basicSetupAndUpdates )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< StringController >( "StringController", new TSerializableTypeInstantiator< StringController >() ); 
    typesRegistry.addSerializableType< IdleState >( "IdleState", new TSerializableTypeInstantiator< IdleState >() ); 
    typesRegistry.addSerializableType< WalkState >( "WalkState", new TSerializableTypeInstantiator< WalkState >() ); 
@@ -118,6 +119,7 @@ TEST( StateMachine, transitingBetweenStates )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< StringController >( "StringController", new TSerializableTypeInstantiator< StringController >() ); 
    typesRegistry.addSerializableType< IdleState >( "IdleState", new TSerializableTypeInstantiator< IdleState >() ); 
    typesRegistry.addSerializableType< WalkState >( "WalkState", new TSerializableTypeInstantiator< WalkState >() ); 

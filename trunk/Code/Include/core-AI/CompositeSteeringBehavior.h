@@ -21,6 +21,8 @@ class CompositeSteeringBehavior : public SteeringBehavior
 private:
    struct BehaviorDesc
    {
+      DECLARE_ALLOCATOR( BehaviorDesc, AM_ALIGNED_16 );
+
       SteeringBehavior* behavior;
       FastFloat weight;
 

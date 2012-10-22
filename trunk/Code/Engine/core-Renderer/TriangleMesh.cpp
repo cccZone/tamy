@@ -54,9 +54,11 @@ const BoundingVolume& TriangleMesh::getBoundingVolume()
 void TriangleMesh::calculateBoundingVolume()
 {
    unsigned int verticesCount = m_vertices.size();
+   Vector tmpVec;
    for (unsigned int i = 0; i < verticesCount; ++i)
    {
-      m_boundingVol.include( ( const Vector& )( m_vertices[i].m_coords ) );
+      tmpVec.load( m_vertices[i].m_coords );
+      m_boundingVol.include( tmpVec );
    }
 
    m_boundsDirty = false;

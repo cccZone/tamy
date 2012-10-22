@@ -12,7 +12,7 @@
 /**
  * The structure describes a point volume.
  */
-struct PointVolume : public BoundingVolume
+ALIGN_16 struct PointVolume : public BoundingVolume
 {
    DECLARE_ALLOCATOR( PointVolume, AM_ALIGNED_16 );
 

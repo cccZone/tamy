@@ -18,7 +18,7 @@ struct Plane;
 /**
  * the structure describes an axis aligned bounding box
  */
-struct AABoundingBox : public BoundingVolume
+ALIGN_16 struct AABoundingBox : public BoundingVolume
 {
    DECLARE_ALLOCATOR( AABoundingBox, AM_ALIGNED_16 );
 

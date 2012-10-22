@@ -37,6 +37,7 @@ TEST( SkeletonAnimationController, architecture )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< SpatialEntity >( "SpatialEntity", new TSerializableTypeInstantiator< SpatialEntity >() ); 
    typesRegistry.addSerializableType< Entity >( "Entity", new TSerializableTypeInstantiator< Entity >() ); 
    typesRegistry.addSerializableType< MockNonAnimatedEntity >( "MockNonAnimatedEntity", new TSerializableTypeInstantiator< MockNonAnimatedEntity >() ); 
@@ -123,6 +124,7 @@ TEST( SkeletonAnimationController, trackTimeControl )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< SpatialEntity >( "SpatialEntity", new TSerializableTypeInstantiator< SpatialEntity >() ); 
    typesRegistry.addSerializableType< Entity >( "Entity", new TSerializableTypeInstantiator< Entity >() ); 
    typesRegistry.addSerializableType< MockNonAnimatedEntity >( "MockNonAnimatedEntity", new TSerializableTypeInstantiator< MockNonAnimatedEntity >() ); 
