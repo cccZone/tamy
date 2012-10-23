@@ -10,11 +10,11 @@ unsigned int IRuntimeVar::s_nextId = 0;
 ///////////////////////////////////////////////////////////////////////////////
 
 RuntimeDataBuffer::RuntimeDataBuffer()
-   : INITIAL_SIZE( 64 )
+   : BUFFER_SIZE( 65536 )
    , m_buffer( NULL )
-   , m_size( 0 )
+   , m_endAddress( 0 )
 {
-   m_buffer = (char*)malloc( INITIAL_SIZE );
+   m_buffer = (char*)malloc( BUFFER_SIZE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
