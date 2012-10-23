@@ -4,6 +4,7 @@
 #define _RUNTIME_DATA_H
 
 #include <map>
+#include "core\types.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -52,14 +53,14 @@ private:
 class RuntimeDataBuffer
 {
 private:
-   typedef std::map< unsigned int, unsigned long >     VarsLayout;
+   typedef std::map< uint, ulong >     VarsLayout;
 
 private:
-   const unsigned long        INITIAL_SIZE;
+   const ulong                BUFFER_SIZE;
 
    VarsLayout                 m_varsLayout;
    char*                      m_buffer;
-   unsigned long              m_size;
+   ulong                      m_endAddress;
 
 public:
    RuntimeDataBuffer();

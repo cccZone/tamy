@@ -38,16 +38,12 @@ template< typename T >
 void RuntimeDataBuffer::registerVar( const typename TRuntimeVar< T >& var, const T& defaultVal )
 {
    const int ALIGNMENT = 16;
-   uint size = MemoryUtils::calcAlignedSize( var.getTypeSize(), ALIGNMENT );
-   ulong newSize = m_size + size;
+   ulong newEndAddress = MemoryUtils::calcAlignedSize( m_endAddress + var.getTypeSize(), ALIGNMENT );
 
-   if ( newSize > INITIAL_SIZE )
+   ASSERT_MSG( newEndAddress < BUFFER_SIZE, "Allocate a larger buffer" );
+   if ( newEndAddress >= BUFFER_SIZE )
    {
-      // we've exceeded the initial size of the buffer - which means we must grow it
-      char* newBuf = (char*)malloc( newSize );
-      memcpy( newBuf, m_buffer, m_size );
-      free( m_buffer );
-      m_buffer = newBuf;
+      return;
    }
 
    // initialize the new variable
@@ -58,15 +54,15 @@ void RuntimeDataBuffer::registerVar( const typename TRuntimeVar< T >& var, const
       ASSERT_MSG( false, "This runtime variable has already been registered." );
    }
 
-   ulong alignedAddress = (ulong)MemoryUtils::alignAddress( (void*)m_size, ALIGNMENT );
-   m_varsLayout.insert( std::make_pair( varId, alignedAddress ) );
+   void* addr = (void*)( m_buffer + m_endAddress );
+   void* alignedAddress = MemoryUtils::alignAddress( addr, ALIGNMENT );
+   m_varsLayout.insert( std::make_pair( varId, (ulong)alignedAddress ) );
 
    // initialize the memory 
-   void* addr = (void*)( m_buffer + alignedAddress );
-   new ( addr ) T( defaultVal );
+   new ( alignedAddress ) T( defaultVal );
 
    // store the new size of the data held in the buffer
-   m_size = newSize;
+   m_endAddress = newEndAddress;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -81,7 +77,7 @@ T& RuntimeDataBuffer::operator[]( const typename TRuntimeVar< T >& var )
       ASSERT_MSG( false,  "This runtime variable wasn't registered." );
    }
 
-   char* data = m_buffer + it->second;
+   char* data = (char*)it->second;
    return reinterpret_cast< T& >( *data );
 }
 
@@ -97,7 +93,7 @@ const T& RuntimeDataBuffer::operator[]( const typename TRuntimeVar< T >& var ) c
       ASSERT_MSG( false, "This runtime variable wasn't registered." );
    }
 
-   char* data = m_buffer + it->second;
+   char* data = (char*)it->second;
    return reinterpret_cast< T& >( *data );
 }
 

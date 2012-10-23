@@ -102,7 +102,8 @@ void UnconstrainedMotionController::rotate( float pitch, float yaw )
          currPitchDot.setClamped( currPitchDot, Float_Minus1, Float_1 );
          currPitchDot.acos();
 
-         FastFloat dot = lookVec.dot( Quad_0100 );
+         FastFloat dot;
+         dot.setNeg( lookVec.dot( Quad_0100 ) );
          currPitch.setFlipSign( currPitchDot, dot );
          currPitch.mul( Float_Rad2Deg );
       }

@@ -86,21 +86,15 @@ TEST(UnconstrainedMotionController, changingPitch)
 
    // let's put the controller into play...
    UnconstrainedMotionController controller(node);
-   controller.rotate(-90, 0, 0); // let's change the pitch by 90 degrees
+   controller.rotate(-89, 0, 0); // let's change the pitch by 90 degrees
 
    // the node's global matrix should now point to the position we just set
    Matrix expectedGlobalMtx; expectedGlobalMtx.setIdentity();
-   expectedGlobalMtx( 1, 0 ) = 0; expectedGlobalMtx( 1, 1 ) = 0; expectedGlobalMtx( 1, 2 ) = -1;
-   expectedGlobalMtx( 2, 0 ) = 0; expectedGlobalMtx( 2, 1 ) = 1; expectedGlobalMtx( 2, 2 ) = 0;
+   expectedGlobalMtx( 1, 0 ) = 0; expectedGlobalMtx( 1, 1 ) = 0.0174525f; expectedGlobalMtx( 1, 2 ) = -0.999848f;
+   expectedGlobalMtx( 2, 0 ) = 0; expectedGlobalMtx( 2, 1 ) = 0.999848f; expectedGlobalMtx( 2, 2 ) = 0.0174525f;
 
    Matrix actualGlobalMtx = node.getGlobalMtx();
-   for (int col = 0; col < 4; col++)
-   {
-      for (int row = 0; row < 4; row++)
-      {
-         CPPUNIT_ASSERT_DOUBLES_EQUAL(expectedGlobalMtx( col, row ), actualGlobalMtx( col, row ), 0.01);
-      }
-   }
+   COMPARE_MTX( expectedGlobalMtx, actualGlobalMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -119,13 +113,7 @@ TEST(UnconstrainedMotionController, changingYaw)
    expectedGlobalMtx( 2, 0 ) = 1; expectedGlobalMtx( 2, 1 ) = 0; expectedGlobalMtx( 2, 2 ) = 0;
 
    Matrix actualGlobalMtx = node.getGlobalMtx();
-   for (int col = 0; col < 4; col++)
-   {
-      for (int row = 0; row < 4; row++)
-      {
-         CPPUNIT_ASSERT_DOUBLES_EQUAL(expectedGlobalMtx( col, row ), actualGlobalMtx( col, row ), 0.01);
-      }
-   }
+   COMPARE_MTX( expectedGlobalMtx, actualGlobalMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -144,13 +132,7 @@ TEST(UnconstrainedMotionController, changingRoll)
    expectedGlobalMtx( 1, 0 ) = -1; expectedGlobalMtx( 1, 1 ) = 0; expectedGlobalMtx( 1, 2 ) = 0;
 
    Matrix actualGlobalMtx = node.getGlobalMtx();
-   for (int col = 0; col < 4; col++)
-   {
-      for (int row = 0; row < 4; row++)
-      {
-         CPPUNIT_ASSERT_DOUBLES_EQUAL(expectedGlobalMtx( col, row ), actualGlobalMtx( col, row ), 0.01);
-      }
-   }
+   COMPARE_MTX( expectedGlobalMtx, actualGlobalMtx );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
