@@ -21,15 +21,25 @@ public:
     * @param alignment     alignment boundary in bytes
     * @return              aligned pointer
     */
-   static void* alignPointer( void* ptr, uint alignment );
+   static void* alignAddress( void* ptr, uint alignment );
 
    /**
-    * Dis-aligns a pointer aligned with 'alignPointer' method.
+    * Aligns a pointer using the specified alignment and stores the original address
+    * 4 bytes before the returned pointer.
+    *
+    * @param ptr           original, unaligned pointer
+    * @param alignment     alignment boundary in bytes
+    * @return              aligned pointer
+    */
+   static void* alignAddressAndStoreOriginal( void* ptr, uint alignment );
+
+   /**
+    * Reverse-aligns a pointer aligned with 'alignAddressAndStoreOriginal' method.
     *
     * @param   alignedPtr
     * @return  original, unaligned pointer
     */
-   static void* resolveAlignedPointer( void* alignedPtr );
+   static void* resolveAlignedAddress( void* alignedPtr );
 
    /**
     * Checks if the specified address is aligned to the specified boundary.
@@ -38,6 +48,15 @@ public:
     * @param alignment
     */
    static bool isAddressAligned( void* ptr, uint alignment );
+
+   /**
+    * Calculates the amount of memory needed to store an aligned version of an object with the specified size
+    * using the specified alignment.
+    *
+    * @param size
+    * @param alignment
+    */
+   static size_t calcAlignedSize( size_t size, uint alignment );
 };
 
 ///////////////////////////////////////////////////////////////////////////////

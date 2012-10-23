@@ -20,11 +20,4 @@ void MemoryRouter::destroy( T* obj, AllocationMode allocMode, MemoryAllocator* a
 
 ///////////////////////////////////////////////////////////////////////////////
 
-size_t MemoryRouter::calcAlignedSize( size_t size, uint alignment )
-{
-   return ( size + alignment - 1 ) + sizeof( void* );
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 #endif // _MEMORY_ROUTER_H

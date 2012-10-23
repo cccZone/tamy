@@ -2,10 +2,19 @@
 #include "core/MemoryUtils.h"
 #include <memory>
 
+///////////////////////////////////////////////////////////////////////////////
+
+void* MemoryUtils::alignAddress( void* ptr, uint alignment )
+{
+   void* alignedPtr;
+   alignedPtr = ( void* )( ( ( ulong )ptr + sizeof( void* ) + alignment - 1 ) & ~( alignment - 1 ) );
+
+   return alignedPtr;
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void* MemoryUtils::alignPointer( void* ptr, uint alignment )
+void* MemoryUtils::alignAddressAndStoreOriginal( void* ptr, uint alignment )
 {
    void* alignedPtr;
    alignedPtr = ( void* )( ( ( ulong )ptr + sizeof( void* ) + alignment - 1 ) & ~( alignment - 1 ) );
@@ -16,7 +25,7 @@ void* MemoryUtils::alignPointer( void* ptr, uint alignment )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void* MemoryUtils::resolveAlignedPointer( void* alignedPtr )
+void* MemoryUtils::resolveAlignedAddress( void* alignedPtr )
 {
    if ( alignedPtr )
    {
@@ -36,6 +45,13 @@ bool MemoryUtils::isAddressAligned( void* ptr, uint alignment )
    ulong alignedAddr = ( specifiedAddr + sizeof( void* ) + alignment - 1 ) & ~( alignment - 1 );
 
    return ( ( specifiedAddr - alignedAddr ) % alignment ) == 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+size_t MemoryUtils::calcAlignedSize( size_t size, uint alignment )
+{
+   return ( size + alignment - 1 ) + sizeof( void* );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

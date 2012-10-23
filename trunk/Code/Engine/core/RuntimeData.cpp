@@ -14,14 +14,14 @@ RuntimeDataBuffer::RuntimeDataBuffer()
    , m_buffer( NULL )
    , m_size( 0 )
 {
-   m_buffer = new char[ INITIAL_SIZE ];
+   m_buffer = (char*)malloc( INITIAL_SIZE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 RuntimeDataBuffer::~RuntimeDataBuffer()
 {
-   delete [] m_buffer;
+   free( m_buffer );
    m_buffer = NULL;
 }
 

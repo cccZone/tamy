@@ -24,7 +24,7 @@ void* MemoryRouter::alloc( size_t size, AllocationMode allocMode, MemoryAllocato
    const size_t headerSize = sizeof( void* );
 
    const int ALIGNMENT = 16;
-   size_t alignedSize = calcAlignedSize( size, ALIGNMENT );
+   size_t alignedSize = MemoryUtils::calcAlignedSize( size, ALIGNMENT );
    void* pa = allocator->alloc( alignedSize + headerSize );
 
    if( !pa )
@@ -37,7 +37,7 @@ void* MemoryRouter::alloc( size_t size, AllocationMode allocMode, MemoryAllocato
    pa = (char*)pa + headerSize;
 
    // then align the address
-   void* ptr = MemoryUtils::alignPointer( pa, ALIGNMENT );
+   void* ptr = MemoryUtils::alignAddressAndStoreOriginal( pa, ALIGNMENT );
          
 
    return ptr;
@@ -49,7 +49,7 @@ void MemoryRouter::dealloc( void* ptr, AllocationMode allocMode )
 {
    const size_t headerSize = sizeof( void* );
 
-   void* postHeaderPtr = MemoryUtils::resolveAlignedPointer( ptr );
+   void* postHeaderPtr = MemoryUtils::resolveAlignedAddress( ptr );
 
    // decode the address of the allocator
    void* origPtr = (char*)postHeaderPtr - headerSize;
@@ -72,7 +72,7 @@ void* MemoryRouter::convertAllocatedToObjectAddress( void* allocatedAddr, Alloca
    void* retAddress = (char*)allocatedAddr + headerSize;
 
    // then align the address
-   retAddress = MemoryUtils::alignPointer( retAddress, ALIGNMENT );
+   retAddress = MemoryUtils::alignAddress( retAddress, ALIGNMENT );
    return retAddress;
 }
 

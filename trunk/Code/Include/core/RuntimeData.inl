@@ -2,7 +2,8 @@
 #error "This file can only be included from RuntimeData.h"
 #else
 
-#include "core/Assert.h"
+#include "core\Assert.h"
+#include "core\MemoryUtils.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -36,15 +37,16 @@ unsigned int TRuntimeVar< T >::getTypeSize() const
 template< typename T >
 void RuntimeDataBuffer::registerVar( const typename TRuntimeVar< T >& var, const T& defaultVal )
 {
-   unsigned int size = var.getTypeSize();
-   unsigned long newSize = m_size + size;
+   const int ALIGNMENT = 16;
+   uint size = MemoryUtils::calcAlignedSize( var.getTypeSize(), ALIGNMENT );
+   ulong newSize = m_size + size;
 
    if ( newSize > INITIAL_SIZE )
    {
       // we've exceeded the initial size of the buffer - which means we must grow it
-      char* newBuf = new char[ newSize ];
+      char* newBuf = (char*)malloc( newSize );
       memcpy( newBuf, m_buffer, m_size );
-      delete [] m_buffer;
+      free( m_buffer );
       m_buffer = newBuf;
    }
 
@@ -55,10 +57,13 @@ void RuntimeDataBuffer::registerVar( const typename TRuntimeVar< T >& var, const
    {
       ASSERT_MSG( false, "This runtime variable has already been registered." );
    }
-   m_varsLayout.insert( std::make_pair( varId, m_size ) );
+
+   ulong alignedAddress = (ulong)MemoryUtils::alignAddress( (void*)m_size, ALIGNMENT );
+   m_varsLayout.insert( std::make_pair( varId, alignedAddress ) );
 
    // initialize the memory 
-   memcpy( m_buffer + m_size, &defaultVal, size );
+   void* addr = (void*)( m_buffer + alignedAddress );
+   new ( addr ) T( defaultVal );
 
    // store the new size of the data held in the buffer
    m_size = newSize;
