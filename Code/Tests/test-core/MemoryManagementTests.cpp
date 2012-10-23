@@ -111,7 +111,7 @@ TEST( MemoryRouter, objectsAllocation )
 
    TestClass* obj = new TestClass();
    CPPUNIT_ASSERT( obj != NULL );
-   ulong expectedSize = MemoryRouter::calcAlignedSize( (ulong)(sizeof( TestClass ) + sizeof(void*)), 16 );
+   ulong expectedSize = MemoryUtils::calcAlignedSize( (ulong)(sizeof( TestClass ) + sizeof(void*)), 16 );
    CPPUNIT_ASSERT_EQUAL( expectedSize, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
 
    delete obj;
@@ -133,7 +133,7 @@ TEST( MemoryRouter, objectsPlacement )
    CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
 
    // entire memory was allocated in the specified external pool
-   ulong expectedSize = MemoryRouter::calcAlignedSize( (ulong)(sizeof( TestClass ) + sizeof(void*)), 16 );
+   ulong expectedSize = MemoryUtils::calcAlignedSize( (ulong)(sizeof( TestClass ) + sizeof(void*)), 16 );
    CPPUNIT_ASSERT_EQUAL( expectedSize, defaultAllocator.getAllocatedMemorySize() );
 
    delete obj;

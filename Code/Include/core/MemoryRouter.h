@@ -75,15 +75,6 @@ public:
     * @param allocMode     allocation mode used by the object
     */
    void* alloc( size_t size, AllocationMode allocMode, MemoryAllocator* allocator);
-
-   /**
-    * Calculuates the amount of memory needed to store an aligned version of an object with the specified size
-    * using the specified alignment.
-    *
-    * @param size
-    * @param alignment
-    */
-   inline static size_t calcAlignedSize( size_t size, uint alignment );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
