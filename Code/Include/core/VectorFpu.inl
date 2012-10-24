@@ -500,6 +500,20 @@ void Vector::load( const QuadStorage& storage )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Vector::store( float* arrFloats ) const
+{
+   memcpy( arrFloats, m_quad.v, sizeof( QuadStorage ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void Vector::load( const float* arrFloats )
+{
+   memcpy( m_quad.v, arrFloats, sizeof( QuadStorage ) );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 const FastFloat Vector::getComponent( uint idx ) const
 {
    return *( const FastFloat* )&m_quad.v[idx];

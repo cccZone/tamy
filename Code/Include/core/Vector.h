@@ -435,6 +435,10 @@ struct Vector
     */ 
    inline void setClamped( const Vector& a, const Vector& minVal, const Vector& maxVal );
 
+   // -------------------------------------------------------------------------
+   // Storing/loading
+   // -------------------------------------------------------------------------
+
    /**
     * Stores the contents of this vector in the specified raw vector instance.
     *
@@ -450,6 +454,20 @@ struct Vector
     */
    template< int Dim >
    void load( const TVector< Dim >& rawVector );
+
+   /**
+    * Stores the contents of this vector in the specified array of 4 floats. The array needs to be address-aligned.
+    *
+    * @param arrFloats
+    */
+   inline void store( float* arrFloats ) const;
+
+   /**
+    * Loads the contents of the specified array of 4 floats into this vector. The array needs to be address-aligned.
+    *
+    * @param arrFloats
+    */
+   inline void load( const float* arrFloats );
 
    /**
     * Stores the contents of this vector in the specified quad storage.

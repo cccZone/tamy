@@ -77,17 +77,16 @@ void AABoundingBox::transform( const Matrix& mtx, BoundingVolume& transformedVol
    ASSERT( dynamic_cast< AABoundingBox* >( &transformedVolume ) != NULL );
    AABoundingBox& transformedBox = static_cast< AABoundingBox& >( transformedVolume );
 
-   // begin at transform position
-   transformedBox.min = mtx.position();
-   transformedBox.max = transformedBox.min;
-
    // find extreme points by considering product of 
    // min and max with each component of mtx.
    float a, b;
    ALIGN_16 float tMin[4];
    ALIGN_16 float tMax[4];
-   memset( tMin, 0, sizeof( float ) * 4 );
-   memset( tMax, 0, sizeof( float ) * 4 );
+
+   // begin at transform position
+   const Vector& newCenter = mtx.position();
+   newCenter.store( tMin );
+   newCenter.store( tMax );
    for( uint j = 0; j < 3; ++j )
    {
       for( uint i = 0; i < 3; ++i )
