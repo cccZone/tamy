@@ -12,6 +12,13 @@
 
 #define PACK_SIMD( x, y, z, w )  _mm_movelh_ps( _mm_unpacklo_ps( x, y ), _mm_unpacklo_ps( z, w ) )
 
+#define _MM_DISCARD_W_MASK          *( const __m128* )&( g_simdMask[SM_DISCARD_W] )
+#define _MM_SET_W_MASK              *( const __m128* )&( g_simdMask[SM_SET_W] )
+#define _MM_SIGN_MASK               *( const __m128* )&( g_simdMask[SM_SIGN] )
+#define _MM_ABS_VAL_MASK            *( const __m128* )&( g_simdMask[SM_ABS_VAL] )
+#define _MM_QUAT_CONJUGATE_MASK     *( const __m128* )&( g_simdMask[SM_QUAT_CONJUGATE] )
+#define _MM_PASSTHROUGH_MASK        *( const __m128* )&( g_simdMask[SM_PASSTHROUGH] )
+
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -209,6 +216,25 @@ public:
     */
    static void notEqualZeroMask( const __m128* quad, __m128* outMask );
 };
+
+///////////////////////////////////////////////////////////////////////////////
+
+enum SimdMask
+{
+   SM_DISCARD_W,
+   SM_SET_W,
+   SM_SIGN,
+   SM_ABS_VAL,
+   SM_QUAT_CONJUGATE,
+   SM_PASSTHROUGH,
+
+   SM_MAX
+};
+
+extern ALIGN_16 struct SimdMaskEntry
+{
+   uint m[4];
+} g_simdMask[SM_MAX];
 
 ///////////////////////////////////////////////////////////////////////////////
 

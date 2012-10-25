@@ -3,6 +3,7 @@
 #else
 
 #include "core\MathDataStorage.h"
+#include "core\SimdUtils.h"
 #include <math.h>
 
 
@@ -183,49 +184,43 @@ void FastFloat::setClamped( const FastFloat& a, const FastFloat& minVal, const F
 
 void FastFloat::setAbs( const FastFloat& a )
 {
-   static ALIGN_16 const uint absValMask[4] = { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
-   m_val = _mm_and_ps( a.m_val, *( const FastFloatStorage*)&absValMask );
+   m_val = _mm_and_ps( a.m_val, _MM_ABS_VAL_MASK );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void FastFloat::abs()
 {
-   static ALIGN_16 const uint absValMask[4] = { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
-   m_val = _mm_and_ps( m_val, *( const __m128* )&absValMask );
+   m_val = _mm_and_ps( m_val, _MM_ABS_VAL_MASK );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void FastFloat::setFlipSign( const FastFloat& a, const FastFloat& sign )
 {
-   static ALIGN_16 const uint signMask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
-   m_val = _mm_xor_ps( a.m_val, _mm_and_ps( sign.m_val, *( const __m128* )&signMask ) );
+   m_val = _mm_xor_ps( a.m_val, _mm_and_ps( sign.m_val, _MM_SIGN_MASK ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void FastFloat::setSign( const FastFloat& a )
 {
-   static ALIGN_16 const uint signMask[4]  = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
-   m_val = _mm_xor_ps( Float_1.m_val, _mm_and_ps( a.m_val, *( const __m128* )&signMask ) );
+   m_val = _mm_xor_ps( Float_1.m_val, _mm_and_ps( a.m_val, _MM_SIGN_MASK ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void FastFloat::sign()
 {
-   static ALIGN_16 const uint signmask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
-   m_val = _mm_xor_ps( Float_1.m_val, _mm_and_ps( m_val, *( const __m128* )&signmask ) );
+   m_val = _mm_xor_ps( Float_1.m_val, _mm_and_ps( m_val, _MM_SIGN_MASK ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool FastFloat::approxEqual( const FastFloat& a, const FastFloat& eps ) const
 {
-   static ALIGN_16 const uint absValMask[4] = { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff };
    __m128 diff = _mm_sub_ps( m_val, a.m_val );
-   diff = _mm_and_ps( diff, *( const __m128* )&absValMask );
+   diff = _mm_and_ps( diff, _MM_ABS_VAL_MASK );
    return _mm_ucomile_ss( diff, eps.m_val ) == 1;
 }
 
@@ -265,16 +260,14 @@ void FastFloat::reciprocal()
 
 void FastFloat::setNeg( const FastFloat& a )
 {
-   static ALIGN_16 const uint signMask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
-   m_val = _mm_xor_ps( a.m_val, *( const FastFloatStorage*)&signMask );
+   m_val = _mm_xor_ps( a.m_val, _MM_SIGN_MASK );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void FastFloat::neg()
 {
-   static ALIGN_16 const uint signMask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
-   m_val = _mm_xor_ps( m_val, *( const FastFloatStorage*)&signMask );
+   m_val = _mm_xor_ps( m_val, _MM_SIGN_MASK );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

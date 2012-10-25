@@ -84,9 +84,8 @@ bool Vector::equals4( const Vector& rhs ) const
 
 bool Vector::operator==( const Vector& rhs ) const
 {
-   static ALIGN_16 const uint discardWMask[4] = { 0xffffffff, 0xffffffff, 0xffffffff, 0x00000000 };
-   __m128 thisWithoutW = _mm_and_ps( m_quad, *( const __m128* )&discardWMask );
-   __m128 rhsWithoutW = _mm_and_ps( rhs.m_quad, *( const __m128* )&discardWMask );
+   __m128 thisWithoutW = _mm_and_ps( m_quad, _MM_DISCARD_W_MASK );
+   __m128 rhsWithoutW = _mm_and_ps( rhs.m_quad, _MM_DISCARD_W_MASK );
 
    __m128 cmpResult = _mm_cmpeq_ps( thisWithoutW, rhsWithoutW );
    int vmask = _mm_movemask_ps( cmpResult );
@@ -98,9 +97,8 @@ bool Vector::operator==( const Vector& rhs ) const
 
 bool Vector::operator!=( const Vector& rhs ) const
 {
-   static ALIGN_16 const uint discardWMask[4] = { 0xffffffff, 0xffffffff, 0xffffffff, 0x00000000 };
-   __m128 thisWithoutW = _mm_and_ps( m_quad, *( const __m128* )&discardWMask );
-   __m128 rhsWithoutW = _mm_and_ps( rhs.m_quad, *( const __m128* )&discardWMask );
+   __m128 thisWithoutW = _mm_and_ps( m_quad, _MM_DISCARD_W_MASK );
+   __m128 rhsWithoutW = _mm_and_ps( rhs.m_quad, _MM_DISCARD_W_MASK );
 
    __m128 cmpResult = _mm_cmpeq_ps( thisWithoutW, rhsWithoutW );
    int vmask = _mm_movemask_ps( cmpResult );
@@ -204,8 +202,7 @@ void Vector::sub( const Vector& vec )
 
 void Vector::neg()
 {
-   static ALIGN_16 const uint signMask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
-   m_quad = _mm_xor_ps( m_quad, *( const FastFloatStorage*)&signMask );
+   m_quad = _mm_xor_ps( m_quad, _MM_SIGN_MASK );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -345,7 +342,7 @@ void Vector::setSelect( const VectorComparison& comparisonResult, const Vector& 
 #if SSE_VERSION >= 0x41
    m_quad = _mm_blendv_ps( falseVec.m_quad, trueVec.m_quad, comparisonResult );
 #else
-   m_quad = _mm_or_ps( _mm_and_ps( comparisonResult, trueVec.m_quad ), _mm_andnot_ps( comparisonResult, falseVec.m_quad ) );
+   m_quad = _mm_or_ps( _mm_and_ps( comparisonResult.m_mask, trueVec.m_quad ), _mm_andnot_ps( comparisonResult.m_mask, falseVec.m_quad ) );
 #endif
 }
 
@@ -353,42 +350,42 @@ void Vector::setSelect( const VectorComparison& comparisonResult, const Vector& 
 
 void Vector::less( const Vector& rhs, VectorComparison& outResult ) const
 {
-   outResult = _mm_cmplt_ps( m_quad, rhs.m_quad );
+   outResult.m_mask = _mm_cmplt_ps( m_quad, rhs.m_quad );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::lessEqual( const Vector& rhs, VectorComparison& outResult ) const
 {
-   outResult = _mm_cmple_ps( m_quad, rhs.m_quad );
+   outResult.m_mask = _mm_cmple_ps( m_quad, rhs.m_quad );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::greater( const Vector& rhs, VectorComparison& outResult ) const
 {
-   outResult = _mm_cmpgt_ps( m_quad, rhs.m_quad );
+   outResult.m_mask = _mm_cmpgt_ps( m_quad, rhs.m_quad );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::greaterEqual( const Vector& rhs, VectorComparison& outResult ) const
 {
-   outResult = _mm_cmpge_ps( m_quad, rhs.m_quad );
+   outResult.m_mask = _mm_cmpge_ps( m_quad, rhs.m_quad );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::equal( const Vector& rhs, VectorComparison& outResult ) const
 {
-   outResult = _mm_cmpeq_ps( m_quad, rhs.m_quad );
+   outResult.m_mask = _mm_cmpeq_ps( m_quad, rhs.m_quad );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::notEqual( const Vector& rhs, VectorComparison& outResult ) const
 {
-   outResult = _mm_cmpneq_ps( m_quad, rhs.m_quad );
+   outResult.m_mask = _mm_cmpneq_ps( m_quad, rhs.m_quad );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -440,6 +437,56 @@ const FastFloat Vector::getComponent( uint idx ) const
    __m128 comp;
    SimdUtils::getComponent( &m_quad, idx, &comp );
    return *( const FastFloat* )&comp;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+void VectorComparison::setAnd( const VectorComparison& c1, const VectorComparison& c2 )
+{
+   m_mask = _mm_and_ps( c1.m_mask, c2.m_mask );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void VectorComparison::setOr( const VectorComparison& c1, const VectorComparison& c2 )
+{
+   m_mask = _mm_or_ps( c1.m_mask, c2.m_mask );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void VectorComparison::not()
+{
+   m_mask = _mm_xor_ps( m_mask, m_mask );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< VectorComparison::Mask M >
+bool VectorComparison::areAllSet() const
+{
+   int vmask = _mm_movemask_ps( m_mask );
+   return ( vmask & M ) == M;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< VectorComparison::Mask M >
+bool VectorComparison::isAnySet() const
+{
+   int vmask = _mm_movemask_ps( m_mask );
+   return vmask & M;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< VectorComparison::Mask M >
+bool VectorComparison::areAllClear() const
+{
+   int vmask = _mm_movemask_ps( m_mask );
+   return ( vmask & M ) == 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

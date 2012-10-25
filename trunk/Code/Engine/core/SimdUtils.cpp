@@ -7,6 +7,17 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+SimdMaskEntry g_simdMask[] = {
+   { 0xffffffff, 0xffffffff, 0xffffffff, 0x00000000 },         // SM_DISCARD_W
+   { 0x00000000, 0x00000000, 0x00000000, 0x3f800000 },         // SM_SET_W
+   { 0x80000000, 0x80000000, 0x80000000, 0x80000000 },         // SM_SIGN
+   { 0x7fffffff, 0x7fffffff, 0x7fffffff, 0x7fffffff },         // SM_ABS_VAL
+   { 0x80000000, 0x80000000, 0x80000000, 0x00000000 },         // SM_QUAT_CONJUGATE
+   { 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff },         // SM_PASSTHROUGH
+};
+
+///////////////////////////////////////////////////////////////////////////////
+
 template<>
 void SimdUtils::dot<2>( const __m128* vecA, const __m128* vecB, __m128* outDot )
 {
@@ -18,12 +29,10 @@ void SimdUtils::dot<2>( const __m128* vecA, const __m128* vecB, __m128* outDot )
 template<>
 void SimdUtils::dot<3>( const __m128* vecA, const __m128* vecB, __m128* outDot )
 {
-   static ALIGN_16 const uint discardWMask[4] = { 0xffffffff, 0xffffffff, 0xffffffff, 0x00000000 };
-
    __m128 dot = _mm_mul_ps( *vecA, *vecB );
 
    // we need to discard the W component of the dot product - as the last component we want to add the 
-   dot = _mm_and_ps( dot, *( const __m128* )&discardWMask );
+   dot = _mm_and_ps( dot, _MM_DISCARD_W_MASK );
 
    __m128 shuffledMulRes = _mm_movehl_ps( dot, dot );
    dot = _mm_add_ps( dot, shuffledMulRes );
@@ -75,8 +84,7 @@ void SimdUtils::addMul( const __m128* quadA, const __m128* t, const __m128* quad
 
 void SimdUtils::flipSign( const __m128* quad, const __m128* mask, __m128* outQuad )
 {
-   static ALIGN_16 const uint signmask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
-   *outQuad = _mm_xor_ps( *quad, _mm_and_ps( *mask, *( const __m128* )&signmask));
+   *outQuad = _mm_xor_ps( *quad, _mm_and_ps( *mask, _MM_SIGN_MASK ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

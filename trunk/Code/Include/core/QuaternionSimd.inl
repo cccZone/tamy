@@ -164,24 +164,21 @@ void Quaternion::mul( const Quaternion& rhs )
 
 void Quaternion::neg()
 {
-   static ALIGN_16 const uint signMask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x80000000 };
-   m_quad = _mm_xor_ps( m_quad, *( const QuadStorage*)&signMask );
+   m_quad = _mm_xor_ps( m_quad, _MM_SIGN_MASK );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Quaternion::setConjugated( const Quaternion& rhs )
 {
-   static ALIGN_16 const uint conjugateMask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x00000000 };
-   m_quad = _mm_xor_ps( rhs.m_quad, *( const QuadStorage*)&conjugateMask );
+   m_quad = _mm_xor_ps( rhs.m_quad, _MM_QUAT_CONJUGATE_MASK );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Quaternion::conjugate()
 {
-   static ALIGN_16 const uint conjugateMask[4] = { 0x80000000, 0x80000000, 0x80000000, 0x00000000 };
-   m_quad = _mm_xor_ps( m_quad, *( const QuadStorage*)&conjugateMask );
+   m_quad = _mm_xor_ps( m_quad, _MM_QUAT_CONJUGATE_MASK );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -280,7 +277,6 @@ void Quaternion::getAngle( FastFloat& outAngle ) const
 
 void Quaternion::transform( const Vector& inVec, Vector& outVec ) const
 {
-   // <fastfloat.todo> this will change as soon as Vector gets converted to SIMD
    __m128 simdVec = inVec.m_quad;
 
    __m128 qreal;

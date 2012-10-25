@@ -67,7 +67,6 @@ void BoundingSphere::calculateBoundingBox( AABoundingBox& outBoundingBox ) const
 
 const FastFloat BoundingSphere::distanceToPlane( const Plane& plane ) const
 {
-   // <fastfloat.todo>
    const FastFloat distance = plane.dotCoord( origin );
    FastFloat absDist;
    absDist.setAbs( distance );
