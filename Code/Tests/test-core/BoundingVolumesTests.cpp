@@ -281,3 +281,44 @@ TEST(Triangle, intersects_Ray)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST( AABoundingBox, intersectionRemovalVector )
+{
+   {
+      AABoundingBox box1( Vector(-1, -1, -1), Vector(1, 1, 1) );
+      AABoundingBox box2( Vector(0.5, -1, -1), Vector(1.5, 1, 1) );
+      Vector result;
+
+      findIntersectionRemovalVector( box1, box2, result );
+      COMPARE_VEC( Vector( 0.5, -2, -2 ), result ); // it should be (0.5, 0, 0) - that would be the shortest removal distance.
+   }
+
+   {
+      AABoundingBox box1( Vector(-1, -1, -1), Vector(1, 1, 1) );
+      AABoundingBox box2( Vector(-1, -1.5, -1), Vector(1, -0.5, 1) );
+      Vector result;
+
+      findIntersectionRemovalVector( box1, box2, result );
+      COMPARE_VEC( Vector( -2, -0.5, -2 ), result ); // it should be (0, -0.5, 0) - that would be the shortest removal distance.
+   }
+
+   {
+      AABoundingBox box1( Vector(-1, -1, -1), Vector(1, 1, 1) );
+      AABoundingBox box2( Vector(-1, -1, 0.5), Vector(1, 1, 1.5) );
+      Vector result;
+
+      findIntersectionRemovalVector( box1, box2, result );
+      COMPARE_VEC( Vector( -2, -2, 0.5 ), result ); // it should be (0, 0, 0.5) - that would be the shortest removal distance.
+   }
+
+   {
+      AABoundingBox box1( Vector(-1, -1, -1), Vector(1, 1, 1) );
+      AABoundingBox box2( Vector(1.5, 1.5, 1.5), Vector(2, 2, 2) );
+      Vector result;
+
+      findIntersectionRemovalVector( box1, box2, result );
+      COMPARE_VEC( Vector( 0, 0, 0 ), result ); 
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////

@@ -24,35 +24,25 @@ static bool areRangesOverlapping( float min1, float max1, float min2, float max2
 
 bool testCollision( const AABoundingBox& aabb, const Vector& point )
 {
-   // <fastfloat.todo> areRangesOverlapping - this can be done using a selector
-   return areRangesOverlapping( aabb.min[0], aabb.max[0], point[0], point[0] ) && 
-      areRangesOverlapping( aabb.min[1], aabb.max[1], point[1], point[1] ) && 
-      areRangesOverlapping( aabb.min[2], aabb.max[2], point[2], point[2] );
+   VectorComparison c1, c2;
+   aabb.min.lessEqual( point, c1 );
+   aabb.max.greaterEqual( point, c2 );
+   c1.setAnd( c1, c2 );
+   bool result = c1.areAllSet< VectorComparison::MASK_XYZ >();
+   return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool testCollision( const AABoundingBox& aabb1, const AABoundingBox& aabb2 )
 {
-   // <fastfloat.todo> areRangesOverlapping - this can be done using a selector
+   VectorComparison c1, c2;
+   aabb1.max.less( aabb2.min, c1 );
+   aabb2.max.less( aabb1.min, c2 );
+   c1.setOr( c1, c2 );
 
-   uint collidingPlanes = 0;
-   if ( areRangesOverlapping( aabb1.min[0], aabb1.max[0], aabb2.min[0], aabb2.max[0] ) )
-   {
-      collidingPlanes++;
-   }
-
-   if (areRangesOverlapping( aabb1.min[1], aabb1.max[1], aabb2.min[1], aabb2.max[1] ) )
-   {
-      collidingPlanes++;
-   }
-
-   if (areRangesOverlapping( aabb1.min[2], aabb1.max[2], aabb2.min[2], aabb2.max[2] ) )
-   {
-      collidingPlanes++;
-   }
-
-   return ( collidingPlanes == 3 );
+   bool result = c1.areAllClear< VectorComparison::MASK_XYZ >();
+   return result;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -159,9 +149,7 @@ bool testCollision( const Ray& ray, const Plane& plane, Vector& intersectionPt )
       return false; 
    }
 
-   // <fastfloat.todo>
    intersectionPt.setMulAdd( ray.direction, t, ray.origin );
-
    return true;
 }
 
@@ -217,36 +205,22 @@ void findIntersectionRemovalVector( const BoundingSphere& sphere, const Bounding
 
 void findIntersectionRemovalVector( const AABoundingBox& aabb, const AABoundingBox& colidor, Vector& outRemovalVec )
 {
-   outRemovalVec = Quad_0;
+   Vector v1, v2;
+   v1.setSub( aabb.min, colidor.max );
+   v2.setSub( aabb.max, colidor.min );
 
-   // <fastfloat.todo> areRangesOverlapping - this can be done using a selector
+   VectorComparison c1, c2, c3;
+   aabb.min.lessEqual( colidor.max, c1 );
+   aabb.max.greaterEqual( colidor.max, c2 );
+   c1.setAnd( c1, c2 );
 
-   if (areRangesOverlapping(aabb.min[0], aabb.max[0], colidor.max[0], colidor.max[0]))
-   {
-      outRemovalVec[0] = aabb.min[0] - colidor.max[0];
-   }
-   else if (areRangesOverlapping(aabb.min[0], aabb.max[0], colidor.min[0], colidor.min[0]))
-   {
-      outRemovalVec[0] = aabb.max[0] - colidor.min[0];
-   }
+   aabb.min.lessEqual( colidor.min, c2 );
+   aabb.max.greaterEqual( colidor.min, c3 );
+   c2.setAnd( c2, c3 );
 
-   if (areRangesOverlapping(aabb.min[1], aabb.max[1], colidor.max[1], colidor.max[1]))
-   {
-      outRemovalVec[1] = aabb.min[1] - colidor.max[1];
-   }
-   else if (areRangesOverlapping(aabb.min[1], aabb.max[1], colidor.min[1], colidor.min[1]))
-   {
-      outRemovalVec[1] = aabb.max[1] - colidor.min[1];
-   }
-
-   if (areRangesOverlapping(aabb.min[2], aabb.max[2], colidor.max[2], colidor.max[2]))
-   {
-      outRemovalVec[2] = aabb.min[2] - colidor.max[2];
-   }
-   else if (areRangesOverlapping(aabb.min[2], aabb.max[2], colidor.min[2], colidor.min[2]))
-   {
-      outRemovalVec[2] = aabb.max[2] - colidor.min[2];
-   }
+   Vector tmpV;
+   tmpV.setSelect( c2, v2, Quad_0 );
+   outRemovalVec.setSelect( c1, v1, tmpV );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

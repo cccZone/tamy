@@ -66,11 +66,11 @@ bool testCollision( const Ray& ray, const Triangle& triangle );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector findIntersectionRemovalVector( const BoundingSphere& sphere, const BoundingSphere& colidor );
+void findIntersectionRemovalVector( const BoundingSphere& sphere, const BoundingSphere& colidor, Vector& outRemovalVec );
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Vector findIntersectionRemovalVector( const AABoundingBox& aabb, const AABoundingBox& colidor );
+void findIntersectionRemovalVector( const AABoundingBox& aabb, const AABoundingBox& colidor, Vector& outRemovalVec );
 
 ///////////////////////////////////////////////////////////////////////////////
 
