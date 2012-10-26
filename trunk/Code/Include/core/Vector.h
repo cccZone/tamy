@@ -15,7 +15,6 @@
 class OutStream;
 class InStream;
 struct FastFloat;
-struct VectorComparison;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -69,6 +68,98 @@ extern Vector          q_vecConstants[VecConstants_MAX];
 #define Vector_NEG_OW   q_vecConstants[ VecConstants_NEG_OW ]
 #define Vector_ZERO     q_vecConstants[ VecConstants_ZERO ]
 #define Vector_ONE     q_vecConstants[ VecConstants_ONE ]
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Result of a comparison of two vectors.
+ */
+struct VectorComparison
+{
+   enum Mask
+   {
+      INDEX_W     = 3,	// Index of the w component
+      INDEX_Z     = 2,
+      INDEX_Y     = 1,
+      INDEX_X     = 0,
+
+      MASK_NONE   = 0x0,					// 0000
+      MASK_W      = (1 << INDEX_W),		// 0001
+      MASK_Z      = (1 << INDEX_Z),		// 0010
+      MASK_ZW     = (MASK_Z | MASK_W),	// 0011
+
+      MASK_Y      = (1 << INDEX_Y),		// 0100
+      MASK_YW     = (MASK_Y | MASK_W),	// 0101
+      MASK_YZ     = (MASK_Y | MASK_Z),	// 0110
+      MASK_YZW    = (MASK_YZ | MASK_W),	// 0111
+
+      MASK_X      = (1 << INDEX_X),		// 1000
+      MASK_XW     = (MASK_X | MASK_W),	// 1001
+      MASK_XZ     = (MASK_X | MASK_Z),	// 1010
+      MASK_XZW    = (MASK_XZ | MASK_W),	// 1011
+
+      MASK_XY     = (MASK_X | MASK_Y),	// 1100
+      MASK_XYW    = (MASK_XY | MASK_W),	// 1101
+      MASK_XYZ    = (MASK_XY | MASK_Z),	// 1110
+      MASK_XYZW   = (MASK_XY | MASK_ZW)	// 1111
+   
+   };
+
+#ifdef _USE_SIMD
+   __m128         m_mask;
+#else
+   int            m_mask;
+#endif
+
+   // -------------------------------------------------------------------------
+   // Setters
+   // -------------------------------------------------------------------------
+
+   /**
+    * Sets the specified mask.
+    *
+    * @param M     mask
+    */
+   template< Mask M >
+   inline void set();
+
+   /**
+    * this = c1 && c2
+    */
+   inline void setAnd( const VectorComparison& c1, const VectorComparison& c2 );
+
+   /**
+    * this = c1 || c2
+    */
+   inline void setOr( const VectorComparison& c1, const VectorComparison& c2 );
+
+    /**
+     * this = !this;
+     */
+   inline void not();
+
+   // -------------------------------------------------------------------------
+   // Boolean tests
+   // -------------------------------------------------------------------------
+
+   /**
+    * Checks if all fields selected by the Mask are set.
+    */
+   template< Mask M >
+   inline bool areAllSet() const;
+
+   /**
+    * Checks if any of the fields selected by the Mask are set.
+    */
+   template< Mask M >
+   inline bool isAnySet() const;
+
+   /**
+    * Checks if all fields selected by the Mask are set to 0.
+    */
+   template< Mask M >
+   inline bool areAllClear() const;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -197,6 +288,16 @@ struct Vector
     * @param falseVec            opposite to the above
     */
    inline void setSelect( const VectorComparison& comparisonResult, const Vector& trueVec, const Vector& falseVec );
+
+   /**
+    * Sets individual vector components depending on the specified vector comparison mask.
+    *
+    * @param M                   mask
+    * @param trueVec             if the result for the component is true, a corresponding component from this vector will be selected
+    * @param falseVec            opposite to the above
+    */
+   template< VectorComparison::Mask M >
+   inline void setSelect( const Vector& trueVec, const Vector& falseVec );
 
    /**
     * this = vec * t
@@ -525,93 +626,6 @@ struct Vector
    friend std::ostream& operator<<(std::ostream& stream, const Vector& rhs);
    friend OutStream& operator<<( OutStream& serializer, const Vector& rhs );
    friend InStream& operator>>( InStream& serializer, Vector& rhs );
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-/**
- * Result of a comparison of two vectors.
- */
-struct VectorComparison
-{
-   enum Mask
-   {
-      INDEX_W     = 3,	// Index of the w component
-      INDEX_Z     = 2,
-      INDEX_Y     = 1,
-      INDEX_X     = 0,
-
-      MASK_NONE   = 0x0,					// 0000
-      MASK_W      = (1 << INDEX_W),		// 0001
-      MASK_Z      = (1 << INDEX_Z),		// 0010
-      MASK_ZW     = (MASK_Z | MASK_W),	// 0011
-
-      MASK_Y      = (1 << INDEX_Y),		// 0100
-      MASK_YW     = (MASK_Y | MASK_W),	// 0101
-      MASK_YZ     = (MASK_Y | MASK_Z),	// 0110
-      MASK_YZW    = (MASK_YZ | MASK_W),	// 0111
-
-      MASK_X      = (1 << INDEX_X),		// 1000
-      MASK_XW     = (MASK_X | MASK_W),	// 1001
-      MASK_XZ     = (MASK_X | MASK_Z),	// 1010
-      MASK_XZW    = (MASK_XZ | MASK_W),	// 1011
-
-      MASK_XY     = (MASK_X | MASK_Y),	// 1100
-      MASK_XYW    = (MASK_XY | MASK_W),	// 1101
-      MASK_XYZ    = (MASK_XY | MASK_Z),	// 1110
-      MASK_XYZW   = (MASK_XY | MASK_ZW)	// 1111
-   
-   };
-
-   #ifdef _USE_SIMD
-      __m128         m_mask;
-   #else
-      struct
-      {
-         bool        m_mask[4];
-      };
-   #endif
-
-   // -------------------------------------------------------------------------
-   // Setters
-   // -------------------------------------------------------------------------
-
-   /**
-    * this = c1 && c2
-    */
-   inline void setAnd( const VectorComparison& c1, const VectorComparison& c2 );
-
-   /**
-    * this = c1 || c2
-    */
-   inline void setOr( const VectorComparison& c1, const VectorComparison& c2 );
-
-    /**
-     * this = !this;
-     */
-   inline void not();
-
-   // -------------------------------------------------------------------------
-   // Boolean tests
-   // -------------------------------------------------------------------------
-
-   /**
-    * Checks if all fields selected by the Mask are set.
-    */
-   template< Mask M >
-   inline bool areAllSet() const;
-
-   /**
-    * Checks if any of the fields selected by the Mask are set.
-    */
-   template< Mask M >
-   inline bool isAnySet() const;
-
-   /**
-    * Checks if all fields selected by the Mask are set to 0.
-    */
-   template< Mask M >
-   inline bool areAllClear() const;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

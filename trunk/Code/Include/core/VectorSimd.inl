@@ -348,6 +348,16 @@ void Vector::setSelect( const VectorComparison& comparisonResult, const Vector& 
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template< VectorComparison::Mask M >
+void Vector::setSelect( const Vector& trueVec, const Vector& falseVec )
+{
+   VectorComparison comp; 
+   comp.set< M >();
+   setSelect( comp, trueVec, falseVec );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void Vector::less( const Vector& rhs, VectorComparison& outResult ) const
 {
    outResult.m_mask = _mm_cmplt_ps( m_quad, rhs.m_quad );
@@ -441,6 +451,41 @@ const FastFloat Vector::getComponent( uint idx ) const
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+static ALIGN_16 const int VectorComparison_maskToComparison[16*4] = 
+{
+   0,  0, 0, 0,
+   ~0,  0, 0, 0,
+   0, ~0, 0, 0,
+   ~0, ~0, 0, 0,
+   0,  0,~0, 0,
+   ~0,  0,~0, 0,
+   0, ~0,~0, 0,
+   ~0, ~0,~0, 0,
+   0,  0, 0,~0,
+   ~0,  0, 0,~0,
+   0, ~0, 0,~0,
+   ~0, ~0, 0,~0,
+   0,  0,~0,~0,
+   ~0,  0,~0,~0,
+   0, ~0,~0,~0,
+   ~0, ~0,~0,~0,
+};
+
+template< VectorComparison::Mask M >
+void VectorComparison::set()
+{
+   if (M == MASK_NONE)
+   {
+      m_mask = _mm_setzero_ps();
+   }
+   else
+   {
+      m_mask = _mm_load_ps( (const float*)&(VectorComparison_maskToComparison[M*4]) );
+   }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 
 void VectorComparison::setAnd( const VectorComparison& c1, const VectorComparison& c2 )
