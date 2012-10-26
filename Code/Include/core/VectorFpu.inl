@@ -404,70 +404,87 @@ void Vector::setClamped( const Vector& a, const Vector& minVal, const Vector& ma
 
 void Vector::setSelect( const VectorComparison& comparisonResult, const Vector& trueVec, const Vector& falseVec )
 {
-   for ( int i = 0; i < 4; ++i )
-   {
-      m_quad.v[i] = comparisonResult.m_mask[i] ? trueVec.m_quad.v[i] : falseVec.m_quad.v[i];
-   }
+   m_quad.v[0] = comparisonResult.isAnySet<VectorComparison::MASK_X>() ? trueVec.m_quad.v[0] : falseVec.m_quad.v[0];
+   m_quad.v[1] = comparisonResult.isAnySet<VectorComparison::MASK_Y>() ? trueVec.m_quad.v[1] : falseVec.m_quad.v[1];
+   m_quad.v[2] = comparisonResult.isAnySet<VectorComparison::MASK_Z>() ? trueVec.m_quad.v[2] : falseVec.m_quad.v[2];
+   m_quad.v[3] = comparisonResult.isAnySet<VectorComparison::MASK_W>() ? trueVec.m_quad.v[3] : falseVec.m_quad.v[3];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< VectorComparison::Mask M >
+void Vector::setSelect( const Vector& trueVec, const Vector& falseVec )
+{
+   m_quad.v[0] = ( M & VectorComparison::MASK_X ) ? trueVec.m_quad.v[0] : falseVec.m_quad.v[0];
+   m_quad.v[1] = ( M & VectorComparison::MASK_Y ) ? trueVec.m_quad.v[1] : falseVec.m_quad.v[1];
+   m_quad.v[2] = ( M & VectorComparison::MASK_Z ) ? trueVec.m_quad.v[2] : falseVec.m_quad.v[2];
+   m_quad.v[3] = ( M & VectorComparison::MASK_W ) ? trueVec.m_quad.v[3] : falseVec.m_quad.v[3];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::less( const Vector& rhs, VectorComparison& outResult ) const
 {
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.m_mask[i] = m_quad.v[i] < rhs.m_quad.v[i];
-   }
+   outResult.m_mask =
+      ( ( m_quad.v[0] < rhs.m_quad.v[0] ) ? VectorComparison::MASK_X : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[1] < rhs.m_quad.v[1] ) ? VectorComparison::MASK_Y : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[2] < rhs.m_quad.v[2] ) ? VectorComparison::MASK_Z : VectorComparison::MASK_NONE ) |    
+      ( ( m_quad.v[3] < rhs.m_quad.v[3] ) ? VectorComparison::MASK_W : VectorComparison::MASK_NONE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::lessEqual( const Vector& rhs, VectorComparison& outResult ) const
 {
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.m_mask[i] = m_quad.v[i] <= rhs.m_quad.v[i];
-   }
+   outResult.m_mask =
+      ( ( m_quad.v[0] <= rhs.m_quad.v[0] ) ? VectorComparison::MASK_X : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[1] <= rhs.m_quad.v[1] ) ? VectorComparison::MASK_Y : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[2] <= rhs.m_quad.v[2] ) ? VectorComparison::MASK_Z : VectorComparison::MASK_NONE ) |    
+      ( ( m_quad.v[3] <= rhs.m_quad.v[3] ) ? VectorComparison::MASK_W : VectorComparison::MASK_NONE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::greater( const Vector& rhs, VectorComparison& outResult ) const
 {
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.m_mask[i] = m_quad.v[i] > rhs.m_quad.v[i];
-   }
+   outResult.m_mask =
+      ( ( m_quad.v[0] > rhs.m_quad.v[0] ) ? VectorComparison::MASK_X : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[1] > rhs.m_quad.v[1] ) ? VectorComparison::MASK_Y : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[2] > rhs.m_quad.v[2] ) ? VectorComparison::MASK_Z : VectorComparison::MASK_NONE ) |    
+      ( ( m_quad.v[3] > rhs.m_quad.v[3] ) ? VectorComparison::MASK_W : VectorComparison::MASK_NONE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::greaterEqual( const Vector& rhs, VectorComparison& outResult ) const
 {
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.m_mask[i] = m_quad.v[i] >= rhs.m_quad.v[i];
-   }
+   outResult.m_mask =
+      ( ( m_quad.v[0] >= rhs.m_quad.v[0] ) ? VectorComparison::MASK_X : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[1] >= rhs.m_quad.v[1] ) ? VectorComparison::MASK_Y : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[2] >= rhs.m_quad.v[2] ) ? VectorComparison::MASK_Z : VectorComparison::MASK_NONE ) |    
+      ( ( m_quad.v[3] >= rhs.m_quad.v[3] ) ? VectorComparison::MASK_W : VectorComparison::MASK_NONE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::equal( const Vector& rhs, VectorComparison& outResult ) const
 {
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.m_mask[i] = m_quad.v[i] == rhs.m_quad.v[i];
-   }
+   outResult.m_mask =
+      ( ( m_quad.v[0] == rhs.m_quad.v[0] ) ? VectorComparison::MASK_X : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[1] == rhs.m_quad.v[1] ) ? VectorComparison::MASK_Y : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[2] == rhs.m_quad.v[2] ) ? VectorComparison::MASK_Z : VectorComparison::MASK_NONE ) |    
+      ( ( m_quad.v[3] == rhs.m_quad.v[3] ) ? VectorComparison::MASK_W : VectorComparison::MASK_NONE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void Vector::notEqual( const Vector& rhs, VectorComparison& outResult ) const
 {
-   for ( int i = 0; i < 4; ++i )
-   {
-      outResult.m_mask[i] = m_quad.v[i] != rhs.m_quad.v[i];
-   }
+   outResult.m_mask =
+      ( ( m_quad.v[0] != rhs.m_quad.v[0] ) ? VectorComparison::MASK_X : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[1] != rhs.m_quad.v[1] ) ? VectorComparison::MASK_Y : VectorComparison::MASK_NONE ) |
+      ( ( m_quad.v[2] != rhs.m_quad.v[2] ) ? VectorComparison::MASK_Z : VectorComparison::MASK_NONE ) |    
+      ( ( m_quad.v[3] != rhs.m_quad.v[3] ) ? VectorComparison::MASK_W : VectorComparison::MASK_NONE );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -523,32 +540,31 @@ const FastFloat Vector::getComponent( uint idx ) const
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
+template< VectorComparison::Mask M >
+void VectorComparison::set()
+{
+   m_mask = M;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void VectorComparison::setAnd( const VectorComparison& c1, const VectorComparison& c2 )
 {
-   m_mask[0] = c1.m_mask[0] && c2.m_mask[0];
-   m_mask[1] = c1.m_mask[1] && c2.m_mask[1];
-   m_mask[2] = c1.m_mask[2] && c2.m_mask[2];
-   m_mask[3] = c1.m_mask[3] && c2.m_mask[3];
+   m_mask = c1.m_mask & c2.m_mask;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void VectorComparison::setOr( const VectorComparison& c1, const VectorComparison& c2 )
 {
-   m_mask[0] = c1.m_mask[0] || c2.m_mask[0];
-   m_mask[1] = c1.m_mask[1] || c2.m_mask[1];
-   m_mask[2] = c1.m_mask[2] || c2.m_mask[2];
-   m_mask[3] = c1.m_mask[3] || c2.m_mask[3];
+   m_mask = c1.m_mask | c2.m_mask;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void VectorComparison::not()
 {
-   m_mask[0] = !m_mask[0];
-   m_mask[1] = !m_mask[1];
-   m_mask[2] = !m_mask[2];
-   m_mask[3] = !m_mask[3];
+   m_mask = !m_mask;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -556,7 +572,18 @@ void VectorComparison::not()
 template< VectorComparison::Mask M >
 bool VectorComparison::areAllSet() const
 {
-   return m_mask[0] && m_mask[1] && m_mask[2] && m_mask[3];
+   if (M == MASK_NONE)
+   {
+      return true;
+   }
+   else if (M == MASK_XYZW)
+   {
+      return m_mask == MASK_XYZW;
+   }
+   else
+   {
+      return (m_mask & M) == M;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -564,7 +591,18 @@ bool VectorComparison::areAllSet() const
 template< VectorComparison::Mask M >
 bool VectorComparison::isAnySet() const
 {
-   return m_mask[0] || m_mask[1] || m_mask[2] || m_mask[3];
+   if (M == MASK_NONE)
+   {
+      return false;
+   }
+   else if ( M == MASK_XYZW )
+   {
+      return m_mask != MASK_NONE;
+   }
+   else
+   {
+      return ( m_mask & M ) != MASK_NONE;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -572,7 +610,18 @@ bool VectorComparison::isAnySet() const
 template< VectorComparison::Mask M >
 bool VectorComparison::areAllClear() const
 {
-   return ( m_mask[0] || m_mask[1] || m_mask[2] || m_mask[3] ) == 0;
+   if (M == MASK_NONE)
+   {
+      return false;
+   }
+   else if (M == MASK_XYZW)
+   {
+      return m_mask == MASK_NONE;
+   }
+   else
+   {
+      return ( m_mask & M ) == MASK_NONE;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

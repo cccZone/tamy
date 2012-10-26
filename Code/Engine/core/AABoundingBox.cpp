@@ -128,34 +128,11 @@ const FastFloat AABoundingBox::distanceToPlane( const Plane& plane ) const
 
    Vector nearPoint, farPoint;
 
-   // <fastfloat.todo> selectors
-   if ( planeNormal[0] > 0.0f ) 
-   {
-      farPoint[0] = max[0]; nearPoint[0] = min[0];
-   }
-   else 
-   {
-      farPoint[0] = min[0]; nearPoint[0] = max[0];
-   }
+   VectorComparison planeNormalGZ;
+   planeNormal.greater( Quad_0, planeNormalGZ );
 
-   if ( planeNormal[1] > 0.0f ) 
-   {
-      farPoint[1] = max[1]; nearPoint[1] = min[1];
-   }
-   else 
-   {
-      farPoint[1] = min[1]; nearPoint[1] = max[1];
-   }
-
-
-   if (planeNormal[2] > 0.0f) 
-   {
-      farPoint[2] = max[2]; nearPoint[2] = min[2];
-   }
-   else 
-   {
-      farPoint[2] = min[2]; nearPoint[2] = max[2];
-   }
+   farPoint.setSelect( planeNormalGZ, max, min );
+   nearPoint.setSelect( planeNormalGZ, min, max );
 
    if ( plane.dotCoord( nearPoint ) > Float_0 )
    {

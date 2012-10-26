@@ -61,55 +61,38 @@ void OctreeNode<Elem>::subdivide()
    
    unsigned int newDepth = m_depth + 1;
    
-   // <fastfloat.todo> vec optimization using select
    AABoundingBox bb;
-   bb = m_bb;
-   bb.max[0] = midPoint[0];
-   bb.min[1] = midPoint[1];
-   bb.min[2] = midPoint[2];
-   m_children[CS_FRONT_LEFT_UPPER] = new OctreeNode(bb, newDepth);
+   bb.max.setSelect< VectorComparison::MASK_X >( midPoint, m_bb.max );
+   bb.min.setSelect< VectorComparison::MASK_YZ >( midPoint, m_bb.min );
+   m_children[CS_FRONT_LEFT_UPPER] = new OctreeNode( bb, newDepth );
 
-   bb = m_bb;
-   bb.min[0] = midPoint[0];
-   bb.min[1] = midPoint[1];
-   bb.min[2] = midPoint[2];
-   m_children[CS_FRONT_RIGHT_UPPER] = new OctreeNode(bb, newDepth);
+   bb.max = m_bb.max;
+   bb.min = midPoint;
+   m_children[CS_FRONT_RIGHT_UPPER] = new OctreeNode( bb, newDepth );
 
-   bb = m_bb;
-   bb.min[0] = midPoint[0];
-   bb.max[1] = midPoint[1];
-   bb.min[2] = midPoint[2];
-   m_children[CS_FRONT_RIGHT_LOWER] = new OctreeNode(bb, newDepth);
+   bb.max.setSelect< VectorComparison::MASK_Y >( midPoint, m_bb.max );
+   bb.min.setSelect< VectorComparison::MASK_XZ >( midPoint, m_bb.min );
+   m_children[CS_FRONT_RIGHT_LOWER] = new OctreeNode( bb, newDepth );
 
-   bb = m_bb;
-   bb.max[0] = midPoint[0];
-   bb.max[1] = midPoint[1];
-   bb.min[2] = midPoint[2];
-   m_children[CS_FRONT_LEFT_LOWER] = new OctreeNode(bb, newDepth);
+   bb.max.setSelect< VectorComparison::MASK_XY >( midPoint, m_bb.max );
+   bb.min.setSelect< VectorComparison::MASK_Z >( midPoint, m_bb.min );
+   m_children[CS_FRONT_LEFT_LOWER] = new OctreeNode( bb, newDepth );
 
-   bb = m_bb;
-   bb.max[0] = midPoint[0];
-   bb.min[1] = midPoint[1];
-   bb.max[2] = midPoint[2];
-   m_children[CS_BACK_LEFT_UPPER] = new OctreeNode(bb, newDepth);
+   bb.max.setSelect< VectorComparison::MASK_XZ >( midPoint, m_bb.max );
+   bb.min.setSelect< VectorComparison::MASK_Y >( midPoint, m_bb.min );
+   m_children[CS_BACK_LEFT_UPPER] = new OctreeNode( bb, newDepth );
 
-   bb = m_bb;
-   bb.min[0] = midPoint[0];
-   bb.min[1] = midPoint[1];
-   bb.max[2] = midPoint[2];
-   m_children[CS_BACK_RIGHT_UPPER] = new OctreeNode(bb, newDepth);
+   bb.max.setSelect< VectorComparison::MASK_Z >( midPoint, m_bb.max );
+   bb.min.setSelect< VectorComparison::MASK_XY >( midPoint, m_bb.min );
+   m_children[CS_BACK_RIGHT_UPPER] = new OctreeNode( bb, newDepth );
 
-   bb = m_bb;
-   bb.min[0] = midPoint[0];
-   bb.max[1] = midPoint[1];
-   bb.max[2] = midPoint[2];
-   m_children[CS_BACK_RIGHT_LOWER] = new OctreeNode(bb, newDepth);
+   bb.max.setSelect< VectorComparison::MASK_YZ >( midPoint, m_bb.max );
+   bb.min.setSelect< VectorComparison::MASK_X >( midPoint, m_bb.min );
+   m_children[CS_BACK_RIGHT_LOWER] = new OctreeNode( bb, newDepth );
 
-   bb = m_bb;
-   bb.max[0] = midPoint[0];
-   bb.max[1] = midPoint[1];
-   bb.max[2] = midPoint[2];
-   m_children[CS_BACK_LEFT_LOWER] = new OctreeNode(bb, newDepth);
+   bb.max = midPoint;
+   bb.min = m_bb.min;
+   m_children[CS_BACK_LEFT_LOWER] = new OctreeNode( bb, newDepth );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
