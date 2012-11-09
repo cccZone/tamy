@@ -81,7 +81,7 @@ TEST( MemoryRouter, differentAllocationMethods )
    DefaultAllocator defaultAllocator;
 
    // at the beginning, no memory is allocated
-   CPPUNIT_ASSERT_EQUAL( (ulong)0, defaultAllocator.getAllocatedMemorySize() );
+   CPPUNIT_ASSERT_EQUAL( (ulong)0, defaultAllocator.getMemoryUsed() );
    
    MemoryRouter& router = MemoryRouter::getInstance();
    void* ptr = router.alloc( 12, AM_ALIGNED_16, &defaultAllocator );
@@ -89,7 +89,7 @@ TEST( MemoryRouter, differentAllocationMethods )
    // memory was indeed allocated - but since we were allocating an aligned block,
    // a larger block was allocated
    CPPUNIT_ASSERT( ptr != NULL );
-   CPPUNIT_ASSERT( (ulong)12 < defaultAllocator.getAllocatedMemorySize() );
+   CPPUNIT_ASSERT( (ulong)12 < defaultAllocator.getMemoryUsed() );
 
    // and that the returned address is aligned to a 16 byte boundary
    bool isAligned = MemoryUtils::isAddressAligned( ptr, 16 );
@@ -99,7 +99,7 @@ TEST( MemoryRouter, differentAllocationMethods )
    router.dealloc( ptr, AM_ALIGNED_16 );
 
    // allocated memory was correctly released - the entire amount
-   CPPUNIT_ASSERT_EQUAL( (ulong)0, defaultAllocator.getAllocatedMemorySize() );
+   CPPUNIT_ASSERT_EQUAL( (ulong)0, defaultAllocator.getMemoryUsed() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -107,15 +107,15 @@ TEST( MemoryRouter, differentAllocationMethods )
 TEST( MemoryRouter, objectsAllocation )
 {
    MemoryRouter& router = MemoryRouter::getInstance();
-   ulong initialAllocatedMemorySize = router.getAllocatedMemorySize();
+   ulong initialAllocatedMemorySize = router.getMemoryUsed();
 
    TestClass* obj = new TestClass();
    CPPUNIT_ASSERT( obj != NULL );
    ulong expectedSize = MemoryUtils::calcAlignedSize( (ulong)(sizeof( TestClass ) + sizeof(void*)), 16 );
-   CPPUNIT_ASSERT_EQUAL( expectedSize, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
+   CPPUNIT_ASSERT_EQUAL( expectedSize, router.getMemoryUsed() - initialAllocatedMemorySize );
 
    delete obj;
-   CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
+   CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getMemoryUsed() - initialAllocatedMemorySize );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -124,21 +124,21 @@ TEST( MemoryRouter, objectsPlacement )
 {
    DefaultAllocator defaultAllocator;
    MemoryRouter& router = MemoryRouter::getInstance();
-   ulong initialAllocatedMemorySize = router.getAllocatedMemorySize();
+   ulong initialAllocatedMemorySize = router.getMemoryUsed();
 
    TestClass* obj = new ( &defaultAllocator ) TestClass();
    CPPUNIT_ASSERT( obj != NULL );
 
    // no memory was allocated in the pool internally managed by the router
-   CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
+   CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getMemoryUsed() - initialAllocatedMemorySize );
 
    // entire memory was allocated in the specified external pool
    ulong expectedSize = MemoryUtils::calcAlignedSize( (ulong)(sizeof( TestClass ) + sizeof(void*)), 16 );
-   CPPUNIT_ASSERT_EQUAL( expectedSize, defaultAllocator.getAllocatedMemorySize() );
+   CPPUNIT_ASSERT_EQUAL( expectedSize, defaultAllocator.getMemoryUsed() );
 
    delete obj;
-   CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getAllocatedMemorySize() - initialAllocatedMemorySize );
-   CPPUNIT_ASSERT_EQUAL( (ulong)0, defaultAllocator.getAllocatedMemorySize() );
+   CPPUNIT_ASSERT_EQUAL( (ulong)0, router.getMemoryUsed() - initialAllocatedMemorySize );
+   CPPUNIT_ASSERT_EQUAL( (ulong)0, defaultAllocator.getMemoryUsed() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

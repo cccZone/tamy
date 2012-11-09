@@ -103,7 +103,7 @@ private:
    typedef std::map< std::string, ImportersArr* >   ResourceImportersMap;
 
 private:
-   static ResourcesManager    s_theInstance;
+   static ResourcesManager*   s_theInstance;
 
    Filesystem*                m_filesystem;
    ResourcesMap               m_resources;
@@ -266,7 +266,12 @@ public:
    /**
     * Returns the singleton instance of the resources manager.
     */
-   static inline ResourcesManager& getInstance() { return s_theInstance; }
+   static inline ResourcesManager& getInstance() { return *s_theInstance; }
+
+   /**
+    * Deinitializes the singleton instance.
+    */
+   static void deinitialize();
 
 protected:
    // -------------------------------------------------------------------------

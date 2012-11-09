@@ -51,7 +51,7 @@ public:
       uint                 m_timerId;
    };
 private:
-   static Profiler         s_theInstance;
+   static Profiler*        s_theInstance;
 
    const uint              MAX_TRACE_LENGTH;
 
@@ -74,7 +74,12 @@ public:
    /**
     * Returns the singleton instance of the profiler.
     */
-   inline static Profiler& getInstance() { return s_theInstance; }
+   inline static Profiler& getInstance() { return *s_theInstance; }
+
+   /**
+    * Deinitializes the static instance.
+    */
+   static void deinitialize();
 
    // -------------------------------------------------------------------------
    // Timers management

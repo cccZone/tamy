@@ -29,13 +29,6 @@ RoundBuffer::~RoundBuffer()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-size_t RoundBuffer::getMemoryUsed() const 
-{ 
-   return m_allocEndOffset - m_allocStartOffset; 
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void* RoundBuffer::alloc( size_t size )
 {
    size_t sizeAtEnd = m_bufSize - m_allocEndOffset - BUFFER_INFO_CHUNK_SIZE;

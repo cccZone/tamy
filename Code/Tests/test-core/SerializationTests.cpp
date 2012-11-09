@@ -25,8 +25,15 @@ namespace // anonymous
 
       int      m_val1;
       int      m_val2;
+      bool     m_wasDeserialized;
 
-      SerializationTestClass( int val1 = 0, int val2 = 0, const char* id = NULL ) : ReflectionObject( id ), m_val1( val1 ), m_val2( val2 ) {}
+      SerializationTestClass( int val1 = 0, int val2 = 0, const char* id = NULL ) 
+         : ReflectionObject( id )
+         , m_val1( val1 )
+         , m_val2( val2 ) 
+      {
+         m_wasDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+      }
       virtual ~SerializationTestClass() {}
    };
    BEGIN_OBJECT( SerializationTestClass );
@@ -229,6 +236,7 @@ TEST( Serialization, simpleTypes )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() ); 
    
@@ -251,13 +259,15 @@ TEST( Serialization, simpleTypes )
    CPPUNIT_ASSERT_EQUAL( 5, restoredObject->m_val1 );
    CPPUNIT_ASSERT_EQUAL( 10, restoredObject->m_val2 );
 
+   CPPUNIT_ASSERT_EQUAL( false, obj.m_wasDeserialized );
+   CPPUNIT_ASSERT_EQUAL( true, restoredObject->m_wasDeserialized );
+
    // check if the unique IDs have been restored correctly
    CPPUNIT_ASSERT_EQUAL( obj.m_uniqueId, restoredObject->m_uniqueId );
 
 
    // cleanup
    delete restoredObject;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -266,6 +276,7 @@ TEST( Serialization, patching )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
 
@@ -295,7 +306,6 @@ TEST( Serialization, patching )
 
    // cleanup
    delete restoredObject;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -304,6 +314,7 @@ TEST( Serialization, inheritance )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< DerivedSerializationTestClass >( "DerivedSerializationTestClass", new TSerializableTypeInstantiator< DerivedSerializationTestClass >() );
@@ -332,7 +343,6 @@ TEST( Serialization, inheritance )
 
    // cleanup
    delete restoredObjectBase;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -341,6 +351,7 @@ TEST( Serialization, patching_inheritanceMissingOneType )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< DerivedSerializationTestClass >( "DerivedSerializationTestClass", new TSerializableTypeInstantiator< DerivedSerializationTestClass >() );
@@ -374,7 +385,6 @@ TEST( Serialization, patching_inheritanceMissingOneType )
 
    // cleanup
    delete restoredObjectBase;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -383,6 +393,7 @@ TEST( Serialization, pointers )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClassWithPointers >( "SerializationTestClassWithPointers", new TSerializableTypeInstantiator< SerializationTestClassWithPointers >() );
 
@@ -410,7 +421,6 @@ TEST( Serialization, pointers )
 
    // cleanup
    delete restoredObject;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -419,6 +429,7 @@ TEST( Serialization, podsArrays )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClassWithPODArray >( "SerializationTestClassWithPODArray", new TSerializableTypeInstantiator< SerializationTestClassWithPODArray >() );
 
@@ -448,7 +459,6 @@ TEST( Serialization, podsArrays )
 
    // cleanup
    delete restoredObject;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -457,6 +467,7 @@ TEST( Serialization, pointersArrays )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< SerializationTestClassWithPtrArray >( "SerializationTestClassWithPtrArray", new TSerializableTypeInstantiator< SerializationTestClassWithPtrArray >() );
@@ -493,7 +504,6 @@ TEST( Serialization, pointersArrays )
 
    // cleanup
    delete restoredObject;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -502,6 +512,7 @@ TEST( Serialization, sharedPointers )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< ReflectionObject >( "ReflectionObject", NULL );
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
@@ -539,7 +550,6 @@ TEST( Serialization, sharedPointers )
    delete restoredObject1;
    delete restoredObject2;
    delete sharedObj;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -548,6 +558,7 @@ TEST( Serialization, deepNestingOfTheSharedPointers )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< SerializationTestClassWithSharedPointers >( "SerializationTestClassWithSharedPointers", new TSerializableTypeInstantiator< SerializationTestClassWithSharedPointers >() );
@@ -590,7 +601,6 @@ TEST( Serialization, deepNestingOfTheSharedPointers )
    delete restoredSharedObjLevel1;
    delete sharedObjLevel2;
    delete sharedObjLevel1;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -599,6 +609,7 @@ TEST( Serialization, instancesTracking )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClass >( "SerializationTestClass", new TSerializableTypeInstantiator< SerializationTestClass >() );
    typesRegistry.addSerializableType< SerializationTestClassWithSharedPointers >( "SerializationTestClassWithSharedPointers", new TSerializableTypeInstantiator< SerializationTestClassWithSharedPointers >() );
@@ -639,7 +650,6 @@ TEST( Serialization, instancesTracking )
 
    // cleanup - and now we don't need to delete the restored objects ourselves - the tracker will take care of that
    delete sharedObj;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -648,6 +658,7 @@ TEST( Serialization, loadSaveNotifications )
 {
    // setup reflection types
    ReflectionTypesRegistry& typesRegistry = ReflectionTypesRegistry::getInstance();
+   typesRegistry.clear();
    typesRegistry.addSerializableType< Resource >( "Resource", NULL );
    typesRegistry.addSerializableType< SerializationTestClassNotifiable >( "SerializationTestClassNotifiable", new TSerializableTypeInstantiator< SerializationTestClassNotifiable >() );
 
@@ -686,7 +697,6 @@ TEST( Serialization, loadSaveNotifications )
 
    // cleanup
    delete restoredObject;
-   typesRegistry.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

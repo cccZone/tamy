@@ -31,7 +31,7 @@ public:
    static uint                         TEXTURE_COORDS_STRIDE;
 
 private:
-   static MaterialsDB                  s_theInstance;
+   static MaterialsDB*                  s_theInstance;
 
    Array< uint >                       m_materialHashes;
    Array< const MaterialInstance* >    m_materials;
@@ -48,7 +48,12 @@ public:
    /**
     * Returns the singleton instance of the DB.
     */
-   static inline MaterialsDB& getInstance() { return s_theInstance; }
+   static inline MaterialsDB& getInstance() { return *s_theInstance; }
+
+   /**
+    * Deinitializes the singleton instance
+    */
+   static void deinitialize();
 
    /**
     * Registers a new material with the database

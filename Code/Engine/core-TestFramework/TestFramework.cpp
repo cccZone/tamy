@@ -96,6 +96,14 @@ int main(int argc, char** argv)
    delete g_SuiteRegistry;
    g_SuiteRegistry = NULL;
 
+   // deinitialize
+   MaterialsDB::deinitialize();
+   ResourcesManager::deinitialize();
+   IDStringsPool::deinitialize();
+   Profiler::deinitialize();
+   MemoryRouter::deinitialize();
+
+   
    // return 0 if tests were successful
    return collectedResults.wasSuccessful () ? 0 : 1;
 }

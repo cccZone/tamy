@@ -79,9 +79,9 @@ public:
 class IDStringsPool
 {
 private:
-   static IDStringsPool    s_theInstance;
+   static IDStringsPool*      s_theInstance;
 
-   Array< char* >    m_strings;
+   Array< char* >             m_strings;
 
 public:
    /**
@@ -93,7 +93,12 @@ public:
    /**
     * Returns the singleton instance of this class.
     */
-   static IDStringsPool& getInstance() { return s_theInstance; }
+   static IDStringsPool& getInstance() { return *s_theInstance; }
+
+   /**
+    * Deinitializes the singleton instance.
+    */
+   static void deinitialize();
 
    /**
     * Registers a string and assigns it a unique id.

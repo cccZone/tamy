@@ -4,6 +4,7 @@
 #define _MEMORY_ROUTER_H
 
 #include "core/DefaultAllocator.h"
+#include "core/EngineDefines.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,6 +15,12 @@ enum AllocationMode
    AM_DEFAULT
 };
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+class CallstackTree;
+class CallstackTracer;
+
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -22,21 +29,33 @@ enum AllocationMode
 class MemoryRouter
 {
 public:
-   DefaultAllocator           m_defaultAllocator;
+   DefaultAllocator              m_defaultAllocator;
 
 private:
-   static MemoryRouter*        s_theInstance;
+   static MemoryRouter*          s_theInstance;
+
+#ifdef _TRACK_MEMORY_ALLOCATIONS
+   CallstackTracer*              m_tracer;
+   CallstackTree*                m_callstacksTree;
+#endif
 
 public:
+   ~MemoryRouter();
+
    /**
     * Returns the singleton instance of this class.
     */
    static MemoryRouter& getInstance();
 
    /**
+    * Destroys the singleton instance of this class.
+    */
+   static void deinitialize();
+
+   /**
     * Returns the size of allocated memory.
     */
-   inline ulong getAllocatedMemorySize() const { return m_defaultAllocator.getAllocatedMemorySize(); }
+   inline ulong getMemoryUsed() const { return m_defaultAllocator.getMemoryUsed(); }
 
    /**
     * Translates an address returned by a memory allocator to an object address
@@ -75,6 +94,12 @@ public:
     * @param allocMode     allocation mode used by the object
     */
    void* alloc( size_t size, AllocationMode allocMode, MemoryAllocator* allocator);
+
+private:
+   /**
+    * Constructor.
+    */
+   MemoryRouter();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -21,6 +21,45 @@ class OutStream;
 class InStream;
 class MemoryPool;
 
+
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A helper singleton class used to tell whether a serialization process is running
+ * at the moment - in a thread-safe manner.
+ */
+class SerializationFlag
+{
+private:
+   static SerializationFlag s_theInstance;
+
+   // <threading.todo> Thread safety is not yet implemented, since the engine is running on a single thread.
+   // As soon as we implement multithreading, make this class has a flag for each running thread ( since
+   // loading will be implemented on threads )
+   bool    m_serializationInProgress;
+
+public:
+   static inline SerializationFlag& getInstance() { return s_theInstance; }
+
+   /**
+    * Checks if the serialization is in progress.
+    */
+   bool isSerializationInProgress();
+
+   /**
+    * Flags whether the serialization is in progress.
+    *
+    * @param inProgress
+    */
+   void flagSerializationInProgress( bool inProgress );
+
+private:
+   /**
+    * Constructor.
+    */
+   SerializationFlag();
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 
 /**

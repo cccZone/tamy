@@ -31,7 +31,7 @@ MemoryPool::~MemoryPool()
 
 size_t MemoryPool::getMemoryUsed() const 
 { 
-   return m_bufSize - m_allocStartOffset; 
+   return m_allocStartOffset; 
 }
 
 ///////////////////////////////////////////////////////////////////////////////

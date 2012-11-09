@@ -239,7 +239,6 @@ void Matrix::scale( const Vector& scaleVec )
 void Matrix::setInverse( const Matrix& rhs )
 {
    // implementation of the algorithm taken from here: ftp://download.intel.com/design/PentiumIII/sml/24504301.pdf
-   // <simd.todo> implement the simd version using the aforementioned document
 
    float tmp[12]; // temp array of pairs
    float src[16]; // array of transpose source matrix

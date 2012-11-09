@@ -212,6 +212,9 @@
     <ClCompile Include="MemoryManagementTests.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
+    <ClCompile Include="CallstackTracerTests.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SpecializedNodeVisitorMock.h">
