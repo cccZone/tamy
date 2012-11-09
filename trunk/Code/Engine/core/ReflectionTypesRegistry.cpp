@@ -39,6 +39,14 @@ ReflectionTypesRegistry::~ReflectionTypesRegistry()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void ReflectionTypesRegistry::deinitialize()
+{
+   delete s_theInstance;
+   s_theInstance = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 ReflectionType* ReflectionTypesRegistry::find( unsigned int id ) const
 {
    // browse through external types first

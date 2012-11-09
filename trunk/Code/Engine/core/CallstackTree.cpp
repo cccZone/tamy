@@ -19,7 +19,10 @@ CallstackTree::CallstackTree()
 
 CallstackTree::~CallstackTree()
 {
-   m_allocator->dealloc( m_callstackIds );
+   if ( m_callstackIds )
+   {
+      m_allocator->dealloc( m_callstackIds );
+   }
    m_callstackIds = NULL;
 
    delete m_allocator;

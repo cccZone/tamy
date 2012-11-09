@@ -147,6 +147,7 @@ void Renderer::render()
 void Renderer::InitialState::render(Renderer& renderer)
 {
    // create the default depth buffer
+   delete renderer.m_defaultDepthBuffer;
    renderer.m_defaultDepthBuffer = new DepthBuffer( renderer.m_viewportWidth, renderer.m_viewportHeight );
    renderer.pushDepthBuffer( renderer.m_defaultDepthBuffer );
 
