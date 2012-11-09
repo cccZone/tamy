@@ -31,7 +31,7 @@ public:
    // -------------------------------------------------------------------------
    void* alloc( size_t size );
    void dealloc( void* ptr );
+   ulong getMemoryUsed() const { return m_pool->getMemoryUsed(); }
 };
 
 ///////////////////////////////////////////////////////////////////////////////
-

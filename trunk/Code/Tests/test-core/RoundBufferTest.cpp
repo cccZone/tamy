@@ -50,7 +50,7 @@ TEST( RoundBuffer, twoObjects )
 
    delete obj2;
    CPPUNIT_ASSERT_EQUAL( (unsigned int)0, buffer.getAllocationsCount() );
-   CPPUNIT_ASSERT_EQUAL( (size_t)0, buffer.getMemoryUsed() );
+   CPPUNIT_ASSERT_EQUAL( (ulong)0, buffer.getMemoryUsed() );
    CPPUNIT_ASSERT_EQUAL( (RoundBufferObjectMock*)NULL, buffer.front< RoundBufferObjectMock >() );
 }
 
@@ -82,6 +82,8 @@ TEST( RoundBuffer, manyAllocations )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+#ifndef _TRACK_MEMORY_ALLOCATIONS
 
 TEST( RoundBuffer, performance )
 {
@@ -118,5 +120,7 @@ TEST( RoundBuffer, performance )
    float allocDeallocDuration = timer.getTimeElapsed();
    CPPUNIT_ASSERT( 2.0f >= allocDeallocDuration );
 }
+
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -33,7 +33,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-MaterialsDB MaterialsDB::s_theInstance;
+MaterialsDB* MaterialsDB::s_theInstance = new MaterialsDB();
 uint MaterialsDB::RENDER_DATA_BUFFER_STRIDE = 4;
 uint MaterialsDB::TEXTURE_COORDS_STRIDE = 2;
 
@@ -50,6 +50,14 @@ MaterialsDB::MaterialsDB()
 
 MaterialsDB::~MaterialsDB()
 {
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void MaterialsDB::deinitialize()
+{
+   delete s_theInstance;
+   s_theInstance = NULL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

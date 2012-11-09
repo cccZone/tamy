@@ -24,11 +24,7 @@ public:
    // -------------------------------------------------------------------------
    void* alloc( size_t size );
    void dealloc( void* ptr );
-
-   /**
-    * Returns the amount of memory allocated by this allocator.
-    */
-   inline ulong getAllocatedMemorySize() const { return m_allocatedMemorySize; }
+   ulong getMemoryUsed() const { return m_allocatedMemorySize; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

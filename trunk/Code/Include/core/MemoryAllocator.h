@@ -21,6 +21,11 @@ public:
     * Deallocates the memory from the specified address.
     */
    virtual void dealloc( void* ptr ) = 0;
+
+   /**
+    * Returns the amount of currently allocated memory.
+    */
+   virtual ulong getMemoryUsed() const = 0;
 };
 
 ///////////////////////////////////////////////////////////////////////////////

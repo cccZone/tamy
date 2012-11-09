@@ -17,6 +17,11 @@
  */
 // #define _TRACE_GLOBAL_ALLOCATIONS
 
+/**
+ * Enables memory allocations tracking - useful to track memory leaks
+ */
+#define _TRACK_MEMORY_ALLOCATIONS
+
 ///////////////////////////////////////////////////////////////////////////////
 
 #define _USE_SIMD

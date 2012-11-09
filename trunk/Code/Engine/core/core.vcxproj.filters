@@ -137,6 +137,12 @@
     <Filter Include="MemoryManagement\Core">
       <UniqueIdentifier>{073f0cb1-ab61-47cd-bc58-d353cace740c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RTTI\Macros">
+      <UniqueIdentifier>{dd0364d9-4ad9-4364-a822-3fe46e57dc49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MemoryManagement\Callstacks">
+      <UniqueIdentifier>{880b9b3a-4242-4dc1-989d-8af92a55f172}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Node.cpp">
@@ -361,6 +367,12 @@
     </ClCompile>
     <ClCompile Include="RoundBuffer.cpp">
       <Filter>MemoryManagement\MemoryPools</Filter>
+    </ClCompile>
+    <ClCompile Include="CallstackTracer.cpp">
+      <Filter>MemoryManagement\Callstacks</Filter>
+    </ClCompile>
+    <ClCompile Include="CallstackTree.cpp">
+      <Filter>MemoryManagement\Callstacks</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -608,16 +620,10 @@
     <ClInclude Include="..\..\Include\core\OutFileStream.h">
       <Filter>Streams\Implementations</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\core\TypeRegistrationMacros.h">
-      <Filter>RTTI\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\Color.h">
       <Filter>Misc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\math.h" />
-    <ClInclude Include="..\..\Include\core\ReflectionMacros.h">
-      <Filter>RTTI\Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\core\ReflectionSerializationMacros.h">
       <Filter>RTTI\Serialization</Filter>
     </ClInclude>
@@ -753,6 +759,21 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\core\RoundBuffer.h">
       <Filter>MemoryManagement\MemoryPools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\TypeRegistrationMacros.h">
+      <Filter>RTTI\Macros</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\ReflectionMacros.h">
+      <Filter>RTTI\Macros</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\CallstackTracer.h">
+      <Filter>MemoryManagement\Callstacks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\CallstackTree.h">
+      <Filter>MemoryManagement\Callstacks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\RawArrayUtil.h">
+      <Filter>DataStructures\Collections</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -953,6 +974,9 @@
     </None>
     <None Include="..\..\Include\core\RoundBuffer.inl">
       <Filter>MemoryManagement\MemoryPools</Filter>
+    </None>
+    <None Include="..\..\Include\core\RawArrayUtil.inl">
+      <Filter>DataStructures\Collections</Filter>
     </None>
   </ItemGroup>
 </Project>

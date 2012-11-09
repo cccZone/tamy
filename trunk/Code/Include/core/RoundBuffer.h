@@ -36,11 +36,6 @@ public:
    ~RoundBuffer();
 
    /**
-    * Returns the amount of memory allocated.
-    */
-   size_t getMemoryUsed() const;
-
-   /**
     * Returns the number of allocations made.
     */
    inline unsigned int getAllocationsCount() const;
@@ -56,6 +51,7 @@ public:
    // -------------------------------------------------------------------------
    void* alloc( size_t size );
    void dealloc( void* ptr );
+   ulong getMemoryUsed() const { return m_allocEndOffset - m_allocStartOffset; }
 };
 
 ///////////////////////////////////////////////////////////////////////////////

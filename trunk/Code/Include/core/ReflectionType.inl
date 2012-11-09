@@ -119,7 +119,9 @@ T* SerializableReflectionType::load( InStream& stream )
       if ( deserializedType )
       {
          // instantiate object of the deserialized type
+         SerializationFlag::getInstance().flagSerializationInProgress( true );
          object = deserializedType->instantiate< T >();
+         SerializationFlag::getInstance().flagSerializationInProgress( false );
          object->m_uniqueId = objectUniqueId;
       }
    }
