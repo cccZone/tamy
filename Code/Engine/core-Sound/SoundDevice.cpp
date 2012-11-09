@@ -15,6 +15,7 @@ SoundDevice::SoundDevice(int numBuffersUsed)
 
 SoundDevice::~SoundDevice() 
 {
+   releaseAllChannels();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -40,20 +41,19 @@ SoundChannel& SoundDevice::activateSound(Sound& sound)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void SoundDevice::deactivateSound(SoundChannel& channel)
+void SoundDevice::deactivateSound( SoundChannel* channel )
 {
-   for (std::vector<SoundChannel*>::iterator it = m_activeChannels.begin();
-        it != m_activeChannels.end(); ++it)
+   for ( std::vector<SoundChannel*>::iterator it = m_activeChannels.begin(); it != m_activeChannels.end(); ++it )
    {
-      if (*it == &channel)
+      if ( *it == channel )
       {
          m_activeChannels.erase(it);
          break;
       }
    }
 
-   channel.stop();
-   delete &channel;
+   channel->stop();
+   delete channel;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -62,8 +62,9 @@ void SoundDevice::releaseAllChannels()
 {
    while(m_activeChannels.size() > 0)
    {
-      SoundChannel& channel = *(m_activeChannels.back());
-      channel.stop();
+      SoundChannel* channel = m_activeChannels.back();
+      channel->stop();
+      delete channel;
       m_activeChannels.pop_back();
    }
 }
@@ -75,16 +76,23 @@ void SoundDevice::update(float timeElapsed)
    std::vector<SoundChannel*>::iterator it = m_activeChannels.begin();
    while(it != m_activeChannels.end())
    {
-      SoundChannel& channel = **it;
-      if (channel.isPlaying() == false) {++it; continue;}
-
-      channel.update();
-      if (channel.getActiveBuffersCount() < m_numBuffersUsed) {channel.loadNextSample();}
-      if (channel.getActiveBuffersCount() == 0)
+      SoundChannel* channel = *it;
+      if (channel->isPlaying() == false) 
       {
-         channel.stop();
+         ++it; 
+         continue;
+      }
+
+      channel->update();
+      if (channel->getActiveBuffersCount() < m_numBuffersUsed) 
+      {
+         channel->loadNextSample();
+      }
+      if (channel->getActiveBuffersCount() == 0)
+      {
+         channel->stop();
          it = m_activeChannels.erase(it);
-         delete &channel;
+         delete channel;
       }
       else
       {

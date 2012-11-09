@@ -134,6 +134,11 @@ public:
     * Returns the singleton instance of the class.
     */
    static inline ReflectionTypesRegistry& getInstance();
+
+   /**
+    * Deinitializes the singleton instance.
+    */
+   static void deinitialize();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

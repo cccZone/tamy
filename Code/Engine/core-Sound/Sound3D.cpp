@@ -59,7 +59,7 @@ void Sound3D::deassignChannel(SoundDevice& device)
       ASSERT_MSG( false, "No channel assigned");
       return;
    }
-   device.deactivateSound(*m_channel);
+   device.deactivateSound( m_channel );
    m_channel = NULL;
 }
 

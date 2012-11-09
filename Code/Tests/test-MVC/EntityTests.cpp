@@ -85,6 +85,8 @@ TEST( Entity, cloningSimple )
    CPPUNIT_ASSERT_EQUAL( 5, castClonedEntity->getIndex() );
 
    // cleanup
+   delete clonedEntity;
+   delete entity;
    typesRegistry.clear();
 }
 
@@ -126,6 +128,8 @@ TEST( Entity, cloningHierarchy )
    CPPUNIT_ASSERT_EQUAL( (unsigned int)0, clonedSecondChildEntity->getEntityChildren().size() );
 
    // cleanup
+   delete rootEntity;
+   delete clonedRootEntity;
    typesRegistry.clear();
 }
 

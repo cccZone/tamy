@@ -598,6 +598,7 @@ TEST( Serialization, deepNestingOfTheSharedPointers )
    // cleanup
    delete restoredObject1;
    delete restoredObject2;
+   delete restoredSharedObjLevel1->m_ptr;
    delete restoredSharedObjLevel1;
    delete sharedObjLevel2;
    delete sharedObjLevel1;

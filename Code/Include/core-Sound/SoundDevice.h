@@ -47,7 +47,7 @@ public:
    /**
     * This method frees a channel from the channel pool
     */
-   void deactivateSound(SoundChannel& channel);
+   void deactivateSound(SoundChannel* channel);
 
    /**
     * The method releases all currently occupied channels
