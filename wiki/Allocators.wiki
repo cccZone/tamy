@@ -97,3 +97,14 @@ And you can simply use it like so:
 CustomAllocator allocator;
 SomeClass* instance = new ( allocator ) SomeClass();
 }}}
+
+==Memory leaks tracing==
+To enable memory leaks tracing, simply uncomment the `_TRACK_MEMORY_ALLOCATIONS` define located in core/EngineDefines.h.
+
+Memory tracker uses two helper classes to caquire and store callstack traces:
+
+ * `CallstackTracer` - is a platform dependent class that resolves current callstacks and provides a toolset to decipher them into a human readable form
+ * `CallstackTree` - stores callstacks acquired using `CallstackTracer` in a memory efficient way.
+
+
+The system traces all memory allocations that go through the global `MemoryRouter` instance.
