@@ -49,6 +49,10 @@ ResourceObject::ResourceObject()
 
 ResourceObject::~ResourceObject()
 {
+   if ( m_hostResource )
+   {
+      m_hostResource->removeObjectExternally( m_objectId );
+   }
    m_hostResource = NULL;
 }
 

@@ -14,9 +14,14 @@ END_OBJECT();
 
 MNFloat::MNFloat()
    : m_value( 0.0f )
-   , m_output( new MSFloatOutput( "Value" ) )
+   , m_output( NULL )
 {
-   defineOutput( m_output );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_output = new MSFloatOutput( "Value" );
+      defineOutput( m_output );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

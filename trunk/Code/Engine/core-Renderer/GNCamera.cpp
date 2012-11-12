@@ -14,26 +14,39 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GNCamera::GNCamera()
-   : m_nearZ( new GSFloatOutput( "nearZ" ) )
-   , m_farZ( new GSFloatOutput( "farZ" ) )
-   , m_viewportWidth( new GSFloatOutput( "width" ) )
-   , m_viewportHeight( new GSFloatOutput( "height" ) )
-   , m_view( new GSMatrixOutput( "view" ) )
-   , m_proj( new GSMatrixOutput( "proj" ) )
-   , m_worldView( new GSMatrixOutput( "worldView" ) )
-   , m_worldViewProj( new GSMatrixOutput( "worldViewProj" ) )
+   : m_nearZ( NULL )
+   , m_farZ( NULL )
+   , m_viewportWidth( NULL )
+   , m_viewportHeight( NULL )
+   , m_view( NULL )
+   , m_proj( NULL )
+   , m_worldView( NULL )
+   , m_worldViewProj( NULL )
 {
-   std::vector< GBNodeOutput< GeometryShaderNode >* > outputs;
-   outputs.push_back( m_nearZ );
-   outputs.push_back( m_farZ );
-   outputs.push_back( m_viewportWidth );
-   outputs.push_back( m_viewportHeight );
-   outputs.push_back( m_view );
-   outputs.push_back( m_proj );
-   outputs.push_back( m_worldView );
-   outputs.push_back( m_worldViewProj );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_nearZ = new GSFloatOutput( "nearZ" );
+      m_farZ = new GSFloatOutput( "farZ" );
+      m_viewportWidth = new GSFloatOutput( "width" );
+      m_viewportHeight = new GSFloatOutput( "height" );
+      m_view = new GSMatrixOutput( "view" );
+      m_proj = new GSMatrixOutput( "proj" );
+      m_worldView = new GSMatrixOutput( "worldView" );
+      m_worldViewProj = new GSMatrixOutput( "worldViewProj" );
 
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< GeometryShaderNode >* > outputs;
+      outputs.push_back( m_nearZ );
+      outputs.push_back( m_farZ );
+      outputs.push_back( m_viewportWidth );
+      outputs.push_back( m_viewportHeight );
+      outputs.push_back( m_view );
+      outputs.push_back( m_proj );
+      outputs.push_back( m_worldView );
+      outputs.push_back( m_worldViewProj );
+
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

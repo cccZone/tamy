@@ -26,9 +26,13 @@ RPPostProcessNode::RPPostProcessNode()
 {
    m_shaderNode = new PixelShaderNodeOperator< RenderingPipelineNode >( *this );
 
-   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
-   MRTUtil::createOutputs( m_renderTargetId, outputs );
-   defineOutputs( outputs );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      MRTUtil::createOutputs( m_renderTargetId, outputs );
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

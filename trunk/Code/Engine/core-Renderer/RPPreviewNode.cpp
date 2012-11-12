@@ -30,9 +30,14 @@ END_OBJECT();
 RPPreviewNode::RPPreviewNode()
    : m_type( PT_Color )
    , m_shader( NULL )
+   , m_texInput( NULL )
 {
-   m_texInput = new RPTextureInput( "Texture" );
-   defineInput( m_texInput );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_texInput = new RPTextureInput( "Texture" );
+      defineInput( m_texInput );
+   }
 
    // load the shader
    ResourcesManager& resMgr = ResourcesManager::getInstance();

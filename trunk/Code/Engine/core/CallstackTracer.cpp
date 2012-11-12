@@ -267,15 +267,19 @@ void CallstackTracer::printCallstack( std::ostream& outputStream, ulong* arrTrac
    char fileName[256];
    char methodName[256];
    uint lineNumber;
+   std::string fullCallstack;
+   char singleLine[640];
 
    outputStream << "\n";
    for ( uint i = 0; i < traceSize; ++i )
    {
       getTraceName( arrTrace[i], fileName, 256, methodName, 256, lineNumber );
 
-      outputStream << fileName << "( " << lineNumber << " ): " << methodName << "\n";
+      sprintf_s( singleLine, "%s ( %d ): %s\n", fileName, lineNumber, methodName );
+      fullCallstack += singleLine;
    }
-   outputStream << "\n===================================================================\n";
+   fullCallstack += "\n===================================================================\n";
+   outputStream << fullCallstack.c_str();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

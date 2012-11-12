@@ -14,9 +14,14 @@ END_OBJECT();
 
 GNBool::GNBool()
    : m_value( true )
-   , m_output( new GSBoolOutput( "Value" ) )
+   , m_output( NULL )
 {
-   defineOutput( m_output );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_output = new GSBoolOutput( "Value" );
+      defineOutput( m_output );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

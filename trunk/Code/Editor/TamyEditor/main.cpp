@@ -71,7 +71,15 @@ int main(int argc, char *argv[])
    w.show();
    bool result = a.exec();
 
+   // deinitialize
    TamyEditor::destroyInstance();
+   MaterialsDB::deinitialize();
+   ResourcesManager::deinitialize();
+   IDStringsPool::deinitialize();
+   Profiler::deinitialize();
+   ReflectionTypesRegistry::deinitialize();
+   MemoryRouter::deinitialize();
+
    return result;
 }
 

@@ -15,14 +15,21 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GNSpatialEntity::GNSpatialEntity()
-   : m_worldMtx( new GSMatrixOutput( "world" ) )
-   , m_worldViewMtx( new GSMatrixOutput( "worldView" ) )
+   : m_worldMtx( NULL )
+   , m_worldViewMtx( NULL )
 {
-   std::vector< GBNodeOutput< GeometryShaderNode >* > outputs;
-   outputs.push_back( m_worldMtx );
-   outputs.push_back( m_worldViewMtx );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_worldMtx = new GSMatrixOutput( "world" );
+      m_worldViewMtx = new GSMatrixOutput( "worldView" );
 
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< GeometryShaderNode >* > outputs;
+      outputs.push_back( m_worldMtx );
+      outputs.push_back( m_worldViewMtx );
+
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

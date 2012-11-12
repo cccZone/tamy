@@ -25,12 +25,16 @@ END_OBJECT();
 RPSceneRenderNode::RPSceneRenderNode()
    : m_clearDepthBuffer( true )
    , m_renderTargetId( "Color" )
-{
-   defineInput( new RPVoidInput( "Input" ) );
-   
-   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
-   MRTUtil::createOutputs( m_renderTargetId, outputs );
-   defineOutputs( outputs );
+{   
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      defineInput( new RPVoidInput( "Input" ) );
+
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      MRTUtil::createOutputs( m_renderTargetId, outputs );
+      defineOutputs( outputs );
+   }
 }
 ///////////////////////////////////////////////////////////////////////////////
 

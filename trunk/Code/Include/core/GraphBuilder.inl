@@ -19,7 +19,6 @@ GraphBuilder< Impl, NodeType >::GraphBuilder()
 template< typename Impl, typename NodeType >
 GraphBuilder< Impl, NodeType >::~GraphBuilder()
 {
-   // <memory.todo> !!!!!!! memory leak fix no 1
    uint count = m_nodes.size();
    for ( uint i = 0; i < count; ++i )
    {

@@ -100,7 +100,7 @@ private:
    typedef std::map< FilePath, Resource* >                     ResourcesMap;
 
    typedef std::vector< ResourceImporterCreator* >             ImportersArr;
-   typedef std::map< std::string, ImportersArr* >   ResourceImportersMap;
+   typedef std::map< std::string, ImportersArr* >              ResourceImportersMap;
 
 private:
    static ResourcesManager*   s_theInstance;

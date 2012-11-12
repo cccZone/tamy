@@ -12,9 +12,14 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MNMaterialIndex::MNMaterialIndex()
-   : m_index( new MSIntOutput( "index" ) )
+   : m_index( NULL )
 {
-   defineOutput( m_index );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_index = new MSIntOutput( "index" );
+      defineOutput( m_index );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

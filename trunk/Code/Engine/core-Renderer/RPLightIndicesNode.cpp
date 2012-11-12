@@ -46,16 +46,26 @@ RPLightIndicesNode::RPLightIndicesNode()
    inputs.push_back( m_depthInput );
    defineInputs( inputs );
 
-   // <memory.todo> when the object is being loaded, the outputs created here will leak memory. Fix that - maybe by introducing a separate serialization constructor...
-   std::string allRenderTargetIds = m_lightsColorTargetId + ";" + m_lightsDirectionTargetId + ";" + m_shadowDepthBufferId + ";" + m_screenSpaceShadowMapId;
-   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
-   MRTUtil::createOutputs( allRenderTargetIds, outputs );
-   defineOutputs( outputs );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      std::string allRenderTargetIds = m_lightsColorTargetId + ";" + m_lightsDirectionTargetId + ";" + m_shadowDepthBufferId + ";" + m_screenSpaceShadowMapId;
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      MRTUtil::createOutputs( allRenderTargetIds, outputs );
+      defineOutputs( outputs );
 
-   m_lightsColorOutput = static_cast< RPTextureOutput* >( findOutput( m_lightsColorTargetId ) );
-   m_lightsDirectionOutput = static_cast< RPTextureOutput* >( findOutput( m_lightsDirectionTargetId ) );
-   m_shadowDepthBufferOutput = static_cast< RPTextureOutput* >( findOutput( m_shadowDepthBufferId ) );
-   m_screenSpaceShadowMapOutput = static_cast< RPTextureOutput* >( findOutput( m_screenSpaceShadowMapId ) );
+      m_lightsColorOutput = static_cast< RPTextureOutput* >( findOutput( m_lightsColorTargetId ) );
+      m_lightsDirectionOutput = static_cast< RPTextureOutput* >( findOutput( m_lightsDirectionTargetId ) );
+      m_shadowDepthBufferOutput = static_cast< RPTextureOutput* >( findOutput( m_shadowDepthBufferId ) );
+      m_screenSpaceShadowMapOutput = static_cast< RPTextureOutput* >( findOutput( m_screenSpaceShadowMapId ) );
+   }
+   else
+   {
+      m_lightsColorOutput = NULL;
+      m_lightsDirectionOutput = NULL;
+      m_shadowDepthBufferOutput = NULL;
+      m_screenSpaceShadowMapOutput = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

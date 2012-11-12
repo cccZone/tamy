@@ -14,9 +14,14 @@ END_OBJECT()
 
 MNBool::MNBool()
    : m_value( true )
-   , m_output( new MSBoolOutput( "Value" ) )
+   , m_output( NULL )
 {
-   defineOutput( m_output );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_output = new MSBoolOutput( "Value" );
+      defineOutput( m_output );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

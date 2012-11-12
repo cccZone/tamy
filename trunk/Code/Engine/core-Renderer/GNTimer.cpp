@@ -19,11 +19,18 @@ GNTimer::GNTimer()
    , m_time( new GSFloatOutput( "t" ) )
    , m_sinTime( new GSFloatOutput( "sin(t * p) * a" ) )
 {
-   std::vector< GBNodeOutput< GeometryShaderNode >* > outputs;
-   outputs.push_back( m_time );
-   outputs.push_back( m_sinTime );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_time = new GSFloatOutput( "t" );
+      m_sinTime = new GSFloatOutput( "sin(t * p) * a" );
 
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< GeometryShaderNode >* > outputs;
+      outputs.push_back( m_time );
+      outputs.push_back( m_sinTime );
+
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

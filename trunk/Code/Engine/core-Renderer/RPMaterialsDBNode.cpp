@@ -26,15 +26,22 @@ END_OBJECT();
 
 RPMaterialsDBNode::RPMaterialsDBNode()
    : m_materialsDB( MaterialsDB::getInstance() )
-   , m_descriptorsOutput( new RPTextureOutput( "MatDescr" ) )
-   , m_texturesAtlas( new RPTextureOutput( "TexAtlas" ) )
+   , m_descriptorsOutput( NULL )
+   , m_texturesAtlas( NULL )
 {
-   defineInput( new RPVoidInput( "Input" ) );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_descriptorsOutput = new RPTextureOutput( "MatDescr" );
+      m_texturesAtlas = new RPTextureOutput( "TexAtlas" );
 
-   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
-   outputs.push_back( m_descriptorsOutput );
-   outputs.push_back( m_texturesAtlas );
-   defineOutputs( outputs );
+      defineInput( new RPVoidInput( "Input" ) );
+
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      outputs.push_back( m_descriptorsOutput );
+      outputs.push_back( m_texturesAtlas );
+      defineOutputs( outputs );
+   }
 
    // load the shaders
    ResourcesManager& resMgr = ResourcesManager::getInstance();

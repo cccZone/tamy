@@ -238,6 +238,26 @@ void Resource::removeObject( int objectId )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Resource::removeObjectExternally( int objectId )
+{
+   ASSERT_MSG( objectId < (int)m_managedObjects.size(), "Trying to remove an object that doesn't exist" );
+   if ( objectId >= (int)m_managedObjects.size() )
+   {
+      return;
+   }
+
+   ASSERT_MSG( m_managedObjects[ objectId ] != NULL, "Trying to remove an object that's already been removed" );
+   if ( (int)m_managedObjects[ objectId ] == NULL )
+   {
+      return;
+   }
+
+   m_freeIds.push_back( objectId );
+   m_managedObjects[ objectId ] = NULL;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 ResourceObject& Resource::getObject( int objectId )
 {
    if ( objectId >= (int)m_managedObjects.size() )

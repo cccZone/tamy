@@ -16,14 +16,21 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MNSpatialEntity::MNSpatialEntity()
-   : m_worldMtx( new MSMatrixOutput( "world" ) )
-   , m_worldViewMtx( new MSMatrixOutput( "worldView" ) )
+   : m_worldMtx( NULL )
+   , m_worldViewMtx( NULL )
 {
-   std::vector< GBNodeOutput< MaterialNode >* > outputs;
-   outputs.push_back( m_worldMtx );
-   outputs.push_back( m_worldViewMtx );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_worldMtx = new MSMatrixOutput( "world" );
+      m_worldViewMtx = new MSMatrixOutput( "worldView" );
 
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< MaterialNode >* > outputs;
+      outputs.push_back( m_worldMtx );
+      outputs.push_back( m_worldViewMtx );
+
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

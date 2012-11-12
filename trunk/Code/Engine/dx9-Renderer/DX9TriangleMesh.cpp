@@ -124,64 +124,8 @@ void DX9TriangleMesh::initialize()
       m_ib->Unlock();
    }
 
-
-   /*
-
-   ID3DXMesh* dxMesh = NULL;
-   HRESULT res = D3DXCreateMeshFVF( trianglesCount, verticesCount, D3DXMESH_MANAGED, 0, m_d3Device, &dxMesh );
-   if ( FAILED(res) ) 
-   { 
-      ASSERT_MSG( false, "Can't create a vertex buffer for the triangle mesh" ); 
-      return;
-   }
-
-   // fill the vertex buffer, analyze the bounding sphere radius on the way
-   void* pVertex = NULL;
-   res = dxMesh->LockVertexBuffer( 0, (void**)&pVertex );
-   if ( FAILED( res ) ) 
-   { 
-      ASSERT_MSG( false, "Can't lock the mesh's vertex buffer" );
-      return;
-   }
-   vertices->copyTo( pVertex );
-   dxMesh->UnlockVertexBuffer();
-
-   // fill the index buffer & the attributes table
-   USHORT* pIndex = NULL;
-   DWORD* pAttrib = NULL;
-   res = dxMesh->LockIndexBuffer( 0, (void**)&pIndex );
-   if ( FAILED( res ) ) 
-   { 
-      ASSERT_MSG( false, "Can't lock the mesh's index buffer" ); 
-      return;
-   }
-   res = dxMesh->LockAttributeBuffer(0, &pAttrib );
-   if ( FAILED( res ) ) 
-   { 
-      ASSERT_MSG( false, "Can't lock the mesh's attributes buffer" );
-      return;
-   }
-
-   for ( unsigned int i = 0; i < trianglesCount; ++i )
-   {
-      const Face& face = faces[i];
-      *pIndex++  = face.idx[0]; 
-      *pIndex++  = face.idx[1]; 
-      *pIndex++  = face.idx[2];
-      *pAttrib++ = 0;
-   }
-   dxMesh->UnlockIndexBuffer();
-   dxMesh->UnlockAttributeBuffer();
-  
+   // cleanup
    delete vertices;
-
-   // copy the buffers
-   dxMesh->GetVertexBuffer( &m_vb );
-   dxMesh->GetIndexBuffer( &m_ib );
-   m_verticesCount = dxMesh->GetNumVertices();
-   m_facesCount = dxMesh->GetNumFaces();
-   dxMesh->Release();
-   */
 }
 
 ///////////////////////////////////////////////////////////////////////////////
