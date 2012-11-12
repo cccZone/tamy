@@ -78,6 +78,8 @@ void ReflectionPropertiesView::analyzeSingleProperty( ReflectionProperty* analyz
    // create the editors for the properties
    if ( !analyzedProperty->canBeEdited() )
    {
+      // delete the unused property - in other case the editor will release it when it no longer needs it
+      delete analyzedProperty;
       return;
    }
 

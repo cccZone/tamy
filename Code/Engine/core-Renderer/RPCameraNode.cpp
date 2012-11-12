@@ -14,25 +14,36 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPCameraNode::RPCameraNode()
-   : m_nearZ( new RPFloatOutput( "nearZ" ) )
-   , m_farZ( new RPFloatOutput( "farZ" ) )
-   , m_viewportWidth( new RPFloatOutput( "width" ) )
-   , m_viewportHeight( new RPFloatOutput( "height" ) )
-   , m_view( new RPMatrixOutput( "view" ) )
-   , m_invView( new RPMatrixOutput( "invView" ) )
-   , m_invProj( new RPMatrixOutput( "invProj" ) )
+   : m_nearZ( NULL )
+   , m_farZ( NULL )
+   , m_viewportWidth( NULL )
+   , m_viewportHeight( NULL )
+   , m_view( NULL )
+   , m_invView( NULL )
+   , m_invProj( NULL )
 {
-   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
-   outputs.push_back( m_nearZ );
-   outputs.push_back( m_farZ );
-   outputs.push_back( m_viewportWidth );
-   outputs.push_back( m_viewportHeight );
-   outputs.push_back( m_view );
-   outputs.push_back( m_invView );
-   outputs.push_back( m_invProj );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_nearZ = new RPFloatOutput( "nearZ" );
+      m_farZ = new RPFloatOutput( "farZ" );
+      m_viewportWidth = new RPFloatOutput( "width" );
+      m_viewportHeight = new RPFloatOutput( "height" );
+      m_view = new RPMatrixOutput( "view" );
+      m_invView = new RPMatrixOutput( "invView" );
+      m_invProj = new RPMatrixOutput( "invProj" );
 
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      outputs.push_back( m_nearZ );
+      outputs.push_back( m_farZ );
+      outputs.push_back( m_viewportWidth );
+      outputs.push_back( m_viewportHeight );
+      outputs.push_back( m_view );
+      outputs.push_back( m_invView );
+      outputs.push_back( m_invProj );
 
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

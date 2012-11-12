@@ -14,22 +14,33 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MNCamera::MNCamera()
-   : m_nearZ( new MSFloatOutput( "nearZ" ) )
-   , m_farZ( new MSFloatOutput( "farZ" ) )
-   , m_viewportWidth( new MSFloatOutput( "width" ) )
-   , m_viewportHeight( new MSFloatOutput( "height" ) )
-   , m_invView( new MSMatrixOutput( "invView" ) )
-   , m_invProj( new MSMatrixOutput( "invProj" ) )
+   : m_nearZ( NULL )
+   , m_farZ( NULL )
+   , m_viewportWidth( NULL )
+   , m_viewportHeight( NULL )
+   , m_invView( NULL )
+   , m_invProj( NULL )
 {
-   std::vector< GBNodeOutput< MaterialNode >* > outputs;
-   outputs.push_back( m_nearZ );
-   outputs.push_back( m_farZ );
-   outputs.push_back( m_viewportWidth );
-   outputs.push_back( m_viewportHeight );
-   outputs.push_back( m_invView );
-   outputs.push_back( m_invProj );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_nearZ = new MSFloatOutput( "nearZ" );
+      m_farZ = new MSFloatOutput( "farZ" );
+      m_viewportWidth = new MSFloatOutput( "width" );
+      m_viewportHeight = new MSFloatOutput( "height" );
+      m_invView = new MSMatrixOutput( "invView" );
+      m_invProj = new MSMatrixOutput( "invProj" );
 
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< MaterialNode >* > outputs;
+      outputs.push_back( m_nearZ );
+      outputs.push_back( m_farZ );
+      outputs.push_back( m_viewportWidth );
+      outputs.push_back( m_viewportHeight );
+      outputs.push_back( m_invView );
+      outputs.push_back( m_invProj );
+
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

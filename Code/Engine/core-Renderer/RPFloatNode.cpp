@@ -14,9 +14,14 @@ END_OBJECT();
 
 RPFloatNode::RPFloatNode()
    : m_value( 0.0f )
-   , m_output( new RPFloatOutput( "Value" ) )
+   , m_output( NULL )
 {
-   defineOutput( m_output );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_output = new RPFloatOutput( "Value" );
+      defineOutput( m_output );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

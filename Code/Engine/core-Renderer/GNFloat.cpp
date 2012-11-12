@@ -16,7 +16,12 @@ GNFloat::GNFloat()
    : m_value( 0.0f )
    , m_output( new GSFloatOutput( "Value" ) )
 {
-   defineOutput( m_output );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_output = NULL;
+      defineOutput( m_output );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -252,7 +252,7 @@ void SceneEditor::onDeinitialize( bool saveProgress )
    // remove self from the time track
    m_sceneTrack->remove( *this );
 
-   // gonna get disposed of by the rendering widget
+   delete m_sceneObjectsManipulator;
    m_sceneObjectsManipulator = NULL;
 }
 

@@ -16,14 +16,21 @@ END_OBJECT();
 MNTimer::MNTimer()
    : m_period( 1.0f )
    , m_amplitude( 1.0f )
-   , m_time( new MSFloatOutput( "t" ) )
-   , m_sinTime( new MSFloatOutput( "sin(t * p) * a" ) )
+   , m_time( NULL )
+   , m_sinTime( NULL )
 {
-   std::vector< GBNodeOutput< MaterialNode >* > outputs;
-   outputs.push_back( m_time );
-   outputs.push_back( m_sinTime );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_time = new MSFloatOutput( "t" );
+      m_sinTime = new MSFloatOutput( "sin(t * p) * a" );
 
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< MaterialNode >* > outputs;
+      outputs.push_back( m_time );
+      outputs.push_back( m_sinTime );
+
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -12,20 +12,30 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 MNSurfaceProperties::MNSurfaceProperties()
-   : m_ambient( new MSVec4Output( "ambient" ) )
-   , m_diffuse( new MSVec4Output( "diffuse" ) )
-   , m_specular( new MSVec4Output( "specular" ) )
-   , m_specularPower( new MSFloatOutput( "specularPower" ) )
-   , m_emissive( new MSVec4Output( "emissive" ) )
+   : m_ambient( NULL )
+   , m_diffuse( NULL )
+   , m_specular( NULL )
+   , m_specularPower( NULL )
+   , m_emissive( NULL )
 {
-   std::vector< GBNodeOutput< MaterialNode >* > outputs;
-   outputs.push_back( m_ambient );
-   outputs.push_back( m_diffuse );
-   outputs.push_back( m_specular );
-   outputs.push_back( m_specularPower );
-   outputs.push_back( m_emissive );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_ambient = new MSVec4Output( "ambient" );
+      m_diffuse = new MSVec4Output( "diffuse" );
+      m_specular = new MSVec4Output( "specular" );
+      m_specularPower = new MSFloatOutput( "specularPower" );
+      m_emissive = new MSVec4Output( "emissive" );
 
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< MaterialNode >* > outputs;
+      outputs.push_back( m_ambient );
+      outputs.push_back( m_diffuse );
+      outputs.push_back( m_specular );
+      outputs.push_back( m_specularPower );
+      outputs.push_back( m_emissive );
+
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

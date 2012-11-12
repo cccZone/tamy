@@ -19,7 +19,12 @@ GNTexture::GNTexture()
    , m_output( new GSTextureOutput( "Texture" ) )
    , m_renderableTexture( new RenderableTexture() )
 {
-   defineOutput( m_output );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_output = new GSTextureOutput( "Texture" );
+      defineOutput( m_output );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -35,32 +35,45 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPDeferredLightingNode::RPDeferredLightingNode()
+   : m_normalsInput( NULL )
+   , m_specularInput( NULL )
+   , m_depthInput( NULL )
+   , m_sceneColorInput( NULL )
+   , m_materialIndicesInput( NULL )
+   , m_materialsDescInput( NULL )
+   , m_finalLightColorTargetOutput( NULL )
+   , m_shadowDepthTextureOutput( NULL )
+   , m_screenSpaceShadowMapOutput( NULL )
 {
-   m_normalsInput = new RPTextureInput( "Normals" );
-   m_specularInput = new RPTextureInput( "Specular" );
-   m_depthInput = new RPTextureInput( "Depth" );
-   m_sceneColorInput = new RPTextureInput( "SceneColor" );
-   m_materialIndicesInput = new RPTextureInput( "MaterialsIndices" );
-   m_materialsDescInput = new RPTextureInput( "MaterialsDescr" );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_normalsInput = new RPTextureInput( "Normals" );
+      m_specularInput = new RPTextureInput( "Specular" );
+      m_depthInput = new RPTextureInput( "Depth" );
+      m_sceneColorInput = new RPTextureInput( "SceneColor" );
+      m_materialIndicesInput = new RPTextureInput( "MaterialsIndices" );
+      m_materialsDescInput = new RPTextureInput( "MaterialsDescr" );
 
-   m_finalLightColorTargetOutput = new RPTextureOutput( "LitScene" );
-   m_shadowDepthTextureOutput = new RPTextureOutput( "ShadowDepthBuffer" );
-   m_screenSpaceShadowMapOutput = new RPTextureOutput( "SS_ShadowMap" );
+      m_finalLightColorTargetOutput = new RPTextureOutput( "LitScene" );
+      m_shadowDepthTextureOutput = new RPTextureOutput( "ShadowDepthBuffer" );
+      m_screenSpaceShadowMapOutput = new RPTextureOutput( "SS_ShadowMap" );
 
-   std::vector< GBNodeInput< RenderingPipelineNode >* > inputs;
-   inputs.push_back( m_normalsInput );
-   inputs.push_back( m_specularInput );
-   inputs.push_back( m_depthInput );
-   inputs.push_back( m_sceneColorInput );
-   inputs.push_back( m_materialIndicesInput );
-   inputs.push_back( m_materialsDescInput );
-   defineInputs( inputs );
+      std::vector< GBNodeInput< RenderingPipelineNode >* > inputs;
+      inputs.push_back( m_normalsInput );
+      inputs.push_back( m_specularInput );
+      inputs.push_back( m_depthInput );
+      inputs.push_back( m_sceneColorInput );
+      inputs.push_back( m_materialIndicesInput );
+      inputs.push_back( m_materialsDescInput );
+      defineInputs( inputs );
 
-   std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
-   outputs.push_back( m_finalLightColorTargetOutput );
-   outputs.push_back( m_shadowDepthTextureOutput );
-   outputs.push_back( m_screenSpaceShadowMapOutput );
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< RenderingPipelineNode >* > outputs;
+      outputs.push_back( m_finalLightColorTargetOutput );
+      outputs.push_back( m_shadowDepthTextureOutput );
+      outputs.push_back( m_screenSpaceShadowMapOutput );
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

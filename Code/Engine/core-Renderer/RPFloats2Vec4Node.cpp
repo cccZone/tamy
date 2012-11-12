@@ -13,20 +13,32 @@ END_OBJECT();
 
 RPFloats2Vec4Node::RPFloats2Vec4Node()
 {
-   m_dataInput[0] = new RPFloatInput( "x" );
-   m_dataInput[1] = new RPFloatInput( "y" );
-   m_dataInput[2] = new RPFloatInput( "z" );
-   m_dataInput[3] = new RPFloatInput( "w" );
-   m_output = new RPVec4Output( "Output" );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_dataInput[0] = new RPFloatInput( "x" );
+      m_dataInput[1] = new RPFloatInput( "y" );
+      m_dataInput[2] = new RPFloatInput( "z" );
+      m_dataInput[3] = new RPFloatInput( "w" );
+      m_output = new RPVec4Output( "Output" );
 
-   std::vector< GBNodeInput< RenderingPipelineNode >* > inputs;
-   inputs.push_back( m_dataInput[0] );
-   inputs.push_back( m_dataInput[1] );
-   inputs.push_back( m_dataInput[2] );
-   inputs.push_back( m_dataInput[3] );
-   defineInputs( inputs );
+      std::vector< GBNodeInput< RenderingPipelineNode >* > inputs;
+      inputs.push_back( m_dataInput[0] );
+      inputs.push_back( m_dataInput[1] );
+      inputs.push_back( m_dataInput[2] );
+      inputs.push_back( m_dataInput[3] );
+      defineInputs( inputs );
 
-   defineOutput( m_output );
+      defineOutput( m_output );
+   }
+   else
+   {
+      m_dataInput[0] = NULL;
+      m_dataInput[1] = NULL;
+      m_dataInput[2] = NULL;
+      m_dataInput[3] = NULL;
+      m_output = NULL;
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

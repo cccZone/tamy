@@ -28,6 +28,35 @@ RenderingPipeline::RenderingPipeline( const FilePath& resourceName )
 
 RenderingPipeline::~RenderingPipeline()
 {
+   uint count = m_depthBuffers.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      if ( m_depthBuffers[i] )
+      {
+         m_depthBuffers[i]->removeReference();
+      }
+   }
+   m_depthBuffers.clear();
+
+   count = m_renderTargets.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      if ( m_renderTargets[i] )
+      {
+         m_renderTargets[i]->removeReference();
+      }
+   }
+   m_renderTargets.clear();
+
+   count = m_nodes.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      if ( m_nodes[i] )
+      {
+         m_nodes[i]->removeReference();
+      }
+   }
+   m_nodes.clear();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -80,7 +109,7 @@ void RenderingPipeline::removeRenderTarget( const std::string& id )
    {
       if ( m_renderTargets[i]->getTargetID() == id )
       {
-         delete m_renderTargets[i];
+         m_renderTargets[i]->removeReference();
          m_renderTargets.erase( m_renderTargets.begin() + i );
 
          break;
@@ -180,7 +209,7 @@ void RenderingPipeline::removeDepthBuffer( const std::string& id )
    {
       if ( m_depthBuffers[i]->getID() == id )
       {
-         delete m_depthBuffers[i];
+         m_depthBuffers[i]->removeReference();
          m_depthBuffers.erase( m_depthBuffers.begin() + i );
          break;
       }

@@ -20,7 +20,7 @@
 /**
  * Enables memory allocations tracking - useful to track memory leaks
  */
-#define _TRACK_MEMORY_ALLOCATIONS
+//#define _TRACK_MEMORY_ALLOCATIONS
 
 ///////////////////////////////////////////////////////////////////////////////
 

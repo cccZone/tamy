@@ -42,6 +42,13 @@ MAIN_FUNCTION_START()
    // cleanup
    delete application;
 
+   MaterialsDB::deinitialize();
+   ResourcesManager::deinitialize();
+   IDStringsPool::deinitialize();
+   Profiler::deinitialize();
+   ReflectionTypesRegistry::deinitialize();
+   MemoryRouter::deinitialize();
+
    return 0;
 }
 MAIN_FUNCTION_END()

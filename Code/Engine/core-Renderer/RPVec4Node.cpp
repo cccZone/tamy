@@ -13,9 +13,14 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 RPVec4Node::RPVec4Node()
-   : m_output( new RPVec4Output( "Vec" ) )
+   : m_output( NULL )
 {
-   defineOutput( m_output );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_output = new RPVec4Output( "Vec" );
+      defineOutput( m_output );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

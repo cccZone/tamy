@@ -130,6 +130,13 @@ public:
     */
    ResourceObject& getObject( int objectId );
 
+   /**
+    * Called by a resource object itself when it gets deleted.
+    *
+    * @param objectId
+    */
+   void removeObjectExternally( int objectId );
+
 protected:
    /**
     * Informs the resource that from now on it's managed by a resources manager.
@@ -186,7 +193,7 @@ protected:
    /**
     * Removes an object from the resource's control.
     *
-    * @param handle
+    * @param objectId
     */
    void removeObject( int objectId );
 };

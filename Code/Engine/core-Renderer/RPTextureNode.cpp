@@ -16,10 +16,15 @@ END_OBJECT();
 
 RPTextureNode::RPTextureNode()
    : m_texture( NULL )
-   , m_output( new RPTextureOutput( "Texture" ) )
+   , m_output( NULL )
    , m_renderableTexture( new RenderableTexture() )
 {
-   defineOutput( m_output );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_output = new RPTextureOutput( "Texture" );
+      defineOutput( m_output );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

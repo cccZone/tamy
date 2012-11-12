@@ -13,9 +13,14 @@ END_OBJECT();
 ///////////////////////////////////////////////////////////////////////////////
 
 GNVec4::GNVec4()
-   : m_output( new GSVec4Output( "Vec" ) )
+   : m_output( NULL )
 {
-   defineOutput( m_output );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_output = new GSVec4Output( "Vec" );
+      defineOutput( m_output );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

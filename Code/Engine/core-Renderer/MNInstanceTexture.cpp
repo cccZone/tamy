@@ -15,15 +15,22 @@ END_OBJECT();
 
 MNInstanceTexture::MNInstanceTexture()
    : m_usage( MT_DIFFUSE_1 )
-   , m_textureOutput( new MSTextureOutput( "Texture" ) )
-   , m_isTextureSetOutput( new MSBoolOutput( "IsSet" ) )
+   , m_textureOutput( NULL )
+   , m_isTextureSetOutput( NULL )
    , m_renderableTexture( new RenderableTexture() )
 {
-   std::vector< GBNodeOutput< MaterialNode >* > outputs;
-   outputs.push_back( m_textureOutput );
-   outputs.push_back( m_isTextureSetOutput );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      m_textureOutput = new MSTextureOutput( "Texture" );
+      m_isTextureSetOutput = new MSBoolOutput( "IsSet" );
 
-   defineOutputs( outputs );
+      std::vector< GBNodeOutput< MaterialNode >* > outputs;
+      outputs.push_back( m_textureOutput );
+      outputs.push_back( m_isTextureSetOutput );
+
+      defineOutputs( outputs );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

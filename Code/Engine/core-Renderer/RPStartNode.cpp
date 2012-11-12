@@ -13,7 +13,11 @@ END_OBJECT();
 
 RPStartNode::RPStartNode()
 {
-   defineOutput( new RPVoidOutput( "Output" ) );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      defineOutput( new RPVoidOutput( "Output" ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

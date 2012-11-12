@@ -12,8 +12,12 @@ END_OBJECT();
 
 RPAdapterNode::RPAdapterNode()
 {
-   defineInput( new RPTextureInput( "Input" ) );
-   defineOutput( new RPVoidOutput( "Output" ) );
+   bool isBeingDeserialized = SerializationFlag::getInstance().isSerializationInProgress();
+   if ( !isBeingDeserialized )
+   {
+      defineInput( new RPTextureInput( "Input" ) );
+      defineOutput( new RPVoidOutput( "Output" ) );
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
