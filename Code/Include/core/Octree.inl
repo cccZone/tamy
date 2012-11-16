@@ -145,4 +145,20 @@ void Octree<Elem>::clearSectors()
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template<typename Elem>
+void Octree<Elem>::getSceneBounds( AABoundingBox& outBounds ) const
+{
+   outBounds = m_root->m_globalElementsBounds;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename Elem>
+void Octree<Elem>::recalculateElementsBounds()
+{
+   m_root->recalculateGlobalBounds( *this );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 #endif // _OCTREE_H

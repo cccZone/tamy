@@ -35,12 +35,6 @@
     <Filter Include="SpatialStorage\Utils">
       <UniqueIdentifier>{e0e0c6cd-7e2d-44fc-bccb-b0502f5e0c45}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SpatialStorage\Solids">
-      <UniqueIdentifier>{ccf8b482-9769-443c-93e9-76e8aff27fdb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SpatialStorage\Nodes">
-      <UniqueIdentifier>{9b474f79-f4b3-43b8-a901-c97870a5e378}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Filesystem">
       <UniqueIdentifier>{8ef7176a-a012-4a0d-8d42-18deef2f0baa}</UniqueIdentifier>
     </Filter>
@@ -142,6 +136,18 @@
     </Filter>
     <Filter Include="MemoryManagement\Callstacks">
       <UniqueIdentifier>{880b9b3a-4242-4dc1-989d-8af92a55f172}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpatialStorage\Octree">
+      <UniqueIdentifier>{4e3eb32b-1d55-4c32-8760-4109f848c328}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpatialStorage\Octree\Nodes">
+      <UniqueIdentifier>{9b474f79-f4b3-43b8-a901-c97870a5e378}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpatialStorage\BSPTree">
+      <UniqueIdentifier>{ccf8b482-9769-443c-93e9-76e8aff27fdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SpatialStorage\LinearStorage">
+      <UniqueIdentifier>{1709a73c-1ab5-417a-9d04-5f41bbf2f5e5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -449,25 +455,10 @@
       <Filter>SpatialStorage\Utils</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\BSPNodeTree.h">
-      <Filter>SpatialStorage\Solids</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\DynamicOctree.h">
-      <Filter>SpatialStorage\Solids</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\LinearStorage.h">
-      <Filter>SpatialStorage\Solids</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\Octree.h">
-      <Filter>SpatialStorage\Solids</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\RegularOctree.h">
-      <Filter>SpatialStorage\Solids</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\core\StaticGeometryOctree.h">
-      <Filter>SpatialStorage\Solids</Filter>
+      <Filter>SpatialStorage\BSPTree</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\OctreeNode.h">
-      <Filter>SpatialStorage\Nodes</Filter>
+      <Filter>SpatialStorage\Octree\Nodes</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\core\BoundingVolume.h">
       <Filter>Math\BoundingVolumes</Filter>
@@ -775,6 +766,21 @@
     <ClInclude Include="..\..\Include\core\RawArrayUtil.h">
       <Filter>DataStructures\Collections</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\core\DynamicOctree.h">
+      <Filter>SpatialStorage\Octree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\Octree.h">
+      <Filter>SpatialStorage\Octree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\RegularOctree.h">
+      <Filter>SpatialStorage\Octree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\StaticGeometryOctree.h">
+      <Filter>SpatialStorage\Octree</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\core\LinearStorage.h">
+      <Filter>SpatialStorage\LinearStorage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Include\core\GenericFactory.inl">
@@ -796,25 +802,10 @@
       <Filter>SpatialStorage\Utils</Filter>
     </None>
     <None Include="..\..\Include\core\BSPNodeTree.inl">
-      <Filter>SpatialStorage\Solids</Filter>
-    </None>
-    <None Include="..\..\Include\core\DynamicOctree.inl">
-      <Filter>SpatialStorage\Solids</Filter>
-    </None>
-    <None Include="..\..\Include\core\LinearStorage.inl">
-      <Filter>SpatialStorage\Solids</Filter>
-    </None>
-    <None Include="..\..\Include\core\Octree.inl">
-      <Filter>SpatialStorage\Solids</Filter>
-    </None>
-    <None Include="..\..\Include\core\RegularOctree.inl">
-      <Filter>SpatialStorage\Solids</Filter>
-    </None>
-    <None Include="..\..\Include\core\StaticGeometryOctree.inl">
-      <Filter>SpatialStorage\Solids</Filter>
+      <Filter>SpatialStorage\BSPTree</Filter>
     </None>
     <None Include="..\..\Include\core\OctreeNode.inl">
-      <Filter>SpatialStorage\Nodes</Filter>
+      <Filter>SpatialStorage\Octree\Nodes</Filter>
     </None>
     <None Include="..\..\Include\core\TriangleSplitter.inl">
       <Filter>Math\BoundingVolumes\Algorithms</Filter>
@@ -977,6 +968,21 @@
     </None>
     <None Include="..\..\Include\core\RawArrayUtil.inl">
       <Filter>DataStructures\Collections</Filter>
+    </None>
+    <None Include="..\..\Include\core\DynamicOctree.inl">
+      <Filter>SpatialStorage\Octree</Filter>
+    </None>
+    <None Include="..\..\Include\core\Octree.inl">
+      <Filter>SpatialStorage\Octree</Filter>
+    </None>
+    <None Include="..\..\Include\core\RegularOctree.inl">
+      <Filter>SpatialStorage\Octree</Filter>
+    </None>
+    <None Include="..\..\Include\core\StaticGeometryOctree.inl">
+      <Filter>SpatialStorage\Octree</Filter>
+    </None>
+    <None Include="..\..\Include\core\LinearStorage.inl">
+      <Filter>SpatialStorage\LinearStorage</Filter>
     </None>
   </ItemGroup>
 </Project>

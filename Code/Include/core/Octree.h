@@ -46,22 +46,7 @@ public:
     * @param treeBB     bounding box for the tree
     */
    Octree( const AABoundingBox& treeBB );
-
    virtual ~Octree();
-
-   /**
-    * This method allows to query all the elements that are contained
-    * in the passed bounding volume.
-    *
-    * What is important here is that a function:
-    *    bool testCollision(const AABoundingBox& bb, const BoundingVolumeType& bv)
-    * is made available to the linker.
-    *
-    * @param boundingVol   volume that bounds the elements we want
-    * @param output        upon method return this array will be filled with
-    *                      elements overlapping the query volume
-    */
-   void query(const BoundingVolume& boundingVol, Array<Elem*>& output) const;
 
    /**
     * This utility method will subdivide the specified subtree
@@ -86,8 +71,19 @@ public:
     */
    void querySectors( const BoundingVolume& boundingVol, Sector& searchRoot, Array< Sector*, MemoryPoolAllocator >& output ) const;
 
-protected:
-      /**
+   /**
+    * Calculates and returns actual boundaries of the scene stored in the storage.
+    *
+    * @param outBounds
+    */
+   void getSceneBounds( AABoundingBox& outBounds ) const;
+
+   // -------------------------------------------------------------------------
+   // SpatialStorage implementation
+   // -------------------------------------------------------------------------
+   void query( const BoundingVolume& boundingVol, Array<Elem*>& output ) const;
+
+   /**
     * This method returns a total number of elements stored in the tree.
     * 
     * @return     tree elements count
@@ -101,6 +97,13 @@ protected:
     * @return     element corresponding to the specified index
     */
    virtual Elem& getElement(unsigned int idx) const = 0;
+
+protected:
+
+   /**
+    * Recalculates the hierarchical boundaries of stored elements.
+    */
+   void recalculateElementsBounds();
 
    /**
     * Deletes all sectors.

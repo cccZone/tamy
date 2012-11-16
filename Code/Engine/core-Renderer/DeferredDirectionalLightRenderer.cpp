@@ -153,7 +153,7 @@ void DeferredDirectionalLightRenderer::renderShadowMap( Renderer& renderer, cons
    m_cascadeCalculationConfig.m_lightRotationMtx.setPosition<3>( Quad_0 );
 
    m_cascadeCalculationConfig.m_cascadeDimensions = (float)( data.m_shadowDepthTexture->getWidth() ) / (float)m_cascadeCalculationConfig.m_numCascadesPerTextureRow;
-   m_cascadeCalculationConfig.m_sceneBounds = data.m_renderingView->getSceneBounds();
+   data.m_renderingView->getSceneBounds( m_cascadeCalculationConfig.m_sceneBounds );
    m_cascadeCalculationConfig.m_activeCamera = &activeCamera;
 
    Vector lightPos;

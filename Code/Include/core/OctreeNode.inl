@@ -159,4 +159,50 @@ const AABoundingBox& OctreeNode<Elem>::getBoundingBox() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template< typename Elem > template< typename OctreeElem >
+void OctreeNode< Elem >::recalculateGlobalBounds( const Octree< OctreeElem >& octree )
+{
+   // first step down into the hierarchy and recalculate its bounds
+   int count = getChildrenCount();
+   for ( int i = 0; i < count; ++i )
+   {
+      OctreeNode< Elem >& child = getChild(i);
+      child.recalculateGlobalBounds( octree );
+   }
+
+   // next, recalculate the local bounds
+   recalculateLocalBounds( octree );
+
+   // and finally - combine all bounds into the node's global bounds
+   m_globalElementsBounds = m_localElementsBounds;
+   for ( int i = 0; i < count; ++i )
+   {
+      OctreeNode< Elem >& child = getChild(i);
+      m_globalElementsBounds.add( child.m_globalElementsBounds, m_globalElementsBounds );
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template< typename Elem > template< typename OctreeElem >
+void OctreeNode<Elem>::recalculateLocalBounds( const Octree< OctreeElem >& octree )
+{
+   AABoundingBox elemBB;
+
+   // calculate the bounding box around this node's elements
+   m_localElementsBounds.reset();
+   uint count = m_elems.size();
+   for ( uint i = 0; i < count; ++i )
+   {
+      uint elemIdx = m_elems[i];
+      const BoundingVolume& vol = octree.getElement(elemIdx).getBoundingVolume();
+      vol.calculateBoundingBox( elemBB );
+
+      m_localElementsBounds.add( elemBB, m_localElementsBounds );
+   }
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 #endif // _OCTREE_NODE_H

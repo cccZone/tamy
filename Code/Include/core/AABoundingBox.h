@@ -39,6 +39,14 @@ ALIGN_16 struct AABoundingBox : public BoundingVolume
    AABoundingBox( const Vector& min, const Vector& max );
 
    /**
+    * Sets the corner values of the bounding box.
+    *
+    * @param min
+    * @param max
+    */
+   void set( const Vector& min, const Vector& max );
+
+   /**
     * Sets new bounds and expands them at the same time, so that the bounding box becomes larger.
     *
     * @param bounds
@@ -80,6 +88,13 @@ ALIGN_16 struct AABoundingBox : public BoundingVolume
     * Resets the bounds.
     */
    void reset();
+
+   // -------------------------------------------------------------------------
+   // Operators
+   // -------------------------------------------------------------------------
+   bool operator==( const AABoundingBox& rhs ) const;
+   bool operator!=( const AABoundingBox& rhs ) const;
+   
 
    // -------------------------------------------------------------------------
    // BoundingVolume implementation

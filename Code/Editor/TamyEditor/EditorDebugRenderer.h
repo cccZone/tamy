@@ -70,6 +70,11 @@ public:
    void remove( Entity& entity );
 
    /**
+    * Removes all stored debug representations.
+    */
+   void resetContents();
+
+   /**
     * Attaches a model view to the debug scene.
     *
     * @param view
