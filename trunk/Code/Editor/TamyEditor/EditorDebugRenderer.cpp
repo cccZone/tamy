@@ -60,6 +60,16 @@ void EditorDebugRenderer::remove( Entity& entity )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void EditorDebugRenderer::resetContents()
+{
+   if ( m_debugScene )
+   {
+      m_debugScene->clear();
+   }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void EditorDebugRenderer::attachSceneView( ModelView& view )
 {
    // don't allow duplicated views

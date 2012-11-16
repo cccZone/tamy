@@ -32,7 +32,7 @@ DynamicOctree<Elem>::~DynamicOctree()
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-void DynamicOctree<Elem>::update(Elem& elem)
+void DynamicOctree<Elem>::update( Elem& elem )
 {  
    // remove the element from the sectors it's in
    TreeElem* treeElem = NULL;
@@ -40,24 +40,33 @@ void DynamicOctree<Elem>::update(Elem& elem)
    unsigned int elemIdx = 0;
    for (unsigned int i = 0; i < elemsCount; ++i)
    {
-      if (&elem == m_elements[i]->elem) 
+      if ( &elem == m_elements[i]->elem ) 
       {
          treeElem = m_elements[i];
          elemIdx = i;
          break;
       }
    }
-   if (treeElem == NULL) {return;}
+   if ( treeElem == NULL ) 
+   {
+      return;
+   }
 
    unsigned int sectorsCount = treeElem->hostSectors.size();
    for (unsigned int i = 0; i < sectorsCount; ++i)
    {
-      Array<unsigned int>& sectorElems = treeElem->hostSectors[i]->m_elems;
+      Sector* hostSector = treeElem->hostSectors[i];
+      Array<unsigned int>& sectorElems = hostSector->m_elems;
       unsigned int idx = sectorElems.find(elemIdx);
-      if (idx != EOA) {sectorElems.remove(idx);}
+      if ( idx != EOA ) 
+      {
+         sectorElems.remove(idx);
+      }
    }
 
-   putElemInTree(elemIdx, *treeElem);
+   putElemInTree( elemIdx, *treeElem );
+
+   recalculateElementsBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -81,6 +90,8 @@ void DynamicOctree<Elem>::clearTree()
          }
       }
    }
+
+   recalculateElementsBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -101,7 +112,10 @@ bool DynamicOctree<Elem>::isAdded(const Elem& elem) const
 template<typename Elem>
 void DynamicOctree<Elem>::insert(Elem& elem)
 {
-   if (isAdded(elem) == true) {return;}
+   if ( isAdded(elem) == true ) 
+   {
+      return;
+   }
 
    // add the element to the collection of elements
    unsigned int elemIdx = m_elements.size();
@@ -109,7 +123,9 @@ void DynamicOctree<Elem>::insert(Elem& elem)
    TreeElem* newElem = new TreeElem(&elem);
    m_elements.insert(newElem);
 
-   putElemInTree(elemIdx, *newElem);
+   putElemInTree( elemIdx, *newElem );
+
+   recalculateElementsBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -128,7 +144,7 @@ void DynamicOctree<Elem>::putElemInTree( unsigned int elemIdx, TreeElem& treeEle
 
    treeElem.hostSectors.clear();
    Sector* sector = NULL;
-   for (unsigned int i = 0; i < sectorsCount; ++i)
+   for ( unsigned int i = 0; i < sectorsCount; ++i )
    {
       sector = candidateSectors[i];
       sector->m_elems.push_back(elemIdx);
@@ -155,7 +171,7 @@ Elem& DynamicOctree<Elem>::getElement(unsigned int idx) const
 ///////////////////////////////////////////////////////////////////////////////
 
 template<typename Elem>
-void DynamicOctree<Elem>::remove(Elem& elem)
+void DynamicOctree<Elem>::remove( Elem& elem )
 {
    TreeElem* treeElem = NULL;
 
@@ -176,13 +192,19 @@ void DynamicOctree<Elem>::remove(Elem& elem)
    unsigned int sectorsCount = treeElem->hostSectors.size();
    for (unsigned int i = 0; i < sectorsCount; ++i)
    {
-      Array<unsigned int>& sectorElems = treeElem->hostSectors[i]->m_elems;
+      Sector* hostSector = treeElem->hostSectors[i];
+      Array<unsigned int>& sectorElems = hostSector->m_elems;
       unsigned int idx = sectorElems.find(removedElemIdx);
-      if (idx != EOA) {sectorElems.remove(idx);}
+      if (idx != EOA) 
+      {
+         sectorElems.remove(idx);
+      }
    }
 
    delete treeElem;
    m_elements[removedElemIdx] = NULL;
+
+   recalculateElementsBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

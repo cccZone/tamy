@@ -78,13 +78,14 @@ void RegularOctree< Elem >::insert( Elem& elem )
       sector = candidateSectors[i];
       sector->m_elems.push_back(elemIdx);
 
-      if ((sector->m_elems.size() > m_maxElemsPerSector) && 
-         (sector->getDepth() < m_maxTreeDepth))
+      if ( ( sector->m_elems.size() > m_maxElemsPerSector ) && ( sector->getDepth() < m_maxTreeDepth ) )
       {
          sector->subdivide();
          spreadChildren(*sector);
       }
    }
+
+   recalculateElementsBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -93,8 +94,8 @@ template<typename Elem>
 void RegularOctree< Elem >::remove( Elem& elem )
 {
    // remove the element from the array of elements
-   unsigned int removedElemIdx = m_elements.find(&elem);
-   m_elements.remove(removedElemIdx);
+   unsigned int removedElemIdx = m_elements.find( &elem );
+   m_elements.remove( removedElemIdx );
 
    // step through the tree and remove all the references to this element
    Stack< Sector*, MemoryPoolAllocator > stack( m_allocator );
@@ -105,21 +106,26 @@ void RegularOctree< Elem >::remove( Elem& elem )
       Sector* currSector = stack.pop();
 
       unsigned int childrenCount = currSector->getChildrenCount();
-      if (childrenCount > 0)
+      if ( childrenCount > 0 )
       {
-         ASSERT_MSG(currSector->m_elems.size() == 0, "Composite node has an element assigned");
-         for (unsigned int i = 0; i < childrenCount; ++i)
+         ASSERT_MSG( currSector->m_elems.size() == 0, "Composite node has an element assigned" );
+         for ( unsigned int i = 0; i < childrenCount; ++i )
          {
-            stack.push(&currSector->getChild(i));
+            stack.push( &currSector->getChild(i) );
          }
       }
       else
       {
          Array<unsigned int>& sectorElems = currSector->m_elems;
-         unsigned int idx = sectorElems.find(removedElemIdx);
-         if (idx != EOA) {sectorElems.remove(idx);}
+         unsigned int idx = sectorElems.find( removedElemIdx );
+         if (idx != EOA) 
+         {
+            sectorElems.remove(idx);
+         }
       }
    }
+
+   recalculateElementsBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -25,6 +25,14 @@ AABoundingBox::AABoundingBox( const Vector& _min, const Vector& _max )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void AABoundingBox::set( const Vector& _min, const Vector& _max )
+{
+   min = _min;
+   max = _max;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void AABoundingBox::setExpanded( const AABoundingBox& bounds, const FastFloat& multiplier )
 {
    min.setMul( bounds.min, multiplier );
@@ -35,8 +43,8 @@ void AABoundingBox::setExpanded( const AABoundingBox& bounds, const FastFloat& m
 
 void AABoundingBox::add( const AABoundingBox& otherBox, AABoundingBox& unionBox ) const
 {
-   unionBox.min.setMin( unionBox.min, min );
-   unionBox.max.setMax( unionBox.max, max );
+   unionBox.min.setMin( otherBox.min, min );
+   unionBox.max.setMax( otherBox.max, max );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -206,6 +214,20 @@ void AABoundingBox::include( const Vector& pt )
 {
    min.setMin( pt, min );
    max.setMax( pt, max );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool AABoundingBox::operator==( const AABoundingBox& rhs ) const
+{
+   return ( min == rhs.min ) && ( max == rhs.max );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+bool AABoundingBox::operator!=( const AABoundingBox& rhs ) const
+{
+   return ( min != rhs.min ) || ( max != rhs.max );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

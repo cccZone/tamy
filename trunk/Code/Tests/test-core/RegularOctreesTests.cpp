@@ -173,3 +173,32 @@ TEST(RegularOctree, removingElements)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+TEST(RegularOctree, sceneBoundsCalculation)
+{
+   AABoundingBox treeBB(Vector(-10, -10, -10), Vector(10, 10, 10));
+   RegularOctree<BoundedObjectMock> tree(treeBB, 1);
+   Array<BoundedObjectMock*> result;
+
+   BoundedObjectMock ob1(0, 0, 0, 2);
+   BoundedObjectMock ob2(3, 3, 3, 2);
+
+   AABoundingBox actualSceneBounds;
+
+   tree.insert(ob1);
+   tree.getSceneBounds( actualSceneBounds );
+   COMPARE_VEC( Vector( -2, -2, -2 ), actualSceneBounds.min );
+   COMPARE_VEC( Vector( 2, 2, 2 ), actualSceneBounds.max );
+
+   tree.insert(ob2);
+   tree.getSceneBounds( actualSceneBounds );
+   COMPARE_VEC( Vector( -2, -2, -2 ), actualSceneBounds.min );
+   COMPARE_VEC( Vector( 5, 5, 5 ), actualSceneBounds.max );
+
+   tree.remove(ob1);
+   tree.getSceneBounds( actualSceneBounds );
+   COMPARE_VEC( Vector( 1, 1, 1 ), actualSceneBounds.min );
+   COMPARE_VEC( Vector( 5, 5, 5 ), actualSceneBounds.max );
+}
+
+///////////////////////////////////////////////////////////////////////////////

@@ -62,6 +62,8 @@ SGHandle StaticGeometryOctree<Elem>::insert( Elem* elem )
       }
    }
 
+   recalculateElementsBounds();
+
    return handle;
 }
 
@@ -227,9 +229,15 @@ void StaticGeometryOctree<Elem>::remove(SGHandle elemHandle)
       unsigned int idx;
       for ( unsigned int j = 0; j < sectorsCount; ++j )
       {
-         idx = sectors[j]->m_elems.find(elemIdx);
-         if (idx == EOA) {continue;}
-         else {sectors[j]->m_elems.remove(idx);}
+         idx = sectors[j]->m_elems.find( elemIdx );
+         if ( idx == EOA ) 
+         {
+            continue;
+         }
+         else 
+         {
+            sectors[j]->m_elems.remove( idx );
+         }
       }
 
       // delete the element
@@ -238,6 +246,8 @@ void StaticGeometryOctree<Elem>::remove(SGHandle elemHandle)
 
    // release the handle to the element
    releaseHandle(elemHandle);
+
+   recalculateElementsBounds();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

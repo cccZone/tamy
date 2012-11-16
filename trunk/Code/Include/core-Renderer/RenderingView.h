@@ -37,8 +37,6 @@ private:
    RegularOctree< Light >*                                  m_lightsStorage;
    AmbientLight*                                            m_ambientLight;
 
-   AABoundingBox                                            m_sceneBounds;
-
 public:
    /**
     * Constructor.
@@ -85,8 +83,10 @@ public:
 
    /**
     * Returns the scene bounds.
+    *
+    * @param outBounds
     */
-   inline const AABoundingBox& getSceneBounds() const { return m_sceneBounds; }
+   void getSceneBounds( AABoundingBox& outBounds ) const;
 
    // ----------------------------------------------------------------------
    // ModelView implementation

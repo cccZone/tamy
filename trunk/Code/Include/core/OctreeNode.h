@@ -11,6 +11,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+template< typename OctreeElem >
+class Octree;
+
+///////////////////////////////////////////////////////////////////////////////
+
 /**
  * A node of an octree.
  */
@@ -35,11 +40,20 @@ private:
 public:
    Array< Elem >                       m_elems;
 
+   // bounds of the elements stored only in this node
+   AABoundingBox                       m_localElementsBounds;
+
+   // bounds of the elements stored in this node and the hierarchy that spans underneath
+   AABoundingBox                       m_globalElementsBounds;
+
 private:
    OctreeNode**                        m_children;
-   AABoundingBox                       m_bb;
    Plane                               m_splitPlanes[3];
    unsigned int                        m_depth;
+
+   // node bounds
+   AABoundingBox                       m_bb;       
+
 
 public:
    OctreeNode(const AABoundingBox& bb, unsigned int depth = 0);
@@ -79,7 +93,7 @@ public:
 
    /**
     * Returns the number of planes that split this type of node
-    * into the subnodes.
+    * into the sub-nodes.
     */
    unsigned int getSplitPlanesCount() const {return 3;}
 
@@ -99,6 +113,23 @@ public:
     * Returns the bounding box of the node.
     */
    inline const AABoundingBox& getBoundingBox() const;
+
+   /**
+    * Recalculates the boundaries of all stored elements
+    *
+    * @param octree     parent octree
+    */
+   template< typename OctreeElem >
+   void recalculateGlobalBounds( const Octree< OctreeElem >& octree );
+
+private:
+   /**
+    * Recalculates the boundaries of locally stored elements
+    *
+    * @param octree     parent octree
+    */
+   template< typename OctreeElem >
+   void recalculateLocalBounds( const Octree< OctreeElem >& octree );
 };
 
 ///////////////////////////////////////////////////////////////////////////////
