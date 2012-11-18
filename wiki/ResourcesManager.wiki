@@ -5,6 +5,16 @@ As such, the bulk of built-in functionality revolves around the issues of serial
 
 Resource class is the cornerstone of the Resources system the engine is built upon. A single Resource is considered a constant data source, referenced by other engine classes that operate on that data, but not modifying it. Imagine an animation clip being such a resource - you can have one clip instance in the memory, and multiple animation players playing it on multiple characters moving on screen.
 
+==Referencing a resource in your code==
+
+*IMPORTANT*
+Resources come and go - you load them when you need them, and they can get unloaded if they're not used at the moment, and we need some spare memory.
+
+That's why, as a rule of thumb - *NEVER USE POINTERS TO RESOURCES AS YOUR CLASS MEMBERS*.
+
+Instead - use a `ResourceHandler` and use its API to get access to a resource instance.
+That way you'll know that you will always get a hold of a resource ( provided it exists in your filesystem ).
+
 ==Resource definition==
 
 {{{
