@@ -1,0 +1,14 @@
+=Patching=
+
+Very often you will require to change definitions of certain types - the code evolves, it's being refactored - that's just how it is.
+
+The problem is that you may be loading data from your resource files that reference those types. 
+How should the reflection system know how to load them then, since the definition has changed?
+
+Patching to the rescue!
+
+==PatchesDB==
+
+==Patch definition XML==
+
+== Custom patch function==
