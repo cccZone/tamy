@@ -8,6 +8,18 @@ How should the reflection system know how to load them then, since the definitio
 Patching to the rescue!
 
 ==PatchesDB==
+`PatchesDB` is a singleton construct that stores differential definitions of how particular types have changed from one version to another.
+
+You can add such a definition using database's API, or by storing it in an XML file ( this will be described in details in a dedicated section later on ).
+
+
+A typical patch definition for a given type should always start from the initial version of the type. Each subsequent entry increases type's version and describes what aspect of the type has changed.
+
+Let's walk through an example showing how to describe patching information step by step, as a sample type migrates from one form to another:
+
+===Initial version===
+
+
 
 ==Patch definition XML==
 
