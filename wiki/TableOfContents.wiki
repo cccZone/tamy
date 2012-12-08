@@ -41,6 +41,7 @@
         * [ Serialization ]
           * [ReflectionSerializationUtil Serialization util]
           * [SerializationFlag Serialization flag]
+          * [Patching Patching]
       * [SpatialStorage Spatial storages]
       * [IDString IDString]
     * [ AI ]
