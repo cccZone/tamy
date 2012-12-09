@@ -55,8 +55,8 @@ record.addField( "m_intField", SFT_Value );
 }}}
 
 What happen's here, step by step, is:
-  * first we create a new patch record, which defines 'an upgrade' from a non-existing version -1 to version 0 for a type called "MyClass"
-  * next, we define its parent as "ReflectionObject". This particular type depends on version 0 of that type.
+  * first we create a new patch record, which defines 'an upgrade' from a non-existing version -1 to version 0 for a type called "`MyClass`"
+  * next, we define its parent as "`ReflectionObject`". This particular type depends on version 0 of that type.
   * last, we add a field called "m_intField", that is a value field
 
 Let's discuss two important concepts here:
