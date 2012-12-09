@@ -19,6 +19,53 @@ Let's walk through an example showing how to describe patching information step 
 
 ===Initial version===
 
+Let's start with a simple class
+{{{
+class MyClass : public ReflectionObject
+{
+   DECLARE_CLASS();
+
+public:
+   int    m_intField;
+};
+
+BEGIN_OBJECT( MyClass );
+   PARENT( ReflectionObject );
+   PROPERTY( int, m_intField );
+END_OBJECT();
+}}}
+
+In this state we don't need to define any patching information - the class is at it's version 0 ( which is implicitly defined ), and a proper patching information will be generated for it automatically, provided you include the following method call in your application's startup sequence:
+
+{{{
+PatchesDB& patchesDB = PatchesDB::getInstance();
+ReflectionTypesRegistry::getInstance().build( patchesDB );
+}}}
+
+
+But just for the sake of it, let's see how such a definition would look like.
+Here's the code:
+
+{{{
+PatchesDB& patchesDB = PatchesDB::getInstance();
+
+PatchRecord& record = patchesDB.addPatch( "", -1, "MyClass", 0 );
+record.addParent( "ReflectionObject", 0 );
+record.addField( "m_intField", SFT_Value );
+}}}
+
+What happen's here, step by step, is:
+  * first we create a new patch record, which defines 'an upgrade' from a non-existing version -1 to version 0 for a type called "MyClass"
+  * next, we define its parent as "ReflectionObject". This particular type depends on version 0 of that type.
+  * last, we add a field called "m_intField", that is a value field
+
+Let's discuss two important concepts here:
+ * _version of the parent type_ - a particular definition needs to specify which version of a type it was parented by exactly. If that type has changed as well, the system would need to know what version to start the patching from.
+ * _member field type_ - there are four options available here:
+   * `SFT_Value` - refers to regular members of a primitive or complex types ( int, float, std::string, Vector etc. )
+   * `SFT_Pointer` - refers to all pointers
+   * `SFT_ArrayOfValues` - refers to std::vector and Array instances of primitive or complex types
+   * `SFT_ArrayOfPointers` - refers to std::vector and Array instances of pointers
 
 
 ==Patch definition XML==
