@@ -251,9 +251,32 @@ In order to make this last definition work, we need to inform the patching syste
 In order to do that, place the following macro directly under the function's closing bracket:
 
 {{{
-REGISTER_PATCH_FUNCTION( patchCounter_1_to_2);
+REGISTER_PATCH_FUNCTION( patchCounter_1_to_2 );
 }}}
 
 It will take care of registering a translation unit for the function with PatchesDB.
 
 ==Custom patch function==
+
+As you saw before, this function can be used to provide custom initialization code that will take care of migrating data from one form to another.
+
+Here's its basic signature:
+{{{
+void patchFunctionName( SerializedReflectionObject& migratedObject )
+{
+}
+}}}
+
+Look up `SerializedReflectionObject` API to see how you can get access to member fields of a type.
+
+===Migrating data between parent and derived type===
+This unfortunately is not supportyed. The function works with a single type at a time, meanining it doesn';t have access to fields defined in the parent type.
+
+===Function pointer registration===
+In order to be able to reference the function from XML files, you need to register it using the following macro:
+
+{{{
+REGISTER_PATCH_FUNCTION( patchFunctionName );
+}}}
+
+SImply place a call to it below the function's closing bracket, and you're good to go,
