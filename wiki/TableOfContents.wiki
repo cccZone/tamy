@@ -25,7 +25,7 @@
         * [RoundBuffer Round Buffer]
         * [Allocators Memory allocators]
       * [ Multithreading ]
-        * [Design&Usage Design & usage]
+        * [DesignAndUsage Design & usage]
         * [ThreadSystem Thread system]
         * [MultithreadedTasksScheduler Tasks scheduler]
         * [AsyncOperationsManager synchronous operations manager]]
