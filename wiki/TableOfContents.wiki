@@ -28,7 +28,7 @@
         * [DesignAndUsage Design & usage]
         * [ThreadSystem Thread system]
         * [MultithreadedTasksScheduler Tasks scheduler]
-        * [AsyncOperationsManager synchronous operations manager]]
+        * [AsyncOperationsManager Asynchronous operations manager]
       * [ResourcesManager Resources management]
         * [ResourcesManager#Resource_definition Resource definition]
         * [ResourcesManager#Resources_management Resources management]
