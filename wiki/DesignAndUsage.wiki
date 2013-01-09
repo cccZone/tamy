@@ -20,7 +20,7 @@ ts.run( taskInstance, true );
 }}}
 
 *The reason* why we have two separate mechanisms that run here is that we want to differentiate between objects that exist and run on threads from those that run on the main thread.
-Check the [DesignAndUsage#Purpose_of_main_thread_Purpose of main thread] section for details.
+Check the [DesignAndUsage#Purpose_of_main_thread Purpose of main thread] section for details.
 
 
 Therefore we need to for a *REQUIREMENT*: 
